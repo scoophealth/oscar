@@ -50,6 +50,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -123,7 +124,6 @@ import oscar.util.ConcatPDF;
 import oscar.util.UtilDateUtilities;
 
 import com.lowagie.text.DocumentException;
-import org.apache.commons.lang.math.NumberUtils;
 
 /*
  * Updated by Eugene Petruhin on 12 and 13 jan 2009 while fixing #2482832 & #2494061
@@ -141,7 +141,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		return edit(mapping, form, request, response);
 	}
-	
+
 	public ActionForward setUpMainEncounter(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		return mapping.findForward("setUpMainEncounterPage");
 	}
@@ -151,7 +151,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		long start = System.currentTimeMillis();
 		long beginning = start;
 		long current = 0;
-                HttpSession session = request.getSession();
+		HttpSession session = request.getSession();
 		if (session.getAttribute("userrole") == null) {
 			response.sendError(response.SC_FORBIDDEN);
 			return null;
@@ -161,7 +161,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		cform.setChain("");
 		request.setAttribute("change_flag", "false");
 		request.setAttribute("from", "casemgmt");
-		
+
 		logger.debug("Get demo and provider no");
 		String demono = getDemographicNo(request);
 		Integer demographicNo = Integer.parseInt(demono);
@@ -221,7 +221,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			} else {
 				// StringEncoderUtils.a();
 				String default_view = OscarProperties.getInstance().getProperty("default_view", "");
-				
+
 				url = bsurl + "/billing.do?billRegion=" + java.net.URLEncoder.encode(province, "UTF-8") + "&billForm=" + java.net.URLEncoder.encode(default_view, "UTF-8") + "&hotclick=" + java.net.URLEncoder.encode("", "UTF-8") + "&appointment_no=" + bean.appointmentNo + "&appointment_date=" + bean.appointmentDate + "&start_time=" + Hour + ":" + Min + "&demographic_name=" + java.net.URLEncoder.encode(bean.patientLastName + "," + bean.patientFirstName, "UTF-8") + "&demographic_no=" + bean.demographicNo
 				        + "&providerview=" + bean.curProviderNo + "&user_no=" + bean.providerNo + "&apptProvider_no=" + bean.curProviderNo + "&bNewForm=1&status=t";
 			}
@@ -278,7 +278,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			note.setProvider(prov);
 			note.setDemographic_no(demono);
 
-			if(!OscarProperties.getInstance().isPropertyActive("encounter.empty_new_note")) {
+			if (!OscarProperties.getInstance().isPropertyActive("encounter.empty_new_note")) {
 				this.insertReason(request, note);
 			} else {
 				note.setNote("");
@@ -294,7 +294,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			} else {
 				note.setEncounter_type(encType);
 			}
-			if(bean.encType!=null && bean.encType.length()>0){ 
+			if (bean.encType != null && bean.encType.length() > 0) {
 				note.setEncounter_type(bean.encType);
 			}
 
@@ -351,8 +351,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				prov.setProviderNo(providerNo);
 				note.setProvider(prov);
 				note.setDemographic_no(demono);
-				
-				if(!OscarProperties.getInstance().isPropertyActive("encounter.empty_new_note")) {
+
+				if (!OscarProperties.getInstance().isPropertyActive("encounter.empty_new_note")) {
 					this.insertReason(request, note);
 				} else {
 					note.setNote("");
@@ -367,7 +367,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				} else {
 					note.setEncounter_type(encType);
 				}
-				if(bean.encType!=null && bean.encType.length()>0){ 
+				if (bean.encType != null && bean.encType.length() > 0) {
 					note.setEncounter_type(bean.encType);
 				}
 			}
@@ -504,24 +504,21 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		String strNote = request.getParameter("value");
 		String appointmentNo = request.getParameter("appointmentNo");
 		HttpSession session = request.getSession();
-		
-		String[] extNames = { "startdate", "resolutiondate", "proceduredate", "ageatonset", "problemstatus", "treatment", "exposuredetail", "relationship","lifestage","hidecpp","problemdescription" };
-		String[] extKeys = { CaseManagementNoteExt.STARTDATE, CaseManagementNoteExt.RESOLUTIONDATE, CaseManagementNoteExt.PROCEDUREDATE,
-							 CaseManagementNoteExt.AGEATONSET, CaseManagementNoteExt.PROBLEMSTATUS, CaseManagementNoteExt.TREATMENT,
-							 CaseManagementNoteExt.EXPOSUREDETAIL, CaseManagementNoteExt.RELATIONSHIP,CaseManagementNoteExt.LIFESTAGE,
-							 CaseManagementNoteExt.HIDECPP,CaseManagementNoteExt.PROBLEMDESC };
-		
+
+		String[] extNames = { "startdate", "resolutiondate", "proceduredate", "ageatonset", "problemstatus", "treatment", "exposuredetail", "relationship", "lifestage", "hidecpp", "problemdescription" };
+		String[] extKeys = { CaseManagementNoteExt.STARTDATE, CaseManagementNoteExt.RESOLUTIONDATE, CaseManagementNoteExt.PROCEDUREDATE, CaseManagementNoteExt.AGEATONSET, CaseManagementNoteExt.PROBLEMSTATUS, CaseManagementNoteExt.TREATMENT, CaseManagementNoteExt.EXPOSUREDETAIL, CaseManagementNoteExt.RELATIONSHIP, CaseManagementNoteExt.LIFESTAGE, CaseManagementNoteExt.HIDECPP, CaseManagementNoteExt.PROBLEMDESC };
+
 		// strNote = strNote.trim();
 		logger.debug("Saving: " + strNote);
 		strNote = org.apache.commons.lang.StringUtils.trimToNull(strNote);
 		if (strNote == null || strNote.equals("")) return null;
 
 		String providerNo = getProviderNo(request);
-		if(providerNo==null) {
+		if (providerNo == null) {
 			providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 		}
 		Provider provider = getProvider(request);
-		if(provider == null) {
+		if (provider == null) {
 			provider = LoggedInInfo.loggedInInfo.get().loggedInProvider;
 		}
 		String userName = provider != null ? provider.getFullName() : "";
@@ -544,9 +541,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		} else {
 			boolean extChanged = false;
 			List<CaseManagementNoteExt> cmeList = caseManagementNoteExtDao.getExtByNote(Long.valueOf(noteId));
-			
-			extNames:
-			for (int i=0; i<extNames.length; i++) {
+
+			extNames: for (int i = 0; i < extNames.length; i++) {
 				boolean extKeyMatched = false;
 
 				String val = request.getParameter(extNames[i]);
@@ -572,11 +568,10 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 					break extNames;
 				}
 			}
-			
+
 			// if note has not changed don't save
 			note = this.caseManagementMgr.getNote(noteId);
-			if (strNote.equals(note.getNote()) && !issueChange.equals("true") && !extChanged && 
-				(archived == null || archived.equalsIgnoreCase("false"))) return null;
+			if (strNote.equals(note.getNote()) && !issueChange.equals("true") && !extChanged && (archived == null || archived.equalsIgnoreCase("false"))) return null;
 		}
 		note.setNote(strNote);
 		note.setProviderNo(providerNo);
@@ -622,10 +617,10 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			team = "0";
 		}
 		note.setReporter_program_team(team);
-		if(appointmentNo != null && appointmentNo.length()>0) {
+		if (appointmentNo != null && appointmentNo.length() > 0) {
 			try {
 				note.setAppointmentNo(Integer.parseInt(appointmentNo));
-			}catch(NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				logger.info("no appt no");
 			}
 		}
@@ -843,59 +838,58 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			String val = request.getParameter(extNames[i]);
 			if (filled(val)) {
 				cme.setKeyVal(extKeys[i]);
-				cme.setDateValue((Date)null);
+				cme.setDateValue((Date) null);
 				cme.setValue(null);
 				if (i <= 2) {
 					if (writePartialDate(val, cme)) caseManagementMgr.saveNoteExt(cme);
 				} else {
 					cme.setValue(val);
-                    caseManagementMgr.saveNoteExt(cme);
+					caseManagementMgr.saveNoteExt(cme);
 				}
 			}
 		}
 
-
 		/* Save annotation */
 
 		String attrib_name = request.getParameter("annotation_attrib");
-                CaseManagementNote cmn = (CaseManagementNote) session.getAttribute(attrib_name);
+		CaseManagementNote cmn = (CaseManagementNote) session.getAttribute(attrib_name);
 		if (cmn != null) {
-                    //new annotation created and got it in session attribute
+			//new annotation created and got it in session attribute
 
-                    caseManagementMgr.saveNoteSimple(cmn);
-                    CaseManagementNoteLink cml = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE,note.getId(),cmn.getId());
-                    caseManagementMgr.saveNoteLink(cml);
-                    LogAction.addLog(providerNo, LogConst.ANNOTATE, LogConst.CON_CME_NOTE, String.valueOf(cmn.getId()), request.getRemoteAddr(), demo, cmn.getNote());
-                    session.removeAttribute(attrib_name);
-                    
+			caseManagementMgr.saveNoteSimple(cmn);
+			CaseManagementNoteLink cml = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE, note.getId(), cmn.getId());
+			caseManagementMgr.saveNoteLink(cml);
+			LogAction.addLog(providerNo, LogConst.ANNOTATE, LogConst.CON_CME_NOTE, String.valueOf(cmn.getId()), request.getRemoteAddr(), demo, cmn.getNote());
+			session.removeAttribute(attrib_name);
+
 		}
-                if (!noteId.equals("0")) {
-                    //Not a new note, look for old annotation
+		if (!noteId.equals("0")) {
+			//Not a new note, look for old annotation
 
-                    CaseManagementNoteLink cml_anno = null;
-                    CaseManagementNoteLink cml_dump = null;
-                    List<CaseManagementNoteLink> cmll = caseManagementMgr.getLinkByTableIdDesc(CaseManagementNoteLink.CASEMGMTNOTE, Long.valueOf(noteId));
-                    for (CaseManagementNoteLink link : cmll) {
-                        CaseManagementNote cmmn = caseManagementMgr.getNote(link.getNoteId().toString());
-                        if (cmmn==null) continue;
+			CaseManagementNoteLink cml_anno = null;
+			CaseManagementNoteLink cml_dump = null;
+			List<CaseManagementNoteLink> cmll = caseManagementMgr.getLinkByTableIdDesc(CaseManagementNoteLink.CASEMGMTNOTE, Long.valueOf(noteId));
+			for (CaseManagementNoteLink link : cmll) {
+				CaseManagementNote cmmn = caseManagementMgr.getNote(link.getNoteId().toString());
+				if (cmmn == null) continue;
 
-                        if (cmmn.getNote().startsWith("imported.cms4.2011.06")) {
-                            if (cml_dump==null) cml_dump = link;
-                        } else {
-                            if (cml_anno==null) cml_anno = link;
-                        }
-                        if (cml_anno!=null && cml_dump!=null) break;
-                    }
+				if (cmmn.getNote().startsWith("imported.cms4.2011.06")) {
+					if (cml_dump == null) cml_dump = link;
+				} else {
+					if (cml_anno == null) cml_anno = link;
+				}
+				if (cml_anno != null && cml_dump != null) break;
+			}
 
-                    if (cml_anno!=null) {//old annotation exists - create new link
-                        CaseManagementNoteLink cml_n = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE,note.getId(),cml_anno.getNoteId());
-                        caseManagementMgr.saveNoteLink(cml_n);
-                    }
-                    if (cml_dump!=null) {//old dump exists - create new link
-                        CaseManagementNoteLink cml_n = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE,note.getId(),cml_dump.getNoteId());
-                        caseManagementMgr.saveNoteLink(cml_n);
-                    }
-                }
+			if (cml_anno != null) {//old annotation exists - create new link
+				CaseManagementNoteLink cml_n = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE, note.getId(), cml_anno.getNoteId());
+				caseManagementMgr.saveNoteLink(cml_n);
+			}
+			if (cml_dump != null) {//old dump exists - create new link
+				CaseManagementNoteLink cml_n = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE, note.getId(), cml_dump.getNoteId());
+				caseManagementMgr.saveNoteLink(cml_n);
+			}
+		}
 		caseManagementMgr.getEditors(note);
 
 		if (newNote) {
@@ -909,11 +903,11 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		LogAction.addLog((String) session.getAttribute("user"), logAction, LogConst.CON_CME_NOTE, String.valueOf(note.getId()), request.getRemoteAddr(), demo, note.getAuditString());
 
 		String f = request.getParameter("forward");
-		if(f != null && f.equals("none")) {
+		if (f != null && f.equals("none")) {
 			response.getWriter().println(note.getId());
 			return null;
 		}
-		
+
 		ActionForward forward = mapping.findForward("listCPPNotes");
 		StringBuilder path = new StringBuilder(forward.getPath());
 		path.append("?" + reloadQuery);
@@ -924,7 +918,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		WebApplicationContext ctx = getSpringContext();
 		ProgramManager programManager = (ProgramManager) ctx.getBean("programManager");
 		AdmissionManager admissionManager = (AdmissionManager) ctx.getBean("admissionManager");
-                HttpSession session = request.getSession();
+		HttpSession session = request.getSession();
 
 		// we don't want to save empty notes!
 
@@ -938,8 +932,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) session.getAttribute(sessionFrmName);
 
 		CaseManagementNote note = sessionFrm.getCaseNote();
-                Long old_note_id = note.getId(); //saved for use with annotation
-                
+		Long old_note_id = note.getId(); //saved for use with annotation
+
 		note.setNote(noteTxt);
 
 		String providerNo = getProviderNo(request);
@@ -963,25 +957,25 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		}
 
 		String hourOfEncounterTime = request.getParameter("hourOfEncounterTime");
-		if(hourOfEncounterTime != null && hourOfEncounterTime!="") {
+		if (hourOfEncounterTime != null && hourOfEncounterTime != "") {
 			note.setHourOfEncounterTime(Integer.valueOf(hourOfEncounterTime));
 		}
-		
+
 		String minuteOfEncounterTime = request.getParameter("minuteOfEncounterTime");
-		if(minuteOfEncounterTime != null && minuteOfEncounterTime!="") {
+		if (minuteOfEncounterTime != null && minuteOfEncounterTime != "") {
 			note.setMinuteOfEncounterTime(Integer.valueOf(minuteOfEncounterTime));
 		}
-		
+
 		String hourOfEncTransportationTime = request.getParameter("hourOfEncTransportationTime");
-		if(hourOfEncTransportationTime != null && hourOfEncTransportationTime!="") {
+		if (hourOfEncTransportationTime != null && hourOfEncTransportationTime != "") {
 			note.setHourOfEncTransportationTime(Integer.valueOf(hourOfEncTransportationTime));
 		}
-		
+
 		String minuteOfEncTransportationTime = request.getParameter("minuteOfEncTransportationTime");
-		if(minuteOfEncTransportationTime != null && minuteOfEncTransportationTime!="") {
+		if (minuteOfEncTransportationTime != null && minuteOfEncTransportationTime != "") {
 			note.setMinuteOfEncTransportationTime(Integer.valueOf(minuteOfEncTransportationTime));
 		}
-		
+
 		String sign = request.getParameter("sign");
 		if (sign == null) {
 			note.setSigning_provider_no("");
@@ -1030,7 +1024,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		try {
 			Admission admission = admissionManager.getAdmission(note.getProgram_no(), Integer.valueOf(note.getDemographic_no()));
-			if(admission != null) {
+			if (admission != null) {
 				team = String.valueOf(admission.getTeamId());
 			} else {
 				team = "0";
@@ -1100,8 +1094,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		String strBeanName = "casemgmt_oscar_bean" + demo;
 		EctSessionBean sessionBean = (EctSessionBean) session.getAttribute(strBeanName);
 		String verify = request.getParameter("verify");
-		OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
-		
+		OscarAppointmentDao appointmentDao = (OscarAppointmentDao) SpringUtils.getBean("oscarAppointmentDao");
+
 		Date now = new Date();
 		String roleName = caseManagementMgr.getRoleName(providerNo, note.getProgram_no());
 
@@ -1115,7 +1109,10 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			if (sessionBean.appointmentNo != null && !(sessionBean.appointmentNo.equals("") || sessionBean.appointmentNo.equals("0"))) {
 				String apptStatus = updateApptStatus(sessionBean.status, "verify");
 				appointmentDao.archiveAppointment(Integer.parseInt(sessionBean.appointmentNo));
-				appointmentDao.updateAppointmentStatus(Integer.parseInt(sessionBean.appointmentNo), apptStatus, providerNo);
+				Appointment appointment = appointmentDao.find(Integer.parseInt(sessionBean.appointmentNo));
+				appointment.setStatus(apptStatus);
+				appointment.setLastUpdateUser(providerNo);
+				appointmentDao.merge(appointment);
 			}
 
 		} else if (note.isSigned()) {
@@ -1128,7 +1125,10 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			if (sessionBean.appointmentNo != null && !(sessionBean.appointmentNo.equals("") || sessionBean.appointmentNo.equals("0"))) {
 				String apptStatus = updateApptStatus(sessionBean.status, "sign");
 				appointmentDao.archiveAppointment(Integer.parseInt(sessionBean.appointmentNo));
-				appointmentDao.updateAppointmentStatus(Integer.parseInt(sessionBean.appointmentNo), apptStatus, providerNo);
+				Appointment appointment = appointmentDao.find(Integer.parseInt(sessionBean.appointmentNo));
+				appointment.setStatus(apptStatus);
+				appointment.setLastUpdateUser(providerNo);
+				appointmentDao.merge(appointment);
 			}
 		}
 
@@ -1195,11 +1195,10 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			note.setCreate_date(now);
 			newNote = true;
 		}
-		
-		if(sessionBean.appointmentNo != null && sessionBean.appointmentNo.length()>0) {
+
+		if (sessionBean.appointmentNo != null && sessionBean.appointmentNo.length() > 0) {
 			note.setAppointmentNo(Integer.parseInt(sessionBean.appointmentNo));
 		}
-			
 
 		/* save note including add signature */
 		String savedStr = caseManagementMgr.saveNote(cpp, note, providerNo, userName, lastSavedNoteString, roleName);
@@ -1215,48 +1214,47 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			logger.warn("warn", e);
 		}
 
-
 		/* Save annotation */
 
 		String attrib_name = request.getParameter("annotation_attribname");
-                CaseManagementNote cmn = (CaseManagementNote) session.getAttribute(attrib_name);
-                if (cmn != null) {
-                        //new annotation created and got it in session attribute
+		CaseManagementNote cmn = (CaseManagementNote) session.getAttribute(attrib_name);
+		if (cmn != null) {
+			//new annotation created and got it in session attribute
 
-                        caseManagementMgr.saveNoteSimple(cmn);
-                        CaseManagementNoteLink cml = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE,note.getId(),cmn.getId());
-                        caseManagementMgr.saveNoteLink(cml);
-                        LogAction.addLog(providerNo, LogConst.ANNOTATE, LogConst.CON_CME_NOTE, String.valueOf(cmn.getId()), request.getRemoteAddr(), demo, cmn.getNote());
-                        session.removeAttribute(attrib_name);
+			caseManagementMgr.saveNoteSimple(cmn);
+			CaseManagementNoteLink cml = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE, note.getId(), cmn.getId());
+			caseManagementMgr.saveNoteLink(cml);
+			LogAction.addLog(providerNo, LogConst.ANNOTATE, LogConst.CON_CME_NOTE, String.valueOf(cmn.getId()), request.getRemoteAddr(), demo, cmn.getNote());
+			session.removeAttribute(attrib_name);
 
 		}
-                if (old_note_id!=null) {
-                    //Not a new note, look for old annotation
+		if (old_note_id != null) {
+			//Not a new note, look for old annotation
 
-                    CaseManagementNoteLink cml_anno = null;
-                    CaseManagementNoteLink cml_dump = null;
-                    List<CaseManagementNoteLink> cmll = caseManagementMgr.getLinkByTableIdDesc(CaseManagementNoteLink.CASEMGMTNOTE, old_note_id);
-                    for (CaseManagementNoteLink link : cmll) {
-                        CaseManagementNote cmmn = caseManagementMgr.getNote(link.getNoteId().toString());
-                        if (cmmn==null) continue;
+			CaseManagementNoteLink cml_anno = null;
+			CaseManagementNoteLink cml_dump = null;
+			List<CaseManagementNoteLink> cmll = caseManagementMgr.getLinkByTableIdDesc(CaseManagementNoteLink.CASEMGMTNOTE, old_note_id);
+			for (CaseManagementNoteLink link : cmll) {
+				CaseManagementNote cmmn = caseManagementMgr.getNote(link.getNoteId().toString());
+				if (cmmn == null) continue;
 
-                        if (cmmn.getNote().startsWith("imported.cms4.2011.06")) {
-                            if (cml_dump==null) cml_dump = link;
-                        } else {
-                            if (cml_anno==null) cml_anno = link;
-                        }
-                        if (cml_anno!=null && cml_dump!=null) break;
-                    }
+				if (cmmn.getNote().startsWith("imported.cms4.2011.06")) {
+					if (cml_dump == null) cml_dump = link;
+				} else {
+					if (cml_anno == null) cml_anno = link;
+				}
+				if (cml_anno != null && cml_dump != null) break;
+			}
 
-                    if (cml_anno!=null) {//old annotation exists - create new link
-                        CaseManagementNoteLink cml_n = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE,note.getId(),cml_anno.getNoteId());
-                        caseManagementMgr.saveNoteLink(cml_n);
-                    }
-                    if (cml_dump!=null) {//old dump exists - create new link
-                        CaseManagementNoteLink cml_n = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE,note.getId(),cml_dump.getNoteId());
-                        caseManagementMgr.saveNoteLink(cml_n);
-                    }
-                }
+			if (cml_anno != null) {//old annotation exists - create new link
+				CaseManagementNoteLink cml_n = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE, note.getId(), cml_anno.getNoteId());
+				caseManagementMgr.saveNoteLink(cml_n);
+			}
+			if (cml_dump != null) {//old dump exists - create new link
+				CaseManagementNoteLink cml_n = new CaseManagementNoteLink(CaseManagementNoteLink.CASEMGMTNOTE, note.getId(), cml_dump.getNoteId());
+				caseManagementMgr.saveNoteLink(cml_n);
+			}
+		}
 
 		String logAction;
 		if (newNote) {
@@ -1470,7 +1468,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	}
 
 	public ActionForward ajaxsave(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-                HttpSession session = request.getSession();
+		HttpSession session = request.getSession();
 		if (session.getAttribute("userrole") == null) return mapping.findForward("expired");
 
 		String noteTxt = request.getParameter("noteTxt");
@@ -1598,22 +1596,22 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		note.setEncounter_type(request.getParameter("encType"));
 
 		String hourOfEncounterTime = request.getParameter("hourOfEncounterTime");
-		if(hourOfEncounterTime != null) {
+		if (hourOfEncounterTime != null) {
 			note.setHourOfEncounterTime(Integer.valueOf(hourOfEncounterTime));
 		}
 		String minuteOfEncounterTime = request.getParameter("minuteOfEncounterTime");
-		if(minuteOfEncounterTime != null) {
+		if (minuteOfEncounterTime != null) {
 			note.setMinuteOfEncounterTime(Integer.valueOf(minuteOfEncounterTime));
 		}
 		String hourOfEncTransportationTime = request.getParameter("hourOfEncTransportationTime");
-		if(minuteOfEncounterTime != null) {
+		if (minuteOfEncounterTime != null) {
 			note.setHourOfEncTransportationTime(Integer.valueOf(hourOfEncTransportationTime));
 		}
 		String minuteOfEncTransportationTime = request.getParameter("minuteOfEncTransportationTime");
-		if(minuteOfEncounterTime != null) {
+		if (minuteOfEncounterTime != null) {
 			note.setMinuteOfEncTransportationTime(Integer.valueOf(minuteOfEncTransportationTime));
 		}
-		
+
 		// check if previous note is doc note.
 
 		Long prevNoteId = note.getId();
@@ -1704,7 +1702,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	public ActionForward saveAndExit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("saveandexit");
 
-                HttpSession session = request.getSession();
+		HttpSession session = request.getSession();
 		String providerNo = getProviderNo(request);
 		String demoNo = getDemographicNo(request);
 		if (session.getAttribute("userrole") == null) return mapping.findForward("expired");
@@ -1743,7 +1741,6 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			return forward;
 		}
 
-		
 		String toBill = request.getParameter("toBill");
 		if (toBill != null && toBill.equalsIgnoreCase("true")) {
 			String region = cform.getBillRegion();
@@ -1805,7 +1802,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	}
 
 	public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-                HttpSession session = request.getSession();
+		HttpSession session = request.getSession();
 		if (session.getAttribute("userrole") == null) return mapping.findForward("expired");
 
 		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
@@ -1822,7 +1819,6 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			logger.warn("Warning", e);
 		}
 
-		
 		return mapping.findForward("windowClose");
 	}
 
@@ -1834,7 +1830,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	public ActionForward addNewIssue(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("addNewIssue");
 
-                HttpSession session = request.getSession();
+		HttpSession session = request.getSession();
 		if (session.getAttribute("userrole") == null) return mapping.findForward("expired");
 
 		request.setAttribute("change_flag", "true");
@@ -1860,7 +1856,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	}
 
 	public ActionForward issueList(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-                HttpSession session = request.getSession();
+		HttpSession session = request.getSession();
 		if (session.getAttribute("userrole") == null) {
 			response.sendError(response.SC_FORBIDDEN);
 			return null;
@@ -1915,7 +1911,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	public ActionForward issueSearch(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("issueSearch");
 
-                HttpSession session = request.getSession();
+		HttpSession session = request.getSession();
 		String programId = (String) session.getAttribute("case_program_id");
 
 		request.setAttribute("change_flag", "true");
@@ -1970,7 +1966,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 	// we need to convert single issue into checkbox array so we can play nicely with CaseManagementEntryFormBean
 	public ActionForward makeIssue(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-                HttpSession session = request.getSession();
+		HttpSession session = request.getSession();
 		// String programId = (String) session.getAttribute("case_program_id");
 		// grab the issue we want to add
 		String issueId = request.getParameter("newIssueId");
@@ -2007,7 +2003,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	}
 
 	public ActionForward issueAdd(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-                HttpSession session = request.getSession();
+		HttpSession session = request.getSession();
 		if (session.getAttribute("userrole") == null) return mapping.findForward("expired");
 
 		String changeDiagnosis = request.getParameter("change_diagnosis");
@@ -2191,7 +2187,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	public ActionForward ajaxChangeDiagnosis(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("ajaxChangeDiagnosis");
 
-                HttpSession session = request.getSession();
+		HttpSession session = request.getSession();
 		if (session.getAttribute("userrole") == null) return mapping.findForward("expired");
 
 		// get issue we're changing
@@ -2231,7 +2227,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	public ActionForward issueDelete(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("issueDelete");
 
-                HttpSession session = request.getSession();
+		HttpSession session = request.getSession();
 		if (session.getAttribute("userrole") == null) {
 			response.sendError(response.SC_FORBIDDEN);
 			return null;
@@ -2304,7 +2300,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	public ActionForward issueChange(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("issueChange");
 
-                HttpSession session = request.getSession();
+		HttpSession session = request.getSession();
 		if (session.getAttribute("userrole") == null) {
 			response.sendError(response.SC_FORBIDDEN);
 			return null;
@@ -2398,8 +2394,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		ResourceBundle props = ResourceBundle.getBundle("oscarResources");
 		if (arrIssues != null) {
 			for (int idx = 0; idx < arrIssues.length; ++idx) {
-				String tempArrIssue=StringUtils.trimToNull(arrIssues[idx]);
-				if (tempArrIssue==null) continue;
+				String tempArrIssue = StringUtils.trimToNull(arrIssues[idx]);
+				if (tempArrIssue == null) continue;
 				Issue i = this.caseManagementMgr.getIssue(tempArrIssue);
 				title.append(i.getDescription());
 				if (idx < arrIssues.length - 1) title.append(", ");
@@ -2414,7 +2410,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	public ActionForward history(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("history");
 
-                HttpSession session = request.getSession();
+		HttpSession session = request.getSession();
 		if (session.getAttribute("userrole") == null) return mapping.findForward("expired");
 
 		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
@@ -2511,38 +2507,37 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		request.setAttribute("demoDOB", dob);
 		String providerNo = getProviderNo(request);
 
-		String[] noteIds;		
+		String[] noteIds;
 		if (ids.length() > 0) noteIds = ids.split(",");
 		else noteIds = (String[]) Array.newInstance(String.class, 0);
 
 		List<CaseManagementNote> notes = new ArrayList<CaseManagementNote>();
-		List<String>remoteNoteUUIDs = new ArrayList<String>();
+		List<String> remoteNoteUUIDs = new ArrayList<String>();
 		String uuid;
 		for (int idx = 0; idx < noteIds.length; ++idx) {
-			if( noteIds[idx].startsWith("UUID")) {
+			if (noteIds[idx].startsWith("UUID")) {
 				uuid = noteIds[idx].substring(4);
 				remoteNoteUUIDs.add(uuid);
-			}
-			else {
+			} else {
 				notes.add(this.caseManagementMgr.getNote(noteIds[idx]));
 			}
 		}
 
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		if (loggedInInfo.currentFacility.isIntegratorEnabled() && remoteNoteUUIDs.size() > 0 ) {
-			DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs();
-			List<CachedDemographicNote> remoteNotes=demographicWs.getLinkedCachedDemographicNotes(Integer.parseInt(demono));
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+		if (loggedInInfo.currentFacility.isIntegratorEnabled() && remoteNoteUUIDs.size() > 0) {
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+			List<CachedDemographicNote> remoteNotes = demographicWs.getLinkedCachedDemographicNotes(Integer.parseInt(demono));
 			for (CachedDemographicNote remoteNote : remoteNotes) {
-				for( String remoteUUID : remoteNoteUUIDs ) {
-					if( remoteUUID.equals(remoteNote.getCachedDemographicNoteCompositePk().getUuid())) {
-						CaseManagementNote fakeNote=getFakedNote(remoteNote);
+				for (String remoteUUID : remoteNoteUUIDs) {
+					if (remoteUUID.equals(remoteNote.getCachedDemographicNoteCompositePk().getUuid())) {
+						CaseManagementNote fakeNote = getFakedNote(remoteNote);
 						notes.add(fakeNote);
 						break;
 					}
 				}
 			}
 		}
-		
+
 		// we're not guaranteed any ordering of notes given to us, so sort by observation date
 		oscar.OscarProperties p = oscar.OscarProperties.getInstance();
 		String noteSort = p.getProperty("CMESort", "");
@@ -2565,15 +2560,15 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				for (int k = 0; k < tmpNotes.size(); ++k) {
 					if (!tmpNotes.get(k).isLocked()) {
 						List<CaseManagementNoteExt> exts = caseManagementMgr.getExtByNote(tmpNotes.get(k).getId());
-						boolean exclude=false;
-						for(CaseManagementNoteExt ext:exts) {
-							if(ext.getKeyVal().equals("Hide Cpp")) {
-								if(ext.getValue().equals("1")) {
-									exclude=true;
+						boolean exclude = false;
+						for (CaseManagementNoteExt ext : exts) {
+							if (ext.getKeyVal().equals("Hide Cpp")) {
+								if (ext.getValue().equals("1")) {
+									exclude = true;
 								}
 							}
 						}
-						if(!exclude) {
+						if (!exclude) {
 							issueNotes.add(tmpNotes.get(k));
 						}
 					}
@@ -2593,114 +2588,112 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				othermeds = cpp.get("OMeds");
 			}
 		}
-		
+
 		//Create new file to save form to
-        String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
-        String fileName = path + "EncounterForm-"+UtilDateUtilities.getToday("yyyy-MM-dd.hh.mm.ss")+".pdf";
-        FileOutputStream out = new FileOutputStream(fileName);
-        
+		String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
+		String fileName = path + "EncounterForm-" + UtilDateUtilities.getToday("yyyy-MM-dd.hh.mm.ss") + ".pdf";
+		FileOutputStream out = new FileOutputStream(fileName);
+
 		CaseManagementPrintPdf printer = new CaseManagementPrintPdf(request, out);
 		printer.printDocHeaderFooter();
 		printer.printCPP(cpp);
 		printer.printRx(demoNo, othermeds);
 		printer.printNotes(notes);
-		
+
 		/* check extensions */
-		Enumeration<String> e=request.getParameterNames();
-		while(e.hasMoreElements()) {
+		Enumeration<String> e = request.getParameterNames();
+		while (e.hasMoreElements()) {
 			String name = e.nextElement();
-			if(name.startsWith("extPrint")) {
-				if(request.getParameter(name).equals("true")) {
-					ExtPrint printBean = (ExtPrint)SpringUtils.getBean(name);
-					if(printBean != null) {
-						printBean.printExt(printer,request);			
+			if (name.startsWith("extPrint")) {
+				if (request.getParameter(name).equals("true")) {
+					ExtPrint printBean = (ExtPrint) SpringUtils.getBean(name);
+					if (printBean != null) {
+						printBean.printExt(printer, request);
 					}
 				}
 			}
 		}
 		printer.finish();
-		
+
 		List<String> pdfDocs = new ArrayList<String>();
 		pdfDocs.add(fileName);
-		
-		
-		if (request.getParameter("printLabs")!=null && request.getParameter("printLabs").equalsIgnoreCase("true")) {
+
+		if (request.getParameter("printLabs") != null && request.getParameter("printLabs").equalsIgnoreCase("true")) {
 			//get the labs which fall into the date range which are attached to this patient
 			CommonLabResultData comLab = new CommonLabResultData();
 			ArrayList<LabResultData> labs = comLab.populateLabResultsData("", demono, "", "", "", "U");
-			LinkedHashMap<String,LabResultData> accessionMap = new LinkedHashMap<String,LabResultData>();
-			for(int i=0;i<labs.size();i++) {
+			LinkedHashMap<String, LabResultData> accessionMap = new LinkedHashMap<String, LabResultData>();
+			for (int i = 0; i < labs.size(); i++) {
 				LabResultData result = labs.get(i);
-				if(result.isHL7TEXT()){
+				if (result.isHL7TEXT()) {
 					if (result.accessionNumber == null || result.accessionNumber.equals("")) {
 						accessionMap.put("noAccessionNum" + i + result.labType, result);
 					} else {
 						if (!accessionMap.containsKey(result.accessionNumber + result.labType)) accessionMap.put(result.accessionNumber + result.labType, result);
 					}
 				}
-			}			
-			for(LabResultData result:accessionMap.values()) {
+			}
+			for (LabResultData result : accessionMap.values()) {
 				Date d = result.getDateObj();
 				//TODO:filter out the ones which aren't in our date range if there's a date range????
 				String segmentId = result.segmentID;
-				MessageHandler handler = Factory.getHandler(segmentId);				 
-				String fileName2 = OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"//"+handler.getPatientName().replaceAll("\\s", "_")+"_"+handler.getMsgDate()+"_LabReport.pdf";	                
+				MessageHandler handler = Factory.getHandler(segmentId);
+				String fileName2 = OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + "//" + handler.getPatientName().replaceAll("\\s", "_") + "_" + handler.getMsgDate() + "_LabReport.pdf";
 				OutputStream os2 = new FileOutputStream(fileName2);
-				LabPDFCreator pdfCreator = new LabPDFCreator(os2,segmentId,LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+				LabPDFCreator pdfCreator = new LabPDFCreator(os2, segmentId, LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
 				pdfCreator.printPdf();
 				pdfDocs.add(fileName2);
 			}
-			
-		}	
-		ConcatPDF.concat(pdfDocs,os);
+
+		}
+		ConcatPDF.concat(pdfDocs, os);
 	}
 
 	private CaseManagementNote getFakedNote(CachedDemographicNote remoteNote) {
-		CaseManagementNote note=new CaseManagementNote();
-		
-		if (remoteNote.getObservationDate()!=null) note.setObservation_date(remoteNote.getObservationDate().getTime());
+		CaseManagementNote note = new CaseManagementNote();
+
+		if (remoteNote.getObservationDate() != null) note.setObservation_date(remoteNote.getObservationDate().getTime());
 		note.setNote(remoteNote.getNote());
-		
-		return(note);
-    }
+
+		return (note);
+	}
 
 	public ActionForward runMacro(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
-		MacroDao macroDao = (MacroDao)SpringUtils.getBean("macroDao");
+		MacroDao macroDao = (MacroDao) SpringUtils.getBean("macroDao");
 		Macro macro = macroDao.find(Integer.parseInt(request.getParameter("macro.id")));
-		logger.info("loaded macro " + macro.getLabel());	
-		boolean cppFromMeasurements=false;
+		logger.info("loaded macro " + macro.getLabel());
+		boolean cppFromMeasurements = false;
 		String cpp = request.getParameter("cpp");
-		if(cpp != null && cpp.equals("measurements")) {		
-			cppFromMeasurements=true;   
+		if (cpp != null && cpp.equals("measurements")) {
+			cppFromMeasurements = true;
 		}
-		   
+
 		cform.setCaseNote_note(cform.getCaseNote_note() + "\n" + macro.getImpression());
-		
+
 		ActionForward fwd = saveAndExit(mapping, form, request, response);
-		
-		
-		if(fwd.getName().equals("windowClose")) {
-			EyeFormDao eyeformDao = (EyeFormDao)SpringUtils.getBean("EyeFormDao");	    	
-	    	EyeForm eyeform = eyeformDao.getByAppointmentNo(Integer.parseInt(cform.getAppointmentNo()));	    	
+
+		if (fwd.getName().equals("windowClose")) {
+			EyeFormDao eyeformDao = (EyeFormDao) SpringUtils.getBean("EyeFormDao");
+			EyeForm eyeform = eyeformDao.getByAppointmentNo(Integer.parseInt(cform.getAppointmentNo()));
 			//load up the eyeform to set/unset checkboxes
-	    	if(macro.getDischargeFlag()!=null && macro.getDischargeFlag().equals("dischargeFlag")) {
-	    		eyeform.setDischarge("true");
-	    	} 
-	    	if(macro.getOptFlag() != null && macro.getOptFlag().equals("optFlag")) {
-	    		eyeform.setOpt("true");
-	    	}
-	    	if(macro.getStatFlag() != null && macro.getStatFlag().equals("statFlag")) {
-	    		eyeform.setStat("true");
-	    	}
-	    	eyeformDao.merge(eyeform);
-	    	
+			if (macro.getDischargeFlag() != null && macro.getDischargeFlag().equals("dischargeFlag")) {
+				eyeform.setDischarge("true");
+			}
+			if (macro.getOptFlag() != null && macro.getOptFlag().equals("optFlag")) {
+				eyeform.setOpt("true");
+			}
+			if (macro.getStatFlag() != null && macro.getStatFlag().equals("statFlag")) {
+				eyeform.setStat("true");
+			}
+			eyeformDao.merge(eyeform);
+
 			//follow ups
-	    	FollowUpDao followUpDao = (FollowUpDao)SpringUtils.getBean("FollowUpDAO");
-	    	int followUpNo = macro.getFollowupNo();
+			FollowUpDao followUpDao = (FollowUpDao) SpringUtils.getBean("FollowUpDAO");
+			int followUpNo = macro.getFollowupNo();
 			String followUpUnit = macro.getFollowupUnit();
 			String followUpDr = macro.getFollowupDoctorId();
-			if(followUpNo>0) {
+			if (followUpNo > 0) {
 				FollowUp f = new FollowUp();
 				f.setAppointmentNo(Integer.parseInt(cform.getAppointmentNo()));
 				f.setDate(new Date());
@@ -2710,22 +2703,20 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				f.setTimespan(followUpNo);
 				f.setType("followup");
 				f.setUrgency("routine");
-				f.setFollowupProvider(followUpDr);				
-		    	followUpDao.persist(f);
-			}	
-			
-	    	//tests
-			TestBookRecordDao testDao = (TestBookRecordDao)SpringUtils.getBean("TestBookDAO");
+				f.setFollowupProvider(followUpDr);
+				followUpDao.persist(f);
+			}
+
+			//tests
+			TestBookRecordDao testDao = (TestBookRecordDao) SpringUtils.getBean("TestBookDAO");
 			String[] tests = macro.getTestRecords().split("\n");
-			for(String test:tests) {
+			for (String test : tests) {
 				String[] parts = test.trim().split("\\|");
-				if(parts.length==3 || parts.length==4) {
+				if (parts.length == 3 || parts.length == 4) {
 					TestBookRecord rec = new TestBookRecord();
 					rec.setAppointmentNo(Integer.parseInt(cform.getAppointmentNo()));
-					if(parts.length==4)
-						rec.setComment(parts[3]);
-					else 
-						rec.setComment("");
+					if (parts.length == 4) rec.setComment(parts[3]);
+					else rec.setComment("");
 					rec.setDate(new Date());
 					rec.setDemographicNo(Integer.parseInt(cform.getDemographicNo()));
 					rec.setEye(parts[1]);
@@ -2736,10 +2727,10 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 					testDao.save(rec);
 				}
 			}
-			
+
 			//send tickler
-			if(macro.getTicklerRecipient() != null && macro.getTicklerRecipient().length()>0) {
-				TicklerDAO ticklerDao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
+			if (macro.getTicklerRecipient() != null && macro.getTicklerRecipient().length() > 0) {
+				TicklerDAO ticklerDao = (TicklerDAO) SpringUtils.getBean("ticklerDAOT");
 				Tickler t = new Tickler();
 				t.setCreator(LoggedInInfo.loggedInInfo.get().loggedInProvider.getPractitionerNo());
 				t.setDemographic_no(cform.getDemographicNo());
@@ -2751,20 +2742,20 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				t.setUpdate_date(new Date());
 				ticklerDao.saveTickler(t);
 			}
-		
+
 			//billing
-			if(macro.getBillingCodes() != null && macro.getBillingCodes().length()>0) {
+			if (macro.getBillingCodes() != null && macro.getBillingCodes().length() > 0) {
 				GstControlDao gstControlDao = (GstControlDao) SpringUtils.getBean("gstControlDao");
-				BillingServiceDao billingServiceDao = (BillingServiceDao)SpringUtils.getBean("billingServiceDao");
-				ClientDao demographicDao = (ClientDao)SpringUtils.getBean("clientDao");
+				BillingServiceDao billingServiceDao = (BillingServiceDao) SpringUtils.getBean("billingServiceDao");
+				ClientDao demographicDao = (ClientDao) SpringUtils.getBean("clientDao");
 				Provider provider = LoggedInInfo.loggedInInfo.get().loggedInProvider;
-				OscarAppointmentDao apptDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
-				
+				OscarAppointmentDao apptDao = (OscarAppointmentDao) SpringUtils.getBean("oscarAppointmentDao");
+
 				Appointment appt = null;
-				if(cform.getAppointmentNo()!=null && cform.getAppointmentNo().length()>0 && !cform.getAppointmentDate().equals("0")) {
+				if (cform.getAppointmentNo() != null && cform.getAppointmentNo().length() > 0 && !cform.getAppointmentDate().equals("0")) {
 					appt = apptDao.find(Integer.parseInt(cform.getAppointmentNo()));
 				}
-				
+
 				SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
 				String serviceDate = sf.format(new Date());
 
@@ -2778,15 +2769,14 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				BigDecimal gstFactor = new BigDecimal(1 + gstControlDao.find(1).getGstPercent().intValue() / 100.0);
 				ArrayList<String[]> percentUnits = new ArrayList<String[]>();
 				for (int i = 0; i < bcodes.length; i++) {
-					if (StringUtils.isBlank(bcodes[i]))
-						continue;
+					if (StringUtils.isBlank(bcodes[i])) continue;
 					String[] codes = bcodes[i].split("\\|");
 					mockReq.addParameter("xserviceCode_" + i, codes[0]);
-					Object[] priceg = billingServiceDao.getUnitPrice(codes[0],serviceDate);
+					Object[] priceg = billingServiceDao.getUnitPrice(codes[0], serviceDate);
 					mockReq.addParameter("xserviceUnit_" + i, codes[1]);
 					if (".00".equals(priceg[0])) {
 						percentUnits.add(codes);
-						mockReq.addParameter("percCodeSubtotal_" + i,(String) priceg[0]);
+						mockReq.addParameter("percCodeSubtotal_" + i, (String) priceg[0]);
 						// skip to next as we deal with percentage later
 						continue;
 					}
@@ -2805,13 +2795,13 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				// now process percent codes
 				BigDecimal stotal = new BigDecimal(0);
 				for (String[] code : percentUnits) {
-					String pct = billingServiceDao.getUnitPercentage(code[0],serviceDate);
+					String pct = billingServiceDao.getUnitPercentage(code[0], serviceDate);
 					stotal = stotal.add(btotal.multiply(new BigDecimal(pct)));
 				}
 				btotal = btotal.add(stotal);
 				mockReq.addParameter("totalItem", "" + bcodes.length);
-				mockReq.addParameter("total", btotal.setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString());
-		
+				mockReq.addParameter("total", btotal.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
+
 				Demographic demo = demographicDao.getClientByDemographicNo(Integer.parseInt(cform.getDemographicNo()));
 				mockReq.setParameter("xml_billtype", macro.getBillingBilltype());
 				// mockReq.addParameter("xml_billtype", "ODP | Bill OHIP");
@@ -2820,10 +2810,10 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				mockReq.addParameter("demographic_dob", demo.getDateOfBirth());
 				mockReq.addParameter("appointment_no", cform.getAppointmentNo());
 				mockReq.addParameter("demographic_name", demo.getLastName() + "," + demo.getFirstName());
-				mockReq.addParameter("sex","F".equalsIgnoreCase(demo.getSex()) ? "2" : "1");
+				mockReq.addParameter("sex", "F".equalsIgnoreCase(demo.getSex()) ? "2" : "1");
 				mockReq.addParameter("hc_type", demo.getHcType());
 				String referalNo = getRefNo(demo.getFamilyDoctor());
-				mockReq.addParameter("referralCode", referalNo); 
+				mockReq.addParameter("referralCode", referalNo);
 				mockReq.addParameter("xml_location", macro.getBillingVisitLocation()); // visit location
 				mockReq.addParameter("m_review", "N"); // manual review, always No
 				// as it's automated
@@ -2838,7 +2828,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				mockReq.addParameter("xml_visittype", macro.getBillingVisitType());
 				mockReq.addParameter("xml_vdate", cform.getAppointmentDate());
 				mockReq.addParameter("apptProvider_no", appt == null ? "" : appt.getProviderNo());
-				mockReq.addParameter("xml_provider", cform.getProviderNo() + "|" + provider.getOhipNo());				
+				mockReq.addParameter("xml_provider", cform.getProviderNo() + "|" + provider.getOhipNo());
 				mockReq.getSession().setAttribute("user", LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
 
 				BillingSavePrep bObj = new BillingSavePrep();
@@ -2866,19 +2856,17 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 						String apptCurStatus = bObj.getApptStatus(cform.getAppointmentNo());
 						oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
 						String billStatus = as.billStatus(apptCurStatus);
-						bObj.updateApptStatus(cform.getAppointmentNo(), billStatus,cform.getProviderNo());
+						bObj.updateApptStatus(cform.getAppointmentNo(), billStatus, cform.getProviderNo());
 					}
-				} else
-					log.error("++++++++++++++ Failed to add billing codes");				
+				} else log.error("++++++++++++++ Failed to add billing codes");
 			}
 		}
-		
+
 		return fwd;
 	}
-	
+
 	public String getRefNo(String referal) {
-		if (referal == null)
-			return "";
+		if (referal == null) return "";
 		int start = referal.indexOf("<rdohip>");
 		int end = referal.indexOf("</rdohip>");
 		String ref = new String();
@@ -2892,17 +2880,17 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		}
 		return ref;
 	}
-	
-	public String getMacroTicklerText(int appointmentNo) {			
+
+	public String getMacroTicklerText(int appointmentNo) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(FollowUpAction.getTicklerText(appointmentNo));
 		sb.append(ProcedureBookAction.getTicklerText(appointmentNo));
 		sb.append(TestBookAction.getTicklerText(appointmentNo));
-		return sb.toString();		
+		return sb.toString();
 	}
-	
+
 	public CaseManagementNote getLastSaved(HttpServletRequest request, String demono, String providerNo) {
-                HttpSession session = request.getSession();
+		HttpSession session = request.getSession();
 		CaseManagementNote note = null;
 		List notes = null;
 
@@ -2931,9 +2919,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	}
 
 	protected Map getUnlockedNotesMap(HttpServletRequest request) {
-		Map<Long,Boolean> map = (Map<Long,Boolean>) request.getSession().getAttribute("unlockedNoteMap");
+		Map<Long, Boolean> map = (Map<Long, Boolean>) request.getSession().getAttribute("unlockedNoteMap");
 		if (map == null) {
-			map = new HashMap<Long,Boolean>();
+			map = new HashMap<Long, Boolean>();
 		}
 		return map;
 	}
@@ -2976,23 +2964,21 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	 * Insert encounter reason for new note
 	 */
 	protected void insertReason(HttpServletRequest request, CaseManagementNote note) {
-		
+
 		String encounterText = "";
 		String apptDate = request.getParameter("appointmentDate");
 		String reason = request.getParameter("reason");
-		
-		if( reason == null ) {
+
+		if (reason == null) {
 			reason = "";
 		}
-		
-		if( apptDate == null || apptDate.equals("") || apptDate.equalsIgnoreCase("null")) {			
+
+		if (apptDate == null || apptDate.equals("") || apptDate.equalsIgnoreCase("null")) {
 			encounterText = "\n[" + oscar.util.UtilDateUtilities.DateToString(oscar.util.UtilDateUtilities.Today(), "dd-MMM-yyyy", request.getLocale()) + " .: " + reason + "] \n";
-		}
-		else {
+		} else {
 			apptDate = convertDateFmt(apptDate, request);
-			encounterText = "\n[" + apptDate + " .: " + reason + "]\n";			
+			encounterText = "\n[" + apptDate + " .: " + reason + "]\n";
 		}
-		
 
 		note.setNote(encounterText);
 		String encType = request.getParameter("encType");
@@ -3001,7 +2987,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			note.setEncounter_type("");
 		} else {
 			note.setEncounter_type(encType);
-		}		
+		}
 
 	}
 
@@ -3081,7 +3067,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	 * Retrieve CPP issuesIf not in session, load them
 	 */
 	protected HashMap getCPPIssues(HttpServletRequest request, String providerNo) {
-                HttpSession session = request.getSession();
+		HttpSession session = request.getSession();
 		HashMap<String, Issue> issues = (HashMap<String, Issue>) session.getAttribute("CPPIssues");
 		if (issues == null) {
 			String[] issueCodes = { "SocHistory", "MedHistory", "Concerns", "Reminders", "FamHistory" };
@@ -3115,50 +3101,46 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		return false;
 	}
 
-        private String partialDateFormat(String dateValue) {
-            if (!filled(dateValue)) return null;
+	private String partialDateFormat(String dateValue) {
+		if (!filled(dateValue)) return null;
 
-            dateValue = dateValue.trim();
-            dateValue = dateValue.replace("/", "-");
-            if (dateValue.length()==4 && NumberUtils.isDigits(dateValue)) return PartialDate.YEARONLY;
+		dateValue = dateValue.trim();
+		dateValue = dateValue.replace("/", "-");
+		if (dateValue.length() == 4 && NumberUtils.isDigits(dateValue)) return PartialDate.YEARONLY;
 
-            String[] dateParts = dateValue.split("-");
-            if (dateParts.length==2 && NumberUtils.isDigits(dateParts[0]) && NumberUtils.isDigits(dateParts[1])) {
-                if (dateParts[0].length()==4 &&
-                    dateParts[1].length()>=1 && dateParts[1].length()<=2) return PartialDate.YEARMONTH;
-            }
-            if (dateParts.length==3 &&
-                NumberUtils.isDigits(dateParts[0]) && NumberUtils.isDigits(dateParts[1]) && NumberUtils.isDigits(dateParts[2])) {
-                if (dateParts[0].length()==4 &&
-                    dateParts[1].length()>=1 && dateParts[1].length()<=2 &&
-                    dateParts[2].length()>=1 && dateParts[2].length()<=2) return ""; //full date
-            }
-            return null;
-        }
-        
-        private String partialFullDate(String dateValue, String type) {
-            if (type==null) return null;
-        	
-            dateValue = dateValue.replace("/", "-");
-            if (type.equals(PartialDate.YEARONLY)) return dateValue+"-01-01";
-            if (type.equals(PartialDate.YEARMONTH)) return dateValue+"-01";
-            return dateValue;
-        }
+		String[] dateParts = dateValue.split("-");
+		if (dateParts.length == 2 && NumberUtils.isDigits(dateParts[0]) && NumberUtils.isDigits(dateParts[1])) {
+			if (dateParts[0].length() == 4 && dateParts[1].length() >= 1 && dateParts[1].length() <= 2) return PartialDate.YEARMONTH;
+		}
+		if (dateParts.length == 3 && NumberUtils.isDigits(dateParts[0]) && NumberUtils.isDigits(dateParts[1]) && NumberUtils.isDigits(dateParts[2])) {
+			if (dateParts[0].length() == 4 && dateParts[1].length() >= 1 && dateParts[1].length() <= 2 && dateParts[2].length() >= 1 && dateParts[2].length() <= 2) return ""; //full date
+		}
+		return null;
+	}
 
-        private boolean writePartialDate(String dateValue, CaseManagementNoteExt cme) {
-            if (cme==null) return false;
+	private String partialFullDate(String dateValue, String type) {
+		if (type == null) return null;
 
-            String type = partialDateFormat(dateValue);
-            if (type==null) return false;
-        	
-            cme.setValue(type);
-            cme.setDateValue(partialFullDate(dateValue, type));
-            return true;
-        }
-        
-        private boolean nullEmptyEqual(String s1, String s2) {
-        	if (s1==null) s1 = "";
-        	if (s2==null) s2 = "";
-        	return s1.trim().equals(s2.trim());
-        }
+		dateValue = dateValue.replace("/", "-");
+		if (type.equals(PartialDate.YEARONLY)) return dateValue + "-01-01";
+		if (type.equals(PartialDate.YEARMONTH)) return dateValue + "-01";
+		return dateValue;
+	}
+
+	private boolean writePartialDate(String dateValue, CaseManagementNoteExt cme) {
+		if (cme == null) return false;
+
+		String type = partialDateFormat(dateValue);
+		if (type == null) return false;
+
+		cme.setValue(type);
+		cme.setDateValue(partialFullDate(dateValue, type));
+		return true;
+	}
+
+	private boolean nullEmptyEqual(String s1, String s2) {
+		if (s1 == null) s1 = "";
+		if (s2 == null) s2 = "";
+		return s1.trim().equals(s2.trim());
+	}
 }

@@ -19,14 +19,18 @@
 		</property>
 	</bean>
 
-	<!-- setup CXF -->
-	<import resource="classpath:spring_ws.xml" />
- 
 	<!-- setup JPA -->
 	<import resource="classpath:spring_jpa.xml" />
 
 	<!-- setup hibernate -->
 	<import resource="classpath:spring_hibernate.xml" />
+
+	<!-- setup managers -->
+	<import resource="classpath:spring_managers.xml" />
+ 
+	<!-- setup CXF -->
+	<import resource="classpath:spring_ws.xml" />
+ 
 
 	<!-- hibernated DAO -->
         <bean id="gstControlDao" class="org.oscarehr.billing.CA.dao.GstControlDao" autowire="byName" />

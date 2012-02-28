@@ -14,37 +14,37 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name="appointment")
+@Table(name = "appointment")
 public class Appointment extends AbstractModel<Integer> implements Serializable {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="appointment_no")
+	@Column(name = "appointment_no")
 	private Integer id;
-	
-	@Column(name="provider_no")
+
+	@Column(name = "provider_no")
 	private String providerNo;
-	
+
 	@Temporal(TemporalType.DATE)
-	@Column(name="appointment_date")
+	@Column(name = "appointment_date")
 	private Date appointmentDate;
-	
+
 	@Temporal(TemporalType.TIME)
-	@Column(name="start_time")
+	@Column(name = "start_time")
 	private Date startTime;
-	
+
 	@Temporal(TemporalType.TIME)
-	@Column(name="end_time")
+	@Column(name = "end_time")
 	private Date endTime;
-	
+
 	private String name;
-	
-	@Column(name="demographic_no")
+
+	@Column(name = "demographic_no")
 	private int demographicNo;
-	
-	@Column(name="program_id")
+
+	@Column(name = "program_id")
 	private int programId;
-	
+
 	private String notes;
 	private String reason;
 	private String location;
@@ -53,25 +53,26 @@ public class Appointment extends AbstractModel<Integer> implements Serializable 
 	private String style;
 	private String billing;
 	private String status;
-	
+
+	@Column(name = "imported_status")
+	private String importedStatus;
+
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="createdatetime")
+	@Column(name = "createdatetime")
 	private Date createDateTime = new Date();
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="updatedatetime")
+	@Column(name = "updatedatetime")
 	private Date updateDateTime = new Date();
-	
+
 	private String creator;
-	
-	@Column(name="lastupdateuser")
+
+	@Column(name = "lastupdateuser")
 	private String lastUpdateUser;
-	
+
 	private String remarks;
-	
-	
-	
-	
+	private String urgency;
+
 	public String getProviderNo() {
 		return providerNo;
 	}
@@ -233,13 +234,29 @@ public class Appointment extends AbstractModel<Integer> implements Serializable 
 	}
 
 	public Appointment() {
-	}	
+	}
+
+	public String getImportedStatus() {
+		return (importedStatus);
+	}
+
+	public void setImportedStatus(String importedStatus) {
+		this.importedStatus = importedStatus;
+	}
+
+	public String getUrgency() {
+		return (urgency);
+	}
+
+	public void setUrgency(String urgency) {
+		this.urgency = urgency;
+	}
 
 	@Override
-    public Integer getId() {
+	public Integer getId() {
 		return id;
 	}
-	
+
 	@PreUpdate
 	protected void jpaUpdateLastUpdateTime() {
 		this.updateDateTime = new Date();
