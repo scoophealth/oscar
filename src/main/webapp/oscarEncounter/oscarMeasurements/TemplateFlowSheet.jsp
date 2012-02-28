@@ -10,6 +10,8 @@
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%@page import="oscar.OscarProperties"%>
+
 <%
     if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
     //int demographic_no = Integer.parseInt(request.getParameter("demographic_no"));
@@ -27,6 +29,17 @@
         response.sendRedirect("../../noRights.html"); %>
     </security:oscarSec>
 </oscar:oscarPropertiesCheck>
+
+<%if (OscarProperties.getInstance().getBooleanProperty("new_flowsheet_enabled", "true")) { %>
+	<%if (temp.equals("diab2")) {%>
+		<jsp:forward page="DiabFlowSheet.jsp" />
+	<%} else if (temp.equals("diab3")) {%>
+		<jsp:forward page="DiabFlowSheet.jsp" />
+	<%} else if (request.getAttribute("temp") != null && request.getAttribute("temp").equals("diab3")) {%>
+		<jsp:forward page="DiabFlowSheet.jsp" />
+	<%}%>
+<%}%>
+
 <%
    
     LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_FLOWSHEET,  temp , request.getRemoteAddr(),demographic_no);

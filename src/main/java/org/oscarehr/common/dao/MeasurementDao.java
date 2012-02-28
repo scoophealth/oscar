@@ -48,4 +48,24 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 
 		return (results);
 	}
+	
+	public List<Measurement> findMatching(Measurement measurement) {
+		
+		String sqlCommand = "select x from Measurement x where x.demographicId=?1 and x.dataField=?2 and x.measuringInstruction=?3 and x.comments=?4 and x.dateObserved=?5 and x.type=?6";
+		
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, measurement.getDemographicId());
+		query.setParameter(2, measurement.getDataField());
+		query.setParameter(3, measurement.getMeasuringInstruction());
+		query.setParameter(4, measurement.getComments());
+		query.setParameter(5, measurement.getDateObserved());
+		query.setParameter(6, measurement.getType());
+		
+		@SuppressWarnings("unchecked")
+		List<Measurement> results = query.getResultList();
+		
+		return results;
+	}
+	
+	
 }
