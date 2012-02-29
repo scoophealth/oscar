@@ -2195,25 +2195,25 @@ create table report_doctext
   PRIMARY KEY  (docid)
 );
 
-create table report_document
-(
-  docid          int(10) NOT NULL auto_increment,
-  subject        varchar(256) default NULL,
-  privacycd      varchar(3) default NULL,
-  ownerid        varchar(12) default NULL,
-  checkoutyn     char(1) default NULL,
-  checkoutuserid	varchar(12) default NULL,
-  checkoutdate	datetime 	default NULL,
-  doctype		varchar(3) 	default NULL,
-  filename		varchar(128) default NULL,
-  moduleid		varchar(6) 	default NULL,
-  refno			varchar(12) default NULL,
-  filetype		varchar(5) 	default NULL,
-  viewid		varchar(36) default NULL,
-  viewrefno		varchar(12)	default NULL,
-  revdatetime   datetime default NULL,
-  PRIMARY KEY  (docid)
-);
+#create table report_document
+#(
+#  docid          int(10) NOT NULL auto_increment,
+#  subject        varchar(256) default NULL,
+#  privacycd      varchar(3) default NULL,
+#  ownerid        varchar(12) default NULL,
+#  checkoutyn     char(1) default NULL,
+#  checkoutuserid	varchar(12) default NULL,
+#  checkoutdate	datetime 	default NULL,
+#  doctype		varchar(3) 	default NULL,
+#  filename		varchar(128) default NULL,
+#  moduleid		varchar(6) 	default NULL,
+#  refno			varchar(12) default NULL,
+#  filetype		varchar(5) 	default NULL,
+#  viewid		varchar(36) default NULL,
+#  viewrefno		varchar(12)	default NULL,
+#  revdatetime   datetime default NULL,
+#  PRIMARY KEY  (docid)
+#);
 
 create table report_filter
 (  
@@ -2263,50 +2263,50 @@ create table report_option
   PRIMARY KEY  (reportoptionid)
 );
 
-create table report_qgviewfield
-(
-  qgviewno      int(10) NOT NULL auto_increment,  
-  fieldno       int(10) not null,
-  fieldname     varchar(32) not null,
-  description   varchar(80)	default NULL,
-  fieldtypecode varchar(8)	default NULL,
-  numbermask    varchar(16)	default NULL,
-  fieldlength   int(10) 	default 0,
-  sourcetxt     text	default NULL,
-  note          varchar(255) default NULL,
-  grouprank     int(10)		default 0,
-  lookuptable   varchar(6)	default NULL,
-  PRIMARY KEY  (qgviewno,fieldno)
-);
+#create table report_qgviewfield
+#(
+#  qgviewno      int(10) NOT NULL auto_increment,  
+#  fieldno       int(10) not null,
+#  fieldname     varchar(32) not null,
+#  description   varchar(80)	default NULL,
+#  fieldtypecode varchar(8)	default NULL,
+#  numbermask    varchar(16)	default NULL,
+#  fieldlength   int(10) 	default 0,
+#  sourcetxt     text	default NULL,
+#  note          varchar(255) default NULL,
+#  grouprank     int(10)		default 0,
+#  lookuptable   varchar(6)	default NULL,
+#  PRIMARY KEY  (qgviewno,fieldno)
+#);
 
-create table report_qgviewsummary
-(
-  qgviewno    int(10) NOT NULL auto_increment,
-  qgviewcode  varchar(30) 	not null ,
-  description varchar(80) 	default NULL,
-  groupcode   varchar(10)	default NULL,
-  mastertype  char(1)	default NULL,
-  updatedby   varchar(12)	default NULL,
-  updateddate datetime	default NULL,
-  note        text	default NULL,
-  activeyn    char(1)	default NULL,
-  secureyn    char(1)	default NULL,
-  dbentity    varchar(40)	default NULL,
-  refviews    varchar(512)	default NULL,
-  relations   text	default NULL,
-  filters     text	default NULL,
-  object_type varchar(5)	default NULL,
-  distinctyn  char(1)	default NULL,
-  PRIMARY KEY  (qgviewno)
-);
+#create table report_qgviewsummary
+#(
+#  qgviewno    int(10) NOT NULL auto_increment,
+#  qgviewcode  varchar(30) 	not null ,
+#  description varchar(80) 	default NULL,
+#  groupcode   varchar(10)	default NULL,
+#  mastertype  char(1)	default NULL,
+#  updatedby   varchar(12)	default NULL,
+#  updateddate datetime	default NULL,
+#  note        text	default NULL,
+#  activeyn    char(1)	default NULL,
+#  secureyn    char(1)	default NULL,
+#  dbentity    varchar(40)	default NULL,
+#  refviews    varchar(512)	default NULL,
+#  relations   text	default NULL,
+#  filters     text	default NULL,
+#  object_type varchar(5)	default NULL,
+#  distinctyn  char(1)	default NULL,
+#  PRIMARY KEY  (qgviewno)
+#);
 
-create table report_role
-(
-  reportno    	int(10) NOT NULL default 0,
-  rolecode		varchar(20) not null ,
-  access_type	char(1) 	default NULL,
-  PRIMARY KEY  (reportno,rolecode)
-);
+#create table report_role
+#(
+#  reportno    	int(10) NOT NULL default 0,
+#  rolecode		varchar(20) not null ,
+#  access_type	char(1) 	default NULL,
+#  PRIMARY KEY  (reportno,rolecode)
+#);
 
 create table report_template
 (
