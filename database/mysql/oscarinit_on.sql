@@ -1487,16 +1487,6 @@ CREATE TABLE billing_on_favourite (
   PRIMARY KEY  (id)
 ) ;
 
-CREATE TABLE billing_private_service (
-  id int(6) NOT NULL auto_increment,
-  service_code varchar(10) default NULL,
-  description varchar(255),
-  value varchar(8) default NULL,
-  percentage varchar(8) default NULL,
-  update_date date default NULL,
-  PRIMARY KEY  (id)
-) ;
-
 CREATE TABLE billing_payment_type (
   id int(11) NOT NULL auto_increment,
   payment_type varchar(25) NOT NULL default '',
