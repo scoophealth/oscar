@@ -14,17 +14,17 @@ INSERT INTO clinic VALUES (1234,'McMaster Hospital','Hamilton','Hamilton','L0R 4
 -- Dumping data for table 'clinic_location'
 --
 
-INSERT INTO clinic_location VALUES ('3642',1,'The Wellington Lodge');
-INSERT INTO clinic_location VALUES ('3831',1,'Maternity Centre of Hamilton');
-INSERT INTO clinic_location VALUES ('1994',1,'McMaster University Medical Center');
-INSERT INTO clinic_location VALUES ('1983',1,'Henderson General');
-INSERT INTO clinic_location VALUES ('1985',1,'Hamilton General');
-INSERT INTO clinic_location VALUES ('2003',1,'St. Joseph\"s Hospital');
-INSERT INTO clinic_location VALUES ('0000',1,'Not Applicable');
-INSERT INTO clinic_location VALUES ('1972',1,'Chedoke Hospital');
-INSERT INTO clinic_location VALUES ('3866',1,'Stonechurch Family Health Center');
-INSERT INTO clinic_location VALUES ('3226',1,'Stonechurch Family Health PCN');
-INSERT INTO clinic_location VALUES ('9999',1,'Home Visit');
+INSERT INTO clinic_location (clinic_location_no,clinic_no,clinic_location_name) VALUES ('3642',1,'The Wellington Lodge');
+INSERT INTO clinic_location (clinic_location_no,clinic_no,clinic_location_name) VALUES ('3831',1,'Maternity Centre of Hamilton');
+INSERT INTO clinic_location (clinic_location_no,clinic_no,clinic_location_name) VALUES ('1994',1,'McMaster University Medical Center');
+INSERT INTO clinic_location (clinic_location_no,clinic_no,clinic_location_name) VALUES ('1983',1,'Henderson General');
+INSERT INTO clinic_location (clinic_location_no,clinic_no,clinic_location_name) VALUES ('1985',1,'Hamilton General');
+INSERT INTO clinic_location (clinic_location_no,clinic_no,clinic_location_name) VALUES ('2003',1,'St. Joseph\"s Hospital');
+INSERT INTO clinic_location (clinic_location_no,clinic_no,clinic_location_name) VALUES ('0000',1,'Not Applicable');
+INSERT INTO clinic_location (clinic_location_no,clinic_no,clinic_location_name) VALUES ('1972',1,'Chedoke Hospital');
+INSERT INTO clinic_location (clinic_location_no,clinic_no,clinic_location_name) VALUES ('3866',1,'Stonechurch Family Health Center');
+INSERT INTO clinic_location (clinic_location_no,clinic_no,clinic_location_name) VALUES ('3226',1,'Stonechurch Family Health PCN');
+INSERT INTO clinic_location (clinic_location_no,clinic_no,clinic_location_name) VALUES ('9999',1,'Home Visit');
 
 --
 -- Dumping data for table 'config_Immunization'
@@ -62,22 +62,22 @@ INSERT INTO consultationServices VALUES (57,'SEE NOTES','1');
 -- Dumping data for table 'ctl_doctype'
 --
 
-INSERT INTO ctl_doctype VALUES ('demographic','lab','A');
-INSERT INTO ctl_doctype VALUES ('demographic','consult','A');
-INSERT INTO ctl_doctype VALUES ('demographic','insurance','A');
-INSERT INTO ctl_doctype VALUES ('demographic','legal','A');
-INSERT INTO ctl_doctype VALUES ('demographic','oldchart','A');
-INSERT INTO ctl_doctype VALUES ('demographic','radiology','A');
-INSERT INTO ctl_doctype VALUES ('demographic','pathology','A');
-INSERT INTO ctl_doctype VALUES ('demographic','others','A');
-INSERT INTO ctl_doctype VALUES ('demographic','photo','A');
-INSERT INTO ctl_doctype VALUES ('provider','resource','A');
-INSERT INTO ctl_doctype VALUES ('provider','desktop','A');
-INSERT INTO ctl_doctype VALUES ('provider','handout','A');
-INSERT INTO ctl_doctype VALUES ('provider','forms','A');
-INSERT INTO ctl_doctype VALUES ('provider','others','A');
-INSERT INTO ctl_doctype VALUES ('provider','share','A');
-INSERT INTO ctl_doctype VALUES ('provider','photo','A');
+INSERT INTO ctl_doctype (module,doctype,status) VALUES ('demographic','lab','A');
+INSERT INTO ctl_doctype (module,doctype,status) VALUES ('demographic','consult','A');
+INSERT INTO ctl_doctype (module,doctype,status) VALUES ('demographic','insurance','A');
+INSERT INTO ctl_doctype (module,doctype,status) VALUES ('demographic','legal','A');
+INSERT INTO ctl_doctype (module,doctype,status) VALUES ('demographic','oldchart','A');
+INSERT INTO ctl_doctype (module,doctype,status) VALUES ('demographic','radiology','A');
+INSERT INTO ctl_doctype (module,doctype,status) VALUES ('demographic','pathology','A');
+INSERT INTO ctl_doctype (module,doctype,status) VALUES ('demographic','others','A');
+INSERT INTO ctl_doctype (module,doctype,status) VALUES ('demographic','photo','A');
+INSERT INTO ctl_doctype (module,doctype,status) VALUES ('provider','resource','A');
+INSERT INTO ctl_doctype (module,doctype,status) VALUES ('provider','desktop','A');
+INSERT INTO ctl_doctype (module,doctype,status) VALUES ('provider','handout','A');
+INSERT INTO ctl_doctype (module,doctype,status) VALUES ('provider','forms','A');
+INSERT INTO ctl_doctype (module,doctype,status) VALUES ('provider','others','A');
+INSERT INTO ctl_doctype (module,doctype,status) VALUES ('provider','share','A');
+INSERT INTO ctl_doctype (module,doctype,status) VALUES ('provider','photo','A');
 
 --
 -- Dumping data for table 'ctl_doc_class'

@@ -18232,7 +18232,7 @@
         <ViolationValue>/database/mysql/oscarinit.sql:clinic_city varchar(40) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:clinic_fax varchar(20) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:clinic_location_code varchar(10) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:clinic_location_name varchar(40) default NULL</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:clinic_location_name varchar(40) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:clinic_location_no varchar(15) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:clinic_name varchar(100) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:clinic_no int(10) NOT NULL default '0',</ViolationValue>
@@ -19569,7 +19569,6 @@
         <ViolationValue>/database/mysql/oscarinit.sql:provider_activity char(3) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:provider_name varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:provider_no int(10)  default NULL ,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:provider_no int(10) NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:provider_no int(10) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:provider_no varchar(10) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:provider_no varchar(6) NOT NULL default '',</ViolationValue>
