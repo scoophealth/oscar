@@ -23,7 +23,7 @@ public final class WsUtils
 	{
 		if (security != null)
 		{
-			if (security.getDateExpiredate()!=null || security.getDateExpiredate().before(new Date())) return(false);
+			if (security.getDateExpiredate()!=null && security.getDateExpiredate().before(new Date())) return(false);
 			
 			if (checkToken(security, securityToken) || security.checkPassword(securityToken))
 			{
