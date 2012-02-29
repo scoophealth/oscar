@@ -3,36 +3,41 @@
 <%@ page
 	import="java.sql.*, oscar.login.*, java.util.*,oscar.*,oscar.oscarDB.*,oscar.util.SqlUtils,oscar.oscarProvider.data.ProviderBillCenter"
 	errorPage="errorpage.jsp"%>
-	
+
 <%@page import="org.oscarehr.common.dao.SiteDao"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.oscarehr.common.model.Site"%>
-	
+<%@page import="org.oscarehr.common.model.Provider"%>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
+<%@page import="org.oscarehr.common.model.ProviderArchive"%>
+<%@page import="org.oscarehr.common.dao.ProviderArchiveDao"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.apache.commons.beanutils.BeanUtils"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 <html:html locale="true">
@@ -51,10 +56,10 @@
 	</tr>
 </table>
 
-<% 
+<%
   ProviderBillCenter billCenter = new ProviderBillCenter();
-  billCenter.updateBillCenter(request.getParameter("provider_no"),request.getParameter("billcenter")); 
-  
+  billCenter.updateBillCenter(request.getParameter("provider_no"),request.getParameter("billcenter"));
+
   DBPreparedHandlerParam[] param =new DBPreparedHandlerParam[21];
   param[0]=new DBPreparedHandlerParam(request.getParameter("last_name"));
   param[1]=new DBPreparedHandlerParam(request.getParameter("first_name"));
@@ -62,7 +67,7 @@
   param[3]=new DBPreparedHandlerParam(request.getParameter("specialty"));
   param[4]=new DBPreparedHandlerParam(request.getParameter("team"));
   param[5]=new DBPreparedHandlerParam(request.getParameter("sex"));
-  
+
   param[6]=new DBPreparedHandlerParam(MyDateFormat.getSysDate(request.getParameter("dob")));
 //  String strDbType = oscar.OscarProperties.getInstance().getProperty("db_type").trim();
 //  if("oracle".equalsIgnoreCase(strDbType)){
@@ -88,14 +93,14 @@
   String  errMsgProviderFormalize = "admin.provideraddrecord.msgAdditionFailure";
   Integer min_value = 0;
   Integer max_value = 0;
-  	
+
   if (org.oscarehr.common.IsPropertiesOn.isProviderFormalizeEnable()) {
 
   	String StrProviderId = request.getParameter("provider_no");
   	OscarProperties props = OscarProperties.getInstance();
 
   	String[] provider_sites = {};
-  	
+
   	// get provider id ranger
   	if (request.getParameter("provider_type").equalsIgnoreCase("doctor")) {
   		//provider is doctor, get provider id range from Property
@@ -106,7 +111,7 @@
   		//non-doctor role
   		provider_sites = request.getParameterValues("sites");
   		provider_sites = (provider_sites == null ? new String[] {} : provider_sites);
-  		
+
   		if (provider_sites.length > 1) {
   			//non-doctor can only have one site
   			isProviderFormalize = false;
@@ -134,7 +139,7 @@
   						isProviderFormalize = false;
   						errMsgProviderFormalize = "admin.provideraddrecord.msgFormalizeProviderIdFailure";
   				    }
-			    
+
   			    }
 
   		} catch(NumberFormatException e) {
@@ -145,10 +150,16 @@
   	}
 
   }
-  
-  if (!org.oscarehr.common.IsPropertiesOn.isProviderFormalizeEnable() || isProviderFormalize) {  
-    DBPreparedHandlerParam[] paramArch =new DBPreparedHandlerParam[] {new DBPreparedHandlerParam(request.getParameter("provider_no"))};
-    apptMainBean.queryExecuteUpdate(paramArch, "provider_archive_record");
+
+  if (!org.oscarehr.common.IsPropertiesOn.isProviderFormalizeEnable() || isProviderFormalize) {
+    ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
+	ProviderArchiveDao providerArchiveDao = (ProviderArchiveDao)SpringUtils.getBean("providerArchiveDao");
+	Provider provider = providerDao.getProvider(request.getParameter("provider_no"));
+	ProviderArchive pa = new ProviderArchive();
+	BeanUtils.copyProperties(pa, provider);
+	providerArchiveDao.persist(pa);
+
+
 
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation"));
   if (rowsAffected ==1) {
@@ -168,23 +179,23 @@
 <h2><bean:message key="admin.providerupdate.msgUpdateSuccess" /><a
 	href="admincontrol.jsp?keyword=<%=request.getParameter("provider_no")%>&displaymode=Provider_Update&dboperation=provider_search_detail"><%= request.getParameter("provider_no") %></a>
 </h2>
-<%  
+<%
   } else {
 %>
 <h1><bean:message key="admin.providerupdate.msgUpdateFailure" /><%= request.getParameter("provider_no") %>.</h1>
-<%  
-  } 
+<%
+  }
 }
 else {
 	if (!isProviderFormalize) {
-		//output ProviderFormalize error message 	
+		//output ProviderFormalize error message
 	%>
 		<h1><bean:message key="<%=errMsgProviderFormalize%>" />  </h1>
 		Provider # range from : <%=min_value %> To : <%=max_value %>
-	<%		
+	<%
 	}
 }
-%> 
+%>
 <p></p>
 <%@ include file="footer2htm.jsp"%>
 </center>
