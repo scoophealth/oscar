@@ -6227,6 +6227,7 @@ CREATE TABLE measurementsDeleted(
 --
 DROP TABLE IF EXISTS measurementGroup;
 CREATE TABLE measurementGroup(
+  `id` int(10) not null auto_increment primary key,
   name varchar(100) NOT NULL,
   typeDisplayName varchar(255), 
   KEY name (name)
@@ -6280,10 +6281,12 @@ CREATE TABLE measurementTypeDeleted (
 --
 
 CREATE TABLE messagelisttbl (
+  id int UNSIGNED AUTO_INCREMENT,
   message mediumint(9) default NULL,
   provider_no varchar(6) default NULL,
   status varchar(10) default NULL,
   remoteLocation int(10) default NULL,
+  PRIMARY KEY(id),
   KEY `message` (`message`),
   KEY `provider_no` (`provider_no`),
   KEY `status` (`status`),
