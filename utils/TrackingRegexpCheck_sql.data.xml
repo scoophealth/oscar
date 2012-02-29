@@ -19565,7 +19565,7 @@
         <ViolationValue>/database/mysql/oscarinit.sql:provName varchar(60) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:providerNo varchar(6) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:providerNo varchar(6) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:provider_No varchar(6) default NULL</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:provider_No varchar(6) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:provider_activity char(3) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:provider_name varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:provider_no int(10)  default NULL ,</ViolationValue>
