@@ -19902,7 +19902,7 @@
         <ViolationValue>/database/mysql/oscarinit.sql:thyroidN tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:time time default NULL</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:total char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:total varchar(20) default NULL</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:total varchar(20) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:total varchar(6) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:totalamount varchar(10) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:tradeName varchar(50) default NULL,</ViolationValue>
@@ -20639,7 +20639,6 @@
         <ViolationValue>/database/mysql/oscarinit_bc.sql:adj_desc varchar(100) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:admisDateTime varchar(16) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:after_hour char(1) default '0',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_bc.sql:alter table billactivity add column sentdate datetime default NULL;</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:alter table billing add column billingtype varchar(4) default 'MSP';</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:amount_received double NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:anatomical_area char(2) default NULL,</ViolationValue>
@@ -21552,7 +21551,6 @@
         <ViolationValue>/database/mysql/oscarinit_on.sql:pay_program char(3) default 'HCP',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:payee char(1) default 'P',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:payment_type varchar(25) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_on.sql:percentage varchar(8) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:pg1_BP varchar(10) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:pg1_abdomen tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:pg1_abdomenA tinyint(1) default NULL,</ViolationValue>
@@ -22328,7 +22326,6 @@
         <ViolationValue>/database/mysql/oscarinit_on.sql:report_name varchar(20)  default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:ser_num char(2) default '01',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:service_code char(20) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_on.sql:service_code varchar(10) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:service_dx varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:sex char(1) default '1',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:spec_id char(3) default 'V03',</ViolationValue>
@@ -22342,8 +22339,6 @@
         <ViolationValue>/database/mysql/oscarinit_on.sql:total varchar(20) default null,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:total varchar(7) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:transc_id char(2) default 'HE',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_on.sql:update_date date default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_on.sql:value varchar(8) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:ver char(2) default '  ',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:visittype char(2) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/updates/hsfo_update_2007_08_31.sql:) ENGINE=InnoDB DEFAULT CHARSET=utf8;</ViolationValue>

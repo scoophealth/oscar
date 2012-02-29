@@ -3267,11 +3267,6 @@ CREATE TABLE billing_cdm_service_codes (
 ) TYPE=MyISAM;
 
 
-alter table billactivity add column id int(10) NOT NULL auto_increment primary key;
- 
-alter table billactivity add column sentdate datetime default NULL;
-
-
 CREATE TABLE `formBCClientChartChecklist` (
   `ID` int(10) NOT NULL auto_increment,
   `demographic_no` int(10) NOT NULL default '0',
