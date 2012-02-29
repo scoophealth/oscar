@@ -1349,7 +1349,7 @@ INSERT INTO serviceSpecialists VALUES (53,297);
 -- Dumping data for table 'specialistsJavascript'
 --
 
-INSERT INTO specialistsJavascript VALUES ('1','function makeSpecialistslist(dec){\n if(dec==\'1\') \n{K(-1,\"----Choose a Service-------\");D(-1,\"--------Choose a Specialist-----\");}\nelse\n{K(-1,\"----All Services-------\");D(-1,\"--------All Specialists-----\");}\nK(53,\"Cardiology\");\nD(53,\"297\",\"ss4444\",\"ssss, sss ssss\",\"sss\",\"sssss\");\n\nK(54,\"Dermatology\");\n\nK(55,\"Neurology\");\n\nK(56,\"Radiology\");\n\nK(57,\"SEE NOTES\");\n\n\n}\n');
+INSERT INTO specialistsJavascript VALUES (1,'1','function makeSpecialistslist(dec){\n if(dec==\'1\') \n{K(-1,\"----Choose a Service-------\");D(-1,\"--------Choose a Specialist-----\");}\nelse\n{K(-1,\"----All Services-------\");D(-1,\"--------All Specialists-----\");}\nK(53,\"Cardiology\");\nD(53,\"297\",\"ss4444\",\"ssss, sss ssss\",\"sss\",\"sssss\");\n\nK(54,\"Dermatology\");\n\nK(55,\"Neurology\");\n\nK(56,\"Radiology\");\n\nK(57,\"SEE NOTES\");\n\n\n}\n');
 
 --
 -- Dumping data for table 'study'

@@ -13930,6 +13930,8 @@
         <ViolationValue>/database/mysql/oscardata_bc.sql:INSERT INTO wcb_side VALUES ('R','Right','');</ViolationValue>
         <ViolationValue>/database/mysql/oscardata_bc.sql:insert into billingreferral values (10029,'28091','Poon','C','Urology','102-123 East 15th Street','','North Vancouver','BC','V7L2P7','6049878171','');</ViolationValue>
         <ViolationValue>/database/mysql/oscardata_bc.sql:insert into billingreferral values (10039,'28149','Gilbart','Michael Kenneth','Orthopedic Surgery','Allan McGavin Sports Med. Center','3055 Wesbrook Mall','Vancouver','BC','V6T1Z3','6048225699','');</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:#  diagnostic_code varchar(5) NOT NULL default '',</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:#  provider_no varchar(6) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:BN varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:DESCRIPTION varchar(50) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:ICD9_E char(6) NOT NULL default '',</ViolationValue>
@@ -16307,6 +16309,11 @@
         <ViolationValue>/database/mysql/measurementMapData.sql:) ENGINE=MyISAM AUTO_INCREMENT=1076 DEFAULT CHARSET=latin1;</ViolationValue>
         <ViolationValue>/database/mysql/measurementMapData.sql:`loinc_code` varchar(20) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscardata_on.sql:ALTER TABLE `billingservice` ADD COLUMN `gstFlag` tinyint(1) NOT NULL default '0';</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:#  day date NOT NULL default '0001-01-01',</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:#  diagnostic_code varchar(5) NOT NULL default '',</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:#  provider_no varchar(6) NOT NULL default '',</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:#  status char(1) default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:#  template_name varchar(20) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:AGCCS int(6) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:AGCSP int(6) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:ATC varchar(20) default NULL,</ViolationValue>
@@ -18351,7 +18358,6 @@
         <ViolationValue>/database/mysql/oscarinit.sql:date_joined date default '0001-01-01'</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:date_prescribed date default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:date_printed date default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:day date NOT NULL default '0001-01-01',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:deleted INT(1) NOT NULL DEFAULT 0,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:deleted char(1) default '0',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:demo_name varchar(60) NOT NULL default '',</ViolationValue>
@@ -19883,7 +19889,6 @@
         <ViolationValue>/database/mysql/oscarinit.sql:team varchar(10) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:team varchar(20) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:temp varchar(80) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit.sql:template_name varchar(20) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:templatetitle varchar(80) NOT NULL DEFAULT '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:tender varchar(100) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:tenderAbN tinyint(1) default NULL,</ViolationValue>

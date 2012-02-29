@@ -6727,12 +6727,12 @@ CREATE TABLE `scheduledate` (
 -- Table structure for table `scheduledaytemplate`
 --
 
-CREATE TABLE scheduledaytemplate (
-  provider_no varchar(6) NOT NULL default '',
-  day date NOT NULL default '0001-01-01',
-  template_name varchar(20) default NULL,
-  PRIMARY KEY  (provider_no,day)
-) ;
+#CREATE TABLE scheduledaytemplate (
+#  provider_no varchar(6) NOT NULL default '',
+#  day date NOT NULL default '0001-01-01',
+#  template_name varchar(20) default NULL,
+#  PRIMARY KEY  (provider_no,day)
+#) ;
 
 --
 -- Table structure for table `scheduleholiday`
@@ -6806,6 +6806,7 @@ CREATE TABLE serviceSpecialists (
 --
 
 CREATE TABLE specialistsJavascript (
+  `id` int(10) not null auto_increment primary key,
   setId char(1) default NULL,
   javascriptString mediumtext
 ) ;
@@ -6883,13 +6884,13 @@ CREATE TABLE tickler (
 -- Table structure for table `tmpdiagnosticcode`
 --
 
-CREATE TABLE tmpdiagnosticcode (
-  diagnosticcode_no int(5) NOT NULL auto_increment,
-  diagnostic_code varchar(5) NOT NULL default '',
-  description text,
-  status char(1) default NULL,
-  PRIMARY KEY  (diagnosticcode_no)
-) ;
+#CREATE TABLE tmpdiagnosticcode (
+#  diagnosticcode_no int(5) NOT NULL auto_increment,
+#  diagnostic_code varchar(5) NOT NULL default '',
+#  description text,
+#  status char(1) default NULL,
+#  PRIMARY KEY  (diagnosticcode_no)
+#) ;
 
 --
 -- Table structure for table `validations`
