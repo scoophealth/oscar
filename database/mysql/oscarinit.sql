@@ -92,6 +92,7 @@ CREATE TABLE batchEligibility(
 --
 
 CREATE TABLE billactivity (
+  id int(10) NOT NULL auto_increment primary key,
   monthCode char(1) default NULL,
   batchcount int(3) default NULL,
   htmlfilename varchar(50) default NULL,
@@ -104,7 +105,8 @@ CREATE TABLE billactivity (
   claimrecord varchar(10) default NULL,
   updatedatetime datetime default NULL,
   status char(1) default NULL,
-  total varchar(20) default NULL
+  total varchar(20) default NULL,
+  sentdate datetime
 ) ;
 
 --
