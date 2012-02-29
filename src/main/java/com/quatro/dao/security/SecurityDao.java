@@ -259,7 +259,8 @@ public class SecurityDao extends HibernateDaoSupport {
 	}
 
 	public List<Security> findByUserName(Object userName) {
-		return findByProperty(USER_NAME, userName);
+		List<Security> results= findByProperty(USER_NAME, userName);		
+		return(results);
 	}
 	public List<Security> findByProviderNo(Object providerNo) {
 		return findByProperty(PROVIDER_NO, providerNo);
