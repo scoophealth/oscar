@@ -6579,6 +6579,7 @@ CREATE TABLE raheader (
 --
 
 CREATE TABLE recycle_bin (
+  `id` int(10) not null auto_increment primary key,
   provider_no varchar(6) NOT NULL default '',
   table_name varchar(30) NOT NULL default '',
   table_content text,
@@ -6614,11 +6615,13 @@ CREATE TABLE rehabStudy2004(
 --
 
 CREATE TABLE remoteAttachments (
+  id int(9) auto_increment,
   demographic_no int(10) default NULL,
   messageid mediumint(9) default NULL,
   savedBy varchar(255) default NULL,
   date date default NULL,
-  time time default NULL
+  time time default NULL,
+  primary key(id)
 ) ;
 
 --
@@ -6626,6 +6629,7 @@ CREATE TABLE remoteAttachments (
 --
 
 CREATE TABLE reportagesex (
+  `id` int(10) not null auto_increment primary key,
   demographic_no int(10) default NULL,
   age int(4) default '0',
   roster varchar(4) default '',
@@ -6663,6 +6667,7 @@ CREATE TABLE reportByExamplesFavorite(
 --
 
 CREATE TABLE reportprovider (
+  `id` int(10) not null auto_increment primary key,
   provider_no varchar(10) default '',
   team varchar(10) default '',
   action varchar(20) default '',

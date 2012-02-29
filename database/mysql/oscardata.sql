@@ -1252,7 +1252,7 @@ INSERT INTO quickList VALUES(10,"List1", "999998", "231","ichppc");
 -- Dumping data for table 'reportprovider'
 --
 
-INSERT INTO reportprovider VALUES ('174','Docs','billingreport','A');
+INSERT INTO reportprovider VALUES (1,'174','Docs','billingreport','A');
 
 --
 -- Dumping data for table 'reporttemp'
