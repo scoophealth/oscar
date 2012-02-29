@@ -5907,8 +5907,10 @@ CREATE TABLE `formConsult` (
 --
 
 CREATE TABLE groupMembers_tbl (
+  id int(10) NOT NULL auto_increment,
   groupID int(10) default NULL,
-  provider_No varchar(6) default NULL
+  provider_No varchar(6) default NULL,
+  PRIMARY KEY  (id)
 ) ;
 
 --
@@ -6952,6 +6954,7 @@ create table pharmacyInfo (
 --
 
 create table demographicPharmacy (
+   id int(10) NOT NULL auto_increment primary key,
    pharmacyID int(10),
    demographic_no int(10),
    status char(1) default '1',
@@ -7057,6 +7060,7 @@ CREATE TABLE `secObjectName` (
 ) ;
 
 CREATE TABLE `demographicSets` (
+  `id` int(10) not null auto_increment primary key,
   `demographic_no` int(10) default NULL,
   `set_name` varchar(20) default NULL,
   `eligibility` char(1) default NULL,
