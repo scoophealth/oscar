@@ -245,9 +245,11 @@ CREATE TABLE clinic (
 --
 
 CREATE TABLE clinic_location (
+  id int(10) NOT NULL auto_increment,
   clinic_location_no varchar(15) NOT NULL default '',
   clinic_no int(10) NOT NULL default '0',
-  clinic_location_name varchar(40) default NULL
+  clinic_location_name varchar(40) default NULL,
+  PRIMARY KEY  (id)
 ) ;
 
 --
@@ -323,6 +325,7 @@ CREATE TABLE ctl_billingservice (
 --
 
 CREATE TABLE ctl_billingservice_premium (
+  id int(10) not null auto_increment primary key,
   servicetype_name varchar(150) default '',
   service_code varchar(10) default '',
   status char(1) default '',
@@ -334,6 +337,7 @@ CREATE TABLE ctl_billingservice_premium (
 --
 
 CREATE TABLE ctl_diagcode (
+  id int(10) not null auto_increment primary key,
   servicetype varchar(10) default NULL,
   diagnostic_code varchar(5) default NULL,
   status char(1) default NULL
@@ -344,6 +348,7 @@ CREATE TABLE ctl_diagcode (
 --
 
 CREATE TABLE ctl_doctype (
+  id int(10) not null auto_increment primary key,
   module varchar(30) NOT NULL default '',
   doctype varchar(60) NOT NULL default '',
   status char(1) default NULL
@@ -383,16 +388,6 @@ CREATE TABLE ctl_frequency (
 ) ;
 
 
-
---
--- Table structure for table `ctl_provider`
---
-
-CREATE TABLE ctl_provider (
-  clinic_no int(10) NOT NULL default '0',
-  provider_no int(10) NOT NULL default '0',
-  status char(1) default NULL
-) ;
 
 --
 -- Table structure for table `ctl_specialinstructions`

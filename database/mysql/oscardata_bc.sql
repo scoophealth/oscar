@@ -14943,24 +14943,24 @@ INSERT INTO ctl_billingservice VALUES ('OB obstetrics','MOB','OB','00012','Premi
 -- Dumping data for table 'ctl_diagcode'
 --
 
-INSERT INTO ctl_diagcode VALUES ('OB','30B','A');
-INSERT INTO ctl_diagcode VALUES ('OB','650','A');
-INSERT INTO ctl_diagcode VALUES ('GP','382','A');
-INSERT INTO ctl_diagcode VALUES ('GP','493','A');
-INSERT INTO ctl_diagcode VALUES ('GP','611','A');
-INSERT INTO ctl_diagcode VALUES ('GP','346','A');
-INSERT INTO ctl_diagcode VALUES ('GP','009','A');
-INSERT INTO ctl_diagcode VALUES ('GP','05A','A');
-INSERT INTO ctl_diagcode VALUES ('GP','465','A');
-INSERT INTO ctl_diagcode VALUES ('GP','250','A');
-INSERT INTO ctl_diagcode VALUES ('GP','626','A');
-INSERT INTO ctl_diagcode VALUES ('GP','486','A');
-INSERT INTO ctl_diagcode VALUES ('GP','36B','A');
-INSERT INTO ctl_diagcode VALUES ('GP','30B','A');
-INSERT INTO ctl_diagcode VALUES ('GP','02A','A');
-INSERT INTO ctl_diagcode VALUES ('GP','3000','A');
-INSERT INTO ctl_diagcode VALUES ('GP','50B','A');
-INSERT INTO ctl_diagcode VALUES ('AN','000','A');
+INSERT INTO ctl_diagcode (servicetype,diagnostic_code,status) VALUES ('OB','30B','A');
+INSERT INTO ctl_diagcode (servicetype,diagnostic_code,status) VALUES ('OB','650','A');
+INSERT INTO ctl_diagcode (servicetype,diagnostic_code,status) VALUES ('GP','382','A');
+INSERT INTO ctl_diagcode (servicetype,diagnostic_code,status) VALUES ('GP','493','A');
+INSERT INTO ctl_diagcode (servicetype,diagnostic_code,status) VALUES ('GP','611','A');
+INSERT INTO ctl_diagcode (servicetype,diagnostic_code,status) VALUES ('GP','346','A');
+INSERT INTO ctl_diagcode (servicetype,diagnostic_code,status) VALUES ('GP','009','A');
+INSERT INTO ctl_diagcode (servicetype,diagnostic_code,status) VALUES ('GP','05A','A');
+INSERT INTO ctl_diagcode (servicetype,diagnostic_code,status) VALUES ('GP','465','A');
+INSERT INTO ctl_diagcode (servicetype,diagnostic_code,status) VALUES ('GP','250','A');
+INSERT INTO ctl_diagcode (servicetype,diagnostic_code,status) VALUES ('GP','626','A');
+INSERT INTO ctl_diagcode (servicetype,diagnostic_code,status) VALUES ('GP','486','A');
+INSERT INTO ctl_diagcode (servicetype,diagnostic_code,status) VALUES ('GP','36B','A');
+INSERT INTO ctl_diagcode (servicetype,diagnostic_code,status) VALUES ('GP','30B','A');
+INSERT INTO ctl_diagcode (servicetype,diagnostic_code,status) VALUES ('GP','02A','A');
+INSERT INTO ctl_diagcode (servicetype,diagnostic_code,status) VALUES ('GP','3000','A');
+INSERT INTO ctl_diagcode (servicetype,diagnostic_code,status) VALUES ('GP','50B','A');
+INSERT INTO ctl_diagcode (servicetype,diagnostic_code,status) VALUES ('AN','000','A');
 
 
 INSERT INTO diagnosticcode VALUES (13494,'4255','ALCOHOLIC CARDIOMYOPATHY                                                 ','A','BC');
