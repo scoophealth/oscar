@@ -2708,14 +2708,14 @@ create table FunctionalCentre
 	description varchar(255) not null
 );
 
-create table group_note_link (
-        id int primary key auto_increment,
-        created timestamp,
-        noteId int(10) not null,
-        demographicNo int(10) not null,
-        key(noteId),
-        key(demographicNo)
-);
+#create table group_note_link (
+#        id int primary key auto_increment,
+#        created timestamp,
+#        noteId int(10) not null,
+#        demographicNo int(10) not null,
+#        key(noteId),
+#        key(demographicNo)
+#);
 
 
 CREATE TABLE IntegratorControl (
