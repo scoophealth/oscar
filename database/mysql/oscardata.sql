@@ -1213,16 +1213,16 @@ INSERT INTO provider VALUES ('999998','oscardoc','doctor','doctor','','','','000
 --
 -- Dumping data for table 'quickList'
 --
-INSERT INTO quickList VALUES("default", "999997", "000","ichppc");
-INSERT INTO quickList VALUES("default", "999997", "204","ichppc");
-INSERT INTO quickList VALUES("default", "999997", "288","ichppc");
-INSERT INTO quickList VALUES("default", "999997", "053","ichppc");
-INSERT INTO quickList VALUES("default", "999997", "235","ichppc");
-INSERT INTO quickList VALUES("List1", "999998", "235","ichppc");
-INSERT INTO quickList VALUES("List1", "999998", "376","ichppc");
-INSERT INTO quickList VALUES("List1", "999998", "246","ichppc");
-INSERT INTO quickList VALUES("List1", "999998", "105","ichppc");
-INSERT INTO quickList VALUES("List1", "999998", "231","ichppc");
+INSERT INTO quickList VALUES(1,"default", "999997", "000","ichppc");
+INSERT INTO quickList VALUES(2,"default", "999997", "204","ichppc");
+INSERT INTO quickList VALUES(3,"default", "999997", "288","ichppc");
+INSERT INTO quickList VALUES(4,"default", "999997", "053","ichppc");
+INSERT INTO quickList VALUES(5,"default", "999997", "235","ichppc");
+INSERT INTO quickList VALUES(6,"List1", "999998", "235","ichppc");
+INSERT INTO quickList VALUES(7,"List1", "999998", "376","ichppc");
+INSERT INTO quickList VALUES(8,"List1", "999998", "246","ichppc");
+INSERT INTO quickList VALUES(9,"List1", "999998", "105","ichppc");
+INSERT INTO quickList VALUES(10,"List1", "999998", "231","ichppc");
 
 --
 -- Dumping data for table 'radetail'

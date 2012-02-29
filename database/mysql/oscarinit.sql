@@ -6518,6 +6518,7 @@ CREATE TABLE providerLabRouting (
 -- Table structure for table quickList
 --
 CREATE TABLE quickList(
+  `id` int(10) not null auto_increment primary key,
   quickListName varchar(255) NOT NULL,
   createdByProvider int(10),
   dxResearchCode varchar(10),
@@ -6528,6 +6529,7 @@ CREATE TABLE quickList(
 -- Table structure for table quickListUser
 --
 CREATE TABLE quickListUser( 
+  `id` int(10) not null auto_increment primary key,
   providerNo int(10) NOT NULL,
   quickListName varchar(10) NOT NULL,
   lastUsed datetime
@@ -8146,6 +8148,7 @@ CREATE TABLE demographicArchive (
 );
 
 CREATE TABLE providerArchive (
+  id bigint(20) auto_increment primary key,
   provider_no varchar(6),
   last_name varchar(30),
   first_name varchar(30),
