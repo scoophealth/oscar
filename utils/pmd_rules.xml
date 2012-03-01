@@ -12,6 +12,7 @@
 	<rule ref="rulesets/basic.xml">
 		<exclude name="CollapsibleIfStatements" />
 		<exclude name="EmptyCatchBlock" />
+		<exclude name="AvoidThreadGroup" />
 	</rule>
 	 
 	<rule ref="rulesets/unusedcode.xml" />
