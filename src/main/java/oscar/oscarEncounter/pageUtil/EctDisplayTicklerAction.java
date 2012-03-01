@@ -33,7 +33,6 @@ import java.util.Properties;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
-
 import org.apache.struts.util.MessageResources;
 import org.oscarehr.util.MiscUtils;
 
@@ -63,8 +62,8 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
     String winName = "ViewTickler" + bean.demographicNo;
     String pathview, pathedit;
     if( org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable() ) {
-    	pathview = request.getContextPath() + "/Tickler.do?filter.demographic_webName="+bean.patientLastName + "," + bean.patientFirstName+"&filter.demographic_no=" + bean.demographicNo +"&filter.assignee=";
-    	pathedit = request.getContextPath() + "/Tickler.do?method=edit&tickler.demographic_webName="+bean.patientLastName + "," + bean.patientFirstName+"&tickler.demographic_no=" + bean.demographicNo;
+    	pathview = request.getContextPath() + "/Tickler.do?filter.demographic_webName="+ URLEncoder.encode(bean.patientLastName + "," + bean.patientFirstName,"UTF-8") +"&filter.demographic_no=" + bean.demographicNo +"&filter.assignee=";
+    	pathedit = request.getContextPath() + "/Tickler.do?method=edit&tickler.demographic_webName="+ URLEncoder.encode(bean.patientLastName + "," + bean.patientFirstName,"UTF-8") +"&tickler.demographic_no=" + bean.demographicNo;
     }
     else {
         pathview = request.getContextPath() + "/tickler/ticklerDemoMain.jsp?demoview=" + bean.demographicNo + "&parentAjaxId=" + cmd;
