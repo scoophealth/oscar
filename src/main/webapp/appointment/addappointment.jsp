@@ -187,21 +187,46 @@ function onButRepeat() {
 	if (calculateEndTime()) { document.forms[0].submit(); }
 }
 <% if(apptObj!=null) { %>
-function pasteAppt() {
-	//document.forms[0].status.value = "<%=apptObj.getStatus()%>";
-	document.forms[0].duration.value = "<%=apptObj.getDuration()%>";
-	//document.forms[0].chart_no.value = "<%=apptObj.getChart_no()%>";
-	document.forms[0].keyword.value = "<%=apptObj.getName()%>";
-	document.forms[0].demographic_no.value = "<%=apptObj.getDemographic_no()%>";
-	document.forms[0].reason.value = "<%=apptObj.getReason()%>";
-	document.forms[0].notes.value = "<%=apptObj.getNotes()%>";
-	//document.forms[0].location.value = "<%=apptObj.getLocation()%>";
-	document.forms[0].resources.value = "<%=apptObj.getResources()%>";
-	if('<%=apptObj.getUrgency()%>' == 'critical') {
-		document.forms[0].urgency.checked = "checked";
-	}
-	
-}
+function pasteAppt(multipleSameDayGroupAppt) {
+        
+        var warnMsgId = document.getElementById("tooManySameDayGroupApptWarning");
+        
+        if (multipleSameDayGroupAppt) {
+           warnMsgId.style.display = "block";
+           if (document.forms[0].groupButton) {
+              document.forms[0].groupButton.style.display = "none";
+           }
+           if (document.forms[0].addPrintPreviewButton){
+              document.forms[0].addPrintPreviewButton.style.display = "none";
+           }
+           document.forms[0].addButton.style.display = "none";
+           document.forms[0].printButton.style.display = "none";
+           
+           if (document.forms[0].pasteButton) {
+                document.forms[0].pasteButton.style.display = "none";
+           }
+           
+           if (document.forms[0].apptRepeatButton) {
+                document.forms[0].apptRepeatButton.style.display = "none";
+           }
+        }
+        else {
+           warnMsgId.style.display = "none";    
+        }
+        //document.forms[0].status.value = "<%=apptObj.getStatus()%>";
+        document.forms[0].duration.value = "<%=apptObj.getDuration()%>";
+        //document.forms[0].chart_no.value = "<%=apptObj.getChart_no()%>";
+        document.forms[0].keyword.value = "<%=apptObj.getName()%>";
+        document.forms[0].demographic_no.value = "<%=apptObj.getDemographic_no()%>";
+        document.forms[0].reason.value = "<%=apptObj.getReason()%>";
+        document.forms[0].notes.value = "<%=apptObj.getNotes()%>";
+        //document.forms[0].location.value = "<%=apptObj.getLocation()%>";
+        document.forms[0].resources.value = "<%=apptObj.getResources()%>";
+        if('<%=apptObj.getUrgency()%>' == 'critical') {
+                document.forms[0].urgency.checked = "checked";
+        }
+            
+}                   
 <% } %>
 
 
@@ -281,7 +306,7 @@ function pasteAppt() {
   param[5] = param[3];
   param[6] = param[2];
   param[7] = param[3];
-  param[8] = request.getParameter("programId_oscarView");
+  param[8] = (String)request.getSession().getAttribute("programId_oscarView");
 
   List<Map<String,Object>> resultList = oscarSuperManager.find("appointmentDao", "search_appt", param);
   long apptnum = resultList.size() > 0 ? (Long)resultList.get(0).get("n") : 0;
@@ -352,10 +377,50 @@ function pasteAppt() {
   String sex = "";
 
   //to show Alert msg
+ 
+  OscarProperties props = OscarProperties.getInstance();
+  boolean bMultipleSameDayGroupAppt = false;
+  String displayStyle = "display:none";
+  String myGroupNo = (String) session.getAttribute("groupno");  
+ 
+  if (props.getProperty("allowMultipleSameDayGroupAppt", "").equalsIgnoreCase("no")) {
+      
+        String demographicNo = request.getParameter("demographic_no");
 
+        if (!bFirstDisp && (demographicNo != null) && (!demographicNo.equals(""))) {          
+   
+            String [] sqlParam = new String[3] ;
+            sqlParam[0] = myGroupNo; //schedule group
+            sqlParam[1] = demographicNo;
+            sqlParam[2] = dateString2;
+
+            resultList = oscarSuperManager.find("appointmentDao", "search_group_day_appt", sqlParam);
+            long numSameDayGroupAppts = resultList.size() > 0 ? (Long)resultList.get(0).get("numAppts") : 0;
+            bMultipleSameDayGroupAppt = (numSameDayGroupAppts > 0);
+        }
+        
+        if (bMultipleSameDayGroupAppt){
+            displayStyle="display:block";
+        }
+ %>
+<div id="tooManySameDayGroupApptWarning" style="<%=displayStyle%>">
+    <table width="98%" BGCOLOR="red" border=1 align='center'> 
+        <tr>
+            <th>
+                <font color='white'> 
+                    <bean:message key='appointment.addappointment.titleMultipleGroupDayBooking'/><br/>
+                    <bean:message key='appointment.addappointment.MultipleGroupDayBooking'/>
+                </font>
+            </th>
+        </tr>
+    </table>
+</div>
+ <%            
+  }
+  
   if (!bFirstDisp && request.getParameter("demographic_no") != null && !request.getParameter("demographic_no").equals("")) {
-
-	resultList = oscarSuperManager.find("appointmentDao", "search_demographic_statusroster", new Object [] {request.getParameter("demographic_no") });
+               	
+        resultList = oscarSuperManager.find("appointmentDao", "search_demographic_statusroster", new Object [] {request.getParameter("demographic_no") });
 	for (Map status : resultList) {
 
         patientStatus      = (String) status.get("patient_status");
@@ -420,8 +485,8 @@ function pasteAppt() {
 
 		}
 	}
-  }
-
+  } 
+  
 
   if(apptnum!=0) {
 
@@ -502,8 +567,7 @@ function pasteAppt() {
 				    SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
 				    List<Site> sites = siteDao.getActiveSitesByProviderNo((String) session.getAttribute("user"));
 				    // multisites end ==================
-				
-				    OscarProperties props = OscarProperties.getInstance();
+								    
 				    boolean bMoreAddr = bMultisites? true : props.getProperty("scheduleSiteID", "").equals("") ? false : true;
 				    String tempLoc = "";
 				    if(bFirstDisp && bMoreAddr) {                
@@ -664,12 +728,14 @@ function pasteAppt() {
 <%String demoNo = request.getParameter("demographic_no");%>
 <table class="buttonBar deep">
     <tr>
-        <% if(!bDnb) { %>
-        <TD nowrap><INPUT TYPE="submit"
+        <% if(!(bDnb || bMultipleSameDayGroupAppt)) { %>
+        <TD nowrap>
+        <%    if (!props.getProperty("allowMultipleSameDayGroupAppt", "").equalsIgnoreCase("no")) {%>
+      <INPUT TYPE="submit" id="groupButton"
             onclick="document.forms['ADDAPPT'].displaymode.value='Group Appt'"
-            VALUE="<bean:message key="appointment.addappointment.btnGroupAppt"/>
-"
-            <%=disabled%>> <%
+            VALUE="<bean:message key="appointment.addappointment.btnGroupAppt"/>"
+            <%=disabled%>> 
+        <% }
 
   if(dateString2.equals( inform.format(inform.parse(now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH))) )
 
@@ -677,7 +743,7 @@ function pasteAppt() {
 
         org.apache.struts.util.MessageResources resources = org.apache.struts.util.MessageResources.getMessageResources("oscarResources");
 
-        %> <INPUT TYPE="submit"
+        %> <INPUT TYPE="submit" id="addPrintPreviewButton"
             onclick="document.forms['ADDAPPT'].displaymode.value='Add Appt & PrintPreview'"
             VALUE="<bean:message key='appointment.addappointment.btnAddApptPrintPreview'/>"
             <%=disabled%>>
@@ -693,7 +759,7 @@ function pasteAppt() {
             VALUE="<% if (isMobileOptimized) { %><bean:message key="appointment.addappointment.btnAddAppointmentMobile" />
                    <% } else { %><bean:message key="appointment.addappointment.btnAddAppointment"/><% } %>"
             <%=disabled%>>
-        <INPUT TYPE="submit"
+        <INPUT TYPE="submit" id="printButton"
             onclick="document.forms['ADDAPPT'].displaymode.value='Add Appt & PrintCard'"
             VALUE="<bean:message key='global.btnPrint'/>"
             <%=disabled%>>
@@ -701,10 +767,28 @@ function pasteAppt() {
 		<TD></TD>
         <% } %>
     <TD align="right">
-        <% if(apptObj!=null) { %> <input type="button" value="Paste"
-           onclick="pasteAppt();"> <% } %> <INPUT TYPE="RESET"
-           id="backButton" class="leftButton top" VALUE="<bean:message key="appointment.addappointment.btnCancel"/>" onClick="window.close();"><input type="button"
-           value="<bean:message key="appointment.addappointment.btnRepeat"/>" onclick="onButRepeat()" <%=disabled%>></TD>
+        <% 
+           if(bFirstDisp && apptObj!=null) {
+           
+               long numSameDayGroupApptsPaste = 0;
+           
+               if (props.getProperty("allowMultipleSameDayGroupAppt", "").equalsIgnoreCase("no")) {
+                    String [] sqlParam = new String[3] ;
+                    sqlParam[0] = myGroupNo; //schedule group
+                    sqlParam[1] = apptObj.getDemographic_no();
+                    sqlParam[2] = dateString2;
+
+                    resultList = oscarSuperManager.find("appointmentDao", "search_group_day_appt", sqlParam);
+                    numSameDayGroupApptsPaste = resultList.size() > 0 ? (Long)resultList.get(0).get("numAppts") : 0;
+                }
+          %> 
+          <input type="button" id="pasteButton" value="Paste" onclick="pasteAppt(<%=(numSameDayGroupApptsPaste > 0)%>);">
+        <% }%>
+          <INPUT TYPE="RESET" id="backButton" class="leftButton top" VALUE="<bean:message key="appointment.addappointment.btnCancel"/>" onClick="window.close();">
+       <% if (!props.getProperty("allowMultipleSameDayGroupAppt", "").equalsIgnoreCase("no")) {%>
+          <input type="button" id="apptRepeatButton" value="<bean:message key="appointment.addappointment.btnRepeat"/>" onclick="onButRepeat()" <%=disabled%>> 
+      <%  } %>
+   </TD>
 	</tr>
 </table>
 </FORM>
