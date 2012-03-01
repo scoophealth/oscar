@@ -431,7 +431,7 @@ window.onload=function(){
 						<td nowrap width="30%"><b>Billing Physician</b></td>
 						<td width="20%"><%=providerBean.getProperty(request.getParameter("xml_provider")!=null?request.getParameter("xml_provider").substring(0,request.getParameter("xml_provider").indexOf("|")):"", "")%></td>
 						<td nowrap width="30%"><b>Assig. Physician</b></td>
-						<td width="20%"><%=providerBean.getProperty(assgProvider_no, "")%></td>
+						<td width="20%"><%=assgProvider_no == null ? "N/A" : providerBean.getProperty(assgProvider_no, "")%></td>
 					</tr>
 					<tr>
 
