@@ -14634,44 +14634,6 @@
         <ViolationValue>/database/mysql/caisi/cookierevolverinit.sql:`user_specific` tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/cookierevolverinit.sql:`verification_needed` tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/init_ticklerplus.sql:shortcut tinyint(1) default '0',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  access_type	char(1) 	default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  activeyn    char(1)	default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  checkoutdate	datetime 	default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  checkoutuserid	varchar(12) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  checkoutyn     char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  dbentity    varchar(40)	default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  description   varchar(80)	default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  description varchar(80) 	default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  distinctyn  char(1)	default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  doctype		varchar(3) 	default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  fieldlength   int(10) 	default 0,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  fieldtypecode varchar(8)	default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  filename		varchar(128) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  filetype		varchar(5) 	default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  filters     text	default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  groupcode   varchar(10)	default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  grouprank     int(10)		default 0,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  lookuptable   varchar(6)	default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  mastertype  char(1)	default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  moduleid		varchar(6) 	default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  note          varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  note        text	default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  numbermask    varchar(16)	default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  object_type varchar(5)	default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  ownerid        varchar(12) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  privacycd      varchar(3) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  refno			varchar(12) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  refviews    varchar(512)	default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  relations   text	default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  reportno    	int(10) NOT NULL default 0,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  revdatetime   datetime default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  secureyn    char(1)	default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  sourcetxt     text	default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  subject        varchar(256) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  updatedby   varchar(12)	default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  updateddate datetime	default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  viewid		varchar(36) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:#  viewrefno		varchar(12)	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:--   `answer` varchar(10) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:--   `demographic_no` int(10) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:--   `processed` int(10) default NULL,</ViolationValue>
@@ -15780,8 +15742,10 @@
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`yearsOfEducation` varchar(4) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`yourCanadianStatus` varchar(50) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`yourCanadianStatus` varchar(50) default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:access_type	char(1) 	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:activeyn       tinyint(1)	default 0,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:activeyn     char(1)	default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:activeyn    char(1)	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:ageMax int not null default 0,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:ageMin int not null default 0,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:allowSims tinyint(1) unsigned NOT NULL default 1,</ViolationValue>
@@ -15791,6 +15755,9 @@
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:attempted tinyint(1) default 0,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:behaved tinyint(1) default 0,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:caused tinyint(1) default 0,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:checkoutdate	datetime 	default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:checkoutuserid	varchar(12) default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:checkoutyn     char(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:chkBehavedA tinyint(1) default 0,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:chkCompetenceA tinyint(1) default 0,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:chkDeteriorationB tinyint(1) default 0,</ViolationValue>
@@ -15821,14 +15788,19 @@
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:datepart		char(1)	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:datetimeOfDelivered varchar(20) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:datetimeOfDetention varchar(20) default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:dbentity    varchar(40)	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:defaultyn      tinyint(1)	default 0,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:demographic_no 	bigint(20) default '0' not null,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:demographic_no bigint(11) NOT NULL default 0,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:description	varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:description    varchar(120)	default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:description   varchar(80)	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:description  varchar(40)	default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:description varchar(80) 	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:deteriorationB tinyint(1) default 0,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:deteriorationB2 tinyint(1) default 0,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:distinctyn  char(1)	default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:doctype		varchar(3) 	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:enableAnonymous tinyint(1) unsigned NOT NULL default 0,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:enableGroupNotes tinyint(1) unsigned NOT NULL default 0,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:enddate		date default NULL,</ViolationValue>
@@ -15840,12 +15812,19 @@
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:facts2 text default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:factsB text default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:fielddesc         varchar(80)	default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:fieldlength   int(10) 	default 0,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:fieldname         varchar(32) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:fieldno    int(10)	default 0,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:fieldsql          varchar(32)	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:fieldtype         varchar(10)	default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:fieldtypecode varchar(8)	default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:filename		varchar(128) default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:filetype		varchar(5) 	default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:filters     text	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:formCreated date default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:formEdited timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:groupcode   varchar(10)	default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:grouprank     int(10)		default 0,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:harmHimself tinyint(1) default 0,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:harmHimselfB tinyint(1) default 0,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:harmHimselfB2 tinyint(1) default 0,</ViolationValue>
@@ -15863,12 +15842,19 @@
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:lookup_script     varchar(50)	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:lookup_table      varchar(30) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:lookup_tree       char(1)	default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:lookuptable   varchar(6)	default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:mastertype  char(1)	default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:moduleid		varchar(6) 	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:name varchar(60) default null,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:name2 varchar(60) default null,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:nameOfMinisterHealth varchar(255) default null,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:note              varchar(128)	default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:note          varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:note         varchar(128)	default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:note        text	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:notes			text 		default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:numbermask    varchar(16)	default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:object_type varchar(5)	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:observation text default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:observation2 text default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:observationB text default NULL,</ViolationValue>
@@ -15879,19 +15865,27 @@
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:optiontitle    varchar(120)	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:orderbyindex int(10)	default 0,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:orgapplicable tinyint(1) 	default 0,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:ownerid        varchar(12) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:physician varchar(60) default null,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:privacycd      varchar(3) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:privateyn      char(1)	default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:refno			varchar(12) default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:refviews    varchar(512)	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:relation   varchar(10)	default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:relations   text	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:reportgroup	int(10)		default 0,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:reportno    	int(10) NOT NULL default 0,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:reportno          int(10) default 0,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:reportno       int(10) not null	default 0,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:reportoptionid int(10)	default 0,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:reporttype	char(3) 	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:required   char(1)	default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:revdatetime   datetime default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:revdatetime TIMESTAMP NOT NULL default CURRENT_TIMESTAMP,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:rptfilename    varchar(128)	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:rptfileno      int(10)	default 0,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:rptversion     datetime default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:secureyn    char(1)	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:shortdesc    varchar(10)	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:shown tinyint(1) default 0,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:signPhysician varchar(60) default null,</ViolationValue>
@@ -15899,6 +15893,7 @@
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:signature varchar(60) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:signature1 varchar(60) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:signature2 varchar(60) default NULL</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:sourcetxt     text	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:sptorun		varchar(32) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:sqlorderby     text	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:sqlwhere       text	default NULL,</ViolationValue>
@@ -15908,6 +15903,7 @@
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:startdate_s	varchar(8) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:startdate_s 	varchar(8) 	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:startpayperiod varchar(10)	default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:subject        varchar(256) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:tablename		varchar(30)	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:templateno int(10) not null	default 0,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:threatened tinyint(1) default 0,</ViolationValue>
@@ -15916,10 +15912,14 @@
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:todayTime varchar(8) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:updatedate     datetime	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:updatedby		varchar(20)	default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:updatedby   varchar(12)	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:updateddate	datetime 	default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:updateddate datetime	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:val        varchar(40)	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:valdesc    varchar(120)	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:valueformat       varchar(32)	default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:viewid		varchar(36) default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:viewrefno		varchar(12)	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisidata.sql:-- DEFAULT BED DEMOGRAPHIC STATUSES</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisidata.sql:-- DEFAULT BED TYPE</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisidata.sql:-- DEFAULT ROOM TYPES</ViolationValue>
