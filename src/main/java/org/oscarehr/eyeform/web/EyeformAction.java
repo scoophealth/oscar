@@ -34,6 +34,7 @@ import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.dao.BillingreferralDao;
 import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.ConsultationRequestExtDao;
+import org.oscarehr.common.dao.DemographicContactDao;
 import org.oscarehr.common.dao.DocumentResultsDao;
 import org.oscarehr.common.dao.EFormGroupDao;
 import org.oscarehr.common.dao.EFormValueDao;
@@ -45,6 +46,7 @@ import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Billingreferral;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.common.model.Document;
 import org.oscarehr.common.model.EFormGroup;
@@ -53,6 +55,7 @@ import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Site;
 import org.oscarehr.common.service.PdfRecordPrinter;
+import org.oscarehr.common.web.ContactAction;
 import org.oscarehr.eyeform.MeasurementFormatter;
 import org.oscarehr.eyeform.dao.ConsultationReportDao;
 import org.oscarehr.eyeform.dao.EyeFormDao;
@@ -61,14 +64,14 @@ import org.oscarehr.eyeform.dao.OcularProcDao;
 import org.oscarehr.eyeform.dao.ProcedureBookDao;
 import org.oscarehr.eyeform.dao.SpecsHistoryDao;
 import org.oscarehr.eyeform.dao.TestBookRecordDao;
-import org.oscarehr.eyeform.model.EyeformConsultationReport;
 import org.oscarehr.eyeform.model.EyeForm;
+import org.oscarehr.eyeform.model.EyeformConsultationReport;
 import org.oscarehr.eyeform.model.EyeformFollowUp;
 import org.oscarehr.eyeform.model.EyeformOcularProcedure;
 import org.oscarehr.eyeform.model.EyeformProcedureBook;
-import org.oscarehr.eyeform.model.SatelliteClinic;
 import org.oscarehr.eyeform.model.EyeformSpecsHistory;
 import org.oscarehr.eyeform.model.EyeformTestBook;
+import org.oscarehr.eyeform.model.SatelliteClinic;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -724,6 +727,11 @@ public class EyeformAction extends DispatchAction {
 				request.setAttribute("referral_doc_name", referraldoc);
 				cp.setReferralNo(refNo);
 			}
+
+			DemographicContactDao demographicContactDao = (DemographicContactDao)SpringUtils.getBean("demographicContactDao");
+			List<DemographicContact> contacts = demographicContactDao.findByDemographicNoAndCategory(demographicNo, "professional");
+			contacts = ContactAction.fillContactNames(contacts);
+			request.setAttribute("contacts", contacts);
 
 
 			if (!"saved".equalsIgnoreCase((String) request.getAttribute("savedflag"))

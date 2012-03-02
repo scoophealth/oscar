@@ -6,6 +6,9 @@
 
 <%@page import="org.oscarehr.eyeform.model.*"%>
 <%@page import="org.oscarehr.eyeform.web.EyeformAction"%>
+<%@page import="java.util.List"%>
+<%@page import="org.oscarehr.common.model.DemographicContact"%>
+
 <html:html>
 <head>
 <html:base />
@@ -118,8 +121,9 @@ input.righty {
 <link rel="stylesheet" type="text/css" href="css/encounterStyles.css">
 </head>
 
+<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
 
-
+<script type="text/javascript" src="<c:out value="${ctx}"/>/js/jquery.js"></script>
 <script type="text/javascript" src="js/optiontransfer.js"></script>
 <script type="text/javascript" language=javascript>
 function confirmCompleted(btn) {
@@ -185,9 +189,10 @@ function confirmPrint(btn) {
 		else document.eyeForm.elements["cp.cc"].value=document.eyeForm.elements["cp.cc"].value+"; "+document.eyeForm.clDoctor.value;
 	}
 	function addFamDoc(){
+		var fd = $("#fam_doc").val();
 		if (document.eyeForm.elements["cp.cc"].value.length<=0)
-			document.eyeForm.elements["cp.cc"].value=document.eyeForm.famDoctor.value;
-		else document.eyeForm.elements["cp.cc"].value=document.eyeForm.elements["cp.cc"].value+"; "+document.eyeForm.famDoctor.value;
+			document.eyeForm.elements["cp.cc"].value=fd;
+		else document.eyeForm.elements["cp.cc"].value=document.eyeForm.elements["cp.cc"].value+"; "+ fd;
 	}
 	function clinicalInfoAdd(str,name){
 		if (document.eyeForm.elements["cp.clinicalInfo"].value.length>0 && name!=null && trim(name)!='')
@@ -546,9 +551,19 @@ jQuery(document).ready(function() {
 					<td width="50%" class="tite4">
 					<table width="100%">
 						<tr>
+							<td class="tite4">
+								<select id="fam_doc">
+									<%
+										List<DemographicContact> contacts = (List<DemographicContact>)request.getAttribute("contacts");
+										for(DemographicContact c:contacts) {
+											%><option value="<%=c.getContactName()%>"><%=c.getRole()%> - <%=c.getContactName() %></option><%
+										}
+									%>
+								</select>
+								&nbsp;
+								<input type="button" class="btn" onclick="addFamDoc();" value="add to cc">
+							</td>
 
-							<td class="tite4">Family doctor:<c:out value="${famDoctor }"/> <input type="button" class="btn"
-								onclick="addFamDoc();" value="add to cc"></td>
 							<td></td>
 						</tr>
 					</table>
