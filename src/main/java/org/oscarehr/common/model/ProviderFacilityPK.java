@@ -25,4 +25,23 @@ public class ProviderFacilityPK implements Serializable {
     }
 
 
+	@Override
+	public String toString() {
+		return ("providerNo=" + providerNo + ", facilityId=" + facilityId);
+	}
+
+	@Override
+	public int hashCode() {
+		return (providerNo.hashCode());
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		try {
+			ProviderFacilityPK o1 = (ProviderFacilityPK) o;
+			return ((providerNo.equals(o1.providerNo)) && (facilityId == o1.facilityId));
+		} catch (RuntimeException e) {
+			return (false);
+		}
+	}
 }

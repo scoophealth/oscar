@@ -34,5 +34,24 @@ public class ReportTempPK implements Serializable {
     }
 
 
+	@Override
+	public String toString() {
+		return ("demographicNo=" + demographicNo + ", edb=" + edb);
+	}
+
+	@Override
+	public int hashCode() {
+		return (demographicNo);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		try {
+			ReportTempPK o1 = (ReportTempPK) o;
+			return ((demographicNo == o1.demographicNo) && (edb.equals(o1.edb)));
+		} catch (RuntimeException e) {
+			return (false);
+		}
+	}
 
 }
