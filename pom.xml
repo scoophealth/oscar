@@ -801,15 +801,16 @@
 					</rulesets>
 				</configuration>
 			</plugin>
+
 		     <plugin>
 		        <groupId>org.apache.maven.plugins</groupId>
 		        <artifactId>maven-surefire-plugin</artifactId>		       
 		        <configuration>
-		          <skipTests>true</skipTests>
+		          <skipTests>false</skipTests>
 		        </configuration>
 		      </plugin>
-			  
-			  <plugin>
+		
+	  <plugin>
 			  	<groupId>org.oscarehr</groupId>
         		<artifactId>oscar-il18n-check-plugin</artifactId>
         		<version>1.0</version>
