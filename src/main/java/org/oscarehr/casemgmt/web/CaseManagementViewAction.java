@@ -60,6 +60,8 @@ import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramTeam;
 import org.oscarehr.PMmodule.model.SecUserRole;
+import org.oscarehr.billing.CA.ON.dao.BillingClaimDAO;
+import org.oscarehr.billing.CA.ON.model.BillingClaimHeader1;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicIssue;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
@@ -92,8 +94,8 @@ import org.oscarehr.eyeform.dao.FollowUpDao;
 import org.oscarehr.eyeform.dao.MacroDao;
 import org.oscarehr.eyeform.dao.TestBookRecordDao;
 import org.oscarehr.eyeform.model.EyeformFollowUp;
-import org.oscarehr.eyeform.model.Macro;
 import org.oscarehr.eyeform.model.EyeformTestBook;
+import org.oscarehr.eyeform.model.Macro;
 import org.oscarehr.provider.web.CppPreferencesUIBean;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -113,6 +115,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 	private static final Integer QUICK_CHART = 20;
 	private static final Integer FULL_CHART = -1;
+	private static final Integer MAX_INVOICES = 20;
 	private static Logger logger = MiscUtils.getLogger();
 	private CaseManagementManager caseManagementManager = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
 	private IssueDAO issueDao = (IssueDAO) SpringUtils.getBean("IssueDAO");
@@ -121,6 +124,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	private GroupNoteDao groupNoteDao = (GroupNoteDao) SpringUtils.getBean("groupNoteDao");
 	private DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 	private CaseManagementIssueNotesDao cmeIssueNotesDao = (CaseManagementIssueNotesDao)SpringUtils.getBean("caseManagementIssueNotesDao");
+	private BillingClaimDAO billingClaimDao = (BillingClaimDAO)SpringUtils.getBean("billingClaimDAO");
 
 	static {
 		//temporary..need something generic;
@@ -660,7 +664,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			providers.add(new LabelValueBean(tempProvider, tempProvider));
 		}
 		request.setAttribute("providers", providers);
-
+		
 		/*
 		 * people are changing the default sorting of notes so it's safer to explicity set it here, some one already changed it once and it reversed our sorting.
 		 */
@@ -679,7 +683,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		request.setAttribute("Notes", notesToDisplay);
 		logger.debug("Apply sorting to notes " + (System.currentTimeMillis() - startTime));
 	}
-
+	
 	private void sortIssues(ArrayList<CheckBoxBean> checkBoxBeanList) {
 		Comparator<CheckBoxBean> cbbComparator = new Comparator<CheckBoxBean>() {
 			public int compare(CheckBoxBean o1, CheckBoxBean o2) {
@@ -845,14 +849,28 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			}
 
 		}
-		// sort the notes
+		
+		//fetch last 20 invoices for display in chart only works for Ontario Billing right now
 		oscar.OscarProperties p = oscar.OscarProperties.getInstance();
+		if( p.getProperty("billregion","").equalsIgnoreCase("ON") ) {
+			fetchInvoices(notesToDisplay, demoNo);
+		}
+		
+		// sort the notes		
 		String noteSort = p.getProperty("CMESort", "");
 		if (noteSort.trim().equalsIgnoreCase("UP")) notesToDisplay = sortNotes(notesToDisplay, "observation_date_asc");
 		else notesToDisplay = sortNotes(notesToDisplay, "observation_date_desc");
 
 		request.setAttribute("notesToDisplay", notesToDisplay);
 	}
+	
+	private void fetchInvoices(ArrayList<NoteDisplay>notes, String demographic_no) {
+		List<BillingClaimHeader1>bills = billingClaimDao.getInvoices(demographic_no, MAX_INVOICES);
+		
+		for( BillingClaimHeader1 h1 : bills ) {
+			notes.add(new NoteDisplayNonNote(h1));
+		}		
+	}	
 
 	private List applyRoleFilter(List notes, String[] roleId) {
 
@@ -1620,6 +1638,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		String preventionColour = "color:#" + blackColour + ";background-color:#" + Colour.prevention + ";";
 		String ticklerColour = "color:#" + blackColour + ";background-color:#" + Colour.tickler + ";";
 		String rxColour = "color:#" + blackColour + ";background-color:#" + Colour.rx + ";";
+		String invoiceColour = "color:#" + blackColour + ";background-color:#" + Colour.invoices + ";";
 
 		String bgColour = "color:#000000;background-color:#CCCCFF;";
 
@@ -1633,7 +1652,10 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			bgColour = eFormsColour;
 		} else if (noteDisplay.isEncounterForm()) {
 			bgColour = formsColour;
+		} else if (noteDisplay.isInvoice()) {
+			bgColour = invoiceColour;
 		}
+		
 
 		return (bgColour);
 	}

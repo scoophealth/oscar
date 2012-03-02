@@ -224,4 +224,8 @@ public class NoteDisplayLocal implements NoteDisplay {
 	public boolean isEncounterForm() {
 	    return false;
     }
+	
+	public boolean isInvoice() {
+	    return false;
+    }
 }

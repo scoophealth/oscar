@@ -180,6 +180,10 @@ public class NoteDisplayIntegrator implements NoteDisplay {
 	public boolean isEncounterForm() {
 	    return false;
     }
+	
+	public boolean isInvoice() {
+		return false;
+	}
 
 	@Override
     public String getEncounterTime() {
