@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context" 
+       xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
                 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
@@ -54,7 +54,7 @@
 	<bean id="dxResearchDao" class="org.oscarehr.dx.dao.DxResearchDAO" autowire="byName" />
 	<bean id="billingOnItemDao" class="oscar.oscarBilling.ca.on.dao.BillingOnItemDao" autowire="byName" />
 	<bean id="otherIdDao" class="org.oscarehr.common.dao.OtherIdDAO" autowire="byName" />
-	
+
 	<!-- <bean id="topazDao" class="com.quatro.dao.TopazDao" autowire="byName" /> -->
 	<bean id="roomDAO" class="org.oscarehr.PMmodule.dao.RoomDAO" autowire="byName" />
 	<bean id="CaseManagementIssueDAO" class="org.oscarehr.casemgmt.dao.CaseManagementIssueDAO" autowire="byName" />
@@ -66,7 +66,7 @@
 	<bean id="CaseManagementCPPDAO" class="org.oscarehr.casemgmt.dao.CaseManagementCPPDAO" autowire="byName" />
 	<bean id="OnCallDAO" class="org.oscarehr.casemgmt.dao.OnCallDAO" autowire="byName" />
 
-	
+
 	<bean id="AllergyDao" class="org.oscarehr.common.dao.AllergyDao" autowire="byName" />
 	<bean id="IssueDAO" class="org.oscarehr.casemgmt.dao.IssueDAO" autowire="byName" />
 	<bean id="EchartDAO" class="org.oscarehr.casemgmt.dao.EchartDAO" autowire="byName" />
@@ -111,18 +111,18 @@
 	<bean id="BillingDxCodeDAO" class="oscar.oscarBilling.ca.bc.data.BillingDxCodeDAO" autowire="byName" />
 	<bean id="BillingreferralDAO" class="org.oscarehr.common.dao.BillingreferralDao" autowire="byName" />
 	<bean id="DxresearchDAO" class="org.oscarehr.common.dao.DxresearchDAO" autowire="byName" />
-	<bean id="Icd9DAO" class="org.oscarehr.common.dao.Icd9Dao" autowire="byName" />        
-    
+	<bean id="Icd9DAO" class="org.oscarehr.common.dao.Icd9Dao" autowire="byName" />
+
     <bean id="OcularProcDAO" class="org.oscarehr.eyeform.dao.OcularProcDao" autowire="byName" />
 	<bean id="SpecsHistoryDAO" class="org.oscarehr.eyeform.dao.SpecsHistoryDao" autowire="byName" />
 	<bean id="ProcedureBookDAO" class="org.oscarehr.eyeform.dao.ProcedureBookDao" autowire="byName" />
 	<bean id="TestBookDAO" class="org.oscarehr.eyeform.dao.TestBookRecordDao" autowire="byName" />
 	<bean id="MacroDAO" class="org.oscarehr.eyeform.dao.MacroDao" autowire="byName" />
 	<bean id="FollowUpDAO" class="org.oscarehr.eyeform.dao.FollowUpDao" autowire="byName" />
-	<bean id="rourke2009Dao" class="oscar.form.dao.Rourke2009DAO" autowire="byName" />      
+	<bean id="rourke2009Dao" class="oscar.form.dao.Rourke2009DAO" autowire="byName" />
 	<bean id="EyeFormDao" class="org.oscarehr.eyeform.dao.EyeFormDao" autowire="byName" />
     <bean id="ocanSubmissionLogDao" class="org.oscarehr.PMmodule.dao.OcanSubmissionLogDao" autowire="byName" />
-    
+
     <bean id="logDAO" class="org.oscarehr.PMmodule.dao.LogDAO" autowire="byName" />
 	<bean id="scratchPadDao" class="com.quatro.dao.ScratchPadDao" autowire="byName" />
 	<bean id="lookupDao" class="com.quatro.dao.LookupDao" autowire="byName" />
@@ -135,6 +135,8 @@
 
         <bean id="queueDocumentLinkDAO" class="org.oscarehr.common.dao.QueueDocumentLinkDao" autowire="byName"/>
 	<bean id="integratorControlDao" class="oscar.facility.IntegratorControlDao" autowire="byName" />
+
+	<bean id="caseloadDao" class="org.oscarehr.common.dao.CaseloadDao" autowire="byName" />
 
 	<!-- Dao classes that implement OscarSuperDao -->
 	<bean id="appointmentSuperDao" class="oscar.dao.AppointmentDao" autowire="byName" />
@@ -191,7 +193,7 @@
 				<!--value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/inrFlowsheet2.xml</value-->
 
 
-				<!--<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/physicalFunctionFlowsheet.xml</value -->				
+				<!--<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/physicalFunctionFlowsheet.xml</value -->
 				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdAsthmaFlowsheet.xml</value>
 				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdCOPDFlowsheet.xml</value>
 				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdChf.xml</value>
@@ -329,25 +331,25 @@
 			<ref local="rxCloneDao" />
 		</property>
 	</bean>
-	
+
 	<bean id="extPrintMeasurements" class="org.oscarehr.casemgmt.service.MeasurementPrint" autowire="byName"/>
 	<bean id="extPrintOcularProcedures" class="org.oscarehr.eyeform.web.OcularProcPrint" autowire="byName"/>
 	<bean id="extPrintSpecsHistory" class="org.oscarehr.eyeform.web.SpecsHistoryPrint" autowire="byName"/>
-	
+
 	<!-- Encounter Form DAO -->
 	<bean id="Rourke2009DAO" class="oscar.form.dao.Rourke2009DAO" autowire="byName"/>
-        
-        
+
+
         <!--Email Support -->
         <context:component-scan base-package="oscar.service"/>
-      
+
         <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor" p:corePoolSize="5"
           p:maxPoolSize="10" p:queueCapacity="100" p:waitForTasksToCompleteOnShutdown="true"/>
-        
+
         <bean id="asyncMailSender" class="oscar.service.AsyncMailSender" autowire="byName">
            <property name="taskExecutor" ref="taskExecutor" />
         </bean>
-        
+
         <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
             <property name="host" value="${email.host}"/>
             <property name="port" value="${email.port}" />

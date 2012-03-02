@@ -9,9 +9,9 @@ import org.springframework.jdbc.core.RowMapper;
  * Oscar Provider DAO implementation created to extract database access code
  * from provider related JSP files. This class contains only actual sql
  * queries and row mappers.
- * 
+ *
  * @author Eugene Petruhin
- * 
+ *
  */
 public class ProviderDao extends OscarSuperDao {
 
@@ -20,7 +20,7 @@ public class ProviderDao extends OscarSuperDao {
 	public ProviderDao() {
 	}
 
-	private String [][] dbQueries = new String[][] { 
+	private String [][] dbQueries = new String[][] {
 			{"search_tickler","select * from tickler where demographic_no=? and service_date<=? and status='A' order by service_date desc"},
 			{"search_studycount","select count(ds.study_no) from demographicstudy ds, study s where ds.demographic_no=? and ds.study_no=s.study_no and s.current1='1'"},
 			{"search_study","select s.* from demographicstudy d, study s where demographic_no=? and d.study_no = s.study_no limit 1 "},
@@ -33,13 +33,10 @@ public class ProviderDao extends OscarSuperDao {
             {"deletegroupmember", "delete from mygroup where mygroup_no=? and provider_no=?"},
             {"savemygroup", "insert into mygroup (mygroup_no,provider_no,last_name,first_name) values(?,?,?,?)" },
             {"updateapptstatus", "update appointment set status=?, lastupdateuser=?, updatedatetime=now() where appointment_no=? "},
-            
             {"updatepreference", "update preference set start_hour=?, end_hour=?, every_min=?, mygroup_no=?, default_servicetype=?, color_template=? where provider_no=? "},
             {"add_preference", "insert into preference (provider_no, start_hour, end_hour, every_min, mygroup_no, default_servicetype, color_template) values (?, ?, ?, ?, ?, ?, ?)"},
             {"updatepreference_newtickler", "update preference set start_hour=?, end_hour=?, every_min=?, mygroup_no=?, default_servicetype=?, color_template=?, new_tickler_warning_window=? , default_caisi_pmm=? , defaultDoNotDeleteBilling=? where provider_no=? "},
             {"add_preference_newtickler", "insert into preference (provider_no, start_hour, end_hour, every_min, mygroup_no, default_servicetype, color_template, new_tickler_warning_window, default_caisi_pmm, defaultDoNotDeleteBilling) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"},
-
-            
             {"archive_appt", "insert into appointmentArchive (select * from appointment where appointment_no=?)"},
 
             {"search_demograph", "select *  from demographic where demographic_no=?"},
@@ -96,15 +93,15 @@ public class ProviderDao extends OscarSuperDao {
 			{"searchpassword", "select password from security where provider_no = ?" },
 			{"updatepassword", "update security set password = ? where  provider_no= ?" },
 
-		    {"search_provider", "select provider_no, last_name, first_name from provider where last_name like ? and first_name like ? order by last_name"}, 
-		    {"search_providersgroup", "select mygroup_no, last_name, first_name from mygroup where last_name like ? and first_name like ? order by last_name, first_name, mygroup_no"}, 
+		    {"search_provider", "select provider_no, last_name, first_name from provider where last_name like ? and first_name like ? order by last_name"},
+		    {"search_providersgroup", "select mygroup_no, last_name, first_name from mygroup where last_name like ? and first_name like ? order by last_name, first_name, mygroup_no"},
 		    {"search_mygroup", "select mygroup_no from mygroup where mygroup_no like ? group by mygroup_no order by mygroup_no"},
 		    //multi-site query, schedule day view page
 			{"site_searchmygroupcount", "select count(provider_no) from mygroup where mygroup_no=?  and provider_no in (select ps.provider_no from providersite ps inner join site s on ps.site_id = s.site_id where s.name = ?)"},
 			{"site_search_numgrpscheduledate", "select count(scheduledate.provider_no) from mygroup, scheduledate where mygroup_no = ? and scheduledate.sdate=? and mygroup.provider_no=scheduledate.provider_no and scheduledate.available = '1'  and scheduledate.status = 'A'  and mygroup.provider_no in (select ps.provider_no from providersite ps inner join site s on ps.site_id = s.site_id where s.name = ?) "},
 			{"site_searchmygroupprovider", "select provider_no, last_name, first_name from mygroup where mygroup_no=?  and provider_no in (select ps.provider_no from providersite ps inner join site s on ps.site_id = s.site_id where s.name = ?)"},
 			{"site_search_scheduledate_datep", "select * from scheduledate where sdate between ? and ? and status = 'A' and provider_no in (select ps.provider_no from providersite ps inner join site s on ps.site_id = s.site_id where s.name = ?) order by sdate" },
-		    
+
 			{"intake_pharmacy","SELECT * FROM  pharmacyInfo where ID = (select d.pharmacyID from demographicPharmacy d where  d.status = 1 and d.demographic_no = ? order by addDate desc limit 1) order by recordID desc limit 1"},
 			{"intake_allergies","SELECT * FROM allergies WHERE demographic_no = ? and archived = '0' ORDER BY DESCRIPTION"},
 			{"intake_medications","select * from drugs as D where demographic_no = ? and archived = 0 and drugId = (select max(drugId) from drugs where demographic_no = D.demographic_no and archived = 0 and regional_identifier = D.regional_identifier) ORDER BY rx_date DESC, drugId DESC"},
@@ -115,6 +112,19 @@ public class ProviderDao extends OscarSuperDao {
 			{"intake_reminders","select distinct casemgmt_note.* from casemgmt_note, (select max(cmn2.note_id) as note_id from casemgmt_issue_notes as cmin2 left join casemgmt_note cmn2 USE INDEX (demographic_no) using (note_id) left join casemgmt_issue as cmi2 using (id) where cmn2.note_id = cmin2.note_id and cmin2.id = cmi2.id and cmi2.issue_id in (38) and cmn2.demographic_no = ? group by cmn2.uuid) as rem_notes where casemgmt_note.note_id=rem_notes.note_id and casemgmt_note.archived=0"},
 			{"intake_preventions","select * from preventions where demographic_no = ? and deleted != 1 order by prevention_type,prevention_date"},
 			{"intake_patient_dxcode","select * from dxresearch where demographic_no=? and status='A' and dxresearch_code=?"},
+
+			{"search_rsstatus", "select distinct roster_status from demographic where roster_status not in ('', 'RO', 'NR', 'TE', 'FS')"},
+			{"cl_demographic_query","select last_name, first_name, sex, month_of_birth, date_of_birth, CAST((DATE_FORMAT(NOW(), '%Y') - DATE_FORMAT(concat(year_of_birth,month_of_birth,date_of_birth), '%Y') - (DATE_FORMAT(NOW(), '00-%m-%d') < DATE_FORMAT(concat(year_of_birth,month_of_birth,date_of_birth), '00-%m-%d'))) as UNSIGNED INTEGER) as age from demographic where demographic_no=?"},
+			{"cl_demographic_query_roster","select last_name, first_name, sex, month_of_birth, date_of_birth, CAST((DATE_FORMAT(NOW(), '%Y') - DATE_FORMAT(concat(year_of_birth,month_of_birth,date_of_birth), '%Y') - (DATE_FORMAT(NOW(), '00-%m-%d') < DATE_FORMAT(concat(year_of_birth,month_of_birth,date_of_birth), '00-%m-%d'))) as UNSIGNED INTEGER) as age from demographic where demographic_no=? AND roster_status=?"},
+			{"cl_last_appt","select max(appointment_date) from appointment where appointment_date < now() and demographic_no=?"},
+			{"cl_next_appt","select min(appointment_date) from appointment where appointment_date > now() and demographic_no=?"},
+			{"cl_num_appts","select count(*) from appointment where demographic_no=? and appointment_date > curdate() - 365"},
+			{"cl_new_labs","select count(*) from providerLabRouting left join patientLabRouting using (lab_no) where providerLabRouting.lab_type='HL7' and status='N' and provider_no=? and demographic_no=?"},
+			{"cl_new_docs","select count(*) from providerLabRouting left join patientLabRouting using (lab_no) where providerLabRouting.lab_type='DOC' and status='N' and provider_no=? and demographic_no=?"},
+			{"cl_new_ticklers","select count(*) from tickler where status='A' and demographic_no=?"},
+			{"cl_new_msgs","select count(*) from msgDemoMap left join messagelisttbl on message = messageID where demographic_no=? and status='new'"},
+			{"cl_measurement","select * from measurements where type=? and demographicNo=? order by dateObserved desc limit 1"},
+
 	};
 
 	/**
@@ -132,4 +142,5 @@ public class ProviderDao extends OscarSuperDao {
 	protected Map<String, RowMapper> getRowMappers() {
 		return rowMappers;
 	}
+
 }
