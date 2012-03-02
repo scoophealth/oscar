@@ -30,4 +30,5 @@ public class Colour {
     public static final String medicalHistory="996633";
     public static final String ongoingConcerns="996633";
     public static final String reminders="996633";
+    public static final String invoices="254117";
 }
