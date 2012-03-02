@@ -6,11 +6,11 @@ import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.oscarehr.util.MiscUtils;
 
 public abstract class AbstractModel<T> implements java.io.Serializable
-{		
+{
 	protected static final String OBJECT_NOT_YET_PERISTED="The object is not persisted yet, this operation requires the object to already be persisted.";
-	
+
 	public abstract T getId();
-	
+
 	@Override
     public String toString()
 	{
@@ -22,13 +22,20 @@ public abstract class AbstractModel<T> implements java.io.Serializable
 	{
 		if (getId() == null)
 		{
+			StackTraceElement[] stack = new Throwable().getStackTrace();
+			for (int i = 0; i < stack.length; i++) {
+		        if(stack[i].getClassName().equals("org.oscarehr.common.model.AbstractModel")
+		        		&& stack[i].getMethodName().equals("toString")) {
+		        	return super.hashCode();
+		        }
+	        }
 			MiscUtils.getLogger().warn(OBJECT_NOT_YET_PERISTED, new Exception());
 			return(super.hashCode());
 		}
-		
+
 		return(getId().hashCode());
 	}
-	
+
 	@Override
 	public boolean equals(Object o)
 	{
