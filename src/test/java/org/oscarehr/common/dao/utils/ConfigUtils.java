@@ -11,7 +11,7 @@ import org.oscarehr.util.MiscUtils;
 public class ConfigUtils
 {
 	private static final Logger logger=MiscUtils.getLogger();
-	
+
 	private static Properties properties=null;
 	static
 	{
@@ -26,22 +26,22 @@ public class ConfigUtils
         	logger.error("unexpected error", e);
         }
 	}
-	
+
 	public static String getProperty(String key)
 	{
 		return(properties.getProperty(key));
 	}
-	
+
 	public static String getProperty(Class<?> c, String key)
 	{
 		return(getProperty(properties, c, key));
 	}
-	
+
 	protected static String getProperty(Properties p, Class<?> c, String key)
 	{
 		return(p.getProperty(c.getName()+'.'+key));
 	}
-	
+
 	/**
 	 * This will automatically read in the values in the file to this object.
 	 */
@@ -49,7 +49,7 @@ public class ConfigUtils
 	{
 		Properties p=new Properties();
 		readFromFile(defaultPropertiesUrl, p);
-		
+
 		if (propertiesUrl!=null)
 		{
 			p=new Properties(p);
@@ -58,22 +58,22 @@ public class ConfigUtils
 
 		return(p);
 	}
-	
+
 	protected static Properties getProperties()
 	{
 		return(properties);
 	}
-	
+
 	/**
 	 * This method reads the properties from the url into the object passed in.
 	 */
 	private static void readFromFile(String url, Properties p) throws IOException
 	{
 		logger.info("Reading properties : "+url);
-		
+
 		InputStream is=ConfigUtils.class.getResourceAsStream(url);
 		if (is==null) is=new FileInputStream(url);
-		
+
 		try
 		{
 			p.load(is);

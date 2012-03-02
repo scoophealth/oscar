@@ -8,36 +8,43 @@ import java.io.InputStreamReader;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.oscarehr.util.MiscUtils;
 
 /**
  * This class is a utility class to create and drop the database schema and all it's bits.
- * This class is highly database specific and alternate versions of this class will have to be 
+ * This class is highly database specific and alternate versions of this class will have to be
  * written for other databases.
  */
 public class SchemaUtils
 {
+	public static boolean inited=false;
+	public static Map<String,String> createTableStatements = new HashMap<String,String>();
+
 	private static Connection getConnection() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException
 	{
 		String driver=ConfigUtils.getProperty("db_driver");
 		String user=ConfigUtils.getProperty("db_user");
 		String password=ConfigUtils.getProperty("db_password");
 		String urlPrefix=ConfigUtils.getProperty("db_url_prefix");
-		
+
 		Class.forName(driver).newInstance();
-		
+
 		return(DriverManager.getConnection(urlPrefix, user, password));
 	}
-	
+
 	/**
 	 * Intent is to support junit tests.
-	 * @throws SQLException 
-	 * @throws ClassNotFoundException 
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
+	 * @throws SQLException
+	 * @throws ClassNotFoundException
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
 	 */
 	public static void dropDatabaseIfExists() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException
 	{
@@ -52,39 +59,94 @@ public class SchemaUtils
 			c.close();
 		}
 	}
-	
+
 	/**
 	 * Intent is for new installations.
-	 * @throws SQLException 
-	 * @throws ClassNotFoundException 
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
-	 * @throws IOException 
-	 * @throws NoSuchAlgorithmException 
+	 * @throws SQLException
+	 * @throws ClassNotFoundException
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
+	 * @throws IOException
+	 * @throws NoSuchAlgorithmException
 	 */
 	public static void createDatabaseAndTables() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException
 	{
 		String schema=ConfigUtils.getProperty("db_schema");
-		
+
 		Connection c=getConnection();
 		try
 		{
 			Statement s=c.createStatement();
 			s.executeUpdate("create database "+schema);
 			s.executeUpdate("use "+schema);
-			
-			runCreateTablesScript(c);			
+
+			runCreateTablesScript(c);
 		}
 		finally
 		{
 			c.close();
 		}
 	}
-	
+
+
+	public static void restoreTable(String[] tableNames) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException
+	{
+		long start = System.currentTimeMillis();
+		String schema=ConfigUtils.getProperty("db_schema");
+
+		Connection c=getConnection();
+		try
+		{
+			Statement s=c.createStatement();
+			s.executeUpdate("use "+schema);
+			for (int i = 0; i < tableNames.length; i++) {
+				s.executeUpdate("drop table if exists " + tableNames[i]);
+				s.executeUpdate(createTableStatements.get(tableNames[i]));
+				s.executeUpdate("insert into " + tableNames[i] + " select * from " + tableNames[i] + "_maventest");
+            }
+
+
+		}
+		finally
+		{
+			c.close();
+		}
+		long end = System.currentTimeMillis();
+		long secsTaken = (end-start)/1000;
+		MiscUtils.getLogger().info("Restoring db took " + secsTaken + " seconds.");
+	}
+
+	public static void restoreAllTables() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException
+	{
+		long start = System.currentTimeMillis();
+		String schema=ConfigUtils.getProperty("db_schema");
+
+		Connection c=getConnection();
+		try
+		{
+			Statement s=c.createStatement();
+			s.executeUpdate("use "+schema);
+			for (String tableName:createTableStatements.keySet()) {
+				s.executeUpdate("drop table if exists " + tableName);
+				s.executeUpdate(createTableStatements.get(tableName));
+				s.executeUpdate("insert into " + tableName + " select * from " + tableName + "_maventest");
+            }
+
+
+		}
+		finally
+		{
+			c.close();
+		}
+		long end = System.currentTimeMillis();
+		long secsTaken = (end-start)/1000;
+		MiscUtils.getLogger().info("Restoring db took " + secsTaken + " seconds.");
+	}
+
 	private static int loadFileIntoMySQL(String filename) throws IOException {
 		String dir = new File(filename).getParent();
 		Process p = Runtime.getRuntime().exec(new String[] {"mysql","--user="+ConfigUtils.getProperty("db_user"),"--password="+ConfigUtils.getProperty("db_password"),"-e","source "+filename,ConfigUtils.getProperty("db_schema")},new String[]{},new File(dir));
-					
+
 		BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
 		BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
@@ -93,7 +155,7 @@ public class SchemaUtils
         while ((s = stdInput.readLine()) != null) {
             System.out.println(s);
         }
-        
+
         // read any errors from the attempted command
         while ((s = stdError.readLine()) != null) {
             System.out.println(s);
@@ -104,12 +166,12 @@ public class SchemaUtils
         	exitValue = p.waitFor();
         }catch(InterruptedException e) {
         	throw new IOException("error with process");
-        }		
+        }
 		return exitValue;
 	}
 
 	private static void runCreateTablesScript(Connection c) throws IOException
-	{				
+	{
 		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/oscarinit.sql"),0);
 
 		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/oscarinit_on.sql"),0);
@@ -118,15 +180,43 @@ public class SchemaUtils
 		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/icd9.sql"),0);
 
 		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/caisi/initcaisi.sql"),0);
-		
+
 		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/caisi/initcaisidata.sql"),0);
 		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/caisi/populate_issue_icd9.sql"),0);
 		//		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/icd9_issue_groups.sql"),0);
 		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/measurementMapData.sql"),0);
 //		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/expire_oscardoc.sql"),0);
-		
+
+
+		createTableStatements.clear();
+		try {
+			ResultSet rs = c.getMetaData().getTables(ConfigUtils.getProperty("db_schema"), null, "%", null);
+			while(rs.next()) {
+				String tableName = rs.getString("TABLE_NAME");
+				Statement stmt2 = c.createStatement();
+				ResultSet rs2 = stmt2.executeQuery("show create table " + tableName + ";");
+				if(rs2.next()) {
+					String sql = rs2.getString(2);
+					createTableStatements.put(tableName, sql);
+
+					Statement stmt = c.createStatement();
+					stmt.executeUpdate("alter table "+ tableName + " rename to " + tableName + "_maventest");
+					stmt.close();
+				}
+				rs2.close();
+				stmt2.close();
+			}
+			rs.close();
+
+
+		}catch(SQLException e) {
+			MiscUtils.getLogger().error("Error:",e);
+		}
+
+
+		inited=true;
 	}
-	
+
 	/**
 	 * Intended for existing installations.
 	 */
@@ -134,22 +224,22 @@ public class SchemaUtils
 	{
 		throw(new NotImplementedException("Not implemented yet..."));
 	}
-	
+
 	/**
 	 * Intent is for junit tests.
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
-	 * @throws SQLException 
-	 * @throws NoSuchAlgorithmException 
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
+	 * @throws SQLException
+	 * @throws NoSuchAlgorithmException
 	 */
 	public static void dropAndRecreateDatabase() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException
 	{
 		dropDatabaseIfExists();
 		createDatabaseAndTables();
 	}
-	
+
 	public static void main(String... argv) throws Exception
 	{
 		dropAndRecreateDatabase();
