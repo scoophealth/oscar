@@ -1,23 +1,23 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for 
- * Centre for Research on Inner City Health, St. Michael's Hospital, 
- * Toronto, Ontario, Canada 
+ *
+ * This software was written for
+ * Centre for Research on Inner City Health, St. Michael's Hospital,
+ * Toronto, Ontario, Canada
  */
 
 package org.oscarehr.common.dao;
@@ -83,16 +83,16 @@ public class DemographicDao extends HibernateDaoSupport {
         List rs = getHibernateTemplate().find(q, new Object[] { new Integer(programId), dt, dt, defdt });
         return rs;
     }
-    
+
     public List<Demographic> getDemographicByProvider(String providerNo){
     	return getDemographicByProvider(providerNo,true);
     }
-        
-    
+
+
     public List<Demographic> getDemographicByProvider(String providerNo, boolean onlyActive){
     	String q = "From Demographic d where d.ProviderNo = ? ";
     	if(onlyActive){
-    		q = "From Demographic d where d.ProviderNo = ? and d.PatientStatus = 'AC' ";	
+    		q = "From Demographic d where d.ProviderNo = ? and d.PatientStatus = 'AC' ";
     	}
     	List<Demographic> rs = getHibernateTemplate().find(q, new Object[] { providerNo });
     	return rs;
@@ -148,17 +148,17 @@ public class DemographicDao extends HibernateDaoSupport {
     public Set getArchiveDemographicByProgramOptimized(int programId, Date dt, Date defdt) {
 /*
     	Set<Demographic> archivedClients = new TreeSet<Demographic>(new Comparator<Demographic>() {
-    		public int compare(Demographic o1, Demographic o2) {    	
+    		public int compare(Demographic o1, Demographic o2) {
     			return String.CASE_INSENSITIVE_ORDER.compare(o1.getLastName()+","+o1.getFirstName(), o2.getLastName()+","+o2.getFirstName());
     		}
-    	});    	
+    	});
 */
     	Set<Demographic> archivedClients = new java.util.LinkedHashSet<Demographic>();
 
 
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     	String sqlQuery = "select distinct d.demographic_no,d.first_name,d.last_name,(select count(*) from admission a where client_id=d.demographic_no and admission_status='current' and program_id="+programId+" and admission_date<='"+sdf.format(dt)+"') as is_active from admission a,demographic d where a.client_id=d.demographic_no and (d.patient_status='AC' or d.patient_status='' or d.patient_status=null) and program_id="+programId + " and (d.anonymous is null or d.anonymous != 'one-time-anonymous') ORDER BY d.last_name,d.first_name";
-    	
+
 		SQLQuery q = this.getSession().createSQLQuery(sqlQuery);
 		q.addScalar("d.demographic_no");
 		q.addScalar("d.first_name");
@@ -180,7 +180,7 @@ public class DemographicDao extends HibernateDaoSupport {
 
 		return archivedClients;
     }
-    
+
     public List getArchiveDemographicByPromgram(int programId, Date dt, Date defdt) {
         // get duplicated demographic records with the same id ....from this sql
         String q = "Select d From Demographic d, Admission a " + "Where (d.PatientStatus=? or d.PatientStatus='' or d.PatientStatus=null) and d.DemographicNo=a.ClientId and a.ProgramId=? and a.AdmissionDate<=? and a.AdmissionStatus=? "
@@ -260,7 +260,7 @@ public class DemographicDao extends HibernateDaoSupport {
         }
     }
 
-    
+
      public List<Demographic> searchDemographic(String searchStr){
         String fieldname = "", regularexp = "like";
 
@@ -271,9 +271,9 @@ public class DemographicDao extends HibernateDaoSupport {
         } else {
             fieldname = "last_name " + regularexp + " ?" + " and first_name ";
         }
-        
+
         String hql = "From Demographic d where " + fieldname + " " + regularexp + " ? ";
-        
+
         String[] lastfirst = searchStr.split(",");
         Object[] object = null;
         if (lastfirst.length > 1) {
@@ -284,8 +284,8 @@ public class DemographicDao extends HibernateDaoSupport {
         List list = getHibernateTemplate().find(hql,object );
         return list;
     }
-    
-     
+
+
      public List<Demographic> getDemographicsByExtKey(String key, String value) {
     	 List<DemographicExt> extras = this.getHibernateTemplate().find("from DemographicExt d where d.key=? and d.value=?", new Object[] {key,value});
     	 if(extras.size()==0) {
@@ -297,20 +297,20 @@ public class DemographicDao extends HibernateDaoSupport {
     		 if(sb.length()>0) {
     			 sb.append(",");
     		 }
-    		 sb.append(extra.getDemographicNo());    		
+    		 sb.append(extra.getDemographicNo());
     	 }
-    	 
+
     	 logger.info("from ext, found " + extras.size() + " ids.");
-    	
+
     	 Query q = this.getSession().createQuery("from Demographic d where d.DemographicNo in ("+sb.toString()+")");
     	 return q.list();
-    	 
+
      }
-     
+
      public void save(Demographic demographic){
     	 this.getHibernateTemplate().saveOrUpdate(demographic);
      }
-     
+
      public static List<Integer> getDemographicIdsOpenedSinceTime(String value) {
     	 Connection c = null;
     	 try {
@@ -329,5 +329,10 @@ public class DemographicDao extends HibernateDaoSupport {
     		 SqlUtils.closeResources(c, null, null);
     	 }
      }
-	 
+
+     @SuppressWarnings("unchecked")
+    public List<String> getRosterStatuses() {
+    	 return this.getHibernateTemplate().find("SELECT d.RosterStatus from Demographic d ORDER BY d.RosterStatus ASC");
+     }
+
 }
