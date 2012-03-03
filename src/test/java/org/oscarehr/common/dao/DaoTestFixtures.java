@@ -29,14 +29,16 @@ public abstract class DaoTestFixtures
 		MiscUtils.getLogger().info("Setting up db took " + secsTaken + " seconds.");
 
 		start = System.currentTimeMillis();
-		oscar.OscarProperties p = oscar.OscarProperties.getInstance();
-		p.setProperty("db_name", ConfigUtils.getProperty("db_schema"));
-		p.setProperty("db_username", ConfigUtils.getProperty("db_user"));
-		p.setProperty("db_password", ConfigUtils.getProperty("db_password"));
-		p.setProperty("db_uri", ConfigUtils.getProperty("db_url_prefix"));
-		p.setProperty("db_driver", ConfigUtils.getProperty("db_driver"));
-		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("/applicationContext.xml");
-		SpringUtils.beanFactory = context;
+		if(SpringUtils.beanFactory==null) {
+			oscar.OscarProperties p = oscar.OscarProperties.getInstance();
+			p.setProperty("db_name", ConfigUtils.getProperty("db_schema"));
+			p.setProperty("db_username", ConfigUtils.getProperty("db_user"));
+			p.setProperty("db_password", ConfigUtils.getProperty("db_password"));
+			p.setProperty("db_uri", ConfigUtils.getProperty("db_url_prefix"));
+			p.setProperty("db_driver", ConfigUtils.getProperty("db_driver"));
+			ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("/applicationContext.xml");
+			SpringUtils.beanFactory = context;
+		}
 		end = System.currentTimeMillis();
 		secsTaken = (end-start)/1000;
 		MiscUtils.getLogger().info("Setting up spring took " + secsTaken + " seconds.");
