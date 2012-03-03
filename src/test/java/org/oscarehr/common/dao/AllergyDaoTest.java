@@ -100,5 +100,26 @@ public class AllergyDaoTest extends DaoTestFixtures {
 		assertEquals(dao.findActiveAllergies(3).size(),2);
 
 	}
+
+	public void testFind() throws Exception {
+		Allergy allergy = new Allergy();
+		EntityDataGenerator.generateTestDataForModelClass(allergy);
+		dao.persist(allergy);
+		Integer id = allergy.getId();
+		allergy = dao.find(allergy.getId());
+		assertNotNull(allergy);
+		assertEquals(id,allergy.getId());
+	}
+
+	@Test
+	public void testDelete() throws Exception {
+		Allergy allergy = new Allergy();
+		EntityDataGenerator.generateTestDataForModelClass(allergy);
+		dao.persist(allergy);
+		dao.remove(allergy.getId());
+		assertEquals(dao.getCountAll(),0);
+
+	}
+
 }
 
