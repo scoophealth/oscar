@@ -87,6 +87,8 @@ public interface NoteDisplay {
 	public boolean isEformData();
 
 	public boolean isEncounterForm();
+	
+	public boolean isInvoice();
 
 	public CaseManagementNoteLink getNoteLink();
 
