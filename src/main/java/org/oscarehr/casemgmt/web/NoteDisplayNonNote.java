@@ -1,10 +1,14 @@
 package org.oscarehr.casemgmt.web;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.billing.CA.ON.model.BillingClaimHeader1;
+import org.oscarehr.billing.CA.ON.model.BillingItem;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.SpringUtils;
@@ -25,6 +29,7 @@ public class NoteDisplayNonNote implements NoteDisplay {
 	private Provider provider;
 	private boolean isEformData = false;
 	private boolean isEncounterForm = false;
+	private boolean isInvoice = false;
 	private String linkInfo;
 
 	public NoteDisplayNonNote(HashMap<String, ? extends Object> eform) {
@@ -44,6 +49,37 @@ public class NoteDisplayNonNote implements NoteDisplay {
 		noteId = patientForm.formId;
 		linkInfo = patientForm.jsp;
 		isEncounterForm = true;
+	}
+	
+	public NoteDisplayNonNote(BillingClaimHeader1 h1) {
+		Calendar cal1 = Calendar.getInstance();
+		Calendar cal2 = Calendar.getInstance();
+		
+		cal1.setTime(h1.getBilling_date());
+		cal2.setTime(h1.getBilling_time());
+		cal1.set(Calendar.HOUR_OF_DAY, cal2.get(Calendar.HOUR_OF_DAY));
+		cal1.set(Calendar.MINUTE, cal2.get(Calendar.MINUTE));
+		cal1.set(Calendar.SECOND, cal2.get(Calendar.SECOND));
+		date = cal1.getTime();
+		
+		StringBuilder tmpNote = new StringBuilder();
+		
+		List<BillingItem>items = h1.getBillingItems();
+		BillingItem item;
+		int size = items.size();
+		for(int idx = 0; idx < size; ++idx) {
+			item = items.get(idx);
+			tmpNote.append(item.getService_code());
+			if( idx < size - 1 ) {
+				tmpNote.append("; ");
+			}			
+		}
+		provider = providerDao.getProvider(h1.getProvider_no());
+		tmpNote.append(" billed by " + provider.getFormattedName());
+		note = tmpNote.toString();
+		noteId = h1.getId();
+		linkInfo = "/billing/CA/ON/billingONCorrection.jsp?billing_no=" + noteId.toString();
+		isInvoice = true;
 	}
 
 	public ArrayList<String> getEditorNames() {
@@ -178,6 +214,14 @@ public class NoteDisplayNonNote implements NoteDisplay {
     public String getEncounterTransportationTime() {
 	    // TODO Auto-generated method stub
 	    return null;
+    }
+
+	public boolean isInvoice() {
+    	return isInvoice;
+    }
+
+	public void setInvoice(boolean isInvoice) {
+    	this.isInvoice = isInvoice;
     }
 
 }
