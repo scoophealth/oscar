@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="messagelisttbl")
-public class messageList extends AbstractModel<Integer> {
+public class MessageList extends AbstractModel<Integer> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

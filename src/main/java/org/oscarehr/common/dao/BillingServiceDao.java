@@ -1,20 +1,20 @@
 /**
  * Copyright (c) 2007-2008. CAISI, Toronto. All Rights Reserved.
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * This software was written for 
- * CAISI, 
- * Toronto, Ontario, Canada 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
+ * This software was written for
+ * CAISI,
+ * Toronto, Ontario, Canada
  */
 
 package org.oscarehr.common.dao;
@@ -39,7 +39,7 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 	public BillingServiceDao() {
 		super(BillingService.class);
 	}
-	
+
 	public List<BillingService> findBillingCodesByCode(String code, String region) {
 		Query query = entityManager.createQuery("select bs  from BillingService bs where bs.serviceCode like (:code) and region = (:region) order by bs.billingserviceDate");
 		query.setParameter("code", code + "%");
@@ -140,7 +140,7 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		Date date = (Date)query.getSingleResult();
 		return date;
 	}
-	
+
 	public Object[] getUnitPrice(String bcode, String referralDate) {
 		String sql = "select bs from BillingService bs where bs.serviceCode = ? and bs.billingserviceDate = ?";
 		Query query = entityManager.createQuery(sql);
@@ -150,21 +150,21 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		try {
 			date = sdf.parse(referralDate);
 		}catch(ParseException e) {
-			MiscUtils.getLogger().error("error",e);			
+			MiscUtils.getLogger().error("error",e);
 		}
 		query.setParameter(2, getLatestServiceDate(date,bcode));
-		
+
 		@SuppressWarnings("unchecked")
 		List<BillingService> results = query.getResultList();
-		
+
 		if (results.size() > 0) {
 			BillingService bs = results.get(0);
-			return (Object[]) new Object[] {bs.getValue(),bs.getGstFlag()};
+			return new Object[] {bs.getValue(),bs.getGstFlag()};
 		} else
 			return null;
 	}
-	
-	public String getUnitPercentage(String bcode, String referralDate) {		
+
+	public String getUnitPercentage(String bcode, String referralDate) {
 		String sql = "select bs from BillingService bs where bs.serviceCode = ? and bs.billingserviceDate = ?";
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1,bcode);
@@ -173,18 +173,18 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		try {
 			date = sdf.parse(referralDate);
 		}catch(ParseException e) {
-			MiscUtils.getLogger().error("error",e);			
+			MiscUtils.getLogger().error("error",e);
 		}
 		query.setParameter(2, getLatestServiceDate(date,bcode));
-		
+
 		@SuppressWarnings("unchecked")
 		List<BillingService> results = query.getResultList();
-		
+
 		if(results.size()>0) {
 			return results.get(0).getPercentage();
 		} else {
 			return null;
-		}				
+		}
 	}
 
 	// /

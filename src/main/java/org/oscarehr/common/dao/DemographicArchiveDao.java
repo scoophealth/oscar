@@ -1,20 +1,20 @@
 /**
  * Copyright (c) 2007-2008. CAISI, Toronto. All Rights Reserved.
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * This software was written for 
- * CAISI, 
- * Toronto, Ontario, Canada 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
+ * This software was written for
+ * CAISI,
+ * Toronto, Ontario, Canada
  */
 package org.oscarehr.common.dao;
 
@@ -25,11 +25,12 @@ import javax.persistence.Query;
 
 import org.oscarehr.common.model.DemographicArchive;
 import org.springframework.stereotype.Repository;
+
 import oscar.util.StringUtils;
 import oscar.util.UtilDateUtilities;
 
 @Repository
-public class DemographicArchiveDao extends AbstractDao {
+public class DemographicArchiveDao extends AbstractDao<DemographicArchive> {
 
 	public DemographicArchiveDao() {
 		super(DemographicArchive.class);
@@ -44,12 +45,12 @@ public class DemographicArchiveDao extends AbstractDao {
 
         @SuppressWarnings("unchecked")
         List<DemographicArchive> results = query.getResultList();
-        
+
         return (results);
     }
 
     public List<DemographicArchive> findRosterStatusHistoryByDemographicNo(Integer demographicNo) {
-        
+
     	String sqlCommand = "select x from DemographicArchive x where x.demographicNo=?1 order by x.id desc";
 
         Query query = entityManager.createQuery(sqlCommand);
@@ -68,9 +69,9 @@ public class DemographicArchiveDao extends AbstractDao {
             next_rd = results.get(i+1).getRosterDate();
             this_td = results.get(i).getRosterTerminationDate();
             next_td = results.get(i+1).getRosterTerminationDate();
-            
-            if (this_rs.equalsIgnoreCase(next_rs) && 
-        		UtilDateUtilities.nullSafeCompare(this_rd, next_rd) == 0 && 
+
+            if (this_rs.equalsIgnoreCase(next_rs) &&
+        		UtilDateUtilities.nullSafeCompare(this_rd, next_rd) == 0 &&
         		UtilDateUtilities.nullSafeCompare(this_td, next_td) == 0) {
                 results.remove(i);
                 i--;
