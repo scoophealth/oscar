@@ -35,10 +35,10 @@ public class DxresearchDAO extends HibernateDaoSupport{
             Iterator i = dList.listIterator();
             while (i.hasNext()) {
                 //Integer demographicNo = (Integer)iter.next();
-                  
+
                 Dxresearch dxres = (Dxresearch)i.next();
                 Integer demographicNo = dxres.getDemographicNo();
-                Demographic demo = (Demographic)getHibernateTemplate().get(Demographic.class, demographicNo);
+                Demographic demo = getHibernateTemplate().get(Demographic.class, demographicNo);
 
                 if (demo != null ) {
                     String demoprovider = demo.getProviderNo();
@@ -103,7 +103,7 @@ public class DxresearchDAO extends HibernateDaoSupport{
                 }
             }
             HQL += " GROUP BY dxres.demographicNo ORDER BY dxres.updateDate asc";
-            
+
         } else {
             HQL = "SELECT dxres FROM Dxresearch dxres GROUP BY dxres.demographicNo ORDER BY dxres.updateDate asc";
         }
@@ -152,7 +152,7 @@ public class DxresearchDAO extends HibernateDaoSupport{
                 }
             }
             HQL += " ORDER BY dxres.demographicNo asc, dxres.updateDate asc";
-            
+
         } else {
             HQL = "SELECT dxres FROM Dxresearch dxres ORDER BY dxres.demographicNo asc, dxres.updateDate asc";
         }
@@ -213,10 +213,10 @@ public class DxresearchDAO extends HibernateDaoSupport{
                 HQL += ") AND ";
 
             HQL += "dxres.status= '" + status + "' ORDER BY dxres.demographicNo asc, dxres.updateDate asc";
-            
+
         } else {
             HQL = "SELECT dxres FROM Dxresearch dxres WHERE dxres.status= '" + status + "' ORDER BY dxres.demographicNo asc, dxres.updateDate asc";
-            
+
         }
         try {
             session = getSession();
@@ -245,12 +245,12 @@ public class DxresearchDAO extends HibernateDaoSupport{
         listItems.addAll(new dxQuickListItemsHandler(quickListName).getDxQuickListItemsVector());
         return listItems;
     }
-    
+
     public List<Dxresearch> getDxResearchItemsByPatient(Integer demographicNo) {
-    	
+
     	@SuppressWarnings("unchecked")
     	List<Dxresearch> items = this.getHibernateTemplate().find("from Dxresearch d where d.demographicNo=?",new Object[]{demographicNo});
-    	
+
     	return items;
     }
 }
