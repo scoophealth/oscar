@@ -104,7 +104,7 @@ public class SchemaUtils
 				s.executeUpdate(createTableStatements.get(tableNames[i]));
 				s.executeUpdate("insert into " + tableNames[i] + " select * from " + tableNames[i] + "_maventest");
             }
-
+			s.close();
 
 		}
 		finally
@@ -131,7 +131,7 @@ public class SchemaUtils
 				s.executeUpdate(createTableStatements.get(tableName));
 				s.executeUpdate("insert into " + tableName + " select * from " + tableName + "_maventest");
             }
-
+			s.close();
 
 		}
 		finally
@@ -167,6 +167,10 @@ public class SchemaUtils
         }catch(InterruptedException e) {
         	throw new IOException("error with process");
         }
+
+        stdInput.close();
+        stdError.close();
+
 		return exitValue;
 	}
 
