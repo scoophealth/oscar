@@ -55,5 +55,3 @@ INSERT INTO HL7HandlerMSHMapping
 
 INSERT INTO HL7HandlerMSHMapping
  (hospital_site,facility,facility_name) VALUES ("Rouge Valley Health System","APG","Rouge Valley Ajax and Pickering");
-
-

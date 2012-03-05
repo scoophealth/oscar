@@ -64,6 +64,8 @@ public class OscarLog extends AbstractModel<Long> implements Serializable {
 	private Integer demographicId;
 
 	private String data;
+	
+	private Integer securityId;
 
 	@PreRemove
 	protected void jpaPreventDelete() {
@@ -139,5 +141,13 @@ public class OscarLog extends AbstractModel<Long> implements Serializable {
 	public Date getCreated() {
 		return created;
 	}
+
+	public Integer getSecurityId() {
+    	return (securityId);
+    }
+
+	public void setSecurityId(Integer securityId) {
+    	this.securityId = securityId;
+    }
 
 }

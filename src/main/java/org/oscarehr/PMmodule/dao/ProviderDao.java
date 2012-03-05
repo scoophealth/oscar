@@ -57,7 +57,7 @@ public class ProviderDao extends HibernateDaoSupport {
 			throw new IllegalArgumentException();
 		}
 
-		Provider provider = (Provider) getHibernateTemplate().get(Provider.class, providerNo);
+		Provider provider = getHibernateTemplate().get(Provider.class, providerNo);
 
 		if (log.isDebugEnabled()) {
 			log.debug("getProvider: providerNo=" + providerNo + ",found=" + (provider != null));
@@ -177,6 +177,13 @@ public class ProviderDao extends HibernateDaoSupport {
 		if (log.isDebugEnabled()) {
 			log.debug("getProviders: # of results=" + rs.size());
 		}
+		return rs;
+	}
+
+	public List<Provider> getProviders(boolean active) {
+		@SuppressWarnings("unchecked")
+		List<Provider> rs = getHibernateTemplate().find(
+				"FROM  Provider p where p.Status='"+(active?1:0)+'\'');
 		return rs;
 	}
 

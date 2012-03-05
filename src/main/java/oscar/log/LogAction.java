@@ -27,6 +27,7 @@ import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.OscarLogDao;
 import org.oscarehr.common.model.OscarLog;
 import org.oscarehr.util.DeamonThreadFactory;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -37,6 +38,17 @@ public class LogAction {
 	private static OscarLogDao oscarLogDao = (OscarLogDao) SpringUtils.getBean("oscarLogDao");
 	private static ExecutorService executorService = Executors.newCachedThreadPool(new DeamonThreadFactory(LogAction.class.getSimpleName()+".executorService", Thread.MAX_PRIORITY));
 
+	public static void addLogSynchronous(String action, String data)
+	{
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		OscarLog logEntry=new OscarLog();
+		if (loggedInInfo.loggedInSecurity!=null) logEntry.setSecurityId(loggedInInfo.loggedInSecurity.getSecurityNo());
+		if (loggedInInfo.loggedInProvider!=null) logEntry.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+		logEntry.setAction(action);
+		logEntry.setData(data);
+		LogAction.addLogSynchronous(logEntry);		
+	}
+	
 	/**
 	 * This method will add a log entry asynchronously in a separate thread.
 	 */

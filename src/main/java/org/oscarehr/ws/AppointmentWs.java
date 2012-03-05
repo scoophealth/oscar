@@ -6,7 +6,6 @@ import java.util.GregorianCalendar;
 
 import javax.jws.WebService;
 
-import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.managers.AppointmentManager;
 import org.oscarehr.managers.DaySchedule;
@@ -21,6 +20,9 @@ public class AppointmentWs extends AbstractWs {
 	@Autowired
 	private AppointmentManager appointmentManager;
 
+	/**
+	 * @deprecated I wrote this wrong... ws method should be generic and data filtering should be on client side, don't use, I will rewrite shortly. 
+	 */
 	public ProviderAppointmentAvailabilityTransfer getProviderAppointmentAvailability(String providerNo, Calendar date) {
 		DaySchedule daySchedule = appointmentManager.getDaySchedule(providerNo, date);
 
@@ -71,10 +73,5 @@ public class AppointmentWs extends AbstractWs {
 		result.setUnavailableTimes(timeBlocks.toArray(new TimeBlock[0]));
 
 		return (result);
-	}
-
-	@Override
-	public String toString() {
-		return (ReflectionToStringBuilder.toString(this));
 	}
 }
