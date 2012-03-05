@@ -8,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="ctl_specialinstructions")
-public class CtlSpecialInstructions {
+public class CtlSpecialInstructions extends AbstractModel<Integer>{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
