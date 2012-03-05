@@ -40,7 +40,12 @@ public class Provider implements Serializable, Comparable<Provider>{
 	private String workPhone;
 	private String address;
 	private String team;
+	
+	/**
+	 * "1"=active "0"=inactive
+	 */
 	private String status;
+	
 	private String lastName;
 	private String providerType;
 	private String sex;

@@ -2,6 +2,8 @@ package org.oscarehr.ws.transfer_objects;
 
 import java.util.Calendar;
 
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+
 public class ProviderAppointmentAvailabilityTransfer {
 	private String providerNo;
 	private Calendar startTime;
@@ -53,4 +55,8 @@ public class ProviderAppointmentAvailabilityTransfer {
 		this.unavailableTimes = unavailableTimes;
 	}
 
+	@Override
+	public String toString() {
+		return (ReflectionToStringBuilder.toString(this));
+	}
 }

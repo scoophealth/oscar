@@ -1,3 +1,4 @@
 SystemInfoService
 LoginService
 AppointmentService
+ProviderService

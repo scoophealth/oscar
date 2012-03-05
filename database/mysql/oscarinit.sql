@@ -7000,7 +7000,8 @@ CREATE TABLE `log` (
   `ip` varchar(30),
   `demographic_no` int(10),
   INDEX `demographic_no` (`demographic_no`),
-  `data` text
+  `data` text,
+  securityId int
 ) ;
 
 CREATE TABLE preventions (

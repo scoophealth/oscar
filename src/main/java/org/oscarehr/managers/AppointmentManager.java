@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import oscar.appt.status.model.AppointmentStatus;
+import oscar.log.LogAction;
 
 @Service
 public class AppointmentManager {
@@ -46,6 +47,9 @@ public class AppointmentManager {
 		List<Appointment> appointments = oscarAppointmentDao.findByProviderAndDayandNotStatus(providerNo, date.getTime(), AppointmentStatus.APPOINTMENT_STATUS_CANCELLED);
 		daySchedule.setAppointments(appointments);
 
+		//--- log action ---
+		LogAction.addLogSynchronous("AppointmentManager.getDaySchedule", "providerNo="+providerNo+", date="+date);
+		
 		return (daySchedule);
 	}
 }
