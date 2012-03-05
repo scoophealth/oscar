@@ -1,5 +1,6 @@
 package oscar.oscarLab.ca.all.parsers;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -9,17 +10,18 @@ import oscar.util.UtilDateUtilities;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.v23.message.ORU_R01;
+import ca.uhn.hl7v2.model.v23.segment.OBX;
 import ca.uhn.hl7v2.parser.Parser;
 import ca.uhn.hl7v2.parser.PipeParser;
 import ca.uhn.hl7v2.util.Terser;
 import ca.uhn.hl7v2.validation.impl.NoValidation;
 
-public class EpsilonHandler extends CMLHandler {
+public class EpsilonHandler  extends CMLHandler implements MessageHandler {
 	private static Logger logger = MiscUtils.getLogger();
 	
 	@Override
 	public String getMsgType() {
-		return "Epsilon";
+		return "EPSILON";
 	}
 
 	@Override
@@ -107,7 +109,7 @@ public class EpsilonHandler extends CMLHandler {
 			if (msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR()
 					.getFillerOrderNumber().getEntityIdentifier().getValue() != null) {
 				accessionNum = accessionNum
-						+ ", "
+						+ (accessionNum != null && accessionNum.trim().length() > 0 ? ", " : "")
 						+ getString(msg.getRESPONSE().getORDER_OBSERVATION(0)
 								.getOBR().getFillerOrderNumber()
 								.getEntityIdentifier().getValue());
@@ -122,7 +124,9 @@ public class EpsilonHandler extends CMLHandler {
 	@Override
 	public String getObservationHeader(int i, int j) {
 		try {
-			return this.getOBXName(i, j).trim();
+			
+			return	getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getText().getValue()).trim();
+			
 		} catch (Exception e) {
 			return ("");
 		}
@@ -184,6 +188,16 @@ public class EpsilonHandler extends CMLHandler {
 		}
 	}
 
+	@Override
+	public String getMsgDate() {
+		try {
+			return formatDateTime(msg.getMSH().getDateTimeOfMessage().getTimeOfAnEvent().getValue());
+		} catch (Exception e) {
+			logger.error("Error of parsing message date :", e);
+		}		
+		return "";
+	}
+	
 	public Date getMsgDateAsDate() {
 		Date date = null;
 		try {
@@ -220,5 +234,146 @@ public class EpsilonHandler extends CMLHandler {
 	public String audit() {
 		return "";		
 	}
-
+	
+	 public String getOBXName(int i, int j){
+	        String ret = "";
+	        try{
+	            // leave the name blank if the value type is 'FT' this is because it
+	            // is a comment, if the name is blank the obx segment will not be displayed
+	            OBX obxSeg = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX();
+	            if ((obxSeg.getValueType().getValue()!=null) && (!obxSeg.getValueType().getValue().equals("FT")))
+	                ret = getString(obxSeg.getObservationIdentifier().getText().getValue());
+	        }catch(Exception e){
+	            logger.error("Error returning OBX name", e);
+	        }
+	        
+	        return ret;
+	    }
+	  
+	 public String getOBXResult(int i, int j){
+	        
+	        String result = "";
+	        try{
+	            
+	            Terser terser = new Terser(msg);
+	            result = getString(terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),5,0,1,1));
+	            
+	            // format the result
+	            if (result.endsWith("."))
+	                result = result.substring(0, result.length()-1);
+	            
+	        }catch(Exception e){
+	            logger.error("Exception returning result", e);
+	        }
+	        return result;
+	    }
+	 
+	 
+	 
+	 public String getOBXComment(int i, int j, int k){
+	        String comment = "";
+	        try{
+	            k++;
+	            
+	            Terser terser = new Terser(msg);
+	            OBX obxSeg = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX();
+	            comment = terser.get(obxSeg,7,k,1,1);
+	            if (comment == null)
+	                comment = terser.get(obxSeg,7,k,2,1);
+	            
+	        }catch(Exception e){
+	            logger.error("Cannot return comment", e);
+	        }
+	        return comment.replaceAll("\\\\\\.br\\\\", "<br />");
+	    }
+	  
+	 public String getOBRComment(int i, int j){
+	        String comment = "";
+	        
+	        // update j to the number of the comment not the index of a comment array
+	        j++;
+	        try {
+	            Terser terser = new Terser(msg);
+	            
+	            int obxCount = getOBXCount(i);
+	            int count = 0;
+	            int l = 0;
+	            OBX obxSeg = null;
+	            
+	            while ( l < obxCount && count < j){
+	                
+	                obxSeg = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX();
+	                if (getString(obxSeg.getValueType().getValue()).equals("FT")){
+	                    count++;
+	                }
+	                l++;
+	                
+	            }
+	            l--;
+	            
+	            int k = 0;
+	            String nextComment = terser.get(obxSeg,5,k,1,1);
+	            while(nextComment != null){
+	                comment = comment + nextComment.replaceAll("\\\\\\.br\\\\", "<br />");
+	                k++;
+	                nextComment = terser.get(obxSeg,5,k,1,1);
+	            }
+	            
+	        } catch (Exception e) {
+	            logger.error("getOBRComment error", e);
+	            comment = "";
+	        }
+	        if (comment.equals(getOBXResult(i,j))) comment = "";
+	        return comment;
+	    }
+	 
+	 public int getOBRCommentCount(int i){
+	        int count = 0;
+	        try {
+	        	for (int j=0; j < getOBXCount(i); j++){
+		            if (getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getValueType().getValue()).equals("FT"))
+		                count++;
+		        }
+	        } catch (Exception e){
+	        	logger.error("Error getting OBRCommentCount");
+	        }
+	        
+	        
+	        return count;
+	        
+	    }
+	 
+	 /**
+	     *  Retrieve the possible segment headers from the OBX fields
+	     */
+	    public ArrayList<String> getHeaders(){
+	        int i, j;
+	        
+	        ArrayList<String> headers = new ArrayList<String>();
+	        String currentHeader;
+	        try{
+	            for (i=0; i < msg.getRESPONSE().getORDER_OBSERVATIONReps(); i++){
+	                
+	                for (j=0; j < msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATIONReps(); j++){
+	                    // only check the obx segment for a header if it is one that will be displayed
+	                	 currentHeader = super.getOBXIdentifier(i, j);//obxSeg.getObservationIdentifier().getIdentifier().toString();
+	                        
+	                        if (!headers.contains(currentHeader)){
+	                            logger.info("Adding header: '"+currentHeader+"' to list");
+	                            headers.add(currentHeader);
+	                        }
+	                  //  }
+	                    
+	                }
+	                
+	            }
+	            return(headers);
+	        }catch(Exception e){
+	            logger.error("Could not create header list", e);
+	            
+	            return(null);
+	        }
+	    }
+	    
+	  
 }

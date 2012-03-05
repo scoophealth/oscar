@@ -24,6 +24,8 @@
  */
 package org.oscarehr.common.dao;
 
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.Hl7TextMessage;
 import org.springframework.stereotype.Repository;
 
@@ -32,5 +34,14 @@ public class Hl7TextMessageDao extends AbstractDao<Hl7TextMessage> {
 
 	public Hl7TextMessageDao() {
 		super(Hl7TextMessage.class);
+	}
+	
+	public void updateIfFillerOrderNumberMatches(String base64EncodedeMessage,int fileUploadCheckId,Integer id){
+		Query query = entityManager.createQuery("update " + modelClass.getName() + " x set x.base64EncodedeMessage=?, fileUploadCheckId=? where x.type='TDIS' and x.id=?");
+		query.setParameter(1, base64EncodedeMessage);
+		query.setParameter(2, fileUploadCheckId);
+		query.setParameter(3, id);
+		
+		query.executeUpdate();
 	}
 }

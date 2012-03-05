@@ -893,6 +893,20 @@ public class MDSHandler implements MessageHandler {
         return retVal;
     }
         
+    public String getFillerOrderNumber(){
+		return "";
+	}
+    public String getEncounterId(){
+    	return "";
+    }
+    public String getRadiologistInfo(){
+		return "";
+	}
+    
+    public String getNteForOBX(int i, int j){
+    	
+    	return "";
+    }
         
 }
 

@@ -80,6 +80,12 @@ public class Hl7TextInfo extends AbstractModel<Integer> implements Serializable 
 
 	@Column(name = "accessionNum")
 	private String accessionNumber;
+	
+	@Column(name = "filler_order_num")
+	private String fillerOrderNum;
+
+	@Column(name = "sending_facility")
+	private String sendingFacility;
 
 	@Override
 	public Integer getId() {
@@ -190,4 +196,23 @@ public class Hl7TextInfo extends AbstractModel<Integer> implements Serializable 
 	public void setAccessionNumber(String accessionNumber) {
 		this.accessionNumber = StringUtils.trimToNull(accessionNumber);
 	}
+	
+	public String getFillerOrderNum() {
+    	return fillerOrderNum;
+    }
+
+	public void setFillerOrderNum(String fillerOrderNum) {
+    	this.fillerOrderNum = fillerOrderNum;
+    }
+
+	public String getSendingFacility() {
+    	return sendingFacility;
+    }
+
+	public void setSendingFacility(String sendingFacility) {
+    	this.sendingFacility = sendingFacility;
+    }
+	
+	
+	
 }

@@ -476,4 +476,21 @@ public class HRMXMLHandler implements MessageHandler {
 		return date.getYear() + "-" + date.getMonth() + "-" + date.getDay() + (!omitTime ? date.getHour() + ":" + date.getMinute() : "");
 	}
 
+	 public String getFillerOrderNumber(){
+			
+			
+			return "";
+		}
+	    
+	    public String getEncounterId(){
+	    	return "";
+	    }
+	    public String getRadiologistInfo(){
+			return "";
+		}
+	    
+	    public String getNteForOBX(int i, int j){
+	    	
+	    	return "";
+	    }
 }

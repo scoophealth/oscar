@@ -7260,6 +7260,8 @@ create table hl7TextInfo(
 	first_name varchar(30),
 	report_status varchar(1) NOT NULL,
 	accessionNum varchar(20),
+	filler_order_num varchar(50),
+	sending_facility varchar(50),
 	KEY `labno_index`(`lab_no`)
 );
 
@@ -8650,3 +8652,13 @@ create table RemoteReferral
 	presentingProblem varchar(255),
 	createDate datetime not null
 );
+
+create table HL7HandlerMSHMapping (
+	id int(50) NOT NULL AUTO_INCREMENT, 
+	hospital_site varchar(255), 
+	facility varchar(100), 
+	facility_name varchar(255), 
+	notes varchar(255), 
+	PRIMARY KEY (id)
+);
+

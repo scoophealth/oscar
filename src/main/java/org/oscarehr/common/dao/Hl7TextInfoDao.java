@@ -24,11 +24,15 @@
  */
 package org.oscarehr.common.dao;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import javax.persistence.Query;
 
+import org.apache.commons.codec.binary.Base64;
 import org.oscarehr.common.model.Hl7TextInfo;
+import org.oscarehr.common.model.Hl7TextMessageInfo;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -72,5 +76,68 @@ public class Hl7TextInfoDao extends AbstractDao<Hl7TextInfo> {
 		
 		return results;
     }
+    
+    public List<Hl7TextInfo> searchByFillerOrderNumber(String fon, String sending_facility){
+    	String sql = "select x from Hl7TextInfo x where x.fillerOrderNum=?1 and sendingFacility=?2";
+    	Query query = entityManager.createQuery(sql);
+    	query.setParameter(1, fon);
+    	query.setParameter(2, sending_facility);
+    	
+    	@SuppressWarnings("unchecked")
+		List<Hl7TextInfo> lab =  query.getResultList();
+		
+		return lab;
+    	
+    	
+    }
+    
+    public void updateReportStatusByLabId(String reportStatus, int labNumber){
+    	Query query = entityManager.createQuery("update " + modelClass.getName() + " x set x.reportStatus=? where x.labNumber=?");
+		query.setParameter(1, reportStatus);
+		query.setParameter(2, labNumber);
+		
+		query.executeUpdate();
+    	
+    }
 
+    public List<Hl7TextMessageInfo> getMatchingLabs(String hl7msg) {
+    	Base64 base64 = new Base64();
+    	//String sql = "SELECT m2.base64EncodedeMessage, a.labNumber AS lab_no_A, b.labNumber AS lab_no_B, a.obrDate AS labDate_A, b.obrDate as labDate_B FROM Hl7TextInfo a, Hl7TextInfo b, Hl7TextMessage m2 WHERE m2.id = a.labNumber AND a.accessionNumber !='' AND a.accessionNumber=b.accessionNumber AND b.labNumber IN ( SELECT id FROM Hl7TextMessage WHERE base64EncodedeMessage=?)ORDER BY a.obrDate, a.labNumber";
+    	String sql = "SELECT m2.message, a.id as id, a.lab_no AS lab_no_A, b.lab_no AS lab_no_B,  a.obr_date AS labDate_A, b.obr_date as labDate_B FROM hl7TextInfo a, hl7TextInfo b, hl7TextMessage m1, hl7TextMessage m2 WHERE m2.lab_id = a.lab_no AND a.accessionNum !='' AND a.accessionNum=b.accessionNum AND b.lab_no = m1.lab_id AND m1.message=?1 ORDER BY a.obr_date, a.lab_no";
+        
+    	Query query = entityManager.createNativeQuery(sql, Hl7TextMessageInfo.class);  //entityManager.createQuery(sql); //
+    	try {
+	        query.setParameter(1, (new String(base64.encode(hl7msg.getBytes(MiscUtils.ENCODING)), MiscUtils.ENCODING)));
+        } catch (UnsupportedEncodingException e) {
+	        
+	        MiscUtils.getLogger().error("Error setting query parameter hl7msg ",e);
+        }
+    	
+    	@SuppressWarnings("unchecked")
+		List<Hl7TextMessageInfo> labs =  query.getResultList();
+    	return labs;
+    	
+    }
+    
+    public List<Hl7TextInfo> getAllLabsByLabNumberResultStatus() {
+    	String sql = "SELECT x FROM Hl7TextInfo x";
+    	Query query = entityManager.createQuery(sql);
+    	
+    	@SuppressWarnings("unchecked")
+		List<Hl7TextInfo> labs = query.getResultList();
+    	
+    	return labs;
+    }
+    
+    public void updateResultStatusByLabId(String resultStatus, int labNumber){
+    	Query query = entityManager.createQuery("update " + modelClass.getName() + " x set x.resultStatus=? where x.labNumber=?");
+		query.setParameter(1, resultStatus);
+		query.setParameter(2, labNumber);
+		
+		query.executeUpdate();
+    	
+    }
+    
 }
+
+

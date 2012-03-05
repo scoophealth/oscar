@@ -584,5 +584,20 @@ public class PATHL7Handler implements MessageHandler {
         }
     }
     
+    public String getFillerOrderNumber(){
+		return "";
+	}
+    public String getEncounterId(){
+    	return "";
+    }
+    public String getRadiologistInfo(){
+		return "";
+	}
+    
+    public String getNteForOBX(int i, int j){
+    	
+    	return "";
+    }
+    
 }
 

@@ -183,7 +183,7 @@ public interface MessageHandler {
      *  Return a list of all possible headers retrieved from getObservationHeader
      *  each header will only occur once in the list
      */
-    public ArrayList<String> getHeaders();
+    public ArrayList getHeaders();
     
     /**
      *  Return the number of comments (usually NTE segments) that follow ith 
@@ -336,4 +336,13 @@ public interface MessageHandler {
      * Returns a string audit of the messages.  If not required handler should just return an empty string;
      */
     public String audit();
+    
+    public String getFillerOrderNumber();
+    
+    public String getEncounterId();
+    
+    public String getRadiologistInfo();
+    
+    public String getNteForOBX(int i,int j);
+   
 }
