@@ -52,6 +52,8 @@ public class Hl7TextMessage extends AbstractModel<Integer> implements Serializab
 
 	@Column(name = "message")
 	private String base64EncodedeMessage;
+	
+	@Column(name = "type")
 	private String type;
 	private String serviceName;
 

@@ -1,0 +1,165 @@
+/*
+ * Modified by Divya Mantha, Indivica
+ * Derived from ICLUtilities.java by David Daley, Indivica
+ */
+
+package oscar.oscarLab.ca.all.util;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Date;
+
+import org.apache.log4j.Logger;
+
+import oscar.OscarProperties;
+
+/*
+ * @author Divya Mantha, Indivica
+ */
+public class PFHTUtilities {
+	 private static Logger logger = Logger.getLogger(PFHTUtilities.class);
+    /**
+     * Creates a new instance of ICLUtilities
+     */
+    public PFHTUtilities() {
+    }
+    
+    public ArrayList<String> separateMessages(String fileName) throws Exception{
+    	
+    	 
+        ArrayList<String> messages = new ArrayList<String>();
+        try{
+            InputStream is = new FileInputStream(fileName);
+            
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            
+            String line = null;
+            boolean firstPIDflag = false; //true if the first PID segment has been processed false otherwise
+            boolean firstMSHflag = false; //true if the first MSH segment has been processed false otherwise
+            //String mshSeg = br.readLine();
+            
+            StringBuilder sb = new StringBuilder();
+            String mshSeg = "";
+            
+            while ((line = br.readLine()) != null) {
+                if (line.length() > 3){
+                    if (line.substring(0, 3).equals("MSH")){
+                        if (firstMSHflag){
+                            messages.add(sb.toString());
+                            sb.delete(0, sb.length());
+                        }
+                        mshSeg = line;
+                        firstMSHflag = true;
+                        firstPIDflag = false;
+                    } else if (line.substring(0, 3).equals("PID")){
+                        if (firstPIDflag){
+                            messages.add(sb.toString());
+                            sb.delete(0, sb.length());
+                            sb.append(mshSeg + "\r\n");
+                        }
+                        firstPIDflag = true;
+                    }
+                    if (line.substring(0, 3).equals("MSH")){
+                    	String[] mshSegArray = line.split("\\|");
+                    	logger.info("MSH 8 = "+mshSegArray[8]);
+                    	if (mshSegArray[8].equals("MDM^R01")) {
+                    		mshSegArray[8]="ORU^R01";
+                    		for (int a=0;a<mshSegArray.length;a++){
+                    			if (a!=mshSegArray.length-1) 
+                    				sb.append(mshSegArray[a]+"|");
+                    			else
+                    				sb.append(mshSegArray[a]);
+                    				
+                    		}
+                    		sb.append("\r\n");
+                    		logger.info("MSH segment = "+sb.toString());
+                    	}  else {
+                    		sb.append(line + "\r\n");
+                    	}
+                   } else
+                    
+                    sb.append(line + "\r\n");
+                }
+            }
+            logger.info("PFHT Message = "+sb.toString());           
+            // add the last message
+            messages.add(sb.toString());
+            
+            is.close();
+            br.close();
+        }catch(Exception e){
+            throw e;
+        }
+        
+        return(messages);
+    }
+    
+    
+    /**
+     *
+     * Save a Jakarta FormFile to a preconfigured place.
+     *
+     * @param file
+     * @return
+     */
+    public static String saveFile(InputStream stream,String filename ){
+        String retVal = null;
+        boolean isAdded = true;
+        
+        
+        try {
+            OscarProperties props = OscarProperties.getInstance();
+            //properties must exist
+            String place= props.getProperty("DOCUMENT_DIR");
+            
+            if(!place.endsWith("/"))
+                place = new StringBuilder(place).insert(place.length(),"/").toString();
+            retVal = place+"LabUpload."+filename.replaceAll(".enc", "")+"."+(new Date()).getTime();
+            
+            //write the  file to the file specified
+            OutputStream os = new FileOutputStream(retVal);
+            
+            int bytesRead = 0;
+            while ((bytesRead = stream.read()) != -1){
+                os.write(bytesRead);
+            }
+            os.close();
+            
+            //close the stream
+            stream.close();
+        }catch (FileNotFoundException fnfe) {
+            logger.error(fnfe);
+            return retVal;
+            
+        }catch (IOException ioe) {
+            logger.error(ioe);
+            return retVal;
+        }
+        return retVal;
+    }    
+    
+    
+    /*
+     *  Return a string corresponding to the data in a given InputStream
+     */
+    public String inputStreamAsString(InputStream stream) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(stream));
+        StringBuilder sb = new StringBuilder();
+        String line = null;
+        
+        while ((line = br.readLine()) != null) {
+            sb.append(line + "\n");
+        }
+        
+        stream.close();
+        br.close();
+        return sb.toString();
+    }
+}

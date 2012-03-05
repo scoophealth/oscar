@@ -90,20 +90,25 @@ if(outcome != null){
 			<tr>
 				<td>Lab type:</td>
 				<td><select name="type" onClick="selectOther()">
+					<option value="ALPHA">ALPHA</option>
 					<option value="CML">CML</option>
-					<option value="GDML">GDML</option>
-					<option value="ICL">ICL</option>
-					<option value="MDS">Lifelabs</option>
-					<option value="Epsilon">MHL</option>
+					<option value="EPSILON">EPSILON/MHL</option>
 					<option value="PATHL7"
 					<oscar:oscarPropertiesCheck property="PATHNET_LABS" value="yes">Selected</oscar:oscarPropertiesCheck>>EXCELLERIS</option>
-					<option value="OTHER">Other</option>
-                    <option value="HHSEMR">HHS Emr Download</option>
-                    <option value="IHA">IHA</option>
-                    <option value="ALPHA">ALPHA</option>
-					<option value="HL7">HL7</option>
+					<option value="GDML">GDML</option>
+					<option value="HHSEMR">HHSEMR</option>
 					<option value="HRMXML">HRM XML</option>
+					<option value="ICL">ICL</option>
+					<option value="IHA">IHA</option>
+					<option value="MDS">MDS/Lifelabs</option>
+					<option value="MEDVUE">MEDVUE</option>
+					<!-- <option value="HL7">HL7</option> -->
 					<option value="OLIS_HL7">OLIS HL7</option>
+					<option value="OSCAR_TO_OSCAR_HL7_V2">OSCAR_TO_OSCAR_HL7_V2</option>
+					<option value="PFHT">PFHT</option>
+					<option value="SIOUX">SIOUX</option>
+					<option value="TDIS">TDIS</option>
+					<option value="OTHER">Other</option>
 				</select></td>
 			</tr>
 			<tr id="OTHER" style="visibility: hidden;">

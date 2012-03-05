@@ -2043,6 +2043,20 @@ public class OLISHL7Handler implements MessageHandler {
 		return (name);
 	}
 
+	public String getFillerOrderNumber(){
+		return "";
+	}
+    public String getEncounterId(){
+    	return "";
+    }
+    public String getRadiologistInfo(){
+		return "";
+	}
+    
+    public String getNteForOBX(int i, int j){
+    	
+    	return "";
+    }
 	/**
 	 * Methods to get information about the patient
 	 */

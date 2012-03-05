@@ -229,5 +229,20 @@ public final class OscarToOscarHl7V2Handler implements MessageHandler {
 	public boolean isOBXAbnormal(int i, int j) {
 	    return chainnedMessageAdapter.isOBXAbnormal(i, j);
     }
+	
+	public String getFillerOrderNumber(){
+		return "";
+	}
+    public String getEncounterId(){
+    	return "";
+    }
+    public String getRadiologistInfo(){
+		return "";
+	}
+    
+    public String getNteForOBX(int i, int j){
+    	
+    	return "";
+    }
 
 }

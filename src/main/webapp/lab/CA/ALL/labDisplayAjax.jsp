@@ -175,7 +175,12 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
         }
         </script>
 
+<style>
 
+.TDISRes	{font-weight: bold; font-size: 10pt; color: black; font-family: 
+               Verdana, Arial, Helvetica}
+
+</style>
     <div id="labdoc_<%=segmentID%>">
         <!-- form forwarding of the lab -->
         <form name="reassignForm_<%=segmentID%>" >
@@ -549,6 +554,45 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
 
                         ArrayList headers = handler.getHeaders();
                         int OBRCount = handler.getOBRCount();
+                        if (handler.getMsgType().equals("MEDVUE")) { %>
+                        <table style="page-break-inside:avoid;" bgcolor="#003399" border="0" cellpadding="0" cellspacing="0" width="100%">
+                           <tr>
+                               <td colspan="4" height="7">&nbsp;</td>
+                           </tr>
+                           <tr>
+                               <td bgcolor="#FFCC00" width="300" valign="bottom">
+                                   <div class="Title2">
+                                      <%=headers.get(0)%>
+                                   </div>
+                               </td>
+                               <%--<td align="right" bgcolor="#FFCC00" width="100">&nbsp;</td>--%>
+                               <td width="9">&nbsp;</td>
+                               <td width="9">&nbsp;</td>
+                               <td width="*">&nbsp;</td>
+                           </tr>
+                       </table>
+                       <table width="100%" border="0" cellspacing="0" cellpadding="2" bgcolor="#CCCCFF" bordercolor="#9966FF" bordercolordark="#bfcbe3" name="tblDiscs" id="tblDiscs">
+                           <tr class="Field2">
+                               <td width="25%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formTestName"/></td>
+                               <td width="15%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formResult"/></td>
+                               <td width="5%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formAbn"/></td>
+                               <td width="15%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formReferenceRange"/></td>
+                               <td width="10%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formUnits"/></td>
+                               <td width="15%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formDateTimeCompleted"/></td>
+                               <td width="6%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formNew"/></td>
+                           </tr>
+	                        <tr class="TDISRes">
+		                      	<td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><b>Radiologist: </b><b><%=handler.getRadiologistInfo()%></b></pre></td>
+		                      	</td>
+	                     	 </tr>
+	                        <tr class="TDISRes">
+		                       	<td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><b><%=handler.getOBXComment(1, 1, 1)%></b></pre></td>
+		                       	</td>
+	                      	 </tr>
+                     	 </table>
+                     <% } else {
+                   	  
+                        
                         for(i=0;i<headers.size();i++){
                             linenum=0;
                         %>
@@ -581,20 +625,27 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
                             </tr>
 
                             <%
-
+                            
                             for ( j=0; j < OBRCount; j++){
 
                                 boolean obrFlag = false;
                                 int obxCount = handler.getOBXCount(j);
+                              
                                 for (k=0; k < obxCount; k++){
                                     String obxName = handler.getOBXName(j, k);
-                                    if ( !handler.getOBXResultStatus(j, k).equals("DNS") && !obxName.equals("") && handler.getObservationHeader(j, k).equals(headers.get(i))){ // <<--  DNS only needed for MDS messages
+                                     boolean b2 = !obxName.equals(""), b3=handler.getObservationHeader(j, k).equals(headers.get(i));
+                                    if (handler.getMsgType().equals("EPSILON")) { 
+                                    	b2=true; b3=true;
+                                    } else if(handler.getMsgType().equals("PFHT")) {
+                                    	b2=true;
+                                    }
+                                    if ( !handler.getOBXResultStatus(j, k).equals("DNS") && b2 && b3){ // <<--  DNS only needed for MDS messages
                                         String obrName = handler.getOBRName(j);
                                         if(!obrFlag && !obrName.equals("") && !(obxName.contains(obrName) && obxCount < 2)){%>
-                                            <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" >
+                                           <%--  <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" >
                                                 <td valign="top" align="left"><%=obrName%></td>
                                                 <td colspan="6">&nbsp;</td>
-                                            </tr>
+                                            </tr> --%>
                                             <%obrFlag = true;
                                         }
 
@@ -605,8 +656,60 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
                                         } else if ( abnormal != null && ( abnormal.equals("A") || abnormal.startsWith("H") || handler.isOBXAbnormal( j, k) ) ){
                                             lineClass = "AbnormalRes";
                                         }%>
+                                        <%if (handler.getMsgType().equals("EPSILON")) {
+	                                    	   if (handler.getOBXIdentifier(j,k).equals(headers.get(i)) && !obxName.equals("")) { %>
+		                                    	
+	                                        	<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
+		                                            <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %>')"><%=obxName %></a></td>                                         
+		                                            <td align="right"><%= handler.getOBXResult( j, k) %></td>
+		                                           
+		                                            <td align="center">
+		                                                    <%= handler.getOBXAbnormalFlag(j, k)%>
+		                                            </td>
+		                                            <td align="left"><%=handler.getOBXReferenceRange( j, k)%></td>
+		                                            <td align="left"><%=handler.getOBXUnits( j, k) %></td>
+		                                            <td align="center"><%= handler.getTimeStamp(j, k) %></td>
+		                                            <td align="center"><%= handler.getOBXResultStatus( j, k) %></td>
+	                                       		</tr> 
+	                                       <% } else if (handler.getOBXIdentifier(j,k).equals(headers.get(i)) && obxName.equals("")) { %>
+	                                       			<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
+	                                                    <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBXResult( j, k)%></pre></td>
+	                                                </tr>
+	                                       	<% }
+                                        } else if (handler.getMsgType().equals("PFHT") || handler.getMsgType().equals("HHSEMR")) {
+	                                    	   if (!obxName.equals("")) { %>
+		                                    		<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
+			                                            <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %>')"><%=obxName %></a></td>                                         
+			                                            <td align="right"><%= handler.getOBXResult( j, k) %></td>
+			                                           
+			                                            <td align="center">
+			                                                    <%= handler.getOBXAbnormalFlag(j, k)%>
+			                                            </td>
+			                                            <td align="left"><%=handler.getOBXReferenceRange( j, k)%></td>
+			                                            <td align="left"><%=handler.getOBXUnits( j, k) %></td>
+			                                            <td align="center"><%= handler.getTimeStamp(j, k) %></td>
+			                                            <td align="center"><%= handler.getOBXResultStatus( j, k) %></td>
+		                                       		 </tr> 
+			                                       
+	                                    	 	<%} else { %>
+	                                    		   <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
+	      	                                     <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBXResult( j, k)%></pre></td>
+	      	                                	 </tr>
+	                                    	 	<%}
+		                                    	if (!handler.getNteForOBX(j,k).equals("") && handler.getNteForOBX(j,k)!=null) { %> 
+			                                       <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
+			                                       		<td valign="top" align="left"colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getNteForOBX(j,k)%></pre></td>
+			                                       </tr>
+			                                    <% } 
+				                                for (l=0; l < handler.getOBXCommentCount(j, k); l++){%>
+				                                     <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
+				                                        <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBXComment(j, k, l)%></pre></td>
+				                                     </tr>  
+				                                <%} 
+	                                       
+                                      } else  if (!handler.getOBXResultStatus(j, k).equals("TDIS") && !handler.getMsgType().equals("EPSILON")) { %>
                                         <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
-                                            <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../lab/CA/ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %>')"><%=obxName %></a></td>
+                                            <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %>')"><%=obxName %></a></td>
                                             <td align="right"><%= handler.getOBXResult( j, k) %></td>
                                             <td align="center">
                                                     <%= handler.getOBXAbnormalFlag(j, k)%>
@@ -616,18 +719,26 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
                                             <td align="center"><%= handler.getTimeStamp(j, k) %></td>
                                             <td align="center"><%= handler.getOBXResultStatus( j, k) %></td>
                                         </tr>
-
+ 										
                                         <%for (l=0; l < handler.getOBXCommentCount(j, k); l++){%>
                                             <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
                                                 <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBXComment(j, k, l)%></pre></td>
                                             </tr>
                                         <%}
-                                    }
+	                                    } else { %>
+		                                	<%for (l=0; l < handler.getOBXCommentCount(j, k); l++){%>
+		                                     <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="TDISRes">
+		                                        <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBXComment(j, k, l)%></pre></td>
+		                                     </tr>  
+		                                	<%} 
+	                                   }
+                                   }
                                 }
                             //}
 
                             //for ( j=0; j< OBRCount; j++){
-                                if (handler.getObservationHeader(j, 0).equals(headers.get(i))) {%>
+                             if (!handler.getMsgType().equals("PFHT")) {
+                                if (headers.get(i).equals(handler.getObservationHeader(j, 0))) {%>
                                 <%for (k=0; k < handler.getOBRCommentCount(j); k++){
                                     // the obrName should only be set if it has not been
                                     // set already which will only have occured if the
@@ -642,21 +753,27 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
                                 <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
                                     <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBRComment(j, k)%></pre></td>
                                 </tr>
-                                <% if(handler.getOBXName(j,k).equals("")){
+                                <% if  (!handler.getMsgType().equals("HHSEMR")) {
+                                	if(handler.getOBXName(j,k).equals("")){
                                        String result = handler.getOBXResult(j, k);%>
                                         <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" >
                                                 <td colspan="7" valign="top"  align="left"><%=result%></td>
                                         </tr>
                                             <%
-                                    }
+                                    } 
+                                }
 
 
                                 }
+                            } 
+                             } // end for if (PFHT)
                             }
-                            }%>
+                          } // end for handler.getMsgType().equals("MEDVUE")
+                            %>
                         </table>
                         <% // end for headers
-                        }  // for i=0... (headers) %>
+                        }  // for i=0... (headers) 
+  					 %>
 
                         <table width="100%" border="0" cellspacing="0" cellpadding="3" class="MainTableBottomRowRightColumn" bgcolor="#003399">
                             <tr>

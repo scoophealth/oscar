@@ -74,6 +74,8 @@ public final class MessageUploader {
 			String requestingClient = h.getDocName();
 			String reportStatus = h.getOrderStatus();
 			String accessionNum = h.getAccessionNum();
+			String fillerOrderNum = h.getFillerOrderNumber(); 
+			String sendingFacility = h.getPatientLocation();
 			ArrayList docNums = h.getDocNums();
 			int finalResultCount = h.getOBXFinalResultCount();
 			String obrDate = h.getMsgDate();
@@ -129,31 +131,47 @@ public final class MessageUploader {
 
 				if (!next.trim().equals("")) discipline = discipline + "/" + next.substring(0, sepMark);
 			}
-
+			
+			boolean isTDIS = type.equals("TDIS");
+			boolean hasBeenUpdated = false;
 			Hl7TextMessage hl7TextMessage = new Hl7TextMessage();
-			hl7TextMessage.setFileUploadCheckId(fileId);
-			hl7TextMessage.setType(type);
-			hl7TextMessage.setBase64EncodedeMessage(MiscUtils.encodeToBase64String(hl7Body));
-			hl7TextMessage.setServiceName(serviceName);
-			hl7TextMessageDao.persist(hl7TextMessage);
-
-			int insertID = hl7TextMessage.getId();
-
 			Hl7TextInfo hl7TextInfo = new Hl7TextInfo();
-			hl7TextInfo.setLabNumber(insertID);
-			hl7TextInfo.setLastName(lastName);
-			hl7TextInfo.setFirstName(firstName);
-			hl7TextInfo.setSex(sex);
-			hl7TextInfo.setHealthNumber(hin);
-			hl7TextInfo.setResultStatus(resultStatus);
-			hl7TextInfo.setFinalResultCount(finalResultCount);
-			hl7TextInfo.setObrDate(obrDate);
-			hl7TextInfo.setPriority(priority);
-			hl7TextInfo.setRequestingProvider(requestingClient);
-			hl7TextInfo.setDiscipline(discipline);
-			hl7TextInfo.setReportStatus(reportStatus);
-			hl7TextInfo.setAccessionNumber(accessionNum);
-			hl7TextInfoDao.persist(hl7TextInfo);
+			
+			
+			if (isTDIS) {
+				List<Hl7TextInfo> matchingTdisLab =  hl7TextInfoDao.searchByFillerOrderNumber(fillerOrderNum, sendingFacility);
+				if (matchingTdisLab.size()>0) {
+					
+					hl7TextMessageDao.updateIfFillerOrderNumberMatches(MiscUtils.encodeToBase64String(hl7Body),fileId,matchingTdisLab.get(0).getLabNumber());
+					
+					hl7TextInfoDao.updateReportStatusByLabId(reportStatus,matchingTdisLab.get(0).getLabNumber());
+					hasBeenUpdated = true;
+				}
+			}
+			int insertID = 0; 
+			if (!isTDIS || !hasBeenUpdated) {
+				hl7TextMessage.setFileUploadCheckId(fileId);
+				hl7TextMessage.setType(type);
+				hl7TextMessage.setBase64EncodedeMessage(MiscUtils.encodeToBase64String(hl7Body));
+				hl7TextMessage.setServiceName(serviceName);
+				hl7TextMessageDao.persist(hl7TextMessage);
+	
+				insertID = hl7TextMessage.getId();
+				hl7TextInfo.setLabNumber(insertID);
+				hl7TextInfo.setLastName(lastName);
+				hl7TextInfo.setFirstName(firstName);
+				hl7TextInfo.setSex(sex);
+				hl7TextInfo.setHealthNumber(hin);
+				hl7TextInfo.setResultStatus(resultStatus);
+				hl7TextInfo.setFinalResultCount(finalResultCount);
+				hl7TextInfo.setObrDate(obrDate);
+				hl7TextInfo.setPriority(priority);
+				hl7TextInfo.setRequestingProvider(requestingClient);
+				hl7TextInfo.setDiscipline(discipline);
+				hl7TextInfo.setReportStatus(reportStatus);
+				hl7TextInfo.setAccessionNumber(accessionNum);
+				hl7TextInfoDao.persist(hl7TextInfo);
+			}
 
 			String demProviderNo = patientRouteReport(insertID, lastName, firstName, sex, dob, hin, DbConnectionFilter.getThreadLocalDbConnection());
 			if(type.equals("OLIS_HL7") && demProviderNo.equals("0")) {
@@ -192,7 +210,7 @@ public final class MessageUploader {
 		if (docNums != null) {
 			for (int i = 0; i < docNums.size(); i++) {
 
-				if (!((String) docNums.get(i)).trim().equals("")) {
+				if (docNums.get(i) != null && !((String) docNums.get(i)).trim().equals("")) {
 					sql = "select provider_no from provider where ohip_no = '" + ((String) docNums.get(i)) + "'";
 					pstmt = conn.prepareStatement(sql);
 					ResultSet rs = pstmt.executeQuery();
