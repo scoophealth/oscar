@@ -81,7 +81,8 @@ public class LabResultData implements Comparable{
     public boolean finalRes = true;
     public boolean isMatchedToPatient = true;
     public String multiLabId;
-
+    public String label;
+    
 	private Integer ackCount = null;
 	private Integer multiplAckCount = null;
 	private Integer remoteFacilityId=null;
@@ -415,6 +416,14 @@ public class LabResultData implements Comparable{
 
 	public ArrayList<Integer> getDuplicateLabIds() {
     	return (duplicateLabIds);
+    }
+
+	public String getLabel() {
+    	return label;
+    }
+
+	public void setLabel(String label) {
+    	this.label = label;
     }
 }
 

@@ -138,6 +138,13 @@ public class Hl7TextInfoDao extends AbstractDao<Hl7TextInfo> {
     	
     }
     
+    public void createUpdateLabelByLabNumber(String label, int lab_no) {
+    	String sql = "update Hl7TextInfo x set x.label=?1 where x.labNumber=?2";
+    	Query query = entityManager.createQuery(sql);
+    	query.setParameter(1, label);
+    	query.setParameter(2, lab_no);
+    	query.executeUpdate();
+    }
 }
 
 

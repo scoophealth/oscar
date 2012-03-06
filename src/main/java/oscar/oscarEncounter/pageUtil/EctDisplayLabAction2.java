@@ -118,7 +118,7 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
 
 			// now we add individual module items
 			LabResultData result;
-			String labDisplayName;
+			String labDisplayName, label;
 			// String bgcolour = "FFFFCC";
 			StringBuilder func;
 			int hash;
@@ -141,7 +141,8 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
 				String formattedDate = DateUtils.getDate(date, "dd-MMM-yyyy", request.getLocale());
 				// String formattedDate = DateUtils.getDate(date);
 				func = new StringBuilder("popupPage(700,960,'");
-
+				label = result.getLabel();
+				
 				String remoteFacilityIdQueryString = "";
 				if (result.getRemoteFacilityId() != null) {
 					try {
@@ -154,17 +155,21 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
 				}
 
 				if (result.isMDS()) {
-					labDisplayName = result.getDiscipline();
+					if (label == null || label.equals("")) labDisplayName = result.getDiscipline();
+	            	else labDisplayName = label;
 					url = request.getContextPath() + "/oscarMDS/SegmentDisplay.jsp?demographicId=" + bean.demographicNo + "&providerNo=" + bean.providerNo + "&segmentID=" + result.segmentID + "&multiID=" + result.multiLabId + "&status=" + result.getReportStatus() + remoteFacilityIdQueryString;
 				} else if (result.isCML()) {
-					labDisplayName = result.getDiscipline();
+					if (label == null || label.equals("")) labDisplayName = result.getDiscipline();
+	            	else labDisplayName = label;
 					url = request.getContextPath() + "/lab/CA/ON/CMLDisplay.jsp?demographicId=" + bean.demographicNo + "&providerNo=" + bean.providerNo + "&segmentID=" + result.segmentID + "&multiID=" + result.multiLabId + remoteFacilityIdQueryString;
 				} else if (result.isHL7TEXT()) {
-					labDisplayName = result.getDiscipline();
+					if (label == null || label.equals("")) labDisplayName = result.getDiscipline();
+	            	else labDisplayName = label;
 					// url = request.getContextPath() + "/lab/CA/ALL/labDisplay.jsp?providerNo="+bean.providerNo+"&segmentID="+result.segmentID;
 					url = request.getContextPath() + "/lab/CA/ALL/labDisplay.jsp?demographicId=" + bean.demographicNo + "&providerNo=" + bean.providerNo + "&segmentID=" + result.segmentID + "&multiID=" + result.multiLabId + remoteFacilityIdQueryString;
 				} else {
-					labDisplayName = result.getDiscipline();
+					if (label == null || label.equals("")) labDisplayName = result.getDiscipline();
+	            	else labDisplayName = label;
 					url = request.getContextPath() + "/lab/CA/BC/labDisplay.jsp?demographicId=" + bean.demographicNo + "&segmentID=" + result.segmentID + "&providerNo=" + bean.providerNo + "&multiID=" + result.multiLabId + remoteFacilityIdQueryString;
 				}
 				String labRead = "";

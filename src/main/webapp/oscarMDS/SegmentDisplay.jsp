@@ -57,10 +57,29 @@ String AbnFlag = "";
 	key="oscarMDS.segmentDisplay.title" /></title>
 <script language="javascript" type="text/javascript"
 	src="../share/javascript/Oscar.js"></script>
+	<script type="text/javascript" src="<%= request.getContextPath() %>/share/jquery/jquery-1.4.2.js"></script>
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 
+     
+       <script  type="text/javascript" charset="utf-8">
+      
+        $(function() {
+      	  $("#createLabel").click(function() {
+      	    $.ajax( {
+      	      type: "POST",      
+      	      url: "/oscar/lab/CA/ALL/createLabelTDIS.do",
+      	      dataType: "json",
+      	      data: { lab_no: $("#labNum").val(),accessionNum: $("#accNum").val(), label: $("#label").val() },
+      	      success: function(data) {
+      	    	  $("#labelspan").html(data.label);  
+      	      }
+      	    });
+      	  });
+      });
+        
+    </script>
 <script language="JavaScript">
 function getComment() {
     var ret = true;
@@ -78,6 +97,10 @@ function popupStart(vheight,vwidth,varpage,windowname) {
     var page = varpage;
     windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
     var popup=window.open(varpage, windowname, windowprops);
+}
+function submitLabel(lblval){
+	 document.forms['TDISLabelForm'].label.value = document.forms['acknowledgeForm'].label.value;
+	
 }
 </script>
 

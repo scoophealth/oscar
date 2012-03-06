@@ -3,13 +3,13 @@
 		 java.sql.*,
 		 oscar.oscarDB.*,
 		 oscar.oscarLab.ca.all.*,
-		 oscar.oscarLab.ca.all.util.*,
+		 oscar.oscarLab.ca.all.util.*,org.oscarehr.util.SpringUtils,
 		 oscar.oscarLab.ca.all.parsers.*,
 		 oscar.oscarLab.LabRequestReportLink,
 		 oscar.oscarMDS.data.ReportStatus,oscar.log.*,
          oscar.oscarDB.DBHandler,
          oscar.OscarProperties, 
-		 org.apache.commons.codec.binary.Base64" %>
+		 org.apache.commons.codec.binary.Base64,org.oscarehr.common.dao.Hl7TextInfoDao,org.oscarehr.common.model.Hl7TextInfo" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -61,6 +61,10 @@ String multiLabId = Hl7textResultsData.getMatchingLabs(segmentID);
 
 MessageHandler handler = Factory.getHandler(segmentID);
 String hl7 = Factory.getHL7Body(segmentID);
+Hl7TextInfoDao hl7TextInfoDao = (Hl7TextInfoDao) SpringUtils.getBean("hl7TextInfoDao");
+int lab_no = Integer.parseInt(segmentID);
+String label = ""; Hl7TextInfo hl7Lab = hl7TextInfoDao.findLabId(lab_no);
+if (hl7Lab.getLabel()!=null) label = hl7Lab.getLabel();
 // check for errors printing
 if (request.getAttribute("printError") != null && (Boolean) request.getAttribute("printError")){
 %>
@@ -69,6 +73,8 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
 </script>
 <%}
 %>
+<script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/jquery/jquery-1.4.2.js"></script>
+      
                 <script language="JavaScript">
          popupStart=function(vheight,vwidth,varpage,windowname) {
             var page = varpage;
@@ -173,6 +179,18 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
         }});
 
         }
+        
+        createTdisLabel=function(tdisformid,ackformid,labelspanid,labelid){
+        	document.forms[tdisformid].label.value = document.forms[ackformid].label.value;
+        	var url = '<%=request.getContextPath()%>'+"/lab/CA/ALL/createLabelTDIS.do";
+        	var data=$(tdisformid).serialize(true);
+        	new Ajax.Request(url,{method:'post', parameters:data
+        		
+        	});
+        	document.getElementById(labelspanid).innerHTML= "<i> Label: "+document.getElementById(labelid).value+"</i>";
+        	document.getElementById(labelid).value="";
+        	
+        };
         </script>
 
 <style>
@@ -191,6 +209,10 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
             <input type="hidden" name="providerNo" value="<%= providerNo %>" />
             <input type="hidden" name="ajax" value="yes" />
         </form>
+        <form name="TDISLabelForm" id="TDISLabelForm<%=segmentID%>" method='POST' onsubmit="createTdisLabel('TDISLabelForm<%=segmentID%>');" action="javascript:void(0);">
+			<input type="hidden" id="labNum" name="lab_no" value="<%=lab_no%>">
+			<input type="hidden" id="label" name="label" value="<%=label%>">
+		</form>
         <form name="acknowledgeForm" id="acknowledgeForm_<%=segmentID%>" onsubmit="javascript:void(0);" method="post" action="javascript:void(0);">
             
             <table width="100%"  border="0" cellspacing="0" cellpadding="0">
@@ -221,6 +243,20 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
                                     <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow')">
                                     <% } %>
 				    <input type="button" value="Req# <%=reqTableID%>" title="Link to Requisition" onclick="linkreq('<%=segmentID%>','<%=reqID%>');" />
+                                    <% if (!label.equals(null) && !label.equals("")) { %>
+				<button type="button" id="createLabel" value="Label" onClick="createTdisLabel('TDISLabelForm<%=segmentID%>','acknowledgeForm_<%=segmentID%>','labelspan_<%=segmentID%>','label_<%=segmentID%>')">Label</button>
+				<%} else { %>
+				<button type="button" id="createLabel" style="background-color:#6699FF" value="Label" onClick="createTdisLabel('TDISLabelForm<%=segmentID%>','acknowledgeForm_<%=segmentID%>','labelspan_<%=segmentID%>','label_<%=segmentID%>')">Label</button>
+				<%} %>
+                 <input type="text" id="label_<%=segmentID%>" name="label" value=""/>
+                 <% String labelval="";
+                 if (label!="" && label!=null) {
+                 	labelval = label;
+                 }else {
+                	 labelval = "(not set)";
+                 	
+                 } %>
+                 <span id="labelspan_<%=segmentID%>" class="Field2"><i>Label: <%=labelval%> </i></span>
                                     <span class="Field2"><i>Next Appointment: <oscar:nextAppt demographicNo="<%=demographicID%>"/></i></span>
                                 </td>
                             </tr>
@@ -457,6 +493,20 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
                                                 </div>
                                             </td>
                                         </tr>
+                                        <% if (handler.getMsgType().equals("MEDVUE")) {  %>
+                                        <tr>
+                                        	<td>
+                                                <div class="FieldData">
+                                                    <strong>MEDVUE Encounter Id:</strong>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="FieldData" nowrap="nowrap">
+                                                   <%= handler.getEncounterId() %>                                        
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <% } %>
                                     </table>
                                 </td>
                             </tr>

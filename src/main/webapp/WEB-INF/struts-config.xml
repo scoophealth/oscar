@@ -2,6 +2,7 @@
 <!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
 <struts-config>
 	<form-beans>
+	<form-bean name="TDISLabelForm" type="oscar.oscarLab.ca.all.pageUtil.CreateLabelTDISForm"></form-bean>
 		<!-- inbox manager -->
 		<form-bean name="inboxInputForm" type="org.apache.struts.validator.LazyValidatorForm" />
 
@@ -539,6 +540,9 @@
 
 	<action-mappings>
 
+		<action input="/SegmentDisplay.jsp" name="TDISLabelForm" path="/lab/CA/ALL/createLabelTDIS" scope="request" type="oscar.oscarLab.ca.all.pageUtil.CreateLabelTDISAction"> 
+			<forward name="complete" path="/SegmentDisplay.jsp" /> 
+		</action>
 		<action path="/MeasurementHL7Uploader" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" name="newLabUploadForm" validate="false">
 
 		</action>
