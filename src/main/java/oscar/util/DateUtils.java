@@ -644,7 +644,8 @@ public final class DateUtils {
 		if (date==null) return(null);
 		
 		GregorianCalendar gregorianCalendar=new GregorianCalendar();
-		gregorianCalendar.setTimeInMillis(date.getTime());
+		gregorianCalendar.setTime(date);
+		gregorianCalendar.getTime();
 		return(gregorianCalendar);
 	}
 	
@@ -760,5 +761,31 @@ public final class DateUtils {
 		if (d2.after(d2)) return -1;
    
 		return null; //should never happen
+	}
+	
+	/**
+	 * This will take 2 date objects, presumably one that holds the date and the other that holds the time
+	 * and it will merge the two into one object that has both the date and the time. This method is not 
+	 * normally useful but our database seems to have a lot of split date/time objects.
+	 * If either parameters are null it will return null.
+	 * This method will materialise the result before returning.
+	 */
+	public static GregorianCalendar toGregorianCalendar(Date date, Date time)
+	{
+		if (date==null || time==null) return(null);
+		
+		GregorianCalendar cal = new GregorianCalendar();
+		cal.setTime(date);
+
+		GregorianCalendar cal2 = new GregorianCalendar();
+		cal2.setTime(time);
+
+		cal.set(GregorianCalendar.HOUR_OF_DAY, cal2.get(GregorianCalendar.HOUR_OF_DAY));
+		cal.set(GregorianCalendar.MINUTE, cal2.get(GregorianCalendar.MINUTE));
+		cal.set(GregorianCalendar.SECOND, cal2.get(GregorianCalendar.SECOND));
+		cal.set(GregorianCalendar.MILLISECOND, cal2.get(GregorianCalendar.MILLISECOND));
+		cal.getTime();
+		
+		return(cal);
 	}
 }
