@@ -80,7 +80,7 @@ public class EctDisplayLabAction extends EctDisplayAction {
              
         //now we add individual module items
         LabResultData result;
-        String labDisplayName;
+        String labDisplayName, label;
         //String bgcolour = "FFFFCC";
         StringBuilder func; 
         int hash;
@@ -89,18 +89,23 @@ public class EctDisplayLabAction extends EctDisplayAction {
             Date date = result.getDateObj();
             String formattedDate = DateUtils.formatDate(date,request.getLocale());               
             func = new StringBuilder("popupPage(700,960,'");
+            label = result.getLabel();
             
             if ( result.isMDS() ){ 
-                labDisplayName = result.getDiscipline();               
+            	if (label == null || label.equals("")) labDisplayName = result.getDiscipline();
+            	else labDisplayName = label;                
                 url = request.getContextPath() + "/oscarMDS/SegmentDisplay.jsp?providerNo="+bean.providerNo+"&segmentID="+result.segmentID+"&status="+result.getReportStatus();
             }else if (result.isCML()){ 
-                labDisplayName = result.getDiscipline();
+            	if (label == null || label.equals("")) labDisplayName = result.getDiscipline();
+            	else labDisplayName = label; 
                 url = request.getContextPath() + "/lab/CA/ON/CMLDisplay.jsp?providerNo="+bean.providerNo+"&segmentID="+result.segmentID;                 
             }else if (result.isHL7TEXT()){
-                labDisplayName = result.getDiscipline();
+            	if (label == null || label.equals("")) labDisplayName = result.getDiscipline();
+            	else labDisplayName = label; 
                 url = request.getContextPath() + "/lab/CA/ALL/labDisplay.jsp?providerNo="+bean.providerNo+"&segmentID="+result.segmentID;
             }else {
-                labDisplayName = result.getDiscipline();
+            	if (label == null || label.equals("")) labDisplayName = result.getDiscipline();
+            	else labDisplayName = label; 
                 url = request.getContextPath() + "/lab/CA/BC/labDisplay.jsp?segmentID="+result.segmentID+"&providerNo="+bean.providerNo;                
             }            
              

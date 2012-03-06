@@ -321,7 +321,7 @@ public class Hl7textResultsData {
      *Populates ArrayList with labs attached to a consultation request
      */
     public static ArrayList<LabResultData> populateHL7ResultsData(String demographicNo, String consultationId, boolean attached) {
-        String sql = "SELECT hl7.lab_no, hl7.obr_date, hl7.discipline, hl7.accessionNum, hl7.final_result_count, patientLabRouting.id " +
+        String sql = "SELECT hl7.label,hl7.lab_no, hl7.obr_date, hl7.discipline, hl7.accessionNum, hl7.final_result_count, patientLabRouting.id " +
                 "FROM hl7TextInfo hl7, patientLabRouting " +
                 "WHERE patientLabRouting.lab_no = hl7.lab_no "+
                 "AND patientLabRouting.lab_type = 'HL7' AND patientLabRouting.demographic_no=" + demographicNo+" GROUP BY hl7.lab_no";
@@ -355,6 +355,7 @@ public class Hl7textResultsData {
                 lbData.discipline = oscar.Misc.getString(rs, "discipline");
                 lbData.accessionNumber = oscar.Misc.getString(rs, "accessionNum");
                 lbData.finalResultsCount = rs.getInt("final_result_count");
+                lbData.label = oscar.Misc.getString(rs,"label");
                 
                 if( attached && Collections.binarySearch(attachedLabs, lbData, c) >= 0 )
                     labResults.add(lbData);
@@ -492,7 +493,7 @@ public class Hl7textResultsData {
                 // note to self: lab reports not found in the providerLabRouting table will not show up - need to ensure every lab is entered in providerLabRouting, with '0'
                 // for the provider number if unable to find correct provider
                 
-                sql = "select info.lab_no, info.sex, info.health_no, info.result_status, info.obr_date, info.priority, info.requesting_client, info.discipline, info.last_name, info.first_name, info.report_status, info.accessionNum, info.final_result_count, providerLabRouting.status " +
+                sql = "select info.label,info.lab_no, info.sex, info.health_no, info.result_status, info.obr_date, info.priority, info.requesting_client, info.discipline, info.last_name, info.first_name, info.report_status, info.accessionNum, info.final_result_count, providerLabRouting.status " +
                         "from hl7TextInfo info, providerLabRouting " +
                         " where info.lab_no = providerLabRouting.lab_no "+
                         " AND providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"'" +
@@ -505,7 +506,7 @@ public class Hl7textResultsData {
                 
             } else {
                 
-                sql = "select info.lab_no, info.sex, info.health_no, info.result_status, info.obr_date, info.priority, info.requesting_client, info.discipline, info.last_name, info.first_name, info.report_status, info.accessionNum, info.final_result_count " +
+                sql = "select info.label,info.lab_no, info.sex, info.health_no, info.result_status, info.obr_date, info.priority, info.requesting_client, info.discipline, info.last_name, info.first_name, info.report_status, info.accessionNum, info.final_result_count " +
                         "from hl7TextInfo info, patientLabRouting " +
                         " where info.lab_no = patientLabRouting.lab_no "+
                         " AND patientLabRouting.lab_type = 'HL7' AND patientLabRouting.demographic_no='"+demographicNo+"' ORDER BY info.lab_no DESC";
@@ -554,6 +555,7 @@ public class Hl7textResultsData {
                 lbData.healthNumber = oscar.Misc.getString(rs, "health_no");
                 lbData.patientName = oscar.Misc.getString(rs, "last_name")+", "+oscar.Misc.getString(rs, "first_name");
                 lbData.sex = oscar.Misc.getString(rs, "sex");
+                lbData.label = oscar.Misc.getString(rs, "label");
                 
                 lbData.resultStatus = oscar.Misc.getString(rs, "result_status");
                 if (lbData.resultStatus.equals("A"))

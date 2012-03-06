@@ -220,7 +220,8 @@ function checkAll(formId){
 
 		<th align="left" valign="bottom" class="cell"><bean:message
 			key="oscarMDS.index.msgReportStatus" /></th>
-
+		<th align="left" valign="bottom" class="cell"><bean:message
+			key="oscarMDS.index.msgLabel" /></th>
 	</tr>
 
 	<%  
@@ -305,6 +306,7 @@ function checkAll(formId){
 
 		<td nowrap><%= ( (String) ( result.isFinal() ? "Final" : "Partial") )%>
 		</td>
+		<td nowrap><%=result.getLabel() %></td>
 	</tr>
 	<% } 
          

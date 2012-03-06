@@ -22,7 +22,7 @@
 <%@ page import="org.oscarehr.util.SpringUtils"%>
 <%@ page import="org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.model.UserProperty" %>
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.dao.*,oscar.oscarEncounter.oscarMeasurements.model.Measurementmap" %>
-<%@ page import="org.oscarehr.casemgmt.service.CaseManagementManager, org.oscarehr.common.dao.Hl7TextMessageDao, org.oscarehr.common.model.Hl7TextMessage"%>
+<%@ page import="org.oscarehr.casemgmt.service.CaseManagementManager, org.oscarehr.common.dao.Hl7TextMessageDao, org.oscarehr.common.model.Hl7TextMessage,org.oscarehr.common.dao.Hl7TextInfoDao,org.oscarehr.common.model.Hl7TextInfo"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -141,7 +141,11 @@ if (ackList != null){
     }
 }
 
-
+Hl7TextInfoDao hl7TextInfoDao = (Hl7TextInfoDao) SpringUtils.getBean("hl7TextInfoDao");
+int lab_no = Integer.parseInt(segmentID);
+Hl7TextInfo hl7Lab = hl7TextInfoDao.findLabId(lab_no);
+String label = "";
+if (hl7Lab.getLabel()!=null) label = hl7Lab.getLabel();
 
 /********************** Converted to this sport *****************************/ 
 
@@ -172,6 +176,27 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
         <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/prototype.js"></script>
         <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/scriptaculous.js"></script>
         <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/effects.js"></script>
+        <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/jquery/jquery-1.4.2.js"></script>
+      
+       <script  type="text/javascript" charset="utf-8">
+      
+        $(function() {
+      	  $("#createLabel").click(function() {
+      	    $.ajax( {
+      	      type: "POST",      
+      	      url: "/oscar/lab/CA/ALL/createLabelTDIS.do",
+      	      dataType: "json",
+      	      data: { lab_no: $("#labNum").val(),accessionNum: $("#accNum").val(), label: $("#label").val() }
+      	        
+      	     
+      	    });
+      	  $("#labelspan").children().get(0).innerHTML = "Label: " +  $("#label").val();
+      	  document.forms['acknowledgeForm'].label.value = "";
+      	  
+      	  });
+      });
+
+		</script>
         <script language="javascript" type="text/javascript">
             // alternately refer to this function in oscarMDSindex.js as labDisplayAjax.jsp does
 		function updateLabDemoStatus(labno){
@@ -453,6 +478,10 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
             	}
         }});
         }
+        
+        function submitLabel(lblval){
+       		document.forms['TDISLabelForm'].label.value = document.forms['acknowledgeForm'].label.value;
+       	}
         </script>
 
     </head>
@@ -467,6 +496,12 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
             <input type="hidden" name="labType<%= segmentID %>HL7" value="imNotNull" />
             <input type="hidden" name="providerNo" value="<%= providerNo %>" />
         </form>    
+        
+        <form name="TDISLabelForm"  method='POST' action="../../../lab/CA/ALL/createLabelTDIS.do">
+					<input type="hidden" id="labNum" name="lab_no" value="<%=lab_no%>">
+					<input type="hidden" id="label" name="label" value="<%=label%>">
+		</form>
+		
         <form name="acknowledgeForm" id="acknowledgeForm" method="post" onsubmit="javascript:void(0);" method="post" action="javascript:void(0);" >
             
             <table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
@@ -499,6 +534,23 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow')">
                                     <% } %>
 				    <input type="button" value="Req# <%=reqTableID%>" title="Link to Requisition" onclick="linkreq('<%=segmentID%>','<%=reqID%>');" />
+                                    <% if (!label.equals(null) && !label.equals("")) { %>
+										<button type="button" id="createLabel" value="Label" onclick="submitLabel(this);">Label</button>
+										<%} else { %>
+										<button type="button" id="createLabel" style="background-color:#6699FF" value="Label" onclick="submitLabel(this);">Label</button>
+										<%} %>
+										<input type="hidden" id="labNum" name="lab_no" value="<%=lab_no%>">
+						                <input type="text" id="acklabel" name="label" value=""/>
+						              
+						                 <% String labelval="";
+						                 if (label!="" && label!=null) {
+						                 	labelval = label;
+						                 }else {
+						                	 labelval = "(not set)";
+						                 	
+						                 } %>
+					                 <span id="labelspan" class="Field2"><i>Label: <%=labelval %> </i></span>
+                                    
                                     <span class="Field2"><i>Next Appointment: <oscar:nextAppt demographicNo="<%=demographicID%>"/></i></span>
                                 </td>
                             </tr>
@@ -745,6 +797,20 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                 </div>
                                             </td>
                                         </tr>
+                                        <% if (handler.getMsgType().equals("MEDVUE")) {  %>
+                                        <tr>
+                                        	<td>
+                                                <div class="FieldData">
+                                                    <strong>MEDVUE Encounter Id:</strong>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="FieldData" nowrap="nowrap">
+                                                   <%= handler.getEncounterId() %>                                        
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <% } %>
                                     </table>
                                 </td>
                             </tr>
@@ -1097,7 +1163,9 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                       			
                                       
                                     } else { %>
-                                       	<%for (l=0; l < handler.getOBXCommentCount(j, k); l++){%>
+                                       	<%for (l=0; l < handler.getOBXCommentCount(j, k); l++){
+                                       			if (!handler.getOBXComment(j, k, l).equals("")) {
+                                       		%>
                                             <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="TDISRes">
                                                <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBXComment(j, k, l)%></pre></td>
                                             	<td align="center" valign="top">
@@ -1106,7 +1174,8 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 	                                                </a>
                                              </td>
                                             </tr>  
-                                       <%} %>
+                                       			<%}
+                                       	} %>
                                        
                                        
                                  <%  } 

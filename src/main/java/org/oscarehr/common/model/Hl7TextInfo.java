@@ -87,6 +87,8 @@ public class Hl7TextInfo extends AbstractModel<Integer> implements Serializable 
 	@Column(name = "sending_facility")
 	private String sendingFacility;
 
+	private String label;
+	
 	@Override
 	public Integer getId() {
 		return (id);
@@ -211,6 +213,14 @@ public class Hl7TextInfo extends AbstractModel<Integer> implements Serializable 
 
 	public void setSendingFacility(String sendingFacility) {
     	this.sendingFacility = sendingFacility;
+    }
+
+	public String getLabel() {
+    	return label;
+    }
+
+	public void setLabel(String label) {
+    	this.label = label;
     }
 	
 	
