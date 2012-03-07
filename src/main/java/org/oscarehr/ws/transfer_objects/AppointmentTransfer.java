@@ -209,8 +209,8 @@ public final class AppointmentTransfer {
 		GregorianCalendar cal = DateUtils.toGregorianCalendar(appointment.getAppointmentDate(), appointment.getStartTime());
 		appointmentTransfer.setAppointmentStartDateTime(cal);
 
-		cal = DateUtils.toGregorianCalendar(appointment.getAppointmentDate(), appointment.getStartTime());
-		appointmentTransfer.setAppointmentStartDateTime(cal);
+		cal = DateUtils.toGregorianCalendar(appointment.getAppointmentDate(), appointment.getEndTime());
+		appointmentTransfer.setAppointmentEndDateTime(cal);
 
 		appointmentTransfer.setCreateDateTime(DateUtils.toGregorianCalendar(appointment.getCreateDateTime()));
 		appointmentTransfer.setUpdateDateTime(DateUtils.toGregorianCalendar(appointment.getUpdateDateTime()));
