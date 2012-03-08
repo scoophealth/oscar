@@ -186,6 +186,15 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 			return null;
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+    public List<BillingService> findBillingCodesByFontStyle(Integer styleId) {
+		String sql = "select bs from BillingService bs where bs.displayStyle = ?";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, styleId);
+		
+		return query.getResultList();
+	}
 
 	// /
 	// public int searchNumBillingCode(String str){
