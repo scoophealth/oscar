@@ -61,7 +61,8 @@
 		<form-bean name="annotationForm" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="oAnnotation" type="org.oscarehr.common.model.OscarAnnotation" />
 		</form-bean>
-
+		<form-bean name="addDocumentType" type="oscar.dms.data.AddDocumentTypeForm" />
+		<form-bean name="changeDocStatus" type="oscar.dms.data.ChangeDocStatusForm" />
 		<!-- login form bean -->
 		<form-bean name="loginForm" type="oscar.login.LoginForm" />
 		<form-bean name="msgSendMessageForm" type="oscar.oscarMessenger.pageUtil.MsgSendMessageForm" />
@@ -539,6 +540,18 @@
 	</global-forwards>
 
 	<action-mappings>
+	<action input="/dms/addNewDocumentCategories.jsp" name="addDocumentType"
+			path="/dms/addDocumentType" type="oscar.dms.actions.AddDocumentTypeAction"
+			parameter="method" scope="request" validate="false">
+			<forward name="failed" path="/dms/addNewDocumentCategories.jsp"></forward>
+			<forward name="success" path="/dms/closeWindow.html"></forward>
+		</action>
+		<action input="/dms/changeStatus.jsp" name="changeDocStatus"
+			path="/dms/changeDocStatus" type="oscar.dms.actions.ChangeDocStatusAction"
+			parameter="method" scope="request" validate="false">
+			<!--<forward name="failed" path="/dms/addNewDocumentCategories.jsp"></forward> -->
+			<forward name="success" path="/dms/closeWindow.html"></forward>
+		</action>
 
 		<action input="/SegmentDisplay.jsp" name="TDISLabelForm" path="/lab/CA/ALL/createLabelTDIS" scope="request" type="oscar.oscarLab.ca.all.pageUtil.CreateLabelTDISAction"> 
 			<forward name="complete" path="/SegmentDisplay.jsp" /> 
