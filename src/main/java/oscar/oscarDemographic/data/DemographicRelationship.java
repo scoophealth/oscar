@@ -31,6 +31,7 @@ package oscar.oscarDemographic.data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -97,32 +98,32 @@ public class DemographicRelationship {
          MiscUtils.getLogger().error("Error", e);
       }       
    }
-   
-   
-   public ArrayList getDemographicRelationships(String demographic){
-      ArrayList list = new ArrayList();
-      try {
-         
-         ResultSet rs;
-         String sql = "select * from relationships where demographic_no = '"+demographic+"' and deleted != '1'";
-         rs = DBHandler.GetSQL(sql);
-         while(rs.next()){
-            Hashtable h = new Hashtable();
-            h.put("id", oscar.Misc.getString(rs, "id"));
-            h.put("demographic_no", oscar.Misc.getString(rs, "relation_demographic_no"));
-            h.put("relation", oscar.Misc.getString(rs, "relation"));
-            h.put("sub_decision_maker", oscar.Misc.getString(rs, "sub_decision_maker"));
-	    h.put("emergency_contact", oscar.Misc.getString(rs, "emergency_contact"));
-            h.put("notes", oscar.Misc.getString(rs, "notes"));
-            list.add(h);
-         }            
-      } catch (SQLException e) {
-         MiscUtils.getLogger().error("Error", e);
-      }       
-      return list; 
-   }
-   
-   
+
+
+	public ArrayList getDemographicRelationships(String demographic){
+		ArrayList list = new ArrayList();
+		try {
+		
+			ResultSet rs;
+			String sql = "select * from relationships where demographic_no = '"+demographic+"' and deleted != '1'";
+			rs = DBHandler.GetSQL(sql);
+			while(rs.next()){
+				HashMap<String,String> h = new HashMap<String,String>();
+				h.put("id", oscar.Misc.getString(rs, "id"));
+				h.put("demographic_no", oscar.Misc.getString(rs, "relation_demographic_no"));
+				h.put("relation", oscar.Misc.getString(rs, "relation"));
+				h.put("sub_decision_maker", oscar.Misc.getString(rs, "sub_decision_maker"));
+				h.put("emergency_contact", oscar.Misc.getString(rs, "emergency_contact"));
+				h.put("notes", oscar.Misc.getString(rs, "notes"));
+				list.add(h);
+			}            
+		} catch (SQLException e) {
+			MiscUtils.getLogger().error("Error", e);
+		}       
+		return list; 
+	}
+
+
    public ArrayList getDemographicRelationshipsByID(String id){
       ArrayList list = new ArrayList();
       try {
