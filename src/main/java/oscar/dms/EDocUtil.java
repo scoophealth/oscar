@@ -42,6 +42,8 @@ import org.oscarehr.caisi_integrator.ws.CachedDemographicDocument;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
+import org.oscarehr.common.dao.CtlDocTypeDao;
+import org.oscarehr.common.model.CtlDocType;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -76,6 +78,7 @@ public final class EDocUtil extends SqlUtilBaseS {
 
 	private static ProgramManager programManager = (ProgramManager) SpringUtils.getBean("programManager");
 	private static CaseManagementNoteLinkDAO caseManagementNoteLinkDao = (CaseManagementNoteLinkDAO) SpringUtils.getBean("CaseManagementNoteLinkDAO");
+	private static CtlDocTypeDao ctldoctypedao = (CtlDocTypeDao) SpringUtils.getBean("ctlDocTypeDao");
 
 	public static ArrayList getCurrentDocs(String tag) {
 		// return TagUtil.getObjects(tag, "EDoc");
@@ -108,21 +111,24 @@ public final class EDocUtil extends SqlUtilBaseS {
 		return info;
 	}
 
-	public static ArrayList getDoctypes(String module) {
-		String sql = "SELECT * FROM ctl_doctype WHERE (status = 'A' OR status='H') AND module = '" + module + "'";
-		ResultSet rs = getSQL(sql);
-		ArrayList doctypes = new ArrayList();
-		String doctype = "";
-		try {
-			while (rs.next()) {
-				doctype = oscar.Misc.getString(rs, "doctype");
-				doctypes.add(doctype);
-			}
-		} catch (SQLException sqe) {
-			logger.error("Error", sqe);
+	public static ArrayList<String> getDoctypes(String module) {
+		ArrayList<String> doctypes = new ArrayList<String>();
+		List<CtlDocType> result = ctldoctypedao.findByStatusAndModule(new String[]{"A","H","I"}, module);
+		for(CtlDocType obj:result) {
+			doctypes.add(obj.getDocType());
 		}
+
 		return doctypes;
 	}
+
+	public static String getDocStatus(String module, String doctype){
+		List<CtlDocType> result = ctldoctypedao.findByDocTypeAndModule(doctype, module);
+		String status = "";
+		for(CtlDocType obj:result) {
+			status = obj.getStatus();
+		}
+        return status;
+   }
 
 	public static void addCaseMgmtNoteLink(CaseManagementNoteLink cmnl) {
 		caseManagementNoteLinkDao.save(cmnl);
@@ -164,7 +170,7 @@ public final class EDocUtil extends SqlUtilBaseS {
 		 * org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getType()) + "', '" + org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getDescription()) + "', '" +
 		 * org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getHtml()) + "', '" + org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getFileName()) + "', '" + newDocument.getCreatorId() + "', '" + newDocument.getDateTimeStamp()
 		 * + "', '" + newDocument.getStatus() + "', '" + newDocument.getContentType() + "', '" + newDocument.getDocPublic() + "', '" + newDocument.getObservationDate() + "')";
-		 * 
+		 *
 		 * String document_no = runSQLinsert(documentSql); logger.debug("addDoc: " + documentSql);
 		 */
 
@@ -176,6 +182,19 @@ public final class EDocUtil extends SqlUtilBaseS {
 		runSQL(ctlDocumentSql);
 		return document_no;
 	}
+
+	//new method to let the user add a new DocumentType into the database
+    public static void addDocTypeSQL(String docType, String module, String status){
+    	CtlDocType ctldoctype = new CtlDocType();
+    	ctldoctype.setDocType(docType);
+    	ctldoctype.setModule(module);
+    	ctldoctype.setStatus(status);
+    	ctldoctypedao.persist(ctldoctype);
+    }
+
+    public static void changeDocTypeStatusSQL(String docType, String module, String status){
+    	ctldoctypedao.changeDocType(docType, module, status);
+    }
 
 	public static void detachDocConsult(String docNo, String consultId) {
 		String sql = "UPDATE consultdocs SET deleted = 'Y' WHERE requestId = " + consultId + " AND document_no = " + docNo + " AND doctype = 'D'";
@@ -233,7 +252,7 @@ public final class EDocUtil extends SqlUtilBaseS {
 	 * document +----------------+--------------+------+-----+---------+----------------+ | Field | Type | Null | Key | Default | Extra | +----------------+--------------+------+-----+---------+----------------+ | document_no | int(6) | | PRI | NULL |
 	 * auto_increment | | doctype | varchar(20) | YES | | NULL | | | docdesc | varchar(255) | | | | | | docxml | text | YES | | NULL | | | docfilename | varchar(255) | | | | | | doccreator | varchar(30) | | | | | | updatedatetime | datetime | YES | | NULL
 	 * | | | status | char(1) | | | | | +----------------+--------------+------+-----+---------+----------------+
-	 * 
+	 *
 	 * ctl_document +-------------+-------------+------+-----+---------+-------+ | Field | Type | Null | Key | Default | Extra | +-------------+-------------+------+-----+---------+-------+ | module | varchar(30) | | | | | | module_id | int(6) | | | 0 | |
 	 * | document_no | int(6) | | | 0 | | | status | char(1) | YES | | NULL | | +-------------+-------------+------+-----+---------+-------+
 	 */
@@ -692,7 +711,7 @@ public final class EDocUtil extends SqlUtilBaseS {
 	public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String docClass, String docSubClass, String contentType, String observationDate, String updateDateTime, String docCreator, String responsible, String reviewer, String reviewDateTime, String source) throws SQLException {
 		return addDocument(demoNo, docFileName, docDesc, docType, docClass, docSubClass, contentType, observationDate, updateDateTime, docCreator, responsible, reviewer, reviewDateTime, source, null);
 	}
-	
+
 	public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String docClass, String docSubClass, String contentType, String observationDate, String updateDateTime, String docCreator, String responsible, String reviewer, String reviewDateTime, String source, String sourceFacility) throws SQLException {
 		String add_record_string1 = "insert into document (doctype,docClass,docSubClass,docdesc,docfilename,doccreator,responsible,updatedatetime,status,contenttype,public1,observationdate,reviewer,reviewdatetime,source,sourceFacility) values (?,?,?,?,?,?,?,?,'A',?,0,?,?,?,?,?)";
 		String add_record_string2 = "insert into ctl_document values ('demographic',?,?,'A')";
@@ -835,7 +854,7 @@ public final class EDocUtil extends SqlUtilBaseS {
 		} catch (SQLException e) {
 			logger.error("Error", e);
 		}
-*/		
+*/
 		return flag;
 	}
 
@@ -910,17 +929,17 @@ public final class EDocUtil extends SqlUtilBaseS {
 		} catch (Exception e) {
 			logger.error("Error retriving integrated documents.", e);
 		}
-		
+
 		logger.debug("retreived remote documents, document count="+results.size());
-		
+
 		return(results);
 	}
 
 	private static EDoc toEDoc(CachedDemographicDocument remoteDocument) {
 		EDoc eDoc=new EDoc();
-		
+
 		eDoc.setRemoteFacilityId(remoteDocument.getFacilityIntegerPk().getIntegratorFacilityId());
-		
+
 		eDoc.setAppointmentNo(remoteDocument.getAppointmentNo());
 		eDoc.setContentType(remoteDocument.getContentType());
 		eDoc.setCreatorId(remoteDocument.getDocCreator());
@@ -943,7 +962,7 @@ public final class EDocUtil extends SqlUtilBaseS {
 		eDoc.setSource(remoteDocument.getSource());
 		eDoc.setStatus(remoteDocument.getStatus()!=null&&remoteDocument.getStatus().length()>0?remoteDocument.getStatus().charAt(0):' ');
 		eDoc.setType(remoteDocument.getContentType());
-		
+
 	    return(eDoc);
     }
 }
