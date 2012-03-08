@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -378,9 +378,9 @@ public class OscarChartPrinter {
        
         DemographicRelationship demoRel = new DemographicRelationship();
         @SuppressWarnings("unchecked")
-		ArrayList<Hashtable<String,String>> demoR = demoRel.getDemographicRelationships(String.valueOf(demographic.getDemographicNo()));
+		ArrayList<HashMap<String,String>> demoR = demoRel.getDemographicRelationships(String.valueOf(demographic.getDemographicNo()));
 		for (int j=0; j<demoR.size(); j++) {
-		    Hashtable<String,String> r = (Hashtable<String,String>) demoR.get(j);
+		    HashMap<String,String> r = (HashMap<String,String>) demoR.get(j);
 		    String relationDemographicNo = (String) r.get("demographic_no");
 		    Demographic relationDemographic = clientDao.getClientByDemographicNo(Integer.parseInt(relationDemographicNo));
 		    String relation = r.get("relation");
