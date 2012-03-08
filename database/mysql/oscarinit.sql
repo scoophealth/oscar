@@ -216,6 +216,7 @@ CREATE TABLE billingservice (
   region varchar(5) default NULL,
   anaesthesia char(2) default NULL,
   termination_date date default '9999-12-31',
+  displaystyle int(10),
   PRIMARY KEY  (billingservice_no),
   KEY billingservice_service_code_index (service_code)
 ) ;
@@ -8664,3 +8665,10 @@ create table HL7HandlerMSHMapping (
 	PRIMARY KEY (id)
 );
 
+CREATE TABLE `cssStyles` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255),
+  `style` text,
+  `status` char(1) NOT NULL,
+  PRIMARY KEY (`id`)
+);
