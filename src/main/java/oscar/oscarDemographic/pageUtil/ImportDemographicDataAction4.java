@@ -86,6 +86,7 @@ import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.DemographicArchive;
 import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.Drug;
+import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentCommentDao;
@@ -97,13 +98,16 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentComment;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.OscarProperties;
 import oscar.appt.ApptStatusData;
 import oscar.dms.EDocUtil;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarDemographic.data.DemographicData.DemographicAddResult;
 import oscar.oscarDemographic.data.DemographicExt;
+import oscar.oscarDemographic.data.DemographicRelationship;
 import oscar.oscarEncounter.data.EctProgram;
 import oscar.oscarEncounter.oscarMeasurements.data.ImportExportMeasurements;
 import oscar.oscarEncounter.oscarMeasurements.data.Measurements;
@@ -170,6 +174,7 @@ import cdsDt.PersonNameStandard.OtherNames;
     String programId = null;
     HashMap<String, Integer> entries = new HashMap<String, Integer>();
     Integer importNo = 0;
+    OscarProperties oscarProperties = OscarProperties.getInstance();
 
     ProgramManager programManager = (ProgramManager) SpringUtils.getBean("programManager");
     AdmissionManager admissionManager = (AdmissionManager) SpringUtils.getBean("admissionManager");
@@ -186,7 +191,7 @@ import cdsDt.PersonNameStandard.OtherNames;
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception  {
         admProviderNo = (String) request.getSession().getAttribute("user");
         programId = new EctProgram(request.getSession()).getProgram(admProviderNo);
-        String tmpDir = oscar.OscarProperties.getInstance().getProperty("TMP_DIR");
+        String tmpDir = oscarProperties.getProperty("TMP_DIR");
         tmpDir = Util.fixDirName(tmpDir);
         if (!Util.checkDir(tmpDir)) {
             logger.debug("Error! Cannot write to TMP_DIR - Check oscar.properties or dir permissions.");
@@ -316,7 +321,7 @@ import cdsDt.PersonNameStandard.OtherNames;
         ArrayList<String> err_othe = new ArrayList<String>(); //errors: other categories
         ArrayList<String> err_note = new ArrayList<String>(); //non-errors: notes
 
-        String docDir = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
+        String docDir = oscarProperties.getProperty("DOCUMENT_DIR");
         docDir = Util.fixDirName(docDir);
         if (!Util.checkDir(docDir)) {
                 logger.debug("Error! Cannot write to DOCUMENT_DIR - Check oscar.properties or dir permissions.");
@@ -719,7 +724,7 @@ import cdsDt.PersonNameStandard.OtherNames;
                     }
                 }
 
-                String contactNote = contt[i].getNote();
+                String contactNote = StringUtils.noNull(contt[i].getNote());
                 String cDemoNo = dd.getDemoNoByNamePhoneEmail(cFirstName, cLastName, homePhone, workPhone, cEmail);
                 String cPatient = cLastName+","+cFirstName;
                 if (StringUtils.empty(cDemoNo)) {   //add new demographic as contact
@@ -764,31 +769,45 @@ import cdsDt.PersonNameStandard.OtherNames;
                 }
                 
                 if (StringUtils.filled(cDemoNo)) {
-                    for (int j=0; j<rel.length; j++) {
-                    	if (rel[j]==null) continue;
-                    	
-                        DemographicContact demoContact = new DemographicContact();
-                        demoContact.setCreated(new Date());
-                        demoContact.setUpdateDate(new Date());
-                        demoContact.setDemographicNo(Integer.valueOf(demographicNo));
-                        demoContact.setContactId(cDemoNo);
-                        demoContact.setType(1); //should be "type" - display problem
-                        demoContact.setCategory("personal");
-                    	demoContact.setRole(rel[j]);
-                        demoContact.setEc(emc);
-                        demoContact.setSdm(sdm);
-                        demoContact.setNote(contactNote);
-                    	contactDao.persist(demoContact);
-                    	
-                    	//clear emc, sdm, contactNote after 1st save
-                    	emc = "";
-                    	sdm = "";
-                    	contactNote = "";
-                    }
-
-//                  DemographicRelationship demoRel = new DemographicRelationship();
-//                  demoRel.addDemographicRelationship(demographicNo, cDemoNo, rel, sdm, emc, ""/*notes*/, primaryPhysician, null);
-//                  err_note.add("Added relationship with patient "+cPatient+" (Demo no="+cDemoNo+")");
+                	if (oscarProperties.isPropertyActive("NEW_CONTACTS_UI")) {
+                        for (int j=0; j<rel.length; j++) {
+                        	if (rel[j]==null) continue;
+                        	
+                            DemographicContact demoContact = new DemographicContact();
+                            demoContact.setCreated(new Date());
+                            demoContact.setUpdateDate(new Date());
+                            demoContact.setDemographicNo(Integer.valueOf(demographicNo));
+                            demoContact.setContactId(cDemoNo);
+                            demoContact.setType(1); //should be "type" - display problem
+                            demoContact.setCategory("personal");
+                        	demoContact.setRole(rel[j]);
+                            demoContact.setEc(emc);
+                            demoContact.setSdm(sdm);
+                            demoContact.setNote(contactNote);
+                        	contactDao.persist(demoContact);
+                        	
+                        	//clear emc, sdm, contactNote after 1st save
+                        	emc = "";
+                        	sdm = "";
+                        	contactNote = "";
+                        }
+                	} else {
+				        Facility facility = (Facility) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);
+				        Integer facilityId = null;
+				        if (facility!=null) facilityId = facility.getId();
+				        
+				        for (int j=0; j<rel.length; j++) {
+				        	if (rel[j]==null) continue;
+				        	
+							DemographicRelationship demoRel = new DemographicRelationship();
+							demoRel.addDemographicRelationship(demographicNo, cDemoNo, rel[j], sdm.equals("true"), emc.equals("true"), contactNote, admProviderNo, facilityId);
+                        	
+                        	//clear emc, sdm, contactNote after 1st save
+                        	emc = "";
+                        	sdm = "";
+                        	contactNote = "";
+				        }
+                	}
                 }
             }
 
