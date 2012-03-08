@@ -152,7 +152,8 @@ function newWindow(file,window) {
 				<option value="GrandFather">GrandFather</option>
 				<option value="GrandMother">GrandMother</option>
 				<option value="Guardian">Guardian</option>
-                                <option value="Foster Parent">Foster Parent</option>
+				<option value="Foster Parent">Foster Parent</option>
+				<option value="Next of Kin">Next of Kin</option>
 				<option value="Administrative Staff">Administrative Staff</option>
 				<option value="Care Giver">Care Giver</option>
 				<option value="Power of Attorney">Power of Attorney</option>
@@ -184,7 +185,7 @@ function newWindow(file,window) {
 
 			<% }
                   for ( int i = 0; i < list.size(); i++ ){ 
-                     Hashtable h = (Hashtable) list.get(i);
+                     HashMap h = (HashMap) list.get(i);
                      String relatedDemo = (String) h.get("demographic_no");              
                      DemographicData dd = new DemographicData();
                      DemographicData.Demographic demographic = dd.getDemographic(relatedDemo);    %>

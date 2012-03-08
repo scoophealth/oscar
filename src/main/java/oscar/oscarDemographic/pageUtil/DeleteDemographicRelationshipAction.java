@@ -29,6 +29,7 @@
 package oscar.oscarDemographic.pageUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 
 import javax.servlet.http.HttpServletRequest;
@@ -89,7 +90,7 @@ public class DeleteDemographicRelationshipAction extends Action {
 	DemographicRelationship demo = new DemographicRelationship();
 	ArrayList dr = demo.getDemographicRelationships(demo_no);
 	for (int i=0; i<dr.size(); i++) {
-	    Hashtable h = (Hashtable) dr.get(i);
+	    HashMap h = (HashMap) dr.get(i);
 	    String demoRel = (String) h.get("demographic_no");
 	    if (demo_r.trim().equalsIgnoreCase(demoRel.trim())) {
 		String rel = (String) h.get("relation");
