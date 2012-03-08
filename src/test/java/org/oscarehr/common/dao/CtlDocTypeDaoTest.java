@@ -20,7 +20,7 @@ public class CtlDocTypeDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable(new String[]{"ctl_doctype"});
+		SchemaUtils.restoreTable("ctl_doctype");
 	}
 
 	@Test
