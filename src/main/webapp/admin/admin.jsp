@@ -785,6 +785,12 @@ div.logoutBox {
 			<%
 				}
 			%>
+			
+			<% if (OscarProperties.getInstance().isFaxEnabled()) { %>
+            <li><a href="#" onclick='popupPage(600, 800,&quot;<html:rewrite page="/admin/faxStatus.do" />&quot;);return false;'><bean:message key="admin.faxStatus.faxStatus" /></a></li>
+            <% } %>	
+			<li><a href="#" onclick='popupPage(800, 800,&quot;<html:rewrite page="/admin/oscarStatus.do" />&quot;);return false;'><bean:message key="admin.oscarStatus.oscarStatus" /></a></li>
+			
             <oscar:oscarPropertiesCheck property="LOGINTEST" value="yes">
             <li><a href="#"
             onclick='popupPage(800,1000,&quot;<html:rewrite page="/admin/uploadEntryText.jsp"/>&quot;);return false;'><bean:message key="admin.admin.uploadEntryTxt"/></a>
