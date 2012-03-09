@@ -1,6 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
-<%-- This JSP is the multi-site admin site detail page --%>
 <!--
 /*
  *
@@ -41,14 +40,11 @@
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>Referral Doctor</title>
-<link rel="stylesheet" type="text/css"
-	href="../share/css/OscarStandardLayout.css">
+<title>Add/Edit Referral Doctor</title>
+<link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
 
-<script type="text/javascript" language="JavaScript"
-	src="../share/javascript/prototype.js"></script>
-<script type="text/javascript" language="JavaScript"
-	src="../share/javascript/Oscar.js"></script>
+<script type="text/javascript" language="JavaScript" src="../share/javascript/prototype.js"></script>
+<script type="text/javascript" language="JavaScript" src="../share/javascript/Oscar.js"></script>
 <link href="<html:rewrite page='/css/displaytag.css'/>" rel="stylesheet" ></link>
 <style>.button {border:1px solid #666666;} </style>
 
@@ -58,7 +54,7 @@
 <nested:form action="/admin/ManageBillingReferral">
 <table class="MainTable">
 	<tr class="MainTableTopRow">
-		<td class="MainTableTopRowLeftColumn">admin</td>
+		<td class="MainTableTopRowLeftColumn">Admin</td>
 		<td class="MainTableTopRowRightColumn">
 		<table class="TopStatusBar" style="width: 100%;">
 			<tr>
@@ -93,7 +89,7 @@
 
 	<nested:hidden property="referral.billingreferralNo"/>
 	<input name="method" type="hidden" value="update"></input>
-	<nested:submit styleClass="button" >Save</nested:submit> <nested:submit styleClass="button" onclick="this.form.method.value='searchbyname'">Cancel</nested:submit>
+	<nested:submit styleClass="button" >Save</nested:submit> <nested:submit styleClass="button" onclick="this.form.method.value='list'">Cancel</nested:submit>
 
   		</td>
 	</tr>
