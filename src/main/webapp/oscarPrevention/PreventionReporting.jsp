@@ -63,7 +63,7 @@
 <script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>" ></script>      
 <script type="text/javascript" src="../share/calendar/calendar-setup.js" ></script>      
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
-
+<script type="text/javascript" src="../share/javascript/sortable.js"></script>
 <style type="text/css">
   div.ImmSet { background-color: #ffffff; }
   div.ImmSet h2 {  }
@@ -244,6 +244,14 @@ table.ele td{
     border:1px solid grey;
     padding:2px;
 }
+
+/* Sortable tables */
+table.ele thead {
+    background-color:#eee;
+    color:#666666;    
+    font-size: x-small;
+    cursor: default;
+}
 </style>
 
 <style type="text/css" media="print">
@@ -357,50 +365,55 @@ table.ele td{
                   if (list != null ){ %>
                   <form name="frmBatchBill" action="" method="post">
                       <input type="hidden" name="clinic_view" value="<%=OscarProperties.getInstance().getProperty("clinic_view","")%>">
-              <table class="ele" width="80%">
-                  
-                      
+              <table class="ele" width="80%">                                        
                        <tr>
                        <td>&nbsp;</td>
-                       <td colspan="2">Total patients: <%=list.size()%><br/>Ineligible:<%=ineligible%></td>
-                       <td colspan="3">Up to Date: <%=done%> = <%=percentage %> % 
+                       <td style="10%;">Total patients: <%=list.size()%><br/>Ineligible:<%=ineligible%></td>
+                       <td style="10%;">Up to Date: <%=done%> = <%=percentage %> % 
                          <%if (percentageWithGrace != null){  %>
                            <%-- <br/> With Grace <%=percentageWithGrace%> %
                            --%>
                          <%}%>
                        </td>
                        <%if (type != null ){ %>
-                       <td colspan="10">&nbsp;<%=request.getAttribute("patientSet")%> </td>
+                       <td style="50%;">&nbsp;<%=request.getAttribute("patientSet")%> </td>
                        <td><input style="float: right" type="button" value="Bill" onclick="return batchBill();"></td>
                        <%}else{%>
-                       <td colspan="8">&nbsp;<%=request.getAttribute("patientSet")%> </td>
-                       <td colspan="3"><input style="float: right" type="button" value="Bill" onclick="return batchBill();"></td>
+                       <td style="50%;">&nbsp;<%=request.getAttribute("patientSet")%> </td>
+                       <td style="30%;"><input style="float: right" type="button" value="Bill" onclick="return batchBill();"></td>
                        <%}%>
                        </tr>
+             </table>
+             <table id="preventionTable" class="sortable ele" width="80%">
+                       <thead>
                        <tr>
-                          <td>&nbsp;</td>
-                          <td>DemoNo</td>
-                          <td>Age as of <br/><%=UtilDateUtilities.DateToString(asDate)%></td>
-                          <td>Sex</td>
-                          <td>Lastname</td>
-                          <td>Firstname</td>
+                          <th class="unsortable">&nbsp;</th>
+                          <th>DemoNo</th>
+                          <th>DOB</th>
+                          <th>Age as of <br/><%=UtilDateUtilities.DateToString(asDate)%></th>
+                          <th>Sex</th>
+                          <th>Lastname</th>
+                          <th>Firstname</th>
+                          <th>HIN</th>
                           <%if (type != null ){ %>
-                          <td>Guardian</td>
+                          <th>Guardian</th>
                           <%}%>
-                          <td>Phone</td>                          
-                          <td>Address</td>
-                          <td>Status</td>                          
+                          <th>Phone</th>                          
+                          <th>Address</th>
+                          <th>Status</th>                          
                           <%if (type != null ){ %>
-                          <td>Shot #</td>
+                          <th>Shot #</th>
                           <%}%>                          
-                          <td>Bonus Stat</td>
-                          <td>Since Last Procedure Date</td>
-                          <td>Last Procedure Date</td>
-                          <td>Last Contact Method</td>
-                          <td>Next Contact Method</td>
-                          <td>Roster Physician</td>
-                          <td>Bill</td>
+                          <th>Bonus Stat</th>
+                          <th>Since Last Procedure Date</th>
+                          <th>Last Procedure Date</th>
+                          <th>Last Contact Method</th>
+                          <th>Next Contact Method</th>
+                          <th>Roster Physician</th>
+                          <th class="unsortable">Bill</th>
                        </tr>
+                       </thead>
+                       <tbody>
                        <%DemographicNameAgeString deName = DemographicNameAgeString.getInstance();                       
                          DemographicData demoData= new DemographicData();
                          boolean setBill;
@@ -442,12 +455,14 @@ table.ele td{
                           <td>
                               <a href="javascript: return false;" onClick="popup(724,964,'../demographic/demographiccontrol.jsp?demographic_no=<%=dis.demographicNo%>&amp;displaymode=edit&amp;dboperation=search_detail','MasterDemographic')"><%=dis.demographicNo%></a>                              
                           </td>
-                          
+                          <td><%=demo.getDob("-")%></td>
+
                           <%if (type == null ){ %>
                           <td><%=demo.getAgeAsOf(asDate)%></td>
                           <td><%=h.get("sex")%></td>
                           <td><%=h.get("lastName")%></td>
                           <td><%=h.get("firstName")%></td>
+                          <td><%=demo.getHIN()%></td>
                           <td><%=demo.getPhone()%> </td>
                           <td><%=demo.getAddress()+" "+demo.getCity()+" "+demo.getProvince()+" "+demo.getPostal()%> </td>                          
                           <td bgcolor="<%=dis.color%>"><%=dis.state%></td>
@@ -462,7 +477,7 @@ table.ele td{
                           <td><%=h.get("sex")%></td>
                           <td><%=h.get("lastName")%></td>
                           <td><%=h.get("firstName")%></td>                          
-                          
+                          <td><%=demo.getHIN()%></td>
                           <td><%=demoSDM==null?"":demoSDM.getLastName()%><%=demoSDM==null?"":","%> <%= demoSDM==null?"":demoSDM.getFirstName() %>&nbsp;</td>
                           <td><%=demoSDM==null?"":demoSDM.getPhone()%> &nbsp;</td>
                           <td><%=demoSDM==null?"":demoSDM.getAddress()+" "+demoSDM==null?"":demoSDM.getCity()+" "+demoSDM==null?"":demoSDM.getProvince()+" "+demoSDM==null?"":demoSDM.getPostal()%> &nbsp;</td>                          
@@ -508,12 +523,14 @@ table.ele td{
 
                        </tr>                                                         
                       <%}%>
+                    	</tbody>   
+                    </table>
+                    <table class="ele" style="width:80%;">
                       <tr>
-                          <td colspan="16"><input style="float: right" type="button" value="Bill" onclick="return batchBill();"></td>
+                          <td style="text-align:right;"><input type="button" value="Bill" onclick="return batchBill();"></td>
 
                       </tr>
-                       
-                    </table>   
+                    </table>
                     
                     </form>
                   
