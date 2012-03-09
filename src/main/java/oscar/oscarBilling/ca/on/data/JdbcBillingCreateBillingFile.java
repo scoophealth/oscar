@@ -30,7 +30,9 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.SiteDao;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Site;
 import org.oscarehr.util.SpringUtils;
 
@@ -43,6 +45,7 @@ public class JdbcBillingCreateBillingFile {
 	private BillingClaimHeader1Data ch1Obj = null;
 	private BillingItemData itemObj = null;
 	private Properties propBillingNo = null;
+	private DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 
 	// private String batchCount = "";
 	private String batchHeader;
@@ -203,7 +206,7 @@ public class JdbcBillingCreateBillingFile {
 				+ "<tr><td colspan='4' class='myGreen'>OHIP Invoice for OHIP No." + bhObj.getProvider_reg_num()
 				+ "</td><td colspan='4' class='myGreen'>Payment date of " + output + "\n</td></tr>";
 		ret += "\n<tr><td class='myGreen'>ACCT NO</td>"
-				+ "<td width='25%' class='myGreen'>NAME</td><td class='myGreen'>HEALTH #</td>"
+				+ "<td width='25%' class='myGreen'>NAME</td><td class='myGreen'>RO</td><td class='myGreen'>DOB</td><td class='myGreen'>Sex</td><td class='myGreen'>HEALTH #</td>"
 				+ "<td class='myGreen'>BILLDATE</td><td class='myGreen'>CODE</td>"
 				+ "<td align='right' class='myGreen'>BILLED</td>"
 				+ "<td align='right' class='myGreen'>DX</td><td align='right' class='myGreen'>Comment</td></tr>";
@@ -237,33 +240,40 @@ public class JdbcBillingCreateBillingFile {
 	
 	private String buildHTMLContentRecord(int invCount) {
 		String ret = null;
-		if (invCount == 0) {
-			ret = "\n<tr><td class='myIvory'><a href=# onclick=\"popupPage(720,640,'billingONCorrection.jsp?billing_no="
+		String styleClass = patientCount % 2 == 0 ? "myLightBlue" : "myIvory";
+		if (invCount == 0) {			
+			Demographic demo = demographicDao.getDemographic(ch1Obj.getDemographic_no());
+			
+			ret = "\n<tr><td class='" + styleClass + "'><a href=# onclick=\"popupPage(720,640,'billingONCorrection.jsp?billing_no="
 					+ ch1Obj.getId()
 					+ "');return false;\">"
 					+ ch1Obj.getId()
 					+ "</a></td>"
-					+ "<td class='myIvory'><a href=# onclick=\"popupPage(720,740,'../../../demographic/demographiccontrol.jsp?demographic_no="
+					+ "<td class='" + styleClass + "'><a href=# onclick=\"popupPage(720,740,'../../../demographic/demographiccontrol.jsp?demographic_no="
 					+ ch1Obj.getDemographic_no()
 					+ "&displaymode=edit&dboperation=search_detail');return false;\">"
 					+ ch1Obj.getDemographic_name()
-					+ "</a></td><td class='myIvory'>"
+					+ "</a></td>"
+					+ "<td class='" + styleClass + "'>" + demo.getRosterStatus() + "</td>"
+					+ "<td class='" + styleClass + "'>" + demo.getBirthDayAsString() + "</td>"
+					+ "<td class='" + styleClass + "'>" + demo.getSex() + "</td>"
+					+ "<td class='" + styleClass + "'>"
 					+ ch1Obj.getHin() + ch1Obj.getVer()
-					+ "</td><td class='myIvory'>"
+					+ "</td><td class='" + styleClass + "'>"
 					+ ch1Obj.getBilling_date()
-					+ "</td><td class='myIvory'>"
+					+ "</td><td class='" + styleClass + "'>"
 					+ itemObj.getService_code()
-					+ "</td><td align='right' class='myIvory'>"
+					+ "</td><td align='right' class='" + styleClass + "'>"
 					+ itemObj.getFee()
-					+ "</td><td align='right' class='myIvory'>"
+					+ "</td><td align='right' class='" + styleClass + "'>"
 					+ itemObj.getDx()
-					+ "</td><td class='myIvory'> &nbsp; &nbsp;" + referral + hcFlag + m_Flag + " </td></tr>";
+					+ "</td><td class='" + styleClass + "'> &nbsp; &nbsp;" + referral + hcFlag + m_Flag + " </td></tr>";
 		} else {
-			ret = "\n<tr><td class='myIvory'>&nbsp;</td> <td class='myIvory'>&nbsp;</td>"
-					+ "<td class='myIvory'>&nbsp;</td> <td class='myIvory'>&nbsp;</td>" + "<td class='myIvory'>"
-					+ itemObj.getService_code() + "</td><td align='right' class='myIvory'>" + itemObj.getFee()
-					+ "</td><td align='right' class='myIvory'>" + itemObj.getDx()
-					+ "</td><td class='myIvory'>&nbsp;</td></tr>";
+			ret = "\n<tr><td class='" + styleClass + "'>&nbsp;</td> <td class='" + styleClass + "'>&nbsp;</td><td class='" + styleClass + "'>&nbsp;</td><td class='" + styleClass + "'>&nbsp;</td><td class='" + styleClass + "'>&nbsp;</td>"
+					+ "<td class='" + styleClass + "'>&nbsp;</td> <td class='" + styleClass + "'>&nbsp;</td>" + "<td class='" + styleClass + "'>"
+					+ itemObj.getService_code() + "</td><td align='right' class='" + styleClass + "'>" + itemObj.getFee()
+					+ "</td><td align='right' class='" + styleClass + "'>" + itemObj.getDx()
+					+ "</td><td class='" + styleClass + "'>&nbsp;</td></tr>";
 		}
 		return ret;
 	}
@@ -303,7 +313,7 @@ public class JdbcBillingCreateBillingFile {
 		return ret;
 	}
 	private String buildHTMLContentTrailer() {
-		htmlContent += "\n<tr><td colspan='8' class='myIvory'>&nbsp;</td></tr><tr><td colspan='4' class='myIvory'>OHIP No: "
+		htmlContent += "\n<tr><td colspan='11' class='myIvory'>&nbsp;</td></tr><tr><td colspan='7' class='myIvory'>OHIP No: "
 				+ bhObj.getProvider_reg_num()
 				+ ": "
 				+ pCount
@@ -400,7 +410,7 @@ public class JdbcBillingCreateBillingFile {
 
 	private String printErrorPartMsg() {
 		String ret = "";
-		ret = errorPartMsg.length() > 0 ? ("\n<tr bgcolor='yellow'><td colspan='8'><font color='red'>" + errorPartMsg + "</font></td></tr>")
+		ret = errorPartMsg.length() > 0 ? ("\n<tr bgcolor='yellow'><td colspan='11'><font color='red'>" + errorPartMsg + "</font></td></tr>")
 				: "";
 		errorPartMsg = "";
 		return ret;
@@ -490,7 +500,7 @@ public class JdbcBillingCreateBillingFile {
 				// inPatient = "0".equals(inPatient) ? " " : inPatient;
 				// demoName = rs.getString("demographic_name");
 				// hin = rs.getString("hin");
-				// dob = rs.getString("dob");
+				//dob = rs.getString("dob");
 				// visitDate = rs.getDate("visitdate");
 				// visitType = rs.getString("visittype");
 				// outPatient = rs.getString("clinic_ref_code");
