@@ -211,4 +211,25 @@ public class OscarProperties extends Properties {
 	public boolean isOscarLearning() {
 		return isPropertyActive("OSCAR_LEARNING");
 	}
+	
+	public boolean faxEnabled() {
+		return isPropertyActive("enableFax");
+	}
+	
+	public boolean isRxFaxEnabled() {
+		return isPropertyActive("rx_fax_enabled");
+	}
+		
+	public boolean isConsultationFaxEnabled() {
+		return isPropertyActive("consultation_fax_enabled");
+	}
+	
+	public boolean isRichEFormFaxEnabled() {
+		return isPropertyActive("richeform_fax_enabled");
+	}
+	
+	public boolean isFaxEnabled() {
+		return faxEnabled() || isRxFaxEnabled() || isConsultationFaxEnabled() || isRichEFormFaxEnabled();
+	}
+	
 }
