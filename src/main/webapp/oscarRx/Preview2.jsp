@@ -426,7 +426,7 @@ if(prop!=null && prop.getValue().equalsIgnoreCase("yes")){
                                                             	<% } %>
                                                             </td>
                                                             <td height=25px>&nbsp; <%= doctorName%> <% if ( pracNo != null && ! pracNo.equals("") && !pracNo.equalsIgnoreCase("null")) { %>
-                                                                Pract. No. <%= pracNo%> <% } %>                                                         
+                                                                <br /> &nbsp; <bean:message key="RxPreview.PractNo"/> <%= pracNo%> <% } %>                                                         
                                                             </td>
                                                     </tr>
                                                     <% 
