@@ -117,7 +117,7 @@
 		<property name="dataExportDAO" ref="dataExportDAO"></property>
 		<property name="demographicDao" ref="demographicDao"></property>
 		<property name="oscarAppointmentDao" ref="oscarAppointmentDao"></property>
-		<property name="issueDAO" ref="IssueDAO"></property>		
+		<property name="issueDAO" ref="IssueDAO"></property>
 		<property name="caseManagementNoteDAO" ref="CaseManagementNoteDAO" />
 		<property name="caseManagementNoteExtDAO" ref="CaseManagementNoteExtDAO" />
 		<property name="hl7TextInfoDAO" ref="hl7TextInfoDao" />
@@ -129,11 +129,11 @@
 		<property name="dataExportDAO" ref="dataExportDAO"></property>
 		<property name="demographicDao" ref="demographicDao"></property>
 		<property name="oscarAppointmentDao" ref="oscarAppointmentDao"></property>
-		<property name="issueDAO" ref="IssueDAO"></property>		
+		<property name="issueDAO" ref="IssueDAO"></property>
 		<property name="caseManagementNoteDAO" ref="CaseManagementNoteDAO" />
 		<property name="caseManagementNoteExtDAO" ref="CaseManagementNoteExtDAO" />
 		<property name="allergyDao" ref="AllergyDao" />
-		<property name="hl7TextInfoDAO" ref="hl7TextInfoDao" />		
+		<property name="hl7TextInfoDAO" ref="hl7TextInfoDao" />
 		<property name="preventionDao" ref="preventionDao"/>
 		<property name="dxResearchDAO" ref="DxresearchDAO"></property>
 		<property name="icd9Dao" ref="Icd9DAO"></property>
@@ -245,7 +245,7 @@
 	</bean>
 
 	<bean name="/report/DxresearchReport" class="org.oscarehr.common.web.DxresearchReportAction" singleton="false">
-		<property name="dxresearchdao" ref="DxresearchDAO" />		
+		<property name="dxresearchdao" ref="DxresearchDAO" />
 	</bean>
 
 	<!-- Indivo -->
@@ -267,7 +267,7 @@
 	</bean>
 	<bean name="/phr/Logout" class="org.oscarehr.phr.web.PHRLogoutAction" singleton="false">
 	</bean>
-	<!-- 
+	<!--
 	<bean name="/phrExchange" class="org.oscarehr.phr.web.PHRExchangeAction" singleton="false">
 		<property name="phrService" ref="phrService" />
 	</bean>
@@ -304,11 +304,6 @@
 	</bean>
 	<bean name="/admin/ManageSites" class="org.oscarehr.common.web.SitesManageAction" singleton="false">
 		<property name="siteDao" ref="siteDao" />
-	</bean>
-
-
-	<bean name="/admin/ManageBillingReferral" class="org.oscarehr.common.web.BillingreferralEditAction" singleton="false">
-		<property name="bDao" ref="BillingreferralDAO" />
 	</bean>
 
 	<bean name="/billing/CA/ON/BatchBill" class="org.oscarehr.billing.CA.ON.web.BatchBillAction" singleton="false">
