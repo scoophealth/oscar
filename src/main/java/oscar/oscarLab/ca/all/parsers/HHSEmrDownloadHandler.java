@@ -23,7 +23,9 @@
  */
 package oscar.oscarLab.ca.all.parsers;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -33,6 +35,7 @@ import org.oscarehr.util.MiscUtils;
 
 import oscar.Misc;
 import oscar.OscarProperties;
+import oscar.util.UtilDateUtilities;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.Group;
 import ca.uhn.hl7v2.model.Segment;
@@ -146,7 +149,7 @@ public class HHSEmrDownloadHandler extends DefaultGenericHandler implements Mess
          *  Fill the OBX array list for use by future methods
          */
 
-        logger.debug("Current Group "+((Group) terser.getFinder().getCurrentGroup()).getName());
+        logger.debug("Current Group "+terser.getFinder().getCurrentGroup().getName());
 
 
 
@@ -332,6 +335,9 @@ public class HHSEmrDownloadHandler extends DefaultGenericHandler implements Mess
 //    }
 //    
     public String getOBXName(int i, int j){
+    	if (getOBXField(i,j,2,0,1).equals("FT")) {
+    		return "";
+    	} else
         return(getOBXField(i, j, 3, 0, 2));
     }
 //    
@@ -500,13 +506,21 @@ public class HHSEmrDownloadHandler extends DefaultGenericHandler implements Mess
 //        }
 //    }
 //    
-//    public String getDOB(){
-//        try{
-//            return(formatDateTime(getString(terser.get("/.PID-7-1"))).substring(0, 10));
-//        }catch(Exception e){
-//            return("");
-//        }
-//    }
+    public String getDOB(){
+    	String dob = "",year="",mon="",day="";
+    	
+        try{
+        	dob = getString(terser.get("/.PID-7-1"));
+        	Date date = new Date(dob);
+        	year = UtilDateUtilities.justYear(date);
+        	mon = UtilDateUtilities.justMonth(date);
+        	day = UtilDateUtilities.justDay(date);
+        	
+            return(formatDateTime(year+mon+day));
+        }catch(Exception e){
+            return("");
+        }
+    }
 //    
 //    public String getAge(){
 //        String age = "N/A";
@@ -563,7 +577,25 @@ public class HHSEmrDownloadHandler extends DefaultGenericHandler implements Mess
 //        }
 //    }
 //    
-//    public String getServiceDate(){
+    public String getServiceDate(){
+    	String serdate = "",year="",mon="",day="", time="";
+        //usually a message type specific location
+    	try{
+    		serdate = getString(terser.get("/.OBR-7-1"));
+        	Date date = new Date(serdate);
+        	year = UtilDateUtilities.justYear(date);
+        	mon = UtilDateUtilities.justMonth(date);
+        	day = UtilDateUtilities.justDay(date);
+        	time = justTime(date);
+            serdate = (year+"-"+mon+"-"+day+" "+time);
+            logger.info("serdate = "+serdate);
+            return serdate.toString();
+        }catch(Exception e){
+            return("");
+        }
+    }
+//    
+//    public String getOrderStatus(){
 //        //usually a message type specific location
 //        return("");
 //    }
@@ -792,4 +824,9 @@ public String getAccessionNum(){
 		}		
 		return ids;
 	}
+	
+	private String justTime(Date date){
+        SimpleDateFormat simpledateformat = new SimpleDateFormat("HH:mm");
+        return simpledateformat.format(date);
+    }
 }
