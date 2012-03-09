@@ -18,7 +18,7 @@ import oscar.oscarRx.data.RxPrescriptionData;
 
 public class NoteDisplayLocal implements NoteDisplay {
 	private CaseManagementIssueNotesDao caseManagementIssueNotesDao=(CaseManagementIssueNotesDao)SpringUtils.getBean("caseManagementIssueNotesDao");
-	
+
 	private CaseManagementNote caseManagementNote;
 	private boolean editable = false;
 	private boolean readonly;
@@ -31,8 +31,18 @@ public class NoteDisplayLocal implements NoteDisplay {
 
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		if (loggedInInfo != null) editable = !caseManagementNote.isSigned() || (loggedInInfo.loggedInProvider.getProviderNo().equals(caseManagementNote.getProviderNo()) && !caseManagementNote.isLocked());
-		
+
 		isCpp=calculateIsCpp();
+	}
+
+	public boolean containsIssue(String issueCode) {
+		List<CaseManagementIssue> caseManagementIssues=caseManagementIssueNotesDao.getNoteIssues(getNoteId());
+		for (CaseManagementIssue caseManagementIssue : caseManagementIssues) {
+			if (caseManagementIssue.getIssue().getCode().equals(issueCode)) {
+					return(true);
+			}
+		}
+		return false;
 	}
 
 	private boolean calculateIsCpp()
@@ -48,10 +58,10 @@ public class NoteDisplayLocal implements NoteDisplay {
 				}
 			}
 		}
-		
+
 		return(false);
 	}
-	
+
 	public void setReadOnly(boolean ro) {
 		readonly = ro;
 	}
@@ -162,36 +172,36 @@ public class NoteDisplayLocal implements NoteDisplay {
 	@Override
     public String getEncounterTime() {
 		StringBuilder et = new StringBuilder();
-		
+
 		if(caseManagementNote.getHourOfEncounterTime()!=null) {
 			et.append(caseManagementNote.getHourOfEncounterTime());
 			et.append(":");
 		}
-		
+
 		if(caseManagementNote.getMinuteOfEncounterTime()!=null) {
 			et.append(caseManagementNote.getMinuteOfEncounterTime());
 		}
-		
+
 		return et.toString();
 	}
-	
+
 	@Override
     public String getEncounterTransportationTime() {
 		StringBuilder et = new StringBuilder();
-		
+
 		if(caseManagementNote.getHourOfEncTransportationTime()!=null) {
 			et.append(caseManagementNote.getHourOfEncTransportationTime());
 			et.append(":");
 		}
-		
+
 		if(caseManagementNote.getMinuteOfEncTransportationTime()!=null) {
 			et.append(caseManagementNote.getMinuteOfEncTransportationTime());
 		}
-		
+
 		return et.toString();
 	}
-	
-	
+
+
 	public ArrayList<String> getIssueDescriptions() {
 		ArrayList<String> issueDescriptions = new ArrayList<String>();
 
@@ -224,7 +234,7 @@ public class NoteDisplayLocal implements NoteDisplay {
 	public boolean isEncounterForm() {
 	    return false;
     }
-	
+
 	public boolean isInvoice() {
 	    return false;
     }

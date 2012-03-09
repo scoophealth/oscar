@@ -87,7 +87,7 @@ public interface NoteDisplay {
 	public boolean isEformData();
 
 	public boolean isEncounterForm();
-	
+
 	public boolean isInvoice();
 
 	public CaseManagementNoteLink getNoteLink();
@@ -107,8 +107,10 @@ public interface NoteDisplay {
 	public boolean isGroupNote();
 
 	public boolean isCpp();
-	
+
+	public boolean containsIssue(String issueCode);
+
 	public String getEncounterTime();
-	
+
 	public String getEncounterTransportationTime();
 }

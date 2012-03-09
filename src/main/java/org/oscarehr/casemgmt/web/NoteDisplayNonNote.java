@@ -50,20 +50,20 @@ public class NoteDisplayNonNote implements NoteDisplay {
 		linkInfo = patientForm.jsp;
 		isEncounterForm = true;
 	}
-	
+
 	public NoteDisplayNonNote(BillingClaimHeader1 h1) {
 		Calendar cal1 = Calendar.getInstance();
 		Calendar cal2 = Calendar.getInstance();
-		
+
 		cal1.setTime(h1.getBilling_date());
 		cal2.setTime(h1.getBilling_time());
 		cal1.set(Calendar.HOUR_OF_DAY, cal2.get(Calendar.HOUR_OF_DAY));
 		cal1.set(Calendar.MINUTE, cal2.get(Calendar.MINUTE));
 		cal1.set(Calendar.SECOND, cal2.get(Calendar.SECOND));
 		date = cal1.getTime();
-		
+
 		StringBuilder tmpNote = new StringBuilder();
-		
+
 		List<BillingItem>items = h1.getBillingItems();
 		BillingItem item;
 		int size = items.size();
@@ -72,7 +72,7 @@ public class NoteDisplayNonNote implements NoteDisplay {
 			tmpNote.append(item.getService_code());
 			if( idx < size - 1 ) {
 				tmpNote.append("; ");
-			}			
+			}
 		}
 		provider = providerDao.getProvider(h1.getProvider_no());
 		tmpNote.append(" billed by " + provider.getFormattedName());
@@ -161,6 +161,10 @@ public class NoteDisplayNonNote implements NoteDisplay {
 	}
 
 	public boolean isCpp() {
+		return false;
+	}
+
+	public boolean containsIssue(String issueCode) {
 		return false;
 	}
 
