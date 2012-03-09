@@ -174,6 +174,7 @@ import ca.ehealthontario.ccim.ConsentSubmissionDocument.ConsentSubmission;
 import ca.ehealthontario.ccim.PersonIdentificationDocument;
 import ca.ehealthontario.ccim.PersonIdentificationDocument.PersonIdentification;
 import ca.ehealthontario.ccim.PersonIdentificationDocument.PersonIdentification.SourceSystem;
+import ca.ehealthontario.ccim.RecordedByInfoDocument.RecordedByInfo;
 import ca.on.iar.definition.SubmissionPortType;
 import ca.on.iar.definition.SubmissionService;
 import ca.on.iar.types.IARSubmission;
@@ -398,38 +399,60 @@ public class OcanReportUIBean implements CallbackHandler {
 		consent.setMimeType("text/xml");
 		consent.setRecordType("Consent");
 		ConsentSubmission cs = ConsentSubmission.Factory.newInstance();
-		ConsentDirective cd = cs.addNewConsentDirective();
-		cd.setId(submissionDoc.getOCANv2SubmissionFile().getID()); //TODO:unique
-		cd.setType(CdConsentDirectiveType.ASSESSMENT);
+		//cs.getDomNode().getAttributes().
+		OCANv2SubmissionRecord[] submissionRecords = submissionDoc.getOCANv2SubmissionFile().getOCANv2SubmissionRecordArray();
+		for(OCANv2SubmissionRecord submissionRecord:submissionRecords) {
 
-		PersonIdentification pi = PersonIdentification.Factory.newInstance();
-		SourceSystem ss = pi.addNewSourceSystem();
-		ss.setId(application.getId());
-		ss.setType(SourceSystem.Type.APPLICATION_ID);
-		PersonIdentificationDocument.PersonIdentification.Organization o = pi.addNewOrganization();
-		o.setId(orgId);
-		o.setName(LoggedInInfo.loggedInInfo.get().currentFacility.getName());
-		pi.setPersonId("444"); //TODO
-		cd.setPersonIdentification(pi);
+			String assessmentId = submissionRecord.getAssessmentID();
+			OcanStaffForm staffForm = ocanStaffFormDao.findLatestByAssessmentId(LoggedInInfo.loggedInInfo.get().currentFacility.getId(),Integer.parseInt(assessmentId));
 
-		ApplyTo at = ApplyTo.Factory.newInstance();
-		ApplyToDocument.ApplyTo.Assessment a = at.addNewAssessment();
-		a.setAssessmentId("1"); //TODO
-		a.setAssessmentType(AssessmentType.OCAN);
-		at.setAssessment(a);
-		cd.setApplyTo(at);
+			ConsentDirective cd = cs.addNewConsentDirective();
+			cd.setId(assessmentId);
+			cd.setType(CdConsentDirectiveType.ASSESSMENT);
 
-		CdConsentActionType actionType = CdConsentActionType.Factory.newInstance();
-		actionType.setAccessLevel(CdConsentActionType.AccessLevel.GRANT);
-		cd.setDirective(actionType);
+			PersonIdentification pi = PersonIdentification.Factory.newInstance();
+			SourceSystem ss = pi.addNewSourceSystem();
+			ss.setId(application.getId());
+			ss.setType(SourceSystem.Type.APPLICATION_ID);
+			PersonIdentificationDocument.PersonIdentification.Organization o = pi.addNewOrganization();
+			o.setId(orgId);
+			o.setName(LoggedInInfo.loggedInInfo.get().currentFacility.getName());
+			pi.setPersonId(submissionRecord.getClientRecord().getClientID().getOrgClientID());
+			cd.setPersonIdentification(pi);
 
-		//RecordedByInfo rbi = RecordedByInfo.Factory.newInstance();
-		//rbi.setNameOrUserID();
-		//rbi.setTimeRecorded(arg0);
-		//cd.setRecordedByInfo(arg0);
+			ApplyTo at = ApplyTo.Factory.newInstance();
+			ApplyToDocument.ApplyTo.Assessment a = at.addNewAssessment();
+			a.setAssessmentId(assessmentId);
+			a.setAssessmentType(AssessmentType.OCAN);
+			at.setAssessment(a);
+			cd.setApplyTo(at);
+
+			CdConsentActionType actionType = CdConsentActionType.Factory.newInstance();
+			String c = staffForm.getConsent();
+			if(c.equals("GRANT")) {
+				actionType.setAccessLevel(CdConsentActionType.AccessLevel.GRANT);
+			}
+			else if(c.equals("DENY")) {
+				actionType.setAccessLevel(CdConsentActionType.AccessLevel.DENY);
+			}
+			else if(c.equals("NOT_SPECIFIED")) {
+				actionType.setAccessLevel(CdConsentActionType.AccessLevel.UNSUPPORTED);
+			} else {
+				actionType.setAccessLevel(CdConsentActionType.AccessLevel.GRANT);
+			}
+			cd.setDirective(actionType);
+
+			RecordedByInfo rbi = RecordedByInfo.Factory.newInstance();
+			rbi.setNameOrUserID(staffForm.getProviderName());
+			Calendar cal2 = Calendar.getInstance();
+			cal2.setTime(staffForm.getCreated());
+			rbi.setTimeRecorded(cal2);
+			cd.setRecordedByInfo(rbi);
+
+		}
 
 		Text t2 = new Text();
-		t2.setValue(cs.toString());
+		t2.setValue("<ConsentSubmission xsi:schemaLocation=\"http://www.ehealthontario.ca/CCIMConsentSubmission-1.0.xsd\" xmlns=\"http://www.ehealthontario.ca/CCIM\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" + cs.toString() + "</ConsentSubmission>");
 		consent.setText(t2);
 
 		SubmissionContent sc = new SubmissionContent();
@@ -451,29 +474,17 @@ public class OcanReportUIBean implements CallbackHandler {
 		is.getTransmissionHeader().setSubmissionId(String.valueOf(log.getId()));
 		logger.info("the submissionId is " + log.getId());
 
-		//XMLBeanStreamSerializer serializer = new XMLBeanStreamSerializer();
-
-		try {
-/*
-	    JAXBContext context = JAXBContext.newInstance(IARSubmission.class);
-        Marshaller marshaller = context.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        marshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new NamespacePrefixmapperImpl() );
-*/
-		}
-		catch(Exception e) {
-			logger.error("Error",e);
-		}
-
-		//if(true) return 0;
-
 		try {
 			String user = OscarProperties.getInstance().getProperty("ocan.iar.user");
+			String url = OscarProperties.getInstance().getProperty("ocan.iar.url");
+			if(url == null || url.length() == 0) {
+				//validation environment
+				url = "https://iarvt.ccim.on.ca/iarws-2.0/services/SubmissionService";
+			}
 			SubmissionService service = new SubmissionService();
 			SubmissionPortType port =  service.getSubmissionPort();
 			((BindingProvider)port).getRequestContext().put(
-				    BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-				    "https://iarvt.ccim.on.ca/iarws-2.0/services/SubmissionService");
+				    BindingProvider.ENDPOINT_ADDRESS_PROPERTY,url);
 			CxfClientUtils.configureClientConnection(port);
 			CxfClientUtils.configureWSSecurity(port,user,new OcanReportUIBean());
 			CxfClientUtils.configureLogging(port);
@@ -2097,7 +2108,7 @@ public class OcanReportUIBean implements CallbackHandler {
 		int hour = cal.get(GregorianCalendar.HOUR_OF_DAY);
 		int min = cal.get(GregorianCalendar.MINUTE);
 
-		return "OCAN" +  year + ( (month<10)?("0"+month):(month) )+ ((date<10)?("0"+date):(date)) + ((hour<10)?("0"+hour):(hour))+ ((min<10)?("0"+min):(min))+LoggedInInfo.loggedInInfo.get().currentFacility.getOcanServiceOrgNumber() +  ( (increment<10)?(".00"+increment):(increment) ) + ".xml";
+		return "OCAN" +  year + ( (month<10)?("0"+month):(month) )+ ((date<10)?("0"+date):(date)) + ((hour<10)?("0"+hour):(hour))+ ((min<10)?("0"+min):(min))+loggedInInfo.loggedInInfo.get().currentFacility.getOcanServiceOrgNumber() +  ( (increment<10)?(".00"+increment):(increment) ) + ".xml";
 	}
 
 	private static Date getStartDate(int year, int month) {
