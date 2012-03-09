@@ -10,20 +10,31 @@
 	IssueDAO issueDao = (IssueDAO)SpringUtils.getBean("IssueDAO");
 	Issue currentHistory = issueDao.findIssueByCode("CurrentHistory");
 	Issue familyHistory = issueDao.findIssueByCode("FamHistory");
-	Issue diagnosticNotes = issueDao.findIssueByCode("DiagnosticNotes");	
+	Issue diagnosticNotes = issueDao.findIssueByCode("DiagnosticNotes");
 	Issue pastOcularHistory = issueDao.findIssueByCode("PastOcularHistory");
 	Issue medicalHistory = issueDao.findIssueByCode("MedHistory");
 	Issue ocularMeds = issueDao.findIssueByCode("OcularMedication");
-	
+	Issue patientLog = issueDao.findIssueByCode("PatientLog");
+	Issue otherMeds = issueDao.findIssueByCode("OMeds");
+	Issue misc = issueDao.findIssueByCode("Misc");
+
+
 	int appointmentNo = Integer.parseInt(request.getParameter("appointmentNo"));
 	String demographicNo = request.getParameter("demographicNo");
-	
+
 	CaseManagementNote currentHistoryNote = CaseManagementViewAction.getLatestCppNote(demographicNo,currentHistory.getId(),appointmentNo,true);
 	CaseManagementNote familyHistoryNote = CaseManagementViewAction.getLatestCppNote(demographicNo,familyHistory.getId(),appointmentNo,false);
 	CaseManagementNote diagnosticNotesNote = CaseManagementViewAction.getLatestCppNote(demographicNo,diagnosticNotes.getId(),appointmentNo,false);
 	CaseManagementNote pastOcularHistoryNote = CaseManagementViewAction.getLatestCppNote(demographicNo,pastOcularHistory.getId(),appointmentNo,false);
 	CaseManagementNote medicalHistoryNote = CaseManagementViewAction.getLatestCppNote(demographicNo,medicalHistory.getId(),appointmentNo,false);
 	CaseManagementNote ocularMedsNote = CaseManagementViewAction.getLatestCppNote(demographicNo,ocularMeds.getId(),appointmentNo,false);
+	CaseManagementNote otherMedsNote = CaseManagementViewAction.getLatestCppNote(demographicNo,otherMeds.getId(),appointmentNo,false);
+	CaseManagementNote patientLogNote = CaseManagementViewAction.getLatestCppNote(demographicNo,patientLog.getId(),appointmentNo,false);
+	CaseManagementNote miscNote = CaseManagementViewAction.getLatestCppNote(demographicNo,misc.getId(),appointmentNo,false);
+
+
+
+
 %>
 <%!
 	public String getNoteValue(CaseManagementNote note) {
@@ -56,7 +67,7 @@
 									<div class="fieldtitle"><b>Family history</b></div>
 								</td>
 								<td>
-									<div class="fieldtitle"><b>Diagnostics Notes</b></div>
+									<div class="fieldtitle"><b>Diag. Notes</b></div>
 								</td>
 								<td>
 									<div style="font-size: 8pt; text-align: right; vertical-align: bottom;">
@@ -69,7 +80,7 @@
     								</div>
 								</td>
 							</tr>
-							
+
 							<tr>
 								<td>
 									<div class="fieldcontent"><textarea name="cpp_currentHis" cpp="CurrentHistory" note_id="<%=getNoteId(currentHistoryNote)%>" issue_id="<%=currentHistory.getId() %>" class="examfieldwhite" tabindex="6" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(currentHistoryNote)%></textarea></div>
@@ -83,8 +94,8 @@
 							</tr>
 						</tbody>
 					</table>
-					
-					
+
+
 					<table id="rowTwo" width="100%">
 						<tbody>
 							<tr>
@@ -95,7 +106,7 @@
 									<div class="fieldtitle"><b>Medical history</b></div>
 								</td>
 								<td>
-									<div class="fieldtitle"><b>Ocular Medications</b></div>
+									<div class="fieldtitle"><b>Patient Log</b></div>
 								</td>
 								<td>
 									<div style="font-size: 8pt; text-align: right; vertical-align: bottom;">
@@ -108,7 +119,7 @@
     								</div>
 								</td>
 							</tr>
-							
+
 							<tr>
 								<td>
 									<div class="fieldcontent"><textarea name="cpp_pastOcularHis" cpp="PastOcularHistory" note_id="<%=getNoteId(pastOcularHistoryNote)%>" issue_id="<%=pastOcularHistory.getId() %>" class="examfieldwhite" tabindex="6" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(pastOcularHistoryNote) %></textarea></div>
@@ -117,7 +128,46 @@
 									<div class="fieldcontent"><textarea name="cpp_medicalHis" cpp="MedHistory" note_id="<%=getNoteId(medicalHistoryNote)%>" issue_id="<%=medicalHistory.getId() %>" class="examfieldwhite" tabindex="7" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(medicalHistoryNote) %></textarea></div>
 								</td>
 								<td colspan="2">
+									<div class="fieldcontent"><textarea name="cpp_patientLog" cpp="PatientLog" note_id="<%=getNoteId(patientLogNote)%>" issue_id="<%=patientLog.getId() %>" class="examfieldwhite" tabindex="8" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(patientLogNote) %></textarea></div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+
+
+					<table id="rowThree" width="100%">
+						<tbody>
+							<tr>
+								<td>
+									<div class="fieldtitle"><b>Ocular Meds</b></div>
+								</td>
+								<td>
+									<div class="fieldtitle"><b>Other Meds</b></div>
+								</td>
+								<td>
+									<div class="fieldtitle"><b>Misc</b></div>
+								</td>
+								<td>
+									<div style="font-size: 8pt; text-align: right; vertical-align: bottom;">
+								        <a onmouseover="javascript:window.status='Minimize'; return true;" href="javascript:rowThreeX1();" title="tooltipsClose">X</a>|
+								        <a onmouseover="javascript:window.status='Small Size'; return true;" href="javascript:rowThreeSmall1();" title="tooltipSmall">S</a>|
+								        <a onmouseover="javascript:window.status='Medium Size'; return true;" href="javascript:rowThreeNormal1();" title="tooltipNormal">N</a> |
+								        <a onmouseover="javascript:window.status='Large Size'; return true;" href="javascript:rowThreeLarge1();" title="tooltipLarge">L</a> |
+								        <a onmouseover="javascript:window.status='Full Size'; return true;" href="javascript:rowThreeFull1();" title="tooltipFull">F</a> |
+								        <a onmouseover="javascript:window.status='Full Size'; return true;" href="javascript:reset1();" title="tooltipReset">R</a>
+    								</div>
+								</td>
+							</tr>
+
+							<tr>
+								<td>
 									<div class="fieldcontent"><textarea name="cpp_ocularMeds" cpp="OcularMedication" note_id="<%=getNoteId(ocularMedsNote)%>" issue_id="<%=ocularMeds.getId() %>" class="examfieldwhite" tabindex="8" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(ocularMedsNote) %></textarea></div>
+								</td>
+								<td>
+									<div class="fieldcontent"><textarea name="cpp_otherMeds" cpp="OMeds" note_id="<%=getNoteId(otherMedsNote)%>" issue_id="<%=otherMeds.getId() %>" class="examfieldwhite" tabindex="7" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(otherMedsNote)%></textarea></div>
+								</td>
+								<td colspan="2">
+									<div class="fieldcontent"><textarea name="cpp_misc" cpp="Misc" note_id="<%=getNoteId(miscNote)%>" issue_id="<%=misc.getId() %>" class="examfieldwhite" tabindex="8" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(miscNote) %></textarea></div>
 								</td>
 							</tr>
 						</tbody>

@@ -133,6 +133,12 @@
        clone.insertAfter(jQuery("#"+afterThisId));
    }
 
+   function reorderNavBarElementsBefore(idToMove, beforeThisId) {
+	   var clone = jQuery("#"+idToMove).clone();
+       jQuery("#"+idToMove).remove();
+       clone.insertBefore(jQuery("#"+beforeThisId));
+   }
+
    function makeElement(type, attributes) {
 	   var element = document.createElement(type);
 	   if (attributes != null) {
