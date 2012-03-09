@@ -17,6 +17,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.BillingreferralDao;
 import org.oscarehr.common.model.Billingreferral;
+import org.oscarehr.util.SpringUtils;
 
 /**
  *
@@ -25,31 +26,49 @@ import org.oscarehr.common.model.Billingreferral;
 
 public class BillingreferralEditAction extends DispatchAction{
 
-    private BillingreferralDao bDao;
+    private BillingreferralDao bDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
 
-    public void setbDao(BillingreferralDao bDao) {
-        this.bDao = bDao;
-    }
 
 
     @Override
     protected ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    	return list(mapping,form,request,response);
+    }
+
+    public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    	List<Billingreferral> referrals = bDao.getBillingreferrals();
+        request.setAttribute("referrals", referrals);
+        request.setAttribute("searchBy", "searchByName");
         return mapping.findForward("list");
     }
 
-    public ActionForward searchbyno(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward searchByNo(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         DynaBean lazyForm = (DynaBean) form;
         String referralNo = (String)lazyForm.get("search");
 
         List<Billingreferral> referrals = bDao.getBillingreferral(referralNo);
-        request.getSession().setAttribute("referrals", referrals);
+        request.setAttribute("referrals", referrals);
+        request.setAttribute("searchBy", "searchByNo");
 
         return mapping.findForward("list");
     }
 
-    public ActionForward searchbyname(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward searchBySpecialty(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        DynaBean lazyForm = (DynaBean) form;
+        String specialty = (String)lazyForm.get("search");
+
+        List<Billingreferral> referrals = bDao.getBillingreferralBySpecialty(specialty);
+        request.setAttribute("referrals", referrals);
+        request.setAttribute("searchBy", "searchBySpecialty");
+
+        return mapping.findForward("list");
+    }
+
+
+    public ActionForward searchByName(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         DynaBean lazyForm = (DynaBean) form;
         String name = (String)lazyForm.get("search");
+
         String last_name="",first_name="";
         if (name != null && !name.equals("")) {
             if (name.indexOf(',') < 0) {
@@ -60,12 +79,13 @@ public class BillingreferralEditAction extends DispatchAction{
             }
         }
         List<Billingreferral> referrals = bDao.getBillingreferral(last_name,first_name);
-        request.getSession().setAttribute("referrals", referrals);
+        request.setAttribute("referrals", referrals);
+        request.setAttribute("searchBy", "searchByName");
 
         return mapping.findForward("list");
     }
 
-    public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         DynaBean lazyForm = (DynaBean) form;
 
         List<Billingreferral> referrals = bDao.getBillingreferral(request.getParameter("referralNo"));
@@ -76,7 +96,7 @@ public class BillingreferralEditAction extends DispatchAction{
         return mapping.findForward("detail");
     }
 
-    public ActionForward add(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward add(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         DynaBean lazyForm = (DynaBean) form;
 
         Billingreferral referral = new Billingreferral();
@@ -86,13 +106,13 @@ public class BillingreferralEditAction extends DispatchAction{
         return mapping.findForward("detail");
     }
 
-    public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         DynaBean lazyForm = (DynaBean) form;
 
         Billingreferral referral = (Billingreferral)lazyForm.get("referral");
         bDao.updateBillingreferral(referral);
 
-        return mapping.findForward("list");
+        return list(mapping,form,request,response);
     }
 
 

@@ -34,7 +34,14 @@ public class BillingreferralDao extends HibernateDaoSupport {
 		 return this.getHibernateTemplate().get(Billingreferral.class, id);
 	 }
 
-    public List getBillingreferral(String referral_no) {
+	 public List<Billingreferral> getBillingreferrals() {
+
+		 @SuppressWarnings("unchecked")
+		 List<Billingreferral> referrals = this.getHibernateTemplate().find("From Billingreferral b order by b.lastName");
+		 return referrals;
+	 }
+
+    public List<Billingreferral> getBillingreferral(String referral_no) {
 
         List cList = null;
         Session session = null;
@@ -56,13 +63,37 @@ public class BillingreferralDao extends HibernateDaoSupport {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public List<Billingreferral> getBillingreferral(String last_name, String first_name) {
 
-        List cList = null;
+        List<Billingreferral> cList = null;
         Session session = null;
         try {
             session = getSession();
             cList = session.createCriteria(Billingreferral.class).add(Restrictions.like("lastName", "%" + last_name + "%")).add(Restrictions.like("firstName", "%" + first_name + "%")).addOrder(Order.asc("lastName")).list();
+        } catch (Exception e) {
+            MiscUtils.getLogger().error("Error", e);
+        } finally {
+            if (session != null) {
+                releaseSession(session);
+            }
+        }
+
+        if (cList != null && cList.size() > 0) {
+            return cList;
+        } else {
+            return null;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Billingreferral> getBillingreferralBySpecialty(String specialty) {
+
+        List<Billingreferral> cList = null;
+        Session session = null;
+        try {
+            session = getSession();
+            cList = session.createCriteria(Billingreferral.class).add(Restrictions.like("specialty", "%" + specialty + "%")).addOrder(Order.asc("lastName")).list();
         } catch (Exception e) {
             MiscUtils.getLogger().error("Error", e);
         } finally {

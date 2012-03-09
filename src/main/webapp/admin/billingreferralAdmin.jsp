@@ -39,17 +39,20 @@
 <%@page import="org.oscarehr.common.model.Billingreferral"%>
 <%@page import="java.util.*"%>
 
+<%
+	String searchBy = "searchByName";
+	if(request.getAttribute("searchBy")!=null) {
+		searchBy = (String)request.getAttribute("searchBy");
+	}
+%>
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Referral Doctor</title>
-<link rel="stylesheet" type="text/css"
-	href="../share/css/OscarStandardLayout.css">
+<link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
 
-<script type="text/javascript" language="JavaScript"
-	src="../share/javascript/prototype.js"></script>
-<script type="text/javascript" language="JavaScript"
-	src="../share/javascript/Oscar.js"></script>
+<script type="text/javascript" language="JavaScript" src="../share/javascript/prototype.js"></script>
+<script type="text/javascript" language="JavaScript" src="../share/javascript/Oscar.js"></script>
 <link href="<html:rewrite page='/css/displaytag.css'/>" rel="stylesheet" ></link>
 </head>
 
@@ -57,7 +60,7 @@
 
 <table class="MainTable">
 	<tr class="MainTableTopRow">
-		<td class="MainTableTopRowLeftColumn">admin</td>
+		<td class="MainTableTopRowLeftColumn">Admin</td>
 		<td class="MainTableTopRowRightColumn">
 		<table class="TopStatusBar" style="width: 100%;">
 			<tr>
@@ -71,26 +74,26 @@
 		</td>
 		<td class="MainTableRightColumn" valign="top">
 
-<%
-    String URL =request.getContextPath()+"/admin/ManageBillingReferral.do?method=edit";
-    request.setAttribute("referrals", request.getSession().getAttribute("referrals"));
-%>
 
-
-<nested:form action="/admin/ManageBillingReferral?method=searchbyname">
+<nested:form action="/admin/ManageBillingReferral">
+	<nested:hidden property="method" value="<%=searchBy %>"/>
     <label>
-      <input type="radio" name="SearchBy" value="radio" id="SearchBy_0" onclick="javascript:this.form.action='<%= request.getContextPath() %>/admin/ManageBillingReferral.do?method=searchbyno'">
+      <input type="radio" name="SearchBy" value="radio" value="searchByNo" id="SearchBy_0" <%=(searchBy.equals("searchByNo")?"checked=\"checked\" ":"") %> onclick="javascript:this.form.method.value='searchByNo'">
       ReferralNo</label>
     <label>
-      <input type="radio" name="SearchBy" value="radio" id="SearchBy_1" checked="true" onclick="javascript:this.form.action='<%= request.getContextPath() %>/admin/ManageBillingReferral.do?method=searchbyname'">
-      Name</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <input type="radio" name="SearchBy" value="radio" value="searchByName" id="SearchBy_1" <%=(searchBy.equals("searchByName")?"checked=\"checked\" ":"") %> onclick="javascript:this.form.method.value='searchByName'">
+      Name</label>
+      <label>
+      <input type="radio" name="SearchBy" value="radio" value="searchBySpecialty" id="SearchBy_2" <%=(searchBy.equals("searchBySpecialty")?"checked=\"checked\" ":"") %> onclick="javascript:this.form.method.value='searchBySpecialty'">
+      Specialty</label>
+      &nbsp;&nbsp;
       <nested:text property="search"></nested:text>
 	<nested:submit style="border:1px solid #666666;">Search</nested:submit>
-        <nested:submit style="border:1px solid #666666;" onclick="this.form.action='ManageBillingReferral.do?method=add'">Add</nested:submit>
+    <nested:submit style="border:1px solid #666666;" onclick="this.form.method.value='add'">Add</nested:submit>
 </nested:form>
 
 <display:table name="referrals" id="referral" class="its" pagesize="15" style="border:1px solid #666666; width:99%;margin-top:2px;">
-    <display:column property="referralNo" title="Referral No" href="<%= URL %>" paramId="referralNo"/>
+    <display:column property="referralNo" title="Referral No" href="ManageBillingReferral.do?method=edit" paramId="referralNo"/>
     <display:column property="firstName" title="First Name" />
     <display:column property="lastName" title="Last Name" />
     <display:column property="specialty" title="Specialty" />

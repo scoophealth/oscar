@@ -49,6 +49,7 @@
 		</form-bean>
 		<form-bean name="billingreferralForm" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="search" type="java.lang.String" />
+			<form-property name="SearchBy" type="java.lang.String" />
 			<form-property name="referral" type="org.oscarehr.common.model.Billingreferral" />
 		</form-bean>
 
@@ -553,8 +554,8 @@
 			<forward name="success" path="/dms/closeWindow.html"></forward>
 		</action>
 
-		<action input="/SegmentDisplay.jsp" name="TDISLabelForm" path="/lab/CA/ALL/createLabelTDIS" scope="request" type="oscar.oscarLab.ca.all.pageUtil.CreateLabelTDISAction"> 
-			<forward name="complete" path="/SegmentDisplay.jsp" /> 
+		<action input="/SegmentDisplay.jsp" name="TDISLabelForm" path="/lab/CA/ALL/createLabelTDIS" scope="request" type="oscar.oscarLab.ca.all.pageUtil.CreateLabelTDISAction">
+			<forward name="complete" path="/SegmentDisplay.jsp" />
 		</action>
 		<action path="/MeasurementHL7Uploader" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" name="newLabUploadForm" validate="false">
 
@@ -1114,11 +1115,11 @@
 			<forward name="success" path="/oscarEncounter/oscarMeasurements/ProcessMeasurementsSubmission.jsp" />
 			<forward name="failure" path="/oscarEncounter/oscarMeasurements/Measurements.jsp" />
 		</action>
-		
-		<action 
-        	path="/oscarEncounter/FormUpdate" 
+
+		<action
+        	path="/oscarEncounter/FormUpdate"
         	name="mainForm"
-        	scope="request" 
+        	scope="request"
         	type="oscar.oscarEncounter.oscarMeasurements.pageUtil.FormUpdateAction">
         	<forward name="success" path="/oscarEncounter/oscarMeasurements/close.jsp" />
         	<forward name="reload" path="/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp" />
@@ -2213,7 +2214,7 @@
 			<forward name="details" path="/admin/sitesAdminDetail.jsp" />
 		</action>
 
-		<action path="/admin/ManageBillingReferral" name="billingreferralForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
+		<action path="/admin/ManageBillingReferral" name="billingreferralForm" type="org.oscarehr.common.web.BillingreferralEditAction" parameter="method" scope="request">
 			<forward name="list" path="/admin/billingreferralAdmin.jsp" />
 			<forward name="detail" path="/admin/billingreferralAdminDetail.jsp" />
 		</action>
