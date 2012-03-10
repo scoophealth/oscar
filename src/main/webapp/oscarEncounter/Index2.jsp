@@ -1169,9 +1169,11 @@ function grabEnterGetTemplate(event){
 	<tr>
 		<td class="hidePrint" bgcolor="#003399"
 			style="width: auto; border-right: 2px solid #A9A9A9; height: 34px;">
+		
 		<div class="Title">&nbsp;<bean:message
 			key="oscarEncounter.Index.msgEncounter" />&nbsp;&nbsp; <%=famDocName%>&nbsp;<%=famDocSurname%>
 		</div>
+		
 		<div class="Title" style="margin: 0 auto; text-align: center"><a
 			href="javascript: function myFunction() {return false; }"
 			title="<bean:message key="oscarEncounter.Index.calculators"/>"
@@ -1200,15 +1202,16 @@ function grabEnterGetTemplate(event){
 					onClick="popupPage(700,1000,'<%=winName%>','<%=url%>'); return false;"
 					title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><%=bean.patientLastName %>,
 				<%=bean.patientFirstName%></a>&nbsp;<%=bean.patientSex%> <%=bean.patientAge%>
+				
 				<a
 					href="javascript:popupPage(400,850,'ApptHist','../demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&last_name=<%=bean.patientLastName%>&first_name=<%=bean.patientFirstName%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25')"
 					style="font-size: 11px; text-decoration: none;"
 					title="Click to see appointment history"><span
 					style="margin-left: 20px;">Next Appt: <oscar:nextAppt
 					demographicNo="<%=bean.demographicNo%>" /></span></a>
-
+		
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
+				
 				<form style="display: inline;" name="ksearch"><select
 					name="channel">
 					<option
