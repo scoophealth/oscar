@@ -792,7 +792,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		/*
 		 * Remove linked issue(s) and insert message into note
-		 * 
+		 *
 		 * if( removeIssue.equals("true") ) { issue_id = request.getParameterValues("issue_id"); issueSet = note.getIssues(); StringBuilder issueNames = new StringBuilder(); for( int idx = 0; idx < issue_id.length; ++idx ) { for(Iterator iter =
 		 * issueSet.iterator();iter.hasNext();) { CaseManagementIssue cIssue = (CaseManagementIssue)iter.next(); if( cIssue.getIssue_id() == Long.parseLong(issue_id[idx]) ) { issueSet.remove(cIssue); issueNames.append(cIssue.getIssue().getDescription() +
 		 * "\n"); break; } } } //Force hibernate to save rather than update Set tmpIssues = new HashSet(issueSet); note.setIssues(tmpIssues); strNote += "\n" + new SimpleDateFormat("dd-MMM-yyyy").format(new Date()) + " Removed following issue(s):\n" +
@@ -1355,7 +1355,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		 * for (int i = 0; i < checkedlist.length; i++) { if (!checkedlist[i].getIssue().isResolved()) ongoing = ongoing + checkedlist[i].getIssue().getIssue().getDescription() + "\n"; String ischecked = request.getParameter("issueCheckList[" + i +
 		 * "].checked"); CaseManagementIssue iss = checkedlist[i].getIssue(); if (ischecked != null && ischecked.equalsIgnoreCase("on")) { checkedlist[i].setChecked("on"); checkedlist[i].setUsed(true); iss.setNotes(noteSet);
 		 * issueset.add(checkedlist[i].getIssue()); } else { checkedlist[i].setChecked("off"); checkedlist[i].setUsed(caseManagementMgr.haveIssue(iss.getId(), note.getId(), demo)); checkedlist[i].setUsed(false); }
-		 * 
+		 *
 		 * issuelist.add(checkedlist[i].getIssue()); } return ongoing;
 		 */
 
@@ -1651,12 +1651,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		return mapping.findForward("issueList_ajax");
 		/*
 		 * CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
-		 * 
+		 *
 		 * String oldId = cform.getCaseNote().getId() == null ? request.getParameter("newNoteIdx") : String.valueOf(cform.getCaseNote().getId()); long newId = noteSave(cform, request);
-		 * 
+		 *
 		 * if( newId > -1 ) { log.debug("OLD ID " + oldId + " NEW ID " + String.valueOf(newId)); cform.setMethod("view"); session.setAttribute("newNote", false); session.setAttribute("caseManagementEntryForm", cform);
 		 * request.setAttribute("caseManagementEntryForm", cform); request.setAttribute("ajaxsave", newId); request.setAttribute("origNoteId", oldId); return mapping.findForward("issueList_ajax"); }
-		 * 
+		 *
 		 * return null;
 		 */
 	}
@@ -2828,7 +2828,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				mockReq.addParameter("xml_visittype", macro.getBillingVisitType());
 				mockReq.addParameter("xml_vdate", cform.getAppointmentDate());
 				mockReq.addParameter("apptProvider_no", appt == null ? "" : appt.getProviderNo());
-				mockReq.addParameter("xml_provider", cform.getProviderNo() + "|" + provider.getOhipNo());
+				mockReq.addParameter("xml_provider", provider.getProviderNo() + "|" + provider.getOhipNo());
 				mockReq.getSession().setAttribute("user", LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
 
 				BillingSavePrep bObj = new BillingSavePrep();
@@ -2837,7 +2837,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				 * not applicable in macro context if (mockReq.getParameter("xml_billtype").substring(0, 3).matches( BillingDataHlp.BILLINGMATCHSTRING_3RDPARTY)) { mockReq.addParameter("billto", macro.getBillingBillto()); mockReq.addParameter("remitto",
 				 * macro.getBillingRemitto()); mockReq.addParameter("gstBilledTotal", macro .getBillingGstBilledTotal()); mockReq.addParameter("payment", macro.getBillingPayment()); mockReq.addParameter("refund", macro.getBillingRefund());
 				 * mockReq.addParameter("gst", macro.getBillingGst()); mockReq.addParameter("payMethod", macro.getBillingPayMethod());
-				 * 
+				 *
 				 * bObj.addPrivateBillExtRecord(mockReq); }
 				 */
 				// int billingNo = bObj.getBillingId();
