@@ -40,6 +40,17 @@ function currentProAdd(val,ob) {
 		case 'otherMeds':
 			str='<%=(String)request.getAttribute("otherMeds") %>';
 			break;
+<%
+	String customCppIssues[] = oscar.OscarProperties.getInstance().getProperty("encounter.custom_cpp_issues", "").split(",");
+	for(String customCppIssue:customCppIssues) {
+		%>
+		case '<%=customCppIssue %>':
+			str='<%=(String)request.getAttribute(customCppIssue) %>';
+			break;
+		<%
+	}
+%>
+
 	}
 	var prefix = "";
 	if(jQuery("#"+ob).val().length>0 && str.length>0) {
@@ -50,6 +61,8 @@ function currentProAdd(val,ob) {
 
 //lets modify some existing HTML
 jQuery(document).ready(function(){
+
+
 	jQuery("#clinicalInfoButtonBar").html("");
 
 	jQuery("#clinicalInfoButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Current History\" onclick=\"currentProAdd('cHis','clinicalInformation');\"/>&nbsp;");
@@ -62,11 +75,23 @@ jQuery(document).ready(function(){
 	jQuery("#clinicalInfoButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Ocular Procedures\" onclick=\"currentProAdd('oProc','clinicalInformation');\"/>&nbsp;");
 	jQuery("#clinicalInfoButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Impression/Plan\" onclick=\"currentProAdd('impress','clinicalInformation');\"/>&nbsp;");
 
+<%
+	for(String customCppIssue:customCppIssues) {
+		%>jQuery("#clinicalInfoButtonBar").append("<input type=\"button\" class=\"btn\" value=\"<%=customCppIssue %>\" onclick=\"currentProAdd('<%=customCppIssue %>','clinicalInformation');\"/>&nbsp;");<%
+	}
+%>
+
 
 	jQuery("#concurrentProblemsButtonBar").html("");
 	jQuery("#concurrentProblemsButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Family History\" onclick=\"currentProAdd('fHis','concurrentProblems');\" />&nbsp;");
 	jQuery("#concurrentProblemsButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Medical History\" onclick=\"currentProAdd('mHis','concurrentProblems');\" />&nbsp;");
 	jQuery("#concurrentProblemsButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Other Meds\" onclick=\"currentProAdd('otherMeds','concurrentProblems');\" />&nbsp;");
+
+<%
+	for(String customCppIssue:customCppIssues) {
+		%>jQuery("#concurrentProblemsButtonBar").append("<input type=\"button\" class=\"btn\" value=\"<%=customCppIssue %>\" onclick=\"currentProAdd('<%=customCppIssue %>','concurrentProblems');\"/>&nbsp;");<%
+	}
+%>
 
 	jQuery("#medsButtonBar").html("");
 	jQuery("#medsButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Ocular Meds\" onclick=\"currentProAdd('oMeds','currentMedications');\"/>&nbsp;");
@@ -76,4 +101,8 @@ jQuery(document).ready(function(){
 	if(jQuery("[name='ext_appNo']").val() == 'null') {
 		jQuery("[name='ext_appNo']").val('<%=request.getAttribute("appNo") %>');
 	}
+
+
+
+
 });
