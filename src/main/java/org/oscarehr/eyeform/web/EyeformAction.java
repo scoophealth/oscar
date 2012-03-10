@@ -858,6 +858,15 @@ public class EyeformAction extends DispatchAction {
 
 			request.setAttribute("otherMeds",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Other Medications:", "OMeds", demographic.getDemographicNo(), appNo, true)));
 
+			IssueDAO issueDao = (IssueDAO)SpringUtils.getBean("IssueDAO");
+			String customCppIssues[] = OscarProperties.getInstance().getProperty("encounter.custom_cpp_issues", "").split(",");
+			for(String customCppIssue:customCppIssues) {
+				Issue i = issueDao.findIssueByCode(customCppIssue);
+				if(i != null) {
+					request.setAttribute(customCppIssue,StringEscapeUtils.escapeJavaScript(getFormattedCppItem(i.getDescription()+":", customCppIssue, demographic.getDemographicNo(), appNo, true)));
+				}
+			}
+
 
 			SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
 			   List<EyeformOcularProcedure> ocularProcs = ocularProcDao.getHistory(demographic.getDemographicNo(), new Date(), "A");
