@@ -206,6 +206,15 @@ public class EyeformAction extends DispatchAction {
 			   request.setAttribute("familyHistory",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Family History:", "FamHistory", Integer.parseInt(demo), appNo, true)));
 			   request.setAttribute("ocularMedication",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Ocular Medications:", "OcularMedication", Integer.parseInt(demo), appNo, true)));
 
+			   IssueDAO issueDao = (IssueDAO)SpringUtils.getBean("IssueDAO");
+
+			   String customCppIssues[] = OscarProperties.getInstance().getProperty("encounter.custom_cpp_issues", "").split(",");
+			   for(String customCppIssue:customCppIssues) {
+				   Issue i = issueDao.findIssueByCode(customCppIssue);
+				   if(i != null) {
+					   request.setAttribute(customCppIssue,StringEscapeUtils.escapeJavaScript(getFormattedCppItem(i.getDescription()+":", customCppIssue, Integer.parseInt(demo), appNo, true)));
+				   }
+			   }
 		   //}
 
 		   request.setAttribute("otherMeds",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Other Meds:", "OMeds", Integer.parseInt(demo), appNo, true)));
