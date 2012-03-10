@@ -153,6 +153,15 @@ function confirmPrint(btn) {
 	con_aller='<%=StringEscapeUtils.escapeJavaScript(aller) %>';
 	con_presc='<%=StringEscapeUtils.escapeJavaScript(presc) %>';
 
+<%
+	String customCppIssues[] = oscar.OscarProperties.getInstance().getProperty("encounter.custom_cpp_issues", "").split(",");
+	for(String customCppIssue:customCppIssues) {
+		%>
+		con_<%=customCppIssue%>='<%=request.getAttribute(customCppIssue)%>';
+		<%
+	}
+%>
+
 
   function trim(s) {
   	if (s==null || s=='') return s;
@@ -624,6 +633,13 @@ jQuery(document).ready(function() {
 							<input type="button" class="btn" value="other meds" name="ohis"	onclick="clinicalInfoAdd('Other meds:',con_oHis)">
 							<input type="button" class="btn" value="diag notes" name="dnote" onclick="clinicalInfoAdd('Diagnostics notes:',con_diag)">
 							<input type="button" class="btn" value="ocular proc" name="opro" onclick="ocluarproAdd('Ocular procedure:',con_ocularpro)">
+
+<%
+	for(String customCppIssue:customCppIssues) {
+		%><input type="button" class="btn" value="<%=customCppIssue %>" name="<%=customCppIssue %>" onclick="clinicalInfoAdd('<%=customCppIssue%>:',con_<%=customCppIssue%>)"><%
+	}
+%>
+
 							</td>
 						</tr>
 					</table>
