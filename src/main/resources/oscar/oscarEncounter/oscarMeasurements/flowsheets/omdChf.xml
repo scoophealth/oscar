@@ -18,11 +18,11 @@
     <indicator key="HIGH 1" colour="#E00000" />
     <indicator key="HIGH" colour="orange" />
     <indicator key="LOW" colour="#9999FF" />
-    <item measurement_type="Kpl" display_name="Sodium" guideline="" graphable="yes" value_name="Value" />
+    <item measurement_type="Kpl" display_name="Potasium" guideline="" graphable="yes" value_name="Value" />
     <measurement type="Kpl" typeDesc="Potassium" typeDisplayName="Potassium" measuringInstrc="">
         <validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength=""/>
     </measurement>
-    <item measurement_type="Napl" display_name="Potassium" guideline="" graphable="yes" value_name="Value" />
+    <item measurement_type="Napl" display_name="Sodium" guideline="" graphable="yes" value_name="Value" />
     <measurement type="Napl" typeDesc="Sodium" typeDisplayName="Sodium" measuringInstrc="">
         <validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength=""/>
     </measurement>
