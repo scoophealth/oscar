@@ -134,7 +134,7 @@
 	<bean id="ProviderLabRoutingFavoritesDao" class="org.oscarehr.common.dao.ProviderLabRoutingFavoritesDao" autowire="byName"/>
 
         <bean id="queueDocumentLinkDAO" class="org.oscarehr.common.dao.QueueDocumentLinkDao" autowire="byName"/>
-	<bean id="integratorControlDao" class="oscar.facility.IntegratorControlDao" autowire="byName" />
+	<bean id="integratorControlDao" class="oscar.facility.IntegratorControlDao" autowire="byName" />	
 
 	<bean id="caseloadDao" class="org.oscarehr.common.dao.CaseloadDao" autowire="byName" />
 

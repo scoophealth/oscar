@@ -485,6 +485,8 @@ div.logoutBox {
 				onclick='popupPage(300,600,&quot;<html:rewrite page="/billing/CA/ON/addEditServiceCode.jsp"/>&quot;);return false;'><bean:message key="admin.admin.manageBillingServiceCode"/></a></li>
 			<li><a href="#"
 				onclick='popupPage(300,600,&quot;<html:rewrite page="/billing/CA/ON/billingONEditPrivateCode.jsp"/>&quot;);return false;'><bean:message key="admin.admin.managePrivBillingCode"/></a></li>
+			<li><a href="#"
+				onclick='popupPage(700,1000,&quot;<html:rewrite page="/admin/manageCSSStyles.do"/>&quot;);return false;'><bean:message key="admin.admin.manageCodeStyles"/></a></li>
 			<li><html:link page="/admin/../admin/gstControl.jsp"><bean:message key="admin.admin.manageGSTControl"/></html:link></li>
 			<li><html:link page="/admin/../admin/gstreport.jsp"><bean:message key="admin.admin.gstReport"/></html:link></li>
 			<li><a href="#"

@@ -73,6 +73,9 @@ public class BillingService extends AbstractModel<Integer> implements Serializab
 	@Column(name = "termination_date")
 	@Temporal(value = javax.persistence.TemporalType.DATE)
 	private Date terminationDate;
+	
+	@Column(name = "displaystyle")
+	private Integer displayStyle;
 
         private Boolean gstFlag;
 
@@ -279,6 +282,14 @@ public class BillingService extends AbstractModel<Integer> implements Serializab
      */
     public void setGstFlag(Boolean gstFlag) {
         this.gstFlag = gstFlag;
+    }
+
+	public Integer getDisplayStyle() {
+	    return displayStyle;
+    }
+
+	public void setDisplayStyle(Integer displayStyle) {
+	    this.displayStyle = displayStyle;
     }
 
 }

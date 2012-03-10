@@ -26,7 +26,7 @@
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
 
-<%@page import="org.oscarehr.common.model.ProviderPreference"%>
+<%@page import="org.oscarehr.common.model.ProviderPreference, org.oscarehr.common.model.CssStyle, org.oscarehr.common.dao.CSSStylesDAO"%>
 <%@page import="org.oscarehr.web.admin.ProviderPreferencesUIBean"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 
@@ -293,9 +293,13 @@
             ArrayList<String> listServiceType = new ArrayList<String>();
             HashMap<String, String> titleMap = new HashMap<String, String>();
             Properties propPremium = new Properties();
-            String serviceCode, serviceDesc, serviceValue, servicePercentage, serviceType, serviceDisp = "";
+            String serviceCode, serviceDesc, serviceValue, servicePercentage, serviceType, displayStyle, serviceDisp = "";
             String headerTitle1 = "", headerTitle2 = "", headerTitle3 = "";
-
+            
+            CSSStylesDAO cssStylesDao = (CSSStylesDAO) SpringUtils.getBean("CSSStylesDAO");
+			CssStyle cssStyle;
+			String styleId;
+			
             sql0 = "select distinct servicetype_name, servicetype from ctl_billingservice where status='A'";
             rs0 = dbObj.searchDBRecord(sql0);
             while (rs0.next()) {
@@ -308,7 +312,7 @@
 
                     listServiceType.add(ctlcode);
                     
-                    sql = "select distinct c.servicetype_name, c.servicetype, c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype ='"
+                    sql = "select distinct c.servicetype_name, c.servicetype, c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage, b.displaystyle from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype ='"
                         + ctlcode + "' and c.service_group ='" + "Group1" + "' and b.billingservice_date in (select max(b2.billingservice_date) from billingservice b2 where b2.billingservice_date <= '" + billReferenceDate + "' and b2.service_code = b.service_code  ) and b.billingservice_no = (select max(b3.billingservice_no) from billingservice b3 where b3.billingservice_date = b.billingservice_date and b3.service_code = b.service_code) order by c.service_order";
     
                     
@@ -322,6 +326,15 @@
 				propT.setProperty("serviceType", rs.getString("servicetype"));
                 propT.setProperty("serviceTypeName", rs.getString("servicetype_name"));
                 
+                styleId = rs.getString("displaystyle");
+                if( styleId != null ) {
+                	cssStyle = cssStylesDao.find(new Integer(styleId));
+                	propT.setProperty("displaystyle", cssStyle.getStyle());
+                }
+                else {
+                	propT.setProperty("displaystyle", "");
+                }
+                                
                	titleMap.put("group1_".concat(ctlcode),rs.getString("service_group_name"));
                	
                 listGroup1.add(propT);
@@ -331,7 +344,7 @@
 				sql = "select service_code,status from ctl_billingservice_premium where ";
 				for (int i = 0; i < listGroup1.size(); i++) {
 					sql += (i == 0 ? "" : " or ") + "service_code='"
-							+ ((Properties) listGroup1.get(i)).getProperty("serviceCode") + "'";
+							+ listGroup1.get(i).getProperty("serviceCode") + "'";
 				}
 				rs = dbObj.searchDBRecord(sql);
 				while (rs.next()) {
@@ -341,7 +354,7 @@
 			billingServiceCodesMap.put("group1_".concat(ctlcode),listGroup1);		
 			
 			
-			sql = "select distinct c.servicetype_name, c.servicetype, c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype ='"
+			sql = "select distinct c.servicetype_name, c.servicetype, c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage, b.displaystyle from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype ='"
                  + ctlcode + "' and c.service_group ='" + "Group2" + "' and b.billingservice_date in (select max(b2.billingservice_date) from billingservice b2 where b2.billingservice_date <= '" + billReferenceDate + "' and b2.service_code = b.service_code) and b.billingservice_no = (select max(b3.billingservice_no) from billingservice b3 where b3.billingservice_date = b.billingservice_date and b3.service_code = b.service_code) order by c.service_order";
 
 			rs = dbObj.searchDBRecord(sql);
@@ -356,6 +369,15 @@
 				propT.setProperty("serviceType", rs.getString("servicetype"));
                 propT.setProperty("serviceTypeName", rs.getString("servicetype_name"));
                 
+                styleId = rs.getString("displaystyle");
+                if( styleId != null ) {
+                	cssStyle = cssStylesDao.find(new Integer(styleId));
+                	propT.setProperty("displaystyle", cssStyle.getStyle());
+                }
+                else {
+                	propT.setProperty("displaystyle", "");
+                }
+                
                 titleMap.put("group2_".concat(ctlcode),rs.getString("service_group_name"));
                 
                 listGroup2.add(propT);
@@ -367,7 +389,7 @@
                 for (int i = 0; i < listGroup2.size(); i++) {
 
 					sql += (i == 0 ? "" : " or ") + "service_code='"
-						+ ((Properties) listGroup2.get(i)).getProperty("serviceCode") + "'";
+						+ listGroup2.get(i).getProperty("serviceCode") + "'";
                 }
                         
                 rs = dbObj.searchDBRecord(sql);
@@ -378,7 +400,7 @@
             billingServiceCodesMap.put("group2_".concat(ctlcode),listGroup2);
             
             
-            sql = "select distinct c.servicetype_name, c.servicetype, c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype ='"
+            sql = "select distinct c.servicetype_name, c.servicetype, c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage, b.displaystyle from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype ='"
                 + ctlcode + "' and c.service_group ='" + "Group3" + "' and b.billingservice_date in (select max(b2.billingservice_date) from billingservice b2 where b2.billingservice_date <= '" + billReferenceDate + "' and b2.service_code = b.service_code) and b.billingservice_no = (select max(b3.billingservice_no) from billingservice b3 where b3.billingservice_date = b.billingservice_date and b3.service_code = b.service_code) order by c.service_order";
 
 			rs = dbObj.searchDBRecord(sql);
@@ -392,6 +414,15 @@
 				propT.setProperty("serviceType", rs.getString("servicetype"));
                 propT.setProperty("serviceTypeName", rs.getString("servicetype_name"));
                 
+                styleId = rs.getString("displaystyle");
+                if( styleId != null ) {
+                	cssStyle = cssStylesDao.find(new Integer(styleId));
+                	propT.setProperty("displaystyle", cssStyle.getStyle());
+                }
+                else {
+                	propT.setProperty("displaystyle", "");
+                }
+                
                 titleMap.put("group3_".concat(ctlcode),rs.getString("service_group_name"));
                 
                 listGroup3.add(propT);
@@ -403,7 +434,7 @@
                  for (int i = 0; i < listGroup3.size(); i++) {
 
 					sql += (i == 0 ? "" : " or ") + "service_code='"
-						+ ((Properties) listGroup3.get(i)).getProperty("serviceCode") + "'";
+						+ listGroup3.get(i).getProperty("serviceCode") + "'";
                  }
                  rs = dbObj.searchDBRecord(sql);
                  while (rs.next()) {
@@ -1379,12 +1410,13 @@ function changeSite(sel) {
 
 
 <%	    for (int i = 0; i < vecCodeCol1.size(); i++) {
-		propT = (Properties) vecCodeCol1.get(i);
+		propT = vecCodeCol1.get(i);
 		serviceCode = propT.getProperty("serviceCode");
 		serviceDesc = propT.getProperty("serviceDesc");
 		serviceDisp = propT.getProperty("serviceDisp");
 		servicePercentage = propT.getProperty("servicePercentage");
-		serviceType = propT.getProperty("serviceType");        
+		serviceType = propT.getProperty("serviceType");
+		displayStyle = propT.getProperty("displaystyle");
         
 		if (propPremium.getProperty(serviceCode) != null) premiumFlag = "A";
 		else premiumFlag = "";
@@ -1393,16 +1425,15 @@ function changeSite(sel) {
 		if (request.getParameter("xml_" + serviceCode) != null) bgcolor = "bgcolor='#66FF66'";
 %>
 			    <tr <%=bgcolor%>>
-				<td align="left" nowrap>
+				<td align="left" style="<%=displayStyle%>" nowrap>
 				    <input type="checkbox" id="xml_<%=serviceCode%>" name="xml_<%=serviceCode%>" value="checked" onclick="refreshServicesChecked(this);"
 					   <%=request.getParameter("xml_"+serviceCode)!=null?request.getParameter("xml_"+serviceCode):""%> 
-					   <%=bSingleClick? "onClick='onClickServiceCode(this)'" :""%> />
-				    <b><font size="-1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>">
-					<span id="sc<%=(""+i).substring(0,1)+serviceCode%>" onDblClick="onDblClickServiceCode(this)"><%=serviceCode%></span>
-				    </font></b>
+					   <%=bSingleClick? "onClick='onClickServiceCode(this)'" :""%> />				    
+					<span id="sc<%=(""+i).substring(0,1)+serviceCode%>" ondblclick="onDblClickServiceCode(this)"><%=serviceCode%></span>
+				    
 				</td>
-				<td <%=serviceDesc.length()>30?"title=\""+serviceDesc+"\"":""%>>
-				    <div class="smallFont"><%=serviceDesc.length() > 30 ? serviceDesc.substring(0, 30) + "..." : serviceDesc%> <!--<input type="hidden" name="desc_xml_<%=serviceCode%>" value="<%=serviceDesc%>" />-->
+				<td <%=serviceDesc.length()>30?"title=\""+serviceDesc+"\"":""%> <%=displayStyle.equals("")? "class=\"smallFont\"": "style=\"" + displayStyle + "\""%>>
+				    <div><%=serviceDesc.length() > 30 ? serviceDesc.substring(0, 30) + "..." : serviceDesc%> <!--<input type="hidden" name="desc_xml_<%=serviceCode%>" value="<%=serviceDesc%>" />-->
 				    </div>
 				</td>
 				<td align="right">
@@ -1436,12 +1467,13 @@ function changeSite(sel) {
 			    </tr>
 			    
 <%	    for (int i = 0; i < vecCodeCol2.size(); i++) {
-		propT = (Properties) vecCodeCol2.get(i);
+		propT = vecCodeCol2.get(i);
 		serviceCode = propT.getProperty("serviceCode");
 		serviceDesc = propT.getProperty("serviceDesc");
 		serviceDisp = propT.getProperty("serviceDisp");
 		servicePercentage = propT.getProperty("servicePercentage");
 		serviceType = propT.getProperty("serviceType");
+		displayStyle = propT.getProperty("displaystyle");
 		
 		if (propPremium.getProperty(serviceCode) != null) premiumFlag = "A";
 		else premiumFlag = "";
@@ -1450,16 +1482,15 @@ function changeSite(sel) {
 		if (request.getParameter("xml_" + serviceCode) != null) bgcolor = "bgcolor='#66FF66'";
 %>
 			    <tr <%=bgcolor%>>
-				<td align="left" nowrap>
+				<td align="left" style="<%=displayStyle%>" nowrap>
 				    <input type="checkbox" id="xml_<%=serviceCode%>" name="xml_<%=serviceCode%>" value="checked" onclick="refreshServicesChecked(this);"
 					   <%=request.getParameter("xml_"+serviceCode)!=null?request.getParameter("xml_"+serviceCode):""%> 
-					   <%=bSingleClick? "onClick='onClickServiceCode(this)'" :""%> />
-				   <b><font	size="-1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>">
+					   <%=bSingleClick? "onClick='onClickServiceCode(this)'" :""%> />				   
 				       <span id="sc<%=(""+i).substring(0,1)+serviceCode%>" onDblClick="onDblClickServiceCode(this)"><%=serviceCode%></span>
-				   </font></b>
+				   
 			        </td>
-				<td <%=serviceDesc.length()>30?"title=\""+serviceDesc+"\"":""%>>
-				    <div class="smallFont">
+				<td <%=serviceDesc.length()>30?"title=\""+serviceDesc+"\"":""%> <%=displayStyle.equals("")? "class=\"smallFont\"": "style=\"" + displayStyle + "\""%>>
+				    <div>
 					<%=serviceDesc.length() > 30 ? serviceDesc.substring(0, 30) + "..." : serviceDesc%>
 				    </div>
 				    <!--<input type="hidden" name="desc_xml_<%=serviceCode%>" value="<%=serviceDesc%>" />-->
@@ -1496,12 +1527,13 @@ function changeSite(sel) {
 			    </tr>
 			    
 <%	    for (int i = 0; i < vecCodeCol3.size(); i++) {
-		propT = (Properties) vecCodeCol3.get(i);
+		propT = vecCodeCol3.get(i);
 		serviceCode = propT.getProperty("serviceCode");
 		serviceDesc = propT.getProperty("serviceDesc");
 		serviceDisp = propT.getProperty("serviceDisp");
 		servicePercentage = propT.getProperty("servicePercentage");
 		serviceType = propT.getProperty("serviceType");
+		displayStyle = propT.getProperty("displaystyle");
 		
 		if (propPremium.getProperty(serviceCode) != null) premiumFlag = "A";
 		else premiumFlag = "";
@@ -1510,16 +1542,14 @@ function changeSite(sel) {
 		if (request.getParameter("xml_" + serviceCode) != null) bgcolor = "bgcolor='#66FF66'";
 %>
 			    <tr <%=bgcolor%>>
-				<td align="left" nowrap>
+				<td align="left" style="<%=displayStyle%>" nowrap>
 				    <input type="checkbox" id="xml_<%=serviceCode%>" name="xml_<%=serviceCode%>" value="checked" onclick="refreshServicesChecked(this);"
 					   <%=request.getParameter("xml_"+serviceCode)!=null?request.getParameter("xml_"+serviceCode):""%>
-					   <%=bSingleClick? "onClick='onClickServiceCode(this)'" :""%> />
-				   <b><font size="-1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>">
-				       <span id="sc<%=(""+i).substring(0,1)+serviceCode%>" onDblClick="onDblClickServiceCode(this)"><%=serviceCode%></span>
-				   </font></b>
+					   <%=bSingleClick? "onClick='onClickServiceCode(this)'" :""%> />				   
+				       <span id="sc<%=(""+i).substring(0,1)+serviceCode%>" onDblClick="onDblClickServiceCode(this)"><%=serviceCode%></span>				   
 			       </td>
-				<td <%=serviceDesc.length()>30?"title=\""+serviceDesc+"\"":""%>>
-				    <div class="smallFont">
+				<td <%=serviceDesc.length()>30?"title=\""+serviceDesc+"\"":""%> <%=displayStyle.equals("")? "class=\"smallFont\"": "style=\"" + displayStyle + "\""%>>
+				    <div>
 					<%=serviceDesc.length() > 30 ? serviceDesc.substring(0, 30) + "..." : serviceDesc%>
 					<!--<input type="hidden" name="desc_xml_<%=serviceCode%>" value="<%=serviceDesc%>" />-->
 				    </div>

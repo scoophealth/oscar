@@ -37,6 +37,7 @@
                                                            java.net.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.BillingONDataHelp"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@ page import="org.oscarehr.util.SpringUtils, org.oscarehr.common.dao.CSSStylesDAO, org.oscarehr.common.model.CssStyle, java.util.List"%>
 <%
   int serviceCodeLen = 5;
   String msg = "Type in a service code and search first to see if it is available.";
@@ -46,6 +47,7 @@
   Properties	prop  = new Properties();
   LinkedHashMap codes = new LinkedHashMap();
   BillingONDataHelp dbObj = new BillingONDataHelp();
+  List<CssStyle> styles = new ArrayList<CssStyle>();
   if (request.getParameter("submitFrm") != null && (request.getParameter("submitFrm").equals("Save") || request.getParameter("submitFrm").equalsIgnoreCase("Add Service Code"))) {
     // check the input data
     // if input the perc code,
@@ -64,6 +66,14 @@
 			sql += " percentage='" + request.getParameter("percentage") + "', ";
 			sql += " billingservice_date='" + request.getParameter("billingservice_date") + "', ";
                         sql += " termination_date='" + request.getParameter("termination_date") + "' ";
+                        String servicecodeStyle = request.getParameter("servicecode_style");
+                        String styleId;
+                        String[] tmp;
+                        if( !servicecodeStyle.startsWith("-1")) {
+                        	tmp = servicecodeStyle.split(",");
+                        	styleId = tmp[0];
+                        	sql += ", displaystyle=" + styleId + " ";
+                        }
                         if( billingservice_no == null ) {
                             sql += " where service_code = '" + serviceCode + "'";
                         }
@@ -116,13 +126,26 @@
       	// insert into the service code
 		String serviceCode = request.getParameter("service_code");
 		if(serviceCode.equals(request.getParameter("action").substring("add".length()))) {
-			String	sql   = "insert into billingservice (service_compositecode, service_code, description, value, percentage, billingservice_date,specialty,region,anaesthesia, termination_date) values ('', '";
+			String	sql   = "insert into billingservice (service_compositecode, service_code, description, value, percentage, billingservice_date,specialty,region,anaesthesia, termination_date, displaystyle) values ('', '";
 			sql += serviceCode + "', '";
 			sql += request.getParameter("description") + "', '";
 			sql += valuePara + "', '";
 			sql += request.getParameter("percentage") + "', '";
 			sql += request.getParameter("billingservice_date") + "',";
-                        sql += "'','ON','00', '" + request.getParameter("termination_date") + "')";
+            sql += "'','ON','00', '" + request.getParameter("termination_date") + "'";
+            
+            String servicecodeStyle = request.getParameter("servicecode_style");
+            String styleId;
+            String[] tmp;
+            if( !servicecodeStyle.startsWith("-1")) {
+            	tmp = servicecodeStyle.split(",");
+            	styleId = tmp[0];
+            	sql += "," + styleId + ")";
+            }
+            else {
+            	sql += ",NULL)";
+            }
+            
 			if(request.getParameter("percentage").length()>1 && request.getParameter("min").length()>1 && request.getParameter("max").length()>1) {
 				String sqlMinMax = "insert into billingperclimit (service_code, min, max, effective_date) values('";
 				sqlMinMax += serviceCode + "', '";
@@ -181,6 +204,8 @@
                         prop.setProperty("billingservice_date", tmp);
                         tmp = rs.getString("termination_date") == null ? "" : rs.getString("termination_date");
                         prop.setProperty("termination_date", tmp);
+                        tmp = rs.getString("displaystyle") == null ? "" : rs.getString("displayStyle");
+                        prop.setProperty("displaystyle", tmp);
                         msg = "You can edit the service code by clicking 'Save' or add a new entry for this code by clicking 'Add Service Code'";
                         action = "edit" + serviceCode;
                         action2 = "add" + serviceCode;
@@ -194,6 +219,9 @@
                     }
                 }
 
+		CSSStylesDAO cssStylesDao = (CSSStylesDAO) SpringUtils.getBean("CSSStylesDAO");
+		styles = cssStylesDao.findAll();
+		
 		if( count == 0 ) {
 		    prop.setProperty("service_code", serviceCode);
 		    msg = "It is a NEW service code. You can add it.";
@@ -226,6 +254,8 @@
             prop.setProperty("billingservice_date", tmp);
             tmp = rs.getString("termination_date") == null ? "" : rs.getString("termination_date");
             prop.setProperty("termination_date", tmp);
+            tmp = rs.getString("displaystyle") == null ? "" : rs.getString("displayStyle");
+            prop.setProperty("displaystyle", tmp);
             msg = "You can edit the service code by clicking 'Save' or add a new entry for this code by clicking 'Add Service Code'";
             action = "edit" + serviceCode;
             action2 = "add" + serviceCode;
@@ -238,7 +268,10 @@
                 prop.setProperty("max", rs2.getString("max"));
             }
         }
-    }      
+    }
+    
+    CSSStylesDAO cssStylesDao = (CSSStylesDAO) SpringUtils.getBean("CSSStylesDAO");
+	styles = cssStylesDao.findAll();
   }
   
 %>
@@ -262,10 +295,17 @@
        adding a calendar a matter of 1 or 2 lines of code. -->
 <script type="text/javascript"
 	src="../../../share/calendar/calendar-setup.js"></script>
-<script language="JavaScript">
+<script type="text/javascript">
 
       <!--
+      	function displayStyleText(value) {
+    		var tmp = value.split(",");
+    		document.getElementById('displayStyle').value = tmp[1];
+      	}
+            
 		function setfocus() {
+		  var optionElements = document.getElementById("servicecode_style");
+		  displayStyleText(optionElements.options[optionElements.selectedIndex].value);
 		  this.focus();
 		  document.forms[0].service_code.focus();
 		  document.forms[0].service_code.select();
@@ -422,6 +462,23 @@
 		<td><input type="text" name="description"
 			value="<%=prop.getProperty("description", "")%>" size='50'
 			maxlength='50'> (50 letters)</td>
+	</tr>
+	<tr>
+		<td align="right"><b>Style</b></td>
+		<td>
+			<select id="servicecode_style" name="servicecode_style" onchange="displayStyleText(this.options[this.selectedIndex].value);">
+				<option value="-1,None">None</option>
+				<%
+					for( CssStyle cssStyle: styles ) {
+				%>
+						<option value="<%=cssStyle.getId()+","+cssStyle.getStyle()%>" <%=prop.getProperty("displaystyle", "").equals(cssStyle.getId().toString())?"selected":""%>><%=cssStyle.getName()%></option>
+				<%		
+					}
+				
+				%>			
+			</select>
+			&nbsp;<input id="displayStyle" type="text" style="width:75%;" readonly="readonly"/>
+		</td>
 	</tr>
 	<tr bgcolor="#EEEEFF">
 		<td align="right"><b>Fee</b></td>
