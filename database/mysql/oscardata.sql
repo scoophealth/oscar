@@ -1480,6 +1480,14 @@ insert into `secObjectName` (`objectName`) values ('_newCasemgmt.templates');
 insert into `secObjectName` (`objectName`) values ('_newCasemgmt.cpp');
 insert into `secObjectName` (`objectName`) values ('_eform.doctor');
 
+insert into `secObjectName` (`objectName`) values ('_resource');
+insert into `secObjectName` (`objectName`) values ('_search');
+insert into `secObjectName` (`objectName`) values ('_report');
+insert into `secObjectName` (`objectName`) values ('_msg');
+insert into `secObjectName` (`objectName`) values ('_con');
+insert into `secObjectName` (`objectName`) values ('_pmm_agencyList');
+insert into `secObjectName` (`objectName`) values ('_newCasemgmt.apptHistory');
+insert into `secObjectName` (`objectName`) values ('_newCasemgmt.doctorName');
 
 insert into `secObjPrivilege` values('receptionist', '_appointment', 'x', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_demographic', 'x', 0, '999998');
@@ -1563,6 +1571,15 @@ insert into `secObjPrivilege` values('doctor','_newCasemgmt.cpp','x',0,'999998')
 
 insert into `secObjPrivilege` values('doctor','_eform.doctor','x',0,'999998');
 
+insert into `secObjPrivilege` values('doctor','_resource','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_search','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_report','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_msg','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_con','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_pmm_agencyList','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_newCasemgmt.apptHistory','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_newCasemgmt.doctorName','x',0,'999998');
+
 
 insert into `secObjPrivilege` values('admin', '_admin', 'x', 0, '999998');
 insert into `secObjPrivilege` values('admin','_masterLink','x',0,999998);
@@ -1620,6 +1637,19 @@ insert into `secObjPrivilege` values('admin','_newCasemgmt.medicalHistory','x',0
 insert into `secObjPrivilege` values('admin','_newCasemgmt.calculators','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_newCasemgmt.templates','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_newCasemgmt.cpp','x',0,'999998');
+
+
+insert into `secObjPrivilege` values('admin','_resource','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_search','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_report','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_msg','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_con','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_pmm_agencyList','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_newCasemgmt.apptHistory','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_newCasemgmt.doctorName','x',0,'999998');
+
+
+
 -- for defaultqueue
 insert into queue values(1,'default');
 insert into secObjectName values('_queue.1','default',0);

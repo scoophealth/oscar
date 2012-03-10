@@ -39,6 +39,7 @@
     EctPatientData.Patient pd = new EctPatientData().getPatient(demoNo);
     String famDocName, famDocSurname, famDocColour, inverseUserColour, userColour;
     String user = (String) session.getAttribute("user");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     ProviderColourUpdater colourUpdater = new ProviderColourUpdater(user);
     userColour = colourUpdater.getColour();
     //we calculate inverse of provider colour for text
@@ -76,9 +77,10 @@
     <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
     
 <div style="float:left; width: 80%; padding-left:2px; text-align:left; font-size: 12px; color:<%=inverseUserColour%>; background-color:<%=userColour%>" id="encounterHeader">
+    <security:oscarSec roleName="<%=roleName$%>" objectName="_newCasemgmt.doctorName" rights="r">
     <span style="border-bottom: medium solid <%=famDocColour%>"><bean:message key="oscarEncounter.Index.msgMRP"/>&nbsp;&nbsp;
     <%=famDocName%> <%=famDocSurname%>  </span>
-
+	</security:oscarSec>
     <span class="Header" style="color:<%=inverseUserColour%>; background-color:<%=userColour%>">
         <%
             String winName = "Master" + bean.demographicNo;
@@ -91,10 +93,11 @@
         <a href="#" onClick="popupPage(700,1000,'<%=winName%>','<c:out value="${ctx}"/><%=url%>'); return false;" title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><%=bean.patientLastName %>, <%=bean.patientFirstName%></a> <%=bean.patientSex%> <%=bean.patientAge%>  
         &nbsp;<oscar:phrverification demographicNo="<%=demoNo%>"><bean:message key="phr.verification.link"/></oscar:phrverification> &nbsp;<%=bean.phone%> 
 		<span id="encounterHeaderExt"></span>
+		<security:oscarSec roleName="<%=roleName$%>" objectName="_newCasemgmt.apptHistory" rights="r">
 		<a href="javascript:popupPage(400,850,'ApptHist','<c:out value="${ctx}"/>/demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&amp;<%=bean.patientLastName.replaceAll("'", "\\\\'")%>&amp;first_name=<%=bean.patientFirstName.replaceAll("'", "\\\\'")%>&amp;orderby=appointment_date&amp;displaymode=appt_history&amp;dboperation=appt_history&amp;limit1=0&amp;limit2=25')" style="font-size: 11px;text-decoration:none;" title="<bean:message key="oscarEncounter.Header.nextApptMsg"/>"><span style="margin-left:20px;"><bean:message key="oscarEncounter.Header.nextAppt"/>: <oscar:nextAppt demographicNo="<%=bean.demographicNo%>"/></span></a>
-
+		</security:oscarSec>
         &nbsp;&nbsp;        
-
+		
         <% if(oscar.OscarProperties.getInstance().hasProperty("ONTARIO_MD_INCOMINGREQUESTOR")){%>
            <a href="javascript:void(0)" onClick="popupPage(600,175,'Calculators','<c:out value="${ctx}"/>/common/omdDiseaseList.jsp?sex=<%=bean.patientSex%>&age=<%=pAge%>'); return false;" ><bean:message key="oscarEncounter.Header.OntMD"/></a>
         <%}%>

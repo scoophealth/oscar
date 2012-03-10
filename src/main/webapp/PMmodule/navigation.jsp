@@ -222,11 +222,15 @@
         <span><a href='<%=request.getContextPath()%>/logout.jsp'>Logout</a></span>
     </div>
 -->
-<div><span>Information</span>
+
+<div>
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_pmm_agencyList" rights="r">
+		<span>Information</span>
 		<div><span><a target='_blank'
 			href='http://www.oscarcanada.org/caisi/social_support_services/hospitals-agencies-and-shelters/participating-agencies-1/participating-agencies'>List of Integrating CAISI Agencies</a></span></div>
-		</div>
+	</security:oscarSec>
 </div>
+
 <div id="admintools" class="toolgroup">
 <%
     if (session.getAttribute("userrole") != null && ((String) session.getAttribute("userrole")).indexOf("admin") != -1) {
@@ -249,25 +253,31 @@
 	Form Editor</a></span></div>
 </security:oscarSec></div>
 
-<div><span>Staff</span> <security:oscarSec
-	roleName="<%=roleName$%>" objectName="_pmm.staffList" rights="r">
-	<div><html:link action="/PMmodule/StaffManager.do">Staff List</html:link>
-	</div>
-</security:oscarSec></div>
+<div> 
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_pmm.staffList" rights="r">
+	<span>Staff</span>
+	<div><html:link action="/PMmodule/StaffManager.do">Staff List</html:link></div>
+	</security:oscarSec>
+</div>
 
-<div><span>Program</span> <security:oscarSec
-	roleName="<%=roleName$%>" objectName="_pmm.programList" rights="r">
+<div>
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_pmm.programList" rights="r">
+	<span>Program</span> 
 	<div><html:link action="/PMmodule/ProgramManager.do">Program List</html:link>
 	</div>
-</security:oscarSec> <security:oscarSec roleName="<%=roleName$%>"
-	objectName="_pmm.addProgram" rights="r">
+    </security:oscarSec> 
+    
+    <security:oscarSec roleName="<%=roleName$%>" objectName="_pmm.addProgram" rights="r">
 	<div><html:link action="/PMmodule/ProgramManager.do?method=add">Add Program</html:link>
 	</div>
-</security:oscarSec> <security:oscarSec roleName="<%=roleName$%>"
+	</security:oscarSec> 
+	
+	<security:oscarSec roleName="<%=roleName$%>"
 	objectName="_pmm.globalRoleAccess" rights="r">
 	<div><html:link action="/PMmodule/Admin/DefaultRoleAccess.do">Global Role Access</html:link>
 	</div>
-</security:oscarSec></div>
+	</security:oscarSec>
+</div>
 <security:oscarSec roleName="<%=roleName$%>"
 	objectName="_admin,_admin.userAdmin,_admin.schedule,_admin.billing,_admin.resource,_admin.reporting,_admin.backup,_admin.messenger,_admin.eform,_admin.encounter,_admin.misc,_admin.torontoRfq"
 	rights="r">

@@ -872,9 +872,11 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
  <li>
     <a href="providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=1&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=month&dboperation=searchappointmentmonth" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewMonthSched"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewMonthSched"/>' ; return true"><bean:message key="global.month"/></a>
  </li>
+ <security:oscarSec roleName="<%=roleName$%>" objectName="_resource" rights="r">
  <li>
     <a href="#" ONCLICK ="popupPage2('<%=resourcebaseurl%>');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.viewResources"/>" onmouseover="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewResources"/>';return true"><bean:message key="oscarEncounter.Index.clinicalResources"/></a>
  </li>
+ </security:oscarSec>
 </caisi:isModuleLoad>
 
  <% if (isMobileOptimized) { %>
@@ -883,7 +885,7 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
                 <bean:message key="global.menu" /></a>
             <ul id="navlistcontents" style="display:none;">
 <% } %>
-
+<security:oscarSec roleName="<%=roleName$%>" objectName="_search" rights="r">
  <li id="search">
     <caisi:isModuleLoad moduleName="caisi">
        <a HREF="../PMmodule/ClientSearch2.do" TITLE='<bean:message key="global.searchPatientRecords"/>' OnMouseOver="window.status='<bean:message key="global.searchPatientRecords"/>' ; return true"><bean:message key="provider.appointmentProviderAdminDay.search"/></a>
@@ -892,12 +894,13 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
        <a HREF="#" ONCLICK ="popupPage2('../demographic/search.jsp');return false;"  TITLE='<bean:message key="global.searchPatientRecords"/>' OnMouseOver="window.status='<bean:message key="global.searchPatientRecords"/>' ; return true"><bean:message key="provider.appointmentProviderAdminDay.search"/></a>
     </caisi:isModuleLoad>
 </li>
-
+</security:oscarSec>
 <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+<security:oscarSec roleName="<%=roleName$%>" objectName="_report" rights="r">
 <li>
     <a HREF="#" ONCLICK ="popupPage2('../report/reportindex.jsp','reportPage');return false;"   TITLE='<bean:message key="global.genReport"/>' OnMouseOver="window.status='<bean:message key="global.genReport"/>' ; return true"><bean:message key="global.report"/></a>
 </li>
-
+</security:oscarSec>
 <oscar:oscarPropertiesCheck property="NOT_FOR_CAISI" value="no" defaultVal="true">
 
 <security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r">
@@ -924,16 +927,20 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 
  </caisi:isModuleLoad>
  <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+ 	<security:oscarSec roleName="<%=roleName$%>" objectName="_msg" rights="r">
      <li>
 	 <a HREF="#" ONCLICK ="popupOscarRx(600,1024,'../oscarMessenger/DisplayMessages.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')" title="<bean:message key="global.messenger"/>">
 	 <span id="oscar_new_msg"><bean:message key="global.msg"/></span></a>
      </li>
+   	</security:oscarSec>
  </caisi:isModuleLoad>
 <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+<security:oscarSec roleName="<%=roleName$%>" objectName="_con" rights="r">
 <li id="con">
  <a HREF="#" ONCLICK ="popupOscarRx(625,1024,'../oscarEncounter/IncomingConsultation.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')" title="<bean:message key="provider.appointmentProviderAdminDay.viewConReq"/>">
  <span id="oscar_aged_consults"><bean:message key="global.con"/></span></a>
 </li>
+</security:oscarSec>
 </caisi:isModuleLoad>
 
 <li>    <!-- remove this and let providerpreference check -->

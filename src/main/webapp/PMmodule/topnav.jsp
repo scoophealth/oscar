@@ -73,16 +73,21 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 				<li>
 					<a href="<html:rewrite page="/provider/providercontrol.jsp"/>?year=<%=curYear%>&month=<%=curMonth%>&day=1&view=0&displaymode=month&dboperation=searchappointmentmonth" TITLE="<bean:message key="provider.appointmentProviderAdminDay.viewMonthSched"/>">Mo<u>n</u>th</a>
 				</li>
+				<security:oscarSec roleName="<%=roleName$%>" objectName="_resource" rights="r">
 				<li>
 					<a href="#" ONCLICK ="popupPage2('http://www.oscarmanual.org/oscar-emr/');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.viewResources"/>">R<u>e</u>sources</a>
 				</li>
+				</security:oscarSec>
+				<security:oscarSec roleName="<%=roleName$%>" objectName="_search" rights="r">
 				<li>
 					<a href="<html:rewrite page="/PMmodule/ClientSearch2.do"/>" title="Search for patient records"><u>S</u>earch</a>
 				</li>
+				</security:oscarSec>
+				<security:oscarSec roleName="<%=roleName$%>" objectName="_report" rights="r">
 				<li>
 					<a HREF="#" ONCLICK ="popupPage2('<html:rewrite page="/report/reportindex.jsp"/>','reportPage');return false;" title="<bean:message key="global.genReport"/>"><u>R</u>eport</a>
 				</li>
-
+				</security:oscarSec>
 				<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r">
 				<oscar:oscarPropertiesCheck property="NOT_FOR_CAISI" value="no" defaultVal="true">
 				<li>
@@ -103,15 +108,19 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 				</li>
 				</oscar:oscarPropertiesCheck>
 </security:oscarSec>
+				<security:oscarSec roleName="<%=roleName$%>" objectName="_msg" rights="r">
 				<li>
 					<a HREF="#" ONCLICK ="popupOscarRx(600,900,'<html:rewrite page="/oscarMessenger/DisplayMessages.do?"/>providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>');return false;" title="<bean:message key="global.messenger"/>">
 						<span id="oscar_new_msg"><u>M</u>sg</span>
 					</a>
 				</li>
+				</security:oscarSec>
+				<security:oscarSec roleName="<%=roleName$%>" objectName="_con" rights="r">
 				<li>
 					<a HREF="#" ONCLICK ="popupOscarRx(625,900,'<html:rewrite page="/oscarEncounter/IncomingConsultation.do"/>?providerNo=<%=curUser_no %>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.viewConReq"/>">
 					<span id="oscar_aged_consults">C<u>o</u>n</span></a>
 				</li>
+				</security:oscarSec>
 				<li>
 					<a href="#" onClick ="popupPage(400,680,'<html:rewrite page="/provider/providerpreference.jsp"/>?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>&new_tickler_warning_window=<%=newticklerwarningwindow%>&default_pmm=<%=default_pmm%>');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>"><u>P</u>ref</a>
 				</li>
