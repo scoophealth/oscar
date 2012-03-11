@@ -629,6 +629,7 @@ try
 			boolean hideDocumentNotes = OscarProperties.getInstance().isPropertyActive("encounter.hide_document_notes");
 			boolean hideEformNotes = OscarProperties.getInstance().isPropertyActive("encounter.hide_eform_notes");
 			//boolean hideMetaData = OscarProperties.getInstance().isPropertyActive("encounter.hide_metadata");
+			String issuesToHide = OscarProperties.getInstance().getProperty("encounter.hide_notes_with_issue","");
 
 			String noteDisplay = "block";
 			if(note.isCpp() && hideCppNotes) {
@@ -639,6 +640,16 @@ try
 			}
 			if(note.isEformData() && hideEformNotes) {
 				noteDisplay="none";
+			}
+
+			if(!noteDisplay.equals("none") && issuesToHide.length()>0) {
+				String[] is =issuesToHide.split(",");
+				for(String i:is) {
+					if(note.containsIssue(i)) {
+						noteDisplay="none";
+						break;
+					}
+				}
 			}
 
 			//String metaDisplay = (hideMetaData)?"none":"block";
@@ -717,9 +728,9 @@ try
 						<%
 						}
 
-						if (!note.isDocument() && !note.isCpp() && !note.isEformData() && !note.isEncounterForm() && !note.isInvoice()) 
+						if (!note.isDocument() && !note.isCpp() && !note.isEformData() && !note.isEncounterForm() && !note.isInvoice())
 						{
-						 	
+
 					 	%>
 						 	<img title="<bean:message key="oscarEncounter.print.title"/>" id='print<%=globalNoteId%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>" onclick="togglePrint('<%=globalNoteId%>'   , event)" style='float: right; margin-right: 5px; margin-top: 2px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'>
 						<%
@@ -844,7 +855,7 @@ try
 							%>
 								<a class="links" title="<bean:message key="oscarEncounter.view.eformView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view" /> </a>
 							<%
-						} else if (note.isEncounterForm()) {						
+						} else if (note.isEncounterForm()) {
 							String winName = "encounterforms"+demographicNo;
 							int hash = Math.abs(winName.hashCode());
 							String url = "popupPage(700,800,'"+hash+"','"+request.getContextPath()+StringEscapeUtils.escapeHtml(((NoteDisplayNonNote)note).getLinkInfo())+"'); return false;";

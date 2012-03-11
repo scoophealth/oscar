@@ -22,38 +22,38 @@ import oscar.oscarRx.data.RxPrescriptionData;
 
 public class NoteDisplayIntegrator implements NoteDisplay {
 	private static final Logger logger=MiscUtils.getLogger();
-	
+
 	private IssueDAO issueDao=(IssueDAO) SpringUtils.getBean("IssueDAO");
-	
+
 	private CachedDemographicNote cachedDemographicNote;
 	private String location="Integrated Facility : details n/a";
 	private String programName="Unavailable";
 	private String providerName="Unavailable";
 	private ArrayList<String> issueDescriptions=new ArrayList<String>();
-	
+
 	public NoteDisplayIntegrator(CachedDemographicNote cachedDemographicNote)
 	{
 		this.cachedDemographicNote=cachedDemographicNote;
-		
+
     	try {
     		// note location
 	        CachedFacility cachedFacility=CaisiIntegratorManager.getRemoteFacility(cachedDemographicNote.getCachedDemographicNoteCompositePk().getIntegratorFacilityId());
 	        if (cachedFacility!=null) location="Integrated Facility : "+cachedFacility.getName();
-	        
+
 	        // program name
 	    	FacilityIdIntegerCompositePk programPk=new FacilityIdIntegerCompositePk();
 	    	programPk.setIntegratorFacilityId(cachedDemographicNote.getCachedDemographicNoteCompositePk().getIntegratorFacilityId());
 	    	programPk.setCaisiItemId(cachedDemographicNote.getCaisiProgramId());
 	    	CachedProgram remoteProgram=CaisiIntegratorManager.getRemoteProgram(programPk);
 	    	if (remoteProgram!=null) programName=remoteProgram.getName();
-	    	
+
 	    	// provider name
 	    	FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
 	    	providerPk.setIntegratorFacilityId(cachedDemographicNote.getCachedDemographicNoteCompositePk().getIntegratorFacilityId());
 	    	providerPk.setCaisiItemId(cachedDemographicNote.getObservationCaisiProviderId());
 	    	CachedProvider remoteProvider=CaisiIntegratorManager.getProvider(providerPk);
 	    	if (remoteProvider!=null) providerName=remoteProvider.getLastName()+", "+remoteProvider.getFirstName();
-	    	
+
 	    	// issue descriptions
 			for (NoteIssue noteIssue : cachedDemographicNote.getIssues())
 			{
@@ -153,14 +153,14 @@ public class NoteDisplayIntegrator implements NoteDisplay {
 	public ArrayList<String> getEditorNames() {
 	    return(new ArrayList<String>());
     }
-	
+
 	public ArrayList<String> getIssueDescriptions()
-	{		
+	{
 		return(issueDescriptions);
 	}
-	
+
 	public boolean isReadOnly() {return true;}
-	
+
 	public boolean isGroupNote() {
 		return false;
 	}
@@ -177,10 +177,14 @@ public class NoteDisplayIntegrator implements NoteDisplay {
 	    return false;
     }
 
+	public boolean containsIssue(String issueCode) {
+		return false;
+	}
+
 	public boolean isEncounterForm() {
 	    return false;
     }
-	
+
 	public boolean isInvoice() {
 		return false;
 	}
