@@ -26,12 +26,15 @@ import org.caisi.model.Tickler;
 import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
+import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
+import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.IsPropertiesOn;
 import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.dao.BillingreferralDao;
+import org.oscarehr.common.dao.CaseManagementIssueNotesDao;
 import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.ConsultationRequestExtDao;
 import org.oscarehr.common.dao.DemographicContactDao;
@@ -108,6 +111,7 @@ public class EyeformAction extends DispatchAction {
 	SiteDao siteDao = (SiteDao)SpringUtils.getBean("siteDao");
 	TicklerDAO ticklerDao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
 	//CppMeasurementsDao cppMeasurementsDao = (CppMeasurementsDao)SpringUtils.getBean("cppMeasurementsDao");
+	CaseManagementIssueNotesDao caseManagementIssueNotesDao=(CaseManagementIssueNotesDao)SpringUtils.getBean("caseManagementIssueNotesDao");
 
 	   public ActionForward getConReqCC(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		   String requestId = request.getParameter("requestId");
@@ -202,6 +206,15 @@ public class EyeformAction extends DispatchAction {
 			   request.setAttribute("familyHistory",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Family History:", "FamHistory", Integer.parseInt(demo), appNo, true)));
 			   request.setAttribute("ocularMedication",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Ocular Medications:", "OcularMedication", Integer.parseInt(demo), appNo, true)));
 
+			   IssueDAO issueDao = (IssueDAO)SpringUtils.getBean("IssueDAO");
+
+			   String customCppIssues[] = OscarProperties.getInstance().getProperty("encounter.custom_cpp_issues", "").split(",");
+			   for(String customCppIssue:customCppIssues) {
+				   Issue i = issueDao.findIssueByCode(customCppIssue);
+				   if(i != null) {
+					   request.setAttribute(customCppIssue,StringEscapeUtils.escapeJavaScript(getFormattedCppItem(i.getDescription()+":", customCppIssue, Integer.parseInt(demo), appNo, true)));
+				   }
+			   }
 		   //}
 
 		   request.setAttribute("otherMeds",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Other Meds:", "OMeds", Integer.parseInt(demo), appNo, true)));
@@ -437,6 +450,7 @@ public class EyeformAction extends DispatchAction {
 			if(cpp != null && cpp.equals("measurements")) {
 				cppFromMeasurements=true;
 			}
+			String[] customCppIssues =OscarProperties.getInstance().getProperty("encounter.custom_cpp_issues","").split(",");
 
 			PdfCopyFields finalDoc = new PdfCopyFields(os);
 			finalDoc.getWriter().setStrictImageSequence(true);
@@ -486,6 +500,8 @@ public class EyeformAction extends DispatchAction {
 
 				} else {
 */
+				IssueDAO issueDao = (IssueDAO)SpringUtils.getBean("IssueDAO");
+
 					printCppItem(printer,"Current History","CurrentHistory",demographic.getDemographicNo(), appointmentNo, false);
 					printCppItem(printer,"Past Ocular History","PastOcularHistory",demographic.getDemographicNo(), appointmentNo, true);
 					printCppItem(printer,"Medical History","MedHistory",demographic.getDemographicNo(), appointmentNo, true);
@@ -493,6 +509,12 @@ public class EyeformAction extends DispatchAction {
 					printCppItem(printer,"Diagnostic Notes","DiagnosticNotes",demographic.getDemographicNo(), appointmentNo, false);
 					printCppItem(printer,"Ocular Medications","OcularMedication",demographic.getDemographicNo(), appointmentNo, true);
 
+					for(String customCppIssue:customCppIssues) {
+						Issue issue = issueDao.findIssueByCode(customCppIssue);
+						if(issue != null) {
+							printCppItem(printer,issue.getDescription(),customCppIssue,demographic.getDemographicNo(), appointmentNo, true);
+						}
+					}
 //				}
 				printCppItem(printer,"Other Medications","OMeds",demographic.getDemographicNo(), appointmentNo, true);
 
@@ -536,8 +558,22 @@ public class EyeformAction extends DispatchAction {
 				}
 
 				//impression
-				if(notes.size()>0) {
-					printer.printNotes(notes);
+				//let's filter out custom cpp notes, as they will already have been
+				//printed out in CPP section
+				List<CaseManagementNote> filteredNotes = new ArrayList<CaseManagementNote>();
+				for(CaseManagementNote note:notes) {
+					boolean okToAdd=true;
+					for(String i:customCppIssues) {
+						if(containsIssue(note.getId().intValue(),i)) {
+							okToAdd=false;
+							break;
+						}
+					}
+					if(okToAdd)
+						filteredNotes.add(note);
+				}
+				if(filteredNotes.size()>0) {
+					printer.printNotes(filteredNotes);
 				}
 
 				//plan - followups/consults, procedures booked, tests booked, checkboxes
@@ -586,6 +622,17 @@ public class EyeformAction extends DispatchAction {
 			printer.finish();
 
 	   }
+
+	   private boolean containsIssue(Integer noteId, String issueCode) {
+			List<CaseManagementIssue> caseManagementIssues=caseManagementIssueNotesDao.getNoteIssues(noteId);
+			for (CaseManagementIssue caseManagementIssue : caseManagementIssues) {
+				if (caseManagementIssue.getIssue().getCode().equals(issueCode)) {
+						return(true);
+				}
+			}
+			return false;
+		}
+
 
 	   public int getNumMeasurementsWithoutCpp(List<Measurements> measurements) {
 		   List<Measurements> filtered = new ArrayList<Measurements>();
@@ -810,6 +857,15 @@ public class EyeformAction extends DispatchAction {
 			//}
 
 			request.setAttribute("otherMeds",StringEscapeUtils.escapeJavaScript(getFormattedCppItem("Other Medications:", "OMeds", demographic.getDemographicNo(), appNo, true)));
+
+			IssueDAO issueDao = (IssueDAO)SpringUtils.getBean("IssueDAO");
+			String customCppIssues[] = OscarProperties.getInstance().getProperty("encounter.custom_cpp_issues", "").split(",");
+			for(String customCppIssue:customCppIssues) {
+				Issue i = issueDao.findIssueByCode(customCppIssue);
+				if(i != null) {
+					request.setAttribute(customCppIssue,StringEscapeUtils.escapeJavaScript(getFormattedCppItem(i.getDescription()+":", customCppIssue, demographic.getDemographicNo(), appNo, true)));
+				}
+			}
 
 
 			SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
