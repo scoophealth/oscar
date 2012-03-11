@@ -27,9 +27,18 @@ Building
 --------
 This is a standard maven project. "mvn package" should create a target directory and there should be a war file in there.
 
-To test jsp compilations "ant -f jspc.xml" can be run, it presumes you have just run "mvn package" and that the target directory and corresponding war file is present.
+To test jsp compilations, as well as run pmd, run "mvn verify". You will need your CATALINA_HOME environment variable set
 
 For developers, if you are doing testing and need to skip the junit test, pmd checks, and checkstyle checks, do "mvn -Dmaven.test.skip=true -Dcheckstyle.skip=true -Dpmd.skip=true package". You should always try to run it with full checks before committing though.
+
+
+-------
+Tests
+------
+If you run the unit tests, maven needs a live MySQL database to load the schema, and test data into, as well as to perform the checks.
+The defaults are a database named 'oscar_test', and full credentials to it for user 'oscar' and password 'oscar'. You can override
+these properties if they don't suit you. The properties are available in src/test/resources/over_ride_config.properties. You can make your
+own file and run maven with -Doscar_override_properties=/<full_path>/myoverrides.properties and those values will take prescendence.
 
 -------------
 NetBeans Note
