@@ -85,7 +85,7 @@
         alert("Generating report from " + startDate + " to " + endDate + ". Please note: it is normal for the generation process to take up to a few minutes to complete, be patient.");
 
         var url = '<html:rewrite action="/PMmodule/GenericIntake/Report"/>?' + 'method=report' + '&type=' + type + '&startDate=' + startDate + '&endDate=' + endDate + '&includePast=' + includePast;
-        
+
         popupPage2(url, "IntakeReport" + type);
     }
 
@@ -108,11 +108,11 @@
 
 	function getGeneralFormsReport()
 	{
-		
+
 		popupPage2('<html:rewrite action="/PMmodule/ClientManager.do"/>?method=getGeneralFormsReport',"generalFormsReport");
 	}
-	
-	
+
+
     function createStreetHealthReport()
     {
         var startDate = "";
@@ -141,6 +141,18 @@
             popup.focus();
         }
     }
+
+    function popupOcanWorkloadPage(url) {
+        var windowprops = "height=700,width=1400,top=10,left=0,location=yes,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
+        var popup = window.open(url, 'OcanWorkload', windowprops);
+        if (popup != null) {
+            if (popup.opener == null) {
+                popup.opener = self;
+            }
+            popup.focus();
+        }
+    }
+
 </script>
 
 <!--
@@ -205,17 +217,27 @@
 		objectName="_pmm.caseManagement" rights="r">
 		<div><span>Case Management</span>
 		<div><span>
-		<caisi:isModuleLoad moduleName="oscarClinic">		
+		<caisi:isModuleLoad moduleName="oscarClinic">
 		<a
 			href='<c:out value="${ctx}"/>/provider/providercontrol.jsp?infirmaryView_isOscar=true&GoToCaisiViewFromOscarView=false'>Case
-		Management</a>		
+		Management</a>
 		</caisi:isModuleLoad>
-		<caisi:isModuleLoad moduleName="oscarClinic" reverse="true">		
+		<caisi:isModuleLoad moduleName="oscarClinic" reverse="true">
 		<a
 			href='<c:out value="${ctx}"/>/provider/providercontrol.jsp?infirmaryView_isOscar=false&GoToCaisiViewFromOscarView=true'>Case
 		Management</a>
 		</caisi:isModuleLoad>
 		</span></div>
+                <%
+                if (org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility.isEnableOcanForms())
+                {
+                %>
+                        <div>
+                                <a href="javascript:void(0);"onclick="popupOcanWorkloadPage('<%=request.getContextPath()%>/PMmodule/OcanWorkload.do'); return false;">OCAN Workload</a>
+                        </div>
+                <%
+                }
+                %>
 		</div>
 	</security:oscarSec>
 </c:if> <!--    <div>
@@ -253,7 +275,7 @@
 	Form Editor</a></span></div>
 </security:oscarSec></div>
 
-<div> 
+<div>
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_pmm.staffList" rights="r">
 	<span>Staff</span>
 	<div><html:link action="/PMmodule/StaffManager.do">Staff List</html:link></div>
@@ -262,16 +284,16 @@
 
 <div>
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_pmm.programList" rights="r">
-	<span>Program</span> 
+	<span>Program</span>
 	<div><html:link action="/PMmodule/ProgramManager.do">Program List</html:link>
 	</div>
-    </security:oscarSec> 
-    
+    </security:oscarSec>
+
     <security:oscarSec roleName="<%=roleName$%>" objectName="_pmm.addProgram" rights="r">
 	<div><html:link action="/PMmodule/ProgramManager.do?method=add">Add Program</html:link>
 	</div>
-	</security:oscarSec> 
-	
+	</security:oscarSec>
+
 	<security:oscarSec roleName="<%=roleName$%>"
 	objectName="_pmm.globalRoleAccess" rights="r">
 	<div><html:link action="/PMmodule/Admin/DefaultRoleAccess.do">Global Role Access</html:link>
@@ -287,12 +309,12 @@
 	Page</a></div>
 	<!--
                    	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
-                   	<div>	
+                   	<div>
                    		<html:link action="/Lookup/LookupTableList.do">Lookup Field Editor</html:link>
                   	</div>
                     </caisi:isModuleLoad>
 --></div>
-</security:oscarSec> <!--         
+</security:oscarSec> <!--
          <security:oscarSec roleName="<%=roleName$%>"
                                objectName="_pmm.caisiRoles"
                                rights="r">
