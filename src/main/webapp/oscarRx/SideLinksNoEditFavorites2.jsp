@@ -28,7 +28,7 @@
 
         oscar.oscarRx.pageUtil.RxSessionBean bean2 = (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");
 
-        oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies = RxPatientData.getPatient(bean2.getDemographicNo()).getActiveAllergies();
+        org.oscarehr.common.model.Allergy[] allergies = RxPatientData.getPatient(bean2.getDemographicNo()).getActiveAllergies();
         String alle = "";
         if (allergies.length > 0 ){ alle = "Red"; }
 
@@ -42,8 +42,8 @@
 <%for (int j=0; j<allergies.length; j++){%>
 
 <p class="PropSheetMenuItemLevel1"><a
-	title="<%= allergies[j].getAllergy().getDESCRIPTION() %> - <%= allergies[j].getAllergy().getReaction() %>">
-<%=allergies[j].getAllergy().getShortDesc(13,8,"...")%> </a></p>
+	title="<%= allergies[j].getDescription() %> - <%= allergies[j].getReaction() %>">
+<%=allergies[j].getShortDesc(13,8,"...")%> </a></p>
 <%}%>
 </p>
 

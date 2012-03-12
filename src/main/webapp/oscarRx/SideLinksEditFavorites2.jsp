@@ -1,33 +1,33 @@
 <%@page import="oscar.oscarRx.data.RxPatientData"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%  
+<%
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 
         oscar.oscarRx.pageUtil.RxSessionBean bean2 = (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");
-        
-        oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies = RxPatientData.getPatient(bean2.getDemographicNo()).getActiveAllergies();
+
+        org.oscarehr.common.model.Allergy[] allergies = RxPatientData.getPatient(bean2.getDemographicNo()).getActiveAllergies();
         String alle = "";
         if (allergies.length > 0 ){ alle = "Red"; }
         %>
@@ -39,12 +39,12 @@
 </p>
 <p class="PropSheetMenuItemLevel1">
 <%
-                
+
         for (int j=0; j<allergies.length; j++){%>
 
 <p class="PropSheetMenuItemLevel1"><a
-	title="<%= allergies[j].getAllergy().getDESCRIPTION() %> - <%= allergies[j].getAllergy().getReaction() %>">
-<%=allergies[j].getAllergy().getShortDesc(13,8,"...")%> </a></p>
+	title="<%= allergies[j].getDescription() %> - <%= allergies[j].getReaction() %>">
+<%=allergies[j].getShortDesc(13,8,"...")%> </a></p>
 <%}%>
 </p>
 <p class="PropSheetLevel1CurrentItem"><bean:message key="oscarRx.sideLinks.msgFavorites"/>
@@ -55,7 +55,7 @@
 <%
         oscar.oscarRx.data.RxPrescriptionData.Favorite[] favorites
             = new oscar.oscarRx.data.RxPrescriptionData().getFavorites(bean2.getProviderNo());
-        
+
         for (int j=0; j<favorites.length; j++){%>
 
 <p class="PropSheetMenuItemLevel1"><a

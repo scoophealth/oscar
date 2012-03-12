@@ -3,8 +3,8 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@page import="java.util.*"%>
-<%@page import="oscar.oscarRx.data.RxAllergyData.Allergy" %>
-<!--  
+<%@page import="org.oscarehr.common.model.Allergy" %>
+<!--
 /*
  *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -37,7 +37,7 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/rx.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/scriptaculous.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/effects.js"></script>
-        
+
 <title><bean:message key="ChooseAllergy.title" /></title>
 <html:base />
 
@@ -60,7 +60,7 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 
 
 <script type="text/javascript">
-    function isEmpty(){  
+    function isEmpty(){
         if (document.RxSearchAllergyForm.searchString.value.length == 0){
             alert("Search Field is Empty");
             document.RxSearchAllergyForm.searchString.focus();
@@ -68,7 +68,7 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
         }
         return true;
     }
-        
+
     function addCustomAllergy(){
         var name = document.getElementById('searchString').value;
         if(isEmpty() == true){
@@ -87,7 +87,7 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
     		document.getElementById(typecode+"_img").src='../images/expander.png';
     		Effect.BlindUp(document.getElementById(typecode+"_content"), {duration: 0.1 });
     	}
-    	
+
     }
 </script>
 </head>
@@ -141,7 +141,7 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 								onclick="javascript:document.forms.RxSearchAllergyForm.searchString.value='';document.forms.RxSearchAllergyForm.searchString.focus();"
 								value="Reset" />
                                                              <input type=button class="ControlPushButton" onclick="javascript:addCustomAllergy();" value="Custom Allergy" />
-                                                            
+
                                                         </td>
 						</tr>
 					</table>
@@ -168,7 +168,7 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
                                         frm.type2.checked = true;
                                         frm.type3.checked = true;
                                         frm.type4.checked = true;
-                                        
+
                                     }
                                     function typeClear()
                                     {
@@ -178,7 +178,7 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
                                         frm.type2.checked = false;
                                         frm.type3.checked = false;
                                         frm.type4.checked = false;
-                                        
+
                                     }
                                 </script> <input type=button
 								class="ControlPushButton" onclick="javascript:typeSelect();"
@@ -199,25 +199,25 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 				<td>
 				<%
                         int newSection = 0;
-                        Hashtable drugClassHash = (Hashtable) request.getAttribute("drugClasses");                            
+                        Hashtable drugClassHash = (Hashtable) request.getAttribute("drugClasses");
                         %>
 				<div class="LeftMargin">
-					<logic:notPresent name="allergies">Search returned no results. Revise your search and try again.</logic:notPresent> 
+					<logic:notPresent name="allergies">Search returned no results. Revise your search and try again.</logic:notPresent>
 					<logic:present name="allergies">
-	
-	
+
+
 						<%
-						boolean flatResults = Boolean.valueOf(oscar.OscarProperties.getInstance().getProperty("allergies.flat_results", "false"));    
+						boolean flatResults = Boolean.valueOf(oscar.OscarProperties.getInstance().getProperty("allergies.flat_results", "false"));
 				       	if(flatResults) {
 				       		TreeMap<String,Allergy> flatMap = (TreeMap<String,Allergy>)request.getAttribute("flatMap");
 				       		if(flatMap.size()>0) {
-				       			
+
 					       		for(String key:flatMap.keySet()) {
 					       			Allergy allergy = flatMap.get(key);
 					       			%>
-					       				<a href="addReaction.do?ID=<%= allergy.getPickID() %>&name=<%=java.net.URLEncoder.encode(allergy.getDESCRIPTION())%>&type=<%=allergy.getTYPECODE()%>"><%=allergy.getDESCRIPTION()%></a>
+					       				<a href="addReaction.do?ID=<%= allergy.getDrugrefId() %>&name=<%=java.net.URLEncoder.encode(allergy.getDescription())%>&type=<%=allergy.getTypeCode()%>"><%=allergy.getDescription()%></a>
 <%
-	                                    java.util.Vector vect = (Vector) drugClassHash.get(""+allergy.getPickID());
+	                                    java.util.Vector vect = (Vector) drugClassHash.get(""+allergy.getDrugrefId());
 	                                    if (vect != null){
 	                                        for (int k = 0; k < vect.size() ; k++){
 	                                        	String[] drugClassPair = (String[]) vect.get(k);
@@ -227,51 +227,51 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
                                         <%
                                         	}
                                         }
-                                        %>					       				
+                                        %>
 										<br/>
 					       			<%
 					       		}
-					       		
+
 				       		}
 						%>
-	
-	
+
+
 						<% } else { //not flat results %>
-	
+
 						<%
 							Map<Integer,List<Allergy>> allergyResults = (Map<Integer,List<Allergy>>)request.getAttribute("allergyResults");
 							if(allergyResults.get(8).size()>0) {
 								%><div class="DivContentSectionHead"><a href="javascript:void(0)" onclick="toggleSection('8');return false;"><img border="0" id="8_img" src="../images/collapser.png"/></a>ATC Class</div><%
-								%><div id="8_content"><%						
+								%><div id="8_content"><%
 								for(Allergy allergy:allergyResults.get(8)) {
 									%>
-									<a href="addReaction.do?ID=<%= allergy.getPickID() %>&name=<%=java.net.URLEncoder.encode(allergy.getDESCRIPTION())%>&type=<%=allergy.getTYPECODE()%>"><%=allergy.getDESCRIPTION()%></a>
+									<a href="addReaction.do?ID=<%= allergy.getDrugrefId() %>&name=<%=java.net.URLEncoder.encode(allergy.getDescription())%>&type=<%=allergy.getTypeCode()%>"><%=allergy.getDescription()%></a>
 									<br/>
 									<%
 								}
 								%></div><%
 							}
-							
+
 							if(allergyResults.get(10).size()>0) {
 								%><div class="DivContentSectionHead"><a href="javascript:void(0)" onclick="toggleSection('10');return false;"><img border="0" id="10_img" src="../images/collapser.png"/></a>AHFS Class</div><%
-								%><div id="10_content"><%						
+								%><div id="10_content"><%
 								for(Allergy allergy:allergyResults.get(10)) {
 									%>
-									<a href="addReaction.do?ID=<%= allergy.getPickID() %>&name=<%=java.net.URLEncoder.encode(allergy.getDESCRIPTION())%>&type=<%=allergy.getTYPECODE()%>"><%=allergy.getDESCRIPTION()%></a>
+									<a href="addReaction.do?ID=<%= allergy.getDrugrefId() %>&name=<%=java.net.URLEncoder.encode(allergy.getDescription())%>&type=<%=allergy.getTypeCode()%>"><%=allergy.getDescription()%></a>
 									<br/>
 									<%
 								}
 								%></div><%
 							}
-							
+
 							if(allergyResults.get(13).size()>0) {
 								%><div class="DivContentSectionHead"><a href="javascript:void(0)" onclick="toggleSection('13');return false;"><img border="0" id="13_img" src="../images/collapser.png"/></a>Brand Name</div><%
-								%><div id="13_content"><%						
+								%><div id="13_content"><%
 								for(Allergy allergy:allergyResults.get(13)) {
 									%>
-									<a href="addReaction.do?ID=<%= allergy.getPickID() %>&name=<%=java.net.URLEncoder.encode(allergy.getDESCRIPTION())%>&type=<%=allergy.getTYPECODE()%>"><%=allergy.getDESCRIPTION() %></a>
+									<a href="addReaction.do?ID=<%= allergy.getDrugrefId() %>&name=<%=java.net.URLEncoder.encode(allergy.getDescription())%>&type=<%=allergy.getTypeCode()%>"><%=allergy.getDescription() %></a>
 									<%
-	                                    java.util.Vector vect = (Vector) drugClassHash.get(""+allergy.getPickID());
+	                                    java.util.Vector vect = (Vector) drugClassHash.get(""+allergy.getDrugrefId());
 	                                    if (vect != null){
 	                                        for (int k = 0; k < vect.size() ; k++){
 	                                        	String[] drugClassPair = (String[]) vect.get(k);
@@ -287,46 +287,46 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 								}
 								%></div><%
 							}
-							
-							
+
+
 							if(allergyResults.get(11).size()>0) {
 								%><div class="DivContentSectionHead"><a href="javascript:void(0)" onclick="toggleSection('11');return false;"><img border="0" id="11_img" src="../images/expander.png"/></a>Generic Name</div><%
-								%><div id="11_content" style="display:none"><%						
+								%><div id="11_content" style="display:none"><%
 								for(Allergy allergy:allergyResults.get(11)) {
 									%>
-									<a href="addReaction.do?ID=<%= allergy.getPickID() %>&name=<%=java.net.URLEncoder.encode(allergy.getDESCRIPTION())%>&type=<%=allergy.getTYPECODE()%>"><%=allergy.getDESCRIPTION() %></a>
+									<a href="addReaction.do?ID=<%= allergy.getDrugrefId() %>&name=<%=java.net.URLEncoder.encode(allergy.getDescription())%>&type=<%=allergy.getTypeCode()%>"><%=allergy.getDescription() %></a>
 									<br/>
 									<%
 								}
 								%></div><%
 							}
-							
+
 							if(allergyResults.get(12).size()>0) {
 								%><div class="DivContentSectionHead"><a href="javascript:void(0)" onclick="toggleSection('12');return false;"><img border="0" id="12_img" src="../images/expander.png"/></a>Compound</div><%
-								%><div id="12_content" style="display:none"><%						
+								%><div id="12_content" style="display:none"><%
 								for(Allergy allergy:allergyResults.get(12)) {
 									%>
-									<a href="addReaction.do?ID=<%= allergy.getPickID() %>&name=<%=java.net.URLEncoder.encode(allergy.getDESCRIPTION())%>&type=<%=allergy.getTYPECODE()%>"><%=allergy.getDESCRIPTION() %></a>
+									<a href="addReaction.do?ID=<%= allergy.getDrugrefId() %>&name=<%=java.net.URLEncoder.encode(allergy.getDescription())%>&type=<%=allergy.getTypeCode()%>"><%=allergy.getDescription() %></a>
 									<br/>
 									<%
 								}
 								%></div><%
 							}
-							
-							
+
+
 							if(allergyResults.get(14).size()>0) {
 								%><div class="DivContentSectionHead"><a href="javascript:void(0)" onclick="toggleSection('14');return false;"><img border="0" id="14_img" src="../images/collapser.png"/></a>Ingredient</div><%
-								%><div id="14_content"><%						
+								%><div id="14_content"><%
 								for(Allergy allergy:allergyResults.get(14)) {
 									%>
-									<a href="addReaction.do?ID=<%= allergy.getPickID() %>&name=<%=java.net.URLEncoder.encode(allergy.getDESCRIPTION())%>&type=<%=allergy.getTYPECODE()%>"><%=allergy.getDESCRIPTION() %></a>
+									<a href="addReaction.do?ID=<%= allergy.getDrugrefId() %>&name=<%=java.net.URLEncoder.encode(allergy.getDescription())%>&type=<%=allergy.getTypeCode()%>"><%=allergy.getDescription() %></a>
 									<br/>
 									<%
 								}
 								%></div><%
 							}
 						%>
-	
+
 						<% } %>
 					</logic:present>
 				</div>

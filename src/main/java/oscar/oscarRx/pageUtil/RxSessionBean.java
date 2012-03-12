@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.model.Allergy;
 import org.oscarehr.phr.model.PHRMedication;
 import org.oscarehr.util.MiscUtils;
 
@@ -43,7 +44,7 @@ import oscar.oscarRx.data.RxPrescriptionData;
 
 public class RxSessionBean  implements java.io.Serializable {
 	private static final Logger logger=MiscUtils.getLogger();
-	
+
     private String providerNo = null;
     private int demographicNo = 0;
     private String view = "Active";
@@ -59,7 +60,7 @@ public class RxSessionBean  implements java.io.Serializable {
     private HashMap randomIdDrugIdPair=new HashMap();
     private List<HashMap<String,String>> listMedHistory=new ArrayList();
     private HashMap<Long,PHRMedication> pairPHRMed=new HashMap<Long,PHRMedication>();
-    private HashMap<Long,PHRMedication> pairPrevViewedPHRMed=new HashMap<Long,PHRMedication>();//viewed meds but not saved, rethrieved from phr_document 
+    private HashMap<Long,PHRMedication> pairPrevViewedPHRMed=new HashMap<Long,PHRMedication>();//viewed meds but not saved, rethrieved from phr_document
 
 
 
@@ -293,7 +294,7 @@ public class RxSessionBean  implements java.io.Serializable {
 
     private void preloadAllergyWarnings(String atccode){
        try{
-         oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies = RxPatientData.getPatient(getDemographicNo()).getActiveAllergies();
+         Allergy[] allergies = RxPatientData.getPatient(getDemographicNo()).getActiveAllergies();
          RxAllergyWarningWorker worker = new RxAllergyWarningWorker(this,atccode,allergies);
          addToWorkingAllergyWarnings(atccode,worker);
          worker.start();
@@ -302,7 +303,7 @@ public class RxSessionBean  implements java.io.Serializable {
        }
     }
 
-    public void addAllergyWarnings(String atc,oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergy){
+    public void addAllergyWarnings(String atc,Allergy[] allergy){
        allergyWarnings.put(atc, allergy);
     }
 
@@ -314,8 +315,8 @@ public class RxSessionBean  implements java.io.Serializable {
     }
 
 
-    public oscar.oscarRx.data.RxPatientData.Patient.Allergy[] getAllergyWarnings(String atccode){
-      oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies = null;
+    public Allergy[] getAllergyWarnings(String atccode){
+      Allergy[] allergies = null;
 
       //Check to see if Allergy checking property is on and if atccode is not null and if atccode is not "" or "null"
 
@@ -323,7 +324,7 @@ public class RxSessionBean  implements java.io.Serializable {
       	logger.debug("Checking allergy reaction : "+atccode);
       	if (allergyWarnings.containsKey(atccode) ){
 
-             allergies = (oscar.oscarRx.data.RxPatientData.Patient.Allergy[]) allergyWarnings.get(atccode);
+             allergies = (Allergy[]) allergyWarnings.get(atccode);
           }else if(workingAllergyWarnings.contains(atccode) ){
 
              RxAllergyWarningWorker worker = (RxAllergyWarningWorker) workingAllergyWarnings.get(atccode);
@@ -340,13 +341,13 @@ public class RxSessionBean  implements java.io.Serializable {
 
 
              }
-             allergies = (oscar.oscarRx.data.RxPatientData.Patient.Allergy[]) allergyWarnings.get(atccode);
+             allergies = (Allergy[]) allergyWarnings.get(atccode);
 
           }else{
          	 logger.debug("NEW ATC CODE for allergy");
              try{
                 RxDrugData drugData = new RxDrugData();
-                oscar.oscarRx.data.RxPatientData.Patient.Allergy[]  allAllergies = RxPatientData.getPatient(getDemographicNo()).getActiveAllergies();
+                Allergy[]  allAllergies = RxPatientData.getPatient(getDemographicNo()).getActiveAllergies();
                 allergies = drugData.getAllergyWarnings(atccode,allAllergies);
                     if (allergies != null){
                        addAllergyWarnings(atccode,allergies);
@@ -380,7 +381,7 @@ public class RxSessionBean  implements java.io.Serializable {
        try{
        start2 = System.currentTimeMillis();
           RxPrescriptionData rxData = new RxPrescriptionData();
-          
+
           RxInteractionData rxInteract =  RxInteractionData.getInstance();
           Vector atcCodes = rxData.getCurrentATCCodesByPatient(this.getDemographicNo());
 

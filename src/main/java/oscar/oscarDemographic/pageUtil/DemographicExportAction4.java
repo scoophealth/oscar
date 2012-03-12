@@ -62,6 +62,7 @@ import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.DemographicArchiveDao;
 import org.oscarehr.common.dao.DemographicContactDao;
 import org.oscarehr.common.dao.PartialDateDao;
+import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.DemographicArchive;
 import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.PartialDate;
@@ -94,7 +95,6 @@ import oscar.oscarReport.data.DemographicSets;
 import oscar.oscarReport.data.RptDemographicQueryBuilder;
 import oscar.oscarReport.data.RptDemographicQueryLoader;
 import oscar.oscarReport.pageUtil.RptDemographicReportForm;
-import oscar.oscarRx.data.RxAllergyData.Allergy;
 import oscar.oscarRx.data.RxPatientData;
 import oscar.oscarRx.data.RxPrescriptionData;
 import oscar.service.OscarSuperManager;
@@ -131,7 +131,7 @@ public class DemographicExportAction4 extends Action {
 	private static final HRMDocumentDao hrmDocDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
 	private static final HRMDocumentCommentDao hrmDocCommentDao = (HRMDocumentCommentDao) SpringUtils.getBean("HRMDocumentCommentDao");
 	private static final CaseManagementManager cmm = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
-	
+
 	private static final String PATIENTID = "Patient";
 	private static final String ALERT = "Alert";
 	private static final String ALLERGY = "Allergy";
@@ -148,7 +148,7 @@ public class DemographicExportAction4 extends Action {
 	private static final String REPORTBINARY = "Binary";
 	private static final String REPORTTEXT = "Text";
 	private static final String RISKFACTOR = "Risk";
-	
+
 	Integer exportNo = 0;
 	ArrayList<String> exportError = null;
 	HashMap<String, Integer> entries = new HashMap<String, Integer>();
@@ -158,7 +158,7 @@ public class DemographicExportAction4 extends Action {
 	@SuppressWarnings("static-access")
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String strEditable = oscarProperties.getProperty("ENABLE_EDIT_APPT_STATUS");
-		
+
 		DemographicExportForm defrm = (DemographicExportForm)form;
 		String demographicNo = defrm.getDemographicNo();
 		String setName = defrm.getPatientSet();
@@ -198,7 +198,7 @@ public class DemographicExportAction4 extends Action {
 	} else {
 		list.add(demographicNo);
 	}
-	
+
 	String ffwd = "fail";
 	String tmpDir = oscarProperties.getProperty("TMP_DIR");
 	if (!Util.checkDir(tmpDir)) {
@@ -208,7 +208,7 @@ public class DemographicExportAction4 extends Action {
 		options.put( XmlOptions.SAVE_PRETTY_PRINT );
 		options.put( XmlOptions.SAVE_PRETTY_PRINT_INDENT, 3 );
 		options.put( XmlOptions.SAVE_AGGRESSIVE_NAMESPACES );
-		
+
 		HashMap<String,String> suggestedPrefix = new HashMap<String,String>();
 		suggestedPrefix.put("cds_dt","cdsd");
 		options.setSaveSuggestedPrefixes(suggestedPrefix);
@@ -336,12 +336,12 @@ public class DemographicExportAction4 extends Action {
 				historyRS1 = i<DAs.size()-1 ? StringUtils.noNull(DAs.get(i+1).getRosterStatus()) : "-1";
 				historyRS = historyRS.equalsIgnoreCase("RO") ? "1" : "0";
 				historyRS1 = historyRS1.equalsIgnoreCase("RO") ? "1" : "0";
-				
+
 				historyRD = DAs.get(i).getRosterDate();
 				historyRD1 = i<DAs.size()-1 ? DAs.get(i+1).getRosterDate() : null;
 				historyTD = DAs.get(i).getRosterTerminationDate();
 				historyTD1 = i<DAs.size()-1 ? DAs.get(i+1).getRosterTerminationDate() : null;
-				
+
 				if (i==0) { //check history info with current
 					String rd = UtilDateUtilities.DateToString(historyRD);
 					String td = UtilDateUtilities.DateToString(historyTD);
@@ -397,7 +397,7 @@ public class DemographicExportAction4 extends Action {
 			} else if (UtilDateUtilities.StringToDate(dob)==null) {
 				exportError.add("Not exporting invalid Date of Birth for Patient "+demoNo);
 			}
-			
+
 			String chartNo = demographic.getChartNo();
 			if (StringUtils.filled(chartNo)) demo.setChartNumber(chartNo);
 
@@ -413,11 +413,11 @@ public class DemographicExportAction4 extends Action {
 				String cpso = prvd.getPractitionerNo();
 				if (cpso!=null && cpso.length()==5) pph.setPrimaryPhysicianCPSO(cpso);
 			}
-			
+
 			if(StringUtils.filled(demographic.getSin())) {
 				demo.setSIN(demographic.getSin());
 			}
-			
+
 			if (StringUtils.filled(demographic.getJustHIN())) {
 				cdsDt.HealthCard healthCard = demo.addNewHealthCard();
 
@@ -445,7 +445,7 @@ public class DemographicExportAction4 extends Action {
 					address.addNewPostalZipCode().setPostalCode(StringUtils.noNull(demographic.getPostal()).replace(" ",""));
 				}
 			}
-			
+
 			boolean phoneExtTooLong = false;
 			if (phoneNoValid(demographic.getPhone())) {
 				phoneExtTooLong = addPhone(demographic.getPhone(), demoExt.get("hPhoneExt"), cdsDt.PhoneNumberType.R, demo.addNewPhoneNumber());
@@ -471,16 +471,16 @@ public class DemographicExportAction4 extends Action {
 			} else {
 				addDemographicRelationships(demoNo, demo);
 			}
-			
+
 			List<CaseManagementNote> lcmn = cmm.getNotes(demoNo);
-			
+
 			//find all "header"; cms4 only
 			List<CaseManagementNote> headers = new ArrayList<CaseManagementNote>();
 			for (CaseManagementNote cmn : lcmn) {
 				if (cmn.getNote()!=null && cmn.getNote().startsWith("imported.cms4.2011.06") && cmm.getLinkByNote(cmn.getId()).isEmpty())
 					headers.add(cmn);
 			}
-			
+
 			for (CaseManagementNote cmn : lcmn) {
 				String famHist="", socHist="", medHist="", concerns="", reminders="", riskFactors="", encounter="", annotation="", summary="";
 				Set<CaseManagementIssue> sisu = cmn.getIssues();
@@ -517,7 +517,7 @@ public class DemographicExportAction4 extends Action {
 						encounter = cmn.getNote();
 						if (encounter.startsWith("imported.cms4.2011.06")) continue; //this is a "header", cms4 only
 				}
-				
+
 				annotation = getNonDumpNote(CaseManagementNoteLink.CASEMGMTNOTE, cmn.getId(), null);
 				List<CaseManagementNoteExt> cmeList = cmm.getExtByNote(cmn.getId());
 
@@ -637,7 +637,7 @@ public class DemographicExportAction4 extends Action {
 									summary = Util.addSummary(summary, "Diagnosis", isu.getIssue().getDescription());
 								} else {
 									cdsDt.StandardCoding diagnosis = pHealth.addNewDiagnosisProcedureCode();
-									
+
 									diagnosis.setStandardCodingSystem(codeSystem);
 									String code = codeSystem.equalsIgnoreCase("icd9") ? Util.formatIcd9(isu.getIssue().getCode()) : isu.getIssue().getCode();
 									diagnosis.setStandardCode(code);
@@ -765,10 +765,10 @@ public class DemographicExportAction4 extends Action {
 					// RISK FACTORS
 					if (StringUtils.filled(riskFactors)) {
 						RiskFactors rFact = patientRec.addNewRiskFactors();
-						
+
 						if (riskFactors.length()>120) riskFactors = riskFactors.substring(0, 120);
 						rFact.setRiskFactor(riskFactors);
-						
+
 						summary = Util.addSummary("Risk Factor", riskFactors);
 						addOneEntry(RISKFACTOR);
 
@@ -837,7 +837,7 @@ public class DemographicExportAction4 extends Action {
 						}
 						cNote.setMyClinicalNotesContent(encounter);
 						addOneEntry(CLINICALNOTE);
-						
+
 						Date createDate = cmn.getCreate_date();
 						String uuid;
 						for (CaseManagementNote header : headers) {
@@ -851,7 +851,7 @@ public class DemographicExportAction4 extends Action {
 						if (createDate!=null) {
 							cNote.addNewEnteredDateTime().setFullDateTime(Util.calDate(createDate));
 						}
-						
+
 						//event datetime
 						if (cmn.getObservation_date()!=null) {
 							cNote.addNewEventDateTime().setFullDateTime(Util.calDate(cmn.getObservation_date()));
@@ -859,7 +859,7 @@ public class DemographicExportAction4 extends Action {
 
 						List<CaseManagementNote> cmn_same = cmm.getNotesByUUID(cmn.getUuid());
 						for (CaseManagementNote cm_note : cmn_same) {
- 
+
 							//participating providers
 							if (StringUtils.filled(cm_note.getProviderNo()) && !Util.isVerified(cm_note)) {
 								//participant info
@@ -867,7 +867,7 @@ public class DemographicExportAction4 extends Action {
 								ProviderData prvd = new ProviderData(cm_note.getProviderNo());
 								Util.writeNameSimple(pProvider.addNewName(), StringUtils.noNull(prvd.getFirst_name()), StringUtils.noNull(prvd.getLast_name()));
 								if (StringUtils.noNull(prvd.getOhip_no()).length()<=6) pProvider.setOHIPPhysicianId(prvd.getOhip_no());
-								
+
 								//note created datetime
 								cdsDt.DateTimeFullOrPartial noteCreatedDateTime = pProvider.addNewDateTimeNoteCreated();
 								if (cmn.getUpdate_date()!=null) noteCreatedDateTime.setFullDateTime(Util.calDate(cm_note.getUpdate_date()));
@@ -881,7 +881,7 @@ public class DemographicExportAction4 extends Action {
 								ProviderData prvd = new ProviderData(cm_note.getSigning_provider_no());
 								Util.writeNameSimple(noteReviewer.addNewName(), prvd.getFirst_name(), prvd.getLast_name());
 								if (StringUtils.noNull(prvd.getOhip_no()).length()<=6) noteReviewer.setOHIPPhysicianId(prvd.getOhip_no());
-								
+
 								//note reviewed datetime
 								cdsDt.DateTimeFullOrPartial noteReviewedDateTime = noteReviewer.addNewDateTimeNoteReviewed();
 								if (cm_note.getUpdate_date()!=null) noteReviewedDateTime.setFullDateTime(Util.calDate(cm_note.getUpdate_date()));
@@ -928,15 +928,15 @@ public class DemographicExportAction4 extends Action {
 
 			if (exAllergiesAndAdverseReactions) {
 				// ALLERGIES & ADVERSE REACTIONS
-				RxPatientData.Patient.Allergy[] allergies = RxPatientData.getPatient(demoNo).getActiveAllergies();
+				Allergy[] allergies = RxPatientData.getPatient(demoNo).getActiveAllergies();
 				String dateFormat = null, annotation = null;
 				for (int j=0; j<allergies.length; j++) {
 					AllergiesAndAdverseReactions alr = patientRec.addNewAllergiesAndAdverseReactions();
-					Allergy allergy = allergies[j].getAllergy();
+					Allergy allergy = allergies[j];
 					String aSummary = "";
 					addOneEntry(ALLERGY);
 
-					String allergyDescription = allergy.getDESCRIPTION();
+					String allergyDescription = allergy.getDescription();
 					if (StringUtils.filled(allergyDescription)) {
 						alr.setOffendingAgentDescription(allergyDescription);
 						aSummary = Util.addSummary("Offending Agent Description", allergyDescription);
@@ -948,7 +948,7 @@ public class DemographicExportAction4 extends Action {
 						drugCode.setCodeValue(regionalId);
 						aSummary = Util.addSummary(aSummary, "DIN", regionalId);
 					}
-					String typeCode = String.valueOf(allergy.getTYPECODE());
+					String typeCode = String.valueOf(allergy.getTypeCode());
 					if (StringUtils.filled(typeCode)) {
 						if (typeCode.equals("0")) {
 							//alr.setReactionType(cdsDt.AdverseReactionType.AL);
@@ -995,7 +995,7 @@ public class DemographicExportAction4 extends Action {
 						Util.putPartialDate(alr.addNewRecordedDate(), allergies[j].getEntryDate(), dateFormat);
 						aSummary = Util.addSummary(aSummary,"Recorded Date",partialDateDao.getDatePartial(allergies[j].getEntryDate(), dateFormat));
 					}
-					
+
 					annotation = getNonDumpNote(CaseManagementNoteLink.ALLERGIES, (long)allergies[j].getAllergyId(), null);
 					if (StringUtils.filled(annotation)) {
 						alr.setNotes(annotation);
@@ -1121,21 +1121,21 @@ public class DemographicExportAction4 extends Action {
 
 					if (StringUtils.filled(arr[p].getDosage())) {
 						String[] strength = arr[p].getDosage().split(" ");
-						
+
 						cdsDt.DrugMeasure drugM = medi.addNewStrength();
 						if (Util.leadingNum(strength[0]).equals(strength[0])) {//amount & unit separated by space
 							drugM.setAmount(strength[0]);
 							if (strength.length>1) drugM.setUnitOfMeasure(strength[1]);
 							else drugM.setUnitOfMeasure("unit"); //UnitOfMeasure cannot be null
-							
+
 						} else {//amount & unit not separated, probably e.g. 50mg / 2tablet
 							if (strength.length>1 && strength[1].equals("/")) {
 								if (strength.length>2) {
 									String unit1 = Util.leadingNum(strength[2]).equals("") ? "1" : Util.leadingNum(strength[2]);
 									String unit2 = Util.trailingTxt(strength[2]).equals("") ? "unit" : Util.trailingTxt(strength[2]);
-									
-									drugM.setAmount(Util.leadingNum(strength[0])+"/"+Util.leadingNum(strength[2])); 
-									drugM.setUnitOfMeasure(Util.trailingTxt(strength[0])+"/"+unit2);									
+
+									drugM.setAmount(Util.leadingNum(strength[0])+"/"+Util.leadingNum(strength[2]));
+									drugM.setUnitOfMeasure(Util.trailingTxt(strength[0])+"/"+unit2);
 								}
 							} else {
 								drugM.setAmount(Util.leadingNum(strength[0]));
@@ -1149,12 +1149,12 @@ public class DemographicExportAction4 extends Action {
 						medi.setDosageUnitOfMeasure(StringUtils.noNull(arr[p].getUnit()));
 						mSummary = Util.addSummary(mSummary, "Dosage", arr[p].getDosageDisplay()+" "+StringUtils.noNull(arr[p].getUnit()));
 					}
-					
+
 					if (StringUtils.filled(arr[p].getSpecialInstruction())) {
 						medi.setPrescriptionInstructions(arr[p].getSpecialInstruction());
 						mSummary = Util.addSummary(mSummary, "Prescription Instructions", arr[p].getSpecialInstruction());
 					}
-					
+
 					if (StringUtils.filled(arr[p].getRoute())) {
 						medi.setRoute(arr[p].getRoute());
 						mSummary = Util.addSummary(mSummary, "Route", arr[p].getRoute());
@@ -1199,7 +1199,7 @@ public class DemographicExportAction4 extends Action {
 						medi.setTreatmentType(arr[p].getETreatmentType());
 						mSummary = Util.addSummary(mSummary, "Treatment Type", arr[p].getETreatmentType());
 					}
-					/* no need: 
+					/* no need:
 					if (StringUtils.filled(arr[p].getRxStatus())) {
 						medi.setPrescriptionStatus(arr[p].getRxStatus());
 						mSummary = Util.addSummary(mSummary, "Prescription Status", arr[p].getRxStatus());
@@ -1357,7 +1357,7 @@ public class DemographicExportAction4 extends Action {
 					*/
 					String reqDate = labMea.getExtVal("request_datetime");
 					if (StringUtils.filled(reqDate)) labResults.addNewLabRequisitionDateTime().setFullDateTime(Util.calDate(reqDate));
-					
+
 					//OLIS test result status
 					String olis_status = labMea.getExtVal("olis_status");
 					if (StringUtils.filled(olis_status)) labResults.setOLISTestResultStatus(olis_status);
@@ -1374,7 +1374,7 @@ public class DemographicExportAction4 extends Action {
 						String other_id = StringUtils.noNull(labMea.getExtVal("other_id"));
 						annotation = getNonDumpNote(labTable, Long.valueOf(lab_no), other_id);
 						if (StringUtils.filled(annotation)) labResults.setPhysiciansNotes(annotation);
-						
+
 //					  String info = labRoutingInfo.get("comment"); <--for whole report, may refer to >1 lab results
 
 
@@ -1389,7 +1389,7 @@ public class DemographicExportAction4 extends Action {
 						if (UtilDateUtilities.StringToDate(timestamp,"yyyy-MM-dd HH:mm:ss")!=null) {
 							LaboratoryResults.ResultReviewer reviewer = labResults.addNewResultReviewer();
 							reviewer.addNewDateTimeResultReviewed().setFullDateTime(Util.calDate(timestamp));
-							
+
 							//reviewer name
 							cdsDt.PersonNameSimple reviewerName = reviewer.addNewName();
 							String lab_provider_no = (String)labRoutingInfo.get("provider_no");
@@ -1436,7 +1436,7 @@ public class DemographicExportAction4 extends Action {
 							msg = asd.getTitle();
 						else
 							msg = getResources(request).getMessage(asd.getTitle());
-						
+
 						if (StringUtils.filled(msg)) {
 							aptm.setAppointmentStatus(msg);
 						} else {
@@ -1473,7 +1473,7 @@ public class DemographicExportAction4 extends Action {
 					} else {
 						ReportsReceived rpr = patientRec.addNewReportsReceived();
 						rpr.setFormat(cdsDt.ReportFormat.TEXT);
-						
+
 						cdsDt.ReportContent rpc = rpr.addNewContent();
 						InputStream in = new FileInputStream(f);
 						byte[] b = new byte[(int)f.length()];
@@ -1499,7 +1499,7 @@ public class DemographicExportAction4 extends Action {
 						if (StringUtils.empty(contentType)) contentType = cutExt(edoc.getFileName());
 						if (StringUtils.empty(contentType)) exportError.add("Error! No File Extension&Version info for Document \""+edoc.getFileName()+"\"");
 						rpr.setFileExtensionAndVersion(contentType);
-						
+
 						String docClass = edoc.getDocClass();
 						if (cdsDt.ReportClass.Enum.forString(docClass)!=null) {
 							rpr.setClass1(cdsDt.ReportClass.Enum.forString(docClass));
@@ -1532,11 +1532,11 @@ public class DemographicExportAction4 extends Action {
 							if (reviewDateTime.length()<=6) reportReviewed.setReviewingOHIPPhysicianId(reviewDateTime);
 						}
 						Util.writeNameSimple(rpr.addNewSourceAuthorPhysician().addNewAuthorName(), edoc.getSource());
-						
+
 						if (StringUtils.filled(edoc.getSourceFacility())) rpr.setSourceFacility(edoc.getSourceFacility());
 
 						if (edoc.getDocId()==null) continue;
-						
+
 						annotation = getNonDumpNote(CaseManagementNoteLink.DOCUMENT, Long.valueOf(edoc.getDocId()), null);
 						if (StringUtils.filled(annotation)) rpr.setNotes(annotation);
 					}
@@ -1563,7 +1563,7 @@ public class DemographicExportAction4 extends Action {
 
 							//Message Unique ID
 							if (hrm.getTransactionMessageUniqueID(i)!=null) rpr.setMessageUniqueID(hrm.getTransactionMessageUniqueID(i));
-							
+
 							HashMap<String,String> reportAuthor = hrm.getReportAuthorPhysician(i);
 							HashMap<String,Object> reportContent = hrm.getReportContent(i);
 							HashMap<String,String> reportStrings = hrm.getReportStrings(i);
@@ -1603,11 +1603,11 @@ public class DemographicExportAction4 extends Action {
 									else rpr.setFormat(cdsDt.ReportFormat.TEXT);
 									exportError.add("Error! No Format for HRM report! Patient "+demoNo+" ("+(i+1)+")");
 								}
-								
+
 								//Class
 								if (reportStrings.get("class")!=null) {
 									rpr.setClass1(cdsDt.ReportClass.Enum.forString(formatHrmEnum(reportStrings.get("class"))));
-									
+
 								} else {
 									rpr.setClass1(cdsDt.ReportClass.OTHER_LETTER);
 									exportError.add("Error! No Class for HRM report! Export as 'Other Letter'. Patient "+demoNo+" ("+(i+1)+")");
@@ -1920,11 +1920,11 @@ public class DemographicExportAction4 extends Action {
 					throw new Exception("Cannot write .xml file(s) to export directory.\n Please check directory permissions.");
 		}
 	}
-	
+
 	//create ReadMe.txt & ExportEvent.log
 		files.add(makeReadMe(files));
 		files.add(makeExportLog(files.get(0).getParentFile()));
-	
+
 	//zip all export files
 		String zipName = files.get(0).getName().replace(".xml", ".zip");
 	if (setName!=null) zipName = "export_"+setName.replace(" ","")+"_"+UtilDateUtilities.getToday("yyyyMMddHHmmss")+".zip";
@@ -1948,7 +1948,7 @@ public class DemographicExportAction4 extends Action {
 			Util.downloadFile(zipName, tmpDir, response);
 			ffwd = "success";
 		}
-		
+
 
 		//Remove zip & export files from temp dir
 		Util.cleanFile(zipName, tmpDir);
@@ -1996,7 +1996,7 @@ public class DemographicExportAction4 extends Action {
 	out.write(getIDInExportFilename(fs.get(fs.size()-1).getName()));
 	out.newLine();
 	out.close();
-	
+
 	return readMe;
 	}
 
@@ -2075,7 +2075,7 @@ public class DemographicExportAction4 extends Action {
 			out.write("Errors/Notes");
 			out.newLine();
 			out.write(fillUp("",'-',tableWidth)); out.newLine();
-			
+
 			//write any error that has occurred
 			if (exportError.size()>0) {
 				out.write(exportError.get(0));
@@ -2093,13 +2093,13 @@ public class DemographicExportAction4 extends Action {
 			exportNo = 0;
 			return exportLog;
 	}
-	
-	
-	
-	
+
+
+
+
 
 	//------------------------------------------------------------
-	
+
 	private String getIDInExportFilename(String filename) {
 		if (filename==null) return null;
 
@@ -2116,7 +2116,7 @@ public class DemographicExportAction4 extends Action {
 	if (parts.length>1) return "."+parts[parts.length-1];
 	else return "";
 	}
-	
+
 	private String fillUp(String tobefilled, char c, int size) {
 	if (size>=tobefilled.length()) {
 		int fill = size-tobefilled.length();
@@ -2124,7 +2124,7 @@ public class DemographicExportAction4 extends Action {
 	}
 	return tobefilled;
 	}
-	
+
 	private void addOneEntry(String category) {
 		if (StringUtils.empty(category)) return;
 
@@ -2132,16 +2132,16 @@ public class DemographicExportAction4 extends Action {
 		n = n==null ? 1 : n+1;
 		entries.put(category+exportNo, n);
 	}
-	
+
 	private String getNonDumpNote(Integer tableName, Long tableId, String otherId) {
 		String note = null;
-		
+
 		List<CaseManagementNoteLink> cmll;
 		if (StringUtils.empty(otherId))
 			cmll = cmm.getLinkByTableIdDesc(tableName, tableId);
 		else
 			cmll = cmm.getLinkByTableIdDesc(tableName, tableId, otherId);
-		
+
 		for (CaseManagementNoteLink cml : cmll) {
 			CaseManagementNote n = cmm.getNote(cml.getNoteId().toString());
 			if (n.getNote()!=null && !n.getNote().startsWith("imported.cms4.2011.06")) {//not from dumpsite
@@ -2151,13 +2151,13 @@ public class DemographicExportAction4 extends Action {
 		}
 		return note;
 	}
-	
+
 	private String formatHrmEnum(String hrmEnum) {
 		if (StringUtils.empty(hrmEnum)) return null;
-		
+
 		hrmEnum = hrmEnum.replace("_", " ");
 		hrmEnum = hrmEnum.toLowerCase();
-		
+
 		String hrmEnumF = hrmEnum.substring(0,1).toUpperCase();
 		for (int i=1; i<hrmEnum.length(); i++) {
 			hrmEnumF += hrmEnum.substring(i,i+1);
@@ -2166,15 +2166,15 @@ public class DemographicExportAction4 extends Action {
 				i++;
 			}
 		}
-		
+
 		if (hrmEnumF.equals("Medical Records Report")) hrmEnumF = "Medical Record Report"; //HRM & CDS class names not match
 		return hrmEnumF;
 	}
-	
+
 	private void addDemographicContacts(String demoNo, Demographics demo) {
 		List<DemographicContact> demoContacts = contactDao.findByDemographicNo(Integer.valueOf(demoNo));
 		DemographicContact demoContact;
-		
+
 		//create a list of contactIds
 		String[] contactId = new String[demoContacts.size()];
 		for (int j=0; j<demoContacts.size(); j++) {
@@ -2194,7 +2194,7 @@ public class DemographicExportAction4 extends Action {
 				}
 				demoContact = demoContacts.get(j);
 				if (demoContact==null) continue;
-				
+
 				Demographics.Contact contact = demo.addNewContact();
 
 				String ec=null, sdm=null, rel=null, contactNote=null;
@@ -2203,11 +2203,11 @@ public class DemographicExportAction4 extends Action {
 					demoContact = demoContacts.get(k);
 					if (demoContact==null) continue;
 					if (!contactId[j].equals(demoContact.getContactId())) continue;
-					
+
 					rel = demoContact.getRole();
 					if (StringUtils.empty(ec)) ec = demoContact.getEc();
 					if (StringUtils.empty(sdm)) sdm = demoContact.getSdm();
-					
+
 					fillContactPurpose(rel, contact);
 					contactNote = Util.addLine(contactNote, demoContact.getNote());
 
@@ -2219,18 +2219,18 @@ public class DemographicExportAction4 extends Action {
 					contact.addNewContactPurpose().setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.SDM);
 				}
 				if (StringUtils.filled(contactNote)) contact.setNote(contactNote);
-				
+
 				fillContactInfo(contact, contactId[j], demoNo, j);
 			}
 		}
 	}
 
-	
+
 	private void addDemographicRelationships(String demoNo, Demographics demo) {
 		DemographicRelationship demographicRelationship = new DemographicRelationship();
 		ArrayList demographicRelationships = demographicRelationship.getDemographicRelationships(demoNo);
 		HashMap<String,String> demoRel;
-		
+
 		//create a list of contactIds
 		String[] contactId = new String[demographicRelationships.size()];
 		for (int j=0; j<demographicRelationships.size(); j++) {
@@ -2250,7 +2250,7 @@ public class DemographicExportAction4 extends Action {
 				}
 				demoRel = (HashMap<String,String>) demographicRelationships.get(j);
 				if (demoRel==null) continue;
-				
+
 				Demographics.Contact contact = demo.addNewContact();
 
 				String ec=null, sdm=null, rel=null, contactNote=null;
@@ -2259,11 +2259,11 @@ public class DemographicExportAction4 extends Action {
 					demoRel = (HashMap<String,String>) demographicRelationships.get(k);
 					if (demoRel==null) continue;
 					if (!contactId[j].equals(demoRel.get("demographic_no"))) continue;
-					
+
 					rel = demoRel.get("relation");
 					if (StringUtils.empty(ec) || "0".equals(ec)) ec = demoRel.get("emergency_contact");
 					if (StringUtils.empty(sdm) || "0".equals(sdm)) sdm = demoRel.get("sub_decision_maker");
-					
+
 					fillContactPurpose(rel, contact);
 					contactNote = Util.addLine(contactNote, demoRel.get("notes"));
 
@@ -2275,14 +2275,14 @@ public class DemographicExportAction4 extends Action {
 					contact.addNewContactPurpose().setPurposeAsEnum(cdsDt.PurposeEnumOrPlainText.PurposeAsEnum.SDM);
 				}
 				if (StringUtils.filled(contactNote)) contact.setNote(contactNote);
-				
+
 				fillContactInfo(contact, contactId[j], demoNo, j);
 			}
 		}
 	}
-	
+
 	private void fillContactInfo(Demographics.Contact contact, String contactId, String demoNo, int index) {
-		
+
 		DemographicData.Demographic relDemo = new DemographicData().getDemographic(contactId);
 		HashMap<String,String> relDemoExt = new HashMap<String,String>();
 		relDemoExt.putAll(new DemographicExt().getAllValuesForDemo(contactId));
@@ -2294,7 +2294,7 @@ public class DemographicExportAction4 extends Action {
 		if (StringUtils.empty(relDemo.getLastName())) {
 			exportError.add("Error! No Last Name for contact ("+index+") for Patient "+demoNo);
 		}
-		
+
 		if (StringUtils.filled(relDemo.getEmail())) contact.setEmailAddress(relDemo.getEmail());
 
 		boolean phoneExtTooLong = false;
@@ -2329,7 +2329,7 @@ public class DemographicExportAction4 extends Action {
 			else contactPurpose.setPurposeAsPlainText(rel);
 		}
 	}
-	
+
 	private boolean phoneNoValid(String phoneNo) {
 		phoneNo = Util.onlyNum(phoneNo);
 		if (StringUtils.filled(phoneNo) && phoneNo.length()>=7)
@@ -2337,10 +2337,10 @@ public class DemographicExportAction4 extends Action {
 		else
 			return false;
 	}
-	
+
 	private boolean addPhone(String phoneNo, String phoneExt, cdsDt.PhoneNumberType.Enum phoneNoType, cdsDt.PhoneNumber cdsDtPhoneNumber) {
 		boolean extensionTooLong = false;
-		
+
 		cdsDtPhoneNumber.setPhoneNumber(Util.onlyNum(phoneNo));
 		cdsDtPhoneNumber.setPhoneNumberType(phoneNoType);
 		if (phoneExt!=null) {

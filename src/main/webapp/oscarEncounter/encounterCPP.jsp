@@ -1,26 +1,26 @@
-<%--  
+<%--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 --%>
 <%@page import="oscar.oscarRx.data.RxPatientData"%>
@@ -52,57 +52,57 @@
     response.sendRedirect("error.jsp");
     return;
   }
-  
+
   String provNo = (String) request.getSession().getAttribute("user");
     CPPData cppData = new CPPData();
     HashMap h = cppData.getCPPData(bean.demographicNo);
-    
+
     oscar.oscarRx.data.RxPrescriptionData prescriptData = new oscar.oscarRx.data.RxPrescriptionData();
     oscar.oscarRx.data.RxPrescriptionData.Prescription [] arr = {};
     arr = prescriptData.getUniquePrescriptionsByPatient(Integer.parseInt(bean.demographicNo));
 
-    oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies
+    org.oscarehr.common.model.Allergy[] allergies
     = RxPatientData.getPatient(Integer.parseInt(bean.demographicNo)).getAllergies();
-    
+
     ArrayList inject = new ArrayList();
-      
+
       PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
       ArrayList<HashMap<String,String>> prevList  = pdc.getPreventions();
       for (int k =0 ; k < prevList.size(); k++){
-             HashMap<String,String> a = prevList.get(k);   
+             HashMap<String,String> a = prevList.get(k);
              if (a != null && a.get("layout") != null &&  a.get("layout").equals("injection")){
                 inject.add(a.get("name"));
-             }	     	
+             }
       }
-      
-      
-      
-            
-            
+
+
+
+
+
     List medsList = (List) h.get("medsList");
     List allergyList = (List) h.get("allergyList");
-    List divList = (List) h.get("divList");    
+    List divList = (List) h.get("divList");
 %>
 
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <script type="text/javascript" language="Javascript">
     var dirty = false;
-    var hiddenPres = new Array();    
-    var hiddenAllergy = new Array();    
-    
+    var hiddenPres = new Array();
+    var hiddenAllergy = new Array();
+
     var isIE = document.all?true:false;
     if (!isIE) document.captureEvents(Event.MOUSEMOVE);
-    
+
     var enc = new Array();
     enc[0] = "<%=StringEscapeUtils.escapeJavaScript(bean.socialHistory)%>"
     enc[1] = "<%=StringEscapeUtils.escapeJavaScript(bean.ongoingConcerns)%>"
-    enc[2] = "<%=StringEscapeUtils.escapeJavaScript(bean.medicalHistory)%>" 
+    enc[2] = "<%=StringEscapeUtils.escapeJavaScript(bean.medicalHistory)%>"
     enc[3] = "<%=StringEscapeUtils.escapeJavaScript(bean.reminders)%>"
-    
-    
-    
-    
-    
+
+
+
+
+
     function onPrint() {
         window.print();
         return true;
@@ -116,41 +116,41 @@
     }
     function setDirtyFalse(){
        dirty = false;
-    }    
-    function addToHiddenPres(id){     
+    }
+    function addToHiddenPres(id){
         hiddenPres[hiddenPres.length] = id;
     }
-    function addToHiddenAllergy(id){     
+    function addToHiddenAllergy(id){
         hiddenAllergy[hiddenAllergy.length] = id;
     }
-    
+
     function fillMedAllerg(){
         listArray(hiddenPres,'medsList');
         listArray(hiddenAllergy,'allergyList');
         getCheckedStr('divArr');
-        //alert(document.getElementById('medsList').value+"\n"+document.getElementById('allergyList').value+"\n"+document.getElementById('divArr').value);      
+        //alert(document.getElementById('medsList').value+"\n"+document.getElementById('allergyList').value+"\n"+document.getElementById('divArr').value);
         //document.FrmForm.submit();
         document.forms[0].submit();
     }
-    
+
     function listArray(arr,id){
-      var listStr = "";    
+      var listStr = "";
       for(var i = 0 ;i < arr.length ; i++){
          //alert(arr[i]);
          listStr = listStr + arr[i];
          if (i != (arr.length - 1 ) ){
             listStr = listStr + ",";
-         }                  
+         }
       }
       document.getElementById(id).value = listStr;
-      //alert(document.getElementById('medsList').value);      
+      //alert(document.getElementById('medsList').value);
     }
-    
+
 </script>
 
 <script type="text/javascript">
 
-function processEditable(editableText,editId){   
+function processEditable(editableText,editId){
    var textVal = document.getElementById(editableText);
    //alert(editId);
    var idName = document.getElementById(editId);
@@ -158,16 +158,16 @@ function processEditable(editableText,editId){
    //alert(idName.value+"Val"+"    "+idName.value+"   "+textVal.value);
    document.getElementById(idName.value+"Val").value = textVal.value;
    var conDiv = document.getElementById(idName.value);
-   
+
    while (conDiv.hasChildNodes()){
         conDiv.removeChild(conDiv.firstChild);
-     }                          
-   
+     }
+
    var newText = document.createTextNode(textVal.value);
 	var newNode = document.createElement("pre");
    newNode.appendChild(newText);
 			conDiv.appendChild(newNode);
-   
+
    //alert(document.getElementById(idName.value).innerHtml);
 }
 
@@ -179,16 +179,16 @@ function checkTheBox(e){
 	else if (e.srcElement) targ = e.srcElement;
 	if (targ.nodeType == 3) // defeat Safari bug
 		targ = targ.parentNode;
-		
+
 		//alert(targ.name+" "+targ.checked);
-		
-		if ( targ.checked){		
+
+		if ( targ.checked){
 		   showItem(targ.name);
 		}else{
-        hideItem(targ.name);		   
+        hideItem(targ.name);
 		}
-		
- 
+
+
 }
 
 function getTarget(e){
@@ -198,7 +198,7 @@ var targ;
 	else if (e.srcElement) targ = e.srcElement;
 	if (targ.nodeType == 3) // defeat Safari bug
 		targ = targ.parentNode;
-	
+
    return targ;
 }
 
@@ -214,34 +214,34 @@ function showElementHere(e,id){
 	else if (e.srcElement) targ = e.srcElement;
 	if (targ.nodeType == 3) // defeat Safari bug
 		targ = targ.parentNode;
-		
-    var ele = document.getElementById(id);    
+
+    var ele = document.getElementById(id);
     var _x = 300;
     var _y = 300;
     if (!isIE) {
        _x = e.pageX;
        _y = e.pageY;
     }
-        
+
     //alert(_y);
     ele.style.top = _y;
     ele.style.left = _x;
-    
+
     //alert(targ.nodeName);
-    
+
     if ( targ.nodeName == "DIV"){
        targ = targ.firstChild ;
     }
-    
-    var str = targ.innerHTML 
-    
+
+    var str = targ.innerHTML
+
     if (-1 != str.lastIndexOf("&nbsp;")){
-       var atTheLast = str.length - str.lastIndexOf("&nbsp;") ;       
+       var atTheLast = str.length - str.lastIndexOf("&nbsp;") ;
        if (atTheLast == 6){
        str = str.substr(0,str.lastIndexOf("&nbsp;"));
        //alert(s);
        }
-       
+
     }
     if (targ.id == ""){
         //alert("targ now == parent");
@@ -252,7 +252,7 @@ function showElementHere(e,id){
     //alert(id+"  >"+targ.id+"<");
     document.getElementById(id+"Text").value = str;
     document.getElementById('editableVal').value = targ.id;
-        
+
     showItem(id);
 }
 
@@ -265,40 +265,40 @@ function showEdit(e,id,dataId){
       return false;
    }
    //alert(dataId);
-   var targ = document.getElementById(dataId);			
-   var ele = document.getElementById(id);                   
+   var targ = document.getElementById(dataId);
+   var ele = document.getElementById(id);
    ele.style.top = _y;
-   ele.style.left = _x;                            
-   
+   ele.style.left = _x;
+
    //alert(targ.id);
-   
+
    var str = "";
    if ( targ.nodeName == "DIV"){
        kids = targ.childNodes;
-       for (var i = 0; i < kids.length; i++) { 
+       for (var i = 0; i < kids.length; i++) {
      //    alert(i+" "+kids[i].nodeName);
          if (kids[i].nodeName == "PRE"){
             str = kids[i].innerHTML;
          }
        }
-              
+
     }
-    
-       
+
+
    //alert(targ.firstChild);
-   //var str = targ.firstChild.innerHTML; 
-    
+   //var str = targ.firstChild.innerHTML;
+
    if (-1 != str.lastIndexOf("&nbsp;")){
-      var atTheLast = str.length - str.lastIndexOf("&nbsp;") ;       
+      var atTheLast = str.length - str.lastIndexOf("&nbsp;") ;
       if (atTheLast == 6){
          str = str.substr(0,str.lastIndexOf("&nbsp;"));
          //alert(s);
       }
     }
-               
+
     document.getElementById(id+"Text").value = str;
     document.getElementById('editableVal').value = dataId;
-        
+
     showItem(id);
 }
 
@@ -308,13 +308,13 @@ function showEdit(e,id,dataId){
 function setChecked(id){
    //alert(id);
    var ele = document.getElementById(id);
-   
+
    if(ele.style.display == 'none'){
        document.getElementById(id+"Check").checked = false;
    }else{
        document.getElementById(id+"Check").checked = true;
    }
-   
+
 }
 
 function getCheck(id){
@@ -328,16 +328,16 @@ function getCheckedStr(id){
     for (i=0; i<divArr.length; i++){
         //alert(divArr[i]+"  "+getCheck(divArr[i]) );
         if(!getCheck(divArr[i])){
-        
+
             if(checkStr.length == 0){
                 checkStr = checkStr + divArr[i];
             }else{
                 checkStr = checkStr +","+divArr[i];
             }
-        }        
+        }
         //alert(checkStr);
-    }       
-    document.getElementById(id).value =  checkStr;     
+    }
+    document.getElementById(id).value =  checkStr;
 }
 
 
@@ -484,7 +484,7 @@ special needs <!--a class="hideShow" onclick="javascript:showHideItem('reminder'
 <br />
 <ul>
 	<%for (int i = 0; i < arr.length; i++){
-                        String rxD = arr[i].getRxDate().toString();                        
+                        String rxD = arr[i].getRxDate().toString();
                         String rxP = arr[i].getFullOutLine().replaceAll(";"," ");
                         rxP = rxP + "   " + arr[i].getEndDate();
                         String styleColor = "";
@@ -528,10 +528,10 @@ special needs <!--a class="hideShow" onclick="javascript:showHideItem('reminder'
 		style="<%=displayNone(""+allergies[j].getAllergyId(),allergyList)%>">
 	<a class="hideShow"
 		onclick="javascript:showHideItem('allergy<%=allergies[j].getAllergyId()%>');addToHiddenAllergy('<%=allergies[j].getAllergyId()%>');"
-		href="javascript: function myFunction() {return false; }">hide</a> <b><%= allergies[j].getAllergy().getDESCRIPTION() %></b>
-	<!--%= allergies[j].getAllergy().getTypeDesc() %--> &nbsp;Severity: <%= allergies[j].getAllergy().getSeverityOfReactionDesc() %>
-	Onset: <%= allergies[j].getAllergy().getOnSetOfReactionDesc() %>
-	Reaction: <%= allergies[j].getAllergy().getReaction() %></li>
+		href="javascript: function myFunction() {return false; }">hide</a> <b><%= allergies[j].getDescription() %></b>
+	<!--%= allergies[j].getAllergy().getTypeDesc() %--> &nbsp;Severity: <%= org.oscarehr.common.model.Allergy.getSeverityOfReactionDesc(allergies[j].getSeverityOfReaction()) %>
+	Onset: <%= org.oscarehr.common.model.Allergy.getOnSetOfReactionDesc(allergies[j].getOnsetOfReaction()) %>
+	Reaction: <%= allergies[j].getReaction() %></li>
 	<%}%>
 </ul>
 </div>
@@ -544,19 +544,19 @@ special needs <!--a class="hideShow" onclick="javascript:showHideItem('reminder'
 	onclick="javascript:showHideItem('imms');setCheckedAll();"
 	href="javascript: function myFunction() {return false; }">hide</a></div>
 <ul>
-	<%for (int i = 0; i < inject.size(); i++ ){                 
-                 ArrayList<Map<String,Object>> list = PreventionData.getPreventionData((String) inject.get(i),bean.demographicNo);                  
+	<%for (int i = 0; i < inject.size(); i++ ){
+                 ArrayList<Map<String,Object>> list = PreventionData.getPreventionData((String) inject.get(i),bean.demographicNo);
                  if ( list.size() > 0 ){%>
 	<li id="imm<%=i%>"><a class="hideShow"
 		onclick="javascript:showHideItem('imm<%=i%>')"
 		href="javascript: function myFunction() {return false; }">hide</a> <b><%=(String) inject.get(i)%></b>
 
 	<%for (int k =0 ; k < list.size(); k++){
-							Map<String,Object> a = list.get(k);              
+							Map<String,Object> a = list.get(k);
                             if (a != null && inject.contains(a.get("type")) ){%>
 	(<%=completeRefused(a.get("refused"))%>: <%=(String) a.get("prevention_date")%>)
 
-	<%}                      
+	<%}
                        }
                     %>
 	</li>
@@ -584,26 +584,26 @@ function getDataFromEnc(){
 }
 
 function putDataInTextArea(tarea) {
-    var txtarea = document.getElementById(tarea);          
+    var txtarea = document.getElementById(tarea);
     var ele = document.getElementById('editableText');
     var text = "";
-    
+
     if(document.all) {
        text = document.selection.createRange().text;
-    }else{   
+    }else{
        var selLength = txtarea.textLength;
        var selStart = txtarea.selectionStart;
-       var selEnd = txtarea.selectionEnd;        
+       var selEnd = txtarea.selectionEnd;
        //alert(selLength);
        //alert(selStart);
-       //alert(selEnd);    
+       //alert(selEnd);
        if ( selStart != selLength ){
           if (selEnd==1 || selEnd==2) selEnd=selLength;
           text = (txtarea.value).substring(selStart, selEnd);
        }
     }
     var eleVal = ele.value;
-    ele.value = eleVal + text;    
+    ele.value = eleVal + text;
 }
 
 </script>
@@ -706,15 +706,15 @@ function putDataInTextArea(tarea) {
 setCheckedAll();
 
 <% if (medsList != null){
-      for (int i =0; i < medsList.size();i++){ 
+      for (int i =0; i < medsList.size();i++){
       String pres =  (String) medsList.get(i); %>
-  addToHiddenPres('<%=pres%>');  
+  addToHiddenPres('<%=pres%>');
 <%    }
-      
+
    }   if (allergyList != null){
       for (int i =0; i < allergyList.size();i++){
         String allerg =  (String) allergyList.get(i); %>
-  addToHiddenAllergy('<%=allerg%>');  
+  addToHiddenAllergy('<%=allerg%>');
 <%    }
    }%>
 
@@ -730,7 +730,7 @@ setCheckedAll();
 
 <%!
 
-    String displayNone(String s,List l){        
+    String displayNone(String s,List l){
        String ret = "";
        if (s != null && l != null  && l.contains(s)){
            ret="display:none;";
@@ -745,13 +745,13 @@ setCheckedAll();
         }
         return st;
     }
-    
+
     String completeRefused(Object s){
         String ret = "Competed";
         String st = "";
         if ( s instanceof String){
              st = (String) s;
-        }        
+        }
         if ( ret != null && st.equalsIgnoreCase("1")){
             ret = "Refused";
         }

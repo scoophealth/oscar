@@ -1,6 +1,5 @@
 package oscar.oscarRx.pageUtil;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -10,20 +9,20 @@ import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicAllergy;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.common.dao.PartialDateDao;
+import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarRx.data.RxPatientData;
-import oscar.oscarRx.data.RxPatientData.Patient.Allergy;
 import oscar.util.DateUtils;
 
 public final class AllergyHelperBean {
 	private static Logger logger = MiscUtils.getLogger();
 	private static final PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
 
-	public static List<AllergyDisplay> getAllergiesToDisplay(Integer demographicId, Locale locale) throws SQLException {
+	public static List<AllergyDisplay> getAllergiesToDisplay(Integer demographicId, Locale locale)  {
 		ArrayList<AllergyDisplay> results = new ArrayList<AllergyDisplay>();
 
 		addLocalAllergies(demographicId, results, locale);
@@ -36,7 +35,7 @@ public final class AllergyHelperBean {
 		return (results);
 	}
 
-	private static void addLocalAllergies(Integer demographicId, ArrayList<AllergyDisplay> results, Locale locale) throws SQLException {
+	private static void addLocalAllergies(Integer demographicId, ArrayList<AllergyDisplay> results, Locale locale)  {
 		Allergy[] allergies = RxPatientData.getPatient(demographicId).getActiveAllergies();
 
 		if (allergies == null) return;
@@ -46,18 +45,18 @@ public final class AllergyHelperBean {
 
 			allergyDisplay.setId(allergy.getAllergyId());
 
-			allergyDisplay.setDescription(allergy.getAllergy().getDESCRIPTION());
-			allergyDisplay.setOnSetCode(allergy.getAllergy().getOnSetOfReaction());
-			allergyDisplay.setReaction(allergy.getAllergy().getReaction());
-			allergyDisplay.setSeverityCode(allergy.getAllergy().getSeverityOfReaction());
-			allergyDisplay.setTypeCode(allergy.getAllergy().getTYPECODE());
-			allergyDisplay.setArchived(allergy.getAllergy().getArchived());
-			
+			allergyDisplay.setDescription(allergy.getDescription());
+			allergyDisplay.setOnSetCode(allergy.getOnsetOfReaction());
+			allergyDisplay.setReaction(allergy.getReaction());
+			allergyDisplay.setSeverityCode(allergy.getSeverityOfReaction());
+			allergyDisplay.setTypeCode(allergy.getTypeCode());
+			allergyDisplay.setArchived(allergy.getArchived());
+
 			String entryDate = partialDateDao.getDatePartial(allergy.getEntryDate(), PartialDate.ALLERGIES, allergy.getAllergyId(), PartialDate.ALLERGIES_ENTRYDATE);
-			String startDate = partialDateDao.getDatePartial(allergy.getAllergy().getStartDate(), PartialDate.ALLERGIES, allergy.getAllergyId(), PartialDate.ALLERGIES_STARTDATE);
+			String startDate = partialDateDao.getDatePartial(allergy.getStartDate(), PartialDate.ALLERGIES, allergy.getAllergyId(), PartialDate.ALLERGIES_STARTDATE);
 			allergyDisplay.setEntryDate(entryDate);
 			allergyDisplay.setStartDate(startDate);
-			
+
 			results.add(allergyDisplay);
 		}
 	}
@@ -80,7 +79,7 @@ public final class AllergyHelperBean {
 				allergyDisplay.setSeverityCode(remoteAllergy.getSeverityCode());
 				allergyDisplay.setStartDate(DateUtils.formatDate(remoteAllergy.getStartDate(), locale));
 				allergyDisplay.setTypeCode(remoteAllergy.getTypeCode());
-				
+
 				results.add(allergyDisplay);
 			}
 		} catch (Exception e) {
