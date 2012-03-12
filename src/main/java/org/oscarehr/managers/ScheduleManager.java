@@ -5,12 +5,14 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
+import org.oscarehr.common.dao.AppointmentTypeDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.ScheduleDateDao;
 import org.oscarehr.common.dao.ScheduleHolidayDao;
 import org.oscarehr.common.dao.ScheduleTemplateCodeDao;
 import org.oscarehr.common.dao.ScheduleTemplateDao;
 import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.AppointmentType;
 import org.oscarehr.common.model.ScheduleDate;
 import org.oscarehr.common.model.ScheduleHoliday;
 import org.oscarehr.common.model.ScheduleTemplate;
@@ -40,6 +42,9 @@ public class ScheduleManager {
 
 	@Autowired
 	private ScheduleTemplateCodeDao scheduleTemplateCodeDao;
+
+	@Autowired
+	private AppointmentTypeDao appointmentTypeDao;
 
 	public DayWorkSchedule getDayWorkSchedule(String providerNo, Calendar date) {
 		// algorithm
@@ -113,5 +118,13 @@ public class ScheduleManager {
 		
 		// This method will not log access as the codes are not private medical data.
 		return(scheduleTemplateCodes);
+	}
+	
+	public List<AppointmentType> getAppointmentTypes()
+	{
+		List<AppointmentType> appointmentTypes=appointmentTypeDao.listAll();
+		
+		// This method will not log access as the appointment types are not private medical data.
+		return(appointmentTypes);
 	}
 }

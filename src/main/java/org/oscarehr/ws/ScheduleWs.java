@@ -6,10 +6,12 @@ import java.util.List;
 import javax.jws.WebService;
 
 import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.AppointmentType;
 import org.oscarehr.common.model.ScheduleTemplateCode;
 import org.oscarehr.managers.DayWorkSchedule;
 import org.oscarehr.managers.ScheduleManager;
 import org.oscarehr.ws.transfer_objects.AppointmentTransfer;
+import org.oscarehr.ws.transfer_objects.AppointmentTypeTransfer;
 import org.oscarehr.ws.transfer_objects.DayWorkScheduleTransfer;
 import org.oscarehr.ws.transfer_objects.ScheduleTemplateCodeTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,5 +39,11 @@ public class ScheduleWs extends AbstractWs {
 	{
 		DayWorkSchedule dayWorkSchedule=scheduleManager.getDayWorkSchedule(providerNo, date);
 		return(DayWorkScheduleTransfer.toTransfer(dayWorkSchedule));
+	}
+	
+	public AppointmentTypeTransfer[] getAppointmentTypes()
+	{
+		List<AppointmentType> appointmentTypes=scheduleManager.getAppointmentTypes();
+		return(AppointmentTypeTransfer.toTransfer(appointmentTypes));
 	}
 }
