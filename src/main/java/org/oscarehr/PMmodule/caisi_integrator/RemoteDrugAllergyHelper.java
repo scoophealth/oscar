@@ -9,9 +9,8 @@ import org.apache.log4j.Logger;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicAllergy;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicDrug;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
+import org.oscarehr.common.model.Allergy;
 import org.oscarehr.util.MiscUtils;
-
-import oscar.oscarRx.data.RxPatientData.Patient.Allergy;
 
 public class RemoteDrugAllergyHelper {
 	private static Logger logger = MiscUtils.getLogger();
@@ -32,7 +31,7 @@ public class RemoteDrugAllergyHelper {
 
 		return (atcCodes);
 	}
-	
+
 	public static ArrayList<Allergy> getRemoteAllergiesAsAllergyItems(Integer localDemographicId)
 	{
 		ArrayList<Allergy> results = new ArrayList<Allergy>();
@@ -55,11 +54,21 @@ public class RemoteDrugAllergyHelper {
 	 * These returned allergies aren't real / local allergies, they shouldn't be used for anything other than sending to drug ref for allergy checking.
 	 */
 	private static Allergy convertRemoteAllergyToLocal(CachedDemographicAllergy remoteAllergy) {
-		
+
 		Date entryDate=null;
 		if (remoteAllergy.getEntryDate()!=null) entryDate=remoteAllergy.getEntryDate().getTime();
-		
-		Allergy result= new Allergy(-1, remoteAllergy.getFacilityIdIntegerCompositePk().getCaisiItemId(), entryDate, remoteAllergy.getDescription(), remoteAllergy.getHiclSeqNo(), remoteAllergy.getHicSeqNo(), remoteAllergy.getAgcsp(), remoteAllergy.getAgccs(), remoteAllergy.getTypeCode());
-		return(result);
+
+
+		Allergy allergy = new Allergy();
+		allergy.setDemographicNo(-1);
+		allergy.setId(remoteAllergy.getFacilityIdIntegerCompositePk().getCaisiItemId());
+		allergy.setDescription( remoteAllergy.getDescription());
+		allergy.setHiclSeqno(remoteAllergy.getHiclSeqNo());
+		allergy.setHicSeqno(remoteAllergy.getHicSeqNo());
+		allergy.setAgcsp(remoteAllergy.getAgcsp());
+		allergy.setAgccs(remoteAllergy.getAgccs());
+		allergy.setTypeCode(remoteAllergy.getTypeCode());
+
+		return(allergy);
     }
 }

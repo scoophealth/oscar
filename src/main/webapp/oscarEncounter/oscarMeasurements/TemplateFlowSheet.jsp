@@ -24,7 +24,7 @@
 <oscar:oscarPropertiesCheck property="SPEC3" value="yes">
     <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="r" reverse="<%=true%>">
         "You have no right to access this page!"
-        <% 
+        <%
          LogAction.addLog((String) session.getAttribute("user"), LogConst.NORIGHT+LogConst.READ, LogConst.CON_FLOWSHEET,  temp , request.getRemoteAddr(),demographic_no);
         response.sendRedirect("../../noRights.html"); %>
     </security:oscarSec>
@@ -41,10 +41,10 @@
 <%}%>
 
 <%
-   
+
     LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_FLOWSHEET,  temp , request.getRemoteAddr(),demographic_no);
-    
-    
+
+
     int numElementsToShow = 4;
     Date sdate = null;
     Date edate = null;
@@ -53,45 +53,45 @@
             numElementsToShow = Integer.parseInt(request.getParameter("numEle"));
         }catch(Exception e){}
     }
-    
+
     if (request.getParameter("sdate") != null){
         try{
            sdate = oscar.util.UtilDateUtilities.StringToDate(request.getParameter("sdate"));
         }catch(Exception e){sdate =null;}
     }
-    
+
     if(request.getParameter("edate") != null){
         try{
            edate = oscar.util.UtilDateUtilities.StringToDate(request.getParameter("edate"));
         }catch(Exception e){edate = null;}
     }
-        
+
 
     long startTimeToGetP = System.currentTimeMillis();
 
     boolean dsProblems = false;
 
-    
+
     WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-            
+
     FlowSheetCustomizerDAO flowSheetCustomizerDAO = (FlowSheetCustomizerDAO) ctx.getBean("flowSheetCustomizerDAO");
     FlowSheetDrugDAO flowSheetDrugDAO = (FlowSheetDrugDAO) ctx.getBean("flowSheetDrugDAO");
-    
+
     List custList = flowSheetCustomizerDAO.getFlowSheetCustomizations( temp,(String) session.getAttribute("user"),demographic_no);
-    
+
     ////Start
     MeasurementTemplateFlowSheetConfig templateConfig = MeasurementTemplateFlowSheetConfig.getInstance();
 
-    
+
     MeasurementFlowSheet mFlowsheet = templateConfig.getFlowSheet(temp,custList);
-    
+
     MeasurementInfo mi = new MeasurementInfo(demographic_no);
     List<String> measurementLs = mFlowsheet.getMeasurementList();
     ArrayList<String> measurements = new ArrayList(measurementLs);
     long startTimeToGetM = System.currentTimeMillis();
-     
+
     mi.getMeasurements(measurements);
-    
+
     try{
     	mFlowsheet.getMessages(mi);
     }catch(Exception e){
@@ -100,9 +100,9 @@
 
 
     ArrayList recList = mi.getList();
-    
-    
-    
+
+
+
     mFlowsheet.sortToCurrentOrder(recList);
     StringBuffer recListBuffer = new StringBuffer();
     for(int i = 0; i < recList.size(); i++){
@@ -174,7 +174,7 @@
 }
 
 .noborder{
-    border: 0px solid #FFF;   
+    border: 0px solid #FFF;
 }
 
 
@@ -193,7 +193,7 @@ div.headPrevention a:visited { color:black; }
 </style>
 <style type="text/css" media="screen">
     .DoNotScreen{ display:none;}
-    
+
     div.headPrevention {
     position:relative;
     float:left;
@@ -241,8 +241,8 @@ div.headPrevention p {
         Rounded("div.leftBox","bottom","transparent","#EEEEFF","small border #ccccff");
 
     }
-    
-    
+
+
    function loadDifferentElements(){
        //console.log("hapy");
         var numEle = $('numEle').value;
@@ -255,18 +255,18 @@ div.headPrevention p {
             window.location = 'TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&sdate='+sdate+'&edate='+edate;
             //console.log("two");
         }else{
-            window.location = 'TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>';  
+            window.location = 'TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>';
         }
-        
+
     }
 
-    
+
     function fsPopup(width,height,url,window) {
     	<%
     		com.quatro.service.security.SecurityManager securityMgr = new com.quatro.service.security.SecurityManager();
     		if(securityMgr.hasWriteAccess("_flowsheet."+mFlowsheet.getName(),roleName$)) {
     	%>
-    	
+
     	return popup(width,height,url,window);
     	<%}%>
     }
@@ -419,7 +419,7 @@ div.recommendations li{
             <tr>
                 <td colspan="3">
                     <oscar:nameage demographicNo="<%=demographic_no%>"/>
-                    <oscar:oscarPropertiesCheck property="SPEC3" value="yes"> 
+                    <oscar:oscarPropertiesCheck property="SPEC3" value="yes">
                     <span class="DoNotPrint">
                     <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="x">
                     <a href="adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>" target="_new">Edit</a>
@@ -439,7 +439,7 @@ div.recommendations li{
              	<td>
                		<span class="DoNotPrint">
                     #Of Elements <input type="text" size="3" id="numEle"/>
-                    
+
                     Start Date <input type="text" size="10" id="flowsheetStartDate" />
                     End Date <input type="text" size="10"id="flowsheetEndDate"/>
                     <input type="button" value="go" onclick="javascript: loadDifferentElements()"/>
@@ -458,10 +458,10 @@ div.recommendations li{
 </tr>
 <tr>
 <td class="MainTableLeftColumn" valign="top">
-	<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">  
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
     <% if (recList.size() > 0){ %>
     <p><a class="DoNotPrint" href="javascript: function myFunction() {return false; }"  onclick="javascript:createAddAll(<%=demographic_no%>, '<%= URLEncoder.encode(temp,"UTF-8") %>', <%=Math.abs( "ADDTHEMALL".hashCode() ) %>)" TITLE="Add all measurements.">
-	    Add All 
+	    Add All
 	</a> </p>
     <p><a class="DoNotPrint" href="javascript: function myFunction() {return false; }"  onclick="javascript:fsPopup(760,670,'AddMeasurementData.jsp?demographic_no=<%=demographic_no%><%=recListBuffer.toString()%>&amp;template=<%=temp%>','addMeasurementData<%=Math.abs( "ADDTHEMALL".hashCode() ) %>')" TITLE="Add all overdue measurements.">
         Add Overdue
@@ -475,19 +475,19 @@ div.recommendations li{
         <div class="wrapper" id="dxFullListing"  >
             <ul>
             <%
-       
+
                 dxResearchBeanHandler dxResearchBeanHand = new dxResearchBeanHandler(demographic_no);
                 Vector patientDx = dxResearchBeanHand.getDxResearchBeanVector();
-   
+
                 int lim =15;
                 for ( int i = 0; i < patientDx.size(); i++){
                     dxResearchBean code = (dxResearchBean)patientDx.get(i);  // code.getEnd_date() code.getStart_date()
                     String desc = code.getDescription();
                     desc = org.apache.commons.lang.StringUtils.abbreviate(desc,lim) ;
                     HashMap dxMap = flowSheetDrugDAO.getFlowSheetDxMap( temp, demographic_no);
-                    
+
                     String pDx = (String) dxMap.get(code.getType()+""+code.getDxSearchCode());
-      
+
             %>
             <li>
                 <oscar:oscarPropertiesCheck property="SPEC3" value="yes">
@@ -496,7 +496,7 @@ div.recommendations li{
                     <%}else{%>
                      <span title="<%=code.getDescription()%>"  style="background-color: yellow;">
                     <%}%>
-                </oscar:oscarPropertiesCheck>    
+                </oscar:oscarPropertiesCheck>
                 - <%=desc%>
                 <oscar:oscarPropertiesCheck property="SPEC3" value="yes">
                     <% if (pDx == null){ %>
@@ -530,10 +530,10 @@ div.recommendations li{
                         String styleColor = "";
                         if(arr[i].isCurrent()){
                     %>
-                    <li title="<%=rxD%> - <%=rxP%>"> 
+                    <li title="<%=rxD%> - <%=rxP%>">
                         <oscar:oscarPropertiesCheck property="SPEC3" value="yes">
                             <a href="FlowSheetDrugAction.do?method=save&flowsheet=<%=temp%>&demographic=<%=demographic_no%>&atcCode=<%=arr[i].getAtcCode()%>">
-                            </oscar:oscarPropertiesCheck>    
+                            </oscar:oscarPropertiesCheck>
                             - <%= org.apache.commons.lang.StringUtils.abbreviate(rxP, 12)%>
                             <oscar:oscarPropertiesCheck property="SPEC3" value="yes">
                             </a>
@@ -548,27 +548,27 @@ div.recommendations li{
 
             </div>
         </div>
-        
-        
-        
+
+
+
          <div class="leftBox">
             <h3>&nbsp;Current Patient Allergy List  <a class="DoNotPrint" href="#" onclick="Element.toggle('allergFullListing'); return false;" style="font-size:x-small;" >show/hide</a></h3>
             <div class="wrapper" id="allergFullListing"  >
 
-                <% 
-			oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies;
+                <%
+			org.oscarehr.common.model.Allergy[] allergies;
                     allergies = RxPatientData.getPatient(Integer.parseInt(demographic_no)).getActiveAllergies();
 
 // oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies;
 //                    allergies = oscar.oscarRx.data.RxPatientData().getPatient(Integer.parseInt(demographic_no)).getAllergies();
-                    
+
                     if (allergies.length > 0){%>
                 <ul>
                     <%for (int i = 0; i < allergies.length; i++){
                         String rxD = ""+allergies[i].getEntryDate();
-                        String rxP = allergies[i].getAllergy().getDESCRIPTION();
+                        String rxP = allergies[i].getDescription();
                     %>
-                    <li title="<%=rxD%> - <%=rxP%>"> 
+                    <li title="<%=rxD%> - <%=rxP%>">
                             - <%= org.apache.commons.lang.StringUtils.abbreviate(rxP, 12)%>
                     </li>
                     <%}%>
@@ -585,7 +585,7 @@ div.recommendations li{
 </div>
 </td>
 
-<td valign="top" class="MainTableRightColumn">    
+<td valign="top" class="MainTableRightColumn">
 <% if (warnings.size() > 0 || recomendations.size() > 0  || dsProblems) { %>
 <div class="recommendations">
     <span style="font-size:larger;"><%=flowSheet%> Recommendations</span>
@@ -615,13 +615,13 @@ div.recommendations li{
 	//set add link array
 	String[] addAllLink = new String[measurements.size()];
 	int mCount=0;
-	
+
     EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();
     long startTimeToLoopAndPrint = System.currentTimeMillis();
     for (String measure:measurements){
         Map h2 = mFlowsheet.getMeasurementFlowSheetInfo(measure);
         FlowSheetItem item =  mFlowsheet.getFlowSheetItem(measure);
-        
+
         String hidden= "";
         if (item.isHide()){
             hidden= "display:none;";
@@ -634,9 +634,9 @@ div.recommendations li{
             if(mtypeBean!=null) {
                 h.put("name",mtypeBean.getTypeDisplayName());
                 h.put("desc",mtypeBean.getTypeDesc());
-                
-                
-                
+
+
+
             }
             String prevName = (String) h.get("name");
             ArrayList<EctMeasurementsDataBean> alist = mi.getMeasurementData(measure);
@@ -663,12 +663,12 @@ div.recommendations li{
                <img class="DoNotPrint" src="img/chart.gif" alt="Plot"/>
             <%}%>
            <%}%>
-           
+
 		   <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
             <a class="noborder" href="javascript: function myFunction() {return false; }"  onclick="javascript:fsPopup(760,670,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
            </security:oscarSec>
                 <span  class="noborder" style="font-weight:bold;"><%=h2.get("display_name")%></span>
-                
+
            <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
             </a>
 			</security:oscarSec>
@@ -692,7 +692,7 @@ div.recommendations li{
                 com ="";
             }
             String hider = "";
-            
+
             int num =numElementsToShow;
             if (request.getParameter("show") !=null && request.getParameter("show").equals("lastOnly")){
                 num =1;
@@ -710,11 +710,11 @@ div.recommendations li{
             if ( mdb.getIndicationColour() != null ){
                 indColour = "style=\"background-color:"+mFlowsheet.getIndicatorColour(mdb.getIndicationColour())+"\"";
             }
-            
+
             if (request.getParameter("show") !=null && request.getParameter("show").equals("outOfRange") && indColour.equals("")){
                 hider = "style=\"display:none;\"";
             }
-            
+
     %>
     <div class="preventionProcedure" <%=hider%>  onclick="javascript:fsPopup(760,670,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData')" >
         <p <%=indColour%> title="fade=[on] header=[<%=hdata.get("age")%> -- Date:<%=hdata.get("prevention_date")%>] body=[<%=com%>&lt;br/&gt;Entered By:<%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%>]"><%=h2.get("value_name")%>: <%=hdata.get("age")%> <br/>
@@ -730,7 +730,7 @@ div.recommendations li{
 	//creating add all link array
 	addAllLink[mCount]=measure;
 	mCount++;
-        
+
     }else{
     String prevType = (String) h2.get("prevention_type");
     long startPrevType = System.currentTimeMillis();
@@ -777,17 +777,17 @@ div.recommendations li{
 	}
 
 }
-%> 
-   
+%>
+
 <script language="javascript">
 function createAddAll(d,t,h){
-	
+
 	//most likely will remove this and create qs above to account for prevention
 	var newMtype;
 	newMtype='<%for(int i=0;i<mCount;i++){
-   				out.print("&measurement="+ addAllLink[i]);	
+   				out.print("&measurement="+ addAllLink[i]);
    				}%>';
-	
+
 	return fsPopup(760,670,'AddMeasurementData.jsp?demographic_no='+d+'&template='+t+newMtype,'addMeasurementData'+h);
 }
 </script>
@@ -795,11 +795,11 @@ function createAddAll(d,t,h){
 <%
     oscar.oscarRx.data.RxPrescriptionData prescriptData = new oscar.oscarRx.data.RxPrescriptionData();
     oscar.oscarRx.data.RxPrescriptionData.Prescription [] arr = {};
-    
+
     List<FlowSheetDrug> atcCodes = flowSheetDrugDAO.getFlowSheetDrugs(temp,demographic_no);
     for(FlowSheetDrug fsd : atcCodes){
-            arr = prescriptData.getPrescriptionScriptsByPatientATC(Integer.parseInt(demographic_no),fsd.getAtcCode());   
-     
+            arr = prescriptData.getPrescriptionScriptsByPatientATC(Integer.parseInt(demographic_no),fsd.getAtcCode());
+
 %>
 
 <div class="preventionSection"  >
@@ -886,13 +886,13 @@ function createAddAll(d,t,h){
         }
         return ret;
     }
-    
+
     public void printOutStringLists(List<String> measurements){
        for (String measurement : measurements){
-          
+
        }
     }
-    
-    
-    
+
+
+
 %>

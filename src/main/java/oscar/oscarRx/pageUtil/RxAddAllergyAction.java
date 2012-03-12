@@ -1,27 +1,27 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
-  
+
 package oscar.oscarRx.pageUtil;
 
 import java.io.IOException;
@@ -34,6 +34,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.util.MiscUtils;
 
@@ -42,44 +43,32 @@ import oscar.log.LogConst;
 import oscar.oscarRx.data.RxAllergyData;
 import oscar.oscarRx.data.RxDrugData;
 import oscar.oscarRx.data.RxPatientData;
-import oscar.oscarRx.data.RxPatientData.Patient.Allergy;
 
 
 public final class RxAddAllergyAction extends Action {
 
-    public ActionForward execute(ActionMapping mapping,
-				 ActionForm form,
-				 HttpServletRequest request,
-				 HttpServletResponse response)
-	throws IOException, ServletException {
-                        
-            // Extract attributes we will need
-            
-
-            // Setup variables
-            
-            // Add allergy
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
             int id = Integer.parseInt(request.getParameter("ID"));
-            
+
             String name = request.getParameter("name");
             String type = request.getParameter("type");
             String description = request.getParameter("reactionDescription");
-            
+
             String startDate = request.getParameter("startDate");
             String ageOfOnset = request.getParameter("ageOfOnset");
             String severityOfReaction = request.getParameter("severityOfReaction");
             String onSetOfReaction = request.getParameter("onSetOfReaction");
             String lifeStage = request.getParameter("lifeStage");
-	    
+
             RxPatientData.Patient patient = (RxPatientData.Patient)request.getSession().getAttribute("Patient");
             RxAllergyData ald = new RxAllergyData();
-            RxAllergyData.Allergy allergy = ald.getAllergy();
-            allergy.setPickID(id);
-            allergy.setDESCRIPTION(name);
-            allergy.setTYPECODE(Integer.parseInt(type));
+            Allergy allergy = new Allergy();
+            allergy.setDrugrefId(String.valueOf(id));
+            allergy.setDescription(name);
+            allergy.setTypeCode(Integer.parseInt(type));
             allergy.setReaction(description);
-	    
+
 	    if (startDate.length()>=8 && getCharOccur(startDate,'-')==2) {
 	    	allergy.setStartDate(oscar.oscarRx.util.RxUtil.StringToDate(startDate, "yyyy-MM-dd"));
 	    } else if (startDate.length()>=6 && getCharOccur(startDate,'-')>=1) {
@@ -91,27 +80,30 @@ public final class RxAddAllergyAction extends Action {
 	    }
             allergy.setAgeOfOnset(ageOfOnset);
             allergy.setSeverityOfReaction(severityOfReaction);
-            allergy.setOnSetOfReaction(onSetOfReaction);
+            allergy.setOnsetOfReaction(onSetOfReaction);
             allergy.setLifeStage(lifeStage);
-            
-            if (type != null && type.equals("13")){          
+
+            if (type != null && type.equals("13")){
                 RxDrugData drugData = new RxDrugData();
                 try{
-                RxDrugData.DrugMonograph f = drugData.getDrug(""+id);      
+                RxDrugData.DrugMonograph f = drugData.getDrug(""+id);
                 allergy.setRegionalIdentifier(f.regionalIdentifier);
                 }catch(Exception e){
                     MiscUtils.getLogger().error("Error", e);
                 }
             }
-            
-            Allergy allerg = patient.addAllergy(oscar.oscarRx.util.RxUtil.Today(), allergy);      
-            
+
+            allergy.setDemographicNo(patient.getDemographicNo());
+            allergy.setArchived("0");
+
+            Allergy allerg = patient.addAllergy(oscar.oscarRx.util.RxUtil.Today(), allergy);
+
             String ip = request.getRemoteAddr();
-            LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_ALLERGY, ""+allerg.getAllergyId() , ip,""+patient.getDemographicNo(), allerg.getAllergy().getAuditString());
+            LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_ALLERGY, ""+allerg.getAllergyId() , ip,""+patient.getDemographicNo(), allergy.getAuditString());
 
             return (mapping.findForward("success"));
     }
-    
+
     private int getCharOccur(String str, char ch) {
 	int occurence=0, from=0;
 	while (str.indexOf(ch,from)>=0) {

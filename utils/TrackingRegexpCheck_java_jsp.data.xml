@@ -196,7 +196,6 @@
         <ViolationValue>/src/main/java/oscar/billing/popup/AtividadeSaudeForm.java:this.atividades = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/billing/popup/CidForm.java:this.cid = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/billing/popup/ProcedimentoForm.java:this.procedimentos = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:ArrayList doctypes = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:ArrayList modules = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:ArrayList&lt;EDoc&gt; list = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:return new ArrayList();</ViolationValue>
@@ -2091,8 +2090,6 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctViewAttachmentAction.java:rs = DBHandler.GetSQL("SELECT m.thesubject, m.theime, m.thedate, m.attachment, m.themessage, m.sentBy, ocl.locationDesc  "</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctWindowSizes.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/search/data/EctSearchDemographicData.java:for(rs = DBHandler.GetSQL(sql); rs.next(); vector.add(demographicData))</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarFax/client/FaxClientLog.java:DBHandler.RunSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarFax/client/FaxClientLog.java:ResultSet rs = DBHandler.GetSQL("SELECT LAST_INSERT_ID() ");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/FileUploadCheck.java:DBHandler.RunSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/FileUploadCheck.java:ResultSet rs = DBHandler.GetSQL("SELECT LAST_INSERT_ID() ");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/FileUploadCheck.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -2340,8 +2337,6 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:b = DBHandler.RunSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:boolean b = DBHandler.RunSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL("SELECT * FROM allergies WHERE demographic_no = '" + getDemographicNo() + "' ORDER BY archived, CASE severity_of_reaction when 4 then severity_of_reaction end asc, CASE severity_of_reaction when  3 then severity_of_reaction end desc, CASE severity_of_reaction when 2 then severity_of_reaction end desc");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL("SELECT * FROM allergies WHERE demographic_no = '" + getDemographicNo() + "' and archived=0 ORDER BY position,severity_of_reaction");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL("SELECT * FROM diseases WHERE demographic_no = '" + getDemographicNo() + "'");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL("SELECT demographic_no, last_name, first_name, sex, year_of_birth, " + "month_of_birth, date_of_birth, address, city, province, postal, phone " + "FROM demographic WHERE last_name LIKE '" + surname + "%' AND first_name LIKE '" + firstName + "%'");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL("SELECT demographic_no, last_name, first_name, sex, year_of_birth, " + "month_of_birth, date_of_birth, address, city, province, postal, phone,hin " + "FROM demographic WHERE demographic_no = " + demographicNo);</ViolationValue>
@@ -2434,7 +2429,6 @@
         <ViolationValue>/src/main/webapp/admin/provideraddarecord.jsp:param2[0]= new DBPreparedHandlerParam(MyDateFormat.getSysDate(request.getParameter("dob")));</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:DBPreparedHandler dbObj = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:DBPreparedHandlerParam[] param =new DBPreparedHandlerParam[21];</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:DBPreparedHandlerParam[] paramArch =new DBPreparedHandlerParam[] {new DBPreparedHandlerParam(request.getParameter("provider_no"))};</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:param[0]=new DBPreparedHandlerParam(request.getParameter("last_name"));</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:param[10]=new DBPreparedHandlerParam(request.getParameter("email"));</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:param[11]=new DBPreparedHandlerParam(request.getParameter("ohip_no"));</ViolationValue>
@@ -2621,9 +2615,6 @@
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/ClientManagerAction.java:ArrayList&lt;Hashtable&gt; relList = demoRelation.getDemographicRelationshipsWithNamePhone(demographicNo, facilityId);</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/ClientManagerAction.java:for (Hashtable h : relList) {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/ClientManagerAction.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/casemgmt/print/OscarChartPrinter.java:ArrayList&lt;Hashtable&lt;String,String&gt;&gt; demoR = demoRel.getDemographicRelationships(String.valueOf(demographic.getDemographicNo()));</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/casemgmt/print/OscarChartPrinter.java:Hashtable&lt;String,String&gt; r = (Hashtable&lt;String,String&gt;) demoR.get(j);</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/casemgmt/print/OscarChartPrinter.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/web/CaseManagementViewAction.java:Vector v = OscarRoleObjectPrivilege.getPrivilegeProp(objectName);</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/web/CaseManagementViewAction.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/web/CaseManagementViewAction.java:return OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1));</ViolationValue>
@@ -3832,11 +3823,11 @@
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxResearchBeanHandler.java:return dxResearchBeanVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxDrugData.java://Vector vec = drugRef.list_drugs(searchStr,hashtable);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxDrugData.java:Hashtable h = (Hashtable) comps.get(i);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/data/RxDrugData.java:Hashtable h = (Hashtable) d.getDrugForm(pKey);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/data/RxDrugData.java:Hashtable h = (Hashtable) d.getGenericName(""+pKey);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/data/RxDrugData.java:Hashtable h = (Hashtable) d.getGenericName(pKey);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxDrugData.java:Hashtable h = (Hashtable) v.get(i);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxDrugData.java:Hashtable h = (Hashtable) vec.get(i);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/data/RxDrugData.java:Hashtable h = d.getDrugForm(pKey);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/data/RxDrugData.java:Hashtable h = d.getGenericName(""+pKey);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/data/RxDrugData.java:Hashtable h = d.getGenericName(pKey);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxDrugData.java:Hashtable h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxDrugData.java:Hashtable hashObject  = (Hashtable) res.get(0);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxDrugData.java:Hashtable retHash = new Hashtable();</ViolationValue>
@@ -3906,7 +3897,7 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:log2.debug(s+" "+((Hashtable) obj).get(s)+" "+((Hashtable) obj).get(s).getClass().getName());</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:public Object callWebserviceLite(String procedureName, Vector params){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:public Vector getMyDrugrefInfo(String command, Vector drugs,String myDrugrefId) throws Exception {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:public Vector getMyDrugrefInfo(String command, Vector drugs,String myDrugrefId) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:public static void removeNullFromVector(Vector v){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:removeNullFromVector(drugs);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:vec = (Vector) holbrook;</ViolationValue>
@@ -4313,7 +4304,6 @@
         <ViolationValue>/src/main/webapp/decision/antenatal/antenatalplanner.jsp:tt = new StringBuffer().append(e.nextElement());</ViolationValue>
         <ViolationValue>/src/main/webapp/decision/antenatal/antenatalplannerprint.jsp:StringBuffer tt;</ViolationValue>
         <ViolationValue>/src/main/webapp/decision/antenatal/antenatalplannerprint.jsp:tt = new StringBuffer().append(e.nextElement());</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/AddAlternateContact.jsp:Hashtable h = (Hashtable) list.get(i);</ViolationValue>
         <ViolationValue>/src/main/webapp/demographic/demographicaddarecordhtm.jsp:Vector vecRef = new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/demographic/demographiceditdemographic.jsp:Hashtable demoExt = ext.getAllValuesForDemo(demographic_no);</ViolationValue>
         <ViolationValue>/src/main/webapp/demographic/demographiceditdemographic.jsp:Hashtable relHash = (Hashtable) relList.get(reCounter);</ViolationValue>
@@ -4596,9 +4586,9 @@
         <ViolationValue>/src/main/webapp/oscarRx/BulletinDisplayMyD.jsp:vec = (Vector) obj;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/BulletinDisplayMyD.jsp:}else if(obj instanceof Hashtable){</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/ChooseAllergy.jsp:Hashtable drugClassHash = (Hashtable) request.getAttribute("drugClasses");</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarRx/ChooseAllergy.jsp:java.util.Vector vect = (Vector) drugClassHash.get(""+allergy.getPickID());</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarRx/ChooseAllergy.jsp:java.util.Vector vect = (Vector) drugClassHash.get(""+allergy.getDrugrefId());</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/ChooseAllergy2.jsp:Hashtable drugClassHash = (Hashtable) request.getAttribute("drugClasses");</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarRx/ChooseAllergy2.jsp:java.util.Vector vect = (Vector) drugClassHash.get(""+allergy.getPickID());</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarRx/ChooseAllergy2.jsp:java.util.Vector vect = (Vector) drugClassHash.get(""+allergy.getDrugrefId());</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/HsfoPreview.jsp:StringBuffer strRxNoNewLines = new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/InteractionDisplay.jsp:Hashtable h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/InteractionDisplay2.jsp:Hashtable h = new Hashtable();</ViolationValue>

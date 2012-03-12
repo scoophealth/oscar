@@ -21,8 +21,8 @@ OscarProperties props = OscarProperties.getInstance();
 
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-    
-    PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao"); 
+
+    PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
 %>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r"
 	reverse="<%=true%>">
@@ -124,8 +124,8 @@ table.allergy_table td{
 	border-top: none;
 	border-left: none;
 	border-right: none;
-	
-	empty-cells: show;	
+
+	empty-cells: show;
 }
 
 
@@ -144,7 +144,7 @@ padding-right:6;
 
 
 <script type="text/javascript">
-    function isEmpty(){  
+    function isEmpty(){
         if (document.RxSearchAllergyForm.searchString.value.length == 0){
             alert("Search Field is Empty");
             document.RxSearchAllergyForm.searchString.focus();
@@ -152,7 +152,7 @@ padding-right:6;
         }
         return true;
     }
-    
+
     function addCustomAllergy(){
         var name = document.getElementById('searchString').value;
         if(isEmpty() == true){
@@ -160,17 +160,17 @@ padding-right:6;
             window.location="addReaction2.do?ID=0&type=0&name="+name;
         }
     }
-    
-    
+
+
     function show_Search_Criteria(){
     	var tbl_as = document.getElementById("advancedSearch");
-    	
+
     	if (tbl_as.style.display == '') {
     		tbl_as.style.display = 'none';
-    	}else{ 
+    	}else{
     		tbl_as.style.display = '';
     	}
-    	
+
     }
 </script>
 
@@ -227,46 +227,46 @@ padding-right:6;
 				<td>
 				<div class="DivContentSectionHead">
 				<bean:message key="EditAllergies.section2Title" />
-								
-				| <span class="view_menu">View: 
-				
+
+				| <span class="view_menu">View:
+
 				<%
-					 				
+
 					 String demoNo=request.getParameter("demographicNo");
-					 
+
 					 if(demoNo==null) {
 						 demoNo = (String)session.getAttribute("demographicNo");
 					 }else{
 						 session.setAttribute("demographicNo", demoNo);
 					 }
-				     
+
 					 String strView=request.getParameter("view");
-					
-					 String[] navArray={"Active","All","Inactive"};	
-				
+
+					 String[] navArray={"Active","All","Inactive"};
+
 					 int i=0;
 					 for(i=0;i<navArray.length;i++)
-					 { 
-						
+					 {
+
 						if( (strView!=null && strView.equals(navArray[i]) || ( strView==null && i==0 ) )){
 
-							out.print(" <span class='view_selected'>"+navArray[i]+"</span>");		
-						
-							
+							out.print(" <span class='view_selected'>"+navArray[i]+"</span>");
+
+
 						}else{
 							out.print("<span class='view_menu'><a href='showAllergy.do?demographicNo="+demoNo+"&view="+navArray[i]+"'>");
 								out.print(navArray[i]);
-							out.print("</a></span>");	
+							out.print("</a></span>");
 						}
 					 }
 					 //1 mild 2 moderate 3 severe 4 unknown
-					 
+
 					 String[] ColourCodesArray=new String[5];
 					 ColourCodesArray[1]="#F5F5F5"; // Mild Was set to yellow (#FFFF33) SJHH requested not to flag mild
 					 ColourCodesArray[2]="#FF6600"; // Moderate
 					 ColourCodesArray[3]="#CC0000"; // Severe
 					 ColourCodesArray[4]="#E0E0E0"; // unknown
-					
+
 					 String allergy_colour_codes = "<table class='allergy_legend' cellspacing='0'><tr><td><b>Legend:</b></td> <td > <table class='colour_codes' bgcolor='"+ColourCodesArray[1]+"'><td> </td></table></td> <td >Mild</td> <td > <table class='colour_codes' bgcolor='"+ColourCodesArray[2]+"'><td> </td></table></td> <td >Moderate</td><td > <table class='colour_codes' bgcolor='"+ColourCodesArray[3]+"'><td> </td></table></td> <td >Severe</td> </tr></table>";
 				%>
 				</span>
@@ -275,12 +275,12 @@ padding-right:6;
                   	  {
 							PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
                   		  	boolean enabledMyOscarButton=MyOscarUtils.isMyOscarSendButtonEnabled(auth, Integer.valueOf(demoNo));
-							if (enabledMyOscarButton) 
+							if (enabledMyOscarButton)
 							{
 								String sendDataPath = request.getContextPath() + "/phr/send_medicaldata_to_myoscar.jsp?"
 														+ "demographicId=" + demoNo + "&"
 														+ "medicalDataType=Allergies" + "&"
-														+ "parentPage=" + request.getRequestURI(); 
+														+ "parentPage=" + request.getRequestURI();
 								%>
 									| <a href="<%=sendDataPath%>"><%=LocaleUtils.getMessage(request, "SendToMyOscar")%></a>
 								<%
@@ -292,10 +292,10 @@ padding-right:6;
 								<%
 							}
                   	  }
-             	%> 
+             	%>
 				</div>
-					
-					
+
+
 				</td>
 			</tr>
 			<tr>
@@ -305,11 +305,11 @@ padding-right:6;
 						<td width="100%">
 						<%=allergy_colour_codes%>
 						<div class="Step1Text" style="width: 830px;">
-						
-						                                                                          <!-- frame="below" and rules="all" 
-						                                                                          are here so the browser displays 
-						                                                                          cells that are empty so the bottom 
-						                                                                          border appears -->                   
+
+						                                                                          <!-- frame="below" and rules="all"
+						                                                                          are here so the browser displays
+						                                                                          cells that are empty so the bottom
+						                                                                          border appears -->
 						<table width="100%" cellpadding="3" cellspacing="0" class="allergy_table" frame="below" rules="all">
 							<tr>
 								<td><b>Status</b></td>
@@ -320,11 +320,11 @@ padding-right:6;
 								<td><b>Onset of Reaction</b></td>
 								<td><b>Reaction</b></td>
 								<td><b>Start Date</b></td>
-								<td><b>Life Stage</b></td>								
+								<td><b>Life Stage</b></td>
 								<td><img src="../images/notes.gif" border="0" width="10" height="12" alt="Annotation"></td>
 								<td><b>Action</b></td>
-							</tr>					
-							<% 
+							</tr>
+							<%
 							String strArchived;
 							int intArchived=0;
 							String labelStatus;
@@ -335,42 +335,42 @@ padding-right:6;
 							String strSOR;
 							int intSOR;
 							%>
-									
+
 							<logic:iterate id="allergy"
-								type="oscar.oscarRx.data.RxPatientData.Patient.Allergy"
+								type="org.oscarehr.common.model.Allergy"
 								name="patient" property="allergies">
-								
+
 								<%
-								
+
 								String title = "";
-								if(allergy.getAllergy().getRegionalIdentifier() != null && !allergy.getAllergy().getRegionalIdentifier().trim().equalsIgnoreCase("null") && !allergy.getAllergy().getRegionalIdentifier().trim().equals("")){
-									 title=  " title=\"Din: "+allergy.getAllergy().getRegionalIdentifier()+"\" ";												 
+								if(allergy.getRegionalIdentifier() != null && !allergy.getRegionalIdentifier().trim().equalsIgnoreCase("null") && !allergy.getRegionalIdentifier().trim().equals("")){
+									 title=  " title=\"Din: "+allergy.getRegionalIdentifier()+"\" ";
 								}
-								
+
 								boolean filterOut=false;
-								strArchived=allergy.getAllergy().getArchived();
-								
+								strArchived=allergy.getArchived();
+
 								try
 								{
 									intArchived = Integer.parseInt(strArchived);
-									
+
 									if(bean.getView().equals("Active") && intArchived == 1) {
 										filterOut=true;
 									}
-									
+
 									if(bean.getView().equals("Inactive") && intArchived == 0) {
 										filterOut=true;
-									}									
+									}
 								}
 								catch (Exception e)
 								{
 									// that's okay , most likely the value is not set so we don't know, leave blank
 								}
-								
-								strSOR=allergy.getAllergy().getSeverityOfReaction();
+
+								strSOR=allergy.getSeverityOfReaction();
 							    intSOR = Integer.parseInt(strSOR);
 							    String sevColour;
-							    								
+
 									if(intArchived==1){
 										//if allergy is set as archived
 										labelStatus="Inactive";
@@ -378,7 +378,7 @@ padding-right:6;
 										labelConfirmAction="Active";
 										actionPath="activate";
 										trColour="#C0C0C0";
-										
+
 										sevColour="#C0C0C0"; //clearing severity bgcolor
 									}else{
 										labelStatus="Active";
@@ -389,28 +389,28 @@ padding-right:6;
 										trColour="#E0E0E0";
 										sevColour=ColourCodesArray[intSOR];
 									}
-													
-									
+
+
 									if(!filterOut) {
 										String entryDate = partialDateDao.getDatePartial(allergy.getEntryDate(), PartialDate.ALLERGIES, allergy.getAllergyId(), PartialDate.ALLERGIES_ENTRYDATE);
-										String startDate = partialDateDao.getDatePartial(allergy.getAllergy().getStartDate(), PartialDate.ALLERGIES, allergy.getAllergyId(), PartialDate.ALLERGIES_STARTDATE);
+										String startDate = partialDateDao.getDatePartial(allergy.getStartDate(), PartialDate.ALLERGIES, allergy.getAllergyId(), PartialDate.ALLERGIES_STARTDATE);
 								%>
-								
+
 								<tr bgcolor="<%=trColour%>">
 									<td><%=labelStatus%></td>
 									<td><%=entryDate==null ? "" : entryDate %></td>
-									<td <%=title%> ><bean:write name="allergy" property="allergy.DESCRIPTION" /></td>
-									<td><bean:write name="allergy" property="allergy.typeDesc" /></td>
-									<td bgcolor="<%=sevColour%>"><bean:write name="allergy" property="allergy.severityOfReactionDesc" /></td>
-									<td><bean:write name="allergy" property="allergy.onSetOfReactionDesc" /></td>
-									<td><bean:write name="allergy" property="allergy.reaction" /></td>
+									<td <%=title%> ><bean:write name="allergy" property="description" /></td>
+									<td><bean:write name="allergy" property="typeDesc" /></td>
+									<td bgcolor="<%=sevColour%>"><bean:write name="allergy" property="severityOfReactionDesc" /></td>
+									<td><bean:write name="allergy" property="onSetOfReactionDesc" /></td>
+									<td><bean:write name="allergy" property="reaction" /></td>
 									<td><%=startDate==null ? "" : startDate %></td>
-									<td><bean:write name="allergy" property="allergy.lifeStageDesc"/> </td>
+									<td><bean:write name="allergy" property="lifeStageDesc"/> </td>
 									<%
 										CaseManagementManager cmm = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
 										@SuppressWarnings("unchecked")
 										List<CaseManagementNoteLink> existingAnnots = cmm.getLinkByTableId(org.oscarehr.casemgmt.model.CaseManagementNoteLink.ALLERGIES,Long.valueOf(allergy.getAllergyId()));
-									%>									
+									%>
 									<td>
 										<%
 											if (!allergy.isIntegratorResult())
@@ -421,7 +421,7 @@ padding-right:6;
 														<img src="../images/filledNotes.gif" border="0"/>
 														<% } else { %>
 														<img src="../images/notes.gif" border="0">
-														<% } %>											
+														<% } %>
 													</a>
 												<%
 											}
@@ -431,13 +431,13 @@ padding-right:6;
 									<%
 										if(!allergy.isIntegratorResult() && securityManager.hasDeleteAccess("_allergies",roleName$)) {
 									%>
-									<a href="deleteAllergy.do?ID=<%= String.valueOf(allergy.getAllergyId()) %>&demographicNo=<%=demoNo %>&action=<%=actionPath %>" onClick="return confirm('Are you sure you want to set the allergy <bean:write name="allergy" property="allergy.DESCRIPTION" /> to <%=labelConfirmAction%>?');"><%=labelAction%></a>
+									<a href="deleteAllergy.do?ID=<%= String.valueOf(allergy.getAllergyId()) %>&demographicNo=<%=demoNo %>&action=<%=actionPath %>" onClick="return confirm('Are you sure you want to set the allergy <bean:write name="allergy" property="description" /> to <%=labelConfirmAction%>?');"><%=labelAction%></a>
 									<% } %>
 									</td>
 								</tr>
 								<% } %>
 							</logic:iterate>
-							
+
 						</table>
 						</div>
 						<%=allergy_colour_codes%>
@@ -446,9 +446,9 @@ padding-right:6;
 				</table>
 				</td>
 			</tr>
-			
+
 			<%if(securityManager.hasWriteAccess("_allergies",roleName$)) {%>
-			<tr> 
+			<tr>
 				<td>
 				<div class="DivContentSectionHead"><bean:message
 					key="EditAllergies.section3Title" /></div>
@@ -467,24 +467,24 @@ padding-right:6;
 						<tr>
 							<td><html:submit property="submit" value="Search"
 								styleClass="ControlPushButton" />
-								
+
 								<input type=button class="ControlPushButton"
 								onclick="javascript:document.forms.RxSearchAllergyForm.searchString.value='';document.forms.RxSearchAllergyForm.searchString.focus();"
 								value="Reset" />
-                            
-                               <input type=button class="ControlPushButton" onclick="javascript:addCustomAllergy();" value="Custom Allergy" />                                                                       
-                           <% 
+
+                               <input type=button class="ControlPushButton" onclick="javascript:addCustomAllergy();" value="Custom Allergy" />
+                           <%
                            String shPref;
                            String showClose;
                            if (props.getProperty("ALLERGIES_SIMPLE_SEARCH", "").equals("1")) { %>
                            		<a href="#" onclick="show_Search_Criteria();">Advanced Search</a>
                            <%
-                            
-                            shPref="display:none";	 
+
+                            shPref="display:none";
                             showClose="<a href='#' onclick='show_Search_Criteria();'>Close [x]</a>";
                             }else{
-                            	
-                            shPref="";	
+
+                            shPref="";
                             showClose="";
                             }
                            %>
@@ -492,12 +492,12 @@ padding-right:6;
 						</tr>
 					</table>
                       &nbsp;
-                      
-                      <% 
 
-                      
+                      <%
+
+
                       %>
-                      
+
                       <table bgcolor="#F5F5F5" cellpadding="3" id="advancedSearch" style="<%=shPref%>">
 						<tr>
 							<td colspan="3">Search the following categories: <i>(Listed
@@ -522,7 +522,7 @@ padding-right:6;
                                         frm.type4.checked = true;
                                         //frm.type5.checked = true;
                                     }
-                                    
+
                                     function initialTypeSelect(){
                                         var frm = document.forms.RxSearchAllergyForm;
 
@@ -551,7 +551,7 @@ padding-right:6;
 								value="Clear All" /></td>
 						</tr>
 					</table>
-					
+
 				</html:form> <br>
 				<br>
 				<%

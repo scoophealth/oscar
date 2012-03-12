@@ -1169,11 +1169,11 @@ function grabEnterGetTemplate(event){
 	<tr>
 		<td class="hidePrint" bgcolor="#003399"
 			style="width: auto; border-right: 2px solid #A9A9A9; height: 34px;">
-		
+
 		<div class="Title">&nbsp;<bean:message
 			key="oscarEncounter.Index.msgEncounter" />&nbsp;&nbsp; <%=famDocName%>&nbsp;<%=famDocSurname%>
 		</div>
-		
+
 		<div class="Title" style="margin: 0 auto; text-align: center"><a
 			href="javascript: function myFunction() {return false; }"
 			title="<bean:message key="oscarEncounter.Index.calculators"/>"
@@ -1202,16 +1202,16 @@ function grabEnterGetTemplate(event){
 					onClick="popupPage(700,1000,'<%=winName%>','<%=url%>'); return false;"
 					title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><%=bean.patientLastName %>,
 				<%=bean.patientFirstName%></a>&nbsp;<%=bean.patientSex%> <%=bean.patientAge%>
-				
+
 				<a
 					href="javascript:popupPage(400,850,'ApptHist','../demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&last_name=<%=bean.patientLastName%>&first_name=<%=bean.patientFirstName%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25')"
 					style="font-size: 11px; text-decoration: none;"
 					title="Click to see appointment history"><span
 					style="margin-left: 20px;">Next Appt: <oscar:nextAppt
 					demographicNo="<%=bean.demographicNo%>" /></span></a>
-		
+
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				
+
 				<form style="display: inline;" name="ksearch"><select
 					name="channel">
 					<option
@@ -1407,13 +1407,13 @@ function grabEnterGetTemplate(event){
 							key="global.allergies" /></a>:&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp&nbsp;&nbsp;</div>
 						<div class="presBox" id="allergyBox">
 						<ul>
-							<%      
-								oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies =RxPatientData.getPatient(Integer.parseInt(demoNo)).getAllergies();
+							<%
+								org.oscarehr.common.model.Allergy[] allergies =RxPatientData.getPatient(Integer.parseInt(demoNo)).getAllergies();
 
                                             for (int j=0; j<allergies.length; j++){%>
 							<li><a
-								title="<%= allergies[j].getAllergy().getDESCRIPTION() %>">
-							<%=allergies[j].getAllergy().getShortDesc(13,8,"...")%> </a></li>
+								title="<%= allergies[j].getDescription() %>">
+							<%=allergies[j].getShortDesc(13,8,"...")%> </a></li>
 							<%}%>
 						</ul>
 						</div>
@@ -1599,7 +1599,7 @@ function grabEnterGetTemplate(event){
                                }else{
                                   encounterText = bean.encounter+"\n--------------------------------------------------\n$$SPLIT CHART$$\n";
                                }
-                              
+
                                if(bean.eChartTimeStamp==null){
                                   encounterText +="\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"] \n";
                                }else if(bean.currentDate.compareTo(bean.eChartTimeStamp)>0){

@@ -829,7 +829,7 @@ if(bean.getStashIndex() > -1){ //new way
     thisForm.setEndDate(RxUtil.DateToString(rx.getEndDate(),"yyyy-MM-dd"));
     thisForm.setWrittenDate(RxUtil.DateToString(rx.getWrittenDate(),"yyyy-MM-dd"));
     if (thisForm.getWrittenDate().length()==0) thisForm.setWrittenDate(RxUtil.DateToString(RxUtil.Today(),"yyyy-MM-dd"));
-   
+
 
     if(! rx.isCustom()){
         thisForm.setGenericName(rx.getGenericName());
@@ -1361,14 +1361,14 @@ int i;
                          <input type=button class="ControlPushButton" style="width:200px" onclick="javascript:addWarning();" value="FillWarning" /-->
 					<br>
 					<!-- peice Went Here --> <%//RxPatientData.Patient.Allergy[] allerg = (RxPatientData.Patient.Allergy[]) request.getAttribute("ALLERGIES");
-                          RxPatientData.Patient.Allergy[] allerg = (RxPatientData.Patient.Allergy[]) bean.getAllergyWarnings(atcCode);
+                          org.oscarehr.common.model.Allergy[] allerg = bean.getAllergyWarnings(atcCode);
                           if (allerg != null && allerg.length > 0){
                             for (int i = 0 ; i < allerg.length; i++){  %>
 					<div
-						style="background-color:<%=severityOfReactionColor(allerg[i].getAllergy().getSeverityOfReaction())%>;margin-right:100px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
-					<b>Allergy:</b> <%= allerg[i].getAllergy().getDESCRIPTION() %> <b>Reaction:</b>
-					<%= allerg[i].getAllergy().getReaction() %> <b>Severity:</b> <%=severityOfReaction(allerg[i].getAllergy().getSeverityOfReaction())%>
-					<b>Onset of Reaction:</b> <%=onSetOfReaction(allerg[i].getAllergy().getOnSetOfReaction())%>
+						style="background-color:<%=severityOfReactionColor(allerg[i].getSeverityOfReaction())%>;margin-right:100px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
+					<b>Allergy:</b> <%= allerg[i].getDescription() %> <b>Reaction:</b>
+					<%= allerg[i].getReaction() %> <b>Severity:</b> <%=severityOfReaction(allerg[i].getSeverityOfReaction())%>
+					<b>Onset of Reaction:</b> <%=onSetOfReaction(allerg[i].getOnsetOfReaction())%>
 					</div>
 					<%  }
                           }%>
