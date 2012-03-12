@@ -124,7 +124,7 @@ public class NextAppointmentSearchHelper {
 	private static List<NextAppointmentSearchResult> searchDayProvider(String providerNo, Date day, boolean today, NextAppointmentSearchBean searchBean) {
 		List<NextAppointmentSearchResult> results = new ArrayList<NextAppointmentSearchResult>();
 		//load up the schedule
-		ScheduleDate sd = scheduleDateDao.getByProviderNoAndDate(providerNo, day);
+		ScheduleDate sd = scheduleDateDao.findByProviderNoAndDate(providerNo, day);
 		if(sd == null) {
 			logger.warn("no schedule found for provider " + providerNo + " on day " + day);
 			return results;
