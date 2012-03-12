@@ -518,7 +518,11 @@ div.logoutBox {
 				onclick='popupPage(800,1000,&quot;<html:rewrite page="/billing/CA/ON/billStatus.jsp"/>&quot;);return false;'><bean:message key="admin.admin.invoiceRpts"/></a></li>
                         <li><a href="#"
                                 onclick='popupPage(700,1000,&quot;<html:rewrite page="/billing/CA/ON/endYearStatement.do"/>&quot;);return false;'><bean:message key="admin.admin.endYearStatement"/></a></li>
-
+			<%if (OscarProperties.getInstance().getBooleanProperty("rma_enabled", "true")) { %>
+				<li>
+					<a href='#'	onclick='popupPage(300,750,&quot;<html:rewrite page="/admin/clinicNbrManage.jsp"/>&quot;);return false;'>Manage Clinic NBR Codes</a>
+				</li>
+			<%}%>
 			<%
 				}
 			%>

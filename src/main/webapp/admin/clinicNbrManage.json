@@ -1,0 +1,54 @@
+<%@page import="net.sf.json.JSONObject"%>
+<%@page import="net.sf.json.JSONSerializer"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.common.dao.ClinicNbrDao"%>
+<%@page import="org.oscarehr.common.model.ClinicNbr"%>
+<%
+	boolean success = false;
+    String error = "";
+	String method = request.getParameter("method");	
+	JSONObject json = new JSONObject();
+	json.put("method", method);
+	ClinicNbrDao cnDao = (ClinicNbrDao)SpringUtils.getBean("clinicNbrDao");
+	if ("remove".equals(method)) {
+		Integer valOld = Integer.parseInt(request.getParameter("nbr"));
+		
+		json.put("nbr", valOld);
+		int i = cnDao.removeEntry(valOld);
+		if (i==0) {
+			success = false;
+			error = "Remove Failure: Could not remove entry from database.";
+		} else {
+			success = true;
+		}
+	}
+
+	else if ("add".equals(method)) {
+		String valNew = request.getParameter("nbr");
+		String str = request.getParameter("nbrDesc");
+		json.put("nbr", valNew);
+		json.put("nbrDesc", str);
+		if (valNew.equals("")) {
+			success = false;
+			error = "Add Failure: Cannot add NRB with empty value.";
+		} else {
+			int j = cnDao.addEntry(valNew,str);
+			if (j==0) {		
+				success = false;
+				error = "Add Failure: Could not add entry to database.";
+			} else {
+				success = true;		
+			}
+		}
+	}
+	else {
+		success = false;
+		error = "Invalid method supplied.";
+	}
+    response.setContentType("text/x-json");    
+	
+	json.put("success", success);
+	json.put("error", error);
+	
+    json.write(out);    	
+%>

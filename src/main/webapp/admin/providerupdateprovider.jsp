@@ -5,6 +5,10 @@
 	import="java.sql.*, java.util.*, oscar.SxmlMisc, oscar.oscarProvider.data.ProviderBillCenter"
 	errorPage="errorpage.jsp"%>
 <%@ page import="oscar.log.LogAction,oscar.log.LogConst"%>
+<%@ page import="org.oscarehr.common.model.ClinicNbr"%>
+<%@ page import="org.oscarehr.util.SpringUtils"%>
+<%@ page import="org.oscarehr.common.dao.ClinicNbrDao"%>
+<%@ page import="oscar.OscarProperties"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 
@@ -353,6 +357,26 @@ for (int i=0; i<sites.size(); i++) {
 				value="<%= apptMainBean.getString(rs,"practitionerNo") %>"
 				maxlength="10"></td>
 		</tr>
+		<% if (OscarProperties.getInstance().getBooleanProperty("rma_enabled", "true")) { %>
+			<tr>
+				<td align="right">Default Clinic NBR:</td>
+				<td colspan="3">
+				<select name="xml_p_nbr">
+				<%
+				ClinicNbrDao clinicNbrDAO = (ClinicNbrDao)SpringUtils.getBean("clinicNbrDao");
+				List<ClinicNbr> nbrList = clinicNbrDAO.findAll();
+				Iterator<ClinicNbr> nbrIter = nbrList.iterator();
+				while (nbrIter.hasNext()) {
+					ClinicNbr tempNbr = nbrIter.next();
+					String valueString = tempNbr.getNbrValue() + " | " + tempNbr.getNbrString();
+				%>
+					<option value="<%=tempNbr.getNbrValue()%>" <%=SxmlMisc.getXmlContent(rs.getString("comments"),"xml_p_nbr").startsWith(tempNbr.getNbrValue())?"selected":""%>><%=valueString%></option>
+				<%}%>
+				
+				</select>
+				</td>
+			</tr>
+		<%} %>
 		<tr>
 			<td align="right">Bill Center:</td>
 			<td><select name="billcenter">

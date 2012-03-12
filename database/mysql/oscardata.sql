@@ -2052,4 +2052,9 @@ INSERT INTO HL7HandlerMSHMapping
 
 INSERT INTO HL7HandlerMSHMapping
  (hospital_site,facility,facility_name) VALUES ("Rouge Valley Health System","APG","Rouge Valley Ajax and Pickering");
-
+ 
+ INSERT INTO `clinic_nbr` 
+VALUES
+	(NULL, '22','R .  M .  A .', 'A'),
+	(NULL, '33','AFP Ham Surgery RMA', 'A'),
+	(NULL, '98','Bill Directs', 'A');

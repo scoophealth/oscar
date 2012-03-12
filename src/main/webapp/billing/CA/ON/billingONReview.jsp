@@ -459,6 +459,10 @@ window.onload=function(){
 					<% } %>
 					</tr>
 					<tr>
+                   		<td><b>SLI Code</b></td>
+                        <td><%=request.getParameter("xml_slicode").substring(request.getParameter("xml_slicode").indexOf("|") + 1)%> &nbsp;</td>
+                    </tr>
+					<tr>
 						<td><b>Admission Date</b></td>
 						<td><%=request.getParameter("xml_vdate")%></td>
 						<td colspan="2"></td>

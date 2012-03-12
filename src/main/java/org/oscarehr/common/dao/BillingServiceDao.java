@@ -39,6 +39,15 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 	public BillingServiceDao() {
 		super(BillingService.class);
 	}
+	
+	public boolean codeRequiresSLI(String code) {
+		Query query = entityManager.createQuery("select bs  from BillingService bs where bs.serviceCode like (:code) and sliFlag = TRUE");
+		query.setParameter("code", code + "%");
+
+		@SuppressWarnings("unchecked")
+		List<BillingService> list = query.getResultList();
+		return list.size() > 0;
+	}
 
 	public List<BillingService> findBillingCodesByCode(String code, String region) {
 		Query query = entityManager.createQuery("select bs  from BillingService bs where bs.serviceCode like (:code) and region = (:region) order by bs.billingserviceDate");

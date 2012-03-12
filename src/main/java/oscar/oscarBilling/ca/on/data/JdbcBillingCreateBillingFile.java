@@ -31,6 +31,7 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.BillingServiceDao;
 import org.oscarehr.common.dao.SiteDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Site;
@@ -158,7 +159,8 @@ public class JdbcBillingCreateBillingFile {
 				+ rightJustify(" ", 4, ch1Obj.getFacilty_num().equals("0000") ? "" : ch1Obj.getFacilty_num())
 				+ rightJustify(" ", 8, getCompactDateStr(ch1Obj.getAdmission_date()))
 				+ rightJustify(" ", 4, ch1Obj.getRef_lab_num()) + rightJustify(" ", 1, ch1Obj.getMan_review())
-				+ rightJustify(" ", 4, ch1Obj.getLocation().equals("0000") ? "" : ch1Obj.getLocation()) + space(11)
+				+ rightJustify(" ", 4, ch1Obj.getLocation())
+				+ space(11)
 				+ space(6);
 		checkHeader1();
 		if (bRMB) {
@@ -514,6 +516,7 @@ public class JdbcBillingCreateBillingFile {
 						+ " and status!='D' and status!='S'";
 				_logger.info("createBillingFileStr(sql = " + query + ")");
 				ResultSet rs2 = dbObj.searchDBRecord(query);
+				boolean hasSliCode = ch1Obj.getLocation().trim().length() == 3;
 				while (rs2.next()) {
 					itemObj = new BillingItemData();
 					recordCount++;
@@ -540,6 +543,13 @@ public class JdbcBillingCreateBillingFile {
 					// apptDate =
 					// UtilDateUtilities.DateToString(rs2.getDate("appointment_date"),
 					// "yyyyMMdd");
+					if (!hasSliCode) {
+						BillingServiceDao bsd = (BillingServiceDao) SpringUtils.getBean("billingServiceDao");
+						if (bsd.codeRequiresSLI(itemObj.getService_code())) {
+							errorPartMsg = "Service code '"+itemObj.getService_code()+"' requires an SLI code. <br/>";
+						}
+					}
+
 					dFee = Double.parseDouble(fee);
 					bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
 					BigTotal = BigTotal.add(bdFee);
@@ -708,7 +718,7 @@ public class JdbcBillingCreateBillingFile {
 					// UtilDateUtilities.DateToString(rs2.getDate("appointment_date"),
 					// "yyyyMMdd");
 					dFee = Double.parseDouble(fee);
-					bdFee = new BigDecimal((double) dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+					bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
 					BigTotal = BigTotal.add(bdFee);
 					_logger.info("createBillingFileStr(BigTotal = " + BigTotal + ")");
 					checkItem();

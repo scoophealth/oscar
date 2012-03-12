@@ -65,6 +65,7 @@
 			sql += " value='" + valuePara + "', ";
 			sql += " percentage='" + request.getParameter("percentage") + "', ";
 			sql += " billingservice_date='" + request.getParameter("billingservice_date") + "', ";
+			sql += " sliFlag=" + "true".equals(request.getParameter("sliFlag")) + ", ";
                         sql += " termination_date='" + request.getParameter("termination_date") + "' ";
                         String servicecodeStyle = request.getParameter("servicecode_style");
                         String styleId;
@@ -116,6 +117,7 @@
 			    prop.setProperty("value", request.getParameter("value"));
 			    prop.setProperty("percentage", request.getParameter("percentage"));
 			    prop.setProperty("billingservice_date", request.getParameter("billingservice_date"));
+			    prop.setProperty("sliFlag", request.getParameter("sliFlag"));
 			}
 		} else {
       		msg = "You can <font color='red'>NOT</font> save the service code - " + serviceCode + ". Please search the service code first.";
@@ -126,7 +128,7 @@
       	// insert into the service code
 		String serviceCode = request.getParameter("service_code");
 		if(serviceCode.equals(request.getParameter("action").substring("add".length()))) {
-			String	sql   = "insert into billingservice (service_compositecode, service_code, description, value, percentage, billingservice_date,specialty,region,anaesthesia, termination_date, displaystyle) values ('', '";
+			String	sql   = "insert into billingservice (service_compositecode, service_code, description, value, percentage, billingservice_date,specialty,region,anaesthesia, termination_date, displaystyle, sliFlag) values ('', '";
 			sql += serviceCode + "', '";
 			sql += request.getParameter("description") + "', '";
 			sql += valuePara + "', '";
@@ -140,11 +142,12 @@
             if( !servicecodeStyle.startsWith("-1")) {
             	tmp = servicecodeStyle.split(",");
             	styleId = tmp[0];
-            	sql += "," + styleId + ")";
+            	sql += "," + styleId + "";
             }
             else {
-            	sql += ",NULL)";
+            	sql += ",NULL";
             }
+            sql += "'," + "true".equals(request.getParameter("sliFlag")) + ")";
             
 			if(request.getParameter("percentage").length()>1 && request.getParameter("min").length()>1 && request.getParameter("max").length()>1) {
 				String sqlMinMax = "insert into billingperclimit (service_code, min, max, effective_date) values('";
@@ -166,6 +169,7 @@
 			    prop.setProperty("value", request.getParameter("value"));
 			    prop.setProperty("percentage", request.getParameter("percentage"));
 			    prop.setProperty("billingservice_date", request.getParameter("billingservice_date"));
+			    prop.setProperty("sliFlag", request.getParameter("sliFlag"));
 			    prop.setProperty("min", request.getParameter("min"));
 			    prop.setProperty("max", request.getParameter("max"));
 			}
@@ -202,6 +206,8 @@
                         prop.setProperty("percentage", tmp);                    
                         tmp = rs.getString("billingservice_date") == null ? "" : rs.getString("billingservice_date");
                         prop.setProperty("billingservice_date", tmp);
+                        tmp = rs.getString("sliFlag") == null ? "" : rs.getString("sliFlag");
+                        prop.setProperty("sliFlag", tmp);
                         tmp = rs.getString("termination_date") == null ? "" : rs.getString("termination_date");
                         prop.setProperty("termination_date", tmp);
                         tmp = rs.getString("displaystyle") == null ? "" : rs.getString("displayStyle");
@@ -252,6 +258,8 @@
             prop.setProperty("percentage", tmp);                    
             tmp = rs.getString("billingservice_date") == null ? "" : rs.getString("billingservice_date");
             prop.setProperty("billingservice_date", tmp);
+            tmp = rs.getString("sliFlag") == null ? "" : rs.getString("sliFlag");
+            prop.setProperty("sliFlag", tmp);
             tmp = rs.getString("termination_date") == null ? "" : rs.getString("termination_date");
             prop.setProperty("termination_date", tmp);
             tmp = rs.getString("displaystyle") == null ? "" : rs.getString("displayStyle");
@@ -511,6 +519,16 @@
 			value="<%=prop.getProperty("termination_date", "9999-12-31")%>" size='10'
 			maxlength='10' readonly> (stale date) <img
 			src="../../../images/cal.gif" id="termination_date_cal"></td>
+	</tr>
+	<tr bgcolor="#EEEEFF">
+		<td align="right"><b>Requires SLI Code</b></td>
+		<% String sliFlagValue = prop.getProperty("sliFlag", "0");
+		   sliFlagValue = sliFlagValue.equals("1") || sliFlagValue.equals("true") ? "checked" : "";
+		%>	
+		<td><input type="checkbox" name="sliFlag"
+			id="sliFlag"
+			value="true" <%=sliFlagValue%>>
+		</td>
 	</tr>
 	<tr>
 		<td>&nbsp;</td>

@@ -507,6 +507,17 @@
 						<td colspan="3"><%=request.getParameter("xml_location").substring(request.getParameter("xml_location").indexOf("|")+1)%></td>
 					</tr>
 					<tr>
+					<td><b>SLI Code</b></td>
+						<td><%String testSliCode = request.getParameter("xml_slicode").substring(
+							request.getParameter("xml_slicode").indexOf("|") + 1);
+							if (testSliCode.startsWith(oscarVariables.getProperty("clinic_no", "").trim())) {%>
+								Not Applicable &nbsp;
+							<%} else {%>
+								<%=testSliCode%> &nbsp;
+							<%}%>
+						</td>
+					</tr>
+					<tr>
 						<td><b>Admission Date</b></td>
 						<td><%=request.getParameter("xml_vdate")%></td>
 						<td colspan="2"></td>

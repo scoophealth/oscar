@@ -25,11 +25,13 @@
 <%@ page import="java.util.*,java.net.*,java.sql.*,oscar.*,oscar.util.*,oscar.appt.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
-
 <%@page import="org.oscarehr.common.model.ProviderPreference, org.oscarehr.common.model.CssStyle, org.oscarehr.common.dao.CSSStylesDAO"%>
+<%@page import="org.oscarehr.common.model.ProviderPreference"%>
 <%@page import="org.oscarehr.web.admin.ProviderPreferencesUIBean"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
-
+<%@page import="org.oscarehr.common.model.ClinicNbr"%>
+<%@page import="org.oscarehr.common.dao.ClinicNbrDao"%>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <%
 			if (session.getAttribute("user") == null) {
@@ -300,6 +302,8 @@
 			CssStyle cssStyle;
 			String styleId;
 			
+            boolean sliFlag = false;
+            
             sql0 = "select distinct servicetype_name, servicetype from ctl_billingservice where status='A'";
             rs0 = dbObj.searchDBRecord(sql0);
             while (rs0.next()) {
@@ -312,7 +316,7 @@
 
                     listServiceType.add(ctlcode);
                     
-                    sql = "select distinct c.servicetype_name, c.servicetype, c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage, b.displaystyle from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype ='"
+                    sql = "select distinct c.servicetype_name, c.servicetype, c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage, b.displayStyle, b.sliFlag from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype ='"
                         + ctlcode + "' and c.service_group ='" + "Group1" + "' and b.billingservice_date in (select max(b2.billingservice_date) from billingservice b2 where b2.billingservice_date <= '" + billReferenceDate + "' and b2.service_code = b.service_code  ) and b.billingservice_no = (select max(b3.billingservice_no) from billingservice b3 where b3.billingservice_date = b.billingservice_date and b3.service_code = b.service_code) order by c.service_order";
     
                     
@@ -335,6 +339,7 @@
                 	propT.setProperty("displaystyle", "");
                 }
                                 
+                propT.setProperty("serviceSLI", ((Boolean)rs.getBoolean("sliFlag")).toString());
                	titleMap.put("group1_".concat(ctlcode),rs.getString("service_group_name"));
                	
                 listGroup1.add(propT);
@@ -354,7 +359,7 @@
 			billingServiceCodesMap.put("group1_".concat(ctlcode),listGroup1);		
 			
 			
-			sql = "select distinct c.servicetype_name, c.servicetype, c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage, b.displaystyle from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype ='"
+			sql = "select distinct c.servicetype_name, c.servicetype, c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage, b.displayStyle, b.sliFlag from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype ='"
                  + ctlcode + "' and c.service_group ='" + "Group2" + "' and b.billingservice_date in (select max(b2.billingservice_date) from billingservice b2 where b2.billingservice_date <= '" + billReferenceDate + "' and b2.service_code = b.service_code) and b.billingservice_no = (select max(b3.billingservice_no) from billingservice b3 where b3.billingservice_date = b.billingservice_date and b3.service_code = b.service_code) order by c.service_order";
 
 			rs = dbObj.searchDBRecord(sql);
@@ -368,7 +373,6 @@
 				propT.setProperty("servicePercentage", noNull(rs.getString("percentage")));
 				propT.setProperty("serviceType", rs.getString("servicetype"));
                 propT.setProperty("serviceTypeName", rs.getString("servicetype_name"));
-                
                 styleId = rs.getString("displaystyle");
                 if( styleId != null ) {
                 	cssStyle = cssStylesDao.find(new Integer(styleId));
@@ -378,6 +382,7 @@
                 	propT.setProperty("displaystyle", "");
                 }
                 
+                propT.setProperty("serviceSLI", ((Boolean)rs.getBoolean("sliFlag")).toString());
                 titleMap.put("group2_".concat(ctlcode),rs.getString("service_group_name"));
                 
                 listGroup2.add(propT);
@@ -400,7 +405,8 @@
             billingServiceCodesMap.put("group2_".concat(ctlcode),listGroup2);
             
             
-            sql = "select distinct c.servicetype_name, c.servicetype, c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage, b.displaystyle from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype ='"
+            sql = "select distinct c.servicetype_name, c.servicetype, c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage, b.displayStyle, b.sliFlag from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype ='"
+
                 + ctlcode + "' and c.service_group ='" + "Group3" + "' and b.billingservice_date in (select max(b2.billingservice_date) from billingservice b2 where b2.billingservice_date <= '" + billReferenceDate + "' and b2.service_code = b.service_code) and b.billingservice_no = (select max(b3.billingservice_no) from billingservice b3 where b3.billingservice_date = b.billingservice_date and b3.service_code = b.service_code) order by c.service_order";
 
 			rs = dbObj.searchDBRecord(sql);
@@ -413,7 +419,6 @@
 				propT.setProperty("servicePercentage", noNull(rs.getString("percentage")));
 				propT.setProperty("serviceType", rs.getString("servicetype"));
                 propT.setProperty("serviceTypeName", rs.getString("servicetype_name"));
-                
                 styleId = rs.getString("displaystyle");
                 if( styleId != null ) {
                 	cssStyle = cssStylesDao.find(new Integer(styleId));
@@ -423,6 +428,7 @@
                 	propT.setProperty("displaystyle", "");
                 }
                 
+                propT.setProperty("serviceSLI", ((Boolean)rs.getBoolean("sliFlag")).toString());                
                 titleMap.put("group3_".concat(ctlcode),rs.getString("service_group_name"));
                 
                 listGroup3.add(propT);
@@ -460,7 +466,6 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <%@page import="org.oscarehr.common.dao.SiteDao"%>
-<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.oscarehr.common.model.Site"%>
 <%@page import="org.oscarehr.common.model.Provider"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
@@ -489,6 +494,7 @@
 <script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>
 
 <script type="text/javascript" src="../../../share/javascript/prototype.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery.js"></script>
 <script type="text/javascript" language="JavaScript">
 <!--
 
@@ -528,36 +534,56 @@ function showHideLayers() { //v3.0
 }
 
 function onNext() {
-    var ret = checkAllDates();
-    if (ret) {
-	if (!existServiceCode() && document.forms[0].services_checked.value<=0) {
+    var ret = true;
+    if (!checkAllDates()) { 
+    	ret = false;
+    }
+    else if (!existServiceCode() && document.forms[0].services_checked.value<=0) {
 	    ret = false;
 	    alert("You haven't selected any billing item yet!");
+	}
+	else if (!checkSli()) {
+		ret = false;
+		alert("You have selected billing codes that require an SLI code but have not provided an SLI code.");		
 	}
 	else if (document.forms[0].dxCode.value=="") {
 	    ret = confirm("You didn't enter a diagnostic code in the Dx box. Continue?");
 	    if (!ret) document.forms[0].dxCode.focus();
-	}
-    }
+	}    
     return ret;
+}
+
+function checkSli() {
+	var needsSli = false; 
+    jQuery("input[name^=xml_]:checked").each(function() { 
+            needsSli = needsSli || eval(jQuery("input[name='sli_xml_" + this.name.substring(4) + "']").val());     
+    }); 
+    jQuery("input[name^=serviceCode][value!='']").each(function() { 
+            needsSli = needsSli || eval(jQuery("input[name='sli_xml_" + this.value + "']").val()); 
+    }); 
+    return !needsSli || jQuery("select[name='xml_slicode']").get(0).selectedIndex != 0;
 }
 
 function checkAllDates() {
     var b = true;
 
     if(document.forms[0].xml_provider.value=="000000"){
-	alert("Please select a provider.");
-	b = false;
-    } else if(document.forms[0].xml_visittype.options[2].selected && (document.forms[0].xml_vdate.value=="" || document.forms[0].xml_vdate.value=="0000-00-00")) {
-	alert("Need an admission date.");
-	b = false;
-    } else if(document.forms[0].xml_vdate.value.length>0) {
-	b = checkServiceDate(document.forms[0].xml_vdate.value);
+		alert("Please select a provider.");
+		b = false;
+    } 
+    <% if (!OscarProperties.getInstance().getBooleanProperty("rma_enabled", "true")) { %>
+    else if(document.forms[0].xml_visittype.options[2].selected && (document.forms[0].xml_vdate.value=="" || document.forms[0].xml_vdate.value=="0000-00-00")) {    
+		alert("Need an admission date.");
+		b = false;
+    }
+    <% } %>
+    else if(document.forms[0].xml_vdate.value.length>0) {
+		b = checkServiceDate(document.forms[0].xml_vdate.value);
     } else if(document.forms[0].referralCode.value.length>0) {
-	if(document.forms[0].referralCode.value.length!=6 || !isInteger(document.forms[0].referralCode.value)) {
-	    alert("Wrong referral code!");
-	    b = false;
-	}
+		if(document.forms[0].referralCode.value.length!=6 || !isInteger(document.forms[0].referralCode.value)) {
+		    alert("Wrong referral code!");
+		    b = false;
+		}
     }
     return b;
 }
@@ -1187,7 +1213,7 @@ function toggleDiv(selectedBillForm, selectedBillFormName,billType)
 
 <% if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) 
 { // multisite start ==========================================
-        	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
+        	SiteDao siteDao = (SiteDao)SpringUtils.getBean("siteDao");
           	List<Site> sites = siteDao.getActiveSitesByProviderNo((String) session.getAttribute("user"));
           	
       %> 
@@ -1273,15 +1299,30 @@ function changeSite(sel) {
 				    </td>
 				</tr>
 				<tr>
-				    <td width="30%"><b>Visit Type</b></td>
+				    <td width="30%"><b><%if (OscarProperties.getInstance().getBooleanProperty("rma_enabled", "true")) { %> Clinic Nbr <% } else { %> <bean:message key="billing.billingCorrection.formVisitType"/> <% } %></b></td>
 				    <td width="20%">
 					<select name="xml_visittype">
+						<% if (OscarProperties.getInstance().getBooleanProperty("rma_enabled", "true")) { %>
+						<% 
+						ClinicNbrDao cnDao = (ClinicNbrDao) SpringUtils.getBean("clinicNbrDao"); 
+						ArrayList<ClinicNbr> nbrs = cnDao.findAll();									            
+			            ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
+			            String providerSearch = apptProvider_no.equalsIgnoreCase("none") ? user_no : apptProvider_no;
+			            Provider p = providerDao.getProvider(providerSearch);
+			            String providerNbr = SxmlMisc.getXmlContent(p.getComments(),"xml_p_nbr");
+	                    for (ClinicNbr clinic : nbrs) {
+							String valueString = String.format("%s | %s", clinic.getNbrValue(), clinic.getNbrString());
+							%>
+					    	<option value="<%=valueString%>" <%=providerNbr.startsWith(clinic.getNbrValue())?"selected":""%>><%=valueString%></option>
+					    <%}%>
+					    <% } else { %>
 					    <option value="00| Clinic Visit" <%=visitType.startsWith("00")?"selected":""%>>00 | Clinic Visit</option>
 					    <option value="01| Outpatient Visit" <%=visitType.startsWith("01")?"selected":""%>>01 | Outpatient Visit</option>
 					    <option value="02| Hospital Visit" <%=visitType.startsWith("02")?"selected":""%>>02 | Hospital Visit</option>
 					    <option value="03| ER" <%=visitType.startsWith("03")?"selected":""%>>03 | ER</option>
 					    <option value="04| Nursing Home" <%=visitType.startsWith("04")?"selected":""%>>04 | Nursing Home</option>
 					    <option value="05| Home Visit" <%=visitType.startsWith("05")?"selected":""%>>05 | Home Visit</option>
+					    <% } %>
 					</select>
 				    </td>
 				    <td width="30%"><b>Billing Type</b></td>
@@ -1324,6 +1365,22 @@ function changeSite(sel) {
 					Manual: <input type="checkbox" name="m_review" value="Y" <%=m_review.equals("Y")?"checked":""%>>
 				    </td>
 				</tr>
+                <tr>
+                    <td><b><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode"/></b></td>
+                    <td colspan="3">
+                        <select name="xml_slicode">
+                        		<option value="<%=clinicNo%>"><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.NA" /></option>
+                                <option value="HDS"><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.HDS" /></option>
+                                <option value="HED"><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.HED" /></option>
+                                <option value="HIP"><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.HIP" /></option>
+                                <option value="HOP"><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.HOP" /></option>
+                                <option value="HRP"><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.HRP" /></option>
+                                <option value="IHF"><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.IHF" /></option>
+                                <option value="OFF"><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.OFF" /></option>
+                                <option value="OTN"><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.OTN" /></option>
+                        </select> 
+                    </td>
+                </tr>
 				<tr>
 				    <td><b>Admission Date</b></td>
 				    <td>
@@ -1417,6 +1474,7 @@ function changeSite(sel) {
 		servicePercentage = propT.getProperty("servicePercentage");
 		serviceType = propT.getProperty("serviceType");
 		displayStyle = propT.getProperty("displaystyle");
+		sliFlag = Boolean.parseBoolean(propT.getProperty("serviceSLI")); 
         
 		if (propPremium.getProperty(serviceCode) != null) premiumFlag = "A";
 		else premiumFlag = "";
@@ -1438,6 +1496,7 @@ function changeSite(sel) {
 				</td>
 				<td align="right">
 				    <div class="smallFont"><%=serviceDisp%></div>
+				    <input type="hidden" name="sli_xml_<%=serviceCode%>" value="<%=sliFlag%>" />
 				    <!--<input type="hidden" name="price_xml_<%=serviceCode%>" value="<%=serviceDisp%>" />
 				    <input type="hidden" name="perc_xml_<%=serviceCode%>" value="<%=servicePercentage%>" />-->
 				</td>
@@ -1474,6 +1533,7 @@ function changeSite(sel) {
 		servicePercentage = propT.getProperty("servicePercentage");
 		serviceType = propT.getProperty("serviceType");
 		displayStyle = propT.getProperty("displaystyle");
+		sliFlag = Boolean.parseBoolean(propT.getProperty("serviceSLI"));
 		
 		if (propPremium.getProperty(serviceCode) != null) premiumFlag = "A";
 		else premiumFlag = "";
@@ -1497,6 +1557,7 @@ function changeSite(sel) {
 				</td>
 				<td align="right">
 				    <div class="smallFont"><%=serviceDisp%></div>
+				    <input type="hidden" name="sli_xml_<%=serviceCode%>" value="<%=sliFlag%>" />
 				    <!--<input type="hidden" name="price_xml_<%=serviceCode%>" value="<%=serviceDisp%>" />
 					<input type="hidden" name="perc_xml_<%=serviceCode%>" value="<%=servicePercentage%>" />-->
 				</td>
@@ -1534,6 +1595,7 @@ function changeSite(sel) {
 		servicePercentage = propT.getProperty("servicePercentage");
 		serviceType = propT.getProperty("serviceType");
 		displayStyle = propT.getProperty("displaystyle");
+		sliFlag = Boolean.parseBoolean(propT.getProperty("serviceSLI"));
 		
 		if (propPremium.getProperty(serviceCode) != null) premiumFlag = "A";
 		else premiumFlag = "";
@@ -1556,6 +1618,7 @@ function changeSite(sel) {
 				</td>
 				<td align="right">
 				    <div class="smallFont"><%=serviceDisp%></div>
+				    <input type="hidden" name="sli_xml_<%=serviceCode%>" value="<%=sliFlag%>" />
 				    <!--<input type="hidden" name="price_xml_<%=serviceCode%>" value="<%=serviceDisp%>" />
 					<input type="hidden" name="perc_xml_<%=serviceCode%>" value="<%=servicePercentage%>" />-->
 				</td>
