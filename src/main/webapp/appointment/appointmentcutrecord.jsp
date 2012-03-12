@@ -7,6 +7,14 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
+<%@page import="org.oscarehr.common.dao.AppointmentArchiveDao" %>
+<%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
+<%@page import="org.oscarehr.common.model.Appointment" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%
+	AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
+	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
+%>
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -22,7 +30,8 @@
 </table>
 <%
 	ApptUtil.copyAppointmentIntoSession(request);
-        oscarSuperManager.update("appointmentDao", "archive_appt", new Object [] {request.getParameter("appointment_no")});
+	Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no")));
+	appointmentArchiveDao.archiveAppointment(appt);
 	int rowsAffected = oscarSuperManager.update("appointmentDao", "delete", new Object [] {request.getParameter("appointment_no")});
 	if (rowsAffected == 1) {
 %>
@@ -33,14 +42,14 @@
 <script LANGUAGE="JavaScript">
 	self.opener.refresh();
 	self.close();
-</script> <%  
+</script> <%
 	} else {
 %>
 <p>
 <h1><bean:message
 	key="appointment.appointmentupdatearecord.msgUpdateFailure" /></h1>
 
-<%  
+<%
 	}
 %>
 <p></p>

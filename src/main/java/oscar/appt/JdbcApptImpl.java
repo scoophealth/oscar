@@ -4,6 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.AppointmentArchiveDao;
+import org.oscarehr.common.dao.OscarAppointmentDao;
+import org.oscarehr.common.model.Appointment;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.SxmlMisc;
@@ -14,10 +17,14 @@ import oscar.util.UtilDateUtilities;
 public class JdbcApptImpl {
 	private static final Logger _logger = Logger.getLogger(JdbcApptImpl.class);
 	BillingONDataHelp dbObj = new BillingONDataHelp();
+	AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
+    OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
+
 
 	public boolean deleteAppt(String apptNo) {
                 OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");
-                oscarSuperManager.update("appointmentDao", "archive_appt", new String[]{apptNo});
+                Appointment appt = appointmentDao.find(Integer.parseInt(apptNo));
+          	  	appointmentArchiveDao.archiveAppointment(appt);
                 int retval = oscarSuperManager.update("appointmentDao", "delete", new String[]{apptNo});
 		if (retval==1) {
 			_logger.error("deleteAppt(id=" + apptNo + ")");

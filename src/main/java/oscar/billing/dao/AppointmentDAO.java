@@ -1,25 +1,25 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 package oscar.billing.dao;
 
@@ -29,6 +29,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.oscarehr.common.dao.AppointmentArchiveDao;
+import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -39,13 +41,16 @@ import oscar.billing.model.Diagnostico;
 import oscar.billing.model.ProcedimentoRealizado;
 import oscar.billing.model.Provider;
 import oscar.oscarDB.DBHandler;
-import oscar.service.OscarSuperManager;
 import oscar.util.DAO;
 import oscar.util.DateUtils;
 import oscar.util.FieldTypes;
 import oscar.util.SqlUtils;
 
 public class AppointmentDAO extends DAO {
+
+	AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
+    OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
+
 
 	public void billing(Appointment app) throws SQLException {
 		String sqlProc;
@@ -84,9 +89,9 @@ public class AppointmentDAO extends DAO {
 				pstmDiag.executeUpdate();
 			}
 
-                        OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");
-                        oscarSuperManager.update("appointmentDao", "archive_appt", new String[]{String.valueOf(app.getAppointmentNo())});
-                        
+			org.oscarehr.common.model.Appointment appt = appointmentDao.find((int)app.getAppointmentNo());
+			appointmentArchiveDao.archiveAppointment(appt);
+
 			SqlUtils.fillPreparedStatement(pstmApp, 1, String.valueOf(app.getAppointmentNo()), FieldTypes.LONG);
 			pstmApp.executeUpdate();
 
@@ -162,7 +167,7 @@ public class AppointmentDAO extends DAO {
 
 		MiscUtils.getLogger().debug("sql = " + sql);
 
-		
+
 
 		try {
 			ResultSet rs = DBHandler.GetSQL(sql);
@@ -203,7 +208,7 @@ public class AppointmentDAO extends DAO {
 
 		sql = sql + " order by a.appointment_date desc";
 
-		
+
 
 		try {
 			ResultSet rs = DBHandler.GetSQL(sql);
@@ -231,7 +236,7 @@ public class AppointmentDAO extends DAO {
 		ArrayList list = new ArrayList();
 		String sql = "select a.appointment_no, a.appointment_date, a.provider_no, b.last_name, " + "b.first_name, a.billing " + "from appointment a, provider b, demographic c " + "where a.provider_no = b.provider_no and " + "a.demographic_no = c.demographic_no and " + "a.demographic_no = " + demographic.getDemographicNo() + " and " + "a.billing is not null " + "order by a.appointment_date desc";
 
-		
+
 
 		try {
 			ResultSet rs = DBHandler.GetSQL(sql);

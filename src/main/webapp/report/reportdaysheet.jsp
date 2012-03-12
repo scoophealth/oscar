@@ -1,5 +1,5 @@
 <%
-    
+
     String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("start_time") ;
     String deepColor = "#CCCCFF", weakColor = "#EEEEFF" ;
 %>
@@ -16,6 +16,15 @@
 <jsp:useBean id="providerBean" class="java.util.Properties"
 	scope="session" />
 <%@ include file="../admin/dbconnection.jsp"%>
+<%@page import="org.oscarehr.common.dao.AppointmentArchiveDao" %>
+<%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
+<%@page import="org.oscarehr.common.model.Appointment" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%
+	AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
+	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
+	SimpleDateFormat dayFormatter = new SimpleDateFormat("yyyy-MM-dd");
+%>
 <%
     java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
     String [][] dbQueries;
@@ -30,10 +39,8 @@
 
             {"searchmygroupall",         "select * from mygroup where mygroup_no= ?"},
             {"update_apptstatus",        "update appointment set status='T', lastupdateuser=?, updatedatetime=now() where appointment_date=? and status='t' " },
-            {"update_apptstatussingle",  "update appointment set status='T', lastupdateuser=?, updatedatetime=now() where appointment_date=? and provider_no=? and status='t' " },
-            {"archive_appt",             "insert into appointmentArchive (select * from appointment where appointment_date=? and status='t')"},
-            {"archive_apptsingle",       "insert into appointmentArchive (select * from appointment where appointment_date=? and provider_no=? and status='t')"}
-        };
+            {"update_apptstatussingle",  "update appointment set status='T', lastupdateuser=?, updatedatetime=now() where appointment_date=? and provider_no=? and status='t' " }
+       };
     } else {
         dbQueries=new String[][] {
 
@@ -44,12 +51,10 @@
 
             {"searchmygroupall",         "select * from mygroup where mygroup_no= ?"},
             {"update_apptstatus",        "update appointment set status='T', lastupdateuser=?, updatedatetime=now() where appointment_date=? and status='t' " },
-            {"update_apptstatussingle",  "update appointment set status='T', lastupdateuser=?, updatedatetime=now() where appointment_date=? and provider_no=? and status='t' " },
-            {"archive_appt",             "insert into appointmentArchive (select * from appointment where appointment_date=? and status='t')"},
-            {"archive_apptsingle",       "insert into appointmentArchive (select * from appointment where appointment_date=? and provider_no=? and status='t')"}
+            {"update_apptstatussingle",  "update appointment set status='T', lastupdateuser=?, updatedatetime=now() where appointment_date=? and provider_no=? and status='t' " }
         };
     }
-  	
+
     daySheetBean.doConfigure(dbQueries);
 %>
 
@@ -59,9 +64,9 @@
 
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-    
+
     boolean isSiteAccessPrivacy=false;
-    boolean isTeamAccessPrivacy=false; 
+    boolean isTeamAccessPrivacy=false;
 %>
 
 <security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
@@ -70,15 +75,15 @@
 <security:oscarSec objectName="_team_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
 	<%isTeamAccessPrivacy =true;%>
 </security:oscarSec>
-<% 
+<%
 HashMap<String,String> providerMap = new HashMap<String,String>();
 //multisites function
 if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
 	String sqlStr = "select provider_no from provider ";
-	if (isSiteAccessPrivacy) 
-		sqlStr = "select distinct p.provider_no from provider p inner join providersite s on s.provider_no = p.provider_no " 
+	if (isSiteAccessPrivacy)
+		sqlStr = "select distinct p.provider_no from provider p inner join providersite s on s.provider_no = p.provider_no "
 		 + " where s.site_id in (select site_id from providersite where provider_no = " + curProvider_no + ")";
-	if (isTeamAccessPrivacy) 
+	if (isTeamAccessPrivacy)
 		sqlStr = "select distinct p.provider_no from provider p where team in (select team from provider "
 				+ " where team is not null and team <> '' and provider_no = " + curProvider_no + ")";
 	DBHelp dbObj = new DBHelp();
@@ -188,18 +193,32 @@ td {
   if(request.getParameter("dsmode")!=null && request.getParameter("dsmode").equals("all") ) {
 	  if(!provider_no.equals("*") && !provider_no.startsWith("_grp_") ) {
 	  rsdemo = daySheetBean.queryResults(parama, "search_daysheetsingleall");
-	  
+
     } else { //select all providers
 	  rsdemo = daySheetBean.queryResults(new String[] {parama[0], parama[1], sTime, eTime}, "search_daysheetall");
     }
   } else { //new appt, need to update status
     if(!provider_no.equals("*") && !provider_no.startsWith("_grp_") ) {
 	  rsdemo = daySheetBean.queryResults(new String[] {param[1],param[2]}, "search_daysheetsinglenew");
-          daySheetBean.queryExecuteUpdate(new String[]{param[1],param[2]}, "archive_apptsingle");
+	  try {
+		  	List<Appointment> appts = appointmentDao.findByProviderDayAndStatus(param[2], dayFormatter.parse(param[1]), "t");
+		  	for(Appointment appt:appts) {
+		  		appointmentArchiveDao.archiveAppointment(appt);
+		  	}
+		  }catch(java.text.ParseException e) {
+			  org.oscarehr.util.MiscUtils.getLogger().error("Cannot archive appt",e);
+		  }
 	  daySheetBean.queryExecuteUpdate(param, "update_apptstatussingle");
     } else { //select all providers
 	  rsdemo = daySheetBean.queryResults(param[0], "search_daysheetnew");
-          daySheetBean.queryExecuteUpdate(param[1], "archive_appt");
+	  try {
+		  	List<Appointment> appts = appointmentDao.findByProviderDayAndStatus(param[2], dayFormatter.parse(param[1]), "t");
+		  	for(Appointment appt:appts) {
+		  		appointmentArchiveDao.archiveAppointment(appt);
+		  	}
+		  }catch(java.text.ParseException e) {
+			  org.oscarehr.util.MiscUtils.getLogger().error("Cannot archive appt",e);
+		  }
 	  daySheetBean.queryExecuteUpdate(new String[]{param[0],param[1]}, "update_apptstatus");
     }
   }
@@ -208,7 +227,7 @@ td {
 	if(!myGroupBean.isEmpty()) {
 	  if(myGroupBean.getProperty(rsdemo.getString("provider_no"))==null) continue;
 	}
-    
+
     //multisites. skip record if not belong to same site/team
     if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
     	if(providerMap.get(rsdemo.getString("provider_no"))== null)  continue;

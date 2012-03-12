@@ -1,6 +1,6 @@
 
 <%
-    
+
     String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("start_time") ;
     String deepColor = "#CCCCFF", weakColor = "#EEEEFF" ;
 %>
@@ -15,6 +15,17 @@
 <jsp:useBean id="providerBean" class="java.util.Properties"
 	scope="session" />
 <%@ include file="../admin/dbconnection.jsp"%>
+
+<%@page import="org.oscarehr.common.dao.AppointmentArchiveDao" %>
+<%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
+<%@page import="org.oscarehr.common.model.Appointment" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%
+	AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
+	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
+	SimpleDateFormat dayFormatter = new SimpleDateFormat("yyyy-MM-dd");
+%>
+
 <%
     java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
     String [][] dbQueries;
@@ -27,9 +38,7 @@
             {"search_daysheetsinglenew", "select a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name, p.last_name, p.first_name, d.provider_no as doc_no, d.chart_no, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name from (appointment a, provider p, demographic d) left join provider p2 on d.provider_no=p2.provider_no where a.provider_no=p.provider_no and a.demographic_no=d.demographic_no and d.demographic_no = a.demographic_no and a.appointment_date=? and a.provider_no=? and a.status like 't%' and a.provider_no=p.provider_no order by a.appointment_date,"+orderby },
             {"searchmygroupall",         "select * from mygroup where mygroup_no= ?"},
             {"update_apptstatus",        "update appointment set status='T', lastupdateuser=?, updatedatetime=now() where appointment_date=? and status='t' " },
-            {"update_apptstatussingle",  "update appointment set status='T', lastupdateuser=?, updatedatetime=now() where appointment_date=? and provider_no=? and status='t' " },
-            {"archive_appt",             "insert into appointmentArchive (select * from appointment where appointment_date=? and status='t'"},
-            {"archive_apptsingle",       "insert into appointmentArchive (select * from appointment where appointment_date=? and provider_no=? and status='t'"}
+            {"update_apptstatussingle",  "update appointment set status='T', lastupdateuser=?, updatedatetime=now() where appointment_date=? and provider_no=? and status='t' " }
         };
     } else {
         dbQueries=new String[][] {
@@ -39,12 +48,10 @@
             {"search_daysheetsinglenew", "select concat(d.year_of_birth,'/',d.month_of_birth,'/',d.date_of_birth)as dob, d.family_doctor, a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name, p.last_name, p.first_name, d.provider_no as doc_no, d.chart_no, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name, d.hin  d.ver from (appointment a, provider p) left join demographic d on a.demographic_no=d.demographic_no left join provider p2 on d.provider_no=p2.provider_no where a.appointment_date=? and a.provider_no=? and a.status like binary 't' and a.provider_no=p.provider_no order by a.appointment_date,"+orderby },
             {"searchmygroupall",         "select * from mygroup where mygroup_no= ?"},
             {"update_apptstatus",        "update appointment set status='T', lastupdateuser=?, updatedatetime=now() where appointment_date=? and status='t' " },
-            {"update_apptstatussingle",  "update appointment set status='T', lastupdateuser=?, updatedatetime=now() where appointment_date=? and provider_no=? and status='t' " },
-            {"archive_appt",             "insert into appointmentArchive (select * from appointment where appointment_date=? and status='t'"},
-            {"archive_apptsingle",       "insert into appointmentArchive (select * from appointment where appointment_date=? and provider_no=? and status='t'"}
+            {"update_apptstatussingle",  "update appointment set status='T', lastupdateuser=?, updatedatetime=now() where appointment_date=? and provider_no=? and status='t' " }
         };
     }
-  	
+
     daySheetBean.doConfigure(dbQueries);
 %>
 <!--
@@ -144,18 +151,34 @@ td {
   if(request.getParameter("dsmode")!=null && request.getParameter("dsmode").equals("all") ) {
 	  if(!provider_no.equals("*") && !provider_no.startsWith("_grp_") ) {
 	  rsdemo = daySheetBean.queryResults(parama, "search_daysheetsingleall");
-	  
+
     } else { //select all providers
 	  rsdemo = daySheetBean.queryResults(new String[] {parama[0], parama[1], sTime, eTime}, "search_daysheetall");
     }
   } else { //new appt, need to update status
     if(!provider_no.equals("*") && !provider_no.startsWith("_grp_") ) {
 	  rsdemo = daySheetBean.queryResults(param, "search_daysheetsinglenew");
-          daySheetBean.queryExecuteUpdate(new String[]{param[1],param[2]}, "archive_apptsingle");
+	  try {
+	  	List<Appointment> appts = appointmentDao.findByProviderDayAndStatus(param[2], dayFormatter.parse(param[1]), "t");
+	  	for(Appointment appt:appts) {
+	  		appointmentArchiveDao.archiveAppointment(appt);
+	  	}
+	  }catch(java.text.ParseException e) {
+		  org.oscarehr.util.MiscUtils.getLogger().error("Cannot archive appt",e);
+	  }
+
 	  daySheetBean.queryExecuteUpdate(param, "update_apptstatussingle");
     } else { //select all providers
 	  rsdemo = daySheetBean.queryResults(param[0], "search_daysheetnew");
-          daySheetBean.queryExecuteUpdate(param[1], "archive_appt");
+	  try {
+		  	List<Appointment> appts = appointmentDao.findByDayAndStatus(dayFormatter.parse(param[1]), "t");
+		  	for(Appointment appt:appts) {
+		  		appointmentArchiveDao.archiveAppointment(appt);
+		  	}
+	  }catch(java.text.ParseException e) {
+		  org.oscarehr.util.MiscUtils.getLogger().error("Cannot archive appt",e);
+	  }
+
 	  daySheetBean.queryExecuteUpdate(new String[]{param[0],param[1]}, "update_apptstatus");
     }
   }
@@ -183,7 +206,7 @@ td {
 	<tr align="center">
 		<td><font size=5> Patient List <%=dateTemp%>
                 </font></td>
-	</tr>	
+	</tr>
 
 </table>
 <table width="100%" border="1" bgcolor="#ffffff" cellspacing="0"

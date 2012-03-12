@@ -37,7 +37,6 @@ public class ProviderDao extends OscarSuperDao {
             {"add_preference", "insert into preference (provider_no, start_hour, end_hour, every_min, mygroup_no, default_servicetype, color_template) values (?, ?, ?, ?, ?, ?, ?)"},
             {"updatepreference_newtickler", "update preference set start_hour=?, end_hour=?, every_min=?, mygroup_no=?, default_servicetype=?, color_template=?, new_tickler_warning_window=? , default_caisi_pmm=? , defaultDoNotDeleteBilling=? where provider_no=? "},
             {"add_preference_newtickler", "insert into preference (provider_no, start_hour, end_hour, every_min, mygroup_no, default_servicetype, color_template, new_tickler_warning_window, default_caisi_pmm, defaultDoNotDeleteBilling) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"},
-            {"archive_appt", "insert into appointmentArchive (select * from appointment where appointment_no=?)"},
 
             {"search_demograph", "select *  from demographic where demographic_no=?"},
             {"search_encounter", "select * from encounter where demographic_no = ? order by encounter_date desc, encounter_time desc"},

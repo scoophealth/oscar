@@ -123,4 +123,60 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		return results;
 	}
 
+	public List<Appointment> findByProviderDayAndStatus(String providerNo,Date date, String status) {
+		String sql = "SELECT a FROM Appointment a WHERE a.providerNo=? and a.appointmentDate = ? and a.status=?";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, providerNo);
+		query.setParameter(2, date);
+		query.setParameter(3, status);
+		@SuppressWarnings("unchecked")
+		List<Appointment> rs = query.getResultList();
+
+		return rs;
+	}
+
+	public List<Appointment> findByDayAndStatus(Date date, String status) {
+		String sql = "SELECT a FROM Appointment a WHERE a.appointmentDate = ? and a.status=?";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, date);
+		query.setParameter(2, status);
+		@SuppressWarnings("unchecked")
+		List<Appointment> rs = query.getResultList();
+
+		return rs;
+	}
+
+	public List<Appointment> find(Date date, String providerNo,Date startTime, Date endTime, String name,
+			String notes, String reason, Date createDateTime, String creator, Integer demographicNo) {
+
+		String sql = "SELECT a FROM Appointment a " +
+				"WHERE a.appointmentDate = ? and a.providerNo=? and a.startTime=?" +
+				"and a.endTime=? and a.name=? and a.notes=? and a.reason=? and a.createDateTime=?" +
+				"and a.creator=? and a.demographicNo=?";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, date);
+		query.setParameter(2, providerNo);
+		query.setParameter(3, startTime);
+		query.setParameter(4, endTime);
+		query.setParameter(5, name);
+		query.setParameter(6, notes);
+		query.setParameter(7, reason);
+		query.setParameter(8, createDateTime);
+		query.setParameter(9, creator);
+		query.setParameter(10, demographicNo);
+		@SuppressWarnings("unchecked")
+		List<Appointment> rs = query.getResultList();
+
+		return rs;
+	}
+
+	public List<Appointment> findAll() {
+		String sql = "SELECT a FROM Appointment a";
+		Query query = entityManager.createQuery(sql);
+
+		@SuppressWarnings("unchecked")
+		List<Appointment> rs = query.getResultList();
+
+		return rs;
+	}
 }
