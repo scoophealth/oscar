@@ -8190,6 +8190,7 @@ CREATE TABLE providerArchive (
 );
 
 CREATE TABLE appointmentArchive (
+  `id` int(10) not null auto_increment primary key,
   appointment_no int(12),
   provider_no varchar(6),
   appointment_date date,

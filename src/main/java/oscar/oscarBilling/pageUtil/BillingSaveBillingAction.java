@@ -37,6 +37,9 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.AppointmentArchiveDao;
+import org.oscarehr.common.dao.OscarAppointmentDao;
+import org.oscarehr.common.model.Appointment;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -45,8 +48,11 @@ import oscar.oscarBilling.ca.bc.data.BillingHistoryDAO;
 import oscar.oscarDB.DBHandler;
 import oscar.service.OscarSuperManager;
 
-public class BillingSaveBillingAction
-    extends Action {
+public class BillingSaveBillingAction extends Action {
+
+	AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
+    OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
+
 
   public ActionForward execute(ActionMapping mapping,
                                ActionForm form,
@@ -81,7 +87,8 @@ public class BillingSaveBillingAction
     MiscUtils.getLogger().debug("appointment_no: " + bean.getApptNo());
     MiscUtils.getLogger().debug("BillStatus:" + billStatus);
     OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");
-    oscarSuperManager.update("appointmentDao", "archive_appt", new Object[]{bean.getApptNo()});
+    Appointment appt = appointmentDao.find(Integer.parseInt(bean.getApptNo()));
+    appointmentArchiveDao.archiveAppointment(appt);
     oscarSuperManager.update("appointmentDao", "updatestatusc", new Object[]{billStatus,bean.getCreator(),bean.getApptNo()});
 
     String sql = "insert into billing (billing_no,demographic_no, provider_no,appointment_no, demographic_name,hin,update_date, billing_date, total, status, dob, visitdate, visittype, provider_ohip_no, apptProvider_no, creator)";
@@ -94,7 +101,7 @@ public class BillingSaveBillingAction
         bean.getBillingPracNo() + "','" + bean.getApptProviderNo() + "','" +
         bean.getCreator() + "')";
     try {
-      
+
       DBHandler.RunSQL(sql);
       rs = DBHandler.GetSQL("SELECT LAST_INSERT_ID()");
 
@@ -215,7 +222,7 @@ public class BillingSaveBillingAction
               + "'')";
           try {
 
-            
+
             DBHandler.RunSQL(sql);
             rs = DBHandler.GetSQL("SELECT LAST_INSERT_ID()");
 
@@ -285,7 +292,7 @@ public class BillingSaveBillingAction
               "', '', '', '" + bean.getPatientPostal() + "')";
 
           try {
-            
+
             DBHandler.RunSQL(sql);
             rs = DBHandler.GetSQL("SELECT LAST_INSERT_ID()");
             /**

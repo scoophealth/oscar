@@ -1,4 +1,4 @@
-<% 
+<%
   if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
   String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF", tableTitle = "#99ccff";
   boolean bEdit = request.getParameter("appointment_no") != null ? true : false;
@@ -8,7 +8,15 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
-<% 
+<%@page import="org.oscarehr.common.dao.AppointmentArchiveDao" %>
+<%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
+<%@page import="org.oscarehr.common.model.Appointment" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%
+	AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
+	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
+%>
+<%
   if (request.getParameter("groupappt") != null) {
     boolean bSucc = false;
     if (request.getParameter("groupappt").equals("Add Group Appointment")) {
@@ -50,7 +58,7 @@
      	    param[13]=createdDateTime;   //request.getParameter("createdatetime");
 	        param[14]=userName;  //request.getParameter("creator");
     	    param[15]=request.getParameter("remarks");
-    	    
+
 	  	    if (request.getParameter("demographic_no")!=null && !(request.getParameter("demographic_no").equals(""))) {
 				param[16]=request.getParameter("demographic_no");
 		    } else param[16]="0";
@@ -71,7 +79,7 @@
 				gCalDate.add(Calendar.MONTH, delta);
 			} else if (everyUnit.equals("year")) {
 				gCalDate.add(Calendar.YEAR, delta);
-			} 
+			}
 
 			if (gCalDate.after(gEndDate)) break;
 			else param[1] = UtilDateUtilities.DateToString(gCalDate.getTime(), "yyyy-MM-dd");
@@ -96,22 +104,25 @@
 	            paramc[0]="C";
 	            paramc[1]=userName;
 	            paramc[2]=request.getParameter("appointment_no" + datano);  //request.getParameter("creator");
-                oscarSuperManager.update("appointmentDao", "archive_appt", new String[]{request.getParameter("appointment_no"+datano)});
+	            Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no")+datano));
+	            appointmentArchiveDao.archiveAppointment(appt);
                 rowsAffected = oscarSuperManager.update("appointmentDao", "updatestatusc", paramc);
 			}
 
 		    //delete the selected appts
             if (request.getParameter("groupappt").equals("Group Delete")) {
-                oscarSuperManager.update("appointmentDao", "archive_appt", new String[]{request.getParameter("appointment_no"+datano)});
+            	Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no")+datano));
+	            appointmentArchiveDao.archiveAppointment(appt);
             	rowsAffected = oscarSuperManager.update("appointmentDao", "delete",
             			new Object [] {request.getParameter("appointment_no" + datano)});
             }
 
             if (request.getParameter("groupappt").equals("Group Update")) {
-                oscarSuperManager.update("appointmentDao", "archive_appt", new String[]{request.getParameter("appointment_no"+datano)});
+            	Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no")+datano));
+	            appointmentArchiveDao.archiveAppointment(appt);
             	rowsAffected = oscarSuperManager.update("appointmentDao", "delete",
             			new Object [] {request.getParameter("appointment_no" + datano)});
-     	        
+
                 String[] paramu = new String[17];
                         paramu[0]=request.getParameter("provider_no"+datano);
                         paramu[1]=request.getParameter("appointment_date");
@@ -157,34 +168,34 @@
 <h1><bean:message
 	key="appointment.appointmentgrouprecords.msgAddFailure" /></h1>
 
-<%  
+<%
     }
     return;
   } // if (request.getParameter("groupappt") != null)
 %>
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 <html:html locale="true">
@@ -215,8 +226,8 @@ function onButDelete() {
 }
 function onSub() {
   if( saveTemp==1 ) {
-    return (confirm("<bean:message key="appointment.appointmentgrouprecords.msgDeleteConfirmation"/>")) ; 
-  } 
+    return (confirm("<bean:message key="appointment.appointmentgrouprecords.msgDeleteConfirmation"/>")) ;
+  }
 }
 //-->
 </script>
@@ -296,7 +307,7 @@ function onSub() {
 		<td width="20%"></td>
 		<td width="16%" nowrap>Every</td>
 		<td nowrap><select name="everyNum">
-			<%	
+			<%
 for (int i = 1; i < 12; i++) {
 %>
 			<option value="<%=i%>"><%=i%></option>

@@ -1,11 +1,19 @@
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.common.model.ProviderPreference"%>
+<%@page import="org.oscarehr.common.dao.AppointmentArchiveDao" %>
+<%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
+<%@page import="org.oscarehr.common.model.Appointment" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%
+	AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
+	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
+%>
 <%
 	if (session.getAttribute("user") == null)    response.sendRedirect("../logout.jsp");
 
 	String curProvider_no = request.getParameter("provider_no");
 	ProviderPreference providerPreference=(ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE);
-	String mygroupno = providerPreference.getMyGroupNo();  
+	String mygroupno = providerPreference.getMyGroupNo();
     String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF", tableTitle = "#99ccff";
 	boolean bEdit = request.getParameter("appointment_no") != null ? true : false;
 %>
@@ -43,7 +51,7 @@
                 param[15]=request.getParameter("remarks");
                 param[17]=(String)request.getSession().getAttribute("programId_oscarView");
                 param[18]=request.getParameter("urgency");
-		
+
 		String[] param2 = new String[7];
         for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 	        strbuf = new StringBuffer(e.nextElement().toString());
@@ -94,22 +102,25 @@
 	            param[0]="C";
                     param[1]=userName;   //request.getParameter("createdatetime");
 	            param[2]=request.getParameter("appointment_no" + datano);  //request.getParameter("creator");
-                    oscarSuperManager.update("appointmentDao", "archive_appt", new String[]{request.getParameter("appointment_no"+datano)});
+	            Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no")+datano));
+	            appointmentArchiveDao.archiveAppointment(appt);
 	            rowsAffected = oscarSuperManager.update("appointmentDao", "updatestatusc", param);
 			}
 
 		    //delete the selected appts
             if (request.getParameter("groupappt").equals("Group Delete")) {
-                oscarSuperManager.update("appointmentDao", "archive_appt", new Object[]{request.getParameter("appointment_no"+datano)});
+            	Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no")+datano));
+	            appointmentArchiveDao.archiveAppointment(appt);
             	rowsAffected = oscarSuperManager.update("appointmentDao", "delete",
             			new Object [] {request.getParameter("appointment_no" + datano)});
             }
 
             if (request.getParameter("groupappt").equals("Group Update")) {
-                oscarSuperManager.update("appointmentDao", "archive_appt", new Object[]{request.getParameter("appointment_no"+datano)});
+            	Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no")+datano));
+	            appointmentArchiveDao.archiveAppointment(appt);
             	rowsAffected = oscarSuperManager.update("appointmentDao", "delete",
             			new Object [] {request.getParameter("appointment_no" + datano)});
-     	        
+
                 String[] paramu = new String[19];
                         paramu[0]=request.getParameter("provider_no"+datano);
                         paramu[1]=request.getParameter("appointment_date");
@@ -129,13 +140,13 @@
                         paramu[15]=request.getParameter("remarks");
                         paramu[17]=(String)request.getSession().getAttribute("programId_oscarView");
                         paramu[18]=request.getParameter("urgency");
-	    		
+
 		        if (!(request.getParameter("demographic_no").equals("")) && strbuf.toString().indexOf("one") != -1) {
 					paramu[16]=request.getParameter("demographic_no");
 	     	    } else {
 	     	    	paramu[16]="0";
 	     	    }
-		        
+
 		    	rowsAffected = oscarSuperManager.update("appointmentDao", "add_apptrecord", paramu);
 
 				if (rowsAffected==1) {
@@ -176,34 +187,34 @@
 <h1><bean:message
 	key="appointment.appointmentgrouprecords.msgAddFailure" /></h1>
 
-<%  
+<%
 	}
 	return;
   } // if (request.getParameter("groupappt") != null)
 %>
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 <html:html locale="true">
@@ -269,8 +280,8 @@ function onButDelete() {
 }
 function onSub() {
   if( saveTemp==1 ) {
-    return (confirm("<bean:message key="appointment.appointmentgrouprecords.msgDeleteConfirmation"/>")) ; 
-  } 
+    return (confirm("<bean:message key="appointment.appointmentgrouprecords.msgDeleteConfirmation"/>")) ;
+  }
 }
 //-->
 </script>
@@ -351,7 +362,7 @@ function onSub() {
         bOne = false;
 	    bTwo = false;
 
-        if (eStartTime.equals(String.valueOf(other.get("start_time"))) && eEndTime.equals(String.valueOf(other.get("end_time"))) && 
+        if (eStartTime.equals(String.valueOf(other.get("start_time"))) && eEndTime.equals(String.valueOf(other.get("end_time"))) &&
 			eName.equals(other.get("name"))) {
 			if (other.get("demographic_no") != null && !other.get("demographic_no").equals(0)  ) {
 	            bOne = true;
@@ -366,10 +377,10 @@ function onSub() {
         if (bTwo)    otherAppt.setProperty(other.get("provider_no")+"two", "checked");
         if (bOne || bTwo) {
 			otherAppt.setProperty(other.get("provider_no")+"apptno", String.valueOf(other.get("appointment_no")));
-			appt += "<b>" + String.valueOf(other.get("start_time")).substring(0,5) + "-" + String.valueOf(other.get("end_time")).substring(0,5) + "|" 
+			appt += "<b>" + String.valueOf(other.get("start_time")).substring(0,5) + "-" + String.valueOf(other.get("end_time")).substring(0,5) + "|"
 				 + dotStr + other.get("name") + "</b>|" ; //+	rsdemo.getString("reason") + "<br>";
 		} else {
-			appt += String.valueOf(other.get("start_time")).substring(0,5) + "-" + String.valueOf(other.get("end_time")).substring(0,5) + "|" 
+			appt += String.valueOf(other.get("start_time")).substring(0,5) + "-" + String.valueOf(other.get("end_time")).substring(0,5) + "|"
 				 + dotStr + other.get("name") + "|" ; //+	rsdemo.getString("reason") + "<br>";
 		}
 
@@ -378,7 +389,7 @@ function onSub() {
 			temp = String.valueOf(other.get("provider_no"));
 			appt = "";
 		} else {
-		    if (otherAppt.getProperty(other.get("provider_no")+"appt") != null)	
+		    if (otherAppt.getProperty(other.get("provider_no")+"appt") != null)
 				appt = otherAppt.getProperty(other.get("provider_no") +"appt")+ "<br>" + appt;
             otherAppt.setProperty(other.get("provider_no")+"appt", appt);
     	    appt = "";
@@ -429,7 +440,7 @@ function onSub() {
 		param1[1] = String.valueOf(provider.get("provider_no"));
 		List<Map<String,Object>> providerTest = oscarSuperManager.find("appointmentDao", "search_scheduledate_single", param1);
 
-		bAvailProvider = providerTest.size() > 0 ? true : false;  
+		bAvailProvider = providerTest.size() > 0 ? true : false;
 		if(bAvailProvider == bLooperCon) continue;
 
         bDefProvider = curProvider_no.equals(String.valueOf(provider.get("provider_no"))) ? true : false;
@@ -459,13 +470,13 @@ function onSub() {
 			onclick="onCheck(this)"></td>
 		<td nowrap><%=otherAppt.getProperty(provider.get("provider_no")+"appt")
 		!= null ? otherAppt.getProperty(provider.get("provider_no")+"appt") : ""%>
-		<%--  
+		<%--
     // <input type="text" name="orig<%=i%>" value="<%=bDefProvider? request.getParameter("reason"):""%>" style="width:100%">
 --%> &nbsp;</td>
 	</tr>
 	<%
       }
-      bLooperCon = true; 
+      bLooperCon = true;
 	  i = 0;
     }
 %>

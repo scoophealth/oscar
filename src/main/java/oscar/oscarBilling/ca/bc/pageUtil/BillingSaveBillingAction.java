@@ -39,6 +39,9 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.AppointmentArchiveDao;
+import org.oscarehr.common.dao.OscarAppointmentDao;
+import org.oscarehr.common.model.Appointment;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
@@ -58,6 +61,9 @@ import oscar.util.UtilDateUtilities;
 public class BillingSaveBillingAction extends Action {
 
     private static Logger log = MiscUtils.getLogger();
+    AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
+    OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
+
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
@@ -103,15 +109,16 @@ public class BillingSaveBillingAction extends Action {
             ///Update Appointment information
             log.debug("appointment_no: " + bean.getApptNo());
             log.debug("BillStatus:" + billStatus);
-            oscarSuperManager.update("appointmentDao", "archive_appt", new Object[]{bean.getApptNo()});
+            Appointment appt = appointmentDao.find(Integer.parseInt(bean.getApptNo()));
+            appointmentArchiveDao.archiveAppointment(appt);
             int rowsAffected = oscarSuperManager.update("appointmentDao", "updatestatusc", new Object[]{billStatus,bean.getCreator(),bean.getApptNo()});
 
             if (rowsAffected<1) log.error("LLLOOK: APPT ERROR - CANNOT UPDATE APPT ("+bean.getApptNo()+") FOR demo:" + bean.getPatientName() +" date " + curDate);
         }
-       
+
 
         char billingAccountStatus = getBillingAccountStatus( bean);
-        
+
         //String billingSQL = insertIntoBilling(bean, curDate, billingAccountStatus);
         Billing billing = getBillingObj(bean, curDate, billingAccountStatus);
 
@@ -121,7 +128,7 @@ public class BillingSaveBillingAction extends Action {
 
         String billedAmount;
         //REALLY should be able to get rid of this since every claim will go thru here.
-////        if (bean.getBillingType().equals("MSP") || bean.getBillingType().equals("ICBC") || bean.getBillingType().equals("Pri") || bean.getBillingType().equals("WCB")) {  
+////        if (bean.getBillingType().equals("MSP") || bean.getBillingType().equals("ICBC") || bean.getBillingType().equals("Pri") || bean.getBillingType().equals("WCB")) {
         for (oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem bItem: billItem){
 
             if(request.getParameter("dispPrice+"+bItem.getServiceCode())!= null){
@@ -143,7 +150,7 @@ public class BillingSaveBillingAction extends Action {
             }
 
             Billingmaster billingmaster = saveBill(billingid, "" + billingAccountStatus, dataCenterId, billedAmount, "" + paymentMode, bean, bItem);//billItem.get(i));
-            
+
             String WCBid = request.getParameter("WCBid");
             MiscUtils.getLogger().debug("WCB:"+WCBid);
             if (bean.getBillingType().equals("WCB")) {
@@ -152,7 +159,7 @@ public class BillingSaveBillingAction extends Action {
             billingmasterDAO.save(billingmaster);
             billingMasterId = "" + billingmaster.getBillingmasterNo();
             this.createBillArchive(billingMasterId);
-        
+
             //Changed March 8th to be included side this loop,  before only one billing would get this information.
             if (bean.getCorrespondenceCode().equals("N") || bean.getCorrespondenceCode().equals("B")) {
                 try {
@@ -172,36 +179,36 @@ public class BillingSaveBillingAction extends Action {
 
             }
         }
-        
+
         if (bean.getBillingType().equals("WCB")) {
-            
+
             // HOW TO DO THIS PART
             /* Need to link the id of a WCB for with a bill
                 -Continue to put it in the WCB form ?   + no data structure change - not sure how will it work.
                 On submission how would this work??  for each bill submission that would look for it's id in the wcb table?
-                The problem is that it's not really logical but it would work.  Not every form would have a billing. 
-                
-             
+                The problem is that it's not really logical but it would work.  Not every form would have a billing.
+
+
                 -Add a field to Billingmaster?   + data structure change + data migration + initial reaction
                 Data conversion wouldn't be that big of a deal though.  because everything else would be coming over too.
                 Most logical
-             
+
                 -Add a separate table ?       + data structure change + data migration + 2nd initial reacion
-             
-             */ 
+
+             */
             MiscUtils.getLogger().debug("WCB BILL!!");
-            
-            
+
+
         }
 
 ////        ///}
         //////////////
 //        if (bean.getBillingType().equals("WCB")) {
 //            //Keep in mind that the first billingId was set way up at the top
-//            //NOT ANY MORE  
+//            //NOT ANY MORE
 //            billingid = getInsertIdFromBilling(billingSQL);//--
 //            billingIds.add(billingid);//--
-//            
+//
 //            String status = new String(new char[]{billingAccountStatus});//--
 //            WCBForm wcb = (WCBForm) request.getSession().getAttribute("WCBForm");
 //            wcb.setW_demographic(bean.getPatientNo());
@@ -209,15 +216,15 @@ public class BillingSaveBillingAction extends Action {
 //            String insertBillingMaster = createBillingMasterInsertString(bean,billingid, billingAccountStatus, wcb.getW_payeeno());//--
 //            String amnt = getFeeByCode(wcb.getW_feeitem());
 //            try {
-//                
-//                
+//
+//
 //                Billingmaster billingmaster = saveBill(billingid, "" + billingAccountStatus, dataCenterId, amnt, "" + paymentMode, bean, "1",wcb.getW_feeitem()) ;
 //                billingmasterDAO.save(billingmaster);
 //                billingMasterId = "" + billingmaster.getBillingmasterNo();
 //                this.createBillArchive(billingMasterId);
-//                
-//           
-//              
+//
+//
+//
 //                //for some bizarre reason billing table stores location with trailing '|' e.g 'A|'
 //                //whereas WCB table stores it as single char.
 //                String serviceLocation = bean.getVisitType().substring(0);
@@ -301,7 +308,7 @@ public class BillingSaveBillingAction extends Action {
 //    private String getInsertIdFromBilling(final String billingSQL) {
 //        String billingId = "";
 //        try {
-//            
+//
 //            DBHandler.RunSQL(billingSQL);
 //            java.sql.ResultSet rs = DBHandler.GetSQL("SELECT LAST_INSERT_ID()");
 //            if (rs.next()) {
@@ -341,8 +348,8 @@ public class BillingSaveBillingAction extends Action {
         bill.setCreator(bean.getCreator());
         bill.setBillingtype(bean.getBillingType());
         return bill;
-    } 
-    
+    }
+
     private char getBillingAccountStatus(oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean bean){
         char billingAccountStatus = 'O';
         if (bean.getBillingType().equals("DONOTBILL")) {
@@ -420,7 +427,7 @@ public class BillingSaveBillingAction extends Action {
     private Billingmaster saveBill(String billingid, String billingAccountStatus, String dataCenterId, String billedAmount, String paymentMode, BillingSessionBean bean, oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem billItem) {
         return saveBill(billingid, billingAccountStatus, dataCenterId,billedAmount , paymentMode, bean,  "" + billItem.getUnit()  ,"" + billItem.getServiceCode());
     }
-    private Billingmaster saveBill(String billingid, String billingAccountStatus, String dataCenterId, String billedAmount, String paymentMode, BillingSessionBean bean, String billingUnit,String serviceCode) {    
+    private Billingmaster saveBill(String billingid, String billingAccountStatus, String dataCenterId, String billedAmount, String paymentMode, BillingSessionBean bean, String billingUnit,String serviceCode) {
         Billingmaster bill = new Billingmaster();
 
         bill.setBillingNo(Integer.parseInt(billingid));

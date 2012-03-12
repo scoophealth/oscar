@@ -24,6 +24,9 @@ import java.util.Properties;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.AppointmentArchiveDao;
+import org.oscarehr.common.dao.OscarAppointmentDao;
+import org.oscarehr.common.model.Appointment;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.SxmlMisc;
@@ -32,6 +35,9 @@ import oscar.service.OscarSuperManager;
 public class JdbcBillingPageUtil {
 	private static final Logger _logger = Logger.getLogger(JdbcBillingPageUtil.class);
 	BillingONDataHelp dbObj = new BillingONDataHelp();
+	AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
+    OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
+
 
 	public List getCurTeamProviderStr(String provider_no) {
 		List retval = new Vector();
@@ -62,7 +68,7 @@ public class JdbcBillingPageUtil {
 
 		return retval;
 	}
-	
+
 	public List getCurSiteProviderStr(String provider_no) {
 		List retval = new Vector();
 		String sql = "select provider_no,last_name,first_name,ohip_no,comments from provider p "
@@ -94,7 +100,7 @@ public class JdbcBillingPageUtil {
 
 		return retval;
 	}
-	
+
 	public List getCurProviderStr() {
 		List retval = new Vector();
 		String sql = "select provider_no,last_name,first_name,ohip_no,comments from provider "
@@ -328,7 +334,8 @@ public class JdbcBillingPageUtil {
 
 	public boolean updateApptStatus(String apptNo, String status, String userNo) {
                 OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");
-                oscarSuperManager.update("appointmentDao", "archive_appt", new Object[]{apptNo});
+                Appointment appt = appointmentDao.find(Integer.parseInt(apptNo));
+                appointmentArchiveDao.archiveAppointment(appt);
                 int rowsAffected = oscarSuperManager.update("appointmentDao", "updatestatusc", new Object[]{status,userNo,apptNo});
                 return (rowsAffected==1);
 	}
@@ -346,7 +353,7 @@ public class JdbcBillingPageUtil {
 		}
 		return retval;
 	}
-	
+
 	// last_name,first_name,dob,hin,ver,hc_type,sex,family_doctor,provider_no,roster_status
 	public List getPatientCurBillingDemographic(String demoNo) {
 		List retval = null;
@@ -374,7 +381,7 @@ public class JdbcBillingPageUtil {
 		}
 		return retval;
 	}
-	
+
 	public String getReferDocSpet(String billingNo) {
 		String retval = null;
 		String sql = "select specialty from billingreferral where referral_no='" + billingNo + "' ";
@@ -455,7 +462,7 @@ public class JdbcBillingPageUtil {
 		}
 		return retval;
 	}
-	
+
 //	 @ OSCARSERVICE
 	public boolean delBillingFavouriteList(String name, String providerNo) {
 		boolean retval = true;
@@ -467,7 +474,7 @@ public class JdbcBillingPageUtil {
 		return retval;
 	}
 	// @ OSCARSERVICE
-	
+
 	public boolean updateBillingFavouriteList(String name, String list, String providerNo) {
 		boolean retval = false;
 		String sql = "update billing_on_favourite set service_dx='" + list + "', provider_no='" + providerNo

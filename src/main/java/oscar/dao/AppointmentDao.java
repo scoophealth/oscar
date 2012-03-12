@@ -13,9 +13,9 @@ import oscar.appt.ApptData;
  * Oscar Appointment DAO implementation created to extract database access code
  * from appointment related JSP files. This class contains only actual sql
  * queries and row mappers.
- * 
+ *
  * @author Eugene Petruhin
- * 
+ *
  */
 public class AppointmentDao extends OscarSuperDao {
 
@@ -25,7 +25,7 @@ public class AppointmentDao extends OscarSuperDao {
 		rowMappers.put("export_appt", new ExportApptDataRowMapper());
 	}
 
-	private String [][] dbQueries = new String[][] { 
+	private String [][] dbQueries = new String[][] {
             {"search_appt", "select count(appointment_no) AS n from appointment where appointment_date = ? and provider_no = ? and status !='C' and ((start_time>= ? and start_time<= ?) or (end_time>= ? and end_time<= ?) or (start_time<= ? and end_time>= ?) ) and program_id=?" },
             {"search_appt_name", "select name from appointment where appointment_date = ? and provider_no = ? and status !='C' and ((start_time>= ? and start_time<= ?) or (end_time>= ? and end_time<= ?) or (start_time<= ? and end_time>= ?) ) and program_id=?" },
             {"search_provider_name", "select last_name,first_name from provider where provider_no= ? " },
@@ -54,11 +54,8 @@ public class AppointmentDao extends OscarSuperDao {
             {"delete_appt", "delete from appointment where appointment_date=? and provider_no=? and start_time=? and end_time=? and name=? and notes=? and reason=? and createdatetime like ?  and creator=? and demographic_no=? " },
             {"update_appt", "update appointment set start_time=?, end_time=?, name=?, demographic_no=?, notes=?, reason=?, location=?, resources=?, updatedatetime=?, lastupdateuser=?, urgency=? where appointment_date=? and provider_no=? and start_time=? and end_time=? and name=? and notes=? and reason=? and createdatetime like ?  and creator=? and demographic_no=?" },
 
-            {"archive_appt", "insert into appointmentArchive (appointment_no,provider_no,appointment_date,start_time,end_time,name,demographic_no,program_id,notes,reason,location,resources,type,style,billing,status,createdatetime,updatedatetime,creator,lastupdateuser,remarks,urgency,imported_status)(select appointment_no,provider_no,appointment_date,start_time,end_time,name,demographic_no,program_id,notes,reason,location,resources,type,style,billing,status,createdatetime,updatedatetime,creator,lastupdateuser,remarks,urgency,imported_status from appointment where appointment_no=?)"},            
-            {"archive_group", "insert into appointmentArchive (appointment_no,provider_no,appointment_date,start_time,end_time,name,demographic_no,program_id,notes,reason,location,resources,type,style,billing,status,createdatetime,updatedatetime,creator,lastupdateuser,remarks,urgency,imported_status)(select appointment_no,provider_no,appointment_date,start_time,end_time,name,demographic_no,program_id,notes,reason,location,resources,type,style,billing,status,createdatetime,updatedatetime,creator,lastupdateuser,remarks,urgency,imported_status from appointment where appointment_date=? and provider_no=? and start_time=? and end_time=? and name=? and notes=? and reason=? and createdatetime = ?  and creator=? and demographic_no=?)"},
-
             {"search_group_day_appt", "select count(appointment_no) as numAppts from appointment, mygroup where mygroup.provider_no=appointment.provider_no and appointment.status != 'C' and mygroup.mygroup_no=? and  appointment.demographic_no=? and  appointment.appointment_date=?"},
-                
+
             {"import_appt", "insert into appointment (provider_no,appointment_date,start_time,end_time,name,demographic_no,notes,reason,status,imported_status) values (?,?,?,?,?,?,?,?,?,?)" },
             {"export_appt", "select app.*, prov.first_name, prov.last_name, prov.ohip_no from appointment app, provider prov where app.provider_no = prov.provider_no and app.demographic_no = ?" }
 	};

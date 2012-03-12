@@ -4,6 +4,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -13,34 +15,37 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name="appointmentArchive")
 public class AppointmentArchive extends AbstractModel<Integer>  {
-	
+
 	@Id
-	@Column(name="appointment_no")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
+
+	@Column(name="appointment_no")
+	private Integer appointmentNo;
+
 	@Column(name="provider_no")
 	private String providerNo;
-	
+
 	@Temporal(TemporalType.DATE)
 	@Column(name="appointment_date")
 	private Date appointmentDate;
-	
+
 	@Temporal(TemporalType.TIME)
 	@Column(name="start_time")
 	private Date startTime;
-	
+
 	@Temporal(TemporalType.TIME)
 	@Column(name="end_time")
 	private Date endTime;
-	
+
 	private String name;
-	
+
 	@Column(name="demographic_no")
 	private int demographicNo;
-	
+
 	@Column(name="program_id")
 	private int programId;
-	
+
 	private String notes;
 	private String reason;
 	private String location;
@@ -49,25 +54,29 @@ public class AppointmentArchive extends AbstractModel<Integer>  {
 	private String style;
 	private String billing;
 	private String status;
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="createdatetime")
 	private Date createDateTime = new Date();
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="updatedatetime")
 	private Date updateDateTime = new Date();
-	
+
 	private String creator;
-	
+
 	@Column(name="lastupdateuser")
 	private String lastUpdateUser;
-	
+
 	private String remarks;
-	
-	
-	
-	
+
+	@Column(name = "imported_status")
+	private String importedStatus;
+	private String urgency;
+
+
+
+
 	public String getProviderNo() {
 		return providerNo;
 	}
@@ -230,8 +239,8 @@ public class AppointmentArchive extends AbstractModel<Integer>  {
 
 	public AppointmentArchive() {
 		//blank
-	}	
-	
+	}
+
 	public AppointmentArchive(Integer id) {
 		this.id = id;
 	}
@@ -240,10 +249,36 @@ public class AppointmentArchive extends AbstractModel<Integer>  {
     public Integer getId() {
 		return id;
 	}
-	
+
 	@PreUpdate
 	protected void jpaUpdateLastUpdateTime() {
 		this.updateDateTime = new Date();
 	}
+
+	public Integer getAppointmentNo() {
+    	return appointmentNo;
+    }
+
+	public void setAppointmentNo(Integer appointmentNo) {
+    	this.appointmentNo = appointmentNo;
+    }
+
+	public String getImportedStatus() {
+    	return importedStatus;
+    }
+
+	public void setImportedStatus(String importedStatus) {
+    	this.importedStatus = importedStatus;
+    }
+
+	public String getUrgency() {
+    	return urgency;
+    }
+
+	public void setUrgency(String urgency) {
+    	this.urgency = urgency;
+    }
+
+
 
 }

@@ -8,6 +8,18 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
+<%@page import="org.oscarehr.common.dao.AppointmentArchiveDao" %>
+<%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
+<%@page import="org.oscarehr.common.model.Appointment" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="java.text.SimpleDateFormat" %>
+<%
+	AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
+	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
+	SimpleDateFormat dayFormatter = new SimpleDateFormat("yyyy-MM-dd");
+	SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
+	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+%>
 <%!
   GregorianCalendar addDateByYMD(GregorianCalendar cal, String unit, int n) {
 	if (unit.equals("day")) {
@@ -16,7 +28,7 @@
 		cal.add(Calendar.MONTH, n);
 	} else if (unit.equals("year")) {
 		cal.add(Calendar.YEAR, n);
-	} 
+	}
 	return cal;
   }
 %>
@@ -39,7 +51,7 @@
 
     // repeat adding
     if (request.getParameter("groupappt").equals("Add Group Appointment") ) {
-        String[] param = new String[18];
+        String[] param = new String[19];
         int rowsAffected=0, datano=0;
 
             param[0]=request.getParameter("provider_no");
@@ -59,10 +71,12 @@
             param[14]=userName;  //request.getParameter("creator");
             param[15]=request.getParameter("remarks");
             param[17]=(String)request.getSession().getAttribute("programId_oscarView");
-		
+
   	    if (request.getParameter("demographic_no")!=null && !(request.getParameter("demographic_no").equals(""))) {
 			param[16]=request.getParameter("demographic_no");
 	    } else param[16]="0";
+
+  	    	param[18] = request.getParameter("urgency");
 
 		while (true) {
 			rowsAffected = oscarSuperManager.update("appointmentDao", "add_apptrecord", param);
@@ -97,6 +111,7 @@
                 paramE[7]=appt.get("createdatetime"); //request.getParameter("createdatetime");
                 paramE[8]=appt.get("creator"); //request.getParameter("creator");
                 paramE[9]=appt.get("demographic_no"); //request.getParameter("creator");
+
         }
 
         // group cancel
@@ -109,7 +124,8 @@
 
 			// repeat doing
 			while (true) {
-                                oscarSuperManager.update("appointmentDao", "archive_appt", new String[]{request.getParameter("appointment_no")});
+				Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no")));
+			    appointmentArchiveDao.archiveAppointment(appt);
 				rowsAffected = oscarSuperManager.update("appointmentDao", "cancel_appt", param);
 
 				gCalDate.setTime(UtilDateUtilities.StringToDate((String)param[3], "yyyy-MM-dd"));
@@ -128,7 +144,12 @@
 
 			// repeat doing
 			while (true) {
-                                oscarSuperManager.update("appointmentDao", "archive_group", param);
+
+				List<Appointment> appts = appointmentDao.find(dayFormatter.parse((String)param[0]), (String)param[1], (java.sql.Time)param[2], (java.sql.Time)param[3],
+						(String)param[4], (String)param[5], (String)param[6], (java.sql.Timestamp)param[7], (String)param[8], (Integer)param[9]);
+				for(Appointment appt:appts) {
+					appointmentArchiveDao.archiveAppointment(appt);
+				}
 				rowsAffected = oscarSuperManager.update("appointmentDao", "delete_appt", param);
 
 				gCalDate.setTime(UtilDateUtilities.StringToDate((String)param[0], "yyyy-MM-dd"));
@@ -141,7 +162,7 @@
 		}
 
 		if (request.getParameter("groupappt").equals("Group Update")) {
-			Object[] param = new Object[20];
+			Object[] param = new Object[21];
                         param[0]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
                         param[1]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"));
                         param[2]=request.getParameter("keyword");
@@ -152,18 +173,23 @@
                         param[7]=request.getParameter("resources");
                         param[8]=createdDateTime;
                         param[9]=userName;
- 	        for(int k=0; k<paramE.length; k++) param[k+10] = paramE[k];
+                        param[10]=request.getParameter("urgency");
+ 	        for(int k=0; k<paramE.length; k++) param[k+11] = paramE[k];
 
 			// repeat doing
 			while (true) {
-                                oscarSuperManager.update("appointmentDao", "archive_group", paramE);
+				List<Appointment> appts = appointmentDao.find(dayFormatter.parse((String)paramE[0]), (String)paramE[1], (java.sql.Time)paramE[2],(java.sql.Time) paramE[3],
+						(String)paramE[4], (String)paramE[5], (String)paramE[6], (java.sql.Timestamp)paramE[7], (String)paramE[8], (Integer)paramE[9]);
+				for(Appointment appt:appts) {
+					appointmentArchiveDao.archiveAppointment(appt);
+				}
 				rowsAffected = oscarSuperManager.update("appointmentDao", "update_appt", param);
 
-				gCalDate.setTime(UtilDateUtilities.StringToDate((String)param[10], "yyyy-MM-dd"));
+				gCalDate.setTime(UtilDateUtilities.StringToDate((String)param[11], "yyyy-MM-dd"));
 				gCalDate = addDateByYMD(gCalDate, everyUnit, delta);
 
 				if (gCalDate.after(gEndDate)) break;
-				else param[10] = UtilDateUtilities.DateToString(gCalDate.getTime(), "yyyy-MM-dd");
+				else param[11] = UtilDateUtilities.DateToString(gCalDate.getTime(), "yyyy-MM-dd");
 			}
         	bSucc = true;
 		}
@@ -184,34 +210,34 @@
 <h1><bean:message
 	key="appointment.appointmentgrouprecords.msgAddFailure" /></h1>
 
-<%  
+<%
     }
     return;
   }
 %>
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 <html:html locale="true">
@@ -242,8 +268,8 @@ function onButDelete() {
 }
 function onSub() {
   if( saveTemp==1 ) {
-    return (confirm("<bean:message key="appointment.appointmentgrouprecords.msgDeleteConfirmation"/>")) ; 
-  } 
+    return (confirm("<bean:message key="appointment.appointmentgrouprecords.msgDeleteConfirmation"/>")) ;
+  }
 }
 //-->
 </script>
@@ -323,7 +349,7 @@ function onSub() {
 		<td width="20%"></td>
 		<td width="16%" nowrap>Every</td>
 		<td nowrap><select name="everyNum">
-			<%	
+			<%
 for (int i = 1; i < 12; i++) {
 %>
 			<option value="<%=i%>"><%=i%></option>
