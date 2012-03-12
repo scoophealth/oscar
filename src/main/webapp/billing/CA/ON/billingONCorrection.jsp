@@ -57,6 +57,7 @@ if (bMultisites)
 			String BillTotal = "";
 			String visitdate = "";
 			String visittype = "";
+			String sliCode = "";
 			String BillDTNo = "";
 			String HCTYPE = "";
 			String HCSex = "";
@@ -142,6 +143,9 @@ if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.oscarehr.common.model.Site"%>
 <%@page import="org.oscarehr.common.model.Provider"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.common.model.ClinicNbr"%>
+<%@page import="org.oscarehr.common.dao.ClinicNbrDao"%>
 
 <html:html locale="true">
 <head>
@@ -354,6 +358,7 @@ function checkSettle(status) {
 						BillTotal = ch1Obj.getTotal();
 						visitdate = ch1Obj.getAdmission_date();
 						visittype = ch1Obj.getVisittype();
+						sliCode = ch1Obj.getLocation();
 						BillDTNo = "";
 						HCTYPE = ch1Obj.getProvince();
 						HCSex = ch1Obj.getSex();
@@ -766,24 +771,27 @@ function changeSite(sel) {
 		 <input type="hidden" name="xml_provider_no" value="<%=Provider%>"></td>
 	</tr>
 	<tr>
-		<td width="54%"><b> <bean:message
-			key="billing.billingCorrection.formVisitType" />: </b> <input
-			type="hidden" name="xml_visittype" value="<%=visittype%>"> <select
-			style="font-size: 80%;" name="visittype">
-			<option value=""><bean:message
-				key="billing.billingCorrection.msgSelectVisitType" /></option>
-			<option value="00" <%=visittype.equals("00")?"selected":""%>><bean:message
-				key="billing.billingCorrection.formClinicVisit" /></option>
-			<option value="01" <%=visittype.equals("01")?"selected":""%>><bean:message
-				key="billing.billingCorrection.formOutpatientVisit" /></option>
-			<option value="02" <%=visittype.equals("02")?"selected":""%>><bean:message
-				key="billing.billingCorrection.formHospitalVisit" /></option>
-			<option value="03" <%=visittype.equals("03")?"selected":""%>><bean:message
-				key="billing.billingCorrection.formER" /></option>
-			<option value="04" <%=visittype.equals("04")?"selected":""%>><bean:message
-				key="billing.billingCorrection.formNursingHome" /></option>
-			<option value="05" <%=visittype.equals("05")?"selected":""%>><bean:message
-				key="billing.billingCorrection.formHomeVisit" /></option>
+		<td width="54%"><b> <%if (OscarProperties.getInstance().getBooleanProperty("rma_enabled", "true")) { %> Clinic Nbr <% } else { %> <bean:message key="billing.billingCorrection.formVisitType"/> <% } %>: </b> <input
+			type="hidden" name="xml_visittype" value="<%=visittype%>"> 
+			<select style="font-size: 80%;" name="visittype">
+			<option value=""><bean:message key="billing.billingCorrection.msgSelectVisitType" /></option>
+			<% if (OscarProperties.getInstance().getBooleanProperty("rma_enabled", "true")) { %>
+			 <% 
+			    ClinicNbrDao cnDao = (ClinicNbrDao) SpringUtils.getBean("clinicNbrDao"); 
+				ArrayList<ClinicNbr> nbrs = cnDao.findAll();
+               	for (ClinicNbr clinic : nbrs) {
+					String valueString = String.format("%s | %s", clinic.getNbrValue(), clinic.getNbrString());
+					%>			    
+				<option value="<%=valueString%>" <%=visittype.startsWith(clinic.getNbrValue())?"selected":""%>><%=valueString%></option>
+		 	<%	}
+			} else { %>
+			<option value="00" <%=visittype.equals("00")?"selected":""%>><bean:message key="billing.billingCorrection.formClinicVisit" /></option>
+			<option value="01" <%=visittype.equals("01")?"selected":""%>><bean:message key="billing.billingCorrection.formOutpatientVisit" /></option>
+			<option value="02" <%=visittype.equals("02")?"selected":""%>><bean:message key="billing.billingCorrection.formHospitalVisit" /></option>
+			<option value="03" <%=visittype.equals("03")?"selected":""%>><bean:message key="billing.billingCorrection.formER" /></option>
+			<option value="04" <%=visittype.equals("04")?"selected":""%>><bean:message key="billing.billingCorrection.formNursingHome" /></option>
+			<option value="05" <%=visittype.equals("05")?"selected":""%>><bean:message key="billing.billingCorrection.formHomeVisit" /></option>
+			<% } %>
 		</select></td>
 		<td width="46%"><b> <input type="hidden" name="xml_visitdate"
 			value="<%=visitdate%>" /> <bean:message
@@ -792,6 +800,21 @@ function changeSite(sel) {
 			type="text" id="xml_vdate" name="xml_vdate" value="<%=visitdate%>"
 			size=10 /></b></td>
 	</tr>
+	<tr>
+		<%String clinicNo = OscarProperties.getInstance().getProperty("clinic_no", "").trim();%>
+		<td colspan="2"><b><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode"/>: </b>
+			<select name="xml_slicode">
+				<option value="<%=clinicNo%>" ><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.NA" /></option>
+				<option value="HDS " <%=sliCode.startsWith("HDS")?"selected":""%>><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.HDS" /></option>
+				<option value="HED " <%=sliCode.startsWith("HED")?"selected":""%>><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.HED" /></option>
+				<option value="HIP " <%=sliCode.startsWith("HIP")?"selected":""%>><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.HIP" /></option>
+				<option value="HOP " <%=sliCode.startsWith("HOP")?"selected":""%>><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.HOP" /></option>
+				<option value="HRP " <%=sliCode.startsWith("HRP")?"selected":""%>><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.HRP" /></option>
+				<option value="IHF " <%=sliCode.startsWith("IHF")?"selected":""%>><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.IHF" /></option>
+				<option value="OFF " <%=sliCode.startsWith("OFF")?"selected":""%>><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.OFF" /></option>
+				<option value="OTN " <%=sliCode.startsWith("OTN")?"selected":""%>><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.OTN" /></option>
+			</select> 
+	   </td>
 </table>
 
 <table width="600" border="0" cellspacing="1" cellpadding="0">

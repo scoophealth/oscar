@@ -65,6 +65,9 @@
 	errorPage="errorpage.jsp"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.common.model.ClinicNbr"%>
+<%@page import="org.oscarehr.common.dao.ClinicNbrDao"%>
 
 <%GregorianCalendar now = new GregorianCalendar();
 			int curYear = now.get(Calendar.YEAR);
@@ -426,8 +429,7 @@ if(bFlag) {
 		</select></td>
 	</tr>
 	<tr class="myGreen">
-		<td width="54%"><b><bean:message
-			key="billing.billingCorrection.formVisit" />:</b> <input type="hidden"
+		<td width="54%"><b><%if (OscarProperties.getInstance().getBooleanProperty("rma_enabled", "true")) { %> Clinic Nbr <% } else { %> <bean:message key="billing.billingCorrection.formVisitType"/> <% } %>:</b> <input type="hidden"
 			name="xml_clinic_ref_code" value="<%=location%>"> <select
 			name="clinic_ref_code">
 			<option value=""><bean:message
@@ -471,6 +473,16 @@ if(bFlag) {
 			style="font-size: 80%;" name="visittype">
 			<option value=""><bean:message
 				key="billing.billingCorrection.msgSelectVisitType" /></option>
+				 <% if (OscarProperties.getInstance().getBooleanProperty("rma_enabled", "true")) { %>
+                   <% 
+			    ClinicNbrDao cnDao = (ClinicNbrDao) SpringUtils.getBean("clinicNbrDao"); 
+				ArrayList<ClinicNbr> nbrs = cnDao.findAll();
+               	for (ClinicNbr clinic : nbrs) {
+					String valueString = String.format("%s | %s", clinic.getNbrValue(), clinic.getNbrString());
+					%>			    
+				<option value="<%=valueString%>" <%=visittype.startsWith(clinic.getNbrValue())?"selected":""%>><%=valueString%></option>
+		 		<%	} %>
+                    <% } else { %>
 			<option value="00" <%=visittype.equals("00")?"selected":""%>><bean:message
 				key="billing.billingCorrection.formClinicVisit" /></option>
 			<option value="01" <%=visittype.equals("01")?"selected":""%>><bean:message
@@ -483,6 +495,7 @@ if(bFlag) {
 				key="billing.billingCorrection.formNursingHome" /></option>
 			<option value="05" <%=visittype.equals("05")?"selected":""%>><bean:message
 				key="billing.billingCorrection.formHomeVisit" /></option>
+				<% } %>
 		</select></td>
 		<td width="46%"><b> <input type="hidden" name="xml_visitdate"
 			value="<%=visitdate%>" /> <bean:message

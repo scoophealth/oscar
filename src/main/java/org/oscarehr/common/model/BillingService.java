@@ -73,16 +73,16 @@ public class BillingService extends AbstractModel<Integer> implements Serializab
 	@Column(name = "termination_date")
 	@Temporal(value = javax.persistence.TemporalType.DATE)
 	private Date terminationDate;
-	
+
 	@Column(name = "displaystyle")
 	private Integer displayStyle;
 
-        private Boolean gstFlag;
-
-        @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-        @JoinColumn(name="service_code", referencedColumnName="service_code")
-        @OrderBy("effective_date DESC")
-        private List<BillingPercLimit> billingPercLimit;
+	private Boolean gstFlag;
+	private Boolean sliFlag;
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	@JoinColumn(name="service_code", referencedColumnName="service_code")
+	@OrderBy("effective_date DESC")
+	private List<BillingPercLimit> billingPercLimit;
 
 	@Override
     public Integer getId() {
@@ -260,7 +260,7 @@ public class BillingService extends AbstractModel<Integer> implements Serializab
         }
 
         return null;
-        
+
     }
 
     /**
@@ -290,6 +290,14 @@ public class BillingService extends AbstractModel<Integer> implements Serializab
 
 	public void setDisplayStyle(Integer displayStyle) {
 	    this.displayStyle = displayStyle;
+	}
+
+	public Boolean getSliFlag() {
+	    return sliFlag;
+    }
+
+	public void setSliFlag(Boolean sliFlag) {
+	    this.sliFlag = sliFlag;
     }
 
 }

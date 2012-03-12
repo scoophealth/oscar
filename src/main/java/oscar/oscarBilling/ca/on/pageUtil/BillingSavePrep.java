@@ -158,7 +158,7 @@ public class BillingSavePrep {
 		claim1Header.setRef_lab_num("");
 		claim1Header.setMan_review(val.getParameter("m_review") != null ? val.getParameter("m_review") : "");
 
-		claim1Header.setLocation(val.getParameter("clinic_no"));
+		claim1Header.setLocation(val.getParameter("xml_slicode").substring(0, 3));
 
 		claim1Header.setDemographic_no(val.getParameter("demographic_no"));
 		claim1Header.setProviderNo(val.getParameter("xml_provider").substring(0,
@@ -236,7 +236,7 @@ public class BillingSavePrep {
 		claim1Header.setRef_lab_num("");
 		claim1Header.setMan_review("");
 
-		claim1Header.setLocation(val.getParameter("clinic_no"));
+		claim1Header.setLocation(val.getParameter("xml_slicode").substring(0, 3)); 
 
 		claim1Header.setDemographic_no(val.getParameter("demographic_no"));
 		claim1Header.setProviderNo(val.getParameter("xml_provider"));

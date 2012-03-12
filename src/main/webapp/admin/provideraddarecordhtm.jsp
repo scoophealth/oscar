@@ -2,12 +2,16 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
-
-<%@ page
-	import="java.util.*, oscar.oscarProvider.data.*"%>
-
+<%@ page import="org.oscarehr.common.model.ClinicNbr"%>
+<%@ page import="org.oscarehr.common.dao.ClinicNbrDao"%>
+<%@ page import="org.oscarehr.util.SpringUtils"%>
+<%@ page import="java.util.*,oscar.oscarProvider.data.*"%>
+<%@ page import="oscar.OscarProperties"%>
+<%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@ page import="org.oscarehr.common.dao.SiteDao"%>
+<%@ page import="org.oscarehr.common.model.Site"%>
 <%
-  if(session.getAttribute("user") == null)
+	if(session.getAttribute("user") == null)
     response.sendRedirect("../logout.jsp");
   String curProvider_no,userfirstname,userlastname;
   curProvider_no = (String) session.getAttribute("user");
@@ -37,14 +41,16 @@
 %>
 
 <%
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+	if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     
     boolean isSiteAccessPrivacy=false;
 %>
 
 <security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
-	<%isSiteAccessPrivacy=true; %>
+	<%
+		isSiteAccessPrivacy=true;
+	%>
 </security:oscarSec>
 
 <!--
@@ -72,13 +78,9 @@
  * Ontario, Canada
  */
 -->
-<%@page import="oscar.OscarProperties"%>
-
-<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
-<%@page import="org.oscarehr.common.dao.SiteDao"%>
-<%@page import="org.oscarehr.common.model.Site"%><html:html locale="true">
+<html:html locale="true">
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
 <title><bean:message key="admin.provideraddrecordhtm.title" /></title>
 <link rel="stylesheet" href="../web.css">
 <script LANGUAGE="JavaScript">
@@ -128,9 +130,13 @@ function upCaseCtrl(ctrl) {
 		<td width="50%" align="right"><bean:message
 			key="admin.provider.formProviderNo" /><font color="red">:</font></td>
 		<td>
-		<%if(OscarProperties.getInstance().isProviderNoAuto()){ %> <input
+		<%
+			if(OscarProperties.getInstance().isProviderNoAuto()){
+		%> <input
 			type="text" name="provider_no" maxlength="6" readonly="readonly"
-			value="-new-"> <%} else {%> <input type="text"
+			value="-new-"> <%
+ 	} else {
+ %> <input type="text"
 			name="provider_no" maxlength="6"> <input type="button" value=<bean:message key="admin.provideraddrecordhtm.suggest"/>
                         onclick="provider_no.value='<%=suggestProviderNo%>'"<%}%>
 		</td>
@@ -151,28 +157,35 @@ function upCaseCtrl(ctrl) {
 		</td>
 	</tr>
 	
-<% if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) { %>
+<%
+		if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
+	%>
 	<tr>
 		<td>
 		<div align="right"><bean:message key="admin.provider.sitesAssigned" /><font color="red">:</font></div>
 		</td>
 		<td>
-<% SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
+<%
+	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
 List<Site> sites = ( isSiteAccessPrivacy ? siteDao.getActiveSitesByProviderNo(curProvider_no) : siteDao.getAllActiveSites()); 
 for (int i=0; i<sites.size(); i++) {
 %>		
-	<input type="checkbox" name="sites" value="<%= sites.get(i).getSiteId() %>"><%= sites.get(i).getName() %><br />
+	<input type="checkbox" name="sites" value="<%=sites.get(i).getSiteId()%>"><%=sites.get(i).getName()%><br />
 <%
-}
+	}
 %>
 		</td>
 	</tr>
-<% } %>	
+<%
+	}
+%>	
 	
 	<tr>
 		<td align="right"><bean:message key="admin.provider.formType" /><font
 			color="red">:</font></td>
-		<td><!--input type="text" name="provider_type" --> <% if (vLocale.getCountry().equals("BR")) { %>
+		<td><!--input type="text" name="provider_type" --> <%
+ 	if (vLocale.getCountry().equals("BR")) {
+ %>
 		<select name="provider_type">
 			<option value="receptionist"><bean:message
 				key="admin.provider.formType.optionReceptionist" /></option>
@@ -188,7 +201,9 @@ for (int i=0; i<sites.size(); i++) {
 				key="admin.provider.formType.optionAdminBilling" /></option>
 			<option value="billing"><bean:message
 				key="admin.provider.formType.optionBilling" /></option>
-		</select> <% } else { %> <select name="provider_type">
+		</select> <%
+ 	} else {
+ %> <select name="provider_type">
 			<option value="receptionist"><bean:message
 				key="admin.provider.formType.optionReceptionist" /></option>
 			<option value="doctor"><bean:message
@@ -205,7 +220,9 @@ for (int i=0; i<sites.size(); i++) {
 				<option value="er_clerk"><bean:message
 					key="admin.provider.formType.optionErClerk" /></option>
 			</caisi:isModuleLoad>
-		</select> <% } %>
+		</select> <%
+ 	}
+ %>
 		</td>
 	</tr>
 	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
@@ -310,6 +327,29 @@ for (int i=0; i<sites.size(); i++) {
 			</td>
 			<td><input type="text" name="practitionerNo"></td>
 		</tr>
+
+		<%
+			if (OscarProperties.getInstance().getBooleanProperty("rma_enabled", "true")) {
+		%>
+		<tr>
+			<td align="right">Default Clinic NBR:</td>
+			<td colspan="3">
+			<select name="xml_p_nbr">
+			<%
+				ClinicNbrDao clinicNbrDAO = (ClinicNbrDao)SpringUtils.getBean("clinicNbrDao");
+					List<ClinicNbr> nbrList = clinicNbrDAO.findAll();
+					Iterator<ClinicNbr> nbrIter = nbrList.iterator();
+					while (nbrIter.hasNext()) {
+						ClinicNbr tempNbr = nbrIter.next();
+						String valueString = tempNbr.getNbrValue() + " | " + tempNbr.getNbrString();
+			%>
+				<option value="<%=tempNbr.getNbrValue()%>" ><%=valueString%></option>
+			<%}%>
+			
+			</select>
+			</td>
+		</tr>
+		<%} %>
 
 		<tr>
 			<td align="right">Bill Center:</td>

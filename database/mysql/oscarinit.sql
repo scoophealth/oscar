@@ -217,6 +217,7 @@ CREATE TABLE billingservice (
   anaesthesia char(2) default NULL,
   termination_date date default '9999-12-31',
   displaystyle int(10),
+  sliFlag TINYINT(1) NOT NULL,
   PRIMARY KEY  (billingservice_no),
   KEY billingservice_service_code_index (service_code)
 ) ;
@@ -8671,4 +8672,12 @@ CREATE TABLE `cssStyles` (
   `style` text,
   `status` char(1) NOT NULL,
   PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `clinic_nbr` (
+  `nbr_id` int NOT NULL AUTO_INCREMENT,
+  `nbr_value` varchar(11) NOT NULL,
+  `nbr_string` text,
+  `nbr_status` varchar(1),
+  PRIMARY KEY (`nbr_id`)
 );
