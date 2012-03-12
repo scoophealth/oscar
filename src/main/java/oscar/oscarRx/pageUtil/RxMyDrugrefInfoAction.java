@@ -34,7 +34,6 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -49,6 +48,7 @@ import org.oscarehr.PMmodule.caisi_integrator.RemoteDrugAllergyHelper;
 import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.common.dao.UserDSMessagePrefsDAO;
 import org.oscarehr.common.dao.UserPropertyDAO;
+import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.common.model.UserDSMessagePrefs;
 import org.oscarehr.common.model.UserProperty;
@@ -70,7 +70,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
 
     private static final Logger log2 = MiscUtils.getLogger();
     //return interactions about current pending prescriptions
-    public ActionForward findInteractingDrugList (ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)throws IOException, ServletException {
+    public ActionForward findInteractingDrugList (ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)throws IOException {
         MiscUtils.getLogger().debug("in findInteractingDrugList");
         oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
          if (bean == null) {
@@ -81,7 +81,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServlet().getServletContext());
         UserPropertyDAO  propDAO =  (UserPropertyDAO) ctx.getBean("UserPropertyDAO");
         String provider = (String) request.getSession().getAttribute("user");
-        
+
         String retStr=RxUtil.findInterDrugStr(propDAO,provider,bean);
 
         bean.setInteractingDrugList(retStr);
@@ -97,7 +97,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         return null;
     }
 
-    public ActionForward view(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)throws IOException, ServletException {
+    public ActionForward view(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)  {
         MiscUtils.getLogger().debug("in view RxMyDrugrefInfoAction");
         try{
 
@@ -121,9 +121,9 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         String myDrugrefId = null;
         //get from system first
         myDrugrefId  = OscarProperties.getInstance().getProperty("mydrugref_id");
-        
+
         //override with user pref
-        if (prop != null && prop.getValue().length()>0){        
+        if (prop != null && prop.getValue().length()>0){
             myDrugrefId = prop.getValue();
         }
 
@@ -132,19 +132,19 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
             return mapping.findForward("success");
         }
         Vector codes = bean.getAtcCodes();
-        
+
         if(Boolean.valueOf(OscarProperties.getInstance().getProperty("drug_allergy_interaction_warnings", "false"))) {
         	RxDrugRef d = new RxDrugRef();
-        	oscar.oscarRx.data.RxPatientData.Patient.Allergy[]  allerg = RxPatientData.getPatient(bean.getDemographicNo()).getActiveAllergies();
+        	Allergy[]  allerg = RxPatientData.getPatient(bean.getDemographicNo()).getActiveAllergies();
         	Vector vec = new Vector();
             for (int i =0; i < allerg.length; i++){
-               Hashtable h = new Hashtable();           
-               h.put("id",""+i); 
-               h.put("description",allerg[i].getAllergy().getDESCRIPTION());  
-               h.put("type",""+allerg[i].getAllergy().getTYPECODE());
+               Hashtable h = new Hashtable();
+               h.put("id",""+i);
+               h.put("description",allerg[i].getDescription());
+               h.put("type",""+allerg[i].getTypeCode());
                vec.add(h);
             }
-        	codes.addAll(d.getAllergyClasses(vec));                
+        	codes.addAll(d.getAllergyClasses(vec));
         }
         //String[] str = new String[]{"warnings_byATC","bulletins_byATC","interactions_byATC"};
         String[] str = new String[]{"warnings_byATC,bulletins_byATC,interactions_byATC,get_guidelines"};   //NEW more efficent way of sending multiple requests at the same time.
@@ -152,7 +152,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         Locale locale = getLocale(request);
 
         log2.debug("Interaction, local drug atc codes : "+codes);
-        
+
         LoggedInInfo loggedInfo=LoggedInInfo.loggedInInfo.get();
         if (loggedInfo.currentFacility.isIntegratorEnabled())
         {
@@ -160,7 +160,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         	codes.addAll(remoteDrugAtcCodes);
             log2.debug("remote drug atc codes : "+remoteDrugAtcCodes);
         }
-        
+
         log2.debug("Interaction, local + remote drug atc codes : "+codes);
 
         Vector all = new Vector();
@@ -178,53 +178,53 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
             }
         }
         Collections.sort(all, new MyDrugrefComparator());
-        
+
         //filter out based on significance by facility, provider, demographic
         int level = 0;
         int orgLevel = LoggedInInfo.loggedInInfo.get().currentFacility.getRxInteractionWarningLevel();
         level = orgLevel;
         MiscUtils.getLogger().debug("orgLevel="+orgLevel);
-        
+
         UserProperty uprop = propDAO.getProp(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), "rxInteractionWarningLevel");
         if(uprop!=null) {
         	if(uprop.getValue()!=null&&uprop.getValue().length()>0) {
         		int providerLevel = Integer.parseInt(uprop.getValue());
         		MiscUtils.getLogger().debug("providerLevel="+providerLevel);
         		if(providerLevel>0)
-        			level = providerLevel;        		
+        			level = providerLevel;
         	}
         }
 
-        
+
         ClientDao clientDao = (ClientDao)SpringUtils.getBean("clientDao");
         DemographicExt demoWarn = clientDao.getLatestDemographicExt(bean.getDemographicNo(), "rxInteractionWarningLevel");
         if(demoWarn!=null) {
         	if(demoWarn.getValue()!=null&&demoWarn.getValue().length()>0) {
         		int demoLevel = Integer.valueOf(demoWarn.getValue());
-        		MiscUtils.getLogger().debug("demoLevel="+demoLevel);  
+        		MiscUtils.getLogger().debug("demoLevel="+demoLevel);
         		if(demoLevel>0)
-        			level = demoLevel;        		
+        			level = demoLevel;
         	}
         }
         MiscUtils.getLogger().debug("level="+level);
-        
+
         List<Hashtable> toRemove = new ArrayList<Hashtable>();
-        
+
         for(int x=0;x<all.size();x++) {
         	 Hashtable ht=(Hashtable)all.get(x);
         	 String significanceStr = (String)ht.get("significance");
         	 if(significanceStr==null || significanceStr.equals("")) {significanceStr="0";}
         	 int significance = Integer.valueOf(significanceStr);
         	 MiscUtils.getLogger().debug("significance="+significance);
-        	 if((level == 4) || level>0 && significance<level) {        		 
+        	 if((level == 4) || level>0 && significance<level) {
         		 toRemove.add(ht);
         	 }
         }
-        
+
         for(Hashtable ht:toRemove) {
         	all.remove(ht);
         }
-        
+
         MiscUtils.getLogger().debug(all);
         //loop through all to add interaction to each warning
         try{
@@ -332,7 +332,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
                 dsmessageDAO.updateProp(pref);
     }
 
-    public ActionForward setWarningToHide(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)throws IOException, ServletException {
+    public ActionForward setWarningToHide(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) {
 
         WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServlet().getServletContext());
         UserDSMessagePrefsDAO  dsmessageDAO =  (UserDSMessagePrefsDAO) ctx.getBean("UserDSMessagePrefsDAO");
@@ -341,7 +341,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         String provider = (String) request.getSession().getAttribute("user");
         String postId = request.getParameter("resId");
         String date = request.getParameter("updatedat");
-        
+
 
         long datel = Long.parseLong(date);
         Date updatedatId = new Date();
@@ -374,7 +374,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
        return mapping.findForward("updateResources");
     }
 
-    public ActionForward setWarningToShow(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)throws IOException, ServletException {
+    public ActionForward setWarningToShow(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) {
 
         WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServlet().getServletContext());
         UserDSMessagePrefsDAO  dsmessageDAO =  (UserDSMessagePrefsDAO) ctx.getBean("UserDSMessagePrefsDAO");
@@ -382,7 +382,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         String provider = (String) request.getSession().getAttribute("user");
         String resId = request.getParameter("resId");
         String date = request.getParameter("updatedat");
-      
+
 
         long datel = Long.parseLong(date);
         Date updatedatId = new Date();
@@ -398,7 +398,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         h.remove("mydrugref"+resId);
         MiscUtils.getLogger().debug("provider,UserDSMessagePrefs.MYDRUGREF , postId, updatedatId :"+provider+"--"+UserDSMessagePrefs.MYDRUGREF +"--"+ resId+"--"+ updatedatId);
         setShowDSMessage(dsmessageDAO, provider, resId, updatedatId);
-        request.getSession().setAttribute("hideResources", h);       
+        request.getSession().setAttribute("hideResources", h);
 
        return mapping.findForward("updateResources");
     }
@@ -411,7 +411,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
     }
 
 
-    public Vector getMyDrugrefInfo(String command, Vector drugs,String myDrugrefId) throws Exception {
+    public Vector getMyDrugrefInfo(String command, Vector drugs,String myDrugrefId) {
 
         removeNullFromVector(drugs);
         Vector params = new Vector();

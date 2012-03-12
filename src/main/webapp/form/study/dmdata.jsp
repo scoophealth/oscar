@@ -1,26 +1,26 @@
-<%--  
+<%--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 --%>
 <%
@@ -38,13 +38,12 @@ if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp
 	scope="page" />
 
 <%@ include file="../../admin/dbconnection.jsp"%>
-<% 
-String [][] dbQueries=new String[][] { 
-	{"search_demographic", "select * from demographic where demographic_no=? "}, 
-    {"search_formtype2diabete", "select * from formType2Diabetes where demographic_no= ? order by formEdited desc, ID desc limit 0,1"}, 
-    //{"search_echart", "select ongoingConcerns from eChart where demographicNo=? order by timeStamp desc limit 1"}, 
-    //{"search_allergies", "select DESCRIPTION from allergies where demographic_no=? "}, 
-    //{"search_drugs", "select * from drugs where demographic_no=? and rx_date >= ? order by rx_date desc, drugid desc "}, 
+<%
+String [][] dbQueries=new String[][] {
+	{"search_demographic", "select * from demographic where demographic_no=? "},
+    {"search_formtype2diabete", "select * from formType2Diabetes where demographic_no= ? order by formEdited desc, ID desc limit 0,1"},
+    //{"search_echart", "select ongoingConcerns from eChart where demographicNo=? order by timeStamp desc limit 1"},
+    //{"search_drugs", "select * from drugs where demographic_no=? and rx_date >= ? order by rx_date desc, drugid desc "},
 };
 studyBean.doConfigure(dbQueries);
 %>
@@ -65,7 +64,7 @@ studyBean.doConfigure(dbQueries);
 
 	//take data from demographic
     ResultSet rsdemo = studyBean.queryResults(demoNo, "search_demographic");
-    while (rsdemo.next()) { 
+    while (rsdemo.next()) {
         demo.setProperty("demographic.first_name", rsdemo.getString("first_name"));
         demo.setProperty("demographic.last_name", rsdemo.getString("last_name"));
         demo.setProperty("demographic.sex", rsdemo.getString("sex"));
@@ -77,7 +76,7 @@ studyBean.doConfigure(dbQueries);
 
     //take data from form
     rsdemo = studyBean.queryResults(demoNo, "search_formtype2diabete");
-    while (rsdemo.next()) { 
+    while (rsdemo.next()) {
         form.setProperty("formType2Diabetes.birthDate", rsdemo.getString("birthDate"));
 		//get the column number
 		int k=0;
@@ -96,7 +95,7 @@ studyBean.doConfigure(dbQueries);
 		form.setProperty("formType2Diabetes.glucoseC", rsdemo.getString("glucoseC" + k)==null?"":rsdemo.getString("glucoseC" + k));
 		form.setProperty("formType2Diabetes.lifestyle", rsdemo.getString("lifestyle" + k)==null?"":rsdemo.getString("lifestyle" + k));
 		form.setProperty("formType2Diabetes.exercise", rsdemo.getString("exercise" + k)==null?"":rsdemo.getString("exercise" + k));
-		
+
 		form.setProperty("formType2Diabetes.weight", rsdemo.getString("weight" + k)==null?"":rsdemo.getString("weight" + k));
 		form.setProperty("formType2Diabetes.aceInhibitor", rsdemo.getString("aceInhibitor")==null?"":rsdemo.getString("aceInhibitor"));
 		form.setProperty("formType2Diabetes.asa", rsdemo.getString("asa")==null?"":rsdemo.getString("asa"));

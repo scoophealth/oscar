@@ -19,7 +19,7 @@
  * McMaster University
  * Hamilton
  * Ontario, Canada   Creates a new instance of RxInteractionWorker
- * 
+ *
  *
  * RxAllergyWarningWorker.java
  *
@@ -28,6 +28,7 @@
 
 package oscar.oscarRx.data;
 
+import org.oscarehr.common.model.Allergy;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -41,12 +42,12 @@ import oscar.oscarRx.pageUtil.RxSessionBean;
 public class RxAllergyWarningWorker extends Thread {
     RxSessionBean sessionBean = null;
     String atcCode = null;
-    oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies = null;
+    Allergy[] allergies = null;
 
     public RxAllergyWarningWorker() {
     }
 
-    public RxAllergyWarningWorker(RxSessionBean sessionBean, String actCode, oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies) {
+    public RxAllergyWarningWorker(RxSessionBean sessionBean, String actCode, Allergy[] allergies) {
         //drugData.getAllergyWarnings(rx.getAtcCode(),allergies)
 
         this.atcCode = actCode;
@@ -61,7 +62,7 @@ public class RxAllergyWarningWorker extends Thread {
 
         long start = System.currentTimeMillis();
 
-        oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergyWarnings = null;
+        Allergy[] allergyWarnings = null;
         try {
             if (atcCode != null && sessionBean != null && allergies != null) {
                 RxDrugData drugData = new RxDrugData();

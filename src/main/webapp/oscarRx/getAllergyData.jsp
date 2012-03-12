@@ -1,6 +1,6 @@
 
 <%@page import="org.apache.commons.lang.StringUtils"%>
-<%@page import="oscar.oscarRx.data.RxPatientData.Patient.Allergy"%>
+<%@page import="org.oscarehr.common.model.Allergy"%>
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.RemoteDrugAllergyHelper"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.util.MiscUtils"%><%--
@@ -36,13 +36,13 @@ String disabled = oscar.OscarProperties.getInstance().getProperty("rx3.disable_a
 if(disabled.equals("false")) {
 
 oscar.oscarRx.pageUtil.RxSessionBean rxSessionBean = (oscar.oscarRx.pageUtil.RxSessionBean) session.getAttribute("RxSessionBean");
-oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies = RxPatientData.getPatient(rxSessionBean.getDemographicNo()).getAllergies();
+Allergy[] allergies = RxPatientData.getPatient(rxSessionBean.getDemographicNo()).getAllergies();
 
 LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
 	try {
 		ArrayList<Allergy> remoteAllergies=RemoteDrugAllergyHelper.getRemoteAllergiesAsAllergyItems(rxSessionBean.getDemographicNo());
-		
+
 		// now merge the 2 lists
 		for (Allergy alleryTemp : allergies) remoteAllergies.add(alleryTemp);
 		allergies=remoteAllergies.toArray(new Allergy[0]);
@@ -51,7 +51,7 @@ if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
 	}
 }
 
-oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergyWarnings = null;
+Allergy[] allergyWarnings = null;
    RxDrugData drugData = new RxDrugData();
    allergyWarnings = drugData.getAllergyWarnings(atcCode, allergies);
 
@@ -61,11 +61,11 @@ oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergyWarnings = null;
 
   //  d.put("id",id);
     d2.put("id",id);
-    for(oscar.oscarRx.data.RxPatientData.Patient.Allergy allg:allergyWarnings){
-   	 	String temp=StringUtils.trimToEmpty(allg.getAllergy().getDESCRIPTION());
+    for(Allergy allg:allergyWarnings){
+   	 	String temp=StringUtils.trimToEmpty(allg.getDescription());
         d2.put("DESCRIPTION", temp);
-        
-        temp=StringUtils.trimToEmpty(allg.getAllergy().getReaction());
+
+        temp=StringUtils.trimToEmpty(allg.getReaction());
         d2.put("reaction", temp);
     }
 
@@ -77,5 +77,5 @@ oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergyWarnings = null;
    catch(Exception e){
 	   MiscUtils.getLogger().error("Error", e);
     }
-}    
+}
 %>

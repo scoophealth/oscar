@@ -1,25 +1,25 @@
 /*
  *
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License.
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version. *
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM> 
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
+ * <OSCAR TEAM>
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 
 package oscar.oscarRx.data;
@@ -51,7 +51,7 @@ import oscar.oscarDB.DBHandler;
 public class RxPatientData {
 	private static Logger logger = MiscUtils.getLogger();
 
-	private static final PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
+	//private static final PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
 
 	private RxPatientData() {
 		// prevent instantitation
@@ -172,6 +172,8 @@ public class RxPatientData {
 		String postal;
 		String phone;
 		String hin;
+		private static AllergyDao allergyDao = (AllergyDao) SpringUtils.getBean("allergyDao");
+		private PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
 
 		public Patient(int demographicNo, String surname, String firstName, String sex, java.util.Date DOB, String address, String city, String province, String postal, String phone, String hin) {
 
@@ -236,52 +238,19 @@ public class RxPatientData {
 			return this.phone;
 		}
 
-		public Allergy getAllergy(int id) {
+		public org.oscarehr.common.model.Allergy getAllergy(int id) {
 
 			// I know none of this method makes sense, but I'm only converting this to JPA right now, too much work to fix it all to make sense.
-			AllergyDao allergyDao = (AllergyDao) SpringUtils.getBean("allergyDao");
-			org.oscarehr.common.model.Allergy tempAllergy = allergyDao.find(id);
-
-			Allergy allergy = new Allergy(tempAllergy.getDemographicNo(), tempAllergy.getAllergyId(), tempAllergy.getEntryDate(), tempAllergy.getDescription(), tempAllergy.getHiclSeqno(), tempAllergy.getHicSeqno(), tempAllergy.getAgcsp(), tempAllergy.getAgccs(), tempAllergy.getTypeCode());
-			allergy.getAllergy().setReaction(tempAllergy.getReaction());
-			allergy.getAllergy().setStartDate(tempAllergy.getStartDate());
-			allergy.getAllergy().setAgeOfOnset(tempAllergy.getAgeOfOnset());
-			allergy.getAllergy().setSeverityOfReaction(tempAllergy.getSeverityOfReaction());
-			allergy.getAllergy().setOnSetOfReaction(tempAllergy.getOnsetOfReaction());
-			allergy.getAllergy().setRegionalIdentifier(tempAllergy.getRegionalIdentifier());
-			allergy.getAllergy().setLifeStage(tempAllergy.getLifeStage());
+			org.oscarehr.common.model.Allergy allergy = allergyDao.find(id);
 
 			return allergy;
 		}
 
-		public Allergy[] getAllergies() {
-			ArrayList<Allergy> results = new ArrayList<Allergy>();
-			try {
+		public org.oscarehr.common.model.Allergy[] getAllergies() {
+			ArrayList<org.oscarehr.common.model.Allergy> results = new ArrayList<org.oscarehr.common.model.Allergy>();
 
-				ResultSet rs;
-				Allergy allergy;
-
-				rs = DBHandler.GetSQL("SELECT * FROM allergies WHERE demographic_no = '" + getDemographicNo() + "' ORDER BY archived, CASE severity_of_reaction when 4 then severity_of_reaction end asc, CASE severity_of_reaction when  3 then severity_of_reaction end desc, CASE severity_of_reaction when 2 then severity_of_reaction end desc");
-
-				while (rs.next()) {
-					allergy = new Allergy(getDemographicNo(), rs.getInt("allergyid"), rs.getDate("entry_date"), oscar.Misc.getString(rs, "DESCRIPTION"), rs.getInt("HICL_SEQNO"), rs.getInt("HIC_SEQNO"), rs.getInt("AGCSP"), rs.getInt("AGCCS"), rs.getInt("TYPECODE"));
-
-					allergy.getAllergy().setArchived(rs.getString("archived"));
-					allergy.getAllergy().setReaction(oscar.Misc.getString(rs, "reaction"));
-					allergy.getAllergy().setStartDate(rs.getDate("start_date"));
-					allergy.getAllergy().setAgeOfOnset(oscar.Misc.getString(rs, "age_of_onset"));
-					allergy.getAllergy().setSeverityOfReaction(oscar.Misc.getString(rs, "severity_of_reaction"));
-					allergy.getAllergy().setOnSetOfReaction(oscar.Misc.getString(rs, "onset_of_reaction"));
-					allergy.getAllergy().setRegionalIdentifier(oscar.Misc.getString(rs, "regional_identifier"));
-					allergy.getAllergy().setLifeStage(oscar.Misc.getString(rs, "life_stage"));
-					allergy.getAllergy().setPickID(rs.getInt("drugref_id"));
-					allergy.getAllergy().setPosition(rs.getInt("position"));
-					results.add(allergy);
-				}
-				rs.close();
-			} catch (SQLException e) {
-				MiscUtils.getLogger().error("Error", e);
-			}
+			List<org.oscarehr.common.model.Allergy> allergies = allergyDao.findAllergies(getDemographicNo());
+			results.addAll(allergies);
 
 			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 			if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
@@ -291,80 +260,57 @@ public class RxPatientData {
 
 					for (CachedDemographicAllergy remoteAllergy : remoteAllergies) {
 						Date date = null;
-						if (remoteAllergy.getEntryDate() != null) date = remoteAllergy.getEntryDate().getTime();
+						if (remoteAllergy.getEntryDate() != null)
+							date = remoteAllergy.getEntryDate().getTime();
 
-						Allergy allergy = new Allergy(getDemographicNo(), remoteAllergy.getFacilityIdIntegerCompositePk().getCaisiItemId().intValue(), date, remoteAllergy.getDescription(), remoteAllergy.getHiclSeqNo(), remoteAllergy.getHicSeqNo(), remoteAllergy.getAgcsp(), remoteAllergy.getAgccs(), remoteAllergy.getTypeCode());
-						allergy.setIntegratorResult(true);
+						org.oscarehr.common.model.Allergy a = new org.oscarehr.common.model.Allergy();
+						a.setDemographicNo(getDemographicNo());
+						a.setId(remoteAllergy.getFacilityIdIntegerCompositePk().getCaisiItemId().intValue());
+						a.setEntryDate(date);
+						a.setDescription(remoteAllergy.getDescription());
+						a.setHiclSeqno(remoteAllergy.getHiclSeqNo());
+						a.setHicSeqno(remoteAllergy.getHicSeqNo());
+						a.setAgcsp(remoteAllergy.getAgcsp());
+						a.setAgccs(remoteAllergy.getAgccs());
+						a.setTypeCode(remoteAllergy.getTypeCode());
+						a.setIntegratorResult(true);
+						a.setReaction(remoteAllergy.getReaction());
 
-						allergy.getAllergy().setReaction(remoteAllergy.getReaction());
+						if (remoteAllergy.getStartDate() != null)
+							date = remoteAllergy.getStartDate().getTime();
 
-						if (remoteAllergy.getStartDate() != null) date = remoteAllergy.getStartDate().getTime();
-						allergy.getAllergy().setStartDate(date);
+						a.setStartDate(date);
+						a.setAgeOfOnset(remoteAllergy.getAgeOfOnset());
+						a.setSeverityOfReaction(remoteAllergy.getSeverityCode());
+						a.setOnsetOfReaction(remoteAllergy.getOnSetCode());
+						a.setRegionalIdentifier(remoteAllergy.getRegionalIdentifier());
+						a.setLifeStage(remoteAllergy.getLifeStage());
+						a.setDrugrefId(String.valueOf(remoteAllergy.getPickId()));
 
-						allergy.getAllergy().setAgeOfOnset(remoteAllergy.getAgeOfOnset());
-						allergy.getAllergy().setSeverityOfReaction(remoteAllergy.getSeverityCode());
-						allergy.getAllergy().setOnSetOfReaction(remoteAllergy.getOnSetCode());
-						allergy.getAllergy().setRegionalIdentifier(remoteAllergy.getRegionalIdentifier());
-						allergy.getAllergy().setLifeStage(remoteAllergy.getLifeStage());
-						allergy.getAllergy().setPickID(remoteAllergy.getPickId());
-						results.add(allergy);
+						results.add(a);
 					}
 				} catch (Exception e) {
 					logger.error("error getting remote allergies", e);
 				}
 			}
 
-			return (results.toArray(new Allergy[0]));
+			return (results.toArray(new org.oscarehr.common.model.Allergy[0]));
 		}
 
-		public Allergy[] getActiveAllergies() {
-			Allergy[] arr = {};
-			LinkedList lst = new LinkedList();
-			try {
-
-				ResultSet rs;
-				Allergy allergy;
-
-				rs = DBHandler.GetSQL("SELECT * FROM allergies WHERE demographic_no = '" + getDemographicNo() + "' and archived=0 ORDER BY position,severity_of_reaction");
-
-				while (rs.next()) {
-					allergy = new Allergy(getDemographicNo(), rs.getInt("allergyid"), rs.getDate("entry_date"), oscar.Misc.getString(rs, "DESCRIPTION"), rs.getInt("HICL_SEQNO"), rs.getInt("HIC_SEQNO"), rs.getInt("AGCSP"), rs.getInt("AGCCS"), rs.getInt("TYPECODE"));
-
-					allergy.getAllergy().setArchived(rs.getString("archived"));
-					allergy.getAllergy().setReaction(oscar.Misc.getString(rs, "reaction"));
-					allergy.getAllergy().setStartDate(rs.getDate("start_date"));
-					allergy.getAllergy().setAgeOfOnset(oscar.Misc.getString(rs, "age_of_onset"));
-					allergy.getAllergy().setSeverityOfReaction(oscar.Misc.getString(rs, "severity_of_reaction"));
-					allergy.getAllergy().setOnSetOfReaction(oscar.Misc.getString(rs, "onset_of_reaction"));
-					allergy.getAllergy().setRegionalIdentifier(oscar.Misc.getString(rs, "regional_identifier"));
-					allergy.getAllergy().setLifeStage(oscar.Misc.getString(rs, "life_stage"));
-					allergy.getAllergy().setPickID(rs.getInt("drugref_id"));
-					allergy.getAllergy().setPosition(rs.getInt("position"));
-					lst.add(allergy);
-				}
-				rs.close();
-				arr = (Allergy[]) lst.toArray(arr);
-			} catch (SQLException e) {
-				MiscUtils.getLogger().error("Error", e);
-			}
-
-			return arr;
+		public org.oscarehr.common.model.Allergy[] getActiveAllergies() {
+			List<org.oscarehr.common.model.Allergy> allergies = allergyDao.findActiveAllergies(getDemographicNo());
+			return  allergies.toArray(new org.oscarehr.common.model.Allergy[allergies.size()]);
 		}
 
-		public Allergy addAllergy(java.util.Date entryDate, RxAllergyData.Allergy allergyCode) {
-			Allergy allergy = null;
-			try {
-				allergy = new Allergy(this.demographicNo, entryDate, allergyCode);
-				allergy.Save();
-			} catch (SQLException e) {
-				MiscUtils.getLogger().error("Error", e);
-			}
+		public org.oscarehr.common.model.Allergy addAllergy(java.util.Date entryDate, org.oscarehr.common.model.Allergy allergy) {
+
+			allergy.setEntryDate(entryDate);
+			allergyDao.persist(allergy);
+			partialDateDao.setPartialDate(PartialDate.ALLERGIES, allergy.getId(), PartialDate.ALLERGIES_STARTDATE, allergy.getStartDateFormat());
 			return allergy;
 		}
 
 		private static boolean setAllergyArchive(int allergyId, String archiveString) {
-			
-			AllergyDao allergyDao=(AllergyDao) SpringUtils.getBean("allergyDao");
 			org.oscarehr.common.model.Allergy allergy=allergyDao.find(allergyId);
 			if (allergy!=null)
 			{
@@ -372,7 +318,7 @@ public class RxPatientData {
 				allergyDao.merge(allergy);
 				return(true);
 			}
-			
+
 			return(false);
 		}
 
@@ -430,137 +376,6 @@ public class RxPatientData {
 			return new RxPrescriptionData().getPrescriptionScriptsByPatient(this.getDemographicNo());
 		}
 
-		public static class Allergy {
-			boolean integratorResult = false;
-			int allergyId;
-			java.util.Date entryDate;
-			RxAllergyData.Allergy allergy;
-			int demographicId;
-
-			public Allergy(int demographicId, int allergyId, java.util.Date entryDate, RxAllergyData.Allergy allergy) {
-				this.demographicId = demographicId;
-				this.allergyId = allergyId;
-				this.entryDate = entryDate;
-				this.allergy = allergy;
-			}
-
-			public Allergy(int demographicId, java.util.Date entryDate, RxAllergyData.Allergy allergy) {
-				this.demographicId = demographicId;
-				this.allergyId = 0;
-				this.entryDate = entryDate;
-				this.allergy = allergy;
-			}
-
-			public Allergy(int demographicId, int allergyId, java.util.Date entryDate, String DESCRIPTION, int HICL_SEQNO, int HIC_SEQNO, int AGCSP, int AGCCS, int TYPECODE) {
-				this.demographicId = demographicId;
-				this.allergyId = allergyId;
-				this.entryDate = entryDate;
-				this.allergy = new RxAllergyData().getAllergy(DESCRIPTION, HICL_SEQNO, HIC_SEQNO, AGCSP, AGCCS, TYPECODE);
-			}
-
-			public boolean isIntegratorResult() {
-				return (integratorResult);
-			}
-
-			public void setIntegratorResult(boolean integratorResult) {
-				this.integratorResult = integratorResult;
-			}
-
-			public int getAllergyId() {
-				return this.allergyId;
-			}
-
-			public java.util.Date getEntryDate() {
-				return this.entryDate;
-			}
-
-			public void setEntryDate(java.util.Date RHS) {
-				this.entryDate = RHS;
-			}
-
-			public RxAllergyData.Allergy getAllergy() {
-				return this.allergy;
-			}
-
-			public int getNextPosition() throws SQLException {
-				String sql = "SELECT Max(position) FROM allergies WHERE demographic_no=" + demographicId;
-				ResultSet rs = DBHandler.GetSQL(sql);
-
-				int position = 0;
-				if (rs.next()) {
-					position = rs.getInt(1);
-				}
-				return (position + 1);
-			}
-
-			public void Save() throws SQLException {
-				
-				if (this.getAllergyId() == 0) {
-					
-					// This logic is twisted and messed up but I'm just converting to JPA, not fixing it... don't know why not all fields are saved, don't care, I'm just converting.
-					AllergyDao allergyDao=(AllergyDao) SpringUtils.getBean("allergyDao");
-					org.oscarehr.common.model.Allergy newAllergy=new org.oscarehr.common.model.Allergy();
-
-					// need to add to the bottom of list
-					newAllergy.setPosition(getNextPosition());
-					
-					newAllergy.setDemographicNo(demographicId);
-					newAllergy.setEntryDate(getEntryDate());
-					newAllergy.setDescription(allergy.getDESCRIPTION());
-					newAllergy.setHiclSeqno(allergy.getHICL_SEQNO());
-					newAllergy.setHicSeqno(allergy.getHIC_SEQNO());
-					newAllergy.setAgcsp(allergy.getAGCSP());
-					newAllergy.setAgccs(allergy.getAGCCS());
-					newAllergy.setTypeCode(allergy.getTYPECODE());
-					newAllergy.setReaction(allergy.getReaction());
-					newAllergy.setDrugrefId(String.valueOf(allergy.getPickID()));
-					newAllergy.setStartDate(allergy.getStartDate());
-					newAllergy.setAgeOfOnset(allergy.getAgeOfOnset());
-					newAllergy.setSeverityOfReaction(allergy.getSeverityOfReaction());
-					newAllergy.setOnsetOfReaction(allergy.getOnSetOfReaction());
-					newAllergy.setRegionalIdentifier(allergy.getRegionalIdentifier());
-					newAllergy.setLifeStage(allergy.getLifeStage());
-					
-					LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-					newAllergy.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
-
-					allergyDao.persist(newAllergy);
-					
-					this.allergyId = newAllergy.getId();
-
-				} else {
-
-					// This logic is twisted and messed up but I'm just converting to JPA, not fixing it... don't know why not all fields are saved, don't care, I'm just converting.
-					AllergyDao allergyDao=(AllergyDao) SpringUtils.getBean("allergyDao");
-					org.oscarehr.common.model.Allergy updateAllergy=allergyDao.find(getAllergyId());
-
-					updateAllergy.setEntryDate(getEntryDate());
-					updateAllergy.setDescription(allergy.getDESCRIPTION());
-					updateAllergy.setHiclSeqno(allergy.getHICL_SEQNO());
-					updateAllergy.setHicSeqno(allergy.getHIC_SEQNO());
-					updateAllergy.setAgcsp(allergy.getAGCSP());
-					updateAllergy.setAgccs(allergy.getAGCCS());
-					updateAllergy.setTypeCode(allergy.getTYPECODE());
-					updateAllergy.setReaction(allergy.getReaction());
-					updateAllergy.setDrugrefId(String.valueOf(allergy.getPickID()));
-					updateAllergy.setStartDate(allergy.getStartDate());
-					updateAllergy.setAgeOfOnset(allergy.getAgeOfOnset());
-					updateAllergy.setSeverityOfReaction(allergy.getSeverityOfReaction());
-					updateAllergy.setOnsetOfReaction(allergy.getOnSetOfReaction());
-					updateAllergy.setLifeStage(allergy.getLifeStage());
-					updateAllergy.setPosition(allergy.getPosition());
-					
-					LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-					updateAllergy.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
-
-					allergyDao.merge(updateAllergy);
-				}
-
-				// write partial date
-				partialDateDao.setPartialDate(PartialDate.ALLERGIES, this.getAllergyId(), PartialDate.ALLERGIES_STARTDATE, allergy.getStartDateFormat());
-			}
-
-		}
 
 		public class Disease {
 			int diseaseId;

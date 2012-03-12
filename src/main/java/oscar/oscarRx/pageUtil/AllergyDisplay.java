@@ -1,6 +1,6 @@
 package oscar.oscarRx.pageUtil;
 
-import oscar.oscarRx.data.RxAllergyData;
+import org.oscarehr.common.model.Allergy;
 
 public final class AllergyDisplay {
 	private Integer id;
@@ -87,15 +87,15 @@ public final class AllergyDisplay {
 	}
 
 	public String getOnSetDesc() {
-		return (RxAllergyData.getOnSetOfReactionDesc(onSetCode));
+		return (Allergy.getOnSetOfReactionDesc(onSetCode));
 	}
 
 	public String getSeverityDesc() {
-		return (RxAllergyData.getSeverityOfReactionDesc(severityCode));
+		return (Allergy.getSeverityOfReactionDesc(severityCode));
 	}
 
 	public String getTypeDesc() {
-		return (RxAllergyData.getTypeDesc(typeCode));
+		return (Allergy.getTypeDesc(typeCode));
 	}
 
 	public String getArchived() {
@@ -105,5 +105,5 @@ public final class AllergyDisplay {
 	public void setArchived(String archived) {
     	this.archived = archived;
     }
-	
+
 }

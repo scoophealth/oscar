@@ -33,10 +33,10 @@ select {
 </style>
 <%
 	String demographicNo = (String) request.getAttribute("demographicNo");
-	oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies = RxPatientData.getPatient(Integer.parseInt(demographicNo)).getAllergies();
+	org.oscarehr.common.model.Allergy[] allergies = RxPatientData.getPatient(Integer.parseInt(demographicNo)).getAllergies();
 		String aller = "";
 		for (int j = 0; j < allergies.length; j++) {
-			aller += allergies[j].getAllergy().getShortDesc(13, 8,
+			aller += allergies[j].getShortDesc(13, 8,
 					"...")
 					+ ";";
 		}
