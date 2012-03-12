@@ -6,6 +6,11 @@
 <%@page import="org.oscarehr.common.dao.FlowSheetCustomizerDAO,org.oscarehr.common.model.FlowSheetCustomization"%>
 <%@page import="org.oscarehr.common.dao.FlowSheetDrugDAO,org.oscarehr.common.model.FlowSheetDrug"%>
 <%@page import="org.oscarehr.common.dao.UserPropertyDAO,org.oscarehr.common.model.UserProperty"%>
+
+<%@page import="org.oscarehr.common.dao.AllergyDao"%>
+<%@page import="org.oscarehr.common.model.Allergy"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -21,6 +26,8 @@
     String demographic_no = request.getParameter("demographic_no");
     String providerNo = (String) session.getAttribute("user");
     String temp = "diab3";
+
+    AllergyDao allergyDao = (AllergyDao)SpringUtils.getBean("allergyDao");
 %>
 <oscar:oscarPropertiesCheck property="SPEC3" value="yes">
     <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="r" reverse="<%=true%>">
@@ -425,13 +432,14 @@ if (remindersResult.size() > 1) {
 	}
 }
 
-String allergiesQuery = "intake_allergies";
-List<Map<String,Object>> allergiesResult = oscarSuperManager.find("providerDao", allergiesQuery, demographicParam);
-String allergiesList = (!allergiesResult.isEmpty() && allergiesResult.get(0).get("DESCRIPTION")!=null) ? allergiesResult.get(0).get("DESCRIPTION").toString() : "";
-if (allergiesResult.size() > 1) {
-	for (int i=1; i<allergiesResult.size(); i++) {
-		allergiesList += ",<br/>" + allergiesResult.get(i).get("DESCRIPTION").toString();
+List<Allergy> allergies = allergyDao.findActiveAllergiesOrderByDescription(Integer.parseInt(demographic_no));
+String allergiesList="";
+for(int x=0;x<allergies.size();x++) {
+	if(x!=0) {
+		allergiesList += ",<br/>";
 	}
+	Allergy allergy = allergies.get(x);
+	allergiesList += allergy.getDescription();
 }
 
 String curUser_no = (String) session.getAttribute("user");

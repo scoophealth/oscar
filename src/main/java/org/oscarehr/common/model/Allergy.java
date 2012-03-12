@@ -1,28 +1,29 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for 
- * Centre for Research on Inner City Health, St. Michael's Hospital, 
- * Toronto, Ontario, Canada 
+ *
+ * This software was written for
+ * Centre for Research on Inner City Health, St. Michael's Hospital,
+ * Toronto, Ontario, Canada
  */
 
 package org.oscarehr.common.model;
 
 import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,6 +34,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -44,67 +46,72 @@ public class Allergy extends AbstractModel<Integer> {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "allergyid")
 	private Integer id;
-	
+
 	@Column(name = "demographic_no")
 	private Integer demographicNo;
-	
+
 	@Temporal(TemporalType.DATE)
 	@Column(name = "entry_date")
 	private Date entryDate;
-	
+
 	@Column(name = "DESCRIPTION")
 	private String description;
-	
+
 	private String reaction;
 	private String archived;
 
 	@Column(name = "HICL_SEQNO")
 	private Integer hiclSeqno;
-	
+
 	@Column(name = "HIC_SEQNO")
 	private Integer hicSeqno;
-	
+
 	@Column(name = "AGCSP")
 	private Integer agcsp;
-	
+
 	@Column(name = "AGCCS")
 	private Integer agccs;
-	
+
 	@Column(name = "TYPECODE")
 	private Integer typeCode;
-	
+
 	@Column(name = "drugref_id")
 	private String drugrefId;
-	
+
 	@Column(name = "start_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date startDate;
 
 	@Column(name = "age_of_onset")
 	private String ageOfOnset;
-	
+
 	@Column(name = "severity_of_reaction")
 	private String severityOfReaction;
-	
+
 	@Column(name = "onset_of_reaction")
 	private String onsetOfReaction;
-	
+
 	@Column(name = "regional_identifier")
 	private String regionalIdentifier;
-	
+
 	@Column(name = "life_stage")
 	private String lifeStage;
 
 	private int position=0;
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastUpdateDate;
 
+	@Transient
+	private boolean integratorResult;
+
+	@Transient
+	private String startDateFormat;
 	/**
 	 * This string is currently nullable because this field never use to exist, therefore all previous entries are null, all new entries should be populated though.
 	 */
 	private String providerNo;
-	
+
 	public String getArchived() {
 		return archived;
 	}
@@ -268,7 +275,7 @@ public class Allergy extends AbstractModel<Integer> {
 	public void setLastUpdateDate(Date lastUpdateDate) {
     	this.lastUpdateDate = lastUpdateDate;
     }
-	
+
 	public String getProviderNo() {
     	return (providerNo);
     }
@@ -277,10 +284,130 @@ public class Allergy extends AbstractModel<Integer> {
     	this.providerNo = StringUtils.trimToNull(providerNo);
     }
 
+	public boolean isIntegratorResult() {
+    	return integratorResult;
+    }
+
+	public void setIntegratorResult(boolean integratorResult) {
+    	this.integratorResult = integratorResult;
+    }
+
+
+	public String getStartDateFormat() {
+    	return startDateFormat;
+    }
+
+	public void setStartDateFormat(String startDateFormat) {
+    	this.startDateFormat = startDateFormat;
+    }
+
 	@PreUpdate
 	@PrePersist
 	protected void autoSetUpdateTime()
 	{
 		lastUpdateDate=new Date();
 	}
+
+
+    public String getShortDesc(int maxlength, int shorted, String added){
+        String desc = this.getDescription();
+        if( (maxlength > shorted) && (desc.length() > maxlength) ){
+           desc = desc.substring(0, 8) + "..." ;
+        }
+        return desc;
+     }
+
+    public String getLifeStageDesc(){
+    	String s = getLifeStage();
+    	if("N".equals(s)){
+    		return "Newborn"; //"oscarEncounter.lifestage.opt.newborn"; //  = Newborn: Birth to 28 days
+    	}else if ("I".equals(s)){
+    		return "Infant";  // "oscarEncounter.lifestage.opt.infant"; // = Infant: 29 days to 2 years
+    	}else if ("C".equals(s)){
+    		return "Child"; //"oscarEncounter.lifestage.opt.child"; // = Child: 2 years to 15 years
+    	}else if ("T".equals(s)){
+    		return "Adolescent"; //  "oscarEncounter.lifestage.opt.adolescent"; // = Adolescent: 16 to 17
+    	}else if ("A".equals(s)){
+    		return "Adult";  //"oscarEncounter.lifestage.opt.adult"; // = Adult: 18 years
+    	}
+    		return "Not Set"; //"oscarEncounter.lifestage.opt.notset"; // = Not Set
+    }
+
+    public String getOnSetOfReactionDesc() {
+    	return Allergy.getOnSetOfReactionDesc(this.getOnsetOfReaction());
+    }
+    public static String getOnSetOfReactionDesc(String onsetCode){
+        if ("1".equals(onsetCode)) return("Immediate");
+        if ("2".equals(onsetCode)) return("Gradual");
+        if ("3".equals(onsetCode)) return("Slow");
+        else return("Unknown "+onsetCode);
+     }
+
+    public String getTypeDesc() {
+    	return Allergy.getTypeDesc(this.getTypeCode());
+    }
+
+    public static String getTypeDesc(int typeCode) {
+        String s;
+        /** 6 |  1 | generic
+            7 |  2 | compound
+            8 |  3 | brandname
+            9 |  4 | ther_class
+           10 |  5 | chem_class
+           13 |  6 | ingredient
+        **/
+        switch(typeCode) {
+            /*
+            *|  8 | anatomical class
+            *|  9 | chemical class
+            *| 10 | therapeutic class
+            *| 11 | generic
+            *| 12 | composite generic
+            *| 13 | branded product
+            *| 14 | ingredient
+            */
+            case 11:
+                s = "Generic Name";
+                break;
+            case 12:
+                s = "Compound";
+                break;
+            case 13:
+                s = "Brand Name";
+                break;
+            case 8:
+                s = "ATC Class";
+                break;
+            case 10:
+                s = "AHFS Class";
+                break;
+            case 14:
+                s = "Ingredient";
+                break;
+            default:
+                s = "";
+        }
+        return s;
+    }
+
+    public String getSeverityOfReactionDesc() {
+    	return Allergy.getSeverityOfReactionDesc(this.getSeverityOfReaction());
+    }
+    //TODO: NEEDS I18N
+    public static String getSeverityOfReactionDesc(String severityCode){
+        if ("1".equals(severityCode)) return("Mild");
+        if ("2".equals(severityCode)) return("Moderate");
+        if ("3".equals(severityCode)) return("Severe");
+        else return("Unknown "+severityCode);
+    }
+
+    //Used for LogAction to insert into data column of log table
+    public String getAuditString() {
+        return getAllergyDisp();
+    }
+
+    public String getAllergyDisp() {
+        return this.getDescription() + " (" + getTypeDesc(getTypeCode()) + ")";
+    }
+
 }

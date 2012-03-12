@@ -1344,13 +1344,13 @@ function removeSaveFeedback()  {
 							key="global.allergies" /></a>:&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp&nbsp;&nbsp;</div>
 						<div class="presBox" id="allergyBox">
 						<ul>
-							<%      
-								oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies = RxPatientData.getPatient(Integer.parseInt(demoNo)).getAllergies();
+							<%
+								org.oscarehr.common.model.Allergy[] allergies = RxPatientData.getPatient(Integer.parseInt(demoNo)).getAllergies();
 
                                             for (int j=0; j<allergies.length; j++){%>
 							<li><a
-								title="<%= allergies[j].getAllergy().getDESCRIPTION() %>">
-							<%=allergies[j].getAllergy().getShortDesc(13,8,"...")%> </a></li>
+								title="<%= allergies[j].getDescription() %>">
+							<%=allergies[j].getShortDesc(13,8,"...")%> </a></li>
 							<%}%>
 						</ul>
 						</div>
@@ -1519,7 +1519,7 @@ function removeSaveFeedback()  {
                                }else{
                                   encounterText = bean.encounter+"\n--------------------------------------------------\n$$SPLIT CHART$$\n";
                                }
-                              
+
                                if(bean.eChartTimeStamp==null){
                                   encounterText +="\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"] \n";
                                }else if(bean.currentDate.compareTo(bean.eChartTimeStamp)>0){

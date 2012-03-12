@@ -94,11 +94,11 @@ public class CihiExportAction extends DispatchAction {
 	private Hl7TextInfoDao hl7TextInfoDAO;
 	private PreventionDao preventionDao;
 	private PreventionExtDao preventionExtDao;
-	
+
 	private Logger log = MiscUtils.getLogger();
-	
+
 	private static final PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
-	
+
 	public void setDemographicDao(DemographicDao demographicDao) {
 	    this.demographicDao = demographicDao;
     }
@@ -178,29 +178,29 @@ public class CihiExportAction extends DispatchAction {
 	public void setClinicDAO(ClinicDAO clinicDAO) {
     	this.clinicDAO = clinicDAO;
     }
-	
+
 	public ActionForward getFile(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		OscarProperties properties = OscarProperties.getInstance();
 		String zipName = request.getParameter("zipFile");
 		String dir = properties.getProperty("DOCUMENT_DIR");
 		Util.downloadFile(zipName, dir, response);
 		return null;
-		
+
 	}
 
 	@SuppressWarnings("rawtypes")
-    @Override    
+    @Override
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		OscarProperties properties = OscarProperties.getInstance();
 		Clinic clinic = clinicDAO.getClinic();
 		List<DataExport> dataExportList = dataExportDAO.findAllByType(DataExportDao.CIHI_OMD4);
 		dataExportList.addAll(dataExportDAO.findAllByType(DataExportDao.CIHI_PHC_VRS));
 		Collections.sort(dataExportList);
-		
+
 		DynaValidatorForm frm = (DynaValidatorForm)form;
 		String patientSet = frm.getString("patientSet");
-		
-		if( patientSet == null || "".equals(patientSet) || patientSet.equals("-1")) {			
+
+		if( patientSet == null || "".equals(patientSet) || patientSet.equals("-1")) {
 			frm.set("orgName", clinic.getClinicName());
 			frm.set("vendorId", properties.getProperty("vendorId", ""));
 			frm.set("vendorBusinessName", properties.getProperty("vendorBusinessName", ""));
@@ -209,7 +209,7 @@ public class CihiExportAction extends DispatchAction {
 			frm.set("vendorSoftwareCommonName", properties.getProperty("softwareCommonName", ""));
 			frm.set("vendorSoftwareVer", properties.getProperty("version", ""));
 			frm.set("installDate", properties.getProperty("buildDateTime", ""));
-			
+
 			if( dataExportList.size() > 0 ) {
 				DataExport dataExport = dataExportList.get(dataExportList.size()-1);
 				frm.set("contactLName",dataExport.getContactLName());
@@ -220,9 +220,9 @@ public class CihiExportAction extends DispatchAction {
 			}
 			request.setAttribute("dataExportList", dataExportList);
 			return mapping.findForward("display");
-		}				
-		
-		
+		}
+
+
 		//Create export files
 	    String tmpDir = properties.getProperty("TMP_DIR");
 	    if (!Util.checkDir(tmpDir)) {
@@ -230,15 +230,15 @@ public class CihiExportAction extends DispatchAction {
 	        MiscUtils.getLogger().error("Error! Cannot write to TMP_DIR - Check oscar.properties or dir permissions. Using " + tmpDir);
 	    }
 	    tmpDir = Util.fixDirName(tmpDir);
-	    
-	    
+
+
 	    //grab patient list from set
-	    DemographicSets demoSets = new DemographicSets(); 
+	    DemographicSets demoSets = new DemographicSets();
 		ArrayList patientList = demoSets.getDemographicSet(frm.getString("patientSet"));
-		
+
 		//make all xml files, zip them and save to document directory
-		String filename = this.make(frm, patientList, tmpDir);		
-		
+		String filename = this.make(frm, patientList, tmpDir);
+
 		//we got this far so save entry to db
 		DataExport dataExport = new DataExport();
 		dataExport.setContactLName(frm.getString("contactLName"));
@@ -251,14 +251,14 @@ public class CihiExportAction extends DispatchAction {
 		dataExport.setDaterun(runDate);
 		dataExport.setFile(filename);
 		dataExportDAO.persist(dataExport);
-		
+
 		dataExportList.add(dataExport);
 		request.setAttribute("dataExportList", dataExportList);
 		return mapping.findForward("display");
 	}
-	
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-    private String make(DynaValidatorForm frm, List patientList, String tmpDir) throws Exception {		 
+    private String make(DynaValidatorForm frm, List patientList, String tmpDir) throws Exception {
 		 HashMap<String,CiHiCdsDocument> xmlMap = new HashMap<String,CiHiCdsDocument>();
 		 HashMap<String,String> fileNamesMap = new HashMap<String,String>();
 		 String demoNo;
@@ -266,7 +266,7 @@ public class CihiExportAction extends DispatchAction {
 		 Calendar now = Calendar.getInstance();
 		 CiHiCds cihicds;
 		 CiHiCdsDocument cihiCdsDocument;
-		 
+
 		 for( int idx = 0; idx < patientList.size(); ++idx ) {
 			 demoNo = null;
 			 Object obj = patientList.get(idx);
@@ -276,12 +276,12 @@ public class CihiExportAction extends DispatchAction {
 				ArrayList<String> l2 = (ArrayList<String>)obj;
 				demoNo = l2.get(0);
 			 }
-			 
+
 			 demo = getDemographicDao().getDemographic(demoNo);
 			 if( demo == null ) {
 				 continue;
 			 }
-			 
+
 			 if( !xmlMap.containsKey(demo.getProviderNo())) {
 				 cihiCdsDocument = CiHiCdsDocument.Factory.newInstance();
 				 cihicds =  cihiCdsDocument.addNewCiHiCds();
@@ -293,9 +293,9 @@ public class CihiExportAction extends DispatchAction {
 				 cihiCdsDocument = xmlMap.get(demo.getProviderNo());
 				 cihicds = cihiCdsDocument.getCiHiCds();
 			 }
-			 
+
 			 PatientRecord patientRecord = cihicds.addNewPatientRecord();
-			 this.buildPatientDemographic(demo, patientRecord.addNewDemographics());			 
+			 this.buildPatientDemographic(demo, patientRecord.addNewDemographics());
 			 this.buildAppointment(demo, patientRecord);
 			 this.buildFamilyHistory(demo, patientRecord);
 			 this.buildOngoingProblems(demo, patientRecord);
@@ -307,17 +307,17 @@ public class CihiExportAction extends DispatchAction {
 			 catch(SQLException e) {
 				 MiscUtils.getLogger().error("Build Care Elements DB Failed", e);
 			 }
-			 
+
 			 this.buildProcedure(demo, patientRecord);
 			 this.buildLaboratoryResults(demo, patientRecord);
 			 this.buildMedications(demo, patientRecord);
 			 this.buildImmunizations(demo, patientRecord);
 		 }
-		 
-		
-		 return this.makeFiles(xmlMap, fileNamesMap, tmpDir);		
+
+
+		 return this.makeFiles(xmlMap, fileNamesMap, tmpDir);
 	}
-	
+
 	private void buildExtractInformation(DynaValidatorForm frm, ExtractInformation info, Calendar now) {
 		info.setRunDate(now);
 		info.setExtractType((String) frm.get("extractType"));
@@ -332,54 +332,54 @@ public class CihiExportAction extends DispatchAction {
 		info.setEMRSoftwareName(frm.getString("vendorSoftware"));
 		info.setEMRSoftwareCommonName(frm.getString("vendorSoftwareCommonName"));
 		info.setEMRSoftwareVersionNumber(frm.getString("vendorSoftwareVer"));
-		
+
 		String contactPhoneNumber = Util.onlyNum(frm.getString("contactPhone"));
 		if (contactPhoneNumber.length()>12) contactPhoneNumber = contactPhoneNumber.substring(0,12);
 		info.setContactPhoneNumber(contactPhoneNumber);
 
 		Date installDate = UtilDateUtilities.StringToDate(frm.getString("installDate"),"yyyy-MM-dd hh:mm aa");
 		if (installDate==null) installDate = new Date();
-                
+
 		Calendar installCalendar = Calendar.getInstance();
 		installCalendar.setTime(installDate);
 		info.setEMRSoftwareVersionDate(installCalendar);
 	}
-	
+
 	private void buildProvider(Provider provider, cdscihi.ProviderDocument.Provider xmlProvider, Map<String,String> fileNamesMap) {
                 if (provider==null || xmlProvider==null || fileNamesMap==null) return;
-                
+
 		xmlProvider.setPrimaryPhysicianLastName(provider.getLastName());
 		xmlProvider.setPrimaryPhysicianFirstName(provider.getFirstName());
 		String cpso = StringUtils.noNull(provider.getPractitionerNo());
 		xmlProvider.setPrimaryPhysicianCPSO(cpso);
-		
+
 		String filename = provider.getFirstName() + "_" + provider.getLastName() + "_" + cpso + ".xml";
 		fileNamesMap.put(provider.getProviderNo(), filename);
 	}
-	
+
 	private void buildPatientDemographic(Demographic demo, Demographics xmlDemographics) {
 		HealthCard healthCard = xmlDemographics.addNewHealthCard();
 		healthCard.setNumber(demo.getHin());
                 if (StringUtils.empty(healthCard.getNumber())) healthCard.setNumber("0");
-		healthCard.setType("HCN");		
-				
-		healthCard.setJurisdiction(cdsDtCihi.HealthCardProvinceCode.CA_ON);					
-		
+		healthCard.setType("HCN");
+
+		healthCard.setJurisdiction(cdsDtCihi.HealthCardProvinceCode.CA_ON);
+
 		Calendar dob  = demo.getBirthDay();
 		xmlDemographics.setDateOfBirth(dob);
-		
+
 		String sex = demo.getSex();
 		if( !"F".equalsIgnoreCase(sex) && !"M".equalsIgnoreCase(sex)) {
 			sex = "U";
 		}
-		cdsDtCihi.Gender.Enum enumDemo = cdsDtCihi.Gender.Enum.forString(sex); 
+		cdsDtCihi.Gender.Enum enumDemo = cdsDtCihi.Gender.Enum.forString(sex);
 		xmlDemographics.setGender(enumDemo);
-		
+
 		String spokenLanguage = demo.getSpokenLanguage();
 		if (StringUtils.filled(spokenLanguage) && Util.convertLanguageToCode(spokenLanguage)!=null){
 			xmlDemographics.setPreferredSpokenLanguage(Util.convertLanguageToCode(spokenLanguage));
 		}
-					
+
 		Date statusDate = demo.getPatientStatusDate();
 		Calendar statusCal = Calendar.getInstance();
 		if( statusDate != null ) {
@@ -413,32 +413,32 @@ public class CihiExportAction extends DispatchAction {
                         rosterTermCal.setTime(rosterTermDate);
                         xmlDemographics.setEnrollmentTerminationDate(rosterTermCal);
                 }
-		
+
                 if (StringUtils.filled(demo.getPostal())) {
                     PostalZipCode postalZipCode = xmlDemographics.addNewPostalAddress();
                     postalZipCode.setPostalCode(StringUtils.noNull(demo.getPostal()).replace(" ",""));
                 }
 	}
-	
+
 	private void buildAppointment(Demographic demo, PatientRecord patientRecord) {
 		//some weird values for appointment time preventing query from executing so just skip bad records
 		try {
 			List<Appointment> appointmentList = oscarAppointmentDao.getAppointmentHistory(demo.getDemographicNo());
-		
+
 			Calendar cal = Calendar.getInstance();
 			Calendar startTime = Calendar.getInstance();
 			Date startDate;
-			
+
 			for( Appointment appt: appointmentList) {
 				if( appt.getAppointmentDate() == null ) {
 					continue;
 				}
 				Appointments appointments = patientRecord.addNewAppointments();
 	            if (StringUtils.filled(appt.getReason())) appointments.setAppointmentPurpose(appt.getReason());
-	            
-				DateFullOrPartial dateFullorPartial = appointments.addNewAppointmentDate();			
+
+				DateFullOrPartial dateFullorPartial = appointments.addNewAppointmentDate();
 				cal.setTime(appt.getAppointmentDate());
-				
+
 				startDate = appt.getStartTime();
 				startTime.setTime(startDate);
 				cal.set(Calendar.HOUR_OF_DAY, startTime.get(Calendar.HOUR_OF_DAY));
@@ -446,24 +446,24 @@ public class CihiExportAction extends DispatchAction {
 				dateFullorPartial.setFullDate(cal);
 			}
 		} catch( Exception e ) {
-			
+
 		}
-		
+
 	}
-	
+
 	@SuppressWarnings("unchecked")
     private void buildFamilyHistory(Demographic demo, PatientRecord patientRecord ) {
 		List<Issue> issueList = issueDAO.findIssueByCode(new String[] {"FamHistory"});
 		String[] famHistory = new String[] {issueList.get(0).getId().toString()};
-		
+
 		String intervention;
 	    String relationship;
 	    String age;
-	    Date startDate;	    
+	    Date startDate;
 	    String startDateFormat;
 	    List<CaseManagementNote> notesList = getCaseManagementNoteDAO().getActiveNotesByDemographic(demo.getDemographicNo().toString(), famHistory);
 		for( CaseManagementNote caseManagementNote: notesList) {
-			
+
 			intervention = "";
 			relationship = "";
 			age = "";
@@ -485,13 +485,13 @@ public class CihiExportAction extends DispatchAction {
                 else if( keyval.equals(CaseManagementNoteExt.STARTDATE)) {
                     startDate = caseManagementNoteExt.getDateValue();
                     startDateFormat = caseManagementNoteExt.getValue();
-                }                
+                }
             }
-            
+
             Set<CaseManagementIssue> noteIssueList = caseManagementNote.getIssues();
             if( noteIssueList != null && noteIssueList.size() > 0 ) {
                 Iterator<CaseManagementIssue> i = noteIssueList.iterator();
-                CaseManagementIssue cIssue;                
+                CaseManagementIssue cIssue;
                 FamilyHistory familyHistory = patientRecord.addNewFamilyHistory();
                 while ( i.hasNext() ) {
                 	cIssue = i.next();
@@ -512,7 +512,7 @@ public class CihiExportAction extends DispatchAction {
                 	try {
                 		familyHistory.setAgeAtOnset(BigInteger.valueOf(Long.parseLong(age)));
                 	}catch(NumberFormatException e) {
-                		
+
                 	}
                 }
 
@@ -528,22 +528,22 @@ public class CihiExportAction extends DispatchAction {
                     familyHistory.setRelationship(relationship);
                 }
             }
-                                    
+
         }
     }
-	
+
 	@SuppressWarnings("unchecked")
     private void buildOngoingProblems(Demographic demo, PatientRecord patientRecord) {
 		List<Issue> issueList = issueDAO.findIssueByCode(new String[] {"Concerns"});
 		String[] onGoingConcerns = new String[] {issueList.get(0).getId().toString()};
-		
+
 		Date startDate;
 	    Date endDate;
 	    String startDateFormat;
 	    String endDateFormat;
 	    List<CaseManagementNote> notesList = getCaseManagementNoteDAO().getActiveNotesByDemographic(demo.getDemographicNo().toString(), onGoingConcerns);
 		for( CaseManagementNote caseManagementNote: notesList) {
-			
+
 			startDate = null;
 			endDate = null;
 		    startDateFormat = null;
@@ -552,7 +552,7 @@ public class CihiExportAction extends DispatchAction {
             String keyval;
             for( CaseManagementNoteExt caseManagementNoteExt: caseManagementNoteExtList ) {
                 keyval = caseManagementNoteExt.getKeyVal();
-                
+
                 if( keyval.equals(CaseManagementNoteExt.STARTDATE)) {
                     startDate = caseManagementNoteExt.getDateValue();
                     startDateFormat = caseManagementNoteExt.getValue();
@@ -562,11 +562,11 @@ public class CihiExportAction extends DispatchAction {
                     endDateFormat = caseManagementNoteExt.getValue();
                 }
             }
-            
+
             Set<CaseManagementIssue> noteIssueList = caseManagementNote.getIssues();
             if( noteIssueList != null && noteIssueList.size() > 0 ) {
                 Iterator<CaseManagementIssue> i = noteIssueList.iterator();
-                CaseManagementIssue cIssue;                
+                CaseManagementIssue cIssue;
                 ProblemList problemList = patientRecord.addNewProblemList();
                 while ( i.hasNext() ) {
                 	cIssue = i.next();
@@ -596,30 +596,30 @@ public class CihiExportAction extends DispatchAction {
             }
         }
     }
-	
+
 	@SuppressWarnings("unchecked")
     private void buildRiskFactors(Demographic demo, PatientRecord patientRecord) {
 		List<Issue> issueList = issueDAO.findIssueByCode(new String[] {"RiskFactors"});
 		String[] riskFactor = new String[] {issueList.get(0).getId().toString()};
-		
+
 		Date startDate;
 	    Date endDate;
 	    String startDateFormat;
 	    String endDateFormat;
-	    
+
 		List<CaseManagementNote> notesList = getCaseManagementNoteDAO().getActiveNotesByDemographic(demo.getDemographicNo().toString(), riskFactor);
 		for( CaseManagementNote caseManagementNote: notesList) {
-			
+
 			startDate = null;
 			endDate = null;
 		    startDateFormat = null;
 		    endDateFormat = null;
-			
+
 			List<CaseManagementNoteExt> caseManagementNoteExtList = getCaseManagementNoteExtDAO().getExtByNote(caseManagementNote.getId());
             String keyval;
             for( CaseManagementNoteExt caseManagementNoteExt: caseManagementNoteExtList ) {
                 keyval = caseManagementNoteExt.getKeyVal();
-                
+
                 if( keyval.equals(CaseManagementNoteExt.STARTDATE)) {
                     startDate = caseManagementNoteExt.getDateValue();
                     startDateFormat = caseManagementNoteExt.getValue();
@@ -629,28 +629,28 @@ public class CihiExportAction extends DispatchAction {
                     endDateFormat = caseManagementNoteExt.getValue();
                 }
             }
-            
+
             RiskFactors riskFactors = patientRecord.addNewRiskFactors();
-                        
-                                    
+
+
             if( startDate != null ) {
             	Util.putPartialDate(riskFactors.addNewStartDate(), startDate, startDateFormat);
             }
-            
+
             if( endDate != null ) {
             	Util.putPartialDate(riskFactors.addNewEndDate(), endDate, endDateFormat);
             }
 
             String riskFactorContent = caseManagementNote.getNote();
             if (riskFactorContent.length()>120) riskFactorContent = riskFactorContent.substring(0, 120);
-            riskFactors.setRiskFactor(riskFactorContent);                                    
+            riskFactors.setRiskFactor(riskFactorContent);
 		}
 	}
-	
+
 	private void buildAllergies(Demographic demo, PatientRecord patientRecord) {
 		String[] severity = new String[] {"MI","MO","LT","NO"};
 		AllergyDao allergyDao=(AllergyDao)SpringUtils.getBean("allergyDao");
-		List<Allergy> allergies = allergyDao.findActiveAllergies(demo.getDemographicNo(), "0");
+		List<Allergy> allergies = allergyDao.findActiveAllergies(demo.getDemographicNo());
 		int index;
 		Date date;
         for( Allergy allergy: allergies ) {
@@ -679,7 +679,7 @@ public class CihiExportAction extends DispatchAction {
         	}
         }
 	}
-	
+
 	@SuppressWarnings("unchecked")
     private void buildCareElements(Demographic demo, PatientRecord patientRecord) throws SQLException {
 		List<Measurements> measList = ImportExportMeasurements.getMeasurements(demo.getDemographicNo().toString());
@@ -687,7 +687,7 @@ public class CihiExportAction extends DispatchAction {
 		Calendar cal = Calendar.getInstance();
 		Date date = null;
 		for (Measurements measurement : measList) {
-			if( measurement.getType().equalsIgnoreCase("BP")) {				
+			if( measurement.getType().equalsIgnoreCase("BP")) {
 				String[] sysdiabBp = measurement.getDataField().split("/");
 				if( sysdiabBp.length == 2 ) {
 					cdsDtCihi.BloodPressure bloodpressure = careElements.addNewBloodPressure();
@@ -778,23 +778,23 @@ public class CihiExportAction extends DispatchAction {
                 dateFullOrPartial.setFullDate(cal);
             }
 	}
- * 
+ *
  */
-	
+
 	@SuppressWarnings("unchecked")
     private void buildProcedure(Demographic demo, PatientRecord patientRecord) {
 		List<Issue> issueList = issueDAO.findIssueByCode(new String[] {"MedHistory"});
 		String[] medhistory = new String[] {issueList.get(0).getId().toString()};
-		
+
 		Procedure procedure;
 		ProblemList problemlist;
-	    
+
 		List<CaseManagementNote> notesList = getCaseManagementNoteDAO().getActiveNotesByDemographic(demo.getDemographicNo().toString(), medhistory);
 		for( CaseManagementNote caseManagementNote: notesList) {
-			
+
                     procedure = null;
                     problemlist = null;
-			
+
                     List<CaseManagementNoteExt> caseManagementNoteExtList = getCaseManagementNoteExtDAO().getExtByNote(caseManagementNote.getId());
                     String keyval;
                     for( CaseManagementNoteExt caseManagementNoteExt: caseManagementNoteExtList ) {
@@ -802,7 +802,7 @@ public class CihiExportAction extends DispatchAction {
                         if (problemlist!=null && problemlist.getOnsetDate()!=null && problemlist.getResolutionDate()!=null) break;
 
                         keyval = caseManagementNoteExt.getKeyVal();
-                       
+
                         if( caseManagementNoteExt.getDateValue() != null ) {
 	                        if( keyval.equals(CaseManagementNoteExt.PROCEDUREDATE)) {
 	                            procedure = patientRecord.addNewProcedure();
@@ -849,15 +849,15 @@ public class CihiExportAction extends DispatchAction {
                     if (procedure!=null) procedure.setProcedureInterventionDescription(caseManagementNote.getNote());
                     if (problemlist!=null) problemlist.setProblemDiagnosisDescription(caseManagementNote.getNote());
 		}
-	}  
-	
+	}
+
 	private void buildLaboratoryResults(Demographic demo, PatientRecord patientRecord) throws SQLException {
 				log.debug("Building lab results for " + demo.getDemographicNo() + " " + demo.getFormattedName());
                 List<LabMeasurements> labMeaList = ImportExportMeasurements.getLabMeasurements(demo.getDemographicNo().toString());
                 for (LabMeasurements labMea : labMeaList) {
                 	String data = StringUtils.noNull(labMea.getExtVal("identifier"));
                 	log.debug("Measurement search for identifier '" + data + "'");
-            	    
+
                     Date dateTime = UtilDateUtilities.StringToDate(labMea.getExtVal("datetime"),"yyyy-MM-dd HH:mm:ss");
                     if (dateTime==null) {
                     	dateTime = UtilDateUtilities.StringToDate(labMea.getExtVal("datetime"),"yyyy-MM-dd");
@@ -867,15 +867,15 @@ public class CihiExportAction extends DispatchAction {
                     }
 
                     LaboratoryResults labResults = patientRecord.addNewLaboratoryResults();
-                    
+
                     if (StringUtils.filled(data)) labResults.setLabTestCode(data);
-                    
+
                     cdsDtCihi.DateFullOrDateTime collDate = labResults.addNewCollectionDateTime();
                     if (dateTime!=null) collDate.setFullDate(Util.calDate(dateTime));
                     else collDate.setFullDate(Util.calDate("0001-01-01"));
 
                     data = labMea.getExtVal("name");
-                    
+
                     if (StringUtils.filled(data)) {
                     	log.debug("Adding " + data);
                     	labResults.setTestNameReportedByLab(data);
@@ -896,8 +896,8 @@ public class CihiExportAction extends DispatchAction {
                     if (StringUtils.filled(max)) refRange.setHighLimit(max);
 		}
 	}
-	
-	
+
+
     private void buildMedications(Demographic demo, PatientRecord patientRecord) {
 		MedicationsAndTreatments medications;
 		RxPrescriptionData.Prescription[] pa = new RxPrescriptionData().getPrescriptionsByPatient(Integer.parseInt(demo.getDemographicNo().toString()));
@@ -906,7 +906,7 @@ public class CihiExportAction extends DispatchAction {
 		String dosage;
 		String[] strength;
 		int sep;
-		
+
 		for(int p = 0; p<pa.length; ++p) {
 			drugname = pa[p].getBrandName();
 			customname = pa[p].getCustomName();
@@ -916,30 +916,30 @@ public class CihiExportAction extends DispatchAction {
 
 			if (StringUtils.filled(drugname)) medications.setDrugName(drugname);
 			else medications.setDrugDescription(customname);
-			
+
 			Date writtenDate = pa[p].getWrittenDate();
 			if (writtenDate!=null) {
 	        	String dateFormat = partialDateDao.getFormat(PartialDate.DRUGS, pa[p].getDrugId(), PartialDate.DRUGS_WRITTENDATE);
 	        	Util.putPartialDate(medications.addNewPrescriptionWrittenDate(), writtenDate, dateFormat);
 			}
-			
+
 			if (StringUtils.filled(pa[p].getDosage())) {
             	strength = pa[p].getDosage().split(" ");
-            	
+
             	cdsDtCihi.DrugMeasure drugM = medications.addNewStrength();
             	if (Util.leadingNum(strength[0]).equals(strength[0])) {//amount & unit separated by space
             		drugM.setAmount(strength[0]);
             		if (strength.length>1) drugM.setUnitOfMeasure(strength[1]);
             		else drugM.setUnitOfMeasure("unit"); //UnitOfMeasure cannot be null
-            		
+
             	} else {//amount & unit not separated, probably e.g. 50mg / 2tablet
             		if (strength.length>1 && strength[1].equals("/")) {
             			if (strength.length>2) {
             				String unit1 = Util.leadingNum(strength[2]).equals("") ? "1" : Util.leadingNum(strength[2]);
             				String unit2 = Util.trailingTxt(strength[2]).equals("") ? "unit" : Util.trailingTxt(strength[2]);
-            				
-                    		drugM.setAmount(Util.leadingNum(strength[0])+"/"+Util.leadingNum(strength[2])); 
-                    		drugM.setUnitOfMeasure(Util.trailingTxt(strength[0])+"/"+unit2);                    				
+
+                    		drugM.setAmount(Util.leadingNum(strength[0])+"/"+Util.leadingNum(strength[2]));
+                    		drugM.setUnitOfMeasure(Util.trailingTxt(strength[0])+"/"+unit2);
             			}
             		} else {
                 		drugM.setAmount(Util.leadingNum(strength[0]));
@@ -955,50 +955,50 @@ public class CihiExportAction extends DispatchAction {
 	        medications.setFrequency(StringUtils.noNull(pa[p].getFreqDisplay()));
 	        medications.setRoute(StringUtils.noNull(pa[p].getRoute()));
 	        medications.setNumberOfRefills(String.valueOf(pa[p].getRepeat()));
-	        
+
 	        YnIndicatorAndBlank patientCompliance = medications.addNewPatientCompliance();
 	        if (pa[p].getPatientCompliance()==null) {
-	        	patientCompliance.setBlank(cdsDtCihi.Blank.X);	        	
+	        	patientCompliance.setBlank(cdsDtCihi.Blank.X);
 	        } else {
 	        	patientCompliance.setBoolean(pa[p].getPatientCompliance());
 	        }
 		}
-		
+
 	}
-	    
+
     private void buildImmunizations(Demographic demo, PatientRecord patientRecord) {
-    	HashMap<String,String> preventionMap;    	
+    	HashMap<String,String> preventionMap;
     	List<Prevention> preventionsList = getPreventionDao().findNotDeletedByDemographicId(demo.getDemographicNo());
-    	 
+
          for( Prevention prevention: preventionsList ) {
              preventionMap = getPreventionExtDao().getPreventionExt(prevention.getId());
-             
+
         	 Immunizations immunizations = patientRecord.addNewImmunizations();
-        	 
+
         	 if (StringUtils.filled(preventionMap.get("name"))) {
         		immunizations.setImmunizationName(preventionMap.get("name"));
         	 }else{
         	    immunizations.setImmunizationName(prevention.getPreventionType());
         	 }
-        	 
+
         	 if (StringUtils.filled(preventionMap.get("lot")))
         		 immunizations.setLotNumber(preventionMap.get("lot"));
-        	 
+
         	 if (prevention.getPreventionDate()!=null) {
         		 DateFullOrPartial dateFullorPartial = immunizations.addNewDate();
         		 dateFullorPartial.setFullDate(Util.calDate(prevention.getPreventionDate()));
         	 }
-        	 
+
         	 YnIndicator refusedIndicator = immunizations.addNewRefusedFlag();
              if( prevention.isRefused() ) {
             	 refusedIndicator.setBoolean(true);
              }
              else {
                  refusedIndicator.setBoolean(false);
-             }                 
+             }
          }
-    }	
-    
+    }
+
     private String makeFiles(Map<String,CiHiCdsDocument> xmlMap, Map<String,String> fileNamesMap, String tmpDir) throws Exception {
     	XmlOptions options = new XmlOptions();
     	options.put( XmlOptions.SAVE_PRETTY_PRINT );
@@ -1008,21 +1008,21 @@ public class CihiExportAction extends DispatchAction {
         HashMap<String,String> suggestedPrefix = new HashMap<String,String>();
         suggestedPrefix.put("cds_dt","cdsd");
         options.setSaveSuggestedPrefixes(suggestedPrefix);
-        
+
     	options.setSaveOuter();
-    	
+
     	ArrayList<File> files = new ArrayList<File>();
     	int idx = 0;
     	CiHiCdsDocument cihiDoc;
     	Set<String>xmlKeys = xmlMap.keySet();
-    	
+
     	//Save each file
     	for( String key: xmlKeys) {
                 if (fileNamesMap.get(key)==null) continue;
 
     		cihiDoc = xmlMap.get(key);
-    		files.add(new File(tmpDir, fileNamesMap.get(key)));    		
-    		
+    		files.add(new File(tmpDir, fileNamesMap.get(key)));
+
     		try {
     			cihiDoc.save(files.get(idx), options);
     		}
@@ -1031,23 +1031,23 @@ public class CihiExportAction extends DispatchAction {
     		}
     		++idx;
     	} //end for
-    	
+
     	//Zip export files
         String zipName = "omd_cihi_export-"+UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss")+".zip";
         if (!Util.zipFiles(files, zipName, tmpDir)) {
         	MiscUtils.getLogger().error("Error! Failed zipping export files");
         }
-        
+
         //copy zip to document directory
         File zipFile = new File(tmpDir,zipName);
         OscarProperties properties = OscarProperties.getInstance();
         File destDir = new File(properties.getProperty("DOCUMENT_DIR"));
         org.apache.commons.io.FileUtils.copyFileToDirectory(zipFile, destDir);
-        
+
         //Remove zip & export files from temp dir
         Util.cleanFile(zipName, tmpDir);
         Util.cleanFiles(files);
-        
+
         return zipName;
     }
 }

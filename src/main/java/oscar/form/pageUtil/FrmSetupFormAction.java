@@ -14,7 +14,7 @@
 // * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
 // *
 // * @Author: Ivy Chan
-// * @Company: iConcept Technologes Inc. 
+// * @Company: iConcept Technologes Inc.
 // * @Created on: October 31, 2004
 // -----------------------------------------------------------------------------------------------------------------------
 
@@ -43,6 +43,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcException;
+import org.oscarehr.common.model.Allergy;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
@@ -53,16 +54,15 @@ import oscar.oscarEncounter.data.EctEChartBean;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBean;
 import oscar.oscarEncounter.oscarMeasurements.util.EctFindMeasurementTypeUtil;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
-import oscar.oscarRx.data.RxAllergyData;
 import oscar.oscarRx.data.RxPatientData;
 import oscar.oscarRx.data.RxPrescriptionData;
 import oscar.util.UtilDateUtilities;
 
 
 public final class FrmSetupFormAction extends Action {
-    
+
     private String _dateFormat = "yyyy-MM-dd";
-    
+
     public ActionForward execute(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
@@ -79,10 +79,10 @@ public final class FrmSetupFormAction extends Action {
         //System.gc();
         MiscUtils.getLogger().debug("SetupFormAction is called");
         HttpSession session = request.getSession(true);
-                
-        FrmFormForm frm = (FrmFormForm) form;        
+
+        FrmFormForm frm = (FrmFormForm) form;
         EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
-        EctEChartBean chartBean = new EctEChartBean();        
+        EctEChartBean chartBean = new EctEChartBean();
         String formId = request.getParameter("formId");
         frm.setValue("formId", formId==null?"0":formId);
         String demo = request.getParameter("demographic_no");
@@ -90,32 +90,32 @@ public final class FrmSetupFormAction extends Action {
         if (demo == null || bean!=null){
             request.getSession().setAttribute("EctSessionBean", bean);
             demo = bean.getDemographicNo();
-            
+
         }
-        
+
         if ( demo != null){
-           chartBean.setEChartBean(demo);	                   
-        }                
-                
+           chartBean.setEChartBean(demo);
+        }
+
         String ongoingConcern = chartBean.ongoingConcerns;
-        String formName = request.getParameter("formName");        
+        String formName = request.getParameter("formName");
         String today = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat);
         String visitCod = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyy-MM-dd");
-        
+
         List drugLists = getDrugList(demo);
         List allergyList = getDrugAllegyList(demo);
-                                    
+
         Properties currentRec = getFormRecord(formName, formId, demo);
-        
+
         request.setAttribute("today", today);
         //specifically for VT Form
-        request.setAttribute("drugs", drugLists); 
+        request.setAttribute("drugs", drugLists);
         request.setAttribute("allergies", allergyList);
         request.setAttribute("ongoingConcerns", chartBean.ongoingConcerns.equalsIgnoreCase("")?"None":chartBean.ongoingConcerns);
         if(currentRec!=null){
             frm.setValue("visitCod", currentRec.getProperty("visitCod",""));
             frm.setValue("diagnosisVT", currentRec.getProperty("Diagnosis", ""));
-            frm.setValue("subjective", currentRec.getProperty("Subjective", ""));            
+            frm.setValue("subjective", currentRec.getProperty("Subjective", ""));
             frm.setValue("objective", currentRec.getProperty("Objective", ""));
             frm.setValue("assessment", currentRec.getProperty("Assessment", ""));
             frm.setValue("plan", currentRec.getProperty("Plan", ""));
@@ -123,13 +123,13 @@ public final class FrmSetupFormAction extends Action {
         else{
             frm.setValue("visitCod", visitCod);
         }
-        
-        try {            
+
+        try {
             MiscUtils.getLogger().debug("formId=" + formId + "opening " + formName + ".xml");
             InputStream is = getClass().getResourceAsStream("/../../form/" + formName + ".xml");
             Vector measurementTypes = EctFindMeasurementTypeUtil.checkMeasurmentTypes(is, formName);
-            EctMeasurementTypesBean mt;            
-            
+            EctMeasurementTypesBean mt;
+
             //Get URL from Miles
             Properties props = new Properties();
             Properties nameProps = new Properties();
@@ -139,8 +139,8 @@ public final class FrmSetupFormAction extends Action {
             String decisionSupportURL = getPatientRlt(demo);
             MiscUtils.getLogger().debug("decisionSupportURL" + decisionSupportURL);
             request.setAttribute("decisionSupportURL", StringEscapeUtils.escapeHtml(decisionSupportURL));
-            
-            //Get the most updated data from Miles"            
+
+            //Get the most updated data from Miles"
             String xmlStr =  getMostRecentRecord(demo);
             nameProps = convertName(formName);
             FrmXml2VTData xml2VTData = new FrmXml2VTData();
@@ -150,134 +150,134 @@ public final class FrmSetupFormAction extends Action {
                 vtData = xml2VTData.getObjectFromXmlStr(xmlStr);
                 vtDataC = oscar.form.data.FrmVTData.class;
             }
-            
+
             ResultSet rs;
-            
+
             for(int i=0; i<measurementTypes.size(); i++){
                 mt = (EctMeasurementTypesBean) measurementTypes.elementAt(i);
                 request.setAttribute(mt.getType(), mt.getType());
                 request.setAttribute(mt.getType() + "Display", mt.getTypeDisplayName());
                 request.setAttribute(mt.getType() + "Desc", mt.getTypeDesc());
                 request.setAttribute(mt.getType() + "MeasuringInstrc", mt.getMeasuringInstrc());
-                
-                addLastData(mt, demo);                
+
+                addLastData(mt, demo);
                 request.setAttribute(mt.getType()+"LastData", mt.getLastData()==null?"":mt.getLastData());
                 request.setAttribute(mt.getType()+"LDDate", mt.getLastDateEntered()==null?"":mt.getLastDateEntered());
-                
+
                 if(currentRec!=null){
                     frm.setValue(mt.getType()+"Value", currentRec.getProperty(mt.getType()+"Value", ""));
-                    frm.setValue(mt.getType()+"Date", currentRec.getProperty(mt.getType()+"Date", ""));     
-                    frm.setValue(mt.getType()+"Comments", currentRec.getProperty(mt.getType()+"Comments", ""));                      
-                    request.setAttribute(mt.getType()+"Date", currentRec.getProperty(mt.getType()+"Date", ""));     
-                    request.setAttribute(mt.getType()+"Comments", currentRec.getProperty(mt.getType()+"Comments", "")); 
+                    frm.setValue(mt.getType()+"Date", currentRec.getProperty(mt.getType()+"Date", ""));
+                    frm.setValue(mt.getType()+"Comments", currentRec.getProperty(mt.getType()+"Comments", ""));
+                    request.setAttribute(mt.getType()+"Date", currentRec.getProperty(mt.getType()+"Date", ""));
+                    request.setAttribute(mt.getType()+"Comments", currentRec.getProperty(mt.getType()+"Comments", ""));
                 }
-                else{                                                                                                                      
-                    //prefill data from Miles if its dataentered date is > than the one in measurements                                        
-                    if(mt.getCanPrefill()){  
+                else{
+                    //prefill data from Miles if its dataentered date is > than the one in measurements
+                    if(mt.getCanPrefill()){
                         String value="";
                         String date=today;
-                        
+
                         String valueMethodCall = (String) nameProps.get(mt.getType()+"Value");
-                        String dateMethodCall = (String) nameProps.get(mt.getType()+"Date");                        
-                        
-                        if (vtData!=null && vtDataC!=null && valueMethodCall != null){                                                  
-                            Method vtGetMethods = vtDataC.getMethod("get"+valueMethodCall, new Class[] {});                        
+                        String dateMethodCall = (String) nameProps.get(mt.getType()+"Date");
+
+                        if (vtData!=null && vtDataC!=null && valueMethodCall != null){
+                            Method vtGetMethods = vtDataC.getMethod("get"+valueMethodCall, new Class[] {});
                             value = (String) vtGetMethods.invoke(vtData, new Object[]{});
-                                                                                   
+
                             if(value!=null){
-                                vtGetMethods = vtDataC.getMethod("get"+valueMethodCall+"$signed_when", new Class[] {});                            
-                                String dMiles = (String) vtGetMethods.invoke(vtData, new Object[]{});                                                            
+                                vtGetMethods = vtDataC.getMethod("get"+valueMethodCall+"$signed_when", new Class[] {});
+                                String dMiles = (String) vtGetMethods.invoke(vtData, new Object[]{});
                                 date = dMiles;
-                                
+
                                 if(dateMethodCall!=null){
                                     vtGetMethods = vtDataC.getMethod("get"+dateMethodCall, new Class[] {});
                                     date = (String) vtGetMethods.invoke(vtData, new Object[]{});
                                     date = date.equalsIgnoreCase("")?"0001-01-01":date;
-                                                                        
-                                    String dObsMeas = mt.getLastDateObserved()==null?"0001-01-01":mt.getLastDateObserved();                                     
+
+                                    String dObsMeas = mt.getLastDateObserved()==null?"0001-01-01":mt.getLastDateObserved();
                                     MiscUtils.getLogger().debug(mt.getType() + " Miles: " + date + " Measurements: " + dObsMeas);
                                     Date milesDate = UtilDateUtilities.StringToDate(date, _dateFormat);
                                     Date obsMeasDate = UtilDateUtilities.StringToDate(dObsMeas, _dateFormat);
-                                    
+
                                     if(mt.getLastData()!=null){
                                         if(obsMeasDate.compareTo(milesDate)>=0){
-                                            String dMeas = mt.getLastDateEntered()==null?"0001-01-01":mt.getLastDateEntered();                            
-                                
+                                            String dMeas = mt.getLastDateEntered()==null?"0001-01-01":mt.getLastDateEntered();
+
                                             Date dateMiles = UtilDateUtilities.StringToDate(dMiles, _dateFormat);
                                             Date dateMeas = UtilDateUtilities.StringToDate(dMeas, _dateFormat);
 
                                             if(dateMeas.compareTo(dateMiles)>0){
                                                 value = mt.getLastData();
                                                 date = dObsMeas;
-                                            }                                        
+                                            }
                                         }
                                     }
-                                }   
+                                }
                             }
-                        }    
-                        frm.setValue(mt.getType()+"Value", value); 
-                        frm.setValue(mt.getType()+"Date", date);       
+                        }
+                        frm.setValue(mt.getType()+"Value", value);
+                        frm.setValue(mt.getType()+"Date", date);
                         request.setAttribute(mt.getType() + "Comments", "");
                     }
                     else{
-                        frm.setValue(mt.getType() + "Date", today);    
-                        request.setAttribute(mt.getType() + "Date", today);  
+                        frm.setValue(mt.getType() + "Date", today);
+                        request.setAttribute(mt.getType() + "Date", today);
                         request.setAttribute(mt.getType() + "Comments", "");
                     }
                 }
-                                                                                             
-            }    
-            is.close();            
+
+            }
+            is.close();
         }
         /*
         catch (SQLException e) {
             MiscUtils.getLogger().error("Error", e);
         }
         /*catch (Exception e) {
-            MiscUtils.getLogger().error("Error", e);            
-        } */       
+            MiscUtils.getLogger().error("Error", e);
+        } */
         catch (IOException e) {
                 MiscUtils.getLogger().debug("IO error.");
                 MiscUtils.getLogger().debug("Error, file " + formName + ".xml not found.");
                 MiscUtils.getLogger().debug("This file must be placed at web/form");
                 MiscUtils.getLogger().error("Error", e);
-        }                        
-        return (new ActionForward("/form/form"+formName+".jsp"));        
+        }
+        return (new ActionForward("/form/form"+formName+".jsp"));
     }
-    
+
     private List getDrugList(String demographicNo){
         List drugs = new LinkedList();
         String fluShot = getFluShotBillingDate(demographicNo);
 
         if(fluShot!=null)
             drugs.add(fluShot + "     Flu Shot");
-            
+
         RxPatientData.Patient p = RxPatientData.getPatient(Integer.parseInt(demographicNo));
         RxPrescriptionData.Prescription[] prescribedDrugs = p.getPrescribedDrugsUnique();
         if(prescribedDrugs.length==0 && fluShot==null)
             drugs=null;
         for(int i=0; i<prescribedDrugs.length; i++){
-            drugs.add(prescribedDrugs[i].getRxDate().toString() + "    " + prescribedDrugs[i].getRxDisplay());            
+            drugs.add(prescribedDrugs[i].getRxDate().toString() + "    " + prescribedDrugs[i].getRxDisplay());
         }
 
         return drugs;
     }
-    
+
     private List getDrugAllegyList(String demographicNo){
         List allergyLst = new LinkedList();
 
         RxPatientData.Patient p = RxPatientData.getPatient(Integer.parseInt(demographicNo));
-        RxPatientData.Patient.Allergy[] allergies = p.getActiveAllergies();
+        Allergy[] allergies = p.getActiveAllergies();
         if(allergies.length==0)
             allergyLst=null;
         for(int i=0; i<allergies.length; i++){
-            RxAllergyData.Allergy allergy = allergies[i].getAllergy();
-            allergyLst.add(allergies[i].getEntryDate() + " " + allergy.getDESCRIPTION() + " " + allergy.getTypeDesc());            
+            Allergy allergy = allergies[i];
+            allergyLst.add(allergies[i].getEntryDate() + " " + allergy.getDescription() + " " + Allergy.getTypeDesc(allergy.getTypeCode()));
         }
-      
+
         return allergyLst;
     }
-    
+
     private String getFluShotBillingDate(String demoNo) {
         String s = null;
         try {
@@ -295,14 +295,14 @@ public final class FrmSetupFormAction extends Action {
         }
         return s;
     }
-    
+
     private Properties getFormRecord(String formName, String formId, String demographicNo){
         Properties props = new Properties();
         try{
-            
+
             if(formId!=null){
                 if(Integer.parseInt(formId)>0){
-                    
+
                     String sql = "SELECT * FROM form" + formName + " WHERE ID='" + formId + "' AND demographic_no='" + demographicNo + "'";
                     ResultSet rs = DBHandler.GetSQL(sql);
                     if(rs.next()) {
@@ -310,7 +310,7 @@ public final class FrmSetupFormAction extends Action {
                         for(int i = 1; i <= md.getColumnCount(); i++)  {
                                 String name = md.getColumnName(i);
                                 String value = oscar.Misc.getString(rs, i);
-                                if(value != null)	
+                                if(value != null)
                                     props.setProperty(name, value);
                         }
                     }
@@ -326,7 +326,7 @@ public final class FrmSetupFormAction extends Action {
         }
         return props;
     }
-    
+
     private String getPatientRlt(String demographicNo){
         Vector data2OSDSF = new Vector();
         data2OSDSF.add("patientCod");
@@ -350,18 +350,18 @@ public final class FrmSetupFormAction extends Action {
         catch(IOException e){
             MiscUtils.getLogger().error("Error", e);
             return null;
-        }                
+        }
         catch(Exception e){
            MiscUtils.getLogger().error("Error", e);
            return null;
         }
     }
-    
+
     private String getMostRecentRecord(String demographicNo){
         Vector ret = new Vector();
             ret.addElement("patientCod");
             ret.addElement(demographicNo);
-            
+
         String osdsfRPCURL = OscarProperties.getInstance().getProperty("osdsfRPCURL", null);
         MiscUtils.getLogger().debug("osdsfRPCURL getMostRecentRecord(): " + osdsfRPCURL);
         if (osdsfRPCURL == null){
@@ -381,18 +381,18 @@ public final class FrmSetupFormAction extends Action {
         catch(IOException e){
             MiscUtils.getLogger().error("Error", e);
             return null;
-        }               
+        }
     }
-    
-    
-    
+
+
+
     private Properties convertName(String formName){
         Properties osdsf = new Properties();
         InputStream is = getClass().getResourceAsStream("/../../form/" + formName + "FromOsdsf.properties");
         try {
                 osdsf.load(is);
         } catch (Exception e) {
-                MiscUtils.getLogger().debug("Error, file " + formName + ".properties not found.");			
+                MiscUtils.getLogger().debug("Error, file " + formName + ".properties not found.");
         }
 
         try{
@@ -403,26 +403,26 @@ public final class FrmSetupFormAction extends Action {
         }
         return osdsf;
     }
-    
+
     private void addLastData(EctMeasurementTypesBean mt,  String demo){
         try{
-                        
-            //get last value and its observation date                
+
+            //get last value and its observation date
             String sqlData = "SELECT dataField, dateEntered FROM measurements WHERE demographicNo='"+ demo + "' AND type ='" + mt.getType()
                              + "' AND measuringInstruction='" + mt.getMeasuringInstrc() + "' ORDER BY dateEntered DESC limit 1";
 
             ResultSet rs = DBHandler.GetSQL(sqlData);
             if(rs.next()){
                 mt.setLastData(oscar.Misc.getString(rs, "dataField"));
-                mt.setLastDateEntered(oscar.Misc.getString(rs, "dateEntered"));                
+                mt.setLastDateEntered(oscar.Misc.getString(rs, "dateEntered"));
             }
-                            
+
             rs.close();
         }
         catch (SQLException e) {
             MiscUtils.getLogger().error("Error", e);
         }
-        
+
     }
-    
+
 }
