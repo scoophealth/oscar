@@ -4,6 +4,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.oscarehr.common.dao.BillingreferralDao;
+import org.oscarehr.common.model.Billingreferral;
+import org.oscarehr.util.SpringUtils;
+
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
@@ -12,12 +16,14 @@ import oscar.util.UtilDateUtilities;
 
 public class FrmConsultantRecord extends FrmRecord {
 
+	BillingreferralDao billingReferralDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
+
 	public Properties getFormRecord(int demographicNo, int existingID) throws SQLException {
         	Properties props = new Properties();
 
         	if (existingID <= 0) {
-            	
-		
+
+
 		String sql = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS pName, address, CONCAT(city, ', ', province, ' ', postal) AS address2, phone, year_of_birth, month_of_birth, date_of_birth, CONCAT(hin, ' ', ver) AS hic FROM demographic WHERE demographic_no = " + demographicNo;
 
 		ResultSet rs = DBHandler.GetSQL(sql);
@@ -35,7 +41,7 @@ public class FrmConsultantRecord extends FrmRecord {
 			props.setProperty("p_healthcard", oscar.Misc.getString(rs, "hic"));
         	}
             	rs.close();
-	
+
 		sql = "SELECT clinic_name, clinic_address, CONCAT(clinic_city, ', ', clinic_province, ' ', clinic_postal) AS clinic_address2, clinic_phone, clinic_fax FROM clinic";
 		rs = DBHandler.GetSQL(sql);
 		if (rs.next()) {
@@ -49,30 +55,28 @@ public class FrmConsultantRecord extends FrmRecord {
         	} else {
             		String sql = "SELECT * FROM formConsult WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;
             		props = (new FrmRecordHelp()).getFormRecord(sql);
-                        
+
         	}
-	
+
 		return props;
 	}
 
 
-        public Properties getDocInfo(Properties props, String billingreferral_no) throws SQLException {
-            
-            String sql = "SELECT CONCAT('Dr. ', first_name, ' ', last_name) AS to_name, CONCAT(address1, ' ', address2) AS to_address1, CONCAT(city, ', ', province, ' ', postal) AS to_address2, phone, fax FROM billingreferral WHERE referral_no ='" + billingreferral_no +"';";
-            ResultSet rs = DBHandler.GetSQL(sql);
-            if (rs.next()) {
-                props.setProperty("t_name", oscar.Misc.getString(rs, "to_name"));
-            	props.setProperty("t_address1", oscar.Misc.getString(rs, "to_address1"));
-		props.setProperty("t_address2", oscar.Misc.getString(rs, "to_address2"));
-		props.setProperty("t_phone", oscar.Misc.getString(rs, "phone"));
-		props.setProperty("t_fax", oscar.Misc.getString(rs, "fax"));
+        public Properties getDocInfo(Properties props, String billingreferral_no) {
+            Billingreferral billingReferral = billingReferralDao.getByReferralNo(billingreferral_no);
+            if(billingReferral != null) {
+            	props.setProperty("t_name", "Dr. " + billingReferral.getFirstName() + " " + billingReferral.getLastName());
+            	props.setProperty("t_address1", billingReferral.getAddress1() +" " + billingReferral.getAddress2());
+            	props.setProperty("t_address2", billingReferral.getCity() + " " + billingReferral.getProvince() + " " + billingReferral.getPostal());
+            	props.setProperty("t_phone", billingReferral.getPhone());
+            	props.setProperty("t_fax", billingReferral.getFax());
             }
-            rs.close();
+
             return props;
         }
-        
+
 	public String getProvName(int provider_no) throws SQLException {
-		
+
 		Properties props = new Properties();
 		String sql = "SELECT CONCAT('Dr. ', first_name, ' ', last_name) AS doc_Name FROM provider WHERE provider_no = " + provider_no;
 		ResultSet rs = DBHandler.GetSQL(sql);
@@ -82,9 +86,9 @@ public class FrmConsultantRecord extends FrmRecord {
 		rs.close();
                 return props.getProperty("doc_name", "");
 	}
-        
+
         public Properties getInitRefDoc(Properties props, int demo_no) throws SQLException {
-                
+
                 String sql = "SELECT family_doctor FROM demographic WHERE demographic_no = '" + demo_no + "';";
                 ResultSet rs = DBHandler.GetSQL(sql);
                 String refdocno, docno;
@@ -95,7 +99,7 @@ public class FrmConsultantRecord extends FrmRecord {
                         props.setProperty("refdocno", refdocno);
                     }
                 }
-                
+
                 return props;
         }
 
@@ -124,7 +128,7 @@ public class FrmConsultantRecord extends FrmRecord {
 	        if ("yes".equalsIgnoreCase(OscarProperties.getInstance().getProperty("PHR", ""))) {
 
         	    String demographic_no = demoNo;
-		    
+
 	            String sql = "select email from demographic where demographic_no=" + demographic_no;
           	  ResultSet rs = DBHandler.GetSQL(sql);
                 if (rs.next()) {
