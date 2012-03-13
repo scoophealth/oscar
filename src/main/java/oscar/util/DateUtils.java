@@ -141,11 +141,20 @@ public final class DateUtils {
 		
 		GregorianCalendar cal=new GregorianCalendar();
 		cal.setTime(d);
+		zeroTimeFields(cal);
+		return(cal);
+	}
+	
+	/**
+	 * sets hours/minutes/seconds/milliseconds to 0
+	 */
+	public static void zeroTimeFields(Calendar cal)
+	{
 		cal.set(Calendar.HOUR, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
-		return(cal);
+		cal.getTimeInMillis();
 	}
 	
 	/**

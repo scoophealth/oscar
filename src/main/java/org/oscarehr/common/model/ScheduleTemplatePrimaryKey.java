@@ -6,6 +6,11 @@ import javax.persistence.Column;
 
 public class ScheduleTemplatePrimaryKey implements Serializable {
 
+	/**
+	 * Don't blame me, I wasn't the one to start doing this, I'm just making the constant for something already in use. Someday we should refactor it to null.
+	 */
+	public static final String DODGY_FAKE_PROVIDER_NO_USED_TO_HOLD_PUBLIC_TEMPLATES="Public";
+	
 	@Column(name="provider_no")
     private String providerNo;
 	private String name;
