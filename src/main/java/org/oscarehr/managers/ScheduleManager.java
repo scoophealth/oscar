@@ -5,6 +5,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.AppointmentTypeDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.ScheduleDateDao;
@@ -18,6 +19,7 @@ import org.oscarehr.common.model.ScheduleHoliday;
 import org.oscarehr.common.model.ScheduleTemplate;
 import org.oscarehr.common.model.ScheduleTemplateCode;
 import org.oscarehr.common.model.ScheduleTemplatePrimaryKey;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,8 @@ import oscar.util.DateUtils;
 @Service
 public class ScheduleManager {
 
+	private static Logger logger=MiscUtils.getLogger();
+	
 	@Autowired
 	private OscarAppointmentDao oscarAppointmentDao;
 
@@ -63,6 +67,11 @@ public class ScheduleManager {
 		dayWorkSchedule.setHoliday(scheduleHoliday != null);
 
 		ScheduleDate scheduleDate = scheduleDateDao.findByProviderNoAndDate(providerNo, date.getTime());
+		if (scheduleDate==null)
+		{
+			logger.debug("No scheduledate for date requested. providerNo="+providerNo+", date="+date.getTime());
+			return(null);
+		}
 		String scheduleTemplateName = scheduleDate.getHour();
 
 		// okay this is a mess, the ScheduleTemplate is messed up because no one links there via a PK, they only link there via the name column
