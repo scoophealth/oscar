@@ -1,4 +1,4 @@
 SystemInfoService
 LoginService
-AppointmentService
 ProviderService
+ScheduleService
