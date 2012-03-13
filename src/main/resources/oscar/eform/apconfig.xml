@@ -228,6 +228,15 @@
         <ap-output>${medicalHistory}</ap-output>
     </databaseap>
     <databaseap>
+    	<ap-name>dxregistry</ap-name>
+    	<ap-sql>SELECT GROUP_CONCAT(icd9.description SEPARATOR ', ') AS dxlist FROM icd9, dxresearch WHERE status='A' AND coding_system='icd9' AND icd9.icd9=dxresearch.dxresearch_code AND demographic_no=${demographic};</ap-sql>
+    	<ap-output>${dxlist}</ap-output></databaseap>
+    <databaseap>
+    	<ap-name>OHIPdxCode</ap-name>
+    	
+    	<ap-sql>SELECT GROUP_CONCAT(DISTINCT billing_on_item.dx) AS ohipdxc FROM billing_on_item, billing_on_cheader1 WHERE billing_on_cheader1.id=billing_on_item.ch1_id AND billing_on_cheader1.demographic_no=${demographic};</ap-sql>
+    	<ap-output>${ohipdxc}</ap-output></databaseap>
+    <databaseap>
         <ap-name>ongoingconcerns</ap-name>
         <ap-sql>SELECT ongoingConcerns FROM eChart WHERE demographicNo=${demographic} ORDER BY eChartId DESC limit 1</ap-sql>
         <ap-output>${ongoingConcerns}</ap-output>
