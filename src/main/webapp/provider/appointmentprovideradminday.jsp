@@ -182,6 +182,8 @@ public boolean patientHasOutstandingPrivateBills(String demographicNo){
     if( defaultServiceType == null ) {
         defaultServiceType = "";
     }
+    
+    boolean bShortcutIntakeForm = oscarVariables.getProperty("appt_intake_form", "").equalsIgnoreCase("on") ? true : false;
 
     String newticklerwarningwindow=null;
     String default_pmm=null;
@@ -1640,6 +1642,8 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
             |<bean:message key="provider.appointmentProviderAdminDay.btnE"/></a>
 <% } %>
 
+
+<%= (bShortcutIntakeForm) ? "| <a href='#' onClick='popupPage(700, 1024, \"formIntake.jsp?demographic_no="+demographic_no+"\")' title='Intake Form'>In</a>" : "" %>
 <!-- billing code block -->
 <% if (!isWeekView) { %>
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r">
