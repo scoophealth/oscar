@@ -1,0 +1,1016 @@
+<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.oscarRx.util.*, oscar.util.*" errorPage="errorpage.jsp"%>
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
+<%!
+public boolean isNumeric (String s) {
+	try{
+		Float.parseFloat(s);
+	} catch(NumberFormatException e) {
+		return false;
+	}
+	return true;
+}
+%>
+<%
+String curUser_no = (String) session.getAttribute("user");
+String demographic_no = ""+Integer.parseInt(request.getParameter("demographic_no"));
+boolean selfSubmit = (request.getParameter("selfsubmit") != null) ? request.getParameter("selfsubmit").equals("1") : false;
+
+// on submit
+if (selfSubmit) {
+	String measurementSetQuery = "intake_set_measurement";
+	String[] measurementSetParam = new String[6];
+	measurementSetParam[1] = demographic_no;
+	measurementSetParam[2] = curUser_no;
+	List<Map<String, Object>> measurementSetResult;
+
+	measurementSetParam[0] = "HT";
+	if (request.getParameter("ht_value")!=null && isNumeric(request.getParameter("ht_value"))) {
+		measurementSetParam[3] = request.getParameter("ht_value");
+		measurementSetParam[4] = "cm";
+		measurementSetParam[5] = (request.getParameter("ht_comment") != null) ? request.getParameter("ht_comment") : "";
+		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+	}
+	
+	measurementSetParam[0] = "WT";
+	if (request.getParameter("wt_value")!=null && isNumeric(request.getParameter("wt_value"))) {
+		measurementSetParam[3] = request.getParameter("wt_value");
+		measurementSetParam[4] = "kg";
+		measurementSetParam[5] = (request.getParameter("wt_comment") != null) ? request.getParameter("wt_comment") : "";
+		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+	}
+
+	measurementSetParam[0] = "BMI";
+	if (request.getParameter("bmi_value")!=null && isNumeric(request.getParameter("bmi_value"))) {
+		measurementSetParam[3] = request.getParameter("bmi_value");
+		measurementSetParam[4] = "";
+		measurementSetParam[5] = (request.getParameter("bmi_comment") != null) ? request.getParameter("bmi_comment") : "";
+		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+	}
+
+	measurementSetParam[0] = "HEAD";
+	if (request.getParameter("head_value")!=null && isNumeric(request.getParameter("head_value"))) {
+		measurementSetParam[3] = request.getParameter("head_value");
+		measurementSetParam[4] = "cm";
+		measurementSetParam[5] = (request.getParameter("head_comment") != null) ? request.getParameter("head_comment") : "";
+		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+	}
+
+	measurementSetParam[0] = "WAIS";
+	if (request.getParameter("waist_value")!=null && isNumeric(request.getParameter("waist_value"))) {
+		measurementSetParam[3] = request.getParameter("waist_value");
+		measurementSetParam[4] = "cm";
+		measurementSetParam[5] = (request.getParameter("waist_comment") != null) ? request.getParameter("waist_comment") : "";
+		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+	}
+
+	measurementSetParam[0] = "HIP";
+	if (request.getParameter("hip_value")!=null && isNumeric(request.getParameter("hip_value"))) {
+		measurementSetParam[3] = request.getParameter("hip_value");
+		measurementSetParam[4] = "cm";
+		measurementSetParam[5] = (request.getParameter("hip_comment") != null) ? request.getParameter("hip_comment") : "";
+		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+	}
+
+	measurementSetParam[0] = "WHR";
+	if (request.getParameter("whr_value")!=null && isNumeric(request.getParameter("whr_value"))) {
+		measurementSetParam[3] = request.getParameter("whr_value");
+		measurementSetParam[4] = "";
+		measurementSetParam[5] = (request.getParameter("whr_comment") != null) ? request.getParameter("whr_comment") : "";
+		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+	}
+
+	measurementSetParam[0] = "BP";
+	if (request.getParameter("bp_value_s")!=null && isNumeric(request.getParameter("bp_value_s")) && request.getParameter("bp_value_d")!=null && isNumeric(request.getParameter("bp_value_d"))) {
+		measurementSetParam[3] = request.getParameter("bp_value_s") + "/" + request.getParameter("bp_value_d");
+		measurementSetParam[4] = request.getParameter("bp_instruction");
+		measurementSetParam[5] = (request.getParameter("bp_comment") != null) ? request.getParameter("bp_comment") : "";
+		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+	}
+
+	measurementSetParam[0] = "PULS";
+	if (request.getParameter("pulse_value")!=null && isNumeric(request.getParameter("pulse_value"))) {
+		measurementSetParam[3] = request.getParameter("pulse_value");
+		measurementSetParam[4] = "";
+		measurementSetParam[5] = (request.getParameter("pulse_comment") != null) ? request.getParameter("pulse_comment") : "";
+		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+	}
+
+	measurementSetParam[0] = "RESP";
+	if (request.getParameter("resp_value")!=null && isNumeric(request.getParameter("resp_value"))) {
+		measurementSetParam[3] = request.getParameter("resp_value");
+		measurementSetParam[4] = "";
+		measurementSetParam[5] = (request.getParameter("resp_comment") != null) ? request.getParameter("resp_comment") : "";
+		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+	}
+
+	measurementSetParam[0] = "TEMP";
+	if (request.getParameter("temp_value")!=null && isNumeric(request.getParameter("temp_value"))) {
+		measurementSetParam[3] = request.getParameter("temp_value");
+		measurementSetParam[4] = "";
+		measurementSetParam[5] = (request.getParameter("temp_comment") != null) ? request.getParameter("temp_comment") : "";
+		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+	}
+
+	measurementSetParam[0] = "O2";
+	if (request.getParameter("o2_value")!=null && isNumeric(request.getParameter("o2_value"))) {
+		measurementSetParam[3] = request.getParameter("o2_value");
+		measurementSetParam[4] = "";
+		measurementSetParam[5] = (request.getParameter("o2_comment") != null) ? request.getParameter("o2_comment") : "";
+		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+	}
+
+	measurementSetParam[0] = "FEET";
+	if (request.getParameter("feet_sensation_value")!=null) {
+		measurementSetParam[3] = request.getParameter("feet_sensation_value");
+		measurementSetParam[4] = "Sensation";
+		measurementSetParam[5] = (request.getParameter("feet_sensation_comment") != null) ? request.getParameter("feet_sensation_comment") : "";
+		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+	}
+
+	if (request.getParameter("feet_vibration_value")!=null) {
+		measurementSetParam[3] = request.getParameter("feet_vibration_value");
+		measurementSetParam[4] = "Vibration";
+		measurementSetParam[5] = (request.getParameter("feet_vibration_comment") != null) ? request.getParameter("feet_vibration_comment") : "";
+		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+	}
+
+	if (request.getParameter("feet_reflexes_value")!=null) {
+		measurementSetParam[3] = request.getParameter("feet_reflexes_value");
+		measurementSetParam[4] = "Reflexes";
+		measurementSetParam[5] = (request.getParameter("feet_reflexes_comment") != null) ? request.getParameter("feet_reflexes_comment") : "";
+		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+	}
+
+	if (request.getParameter("feet_pulses_value")!=null) {
+		measurementSetParam[3] = request.getParameter("feet_pulses_value");
+		measurementSetParam[4] = "Pulses";
+		measurementSetParam[5] = (request.getParameter("feet_pulses_comment") != null) ? request.getParameter("feet_pulses_comment") : "";
+		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+	}
+
+	if (request.getParameter("feet_infection_value")!=null) {
+		measurementSetParam[3] = request.getParameter("feet_infection_value");
+		measurementSetParam[4] = "Infection";
+		measurementSetParam[5] = (request.getParameter("feet_infection_comment") != null) ? request.getParameter("feet_infection_comment") : "";
+		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+	}
+
+	measurementSetParam[0] = "Exer";
+	if (request.getParameter("exercise_value")!=null && isNumeric(request.getParameter("exercise_value"))) {
+		measurementSetParam[3] = request.getParameter("exercise_value");
+		measurementSetParam[4] = "";
+		measurementSetParam[5] = (request.getParameter("exercise_comment") != null) ? request.getParameter("exercise_comment") : "";
+		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+	}
+
+	measurementSetParam[0] = "DRPW";
+	if (request.getParameter("drinks_value")!=null && isNumeric(request.getParameter("drinks_value"))) {
+		measurementSetParam[3] = request.getParameter("drinks_value");
+		measurementSetParam[4] = "";
+		measurementSetParam[5] = (request.getParameter("drinks_comment") != null) ? request.getParameter("drinks_comment") : "";
+		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+	}
+
+	measurementSetParam[0] = "SMK";
+	if (request.getParameter("smoking_value")!=null) {
+		measurementSetParam[3] = request.getParameter("smoking_value");
+		measurementSetParam[4] = "";
+		measurementSetParam[5] = (request.getParameter("smoking_comment") != null) ? request.getParameter("smoking_comment") : "";
+		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+	}
+
+	measurementSetParam[0] = "SmkR";
+	if (request.getParameter("smokingrecent_value")!=null) {
+		measurementSetParam[3] = request.getParameter("smokingrecent_value");
+		measurementSetParam[4] = "";
+		measurementSetParam[5] = (request.getParameter("smokingrecent_comment") != null) ? request.getParameter("smokingrecent_comment") : "";
+		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+	}
+
+	measurementSetParam[0] = "SmkS";
+	if (request.getParameter("smokingstartyear_value")!=null && isNumeric(request.getParameter("smokingstartyear_value"))) {
+		measurementSetParam[3] = String.format("%04d", Integer.parseInt(request.getParameter("smokingstartyear_value")));
+		measurementSetParam[4] = "";
+		measurementSetParam[5] = (request.getParameter("smokingstart_comment") != null) ? request.getParameter("smokingstart_comment") : "";
+		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+	}
+
+	measurementSetParam[0] = "SmkC";
+	if (request.getParameter("smokingcessyear_value")!=null && isNumeric(request.getParameter("smokingcessyear_value"))) {
+		measurementSetParam[3] = String.format("%04d", Integer.parseInt(request.getParameter("smokingcessyear_value")));
+		measurementSetParam[4] = "";
+		measurementSetParam[5] = (request.getParameter("smokingcess_comment") != null) ? request.getParameter("smokingcess_comment") : "";
+		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+	}
+
+	measurementSetParam[0] = "SmkD";
+	if (request.getParameter("smokingpks_value")!=null) {
+		measurementSetParam[3] = request.getParameter("smokingpks_value");
+		measurementSetParam[4] = "";
+		measurementSetParam[5] = (request.getParameter("smokingpks_comment") != null) ? request.getParameter("smokingpks_comment") : "";
+		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+	}
+
+	measurementSetParam[0] = "SmkPY";
+	if (request.getParameter("smokingpyhx_value")!=null && isNumeric(request.getParameter("smokingpyhx_value"))) {
+		measurementSetParam[3] = request.getParameter("smokingpyhx_value");
+		measurementSetParam[4] = "";
+		measurementSetParam[5] = (request.getParameter("smokingpyhx_comment") != null) ? request.getParameter("smokingpyhx_comment") : "";
+		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+	}
+
+	measurementSetParam[0] = "SmkA";
+	if (request.getParameter("smokingadvised_value")!=null) {
+		measurementSetParam[3] = request.getParameter("smokingadvised_value");
+		measurementSetParam[4] = "";
+		measurementSetParam[5] = (request.getParameter("smokingadvised_comment") != null) ? request.getParameter("smokingadvised_comment") : "";
+		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+	}
+
+	measurementSetParam[0] = "SmkQ";
+	if (request.getParameter("smokingquit_value")!=null) {
+		measurementSetParam[3] = request.getParameter("smokingquit_value");
+		measurementSetParam[4] = "";
+		measurementSetParam[5] = (request.getParameter("smokingquit_comment") != null) ? request.getParameter("smokingquit_comment") : "";
+		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+	}
+
+	measurementSetParam[0] = "SmkF";
+	if (request.getParameter("smokingfollowup_value")!=null) {
+		measurementSetParam[3] = request.getParameter("smokingfollowup_value");
+		measurementSetParam[4] = "";
+		measurementSetParam[5] = (request.getParameter("smokingfollowup_comment") != null) ? request.getParameter("smokingfollowup_comment") : "";
+		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+	}
+}
+
+// no submit
+String demographicQuery = "intake_demographic";
+String[] demographicParam = new String[1];
+demographicParam[0] = demographic_no;
+List<Map<String, Object>> demographicResult = oscarSuperManager.find("providerDao", demographicQuery, demographicParam);
+String demographicName = demographicResult.get(0).get("last_name").toString() + ", " + demographicResult.get(0).get("first_name").toString();
+java.util.Date demographicDOB = new GregorianCalendar(Integer.parseInt(demographicResult.get(0).get("year_of_birth").toString()), Integer.parseInt(demographicResult.get(0).get("month_of_birth").toString())-1, Integer.parseInt(demographicResult.get(0).get("date_of_birth").toString())).getTime();
+String demographicBirthYear = demographicResult.get(0).get("year_of_birth").toString();
+
+String remindersQuery = "intake_reminders";
+List<Map<String, Object>> remindersResult = oscarSuperManager.find("providerDao", remindersQuery, demographicParam);
+String remindersList = (!remindersResult.isEmpty() && remindersResult.get(0).get("note")!=null) ? remindersResult.get(0).get("note").toString() : "";
+if (remindersResult.size() > 1) {
+	for (int i=1; i<remindersResult.size(); i++) {
+		remindersList += ",<br/>" + remindersResult.get(i).get("note").toString();
+	}
+}
+
+String pharmacyQuery = "intake_pharmacy";
+List<Map<String, Object>> pharmacyResult = oscarSuperManager.find("providerDao", pharmacyQuery, demographicParam);
+String pharmacyName = (!pharmacyResult.isEmpty() && pharmacyResult.get(0).get("name")!=null) ? pharmacyResult.get(0).get("name").toString() : "";
+
+String allergiesQuery = "intake_allergies";
+List<Map<String, Object>> allergiesResult = oscarSuperManager.find("providerDao", allergiesQuery, demographicParam);
+String allergiesList = (!allergiesResult.isEmpty() && allergiesResult.get(0).get("DESCRIPTION")!=null) ? allergiesResult.get(0).get("DESCRIPTION").toString() : "";
+if (allergiesResult.size() > 1) {
+	for (int i=1; i<allergiesResult.size(); i++) {
+		allergiesList += ",<br/>" + allergiesResult.get(i).get("DESCRIPTION").toString();
+	}
+}
+
+String medicationsQuery = "intake_medications";
+List<Map<String, Object>> medicationsResult = oscarSuperManager.find("providerDao", medicationsQuery, demographicParam);
+String medicationsList = "";
+if (!medicationsResult.isEmpty()) {
+	for (int i=0; i<medicationsResult.size(); i++) {
+		if (i != 0) {
+			medicationsList += ",<br/>";
+		}
+
+		if (medicationsResult.get(i).get("customName")!=null && !medicationsResult.get(i).get("customName").toString().equals("null")) {
+			medicationsList += medicationsResult.get(i).get("customName").toString();
+		} else if (Integer.parseInt(medicationsResult.get(i).get("GCN_SEQNO").toString())==0) {
+			medicationsList += "Unknown";	
+		} else {
+			medicationsList += medicationsResult.get(i).get("BN").toString();
+		}
+		
+		medicationsList += " " + RxUtil.FloatToString(Float.parseFloat(medicationsResult.get(i).get("takemin").toString()));
+		if (!medicationsResult.get(i).get("takemin").toString().equals(medicationsResult.get(i).get("takemax").toString())) {
+			medicationsList += "-" + RxUtil.FloatToString(Float.parseFloat(medicationsResult.get(i).get("takemax").toString()));
+		}
+
+		
+		if (medicationsResult.get(i).get("freqcode") != null) {
+			medicationsList += " " + medicationsResult.get(i).get("freqcode").toString();
+		}
+		
+		if (medicationsResult.get(i).get("prn").toString().equals("1")) {
+			medicationsList += " PRN";
+		}
+
+		if (medicationsResult.get(i).get("duration") != null && !medicationsResult.get(i).get("duration").toString().equals("null")) {
+			medicationsList += " " + medicationsResult.get(i).get("duration").toString();
+			if (medicationsResult.get(i).get("durunit")!=null) {
+				if (medicationsResult.get(i).get("durunit").toString().equals("D")) {
+					medicationsList += " Day";
+				} else if (medicationsResult.get(i).get("durunit").toString().equals("W")) {
+					medicationsList += " Week";
+				} else if (medicationsResult.get(i).get("durunit").toString().equals("M")) {
+					medicationsList += " Month";
+				}
+			}
+		}
+		
+		if (medicationsResult.get(i).get("duration")!=null && !medicationsResult.get(i).get("duration").toString().equals("null") && !medicationsResult.get(i).get("duration").toString().equals("") && Integer.parseInt(medicationsResult.get(i).get("duration").toString())>1) {
+			medicationsList += "s";
+		}
+
+		medicationsList += "  " + medicationsResult.get(i).get("quantity").toString() + " Qty  Repeats: ";
+
+		medicationsList += medicationsResult.get(i).get("repeat").toString();
+
+		if (medicationsResult.get(i).get("repeat").toString().equals("1")) {
+			medicationsList += " No subs";
+		}
+	}
+}
+
+String preventionsQuery = "intake_preventions";
+List<Map<String, Object>> preventionsResult = oscarSuperManager.find("providerDao", preventionsQuery, demographicParam);
+
+String preventionsList = "";
+String curPrevention = "";
+String preventionDateStr, demographicAge;
+String[] preventionDateArr;
+java.util.Date preventionDate;
+
+if (!preventionsResult.isEmpty()) {
+        for (int i=0; i<preventionsResult.size(); i++) {
+	       	try {
+				preventionDateStr = preventionsResult.get(i).get("prevention_date").toString();
+				preventionDateArr = preventionsResult.get(i).get("prevention_date").toString().split("-");
+				preventionDate = new GregorianCalendar(Integer.parseInt(preventionDateArr[0]), Integer.parseInt(preventionDateArr[1])-1, Integer.parseInt(preventionDateArr[2])).getTime(); 
+				
+	       	} catch (Exception e) {
+	       		preventionDateStr = "0001-01-01";
+	       		preventionDateArr = preventionDateStr.split("-");
+	       		preventionDate = new GregorianCalendar(1,1,1).getTime();
+	       	}
+	       	demographicAge = UtilDateUtilities.calcAgeAtDate(demographicDOB, preventionDate);
+			if (!preventionsResult.get(i).get("prevention_type").toString().equals(curPrevention)) {
+				if (i != 0) {
+					preventionsList += "<br/>";
+				} 
+				curPrevention = preventionsResult.get(i).get("prevention_type").toString();
+				preventionsList += "<b>" + curPrevention + ":</b> " + preventionDateStr + " (" + demographicAge + ")";
+			} else {
+				preventionsList += ", " + preventionDateStr + " (" + demographicAge + ")";
+			}
+	}
+}
+
+String dxCodeQuery = "intake_patient_dxcode";
+String[] dxCodeParam = new String[2];
+dxCodeParam[0] = demographic_no;
+String dxCodeList = "";
+
+dxCodeParam[1] = "250";
+List<Map<String, Object>> dxCodeResult = oscarSuperManager.find("providerDao", dxCodeQuery, dxCodeParam);
+if (!dxCodeResult.isEmpty()) {
+	dxCodeList += "<a href='#' onclick='popupPage(\"700\", \"1000\", \"/oscar/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no="+demographic_no+"&template=diab2\"); return false;'>Diabetic Flowsheet</a><br />";
+}
+
+dxCodeParam[1] = "401";
+dxCodeResult = oscarSuperManager.find("providerDao", dxCodeQuery, dxCodeParam);
+if (!dxCodeResult.isEmpty()) {
+	dxCodeList += "<a href='#' onclick='popupPage(\"700\", \"1000\", \"/oscar/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no="+demographic_no+"&template=hyptension\"); return false;'>Hypertension Flowsheet</a><br />";
+}
+
+boolean showInr = false;
+dxCodeParam[1] = "42731";
+dxCodeResult = oscarSuperManager.find("providerDao", dxCodeQuery, dxCodeParam);
+showInr = showInr || !dxCodeResult.isEmpty();
+dxCodeParam[1] = "V1251";
+dxCodeResult = oscarSuperManager.find("providerDao", dxCodeQuery, dxCodeParam);
+showInr = showInr || !dxCodeResult.isEmpty();
+dxCodeParam[1] = "V5861";
+dxCodeResult = oscarSuperManager.find("providerDao", dxCodeQuery, dxCodeParam);
+showInr = showInr || !dxCodeResult.isEmpty();
+if (showInr) {
+	dxCodeList += "<a href='#' onclick='popupPage(\"700\", \"1000\", \"/oscar/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no="+demographic_no+"&template=inrFlow\"); return false;'>INR Flowsheet</a><br />";
+}
+
+dxCodeParam[1] = "042";
+dxCodeResult = oscarSuperManager.find("providerDao", dxCodeQuery, dxCodeParam);
+if (!dxCodeResult.isEmpty()) {
+	dxCodeList += "<a href='#' onclick='popupPage(\"700\", \"1000\", \"/oscar/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no="+demographic_no+"&template=hiv\"); return false;'>HIV Flowsheet</a><br />";
+}
+
+String msmtQuery = "intake_get_measurement";
+String[] msmtParam = new String[2];
+msmtParam[1] = demographic_no;
+
+msmtParam[0] = "HT";
+List<Map<String, Object>> msmtResult = oscarSuperManager.find("providerDao", msmtQuery, msmtParam);
+String msmtValueHT = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField")!=null) ? msmtResult.get(0).get("dataField").toString()+" cm" : "";
+String msmtDateHT = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentHT = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
+
+msmtParam[0] = "WT";
+msmtResult = oscarSuperManager.find("providerDao", msmtQuery, msmtParam);
+String msmtValueWT = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField")!=null) ? msmtResult.get(0).get("dataField").toString()+" kg" : "";
+String msmtDateWT = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentWT = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
+
+msmtParam[0] = "BMI";
+msmtResult = oscarSuperManager.find("providerDao", msmtQuery, msmtParam);
+String msmtValueBMI = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField")!=null) ? msmtResult.get(0).get("dataField").toString() : "";
+String msmtDateBMI = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentBMI = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
+
+
+msmtParam[0] = "HEAD";
+msmtResult = oscarSuperManager.find("providerDao", msmtQuery, msmtParam);
+String msmtValueHEAD = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField")!=null) ? msmtResult.get(0).get("dataField").toString()+" cm" : "";
+String msmtDateHEAD = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentHEAD = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
+
+msmtParam[0] = "WAIS";
+msmtResult = oscarSuperManager.find("providerDao", msmtQuery, msmtParam);
+String msmtValueWAIST = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField")!=null) ? msmtResult.get(0).get("dataField").toString()+" cm" : "";
+String msmtDateWAIST = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentWAIST = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
+
+msmtParam[0] = "HIP";
+msmtResult = oscarSuperManager.find("providerDao", msmtQuery, msmtParam);
+String msmtValueHIP = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField")!=null) ? msmtResult.get(0).get("dataField").toString()+" cm" : "";
+String msmtDateHIP = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentHIP = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
+
+msmtParam[0] = "WHR";
+msmtResult = oscarSuperManager.find("providerDao", msmtQuery, msmtParam);
+String msmtValueWHR = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField")!=null) ? msmtResult.get(0).get("dataField").toString() : "";
+String msmtDateWHR = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentWHR = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
+
+msmtParam[0] = "BP";
+msmtResult = oscarSuperManager.find("providerDao", msmtQuery, msmtParam);
+String msmtValueBP = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField")!=null) ? msmtResult.get(0).get("dataField").toString()+"<br />("+msmtResult.get(0).get("measuringInstruction").toString()+")" : "";
+String msmtDateBP = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentBP = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
+
+msmtParam[0] = "PULS";
+msmtResult = oscarSuperManager.find("providerDao", msmtQuery, msmtParam);
+String msmtValuePULSE = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField")!=null) ? msmtResult.get(0).get("dataField").toString()+" bpm" : "";
+String msmtDatePULSE = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentPULSE = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
+
+msmtParam[0] = "RESP";
+msmtResult = oscarSuperManager.find("providerDao", msmtQuery, msmtParam);
+String msmtValueRESP = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField")!=null) ? msmtResult.get(0).get("dataField").toString()+" bpm" : "";
+String msmtDateRESP = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentRESP = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
+
+msmtParam[0] = "TEMP";
+msmtResult = oscarSuperManager.find("providerDao", msmtQuery, msmtParam);
+String msmtValueTEMP = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField")!=null) ? msmtResult.get(0).get("dataField").toString()+" &deg;C" : "";
+String msmtDateTEMP = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentTEMP = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
+
+msmtParam[0] = "O2";
+msmtResult = oscarSuperManager.find("providerDao", msmtQuery, msmtParam);
+String msmtValueO2 = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField")!=null) ? msmtResult.get(0).get("dataField").toString() : "";
+String msmtDateO2 = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentO2 = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
+
+String msmtQueryEx = "intake_get_measurement_ex";
+String[] msmtParamEx = new String[3];
+msmtParamEx[0] = "FEET";
+msmtParamEx[1] = demographic_no;
+
+msmtParamEx[2] = "Sensation";
+List<Map<String, Object>> msmtResultEx = oscarSuperManager.find("providerDao", msmtQueryEx, msmtParamEx);
+String msmtValueFEETsensation = (!msmtResultEx.isEmpty() && msmtResultEx.get(0).get("dataField")!=null) ? msmtResultEx.get(0).get("dataField").toString() : "";
+String msmtDateFEETsensation = (!msmtResultEx.isEmpty() && msmtResultEx.get(0).get("dateObserved")!=null) ? msmtResultEx.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentFEETsensation = (!msmtResultEx.isEmpty() && msmtResultEx.get(0).get("comments")!=null) ? msmtResultEx.get(0).get("comments").toString() : "";
+
+msmtParamEx[2] = "Vibration";
+msmtResultEx = oscarSuperManager.find("providerDao", msmtQueryEx, msmtParamEx);
+String msmtValueFEETvibration = (!msmtResultEx.isEmpty() && msmtResultEx.get(0).get("dataField")!=null) ? msmtResultEx.get(0).get("dataField").toString() : "";
+String msmtDateFEETvibration = (!msmtResultEx.isEmpty() && msmtResultEx.get(0).get("dateObserved")!=null) ? msmtResultEx.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentFEETvibration = (!msmtResultEx.isEmpty() && msmtResultEx.get(0).get("comments")!=null) ? msmtResultEx.get(0).get("comments").toString() : "";
+
+msmtParamEx[2] = "Reflexes";
+msmtResultEx = oscarSuperManager.find("providerDao", msmtQueryEx, msmtParamEx);
+String msmtValueFEETreflexes = (!msmtResultEx.isEmpty() && msmtResultEx.get(0).get("dataField")!=null) ? msmtResultEx.get(0).get("dataField").toString() : "";
+String msmtDateFEETreflexes = (!msmtResultEx.isEmpty() && msmtResultEx.get(0).get("dateObserved")!=null) ? msmtResultEx.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentFEETreflexes = (!msmtResultEx.isEmpty() && msmtResultEx.get(0).get("comments")!=null) ? msmtResultEx.get(0).get("comments").toString() : "";
+
+msmtParamEx[2] = "Pulses";
+msmtResultEx = oscarSuperManager.find("providerDao", msmtQueryEx, msmtParamEx);
+String msmtValueFEETpulses = (!msmtResultEx.isEmpty() && msmtResultEx.get(0).get("dataField")!=null) ? msmtResultEx.get(0).get("dataField").toString() : "";
+String msmtDateFEETpulses = (!msmtResultEx.isEmpty() && msmtResultEx.get(0).get("dateObserved")!=null) ? msmtResultEx.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentFEETpulses = (!msmtResultEx.isEmpty() && msmtResultEx.get(0).get("comments")!=null) ? msmtResultEx.get(0).get("comments").toString() : "";
+
+msmtParamEx[2] = "Infection";
+msmtResultEx = oscarSuperManager.find("providerDao", msmtQueryEx, msmtParamEx);
+String msmtValueFEETinfection = (!msmtResultEx.isEmpty() && msmtResultEx.get(0).get("dataField")!=null) ? msmtResultEx.get(0).get("dataField").toString() : "";
+String msmtDateFEETinfection = (!msmtResultEx.isEmpty() && msmtResultEx.get(0).get("dateObserved")!=null) ? msmtResultEx.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentFEETinfection = (!msmtResultEx.isEmpty() && msmtResultEx.get(0).get("comments")!=null) ? msmtResultEx.get(0).get("comments").toString() : "";
+
+msmtParam[0] = "Exer";
+msmtResult = oscarSuperManager.find("providerDao", msmtQuery, msmtParam);
+String msmtValueEXERCISE = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField")!=null) ? msmtResult.get(0).get("dataField").toString()+" min/wk" : "";
+String msmtDateEXERCISE = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentEXERCISE = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
+
+msmtParam[0] = "DRPW";
+msmtResult = oscarSuperManager.find("providerDao", msmtQuery, msmtParam);
+String msmtValueDRINKS = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField")!=null) ? msmtResult.get(0).get("dataField").toString()+" drinks/wk" : "";
+String msmtDateDRINKS = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentDRINKS = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
+
+msmtParam[0] = "SMK";
+msmtResult = oscarSuperManager.find("providerDao", msmtQuery, msmtParam);
+String msmtValueSMK = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField")!=null) ? msmtResult.get(0).get("dataField").toString() : "";
+String msmtDateSMK = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentSMK = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
+
+msmtParam[0] = "SmkR";
+msmtResult = oscarSuperManager.find("providerDao", msmtQuery, msmtParam);
+String msmtValueSmkR = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField")!=null) ? msmtResult.get(0).get("dataField").toString() : "";
+String msmtDateSmkR = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentSmkR = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
+
+msmtParam[0] = "SmkS";
+msmtResult = oscarSuperManager.find("providerDao", msmtQuery, msmtParam);
+String msmtValueSmkS = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField")!=null) ? msmtResult.get(0).get("dataField").toString() : "";
+String msmtDateSmkS = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentSmkS = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
+
+msmtParam[0] = "SmkC";
+msmtResult = oscarSuperManager.find("providerDao", msmtQuery, msmtParam);
+String msmtValueSmkC = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField")!=null) ? msmtResult.get(0).get("dataField").toString() : "";
+String msmtDateSmkC = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentSmkC = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
+
+msmtParam[0] = "SmkD";
+msmtResult = oscarSuperManager.find("providerDao", msmtQuery, msmtParam);
+String msmtValueSmkD = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField")!=null) ? msmtResult.get(0).get("dataField").toString()+" ppd" : "";
+String msmtDateSmkD = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentSmkD = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
+
+msmtParam[0] = "SmkPY";
+msmtResult = oscarSuperManager.find("providerDao", msmtQuery, msmtParam);
+String msmtValueSmkPY = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField")!=null) ? msmtResult.get(0).get("dataField").toString()+" pyhx" : "";
+String msmtDateSmkPY = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentSmkPY = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
+
+msmtParam[0] = "SmkA";
+msmtResult = oscarSuperManager.find("providerDao", msmtQuery, msmtParam);
+String msmtValueSmkA = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField")!=null) ? msmtResult.get(0).get("dataField").toString() : "";
+String msmtDateSmkA = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentSmkA = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
+
+msmtParam[0] = "SmkQ";
+msmtResult = oscarSuperManager.find("providerDao", msmtQuery, msmtParam);
+String msmtValueSmkQ = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField")!=null) ? msmtResult.get(0).get("dataField").toString() : "";
+String msmtDateSmkQ = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentSmkQ = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
+
+msmtParam[0] = "SmkF";
+msmtResult = oscarSuperManager.find("providerDao", msmtQuery, msmtParam);
+String msmtValueSmkF = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField")!=null) ? msmtResult.get(0).get("dataField").toString() : "";
+String msmtDateSmkF = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentSmkF = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
+
+%>
+<html>
+<head>
+<title>Intake</title>
+<style>
+
+table {
+	font-family: Verdana,Tahoma,Arial,sans-serif;
+	font-size: 12px;
+	line-height: 14px;
+	border: 1px solid #9d9d9d;
+	border-collapse:collapse;
+	margin-left: auto;
+	margin-right: auto;
+	width: 100%;
+}
+
+th {
+	background: #9d9d9d;
+	color: #fff;
+	text-align: left;
+	padding: 0.2em 0.5em;
+}
+
+td {
+	padding: 0.4em 0.5em;
+}
+
+.rowheader {
+	text-align: right;
+	vertical-align: text-top;
+}
+
+.rowheader2 {
+	text-align: right;
+}
+
+.header {
+	font-weight: bold;
+}
+
+a {
+	font-weight: bold;
+	color: #000;
+}
+
+.centerbox {
+	width: 100%;
+	text-align: center;
+}
+
+p {
+	max-width: 15em;
+}
+</style>
+<script type="text/javascript">
+var myPopup;
+function popupPage(vheight,vwidth,varpage) {
+	if (myPopup != null) {
+		myPopup.close();
+	}
+	var page = "" + varpage;
+	windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=0,left=0";
+	myPopup=window.open(page, "apptProvider", windowprops);
+	if (myPopup != null) {
+		if (myPopup.opener == null) {
+			myPopup.opener = self;
+		}
+		myPopup.focus();
+	}
+}
+
+function isNumber(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+function calcBMI() {
+	if (isNumber(document.getElementsByName("ht_value")[0].value) && isNumber(document.getElementsByName("wt_value")[0].value)) {
+		document.getElementsByName("bmi_value")[0].value = (document.getElementsByName("wt_value")[0].value/Math.pow(document.getElementsByName("ht_value")[0].value/100,2)).toFixed(1);
+	}
+}
+
+function calcWHR() {
+	if (isNumber(document.getElementsByName("waist_value")[0].value) && isNumber(document.getElementsByName("hip_value")[0].value)) {
+		document.getElementsByName("whr_value")[0].value = (document.getElementsByName("waist_value")[0].value/document.getElementsByName("hip_value")[0].value).toFixed(2);
+	}
+}
+
+function calcSmkSYear() {
+	if (isNumber(document.getElementsByName("smokingstartage_value")[0].value)) {
+		document.getElementsByName("smokingstartyear_value")[0].value = <%=demographicBirthYear%> + parseInt(document.getElementsByName("smokingstartage_value")[0].value);
+	}
+}
+
+function calcSmkSAge() {
+	if (isNumber(document.getElementsByName("smokingstartyear_value")[0].value)) {
+		document.getElementsByName("smokingstartage_value")[0].value = parseInt(document.getElementsByName("smokingstartyear_value")[0].value) - <%=demographicBirthYear%>;
+	}
+}
+
+function calcSmkCYear() {
+	if (isNumber(document.getElementsByName("smokingcessage_value")[0].value)) {
+		document.getElementsByName("smokingcessyear_value")[0].value = <%=demographicBirthYear%> + parseInt(document.getElementsByName("smokingcessage_value")[0].value);
+	}
+}
+
+function calcSmkCAge() {
+	if (isNumber(document.getElementsByName("smokingcessyear_value")[0].value)) {
+		document.getElementsByName("smokingcessage_value")[0].value = parseInt(document.getElementsByName("smokingcessyear_value")[0].value) - <%=demographicBirthYear%>;
+	}
+}
+
+function calcPYHX() {
+	ppd = -1;
+	for (i=0; i<document.getElementsByName("smokingpks_value").length; i++) {
+		if (document.getElementsByName("smokingpks_value")[i].checked) {
+			ppd = parseFloat(document.getElementsByName("smokingpks_value")[i].value.replace("1/8",1/8).replace("1/4",1/4).replace("1/2",1/2).replace("3/4",3/4));
+		}
+	}
+	if (isNumber(document.getElementsByName("smokingstartyear_value")[0].value) && isNumber(document.getElementsByName("smokingcessyear_value")[0].value)) {
+		if (ppd != -1 && isNumber(ppd)) {
+			document.getElementsByName("smokingpyhx_value")[0].value = (parseInt(document.getElementsByName("smokingcessyear_value")[0].value) - parseInt(document.getElementsByName("smokingstartyear_value")[0].value))*parseFloat(ppd);
+		}	
+	}
+	// If only the starting year has been set then we use the current year as the cessation year.
+	else if (isNumber(document.getElementsByName("smokingstartyear_value")[0].value)) {
+		if (ppd != -1 && isNumber(ppd)) {
+			document.getElementsByName("smokingpyhx_value")[0].value = (new Date().getFullYear() - parseInt(document.getElementsByName("smokingstartyear_value")[0].value))*parseFloat(ppd);
+		}
+	}
+}
+</script>
+</head>
+<body>
+<% if (selfSubmit) { %>
+<div class="centerbox">Form Submitted!</div>
+<% } %>
+
+<form method="post" action="">
+<input type="hidden" name="demographic_no" value="<%=demographic_no%>" />
+<input type="hidden" name="selfsubmit" value="1" />
+<table>
+<tr><th colspan="8"><%=demographicName%></th></tr>
+<tr>
+	<td class="rowheader"><a href="#" onclick="popupPage('700', '1000', '/oscar/CaseManagementEntry.do?method=issuehistory&demographicNo=<%=demographic_no%>&issueIds=38'); return false;">Reminders:</a></td>
+	<td colspan="7"><%=remindersList%></td>
+</tr><tr>
+	<td class="rowheader"><a href="#" onclick="popupPage('700', '1000', '/oscar/oscarRx/choosePatient.do?providerNo=999998&demographicNo=<%=demographic_no%>&pharmaList=true'); return false;">Pharmacy:</a></td>
+	<td colspan="7"><%=pharmacyName%></td>
+</tr><tr>
+	<td class="rowheader"><a href="#" onclick="popupPage('700', '1000', '/oscar/oscarRx/showAllergy.do?demographicNo=<%=demographic_no%>'); return false;">Allergies:</a></td>
+	<td colspan="7"><%=allergiesList%></td>
+</tr><tr>
+	<td class="rowheader"><a href="#" onclick="popupPage('700', '1000', '/oscar/oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>'); return false;">Medications:</a></td>
+	<td colspan="7"><%=medicationsList%></td>
+</tr><tr>
+	<td class="rowheader"><a href="#" onclick="popupPage('700', '1000', '/oscar/oscarPrevention/index.jsp?demographic_no=<%=demographic_no%>'); return false;">Preventions:</a></td>
+	<td colspan="7"><%=preventionsList%></td>
+</tr><tr>
+	<td class="rowheader">Other:</td>
+	<td colspan="7"><%=dxCodeList%></td>
+</tr>
+
+<tr><th colspan="8">Vitals</th></tr>
+<tr class="header">
+	<td class="rowheader2">Measurement</td>
+	<td colspan="3">Value</td>
+	<td>Comment</td>
+	<td>Last Value</td>
+	<td>Last Date</td>
+	<td>Last Comment</td>
+</tr>
+<tr>
+	<td class="rowheader2">Height:</td>
+	<td colspan="3"><input type="text" name="ht_value" size="5" onchange="calcBMI()" /> cm</td>
+	<td><input type="text" name="ht_comment" /></td>
+	<td><%=msmtValueHT%></td>
+	<td><%=msmtDateHT%></td>
+	<td><p><%=msmtCommentHT%></p></td>
+</tr>
+<tr>
+	<td class="rowheader2">Weight:</td>
+	<td colspan="3"><input type="text" name="wt_value" size="5" onchange="calcBMI()" /> kg</td>
+	<td><input type="text" name="wt_comment" /></td>
+	<td><%=msmtValueWT%></td>
+	<td><%=msmtDateWT%></td>
+	<td><p><%=msmtCommentWT%></p></td>
+</tr>
+<tr>
+	<td class="rowheader2">BMI:</td>
+	<td colspan="3"><input type="text" name="bmi_value" size="5" /></td>
+	<td><input type="text" name="bmi_comment" /></td>
+	<td><%=msmtValueBMI%></td>
+	<td><%=msmtDateBMI%></td>
+	<td><p><%=msmtCommentBMI%></p></td>
+</tr>
+<tr>
+	<td class="rowheader2">Head Circ:</td>
+	<td colspan="3"><input type="text" name="head_value" size="5" /> cm</td>
+	<td><input type="text" name="head_comment" /></td>
+	<td><%=msmtValueHEAD%></td>
+	<td><%=msmtDateHEAD%></td>
+	<td><p><%=msmtCommentHEAD%></p></td>
+</tr>
+<tr>
+	<td class="rowheader2">Waist:</td>
+	<td colspan="3"><input type="text" name="waist_value" size="5" onchange="calcWHR()" /> cm</td>
+	<td><input type="text" name="waist_comment" /></td>
+	<td><%=msmtValueWAIST%></td>
+	<td><%=msmtDateWAIST%></td>
+	<td><p><%=msmtCommentWAIST%></p></td>
+</tr>
+<tr>
+	<td class="rowheader2">Hip:</td>
+	<td colspan="3"><input type="text" name="hip_value" size="5" onchange="calcWHR()" /> cm</td>
+	<td><input type="text" name="hip_comment" /></td>
+	<td><%=msmtValueHIP%></td>
+	<td><%=msmtDateHIP%></td>
+	<td><p><%=msmtCommentHIP%></p></td>
+</tr>
+<tr>
+	<td class="rowheader2">Waist:Hip Ratio:</td>
+	<td colspan="3"><input type="text" name="whr_value" size="5" /></td>
+	<td><input type="text" name="whr_comment" /></td>
+	<td><%=msmtValueWHR%></td>
+	<td><%=msmtDateWHR%></td>
+	<td><p><%=msmtCommentWHR%></p></td>
+</tr>
+<tr>
+	<td class="rowheader2" rowspan="2">BP:</td>
+	<td><input type="text" name="bp_value_s" size="5" /> (Sys.)</td>
+	<td><input type="radio" name="bp_instruction" value="BP Tru">BP Tru</input></td>
+	<td><input type="radio" name="bp_instruction" value="Sitting" checked>Sitting</input></td>
+	<td rowspan="2"><input type="text" name="bp_comment" /></td>
+	<td rowspan="2"><%=msmtValueBP%></td>
+	<td rowspan="2"><%=msmtDateBP%></td>
+	<td rowspan="2"><p><%=msmtCommentBP%></p></td>
+</tr>
+<tr>
+	<td><input type="text" name="bp_value_d" size="5" /> (Dia.)</td>
+	<td><input type="radio" name="bp_instruction" value="Standing">Standing</input></td>
+	<td><input type="radio" name="bp_instruction" value="Supine">Supine</input></td>
+</tr>
+<tr>
+	<td class="rowheader2">Pulse:</td>
+	<td colspan="3"><input type="text" name="pulse_value" size="5" /> bpm</td>
+	<td><input type="text" name="pulse_comment" /></td>
+	<td><%=msmtValuePULSE%></td>
+	<td><%=msmtDatePULSE%></td>
+	<td><p><%=msmtCommentPULSE%></p></td>
+</tr>
+<tr>
+	<td class="rowheader2">Resp:</td>
+	<td colspan="3"><input type="text" name="resp_value" size="5" /> bpm</td>
+	<td><input type="text" name="resp_comment" /></td>
+	<td><%=msmtValueRESP%></td>
+	<td><%=msmtDateRESP%></td>
+	<td><p><%=msmtCommentRESP%></p></td>
+</tr>
+<tr>
+	<td class="rowheader2">Temp:</td>
+	<td colspan="3"><input type="text" name="temp_value" size="5" /> &deg;C</td>
+	<td><input type="text" name="temp_comment" /></td>
+	<td><%=msmtValueTEMP%></td>
+	<td><%=msmtDateTEMP%></td>
+	<td><p><%=msmtCommentTEMP%></p></td>
+</tr>
+<tr>
+	<td class="rowheader2">O2 Sats:</td>
+	<td colspan="3"><input type="text" name="o2_value" size="5" /></td>
+	<td><input type="text" name="o2_comment" /></td>
+	<td><%=msmtValueO2%></td>
+	<td><%=msmtDateO2%></td>
+	<td><p><%=msmtCommentO2%></p></td>
+</tr>
+<tr>
+	<td class="rowheader2">Feet - Sensation:</td>
+	<td colspan="3"><input type="radio" name="feet_sensation_value" value="Yes">Yes</input><input type="radio" name="feet_sensation_value" value="No">No</input></td>
+	<td><input type="text" name="feet_sensation_comment" /></td>
+	<td><%=msmtValueFEETsensation%></td>
+	<td><%=msmtDateFEETsensation%></td>
+	<td><p><%=msmtCommentFEETsensation%></p></td>
+</tr>
+<tr>
+	<td class="rowheader2">Feet - Vibration:</td>
+	<td colspan="3"><input type="radio" name="feet_vibration_value" value="Yes">Yes</input><input type="radio" name="feet_vibration_value" value="No">No</input></td>
+	<td><input type="text" name="feet_vibration_comment" /></td>
+	<td><%=msmtValueFEETvibration%></td>
+	<td><%=msmtDateFEETvibration%></td>
+	<td><p><%=msmtCommentFEETvibration%></p></td>
+</tr>
+<tr>
+	<td class="rowheader2">Feet - Reflexes:</td>
+	<td colspan="3"><input type="radio" name="feet_reflexes_value" value="Yes">Yes</input><input type="radio" name="feet_reflexes_value" value="No">No</input></td>
+	<td><input type="text" name="feet_reflexes_comment" /></td>
+	<td><%=msmtValueFEETreflexes%></td>
+	<td><%=msmtDateFEETreflexes%></td>
+	<td><p><%=msmtCommentFEETreflexes%></p></td>
+</tr>
+<tr>
+	<td class="rowheader2">Feet - Pulses:</td>
+	<td colspan="3"><input type="radio" name="feet_pulses_value" value="Yes">Yes</input><input type="radio" name="feet_pulses_value" value="No">No</input></td>
+	<td><input type="text" name="feet_pulses_comment" /></td>
+	<td><%=msmtValueFEETpulses%></td>
+	<td><%=msmtDateFEETpulses%></td>
+	<td><p><%=msmtCommentFEETpulses%></p></td>
+</tr>
+<tr>
+	<td class="rowheader2">Feet - Infection:</td>
+	<td colspan="3"><input type="radio" name="feet_infection_value" value="Yes">Yes</input><input type="radio" name="feet_infection_value" value="No">No</input></td>
+	<td><input type="text" name="feet_infection_comment" /></td>
+	<td><%=msmtValueFEETinfection%></td>
+	<td><%=msmtDateFEETinfection%></td>
+	<td><p><%=msmtCommentFEETinfection%></p></td>
+</tr>
+<tr>
+	<td class="rowheader2">Exercise:</td>
+	<td colspan="3"><input type="text" name="exercise_value" size="5" /> min/wk</td>
+	<td><input type="text" name="exercise_comment" /></td>
+	<td><%=msmtValueEXERCISE%></td>
+	<td><%=msmtDateEXERCISE%></td>
+	<td><p><%=msmtCommentEXERCISE%></p></td>
+</tr>
+<tr>
+	<td class="rowheader2">Drinks per Week:</td>
+	<td colspan="3"><input type="text" name="drinks_value" size="5" /> drinks/wk</td>
+	<td><input type="text" name="drinks_comment" /></td>
+	<td><%=msmtValueDRINKS%></td>
+	<td><%=msmtDateDRINKS%></td>
+	<td><p><%=msmtCommentDRINKS%></p></td>
+</tr>
+<tr>
+	<td class="rowheader2">Smoking:</td>
+	<td><input type="radio" name="smoking_value" value="Current">Current</input></td>
+	<td><input type="radio" name="smoking_value" value="Former">Former</input></td>
+	<td><input type="radio" name="smoking_value" value="Never">Never</input></td>
+	<td><input type="text" name="smoking_comment" /></td>
+	<td><%=msmtValueSMK%></td>
+	<td><%=msmtDateSMK%></td>
+	<td><p><%=msmtCommentSMK%></p></td>
+</tr>
+<tr>
+	<td class="rowheader2">Recent Tobacco Use:</td>
+	<td><input type="radio" name="smokingrecent_value" value="Last 7 Days">Last 7 Days</input></td>
+	<td><input type="radio" name="smokingrecent_value" value="Last 6 Months">Last 6 Months</input></td>
+	<td><input type="radio" name="smokingrecent_value" value="None">None</input></td>
+	<td><input type="text" name="smokingrecent_comment" /></td>
+	<td><%=msmtValueSmkR%></td>
+	<td><%=msmtDateSmkR%></td>
+	<td><%=msmtCommentSmkR%></td>
+</tr>
+<tr>
+	<td class="rowheader2">Smoking Start:</td>
+	<td><input type="text" name="smokingstartage_value" size="5" onchange="calcSmkSYear(); calcPYHX()"/> (age)</td>
+	<td colspan="2"><input type="text" name="smokingstartyear_value" size="5" onchange="calcSmkSAge(); calcPYHX()"/> (year)</td>
+	<td><input type="text" name="smokingstart_comment" /></td>
+	<td><%=msmtValueSmkS%></td>
+	<td><%=msmtDateSmkS%></td>
+	<td><p><%=msmtCommentSmkS%></p></td>
+</tr>
+<tr>
+	<td class="rowheader2">Smoking Cessation:</td>
+	<td><input type="text" name="smokingcessage_value" size="5" onchange="calcSmkCYear(); calcPYHX()"/> (age)</td>
+	<td colspan="2"><input type="text" name="smokingcessyear_value" size="5" onchange="calcSmkCAge(); calcPYHX()"/> (year)</td>
+	<td><input type="text" name="smokingcess_comment" /></td>
+	<td><%=msmtValueSmkC%></td>
+	<td><%=msmtDateSmkC%></td>
+	<td><p><%=msmtCommentSmkC%></p></td>
+</tr>
+<tr>
+	<td class="rowheader2">Packs Per Day:</td>
+	<td colspan="3">
+		<input type="radio" name="smokingpks_value" value="1/8" onchange="calcPYHX()">&#8539;</input>
+		<input type="radio" name="smokingpks_value" value="1/4" onchange="calcPYHX()">&frac14;</input>
+		<input type="radio" name="smokingpks_value" value="1/2" onchange="calcPYHX()">&frac12;</input>
+		<input type="radio" name="smokingpks_value" value="3/4" onchange="calcPYHX()">&frac34;</input>
+		<input type="radio" name="smokingpks_value" value="1" onchange="calcPYHX()">1</input>
+		<input type="radio" name="smokingpks_value" value="2" onchange="calcPYHX()">2</input>
+		<input type="radio" name="smokingpks_value" value="3" onchange="calcPYHX()">3</input>
+		<input type="radio" name="smokingpks_value" value="4" onchange="calcPYHX()">4</input>
+	</td>
+	<td><input type="text" name="smokingpks_comment" /></td>
+	<td><%=msmtValueSmkD%></td>
+	<td><%=msmtDateSmkD%></td>
+	<td><p><%=msmtCommentSmkD%></p></td>
+</tr>
+<tr>
+	<td class="rowheader2">Pack Years:</td>
+	<td colspan="3"><input type="text" name="smokingpyhx_value" size="5" /> pyhx</td>
+	<td><input type="text" name="smokingpyhx_comment" /></td>
+	<td><%=msmtValueSmkPY%></td>
+	<td><%=msmtDateSmkPY%></td>
+	<td><%=msmtCommentSmkPY%></td>
+</tr>
+<tr>
+	<td class="rowheader2">Advised Patient to Quit:</td>
+	<td colspan="3"><input type="radio" name="smokingadvised_value" value="Yes">Yes</input><input type="radio" name="smokingadvised_value" value="No">No</input></td>
+	<td><input type="text" name="smokingadvised_comment" /></td>
+	<td><%=msmtValueSmkA%></td>
+	<td><%=msmtDateSmkA%></td>
+	<td><%=msmtCommentSmkA%></td>
+</tr>
+<tr>
+	<td class="rowheader2">Patient Ready to Quit:</td>
+	<td colspan="3"><input type="radio" name="smokingquit_value" value="Yes">Yes</input><input type="radio" name="smokingquit_value" value="No">No</input></td>
+	<td><input type="text" name="smokingquit_comment" /></td>
+	<td><%=msmtValueSmkQ%></td>
+	<td><%=msmtDateSmkQ%></td>
+	<td><p><%=msmtCommentSmkQ%></p></td>
+</tr>
+
+<tr>
+	<td class="rowheader2">Patient Wants Follow-up:</td>
+	<td colspan="3"><input type="radio" name="smokingfollowup_value" value="Yes">Yes</input><input type="radio" name="smokingfollowup_value" value="No">No</input></td>
+	<td><input type="text" name="smokingfollowup_comment" /></td>
+	<td><%=msmtValueSmkF%></td>
+	<td><%=msmtDateSmkF%></td>
+	<td><p><%=msmtCommentSmkF%></p></td>
+</tr>
+
+
+</table>
+<br />
+<div class="centerbox">
+<input type="submit" value="Submit"/>
+</div>
+
+</form>
+
+</body>
+</html>
+
