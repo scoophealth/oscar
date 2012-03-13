@@ -37,7 +37,7 @@ public class BillingreferralDao extends HibernateDaoSupport {
 	 public List<Billingreferral> getBillingreferrals() {
 
 		 @SuppressWarnings("unchecked")
-		 List<Billingreferral> referrals = this.getHibernateTemplate().find("From Billingreferral b order by b.lastName");
+		 List<Billingreferral> referrals = this.getHibernateTemplate().find("From Billingreferral b order by b.lastName, b.firstName");
 		 return referrals;
 	 }
 
@@ -87,6 +87,30 @@ public class BillingreferralDao extends HibernateDaoSupport {
     }
 
     @SuppressWarnings("unchecked")
+    public List<Billingreferral> getBillingreferralByLastName(String last_name) {
+
+        List<Billingreferral> cList = null;
+        Session session = null;
+        try {
+            session = getSession();
+            cList = session.createCriteria(Billingreferral.class).add(Restrictions.like("lastName", "%" + last_name + "%")).addOrder(Order.asc("lastName")).list();
+        } catch (Exception e) {
+            MiscUtils.getLogger().error("Error", e);
+        } finally {
+            if (session != null) {
+                releaseSession(session);
+            }
+        }
+
+        if (cList != null && cList.size() > 0) {
+            return cList;
+        } else {
+            return null;
+        }
+    }
+
+
+    @SuppressWarnings("unchecked")
     public List<Billingreferral> getBillingreferralBySpecialty(String specialty) {
 
         List<Billingreferral> cList = null;
@@ -109,6 +133,23 @@ public class BillingreferralDao extends HibernateDaoSupport {
         }
     }
 
+    /*
+     * Don't blame me for this one, converted from SQL.
+     */
+    @SuppressWarnings("unchecked")
+    public List<Billingreferral> searchReferralCode(String codeName, String codeName1, String codeName2, String desc, String fDesc, String desc1, String fDesc1, String desc2, String fDesc2) {
+
+        List<Billingreferral> cList = null;
+
+        cList = this.getHibernateTemplate().find("SELECT b FROM Billingreferral b WHERE b.referralNo LIKE ? or b.referralNo LIKE ? or b.referralNo LIKE ?"
+        		+ " or (b.lastName LIKE ? and b.firstName LIKE ?)"
+        		+ " or (b.lastName LIKE ? and b.firstName LIKE ?)"
+        		+ " or (b.lastName LIKE ? and b.firstName LIKE ?)"
+        		, new Object[]{codeName, codeName1,codeName2, desc,fDesc,desc1,fDesc1,desc2,fDesc2});
+
+        return cList;
+    }
+
     public void updateBillingreferral(Billingreferral obj) {
     	if(obj.getBillingreferralNo() == null || obj.getBillingreferralNo().intValue() == 0) {
     		getHibernateTemplate().save(obj);
@@ -116,4 +157,15 @@ public class BillingreferralDao extends HibernateDaoSupport {
     		getHibernateTemplate().update(obj);
     	}
     }
+
+	 public String getReferralDocName(String referral_no) {
+		 String sql = "From Billingreferral br WHERE br.referralNo=?";
+
+		 @SuppressWarnings("unchecked")
+		 List<Billingreferral> brs = this.getHibernateTemplate().find(sql,referral_no);
+		 if(!brs.isEmpty())
+			 return brs.get(0).getLastName() + ", " + brs.get(0).getFirstName();
+
+		 return "";
+	 }
 }

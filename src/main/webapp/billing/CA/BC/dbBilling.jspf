@@ -132,7 +132,6 @@
     //NEW FOR BC
     {"search_teleplanbill", "select b.billing_no, b.demographic_no, b.demographic_name, b.update_date, b.status, b.billing_date, b.provider_no, b.visitdate, b.visittype from billing b, billingmaster bm where b.billing_no= bm.billing_no and bm.billingmaster_no=?"},
     {"search_diagnostic_new_code", "select diagnostic_code, description from diagnosticcode where diagnostic_code like ? or diagnostic_code like ? or diagnostic_code like ? or description like ? or description like ? or description like ?"},
-    {"search_referral_code", "select * from billingreferral where referral_no like ? or referral_no like ? or referral_no like ? or (last_name like ? and first_name like ?) or (last_name like ? and first_name like ?)  or (last_name like ? and first_name like ?) "},
     {"save_tahd", "insert into teleplanS21 values('\\N',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"},
     {"save_tadt", "insert into teleplanS00 values('\\N',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"},
     {"save_tadt_s23","insert into teleplanS23 values('\\N',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"},

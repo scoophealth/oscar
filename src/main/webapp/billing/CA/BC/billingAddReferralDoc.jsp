@@ -1,26 +1,26 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -28,7 +28,12 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ page
 	import="java.util.*,oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*,org.apache.commons.beanutils.*"%>
-
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.Billingreferral" %>
+<%@page import="org.oscarehr.common.dao.BillingreferralDao" %>
+<%
+	BillingreferralDao billingReferralDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
+%>
 
 <%@page import="org.oscarehr.util.MiscUtils"%><html:html locale="true">
 
@@ -53,7 +58,7 @@ function isNumeric(strString){
      return retval;
 }
 
-function checkUnits(){   
+function checkUnits(){
 	if  (!isNumeric(document.BillingAddCodeForm.value.value)){
 		alert("Price has to be a numeric value");
 	        document.BillingAddCodeForm.value.focus();
@@ -61,7 +66,7 @@ function checkUnits(){
 	}
 	return true;
 }
-	
+
 function checkBillingNumber(){
     //alert(">"+document.AddReferralDocForm.referral_no.value+"<");
     if( document.AddReferralDocForm.referral_no.value.length == 0){
@@ -73,23 +78,23 @@ function checkBillingNumber(){
         return false;
     }else if( document.AddReferralDocForm.referral_no.value.length != 5){
        if( document.AddReferralDocForm.referral_no.value.length < 5){
-          //need to addzeros 
+          //need to addzeros
 	  document.AddReferralDocForm.referral_no.value = forwardZero(document.AddReferralDocForm.referral_no.value, 5);
        }else{
 	  alert("Billing Number must be digits");
           return false;
        }
-	
+
     }
-	
+
 	return true;
 }
 
-function forwardZero(str, len) {      
+function forwardZero(str, len) {
         returnZeroValue = "";
         for(var i= str.length; i < len; i++) {
             returnZeroValue += "0";
-        }        
+        }
         //return cutFrontString(returnZeroValue+y,x);
         return (returnZeroValue+str);
     }
@@ -130,11 +135,23 @@ function forwardZero(str, len) {
 
 			<%
             String id = request.getParameter("id");
-            if ( id != null ){                
+            if ( id != null ){
                 try{
-                    ReferralBillingData bd = new ReferralBillingData();     
-                    AddReferralDocForm frm = (AddReferralDocForm) request.getAttribute("AddReferralDocForm");
-                    BeanUtils.populate(frm,bd.getReferralbyId(id));                              
+                  AddReferralDocForm frm = (AddReferralDocForm) request.getAttribute("AddReferralDocForm");
+                 Billingreferral billingReferral = billingReferralDao.getById(Integer.parseInt(id));
+                 if(billingReferral!=null) {
+                	 frm.setReferral_no(billingReferral.getReferralNo());
+                	 frm.setAddress1(billingReferral.getAddress1());
+                	 frm.setAddress2(billingReferral.getAddress2());
+                	 frm.setCity(billingReferral.getCity());
+                	 frm.setFax(billingReferral.getFax());
+                	 frm.setFirst_name(billingReferral.getFirstName());
+                	 frm.setLast_name(billingReferral.getLastName());
+                	 frm.setPhone(billingReferral.getPhone());
+                	 frm.setPostal(billingReferral.getPostal());
+                	 frm.setProvince(billingReferral.getProvince());
+                	 frm.setSpecialty(billingReferral.getSpecialty());
+                 }
                 }catch(Exception e){
                 	MiscUtils.getLogger().error("Error", e);
                 }%>

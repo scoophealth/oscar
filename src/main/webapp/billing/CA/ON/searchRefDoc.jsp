@@ -17,6 +17,12 @@
  * <OSCAR TEAM>
  */
 -->
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.Billingreferral" %>
+<%@page import="org.oscarehr.common.dao.BillingreferralDao" %>
+<%
+	BillingreferralDao billingReferralDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
+%>
 <%
   if (session.getAttribute("user") == null) {
     response.sendRedirect("../logout.jsp");
@@ -31,63 +37,52 @@
   Properties prop = null;
   String param = request.getParameter("param")==null?"":request.getParameter("param") ;
   String param2 = request.getParameter("param2")==null?"":request.getParameter("param2") ;
-  String toname = request.getParameter("toname")==null?"":request.getParameter("toname") ; 
-  String toaddress1 = request.getParameter("toaddress1")==null?"":request.getParameter("toaddress1") ; 
-  String toaddress2 = request.getParameter("toaddress2")==null?"":request.getParameter("toaddress2") ; 
-  String tophone = request.getParameter("tophone")==null?"":request.getParameter("tophone") ; 
-  String tofax = request.getParameter("tofax")==null?"":request.getParameter("tofax") ; 
+  String toname = request.getParameter("toname")==null?"":request.getParameter("toname") ;
+  String toaddress1 = request.getParameter("toaddress1")==null?"":request.getParameter("toaddress1") ;
+  String toaddress2 = request.getParameter("toaddress2")==null?"":request.getParameter("toaddress2") ;
+  String tophone = request.getParameter("tophone")==null?"":request.getParameter("tophone") ;
+  String tofax = request.getParameter("tofax")==null?"":request.getParameter("tofax") ;
   String keyword = request.getParameter("keyword");
 
 	if (request.getParameter("submit") != null && (request.getParameter("submit").equals("Search")
 		|| request.getParameter("submit").equals("Next Page") || request.getParameter("submit").equals("Last Page")) ) {
+
 	  BillingONDataHelp dbObj = new BillingONDataHelp();
 	  String search_mode = request.getParameter("search_mode")==null?"search_name":request.getParameter("search_mode");
 	  String orderBy = request.getParameter("orderby")==null?"last_name,first_name":request.getParameter("orderby");
 	  String where = "";
+
+	  List<Billingreferral> billingReferrals = null;
+
 	  if("search_name".equals(search_mode)) {
 	    String[] temp = keyword.split("\\,\\p{Space}*");
 	    if(temp.length>1) {
-	      where = "last_name like '" + StringEscapeUtils.escapeSql(temp[0]) + "%' and first_name like '" + StringEscapeUtils.escapeSql(temp[1]) + "%'";
+	      billingReferrals = billingReferralDao.getBillingreferral(temp[0], temp[1]);
 	    } else {
-	      where = "last_name like '" + StringEscapeUtils.escapeSql(temp[0]) + "%'";
+	      billingReferrals = billingReferralDao.getBillingreferralByLastName(temp[0]);
 	    }
-	  } else {
-	    where = search_mode + " like '" + StringEscapeUtils.escapeSql(keyword) + "%'";
+	  } else if("specialty".equals(search_mode)){
+	    billingReferrals = billingReferralDao.getBillingreferralBySpecialty(keyword);
+	  } else if("referral_no".equals(search_mode)) {
+		  billingReferrals = billingReferralDao.getBillingreferral(keyword);
 	  }
-	  String  sql = "select referral_no, last_name, first_name, specialty, phone, fax, " +
-	                "CONCAT(CONCAT(CONCAT('Dr. ', first_name), ' '), last_name) AS to_name, " +
-	                "CONCAT(CONCAT(address1, ' '), address2) AS to_address1, " + 
-	                "CONCAT(CONCAT(CONCAT(CONCAT(city, ', '), province), ' '), postal) AS to_address2 " + 
-	                "from billingreferral where " + where + " order by " + orderBy;
-	                // + " limit " +strLimit1+"," +strLimit2;
 
-      int iRow=0;	   
-	  ResultSet rs = dbObj.searchDBRecord(sql);
-          int startidx = Integer.parseInt(strLimit1);
-          if( startidx > 0 ) {
-            while(rs.next()) {
-                if( ++iRow == startidx ) {
-                    break;
-                }
-          }
-                
-            iRow = 0;
-          }
-	  while (rs.next()) {
-	    iRow++;
-	    if(iRow>Integer.parseInt(strLimit2)) break;
-	  	prop = new Properties();
-	  	prop.setProperty("referral_no",rs.getString("referral_no"));
-	  	prop.setProperty("last_name",rs.getString("last_name"));
-	  	prop.setProperty("first_name",rs.getString("first_name"));
-	  	prop.setProperty("specialty",rs.getString("specialty"));
-	  	prop.setProperty("phone",rs.getString("phone"));
-                prop.setProperty("to_fax", rs.getString("fax")); 
-                prop.setProperty("to_name", rs.getString("to_name")); 
-                prop.setProperty("to_address1", rs.getString("to_address1")); 
-                prop.setProperty("to_address2", rs.getString("to_address2")); 
-	  	vec.add(prop);
+	  if(billingReferrals != null) {
+		 for( Billingreferral billingReferral:billingReferrals) {
+		  	prop = new Properties();
+		  	prop.setProperty("referral_no",billingReferral.getReferralNo());
+		  	prop.setProperty("last_name",billingReferral.getLastName());
+		  	prop.setProperty("first_name",billingReferral.getFirstName());
+		  	prop.setProperty("specialty",billingReferral.getSpecialty());
+		  	prop.setProperty("phone",billingReferral.getPhone());
+            prop.setProperty("to_fax", billingReferral.getFax());
+            prop.setProperty("to_name", "Dr. " + billingReferral.getFirstName() + " " + billingReferral.getLastName());
+            prop.setProperty("to_address1", billingReferral.getAddress1() + " " + billingReferral.getAddress2());
+            prop.setProperty("to_address2", billingReferral.getCity() + " " + billingReferral.getProvince() + " " + billingReferral.getPostal());
+		  	vec.add(prop);
+		 }
 	  }
+
 	}
 %>
 <%@ page errorPage="../appointment/errorpage.jsp"
@@ -127,17 +122,17 @@
 		  self.close();
 		}
 		<%}}%>
-                <%if(toname.length()>0){%> 
-                function typeInData3(billno, toname, toaddress1, toaddress2, tophone, tofax){ 
-                self.close(); 
-                opener.<%=param%> = billno; 
-                opener.<%=toname%> = toname; 
-                opener.<%=toaddress1%> = toaddress1; 
-                opener.<%=toaddress2%> = toaddress2; 
-                opener.<%=tophone%> = tophone; 
-                opener.<%=tofax%> = tofax; 
-                } 
-                <%}%> 
+                <%if(toname.length()>0){%>
+                function typeInData3(billno, toname, toaddress1, toaddress2, tophone, tofax){
+                self.close();
+                opener.<%=param%> = billno;
+                opener.<%=toname%> = toname;
+                opener.<%=toaddress1%> = toaddress1;
+                opener.<%=toaddress2%> = toaddress2;
+                opener.<%=tophone%> = tophone;
+                opener.<%=tofax%> = tofax;
+                }
+                <%}%>
 -->
 
       </script>
@@ -200,11 +195,11 @@
 	<%for(int i=0; i<vec.size(); i++) {
         	prop = (Properties) vec.get(i);
 			String bgColor = i%2==0?"#EEEEFF":"ivory";
-			String strOnClick; 
-                        if ( param2.length() <= 0){ 
-                            strOnClick = "typeInData3('" + prop.getProperty("referral_no","") + "', '" + prop.getProperty("to_name", "") + "', '" + prop.getProperty("to_address1", "") + "', '" + prop.getProperty("to_address2", "") + "', '" + prop.getProperty("phone", "") + "', '" + prop.getProperty("to_fax", "") + "')" ; 
-                        } else {   
-                            strOnClick = param2.length()>0? "typeInData2('" + prop.getProperty("referral_no", "") + "','"+StringEscapeUtils.escapeJavaScript(prop.getProperty("last_name", "")+ "," + prop.getProperty("first_name", "")) + "')" 
+			String strOnClick;
+                        if ( param2.length() <= 0){
+                            strOnClick = "typeInData3('" + prop.getProperty("referral_no","") + "', '" + prop.getProperty("to_name", "") + "', '" + prop.getProperty("to_address1", "") + "', '" + prop.getProperty("to_address2", "") + "', '" + prop.getProperty("phone", "") + "', '" + prop.getProperty("to_fax", "") + "')" ;
+                        } else {
+                            strOnClick = param2.length()>0? "typeInData2('" + prop.getProperty("referral_no", "") + "','"+StringEscapeUtils.escapeJavaScript(prop.getProperty("last_name", "")+ "," + prop.getProperty("first_name", "")) + "')"
 				: "typeInData1('" + prop.getProperty("referral_no", "") + "')";
                                 }
         %>
@@ -233,11 +228,11 @@
 %> <script language="JavaScript">
 <!--
 function last() {
-  document.nextform.action="searchRefDoc.jsp?param=<%=URLEncoder.encode(param,"UTF-8")%>&param2=<%=URLEncoder.encode(param2,"UTF-8")%>&toname=<%=URLEncoder.encode(toname,"UTF-8")%>&toaddress1=<%=URLEncoder.encode(toaddress1,"UTF-8")%>&toaddress2=<%=URLEncoder.encode(toaddress2,"UTF-8")%>&tophone=<%=URLEncoder.encode(tophone,"UTF-8")%>&tofax=<%=URLEncoder.encode(tofax,"UTF-8")%>&keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>" ; 
+  document.nextform.action="searchRefDoc.jsp?param=<%=URLEncoder.encode(param,"UTF-8")%>&param2=<%=URLEncoder.encode(param2,"UTF-8")%>&toname=<%=URLEncoder.encode(toname,"UTF-8")%>&toaddress1=<%=URLEncoder.encode(toaddress1,"UTF-8")%>&toaddress2=<%=URLEncoder.encode(toaddress2,"UTF-8")%>&tophone=<%=URLEncoder.encode(tophone,"UTF-8")%>&tofax=<%=URLEncoder.encode(tofax,"UTF-8")%>&keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>" ;
   document.nextform.submit();
 }
 function next() {
-  document.nextform.action="searchRefDoc.jsp?param=<%=URLEncoder.encode(param,"UTF-8")%>&param2=<%=URLEncoder.encode(param2,"UTF-8")%>&toname=<%=URLEncoder.encode(toname,"UTF-8")%>&toaddress1=<%=URLEncoder.encode(toaddress1,"UTF-8")%>&toaddress2=<%=URLEncoder.encode(toaddress2,"UTF-8")%>&tophone=<%=URLEncoder.encode(tophone,"UTF-8")%>&tofax=<%=URLEncoder.encode(tofax,"UTF-8")%>&keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>" ; 
+  document.nextform.action="searchRefDoc.jsp?param=<%=URLEncoder.encode(param,"UTF-8")%>&param2=<%=URLEncoder.encode(param2,"UTF-8")%>&toname=<%=URLEncoder.encode(toname,"UTF-8")%>&toaddress1=<%=URLEncoder.encode(toaddress1,"UTF-8")%>&toaddress2=<%=URLEncoder.encode(toaddress2,"UTF-8")%>&tophone=<%=URLEncoder.encode(tophone,"UTF-8")%>&tofax=<%=URLEncoder.encode(tofax,"UTF-8")%>&keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>" ;
   document.nextform.submit();
 }
 //-->

@@ -25,8 +25,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.AppointmentArchiveDao;
+import org.oscarehr.common.dao.BillingreferralDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.Billingreferral;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.SxmlMisc;
@@ -37,6 +39,7 @@ public class JdbcBillingPageUtil {
 	BillingONDataHelp dbObj = new BillingONDataHelp();
 	AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
     OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
+    BillingreferralDao billingReferralDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
 
 
 	public List getCurTeamProviderStr(String provider_no) {
@@ -384,15 +387,11 @@ public class JdbcBillingPageUtil {
 
 	public String getReferDocSpet(String billingNo) {
 		String retval = null;
-		String sql = "select specialty from billingreferral where referral_no='" + billingNo + "' ";
-		ResultSet rslocal = dbObj.searchDBRecord(sql);
-		try {
-			while (rslocal.next()) {
-				retval = rslocal.getString("specialty");
-			}
-		} catch (SQLException e) {
-			_logger.error("getReferDocSpet(sql = " + sql + ")");
-		}
+		Billingreferral billingReferral = billingReferralDao.getByReferralNo(billingNo);
+        if(billingReferral != null) {
+        	return billingReferral.getSpecialty();
+        }
+
 		return retval;
 	}
 

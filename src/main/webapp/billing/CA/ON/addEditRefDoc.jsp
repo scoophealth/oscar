@@ -27,6 +27,12 @@
                                                            java.sql.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.BillingONDataHelp"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.Billingreferral" %>
+<%@page import="org.oscarehr.common.dao.BillingreferralDao" %>
+<%
+	BillingreferralDao billingReferralDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
+%>
 <%
   int referralNoLen = 6;
   String msg = "Type in a doctor's ref. # and search first to see if it is available.";
@@ -41,39 +47,28 @@
       	// update the service code
 		String referral_no = request.getParameter("referral_no");
 		if(referral_no.equals(request.getParameter("action").substring("edit".length()))) {
-			String	sql   = "update billingreferral set last_name='" + StringEscapeUtils.escapeSql(request.getParameter("last_name")) + "', ";
-			sql += " first_name='" + request.getParameter("first_name") + "', ";
-			sql += " specialty='" + request.getParameter("specialty") + "', ";
-			sql += " address1='" + request.getParameter("address1") + "', ";
-			sql += " address2='" + request.getParameter("address2") + "', ";
-			sql += " city='" + request.getParameter("city") + "', ";
-			sql += " province='" + request.getParameter("province") + "', ";
-			sql += " country='" + request.getParameter("country") + "', ";
-			sql += " postal='" + request.getParameter("postal") + "', ";
-			sql += " phone='" + request.getParameter("phone") + "', ";
-			sql += " fax='" + request.getParameter("fax") + "' ";
-			sql += "where referral_no='" + referral_no + "'";
-
-			if(dbObj.updateDBRecord(sql)) {
-	  			msg = referral_no + " is updated.<br>" + "Type in a doctor's ref. # and search first to see if it is available.";
-	  			action = "search";
-			    prop.setProperty("referral_no", referral_no);
-			} else {
-	  			msg = referral_no + " is <font color='red'>NOT</font> updated. Action failed! Try edit it again." ;
-			    action = "edit" + referral_no;
-			    prop.setProperty("referral_no", referral_no);
-			    prop.setProperty("last_name", request.getParameter("last_name"));
-			    prop.setProperty("first_name", request.getParameter("first_name"));
-			    prop.setProperty("specialty", request.getParameter("specialty"));
-			    prop.setProperty("address1", request.getParameter("address1"));
-			    prop.setProperty("address2", request.getParameter("address2"));
-			    prop.setProperty("city", request.getParameter("city"));
-			    prop.setProperty("province", request.getParameter("province"));
-			    prop.setProperty("country", request.getParameter("country"));
-			    prop.setProperty("postal", request.getParameter("postal"));
-			    prop.setProperty("phone", request.getParameter("phone"));
-			    prop.setProperty("fax", request.getParameter("fax"));
+			Billingreferral billingReferral = billingReferralDao.getByReferralNo(referral_no);
+			if(billingReferral == null) {
+				billingReferral = new Billingreferral();
 			}
+			billingReferral.setLastName(request.getParameter("last_name"));
+			billingReferral.setFirstName(request.getParameter("first_name"));
+			billingReferral.setSpecialty(request.getParameter("specialty"));
+			billingReferral.setAddress1(request.getParameter("address1"));
+			billingReferral.setAddress2(request.getParameter("address2"));
+			billingReferral.setCity(request.getParameter("city"));
+			billingReferral.setProvince(request.getParameter("province"));
+			billingReferral.setCountry(request.getParameter("country"));
+			billingReferral.setPostal(request.getParameter("postal"));
+			billingReferral.setPhone(request.getParameter("phone"));
+			billingReferral.setFax(request.getParameter("fax"));
+			billingReferral.setReferralNo(referral_no);
+			billingReferralDao.updateBillingreferral(billingReferral);
+
+			msg = referral_no + " is updated.<br>" + "Type in a doctor's ref. # and search first to see if it is available.";
+  			action = "search";
+		    prop.setProperty("referral_no", referral_no);
+
 		} else {
       		msg = "You can <font color='red'>NOT</font> save the doctor's ref. # - " + referral_no + ". Please search the doctor's ref. # first.";
   			action = "search";
@@ -83,40 +78,25 @@
       	// insert into the referral_no
 		String referral_no = request.getParameter("referral_no");
 		if(referral_no.equals(request.getParameter("action").substring("add".length()))) {
-			String	sql   = "insert into billingreferral (referral_no, last_name, first_name, specialty, address1, address2, "
-				+ "	city, province, country, postal, phone, fax) values ('";
-			sql += referral_no + "', '";
-			sql += request.getParameter("last_name") + "', '";
-			sql += request.getParameter("first_name") + "', '";
-			sql += request.getParameter("specialty") + "', '";
-			sql += request.getParameter("address1") + "', '";
-			sql += request.getParameter("address2") + "', '";
-			sql += request.getParameter("city") + "', '";
-			sql += request.getParameter("province") + "', '";
-			sql += request.getParameter("country") + "', '";
-			sql += request.getParameter("postal") + "', '";
-			sql += request.getParameter("phone") + "', '";
-			sql += request.getParameter("fax") + "' )";
-			if(dbObj.updateDBRecord(sql) ) {
-	  			msg = referral_no + " is added.<br>" + "Type in a doctor's ref. # and search first to see if it is available.";
-	  			action = "search";
-			    prop.setProperty("referral_no", referral_no);
-			} else {
-	  			msg = referral_no + " is <font color='red'>NOT</font> added. Action failed! Try edit it again." ;
-			    action = "add" + referral_no;
-			    prop.setProperty("referral_no", referral_no);
-			    prop.setProperty("last_name", request.getParameter("last_name"));
-			    prop.setProperty("first_name", request.getParameter("first_name"));
-			    prop.setProperty("specialty", request.getParameter("specialty"));
-			    prop.setProperty("address1", request.getParameter("address1"));
-			    prop.setProperty("address2", request.getParameter("address2"));
-			    prop.setProperty("city", request.getParameter("city"));
-			    prop.setProperty("province", request.getParameter("province"));
-			    prop.setProperty("country", request.getParameter("country"));
-			    prop.setProperty("postal", request.getParameter("postal"));
-			    prop.setProperty("phone", request.getParameter("phone"));
-			    prop.setProperty("fax", request.getParameter("fax"));
-			}
+			Billingreferral billingReferral =  new Billingreferral();
+			billingReferral.setLastName(request.getParameter("last_name"));
+			billingReferral.setFirstName(request.getParameter("first_name"));
+			billingReferral.setSpecialty(request.getParameter("specialty"));
+			billingReferral.setAddress1(request.getParameter("address1"));
+			billingReferral.setAddress2(request.getParameter("address2"));
+			billingReferral.setCity(request.getParameter("city"));
+			billingReferral.setProvince(request.getParameter("province"));
+			billingReferral.setCountry(request.getParameter("country"));
+			billingReferral.setPostal(request.getParameter("postal"));
+			billingReferral.setPhone(request.getParameter("phone"));
+			billingReferral.setFax(request.getParameter("fax"));
+			billingReferral.setReferralNo(referral_no);
+			billingReferralDao.updateBillingreferral(billingReferral);
+
+			msg = referral_no + " is added.<br>" + "Type in a doctor's ref. # and search first to see if it is available.";
+  			action = "search";
+		    prop.setProperty("referral_no", referral_no);
+
 		} else {
       		msg = "You can <font color='red'>NOT</font> save the ref. code - " + referral_no + ". Please search the ref. # first.";
   			action = "search";
@@ -131,22 +111,21 @@
       msg = "Please type in a ref. code.";
     } else {
         String referral_no = request.getParameter("referral_no");
-		String	sql   = "select * from billingreferral where referral_no='" + referral_no + "'";
-		ResultSet rs = dbObj.searchDBRecord(sql);
+        Billingreferral billingReferral = billingReferralDao.getByReferralNo(referral_no);
 
-		if (rs.next()) {
+		if (billingReferral != null) {
 		    prop.setProperty("referral_no", referral_no);
-		    prop.setProperty("last_name", rs.getString("last_name"));
-		    prop.setProperty("first_name", rs.getString("first_name"));
-		    prop.setProperty("specialty", rs.getString("specialty"));
-		    prop.setProperty("address1", rs.getString("address1"));
-		    prop.setProperty("address2", rs.getString("address2"));
-		    prop.setProperty("city", rs.getString("city"));
-		    prop.setProperty("province", rs.getString("province"));
-		    prop.setProperty("country", rs.getString("country"));
-		    prop.setProperty("postal", rs.getString("postal"));
-		    prop.setProperty("phone", rs.getString("phone"));
-		    prop.setProperty("fax", rs.getString("fax"));
+		    prop.setProperty("last_name", billingReferral.getLastName());
+		    prop.setProperty("first_name", billingReferral.getFirstName());
+		    prop.setProperty("specialty",billingReferral.getSpecialty());
+		    prop.setProperty("address1", billingReferral.getAddress1());
+		    prop.setProperty("address2", billingReferral.getAddress2());
+		    prop.setProperty("city", billingReferral.getCity());
+		    prop.setProperty("province", billingReferral.getProvince());
+		    prop.setProperty("country", billingReferral.getCountry());
+		    prop.setProperty("postal", billingReferral.getPostal());
+		    prop.setProperty("phone",billingReferral.getPhone());
+		    prop.setProperty("fax", billingReferral.getFax());
 		    msg = "You can edit the ref. code.";
 		    action = "edit" + referral_no;
 		} else {
