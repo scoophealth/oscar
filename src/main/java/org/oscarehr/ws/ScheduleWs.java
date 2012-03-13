@@ -38,7 +38,8 @@ public class ScheduleWs extends AbstractWs {
 	public DayWorkScheduleTransfer getDayWorkSchedule(String providerNo, Calendar date)
 	{
 		DayWorkSchedule dayWorkSchedule=scheduleManager.getDayWorkSchedule(providerNo, date);
-		return(DayWorkScheduleTransfer.toTransfer(dayWorkSchedule));
+		if (dayWorkSchedule==null) return(null);
+		else return(DayWorkScheduleTransfer.toTransfer(dayWorkSchedule));
 	}
 	
 	public AppointmentTypeTransfer[] getAppointmentTypes()
