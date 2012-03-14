@@ -1,31 +1,31 @@
 
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
-<% 
+<%
   if(session.getValue("user") == null)
     response.sendRedirect("../../../logout.jsp");
   String user_no;
@@ -36,13 +36,20 @@
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <%@ include file="dbBilling.jspf"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.Billingreferral" %>
+<%@page import="org.oscarehr.common.dao.BillingreferralDao" %>
+<%
+	BillingreferralDao billingReferralDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
+%>
+
 <% String search = "",search2 = "";
- search = request.getParameter("search"); 
- if (search.compareTo("") == 0){
+ search = request.getParameter("search");
+ if (search == null || search.compareTo("") == 0){
  search = "search_referral_code";
  }
 
- 
+
    String codeName= "",codeName1 = "", codeName2 = "";
    String xcodeName= "",xcodeName1 = "",xcodeName2 = "";
    codeName = request.getParameter("name");
@@ -58,13 +65,13 @@
       formName = "";
       formElement = "";
    }
-   
+
    String desc = "", desc1 = "", desc2 = "";
     String fdesc = "", fdesc1 = "", fdesc2 = "";
-  
-   
-   
- if (codeName.compareTo("") == 0 || codeName == null){
+
+
+
+ if (codeName == null || codeName.compareTo("") == 0){
  codeName = " ";
  desc = " ";
  }
@@ -78,10 +85,10 @@
 		else{
 		desc =  codeName + "%";
 		fdesc = "%";
-	
+
 		}
          }
-  if (codeName1.compareTo("") == 0 || codeName1 == null){
+  if (codeName1 == null || codeName1.compareTo("") == 0){
   codeName1 = " ";
   desc1 = " ";
   }
@@ -96,9 +103,9 @@
 		desc1 =  codeName1 + "%";
 		fdesc1 = "%";
 	}
-	
+
 	}
- if (codeName2.compareTo("") == 0 || codeName2 == null){
+ if (codeName2 == null || codeName2.compareTo("") == 0){
  codeName2 = " ";
  desc2 = " ";
  }
@@ -114,7 +121,7 @@ codeName2 = codeName2 + "%";
 		else{
 		desc2 =  codeName2 + "%";
 		fdesc2 = "%";
-		}	
+		}
 		}
 
  String[] param =new String[9];
@@ -135,7 +142,7 @@ codeName2 = codeName2 + "%";
 <title>Diagnostic Code Search</title>
 <script LANGUAGE="JavaScript">
 <!--
-function CodeAttach(File0) {      
+function CodeAttach(File0) {
       self.close();
       self.opener.document.BillingCreateBillingForm.xml_refer1.value = File0;
       self.opener.document.BillingCreateBillingForm.xml_refer2.value ='';
@@ -174,10 +181,7 @@ function CodeAttach(File0) {
 			size="2">Phone</font></b></td>
 	</tr>
 
-	<%  ResultSet rslocal = null;  
-      ResultSet rslocal2 = null;
-     
-     
+	<%
     String color="";
  int Count = 0;
  int intCount = 0;
@@ -185,17 +189,19 @@ function CodeAttach(File0) {
    String textCode="";
    String searchType="";
 // Retrieving Provider
- 
+
 String Dcode="", DcodeDesc="", DcodeCity="", DcodeSpecialty="", DcodePhone="";
- rslocal = null;
-  rslocal = apptMainBean.queryResults(param, search);
- while(rslocal.next()){
+
+  List<Billingreferral> billingReferrals = billingReferralDao.searchReferralCode(param[0], param[1], param[2], param[3], param[4], param[5], param[6], param[7], param[8]);
+  for(Billingreferral billingReferral:billingReferrals) {
+
+
  intCount = intCount + 1;
- Dcode = rslocal.getString("referral_no");
-  DcodeDesc = rslocal.getString("last_name")+","+rslocal.getString("first_name");
-  DcodeCity = rslocal.getString("city");
-  DcodeSpecialty = rslocal.getString("specialty");
-  DcodePhone =rslocal.getString("phone");
+ Dcode = billingReferral.getReferralNo();
+  DcodeDesc = billingReferral.getLastName()+","+billingReferral.getFirstName();
+  DcodeCity = billingReferral.getCity();
+  DcodeSpecialty = billingReferral.getSpecialty();
+  DcodePhone =billingReferral.getPhone();
  if (Count == 0){
  Count = 1;
  color = "#FFFFFF";
@@ -221,7 +227,7 @@ String Dcode="", DcodeDesc="", DcodeCity="", DcodeSpecialty="", DcodePhone="";
 		<td width="22%"><font face="Arial, Helvetica, sans-serif"
 			size="2"><%=DcodePhone%></font></td>
 	</tr>
-	<% 
+	<%
   }
   %>
 
@@ -238,7 +244,7 @@ String Dcode="", DcodeDesc="", DcodeCity="", DcodeSpecialty="", DcodePhone="";
 	<% if (intCount == 1) { %>
 	<script LANGUAGE="JavaScript">
 <!--
- CodeAttach('<%=Dcode%>'); 
+ CodeAttach('<%=Dcode%>');
 -->
 
 </script>

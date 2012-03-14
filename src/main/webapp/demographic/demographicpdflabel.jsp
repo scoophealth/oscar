@@ -44,6 +44,12 @@ You have no rights to access the data!
 
 <%@ page
 	import="java.util.*, java.sql.*, java.net.*,java.text.DecimalFormat, oscar.*, oscar.oscarDemographic.data.ProvinceNames, oscar.oscarWaitingList.WaitingList"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.Billingreferral" %>
+<%@page import="org.oscarehr.common.dao.BillingreferralDao" %>
+<%
+	BillingreferralDao billingReferralDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
+%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties"
@@ -62,7 +68,7 @@ You have no rights to access the data!
 	String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
 	String str = null;
 	int nStrShowLen = 20;
-        String prov= ((String ) oscarVariables.getProperty("billregion","")).trim().toUpperCase();
+        String prov= (oscarVariables.getProperty("billregion","")).trim().toUpperCase();
 
         OscarProperties oscarProps = OscarProperties.getInstance();
 
@@ -345,20 +351,18 @@ while (rs.next()) {
 		<td align="left" nowrap><b><bean:message
 			key="demographic.demographiceditdemographic.formRefDoc" />: </b> <% if(oscarProps.getProperty("isMRefDocSelectList", "").equals("true") ) {
                             // drop down list
-                                                      String	sql   = "select * from billingreferral order by last_name, first_name" ;
-                                                      oscar.oscarBilling.ca.on.data.BillingONDataHelp dbObj = new oscar.oscarBilling.ca.on.data.BillingONDataHelp();
-                                                      ResultSet rs1 = dbObj.searchDBRecord(sql);
                                                       Properties prop = null;
                                                       Vector vecRef = new Vector();
-                                                      while (rs1.next()) {
-                                                            prop = new Properties();
-                                                            prop.setProperty("referral_no",rs1.getString("referral_no"));
-                                                            prop.setProperty("last_name",rs1.getString("last_name"));
-                                                            prop.setProperty("first_name",rs1.getString("first_name"));
-                                                            //prop.setProperty("specialty",rs1.getString("specialty"));
-                                                            //prop.setProperty("phone",rs1.getString("phone"));
-                                                            vecRef.add(prop);
-                  }
+
+                                                      List<Billingreferral> billingReferrals = billingReferralDao.getBillingreferrals();
+                                                      for(Billingreferral billingReferral:billingReferrals) {
+                                                    	  prop = new Properties();
+                                                          prop.setProperty("referral_no",billingReferral.getReferralNo());
+                                                          prop.setProperty("last_name",billingReferral.getLastName());
+                                                          prop.setProperty("first_name",billingReferral.getFirstName());
+                                                          vecRef.add(prop);
+                                                      }
+
               %> <select name="r_doctor" onChange="changeRefDoc()"
 			style="width: 200px">
 			<option value=""></option>

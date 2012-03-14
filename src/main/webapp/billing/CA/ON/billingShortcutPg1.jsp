@@ -29,6 +29,12 @@
 <% java.util.Properties oscarVariables = OscarProperties.getInstance(); %>
 <jsp:useBean id="providerBean" class="java.util.Properties"
 	scope="session" />
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.Billingreferral" %>
+<%@page import="org.oscarehr.common.dao.BillingreferralDao" %>
+<%
+	BillingreferralDao billingReferralDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
+%>
 <%
   boolean bHospitalBilling = true;
   String            clinicview        = bHospitalBilling? oscarVariables.getProperty("clinic_hospital", "") : oscarVariables.getProperty("clinic_view", "");
@@ -222,12 +228,11 @@
 
   // set default value
   // use parameter -> history record
-  sql = "select last_name,first_name from billingreferral where referral_no='" + r_doctor_ohip + "'";
-  rs = dbObj.searchDBRecord(sql);
-  while (rs.next()) {
-      r_doctor = rs.getString("last_name") + "," + rs.getString("first_name");
+  Billingreferral billingReferral = billingReferralDao.getByReferralNo(r_doctor_ohip);
+  if(billingReferral != null) {
+  	          	r_doctor = billingReferral.getLastName() + "," + billingReferral.getFirstName();
   }
-  
+
   String paraName = request.getParameter("dxCode");
   String dxCode = getDefaultValue(paraName, vecHistD, "diagnostic_code");
 

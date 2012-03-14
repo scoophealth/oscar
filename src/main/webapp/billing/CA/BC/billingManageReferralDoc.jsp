@@ -1,26 +1,26 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -28,7 +28,12 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ page
 	import="java.util.*,oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*"%>
-
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.Billingreferral" %>
+<%@page import="org.oscarehr.common.dao.BillingreferralDao" %>
+<%
+	BillingreferralDao billingReferralDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
+%>
 <html:html locale="true">
 
 
@@ -54,7 +59,7 @@ function isNumeric(strString){
      return retval;
 }
 
-function checkUnits(){   
+function checkUnits(){
 	if  (!isNumeric(document.BillingAddCodeForm.value.value)){
 		alert("Price has to be a numeric value");
 	        document.BillingAddCodeForm.value.focus();
@@ -62,8 +67,8 @@ function checkUnits(){
 	}
 	return true;
 }
-	
-	
+
+
 
 </script>
 
@@ -121,27 +126,28 @@ function checkUnits(){
 				<th>Phone</th>
 				<th>Fax</th>
 			</tr>
-			<% ReferralBillingData rbd = new ReferralBillingData();
+			<%
+			//ReferralBillingData rbd = new ReferralBillingData();
                if (limit == null) limit = "10";
                if (lastname == null) lastname = "%";
-               ArrayList alist = rbd.searchReferralDocByLastName(lastname,limit);
+               List<Billingreferral> alist = billingReferralDao.getBillingreferralByLastName(lastname);
                for ( int i =0 ; i < alist.size() ; i++ ){
-                   Hashtable h = (Hashtable) alist.get(i);
+                  Billingreferral billingReferral = alist.get(i);
             %>
 			<tr>
-				<!--td><%=h.get("billingreferral_no")%></td-->
+				<!--td><%=billingReferral.getBillingreferralNo()%></td-->
 				<td><a
-					href="billingAddReferralDoc.jsp?id=<%=h.get("billingreferral_no")%>"><%=h.get("referral_no")%></a></td>
-				<td><%=h.get("last_name")%></td>
-				<td><%=h.get("first_name")%></td>
-				<td><%=h.get("specialty")%></td>
-				<td><%=h.get("address1")%></td>
-				<td><%=h.get("address2")%></td>
-				<td><%=h.get("city")%></td>
-				<td><%=h.get("province")%></td>
-				<td><%=h.get("postal")%></td>
-				<td><%=h.get("phone")%></td>
-				<td><%=h.get("fax")%></td>
+					href="billingAddReferralDoc.jsp?id=<%=billingReferral.getBillingreferralNo()%>"><%=billingReferral.getReferralNo()%></a></td>
+				<td><%=billingReferral.getLastName()%></td>
+				<td><%=billingReferral.getFirstName()%></td>
+				<td><%=billingReferral.getSpecialty()%></td>
+				<td><%=billingReferral.getAddress1()%></td>
+				<td><%=billingReferral.getAddress2()%></td>
+				<td><%=billingReferral.getCity()%></td>
+				<td><%=billingReferral.getProvince()%></td>
+				<td><%=billingReferral.getPostal()%></td>
+				<td><%=billingReferral.getPhone()%></td>
+				<td><%=billingReferral.getFax()%></td>
 			</tr>
 
 
@@ -157,8 +163,8 @@ function checkUnits(){
 </table>
 </body>
 </html:html>
-<%! 
- String selected(String var,String constant){     
+<%!
+ String selected(String var,String constant){
      if (var != null && var.equals(constant)){
          return "selected";
      }else{

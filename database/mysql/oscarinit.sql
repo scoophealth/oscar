@@ -8682,3 +8682,22 @@ CREATE TABLE `clinic_nbr` (
   `nbr_status` varchar(1),
   PRIMARY KEY (`nbr_id`)
 );
+
+CREATE TABLE billingreferral (
+  billingreferral_no int(10) NOT NULL auto_increment,
+  referral_no varchar(6) NOT NULL,
+  last_name varchar(30) default NULL,
+  first_name varchar(30) default NULL,
+  specialty varchar(30) default NULL,
+  address1 varchar(50) default NULL,
+  address2 varchar(50) default NULL,
+  city varchar(30) default NULL,
+  province varchar(30) default NULL,
+  country varchar(30) default NULL,
+  postal varchar(10) default NULL,
+  phone varchar(25) default NULL,
+  fax varchar(16) default NULL,
+  PRIMARY KEY  (billingreferral_no),
+  KEY referral_no (referral_no)
+) ;
+

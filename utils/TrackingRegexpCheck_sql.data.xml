@@ -17986,6 +17986,8 @@
         <ViolationValue>/database/mysql/oscarinit.sql:addAppts tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:addictPrograms tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:address varchar(40) default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:address1 varchar(50) default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:address2 varchar(50) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:admDateTime char(26) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:admDoctor char(60) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:adnexa varchar(100) default NULL,</ViolationValue>
@@ -18221,6 +18223,7 @@
         <ViolationValue>/database/mysql/oscarinit.sql:chestbpAbN tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:chestbpN tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:childhood varchar(80) default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:city varchar(30) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:claim_no varchar(12) not null default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:claimrecord varchar(10) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:claims varchar(5) NOT NULL default '',</ViolationValue>
@@ -18267,6 +18270,7 @@
         <ViolationValue>/database/mysql/oscarinit.sql:consultDoc char(60) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:consultant varchar(30) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:contenttype varchar(60) NOT NULL default '',</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:country varchar(30) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:crackles varchar(100) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:cracklesAbN tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:cracklesN tinyint(1) default NULL,</ViolationValue>
@@ -18482,6 +18486,7 @@
         <ViolationValue>/database/mysql/oscarinit.sql:famHxUpdated tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:familyHistory tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:favoritename varchar(50) NOT NULL default '',</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:fax varchar(16) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:faxId varchar(10) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:feet1 varchar(100) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:feet2 varchar(100) default NULL,</ViolationValue>
@@ -18500,6 +18505,7 @@
         <ViolationValue>/database/mysql/oscarinit.sql:fillerFieldOne char(60) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:firstName varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:first_name varchar(30) NOT NULL default '',</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:first_name varchar(30) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:flu1 varchar(100) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:flu2 varchar(100) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:flu3 varchar(100) default NULL,</ViolationValue>
@@ -18667,6 +18673,7 @@
         <ViolationValue>/database/mysql/oscarinit.sql:lastName varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:lastVisited char(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:last_name varchar(30) NOT NULL default '',</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:last_name varchar(30) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:lastupdateuser varchar(6) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:lc_alert tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:lc_coma tinyint(1) default NULL,</ViolationValue>
@@ -19535,6 +19542,7 @@
         <ViolationValue>/database/mysql/oscarinit.sql:pg3_wt33 varchar(6) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:pg3_wt34 varchar(6) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:phone varchar(20) default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:phone varchar(25) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:phoneNumber varchar(20) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:phrtNo tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:phrtYes tinyint(1) default NULL,</ViolationValue>
@@ -19547,6 +19555,7 @@
         <ViolationValue>/database/mysql/oscarinit.sql:pneumovax3 varchar(100) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:pneumovax4 varchar(100) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:pneumovaxDate date default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:postal varchar(10) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:postpartumAppts tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:practitionerNo varchar(14) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:precontraceptive tinyint(1) default NULL,</ViolationValue>
@@ -19586,6 +19595,7 @@
         <ViolationValue>/database/mysql/oscarinit.sql:providerohip_no varchar(12) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:providerohipno varchar(6) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:province varchar(15) default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:province varchar(30) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:psych tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:psychAgitation1 varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:psychAgitation2 varchar(255) default NULL,</ViolationValue>
@@ -19842,6 +19852,7 @@
         <ViolationValue>/database/mysql/oscarinit.sql:special varchar(255) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:special_instruction TEXT default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:specialty varchar(15) default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/oscarinit.sql:specialty varchar(30) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:specialty varchar(40) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:specimenRecDateTime char(26) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit.sql:splenomeg varchar(100) default NULL,</ViolationValue>
@@ -20637,8 +20648,6 @@
         <ViolationValue>/database/mysql/oscarinit_bc.sql:`wason9` varchar(20) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:`work_number` varchar(40) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:address varchar(100) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_bc.sql:address1 varchar(25) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_bc.sql:address2 varchar(25) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:adj_code varchar(100) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:adj_desc varchar(100) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:admisDateTime varchar(16) default NULL,</ViolationValue>
@@ -20668,7 +20677,6 @@
         <ViolationValue>/database/mysql/oscarinit_bc.sql:birth_date varchar(8) default '00000000',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:cdmCode varchar(5) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:city varchar(100) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_bc.sql:city varchar(15) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:claim_comment varchar(20) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:claimcode char(3) default 'C02',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:clarification_code char(2) default '00',</ViolationValue>
@@ -20698,11 +20706,9 @@
         <ViolationValue>/database/mysql/oscarinit_bc.sql:extended_submission_code char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:facility_no varchar(5) default '00000',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:facility_sub_no varchar(5) default '00000',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_bc.sql:fax varchar(16) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:filename varchar(255) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:filename varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:filler_claim varchar(58) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_bc.sql:first_name varchar(20) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:formCreated date  default NULL ,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:formCreated date default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:formCreated datetime NOT NULL default '0000-00-00 00:00:00',</ViolationValue>
@@ -20710,7 +20716,6 @@
         <ViolationValue>/database/mysql/oscarinit_bc.sql:formNeeded int(1) default '1',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:gender char(1) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:icbc_claim_no varchar(8) default '00000000',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_bc.sql:last_name varchar(20) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:level1 varchar(100) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:level2 varchar(100) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:level3 varchar(255) default '',</ViolationValue>
@@ -20741,8 +20746,6 @@
         <ViolationValue>/database/mysql/oscarinit_bc.sql:payment_mode char(1) default '0',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:payment_type varchar(25) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:phn varchar(10) default '0000000000',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_bc.sql:phone varchar(25) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_bc.sql:postal varchar(10) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:postal varchar(6) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:ppLos char(3) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:practitioner_no varchar(5) default '00000',</ViolationValue>
@@ -20752,11 +20755,9 @@
         <ViolationValue>/database/mysql/oscarinit_bc.sql:provider_no int(10) unsigned NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:provider_no varchar(6) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:province varchar(100) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_bc.sql:province varchar(20) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:referral int(10) unsigned NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:referral_flag1 char(1) default '0',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:referral_flag2 char(1) default '0',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_bc.sql:referral_no varchar(5) NOT NULL default '00000',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:referral_no1 varchar(5) default '00000',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:referral_no2 varchar(5) default '00000',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:region varchar(5) default ''</ViolationValue>
@@ -20776,7 +20777,6 @@
         <ViolationValue>/database/mysql/oscarinit_bc.sql:sidetype char(2) default '00',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:sortOrder int(10) unsigned NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:specialty char(2) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_bc.sql:specialty varchar(8) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:specialtydesc varchar(100) default ''</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:status char(1) NOT NULL default 'O',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_bc.sql:status char(1) default NULL,</ViolationValue>
@@ -21436,8 +21436,6 @@
         <ViolationValue>/database/mysql/oscarinit_on.sql:`workPhone` varchar(18) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:action varchar(60)  default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:address varchar(200) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_on.sql:address1 varchar(50) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_on.sql:address2 varchar(50) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:admission_date varchar(10) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:appointment_no int(12) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:apptProvider_no varchar(6) default NULL,</ViolationValue>
@@ -21510,12 +21508,10 @@
         <ViolationValue>/database/mysql/oscarinit_on.sql:c_riskFactors7 varchar(50) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:c_term varchar(3) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:city varchar(200) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_on.sql:city varchar(30) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:claimrecord varchar(10) default null,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:clinic varchar(30) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:comment varchar(200)  default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:comment1 varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_on.sql:country varchar(30) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:creator char(6) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:creator varchar(6) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:creator varchar(6) default NULL,</ViolationValue>
@@ -21529,10 +21525,8 @@
         <ViolationValue>/database/mysql/oscarinit_on.sql:effective_date date default '1970-01-01',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:facilty_num varchar(4) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:fax varchar(15) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_on.sql:fax varchar(16) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:fee varchar(7) default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:first_name char(5) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_on.sql:first_name varchar(30) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:formCreated date  default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:group_no varchar(6) default '0000',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:group_num char(4) default '0000',</ViolationValue>
@@ -21541,7 +21535,6 @@
         <ViolationValue>/database/mysql/oscarinit_on.sql:hin char(10) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:hin char(12) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:last_name char(9) default '  ',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_on.sql:last_name varchar(30) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:location varchar(4) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:man_review char(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:max varchar(8) default '0',</ViolationValue>
@@ -22305,8 +22298,6 @@
         <ViolationValue>/database/mysql/oscarinit_on.sql:pg4_wt52 varchar(6) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:pg4_wt53 varchar(6) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:pg4_wt54 varchar(6) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_on.sql:phone varchar(25) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_on.sql:postal varchar(10) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:postcode varchar(10) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:provider_no int(10)  default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:provider_no varchar(6) NOT NULL default '',</ViolationValue>
@@ -22318,7 +22309,6 @@
         <ViolationValue>/database/mysql/oscarinit_on.sql:province char(2) default 'AB',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:province char(2) default 'ON',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:province varchar(10) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_on.sql:province varchar(30) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:r_count varchar(4) default '0000',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:rec_id char(1) default 'B',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:rec_id char(1) default 'H',</ViolationValue>
@@ -22326,7 +22316,6 @@
         <ViolationValue>/database/mysql/oscarinit_on.sql:rec_id char(1) default 'T',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:ref_lab_num varchar(4) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:ref_num varchar(6) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_on.sql:referral_no varchar(6) NOT NULL default '000000',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:report_name varchar(20)  default '',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:ser_num char(2) default '01',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:service_code char(20) default NULL,</ViolationValue>
@@ -22334,7 +22323,6 @@
         <ViolationValue>/database/mysql/oscarinit_on.sql:sex char(1) default '1',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:spec_id char(3) default 'V03',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:specialty char(2) default '00',</ViolationValue>
-        <ViolationValue>/database/mysql/oscarinit_on.sql:specialty varchar(30) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:status char(1) default '1',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:status char(1) default 'N',</ViolationValue>
         <ViolationValue>/database/mysql/oscarinit_on.sql:status char(1) default NULL,</ViolationValue>
