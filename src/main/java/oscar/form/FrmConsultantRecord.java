@@ -5,7 +5,9 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 import org.oscarehr.common.dao.BillingreferralDao;
+import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.model.Billingreferral;
+import org.oscarehr.common.model.Clinic;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
@@ -17,6 +19,8 @@ import oscar.util.UtilDateUtilities;
 public class FrmConsultantRecord extends FrmRecord {
 
 	BillingreferralDao billingReferralDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
+	private ClinicDAO clinicDao = (ClinicDAO)SpringUtils.getBean("clinicDAO");
+
 
 	public Properties getFormRecord(int demographicNo, int existingID) throws SQLException {
         	Properties props = new Properties();
@@ -42,16 +46,15 @@ public class FrmConsultantRecord extends FrmRecord {
         	}
             	rs.close();
 
-		sql = "SELECT clinic_name, clinic_address, CONCAT(clinic_city, ', ', clinic_province, ' ', clinic_postal) AS clinic_address2, clinic_phone, clinic_fax FROM clinic";
-		rs = DBHandler.GetSQL(sql);
-		if (rs.next()) {
-			props.setProperty("cl_name", oscar.Misc.getString(rs, "clinic_name"));
-			props.setProperty("cl_address1", oscar.Misc.getString(rs, "clinic_address"));
-			props.setProperty("cl_address2", oscar.Misc.getString(rs, "clinic_address2"));
-			props.setProperty("cl_phone", oscar.Misc.getString(rs, "clinic_phone"));
-			props.setProperty("cl_fax", oscar.Misc.getString(rs, "clinic_fax"));
-		}
-		rs.close();
+        	Clinic clinic = clinicDao.getClinic();
+        	if(clinic != null) {
+        		props.setProperty("cl_name",clinic.getClinicName());
+        		props.setProperty("cl_address1",clinic.getClinicAddress());
+        		props.setProperty("cl_address2",clinic.getClinicCity() + ", " + clinic.getClinicProvince() + ", " + clinic.getClinicPostal());
+        		props.setProperty("cl_phone",clinic.getClinicPhone());
+        		props.setProperty("cl_fax",clinic.getClinicFax());
+        	}
+
         	} else {
             		String sql = "SELECT * FROM formConsult WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;
             		props = (new FrmRecordHelp()).getFormRecord(sql);
