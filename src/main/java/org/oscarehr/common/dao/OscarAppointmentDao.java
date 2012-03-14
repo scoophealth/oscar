@@ -5,10 +5,8 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.model.Appointment;
-import org.oscarehr.common.model.AppointmentArchive;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
@@ -51,6 +49,7 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		return rs;
 	}
 
+	/*
 	public void archiveAppointment(int appointmentNo) {
 		Appointment appointment = this.find(appointmentNo);
 		if (appointment != null) {
@@ -63,6 +62,7 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 			entityManager.persist(apptArchive);
 		}
 	}
+*/
 
 	public List<Appointment> getAllByDemographicNo(Integer demographicNo) {
 		String sql = "SELECT a FROM Appointment a WHERE a.demographicNo = " + demographicNo + " ORDER BY a.id";
