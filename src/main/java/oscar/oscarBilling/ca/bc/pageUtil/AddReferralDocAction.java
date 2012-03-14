@@ -11,21 +11,23 @@
  *  GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
- * 
+ *
  *  Jason Gallagher
- * 
+ *
  *  This software was written for the
  *  Department of Family Medicine
  *  McMaster University
  *  Hamilton
  *  Ontario, Canada   Creates a new instance of AddReferralDocAction
- * 
+ *
  * AddReferralDocAction.java
  *
  * Created on November 7, 2005, 11:09 PM
  */
 
 package oscar.oscarBilling.ca.bc.pageUtil;
+
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,8 +36,9 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-
-import oscar.oscarBilling.ca.bc.data.ReferralBillingData;
+import org.oscarehr.common.dao.BillingreferralDao;
+import org.oscarehr.common.model.Billingreferral;
+import org.oscarehr.util.SpringUtils;
 
 /**
  *
@@ -43,28 +46,55 @@ import oscar.oscarBilling.ca.bc.data.ReferralBillingData;
  */
 public class AddReferralDocAction extends Action {
 
+	private BillingreferralDao billingReferralDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
+
   public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) {
      ActionForward af = mapping.findForward("success");
-     ReferralBillingData bd = new ReferralBillingData();
-     
+
      AddReferralDocForm f = (AddReferralDocForm) form;
-     
+
      String id = request.getParameter("id");
      if (id == null ){
-        if (bd.getNumberOfRecordsUsingBillingNumber(f.getReferral_no()) == 0 ){
-           bd.insertIntoBillingReferral(f.getReferral_no(),f.getLast_name(),f.getFirst_name(),f.getSpecialty(),f.getAddress1(),f.getAddress2(),f.getCity(),f.getProvince(),f.getPostal(),f.getPhone(),f.getFax());
-        }else{           
-           request.setAttribute("Error", "Billing # already in use");
-           af = mapping.findForward("error");
-        }
+    	 List<Billingreferral> billingReferrals = billingReferralDao.getBillingreferral(f.getReferral_no());
+    	 if(billingReferrals.size() == 0) {
+    		 Billingreferral billingReferral = new Billingreferral();
+    		 billingReferral.setReferralNo(f.getReferral_no());
+    		 billingReferral.setLastName(f.getLast_name());
+    		 billingReferral.setFirstName(f.getFirst_name());
+    		 billingReferral.setAddress1(f.getAddress1());
+    		 billingReferral.setAddress2(f.getAddress2());
+    		 billingReferral.setCity(f.getCity());
+    		 billingReferral.setProvince(f.getProvince());
+    		 billingReferral.setPostal(f.getPostal());
+    		 billingReferral.setPhone(f.getPhone());
+    		 billingReferral.setFax(f.getFax());
+    		 billingReferralDao.updateBillingreferral(billingReferral);
+    	 } else {
+    		 request.setAttribute("Error", "Billing # already in use");
+             af = mapping.findForward("error");
+    	 }
+
      }else{
-        bd.updateBillingReferral(id,f.getReferral_no(),f.getLast_name(),f.getFirst_name(),f.getSpecialty(),f.getAddress1(),f.getAddress2(),f.getCity(),f.getProvince(),f.getPostal(),f.getPhone(),f.getFax());
-     }                        
-     
+    	Billingreferral billingReferral = billingReferralDao.getById(Integer.parseInt(id));
+    	if(billingReferral!=null) {
+   		 billingReferral.setReferralNo(f.getReferral_no());
+   		 billingReferral.setLastName(f.getLast_name());
+   		 billingReferral.setFirstName(f.getFirst_name());
+   		 billingReferral.setAddress1(f.getAddress1());
+   		 billingReferral.setAddress2(f.getAddress2());
+   		 billingReferral.setCity(f.getCity());
+   		 billingReferral.setProvince(f.getProvince());
+   		 billingReferral.setPostal(f.getPostal());
+   		 billingReferral.setPhone(f.getPhone());
+   		 billingReferral.setFax(f.getFax());
+   		 billingReferralDao.updateBillingreferral(billingReferral);
+    	}
+     }
+
      //af.setRedirect(true);
      return af;
   }
    public AddReferralDocAction() {
    }
-   
+
 }

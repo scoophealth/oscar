@@ -14,6 +14,12 @@
 	errorPage="errorpage.jsp"%>
 <%@ page
 	import="org.springframework.web.context.*,org.springframework.web.context.support.*,org.oscarehr.common.dao.*,org.oscarehr.common.model.*"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.Billingreferral" %>
+<%@page import="org.oscarehr.common.dao.BillingreferralDao" %>
+<%
+	BillingreferralDao billingReferralDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
+%>
 <jsp:useBean id="providerBean" class="java.util.Properties"
 	scope="session" />
 <jsp:useBean id="addDemoBean" class="oscar.AppointmentMainBean"
@@ -973,17 +979,16 @@ function autoFillHin(){
 				<td align="left" height="10">
 				<% if(oscarProps.getProperty("isMRefDocSelectList", "").equals("true") ) {
                                   		// drop down list
-									  String	sql   = "select * from billingreferral order by last_name, first_name" ;
-									  oscar.oscarBilling.ca.on.data.BillingONDataHelp dbObj = new oscar.oscarBilling.ca.on.data.BillingONDataHelp();
-									  ResultSet rs1 = dbObj.searchDBRecord(sql);
 									  Properties prop = null;
 									  Vector vecRef = new Vector();
-									  while (rs1.next()) {
-									  	prop = new Properties();
-									  	prop.setProperty("referral_no",rs1.getString("referral_no"));
-									  	prop.setProperty("last_name",rs1.getString("last_name"));
-									  	prop.setProperty("first_name",rs1.getString("first_name"));
-									  	vecRef.add(prop);
+
+                                      List<Billingreferral> billingReferrals = billingReferralDao.getBillingreferrals();
+                                      for(Billingreferral billingReferral:billingReferrals) {
+                                    	  prop = new Properties();
+                                          prop.setProperty("referral_no",billingReferral.getReferralNo());
+                                          prop.setProperty("last_name",billingReferral.getLastName());
+                                          prop.setProperty("first_name",billingReferral.getFirstName());
+                                          vecRef.add(prop);
                                       }
                                   %> <select name="r_doctor"
 					onChange="changeRefDoc()" style="width: 200px">

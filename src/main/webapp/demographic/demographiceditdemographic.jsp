@@ -63,7 +63,11 @@
 <%@ page import="org.oscarehr.casemgmt.model.CaseManagementNoteLink" %>
 <%@ page import="org.oscarehr.casemgmt.service.CaseManagementManager" %>
 <%@ page import="org.oscarehr.util.SpringUtils"%>
-
+<%@page import="org.oscarehr.common.model.Billingreferral" %>
+<%@page import="org.oscarehr.common.dao.BillingreferralDao" %>
+<%
+	BillingreferralDao billingReferralDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
+%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties"
@@ -2136,21 +2140,17 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 								<td align="left">
 								<% if(oscarProps.getProperty("isMRefDocSelectList", "").equals("true") ) {
                                   		// drop down list
-									  String	sql   = "select * from billingreferral order by last_name, first_name" ;
-									  oscar.oscarBilling.ca.on.data.BillingONDataHelp dbObj = new oscar.oscarBilling.ca.on.data.BillingONDataHelp();
-									  ResultSet rs1 = dbObj.searchDBRecord(sql);
 									  Properties prop = null;
 									  Vector vecRef = new Vector();
-									  while (rs1.next()) {
-									  	prop = new Properties();
-									  	prop.setProperty("referral_no",apptMainBean.getString(rs1,"referral_no"));
-									  	prop.setProperty("last_name",apptMainBean.getString(rs1,"last_name"));
-									  	prop.setProperty("first_name",apptMainBean.getString(rs1,"first_name"));
-									  	//prop.setProperty("specialty",apptMainBean.getString(rs1,"specialty"));
-									  	//prop.setProperty("phone",apptMainBean.getString(rs1,"phone"));
-									  	vecRef.add(prop);
+                                      List<Billingreferral> billingReferrals = billingReferralDao.getBillingreferrals();
+                                      for(Billingreferral billingReferral:billingReferrals) {
+                                    	  prop = new Properties();
+                                          prop.setProperty("referral_no",billingReferral.getReferralNo());
+                                          prop.setProperty("last_name",billingReferral.getLastName());
+                                          prop.setProperty("first_name",billingReferral.getFirstName());
+                                          vecRef.add(prop);
                                       }
-                                      rs1.close();
+
                                   %> <select name="r_doctor" <%=getDisabled("r_doctor")%>
 									onChange="changeRefDoc()" style="width: 200px">
 									<option value=""></option>

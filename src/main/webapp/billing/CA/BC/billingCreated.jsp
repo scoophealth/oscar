@@ -33,8 +33,13 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
 <%@ page import="java.util.*, oscar.oscarDemographic.data.*"%>
-<%@ page
-	import="oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*"%>
+<%@ page import="oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.Billingreferral" %>
+<%@page import="org.oscarehr.common.dao.BillingreferralDao" %>
+<%
+	BillingreferralDao billingReferralDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
+%>
 <%
 
 String color = "", colorflag ="";
@@ -44,7 +49,7 @@ oscar.oscarDemographic.data.DemographicData.Demographic demo = demoData.getDemog
 
 ArrayList billItem = bean.getBillItem();
 BillingFormData billform = new BillingFormData();
-ReferralBillingData rb = new ReferralBillingData();
+
 
 %>
 
@@ -255,9 +260,9 @@ function showHideLayers() { //v3.0
 			</tr>
 			<tr>
 				<td height="16" colspan="3"><%=getReferralString(bean.getReferType1())%>
-				<%=rb.getReferralDocName(bean.getReferral1()) %> <%=addBrackets(bean.getReferral1())%>
+				<%=billingReferralDao.getReferralDocName(bean.getReferral1()) %> <%=addBrackets(bean.getReferral1())%>
 				&nbsp;&nbsp;&nbsp;&nbsp; <%=getReferralString(bean.getReferType2())%>
-				<%=rb.getReferralDocName(bean.getReferral2()) %> <%=addBrackets(bean.getReferral2())%>
+				<%=billingReferralDao.getReferralDocName(bean.getReferral2()) %> <%=addBrackets(bean.getReferral2())%>
 				</td>
 				<td>Dependent: <%=bean.getDependent()%></td>
 
