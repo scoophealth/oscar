@@ -378,6 +378,15 @@ public class StringUtils {
     public static boolean nullSafeEqualsIgnoreCase(String s1, String s2) {
 		return nullSafeEquals(s1.toUpperCase(), s2.toUpperCase());
     }
+    
+    public static boolean containsIgnoreCase(String text, String searchWord) {
+    	if (text==null || searchWord==null) return false;
+    	
+    	text = text.toUpperCase();
+    	searchWord = searchWord.toUpperCase();
+    	
+    	return text.contains(searchWord);
+    }
 
     static public String noNull(String maybeNullText) {
 		return filled(maybeNullText) ? maybeNullText : "";
