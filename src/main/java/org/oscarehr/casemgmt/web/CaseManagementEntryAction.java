@@ -82,6 +82,7 @@ import org.oscarehr.casemgmt.service.CaseManagementPrintPdf;
 import org.oscarehr.casemgmt.util.ExtPrint;
 import org.oscarehr.casemgmt.web.CaseManagementViewAction.IssueDisplay;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean;
+import org.oscarehr.common.dao.AppointmentArchiveDao;
 import org.oscarehr.common.dao.BillingServiceDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.model.Appointment;
@@ -137,6 +138,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	private CaseManagementIssueDAO caseManagementIssueDao = (CaseManagementIssueDAO) SpringUtils.getBean("caseManagementIssueDAO");
 	private CaseManagementNoteExtDAO caseManagementNoteExtDao = (CaseManagementNoteExtDAO) SpringUtils.getBean("CaseManagementNoteExtDAO");
 	private IssueDAO issueDao = (IssueDAO) SpringUtils.getBean("IssueDAO");
+	private AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
 
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		return edit(mapping, form, request, response);
@@ -1108,8 +1110,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			// only update appt if there is one
 			if (sessionBean.appointmentNo != null && !(sessionBean.appointmentNo.equals("") || sessionBean.appointmentNo.equals("0"))) {
 				String apptStatus = updateApptStatus(sessionBean.status, "verify");
-				appointmentDao.archiveAppointment(Integer.parseInt(sessionBean.appointmentNo));
 				Appointment appointment = appointmentDao.find(Integer.parseInt(sessionBean.appointmentNo));
+				appointmentArchiveDao.archiveAppointment(appointment);
 				appointment.setStatus(apptStatus);
 				appointment.setLastUpdateUser(providerNo);
 				appointmentDao.merge(appointment);
@@ -1124,8 +1126,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			// only update appt if there is one
 			if (sessionBean.appointmentNo != null && !(sessionBean.appointmentNo.equals("") || sessionBean.appointmentNo.equals("0"))) {
 				String apptStatus = updateApptStatus(sessionBean.status, "sign");
-				appointmentDao.archiveAppointment(Integer.parseInt(sessionBean.appointmentNo));
 				Appointment appointment = appointmentDao.find(Integer.parseInt(sessionBean.appointmentNo));
+				appointmentArchiveDao.archiveAppointment(appointment);
 				appointment.setStatus(apptStatus);
 				appointment.setLastUpdateUser(providerNo);
 				appointmentDao.merge(appointment);

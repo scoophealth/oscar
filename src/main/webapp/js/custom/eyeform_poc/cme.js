@@ -118,8 +118,8 @@
 			jQuery("#measurements_div").append(data);
 
 			//hide some parts of it
-			jQuery("#a_21").parent().hide();
-			jQuery("#s_21").parent().hide();
+			jQuery("#a_22").parent().hide();
+			jQuery("#s_22").parent().hide();
 			jQuery("#a_24").parent().hide();
 			jQuery("#s_24").parent().hide();
 			jQuery("#a_25").parent().hide();

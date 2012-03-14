@@ -83,13 +83,13 @@
 
 							<tr>
 								<td>
-									<div class="fieldcontent"><textarea name="cpp_currentHis" cpp="CurrentHistory" note_id="<%=getNoteId(currentHistoryNote)%>" issue_id="<%=currentHistory.getId() %>" class="examfieldwhite" tabindex="6" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(currentHistoryNote)%></textarea></div>
+									<div class="fieldcontent"><textarea name="cpp_currentHis" cpp="CurrentHistory" note_id="<%=getNoteId(currentHistoryNote)%>" issue_id="<%=currentHistory.getId() %>" class="examfieldwhite" tabindex="1" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(currentHistoryNote)%></textarea></div>
 								</td>
 								<td>
-									<div class="fieldcontent"><textarea name="cpp_familyHis" cpp="FamHistory" note_id="<%=getNoteId(familyHistoryNote)%>" issue_id="<%=familyHistory.getId() %>" class="examfieldwhite" tabindex="7" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(familyHistoryNote)%></textarea></div>
+									<div class="fieldcontent"><textarea name="cpp_familyHis" cpp="FamHistory" note_id="<%=getNoteId(familyHistoryNote)%>" issue_id="<%=familyHistory.getId() %>" class="examfieldwhite" tabindex="2" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(familyHistoryNote)%></textarea></div>
 								</td>
 								<td colspan="2">
-									<div class="fieldcontent"><textarea name="cpp_diagnostics" cpp="DiagnosticNotes" note_id="<%=getNoteId(diagnosticNotesNote)%>" issue_id="<%=diagnosticNotes.getId() %>" class="examfieldwhite" tabindex="8" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(diagnosticNotesNote) %></textarea></div>
+									<div class="fieldcontent"><textarea name="cpp_diagnostics" cpp="DiagnosticNotes" note_id="<%=getNoteId(diagnosticNotesNote)%>" issue_id="<%=diagnosticNotes.getId() %>" class="examfieldwhite" tabindex="3" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(diagnosticNotesNote) %></textarea></div>
 								</td>
 							</tr>
 						</tbody>
@@ -122,13 +122,13 @@
 
 							<tr>
 								<td>
-									<div class="fieldcontent"><textarea name="cpp_pastOcularHis" cpp="PastOcularHistory" note_id="<%=getNoteId(pastOcularHistoryNote)%>" issue_id="<%=pastOcularHistory.getId() %>" class="examfieldwhite" tabindex="6" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(pastOcularHistoryNote) %></textarea></div>
+									<div class="fieldcontent"><textarea name="cpp_pastOcularHis" cpp="PastOcularHistory" note_id="<%=getNoteId(pastOcularHistoryNote)%>" issue_id="<%=pastOcularHistory.getId() %>" class="examfieldwhite" tabindex="4" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(pastOcularHistoryNote) %></textarea></div>
 								</td>
 								<td>
-									<div class="fieldcontent"><textarea name="cpp_medicalHis" cpp="MedHistory" note_id="<%=getNoteId(medicalHistoryNote)%>" issue_id="<%=medicalHistory.getId() %>" class="examfieldwhite" tabindex="7" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(medicalHistoryNote) %></textarea></div>
+									<div class="fieldcontent"><textarea name="cpp_medicalHis" cpp="MedHistory" note_id="<%=getNoteId(medicalHistoryNote)%>" issue_id="<%=medicalHistory.getId() %>" class="examfieldwhite" tabindex="5" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(medicalHistoryNote) %></textarea></div>
 								</td>
 								<td colspan="2">
-									<div class="fieldcontent"><textarea name="cpp_patientLog" cpp="PatientLog" note_id="<%=getNoteId(patientLogNote)%>" issue_id="<%=patientLog.getId() %>" class="examfieldwhite" tabindex="8" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(patientLogNote) %></textarea></div>
+									<div class="fieldcontent"><textarea name="cpp_patientLog" cpp="PatientLog" note_id="<%=getNoteId(patientLogNote)%>" issue_id="<%=patientLog.getId() %>" class="examfieldwhite" tabindex="6" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(patientLogNote) %></textarea></div>
 								</td>
 							</tr>
 						</tbody>
@@ -161,13 +161,13 @@
 
 							<tr>
 								<td>
-									<div class="fieldcontent"><textarea name="cpp_ocularMeds" cpp="OcularMedication" note_id="<%=getNoteId(ocularMedsNote)%>" issue_id="<%=ocularMeds.getId() %>" class="examfieldwhite" tabindex="8" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(ocularMedsNote) %></textarea></div>
+									<div class="fieldcontent"><textarea name="cpp_ocularMeds" cpp="OcularMedication" note_id="<%=getNoteId(ocularMedsNote)%>" issue_id="<%=ocularMeds.getId() %>" class="examfieldwhite" tabindex="7" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(ocularMedsNote) %></textarea></div>
 								</td>
 								<td>
-									<div class="fieldcontent"><textarea name="cpp_otherMeds" cpp="OMeds" note_id="<%=getNoteId(otherMedsNote)%>" issue_id="<%=otherMeds.getId() %>" class="examfieldwhite" tabindex="7" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(otherMedsNote)%></textarea></div>
+									<div class="fieldcontent"><textarea name="cpp_otherMeds" cpp="OMeds" note_id="<%=getNoteId(otherMedsNote)%>" issue_id="<%=otherMeds.getId() %>" class="examfieldwhite" tabindex="8" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(otherMedsNote)%></textarea></div>
 								</td>
 								<td colspan="2">
-									<div class="fieldcontent"><textarea name="cpp_misc" cpp="Misc" note_id="<%=getNoteId(miscNote)%>" issue_id="<%=misc.getId() %>" class="examfieldwhite" tabindex="8" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(miscNote) %></textarea></div>
+									<div class="fieldcontent"><textarea name="cpp_misc" cpp="Misc" note_id="<%=getNoteId(miscNote)%>" issue_id="<%=misc.getId() %>" class="examfieldwhite" tabindex="9" cols="20" onchange="setSaveflag(true)" style="height: 60px; overflow: auto; width:100%"><%=getNoteValue(miscNote) %></textarea></div>
 								</td>
 							</tr>
 						</tbody>
