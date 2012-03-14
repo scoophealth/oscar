@@ -5,7 +5,7 @@ import org.oscarehr.managers.DayWorkSchedule;
 public final class DayWorkScheduleTransfer {
 	private boolean isHoliday;
 	private Integer timeSlotDurationMin;
-	private KeyValueEntryTransfer[] timeSlots;
+	private CalendarScheduleCodePairTransfer[] timeSlots;
 
 	public boolean isHoliday() {
 		return (isHoliday);
@@ -23,11 +23,11 @@ public final class DayWorkScheduleTransfer {
 		this.timeSlotDurationMin = timeSlotDurationMin;
 	}
 
-	public KeyValueEntryTransfer[] getTimeSlots() {
+	public CalendarScheduleCodePairTransfer[] getTimeSlots() {
 		return (timeSlots);
 	}
 
-	public void setTimeSlots(KeyValueEntryTransfer[] timeSlots) {
+	public void setTimeSlots(CalendarScheduleCodePairTransfer[] timeSlots) {
 		this.timeSlots = timeSlots;
 	}
 
@@ -37,7 +37,7 @@ public final class DayWorkScheduleTransfer {
 		
 		dayWorkScheduleTransfer.setHoliday(dayWorkSchedule.isHoliday());
 		dayWorkScheduleTransfer.setTimeSlotDurationMin(dayWorkSchedule.getTimeSlotDurationMin());
-		dayWorkScheduleTransfer.setTimeSlots(KeyValueEntryTransfer.toTransfer(dayWorkSchedule.getTimeSlots()));
+		dayWorkScheduleTransfer.setTimeSlots(CalendarScheduleCodePairTransfer.toTransfer(dayWorkSchedule.getTimeSlots()));
 		
 		return(dayWorkScheduleTransfer);
 	}
