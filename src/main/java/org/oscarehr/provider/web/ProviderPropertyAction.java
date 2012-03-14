@@ -1680,6 +1680,64 @@ public class ProviderPropertyAction extends DispatchAction {
 		return actionmapping.findForward("genEncounterWindowSize");
 	}
 
+    public ActionForward viewQuickChartSize(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request, HttpServletResponse response) {
+
+		DynaActionForm frm = (DynaActionForm)actionform;
+		String provider = (String) request.getSession().getAttribute("user");
+
+		UserProperty size = this.userPropertyDAO.getProp(provider, "quickChartSize");
+
+		if (size == null){
+			size = new UserProperty();
+		}
+
+
+		request.setAttribute("size",size);
+
+
+		request.setAttribute("providertitle","provider.quickChartSize.title"); //=Set myDrugref ID
+		request.setAttribute("providermsgPrefs","provider.quickChartSize.msgPrefs"); //=Preferences"); //
+		request.setAttribute("providermsgProvider","provider.quickChartSize.msgProvider"); //=myDrugref ID
+		request.setAttribute("providermsgEdit","provider.quickChartSize.msgEdit"); //=Enter your desired login for myDrugref
+		request.setAttribute("providerbtnSubmit","provider.quickChartSize.btnSubmit"); //=Save
+		request.setAttribute("providermsgSuccess","provider.quickChartSize.msgSuccess"); //=myDrugref Id saved
+		request.setAttribute("method","saveQuickChartSize");
+
+		frm.set("quickChartSize", size);
+
+		return actionmapping.findForward("genQuickChartSize");
+    }
+
+    public ActionForward saveQuickChartSize(ActionMapping actionmapping,ActionForm actionform, HttpServletRequest request, HttpServletResponse response) {
+
+		DynaActionForm frm = (DynaActionForm)actionform;
+		UserProperty s = (UserProperty)frm.get("quickChartSize");
+
+		String size = s != null ? s.getValue() : "";
+
+		String provider = (String) request.getSession().getAttribute("user");
+
+		UserProperty wProperty = this.userPropertyDAO.getProp(provider,"quickChartSize");
+		if( wProperty == null ) {
+			wProperty = new UserProperty();
+			wProperty.setProviderNo(provider);
+			wProperty.setName("quickChartsize");
+		}
+		wProperty.setValue(size);
+		userPropertyDAO.saveProp(wProperty);
+
+
+		request.setAttribute("status", "success");
+		request.setAttribute("providertitle","provider.quickChartSize.title"); //=Set myDrugref ID
+		request.setAttribute("providermsgPrefs","provider.quickChartSize.msgPrefs"); //=Preferences"); //
+		request.setAttribute("providermsgProvider","provider.quickChartSize.msgProvider"); //=myDrugref ID
+		request.setAttribute("providermsgEdit","provider.quickChartSize.msgEdit"); //=Enter your desired login for myDrugref
+		request.setAttribute("providerbtnSubmit","provider.quickChartSize.btnSubmit"); //=Save
+		request.setAttribute("providermsgSuccess","provider.quickChartSize.msgSuccess"); //=myDrugref Id saved
+		request.setAttribute("method","saveQuickChartSize");
+
+		return actionmapping.findForward("genQuickChartSize");
+	}
 
     public ActionForward viewIntegratorProperties(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         UserProperty[] integratorProperties = new UserProperty[20];
