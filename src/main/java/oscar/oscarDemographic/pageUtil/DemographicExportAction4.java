@@ -1144,11 +1144,45 @@ public class DemographicExportAction4 extends Action {
 						}
 						mSummary = Util.addSummary(mSummary, "Strength", drugM.getAmount()+" "+drugM.getUnitOfMeasure());
 					}
-					if (StringUtils.filled(arr[p].getDosageDisplay())) {
-						medi.setDosage(arr[p].getDosageDisplay());
-						medi.setDosageUnitOfMeasure(StringUtils.noNull(arr[p].getUnit()));
-						mSummary = Util.addSummary(mSummary, "Dosage", arr[p].getDosageDisplay()+" "+StringUtils.noNull(arr[p].getUnit()));
+					
+					String drugForm = arr[p].getDrugForm();
+					if (StringUtils.filled(drugForm)) {
+						medi.setForm(drugForm);
+						mSummary = Util.addSummary(mSummary, "Form", drugForm);
 					}
+					
+					//Process dosage export
+					Float dosageValue = arr[p].getTakeMin();
+					if (dosageValue==0) { //takemin=0, try takemax
+						dosageValue = arr[p].getTakeMax();					
+					}
+					String drugUnit = StringUtils.noNull(arr[p].getUnit());
+					
+					if (drugUnit.equalsIgnoreCase(getDosageUnit(arr[p].getDosage()))) {
+						//drug unit should not be same as dosage unit
+						//check drug form to see if it matches the following list
+						
+						if (StringUtils.containsIgnoreCase(drugForm, "capsule")) drugUnit = "capsule";
+						else if (StringUtils.containsIgnoreCase(drugForm, "drop")) drugUnit = "drop";
+						else if (StringUtils.containsIgnoreCase(drugForm, "dosing")) drugUnit = "dosing";
+						else if (StringUtils.containsIgnoreCase(drugForm, "grobule")) drugUnit = "grobule";
+						else if (StringUtils.containsIgnoreCase(drugForm, "granule")) drugUnit = "granule";
+						else if (StringUtils.containsIgnoreCase(drugForm, "patch")) drugUnit = "patch";
+						else if (StringUtils.containsIgnoreCase(drugForm, "pellet")) drugUnit = "pellet";
+						else if (StringUtils.containsIgnoreCase(drugForm, "pill")) drugUnit = "pill";
+						else if (StringUtils.containsIgnoreCase(drugForm, "tablet")) drugUnit = "tablet";
+						
+						if (drugUnit.equals(arr[p].getUnit())) {
+							//drugUnit not changed by the above
+							//export dosage as "take * dosageValue"
+							dosageValue *= getDosageValue(arr[p].getDosage());
+						}
+					}
+					
+					//export dosage
+					medi.setDosage(dosageValue.toString());
+					if (StringUtils.filled(drugUnit)) medi.setDosageUnitOfMeasure(drugUnit);
+					mSummary = Util.addSummary(mSummary, "Dosage", dosageValue+" "+drugUnit);
 
 					if (StringUtils.filled(arr[p].getSpecialInstruction())) {
 						medi.setPrescriptionInstructions(arr[p].getSpecialInstruction());
@@ -1158,10 +1192,6 @@ public class DemographicExportAction4 extends Action {
 					if (StringUtils.filled(arr[p].getRoute())) {
 						medi.setRoute(arr[p].getRoute());
 						mSummary = Util.addSummary(mSummary, "Route", arr[p].getRoute());
-					}
-					if (StringUtils.filled(arr[p].getDrugForm())) {
-						medi.setForm(arr[p].getDrugForm());
-						mSummary = Util.addSummary(mSummary, "Form", arr[p].getDrugForm());
 					}
 					if (StringUtils.filled(arr[p].getFreqDisplay())) {
 						medi.setFrequency(arr[p].getFreqDisplay());
@@ -2351,5 +2381,26 @@ public class DemographicExportAction4 extends Action {
 			cdsDtPhoneNumber.setExtension(phoneExt);
 		}
 		return extensionTooLong;
+	}
+	
+	private Float getDosageValue(String dosage) {
+		String[] dosageBreak = getDosageMultiple1st(dosage).split(" ");
+		
+		if (NumberUtils.isNumber(dosageBreak[0])) return Float.parseFloat(dosageBreak[0]);
+		else return 0f;
+	}
+	
+	private String getDosageUnit(String dosage) {
+		String[] dosageBreak = getDosageMultiple1st(dosage).split(" ");
+		
+		if (dosageBreak.length==2) return dosageBreak[1].trim();
+		else return null;
+	}
+	
+	private String getDosageMultiple1st(String dosage) {
+		if (StringUtils.empty(dosage)) return "";
+		
+		String[] dosageMultiple = dosage.split("/");
+		return dosageMultiple[0].trim(); 
 	}
 }
