@@ -90,6 +90,11 @@ if (request.getParameter("function") != null) {
     module = (String) request.getAttribute("function");
     moduleid = (String) request.getAttribute("functionid");
 }
+
+if( !"".equalsIgnoreCase(moduleid) && (demographicNo == null || demographicNo.equalsIgnoreCase("null")) ) {
+	demographicNo = moduleid;
+}
+
 String moduleName = EDocUtil.getModuleName(module, moduleid);
 
 String curUser = "";
