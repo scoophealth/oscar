@@ -298,7 +298,6 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		appt.setLocation(getApptLocation());		
 		appt.setName(demographic.getFormattedName());
 		appt.setProviderNo(provider.getProviderNo());
-		appt.setUpdateDateTime(new Date());
 		appt.setType(getApptType());
 		appt.setReason(getApptReason());	
 		
@@ -433,9 +432,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		appt.setAppointmentDate(getApptStartDate());
 		appt.setStartTime(getApptStartDate());
 		appt.setEndTime(getApptEndDate());
-		appt.setUpdateDateTime(new Date());			
 		appt.setLocation(getApptLocation());		
-		appt.setUpdateDateTime(new Date());
 		appt.setType(getApptType());
 		appt.setReason(getApptReason());	
 		
