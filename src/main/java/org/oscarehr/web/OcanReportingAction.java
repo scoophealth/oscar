@@ -86,22 +86,22 @@ public class OcanReportingAction extends DispatchAction {
 		//we know there's atleast 1.
 		OcanStaffForm firstOcan = staffForms.get(0);
 		String label = convertOcanReasonUserString(firstOcan.getReasonForAssessment());
-		results.add(new LabelValueBean(label + " - " + dateFormatter.format(firstOcan.getClientFormCreated()),String.valueOf(firstOcan.getId())));
+		results.add(new LabelValueBean(label + " - " + dateFormatter.format(firstOcan.getCreated()),String.valueOf(firstOcan.getId())));
 
 		if(staffForms.size()>1) {
 			OcanStaffForm latestOcan = staffForms.get(staffForms.size()-1);
-			results.add(new LabelValueBean("Current OCAN - " + dateFormatter.format(latestOcan.getClientFormCreated()),String.valueOf(latestOcan.getId())));
+			results.add(new LabelValueBean("Current OCAN - " + dateFormatter.format(latestOcan.getCreated()),String.valueOf(latestOcan.getId())));
 		}
 
 		if(staffForms.size()>2) {
 			OcanStaffForm previousOcan = staffForms.get(staffForms.size()-2);
-			results.add(1,new LabelValueBean("Previous OCAN - " +dateFormatter.format(previousOcan.getClientFormCreated()),String.valueOf(previousOcan.getId())));
+			results.add(1,new LabelValueBean("Previous OCAN - " +dateFormatter.format(previousOcan.getCreated()),String.valueOf(previousOcan.getId())));
 		}
 		int counter=1;
 		if(staffForms.size()>3) {
 			for(int x=1;x<=staffForms.size()-3;x++) {
 				OcanStaffForm staffForm = staffForms.get(x);
-				label = convertOcanReasonUserString(staffForm.getReasonForAssessment()) + " "+ counter + " - " + dateFormatter.format(staffForm.getClientFormCreated());
+				label = convertOcanReasonUserString(staffForm.getReasonForAssessment()) + " "+ counter + " - " + dateFormatter.format(staffForm.getCreated());
 				results.add(counter,new LabelValueBean(label,String.valueOf(staffForm.getId())));
 				counter++;
 			}
