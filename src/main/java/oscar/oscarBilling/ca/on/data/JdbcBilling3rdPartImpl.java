@@ -8,7 +8,10 @@ import java.util.Vector;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.ClinicDAO;
+import org.oscarehr.common.model.Clinic;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
@@ -16,6 +19,8 @@ import oscar.util.UtilDateUtilities;
 public class JdbcBilling3rdPartImpl {
 	private static final Logger _logger = Logger
 			.getLogger(JdbcBilling3rdPartImpl.class);
+	private ClinicDAO clinicDao = (ClinicDAO)SpringUtils.getBean("clinicDAO");
+
 
 	BillingONDataHelp dbObj = new BillingONDataHelp();
 
@@ -37,27 +42,19 @@ public class JdbcBilling3rdPartImpl {
 
 	public Properties getLocalClinicAddr() {
 		Properties retval = new Properties();
-		String sql = "select * from clinic limit 1";
-		ResultSet rs = dbObj.searchDBRecord(sql);
 
-		try {
-			while (rs.next()) {
-				retval.setProperty("clinic_name", rs.getString("clinic_name"));
-				retval.setProperty("clinic_address", rs
-						.getString("clinic_address"));
-				retval.setProperty("clinic_city", rs.getString("clinic_city"));
-				retval.setProperty("clinic_province", rs
-						.getString("clinic_province"));
-                                retval.setProperty("clinic_postal", rs.getString("clinic_postal")); 
-				retval.setProperty("clinic_fax", rs.getString("clinic_fax"));
-				retval
-						.setProperty("clinic_phone", rs
-								.getString("clinic_phone"));
-				retval.setProperty("clinic_fax", rs.getString("clinic_fax"));
-			}
-		} catch (SQLException e) {
-			_logger.error("get3rdPartBillProp(sql = " + sql + ")");
+		Clinic clinic = clinicDao.getClinic();
+		if(clinic != null) {
+			retval.setProperty("clinic_name", clinic.getClinicName());
+			retval.setProperty("clinic_address", clinic.getClinicAddress());
+			retval.setProperty("clinic_city", clinic.getClinicCity());
+			retval.setProperty("clinic_province", clinic.getClinicProvince());
+            retval.setProperty("clinic_postal", clinic.getClinicPostal());
+			retval.setProperty("clinic_fax", clinic.getClinicFax());
+			retval.setProperty("clinic_phone", clinic.getClinicPhone());
+			retval.setProperty("clinic_fax", clinic.getClinicFax());
 		}
+
 		return retval;
 	}
 
@@ -142,7 +139,7 @@ public class JdbcBilling3rdPartImpl {
                         _logger.error("add3rdBillExt(sql = " + sql + ")");
                         return retval;
                 }
-		
+
 		return retval;
 	}
 
@@ -299,7 +296,7 @@ public class JdbcBilling3rdPartImpl {
         public Properties getGstTotal(String invNo) throws SQLException{
             String sql = "SELECT value from billing_on_ext where key_val = 'gst' AND billing_no = '" + invNo + "';";
             _logger.info("getGstTotal(sql= " + sql + ")");
-            
+
             ResultSet rs = DBHandler.GetSQL(sql);
             Properties props = new Properties();
             if (rs.next()){
