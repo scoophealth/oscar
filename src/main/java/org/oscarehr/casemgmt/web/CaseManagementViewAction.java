@@ -664,7 +664,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			providers.add(new LabelValueBean(tempProvider, tempProvider));
 		}
 		request.setAttribute("providers", providers);
-		
+
 		/*
 		 * people are changing the default sorting of notes so it's safer to explicity set it here, some one already changed it once and it reversed our sorting.
 		 */
@@ -683,7 +683,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		request.setAttribute("Notes", notesToDisplay);
 		logger.debug("Apply sorting to notes " + (System.currentTimeMillis() - startTime));
 	}
-	
+
 	private void sortIssues(ArrayList<CheckBoxBean> checkBoxBeanList) {
 		Comparator<CheckBoxBean> cbbComparator = new Comparator<CheckBoxBean>() {
 			public int compare(CheckBoxBean o1, CheckBoxBean o2) {
@@ -721,7 +721,19 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		String[] checkedIssues = request.getParameterValues("check_issue");
 		String strFullChart = request.getParameter("fullChart");
 		boolean quickChart =  strFullChart == null || strFullChart.equals("") || strFullChart.equalsIgnoreCase("false");
-		Integer maxNotes =  quickChart ? QUICK_CHART : FULL_CHART;
+		Integer maxNotes = FULL_CHART;
+		if(quickChart) {
+			maxNotes = Integer.parseInt(OscarProperties.getInstance().getProperty("quick_chart_size",String.valueOf(QUICK_CHART)));
+			 UserProperty providerQuickChartSize = caseManagementMgr.getUserProperty(providerNo, "quickChartSize");
+			 if(providerQuickChartSize != null && providerQuickChartSize.getValue().length()>0) {
+				 try {
+					 int psize = Integer.parseInt(providerQuickChartSize.getValue());
+					 maxNotes = psize;
+				 }catch(NumberFormatException e) {
+					 logger.warn("Error",e);
+				 }
+			 }
+		}
 		if (checkedIssues != null && checkedIssues[0].trim().length() > 0) {
 			// need to apply a filter
 			logger.debug("Get Notes with checked issues");
@@ -849,28 +861,28 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			}
 
 		}
-		
+
 		//fetch last 20 invoices for display in chart only works for Ontario Billing right now
 		oscar.OscarProperties p = oscar.OscarProperties.getInstance();
 		if( p.getProperty("billregion","").equalsIgnoreCase("ON") ) {
 			fetchInvoices(notesToDisplay, demoNo);
 		}
-		
-		// sort the notes		
+
+		// sort the notes
 		String noteSort = p.getProperty("CMESort", "");
 		if (noteSort.trim().equalsIgnoreCase("UP")) notesToDisplay = sortNotes(notesToDisplay, "observation_date_asc");
 		else notesToDisplay = sortNotes(notesToDisplay, "observation_date_desc");
 
 		request.setAttribute("notesToDisplay", notesToDisplay);
 	}
-	
+
 	private void fetchInvoices(ArrayList<NoteDisplay>notes, String demographic_no) {
 		List<BillingClaimHeader1>bills = billingClaimDao.getInvoices(demographic_no, MAX_INVOICES);
-		
+
 		for( BillingClaimHeader1 h1 : bills ) {
 			notes.add(new NoteDisplayNonNote(h1));
-		}		
-	}	
+		}
+	}
 
 	private List applyRoleFilter(List notes, String[] roleId) {
 
@@ -1655,7 +1667,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		} else if (noteDisplay.isInvoice()) {
 			bgColour = invoiceColour;
 		}
-		
+
 
 		return (bgColour);
 	}
