@@ -1,8 +1,8 @@
 package org.oscarehr.managers;
 
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 public final class DayWorkSchedule {
 	private boolean isHoliday;
@@ -13,9 +13,9 @@ public final class DayWorkSchedule {
 	private Integer timeSlotDurationMin;
 	
 	/**
-	 * This hashmap holds the start of the time slot and the time code for that slot, i.e. scheduleTemplateCode
+	 * This treemap holds and orders the start of the time slot and the time code for that slot, i.e. scheduleTemplateCode
 	 */
-	private HashMap<Calendar,Character> timeSlots=new HashMap<Calendar,Character>();
+	private TreeMap<Calendar,Character> timeSlots=new TreeMap<Calendar,Character>();
 
 	public Integer getTimeSlotDurationMin() {
     	return (timeSlotDurationMin);
@@ -33,11 +33,11 @@ public final class DayWorkSchedule {
     	this.isHoliday = isHoliday;
     }
 
-	public HashMap<Calendar, Character> getTimeSlots() {
+	public TreeMap<Calendar, Character> getTimeSlots() {
     	return (timeSlots);
     }
 
-	public void setTimeSlots(HashMap<Calendar, Character> timeSlots) {
+	public void setTimeSlots(TreeMap<Calendar, Character> timeSlots) {
     	this.timeSlots = timeSlots;
     }
 	
