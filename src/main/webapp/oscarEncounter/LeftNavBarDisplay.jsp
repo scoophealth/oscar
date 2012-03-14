@@ -12,13 +12,13 @@
 <%
         long startTime = System.currentTimeMillis();
         NavBarDisplayDAO dao = (NavBarDisplayDAO)request.getAttribute("DAO");
-        String js = dao.getJavaScript();    
+        String js = dao.getJavaScript();
         int maxColumnHeight = 40;  //break into columns after maxColumnHeight items reached
         int menuWidth = 125;
-        
-        
+
+
         //Is there java script to insert in page?  Then do it
-        if( js != null ) {            
+        if( js != null ) {
         %>
 <%=js%>
 <% } %>
@@ -29,15 +29,15 @@
 		String rhid = dao.getRightHeadingID();
 		String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 		com.quatro.service.security.SecurityManager securityMgr = new com.quatro.service.security.SecurityManager();
-		        
-		if( !rh.equals("") && securityMgr.hasWriteAccess("_" + ((String)request.getAttribute("cmd")).toLowerCase(),roleName$)) {              
+
+		if( !rh.equals("") && securityMgr.hasWriteAccess("_" + ((String)request.getAttribute("cmd")).toLowerCase(),roleName$)) {
         %>
 <div id='menuTitle<%=rh%>'
 	style="width: 10%; float: right; text-align: center;">
-<h3 style="padding:0px; <%=getBackgroundColor(dao)%>"><a href="#"
+<h3 style="padding:0px; <%=getBackgroundColor(dao)%>"><a href="javascript:void(0);"
 	<%=dao.numPopUpMenuItems() > 0 ? "onmouseover" : "onclick"%>="<%=dao.getRightURL()%>">+</a></h3>
 </div>
-<%        
+<%
         int num;
         //if there is a pop up menu then grab all of the items and format according to number
         if( (num = dao.numPopUpMenuItems()) > 0 ) {
@@ -52,7 +52,7 @@
 <div id='menu<%=rh%>' class='menu' style='width: <%=menuWidth%>;px'
 	onclick='event.cancelBubble = true;'>
 <h3 style='text-align: center'><%=dao.getMenuHeader()%></h3>
-<%            
+<%
             for(int idx = 0; idx < num; ++idx) {
             if( columns )
             style = idx % 2 == 0 ? "menuItemleft" : "menuItemright";
@@ -69,24 +69,24 @@
             }
             else if( !columns ){
             %> <br>
-<%                    
+<%
             }
             } //end for
             %>
 </div>
-<%            
+<%
         } //end if menu items
-        	
-        } //end if there is a right hand header               
+
+        } //end if there is a right hand header
         else {
         	if(!rh.equals("")) {
         	 %>
              <div id='menuTitle<%=rh%>' style="width: 10%; float: right; text-align: center;">
       			<h3 style="padding:0px; <%=getBackgroundColor(dao)%>">&nbsp;</h3>
       	   </div>
-             <%	        	
+             <%
         } }
-        
+
         //left hand module header comes last as it's displayed as a block
         %>
 <div style="clear: left; float: left; width: 90%;">
@@ -102,26 +102,26 @@
             div = div.trim();
             int numItems = dao.numItems();
             String strToDisplay = request.getParameter("numToDisplay");
-            int numToDisplay;             
+            int numToDisplay;
             boolean xpanded = false;
-            int displayThreshold = 6;            
-            
-            if( strToDisplay != null ) { 
+            int displayThreshold = 6;
+
+            if( strToDisplay != null ) {
                 numToDisplay = Integer.parseInt(strToDisplay);
-                
+
                 if( numItems > numToDisplay ) {
-                    String xpandUrl = request.getParameter("reloadURL") + "&cmd=" + div;                      
-                    manageItems = xpandUrl;           
+                    String xpandUrl = request.getParameter("reloadURL") + "&cmd=" + div;
+                    manageItems = xpandUrl;
                 }
-            }   
+            }
             else {
-                numToDisplay = numItems;                
-                if( numToDisplay > displayThreshold ) {                 
+                numToDisplay = numItems;
+                if( numToDisplay > displayThreshold ) {
                     xpanded = true;
                 }
             }
-            
-            int numDisplayed = 0;            
+
+            int numDisplayed = 0;
 
             ArrayList<NavBarDisplayDAO.Item> current = new ArrayList<NavBarDisplayDAO.Item>();
             ArrayList<NavBarDisplayDAO.Item> pastDates = new ArrayList<NavBarDisplayDAO.Item>();
@@ -130,7 +130,7 @@
             threshold.add(Calendar.MONTH, -3);
             Date threeMths = threshold.getTime();
             int j;
-            
+
             for(j=0; j<numItems; j++) {
                 NavBarDisplayDAO.Item item = dao.getItem(j);
                 Date d = item.getDate();
@@ -140,20 +140,20 @@
                     pastDates.add(item);
                 else
                     current.add(item);
-            }   
-            
+            }
+
             StringBuffer jscode = new StringBuffer();
-            
+
             numDisplayed = display(noDates, numToDisplay, numDisplayed, manageItems, xpanded, numItems, jscode, displayThreshold, request, out);
-            
+
             if( numDisplayed < numToDisplay ){
                numDisplayed += display(current, numToDisplay, numDisplayed, manageItems, xpanded, numItems, jscode, displayThreshold, request, out);
             }
-               
-            if( numDisplayed < numToDisplay ){ 
+
+            if( numDisplayed < numToDisplay ){
                 numDisplayed += display(pastDates, numToDisplay, numDisplayed, manageItems, xpanded, numItems, jscode, displayThreshold, request, out);
             }
-                
+
             if( numDisplayed == 0 ) {
                 out.println("<li>&nbsp;</li>");
             }
@@ -161,28 +161,28 @@
 </ul>
 <input type="hidden" id="<%=request.getAttribute("navbarName")%>num"
 	value="<%=numDisplayed%>" />
-<%   
+<%
         out.println("<script type=\"text/javascript\">" + jscode.toString() + "</script>");
     %>
 
 <%!
     public String getBackgroundColor(NavBarDisplayDAO dao){
         if ( dao.hasHeadingColour()){
-           return  "background-color: #"+dao.getHeadingColour()+";"; 
+           return  "background-color: #"+dao.getHeadingColour()+";";
         }
         return "";
     }
-    
+
     public int display(ArrayList<NavBarDisplayDAO.Item>items, int numToDisplay, int numDisplayed, String reloadUrl, boolean xpanded, int numItems, StringBuffer js, int displayThreshold, javax.servlet.http.HttpServletRequest request, javax.servlet.jsp.JspWriter out ) throws IOException {
-        String stripe,colour,bgColour;   
+        String stripe,colour,bgColour;
         String imgName;
         String dateFormat = "dd-MMM-yyyy";
         numToDisplay -= numDisplayed;
-        
+
         int total = items.size() < numToDisplay ? items.size() : numToDisplay;
         int j;
         int curNum = numDisplayed;
-        for(j = 0 ; j< total; ++j ) {                
+        for(j = 0 ; j< total; ++j ) {
                 NavBarDisplayDAO.Item item = items.get(j);
                 colour = item.getColour().equals("") ? "" : "color: " + item.getColour() + ";";
                 bgColour = item.getBgColour().equals("") ? "background-color: #f3f3f3;" : "background-color: " + item.getBgColour() + ";";
@@ -192,16 +192,16 @@
                    dateColour = bgColour;
                 }else{
                    stripe = "style=\"overflow: hidden; clear:both; position:relative; display:block; white-space:nowrap; \"";
-                }        
-                out.println("<li " + stripe + ">");    
-                
+                }
+                out.println("<li " + stripe + ">");
+
                 if( curNum == 0 && xpanded ) {
-                    imgName = "img" + request.getAttribute("navbarName") + curNum;                    
+                    imgName = "img" + request.getAttribute("navbarName") + curNum;
                     out.println("<a href='#' onclick=\"return false;\" style='text-decoration:none; width:7px; z-index: 100; "+dateColour+" position:relative; margin: 0px; padding-bottom: 0px;  vertical-align: bottom; display: inline; float: right; clear:both;'><img id='" + imgName + "' src='" + request.getContextPath() + "/oscarMessenger/img/collapse.gif'/>&nbsp;&nbsp;</a>");
                     js.append("imgfunc['" + imgName + "'] = clickListDisplay.bindAsEventListener(obj,'" + request.getAttribute("navbarName") + "', '" + displayThreshold + "');" );
                     js.append("Element.observe($('" + imgName + "'), 'click', imgfunc['" + imgName + "']);");
                 }else if( j == (numToDisplay-1) && xpanded ) {
-                    imgName = "img" + request.getAttribute("navbarName") + curNum;                    
+                    imgName = "img" + request.getAttribute("navbarName") + curNum;
                     out.println("<a href='#' onclick=\"return false;\" style='text-decoration:none; width:7px; z-index: 100; "+dateColour+" position:relative; margin: 0px; padding-bottom: 0px;  vertical-align: bottom; display: inline; float: right; clear:both;'><img id='" + imgName + "' src='" + request.getContextPath() + "/oscarMessenger/img/collapse.gif'/>&nbsp;&nbsp;</a>");
                     js.append("imgfunc['" + imgName + "'] = clickListDisplay.bindAsEventListener(obj,'" + request.getAttribute("navbarName") + "', '" + displayThreshold + "');" );
                     js.append("Element.observe($('" + imgName + "'), 'click', imgfunc['" + imgName + "']);");
@@ -212,9 +212,9 @@
                     js.append("Element.observe($('" + imgName + "'), 'click', imgfunc['" + imgName + "']);");
                 }else{
                     out.println("<a border=0 style='text-decoration:none; width:7px; z-index: 100; "+dateColour+" position:relative; margin: 0px; padding-bottom: 0px;  vertical-align: bottom; display: inline; float: right; clear:both;'><img  id='img" + request.getAttribute("navbarName") + curNum + "' src='" + request.getContextPath() + "/images/clear.gif'/>&nbsp;&nbsp;</a>");
-                }                   
+                }
                 ++curNum;
-                        
+
                 out.println("<span style=\" z-index: 1; position:absolute; margin-right:10px; width:90%; overflow:hidden;  height:1.2em; white-space:nowrap; float:left; text-align:left; \">");
 				String url = item.getURL();
 				//This should be done in the display classes but I'll keep it here for future reference
@@ -228,28 +228,28 @@
                 out.println(item.getTitle());
                 out.println("</a>");
                 out.println("</span>");
-              
-                if( item.getDate() != null ) {                                                 
+
+                if( item.getDate() != null ) {
                     out.println("<span style=\"z-index: 100; "+dateColour+" overflow:hidden;   position:relative; height:1.2em; white-space:nowrap; float:right; text-align:right;\">");
-                    
+
                     if( item.isURLJavaScript() ) {
                     	out.println("...<a class='links' style='margin-right: 2px;" + colour + "' onmouseover=\"this.className='linkhover'\" onmouseout=\"this.className='links'\" href='#' onclick=\"" + url + "\" title='" + item.getLinkTitle() + "'>");
                     }
                     else {
                     	out.println("...<a class='links' style='margin-right: 2px;" + colour + "' onmouseover=\"this.className='linkhover'\" onmouseout=\"this.className='links'\" href=\"" + url + "\" title='" + item.getLinkTitle() + "' target=\"_blank\">");
                     }
-                    
+
                     if(item.getValue() != null && !item.getValue().trim().equals("")){
                         out.println(item.getValue());
                     }
                     out.println(DateUtils.getDate(item.getDate(), dateFormat, request.getLocale()));
                     out.println("</a>");
                     out.println("</span>");
-                } 
-                out.println("</li>");              
+                }
+                out.println("</li>");
          }
-                      
+
          return j;
     }
-    
+
     %>
