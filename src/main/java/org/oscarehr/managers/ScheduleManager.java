@@ -2,8 +2,8 @@ package org.oscarehr.managers;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.AppointmentTypeDao;
@@ -94,7 +94,7 @@ public class ScheduleManager {
 			// sort out designated timeslots and their purpose
 			Calendar timeSlot=(Calendar) date.clone();
 			DateUtils.zeroTimeFields(timeSlot);
-			HashMap<Calendar, Character> allTimeSlots=dayWorkSchedule.getTimeSlots();
+			TreeMap<Calendar, Character> allTimeSlots=dayWorkSchedule.getTimeSlots();
 			
 			for (int i=0; i<timecode.length(); i++)
 			{
