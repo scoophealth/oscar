@@ -4,6 +4,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.oscarehr.common.dao.ClinicDAO;
+import org.oscarehr.common.model.Clinic;
+import org.oscarehr.util.SpringUtils;
+
 import oscar.login.DBHelp;
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
@@ -13,6 +17,9 @@ import oscar.util.UtilDateUtilities;
 
 public class FrmBCClientChartChecklistRecord extends FrmRecord {
 
+	private ClinicDAO clinicDao = (ClinicDAO)SpringUtils.getBean("clinicDAO");
+
+
 	public FrmBCClientChartChecklistRecord() {
 		_dateFormat = "dd/MM/yyyy";
 	}
@@ -21,7 +28,7 @@ public class FrmBCClientChartChecklistRecord extends FrmRecord {
 			throws SQLException {
 		Properties props = new Properties();
 		if (existingID <= 0) {
-			
+
 			String sql = "SELECT demographic_no, last_name, first_name, sex, address, city, province, postal, phone, phone2, year_of_birth, month_of_birth, date_of_birth, hin FROM demographic WHERE demographic_no = "
 					+ demographicNo;
 			ResultSet rs = DBHandler.GetSQL(sql);
@@ -52,12 +59,10 @@ public class FrmBCClientChartChecklistRecord extends FrmRecord {
 				props.setProperty("pg1_formDate", UtilDateUtilities
 						.DateToString(UtilDateUtilities.Today(), _dateFormat));
 			}
-			sql = "select clinic_name from clinic";
-			rs = DBHandler.GetSQL(sql);
-			if (rs.next()) {
-				props.setProperty("c_clinicName", oscar.Misc.getString(rs, "clinic_name"));
+			Clinic clinic = clinicDao.getClinic();
+			if(clinic != null) {
+				props.setProperty("c_clinicName", clinic.getClinicName());
 			}
-			rs.close();
 		} else {
 			String sql = "SELECT * FROM formBCClientChartChecklist WHERE demographic_no = "
 					+ demographicNo + " AND ID = " + existingID;
@@ -66,8 +71,7 @@ public class FrmBCClientChartChecklistRecord extends FrmRecord {
 			props = frh.getFormRecord(sql);
 			sql = "SELECT last_name, first_name, address, city, province, postal, phone,phone2, hin FROM demographic WHERE demographic_no = "
 					+ demographicNo;
-			DBHelp db = new DBHelp();
-			ResultSet rs = db.searchDBRecord(sql);
+			ResultSet rs = DBHelp.searchDBRecord(sql);
 			if (rs.next()) {
 				props.setProperty("c_surname_cur", oscar.Misc.getString(rs, "last_name"));
 				props
