@@ -6,6 +6,8 @@ import java.lang.reflect.Field;
 import java.util.Calendar;
 import java.util.Date;
 
+import javassist.Modifier;
+
 import javax.persistence.Id;
 
 import org.oscarehr.util.MiscUtils;
@@ -27,6 +29,10 @@ public class EntityDataGenerator {
 	        if(isId)
 	        	continue;
 
+	        int modifiers = f[i].getModifiers();
+	        if((modifiers & Modifier.STATIC) == Modifier.STATIC) {
+	        	continue;
+	        }
 
 	        if(f[i].getType() == String.class) {
 	        	f[i].set(model, f[i].getName() + ((int)(Math.random()*10000)));
