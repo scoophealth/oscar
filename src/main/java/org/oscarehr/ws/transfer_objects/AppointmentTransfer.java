@@ -200,10 +200,29 @@ public final class AppointmentTransfer {
 		this.urgency = urgency;
 	}
 
+	public Appointment toAppointment() {
+		Appointment appointment = new Appointment();
+
+		String[] ignored = { "id", "appointmentDate", "startTime", "endTime", "createDateTime", "updateDateTime", "creator", "lastUpdateUser", "creatorSecurityId" };
+		BeanUtils.copyProperties(this, appointment, ignored);
+
+		if (appointmentStartDateTime != null) {
+			appointment.setAppointmentDate(appointmentStartDateTime.getTime());
+			appointment.setStartTime(appointmentStartDateTime.getTime());
+		}
+
+		// yupp terrible source of error here, if an appointment starts on one day and ends on the other like
+		// a hospital visit at 11:45pm that ends at 12:15am, this is going to go all bad, but there's 
+		// not much we can do right now because it's a fault in oscars data structure.
+		if (appointmentEndDateTime != null) appointment.setEndTime(appointmentEndDateTime.getTime());
+
+		return (appointment);
+	}
+
 	public static AppointmentTransfer toTransfer(Appointment appointment) {
 		AppointmentTransfer appointmentTransfer = new AppointmentTransfer();
 
-		String[] ignored = { "appointmentDate", "startTime", "endTime", "createDateTime", "updateDateTime" };
+		String[] ignored = { "appointmentDate", "startTime", "endTime", "createDateTime", "updateDateTime", "creatorSecurityId" };
 		BeanUtils.copyProperties(appointment, appointmentTransfer, ignored);
 
 		GregorianCalendar cal = DateUtils.toGregorianCalendar(appointment.getAppointmentDate(), appointment.getStartTime());
@@ -222,7 +241,7 @@ public final class AppointmentTransfer {
 		AppointmentTransfer[] result = new AppointmentTransfer[appointments.size()];
 
 		for (int i = 0; i < appointments.size(); i++) {
-			result[i]=toTransfer(appointments.get(i));
+			result[i] = toTransfer(appointments.get(i));
 		}
 
 		return (result);

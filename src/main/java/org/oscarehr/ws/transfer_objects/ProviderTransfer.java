@@ -208,7 +208,7 @@ public final class ProviderTransfer {
 		this.title = title;
 	}
 
-	public static ProviderTransfer getTransfer(Provider provider) {
+	public static ProviderTransfer toTransfer(Provider provider) {
 		ProviderTransfer providerTransfer = new ProviderTransfer();
 
 		BeanUtils.copyProperties(provider, providerTransfer);
@@ -216,11 +216,11 @@ public final class ProviderTransfer {
 		return (providerTransfer);
 	}
 
-	public static ProviderTransfer[] getTransfers(List<Provider> providers) {
+	public static ProviderTransfer[] toTransfers(List<Provider> providers) {
 		ArrayList<ProviderTransfer> results = new ArrayList<ProviderTransfer>();
 
 		for (Provider provider : providers) {
-			results.add(getTransfer(provider));
+			results.add(toTransfer(provider));
 		}
 
 		return (results.toArray(new ProviderTransfer[0]));

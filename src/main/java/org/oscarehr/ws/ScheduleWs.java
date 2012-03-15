@@ -47,4 +47,14 @@ public class ScheduleWs extends AbstractWs {
 		List<AppointmentType> appointmentTypes=scheduleManager.getAppointmentTypes();
 		return(AppointmentTypeTransfer.toTransfer(appointmentTypes));
 	}
+	
+	/**
+	 * @return the ID of the appointment just added
+	 */
+	public Integer addAppointment(AppointmentTransfer appointmentTransfer)
+	{
+		Appointment appointment=appointmentTransfer.toAppointment();
+		scheduleManager.addAppointment(appointment);
+		return(appointment.getId());
+	}
 }

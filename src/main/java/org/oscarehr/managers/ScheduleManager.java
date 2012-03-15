@@ -19,6 +19,7 @@ import org.oscarehr.common.model.ScheduleHoliday;
 import org.oscarehr.common.model.ScheduleTemplate;
 import org.oscarehr.common.model.ScheduleTemplateCode;
 import org.oscarehr.common.model.ScheduleTemplatePrimaryKey;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,8 @@ import org.springframework.stereotype.Service;
 import oscar.appt.status.model.AppointmentStatus;
 import oscar.log.LogAction;
 import oscar.util.DateUtils;
+
+import com.quatro.model.security.Security;
 
 @Service
 public class ScheduleManager {
@@ -116,7 +119,7 @@ public class ScheduleManager {
 		List<Appointment> appointments = oscarAppointmentDao.findByProviderAndDayandNotStatus(providerNo, date.getTime(), AppointmentStatus.APPOINTMENT_STATUS_CANCELLED);
 
 		//--- log action ---
-		LogAction.addLogSynchronous("AppointmentManager.getDayAppointments", "providerNo=" + providerNo + ", date=" + date);
+		LogAction.addLogSynchronous("AppointmentManager.getDayAppointments", "appointments for providerNo=" + providerNo + ", appointments for date=" + date);
 
 		return (appointments);
 	}
@@ -136,4 +139,16 @@ public class ScheduleManager {
 		// This method will not log access as the appointment types are not private medical data.
 		return(appointmentTypes);
 	}
+
+	public void addAppointment(Appointment appointment) {
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		Security security=loggedInInfo.loggedInSecurity;
+	    appointment.setCreatorSecurityId(security.getSecurityNo());
+	    appointment.setCreator(security.getUserName());
+	    
+	    oscarAppointmentDao.persist(appointment);
+	    	    
+		//--- log action ---
+		LogAction.addLogSynchronous("AppointmentManager.addAppointment", appointment.toString());
+    }
 }
