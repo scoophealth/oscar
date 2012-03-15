@@ -34,6 +34,12 @@ if(props.getProperty("isNewONbilling", "").equals("true")) {
 <jsp:useBean id="providerBean" class="java.util.Properties"
 	scope="session" />
 <%@ include file="dbBilling.jspf"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.ClinicLocationDao" %>
+<%@page import="org.oscarehr.common.model.ClinicLocation" %>
+<%
+	ClinicLocationDao clinicLocationDao = (ClinicLocationDao)SpringUtils.getBean("clinicLocationDao");
+%>
 <%
 String clinicview = oscarVariables.getProperty("clinic_view", "");
 String clinicNo = oscarVariables.getProperty("clinic_no", "");
@@ -162,7 +168,7 @@ function checkData() {
 	document.forms[0].xml_other1.value = document.forms[0].xml_other1.value.toUpperCase();
 	document.forms[0].xml_other2.value = document.forms[0].xml_other2.value.toUpperCase();
 	document.forms[0].xml_other3.value = document.forms[0].xml_other3.value.toUpperCase();
-    
+
     // for no dx code
 	for (i=0;i<document.forms[0].length;i++){
 		var cd = document.forms[0].elements[i];
@@ -186,7 +192,7 @@ function checkData() {
 			}
 		}
 	}
-    
+
     if(document.forms[0].xml_provider.value == "000000"){
     	alert("Please select Billing Physician!");
         b = false;
@@ -224,7 +230,7 @@ function checkData() {
 			}
 		}
 	}<%}%>
-	
+
 	checkServiceDate();
     return b;
 }
@@ -536,17 +542,17 @@ if (appt_no.compareTo("0") == 0) {
 				<td colspan="2"><font size="-2"> <select
 					name="xml_location" datafld='xml_location'>
 					<%
-String clinic_location="", clinic_code="";
-ResultSet rsclinic = apptMainBean.queryResults("1", "search_clinic_location");
-while (rsclinic.next()){
-	clinic_location = rsclinic.getString("clinic_location_name");
-	clinic_code = rsclinic.getString("clinic_location_no");
+					String clinic_location="", clinic_code="";
+					List<ClinicLocation> clinicLocations = clinicLocationDao.findByClinicNo(1);
+		            for(ClinicLocation clinicLocation:clinicLocations) {
+		            	clinic_location = clinicLocation.getClinicLocationName();
+		            	clinic_code = clinicLocation.getClinicLocationNo();
 %>
 					<option value="<%=clinic_code%>"
 						<%=clinicview.equals(clinic_code)?"selected":""%>><%=clinic_location%></option>
 					<%
 }
-rsclinic.close();
+
 %>
 				</select> <input type="checkbox" name="xml_referral" value="checked"
 					<%=bNew?(props.getProperty("billingRefBoxDefault", "").startsWith("checked")?"checked":""):"datafld='xml_referral'"%>>
