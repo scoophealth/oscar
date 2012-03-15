@@ -36,7 +36,7 @@
 
 
   String [][] dbQueries=new String[][] {
-    {"get_appt_location", "select location from appointment where appointment_no=?"},	  
+    {"get_appt_location", "select location from appointment where appointment_no=?"},
     {"search_provider_team_dt", "select * from provider where provider_type='doctor' and status = '1' and (provider_no=? or team=(select team from provider where provider_no=?)) order by last_name"},
     {"search_provider_all_dt", "select * from provider where provider_type='doctor' and status = '1' and provider_no like ? order by last_name"},
     {"search_provider_all", "select * from provider where provider_no like ?  and status = '1' order by last_name"},
@@ -45,7 +45,6 @@
      {"search_provider_details", "select * from provider where provider_no=?"},
      {"search_document_content", "select * from document where status<>'D' and document_no=?"},
     {"search_provider_name", "select * from provider where provider_no like ?"},
-    {"search_visit_location", "select clinic_location_name from clinic_location where clinic_location_no=?"},
     {"save_document","insert into document (doctype, docdesc, docxml, docfilename, doccreator, updatedatetime, status) values(?,?,?,?,?,?,?)"},
      {"save_tickler","insert into tickler (demographic_no, message, status, update_date, service_date, creator, priority, task_assigned_to) values(?,?,?,?,?,?,?,?)"},
          {"update_tickler","update tickler set status=? where tickler_no=?"},

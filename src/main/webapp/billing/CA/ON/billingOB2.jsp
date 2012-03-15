@@ -1,26 +1,26 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -29,7 +29,7 @@
     response.sendRedirect("../logout.htm");
   String curUser_no,userfirstname,userlastname;
   curUser_no = (String) session.getAttribute("user");
- 
+
 %>
 <%@ page
 	import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*"
@@ -38,15 +38,20 @@
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <%@ include file="dbBilling.jspf"%>
-
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.ClinicLocationDao" %>
+<%@page import="org.oscarehr.common.model.ClinicLocation" %>
+<%
+	ClinicLocationDao clinicLocationDao = (ClinicLocationDao)SpringUtils.getBean("clinicLocationDao");
+%>
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Billing History</title>
 </head>
 <% String billNo = request.getParameter("billing_no");
- ResultSet rslocation = null;  
- ResultSet rsPatient = null; 
+ ResultSet rslocation = null;
+ ResultSet rsPatient = null;
  String proFirst="", proLast="", proRMA="", proOHIPNO="", crFirst="Not", crLast="Available", apptFirst="Not", apptLast="Available", asstFirst="Not", asstLast="Available";
  String UpdateDate = "";
  String DemoNo = "";
@@ -88,14 +93,13 @@
     asstProvider_no = rslocation.getString("asstProvider_no");
     creator = rslocation.getString("creator");
    }
-   
-   
- rslocation = null;
- rslocation = apptMainBean.queryResults(location, "search_bill_location");
- while(rslocation.next()){
- 
- BillLocation = rslocation.getString("clinic_location_name");
-   }
+
+
+ ClinicLocation clinicLocation = clinicLocationDao.searchBillLocation(1,location);
+ if(clinicLocation!=null) {
+	 BillLocation = clinicLocation.getClinicLocationName();
+ }
+
  rsPatient = null;
  rsPatient = apptMainBean.queryResults(DemoNo, "search_demographic_details");
  while(rsPatient.next()){
@@ -107,10 +111,10 @@
  DemoDOB = rsPatient.getString("year_of_birth") + "-" + rsPatient.getString("month_of_birth") + "-" + rsPatient.getString("date_of_birth");
 
    }
-   
-   ResultSet rsprovider = null;  
-   
-   
+
+   ResultSet rsprovider = null;
+
+
      rsprovider = null;
     rsprovider = apptMainBean.queryResults(proNO, "search_provider_name");
     while(rsprovider.next()){
@@ -124,7 +128,7 @@
       while(rsprovider.next()){
      apptFirst = rsprovider.getString("first_name");
      apptLast = rsprovider.getString("last_name");
-      
+
      }
        rsprovider = null;
       rsprovider = apptMainBean.queryResults(asstProvider_no, "search_provider_name");
@@ -132,7 +136,7 @@
     asstFirst = rsprovider.getString("first_name");
      asstLast = rsprovider.getString("last_name");
   }
-  
+
          rsprovider = null;
         rsprovider = apptMainBean.queryResults(creator, "search_provider_name");
         while(rsprovider.next()){
@@ -143,7 +147,7 @@
      rsBillRec2 = null;
  rsBillRec2 = apptMainBean.queryResults(billNo, "search_bill_record");
  while(rsBillRec2.next()){
- BillDate = rsBillRec2.getString("appointment_date");   
+ BillDate = rsBillRec2.getString("appointment_date");
 }
  %>
 
@@ -271,8 +275,8 @@ billUnit = rsBillRec.getString("billingunit");
  serviceDesc = rsBillRec.getString("service_desc");
  billAmount = rsBillRec.getString("billing_amount");
  diagCode = rsBillRec.getString("diagnostic_code");
- 
-  
+
+
  %>
 
 	<tr>

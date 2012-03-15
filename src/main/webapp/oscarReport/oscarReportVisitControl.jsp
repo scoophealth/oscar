@@ -1,11 +1,11 @@
 
-<%       
+<%
   if(session.getValue("user") == null)
     response.sendRedirect("../logout.jsp");
-  String user_no; 
+  String user_no;
   user_no = (String) session.getAttribute("user");
-  int  nItems=0;  
-  String strLimit1="0"; 
+  int  nItems=0;
+  String strLimit1="0";
   String strLimit2="5";
   if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
@@ -20,6 +20,12 @@
 	scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
 <%@ include file="dbReport.jspf"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.ClinicLocationDao" %>
+<%@page import="org.oscarehr.common.model.ClinicLocation" %>
+<%
+	ClinicLocationDao clinicLocationDao = (ClinicLocationDao)SpringUtils.getBean("clinicLocationDao");
+%>
 <%
 GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
@@ -27,39 +33,40 @@ GregorianCalendar now=new GregorianCalendar();
   int curDay = now.get(Calendar.DAY_OF_MONTH);
   String clinic="";
   String clinicview = oscarVariables.getProperty("clinic_view");
-  ResultSet rslocal2 = null;
-  rslocal2 = apptMainBean.queryResults(clinicview, "search_visit_location");
-  while(rslocal2.next()){
-      clinic = rslocal2.getString("clinic_location_name");
+
+  String visitLocation = clinicLocationDao.searchVisitLocation(clinicview);
+  if(visitLocation!=null) {
+ 	 clinic = visitLocation;
   }
+
   int flag = 0, rowCount=0;
   String reportAction=request.getParameter("reportAction")==null?"":request.getParameter("reportAction");
   String xml_vdate=request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
   String xml_appointment_date = request.getParameter("xml_appointment_date")==null?"":request.getParameter("xml_appointment_date");
 %>
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 <html>
@@ -70,7 +77,7 @@ GregorianCalendar now=new GregorianCalendar();
 <link rel="stylesheet" href="oscarReport.css">
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <script language="JavaScript">
-<!-- 
+<!--
 
 function selectprovider(s) {
   if(self.location.href.lastIndexOf("&providerview=") > 0 ) a = self.location.href.substring(0,self.location.href.lastIndexOf("&providerview="));
@@ -142,7 +149,7 @@ function refresh() {
 				key="oscarReport.oscarReportVisitControl.msgSelectProviderAll" /></option>
 			<% String proFirst="";
             String proLast="";
-            String proOHIP="";            
+            String proOHIP="";
             ResultSet rslocal = apptMainBean.queryResults("visitreport", "search_reportprovider");
             while(rslocal.next()){
                 proFirst = rslocal.getString("first_name");
@@ -179,7 +186,7 @@ function refresh() {
 </table>
 <% if (reportAction.compareTo("") == 0 || reportAction == null) { %>
 <p>&nbsp;</p>
-<% } else {  
+<% } else {
        if (reportAction.compareTo("lk") == 0) { %>
 <%@ include file="oscarReportVisit_lk.jspf"%>
 <%     } else {

@@ -1,6 +1,6 @@
 
 <%
-  if(session.getValue("user") == null) 
+  if(session.getValue("user") == null)
     response.sendRedirect("../logout.htm");
   String curUser_no,userfirstname,userlastname;
   curUser_no = (String) session.getAttribute("user");
@@ -14,30 +14,35 @@
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <%@ include file="dbBilling.jspf"%>
-
-<!--  
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.ClinicLocationDao" %>
+<%@page import="org.oscarehr.common.model.ClinicLocation" %>
+<%
+	ClinicLocationDao clinicLocationDao = (ClinicLocationDao)SpringUtils.getBean("clinicLocationDao");
+%>
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 <html>
@@ -50,14 +55,14 @@ function validate_form(){
   // do some validation
   document.body.style.cursor = "wait";
   document.forms.form1.Submit.disabled = true;
-  return true; 
+  return true;
 }
 //-->
 </SCRIPT>
 
 </head>
 
-<% 
+<%
 String errorMsg="", errorFlag = "";
 String proNO = request.getParameter("xml_provider");
 String temp2=null, content="", location2="", desc3="",desc2="", scode2=null, scode3=null, dsfee="", fee2="",fee3="", flag="", flag1="", flag2="";
@@ -94,7 +99,7 @@ for(int i=0;i<diagcode.length();i++)
  diagnostic_code = "000|Other code";
  diagcode="000";
  }
- 
+
 }
 else {
 diagcode = diagnostic_code.substring(0,3);
@@ -120,12 +125,12 @@ errorMsg = errorMsg + "Error: Please enter a valid Diagnostic Code. <br>";
 }
 String demoname=request.getParameter("demographic_name");
 GregorianCalendar now=new GregorianCalendar();
-ResultSet rslocal = null;  
+ResultSet rslocal = null;
 String demoNO = request.getParameter("demographic_no");
 String r_doctor="", r_doctor_ohip="", r_status="";
   r_status=request.getParameter("xml_referral");
   String demoFirst="", demoLast="", demoHIN="", demoDOB="", demoDOBYY="", demoDOBMM="", demoDOBDD="", demoSex="", demoHCTYPE="";
- 
+
  // String demoFirst="", demoLast="", demoHIN="", demoDOB="", demoDOBYY="", demoDOBMM="", demoDOBDD="";;// int dobCount1=0, dobCount2=0;
   rslocal = null;
  rslocal = apptMainBean.queryResults(demoNO, "search_demographic_details");
@@ -134,9 +139,9 @@ String r_doctor="", r_doctor_ohip="", r_status="";
  demoLast = rslocal.getString("last_name");
  demoHIN = rslocal.getString("hin") + rslocal.getString("ver");
 demoSex = rslocal.getString("sex");
-    if (demoSex.compareTo("M")==0) demoSex ="1"; 
-    if (demoSex.compareTo("F")==0) demoSex ="2"; 
-    
+    if (demoSex.compareTo("M")==0) demoSex ="1";
+    if (demoSex.compareTo("F")==0) demoSex ="2";
+
     demoHCTYPE = rslocal.getString("hc_type")==null?"":rslocal.getString("hc_type");
     if(demoHCTYPE == null) demoHCTYPE = "ON";
     if (demoHCTYPE.compareTo("") == 0 || demoHCTYPE == null || demoHCTYPE.length() <2) {demoHCTYPE="ON"; }else{ demoHCTYPE=demoHCTYPE.substring(0,2).toUpperCase();}
@@ -155,10 +160,10 @@ demoSex = rslocal.getString("sex");
    }
    demoDOB = demoDOBYY + demoDOBMM + demoDOBDD;
   }
-     
+
    if (r_doctor==null || r_status == null || r_doctor.equals("")) r_doctor="N/A";
    if (r_doctor_ohip==null || r_status == null || r_doctor_ohip.equals("")) r_doctor_ohip="000000";
-ResultSet rsprovider = null;  
+ResultSet rsprovider = null;
 
 String proFirst="", proLast="", proRMA="", proOHIPNO="", crFirst="Not", crLast="Available", apptFirst="Not", apptLast="Available", asstFirst="Not", asstLast="Available";
   rsprovider = null;
@@ -174,7 +179,7 @@ String proFirst="", proLast="", proRMA="", proOHIPNO="", crFirst="Not", crLast="
    while(rsprovider.next()){
   apptFirst = rsprovider.getString("first_name");
   apptLast = rsprovider.getString("last_name");
-   
+
   }
     rsprovider = null;
    rsprovider = apptMainBean.queryResults(request.getParameter("asstProvider_no"), "search_provider_name");
@@ -224,16 +229,16 @@ Summary</u></font></b><br>
 		<td width="46%"><b><font face="Arial, Helvetica, sans-serif">Service</font><font
 			face="Arial, Helvetica, sans-serif"> Date: <%=request.getParameter("xml_appointment_date")%></font></b></td>
 	</tr>
-	<%  
+	<%
     	String local_desc="";
         String location1 = request.getParameter("xml_location");
-        ResultSet rslocation = null;  
+        ResultSet rslocation = null;
 
- rslocation = null;
- rslocation = apptMainBean.queryResults(location1, "search_visit_location");
- while(rslocation.next()){
- local_desc = rslocation.getString("clinic_location_name");
-   }
+ String visitLocation = clinicLocationDao.searchVisitLocation(location1);
+ if(visitLocation!=null) {
+	 local_desc = visitLocation;
+ }
+
      //
        %>
 	<tr>
@@ -268,8 +273,8 @@ Summary</u></font></b><br>
 	</tr>
 </table>
 <%
-  
-  
+
+
  BigDecimal otherfee = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
  BigDecimal otherfee02 = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
  BigDecimal otherfee03 = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -294,17 +299,17 @@ Summary</u></font></b><br>
  othercode2unit = request.getParameter("xml_other2_unit");
  othercode3 = request.getParameter("xml_other3");
  othercode3unit = request.getParameter("xml_other3_unit");
- 
+
  if (othercode1.compareTo("") == 0 || othercode1 == null || othercode1.length() < 5) {
   otherflag1 = 0;
   othercode1 = "00000";
-  } 
+  }
   else {
   if (othercode1unit.compareTo("") == 0 || othercode1unit == null) {
   othercode1unit = "1";
-  } 
-    
-   ResultSet rsother = null;  
+  }
+
+   ResultSet rsother = null;
 
  rsother = null;
  rsother = apptMainBean.queryResults(othercode1.substring(0,5), "search_servicecode_detail");
@@ -313,10 +318,10 @@ Summary</u></font></b><br>
   otherdbcode1 = rsother.getString("service_code");
    otherfee1 = rsother.getString("value");
    otherperc1 = rsother.getString("percentage");
- 
+
    }
     //
-  
+
   if (otherdesc1.compareTo("") == 0 || otherdesc1 == null ) {
   otherflag1 = 0;
   }
@@ -324,17 +329,17 @@ Summary</u></font></b><br>
   {
 //  otherflag1 = 1;
 
-   
-   
+
+
   if (otherfee1.compareTo(".00") == 0) {
     		 otherunit = new BigDecimal(Double.parseDouble(othercode1unit)).setScale(2, BigDecimal.ROUND_HALF_UP);
     BigDecimal bdotherFee = new BigDecimal(Double.parseDouble(otherperc1)).setScale(4, BigDecimal.ROUND_HALF_UP);
-     BigDecimal otherperc01 = bdotherFee.multiply(otherunit).setScale(4, BigDecimal.ROUND_HALF_UP);   
-    
+     BigDecimal otherperc01 = bdotherFee.multiply(otherunit).setScale(4, BigDecimal.ROUND_HALF_UP);
+
     if (otherdbcode1.compareTo("E411A") == 0) {
-     
-       
-   
+
+
+
 			 eCode = otherdbcode1;
          		eDesc = otherdesc1;
          		ePerc = otherperc01.toString();
@@ -343,7 +348,7 @@ Summary</u></font></b><br>
          		eFlag = "1";
          		}
          		else{
-         		
+
          		xCode = otherdbcode1;
  			xDesc = otherdesc1;
  			xPerc = otherperc01.toString();
@@ -351,8 +356,8 @@ Summary</u></font></b><br>
  			xUnit = othercode1unit;
         		xFlag = "1";
           }
-     }else{       
-	
+     }else{
+
     otherflag1 = 1;
               otherunit = new BigDecimal(Double.parseDouble(othercode1unit)).setScale(2, BigDecimal.ROUND_HALF_UP);
        BigDecimal bdotherFee = new BigDecimal(Double.parseDouble(otherfee1)).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -363,38 +368,38 @@ Summary</u></font></b><br>
        int f = otherstr.indexOf('.');
        sotherBuffer.deleteCharAt(f);
        sotherBuffer.insert(f,"");
-otherstr = sotherBuffer.toString();   
+otherstr = sotherBuffer.toString();
 
      	if (otherdbcode1.compareTo("P009A")==0 || otherdbcode1.compareTo("P006A") == 0 || otherdbcode1.compareTo("P011A")==0 || otherdbcode1.compareTo("P041A") == 0 || otherdbcode1.compareTo("P018A") == 0 || otherdbcode1.compareTo("P038A") == 0 || otherdbcode1.compareTo("P020A") == 0){
    	    pValue1 = pValue1.add(otherfee);
      pCode =otherdbcode1;
        	 pDesc = otherdesc1;
        	 pValue = pValue1.toString();
-    
+
        if (eCode.compareTo("") == 0){
        }else{
        eFlag = "1";
        }
-       
-         
-} 
-               
 
- 
+
+}
+
+
+
   }
   }
   }
-  
+
   if (othercode2.compareTo("") == 0 || othercode2 == null || othercode2.length() < 5) {
   otherflag2 = 0;
    othercode2 = "00000";
-  } 
+  }
   else {
   if (othercode2unit.compareTo("") == 0 || othercode2unit == null) {
   othercode2unit = "1";
-  } 
-    
- ResultSet  rsother = null;  
+  }
+
+ ResultSet  rsother = null;
 
  rsother = null;
  rsother = apptMainBean.queryResults(othercode2.substring(0,5), "search_servicecode_detail");
@@ -405,8 +410,8 @@ otherstr = sotherBuffer.toString();
     otherperc2 = rsother.getString("percentage");
    }
    //
-  
-  if (otherdesc2.compareTo("") == 0 || otherdesc2 == null) { 
+
+  if (otherdesc2.compareTo("") == 0 || otherdesc2 == null) {
   otherflag2 = 0;
   }
   else
@@ -418,12 +423,12 @@ if (otherfee2.compareTo(".00") == 0) {
     		 otherunit = new BigDecimal(Double.parseDouble(othercode2unit)).setScale(2, BigDecimal.ROUND_HALF_UP);
     BigDecimal bdotherFee = new BigDecimal(Double.parseDouble(otherperc2)).setScale(4, BigDecimal.ROUND_HALF_UP);
      BigDecimal otherperc02 = bdotherFee.multiply(otherunit).setScale(4, BigDecimal.ROUND_HALF_UP);
-   
-    
+
+
     if (otherdbcode2.compareTo("E411A") == 0) {
-     
-       
-   
+
+
+
 			 eCode = otherdbcode2;
          		eDesc = otherdesc2;
          		ePerc = otherperc02.toString();
@@ -432,7 +437,7 @@ if (otherfee2.compareTo(".00") == 0) {
          		eFlag = "1";
          		}
          		else{
-         		
+
          		xCode = otherdbcode2;
  			xDesc = otherdesc2;
  			xPerc = otherperc02.toString();
@@ -440,7 +445,7 @@ if (otherfee2.compareTo(".00") == 0) {
  			xUnit = othercode2unit;
         		xFlag = "1";
           }
-     }else{       
+     }else{
   otherflag2 = 1;
         BigDecimal otherunit2 = new BigDecimal(Double.parseDouble(othercode2unit)).setScale(2, BigDecimal.ROUND_HALF_UP);
 	BigDecimal bdotherFee = new BigDecimal(Double.parseDouble(otherfee2)).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -452,13 +457,13 @@ int f = otherstr2.indexOf('.');
 sotherBuffer.deleteCharAt(f);
 sotherBuffer.insert(f,"");
 otherstr2 = sotherBuffer.toString();
-     
+
      if (otherdbcode2.compareTo("P009A")==0 || otherdbcode2.compareTo("P006A") == 0 || otherdbcode2.compareTo("P011A")==0 || otherdbcode2.compareTo("P041A") == 0 || otherdbcode2.compareTo("P018A") == 0 || otherdbcode2.compareTo("P038A") == 0 || otherdbcode2.compareTo("P020A") == 0){
    	    pValue1 = pValue1.add(otherfee02);
      pCode =otherdbcode2;
        	 pDesc = otherdesc2;
        	 pValue = pValue1.toString();
-    
+
        if (eCode.compareTo("") == 0){
        }else{
        eFlag = "1";
@@ -469,20 +474,20 @@ otherstr2 = sotherBuffer.toString();
   }
 }
 }
-  
-  
-  
-  
+
+
+
+
   if (othercode3.compareTo("") == 0 || othercode3 == null || othercode3.length() < 5) {
   otherflag3 = 0;
   othercode3 = "00000";
-  } 
+  }
   else {
   if (othercode3unit.compareTo("") == 0 || othercode3unit == null) {
   othercode3unit = "1";
-  } 
-    
- ResultSet rsother = null;  
+  }
+
+ ResultSet rsother = null;
 
  rsother = null;
  rsother = apptMainBean.queryResults(othercode3.substring(0,5), "search_servicecode_detail");
@@ -490,9 +495,9 @@ otherstr2 = sotherBuffer.toString();
  otherdesc3 = rsother.getString("description");
   otherdbcode3 = rsother.getString("service_code");
    otherfee3 = rsother.getString("value");
- 
+
    }
-  
+
   if (otherdesc3.compareTo("") == 0 || otherdesc3 == null ) {
   otherflag3 = 0;
   }
@@ -503,11 +508,11 @@ otherstr2 = sotherBuffer.toString();
             BigDecimal bdotherFee = new BigDecimal(Double.parseDouble(otherperc3)).setScale(4, BigDecimal.ROUND_HALF_UP);
            BigDecimal otherperc03 = bdotherFee.multiply(otherunit).setScale(4, BigDecimal.ROUND_HALF_UP);
 
-    
+
     if (otherdbcode3.compareTo("E411A") == 0) {
-     
-       
-   
+
+
+
 			 eCode = otherdbcode3;
          		eDesc = otherdesc3;
          		ePerc = otherperc03.toString();
@@ -516,7 +521,7 @@ otherstr2 = sotherBuffer.toString();
          		eFlag = "1";
          		}
          		else{
-         		
+
          		xCode = otherdbcode3;
  			xDesc = otherdesc3;
  			xPerc = otherperc03.toString();
@@ -524,8 +529,8 @@ otherstr2 = sotherBuffer.toString();
  			xUnit = othercode3unit;
         		xFlag = "1";
           }
-     }else{       
-	
+     }else{
+
   otherflag3 = 1;
         BigDecimal otherunit3 = new BigDecimal(Double.parseDouble(othercode3unit)).setScale(2, BigDecimal.ROUND_HALF_UP);
 	BigDecimal bdotherFee = new BigDecimal(Double.parseDouble(otherfee3)).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -544,26 +549,26 @@ otherstr3 = sotherBuffer.toString();
      pCode =otherdbcode3;
        	 pDesc = otherdesc3;
        	 pValue = pValue1.toString();
-    
+
        if (eCode.compareTo("") == 0){
        }else{
        eFlag = "1";
        }
-       
-         
-  } 
+
+
   }
   }
   }
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  }
+
+
+
+
+
+
+
+
+
   %>
 <table width="600" border="1">
 	<tr>
@@ -582,19 +587,19 @@ otherstr3 = sotherBuffer.toString();
 	</tr>
 	<% //String premium = request.getParameter("xml_premium");
        //String longlist = request.getParameter("xml_longlist");
-       
-       
-   double dSFee = 0.00;        
+
+
+   double dSFee = 0.00;
  double dFee = 0.00;
 
 
-         
+
 	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 		temp=e.nextElement().toString();
-		if( temp.indexOf("xml_")==-1 ) continue; 
+		if( temp.indexOf("xml_")==-1 ) continue;
 //////////////////////////////////////////////////////////////////////////////////////
   	content+="<" +temp+ ">" +SxmlMisc.replaceHTMLContent(request.getParameter(temp))+ "</" +temp+ ">";
-//////////////////////////////////////////////////////////////////////////////////////  	
+//////////////////////////////////////////////////////////////////////////////////////
 
 
         fee = request.getParameter("price_" + temp);
@@ -603,13 +608,13 @@ otherstr3 = sotherBuffer.toString();
         if (scode.substring(scode.length()-1).compareTo("A") != 0){
         scode = scode;
         }
-       
+
                      if (fee == null) {
         		fee = "";
-        		}else{ 
-        		
+        		}else{
+
         		if (fee.compareTo(".00")==0) {
-        		
+
         		if (scode.compareTo("E411A") == 0) {
         		eCode = scode;
         		eDesc = desc;
@@ -619,50 +624,50 @@ otherstr3 = sotherBuffer.toString();
         		eFlag = "1";
         		}
         		else{
-        		
+
         		xCode = scode;
 			xDesc = desc;
 			xPerc = request.getParameter("perc_"+temp);
 			xValue = fee;
 			xUnit = "1";
         		xFlag = "1";
-        		   		
-        		
+
+
         		}
-        		
-        	
+
+
           		}else{
-          		
+
           				dFee = Double.parseDouble(fee);
 			        		BigDecimal bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
         				BigTotal = BigTotal.add(bdFee);
-        		
+
        	 if (scode.compareTo("P009A")==0 || scode.compareTo("P006A") == 0 || scode.compareTo("P011A")==0 || scode.compareTo("P041A") == 0 || scode.compareTo("P018A") == 0 || scode.compareTo("P038A") == 0 || scode.compareTo("P020A") == 0){
- 
+
      	 pValue1 = pValue1.add(bdFee);
        	 pCode = scode;
        	 pDesc = desc;
        	 pValue = pValue1.toString();
-    
+
        if (eCode.compareTo("") == 0){
        }else{
        eFlag = "1";
        }
-      
-     
-       	
-        	
+
+
+
+
                }
-        
-        		
-        		
-        		
-        		
+
+
+
+
+
         if (desc == null){
-       		 
+
         desc = "";
         }
-     
+
         String str = fee.toString();
 StringBuffer sBuffer = new StringBuffer(str);
 int i = str.indexOf('.');
@@ -670,7 +675,7 @@ sBuffer.deleteCharAt(i);
 sBuffer.insert(i,"");
 str = sBuffer.toString();
 
-			
+
 
         %>
 	<tr>
@@ -691,7 +696,7 @@ str = sBuffer.toString();
 			face="Arial, Helvetica, sans-serif"><font size="2"><%=fee%></font></font></font></div>
 		</td>
 	</tr>
-	<% counter = counter + 1; 
+	<% counter = counter + 1;
 
 }
 }
@@ -774,12 +779,12 @@ str = sBuffer.toString();
 	</tr>
 	<% counter = counter + 1;
     } %>
-	<% if (eFlag.compareTo("1")==0) { 
-      
+	<% if (eFlag.compareTo("1")==0) {
+
    percent = new BigDecimal(Double.parseDouble(ePerc)).setScale(4, BigDecimal.ROUND_HALF_UP);
    percentPremium = percent.multiply(pValue1).setScale(2, BigDecimal.ROUND_HALF_UP);
     BigTotal = BigTotal.add(percentPremium);
-    
+
     String str = percentPremium.toString();
 StringBuffer sBuffer = new StringBuffer(str);
 int i = str.indexOf('.');
@@ -808,14 +813,14 @@ str = sBuffer.toString();
 	<% counter = counter + 1;
     } %>
 
-	<% if (xFlag.compareTo("1")==0) { 
-          
+	<% if (xFlag.compareTo("1")==0) {
+
            BigTotal = BigTotal.subtract(percentPremium);
          xPercent = new BigDecimal(Double.parseDouble(xPerc)).setScale(4, BigDecimal.ROUND_HALF_UP);
    	 xPercentPremium = xPercent.multiply(pValue1).setScale(2, BigDecimal.ROUND_HALF_UP);
      BigTotal = BigTotal.add(xPercentPremium);
          BigTotal = BigTotal.add(percentPremium);
-     
+
         String str = xPercentPremium.toString();
     StringBuffer sBuffer = new StringBuffer(str);
     int i = str.indexOf('.');
@@ -845,11 +850,11 @@ str = sBuffer.toString();
     } %>
 
 
-	<% if (counter == 0) { 
+	<% if (counter == 0) {
     errorFlag = "1";
     errorMsg = errorMsg + "Error: No Service/Procedure Code selected. <br>";
     }
-    
+
     if (errorFlag.compareTo("1")==0){
     %>
 </table>
@@ -970,7 +975,7 @@ str = sBuffer.toString();
 </form>
 </body>
 
-<% } 
+<% }
 
 %>
 </html>
