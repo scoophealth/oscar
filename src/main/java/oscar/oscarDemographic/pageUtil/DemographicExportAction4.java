@@ -1030,12 +1030,14 @@ public class DemographicExportAction4 extends Action {
 					String prevType = Util.getImmunizationType((String)a.get("type"));
 					if (cdsDt.ImmunizationType.Enum.forString(prevType)!=null) {
 						immu.setImmunizationType(cdsDt.ImmunizationType.Enum.forString(prevType));
+					} else {
+						exportError.add("Error! No matching type for Immunization "+a.get("type")+" for Patient "+demoNo+" ("+(k+1)+")");
 					}
 
 					if (StringUtils.filled((String)extraData.get("name"))) immu.setImmunizationName((String)extraData.get("name"));
 					else
 					{
-						exportError.add("Error! No Immunization Name for Patient "+demoNo+" ("+(k+1)+")");
+						exportError.add("Error! No Name for Immunization "+prevType+" for Patient "+demoNo+" ("+(k+1)+")");
 						if (StringUtils.filled(prevType)) {
 							immu.setImmunizationName(prevType);
 							imSummary = Util.addSummary("Immunization Name",prevType);

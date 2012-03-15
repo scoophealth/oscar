@@ -252,7 +252,7 @@ public class PreventionData {
 		try {
 			Date dob = getDemographicDateOfBirth(demoNo);
 			Integer demographicId = Integer.valueOf(demoNo);
-			List<Prevention> preventions = preventionType==null ? preventionDao.findByDemographicId(demographicId) : preventionDao.findByTypeAndDemoNo(preventionType, demographicId); 
+			List<Prevention> preventions = preventionType==null ? preventionDao.findNotDeletedByDemographicId(demographicId) : preventionDao.findByTypeAndDemoNo(preventionType, demographicId); 
 			for (Prevention prevention : preventions) {
 				Map<String,Object> h = new HashMap<String,Object>();
 				h.put("id", prevention.getId().toString());
