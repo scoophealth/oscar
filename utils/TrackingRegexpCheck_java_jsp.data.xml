@@ -325,8 +325,6 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/BillingHistoryDAO.java:List list = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/DxReference.java:ArrayList list = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/DxReference.java:Map m = new HashMap();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/ReferralBillingData.java:ArrayList l = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/ReferralBillingData.java:Hashtable h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/SupServiceCodeAssocDAO.java:HashMap map = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/SupServiceCodeAssocDAO.java:HashMap ret = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/SupServiceCodeAssocDAO.java:List ret = new ArrayList();</ViolationValue>
@@ -1593,9 +1591,7 @@
         <ViolationValue>/src/main/java/oscar/billing/cad/dao/CadProcedimentoDAO.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/billing/cad/dao/CidDAO.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/billing/cad/dao/TipoAtendimentoDAO.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/billing/dao/AppointmentDAO.java:OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/billing/dao/AppointmentDAO.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/billing/dao/AppointmentDAO.java:import oscar.service.OscarSuperManager;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/billing/dao/DiagnosticoDAO.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/billing/dao/ProcedimentoRealizadoDAO.java:DBHandler.RunSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/billing/dao/ProcedimentoRealizadoDAO.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -1667,10 +1663,9 @@
         <ViolationValue>/src/main/java/oscar/form/FrmBCBrithSumMoRecord.java:DBHelp db = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCBrithSumMoRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCBrithSumMoRecord.java:import oscar.login.DBHelp;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmBCClientChartChecklistRecord.java:DBHelp db = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCClientChartChecklistRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/form/FrmBCClientChartChecklistRecord.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCClientChartChecklistRecord.java:import oscar.login.DBHelp;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmBCClientChartChecklistRecord.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCHPRecord.java:ResultSet rs = (new DBHelp()).searchDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCHPRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCHPRecord.java:import oscar.login.DBHelp;</ViolationValue>
@@ -1686,7 +1681,6 @@
         <ViolationValue>/src/main/java/oscar/form/FrmCESDRecord.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmCaregiverRecord.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmConsultantRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmConsultantRecord.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmCostQuestionnaireRecord.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmCounsellorAssessmentRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmDischargeSummaryRecord.java:DBHandler.RunSQL(sql_insert);</ViolationValue>
@@ -1711,7 +1705,6 @@
         <ViolationValue>/src/main/java/oscar/form/FrmIntakeInfoRecord.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmInternetAccessRecord.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmInvoiceRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmLabReq07Record.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmLabReq07Record.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmLabReqRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmLabReqRecord.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -1847,10 +1840,6 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/BillingPreferencesDAO.java:rs = DBHandler.GetSQL(recordExistsQRY);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/BillingmasterDAO.java:DBHandler.RunSQL(query);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/PrivateBillTransactionsDAO.java:DBHandler.RunSQL(qry);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/ReferralBillingData.java:DBHandler.RunSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/ReferralBillingData.java:ResultSet rs = DBHandler.GetSQL(" select * from billingreferral where referral_no = '"+billingNum+"' ");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/ReferralBillingData.java:ResultSet rs = DBHandler.GetSQL(" select count(*) as coun from billingreferral where referral_no = '"+billingNum+"' ");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/ReferralBillingData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/SupServiceCodeAssocDAO.java:DBHandler.RunSQL(qry);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/SupServiceCodeAssocDAO.java:rs = DBHandler.GetSQL(</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingAssociationPersistence.java:ret = DBHandler.RunSQL(qry);</ViolationValue>
@@ -1884,7 +1873,6 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/administration/GstReport.java:rs2 = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/bean/BillingEDTOBECOutputSpecificationBeanHandler.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/bean/BillingEDTOBECOutputSpecificationBeanHandler.java:ResultSet rsProvider = DBHandler.GetSQL(sqlProvider);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/bean/BillingEDTOBECOutputSpecificationBeanHandler.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/dao/BillingOnItemDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/dao/BillingOnItemDao.java:public class BillingOnItemDao extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingCodeData.java:DBHandler.RunSQL(str);</ViolationValue>
@@ -1903,9 +1891,7 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingReviewImpl.java:public List getBillingHist(String demoNo, int iPageSize, int iOffSet, DBPreparedHandlerParam[] pDateRange) throws Exception{</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/RAData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDocumentErrorReportUploadAction.java:DBHandler.RunSQL(newAlertSql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDocumentErrorReportUploadAction.java:DBHandler.RunSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDocumentErrorReportUploadAction.java:DBHandler.RunSQL(sqlVer);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDocumentErrorReportUploadAction.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDocumentErrorReportUploadAction.java:ResultSet rsAlert = DBHandler.GetSQL(sqlAlert);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDocumentErrorReportUploadAction.java:ResultSet rsDemo = DBHandler.GetSQL(sqlDemo);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/data/BillingFormData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -2349,7 +2335,6 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPrescriptionData.java:rs = DBHandler.GetSQL("SELECT LAST_INSERT_ID() ");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPrescriptionData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPrescriptionData.java:rs2 = DBHandler.GetSQL(tmp);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/data/RxProviderData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:rs = DBHandler.GetSQL(sql2);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:rs = DBHandler.GetSQL(sql3);</ViolationValue>
@@ -2839,13 +2824,6 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:Vector exp = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/ReferralBillingData.java:Hashtable h = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/ReferralBillingData.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/ReferralBillingData.java:private Hashtable fillHash(ResultSet rs) throws Exception{</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/ReferralBillingData.java:private Hashtable runSQL(String sql){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/ReferralBillingData.java:private void fillHash(ResultSet rs, Hashtable h) throws Exception{</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/ReferralBillingData.java:public Hashtable getReferralDoc(String billingNum){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/ReferralBillingData.java:public Hashtable getReferralbyId(String billingNum){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingCreateBillingAction.java:Vector vCodes = new Vector(Arrays.asList(cnlsCodes));</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingCreateBillingAction.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/OHIP/ScheduleOfBenefits.java:Hashtable billingInfo = bc.searchBillingCode((String) newPricingInfo.get("feeCode")+"A");</ViolationValue>
@@ -4177,7 +4155,6 @@
         <ViolationValue>/src/main/webapp/billing/CA/BC/billingCorrectionValid.jsp:StringBuffer otherBuffer = new StringBuffer(otherstr);</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/BC/billingCorrectionValid.jsp:StringBuffer sotherBuffer = new StringBuffer(otherstr2);</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/BC/billingDigSearch.jsp:StringBuffer sBuffer = new StringBuffer(textCode);</ViolationValue>
-        <ViolationValue>/src/main/webapp/billing/CA/BC/billingManageReferralDoc.jsp:Hashtable h = (Hashtable) alist.get(i);</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/BC/onSearch3rdBillAddr.jsp:Vector vec = new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/ON/ScheduleOfBenefitsUpload.jsp:Hashtable h = (Hashtable) l.get(i); %&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/ON/ScheduleOfBenefitsUpload.jsp:Hashtable h = (Hashtable) warnings.get(i);</ViolationValue>

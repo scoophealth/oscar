@@ -17,17 +17,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.oscarehr.common.dao.ClinicDAO;
+import org.oscarehr.common.model.Clinic;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
 public class FrmLabReqRecord extends FrmRecord {
+
+	private ClinicDAO clinicDao = (ClinicDAO)SpringUtils.getBean("clinicDAO");
+
     public Properties getFormRecord(int demographicNo, int existingID) throws SQLException {
         Properties props = new Properties();
 
         if (existingID <= 0) {
-            
+
             String demoProvider = "000000";
             String sql = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS patientName, "
                     + "sex, address, city, province, postal, hin, ver, "
@@ -61,16 +67,15 @@ public class FrmLabReqRecord extends FrmRecord {
             rs.close();
 
             //get local clinic information
-            sql = "SELECT clinic_name, clinic_address, clinic_city, clinic_province, clinic_postal, clinic_phone, clinic_fax FROM clinic";
-            rs = DBHandler.GetSQL(sql);
-            if (rs.next()) {
-            	props.setProperty("clinicName",oscar.Misc.getString(rs, "clinic_name"));
-            	props.setProperty("clinicProvince",oscar.Misc.getString(rs, "clinic_province"));
-                props.setProperty("clinicAddress", oscar.Misc.getString(rs, "clinic_address"));
-                props.setProperty("clinicCity", oscar.Misc.getString(rs, "clinic_city"));
-                props.setProperty("clinicPC", oscar.Misc.getString(rs, "clinic_postal"));
-            }
-            rs.close();
+        	Clinic clinic = clinicDao.getClinic();
+
+        	if(clinic != null) {
+        		props.setProperty("clinicName",clinic.getClinicName());
+        		props.setProperty("clinicProvince",clinic.getClinicProvince());
+        		props.setProperty("clinicAddress",clinic.getClinicAddress());
+        		props.setProperty("clinicCity",clinic.getClinicCity());
+        		props.setProperty("clinicPC",clinic.getClinicPostal());
+        	}
 
         } else {
             String sql = "SELECT * FROM formLabReq WHERE demographic_no = " + demographicNo + " AND ID = "
@@ -83,7 +88,7 @@ public class FrmLabReqRecord extends FrmRecord {
 
     public Properties getFormCustRecord(Properties props, int provNo) throws SQLException {
         String demoProvider = props.getProperty("demoProvider", "");
-        
+
         ResultSet rs = null;
         String sql = null;
 
@@ -97,7 +102,7 @@ public class FrmLabReqRecord extends FrmRecord {
 
                 if (rs.next()) {
                     String num = oscar.Misc.getString(rs, "ohip_no");
-                    
+
             		String sp, specialty;
             		specialty = oscar.Misc.getString(rs, "comments");
             		MiscUtils.getLogger().debug("specialty: "+specialty);
@@ -119,7 +124,7 @@ public class FrmLabReqRecord extends FrmRecord {
                 sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no, comments FROM provider WHERE provider_no = "
                         + provNo;
                 rs = DBHandler.GetSQL(sql);
-                
+
                 String num = "";
                 if (rs.next()) {
                 	String sp, specialty;
@@ -132,7 +137,7 @@ public class FrmLabReqRecord extends FrmRecord {
                 		sp = specialty.substring(st,end);
             		}
                     num = oscar.Misc.getString(rs, "ohip_no");
-                    props.setProperty("reqProvName", oscar.Misc.getString(rs, "provName"));                    
+                    props.setProperty("reqProvName", oscar.Misc.getString(rs, "provName"));
                     props.setProperty("practitionerNo", "0000-" + num + "-" + sp);
                 }
                 rs.close();
@@ -148,7 +153,7 @@ public class FrmLabReqRecord extends FrmRecord {
             		if(specialty.equals("")|| specialty == null || specialty.indexOf("<xml_p_specialty_code>") < 0){
             			sp = "00";
             		}else{
-            			
+
             			int st = specialty.indexOf("<xml_p_specialty_code>") + 22;
                 		int end = specialty.indexOf("</xml_p_specialty_code>");
                 		sp = specialty.substring(st,end);
@@ -158,23 +163,20 @@ public class FrmLabReqRecord extends FrmRecord {
                         props.setProperty("practitionerNo", "0000-"+num+ "-"+ sp);
                     }
                     props.setProperty("provName", oscar.Misc.getString(rs, "provName"));
-                    
+
                 }
                 rs.close();
             }
         }
         //get local clinic information
-        sql = "SELECT clinic_name, clinic_address, clinic_city, clinic_postal, clinic_province, clinic_phone, clinic_fax FROM clinic";
-        rs = DBHandler.GetSQL(sql);
-        if (rs.next()) {
-        	props.setProperty("clinicName",oscar.Misc.getString(rs, "clinic_name"));
-        	props.setProperty("clinicProvince",oscar.Misc.getString(rs, "clinic_province"));
-            props.setProperty("clinicAddress", oscar.Misc.getString(rs, "clinic_address"));
-            props.setProperty("clinicCity", oscar.Misc.getString(rs, "clinic_city"));
-            props.setProperty("clinicPC", oscar.Misc.getString(rs, "clinic_postal"));
-            
-        }
-        rs.close();
+    	Clinic clinic = clinicDao.getClinic();
+    	if(clinic != null) {
+    		props.setProperty("clinicName",clinic.getClinicName());
+    		props.setProperty("clinicProvince",clinic.getClinicProvince());
+    		props.setProperty("clinicAddress",clinic.getClinicAddress());
+    		props.setProperty("clinicCity",clinic.getClinicCity());
+    		props.setProperty("clinicPC",clinic.getClinicPostal());
+    	}
 
         return props;
     }

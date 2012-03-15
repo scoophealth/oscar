@@ -28,7 +28,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
 
+import org.oscarehr.common.dao.ClinicDAO;
+import org.oscarehr.common.model.Clinic;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
@@ -36,14 +39,14 @@ import oscar.util.UtilDateUtilities;
 public class EctConsultationFormRequestUtil {
 
 	private boolean bMultisites=org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();
-	
+
     public boolean estPatient(String demo) {
 
         demoNo = demo;
         boolean verdict = true;
 
         try {
-            
+
             String sql = "select * from demographic where demographic_no = " + demoNo;
             ResultSet rs = DBHandler.GetSQL(sql);
 
@@ -79,7 +82,7 @@ public class EctConsultationFormRequestUtil {
         boolean verdict = true;
         teamVec = new Vector();
         try {
-            
+
             String sql = "select distinct team from provider where status = '1' and team != '' order by team";
             ResultSet rs = DBHandler.GetSQL(sql);
 
@@ -102,7 +105,7 @@ public class EctConsultationFormRequestUtil {
         boolean verdict = true;
         teamVec = new Vector();
         try {
-            
+
             String sql = "select distinct team from provider order by team ";
             ResultSet rs = DBHandler.GetSQL(sql);
 
@@ -119,7 +122,7 @@ public class EctConsultationFormRequestUtil {
         }
         return verdict;
     }
-    
+
     public boolean estTeamsBySite(String providerNo) {
 
         boolean verdict = true;
@@ -136,14 +139,14 @@ public class EctConsultationFormRequestUtil {
                 }
             }
             rs.close();
-            
+
         } catch (SQLException e) {
             MiscUtils.getLogger().error("Error", e);
             verdict = false;
         }
         return verdict;
     }
-        
+
     public boolean estTeamsByTeam(String providerNo) {
 
         boolean verdict = true;
@@ -159,20 +162,20 @@ public class EctConsultationFormRequestUtil {
                 }
             }
             rs.close();
-            
+
         } catch (SQLException e) {
             MiscUtils.getLogger().error("Error", e);
             verdict = false;
         }
         return verdict;
-    }    
+    }
 
     public boolean estRequestFromId(String id) {
 
         boolean verdict = true;
         getSpecailistsName(id);
         try {
-            
+
             String sql = "select * from consultationRequests where requestId  = " +id;
 
             ResultSet rs = DBHandler.GetSQL(sql);
@@ -196,11 +199,11 @@ public class EctConsultationFormRequestUtil {
                     appointmentNotes = new String();
                 }
                 estPatient(oscar.Misc.getString(rs, "demographicNo"));
-                
+
                 if (bMultisites) {
                 	siteName = oscar.Misc.getString(rs, "site_name");
                 }
-                
+
                 String date = oscar.Misc.getString(rs, "appointmentDate");
                 if( date == null || date.equals("") ) {
                 	appointmentYear = "1970";
@@ -209,7 +212,7 @@ public class EctConsultationFormRequestUtil {
                 	appointmentHour = "1";
                 	appointmentMinute = "1";
                 	appointmentPm = "AM";
-                	
+
                 }
                 else {
 	                int fir = date.indexOf('-');
@@ -220,7 +223,7 @@ public class EctConsultationFormRequestUtil {
 	                fir = appointmentTime.indexOf(':');
 	                las = appointmentTime.lastIndexOf(':');
 	                if (fir > -1 && las > -1) {
-	
+
 	                    appointmentHour = appointmentTime.substring(0, fir);
 	                    if (fir < las) {
 	                        appointmentMinute = appointmentTime.substring(fir + 1, las);
@@ -247,7 +250,7 @@ public class EctConsultationFormRequestUtil {
     public String getSpecailistsName(String id) {
         String retval = new String();
         try {
-            
+
             String sql = "select * from professionalSpecialists where specId  = " +id;
             ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
@@ -283,7 +286,7 @@ public class EctConsultationFormRequestUtil {
         MiscUtils.getLogger().debug("in Get SPECAILISTS EMAIL \n\n" + id);
         String retval = new String();
         try {
-            
+
             String sql = "select email from professionalSpecialists where specId  = '" + id + "'";
             ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
@@ -304,7 +307,7 @@ public class EctConsultationFormRequestUtil {
     public String getProviderTeam(String id) {
         String retval = new String();
         try {
-            
+
             String sql = "select team from provider where provider_no  = " + id;
             ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
@@ -320,7 +323,7 @@ public class EctConsultationFormRequestUtil {
     public String getProviderName(String id) {
         String retval = new String();
         try {
-            
+
             String sql = "select * from provider where provider_no  = " + id;
             ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
@@ -336,7 +339,7 @@ public class EctConsultationFormRequestUtil {
     public String getFamilyDoctor() {
         String retval = new String();
         try {
-            
+
             String sql = "select p.last_name, p.first_name from provider p, demographic d where d.provider_no  = p.provider_no and  d.demographic_no = " +demoNo;
             ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
@@ -352,7 +355,7 @@ public class EctConsultationFormRequestUtil {
     public String getServiceName(String id) {
         String retval = new String();
         try {
-            
+
             String sql = "select * from consultationServices where serviceId  = " +id;
             ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
@@ -366,21 +369,17 @@ public class EctConsultationFormRequestUtil {
     }
 
     public String getClinicName() {
+    	ClinicDAO clinicDao = (ClinicDAO)SpringUtils.getBean("clinicDAO");
+
         String retval = new String();
-        try {
-            
-            String sql = "select clinic_name from clinic";
-            ResultSet rs = DBHandler.GetSQL(sql);
-            if (rs.next()) {
-                retval = oscar.Misc.getString(rs, "clinic_name");
-            }
-            rs.close();
-        } catch (SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
+        Clinic clinic = clinicDao.getClinic();
+        if(clinic != null) {
+        	retval = clinic.getClinicName();
         }
+
         return retval;
     }
-            
+
     public String patientName;
     public String patientFirstName;
     public String patientLastName;
