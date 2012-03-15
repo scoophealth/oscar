@@ -978,7 +978,12 @@ public class CihiExportAction extends DispatchAction {
         	 if (StringUtils.filled(preventionMap.get("name"))) {
         		immunizations.setImmunizationName(preventionMap.get("name"));
         	 }else{
-        	    immunizations.setImmunizationName(prevention.getPreventionType());
+        		String preventionType = Util.getImmunizationType(prevention.getPreventionType());
+        		if (cdsDt.ImmunizationType.Enum.forString(preventionType)!=null) {
+        			immunizations.setImmunizationName(preventionType);
+        		} else {
+        			immunizations.setImmunizationName("");
+        		}
         	 }
 
         	 if (StringUtils.filled(preventionMap.get("lot")))
