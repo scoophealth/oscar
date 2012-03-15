@@ -22,34 +22,40 @@
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <%@ include file="dbBilling.jspf"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.ClinicLocationDao" %>
+<%@page import="org.oscarehr.common.model.ClinicLocation" %>
+<%
+	ClinicLocationDao clinicLocationDao = (ClinicLocationDao)SpringUtils.getBean("clinicLocationDao");
+%>
 <%
 	String clinicview = oscarVariables.getProperty("clinic_view");
 	String clinicNo = oscarVariables.getProperty("clinic_no");
 %>
 
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -67,7 +73,7 @@ function setfocus() {
 		  //document.serviceform.xml_diagnostic_code.focus();
 		  //document.serviceform.xml_diagnostic_code.select();
 		}
-		
+
 function RecordAttachments(Files, File0, File1, File2) {
   window.document.serviceform.elements["File0Data"].value = File0;
   window.document.serviceform.elements["File1Data"].value = File1;
@@ -416,7 +422,7 @@ function showHideLayers() { //v3.0
  	if (bNew) { //the new billing form
  %> <!-- <%=now.get(Calendar.YEAR) + "-"
 						+ (now.get(Calendar.MONTH) + 1) + "-"
-						+ now.get(Calendar.DAY_OF_MONTH)%> 
+						+ now.get(Calendar.DAY_OF_MONTH)%>
               <%=now.get(Calendar.HOUR_OF_DAY) + ":"
 						+ now.get(Calendar.MINUTE)%> -->
 				<%
@@ -515,10 +521,10 @@ function showHideLayers() { //v3.0
 						ResultSet rsclinic = null;
 						String clinic_location = "", clinic_code = "";
 						rsclinic = null;
-						rsclinic = apptMainBean.queryResults("1", "search_clinic_location");
-						while (rsclinic.next()) {
-							clinic_location = rsclinic.getString("clinic_location_name");
-							clinic_code = rsclinic.getString("clinic_location_no");
+						List<ClinicLocation> clinicLocations = clinicLocationDao.findByClinicNo(1);
+			            for(ClinicLocation clinicLocation:clinicLocations) {
+			            	clinic_location = clinicLocation.getClinicLocationName();
+			            	clinic_code = clinicLocation.getClinicLocationNo();
 					%>
 					<option value="<%=clinic_code%>"
 						<%=clinicview.equals(clinic_code)
@@ -893,34 +899,34 @@ function showHideLayers() { //v3.0
 								</td>
 								<td width="9%"><!--
                           <table width="20%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#CEFFCE">
-                            <tr> 
-                              <td><b><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Research 
+                            <tr>
+                              <td><b><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Research
                                 <font color="#FF0000">(optional)</font></font></b></td>
                               <td><b></b></td>
                             </tr>
-                            <tr> 
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
+                            <tr>
+                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
                                 <input type="hidden" name="xml_research1" size="10" datafld='xml_research1'>
                                 </font></td>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
+                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
                                 </font></td>
                             </tr>
-                            <tr> 
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
+                            <tr>
+                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
                                 <input type="hidden" name="xml_research2" size="10" datafld='xml_research2'>
                                 </font></td>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
+                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
                                 </font></td>
                             </tr>
-                            <tr> 
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
+                            <tr>
+                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
                                 <input type="hidden" name="xml_research3" size="10"  datafld='xml_research3'>
                                 </font></td>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
+                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
                                 </font></td>
                             </tr>
-                            <tr> 
-                              <td colspan="2"><a href="javascript:ResearchScriptAttach()"><img src="../images/research_code.jpg" border="0"></a> 
+                            <tr>
+                              <td colspan="2"><a href="javascript:ResearchScriptAttach()"><img src="../images/research_code.jpg" border="0"></a>
                               </td>
                             </tr>
                           </table> --></td>

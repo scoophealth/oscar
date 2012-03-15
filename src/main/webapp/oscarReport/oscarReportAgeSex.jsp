@@ -1,37 +1,37 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
-<%    
+<%
   if(session.getValue("user") == null)
      response.sendRedirect("../logout.jsp");
   String user_no;
   user_no = (String) session.getAttribute("user");
   int  nItems=0;
   String strLimit1="0";
-  String strLimit2="5"; 
+  String strLimit2="5";
   if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
   String providerview = request.getParameter("providerview")==null?"all":request.getParameter("providerview") ;
@@ -44,24 +44,30 @@
 	scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
 <%@ include file="dbReport.jspf"%>
-<% 
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.ClinicLocationDao" %>
+<%@page import="org.oscarehr.common.model.ClinicLocation" %>
+<%
+	ClinicLocationDao clinicLocationDao = (ClinicLocationDao)SpringUtils.getBean("clinicLocationDao");
+%>
+<%
 GregorianCalendar now=new GregorianCalendar();
    int curYear = now.get(Calendar.YEAR);
    int curMonth = (now.get(Calendar.MONTH)+1);
-   int curDay = now.get(Calendar.DAY_OF_MONTH); 
+   int curDay = now.get(Calendar.DAY_OF_MONTH);
    String clinic="";
    String clinicview = oscarVariables.getProperty("clinic_view");
-   ResultSet rslocal2 = null;
-   rslocal2 = apptMainBean.queryResults(clinicview, "search_visit_location");
-   while(rslocal2.next()){
-      clinic = rslocal2.getString("clinic_location_name");
+
+   String visitLocation = clinicLocationDao.searchVisitLocation(clinicview);
+   if(visitLocation!=null) {
+  	 clinic = visitLocation;
    }
-  
+
    //String providerview=request.getParameter("provider")==null?"":request.getParameter("provider");
    String reportAction=request.getParameter("reportAction")==null?"":request.getParameter("reportAction");
    String xml_vdate=request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
    String xml_appointment_date = request.getParameter("xml_appointment_date")==null?"":request.getParameter("xml_appointment_date");
-         
+
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -83,7 +89,7 @@ function selectprovider(s) {
 }
 
 
-function openBrWindow(theURL,winName,features) { 
+function openBrWindow(theURL,winName,features) {
   window.open(theURL,winName,features);
 }
 function refresh() {
@@ -152,7 +158,7 @@ function refresh() {
 			<%   String proFirst="";
                String proLast="";
                String proOHIP="";
-               String specialty_code; 
+               String specialty_code;
                String billinggroup_no;
                int Count = 0;
                ResultSet rslocal = null;
@@ -160,7 +166,7 @@ function refresh() {
                while(rslocal.next()){
                   proFirst = rslocal.getString("first_name");
                   proLast = rslocal.getString("last_name");
-                  proOHIP = rslocal.getString("provider_no"); 
+                  proOHIP = rslocal.getString("provider_no");
                   billinggroup_no= SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
                   specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
           %>
@@ -206,7 +212,7 @@ function refresh() {
 <% if (reportAction.compareTo("") == 0 || reportAction == null){%>
 
 <p>&nbsp;</p>
-<% } else {  
+<% } else {
 
       String Total="0", mNum="", fNum="";
       String dateBegin = request.getParameter("xml_vdate");
@@ -226,9 +232,9 @@ function refresh() {
       } else {
          param[0] = "%";
       }
-      
+
       param[1] = "%";
-      param[2] = providerview; 
+      param[2] = providerview;
       param[3] = "0";
       param[4] = "200";
       param[5] = dateBegin;
@@ -237,7 +243,7 @@ function refresh() {
       rs = apptMainBean.queryResults(param, queryName);
       while(rs.next()){
          Total = apptMainBean.getString(rs,"n");
-      } 
+      }
 
       BigDecimal percent = new BigDecimal(100).setScale(2, BigDecimal.ROUND_HALF_UP);
       BigDecimal mdNum = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -251,10 +257,10 @@ function refresh() {
 
       BigDecimal mTotal = new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);
       BigDecimal fTotal= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);
-      BigDecimal BigTotal= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
-      BigDecimal BigTotalPerc= new BigDecimal(0).setScale(1, BigDecimal.ROUND_HALF_UP);    
-      BigDecimal LineTotal= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
-      BigDecimal LinePerc= new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);    
+      BigDecimal BigTotal= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);
+      BigDecimal BigTotalPerc= new BigDecimal(0).setScale(1, BigDecimal.ROUND_HALF_UP);
+      BigDecimal LineTotal= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);
+      BigDecimal LinePerc= new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
    %>
 <pre><font face="Arial, Helvetica, sans-serif" size="2"> <bean:message
 	key="oscarReport.oscarReportAgeSex.msgDate" />: <%=curYear%>-<%=curMonth%>-<%=curDay%>                          <bean:message
@@ -413,10 +419,10 @@ function refresh() {
      AgeMatrix[18][1] = "94";
      AgeMatrix[19][0] = "95";
      AgeMatrix[19][1] = "200";
-     
-     
-     
-     for (int i=0;i<20; i++){         
+
+
+
+     for (int i=0;i<20; i++){
         param[1] = "M%";
         param[2] = providerview;
         param[3] = AgeMatrix[i][0];
@@ -428,7 +434,7 @@ function refresh() {
         while(rs.next()){
            mNum = apptMainBean.getString(rs,"n");
         }
-  
+
         param[1] = "F%";
         //param[2] = providerview;
         //param[3] = AgeMatrix[i][0];
@@ -451,7 +457,7 @@ function refresh() {
         // fPerc = fdNum.divide(BigTotal, BigDecimal.ROUND_HALF_UP);
         fPerc = fdNum.multiply(percent).divide(BigTotal, BigDecimal.ROUND_HALF_UP).setScale(1, BigDecimal.ROUND_HALF_UP);
         fPercId = fPerc.setScale(0, BigDecimal.ROUND_HALF_UP);
-   
+
         LineTotal = fdNum.add(mdNum).setScale(0, BigDecimal.ROUND_HALF_UP);
         LinePerc = fPerc.add(mPerc);
   %>
@@ -485,8 +491,8 @@ function refresh() {
 		<div align="right"><%=LinePerc%></div>
 		</td>
 	</tr>
-	<% 
-  
+	<%
+
         mPercTotal = mPercTotal.add(mPerc);
         fPercTotal = fPercTotal.add(fPerc);
         mTotal = mTotal.add(mdNum);
@@ -598,15 +604,15 @@ function refresh() {
 	   for(int j=0;j<10-x;j++){
          content = content +    "<td> <div align='center'></div></td>";
 	   }
-	 
+
    }catch(Exception e){
       MiscUtils.getLogger().error("Error", e);
    }
-   return content; 
+   return content;
    }
 public String WriteFemaleBar(int x){
    String content="";
-   try{   
+   try{
       if (x > 10){x = 10;}
 	   for(int j=0;j<10-x;j++){
          content = content +    "<td> <div align='center'></div></td>";
@@ -614,11 +620,11 @@ public String WriteFemaleBar(int x){
 	   for (int i=0;i<x; i++){
          content = content + "<td bgcolor='navy blue'> <div align='center'><font color='navy blue'>F<font></div></td>";
 	   }
-	  
+
 	}catch(Exception e){
       MiscUtils.getLogger().error("Error", e);
    }
-   return content; 
+   return content;
 }
 
     %>

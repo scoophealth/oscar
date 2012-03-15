@@ -1,30 +1,30 @@
-<%--  
+<%--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * Yi Li
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 --%>
 
-<%      
+<%
 if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
 String user_no = (String) session.getAttribute("user");
 String asstProvider_no = "";
@@ -36,24 +36,23 @@ String service_form="", service_name="";
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.BillingONDataHelp"%>
 <%@ include file="../../../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%@ include file="dbBilling.jspf"%>
-
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.ClinicLocation" %>
+<%@page import="org.oscarehr.common.dao.ClinicLocationDao" %>
+<%
+	ClinicLocationDao clinicLocationDao = (ClinicLocationDao)SpringUtils.getBean("clinicLocationDao");
+%>
 <%
 String clinicview = request.getParameter("billingform")==null?oscarVariables.getProperty("default_view"):request.getParameter("billingform");
 String reportAction=request.getParameter("reportAction")==null?"":request.getParameter("reportAction");
 
 if (request.getParameter("submit") != null && request.getParameter("submit").equals("Delete")) {
-	String	sql   = "delete from clinic_location where clinic_location_no='" + request.getParameter("location_no") + "'";
-	BillingONDataHelp dbObj = new BillingONDataHelp();
-	if(!dbObj.updateDBRecord(sql)) {
-		out.println("The action is failed!!!");
-	}
+	clinicLocationDao.removeByClinicLocationNo(request.getParameter("location_no"));
 }
 %>
 
@@ -70,15 +69,15 @@ function selectprovider(s) {
   else a = self.location.href;
 	self.location.href = a + "&providerview=" +s.options[s.selectedIndex].value ;
 }
-function openBrWindow(theURL,winName,features) { 
+function openBrWindow(theURL,winName,features) {
   window.open(theURL,winName,features);
-} 
+}
 function setfocus() {
   this.focus();
   document.ADDAPPT.keyword.focus();
   document.ADDAPPT.keyword.select();
 }
-   
+
 function valid(form){
 if (validateServiceType(form)){
 form.action = "dbManageBillingform_add.jsp"
@@ -93,8 +92,8 @@ alert("<bean:message key="billing.manageBillingLocation.msgServiceTypeExists"/>"
  }
  else{
  return true;
-} 
-    
+}
+
 }
 function refresh() {
   var u = self.location.href;
@@ -162,37 +161,37 @@ function confirmthis(lno) {
 				<th>Action</th>
 			</tr>
 
-			<% 
-ResultSet rs=null ;
+			<%
+
 ResultSet rs2=null ;
-String[] param =new String[1];
+
 String[] param2 =new String[10];
 String[] service_code = new String[45];
 
-param[0] = "1";
-rs = apptMainBean.queryResults(param, "search_clinic_location");
+
+List<ClinicLocation> clinicLocations = clinicLocationDao.findByClinicNo(1);
 int rCount = 0;
 boolean bodd=false;
 String servicetype_name="";
 
-if(rs==null) {
-	out.println("failed!!!"); 
+if(clinicLocations.size()==0) {
+	out.println("failed!!!");
 } else {
 %>
-			<% 
-	while (rs.next()) {
+			<%
+	for (ClinicLocation clinicLocation:clinicLocations) {
 		bodd=bodd?false:true; //for the color of rows
 %>
 
 			<tr <%=bodd? "class=\"myGreen\"":"bgcolor='ivory'"%>>
 				<form name="serviceform" method="post"
 					action="manageBillingLocation.jsp"
-					onsubmit="return confirmthis(<%=rs.getString("clinic_location_no")%>);">
-				<td align="center"><%=rs.getString("clinic_location_no")%></td>
-				<td><%=rs.getString("clinic_location_name")%></td>
+					onsubmit="return confirmthis(<%=clinicLocation.getClinicLocationNo()%>);">
+				<td align="center"><%=clinicLocation.getClinicLocationNo()%></td>
+				<td><%=clinicLocation.getClinicLocationName()%></td>
 				<td align="center"><input type="submit" name="submit"
 					value="Delete" /> <input type="hidden" name="location_no"
-					value="<%=rs.getString("clinic_location_no")%>" /></td>
+					value="<%=clinicLocation.getClinicLocationNo()%>" /></td>
 				</form>
 			</tr>
 			<%

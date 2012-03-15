@@ -26,9 +26,11 @@ import java.util.Vector;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.AppointmentArchiveDao;
 import org.oscarehr.common.dao.BillingreferralDao;
+import org.oscarehr.common.dao.ClinicLocationDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Billingreferral;
+import org.oscarehr.common.model.ClinicLocation;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.SxmlMisc;
@@ -40,7 +42,7 @@ public class JdbcBillingPageUtil {
 	AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
     OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
     BillingreferralDao billingReferralDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
-
+    ClinicLocationDao clinicLocationDao = (ClinicLocationDao) SpringUtils.getBean("clinicLocationDao");
 
 	public List getCurTeamProviderStr(String provider_no) {
 		List retval = new Vector();
@@ -502,16 +504,12 @@ public class JdbcBillingPageUtil {
 
 	public List getFacilty_num() {
 		List retval = new Vector();
-		String sql = "select * from clinic_location where clinic_no=1 order by clinic_location_no";
-		ResultSet rslocal = dbObj.searchDBRecord(sql);
-		try {
-			while (rslocal.next()) {
-				retval.add(rslocal.getString("clinic_location_no"));
-				retval.add(rslocal.getString("clinic_location_name"));
-			}
-		} catch (SQLException e) {
-			_logger.error("getFacilty_num(sql = " + sql + ")");
+		List<ClinicLocation> clinicLocations = clinicLocationDao.findByClinicNo(1);
+		for(ClinicLocation clinicLocation:clinicLocations) {
+			retval.add(clinicLocation.getClinicLocationNo());
+			retval.add(clinicLocation.getClinicLocationName());
 		}
+
 		return retval;
 	}
 

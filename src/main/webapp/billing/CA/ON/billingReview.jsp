@@ -14,29 +14,35 @@ String userlastname = (String) session.getAttribute("userlastname");
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <%@ include file="dbBilling.jspf"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.ClinicLocationDao" %>
+<%@page import="org.oscarehr.common.model.ClinicLocation" %>
+<%
+	ClinicLocationDao clinicLocationDao = (ClinicLocationDao)SpringUtils.getBean("clinicLocationDao");
+%>
 <!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 <html>
@@ -70,13 +76,13 @@ function validate_form(){
 	// do some validation
 	document.body.style.cursor = "wait";
 	document.forms.form1.Submit.disabled = true;
-	return true; 
+	return true;
 }
 //-->
 </SCRIPT>
 </head>
 
-<% 
+<%
 String errorMsg="", errorFlag = "";
 String warningMsg="";
 String proNO = request.getParameter("xml_provider");
@@ -109,16 +115,16 @@ if(bPercS) {
     billing_pCode = oscarVariables.getProperty("billing_pCode","");
 	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 		String t=e.nextElement().toString();
-		if( t.startsWith("xml_") ) { 
+		if( t.startsWith("xml_") ) {
 			t = t.substring(4).toUpperCase();
-			if("E411A".equals(t) || "E411A".equals(request.getParameter("xml_other1").toUpperCase()) 
+			if("E411A".equals(t) || "E411A".equals(request.getParameter("xml_other1").toUpperCase())
 			        || "E411A".equals(request.getParameter("xml_other2").toUpperCase())
 			        || "E411A".equals(request.getParameter("xml_other3").toUpperCase())) {
 			    billing_pCode = oscarVariables.getProperty("billing_pCode_E411A","");
 			    break;
-			} 
+			}
 			if(!"".equals(billing_E078A)) {
-				if("E078A".equals(t) || "E078A".equals(request.getParameter("xml_other1").toUpperCase()) 
+				if("E078A".equals(t) || "E078A".equals(request.getParameter("xml_other1").toUpperCase())
 				        || "E078A".equals(request.getParameter("xml_other2").toUpperCase())
 				        || "E078A".equals(request.getParameter("xml_other3").toUpperCase())) {
 				    billing_pCode = billing_E078A;
@@ -190,20 +196,20 @@ while(rslocal.next()){
 	demoLast = rslocal.getString("last_name");
 	demoHIN = rslocal.getString("hin") + rslocal.getString("ver");
 	demoSex = rslocal.getString("sex");
-	if (demoSex.compareTo("M")==0) demoSex ="1"; 
-	if (demoSex.compareTo("F")==0) demoSex ="2"; 
+	if (demoSex.compareTo("M")==0) demoSex ="1";
+	if (demoSex.compareTo("F")==0) demoSex ="2";
 
 	demoHCTYPE = rslocal.getString("hc_type")==null?"":rslocal.getString("hc_type");
 	if (demoHCTYPE.compareTo("") == 0 || demoHCTYPE == null || demoHCTYPE.length() <2) {
-		demoHCTYPE="ON"; 
-	}else{ 
+		demoHCTYPE="ON";
+	}else{
 		demoHCTYPE=demoHCTYPE.substring(0,2).toUpperCase();
 	}
 	demoDOBYY = rslocal.getString("year_of_birth");
 	demoDOBMM = rslocal.getString("month_of_birth");
 	demoDOBDD = rslocal.getString("date_of_birth");
 
-	if (rslocal.getString("family_doctor") == null){ 
+	if (rslocal.getString("family_doctor") == null){
 		r_doctor = "N/A"; r_doctor_ohip="000000";
 	}else{
 		r_doctor=SxmlMisc.getXmlContent(rslocal.getString("family_doctor"),"rd")==null ? "" : SxmlMisc.getXmlContent(rslocal.getString("family_doctor"), "rd");
@@ -304,14 +310,13 @@ if (visittype.substring(0,2).compareTo("00") == 0) {
 		<td width="54%">Billing Type: <b><%=billtype%></b></td>
 		<td width="46%">Service Date: <b><%=request.getParameter("xml_appointment_date")%></b></td>
 	</tr>
-	<%  
+	<%
 String local_desc="";
 String location1 = request.getParameter("xml_location");
-ResultSet rslocation = apptMainBean.queryResults(location1, "search_visit_location");
-while(rslocation.next()){
-	local_desc = rslocation.getString("clinic_location_name");
+String visitLocation = clinicLocationDao.searchVisitLocation(location1);
+if(visitLocation!=null) {
+	 local_desc = visitLocation;
 }
-rslocation.close();
 %>
 	<tr bgcolor="#EEEEFF">
 		<td width="54%">Visit Type Code: <b><%=request.getParameter("xml_visittype")%></b></td>
@@ -373,7 +378,7 @@ if (othercode1.compareTo("") == 0 || othercode1 == null || othercode1.length() <
 } else {
 	if (othercode1unit.compareTo("") == 0 || othercode1unit == null) {
 		othercode1unit = "1";
-	} 
+	}
 
 	ResultSet rsother = apptMainBean.queryResults(othercode1.substring(0,5), "search_servicecode_detail");
 	while(rsother.next()){
@@ -391,9 +396,9 @@ if (othercode1.compareTo("") == 0 || othercode1 == null || othercode1.length() <
 		if (otherfee1.compareTo(".00") == 0) {
 			otherunit = new BigDecimal(Double.parseDouble(othercode1unit)).setScale(2, BigDecimal.ROUND_HALF_UP);
 			BigDecimal bdotherFee = new BigDecimal(Double.parseDouble(otherperc1)).setScale(4, BigDecimal.ROUND_HALF_UP);
-			BigDecimal otherperc01 = bdotherFee.multiply(otherunit).setScale(4, BigDecimal.ROUND_HALF_UP);   
+			BigDecimal otherperc01 = bdotherFee.multiply(otherunit).setScale(4, BigDecimal.ROUND_HALF_UP);
 
-			if (scode.compareTo("E400B") == 0 || scode.compareTo("E401B") == 0 || scode.compareTo("E410A") == 0 || scode.compareTo("E409A") == 0 
+			if (scode.compareTo("E400B") == 0 || scode.compareTo("E401B") == 0 || scode.compareTo("E410A") == 0 || scode.compareTo("E409A") == 0
 			        || scode.compareTo("E070A") == 0 || scode.compareTo("E071A") == 0 || otherdbcode1.compareTo("Q012A") == 0 || scode.compareTo("Q016A") == 0) {
 				eCode = otherdbcode1;
 				eDesc = otherdesc1;
@@ -409,7 +414,7 @@ if (othercode1.compareTo("") == 0 || othercode1 == null || othercode1.length() <
 				xUnit = othercode1unit;
 				xFlag = "1";
 			}
-		}else{       
+		}else{
 			otherflag1 = 1;
 			otherunit = new BigDecimal(Double.parseDouble(othercode1unit)).setScale(2, BigDecimal.ROUND_HALF_UP);
 			BigDecimal bdotherFee = new BigDecimal(Double.parseDouble(otherfee1)).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -420,7 +425,7 @@ if (othercode1.compareTo("") == 0 || othercode1 == null || othercode1.length() <
 			int f = otherstr.indexOf('.');
 			sotherBuffer.deleteCharAt(f);
 			sotherBuffer.insert(f,"");
-			otherstr = sotherBuffer.toString();   
+			otherstr = sotherBuffer.toString();
 
 			if(bPercS) {
 			    bDbCode = bPercS ? otherdbcode1.matches(billing_pCode) : false;
@@ -434,27 +439,27 @@ if (othercode1.compareTo("") == 0 || othercode1 == null || othercode1.length() <
 					if (!eCode.equals(""))	eFlag = "1";
 			    }
 			}
-			else if (otherdbcode1.compareTo("A001A")==0 || otherdbcode1.compareTo("A003A")==0 || 
-                            otherdbcode1.compareTo("A004A")==0 || otherdbcode1.compareTo("A007A")==0 || 
-                            otherdbcode1.compareTo("A008A")==0 || otherdbcode1.compareTo("A888A")==0 || 
-                            otherdbcode1.compareTo("Z777A")==0 || otherdbcode1.compareTo("P029A")==0 || 
-                            otherdbcode1.compareTo("P028A")==0 || otherdbcode1.compareTo("Z776A")==0 || 
-                            otherdbcode1.compareTo("P042A")==0 || otherdbcode1.compareTo("S768A")==0 || 
-                            otherdbcode1.compareTo("S756A")==0 || otherdbcode1.compareTo("S757A")==0 || 
-                            otherdbcode1.compareTo("S784A")==0 || otherdbcode1.compareTo("S745A")==0 || 
-                            otherdbcode1.compareTo("P010A")==0 || otherdbcode1.compareTo("P009A")==0 || 
-                            otherdbcode1.compareTo("P006A")==0 || otherdbcode1.compareTo("P011A")==0 || 
-                            otherdbcode1.compareTo("P041A")==0 || otherdbcode1.compareTo("P018A")==0 || 
-                            otherdbcode1.compareTo("P038A")==0 || otherdbcode1.compareTo("P020A")==0 || 
-                            otherdbcode1.compareTo("P031A")==0 || otherdbcode1.compareTo("Z552A")==0 || 
-                            otherdbcode1.compareTo("P022A")==0 || otherdbcode1.compareTo("P023A")==0 || 
+			else if (otherdbcode1.compareTo("A001A")==0 || otherdbcode1.compareTo("A003A")==0 ||
+                            otherdbcode1.compareTo("A004A")==0 || otherdbcode1.compareTo("A007A")==0 ||
+                            otherdbcode1.compareTo("A008A")==0 || otherdbcode1.compareTo("A888A")==0 ||
+                            otherdbcode1.compareTo("Z777A")==0 || otherdbcode1.compareTo("P029A")==0 ||
+                            otherdbcode1.compareTo("P028A")==0 || otherdbcode1.compareTo("Z776A")==0 ||
+                            otherdbcode1.compareTo("P042A")==0 || otherdbcode1.compareTo("S768A")==0 ||
+                            otherdbcode1.compareTo("S756A")==0 || otherdbcode1.compareTo("S757A")==0 ||
+                            otherdbcode1.compareTo("S784A")==0 || otherdbcode1.compareTo("S745A")==0 ||
+                            otherdbcode1.compareTo("P010A")==0 || otherdbcode1.compareTo("P009A")==0 ||
+                            otherdbcode1.compareTo("P006A")==0 || otherdbcode1.compareTo("P011A")==0 ||
+                            otherdbcode1.compareTo("P041A")==0 || otherdbcode1.compareTo("P018A")==0 ||
+                            otherdbcode1.compareTo("P038A")==0 || otherdbcode1.compareTo("P020A")==0 ||
+                            otherdbcode1.compareTo("P031A")==0 || otherdbcode1.compareTo("Z552A")==0 ||
+                            otherdbcode1.compareTo("P022A")==0 || otherdbcode1.compareTo("P023A")==0 ||
                             otherdbcode1.compareTo("P030A")==0 ||
                             otherdbcode1.compareTo("K005A")==0 ||
                             otherdbcode1.compareTo("K030A")==0 ||
                             otherdbcode1.compareTo("K017A")==0 ||
                             otherdbcode1.compareTo("P005A")==0 ||
                             otherdbcode1.compareTo("P004A")==0 ||
-                            otherdbcode1.compareTo("Z716A")==0 || otherdbcode1.startsWith("S") || 
+                            otherdbcode1.compareTo("Z716A")==0 || otherdbcode1.startsWith("S") ||
                             (otherdbcode1.endsWith("B") && !otherdbcode1.endsWith("C988B") && !otherdbcode1.endsWith("C998B") && !otherdbcode1.endsWith("C999B") ) ){
 				pValue1 = pValue1.add(otherfee);
 				pValue1PerUnit = pValue1PerUnit.add(bdotherFee);
@@ -463,7 +468,7 @@ if (othercode1.compareTo("") == 0 || othercode1 == null || othercode1.length() <
 				pValue = pValue1.toString();
 
 				if (!eCode.equals(""))	eFlag = "1";
-			} 
+			}
 		}
 	}
 }
@@ -474,7 +479,7 @@ if (othercode2.compareTo("") == 0 || othercode2 == null || othercode2.length() <
 } else {
 	if (othercode2unit.compareTo("") == 0 || othercode2unit == null) {
 		othercode2unit = "1";
-	} 
+	}
 
 	ResultSet  rsother = apptMainBean.queryResults(othercode2.substring(0,5), "search_servicecode_detail");
 	while(rsother.next()){
@@ -485,7 +490,7 @@ if (othercode2.compareTo("") == 0 || othercode2 == null || othercode2.length() <
 	}
 	rsother.close();
 
-	if (otherdesc2.compareTo("") == 0 || otherdesc2 == null) { 
+	if (otherdesc2.compareTo("") == 0 || otherdesc2 == null) {
 		otherflag2 = 0;
 	} else {
 		if (otherfee2.compareTo(".00") == 0) {
@@ -509,7 +514,7 @@ if (othercode2.compareTo("") == 0 || othercode2 == null || othercode2.length() <
 				xUnit = othercode2unit;
 				xFlag = "1";
 			}
-		}else{       
+		}else{
 			otherflag2 = 1;
 			BigDecimal otherunit2 = new BigDecimal(Double.parseDouble(othercode2unit)).setScale(2, BigDecimal.ROUND_HALF_UP);
 			BigDecimal bdotherFee = new BigDecimal(Double.parseDouble(otherfee2)).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -530,38 +535,38 @@ if (othercode2.compareTo("") == 0 || othercode2 == null || othercode2.length() <
 					pCode =otherdbcode2;
 					pDesc = otherdesc2;
 					pValue = pValue1.toString();
-				
+
 					if (!eCode.equals(""))	eFlag = "1";
 			    }
 			} else
-			if (otherdbcode2.compareTo("A001A")==0 || otherdbcode2.compareTo("A003A")==0 || 
-                            otherdbcode2.compareTo("A004A")==0 || otherdbcode2.compareTo("A007A")==0 || 
-                            otherdbcode2.compareTo("A008A")==0 || otherdbcode2.compareTo("A888A")==0 || 
-                            otherdbcode2.compareTo("Z777A")==0 || otherdbcode2.compareTo("P029A")==0 || 
-                            otherdbcode2.compareTo("P028A")==0 || otherdbcode2.compareTo("Z776A")==0 || 
-                            otherdbcode2.compareTo("P042A")==0 || otherdbcode2.compareTo("S768A")==0 || 
-                            otherdbcode2.compareTo("S756A")==0 || otherdbcode2.compareTo("S757A")==0 || 
-                            otherdbcode2.compareTo("S784A")==0 || otherdbcode2.compareTo("S745A")==0 || 
-                            otherdbcode2.compareTo("P010A")==0 || otherdbcode2.compareTo("P009A")==0 || 
-                            otherdbcode2.compareTo("P006A")==0 || otherdbcode2.compareTo("P011A")==0 || 
-                            otherdbcode2.compareTo("P041A")==0 || otherdbcode2.compareTo("P018A")==0 || 
-                            otherdbcode2.compareTo("P038A")==0 || otherdbcode2.compareTo("P020A")==0 || 
-                            otherdbcode2.compareTo("P031A")==0 || otherdbcode2.compareTo("Z552A")==0 || 
-                            otherdbcode2.compareTo("P022A")==0 || otherdbcode2.compareTo("P023A")==0 || 
+			if (otherdbcode2.compareTo("A001A")==0 || otherdbcode2.compareTo("A003A")==0 ||
+                            otherdbcode2.compareTo("A004A")==0 || otherdbcode2.compareTo("A007A")==0 ||
+                            otherdbcode2.compareTo("A008A")==0 || otherdbcode2.compareTo("A888A")==0 ||
+                            otherdbcode2.compareTo("Z777A")==0 || otherdbcode2.compareTo("P029A")==0 ||
+                            otherdbcode2.compareTo("P028A")==0 || otherdbcode2.compareTo("Z776A")==0 ||
+                            otherdbcode2.compareTo("P042A")==0 || otherdbcode2.compareTo("S768A")==0 ||
+                            otherdbcode2.compareTo("S756A")==0 || otherdbcode2.compareTo("S757A")==0 ||
+                            otherdbcode2.compareTo("S784A")==0 || otherdbcode2.compareTo("S745A")==0 ||
+                            otherdbcode2.compareTo("P010A")==0 || otherdbcode2.compareTo("P009A")==0 ||
+                            otherdbcode2.compareTo("P006A")==0 || otherdbcode2.compareTo("P011A")==0 ||
+                            otherdbcode2.compareTo("P041A")==0 || otherdbcode2.compareTo("P018A")==0 ||
+                            otherdbcode2.compareTo("P038A")==0 || otherdbcode2.compareTo("P020A")==0 ||
+                            otherdbcode2.compareTo("P031A")==0 || otherdbcode2.compareTo("Z552A")==0 ||
+                            otherdbcode2.compareTo("P022A")==0 || otherdbcode2.compareTo("P023A")==0 ||
                             otherdbcode2.compareTo("P030A")==0 ||
                             otherdbcode2.compareTo("K005A")==0 ||
                             otherdbcode2.compareTo("K030A")==0 ||
                             otherdbcode2.compareTo("K017A")==0 ||
                             otherdbcode2.compareTo("P005A")==0 ||
                             otherdbcode2.compareTo("P004A")==0 ||
-                            otherdbcode2.compareTo("Z716A")==0 || otherdbcode2.startsWith("S") || 
+                            otherdbcode2.compareTo("Z716A")==0 || otherdbcode2.startsWith("S") ||
                             (otherdbcode2.endsWith("B") && !otherdbcode2.endsWith("C988B") && !otherdbcode2.endsWith("C998B") && !otherdbcode2.endsWith("C999B") ) ){
 				pValue1 = pValue1.add(otherfee02);
 				pValue1PerUnit = pValue1PerUnit.add(bdotherFee);
 				pCode =otherdbcode2;
 				pDesc = otherdesc2;
 				pValue = pValue1.toString();
-			
+
 				if (!eCode.equals(""))	eFlag = "1";
 			}
 		}
@@ -574,7 +579,7 @@ if (othercode3.compareTo("") == 0 || othercode3 == null || othercode3.length() <
 } else {
 	if (othercode3unit.compareTo("") == 0 || othercode3unit == null) {
 		othercode3unit = "1";
-	} 
+	}
 
 	ResultSet rsother = apptMainBean.queryResults(othercode3.substring(0,5), "search_servicecode_detail");
 	while(rsother.next()){
@@ -608,7 +613,7 @@ if (othercode3.compareTo("") == 0 || othercode3 == null || othercode3.length() <
 				xUnit = othercode3unit;
 				xFlag = "1";
 			}
-		}else{       
+		}else{
 			otherflag3 = 1;
 			BigDecimal otherunit3 = new BigDecimal(Double.parseDouble(othercode3unit)).setScale(2, BigDecimal.ROUND_HALF_UP);
 			BigDecimal bdotherFee = new BigDecimal(Double.parseDouble(otherfee3)).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -633,27 +638,27 @@ if (othercode3.compareTo("") == 0 || othercode3 == null || othercode3.length() <
 					if (!eCode.equals(""))	eFlag = "1";
 			    }
 			} else
-			if (otherdbcode3.compareTo("A001A")==0 || otherdbcode3.compareTo("A003A")==0 || 
-                            otherdbcode3.compareTo("A004A")==0 || otherdbcode3.compareTo("A007A")==0 || 
-                            otherdbcode3.compareTo("A008A")==0 || otherdbcode3.compareTo("A888A")==0 || 
-                            otherdbcode3.compareTo("Z777A")==0 || otherdbcode3.compareTo("P029A")==0 || 
-                            otherdbcode3.compareTo("P028A")==0 || otherdbcode3.compareTo("Z776A")==0 || 
-                            otherdbcode3.compareTo("P042A")==0 || otherdbcode3.compareTo("S768A")==0 || 
-                            otherdbcode3.compareTo("S756A")==0 || otherdbcode3.compareTo("S757A")==0 || 
-                            otherdbcode3.compareTo("S784A")==0 || otherdbcode3.compareTo("S745A")==0 || 
-                            otherdbcode3.compareTo("P010A")==0 || otherdbcode3.compareTo("P009A")==0 || 
-                            otherdbcode3.compareTo("P006A")==0 || otherdbcode3.compareTo("P011A")==0 || 
-                            otherdbcode3.compareTo("P041A")==0 || otherdbcode3.compareTo("P018A")==0 || 
-                            otherdbcode3.compareTo("P038A")==0 || otherdbcode3.compareTo("P020A")==0 || 
-                            otherdbcode3.compareTo("P031A")==0 || otherdbcode3.compareTo("Z552A")==0 || 
-                            otherdbcode3.compareTo("P022A")==0 || otherdbcode3.compareTo("P023A")==0 || 
+			if (otherdbcode3.compareTo("A001A")==0 || otherdbcode3.compareTo("A003A")==0 ||
+                            otherdbcode3.compareTo("A004A")==0 || otherdbcode3.compareTo("A007A")==0 ||
+                            otherdbcode3.compareTo("A008A")==0 || otherdbcode3.compareTo("A888A")==0 ||
+                            otherdbcode3.compareTo("Z777A")==0 || otherdbcode3.compareTo("P029A")==0 ||
+                            otherdbcode3.compareTo("P028A")==0 || otherdbcode3.compareTo("Z776A")==0 ||
+                            otherdbcode3.compareTo("P042A")==0 || otherdbcode3.compareTo("S768A")==0 ||
+                            otherdbcode3.compareTo("S756A")==0 || otherdbcode3.compareTo("S757A")==0 ||
+                            otherdbcode3.compareTo("S784A")==0 || otherdbcode3.compareTo("S745A")==0 ||
+                            otherdbcode3.compareTo("P010A")==0 || otherdbcode3.compareTo("P009A")==0 ||
+                            otherdbcode3.compareTo("P006A")==0 || otherdbcode3.compareTo("P011A")==0 ||
+                            otherdbcode3.compareTo("P041A")==0 || otherdbcode3.compareTo("P018A")==0 ||
+                            otherdbcode3.compareTo("P038A")==0 || otherdbcode3.compareTo("P020A")==0 ||
+                            otherdbcode3.compareTo("P031A")==0 || otherdbcode3.compareTo("Z552A")==0 ||
+                            otherdbcode3.compareTo("P022A")==0 || otherdbcode3.compareTo("P023A")==0 ||
                             otherdbcode3.compareTo("P030A")==0 ||
                             otherdbcode3.compareTo("K005A")==0 ||
                             otherdbcode3.compareTo("K030A")==0 ||
                             otherdbcode3.compareTo("P005A")==0 ||
                             otherdbcode3.compareTo("P004A")==0 ||
                             otherdbcode3.compareTo("K017A")==0 ||
-                            otherdbcode3.compareTo("Z716A")==0 || otherdbcode3.startsWith("S") || 
+                            otherdbcode3.compareTo("Z716A")==0 || otherdbcode3.startsWith("S") ||
                             (otherdbcode3.endsWith("B") && !otherdbcode3.endsWith("C988B") && !otherdbcode3.endsWith("C998B") && !otherdbcode3.endsWith("C999B") ) ){
 				pValue1 = pValue1.add(otherfee03);
 				pValue1PerUnit = pValue1PerUnit.add(bdotherFee);
@@ -662,7 +667,7 @@ if (othercode3.compareTo("") == 0 || othercode3 == null || othercode3.length() <
 				pValue = pValue1.toString();
 
 				if (!eCode.equals(""))	eFlag = "1";
-			} 
+			}
 		}
 	}
 }
@@ -676,31 +681,31 @@ if (othercode3.compareTo("") == 0 || othercode3 == null || othercode3.length() <
 		<th width="14%" align="right"><font size="2">$ Fee</th>
 	</tr>
 
-	<% 
+	<%
 // get the list of checked codes
 Properties checkedCode = new Properties();
 for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 	temp=e.nextElement().toString();
-	if( temp.startsWith("xml_") ) { 
+	if( temp.startsWith("xml_") ) {
 		checkedCode.setProperty(temp, "1") ;
 	}
 }
 
-double dSFee = 0.00;        
+double dSFee = 0.00;
 double dFee = 0.00;
 
 for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 	temp=e.nextElement().toString();
-	if( temp.indexOf("xml_")==-1 ) continue; 
+	if( temp.indexOf("xml_")==-1 ) continue;
 	//////////////////////////////////////////////////////////////////////////////////////
-	if( temp.startsWith("desc_xml_") || temp.startsWith("price_xml_") || temp.startsWith("perc_xml_") ) { 
+	if( temp.startsWith("desc_xml_") || temp.startsWith("price_xml_") || temp.startsWith("perc_xml_") ) {
 		if (checkedCode.getProperty(temp.substring(temp.indexOf("_")+1) , "").equals("1") ) {
 			content+="<" +temp+ ">" +SxmlMisc.replaceHTMLContent(request.getParameter(temp))+ "</" +temp+ ">";
 		}
 	} else {
 		content+="<" +temp+ ">" +SxmlMisc.replaceHTMLContent(request.getParameter(temp).trim())+ "</" +temp+ ">";
 	}
-	//////////////////////////////////////////////////////////////////////////////////////  	
+	//////////////////////////////////////////////////////////////////////////////////////
 
 	fee = request.getParameter("price_" + temp);
 	desc = request.getParameter("desc_" + temp);
@@ -711,7 +716,7 @@ for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 
 	if (fee == null) {
 		fee = "";
-	}else{ 
+	}else{
 		if (fee.compareTo(".00")==0) {
 			if (scode.compareTo("E400B") == 0 || scode.compareTo("E401B") == 0 || scode.compareTo("E410A") == 0 || scode.compareTo("E409A") == 0
 			        || scode.compareTo("E070A") == 0 || scode.compareTo("E071A") == 0 || otherdbcode1.compareTo("Q012A") == 0 || scode.compareTo("Q016A") == 0) {
@@ -746,30 +751,30 @@ for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 					if (!eCode.equals(""))	eFlag = "1";
 			    }
 			} else
-			if (scode.compareTo("A001A")==0 || scode.compareTo("A003A")==0 || 
-                            scode.compareTo("A004A")==0 || scode.compareTo("A007A")==0 || 
-                            scode.compareTo("A008A")==0 || scode.compareTo("A888A")==0 || 
-                            scode.compareTo("Z777A")==0 || scode.compareTo("P029A")==0 || 
-                            scode.compareTo("P028A")==0 || scode.compareTo("Z776A")==0 || 
-                            scode.compareTo("P042A")==0 || scode.compareTo("S768A")==0 || 
-                            scode.compareTo("S756A")==0 || scode.compareTo("S757A")==0 || 
-                            scode.compareTo("S784A")==0 || scode.compareTo("S745A")==0 || 
-                            scode.compareTo("P010A")==0 || scode.compareTo("P009A")==0 || 
-                            scode.compareTo("P006A")==0 || scode.compareTo("P011A")==0 || 
-                            scode.compareTo("P041A")==0 || scode.compareTo("P018A")==0 || 
-                            scode.compareTo("P038A")==0 || scode.compareTo("P020A")==0 || 
-                            scode.compareTo("P031A")==0 || scode.compareTo("Z552A")==0 || 
-                            scode.compareTo("P022A")==0 || scode.compareTo("P023A")==0 || 
+			if (scode.compareTo("A001A")==0 || scode.compareTo("A003A")==0 ||
+                            scode.compareTo("A004A")==0 || scode.compareTo("A007A")==0 ||
+                            scode.compareTo("A008A")==0 || scode.compareTo("A888A")==0 ||
+                            scode.compareTo("Z777A")==0 || scode.compareTo("P029A")==0 ||
+                            scode.compareTo("P028A")==0 || scode.compareTo("Z776A")==0 ||
+                            scode.compareTo("P042A")==0 || scode.compareTo("S768A")==0 ||
+                            scode.compareTo("S756A")==0 || scode.compareTo("S757A")==0 ||
+                            scode.compareTo("S784A")==0 || scode.compareTo("S745A")==0 ||
+                            scode.compareTo("P010A")==0 || scode.compareTo("P009A")==0 ||
+                            scode.compareTo("P006A")==0 || scode.compareTo("P011A")==0 ||
+                            scode.compareTo("P041A")==0 || scode.compareTo("P018A")==0 ||
+                            scode.compareTo("P038A")==0 || scode.compareTo("P020A")==0 ||
+                            scode.compareTo("P031A")==0 || scode.compareTo("Z552A")==0 ||
+                            scode.compareTo("P022A")==0 || scode.compareTo("P023A")==0 ||
                             scode.compareTo("P030A")==0 ||
                             scode.compareTo("K005A")==0 ||
                             scode.compareTo("K030A")==0 ||
                             scode.compareTo("P005A")==0 ||
                             scode.compareTo("P004A")==0 ||
                             scode.compareTo("K017A")==0 ||
-                            scode.compareTo("A903A")==0 || scode.compareTo("C903A")==0 || 
-                            scode.compareTo("C003A")==0 || scode.compareTo("W102A")==0 || 
-                            scode.compareTo("W109A")==0 || scode.compareTo("W903A")==0 || 
-                            scode.compareTo("Z716A")==0 || scode.startsWith("S") || 
+                            scode.compareTo("A903A")==0 || scode.compareTo("C903A")==0 ||
+                            scode.compareTo("C003A")==0 || scode.compareTo("W102A")==0 ||
+                            scode.compareTo("W109A")==0 || scode.compareTo("W903A")==0 ||
+                            scode.compareTo("Z716A")==0 || scode.startsWith("S") ||
                             (scode.endsWith("B") && !scode.endsWith("C988B") && !scode.endsWith("C998B") && !scode.endsWith("C999B") ) ){
 				pValue1 = pValue1.add(bdFee);
 				pValue1PerUnit = pValue1PerUnit.add(bdFee);
@@ -799,13 +804,13 @@ for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 		<td width="6%" align="right"><font size="2">1</td>
 		<td width="14%" align="right"><font size="2"><%=fee%></td>
 	</tr>
-	<% 
-			counter = counter + 1; 
+	<%
+			counter = counter + 1;
 		}
 	}
 }
 
-if (otherflag1 == 1) { 
+if (otherflag1 == 1) {
 %>
 	<tr bgcolor="#EEEEFF">
 		<td width="22%"><font size="2"><%=otherdbcode1%></td>
@@ -820,10 +825,10 @@ if (otherflag1 == 1) {
 		<td width="6%" align="right"><font size="2"><%=othercode1unit%></td>
 		<td width="14%" align="right"><font size="2"><%=otherfee%></td>
 	</tr>
-	<% 
+	<%
 	counter = counter + 1;
-} 
-if (otherflag2 == 1) { 
+}
+if (otherflag2 == 1) {
 %>
 	<tr bgcolor="#EEEEFF">
 		<td width="22%"><font size="2"><%=otherdbcode2%></td>
@@ -843,10 +848,10 @@ if (otherflag2 == 1) {
 		<div align="right"><font size="2"><%=otherfee02%></div>
 		</td>
 	</tr>
-	<% 
+	<%
 	counter = counter + 1;
-} 
-if (otherflag3 == 1) { 
+}
+if (otherflag3 == 1) {
 %>
 	<tr bgcolor="#EEEEFF">
 		<td width="22%"><font size="2"><%=otherdbcode3%></td>
@@ -866,11 +871,11 @@ if (otherflag3 == 1) {
 		<div align="right"><font size="2"><%=otherfee03%></div>
 		</td>
 	</tr>
-	<% 
+	<%
 	counter = counter + 1;
-} 
+}
 
-if (eFlag.compareTo("1")==0) { 
+if (eFlag.compareTo("1")==0) {
 	percent = new BigDecimal(Double.parseDouble(ePerc)).setScale(4, BigDecimal.ROUND_HALF_UP);
 	percentPremium = percent.multiply(pValue1).setScale(2, BigDecimal.ROUND_HALF_UP);
 	BigTotal = BigTotal.add(percentPremium);
@@ -896,11 +901,11 @@ if (eFlag.compareTo("1")==0) {
 		<div align="right"><font size="2"><%=percentPremium%></div>
 		</td>
 	</tr>
-	<% 
+	<%
 	counter = counter + 1;
-} 
+}
 
-if (xFlag.compareTo("1")==0) { 
+if (xFlag.compareTo("1")==0) {
 
 	BigTotal = BigTotal.subtract(percentPremium);
 	xPercent = new BigDecimal(Double.parseDouble(xPerc)).setScale(4, BigDecimal.ROUND_HALF_UP);
@@ -945,11 +950,11 @@ if (xFlag.compareTo("1")==0) {
 		<div align="right"><font size="2"><%=xPercentPremium%></div>
 		</td>
 	</tr>
-	<% 
+	<%
 	counter = counter + 1;
-} 
+}
 
-if (counter == 0) { 
+if (counter == 0) {
 	errorFlag = "1";
 	errorMsg = errorMsg + "Error: No Service/Procedure Code selected. <br>";
 }
@@ -965,7 +970,7 @@ if (errorFlag.compareTo("1")==0){
 	onClick='javascript:location.href="billingOB.jsp?billForm=<%=request.getParameter("billForm")%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=request.getParameter("user_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("xml_appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=0"'>
 </form>
 
-<% 
+<%
 } else { %>
 
 <tr bgcolor="#EEEEFF">
@@ -976,8 +981,8 @@ if (errorFlag.compareTo("1")==0){
 	</td>
 </tr>
 
-<% 
-	if (request.getParameter("xml_research1") == null || request.getParameter("xml_research1").compareTo("") == 0) { 
+<%
+	if (request.getParameter("xml_research1") == null || request.getParameter("xml_research1").compareTo("") == 0) {
 %>
 <tr bgcolor="#EEEEFF">
 	<td width="22%"><font size="2"></td>
@@ -991,7 +996,7 @@ if (errorFlag.compareTo("1")==0){
 </table>
 
 <%
-	} else { 
+	} else {
 %>
 
 <tr bgcolor="#EEEEFF">
@@ -1062,14 +1067,14 @@ if (errorFlag.compareTo("1")==0){
 	type="submit" name="Submit" value="Confirm" onDblClick=""> <a
 	href="billingOB.jsp?billForm=<%=request.getParameter("billForm")%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=request.getParameter("user_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("xml_appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=0">edit</a>
 
-<% 
+<%
 	if (warningMsg.length() > 0) {
 %>
 
 <p bgcolor="yellow"><%=warningMsg%></p>
 <%
 	}
-	session.setAttribute("content", content); 
+	session.setAttribute("content", content);
 }
 
 if(bPercS) {
@@ -1085,27 +1090,27 @@ function addToDiseaseRegistry(){
 	var url = "../../../oscarResearch/oscarDxResearch/dxResearch.do";
 	var data = Form.serialize(dxForm);
 	//alert ( data);
-	new Ajax.Updater('dxListing',url, {method: 'post',postBody: data,asynchronous:true,onComplete: getNewCurrentDxCodeList}); 
+	new Ajax.Updater('dxListing',url, {method: 'post',postBody: data,asynchronous:true,onComplete: getNewCurrentDxCodeList});
     }else{
        alert("Error: Nothing was selected");
     }
 }
 
-function validateItems(form){    
+function validateItems(form){
     var dxChecks;
-    var ret = false;    
-        
-    dxChecks = document.getElementsByName("xml_research");            
-     
-     for( idx = 0; idx < dxChecks.length; ++idx ) {   
+    var ret = false;
+
+    dxChecks = document.getElementsByName("xml_research");
+
+     for( idx = 0; idx < dxChecks.length; ++idx ) {
         if( dxChecks[idx].checked ) {
             ret = true;
             break;
         }
-     }             
+     }
     return ret;
 }
-    
+
 
 function getNewCurrentDxCodeList(origRequest){
    //alert("calling get NEW current Dx Code List");
@@ -1113,7 +1118,7 @@ function getNewCurrentDxCodeList(origRequest){
    var ran_number=Math.round(Math.random()*1000000);
    var params = "demographicNo=<%=demoNO%>&rand="+ran_number;  //hack to get around ie caching the page
    //alert(params);
-   new Ajax.Updater('dxFullListing',url, {method:'get',parameters:params,asynchronous:true}); 
+   new Ajax.Updater('dxFullListing',url, {method:'get',parameters:params,asynchronous:true});
    //alert(origRequest.responseText);
 }
 
@@ -1135,7 +1140,7 @@ function getNewCurrentDxCodeList(origRequest){
 		<jsp:param name="demographicNo" value="<%=demoNO%>" />
 	</jsp:include></div>
 	<input type="button" value="Add To Disease Registry"
-		onclick="addToDiseaseRegistry()" /> <!--input type="button" value="check" onclick="getNewCurrentDxCodeList()"/> 
+		onclick="addToDiseaseRegistry()" /> <!--input type="button" value="check" onclick="getNewCurrentDxCodeList()"/>
 <input type="button" value="check" onclick="validateItems()"/--></form>
 	</div>
 
