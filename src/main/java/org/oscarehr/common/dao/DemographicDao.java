@@ -58,11 +58,12 @@ public class DemographicDao extends HibernateDaoSupport {
             return null;
         }
 
-        return (Demographic) this.getHibernateTemplate().get(Demographic.class, Integer.valueOf(demographic_no));
+        return this.getHibernateTemplate().get(Demographic.class, Integer.valueOf(demographic_no));
     }
 
     // ADD BY PINE-SOFT
     public List getDemographics() {
+    	logger.error("No one should be calling this method, this is a good way to run out of memory and crash a server... this is too large of a result set, it should be pagenated.", new IllegalArgumentException("The entire demographic table is too big to allow a full select."));
         return this.getHibernateTemplate().find("from Demographic d order by d.LastName");
     }
 
