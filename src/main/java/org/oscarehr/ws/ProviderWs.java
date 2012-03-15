@@ -19,7 +19,7 @@ public class ProviderWs extends AbstractWs {
 	public ProviderTransfer[] getProviders(boolean active) {
 		List<Provider> tempResults = providerManager.getProviders(active);
 
-		ProviderTransfer[] results = ProviderTransfer.getTransfers(tempResults);
+		ProviderTransfer[] results = ProviderTransfer.toTransfers(tempResults);
 
 		return (results);
 	}

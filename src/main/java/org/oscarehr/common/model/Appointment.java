@@ -72,6 +72,7 @@ public class Appointment extends AbstractModel<Integer> implements Serializable 
 
 	private String remarks;
 	private String urgency;
+	private Integer creatorSecurityId;
 
 	public String getProviderNo() {
 		return providerNo;
@@ -251,6 +252,14 @@ public class Appointment extends AbstractModel<Integer> implements Serializable 
 	public void setUrgency(String urgency) {
 		this.urgency = urgency;
 	}
+
+	public Integer getCreatorSecurityId() {
+    	return (creatorSecurityId);
+    }
+
+	public void setCreatorSecurityId(Integer creatorSecurityId) {
+    	this.creatorSecurityId = creatorSecurityId;
+    }
 
 	@Override
 	public Integer getId() {

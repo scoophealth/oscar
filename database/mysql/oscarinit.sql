@@ -71,6 +71,7 @@ CREATE TABLE appointment (
   lastupdateuser varchar(6) default NULL,
   remarks varchar(50) default NULL,
   urgency varchar(30),
+  creatorSecurityId int,
   PRIMARY KEY  (appointment_no),
   KEY appointment_date (appointment_date,start_time,demographic_no),
   KEY demographic_no (demographic_no),
