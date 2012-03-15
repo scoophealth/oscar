@@ -1,5 +1,5 @@
 
-<%  
+<%
 if(session.getValue("user") == null) response.sendRedirect("../../../logout.htm");
 String curUser_no,userfirstname,userlastname;
 curUser_no = (String) session.getAttribute("user");
@@ -12,7 +12,7 @@ String DemoProvince="";
 String DemoPostal="";
 String DemoDOB="";
 String DemoSex="";
-String hin=""; 
+String hin="";
 String location="";
 String BillLocation="";
 String BillLocationNo="";
@@ -33,10 +33,10 @@ String m_review="";
 String specialty="";
 String r_status="";
 String roster_status="";
-int rowCount = 0; 
+int rowCount = 0;
 int rowReCount = 0;
-ResultSet rslocation = null;  
-ResultSet rsPatient = null; 
+ResultSet rslocation = null;
+ResultSet rsPatient = null;
 
 OscarProperties props = OscarProperties.getInstance();
 if(props.getProperty("isNewONbilling", "").equals("true")) {
@@ -52,6 +52,12 @@ if(props.getProperty("isNewONbilling", "").equals("true")) {
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <%@ include file="dbBilling.jspf"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.ClinicLocationDao" %>
+<%@page import="org.oscarehr.common.model.ClinicLocation" %>
+<%
+	ClinicLocationDao clinicLocationDao = (ClinicLocationDao)SpringUtils.getBean("clinicLocationDao");
+%>
 
 <%
 GregorianCalendar now=new GregorianCalendar();
@@ -62,29 +68,29 @@ int curDay = now.get(Calendar.DAY_OF_MONTH);
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 <html:html locale="true">
@@ -122,7 +128,7 @@ function ScriptAttach() {
 function validateNum(el){
    var val = el.value;
    var tval = ""+val;
-   if (isNaN(val)){   
+   if (isNaN(val)){
       alert("Item value must be numeric.");
       el.select();
       el.focus();
@@ -140,29 +146,29 @@ function validateNum(el){
       el.select();
       el.focus();
       return false;
-   }  
+   }
    return true;
 }
 
-function validateAllItems(){   
+function validateAllItems(){
    if (!validateNum(document.getElementById("billingamount0")) ){
       return false;
-   }   
+   }
    if (!validateNum(document.getElementById("billingamount1")) ){
       return false;
-   }   
+   }
    if (!validateNum(document.getElementById("billingamount2")) ){
       return false;
-   }   
+   }
    if (!validateNum(document.getElementById("billingamount3")) ){
       return false;
-   }   
+   }
    if (!validateNum(document.getElementById("billingamount4")) ){
       return false;
-   }   
+   }
    if (!validateNum(document.getElementById("billingamount5")) ){
       return false;
-   }   
+   }
    return true;
 }
 </script>
@@ -179,16 +185,16 @@ function validateAllItems(){
 	</tr>
 </table>
 
-<% 
-boolean bFlag = false;	
-String billNo = request.getParameter("billing_no");         
+<%
+boolean bFlag = false;
+String billNo = request.getParameter("billing_no");
 if (billNo.compareTo("") == 0 || billNo == null) {
-	bFlag = false;         
-} else {         
-	bFlag =true;         
+	bFlag = false;
+} else {
+	bFlag =true;
 %>
 <%@ include file="billingDataRetrieve.jspf"%>
-<% 
+<%
 	if(oscarVariables.getProperty("isSpecialist", "").equals("true")) {
 	    r_doctor_ohip = r_doctor_ohip_s;
 	    r_doctor = r_doctor_s;
@@ -429,11 +435,13 @@ if (billNo.compareTo("") == 0 || billNo == null) {
 			name="clinic_ref_code">
 			<option value=""><bean:message
 				key="billing.billingCorrection.msgSelectLocation" /></option>
-			<%  
-rslocation = apptMainBean.queryResults("1", "search_clinic_location");
-while(rslocation.next()){
-	BillLocationNo = rslocation.getString("clinic_location_no");
-	BillLocation = rslocation.getString("clinic_location_name");
+			<%
+
+			List<ClinicLocation> clinicLocations = clinicLocationDao.findByClinicNo(1);
+            for(ClinicLocation clinicLocation:clinicLocations) {
+           	 	BillLocation = clinicLocation.getClinicLocationName();
+           	 	BillLocationNo = clinicLocation.getClinicLocationNo();
+
 %>
 			<option value="<%=BillLocationNo%>"
 				<%=location.equals(BillLocationNo)?"selected":""%>><%=BillLocationNo%>
@@ -447,7 +455,7 @@ while(rslocation.next()){
 			style="font-size: 80%;" name="provider_no">
 			<option value=""><bean:message
 				key="billing.billingCorrection.msgSelectProvider" /></option>
-			<% 
+			<%
 String proFirst="", proLast="", proOHIP="", proNo="";
 int Count = 0;
 ResultSet rslocal = apptMainBean.queryResults("%", "search_provider_dt");
@@ -459,7 +467,7 @@ while(rslocal.next()){
 			<option value="<%=proOHIP%>"
 				<%=Provider.equals(proOHIP)?"selected":""%>><%=proOHIP%> |
 			<%=proLast%>, <%=proFirst%></option>
-			<% 
+			<%
 }
 %>
 		</select> <input type="hidden" name="xml_provider_no" value="<%=Provider%>">
@@ -527,7 +535,7 @@ if (bFlag) {
 		billAmount = rsBillRec.getString("billing_amount");
 		diagCode = rsBillRec.getString("diagnostic_code");
 		billingunit = rsBillRec.getString("billingunit");
-		rowCount = rowCount + 1; 
+		rowCount = rowCount + 1;
 %>
 
 	<tr>
@@ -554,7 +562,7 @@ if (bFlag) {
 	<%
 	}
 
-	for (int i=rowCount; i<6; i++){ 
+	for (int i=rowCount; i<6; i++){
 %>
 	<tr>
 		<td><input type="text" style="width: 100%"
@@ -567,8 +575,8 @@ if (bFlag) {
 			maxlength="5"></td>
 	</tr>
 
-	<%	
-	}	
+	<%
+	}
 
 	ResultSet rsDiagCode = apptMainBean.queryResults(diagCode, "search_diagnostic_code");
 	while(rsDiagCode.next()){

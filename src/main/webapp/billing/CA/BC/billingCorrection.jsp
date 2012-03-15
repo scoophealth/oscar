@@ -1,9 +1,9 @@
 
-<%  
+<%
   if(session.getValue("user") == null)
     response.sendRedirect("../logout.htm");
   String curUser_no,userfirstname,userlastname;
-  curUser_no = (String) session.getAttribute("user");  
+  curUser_no = (String) session.getAttribute("user");
  String UpdateDate = "";
  String DemoNo = "";
  String DemoName = "";
@@ -13,7 +13,7 @@
  String DemoPostal="";
  String DemoDOB="";
  String DemoSex="";
- String hin=""; 
+ String hin="";
  String location="";
  String BillLocation="";
  String BillLocationNo="";
@@ -32,11 +32,11 @@
   String specialty="";
  String r_status="";
   String roster_status="";
- int rowCount = 0; 
+ int rowCount = 0;
  int rowReCount = 0;
-  ResultSet rslocation = null;  
- ResultSet rsPatient = null; 
- 
+  ResultSet rslocation = null;
+ ResultSet rsPatient = null;
+
 %>
 <%@ page
 	import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*"
@@ -44,35 +44,41 @@
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <%@ include file="dbBilling.jspf"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.ClinicLocationDao" %>
+<%@page import="org.oscarehr.common.model.ClinicLocation" %>
+<%
+	ClinicLocationDao clinicLocationDao = (ClinicLocationDao)SpringUtils.getBean("clinicLocationDao");
+%>
 <%
   GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
   int curMonth = (now.get(Calendar.MONTH)+1);
   int curDay = now.get(Calendar.DAY_OF_MONTH);
 %>
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 <html>
@@ -94,9 +100,9 @@
 		  }
 	 	  if (x == 1) { return remote; }
 		}
-	 	
-		
-		
+
+
+
 	 	var awnd=null;
 		function ScriptAttach() {
 		  f0 = escape(document.serviceform.xml_diagnostic_detail.value);
@@ -107,11 +113,11 @@
 		  awnd.focus();
 }
         //-->
-        
+
         function validateNum(el){
    var val = el.value;
    var tval = ""+val;
-   if (isNaN(val)){   
+   if (isNaN(val)){
       alert("Item value must be numeric.");
       el.select();
       el.focus();
@@ -129,7 +135,7 @@
       el.select();
       el.focus();
       return false;
-   }  
+   }
    return true;
 }
     </script>
@@ -327,10 +333,10 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 			style="font-size: 80%;" name="clinic_ref_code">
 			<option value="">--- Select Visit Location ---</option>
 			<%  rslocation = null;
- rslocation = apptMainBean.queryResults("1", "search_clinic_location");
- while(rslocation.next()){
- BillLocationNo = rslocation.getString("clinic_location_no");
- BillLocation = rslocation.getString("clinic_location_name");
+			List<ClinicLocation> clinicLocations = clinicLocationDao.findByClinicNo(1);
+            for(ClinicLocation clinicLocation:clinicLocations) {
+           	 	BillLocation = clinicLocation.getClinicLocationName();
+           	 	BillLocationNo = clinicLocation.getClinicLocationNo();
  %>
 			<option value="<%=BillLocationNo%>"
 				<%=location.equals(BillLocationNo)?"selected":""%>><%=BillLocationNo%>
@@ -342,14 +348,14 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 			size="2">Billing Physician#: <select style="font-size: 80%;"
 			name="provider_no">
 			<option value="">--- Select Provider ---</option>
-			<% ResultSet rslocal = null;  
+			<% ResultSet rslocal = null;
 // Retrieving Provider
 String proFirst="", proLast="", proOHIP="", proNo="";
  int Count = 0;
   rslocal = null;
  rslocal = apptMainBean.queryResults("%", "search_provider_dt");
  while(rslocal.next()){
- 
+
  proFirst = rslocal.getString("first_name");
  proLast = rslocal.getString("last_name");
  proOHIP = rslocal.getString("provider_no");
@@ -360,7 +366,7 @@ String proFirst="", proLast="", proOHIP="", proNo="";
 			<%=proLast%>, <%=proFirst%></option>
 			<% }
 
- 
+
   %><input type="hidden" name="xml_provider_no" value="<%=Provider%>"></font></b></td>
 	</tr>
 	<tr>
@@ -423,7 +429,7 @@ String proFirst="", proLast="", proOHIP="", proNo="";
  billAmount = rsBillRec.getString("billing_amount");
  diagCode = rsBillRec.getString("diagnostic_code");
  billingunit = rsBillRec.getString("billingunit");
- rowCount = rowCount + 1; 
+ rowCount = rowCount + 1;
  %>
 
 	<tr>

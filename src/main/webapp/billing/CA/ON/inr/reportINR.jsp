@@ -1,30 +1,30 @@
-<%--  
+<%--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 --%>
 
-<% 
+<%
 if(session.getAttribute("user") == null)    response.sendRedirect("../../../../logout.jsp");
 String user_no="";
 user_no = (String) session.getAttribute("user");
@@ -38,6 +38,12 @@ user_no = (String) session.getAttribute("user");
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
 
 <%@ include file="dbINR.jspf"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.ClinicLocationDao" %>
+<%@page import="org.oscarehr.common.model.ClinicLocation" %>
+<%
+	ClinicLocationDao clinicLocationDao = (ClinicLocationDao)SpringUtils.getBean("clinicLocationDao");
+%>
 <% 	GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
   int curMonth = (now.get(Calendar.MONTH)+1);
@@ -46,8 +52,8 @@ user_no = (String) session.getAttribute("user");
   String nowTime = now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE) + ":"+now.get(Calendar.SECOND);
  String clinicview = oscarVariables.getProperty("clinic_view");
    String Clinic_no = oscarVariables.getProperty("clinic_no");
-               
- 
+
+
   %>
 
 <html>
@@ -60,7 +66,7 @@ function openBrWindow(theURL,winName,features) {
   window.open(theURL,winName,features);
 }
 
-function jumpMenu(targ,selObj,restore){ 
+function jumpMenu(targ,selObj,restore){
   eval(targ+".location='"+selObj.options[selObj.selectedIndex].value+"'");
   if (restore) selObj.selectedIndex=0;
 }
@@ -119,10 +125,10 @@ var awnd=null;
            String proName="";
             String proName1="";
            String proOHIP="";
-          String specialty_code; 
+          String specialty_code;
 String billinggroup_no;
 ArrayList providerArray = new ArrayList();
-String[] providerArr = new String[2]; 
+String[] providerArr = new String[2];
            int Count = 0;
         ResultSet rslocal;
         rslocal = null;
@@ -131,21 +137,21 @@ String[] providerArr = new String[2];
  proFirst = rslocal.getString("first_name");
  proLast = rslocal.getString("last_name");
 proName = proFirst + " " + proLast;
- proOHIP = rslocal.getString("provider_no"); 
+ proOHIP = rslocal.getString("provider_no");
 // billinggroup_no= SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
 // specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
 
-providerArr[0] = proOHIP; 
+providerArr[0] = proOHIP;
 providerArr[1] = proName;
 providerArray.add(providerArr);
  %>
 			<option value="reportINR.jsp?provider_no=<%=proOHIP%>"
 				<%=providerview.equals(proOHIP)?"selected":""%>><%=proLast%>,
 			<%=proFirst%></option>
-			<% 
+			<%
 
  }
-// 
+//
   %>
 		</select> </font></b></td>
 		<td width="254"><font color="#003366"><b><font
@@ -156,11 +162,10 @@ providerArray.add(providerArr);
 			datafld='xml_location'>
 			<% ResultSet rsclinic = null;
              String clinic_location="", clinic_code="";
-             rsclinic = null;
-             rsclinic = apptMainBean.queryResults("1", "search_clinic_location");
-             while (rsclinic.next()){
-             clinic_location = rsclinic.getString("clinic_location_name");
-             clinic_code = rsclinic.getString("clinic_location_no");
+             List<ClinicLocation> clinicLocations = clinicLocationDao.findByClinicNo(1);
+             for(ClinicLocation clinicLocation:clinicLocations) {
+            	 clinic_location = clinicLocation.getClinicLocationName();
+                 clinic_code = clinicLocation.getClinicLocationNo();
              %>
 			<option value="<%=clinic_code%>"
 				<%=clinicview.equals(clinic_code)?"selected":""%>><%=clinic_location%></option>
@@ -192,25 +197,25 @@ providerArray.add(providerArr);
     String billing_unit="", billdate="", billstatus="";
     int colorCount = 0;
        String color="";
-  int Count1 = 0;     
-       
-       
+  int Count1 = 0;
+
+
        if (providerview.compareTo("all")==0){
-       
+
    //  for (int i=0;i<providerArray.size(); i++){
 
 
      ResultSet rsdemo = null;
       rsdemo = apptMainBean.queryResults( "%", "search_inrbilling_dt");
       while(rsdemo.next()){
-      
+
       billinginr_no = rsdemo.getString("billinginr_no");
       demono = rsdemo.getString("demographic_no");
       demo_name = rsdemo.getString("demographic_name");
       demo_hin = rsdemo.getString("hin");
       demo_dob = rsdemo.getString("dob");
       provider_no = rsdemo.getString("provider_no");
-      
+
               rslocal = null;
        rslocal = apptMainBean.queryResults(provider_no, "search_provider_name");
        while(rslocal.next()){
@@ -233,7 +238,7 @@ proName1 = proFirst + " " + proLast;
     	      colorCount = 0;
 	      color="#EEEEFF";
 	      }
-  Count1 = Count1 + 1;  
+  Count1 = Count1 + 1;
     %>
 			<tr bgcolor="<%=color%>">
 				<td width="12%" height="16"><input type="checkbox"
@@ -251,12 +256,12 @@ proName1 = proFirst + " " + proLast;
 			</tr>
 			<%}
   } else{
-  
+
   	//String[] billArray = (String[])providerArray.get(i);
        ResultSet rsdemo = null;
         rsdemo = apptMainBean.queryResults(providerview, "search_inrbilling_dt");
         while(rsdemo.next()){
-        
+
         billinginr_no = rsdemo.getString("billinginr_no");
         demono = rsdemo.getString("demographic_no");
         demo_name = rsdemo.getString("demographic_name");
@@ -285,7 +290,7 @@ proName1 = proFirst + " " + proLast;
       	      colorCount = 0;
   	      color="#EEEEFF";
   	      }
-      
+
   Count1 = Count1 + 1;
   %>
 			<tr bgcolor="<%=color%>">
@@ -308,7 +313,7 @@ proName1 = proFirst + " " + proLast;
 				<td colspan=7>No Match Found</td>
 				</td>
 				<%} else {%>
-			
+
 			<tr bgcolor="#FFFFFF">
 				<a href="#"
 					onClick='rs("billingcalendar","../billingCalendarPopup.jsp?year=<%=curYear%>&month=<%=curMonth%>&type=service","380","300","0")'>Service
@@ -327,7 +332,7 @@ proName1 = proFirst + " " + proLast;
 <%
 }
 %>
-</table> 
+</table>
     </td>
     </tr>
   </form>

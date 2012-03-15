@@ -85,6 +85,12 @@
 	scope="session" />
 
 <%@ include file="dbBilling.jspf"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.ClinicLocationDao" %>
+<%@page import="org.oscarehr.common.model.ClinicLocation" %>
+<%
+	ClinicLocationDao clinicLocationDao = (ClinicLocationDao)SpringUtils.getBean("clinicLocationDao");
+%>
 
 <%
 
@@ -433,13 +439,10 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 			<option value="">--- Select Visit Location ---</option>
 			<%  rslocation = null;
 
- rslocation = apptMainBean.queryResults("1", "search_clinic_location");
-
- while(rslocation.next()){
-
- BillLocationNo = rslocation.getString("clinic_location_no");
-
- BillLocation = rslocation.getString("clinic_location_name");
+			List<ClinicLocation> clinicLocations = clinicLocationDao.findByClinicNo(1);
+            for(ClinicLocation clinicLocation:clinicLocations) {
+           	 	BillLocation = clinicLocation.getClinicLocationName();
+           	 	BillLocationNo = clinicLocation.getClinicLocationNo();
 
  %>
 
