@@ -30,4 +30,13 @@ public class PropertyDao extends AbstractDao<Property> {
 
 		return(results);
 	}
+    
+    public Property checkByName(String name) {
+    	
+		String sql = " select x from " + this.modelClass.getName() + " x where x.name='"+name+"'";
+		Query query = entityManager.createQuery(sql);		
+
+		return (Property)query.getSingleResult();
+		
+	}
 }
