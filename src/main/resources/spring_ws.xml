@@ -44,5 +44,6 @@
 	<jaxws:endpoint implementor="#scheduleWs" address="/ScheduleService" publishedEndpointUrl="${https_endpoint_url_base}/ScheduleService" />	
 	<jaxws:endpoint implementor="#providerWs" address="/ProviderService" publishedEndpointUrl="${https_endpoint_url_base}/ProviderService" />	
 	<jaxws:endpoint implementor="#demographicWs" address="/DemographicService" publishedEndpointUrl="${https_endpoint_url_base}/DemographicService" />	
+	<jaxws:endpoint implementor="#facilityWs" address="/FacilityService" publishedEndpointUrl="${https_endpoint_url_base}/FacilityService" />	
    	
 </beans>
