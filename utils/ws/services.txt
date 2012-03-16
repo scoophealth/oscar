@@ -3,3 +3,4 @@ LoginService
 ProviderService
 ScheduleService
 DemographicService
+FacilityService
