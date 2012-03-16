@@ -113,7 +113,9 @@ public class SchemaUtils
 		}
 		long end = System.currentTimeMillis();
 		long secsTaken = (end-start)/1000;
-		MiscUtils.getLogger().info("Restoring db took " + secsTaken + " seconds.");
+		if(secsTaken > 30) {
+			MiscUtils.getLogger().info("Restoring db took " + secsTaken + " seconds.");
+		}
 	}
 
 	public static void restoreAllTables() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException
@@ -140,7 +142,9 @@ public class SchemaUtils
 		}
 		long end = System.currentTimeMillis();
 		long secsTaken = (end-start)/1000;
-		MiscUtils.getLogger().info("Restoring db took " + secsTaken + " seconds.");
+		if(secsTaken > 30) {
+			MiscUtils.getLogger().info("Restoring db took " + secsTaken + " seconds.");
+		}
 	}
 
 	private static int loadFileIntoMySQL(String filename) throws IOException {
