@@ -90,7 +90,6 @@
 	<bean id="demographicDao" class="org.oscarehr.common.dao.DemographicDao" autowire="byName" />
 	<bean id="secUserRoleDao" class="org.oscarehr.PMmodule.dao.SecUserRoleDao" autowire="byName" />
 	<bean id="programSignatureDao" class="org.oscarehr.PMmodule.dao.ProgramSignatureDao" autowire="byName" />
-	<bean id="consultationDAOT" class="org.caisi.dao.ConsultationDAO" autowire="byName" />
 	<bean id="chartDAOT" class="org.caisi.dao.EChartDAO" autowire="byName" />
 	<bean id="ticklerDAOT" class="org.caisi.dao.TicklerDAO" autowire="byName" />
 	<bean id="customFilterDAOT" class="org.caisi.dao.CustomFilterDAO" autowire="byName" />
@@ -292,9 +291,6 @@
 		<property name="demographicDao" ref="demographicDao" />
 	</bean>
 	<bean id="preparedTicklerManagerT" class="org.caisi.tickler.prepared.PreparedTicklerManager" scope="singleton" />
-	<bean id="consultationManager" class="org.caisi.service.ConsultationManager">
-		<property name="consultationDAO" ref="consultationDAOT" />
-	</bean>
 	<bean id="chartManagerT" class="org.caisi.service.EChartManager">
 		<property name="chartDAO" ref="chartDAOT" />
 	</bean>

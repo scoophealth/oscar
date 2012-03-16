@@ -1,20 +1,20 @@
 /*
  * Copyright (c) 2010. Department of Family Medicine, McMaster University. All Rights Reserved.
- * 
+ *
  * This software is published under the GPL GNU General Public License.
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details. 
- * 
+ * GNU General Public License for more details.
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This software was written for the
  * Department of Family Medicine
@@ -57,11 +57,13 @@ public class ConsultationRequestDao extends AbstractDao<ConsultationRequest> {
 		return((Integer)query.getSingleResult());
 	}
 
-        public List getConsults(String demoNo) {
+        public List<ConsultationRequest> getConsults(String demoNo) {
             StringBuilder sql = new StringBuilder("select cr from ConsultationRequest cr, Demographic d, Provider p where d.DemographicNo = cr.demographicId and p.ProviderNo = cr.providerNo and cr.demographicId = ?1");
             Query query = entityManager.createQuery(sql.toString());
             query.setParameter(1, new Integer(demoNo));
-            return query.getResultList();
+            @SuppressWarnings("unchecked")
+            List<ConsultationRequest> results = query.getResultList();
+            return results;
         }
 
         public List getConsults(String team, boolean showCompleted, Date startDate, Date endDate, String orderby, String desc, String searchDate) {
@@ -75,7 +77,7 @@ public class ConsultationRequestDao extends AbstractDao<ConsultationRequest> {
                 sql.append("and cr.sendTo = '" + team + "' ");
             }
 
-            if(startDate != null){                
+            if(startDate != null){
                 if (searchDate != null && searchDate.equals("1")){
                     sql.append("and cr.appointmentDate >= '" + DateFormatUtils.ISO_DATETIME_FORMAT.format(startDate)+ "' ");
                 }else{
@@ -83,7 +85,7 @@ public class ConsultationRequestDao extends AbstractDao<ConsultationRequest> {
                 }
             }
 
-            if(endDate != null){                
+            if(endDate != null){
                 if (searchDate != null && searchDate.equals("1")){
                     sql.append("and cr.appointmentDate <= '" + DateFormatUtils.ISO_DATETIME_FORMAT.format(endDate)+ "' ");
                 }else{
@@ -115,10 +117,24 @@ public class ConsultationRequestDao extends AbstractDao<ConsultationRequest> {
             }else{
                 sql.append("order by cr.referralDate desc");
             }
-            
+
             Query query = entityManager.createQuery(sql.toString());
-            
+
             return query.getResultList();
-        }                
-               
+        }
+
+
+        public List<ConsultationRequest> getConsultationsByStatus(String demographicNo, String status) {
+        	Query query = entityManager.createQuery("SELECT c FROM ConsultationRequest c where c.demographicId = ? and c.status = ?");
+        	query.setParameter(1,Integer.parseInt(demographicNo));
+        	query.setParameter(2,status);
+
+        	@SuppressWarnings("unchecked")
+            List<ConsultationRequest> results = query.getResultList();
+        	return results;
+        }
+
+        public ConsultationRequest getConsultation(Integer requestId) {
+            return this.find(requestId);
+        }
 }
