@@ -26,7 +26,9 @@ public abstract class DaoTestFixtures
 		}
 		long end = System.currentTimeMillis();
 		long secsTaken = (end-start)/1000;
-		MiscUtils.getLogger().info("Setting up db took " + secsTaken + " seconds.");
+		if(secsTaken > 30) {
+			MiscUtils.getLogger().info("Setting up db took " + secsTaken + " seconds.");
+		}
 
 		start = System.currentTimeMillis();
 		if(SpringUtils.beanFactory==null) {
