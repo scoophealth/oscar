@@ -1,23 +1,23 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for 
- * Centre for Research on Inner City Health, St. Michael's Hospital, 
- * Toronto, Ontario, Canada 
+ *
+ * This software was written for
+ * Centre for Research on Inner City Health, St. Michael's Hospital,
+ * Toronto, Ontario, Canada
  */
 
 package org.caisi.tickler.web;
@@ -41,7 +41,6 @@ import org.apache.struts.actions.DispatchAction;
 import org.caisi.model.CustomFilter;
 import org.caisi.model.EChart;
 import org.caisi.model.Tickler;
-import org.caisi.service.ConsultationManager;
 import org.caisi.service.DemographicManagerTickler;
 import org.caisi.service.EChartManager;
 import org.caisi.service.TicklerManager;
@@ -50,9 +49,11 @@ import org.caisi.tickler.prepared.PreparedTicklerManager;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
+import org.oscarehr.common.dao.ConsultationRequestDao;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 
@@ -65,11 +66,11 @@ public class TicklerAction extends DispatchAction {
     private TicklerManager ticklerMgr = null;
     private ProviderManager providerMgr = null;
     private PreparedTicklerManager preparedTicklerMgr = null;
-    private ConsultationManager consultationMgr = null;
     private DemographicManagerTickler demographicMgr = null;
     private EChartManager chartMgr = null;
     private ProgramManager programMgr = null;
-    
+    private ConsultationRequestDao consultationRequestDao = (ConsultationRequestDao)SpringUtils.getBean("consultationRequestDao");
+
     public void setTicklerManager(TicklerManager ticklerManager) {
         this.ticklerMgr = ticklerManager;
     }
@@ -84,10 +85,6 @@ public class TicklerAction extends DispatchAction {
 
     public void setPreparedTicklerManager(PreparedTicklerManager preparedTicklerMgr) {
         this.preparedTicklerMgr = preparedTicklerMgr;
-    }
-
-    public void setConsultationManager(ConsultationManager consultationMgr) {
-        this.consultationMgr = consultationMgr;
     }
 
     public void setChartManager(EChartManager eChartManager) {
@@ -118,7 +115,7 @@ public class TicklerAction extends DispatchAction {
 
 
     /* show a tickler */
-    public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
         log.debug("view");
         String tickler_id = request.getParameter("id");
         Tickler tickler = ticklerMgr.getTickler(tickler_id);
@@ -133,11 +130,11 @@ public class TicklerAction extends DispatchAction {
 
     /* run a filter */
     /* show all ticklers */
-    public ActionForward filter(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward filter(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         log.debug("filter");
         DynaActionForm ticklerForm = (DynaActionForm) form;
         CustomFilter filter = (CustomFilter) ticklerForm.get("filter");
-        
+
         //view tickler from CME
         String filter_clientId = filter.getDemographic_no();
         String filter_clientName = filter.getDemographic_webName();
@@ -149,19 +146,19 @@ public class TicklerAction extends DispatchAction {
         	filter_clientName = "";
         	filter.setDemographic_webName("");
         }
-        
+
         String providerId = (String)request.getSession().getAttribute("user");
         String programId = "";
-        
+
         List<Program> programs=programMgr.getProgramDomainInCurrentFacilityForCurrentProvider(true);
         request.setAttribute("programs", programs);
-        
+
         // if program selected default to first
         //if (filter.getProgramId()==null || filter.getProgramId().length()==0)
         //{
         //    if (programs.size()>0) filter.setProgramId(String.valueOf(programs.get(0).getId()));
         //}
-        
+
         List<Tickler> ticklers = ticklerMgr.getTicklers(filter,providerId, programId);
 
         List cf = ticklerMgr.getCustomFilters(this.getProviderNo(request));
@@ -194,7 +191,7 @@ public class TicklerAction extends DispatchAction {
         request.getSession().setAttribute("ticklers", ticklers);
         request.setAttribute("providers", providerMgr.getProviders());
         request.setAttribute("demographics", demographicMgr.getDemographics());
-        
+
 		request.setAttribute("customFilters", ticklerMgr.getCustomFilters(this.getProviderNo(request)));
         request.setAttribute("from", getFrom(request));
         request.getSession().setAttribute("filter_order", filter_order);
@@ -203,7 +200,7 @@ public class TicklerAction extends DispatchAction {
 
     /* run myfilter */
     /* show myticklers */
-    public ActionForward my_tickler_filter(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward my_tickler_filter(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         log.debug("my_tickler_filter");
         DynaActionForm ticklerForm = (DynaActionForm) form;
         CustomFilter filter = (CustomFilter) ticklerForm.get("filter");
@@ -222,15 +219,15 @@ public class TicklerAction extends DispatchAction {
         request.getSession().setAttribute("ticklers", ticklers);
         request.setAttribute("providers", providerMgr.getProviders());
         request.setAttribute("demographics", demographicMgr.getDemographics());
-        
+
 		request.setAttribute("programs", programMgr.getProgramDomainInCurrentFacilityForCurrentProvider(true));
-        
+
 		request.setAttribute("customFilters", ticklerMgr.getCustomFilters(this.getProviderNo(request)));
         request.setAttribute("from", getFrom(request));
         return mapping.findForward("list");
     }
 
-    public ActionForward run_custom_filter(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward run_custom_filter(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         log.debug("run_custom_filter");
         DynaActionForm ticklerForm = (DynaActionForm) form;
         CustomFilter filter = (CustomFilter) ticklerForm.get("filter");
@@ -249,7 +246,7 @@ public class TicklerAction extends DispatchAction {
     }
 
     /* ningys-reassign a ticker */
-    public ActionForward reassign(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward reassign(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         log.debug("reassign");
 
         String id = request.getParameter("id");
@@ -265,7 +262,7 @@ public class TicklerAction extends DispatchAction {
     }
 
     /* delete a tickler */
-    public ActionForward delete(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward delete(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         log.debug("delete");
         String[] checks = request.getParameterValues("checkbox");
 
@@ -276,7 +273,7 @@ public class TicklerAction extends DispatchAction {
     }
 
     /* add a comment to a tickler */
-    public ActionForward add_comment(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward add_comment(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         log.debug("add_comment");
 
         String id = request.getParameter("id");
@@ -289,7 +286,7 @@ public class TicklerAction extends DispatchAction {
     }
 
     /* complete a tickler */
-    public ActionForward complete(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward complete(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
         log.debug("complete");
         String[] checks = request.getParameterValues("checkbox");
 
@@ -300,7 +297,7 @@ public class TicklerAction extends DispatchAction {
     }
 
     /* edit a tickler */
-    public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         log.debug("edit");
         String programId = (String) request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
         request.setAttribute("providers", providerMgr.getActiveProviders(null, programId));
@@ -391,11 +388,11 @@ public class TicklerAction extends DispatchAction {
         af.setRedirect(true);
         af.setPath("/Tickler.do?tickler.demographic_webName="+tickler.getDemographic_webName()+"&tickler.demographic_no="+tickler.getDemographic_no());
         return af;
-        
+
     }
 
     /* get a list of prepared ticklers */
-    public ActionForward prepared_tickler_list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward prepared_tickler_list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         log.debug("prepared_tickler_list");
         String path = this.getServlet().getServletContext().getRealPath("/");
         preparedTicklerMgr.setPath(path);
@@ -411,7 +408,6 @@ public class TicklerAction extends DispatchAction {
         PreparedTickler pt = preparedTicklerMgr.getTickler(name);
 
         if (pt != null) {
-            pt.setDependency("consultationManager", consultationMgr);
             pt.setDependency("ticklerManager", ticklerMgr);
             pt.setDependency("providerManager", providerMgr);
             ActionForward af = pt.execute(mapping, form, request, response);
@@ -424,10 +420,10 @@ public class TicklerAction extends DispatchAction {
     }
 
     /* complete a tickler */
-    public ActionForward update_status(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward update_status(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
         log.debug("update_status");
         char status = request.getParameter("status").charAt(0);
-        
+
         String id = request.getParameter("id");
 
         switch (status) {
@@ -445,8 +441,8 @@ public class TicklerAction extends DispatchAction {
     }
 
     public boolean isModuleLoaded(HttpServletRequest request, String moduleName) {
-    
-        
+
+
         OscarProperties proper = OscarProperties.getInstance();
 
         if (proper.getProperty(moduleName, "").equalsIgnoreCase("yes") || proper.getProperty(moduleName, "").equalsIgnoreCase("true") || proper.getProperty(moduleName, "").equalsIgnoreCase("on")) {
