@@ -24,7 +24,6 @@
 package oscar.oscarEncounter.immunization.config.pageUtil;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -34,34 +33,26 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.oscarehr.util.MiscUtils;
-
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.common.dao.ConfigImmunizationDao;
+import org.oscarehr.common.model.ConfigImmunization;
+import org.oscarehr.util.SpringUtils;
 
 public class EctImmDeleteImmunizationSetAction extends Action {
-   
+
+	private ConfigImmunizationDao configImmunizationDao = (ConfigImmunizationDao)SpringUtils.getBean("configImmunizationDao");
+
+
    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
    throws ServletException, IOException {
       EctImmDeleteImmunizationSetForm frm = (EctImmDeleteImmunizationSetForm)form;
       String sets[] = frm.getImmuSets();
-      StringBuilder stringBuffer = new StringBuilder(" Update config_Immunization set archived = 1 where ");
-      for(int i = 0; i < sets.length; i++) {
-         MiscUtils.getLogger().debug(String.valueOf(String.valueOf((new StringBuilder("set len ")).append(sets.length - 1).append(" i = ").append(i))));
-         if(i == sets.length - 1)
-            stringBuffer.append("setId = ".concat(String.valueOf(String.valueOf(sets[i]))));
-         else
-            stringBuffer.append(String.valueOf(String.valueOf((new StringBuilder("setId = ")).append(sets[i]).append(" or "))));
+
+      for(String set:sets) {
+    	  ConfigImmunization configImmunization = configImmunizationDao.find(Integer.parseInt(set));
+    	  configImmunization.setArchived(1);
+    	  configImmunizationDao.merge(configImmunization);
       }
-      
-      if(sets.length > 0)
-         try {
-            
-            String sql = stringBuffer.toString();
-            DBHandler.RunSQL(sql);
-         }
-         catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-         }
+
       return mapping.findForward("success");
    }
 }
