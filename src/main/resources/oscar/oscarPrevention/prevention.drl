@@ -18,7 +18,7 @@
                 
         <java:consequence>              
               prev.log("DTaP-IPV 1");
-              prev.addWarning("DTaP-IPV 1", "Needs First DTaP-IPV /HIB");
+              prev.addWarning("DTaP-IPV", "Needs First DTaP-IPV /HIB");
         </java:consequence>
     </rule>
 
@@ -161,7 +161,7 @@
        <java:condition>!prev.isPreventionNever("Rot")</java:condition>
        <java:consequence>
              System.out.println("Rot 1");
-             prev.addWarning("Rot 1", "Needs First Rot-1 vaccine");
+             prev.addWarning("Rot", "Needs First Rot-1 vaccine");
        </java:consequence>
    </rule>
 
@@ -178,7 +178,7 @@
 
        <java:consequence>
              System.out.println("Rot 2");
-             prev.addWarning("Rot 2", "Needs Second Rot-1 vaccine");
+             prev.addWarning("Rot", "Needs Second Rot-1 vaccine");
        </java:consequence>
    </rule>    
     
