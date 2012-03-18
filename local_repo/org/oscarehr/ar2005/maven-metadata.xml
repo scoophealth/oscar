@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>org.oscarehr</groupId>
+  <artifactId>ar2005</artifactId>
+  <version>SNAPSHOT</version>
+  <versioning>
+    <versions>
+      <version>SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20120317140257</lastUpdated>
+  </versioning>
+</metadata>
