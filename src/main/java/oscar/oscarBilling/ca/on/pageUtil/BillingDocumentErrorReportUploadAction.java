@@ -51,7 +51,9 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.upload.FormFile;
 import org.oscarehr.common.dao.BatchEligibilityDao;
+import org.oscarehr.common.dao.DemographicCustDao;
 import org.oscarehr.common.model.BatchEligibility;
+import org.oscarehr.common.model.DemographicCust;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -66,6 +68,7 @@ import oscar.oscarDB.DBHandler;
 public class BillingDocumentErrorReportUploadAction extends Action {
 
 	private BatchEligibilityDao batchEligibilityDao = (BatchEligibilityDao)SpringUtils.getBean("batchEligibilityDao");
+	private DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
@@ -316,20 +319,14 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 						if (rsDemo.getString("ver").compareTo(bean.getVersion()) == 0) {
 							String sqlVer = "UPDATE demographic SET ver ='##' WHERE hin='" + hin + "'";
 							DBHandler.RunSQL(sqlVer);
-							String sqlAlert = "SELECT * FROM demographiccust where demographic_no ='"
-									+ rsDemo.getString("demographic_no") + "'";
-							MiscUtils.getLogger().debug("Select Demo sql: " + sqlAlert);
-							ResultSet rsAlert = DBHandler.GetSQL(sqlAlert);
-							if (rsAlert.next() && batchEligibility!=null) {
-								String newAlert = rsAlert.getString("cust3") + "\n" + "Invalid old version code: "
+							DemographicCust demographicCust = demographicCustDao.find(Integer.parseInt(rsDemo.getString("demographic_no")));
+							if(demographicCust != null && batchEligibility != null) {
+								String newAlert =  demographicCust.getAlert() + "\n" + "Invalid old version code: "
 										+ bean.getVersion() + "\nReason: " + batchEligibility.getMOHResponse() + "- "
 										+ batchEligibility.getReason() + "\nResponse Code: " + responseCode;
-								String newAlertSql = "UPDATE demographiccust SET cust3 = '" + newAlert
-										+ "' where demographic_no='" + rsDemo.getString("demographic_no") + "'";
-								MiscUtils.getLogger().debug("Update alert msg: " + newAlertSql);
-								DBHandler.RunSQL(newAlertSql);
+								demographicCust.setAlert(newAlert);
+								demographicCustDao.merge(demographicCust);
 							}
-							rsAlert.close();
 						}
 						rsDemo.close();
 					}

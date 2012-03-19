@@ -26,8 +26,12 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
-
-<%      
+<%@page import="org.oscarehr.common.model.DemographicCust" %>
+<%@page import="org.oscarehr.common.dao.DemographicCustDao" %>
+<%
+	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
+%>
+<%
   ApptData apptObj = ApptUtil.getAppointmentFromSession(request);
 
   oscar.OscarProperties pros = oscar.OscarProperties.getInstance();
@@ -37,32 +41,32 @@
   List allStatus = apptStatusMgr.getAllActiveStatus();
 
   Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
-  
+
   DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 %>
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -104,7 +108,7 @@
 <title><bean:message key="appointment.editappointment.title" /></title>
 
 <script language="javascript">
-<!-- // start javascript 
+<!-- // start javascript
 function toggleView() {
     showHideItem('editAppointment');
     showHideItem('viewAppointment');
@@ -149,13 +153,13 @@ function onButUpdate() {
   saveTemp=2;
 }
 
-function onButCancel(){   
-   var aptStat = document.EDITAPPT.status.value;    
+function onButCancel(){
+   var aptStat = document.EDITAPPT.status.value;
    if (aptStat.indexOf('B') == 0){
-       var agree = confirm("<bean:message key="appointment.editappointment.msgCanceledBilledConfirmation"/>") ; 
+       var agree = confirm("<bean:message key="appointment.editappointment.msgCanceledBilledConfirmation"/>") ;
        if (agree){
           window.location='appointmentcontrol.jsp?buttoncancel=Cancel Appt&displaymode=Update Appt&appointment_no=<%=appointment_no%>';
-       }              
+       }
    }else{
       window.location='appointmentcontrol.jsp?buttoncancel=Cancel Appt&displaymode=Update Appt&appointment_no=<%=appointment_no%>';
    }
@@ -165,16 +169,16 @@ function upCaseCtrl(ctrl) {
 }
 function onSub() {
   if( saveTemp==1 ) {
-    var aptStat = document.EDITAPPT.status.value;    
+    var aptStat = document.EDITAPPT.status.value;
     if (aptStat.indexOf('B') == 0){
-       return (confirm("<bean:message key="appointment.editappointment.msgDeleteBilledConfirmation"/>")) ; 
+       return (confirm("<bean:message key="appointment.editappointment.msgDeleteBilledConfirmation"/>")) ;
     }else{
-       return (confirm("<bean:message key="appointment.editappointment.msgDeleteConfirmation"/>")) ; 
+       return (confirm("<bean:message key="appointment.editappointment.msgDeleteConfirmation"/>")) ;
     }
-  } 
+  }
   if( saveTemp==2 ) {
     return calculateEndTime() ;
-  } else 
+  } else
       return true;
 }
 
@@ -184,23 +188,23 @@ function calculateEndTime() {
   var stime = document.EDITAPPT.start_time.value;
   var vlen = stime.indexOf(':')==-1?1:2;
   if(vlen==1 && stime.length==4 ) {
-    document.EDITAPPT.start_time.value = stime.substring(0,2) +":"+ stime.substring(2); 
+    document.EDITAPPT.start_time.value = stime.substring(0,2) +":"+ stime.substring(2);
     stime = document.EDITAPPT.start_time.value;
   }
   if(stime.length!=5) {
     alert("<bean:message key="Appointment.msgInvalidDateFormat"/>");
     return false;
   }
- 
+
   var shour = stime.substring(0,2) ;
   var smin = stime.substring(stime.length-vlen) ;
   var duration = document.EDITAPPT.duration.value ;
   if(eval(duration) == 0) { duration =1; }
   if(eval(duration) < 0) { duration = Math.abs(duration) ; }
-  
+
   var lmin = eval(smin)+eval(duration)-1 ;
   var lhour = parseInt(lmin/60);
-  
+
   if((lmin) > 59) {
     shour = eval(shour) + eval(lhour);
     shour = shour<10?("0"+shour):shour;
@@ -224,14 +228,14 @@ function checkTimeTypeIn(obj) {
 	  if(obj.value.indexOf(':')==-1) {
 	    if(obj.value.length < 3) alert("<bean:message key="Appointment.msgFillValidTimeField"/>");
 	    obj.value = obj.value.substring(0, obj.value.length-2 )+":"+obj.value.substring( obj.value.length-2 );
-	  } 
+	  }
 	}
 }
 <% if (apptObj!=null) { %>
 function pasteAppt(multipleSameDayGroupAppt) {
-    
+
         var warnMsgId = document.getElementById("tooManySameDayGroupApptWarning");
-        
+
         if (multipleSameDayGroupAppt) {
            warnMsgId.style.display = "block";
            if (document.EDITAPPT.updateButton) {
@@ -245,19 +249,19 @@ function pasteAppt(multipleSameDayGroupAppt) {
            }
            if (document.EDITAPPT.cancelButton){
               document.EDITAPPT.cancelButton.style.display = "none";
-           }           
+           }
            if (document.EDITAPPT.noShowButton){
               document.EDITAPPT.noShowButton.style.display = "none";
-           }           
+           }
            if (document.EDITAPPT.labelButton) {
                 document.EDITAPPT.labelButton.style.display = "none";
-           }           
+           }
            if (document.EDITAPPT.repeatButton) {
                 document.EDITAPPT.repeatButton.style.display = "none";
            }
         }
         else {
-           warnMsgId.style.display = "none";    
+           warnMsgId.style.display = "none";
         }
 	document.EDITAPPT.status.value = "<%=apptObj.getStatus()%>";
 	document.EDITAPPT.duration.value = "<%=apptObj.getDuration()%>";
@@ -318,7 +322,7 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
 <div id="editAppointment" style="display:<%= (isMobileOptimized && bFirstDisp) ? "none":"block"%>;">
 <FORM NAME="EDITAPPT" METHOD="post" ACTION="appointmentcontrol.jsp"
 	onSubmit="return(onSub())"><INPUT TYPE="hidden"
-	NAME="displaymode" value=""> 
+	NAME="displaymode" value="">
     <div class="header deep">
         <div class="title">
             <!-- We display a shortened title for the mobile version -->
@@ -336,17 +340,17 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
 	String demono="", chartno="", phone="", rosterstatus="", alert="", doctorNo="";
 	String strApptDate = bFirstDisp?"":request.getParameter("appointment_date") ;
 
-	
+
 	if (bFirstDisp) {
 		List<Map<String,Object>> resultList = oscarSuperManager.find("appointmentDao",
 				request.getParameter("dboperation"), new Object [] {appointment_no});
 		if (resultList.size() == 0) {
 %>
-<bean:message key="appointment.editappointment.msgNoSuchAppointment" /> 
+<bean:message key="appointment.editappointment.msgNoSuchAppointment" />
 <%
 			return;
 		} else {
-			appt = resultList.get(0); 
+			appt = resultList.get(0);
 		}
 	}
 
@@ -366,18 +370,18 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
 			phone = (String) detail.get("phone");
 			rosterstatus = (String) detail.get("roster_status");
 		}
-   		resultList = oscarSuperManager.find("appointmentDao", "search_demographiccust_alert", new Object [] {demono});
-		if (resultList.size() > 0) {
-			Map detail = resultList.get(0);
-			alert = (String) detail.get("cust3");
+		DemographicCust demographicCust = demographicCustDao.find(Integer.parseInt(demono));
+		if(demographicCust != null) {
+			alert = demographicCust.getAlert();
 		}
+
 	}
-        
+
         OscarProperties props = OscarProperties.getInstance();
         String displayStyle="display:none";
-        String myGroupNo = (String) session.getAttribute("groupno");  
+        String myGroupNo = (String) session.getAttribute("groupno");
         boolean bMultipleSameDayGroupAppt = false;
-        if (props.getProperty("allowMultipleSameDayGroupAppt", "").equalsIgnoreCase("no")) {  
+        if (props.getProperty("allowMultipleSameDayGroupAppt", "").equalsIgnoreCase("no")) {
 
             if (!bFirstDisp && !demono.equals("0") && !demono.equals("")) {
                 String [] sqlParam = new String[3] ;
@@ -389,16 +393,16 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
                 long numSameDayGroupAppts = resultList.size() > 0 ? (Long)resultList.get(0).get("numAppts") : 0;
                 bMultipleSameDayGroupAppt = (numSameDayGroupAppts > 0);
             }
-            
+
             if (bMultipleSameDayGroupAppt){
                 displayStyle="display:block";
             }
 %>
 <div id="tooManySameDayGroupApptWarning" style="<%=displayStyle%>">
-    <table width="98%" BGCOLOR="red" border=1 align='center'> 
+    <table width="98%" BGCOLOR="red" border=1 align='center'>
         <tr>
             <th>
-                <font color='white'> 
+                <font color='white'>
                     <bean:message key='appointment.addappointment.titleMultipleGroupDayBooking'/><br/>
                     <bean:message key='appointment.addappointment.MultipleGroupDayBooking'/>
                 </font>
@@ -406,9 +410,9 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
         </tr>
     </table>
 </div>
- <%            
+ <%
         }
-   
+
     //RJ 07/12/2006
     //If page is loaded first time hit db for patient's family doctor
     //Else if we are coming back from search this has been done for us
@@ -436,15 +440,15 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
             <div class="space">&nbsp;</div>
             <div class="label"><bean:message key="Appointment.formStatus" />:</div>
             <div class="input">
-<%     
+<%
               String statusCode = request.getParameter("status");
 			  String importedStatus = null;
               if (bFirstDisp){
                   statusCode = (String) appt.get("status");
                   importedStatus = (String) appt.get("imported_status");
               }
-              
-              
+
+
               String signOrVerify = "";
               if (statusCode.length() >= 2){
                   signOrVerify = statusCode.substring(1,2);
@@ -458,7 +462,7 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
 						<%=((AppointmentStatus)allStatus.get(i)).getStatus().equals(statusCode)?"SELECTED":""%>><%=((AppointmentStatus)allStatus.get(i)).getDescription()%></option>
 					<% } %>
 				</select> <%
-              } else { 
+              } else {
               	if (importedStatus==null || importedStatus.trim().equals("")) { %>
               	<INPUT TYPE="TEXT" NAME="status" VALUE="<%=statusCode%>" WIDTH="25"> <%
               	} else { %>
@@ -494,13 +498,13 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
             String colo = bMultisites
                                         ? ApptUtil.getColorFromLocation(sites, loc)
                                         : bMoreAddr? ApptUtil.getColorFromLocation(props.getProperty("scheduleSiteID", ""), props.getProperty("scheduleSiteColor", ""),loc) : "white";
-            %>                                  
+            %>
                         <% if (bMultisites) { %>
                                 <INPUT TYPE="button" NAME="typeButton" VALUE="<bean:message key="Appointment.formType"/>" onClick="openTypePopup()">
                         <% } else { %>
                                 <bean:message key="Appointment.formType"/>
                         <% } %>
-        
+
             </div>
 
             <div class="input">
@@ -519,7 +523,7 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
     int endtime = (Integer.parseInt(String.valueOf(appt.get("end_time")).substring(0,2) ) )*60 + (Integer.parseInt(String.valueOf(appt.get("end_time")).substring(3,5) ) ) ;
     int starttime = (Integer.parseInt(String.valueOf(appt.get("start_time")).substring(0,2) ) )*60 + (Integer.parseInt(String.valueOf(appt.get("start_time")).substring(3,5) ) ) ;
     everyMin = endtime - starttime +1;
-    
+
     if (!demono.equals("0") && !demono.equals("") && (demographicDao != null)) {
         Demographic demo = demographicDao.getDemographic(demono);
         nameSb.append(demo.getLastName())
@@ -624,10 +628,10 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
 boolean isSiteSelected = false;
 if (bMultisites) { %>
 				<select tabindex="4" name="location" style="background-color: <%=colo%>" onchange='this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor'>
-				<% 
+				<%
 					StringBuilder sb = new StringBuilder();
-					for (Site s:sites) { 
-						if (s.getName().equals(loc)) isSiteSelected = true; // added by vic 
+					for (Site s:sites) {
+						if (s.getName().equals(loc)) isSiteSelected = true; // added by vic
 						sb.append("<option value=\"").append(s.getName()).append("\" style=\"background-color: ").append(s.getBgColor()).append("\" ").append(s.getName().equals(loc)?"selected":"").append(">").append(s.getName()).append("</option>");
 					}
 					if (isSiteSelected) {
@@ -636,12 +640,12 @@ if (bMultisites) { %>
 						out.println("<option value='"+loc+"'>"+loc+"</option>");
 					}
 				%>
-				
+
 				</select>
-<% } else { 
+<% } else {
 	isSiteSelected = true;
 	// multisites end ==================
-%>				           
+%>
             <INPUT TYPE="TEXT" NAME="location" tabindex="4"
 					VALUE="<%=bFirstDisp?appt.get("location"):request.getParameter("location")%>"
 					WIDTH="25">
@@ -669,16 +673,16 @@ if (bMultisites) { %>
                  origDate =  bFirstDisp ? String.valueOf(appt.get("createdatetime")) : request.getParameter("createDate");
                  String lastDateTime = bFirstDisp?String.valueOf(appt.get("updatedatetime")):request.getParameter("updatedatetime");
                  if (lastDateTime == null){ lastDateTime = bFirstDisp?String.valueOf(appt.get("createdatetime")):request.getParameter("createdatetime"); }
- 
+
 				GregorianCalendar now=new GregorianCalendar();
 				String strDateTime=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)+" "
 					+	now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND);
-                                
+
                  String remarks = "";
                  if (bFirstDisp && appt.get("remarks")!=null) {
                      remarks = (String) appt.get("remarks");
                  }
-               
+
 %>
                 <INPUT TYPE="TEXT" NAME="lastcreatedatetime" readonly
                     VALUE="<%=bFirstDisp?lastDateTime:request.getParameter("lastcreatedatetime")%>"
@@ -687,7 +691,7 @@ if (bMultisites) { %>
 				<INPUT TYPE="hidden" NAME="provider_no" VALUE="<%=curProvider_no%>">
 				<INPUT TYPE="hidden" NAME="dboperation" VALUE="update_apptrecord">
                 <INPUT TYPE="hidden" NAME="creator" VALUE="<%=userlastname+", "+userfirstname%>">
-                <INPUT TYPE="hidden" NAME="remarks" VALUE="<%=remarks%>"> 
+                <INPUT TYPE="hidden" NAME="remarks" VALUE="<%=remarks%>">
                 <INPUT TYPE="hidden" NAME="appointment_no" VALUE="<%=appointment_no%>">
             </div>
         </li>
@@ -715,7 +719,7 @@ if (bMultisites) { %>
             		}
             	%>
             	<input type="checkbox" name="urgency" value="critical" <%=urgencyChecked%>/>
-            </div>        
+            </div>
         </li>
         <li class="row weak">
 			<div class="label"></div>
@@ -725,8 +729,8 @@ if (bMultisites) { %>
             <div class="input"></div>
         </li>
     </ul>
-    
-<% if (isSiteSelected) { %>    
+
+<% if (isSiteSelected) { %>
 <table class="buttonBar deep">
 	<tr>
             <% if (!bMultipleSameDayGroupAppt) { %>
@@ -783,12 +787,12 @@ if (bMultisites) { %>
 			onclick="document.forms['EDITAPPT'].displaymode.value='Cut';"
 			value="Cut" /> | <input type="submit"
 			onclick="document.forms['EDITAPPT'].displaymode.value='Copy';"
-			value="Copy" /> 
-                     <% 
+			value="Copy" />
+                     <%
                      if(bFirstDisp && apptObj!=null) {
-           
+
                             long numSameDayGroupApptsPaste = 0;
-           
+
                             if (props.getProperty("allowMultipleSameDayGroupAppt", "").equalsIgnoreCase("no")) {
                                 String [] sqlParam = new String[3] ;
                                 sqlParam[0] = myGroupNo; //schedule group

@@ -44,7 +44,12 @@
 	scope="page" />
 <jsp:useBean id="namevector" class="java.util.Vector" scope="page" />
 <jsp:useBean id="novector" class="java.util.Vector" scope="page" />
-
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.DemographicCust" %>
+<%@page import="org.oscarehr.common.dao.DemographicCustDao" %>
+<%
+	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
+%>
 <% // table demographiccust: cust1 = nurse   cust2 = resident   cust4 = midwife
 
   String [][] dbQueries = new String[1][1];
@@ -52,29 +57,19 @@
 
   if (strDbType.trim().equalsIgnoreCase("mysql")) {;
   		dbQueries=new String[][] {
-		    {"update_residentmultiple", "update demographiccust set cust2 = ? where cust2 = ? and demographic_no in " },
-		    {"update_nursemultiple", "update demographiccust set cust1 = ? where cust1 = ? and demographic_no in " },
-		    {"update_midwifemultiple", "update demographiccust set cust4 = ? where cust4 = ? and demographic_no in " },
 		    {"update_provider", "update demographic set provider_no = ? where provider_no = ? " },
 		    {"select_demoname", "select d.demographic_no from demographic d, demographiccust c where c.cust2=? and d.demographic_no=c.demographic_no and d.last_name REGEXP ? " },
 		    {"search_provider", "select provider_no, last_name, first_name from provider order by last_name"},
 		    {"select_demoname1", "select d.demographic_no from demographic d, demographiccust c where c.cust1=? and d.demographic_no=c.demographic_no and d.last_name REGEXP ? " },
 		    {"select_demoname2", "select d.demographic_no from demographic d, demographiccust c where c.cust4=? and d.demographic_no=c.demographic_no and d.last_name REGEXP ? " },
-		    {"update_residentsingle", "update demographiccust  set cust2 = ? where cust2 = ? and demographic_no in (?) " },
-		    {"update_nursesingle", "update demographiccust  set cust1 = ? where cust1 = ? and demographic_no in (?) " },
 		  };
   }else if (strDbType.trim().equalsIgnoreCase("postgresql"))  {
   		dbQueries=new String[][] {
-		    {"update_residentmultiple", "update demographiccust set cust2 = ? where cust2 = ? and demographic_no in " },
-		    {"update_nursemultiple", "update demographiccust set cust1 = ? where cust1 = ? and demographic_no in " },
-		    {"update_midwifemultiple", "update demographiccust set cust4 = ? where cust4 = ? and demographic_no in " },
 		    {"update_provider", "update demographic set provider_no = ? where provider_no = ? " },
 		    {"select_demoname", "select d.demographic_no from demographic d, demographiccust c where c.cust2=? and d.demographic_no=c.demographic_no and d.last_name ~* ? " },
 		    {"search_provider", "select provider_no, last_name, first_name from provider order by last_name"},
 		    {"select_demoname1", "select d.demographic_no from demographic d, demographiccust c where c.cust1=? and d.demographic_no=c.demographic_no and d.last_name ~* ? " },
 		    {"select_demoname2", "select d.demographic_no from demographic d, demographiccust c where c.cust4=? and d.demographic_no=c.demographic_no and d.last_name ~* ? " },
-		    {"update_residentsingle", "update demographiccust  set cust2 = ? where cust2 = ? and demographic_no in (?) " },
-		    {"update_nursesingle", "update demographiccust  set cust1 = ? where cust1 = ? and demographic_no in (?) " },
 		  };
   }
   String[][] responseTargets=new String[][] {  };
@@ -152,7 +147,17 @@ function setregexp2() {
       String instrdemo = sbtemp.toString();
       dbQueries[0][1] = dbQueries[0][1] + "("+ instrdemo +")" ;
       updatedpBean.doConfigure(dbQueries,responseTargets);
-      rowsAffected = updatedpBean.queryExecuteUpdate(param, "update_residentmultiple");
+
+      List<Integer> demoList= new ArrayList<Integer>();
+      for(int x=2;x<param.length;x++) {
+    	  demoList.add(Integer.parseInt(param[x]));
+      }
+      List<DemographicCust> demographicCusts = demographicCustDao.findMultipleResident(demoList, param[1]);
+      for(DemographicCust demographicCust:demographicCusts) {
+    	  demographicCust.setResident(param[0]);
+    	  demographicCustDao.merge(demographicCust);
+      }
+      rowsAffected = demographicCusts.size();
     } %>
 <%=rowsAffected %>
 <bean:message key="admin.updatedemographicprovider.msgRecords" />
@@ -188,7 +193,17 @@ function setregexp2() {
       String instrdemo = sbtemp.toString();
       dbQueries[1][1] += "("+ instrdemo +")" ;
       updatedpBean.doConfigure(dbQueries,responseTargets);
-      rowsAffected = updatedpBean.queryExecuteUpdate(param, "update_nursemultiple");
+
+      List<Integer> demoList= new ArrayList<Integer>();
+      for(int x=2;x<param.length;x++) {
+    	  demoList.add(Integer.parseInt(param[x]));
+      }
+      List<DemographicCust> demographicCusts = demographicCustDao.findMultipleNurse(demoList, param[1]);
+      for(DemographicCust demographicCust:demographicCusts) {
+    	  demographicCust.setNurse(param[0]);
+    	  demographicCustDao.merge(demographicCust);
+      }
+      rowsAffected = demographicCusts.size();
     } %>
 <%=rowsAffected %>
 <bean:message key="admin.updatedemographicprovider.msgRecords" />
@@ -224,7 +239,18 @@ function setregexp2() {
       String instrdemo = sbtemp.toString();
       dbQueries[2][1] += "("+ instrdemo +")" ;
       updatedpBean.doConfigure(dbQueries,responseTargets);
-      rowsAffected = updatedpBean.queryExecuteUpdate(param, "update_midwifemultiple");
+
+      List<Integer> demoList= new ArrayList<Integer>();
+      for(int x=2;x<param.length;x++) {
+    	  demoList.add(Integer.parseInt(param[x]));
+      }
+      List<DemographicCust> demographicCusts = demographicCustDao.findMultipleMidwife(demoList, param[1]);
+      for(DemographicCust demographicCust:demographicCusts) {
+    	  demographicCust.setMidwife(param[0]);
+    	  demographicCustDao.merge(demographicCust);
+      }
+      rowsAffected = demographicCusts.size();
+
     } %>
 <%=rowsAffected %>
 <bean:message key="admin.updatedemographicprovider.msgRecords" />

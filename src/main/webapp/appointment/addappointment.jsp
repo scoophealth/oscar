@@ -37,6 +37,12 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%--RJ 07/07/2006 --%>
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.DemographicCust" %>
+<%@page import="org.oscarehr.common.dao.DemographicCustDao" %>
+<%
+	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
+%>
 
 <%
   int iPageSize=5;
@@ -188,9 +194,9 @@ function onButRepeat() {
 }
 <% if(apptObj!=null) { %>
 function pasteAppt(multipleSameDayGroupAppt) {
-        
+
         var warnMsgId = document.getElementById("tooManySameDayGroupApptWarning");
-        
+
         if (multipleSameDayGroupAppt) {
            warnMsgId.style.display = "block";
            if (document.forms[0].groupButton) {
@@ -201,17 +207,17 @@ function pasteAppt(multipleSameDayGroupAppt) {
            }
            document.forms[0].addButton.style.display = "none";
            document.forms[0].printButton.style.display = "none";
-           
+
            if (document.forms[0].pasteButton) {
                 document.forms[0].pasteButton.style.display = "none";
            }
-           
+
            if (document.forms[0].apptRepeatButton) {
                 document.forms[0].apptRepeatButton.style.display = "none";
            }
         }
         else {
-           warnMsgId.style.display = "none";    
+           warnMsgId.style.display = "none";
         }
         //document.forms[0].status.value = "<%=apptObj.getStatus()%>";
         document.forms[0].duration.value = "<%=apptObj.getDuration()%>";
@@ -225,8 +231,8 @@ function pasteAppt(multipleSameDayGroupAppt) {
         if('<%=apptObj.getUrgency()%>' == 'critical') {
                 document.forms[0].urgency.checked = "checked";
         }
-            
-}                   
+
+}
 <% } %>
 
 
@@ -240,7 +246,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
 			popup.focus();
 		}
 	}
-		
+
 	function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
 		  document.forms['ADDAPPT'].type.value = typeSel;
 		  document.forms['ADDAPPT'].reason.value = reasonSel;
@@ -259,8 +265,8 @@ function pasteAppt(multipleSameDayGroupAppt) {
 		          }
 		  }
 	}
-		
-		
+
+
 // stop javascript -->
 
 </script>
@@ -377,18 +383,18 @@ function pasteAppt(multipleSameDayGroupAppt) {
   String sex = "";
 
   //to show Alert msg
- 
+
   OscarProperties props = OscarProperties.getInstance();
   boolean bMultipleSameDayGroupAppt = false;
   String displayStyle = "display:none";
-  String myGroupNo = (String) session.getAttribute("groupno");  
- 
+  String myGroupNo = (String) session.getAttribute("groupno");
+
   if (props.getProperty("allowMultipleSameDayGroupAppt", "").equalsIgnoreCase("no")) {
-      
+
         String demographicNo = request.getParameter("demographic_no");
 
-        if (!bFirstDisp && (demographicNo != null) && (!demographicNo.equals(""))) {          
-   
+        if (!bFirstDisp && (demographicNo != null) && (!demographicNo.equals(""))) {
+
             String [] sqlParam = new String[3] ;
             sqlParam[0] = myGroupNo; //schedule group
             sqlParam[1] = demographicNo;
@@ -398,16 +404,16 @@ function pasteAppt(multipleSameDayGroupAppt) {
             long numSameDayGroupAppts = resultList.size() > 0 ? (Long)resultList.get(0).get("numAppts") : 0;
             bMultipleSameDayGroupAppt = (numSameDayGroupAppts > 0);
         }
-        
+
         if (bMultipleSameDayGroupAppt){
             displayStyle="display:block";
         }
  %>
 <div id="tooManySameDayGroupApptWarning" style="<%=displayStyle%>">
-    <table width="98%" BGCOLOR="red" border=1 align='center'> 
+    <table width="98%" BGCOLOR="red" border=1 align='center'>
         <tr>
             <th>
-                <font color='white'> 
+                <font color='white'>
                     <bean:message key='appointment.addappointment.titleMultipleGroupDayBooking'/><br/>
                     <bean:message key='appointment.addappointment.MultipleGroupDayBooking'/>
                 </font>
@@ -415,11 +421,11 @@ function pasteAppt(multipleSameDayGroupAppt) {
         </tr>
     </table>
 </div>
- <%            
+ <%
   }
-  
+
   if (!bFirstDisp && request.getParameter("demographic_no") != null && !request.getParameter("demographic_no").equals("")) {
-               	
+
         resultList = oscarSuperManager.find("appointmentDao", "search_demographic_statusroster", new Object [] {request.getParameter("demographic_no") });
 	for (Map status : resultList) {
 
@@ -469,24 +475,23 @@ function pasteAppt(multipleSameDayGroupAppt) {
 
         }
 	}
+	DemographicCust demographicCust = demographicCustDao.find(Integer.parseInt(request.getParameter("demographic_no")));
 
-	resultList = oscarSuperManager.find("appointmentDao", "search_demographiccust_alert", new Object [] {request.getParameter("demographic_no") });
-	for (Map alert : resultList) {
-		if (alert.get("cust3") != null && !alert.get("cust3").equals("") ) {
+		if (demographicCust.getAlert() != null && !demographicCust.getAlert().equals("") ) {
 
 %>
 <p>
 <table width="98%" BGCOLOR="yellow" border=1 align='center'>
 	<tr>
-		<td><font color='red'><bean:message key="Appointment.formAlert" />: <b><%=alert.get("cust3")%></b></font></td>
+		<td><font color='red'><bean:message key="Appointment.formAlert" />: <b><%=demographicCust.getAlert()%></b></font></td>
 	</tr>
 </table>
 <%
 
 		}
-	}
-  } 
-  
+
+  }
+
 
   if(apptnum!=0) {
 
@@ -559,31 +564,31 @@ function pasteAppt(multipleSameDayGroupAppt) {
                     HEIGHT="20" border="0" onChange="checkTimeTypeIn(this)">
             </div>
             <div class="space">&nbsp;</div>
-            
-            <%		
+
+            <%
 				    // multisites start ==================
 				    boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable(
 );
 				    SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
 				    List<Site> sites = siteDao.getActiveSitesByProviderNo((String) session.getAttribute("user"));
 				    // multisites end ==================
-								    
+
 				    boolean bMoreAddr = bMultisites? true : props.getProperty("scheduleSiteID", "").equals("") ? false : true;
 				    String tempLoc = "";
-				    if(bFirstDisp && bMoreAddr) {                
+				    if(bFirstDisp && bMoreAddr) {
 				            tempLoc = (new JdbcApptImpl()).getLocationFromSchedule(dateString2, curProvider_no);
 				    }
 				    String loc = bFirstDisp?tempLoc:request.getParameter("location");
 				    String colo = bMultisites
 				                                        ? ApptUtil.getColorFromLocation(sites, loc)
 				                                        : bMoreAddr? ApptUtil.getColorFromLocation(props.getProperty("scheduleSiteID", ""), props.getProperty("scheduleSiteColor", ""),loc) : "white";
-					 if (bMultisites) { 
+					 if (bMultisites) {
 			%>
 				    <INPUT TYPE="button" NAME="typeButton" VALUE="<bean:message key="Appointment.formType"/>" onClick="openTypePopup()">
 			<% } else { %>
 				    <div class="label"><bean:message key="Appointment.formType"/>:</div>
 			<% } %>
-			
+
             <div class="input">
                 <INPUT TYPE="TEXT" NAME="type"
                     VALUE='<%=bFirstDisp?"":request.getParameter("type").equals("")?"":request.getParameter("type")%>'
@@ -708,7 +713,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
             </div>
         </li>
         <li class="row weak">
-            <% String emailReminder = pros.getProperty("emailApptReminder"); 
+            <% String emailReminder = pros.getProperty("emailApptReminder");
                if ((emailReminder != null) && emailReminder.equalsIgnoreCase("yes")) { %>
                     <div class="label"><bean:message key="Appointment.formEmailReminder" />:</div>
                     <div class="input"><input type="checkbox" name="emailPt" value="email reminder"></div>
@@ -716,12 +721,12 @@ function pasteAppt(multipleSameDayGroupAppt) {
                     <div class="label"></div>
                     <div class="input"></div>
 	     <%  }%>
-           
+
             <div class="space">&nbsp;</div>
             <div class="label"><bean:message key="Appointment.formCritical" />:</div>
             <div class="input">
             	<input type="checkbox" name="urgency" value="critical"/>
-            </div>        
+            </div>
         </li>
     </ul>
 </div>
@@ -734,7 +739,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
       <INPUT TYPE="submit" id="groupButton"
             onclick="document.forms['ADDAPPT'].displaymode.value='Group Appt'"
             VALUE="<bean:message key="appointment.addappointment.btnGroupAppt"/>"
-            <%=disabled%>> 
+            <%=disabled%>>
         <% }
 
   if(dateString2.equals( inform.format(inform.parse(now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH))) )
@@ -767,11 +772,11 @@ function pasteAppt(multipleSameDayGroupAppt) {
 		<TD></TD>
         <% } %>
     <TD align="right">
-        <% 
+        <%
            if(bFirstDisp && apptObj!=null) {
-           
+
                long numSameDayGroupApptsPaste = 0;
-           
+
                if (props.getProperty("allowMultipleSameDayGroupAppt", "").equalsIgnoreCase("no")) {
                     String [] sqlParam = new String[3] ;
                     sqlParam[0] = myGroupNo; //schedule group
@@ -781,12 +786,12 @@ function pasteAppt(multipleSameDayGroupAppt) {
                     resultList = oscarSuperManager.find("appointmentDao", "search_group_day_appt", sqlParam);
                     numSameDayGroupApptsPaste = resultList.size() > 0 ? (Long)resultList.get(0).get("numAppts") : 0;
                 }
-          %> 
+          %>
           <input type="button" id="pasteButton" value="Paste" onclick="pasteAppt(<%=(numSameDayGroupApptsPaste > 0)%>);">
         <% }%>
           <INPUT TYPE="RESET" id="backButton" class="leftButton top" VALUE="<bean:message key="appointment.addappointment.btnCancel"/>" onClick="window.close();">
        <% if (!props.getProperty("allowMultipleSameDayGroupAppt", "").equalsIgnoreCase("no")) {%>
-          <input type="button" id="apptRepeatButton" value="<bean:message key="appointment.addappointment.btnRepeat"/>" onclick="onButRepeat()" <%=disabled%>> 
+          <input type="button" id="apptRepeatButton" value="<bean:message key="appointment.addappointment.btnRepeat"/>" onclick="onButRepeat()" <%=disabled%>>
       <%  } %>
    </TD>
 	</tr>

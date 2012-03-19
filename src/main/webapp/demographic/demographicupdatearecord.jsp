@@ -42,8 +42,11 @@
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.dao.DemographicArchiveDao" %>
 <%@page import="org.oscarehr.common.model.DemographicArchive" %>
+<%@page import="org.oscarehr.common.model.DemographicCust" %>
+<%@page import="org.oscarehr.common.dao.DemographicCustDao" %>
 <%
 	DemographicArchiveDao demographicArchiveDao = (DemographicArchiveDao)SpringUtils.getBean("demographicArchiveDao");
+	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
 %>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script></head>
@@ -246,15 +249,10 @@
         }
     }
 
-    int[] paramOne =new int[] {Integer.parseInt(request.getParameter("demographic_no"))};
-    apptMainBean.queryExecuteUpdate(paramOne, "archive_record");
-
     DemographicArchive da = new DemographicArchive();
 	da.setDemographicNo(Integer.parseInt(request.getParameter("demographic_no")));
-
-
-
     demographicArchiveDao.persist(da);
+
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, dtparam, intparam, request.getParameter("dboperation"));
   if (rowsAffected ==1) {
     //find the democust record for update
@@ -264,27 +262,27 @@
     }catch(Exception nameAgeEx){
     	MiscUtils.getLogger().error("ERROR RESETTING NAME AGE", nameAgeEx);
     }
-    rs = apptMainBean.queryResults(request.getParameter("demographic_no"), "search_custrecordno");
-    if(rs.next() ) { //update
-      String[] param1 =new String[6];
-	    param1[0]=request.getParameter("resident");
-	    param1[1]=request.getParameter("nurse");
-	    param1[2]=request.getParameter("alert");
-            param1[3]=request.getParameter("midwife");
-	    param1[4]="<unotes>"+ request.getParameter("notes")+"</unotes>";
-	    param1[5]=request.getParameter("demographic_no");
-        rowsAffected = apptMainBean.queryExecuteUpdate(param1, "update_custrecord");
-
-    } else { //add
-	    String[] param2 =new String[6];
-	    param2[0]=request.getParameter("demographic_no");
-	    param2[1]=request.getParameter("resident");
-	    param2[2]=request.getParameter("nurse");
-	    param2[3]=request.getParameter("alert");
-	    param2[4]=request.getParameter("midwife");
-	    param2[5]="<unotes>"+ request.getParameter("notes")+"</unotes>";
-        rowsAffected = apptMainBean.queryExecuteUpdate(param2, "add_custrecord");
+    DemographicCust demographicCust = demographicCustDao.find(Integer.parseInt(request.getParameter("demographic_no")));
+    if(demographicCust != null) {
+    	demographicCust.setResident(request.getParameter("resident"));
+    	demographicCust.setNurse(request.getParameter("nurse"));
+    	demographicCust.setAlert(request.getParameter("alert"));
+    	demographicCust.setMidwife(request.getParameter("midwife"));
+    	demographicCust.setNotes("<unotes>"+ request.getParameter("notes")+"</unotes>");
+    	demographicCustDao.merge(demographicCust);
+    	rowsAffected=1;
+    } else {
+    	demographicCust = new DemographicCust();
+    	demographicCust.setResident(request.getParameter("resident"));
+    	demographicCust.setNurse(request.getParameter("nurse"));
+    	demographicCust.setAlert(request.getParameter("alert"));
+    	demographicCust.setMidwife(request.getParameter("midwife"));
+    	demographicCust.setNotes("<unotes>"+ request.getParameter("notes")+"</unotes>");
+    	demographicCust.setId(Integer.parseInt(request.getParameter("demographic_no")));
+    	demographicCustDao.persist(demographicCust);
+    	rowsAffected=1;
     }
+
 
     if (vLocale.getCountry().equals("BR")) {
 	    //find the demographic_ptbr record for update

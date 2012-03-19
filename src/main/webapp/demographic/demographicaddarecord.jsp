@@ -35,7 +35,14 @@
  */
 -->
 
-<%@page import="org.apache.commons.lang.StringUtils"%><html:html locale="true">
+<%@page import="org.apache.commons.lang.StringUtils"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.DemographicCust" %>
+<%@page import="org.oscarehr.common.dao.DemographicCustDao" %>
+<%
+	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
+%>
+<html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <link rel="stylesheet" href="../web.css" />
@@ -66,13 +73,13 @@
     String dem = null;
 
     String curUser_no = (String)session.getAttribute("user");
-    
+
     //check to see if new case management is request
     ArrayList users = (ArrayList)session.getServletContext().getAttribute("CaseMgmtUsers");
     boolean newCaseManagement = false;
-    
+
     if( users != null && users.size() > 0 )
-        newCaseManagement = true;         
+        newCaseManagement = true;
 
   //if action is good, then give me the result
 	  //param[0]=Integer.parseIntdemographicaddarecord((new GregorianCalendar()).get(Calendar.MILLISECOND) ); //int
@@ -145,13 +152,13 @@
 
 	  param[26] =new DBPreparedHandlerParam("<rdohip>" + request.getParameter("r_doctor_ohip") + "</rdohip>" + "<rd>" + request.getParameter("r_doctor") + "</rd>"+ (request.getParameter("family_doc")!=null? ("<family_doc>" + request.getParameter("family_doc") + "</family_doc>") : ""));
           param[27] =new DBPreparedHandlerParam(request.getParameter("countryOfOrigin"));
-          param[28] =new DBPreparedHandlerParam(request.getParameter("newsletter"));     
+          param[28] =new DBPreparedHandlerParam(request.getParameter("newsletter"));
           param[29] =new DBPreparedHandlerParam(request.getParameter("sin"));
 	  param[30] =new DBPreparedHandlerParam(request.getParameter("title"));
 	  param[31] =new DBPreparedHandlerParam(request.getParameter("official_lang"));
 	  param[32] =new DBPreparedHandlerParam(request.getParameter("spoken_lang"));
           param[33] =new DBPreparedHandlerParam(curUser_no);
-          
+
 	String[] paramName =new String[5];
 	  paramName[0]=param[0].getStringValue().trim(); //last name
 	  paramName[1]=param[1].getStringValue().trim(); //first name
@@ -173,9 +180,9 @@
      String hcType = request.getParameter("hc_type");
      String ver  = request.getParameter("ver");
      if (hcType != null && ver != null && hcType.equals("BC") && ver.equals("66")){
-        hinDupCheckException = true;    
+        hinDupCheckException = true;
      }
-    
+
     if(request.getParameter("hin")!=null && request.getParameter("hin").length()>5 && !hinDupCheckException) {
   		//oscar.oscarBilling.ca.on.data.BillingONDataHelp dbObj = new oscar.oscarBilling.ca.on.data.BillingONDataHelp();
 		//String sql = "select demographic_no from demographic where hin=? and year_of_birth=? and month_of_birth=? and date_of_birth=?";
@@ -192,7 +199,7 @@
 
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation")); //add_record
   if (rowsAffected ==1) {
-  
+
     //find the demo_no and add democust record for alert
     String[] param1 =new String[7];
 	  param1[0]=request.getParameter("last_name");
@@ -202,17 +209,17 @@
 	  param1[4]=request.getParameter("date_of_birth");
 	  param1[5]=request.getParameter("hin");
 	  param1[6]=request.getParameter("ver");
- 
+
     rs = apptMainBean.queryResults(param1, "search_demoaddno");
     if(rs.next()) { //
-        
+
         //propagate demographic to caisi admission table
         if( newCaseManagement ) {
             //fetch programId associated with provider
             //if none(0) then check for OSCAR program; if available set it as default
             oscar.oscarEncounter.data.EctProgram program = new oscar.oscarEncounter.data.EctProgram(request.getSession());
             String progId = program.getProgram(request.getParameter("staff"));
-            if( progId.equals("0") ) {                
+            if( progId.equals("0") ) {
                 ResultSet rsProg = apptMainBean.queryResults("OSCAR", "search_program");
                 if( rsProg.next() )
                     progId = rsProg.getString("id");
@@ -237,26 +244,30 @@
 
             apptMainBean.queryExecuteUpdate(caisiParam, "add2caisi_admission");
         }
-        
+
         //add democust record for alert
         String[] param2 =new String[6];
 	    param2[0]=apptMainBean.getString(rs,"demographic_no");
-	    param2[1]=request.getParameter("cust1");
-	    param2[2]=request.getParameter("cust2");
-	    param2[3]=request.getParameter("cust3");
-	    param2[4]=request.getParameter("cust4");
-	    param2[5]="<unotes>"+request.getParameter("content")+"</unotes>";
-        rowsAffected = apptMainBean.queryExecuteUpdate(param2, "add_custrecord" ); //add_record
+
+        DemographicCust demographicCust = new DemographicCust();
+       	demographicCust.setResident(request.getParameter("cust2"));
+    	demographicCust.setNurse(request.getParameter("cust1"));
+    	demographicCust.setAlert(request.getParameter("cust3"));
+    	demographicCust.setMidwife(request.getParameter("cust4"));
+    	demographicCust.setNotes("<unotes>"+ request.getParameter("content")+"</unotes>");
+    	demographicCust.setId(Integer.parseInt(apptMainBean.getString(rs,"demographic_no")));
+    	demographicCustDao.persist(demographicCust);
+        rowsAffected=1;
 
        dem = apptMainBean.getString(rs,"demographic_no");
        DemographicExt dExt = new DemographicExt();
-	   
+
        String proNo = (String) session.getValue("user");
        dExt.addKey(proNo, dem, "hPhoneExt", request.getParameter("hPhoneExt"), "");
        dExt.addKey(proNo, dem, "wPhoneExt", request.getParameter("wPhoneExt"), "");
        dExt.addKey(proNo, dem, "demo_cell", request.getParameter("cellphone"), "");
        dExt.addKey(proNo, dem, "cytolNum",  request.getParameter("cytolNum"),  "");
-       
+
        dExt.addKey(proNo, dem, "ethnicity",     request.getParameter("ethnicity"),     "");
        dExt.addKey(proNo, dem, "area",          request.getParameter("area"),          "");
        dExt.addKey(proNo, dem, "statusNum",     request.getParameter("statusNum"),     "");
@@ -264,10 +275,10 @@
        dExt.addKey(proNo, dem, "given_consent", request.getParameter("given_consent"), "");
 
        dExt.addKey(proNo, dem, "rxInteractionWarningLevel", request.getParameter("rxInteractionWarningLevel"), "");
-       
+
        //for the IBD clinic
 		OtherIdManager.saveIdDemographic(dem, "meditech_id", request.getParameter("meditech_id"));
-     
+
        // customized key
        if(oscarVariables.getProperty("demographicExt") != null) {
 	       String [] propDemoExt = oscarVariables.getProperty("demographicExt","").split("\\|");
@@ -276,7 +287,7 @@
 	       }
        }
        // customized key
-       
+
 		// add log
 		String ip = request.getRemoteAddr();
 		LogAction.addLog(curUser_no, "add", "demographic", param2[0], ip,param2[0]);
@@ -292,13 +303,13 @@
                 ResultSet rsWL = apptMainBean.queryResults(paramWLPosition, "search_waitingListPosition");
 
                 if(rsWL.next()){
-                    String[] paramWL = new String[6]; 
+                    String[] paramWL = new String[6];
                     paramWL[0] = request.getParameter("list_id");
                     paramWL[1] = apptMainBean.getString(rs,"demographic_no");
                     paramWL[2] = request.getParameter("waiting_list_note");
                     paramWL[3] = Integer.toString(rsWL.getInt("position") + 1);
                     paramWL[4] = request.getParameter("waiting_list_referral_date");
-                    paramWL[5] = "N"; 
+                    paramWL[5] = "N";
                     if(paramWL[0]!=null && !paramWL[0].equals("") && !paramWL[0].equals("0"))
                         apptMainBean.queryExecuteUpdate(paramWL, "add2WaitingList");
                 }

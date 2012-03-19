@@ -35,9 +35,12 @@ import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.DemographicCustDao;
 import org.oscarehr.common.model.Allergy;
+import org.oscarehr.common.model.DemographicCust;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarRx.data.RxPatientData;
@@ -45,6 +48,7 @@ import oscar.util.UtilDateUtilities;
 
 public class DemographicData {
 	private static final Logger logger = MiscUtils.getLogger();
+	private DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
 
 	public DemographicData() {
 	}
@@ -300,21 +304,11 @@ public class DemographicData {
 
 	public String getDemographicNotes(String demographicNo) {
 		String retval = "";
-		try {
-			ResultSet rs;
-			String sql = "SELECT content FROM demographiccust WHERE demographic_no = '" + demographicNo + "'";
-			rs = DBHandler.GetSQL(sql);
-			if (rs.next()) {
-				try {
-					retval = oscar.Misc.getString(rs, "content");
-				} catch (Exception eg) {
-				}
-			}
-			rs.close();
-
-		} catch (SQLException e) {
-			MiscUtils.getLogger().error("Error", e);
+		DemographicCust demographicCust = demographicCustDao.find(Integer.parseInt(demographicNo));
+		if(demographicCust != null) {
+			retval = demographicCust.getNotes();
 		}
+
 		if (retval.startsWith("<unotes>")) retval = retval.substring(8);
 		if (retval.endsWith("</unotes>")) retval = retval.substring(0, retval.length() - 9);
 
@@ -1242,14 +1236,14 @@ public class DemographicData {
 	}
 
 	public void addDemographiccust(String demoNo, String content) {
-		String sql = "INSERT INTO demographiccust VALUES ('" + demoNo + "','','','','','<unotes>" + content + "</unotes>')";
-		DBHandler db;
-		try {
-
-			DBHandler.RunSQL(sql);
-		} catch (SQLException ex) {
-			MiscUtils.getLogger().error("Error", ex);
-		}
+		DemographicCust demographicCust = new DemographicCust();
+		demographicCust.setId(Integer.parseInt(demoNo));
+		demographicCust.setAlert("");
+		demographicCust.setMidwife("");
+		demographicCust.setNurse("");
+		demographicCust.setResident("");
+		demographicCust.setNotes("<unotes>" + content + "</unotes>");
+		demographicCustDao.persist(demographicCust);
 	}
 
 	public class DemographicAddResult {
