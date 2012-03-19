@@ -1,26 +1,26 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -30,6 +30,12 @@
 <%@ page import="java.sql.*, java.util.*, java.net.*, oscar.*"
 	errorPage="errorpage.jsp"%>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.DemographicAccessoryDao" %>
+<%@page import="org.oscarehr.common.model.DemographicAccessory" %>
+<%
+	DemographicAccessoryDao demographicAccessoryDao = (DemographicAccessoryDao)SpringUtils.getBean("demographicAccessoryDao");
+%>
 
 <html>
 <head>
@@ -52,32 +58,31 @@
 </table>
 <%
   //update the demo accessary data
-  String content=null;//default is not null temp=null, 
+  String content=null;//default is not null temp=null,
   long numRecord=1, rowsAffected=0;
   content="<xml_Problem_List>"+SxmlMisc.replaceHTMLContent(request.getParameter("xml_Problem_List"))+"</xml_Problem_List>"+ "<xml_Medication>"+SxmlMisc.replaceHTMLContent(request.getParameter("xml_Medication"))+"</xml_Medication>"+ "<xml_Alert>"+SxmlMisc.replaceHTMLContent(request.getParameter("xml_Alert"))+"</xml_Alert>" +"<xml_Family_Social_History>"+SxmlMisc.replaceHTMLContent(request.getParameter("xml_Family_Social_History"))+"</xml_Family_Social_History>";
 
   String[] param0 = new String[2];
   param0[0]=request.getParameter("demographic_no");
-  param0[1]=content; 
+  param0[1]=content;
   String[] param2 = new String[2];
   param2[0]=content;
   param2[1]=request.getParameter("demographic_no");
-  List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "search_demographicaccessorycount", new Object[] {request.getParameter("demographic_no")});
-  for (Map demo : resultList) {
-    numRecord=(Long)demo.get("count(demographic_no)");
-  }
-  if(numRecord==0) {
-    rowsAffected = oscarSuperManager.update("providerDao", "add_demographicaccessory", param0);
+
+  DemographicAccessory da = demographicAccessoryDao.find(Integer.parseInt(request.getParameter("demographic_no")));
+  if(da != null) {
+	  da.setContent(content);
   } else {
-    rowsAffected = oscarSuperManager.update("providerDao", "update_demographicaccessory", param2);
+	  da = new DemographicAccessory();
+	  da.setDemographicNo(Integer.parseInt(request.getParameter("demographic_no")));
+	  da.setContent(content);
   }
-  if (rowsAffected !=1) { out.println("Error"); return;}
 
 
   //get demographic string
   String demoname=null,address=null,phone=null,dob=null,gender=null,hin=null,ver=null,roster=null,fd=null;
   int dob_year = 0, dob_month = 0, dob_date = 0;
-  resultList = oscarSuperManager.find("providerDao", "search_demograph", new Object[] {request.getParameter("demographic_no")});
+  List<Map<String, Object>> resultList = oscarSuperManager.find("providerDao", "search_demograph", new Object[] {request.getParameter("demographic_no")});
   for (Map demo : resultList) {
     demoname="<xml_name>" +SxmlMisc.replaceHTMLContent(demo.get("last_name")+", "+demo.get("first_name")) +"</xml_name>";
     address="<xml_address>" +SxmlMisc.replaceHTMLContent(demo.get("address") +",  "+demo.get("city") +",  "+demo.get("province") +"  "+ demo.get("postal")) +"</xml_address>";
@@ -100,14 +105,14 @@
   if(dob_year!=0) age=MyDateFormat.getAge(dob_year,dob_month,dob_date);
   String xml_demo = demoname + address + phone + dob + gender + hin + ver + roster +"<xml_age>"+age+"</xml_age>";
   //String xml_demo = demoname + address + phone + dob + gender + hin + ver + roster + fd +"<xml_age>"+age+"</xml_age>";
-  
+
   //save encounter
-  String subject="";//default is not null temp=null, 
+  String subject="";//default is not null temp=null,
   content=xml_demo + SxmlMisc.createXmlDataString(request, "xml_");
 
   subject = request.getParameter("xml_subjectprefix")==null?"":".: " ; //(request.getParameter("xml_subjectprefix") +": ") ;
   subject += request.getParameter("xml_subject")+ " |"+ request.getParameter("attachmentdisplay");
-  
+
   String[] param =new String[7];
   param[0]=request.getParameter("demographic_no");
 	param[1]=curYear+"-"+(curMonth)+"-"+curDay; //request.getParameter("encounter_date");
@@ -136,13 +141,13 @@
         rowsAffected2 = oscarSuperManager.update("providerDao", "delete_encounter2", new Object[] {request.getParameter("del_encounter_no")});
       }
     }
-  
+
     if(request.getParameter("submit") != null && request.getParameter("submit").equals("Save & Print Preview") ) {  //response.sendRedirect("providerencounterprint.jsp"); //
       //get encounter_no
       String[] param1 = new String[4];
       param1[0]=request.getParameter("demographic_no");
 	  param1[1]=curYear+"-"+(curMonth)+"-"+curDay; //request.getParameter("encounter_date");
-	  param1[2]=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND); //request.getParameter("encounter_time"); 
+	  param1[2]=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND); //request.getParameter("encounter_time");
 	  param1[3]=request.getParameter("user_no");
       resultList = oscarSuperManager.find("providerDao", "search_encounter_no", param1);
       String encounter_no = "0";
@@ -154,7 +159,7 @@
         pageContext.forward("providerencounterprint.jsp?encounter_no="+encounter_no);
         return;
       }
-    } 
+    }
 %>
 <p>
 <h1>Successful Addition of an Encounter Record.</h1>
@@ -168,7 +173,7 @@
 <p>
 <h1>Sorry, addition has failed.</h1>
 </p>
-<%  
+<%
   }
 %>
 <p></p>

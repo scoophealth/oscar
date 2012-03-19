@@ -75,9 +75,9 @@ public class DemographicArchive extends AbstractModel<Long> implements Serializa
 	@Column(name = "chart_no")
 	private String chartNo = null;
 	@Column(name = "official_lang")
-	private String officialLang = null;
+	private String officialLanguage = null;
 	@Column(name = "spoken_lang")
-	private String spokenLang = null;
+	private String spokenLanguage = null;
 	@Column(name = "provider_no")
 	private String providerNo = null;
 	@Column(name = "sex")
@@ -120,17 +120,17 @@ public class DemographicArchive extends AbstractModel<Long> implements Serializa
 	@Column(name = "lastUpdateDate")
 	@Temporal(TemporalType.DATE)
 	private Date lastUpdateDate = null;
-	
-	
+
+
 	public DemographicArchive() {}
-	
+
 	public Integer getDemographicNo() {
 	    return this.demographicNo;
 	}
 	public void setDemographicNo(Integer i) {
 	    this.demographicNo = i;
 	}
-	
+
 	public String getTitle() {
         return this.title;
     }
@@ -144,288 +144,291 @@ public class DemographicArchive extends AbstractModel<Long> implements Serializa
 		public void setLastName(String s) {
 		    this.lastName = s;
 		}
-		
+
 		public String getFirstName() {
 		    return this.firstName;
 		}
 		public void setFirstName(String s) {
 		    this.firstName = s;
 		}
-		
+
 		public String getAddress() {
 		    return this.address;
 		}
 		public void setAddress(String s) {
 		    this.address = s;
 		}
-		
+
 		public String getCity() {
 		    return this.city;
 		}
 		public void setCity(String s) {
 		    this.city = s;
 		}
-		
+
 		public String getProvince() {
 		    return this.province;
 		}
 		public void setProvince(String s) {
 		    this.province = s;
 		}
-		
+
 		public String getPostal() {
 		    return this.postal;
 		}
 		public void setPostal(String s) {
 		    this.postal = s;
 		}
-		
+
 		public String getPhone() {
 		    return this.phone;
 		}
 		public void setPhone(String s) {
 		    this.phone = s;
 		}
-		
+
 		public String getPhone2() {
 		    return this.phone2;
 		}
 		public void setPhone2(String s) {
 		    this.phone2 = s;
 		}
-		
+
 		public String getEmail() {
 		    return this.email;
 		}
 		public void setEmail(String s) {
 		    this.email = s;
 		}
-		
+
 		public String getMyOscarUserName() {
 			return (myOscarUserName);
 		}
-		
+
 		public void setMyOscarUserName(String myOscarUserName) {
 			this.myOscarUserName = myOscarUserName;
 		}
-		
+
 		public String getYearOfBirth() {
 		    return this.yearOfBirth;
 		}
 		public void setYearOfBirth(String s) {
 		    this.yearOfBirth = s;
 		}
-		
+
 		public String getMonthOfBirth() {
 		    return this.monthOfBirth;
 		}
 		public void setMonthOfBirth(String s) {
 		    this.monthOfBirth = s;
 		}
-		
+
 		public String getDateOfBirth() {
 		    return this.dateOfBirth;
 		}
 		public void setDateOfBirth(String s) {
 		    this.dateOfBirth = s;
 		}
-		
+
 		public String getHin() {
 		    return this.hin;
 		}
 		public void setHin(String s) {
 		    this.hin = s;
 		}
-		
+
 		public String getVer() {
 		    return this.ver;
 		}
 		public void setVer(String s) {
 		    this.ver = s;
 		}
-		
+
 		public String getRosterStatus() {
 		    return this.rosterStatus;
 		}
 		public void setRosterStatus(String s) {
 		    this.rosterStatus = s;
 		}
-		
+
 		public Date getRosterDate() {
 		    return this.rosterDate;
 		}
 		public void setRosterDate(Date d) {
 		    this.rosterDate = d;
 		}
-		
+
 		public Date getRosterTerminationDate() {
 		    return this.rosterTerminationDate;
 		}
 		public void setRosterTerminationDate(Date d) {
 		    this.rosterTerminationDate = d;
 		}
-		
+
 		public String getRosterTerminationReason() {
 		    return this.rosterTerminationReason;
 		}
 		public void setRosterTerminationReason(String s) {
 		    this.rosterTerminationReason = s;
 		}
-		
+
 		public String getPatientStatus() {
 		    return this.patientStatus;
 		}
 		public void setPatientStatus(String s) {
 		    this.patientStatus = s;
 		}
-		
+
 		public Date getPatientStatusDate() {
 		    return this.patientStatusDate;
 		}
 		public void setPatientStatusDate(Date d) {
 		    this.patientStatusDate = d;
 		}
-		
+
 		public Date getDateJoined() {
 		    return this.dateJoined;
 		}
 		public void setDateJoined(Date d) {
 		    this.dateJoined = d;
 		}
-		
+
 		public String getChartNo() {
 		    return this.chartNo;
 		}
 		public void setChartNo(String s) {
 		    this.chartNo = s;
 		}
-		
-		public String getOfficialLang() {
-		    return this.officialLang;
-		}
-		public void setOfficialLang(String s) {
-		    this.officialLang = s;
-		}
-		
-		public String getSpokenLang() {
-		    return this.spokenLang;
-		}
-		public void setSpokenLang(String s) {
-		    this.spokenLang = s;
-		}
-		
+
+
+		public String getOfficialLanguage() {
+        	return officialLanguage;
+        }
+
+		public void setOfficialLanguage(String officialLanguage) {
+        	this.officialLanguage = officialLanguage;
+        }
+
+		public String getSpokenLanguage() {
+        	return spokenLanguage;
+        }
+
+		public void setSpokenLanguage(String spokenLanguage) {
+        	this.spokenLanguage = spokenLanguage;
+        }
+
 		public String getProviderNo() {
 		    return this.providerNo;
 		}
 		public void setProviderNo(String s) {
 		    this.providerNo = s;
 		}
-		
+
 		public String getSex() {
 		    return this.sex;
 		}
 		public void setSex(String s) {
 		    this.sex = s;
 		}
-		
+
 		public Date getEndDate() {
 		    return this.endDate;
 		}
 		public void setEndDate(Date d) {
 		    this.endDate = d;
 		}
-		
+
 		public Date getEffDate() {
 		    return this.effDate;
 		}
 		public void setEffDate(Date d) {
 		    this.effDate = d;
 		}
-		
+
 		public String getPcnIndicator() {
 		    return this.pcnIndicator;
 		}
 		public void setPcnIndicator(String s) {
 		    this.pcnIndicator = s;
 		}
-		
+
 		public String getHcType() {
 		    return this.hcType;
 		}
 		public void setHcType(String s) {
 		    this.hcType = s;
 		}
-		
+
 		public Date getHcRenewDate() {
 		    return this.hcRenewDate;
 		}
 		public void setHcRenewDate(Date d) {
 		    this.hcRenewDate = d;
 		}
-		
+
 		public String getFamilyDoctor() {
 		    return this.familyDoctor;
 		}
 		public void setFamilyDoctor(String s) {
 		    this.familyDoctor = s;
 		}
-		
+
 		public String getAlias() {
 		    return this.alias;
 		}
 		public void setAlias(String s) {
 		    this.alias = s;
 		}
-		
+
 		public String getPreviousAddress() {
 		    return this.previousAddress;
 		}
 		public void setPreviousAddress(String s) {
 		    this.previousAddress = s;
 		}
-		
+
 		public String getChildren() {
 		    return this.children;
 		}
 		public void setChildren(String s) {
 		    this.children = s;
 		}
-		
+
 		public String getSourceOfIncome() {
 		    return this.sourceOfIncome;
 		}
 		public void setSourceOfIncome(String s) {
 		    this.sourceOfIncome = s;
 		}
-		
+
 		public String getCitizenship() {
 		    return this.citizenship;
 		}
 		public void setCitizenship(String s) {
 		    this.citizenship = s;
 		}
-		
+
 		public String getSin() {
 		    return this.sin;
 		}
 		public void setSin(String s) {
 		    this.sin = s;
 		}
-		
+
 		public String getCountryOfOrigin() {
 		    return this.countryOfOrigin;
 		}
 		public void setCountryOfOrigin(String s) {
 		    this.countryOfOrigin = s;
 		}
-		
+
 		public String getNewsletter() {
 		    return this.newsletter;
 		}
 		public void setNewsletter(String s) {
 		    this.newsletter = s;
 		}
-		
+
 		public String getAnonymous() {
 		    return this.anonymous;
 		}
@@ -439,14 +442,14 @@ public class DemographicArchive extends AbstractModel<Long> implements Serializa
 		public void setLastUpdateUser(String s) {
 		    this.lastUpdateUser = s;
 		}
-		
+
 		public Date getLastUpdateDate() {
 		    return this.lastUpdateDate;
 		}
 		public void setLastUpdateDate(Date d) {
 		    this.lastUpdateDate = d;
 		}
-	
+
 		@Override
 		public Long getId() {
 		    return this.id;

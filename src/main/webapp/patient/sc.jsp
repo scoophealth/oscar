@@ -1,26 +1,26 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -38,12 +38,18 @@
 <jsp:useBean id="risks" class="oscar.OBRisks_99_12" scope="page" />
 
 <%@ include file="../admin/dbconnection.jsp"%>
-<% 
-  String [][] dbQueries=new String[][] { 
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.DemographicAccessoryDao" %>
+<%@page import="org.oscarehr.common.model.DemographicAccessory" %>
+<%
+	DemographicAccessoryDao demographicAccessoryDao = (DemographicAccessoryDao)SpringUtils.getBean("demographicAccessoryDao");
+%>
+
+<%
+  String [][] dbQueries=new String[][] {
 {"search_form", "select * from form where form_no=? "}, //new?delete
 {"search_form_no", "select form_no, content from form where demographic_no=? and form_name like ? order by form_date desc, form_time desc,form_no  limit 1 offset 0"}, //new?delete
 {"search_demograph", "select *  from demographic where demographic_no=?"},
-{"search_demographicaccessory", "select * from demographicaccessory where demographic_no=?"},
 {"compare_form", "select form_no, form_name, content from form where demographic_no=? and form_name like ? order by form_date desc, form_time desc,form_no  limit 1 offset 0"},
   };
   String[][] responseTargets=new String[][] {
@@ -73,19 +79,19 @@
   if(!bNew ) { //not new form
     bNewList = false;
     rsdemo = formMainBean.queryResults(request.getParameter("form_no"), "search_form");
-    while (rsdemo.next()) { 
+    while (rsdemo.next()) {
       content = rsdemo.getString("content");
 %>
 <!--xml id="xml_list"><encounter><%--=content--%></encounter></xml-->
 <%
-    }     
+    }
   } else {
 
 	//get the data from the latest version of artenatal record 1 or 2
     param2[0]=demographic_no;
     param2[1]="ar%";
     rsdemo = formMainBean.queryResults(param2, "compare_form");
-    while (rsdemo.next()) { 
+    while (rsdemo.next()) {
       content = rsdemo.getString("content");
       birthAttendants = SxmlMisc.getXmlContent(content, "<xml_ba>","</xml_ba>");
 	  birthAttendants = birthAttendants==null?"":birthAttendants;
@@ -111,19 +117,19 @@
 	  prepregwt = SxmlMisc.getXmlContent(content, "<xml_ppw>","</xml_ppw>");
 	  prepregwt = prepregwt==null?"":prepregwt;
 	}
-	
+
     param2[0]=demographic_no;
     param2[1]="ar2%";  //form_name;
     rsdemo = formMainBean.queryResults(param2, "compare_form");
-    while (rsdemo.next()) { 
+    while (rsdemo.next()) {
       bNew = false;
       content = rsdemo.getString("content");
 %>
 <!--xml id="xml_list"> <encounter> <%--=content--%> </encounter> </xml-->
 <%
-    }     
+    }
     rsdemo = formMainBean.queryResults(demographic_no, "search_demograph"); //dboperation=search_demograph
-    while (rsdemo.next()) { 
+    while (rsdemo.next()) {
       demoname=rsdemo.getString("last_name")+", "+rsdemo.getString("first_name");
       address=rsdemo.getString("address") +",  "+ rsdemo.getString("city") +",  "+ rsdemo.getString("province") +"  "+ rsdemo.getString("postal");
       dob=rsdemo.getString("year_of_birth")+"/"+rsdemo.getString("month_of_birth")+"/"+rsdemo.getString("date_of_birth");
@@ -131,11 +137,12 @@
       workphone=rsdemo.getString("phone2");
       age=MyDateFormat.getAge(Integer.parseInt(rsdemo.getString("year_of_birth")),Integer.parseInt(rsdemo.getString("month_of_birth")),Integer.parseInt(rsdemo.getString("date_of_birth")));
     }
-    rsdemo = formMainBean.queryResults(demographic_no, "search_demographicaccessory"); //dboperation=search_demograph
-    if (rsdemo.next()) { 
-      allergies=SxmlMisc.getXmlContent(rsdemo.getString("content"),"<xml_Alert>","</xml_Alert>");
-      medications=SxmlMisc.getXmlContent(rsdemo.getString("content"),"<xml_Medication>","</xml_Medication>");
+    DemographicAccessory da = demographicAccessoryDao.find(Integer.parseInt(demographic_no));
+    if(da != null) {
+    	allergies=SxmlMisc.getXmlContent(da.getContent(),"<xml_Alert>","</xml_Alert>");
+        medications=SxmlMisc.getXmlContent(da.getContent(),"<xml_Medication>","</xml_Medication>");
     }
+
   }
   //boolean bNewDemoAcc=true;
 %>
@@ -1380,9 +1387,9 @@
 
 
 <%
-if(bNewList) { 
+if(bNewList) {
 
-Properties savedar1risk = new Properties(); 
+Properties savedar1risk = new Properties();
 if(finalEDB==null || finalEDB=="") out.println("************No EDB, no check list!**************");
 else {
    savedar1risk.setProperty("finalEDB", finalEDB);
@@ -1391,14 +1398,14 @@ else {
     rsdemo = formMainBean.queryResults(param2, "compare_form");
     String temp = "";
 	StringBuffer tt;
-    while (rsdemo.next()) { 
+    while (rsdemo.next()) {
       temp = rsdemo.getString("content");
-      Properties savedar1risk1 = risks.getRiskName("../webapps/"+oscarVariables.getProperty("project_home")+"/provider/obarrisks_99_12.xml"); 
+      Properties savedar1risk1 = risks.getRiskName("../webapps/"+oscarVariables.getProperty("project_home")+"/provider/obarrisks_99_12.xml");
       for (Enumeration e = savedar1risk1.propertyNames() ; e.hasMoreElements() ;) {
         tt = new StringBuffer().append(e.nextElement());
         if(SxmlMisc.getXmlContent(temp, savedar1risk1.getProperty(tt.toString()))!= null) savedar1risk.setProperty(tt.toString(), savedar1risk1.getProperty(tt.toString()));
       }
-	  
+
       //calculate bmi
 	  String wt = SxmlMisc.getXmlContent(temp, "<xml_pew>","</xml_pew>");
 	  String ht = SxmlMisc.getXmlContent(temp, "<xml_peh>","</xml_peh>");
@@ -1503,9 +1510,9 @@ else {
       if(SxmlMisc.getXmlContent(temp, "<xml_nadref>","</xml_nadref>")!= null) savedar1risk.setProperty("75", "xml_nadref");
      }
 	out.println(checklist.doStuff(new String("../webapps/"+oscarVariables.getProperty("project_home")+"/provider/obarchecklist_99_12.xml"), savedar1risk));
-}	
 }
-		
+}
+
 %>
 
 
