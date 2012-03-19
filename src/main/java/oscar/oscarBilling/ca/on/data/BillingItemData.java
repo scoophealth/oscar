@@ -32,22 +32,23 @@ public class BillingItemData {
 
 	String status;
 	String timestamp;
-        
+
+	String location;
         /*
          *Default Constructor
          */
         public BillingItemData() {
-            
+
         }
-        
+
         /*
          *Copy constructor
          */
         public BillingItemData( BillingItemData copy ) {
-            
+
             this.setId(copy.getId());
             this.setCh1_id(copy.getCh1_id());
-            this.setTransc_id(copy.getTransc_id()); 
+            this.setTransc_id(copy.getTransc_id());
             this.setRec_id(copy.getRec_id());
             this.setService_code(copy.getService_code());
             this.setFee(copy.getFee());
@@ -58,9 +59,9 @@ public class BillingItemData {
             this.setDx2(copy.getDx2());
             this.setStatus(copy.getStatus());
             this.setTimestamp(copy.getTimestamp());
-            
+            this.setLocation(copy.getLocation());
         }
-        
+
 	public String getCh1_id() {
 		return ch1_id;
 	}
@@ -139,5 +140,14 @@ public class BillingItemData {
 	public void setDx2(String dx2) {
 		this.dx2 = dx2;
 	}
+
+	public String getLocation() {
+    	return location;
+    }
+
+	public void setLocation(String location) {
+    	this.location = location;
+    }
+
 
 }
