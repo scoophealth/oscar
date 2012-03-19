@@ -181,7 +181,8 @@ public class MeasurementFlowSheet {
     
     public Map getMeasurementFlowSheetInfo(String measurement) {
         if (itemList == null) {
-         //DO something   itemList = new Hashtable();
+         //DO something   
+        	itemList = new ListOrderedMap();
         }
         log.debug("GETTING "+measurement+ " ITEMS IN THE LIST "+itemList.size());
         FlowSheetItem item = (FlowSheetItem) itemList.get(measurement);

@@ -44,7 +44,6 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.drools.RuleBase;
@@ -123,7 +122,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
      * How to query in an effiecent way
      * How to handle when codes have multiple flowsheets
      */
-    public ArrayList<String> getFlowsheetsFromDxCodes(Vector coll) {
+    public ArrayList<String> getFlowsheetsFromDxCodes(List coll) {
         ArrayList<String> alist = new ArrayList<String>();
 
         //should i search run thru the list of possible flowsheets?

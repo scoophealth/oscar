@@ -145,7 +145,7 @@ public class BillingGuidelines  {
         ArrayList<DSConsequence> allResultingConsequences = new ArrayList();
         for (DSGuideline dsGuideline: billingGuideLines) {
             try {
-                List<DSConsequence> newConsequences = dsGuideline.evaluate(demographicNo);
+                List<DSConsequence> newConsequences = dsGuideline.evaluate(demographicNo, providerNo);
                 if (newConsequences != null) {
                     allResultingConsequences.addAll(newConsequences);
                 }

@@ -279,6 +279,30 @@ public class BillingClaimDAO extends AbstractDao<BillingClaimHeader1> {
         return numdays;
     }
     
+    public int getDaysSincePaid(String serviceCode, String demographic_no) {
+        String sql = "select b from BillingClaimHeader1 h1, BillingItem b where b.ch1_id = h1.id and b.service_code = :code and" +
+                " h1.demographic_no = :demo and h1.status = 'S' order by h1.billing_date desc limit 1";
+        Query q = entityManager.createQuery(sql);
+        q.setParameter("code", serviceCode);
+        q.setParameter("demo", new Integer(demographic_no));
+        List billingClaims = q.getResultList();
+        int numdays = -1;
+
+        if( billingClaims.size() > 0 ) {
+            BillingItem i = (BillingItem)billingClaims.get(0);
+            Calendar billdate = Calendar.getInstance();
+            billdate.setTime(i.getService_date());
+
+            long milliBilldate = billdate.getTimeInMillis();
+            long milliToday = Calendar.getInstance().getTimeInMillis();
+            long day = 1000*60*60*24;
+            numdays = (int)((milliToday/day) - (milliBilldate/day));
+
+        }
+
+        return numdays;
+    }    
+    
     @SuppressWarnings("unchecked")
     public List<BillingClaimHeader1> getInvoices(String demographic_no, Integer limit) {
     	String sql = "select h1 from BillingClaimHeader1 h1 where " +
