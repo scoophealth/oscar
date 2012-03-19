@@ -29,7 +29,9 @@ import java.sql.SQLException;
 import java.util.Vector;
 
 import org.oscarehr.common.dao.ClinicDAO;
+import org.oscarehr.common.dao.ConsultationServiceDao;
 import org.oscarehr.common.model.Clinic;
+import org.oscarehr.common.model.ConsultationServices;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -37,6 +39,8 @@ import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
 public class EctConsultationFormRequestUtil {
+
+	private ConsultationServiceDao consultationServiceDao = (ConsultationServiceDao)SpringUtils.getBean("consultationServiceDao");
 
 	private boolean bMultisites=org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();
 
@@ -354,17 +358,11 @@ public class EctConsultationFormRequestUtil {
 
     public String getServiceName(String id) {
         String retval = new String();
-        try {
-
-            String sql = "select * from consultationServices where serviceId  = " +id;
-            ResultSet rs = DBHandler.GetSQL(sql);
-            if (rs.next()) {
-                retval = oscar.Misc.getString(rs, "serviceDesc");
-            }
-            rs.close();
-        } catch (SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
+        ConsultationServices cs = consultationServiceDao.find(Integer.parseInt(id));
+        if(cs != null) {
+        	retval = cs.getServiceDesc();
         }
+
         return retval;
     }
 
