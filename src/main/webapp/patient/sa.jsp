@@ -1,26 +1,26 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -37,12 +37,19 @@
 <jsp:useBean id="risks" class="oscar.OBRisks_99_12" scope="page" />
 
 <%@ include file="../admin/dbconnection.jsp"%>
-<% 
-  String [][] dbQueries=new String[][] { 
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.DemographicAccessoryDao" %>
+<%@page import="org.oscarehr.common.model.DemographicAccessory" %>
+<%
+	DemographicAccessoryDao demographicAccessoryDao = (DemographicAccessoryDao)SpringUtils.getBean("demographicAccessoryDao");
+%>
+
+
+<%
+  String [][] dbQueries=new String[][] {
 {"search_form", "select * from form where form_no=? "}, //new?delete
 {"search_form_no", "select form_no, content from form where demographic_no=? and form_name like ? order by form_date desc, form_time desc,form_no  limit 1 offset 0"}, //new?delete
 {"search_demograph", "select *  from demographic where demographic_no=?"},
-{"search_demographicaccessory", "select * from demographicaccessory where demographic_no=?"},
 {"compare_form", "select form_no, form_name, content from form where demographic_no=? and form_name like ? order by form_date desc, form_time desc,form_no  limit 1 offset 0"},
   };
   String[][] responseTargets=new String[][] {
@@ -70,19 +77,19 @@
   if(!bNew ) { //not new form
     bNewList = false;
     rsdemo = formMainBean.queryResults(request.getParameter("form_no"), "search_form");
-    while (rsdemo.next()) { 
+    while (rsdemo.next()) {
       content = rsdemo.getString("content");
 %>
 <!--xml id="xml_list"><encounter><%--=content--%></encounter></xml-->
 <%
-    }     
+    }
   } else {
     String[] param2 =new String[2];
     param2[0]=demographic_no;
     param2[1]="ar1%" ; //form_name;
     rsdemo = formMainBean.queryResults(param2, "search_form_no");
     //rsdemo = formMainBean.queryResults(demographic_no, "search_form_ar1");
-    while (rsdemo.next()) { 
+    while (rsdemo.next()) {
       bNew = false;
       content = rsdemo.getString("content");
 %>
@@ -92,11 +99,11 @@
     </encounter>
   </xml-->
 <%
-    }     
+    }
 
     //rsdemo = null;
     rsdemo = formMainBean.queryResults(demographic_no, "search_demograph"); //dboperation=search_demograph
-    while (rsdemo.next()) { 
+    while (rsdemo.next()) {
       demoname=rsdemo.getString("last_name")+", "+rsdemo.getString("first_name");
       address=rsdemo.getString("address") +",  "+ rsdemo.getString("city") +",  "+ rsdemo.getString("province") +"  "+ rsdemo.getString("postal");
       dob=rsdemo.getString("year_of_birth")+"/"+rsdemo.getString("month_of_birth")+"/"+rsdemo.getString("date_of_birth");
@@ -104,17 +111,18 @@
       workphone=rsdemo.getString("phone2");
       age=MyDateFormat.getAge(Integer.parseInt(rsdemo.getString("year_of_birth")),Integer.parseInt(rsdemo.getString("month_of_birth")),Integer.parseInt(rsdemo.getString("date_of_birth")));
     }
-    rsdemo = formMainBean.queryResults(demographic_no, "search_demographicaccessory"); //dboperation=search_demograph
-    if (rsdemo.next()) { 
-      allergies=SxmlMisc.getXmlContent(rsdemo.getString("content"),"<xml_Alert>","</xml_Alert>");
-      medications=SxmlMisc.getXmlContent(rsdemo.getString("content"),"<xml_Medication>","</xml_Medication>");
+    DemographicAccessory da = demographicAccessoryDao.find(Integer.parseInt(demographic_no));
+    if(da != null) {
+    	allergies=SxmlMisc.getXmlContent(da.getContent(),"<xml_Alert>","</xml_Alert>");
+        medications=SxmlMisc.getXmlContent(da.getContent(),"<xml_Medication>","</xml_Medication>");
     }
+
 	//find the latest version of g,t,p,a,l etc.
     String[] param1 =new String[2];
     param1[0]=demographic_no;
     param1[1]="ar%"; //!!! other forms can't have the name of 'ar' chars.
     rsdemo = formMainBean.queryResults(param1, "compare_form");
-    if (rsdemo.next()) { 
+    if (rsdemo.next()) {
       birthAttendants = SxmlMisc.getXmlContent(rsdemo.getString("content"),"<xml_ba>","</xml_ba>");
 	  birthAttendants = birthAttendants==null?"":birthAttendants;
       newbornCare = SxmlMisc.getXmlContent(rsdemo.getString("content"),"<xml_nc>","</xml_nc>");

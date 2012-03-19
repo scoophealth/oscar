@@ -1,31 +1,31 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
 <%
-  
+
   if(request.getParameter("submit")!=null && request.getParameter("submit").equals("Create Encounter Report") ) {
     if(true) {
       out.clear();
@@ -39,11 +39,16 @@
 	errorPage="errorpage.jsp"%>
 <jsp:useBean id="demosummaryBean" class="oscar.AppointmentMainBean"
 	scope="page" />
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.DemographicAccessoryDao" %>
+<%@page import="org.oscarehr.common.model.DemographicAccessory" %>
+<%
+	DemographicAccessoryDao demographicAccessoryDao = (DemographicAccessoryDao)SpringUtils.getBean("demographicAccessoryDao");
+%>
 
 <%
   String [][] dbQueries=new String[][] {
     {"search_detail", "select * from demographic where demographic_no=?"},
-    {"search_demographicaccessory", "select * from demographicaccessory where demographic_no=?"},
     {"search_encounter", "select * from encounter where demographic_no = ? order by encounter_date desc, encounter_time desc"},
     {"search_encounterdetail", "select * from encounter where encounter_no=?"},
     {"delete_encounter1", "insert into recyclebin (provider_no,updatedatetime,table_name,keyword,table_content) values(?,?,'encounter',?,?)"},
@@ -56,30 +61,30 @@
 <% //delete the selected records
   if(request.getParameter("submit")!=null && request.getParameter("submit").equals("Delete") ) {
     ResultSet rs = null;
-    int ii = Integer.parseInt(request.getParameter("encounternum"));  
+    int ii = Integer.parseInt(request.getParameter("encounternum"));
     String[] param =new String[4];
     String content=null, keyword=null, datetime=null;
     GregorianCalendar now=new GregorianCalendar();
     datetime  =now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH) +" "+now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND);
-    
+
     for(int i=0;i<=ii;i++) {
       if(request.getParameter("encounter_no"+i)==null) {
         continue;
       }
-       
+
       rs = demosummaryBean.queryResults(request.getParameter("encounter_no"+i), "search_encounterdetail");
-      while (rs.next()) { 
+      while (rs.next()) {
         keyword = demosummaryBean.getString(rs,"encounter_date");
         content = "<encounter_no>"+demosummaryBean.getString(rs,"encounter_no")+"</encounter_no>"+ "<demographic_no>"+demosummaryBean.getString(rs,"demographic_no")+"</demographic_no>"+ "<encounter_date>"+demosummaryBean.getString(rs,"encounter_date")+"</encounter_date>";
         content += "<encounter_time>"+demosummaryBean.getString(rs,"encounter_time")+"</encounter_time>"+ "<provider_no>"+demosummaryBean.getString(rs,"provider_no")+"</provider_no>"+ "<subject>"+demosummaryBean.getString(rs,"subject")+"</subject>";
         content += "<content>"+demosummaryBean.getString(rs,"content")+"</content>" +"<encounterattachment>"+demosummaryBean.getString(rs,"encounterattachment")+"</encounterattachment>";
       }
-      
+
 	    param[0]=user_no;
 	    param[1]=datetime;
 	    param[2]=keyword;
 	    param[3]=content;
-      
+
       int rowsAffected = demosummaryBean.queryExecuteUpdate(param, "delete_encounter1");
       if(rowsAffected ==1) {
         rowsAffected = demosummaryBean.queryExecuteUpdate(request.getParameter("encounter_no"+i), "delete_encounter2");
@@ -117,7 +122,7 @@
    String demoname=null,dob=null,gender=null,hin=null,roster=null;
    int dob_year = 0, dob_month = 0, dob_date = 0;
    rsdemo = demosummaryBean.queryResults(request.getParameter("demographic_no"), "search_detail"); //dboperation=search_demograph
-   while (rsdemo.next()) { 
+   while (rsdemo.next()) {
      demoname=rsdemo.getString("last_name")+", "+rsdemo.getString("first_name");
      dob_year = Integer.parseInt(rsdemo.getString("year_of_birth"));
      dob_month = Integer.parseInt(rsdemo.getString("month_of_birth"));
@@ -137,9 +142,9 @@
   if(dob_year!=0) age=MyDateFormat.getAge(dob_year,dob_month,dob_date);
 
    rsdemo = null;
-   rsdemo = demosummaryBean.queryResults(request.getParameter("demographic_no"), "search_demographicaccessory"); //dboperation=search_demograph
-   if (rsdemo.next()) { 
-     content=rsdemo.getString("content");
+   DemographicAccessory da = demographicAccessoryDao.find(Integer.parseInt(request.getParameter("demographic_no")));
+   if (da != null) {
+     content=da.getContent();
 	 strTemp = SxmlMisc.getXmlContent(content, "<xml_Problem_List>","</xml_Problem_List>");
      xml_Problem_List = strTemp==null?"":strTemp;
 	 strTemp = SxmlMisc.getXmlContent(content, "<xml_Medication>","</xml_Medication>");
@@ -149,7 +154,7 @@
 	 strTemp = SxmlMisc.getXmlContent(content, "<xml_Family_Social_History>","</xml_Family_Social_History>");
      xml_Family_Social_History = strTemp==null?"":strTemp;
 
-   } 
+   }
 %>
 <xml id="xml_list">
 <encounter>
@@ -207,7 +212,7 @@
    rsdemo = null;
    rsdemo = demosummaryBean.queryResults(request.getParameter("demographic_no"), "search_encounter");
    int i=0;
-   while (rsdemo.next()) { 
+   while (rsdemo.next()) {
      i++;
 %> &nbsp;<%=rsdemo.getString("encounter_date")%> <%=rsdemo.getString("encounter_time")%>
 
@@ -234,7 +239,7 @@
 		</a></font><br>
 		<%
      }
-   }     
+   }
 %>
 		</td>
 	</tr>

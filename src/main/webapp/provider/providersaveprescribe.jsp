@@ -1,26 +1,26 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -35,6 +35,12 @@
 <%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat"
 	errorPage="errorpage.jsp"%>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.DemographicAccessoryDao" %>
+<%@page import="org.oscarehr.common.model.DemographicAccessory" %>
+<%
+	DemographicAccessoryDao demographicAccessoryDao = (DemographicAccessoryDao)SpringUtils.getBean("demographicAccessoryDao");
+%>
 
 <html>
 <head>
@@ -46,8 +52,8 @@
     }
     function closeit() {
     	//self.opener.refresh();
-      //self.close();      
-    }   
+      //self.close();
+    }
     //-->
 </script>
 </head>
@@ -73,7 +79,7 @@
 	  param[1]=request.getParameter("user_no");
 	  param[2]=request.getParameter("prescribe_date");
 	  param[3]=request.getParameter("prescribe_time"); //MyDateFormat.getTimeXX_XX_XX(request.getParameter("prescribe_time"));
-	  param[4]=request.getParameter("xml_Medication"); 
+	  param[4]=request.getParameter("xml_Medication");
 
     //to update demographic acce record
     String[] param1 =new String[2]; //update demographic acce record
@@ -83,20 +89,21 @@
 	  param2[0]=param1[1];
 	  param2[1]=param1[0];
     long numRecord=1, rowsAffected=0;
-    List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "search_demographicaccessorycount", new Object[] {request.getParameter("demographic_no")});
-    for (Map demo : resultList) {
-      numRecord=(Long)demo.get("count(demographic_no)");
-    }
-    if(numRecord==0) {
-  	  rowsAffected = oscarSuperManager.update("providerDao", "add_demographicaccessory", param1);
+    DemographicAccessory da = demographicAccessoryDao.find(Integer.parseInt(request.getParameter("demographic_no")));
+    if(da != null) {
+    	da.setContent(content);
+    	demographicAccessoryDao.merge(da);
     } else {
-  	  rowsAffected = oscarSuperManager.update("providerDao", "update_demographicaccessory", param2);
+    	da = new DemographicAccessory();
+    	da.setDemographicNo(Integer.parseInt(request.getParameter("demographic_no")));
+    	da.setContent(content);
+    	demographicAccessoryDao.persist(da);
     }
 
   //add the prescribe record
   rowsAffected = oscarSuperManager.update("providerDao", request.getParameter("dboperation"), param);
   if (rowsAffected == 1) {
-    resultList = oscarSuperManager.find("providerDao", "search_prescribe_no", new Object[] {request.getParameter("demographic_no")});
+	  List<Map<String, Object>> resultList = oscarSuperManager.find("providerDao", "search_prescribe_no", new Object[] {request.getParameter("demographic_no")});
     for (Map pre : resultList) {
 %>
 <p>
@@ -116,7 +123,7 @@
 <p>
 <h1>Sorry, addition has failed.</h1>
 </p>
-<%  
+<%
   }
 %>
 <p></p>
