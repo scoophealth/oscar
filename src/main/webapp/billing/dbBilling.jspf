@@ -77,7 +77,6 @@
     {"searchappointmentday", "select appointment_no,provider_no, start_time,end_time,name,demographic_no,reason,notes,status from appointment where provider_no=? and appointment_date=? order by start_time "},
     {"search_demograph", "select *  from demographic where demographic_no=?"},
     {"search_encounter", "select * from encounter where demographic_no = ? order by encounter_date desc, encounter_time desc"},
-    {"search_demographicaccessory", "select * from demographicaccessory where demographic_no=?"},
     {"archive_bill", "insert into recycle_bin values(?,'billing',?,?)"},
     {"update_bill_header", "update billing set hin=?,dob=?,visittype=?,visitdate=?,clinic_ref_code=?,provider_no=?,status=?, update_date=?, total=? , content=? where billing_no=?"},
     {"search_bill_generic", "select distinct demographic.last_name dl, demographic.first_name df, provider.last_name pl, provider.first_name pf, billing.billing_no, billing.billing_date, billing.billing_time, billing.status, billing.appointment_no, billing.hin from billing, provider, appointment, demographic where provider.provider_no=appointment.provider_no and demographic.demographic_no= billing.demographic_no and billing.appointment_no=appointment.appointment_no and billing.status <> 'D' and billing.billing_no=?"},

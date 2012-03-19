@@ -1,26 +1,26 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -33,6 +33,12 @@
 	import="java.util.*, java.sql.*, java.net.*, oscar.*, oscar.util.UtilDateUtilities, oscar.form.graphic.*"
 	errorPage="errorpage.jsp"%>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.DemographicAccessoryDao" %>
+<%@page import="org.oscarehr.common.model.DemographicAccessory" %>
+<%
+	DemographicAccessoryDao demographicAccessoryDao = (DemographicAccessoryDao)SpringUtils.getBean("demographicAccessoryDao");
+%>
 
 <jsp:useBean id="checklist" class="oscar.OBChecklist_99_12" scope="page" />
 <jsp:useBean id="risks" class="oscar.OBRisks_99_12" scope="page" />
@@ -44,7 +50,7 @@
 <title>ANTENATAL RECORD</title>
 <link rel="stylesheet" href="../provider/antenatalrecord.css">
 <script language="JavaScript">
-<!--		
+<!--
 var saveTemp=0;
 
 
@@ -99,7 +105,7 @@ function onSubmitForm() {
     document.serviceform.submit();
   }
   return false;
-}  
+}
 //-->
 </SCRIPT>
 </head>
@@ -123,7 +129,7 @@ function onSubmitForm() {
     for (Map form : resultList) {
       content = (String)form.get("content");
 %> <xml id="xml_list"><encounter><%=content%></encounter></xml> <%
-    }     
+    }
   } else {
 
 	//get the data from the latest version of artenatal record 1 or 2
@@ -155,12 +161,12 @@ function onSubmitForm() {
 	  l = l==null?"":l;
 	  prepregwt = SxmlMisc.getXmlContent(content, "<xml_ppw>","</xml_ppw>");
 	  prepregwt = prepregwt==null?"":prepregwt;
-	  
+
 	  //page no
 	  pageno = Integer.parseInt(SxmlMisc.getXmlContent(content, "<xml_pageno>","</xml_pageno>")==null?"1":SxmlMisc.getXmlContent(content, "<xml_pageno>","</xml_pageno>"));
       if( request.getParameter("bNext")!=null && request.getParameter("bNext").compareTo("1")==0 ) pageno++;
 	}
-	
+
     param2[0]=request.getParameter("demographic_no");
     param2[1]="ar2%";  //form_name;
     resultList = oscarSuperManager.find("providerDao", "compare_form", param2);
@@ -168,7 +174,7 @@ function onSubmitForm() {
       bNew = false;
       content = (String)form.get("content");
 %> <xml id="xml_list"> <encounter> <%=content%> </encounter> </xml> <%
-    }     
+    }
 
     resultList = oscarSuperManager.find("providerDao", "search_demograph", new Object[] {request.getParameter("demographic_no")});
     for (Map demo : resultList) {
@@ -181,11 +187,12 @@ function onSubmitForm() {
       age=MyDateFormat.getAge(Integer.parseInt((String)demo.get("year_of_birth")),Integer.parseInt((String)demo.get("month_of_birth")),Integer.parseInt((String)demo.get("date_of_birth")));
     }
 
-    resultList = oscarSuperManager.find("providerDao", "search_demographicaccessory", new Object[] {request.getParameter("demographic_no")});
-    for (Map acc : resultList) {
-      allergies=SxmlMisc.getXmlContent((String)acc.get("content"),"<xml_Alert>","</xml_Alert>");
-      medications=SxmlMisc.getXmlContent((String)acc.get("content"),"<xml_Medication>","</xml_Medication>");
+    DemographicAccessory da = demographicAccessoryDao.find(Integer.parseInt(request.getParameter("demographic_no")));
+    if(da != null) {
+    	allergies=SxmlMisc.getXmlContent(da.getContent(),"<xml_Alert>","</xml_Alert>");
+        medications=SxmlMisc.getXmlContent(da.getContent(),"<xml_Medication>","</xml_Medication>");
     }
+
   }
   //boolean bNewDemoAcc=true;
   if( request.getParameter("bNew")!=null && request.getParameter("bNew").compareTo("1")==0 ) bNew = true; //here for another ar2 new form, continue from finished previous ar2 form
@@ -294,11 +301,11 @@ newFormURL += "&bNewForm=1&displaymode=ar2&dboperation=search_demograph&template
 </table>
 
 <script language="JavaScript">
-<!--		
+<!--
 	function calcWeek(source) {
 <%
 String fedb = null;
-if (bNewList) fedb = finalEDB; 
+if (bNewList) fedb = finalEDB;
 else fedb = SxmlMisc.getXmlContent(content, "xml_fedb");   //:"datafld='xml_fedb'";
 
 String sDate = "";
@@ -322,7 +329,7 @@ if (fedb != null && fedb.length() == 10 ) {
 			} else {
 			    delta = 1 * 60 * 60 * 1000;
 			}
-		} 
+		}
 
 		var day = eval((check_date.getTime() - start.getTime() + delta) / (24*60*60*1000));
         var week = Math.floor(day/7);
@@ -340,7 +347,7 @@ if (fedb != null && fedb.length() == 10 ) {
 		} else {
 			name = "xml_sv" + n1 + "da";
 		}
-        
+
         for (var i =0; i <document.serviceform.elements.length; i++) {
             if (document.serviceform.elements[i].name == name) {
                return document.serviceform.elements[i].value;
@@ -1309,9 +1316,9 @@ if (fedb != null && fedb.length() == 10 ) {
 
 
 <%
-if(bNewList) { 
+if(bNewList) {
 
-Properties savedar1risk = new Properties(); 
+Properties savedar1risk = new Properties();
 if(finalEDB==null || finalEDB=="") out.println("************No EDB, no check list!**************");
 else {
    savedar1risk.setProperty("finalEDB", finalEDB);
@@ -1322,12 +1329,12 @@ else {
 	StringBuffer tt;
     for (Map form : resultList) {
       temp = (String)form.get("content");
-      Properties savedar1risk1 = risks.getRiskName("../webapps/"+oscarVariables.getProperty("project_home")+"/provider/obarrisks_99_12.xml"); 
+      Properties savedar1risk1 = risks.getRiskName("../webapps/"+oscarVariables.getProperty("project_home")+"/provider/obarrisks_99_12.xml");
       for (Enumeration e = savedar1risk1.propertyNames() ; e.hasMoreElements() ;) {
         tt = new StringBuffer().append(e.nextElement());
         if(SxmlMisc.getXmlContent(temp, savedar1risk1.getProperty(tt.toString()))!= null) savedar1risk.setProperty(tt.toString(), savedar1risk1.getProperty(tt.toString()));
       }
-	  
+
       //calculate bmi
 	  String wt = SxmlMisc.getXmlContent(temp, "<xml_pew>","</xml_pew>");
 	  String ht = SxmlMisc.getXmlContent(temp, "<xml_peh>","</xml_peh>");
@@ -1432,9 +1439,9 @@ else {
       if(SxmlMisc.getXmlContent(temp, "<xml_nadref>","</xml_nadref>")!= null) savedar1risk.setProperty("75", "xml_nadref");
      }
 	out.println(checklist.doStuff(new String("../webapps/"+oscarVariables.getProperty("project_home")+"/provider/obarchecklist_99_12.xml"), savedar1risk));
-}	
 }
-		
+}
+
 %>
 </form>
 </body>

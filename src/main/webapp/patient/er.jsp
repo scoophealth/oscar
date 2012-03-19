@@ -1,26 +1,26 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -32,14 +32,19 @@
 	errorPage="../errorpage.jsp"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="page" />
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.DemographicAccessoryDao" %>
+<%@page import="org.oscarehr.common.model.DemographicAccessory" %>
+<%
+	DemographicAccessoryDao demographicAccessoryDao = (DemographicAccessoryDao)SpringUtils.getBean("demographicAccessoryDao");
+%>
 
 <%
   String [][] dbQueries=new String[][] {
     {"search_detail", "select * from demographic where demographic_no=?"},
-    {"search_demographicaccessory", "select * from demographicaccessory where demographic_no=?"},
     {"search_encounter", "select * from encounter where demographic_no = ? order by encounter_date desc, encounter_time desc"},
    };
-   
+
    //associate each operation with an output JSP file -- displaymode
    String[][] responseTargets=new String[][] {
      {"Add Record" , "demographicaddarecord.jsp"},
@@ -72,7 +77,7 @@
    String demoname=null,dob=null,gender=null,hin=null,roster=null;
    int dob_year = 0, dob_month = 0, dob_date = 0;
    rsdemo = apptMainBean.queryResults(demographic_no, "search_detail"); //dboperation=search_demograph
-   while (rsdemo.next()) { 
+   while (rsdemo.next()) {
      demoname=rsdemo.getString("last_name")+", "+rsdemo.getString("first_name");
      dob_year = Integer.parseInt(rsdemo.getString("year_of_birth"));
      dob_month = Integer.parseInt(rsdemo.getString("month_of_birth"));
@@ -92,9 +97,10 @@
   if(dob_year!=0) age=MyDateFormat.getAge(dob_year,dob_month,dob_date);
 
    rsdemo = null;
-   rsdemo = apptMainBean.queryResults(demographic_no, "search_demographicaccessory"); //dboperation=search_demograph
-   if (rsdemo.next()) { 
-     String content=rsdemo.getString("content");
+   DemographicAccessory da = demographicAccessoryDao.find(Integer.parseInt(demographic_no));
+   if(da != null) {
+
+     String content=da.getContent();
 	 strTemp = SxmlMisc.getXmlContent(content, "<xml_Problem_List>","</xml_Problem_List>");
      xml_Problem_List = strTemp==null?"":strTemp;
 	 strTemp = SxmlMisc.getXmlContent(content, "<xml_Medication>","</xml_Medication>");
@@ -104,7 +110,7 @@
 	 strTemp = SxmlMisc.getXmlContent(content, "<xml_Family_Social_History>","</xml_Family_Social_History>");
      xml_Family_Social_History = strTemp==null?"":strTemp;
 
-   } 
+   }
 %>
 
 		<table width="100%" border="0">
@@ -145,7 +151,7 @@
    rsdemo = null;
    rsdemo = apptMainBean.queryResults(demographic_no, "search_encounter");
 
-   while (rsdemo.next()) { 
+   while (rsdemo.next()) {
 %> &nbsp;<%=rsdemo.getString("encounter_date")%> <%=rsdemo.getString("encounter_time")%><font
 					color="blue"> <%
      String historysubject = rsdemo.getString("subject")==null?"No Subject":rsdemo.getString("subject").equals("")?"No Subject":rsdemo.getString("subject");
@@ -168,7 +174,7 @@
 				</a></font><br>
 				<%
      }
-   }       
+   }
 %>
 				</td>
 			</tr>
