@@ -316,7 +316,7 @@
                     <tr>
                         <td>
                             <div class="DivContentPadding">
-                                <div class="DivContentTitle">Your Favoraite Share Setting</div>
+                                <div class="DivContentTitle">Your Favorite Share Setting</div>
                             </div>
                         </td>
                     </tr>
