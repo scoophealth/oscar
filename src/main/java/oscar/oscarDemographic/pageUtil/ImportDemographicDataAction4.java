@@ -287,9 +287,9 @@ import cdsDt.PersonNameStandard.OtherNames;
         if(students == null || students.isEmpty()) {
             return importXML(xmlFile,warnings,request,timeShiftInDays,null,null,0);
         }
-        
+
         List<String> logs = new ArrayList<String>();
-        
+
         for(Provider student:students) {
             logger.info("importing patient for student " +  student.getFormattedName());
             //need that student's personal program
@@ -305,7 +305,7 @@ import cdsDt.PersonNameStandard.OtherNames;
         }
         return logs.toArray(new String[logs.size()]);
     }
-    
+
     private List<String> convertLog(String[] logs) {
     	List<String> tmp = new ArrayList<String>();
         tmp.addAll(Arrays.asList(logs));
@@ -358,16 +358,16 @@ import cdsDt.PersonNameStandard.OtherNames;
         } else {
             err_data.add("Error! No Legal Name");
         }
-        
+
         //other names
         String legalOtherNameTxt=null, otherNameTxt=null;
-        
+
         LegalName.OtherName[] legalOtherNames = legalName.getOtherNameArray();
         for (LegalName.OtherName otherName : legalOtherNames) {
             if (legalOtherNameTxt==null) legalOtherNameTxt = otherName.getPart();
             else legalOtherNameTxt += ", "+otherName.getPart();
         }
-        
+
         OtherNames[] otherNames = demo.getNames().getOtherNamesArray();
         for (OtherNames otherName : otherNames) {
         	OtherNames.OtherName[] otherNames2 = otherName.getOtherNameArray();
@@ -441,10 +441,10 @@ import cdsDt.PersonNameStandard.OtherNames;
         		 roster_date=new String[enrolTotal],
         		 term_date=new String[enrolTotal],
         		 term_reason=new String[enrolTotal];
-        		 
+
         String rosterInfo = null;
         Calendar enrollDate=null, currentEnrollDate=null;
-        
+
         for (int i=0; i<enrolTotal; i++) {
             roster_status[i] = enrolments[i].getEnrollmentStatus()!=null ? enrolments[i].getEnrollmentStatus().toString() : "";
             if	(roster_status[i].equals("1")) roster_status[i] = "RO";
@@ -453,26 +453,26 @@ import cdsDt.PersonNameStandard.OtherNames;
             term_date[i] = getCalDate(enrolments[i].getEnrollmentTerminationDate(), timeShiftInDays);
             if (enrolments[i].getTerminationReason()!=null)
             	term_reason[i] = enrolments[i].getTerminationReason().toString();
-            
+
             //Sort enrolments by date
             if (enrolments[i].getEnrollmentDate()!=null) currentEnrollDate = enrolments[i].getEnrollmentDate();
             else if (enrolments[i].getEnrollmentTerminationDate()!=null) currentEnrollDate = enrolments[i].getEnrollmentTerminationDate();
             else currentEnrollDate = null;
-            
+
             for (int j=i-1; j>=0; j--) {
                 if (enrolments[j].getEnrollmentDate()!=null) enrollDate = enrolments[j].getEnrollmentDate();
                 else if (enrolments[j].getEnrollmentTerminationDate()!=null) enrollDate = enrolments[j].getEnrollmentTerminationDate();
                 else break;
-                
+
                 if (currentEnrollDate==null || currentEnrollDate.before(enrollDate)) {
                     rosterInfo=roster_status[j]; roster_status[j]=roster_status[i]; roster_status[i]=rosterInfo;
                     rosterInfo=roster_date[j];   roster_date[j]=roster_date[i];     roster_date[i]=rosterInfo;
             		rosterInfo=term_date[j];     term_date[j]=term_date[i];         term_date[i]=rosterInfo;
-    				rosterInfo=term_reason[j];   term_reason[j]=term_reason[i];     term_reason[i]=rosterInfo; 
+    				rosterInfo=term_reason[j];   term_reason[j]=term_reason[i];     term_reason[i]=rosterInfo;
                 }
             }
         }
-        
+
         String rosterStatus=null, rosterDate=null, termDate=null, termReason=null;
         if (enrolTotal>0) {
         	rosterStatus=roster_status[enrolTotal-1];
@@ -480,7 +480,7 @@ import cdsDt.PersonNameStandard.OtherNames;
         	termDate=term_date[enrolTotal-1];
         	termReason=term_reason[enrolTotal-1];
         }
-        
+
         String sin = StringUtils.noNull(demo.getSIN());
 
         String chart_no = StringUtils.noNull(demo.getChartNumber());
@@ -490,13 +490,13 @@ import cdsDt.PersonNameStandard.OtherNames;
             official_lang = official_lang.equals("ENG") ? "English" : official_lang;
             official_lang = official_lang.equals("FRE") ? "French" : official_lang;
         }
-        
-        String spoken_lang = null; 
+
+        String spoken_lang = null;
         if (demo.getPreferredSpokenLanguage()!=null) {
         	spoken_lang = Util.convertCodeToLanguage(demo.getPreferredSpokenLanguage());
         	if (StringUtils.empty(spoken_lang)) err_data.add("Error! Cannot map spoken language code "+demo.getPreferredSpokenLanguage());
         }
-        
+
         String dNote = StringUtils.noNull(demo.getNoteAboutPatient());
         String uvID = demo.getUniqueVendorIdSequence();
         String psDate = getCalDate(demo.getPersonStatusDate(), timeShiftInDays);
@@ -505,11 +505,11 @@ import cdsDt.PersonNameStandard.OtherNames;
         if (StringUtils.filled(lastNameQualifier)) {
         	extra = Util.addLine(extra, "Lastname Qualifier: ", lastNameQualifier);
         }
-        
+
         if (StringUtils.filled(firstNameQualifier)) {
         	extra = Util.addLine(extra, "Firstname Qualifier: ", firstNameQualifier);
         }
-        
+
         if (StringUtils.filled(otherNameTxt)) {
             extra = Util.addLine(extra, "Other name: ", otherNameTxt);
         }
@@ -613,7 +613,7 @@ import cdsDt.PersonNameStandard.OtherNames;
             demographicNo = dd.getDemoNoByNamePhoneEmail(firstName, lastName, homePhone, workPhone, email);
             demographic = dd.getDemographic(demographicNo);
         }
-        
+
         if (demographic!=null && StringUtils.nullSafeEqualsIgnoreCase(demographic.getPatientStatus(), "Contact-only")) {
         	//found contact-only demo, replace!
             demographic.setTitle(title);
@@ -642,7 +642,7 @@ import cdsDt.PersonNameStandard.OtherNames;
             demographic.setSin(sin);
             dd.setDemographic(demographic);
             err_note.add("Replaced Contact-only patient "+patientName+" (Demo no="+demographicNo+")");
-            
+
         } else { //add patient!
             demoRes = dd.addDemographic(title, lastName, firstName, address, city, province, postalCode, homePhone, workPhone, year_of_birth, month_of_birth, date_of_birth, hin, versionCode, rosterStatus, rosterDate, termDate, termReason, patient_status, psDate, ""/*date_joined*/, chart_no, official_lang, spoken_lang, primaryPhysician, sex, ""/*end_date*/, ""/*eff_date*/, ""/*pcn_indicator*/, hc_type, hc_renew_date, ""/*family_doctor*/, email, ""/*pin*/, ""/*alias*/, ""/*previousAddress*/, ""/*children*/, ""/*sourceOfIncome*/, ""/*citizenship*/, sin);
             demographicNo = demoRes.getId();
@@ -651,15 +651,15 @@ import cdsDt.PersonNameStandard.OtherNames;
         if (StringUtils.filled(demographicNo))
         {
             //TODO: Course - Admit to student program
-        	
+
             entries.put(PATIENTID+importNo, Integer.valueOf(demographicNo));
-            
+
             if(admitTo == null) {
                 insertIntoAdmission(demographicNo);
             } else {
                 admissionManager.processAdmission(Integer.valueOf(demographicNo), student.getProviderNo(), admitTo, "", "batch import");
             }
-            
+
             //Put enrolment history into demographicArchive
             demographic = dd.getDemographic(demographicNo);
             for (int i=0; i<roster_status.length-1; i++) {
@@ -673,7 +673,7 @@ import cdsDt.PersonNameStandard.OtherNames;
 
             //Patient notes
             if (StringUtils.filled(dNote)) dd.addDemographiccust(demographicNo, dNote);
-            
+
             //to dumpsite: Extra demographic data
             if (StringUtils.filled(extra)) {
 	            extra = Util.addLine("imported.cms4.2011.06", extra);
@@ -729,9 +729,9 @@ import cdsDt.PersonNameStandard.OtherNames;
                 String cPatient = cLastName+","+cFirstName;
                 if (StringUtils.empty(cDemoNo)) {   //add new demographic as contact
                     psDate = UtilDateUtilities.DateToString(new Date(),"yyyy-MM-dd");
-                    demoRes = dd.addDemographic(""/*title*/, cLastName, cFirstName, ""/*address*/, ""/*city*/, ""/*province*/, ""/*postal*/, 
-                    			homePhone, workPhone, ""/*year_of_birth*/, ""/*month_*/, ""/*date_*/, ""/*hin*/, ""/*ver*/, ""/*roster_status*/, "", "", "", 
-                    			"Contact-only", psDate, ""/*date_joined*/, ""/*chart_no*/, ""/*official_lang*/, ""/*spoken_lang*/, ""/*provider_no*/, 
+                    demoRes = dd.addDemographic(""/*title*/, cLastName, cFirstName, ""/*address*/, ""/*city*/, ""/*province*/, ""/*postal*/,
+                    			homePhone, workPhone, ""/*year_of_birth*/, ""/*month_*/, ""/*date_*/, ""/*hin*/, ""/*ver*/, ""/*roster_status*/, "", "", "",
+                    			"Contact-only", psDate, ""/*date_joined*/, ""/*chart_no*/, ""/*official_lang*/, ""/*spoken_lang*/, ""/*provider_no*/,
                     			"F", ""/*end_date*/, ""/*eff_date*/, ""/*pcn_indicator*/, ""/*hc_type*/, ""/*hc_renew_date*/, ""/*family_doctor*/,
                     			cEmail, "", "", "", "", "", "", "");
                 	cDemoNo = demoRes.getId();
@@ -742,14 +742,14 @@ import cdsDt.PersonNameStandard.OtherNames;
                     if (!cellPhone.equals("")) dExt.addKey("", cDemoNo, "demo_cell", cellPhone);
                 }
                 insertIntoAdmission(cDemoNo);
-                
+
                 cdsDt.PurposeEnumOrPlainText[] contactPurposes = contt[i].getContactPurposeArray();
                 String sdm="", emc="", cPurpose=null;
                 String[] rel = new String[contactPurposes.length];
-                
+
                 for (int j=0; j<contactPurposes.length; j++) {
                     cPurpose = contactPurposes[j].getPurposeAsPlainText();
-                    if (cPurpose==null) cPurpose = contactPurposes[j].getPurposeAsEnum().toString(); 
+                    if (cPurpose==null) cPurpose = contactPurposes[j].getPurposeAsEnum().toString();
                     if (cPurpose!=null) cPurpose = cPurpose.trim();
                     else continue;
 
@@ -767,12 +767,12 @@ import cdsDt.PersonNameStandard.OtherNames;
                         rel[j] = cPurpose;
                     }
                 }
-                
+
                 if (StringUtils.filled(cDemoNo)) {
                 	if (oscarProperties.isPropertyActive("NEW_CONTACTS_UI")) {
                         for (int j=0; j<rel.length; j++) {
                         	if (rel[j]==null) continue;
-                        	
+
                             DemographicContact demoContact = new DemographicContact();
                             demoContact.setCreated(new Date());
                             demoContact.setUpdateDate(new Date());
@@ -785,7 +785,7 @@ import cdsDt.PersonNameStandard.OtherNames;
                             demoContact.setSdm(sdm);
                             demoContact.setNote(contactNote);
                         	contactDao.persist(demoContact);
-                        	
+
                         	//clear emc, sdm, contactNote after 1st save
                         	emc = "";
                         	sdm = "";
@@ -795,13 +795,13 @@ import cdsDt.PersonNameStandard.OtherNames;
 				        Facility facility = (Facility) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);
 				        Integer facilityId = null;
 				        if (facility!=null) facilityId = facility.getId();
-				        
+
 				        for (int j=0; j<rel.length; j++) {
 				        	if (rel[j]==null) continue;
-				        	
+
 							DemographicRelationship demoRel = new DemographicRelationship();
 							demoRel.addDemographicRelationship(demographicNo, cDemoNo, rel[j], sdm.equals("true"), emc.equals("true"), contactNote, admProviderNo, facilityId);
-                        	
+
                         	//clear emc, sdm, contactNote after 1st save
                         	emc = "";
                         	sdm = "";
@@ -1215,14 +1215,14 @@ import cdsDt.PersonNameStandard.OtherNames;
                     if (cNotes[i].getEventDateTime()!=null) {
                     	observeDate = dateTimeFPtoDate(cNotes[i].getEventDateTime(),timeShiftInDays);
                     	if (cNotes[i].getEnteredDateTime()==null) createDate = observeDate;
-                    	
+
                     }
-                    
+
                     CaseManagementNote cmNote = prepareCMNote("1",null);
                     cmNote.setCreate_date(createDate);
                     cmNote.setObservation_date(observeDate);
                     cmNote.setNote(encounter);
-                    
+
                     String uuid = null;
                     ClinicalNotes.ParticipatingProviders[] participatingProviders = cNotes[i].getParticipatingProvidersArray();
                     ClinicalNotes.NoteReviewer[] noteReviewers = cNotes[i].getNoteReviewerArray();
@@ -1263,7 +1263,7 @@ import cdsDt.PersonNameStandard.OtherNames;
                                 HashMap<String,String> authorName = getPersonName(noteReviewers[r].getName());
                                 String reviewerOHIP = noteReviewers[r].getOHIPPhysicianId();
                                 String reviewer = writeProviderData(authorName.get("firstname"), authorName.get("lastname"), reviewerOHIP);
-                                
+
                                 cmNote.setProviderNo(reviewer);
                                 cmNote.setSigning_provider_no(reviewer);
                                 Util.writeVerified(cmNote);
@@ -1275,7 +1275,7 @@ import cdsDt.PersonNameStandard.OtherNames;
                         if (p==0) {
                             addOneEntry(CLINICALNOTE);
                             uuid = cmNote.getUuid();
-                            
+
                             //create "header", cms4 only
                         	if (cNotes[i].getEnteredDateTime()!=null && !createDate.equals(cmNote.getUpdate_date())) {
                         		CaseManagementNote headNote = prepareCMNote("2",null);
@@ -1285,14 +1285,14 @@ import cdsDt.PersonNameStandard.OtherNames;
                         		headNote.setNote("imported.cms4.2011.06"+uuid);
                         		caseManagementManager.saveNoteSimple(headNote);
                         	}
-                            
+
                         }
                     }
                     if (p_total==0) {
                         err_note.add("Clinical notes have no author; assigned to \"doctor oscardoc\" ("+(i+1)+")");
                     	caseManagementManager.saveNoteSimple(cmNote);
                     }
-                    
+
                     //to dumpsite
                     String noteType = cNotes[i].getNoteType();
                     if (StringUtils.filled(noteType)) {
@@ -1341,12 +1341,12 @@ import cdsDt.PersonNameStandard.OtherNames;
                     } else {
                     	severity = "4"; //severity unknown
                     }
-                    
+
                     Date entryDateDate=toDateFromString(entryDate);
                     Date startDateDate=toDateFromString(startDate);
                     Integer allergyId = saveRxAllergy(Integer.valueOf(demographicNo), entryDateDate, description, Integer.parseInt(typeCode), reaction, startDateDate, severity, regionalId, lifeStage);
                     addOneEntry(ALLERGY);
-                    
+
                     //write partial dates
                     if (entryDateFormat!=null) partialDateDao.setPartialDate(PartialDate.ALLERGIES, allergyId.intValue(), PartialDate.ALLERGIES_ENTRYDATE, entryDateFormat);
                     if (startDateFormat!=null) partialDateDao.setPartialDate(PartialDate.ALLERGIES, allergyId.intValue(), PartialDate.ALLERGIES_STARTDATE, startDateFormat);
@@ -1383,10 +1383,10 @@ import cdsDt.PersonNameStandard.OtherNames;
                     drug.setCreateDate(new Date());
                     drug.setWrittenDate(dateTimeFPtoDate(medArray[i].getPrescriptionWrittenDate(), timeShiftInDays));
                     String writtenDateFormat = dateFPGetPartial(medArray[i].getPrescriptionWrittenDate());
-                    
+
                     drug.setRxDate(dateFPtoDate(medArray[i].getStartDate(), timeShiftInDays));
                     if (medArray[i].getStartDate()==null) drug.setRxDate(drug.getWrittenDate());
-                    
+
                     duration = medArray[i].getDuration();
                     if (StringUtils.filled(duration)) {
                     	duration = duration.trim();
@@ -1397,22 +1397,22 @@ import cdsDt.PersonNameStandard.OtherNames;
                     	}
                     	else err_data.add("Error! Invalid Duration ["+medArray[i].getDuration()+"] for Medications");
                     }
-                    
+
                     quantity = medArray[i].getQuantity();
                     if (StringUtils.filled(quantity)) {
                     	quantity = Util.leadingNum(quantity.trim());
                     	if (NumberUtils.isNumber(quantity)) {
                     		drug.setQuantity(quantity);
-                    	} 
+                    	}
                     	else err_data.add("Error! Invalid Quantity ["+medArray[i].getQuantity()+"] for Medications");
                     }
-                    
+
                     Calendar endDate = Calendar.getInstance();
                     endDate.setTime(drug.getRxDate());
                     if (StringUtils.filled(duration))
                     	endDate.add(Calendar.DAY_OF_YEAR, Integer.valueOf(duration)+timeShiftInDays);
                     drug.setEndDate(endDate.getTime());
-                    
+
                     String freq = StringUtils.noNull(medArray[i].getFrequency());
                     int prnPos = freq.toUpperCase().indexOf("PRN");
                     if (prnPos>=0) {
@@ -1420,7 +1420,7 @@ import cdsDt.PersonNameStandard.OtherNames;
                     	 freq = freq.substring(0, prnPos).trim() +" "+ freq.substring(prnPos+3).trim(); //remove "prn" from freq
                     }
                     drug.setFreqCode(freq);
-                    
+
                     drug.setFreqCode(medArray[i].getFrequency());
                     if (medArray[i].getFrequency()!=null && medArray[i].getFrequency().contains("PRN")) drug.setPrn(true);
                     else drug.setPrn(false);
@@ -1447,7 +1447,7 @@ import cdsDt.PersonNameStandard.OtherNames;
                     	if (NumberUtils.isNumber(quantity)) drug.setRefillQuantity(Integer.valueOf(quantity));
                     	else err_data.add("Error! Invalid Refill Quantity ["+medArray[i].getRefillQuantity()+"] for Medications");
                     }
-                    
+
                     drug.setETreatmentType(medArray[i].getTreatmentType());
                     //no need: DrugReason drugReason = new DrugReason();
                     //no need: drug.setRxStatus(medArray[i].getPrescriptionStatus());
@@ -1469,7 +1469,7 @@ import cdsDt.PersonNameStandard.OtherNames;
                     else drug.setTakeMax(drug.getTakeMin());
                     drug.setUnit(medArray[i].getDosageUnitOfMeasure());
                     if ("table".equalsIgnoreCase(drug.getUnit())) drug.setUnit("tab");
-                    
+
                     drug.setDemographicId(Integer.valueOf(demographicNo));
                     drug.setArchived(false);
 
@@ -1486,7 +1486,7 @@ import cdsDt.PersonNameStandard.OtherNames;
                     if (strength!=null) {
                     	String dosageValue = StringUtils.noNull(strength.getAmount());
                     	String dosageUnit = StringUtils.noNull(strength.getUnitOfMeasure());
-                    	
+
                     	if (dosageValue.contains("/")) {
                     		String[] dValue = dosageValue.split("/");
                     		String[] dUnit = dosageUnit.split("/");
@@ -1500,7 +1500,7 @@ import cdsDt.PersonNameStandard.OtherNames;
                     special = addSpaced(special, medArray[i].getDosage());
                     special = addSpaced(special, drug.getRoute());
                     special = addSpaced(special, drug.getFreqCode());
-                    
+
                     if (drug.getDuration()!=null) {
                     	special = addSpaced(special, "for "+drug.getDuration()+" days");
                     }
@@ -1511,12 +1511,12 @@ import cdsDt.PersonNameStandard.OtherNames;
                     //no need: special = Util.addLine(special, "Protocol Id: ", medArray[i].getProtocolIdentifier());
                     //no need: special = Util.addLine(special, "Prescription Id: ", medArray[i].getPrescriptionIdentifier());
                     //no need: special = Util.addLine(special, "Prior Prescription Id: ", medArray[i].getPriorPrescriptionReferenceIdentifier());
-                    
+
 
                     if (StringUtils.filled(medArray[i].getPrescriptionInstructions())) {
                     	drug.setSpecialInstruction(medArray[i].getPrescriptionInstructions());
                     }
-                    
+
                     if (medArray[i].getPrescribedBy()!=null) {
                         HashMap<String,String> personName = getPersonName(medArray[i].getPrescribedBy().getName());
                         String personOHIP = medArray[i].getPrescribedBy().getOHIPPhysicianId();
@@ -1549,7 +1549,7 @@ import cdsDt.PersonNameStandard.OtherNames;
 
                     //partial date
                     partialDateDao.setPartialDate(PartialDate.DRUGS, drug.getId(), PartialDate.DRUGS_WRITTENDATE, writtenDateFormat);
-                    
+
                     //annotation
                     CaseManagementNote cmNote = prepareCMNote("2",null);
                     String note = StringUtils.noNull(medArray[i].getNotes());
@@ -1622,7 +1622,7 @@ import cdsDt.PersonNameStandard.OtherNames;
                         ht.put("dose", immuArray[i].getDose());
                         preventionExt.add(ht);
                     }
-                    
+
                     if (StringUtils.filled(immuArray[i].getNotes())) {
                         Map<String,String> ht = new HashMap<String,String>();
                         ht.put("comments", immuArray[i].getNotes());
@@ -1645,13 +1645,13 @@ import cdsDt.PersonNameStandard.OtherNames;
                         comments = Util.addLine(comments, "Summary: ", iSummary);
                         err_note.add("Immunization Summary imported in [comments] ("+(i+1)+")");
                     }
- * 
+ *
  */
 
                     immExtra = Util.addLine(immExtra, getCode(immuArray[i].getImmunizationCode(),"Immunization Code"));
                     immExtra = Util.addLine(immExtra, "Instructions: ", immuArray[i].getInstructions());
                     immExtra = Util.addLine(immExtra, getResidual(immuArray[i].getResidualInfo()));
-                    
+
                     Integer preventionId = PreventionData.insertPreventionData(admProviderNo, demographicNo, preventionDate, defaultProviderNo(), "", preventionType, refused, "", "", preventionExt);
                     addOneEntry(IMMUNIZATION);
 
@@ -1696,7 +1696,7 @@ import cdsDt.PersonNameStandard.OtherNames;
                     	_testName[i] += labResultArr[i].getTestNameReportedByLab();
                     }
                     _title[i] = _testName[i];
-                    
+
                     if (StringUtils.filled(labResultArr[i].getNotesFromLab()))
                         _labnotes[i] = "Notes: "+labResultArr[i].getNotesFromLab();
 
@@ -1803,20 +1803,20 @@ import cdsDt.PersonNameStandard.OtherNames;
 
                     //save lab collection datetime
                     cdsDt.DateTimeFullOrPartial collDate = labResults.getCollectionDateTime();
-                    String coll_date = null; 
+                    String coll_date = null;
                     if (collDate!=null) {
                     	coll_date = dateFPtoString(collDate, timeShiftInDays);
                         saveMeasurementsExt(measId, "datetime", coll_date);
                     } else {
                         err_data.add("Error! No Collection DateTime for Lab Test "+testCode+" for Patient "+demographicNo);
                     }
-                    
+
                     //save lab requisition datetime
                     cdsDt.DateTimeFullOrPartial reqDate = labResults.getLabRequisitionDateTime();
                     if (reqDate!=null) {
                     	saveMeasurementsExt(measId, "request_datetime", dateFPtoString(reqDate, timeShiftInDays));
                     }
-                    
+
                     //save laboratory name
                     String labname = StringUtils.noNull(labResults.getLaboratoryName());
                     if (StringUtils.filled(labname)) {
@@ -1938,7 +1938,7 @@ import cdsDt.PersonNameStandard.OtherNames;
                         	status = allStatus[0];
 //                        	err_note.add("Cannot map appointment status ["+apptStatus+"]. Appointment Status set to [To Do]");
                         }
-                        
+
                     }
 
                     reason = StringUtils.noNull(appArray[i].getAppointmentPurpose());
@@ -2054,11 +2054,11 @@ import cdsDt.PersonNameStandard.OtherNames;
                                 if (repR[i].getSourceFacility()!=null) {
                                 	sourceFacility = repR[i].getSourceFacility();
                                 }
-                                
+
                                 if (repR[i].getMedia()!=null) {
                                 	reportExtra = Util.addLine(reportExtra, "Media: ", repR[i].getMedia().toString());
                                 }
-                                
+
                                 ReportsReceived.SourceAuthorPhysician authorPhysician = repR[i].getSourceAuthorPhysician();
                                 if (authorPhysician!=null) {
                                     if (authorPhysician.getAuthorName()!=null) {
@@ -2083,7 +2083,7 @@ import cdsDt.PersonNameStandard.OtherNames;
                                 if (docNum==null) docNum = 0;
                                 if (binaryFormat) addOneEntry(REPORTBINARY);
                                 else addOneEntry(REPORTTEXT);
-                                
+
                                 //to dumpsite: Extra report data
                                 if (StringUtils.filled(reportExtra)) {
                     	            reportExtra = Util.addLine("imported.cms4.2011.06", reportExtra);
@@ -2402,29 +2402,29 @@ import cdsDt.PersonNameStandard.OtherNames;
 		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
 		return f.format(c.getTime());
 	}
-	
+
 	String getCalDate(Calendar c, int timeShiftInDays) {
 		if (c==null) return "";
 
 		c.add(Calendar.DAY_OF_YEAR, timeShiftInDays);
 		return getCalDate(c);
 	}
-	
+
 	String getCalDateTime(Calendar c) {
 		if (c==null) return "";
-		
+
 		Calendar c1 = Calendar.getInstance();
 		c1.setTime(new Date());
-		
+
 		//Cancel out timezone difference
 		int diff = c.getTimeZone().getRawOffset() - c1.getTimeZone().getRawOffset();
 		c.add(Calendar.MILLISECOND, diff);
-		
+
 		//Cancel out daylight saving
 		diff = c.getTimeZone().useDaylightTime() && c.getTimeZone().inDaylightTime(c.getTime()) ? 1 : 0;
 		diff -= c1.getTimeZone().useDaylightTime() && c1.getTimeZone().inDaylightTime(c.getTime()) ? 1 : 0;
 		c.add(Calendar.HOUR, diff);
-		
+
 		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return f.format(c.getTime());
 	}
@@ -2471,21 +2471,21 @@ import cdsDt.PersonNameStandard.OtherNames;
 
     String dateFPtoString(cdsDt.DateFullOrPartial dfp, int timeshiftInDays) {
 		if (dfp==null) return "";
-				
+
 		if (dfp.getFullDate()!=null)  {
 			dfp.getFullDate().add(Calendar.DAY_OF_YEAR, timeshiftInDays);
 			return getCalDate(dfp.getFullDate());
-		}		
+		}
 		else if (dfp.getYearMonth()!=null) {
 			dfp.getYearMonth().add(Calendar.DAY_OF_YEAR, timeshiftInDays);
 			return getCalDate(dfp.getYearMonth());
 		}
-		else if (dfp.getYearOnly()!=null)  
+		else if (dfp.getYearOnly()!=null)
 		{
 			dfp.getYearOnly().add(Calendar.DAY_OF_YEAR, timeshiftInDays);
 			return getCalDate(dfp.getYearOnly());
 		}
-		else 
+		else
 			return "";
     }
 
@@ -2512,10 +2512,10 @@ import cdsDt.PersonNameStandard.OtherNames;
 			dDate = UtilDateUtilities.StringToDate(sdate, "yyyy-MM-dd");
 		if (dDate==null)
 			dDate = UtilDateUtilities.StringToDate(sdate, "HH:mm:ss");
-		
+
 		return dDate;
     }
-	    
+
     Date dateFPtoDate(cdsDt.DateFullOrPartial dfp, int timeShiftInDays) {
             String sdate = dateFPtoString(dfp,timeShiftInDays);
             return UtilDateUtilities.StringToDate(sdate, "yyyy-MM-dd");
@@ -2571,7 +2571,7 @@ import cdsDt.PersonNameStandard.OtherNames;
 		cmIssu.setIssue_id(isu.getId());
 		cmIssu.setType(isu.getType());
 		caseManagementManager.saveCaseIssue(cmIssu);
-	
+
 		Set<CaseManagementIssue> sCmIssu = new HashSet<CaseManagementIssue>();
 		sCmIssu.add(cmIssu);
 		return sCmIssu;
@@ -2837,7 +2837,7 @@ import cdsDt.PersonNameStandard.OtherNames;
 	String updateExternalProvider(String firstName, String lastName, String ohipNo, String cpsoNo, ProviderData pd) {
 		// For external provider only
 		if (pd==null || pd.getProviderNo().charAt(0)!='-') return null;
-		
+
 		org.oscarehr.common.model.ProviderData newpd = providerDataDao.findByProviderNo(pd.getProviderNo());
 		if (StringUtils.empty(pd.getFirst_name()))
 			newpd.setFirstName(StringUtils.noNull(firstName));
@@ -2847,7 +2847,7 @@ import cdsDt.PersonNameStandard.OtherNames;
 			newpd.setOhipNo(ohipNo);
 		if (StringUtils.empty(pd.getPractitionerNo()))
 			newpd.setPractitionerNo(cpsoNo);
-		
+
 		providerDataDao.merge(newpd);
 		return newpd.getId();
 	}
@@ -2892,7 +2892,7 @@ import cdsDt.PersonNameStandard.OtherNames;
 		admission.setRadioDischargeReason("0");
 		admission.setClientStatusId(0);
 		admission.setAutomaticDischarge(false);
-		
+
 		admissionDao.saveAdmission(admission);
 	}
 
@@ -2928,7 +2928,7 @@ import cdsDt.PersonNameStandard.OtherNames;
                         appendIfNotNull(s,"Reviewer Last Name:", reviewerName.getLastName());
                     }
                 }
-		
+
 		appendIfNotNull(s,"ResultNormalAbnormalFlag",""+labRes.getResultNormalAbnormalFlag());
 		appendIfNotNull(s,"TestResultsInformationreportedbytheLaboratory",labRes.getTestResultsInformationReportedByTheLab());
 		appendIfNotNull(s,"NotesFromLab",labRes.getNotesFromLab());
@@ -2948,15 +2948,15 @@ import cdsDt.PersonNameStandard.OtherNames;
 
     void addOneEntry(String category) {
         if (StringUtils.empty(category)) return;
-        
+
         Integer n = entries.get(category+importNo);
         n = n==null ? 1 : n+1;
         entries.put(category+importNo, n);
     }
-    
+
     DemographicArchive archiveDemographic(DemographicData.Demographic d) {
     	DemographicArchive da = new DemographicArchive();
-    	
+
     	da.setDemographicNo(Integer.valueOf(d.getDemographicNo()));
     	da.setFirstName(d.getFirstName());
     	da.setLastName(d.getLastName());
@@ -2986,8 +2986,8 @@ import cdsDt.PersonNameStandard.OtherNames;
     	da.setHcRenewDate(UtilDateUtilities.StringToDate(d.getHCRenewDate()));
     	da.setMyOscarUserName(d.getMyOscarUserName());
     	da.setNewsletter(d.getNewsletter());
-    	da.setOfficialLang(d.getOfficialLang());
-    	da.setSpokenLang(d.getSpokenLang());
+    	da.setOfficialLanguage(d.getOfficialLang());
+    	da.setSpokenLanguage(d.getSpokenLang());
     	da.setPatientStatus(d.getPatientStatus());
     	da.setPatientStatusDate(UtilDateUtilities.StringToDate(d.getPatientStatusDate()));
     	da.setPcnIndicator(d.getPCNindicator());
@@ -3003,10 +3003,10 @@ import cdsDt.PersonNameStandard.OtherNames;
     	da.setSourceOfIncome(d.getSourceOfIncome());
     	da.setLastUpdateDate(UtilDateUtilities.StringToDate(d.getLastUpdateDate()));
     	da.setLastUpdateUser(d.getLastUpdateUser());
-    	
+
     	return da;
     }
-	
+
 	String mapNamePurpose(cdsDt.PersonNamePurposeCode.Enum namePurpose) {
 		if (namePurpose.equals(cdsDt.PersonNamePurposeCode.HC))
 			return "Health Card Name";
@@ -3018,7 +3018,7 @@ import cdsDt.PersonNameStandard.OtherNames;
 			return "License Name";
 		return "";
 	}
-	
+
     String noDot(String s) {
         if (s==null) return null;
         s = s.trim();
@@ -3034,17 +3034,17 @@ import cdsDt.PersonNameStandard.OtherNames;
 
     String addSpaced(String s, String ss) {
     	s = StringUtils.noNull(s).trim();
-    	
+
     	if (!s.equals("") && StringUtils.filled(ss)) s += " " + ss.trim();
     	else s += StringUtils.noNull(ss).trim();
-    	
+
     	return s;
     }
-    
+
 	private static Integer saveRxAllergy(Integer demographicNo, Date entryDate, String description, Integer typeCode, String reaction, Date startDate, String severity, String regionalId, String lifeStage) {
 
 		AllergyDao allergyDao=(AllergyDao) SpringUtils.getBean("allergyDao");
-		
+
 		Allergy allergy=new Allergy();
 		allergy.setDemographicNo(demographicNo);
 		allergy.setEntryDate(entryDate);
@@ -3055,9 +3055,9 @@ import cdsDt.PersonNameStandard.OtherNames;
 		allergy.setSeverityOfReaction(severity);
 		allergy.setRegionalIdentifier(regionalId);
 		allergy.setLifeStage(lifeStage);
-		
+
 		allergyDao.persist(allergy);
-		return(allergy.getId());		
+		return(allergy.getId());
 	}
 
 	/**
@@ -3075,7 +3075,7 @@ import cdsDt.PersonNameStandard.OtherNames;
         {
         	// okay we couldn't parse it, we'll try another format
         }
-        
+
         try
         {
             SimpleDateFormat sdf=new SimpleDateFormat(DateFormatUtils.ISO_DATETIME_FORMAT.getPattern());
@@ -3085,7 +3085,7 @@ import cdsDt.PersonNameStandard.OtherNames;
         {
         	// okay we couldn't parse it, we'll try another format
         }
-        
+
         try
         {
             SimpleDateFormat sdf=new SimpleDateFormat(DateFormatUtils.ISO_DATE_FORMAT.getPattern());
@@ -3095,11 +3095,11 @@ import cdsDt.PersonNameStandard.OtherNames;
         {
         	// okay we couldn't parse it, we'll try another format
         }
-        
+
         // no more formats to try, we lose :(
         logger.warn("UnParsable date string : "+s);
-        
+
         return(null);
-        		
+
 	}
 }
