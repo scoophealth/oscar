@@ -25,7 +25,6 @@
 package oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -35,34 +34,30 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.oscarehr.util.MiscUtils;
-
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.common.dao.ConsultationServiceDao;
+import org.oscarehr.common.model.ConsultationServices;
+import org.oscarehr.util.SpringUtils;
 
 public class EctConDeleteServicesAction extends Action {
-   
+
+	private ConsultationServiceDao consultationServiceDao = (ConsultationServiceDao)SpringUtils.getBean("consultationServiceDao");
+
    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
    throws ServletException, IOException {
-      MiscUtils.getLogger().debug("Delete Services Action Jackson");
-      EctConDeleteServicesForm frm = (EctConDeleteServicesForm)form;
+
+	   EctConDeleteServicesForm frm = (EctConDeleteServicesForm)form;
       String servs[] = frm.getService();
       if(servs.length > 0) {
-         StringBuilder stringBuffer = new StringBuilder();
-         for(int i = 0; i < servs.length; i++)
-            if(i == servs.length - 1)
-               stringBuffer.append(String.valueOf(String.valueOf((new StringBuilder(" serviceId = '")).append(servs[i]).append("' "))));
-            else
-               stringBuffer.append(String.valueOf(String.valueOf((new StringBuilder(" serviceId = '")).append(servs[i]).append("' or "))));
-         
-         try {
-            
-            String sql = "update consultationServices set active = '02' where ".concat(String.valueOf(String.valueOf(stringBuffer.toString())));
-            MiscUtils.getLogger().debug("sql = ".concat(String.valueOf(String.valueOf(sql))));
-            DBHandler.RunSQL(sql);
-         }
-         catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-         }
+
+    	  for(String serv:frm.getService()) {
+    		  ConsultationServices cs = consultationServiceDao.find(Integer.valueOf(serv));
+    		  if(cs!=null) {
+    			  cs.setActive("02");
+    			  consultationServiceDao.merge(cs);
+    		  }
+    	  }
+
+
       }
       return mapping.findForward("success");
    }
