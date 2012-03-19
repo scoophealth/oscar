@@ -105,10 +105,11 @@ public class Demographic implements Serializable {
 
 	private String title;
 	private String officialLanguage;
-        
-        
-        
-        
+
+    private String countryOfOrigin;
+    private String newsletter;
+
+
         public String getTitle() {
         	return title;
         }
@@ -162,11 +163,11 @@ public class Demographic implements Serializable {
     public void setRosterTerminationDate(Date rosterTermDate) {
         this.rosterTerminationDate = rosterTermDate;
     }
-    
+
     public String getRosterTerminationReason() {
     	return rosterTerminationReason;
     }
-    
+
     public void setRosterTerminationReason(String rosterTermReason) {
     	this.rosterTerminationReason = rosterTermReason;
     }
@@ -203,7 +204,7 @@ public class Demographic implements Serializable {
 		demographic.setSex(gender == null || gender.length() == 0 ? DEFAULT_SEX : gender.substring(0, 1).toUpperCase());
 
 		demographic.setDateJoined(new Date());
-		//demographic.setEffDate(new Date());		
+		//demographic.setEffDate(new Date());
 		demographic.setEndDate(DateTimeFormatUtils.getDateFromString(DEFAULT_FUTURE_DATE));
 		//demographic.setHcRenewDate(DateTimeFormatUtils.getDateFromString(DEFAULT_FUTURE_DATE));
 
@@ -242,7 +243,7 @@ public class Demographic implements Serializable {
         }
 	/**
 	 * Return the unique identifier of this class
-	 * 
+	 *
 	 * @hibernate.id generator-class="native" column="demographic_no"
 	 */
 	public Integer getDemographicNo() {
@@ -251,7 +252,7 @@ public class Demographic implements Serializable {
 
 	/**
 	 * Set the unique identifier of this class
-	 * 
+	 *
 	 * @param demographicNo the new ID
 	 */
 	public void setDemographicNo(Integer demographicNo) {
@@ -268,7 +269,7 @@ public class Demographic implements Serializable {
 
 	/**
 	 * Set the value related to the column: phone
-	 * 
+	 *
 	 * @param phone the phone value
 	 */
 	public void setPhone(String phone) {
@@ -288,7 +289,7 @@ public class Demographic implements Serializable {
 
 	/**
 	 * Set the value related to the column: patient_status
-	 * 
+	 *
 	 * @param patientStatus the patient_status value
 	 */
 	public void setPatientStatus(String patientStatus) {
@@ -308,7 +309,7 @@ public class Demographic implements Serializable {
 
 	/**
 	 * Set the value related to the column: roster_status
-	 * 
+	 *
 	 * @param rosterStatus the roster_status value
 	 */
 	public void setRosterStatus(String rosterStatus) {
@@ -324,7 +325,7 @@ public class Demographic implements Serializable {
 
 	/**
 	 * Set the value related to the column: provider_no
-	 * 
+	 *
 	 * @param providerNo the provider_no value
 	 */
 	public void setProviderNo(String providerNo) {
@@ -350,7 +351,7 @@ public class Demographic implements Serializable {
 
 	/**
 	 * Set the value related to the column: hin
-	 * 
+	 *
 	 * @param hin the hin value
 	 */
 	public void setHin(String hin) {
@@ -366,7 +367,7 @@ public class Demographic implements Serializable {
 
 	/**
 	 * Set the value related to the column: address
-	 * 
+	 *
 	 * @param address the address value
 	 */
 	public void setAddress(String address) {
@@ -382,14 +383,14 @@ public class Demographic implements Serializable {
 
 	/**
 	 * Set the value related to the column: province
-	 * 
+	 *
 	 * @param province the province value
 	 */
 	public void setProvince(String province) {
 		province=StringUtils.trimToNull(province);
-		
+
 		if (province!=null) province=province.toUpperCase();
-		
+
 		this.province = province;
 	}
 
@@ -402,7 +403,7 @@ public class Demographic implements Serializable {
 
 	/**
 	 * Set the value related to the column: month_of_birth
-	 * 
+	 *
 	 * @param monthOfBirth the month_of_birth value
 	 */
 	public void setMonthOfBirth(String monthOfBirth) {
@@ -418,7 +419,7 @@ public class Demographic implements Serializable {
 
 	/**
 	 * Set the value related to the column: ver
-	 * 
+	 *
 	 * @param ver the ver value
 	 */
 	public void setVer(String ver) {
@@ -434,7 +435,7 @@ public class Demographic implements Serializable {
 
 	/**
 	 * Set the value related to the column: date_of_birth
-	 * 
+	 *
 	 * @param dateOfBirth the date_of_birth value
 	 */
 	public void setDateOfBirth(String dateOfBirth) {
@@ -450,7 +451,7 @@ public class Demographic implements Serializable {
 
 	/**
 	 * Set the value related to the column: sex
-	 * 
+	 *
 	 * @param sex the sex value
 	 */
 	public void setSex(String sex) {
@@ -466,7 +467,7 @@ public class Demographic implements Serializable {
 
 	/**
 	 * Set the value related to the column: date_joined
-	 * 
+	 *
 	 * @param dateJoined the date_joined value
 	 */
 	public void setDateJoined(Date dateJoined) {
@@ -482,7 +483,7 @@ public class Demographic implements Serializable {
 
 	/**
 	 * Set the value related to the column: family_doctor
-	 * 
+	 *
 	 * @param familyDoctor the family_doctor value
 	 */
 	public void setFamilyDoctor(String familyDoctor) {
@@ -498,7 +499,7 @@ public class Demographic implements Serializable {
 
 	/**
 	 * Set the value related to the column: city
-	 * 
+	 *
 	 * @param city the city value
 	 */
 	public void setCity(String city) {
@@ -514,7 +515,7 @@ public class Demographic implements Serializable {
 
 	/**
 	 * Set the value related to the column: first_name
-	 * 
+	 *
 	 * @param firstName the first_name value
 	 */
 	public void setFirstName(String firstName) {
@@ -530,7 +531,7 @@ public class Demographic implements Serializable {
 
 	/**
 	 * Set the value related to the column: postal
-	 * 
+	 *
 	 * @param postal the postal value
 	 */
 	public void setPostal(String postal) {
@@ -546,7 +547,7 @@ public class Demographic implements Serializable {
 
 	/**
 	 * Set the value related to the column: hc_renew_date
-	 * 
+	 *
 	 * @param hcRenewDate the hc_renew_date value
 	 */
 	public void setHcRenewDate(Date hcRenewDate) {
@@ -562,7 +563,7 @@ public class Demographic implements Serializable {
 
 	/**
 	 * Set the value related to the column: phone2
-	 * 
+	 *
 	 * @param phone2 the phone2 value
 	 */
 	public void setPhone2(String phone2) {
@@ -578,7 +579,7 @@ public class Demographic implements Serializable {
 
 	/**
 	 * Set the value related to the column: pcn_indicator
-	 * 
+	 *
 	 * @param pcnIndicator the pcn_indicator value
 	 */
 	public void setPcnIndicator(String pcnIndicator) {
@@ -594,7 +595,7 @@ public class Demographic implements Serializable {
 
 	/**
 	 * Set the value related to the column: end_date
-	 * 
+	 *
 	 * @param endDate the end_date value
 	 */
 	public void setEndDate(Date endDate) {
@@ -610,7 +611,7 @@ public class Demographic implements Serializable {
 
 	/**
 	 * Set the value related to the column: last_name
-	 * 
+	 *
 	 * @param lastName the last_name value
 	 */
 	public void setLastName(String lastName) {
@@ -626,7 +627,7 @@ public class Demographic implements Serializable {
 
 	/**
 	 * Set the value related to the column: hc_type
-	 * 
+	 *
 	 * @param hcType the hc_type value
 	 */
 	public void setHcType(String hcType) {
@@ -642,7 +643,7 @@ public class Demographic implements Serializable {
 
 	/**
 	 * Set the value related to the column: chart_no
-	 * 
+	 *
 	 * @param chartNo the chart_no value
 	 */
 	public void setChartNo(String chartNo) {
@@ -658,7 +659,7 @@ public class Demographic implements Serializable {
 
 	/**
 	 * Set the value related to the column: email
-	 * 
+	 *
 	 * @param email the email value
 	 */
 	public void setEmail(String email) {
@@ -674,7 +675,7 @@ public class Demographic implements Serializable {
 
 	/**
 	 * Set the value related to the column: year_of_birth
-	 * 
+	 *
 	 * @param yearOfBirth the year_of_birth value
 	 */
 	public void setYearOfBirth(String yearOfBirth) {
@@ -735,7 +736,7 @@ public class Demographic implements Serializable {
 
 	/**
 	 * Set the value related to the column: eff_date
-	 * 
+	 *
 	 * @param effDate the eff_date value
 	 */
 	public void setEffDate(Date effDate) {
@@ -1020,7 +1021,7 @@ public class Demographic implements Serializable {
 	public String getBirthDayAsString() {
 		return getYearOfBirth() + "-" + getMonthOfBirth() + "-" + getDateOfBirth();
 	}
-	
+
 	public String getSpokenLanguage() {
 		return spokenLanguage;
 	}
@@ -1042,5 +1043,22 @@ public class Demographic implements Serializable {
     public void setProvider(Provider provider) {
         this.provider = provider;
     }
+
+	public String getCountryOfOrigin() {
+    	return countryOfOrigin;
+    }
+
+	public void setCountryOfOrigin(String countryOfOrigin) {
+    	this.countryOfOrigin = countryOfOrigin;
+    }
+
+	public String getNewsletter() {
+    	return newsletter;
+    }
+
+	public void setNewsletter(String newsletter) {
+    	this.newsletter = newsletter;
+    }
+
 
 }

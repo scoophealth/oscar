@@ -57,10 +57,6 @@ public class ProviderDao extends OscarSuperDao {
 			{"save_prescribe", "insert into prescribe (demographic_no, provider_no, prescribe_date, prescribe_time, content) values(?,?,?,?,?)"},
 			{"search_prescribe", "select * from prescribe where prescribe_no= ?"},
 			{"search_prescribe_no", "select prescribe_no from prescribe where demographic_no=?  order by prescribe_date desc, prescribe_time desc limit 1"},
-			{"search_demographicaccessory", "select * from demographicaccessory where demographic_no=?"},
-			{"search_demographicaccessorycount", "select count(demographic_no) from demographicaccessory where demographic_no=?"},
-			{"add_demographicaccessory", "insert into demographicaccessory values(?,?)"},
-			{"update_demographicaccessory", "update demographicaccessory set content=? where demographic_no=?"},
 
 			{"add_template", "insert into encountertemplate values(?,?,?,?)"},
 			{"delete_template", "delete from encountertemplate where encountertemplate_name = ?"},

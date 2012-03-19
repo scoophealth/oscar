@@ -1,26 +1,26 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -32,6 +32,12 @@
 <%@ page import="java.util.*, java.sql.*, java.net.URLEncoder, oscar.*"
 	errorPage="errorpage.jsp"%>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.DemographicAccessoryDao" %>
+<%@page import="org.oscarehr.common.model.DemographicAccessory" %>
+<%
+	DemographicAccessoryDao demographicAccessoryDao = (DemographicAccessoryDao)SpringUtils.getBean("demographicAccessoryDao");
+%>
 
 <jsp:useBean id="risks" class="oscar.OBRisks_99_12" scope="page" />
 <% java.util.Properties oscarVariables = OscarProperties.getInstance(); %>
@@ -42,7 +48,7 @@
 <title>ANTENATAL RECORD</title>
 <link rel="stylesheet" href="../provider/antenatalrecord.css">
 <script language="JavaScript">
-<!--		
+<!--
 var saveTemp=0;
 
 
@@ -160,7 +166,7 @@ function onSubmitForm() {
     for (Map form : resultList) {
       content = (String)form.get("content");
 %> <xml id="xml_list"><encounter><%=content%></encounter></xml> <%
-    }     
+    }
   } else {
     String[] param2 =new String[2];
     param2[0]=request.getParameter("demographic_no");
@@ -172,7 +178,7 @@ function onSubmitForm() {
         bNew = true;
       content = (String)form.get("content");
 %> <xml id="xml_list"> <encounter> <%=content%> </encounter> </xml> <%
-    }     
+    }
 
     resultList = oscarSuperManager.find("providerDao", "search_demograph", new Object[] {request.getParameter("demographic_no")});
     for (Map demo : resultList) {
@@ -186,11 +192,12 @@ function onSubmitForm() {
       age=MyDateFormat.getAge(Integer.parseInt((String)demo.get("year_of_birth")),Integer.parseInt((String)demo.get("month_of_birth")),Integer.parseInt((String)demo.get("date_of_birth")));
     }
 
-    resultList = oscarSuperManager.find("providerDao", "search_demographicaccessory", new Object[] {request.getParameter("demographic_no")});
-    for (Map acc : resultList) {
-      allergies=SxmlMisc.getXmlContent((String)acc.get("content"),"<xml_Alert>","</xml_Alert>");
-      medications=SxmlMisc.getXmlContent((String)acc.get("content"),"<xml_Medication>","</xml_Medication>");
+    DemographicAccessory da = demographicAccessoryDao.find(Integer.parseInt(request.getParameter("demographic_no")));
+    if(da != null) {
+    	allergies=SxmlMisc.getXmlContent(da.getContent(),"<xml_Alert>","</xml_Alert>");
+        medications=SxmlMisc.getXmlContent(da.getContent(),"<xml_Medication>","</xml_Medication>");
     }
+
 
     //find the latest version of g,t,p,a,l etc.
     String[] param1 =new String[2];
@@ -1311,7 +1318,7 @@ newFormURL += "&bNewForm=1&displaymode=ar1&dboperation=search_demograph";
 		<td>Date (yyyy/mm/dd)<br>
 		<input type="text" name="xml_date" size="30" maxlength="50"
 			style="width: 80%"
-			<%--=bNewList?"value='"+now.get(Calendar.YEAR)+"/"+(now.get(Calendar.MONTH)+1)+"/"+now.get(Calendar.DAY_OF_MONTH)+"'":"datafld='xml_date'"--%> 
+			<%--=bNewList?"value='"+now.get(Calendar.YEAR)+"/"+(now.get(Calendar.MONTH)+1)+"/"+now.get(Calendar.DAY_OF_MONTH)+"'":"datafld='xml_date'"--%>
     <%=bNew?"value='"+now.get(Calendar.YEAR)+"/"+(now.get(Calendar.MONTH)+1)+"/"+now.get(Calendar.DAY_OF_MONTH)+"'":"datafld='xml_date'"%>>
 		</td>
 	</tr>
