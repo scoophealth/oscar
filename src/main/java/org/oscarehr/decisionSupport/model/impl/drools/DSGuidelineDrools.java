@@ -112,6 +112,75 @@ public class DSGuidelineDrools extends DSGuideline {
             throw new DecisionSupportException("Unable to instantiate class", e);
         }
     }
+    
+    public List<DSConsequence> evaluate(String demographicNo, String providerNo) throws DecisionSupportException {
+        if (_ruleBase == null)
+            generateRuleBase();
+        //at this point _ruleBase WILL be set or exception is thrown in generateRuleBase()
+        WorkingMemory workingMemory = _ruleBase.newWorkingMemory( );
+        DSDemographicAccess dsDemographicAccess = new DSDemographicAccess(demographicNo, providerNo);
+        //put "bob" in working memory
+        try {
+
+
+
+
+
+            workingMemory.assertObject(dsDemographicAccess);
+
+            for(DSCondition dsc :this.getConditions()){
+                if (dsc.getParam() != null && !dsc.getParam().isEmpty()){
+                    log.debug("PARAM:"+dsc.getParam().toString());
+                    workingMemory.assertObject(dsc.getParam());
+                }
+            }
+
+            List<DSParameter> lDSP = this.getParameters();
+            if (lDSP != null){
+	            for( DSParameter dsp: lDSP ) {
+	                Class clas = Class.forName(dsp.getStrClass());
+	                Constructor constructor = clas.getConstructor();
+	                Object obj = constructor.newInstance();
+	
+	                workingMemory.assertObject(obj);
+	            }
+            }
+
+            workingMemory.fireAllRules();
+            if (dsDemographicAccess.isPassedGuideline()) {
+                List<DSConsequence> returnDsConsequences = new ArrayList();
+                if (this.getConsequences() == null) return returnDsConsequences;
+                else {
+                    for (DSConsequence dsConsequence: this.getConsequences()) {
+                        if (dsConsequence.getConsequenceType() != DSConsequence.ConsequenceType.java) {
+                            returnDsConsequences.add(dsConsequence);
+                    }
+                        else if( dsConsequence.getConsequenceType() == DSConsequence.ConsequenceType.java ) {
+                            List<Object> javaConsequences = workingMemory.getObjects();
+                            dsConsequence.setObjConsequence(javaConsequences);
+                            returnDsConsequences.add(dsConsequence);
+                        }
+                    }
+                    return returnDsConsequences;
+                }
+            } else {
+                return null;
+            }
+        } catch (FactException factException) {
+            throw new DecisionSupportException("Unable to assert guideline", factException);
+        } catch( ClassNotFoundException e ) {
+            throw new DecisionSupportException("Unable to instantiate class", e);
+        } catch( NoSuchMethodException e ) {
+            throw new DecisionSupportException("Unable to instantiate class", e);
+        } catch( InstantiationException e ) {
+            throw new DecisionSupportException("Unable to instantiate class", e);
+        } catch( IllegalAccessException e ) {
+            throw new DecisionSupportException("Unable to instantiate class", e);
+        } catch( InvocationTargetException e ) {
+            throw new DecisionSupportException("Unable to instantiate class", e);
+        }
+    }
+
 
     public void generateRuleBase() throws DecisionSupportException {
         ArrayList<Element> rules = new ArrayList();

@@ -77,6 +77,8 @@ public abstract class DSGuideline {
     }
 
     public abstract List<DSConsequence> evaluate(String demographicNo) throws DecisionSupportException;
+    
+    public abstract List<DSConsequence> evaluate(String demographicNo, String providerNo) throws DecisionSupportException;
 
     public boolean evaluateBoolean(String demographicNo) throws DecisionSupportException {
         if (evaluate(demographicNo) == null) return false;
