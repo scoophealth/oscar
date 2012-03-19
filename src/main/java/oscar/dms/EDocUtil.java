@@ -42,7 +42,9 @@ import org.oscarehr.caisi_integrator.ws.CachedDemographicDocument;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
+import org.oscarehr.common.dao.ConsultDocsDao;
 import org.oscarehr.common.dao.CtlDocTypeDao;
+import org.oscarehr.common.model.ConsultDocs;
 import org.oscarehr.common.model.CtlDocType;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
@@ -58,6 +60,9 @@ import oscar.util.UtilDateUtilities;
 
 // all SQL statements here
 public final class EDocUtil extends SqlUtilBaseS {
+
+	private static ConsultDocsDao consultDocsDao = (ConsultDocsDao)SpringUtils.getBean("consultDocsDao");
+
 	private static Logger logger = MiscUtils.getLogger();
 
 	public static final String PUBLIC = "public";
@@ -197,15 +202,21 @@ public final class EDocUtil extends SqlUtilBaseS {
     }
 
 	public static void detachDocConsult(String docNo, String consultId) {
-		String sql = "UPDATE consultdocs SET deleted = 'Y' WHERE requestId = " + consultId + " AND document_no = " + docNo + " AND doctype = 'D'";
-		logger.debug("detachDoc: " + sql);
-		runSQL(sql);
+		List<ConsultDocs> consultDocs = consultDocsDao.findByRequestIdDocumentNoAndDocumentType(Integer.parseInt(consultId), Integer.parseInt(docNo), "D");
+    	for(ConsultDocs consultDoc:consultDocs) {
+    		consultDoc.setDeleted("Y");
+    		consultDocsDao.merge(consultDoc);
+    	}
 	}
 
 	public static void attachDocConsult(String providerNo, String docNo, String consultId) {
-		String sql = "INSERT INTO consultdocs (requestId,document_no,doctype,attach_date, provider_no) VALUES(" + consultId + "," + docNo + ",'D', now(), '" + providerNo + "')";
-		logger.debug("attachDoc: " + sql);
-		runSQL(sql);
+		ConsultDocs consultDoc = new ConsultDocs();
+    	consultDoc.setRequestId(Integer.parseInt(consultId));
+    	consultDoc.setDocumentNo(Integer.parseInt(docNo));
+    	consultDoc.setDocType("D");
+    	consultDoc.setAttachDate(new Date());
+    	consultDoc.setProviderNo(providerNo);
+    	consultDocsDao.persist(consultDoc);
 	}
 
 	public static void editDocumentSQL(EDoc newDocument, boolean doReview) {

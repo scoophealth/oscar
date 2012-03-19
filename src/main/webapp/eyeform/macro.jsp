@@ -4,8 +4,8 @@
 <html lang="en">
 <head>
     <title>Eyeform Macro Details</title>
-    
-  
+
+
 <link rel="stylesheet" href="css/displaytag.css" type="text/css">
 <style type="text/css">
 .boldRow {
@@ -28,7 +28,7 @@ span.h5 {
   text-decoration: none;
   display: block;
   clear: both;
-  white-space: nowrap;	
+  white-space: nowrap;
 
 }
 </style>
@@ -64,7 +64,7 @@ function fixCheckboxes(form) {
 	form.followupFlags.value = '';
 	for (var i=0; i<cbs.length; i++) {
 		if (cbs[i].type=="checkbox" && cbs[i].name.indexOf("Flag")>0 && cbs[i].checked) {
-			form.followupFlags.value += cbs[i].name + "|";			
+			form.followupFlags.value += cbs[i].name + "|";
 		}
 	}
 }
@@ -83,13 +83,13 @@ function fixCheckboxes(form) {
 	<input value="Close" onclick="window.opener.location.reload();window.close();return false;" type="button">
 	</td></tr>
 	</tbody></table>
-	
+
 	<c:if test="${not empty errors }">
 		<span style="color:red;"><c:out value="${errors}" escapeXml="false"/></span>
 	</c:if>
-	
+
 <fieldset>
-	<legend>Macro Details</legend>	
+	<legend>Macro Details</legend>
 	<table style="border: 0px none;">
 
 	<tbody><tr>
@@ -102,9 +102,9 @@ function fixCheckboxes(form) {
 	</tr>
 
 	</tbody></table>
-	
+
 	<fieldset>
-	<legend>Impression &amp; Followup</legend>	
+	<legend>Impression &amp; Followup</legend>
 	<table style="border: 0px none;">
 	<tbody><tr>
 	<td width="150">Impression Text<br> <font size="-1">(to be appended)</font></td>
@@ -120,19 +120,19 @@ function fixCheckboxes(form) {
 	            <html:option value="months">months</html:option>
 	         </html:select>
     &nbsp;
-    with doctor 
+    with doctor
     <html:select property="macro.followupDoctorId">
-    	<html:options collection="providers" property="providerNo" labelProperty="formattedName" /> 	
+    	<html:options collection="providers" property="providerNo" labelProperty="formattedName" />
 	</html:select>
 	</td>
 	</tr>
 	<tr><td></td>
 
 	<td nowrap="nowrap">
-	
-	<html:checkbox property="macro.statFlag" value="statFlag" /> STAT/PRN 
-	<html:checkbox property="macro.optFlag" value="optFlag" /> Optom Routine 
-	<html:checkbox property="macro.dischargeFlag" value="dischargeFlag"/> Discharge 
+
+	<html:checkbox property="macro.statFlag" value="statFlag" /> STAT/PRN
+	<html:checkbox property="macro.optFlag" value="optFlag" /> Optom Routine
+	<html:checkbox property="macro.dischargeFlag" value="dischargeFlag"/> Discharge
 	</td></tr>
 	<tr>
 	<td>Book Tests</td>
@@ -146,23 +146,23 @@ function fixCheckboxes(form) {
 	<tr><td>send tickler to </td><td>
 			<html:select property="macro.ticklerRecipient">
 				<html:option value="">Nobody</html:option>
-				<html:options collection="providers" property="providerNo" labelProperty="formattedName" /> 
+				<html:options collection="providers" property="providerNo" labelProperty="formattedName" />
 			</html:select>
     </td></tr>
 	</tbody></table>
 	</fieldset>
-	
-	
+
+
 	<fieldset>
-	<legend>Billing</legend>	
+	<legend>Billing</legend>
 	<table style="border: 0px none;">
 
 	<tbody><tr>
 	<td>Billing Codes<br>(won't bill if empty)<br></td>
 	<td><html:textarea property="macro.billingCodes" rows="4"></html:textarea></td>
 	<td><font size="-1">Add a billing code per line in the following format:
-	<br>&lt;unit_code&gt;|&lt;unit_count&gt;
-	<br>e.g. A001A|2</font></td>
+	<br>&lt;unit_code&gt;|&lt;unit_count&gt;|&lt;sli_code&gt;
+	<br>e.g. A001A|2|NA</font></td>
 
 	</tr>
 	<tr>
@@ -206,12 +206,12 @@ function fixCheckboxes(form) {
 					<html:select property="macro.billingBilltype">
 						<html:option value="ODP | Bill OHIP">Bill OHIP</html:option>
 					    <html:option value="WCB | Worker's Compensation Board">WSIB</html:option>
-					    <!-- 
+					    <!--
 					    <option value="NOT | Do Not Bill" >Do Not Bill</option>
 					    <option value="IFH | Interm Federal Health" >IFH</option>
 					    <option value="PAT | Bill Patient" >3rd Party</option>
 					    <option value="OCF | " > -OCF</option>
-					    <option value="ODS | "> -ODSP</option> 
+					    <option value="ODS | "> -ODSP</option>
 					    <option value="CPP | Canada Pension Plan" > -CPP</option>
 					    <option value="STD | Short Term Disability / Long Term Disability" >-STD/LTD</option>
 					    -->
@@ -227,7 +227,7 @@ function fixCheckboxes(form) {
 
 	</tbody></table>
 	</fieldset>
-	
+
 
 </fieldset>
 </html:form>
