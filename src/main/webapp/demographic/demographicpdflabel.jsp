@@ -47,8 +47,11 @@ You have no rights to access the data!
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.model.Billingreferral" %>
 <%@page import="org.oscarehr.common.dao.BillingreferralDao" %>
+<%@page import="org.oscarehr.common.model.DemographicCust" %>
+<%@page import="org.oscarehr.common.dao.DemographicCustDao" %>
 <%
 	BillingreferralDao billingReferralDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
+	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
 %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
@@ -94,14 +97,15 @@ String rdohip="", rd="", fd="", family_doc = "";
 
 String resident="", nurse="", alert="", notes="", midwife="";
 ResultSet rs = null;
-rs = apptMainBean.queryResults(demographic_no, "search_demographiccust");
-while (rs.next()) {
-resident = apptMainBean.getString(rs,"cust1");
-nurse = apptMainBean.getString(rs,"cust2");
-alert = apptMainBean.getString(rs,"cust3");
-midwife = apptMainBean.getString(rs,"cust4");
-notes = SxmlMisc.getXmlContent(apptMainBean.getString(rs,"content"),"unotes") ;
-notes = notes==null?"":notes;
+
+DemographicCust demographicCust = demographicCustDao.find(Integer.parseInt(demographic_no));
+if(demographicCust != null) {
+	resident = demographicCust.getResident();
+	nurse = demographicCust.getNurse();
+	alert = demographicCust.getAlert();
+	midwife = demographicCust.getMidwife();
+	notes = SxmlMisc.getXmlContent(demographicCust.getNotes(),"unotes") ;
+	notes = notes==null?"":notes;
 }
 
 GregorianCalendar now=new GregorianCalendar();
@@ -138,7 +142,7 @@ while (rs.next()) {
         dob_month = Integer.parseInt(apptMainBean.getString(rs,"month_of_birth"));
         dob_date = Integer.parseInt(apptMainBean.getString(rs,"date_of_birth"));
         if(dob_year!=0) age=MyDateFormat.getAge(dob_year,dob_month,dob_date);
-                    WaitingList wL = WaitingList.getInstance();                       
+                    WaitingList wL = WaitingList.getInstance();
 %>
 
 
@@ -332,7 +336,7 @@ while (rs.next()) {
       while (rsdemo.next()) {
           if ( rsdemo.getString("provider_no").equals(midwife) ) {                         %>
 		<%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",nStrShowLen)%>
-		<%    } 
+		<%    }
       } %>
 		</td>
 		<td align="left"><b><bean:message
@@ -425,9 +429,9 @@ while (rs.next()) {
                  while (rsstatus.next()) {
                     if ( pacStatus.equals(rsstatus.getString("patient_status")) ) { %>
 		<%=rsstatus.getString("patient_status")%> <% nextStatus = false;
-                    } 
+                    }
                 } // end while
-           %> <% if ( nextStatus )  { 
+           %> <% if ( nextStatus )  {
 
                 %> <%=pacStatus%> <% } %> <% } // end if...then...else %>
 		</td>

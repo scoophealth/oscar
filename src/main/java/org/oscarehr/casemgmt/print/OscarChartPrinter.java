@@ -67,25 +67,25 @@ import com.lowagie.text.pdf.PdfWriter;
 
 /**
  * This will create a PDF + assemble e-forms,documents,labs into a package
- * 
+ *
  * @author Marc Dumontier
  *
  */
 public class OscarChartPrinter {
 
 	private static Logger logger = MiscUtils.getLogger();
-	
+
     public final int LINESPACING = 1;
     public final float LEADING = 12;
     public final float FONTSIZE = 10;
     public final int NUMCOLS = 2;
-    
+
     private Demographic demographic;
     private Appointment appointment;
     private String signingProvider;
-    
+
     private PdfWriter writer;
-    
+
 	private HttpServletRequest request;
     private OutputStream os;
     private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -95,76 +95,76 @@ public class OscarChartPrinter {
     private Font font, boldFont;
     boolean newPage;
     private PdfContentByte cb;
-    
+
     private ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
     private DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
     private ClientDao clientDao = (ClientDao)SpringUtils.getBean("clientDao");
     private OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
     private PreventionDao preventionDao = (PreventionDao)SpringUtils.getBean("preventionDao");
-    
+
 	public OscarChartPrinter(HttpServletRequest request, OutputStream os) throws DocumentException,IOException {
 		this.request = request;
-		this.os = os;		
-			       
+		this.os = os;
+
 		document = new Document();
 	    writer = PdfWriter.getInstance(document,os);
 		writer.setPageEvent(new EndPage());
-		document.setPageSize(PageSize.LETTER);                
+		document.setPageSize(PageSize.LETTER);
 		document.open();
-		//Create the font we are going to print to        
+		//Create the font we are going to print to
         bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
         font = new Font(bf, FONTSIZE, Font.NORMAL);
         boldFont = new Font(bf,FONTSIZE,Font.BOLD);
 	}
-	
-	
+
+
     public HttpServletRequest getRequest() {
     	return request;
     }
-    
+
     public OutputStream getOutputStream() {
     	return os;
     }
-    
+
     public void setDemographic(Demographic demographic) {
     	this.demographic=demographic;
     }
-    
+
     public void setAppointment(Appointment appointment) {
     	this.appointment=appointment;
     }
-    
+
     public Font getFont() {
     	return font;
     }
     public SimpleDateFormat getFormatter() {
     	return formatter;
     }
-    
+
     public Document getDocument() {
     	return document;
     }
-    
+
     public boolean getNewPage() {
     	return newPage;
     }
     public void setNewPage(boolean b) {
     	this.newPage = b;
     }
-    
+
     public BaseFont getBaseFont() {
     	return bf;
     }
     private Paragraph getParagraph(String value) {
     	Paragraph p = new Paragraph(value,font);
-    	return p;    	
+    	return p;
     }
-    
+
     public void finish() {
         document.close();
     }
-    
-    
+
+
 	public void printDocHeaderFooter() throws IOException, DocumentException {
     	String headerTitle = demographic.getFormattedName() + " " + demographic.getAge() + " " + demographic.getSex() + " DOB:" + demographic.getFormattedDob();
 
@@ -176,52 +176,52 @@ public class OscarChartPrinter {
         String age = propResource.getString("oscarEncounter.pdfPrint.age") + " " + (String)request.getAttribute("demoAge") + "\n";
         String mrp = propResource.getString("oscarEncounter.pdfPrint.mrp") + " " + (String)request.getAttribute("mrp") + "\n";
         String[] info = new String[] { title, gender, dob, age, mrp };
-        
+
         ClinicData clinicData = new ClinicData();
         clinicData.refreshClinicData();
         String[] clinic = new String[] {clinicData.getClinicName(), clinicData.getClinicAddress(),
         clinicData.getClinicCity() + ", " + clinicData.getClinicProvince(),
         clinicData.getClinicPostal(), clinicData.getClinicPhone()};
-        
+
         if( newPage ) {
             document.newPage();
             newPage=false;
         }
-        
+
         //Header will be printed at top of every page beginning with p2
         Phrase headerPhrase = new Phrase(LEADING, headerTitle, boldFont);
         HeaderFooter header = new HeaderFooter(headerPhrase,false);
         header.setAlignment(HeaderFooter.ALIGN_CENTER);
-        document.setHeader(header);   
+        document.setHeader(header);
 
         getDocument().add(headerPhrase);
         getDocument().add(new Phrase("\n"));
-        
+
         Paragraph p = new Paragraph("Tel:"+demographic.getPhone(),getFont());
         p.setAlignment(Paragraph.ALIGN_LEFT);
        // getDocument().add(p);
-                
+
         Paragraph p2 = new Paragraph("Date of Visit: ",getFont());
         p2.setAlignment(Paragraph.ALIGN_RIGHT);
        // getDocument().add(p);
-        
+
         PdfPTable table = new PdfPTable(2);
         table.setWidthPercentage(100f);
-        table.getDefaultCell().setBorder(PdfPCell.NO_BORDER);        
+        table.getDefaultCell().setBorder(PdfPCell.NO_BORDER);
         PdfPCell cell1 = new PdfPCell(p);
         cell1.setBorder(PdfPCell.NO_BORDER);
         cell1.setHorizontalAlignment(Element.ALIGN_LEFT);
         PdfPCell cell2 = new PdfPCell(p2);
         cell2.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        cell2.setBorder(PdfPCell.NO_BORDER);        
+        cell2.setBorder(PdfPCell.NO_BORDER);
         table.addCell(cell1);
         table.addCell(cell2);
-        
+
         getDocument().add(table);
-        
+
         table = new PdfPTable(3);
         table.setWidthPercentage(100f);
-        table.getDefaultCell().setBorder(PdfPCell.NO_BORDER);        
+        table.getDefaultCell().setBorder(PdfPCell.NO_BORDER);
         cell1 = new PdfPCell(getParagraph("Signed Provider:" + ((signingProvider!=null)?signingProvider:"")));
         cell1.setBorder(PdfPCell.NO_BORDER);
         cell1.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -230,81 +230,81 @@ public class OscarChartPrinter {
         cell2.setBorder(PdfPCell.NO_BORDER);
         PdfPCell cell3 = new PdfPCell(getParagraph("Ref:"));
         cell3.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        cell3.setBorder(PdfPCell.NO_BORDER);       
+        cell3.setBorder(PdfPCell.NO_BORDER);
         table.addCell(cell1);
         table.addCell(cell2);
         table.addCell(cell3);
-        
+
         getDocument().add(table);
-        
+
         //Write title with top and bottom borders on p1
         cb = writer.getDirectContent();
         cb.setColorStroke(new Color(0,0,0));
         cb.setLineWidth(0.5f);
-  
+
         cb.moveTo(document.left(), document.top() - (font.getCalculatedLeading(LINESPACING)*5f));
         cb.lineTo(document.right(), document.top() - (font.getCalculatedLeading(LINESPACING)*5f));
-        cb.stroke();       
+        cb.stroke();
     }
-	
-	
+
+
 	public void printMasterRecord() throws IOException, DocumentException {
 		if( newPage ) {
             document.newPage();
             newPage=false;
         }
-		
+
         Font obsfont = new Font(bf, FONTSIZE, Font.UNDERLINE);
 
         Paragraph p = null;
         Phrase phrase = null;
-        
-      
+
+
         p = new Paragraph();
         p.setAlignment(Paragraph.ALIGN_LEFT);
         phrase = new Phrase(LEADING, "Patient Information", boldFont);
-        phrase.add("\n");  
+        phrase.add("\n");
         p.add(phrase);
         document.add(p);
-        
+
         p = new Paragraph();
-        phrase = new Phrase(LEADING, "", font);                  	 
+        phrase = new Phrase(LEADING, "", font);
         phrase.add("Title: " + demographic.getTitle() + "\n");
         phrase.add("Last Name: " + demographic.getLastName() + "\n");
         phrase.add("First Name: " + demographic.getFirstName() + "\n");
         phrase.add("Gender: " + demographic.getSex() + "\n");
         phrase.add("Date of Birth: " + demographic.getFormattedDob() + "\n");
         phrase.add("Offical Language: " + demographic.getOfficialLanguage()  + "\n");
-        phrase.add("Spoken Language: " + demographic.getSpokenLanguage() + "\n");   
-        phrase.add("\n");  
+        phrase.add("Spoken Language: " + demographic.getSpokenLanguage() + "\n");
+        phrase.add("\n");
         p.add(phrase);
         document.add(p);
-        
+
         p = new Paragraph();
-        phrase = new Phrase(LEADING, "", font);                  	 
+        phrase = new Phrase(LEADING, "", font);
         phrase.add("Roster Status: " + demographic.getRosterStatus()+ "\n");
         phrase.add("Date Rostered: " + "\n");
         phrase.add("Patient Status: " + demographic.getPatientStatus() + "\n");
-        phrase.add("Chart No (MRN): " + demographic.getChartNo() + "\n");    
+        phrase.add("Chart No (MRN): " + demographic.getChartNo() + "\n");
         if(demographic.getDateJoined()!=null) {
         	phrase.add("Date Joined: " + formatter.format(demographic.getDateJoined())  + "\n");
         }
         if(demographic.getEndDate() != null) {
         	phrase.add("End Date: " + formatter.format(demographic.getEndDate()) + "\n");
         }
-        phrase.add("\n");  
+        phrase.add("\n");
         p.add(phrase);
         document.add(p);
-        
+
         p = new Paragraph();
-        phrase = new Phrase(LEADING, "", font);                  	 
+        phrase = new Phrase(LEADING, "", font);
         phrase.add("Address: " + demographic.getAddress() + "\n");
         phrase.add("City: " + demographic.getCity() + "\n");
         phrase.add("Province: " + demographic.getProvince() + "\n");
-        phrase.add("Postal Code: " + demographic.getPostal() + "\n");        
+        phrase.add("Postal Code: " + demographic.getPostal() + "\n");
         phrase.add("Email: " + demographic.getEmail()  + "\n");
         phrase.add("Phone: " +  demographic.getPhone() + "\n");
-        
+
         List<DemographicExt> exts = clientDao.getDemographicExtByDemographicNo(demographic.getDemographicNo());
         String phoneExt = null;
         String cell = null;
@@ -316,66 +316,66 @@ public class OscarChartPrinter {
         		cell = ext.getValue();
         	}
         }
-        
+
         phrase.add("Work Phone: " +  demographic.getPhone2());
         if(phoneExt != null) {
         	phrase.add(" ext:" + phoneExt + "\n");
         }else {
         	phrase.add("\n");
         }
-        
+
         if(cell!=null) {
         	phrase.add("Cell Phone: " +  cell +  "\n");
         }
-        
-        phrase.add("\n");  
+
+        phrase.add("\n");
         p.add(phrase);
         document.add(p);
-        
+
         p = new Paragraph();
-        phrase = new Phrase(LEADING, "", font);                  	 
+        phrase = new Phrase(LEADING, "", font);
         phrase.add("Health Insurance #: " + demographic.getHin() + "\n");
         phrase.add("HC Type: " + demographic.getHcType() + "\n");
         if(demographic.getEffDate() != null) {
         	phrase.add("Eff Date: " + formatter.format(demographic.getEffDate())  + "\n");
         }
-        phrase.add("\n");  
+        phrase.add("\n");
         p.add(phrase);
         document.add(p);
-        
+
         DemographicCust demographicCust = demographicCustDao.find(demographic.getDemographicNo());
-        
+
         p = new Paragraph();
-        phrase = new Phrase(LEADING, "", font);            
+        phrase = new Phrase(LEADING, "", font);
         phrase.add("Physician: " + getProviderName(demographic.getProviderNo()) + "\n");
         if(demographicCust != null) {
-	        phrase.add("Nurse: " + getProviderName(demographicCust.getCust2()) + "\n");
-	        phrase.add("Midwife: " + getProviderName(demographicCust.getCust4()) + "\n");
-	        phrase.add("Resident: " + getProviderName(demographicCust.getCust1()) + "\n");
+	        phrase.add("Nurse: " + getProviderName(demographicCust.getNurse()) + "\n");
+	        phrase.add("Midwife: " + getProviderName(demographicCust.getMidwife()) + "\n");
+	        phrase.add("Resident: " + getProviderName(demographicCust.getResident()) + "\n");
         }
-        phrase.add("Referral Doctor: " + getReferralDoctor(demographic.getFamilyDoctor()) + "\n");        
-        phrase.add("\n");  
+        phrase.add("Referral Doctor: " + getReferralDoctor(demographic.getFamilyDoctor()) + "\n");
+        phrase.add("\n");
         p.add(phrase);
         document.add(p);
-        
+
         p = new Paragraph();
-        phrase = new Phrase(LEADING, "", font);            
+        phrase = new Phrase(LEADING, "", font);
         //alerts & notes
         if(demographicCust != null) {
-	        phrase.add("Alerts: " + demographicCust.getCust3() + "\n");
-	        if(demographicCust.getContent().length()>0) {
-	        	phrase.add("Notes: " + SxmlMisc.getXmlContent(demographicCust.getContent(),"unotes") + "\n");	        	
+	        phrase.add("Alerts: " + demographicCust.getAlert() + "\n");
+	        if(demographicCust.getNotes().length()>0) {
+	        	phrase.add("Notes: " + SxmlMisc.getXmlContent(demographicCust.getNotes(),"unotes") + "\n");
 	        }
-        }                       
-        phrase.add("\n");  
+        }
+        phrase.add("\n");
         p.add(phrase);
         document.add(p);
-        
-        
+
+
         //relationships
         p = new Paragraph();
-        phrase = new Phrase(LEADING, "", font);            
-       
+        phrase = new Phrase(LEADING, "", font);
+
         DemographicRelationship demoRel = new DemographicRelationship();
         @SuppressWarnings("unchecked")
 		ArrayList<HashMap<String,String>> demoR = demoRel.getDemographicRelationships(String.valueOf(demographic.getDemographicNo()));
@@ -387,22 +387,22 @@ public class OscarChartPrinter {
 		    String subDecisionMaker = r.get("sub_decision_maker");
 		    String emergencyContact = r.get("emergency_contact");
 		    String notes = r.get("notes");
-		    
-		    phrase.add(relation + " - " + relationDemographic.getFormattedName() +  " - " + subDecisionMaker + " - " + emergencyContact + " - " + notes+ "\n");	  
-		}		
-        phrase.add("\n");  
+
+		    phrase.add(relation + " - " + relationDemographic.getFormattedName() +  " - " + subDecisionMaker + " - " + emergencyContact + " - " + notes+ "\n");
+		}
+        phrase.add("\n");
         p.add(phrase);
         document.add(p);
-        
+
 	}
-	
+
 	private String getReferralDoctor(String field) {
 		if(field!=null&&field.length()>0) {
 			return SxmlMisc.getXmlContent(field,"rd") ;
 		}
 		return "";
 	}
-	
+
 	private String getProviderName(String providerNo) {
 		if(providerNo == null || providerNo.length()==0) {
 			return "";
@@ -413,16 +413,16 @@ public class OscarChartPrinter {
 		}
 		return "";
 	}
-	
-	
-	public void printAppointmentHistory() throws IOException, DocumentException {		
+
+
+	public void printAppointmentHistory() throws IOException, DocumentException {
 		if( newPage ) {
             document.newPage();
             newPage=false;
         }
-		
-		List<Appointment> appts = appointmentDao.getAppointmentHistory(demographic.getDemographicNo());			
-		
+
+		List<Appointment> appts = appointmentDao.getAppointmentHistory(demographic.getDemographicNo());
+
 		PdfPTable table = new PdfPTable(6);
         table.setWidthPercentage(100f);
         table.getDefaultCell().setBorder(PdfPCell.NO_BORDER);
@@ -432,8 +432,8 @@ public class OscarChartPrinter {
         table.addCell("Reason");
         table.addCell("Provider");
         table.addCell("Notes");
-        
-        for(Appointment appt:appts) {	        	        
+
+        for(Appointment appt:appts) {
 	        table.addCell(generalCellForApptHistory(formatter.format(appt.getAppointmentDate())));
 	        table.addCell(generalCellForApptHistory(timeFormatter.format(appt.getStartTime())));
 	        table.addCell(generalCellForApptHistory(timeFormatter.format(appt.getEndTime())));
@@ -441,60 +441,60 @@ public class OscarChartPrinter {
 	        table.addCell(generalCellForApptHistory(providerDao.getProvider(appt.getProviderNo()).getFormattedName()));
 	        table.addCell(generalCellForApptHistory(appt.getNotes()));
         }
-        
+
         getDocument().add(table);
 	}
-	
-	
+
+
     public void printCPPItem(String heading, Collection<CaseManagementNote> notes) throws IOException, DocumentException {
         if( newPage )
             document.newPage();
       //  else
       //      newPage = true;
-        
+
         Font obsfont = new Font(bf, FONTSIZE, Font.UNDERLINE);
 
         Paragraph p = null;
         Phrase phrase = null;
-        
-      
+
+
         p = new Paragraph();
         p.setAlignment(Paragraph.ALIGN_LEFT);
-        phrase = new Phrase(LEADING, heading, obsfont);                                         
+        phrase = new Phrase(LEADING, heading, obsfont);
         p.add(phrase);
         document.add(p);
         newPage = false;
         this.printNotes(notes,true);
-        
-            
-        cb.endText();       
-        
+
+
+        cb.endText();
+
     }
-    
+
 
 
 
     public void printNotes(Collection<CaseManagementNote>notes, boolean compact) throws IOException, DocumentException{
-                                                                  
-        CaseManagementNote note;             
+
+        CaseManagementNote note;
         Font obsfont = new Font(bf, FONTSIZE, Font.UNDERLINE);
         Paragraph p;
         Phrase phrase;
         Chunk chunk;
-                
+
         //if( newPage )
        //     document.newPage();
        // else
        //     newPage = true;
-        
+
         //Print notes
         Iterator<CaseManagementNote> notesIter = notes.iterator();
         while(notesIter.hasNext()) {
         	note = notesIter.next();
             p = new Paragraph();
             //p.setSpacingBefore(font.leading(LINESPACING)*2f);
-            phrase = new Phrase(LEADING, "", font);              
-        	
+            phrase = new Phrase(LEADING, "", font);
+
             if(compact) {
             	phrase.add(new Chunk(formatter.format(note.getObservation_date()) + ":"));
             } else {
@@ -508,16 +508,16 @@ public class OscarChartPrinter {
             }
             p.add(phrase);
             document.add(p);
-        }                   
+        }
     }
-    
+
     public void printBlankLine() throws DocumentException {
     	Paragraph p = new Paragraph();
     	p.add(new Phrase("\n"));
     	document.add(p);
-    	
+
     }
-	
+
 	private PdfPCell generalCellForApptHistory(String text) {
 		Paragraph p = new Paragraph(text,getFont());
         p.setAlignment(Paragraph.ALIGN_LEFT);
@@ -525,12 +525,12 @@ public class OscarChartPrinter {
         cell1.setBorder(PdfPCell.NO_BORDER);
         cell1.setHorizontalAlignment(Element.ALIGN_LEFT);
         return cell1;
-        
-	}
-	
-	
 
-	
+	}
+
+
+
+
 
 
 
@@ -538,32 +538,32 @@ public class OscarChartPrinter {
 
     public void printAllergies(List<Allergy> allergies) throws IOException, DocumentException {
     	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
-    	
- /*   	 
+
+ /*
 		if( getNewPage() )
             getDocument().newPage();
         else
             setNewPage(true);
- */       
-        Font obsfont = new Font(getBaseFont(), FONTSIZE, Font.UNDERLINE);                
-       
-        
+ */
+        Font obsfont = new Font(getBaseFont(), FONTSIZE, Font.UNDERLINE);
+
+
         Paragraph p = new Paragraph();
         p.setAlignment(Paragraph.ALIGN_LEFT);
         Phrase phrase = new Phrase(LEADING, "\n", getFont());
         p.add(phrase);
-        phrase = new Phrase(LEADING, "Allergies", obsfont);        
+        phrase = new Phrase(LEADING, "Allergies", obsfont);
         p.add(phrase);
         getDocument().add(p);
-        
+
         for(Allergy allergy:allergies) {
         	p = new Paragraph();
-    		phrase = new Phrase(LEADING, "", getFont());              
+    		phrase = new Phrase(LEADING, "", getFont());
     		Chunk chunk = new Chunk(allergy.getDescription());
-    		phrase.add(chunk);                    
-    		p.add(phrase);        		    
+    		phrase.add(chunk);
+    		p.add(phrase);
     		getDocument().add(p);
-        } 
+        }
         getDocument().add(new Phrase("\n",getFont()));
     }
 
@@ -585,11 +585,11 @@ public class OscarChartPrinter {
         oscar.oscarRx.data.RxPrescriptionData prescriptData = new oscar.oscarRx.data.RxPrescriptionData();
         oscar.oscarRx.data.RxPrescriptionData.Prescription [] arr = {};
         arr = prescriptData.getUniquePrescriptionsByPatient(Integer.parseInt(demoNo));
-       
+
         if(arr.length==0) {
         	return;
         }
-        
+
         Paragraph p = new Paragraph();
         Font obsfont = new Font(bf, FONTSIZE, Font.UNDERLINE);
         Phrase phrase = new Phrase(LEADING, "", obsfont);
@@ -597,11 +597,11 @@ public class OscarChartPrinter {
         phrase.add("Prescriptions");
         p.add(phrase);
         document.add(p);
-        
+
         Font normal = new Font(bf, FONTSIZE, Font.NORMAL);
-        
-       
-        
+
+
+
         Font curFont;
         for(int idx = 0; idx < arr.length; ++idx ) {
             oscar.oscarRx.data.RxPrescriptionData.Prescription drug = arr[idx];
@@ -619,14 +619,14 @@ public class OscarChartPrinter {
 
     }
 
-	
+
     public void printPreventions() throws IOException, DocumentException {
         List<Prevention> preventions = preventionDao.findNotDeletedByDemographicId(demographic.getDemographicNo());
-        
+
         if(preventions.size()==0) {
         	return;
         }
-        
+
         Paragraph p = new Paragraph();
         Font obsfont = new Font(bf, FONTSIZE, Font.UNDERLINE);
         Phrase phrase = new Phrase(LEADING, "", obsfont);
@@ -634,31 +634,31 @@ public class OscarChartPrinter {
         phrase.add("Preventions");
         p.add(phrase);
         document.add(p);
-        
+
         for(Prevention prevention:preventions) {
         	String type = prevention.getPreventionType();
         	Date date = prevention.getPreventionDate();
-        	
+
         	p = new Paragraph();
-    		phrase = new Phrase(LEADING, "", getFont());              
+    		phrase = new Phrase(LEADING, "", getFont());
     		Chunk chunk = new Chunk(type + " " + formatter.format(date)+"\n");
-    		phrase.add(chunk);                    
-    		p.add(phrase);        		    
+    		phrase.add(chunk);
+    		p.add(phrase);
     		getDocument().add(p);
         }
-        
+
     }
-    
+
     public void printTicklers() throws IOException, DocumentException {
     	TicklerDAO ticklerDao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
     	CustomFilter filter = new CustomFilter();
     	filter.setDemographic_no(String.valueOf(demographic.getDemographicNo()));
     	List<Tickler> ticklers = ticklerDao.getTicklers(filter);
-    	
+
     	if(ticklers.size()==0) {
     		return;
     	}
-    	
+
     	Paragraph p = new Paragraph();
         Font obsfont = new Font(bf, FONTSIZE, Font.UNDERLINE);
         Phrase phrase = new Phrase(LEADING, "", obsfont);
@@ -666,7 +666,7 @@ public class OscarChartPrinter {
         phrase.add("Ticklers");
         p.add(phrase);
         document.add(p);
-        
+
         for(Tickler tickler:ticklers) {
         	String providerName = tickler.getProvider().getFormattedName();
         	String assigneeName = tickler.getAssignee().getFormattedName();
@@ -674,10 +674,10 @@ public class OscarChartPrinter {
         	String priority = tickler.getPriority();
         	char status = tickler.getStatus();
         	String message = tickler.getMessage();
-        	
-        	
+
+
         	p = new Paragraph();
-    		phrase = new Phrase(LEADING, "", getFont());              
+    		phrase = new Phrase(LEADING, "", getFont());
     		Chunk chunk = new Chunk("Provider:" + providerName+ "\n");
     		phrase.add(chunk);
     		chunk = new Chunk("Assignee:" + assigneeName+ "\n");
@@ -687,23 +687,23 @@ public class OscarChartPrinter {
     		chunk = new Chunk("Priority:" + priority+ "\n");
     		phrase.add(chunk);
     		chunk = new Chunk("Status:" + status+ "\n");
-    		phrase.add(chunk); 
+    		phrase.add(chunk);
     		chunk = new Chunk("Message:" + message+ "\n\n");
-    		phrase.add(chunk); 
-    		
-    		p.add(phrase);        		    
+    		phrase.add(chunk);
+
+    		p.add(phrase);
     		getDocument().add(p);
         }
-        
+
     }
-    
+
     public void printDiseaseRegistry() throws IOException, DocumentException {
     	DxresearchDAO dxDao = (DxresearchDAO)SpringUtils.getBean("DxresearchDAO");
     	IssueDAO issueDao = (IssueDAO)SpringUtils.getBean("IssueDAO");
     	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-    	
+
     	List<Dxresearch> dxs = dxDao.getDxResearchItemsByPatient(demographic.getDemographicNo());
-    	
+
     	if(dxs.size()==0) {
     		return;
     	}
@@ -714,19 +714,19 @@ public class OscarChartPrinter {
         phrase.add("Disease Registry");
         p.add(phrase);
         document.add(p);
-        
+
         for(Dxresearch dx:dxs) {
         	String codingSystem = dx.getCodingSystem();
         	String code = dx.getDxresearchCode();
         	Date startDate = dx.getStartDate();
         	char status = dx.getStatus();
-        	
+
         	Issue issue = issueDao.findIssueByTypeAndCode(codingSystem, code);
-        	
-        	
+
+
         	p = new Paragraph();
-    		phrase = new Phrase(LEADING, "", getFont());              
-    		Chunk chunk = new Chunk("Start Date:" + formatter.format(startDate) + "\n");    		
+    		phrase = new Phrase(LEADING, "", getFont());
+    		Chunk chunk = new Chunk("Start Date:" + formatter.format(startDate) + "\n");
     		phrase.add(chunk);
     		if(issue != null) {
     			chunk = new Chunk("Issue:" + issue.getDescription()+ "\n");
@@ -737,19 +737,19 @@ public class OscarChartPrinter {
     		}
     		chunk = new Chunk("Status:" + status+ "\n\n");
 			phrase.add(chunk);
-			
-    		p.add(phrase);        		    
+
+    		p.add(phrase);
     		getDocument().add(p);
         }
-        
+
     }
-    
+
     public void printCurrentAdmissions() throws IOException, DocumentException {
     	AdmissionDao admissionDao = (AdmissionDao)SpringUtils.getBean("admissionDao");
     	ProgramDao programDao = (ProgramDao)SpringUtils.getBean("programDao");
-    	
+
     	List<Admission> admissions = admissionDao.getCurrentAdmissions(demographic.getDemographicNo());
-    	
+
     	if(admissions.size()==0) {
     		return;
     	}
@@ -760,35 +760,35 @@ public class OscarChartPrinter {
         phrase.add("Current Admissions");
         p.add(phrase);
         document.add(p);
-        
+
         for(Admission admission:admissions) {
         	String admissionDate =admission.getAdmissionDate("yyyy-MM-dd");
-        	String admissionNotes = admission.getAdmissionNotes();        	
+        	String admissionNotes = admission.getAdmissionNotes();
         	String programName = programDao.getProgramName(admission.getProgramId());
         	String programType = admission.getProgramType();
         	String providerName = providerDao.getProvider(admission.getProviderNo()).getFormattedName();
-        	
+
         	p = new Paragraph();
-    		phrase = new Phrase(LEADING, "", getFont());              
-    		Chunk chunk = new Chunk("Summary:" + programName + "(" + programType + ")" + " by " + providerName + " on " + admissionDate + "\n");    		
-    		phrase.add(chunk);    	
+    		phrase = new Phrase(LEADING, "", getFont());
+    		Chunk chunk = new Chunk("Summary:" + programName + "(" + programType + ")" + " by " + providerName + " on " + admissionDate + "\n");
+    		phrase.add(chunk);
     		chunk = new Chunk("Admission Notes:" + admissionNotes+ "\n\n");
 			phrase.add(chunk);
-			
-    		p.add(phrase);        		    
+
+    		p.add(phrase);
     		getDocument().add(p);
         }
-        
+
     }
-    
+
     public void printPastAdmissions() throws IOException, DocumentException {
     	AdmissionDao admissionDao = (AdmissionDao)SpringUtils.getBean("admissionDao");
-    	ProgramDao programDao = (ProgramDao)SpringUtils.getBean("programDao");    	
+    	ProgramDao programDao = (ProgramDao)SpringUtils.getBean("programDao");
     	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-    	
+
     	List<Admission> admissions = admissionDao.getAdmissions(demographic.getDemographicNo());
     	admissions = filterOutCurrentAdmissions(admissions);
-    	
+
     	if(admissions.size()==0) {
     		return;
     	}
@@ -799,8 +799,8 @@ public class OscarChartPrinter {
         phrase.add("Past Admissions");
         p.add(phrase);
         document.add(p);
-        
-        for(Admission admission:admissions) {        	
+
+        for(Admission admission:admissions) {
         	String admissionDate =admission.getAdmissionDate("yyyy-MM-dd");
         	String admissionNotes = admission.getAdmissionNotes();
         	String programName = programDao.getProgramName(admission.getProgramId());
@@ -808,27 +808,27 @@ public class OscarChartPrinter {
         	String providerName = providerDao.getProvider(admission.getProviderNo()).getFormattedName();
         	String dischargeDate = formatter.format(admission.getDischargeDate());
         	String dischargeNotes = admission.getDischargeNotes();
-        	
+
         	p = new Paragraph();
-    		phrase = new Phrase(LEADING, "", getFont());              
-    		Chunk chunk = new Chunk("Summary:" + programName + "(" + programType + ")" + " by " + providerName + " on " + admissionDate + "\n");    		
-    		phrase.add(chunk);    	
+    		phrase = new Phrase(LEADING, "", getFont());
+    		Chunk chunk = new Chunk("Summary:" + programName + "(" + programType + ")" + " by " + providerName + " on " + admissionDate + "\n");
+    		phrase.add(chunk);
     		chunk = new Chunk("Admission Notes:" + admissionNotes+ "\n\n");
 			phrase.add(chunk);
 			chunk = new Chunk("Discharged on " + dischargeDate + ", Notes:" + dischargeNotes+ "\n\n");
 			phrase.add(chunk);
-			
-    		p.add(phrase);        		    
+
+    		p.add(phrase);
     		getDocument().add(p);
         }
-        
+
     }
-    
+
     public void printCurrentIssues() throws IOException, DocumentException {
     	CaseManagementIssueDAO cmIssueDao = (CaseManagementIssueDAO)SpringUtils.getBean("CaseManagementIssueDAO");
-    	
+
     	List<CaseManagementIssue> issues = cmIssueDao.getIssuesByDemographic(String.valueOf(demographic.getDemographicNo()));
-    	
+
     	Paragraph p = new Paragraph();
         Font obsfont = new Font(bf, FONTSIZE, Font.UNDERLINE);
         Phrase phrase = new Phrase(LEADING, "", obsfont);
@@ -836,22 +836,22 @@ public class OscarChartPrinter {
         phrase.add("Current Issues");
         p.add(phrase);
         document.add(p);
-        
+
         for(CaseManagementIssue issue:issues) {
         	String type = issue.getType();
         	String description = issue.getIssue().getDescription();
-        	
+
         	p = new Paragraph();
-    		phrase = new Phrase(LEADING, "", getFont());              
-    		Chunk chunk = new Chunk(description + "\n\n");    		
-    		phrase.add(chunk);    	
-    		
-    		p.add(phrase);        		    
+    		phrase = new Phrase(LEADING, "", getFont());
+    		Chunk chunk = new Chunk(description + "\n\n");
+    		phrase.add(chunk);
+
+    		p.add(phrase);
     		getDocument().add(p);
         }
-        
+
     }
-    
+
     private List<Admission> filterOutCurrentAdmissions(List<Admission> admissions) {
     	List<Admission> results = new ArrayList<Admission>();
     	for(Admission a:admissions) {
@@ -861,14 +861,14 @@ public class OscarChartPrinter {
     	}
     	return results;
     }
-    
+
     /*
      *Used to print footers on each page
      */
     class EndPage extends PdfPageEventHelper {
         private Date now;
         private String promoTxt;
-        
+
         public EndPage() {
             now = new Date();
             promoTxt = OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT");
@@ -876,22 +876,22 @@ public class OscarChartPrinter {
                 promoTxt = new String();
             }
         }
-        
+
         public void onEndPage( PdfWriter writer, Document document ) {
-            //Footer contains page numbers and date printed on all pages            
+            //Footer contains page numbers and date printed on all pages
             PdfContentByte cb = writer.getDirectContent();
             cb.saveState();
-            
+
             String strFooter = promoTxt + " " + formatter.format(now);
-           
+
             float textBase = document.bottom();
             cb.beginText();
             cb.setFontAndSize(font.getBaseFont(),FONTSIZE);
             Rectangle page = document.getPageSize();
-            float width = page.getWidth();            
-                        
+            float width = page.getWidth();
+
             cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (width/2.0f), textBase - 20, 0);
-            
+
             strFooter = "-" + writer.getPageNumber() + "-";
             cb.showTextAligned(PdfContentByte.ALIGN_CENTER, strFooter, (width/2.0f), textBase-10, 0);
 
@@ -899,6 +899,6 @@ public class OscarChartPrinter {
             cb.restoreState();
         }
     }
-    
-    
+
+
 }

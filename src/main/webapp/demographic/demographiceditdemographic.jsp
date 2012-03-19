@@ -65,8 +65,11 @@
 <%@ page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.common.model.Billingreferral" %>
 <%@page import="org.oscarehr.common.dao.BillingreferralDao" %>
+<%@page import="org.oscarehr.common.model.DemographicCust" %>
+<%@page import="org.oscarehr.common.dao.DemographicCustDao" %>
 <%
 	BillingreferralDao billingReferralDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
+	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
 %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
@@ -350,7 +353,7 @@ function checkRosterStatus() {
 			if (!rosterStatusTerminationReasonNotBlank()) return false;
 		}
 	}
-	
+
 	if (rosterStatusDateAllowed()) {
 		if (document.updatedelete.roster_status.value=="RO") { //Patient rostered
 			if (!rosterStatusDateValid(false)) return false;
@@ -387,7 +390,7 @@ function rosterStatusDateAllowed() {
 	    yyyy = document.updatedelete.roster_date_year.value.trim();
 	    mm = document.updatedelete.roster_date_month.value.trim();
 	    dd = document.updatedelete.roster_date_day.value.trim();
-	    
+
 	    if (yyyy!="" || mm!="" || dd!="") {
 	    	alert ("<bean:message key="demographic.search.msgForbiddenRosterDate"/>");
 	    	return false;
@@ -402,7 +405,7 @@ function rosterStatusDateValid(trueIfBlank) {
     mm = document.updatedelete.roster_date_month.value.trim();
     dd = document.updatedelete.roster_date_day.value.trim();
     var errMsg = "<bean:message key="demographic.search.msgWrongRosterDate"/>";
-    
+
     if (trueIfBlank) {
     	errMsg += "\n<bean:message key="demographic.search.msgLeaveBlank"/>";
     	if (yyyy=="" && mm=="" && dd=="") return true;
@@ -415,7 +418,7 @@ function rosterStatusTerminationDateValid(trueIfBlank) {
     mm = document.updatedelete.roster_termination_date_month.value.trim();
     dd = document.updatedelete.roster_termination_date_day.value.trim();
     var errMsg = "<bean:message key="demographic.search.msgWrongRosterTerminationDate"/>";
-    
+
     if (trueIfBlank) {
     	errMsg += "\n<bean:message key="demographic.search.msgLeaveBlank"/>";
     	if (yyyy=="" && mm=="" && dd=="") return true;
@@ -446,7 +449,7 @@ function patientStatusDateValid(trueIfBlank) {
     var yyyy = document.updatedelete.patientstatus_date_year.value.trim();
     var mm = document.updatedelete.patientstatus_date_month.value.trim();
     var dd = document.updatedelete.patientstatus_date_day.value.trim();
-    
+
     if (trueIfBlank) {
     	if (yyyy=="" && mm=="" && dd=="") return true;
     }
@@ -750,20 +753,19 @@ div.demographicWrapper {
 
                                 String resident="", nurse="", alert="", notes="", midwife="";
                                 ResultSet rs = null;
-                                rs = apptMainBean.queryResults(demographic_no, "search_demographiccust");
+
+                                DemographicCust demographicCust = demographicCustDao.find(Integer.parseInt(demographic_no));
+                                if(demographicCust != null) {
+                                	resident = demographicCust.getResident();
+                                	nurse = demographicCust.getNurse();
+                                	alert = demographicCust.getAlert();
+                                	midwife = demographicCust.getMidwife();
+                                	notes = SxmlMisc.getXmlContent(demographicCust.getNotes(),"unotes") ;
+                                	notes = notes==null?"":notes;
+                                }
 
                                 DemographicDao demographicDao=(DemographicDao)SpringUtils.getBean("demographicDao");
                                 Demographic demographic=demographicDao.getDemographic(demographic_no);
-
-                                while (rs.next()) {
-                                        resident = (apptMainBean.getString(rs,"cust1"));
-                                        nurse = (apptMainBean.getString(rs,"cust2"));
-                                        alert = (apptMainBean.getString(rs,"cust3"));
-                                        midwife = (apptMainBean.getString(rs,"cust4"));
-                                        notes = SxmlMisc.getXmlContent(apptMainBean.getString(rs,"content"),"unotes") ;
-                                        notes = notes==null?"":notes;
-                                }
-                                rs.close();
 
                                 String dateString = curYear+"-"+curMonth+"-"+curDay;
                                 int age=0, dob_year=0, dob_month=0, dob_date=0;
