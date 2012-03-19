@@ -111,17 +111,17 @@ public class BillingSavePrep {
 		ret.add(aL);
 		return ret;
 	}
-        
-        
+
+
 
 	private BillingClaimHeader1Data getClaimHeader1Obj(HttpServletRequest val) {
                 String billtype = val.getParameter("xml_billtype");
-                
+
 		BillingClaimHeader1Data claim1Header = new BillingClaimHeader1Data();
 
 		claim1Header.setTransc_id(BillingDataHlp.CLAIMHEADER1_TRANSACTIONIDENTIFIER);
 		claim1Header.setRec_id(BillingDataHlp.CLAIMHEADER1_REORDIDENTIFICATION);
-                
+
                 if( !billtype.substring(0,3).equals("BON") ) {
                     claim1Header.setHin(val.getParameter("hin"));
                     claim1Header.setVer(val.getParameter("ver"));
@@ -139,13 +139,13 @@ public class BillingSavePrep {
                     claim1Header.setVer("");
                     claim1Header.setDob("");
                     claim1Header.setAppointment_no(""); // appointment_no;
-                    claim1Header.setDemographic_name("");                    
+                    claim1Header.setDemographic_name("");
                     claim1Header.setLast_name("");
                     claim1Header.setFirst_name("");
                     claim1Header.setSex("");
-                    claim1Header.setProvince("ON");                    
+                    claim1Header.setProvince("ON");
                 }
-                
+
 		// acc_num - billing no
 		claim1Header.setPay_program(getPayProgram(val.getParameter("xml_billtype"), val.getParameter("hc_type")));
 		claim1Header.setPayee(val.getParameter("payMethod") != null ? val.getParameter("payMethod")
@@ -158,11 +158,13 @@ public class BillingSavePrep {
 		claim1Header.setRef_lab_num("");
 		claim1Header.setMan_review(val.getParameter("m_review") != null ? val.getParameter("m_review") : "");
 
-		claim1Header.setLocation(val.getParameter("xml_slicode").substring(0, 3));
+		if(val.getParameter("xml_slicode") != null) {
+			claim1Header.setLocation(val.getParameter("xml_slicode").substring(0, 3));
+		}
 
 		claim1Header.setDemographic_no(val.getParameter("demographic_no"));
 		claim1Header.setProviderNo(val.getParameter("xml_provider").substring(0,
-				val.getParameter("xml_provider").indexOf("|")));		
+				val.getParameter("xml_provider").indexOf("|")));
 
 		claim1Header.setBilling_date(val.getParameter("service_date"));
 		claim1Header.setBilling_time(val.getParameter("start_time"));
@@ -201,6 +203,9 @@ public class BillingSavePrep {
 			claimItem[i].setTransc_id(BillingDataHlp.ITEM_TRANSACTIONIDENTIFIER);
 			claimItem[i].setRec_id(BillingDataHlp.ITEM_REORDIDENTIFICATION);
 			claimItem[i].setService_code(val.getParameter("xserviceCode_" + i));
+			if(val.getParameter("xsliCode_" + i)!=null) {
+				claimItem[i].setLocation(val.getParameter("xsliCode_" + i));
+			}
 			claimItem[i].setFee(val.getParameter("percCodeSubtotal_" + i));
 			claimItem[i].setSer_num(getDefaultUnit(val.getParameter("xserviceUnit_" + i)));
 			claimItem[i].setService_date(val.getParameter("service_date"));
@@ -236,7 +241,7 @@ public class BillingSavePrep {
 		claim1Header.setRef_lab_num("");
 		claim1Header.setMan_review("");
 
-		claim1Header.setLocation(val.getParameter("xml_slicode").substring(0, 3)); 
+		claim1Header.setLocation(val.getParameter("xml_slicode").substring(0, 3));
 
 		claim1Header.setDemographic_no(val.getParameter("demographic_no"));
 		claim1Header.setProviderNo(val.getParameter("xml_provider"));
@@ -300,16 +305,16 @@ public class BillingSavePrep {
 		valsMap.put("billTo",val.getParameter("billto"));
 		valsMap.put("remitTo",val.getParameter("remitto"));
                 valsMap.put("total",val.getParameter("gstBilledTotal"));
-                if (val.getParameter("submit").equalsIgnoreCase("Settle & Print Invoice")) {                    
+                if (val.getParameter("submit").equalsIgnoreCase("Settle & Print Invoice")) {
                     valsMap.put("payment", valsMap.get("total"));
                 }
-                else {                    
+                else {
                     valsMap.put("payment", val.getParameter("payment"));
                 }
 		valsMap.put("refund",val.getParameter("refund"));
                 valsMap.put("provider_no",val.getParameter("provider_no"));
                 valsMap.put("gst",val.getParameter("gst"));
-                
+
 		if (val.getParameter("payMethod") != null) {
 			valsMap.put("payMethod",val.getParameter("payMethod"));
 		}

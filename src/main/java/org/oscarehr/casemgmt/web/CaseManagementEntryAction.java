@@ -2776,6 +2776,11 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 					mockReq.addParameter("xserviceCode_" + i, codes[0]);
 					Object[] priceg = billingServiceDao.getUnitPrice(codes[0], serviceDate);
 					mockReq.addParameter("xserviceUnit_" + i, codes[1]);
+					String sliCode = OscarProperties.getInstance().getProperty("clinic_no");
+					if(codes.length==3 && !codes[2].equals("NA")) {
+						sliCode=codes[2];
+					}
+					mockReq.addParameter("xsliCode_"+i, sliCode);
 					if (".00".equals(priceg[0])) {
 						percentUnits.add(codes);
 						mockReq.addParameter("percCodeSubtotal_" + i, (String) priceg[0]);
