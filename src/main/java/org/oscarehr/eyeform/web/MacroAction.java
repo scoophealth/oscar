@@ -25,19 +25,19 @@ public class MacroAction extends DispatchAction {
 	MacroDao dao = (MacroDao)SpringUtils.getBean("MacroDAO");
 	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 	BillingServiceDao billingServiceDao = (BillingServiceDao)SpringUtils.getBean("billingServiceDao");
-	
+
 	@Override
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         return form(mapping, form, request, response);
     }
-	
+
 	public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		List<Macro> macros = dao.getAll();		
+		List<Macro> macros = dao.getAll();
 		request.setAttribute("macros", macros);
         return mapping.findForward("list");
     }
-	
-	public ActionForward addMacro(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {		
+
+	public ActionForward addMacro(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         return form(mapping, form, request, response);
     }
 
@@ -46,30 +46,30 @@ public class MacroAction extends DispatchAction {
     }
 
     public ActionForward form(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-    	
+
     	request.setAttribute("providers",providerDao.getActiveProviders());
-    	
+
     	if(request.getParameter("macro.id") != null) {
     		int macroId = Integer.parseInt(request.getParameter("macro.id"));
     		Macro macro = dao.find(macroId);
-    		DynaValidatorForm f = (DynaValidatorForm)form;	
+    		DynaValidatorForm f = (DynaValidatorForm)form;
     		f.set("macro", macro);
     	}
-    	
+
         return mapping.findForward("form");
     }
-    
+
     public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	DynaValidatorForm f = (DynaValidatorForm)form;
-    	
-    	Macro macro = (Macro)f.get("macro");    	
-    	
-    	if(request.getParameter("macro.id") != null && request.getParameter("macro.id").length()>0) {    		
+
+    	Macro macro = (Macro)f.get("macro");
+
+    	if(request.getParameter("macro.id") != null && request.getParameter("macro.id").length()>0) {
     		macro.setId(Integer.parseInt(request.getParameter("macro.id")));
     	}
-    	
+
     	StringBuilder errors = new StringBuilder();
-    	
+
     	//validate billing
     	String bcodes = macro.getBillingCodes();
 		if (StringUtils.isNotBlank(bcodes)) {
@@ -86,9 +86,21 @@ public class MacroAction extends DispatchAction {
 				if (price == null) {
 					errors.append("<br/>Invalid billing code or format: " + code);
 				}
+				boolean requiresSli = billingServiceDao.codeRequiresSLI(atts[0]);
+				if(requiresSli&& atts.length != 3) {
+					errors.append("<br/>SLI code required for billing code: " + code);
+					continue;
+				}
+				if(requiresSli) {
+					String sli = atts[2];
+					if(!isValidSli(sli)) {
+						errors.append("<br/>invalid SLI code for billing code: " + code);
+						continue;
+					}
+				}
 			}
 		}
-		
+
 		//validate tests
 		String tests = macro.getTestRecords().replace("\r", "");
 		StringBuilder sb = new StringBuilder();
@@ -106,30 +118,37 @@ public class MacroAction extends DispatchAction {
 			}
 		}
 		macro.setTestRecords(sb.toString());
-    	
+
 		//addMessage(request, "Macro has been saved successfully.");
 		if(errors.toString().length()>0) {
 			request.setAttribute("errors", errors.toString());
 			request.setAttribute("providers",providerDao.getActiveProviders());
-	    	DynaValidatorForm f2 = (DynaValidatorForm)form;	
-	    	f2.set("macro", macro);	    		    	
+	    	DynaValidatorForm f2 = (DynaValidatorForm)form;
+	    	f2.set("macro", macro);
 	        return mapping.findForward("form");
 		}
-    	
+
     	if(macro.getId() != null && macro.getId() == 0) {
     		macro.setId(null);
     	}
-    	
+
     	if(macro.getId() == null) {
     		dao.persist(macro);
     	} else {
     		dao.merge(macro);
     	}
-    	
+
     	request.setAttribute("parentAjaxId", "macro");
     	return mapping.findForward("success");
     }
 
+    private boolean isValidSli(String sli) {
+    	if(sli.equals("NA") || sli.equals("HDS") || sli.equals("HED") || sli.equals("HIP") || sli.equals("HOP")
+    			|| sli.equals("HRP") || sli.equals("IHF") || sli.equals("OFF") || sli.equals("OTN")) {
+    		return true;
+    	}
+    	return false;
+    }
     public ActionForward deleteMacro(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	String[] ids = request.getParameterValues("selected_id");
     	for(int x=0;x<ids.length;x++) {
