@@ -35,22 +35,21 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * @author Jason Gallagher
  */
 public class CountryCodeDAO extends HibernateDaoSupport {
-    
-    /** Creates a new instance of UserPropertyDAO */
+
     public CountryCodeDAO() {
     }
-   
+
     public List<CountryCode> getAllCountryCodes(){
         List<CountryCode> codeList = this.getHibernateTemplate().find("from CountryCode");
         return codeList;
     }
-   
+
     //NOT USED YET
     public List<CountryCode> getAllCountryCodes(String locale){
         List<CountryCode> codeList = this.getHibernateTemplate().find("from CountryCode c where c.cLocale = ?",locale);
         return codeList;
     }
-    
+
     public CountryCode getCountryCode(String countryCode){
         List<CountryCode> codeList = this.getHibernateTemplate().find("from CountryCode c where c.countryId = ?",countryCode);
         CountryCode code = null;
@@ -59,8 +58,8 @@ public class CountryCodeDAO extends HibernateDaoSupport {
         }
         return code;
     }
-    
-    
+
+
     //NOT USED YET
     public CountryCode getCountryCode(String countryCode,String locale){
         List<CountryCode> codeList = this.getHibernateTemplate().find("from CountryCode c where c.countryId = ? and c.cLocale = ?",new Object[] {countryCode,locale});
@@ -70,9 +69,9 @@ public class CountryCodeDAO extends HibernateDaoSupport {
         }
         return code;
     }
-    
-    
-    
+
+
+
 //    public UserDSMessagePrefs getMessagePrefsOnType(String prov, String name) {
 //        List list = this.getHibernateTemplate().find("from UserDSMessagePrefs p where p.providerNo = ? and p.resourceType = ? and p.archived = false ", new Object[] {prov,name});
 //        if( list != null && list.size() > 0 ) {
@@ -80,11 +79,11 @@ public class CountryCodeDAO extends HibernateDaoSupport {
 //            return prop;
 //        }
 //        else
-//            return null;            
+//            return null;
 //    }
-//    
-//    
-//    
+//
+//
+//
 //    public Hashtable getHashofMessages(String providerNo,String name){
 //        Hashtable retHash = new Hashtable();
 //        List<UserDSMessagePrefs> list = this.getHibernateTemplate().find("from UserDSMessagePrefs p where p.providerNo = ? and p.resourceType = ? and p.archived = false", new Object[] {providerNo,name});
@@ -95,5 +94,5 @@ public class CountryCodeDAO extends HibernateDaoSupport {
 //        }
 //        return retHash;
 //    }
-    
+
 }
