@@ -2552,7 +2552,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 
 <tr valign="top">
 <td nowrap colspan="4">
-<b><bean:message key="demographic.demographiceditdemographic.rxInteractionWarningLevel" /></b>
+<b><bean:message key="demographic.demographiceditdemographic.rxInteractionWarningLevel" />:</b>
 <input type="hidden" name="rxInteractionWarningLevelOrig"
 									value="<%=apptMainBean.getString(demoExt.get("rxInteractionWarningLevel"))%>" />
 					<select id="rxInteractionWarningLevel" name="rxInteractionWarningLevel">
@@ -2562,6 +2562,20 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 						<option value="3" <%=(warningLevel.equals("3")?"selected=\"selected\"":"") %>>High</option>
 						<option value="4" <%=(warningLevel.equals("4")?"selected=\"selected\"":"") %>>None</option>
 					</select>
+					<oscar:oscarPropertiesCheck property="INTEGRATOR.LOCAL.STORE" value="yes">
+					<b><bean:message key="demographic.demographiceditdemographic.primaryEMR" />:</b>
+
+				    <%
+				       	String primaryEMR = (String)demoExt.get("primaryEMR");
+				       	if(primaryEMR==null) primaryEMR="0";
+				    %>			
+					<input type="hidden" name="primaryEMROrig" value="<%=apptMainBean.getString(demoExt.get("primaryEMR"))%>" />
+					<select id="primaryEMR" name="primaryEMR">
+						<option value="0" <%=(primaryEMR.equals("0")?"selected=\"selected\"":"") %>>No</option>
+						<option value="1" <%=(primaryEMR.equals("1")?"selected=\"selected\"":"") %>>Yes</option>
+					</select>	
+					</oscar:oscarPropertiesCheck>
+				
 </td>
 </tr>
 							<tr valign="top">

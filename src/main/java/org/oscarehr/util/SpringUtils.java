@@ -22,6 +22,7 @@
 
 package org.oscarehr.util;
 
+import org.apache.commons.lang.WordUtils;
 import org.springframework.beans.factory.BeanFactory;
 
 /**
@@ -37,5 +38,9 @@ public class SpringUtils {
     public static Object getBean(String beanName)
     {
         return(beanFactory.getBean(beanName));
+    }
+    
+    public static <T> T getBean(Class clazz){
+    	return (T) beanFactory.getBean(WordUtils.uncapitalize(clazz.getSimpleName()));
     }
 }

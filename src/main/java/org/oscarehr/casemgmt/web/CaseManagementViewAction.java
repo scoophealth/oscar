@@ -55,6 +55,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.LabelValueBean;
 import org.caisi.model.CustomFilter;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.PMmodule.dao.SecUserRoleDao;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.ProgramProvider;
@@ -1019,7 +1020,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return;
 
 		try {
-			List<CachedDemographicNote> linkedNotes = CaisiIntegratorManager.getLinkedNotes(demographicNo);
+			List<CachedDemographicNote> linkedNotes = IntegratorFallBackManager.getLinkedNotes(demographicNo);
 
 			for (CachedDemographicNote cachedDemographicNote : linkedNotes) {
 				try {

@@ -276,6 +276,9 @@
 
        dExt.addKey(proNo, dem, "rxInteractionWarningLevel", request.getParameter("rxInteractionWarningLevel"), "");
 
+       dExt.addKey(proNo, dem, "primaryEMR", request.getParameter("primaryEMR"), "");
+       
+       
        //for the IBD clinic
 		OtherIdManager.saveIdDemographic(dem, "meditech_id", request.getParameter("meditech_id"));
 

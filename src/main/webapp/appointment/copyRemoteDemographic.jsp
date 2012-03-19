@@ -9,6 +9,7 @@
 <%@page import="org.oscarehr.PMmodule.dao.ClientDao"%>
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
 <%@page import="org.oscarehr.util.WebUtils"%>
+<%@page import="org.oscarehr.util.MiscUtils"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%
 	int remoteFacilityId = Integer.parseInt(request.getParameter("remoteFacilityId"));
@@ -18,12 +19,17 @@
 	Demographic demographic=CaisiIntegratorManager.makeUnpersistedDemographicObjectFromRemoteEntry(remoteFacilityId, remoteDemographicId);
 	ClientDao clientDao=(ClientDao)SpringUtils.getBean("clientDao");
 	clientDao.saveClient(demographic);
+	Integer demoNoRightNow = demographic.getDemographicNo(); // temp use for debugging
 	
 	//--- link the demographic on the integrator so associated data shows up ---
 	DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs();
 	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 	String providerNo=loggedInInfo.loggedInProvider.getProviderNo();
 	demographicWs.linkDemographics(providerNo, demographic.getDemographicNo(), remoteFacilityId, remoteDemographicId);
+	
+
+	MiscUtils.getLogger().error("LINK DEMOGRAPHIC #### ProviderNo :"+providerNo+" ,demo No :"+ demographic.getDemographicNo()+" , remoteFacilityId :"+ remoteFacilityId+" ,remoteDemographicId "+ remoteDemographicId+" orig demo "+demoNoRightNow);
+	
 
 	//--- add to program so the caisi program access filtering doesn't cause a security problem ---
 	oscar.oscarEncounter.data.EctProgram program = new oscar.oscarEncounter.data.EctProgram(request.getSession());
