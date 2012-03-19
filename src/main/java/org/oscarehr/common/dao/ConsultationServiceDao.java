@@ -25,6 +25,10 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.ConsultationServices;
 import org.springframework.stereotype.Repository;
 
@@ -37,6 +41,25 @@ public class ConsultationServiceDao extends AbstractDao<ConsultationServices> {
 
     public ConsultationServiceDao() {
         super(ConsultationServices.class);
+    }
+
+    public List<ConsultationServices> findAll() {
+    	String sql = "select x from ConsultationServices x order by x.serviceDesc";
+    	Query query = entityManager.createQuery(sql);
+
+        @SuppressWarnings("unchecked")
+        List<ConsultationServices> results = query.getResultList();
+        return results;
+    }
+
+    public List<ConsultationServices> findActive() {
+    	String sql = "select x from ConsultationServices x where x.active=? order by x.serviceDesc";
+    	Query query = entityManager.createQuery(sql);
+    	query.setParameter(1,"1");
+
+        @SuppressWarnings("unchecked")
+        List<ConsultationServices> results = query.getResultList();
+        return results;
     }
 
 }
