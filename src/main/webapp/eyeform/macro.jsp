@@ -1,5 +1,11 @@
 <%@ include file="/taglibs.jsp"%>
-
+<%@page import="java.util.List" %>
+<%@page import="org.oscarehr.eyeform.web.MacroAction" %>
+<%@page import="org.apache.struts.util.LabelValueBean" %>
+<%
+	List<LabelValueBean> sliCodes = MacroAction.sliCodeList;
+	request.setAttribute("sliCodes", sliCodes);
+%>
 
 <html lang="en">
 <head>
@@ -157,7 +163,18 @@ function fixCheckboxes(form) {
 	<legend>Billing</legend>
 	<table style="border: 0px none;">
 
-	<tbody><tr>
+	<tbody>
+	<tr>
+		<td>
+		SLI Code<br/>(Required for some billing codes)
+		</td>
+		<td>
+			<html:select property="macro.sliCode">
+				<html:options collection="sliCodes" property="value" labelProperty="label"/>
+			</html:select>
+		</td>
+	</tr>
+	<tr>
 	<td>Billing Codes<br>(won't bill if empty)<br></td>
 	<td><html:textarea property="macro.billingCodes" rows="4"></html:textarea></td>
 	<td><font size="-1">Add a billing code per line in the following format:

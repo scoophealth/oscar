@@ -8275,6 +8275,7 @@ CREATE TABLE `EyeformMacro` (
   `dischargeFlag` varchar(20),
   `statFlag` varchar(20),
   `optFlag` varchar(20),
+  `sliCode` varchar(10),
   PRIMARY KEY (`id`)
 );
 
