@@ -81,5 +81,7 @@
 		<property name="lastUpdateDate" column="lastupdatedate"></property>
 		<property name="lastUpdateUser" column="lastupdateuser"></property>
 		<property name="siteSpecificField" />
+		<property name="enableEncounterTime" column="enableEncounterTime" type="boolean" length="1" />
+		<property name="enableEncounterTransportationTime" column="enableEncounterTransportationTime" type="boolean" length="1" />
     </class>
 </hibernate-mapping>

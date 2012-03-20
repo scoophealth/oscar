@@ -120,4 +120,12 @@
 		<td width="20%">Maximum Age:</td>
 		<td><c:out value="${program.ageMax}" /></td>
 	</tr>
+	<tr class="b">
+		<td width="20%">Enable Mandatory Encounter Time:</td>
+		<td><c:out value="${program.enableEncounterTime}" /></td>
+	</tr>
+	<tr class="b">
+		<td width="20%">Enable Mandatory Transportation Time:</td>
+		<td><c:out value="${program.enableEncounterTransportationTime}" /></td>
+	</tr>
 </table>
