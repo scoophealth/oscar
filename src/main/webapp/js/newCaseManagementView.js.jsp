@@ -2363,7 +2363,7 @@ function onIssueUpdate() {
     //this request succeeded so we reset issues
     $("issueAutocomplete").value = "";
     $("newIssueId").value = "";
-	notifyIssueUpdate();
+	//notifyIssueUpdate();
 }
 
 function submitIssue(event) {

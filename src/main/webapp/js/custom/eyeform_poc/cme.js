@@ -255,10 +255,15 @@
 
 
    function notifyIssueUpdate() {
+
+	   if(savedNoteId == null || savedNoteId=='null') {
+		   savedNoteId=0;
+	   }
 	   var noteAddonUrl = ctx+"/eyeform/NoteData.do?method=getCurrentNoteData&demographicNo="+demographicNo+"&noteId="+savedNoteId+"&appointmentNo="+appointmentNo;
        jQuery.ajax({url:noteAddonUrl,dataType: "html",success: function(data) {
 			jQuery("#current_note_addon").html(data);
        }});
+
    }
 
    function notifyDivLoaded(divId) {
@@ -268,7 +273,6 @@
    }
 
    function messagesLoaded(savedId){
-	   //alert('messagesLoaded() - savedNoteId=' + savedId);
 	   var noteAddonUrl = ctx+"/eyeform/NoteData.do?method=getCurrentNoteData&demographicNo="+demographicNo+"&noteId="+savedId+"&appointmentNo="+appointmentNo;
        jQuery.ajax({url:noteAddonUrl,dataType: "html",success: function(data) {
 			jQuery("#current_note_addon").html(data);
@@ -285,7 +289,7 @@
        jQuery("#caseNote_note"+savedId).css('height','10em');
        jQuery("#saveImg, #signSaveImg, #signVerifyImg").bind('click',function() {
     	   jQuery("#save_measurements").click();
-    	   saveEyeformNote();
+    	   saveEyeformNoteNoGenerate();
        });
 
        jQuery("#topContent").hide();

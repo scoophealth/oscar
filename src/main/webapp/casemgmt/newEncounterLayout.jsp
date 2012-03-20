@@ -255,12 +255,6 @@
         <%}%>
 
         var savedNoteId=0;
-        <%
-        if (cform == null){%>
-            savedNoteId=0;
-        <%}else{%>
-            savedNoteId=<%=cform.getCaseNote().getId()%>
-    <%}%>
    </script>
 
 	<!-- set size of window if customized in preferences -->
