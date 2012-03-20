@@ -1441,7 +1441,7 @@ function minView(e) {
     new Insertion.After(print, anchor);
 
 
-    img = "<img title='Maximize Display' alt='Maximize Display' id='xpImg" + nId + "' onclick='xpandView(event)' style='float:right; margin-right:5px; margin-top: 2px;' src='" + ctx + "/oscarEncounter/graphics/triangle_down.gif'>";
+    img = "<img title='Maximize Display' alt='Maximize Display' id='xpImg" + nId + "' name='expandViewTrigger' onclick='xpandView(event)' style='float:right; margin-right:5px; margin-top: 2px;' src='" + ctx + "/oscarEncounter/graphics/triangle_down.gif'>";
     new Insertion.Top(txt, img);
     Element.observe(txt, 'click', xpandView);
 }
@@ -1469,6 +1469,11 @@ function shrinkImpl(id, minHeight, delta) {
 //this func fires only if maximize button is clicked after fullView
 function xpandView(e) {
     var id = Event.element(e).id;
+    xpandViewById(id);
+    Event.stop(e);
+}
+
+function xpandViewById(id) {
     var regEx = /\d+/;
     var nId = regEx.exec(id);
     var txt = "n" + nId;
@@ -1488,7 +1493,6 @@ function xpandView(e) {
     new Insertion.Top(txt, imgTag);
     $("txt"+nId).show();
     $("sig"+nId).show();
-    Event.stop(e);
     Element.stopObserving(txt, 'click', xpandView);
 
 }
@@ -1518,10 +1522,26 @@ function fetchNote(nId) {
 
 }
 
+function toggleFullViewForAll(f) {
+    var triggers = document.getElementsByName('fullViewTrigger');
+    for (var i=0; i<triggers.length; i++) {
+        fullViewById(triggers[i].id);
+    }
+    triggers = document.getElementsByName('expandViewTrigger');
+    for (var i=0; i<triggers.length; i++) {
+        xpandViewById(triggers[i].id);
+    }
+}
+
 //this func fires only if maximize button is clicked
 function fullView(e) {
-    var url = ctx + "/CaseManagementView.do";
     var id = Event.element(e).id;
+    fullViewById(id);
+    Event.stop(e);
+}
+
+function fullViewById(id) {
+    var url = ctx + "/CaseManagementView.do";
 
     var regEx = /\d+/;
     var nId = regEx.exec(id);
@@ -1559,8 +1579,6 @@ function fullView(e) {
     $(txt).style.height = 'auto';
     new Insertion.Top(txt, imgTag);
     //Element.stopObserving(txt, 'click', fullView);
-    Event.stop(e);
-
 }
 
 function resetEdit(e) {
@@ -1985,6 +2003,7 @@ var assignObservationDateError;
 var assignIssueError;
 var savingNoteError;
 var encTimeError;
+var encMinError;
 function ajaxSaveNote(div,noteId,noteTxt) {
 
     if( $("observationDate") != null && $("observationDate").value.length > 0 && !validDate() ) {
@@ -2010,12 +2029,27 @@ function ajaxSaveNote(div,noteId,noteTxt) {
         }
         if(document.getElementById("hourOfEncTransportationTime") != null) {
 	        if(isNaN(document.getElementById("hourOfEncTransportationTime").value) ||
-	         isNaN(document.getElementById("minuteOfEncTransportationTime").value) ||
-	         isNaN(document.getElementById("hourOfEncounterTime").value) ||
-	         isNaN(document.getElementById("minuteOfEncounterTime").value) ) {
-	        	alert(encTimeError);
-	        	return false;
-	        }
+	        isNaN(document.getElementById("minuteOfEncTransportationTime").value) ) {
+				alert(encTimeError);
+				return false;
+			}
+			if(!isNaN(document.getElementById("minuteOfEncTransportationTime").value) &&
+			parseInt(document.getElementById("minuteOfEncTransportationTime").value) > 59) {
+				alert(encMinError);
+				return false;
+			}
+		}
+		if(document.getElementById("hourOfEncounterTime") != null) {
+			if(isNaN(document.getElementById("hourOfEncounterTime").value) ||
+			isNaN(document.getElementById("minuteOfEncounterTime").value) ) {
+				alert(encTimeError);
+				return false;
+			}
+			if(!isNaN(document.getElementById("minuteOfEncounterTime").value) &&
+			parseInt(document.getElementById("minuteOfEncounterTime").value) > 59) {
+				alert(encMinError);
+				return false;
+			}
 		}
     }
 
@@ -2090,15 +2124,28 @@ function saveNoteAjax(method, chain) {
         }
  		if(document.getElementById("hourOfEncTransportationTime") != null) {
 	        if(isNaN(document.getElementById("hourOfEncTransportationTime").value) ||
-	         isNaN(document.getElementById("minuteOfEncTransportationTime").value) ||
-	         isNaN(document.getElementById("hourOfEncounterTime").value) ||
-	         isNaN(document.getElementById("minuteOfEncounterTime").value) ) {
-	        	alert(encTimeError);
-	        	return false;
-	        }
-	    }
-
-
+	        isNaN(document.getElementById("minuteOfEncTransportationTime").value) ) {
+				alert(encTimeError);
+				return false;
+			}
+			if(!isNaN(document.getElementById("minuteOfEncTransportationTime").value) &&
+			parseInt(document.getElementById("minuteOfEncTransportationTime").value) > 59) {
+				alert(encMinError);
+				return false;
+			}
+		}
+		if(document.getElementById("hourOfEncounterTime") != null) {
+			if(isNaN(document.getElementById("hourOfEncounterTime").value) ||
+			isNaN(document.getElementById("minuteOfEncounterTime").value) ) {
+				alert(encTimeError);
+				return false;
+			}
+			if(!isNaN(document.getElementById("minuteOfEncounterTime").value) &&
+			parseInt(document.getElementById("minuteOfEncounterTime").value) > 59) {
+				alert(encMinError);
+				return false;
+			}
+		}
     }
     document.forms["caseManagementEntryForm"].method.value = method;
     document.forms["caseManagementEntryForm"].ajax.value = false;

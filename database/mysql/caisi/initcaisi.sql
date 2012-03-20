@@ -1645,6 +1645,8 @@ CREATE TABLE `program` (
   `capacity_space` int(10) default NULL,
   `lastUpdateUser` varchar(6) default NULL,
   `lastUpdateDate` date default NULL,
+  `enableEncounterTime` tinyint(1),
+  `enableEncounterTransportationTime` tinyint(1),
   `siteSpecificField` varchar(255) default NULL
 
 );

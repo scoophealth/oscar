@@ -674,6 +674,8 @@ public class ProgramManagerAction extends BaseAction {
 		if (request.getParameter("program.physicalHealth") == null) program.setPhysicalHealth(false);
 		if (request.getParameter("program.mentalHealth") == null) program.setMentalHealth(false);
 		if (request.getParameter("program.housing") == null) program.setHousing(false);
+		if (request.getParameter("program.enableEncounterTime") == null) program.setEnableEncounterTime(false);
+		if (request.getParameter("program.enableEncounterTransportationTime") == null) program.setEnableEncounterTransportationTime(false);
 
 		request.setAttribute("oldProgram", program);
 
@@ -754,7 +756,9 @@ public class ProgramManagerAction extends BaseAction {
 		oldProgram.setPhysicalHealth(getParameterAsBoolean(request,"old_physicalHealth"));
 		oldProgram.setMentalHealth(getParameterAsBoolean(request,"old_mentalHealth"));
 		oldProgram.setHousing(getParameterAsBoolean(request,"old_housing"));
-		oldProgram.setHousing(getParameterAsBoolean(request,"old_facility_id"));
+		oldProgram.setFacilityId(getParameterAsInteger(request,"old_facility_id",0));
+		oldProgram.setEnableEncounterTime(getParameterAsBoolean(request,"old_enableEncounterTime"));
+		oldProgram.setEnableEncounterTransportationTime(getParameterAsBoolean(request,"old_enableEncounterTransportationTime"));
 
 		if (isChanged(program, oldProgram)) {
 			ProgramSignature programSignature = new ProgramSignature();

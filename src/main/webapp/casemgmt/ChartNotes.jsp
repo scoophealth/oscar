@@ -29,6 +29,9 @@
 <%@page import="org.oscarehr.common.dao.ProfessionalSpecialistDao"%>
 <%@page import="oscar.OscarProperties"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
+<%@page import="org.oscarehr.PMmodule.model.Program"%>
+<%@page import="org.oscarehr.PMmodule.dao.ProgramDao"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="oscar.util.UtilDateUtilities"%>
 <%@page import="org.oscarehr.casemgmt.web.NoteDisplayNonNote"%>
 <%@page import="org.oscarehr.common.dao.EncounterTemplateDao"%>
@@ -43,6 +46,15 @@ try
 	ProfessionalSpecialistDao professionalSpecialistDao=(ProfessionalSpecialistDao)SpringUtils.getBean("professionalSpecialistDao");
     CaseManagementManager caseManagementManager=(CaseManagementManager)SpringUtils.getBean("caseManagementManager");
 
+    String pId = (String)session.getAttribute("case_program_id");
+    Program program = null;
+    if (pId == null) {
+        pId = "";
+    } else {
+        ProgramDao programDao=(ProgramDao)SpringUtils.getBean("programDao");
+        program = programDao.getProgram(Integer.valueOf(pId));
+    }
+
 	String demographicNo = request.getParameter("demographicNo");
 	oscar.oscarEncounter.pageUtil.EctSessionBean bean = null;
 	String strBeanName = "casemgmt_oscar_bean" + demographicNo;
@@ -53,9 +65,6 @@ try
 	}
 
 	String provNo = bean.providerNo;
-
-	String pId = (String)session.getAttribute("case_program_id");
-	if (pId == null) pId = "";
 
 	String dateFormat = "dd-MMM-yyyy H:mm";
 	long savedId = 0;
@@ -709,7 +718,7 @@ try
 							else
 							{
 							%>
-								<img title="<bean:message key="oscarEncounter.MaxDisplay.title"/>" id='quitImg<%=note.getNoteId()%>' alt="Maximize Display" onclick="fullView(event)" style='float: right; margin-right: 5px; margin-top: 2px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_down.gif'>
+								<img title="<bean:message key="oscarEncounter.MaxDisplay.title"/>" id='quitImg<%=note.getNoteId()%>' name='fullViewTrigger' alt="Maximize Display" onclick="fullView(event)" style='float: right; margin-right: 5px; margin-top: 2px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_down.gif'>
 							<%
 							}
 						}
@@ -746,7 +755,7 @@ try
 					 			{
 						 		%>
 							 		<a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getNoteId()%>"
-							 		href="#" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float: right; margin-right: 5px; font-size: 8px;">
+							 		href="#" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float: right; margin-right: 5px; font-size: 10px;">
 							 		<bean:message key="oscarEncounter.edit.msgEdit" />
 							 		</a>
 								<%
@@ -755,7 +764,7 @@ try
 					 			if (professionalSpecialistDao.hasRemoteCapableProfessionalSpecialists())
 					 			{
 					 			%>
-					 				<a href="" onclick="window.open('<%=request.getContextPath()+"/lab/CA/ALL/sendOruR01.jsp?noteId="+note.getNoteId()%>', 'eSend');return(false);" title="<bean:message key="oscarEncounter.eSendTitle"/>" style="float: right; margin-right: 5px; font-size: 8px;"><bean:message key="oscarEncounter.eSend" /></a>
+					 				<a href="" onclick="window.open('<%=request.getContextPath()+"/lab/CA/ALL/sendOruR01.jsp?noteId="+note.getNoteId()%>', 'eSend');return(false);" title="<bean:message key="oscarEncounter.eSendTitle"/>" style="float: right; margin-right: 5px; font-size: 10px;"><bean:message key="oscarEncounter.eSend" /></a>
 					 			<%
 					 			}
 					 		}
@@ -773,7 +782,7 @@ try
 	                      		{
 								%>
 							 		<a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getNoteId()%>"
-							 		href="javascript:void(0);" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float: right; margin-right: 5px; font-size: 8px;">
+							 		href="javascript:void(0);" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float: right; margin-right: 5px; font-size: 10px;">
 							 		<bean:message key="oscarEncounter.edit.msgEdit" />
 							 		</a>
 						 		<%
@@ -784,7 +793,7 @@ try
 	       		            {
 	               		        String url="popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/oscarRx/StaticScript2.jsp?demographicNo=" + rx.getDemographicNo() + "&regionalIdentifier="+rx.getRegionalIdentifier()+"&cn="+response.encodeURL(rx.getCustomName())+"');";
 		                        %>
-		                        	<a class="links" title="<%=rx.getSpecial()%>" id="view<%=note.getNoteId()%>" href="javascript:void(0);" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view.rxView" /> </a>
+		                        	<a class="links" title="<%=rx.getSpecial()%>" id="view<%=note.getNoteId()%>" href="javascript:void(0);" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 10px;"> <bean:message key="oscarEncounter.view.rxView" /> </a>
 		                        <%
 	                        }
 		                }
@@ -807,14 +816,14 @@ try
 								{
 								%>
 							 		<a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getNoteId()%>"
-							 		href="javascript:void(0);" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float: right; margin-right: 5px; font-size: 8px;">
+							 		href="javascript:void(0);" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float: right; margin-right: 5px; font-size: 10px;">
 							 		<bean:message key="oscarEncounter.edit.msgEdit" />
 							 		</a>
 						 		<%
 								}
 							}
 			 				%>
-								<a class="links" title="<bean:message key="oscarEncounter.view.docView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view" /> </a>
+								<a class="links" title="<bean:message key="oscarEncounter.view.docView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 10px;"> <bean:message key="oscarEncounter.view" /> </a>
 							<%
 			 			}
 						else
@@ -828,7 +837,7 @@ try
 							url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/dms/documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(dispFilename) + "&type=" + dispStatus + "&doc_no=" + dispDocNo + "');";
 							url = url + "return false;";
 						 	%>
-							 	<a class="links" title="<bean:message key="oscarEncounter.view.docView"/>" id="view<%=note.getNoteId()%>" href="javascript:void(0);" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;color:black">
+							 	<a class="links" title="<bean:message key="oscarEncounter.view.docView"/>" id="view<%=note.getNoteId()%>" href="javascript:void(0);" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 10px;color:black">
 							 		<bean:message key="oscarEncounter.view" />
 								</a>
 							<%
@@ -846,21 +855,21 @@ try
 
 							url += "'); return false;";
 							%>
-								<a class="links" title="<bean:message key="oscarEncounter.view.eformView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view" /> </a>
+								<a class="links" title="<bean:message key="oscarEncounter.view.eformView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 10px;"> <bean:message key="oscarEncounter.view" /> </a>
 							<%
 						} else if (note.isInvoice()) {
 							String winName = "invoice"+demographicNo;
 							int hash = Math.abs(winName.hashCode());
 							String url = "popupPage(700,800,'"+hash+"','"+request.getContextPath()+StringEscapeUtils.escapeHtml(((NoteDisplayNonNote)note).getLinkInfo())+"'); return false;";
 							%>
-								<a class="links" title="<bean:message key="oscarEncounter.view.eformView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view" /> </a>
+								<a class="links" title="<bean:message key="oscarEncounter.view.eformView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 10px;"> <bean:message key="oscarEncounter.view" /> </a>
 							<%
 						} else if (note.isEncounterForm()) {
 							String winName = "encounterforms"+demographicNo;
 							int hash = Math.abs(winName.hashCode());
 							String url = "popupPage(700,800,'"+hash+"','"+request.getContextPath()+StringEscapeUtils.escapeHtml(((NoteDisplayNonNote)note).getLinkInfo())+"'); return false;";
 							%>
-								<a class="links" title="<bean:message key="oscarEncounter.view.eformView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view" /> </a>
+								<a class="links" title="<bean:message key="oscarEncounter.view.eformView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 10px;"> <bean:message key="oscarEncounter.view" /> </a>
 							<%
 						}
 					 	if (!note.isDocument() && !note.isCpp() && !note.isEformData() && !note.isEncounterForm() && !note.isInvoice()) {
@@ -870,15 +879,14 @@ try
 							<input id="anno<%=note.getNoteId()%>" height="10px;" width="10px" type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/annotation.png"/>" title='<bean:message key="oscarEncounter.Index.btnAnnotation"/>' style='float: right; margin-right: 5px; margin-bottom: 3px;' onclick="window.open('<%=addr%>','anwin','width=400,height=500');$('annotation_attribname').value='<%=atbname%>'; return false;">
 						<%} %>
 							<%-- render the note contents here --%>
-			  				<div id="txt<%=note.getNoteId()%>" style="<%=(note.isDocument()||note.isCpp()||note.isEformData()||note.isEncounterForm()||note.isInvoice())?(bgColour+";color:white;font-size:9px"):""%>">
+			  				<div id="txt<%=note.getNoteId()%>" style="<%=(note.isDocument()||note.isCpp()||note.isEformData()||note.isEncounterForm()||note.isInvoice())?(bgColour+";color:white;font-size:10px"):""%>">
 		  						<%=noteStr%>
 		  						<%
 		  							if (note.isCpp()||note.isEformData()||note.isEncounterForm()||note.isInvoice())
 		  							{
 		  								%>
-											<div id="observation<%=note.getNoteId()%>" style="float: right; margin-right: 3px;">
-												<i>
-													Encounter Date:&nbsp;
+											<div id="observation<%=note.getNoteId()%>" style="font-size: 11px; float: right; margin-right: 3px;">
+													<bean:message key="oscarEncounter.encounterDate.title"/>:&nbsp;
 													<span id="obs<%=note.getNoteId()%>"><%=DateUtils.getDate(note.getObservationDate(), dateFormat, request.getLocale())%></span>
 													<%
 														if (note.isCpp())
@@ -902,7 +910,6 @@ try
 															}
 														}
 													%>
-												</i>
 											</div>
 		  								<%
 		  							}
@@ -923,9 +930,8 @@ try
 						%>
 							<div id="sig<%=globalNoteId%>" class="sig" style="clear:both;<%=bgColour%>">
 								<div id="sumary<%=globalNoteId%>">
-									<div id="observation<%=globalNoteId%>" style="float: right; margin-right: 3px;">
-										<i>
-											Encounter Date:&nbsp;
+									<div id="observation<%=globalNoteId%>" style="font-size: 11px; float: right; margin-right: 3px;">
+											<bean:message key="oscarEncounter.encounterDate.title"/>:&nbsp;
 											<span id="obs<%=globalNoteId%>"><%=DateUtils.getDate(note.getObservationDate(), dateFormat, request.getLocale())%></span>&nbsp;
 											<bean:message key="oscarEncounter.noteRev.title" />
 											<%
@@ -942,12 +948,11 @@ try
 													<%
 												}
 											%>
-										</i>
 									</div>
 
 
 
-									<div>
+									<div style="font-size: 11px;">
 										<span style="float: left;"><bean:message key="oscarEncounter.editors.title" />:</span>
 										<ul style="list-style: none inside none; margin: 0px;">
 											<%
@@ -976,18 +981,20 @@ try
 
 
 									<%
-									if(facility.isEnableEncounterTransportationTime()) {
+									if(facility.isEnableEncounterTime() || (program != null && program.isEnableEncounterTime())) {
 									%>
-									<div style="clear: right; margin-right: 3px; float: right;">Encounter Transportation Time (hour:min):&nbsp;<span id="encTransTime<%=note.getNoteId()%>"><%=note.getEncounterTransportationTime()%></span></div>
-									<%} %>
-									<%if(facility.isEnableEncounterTime()) { %>
-									<div style="clear: left; margin-left: 3px;float: left;">Encounter Time (hour:min):&nbsp;<span id="encTime<%=note.getNoteId()%>"><%=note.getEncounterTime()%></span></div>
+									<div style="font-size: 11px; clear: right; margin-right: 3px; float: right;"><bean:message key="oscarEncounter.encounterTime.title"/>:&nbsp;<span id="encTime<%=note.getNoteId()%>"><%=note.getEncounterTime()%></span></div>
+									<% } %>
+									<%
+									if(facility.isEnableEncounterTransportationTime() || (program != null && program.isEnableEncounterTransportationTime())) {
+									%>
+									<div style="font-size: 11px; clear: right; margin-right: 3px; float: right;"><bean:message key="oscarEncounter.encounterTransportation.title"/>:&nbsp;<span id="encTransTime<%=note.getNoteId()%>"><%=note.getEncounterTransportationTime()%></span></div>
 									<% } %>
 
-									<div style="clear: right; margin-right: 3px; float: right;">Enc Type:&nbsp;<span id="encType<%=note.getNoteId()%>"><%=note.getEncounterType().equals("")?"":"&quot;" + note.getEncounterType() + "&quot;"%></span></div>
+									<div style="font-size: 11px; clear: right; margin-right: 3px; float: right;"><bean:message key="oscarEncounter.encType.title"/>:&nbsp;<span id="encType<%=note.getNoteId()%>"><%=note.getEncounterType().equals("")?"":"&quot;" + note.getEncounterType() + "&quot;"%></span></div>
 
 
-									<div style="display: block;">
+									<div style="display: block; font-size: 11px;">
 										<span style="float: left;"><bean:message key="oscarEncounter.assignedIssues.title" /></span>
 										<%
 											ArrayList<String> issueDescriptions = note.getIssueDescriptions();
@@ -1102,35 +1109,39 @@ try
 
     }
 </script>
-			<input tabindex="09" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/group-gnote.png"/>" id="groupNoteImg" onclick="Event.stop(event);return selectGroup();" title='<bean:message key="oscarEncounter.Index.btnGroupNote"/>'>&nbsp;
+			<input tabindex="16" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/group-gnote.png"/>" id="groupNoteImg" onclick="Event.stop(event);return selectGroup();" title='<bean:message key="oscarEncounter.Index.btnGroupNote"/>'>&nbsp;
 		<%  } %>
-			<input tabindex="10" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/media-floppy.png"/>" id="saveImg" onclick="Event.stop(event);return saveNoteAjax('save', 'list');" title='<bean:message key="oscarEncounter.Index.btnSave"/>'>&nbsp;
-			<input tabindex="11" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/document-new.png"/>" id="newNoteImg" onclick="newNote(event); return false;" title='<bean:message key="oscarEncounter.Index.btnNew"/>'>&nbsp;
-			<input tabindex="12" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" id="signSaveImg" onclick="document.forms['caseManagementEntryForm'].sign.value='on';Event.stop(event);return savePage('saveAndExit', '');" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>'>&nbsp;
-			<input tabindex="13" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/verify-sign.png"/>" id="signVerifyImg" onclick="document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].verify.value='on';Event.stop(event);return savePage('saveAndExit', '');" title='<bean:message key="oscarEncounter.Index.btnSign"/>'>&nbsp;
+			<input tabindex="17" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/media-floppy.png"/>" id="saveImg" onclick="Event.stop(event);return saveNoteAjax('save', 'list');" title='<bean:message key="oscarEncounter.Index.btnSave"/>'>&nbsp;
+			<input tabindex="18" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/document-new.png"/>" id="newNoteImg" onclick="newNote(event); return false;" title='<bean:message key="oscarEncounter.Index.btnNew"/>'>&nbsp;
+			<input tabindex="19" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" id="signSaveImg" onclick="document.forms['caseManagementEntryForm'].sign.value='on';Event.stop(event);return savePage('saveAndExit', '');" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>'>&nbsp;
+			<input tabindex="20" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/verify-sign.png"/>" id="signVerifyImg" onclick="document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].verify.value='on';Event.stop(event);return savePage('saveAndExit', '');" title='<bean:message key="oscarEncounter.Index.btnSign"/>'>&nbsp;
 			<%
 				if(bean.source == null)  {
 				%>
-					<input tabindex="13" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/dollar-sign-icon.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].toBill.value='true';Event.stop(event);return savePage('saveAndExit', '');" title='<bean:message key="oscarEncounter.Index.btnBill"/>'>&nbsp;
+					<input tabindex="21" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/dollar-sign-icon.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].toBill.value='true';Event.stop(event);return savePage('saveAndExit', '');" title='<bean:message key="oscarEncounter.Index.btnBill"/>'>&nbsp;
 				<%
 				}
 			%>
 
 			<c:if test="${sessionScope.passwordEnabled=='true'}">
-				<input tabindex="14" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/lock-note.png"/>" onclick="return toggleNotePasswd();" title='<bean:message key="oscarEncounter.Index.btnLock"/>'>&nbsp;
+				<input tabindex="22" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/lock-note.png"/>" onclick="return toggleNotePasswd();" title='<bean:message key="oscarEncounter.Index.btnLock"/>'>&nbsp;
 	    	</c:if>
 
-	    	<input tabindex="15" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" onclick='closeEnc(event);return false;' title='<bean:message key="global.btnExit"/>'>&nbsp;
-	    	<input tabindex="16" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/document-print.png"/>" onclick="return printSetup(event);" title='<bean:message key="oscarEncounter.Index.btnPrint"/>' id="imgPrintEncounter">
+	    	<input tabindex="23" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" onclick='closeEnc(event);return false;' title='<bean:message key="global.btnExit"/>'>&nbsp;
+	    	<input tabindex="24" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/document-print.png"/>" onclick="return printSetup(event);" title='<bean:message key="oscarEncounter.Index.btnPrint"/>' id="imgPrintEncounter">
     	</span>
     	<div id="assignIssueSection">
-	    	<input type='image' id='toggleIssue' onclick="return showIssues(event);" src="<c:out value="${ctx}/oscarEncounter/graphics/issues.png"/>" title='<bean:message key="oscarEncounter.Index.btnDisplayIssues"/>'>&nbsp;
-	    	<input tabindex="8" type="text" id="issueAutocomplete" name="issueSearch" style="z-index: 2;" onkeypress="return submitIssue(event);" size="25">&nbsp; <input tabindex="9" type="button" id="asgnIssues" value="<bean:message key="oscarEncounter.assign.title"/>">
+	    	<!-- input type='image' id='toggleIssue' onclick="return showIssues(event);" src="<c:out value="${ctx}/oscarEncounter/graphics/issues.png"/>" title='<bean:message key="oscarEncounter.Index.btnDisplayIssues"/>'>&nbsp; -->
+	    	<input tabindex="8" type="text" id="issueAutocomplete" name="issueSearch" style="z-index: 2;" onkeypress="return submitIssue(event);" size="30">&nbsp; <input tabindex="9" type="button" id="asgnIssues" value="<bean:message key="oscarEncounter.assign.title"/>">
 	    	<span id="busy" style="display: none">
 	    		<img style="position: absolute;" src="<c:out value="${ctx}/oscarEncounter/graphics/busy.gif"/>" alt="<bean:message key="oscarEncounter.Index.btnWorking" />">
 	    	</span>
     	</div>
-    	<button type="button" onclick="javascript:spellCheck();">Spell Check</button>
+    	<div style="padding-top: 3px;">
+    		<button type="button" onclick="return showIssues(event);"><bean:message key="oscarEncounter.Index.btnDisplayIssues"/></button> &nbsp;
+    		<button type="button" onclick="javascript:spellCheck();">Spell Check</button> &nbsp;
+    		<button type="button" onclick="javascript:toggleFullViewForAll(this.form);"><bean:message key="eFormGenerator.expandAll"/> <bean:message key="Appointment.formNotes"/></button>
+    	</div>
     </div>
 
 </div>

@@ -555,6 +555,7 @@
         filterError = "<bean:message key="oscarEncounter.filterError.msg"/>";
         pastObservationDateError = "<bean:message key="oscarEncounter.pastObservationDateError.msg"/>";
         encTimeError = "<bean:message key="oscarEncounter.encounterTimeError.msg"/>";
+        encMinError = "<bean:message key="oscarEncounter.encounterMinuteError.msg"/>";
         assignIssueError = "<bean:message key="oscarEncounter.assignIssueError.msg"/>";
         assignObservationDateError = "<bean:message key="oscarEncounter.assignObservationDateError.msg"/>";
         assignEncTypeError = "<bean:message key="oscarEncounter.assignEncTypeError.msg"/>";
