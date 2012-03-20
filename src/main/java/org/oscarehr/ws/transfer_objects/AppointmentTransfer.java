@@ -200,8 +200,7 @@ public final class AppointmentTransfer {
 		this.urgency = urgency;
 	}
 
-	public Appointment toAppointment() {
-		Appointment appointment = new Appointment();
+	public Appointment copyTo(Appointment appointment) {
 
 		String[] ignored = { "id", "appointmentDate", "startTime", "endTime", "createDateTime", "updateDateTime", "creator", "lastUpdateUser", "creatorSecurityId" };
 		BeanUtils.copyProperties(this, appointment, ignored);

@@ -151,4 +151,33 @@ public class ScheduleManager {
 		//--- log action ---
 		LogAction.addLogSynchronous("AppointmentManager.addAppointment", appointment.toString());
     }
+
+	public List<Appointment> getAppointmentsForPatient(Integer demographicId, int startIndex, int itemsToReturn) {
+		List<Appointment> results=oscarAppointmentDao.findByDemographicId(demographicId, startIndex, itemsToReturn);
+		
+		//--- log action ---
+		LogAction.addLogSynchronous("AppointmentManager.getAppointmentsForPatient", "appointments for demographicId=" + demographicId + ", startIndex=" + startIndex + ", itemsToReturn=" + itemsToReturn);
+
+		return(results);
+    }
+
+	public Appointment getAppointment(Integer appointmentId) {
+		Appointment result=oscarAppointmentDao.find(appointmentId);
+		
+		//--- log action ---
+		LogAction.addLogSynchronous("AppointmentManager.getAppointment", "appointmentId=" + appointmentId);
+		
+		return(result);
+    }
+
+	public void updateAppointment(Appointment appointment) {
+		//--- log action ---
+		LogAction.addLogSynchronous("AppointmentManager.updateAppointment", "appointmentId=" + appointment.getId());
+	    
+		// generate archive object
+		oscarAppointmentDao.archiveAppointment(appointment.getId());
+		
+		// save new changes
+		oscarAppointmentDao.merge(appointment);
+    }
 }
