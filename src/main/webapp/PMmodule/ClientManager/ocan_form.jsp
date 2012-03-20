@@ -2824,7 +2824,7 @@ This information is collected from a variety of sources, including self-report, 
 					
 					
 		<tr>
-			<td colspan="2">11. Safefy to others</td>
+			<td colspan="2">11. Safety to others</td>
 		</tr>			
 
 		<tr>
