@@ -31,7 +31,7 @@
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 
 <%
-				Integer noteId = (Integer)request.getAttribute("noteId");
+				Integer noteId = Integer.parseInt(request.getParameter("noteId"));
 				String aptNo = request.getParameter("appointmentNo");
 				String demographicNo = request.getParameter("demographicNo");
 			%>         
@@ -69,6 +69,10 @@ function popupPageOne(varpage,name,height,width) {
 
 <span style="float: left;">
 <script>
+function saveEyeformNoteNoGenerate() {
+	saveFlags();
+}
+
 function saveEyeformNote() {
 	//alert("save function called for eyeform - " + savedNoteId);
 	//do the ajax call to save form values 
@@ -155,7 +159,7 @@ function saveFlags() {
 }
 </style>
 
-<span note_addon="saveEyeformNote"></span>
+<span note_addon="saveEyeformNoteNoGenerate"></span>
 <span><input type="button" onclick="popupPageOne('<c:out value="${ctx}"/>/eyeform/EyeformPlan.do?method=form&amp;followup.demographicNo=<%=demographicNo %>&amp;noteId=<%=noteId%>&amp;followup.appointmentNo=<%=aptNo%>','eyeFormPlan',600,1200);" value="Arrange Plan"/></span>
 
 <table width="100%" class="plan">
