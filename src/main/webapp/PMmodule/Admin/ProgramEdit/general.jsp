@@ -63,6 +63,8 @@ Program p = (Program)request.getAttribute("oldProgram");
 <input type="hidden" name="old_mentalHealth" value=<%if(p!=null) { %> "<%=p.isMentalHealth() %>" <%}else{ %> "" <%} %> />
 <input type="hidden" name="old_housing" value=<%if(p!=null) { %> "<%=p.isHousing() %>" <%}else{ %> "" <%} %> />
 <input type="hidden" name="old_facility_id" value=<%if(p!=null) { %> "<%=p.getFacilityId() %>" <%}else{ %> "" <%} %> />
+<input type="hidden" name="old_enableEncounterTime" value=<%if(p!=null) { %> "<%=p.isEnableEncounterTime() %>" <%}else{ %> "" <%} %> />
+<input type="hidden" name="old_enableEncounterTransportationTime" value=<%if(p!=null) { %> "<%=p.isEnableEncounterTransportationTime() %>" <%}else{ %> "" <%} %> />
 
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
@@ -246,6 +248,14 @@ Program p = (Program)request.getAttribute("oldProgram");
 	<tr class="b">
 		<td width="20%">Maximum Age (inclusive):</td>
 		<td><html:text property="program.ageMax" size="8" maxlength="8" /></td>
+	</tr>
+	<tr class="b">
+		<td width="20%">Enable Mandatory Encounter Time:</td>
+		<td><html:checkbox property="program.enableEncounterTime" /></td>
+	</tr>
+	<tr class="b">
+		<td width="20%">Enable Mandatory Transportation Time:</td>
+		<td><html:checkbox property="program.enableEncounterTransportationTime" /></td>
 	</tr>
 	<tr>
 		<td colspan="2"><input type="button" value="Save" onclick="return save()" /> <html:cancel /></td>
