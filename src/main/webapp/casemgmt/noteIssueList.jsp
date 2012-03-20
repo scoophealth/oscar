@@ -26,6 +26,9 @@
 --%><%@ page
 	import="org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean, org.oscarehr.common.model.Facility"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="org.oscarehr.PMmodule.model.Program"%>
+<%@page import="org.oscarehr.PMmodule.dao.ProgramDao"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
 <%@ include file="/casemgmt/taglibs.jsp"%>
 
 <c:set var="ctx" value="${pageContext.request.contextPath}"
@@ -71,22 +74,22 @@
 </nested:notEmpty>
 </div>
 
-<div><span style="float: right;">
+<div style="margin: 0px 3px 0px 0px; font-size: 11px;"><span style="float: right;">
 <nested:notEmpty name="ajaxsave">
-	<i><bean:message key="oscarEncounter.encounterDate.title"/>:&nbsp;<span
+	<bean:message key="oscarEncounter.encounterDate.title"/>:&nbsp;<span
 		id="obs<nested:write name="caseManagementEntryForm" property="caseNote.id" />">
 	<nested:write name="caseManagementEntryForm"
-		property="caseNote.observation_date" format="dd-MMM-yyyy H:mm" /> </span>&nbsp;
+		property="caseNote.observation_date" format="dd-MMM-yyyy H:mm" /></span>&nbsp;
 	<bean:message key="oscarEncounter.noteRev.title"/><a href="#"
 		onclick="return showHistory('<nested:write name="caseManagementEntryForm" property="caseNote.id" />', event);"><nested:write
-		name="caseManagementEntryForm" property="caseNote.revision" /></a></i>
+		name="caseManagementEntryForm" property="caseNote.revision" /></a>
 </nested:notEmpty>
 <nested:empty name="ajaxsave">
-	<i><bean:message key="oscarEncounter.encounterDate.title"/>:</i>&nbsp;<img src="<c:out value="${ctx}/images/cal.gif" />"
+	<bean:message key="oscarEncounter.encounterDate.title"/>:&nbsp;<img src="<c:out value="${ctx}/images/cal.gif" />"
 		id="observationDate_cal" alt="calendar">&nbsp;<input type="text"
 		id="observationDate" name="observation_date"
 		ondblclick="this.value='';"
-		style="font-style: italic; border: none; width: 140px;" readonly
+		style="border: none; width: 140px;" readonly
 		value="<nested:write name="caseManagementEntryForm" property="caseNote.observation_date" format="dd-MMM-yyyy H:mm" />">
                 rev<a href="#"
 		onclick="return showHistory('<nested:write name="caseManagementEntryForm" property="caseNote.id" />', event);"><nested:write
@@ -94,7 +97,7 @@
 </nested:empty>
 </div>
 
-<div><span style="float: left;"><bean:message key="oscarEncounter.editors.title"/>:</span> <nested:equal
+<div style="margin: 5px 0px 0px 3px; font-size: 11px;"><span style="float: left;"><bean:message key="oscarEncounter.editors.title"/>:</span> <nested:equal
 	name="newNote" value="false">
 	<ul style="list-style: none inside none; margin: 0px;">
 		<nested:iterate indexId="eIdx" id="editor" property="caseNote.editors"
@@ -119,34 +122,17 @@
 
 <%
 Facility currentFacility = org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility;
-if(currentFacility.isEnableEncounterTransportationTime()) {%>
-<div style="clear: right; margin-right: 3px; margin: 0px;float: right;"><span>
-<nested:notEmpty name="ajaxsave">
-	<i><bean:message key="oscarEncounter.encounterTransportation.title"/>:&nbsp;
-	<span id="encTransTimeHr<nested:write name="caseManagementEntryForm" property="caseNote.id" />"	>
-		<nested:write name="caseManagementEntryForm" property="caseNote.hourOfEncTransportationTime" /> 
-	</span>:
-	<span id="encTransTimeMin<nested:write name="caseManagementEntryForm" property="caseNote.id" />"	>
-		<nested:write name="caseManagementEntryForm" property="caseNote.minuteOfEncTransportationTime" /> 
-	</span>	
-</nested:notEmpty>
-<nested:empty name="ajaxsave">
-	<i><bean:message key="oscarEncounter.encounterTransportation.title"/>:</i>&nbsp;
-	<input type="text" id="hourOfEncTransportationTime" name="hourOfEncTransportationTime" 	maxlength="2" 	
-		style="font-style: italic; border: none; width: 20px;" 
-		value="<nested:write name="caseManagementEntryForm" property="caseNote.hourOfEncTransportationTime"/>">:
-	<input type="text" id="minuteOfEncTransportationTime" name="minuteOfEncTransportationTime" 	maxlength="2" 	
-		style="font-style: italic; border: none; width: 20px;" value="<nested:write name="caseManagementEntryForm" property="caseNote.minuteOfEncTransportationTime"/>">	
-</nested:empty>
-</span></div>
-<%} %>
-     
- <% 
-if(currentFacility.isEnableEncounterTime()) { 
+String programId = (String)request.getSession().getAttribute("case_program_id");
+Program currentProgram = null;
+if (programId != null) {
+    ProgramDao programDao=(ProgramDao)SpringUtils.getBean("programDao");
+    currentProgram = programDao.getProgram(Integer.valueOf(programId));
+}
+if(currentFacility.isEnableEncounterTime() || (currentProgram != null && currentProgram.isEnableEncounterTime())) {  
 %>
-<div style="clear: left; margin-left: 3px; margin: 0px;float: left;"><span>
+<div style="clear: right; margin: 0px 30px 0px 0px; font-size: 11px; float: right;"><span>
 <nested:notEmpty name="ajaxsave">
-	<i><bean:message key="oscarEncounter.encounterTime.title"/>:&nbsp;
+	<bean:message key="oscarEncounter.encounterTime.title"/>:&nbsp;
 	<span id="encTimeHr<nested:write name="caseManagementEntryForm" property="caseNote.id" />"	>
 		<nested:write name="caseManagementEntryForm" property="caseNote.hourOfEncounterTime" /> 
 	</span>:
@@ -155,12 +141,36 @@ if(currentFacility.isEnableEncounterTime()) {
 	</span>	
 </nested:notEmpty>
 <nested:empty name="ajaxsave">
-	<i><bean:message key="oscarEncounter.encounterTime.title"/>:</i>&nbsp;
-	<input type="text" id="hourOfEncounterTime" name="hourOfEncounterTime" maxlength="2"	
-		style="font-style: italic; border: none; width: 20px;" 
+	<bean:message key="oscarEncounter.encounterTime.title"/>:&nbsp;
+	<input type="text" tabindex="11" id="hourOfEncounterTime" name="hourOfEncounterTime" maxlength="2"	
+		style="border: none; width: 20px;" 
 		value="<nested:write name="caseManagementEntryForm" property="caseNote.hourOfEncounterTime"/>">:
-	<input type="text" id="minuteOfEncounterTime" name="minuteOfEncounterTime" maxlength="2"	
-		style="font-style: italic; border: none; width: 20px;" value="<nested:write name="caseManagementEntryForm" property="caseNote.minuteOfEncounterTime"/>">	
+	<input type="text" tabindex="12" id="minuteOfEncounterTime" name="minuteOfEncounterTime" maxlength="2"	
+		style="border: none; width: 20px;" value="<nested:write name="caseManagementEntryForm" property="caseNote.minuteOfEncounterTime"/>">	
+</nested:empty>
+</span></div>
+<%}%>
+
+<%
+if(currentFacility.isEnableEncounterTransportationTime() || (currentProgram != null && currentProgram.isEnableEncounterTransportationTime())) {
+%>
+<div style="clear: right; margin: 0px 30px 0px 0px; font-size: 11px; float: right;"><span>
+<nested:notEmpty name="ajaxsave">
+	<bean:message key="oscarEncounter.encounterTransportation.title"/>:&nbsp;
+	<span id="encTransTimeHr<nested:write name="caseManagementEntryForm" property="caseNote.id" />"	>
+		<nested:write name="caseManagementEntryForm" property="caseNote.hourOfEncTransportationTime" /> 
+	</span>:
+	<span id="encTransTimeMin<nested:write name="caseManagementEntryForm" property="caseNote.id" />"	>
+		<nested:write name="caseManagementEntryForm" property="caseNote.minuteOfEncTransportationTime" /> 
+	</span>	
+</nested:notEmpty>
+<nested:empty name="ajaxsave">
+	<bean:message key="oscarEncounter.encounterTransportation.title"/>:&nbsp;
+	<input type="text" tabindex="13" id="hourOfEncTransportationTime" name="hourOfEncTransportationTime" 	maxlength="2" 	
+		style="border: none; width: 20px;" 
+		value="<nested:write name="caseManagementEntryForm" property="caseNote.hourOfEncTransportationTime"/>">:
+	<input type="text" tabindex="14" id="minuteOfEncTransportationTime" name="minuteOfEncTransportationTime" 	maxlength="2" 	
+		style="border: none; width: 20px;" value="<nested:write name="caseManagementEntryForm" property="caseNote.minuteOfEncTransportationTime"/>">	
 </nested:empty>
 </span></div>
 <%}%>
@@ -170,9 +180,9 @@ if(currentFacility.isEnableEncounterTime()) {
 <%
 	encSelect += noteIndex;
 %>
-<div style="clear: right; margin-right: 3px; margin: 0px; float: right;"><bean:message key="oscarEncounter.encType.title"/>
-:&nbsp;<span id="encType<%=noteIndex%>"> <nested:empty
-	name="ajaxsave">
+<div style="clear: right; margin: 0px 3px 0px 0px; font-size: 11px; float: right;"><bean:message key="oscarEncounter.encType.title"/>:&nbsp;
+<span id="encType<%=noteIndex%>">
+	<nested:empty name="ajaxsave">
 	<html:select styleId="<%=encSelect%>" styleClass="encTypeCombo"
 		name="caseManagementEntryForm" property="caseNote.encounter_type">
 		<html:option value=""></html:option>
@@ -208,7 +218,7 @@ if(currentFacility.isEnableEncounterTime()) {
         <div>&nbsp;</div>
     </nested:equal> --%>
 <nested:greaterThan name="numIssues" value="0">
-	<div style="display: block;"><span style="float: left;"><bean:message key="oscarEncounter.assignedIssues.title"/>
+	<div style="margin: 0px 0px 0px 3px; font-size: 11px;"><span style="float: left;"><bean:message key="oscarEncounter.assignedIssues.title"/>
 	</span>
 	<ul style="float: left; list-style: circle inside; margin: 0px;">
 		<nested:iterate id="noteIssue" property="caseNote.issues"
@@ -226,9 +236,9 @@ if(currentFacility.isEnableEncounterTime()) {
 </div>
 
 <div id="noteIssues"
-	style="margin: 0px; background-color: #CCCCFF; font-size: 8px; display: none;">
+	style="margin: 0px; background-color: #CCCCFF; font-size: 11px; display: none;">
 <b><bean:message key="oscarEncounter.referenceIssues.title"/></b>
-<table id="setIssueList" style="font-size: 8px;">
+<table id="setIssueList" style="font-size: 11px;">
 	<nested:iterate indexId="ind" id="issueCheckList" property="issueCheckList" name="caseManagementEntryForm" type="org.oscarehr.casemgmt.web.CheckBoxBean">
 		<%
 			String winame = "window" + issueCheckList.getIssueDisplay().getDescription();
@@ -244,13 +254,12 @@ if(currentFacility.isEnableEncounterTime()) {
 			%>
 
 
-			<td style="width: 50%; font-size: 8px; background-color: #CCCCFF;">
+			<td style="width: 50%; font-size: 11px; background-color: #CCCCFF;">
 				<%
 					String submitString = "this.form.method.value='issueChange';";
 					submitString = submitString + "this.form.lineId.value=" + "'" + ind.intValue() + "'; return ajaxUpdateIssues('issueChange', $('noteIssues').up().id);";
 					String id = "noteIssue" + ind;
 					org.oscarehr.casemgmt.web.CheckBoxBean cbb = (org.oscarehr.casemgmt.web.CheckBoxBean)pageContext.getAttribute("issueCheckList");
-					String programId = (String)request.getSession().getAttribute("case_program_id");
 					boolean writeAccess = cbb.getIssueDisplay().isWriteAccess();
 					boolean disabled = !writeAccess;
 				%> 
