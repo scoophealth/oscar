@@ -1,6 +1,7 @@
 package org.oscarehr.eyeform.web;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.apache.struts.util.LabelValueBean;
 import org.apache.struts.validator.DynaValidatorForm;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.BillingServiceDao;
@@ -21,6 +23,19 @@ import org.oscarehr.util.SpringUtils;
 
 
 public class MacroAction extends DispatchAction {
+
+	public static List<LabelValueBean> sliCodeList = new ArrayList<LabelValueBean>();
+	static {
+		sliCodeList.add(new LabelValueBean("Not Applicable","NA"));
+		sliCodeList.add(new LabelValueBean("HDS | Hospital Day Surgery","HDS"));
+		sliCodeList.add(new LabelValueBean("HED | Hospital Emergency Department","HED"));
+		sliCodeList.add(new LabelValueBean("HIP | Hospital In-Patient","HIP"));
+		sliCodeList.add(new LabelValueBean("HOP | Hospital Out-Patient","HOP"));
+		sliCodeList.add(new LabelValueBean("HRP | Hospital Referred Patient","HRP"));
+		sliCodeList.add(new LabelValueBean("IHF | Independant Health Facility","IHF"));
+		sliCodeList.add(new LabelValueBean("OFF | Office of community physician","OFF"));
+		sliCodeList.add(new LabelValueBean("OTN | Ontario Telemedicine Network","OTN"));
+	}
 
 	MacroDao dao = (MacroDao)SpringUtils.getBean("MacroDAO");
 	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");

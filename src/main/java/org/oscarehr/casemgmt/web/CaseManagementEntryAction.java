@@ -2811,6 +2811,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 				Demographic demo = demographicDao.getClientByDemographicNo(Integer.parseInt(cform.getDemographicNo()));
 				mockReq.setParameter("xml_billtype", macro.getBillingBilltype());
+				if(macro.getSliCode() == null || macro.getSliCode().equals("NA")) {
+					String value = OscarProperties.getInstance().getProperty("clinic_no","");
+					mockReq.setParameter("xml_slicode", value);
+				} else {
+					mockReq.setParameter("xml_slicode", macro.getSliCode());
+				}
 				// mockReq.addParameter("xml_billtype", "ODP | Bill OHIP");
 				mockReq.addParameter("hin", demo.getHin());
 				mockReq.addParameter("ver", demo.getVer());

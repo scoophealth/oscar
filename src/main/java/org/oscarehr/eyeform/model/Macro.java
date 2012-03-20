@@ -21,7 +21,7 @@ public class Macro extends AbstractModel<Integer>{
 	private String impression;
 	private short followupNo;
 	private String followupUnit;
-	
+
 	@Column(name="followupDoctor")
 	private String followupDoctorId;
 	private String followupReason;
@@ -40,15 +40,15 @@ public class Macro extends AbstractModel<Integer>{
 	private String billingRefund;
 	private String billingGst;
 	private String testRecords;
-	
+
 	private String statFlag;
 	private String optFlag;
 	private String dischargeFlag;
 	@Column(name="ticklerStaff")
 	private String ticklerRecipient;
-	
-	
-	
+
+	private String sliCode;
+
 	public String getTicklerRecipient() {
 		return ticklerRecipient;
 	}
@@ -79,7 +79,7 @@ public class Macro extends AbstractModel<Integer>{
 	public void setFollowupDoctorId(String followupDoctorId) {
 		this.followupDoctorId = followupDoctorId;
 	}
-	
+
 	public Integer getId() {
 		return id;
 	}
@@ -213,5 +213,13 @@ public class Macro extends AbstractModel<Integer>{
 	public void setTestRecords(String testRecords) {
 		this.testRecords = testRecords;
 	}
-	
+	public String getSliCode() {
+    	return sliCode;
+    }
+	public void setSliCode(String sliCode) {
+    	this.sliCode = sliCode;
+    }
+
+
+
 }
