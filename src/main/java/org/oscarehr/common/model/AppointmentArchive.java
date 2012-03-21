@@ -73,10 +73,8 @@ public class AppointmentArchive extends AbstractModel<Integer>  {
 	@Column(name = "imported_status")
 	private String importedStatus;
 	private String urgency;
-
-
-
-
+	private Integer creatorSecurityId;	
+		
 	public String getProviderNo() {
 		return providerNo;
 	}
@@ -244,6 +242,14 @@ public class AppointmentArchive extends AbstractModel<Integer>  {
 	public AppointmentArchive(Integer id) {
 		this.id = id;
 	}
+
+	public Integer getCreatorSecurityId() {
+    	return (creatorSecurityId);
+    }
+
+	public void setCreatorSecurityId(Integer creatorSecurityId) {
+    	this.creatorSecurityId = creatorSecurityId;
+    }
 
 	@Override
     public Integer getId() {
