@@ -314,6 +314,9 @@ public class CaisiIntegratorManager {
 		return (hnrWs.setHnrClientData(hnrClient));
 	}
 
+	/**
+	 * You can not determine which facility "you are" from the facility listing. You must use this method to determine which facility you authenticated as.
+	 */
 	public static CachedFacility getCurrentRemoteFacility() throws MalformedURLException {
 		FacilityWs facilityWs = getFacilityWs();
 		CachedFacility cachedFacility = facilityWs.getMyFacility();
