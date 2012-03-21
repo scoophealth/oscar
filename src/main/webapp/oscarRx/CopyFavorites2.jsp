@@ -162,7 +162,7 @@
             style = "style='background-color:#F5F5F5'";
                             %>
                             <tr><td>
-                                    <input type="hidden" name="countFavorites" value="<%=count%>"
+                                    <input type="hidden" name="countFavorites" value="<%=count%>" />
                                            <input type="checkbox" name="selected<%=i%>" value="ON" />   Check off this favorite to copy
                             </td></tr>
                             <tr class=tblRow <%= style%> name="record<%= i%>Line1">
