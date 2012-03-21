@@ -7,8 +7,10 @@ import javax.persistence.Query;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.AppointmentArchive;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.util.MiscUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -49,20 +51,18 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		return rs;
 	}
 
-	/*
 	public void archiveAppointment(int appointmentNo) {
 		Appointment appointment = this.find(appointmentNo);
 		if (appointment != null) {
 			AppointmentArchive apptArchive = new AppointmentArchive(appointment.getId());
 			try {
-				BeanUtils.copyProperties(apptArchive, appointment);
+				BeanUtils.copyProperties(appointment, apptArchive);
 			} catch (Exception e) {
 				logger.error("Error copying values to archive bean", e);
 			}
 			entityManager.persist(apptArchive);
 		}
 	}
-*/
 
 	public List<Appointment> getAllByDemographicNo(Integer demographicNo) {
 		String sql = "SELECT a FROM Appointment a WHERE a.demographicNo = " + demographicNo + " ORDER BY a.id";
@@ -164,6 +164,23 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		query.setParameter(8, createDateTime);
 		query.setParameter(9, creator);
 		query.setParameter(10, demographicNo);
+
+		@SuppressWarnings("unchecked")
+		List<Appointment> rs = query.getResultList();
+
+		return rs;
+	}
+	
+	/**
+	 * @return return results ordered by appointmentDate, most recent first
+	 */
+	public List<Appointment> findByDemographicId(Integer demographicId, int startIndex, int itemsToReturn) {
+		String sql = "SELECT a FROM Appointment a WHERE a.demographicNo = ?1 ORDER BY a.appointmentDate desc";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, demographicId);
+		query.setFirstResult(startIndex);
+		query.setMaxResults(itemsToReturn);
+
 		@SuppressWarnings("unchecked")
 		List<Appointment> rs = query.getResultList();
 

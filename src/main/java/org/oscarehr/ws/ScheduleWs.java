@@ -29,9 +29,21 @@ public class ScheduleWs extends AbstractWs {
 		return(ScheduleTemplateCodeTransfer.toTransfer(scheduleTemplateCodes));
 	}
 
-	public AppointmentTransfer[] getAppointments(String providerNo, Calendar date)
+	public AppointmentTransfer getAppointment(Integer appointmentId)
+	{
+		Appointment appointment=scheduleManager.getAppointment(appointmentId);
+		return(AppointmentTransfer.toTransfer(appointment));
+	}
+
+	public AppointmentTransfer[] getAppointmentsForProvider(String providerNo, Calendar date)
 	{
 		List<Appointment> appointments=scheduleManager.getDayAppointments(providerNo, date);
+		return(AppointmentTransfer.toTransfer(appointments));
+	}
+	
+	public AppointmentTransfer[] getAppointmentsForPatient(Integer demographicId, int startIndex, int itemsToReturn)
+	{
+		List<Appointment> appointments=scheduleManager.getAppointmentsForPatient(demographicId, startIndex, itemsToReturn);
 		return(AppointmentTransfer.toTransfer(appointments));
 	}
 	
@@ -53,8 +65,18 @@ public class ScheduleWs extends AbstractWs {
 	 */
 	public Integer addAppointment(AppointmentTransfer appointmentTransfer)
 	{
-		Appointment appointment=appointmentTransfer.toAppointment();
+		Appointment appointment=new Appointment();
+		appointmentTransfer.copyTo(appointment);
 		scheduleManager.addAppointment(appointment);
 		return(appointment.getId());
+	}
+	
+	
+	public void updateAppointment(AppointmentTransfer appointmentTransfer)
+	{
+		Appointment appointment=scheduleManager.getAppointment(appointmentTransfer.getId());
+		
+		appointmentTransfer.copyTo(appointment);
+		scheduleManager.updateAppointment(appointment);
 	}
 }
