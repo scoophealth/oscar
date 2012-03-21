@@ -8214,7 +8214,8 @@ CREATE TABLE appointmentArchive (
   creator varchar(50),
   lastupdateuser varchar(6),
   remarks varchar(50),
-  urgency varchar(30)
+  urgency varchar(30),
+  creatorSecurityId int
 );
 
 create table ProviderPreferenceAppointmentScreenForm(providerNo varchar(6) not null, appointmentScreenForm varchar(128) not null);
