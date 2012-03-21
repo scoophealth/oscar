@@ -47,6 +47,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.web.formbean.ClientListsReportFormBean;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.common.model.Demographic;
@@ -261,8 +262,7 @@ public class ClientDao extends HibernateDaoSupport {
 		}
 
 		String clientNo = bean.getDemographicNo();
-		if (clientNo != null && !"".equals(clientNo))
-		{
+		if (clientNo != null && !"".equals(clientNo)) {
 			if (com.quatro.util.Utility.IsInt(clientNo) ) {
 				criteria.add(Expression.eq("DemographicNo", Integer.valueOf(clientNo).intValue()));
 				results = criteria.list();
@@ -331,17 +331,18 @@ public class ClientDao extends HibernateDaoSupport {
 			criteria.add(Expression.eq("Ver", bean.getHealthCardVersion()));
 		}
 
+		if (bean.getChartNo() != null && bean.getChartNo().length() > 0) {
+			criteria.add(Expression.like("ChartNo", "%"+bean.getChartNo()+"%"));
+		}
 
 		if(!bean.isSearchOutsideDomain()) {
+			// program domain limited search
+			if(bean.getProgramDomain() == null) {
+				bean.setProgramDomain(new ArrayList<ProgramProvider>());
+			}
 
-// -------- start splice from 1.31 for 2270307
-		DetachedCriteria subq = DetachedCriteria.forClass(Admission.class)
-	    .setProjection(Property.forName("ClientId") );
-		/*
-		// this code seems not to work properly... Bug 2270307 encapsulates this.
-		if (bean.getProgramDomain() != null && !bean.getProgramDomain().isEmpty() && !bean.isSearchOutsideDomain()) {
+			DetachedCriteria subq = DetachedCriteria.forClass(Admission.class).setProjection(Property.forName("ClientId") );
 
-			// program domain search
 			StringBuilder programIds = new StringBuilder();
 			for (int x = 0; x < bean.getProgramDomain().size(); x++) {
 				ProgramProvider p = (ProgramProvider)bean.getProgramDomain().get(x);
@@ -351,71 +352,52 @@ public class ClientDao extends HibernateDaoSupport {
 				programIds.append(p.getProgramId());
 			}
 
-			String [] pIds ;
-			if(bean.getBedProgramId()==null || bean.getBedProgramId().length()==0) {
-				pIds = programIds.toString().split(",");
-			} else {
-				pIds = bean.getBedProgramId().split(",");
-			}
+			String [] pIds = {};
+			pIds = programIds.toString().split(",");
+			logger.info("programIds is " + programIds.toString());
 
+			if(programIds.length() == 0) {
+				logger.info("provider not staff in any program, ie. can't see ANYONE.");
+				//provider not staff in any program, ie. can't see ANYONE.
+				return new ArrayList<Demographic>();
+			}
 			Integer [] pIdi = new Integer[pIds.length];
 			for(int i=0;i<pIds.length;i++)
 			{
 				pIdi[i] = Integer.parseInt(pIds[i]);
 			}
-		    subq.add(Restrictions.in("ProgramId", pIdi));
 
-		}else{
-			String extraCond = "";
-			if(bedProgramIdCond.length()>0){
-				String [] pIds ;
-				pIds = bean.getBedProgramId().split(",");
-				Integer [] pIdi = new Integer[pIds.length];
-				for(int i=0;i<pIds.length;i++)
-				{
-					pIdi[i] = Integer.parseInt(pIds[i]);
-				}
-
-			    subq.add(Restrictions.in("ProgramId", pIdi));
+			if(pIdi.length>0) {
+				subq.add(Restrictions.in("ProgramId", pIdi));
 			}
-		}
-		*/
 
-		if(bean.getDateFrom() != null && bean.getDateFrom().length() > 0) {
-	    	Date dt = MyDateFormat.getSysDate(bean.getDateFrom().trim());
-	    	subq.add(Restrictions.ge("AdmissionDate",dt ));
-	    }
-	    if(bean.getDateTo() != null && bean.getDateTo().length() > 0) {
-	    	Date dt1 =  MyDateFormat.getSysDate(bean.getDateTo().trim());
-	    	subq.add(Restrictions.le("AdmissionDate",dt1));
-	    }
+			if(bean.getDateFrom() != null && bean.getDateFrom().length() > 0) {
+				Date dt = MyDateFormat.getSysDate(bean.getDateFrom().trim());
+		    	subq.add(Restrictions.ge("AdmissionDate",dt ));
+		    }
+		    if(bean.getDateTo() != null && bean.getDateTo().length() > 0) {
+		    	Date dt1 =  MyDateFormat.getSysDate(bean.getDateTo().trim());
+		    	subq.add(Restrictions.le("AdmissionDate",dt1));
+		    }
 
-
-
-	    criteria.add(Property.forName("DemographicNo").in(subq));
-// -------- end splice from 1.31
+	    	criteria.add(Property.forName("DemographicNo").in(subq));
 		}
 
 		active = bean.getActive();
 		if("1".equals(active)) {
 			criteria.add(Expression.ge("activeCount", 1));
 		}
-		else if ("0".equals(active))
-		{
+		else if ("0".equals(active)) {
 			criteria.add(Expression.eq("activeCount", 0));
 		}
 
 		gender = bean.getGender();
-		if (gender != null && !"".equals(gender))
-		{
+		if (gender != null && !"".equals(gender)) {
 			criteria.add(Expression.eq("Sex", gender));
 		}
 
-		//filter out non unique anonymous
-	//	criteria.add(Expression.ne("anonymous", "one-time-anonymous"));
-		//criteria.add(Expression.isNull("anonymous"));
-
 		criteria.add(Expression.or(Expression.ne("anonymous", "one-time-anonymous"), Expression.isNull("anonymous")));
+
 		results = criteria.list();
 
 		if (log.isDebugEnabled()) {

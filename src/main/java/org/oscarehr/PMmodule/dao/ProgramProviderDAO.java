@@ -234,7 +234,7 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
 
     @SuppressWarnings("unchecked")
     public List<ProgramProvider> getProgramDomain(String providerNo) {
-        if (providerNo == null || Long.valueOf(providerNo) == null) {
+        if (providerNo == null) {
             throw new IllegalArgumentException();
         }
 

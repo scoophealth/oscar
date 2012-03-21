@@ -35,6 +35,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
@@ -54,6 +55,9 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
+import org.oscarehr.util.SpringUtils;
+
+import oscar.OscarProperties;
 
 import com.quatro.model.LookupCodeValue;
 
@@ -268,11 +272,19 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 	}
 
 	private List<Demographic> localSearch(GenericIntakeSearchFormBean intakeSearchBean) {
+		String strictSearch = OscarProperties.getInstance().getProperty("caisi.new_client.strict_search", "false");
+
 		ClientSearchFormBean clientSearchBean = new ClientSearchFormBean();
 		clientSearchBean.setFirstName(intakeSearchBean.getFirstName());
 		clientSearchBean.setLastName(intakeSearchBean.getLastName());
 		clientSearchBean.setGender(intakeSearchBean.getGender());
-		clientSearchBean.setSearchOutsideDomain(true);
+		if(strictSearch.equalsIgnoreCase("true")) {
+			ProgramProviderDAO ppDao = (ProgramProviderDAO) SpringUtils.getBean("programProviderDAO");
+			clientSearchBean.setSearchOutsideDomain(false);
+			clientSearchBean.setProgramDomain(ppDao.getProgramDomain(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo()));
+		} else {
+			clientSearchBean.setSearchOutsideDomain(true);
+		}
 		clientSearchBean.setSearchUsingSoundex(true);
 
 		return clientManager.search(clientSearchBean);
