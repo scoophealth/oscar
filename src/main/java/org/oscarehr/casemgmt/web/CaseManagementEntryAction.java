@@ -60,7 +60,7 @@ import org.apache.struts.action.ActionMessages;
 import org.caisi.dao.TicklerDAO;
 import org.caisi.model.Tickler;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
-import org.oscarehr.PMmodule.dao.ClientDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
@@ -2749,7 +2749,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			if (macro.getBillingCodes() != null && macro.getBillingCodes().length() > 0) {
 				GstControlDao gstControlDao = (GstControlDao) SpringUtils.getBean("gstControlDao");
 				BillingServiceDao billingServiceDao = (BillingServiceDao) SpringUtils.getBean("billingServiceDao");
-				ClientDao demographicDao = (ClientDao) SpringUtils.getBean("clientDao");
+				DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 				Provider provider = LoggedInInfo.loggedInInfo.get().loggedInProvider;
 				OscarAppointmentDao apptDao = (OscarAppointmentDao) SpringUtils.getBean("oscarAppointmentDao");
 

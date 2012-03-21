@@ -15,7 +15,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.validator.DynaValidatorForm;
-import org.oscarehr.PMmodule.dao.ClientDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.eyeform.dao.ConsultationReportDao;
@@ -28,7 +28,7 @@ public class ConReportListAction extends DispatchAction {
 	Logger logger = MiscUtils.getLogger();
 	
 	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
-	ClientDao demographicDao= (ClientDao)SpringUtils.getBean("clientDao");
+	DemographicDao demographicDao= (DemographicDao)SpringUtils.getBean("demographicDao");
 	ConsultationReportDao crDao = (ConsultationReportDao)SpringUtils.getBean("consultationReportDao");
 	
 	@Override

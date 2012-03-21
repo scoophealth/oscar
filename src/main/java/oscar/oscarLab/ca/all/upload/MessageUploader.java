@@ -18,8 +18,8 @@ import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
-import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.common.OtherIdManager;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.dao.Hl7TextMessageDao;
 import org.oscarehr.common.model.Demographic;
@@ -74,18 +74,18 @@ public final class MessageUploader {
 			String requestingClient = h.getDocName();
 			String reportStatus = h.getOrderStatus();
 			String accessionNum = h.getAccessionNum();
-			String fillerOrderNum = h.getFillerOrderNumber(); 
+			String fillerOrderNum = h.getFillerOrderNumber();
 			String sendingFacility = h.getPatientLocation();
 			ArrayList docNums = h.getDocNums();
 			int finalResultCount = h.getOBXFinalResultCount();
 			String obrDate = h.getMsgDate();
-			
+
 			if(h instanceof HHSEmrDownloadHandler) {
             	String chartNo = ((HHSEmrDownloadHandler)h).getPatientIdByType("MR");
             	if(chartNo != null) {
             		//let's get the hin
-            		ClientDao clientDao = (ClientDao)SpringUtils.getBean("clientDao");
-            		List<Demographic> clients = clientDao.getClientsByChartNo(chartNo);
+            		DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+            		List<Demographic> clients = demographicDao.getClientsByChartNo(chartNo);
             		if(clients!=null && clients.size()>0) {
             			hin = clients.get(0).getHin();
             		}
@@ -131,31 +131,31 @@ public final class MessageUploader {
 
 				if (!next.trim().equals("")) discipline = discipline + "/" + next.substring(0, sepMark);
 			}
-			
+
 			boolean isTDIS = type.equals("TDIS");
 			boolean hasBeenUpdated = false;
 			Hl7TextMessage hl7TextMessage = new Hl7TextMessage();
 			Hl7TextInfo hl7TextInfo = new Hl7TextInfo();
-			
-			
+
+
 			if (isTDIS) {
 				List<Hl7TextInfo> matchingTdisLab =  hl7TextInfoDao.searchByFillerOrderNumber(fillerOrderNum, sendingFacility);
 				if (matchingTdisLab.size()>0) {
-					
+
 					hl7TextMessageDao.updateIfFillerOrderNumberMatches(MiscUtils.encodeToBase64String(hl7Body),fileId,matchingTdisLab.get(0).getLabNumber());
-					
+
 					hl7TextInfoDao.updateReportStatusByLabId(reportStatus,matchingTdisLab.get(0).getLabNumber());
 					hasBeenUpdated = true;
 				}
 			}
-			int insertID = 0; 
+			int insertID = 0;
 			if (!isTDIS || !hasBeenUpdated) {
 				hl7TextMessage.setFileUploadCheckId(fileId);
 				hl7TextMessage.setType(type);
 				hl7TextMessage.setBase64EncodedeMessage(MiscUtils.encodeToBase64String(hl7Body));
 				hl7TextMessage.setServiceName(serviceName);
 				hl7TextMessageDao.persist(hl7TextMessage);
-	
+
 				insertID = hl7TextMessage.getId();
 				hl7TextInfo.setLabNumber(insertID);
 				hl7TextInfo.setLastName(lastName);
@@ -177,11 +177,11 @@ public final class MessageUploader {
 			if(type.equals("OLIS_HL7") && demProviderNo.equals("0")) {
 				OLISSystemPreferencesDao olisPrefDao = (OLISSystemPreferencesDao)SpringUtils.getBean("OLISSystemPreferencesDao");
 			    OLISSystemPreferences olisPreferences =  olisPrefDao.getPreferences();
-			    if(olisPreferences.isFilterPatients()) {			    	
+			    if(olisPreferences.isFilterPatients()) {
 			    	//set as unclaimed
 			    	providerRouteReport(String.valueOf(insertID), null, DbConnectionFilter.getThreadLocalDbConnection(), String.valueOf(0), type);
 			    } else {
-			    	providerRouteReport(String.valueOf(insertID), docNums, DbConnectionFilter.getThreadLocalDbConnection(), demProviderNo, type);			    	
+			    	providerRouteReport(String.valueOf(insertID), docNums, DbConnectionFilter.getThreadLocalDbConnection(), demProviderNo, type);
 			    }
 			} else {
 				providerRouteReport(String.valueOf(insertID), docNums, DbConnectionFilter.getThreadLocalDbConnection(), demProviderNo, type);
@@ -219,7 +219,7 @@ public final class MessageUploader {
 					}
 					rs.close();
 					pstmt.close();
-					
+
 					String otherIdMatchKey = OscarProperties.getInstance().getProperty("lab.other_id_matching", "");
 					if(otherIdMatchKey.length()>0) {
 						OtherId otherId = OtherIdManager.searchTable(OtherIdManager.PROVIDER, otherIdMatchKey, (String)docNums.get(i));
@@ -227,7 +227,7 @@ public final class MessageUploader {
 							providerNums.add(otherId.getTableId());
 						}
 					}
-					
+
 				}
 			}
 		}

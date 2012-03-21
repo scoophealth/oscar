@@ -11,7 +11,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.validator.DynaValidatorForm;
-import org.oscarehr.PMmodule.dao.ClientDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.ContactDao;
 import org.oscarehr.common.dao.DemographicContactDao;
@@ -28,7 +28,7 @@ public class ContactAction extends DispatchAction {
 	static ContactDao contactDao = (ContactDao)SpringUtils.getBean("contactDao");
 	static ProfessionalContactDao proContactDao = (ProfessionalContactDao)SpringUtils.getBean("professionalContactDao");
 	static DemographicContactDao demographicContactDao = (DemographicContactDao)SpringUtils.getBean("demographicContactDao");
-	static ClientDao demographicDao= (ClientDao)SpringUtils.getBean("clientDao");
+	static DemographicDao demographicDao= (DemographicDao)SpringUtils.getBean("demographicDao");
 	static ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 
 	@Override

@@ -26,7 +26,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.BedDemographicDao;
-import org.oscarehr.PMmodule.dao.ClientDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.dao.RoomDAO;
 import org.oscarehr.PMmodule.dao.RoomDemographicDao;
@@ -53,7 +53,7 @@ public class RoomDemographicManagerImpl implements RoomDemographicManager {
 	private BedDemographicDao bedDemographicDao;
 	private RoomDemographicDao roomDemographicDao;
 	private ProviderDao providerDao;
-	private ClientDao clientDao;
+	private DemographicDao demographicDao;
 	private RoomDAO roomDAO;
 
 	public void setRoomDemographicDao(RoomDemographicDao roomDemographicDao) {
@@ -68,8 +68,8 @@ public class RoomDemographicManagerImpl implements RoomDemographicManager {
 		this.bedDemographicDao = bedDemographicDao;
 	}
 
-	public void setClientDao(ClientDao clientDao) {
-		this.clientDao = clientDao;
+	public void setDemographicDao(DemographicDao demographicDao) {
+		this.demographicDao = demographicDao;
 	}
 
 	public void setRoomDAO(RoomDAO roomDAO) {
@@ -206,7 +206,7 @@ public class RoomDemographicManagerImpl implements RoomDemographicManager {
 	}
 
 	void validateDemographic(Integer demographicNo) {
-		if (!clientDao.clientExists(demographicNo)) {
+		if (!demographicDao.clientExists(demographicNo)) {
 			handleException(new IllegalArgumentException("no demographic with id : " + demographicNo));
 		}
 	}

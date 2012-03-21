@@ -4,7 +4,7 @@
 <%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
-<%@page import="org.oscarehr.PMmodule.dao.ClientDao"%>
+<%@page import="org.oscarehr.common.dao.DemographicDao"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.oscarehr.common.dao.DemographicArchiveDao" %>
 <%@page import="org.oscarehr.common.model.DemographicArchive" %>
@@ -55,8 +55,8 @@
 	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 	
 	//load demographic
-	ClientDao clientDao=(ClientDao)SpringUtils.getBean("clientDao");
-	Demographic demographic = clientDao.getClientByDemographicNo(Integer.valueOf(demographicNo));
+	DemographicDao demographicDao=(DemographicDao)SpringUtils.getBean("demographicDao");
+	Demographic demographic = demographicDao.getClientByDemographicNo(Integer.valueOf(demographicNo));
 
 	//load current roster status
 	String rosterStatus = demographic.getRosterStatus();

@@ -46,18 +46,18 @@
 	<bean id="genericIntakeManager" class="org.oscarehr.PMmodule.service.GenericIntakeManager" autowire="byName" />
 	<bean id="intakeAManager" class="org.oscarehr.PMmodule.service.impl.IntakeAManagerImpl">
 		<property name="intakeADao" ref="intakeADao" />
-		<property name="clientDao" ref="clientDao" />
+		<property name="demographicDao" ref="demographicDao" />
 		<property name="enabled" value="${intakea.enabled}" />
 		<property name="newClientForm" value="${intakea.newForm}" />
 	</bean>
 	<bean id="intakeCManager" class="org.oscarehr.PMmodule.service.impl.IntakeCManagerImpl">
 		<property name="intakeCDao" ref="intakeCDao" />
-		<property name="clientDao" ref="clientDao" />
+		<property name="demographicDao" ref="demographicDao" />
 		<property name="enabled" value="${intakec.enabled}" />
 		<property name="newClientForm" value="${intakec.newForm}" />
 	</bean>
 	<bean id="streetHealthReportManager" class="org.oscarehr.PMmodule.service.impl.StreetHealthReportManagerImpl">
-		<property name="clientDao" ref="clientDao" />
+		<property name="demographicDao" ref="demographicDao" />
 		<property name="genericIntakeManager" ref="genericIntakeManager" />
 	</bean>
 	<!-- Generic Intake -->

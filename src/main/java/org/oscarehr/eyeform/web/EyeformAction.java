@@ -23,7 +23,7 @@ import org.apache.struts.util.LabelValueBean;
 import org.apache.struts.validator.DynaValidatorForm;
 import org.caisi.dao.TicklerDAO;
 import org.caisi.model.Tickler;
-import org.oscarehr.PMmodule.dao.ClientDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.IssueDAO;
@@ -95,7 +95,7 @@ public class EyeformAction extends DispatchAction {
 
 	CaseManagementManager cmm = null;
 	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
-	ClientDao demographicDao= (ClientDao)SpringUtils.getBean("clientDao");
+	DemographicDao demographicDao= (DemographicDao)SpringUtils.getBean("demographicDao");
 	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 	CaseManagementNoteDAO caseManagementNoteDao = (CaseManagementNoteDAO)SpringUtils.getBean("CaseManagementNoteDAO");
 	OcularProcDao ocularProcDao = (OcularProcDao)SpringUtils.getBean("OcularProcDAO");

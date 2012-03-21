@@ -41,7 +41,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.util.LabelValueBean;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
-import org.oscarehr.PMmodule.dao.ClientDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.PMmodule.dao.ProgramAccessDAO;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.dao.ProviderDao;
@@ -121,7 +121,7 @@ public class CaseManagementManager {
 	private MessagetblDAO messagetblDAO;
 	private EchartDAO echartDAO;
 	private ProviderDao providerDAO;
-	private ClientDao demographicDao;
+	private DemographicDao demographicDao;
 	private ProviderSignitureDao providerSignitureDao;
 	private RoleProgramAccessDAO roleProgramAccessDAO;
 	private RolesManager roleManager;
@@ -1478,7 +1478,7 @@ public class CaseManagementManager {
 		this.roleProgramAccessDAO = roleProgramAccessDAO;
 	}
 
-	public void setDemographicDao(ClientDao demographicDao) {
+	public void setDemographicDao(DemographicDao demographicDao) {
 		this.demographicDao = demographicDao;
 	}
 

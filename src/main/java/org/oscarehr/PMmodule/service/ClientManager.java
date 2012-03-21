@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.oscarehr.PMmodule.dao.ClientDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.PMmodule.dao.ClientReferralDAO;
 import org.oscarehr.PMmodule.dao.JointAdmissionDAO;
 import org.oscarehr.PMmodule.exception.AlreadyAdmittedException;
@@ -46,7 +46,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ClientManager {
 
-    private ClientDao dao;
+    private DemographicDao dao;
     private ClientReferralDAO referralDAO;
     private JointAdmissionDAO jointAdmissionDAO;
     private ProgramQueueManager queueManager;
@@ -280,7 +280,7 @@ public class ClientManager {
     // }
 
     @Required
-    public void setClientDao(ClientDao dao) {
+    public void setDemographicDao(DemographicDao dao) {
         this.dao = dao;
     }
 

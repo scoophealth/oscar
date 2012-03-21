@@ -6,7 +6,7 @@
 <%@page import="java.util.Enumeration"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
-<%@page import="org.oscarehr.PMmodule.dao.ClientDao"%>
+<%@page import="org.oscarehr.common.dao.DemographicDao"%>
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
 <%@page import="org.oscarehr.util.WebUtils"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
@@ -17,8 +17,8 @@
 
 	//--- make new local demographic record ---
 	Demographic demographic=CaisiIntegratorManager.makeUnpersistedDemographicObjectFromRemoteEntry(remoteFacilityId, remoteDemographicId);
-	ClientDao clientDao=(ClientDao)SpringUtils.getBean("clientDao");
-	clientDao.saveClient(demographic);
+	DemographicDao demographicDao=(DemographicDao)SpringUtils.getBean("demographicDao");
+	demographicDao.saveClient(demographic);
 	Integer demoNoRightNow = demographic.getDemographicNo(); // temp use for debugging
 	
 	//--- link the demographic on the integrator so associated data shows up ---

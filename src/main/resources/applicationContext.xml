@@ -48,7 +48,6 @@
 	<bean id="roomDemographicDao" class="org.oscarehr.PMmodule.dao.RoomDemographicDao" autowire="byName" />
 	<bean id="providerDao" class="org.oscarehr.PMmodule.dao.ProviderDao" autowire="byName" />
 	<bean id="bedDAO" class="org.oscarehr.PMmodule.dao.BedDAO" autowire="byName" />
-	<bean id="clientDao" class="org.oscarehr.PMmodule.dao.ClientDao" autowire="byName" />
 	<bean id="streetHealthDao" class="org.oscarehr.PMmodule.dao.StreetHealthDao" autowire="byName" />
 	<bean id="countryCodeDAO" class="org.oscarehr.common.dao.CountryCodeDAO" autowire="byName" />
 	<bean id="dxResearchDao" class="org.oscarehr.dx.dao.DxResearchDAO" autowire="byName" />
@@ -217,7 +216,7 @@
 		<property name="bedDemographicDao" ref="bedDemographicDao" />
 		<property name="providerDAO" ref="providerDao" />
 		<property name="bedDAO" ref="bedDAO" />
-		<property name="demographicDao" ref="clientDao" />
+		<property name="demographicDao" ref="demographicDao" />
 		<property name="roomDAO" ref="roomDAO" />
 		<property name="programDAO" ref="programDao" />
 	</bean>
@@ -235,7 +234,7 @@
 		<property name="echartDAO" ref="EchartDAO" />
 		<property name="providerSignitureDao" ref="ProviderSignitureDao" />
 		<property name="providerDAO" ref="providerDao" />
-		<property name="demographicDao" ref="clientDao" />
+		<property name="demographicDao" ref="demographicDao" />
 		<property name="roleProgramAccessDAO" ref="RoleProgramAccessDAO" />
 		<property name="hashAuditDAO" ref="HashAuditDAO" />
 		<property name="ectWindowDAO" ref="EncounterWindowDAO" />
@@ -265,7 +264,7 @@
 		<property name="enabled" value="${pmm.refer.temporaryAdmission.enabled}" />
 	</bean>
 	<bean id="clientManager" class="org.oscarehr.PMmodule.service.ClientManager">
-		<property name="clientDao" ref="clientDao" />
+		<property name="demographicDao" ref="demographicDao" />
 		<property name="clientReferralDAO" ref="clientReferralDAO" />
 		<property name="jointAdmissionDAO" ref="jointAdmissionDAO" />
 		<property name="programQueueManager" ref="programQueueManager" />

@@ -15,7 +15,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.oscarehr.PMmodule.dao.AdmissionDao;
-import org.oscarehr.PMmodule.dao.ClientDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Admission;
@@ -46,7 +46,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
 
 	Logger logger = MiscUtils.getLogger();
 	
-	ClientDao clientDao = (ClientDao)SpringUtils.getBean("clientDao");
+	DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
 	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 	ProgramDao programDao = (ProgramDao)SpringUtils.getBean("programDao");
@@ -75,7 +75,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		PatientId mrn = internalIds.get("MR");
 		if(mrn != null) {			
 			logger.debug("MRN found in message");
-			List<Demographic> records = clientDao.getClientsByChartNo(mrn.getId());
+			List<Demographic> records = demographicDao.getClientsByChartNo(mrn.getId());
 			if(records.size() == 1) {
 				logger.debug("Found demographic:"+records.get(0).getDemographicNo());
 				return records.get(0).getDemographicNo();
@@ -102,7 +102,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		PatientId hc = internalIds.get("JHN");
 		if(hc != null) {
 			logger.debug("Health Card found in message");	
-			List<Demographic> records = clientDao.getClientsByHealthCard(hc.getId(),hc.getAuthority());
+			List<Demographic> records = demographicDao.getClientsByHealthCard(hc.getId(),hc.getAuthority());
 			if(records.size() == 1) {
 				logger.debug("Found demographic:"+records.get(0).getDemographicNo());
 				return records.get(0).getDemographicNo();
@@ -173,7 +173,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
 			demo.setFamilyDoctor("<rdohip>"+getPrimaryPractitionerId()+"</rdohip><rd>" + this.getPrimaryPractitionerLastName() + ", "+this.getPrimaryPractitionerFirstName()+"</rd>");
 		}
 		//save 		
-		clientDao.saveClient(demo);
+		demographicDao.saveClient(demo);
 		
 		Integer demographicNo = demo.getDemographicNo();
 		logger.debug("new patient saved with demographicNo="+demographicNo);
@@ -200,7 +200,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
 	 */
 	private void updateDemographic(Integer demographicNo) throws HL7Exception {
 		logger.info("Updating patient record " + demographicNo);
-		Demographic demo = clientDao.getClientByDemographicNo(demographicNo);
+		Demographic demo = demographicDao.getClientByDemographicNo(demographicNo);
 		if(demo == null) {
 			logger.error("couldn't find the patient record to update - " + demographicNo);
 			throw new HL7Exception("couldn't find the record to update - " + demographicNo);		
@@ -250,7 +250,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		}
 		
 		//save 		
-		clientDao.saveClient(demo);
+		demographicDao.saveClient(demo);
 				
 		//save temporary MRN (might want to check to see if this key already exists)
 		PatientId tempMrn = internalIds.get("TMR");
@@ -272,7 +272,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
 	 * @throws HL7Exception
 	 */
 	private void createNewAppointment(Integer demographicNo) throws HL7Exception {
-		Demographic demographic = clientDao.getClientByDemographicNo(demographicNo);
+		Demographic demographic = demographicDao.getClientByDemographicNo(demographicNo);
 		if(demographic == null) {
 			logger.error("Unable to retrieve patient data..cannot make appointment");
 			throw new HL7Exception("Unable to retrieve patient data..cannot make appointment");
@@ -365,7 +365,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
 	}
 
 	private void doAdmit(Integer demographicNo, Program p, String providerNo) {
-		Demographic demographic = clientDao.getClientByDemographicNo(demographicNo);
+		Demographic demographic = demographicDao.getClientByDemographicNo(demographicNo);
 		doAdmit(demographic,p,providerNo);
 	}
 	
@@ -415,7 +415,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
 			return;
 		}
 		
-		Demographic demographic = clientDao.getClientByDemographicNo(appt.getDemographicNo());
+		Demographic demographic = demographicDao.getClientByDemographicNo(appt.getDemographicNo());
 		
 		//match provider - STAR id is linked from OtherId table
 		Provider provider = null;
@@ -670,10 +670,10 @@ public class PhsStarHandler extends BasePhsStarHandler {
 			OtherId otherId = OtherIdManager.searchTable(OtherIdManager.PROVIDER, "STAR", attendingId);
 			if(otherId != null) {
 				String providerNo = otherId.getTableId();
-				Demographic d = clientDao.getClientByDemographicNo(demographicNo);
+				Demographic d = demographicDao.getClientByDemographicNo(demographicNo);
 				if(d != null) {
 					d.setProviderNo(providerNo);
-					clientDao.saveClient(d);
+					demographicDao.saveClient(d);
 					logger.info("Updated primary physician to attending - " + providerNo);
 				}
 			} else {

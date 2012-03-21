@@ -20,7 +20,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
-import org.oscarehr.PMmodule.dao.ClientDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.util.MiscUtils;
@@ -34,7 +34,7 @@ public class ExaminationHistoryAction extends DispatchAction {
 
 	Logger logger = MiscUtils.getLogger();	
 	protected MeasurementsDao measurementsDao = (MeasurementsDao) SpringUtils.getBean("measurementsDao");
-	ClientDao demographicDao= (ClientDao)SpringUtils.getBean("clientDao");
+	DemographicDao demographicDao= (DemographicDao)SpringUtils.getBean("demographicDao");
 	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
 	
 	

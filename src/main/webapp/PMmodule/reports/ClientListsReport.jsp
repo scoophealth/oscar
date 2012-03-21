@@ -1,6 +1,7 @@
 <%@page import="java.util.*"%>
 <%@page import="org.oscarehr.PMmodule.model.*"%>
 <%@page import="org.oscarehr.PMmodule.dao.*"%>
+<%@page import="org.oscarehr.common.dao.*"%>
 <%@page import="org.apache.commons.lang.time.*"%>
 <%@ include file="/taglibs.jsp"%>
 
@@ -17,8 +18,8 @@
 			<th>Program</th>
 		</tr>
 		<%
-				Map<String, ClientDao.ClientListsReportResults> reportResults=(Map<String, ClientDao.ClientListsReportResults>)request.getAttribute("reportResults");
-				for (ClientDao.ClientListsReportResults clientListsReportResults : reportResults.values())
+				Map<String, DemographicDao.ClientListsReportResults> reportResults=(Map<String, DemographicDao.ClientListsReportResults>)request.getAttribute("reportResults");
+				for (DemographicDao.ClientListsReportResults clientListsReportResults : reportResults.values())
 				{
 					%>
 		<tr>
