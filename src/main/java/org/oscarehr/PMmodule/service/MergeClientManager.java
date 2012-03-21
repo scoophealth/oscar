@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.dao.MergeClientDao;
 import org.oscarehr.PMmodule.model.ClientMerge;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
 
 public class MergeClientManager {
 	private MergeClientDao mergeClientDao;
-	private ClientDao	clientDao;
+	private DemographicDao	demographicDao;
 
 	public void setMergeClientDao(MergeClientDao mergeClientDao) {
 		this.mergeClientDao = mergeClientDao;
@@ -37,7 +37,7 @@ public class MergeClientManager {
 		return mergeClientDao.getClientMerge(demographic_no);
 	}
 	public List  searchMerged(ClientSearchFormBean criteria){
-		List lst=this.clientDao.search(criteria, false,false);
+		List lst=this.demographicDao.search(criteria, false,false);
 		List result = new ArrayList();
 		Iterator items =lst.iterator();
 		while(items.hasNext()){
@@ -46,16 +46,16 @@ public class MergeClientManager {
 				Iterator subs = client.getSubRecord().iterator();
 				while(subs.hasNext()){
 					Integer cId=(Integer)subs.next();
-					Demographic mergedClient= clientDao.getClientByDemographicNo(cId); 
+					Demographic mergedClient= demographicDao.getClientByDemographicNo(cId);
 					result.add(mergedClient);
 					result.add(client);
-				}				
+				}
 			}
 		}
 		return result;
 	}
-	
-	public void setClientDao(ClientDao clientDao) {
-		this.clientDao = clientDao;
+
+	public void setDemographicDao(DemographicDao demographicDao) {
+		this.demographicDao = demographicDao;
 	}
 }

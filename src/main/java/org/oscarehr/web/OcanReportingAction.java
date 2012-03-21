@@ -30,7 +30,7 @@ import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.LineAndShapeRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
-import org.oscarehr.PMmodule.dao.ClientDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.OcanStaffFormDao;
 import org.oscarehr.common.dao.OcanStaffFormDataDao;
 import org.oscarehr.common.model.OcanStaffForm;
@@ -57,7 +57,7 @@ public class OcanReportingAction extends DispatchAction {
 
 	private OcanStaffFormDao ocanStaffFormDao = (OcanStaffFormDao) SpringUtils.getBean("ocanStaffFormDao");
 	private OcanStaffFormDataDao ocanStaffFormDataDao = (OcanStaffFormDataDao) SpringUtils.getBean("ocanStaffFormDataDao");
-	private ClientDao clientDao = (ClientDao)SpringUtils.getBean("clientDao");
+	private DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 
 	/*
 	 * return first OCAN that was done at this facility and call it either "Initial OCAN" or "Reassessment"
@@ -161,7 +161,7 @@ public class OcanReportingAction extends DispatchAction {
 
 		//bean which will feed our generator
 		OcanIndividualNeedsOverTimeBean bean = new OcanIndividualNeedsOverTimeBean();
-		bean.setConsumerName(clientDao.getClientByDemographicNo(Integer.parseInt(clientId)).getFormattedName());
+		bean.setConsumerName(demographicDao.getClientByDemographicNo(Integer.parseInt(clientId)).getFormattedName());
 		bean.setStaffName(LoggedInInfo.loggedInInfo.get().loggedInProvider.getFormattedName());
 		bean.setReportDate(new Date());
 		bean.setShowUnmetNeeds(needsUnmet!=null);
@@ -335,7 +335,7 @@ public class OcanReportingAction extends DispatchAction {
 
 		NeedRatingOverTimeReportGenerator reportGen = new NeedRatingOverTimeReportGenerator();
 
-		reportGen.setConsumerName(clientDao.getClientByDemographicNo(Integer.parseInt(clientId)).getFormattedName());
+		reportGen.setConsumerName(demographicDao.getClientByDemographicNo(Integer.parseInt(clientId)).getFormattedName());
 		reportGen.setStaffName(LoggedInInfo.loggedInInfo.get().loggedInProvider.getFormattedName());
 		reportGen.setReportDate(new Date());
 
@@ -667,7 +667,7 @@ public class OcanReportingAction extends DispatchAction {
 
 		SummaryOfActionsAndCommentsReportGenerator reportGen = new SummaryOfActionsAndCommentsReportGenerator();
 		reportGen.setReportBean(reportBean);
-		reportGen.setConsumerName(clientDao.getClientByDemographicNo(Integer.parseInt(clientId)).getFormattedName());
+		reportGen.setConsumerName(demographicDao.getClientByDemographicNo(Integer.parseInt(clientId)).getFormattedName());
 		reportGen.setStaffName(LoggedInInfo.loggedInInfo.get().loggedInProvider.getFormattedName());
 		reportGen.setReportDate(new Date());
 		reportGen.setIncludeComments(includeComments);

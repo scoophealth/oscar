@@ -914,7 +914,7 @@ public class GenericIntakeManager {
 	/*
 	 * street health report, not finished yet public List getCohort(Date
 	 * beginDate, Date endDate) { return genericIntakeDAO.getCohort(beginDate,
-	 * endDate, clientDao.getClients()); }
+	 * endDate, demographicDao.getClients()); }
 	 */
 	
 

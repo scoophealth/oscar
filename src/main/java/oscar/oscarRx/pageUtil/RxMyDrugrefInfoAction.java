@@ -45,7 +45,7 @@ import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.util.MessageResources;
 import org.apache.xmlrpc.XmlRpcClientLite;
 import org.oscarehr.PMmodule.caisi_integrator.RemoteDrugAllergyHelper;
-import org.oscarehr.PMmodule.dao.ClientDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.UserDSMessagePrefsDAO;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Allergy;
@@ -196,8 +196,8 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         }
 
 
-        ClientDao clientDao = (ClientDao)SpringUtils.getBean("clientDao");
-        DemographicExt demoWarn = clientDao.getLatestDemographicExt(bean.getDemographicNo(), "rxInteractionWarningLevel");
+        DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+        DemographicExt demoWarn = demographicDao.getLatestDemographicExt(bean.getDemographicNo(), "rxInteractionWarningLevel");
         if(demoWarn!=null) {
         	if(demoWarn.getValue()!=null&&demoWarn.getValue().length()>0) {
         		int demoLevel = Integer.valueOf(demoWarn.getValue());

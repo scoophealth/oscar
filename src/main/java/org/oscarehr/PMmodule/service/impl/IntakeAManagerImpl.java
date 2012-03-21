@@ -27,7 +27,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.oscarehr.PMmodule.dao.ClientDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.PMmodule.dao.IntakeADao;
 import org.oscarehr.PMmodule.model.Formintakea;
 import org.oscarehr.PMmodule.service.IntakeAManager;
@@ -41,14 +41,14 @@ public class IntakeAManagerImpl extends BaseIntakeManager implements IntakeAMana
 	private static Logger log = MiscUtils.getLogger();
 	
 	private IntakeADao dao;
-	private ClientDao clientDao;
+	private DemographicDao demographicDao;
 	
 	public void setIntakeADao(IntakeADao dao) {
 		this.dao = dao;
 	}
 	
-	public void setClientDao(ClientDao dao) {
-		this.clientDao = dao;
+	public void setDemographicDao(DemographicDao dao) {
+		this.demographicDao = dao;
 	}
 	
 	public Formintakea getCurrIntakeAByDemographicNo(String demographicNo) {
@@ -114,7 +114,7 @@ public class IntakeAManagerImpl extends BaseIntakeManager implements IntakeAMana
 			client.setEndDate(cal.getTime());
 			client.setHcRenewDate(cal.getTime());
 			
-			clientDao.saveClient(client);
+			demographicDao.saveClient(client);
 			form.setDemographicNo(new Long(client.getDemographicNo().longValue()));
 		}
 		form.setFormEdited(new Date());

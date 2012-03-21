@@ -30,7 +30,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
-import org.oscarehr.PMmodule.dao.ClientDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
@@ -38,10 +38,10 @@ import org.oscarehr.common.model.Provider;
 
 public class ClientListsReportAction extends DispatchAction {
 
-    private ClientDao clientDao;
+    private DemographicDao demographicDao;
 
-    public void setClientDao(ClientDao clientDao) {
-        this.clientDao = clientDao;
+    public void setDemographicDao(DemographicDao demographicDao) {
+        this.demographicDao = demographicDao;
     }
 
     private ProviderManager providerManager;
@@ -80,7 +80,7 @@ public class ClientListsReportAction extends DispatchAction {
 //        DynaActionForm reportForm = (DynaActionForm)form;
 //        ClientListsReportFormBean formBean = (ClientListsReportFormBean)reportForm.get("form");
 //
-//        Map<String, ClientListsReportResults> reportResults = clientDao.findByReportCriteria(formBean);
+//        Map<String, ClientListsReportResults> reportResults = demographicDao.findByReportCriteria(formBean);
 //        request.setAttribute("reportResults", reportResults);
 
     	

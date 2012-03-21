@@ -27,7 +27,7 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.BedDAO;
 import org.oscarehr.PMmodule.dao.BedDemographicDao;
-import org.oscarehr.PMmodule.dao.ClientDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.dao.RoomDAO;
@@ -59,7 +59,7 @@ public class BedDemographicManagerImpl implements BedDemographicManager {
 	private BedDemographicDao bedDemographicDao;
 	private ProviderDao providerDAO;
 	private BedDAO bedDAO;
-	private ClientDao demographicDao;
+	private DemographicDao demographicDao;
 	private RoomDAO roomDAO;
 	private ProgramDao programDAO;
 
@@ -75,7 +75,7 @@ public class BedDemographicManagerImpl implements BedDemographicManager {
 		this.bedDAO = bedDAO;
 	}
 
-	public void setDemographicDao(ClientDao demographicDao) {
+	public void setDemographicDao(DemographicDao demographicDao) {
 		this.demographicDao = demographicDao;
 	}
 

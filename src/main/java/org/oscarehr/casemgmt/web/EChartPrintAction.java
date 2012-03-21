@@ -12,7 +12,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
-import org.oscarehr.PMmodule.dao.ClientDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
@@ -37,8 +37,8 @@ public class EChartPrintAction extends DispatchAction {
 	
 	public ActionForward print(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String demographicNo = request.getParameter("demographicNo");
-		ClientDao clientDao = (ClientDao)SpringUtils.getBean("clientDao");
-		Demographic demographic = clientDao.getClientByDemographicNo(Integer.parseInt(demographicNo));
+		DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+		Demographic demographic = demographicDao.getClientByDemographicNo(Integer.parseInt(demographicNo));
 		
 		response.setContentType("application/pdf"); // octet-stream			
 		response.setHeader("Content-Disposition", "attachment; filename=\""+demographicNo+".pdf\"");			

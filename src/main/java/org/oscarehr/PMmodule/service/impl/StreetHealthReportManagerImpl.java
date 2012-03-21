@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.oscarehr.PMmodule.dao.ClientDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.service.StreetHealthReportManager;
@@ -18,11 +18,11 @@ public class StreetHealthReportManagerImpl implements StreetHealthReportManager 
 
 	private Logger log=MiscUtils.getLogger();
 
-	private ClientDao clientDao;
+	private DemographicDao demographicDao;
 	private GenericIntakeManager intakeMgr;
 		
-	public void setClientDao(ClientDao dao) {
-		this.clientDao = dao;
+	public void setDemographicDao(DemographicDao dao) {
+		this.demographicDao = dao;
 	}
 	
 	public void setGenericIntakeManager(GenericIntakeManager mgr) {
@@ -30,8 +30,8 @@ public class StreetHealthReportManagerImpl implements StreetHealthReportManager 
 	}
 	
 	public List getCohort(Date beginDate, Date endDate, int facilityId) {
-		List<Demographic> clients = clientDao.getClients();
-//		//return streetHealthDao.getCohort(beginDate, endDate, clientDao.getClients());
+		List<Demographic> clients = demographicDao.getClients();
+//		//return streetHealthDao.getCohort(beginDate, endDate, demographicDao.getClients());
 	        if (beginDate == null && endDate == null) {
 	            return new ArrayList();
 	        }

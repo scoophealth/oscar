@@ -19,7 +19,7 @@ import org.caisi.dao.TicklerDAO;
 import org.caisi.model.CustomFilter;
 import org.caisi.model.Tickler;
 import org.oscarehr.PMmodule.dao.AdmissionDao;
-import org.oscarehr.PMmodule.dao.ClientDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Admission;
@@ -98,7 +98,7 @@ public class OscarChartPrinter {
 
     private ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
     private DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
-    private ClientDao clientDao = (ClientDao)SpringUtils.getBean("clientDao");
+    private DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
     private OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
     private PreventionDao preventionDao = (PreventionDao)SpringUtils.getBean("preventionDao");
 
@@ -305,7 +305,7 @@ public class OscarChartPrinter {
         phrase.add("Email: " + demographic.getEmail()  + "\n");
         phrase.add("Phone: " +  demographic.getPhone() + "\n");
 
-        List<DemographicExt> exts = clientDao.getDemographicExtByDemographicNo(demographic.getDemographicNo());
+        List<DemographicExt> exts = demographicDao.getDemographicExtByDemographicNo(demographic.getDemographicNo());
         String phoneExt = null;
         String cell = null;
         for(DemographicExt ext:exts) {
@@ -382,7 +382,7 @@ public class OscarChartPrinter {
 		for (int j=0; j<demoR.size(); j++) {
 		    HashMap<String,String> r = (HashMap<String,String>) demoR.get(j);
 		    String relationDemographicNo = (String) r.get("demographic_no");
-		    Demographic relationDemographic = clientDao.getClientByDemographicNo(Integer.parseInt(relationDemographicNo));
+		    Demographic relationDemographic = demographicDao.getClientByDemographicNo(Integer.parseInt(relationDemographicNo));
 		    String relation = r.get("relation");
 		    String subDecisionMaker = r.get("sub_decision_maker");
 		    String emergencyContact = r.get("emergency_contact");

@@ -27,7 +27,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.oscarehr.PMmodule.dao.ClientDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.PMmodule.dao.IntakeCDao;
 import org.oscarehr.PMmodule.model.Formintakec;
 import org.oscarehr.PMmodule.service.IntakeCManager;
@@ -38,14 +38,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class IntakeCManagerImpl extends BaseIntakeManager implements IntakeCManager {
 
 	private IntakeCDao intakeDao;
-	private ClientDao clientDao;
+	private DemographicDao demographicDao;
 
 	public void setIntakeCDao(IntakeCDao intakeDao) {
 		this.intakeDao = intakeDao;
 	}
 
-	public void setClientDao(ClientDao dao) {
-		this.clientDao = dao;
+	public void setDemographicDao(DemographicDao dao) {
+		this.demographicDao = dao;
 	}
 
 	public Formintakec getCurrentForm(String demographicNo) {
@@ -102,7 +102,7 @@ public class IntakeCManagerImpl extends BaseIntakeManager implements IntakeCMana
 			client.setEndDate(cal.getTime());
 			client.setHcRenewDate(cal.getTime());
 
-			clientDao.saveClient(client);
+			demographicDao.saveClient(client);
 			
 			form.setDemographicNo(client.getDemographicNo().longValue());
 		}
@@ -113,7 +113,7 @@ public class IntakeCManagerImpl extends BaseIntakeManager implements IntakeCMana
 	}
 
 	public List getCohort(Date beginDate, Date endDate) {
-		return intakeDao.getCohort(beginDate, endDate, clientDao.getClients());
+		return intakeDao.getCohort(beginDate, endDate, demographicDao.getClients());
 	}
 	
 }

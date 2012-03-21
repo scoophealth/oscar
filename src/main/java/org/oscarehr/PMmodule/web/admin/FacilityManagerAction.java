@@ -15,7 +15,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.oscarehr.PMmodule.dao.AdmissionDao;
-import org.oscarehr.PMmodule.dao.ClientDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.service.LogManager;
@@ -36,7 +36,7 @@ import com.quatro.service.LookupManager;
 public class FacilityManagerAction extends BaseAction {
 
 	private AdmissionDao admissionDao;
-	private ClientDao clientDao;
+	private DemographicDao demographicDao;
 	private ProgramManager programManager;
 	private LookupManager lookupManager;
 	private LogManager logManager;
@@ -96,7 +96,7 @@ public class FacilityManagerAction extends BaseAction {
 						Admission admission = (Admission) it.next();
 
 						// Get demographic list by demographic_no
-						Demographic client = clientDao.getClientByDemographicNo(admission.getClientId());
+						Demographic client = demographicDao.getClientByDemographicNo(admission.getClientId());
 
 						String name = client.getFirstName() + " " + client.getLastName();
 						String dob = client.getFormattedDob();
@@ -238,8 +238,8 @@ public class FacilityManagerAction extends BaseAction {
 		this.admissionDao = admissionDao;
 	}
 
-	public void setClientDao(ClientDao clientDao) {
-		this.clientDao = clientDao;
+	public void setDemographicDao(DemographicDao demographicDao) {
+		this.demographicDao = demographicDao;
 	}
 
 	public void setLookupManager(LookupManager lookupManager) {

@@ -22,7 +22,7 @@ package org.oscarehr.PMmodule.caisi_integrator;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.oscarehr.PMmodule.dao.ClientDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
 import org.oscarehr.common.dao.RemoteIntegratedDataCopyDao;
 import org.oscarehr.common.model.DemographicExt;
@@ -35,7 +35,7 @@ import oscar.OscarProperties;
 
 public class IntegratorFallBackManager {
 	static RemoteIntegratedDataCopyDao  remoteIntegratedDataCopyDao = SpringUtils.getBean(RemoteIntegratedDataCopyDao.class); 
-	static ClientDao clientDao = SpringUtils.getBean(ClientDao.class);
+	static DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 	
 	/*
 	 * First call the Integrator, if there is a problem fall back to the local store.  
@@ -52,7 +52,7 @@ public class IntegratorFallBackManager {
 		try{
 			linkedNotes= CaisiIntegratorManager.getLinkedNotes(demographicNo);
 			
-			DemographicExt demographicExt = clientDao.getLatestDemographicExt(demographicNo, "primaryEMR");
+			DemographicExt demographicExt = demographicDao.getLatestDemographicExt(demographicNo, "primaryEMR");
 			if (integratorLocalStore && demographicExt != null && demographicExt.getValue().equals("1")){
 				try{
 					MiscUtils.getLogger().debug("Saving remote copy for "+demographicNo);

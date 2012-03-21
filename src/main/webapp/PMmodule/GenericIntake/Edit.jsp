@@ -27,7 +27,7 @@
 <%@ page import="org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean" %>
 <%@ page import="org.oscarehr.PMmodule.web.ProgramUtils" %>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
-<%@ page import="org.oscarehr.PMmodule.dao.ClientDao" %>
+<%@ page import="org.oscarehr.common.dao.DemographicDao" %>
 <%@ page import="oscar.OscarProperties" %>
 
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
@@ -468,8 +468,8 @@
 				<html:option value="TE"><bean:message key="demographic.demographiceditdemographic.optTerminated"/></html:option>
 				<html:option value="FS"><bean:message key="demographic.demographiceditdemographic.optFeeService"/></html:option>
 				<%
-				ClientDao clientDao = (ClientDao)SpringUtils.getBean("clientDao");
-				List<String> statuses = clientDao.getRosterStatuses();
+				DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+				List<String> statuses = demographicDao.getRosterStatuses();
 				for(String status:statuses) {
 					%>
 						<html:option value="<%=status%>"><%=status%></html:option>
