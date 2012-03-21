@@ -34,6 +34,9 @@
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="org.oscarehr.common.model.CdsClientForm"%>
 <%@page import="org.oscarehr.PMmodule.web.ClientManagerAction"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.common.model.DemographicCust"%>
+<%@page import="org.oscarehr.common.dao.DemographicCustDao"%>
 <%@page import="org.oscarehr.PMmodule.web.AdmissionForDisplay"%><input type="hidden" name="clientId" value="" />
 <input type="hidden" name="formId" value="" />
 <input type="hidden" id="formInstanceId" value="0" />
@@ -71,7 +74,7 @@ function openHealthSafety(){
 	var url = '<html:rewrite action="/PMmodule/HealthSafety.do"/>';
 		url += '?method=form&id='+ '<c:out value="${client.demographicNo}"/>';
 	window.open(url,'consent');
-}	
+}
 
 
 function saveJointAdmission(clientId,headClientId,jType){
@@ -81,16 +84,42 @@ function removeJointAdmission(clientId){
 	location.href = '<html:rewrite action="/PMmodule/ClientManager.do"/>' + "?method=remove_joint_admission&clientId=<c:out value='${client.demographicNo}'/>&dependentClientId="+clientId;
 }
 
-function openSurvey() {	
-	var selectBox = getElement('form.formId');		
-	var formId = selectBox.options[selectBox.selectedIndex].value;	
+function openSurvey() {
+	var selectBox = getElement('form.formId');
+	var formId = selectBox.options[selectBox.selectedIndex].value;
 	document.clientManagerForm.clientId.value='<c:out value="${client.demographicNo}"/>';
-	document.clientManagerForm.formId.value=formId;	
-	var id = document.getElementById('formInstanceId').value; 	
+	document.clientManagerForm.formId.value=formId;
+	var id = document.getElementById('formInstanceId').value;
 	location.href = '<html:rewrite action="/PMmodule/Forms/SurveyExecute.do"/>' + "?method=survey&formId=" + formId + "&formInstanceId=" + id + "&clientId=" + '<c:out value="${client.demographicNo}"/>';
 }
 
 </script>
+
+<div style="text-align:left;color:red;">
+
+</div>
+
+
+<table style="width:100%;">
+	<tr>
+	<td style="text-align:left;color:red;">
+	<%
+		DemographicCustDao demographicCustDao = SpringUtils.getBean(DemographicCustDao.class);
+		DemographicCust demographicCust = demographicCustDao.find(currentDemographic.getDemographicNo());
+		if(demographicCust != null) {
+			String alert = demographicCust.getAlert();
+			if(alert != null && alert.length()>0) {
+				alert = alert.replaceAll("\n", "<br/>");
+    %>
+    			<%=alert %>
+    <%
+		}}
+	%>
+	</td>
+	</tr>
+</table>
+
+
 
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
@@ -109,10 +138,10 @@ function openSurvey() {
 			<%
 				ClientImageDAO clientImageDAO=(ClientImageDAO)SpringUtils.getBean("clientImageDAO");
 				ClientImage clientImage=clientImageDAO.getClientImage(currentDemographic.getDemographicNo());
-		
+
 				String imagePlaceholder=ClientImage.imageMissingPlaceholderUrl;
 				String imageUrl=imagePlaceholder;
-		
+
 				if (clientImage!=null)
 				{
 					imagePlaceholder=ClientImage.imagePresentPlaceholderUrl;
@@ -154,7 +183,7 @@ function openSurvey() {
 							<input type="button" value="Manage Health Number Registry" onclick="document.location='ClientManager/manage_hnr_client.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
 						<%
 					}
-				%>				
+				%>
 			</td>
 		</tr>
 		<tr>
@@ -163,17 +192,17 @@ function openSurvey() {
 				<%
 						Integer demographicNo=currentDemographic.getDemographicNo();
 						pageContext.setAttribute("demographicNo", demographicNo);
-	
+
 						if (!OscarProperties.getInstance().isTorontoRFQ())
 						{
 							%>
-								<a href="javascript:void(0);" onclick="window.open('<c:out value="${ctx}"/>/demographic/demographiccontrol.jsp?displaymode=edit&dboperation=search_detail&demographic_no=<c:out value="${demographicNo}"/>','master_file');return false;">OSCAR Master File</a> 
+								<a href="javascript:void(0);" onclick="window.open('<c:out value="${ctx}"/>/demographic/demographiccontrol.jsp?displaymode=edit&dboperation=search_detail&demographic_no=<c:out value="${demographicNo}"/>','master_file');return false;">OSCAR Master File</a>
 							<%
-	 					}	 				
+	 					}
  				%>
 			</td>
 		</tr>
-<!-- 
+<!--
 		<tr>
 			<th width="20%">EMPI</th>
 			<td colspan="2"><span id='empi_links'>Loading...</span></td>
@@ -229,19 +258,19 @@ function openSurvey() {
 						<%
 							String consentString="System is unavailable";
 							boolean isIntegratorContactable=false;
-						
+
 							try
 							{
 								GetConsentTransfer remoteConsent=CaisiIntegratorManager.getConsentState(currentDemographic.getDemographicNo());
-								
+
 								if (remoteConsent!=null)
 								{
 									StringBuilder sb=new StringBuilder();
-									
+
 									if (remoteConsent.getConsentState()==ConsentState.ALL) sb.append("Consented to all, ");
 									if (remoteConsent.getConsentState()==ConsentState.SOME) sb.append("Limited consent, ");
 									if (remoteConsent.getConsentState()==ConsentState.NONE) sb.append("No consent, ");
-									
+
 									CachedFacility myFacility=CaisiIntegratorManager.getCurrentRemoteFacility();
 									if (myFacility.getIntegratorFacilityId().equals(remoteConsent.getIntegratorFacilityId()))
 									{
@@ -251,15 +280,15 @@ function openSurvey() {
 									{
 										sb.append("set by another facility on ");
 									}
-									
+
 									sb.append(DateFormatUtils.ISO_DATE_FORMAT.format(remoteConsent.getConsentDate()));
 									consentString=sb.toString();
 								}
 								else
 								{
-									consentString="Not yet obtained";								
+									consentString="Not yet obtained";
 								}
-								
+
 								isIntegratorContactable=true;
 							}
 							catch (Exception e)
@@ -275,7 +304,7 @@ function openSurvey() {
 				 	<td colspan="2"><input type="button" <%=isIntegratorContactable?"":"disabled=\"disabled\""%> value="Manage Linked Clients" onclick="document.location='ClientManager/manage_linked_clients.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" /></td>
 				</tr>
 			<%
-		}		
+		}
 			%>
 </table>
 
@@ -317,7 +346,7 @@ function openSurvey() {
 					<td><c:choose>
 						<c:when test="${rHash['dependent'] == null}">
 							<c:if test="${rHash['dependentable'] != null}">
-                                        Add as 
+                                        Add as
                                         <input type="button" onclick="saveJointAdmission('<c:out value="${rHash['demographicNo']}"/>','<c:out value="${client.demographicNo}" />','2')" value="dependent" />
 								<input type="button" onclick="saveJointAdmission('<c:out value="${rHash['demographicNo']}"/>','<c:out value="${client.demographicNo}" />','1')" value="spouse" />
 							</c:if>
@@ -501,8 +530,8 @@ function openSurvey() {
 			</td>
 		</c:if>
 	</tr>
-		
-													
+
+
 	<%
 		if (LoggedInInfo.loggedInInfo.get().currentFacility.isEnableOcanForms())
 		{
@@ -514,7 +543,7 @@ function openSurvey() {
 			<td><c:out value="${ocanStaffForm.providerName}" /></td>
 			<td><c:out value="${ocanStaffForm.assessmentStatus}" /></td>
 			<td>
-				<input type="button" value="Update" onclick="document.location='ClientManager/ocan_form.jsp?ocanType=FULL&demographicId=<%=currentDemographic.getDemographicNo()%>'" />			
+				<input type="button" value="Update" onclick="document.location='ClientManager/ocan_form.jsp?ocanType=FULL&demographicId=<%=currentDemographic.getDemographicNo()%>'" />
 				<input type="button" value="Print Preview" onclick="document.location='ClientManager/ocan_form.jsp?ocanType=FULL&demographicId=<%=currentDemographic.getDemographicNo()%>&print=true'" />
 				<input type="button" value="Blank Form" onclick="window.open('<html:rewrite page="/ocan/OCAN_2.0_FULL_v2.0.5.pdf"/>')"/>
 			</td>
@@ -523,14 +552,14 @@ function openSurvey() {
 			<td><span style="color: red">None found</span></td>
 			<td></td>
 			<td>
-				<input type="button" value="New FULL OCAN Form" onclick="document.location='ClientManager/ocan_form.jsp?prepopulate=0&ocanType=FULL&demographicId=<%=currentDemographic.getDemographicNo()%>'" />						
-				<input type="button" value="New FULL OCAN Form - Prepopulated" onclick="document.location='ClientManager/ocan_form.jsp?prepopulate=1&ocanType=FULL&demographicId=<%=currentDemographic.getDemographicNo()%>'" />						
+				<input type="button" value="New FULL OCAN Form" onclick="document.location='ClientManager/ocan_form.jsp?prepopulate=0&ocanType=FULL&demographicId=<%=currentDemographic.getDemographicNo()%>'" />
+				<input type="button" value="New FULL OCAN Form - Prepopulated" onclick="document.location='ClientManager/ocan_form.jsp?prepopulate=1&ocanType=FULL&demographicId=<%=currentDemographic.getDemographicNo()%>'" />
 			</td>
-			<td><input type="button" value="Blank Form" onclick="window.open('<html:rewrite page="/ocan/OCAN_2.0_FULL_v2.0.5.pdf"/>')"/>			
+			<td><input type="button" value="Blank Form" onclick="window.open('<html:rewrite page="/ocan/OCAN_2.0_FULL_v2.0.5.pdf"/>')"/>
 			</td>
 		</c:if>
 	</tr>
-	
+
 	<tr>
 		<td width="20%">FULL OCAN 2.0 Consumer Self-Assessment</td>
 		<c:if test="${ocanStaffForm != null}">
@@ -546,14 +575,14 @@ function openSurvey() {
 			<td><span style="color: red">None found</span></td>
 			<td></td>
 			<td>
-				<input type="button" value="New FULL OCAN Form" onclick="document.location='ClientManager/ocan_client_form.jsp?prepopulate=0&ocanType=FULL&demographicId=<%=currentDemographic.getDemographicNo()%>'" />	
+				<input type="button" value="New FULL OCAN Form" onclick="document.location='ClientManager/ocan_client_form.jsp?prepopulate=0&ocanType=FULL&demographicId=<%=currentDemographic.getDemographicNo()%>'" />
 			</td>
 			<td>
 			</td>
 		</c:if>
 	</tr>
-	
-	
+
+
 	<tr>
 		<td width="20%">SELF+CORE OCAN 2.0 Staff Assessment</td>
 		<c:if test="${selfOcanStaffForm != null}">
@@ -563,22 +592,22 @@ function openSurvey() {
 			<td>
 				<input type="button" value="Update" onclick="document.location='ClientManager/ocan_form.jsp?ocanType=SELF&demographicId=<%=currentDemographic.getDemographicNo()%>'" />
 				<input type="button" value="Print Preview" onclick="document.location='ClientManager/ocan_form.jsp?ocanType=SELF&demographicId=<%=currentDemographic.getDemographicNo()%>&print=true'" />
-				<input type="button" value="Blank Form" onclick="window.open('<html:rewrite page="/ocan/OCAN_2.0_CORE_SELF_v2.0.5.pdf"/>')"/>			
-				
+				<input type="button" value="Blank Form" onclick="window.open('<html:rewrite page="/ocan/OCAN_2.0_CORE_SELF_v2.0.5.pdf"/>')"/>
+
 			</td>
 		</c:if>
 		<c:if test="${selfOcanStaffForm == null}">
 			<td><span style="color: red">None found</span></td>
 			<td></td>
 			<td>
-				<input type="button" value="New SELF+CORE OCAN Form" onclick="document.location='ClientManager/ocan_form.jsp?prepopulate=0&ocanType=SELF&demographicId=<%=currentDemographic.getDemographicNo()%>'" />						
-				<input type="button" value="New SELF+CORE OCAN Form - Prepopulated" onclick="document.location='ClientManager/ocan_form.jsp?prepopulate=1&ocanType=SELF&demographicId=<%=currentDemographic.getDemographicNo()%>'" />						
+				<input type="button" value="New SELF+CORE OCAN Form" onclick="document.location='ClientManager/ocan_form.jsp?prepopulate=0&ocanType=SELF&demographicId=<%=currentDemographic.getDemographicNo()%>'" />
+				<input type="button" value="New SELF+CORE OCAN Form - Prepopulated" onclick="document.location='ClientManager/ocan_form.jsp?prepopulate=1&ocanType=SELF&demographicId=<%=currentDemographic.getDemographicNo()%>'" />
 			</td>
-			<td><input type="button" value="Blank Form" onclick="window.open('<html:rewrite page="/ocan/OCAN_2.0_CORE_SELF_v2.0.5.pdf"/>')"/>			
+			<td><input type="button" value="Blank Form" onclick="window.open('<html:rewrite page="/ocan/OCAN_2.0_CORE_SELF_v2.0.5.pdf"/>')"/>
 				</td>
 		</c:if>
 	</tr>
-	
+
 	<tr>
 		<td width="20%">SELF+CORE OCAN 2.0 Consumer Self-Assessment</td>
 		<c:if test="${selfOcanStaffForm != null}">
@@ -588,20 +617,20 @@ function openSurvey() {
 			<td>
 				<input type="button" value="Update" onclick="document.location='ClientManager/ocan_client_form.jsp?ocanType=SELF&demographicId=<%=currentDemographic.getDemographicNo()%>'" />
 				<input type="button" value="Print Preview" onclick="document.location='ClientManager/ocan_client_form.jsp?ocanType=SELF&demographicId=<%=currentDemographic.getDemographicNo()%>&print=true'" />
-				<input type="button" value="Blank Form" onclick="window.open('<html:rewrite page="/ocan/OCAN_2.0_CORE_SELF_v2.0.5.pdf"/>')"/>											
-				
+				<input type="button" value="Blank Form" onclick="window.open('<html:rewrite page="/ocan/OCAN_2.0_CORE_SELF_v2.0.5.pdf"/>')"/>
+
 			</td>
 		</c:if>
 		<c:if test="${selfOcanStaffForm == null}">
 			<td><span style="color: red">None found</span></td>
 			<td></td>
 			<td>
-				<input type="button" value="New SELF+CORE OCAN Form" onclick="document.location='ClientManager/ocan_client_form.jsp?prepopulate=0&ocanType=SELF&demographicId=<%=currentDemographic.getDemographicNo()%>'" />							
+				<input type="button" value="New SELF+CORE OCAN Form" onclick="document.location='ClientManager/ocan_client_form.jsp?prepopulate=0&ocanType=SELF&demographicId=<%=currentDemographic.getDemographicNo()%>'" />
 			</td>
 			<td></td>
 		</c:if>
 	</tr>
-	
+
 	<tr>
 		<td width="20%">CORE OCAN 2.0 Assessment</td>
 		<c:if test="${coreOcanStaffForm != null}">
@@ -611,23 +640,23 @@ function openSurvey() {
 			<td>
 				<input type="button" value="Update" onclick="document.location='ClientManager/ocan_form.jsp?ocanType=CORE&demographicId=<%=currentDemographic.getDemographicNo()%>'" />
 				<input type="button" value="Print Preview" onclick="document.location='ClientManager/ocan_form.jsp?ocanType=CORE&demographicId=<%=currentDemographic.getDemographicNo()%>&print=true'" />
-				<input type="button" value="Blank Form" onclick="window.open('<html:rewrite page="/ocan/OCAN_2.0_CORE_v2.0.5.pdf"/>')"/>			
-				
+				<input type="button" value="Blank Form" onclick="window.open('<html:rewrite page="/ocan/OCAN_2.0_CORE_v2.0.5.pdf"/>')"/>
+
 			</td>
 		</c:if>
 		<c:if test="${coreOcanStaffForm == null}">
 			<td><span style="color: red">None found</span></td>
 			<td></td>
 			<td>
-				<input type="button" value="New CORE OCAN Form" onclick="document.location='ClientManager/ocan_form.jsp?prepopulate=0&ocanType=CORE&demographicId=<%=currentDemographic.getDemographicNo()%>'" />						
-			
-				<input type="button" value="New CORE OCAN Form - Prepopulated" onclick="document.location='ClientManager/ocan_form.jsp?prepopulate=1&ocanType=CORE&demographicId=<%=currentDemographic.getDemographicNo()%>'" />						
+				<input type="button" value="New CORE OCAN Form" onclick="document.location='ClientManager/ocan_form.jsp?prepopulate=0&ocanType=CORE&demographicId=<%=currentDemographic.getDemographicNo()%>'" />
+
+				<input type="button" value="New CORE OCAN Form - Prepopulated" onclick="document.location='ClientManager/ocan_form.jsp?prepopulate=1&ocanType=CORE&demographicId=<%=currentDemographic.getDemographicNo()%>'" />
 			</td>
-			<td><input type="button" value="Blank Form" onclick="window.open('<html:rewrite page="/ocan/OCAN_2.0_CORE_v2.0.5.pdf"/>')"/>			
+			<td><input type="button" value="Blank Form" onclick="window.open('<html:rewrite page="/ocan/OCAN_2.0_CORE_v2.0.5.pdf"/>')"/>
 				</td>
 		</c:if>
 	</tr>
-	
+
 	<% } %>
 </table>
 <br />
@@ -684,7 +713,7 @@ function openSurvey() {
 </table>
 </div>
 
-<% boolean bShowEncounterLink = false; 
+<% boolean bShowEncounterLink = false;
 String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="r">
@@ -705,24 +734,24 @@ String reason ="";
 
 	<display:column property="facilityName" sortable="true" title="Facility" />
 	<display:column property="programName" sortable="true" title="Program" />
-	<display:column sortable="true" title="">	
-		<% if(bShowEncounterLink) {	
-			HttpSession se = request.getSession();			
+	<display:column sortable="true" title="">
+		<% if(bShowEncounterLink) {
+			HttpSession se = request.getSession();
 			AdmissionForDisplay tempAdmission=(AdmissionForDisplay)pageContext.getAttribute("admission");
-			
+
 			if (!tempAdmission.isFromIntegrator())
 			{
 				//Check program is in provider's program domain:
-				if(ppd.isThisProgramInProgramDomain(curUser_no,tempAdmission.getProgramId())) 
+				if(ppd.isThisProgramInProgramDomain(curUser_no,tempAdmission.getProgramId()))
 				{
 					String eURL = "../oscarEncounter/IncomingEncounter.do?programId="+tempAdmission.getProgramId()+"&providerNo="+curUser_no+"&appointmentNo="+rsAppointNO+"&demographicNo="+demographic_no+"&curProviderNo="+curUser_no+"&reason="+java.net.URLEncoder.encode(reason)+"&encType="+java.net.URLEncoder.encode("face to face encounter with client","UTF-8")+"&userName="+java.net.URLEncoder.encode( userfirstname+" "+userlastname)+"&curDate=null&appointmentDate=null&startTime=0:0"+"&status="+status+"&source=cm";
-					%>	
+					%>
 					<logic:notEqual value="community" property="programType" name="admission">
 						<a href=# onClick="popupPage(710, 1024,'../oscarSurveillance/CheckSurveillance.do?programId=<%=tempAdmission.getProgramId()%>&demographicNo=<%=demographic_no%>&proceed=<%=java.net.URLEncoder.encode(eURL)%>');return false;" title="<bean:message key="global.encounter"/>">
 						   <bean:message key="provider.appointmentProviderAdminDay.btnE" />
-						</a> 
+						</a>
 					</logic:notEqual>
-					<% 		
+					<%
 				}
 			}
 		}
