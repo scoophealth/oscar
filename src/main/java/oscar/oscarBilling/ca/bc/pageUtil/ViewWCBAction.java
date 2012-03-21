@@ -35,11 +35,13 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import oscar.Misc;
-import oscar.entities.Demographic;
 import oscar.oscarBilling.ca.bc.data.BillingFormData;
 import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
 import oscar.util.SqlUtils;
@@ -54,8 +56,10 @@ import oscar.util.SqlUtils;
  * @author Joel Legris
  * @version 1.0
  */
-public class ViewWCBAction
-    extends Action {
+public class ViewWCBAction extends Action {
+
+	DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+
   public ActionForward execute(ActionMapping mapping,
                                ActionForm form,
                                HttpServletRequest request,
@@ -71,18 +75,16 @@ public class ViewWCBAction
 
     if ("0".equals(formId)) {
       frm.setFormNeeded("1");
-      List lst = SqlUtils.getBeanList(
-          "select * from demographic where demographic_no = " + demoNo,
-          Demographic.class);
-      if (!lst.isEmpty()) {
-        Demographic demo = (Demographic) lst.get(0);
-        frm.setDemographic(demo.getDemographic_no().toString());
-        frm.setW_fname(demo.getFirst_name());
-        frm.setW_lname(demo.getLast_name());
-        frm.setW_gender(demo.getSex());
-        frm.setW_phone(demo.getPhone());
-        frm.setW_area(Misc.areaCode(demo.getPhone()));
-        String[] pc = demo.getPostal().split(" ");
+      Demographic demographic = demographicDao.getDemographic(demoNo);
+
+      if (demographic != null) {
+        frm.setDemographic(demographic.getDemographicNo().toString());
+        frm.setW_fname(demographic.getFirstName());
+        frm.setW_lname(demographic.getLastName());
+        frm.setW_gender(demographic.getSex());
+        frm.setW_phone(demographic.getPhone());
+        frm.setW_area(Misc.areaCode(demographic.getPhone()));
+        String[] pc = demographic.getPostal().split(" ");
 
         String postal = "";
         for (int i = 0; i < pc.length; i++) {  // DOES THIS JUST REMOVE SPACES???
@@ -90,14 +92,14 @@ public class ViewWCBAction
         }
         frm.setW_postal(postal);
 
-        frm.setW_phn(demo.getHin());
+        frm.setW_phn(demographic.getHin());
         String seperator = "-";
-        String dob = demo.getYear_of_birth() + seperator +
-            demo.getMonth_of_birth() + seperator + demo.getDate_of_birth();
+        String dob = demographic.getYearOfBirth() + seperator +
+        		demographic.getMonthOfBirth() + seperator + demographic.getDateOfBirth();
         frm.setW_dob(dob);
-        frm.setW_address(demo.getAddress());
-        frm.setW_opcity(demo.getCity());
-        frm.setW_city(demo.getCity());
+        frm.setW_address(demographic.getAddress());
+        frm.setW_opcity(demographic.getCity());
+        frm.setW_city(demographic.getCity());
         frm.setInjuryLocations(data.getInjuryLocationList());
 
         //Retrieve provider ohip number and payee number
@@ -122,7 +124,7 @@ public class ViewWCBAction
       request.setAttribute("readonly", "true");
        WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
        BillingmasterDAO billingmasterDAO = (BillingmasterDAO) ctx.getBean("BillingmasterDAO");
-            
+
        frm.setWCBForms(billingmasterDAO.getWCBForm(formId));
     }
     return (mapping.findForward("success"));
