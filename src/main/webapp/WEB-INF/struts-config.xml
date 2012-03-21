@@ -667,9 +667,6 @@
 		<action input="/oscarMessenger/ViewPDFAttachment.jsp" name="msgViewPDFForm" path="/oscarMessenger/ViewPDFFile" scope="request" type="oscar.oscarMessenger.pageUtil.MsgViewPDFAction">
 			<forward name="success" path="/oscarMessenger/ViewPDFFile.jsp" />
 		</action>
-		<action input="/oscarMessenger/Transfer/DemographicSearch.jsp" name="msgDemographicSearchForm" path="/oscarMessenger/SearchDemographic" scope="request" type="oscar.oscarMessenger.pageUtil.MsgDemographicSearchAction">
-			<forward name="success" path="/oscarMessenger/Transfer/DemographicSearch.jsp" />
-		</action>
 		<action input="/oscarMessenger/CreateMessage.jsp" name="msgProceedForm" path="/oscarMessenger/Transfer/Proceed" scope="request" type="oscar.oscarMessenger.pageUtil.MsgProceedAction">
 			<forward name="success" path="/oscarMessenger/Transfer/SearchComplete.jsp" />
 		</action>
