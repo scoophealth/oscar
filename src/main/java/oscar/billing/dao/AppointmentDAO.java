@@ -31,12 +31,12 @@ import java.util.ArrayList;
 
 import org.oscarehr.common.dao.AppointmentArchiveDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.billing.model.Appointment;
-import oscar.billing.model.Demographic;
 import oscar.billing.model.Diagnostico;
 import oscar.billing.model.ProcedimentoRealizado;
 import oscar.billing.model.Provider;
@@ -177,7 +177,7 @@ public class AppointmentDAO extends DAO {
 				appointment.getProvider().setProviderNo(oscar.Misc.getString(rs, 2));
 				appointment.getProvider().setFirstName(oscar.Misc.getString(rs, 3));
 				appointment.getProvider().setLastName(oscar.Misc.getString(rs, 4));
-				appointment.getDemographic().setDemographicNo(rs.getLong(5));
+				appointment.getDemographic().setDemographicNo(rs.getInt(5));
 				appointment.getDemographic().setFirstName(oscar.Misc.getString(rs, 6));
 				appointment.getDemographic().setLastName(oscar.Misc.getString(rs, 7));
 				appointment.setName(oscar.Misc.getString(rs, 8));
@@ -220,7 +220,7 @@ public class AppointmentDAO extends DAO {
 				app.getProvider().setProviderNo(oscar.Misc.getString(rs, 3));
 				app.getProvider().setLastName(oscar.Misc.getString(rs, 4));
 				app.getProvider().setFirstName(oscar.Misc.getString(rs, 5));
-				app.getDemographic().setDemographicNo(rs.getLong(6));
+				app.getDemographic().setDemographicNo(rs.getInt(6));
 				app.getDemographic().setLastName(oscar.Misc.getString(rs, 7));
 				app.getDemographic().setFirstName(oscar.Misc.getString(rs, 8));
 
