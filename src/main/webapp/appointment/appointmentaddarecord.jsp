@@ -50,7 +50,7 @@
 	param[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"));
           
 	//the keyword(name) must match the demographic_no if it has been changed
-        DemographicData.Demographic demo = null;
+        org.oscarehr.common.model.Demographic demo = null;
     if (request.getParameter("demographic_no") != null && !(request.getParameter("demographic_no").equals(""))) {
         DemographicMerged dmDAO = new DemographicMerged();
         param[16] = dmDAO.getHead(request.getParameter("demographic_no"));

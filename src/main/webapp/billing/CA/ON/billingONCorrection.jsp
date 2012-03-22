@@ -1,4 +1,4 @@
-<!-- 
+<!--
  *
  * Copyright (c) 2006-. OSCARservice, OpenSoft System. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License.
@@ -17,18 +17,18 @@
  */
 -->
 <%! boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();
-	List<String> mgrSites = new ArrayList<String>();	
+	List<String> mgrSites = new ArrayList<String>();
 %>
-<% 
-if (bMultisites) 
-{ 
+<%
+if (bMultisites)
+{
         	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
           	List<Site> sites = siteDao.getActiveSitesByProviderNo((String) session.getAttribute("user"));
           	for (Site s : sites) {
           		mgrSites.add(s.getName());
           	}
-}         	
- %>         	
+}
+ %>
 <%@ page import="oscar.login.DBHelp"%>
 <%// start
 			if (session.getAttribute("user") == null)
@@ -83,14 +83,14 @@ if (bMultisites)
 <%
 	if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
 	String curProvider_no = (String) session.getAttribute("user");
-	
+
 	if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
 	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 
-	boolean isTeamBillingOnly=false; 
+	boolean isTeamBillingOnly=false;
     boolean isSiteAccessPrivacy=false;
-    boolean isTeamAccessPrivacy=false; 
-    
+    boolean isTeamAccessPrivacy=false;
+
 	boolean isMultiSiteProvider = true;
 %>
 <security:oscarSec objectName="_team_billing_only" roleName="<%= roleName$ %>" rights="r" reverse="false">
@@ -103,15 +103,15 @@ if (bMultisites)
 	<%isTeamAccessPrivacy=true; %>
 </security:oscarSec>
 
-<% 
+<%
 HashMap<String,String> providerMap = new HashMap<String,String>();
 //multisites function
 if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
 	String sqlStr = "select provider_no from provider ";
-	if (isSiteAccessPrivacy) 
-		sqlStr = "select distinct p.provider_no from provider p inner join providersite s on s.provider_no = p.provider_no " 
+	if (isSiteAccessPrivacy)
+		sqlStr = "select distinct p.provider_no from provider p inner join providersite s on s.provider_no = p.provider_no "
 		 + " where s.site_id in (select site_id from providersite where provider_no = " + curProvider_no + ")";
-	if (isTeamAccessPrivacy) 
+	if (isTeamAccessPrivacy)
 		sqlStr = "select distinct p.provider_no from provider p where team in (select team from provider "
 				+ " where team is not null and team <> '' and provider_no = " + curProvider_no + ")";
 	DBHelp dbObj = new DBHelp();
@@ -213,7 +213,7 @@ function search3rdParty(elementName) {
 function validateNum(el){
    var val = el.value;
    var tval = ""+val;
-   if (isNaN(val)){   
+   if (isNaN(val)){
       alert("Item value must be numeric.");
       el.select();
       el.focus();
@@ -231,25 +231,25 @@ function validateNum(el){
       el.select();
       el.focus();
       return false;
-   }  
+   }
    return true;
 }
 
 function validateAllItems(){
 
-   var provider = document.getElementById("provider_no");   
+   var provider = document.getElementById("provider_no");
    if( provider.options[provider.selectedIndex].value == "" ) {
       alert("Billing provider must be set");
       return false;
    }
-   
-   var billamt;   
+
+   var billamt;
    for( idx = 0; idx < 6; ++idx ) {
        billamt = document.getElementById("billingamount" + idx);
        if( billamt != undefined && !validateNum(billamt) )
            return false;
    }
-      
+
    return true;
 }
 function popupPage(vheight,vwidth,varpage) {
@@ -281,7 +281,7 @@ function checkSettle(status) {
             payElem.value = document.getElementById("billTotal").value;
         }
     }
-    
+
 }
 
 //-->
@@ -309,13 +309,13 @@ function checkSettle(status) {
 				boolean bFlag = false;
 				String billNo = request.getParameter("billing_no").trim();
                                 String claimNo = request.getParameter("claim_no");
-                                
-                                if( billNo == null || billNo.length() == 0 ) {                                    
+
+                                if( billNo == null || billNo.length() == 0 ) {
                                     if( claimNo != null && claimNo.length() > 0 ) {
                                         claimNo = claimNo.trim();
                                         billNo = raObj.getRABilllingNo4ClaimNo(claimNo);
                                     }
-                                    
+
                                 }
 				if (billNo != null && billNo.length() > 0) {
 					bFlag = true;
@@ -324,14 +324,14 @@ function checkSettle(status) {
 				if (bFlag) {
 					recordObj = obj.getBillingRecordObj(billNo);
 					if (recordObj != null && recordObj.size() > 0) {
-						
+
 						ch1Obj = (BillingClaimHeader1Data) recordObj.get(0);
-						
+
 						//multisite. check provider no
 					    if ((isSiteAccessPrivacy || isTeamAccessPrivacy) && (providerMap.get(ch1Obj.getProviderNo())== null || !mgrSites.contains(ch1Obj.getClinic())))
 					    		isMultiSiteProvider = false;
-						
-					    if 	(isMultiSiteProvider) {	
+
+					    if 	(isMultiSiteProvider) {
 						UpdateDate = ch1Obj.getUpdate_datetime(); //.substring(0,10);
 						DemoNo = ch1Obj.getDemographic_no();
 						DemoName = ch1Obj.getDemographic_name();
@@ -341,9 +341,9 @@ function checkSettle(status) {
 						DemoPostal = "";
 						DemoDOB = ch1Obj.getDob();
 						DemoSex = ch1Obj.getSex().equals("1") ? "M" : "F";
-						
-						DemographicData.Demographic sdemo = (new DemographicData()).getDemographic(DemoNo);
-						hin = sdemo.getHIN();
+
+						org.oscarehr.common.model.Demographic sdemo = (new DemographicData()).getDemographic(DemoNo);
+						hin = sdemo.getHin()+sdemo.getVer();
 						DemoDOB = sdemo.getYearOfBirth() + sdemo.getMonthOfBirth() + sdemo.getDateOfBirth();
 						DemoSex = sdemo.getSex();
 						DemoRS = sdemo.getRosterStatus();
@@ -382,7 +382,7 @@ function checkSettle(status) {
 							DemoProvince = "";
 							DemoPostal = "";
 							DemoDOB = "";
-							DemoSex = "";		
+							DemoSex = "";
 							r_doctor = "";
 							r_doctor_ohip_s = "";
 							r_doctor_s = "";
@@ -390,13 +390,13 @@ function checkSettle(status) {
 							specialty = "";
 							r_status = "";
 							roster_status = "";
-							
+
 							out.write("<script>window.alert('sorry, billing access denied.')</script>");
 					    }
 					}
 				}
 
-				if("HCP".equals(payProgram) || "RMB".equals(payProgram) || "WCB".equals(payProgram) 
+				if("HCP".equals(payProgram) || "RMB".equals(payProgram) || "WCB".equals(payProgram)
 						|| request.getParameter("billing_no").length() < 1) {
 					htmlPaid = "";
 				} else {
@@ -406,7 +406,7 @@ function checkSettle(status) {
 						+ tProp.getProperty("payment") + "' /><input type='hidden' name='oldPayment' value='"
                                                 + tProp.getProperty("payment") + "' /><input type='hidden' name='payDate' value='"
                                                 + UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "'/></br>";
-					htmlPaid += "Refund</br><input type='text' name='refund' size=5 value='" 
+					htmlPaid += "Refund</br><input type='text' name='refund' size=5 value='"
 						+ tProp.getProperty("refund") + "' /></br>";
                                         payer = tProp.getProperty("billTo");
                                         if( payer == null ) {
@@ -434,14 +434,14 @@ function checkSettle(status) {
                     OHIP Claim No
 		</th>
 		<th style="text-align:left;" colspan="3" width="10%"><input type="text" name="claim_no"
-			value="<%=nullToEmpty(claimNo)%>" maxsize="10"></th>				
+			value="<%=nullToEmpty(claimNo)%>" maxsize="10"></th>
 	</tr>
 	</form>
 </table>
 
 <!-- RA error -->
-<% 
-if(bFlag) { 
+<%
+if(bFlag) {
 	//billNo = "44071";
 	List lReject = obj.getBillingRejectList(billNo);
 	List lError = obj.getBillingExplanatoryList(billNo);
@@ -449,7 +449,7 @@ if(bFlag) {
 	JdbcBillingErrorCodeImpl errorObj = new JdbcBillingErrorCodeImpl();
 %>
 <table width="100%" border="0" class="myIvory">
-	<% for(int i=0; i<lError.size(); i++) { 
+	<% for(int i=0; i<lError.size(); i++) {
 	String codeNo = (String) lError.get(i);
 	if("".equals(codeNo)) continue;
 	String codeDesc = errorObj.getCodeDesc((String)lError.get(i));
@@ -648,7 +648,7 @@ if(bFlag) {
 
 					%>
 			<option value="<%=BillingDataHlp.vecPaymentType.get(i) %>"
-				<%=payProgram.equals((String)BillingDataHlp.vecPaymentType.get(i))? "selected":"" %>><%=BillingDataHlp.vecPaymentType.get(i + 1)%></option>
+				<%=payProgram.equals(BillingDataHlp.vecPaymentType.get(i))? "selected":"" %>><%=BillingDataHlp.vecPaymentType.get(i + 1)%></option>
 			<%}
 
 				%>
@@ -680,15 +680,15 @@ if(bFlag) {
 
 <% // multisite start ==========================================
 String curSite = request.getParameter("site")==null?ch1Obj.getClinic():request.getParameter("site");
-if (bMultisites) 
-{ 
+if (bMultisites)
+{
         	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
           	List<Site> sites = siteDao.getActiveSitesByProviderNo((String) session.getAttribute("user"));
           	// now get all providers eligible
-          	
-          	
-			List pList; 
-			
+
+
+			List pList;
+
 			if (isTeamBillingOnly || isTeamAccessPrivacy) {
 				pList = (new JdbcBillingPageUtil()).getCurTeamProviderStr((String) session.getAttribute("user"));
 			}
@@ -696,14 +696,14 @@ if (bMultisites)
 				pList = (new JdbcBillingPageUtil()).getCurSiteProviderStr((String) session.getAttribute("user"));
 			}
 			else {
-				pList = (Vector) (new JdbcBillingPageUtil()).getCurProviderStr();
+				pList =  (new JdbcBillingPageUtil()).getCurProviderStr();
 			}
-			
+
           	HashSet<String> pros=new HashSet<String>();
           	for (Object s:pList) {
           		pros.add(((String)s).substring(0, ((String)s).indexOf("|")));
           	}
-      %> 
+      %>
       <script>
 var _providers = [];
 <%	for (int i=0; i<sites.size(); i++) { %>
@@ -730,19 +730,19 @@ function changeSite(sel) {
       	<select id="provider_no" name="provider_no" style="font-size: 80%;width:140px"></select>
       	<script>
      	changeSite(document.getElementById("site"));
-      	document.getElementById("provider_no").value='<%=Provider%>';     	
+      	document.getElementById("provider_no").value='<%=Provider%>';
       	</script>
 <%  // multisite end ==========================================
 } else {
-%>	 
+%>
 		<select
 			id="provider_no" style="font-size: 80%;" name="provider_no">
 			<option value=""><bean:message
 				key="billing.billingCorrection.msgSelectProvider" /></option>
 			<%
-			
-			List pList; 
-			
+
+			List pList;
+
 			if (isTeamBillingOnly || isTeamAccessPrivacy) {
 				pList = (new JdbcBillingPageUtil()).getCurTeamProviderStr((String) session.getAttribute("user"));
 			}
@@ -750,10 +750,10 @@ function changeSite(sel) {
 				pList = (new JdbcBillingPageUtil()).getCurSiteProviderStr((String) session.getAttribute("user"));
 			}
 			else {
-				pList = (Vector) (new JdbcBillingPageUtil()).getCurProviderStr();
+				pList =  (new JdbcBillingPageUtil()).getCurProviderStr();
 			}
-										
-					
+
+
 				for (int i = 0; i < pList.size(); i++) {
 					String temp[] = ((String) pList.get(i)).split("\\|");
 
@@ -767,21 +767,21 @@ function changeSite(sel) {
 		</select>
 <% } %>
 
-		
+
 		 <input type="hidden" name="xml_provider_no" value="<%=Provider%>"></td>
 	</tr>
 	<tr>
 		<td width="54%"><b> <%if (OscarProperties.getInstance().getBooleanProperty("rma_enabled", "true")) { %> Clinic Nbr <% } else { %> <bean:message key="billing.billingCorrection.formVisitType"/> <% } %>: </b> <input
-			type="hidden" name="xml_visittype" value="<%=visittype%>"> 
+			type="hidden" name="xml_visittype" value="<%=visittype%>">
 			<select style="font-size: 80%;" name="visittype">
 			<option value=""><bean:message key="billing.billingCorrection.msgSelectVisitType" /></option>
 			<% if (OscarProperties.getInstance().getBooleanProperty("rma_enabled", "true")) { %>
-			 <% 
-			    ClinicNbrDao cnDao = (ClinicNbrDao) SpringUtils.getBean("clinicNbrDao"); 
+			 <%
+			    ClinicNbrDao cnDao = (ClinicNbrDao) SpringUtils.getBean("clinicNbrDao");
 				ArrayList<ClinicNbr> nbrs = cnDao.findAll();
                	for (ClinicNbr clinic : nbrs) {
 					String valueString = String.format("%s | %s", clinic.getNbrValue(), clinic.getNbrString());
-					%>			    
+					%>
 				<option value="<%=valueString%>" <%=visittype.startsWith(clinic.getNbrValue())?"selected":""%>><%=valueString%></option>
 		 	<%	}
 			} else { %>
@@ -813,7 +813,7 @@ function changeSite(sel) {
 				<option value="IHF " <%=sliCode.startsWith("IHF")?"selected":""%>><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.IHF" /></option>
 				<option value="OFF " <%=sliCode.startsWith("OFF")?"selected":""%>><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.OFF" /></option>
 				<option value="OTN " <%=sliCode.startsWith("OTN")?"selected":""%>><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.OTN" /></option>
-			</select> 
+			</select>
 	   </td>
 </table>
 
@@ -841,9 +841,9 @@ function changeSite(sel) {
 				if (bFlag) {
 					if (recordObj.size() > 1) {
 						for (int i = 1; i < recordObj.size(); i++) {
-							//multisite. skip display if billing provider_no not in current access privacy 
+							//multisite. skip display if billing provider_no not in current access privacy
 							if (!isMultiSiteProvider) continue;
-							
+
 							itemObj = (BillingItemData) recordObj.get(i);
 
 							serviceCode = itemObj.getService_code();

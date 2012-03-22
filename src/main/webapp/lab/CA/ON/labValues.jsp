@@ -22,7 +22,7 @@ if (identifier == null) identifier = "NULL";
 String highlight = "#E0E0FF";
 
 DemographicData dData = new DemographicData();
-DemographicData.Demographic demographic =  dData.getDemographic(demographicNo);
+org.oscarehr.common.model.Demographic demographic =  dData.getDemographic(demographicNo);
 
 ArrayList list = null;
 
@@ -41,29 +41,29 @@ if (!demographicNo.equals("null")){
 }
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 <html>
@@ -78,9 +78,9 @@ if (!demographicNo.equals("null")){
 </head>
 
 <script language="JavaScript">
-function getComment() {    
+function getComment() {
     var commentVal = prompt('<bean:message key="oscarMDS.segmentDisplay.msgComment"/>', '');
-    document.acknowledgeForm.comment.value = commentVal;    
+    document.acknowledgeForm.comment.value = commentVal;
     return true;
 }
 
@@ -145,7 +145,7 @@ window.close();
 									<tr>
 										<td colspan="2" nowrap>
 										<div class="FieldData"><strong><bean:message
-											key="oscarMDS.segmentDisplay.formDateBirth" />: </strong> <%=demographic.getDob("-")%>
+											key="oscarMDS.segmentDisplay.formDateBirth" />: </strong> <%=DemographicData.getDob(demographic,"-")%>
 										</div>
 										</td>
 										<td colspan="2" nowrap>
@@ -194,7 +194,7 @@ window.close();
 			<tr>
 				<td colspan="4" height="7">&nbsp;</td>
 			</tr>
-                                        
+
 		</table>
 
 		<table width="100%" border="0" cellspacing="0" cellpadding="2"
@@ -215,7 +215,7 @@ window.close();
 					key="oscarMDS.segmentDisplay.formDateTimeCompleted" /></td>
 			</tr>
 			<%  int linenum = 0;
-                            if (list != null){ 
+                            if (list != null){
                                for (int i = 0 ;  i < list.size(); i++){
                                    Hashtable h = (Hashtable) list.get(i);
                                    String lineClass = "NormalRes";
@@ -247,12 +247,12 @@ window.close();
 					onClick="window.close()"> <input type="button"
 					value=" <bean:message key="global.btnPrint"/> "
 					onClick="window.print()">
-                               <%-- <input type="button" value="Plot" 
+                               <%-- <input type="button" value="Plot"
                                 onclick="window.open('../../../oscarEncounter/GraphMeasurements.do?method=actualLab&demographic_no=<%=demographicNo%>&labType=<%=labType%>&identifier=<%=identifier%>&testName=<%=testName%>');"/>
-                                --%>        
-                               <input type="button" value="Plot" 
+                                --%>
+                               <input type="button" value="Plot"
                                 onclick="window.location = 'labValuesGraph.jsp?demographic_no=<%=demographicNo%>&labType=<%=labType%>&identifier=<%=identifier%>&testName=<%=testName%>';"/>
-                
+
                                 </td>
 			</tr>
 		</table>

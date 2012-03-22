@@ -1,26 +1,26 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * Jason Gallagher
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 <%@ page
@@ -30,7 +30,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <link rel="stylesheet" type="text/css"
 	href="../oscarEncounter/encounterStyles.css">
-<%  //This could be done alot better.  
+<%  //This could be done alot better.
 if(session.getValue("user") == null)
     response.sendRedirect("../logout.htm");
   String curUser_no,userfirstname,userlastname;
@@ -39,34 +39,34 @@ if(session.getValue("user") == null)
   String startStr = "";
   String endStr   = "";
   String injectionType ="";
-    
+
   if (request.getParameter("startDate") != null && request.getParameter("startDate") != null && request.getParameter("startDate") != null  ){
 
       String startDate =     request.getParameter("startDate");
       String endDate  =      request.getParameter("endDate");
       injectionType = request.getParameter("injectionType");
-      
+
       java.util.Date sDate = UtilDateUtilities.StringToDate(startDate);
-      java.util.Date eDate = UtilDateUtilities.StringToDate(endDate);            
-      
+      java.util.Date eDate = UtilDateUtilities.StringToDate(endDate);
+
       String keyVal = "lot";
       if (injectionType != null && injectionType.equals("RH")){
           keyVal = "product";
       }
-      
+
       ArrayList<Map<String,Object>> list = PreventionData.getExtValues(injectionType,sDate,eDate,keyVal);
       pageContext.setAttribute("list",list);
-      
-      startStr = UtilDateUtilities.DateToString(sDate); 
-      endStr   = UtilDateUtilities.DateToString(eDate);   
+
+      startStr = UtilDateUtilities.DateToString(sDate);
+      endStr   = UtilDateUtilities.DateToString(eDate);
   }else{
      Calendar cal = Calendar.getInstance();
      int daysTillMonday = cal.get(Calendar.DAY_OF_WEEK) - Calendar.MONDAY;
      java.util.Date endDate = cal.getTime();
      cal.add(Calendar.DATE,-daysTillMonday);
      java.util.Date startDate = cal.getTime();
-  
-     startStr = UtilDateUtilities.DateToString(startDate); 
+
+     startStr = UtilDateUtilities.DateToString(startDate);
      endStr   = UtilDateUtilities.DateToString(endDate);
   }
 %>
@@ -89,7 +89,7 @@ table.ele {
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 <script type="text/javascript">
-  
+
 </script>
 
 </head>
@@ -150,7 +150,7 @@ table.ele {
 <%
     ArrayList<Map<String,Object>> report = (ArrayList<Map<String,Object>>) pageContext.getAttribute("list");
     if (report != null){
-        DemographicData demoData= new DemographicData();                       
+        DemographicData demoData= new DemographicData();
     %>
 <table class="ele">
 	<tr>
@@ -163,10 +163,10 @@ table.ele {
 		<th>Injection Date</th>
 		<th>Comments</th>
 	</tr>
-	<% for (int i = 0; i < report.size(); i++){ 
+	<% for (int i = 0; i < report.size(); i++){
 				Map<String,Object> h = report.get(i);
                 String demo = (String) h.get("demographic_no");
-                DemographicData.Demographic demog = demoData.getDemographic(demo);
+                org.oscarehr.common.model.Demographic demog = demoData.getDemographic(demo);
                 String comments = PreventionData.getPreventionComment((String)h.get("preventions_id"));
                 if( comments == null ) {
                     comments = "";
@@ -176,7 +176,7 @@ table.ele {
 		<td><%=i+1%></td>
 		<td><%=demog.getFirstName()%></td>
 		<td><%=demog.getLastName()%></td>
-		<td><%=demog.getDob("-")%></td>
+		<td><%=DemographicData.getDob(demog,"-")%></td>
 		<td><%=demog.getChartNo()%></td>
 		<td><%=h.get("val")%>&nbsp;</td>
 		<td><%=h.get("prevention_date")%></td>

@@ -716,7 +716,7 @@ public class PHRService {
 // this code can't possibly be run, its using the wrong client
 		
 //		DemographicData dd = new DemographicData();
-//		DemographicData.Demographic demo = dd.getDemographic(demographic);
+//		org.oscarehr.common.model.Demographic demo = dd.getDemographic(demographic);
 //		String recipientId = demo.getIndivoId();
 //		try {
 //			TalkClient client = getTalkClient();

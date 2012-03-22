@@ -93,7 +93,7 @@ public class DSGuidelineAction extends DispatchAction {
             conditionResults.add(new ConditionResult(dsCondition, result, actualValues));
         }
         DemographicData demographicData = new DemographicData();
-        DemographicData.Demographic demographic = demographicData.getDemographic(demographicNo);
+        org.oscarehr.common.model.Demographic demographic = demographicData.getDemographic(demographicNo);
 
         request.setAttribute("patientName", demographic.getFirstName() + " " + demographic.getLastName());
         request.setAttribute("guideline", dsGuideline);

@@ -1,21 +1,21 @@
 // -----------------------------------------------------------------------------------------------------------------------
 // *
 // *
-// * This software is published under the GPL GNU General Public License. 
-// * This program is free software; you can redistribute it and/or 
-// * modify it under the terms of the GNU General Public License 
-// * as published by the Free Software Foundation; either version 2 
-// * of the License, or (at your option) any later version. * 
-// * This program is distributed in the hope that it will be useful, 
-// * but WITHOUT ANY WARRANTY; without even the implied warranty of 
-// * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-// * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-// * along with this program; if not, write to the Free Software 
-// * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-// * 
+// * This software is published under the GPL GNU General Public License.
+// * This program is free software; you can redistribute it and/or
+// * modify it under the terms of the GNU General Public License
+// * as published by the Free Software Foundation; either version 2
+// * of the License, or (at your option) any later version. *
+// * This program is distributed in the hope that it will be useful,
+// * but WITHOUT ANY WARRANTY; without even the implied warranty of
+// * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+// * along with this program; if not, write to the Free Software
+// * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+// *
 // *
 // * Author: Ivy Chan
-// * Company: iConcept Technologes Inc. 
+// * Company: iConcept Technologes Inc.
 // * Created on: October 31, 2004
 // -----------------------------------------------------------------------------------------------------------------------
 
@@ -63,9 +63,9 @@ import oscar.util.UtilDateUtilities;
 
 
 public class FrmFormAction extends Action {
-    
+
 	private static Logger logger=MiscUtils.getLogger();
-	
+
     /**
      * To create a new form which can write to measurement and osdsf, you need to ...
      * Create a xml file with all the measurement types named <formName>.xml (check form/VTForm.xml as an example)
@@ -74,34 +74,34 @@ public class FrmFormAction extends Action {
      * Add the form description to encounterForm table of the database
      **/
 
-    
+
     private String _dateFormat = "yyyy/MM/dd";
-    
-    
+
+
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException{
-                             
-        ActionMessages errors = new ActionMessages();    
-        boolean valid = true;          
-        logger.debug("FrmFormAction is called "+currentMem());        
-        
+
+        ActionMessages errors = new ActionMessages();
+        boolean valid = true;
+        logger.debug("FrmFormAction is called "+currentMem());
+
         logger.debug("current mem 1 "+currentMem());
-        FrmFormForm frm = (FrmFormForm) form;               
-        
-        HttpSession session = request.getSession();        
+        FrmFormForm frm = (FrmFormForm) form;
+
+        HttpSession session = request.getSession();
         EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
         request.getSession().setAttribute("EctSessionBean", bean);
-        
-        String formName = (String) frm.getValue("formName"); 
+
+        String formName = (String) frm.getValue("formName");
         logger.debug("formNme Top "+formName);
         String formId = (String) frm.getValue("formId");
         String dateEntered = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat);
         String timeStamp = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyy-MM-dd hh:mm:ss");
         //String visitCod = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyyMMdd");
         String today = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyy-MM-dd");
-                        
+
         logger.debug("current mem 2 "+currentMem());
-        
+
         Properties props = new Properties();
         EctFormProp formProp = EctFormProp.getInstance();
         Vector measurementTypes = formProp.getMeasurementTypes();
@@ -109,23 +109,23 @@ public class FrmFormAction extends Action {
         String demographicNo = null;
         String providerNo = (String) session.getAttribute("user");
         if ( bean != null)
-            demographicNo = bean.getDemographicNo();                        
-        
+            demographicNo = bean.getDemographicNo();
+
         logger.debug("current mem 3 "+currentMem());
-        
+
         errors.clear();
         valid = true;
-        
+
         logger.debug("current mem 4 "+currentMem());
-        
+
         String submit = request.getParameter("submit");
-        
+
         EctMeasurementTypesBean mt;
         EctValidationsBean validation;
         EctValidation ectValidation = new EctValidation();
         //Validate each measurement
         long startTime = System.currentTimeMillis();
-        
+
         logger.debug("current mem 5 "+currentMem());
         for(int i=0; i<measurementTypes.size(); i++){
             mt = (EctMeasurementTypesBean) measurementTypes.elementAt(i);
@@ -133,20 +133,20 @@ public class FrmFormAction extends Action {
             String inputValue = (String) frm.getValue(mt.getType()+"Value");
             String observationDate = (String) frm.getValue(mt.getType()+"Date");
             if(observationDate==null){
-                observationDate = today;                
+                observationDate = today;
             }
             else if(observationDate.compareTo("")==0){
-                observationDate = today; 
+                observationDate = today;
             }
-                        
+
             //parse the checkbox value
             inputValue = parseCheckBoxValue(inputValue, validation.getName());
-            
+
             //validate
-            valid = validate( inputValue, observationDate, mt, validation, request,errors);                
-        } 
+            valid = validate( inputValue, observationDate, mt, validation, request,errors);
+        }
         valid = ectValidation.isDate((String) frm.getValue("visitCod"));
-        
+
         logger.debug("current mem 6 "+currentMem());
         long endTime = System.currentTimeMillis();
         long delTime = endTime - startTime;
@@ -154,25 +154,25 @@ public class FrmFormAction extends Action {
 
         if(valid){
             DemographicData demoData = new DemographicData();
-            DemographicData.Demographic demo = demoData.getDemographic(demographicNo);
+            org.oscarehr.common.model.Demographic demo = demoData.getDemographic(demographicNo);
             logger.debug("is valid, procede write to table");
             //Store form information as properties for saving to form table
             props.setProperty("demographic_no", demographicNo);
             props.setProperty("provider_no", providerNo);
             props.setProperty("visitCod", (String) frm.getValue("visitCod"));
-            props.setProperty("dob", demo.getDob("-"));
+            props.setProperty("dob", DemographicData.getDob(demo,"-"));
             props.setProperty("gender", demo.getSex());
             props.setProperty("surname", demo.getLastName());
             props.setProperty("givenName", demo.getFirstName());
-            
+
             String diagnosisVT = org.apache.commons.lang.StringEscapeUtils.escapeSql((String) frm.getValue("diagnosisVT"));
 
             String subjective = org.apache.commons.lang.StringEscapeUtils.escapeSql((String) frm.getValue("subjective"));
             String objective = org.apache.commons.lang.StringEscapeUtils.escapeSql((String) frm.getValue("objective"));
             String assessment = org.apache.commons.lang.StringEscapeUtils.escapeSql((String) frm.getValue("assessment"));
             String plan = org.apache.commons.lang.StringEscapeUtils.escapeSql((String) frm.getValue("plan"));
-            
-            //for VTForm            
+
+            //for VTForm
             props.setProperty("Diagnosis", diagnosisVT);
             props.setProperty("Subjective", subjective);
             props.setProperty("Objective", objective);
@@ -181,36 +181,36 @@ public class FrmFormAction extends Action {
 
             startTime = System.currentTimeMillis();
             for(int i=0; i<measurementTypes.size(); i++){
-                logger.debug("current mem 7.1."+i+" "+currentMem()); 
+                logger.debug("current mem 7.1."+i+" "+currentMem());
                 mt = (EctMeasurementTypesBean) measurementTypes.elementAt(i);
                 validation = (EctValidationsBean) mt.getValidationRules().elementAt(0);
                 String type = mt.getType();
-                String inputValue = (String) frm.getValue(type+"Value");                
-                String lastData = (String) frm.getValue(type+"LastData");                
+                String inputValue = (String) frm.getValue(type+"Value");
+                String lastData = (String) frm.getValue(type+"LastData");
                 String lastDataEnteredDate = (String) frm.getValue(type+"LastDataEnteredDate");
 
                 String observationDate = (String) frm.getValue(type+"Date");
                 if(observationDate==null){
-                    observationDate = today;                
+                    observationDate = today;
                 }
                 else if(observationDate.compareTo("")==0){
-                    observationDate = today; 
+                    observationDate = today;
                 }
-                
+
                 String comments = (String) frm.getValue(type+"Comments");
                 comments = org.apache.commons.lang.StringEscapeUtils.escapeSql(comments);
-                
+
                 logger.debug("type: " + type + " inputValue: " + inputValue);
                 //parse the checkbox value
                 inputValue = parseCheckBoxValue(inputValue, validation.getName());
-                
+
                 //Write to Measurement Table
 
                 if(inputValue!=null){
                     if(submit.equalsIgnoreCase("exit") && !inputValue.equalsIgnoreCase(""))
-                        write2MeasurementTable(demographicNo, providerNo, mt, inputValue, observationDate, comments);                
+                        write2MeasurementTable(demographicNo, providerNo, mt, inputValue, observationDate, comments);
                 }
-                
+
                 //Store all input value as properties for saving to form table
                 if(lastData!=null)
                     props.setProperty(type+"LastData", lastData);
@@ -218,16 +218,16 @@ public class FrmFormAction extends Action {
                     props.setProperty(type+"LastDataEnteredDate", lastDataEnteredDate);
 
                 props.setProperty(type+"Date", observationDate==null?dateEntered:observationDate);
-                props.setProperty(type+"Comments", comments==null?"":comments);                
-                    
+                props.setProperty(type+"Comments", comments==null?"":comments);
+
                 if(!GenericValidator.isBlankOrNull(inputValue)){
                     props.setProperty(type+"Value", inputValue);
-                    
+
                     if(type.equalsIgnoreCase("BP")){
                         //extract SBP and DBP for blood pressure
                         String bp = inputValue;
                         if(bp!=null){
-                            int sbpIndex = bp.indexOf("/");                    
+                            int sbpIndex = bp.indexOf("/");
                             if(sbpIndex>=0){
                                 String sbp = bp.substring(0,sbpIndex);
                                 String dbp = bp.substring(sbpIndex+1);
@@ -237,14 +237,14 @@ public class FrmFormAction extends Action {
                         }
                     }
                 }
-                logger.debug("current mem 7.2."+i+" "+currentMem()); 
+                logger.debug("current mem 7.2."+i+" "+currentMem());
             }
             endTime = System.currentTimeMillis();
             delTime = endTime - startTime;
             logger.debug("Time spent on write2Measurements: " + Long.toString(delTime));
-            
-            //Store the the form table for keeping the current record            
-            logger.debug("current mem 8 "+currentMem()); 
+
+            //Store the the form table for keeping the current record
+            logger.debug("current mem 8 "+currentMem());
             try{
                 String sql = "SELECT * FROM form"+formName + " WHERE demographic_no='"+demographicNo + "' AND ID=0";
                 FrmRecordHelp frh = new FrmRecordHelp();
@@ -253,23 +253,23 @@ public class FrmFormAction extends Action {
             }catch(SQLException e){
                 logger.error("Error", e);
             }
-            
-            logger.debug("current mem 9 "+currentMem()); 
-            //Send to Mils thru xml-rpc            
+
+            logger.debug("current mem 9 "+currentMem());
+            //Send to Mils thru xml-rpc
             Properties nameProps = convertName(formName);
             String xmlData = FrmToXMLUtil.convertToXml(measurementTypes, nameProps, props);
             String decisionSupportURL = connect2OSDSF(xmlData);
             request.setAttribute("decisionSupportURL", decisionSupportURL);
-            logger.debug("current mem 9 "+currentMem()); 
-        }else{                             
+            logger.debug("current mem 9 "+currentMem());
+        }else{
             //return to the orignal form
             return (new ActionForward("/form/SetupForm.do?formName="+formName+"&formId=0"));
         }
-        
+
          //return mapping.findForward("success");
-        //forward to the for with updated formId  
-        
-        
+        //forward to the for with updated formId
+
+
         logger.debug("submit value: " + submit);
         if(submit.equalsIgnoreCase("exit")){
             String toEChart = "[" + timeStamp + ".: Vascular Tracker] \n\n" ;
@@ -283,23 +283,23 @@ public class FrmFormAction extends Action {
         logger.debug("formNameByFormTable"+formNameByFormTable);
         String[] formPath = {"","0"};
         try{
-            formPath = (new FrmData()).getShortcutFormValue(demographicNo, formNameByFormTable);    
-        }catch(SQLException e){            
+            formPath = (new FrmData()).getShortcutFormValue(demographicNo, formNameByFormTable);
+        }catch(SQLException e){
             logger.error("Error", e);
         }
         return (new ActionForward("/form/SetupForm.do?formName="+formName+"&formId="+formPath[1]));
     }
-        
-    
-    
-    
-    
+
+
+
+
+
     private boolean validate(String inputValue, String observationDate, EctMeasurementTypesBean mt, EctValidationsBean validation, HttpServletRequest request,ActionMessages errors ){
-        EctValidation ectValidation = new EctValidation();    
+        EctValidation ectValidation = new EctValidation();
         boolean valid = true;
-        
+
         String inputTypeDisplay = mt.getTypeDesc();
-        String inputValueName = mt.getType()+"Value";   
+        String inputValueName = mt.getType()+"Value";
         String inputDateName = mt.getType()+"Date";
         String regExp = validation.getRegularExp();
 
@@ -309,80 +309,80 @@ public class FrmFormAction extends Action {
         int iMin = Integer.parseInt(validation.getMinLength()==null?"0":validation.getMinLength());
         int iIsDate = Integer.parseInt(validation.getIsDate()==null?"0":validation.getIsDate());
         int iIsNumeric = Integer.parseInt(validation.getIsNumeric()==null?"0":validation.getIsNumeric());
-        
-        
-        if(!GenericValidator.isBlankOrNull(inputValue)){            
-            if(iIsNumeric==1 && !ectValidation.isInRange(dMax, dMin, inputValue)){                       
+
+
+        if(!GenericValidator.isBlankOrNull(inputValue)){
+            if(iIsNumeric==1 && !ectValidation.isInRange(dMax, dMin, inputValue)){
                 errors.add(inputValueName, new ActionMessage("errors.range", inputTypeDisplay, Double.toString(dMin), Double.toString(dMax)));
-                saveErrors(request, errors);            
+                saveErrors(request, errors);
                 valid = false;
             }
-            if(!ectValidation.maxLength(iMax, inputValue)){                       
+            if(!ectValidation.maxLength(iMax, inputValue)){
                 errors.add(inputValueName, new ActionMessage("errors.maxlength", inputTypeDisplay, Integer.toString(iMax)));
                 saveErrors(request, errors);
                 valid = false;
             }
-            if(!ectValidation.minLength(iMin, inputValue)){                       
+            if(!ectValidation.minLength(iMin, inputValue)){
                 errors.add(inputValueName, new ActionMessage("errors.minlength", inputTypeDisplay, Integer.toString(iMin)));
                 saveErrors(request, errors);
                 valid = false;
             }
-            if(!ectValidation.matchRegExp(regExp, inputValue)){                        
+            if(!ectValidation.matchRegExp(regExp, inputValue)){
                 errors.add(inputValueName,
                 new ActionMessage("errors.invalid", inputTypeDisplay));
                 saveErrors(request, errors);
                 valid = false;
             }
-            if(mt.getType().equalsIgnoreCase("BP")&&!ectValidation.isValidBloodPressure(regExp, inputValue)){                        
+            if(mt.getType().equalsIgnoreCase("BP")&&!ectValidation.isValidBloodPressure(regExp, inputValue)){
                 errors.add(inputValueName,
                 new ActionMessage("error.bloodPressure"));
                 saveErrors(request, errors);
                 valid = false;
             }
-            if(iIsDate==1 && !ectValidation.isDate(inputValue)){                        
+            if(iIsDate==1 && !ectValidation.isDate(inputValue)){
                 errors.add(inputValueName,
                 new ActionMessage("errors.invalidDate", inputTypeDisplay));
                 saveErrors(request, errors);
                 valid = false;
-            }        
-            if(!ectValidation.isDate(observationDate)){                        
+            }
+            if(!ectValidation.isDate(observationDate)){
                 errors.add(inputDateName,
                 new ActionMessage("errors.invalidDate", inputTypeDisplay));
                 saveErrors(request, errors);
                 valid = false;
             }
-        }   
+        }
         return valid;
     }
-    
-    
-    
-    
-    private boolean write2MeasurementTable(String demographicNo, String providerNo, 
-                                        EctMeasurementTypesBean mt, String inputValue, 
+
+
+
+
+    private boolean write2MeasurementTable(String demographicNo, String providerNo,
+                                        EctMeasurementTypesBean mt, String inputValue,
                                         String dateObserved, String comments){
         boolean newDataAdded = false;
 
         try{
-                
+
             org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
             if(!gValidator.isBlankOrNull(inputValue)){
                 //Find if the same data has already been entered into the system
-                String sql = "SELECT * FROM measurements WHERE demographicNo='"+demographicNo 
-                            + "' AND type='" + mt.getType() + "' AND dataField='"+inputValue 
+                String sql = "SELECT * FROM measurements WHERE demographicNo='"+demographicNo
+                            + "' AND type='" + mt.getType() + "' AND dataField='"+inputValue
                             + "' AND measuringInstruction='" + mt.getMeasuringInstrc() + "' AND comments='" + comments
                             + "' AND dateObserved='" + dateObserved + "'";
                 ResultSet rs = DBHandler.GetSQL(sql);
                 if(!rs.next()){
                     newDataAdded = true;
-                    //Write to the Dababase if all input values are valid                        
+                    //Write to the Dababase if all input values are valid
                     sql = "INSERT INTO measurements"
                             +"(type, demographicNo, providerNo, dataField, measuringInstruction, comments, dateObserved, dateEntered)"
                             +" VALUES ('"+mt.getType()+"','"+demographicNo+"','"+providerNo+"','"+inputValue+"','"
-                            + mt.getMeasuringInstrc() +"','"+comments+"','"+dateObserved+"', now())";                           
+                            + mt.getMeasuringInstrc() +"','"+comments+"','"+dateObserved+"', now())";
                     DBHandler.RunSQL(sql);
                 }
-                rs.close();                
+                rs.close();
             }
         }
         catch(SQLException e){
@@ -390,7 +390,7 @@ public class FrmFormAction extends Action {
         }
         return newDataAdded;
     }
-    
+
     private String connect2OSDSF(String xmlResult){
         Vector data2OSDSF = new Vector();
         data2OSDSF.add("xml");
@@ -401,7 +401,7 @@ public class FrmFormAction extends Action {
         }
         //data2OSDSF.add("dummy");
         //send to osdsf thru XMLRPC
-        try{            
+        try{
             XmlRpcClient xmlrpc = new XmlRpcClient(osdsfRPCURL);
             String result = (String) xmlrpc.execute("vt.getAndSaveRlt", data2OSDSF);
             logger.debug("Reverse result: " + result);
@@ -417,16 +417,16 @@ public class FrmFormAction extends Action {
         }
         /*catch(MalformedURLException e){
             logger.error("Error", e);
-        }*/        
+        }*/
     }
-    
+
     private Properties convertName(String formName){
         Properties osdsf = new Properties();
         InputStream is = getClass().getResourceAsStream("/../../form/" + formName + "2Osdsf.properties");
         try {
                 osdsf.load(is);
         } catch (Exception e) {
-                logger.debug("Error, file " + formName + ".properties not found.");			
+                logger.debug("Error, file " + formName + ".properties not found.");
         }
 
         try{
@@ -437,25 +437,25 @@ public class FrmFormAction extends Action {
         }
         return osdsf;
     }
-   
-        
-    private String parseCheckBoxValue(String inputValue, String validationName){        
+
+
+    private String parseCheckBoxValue(String inputValue, String validationName){
 
         if(validationName.equalsIgnoreCase("Yes/No")){
             /*if(inputValue==null)
                 inputValue="no";
-            else*/ 
+            else*/
             if(inputValue!=null){
                 if (inputValue.equalsIgnoreCase("on"))
-                        inputValue="yes";    
+                        inputValue="yes";
                 else if (inputValue.equalsIgnoreCase("off"))
                         inputValue="no";
             }
-        }        
+        }
         return inputValue;
     }
-     
-    public String currentMem(){        
+
+    public String currentMem(){
        long total = Runtime.getRuntime().totalMemory();
        long free  = Runtime.getRuntime().freeMemory();
        long Used = total -  free;

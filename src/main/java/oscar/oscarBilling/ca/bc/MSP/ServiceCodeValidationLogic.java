@@ -38,7 +38,7 @@ import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarBilling.ca.bc.data.BillingFormData.BillingService;
 import oscar.oscarDB.DBHandler;
-import oscar.oscarDemographic.data.DemographicData.Demographic;
+import org.oscarehr.common.model.Demographic;
 import oscar.util.DateUtils;
 import oscar.util.SqlUtils;
 import oscar.util.UtilMisc;

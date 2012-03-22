@@ -22,7 +22,7 @@
  * Send2IndivoAction.java
  *
  * Created on January 8, 2007, 4:39 PM
- * 
+ *
  */
 
 package oscar.dms.actions;
@@ -38,6 +38,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.RemoteDataLogDao;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.RemoteDataLog;
 import org.oscarehr.myoscar_server.ws.ItemAlreadyExistsException_Exception;
 import org.oscarehr.myoscar_server.ws.MedicalDataTransfer2;
@@ -71,12 +72,12 @@ public class SendDocToPhrAction extends Action {
 
 		String[] files = request.getParameterValues("docNo");
 		String demographicId=request.getParameter("demoId");
-		
+
 		if (files != null) {
 
 			logger.debug("Preparing to send " + files.length + " files");
 
-			DemographicData.Demographic demo = new DemographicData().getDemographic(demographicId);
+			Demographic demo = new DemographicData().getDemographic(demographicId);
 			LoggedInInfo loggedInfo=LoggedInInfo.loggedInInfo.get();
 			ProviderData prov = new ProviderData(loggedInfo.loggedInProvider.getProviderNo());
 
@@ -90,7 +91,7 @@ public class SendDocToPhrAction extends Action {
 		return mapping.findForward("finished");
 	}
 
-	private static void addOrUpdate(HttpServletRequest request, DemographicData.Demographic demo, ProviderData prov, EDoc eDoc) {
+	private static void addOrUpdate(HttpServletRequest request, Demographic demo, ProviderData prov, EDoc eDoc) {
 		logger.debug("called addOrUpdate()");
 
 		try {
@@ -103,14 +104,14 @@ public class SendDocToPhrAction extends Action {
     		XmlUtils.appendChildToRoot(doc, "MimeType", eDoc.getContentType());
     		XmlUtils.appendChildToRoot(doc, "Data", eDoc.getFileBytes());
     		String docAsString=XmlUtils.toString(doc, false);
-    		
+
     		PHRAuthentication auth  = MyOscarUtils.getPHRAuthentication(request.getSession());
     		MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
-    		
+
     		Long patientMyOscarUserId=MyOscarUtils.getMyOscarUserId(auth, demo.getMyOscarUserName());
     		GregorianCalendar dateOfData=new GregorianCalendar();
     		if (eDoc.getDateTimeStampAsDate()!=null) dateOfData.setTime(eDoc.getDateTimeStampAsDate());
-    		
+
 			MedicalDataTransfer2 medicalDataTransfer=new MedicalDataTransfer2();
 			medicalDataTransfer.setActive(true);
 			medicalDataTransfer.setCompleted(true);
@@ -123,7 +124,7 @@ public class SendDocToPhrAction extends Action {
 			medicalDataTransfer.setOwningPersonId(patientMyOscarUserId);
 
     		medicalDataWs.addMedicalData2(medicalDataTransfer);
-    		
+
     		// log the send
     		RemoteDataLog remoteDataLog=new RemoteDataLog();
     		remoteDataLog.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());

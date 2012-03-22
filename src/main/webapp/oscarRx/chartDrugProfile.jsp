@@ -38,7 +38,7 @@
 
             DemographicData dData = new DemographicData();
 
-            DemographicData.Demographic demographic = dData.getDemographic(demographicNo);
+            org.oscarehr.common.model.Demographic demographic = dData.getDemographic(demographicNo);
 
 
             oscar.oscarRx.data.RxPrescriptionData prescriptData = new oscar.oscarRx.data.RxPrescriptionData();

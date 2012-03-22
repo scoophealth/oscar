@@ -1,30 +1,30 @@
 /*
  *  Copyright (C) 2007  Heart & Stroke Foundation
- 
+
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation; either version 2
     of the License, or (at your option) any later version.
- 
+
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
- 
+
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- 
+
     <HSFO TEAM>
- 
+
    This software was written for the
    The Heart and Stroke Foundation of Ontario
    Toronto, Ontario, Canada
- 
+
    ManageHSFOAction.java
- 
+
    Created on March 1, 2007, 11:03 PM
- 
+
  */
 
 package oscar.form.study.HSFO.pageUtil;
@@ -58,13 +58,13 @@ import oscar.util.UtilDateUtilities;
  * Class used to fill data for the HSFO form Study
  */
 public class ManageHSFOAction extends Action{
-    
+
     /** Creates a new instance of ManageHSFOAction */
     public ManageHSFOAction() {
     }
-    
+
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception{
-        
+
         PatientData patientData = new PatientData();
         VisitData latestVisitData = new VisitData();
         VisitData visitData = new VisitData();
@@ -72,7 +72,7 @@ public class ManageHSFOAction extends Action{
         //RecordList record = new RecordList();
         List recordList = new LinkedList();
         String forward = "registration";
-        
+
         List patientHistory = new LinkedList();
         String id = (String) request.getAttribute("demographic_no");
         if (id == null){
@@ -82,51 +82,51 @@ public class ManageHSFOAction extends Action{
         boolean firstrecord=false;
         String user = (String) request.getSession().getAttribute("user");
         MiscUtils.getLogger().debug(request.getAttribute("Id"));
-        
-        
+
+
         HSFODAO hsfoDAO = new HSFODAO();
         firstrecord = hsfoDAO.isFirstRecord(id);
-        
+
         DemographicData demoData = new DemographicData();
-        DemographicData.Demographic de = demoData.getDemographic(id);
-        
+        org.oscarehr.common.model.Demographic de = demoData.getDemographic(id);
+
         if (firstrecord == true) {//		determine if this is the first record
             isfirstrecord="true";
             patientData.setFName(de.getFirstName());
             patientData.setLName(de.getLastName());
-            patientData.setBirthDate(de.getDOBObj());
+            patientData.setBirthDate(DemographicData.getDOBObj(de));
             patientData.setSex(de.getSex());
             patientData.setPostalCode(Misc.cutBackString(de.getPostal(),3));
             patientData.setPatient_Id(id);
             latestVisitData.setVisitDateIdToday();
         } else {
             isfirstrecord="false";
-            
+
             patientData = hsfoDAO.retrievePatientRecord(id);
             patientHistory = hsfoDAO.retrieveVisitRecord(id);
-            
+
             int size = patientHistory.size();
-            
+
             //retrieve the most recent record
             if ( request.getParameter("refresh") != null && request.getParameter("refresh").equals("true")){
                 int num = Integer.parseInt(request.getParameter("recordNumber"));
                 latestVisitData = hsfoDAO.retrieveSelectedRecord(num);
-            }else if ( request.getParameter("formId") != null  ){   
+            }else if ( request.getParameter("formId") != null  ){
                 int num = Integer.parseInt(request.getParameter("formId"));
                 latestVisitData = hsfoDAO.retrieveSelectedRecord(num);
-            }else if ( request.getAttribute("formId") != null  ){   
+            }else if ( request.getAttribute("formId") != null  ){
                 Integer num = (Integer) request.getAttribute("formId");
                 latestVisitData = hsfoDAO.retrieveSelectedRecord(num.intValue());
             }else{
                 latestVisitData = (VisitData)patientHistory.get(size-1);
                 //should i check to see if currently editing todays visit?
-                
+
                 latestVisitData.setVisitDateIdToday();
                 //Should is set todays date as the visit Date?
-                
+
             }
-            
-            
+
+
             int SBPArray[] = new int[size];
             String SBPDateArray[] = new String[size];
             int DBPArray[] = new int[size];
@@ -143,9 +143,9 @@ public class ManageHSFOAction extends Action{
             String importanceDateArray[] = new String[size];
             int confidenceArray[] = new int[size];
             String confidenceDateArray[] = new String[size];
-            
-            
-            
+
+
+
             //////
             Hashtable SBPHash[] = new Hashtable[size];
             Hashtable DBPHash[] = new Hashtable[size];
@@ -156,7 +156,7 @@ public class ManageHSFOAction extends Action{
             Hashtable importanceHash[] = new Hashtable[size];
             Hashtable confidenceHash[] = new Hashtable[size];
             //////
-            
+
             //If patientHistory is greater than 1 than fill the graphing arrays
             if ( size >1 ){
                 ArrayList visitDateArray = new ArrayList();
@@ -167,9 +167,9 @@ public class ManageHSFOAction extends Action{
                     VisitData visitdata = (VisitData) i.next();
                     visitDateArray.add(setDateFull(visitdata.getVisitDate_Id()));
                     visitIdArray.add(""+visitdata.getID());
-                
-                
-                        
+
+
+
                         //////////
                         if (visitdata.getVisitDate_Id() != null ) {
                             if (visitdata.getSBP() != 0) {
@@ -231,7 +231,7 @@ public class ManageHSFOAction extends Action{
                                 }
                                 WaistHash[d] = new Hashtable();
                                 WaistHash[d].put("data",waist);
-                                WaistHash[d].put("date",visitdata.getVisitDate_Id());    
+                                WaistHash[d].put("date",visitdata.getVisitDate_Id());
                                 d++;
                             }
 
@@ -270,15 +270,15 @@ public class ManageHSFOAction extends Action{
                         }
                 }
                         //////////
-                
-                
+
+
                 /////Set session vars to show graphs
                 //Blood Pressure
                 Hashtable[] chart1 = new Hashtable[2];
                 chart1[0] = getChartHash(SBPHash,"Systolic");
                 chart1[1] = getChartHash(DBPHash,"Diastolic");
                 request.getSession().setAttribute("HSFOBPCHART",chart1);
-                
+
                 //BMI
                 Hashtable[] chart2 = new Hashtable[1];
                 chart2[0] = getChartHash(BMIHash,"BMI");
@@ -297,11 +297,11 @@ public class ManageHSFOAction extends Action{
                 chart5[0] = getChartHash(importanceHash,"Importance");
                 chart5[1] = getChartHash(confidenceHash,"Confidence");
                 request.getSession().setAttribute("HSFOimportanceconfidenceCHART",chart5);
-                
-                
+
+
                 /////
-                
-                
+
+
                 String[] visitDates = new String[visitDateArray.size()];
                 visitDateArray.toArray(visitDates);
 
@@ -311,29 +311,29 @@ public class ManageHSFOAction extends Action{
                 request.setAttribute("visitIds", visitIds);
             }
         }
-        
+
         historyList.setPatientHistory(patientHistory);
-        
+
         //send provider_no and family_doctor to form for processing
         request.setAttribute("EmrHCPId1", user);
         request.setAttribute("EmrHCPId2", de.getProviderNo()); //TODO: may need to convert to provider name
-        
+
         //set request attributes to forward to jsp
         request.setAttribute("patientData", patientData);
         request.setAttribute("historyList", historyList);
         request.setAttribute("visitData", latestVisitData);
         request.setAttribute("isFirstRecord", isfirstrecord);
-        
+
         return mapping.findForward("flowsheet");
     }
-    
+
     Hashtable  getChartHash(Hashtable[] arr, String name ){
         Hashtable chart = new Hashtable();
         chart.put("name",name);
         chart.put("data",arr);
         return chart;
     }
-    
+
     protected String setDate(Date visitDate){
         Calendar cal=Calendar.getInstance();
         cal.setTime(visitDate);
@@ -342,15 +342,15 @@ public class ManageHSFOAction extends Action{
     //method to convert the date
     protected String setDate(int mnth, int year){
         MiscUtils.getLogger().debug("month "+ mnth+" year "+year);
-        
+
         String date="";
         String month="";
         String yr = "";
-        
+
         yr = Integer.toString(year);
         yr = yr.substring(2);
-        
-        
+
+
         switch (mnth) {
             case 0:  month="Jan"; break;
             case 1:  month="Feb"; break;
@@ -366,20 +366,20 @@ public class ManageHSFOAction extends Action{
             case 11: month="Dec"; break;
             default: month=" ";break;
         }
-        
+
         date = month + "-" + yr;
-        
+
         return date;
     }
     protected String setDateFull(Date visitDate){
         return UtilDateUtilities.DateToString( visitDate , "yyyy-MMM-dd");
     }
-    
+
     //method to convert the date
     protected String setDate(int mnth, int day, int year){
         String date="";
         String month="";
-        
+
         switch (mnth) {
             case 0:  month="Jan"; break;
             case 1:  month="Feb"; break;
@@ -395,14 +395,14 @@ public class ManageHSFOAction extends Action{
             case 11: month="Dec"; break;
             default: month=" ";break;
         }
-        
+
         date = month + " " + day + ", " + year;
-        
+
         return date;
     }
-    
-    
-    
+
+
+
 }
 
 

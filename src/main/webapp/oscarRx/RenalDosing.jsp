@@ -1,4 +1,4 @@
-<%@page %><%@page import="oscar.oscarDemographic.data.*,oscar.oscarDemographic.data.DemographicData.Demographic"%>
+<%@page %><%@page import="oscar.oscarDemographic.data.*,org.oscarehr.common.model.Demographic"%>
 <%@page import="oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler,java.util.*,oscar.oscarRx.util.*" %>
 <%@page import="oscar.oscarLab.ca.on.*,oscar.util.*,oscar.oscarLab.*" %>
 <%
@@ -14,7 +14,7 @@ DemographicData demoData = new DemographicData();
 Demographic demographic = demoData.getDemographic(demographicNo);
 
 int age = demographic.getAgeInYears();
-boolean female = demographic.isFemale();
+boolean female = DemographicData.isFemale(demographic);
 double weight = -1;
 Hashtable measurementHash = EctMeasurementsDataBeanHandler.getLast(demographicNo, "WT");
 
@@ -68,7 +68,7 @@ if (sCrDate == null && measurementsCrDate != null){  // If there is no lab value
 
 
 boolean ageb,weightb,sCrb,equate;
-ageb = weightb = sCrb = equate =false; 
+ageb = weightb = sCrb = equate =false;
 
 
 if  ( age > 0){    ageb =true ;}
@@ -90,7 +90,7 @@ ArrayList list = rd.getDose();
 %>
 <!--
   CIPRO : 	J01MA02 S01AX13 S03AA07
-  
+
 RENAL DOSING INFORMATION  ATC: <%=atc%>  Demographic: <%=demographicNo%>
   <br/>
   Clcr = {(140 - age ) X weight[kg] )} / (sCr [umol/L] X 0.8)           if female X 0.85
@@ -98,10 +98,10 @@ RENAL DOSING INFORMATION  ATC: <%=atc%>  Demographic: <%=demographicNo%>
 Clcr = {(140 - <%=age%> ) X <%=weight%>[kg] )} / (sCr [umol/L] X 0.8)   <% if(female){%> X 0.85 <%}%>
   -->
 <style type="text/css">
-    table.sofT{ 
+    table.sofT{
     float:left;
     text-align: center;
-    font-family: Verdana;   
+    font-family: Verdana;
     font-weight: normal;
     font-size: 11px;
     color: #404040;
@@ -110,20 +110,20 @@ Clcr = {(140 - <%=age%> ) X <%=weight%>[kg] )} / (sCr [umol/L] X 0.8)   <% if(fe
     border: 1px #cfcfcf solid;
     border-collapse: collapse;
     border-spacing: 0px; }
-    
-    tr.selected{ 
+
+    tr.selected{
     /*background-color: #BEC8D1;*/
     background-color: yellow;
-    
+
     font-weight: bold;
     font-size: 11px;
     color: #404040; }
-    tr.heading{ 
+    tr.heading{
     border-bottom: 1px #cfcfcf solid;
     }
-    
+
     table.equation {
-    font-family: Verdana;   
+    font-family: Verdana;
     font-weight: normal;
     font-size: 11px;
     }
@@ -136,51 +136,51 @@ Clcr = {(140 - <%=age%> ) X <%=weight%>[kg] )} / (sCr [umol/L] X 0.8)   <% if(fe
             <th>Recommendation</th>
         </tr>
         <%for (int i = 0; i < list.size(); i++){
-        Hashtable h = (Hashtable) list.get(i); 
+        Hashtable h = (Hashtable) list.get(i);
         String sel = "";
         if ( rd.valueInRangeOfDose(Clcr , h) & ageb & weightb & sCrb){
-        sel = "class=\"selected\" ";   
+        sel = "class=\"selected\" ";
         }
-        
-        %> 
+
+        %>
         <tr <%=sel%> >
-            
+
             <td><%=h.get("clcrrange")%></td>
             <td><%=h.get("recommendation")%></td>
-        </tr> 
+        </tr>
         <%}%>
     </table>
-    
-    
+
+
     <div style="width:410px; float:left;">
-        
+
         <!--
         <div style="float:left; border: 1px yellow solid;" >Clcr <%=Clcr%> =</div> <div style="float:left;" > (140 - <%=age%>[age] ) X <%=weight%>[kg] ) <hr/> (<%=sCr%> sCr [umol/L] X 0.8)   <% if(female){%> X 0.85 <%}%> </div>
       -->
         <table class="equation">
             <tr>
-                <th rowspan=2 valign="middle">Clcr <%=setNA(equate,Clcr)%> =</th> 
+                <th rowspan=2 valign="middle">Clcr <%=setNA(equate,Clcr)%> =</th>
                 <td align="center">
-                    (140 - <%=setNA(ageb,age)%>[age] ) X <%=setNA(weightb,weight)%> 
+                    (140 - <%=setNA(ageb,age)%>[age] ) X <%=setNA(weightb,weight)%>
                     <a href="javascript: function myFunction() {return false; }"  onclick="popup(500,1000,'/oscar/oscarEncounter/oscarMeasurements/SetupMeasurements.do?groupName=Renal Dosing&amp;demographic_no=<%=demographicNo%>','dddsfds'); return false;">
-                    [kg <%=UtilDateUtilities.DateToString( wtDate , "yyyy-MMM-dd")%>] 
-                    </a> X 1.23 
-                    
+                    [kg <%=UtilDateUtilities.DateToString( wtDate , "yyyy-MMM-dd")%>]
+                    </a> X 1.23
+
                 </td>
-                 <% if(female){%> 
+                 <% if(female){%>
                    <td nowrap rowspan="2"> X 0.85 </td>
                  <%}%>
             </tr>
             <tr>
-                <td align="center" style="border-top: 2px black solid;"><%=setNA(sCrb,sCr)%> sCr 
+                <td align="center" style="border-top: 2px black solid;"><%=setNA(sCrb,sCr)%> sCr
                     <a href="javascript: function myFunction() {return false; }"  onclick="popup(500,1000,'/oscar/oscarEncounter/oscarMeasurements/SetupMeasurements.do?groupName=Renal Dosing&amp;demographic_no=<%=demographicNo%>','dddsfds'); return false;">
                         [umol/L <%=UtilDateUtilities.DateToString( sCrDate , "yyyy-MMM-dd")%>]
                     </a>
-                </td> 
+                </td>
             </tr>
         </table>
     </div>
-    
+
     <div style="clear:left"><%=rd.getMoreinfo()%></div>
     <%if (request.getParameter("divId") != null){ %>
     <div style="float:right"><a href="javascript:void(0);"  onclick="$('<%=request.getParameter("divId")%>').toggle();">hide</a></div>
@@ -191,19 +191,19 @@ Clcr = {(140 - <%=age%> ) X <%=weight%>[kg] )} / (sCr [umol/L] X 0.8)   <% if(fe
   -what to do if patient doesn't have a any creatine values?
   --%>
   <%!
-  
+
   String setNA(boolean valb, int value){
        if (valb){
            return ""+value;
        }
        return "<span style=\"color:orange\">N/A</span>";
   }
-  
+
   String setNA(boolean valb, double value){
        if (valb){
            return ""+value;
        }
        return "<span style=\"color:orange\">N/A</span>";
   }
-  
+
   %>

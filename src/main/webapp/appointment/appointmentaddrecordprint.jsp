@@ -60,7 +60,7 @@
 	param[14]=request.getParameter("creator");
 	param[15]=request.getParameter("remarks");
 	param[17]=(String)request.getSession().getAttribute("programId_oscarView");
-	DemographicData.Demographic demo = null;
+	org.oscarehr.common.model.Demographic demo = null;
     if (request.getParameter("demographic_no") != null && !(request.getParameter("demographic_no").equals(""))) {
         param[16] = request.getParameter("demographic_no");
         DemographicData demData = new DemographicData();

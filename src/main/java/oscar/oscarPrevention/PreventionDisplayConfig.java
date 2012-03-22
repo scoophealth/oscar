@@ -164,7 +164,7 @@ public class PreventionDisplayConfig {
         String display = "style=\"display:none;\"";
         DemographicData dData = new DemographicData();
         log.debug("demoage " + Demographic_no);
-        DemographicData.Demographic demograph = dData.getDemographic(Demographic_no);
+        org.oscarehr.common.model.Demographic demograph = dData.getDemographic(Demographic_no);
         try {
             String minAgeStr = (String) setHash.get("minAge");
             String maxAgeStr = (String) setHash.get("maxAge");
@@ -220,7 +220,7 @@ public class PreventionDisplayConfig {
         boolean display = false;
         DemographicData dData = new DemographicData();
         log.debug("demoage " + Demographic_no);
-        DemographicData.Demographic demograph = dData.getDemographic(Demographic_no);
+        org.oscarehr.common.model.Demographic demograph = dData.getDemographic(Demographic_no);
         try {
             String minAgeStr = setHash.get("minAge");
             String maxAgeStr = setHash.get("maxAge");

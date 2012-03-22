@@ -38,21 +38,21 @@ import oscar.oscarDemographic.data.DemographicData;
 public class TeleplanCorrectionFormWCB
         extends org.apache.struts.action.ActionForm {
 
-    private static Logger logger=MiscUtils.getLogger(); 
+    private static Logger logger=MiscUtils.getLogger();
 
-	
+
     private String id = "",  demographicNumber = "",  lastName = "",  firstName = "",  yearOfBirth = "",  monthOfBirth = "",  dayOfBirth = "",  address = "",  city = "",  province = "",  postal = "",  hin = "",  practitioner = "",  billingUnit = "",  billingCode = "",  billingAmount = "",  serviceLocation = "",  date = "",  billingNo = "",  dataSeqNo = "",  w_reportype = "",  w_mname = "",  w_gender = "",  w_doi = "",  w_area = "",  w_phone = "",  w_empname = "",  w_emparea = "",  w_empphone = "",  w_wcbno = "",  w_opaddress = "",  w_opcity = "",  w_rphysician = "",  w_duration = "",  w_ftreatment = "",  w_problem = "",  w_servicedate = "",  w_diagnosis = "",  w_icd9 = "",  w_bp = "",  w_side = "",  w_noi = "",  w_work = "",  w_workdate = "",  w_clinicinfo = "",  w_capability = "",  w_capreason = "",  w_estimate = "",  w_rehab = "",  w_rehabtype = "",  w_estimatedate = "",  w_tofollow = "",  w_wcbadvisor = "",  w_feeitem = "",  w_extrafeeitem = "",  status = "",  formNeeded = "",  providerNo = "",  w_payeeno = "",  w_pracno = "";
     private String xml_status;
     private String adjType;
     private String adjAmount;
 
-    
-    
 
-      
+
+
+
         ;
 
-    
+
 
     public  TeleplanCorrectionFormWCB( ) {
         super();
@@ -613,17 +613,13 @@ public class TeleplanCorrectionFormWCB
 
     }
 
-    private String DateOfBirth() {
-        return oscar.Misc.mysqlEscape(this.getYearOfBirth()) + "-" + oscar.Misc.mysqlEscape(this.getMonthOfBirth()) + "-" + oscar.Misc.mysqlEscape(this.getDayOfBirth());
-    }
-
     //TODO check to see if this works.  i think if you escape a prepared statement you end up with double escaped text
     public String[] getWcb(String billamt) {
 
         MiscUtils.getLogger().debug("reseting wcb with bill amount " + billamt);
 
         DemographicData demoData = new DemographicData();
-        DemographicData.Demographic demo = demoData.getDemographic(this.demographicNumber);
+        org.oscarehr.common.model.Demographic demo = demoData.getDemographic(this.demographicNumber);
 
         return new String[]{
             oscar.Misc.mysqlEscape(this.w_reportype),
@@ -632,13 +628,13 @@ public class TeleplanCorrectionFormWCB
             demo.getLastName(),//oscar.Misc.mysqlEscape(this.lastName), //
             "",//oscar.Misc.mysqlEscape(this.w_mname),//
             demo.getSex(),//oscar.Misc.mysqlEscape(this.w_gender),//
-            demo.getDob("-"),//oscar.Misc.mysqlEscape(this.DateOfBirth()),//
+            DemographicData.getDob(demo, "-"),//oscar.Misc.mysqlEscape(this.DateOfBirth()),//
             demo.getAddress(),//oscar.Misc.mysqlEscape(this.address),  //
             demo.getCity(),//oscar.Misc.mysqlEscape(this.city),  //
             demo.getPostal(),//oscar.Misc.mysqlEscape(this.postal), //
             oscar.Misc.areaCode(demo.getPhone2()),//oscar.Misc.mysqlEscape(this.w_area),//
             oscar.Misc.phoneNumber(demo.getPhone2()),//oscar.Misc.mysqlEscape(this.w_phone),//
-            demo.getHIN(),//oscar.Misc.mysqlEscape(this.hin),  //
+            demo.getHin()+demo.getVer(),//oscar.Misc.mysqlEscape(this.hin),  //
             oscar.Misc.mysqlEscape(this.w_empname),
             oscar.Misc.mysqlEscape(this.w_emparea),
             oscar.Misc.mysqlEscape(this.w_empphone),

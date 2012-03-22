@@ -104,8 +104,8 @@ import org.oscarehr.util.SpringUtils;
 import oscar.OscarProperties;
 import oscar.appt.ApptStatusData;
 import oscar.dms.EDocUtil;
+import oscar.oscarDemographic.data.DemographicAddResult;
 import oscar.oscarDemographic.data.DemographicData;
-import oscar.oscarDemographic.data.DemographicData.DemographicAddResult;
 import oscar.oscarDemographic.data.DemographicExt;
 import oscar.oscarDemographic.data.DemographicRelationship;
 import oscar.oscarEncounter.data.EctProgram;
@@ -607,7 +607,7 @@ import cdsDt.PersonNameStandard.OtherNames;
         DemographicAddResult demoRes = null;
 
         //Check if Contact-only demographic exists
-        DemographicData.Demographic demographic = null;
+        org.oscarehr.common.model.Demographic demographic = null;
 
         if(courseId == 0) {
             demographicNo = dd.getDemoNoByNamePhoneEmail(firstName, lastName, homePhone, workPhone, email);
@@ -616,6 +616,7 @@ import cdsDt.PersonNameStandard.OtherNames;
 
         if (demographic!=null && StringUtils.nullSafeEqualsIgnoreCase(demographic.getPatientStatus(), "Contact-only")) {
         	//found contact-only demo, replace!
+        	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             demographic.setTitle(title);
             demographic.setAddress(address);
             demographic.setCity(city);
@@ -624,21 +625,21 @@ import cdsDt.PersonNameStandard.OtherNames;
             demographic.setYearOfBirth(year_of_birth);
             demographic.setMonthOfBirth(month_of_birth);
             demographic.setDateOfBirth(date_of_birth);
-            demographic.setJustHIN(hin);
-            demographic.setVersionCode(versionCode);
+            demographic.setHin(hin);
+            demographic.setVer(versionCode);
             demographic.setRosterStatus(rosterStatus);
-            demographic.setRosterDate(rosterDate);
-            demographic.setRosterTerminationDate(termDate);
+            demographic.setRosterDate(formatter.parse(rosterDate));
+            demographic.setRosterTerminationDate(formatter.parse(termDate));
             demographic.setRosterTerminationReason(termReason);
             demographic.setPatientStatus(patient_status);
-            demographic.setPatientStatusDate(psDate);
+            demographic.setPatientStatusDate(formatter.parse(psDate));
             demographic.setChartNo(chart_no);
-            demographic.setOfficialLang(official_lang);
-            demographic.setSpokenLang(spoken_lang);
+            demographic.setOfficialLanguage(official_lang);
+            demographic.setSpokenLanguage(spoken_lang);
             demographic.setFamilyDoctor(primaryPhysician);
             demographic.setSex(sex);
-            demographic.setHCType(hc_type);
-            demographic.setHCRenewDate(hc_renew_date);
+            demographic.setHcType(hc_type);
+            demographic.setHcRenewDate(formatter.parse(hc_renew_date));
             demographic.setSin(sin);
             dd.setDemographic(demographic);
             err_note.add("Replaced Contact-only patient "+patientName+" (Demo no="+demographicNo+")");
@@ -2954,7 +2955,7 @@ import cdsDt.PersonNameStandard.OtherNames;
         entries.put(category+importNo, n);
     }
 
-    DemographicArchive archiveDemographic(DemographicData.Demographic d) {
+    DemographicArchive archiveDemographic(org.oscarehr.common.model.Demographic d) {
     	DemographicArchive da = new DemographicArchive();
 
     	da.setDemographicNo(Integer.valueOf(d.getDemographicNo()));
@@ -2976,32 +2977,32 @@ import cdsDt.PersonNameStandard.OtherNames;
     	da.setChildren(d.getChildren());
     	da.setCitizenship(d.getCitizenship());
     	da.setCountryOfOrigin(d.getCountryOfOrigin());
-    	da.setDateJoined(UtilDateUtilities.StringToDate(d.getDateJoined()));
-    	da.setEndDate(UtilDateUtilities.StringToDate(d.getEndDate()));
+    	da.setDateJoined(d.getDateJoined());
+    	da.setEndDate(d.getEndDate());
     	da.setFamilyDoctor(d.getFamilyDoctor());
-    	da.setHin(d.getHIN());
-    	da.setVer(d.getVersionCode());
-    	da.setHcType(d.getHCType());
-    	da.setEffDate(UtilDateUtilities.StringToDate(d.getEffDate()));
-    	da.setHcRenewDate(UtilDateUtilities.StringToDate(d.getHCRenewDate()));
+    	da.setHin(d.getHin());
+    	da.setVer(d.getVer());
+    	da.setHcType(d.getHcType());
+    	da.setEffDate(d.getEffDate());
+    	da.setHcRenewDate(d.getHcRenewDate());
     	da.setMyOscarUserName(d.getMyOscarUserName());
     	da.setNewsletter(d.getNewsletter());
-    	da.setOfficialLanguage(d.getOfficialLang());
-    	da.setSpokenLanguage(d.getSpokenLang());
+    	da.setOfficialLanguage(d.getOfficialLanguage());
+    	da.setSpokenLanguage(d.getSpokenLanguage());
     	da.setPatientStatus(d.getPatientStatus());
-    	da.setPatientStatusDate(UtilDateUtilities.StringToDate(d.getPatientStatusDate()));
-    	da.setPcnIndicator(d.getPCNindicator());
+    	da.setPatientStatusDate(d.getPatientStatusDate());
+    	da.setPcnIndicator(d.getPcnIndicator());
     	da.setPhone(d.getPhone());
     	da.setPhone2(d.getPhone2());
     	da.setPreviousAddress(d.getPreviousAddress());
     	da.setProviderNo(d.getProviderNo());
     	da.setRosterStatus(d.getRosterStatus());
-    	da.setRosterDate(UtilDateUtilities.StringToDate(d.getRosterDate()));
-    	da.setRosterTerminationDate(UtilDateUtilities.StringToDate(d.getRosterTerminationDate()));
+    	da.setRosterDate(d.getRosterDate());
+    	da.setRosterTerminationDate(d.getRosterTerminationDate());
     	da.setRosterTerminationReason(d.getRosterTerminationReason());
     	da.setSin(d.getSin());
     	da.setSourceOfIncome(d.getSourceOfIncome());
-    	da.setLastUpdateDate(UtilDateUtilities.StringToDate(d.getLastUpdateDate()));
+    	da.setLastUpdateDate(d.getLastUpdateDate());
     	da.setLastUpdateUser(d.getLastUpdateUser());
 
     	return da;

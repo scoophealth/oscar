@@ -65,7 +65,7 @@ ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 
 List<PHRVerification> phrVerifications = phrVerificationDao.getForDemographic(demoNo);
 
-DemographicData.Demographic demo = new DemographicData().getDemographic(demographicNo); 
+org.oscarehr.common.model.Demographic demo = new DemographicData().getDemographic(demographicNo); 
 String myOscarUserName = demo.getMyOscarUserName();
 
 PHRAuthentication phrAuthentication= MyOscarUtils.getPHRAuthentication(session);

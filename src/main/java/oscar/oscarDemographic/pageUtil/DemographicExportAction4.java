@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -226,7 +227,7 @@ public class DemographicExportAction4 extends Action {
 			DemographicData d = new DemographicData();
 			DemographicExt ext = new DemographicExt();
 
-			DemographicData.Demographic demographic = d.getDemographic(demoNo);
+			org.oscarehr.common.model.Demographic demographic = d.getDemographic(demoNo);
 
 			if (demographic.getPatientStatus()!=null && demographic.getPatientStatus().equals("Contact-only")) continue;
 
@@ -280,7 +281,7 @@ public class DemographicExportAction4 extends Action {
 				if (title.equalsIgnoreCase("SR")) personName.setNamePrefix(cdsDt.PersonNamePrefixCode.SR);
 			}
 
-			String lang = demographic.getOfficialLang();
+			String lang = demographic.getOfficialLanguage();
 			if (StringUtils.filled(lang)) {
 				if (lang.equalsIgnoreCase("English"))	 demo.setPreferredOfficialLanguage(cdsDt.OfficialSpokenLanguageCode.ENG);
 				else if (lang.equalsIgnoreCase("French")) demo.setPreferredOfficialLanguage(cdsDt.OfficialSpokenLanguageCode.FRE);
@@ -288,7 +289,7 @@ public class DemographicExportAction4 extends Action {
 				exportError.add("Error! No Preferred Official Language for Patient "+demoNo);
 			}
 
-			lang = demographic.getSpokenLang();
+			lang = demographic.getSpokenLanguage();
 			if (StringUtils.filled(lang) && Util.convertLanguageToCode(lang) != null) {
 				demo.setPreferredSpokenLanguage(Util.convertLanguageToCode(lang));
 			}
@@ -306,10 +307,16 @@ public class DemographicExportAction4 extends Action {
 			}
 
 			//Enrolment Status (Roster Status)
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 			Demographics.Enrolment enrolment;
-			String rosterStatus = StringUtils.noNull(demographic.getRosterStatus());
-			String rosterDate = StringUtils.noNull(demographic.getRosterDate());
-			String rosterTermDate = StringUtils.noNull(demographic.getRosterTerminationDate());
+			String rosterStatus = demographic.getRosterStatus();
+			String rosterDate = "";
+			if(demographic.getRosterDate() != null)
+				rosterDate = formatter.format(demographic.getRosterDate());
+			String rosterTermDate = "";
+			if(demographic.getRosterTerminationDate() != null)
+				rosterTermDate = formatter.format(demographic.getRosterTerminationDate());
+
 			if (StringUtils.filled(rosterStatus)) {
 				rosterStatus = rosterStatus.equalsIgnoreCase("RO") ? "1" : "0";
 				enrolment = demo.addNewEnrolment();
@@ -382,15 +389,16 @@ public class DemographicExportAction4 extends Action {
 				else if ("FI".equalsIgnoreCase(patientStatus)) patientStatus = "Fired";
 				personStatusCode.setPersonStatusAsPlainText(patientStatus);
 			}
-
-			String patientStatusDate = demographic.getPatientStatusDate();
+			String patientStatusDate = "";
+			if(demographic.getPatientStatusDate() != null)
+				patientStatusDate = formatter.format(demographic.getPatientStatusDate());
 			if (StringUtils.filled(patientStatusDate)) demo.setPersonStatusDate(Util.calDate(patientStatusDate));
 
 			//patient notes
 			String demoNotes = d.getDemographicNotes(demoNo);
 			if (StringUtils.filled(demoNotes)) demo.setNoteAboutPatient(demoNotes);
 
-			String dob = StringUtils.noNull(demographic.getDob("-"));
+			String dob = StringUtils.noNull(DemographicData.getDob(demographic,"-"));
 			demo.setDateOfBirth(Util.calDate(dob));
 			if (UtilDateUtilities.StringToDate(dob)==null) {
 				exportError.add("Error! No Date Of Birth for Patient "+demoNo);
@@ -418,17 +426,19 @@ public class DemographicExportAction4 extends Action {
 				demo.setSIN(demographic.getSin());
 			}
 
-			if (StringUtils.filled(demographic.getJustHIN())) {
+			if (StringUtils.filled(demographic.getHin())) {
 				cdsDt.HealthCard healthCard = demo.addNewHealthCard();
 
-				healthCard.setNumber(demographic.getJustHIN());
-				if (Util.setProvinceCode(demographic.getHCType())!=null) healthCard.setProvinceCode(Util.setProvinceCode(demographic.getHCType()));
+				healthCard.setNumber(demographic.getHin());
+				if (Util.setProvinceCode(demographic.getHcType())!=null) healthCard.setProvinceCode(Util.setProvinceCode(demographic.getHcType()));
 				else healthCard.setProvinceCode(cdsDt.HealthCardProvinceCode.X_70); //Asked, unknown
 				if (healthCard.getProvinceCode()==null) {
 					exportError.add("Error! No Health Card Province Code for Patient "+demoNo);
 				}
-				if (StringUtils.filled(demographic.getVersionCode())) healthCard.setVersion(demographic.getVersionCode());
-				String HCRenewDate = demographic.getHCRenewDate();
+				if (StringUtils.filled(demographic.getVer())) healthCard.setVersion(demographic.getVer());
+				String HCRenewDate = "";
+				if(demographic.getHcRenewDate() != null)
+					HCRenewDate = formatter.format(demographic.getHcRenewDate());
 				if (UtilDateUtilities.StringToDate(HCRenewDate)!=null) {
 					healthCard.setExpirydate(Util.calDate(HCRenewDate));
 				}
@@ -1146,24 +1156,24 @@ public class DemographicExportAction4 extends Action {
 						}
 						mSummary = Util.addSummary(mSummary, "Strength", drugM.getAmount()+" "+drugM.getUnitOfMeasure());
 					}
-					
+
 					String drugForm = arr[p].getDrugForm();
 					if (StringUtils.filled(drugForm)) {
 						medi.setForm(drugForm);
 						mSummary = Util.addSummary(mSummary, "Form", drugForm);
 					}
-					
+
 					//Process dosage export
 					Float dosageValue = arr[p].getTakeMin();
 					if (dosageValue==0) { //takemin=0, try takemax
-						dosageValue = arr[p].getTakeMax();					
+						dosageValue = arr[p].getTakeMax();
 					}
 					String drugUnit = StringUtils.noNull(arr[p].getUnit());
-					
+
 					if (drugUnit.equalsIgnoreCase(getDosageUnit(arr[p].getDosage()))) {
 						//drug unit should not be same as dosage unit
 						//check drug form to see if it matches the following list
-						
+
 						if (StringUtils.containsIgnoreCase(drugForm, "capsule")) drugUnit = "capsule";
 						else if (StringUtils.containsIgnoreCase(drugForm, "drop")) drugUnit = "drop";
 						else if (StringUtils.containsIgnoreCase(drugForm, "dosing")) drugUnit = "dosing";
@@ -1173,14 +1183,14 @@ public class DemographicExportAction4 extends Action {
 						else if (StringUtils.containsIgnoreCase(drugForm, "pellet")) drugUnit = "pellet";
 						else if (StringUtils.containsIgnoreCase(drugForm, "pill")) drugUnit = "pill";
 						else if (StringUtils.containsIgnoreCase(drugForm, "tablet")) drugUnit = "tablet";
-						
+
 						if (drugUnit.equals(arr[p].getUnit())) {
 							//drugUnit not changed by the above
 							//export dosage as "take * dosageValue"
 							dosageValue *= getDosageValue(arr[p].getDosage());
 						}
 					}
-					
+
 					//export dosage
 					medi.setDosage(dosageValue.toString());
 					if (StringUtils.filled(drugUnit)) medi.setDosageUnitOfMeasure(drugUnit);
@@ -2315,7 +2325,7 @@ public class DemographicExportAction4 extends Action {
 
 	private void fillContactInfo(Demographics.Contact contact, String contactId, String demoNo, int index) {
 
-		DemographicData.Demographic relDemo = new DemographicData().getDemographic(contactId);
+		org.oscarehr.common.model.Demographic relDemo = new DemographicData().getDemographic(contactId);
 		HashMap<String,String> relDemoExt = new HashMap<String,String>();
 		relDemoExt.putAll(new DemographicExt().getAllValuesForDemo(contactId));
 
@@ -2384,25 +2394,25 @@ public class DemographicExportAction4 extends Action {
 		}
 		return extensionTooLong;
 	}
-	
+
 	private Float getDosageValue(String dosage) {
 		String[] dosageBreak = getDosageMultiple1st(dosage).split(" ");
-		
+
 		if (NumberUtils.isNumber(dosageBreak[0])) return Float.parseFloat(dosageBreak[0]);
 		else return 0f;
 	}
-	
+
 	private String getDosageUnit(String dosage) {
 		String[] dosageBreak = getDosageMultiple1st(dosage).split(" ");
-		
+
 		if (dosageBreak.length==2) return dosageBreak[1].trim();
 		else return null;
 	}
-	
+
 	private String getDosageMultiple1st(String dosage) {
 		if (StringUtils.empty(dosage)) return "";
-		
+
 		String[] dosageMultiple = dosage.split("/");
-		return dosageMultiple[0].trim(); 
+		return dosageMultiple[0].trim();
 	}
 }

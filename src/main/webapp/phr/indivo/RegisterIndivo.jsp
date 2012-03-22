@@ -1,4 +1,4 @@
-<%-- 
+<%--
     Document   : registerIndivo
     Created on : 12-May-2008, 10:59:27 AM
     Author     : apavel
@@ -6,7 +6,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
-   
+
 <%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.oscarehr.common.model.Provider"%>
@@ -28,7 +28,7 @@
 String demographicNo = request.getParameter("demographicNo");
 int demographicId=Integer.parseInt(demographicNo);
 
-DemographicData.Demographic demographic = new DemographicData().getDemographic(demographicNo);
+org.oscarehr.common.model.Demographic demographic = new DemographicData().getDemographic(demographicNo);
 request.setAttribute("demographic", demographic);
 
 String defaultNewUserName=RegistrationHelper.getDefaultUserName(demographicId);
@@ -36,7 +36,7 @@ String defaultNewUserName=RegistrationHelper.getDefaultUserName(demographicId);
 DemographicExt demographicExt = new DemographicExt();
 String hPhoneExt = demographicExt.getValueForDemoKey(demographicNo, "hPhoneExt");
 String wPhoneExt = demographicExt.getValueForDemoKey(demographicNo, "wPhoneExt");
-if (hPhoneExt != null) 
+if (hPhoneExt != null)
     request.setAttribute("demographicHomeExt", " " + hPhoneExt);
 if (wPhoneExt != null)
     request.setAttribute("demographicWorkExt", " " + wPhoneExt);
@@ -57,7 +57,7 @@ if (wPhoneExt != null)
             }
             tr.userrow td {
             	border-bottom:1px solid black;
-            
+
             }
         </style>
         <script type="text/javascript" language="JavaScript">
@@ -71,7 +71,7 @@ if (wPhoneExt != null)
                     document.getElementById("password").focus();
                     return;
                 }
-                
+
                 //if everything is cool:
                 document.getElementById("submitButton").disabled = true;
                 document.getElementById("closeButton").disabled = true;
@@ -91,7 +91,7 @@ if (wPhoneExt != null)
                 document.getElementById("submitButton").disabled = true;
                 document.getElementById("closeButton").disabled = true;
             }
-  
+
         </script>
     </head>
     <body>
@@ -138,7 +138,7 @@ if (wPhoneExt != null)
                     </tr>
                     <tr>
                         <td>City</td>
-                        <td><html-el:text property="city" value="${demographic.city}" size="20"/></td>   
+                        <td><html-el:text property="city" value="${demographic.city}" size="20"/></td>
                     </tr>
                     <tr>
                         <td>Province</td>
@@ -162,7 +162,7 @@ if (wPhoneExt != null)
                     </tr>
                     <tr>
                         <td>Date of Birth</td>
-                        <td><html-el:text property="dob" value="<%=demographic.getDob(\"/\")%>" size="10"/> (YYYY-MM-DD)</td>
+                        <td><html-el:text property="dob" value="<%=DemographicData.getDob(demographic,\"/\")%>" size="10"/> (YYYY-MM-DD)</td>
                     </tr>
                 </table>
             </div>
@@ -175,7 +175,7 @@ if (wPhoneExt != null)
                     			<th>&nbsp;</th>
                     			<th>Provider</th>
                     			<th>Relationship</th>
-                    			<th>Allow patients to send messages</th> 
+                    			<th>Allow patients to send messages</th>
                     		</tr>
                 	<%
                 		TreeMap<String, Provider> myOscarProviders=RegistrationHelper.getMyOscarProviders();

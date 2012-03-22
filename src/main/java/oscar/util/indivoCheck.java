@@ -68,7 +68,7 @@ public class indivoCheck extends TagSupport {
         try {            
             if( ProviderMyOscarIdData.idIsSet(providerNo) ) {
                 if( demoNo != null ) {
-                   DemographicData.Demographic demo = new DemographicData().getDemographic(demoNo); 
+                   org.oscarehr.common.model.Demographic demo = new DemographicData().getDemographic(demoNo); 
                    String myOscarUserName = demo.getMyOscarUserName();
                    if( myOscarUserName != null ) 
                         conditionMet = true;

@@ -268,7 +268,7 @@ public class ManageDocumentAction extends DispatchAction {
 
 	private String getDemoName(String demog) {
 		DemographicData demoD = new DemographicData();
-		DemographicData.Demographic demo = demoD.getDemographic(demog);
+		org.oscarehr.common.model.Demographic demo = demoD.getDemographic(demog);
 		String demoName = demo.getLastName() + ", " + demo.getFirstName();
 		return demoName;
 	}

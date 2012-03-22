@@ -41,7 +41,7 @@ public class EctPatientData {
     public static String getProviderNo(String demographicNo) {
         String ret = "";
         try {
-            
+
             ResultSet rs = DBHandler.GetSQL("SELECT provider_no FROM demographic WHERE demographic_no = "
                             + demographicNo);
             if (rs.next())
@@ -53,8 +53,8 @@ public class EctPatientData {
         return ret;
     }
 
-    public Patient getPatient(String demographicNo) throws SQLException {
-        
+    public Patient getPatient(String demographicNo) {
+
         Patient p = null;
         try {
             ResultSet rs = DBHandler.GetSQL("SELECT demographic_no, last_name, first_name, sex, year_of_birth, month_of_birth, date_of_birth, address, city, postal, phone, roster_status FROM demographic WHERE demographic_no = "
@@ -167,9 +167,9 @@ public class EctPatientData {
             	OscarProperties properties = OscarProperties.getInstance();
         		if( !Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
 	                try {
-	                	
+
 	                    ResultSet rs;
-	
+
 	                    String sql = "select * from eChart where demographicNo=" + demographicNo
 	                            + " ORDER BY eChartId DESC";
 	//                            + " ORDER BY eChartId DESC limit 1";

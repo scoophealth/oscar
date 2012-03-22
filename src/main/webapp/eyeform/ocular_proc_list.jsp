@@ -36,7 +36,7 @@
 String demo = request.getParameter("demographicNo");
 String proNo = (String) session.getAttribute("user");
 oscar.oscarDemographic.data.DemographicData demoData=null;
-oscar.oscarDemographic.data.DemographicData.Demographic demographic=null;
+org.oscarehr.common.model.Demographic demographic=null;
 
 oscar.oscarProvider.data.ProviderData pdata = new oscar.oscarProvider.data.ProviderData(proNo);
 String team = pdata.getTeam();

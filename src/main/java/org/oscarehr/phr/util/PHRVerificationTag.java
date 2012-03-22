@@ -70,7 +70,7 @@ public class PHRVerificationTag extends TagSupport {
            try {            
                if( ProviderMyOscarIdData.idIsSet((String)request.getSession().getAttribute("user")) ) {
                    if( demoNo != null ) {
-                      DemographicData.Demographic demo = new DemographicData().getDemographic(demoNo); 
+                      org.oscarehr.common.model.Demographic demo = new DemographicData().getDemographic(demoNo); 
                       String myOscarUserName = demo.getMyOscarUserName();
                       if( myOscarUserName != null && !myOscarUserName.equals("") ) 
                            conditionMet = true;

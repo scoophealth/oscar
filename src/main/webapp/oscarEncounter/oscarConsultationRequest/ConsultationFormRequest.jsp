@@ -91,7 +91,7 @@
 		String team = request.getParameter("teamVar");
 		String providerNo = (String)session.getAttribute("user");
 		DemographicData demoData = null;
-		DemographicData.Demographic demographic = null;
+		org.oscarehr.common.model.Demographic demographic = null;
 
 		EctConsultationFormRequestUtil consultUtil = new EctConsultationFormRequestUtil();
 
@@ -671,7 +671,8 @@ function importFromEnct(reqInfo,txtArea)
 					}
 					else
 					{
-						value = demographic.EctInfo.getMedicalHistory();
+						oscar.oscarDemographic.data.EctInformation EctInfo = new oscar.oscarDemographic.data.EctInformation(demo);
+						value = EctInfo.getMedicalHistory();
 					}
 					if (pasteFmt == null || pasteFmt.equalsIgnoreCase("single"))
 					{
@@ -690,7 +691,8 @@ function importFromEnct(reqInfo,txtArea)
 					}
 					else
 					{
-						value = demographic.EctInfo.getOngoingConcerns();
+						oscar.oscarDemographic.data.EctInformation EctInfo = new oscar.oscarDemographic.data.EctInformation(demo);
+						value = EctInfo.getOngoingConcerns();
 					}
 					if (pasteFmt == null || pasteFmt.equalsIgnoreCase("single"))
 					{
@@ -705,7 +707,8 @@ function importFromEnct(reqInfo,txtArea)
 				{
 					if (OscarProperties.getInstance().getBooleanProperty("caisi", "on"))
 					{
-						value = demographic.EctInfo.getFamilyHistory();
+						oscar.oscarDemographic.data.EctInformation EctInfo = new oscar.oscarDemographic.data.EctInformation(demo);
+						value = EctInfo.getFamilyHistory();
 					}
 					else
 					{
@@ -715,7 +718,8 @@ function importFromEnct(reqInfo,txtArea)
 						}
 						else
 						{
-							value = demographic.EctInfo.getFamilyHistory();
+							oscar.oscarDemographic.data.EctInformation EctInfo = new oscar.oscarDemographic.data.EctInformation(demo);
+							value = EctInfo.getFamilyHistory();
 						}
 					}
 					if (pasteFmt == null || pasteFmt.equalsIgnoreCase("single"))
@@ -742,7 +746,8 @@ function importFromEnct(reqInfo,txtArea)
 						else
 						{
 							//family history was used as bucket for Other Meds in old encounter
-							value = demographic.EctInfo.getFamilyHistory();
+							oscar.oscarDemographic.data.EctInformation EctInfo = new oscar.oscarDemographic.data.EctInformation(demo);
+							value = EctInfo.getFamilyHistory();
 						}
 					}
 					if (pasteFmt == null || pasteFmt.equalsIgnoreCase("single"))
@@ -763,7 +768,8 @@ function importFromEnct(reqInfo,txtArea)
 					}
 					else
 					{
-						value = demographic.EctInfo.getReminders();
+						oscar.oscarDemographic.data.EctInformation EctInfo = new oscar.oscarDemographic.data.EctInformation(demo);
+						value = EctInfo.getReminders();
 					}
 					//if( !value.equals("") ) {
 					if (pasteFmt == null || pasteFmt.equalsIgnoreCase("single"))
@@ -848,16 +854,18 @@ function addCCName(){
 			//  new request
 			if (demo != null)
 			{
-                                EctViewRequestAction.fillFormValues(thisForm,consultUtil);
-				thisForm.setAllergies(demographic.RxInfo.getAllergies());
+				oscar.oscarDemographic.data.RxInformation RxInfo = new oscar.oscarDemographic.data.RxInformation();
+                EctViewRequestAction.fillFormValues(thisForm,consultUtil);
+				thisForm.setAllergies(RxInfo.getAllergies(demo));
 
 				if (props.getProperty("currentMedications", "").equalsIgnoreCase("otherMedications"))
 				{
-					thisForm.setCurrentMedications(demographic.EctInfo.getFamilyHistory());
+					oscar.oscarDemographic.data.EctInformation EctInfo = new oscar.oscarDemographic.data.EctInformation(demo);
+					thisForm.setCurrentMedications(EctInfo.getFamilyHistory());
 				}
 				else
 				{
-					thisForm.setCurrentMedications(demographic.RxInfo.getCurrentMedication());
+					thisForm.setCurrentMedications(RxInfo.getCurrentMedication(demo));
 				}
 
 				team = consultUtil.getProviderTeam(consultUtil.mrp);
@@ -1290,8 +1298,8 @@ function addCCName(){
 							<td>
 								<html:select property="siteName" onchange='this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor'>
 						            <%  for (int i =0; i < vecAddressName.size();i++){
-						                 String te = (String) vecAddressName.get(i);
-						                 String bg = (String) bgColor.get(i);
+						                 String te = vecAddressName.get(i);
+						                 String bg = bgColor.get(i);
 						                 if (te.equals(defaultSiteName))
 						                	 defaultSiteId = siteIds.get(i);
 						            %>

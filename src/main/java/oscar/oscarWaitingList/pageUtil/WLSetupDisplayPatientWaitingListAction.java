@@ -49,7 +49,7 @@ public final class WLSetupDisplayPatientWaitingListAction extends Action {
         
         String demographicNo = request.getParameter("demographic_no");
         DemographicData demoData = new DemographicData();
-        DemographicData.Demographic demo = demoData.getDemographic(demographicNo);
+        org.oscarehr.common.model.Demographic demo = demoData.getDemographic(demographicNo);
         String demoInfo = demo.getLastName() + ", " + demo.getFirstName() + " " + demo.getSex() + " " + demo.getAge();
         WLPatientWaitingListBeanHandler hd = new WLPatientWaitingListBeanHandler(demographicNo);           
         HttpSession session = request.getSession();
