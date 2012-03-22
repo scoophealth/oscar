@@ -111,11 +111,6 @@
 			</tr>
 			<!----Start new rows here-->
 			<tr>
-				<td>
-				<div class="DivContentTitle"><bean:message key="StaticScript.title" /></div>
-				</td>
-			</tr>
-			<tr>
 				<td style="font-size: small;"><br />
 				<br />
 				<b>Patient Name:</b> <%=patient.getFirstName()%> <%=patient.getSurname()%> <br />

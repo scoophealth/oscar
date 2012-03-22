@@ -1,9 +1,6 @@
 <%@ page import="oscar.oscarRx.data.*,oscar.oscarProvider.data.ProviderMyOscarIdData,oscar.oscarDemographic.data.DemographicData,oscar.OscarProperties,oscar.log.*"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%/*
-<!--  
-/*
- * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License. 
  * This program is free software; you can redistribute it and/or 
@@ -24,32 +21,31 @@
  * McMaster University 
  * Hamilton 
  * Ontario, Canada 
- */
-%>
+ */%> 
 <tr>
-	<td width="10%" height="37" bgcolor="#000000">&nbsp;</td>
+	<td width="10%" height="37" bgcolor="#000000"><span class="ScreenTitle" >oscarRx</span></td>
         <td width="100%" valign="bottom"  bgcolor="#000000" style="border-left: 2px solid #A9A9A9; padding-left: 5" height="0%" colspan="2">
             <table width="100%" border="0" height="100%">
                 <tr>
                     <td valign="bottom" style="color:white;" >
-	<span class="ScreenTitle" >oscarRx</span>
-                   --<b><bean:message key="SearchDrug.nameText" /></b> <jsp:getProperty name="patient" property="firstName" /> <jsp:getProperty name="patient" property="surname" /> &nbsp;
-		     <b><bean:message key="SearchDrug.ageText" /></b> <jsp:getProperty name="patient" property="age" />
-                     <b>
-                     <oscar:phrverification styleId="verificationLink" demographicNo="<%=Integer.toString(demoNo)%>"><bean:message key="phr.verification.link"/></oscar:phrverification> &nbsp;
-                         <a style="color:white; "href="SelectPharmacy2.jsp"><bean:message key="SearchDrug.PreferedPharmacy"/></a>:</b> <a  style="color:white;" href="javascript: function myFunction() {return false; }" onClick="showpic('Layer1');" id="Calcs" ><%=prefPharmacy%></a>
-
+	
+             		<b><bean:message key="SearchDrug.nameText" /></b> <jsp:getProperty name="patient" property="firstName" /> <jsp:getProperty name="patient" property="surname" />
+		     		<b><bean:message key="SearchDrug.ageText" /></b> <jsp:getProperty name="patient" property="age" />
+                    <b><a style="color:white; "href="SelectPharmacy2.jsp"><bean:message key="SearchDrug.PreferedPharmacy"/></a>:</b> <a  style="color:white;" href="javascript: function myFunction() {return false; }" onClick="showpic('Layer1');" id="Calcs" ><%=prefPharmacy%></a>
+			
                   
                     </td>
                     <td valign="top" align="right">
                         <span class="HelpAboutLogout" style="color:white;">
-                            <span class="FakeLink" ><a style="color:white;" href="javascript: popupFocusPage(200,700,'./drugrefInfo.jsp','Drugref Info');" >Drugref Info</a></span> |
-                            <span class="FakeLink" style="color:white;"><oscar:help keywords="2.2.4" key="app.top1" style="color:white;"/></span> |
-                            <span class="FakeLink" ><a style="color:white;" href="About.htm">About</a></span> |
-                            <span class="FakeLink" style="color:white;"><a style="color:white;" href="Disclaimer.htm">Disclaimer</a></span>
+							<a style="color:white;" href="javascript: popupFocusPage(200,700,'./drugrefInfo.jsp','Drugref Info');" >Drugref Info</a> |
+							<oscar:help keywords="2.2.4" key="app.top1" style="color:white;"/> |
+                            <a style="color:white;" href="<%=request.getContextPath()%>/oscarEncounter/About.jsp" target="_new">About</a>
+                            <!-- is this needed? 
+                            <a style="color:white;" href="Disclaimer.htm">Disclaimer</a> 
+                            -->
                         </span>
                     </td>
                 </tr>
             </table>
 	</td>
-</tr>
+</tr>                            

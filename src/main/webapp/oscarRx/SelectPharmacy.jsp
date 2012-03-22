@@ -73,7 +73,7 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 			<tr>
 				<td width="0%" valign="top">
 				<div class="DivCCBreadCrumbs"><a href="SearchDrug.jsp"> <bean:message
-					key="SearchDrug.title" /></a></div>
+					key="SearchDrug.title" /></a> > <bean:message key="SelectPharmacy.title" /></div>
 				</td>
 			</tr>
 			<!----Start new rows here-->
@@ -99,7 +99,7 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
                          ArrayList pharList = pharmacy.getAllPharmacies();
                        %>
 
-                <div style=" width:400px; height:400px; overflow:auto;">
+                <div style=" width:860px; height:460px; overflow:auto;">
 				<table>
 					<tr>
 						<td><bean:message key="SelectPharmacy.table.pharmacyName" /></td>

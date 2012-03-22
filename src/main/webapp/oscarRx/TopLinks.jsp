@@ -1,8 +1,5 @@
-
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%/*
-<!--  
-/*
- * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License. 
  * This program is free software; you can redistribute it and/or 
@@ -23,22 +20,26 @@
  * McMaster University 
  * Hamilton 
  * Ontario, Canada 
- */
-%>
+ */%> 
+ 
 <tr>
-	<td width="100%"
-		style="padding-left: 3; padding-right: 3; padding-top: 2; padding-bottom: 2"
-		height="0%" colspan="2">
-	<p class="HelpAboutLogout"><span class="FakeLink"><oscar:help keywords="2.2.4" key="app.top1"/></span> | <span class="FakeLink"><a
-		href="About.htm">About</a></span> | <span class="FakeLink"> <a
-		href="Disclaimer.htm">Disclaimer</a></span></p>
-	</td>
-</tr>
-
-<tr>
-	<td width="10%" height="37" bgcolor="#000000">&nbsp;</td>
-	<td width="100%" bgcolor="#000000"
-		style="border-left: 2px solid #A9A9A9; padding-left: 5" height="0%">
-	<p class="ScreenTitle">oscarRx</p>
+	<td width="10%" height="37" bgcolor="#000000"><span class="ScreenTitle" >oscarRx</span></td>
+        <td width="100%" valign="bottom"  bgcolor="#000000" style="border-left: 2px solid #A9A9A9; padding-left: 5" height="0%" colspan="2">
+            <table width="100%" border="0" height="100%">
+                <tr>
+                    <td valign="bottom" style="color:white;" >
+					
+                    </td>
+                    <td valign="top" align="right">
+                        <span class="HelpAboutLogout" style="color:white;">
+                            <oscar:help keywords="2.2.4" key="app.top1" style="color:white;"/> |
+                            <a style="color:white;" href="<%=request.getContextPath()%>/oscarEncounter/About.jsp" target="_new">About</a>
+                            <!-- is this needed? 
+                            <a style="color:white;" href="Disclaimer.htm">Disclaimer</a> 
+                            -->
+                        </span>
+                    </td>
+                </tr>
+            </table>
 	</td>
 </tr>
