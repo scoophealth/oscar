@@ -598,11 +598,6 @@ function popUpMsg(vheight,vwidth,msgPosition) {
   popup.focus();
 }
 
-function goToSearch() {
-        var x = window.confirm("<bean:message key="oscarEncounter.Index.goToSearchConfirm"/>");
-        if(x)
-        {  location = "./search/DemographicSearch.jsp";}
-}
 //function sign(){
 //        document.encForm.enTextarea.value =document.encForm.enTextarea.value +"\n[<bean:message key="oscarEncounter.Index.signed"/> <%=dateConvert.DateToString(bean.currentDate)%> <bean:message key="oscarEncounter.Index.by"/> <%=bean.userName%>]";
 //}
@@ -1597,7 +1592,6 @@ function removeSaveFeedback()  {
 							value="<bean:message key="global.btnExit"/>"
 							class="ControlPushButton"
 							onclick="document.forms['encForm'].btnPressed.value='Exit'; if (closeEncounterWindow()) {document.forms['encForm'].submit();}">
-						<!--input type="button" style="height:20px" onclick="javascript:goToSearch()" name="btnPressed" value="Search New Patient" class="ControlPushButton"-->
 						<input type="hidden" name="rowOneSize"
 							value="<%=windowSizes.getProperty("rowOneSize")%>"> <input
 							type="hidden" name="rowTwoSize"
