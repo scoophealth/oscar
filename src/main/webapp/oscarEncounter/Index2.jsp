@@ -684,11 +684,6 @@ function selectBox(name) {
       popupPageK(to);
 }
 
-function goToSearch() {
-        var x = window.confirm("<bean:message key="oscarEncounter.Index.goToSearchConfirm"/>");
-        if(x)
-        {  location = "./search/DemographicSearch.jsp";}
-}
 --%>
 
 function measurementLoaded(name) {
@@ -1668,7 +1663,6 @@ function grabEnterGetTemplate(event){
 							value="<bean:message key="global.btnExit"/>"
 							class="ControlPushButton2"
 							onclick="document.forms['encForm'].btnPressed.value='Exit'; if (closeEncounterWindow()) {document.forms['encForm'].submit();}">
-						<!--input type="button" style="height:20px" onclick="javascript:goToSearch()" name="btnPressed" value="Search New Patient" class="ControlPushButton"-->
 						<input type="hidden" name="rowOneSize"
 							value="<%=windowSizes.getProperty("rowOneSize")%>"> <input
 							type="hidden" name="rowTwoSize"

@@ -1047,9 +1047,6 @@
 			<forward name="success" path="/oscarEncounter/InsertTemplate.jsp" />
 			<forward name="success2" path="/oscarEncounter/InsertTemplate2.jsp" />
 		</action>
-		<action input="/search/DemographicSearch.jsp" name="EctDemographicSearchForm" path="/oscarEncounter/SearchDemographic" scope="request" type="oscar.oscarEncounter.search.pageUtil.EctDemographicSearchAction">
-			<forward name="success" path="/oscarEncounter/search/DemographicSearch.jsp" />
-		</action>
 		<action name="PatientOptionsForm" path="/PatientOption" scope="request" type="oscar.oscarEncounter.search.pageUtil.EctPatientOptionsAction">
 			<forward name="consult" path="/oscarConsultationRequest/ConsultationFormRequest.jsp" />
 			<forward name="viewAllConsult" path="/oscarConsultationRequest/DisplayDemographicConsultationRequests.jsp" />
