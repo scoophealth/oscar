@@ -1,25 +1,25 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 package oscar.oscarBilling.pageUtil;
 import java.io.IOException;
@@ -41,24 +41,24 @@ import org.oscarehr.util.MiscUtils;
 import oscar.OscarProperties;
 
 public final class BillingViewAction extends Action {
-    
+
     public ActionForward execute(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
     throws IOException, ServletException {
-        
-        
+
+
         if(request.getSession().getAttribute("user") == null  ){
             return (mapping.findForward("Logout"));
         }
         // Extract attributes we will need
         Locale locale = getLocale(request);
         MessageResources messages = getResources(request);
-        
+
         // Setup variables
         Properties oscarVars = OscarProperties.getInstance();
-        
+
         if (oscarVars.getProperty("billregion").equals("ON")){
             String newURL = mapping.findForward("ON").getPath();
             newURL = newURL + "?"+request.getQueryString();
@@ -75,8 +75,8 @@ public final class BillingViewAction extends Action {
             MiscUtils.getLogger().debug("GrandTotal" +bmanager.getGrandTotal(billItem));
             oscar.oscarDemographic.data.DemographicData demoData = new oscar.oscarDemographic.data.DemographicData();
             MiscUtils.getLogger().debug("Calling Demo");
-            
-            oscar.oscarDemographic.data.DemographicData.Demographic demo = demoData.getDemographic(bean.getPatientNo());
+
+            org.oscarehr.common.model.Demographic demo = demoData.getDemographic(bean.getPatientNo());
             bean.setPatientLastName(demo.getLastName());
             bean.setPatientFirstName(demo.getFirstName());
             bean.setPatientDoB(demo.getFirstName());
@@ -84,15 +84,15 @@ public final class BillingViewAction extends Action {
             bean.setPatientAddress2(demo.getCity());
             bean.setPatientPostal(demo.getPostal());
             bean.setPatientSex(demo.getSex());
-            bean.setPatientPHN(demo.getHIN());
-            bean.setPatientHCType(demo.getHCType());
+            bean.setPatientPHN(demo.getHin()+demo.getVer());
+            bean.setPatientHCType(demo.getHcType());
             bean.setPatientAge(demo.getAge());
             MiscUtils.getLogger().debug("End Demo Call");
-            
+
             //if(request.getParameter("demographic_no")!=null & request.getParameter("appointment_no")!=null)
             //{
             //    bean = new oscar.oscarBilling.pageUtil.BillingSessionBean();
-            
+
             //	 bean.setApptProviderNo(request.getParameter("apptProvider_no"));
             //    bean.setPatientName(request.getParameter("demographic_name"));
             //    bean.setProviderView(request.getParameter("providerview"));
@@ -111,11 +111,11 @@ public final class BillingViewAction extends Action {
             //{
             //    bean = (oscar.oscarBilling.pageUtil.BillingSessionBean)request.getSession().getAttribute("billingSessionBean");
             //}
-            
-            
-            
+
+
+
             return (mapping.findForward("success"));
         }
     }
-    
+
 }

@@ -65,7 +65,7 @@ public class BillingCreateBillingAction extends Action {
 
   private ServiceCodeValidationLogic vldt = new ServiceCodeValidationLogic();
   private ArrayList patientDX = new ArrayList(); //List of disease codes for current patient
-  
+
   public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) throws IOException,ServletException {
     ActionMessages errors = new ActionMessages();
     BillingBillingManager bmanager = new BillingBillingManager();
@@ -85,8 +85,8 @@ public class BillingCreateBillingAction extends Action {
     String other_service3_unit = frm.getXml_other3_unit();
 
     BillingSessionBean bean = (BillingSessionBean) request.getSession().getAttribute("billingSessionBean");
-    DemographicData.Demographic demo = new DemographicData().getDemographic(bean.getPatientNo());
-    this.patientDX = vldt.getPatientDxCodes(demo.getDemographicNo());
+    org.oscarehr.common.model.Demographic demo = new DemographicData().getDemographic(bean.getPatientNo());
+    this.patientDX = vldt.getPatientDxCodes(demo.getDemographicNo().toString());
     ArrayList billItem = bmanager.getDups2(service, other_service1,
                                            other_service2, other_service3,
                                            other_service1_unit,
@@ -97,13 +97,13 @@ public class BillingCreateBillingAction extends Action {
     bean.setGrandtotal(bmanager.getGrandTotal(billItem));
     bean.setPatientLastName(demo.getLastName());
     bean.setPatientFirstName(demo.getFirstName());
-    bean.setPatientDoB(demo.getDob());
+    bean.setPatientDoB(DemographicData.getDob(demo));
     bean.setPatientAddress1(demo.getAddress());
     bean.setPatientAddress2(demo.getCity());
     bean.setPatientPostal(demo.getPostal());
     bean.setPatientSex(demo.getSex());
-    bean.setPatientPHN(demo.getHIN());
-    bean.setPatientHCType(demo.getHCType());
+    bean.setPatientPHN(demo.getHin()+demo.getVer());
+    bean.setPatientHCType(demo.getHcType());
     bean.setPatientAge(demo.getAge());
     bean.setBillingType(frm.getXml_billtype());
     bean.setPaymentType(payMeth);
@@ -114,7 +114,7 @@ public class BillingCreateBillingAction extends Action {
     else {
       bean.setEncounter("O");
     }
-    
+
     bean.setWcbId(request.getParameter("WCBid"));
     bean.setVisitType(frm.getXml_visittype());
     bean.setVisitLocation(frm.getXml_location());
@@ -163,26 +163,26 @@ public class BillingCreateBillingAction extends Action {
         validateServiceCodeList(billItem, demo, errors);
         validateDxCodeList(bean, errors);
         validateServiceCodeTimes(billItem, frm, errors);
-    
+
         for (Iterator iter = billItem.iterator(); iter.hasNext(); ) {
           BillingItem item = (BillingItem) iter.next();
-          validateCDMCodeConditions(errors, demo.getDemographicNo(),
+          validateCDMCodeConditions(errors, demo.getDemographicNo().toString(),
                                     item.getServiceCode());
         }
 
         if (!errors.isEmpty()) {
-          validateCodeLastBilled(request, errors, demo.getDemographicNo());
+          validateCodeLastBilled(request, errors, demo.getDemographicNo().toString());
           return mapping.getInputForward();
         }
         validate00120(errors, demo, billItem, bean.getServiceDate());
         if (!errors.isEmpty()) {
-          validateCodeLastBilled(request, errors, demo.getDemographicNo());
+          validateCodeLastBilled(request, errors, demo.getDemographicNo().toString());
           return mapping.getInputForward();
         }
         this.validatePatientManagementCodes(errors, demo, billItem,
                                             bean.getServiceDate());
         if (!errors.isEmpty()) {
-          validateCodeLastBilled(request, errors, demo.getDemographicNo());
+          validateCodeLastBilled(request, errors, demo.getDemographicNo().toString());
           return mapping.getInputForward();
         }
 
@@ -218,12 +218,12 @@ public class BillingCreateBillingAction extends Action {
             return mapping.getInputForward();
         }
     }
-    
+
     //We want this alert to show up regardless
     //However we don't necessarily want it to force the user to enter a bill
-    validateCodeLastBilled(request, errors, demo.getDemographicNo());
+    validateCodeLastBilled(request, errors, demo.getDemographicNo().toString());
 
-    
+
 
     //if fromBilling is true set forward to WCB Form
 ////    if ("true".equals(fromBilling)) {
@@ -331,7 +331,7 @@ public class BillingCreateBillingAction extends Action {
    * @param errors ActionMessages
    */
   private void validateServiceCodeList(ArrayList billItems,
-                                       DemographicData.Demographic demo,
+                                       org.oscarehr.common.model.Demographic demo,
                                        ActionMessages errors) {
     BillingAssociationPersistence per = new BillingAssociationPersistence();
     for (int i = 0; i < billItems.size(); i++) {
@@ -370,7 +370,7 @@ public class BillingCreateBillingAction extends Action {
   }
 
   private void validate00120(ActionMessages errors,
-                             DemographicData.Demographic demo,
+                             org.oscarehr.common.model.Demographic demo,
                              ArrayList billItem, String serviceDate) {
     for (Iterator iter = billItem.iterator(); iter.hasNext(); ) {
       BillingItem item = (BillingItem) iter.next();
@@ -378,7 +378,7 @@ public class BillingCreateBillingAction extends Action {
           "COUNSELING_CODES").split(",");
       Vector vCodes = new Vector(Arrays.asList(cnlsCodes));
       if (vCodes.contains(item.getServiceCode())) {
-        if (!vldt.hasMore00120Codes(demo.getDemographicNo(),
+        if (!vldt.hasMore00120Codes(demo.getDemographicNo().toString(),
                                     item.getServiceCode(), serviceDate)) {
           errors.add("",
                      new ActionMessage(
@@ -399,7 +399,7 @@ public class BillingCreateBillingAction extends Action {
    * @return boolean -  true if the specified service is billable
    */
   private void validatePatientManagementCodes(ActionMessages errors,
-                                              DemographicData.Demographic demo,
+                                              org.oscarehr.common.model.Demographic demo,
                                               ArrayList billItem,
                                               String serviceDate) {
     HashMap mgmCodeCount = new HashMap();
@@ -423,10 +423,10 @@ public class BillingCreateBillingAction extends Action {
       double count = ( (Double) mgmCodeCount.get(key)).doubleValue();
       if (count > 0) {
         Map availableUnits = vldt.getCountAvailablePatientManagementUnits(demo.
-            getDemographicNo(), key, serviceDate);
-        double dailyAvail = ( (Double) availableUnits.get(vldt.
+            getDemographicNo().toString(), key, serviceDate);
+        double dailyAvail = ( (Double) availableUnits.get(ServiceCodeValidationLogic.
             DAILY_AVAILABLE_UNITS)).doubleValue();
-        double yearAvail = ( (Double) availableUnits.get(vldt.
+        double yearAvail = ( (Double) availableUnits.get(ServiceCodeValidationLogic.
             ANNUAL_AVAILABLE_UNITS)).doubleValue();
 
         if ( (count > dailyAvail)) {
@@ -527,6 +527,6 @@ public class BillingCreateBillingAction extends Action {
     }
   }
 
-  
+
 
 }

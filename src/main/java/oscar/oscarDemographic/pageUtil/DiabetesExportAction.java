@@ -11,8 +11,10 @@ import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
@@ -41,6 +44,7 @@ import org.oscarehr.dx.model.DxResearch;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.OscarProperties;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarDemographic.data.DemographicExt;
 import oscar.oscarEncounter.oscarMeasurements.data.ImportExportMeasurements;
@@ -50,24 +54,21 @@ import oscar.oscarEncounter.oscarMeasurements.data.Measurements;
 import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
 import oscar.oscarPrevention.PreventionData;
 import oscar.oscarPrevention.PreventionDisplayConfig;
-import oscar.OscarProperties;
 import oscar.oscarProvider.data.ProviderData;
 import oscar.oscarReport.data.DemographicSets;
 import oscar.oscarRx.data.RxPrescriptionData;
 import oscar.util.StringUtils;
 import oscar.util.UtilDateUtilities;
-import cdsdiabetes.OmdCdsDiabetesDocument;
 import cdsdiabetes.CareElementsDocument.CareElements;
 import cdsdiabetes.DemographicsDocument.Demographics;
+import cdsdiabetes.DiabetesDinList;
 import cdsdiabetes.ImmunizationsDocument.Immunizations;
 import cdsdiabetes.LaboratoryResultsDocument.LaboratoryResults;
 import cdsdiabetes.MedicationsAndTreatmentsDocument.MedicationsAndTreatments;
+import cdsdiabetes.OmdCdsDiabetesDocument;
 import cdsdiabetes.PatientRecordDocument.PatientRecord;
 import cdsdiabetes.ProblemListDocument.ProblemList;
 import cdsdiabetes.ReportInformationDocument.ReportInformation;
-import cdsdiabetes.DiabetesDinList;
-import java.util.HashMap;
-import org.apache.commons.lang.math.NumberUtils;
 
 
 
@@ -80,11 +81,11 @@ public class DiabetesExportAction extends Action {
     Date endDate;
     ArrayList<String> errors;
     ArrayList<String> listOfDINS = new ArrayList<String>();
-    
+
     private static final Logger logger = MiscUtils.getLogger();
     private static final CaseManagementManager cmm = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
     private static final PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
-  
+
 
 public DiabetesExportAction(){}
 
@@ -96,10 +97,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     this.endDate = UtilDateUtilities.StringToDate(defrm.getendDate());
     this.errors = new ArrayList<String>();
     getListOfDINS();
-    
+
     //Create Patient List from Patient Set
     ArrayList patientList = new DemographicSets().getDemographicSet(setName);
-    
+
     //Create export files
     String tmpDir = OscarProperties.getInstance().getProperty("TMP_DIR");
     if (!Util.checkDir(tmpDir)) {
@@ -108,22 +109,22 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         tmpDir = Util.fixDirName(tmpDir);
     }
     ArrayList<File> exportFiles = this.make(patientList, tmpDir);
-    
+
     //Create & put error.log into the file list
     File errorLog = makeErrorLog("error.log", tmpDir);
     if (errorLog!=null) exportFiles.add(errorLog);
-    
+
     //Zip export files
     String zipName = "omd_diabetes-"+UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss")+".zip";
     if (!Util.zipFiles(exportFiles, zipName, tmpDir)) logger.error("Error! Failed zipping export files");
-    
+
     //Download zip file
     Util.downloadFile(zipName, tmpDir, response);
 
     //Remove zip & export files from temp dir
     Util.cleanFile(zipName, tmpDir);
     Util.cleanFiles(exportFiles);
-    
+
     return null;
 }
 
@@ -139,8 +140,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	}
         else return false;
     }
-    
-    
+
+
     ArrayList<File> make(List<String> demographicNos, String tmpDir) throws Exception{
 	XmlOptions options = new XmlOptions();
 	options.put( XmlOptions.SAVE_PRETTY_PRINT );
@@ -150,7 +151,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         HashMap<String,String> suggestedPrefix = new HashMap<String,String>();
         suggestedPrefix.put("cds_dt","cdsd");
         options.setSaveSuggestedPrefixes(suggestedPrefix);
-        
+
 	options.setSaveOuter();
         ArrayList<File> files = new ArrayList<File>();
 
@@ -158,7 +159,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         for (String demoNo : demographicNos) {
 	    OmdCdsDiabetesDocument omdCdsDiabetesDoc = OmdCdsDiabetesDocument.Factory.newInstance();
 	    OmdCdsDiabetesDocument.OmdCdsDiabetes omdcdsdiabetes = omdCdsDiabetesDoc.addNewOmdCdsDiabetes();
-	    
+
 	    PatientRecord patientRecord = omdcdsdiabetes.addNewPatientRecord();
 	    if (!fillPatientRecord(patientRecord, demoNo)) continue;
 
@@ -183,14 +184,14 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	}
         return files;
     }
-    
+
     File makeErrorLog(String errorLogName, String dirName) throws IOException {
 	if (errors.isEmpty()) return null;
 
         dirName = Util.fixDirName(dirName);
 	File errorLog = new File(dirName+errorLogName);
 	BufferedWriter out = new BufferedWriter(new FileWriter(errorLog));
-	
+
 	for (String err : errors) {
 	    out.write(err);
 	    out.newLine();
@@ -207,11 +208,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             errors.add("Error loading schema file! Property ontariomd_cds_diabetes_link not set!");
             return;
         }
-        
+
         try {
             URL omdDmURL = new URL(omdDmlink);
             logger.info("Diabetes export schema: "+omdDmlink);
-            
+
             BufferedReader in = new BufferedReader(new InputStreamReader(omdDmURL.openStream()));
             SAXBuilder parser = new SAXBuilder();
             Document doc;
@@ -237,11 +238,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         } catch (IOException ex) {
             Logger.getLogger(DiabetesExportAction.class.getName()).log(Level.ERROR, null, ex);
         }
-        
+
         if (listOfDINS.isEmpty())
             errors.add("Error loading schema file! Cannot obtain DIN list!");
     }
-    
+
     void setCareElements(PatientRecord patientRecord, String demoNo) throws SQLException {
     	List<Measurements> measList = ImportExportMeasurements.getMeasurements(demoNo);
         for (Measurements meas : measList) {
@@ -249,7 +250,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             if (dateObserved!=null) {
                 if (startDate.after(dateObserved) || endDate.before(dateObserved)) continue;
             }
-            
+
             if (meas.getType().equals("HT")) { //Height in cm
                 CareElements careElements = patientRecord.addNewCareElements();
 		cdsDt.Height height = careElements.addNewHeight();
@@ -426,16 +427,16 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             }
         }
     }
-    
+
     void setDemographicDetails(PatientRecord patientRec, String demoNo){
 	Demographics demo = patientRec.addNewDemographics();
-        DemographicData.Demographic demographic = new DemographicData().getDemographic(demoNo);
-        
+        org.oscarehr.common.model.Demographic demographic = new DemographicData().getDemographic(demoNo);
+
         cdsDt.PersonNameStandard.LegalName legalName = demo.addNewNames().addNewLegalName();
         cdsDt.PersonNameStandard.LegalName.FirstName firstName = legalName.addNewFirstName();
         cdsDt.PersonNameStandard.LegalName.LastName  lastName  = legalName.addNewLastName();
         legalName.setNamePurpose(cdsDt.PersonNamePurposeCode.L);
-		
+
         String data = StringUtils.noNull(demographic.getFirstName());
 	firstName.setPart(data);
 	firstName.setPartType(cdsDt.PersonNamePartTypeCode.GIV);
@@ -456,7 +457,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         if (StringUtils.empty(data)) {
             errors.add("Error! No Gender for Patient "+demoNo);
         }
-        
+
         data = demographic.getProviderNo();
         demo.setOHIPPhysicianId("");
         if (StringUtils.filled(data)) {
@@ -469,8 +470,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             data = provider.getPractitionerNo();
             if (data!=null && data.length()==5) demo.setPrimaryPhysicianCPSO(data);
         }
-        
-        data = StringUtils.noNull(demographic.getJustHIN());
+
+        data = StringUtils.noNull(demographic.getHin());
 	cdsDt.HealthCard healthCard = demo.addNewHealthCard();
 	healthCard.setNumber(data);
 	if (StringUtils.empty(data)) errors.add("Error! No Health Card Number for Patient "+demoNo);
@@ -479,19 +480,23 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	if (healthCard.getProvinceCode()==null) {
 	    errors.add("Error! No Health Card Province Code for Patient "+demoNo);
 	}
-	if (StringUtils.filled(demographic.getVersionCode())) healthCard.setVersion(demographic.getVersionCode());
-	data = demographic.getHCRenewDate();
+	if (StringUtils.filled(demographic.getVer())) healthCard.setVersion(demographic.getVer());
+	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
+	if(demographic.getHcRenewDate()!=null)
+		data =formatter.format(demographic.getHcRenewDate());
+	else
+		data=null;
 	if (UtilDateUtilities.StringToDate(data)!=null) {
 	    healthCard.setExpirydate(Util.calDate(data));
         }
-        
-        data = StringUtils.noNull(demographic.getDob("-"));
+
+        data = StringUtils.noNull(DemographicData.getDob(demographic,"-"));
         if (UtilDateUtilities.StringToDate(data)!=null) {
             demo.addNewDateOfBirth().setFullDate(Util.calDate(data));
         }
-        
+
         if (StringUtils.filled(demographic.getAddress())) {
-            cdsDt.Address addr = demo.addNewAddress();		
+            cdsDt.Address addr = demo.addNewAddress();
             cdsDt.AddressStructured address = addr.addNewStructured();
             addr.setAddressType(cdsDt.AddressType.R);
             address.setLine1(demographic.getAddress());
@@ -501,14 +506,14 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		address.addNewPostalZipCode().setPostalCode(StringUtils.noNull(demographic.getPostal()).replace(" ",""));
 	    }
         }
-        
+
         data = demographic.getEmail();
         if (StringUtils.filled(data)) demo.setEmail(data);
-        
+
         DemographicExt ext = new DemographicExt();
         HashMap<String,String> demoExt = new HashMap<String,String>();
         demoExt.putAll(ext.getAllValuesForDemo(demoNo));
-	
+
         String phoneNo = Util.onlyNum(demographic.getPhone());
         if (StringUtils.filled(phoneNo) && phoneNo.length()>=7) {
             cdsDt.PhoneNumber phoneResident = demo.addNewPhoneNumber();
@@ -524,7 +529,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             }
         }
     }
-    
+
     void setImmunizations(PatientRecord patientRecord, String demoNo) {
         ArrayList<String> inject = new ArrayList<String>();
         ArrayList<? extends Map<String,? extends Object>> preventionList = PreventionDisplayConfig.getInstance().getPreventions();
@@ -533,7 +538,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             h.putAll(preventionList.get(i));
             if (h!= null && h.get("layout")!= null && h.get("layout").equals("injection")){
                 inject.add((String) h.get("name"));
-            }	     	
+            }
         }
         preventionList = PreventionData.getPreventionData(demoNo);
         for (int i=0; i<preventionList.size(); i++){
@@ -569,10 +574,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 } else {
                     refused.setBoolean(Util.convert10toboolean(data));
                 }
-            }                                                       
+            }
         }
     }
-    
+
     void setLaboratoryResults(PatientRecord patientRecord, String demoNo) throws SQLException {
 	List<LabMeasurements> labMeaList = ImportExportMeasurements.getLabMeasurements(demoNo);
 	for (LabMeasurements labMea : labMeaList) {
@@ -582,15 +587,15 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    	loinc = loinc.trim();
 	    	if (loinc.equals("9318-7")) loinc = "14959-1"; //Urine Albumin-Creatinine Ratio
     	}
-            
+
 	    LaboratoryResults.TestName.Enum testName = LaboratoryResults.TestName.Enum.forString(loinc);
 	    if (testName==null) continue;
-	    
+
 	    LaboratoryResults labResults = patientRecord.addNewLaboratoryResults();
 	    labResults.setTestName(testName); //LOINC code
 	    labResults.setLabTestCode(data);
-	    
-	    
+
+
 	    cdsDt.DateFullOrPartial collDate = labResults.addNewCollectionDateTime();
         String sDateTime = labMea.getExtVal("datetime");
         if (StringUtils.filled(sDateTime)) {
@@ -599,7 +604,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             errors.add("Error! No Collection Datetime for Lab Test "+testName+" for Patient "+demoNo);
             collDate.setFullDate(Util.calDate("0001-01-01"));
         }
-            
+
 	    data = labMea.getMeasure().getDataField();
 	    LaboratoryResults.Result result = labResults.addNewResult();
 	    if (StringUtils.filled(data)) {
@@ -607,39 +612,39 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    } else {
 	    	errors.add("Error! No Result Value for Lab Test "+testName+" for Patient "+demoNo);
 	    }
-	    
+
 	    data = labMea.getExtVal("unit");
 	    if (StringUtils.filled(data)) {
 	    	result.setUnitOfMeasure(data);
 	    } else {
 	    	errors.add("Error! No Unit for Lab Test "+testName+" for Patient "+demoNo);
 	    }
-	    
+
 	    labResults.setLaboratoryName(StringUtils.noNull(labMea.getExtVal("labname")));
 	    if (StringUtils.empty(labResults.getLaboratoryName())) {
 		errors.add("Error! No Laboratory Name for Lab Test "+testName+" for Patient "+demoNo);
 	    }
-	    
+
 	    labResults.setResultNormalAbnormalFlag(cdsDt.ResultNormalAbnormalFlag.U);
 	    data = StringUtils.noNull(labMea.getExtVal("abnormal"));
 	    if (data.equals("A") || data.equals("L")) labResults.setResultNormalAbnormalFlag(cdsDt.ResultNormalAbnormalFlag.Y);
 	    if (data.equals("N")) labResults.setResultNormalAbnormalFlag(cdsDt.ResultNormalAbnormalFlag.N);
-	    
+
 	    data = labMea.getExtVal("accession");
 	    if (StringUtils.filled(data)) {
 		labResults.setAccessionNumber(data);
 	    }
-	    
+
 	    data = labMea.getExtVal("name");
 	    if (StringUtils.filled(data)) {
 	    	labResults.setTestNameReportedByLab(data);
 	    }
-        
+
         data = labMea.getExtVal("comments");
         if (StringUtils.filled(data)) {
             labResults.setNotesFromLab(Util.replaceTags(data));
         }
-        
+
         String range = labMea.getExtVal("range");
         String min = labMea.getExtVal("minimum");
         String max = labMea.getExtVal("maximum");
@@ -652,19 +657,19 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 
         String reqDate = labMea.getExtVal("request_datetime");
         if (StringUtils.filled(reqDate)) labResults.addNewLabRequisitionDateTime().setFullDate(Util.calDate(reqDate));
-        
+
 	    String lab_no = labMea.getExtVal("lab_no");
 	    if (StringUtils.empty(lab_no)) lab_no = labMea.getExtVal("lab_ppid");
 	    if (StringUtils.filled(lab_no)) {
-	    	
+
             //lab annotation
             String other_id = StringUtils.noNull(labMea.getExtVal("other_id"));
             String annotation = getNonDumpNote(CaseManagementNoteLink.LABTEST, Long.valueOf(lab_no), other_id);
             if (StringUtils.filled(annotation)) labResults.setPhysiciansNotes(annotation);
-	    	
+
 	    	HashMap<String,String> labRoutingInfo = new HashMap<String,String>();
 	    	labRoutingInfo.putAll(ProviderLabRouting.getInfo(lab_no));
-	    	
+
 	    	String info = labRoutingInfo.get("provider_no");
 	    	if (info!=null && !"0".equals(info)) {
 	    		ProviderData pd = new ProviderData(info);
@@ -681,7 +686,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    }
 	}
     }
-    
+
     void setMedicationsAndTreatments(PatientRecord patientRecord, String demoNo) throws Exception {
         if (listOfDINS.isEmpty()) {
             return;
@@ -708,11 +713,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             }
             String drugName = StringUtils.noNull(pa[p].getBrandName());
             medications.setDrugName(StringUtils.noNull(drugName));
-            
+
             if (StringUtils.filled(pa[p].getRoute())) medications.setRoute(pa[p].getRoute());
             if (StringUtils.filled(pa[p].getDrugForm())) medications.setForm(pa[p].getDrugForm());
             if (StringUtils.filled(pa[p].getFreqDisplay())) medications.setFrequency(pa[p].getFreqDisplay());
-                
+
             data = pa[p].getDuration();
             if (StringUtils.filled(data)) {
             	String durunit = StringUtils.noNull(pa[p].getDurationUnit());
@@ -726,33 +731,33 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         			errors.add("Error! Invalid prescrption duration for Drug "+drugName+" for Patient "+demoNo);
     			}
         	}
-            
+
             if (StringUtils.filled(pa[p].getQuantity())) medications.setQuantity(pa[p].getQuantity());
             if (StringUtils.filled(pa[p].getSpecialInstruction())) medications.setPrescriptionInstructions(pa[p].getSpecialInstruction());
             if (StringUtils.filled(pa[p].getDosageDisplay())) medications.setDosage(pa[p].getDosageDisplay());
             if (StringUtils.filled(pa[p].getUnit())) medications.setDosageUnitOfMeasure(pa[p].getUnit());
             if (pa[p].getRepeat()>0) medications.setNumberOfRefills(String.valueOf(pa[p].getRepeat()));
-            
+
             if (pa[p].getRefillDuration()!=null && pa[p].getRefillDuration()>0) medications.setRefillDuration(pa[p].getRefillDuration().toString());
             if (pa[p].getRefillQuantity()!=null && pa[p].getRefillQuantity()>0) medications.setRefillQuantity(pa[p].getRefillQuantity().toString());
 
             if (StringUtils.filled(pa[p].getDosage())) {
             	String[] strength = pa[p].getDosage().split(" ");
-            	
+
             	cdsDt.DrugMeasure drugM = medications.addNewStrength();
             	if (Util.leadingNum(strength[0]).equals(strength[0])) {//amount & unit separated by space
             		drugM.setAmount(strength[0]);
             		if (strength.length>1) drugM.setUnitOfMeasure(strength[1]);
             		else drugM.setUnitOfMeasure("unit"); //UnitOfMeasure cannot be null
-            		
+
             	} else {//amount & unit not separated, probably e.g. 50mg / 2tablet
             		if (strength.length>1 && strength[1].equals("/")) {
             			if (strength.length>2) {
             				String unit1 = Util.leadingNum(strength[2]).equals("") ? "1" : Util.leadingNum(strength[2]);
             				String unit2 = Util.trailingTxt(strength[2]).equals("") ? "unit" : Util.trailingTxt(strength[2]);
-            				
-                    		drugM.setAmount(Util.leadingNum(strength[0])+"/"+Util.leadingNum(strength[2])); 
-                    		drugM.setUnitOfMeasure(Util.trailingTxt(strength[0])+"/"+unit2);                    				
+
+                    		drugM.setAmount(Util.leadingNum(strength[0])+"/"+Util.leadingNum(strength[2]));
+                    		drugM.setUnitOfMeasure(Util.trailingTxt(strength[0])+"/"+unit2);
             			}
             		} else {
                 		drugM.setAmount(Util.leadingNum(strength[0]));
@@ -763,14 +768,14 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 
             medications.addNewLongTermMedication().setBoolean(pa[p].getLongTerm());
             medications.addNewPastMedications().setBoolean(pa[p].getPastMed());
-            
+
             cdsDt.YnIndicatorAndBlank pc = medications.addNewPatientCompliance();
             if (pa[p].getPatientCompliance()==null) pc.setBlank(cdsDt.Blank.X);
             else pc.setBoolean(pa[p].getPatientCompliance());
-            
+
             annotation = getNonDumpNote(CaseManagementNoteLink.DRUGS, (long)pa[p].getDrugId(), null);
             if (StringUtils.filled(annotation)) medications.setNotes(annotation);
-            
+
             data = pa[p].getOutsideProviderName();
             if (StringUtils.filled(data)) {
                 MedicationsAndTreatments.PrescribedBy pcb = medications.addNewPrescribedBy();
@@ -791,7 +796,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             }
         }
     }
-    
+
     boolean setProblemList(PatientRecord patientRecord, String demoNo) {
 	/*                                     */
 	/* Note: Look for Diabetes Type 1 or 2 */
@@ -806,17 +811,17 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    if (dx.getCode().equals("25001")) diagValue = "E10.9";  //Type 1 diabetes
 	    else if (dx.getCode().equals("250")) diagValue = "E11.9";  //Type 2 diabetes
 	    else continue;
-	    
+
 	    dateValue = dx.getStartDate();
 	    dateFormat = partialDateDao.getFormat(PartialDate.DXRESEARCH, dx.getId().intValue(), PartialDate.DXRESEARCH_STARTDATE);
 	}
 	if (StringUtils.filled(diagValue)) {
 	    ProblemList problemList = patientRecord.addNewProblemList();
 	    cdsDt.Code diagnosis = problemList.addNewDiagnosisCode();
-	    
+
 	    diagnosis.setValue(diagValue);
 	    diagnosis.setCodingSystem("ICD10-CA");
-	    
+
 	    Util.putPartialDate(problemList.addNewOnsetDate(), dateValue, dateFormat);
 		if (dateValue==null) {
 			errors.add("Error! No Onset Date for Diabetes Diagnosis for Patient "+demoNo);
@@ -826,7 +831,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	}
 	return true;
     }
-    
+
     void setReportInformation(PatientRecord patientRecord) {
         ReportInformation rptInfo = patientRecord.addNewReportInformation();
         rptInfo.setReportRunDate(Util.calDate(new Date()));
@@ -836,18 +841,18 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	} else {
 	    rptInfo.setReportEndDate(Util.calDate("9999-12-31"));
 	}
-        
+
     }
 
     private String getNonDumpNote(Integer tableName, Long tableId, String otherId) {
     	String note = null;
-    	
+
     	List<CaseManagementNoteLink> cmll;
     	if (StringUtils.empty(otherId))
     		cmll = cmm.getLinkByTableIdDesc(tableName, tableId);
 		else
 			cmll = cmm.getLinkByTableIdDesc(tableName, tableId, otherId);
-		
+
         for (CaseManagementNoteLink cml : cmll) {
         	CaseManagementNote n = cmm.getNote(cml.getNoteId().toString());
         	if (n.getNote()!=null && !n.getNote().startsWith("imported.cms4.2011.06")) {//not from dumpsite
@@ -856,5 +861,5 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         	}
         }
         return note;
-    }    
+    }
 }

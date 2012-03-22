@@ -68,7 +68,7 @@ String demographic_no = bean.getDemographic_no();
 String demographic_name = "";
 if ( demographic_no != null ) {   
     DemographicData demographic_data = new DemographicData();
-    DemographicData.Demographic demographic = demographic_data.getDemographic(demographic_no);
+    org.oscarehr.common.model.Demographic demographic = demographic_data.getDemographic(demographic_no);
     demographic_name = demographic.getLastName() + ", " + demographic.getFirstName();
 }
 

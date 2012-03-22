@@ -55,7 +55,7 @@ public class DSDemographicAccess {
 
     private String demographicNo;
     private boolean passedGuideline = false;
-    private DemographicData.Demographic demographicData;
+    private org.oscarehr.common.model.Demographic demographicData;
     private List<Prescription> prescriptionData;
 
     public DSDemographicAccess(String demographicNo) {
@@ -193,17 +193,17 @@ public class DSDemographicAccess {
         String compareAge = getDemographicData().getAgeInYears() + "";
         if (statement.getValueUnit() != null) {
             if (statement.getValueUnit().equals("y")) ;
-            else if (statement.getValueUnit().equals("m")) compareAge = getDemographicData().getAgeInMonths() + "";
-            else if (statement.getValueUnit().equals("d")) compareAge = getDemographicData().getAgeInDays() + "";
+            else if (statement.getValueUnit().equals("m")) compareAge = DemographicData.getAgeInMonths(getDemographicData()) + "";
+            else if (statement.getValueUnit().equals("d")) compareAge = DemographicData.getAgeInDays(getDemographicData()) + "";
             else throw new DecisionSupportException("Cannot recognize unit: " + statement.getValueUnit());
         }
         return statement.testValue(compareAge);
     }
 
     public long getAgeDays() {
-        return getDemographicData().getAgeInDays();
+        return DemographicData.getAgeInDays(getDemographicData());
     }
-    
+
     public boolean isAgeAny(String ageStatements) throws DecisionSupportException {
         List<DSValue> statements =  DSValue.createDSValues(ageStatements);
         for (DSValue statement: statements) {
@@ -270,7 +270,7 @@ public class DSDemographicAccess {
 
     public boolean isSexNotany(String sexStatement) throws DecisionSupportException { return !isSexAny(sexStatement); }
 
-    
+
      public boolean noteContains(DSValue searchValue) {
         CaseManagementNoteDAO dao = (CaseManagementNoteDAO) SpringUtils.getBean("CaseManagementNoteDAO");
         List<CaseManagementNote> notes = dao.searchDemographicNotes(demographicNo, "%" + searchValue.getValue() + "%");
@@ -350,7 +350,7 @@ public class DSDemographicAccess {
                      else if( billregion.equalsIgnoreCase("ON") ) {
                          numDays = billingClaimONDAO.getDaysSinceBilled(code, demographicNo);
                      }
-                     
+
                     //If any of the codes has been billed in the number of days then return false
                     if (numDays < notInDays && numDays != -1){
                         retval = false;  // should it just return false here,  why go on once it finds a false?
@@ -457,7 +457,7 @@ public class DSDemographicAccess {
     /**
      * @return the demographicData
      */
-    public DemographicData.Demographic getDemographicData() {
+    public org.oscarehr.common.model.Demographic getDemographicData() {
         if (this.demographicData == null) {
             this.demographicData = new DemographicData().getDemographic(demographicNo);
         }
@@ -467,14 +467,14 @@ public class DSDemographicAccess {
     /**
      * @param demographicData the demographicData to set
      */
-    public void setDemographicData(DemographicData.Demographic demographicData) {
+    public void setDemographicData(org.oscarehr.common.model.Demographic demographicData) {
         this.demographicData = demographicData;
     }
 
     /**
  * @return the prescriptionData
      */
-    public List<Prescription> getPrescriptionData() throws Exception{
+    public List<Prescription> getPrescriptionData() {
         if (this.prescriptionData == null)
             setPrescriptionData(this.getRxCodes());
         return prescriptionData;

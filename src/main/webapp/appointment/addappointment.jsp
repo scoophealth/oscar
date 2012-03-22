@@ -477,7 +477,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
 	}
 	DemographicCust demographicCust = demographicCustDao.find(Integer.parseInt(request.getParameter("demographic_no")));
 
-		if (demographicCust.getAlert() != null && !demographicCust.getAlert().equals("") ) {
+		if (demographicCust != null && demographicCust.getAlert() != null && !demographicCust.getAlert().equals("") ) {
 
 %>
 <p>

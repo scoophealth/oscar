@@ -80,7 +80,7 @@
   String color = "", colorflag = "";
   BillingSessionBean bean = (BillingSessionBean) pageContext.findAttribute("billingSessionBean");
   oscar.oscarDemographic.data.DemographicData demoData = new oscar.oscarDemographic.data.DemographicData();
-  oscar.oscarDemographic.data.DemographicData.Demographic demo = demoData.getDemographic(bean.getPatientNo());
+  org.oscarehr.common.model.Demographic demo = demoData.getDemographic(bean.getPatientNo());
   oscar.oscarBilling.ca.bc.MSP.ServiceCodeValidationLogic lgc = new oscar.oscarBilling.ca.bc.MSP.ServiceCodeValidationLogic();
   BillingFormData billform = new BillingFormData();
   BillingFormData.BillingService[] billlist1 = lgc.filterServiceCodeList(billform.getServiceList("Group1", bean.getBillForm(), bean.getBillRegion(),new Date()), demo);
@@ -750,7 +750,7 @@ if(wcbneeds != null){%>
     else if (request.getParameter("billType") != null) {
       thisForm.setXml_billtype(request.getParameter("billType"));
     }
-    if (demo != null && demo.getVersionCode() != null && demo.getVersionCode().equals("66")) {
+    if (demo != null && demo.getVer() != null && demo.getVer().equals("66")) {
       thisForm.setDependent("66");
     }
     thisForm.setCorrespondenceCode(bean.getCorrespondenceCode());

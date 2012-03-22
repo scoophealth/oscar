@@ -40,7 +40,7 @@ String demographic_no = request.getParameter("demographic_no");
 
 
 DemographicData demoData = new  DemographicData();
-DemographicData.Demographic demo =  demoData.getDemographic(demographic_no);
+org.oscarehr.common.model.Demographic demo =  demoData.getDemographic(demographic_no);
 String demoName = "";
 if ( demo != null ) {
     demoName = demo.getLastName()+", "+demo.getFirstName();

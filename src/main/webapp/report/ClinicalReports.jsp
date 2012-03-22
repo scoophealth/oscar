@@ -415,7 +415,7 @@
                     for (Hashtable h : list) {
                         
                         Hashtable demoHash = deName.getNameAgeSexHashtable("" + h.get("_demographic_no"));
-                        DemographicData.Demographic demoObj = demoData.getDemographic("" + h.get("_demographic_no"));
+                        org.oscarehr.common.model.Demographic demoObj = demoData.getDemographic("" + h.get("_demographic_no"));
 
                         String colour = "";
                         if (h.get("_report_result") != null && ("" + h.get("_report_result")).equals("false")) {
@@ -611,7 +611,7 @@
     }
     
     
-    String commonRow(String heading,Hashtable demoHash,DemographicData.Demographic demoObj){
+    String commonRow(String heading,Hashtable demoHash,org.oscarehr.common.model.Demographic demoObj){
         if (heading == null){
             return "";
         }

@@ -72,13 +72,13 @@ public final class BillingViewAction
       BillingBillingManager bmanager = new BillingBillingManager();
       ArrayList billItem = new ArrayList();
       String[] billingN = request.getParameterValues("billing_no");
-      
+
       for (int i = 0; i < billingN.length; i++){
           log.debug("billn "+i+" "+billingN[i]);
          ArrayList tempBillItem = bmanager.getBillView(billingN[i]);
          billItem.addAll(tempBillItem);
       }
-      
+
       log.debug("Calling getGrandTotal");
       bean.setBillItem(billItem);
 
@@ -87,7 +87,7 @@ public final class BillingViewAction
       DemographicData demoData = new DemographicData();
       log.debug("Calling Demo");
 
-      DemographicData.Demographic demo = demoData.getDemographic(bean.getPatientNo());
+      org.oscarehr.common.model.Demographic demo = demoData.getDemographic(bean.getPatientNo());
       bean.setPatientLastName(demo.getLastName());
       bean.setPatientFirstName(demo.getFirstName());
       bean.setPatientDoB(demo.getDateOfBirth());
@@ -95,8 +95,8 @@ public final class BillingViewAction
       bean.setPatientAddress2(demo.getCity());
       bean.setPatientPostal(demo.getPostal());
       bean.setPatientSex(demo.getSex());
-      bean.setPatientPHN(demo.getHIN());
-      bean.setPatientHCType(demo.getHCType());
+      bean.setPatientPHN(demo.getHin()+demo.getVer());
+      bean.setPatientHCType(demo.getHcType());
       bean.setPatientAge(demo.getAge());
       frm.setBillingNo(bean.getBillingNo());
       log.debug("End Demo Call billing No"+request.getParameter("billing_no"));

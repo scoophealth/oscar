@@ -96,7 +96,7 @@ public class MyOscarServerRelationManager {
 		boolean relationCreated = false;
 		AccountWs accountWs=MyOscarServerWebServicesManager.getAccountWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
 
-		DemographicData.Demographic demo = new DemographicData().getDemographic(demoNo); 
+		org.oscarehr.common.model.Demographic demo = new DemographicData().getDemographic(demoNo); 
         String myOscarUserName = demo.getMyOscarUserName();
         boolean patientRelationshipExists= MyOscarServerRelationManager.hasPatientRelationship(auth,myOscarUserName);
                 

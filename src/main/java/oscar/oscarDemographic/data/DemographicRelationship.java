@@ -177,7 +177,7 @@ public class DemographicRelationship {
             Hashtable h = new Hashtable();
             String demo = oscar.Misc.getString(rs, "relation_demographic_no");
             DemographicData dd = new DemographicData();
-            DemographicData.Demographic demographic = dd.getDemographic(demo);    
+            org.oscarehr.common.model.Demographic demographic = dd.getDemographic(demo);    
             h.put("lastName", demographic.getLastName());
             h.put("firstName", demographic.getFirstName());
             h.put("phone", demographic.getPhone());
@@ -208,7 +208,7 @@ public class DemographicRelationship {
 	            Hashtable h = new Hashtable();
 	            String demo = oscar.Misc.getString(rs, "relation_demographic_no");
 	            DemographicData dd = new DemographicData();
-	            DemographicData.Demographic demographic = dd.getDemographic(demo);    
+	            org.oscarehr.common.model.Demographic demographic = dd.getDemographic(demo);    
 	            h.put("lastName", demographic.getLastName());
 	            h.put("firstName", demographic.getFirstName());
 	            h.put("phone", demographic.getPhone());

@@ -1,28 +1,28 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
         "http://www.w3.org/TR/html4/loose.dtd">
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 <%@page import="org.apache.commons.lang.StringUtils"%>
@@ -33,17 +33,17 @@
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
-<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>	
+<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
-  String demographic_no = request.getParameter("demographic_no"); 
-  
-  oscar.oscarReport.data.RptSearchData searchData  = new oscar.oscarReport.data.RptSearchData();    
+  String demographic_no = request.getParameter("demographic_no");
+
+  oscar.oscarReport.data.RptSearchData searchData  = new oscar.oscarReport.data.RptSearchData();
   ArrayList queryArray = searchData.getQueryTypes();
-  
+
   String preventionText = "";
-  
+
   String eformSearch = (String) request.getAttribute("eformSearch");
   EfmData efData = new EfmData();
   BillingClaimDAO bcDAO = (BillingClaimDAO)SpringUtils.getBean("billingClaimDAO");
@@ -57,11 +57,11 @@
 
 <script type="text/javascript" src="../share/javascript/Oscar.js"></script>
 <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
-<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" > 
-     
-<script type="text/javascript" src="../share/calendar/calendar.js" ></script>      
-<script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>" ></script>      
-<script type="text/javascript" src="../share/calendar/calendar-setup.js" ></script>      
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" >
+
+<script type="text/javascript" src="../share/calendar/calendar.js" ></script>
+<script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>" ></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js" ></script>
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
 <script type="text/javascript" src="../share/javascript/sortable.js"></script>
 <style type="text/css">
@@ -71,24 +71,24 @@
   div.ImmSet li {  }
   div.ImmSet li a { text-decoration:none; color:blue;}
   div.ImmSet li a:hover { text-decoration:none; color:red; }
-  div.ImmSet li a:visited { text-decoration:none; color:blue;}  
+  div.ImmSet li a:visited { text-decoration:none; color:blue;}
 </style>
 
 <script type="text/javascript">
 
-function showHideItem(id){ 
+function showHideItem(id){
     if(document.getElementById(id).style.display == 'none')
-        document.getElementById(id).style.display = ''; 
+        document.getElementById(id).style.display = '';
     else
-        document.getElementById(id).style.display = 'none'; 
+        document.getElementById(id).style.display = 'none';
 }
 
 function showItem(id){
-        document.getElementById(id).style.display = ''; 
+        document.getElementById(id).style.display = '';
 }
 
 function hideItem(id){
-        document.getElementById(id).style.display = 'none'; 
+        document.getElementById(id).style.display = 'none';
 }
 
 function showHideNextDate(id,nextDate,nexerWarn){
@@ -98,22 +98,22 @@ function showHideNextDate(id,nextDate,nexerWarn){
         hideItem(id);
         document.getElementById(nextDate).value = "";
         document.getElementById(nexerWarn).checked = false ;
-        
-    }        
+
+    }
 }
 
-function disableifchecked(ele,nextDate){        
-    if(ele.checked == true){       
-       document.getElementById(nextDate).disabled = true;       
-    }else{                      
-       document.getElementById(nextDate).disabled = false;              
+function disableifchecked(ele,nextDate){
+    if(ele.checked == true){
+       document.getElementById(nextDate).disabled = true;
+    }else{
+       document.getElementById(nextDate).disabled = false;
     }
 }
 
 function batchBill() {
     var frm = document.forms["frmBatchBill"];
     var url = "<c:out value="${ctx}"/>" + "/billing/CA/ON/BatchBill.do";
-        
+
     new Ajax.Request(
         url,
         {
@@ -137,9 +137,9 @@ function batchBill() {
 
 
 <script type="text/javascript">
-                        
-                        
-                        
+
+
+
     //Function sends AJAX request to action
     function completedProcedure(idval,followUpType,procedure,demographic){
        var comment = prompt('Are you sure you want to added this to patients record \n\nAdd Comment Below ','');
@@ -147,7 +147,7 @@ function batchBill() {
           var params = "id="+idval+"&followupType="+followUpType+"&followupValue="+procedure+"&demos="+demographic+"&message="+comment;
           var url = "../oscarMeasurement/AddShortMeasurement.do";
 
-          new Ajax.Request(url, {method: 'get',parameters:params,asynchronous:true,onComplete: followUp}); 
+          new Ajax.Request(url, {method: 'get',parameters:params,asynchronous:true,onComplete: followUp});
        }
        return false;
     }
@@ -166,7 +166,7 @@ function batchBill() {
         //alert(nextProcedureTD.innerText);
 
     }
-</script>  
+</script>
 
 
 
@@ -194,12 +194,12 @@ function batchBill() {
                 text-align: center;
         }
 	td.middleGrid{
-	   border-left: 1pt solid #888888;	   
+	   border-left: 1pt solid #888888;
 	   border-right: 1pt solid #888888;
            text-align: center;
-	}	
-	
-	
+	}
+
+
 label{
 float: left;
 width: 120px;
@@ -236,7 +236,7 @@ clear: left;
 }
 
 table.ele {
-   
+
    border-collapse:collapse;
 }
 
@@ -248,7 +248,7 @@ table.ele td{
 /* Sortable tables */
 table.ele thead {
     background-color:#eee;
-    color:#666666;    
+    color:#666666;
     font-size: x-small;
     cursor: default;
 }
@@ -284,7 +284,7 @@ table.ele thead {
                             Prevention Reporting
                         </td>
                         <td  >&nbsp;
-		               <a href="../report/ManageLetters.jsp?goto=success_manage_from_prevention" target="_blank">manage letters</a>			
+		               <a href="../report/ManageLetters.jsp?goto=success_manage_from_prevention" target="_blank">manage letters</a>
                         </td>
                         <td style="text-align:right">
                                 <oscar:help keywords="report" key="app.top1"/> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
@@ -309,7 +309,7 @@ table.ele thead {
                         String qName = sc.queryName;%>
                         <html:option value="<%=qId%>"><%=qName%></html:option>
                       <%}%>
-                  </html:select>                  
+                  </html:select>
                </div>
                <div>
                   Prevention Query:
@@ -318,21 +318,21 @@ table.ele thead {
                       <html:option value="PAP" >PAP</html:option>
                       <html:option value="Mammogram" >Mammogram</html:option>
                       <html:option value="Flu" >Flu</html:option>
-                      <html:option value="ChildImmunizations" >Child Immunizations</html:option>  
-                      <html:option value="FOBT" >FOBT</html:option>  
-                  </html:select>                  
+                      <html:option value="ChildImmunizations" >Child Immunizations</html:option>
+                      <html:option value="FOBT" >FOBT</html:option>
+                  </html:select>
                </div>
                <div>
                   As of:
-                    <html:text property="asofDate" size="9" styleId="asofDate" /> <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>                        
-                      
-                    
-                    
+                    <html:text property="asofDate" size="9" styleId="asofDate" /> <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>
+
+
+
                </div>
                <input type="submit" />
                </html:form>
-               
-               
+
+
             </td>
         </tr>
         <tr>
@@ -344,7 +344,7 @@ table.ele thead {
             </td>
         </tr>
     </table>
-    
+
     <div>
                 <%ArrayList overDueList = new ArrayList();
                   ArrayList firstLetter = new ArrayList();
@@ -361,15 +361,15 @@ table.ele thead {
                   ArrayList list = (ArrayList) request.getAttribute("returnReport");
                   Date asDate = (Date) request.getAttribute("asDate");
                   if (asDate == null){ asDate = Calendar.getInstance().getTime(); }
-                  
+
                   if (list != null ){ %>
                   <form name="frmBatchBill" action="" method="post">
                       <input type="hidden" name="clinic_view" value="<%=OscarProperties.getInstance().getProperty("clinic_view","")%>">
-              <table class="ele" width="80%">                                        
+              <table class="ele" width="80%">
                        <tr>
                        <td>&nbsp;</td>
                        <td style="10%;">Total patients: <%=list.size()%><br/>Ineligible:<%=ineligible%></td>
-                       <td style="10%;">Up to Date: <%=done%> = <%=percentage %> % 
+                       <td style="10%;">Up to Date: <%=done%> = <%=percentage %> %
                          <%if (percentageWithGrace != null){  %>
                            <%-- <br/> With Grace <%=percentageWithGrace%> %
                            --%>
@@ -398,12 +398,12 @@ table.ele thead {
                           <%if (type != null ){ %>
                           <th>Guardian</th>
                           <%}%>
-                          <th>Phone</th>                          
+                          <th>Phone</th>
                           <th>Address</th>
-                          <th>Status</th>                          
+                          <th>Status</th>
                           <%if (type != null ){ %>
                           <th>Shot #</th>
-                          <%}%>                          
+                          <%}%>
                           <th>Bonus Stat</th>
                           <th>Since Last Procedure Date</th>
                           <th>Last Procedure Date</th>
@@ -414,18 +414,18 @@ table.ele thead {
                        </tr>
                        </thead>
                        <tbody>
-                       <%DemographicNameAgeString deName = DemographicNameAgeString.getInstance();                       
+                       <%DemographicNameAgeString deName = DemographicNameAgeString.getInstance();
                          DemographicData demoData= new DemographicData();
                          boolean setBill;
                          String enabled = "";
                          int numDays;
-                         
-                         for (int i = 0; i < list.size(); i++){ 
+
+                         for (int i = 0; i < list.size(); i++){
                              setBill = false;
                             PreventionReportDisplay dis = (PreventionReportDisplay) list.get(i);
                             Hashtable h = deName.getNameAgeSexHashtable(dis.demographicNo);
-                            DemographicData.Demographic demo = demoData.getDemographic(dis.demographicNo);
-                            
+                            org.oscarehr.common.model.Demographic demo = demoData.getDemographic(dis.demographicNo);
+
                             if ( dis.nextSuggestedProcedure != null ){
                                 if (dis.nextSuggestedProcedure.equals("L1")){
                                     firstLetter.add(dis.demographicNo);
@@ -436,12 +436,12 @@ table.ele thead {
                                     setBill = true;
                                 }
                             }
-                          
+
                             if (dis.state != null && dis.state.equals("Refused")){
                                 refusedLetter.add(dis.demographicNo);
                                 setBill = true;
                             }
-                                    
+
                             if (dis.state != null && dis.state.equals("Overdue")){
                                overDueList.add(dis.demographicNo);
                             }
@@ -453,49 +453,49 @@ table.ele thead {
                        <tr>
                           <td><%=i+1%></td>
                           <td>
-                              <a href="javascript: return false;" onClick="popup(724,964,'../demographic/demographiccontrol.jsp?demographic_no=<%=dis.demographicNo%>&amp;displaymode=edit&amp;dboperation=search_detail','MasterDemographic')"><%=dis.demographicNo%></a>                              
+                              <a href="javascript: return false;" onClick="popup(724,964,'../demographic/demographiccontrol.jsp?demographic_no=<%=dis.demographicNo%>&amp;displaymode=edit&amp;dboperation=search_detail','MasterDemographic')"><%=dis.demographicNo%></a>
                           </td>
-                          <td><%=demo.getDob("-")%></td>
+                          <td><%=DemographicData.getDob(demo,"-")%></td>
 
                           <%if (type == null ){ %>
                           <td><%=demo.getAgeAsOf(asDate)%></td>
                           <td><%=h.get("sex")%></td>
                           <td><%=h.get("lastName")%></td>
                           <td><%=h.get("firstName")%></td>
-                          <td><%=demo.getHIN()%></td>
+                          <td><%=demo.getHin()+demo.getVer()%></td>
                           <td><%=demo.getPhone()%> </td>
-                          <td><%=demo.getAddress()+" "+demo.getCity()+" "+demo.getProvince()+" "+demo.getPostal()%> </td>                          
+                          <td><%=demo.getAddress()+" "+demo.getCity()+" "+demo.getProvince()+" "+demo.getPostal()%> </td>
                           <td bgcolor="<%=dis.color%>"><%=dis.state%></td>
                           <td bgcolor="<%=dis.color%>"><%=dis.bonusStatus%></td>
                           <td bgcolor="<%=dis.color%>"><%=dis.numMonths%></td>
                           <td bgcolor="<%=dis.color%>"><%=dis.lastDate%></td>
-                          
-                          
+
+
                           <% }else {
-                              DemographicData.Demographic demoSDM = demoData.getSubstituteDecisionMaker(dis.demographicNo);%>                                                                 
+                              org.oscarehr.common.model.Demographic demoSDM = demoData.getSubstituteDecisionMaker(dis.demographicNo);%>
                           <td><%=demo.getAgeAsOf(asDate)%></td>
                           <td><%=h.get("sex")%></td>
                           <td><%=h.get("lastName")%></td>
-                          <td><%=h.get("firstName")%></td>                          
-                          <td><%=demo.getHIN()%></td>
+                          <td><%=h.get("firstName")%></td>
+                          <td><%=demo.getHin()+demo.getVer()%></td>
                           <td><%=demoSDM==null?"":demoSDM.getLastName()%><%=demoSDM==null?"":","%> <%= demoSDM==null?"":demoSDM.getFirstName() %>&nbsp;</td>
                           <td><%=demoSDM==null?"":demoSDM.getPhone()%> &nbsp;</td>
-                          <td><%=demoSDM==null?"":demoSDM.getAddress()+" "+demoSDM==null?"":demoSDM.getCity()+" "+demoSDM==null?"":demoSDM.getProvince()+" "+demoSDM==null?"":demoSDM.getPostal()%> &nbsp;</td>                          
-                          <td bgcolor="<%=dis.color%>"><%=dis.state%></td>                          
+                          <td><%=demoSDM==null?"":demoSDM.getAddress()+" "+demoSDM==null?"":demoSDM.getCity()+" "+demoSDM==null?"":demoSDM.getProvince()+" "+demoSDM==null?"":demoSDM.getPostal()%> &nbsp;</td>
+                          <td bgcolor="<%=dis.color%>"><%=dis.state%></td>
                           <td bgcolor="<%=dis.color%>"><%=dis.numShots%></td>
                           <td bgcolor="<%=dis.color%>"><%=dis.bonusStatus%></td>
                           <td bgcolor="<%=dis.color%>"><%=dis.numMonths%></td>
                           <td bgcolor="<%=dis.color%>"><%=dis.lastDate%></td>
-                          
-                          <%}%>                          
+
+                          <%}%>
                           <td bgcolor="<%=dis.color%>" id="lastFollowup<%=i+1%>">
-                             <% if (dis.lastFollowup != null ){ %>                                 
+                             <% if (dis.lastFollowup != null ){ %>
                                  <%=dis.lastFollupProcedure%>
-                                 <%=UtilDateUtilities.DateToString(dis.lastFollowup)%> 
-                                 <%=UtilDateUtilities.getNumMonths(dis.lastFollowup,UtilDateUtilities.now())%>M                           
+                                 <%=UtilDateUtilities.DateToString(dis.lastFollowup)%>
+                                 <%=UtilDateUtilities.getNumMonths(dis.lastFollowup,UtilDateUtilities.now())%>M
                              <% }else{ %>
                                 ----
-                             <% } %>                                 
+                             <% } %>
                           </td>
                           <td bgcolor="<%=dis.color%>" id="nextSuggestedProcedure<%=i+1%>">
                               <%if ( dis.nextSuggestedProcedure != null && dis.nextSuggestedProcedure.equals("P1")){ %>
@@ -511,7 +511,7 @@ table.ele thead {
                           	providerName=StringUtils.trimToEmpty(providerName);
                           %>
                           <td bgcolor="<%=dis.color%>"><%=providerName%></td>
-                          <td bgcolor="<%=dis.color%>">                              
+                          <td bgcolor="<%=dis.color%>">
                               <% if( billCode != null && setBill ) {
                                   numDays = bcDAO.getDaysSinceBilled(billCode, dis.demographicNo);
                                   //we only want to enable billing if it has been a year since the last invoice was created
@@ -521,9 +521,9 @@ table.ele thead {
                               <%}%>
                           </td>
 
-                       </tr>                                                         
+                       </tr>
                       <%}%>
-                    	</tbody>   
+                    	</tbody>
                     </table>
                     <table class="ele" style="width:80%;">
                       <tr>
@@ -531,58 +531,58 @@ table.ele thead {
 
                       </tr>
                     </table>
-                    
+
                     </form>
-                  
+
                   <%}%>
                   <%--
-                  <% if ( overDueList.size() > 0 ) { 
-                        String queryStr = getUrlParamList(overDueList, "demo");            
-                        %>                        
+                  <% if ( overDueList.size() > 0 ) {
+                        String queryStr = getUrlParamList(overDueList, "demo");
+                        %>
                         <a target="_blank" href="../report/GenerateEnvelopes.do?<%=queryStr%>&amp;message=<%=java.net.URLEncoder.encode(request.getAttribute("prevType")+" is due","UTF-8")%>">Add Tickler for Overdue</a>
                   <%}%>
                   --%>
-                  
-                 <%-- if ( firstLetter.size() > 0 ) { 
-                        String queryStr = getUrlParamList(firstLetter, "demo"); 
-                        %>                        
+
+                 <%-- if ( firstLetter.size() > 0 ) {
+                        String queryStr = getUrlParamList(firstLetter, "demo");
+                        %>
                     <a target="_blank" href="../report/GenerateEnvelopes.do?<%=queryStr%>&message=<%=java.net.URLEncoder.encode("Letter 1 Reminder Letter sent for :"+request.getAttribute("prevType"),"UTF-8")%>">Generate First Envelopes</a>
                   <%}
                     --%>
-                  
-                  
-                  <% if ( firstLetter.size() > 0 ) { 
-                        String queryStr = getUrlParamList(firstLetter, "demo"); 
-                        %>                        
+
+
+                  <% if ( firstLetter.size() > 0 ) {
+                        String queryStr = getUrlParamList(firstLetter, "demo");
+                        %>
                     <a target="_blank" href="../report/GenerateLetters.jsp?<%=queryStr%>&amp;message=<%=java.net.URLEncoder.encode("Letter 1 Reminder Letter sent for :"+request.getAttribute("prevType"),"UTF-8")%>&amp;followupType=<%=followUpType%>&amp;followupValue=L1">Generate First Letter</a>
                   <%}%>
-                  
-                  <% if ( secondLetter.size() > 0 ) { 
-                        String queryStr = getUrlParamList(secondLetter, "demo"); 
-                        %>                        
+
+                  <% if ( secondLetter.size() > 0 ) {
+                        String queryStr = getUrlParamList(secondLetter, "demo");
+                        %>
                     <a target="_blank" href="../report/GenerateLetters.jsp?<%=queryStr%>&amp;message=<%=java.net.URLEncoder.encode("Letter 2 Reminder Letter sent for :"+request.getAttribute("prevType"),"UTF-8")%>&amp;followupType=<%=followUpType%>&amp;followupValue=L2">Generate Second Letter</a>
                   <%}%>
-                  
-                  <% if ( refusedLetter.size() > 0 ) { 
-                        String queryStr = getUrlParamList(refusedLetter, "demo"); 
-                        %>                        
+
+                  <% if ( refusedLetter.size() > 0 ) {
+                        String queryStr = getUrlParamList(refusedLetter, "demo");
+                        %>
                     <a target="_blank" href="../report/GenerateLetters.jsp?<%=queryStr%>&amp;message=<%=java.net.URLEncoder.encode("Letter 1 Reminder Letter sent for :"+request.getAttribute("prevType"),"UTF-8")%>&amp;followupType=<%=followUpType%>&amp;followupValue=L1">Generate Refused Letter</a>
                   <%}%>
-                  
-                  
+
+
                   <%--
-                  <% if ( phoneCall.size() > 0 ) { 
-                        String queryStr = getUrlParamList(phoneCall, "demo");                      
-                        %>                        
+                  <% if ( phoneCall.size() > 0 ) {
+                        String queryStr = getUrlParamList(phoneCall, "demo");
+                        %>
                         <a target="_blank" href="../report/GenerateSpreadsheet.do?<%=queryStr%>&message=<%=java.net.URLEncoder.encode("Phone call 1 made for : "+request.getAttribute("prevType"),"UTF-8")%>followupType=<%=followUpType%>&followupValue=P1">Generate Phone Call list</a>
                   <%}%>
-                  --%>             
-                  
+                  --%>
+
                </div>
-    
+
 <script type="text/javascript">
     Calendar.setup( { inputField : "asofDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "date", singleClick : true, step : 1 } );
-</script>    
+</script>
 
 </body>
 </html:html>
@@ -595,9 +595,9 @@ table.ele thead {
             if (i == 0){
               queryStr += paramName+"="+demo;
             }else{
-              queryStr += "&amp;"+paramName+"="+demo;  
+              queryStr += "&amp;"+paramName+"="+demo;
             }
         }
         return queryStr;
-  } 
+  }
 %>

@@ -76,15 +76,15 @@ public class BillingReProcessBillAction extends Action {
     String billingmasterNo = frm.getBillingmasterNo();
     String demographicNo = frm.getDemoNo();
     DemographicData demoD = new DemographicData();
-    DemographicData.Demographic demo = demoD.getDemographic(demographicNo);
-    
+    org.oscarehr.common.model.Demographic demo = demoD.getDemographic(demographicNo);
+
     WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
-    BillingmasterDAO billingmasterDAO = (BillingmasterDAO) ctx.getBean("BillingmasterDAO"); 
+    BillingmasterDAO billingmasterDAO = (BillingmasterDAO) ctx.getBean("BillingmasterDAO");
     logger.debug("RETRIEVING Using "+billingmasterNo);
     Billingmaster billingmaster = billingmasterDAO.getBillingMasterByBillingMasterNo(billingmasterNo);
     Billing bill = billingmasterDAO.getBilling(billingmaster.getBillingNo());
-    
-    
+
+
     logger.debug("type "+bill.getBillingtype());
 
 
@@ -98,7 +98,7 @@ public class BillingReProcessBillAction extends Action {
     String billingGroupNo = billform.getGroupNo(providerNo);
     String practitionerNo = billform.getPracNo(providerNo); //p
 
-    String hcNo = demo.getHIN().trim(); //d
+    String hcNo = demo.getHin().trim()+demo.getVer().trim(); //d
     String dependentNo = frm.getDependentNo(); //f
 
     String visitLocation = frm.getLocationVisit(); //f
@@ -127,7 +127,7 @@ public class BillingReProcessBillAction extends Action {
     String timeCall = frm.getTimeCallRec(); //f
     String serviceStartTime = frm.getStartTime(); //f
     String serviceEndTime = frm.getFinishTime(); //f
-    String birthDate = demo.getDob(); //d
+    String birthDate = DemographicData.getDob(demo); //d
     String correspondenceCode = frm.getCorrespondenceCode(); //f
     String claimComment = frm.getShortComment(); //f
     String icbcClaimNo = frm.getIcbcClaim();
@@ -140,8 +140,8 @@ public class BillingReProcessBillAction extends Action {
     String originalMSPNumber = Misc.forwardZero("", 20);
 
     String oinInsurerCode = frm.getInsurerCode(); //f
-    String oinRegistrationNo = demo.getHIN(); //d
-    String oinBirthdate = demo.getDob(); //d
+    String oinRegistrationNo = demo.getHin()+demo.getVer(); //d
+    String oinBirthdate = DemographicData.getDob(demo); //d
     String oinFirstName = demo.getFirstName(); //d
     String oinSecondName = ""; //d
     String oinSurname = demo.getLastName(); //d
@@ -152,8 +152,8 @@ public class BillingReProcessBillAction extends Action {
     String oinAddress4 = ""; //d
     String oinPostalcode = demo.getPostal(); //d
 
-    String hcType = demo.getHCType(); //d
-    
+    String hcType = demo.getHcType(); //d
+
     String messageNotes = frm.getMessageNotes();
     String billRegion = OscarProperties.getInstance().getProperty("billregion");
     String submit = frm.getSubmit();
@@ -163,7 +163,7 @@ public class BillingReProcessBillAction extends Action {
       if(!"W".equals(billingStatus)){
         billingStatus = "O";
       }
-      
+
       secondSQL = "update billing set status = '"+billingStatus+"' where billing_no ='" + frm.getBillNumber() + "'";
     } else if (submit.equals("Settle Bill")) {
       billingStatus = "S";
@@ -242,7 +242,7 @@ public class BillingReProcessBillAction extends Action {
       //BillingService billingService = bcd.getBillingCodeByCode(billingServiceCode, new Date());
       String codePrice = request.getParameter("billingAmount"); //billingService.getValue();
       logger.debug("codePrice=" + codePrice+" amount on form "+request.getParameter("billingAmount"));
-      
+
       if("E".equals(payment_mode)){
           codePrice = "0.00";
       }
@@ -297,7 +297,7 @@ public class BillingReProcessBillAction extends Action {
         billingmaster.setFacilityNo(facilityNum);
         billingmaster.setFacilitySubNo(facilitySubNum);
         billingmaster.setIcbcClaimNo(icbcClaimNo);
-        
+
         billingmaster.setOinInsurerCode(oinInsurerCode);
         billingmaster.setOinRegistrationNo(oinRegistrationNo);
         billingmaster.setOinBirthdate(oinBirthdate);
@@ -317,17 +317,17 @@ public class BillingReProcessBillAction extends Action {
         logger.debug("WHAT IS BILL <ASTER "+billingmaster.getBillingmasterNo());
         billingmasterDAO.update(billingmaster);
         billingmasterDAO.update(bill);
-        
+
         logger.debug("type 2"+bill.getBillingtype());
         logger.debug("WHAT IS BILL <ASTER2 "+billingmaster.getBillingmasterNo());
-        
+
         try {
-      
+
       //DBHandler.RunSQL(sql);
       //DBHandler.RunSQL(providerSQL);
       if (!StringUtils.isNullOrEmpty(billingStatus)) {  //What if billing status is null?? the status just doesn't get updated but everything else does??'
-          //Why does this get called??  update billing type based on the billing status.  I guess this is effective when you switch this to bill on 
-        msp.updateBillingStatus(frm.getBillNumber(), billingStatus,billingmasterNo);  
+          //Why does this get called??  update billing type based on the billing status.  I guess this is effective when you switch this to bill on
+        msp.updateBillingStatus(frm.getBillNumber(), billingStatus,billingmasterNo);
       }
       BillingHistoryDAO dao = new BillingHistoryDAO();
       //If the adjustment amount field isn't empty, create an archive of the adjustment

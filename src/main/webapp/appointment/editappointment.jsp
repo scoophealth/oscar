@@ -419,7 +419,7 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
     //Else how did we get here?
     if( bFirstDisp ) {
         DemographicData dd = new DemographicData();
-        DemographicData.Demographic demo = dd.getDemographic(String.valueOf(appt.get("demographic_no")));
+        org.oscarehr.common.model.Demographic demo = dd.getDemographic(String.valueOf(appt.get("demographic_no")));
         doctorNo = demo!=null ? (demo.getProviderNo()) : "";
     } else if (!request.getParameter("doctor_no").equals("")) {
         doctorNo = request.getParameter("doctor_no");

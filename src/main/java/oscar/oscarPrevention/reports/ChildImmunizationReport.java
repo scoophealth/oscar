@@ -4,14 +4,14 @@
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
  *  as published by the Free Software Foundation; either version 2
- *  of the License, or (at your option) any later version. 
+ *  of the License, or (at your option) any later version.
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details. 
+ *  GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  *  Jason Gallagher
  *
@@ -19,7 +19,7 @@
  *  Department of Family Medicine
  *  McMaster University
  *  Hamilton
- *  Ontario, Canada  
+ *  Ontario, Canada
  *
  * ChildImmunizationReport.java
  *
@@ -70,25 +70,25 @@ public class ChildImmunizationReport implements PreventionReport{
     /** Creates a new instance of ChildImmunizationReport */
     public ChildImmunizationReport() {
     }
-    
-    
+
+
     public Hashtable runReport(ArrayList list,Date asofDate){
         int inList = 0;
         double done= 0;
         ArrayList returnReport = new ArrayList();
-        
+
         int dontInclude = 0;
-          for (int i = 0; i < list.size(); i ++){//for each  element in arraylist 
-             ArrayList fieldList = (ArrayList) list.get(i);  
+          for (int i = 0; i < list.size(); i ++){//for each  element in arraylist
+             ArrayList fieldList = (ArrayList) list.get(i);
              log.debug("list "+list.size());
-             String demo = (String) fieldList.get(0);  
+             String demo = (String) fieldList.get(0);
              log.debug("fieldList "+fieldList.size());
 
 			// search prevention_date prevention_type deleted refused
 			ArrayList<Map<String, Object>> prevs1 = PreventionData.getPreventionData("DTap-IPV", demo);
 			ArrayList<Map<String, Object>> prevsDtapIPVHIB = PreventionData.getPreventionData("DTaP-IPV-Hib", demo);
 			ArrayList<Map<String, Object>> prevs2 = PreventionData.getPreventionData("Hib", demo);
-			ArrayList<Map<String, Object>> prevs4 = PreventionData.getPreventionData("MMR",demo);            
+			ArrayList<Map<String, Object>> prevs4 = PreventionData.getPreventionData("MMR",demo);
 
              //need to compile accurate dtap numbers
 			 Map<String, Object> hDtapIpv, hDtapIpvHib;
@@ -112,19 +112,19 @@ public class ChildImmunizationReport implements PreventionReport{
 
 
              Collections.sort(prevs1, new DtapComparator());
-             
+
              int numDtap = prevs1.size();  //4
-             int numHib  = prevs2.size();  //4             
-             int numMMR  = prevs4.size();  //1   
-             
+             int numHib  = prevs2.size();  //4
+             int numMMR  = prevs4.size();  //1
+
              log.debug("prev1 "+prevs1.size()+ " prevs2 "+ prevs2.size() +" prev4 "+prevs4.size());
 
              DemographicData dd = new DemographicData();
-             DemographicData.Demographic demoData = dd.getDemographic(demo);
+             org.oscarehr.common.model.Demographic demoData = dd.getDemographic(demo);
              // This a kludge to get by conformance testing in ontario -- needs to be done in a smarter way
              int totalImmunizations = numDtap + /*numHib +*/ numMMR ;
              int recommTotal = 5; //9;NOT SURE HOW HIB WORKS
-             int ageInMonths = demoData.getAgeInMonthsAsOf(asofDate);
+             int ageInMonths = DemographicData.getAgeInMonthsAsOf(demoData,asofDate);
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;
              prd.bonusStatus = "N";
@@ -132,41 +132,41 @@ public class ChildImmunizationReport implements PreventionReport{
              if (totalImmunizations == 0){// no info
                 prd.rank = 1;
                 prd.lastDate = "------";
-                prd.state = "No Info";                
+                prd.state = "No Info";
                 prd.numMonths = "------";
                 prd.color = "Magenta";
              }else if(  (  prevs1.size()> 0 &&  ineligible(prevs1.get(prevs1.size()-1))) || (  prevs2.size()> 0 && ineligible(prevs2.get(prevs2.size()-1))) || (  prevs4.size()> 0 && ineligible(prevs4.get(prevs4.size()-1))) ){
                 prd.rank = 5;
-                prd.lastDate = "------"; 
-                prd.state = "Ineligible"; 
+                prd.lastDate = "------";
+                prd.state = "Ineligible";
                 prd.numMonths = "------";
                 prd.color = "grey";
                 inList++;
             }else{
-                
-                boolean refused = false;                                
+
+                boolean refused = false;
                 DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                
+
                 Date lastDate = null;
                 String prevDateStr = "";
-                
+
                 if(prevs1.size() > 0){
-                	Map<String, Object> hDtap = prevs1.get(prevs1.size()-1);   
+                	Map<String, Object> hDtap = prevs1.get(prevs1.size()-1);
                    if ( hDtap.get("refused") != null && ((String) hDtap.get("refused")).equals("1")){
                       refused = true;
-                   }                                   
-                   prevDateStr = (String) hDtap.get("prevention_date");                   
+                   }
+                   prevDateStr = (String) hDtap.get("prevention_date");
                    try{
                       lastDate = formatter.parse(prevDateStr);
                    }catch (Exception e){MiscUtils.getLogger().error("Error", e);}
-                }                
-                                               
+                }
+
                 if(prevs4.size() > 0){
                 	Map<String, Object> hMMR  = prevs4.get(0);  //Changed to get first MMR value instead of last value
                    if ( hMMR.get("refused") != null && ((String) hMMR.get("refused")).equals("1")){
                       refused = true;
                    }
-                   
+
                    String mmrDateStr = (String) hMMR.get("prevention_date");
                    Date prevDate = null;
                    try{
@@ -177,13 +177,13 @@ public class ChildImmunizationReport implements PreventionReport{
                       }
                    }catch (Exception e){MiscUtils.getLogger().error("Error", e);}
                 }
-                
+
                 String numMonths = "------";
                 if ( lastDate != null){
                    int num = UtilDateUtilities.getNumMonths(lastDate,asofDate);
                    numMonths = ""+num+" months";
                 }
-                                                                                                                                
+
                 Date dob = dd.getDemographicDOB(demo);
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(dob);
@@ -191,29 +191,29 @@ public class ChildImmunizationReport implements PreventionReport{
                 Date twoYearsAfterDOB = cal.getTime();
                 if( lastDate != null ) {
                     log.debug("twoYearsAfterDOB date "+twoYearsAfterDOB+ " "+lastDate.before(twoYearsAfterDOB) );
-                    if (!refused && (totalImmunizations >= recommTotal  ) && lastDate.before(twoYearsAfterDOB) && ( ageInMonths >= 18 )){//&& endOfYear.after(prevDate)){                  
+                    if (!refused && (totalImmunizations >= recommTotal  ) && lastDate.before(twoYearsAfterDOB) && ( ageInMonths >= 18 )){//&& endOfYear.after(prevDate)){
                        prd.bonusStatus = "Y";
                        prd.billStatus = "Y";
                        done++;
                     }
                 }
-                //outcomes                        
-                if (!refused && totalImmunizations < recommTotal && ageInMonths >= 18 && ageInMonths <= 23){ // less < 9 
+                //outcomes
+                if (!refused && totalImmunizations < recommTotal && ageInMonths >= 18 && ageInMonths <= 23){ // less < 9
                    prd.rank = 2;
                    prd.lastDate = prevDateStr;
                    prd.state = "due";
                    prd.numMonths = numMonths;
                    prd.numShots = ""+totalImmunizations;
                    prd.color = "yellow"; //FF00FF
-                   
+
                 } else if (!refused && totalImmunizations < recommTotal && ageInMonths > 23 ){ // overdue
                    prd.rank = 2;
-                   prd.lastDate = prevDateStr;                
+                   prd.lastDate = prevDateStr;
                    prd.state = "Overdue";
                    prd.numMonths = numMonths;
                    prd.numShots = ""+totalImmunizations;
                    prd.color = "red"; //FF00FF
-                   
+
                 } else if (refused){  // recorded and refused
                    prd.rank = 3;
                    prd.lastDate = "-----";
@@ -231,19 +231,19 @@ public class ChildImmunizationReport implements PreventionReport{
                    //done++;
                 }else{
                    prd.state = "------";
-                   prd.lastDate = prevDateStr;                   
+                   prd.lastDate = prevDateStr;
                    prd.numMonths = numMonths;
                    prd.numShots = ""+totalImmunizations;
                    prd.color = "white";
                    dontInclude++;
                 }
-                
-                
+
+
              }
-             
+
              letterProcessing( prd,"CIMF",asofDate);
              returnReport.add(prd);
-             
+
           }
           String percentStr = "0";
           double eligible = list.size() - inList - dontInclude;
@@ -251,14 +251,14 @@ public class ChildImmunizationReport implements PreventionReport{
           if (eligible != 0){
              double percentage = ( done / eligible ) * 100;
              log.debug("in percentage  "+percentage   +" "+( done / eligible));
-             percentStr = ""+Math.round(percentage); 
+             percentStr = ""+Math.round(percentage);
           }
-        
-        
+
+
             Collections.sort(returnReport);
-          
+
           Hashtable h = new Hashtable();
-          
+
           h.put("up2date",""+Math.round(done));
           h.put("percent",percentStr);
           h.put("returnReport",returnReport);
@@ -269,7 +269,7 @@ public class ChildImmunizationReport implements PreventionReport{
           log.debug("set returnReport "+returnReport);
           return h;
     }
-          
+
     boolean ineligible(Map<String, Object> h){
        boolean ret =false;
        if ( h.get("refused") != null && ((String) h.get("refused")).equals("2")){
@@ -277,33 +277,33 @@ public class ChildImmunizationReport implements PreventionReport{
        }
        return ret;
    }
-    
-    
-    
-    
-   //TODO: THIS MAY NEED TO BE REFACTORED AT SOME POINT IF MAM and PAP are exactly the same  
-   
+
+
+
+
+   //TODO: THIS MAY NEED TO BE REFACTORED AT SOME POINT IF MAM and PAP are exactly the same
+
                 //Get last contact method?
                     //NO contact
-                        //Send letter                    
+                        //Send letter
                     //Was it atleast 3months ago?
                         //WAS is L1
                             //SEnd L2
                         //Was is L2
                             //P1
 
-   //Measurement Type will be 1 per Prevention report, with the dataField holding method ie L1, L2, P1 (letter 1 , letter 2, phone call 1) 
+   //Measurement Type will be 1 per Prevention report, with the dataField holding method ie L1, L2, P1 (letter 1 , letter 2, phone call 1)
    String LETTER1 = "L1";
    String LETTER2 = "L2";
    String PHONE1 = "P1";
-  
+
    private String letterProcessing(PreventionReportDisplay prd,String measurementType,Date asofDate){
        if (prd != null){
           if (prd.state.equals("No Info") || prd.state.equals("due") ){
               // Get LAST contact method
               EctMeasurementsDataBeanHandler measurementDataHandler = new EctMeasurementsDataBeanHandler(prd.demographicNo,measurementType);
               log.debug("getting followup data for "+prd.demographicNo);
-              
+
               Collection followupData = measurementDataHandler.getMeasurementsDataVector();
               //NO Contact
               if ( followupData.size() == 0 ){
@@ -312,27 +312,27 @@ public class ChildImmunizationReport implements PreventionReport{
               }else{ //There has been contact
                   EctMeasurementsDataBean measurementData = (EctMeasurementsDataBean) followupData.iterator().next();
                   log.debug("fluData "+measurementData.getDataField());
-                  log.debug("lastFollowup "+measurementData.getDateObservedAsDate()+ " last procedure "+measurementData.getDateObservedAsDate());     
+                  log.debug("lastFollowup "+measurementData.getDateObservedAsDate()+ " last procedure "+measurementData.getDateObservedAsDate());
                   log.debug("toString: "+measurementData.toString());
                   prd.lastFollowup = measurementData.getDateObservedAsDate();
                   prd.lastFollupProcedure = measurementData.getDataField();
-                  
-                  
+
+
                   Calendar threemonth = Calendar.getInstance();
-                  threemonth.setTime(asofDate);                
+                  threemonth.setTime(asofDate);
                   threemonth.add(Calendar.MONTH,-1);
                   Date onemon = threemonth.getTime();
                   threemonth.add(Calendar.MONTH,-2);
                   Date threemon = threemonth.getTime();
-                  
+
                   if ( measurementData.getDateObservedAsDate().before(onemon)){
                       if (prd.lastFollupProcedure.equals(this.LETTER1)){
                                     prd.nextSuggestedProcedure = this.LETTER2;
                                     return this.LETTER2;
-                      //is last measurementData within 3 months               
+                      //is last measurementData within 3 months
                       }else if( measurementData.getDateObservedAsDate().before(threemon)){
                                   prd.nextSuggestedProcedure = "----";
-                                  return "----";                  
+                                  return "----";
                       }else if(prd.lastFollupProcedure.equals(this.LETTER2)){
                                     prd.nextSuggestedProcedure = this.PHONE1;
                                     return this.PHONE1;
@@ -340,33 +340,33 @@ public class ChildImmunizationReport implements PreventionReport{
                                   prd.nextSuggestedProcedure = "----";
                                   return "----";
                       }
-                          
+
                   }else if(prd.lastFollupProcedure.equals(this.LETTER2)){
                       prd.nextSuggestedProcedure = this.PHONE1;
                       return this.PHONE1;
                   }else{
                       prd.nextSuggestedProcedure = "----";
                       return "----";
-                  }                  
+                  }
               }
           }else if (prd.state.equals("Refused")  || prd.state.equals("due") || prd.state.equals("Overdue") ){  //Not sure what to do about refused
-                //prd.lastDate = "-----";  
-              
+                //prd.lastDate = "-----";
+
               EctMeasurementsDataBeanHandler measurementDataHandler = new EctMeasurementsDataBeanHandler(prd.demographicNo,measurementType);
               log.debug("2getting followup data for "+prd.demographicNo);
               Collection followupData = measurementDataHandler.getMeasurementsDataVector();
-              
+
               if ( followupData.size() > 0 ){
                   EctMeasurementsDataBean measurementData = (EctMeasurementsDataBean) followupData.iterator().next();
                   prd.lastFollowup = measurementData.getDateObservedAsDate();
                   prd.lastFollupProcedure = measurementData.getDataField();
               }
-              
+
               prd.nextSuggestedProcedure = "----";
                 //prd.numMonths ;
           }else if(prd.state.equals("Ineligible")){
-                // Do nothing   
-                prd.nextSuggestedProcedure = "----"; 
+                // Do nothing
+                prd.nextSuggestedProcedure = "----";
           }else if(prd.state.equals("Up to date")){
                 //Do nothing
               prd.nextSuggestedProcedure = "----";
@@ -374,8 +374,8 @@ public class ChildImmunizationReport implements PreventionReport{
                log.debug("NOT SURE WHAT HAPPEND IN THE LETTER PROCESSING");
           }
        }
-       return null;         
+       return null;
    }
-    
-    
+
+
 }

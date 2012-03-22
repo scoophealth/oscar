@@ -45,7 +45,7 @@
 String color = "", colorflag ="";
 BillingSessionBean bean = (BillingSessionBean)pageContext.findAttribute("billingSessionBean");
 oscar.oscarDemographic.data.DemographicData demoData = new oscar.oscarDemographic.data.DemographicData();
-oscar.oscarDemographic.data.DemographicData.Demographic demo = demoData.getDemographic(bean.getPatientNo());
+org.oscarehr.common.model.Demographic demo = demoData.getDemographic(bean.getPatientNo());
 
 ArrayList billItem = bean.getBillItem();
 BillingFormData billform = new BillingFormData();

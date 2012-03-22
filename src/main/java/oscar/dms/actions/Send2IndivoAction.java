@@ -70,7 +70,7 @@ public class Send2IndivoAction extends Action{
 	            String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
 	            EDocUtil docData = new EDocUtil();                        
 	            
-	            DemographicData.Demographic demo = new DemographicData().getDemographic(request.getParameter("demoId"));
+	            org.oscarehr.common.model.Demographic demo = new DemographicData().getDemographic(request.getParameter("demoId"));
 
 	        	PHRAuthentication auth = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
 	        	Long myOscarUserId = MyOscarUtils.getMyOscarUserId(auth, demo.getMyOscarUserName());

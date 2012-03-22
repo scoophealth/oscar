@@ -155,7 +155,7 @@ public class PHRMessageAction extends DispatchAction {
 		String demographicNo = request.getParameter("demographicNo");
 		String provNo = (String) request.getSession().getAttribute("user");
 		DemographicData dd = new DemographicData();
-		DemographicData.Demographic d = dd.getDemographic(demographicNo);
+		org.oscarehr.common.model.Demographic d = dd.getDemographic(demographicNo);
 		ProviderData pp = new ProviderData();
 		String providerName = pp.getProviderName(provNo);
 

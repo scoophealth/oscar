@@ -24,7 +24,7 @@
  */
 --%>
 <%@ page
-	import="oscar.oscarDemographic.data.*, oscar.oscarDemographic.data.DemographicData.Demographic"%>
+	import="oscar.oscarDemographic.data.*, org.oscarehr.common.model.Demographic"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 

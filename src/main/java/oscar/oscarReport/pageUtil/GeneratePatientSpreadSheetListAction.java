@@ -42,7 +42,7 @@ import org.apache.struts.action.ActionMapping;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDemographic.data.DemographicData;
-import oscar.oscarDemographic.data.DemographicData.Demographic;
+import org.oscarehr.common.model.Demographic;
 import oscar.util.UtilDateUtilities;
 
 import com.lowagie.text.FontFactory;

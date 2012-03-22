@@ -41,7 +41,7 @@
             BillingViewBean bean = (BillingViewBean) pageContext.findAttribute("billingViewBean");
             request.setAttribute("paymentTypes", bean.getPaymentTypes());
             oscar.oscarDemographic.data.DemographicData demoData = new oscar.oscarDemographic.data.DemographicData();
-            oscar.oscarDemographic.data.DemographicData.Demographic demo = demoData.getDemographic(bean.getPatientNo());
+            org.oscarehr.common.model.Demographic demo = demoData.getDemographic(bean.getPatientNo());
             ArrayList billItem = bean.getBillItem();
             BillingFormData billform = new BillingFormData();
             OscarProperties props = OscarProperties.getInstance();
@@ -348,7 +348,7 @@
                                                                 <strong>Gender:</strong>
                                                                 <%=demo.getSex()%>                              <br>
                                                                 <strong>Birth Date :</strong>
-                                                            <%=demo.getDob("-")%>                            </p>
+                                                            <%=DemographicData.getDob(demo,"-")%>                            </p>
                                                         </td>
                                                     </tr>
                                                 </table>

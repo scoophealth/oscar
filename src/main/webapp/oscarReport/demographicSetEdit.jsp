@@ -1,26 +1,26 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
-     * This software was written for the 
- * Department of Family Medicine 
+ *
+     * This software was written for the
+ * Department of Family Medicine
  * McMaster University test2
- * Hamilton 
- * Ontario, Canada 
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 <%@page
@@ -32,15 +32,15 @@
 	scope="session" />
 
 <%
-  
-  //int demographic_no = Integer.parseInt(request.getParameter("demographic_no")); 
-  String demographic_no = request.getParameter("demographic_no"); 
-  
+
+  //int demographic_no = Integer.parseInt(request.getParameter("demographic_no"));
+  String demographic_no = request.getParameter("demographic_no");
+
   DemographicSets  ds = new DemographicSets();
   ArrayList sets = ds.getDemographicSets();
 
   DemographicData dd = new DemographicData();
-  
+
 %>
 
 <html:html locale="true">
@@ -63,19 +63,19 @@
 
 <SCRIPT LANGUAGE="JavaScript">
 
-function showHideItem(id){ 
+function showHideItem(id){
     if(document.getElementById(id).style.display == 'none')
-        document.getElementById(id).style.display = ''; 
+        document.getElementById(id).style.display = '';
     else
-        document.getElementById(id).style.display = 'none'; 
+        document.getElementById(id).style.display = 'none';
 }
 
 function showItem(id){
-        document.getElementById(id).style.display = ''; 
+        document.getElementById(id).style.display = '';
 }
 
 function hideItem(id){
-        document.getElementById(id).style.display = 'none'; 
+        document.getElementById(id).style.display = 'none';
 }
 
 function showHideNextDate(id,nextDate,nexerWarn){
@@ -85,15 +85,15 @@ function showHideNextDate(id,nextDate,nexerWarn){
         hideItem(id);
         document.getElementById(nextDate).value = "";
         document.getElementById(nexerWarn).checked = false ;
-        
-    }        
+
+    }
 }
 
-function disableifchecked(ele,nextDate){        
-    if(ele.checked == true){       
-       document.getElementById(nextDate).disabled = true;       
-    }else{                      
-       document.getElementById(nextDate).disabled = false;              
+function disableifchecked(ele,nextDate){
+    if(ele.checked == true){
+       document.getElementById(nextDate).disabled = true;
+    }else{
+       document.getElementById(nextDate).disabled = false;
     }
 }
 
@@ -130,7 +130,7 @@ function disableifchecked(ele,nextDate){
 			action="/report/DemographicSetEdit">
 			<div><bean:message key="oscarReport.oscarReportDemoSetEdit.msgPatientSet"/>: <html:select property="patientSet">
 				<html:option value="-1"><bean:message key="oscarReport.oscarReportDemoSetEdit.msgOptionSet"/></html:option>
-				<% for ( int i = 0 ; i < sets.size(); i++ ){  
+				<% for ( int i = 0 ; i < sets.size(); i++ ){
                             String s = (String) sets.get(i);%>
 				<html:option value="<%=s%>"><%=s%></html:option>
 				<%}%>
@@ -155,15 +155,15 @@ function disableifchecked(ele,nextDate){
 					<th><bean:message key="oscarReport.oscarReportDemoSetEdit.msgDoctor"/></th>
 					<th><bean:message key="oscarReport.oscarReportDemoSetEdit.msgEligibility" /></th>
 				</tr>
-				<%for (int i=0; i < list.size(); i++){ 
+				<%for (int i=0; i < list.size(); i++){
                      Hashtable h = (Hashtable) list.get(i);
-                     DemographicData.Demographic demo = dd.getDemographic((String) h.get("demographic_no"));  %>
+                     org.oscarehr.common.model.Demographic demo = dd.getDemographic((String) h.get("demographic_no"));  %>
 				<tr>
 					<td><input type="checkbox" name="demoNo"
 						value="<%=h.get("demographic_no")%>" />
 					<td><%=h.get("demographic_no")%></td>
 					<td><%=demo.getLastName()%>, <%=demo.getFirstName()%></td>
-					<td><%=demo.getDob("-")%></td>
+					<td><%=oscar.oscarDemographic.data.DemographicData.getDob(demo,"-")%></td>
 					<td><%=demo.getAge()%></td>
 					<td><%=demo.getRosterStatus()%></td>
 					<td><%=providerBean.getProperty(demo.getProviderNo(),"")%></td>
