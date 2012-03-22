@@ -79,12 +79,6 @@ String allergyId = (String) request.getAttribute("allergyId");
 			<!----Start new rows here-->
 			<tr>
 				<td>
-				<div class="DivContentTitle"><bean:message
-					key="AddReaction.title" /></div>
-				</td>
-			</tr>
-			<tr>
-				<td>
 				<div class="DivContentSectionHead"><%=name%></div>
 				</td>
 			</tr>
