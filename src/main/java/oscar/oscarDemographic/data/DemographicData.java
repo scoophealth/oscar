@@ -28,14 +28,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DemographicCustDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.DemographicCust;
 import org.oscarehr.util.DbConnectionFilter;
@@ -49,146 +52,70 @@ import oscar.util.UtilDateUtilities;
 public class DemographicData {
 	private static final Logger logger = MiscUtils.getLogger();
 	private DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
+	private DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 
 	public DemographicData() {
 	}
 
 	public String getDemographicFirstLastName(String demographicNo) {
-		String fullName = "";
-		logger.debug("test");
-		MiscUtils.getLogger().debug("test");
-		try {
-
-			ResultSet rs;
-			String sql = "SELECT first_name, last_name FROM demographic WHERE demographic_no = '" + demographicNo + "'";
-			rs = DBHandler.GetSQL(sql);
-			MiscUtils.getLogger().debug("sql: " + sql);
-
-			if (rs.next()) {
-				MiscUtils.getLogger().debug(oscar.Misc.getString(rs, "first_name"));
-				fullName = oscar.Misc.getString(rs, "first_name") + " " + oscar.Misc.getString(rs, "last_name");
-			}
-			rs.close();
-
-		} catch (SQLException sqe) {
-			logger.error("Could not get demographic first/last name", sqe);
+		org.oscarehr.common.model.Demographic demographic = demographicDao.getDemographic(demographicNo);
+		if(demographic != null) {
+			return demographic.getFirstName() + " " + demographic.getLastName();
 		}
-		return fullName;
+
+		return "";
 	}
 
 	public Date getDemographicDOB(String demographicNo) {
 		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = null;
-
-		try {
-
-			ResultSet rs;
-			String sql = "SELECT year_of_birth,month_of_birth,date_of_birth FROM demographic WHERE demographic_no = '" + demographicNo + "'";
-			rs = DBHandler.GetSQL(sql);
-			if (rs.next()) {
-				try {
-					date = formatter.parse(oscar.Misc.getString(rs, "year_of_birth") + "-" + oscar.Misc.getString(rs, "month_of_birth") + "-" + oscar.Misc.getString(rs, "date_of_birth"));
-				} catch (Exception eg) {
-				}
+		org.oscarehr.common.model.Demographic demographic = demographicDao.getDemographic(demographicNo);
+		if(demographic != null) {
+			try {
+				date = formatter.parse(demographic.getYearOfBirth() + "-" + demographic.getMonthOfBirth() + "-" + demographic.getDateOfBirth());
+			}catch(ParseException e) {
+				date = null;
 			}
-
-			rs.close();
-
-		} catch (SQLException e) {
-			MiscUtils.getLogger().error("Error", e);
 		}
 		return date;
 	}
 
 	public String getDemographicNoByIndivoId(String myOscarUserName) {
-		String demographicNo = "";
-
-		try {
-
-			ResultSet rs;
-			String sql = "SELECT demographic_no FROM demographic WHERE myOscarUserName = '" + myOscarUserName + "'";
-			rs = DBHandler.GetSQL(sql);
-			if (rs.next()) {
-				demographicNo = oscar.Misc.getString(rs, "demographic_no");
-			}
-			rs.close();
-			return demographicNo;
-		} catch (SQLException e) {
-			MiscUtils.getLogger().error("Error", e);
+		org.oscarehr.common.model.Demographic demographic = demographicDao.getDemographicByMyOscarUserName(myOscarUserName);
+		if(demographic != null) {
+			return demographic.getDemographicNo().toString();
 		}
-		return demographicNo;
+		return "";
 	}
 
 	public String getDemoNoByNamePhoneEmail(String firstName, String lastName, String hPhone, String wPhone, String email) {
-		String demographicNo = "";
+		org.oscarehr.common.model.Demographic demographic = demographicDao.getDemographicByNamePhoneEmail(firstName, lastName, hPhone, wPhone, email);
 
-		try {
-
-			ResultSet rs;
-
-			firstName = "first_name='" + firstName.trim() + "' ";
-			lastName = lastName.trim().equals("") ? "" : "AND last_name='" + lastName.trim() + "' ";
-			hPhone = hPhone.trim().equals("") ? "" : "AND (phone='" + hPhone.trim() + "') ";
-			wPhone = wPhone.trim().equals("") ? "" : "AND (phone2='" + wPhone.trim() + "') ";
-			email = email.trim().equals("") ? "" : "AND email='" + email.trim() + "'";
-
-			String sql = "SELECT demographic_no FROM demographic WHERE " + firstName + lastName + hPhone + wPhone + email;
-
-			rs = DBHandler.GetSQL(sql);
-			if (rs.next()) {
-				demographicNo = oscar.Misc.getString(rs, "demographic_no");
-			}
-			rs.close();
-			return demographicNo;
-		} catch (SQLException e) {
-			MiscUtils.getLogger().error("Error", e);
+		if(demographic != null) {
+			return String.valueOf(demographic.getDemographicNo());
 		}
-		return demographicNo;
+		return "";
 	}
 
 	// //
 	public int numDemographicsWithHIN(String hin) {
-		int num = 0;
-		try {
-
-			ResultSet rs;
-			String sql = "SELECT count(*) as c FROM demographic WHERE hin = '" + hin + "'";
-			rs = DBHandler.GetSQL(sql);
-			if (rs.next()) {
-				num = rs.getInt("c");
-			}
-			rs.close();
-		} catch (SQLException e) {
-			MiscUtils.getLogger().error("Error", e);
-		}
-		return num;
+		return demographicDao.searchByHealthCard(hin).size();
 	}
 
 	public boolean isUniqueHin(String hin) {
 		return numDemographicsWithHIN(hin) == 0;
 	}
 
-	public ArrayList getDemographicWithHIN(String hin) {
-		ArrayList list = new ArrayList();
-		try {
-
-			ResultSet rs;
-			String sql = "SELECT demographic_no FROM demographic WHERE hin = '" + hin + "'";
-
-			rs = DBHandler.GetSQL(sql);
-			while (rs.next()) {
-				String demoNo = oscar.Misc.getString(rs, "demographic_no");
-
-				list.add(getDemographic(demoNo));
-			}
-			rs.close();
-		} catch (SQLException e) {
-			MiscUtils.getLogger().error("Error", e);
+	public ArrayList<Demographic> getDemographicWithHIN(String hin) {
+		ArrayList<Demographic> list = new ArrayList<Demographic>();
+		List<org.oscarehr.common.model.Demographic> demos = demographicDao.searchByHealthCard(hin);
+		for(org.oscarehr.common.model.Demographic demo:demos) {
+			list.add(getDemographic(String.valueOf(demo.getDemographicNo())));
 		}
 		return list;
 	}
 
-	public ArrayList getDemographicWithLastFirstDOB(String lastname, String firstname, String dob) {
+	public ArrayList<Demographic> getDemographicWithLastFirstDOB(String lastname, String firstname, String dob) {
 		if (dob != null) {
 			Date bDate = UtilDateUtilities.StringToDate(dob, "yyyy-MM-dd");
 			String year_of_birth = UtilDateUtilities.DateToString(bDate, "yyyy");
@@ -201,95 +128,50 @@ public class DemographicData {
 		}
 	}
 
-	public ArrayList getDemographicWithLastFirstDOB(String lastname, String firstname, String year_of_birth, String month_of_birth, String date_of_birth) {
-		ArrayList list = new ArrayList();
-		try {
-
-			ResultSet rs;
-			String sql = "SELECT demographic_no FROM demographic " + " WHERE last_name like '" + lastname + "%' and first_name like '" + lastname + "%'";
-			if (year_of_birth != null) sql = sql + "  and year_of_birth = '" + year_of_birth + "'";
-			if (month_of_birth != null) sql = sql + " and month_of_birth = '" + month_of_birth + "'";
-			if (date_of_birth != null) sql = sql + " and date_of_birth = '" + date_of_birth + "'";
-
-			rs = DBHandler.GetSQL(sql);
-			while (rs.next()) {
-				String demoNo = oscar.Misc.getString(rs, "demographic_no");
-
-				list.add(getDemographic(demoNo));
-			}
-			rs.close();
-		} catch (SQLException e) {
-			MiscUtils.getLogger().error("Error", e);
+	public ArrayList<Demographic> getDemographicWithLastFirstDOB(String lastname, String firstname, String year_of_birth, String month_of_birth, String date_of_birth) {
+		ArrayList<Demographic> list = new ArrayList<Demographic>();
+		List<org.oscarehr.common.model.Demographic> demos = demographicDao.getDemographicWithLastFirstDOB(lastname, firstname, year_of_birth, month_of_birth, date_of_birth);
+		for(org.oscarehr.common.model.Demographic demo:demos) {
+			list.add(getDemographic(String.valueOf(demo.getDemographicNo())));
 		}
+
 		return list;
 	}
 
 	public String getNameAgeString(String demographicNo) {
 		String nameage = "";
-		try {
-
-			ResultSet rs;
-			String sql = "SELECT last_name, first_name, year_of_birth,sex,month_of_birth,date_of_birth FROM demographic WHERE demographic_no = '" + demographicNo + "'";
-			rs = DBHandler.GetSQL(sql);
-			if (rs.next()) {
-				String age = UtilDateUtilities.calcAge(UtilDateUtilities.calcDate(oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"), oscar.Misc.getString(rs, "date_of_birth")));
-				if (age == null) {
-					age = "";
-				}
-				nameage = oscar.Misc.getString(rs, "last_name") + ", " + oscar.Misc.getString(rs, "first_name") + " " + oscar.Misc.getString(rs, "sex") + " " + age;
+		org.oscarehr.common.model.Demographic demographic = demographicDao.getDemographic(demographicNo);
+		if(demographic != null) {
+			String age = UtilDateUtilities.calcAge(UtilDateUtilities.calcDate(demographic.getYearOfBirth(), demographic.getMonthOfBirth(), demographic.getDateOfBirth()));
+			if (age == null) {
+				age = "";
 			}
-
-			rs.close();
-
-		} catch (SQLException e) {
-			MiscUtils.getLogger().error("Error", e);
+			nameage = demographic.getLastName() + ", " + demographic.getFirstName() + " " + demographic.getSex() + " " + age;
 		}
+
 		return nameage;
 	}
 
 	public String[] getNameAgeSexArray(String demographicNo) {
 		String[] nameage = null;
-		try {
-
-			ResultSet rs;
-			String sql = "SELECT last_name, first_name, year_of_birth,sex,month_of_birth,date_of_birth FROM demographic WHERE demographic_no = '" + demographicNo + "'";
-			rs = DBHandler.GetSQL(sql);
-			if (rs.next()) {
-				String age = UtilDateUtilities.calcAge(UtilDateUtilities.calcDate(oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"), oscar.Misc.getString(rs, "date_of_birth")));
-				if (age == null) {
-					age = "";
-				}
-				nameage = new String[] { oscar.Misc.getString(rs, "last_name"), oscar.Misc.getString(rs, "first_name"), oscar.Misc.getString(rs, "sex"), age };
+		org.oscarehr.common.model.Demographic demographic = demographicDao.getDemographic(demographicNo);
+		if(demographic != null) {
+			String age = UtilDateUtilities.calcAge(UtilDateUtilities.calcDate(demographic.getYearOfBirth(), demographic.getMonthOfBirth(), demographic.getDateOfBirth()));
+			if (age == null) {
+				age = "";
 			}
-
-			rs.close();
-
-		} catch (SQLException e) {
-			MiscUtils.getLogger().error("Error", e);
+			nameage = new String[] {demographic.getLastName(),demographic.getFirstName(), demographic.getSex(),age};
 		}
+
 		return nameage;
 	}
 
 	public String getDemographicSex(String demographicNo) {
-		String retval = "";
-		try {
-
-			ResultSet rs;
-			String sql = "SELECT sex FROM demographic WHERE demographic_no = '" + demographicNo + "'";
-			rs = DBHandler.GetSQL(sql);
-			if (rs.next()) {
-				try {
-					retval = oscar.Misc.getString(rs, "sex");
-				} catch (Exception eg) {
-				}
-			}
-
-			rs.close();
-
-		} catch (SQLException e) {
-			MiscUtils.getLogger().error("Error", e);
+		org.oscarehr.common.model.Demographic demographic = demographicDao.getDemographic(demographicNo);
+		if(demographic != null) {
+			return demographic.getSex();
 		}
-		return retval;
+		return "";
 	}
 
 	public Demographic getSubstituteDecisionMaker(String DemographicNo) {
@@ -342,49 +224,26 @@ public class DemographicData {
 	}
 
 	public String getDemographicNoByMyOscarUserName(String myOscarUserName) {
-		String demographicNo = "";
-
-		try {
-
-			ResultSet rs;
-			String sql = "SELECT demographic_no FROM demographic WHERE myOscarUserName = '" + myOscarUserName + "'";
-			rs = DBHandler.GetSQL(sql);
-			if (rs.next()) {
-				demographicNo = oscar.Misc.getString(rs, "demographic_no");
-			}
-			rs.close();
-			return demographicNo;
-		} catch (SQLException e) {
-			MiscUtils.getLogger().error("Error", e);
+		org.oscarehr.common.model.Demographic d = demographicDao.getDemographicByMyOscarUserName(myOscarUserName);
+		if(d != null) {
+			return d.getDemographicNo().toString();
 		}
-		return demographicNo;
+		return "";
 	}
 
-	public String getDemographicDateJoined(String DemographicNo) {
-		String date = null;
-		try {
-
-			ResultSet rs;
-			String sql = "SELECT date_joined FROM demographic WHERE demographic_no = '" + DemographicNo + "'";
-
-			rs = DBHandler.GetSQL(sql);
-
-			if (rs.next()) {
-				date = oscar.Misc.getString(rs, "date_joined");// getString("date_joined");
-			}
-
-			rs.close();
-
-		} catch (SQLException e) {
-			MiscUtils.getLogger().error("Error", e);
+	public String getDemographicDateJoined(String demographicNo) {
+		org.oscarehr.common.model.Demographic d = demographicDao.getDemographic(demographicNo);
+		if(d != null) {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			return sdf.format(d.getDateJoined());
 		}
-		return date;
+		return null;
 	}
 
-	public void setDemographicPin(String demographicNo, String myOscarUserName) throws Exception {
-
-		String sql = "UPDATE demographic SET myOscarUserName = '" + myOscarUserName + "' WHERE demographic_no = " + demographicNo;
-		DBHandler.RunSQL(sql);
+	public void setDemographicPin(String demographicNo, String myOscarUserName) {
+		org.oscarehr.common.model.Demographic d = demographicDao.getDemographic(demographicNo);
+		d.setMyOscarUserName(myOscarUserName);
+		demographicDao.save(d);
 	}
 
 	public void setDemographic(Demographic dm) throws Exception {
@@ -397,6 +256,88 @@ public class DemographicData {
 		        + "WHERE demographic_no = " + dm.getDemographicNo();
 		DBHandler.RunSQL(sql);
 	}
+
+
+	public static String getAge(Demographic d) {
+		if (oscar.util.StringUtils.empty(d.year_of_birth) || oscar.util.StringUtils.empty(d.month_of_birth) || oscar.util.StringUtils.empty(d.date_of_birth)) {
+			return "";
+		}
+		return (String.valueOf(oscar.util.UtilDateUtilities.calcAge(d.year_of_birth, d.month_of_birth, d.date_of_birth)));
+	}
+
+	public String getAgeAsOf(Demographic d,Date asofDate) {
+		return UtilDateUtilities.calcAgeAtDate(UtilDateUtilities.calcDate(d.year_of_birth, d.month_of_birth, d.date_of_birth), asofDate);
+	}
+
+	public int getAgeInMonths(Demographic d) {
+		return UtilDateUtilities.getNumMonths(UtilDateUtilities.calcDate(d.year_of_birth,d.month_of_birth, d.date_of_birth), Calendar.getInstance().getTime());
+	}
+
+	public int getAgeInMonthsAsOf(Demographic d, Date asofDate) {
+		return UtilDateUtilities.getNumMonths(UtilDateUtilities.calcDate(d.year_of_birth, d.month_of_birth, d.date_of_birth), asofDate);
+	}
+
+	public int getAgeInYears(Demographic d) {
+		return UtilDateUtilities.getNumYears(UtilDateUtilities.calcDate(d.year_of_birth, d.month_of_birth, d.date_of_birth), Calendar.getInstance().getTime());
+	}
+
+	public int getAgeInYearsAsOf(Demographic d,Date asofDate) {
+		return UtilDateUtilities.getNumYears(UtilDateUtilities.calcDate(d.year_of_birth, d.month_of_birth, d.date_of_birth), asofDate);
+	}
+
+	public String getDob(Demographic d) {
+		return addZero(d.year_of_birth, 4) + addZero(d.month_of_birth, 2) + addZero(d.date_of_birth, 2);
+	}
+
+	public long getAgeInDays(Demographic d) {
+		return UtilDateUtilities.getNumDays(UtilDateUtilities.calcDate(d.year_of_birth, d.month_of_birth, d.date_of_birth), Calendar.getInstance().getTime());
+	}
+
+	public Date getDOBObj(Demographic d) {
+		Date date = null;
+		try {
+			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			date = formatter.parse(addZero(d.year_of_birth, 4) + "-" + addZero(d.month_of_birth, 2) + "-" + addZero(d.date_of_birth, 2));
+		} catch (Exception eg) {
+			// this is okay, it means the date is not set or invalid data was set.
+		}
+		return date;
+	}
+
+	public String getDob(Demographic d, String seperator) {
+		if (d.getYearOfBirth() == null || d.getMonthOfBirth() == null || d.getDateOfBirth() == null) return (null);
+
+		return d.getYearOfBirth() + seperator + d.getMonthOfBirth() + seperator + d.getDateOfBirth();
+	}
+
+	public boolean isFemale(Demographic d) {
+		boolean female = false;
+		if (d.sex != null && d.sex.trim().equalsIgnoreCase("f")) {
+			female = true;
+		}
+		return female;
+	}
+
+	public boolean isMale(Demographic d) {
+		boolean male = false;
+		if (d.sex != null && d.sex.trim().equalsIgnoreCase("m")) {
+			male = true;
+		}
+		return male;
+	}
+
+	public String addZero(String text, int num) {
+		if (text == null) return (null);
+
+		text = text.trim();
+		String zero = "0";
+		for (int i = text.length(); i < num; i++) {
+			text = zero + text;
+		}
+		return text;
+	}
+
+
 
 	public class Demographic {
 
@@ -1125,9 +1066,6 @@ public class DemographicData {
 
 		boolean duplicateRecord = false;
 		DemographicAddResult ret = new DemographicAddResult();
-
-		// "insert into demographic (last_name, first_name, address, city, province, postal, phone, phone2, email, pin, year_of_birth, month_of_birth, date_of_birth, hin, ver, roster_status, patient_status, date_joined, chart_no, provider_no, sex, end_date, eff_date, pcn_indicator, hc_type, hc_renew_date, family_doctor) values(?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?)"
-		// },
 
 		end_date = StringUtils.trimToNull(end_date);
 		eff_date = StringUtils.trimToNull(eff_date);

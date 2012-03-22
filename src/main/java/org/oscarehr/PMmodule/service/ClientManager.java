@@ -1,23 +1,23 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for 
- * Centre for Research on Inner City Health, St. Michael's Hospital, 
- * Toronto, Ontario, Canada 
+ *
+ * This software was written for
+ * Centre for Research on Inner City Health, St. Michael's Hospital,
+ * Toronto, Ontario, Canada
  */
 
 package org.oscarehr.PMmodule.service;
@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.PMmodule.dao.ClientReferralDAO;
 import org.oscarehr.PMmodule.dao.JointAdmissionDAO;
 import org.oscarehr.PMmodule.exception.AlreadyAdmittedException;
@@ -38,6 +37,7 @@ import org.oscarehr.PMmodule.model.JointAdmission;
 import org.oscarehr.PMmodule.model.ProgramClientRestriction;
 import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicExt;
 import org.springframework.beans.factory.annotation.Required;
@@ -75,22 +75,6 @@ public class ClientManager {
     }
     public List<Demographic> search(ClientSearchFormBean criteria) {
         return dao.search(criteria);
-    }
-
-    public java.util.Date getMostRecentIntakeADate(String demographicNo) {
-        return dao.getMostRecentIntakeADate(Integer.valueOf(demographicNo));
-    }
-
-    public java.util.Date getMostRecentIntakeCDate(String demographicNo) {
-        return dao.getMostRecentIntakeCDate(Integer.valueOf(demographicNo));
-    }
-
-    public String getMostRecentIntakeAProvider(String demographicNo) {
-        return dao.getMostRecentIntakeAProvider(Integer.valueOf(demographicNo));
-    }
-
-    public String getMostRecentIntakeCProvider(String demographicNo) {
-        return dao.getMostRecentIntakeCProvider(Integer.valueOf(demographicNo));
     }
 
     public List<ClientReferral> getReferrals() {
@@ -168,7 +152,7 @@ public class ClientManager {
     }
 
     public boolean isClientDependentOfFamily(Integer clientId){
-		
+
 		JointAdmission clientsJadm = null;
 		if(clientId != null){
 			clientsJadm = getJointAdmission(Long.valueOf(clientId.toString()));
@@ -178,17 +162,17 @@ public class ClientManager {
 		}
 		return false;
     }
-    
-    
+
+
     public boolean isClientFamilyHead(Integer clientId){
-		
+
 		List<JointAdmission> dependentList = getDependents(Long.valueOf(clientId.toString()));
 		if(dependentList != null  &&  dependentList.size() > 0){
 			return true;
 		}
 		return false;
     }
-    
+
     public void removeJointAdmission(Long clientId, String providerNo) {
         jointAdmissionDAO.removeJointAdmission(clientId, providerNo);
     }
@@ -309,9 +293,9 @@ public class ClientManager {
         this.outsideOfDomainEnabled = outsideOfDomainEnabled;
     }
 
-        
+
 	public boolean checkHealthCardExists(String hin, String hcType) {
-	   List<Demographic> results = this.dao.searchByHealthCard(hin,hcType);            
+	   List<Demographic> results = this.dao.searchByHealthCard(hin,hcType);
 	   return (results.size()>0)?true:false;
 	}
 }

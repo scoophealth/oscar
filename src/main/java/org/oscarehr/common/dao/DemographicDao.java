@@ -60,7 +60,6 @@ import org.oscarehr.PMmodule.web.formbean.ClientListsReportFormBean;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicExt;
-import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -96,15 +95,6 @@ public class DemographicDao extends HibernateDaoSupport {
         else return (Demographic) rs.get(0);
     }
 
-    /*
-     * get demographics according to their program, admit time, discharge time, ordered by lastname and first name
-     */
-    public List getDemographicByProgram(int programId, Date dt, Date defdt) {
-        String q = "Select d From Demographic d, Admission a " + "Where d.DemographicNo=a.DlientId and a.ProgramId=? and a.AdmissionDate<=? and " + "(a.DischargeDate>=? or (a.DischargeDate is null) or a.DischargeDate=?)"
-                + " order by d.LastName,d.FirstName";
-        List rs = getHibernateTemplate().find(q, new Object[] { new Integer(programId), dt, dt, defdt });
-        return rs;
-    }
 
     public List<Demographic> getDemographicByProvider(String providerNo){
     	return getDemographicByProvider(providerNo,true);
@@ -168,17 +158,9 @@ public class DemographicDao extends HibernateDaoSupport {
 	}
 
     public Set getArchiveDemographicByProgramOptimized(int programId, Date dt, Date defdt) {
-/*
-    	Set<Demographic> archivedClients = new TreeSet<Demographic>(new Comparator<Demographic>() {
-    		public int compare(Demographic o1, Demographic o2) {
-    			return String.CASE_INSENSITIVE_ORDER.compare(o1.getLastName()+","+o1.getFirstName(), o2.getLastName()+","+o2.getFirstName());
-    		}
-    	});
-*/
     	Set<Demographic> archivedClients = new java.util.LinkedHashSet<Demographic>();
 
-
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     	String sqlQuery = "select distinct d.demographic_no,d.first_name,d.last_name,(select count(*) from admission a where client_id=d.demographic_no and admission_status='current' and program_id="+programId+" and admission_date<='"+sdf.format(dt)+"') as is_active from admission a,demographic d where a.client_id=d.demographic_no and (d.patient_status='AC' or d.patient_status='' or d.patient_status=null) and program_id="+programId + " and (d.anonymous is null or d.anonymous != 'one-time-anonymous') ORDER BY d.last_name,d.first_name";
 
 		SQLQuery q = this.getSession().createSQLQuery(sqlQuery);
@@ -203,37 +185,6 @@ public class DemographicDao extends HibernateDaoSupport {
 		return archivedClients;
     }
 
-    public List getArchiveDemographicByPromgram(int programId, Date dt, Date defdt) {
-        // get duplicated demographic records with the same id ....from this sql
-        String q = "Select d From Demographic d, Admission a " + "Where (d.PatientStatus=? or d.PatientStatus='' or d.PatientStatus=null) and d.DemographicNo=a.ClientId and a.ProgramId=? and a.AdmissionDate<=? and a.AdmissionStatus=? "
-                + " order by d.LastName,d.FirstName";
-
-        String status = "AC"; // only show active clients
-        String admissionStatus = "discharged"; // only show discharged clients
-        List rs = getHibernateTemplate().find(q, new Object[] { status, new Integer(programId), dt, admissionStatus });
-
-        // and clients should not currently in this program.
-        List clients = new ArrayList<Demographic>();
-        Integer clientNo = 0;
-
-        Iterator it = rs.iterator();
-        while (it.hasNext()) {
-            Demographic demographic = (Demographic) it.next();
-            String q1 = "Select a.AdmissionStatus From Admission a " + "Where a.ClientId=? and a.ProgramId=? and a.AdmissionStatus=?";
-            String ss = "current";
-
-            // no dumplicated clients.
-            if (demographic.getDemographicNo() == clientNo) continue;
-
-            clientNo = demographic.getDemographicNo();
-            List rs1 = getHibernateTemplate().find(q1, new Object[] { clientNo, new Integer(programId), ss });
-            if (rs1.size() == 0) {
-                clients.add(demographic);
-            }
-        }
-
-        return clients;
-    }
 
     public List getProgramIdByDemoNo(String demoNo) {
         String q = "Select a.ProgramId From Admission a " + "Where a.ClientId=? and a.AdmissionDate<=? and " + "(a.DischargeDate>=? or (a.DischargeDate is null) or a.DischargeDate=?)";
@@ -353,8 +304,9 @@ public class DemographicDao extends HibernateDaoSupport {
      }
 
      @SuppressWarnings("unchecked")
-    public List<String> getRosterStatuses() {
-    	 return this.getHibernateTemplate().find("SELECT d.RosterStatus from Demographic d ORDER BY d.RosterStatus ASC");
+     public List<String> getRosterStatuses() {
+    	 List<String> results = getHibernateTemplate().find("SELECT DISTINCT d.RosterStatus FROM Demographic d where d.RosterStatus != '' and d.RosterStatus != 'RO' and d.RosterStatus != 'NR' and d.RosterStatus != 'TE' and d.RosterStatus != 'FS'");
+    	 return results;
      }
 
      ///////////////// CLIENT DAO MERGED ///////////////////////////
@@ -388,6 +340,7 @@ public class DemographicDao extends HibernateDaoSupport {
  	}
 
      public List<Demographic> getClients() {
+    	 logger.error("No one should be calling this method, this is a good way to run out of memory and crash a server... this is too large of a result set, it should be pagenated.", new IllegalArgumentException("The entire demographic table is too big to allow a full select."));
 
  		String queryStr = " FROM Demographic";
  	    @SuppressWarnings("unchecked")
@@ -701,52 +654,6 @@ public class DemographicDao extends HibernateDaoSupport {
  		return results;
  	}
 
- 	public Date getMostRecentIntakeADate(Integer demographicNo) {
-
- 		Date date = null;
-
- 		if (demographicNo == null || demographicNo.intValue() <= 0) {
- 			throw new IllegalArgumentException();
- 		}
-
- 		Query q = getSession().createQuery("select intake.FormEdited from Formintakea intake where intake.DemographicNo = ? order by intake.FormEdited DESC");
- 		q.setLong(0, demographicNo.longValue());
- 		List results = q.list();
-
- 		if (!results.isEmpty()) {
- 			date = (Date)results.get(0);
- 		}
-
- 		if (log.isDebugEnabled()) {
- 			log.debug("getMostRecentIntakeADate: demographicNo=" + demographicNo + ",found=" + (date != null));
- 		}
-
- 		return date;
- 	}
-
- 	public Date getMostRecentIntakeCDate(Integer demographicNo) {
-
- 		Date date = null;
-
- 		if (demographicNo == null || demographicNo.intValue() <= 0) {
- 			throw new IllegalArgumentException();
- 		}
-
- 		Query q = getSession().createQuery("select intake.FormEdited from Formintakec intake where intake.DemographicNo = ? order by intake.FormEdited DESC");
- 		q.setLong(0, demographicNo.longValue());
-
- 		List result = q.list();
- 		if (!result.isEmpty()) {
- 			date = (Date)result.get(0);
- 		}
-
- 		if (log.isDebugEnabled()) {
- 			log.debug("getMostRecentIntakeCDate: demographicNo=" + demographicNo + ",found=" + (date != null));
- 		}
-
- 		return date;
- 	}
-
  	public void saveClient(Demographic client) {
 
  		if (client == null) {
@@ -760,59 +667,6 @@ public class DemographicDao extends HibernateDaoSupport {
  		}
  	}
 
- 	public String getMostRecentIntakeAProvider(Integer demographicNo) {
-
- 		String providerName = null;
-
- 		if (demographicNo == null || demographicNo.intValue() <= 0) {
- 			throw new IllegalArgumentException();
- 		}
-
- 		Query q = getSession().createQuery("select intake.ProviderNo from Formintakea intake where intake.DemographicNo = ? order by intake.FormEdited DESC");
- 		q.setLong(0, demographicNo.longValue());
- 		List result = q.list();
- 		if (!result.isEmpty()) {
- 			Long providerNo = (Long)result.get(0);
- 			Provider provider = this.getHibernateTemplate().get(Provider.class, String.valueOf(providerNo));
- 			if (provider != null) {
- 				providerName = provider.getFormattedName();
- 			}
-
- 		}
-
- 		if (log.isDebugEnabled()) {
- 			log.debug("getMostRecentIntakeAProvider: demographicNo=" + demographicNo + ",result=" + providerName);
- 		}
-
- 		return providerName;
- 	}
-
- 	public String getMostRecentIntakeCProvider(Integer demographicNo) {
-
- 		String providerName = null;
-
- 		if (demographicNo == null || demographicNo.intValue() <= 0) {
- 			throw new IllegalArgumentException();
- 		}
-
- 		Query q = getSession().createQuery("select intake.ProviderNo from Formintakec intake where intake.DemographicNo = ? order by intake.FormEdited DESC");
- 		q.setLong(0, demographicNo.longValue());
- 		List result = q.list();
- 		if (!result.isEmpty()) {
- 			Long providerNo = (Long)result.get(0);
- 			Provider provider = this.getHibernateTemplate().get(Provider.class, String.valueOf(providerNo));
- 			if (provider != null) {
- 				providerName = provider.getFormattedName();
- 			}
-
- 		}
-
- 		if (log.isDebugEnabled()) {
- 			log.debug("getMostRecentIntakeCProvider: demographicNo=" + demographicNo + ",result=" + providerName);
- 		}
-
- 		return providerName;
- 	}
 
  	public DemographicExt getDemographicExt(Integer id) {
 
@@ -1103,4 +957,89 @@ public class DemographicDao extends HibernateDaoSupport {
      public List<Demographic> searchByHealthCard(String hin, String hcType) {
      	return getClientsByHealthCard(hin,hcType);
      }
+
+     //from DemographicData
+ 	public Demographic getDemographicByNamePhoneEmail(String firstName, String lastName, String hPhone, String wPhone, String email) {
+
+ 		List<String> params = new ArrayList<String>();
+ 		StringBuilder whereClause = new StringBuilder();
+
+ 		if(firstName.trim().length()>0) {
+ 			whereClause.append("FirstName=?");
+ 			params.add(firstName.trim());
+ 		}
+ 		if(lastName.trim().length()>0) {
+ 			if(params.size()>0) {
+ 				whereClause.append(" AND " );
+ 			}
+ 			whereClause.append("LastName=?");
+ 			params.add(lastName.trim());
+ 		}
+ 		if(hPhone.trim().length()>0) {
+ 			if(params.size()>0) {
+ 				whereClause.append(" AND " );
+ 			}
+ 			whereClause.append("Phone=?");
+ 			params.add(hPhone.trim());
+ 		}
+ 		if(wPhone.trim().length()>0) {
+ 			if(params.size()>0) {
+ 				whereClause.append(" AND " );
+ 			}
+ 			whereClause.append("Phone2=?");
+ 			params.add(wPhone.trim());
+ 		}
+ 		if(email.trim().length()>0) {
+ 			if(params.size()>0) {
+ 				whereClause.append(" AND " );
+ 			}
+ 			whereClause.append("Email=?");
+ 			params.add(email.trim());
+ 		}
+
+ 		if(whereClause.length()==0) {
+ 			throw new IllegalArgumentException("you need to search by something");
+ 		}
+		String sql = "FROM Demographic WHERE " + whereClause;
+
+		@SuppressWarnings("unchecked")
+        List<Demographic> demographics = this.getHibernateTemplate().find(sql,params.toArray(new String[params.size()]));
+
+		if(!demographics.isEmpty()) {
+			return demographics.get(0);
+		}
+
+		return null;
+	}
+
+ 	public List<Demographic> searchByHealthCard(String hin) {
+     	String queryStr = " FROM Demographic d where d.Hin=?";
+ 	    @SuppressWarnings("unchecked")
+ 		List<Demographic> rs = getHibernateTemplate().find(queryStr,new Object[]{hin});
+
+ 		return rs;
+     }
+
+	@SuppressWarnings("unchecked")
+    public List<Demographic> getDemographicWithLastFirstDOB(String lastname, String firstname, String year_of_birth, String month_of_birth, String date_of_birth) {
+		List<String> params = new ArrayList<String>();
+		String sql = "FROM Demographic " + " WHERE LastName like ? and FirstName like ?";
+		params.add(lastname + "%");
+		params.add(firstname + "%");
+
+		if(year_of_birth != null) {
+			sql += " AND YearOfBirth = ?";
+			params.add(year_of_birth);
+		}
+		if(month_of_birth != null) {
+			sql += " AND MonthOfBirth = ?";
+			params.add(month_of_birth);
+		}
+		if(date_of_birth != null) {
+			sql += " AND DateOfBirth = ?";
+			params.add(date_of_birth);
+		}
+
+		return  this.getHibernateTemplate().find(sql,params.toArray(new String[params.size()]));
+	}
 }
