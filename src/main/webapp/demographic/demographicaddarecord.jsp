@@ -37,9 +37,12 @@
 
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.Demographic" %>
+<%@page import="org.oscarehr.common.dao.DemographicDao" %>
 <%@page import="org.oscarehr.common.model.DemographicCust" %>
 <%@page import="org.oscarehr.common.dao.DemographicCustDao" %>
 <%
+	DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
 %>
 <html:html locale="true">
@@ -84,95 +87,82 @@
   //if action is good, then give me the result
 	  //param[0]=Integer.parseIntdemographicaddarecord((new GregorianCalendar()).get(Calendar.MILLISECOND) ); //int
 	  //temp variables for test/set null dates
-	  String year, month, day;
-      DBPreparedHandlerParam [] param =new DBPreparedHandlerParam[34];
-	  param[0]=new DBPreparedHandlerParam(request.getParameter("last_name"));
-	  param[1]=new DBPreparedHandlerParam(request.getParameter("first_name"));
-	  param[2]=new DBPreparedHandlerParam(request.getParameter("address"));
-	  param[3]=new DBPreparedHandlerParam(request.getParameter("city"));
-	  param[4]=new DBPreparedHandlerParam(request.getParameter("province"));
-	  param[5]=new DBPreparedHandlerParam(request.getParameter("postal"));
-	  param[6]=new DBPreparedHandlerParam(request.getParameter("phone"));
-	  param[7]=new DBPreparedHandlerParam(request.getParameter("phone2"));
-	  param[8]=new DBPreparedHandlerParam(request.getParameter("email"));
-	  param[9]=new DBPreparedHandlerParam(StringUtils.trimToNull(request.getParameter("myOscarUserName")));
-	  param[10]=new DBPreparedHandlerParam(request.getParameter("year_of_birth"));
-	  param[11]=new DBPreparedHandlerParam(request.getParameter("month_of_birth")!=null && request.getParameter("month_of_birth").length()==1 ? "0"+request.getParameter("month_of_birth") : request.getParameter("month_of_birth"));
-	  param[12]=new DBPreparedHandlerParam(request.getParameter("date_of_birth")!=null && request.getParameter("date_of_birth").length()==1 ? "0"+request.getParameter("date_of_birth") : request.getParameter("date_of_birth"));
-	  param[13]=new DBPreparedHandlerParam(request.getParameter("hin"));
-	  param[14]=new DBPreparedHandlerParam(request.getParameter("ver"));
-	  param[15]=new DBPreparedHandlerParam(request.getParameter("roster_status"));
-	  param[16]=new DBPreparedHandlerParam(request.getParameter("patient_status"));
-	  // Databases have an alias for today. It is not necessary give the current date.
-          // ** Overridden - we want to give users option to change if needed
-          // ** Now defaults to current date on the add demographic screen
-	  param[17]=new DBPreparedHandlerParam(MyDateFormat.getSysDate(request.getParameter("date_joined_year")+"-"+request.getParameter("date_joined_month")+"-"+request.getParameter("date_joined_date")));
-	  param[18]=new DBPreparedHandlerParam(request.getParameter("chart_no"));
-	  param[19]=new DBPreparedHandlerParam(request.getParameter("staff"));
-	  param[20]=new DBPreparedHandlerParam(request.getParameter("sex"));
+	  DBPreparedHandlerParam [] param =new DBPreparedHandlerParam[34];
 
-		year = StringUtils.trimToNull(request.getParameter("end_date_year"));
-		month = StringUtils.trimToNull(request.getParameter("end_date_month"));
-		day = StringUtils.trimToNull(request.getParameter("end_date_date"));
-		if (year!=null && month!=null && day!=null)
-		{
-	  		param[21] = new DBPreparedHandlerParam(MyDateFormat.getSysDate(year + "-" + month + "-" + day));
-		}
-		else
-		{
-			param[21]=null;
+	  String year, month, day;
+
+	  Demographic demographic = new Demographic();
+	  demographic.setLastName(request.getParameter("last_name"));
+	  demographic.setFirstName(request.getParameter("first_name"));
+	  demographic.setAddress(request.getParameter("address"));
+	  demographic.setCity(request.getParameter("city"));
+	  demographic.setProvince(request.getParameter("province"));
+	  demographic.setPostal(request.getParameter("postal"));
+	  demographic.setPhone(request.getParameter("phone"));
+	  demographic.setPhone2(request.getParameter("phone2"));
+	  demographic.setEmail(request.getParameter("email"));
+	  demographic.setMyOscarUserName(StringUtils.trimToNull(request.getParameter("myOscarUserName")));
+	  demographic.setYearOfBirth(request.getParameter("year_of_birth"));
+	  demographic.setMonthOfBirth(request.getParameter("month_of_birth")!=null && request.getParameter("month_of_birth").length()==1 ? "0"+request.getParameter("month_of_birth") : request.getParameter("month_of_birth"));
+	  demographic.setDateOfBirth(request.getParameter("date_of_birth")!=null && request.getParameter("date_of_birth").length()==1 ? "0"+request.getParameter("date_of_birth") : request.getParameter("date_of_birth"));
+	  demographic.setHin(request.getParameter("hin"));
+	  demographic.setVer(request.getParameter("ver"));
+	  demographic.setRosterStatus(request.getParameter("roster_status"));
+	  demographic.setPatientStatus(request.getParameter("patient_status"));
+	  demographic.setDateJoined(MyDateFormat.getSysDate(request.getParameter("date_joined_year")+"-"+request.getParameter("date_joined_month")+"-"+request.getParameter("date_joined_date")));
+	  demographic.setChartNo(request.getParameter("chart_no"));
+	  demographic.setProviderNo(request.getParameter("staff"));
+	  demographic.setSex(request.getParameter("sex"));
+
+	  year = StringUtils.trimToNull(request.getParameter("end_date_year"));
+	  month = StringUtils.trimToNull(request.getParameter("end_date_month"));
+	  day = StringUtils.trimToNull(request.getParameter("end_date_date"));
+		if (year!=null && month!=null && day!=null) {
+	  		demographic.setEndDate(MyDateFormat.getSysDate(year + "-" + month + "-" + day));
+		} else {
+			demographic.setEndDate(null);
 		}
 
 	    year = StringUtils.trimToNull(request.getParameter("eff_date_year"));
 	    month = StringUtils.trimToNull(request.getParameter("eff_date_month"));
 	    day = StringUtils.trimToNull(request.getParameter("eff_date_date"));
-		if (year!=null && month!=null && day!=null)
-		{
-			param[22] =  new DBPreparedHandlerParam(MyDateFormat.getSysDate(year + "-" + month + "-" + day));
-		}
-		else
-		{
-			param[22]=null;
+		if (year!=null && month!=null && day!=null) {
+			demographic.setEffDate(MyDateFormat.getSysDate(year + "-" + month + "-" + day));
+		} else {
+			demographic.setEffDate(null);
 		}
 
-	  param[23]=new DBPreparedHandlerParam(request.getParameter("pcn_indicator"));
-	  param[24]=new DBPreparedHandlerParam(request.getParameter("hc_type"));
+		demographic.setPcnIndicator(request.getParameter("pcn_indicator"));
+		demographic.setHcType(request.getParameter("hc_type"));
 
 	    year = StringUtils.trimToNull(request.getParameter("roster_date_year"));
 	    month = StringUtils.trimToNull(request.getParameter("roster_date_month"));
 	    day = StringUtils.trimToNull(request.getParameter("roster_date_date"));
-		if (year!=null && month!=null && day!=null)
-		{
-			param[25] =new DBPreparedHandlerParam(MyDateFormat.getSysDate( year + "-" + month + "-" + day));
+		if (year!=null && month!=null && day!=null) {
+			demographic.setRosterDate(MyDateFormat.getSysDate( year + "-" + month + "-" + day));
+		} else {
+			demographic.setRosterDate(null);
 		}
-		else
-		{
-			param[25]=null;
-		}
+		demographic.setFamilyDoctor("<rdohip>" + request.getParameter("r_doctor_ohip") + "</rdohip>" + "<rd>" + request.getParameter("r_doctor") + "</rd>"+ (request.getParameter("family_doc")!=null? ("<family_doc>" + request.getParameter("family_doc") + "</family_doc>") : ""));
+		demographic.setCountryOfOrigin(request.getParameter("countryOfOrigin"));
+		demographic.setNewsletter(request.getParameter("newsletter"));
+		demographic.setSin(request.getParameter("sin"));
+		demographic.setTitle(request.getParameter("title"));
+		demographic.setOfficialLanguage(request.getParameter("official_lang"));
+		demographic.setSpokenLanguage(request.getParameter("spoken_lang"));
+		demographic.setLastUpdateUser(curUser_no);
+		demographic.setLastUpdateDate(new java.util.Date());
+		demographic.setPatientStatusDate(new java.util.Date());
 
-	  param[26] =new DBPreparedHandlerParam("<rdohip>" + request.getParameter("r_doctor_ohip") + "</rdohip>" + "<rd>" + request.getParameter("r_doctor") + "</rd>"+ (request.getParameter("family_doc")!=null? ("<family_doc>" + request.getParameter("family_doc") + "</family_doc>") : ""));
-          param[27] =new DBPreparedHandlerParam(request.getParameter("countryOfOrigin"));
-          param[28] =new DBPreparedHandlerParam(request.getParameter("newsletter"));
-          param[29] =new DBPreparedHandlerParam(request.getParameter("sin"));
-	  param[30] =new DBPreparedHandlerParam(request.getParameter("title"));
-	  param[31] =new DBPreparedHandlerParam(request.getParameter("official_lang"));
-	  param[32] =new DBPreparedHandlerParam(request.getParameter("spoken_lang"));
-          param[33] =new DBPreparedHandlerParam(curUser_no);
+		List<Demographic> duplicateList = demographicDao.getDemographicWithLastFirstDOBExact(demographic.getLastName(),demographic.getFirstName(),
+				demographic.getYearOfBirth(),demographic.getMonthOfBirth(),demographic.getDateOfBirth());
 
-	String[] paramName =new String[5];
-	  paramName[0]=param[0].getStringValue().trim(); //last name
-	  paramName[1]=param[1].getStringValue().trim(); //first name
-	  paramName[2]=param[10].getStringValue().trim(); // year of dob
-	  paramName[3]=param[11].getStringValue().trim(); // month of dob
-	  paramName[4]=param[12].getStringValue().trim(); // day of dob
-    ResultSet rs = apptMainBean.queryResults(paramName, "search_lastfirstnamedob");
-
-    if(rs.next()) {  %> ***<font color='red'><bean:message
-	key="demographic.demographicaddarecord.msgDuplicatedRecord" /></font>***<br>
-<br>
-<a href=# onClick="history.go(-1);return false;"><b>&lt;-<bean:message
-	key="global.btnBack" /></b></a> <% return;
-    }
+		if(duplicateList.size()>0) {
+%>
+   ***<font color='red'><bean:message key="demographic.demographicaddarecord.msgDuplicatedRecord" /></font>***<br>
+	<br>
+   <a href=# onClick="history.go(-1);return false;"><b>&lt;-<bean:message key="global.btnBack" /></b></a>
+   <% return; }
 
     // add checking hin duplicated record, if there is a HIN number
     // added check to see if patient has a bc health card and has a version code of 66, in this case you are aloud to have dup hin
@@ -188,32 +178,16 @@
 		//String sql = "select demographic_no from demographic where hin=? and year_of_birth=? and month_of_birth=? and date_of_birth=?";
 		String paramNameHin =new String();
 		paramNameHin=request.getParameter("hin").trim();
-	    ResultSet rsHin = apptMainBean.queryResults(paramNameHin, "search_hin");
-	    if(rsHin.next()) {  %> ***<font color='red'><bean:message
-	key="demographic.demographicaddarecord.msgDuplicatedHIN" /></font>***<br>
+		List<Demographic> demographics = demographicDao.searchByHealthCard(paramNameHin);
+		if(demographics.size()>0){ %>
+	   ***<font color='red'><bean:message key="demographic.demographicaddarecord.msgDuplicatedHIN" /></font>***<br>
 <br>
-<a href=# onClick="history.go(-1);return false;"><b>&lt;-<bean:message
-	key="global.btnBack" /></b></a> <% return;
-	    }
-    }
+<a href=# onClick="history.go(-1);return false;"><b>&lt;-<bean:message key="global.btnBack" /></b></a>
+	<% return; }  }
 
-  int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation")); //add_record
-  if (rowsAffected ==1) {
+    demographicDao.save(demographic);
 
-    //find the demo_no and add democust record for alert
-    String[] param1 =new String[7];
-	  param1[0]=request.getParameter("last_name");
-	  param1[1]=request.getParameter("first_name");
-	  param1[2]=request.getParameter("year_of_birth");
-	  param1[3]=request.getParameter("month_of_birth");
-	  param1[4]=request.getParameter("date_of_birth");
-	  param1[5]=request.getParameter("hin");
-	  param1[6]=request.getParameter("ver");
-
-    rs = apptMainBean.queryResults(param1, "search_demoaddno");
-    if(rs.next()) { //
-
-        //propagate demographic to caisi admission table
+         //propagate demographic to caisi admission table
         if( newCaseManagement ) {
             //fetch programId associated with provider
             //if none(0) then check for OSCAR program; if available set it as default
@@ -225,29 +199,26 @@
                     progId = rsProg.getString("id");
             }
             String[] caisiParam = new String[4];
-            caisiParam[0] = apptMainBean.getString(rs,"demographic_no");
+            caisiParam[0] = demographic.getDemographicNo().toString();
             caisiParam[1] = progId;
             caisiParam[2] = request.getParameter("staff");
 
     		String yearTmp = StringUtils.trimToNull(request.getParameter("date_joined_year"));
     		String monthTmp = StringUtils.trimToNull(request.getParameter("date_joined_month"));
     		String dayTmp = StringUtils.trimToNull(request.getParameter("date_joined_date"));
-    		if (yearTmp!=null && monthTmp!=null && dayTmp!=null)
-    		{
+    		if (yearTmp!=null && monthTmp!=null && dayTmp!=null) {
     			caisiParam[3] = yearTmp+"-"+monthTmp+"-"+dayTmp;
-    		}
-    		else
-    		{
+    		} else {
     			GregorianCalendar cal=new GregorianCalendar();
     			caisiParam[3]=""+cal.get(GregorianCalendar.YEAR)+'-'+(cal.get(GregorianCalendar.MONTH)+1)+'-'+cal.get(GregorianCalendar.DAY_OF_MONTH);
     		}
 
             apptMainBean.queryExecuteUpdate(caisiParam, "add2caisi_admission");
-        }
+        } //end of new casemgmt
 
         //add democust record for alert
         String[] param2 =new String[6];
-	    param2[0]=apptMainBean.getString(rs,"demographic_no");
+	    param2[0]=demographic.getDemographicNo().toString();
 
         DemographicCust demographicCust = new DemographicCust();
        	demographicCust.setResident(request.getParameter("cust2"));
@@ -255,11 +226,11 @@
     	demographicCust.setAlert(request.getParameter("cust3"));
     	demographicCust.setMidwife(request.getParameter("cust4"));
     	demographicCust.setNotes("<unotes>"+ request.getParameter("content")+"</unotes>");
-    	demographicCust.setId(Integer.parseInt(apptMainBean.getString(rs,"demographic_no")));
+    	demographicCust.setId(demographic.getDemographicNo());
     	demographicCustDao.persist(demographicCust);
-        rowsAffected=1;
+        int rowsAffected=1;
 
-       dem = apptMainBean.getString(rs,"demographic_no");
+       dem = demographic.getDemographicNo().toString();
        DemographicExt dExt = new DemographicExt();
 
        String proNo = (String) session.getValue("user");
@@ -277,8 +248,8 @@
        dExt.addKey(proNo, dem, "rxInteractionWarningLevel", request.getParameter("rxInteractionWarningLevel"), "");
 
        dExt.addKey(proNo, dem, "primaryEMR", request.getParameter("primaryEMR"), "");
-       
-       
+
+
        //for the IBD clinic
 		OtherIdManager.saveIdDemographic(dem, "meditech_id", request.getParameter("meditech_id"));
 
@@ -308,7 +279,7 @@
                 if(rsWL.next()){
                     String[] paramWL = new String[6];
                     paramWL[0] = request.getParameter("list_id");
-                    paramWL[1] = apptMainBean.getString(rs,"demographic_no");
+                    paramWL[1] = demographic.getDemographicNo().toString();
                     paramWL[2] = request.getParameter("waiting_list_note");
                     paramWL[3] = Integer.toString(rsWL.getInt("position") + 1);
                     paramWL[4] = request.getParameter("waiting_list_referral_date");
@@ -317,46 +288,17 @@
                         apptMainBean.queryExecuteUpdate(paramWL, "add2WaitingList");
                 }
             }
-        }
-
-	  	if (request.getParameter("dboperation2") != null) {
-	  	  	String[] parametros = new String[13];
-
-	  	  	parametros[0]=apptMainBean.getString(rs,"demographic_no");
-	  	  	parametros[1]=request.getParameter("cpf");
-	  	  	parametros[2]=request.getParameter("rg");
-	  	  	parametros[3]=request.getParameter("chart_address");
-	  	  	parametros[4]=request.getParameter("marriage_certificate");
-	  	  	parametros[5]=request.getParameter("birth_certificate");
-	  	  	parametros[6]=request.getParameter("marital_state");
-	  	  	parametros[7]=request.getParameter("partner_name");
-	  	  	parametros[8]=request.getParameter("father_name");
-	  	  	parametros[9]=request.getParameter("mother_name");
-	  	  	parametros[10]=request.getParameter("district");
-	  	  	parametros[11]=request.getParameter("address_no")==null || request.getParameter("address_no").trim().equals("")?"0":request.getParameter("address_no");
-	  	  	parametros[12]=request.getParameter("complementary_address");
 
 
-	  		rowsAffected = apptMainBean.queryExecuteUpdate(parametros, request.getParameter("dboperation2")); //add_record
-	  	}
+        } //end of waitingl list
 
-    }
+
 
 %>
 <p>
 <h2><bean:message key="demographic.demographicaddarecord.msgSuccessful" /></h2>
     <a href="demographiccontrol.jsp?demographic_no=<%=dem%>&displaymode=edit&dboperation=search_detail"><bean:message key="demographic.demographicaddarecord.goToRecord"/></a>
 
-
-<%
-  } else {
-%>
-<p>
-<h1><bean:message key="demographic.demographicaddarecord.msgFailed" /></h1>
-
-<%
-  }
-%>
 <p></p>
 <%@ include file="footer.jsp"%></center>
 </body>
