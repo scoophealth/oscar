@@ -1042,4 +1042,27 @@ public class DemographicDao extends HibernateDaoSupport {
 
 		return  this.getHibernateTemplate().find(sql,params.toArray(new String[params.size()]));
 	}
+
+	@SuppressWarnings("unchecked")
+    public List<Demographic> getDemographicWithLastFirstDOBExact(String lastname, String firstname, String year_of_birth, String month_of_birth, String date_of_birth) {
+		List<String> params = new ArrayList<String>();
+		String sql = "FROM Demographic " + " WHERE LastName = ? and FirstName = ?";
+		params.add(lastname);
+		params.add(firstname);
+
+		if(year_of_birth != null) {
+			sql += " AND YearOfBirth = ?";
+			params.add(year_of_birth);
+		}
+		if(month_of_birth != null) {
+			sql += " AND MonthOfBirth = ?";
+			params.add(month_of_birth);
+		}
+		if(date_of_birth != null) {
+			sql += " AND DateOfBirth = ?";
+			params.add(date_of_birth);
+		}
+
+		return  this.getHibernateTemplate().find(sql,params.toArray(new String[params.size()]));
+	}
 }

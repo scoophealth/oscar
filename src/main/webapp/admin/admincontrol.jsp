@@ -126,7 +126,6 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"provider_add_record", "insert into provider (provider_no,last_name,first_name,provider_type,specialty,team,sex,dob,address,phone,work_phone,email,ohip_no,rma_no,billing_no,hso_no,status,comments,provider_activity,practitionerNo,lastUpdateUser,lastUpdateDate) values(?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,now())" },
     {"provider_search_titlename", "select provider_no,first_name,last_name,specialty,sex,team,phone,status from provider where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
     {"provider_search_detail", "select * from provider where provider_no=?"},
-    {"provider_delete", "delete from provider where provider_no=? and provider_no!='super'"},
     {"provider_update_record", "update provider set last_name=?,first_name=?, provider_type=?, specialty=?,team=?,sex=?,dob=?, address=?,phone=?,work_phone=?,email=?,ohip_no=?,rma_no=?,billing_no=?,hso_no=?,status=?, comments=?, provider_activity=?, practitionerNo=?, lastUpdateUser=?, lastUpdateDate=now()  where provider_no=? and provider_no!='super'"},
     {"search_provider_doc", "select * from provider where provider_type='doctor' and status='1' order by last_name"},
 
@@ -134,11 +133,6 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"demographic_search_merged", "select d.demographic_no,first_name,last_name,roster_status,sex,year_of_birth,month_of_birth,date_of_birth  from demographic d join demographic_merged dm on d.demographic_no = dm.demographic_no and dm.deleted = 0 where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
     {"demographic_search_detail", "select * from demographic where demographic_no=?"},
     {"demographic_search_detail_ptbr", "select * from demographic d left outer join demographic_ptbr dptbr on dptbr.demographic_no = d.demographic_no where d.demographic_no=?"},
-    {"demographic_update_record", "update demographic set last_name=?,first_name =?,address=?, city=?,province=?,postal=?,phone =?,phone2=?, year_of_birth=?,month_of_birth=?,date_of_birth=?,hin=?,ver=?, roster_status=?, patient_status=?, date_joined=?,  chart_no=?,provider_no=?,sex=? , end_date=?,eff_date=?, pcn_indicator=?,hc_type=? ,hc_renew_date=?, family_doctor=? where  demographic_no=?"},
-    {"demographic_update_record_ptbr", "update demographic_ptbr set cpf=?,rg=?,chart_address=?,marriage_certificate=?,birth_certificate=?,marital_state=?,partner_name=?,father_name=?,mother_name=?,district=?,address_no=?,complementary_address=? where  demographic_no=?"},
-    {"demographic_add_record", "insert into demographic (last_name, first_name, address, city, province, postal, phone, phone2, year_of_birth, month_of_birth, date_of_birth, hin, ver, roster_status, patient_status, date_joined, chart_no, provider_no, sex, end_date, eff_date, pcn_indicator, hc_type, hc_renew_date, family_doctor) values (?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?)" }, //26-1 demographic_no auto_increment
-    {"demographic_add_record_ptbr","insert into demographic_ptbr (demographic_no,cpf,rg,chart_address,marriage_certificate,birth_certificate,marital_state,partner_name,father_name,mother_name,district,address_no,complementary_address) values (?,?,?,?,?,?,?,?,?,?,?,?,?)" },
-    {"demographic_delete", "delete from demographic where demographic_no=?"},
     {"demographic_search_demoaddno", "select demographic_no from demographic where last_name=? and first_name =? and year_of_birth=? and month_of_birth=? and date_of_birth=? and hin=? and ver=?"},
     {"search_lastfirstnamedob", "select demographic_no from demographic where last_name=? and first_name=? and year_of_birth=? and month_of_birth=? and date_of_birth=?"},
 
@@ -176,17 +170,12 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"provider_add_record", "insert into provider (provider_no,last_name,first_name,provider_type,specialty,team,sex,dob,address,phone,work_phone,email,ohip_no,rma_no,billing_no,hso_no,status,comments,provider_activity,practitionerNo, lastUpdateUser, lastUpdateDate) values(?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,now())" },
     {"provider_search_titlename", "select provider_no,first_name,last_name,specialty,sex,team,phone,status from provider where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
     {"provider_search_detail", "select * from provider where provider_no=?"},
-    {"provider_delete", "delete from provider where provider_no=? and provider_no!='super'"},
     {"provider_update_record", "update provider set last_name=?,first_name=?, provider_type=?, specialty=?,team=?,sex=?,dob=?, address=?,phone=?,work_phone=?,email=?,ohip_no=?,rma_no=?,billing_no=?,hso_no=?,status=?, comments=?, provider_activity=?, practitionerNo=?, lastUpdateUser=?, lastUpdateDate=now()  where provider_no=? and provider_no!='super'"},
     {"search_provider_doc", "select * from provider where provider_type='doctor' and status='1' order by last_name"},
 
     {"demographic_search_titlename", "select demographic_no,first_name,last_name,roster_status,sex,year_of_birth,month_of_birth,date_of_birth  from demographic where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
     {"demographic_search_merged", "select d.demographic_no,first_name,last_name,roster_status,sex,year_of_birth,month_of_birth,date_of_birth  from demographic d join demographic_merged dm on d.demographic_no = dm.demographic_no and dm.deleted = 0 where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
     {"demographic_search_detail", "select * from demographic where demographic_no=?"},
-    {"demographic_update_record", "update demographic set last_name=?,first_name =?,address=?, city=?,province=?,postal=?,phone =?,phone2=?, year_of_birth=?,month_of_birth=?,hin=?,ver=?, roster_status=?, patient_status=?,  chart_no=?,provider_no=?,sex=? , pcn_indicator=?,hc_type=? , family_doctor=?, date_of_birth=?,date_joined=?,end_date=?,eff_date=?,hc_renew_date=? where  demographic_no=?"},
-    {"demographic_update_record_ptbr", "update demographic_ptbr set cpf=?,rg=?,chart_address=?,marriage_certificate=?,birth_certificate=?,marital_state=?,partner_name=?,father_name=?,mother_name=?,district=?,address_no=?,complementary_address=? where  demographic_no=?"},
-    {"demographic_add_record", "insert into demographic (last_name, first_name, address, city, province, postal, phone, phone2, year_of_birth, month_of_birth, date_of_birth, hin, ver, roster_status, patient_status, date_joined, chart_no, provider_no, sex, end_date, eff_date, pcn_indicator, hc_type, hc_renew_date, family_doctor) values (?,?,?,?,? ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?)" }, //26-1 demographic_no auto_increment
-    {"demographic_add_record_ptbr","insert into demographic_ptbr (demographic_no,cpf,rg,chart_address,marriage_certificate,birth_certificate,marital_state,partner_name,father_name,mother_name,district,address_no,complementary_address) values (?,?,?,?,?,?,?,?,?,?,?,?,?)" },
     {"demographic_search_demoaddno", "select demographic_no from demographic where last_name=? and first_name =? and year_of_birth=? and month_of_birth=? and date_of_birth=? and hin=? and ver=?"},
     {"search_lastfirstnamedob", "select demographic_no from demographic where last_name=? and first_name=? and year_of_birth=? and month_of_birth=? and date_of_birth=?"},
 
@@ -226,9 +215,7 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"Provider_Add_Record" , "provideraddarecord.jsp"},
     {"Provider_Search" , "providersearchresults.jsp"},
     {"Provider_Update" , "providerupdateprovider.jsp"},
-    {"Provider_Delete" , "providerdelete.jsp"},
     {"Provider_Update_Record" , "providerupdate.jsp"},
-    {"Demographic_Edit" , "demographiceditdemographic.jsp"},
     {"Demographic_Edit2" , "../demographic/demographiceditdemographic.jsp"},
     {"Demographic_Update" , "demographicupdatearecord.jsp"},
     {"Demographic_Merge" , "demographicmergerecord.jsp"},
@@ -246,7 +233,7 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"displaymygroup" , "admindisplaymygroup.jsp"},
     {"newgroup" , "adminnewgroup.jsp"},
     {"savemygroup" , "adminsavemygroup.jsp"},
-    
+
     {"reboot_confirmation", "rebootConfirmation.jsp"},
   };
   apptMainBean.doConfigure(dbQueries,responseTargets);

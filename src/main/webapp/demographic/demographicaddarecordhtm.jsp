@@ -418,7 +418,7 @@ function autoFillHin(){
     <b><bean:message key="demographic.record"/></b>
 </td></tr>
 <tr><td>
-<form method="post" name="adddemographic" action="demographiccontrol.jsp"  onsubmit="return checkFormTypeIn()">
+<form method="post" name="adddemographic" action="demographicaddarecord.jsp"  onsubmit="return checkFormTypeIn()">
 <table border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="#EEEEFF">
     <tr>
       <td align="right"> <b><bean:message key="demographic.demographicaddrecordhtm.formLastName"/><font color="red">:</font> </b></td>
@@ -461,7 +461,7 @@ function autoFillHin(){
         <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.msgSpoken"/>:</b></td>
         <td><select name="spoken_lang">
 <%for (String sp_lang : Util.spokenLangProperties.getLangSorted()) { %>
-                <option value="<%=sp_lang %>"><%=sp_lang %></option> 
+                <option value="<%=sp_lang %>"><%=sp_lang %></option>
 <%} %>
             </select>
         </td>
