@@ -57,7 +57,6 @@
 
   if (strDbType.trim().equalsIgnoreCase("mysql")) {;
   		dbQueries=new String[][] {
-		    {"update_provider", "update demographic set provider_no = ? where provider_no = ? " },
 		    {"select_demoname", "select d.demographic_no from demographic d, demographiccust c where c.cust2=? and d.demographic_no=c.demographic_no and d.last_name REGEXP ? " },
 		    {"search_provider", "select provider_no, last_name, first_name from provider order by last_name"},
 		    {"select_demoname1", "select d.demographic_no from demographic d, demographiccust c where c.cust1=? and d.demographic_no=c.demographic_no and d.last_name REGEXP ? " },
@@ -65,7 +64,6 @@
 		  };
   }else if (strDbType.trim().equalsIgnoreCase("postgresql"))  {
   		dbQueries=new String[][] {
-		    {"update_provider", "update demographic set provider_no = ? where provider_no = ? " },
 		    {"select_demoname", "select d.demographic_no from demographic d, demographiccust c where c.cust2=? and d.demographic_no=c.demographic_no and d.last_name ~* ? " },
 		    {"search_provider", "select provider_no, last_name, first_name from provider order by last_name"},
 		    {"select_demoname1", "select d.demographic_no from demographic d, demographiccust c where c.cust1=? and d.demographic_no=c.demographic_no and d.last_name ~* ? " },
