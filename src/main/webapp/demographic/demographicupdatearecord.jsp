@@ -40,11 +40,14 @@
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page import="org.oscarehr.util.MiscUtils"%><html:html locale="true">
 <%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.Demographic" %>
+<%@page import="org.oscarehr.common.dao.DemographicDao" %>
 <%@page import="org.oscarehr.common.dao.DemographicArchiveDao" %>
 <%@page import="org.oscarehr.common.model.DemographicArchive" %>
 <%@page import="org.oscarehr.common.model.DemographicCust" %>
 <%@page import="org.oscarehr.common.dao.DemographicCustDao" %>
 <%
+	DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 	DemographicArchiveDao demographicArchiveDao = (DemographicArchiveDao)SpringUtils.getBean("demographicArchiveDao");
 	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
 %>
@@ -64,39 +67,45 @@
   ResultSet rs = null;
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
 
+  Demographic demographic = demographicDao.getDemographic(request.getParameter("demographic_no"));
+  if(demographic == null) {
+	  //we have a problem!
+  }
+  demographic.setLastName(request.getParameter("last_name"));
+  demographic.setFirstName(request.getParameter("first_name"));
+  demographic.setAddress(request.getParameter("address"));
+  demographic.setCity(request.getParameter("city"));
+  demographic.setProvince(request.getParameter("province"));
+  demographic.setPostal(request.getParameter("postal"));
+  demographic.setPhone(request.getParameter("phone"));
+  demographic.setPhone2(request.getParameter("phone2"));
+  demographic.setEmail(request.getParameter("email"));
+  demographic.setMyOscarUserName(StringUtils.trimToNull(request.getParameter("myOscarUserName")));
+  demographic.setYearOfBirth(request.getParameter("year_of_birth"));
+  demographic.setMonthOfBirth(request.getParameter("month_of_birth")!=null && request.getParameter("month_of_birth").length()==1 ? "0"+request.getParameter("month_of_birth") : request.getParameter("month_of_birth"));
+  demographic.setDateOfBirth(request.getParameter("date_of_birth")!=null && request.getParameter("date_of_birth").length()==1 ? "0"+request.getParameter("date_of_birth") : request.getParameter("date_of_birth"));
+  demographic.setHin(request.getParameter("hin"));
+  demographic.setVer(request.getParameter("ver"));
+  demographic.setRosterStatus(request.getParameter("roster_status"));
+  demographic.setPatientStatus(request.getParameter("patient_status"));
+  demographic.setChartNo(request.getParameter("chart_no"));
+  demographic.setProviderNo(request.getParameter("provider_no"));
+  demographic.setSex(request.getParameter("sex"));
+  demographic.setPcnIndicator(request.getParameter("pcn_indicator"));
+  demographic.setHcType(request.getParameter("hc_type"));
+  demographic.setFamilyDoctor("<rdohip>" + request.getParameter("r_doctor_ohip") + "</rdohip><rd>" + request.getParameter("r_doctor") + "</rd>" + (request.getParameter("family_doc")!=null? ("<family_doc>" + request.getParameter("family_doc") + "</family_doc>") : ""));
+  demographic.setCountryOfOrigin(request.getParameter("countryOfOrigin"));
+  demographic.setNewsletter(request.getParameter("newsletter"));
+  demographic.setSin(request.getParameter("sin"));
+  demographic.setTitle(request.getParameter("title"));
+  demographic.setOfficialLanguage(request.getParameter("official_lang"));
+  demographic.setSpokenLanguage(request.getParameter("spoken_lang"));
+  demographic.setRosterTerminationReason(request.getParameter("roster_termination_reason"));
+  demographic.setLastUpdateUser((String)session.getAttribute("user"));
+  demographic.setLastUpdateDate(new java.util.Date());
+
   //if action is good, then give me the result
     String[] param =new String[31];
-	  param[0]=request.getParameter("last_name");
-	  param[1]=request.getParameter("first_name");
-	  param[2]=request.getParameter("address");
-	  param[3]=request.getParameter("city");
-	  param[4]=request.getParameter("province");
-	  param[5]=request.getParameter("postal");
-	  param[6]=request.getParameter("phone");
-	  param[7]=request.getParameter("phone2");
-	  param[8]=request.getParameter("email");
-	  param[9]=StringUtils.trimToNull(request.getParameter("myOscarUserName"));
-	  param[10]=request.getParameter("year_of_birth");
-	  param[11]=request.getParameter("month_of_birth")!=null && request.getParameter("month_of_birth").length()==1 ? "0"+request.getParameter("month_of_birth") : request.getParameter("month_of_birth");
-	  param[12]=request.getParameter("date_of_birth")!=null && request.getParameter("date_of_birth").length()==1 ? "0"+request.getParameter("date_of_birth") : request.getParameter("date_of_birth");
-	  param[13]=request.getParameter("hin");
-	  param[14]=request.getParameter("ver");
-	  param[15]=request.getParameter("roster_status");
-	  param[16]=request.getParameter("patient_status");
-	  param[17]=request.getParameter("chart_no");
-	  param[18]=request.getParameter("provider_no");
-	  param[19]=request.getParameter("sex");
-	  param[20]=request.getParameter("pcn_indicator");
-	  param[21]=request.getParameter("hc_type");
-	  param[22]="<rdohip>" + request.getParameter("r_doctor_ohip") + "</rdohip><rd>" + request.getParameter("r_doctor") + "</rd>" + (request.getParameter("family_doc")!=null? ("<family_doc>" + request.getParameter("family_doc") + "</family_doc>") : "") ;
-	  param[23] =request.getParameter("countryOfOrigin");
-	  param[24]=request.getParameter("newsletter");
-	  param[25]=request.getParameter("sin");
-	  param[26]=request.getParameter("title");
-	  param[27]=request.getParameter("official_lang");
-	  param[28]=request.getParameter("spoken_lang");
-	  param[29]=request.getParameter("roster_termination_reason");
-	  param[30]=(String)session.getAttribute("user");
 
 		java.sql.Date [] dtparam = new java.sql.Date[7];
 
@@ -105,11 +114,11 @@
 		String dayTmp=StringUtils.trimToNull(request.getParameter("date_joined_date"));
 		if( yearTmp != null && monthTmp!=null && dayTmp!=null )
 		{
-			dtparam[0]=MyDateFormat.getSysDate(yearTmp+'-'+monthTmp+'-'+dayTmp);
+			demographic.setDateJoined(MyDateFormat.getSysDate(yearTmp+'-'+monthTmp+'-'+dayTmp));
 		}
 		else
 		{
-			dtparam[0]=null;
+			demographic.setDateJoined(null);
 		}
 
 		yearTmp=StringUtils.trimToNull(request.getParameter("end_date_year"));
@@ -117,11 +126,11 @@
 		dayTmp=StringUtils.trimToNull(request.getParameter("end_date_date"));
 		if( yearTmp != null && monthTmp!=null && dayTmp!=null )
 		{
-			dtparam[1]=MyDateFormat.getSysDate(yearTmp+'-'+monthTmp+'-'+dayTmp);
+			demographic.setEndDate(MyDateFormat.getSysDate(yearTmp+'-'+monthTmp+'-'+dayTmp));
 		}
 		else
 		{
-			dtparam[1]=null;
+			demographic.setEndDate(null);
 		}
 
 		yearTmp=StringUtils.trimToNull(request.getParameter("eff_date_year"));
@@ -129,11 +138,11 @@
 		dayTmp=StringUtils.trimToNull(request.getParameter("eff_date_date"));
 		if( yearTmp != null && monthTmp!=null && dayTmp!=null )
 		{
-			dtparam[2]=MyDateFormat.getSysDate(yearTmp+'-'+monthTmp+'-'+dayTmp);
+			demographic.setEffDate(MyDateFormat.getSysDate(yearTmp+'-'+monthTmp+'-'+dayTmp));
 		}
 		else
 		{
-			dtparam[2]=null;
+			demographic.setEffDate(null);
 		}
 
 		yearTmp=StringUtils.trimToNull(request.getParameter("hc_renew_date_year"));
@@ -141,11 +150,11 @@
 		dayTmp=StringUtils.trimToNull(request.getParameter("hc_renew_date_date"));
 		if( yearTmp != null && monthTmp!=null && dayTmp!=null )
 		{
-			dtparam[3]=MyDateFormat.getSysDate(yearTmp+'-'+monthTmp+'-'+dayTmp);
+			demographic.setHcRenewDate(MyDateFormat.getSysDate(yearTmp+'-'+monthTmp+'-'+dayTmp));
 		}
 		else
 		{
-			dtparam[3]=null;
+			demographic.setHcRenewDate(null);
 		}
 
                 yearTmp=StringUtils.trimToNull(request.getParameter("roster_date_year"));
@@ -154,11 +163,11 @@
 
 		if( yearTmp != null && monthTmp!=null && dayTmp!=null )
 		{
-			dtparam[4]=MyDateFormat.getSysDate(yearTmp+'-'+monthTmp+'-'+dayTmp);
+			demographic.setRosterDate(MyDateFormat.getSysDate(yearTmp+'-'+monthTmp+'-'+dayTmp));
 		}
 		else
 		{
-			dtparam[4]=null;
+			demographic.setRosterDate(null);
 		}
 		yearTmp=StringUtils.trimToNull(request.getParameter("roster_termination_date_year"));
 		monthTmp=StringUtils.trimToNull(request.getParameter("roster_termination_date_month"));
@@ -166,11 +175,11 @@
 
 		if( yearTmp != null && monthTmp!=null && dayTmp!=null )
 		{
-			dtparam[5]=MyDateFormat.getSysDate(yearTmp+'-'+monthTmp+'-'+dayTmp);
+			demographic.setRosterTerminationDate(MyDateFormat.getSysDate(yearTmp+'-'+monthTmp+'-'+dayTmp));
 		}
 		else
 		{
-			dtparam[5]=null;
+			demographic.setRosterTerminationDate(null);
 		}
 
                 yearTmp=StringUtils.trimToNull(request.getParameter("patientstatus_date_year"));
@@ -179,11 +188,11 @@
 
 		if( yearTmp != null && monthTmp!=null && dayTmp!=null )
 		{
-			dtparam[6]=MyDateFormat.getSysDate(yearTmp+'-'+monthTmp+'-'+dayTmp);
+			demographic.setPatientStatusDate(MyDateFormat.getSysDate(yearTmp+'-'+monthTmp+'-'+dayTmp));
 		}
 		else
 		{
-			dtparam[6]=null;
+			demographic.setPatientStatusDate(null);
 		}
 
 
@@ -207,7 +216,7 @@
      dExt.addKey(proNo, demoNo, "rxInteractionWarningLevel", request.getParameter("rxInteractionWarningLevel"), request.getParameter("rxInteractionWarningLevelOrig"));
 
      dExt.addKey(proNo, demoNo, "primaryEMR", request.getParameter("primaryEMR"), request.getParameter("primaryEMROrig"));
-    
+
      // for the IBD clinic
 	 OtherIdManager.saveIdDemographic(demoNo, "meditech_id", request.getParameter("meditech_id"));
 
@@ -255,7 +264,8 @@
 	da.setDemographicNo(Integer.parseInt(request.getParameter("demographic_no")));
     demographicArchiveDao.persist(da);
 
-  int rowsAffected = apptMainBean.queryExecuteUpdate(param, dtparam, intparam, request.getParameter("dboperation"));
+    demographicDao.save(demographic);
+    int rowsAffected=1;
   if (rowsAffected ==1) {
     //find the democust record for update
     try{
@@ -285,50 +295,6 @@
     	rowsAffected=1;
     }
 
-
-    if (vLocale.getCountry().equals("BR")) {
-	    //find the demographic_ptbr record for update
-	    rs = apptMainBean.queryResults(request.getParameter("demographic_no"),"search_demographic_ptbr");
-	    if(rs.next() ) { //update
-	  	 	String[] parametros = new String[13];
-
-	  	  	parametros[0]=request.getParameter("cpf");
-	  	  	parametros[1]=request.getParameter("rg");
-	  	  	parametros[2]=request.getParameter("chart_address");
-	  	  	parametros[3]=request.getParameter("marriage_certificate");
-	  	  	parametros[4]=request.getParameter("birth_certificate");
-	  	  	parametros[5]=request.getParameter("marital_state");
-	  	  	parametros[6]=request.getParameter("partner_name");
-	  	  	parametros[7]=request.getParameter("father_name");
-	  	  	parametros[8]=request.getParameter("mother_name");
-	  	  	parametros[9]=request.getParameter("district");
-	  	  	parametros[10]=request.getParameter("address_no")==null || request.getParameter("address_no").trim().equals("")?"0":request.getParameter("address_no");
-	  	  	parametros[11]=request.getParameter("complementary_address");
-	  	  	parametros[12]=request.getParameter("demographic_no");
-
-	  		rowsAffected = apptMainBean.queryExecuteUpdate(parametros,"update_record_ptbr");
-
-	    }else{//add
-	 	 	String[] parametros = new String[13];
-
-	  	  	parametros[0]=request.getParameter("demographic_no");
-	  	  	parametros[1]=request.getParameter("cpf");
-	  	  	parametros[2]=request.getParameter("rg");
-	  	  	parametros[3]=request.getParameter("chart_address");
-	  	  	parametros[4]=request.getParameter("marriage_certificate");
-	  	  	parametros[5]=request.getParameter("birth_certificate");
-	  	  	parametros[6]=request.getParameter("marital_state");
-	  	  	parametros[7]=request.getParameter("partner_name");
-	  	  	parametros[8]=request.getParameter("father_name");
-	  	  	parametros[9]=request.getParameter("mother_name");
-	  	  	parametros[10]=request.getParameter("district");
-	  	  	parametros[11]=request.getParameter("address_no")==null || request.getParameter("address_no").trim().equals("")?"0":request.getParameter("address_no");
-	  	  	parametros[12]=request.getParameter("complementary_address");
-
-
-	  		rowsAffected = apptMainBean.queryExecuteUpdate(parametros,"add_record_ptbr");
-	    }
-	}
     //add to waiting list if the waiting_list parameter in the property file is set to true
 
     WaitingList wL = WaitingList.getInstance();
