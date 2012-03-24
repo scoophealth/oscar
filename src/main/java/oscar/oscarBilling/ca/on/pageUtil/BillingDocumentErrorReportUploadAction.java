@@ -37,6 +37,7 @@ import java.net.URLEncoder;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import javax.servlet.ServletException;
@@ -52,7 +53,9 @@ import org.apache.struts.action.ActionMessages;
 import org.apache.struts.upload.FormFile;
 import org.oscarehr.common.dao.BatchEligibilityDao;
 import org.oscarehr.common.dao.DemographicCustDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.BatchEligibility;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicCust;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -69,6 +72,7 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 
 	private BatchEligibilityDao batchEligibilityDao = (BatchEligibilityDao)SpringUtils.getBean("batchEligibilityDao");
 	private DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
+	private DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
@@ -317,8 +321,11 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 
 					if (rsDemo.next()) {
 						if (rsDemo.getString("ver").compareTo(bean.getVersion()) == 0) {
-							String sqlVer = "UPDATE demographic SET ver ='##' WHERE hin='" + hin + "'";
-							DBHandler.RunSQL(sqlVer);
+							List<Demographic> demographics = demographicDao.searchByHealthCard(hin);
+							for(Demographic demographic:demographics) {
+								demographic.setVer("##");
+								demographicDao.save(demographic);
+							}
 							DemographicCust demographicCust = demographicCustDao.find(Integer.parseInt(rsDemo.getString("demographic_no")));
 							if(demographicCust != null && batchEligibility != null) {
 								String newAlert =  demographicCust.getAlert() + "\n" + "Invalid old version code: "

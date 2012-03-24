@@ -53,7 +53,6 @@ public class TeleplanCorrectionActionWCB
 
     static Logger log=MiscUtils.getLogger();
     private static final String sql_biling = "update_wcb_billing", //set it to be billed again in billing
-             sql_demographic = "update_wcb_demographic", //update demographic information
              sql_wcb = "update_wcb_wcb", //updates wcb form
              provider_wcb = "update_provider_wcb",  CLOSE_RECONCILIATION = "close_reconciliation"; //closes c12 record
 
@@ -134,7 +133,7 @@ public class TeleplanCorrectionActionWCB
     }
     private void updateUnitValue(String i, String billingno) {
         try {
-            
+
         	DBHandler.RunSQL("update billingmaster set billing_unit = '" + i + "' WHERE billing_no ='" + billingno + "'");
         } catch (java.sql.SQLException e) {
             log.error("", e);
@@ -145,7 +144,7 @@ public class TeleplanCorrectionActionWCB
         String billamt = "0.00";
 
         try {
-            
+
             java.sql.ResultSet rs;
             rs = DBHandler.GetSQL("SELECT value FROM billingservice WHERE service_code='" +
                     fee1 + "'");
