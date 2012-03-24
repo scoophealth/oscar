@@ -92,6 +92,10 @@
 		requestURI="/PMmodule/FacilityManager.do">
 		<display:setProperty name="basic.msg.empty_list" value="No programs." />
 
+		<%
+			if(request.getAttribute("program") != null) {
+		%>
+
 		<logic:equal name="program" property="facilityId"
 			value="<%=((Facility)facility).getId().toString()%>">
 			<display:column sortable="true" sortProperty="name"
@@ -112,6 +116,8 @@
 		<display:column property="type" sortable="true" title="Program Type" />
 		<display:column property="queueSize" sortable="true"
 			title="Clients in Queue" />
+
+		<% } %>
 	</display:table>
 
 	<br>
