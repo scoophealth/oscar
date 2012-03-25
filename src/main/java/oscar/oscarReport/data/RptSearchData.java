@@ -26,7 +26,12 @@
 package oscar.oscarReport.data;
 
 
+import java.util.List;
+
+import org.oscarehr.common.dao.DemographicQueryFavouritesDao;
+import org.oscarehr.common.model.DemographicQueryFavourite;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 /**
@@ -38,6 +43,8 @@ public class RptSearchData {
     java.util.ArrayList rosterTypes;
     java.util.ArrayList patientTypes;
     java.util.ArrayList savedQueries;
+
+    private DemographicQueryFavouritesDao demographicQueryFavouritesDao = SpringUtils.getBean(DemographicQueryFavouritesDao.class);
 
     /**
      *This function runs through the demographic table and retrieves all the roster types currently being used
@@ -94,21 +101,15 @@ public class RptSearchData {
 
     public java.util.ArrayList getQueryTypes(){
             java.util.ArrayList retval = new java.util.ArrayList();
-         try{
-
-              java.sql.ResultSet rs;
-              rs = DBHandler.GetSQL("select favId, queryName from demographicQueryFavourites where archived = '1' order by queryName");
-
-              while (rs.next()) {
-                SearchCriteria sc = new SearchCriteria();
-                sc.id = oscar.Misc.getString(rs, "favId");
-                sc.queryName = oscar.Misc.getString(rs, "queryName");
+            List<DemographicQueryFavourite> results = demographicQueryFavouritesDao.findByArchived("1");
+            for(DemographicQueryFavourite result:results) {
+            	SearchCriteria sc = new SearchCriteria();
+                sc.id = String.valueOf(result.getId());
+                sc.queryName = result.getQueryName();
 
                 retval.add( sc );
+            }
 
-              }
-              rs.close();
-            }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }
             return retval;
     }
 
