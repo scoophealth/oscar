@@ -235,14 +235,6 @@ public class AppointmentArchive extends AbstractModel<Integer>  {
 		this.remarks = remarks;
 	}
 
-	public AppointmentArchive() {
-		//blank
-	}
-
-	public AppointmentArchive(Integer id) {
-		this.id = id;
-	}
-
 	public Integer getCreatorSecurityId() {
     	return (creatorSecurityId);
     }
