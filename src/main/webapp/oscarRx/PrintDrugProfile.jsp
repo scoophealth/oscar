@@ -21,37 +21,37 @@ String userlastname = (String) session.getAttribute("userlastname");
 %>
 
 <% RxPharmacyData pharmacyData = new RxPharmacyData();
-  RxPharmacyData.Pharmacy pharmacy ;                                  
-  pharmacy = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));                                  
+  org.oscarehr.common.model.PharmacyInfo pharmacy ;
+  pharmacy = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));
   String prefPharmacy = "";
-  if (pharmacy != null){   
-     prefPharmacy = pharmacy.name;                                  
+  if (pharmacy != null){
+     prefPharmacy = pharmacy.getName();
   }
 %>
 
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -103,7 +103,7 @@ String userlastname = (String) session.getAttribute("userlastname");
                                 <jsp:getProperty name="patient" property="surname" />,
                                 <jsp:getProperty name="patient" property="firstName" />
                                 <br/>
-                                
+
 								<jsp:getProperty name="patient" property="address" />
 								<br />
 								<jsp:getProperty name="patient" property="city" />, <jsp:getProperty name="patient" property="province" /> <jsp:getProperty name="patient" property="postal" />
@@ -111,7 +111,7 @@ String userlastname = (String) session.getAttribute("userlastname");
 								<br />
 			</tr>
 			<tr>
-                 <td>                             
+                 <td>
                  <b><bean:message key="SearchDrug.ageText" /></b> <jsp:getProperty name="patient" property="age" /> <b>Gender:</b> <jsp:getProperty name="patient" property="sex" /> <b>HC:</b> <jsp:getProperty name="patient" property="hin" />
 				 <br />
 				 <b>User:</b> <%=userlastname%>, <%=userfirstname %><br />
@@ -125,12 +125,12 @@ String userlastname = (String) session.getAttribute("userlastname");
 					</td>
 					<td align="right" class="noPrint">
 					<div class="DivContentSectionHead">
-						<% if(showall) { %> 
-						  <a href="PrintDrugProfile.jsp">Show Current</a> 
-						 <% } else { %> 
-						  <a href="PrintDrugProfile.jsp?show=all">Show All</a> 
-						<% } %>	
-						| <a href="javascript:void(0);window.print();">Print</a>			
+						<% if(showall) { %>
+						  <a href="PrintDrugProfile.jsp">Show Current</a>
+						 <% } else { %>
+						  <a href="PrintDrugProfile.jsp?show=all">Show All</a>
+						<% } %>
+						| <a href="javascript:void(0);window.print();">Print</a>
 					</div>
 					</td>
 					</tr>
@@ -160,7 +160,7 @@ String userlastname = (String) session.getAttribute("userlastname");
                                     oscar.oscarRx.data.RxPrescriptionData.Prescription drug = prescribedDrugs[i];
                                     String styleColor = "";
                                     if(drug.isCurrent() == true && drug.isArchived() ){
-					                        styleColor="style=\"color:red;text-decoration: line-through;\"";  
+					                        styleColor="style=\"color:red;text-decoration: line-through;\"";
                                     }else if (drug.isCurrent() && !drug.isArchived())  {
                                        styleColor="style=\"color:red;font-weight:bold;\"";
 				                        }else if (!drug.isCurrent() && drug.isArchived()){
@@ -194,13 +194,13 @@ String userlastname = (String) session.getAttribute("userlastname");
 						<tr>
 							<td align="right" class="noPrint">
 							<div class="DivContentSectionHead">
-								
-								<% if(showall) { %> 
-								  <a href="PrintDrugProfile.jsp">Show Current</a> 
-								 <% } else { %> 
-								  <a href="PrintDrugProfile.jsp?show=all">Show All</a> 
+
+								<% if(showall) { %>
+								  <a href="PrintDrugProfile.jsp">Show Current</a>
+								 <% } else { %>
+								  <a href="PrintDrugProfile.jsp?show=all">Show All</a>
 								<% } %>
-								| <a href="javascript:void(0);window.print();">Print</a> 
+								| <a href="javascript:void(0);window.print();">Print</a>
 							</div>
 							</td>
 						</tr>

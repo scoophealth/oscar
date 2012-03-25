@@ -2,30 +2,30 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ page import="oscar.oscarRx.data.*,java.util.*"%>
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * Jason Gallagher
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
- */ 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
+ */
 
 -->
 
@@ -95,8 +95,8 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 			</tr>
 			<tr>
 				<td>
-				<% RxPharmacyData pharmacy = new RxPharmacyData(); 
-                         ArrayList pharList = pharmacy.getAllPharmacies();
+				<% RxPharmacyData pharmacy = new RxPharmacyData();
+                         List< org.oscarehr.common.model.PharmacyInfo> pharList = pharmacy.getAllPharmacies();
                        %>
 
                 <div style=" width:400px; height:400px; overflow:auto;">
@@ -110,19 +110,19 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>
 					</tr>
-					<% for (int i = 0 ; i < pharList.size(); i++){ 
-                               RxPharmacyData.Pharmacy ph = (RxPharmacyData.Pharmacy) pharList.get(i);
+					<% for (int i = 0 ; i < pharList.size(); i++){
+                               org.oscarehr.common.model.PharmacyInfo ph = pharList.get(i);
                             %>
 					<tr>
 						<td><a
-							href="LinkPharmacy.do?ID=<%=ph.ID%>&DemoId=<jsp:getProperty name="patient" property="demographicNo"/>"><%=ph.name%></a></td>
-						<td><%=ph.address%></td>
-						<td><%=ph.city%></td>
-						<td><%=ph.phone1%></td>
-						<td><%=ph.fax%></td>
-						<td><a href="ManagePharmacy.jsp?type=Edit&ID=<%=ph.ID%>"><bean:message
+							href="LinkPharmacy.do?ID=<%=ph.getId2()%>&DemoId=<jsp:getProperty name="patient" property="demographicNo"/>"><%=ph.getName()%></a></td>
+						<td><%=ph.getAddress()%></td>
+						<td><%=ph.getCity()%></td>
+						<td><%=ph.getPhone1()%></td>
+						<td><%=ph.getFax()%></td>
+						<td><a href="ManagePharmacy.jsp?type=Edit&ID=<%=ph.getId2()%>"><bean:message
 							key="SelectPharmacy.editLink" /></a></td>
-						<td><a href="ManagePharmacy.jsp?type=Delete&ID=<%=ph.ID%>"><bean:message
+						<td><a href="ManagePharmacy.jsp?type=Delete&ID=<%=ph.getId2()%>"><bean:message
 							key="SelectPharmacy.deleteLink" /></a></td>
 					</tr>
 					<% } %>
