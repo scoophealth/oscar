@@ -13,7 +13,7 @@
 	if (session.getAttribute("userrole") == null) response.sendRedirect("../logout.jsp");
 	String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r" 
+<security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r"
 reverse="<%=true%>">
 	<%
 		response.sendRedirect("../noRights.html");
@@ -35,12 +35,12 @@ reverse="<%=true%>">
 
 <%
 	RxPharmacyData pharmacyData = new RxPharmacyData();
-	RxPharmacyData.Pharmacy pharmacy;
+	org.oscarehr.common.model.PharmacyInfo pharmacy;
 	pharmacy = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));
 	String prefPharmacy = "";
 	if (pharmacy != null)
 	{
-		prefPharmacy = pharmacy.name;
+		prefPharmacy = pharmacy.getName();
 	}
 
 	String drugref_route = OscarProperties.getInstance().getProperty("drugref_route");
@@ -50,29 +50,29 @@ reverse="<%=true%>">
 	String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;
 %>
 
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -114,16 +114,16 @@ function goDOC(){
 	popupDrugOfChoice(720,700,'http://doc.oscartools.org/')
     }else{
 	//var docURL = "http://resource.oscarmcmaster.org/oscarResource/DoC/OSCAR_search/OSCAR_search_results?title="+document.RxSearchDrugForm.searchString.value+"&SUBMIT=GO";
-	var docURL = "http://doc.oscartools.org/search?SearchableText="+document.RxSearchDrugForm.searchString.value;          
-	popupDrugOfChoice(720,700,docURL);                               
+	var docURL = "http://doc.oscartools.org/search?SearchableText="+document.RxSearchDrugForm.searchString.value;
+	popupDrugOfChoice(720,700,docURL);
     }
-}    
+}
 
 
 function goOMD(){
-  	var docURL = "../common/OntarioMDRedirect.jsp?keyword=eCPS&params="+document.RxSearchDrugForm.searchString.value;          
-	popupDrugOfChoice(743,817,docURL);                               
-}     
+  	var docURL = "../common/OntarioMDRedirect.jsp?keyword=eCPS&params="+document.RxSearchDrugForm.searchString.value;
+	popupDrugOfChoice(743,817,docURL);
+}
 
 
 function popupWindow(vheight,vwidth,varpage,varPageName) { //open a new popup window
@@ -136,7 +136,7 @@ function popupWindow(vheight,vwidth,varpage,varPageName) { //open a new popup wi
 	}
     }
 }
-    
+
 function customWarning(){
     if (confirm('This feature will allow you to manually enter a drug.'
 	+ '\nWarning: Only use this feature if absolutely necessary, as you will lose the following functionality:'
@@ -150,8 +150,8 @@ function customWarning(){
 }
 
 function showpic(picture){
-    if (document.getElementById){ // Netscape 6 and IE 5+      
-	var targetElement = document.getElementById(picture);                
+    if (document.getElementById){ // Netscape 6 and IE 5+
+	var targetElement = document.getElementById(picture);
 	var bal = document.getElementById("Calcs");
 
 	var offsetTrail = document.getElementById("Calcs");
@@ -162,14 +162,14 @@ function showpic(picture){
 	    offsetTop += offsetTrail.offsetTop;
 	    offsetTrail = offsetTrail.offsetParent;
 	}
-	if (navigator.userAgent.indexOf("Mac") != -1 && 
+	if (navigator.userAgent.indexOf("Mac") != -1 &&
 	    typeof document.body.leftMargin != "undefined") {
 	    offsetLeft += document.body.leftMargin;
 	    offsetTop += document.body.topMargin;
 	}
-	targetElement.style.left = offsetLeft +bal.offsetWidth;        
-	targetElement.style.top = offsetTop;	
-	targetElement.style.visibility = 'visible';        
+	targetElement.style.left = offsetLeft +bal.offsetWidth;
+	targetElement.style.top = offsetTop;
+	targetElement.style.visibility = 'visible';
     }
 }
 
@@ -179,8 +179,8 @@ function hidepic(picture){
 	targetElement.style.visibility = 'hidden';
     }
 }
-  
-function isEmpty(){  
+
+function isEmpty(){
     if (document.RxSearchDrugForm.searchString.value.length == 0){
 
 	document.RxSearchDrugForm.searchString.focus();
@@ -188,26 +188,26 @@ function isEmpty(){
     }
     return true;
 }
-    
+
 function buildRoute() {
-        
+
         pickRoute = "";
-<oscar:oscarPropertiesCheck property="drugref_route_search" value="on">        
+<oscar:oscarPropertiesCheck property="drugref_route_search" value="on">
 <%for (int i = 0; i < d_route.length; i++)
 					{%>
 	if (document.forms[2].route<%=i%>.checked) pickRoute += " "+document.forms[2].route<%=i%>.value;
 <%}%>
 	document.forms[2].searchRoute.value = pickRoute;
-</oscar:oscarPropertiesCheck>        
+</oscar:oscarPropertiesCheck>
 }
 
 function processData() {
-    
-    if (isEmpty()) 
+
+    if (isEmpty())
         buildRoute();
-    else 
+    else
         return false;
-    
+
     return true;
 }
 
@@ -292,10 +292,10 @@ function load() {
 								oscar.oscarRx.data.RxPrescriptionData.Prescription drug = prescribedDrugs[i];
 								if (drug.getScript_no() != null && script_no.equals(drug.getScript_no()))
 								{
-					%> 
+					%>
 										<br>
 										<div style="float: left; width: 24%; padding-left: 40px;">&nbsp;</div>
-										<a style="float: left;" href="javascript:reprint('<%=drug.getScript_no()%>')"><%=drug.getRxDisplay()%></a> 
+										<a style="float: left;" href="javascript:reprint('<%=drug.getScript_no()%>')"><%=drug.getRxDisplay()%></a>
 									<%
  										}
  												else
@@ -303,7 +303,7 @@ function load() {
  									%>
 										<%=i > 0?"<br style='clear:both;'><br style='clear:both;'>":""%><div style="float: left; width: 12%; padding-left: 20px;"><%=drug.getRxDate()%></div>
 										<div style="float: left; width: 12%; padding-left: 20px;"><%=drug.getNumPrints()%>&nbsp;Prints</div>
-										<a style="float: left;" href="javascript:reprint('<%=drug.getScript_no()%>')"><%=drug.getRxDisplay()%></a> 
+										<a style="float: left;" href="javascript:reprint('<%=drug.getScript_no()%>')"><%=drug.getRxDisplay()%></a>
 									<%
  										}
  												script_no = drug.getScript_no() == null?"":drug.getScript_no();
@@ -327,7 +327,7 @@ function load() {
 								<th align="center" width="20px">&nbsp;</th>
 								<%
 									boolean integratorEnabled=LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled();
-								
+
 									if (integratorEnabled)
 									{
 										%>
@@ -402,7 +402,7 @@ function load() {
 													if (searchString==null) searchString=prescriptDrug.getSpecial();
 												%>
 												<input type="hidden" name="searchString" value="<%=searchString%>" />
-												<input type="submit" class="ControlPushButton" value="Search to Re-prescribe" />										
+												<input type="submit" class="ControlPushButton" value="Search to Re-prescribe" />
 											</form>
 										<%
 									}
@@ -454,10 +454,10 @@ function load() {
  %> &nbsp;&nbsp;&nbsp; <a href="SearchDrug.jsp?status=active<%=show%>"><bean:message key="SearchDrug.msgActive"/></a> - <a
 									href="SearchDrug.jsp?status=inactive<%=show%>"><bean:message key="SearchDrug.msgInactive"/></a> - <a href="SearchDrug.jsp?status=all<%=show%>"><bean:message key="SearchDrug.msgAll"/></a></td>
 								<td align="right">
-                                                                    <span style="width: 350px; align: right"> 
+                                                                    <span style="width: 350px; align: right">
                                                                        <input type="button" name="cmdAllergies" value="<bean:message key="SearchDrug.msgViewEditAllergies"/>" class="ControlPushButton" onclick="javascript:window.location.href='ShowAllergies.jsp?demographicNo=<%=request.getParameter("demographicNo")%>';" style="width: 100px" />
-								       <input type="button" name="cmdRePrescribe" value="<bean:message key="SearchDrug.msgReprescribe"/>" class="ControlPushButton" onclick="javascript:RePrescribe();" style="width: 100px" /> 
-                                                                       <input type="button" name="cmdDelete" value="<bean:message key="SearchDrug.msgDelete"/>" class="ControlPushButton" onclick="javascript:Delete();" style="width: 100px" /> 
+								       <input type="button" name="cmdRePrescribe" value="<bean:message key="SearchDrug.msgReprescribe"/>" class="ControlPushButton" onclick="javascript:RePrescribe();" style="width: 100px" />
+                                                                       <input type="button" name="cmdDelete" value="<bean:message key="SearchDrug.msgDelete"/>" class="ControlPushButton" onclick="javascript:Delete();" style="width: 100px" />
                                                                     </span>
                                                                 </td>
 							</tr>
@@ -469,11 +469,11 @@ function load() {
                                     document.forms[0].drugList.value = drug;
                                     document.forms[0].method.value = "reprint";
                                     document.forms[0].submit();
-                                                                        
+
                                 }
-                                
+
                                 function RePrescribe(){
-                                
+
                                     if(document.getElementsByName('chkRePrescribe')!=null){
                                         var checks = document.getElementsByName('chkRePrescribe');
                                         var s='';
@@ -487,7 +487,7 @@ function load() {
                                         }
 
                                         if(s.length>1){
-                                            s = s.substring(0, s.length - 1);                                                                                        
+                                            s = s.substring(0, s.length - 1);
 
                                             document.forms[0].drugList.value = s;
                                             document.forms[0].method.value = "represcribe";
@@ -511,7 +511,7 @@ function load() {
 
                                         if(s.length>1){
                                             if(confirm('Are you sure you wish to delete the selected prescriptions?')==true){
-                                                s = s.substring(0, s.length - 1);                                               
+                                                s = s.substring(0, s.length - 1);
                                                 document.forms[1].drugList.value = s;
                                                 document.forms[1].submit();
                                             }
@@ -565,8 +565,8 @@ function load() {
 						</tr>
 						<tr>
 							<td colspan="3">
-                                                            <html:submit property="submit" styleClass="ControlPushButton"><bean:message key="SearchDrug.msgSearch"/></html:submit> &nbsp;&nbsp;&nbsp; 
-                                                            <input type="button" class="ControlPushButton" onclick="searchString.value='';searchRoute.value='';searchString.focus();" value="<bean:message key="SearchDrug.msgReset"/>" /> 
+                                                            <html:submit property="submit" styleClass="ControlPushButton"><bean:message key="SearchDrug.msgSearch"/></html:submit> &nbsp;&nbsp;&nbsp;
+                                                            <input type="button" class="ControlPushButton" onclick="searchString.value='';searchRoute.value='';searchString.focus();" value="<bean:message key="SearchDrug.msgReset"/>" />
                                                             <input type="button" class="ControlPushButton" onclick="customWarning();" value="<bean:message key="SearchDrug.msgCustomDrug"/>" /></td>
 						</tr>
 					</table>
@@ -660,55 +660,55 @@ function load() {
 	<tr class="LightBG">
 		<td class="wcblayerTitle"><bean:message key="SearchDrug.pharmacy.msgName"/></td>
 		<td class="wcblayerItem">&nbsp;</td>
-		<td><%=pharmacy.name%></td>
+		<td><%=pharmacy.getName()%></td>
 	</tr>
 
 	<tr class="LightBG">
 		<td class="wcblayerTitle"><bean:message key="SearchDrug.pharmacy.msgAddress"/></td>
 		<td class="wcblayerItem">&nbsp;</td>
-		<td><%=pharmacy.address%></td>
+		<td><%=pharmacy.getAddress()%></td>
 	</tr>
 	<tr class="LightBG">
 		<td class="wcblayerTitle"><bean:message key="SearchDrug.pharmacy.msgCity"/></td>
 		<td class="wcblayerItem">&nbsp;</td>
-		<td><%=pharmacy.city%></td>
+		<td><%=pharmacy.getCity()%></td>
 	</tr>
 
 	<tr class="LightBG">
 		<td class="wcblayerTitle"><bean:message key="SearchDrug.pharmacy.msgProvince"/></td>
 		<td class="wcblayerItem">&nbsp;</td>
-		<td><%=pharmacy.province%></td>
+		<td><%=pharmacy.getProvince()%></td>
 	</tr>
 	<tr class="LightBG">
 		<td class="wcblayerTitle"><bean:message key="SearchDrug.pharmacy.msgPostalCode"/> :</td>
 		<td class="wcblayerItem">&nbsp;</td>
-		<td><%=pharmacy.postalCode%></td>
+		<td><%=pharmacy.getPostalCode()%></td>
 	</tr>
 	<tr class="LightBG">
 		<td class="wcblayerTitle"><bean:message key="SearchDrug.pharmacy.msgPhone1"/> :</td>
 		<td class="wcblayerItem">&nbsp;</td>
-		<td><%=pharmacy.phone1%></td>
+		<td><%=pharmacy.getPhone1()%></td>
 	</tr>
 	<tr class="LightBG">
 		<td class="wcblayerTitle"><bean:message key="SearchDrug.pharmacy.msgPhone2"/> :</td>
 		<td class="wcblayerItem">&nbsp;</td>
-		<td><%=pharmacy.phone2%></td>
+		<td><%=pharmacy.getPhone2()%></td>
 	</tr>
 	<tr class="LightBG">
 		<td class="wcblayerTitle"><bean:message key="SearchDrug.pharmacy.msgFax"/> :</td>
 		<td class="wcblayerItem">&nbsp;</td>
-		<td><%=pharmacy.fax%></td>
+		<td><%=pharmacy.getFax()%></td>
 	</tr>
 	<tr class="LightBG">
 		<td class="wcblayerTitle"><bean:message key="SearchDrug.pharmacy.msgEmail"/> :</td>
 		<td class="wcblayerItem">&nbsp;</td>
-		<td><%=pharmacy.email%></td>
+		<td><%=pharmacy.getEmail()%></td>
 	</tr>
 	<tr class="LightBG">
 		<td colspan="3" class="wcblayerTitle"><bean:message key="SearchDrug.pharmacy.msgNotes"/> :</td>
 	</tr>
 	<tr class="LightBG">
-		<td colspan="3"><%=pharmacy.notes%></td>
+		<td colspan="3"><%=pharmacy.getNotes()%></td>
 	</tr>
 
 </table>

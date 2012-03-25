@@ -103,19 +103,19 @@ if (request.getParameter("ID") != null && request.getParameter("type")!=null && 
                                RxManagePharmacyForm frm = (RxManagePharmacyForm) request.getAttribute("RxManagePharmacyForm");
                                String ID = request.getParameter("ID");
                                RxPharmacyData pharmacy = new RxPharmacyData();
-                               RxPharmacyData.Pharmacy ph = pharmacy.getPharmacy(ID);
+                               org.oscarehr.common.model.PharmacyInfo ph = pharmacy.getPharmacy(ID);
                                frm.setID(ID);
-                               frm.setAddress(ph.address);
-                               frm.setCity(ph.city);
-                               frm.setEmail(ph.email);
-                               frm.setFax(ph.fax);
-                               frm.setName(ph.name);
-                               frm.setNotes(ph.notes);
-                               frm.setPhone1(ph.phone1);
-                               frm.setPhone2(ph.phone2);
-                               frm.setPostalCode(ph.postalCode);
-                               frm.setProvince(ph.province);
-                               frm.setServiceLocationIdentifier(ph.serviceLocationIdentifier);
+                               frm.setAddress(ph.getAddress());
+                               frm.setCity(ph.getCity());
+                               frm.setEmail(ph.getEmail());
+                               frm.setFax(ph.getFax());
+                               frm.setName(ph.getName());
+                               frm.setNotes(ph.getNotes());
+                               frm.setPhone1(ph.getPhone1());
+                               frm.setPhone2(ph.getPhone2());
+                               frm.setPostalCode(ph.getPostalCode());
+                               frm.setProvince(ph.getProvince());
+                               frm.setServiceLocationIdentifier(ph.getServiceLocationIdentifier());
                             }%>
 					<table>
 						<tr>
@@ -172,7 +172,7 @@ if (request.getParameter("ID") != null && request.getParameter("type")!=null && 
                                                     </td>
                                                     <td><html:text property="serviceLocationIdentifier" /></td>
                                                 </tr>
-                                                
+
 						<tr>
 							<td colspan="2"><bean:message
 								key="ManagePharmacy.txtfld.label.notes" /> :</td>
@@ -183,7 +183,7 @@ if (request.getParameter("ID") != null && request.getParameter("type")!=null && 
 						</tr>
 
 						<tr>
-                                                    <td><input type="submit" 
+                                                    <td><input type="submit"
 								value="<bean:message key="ManagePharmacy.submitBtn.label.submit"/>" />
 							</td>
 						</tr>

@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,7 +28,7 @@ public class DemographicPharmacy extends AbstractModel<Integer>{
 
 	private String status;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date addDate;
 
 	public Integer getId() {
@@ -69,6 +70,11 @@ public class DemographicPharmacy extends AbstractModel<Integer>{
 	public void setAddDate(Date addDate) {
     	this.addDate = addDate;
     }
+
+	@PrePersist
+	public void beforePersist() {
+		addDate = new Date();
+	}
 
 
 }
