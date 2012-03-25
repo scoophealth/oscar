@@ -11,9 +11,9 @@
  * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
- * 
+ *
  * Jason Gallagher
- * 
+ *
  * This software was written for the
  * Department of Family Medicine
  * McMaster University
@@ -44,15 +44,18 @@
  */
 
 package oscar.oscarReport.data;
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.common.dao.DemographicQueryFavouritesDao;
+import org.oscarehr.common.model.DemographicQueryFavourite;
+import org.oscarehr.util.SpringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarMessenger.docxfer.util.MsgCommxml;
 import oscar.oscarReport.pageUtil.RptDemographicReportForm;
 
 public class RptDemographicQuerySaver {
+
+	private DemographicQueryFavouritesDao demographicQueryFavouritesDao = SpringUtils.getBean(DemographicQueryFavouritesDao.class);
 
     public RptDemographicQuerySaver() {
     }
@@ -71,7 +74,7 @@ public class RptDemographicQuerySaver {
         String lastName         = frm.getLastName();
         String sex              = frm.getSex();
         String queryName        = frm.getQueryName();
-       
+
 
         if (firstName != null ){
             firstName = firstName.trim();
@@ -148,21 +151,23 @@ public class RptDemographicQuerySaver {
         sqProviderNo = MsgCommxml.toXML(docRoot);
         }
         oscar.oscarMessenger.util.MsgStringQuote s = new oscar.oscarMessenger.util.MsgStringQuote();
-        try{
-                  
-
-                  String sql = "insert into demographicQueryFavourites "
-                  +"(selects,age,startYear,endYear,firstName,lastName,rosterStatus,sex,providerNo,patientStatus,queryName,archived)"
-                  +" values "
-                  +" ('"+sqSelects+"','"+sqAge+"','"+sqStartYear+"','"+sqEndYear+"','"+s.q(sqFirstName)+"','"+s.q(sqLastName)+"',"
-                  +"  '"+sqRosterStatus+"', '"+s.q(sqSex)+"', '"+sqProviderNo+"' , '"+sqPatientStatus+"','"+sqQueryName+"','1')";;
-                  MiscUtils.getLogger().debug("sql statement : "+sql);
-                  DBHandler.RunSQL(sql);
-       }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }
 
 
+    	DemographicQueryFavourite dqf = new DemographicQueryFavourite();
+    	dqf.setSelects(sqSelects);
+    	dqf.setAge(sqAge);
+    	dqf.setStartYear(sqStartYear);
+    	dqf.setEndYear(sqEndYear);
+    	dqf.setFirstName(sqFirstName);
+    	dqf.setLastName(sqLastName);
+    	dqf.setRosterStatus(sqRosterStatus);
+    	dqf.setSex(sqSex);
+    	dqf.setProviderNo(sqProviderNo);
+    	dqf.setPatientStatus(sqPatientStatus);
+    	dqf.setQueryName(sqQueryName);
+    	dqf.setArchived("1");
 
-
+    	demographicQueryFavouritesDao.persist(dqf);
 
     }
 }
