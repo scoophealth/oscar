@@ -1486,7 +1486,10 @@
 			<forward name="success" path="/billing/CA/BC/billStatement.jsp" />
 		</action>
 
-		<action input="/oscarPrevention/PreventionReporting.jsp" path="/billing/CA/ON/BatchBill" scope="request" type="org.springframework.web.struts.DelegatingActionProxy">
+		<action path="/billing/CA/ON/BatchBill" scope="request" parameter="method" type="org.springframework.web.struts.DelegatingActionProxy">
+			<forward name="saved" path="/billing/CA/ON/batchsaved.jsp" />
+			<forward name="error" path="/billing/CA/ON/batcherror.jsp" />
+			<forward name="success" path="/billing/CA/ON/batchBilling.jsp" />
 		</action>
 
 		<action input="/billing/CA/BC/formwcb.jsp" name="WCBForm" path="/billing/CA/BC/formwcb" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.WCBAction2" parameter="method">
