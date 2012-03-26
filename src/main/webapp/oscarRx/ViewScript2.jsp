@@ -1,4 +1,8 @@
-<%@ page import="oscar.oscarProvider.data.*, oscar.oscarRx.data.*,oscar.oscarRx.data.RxPharmacyData.Pharmacy,oscar.OscarProperties, oscar.oscarClinic.ClinicData, java.util.*"%>
+<%@ page import="oscar.oscarProvider.data.*, oscar.oscarRx.data.*,oscar.OscarProperties, oscar.oscarClinic.ClinicData, java.util.*"%>
+<%@ page import="org.oscarehr.common.model.PharmacyInfo" %>
+<%@ page import="org.oscarehr.common.model.DemographicPharmacy" %>
+<%@ page import="org.oscarehr.common.dao.DemographicPharmacyDao" %>
+<%@ page import="org.oscarehr.common.dao.PharmacyInfoDao" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -155,13 +159,13 @@ if(bMultisites) {
 }
 String comment = (String) request.getSession().getAttribute("comment");
 RxPharmacyData pharmacyData = new RxPharmacyData();
-RxPharmacyData.Pharmacy pharmacy;
+PharmacyInfo pharmacy;
 pharmacy = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));
 String prefPharmacy = "";
 String prefPharmacyId="";
 if (pharmacy != null) {
-    prefPharmacy = pharmacy.name;
-    prefPharmacyId=pharmacy.ID;
+    prefPharmacy = pharmacy.getName();
+    prefPharmacyId=String.valueOf(pharmacy.getId2());
     prefPharmacy=prefPharmacy.trim();
     prefPharmacyId=prefPharmacyId.trim();
 }
@@ -201,7 +205,7 @@ if (pharmacy != null) {
                                         }});
                             }});
     }
-    
+
     function onPrint2(method, scriptId) {
         var useSC=false;
         var scAddress="";
@@ -254,24 +258,24 @@ function addNotes(){
 
 
 function printIframe(){
-	var browserName=navigator.appName; 
+	var browserName=navigator.appName;
 	   if (browserName=="Microsoft Internet Explorer")
 			{
-	              try 
-	            { 
-	                iframe = document.getElementById('preview'); 
-	                iframe.contentWindow.document.execCommand('print', false, null); 
-	            } 
-	            catch(e) 
-	            { 
-	                window.print(); 
-	            } 
+	              try
+	            {
+	                iframe = document.getElementById('preview');
+	                iframe.contentWindow.document.execCommand('print', false, null);
+	            }
+	            catch(e)
+	            {
+	                window.print();
+	            }
 			}
 			else
 			{
 				preview.focus();
 				preview.print();
-			}	
+			}
 	}
 
 
@@ -424,7 +428,7 @@ function toggleView(form) {
                                         "location=no, menubar=no, toolbar=no, scrollbars=yes, status=yes, resizable=yes");
                                 }
 
-         
+
                                 function printPharmacy(id,name){
                                     //ajax call to get all info about a pharmacy
                                     //use json to write to html
@@ -449,7 +453,7 @@ function toggleView(form) {
                                     frames['preview'].document.getElementById('pharmInfo').innerHTML=text;
                                     //frames['preview'].document.getElementById('removePharm').show();
                                     $("selectedPharmacy").innerHTML='<bean:message key="oscarRx.printPharmacyInfo.paperSizeWarning"/>';
-      
+
                                 }
                                 function reducePreview(){
                                     parent.document.getElementById('lightwindow_container').style.width="680px";
@@ -540,7 +544,7 @@ function toggleView(form) {
                                                              onclick="printPharmacy('<%=prefPharmacyId%>','<%=prefPharmacy%>');"/>
                                                 </span>
 
-                                            </td>                                            
+                                            </td>
                                         </tr><%}%>
                                         <tr>
                                             <td>

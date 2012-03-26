@@ -99,7 +99,7 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 			<tr>
 				<td>
 				<% RxPharmacyData pharmacy = new RxPharmacyData();
-                         ArrayList pharList = pharmacy.getAllPharmacies();
+                         List<org.oscarehr.common.model.PharmacyInfo> pharList = pharmacy.getAllPharmacies();
                        %>
 
                 <div style=" width:400px; height:400px; overflow:auto;">
@@ -114,18 +114,18 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 						<td>&nbsp;</td>
 					</tr>
 					<% for (int i = 0 ; i < pharList.size(); i++){
-                               RxPharmacyData.Pharmacy ph = (RxPharmacyData.Pharmacy) pharList.get(i);
+                               org.oscarehr.common.model.PharmacyInfo ph = pharList.get(i);
                             %>
 					<tr>
 						<td><a
-							href="LinkPharmacy2.do?ID=<%=ph.ID%>&DemoId=<jsp:getProperty name="patient" property="demographicNo"/>"><%=ph.name%></a></td>
-						<td><%=ph.address%></td>
-						<td><%=ph.city%></td>
-						<td><%=ph.phone1%></td>
-						<td><%=ph.fax%></td>
-						<td><a href="ManagePharmacy2.jsp?type=Edit&ID=<%=ph.ID%>"><bean:message
+							href="LinkPharmacy2.do?ID=<%=ph.getId2()%>&DemoId=<jsp:getProperty name="patient" property="demographicNo"/>"><%=ph.getName()%></a></td>
+						<td><%=ph.getAddress()%></td>
+						<td><%=ph.getCity()%></td>
+						<td><%=ph.getPhone1()%></td>
+						<td><%=ph.getFax()%></td>
+						<td><a href="ManagePharmacy2.jsp?type=Edit&ID=<%=ph.getId2()%>"><bean:message
 							key="SelectPharmacy.editLink" /></a></td>
-						<td><a href="ManagePharmacy2.jsp?type=Delete&ID=<%=ph.ID%>"><bean:message
+						<td><a href="ManagePharmacy2.jsp?type=Delete&ID=<%=ph.getId2()%>"><bean:message
 							key="SelectPharmacy.deleteLink" /></a></td>
 					</tr>
 					<% } %>

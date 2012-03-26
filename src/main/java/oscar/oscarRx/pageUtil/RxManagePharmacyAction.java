@@ -44,10 +44,10 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.common.model.PharmacyInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarRx.data.RxPharmacyData;
-import oscar.oscarRx.data.RxPharmacyData.Pharmacy;
 
 /**
  *
@@ -77,30 +77,25 @@ public final class RxManagePharmacyAction extends DispatchAction {
        return mapping.findForward("success");
     }
 
-    public ActionForward getPharmacyInfo(ActionMapping mapping,
-				 ActionForm form,
-				 HttpServletRequest request,
-				 HttpServletResponse response)
-	throws IOException, ServletException {
+    public ActionForward getPharmacyInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
         String pharmacyId=request.getParameter("pharmacyId");
         MiscUtils.getLogger().debug("pharmacyId="+pharmacyId);
         if(pharmacyId==null) return null;
         RxPharmacyData pharmacyData = new RxPharmacyData();
-        Pharmacy pharmacy=pharmacyData.getPharmacy(pharmacyId);
-        HashMap hm=new HashMap();
+        PharmacyInfo pharmacy=pharmacyData.getPharmacy(pharmacyId);
+        HashMap<String,String> hm=new HashMap<String,String>();
        if(pharmacy!=null){
-           hm.put("address", pharmacy.address);
-            hm.put("city", pharmacy.city);
-            hm.put("email", pharmacy.email);
-            hm.put("fax", pharmacy.fax);
-            hm.put("name", pharmacy.name);
-            hm.put("phone1", pharmacy.phone1);
-            hm.put("phone2", pharmacy.phone2);
-            hm.put("postalCode", pharmacy.postalCode);
-            hm.put("province", pharmacy.province);
-            hm.put("serviceLocationIdentifier", pharmacy.serviceLocationIdentifier);
-            hm.put("notes", pharmacy.notes);
-            MiscUtils.getLogger().debug("in getPharmacyInfo,hm="+hm);
+           hm.put("address", pharmacy.getAddress());
+            hm.put("city", pharmacy.getCity());
+            hm.put("email", pharmacy.getEmail());
+            hm.put("fax", pharmacy.getFax());
+            hm.put("name", pharmacy.getName());
+            hm.put("phone1", pharmacy.getPhone1());
+            hm.put("phone2", pharmacy.getPhone2());
+            hm.put("postalCode", pharmacy.getPostalCode());
+            hm.put("province", pharmacy.getProvince());
+            hm.put("serviceLocationIdentifier", pharmacy.getServiceLocationIdentifier());
+            hm.put("notes", pharmacy.getNotes());
             JSONObject jsonObject = JSONObject.fromObject(hm);
             response.getOutputStream().write(jsonObject.toString().getBytes());
        }
