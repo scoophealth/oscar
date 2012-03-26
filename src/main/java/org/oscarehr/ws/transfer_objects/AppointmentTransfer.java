@@ -5,6 +5,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.Appointment.BookingSource;
 import org.springframework.beans.BeanUtils;
 
 import oscar.util.DateUtils;
@@ -31,6 +32,7 @@ public final class AppointmentTransfer {
 	private String lastUpdateUser;
 	private String remarks;
 	private String urgency;
+	private BookingSource bookingSource;
 
 	public Integer getId() {
 		return (id);
@@ -199,6 +201,14 @@ public final class AppointmentTransfer {
 	public void setUrgency(String urgency) {
 		this.urgency = urgency;
 	}
+
+	public BookingSource getBookingSource() {
+    	return (bookingSource);
+    }
+
+	public void setBookingSource(BookingSource bookingSource) {
+    	this.bookingSource = bookingSource;
+    }
 
 	public Appointment copyTo(Appointment appointment) {
 
