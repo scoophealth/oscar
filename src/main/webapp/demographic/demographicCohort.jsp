@@ -11,7 +11,7 @@
             a:hover {
                 font-weight: bold;
             }
-            
+
             div.demographicSection{
                //width:49%;
                width:100%;
@@ -58,13 +58,13 @@
     </head>
     <body>
         <div class="demographicSection">
-            <%        
+            <%
             String demoNo = request.getParameter("demographic_no");
             DemographicSets demoSets = new DemographicSets();
-            ArrayList arrCurDemoSets = demoSets.getDemographicSets(demoNo);                
+            java.util.List<String> arrCurDemoSets = demoSets.getDemographicSets(demoNo);
             ArrayList arrDemo = new ArrayList();
-            arrDemo.add(demoNo);        
-            pageContext.setAttribute("curSets",arrCurDemoSets);     
+            arrDemo.add(demoNo);
+            pageContext.setAttribute("curSets",arrCurDemoSets);
             DemographicData demoData = new DemographicData();
             String setName = request.getParameter("setName");
             if( setName != null && setName.trim().length() > 0 ) {
@@ -75,17 +75,17 @@
             <p style="font-size:small; font-variant:small-caps">Saved <%=demoData.getDemographic(demoNo).getFirstName() + " " + demoData.getDemographic(demoNo).getLastName()%> to <%=setName%></p>
             <%
             }
-            }    
-            ArrayList arrDemoSets = demoSets.getDemographicSets();
+            }
+            java.util.List<String> arrDemoSets = demoSets.getDemographicSets();
             pageContext.setAttribute("arrDemoSets", arrDemoSets);
-            %>  
+            %>
             <h3>Current Patient Set(s)</h3>
             <ul>
                 <logic:iterate id="set" name="curSets">
                     <li><c:out value="${set}"/></li>
                 </logic:iterate>
             </ul>
-            
+
             <h3>Add to Patient Set:</h3>
             <ul>
                 <logic:iterate id="set" name="arrDemoSets">

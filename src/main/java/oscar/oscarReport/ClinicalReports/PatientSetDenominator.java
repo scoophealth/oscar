@@ -40,36 +40,36 @@ public class PatientSetDenominator implements Denominator {
     private String id = null;
     private String name = null;
     private Hashtable replaceableValues = null;
-    
+
     /** Creates a new instance of PatientSetDenominator */
     public PatientSetDenominator() {
         replaceKeys = new String[1];
         replaceKeys[0] = "patientSet";
     }
-    
+
     public String getId() {
         return id;
     }
-    
+
     public void setId(String id){
         this.id = id;
     }
-    
+
     public List getDenominatorList() {
-       ArrayList list = new ArrayList();
+       List<String> list = new ArrayList<String>();
        DemographicSets demoSets = new DemographicSets();
-       ArrayList strNames = null;
+       List<String> strNames = null;
        if( this.hasReplaceableValues() ) {
-           strNames = new ArrayList(replaceableValues.values());           
+           strNames = new ArrayList<String>(replaceableValues.values());
            list = demoSets.getDemographicSet(strNames);
        }
        else {
            list = demoSets.getDemographicSets();
        }
-        
+
        return list;
     }
-        
+
    public void setReplaceableValues(Hashtable vals) {
         replaceableValues = vals;
     }
@@ -77,16 +77,16 @@ public class PatientSetDenominator implements Denominator {
     public Hashtable getReplaceableValues() {
         return replaceableValues;
     }
-    
+
     public boolean hasReplaceableValues(){
         return true;
     }
-    
+
     public String[] getReplaceableKeys() {
         return replaceKeys;
     }
-    
-    
+
+
      public String getDenominatorName() {
         return this.name;
     }
