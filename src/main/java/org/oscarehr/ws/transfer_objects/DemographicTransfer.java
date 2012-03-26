@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.oscarehr.common.model.Demographic;
-import org.oscarehr.common.model.Provider;
 import org.springframework.beans.BeanUtils;
 
 public final class DemographicTransfer {
@@ -57,7 +56,6 @@ public final class DemographicTransfer {
 	private int activeCount;
 	private int hsAlertCount;
 	private String displayName;
-	private Provider provider;
 	private String lastUpdateUser;
 	private Date lastUpdateDate;
 	private String title;
@@ -430,14 +428,6 @@ public final class DemographicTransfer {
 
 	public void setDisplayName(String displayName) {
     	this.displayName = displayName;
-    }
-
-	public Provider getProvider() {
-    	return (provider);
-    }
-
-	public void setProvider(Provider provider) {
-    	this.provider = provider;
     }
 
 	public String getLastUpdateUser() {
