@@ -505,6 +505,9 @@ div.logoutBox {
 				onclick='popupPage(700,640,&quot;<html:rewrite page="/billing/CA/ON/billingCorrection.jsp"/>?billing_no=&quot;);return false;'><bean:message
 				key="admin.admin.btnBillingCorrection" /></a></li>
 			<li><a href="#"
+				onclick='popupPage(700,820,&quot;<html:rewrite page="/billing/CA/ON/batchBilling.jsp"/>?service_code=all&quot;);return false;'><bean:message
+				key="admin.admin.btnBatchBilling" /></a></li>
+			<li><a href="#"
 				onclick='popupPage(700,640,&quot;<html:rewrite page="/billing/CA/ON/inr/reportINR.jsp"/>?provider_no=all&quot;);return false;'><bean:message
 				key="admin.admin.btnINRBatchBilling" /></a></li>
 			<li><a href="#"
