@@ -3,30 +3,30 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ page
 	import="oscar.oscarRx.pageUtil.*,oscar.oscarRx.data.*,java.util.*"%>
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * Jason Gallagher
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
- */ 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
+ */
 
 -->
 
@@ -54,7 +54,7 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 if (request.getParameter("ID") != null && request.getParameter("type")!=null && request.getParameter("type").equals("Delete")){
 	RxPharmacyData rxp = new RxPharmacyData();
 	rxp.deletePharmacy(request.getParameter("ID"));
-	
+
 	response.sendRedirect(request.getContextPath() + "/oscarRx/SelectPharmacy2.jsp");
 	return;
 }
@@ -99,29 +99,29 @@ if (request.getParameter("ID") != null && request.getParameter("type")!=null && 
 			</tr>
 			<tr>
 				<td><html:form action="/oscarRx/managePharmacy">
-					<% 
-                            if (request.getParameter("ID") != null){ 
+					<%
+                            if (request.getParameter("ID") != null){
                                RxManagePharmacyForm frm = (RxManagePharmacyForm) request.getAttribute("RxManagePharmacyForm");
                                String ID = request.getParameter("ID");
-                               RxPharmacyData pharmacy = new RxPharmacyData();                               
-                               RxPharmacyData.Pharmacy ph = pharmacy.getPharmacy(ID);
+                               RxPharmacyData pharmacy = new RxPharmacyData();
+                               org.oscarehr.common.model.PharmacyInfo ph = pharmacy.getPharmacy(ID);
                                frm.setID(ID);
-                               frm.setAddress(ph.address);
-                               frm.setCity(ph.city);
-                               frm.setEmail(ph.email);
-                               frm.setFax(ph.fax);
-                               frm.setName(ph.name);
-                               frm.setNotes(ph.notes);
-                               frm.setPhone1(ph.phone1);
-                               frm.setPhone2(ph.phone2);
-                               frm.setPostalCode(ph.postalCode);
-                               frm.setProvince(ph.province);                               
+                               frm.setAddress(ph.getAddress());
+                               frm.setCity(ph.getCity());
+                               frm.setEmail(ph.getEmail());
+                               frm.setFax(ph.getFax());
+                               frm.setName(ph.getName());
+                               frm.setNotes(ph.getNotes());
+                               frm.setPhone1(ph.getPhone1());
+                               frm.setPhone2(ph.getPhone2());
+                               frm.setPostalCode(ph.getPostalCode());
+                               frm.setProvince(ph.getProvince());
                             }%>
 					<table>
 						<tr>
 							<td>
 							<%String type = request.getParameter("type"); %>
-                            <html:hidden property="pharmacyAction" value="<%=type%>"/>                                  
+                            <html:hidden property="pharmacyAction" value="<%=type%>"/>
 							<html:hidden property="pharmacyAction" value="<%=type%>" />
 								 <html:hidden property="ID" /> <bean:message
 								key="ManagePharmacy.txtfld.label.pharmacyName" /> :</td>
