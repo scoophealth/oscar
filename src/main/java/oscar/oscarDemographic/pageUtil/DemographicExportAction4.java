@@ -179,7 +179,7 @@ public class DemographicExportAction4 extends Action {
 		boolean exAlertsAndSpecialNeeds = WebUtils.isChecked(request, "exAlertsAndSpecialNeeds");
 		boolean exCareElements = WebUtils.isChecked(request, "exCareElements");
 
-		ArrayList<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<String>();
 		if (demographicNo==null) {
 			list = new DemographicSets().getDemographicSet(setName);
 		if (list.isEmpty()) {
@@ -995,7 +995,7 @@ public class DemographicExportAction4 extends Action {
 						Util.putPartialDate(alr.addNewStartDate(), allergy.getStartDate(), dateFormat);
 						aSummary = Util.addSummary(aSummary,"Start Date",partialDateDao.getDatePartial(allergy.getStartDate(), dateFormat));
 					}
-					if ("NICTA".contains(allergy.getLifeStage()) && allergy.getLifeStage().length()==1) {
+					if (allergy.getLifeStage() != null && "NICTA".contains(allergy.getLifeStage()) && allergy.getLifeStage().length()==1) {
 						alr.setLifeStage(cdsDt.LifeStage.Enum.forString(allergy.getLifeStage()));
 						aSummary = Util.addSummary(aSummary,"Life Stage at Onset", allergy.getLifeStageDesc());
 					}
