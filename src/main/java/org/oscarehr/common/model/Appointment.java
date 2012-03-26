@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,6 +19,12 @@ import javax.persistence.TemporalType;
 @Table(name = "appointment")
 public class Appointment extends AbstractModel<Integer> implements Serializable {
 
+	public enum BookingSource
+	{
+		OSCAR,
+		MYOSCAR_SELF_BOOKING
+	}
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "appointment_no")
@@ -73,7 +81,10 @@ public class Appointment extends AbstractModel<Integer> implements Serializable 
 	private String remarks;
 	private String urgency;
 	private Integer creatorSecurityId;
-
+	
+	@Enumerated(EnumType.STRING)
+	private BookingSource bookingSource;
+	
 	public String getProviderNo() {
 		return providerNo;
 	}
@@ -259,6 +270,14 @@ public class Appointment extends AbstractModel<Integer> implements Serializable 
 
 	public void setCreatorSecurityId(Integer creatorSecurityId) {
     	this.creatorSecurityId = creatorSecurityId;
+    }
+
+	public BookingSource getBookingSource() {
+    	return (bookingSource);
+    }
+
+	public void setBookingSource(BookingSource bookingSource) {
+    	this.bookingSource = bookingSource;
     }
 
 	@Override

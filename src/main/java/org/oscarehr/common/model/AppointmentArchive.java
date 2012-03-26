@@ -4,6 +4,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -11,6 +13,8 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.oscarehr.common.model.Appointment.BookingSource;
 
 @Entity
 @Table(name="appointmentArchive")
@@ -74,6 +78,9 @@ public class AppointmentArchive extends AbstractModel<Integer>  {
 	private String importedStatus;
 	private String urgency;
 	private Integer creatorSecurityId;	
+
+	@Enumerated(EnumType.STRING)
+	private BookingSource bookingSource;
 		
 	public String getProviderNo() {
 		return providerNo;
@@ -275,6 +282,14 @@ public class AppointmentArchive extends AbstractModel<Integer>  {
 
 	public void setUrgency(String urgency) {
     	this.urgency = urgency;
+    }
+
+	public BookingSource getBookingSource() {
+    	return (bookingSource);
+    }
+
+	public void setBookingSource(BookingSource bookingSource) {
+    	this.bookingSource = bookingSource;
     }
 
 

@@ -1,3 +1,4 @@
+<%@page import="org.oscarehr.common.model.Appointment.BookingSource"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@page import="org.oscarehr.common.model.Provider,org.oscarehr.common.dao.BillingDao,org.oscarehr.common.model.BillingONCHeader1"%>
 <%@page import="org.oscarehr.common.model.ProviderPreference"%>
@@ -1545,7 +1546,14 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 			 if (!bMultisites || (selectedSite == null && CurrentSiteMap.get(sitename) != null) || sitename.equals(selectedSite)) {
         %>
             <td class="appt" bgcolor='<%=as.getBgColor()%>' rowspan="<%=iRows%>" <%-- =view==0?(len==lenLimitedL?"nowrap":""):"nowrap"--%> nowrap>
-
+			<%
+				if (BookingSource.MYOSCAR_SELF_BOOKING.name().equals(appointment.get("bookingSource")))
+				{
+					%>
+						<bean:message key="provider.appointmentProviderAdminDay.SelfBookedMarker"/>
+					<%
+				}
+			%>
 			 <!-- multisites : add colour-coded to the "location" value of that appointment. -->
 			 <%if (bMultisites) {%>
 			 	<span title="<%= sitename %>" style="background-color:<%=siteBgColor.get(sitename)%>;">&nbsp;</span>|
