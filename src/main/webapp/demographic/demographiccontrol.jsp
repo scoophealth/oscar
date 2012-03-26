@@ -141,9 +141,6 @@
     {"search_detail", "select * from demographic where demographic_no=?"},
     {"search_detail_ptbr", "select * from demographic d left outer join demographic_ptbr dptbr on dptbr.demographic_no = d.demographic_no where d.demographic_no=?"},
 
-    {"update_record", "update demographic set last_name=?,first_name=?,address=?,city=?,province=?,postal=?,phone=?,phone2=?,email=?,myOscarUserName=?,year_of_birth=?,month_of_birth=?,date_of_birth=?,hin=?,ver=?,roster_status=?,patient_status=?,chart_no=?,provider_no=?,sex=?,pcn_indicator=?,hc_type=?,family_doctor=?,country_of_origin=?,newsletter=?,sin=?,title=?,official_lang=?,spoken_lang=?,roster_termination_reason=?,lastUpdateUser=?,lastUpdateDate=now(),date_joined=?,end_date=?,eff_date=?,hc_renew_date=?,roster_date=?,roster_termination_date=?,patient_status_date=?  where demographic_no=?"},
-
-    {"update_record_ptbr", "update demographic_ptbr set cpf=?,rg=?,chart_address=?,marriage_certificate=?,birth_certificate=?,marital_state=?,partner_name=?,father_name=?,mother_name=?,district=?,address_no=?,complementary_address=? where  demographic_no=?"},
     {"search_provider", "select * from provider status='1' order by last_name"},
     {"search_provider_doc", "select * from provider where provider_type='doctor' and status='1' order by last_name"},
     {"search_provider_doc_with_ohip", "select * from provider where provider_type='doctor' and status='1' and ohip_no is not null and ohip_no !='' order by last_name"},

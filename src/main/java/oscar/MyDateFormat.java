@@ -77,6 +77,13 @@ public class MyDateFormat {
 		}
 	}
 
+	public static String getMyStandardDate(java.util.Date aDate)
+	{
+		if (aDate == null) return "";
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+	    return formatter.format(aDate);
+	}
+
 	public static String getStandardDate(Calendar cal) {
 		if (cal == null) return "";
 	    SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
