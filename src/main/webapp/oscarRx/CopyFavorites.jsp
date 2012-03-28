@@ -32,7 +32,7 @@
 <html:html locale="true">
     <head>
         <script type="text/javascript" src="<%= request.getContextPath()%>/js/global.js"></script>
-        <title>Copy Favorites</title>
+        <title><bean:message key="SearchDrug.title.CopyFavorites" /></title>
         <html:base />
 
         <logic:notPresent name="RxSessionBean" scope="session">
@@ -307,7 +307,7 @@
                        width="100%" height="100%">
                     <tr>
                         <td width="0%" valign="top">
-                            <div class="DivCCBreadCrumbs"><a href="CopyFavorites.jsp"> Copy Favorites</a> > <b>Setting</b></div>
+                            <div class="DivCCBreadCrumbs"><div class="DivCCBreadCrumbs"><a href="SearchDrug3.jsp"> <bean:message key="SearchDrug.title" /></a> > <b><bean:message key="SearchDrug.title.CopyFavorites" /> > <b>Setting</b></div>
                         </td>
                     </tr>
 

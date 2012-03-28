@@ -781,7 +781,7 @@ body {
             <%@ include file="TopLinks2.jspf" %><!-- Row One included here-->
             <tr>
                 <%@ include file="SideLinksEditFavorites2.jsp"%><%-- <td></td>Side Bar File --%>
-                <td width="70%" style="border-left: 2px solid #A9A9A9;" height="100%" valign="top"><!--Column Two Row Two-->
+                <td width="100%" style="border-left: 2px solid #A9A9A9;" height="100%" valign="top"><!--Column Two Row Two-->
 
 
                     <table cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
