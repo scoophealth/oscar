@@ -36,7 +36,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -54,7 +56,8 @@ public class Prevention {
    Hashtable preventionTypes = new Hashtable();   
    Date DOB = null;
          
-   Hashtable warnings = new Hashtable();
+   Map<String, Object> warnings = new HashMap<String, Object>();
+      
    ArrayList messageList = new ArrayList();
    ArrayList reminder = new ArrayList();
    
@@ -100,10 +103,11 @@ public class Prevention {
       return messageList;
    }
    
-   public Hashtable getWarningMsgs() {
+   @SuppressWarnings("rawtypes")
+   public Map getWarningMsgs() {
        return warnings;
    }
-   
+      
    public void addReminder(String warn){
       reminder.add(warn);
    }      

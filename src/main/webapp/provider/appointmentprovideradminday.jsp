@@ -1622,15 +1622,27 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 <!-- /security:oscarSec -->
 <% } %>
 <!-- doctor code block 2 -->
-<oscar:oscarPropertiesCheck property="SHOW_PREVENTION_STOP_SIGNS" value="yes" defaultVal="true">
-<%String warning = prevMgr.getWarnings(String.valueOf(demographic_no));
-  String htmlWarning = "";
-  if( !warning.equals("")  ) {
-      htmlWarning = "<img src=\"../images/stop_sign.png\" height=\"14\" width=\"14\" title=\"" + warning + "\">&nbsp;";
-   }
- %>
-<%=htmlWarning%>
-</oscar:oscarPropertiesCheck>
+<%
+
+boolean disableStopSigns = PreventionManager.isDisabled();
+boolean propertyExists = PreventionManager.isCreated();
+if(disableStopSigns!=true){
+if( OscarProperties.getInstance().getProperty("SHOW_PREVENTION_STOP_SIGNS","false").equals("true") || propertyExists==true) {
+
+		String warning = prevMgr.getWarnings(String.valueOf(demographic_no));
+		warning = PreventionManager.checkNames(warning);
+				
+		String htmlWarning = "";
+		
+		if( !warning.equals("")) {
+			  htmlWarning = "<img src=\"../images/stop_sign.png\" height=\"14\" width=\"14\" title=\"" + warning +"\">&nbsp;";
+		} 
+	
+		out.print(htmlWarning);
+
+}
+}
+%>
 <a class="apptLink" href=# onClick ="popupPage(535,860,'../appointment/appointmentcontrol.jsp?appointment_no=<%=appointment.get("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search');return false;"  <oscar:oscarPropertiesCheck property="SHOW_APPT_REASON_TOOLTIP" value="yes" defaultVal="true"> title="<%=name%>
 &nbsp; reason: <%=UtilMisc.htmlEscape(reason)%>
 &nbsp; notes: <%=UtilMisc.htmlEscape(notes)%>"</oscar:oscarPropertiesCheck>   ><%=(view==0)?(name.length()>len?name.substring(0,len):name):name%></a>
