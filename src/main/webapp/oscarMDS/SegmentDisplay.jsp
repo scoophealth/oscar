@@ -69,7 +69,7 @@ String AbnFlag = "";
       	  $("#createLabel").click(function() {
       	    $.ajax( {
       	      type: "POST",      
-      	      url: "/oscar/lab/CA/ALL/createLabelTDIS.do",
+      	      url: '<%=request.getContextPath()%>'+"/lab/CA/ALL/createLabelTDIS.do",
       	      dataType: "json",
       	      data: { lab_no: $("#labNum").val(),accessionNum: $("#accNum").val(), label: $("#label").val() },
       	      success: function(data) {
