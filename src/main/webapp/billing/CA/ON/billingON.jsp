@@ -34,6 +34,8 @@
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
 <%@page import="org.oscarehr.common.model.Billingreferral" %>
 <%@page import="org.oscarehr.common.dao.BillingreferralDao" %>
+<%@page import="oscar.oscarBilling.ca.bc.decisionSupport.BillingGuidelines" %>
+<%@page import="org.oscarehr.decisionSupport.model.DSConsequence" %>
 <%
 	BillingreferralDao billingReferralDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
 %>
@@ -88,6 +90,19 @@
 			else {
      			provider_no = apptProvider_no;
  			}
+            
+            
+            //check for management fee code eligibility
+            StringBuilder billingRecomendations = new StringBuilder();
+            try{            	
+            	List<DSConsequence> list = BillingGuidelines.getInstance().evaluateAndGetConsequences(request.getParameter("demographic_no"), (String) request.getSession().getAttribute("user"));
+        
+            	for (DSConsequence dscon : list){                
+                	billingRecomendations.append(dscon.getText() + " ");
+           		}
+        	}catch(Exception e){
+            	MiscUtils.getLogger().error("Error", e);
+        	}
             
             ProviderPreferenceDao preferenceDao = (ProviderPreferenceDao) SpringUtils.getBean("providerPreferenceDao");
             ProviderPreference preference = null;
@@ -1087,7 +1102,7 @@ function toggleDiv(selectedBillForm, selectedBillFormName,billType)
 		<table border="0" cellspacing="0" cellpadding="0" width="100%" class="myYellow">
 		    <tr>
 			<td nowrap bgcolor="#FFCC99" width="10%" align="center">
-			    <b>&nbsp;<oscar:nameage demographicNo="<%=demo_no%>"/>  <%=roster_status%></b>
+			    <b>&nbsp;<oscar:nameage demographicNo="<%=demo_no%>"/>  <%=roster_status%></b>			    			    
 				<%if (appt_no.compareTo("0") == 0) {%> 
 			    <img src="../../../images/cal.gif" id="service_date_cal" />
 			    <input type="text" id="service_date" name="service_date"
@@ -1098,7 +1113,8 @@ function toggleDiv(selectedBillForm, selectedBillFormName,billType)
 				   size="10" maxlength="10" style="width:80px;" />
 				<%}%>
 			</td>
-			<td align="center"><font color="black"><%=msg%></font></td>
+			<td style="color:red; background-color:#FFFFFF; font-size:18px; font-weight:bold;"><%=billingRecomendations.length() > 0 ? billingRecomendations.toString() : ""%></td>
+			<td align="center"><font color="black"><%=msg%></font></td>			
 		    </tr>
 		</table>
 

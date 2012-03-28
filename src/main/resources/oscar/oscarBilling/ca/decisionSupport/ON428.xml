@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<guideline title="428Message" >
-    <parameter identifier="iCodes">
-        <class>java.util.ArrayList</class>
-    </parameter>
+<guideline title="428Message" >    
 <conditions>
 	<condition type="dxcodes" any="icd9:428"/>
-	<condition type="billedFor" any="Q050A">
+	<condition type="paid" any="Q050A">
 			<param key="payer" value="MSP"/>
 			<param key="notInDays" value="365"/>
-
 	</condition>
+	<condition type="flowsheet" any="chf"/>
 </conditions>
 <consequence>
-<java>iCodes.add("Q050A");</java>
+<warning strength="warning">Eligible to bill Q050A</warning>
 </consequence>
 </guideline>
