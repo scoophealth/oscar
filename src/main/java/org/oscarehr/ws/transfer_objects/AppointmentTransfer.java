@@ -13,7 +13,13 @@ import oscar.util.DateUtils;
 public final class AppointmentTransfer {
 	private Integer id;
 	private String providerNo;
+	/**
+	 * start time is inclusive i.e. 15:30:00 means 3:30pm is the actual start time.
+	 */
 	private Calendar appointmentStartDateTime;
+	/**
+	 * end time is exclusive i.e. 15:45:00 mean it ended right before that, i.e. 15:44:59.9999999999....
+	 */
 	private Calendar appointmentEndDateTime;
 	private String name;
 	private int demographicNo;
@@ -223,7 +229,12 @@ public final class AppointmentTransfer {
 		// yupp terrible source of error here, if an appointment starts on one day and ends on the other like
 		// a hospital visit at 11:45pm that ends at 12:15am, this is going to go all bad, but there's 
 		// not much we can do right now because it's a fault in oscars data structure.
-		if (appointmentEndDateTime != null) appointment.setEndTime(appointmentEndDateTime.getTime());
+		if (appointmentEndDateTime != null)
+		{
+			// also oscar sets end time funny, it is not exclusive so we need to calculate exclusivity ourselves.
+			appointmentEndDateTime.add(Calendar.MILLISECOND, -1);
+			appointment.setEndTime(appointmentEndDateTime.getTime());
+		}
 
 		return (appointment);
 	}
