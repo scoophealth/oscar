@@ -1541,7 +1541,12 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 							<tr>
 							  <td align="right"> <b><bean:message key="demographic.demographiceditdemographic.msgDemoTitle"/>: </b></td>
 							    <td align="left">
-					<% String title = demographic.getTitle(); %>
+					<%
+						String title = demographic.getTitle();
+						if(title == null) {
+							title="";
+						}
+					%>
 								<select name="title" <%=getDisabled("title")%>>
 									<option value="" <%=title.equals("")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgNotSet"/></option>
 								    <option value="MS" <%=title.equalsIgnoreCase("MS")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgMs"/></option>
@@ -1560,7 +1565,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 							    </td>
 							  <td align="right"><b><bean:message key="demographic.demographiceditdemographic.msgDemoLanguage"/>: </b> </td>
 							    <td align="left">
-					<% String lang = demographic.getOfficialLanguage(); %>
+					<% String lang = oscar.util.StringUtils.noNull(demographic.getOfficialLanguage()); %>
 								<select name="official_lang" <%=getDisabled("official_lang")%>>
                                                                     <option value="">--</option>
 								    <option value="English" <%=lang.equals("English")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgEnglish"/></option>
@@ -1574,7 +1579,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 							    <b><bean:message key="demographic.demographiceditdemographic.msgSpoken"/>: </b>
 							    </td>
 							    <td>
-								<%String spokenLang = demographic.getSpokenLanguage(); %>
+								<%String spokenLang = oscar.util.StringUtils.noNull(demographic.getSpokenLanguage()); %>
 									<select name="spoken_lang" <%=getDisabled("spoken_lang")%>>
 <%for (String splang : Util.spokenLangProperties.getLangSorted()) { %>
                                         <option value="<%=splang %>" <%=spokenLang.equals(splang)?"selected":"" %>><%=splang %></option>
@@ -1736,7 +1741,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 									<option value="-1"><bean:message key="demographic.demographiceditdemographic.msgNotSet"/></option>
 									<%for(CountryCode cc : countryList){ %>
 									<option value="<%=cc.getCountryId()%>"
-										<% if (demographic.getCountryOfOrigin().equals(cc.getCountryId())){out.print("SELECTED") ;}%>><%=cc.getCountryName() %></option>
+										<% if (oscar.util.StringUtils.noNull(demographic.getCountryOfOrigin()).equals(cc.getCountryId())){out.print("SELECTED") ;}%>><%=cc.getCountryName() %></option>
 									<%}%>
 								</select></td>
 							</tr>
@@ -1767,7 +1772,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 									key="demographic.demographiceditdemographic.formNewsLetter" />:
 								</b></td>
 								<td align="left">
-								<% String newsletter = demographic.getNewsletter().trim();
+								<% String newsletter = oscar.util.StringUtils.noNull(demographic.getNewsletter()).trim();
                                      if( newsletter == null || newsletter.equals("")) {
                                         newsletter = "Unknown";
                                      }
