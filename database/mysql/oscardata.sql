@@ -1133,40 +1133,40 @@ INSERT INTO ichppccode VALUES ('203','650','Uncomplicated Pregnancy, normal deli
 -- Dumping data for table 'measurementType'
 --
 
-INSERT INTO measurementType(type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("HT", "HT", "Height", "in cm",  "5");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("WT", "WT", "Weight", "in kg", "5");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("WT", "WT", "Weight", "in BMI", "4");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("BP", "BP", "Blood Pressure", "sitting position", "6");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("HbAi", "HbAic", "Glucose HbAic", "HbAic", "1");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("FBS", "FBS", "Glucose FBS", "FBS", "3");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("MACA", "Macroalbuminuria", "Renal Macrobalbumnuria", "q 3-6 months", "3");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("UALB", "Urine alb", "Renal Urine alb", "Create ratio yearly", "3");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("24UR", "24-hr Urine cr clearance & albuminuria", "Renal 24-hr Urine cr clearance & albuminuria", "q 6-12 months, unit mg", "3");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("TG", "TG", "LIPIDS TG", "monitor every 1-3 year", "3");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("LDL", "LDL", "LIPIDS LDL", "monitor every 1-3 year", "3");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("TCHD", "TC/HDL", "LIPIDS TD/HDL", "monitor every 1-3 year", "3");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("FEET", "FEET", "Feet Check skin", "sensation (Yes/No)", "7");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("FEET", "FEET", "Feet Check skin", "vibration (Yes/No)", "7");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("FEET", "FEET", "Feet Check skin", "reflexes (Yes/No)", "7");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("FEET", "FEET", "Feet Check skin", "pulses (Yes/No)", "7");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("FEET", "FEET", "Feet Check skin", "infection (Yes/No)", "7");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("SMK", "Smoking", "Smoking", "Yes/No", "7");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("EXE", "Exercise", "Exercise", "Yes/No", "7");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("ALC", "Alcohol", "Alcohol", "Yes/No", "7");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("SEXF", "Sexual Function", "Sexual Function", "Yes/No", "7");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("DIET", "Diet", "Diet", "Yes/No", "7");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("DMSM", "Diabetes Self Management Goals", "Diabetes Self Management Goals", "Yes/No", "7");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("DT1", "Type I", "Diabetes Type 1", "Yes/No", "7");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("DT2", "Type II", "Diabetes Type 2", "Yes/No", "7");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("DIFB", "Impaired FB", "Impaired FB", "Yes/No", "7");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("DIGT", "Impaired GT", "Impaired Glucose Tolerance", "Yes/No", "7");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("DARB", "ACE AARB", "ACE AARB", "Yes/No", "7");
+INSERT INTO measurementType(type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("HT", "HT", "Height", "in cm",  "5", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("WT", "WT", "Weight", "in kg", "5", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("WT", "WT", "Weight", "in BMI", "4", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("BP", "BP", "Blood Pressure", "sitting position", "6", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("HbAi", "HbAic", "Glucose HbAic", "HbAic", "1", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("FBS", "FBS", "Glucose FBS", "FBS", "3", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("MACA", "Macroalbuminuria", "Renal Macrobalbumnuria", "q 3-6 months", "3", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("UALB", "Urine alb", "Renal Urine alb", "Create ratio yearly", "3", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("24UR", "24-hr Urine cr clearance & albuminuria", "Renal 24-hr Urine cr clearance & albuminuria", "q 6-12 months, unit mg", "3", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("TG", "TG", "LIPIDS TG", "monitor every 1-3 year", "3", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("LDL", "LDL", "LIPIDS LDL", "monitor every 1-3 year", "3", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("TCHD", "TC/HDL", "LIPIDS TD/HDL", "monitor every 1-3 year", "3", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("FEET", "FEET", "Feet Check skin", "sensation (Yes/No)", "7", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("FEET", "FEET", "Feet Check skin", "vibration (Yes/No)", "7", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("FEET", "FEET", "Feet Check skin", "reflexes (Yes/No)", "7", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("FEET", "FEET", "Feet Check skin", "pulses (Yes/No)", "7", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("FEET", "FEET", "Feet Check skin", "infection (Yes/No)", "7", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("SMK", "Smoking", "Smoking", "Yes/No", "7", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("EXE", "Exercise", "Exercise", "Yes/No", "7", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("ALC", "Alcohol", "Alcohol", "Yes/No", "7", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("SEXF", "Sexual Function", "Sexual Function", "Yes/No", "7", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("DIET", "Diet", "Diet", "Yes/No", "7", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("DMSM", "Diabetes Self Management Goals", "Diabetes Self Management Goals", "Yes/No", "7", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("DT1", "Type I", "Diabetes Type 1", "Yes/No", "7", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("DT2", "Type II", "Diabetes Type 2", "Yes/No", "7", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("DIFB", "Impaired FB", "Impaired FB", "Yes/No", "7", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("DIGT", "Impaired GT", "Impaired Glucose Tolerance", "Yes/No", "7", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("DARB", "ACE AARB", "ACE AARB", "Yes/No", "7", now());
 
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("FLUF", "Flu Follow up", "flu prevention follow up", "", "11");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("PAPF", "Pap prevention follow up", "Pap Follow up", "", "11");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("MAMF", "Mammogram prevention follow up", "Mammogram Follow Up", "", "11");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("CIMF", "Child Immunization prevention follow up", "Child Immunization Follow up", "", "11");
-INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("FOBF", "FOBT prevention follow up", "FOBT Immunization Follow up", "", "11");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("FLUF", "Flu Follow up", "flu prevention follow up", "", "11", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("PAPF", "Pap prevention follow up", "Pap Follow up", "", "11", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("MAMF", "Mammogram prevention follow up", "Mammogram Follow Up", "", "11", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("CIMF", "Child Immunization prevention follow up", "Child Immunization Follow up", "", "11", now());
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation, createDate) VALUES("FOBF", "FOBT prevention follow up", "FOBT Immunization Follow up", "", "11", now());
 
 --
 -- Dumping data for table 'measurementCSSLocation'
