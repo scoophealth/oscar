@@ -41,7 +41,7 @@ TABLE {
 }
 
 .HelpAboutLogout {
-	font-size: 70%;
+	font-size: 10px;
 	text-align: right
 }
 
@@ -150,7 +150,7 @@ TABLE {
 }
 
 .ScreenTitle {
-	font-size: 140%;
+	font-size: 18px;
 	font-weight: bold;
 	color: white;
 	background-color: #000000;
@@ -158,7 +158,7 @@ TABLE {
 
 .DivCCBreadCrumbs {
 	border-bottom: 2px solid #A9A9A9;
-	font-size: 70%;
+	font-size: 10px;
 	padding-left: 7px;
 	padding-top: 4px;
 	padding-bottom: 4px

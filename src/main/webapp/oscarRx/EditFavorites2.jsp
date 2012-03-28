@@ -161,7 +161,7 @@ int i, j;
 
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
 <table border="0" cellpadding="0" cellspacing="0"
-	style="border-collapse: collapse" bordercolor="#111111" width="100%"
+	style="border-collapse: collapse; position: absolute; left: 0; top:0;" bordercolor="#111111" width="100%"
 	id="AutoNumber1" height="100%">
 	<%@ include file="TopLinks.jsp"%><!-- Row One included here-->
 	<tr>
@@ -176,19 +176,12 @@ int i, j;
 				<td width="0%" valign="top">
 				<div class="DivCCBreadCrumbs"><a href="SearchDrug3.jsp"> <bean:message
 					key="SearchDrug.title" /></a> > <b><bean:message
-					key="StaticScript.title" /></b></div>
+					key="StaticScript.title.EditFavorites" /></b></div>
 				</td>
 			</tr>
 
 
 			<!----Start new rows here-->
-			<tr>
-				<td>
-				<div class="DivContentPadding">
-				<div class="DivContentTitle">Edit Favorites</div>
-				</div>
-				</td>
-			</tr>
 
 			<tr>
 				<td>
