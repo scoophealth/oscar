@@ -562,8 +562,8 @@
 			<forward name="success" path="/dms/closeWindow.html"></forward>
 		</action>
 
-		<action input="/SegmentDisplay.jsp" name="TDISLabelForm" path="/lab/CA/ALL/createLabelTDIS" scope="request" type="oscar.oscarLab.ca.all.pageUtil.CreateLabelTDISAction">
-			<forward name="complete" path="/SegmentDisplay.jsp" />
+		<action input="/oscarMDS/SegmentDisplay.jsp" name="TDISLabelForm" path="/lab/CA/ALL/createLabelTDIS" scope="request" type="oscar.oscarLab.ca.all.pageUtil.CreateLabelTDISAction">
+			<forward name="complete" path="/oscarMDS/SegmentDisplay.jsp" />
 		</action>
 		<action path="/MeasurementHL7Uploader" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" name="newLabUploadForm" validate="false">
 
