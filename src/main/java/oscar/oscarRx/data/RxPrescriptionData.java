@@ -2024,6 +2024,13 @@ public class RxPrescriptionData {
                     // the database. If there is we'll return that drugid instead
                     // of adding a new prescription.
 
+                	String endDate;
+                	if (this.getEndDate() == null) {
+                		endDate = "0001-01-01";
+                	} else {
+                		endDate = RxUtil.DateToString(this.getEndDate());
+                	}
+                	
                     sql = "SELECT drugid FROM drugs WHERE archived = 0 AND " + "provider_no = '" + this.getProviderNo() + "' AND " + "demographic_no = " +
                             this.getDemographicNo() + " AND " + "rx_date = '" + RxUtil.DateToString(this.getRxDate()) + "' AND " + "end_date = '" +
                             RxUtil.DateToString(this.getEndDate()) + "' AND " + "written_date = '" + RxUtil.DateToString(this.getWrittenDate()) + "' AND " + "BN = '" +

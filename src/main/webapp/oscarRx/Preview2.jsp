@@ -9,7 +9,7 @@
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ page import="org.apache.log4j.Logger" %>
 
-<%@ page import="oscar.*,java.lang.*,java.util.Date,oscar.oscarRx.util.RxUtil,org.springframework.web.context.WebApplicationContext,
+<%@ page import="oscar.*,java.lang.*,java.util.Date,java.text.SimpleDateFormat,oscar.oscarRx.util.RxUtil,org.springframework.web.context.WebApplicationContext,
          org.springframework.web.context.support.WebApplicationContextUtils,
          org.oscarehr.common.dao.UserPropertyDAO,org.oscarehr.common.model.UserProperty"%>
 <%@ page import="org.oscarehr.util.SpringUtils"%>
@@ -53,6 +53,9 @@
 	String scriptid=request.getParameter("scriptId");
 %>
 
+<%
+String rx_enhance = OscarProperties.getInstance().getProperty("rx_enhance");
+%>	
 
 <%@page import="org.oscarehr.web.PrescriptionQrCodeUIBean"%><html:html locale="true">
 <head>
@@ -130,6 +133,7 @@ else {
 
 oscar.oscarRx.data.RxPatientData.Patient patient = RxPatientData.getPatient(bean.getDemographicNo());
 
+
 oscar.oscarRx.data.RxPrescriptionData.Prescription rx = null;
 int i;
 ProSignatureData sig = new ProSignatureData();
@@ -174,9 +178,35 @@ if(prop!=null && prop.getValue().equalsIgnoreCase("yes")){
                                                     src="img/rx.gif" border="0" alt="[Submit]"
                                                     name="submit" title="Print in a half letter size paper"
                                                     onclick="<%=rePrint.equalsIgnoreCase("true") ? "javascript:return onPrint2('rePrint');" : "javascript:return onPrint2('print');"  %>"/>
-                                            <!--input type="hidden" name="printPageSize" value="PageSize.A6" /--> <% 	String clinicTitle = provider.getClinicName().replaceAll("\\(\\d{6}\\)","") + "<br>" ;
-                                                    clinicTitle += provider.getClinicAddress() + "<br>" ;
-                                                    clinicTitle += provider.getClinicCity() + "   " + provider.getClinicPostal()  ;
+                                            <!--input type="hidden" name="printPageSize" value="PageSize.A6" /--> <% 	
+                                            String clinicTitle = provider.getClinicName().replaceAll("\\(\\d{6}\\)","") + "<br>" ;
+                                                    
+                                            clinicTitle += provider.getClinicAddress() + "<br>" ;
+                                            clinicTitle += provider.getClinicCity() + "   " + provider.getClinicPostal()  ;
+                                            
+                                            if (rx_enhance!=null && rx_enhance.equals("true")) {
+                                            	
+                                            	SimpleDateFormat formatter=new SimpleDateFormat("yyyy/MM/dd");
+                                    			String patientDOB = patient.getDOB() == null ? "" : formatter.format(patient.getDOB());
+                                    			
+                                            	String docInfo = doctorName + "\n"+provider.getClinicName().replaceAll("\\(\\d{6}\\)","")
+														+"\nCPSO #" + pracNo
+														+ "\n" + provider.getClinicAddress() + "\n"
+														+ provider.getClinicCity() + "   "
+														+ provider.getClinicPostal() + "\nTel: "
+														+ provider.getClinicPhone() + "\nFax: "
+														+ provider.getClinicFax();
+                                        
+                                            	String patientInfo = patient.getFirstName() + " "
+														+ patient.getSurname() + "\n"
+														+ patient.getAddress() + "\n"
+														+ patient.getCity() + "   "
+														+ patient.getPostal() + "\nTel: "
+														+ patient.getPhone()
+														+ (patientDOB != null && !patientDOB.trim().equals("") ? "\nDOB: " + patientDOB : "") 
+														+ (patient.getHin() != null && !patient.getHin().trim().equals("") ? "\nHIN: " + patient.getHin() : "");
+                                            }    
+                                                    
                                             %> <input type="hidden" name="doctorName"
                                                     value="<%= StringEscapeUtils.escapeHtml(doctorName) %>" /> <c:choose>
                                                     <c:when test="${empty infirmaryView_programAddress}">
