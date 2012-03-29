@@ -179,18 +179,21 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
         <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/jquery/jquery-1.4.2.js"></script>
       
        <script  type="text/javascript" charset="utf-8">
-      
-        $(function() {
-      	  $("#createLabel").click(function() {
-      	    $.ajax( {
+     
+     	  jQuery.noConflict();
+     
+       
+        jQuery(function() {
+      	  jQuery("#createLabel").click(function() {
+      	    jQuery.ajax( {
       	      type: "POST",      
-      	      url: "/oscar/lab/CA/ALL/createLabelTDIS.do",
+      	      url: '<%=request.getContextPath()%>'+"/lab/CA/ALL/createLabelTDIS.do",
       	      dataType: "json",
-      	      data: { lab_no: $("#labNum").val(),accessionNum: $("#accNum").val(), label: $("#label").val() }
+      	      data: { lab_no: jQuery("#labNum").val(),accessionNum: jQuery("#accNum").val(), label: jQuery("#label").val() }
       	        
       	     
       	    });
-      	  $("#labelspan").children().get(0).innerHTML = "Label: " +  $("#label").val();
+      	  jQuery("#labelspan").children().get(0).innerHTML = "Label: " +  jQuery("#label").val();
       	  document.forms['acknowledgeForm'].label.value = "";
       	  
       	  });
@@ -494,7 +497,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
             <input type="hidden" name="favorites" value="" />
             <input type="hidden" name="labType" value="HL7" />
             <input type="hidden" name="labType<%= segmentID %>HL7" value="imNotNull" />
-            <input type="hidden" name="providerNo" value="<%= providerNo %>" />
+            <input type="hidden" id="providerNo" name="providerNo" value="<%= providerNo %>" />
         </form>    
         
         <form name="TDISLabelForm"  method='POST' action="../../../lab/CA/ALL/createLabelTDIS.do">
