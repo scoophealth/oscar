@@ -1,26 +1,26 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
+ *
+ * This software was written for the
+ * Department of Family Medicine
  * McMaster University
- * Hamilton 
- * Ontario, Canada 
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 <%@ page import="java.util.List"%>
@@ -37,7 +37,7 @@
   if(demographic_no == null) {
 	  demographic_no = (String)request.getAttribute("demographic_no");
   }
-  
+
 %>
 
 
@@ -66,7 +66,7 @@
 function newWindow(file,window) {
   msgWindow=open(file,window,'scrollbars=yes,width=760,height=520,screenX=0,screenY=0,top=0,left=10');
   if (msgWindow.opener == null) msgWindow.opener = self;
-} 
+}
 //-->
 </script>
 
@@ -76,31 +76,31 @@ function addContact() {
 	total++;
 	jQuery("#contact_num").val(total);
 	jQuery.ajax({url:'contact.jsp?id='+total,async:false, success:function(data) {
-		  jQuery("#contact_container").append(data);					 	
-	}});		
+		  jQuery("#contact_container").append(data);
+	}});
 }
 
-function deleteContact(id) {	
+function deleteContact(id) {
 	var contactId = jQuery("input[name='contact_"+id+".id']").val();
 	jQuery("form[name='contactForm']").append("<input type=\"hidden\" name=\"contact.delete\" value=\""+contactId+"\"/>");
-	jQuery("#contact_"+id).remove();	
-	
+	jQuery("#contact_"+id).remove();
+
 }
 
 function addProContact() {
 	var total = jQuery("#procontact_num").val();
 	total++;
-	jQuery("#procontact_num").val(total);	
-	jQuery.ajax({url:'procontact.jsp?id='+total,async:false, success:function(data) {			
-		  jQuery("#procontact_container").append(data);					 	
-	}});		
+	jQuery("#procontact_num").val(total);
+	jQuery.ajax({url:'procontact.jsp?id='+total,async:false, success:function(data) {
+		  jQuery("#procontact_container").append(data);
+	}});
 }
 
-function deleteProContact(id) {	
+function deleteProContact(id) {
 	var contactId = jQuery("input[name='procontact_"+id+".id']").val();
 	jQuery("form[name='contactForm']").append("<input type=\"hidden\" name=\"procontact.delete\" value=\""+contactId+"\"/>");
-	jQuery("#procontact_"+id).remove();	
-	
+	jQuery("#procontact_"+id).remove();
+
 }
 
 function doPersonalSearch(id) {
@@ -124,7 +124,7 @@ function doProfessionalSearch(id) {
 }
 
 function updTklrList() {
-    clearInterval(check_demo_no); 
+    clearInterval(check_demo_no);
 }
 
 function search_demographic(nameEl, valueEl) {
@@ -132,13 +132,13 @@ function search_demographic(nameEl, valueEl) {
     var popup = window.open(url,'demographic_search');
     demo_no_orig = document.contactForm.elements[valueEl].value;
     //check_demo_no = setInterval("if (demo_no_orig != document.contactForm.elements[valueEl].value) updTklrList()",100);
-	
+
 		if (popup != null) {
 		if (popup.opener == null) {
 				popup.opener = self;
 		}
 		popup.focus();
-		}	
+		}
 }
 
 function search_provider(nameEl, valueEl) {
@@ -146,27 +146,27 @@ function search_provider(nameEl, valueEl) {
     var popup = window.open(url,'demographic_search');
     demo_no_orig = document.contactForm.elements[valueEl].value;
     //check_demo_no = setInterval("if (demo_no_orig != document.contactForm.elements[valueEl].value) updTklrList()",100);
-	
+
 		if (popup != null) {
 		if (popup.opener == null) {
 				popup.opener = self;
 		}
 		popup.focus();
-		}	
-}    
+		}
+}
 
 function search_contact(nameEl, valueEl) {
     var url = 'contactSearch.jsp?form=contactForm&elementName='+nameEl+'&elementId='+valueEl;
     var popup = window.open(url,'demographic_search');
     demo_no_orig = document.contactForm.elements[valueEl].value;
     //check_demo_no = setInterval("if (demo_no_orig != document.contactForm.elements[valueEl].value) updTklrList()",100);
-	
+
 		if (popup != null) {
 		if (popup.opener == null) {
 				popup.opener = self;
 		}
 		popup.focus();
-		}		
+		}
 }
 
 function search_procontact(nameEl, valueEl) {
@@ -174,36 +174,36 @@ function search_procontact(nameEl, valueEl) {
     var popup = window.open(url,'demographic_search');
     demo_no_orig = document.contactForm.elements[valueEl].value;
     //check_demo_no = setInterval("if (demo_no_orig != document.contactForm.elements[valueEl].value) updTklrList()",100);
-	
+
 		if (popup != null) {
 		if (popup.opener == null) {
 				popup.opener = self;
 		}
 		popup.focus();
-		}		
+		}
 }
 
 function setSelect(id,type,name,val) {
 	jQuery("select[name='"+type+"_"+id+"."+name+"']").each(function() {
-		jQuery(this).val(val);					
+		jQuery(this).val(val);
 	});
 }
 
 function setInput(id,type,name,val) {
 	jQuery("input[name='"+type+"_"+id+"."+name+"']").each(function() {
-		jQuery(this).val(val);					
+		jQuery(this).val(val);
 	});
 }
 
 function setChecked(id,type,name) {
 	jQuery("input[name='"+type+"_"+id+"."+name+"']").each(function() {
-		jQuery(this).attr('checked','true');					
+		jQuery(this).attr('checked','true');
 	});
 }
 
 function setTextarea(id,type,name,val) {
 	jQuery("textarea[name='"+type+"_"+id+"."+name+"']").each(function() {
-		jQuery(this).val(val);					
+		jQuery(this).val(val);
 	});
 }
 
@@ -222,10 +222,10 @@ jQuery(document).ready(function() {
 					setInput(num,'contact','contactId','<%=dc.getContactId()%>');
 					setInput(num,'contact','contactName','<%=dc.getContactName()%>');
 					setTextarea(num,'contact','note','<%=dc.getNote()!=null?dc.getNote():""%>');
-					<%if(dc.getSdm().equals("true")) {%>setChecked(num,'contact','sdm');<%}%>
-					<%if(dc.getEc().equals("true")) {%>setChecked(num,'contact','ec');<%}%>
+					<%if(dc.getSdm() != null && dc.getSdm().equals("true")) {%>setChecked(num,'contact','sdm');<%}%>
+					<%if(dc.getEc() != null && dc.getEc().equals("true")) {%>setChecked(num,'contact','ec');<%}%>
 			    <%
-			}		
+			}
 		}
 
 		@SuppressWarnings("unchecked")
@@ -241,11 +241,11 @@ jQuery(document).ready(function() {
 					setInput(num,'procontact','contactId','<%=dc.getContactId()%>');
 					setInput(num,'procontact','contactName','<%=dc.getContactName()%>');
 			    <%
-			}		
+			}
 		}
 	%>
 	});
-	
+
 </script>
 
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
@@ -276,21 +276,21 @@ jQuery(document).ready(function() {
 		<td valign="top" class="MainTableRightColumn">
 
 		<form method="post" name="contactForm" id="contactForm" action="Contact.do">
-			<input type="hidden" name="method" value="saveManage"/>		
-			<input type="hidden" name="demographic_no" value="<%=demographic_no%>"/>		
-			
+			<input type="hidden" name="method" value="saveManage"/>
+			<input type="hidden" name="demographic_no" value="<%=demographic_no%>"/>
+
 			<b>Personal Contacts:</b>
 			<br />
 			<div id="contact_container"></div>
-			<input type="hidden" id="contact_num" name="contact_num" value="0"/>	
+			<input type="hidden" id="contact_num" name="contact_num" value="0"/>
 			<a href="#" onclick="addContact();">[ADD]</a>
-			
+
 			<br/><br/>
 			<b>Professional Contacts:</b>
 			<br />
 			<div id="procontact_container"></div>
-			<input type="hidden" id="procontact_num" name="procontact_num" value="0"/>	
-			<a href="#" onclick="addProContact();">[ADD]</a>		
+			<input type="hidden" id="procontact_num" name="procontact_num" value="0"/>
+			<a href="#" onclick="addProContact();">[ADD]</a>
 
 			<br/>
 
