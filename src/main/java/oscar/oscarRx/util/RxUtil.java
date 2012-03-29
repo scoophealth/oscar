@@ -1096,26 +1096,30 @@ public class RxUtil {
         special = m.replaceAll("");
         MiscUtils.getLogger().debug("after trimming mitte special=" + special);
         //assume drug name is before method and drug name is the first part of the instruction.
-        if (special.indexOf("Take") != -1) {
-            special = special.substring(special.indexOf("Take"));
-        } else if (special.indexOf("take") != -1) {
-            special = special.substring(special.indexOf("take"));
-        } else if (special.indexOf("TAKE") != -1) {
-            special = special.substring(special.indexOf("TAKE"));
-        } else if (special.indexOf("Apply") != -1) {
-            special = special.substring(special.indexOf("Apply"));
-        } else if (special.indexOf("apply") != -1) {
-            special = special.substring(special.indexOf("apply"));
-        } else if (special.indexOf("APPLY") != -1) {
-            special = special.substring(special.indexOf("APPLY"));
-        } else if (special.indexOf("Rub well in") != -1) {
-            special = special.substring(special.indexOf("Rub well in"));
-        } else if (special.indexOf("rub well in") != -1) {
-            special = special.substring(special.indexOf("rub well in"));
-        } else if (special.indexOf("RUB WELL IN") != -1) {
-            special = special.substring(special.indexOf("RUB WELL IN"));
-        } else if (special.indexOf("Rub Well In") != -1) {
-            special = special.substring(special.indexOf("Rub Well In"));
+        String rx_enhance = OscarProperties.getInstance().getProperty("rx_enhance");
+        //rx_enhance changes the behavior by not deleting anything up to the words Take, apply..
+        if (!(rx_enhance != null && rx_enhance.equals("true"))) {
+	        if (special.indexOf("Take") != -1) {
+	            special = special.substring(special.indexOf("Take"));
+	        } else if (special.indexOf("take") != -1) {
+	            special = special.substring(special.indexOf("take"));
+	        } else if (special.indexOf("TAKE") != -1) {
+	            special = special.substring(special.indexOf("TAKE"));
+	        } else if (special.indexOf("Apply") != -1) {
+	            special = special.substring(special.indexOf("Apply"));
+	        } else if (special.indexOf("apply") != -1) {
+	            special = special.substring(special.indexOf("apply"));
+	        } else if (special.indexOf("APPLY") != -1) {
+	            special = special.substring(special.indexOf("APPLY"));
+	        } else if (special.indexOf("Rub well in") != -1) {
+	            special = special.substring(special.indexOf("Rub well in"));
+	        } else if (special.indexOf("rub well in") != -1) {
+	            special = special.substring(special.indexOf("rub well in"));
+	        } else if (special.indexOf("RUB WELL IN") != -1) {
+	            special = special.substring(special.indexOf("RUB WELL IN"));
+	        } else if (special.indexOf("Rub Well In") != -1) {
+	            special = special.substring(special.indexOf("Rub Well In"));
+	        }
         }
 
         return special.trim();

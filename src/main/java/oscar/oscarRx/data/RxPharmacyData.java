@@ -88,9 +88,8 @@ public class RxPharmacyData {
     * @param notes
     */
    public void updatePharmacy(String ID,String name,String address,String city,String province,String postalCode, String phone1, String phone2, String fax, String email, String serviceLocationIdentifier, String notes){
-	   pharmacyInfoDao.updatePharmacy(ID, name, address, city, province, postalCode, phone1, phone2, fax, email, serviceLocationIdentifier, notes);
+		pharmacyInfoDao.updatePharmacy(ID, name, address, city, province, postalCode, phone1, phone2, fax, email, serviceLocationIdentifier, notes);
    }
-
 
    /**
     * set the status of the pharmacy to 0, this will not be found in the getAllPharmacy queries

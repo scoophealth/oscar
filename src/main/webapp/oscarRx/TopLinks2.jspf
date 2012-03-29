@@ -22,17 +22,37 @@
  * Hamilton 
  * Ontario, Canada 
  */%> 
+<script language="javascript" type="text/javascript">
+
+function popupWindow(url) {
+	newwindow=window.open(url,'name','height=700,width=1000');
+	if (window.focus) {newwindow.focus()}
+	return false;
+}
+
+
+</script>
+
 <tr>
 	<td width="10%" height="37" bgcolor="#000000"><span class="ScreenTitle" >oscarRx</span></td>
         <td width="100%" valign="bottom"  bgcolor="#000000" style="border-left: 2px solid #A9A9A9; padding-left: 5" height="0%" colspan="2">
             <table width="100%" border="0" height="100%">
                 <tr>
-                    <td valign="bottom" style="color:white;" >
-	
-             		<b><bean:message key="SearchDrug.nameText" /></b> <jsp:getProperty name="patient" property="firstName" /> <jsp:getProperty name="patient" property="surname" />
+                    <td valign="bottom" style="color:white;" >     
+			
+<% 
+if (rx_enhance!=null && rx_enhance.equals("true")) { %>
+	<span class="ScreenTitle" >oscarRx</span>
+                   --<b><bean:message key="SearchDrug.nameText" /></b> <jsp:getProperty name="patient" property="firstName" /> <jsp:getProperty name="patient" property="surname" /> &nbsp;
+		     <b><bean:message key="SearchDrug.ageText" /></b> <jsp:getProperty name="patient" property="age" />
+                     <b>
+                     <oscar:phrverification styleId="verificationLink" demographicNo="<%=Integer.toString(demoNo)%>"><bean:message key="phr.verification.link"/></oscar:phrverification> &nbsp;
+                     <a style="color:white; "href="SelectPharmacy2.jsp" onclick="return popupWindow('SelectPharmacy2.jsp')"><bean:message key="SearchDrug.PreferedPharmacy"/></a>:</b> <a  style="color:white;" href="javascript: function myFunction() {return false; }" onClick="showpic('Layer1');" id="Calcs" ><%=prefPharmacy%></a>
+<%}else {%>					
+					<b><bean:message key="SearchDrug.nameText" /></b> <jsp:getProperty name="patient" property="firstName" /> <jsp:getProperty name="patient" property="surname" />
 		     		<b><bean:message key="SearchDrug.ageText" /></b> <jsp:getProperty name="patient" property="age" />
                     <b><a style="color:white; "href="SelectPharmacy2.jsp"><bean:message key="SearchDrug.PreferedPharmacy"/></a>:</b> <a  style="color:white;" href="javascript: function myFunction() {return false; }" onClick="showpic('Layer1');" id="Calcs" ><%=prefPharmacy%></a>
-			
+<%} %>
                   
                     </td>
                     <td valign="top" align="right">
