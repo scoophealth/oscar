@@ -23,6 +23,8 @@
 	errorPage="errorpage.jsp"%>
 <%@ page import="org.oscarehr.common.dao.DemographicDao, org.oscarehr.common.model.Demographic, org.oscarehr.util.SpringUtils"
          errorPage="errorpage.jsp"%>
+<%@ page import="oscar.oscarEncounter.data.EctFormData"%>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
@@ -815,6 +817,55 @@ if (bMultisites) { %>
 </FORM>
 </div> <!-- end of edit appointment screen -->
 
+<% 
+    String formTblProp = props.getProperty("appt_formTbl");
+    String[] formTblNames = formTblProp.split(";");
+               
+    int numForms = 0;
+    for (String formTblName : formTblNames){
+        if ((formTblName != null) && !formTblName.equals("")) {
+            //form table name defined
+            List<Map<String,Object>> resultList = oscarSuperManager.find("appointmentDao", "search_formtbl", new Object [] {formTblName});
+            if (resultList.size() > 0) {
+                //form table exists                            
+                Map mFormName = resultList.get(0);
+                String formName = (String) mFormName.get("form_name");
+                pageContext.setAttribute("formName", formName);
+                boolean formComplete = false;
+                EctFormData.PatientForm[] ptForms = EctFormData.getPatientFormsFromLocalAndRemote(demono, formTblName);
+
+                if (ptForms.length > 0) {
+                    formComplete = true;
+                }
+                numForms++;
+                if (numForms == 1) {
+%>
+         <table style="font-size: 9pt;" bgcolor="#c0c0c0" align="center" valign="top" cellpadding="3px">
+            <tr bgcolor="#ccccff">
+                <th colspan="2">
+                    <bean:message key="appointment.addappointment.msgFormsSaved"/>
+                </th>
+            </tr>              
+<%              } %>
+             
+            <tr bgcolor="#c0c0c0" align="left">
+                <th style="padding-right: 20px"><c:out value="${formName}:"/></th>
+<%                 if (formComplete){  %>
+                <td><bean:message key="appointment.addappointment.msgFormCompleted"/></td>
+<%                 } else {            %>
+                <td><bean:message key="appointment.addappointment.msgFormNotCompleted"/></td>
+<%                 } %>               
+            </tr>
+<%                         
+            }
+        }
+    }
+               
+    if (numForms > 0) {        %>
+         </table>
+<%  }   %>
+         
+         
 <!-- View Appointment: Screen that summarizes appointment data.
 Currently this is only used in the mobile version -->
 <div id="viewAppointment" style="display:<%=(bFirstDisp && isMobileOptimized) ? "block":"none"%>;">

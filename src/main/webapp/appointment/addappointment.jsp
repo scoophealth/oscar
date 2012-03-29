@@ -38,6 +38,8 @@
 <%--RJ 07/07/2006 --%>
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <%@page import="org.oscarehr.util.SpringUtils" %>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
+<%@ page import="oscar.oscarEncounter.data.EctFormData"%>
 <%@page import="org.oscarehr.common.model.DemographicCust" %>
 <%@page import="org.oscarehr.common.dao.DemographicCustDao" %>
 <%
@@ -831,6 +833,56 @@ function pasteAppt(multipleSameDayGroupAppt) {
 
         </table>
         <%}%>
+    </td>
+    <td valign="top">
+    <% 
+        String formTblProp = props.getProperty("appt_formTbl");
+        String[] formTblNames = formTblProp.split(";");
+               
+        int numForms = 0;
+        for (String formTblName : formTblNames){
+            if ((formTblName != null) && !formTblName.equals("")) {
+                //form table name defined
+                resultList = oscarSuperManager.find("appointmentDao", "search_formtbl", new Object [] {formTblName});
+                if (resultList.size() > 0) {
+                    //form table exists                            
+                    Map mFormName = resultList.get(0);
+                    String formName = (String) mFormName.get("form_name");
+                    pageContext.setAttribute("formName", formName);
+                    boolean formComplete = false;
+                    EctFormData.PatientForm[] ptForms = EctFormData.getPatientFormsFromLocalAndRemote(demoNo, formTblName);
+
+                    if (ptForms.length > 0) {
+                        formComplete = true;
+                    }
+                    numForms++;
+                    if (numForms == 1) {
+    %>
+            <table style="font-size: 9pt;" bgcolor="#c0c0c0" align="center" valign="top" cellpadding="3px">
+                <tr bgcolor="#ccccff">
+                    <th colspan="2">
+                        <bean:message key="appointment.addappointment.msgFormsSaved"/>
+                    </th>
+                </tr>              
+    <%              }%>
+             
+                <tr bgcolor="#c0c0c0" align="left">
+                    <th style="padding-right: 20px"><c:out value="${formName}:"/></th>
+    <%              if (formComplete){  %>
+                        <td><bean:message key="appointment.addappointment.msgFormCompleted"/></td>
+    <%              } else {            %>
+                        <td><bean:message key="appointment.addappointment.msgFormNotCompleted"/></td>
+    <%              } %>               
+                </tr>
+    <%                         
+                }
+            }
+        }
+               
+        if (numForms > 0) {        
+    %>
+         </table>
+    <%  }   %>
     </td>
     <td valign="top">
 <table style="font-size: 8pt;" bgcolor="#c0c0c0" align="center" valign="top">
