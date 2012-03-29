@@ -908,7 +908,13 @@ if(wLReadonly.equals("")){
 					onClick="popupS('../billing/CA/ON/billingShortcutPg1.jsp?billRegion=<%=URLEncoder.encode(prov)%>&billForm=<%=URLEncoder.encode(oscarVariables.getProperty("hospital_view", default_view))%>&hotclick=&appointment_no=0&demographic_name=<%=URLEncoder.encode(demographic.getLastName())%>%2C<%=URLEncoder.encode(demographic.getFirstName())%>&demographic_no=<%=demographic.getDemographicNo()%>&providerview=1&user_no=<%=curProvider_no%>&apptProvider_no=none&appointment_date=<%=dateString%>&start_time=0:00&bNewForm=1&status=t');return false;"
 					title="<bean:message key="demographic.demographiceditdemographic.msgBillPatient"/>"><bean:message key="demographic.demographiceditdemographic.msgHospitalBilling"/></a></td>
 			</tr>
-
+			<tr>
+				<td><a
+					href="javascript: function myFunction() {return false; }"
+					onClick="window.open('../billing/CA/ON/addBatchBilling.jsp?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>&creator=<%=curProvider_no%>&demographic_name=<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>%2C<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>&hin=<%=URLEncoder.encode(apptMainBean.getString(rs,"hin")!=null?apptMainBean.getString(rs,"hin"):"")%><%=URLEncoder.encode(apptMainBean.getString(rs,"ver")!=null?apptMainBean.getString(rs,"ver"):"")%>&dob=<%=MyDateFormat.getStandardDate(Integer.parseInt(birthYear),Integer.parseInt(birthMonth),Integer.parseInt(birthDate))%>','', 'scrollbars=yes,resizable=yes,width=600,height=400');return false;"
+					title='<bean:message key="demographic.demographiceditdemographic.msgAddBatchBilling"/>'><bean:message key="demographic.demographiceditdemographic.msgAddBatchBilling"/></a>
+				</td>
+			</tr>
 			<tr>
 				<td><a
 					href="javascript: function myFunction() {return false; }"
@@ -2457,7 +2463,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 
 <tr valign="top">
 <td nowrap colspan="4">
-<b><bean:message key="demographic.demographiceditdemographic.rxInteractionWarningLevel" />:</b>
+<b><bean:message key="demographic.demographiceditdemographic.rxInteractionWarningLevel" /></b>
 <input type="hidden" name="rxInteractionWarningLevelOrig"
 									value="<%=apptMainBean.getString(demoExt.get("rxInteractionWarningLevel"))%>" />
 					<select id="rxInteractionWarningLevel" name="rxInteractionWarningLevel">

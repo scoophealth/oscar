@@ -97,7 +97,7 @@ public class BillingClaimDAO extends AbstractDao<BillingClaimHeader1> {
         this.persist(b);
     }
 
-    public void createBill(String provider, String demographic, String code, String clinic_ref_code, Date serviceDate, String curuser) {
+    public String createBill(String provider, String demographic, String code, String clinic_ref_code, Date serviceDate, String curuser) {
         BillingClaimHeader1 header1 = null;
         Provider prov = provDAO.getProvider(provider);
         OscarProperties properties = OscarProperties.getInstance();
@@ -110,9 +110,31 @@ public class BillingClaimDAO extends AbstractDao<BillingClaimHeader1> {
         header1 = this.assembleHeader1(prov, demographic, clinic_ref_code, serviceDate, total, curuser, properties);
         this.addItems(header1, codes, dxCodes, serviceDate);
         this.persist(header1);
+        
+        return total;
     }
+    
+    public String createBill(String provider, String demographic, String code, String dxCode, String clinic_ref_code, Date serviceDate, String curuser) {
+        BillingClaimHeader1 header1 = null;
+        Provider prov = provDAO.getProvider(provider);
+        OscarProperties properties = OscarProperties.getInstance();
+        ArrayList<String>codes = new ArrayList<String>();
+        ArrayList<String>dxCodes = new ArrayList<String>();        
 
-    public void createBills(String provider, List<String>demographic_nos, List<String>codes, List<String>dxcodes, String clinic_ref_code, Date serviceDate, String curuser) {
+        codes.add(code);
+        dxCodes.add(dxCode);
+        
+        String total = this.calcTotal(codes,serviceDate);
+
+        header1 = this.assembleHeader1(prov, demographic, clinic_ref_code, serviceDate, total, curuser, properties);
+        this.addItems(header1, codes, dxCodes, serviceDate);
+        this.persist(header1);
+        
+        return total;
+    }
+    
+
+    public String createBills(String provider, List<String>demographic_nos, List<String>codes, List<String>dxcodes, String clinic_ref_code, Date serviceDate, String curuser) {
         BillingClaimHeader1 header1 = null;
         Provider prov = provDAO.getProvider(provider);
         OscarProperties properties = OscarProperties.getInstance();
@@ -123,6 +145,8 @@ public class BillingClaimDAO extends AbstractDao<BillingClaimHeader1> {
             this.addItems(header1, codes, dxcodes, serviceDate);
             this.persist(header1);
         }
+        
+        return total;
     }
 
     private BillingClaimHeader1 assembleHeader1(Provider prov, String demographic, String clinic_ref_code, Date serviceDate, String total, String cursuser, OscarProperties properties) {
