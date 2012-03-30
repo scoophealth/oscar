@@ -22,11 +22,11 @@ public class DemographicContact extends AbstractModel<Integer> {
 	public static final int TYPE_DEMOGRAPHIC = 1;
 	//link to the contact table
 	public static final int TYPE_CONTACT = 2;
-	
+
 	public static final String CATEGORY_PERSONAL = "personal";
 	public static final String CATEGORY_PROFESSIONAL = "professional";
-	
-	
+
+
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,10 +44,14 @@ public class DemographicContact extends AbstractModel<Integer> {
 	private String sdm;
 	private String ec;
 	private String note;
-	
+
+	private int facilityId;
+	private String creator;
+
+
 	@Transient
 	private String contactName;
-	
+
 	@Override
 	public Integer getId() {
 		return this.id;
@@ -84,8 +88,8 @@ public class DemographicContact extends AbstractModel<Integer> {
 	public void setContactId(String contactId) {
 		this.contactId = contactId;
 	}
-	
-	
+
+
 	public Date getUpdateDate() {
 		return updateDate;
 	}
@@ -93,7 +97,7 @@ public class DemographicContact extends AbstractModel<Integer> {
 	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
 	}
-	
+
 
 	public String getRole() {
 		return role;
@@ -123,7 +127,7 @@ public class DemographicContact extends AbstractModel<Integer> {
     	this.id = id;
     }
 
-	
+
 	public String getContactName() {
     	return contactName;
     }
@@ -154,6 +158,24 @@ public class DemographicContact extends AbstractModel<Integer> {
 
 	public void setNote(String note) {
     	this.note = note;
+    }
+
+
+
+	public int getFacilityId() {
+    	return facilityId;
+    }
+
+	public void setFacilityId(int facilityId) {
+    	this.facilityId = facilityId;
+    }
+
+	public String getCreator() {
+    	return creator;
+    }
+
+	public void setCreator(String creator) {
+    	this.creator = creator;
     }
 
 	@PreRemove

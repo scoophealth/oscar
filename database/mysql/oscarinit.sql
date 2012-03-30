@@ -8422,6 +8422,8 @@ create table RemoteDataLog
 
 create table DemographicContact (
 	id integer not null auto_increment primary key,
+	facilityId integer not null,
+	creator varchar(20) not null,
 	created timestamp not null,
 	updateDate timestamp not null,
 	deleted tinyint,
