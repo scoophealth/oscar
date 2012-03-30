@@ -44,6 +44,8 @@ public class Relationships extends AbstractModel<Integer> {
 
 	private String deleted;
 
+	private String creator;
+
 	public Integer getId() {
     	return id;
     }
@@ -123,6 +125,15 @@ public class Relationships extends AbstractModel<Integer> {
 	public void setDeleted(String deleted) {
     	this.deleted = deleted;
     }
+
+	public String getCreator() {
+    	return creator;
+    }
+
+	public void setCreator(String creator) {
+    	this.creator = creator;
+    }
+
 
 
 }

@@ -715,7 +715,7 @@ div.logoutBox {
                     <li><a href="javascript:void(0);" onclick="popupPage(550,800,&quot;<html:rewrite page="/admin/addQueue.jsp"/>&quot;);return false;" ><bean:message key="admin.admin.AddNewQueue"/></a></li>
 			<li><a href="#"
 				onclick='popupPage(550,800,&quot;<html:rewrite page="/admin/displayDocumentCategories.jsp"/>&quot;);return false;'><bean:message key="admin.admin.DocumentCategories"/></a></li>
-			
+
 			<li><a href="#"
 				onclick='popupPage(550,800,&quot;<html:rewrite page="/admin/ManageClinic.do"/>&quot;);return false;'><bean:message key="admin.admin.clinicAdmin"/></a></li>
 <%
@@ -778,9 +778,9 @@ div.logoutBox {
 			<li><a href="#" onclick='popupPage(400, 400,&quot;<html:rewrite page="/hospitalReportManager/hrmPreferences.jsp"/>&quot;);return false;'>Hospital Report Manager (HRM) Preferences</a></li>
 			<li><a href="#" onclick='popupPage(400, 400,&quot;<html:rewrite page="/hospitalReportManager/hrmShowMapping.jsp"/>&quot;);return false;'>Hospital Report Manager (HRM) Class Mappings</a></li>
 			<li><a href="#" onclick='popupPage(400, 400,&quot;<html:rewrite page="/hospitalReportManager/hrmCategories.jsp"/>&quot;);return false;'>Hospital Report Manager (HRM) Categories</a></li>
-			
+
 			<li><a href="#" onclick='popupPage(800, 700,&quot;<html:rewrite page="/oscarPrevention/PreventionManager.jsp"/>&quot;);return false;' title="Customize prevention notifications."><bean:message key="admin.admin.preventionNotification.title" /></a></li>
-			
+
 			<%
 				String olisKeystore = OscarProperties.getInstance().getProperty("olis_keystore", "");
 				if(olisKeystore.length()>0) {
@@ -801,17 +801,21 @@ div.logoutBox {
 			<%
 				}
 			%>
-			
+
 			<% if (OscarProperties.getInstance().isFaxEnabled()) { %>
             <li><a href="#" onclick='popupPage(600, 800,&quot;<html:rewrite page="/admin/faxStatus.do" />&quot;);return false;'><bean:message key="admin.faxStatus.faxStatus" /></a></li>
-            <% } %>	
+            <% } %>
 			<li><a href="#" onclick='popupPage(800, 800,&quot;<html:rewrite page="/admin/oscarStatus.do" />&quot;);return false;'><bean:message key="admin.oscarStatus.oscarStatus" /></a></li>
-			
+
             <oscar:oscarPropertiesCheck property="LOGINTEST" value="yes">
             <li><a href="#"
             onclick='popupPage(800,1000,&quot;<html:rewrite page="/admin/uploadEntryText.jsp"/>&quot;);return false;'><bean:message key="admin.admin.uploadEntryTxt"/></a>
             </li>
             </oscar:oscarPropertiesCheck>
+            <% if (OscarProperties.getInstance().getProperty("NEW_CONTACTS_UI","false").equals("true")) { %>
+            	<li><a href="#" onclick='popupPage(800, 1000,&quot;<html:rewrite page="/demographic/migrate_demographic_contacts.jsp"/>&quot;);return false;'><bean:message key="admin.admin.migrate_contacts"/></a></li>
+            <% } %>
+
 		</ul>
 		</div>
 	</security:oscarSec>

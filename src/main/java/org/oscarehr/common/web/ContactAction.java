@@ -11,14 +11,16 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.validator.DynaValidatorForm;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.ContactDao;
 import org.oscarehr.common.dao.DemographicContactDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.ProfessionalContactDao;
 import org.oscarehr.common.model.Contact;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.ProfessionalContact;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -102,11 +104,42 @@ public class ContactAction extends DispatchAction {
     			} else {
     				c.setEc("");
     			}
-
+    			c.setFacilityId(LoggedInInfo.loggedInInfo.get().currentFacility.getId());
+    			c.setCreator(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
     			if(c.getId() == null)
     				demographicContactDao.persist(c);
     			else
     				demographicContactDao.merge(c);
+
+
+    			//internal - do the reverse
+    			if(c.getType() == 1) {
+    				//check if it exists
+    				if(demographicContactDao.find(Integer.parseInt(otherId),Integer.parseInt(request.getParameter("demographic_no"))).size() == 0) {
+
+	    				c = new DemographicContact();
+	        			if(id.length()>0 && Integer.parseInt(id)>0) {
+	        				c = demographicContactDao.find(Integer.parseInt(id));
+	        			}
+
+	    				c.setDemographicNo(Integer.parseInt(otherId));
+	    				String role = getReverseRole(request.getParameter("contact_"+x+".role"),demographicNo);
+	    				if(role != null) {
+		        			c.setRole(role);
+		        			c.setType(Integer.parseInt(request.getParameter("contact_"+x+".type")));
+		        			c.setNote(request.getParameter("contact_"+x+".note"));
+		        			c.setContactId(request.getParameter("demographic_no"));
+		        			c.setCategory(DemographicContact.CATEGORY_PERSONAL);
+		        			c.setSdm("");
+		        			c.setEc("");
+		        			if(c.getId() == null)
+		        				demographicContactDao.persist(c);
+		        			else
+		        				demographicContactDao.merge(c);
+	    				}
+    				}
+
+    			}
     		}
     	}
 
@@ -119,7 +152,7 @@ public class ContactAction extends DispatchAction {
     			dc.setDeleted(true);
     			demographicContactDao.merge(dc);
     		}
-    	}
+    	};
 
     	int maxProContact = Integer.parseInt(request.getParameter("procontact_num"));
     	for(int x=1;x<=maxProContact;x++) {
@@ -140,7 +173,8 @@ public class ContactAction extends DispatchAction {
     			c.setType(Integer.parseInt(request.getParameter("procontact_"+x+".type")));
     			c.setContactId(otherId);
     			c.setCategory(DemographicContact.CATEGORY_PROFESSIONAL);
-
+    			c.setFacilityId(LoggedInInfo.loggedInInfo.get().currentFacility.getId());
+    			c.setCreator(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
 
     			if(c.getId() == null)
     				demographicContactDao.persist(c);
@@ -162,6 +196,40 @@ public class ContactAction extends DispatchAction {
 		return manage(mapping,form,request,response);
 	}
 
+	private String getReverseRole(String roleName, int targetDemographicNo) {
+		Demographic demographic = demographicDao.getDemographicById(targetDemographicNo);
+
+		if(roleName.equals("Mother") || roleName.equals("Father") || roleName.equals("Parent")) {
+			if(demographic.getSex().equalsIgnoreCase("M")) {
+				return "Son";
+			} else {
+				return "Daughter";
+			}
+
+		} else if(roleName.equals("Wife")) {
+			return "Husband";
+
+		} else if(roleName.equals("Husband")) {
+			return "Wife";
+		} else if(roleName.equals("Partner")) {
+			return "Partner";
+		} else if(roleName.equals("Son") || roleName.equals("Daughter")) {
+			if(demographic.getSex().equalsIgnoreCase("M")) {
+				return "Father";
+			} else {
+				return "Mother";
+			}
+
+		} else if(roleName.equals("Brother") || roleName.equals("Sister")) {
+			if(demographic.getSex().equalsIgnoreCase("M")) {
+				return "Brother";
+			} else {
+				return "Sister";
+			}
+		}
+
+		return null;
+	}
 
 	public ActionForward addContact(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		return mapping.findForward("cForm");
