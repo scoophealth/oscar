@@ -90,6 +90,9 @@ try
 		request.setAttribute("caseManagementEntryForm", cform);
 	}
 %>
+
+
+
 <script type="text/javascript">
     numNotes = <%=noteSize%>; //How many saved notes do we have?
     ctx = "<c:out value="${ctx}"/>";
@@ -1147,7 +1150,6 @@ try
 </div>
 </nested:form>
 
-<script language="JavaScript" src='<c:out value="${ctx}"/>/jspspellcheck/spellcheck-caller.js'></script>
 
 <script type="text/javascript">
     document.forms["caseManagementEntryForm"].noteId.value = "<%=savedId%>";
@@ -1230,19 +1232,6 @@ try
 
     //$("encMainDiv").scrollTop = $("n<%=savedId%>").offsetTop - $("encMainDiv").offsetTop;
     reason = "<%=insertReason(request)%>";    //function defined bottom of file
-
- 	function spellCheck()
-    {
-		// Build an array of form elements (not there values)
-        var elements = new Array(0);
-
-        // Your form elements that you want to have spell checked
-        elements[elements.length] = document.getElementById(caseNote);
-
-        // Start the spell checker
-        startSpellCheck(ctx+'/jspspellcheck/',elements);
-
-    }
 
     if(typeof messagesLoaded == 'function') {
  	     messagesLoaded('<%=savedId%>');
