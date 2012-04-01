@@ -278,6 +278,7 @@
             <form-property name="encounterWindowHeight" type="org.oscarehr.common.model.UserProperty"/>
             <form-property name="encounterWindowMaximize" type="org.oscarehr.common.model.UserProperty"/>
             <form-property name="quickChartSize" type="org.oscarehr.common.model.UserProperty"/>
+			<form-property name="labAckCommentProperty" type="org.oscarehr.common.model.UserProperty" />
 		</form-bean>
 		<form-bean name="setMyOscarIdForm" type="org.apache.struts.action.DynaActionForm">
 			<form-property name="myOscarLoginId" type="java.lang.String" />
