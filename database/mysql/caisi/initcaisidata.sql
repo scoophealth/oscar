@@ -1397,6 +1397,10 @@ INSERT INTO `program` (id,facilityId,name,description,address,phone,fax,url,emai
 
 INSERT INTO `program` (id,facilityId,name,description,address,phone,fax,url,email,emergencyNumber,type,location,maxAllowed,holdingTank,allowBatchAdmission,allowBatchDischarge,hic,programStatus,exclusiveView,defaultServiceRestrictionDays,userDefined) VALUES (10015,1,'Outside on Street','Outside on Street','','','','','','','community','',99999,0,0,0,0,'active','no',30,1);
 
+update program set enableEncounterTime=0;
+update program set enableEncounterTransportationTime=0;
+
+
 -- DEFAULT BED TYPE
 INSERT INTO `bed_type` VALUES (1, 'N/A', 1);
 
