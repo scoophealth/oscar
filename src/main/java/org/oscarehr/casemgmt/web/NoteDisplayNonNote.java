@@ -75,7 +75,8 @@ public class NoteDisplayNonNote implements NoteDisplay {
 			}
 		}
 		provider = providerDao.getProvider(h1.getProvider_no());
-		tmpNote.append(" billed by " + provider.getFormattedName());
+		String name = provider == null ? "Not Set" : provider.getFormattedName(); 
+		tmpNote.append(" billed by " + name);
 		note = tmpNote.toString();
 		noteId = h1.getId();
 		linkInfo = "/billing/CA/ON/billingONCorrection.jsp?billing_no=" + noteId.toString();
