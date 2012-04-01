@@ -65,10 +65,10 @@ user_no = (String) session.getAttribute("user");
    		}
    		else {
 	   		if( servicecode.equals("all") ) {
-		   		batchBillings = batchBillingDAO.findByProvider(Integer.parseInt(providerview.trim()));
+		   		batchBillings = batchBillingDAO.findByProvider(providerview.trim());
 	   		}
 	   		else {
-		   		batchBillings = batchBillingDAO.findByProvider(Integer.parseInt(providerview.trim()), servicecode);
+		   		batchBillings = batchBillingDAO.findByProvider(providerview.trim(), servicecode);
 	   		}
    		}
    	}
@@ -271,7 +271,7 @@ ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 	      String proName1;
 	      for( BatchBilling batchBilling : batchBillings ){
 		
-	       provider = providerDao.getProvider(String.valueOf(batchBilling.getBillingProviderNo()));
+	       provider = providerDao.getProvider(batchBilling.getBillingProviderNo());
 	       proFirst = provider.getFirstName();
 	       proLast = provider.getLastName();
 		   proName1 = provider.getFullName();

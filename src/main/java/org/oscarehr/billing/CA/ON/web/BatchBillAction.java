@@ -190,8 +190,8 @@ public class BatchBillAction extends DispatchAction {
     	
     		BatchBillingDAO batchBillingDAO = (BatchBillingDAO) SpringUtils.getBean("batchBillingDAO");
     		Integer demographicNo = Integer.parseInt(request.getParameter("demographic_no").trim());
-    		Integer billingProviderNo = Integer.parseInt(request.getParameter("provider").trim());
-    		Integer creatorProviderNo = Integer.parseInt(request.getParameter("creator").trim());
+    		String billingProviderNo = request.getParameter("provider").trim();
+    		String creatorProviderNo = request.getParameter("creator").trim();
     		String service_code = request.getParameter("xml_other1");
     		String dxcode = request.getParameter("xml_diagnostic_detail");
     		String createdDate = request.getParameter("createdate");

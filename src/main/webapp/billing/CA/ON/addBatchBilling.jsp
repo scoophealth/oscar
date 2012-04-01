@@ -114,6 +114,11 @@ function checkCodes() {
 		}
 	}
 	
+	if( document.serviceform.provider[document.serviceform.provider.selectedIndex].value == "" ) {
+		msg += "\n<bean:message key="billing.batchbilling.noProviderErr"/>";
+		ret = false;
+	}
+	
 	if( msg.length > 0 ) {
 		alert(msg);
 	}

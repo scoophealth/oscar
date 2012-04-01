@@ -23,10 +23,10 @@ import javax.persistence.TemporalType;
 public class BatchBilling  extends AbstractModel<Integer> implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Integer id;
-	private int billingProviderNo;
+	private String billingProviderNo;
 	private Timestamp createDate;
 	private Date lastbilled_date;
-	private int creator;
+	private String creator;
 	private int demographicNo;
 	private String dxcode;
 	private String serviceCode;
@@ -49,11 +49,11 @@ public class BatchBilling  extends AbstractModel<Integer> implements Serializabl
 
 
 	@Column(name="billing_provider_no")
-	public int getBillingProviderNo() {
+	public String getBillingProviderNo() {
 		return this.billingProviderNo;
 	}
 
-	public void setBillingProviderNo(int billingProviderNo) {
+	public void setBillingProviderNo(String billingProviderNo) {
 		this.billingProviderNo = billingProviderNo;
 	}
 
@@ -68,12 +68,12 @@ public class BatchBilling  extends AbstractModel<Integer> implements Serializabl
 	}
 
 
-	public int getCreator() {
+	public String getCreator() {
 		return this.creator;
 	}
 
-	public void setCreator(int creator) {
-		this.creator = creator;
+	public void setCreator(String creatorProviderNo) {
+		this.creator = creatorProviderNo;
 	}
 
 

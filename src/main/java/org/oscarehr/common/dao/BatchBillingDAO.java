@@ -49,14 +49,14 @@ public class BatchBillingDAO extends AbstractDao<BatchBilling> {
     }
     
     @SuppressWarnings("unchecked")
-    public List<BatchBilling> findByProvider(Integer providerNo) {
+    public List<BatchBilling> findByProvider(String providerNo) {
     	Query query = entityManager.createQuery("select b from BatchBilling b where b.billingProviderNo = :provider");
     	query.setParameter("provider", providerNo);    	    	
     	return query.getResultList();
     }
     
     @SuppressWarnings("unchecked")
-    public List<BatchBilling> findByProvider(Integer providerNo, String service_code) {
+    public List<BatchBilling> findByProvider(String providerNo, String service_code) {
     	Query query = entityManager.createQuery("select b from BatchBilling b where b.billingProviderNo = :provider and b.serviceCode = :service_code");
     	query.setParameter("provider", providerNo);
     	query.setParameter("service_code", service_code);
