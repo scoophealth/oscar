@@ -174,8 +174,18 @@ public class SchemaUtils
 
 	public static int loadFileIntoMySQL(String filename) throws IOException {
 		String dir = new File(filename).getParent();
-		Process p = Runtime.getRuntime().exec(new String[] {"mysql","--user="+ConfigUtils.getProperty("db_user"),"--password="+ConfigUtils.getProperty("db_password"),"-e","source "+filename,ConfigUtils.getProperty("db_schema")},new String[]{},new File(dir));
-
+                String env[] = null;
+                String envStr = null;
+                if (System.getProperty("os.name").startsWith("Windows")){
+                    envStr = "SYSTEMROOT="+System.getenv("SYSTEMROOT");
+                }
+                if (envStr != null) {
+                    env = new String[]{envStr};
+                } else {
+                    env = new String[]{};
+                }
+                
+		Process p = Runtime.getRuntime().exec(new String[] {"mysql","--user="+ConfigUtils.getProperty("db_user"),"--password="+ConfigUtils.getProperty("db_password"),"-e","source "+filename,ConfigUtils.getProperty("db_schema")},env, new File(dir));
 		BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
 		BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
@@ -241,7 +251,7 @@ public class SchemaUtils
 			}
 			rs.close();
 
-
+                        
 		}catch(SQLException e) {
 			MiscUtils.getLogger().error("Error:",e);
 		}
