@@ -54,13 +54,20 @@ public class NoteDisplayNonNote implements NoteDisplay {
 	public NoteDisplayNonNote(BillingClaimHeader1 h1) {
 		Calendar cal1 = Calendar.getInstance();
 		Calendar cal2 = Calendar.getInstance();
-
-		cal1.setTime(h1.getBilling_date());
-		cal2.setTime(h1.getBilling_time());
-		cal1.set(Calendar.HOUR_OF_DAY, cal2.get(Calendar.HOUR_OF_DAY));
-		cal1.set(Calendar.MINUTE, cal2.get(Calendar.MINUTE));
-		cal1.set(Calendar.SECOND, cal2.get(Calendar.SECOND));
-		date = cal1.getTime();
+		date = null;
+		
+		if( h1.getBilling_date() != null ) {
+			cal1.setTime(h1.getBilling_date());
+			
+			if( h1.getBilling_time() != null ) {
+				cal2.setTime(h1.getBilling_time());
+				cal1.set(Calendar.HOUR_OF_DAY, cal2.get(Calendar.HOUR_OF_DAY));
+				cal1.set(Calendar.MINUTE, cal2.get(Calendar.MINUTE));
+				cal1.set(Calendar.SECOND, cal2.get(Calendar.SECOND));
+			}
+			
+			date = cal1.getTime();
+		}
 
 		StringBuilder tmpNote = new StringBuilder();
 
@@ -74,8 +81,16 @@ public class NoteDisplayNonNote implements NoteDisplay {
 				tmpNote.append("; ");
 			}
 		}
-		provider = providerDao.getProvider(h1.getProvider_no());
-		String name = provider == null ? "Not Set" : provider.getFormattedName(); 
+		
+		String name;
+		if( h1.getProvider_no() != null && h1.getProvider_no().length() > 0 ) {
+			provider = providerDao.getProvider(h1.getProvider_no());
+			name = provider == null ? "Not Set" : provider.getFormattedName();
+		}
+		else {
+			name = "Not Set";
+		}
+		
 		tmpNote.append(" billed by " + name);
 		note = tmpNote.toString();
 		noteId = h1.getId();

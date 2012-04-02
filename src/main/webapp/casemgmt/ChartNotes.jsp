@@ -550,6 +550,11 @@ try
 				fullTxtFormat.add(Boolean.FALSE);
 				continue;
 			}
+			
+			if( cmNote.getObservationDate() == null ) {
+				fullTxtFormat.add(Boolean.FALSE);
+				continue;
+			}
 
 			if (noteSize > numToDisplay)
 			{
@@ -890,7 +895,7 @@ try
 		  								%>
 											<div id="observation<%=note.getNoteId()%>" style="font-size: 11px; float: right; margin-right: 3px;">
 													<bean:message key="oscarEncounter.encounterDate.title"/>:&nbsp;
-													<span id="obs<%=note.getNoteId()%>"><%=DateUtils.getDate(note.getObservationDate(), dateFormat, request.getLocale())%></span>
+													<span id="obs<%=note.getNoteId()%>"><%=note.getObservationDate() != null ? DateUtils.getDate(note.getObservationDate(), dateFormat, request.getLocale()) : "N/A"%></span>
 													<%
 														if (note.isCpp())
 														{
