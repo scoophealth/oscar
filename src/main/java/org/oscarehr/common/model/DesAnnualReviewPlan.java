@@ -12,7 +12,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name="demographicSets")
+@Table(name="desannualreviewplan")
 public class DesAnnualReviewPlan extends AbstractModel<Integer>{
 
 	@Id
