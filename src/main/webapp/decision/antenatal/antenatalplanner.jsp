@@ -1,26 +1,26 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -30,7 +30,7 @@
   String form_no = request.getParameter("formId")!=null?request.getParameter("formId"):("0") ;
   String query_name = request.getParameter("query_name")!=null?request.getParameter("query_name"):("") ;
   String curUser_no = (String) session.getAttribute("user");
-  
+
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*,java.io.*" %>
 <jsp:useBean id="plannerBean" class="oscar.AppointmentMainBean" scope="page" />
@@ -38,16 +38,21 @@
 <jsp:useBean id="risks" class="oscar.decision.DesAntenatalPlannerRisks_99_12" scope="page" />
 <jsp:useBean id="checklist" class="oscar.decision.DesAntenatalPlannerChecklist_99_12" scope="page" />
 <%@ include file="../../admin/dbconnection.jsp" %>
-<% 
-String [][] dbQueries=new String[][] { 
-{"search_formarrisk", "select * from formAR where ID = ?" }, 
-{"search_formonarrisk", "select * from formONAR where ID = ?" }, 
-{"search_desaprisk", "select * from desaprisk where form_no <= ? and demographic_no = ? order by form_no desc, desaprisk_date desc, desaprisk_time desc limit 1 " }, 
-{"save_desaprisk", "insert into desaprisk (desaprisk_date,desaprisk_time,provider_no,risk_content,checklist_content,demographic_no,form_no) values (?,?,?,?,?,?,? ) " }, 
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.Desaprisk" %>
+<%@page import="org.oscarehr.common.dao.DesapriskDao" %>
+<%
+	DesapriskDao desapriskDao = SpringUtils.getBean(DesapriskDao.class);
+%>
+
+<%
+String [][] dbQueries=new String[][] {
+{"search_formarrisk", "select * from formAR where ID = ?" },
+{"search_formonarrisk", "select * from formONAR where ID = ?" },
 };
 plannerBean.doConfigure(dbQueries);
 %>
- 
+
 <html>
 <head>
     <title>Antenatal Planner</title>
@@ -67,18 +72,22 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 </head>
 <body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1">
 <form name="planner" method="post" action="antenatalplanner.jsp?demographic_no=<%=demographic_no%>&formId=<%=form_no%>" >
-<%-- @ include file="zgetarriskdata.jsp" --%> 
+<%-- @ include file="zgetarriskdata.jsp" --%>
 <%
   //save risk&checklist data if required
   if(request.getParameter("submit")!=null && (request.getParameter("submit").equals(" Save ") || request.getParameter("submit").equals("Save and Exit")) ) {
-    GregorianCalendar now=new GregorianCalendar();
-    String form_date =now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH);
-    String form_time =now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND);
     String risk_content="", checklist_content="";
     risk_content=SxmlMisc.createXmlDataString(request, "risk_");
     checklist_content=SxmlMisc.createXmlDataString(request, "checklist_");
-    String[] param = {form_date,form_time,curUser_no,risk_content,checklist_content,demographic_no,form_no};
-    int rowsAffected = plannerBean.queryExecuteUpdate(param, "save_desaprisk" );
+    Desaprisk darp = new Desaprisk();
+    darp.setDesapriskDate(new java.util.Date());
+    darp.setDesapriskTime(new java.util.Date());
+    darp.setProviderNo(curUser_no);
+    darp.setRiskContent(risk_content);
+    darp.setChecklistContent(checklist_content);
+    darp.setDemographicNo(Integer.parseInt(demographic_no));
+    darp.setFormNo(Integer.parseInt(form_no));
+    desapriskDao.persist(darp);
   }
 
   //save & exit if required
@@ -87,24 +96,24 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     return;
   }
 
-  //initial prop bean with "0" 
+  //initial prop bean with "0"
   //for(int i=0;i<riskdataname.length;i++) {
 	//  riskDataBean.setProperty(riskdataname[i][0],"0");
   //}
   //get the risk data from formAR1
   String finalEDB = null, wt=null, ht=null;
-  
+
   ResultSet rsdemo = null ;
   if(!form_no.equals("0")) {
       //if(query_name.equalsIgnoreCase("search_formonarrisk") ) {
           rsdemo = plannerBean.queryResults(form_no, "search_formonarrisk");
       //} else {
-     //         rsdemo = plannerBean.queryResults(form_no, "search_formarrisk");                  
+     //         rsdemo = plannerBean.queryResults(form_no, "search_formarrisk");
      // }
-          
+
       ResultSetMetaData resultsetmetadata = rsdemo.getMetaData();
-      while (rsdemo.next()) { 
-          finalEDB = rsdemo.getString("c_finalEDB");              
+      while (rsdemo.next()) {
+          finalEDB = rsdemo.getString("c_finalEDB");
 	      wt = rsdemo.getString("pg1_wt");
 	      ht = rsdemo.getString("pg1_ht");
           for(int k = 1; k <= resultsetmetadata.getColumnCount(); k++) {
@@ -112,7 +121,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
               //String value = null;
               if(resultsetmetadata.getColumnTypeName(k).equalsIgnoreCase("TINY")) {
                   if(rsdemo.getInt(k) == 1) riskDataBean.setProperty(resultsetmetadata.getColumnName(k), "checked"); //"55", "risk_cinca"
-              	       
+
 %>
 <input type="hidden" name="<%=resultsetmetadata.getColumnName(k)%>" value="checked" >
 <%            }
@@ -120,19 +129,19 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
       }
   }
   //get the risk data from table desaprisk for other risk factors
-  String[] param2 = {form_no, demographic_no};
-  rsdemo = plannerBean.queryResults(param2, "search_desaprisk");
+  Desaprisk darp = desapriskDao.search(Integer.parseInt(form_no),Integer.parseInt(demographic_no));
+
   HashMap dataMap = new HashMap();
-  while (rsdemo.next()) { 
-    String risk_content = rsdemo.getString("risk_content");
-    String checklist_content = rsdemo.getString("checklist_content");
+  if (darp != null) {
+    String risk_content = darp.getRiskContent();
+    String checklist_content = darp.getChecklistContent();
 %>
 <script type="text/javascript">
    xmlText = "<xml><planner><%=risk_content%><%=checklist_content%></planner></xml>";
 </script>
 <%
     String riskFilePath = "../webapps/"+oscarVariables.getProperty("project_home")+"/decision/antenatal/desantenatalplannerrisks_99_12.xml";
-    
+
         File file = new File(OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"desantenatalplannerrisks_99_12.xml");
         if(file.isFile() || file.canRead()) {
 			   riskFilePath = OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"desantenatalplannerrisks_99_12.xml";
@@ -140,12 +149,12 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 
     //set the riskdata bean from xml file
     Properties savedar1risk1 = risks.getRiskName(riskFilePath); //risk_55
-  	StringBuffer tt; 
+  	StringBuffer tt;
 
     for (Enumeration e = savedar1risk1.propertyNames() ; e.hasMoreElements() ;) {
       tt = new StringBuffer().append(e.nextElement());
       if(SxmlMisc.getXmlContent(risk_content, "risk_"+tt.toString())!= null) {
-        riskDataBean.setProperty(tt.toString(), "checked");            
+        riskDataBean.setProperty(tt.toString(), "checked");
 	  }
     }
 
@@ -160,7 +169,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     <input type="button" name="submit" value="Print" onclick="popupPage(700,800,'antenatalplannerprint.jsp?demographic_no=<%=demographic_no%>&formId=<%=form_no%>');return false;" />
     </td>
     <td align="right">
-      <a href=# onClick ="popupPage(600,930,'obarriskedit_99_12.jsp');return false;">Edit OB Risks</a> | 
+      <a href=# onClick ="popupPage(600,930,'obarriskedit_99_12.jsp');return false;">Edit OB Risks</a> |
       <a href=# onClick ="popupPage(600,930,'obarchecklistedit_99_12.jsp');return false;">Edit CheckList</a>
     </td>
   </tr>
@@ -176,7 +185,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     if(file.isFile() || file.canRead()) {
         riskFilePath = OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"/desantenatalplannerrisks_99_12.xml";
     }
-    
+
     out.println(risks.doStuff(new String(riskFilePath)));
 %>
     </td><td>
@@ -209,9 +218,9 @@ else {
 		    }
 		  }
     }
-  
+
     String checkListFilePath = "../webapps/"+oscarVariables.getProperty("project_home")+"/decision/antenatal/desantenatalplannerchecklist_99_12.xml";
-    
+
     file = new File(OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"/desantenatalplannerchecklist_99_12.xml");
     if(file.isFile() || file.canRead()) {
         checkListFilePath = OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"/desantenatalplannerchecklist_99_12.xml";
@@ -219,7 +228,7 @@ else {
 
   out.println(checklist.doStuff(new String(checkListFilePath), riskDataBean));
 }
-%>    
+%>
   </tr>
 </table>
 <table bgcolor='silver' width='100%'>
@@ -231,7 +240,7 @@ else {
     <input type="button" name="submit" value="Print" onclick="popupPage(700,800,'antenatalplannerprint.jsp?demographic_no=<%=demographic_no%>&formId=<%=form_no%>');return false;" />
     </td>
     <td align="right">
-      <a href=# onClick ="popupPage(600,930,'obarriskedit_99_12.jsp');return false;">Edit OB Risks</a> | 
+      <a href=# onClick ="popupPage(600,930,'obarriskedit_99_12.jsp');return false;">Edit OB Risks</a> |
       <a href=# onClick ="popupPage(600,930,'obarchecklistedit_99_12.jsp');return false;">Edit CheckList</a>
     </td>
   </tr>
@@ -256,10 +265,10 @@ else
 
   //console.log(doc.nodeName+" "+doc.nodeType);
 
-  
-  
+
+
   var x=doc.getElementsByTagName("planner");
-  
+
   //console.log(x.nodeName);
   for (var i=0;i < x.length; i++){
      //console.log("WHAT IS X "+x[i]);
@@ -271,7 +280,7 @@ else
         ele.checked = true;
      }
   }
-    
+
     </script>
 </body>
 </html>
