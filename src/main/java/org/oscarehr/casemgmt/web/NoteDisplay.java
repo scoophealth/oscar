@@ -42,6 +42,11 @@ public interface NoteDisplay {
 			if (note1 == null || note2 == null) {
 				return 0;
 			}
+			
+			if( note2.getObservationDate() == null || note1.getObservationDate() == null ) {
+				return 0;
+			}
+			
 			return note2.getObservationDate().compareTo(note1.getObservationDate());
 		}
 	};
