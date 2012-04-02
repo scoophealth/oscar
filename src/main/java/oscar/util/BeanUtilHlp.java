@@ -52,7 +52,7 @@ public String getPropertyValue(Object bean, String fieldName) {
   BeanUtils ut = new BeanUtils();
   String value = "";
   try {
-    value = ut.getProperty(bean, fieldName);
+    value = BeanUtils.getProperty(bean, fieldName);
   }
   catch (NoSuchMethodException ex) {MiscUtils.getLogger().error("Error", ex);
   }

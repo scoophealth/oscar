@@ -182,7 +182,7 @@ public class BillActivityDAO {
         
            PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(query);
         
-            pstmt.setString(1,b.SENT);
+            pstmt.setString(1,Billactivity.SENT);
             pstmt.setDate(2,new java.sql.Date(new Date().getTime()));
             pstmt.setString(3,""+b.getId());
             pstmt.executeUpdate();

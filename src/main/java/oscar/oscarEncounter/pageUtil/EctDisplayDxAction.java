@@ -79,7 +79,7 @@ public class EctDisplayDxAction extends EctDisplayAction {
         Vector diseases = hd.getDxResearchBeanVector();
         
         for(int idx = 0; idx < diseases.size(); ++idx ) {
-            NavBarDisplayDAO.Item item = Dao.Item();
+            NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
             dxResearchBean dxBean = (dxResearchBean) diseases.get(idx);
             
             if (dxBean.getStatus() != null && dxBean.getStatus().equalsIgnoreCase("C")){

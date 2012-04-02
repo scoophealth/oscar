@@ -50,8 +50,8 @@ public class EctEditMeasurementStyleAction extends Action {
         EctEditMeasurementStyleForm frm = (EctEditMeasurementStyleForm) form;                
         request.getSession().setAttribute("EctEditMeasurementStyleForm", frm);
         
-        String groupName = (String) frm.getGroupName();
-        String styleSheet = (String) frm.getStyleSheet();         
+        String groupName = frm.getGroupName();
+        String styleSheet = frm.getStyleSheet();         
         
         changeCSS(groupName, styleSheet);
         

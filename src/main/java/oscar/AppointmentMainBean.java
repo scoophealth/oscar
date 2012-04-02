@@ -49,7 +49,7 @@ public class AppointmentMainBean {
   public boolean getBDoConfigure() {return bDoConfigure;}
   public void setBDoConfigure() { bDoConfigure = false;}
 
-  public void doConfigure( String[][]dbOperation ) throws Exception {
+  public void doConfigure( String[][]dbOperation ) {
     bDoConfigure = true;
     if(dbPH!=null) dbPH=null;
 
@@ -58,7 +58,7 @@ public class AppointmentMainBean {
     dbPH=new DBPreparedHandler();
   }
 
-  public void doConfigure( String[][]dbOperation,String[][]controlToFile) throws Exception {
+  public void doConfigure( String[][]dbOperation,String[][]controlToFile) {
     bDoConfigure = true;
     if(dbPH!=null) dbPH=null;
 
@@ -141,7 +141,7 @@ public class AppointmentMainBean {
     	  dbPH.queryExecuteUpdate(lst.get(i));
       }
   }
-  
+
   public ResultSet queryResults(String[] aKeyword, String dboperation) throws Exception{
 	 	String sqlQuery =null;
 
@@ -176,7 +176,7 @@ public class AppointmentMainBean {
 	 	String sqlQuery =null;
 
 	  ResultSet rs =null;
-	  if(aKeyword[0].getParamType().equals(DBPreparedHandlerParam.PARAM_STRING) && 
+	  if(aKeyword[0].getParamType().equals(DBPreparedHandlerParam.PARAM_STRING) &&
 			  aKeyword[0].getStringValue().equals("*")) {
 	  	sqlQuery = dbSQL.getDef("search*","");
 	    rs = dbPH.queryResults_paged(sqlQuery, iOffSet);
@@ -186,7 +186,7 @@ public class AppointmentMainBean {
 	  }
 	return rs;
   }
-  
+
   public Object[] queryResultsCaisi(String[] aKeyword, String dboperation) throws Exception{
 	String sqlQuery =null;
 	Object[] rs =null;
@@ -220,7 +220,7 @@ public class AppointmentMainBean {
       String sqlQuery = dbSQL.getDef(dboperation);
       return dbPH.queryResultsCaisi(sqlQuery);
     }
-  
+
   public ResultSet queryResults(String aKeyword, String dboperation) throws Exception{
 	  String sqlQuery = null;
 	  ResultSet rs =null;
@@ -233,7 +233,7 @@ public class AppointmentMainBean {
 	  }
   	return rs;
   }
-  
+
   public ResultSet queryResults_paged(String aKeyword, String dboperation, int iOffSet) throws Exception{
 	String sqlQuery = null;
 	ResultSet rs =null;
@@ -250,7 +250,7 @@ public class AppointmentMainBean {
             String str2=str1.substring(0, str1.lastIndexOf(" "));
             String str3=sqlQuery.substring(iIndex1+5, sqlQuery.length());
             int iIndex2=str3.indexOf("?");
-//            if(str3.indexOf("and")>iIndex2) iIndex2=str3.indexOf("and") + 3; 
+//            if(str3.indexOf("and")>iIndex2) iIndex2=str3.indexOf("and") + 3;
             sqlQuery= str2 +  " 1=1 " + str3.substring(iIndex2+1, str3.length());
 	  	  }
     	  rs = dbPH.queryResults_paged(sqlQuery, iOffSet);
@@ -262,7 +262,7 @@ public class AppointmentMainBean {
 	}
   	return rs;
   }
-  
+
   public ResultSet queryResults(int aKeyword, String dboperation) throws Exception{
 	  String sqlQuery = null;
 	  ResultSet rs =null;

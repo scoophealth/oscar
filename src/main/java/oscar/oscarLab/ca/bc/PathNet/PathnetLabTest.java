@@ -217,7 +217,7 @@ public class PathnetLabTest {
         try {
             // Some examples
             DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-            java.util.Date date = (java.util.Date)formatter.parse(s);
+            java.util.Date date = formatter.parse(s);
             age = UtilDateUtilities.calcAge(date);
         } catch (ParseException e) {
         }

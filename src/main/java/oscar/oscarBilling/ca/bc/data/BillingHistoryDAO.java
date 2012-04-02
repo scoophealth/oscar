@@ -71,7 +71,7 @@ public class BillingHistoryDAO {
     ResultSet rs = null;
     try {
       
-      rs = (ResultSet) DBHandler.GetSQL(qry);
+      rs = DBHandler.GetSQL(qry);
       while (rs.next()) {
         BillHistory bh = new BillHistory();
         bh.setId(rs.getInt(1));
@@ -176,7 +176,7 @@ public class BillingHistoryDAO {
       history.setPaymentTypeId(values[4]);
       MSPReconcile rec = new MSPReconcile();
       //don't waste resources if this is a private bill
-      if (!rec.BILLTYPE_PRI.equals(history.getBillingtype())) {
+      if (!MSPReconcile.BILLTYPE_PRI.equals(history.getBillingtype())) {
         String maxSeqNum = rec.getMaxSeqNum(billMasterNo);
         history.setSeqNum(maxSeqNum);
       }

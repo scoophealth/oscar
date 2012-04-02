@@ -48,7 +48,7 @@ public class RptByExampleQueryBean{
             this.queryName = queryName;
             //this.queryWithEscapeChar = exampleData.replaceSQLString ("'","\\'",query);
             StringEscapeUtils strEscUtils = new StringEscapeUtils();                                
-            this.queryWithEscapeChar = strEscUtils.escapeJavaScript(query);
+            this.queryWithEscapeChar = StringEscapeUtils.escapeJavaScript(query);
             MiscUtils.getLogger().debug("query with javascript escape char: " + queryWithEscapeChar);
        }
       
@@ -60,7 +60,7 @@ public class RptByExampleQueryBean{
             this.date = date;
             //this.queryWithEscapeChar = exampleData.replaceSQLString ("'","\\'",query);
             StringEscapeUtils strEscUtils = new StringEscapeUtils();                                
-            this.queryWithEscapeChar = strEscUtils.escapeJavaScript(query);
+            this.queryWithEscapeChar = StringEscapeUtils.escapeJavaScript(query);
        }
        
        public int getId(){

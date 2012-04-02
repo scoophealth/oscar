@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import org.apache.commons.validator.GenericValidator;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.oscarehr.util.MiscUtils;
@@ -146,7 +147,7 @@ public class WriteNewMeasurements {
                 int iMax = 0;
                 int iMin = 0;
                 org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
-                if (gValidator.isBlankOrNull(inputValue)) {
+                if (GenericValidator.isBlankOrNull(inputValue)) {
                     measures.removeElementAt(i);
                     i--;
                     continue;

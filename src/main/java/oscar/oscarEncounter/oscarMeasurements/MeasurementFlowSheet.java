@@ -66,13 +66,13 @@ public class MeasurementFlowSheet {
     private String displayName = null;
     private String warningColour = null;
     private String recommendationColour = null;
-    
-    Hashtable indicatorHash = new Hashtable();   //color map for severity 
+
+    Hashtable indicatorHash = new Hashtable();   //color map for severity
     private String topHTMLFileName = null;
     private boolean universal;
     private boolean isMedical = true;
-    
-    
+
+
     //ArrayList list = null;  // list of the measurements  ** replace with a asList Items. (maybe for first iteration condence down to string
     //ArrayList dsElements = null; //collection of ds xml elements  ** future replace function with just getted list
     //Hashtable dsHash = null; //hash of the rules  ** might not be needed if it's in the object
@@ -84,11 +84,11 @@ public class MeasurementFlowSheet {
     //String demographic = null;   //not used
     String[] dxTriggers = null; // triggers that will cause this flowsheet to show up in a patients profice
     String[] programTriggers = null;
-     
-    
-    
+
+
+
     private ListOrderedMap itemList = new ListOrderedMap();
-    
+
     public FlowSheetItem addListItem(FlowSheetItem item){
         log.debug("ITEM "+ item.getItemName());
         String dsRules = (String) item.getAllFields().get("ds_rules");  //ds_rules=
@@ -117,7 +117,7 @@ public class MeasurementFlowSheet {
     public void parseDxTriggers(String s) {
         dxTriggers = s.split(","); //TODO: what do about different coding systems.
     }
-    
+
     public void parseProgramTriggers(String s) {
         programTriggers = s.split(",");
     }
@@ -125,35 +125,35 @@ public class MeasurementFlowSheet {
     public String[] getDxTriggers() {
         return dxTriggers;
     }
-    
+
     public String[] getProgramTriggers() {
         return programTriggers;
     }
-    
-    public String getDxTriggersString(){ 
+
+    public String getDxTriggersString(){
        StringBuilder sb = new StringBuilder();
        boolean firstElement = true;
        if (dxTriggers != null){
            for(String s:dxTriggers){
                 if (!firstElement){
                     sb.append(",");
-                }   
+                }
                 sb.append(s);
-           }  
+           }
        }
        return sb.toString();
     }
-    
-    public String getProgramTriggersString(){ 
+
+    public String getProgramTriggersString(){
     	StringBuilder sb = new StringBuilder();
         boolean firstElement = true;
         if (programTriggers != null){
             for(String s:programTriggers){
                  if (!firstElement){
                      sb.append(",");
-                 }   
+                 }
                  sb.append(s);
-            }  
+            }
         }
         return sb.toString();
      }
@@ -161,7 +161,7 @@ public class MeasurementFlowSheet {
     /** Creates a new instance of MeasurementFlowSheet */
     public MeasurementFlowSheet() {
     }
-    
+
     public List getDSElements(String measurement){
           FlowSheetItem fsi = (FlowSheetItem) itemList.get(measurement);
           return fsi.getRecommendations();
@@ -170,26 +170,26 @@ public class MeasurementFlowSheet {
     public void addFlowSheetItem(int i,FlowSheetItem item){
         itemList.put(i, item.getItemName(), item);
     }
-    
+
     public FlowSheetItem getFlowSheetItem(String measurement) {
         MiscUtils.getLogger().debug("GETTING "+measurement+ " ITEMS IN THE LIST "+itemList.size());
         FlowSheetItem item = (FlowSheetItem) itemList.get(measurement);
-        
+
         return item;
     }
-  
-    
+
+
     public Map getMeasurementFlowSheetInfo(String measurement) {
         if (itemList == null) {
-         //DO something   
+         //DO something
         	itemList = new ListOrderedMap();
         }
         log.debug("GETTING "+measurement+ " ITEMS IN THE LIST "+itemList.size());
         FlowSheetItem item = (FlowSheetItem) itemList.get(measurement);
-        
+
         return item.getAllFields();
     }
-    
+
     //If measurement is null. Add item to the end of the flowsheet.
     public void addAfter(String measurement , FlowSheetItem item){
     	int placement = itemList.size();
@@ -198,23 +198,23 @@ public class MeasurementFlowSheet {
     	}
         itemList.put(placement, item.getItemName(), item);
     }
-    
+
     public void setToHidden(String measurement){
          FlowSheetItem item = (FlowSheetItem) itemList.get(measurement);
          item.setHide(true);
     }
-    
-    
-    
+
+
+
     public void updateMeasurementFlowSheetInfo(String measurement, Hashtable h) {
         FlowSheetItem item = new FlowSheetItem(h);
         itemList.put(measurement, item);
     }
-    
+
     public void updateMeasurementFlowSheetInfo(String measurement, FlowSheetItem item) {
         itemList.put(measurement, item);
     }
-    
+
 
     public List getMeasurementList() {
         return itemList.asList();
@@ -244,10 +244,10 @@ public class MeasurementFlowSheet {
                 }
 
                 if (is == null) {
-                   is = MeasurementFlowSheet.class.getResourceAsStream("/oscar/oscarEncounter/oscarMeasurements/flowsheets/html/" + topHTMLFileName);  
+                   is = MeasurementFlowSheet.class.getResourceAsStream("/oscar/oscarEncounter/oscarMeasurements/flowsheets/html/" + topHTMLFileName);
                    log.debug("loading from stream " );
                 }
-                
+
                 if (is != null){
                     BufferedReader bReader = new BufferedReader(new InputStreamReader(is));
                     String str;
@@ -263,7 +263,7 @@ public class MeasurementFlowSheet {
         return sb.toString();
     }
 
-    
+
     public void loadRuleBase(){
         log.debug("LOADRULEBASE == "+name);
         ArrayList dsElements = new ArrayList();
@@ -283,30 +283,30 @@ public class MeasurementFlowSheet {
               }else{
                   log.debug("NO RULES FOR "+fsi.getItemName());
               }
-              
+
            }
         }
         log.debug("LOADING RULES2"+name+" size + "+dsElements.size()+" rulebase "+ruleBase);
         if (dsElements != null && dsElements.size() > 0){
-            
+
             log.debug("LOADING RULES21"+dsElements.size());
             RuleBaseCreator rcb = new RuleBaseCreator();
             try{
-                
+
                 log.debug("LOADING RULES22");
                 ruleBase = rcb.getRuleBase("rulesetName", dsElements);
                 log.debug("LOADING RULES23");
                 rulesLoaded = true;
             }catch(Exception e){
                 log.debug("LOADING EXEPTION");
-        
+
                 MiscUtils.getLogger().error("Error", e);
             }
         }else{
             if (true);
         }
     }
-    
+
     public void loadRuleBase(String string) {
         try {
             boolean fileFound = false;
@@ -348,26 +348,26 @@ public class MeasurementFlowSheet {
             try{
                 int count = 0;
                 for (TargetColour obj: targetColours){
-                     TargetColour rec = (TargetColour) obj;
+                     TargetColour rec = obj;
                      dsElements.add(rec.getRuleBaseElement("DD"+count));
                      count++;
                   }
-                
+
                 log.debug("loadMeasuremntRuleBase 1");
                 measurementRuleBase = rcb.getRuleBase("rulesetName", dsElements);
                 log.debug("loadMeasuremntRuleBase 2");
                 rulesLoaded = true;
             }catch(Exception e){
                 log.debug("loadMeasuremntRuleBase EXEPTION");
-        
+
                 MiscUtils.getLogger().error("Error", e);
             }
          return measurementRuleBase;
-        
+
     }
-    
-    
-    
+
+
+
     public RuleBase loadMeasurementRuleBase(String string) {
         RuleBase measurementRuleBase = null;
         try {
@@ -397,12 +397,12 @@ public class MeasurementFlowSheet {
     }
 
 
-    public void runRulesForMeasurement(EctMeasurementsDataBean mdb) throws Exception {
+    public void runRulesForMeasurement(EctMeasurementsDataBean mdb) {
 
         String type = mdb.getType();
         log.debug("GETTING RULES FOR TYPE "+type);
         FlowSheetItem fs = (FlowSheetItem) itemList.get(type);
-        RuleBase rb = (RuleBase) fs.getRuleBase();
+        RuleBase rb = fs.getRuleBase();
         log.debug("RULEBASE FOR "+fs);
         //Is there a rule base for this
         if (rb != null) {
@@ -472,7 +472,7 @@ public class MeasurementFlowSheet {
         }
         return ret;
     }
-    
+
     public Hashtable getIndicatorHashtable(){
         return new Hashtable(indicatorHash);
     }
@@ -519,10 +519,10 @@ public class MeasurementFlowSheet {
         }
 
         public int compare(Object o1, Object o2) {
-            log.debug(" o1 "+o1+" o2 "+o2); 
+            log.debug(" o1 "+o1+" o2 "+o2);
             int n1 = list.indexOf(o1);
             int n2 = list.indexOf(o2);
-            // If this < o, return a negative 
+            // If this < o, return a negative
             if (n1 < n2) {
                 return -1;
             } else if (n1 == n2) // If this = o, return 0

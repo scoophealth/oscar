@@ -227,7 +227,7 @@ public class SqlUtils {
 		
 		try {
 			
-			rs = (ResultSet) DBHandler.GetSQL(qry);
+			rs = DBHandler.GetSQL(qry);
 			ResultSetMetaData rsmd = rs.getMetaData();
 			colCount = rsmd.getColumnCount();
 
@@ -356,7 +356,7 @@ public class SqlUtils {
 		try {
 			records = new ArrayList();
 			
-			rs = (ResultSet) DBHandler.GetSQL(qry);
+			rs = DBHandler.GetSQL(qry);
 			int cols = rs.getMetaData().getColumnCount();
 			while (rs.next()) {
 				String[] record = new String[cols];
@@ -415,7 +415,7 @@ public class SqlUtils {
 		try {
 			records = new ArrayList();
 			
-			rs = (ResultSet) DBHandler.GetSQL(qry);
+			rs = DBHandler.GetSQL(qry);
 			int cols = rs.getMetaData().getColumnCount();
 			while (rs.next()) {
 				Properties record = new Properties();

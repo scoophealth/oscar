@@ -73,21 +73,21 @@ import oscar.oscarRx.util.RxUtil;
  * @author jay
  */
 public class PHRExchangeAction extends DispatchAction {
-    
+
     private static Logger log = MiscUtils.getLogger();
     PHRService phrService = null;
-    
+
     /**
      * Creates a new instance of PHRRetrieveAsyncAction
      */
     public PHRExchangeAction() {
     }
-    
+
     public ActionForward unspecified(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) throws Exception {
         return doPhrExchange(mapping, form ,request, response);
     }
 
-  
+
     //save selected meds to drugs table.
     public ActionForward saveSelectedPHRMeds(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -157,20 +157,20 @@ public class PHRExchangeAction extends DispatchAction {
                 PHRAuthentication auth  = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
                 Long myOserUserId=MyOscarUtils.getMyOscarUserId(auth, myOscarUserName);
                 //PrintWriter out = response.getWriter();
-                log.error("auth object="+auth+"--"+request.getSession().getAttribute(phrService.SESSION_PHR_EXCHANGE_TIME));
-                if (auth != null && request.getSession().getAttribute(phrService.SESSION_PHR_EXCHANGE_TIME) != null){
+                log.error("auth object="+auth+"--"+request.getSession().getAttribute(PHRService.SESSION_PHR_EXCHANGE_TIME));
+                if (auth != null && request.getSession().getAttribute(PHRService.SESSION_PHR_EXCHANGE_TIME) != null){
                 //if (auth != null){
                     String providerNo = (String) request.getSession().getAttribute("user");
                     try{
-                        request.getSession().setAttribute(phrService.SESSION_PHR_EXCHANGE_TIME, null);
-                        long startTime = System.currentTimeMillis();                        
-                        
+                        request.getSession().setAttribute(PHRService.SESSION_PHR_EXCHANGE_TIME, null);
+                        long startTime = System.currentTimeMillis();
+
                         List<PHRMedication> listDrugsToDisplay=phrService.retrieveSaveMedToDisplay(auth,providerNo,demoId,myOserUserId);
                         HashMap<Long,PHRMedication> drugsToDisplay =RxUtil.createKeyValPair(listDrugsToDisplay);
                         bean.setPairPHRMed(drugsToDisplay);
-                        
+
                         //phrService.retrieveUploadDocs(auth,providerNo);
-                        request.getSession().setAttribute(phrService.SESSION_PHR_EXCHANGE_TIME, getNextExchangeTime());
+                        request.getSession().setAttribute(PHRService.SESSION_PHR_EXCHANGE_TIME, getNextExchangeTime());
                         log.info("Time taken to perform doPhrExchangeMedication: " + (System.currentTimeMillis()-startTime) + "ms");
                         //out.print("1");
                     }catch(Exception e){
@@ -187,7 +187,7 @@ public class PHRExchangeAction extends DispatchAction {
         return mapping.findForward("success");
     }
 
-    public ActionForward displayPrevViewedMeds(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward displayPrevViewedMeds(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) {
         oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
         String provNo=bean.getProviderNo();
         //need demographic number
@@ -212,15 +212,15 @@ public class PHRExchangeAction extends DispatchAction {
         log.debug("-----------------Indivo Exchange has been called -------------");
         PHRAuthentication auth  = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
         PrintWriter out = response.getWriter();
-        if (auth != null && request.getSession().getAttribute(phrService.SESSION_PHR_EXCHANGE_TIME) != null){
+        if (auth != null && request.getSession().getAttribute(PHRService.SESSION_PHR_EXCHANGE_TIME) != null){
             String providerNo = (String) request.getSession().getAttribute("user");
             try{
-                request.getSession().setAttribute(phrService.SESSION_PHR_EXCHANGE_TIME, null);
+                request.getSession().setAttribute(PHRService.SESSION_PHR_EXCHANGE_TIME, null);
                 long startTime = System.currentTimeMillis();
                 phrService.sendQueuedDocuments(auth,providerNo) ;
 //                phrService.retrieveDocuments(auth,providerNo);
                 //phrService.retrieveUploadDocs(auth,providerNo);
-                request.getSession().setAttribute(phrService.SESSION_PHR_EXCHANGE_TIME, getNextExchangeTime());
+                request.getSession().setAttribute(PHRService.SESSION_PHR_EXCHANGE_TIME, getNextExchangeTime());
                 log.info("Time taken to perform OSCAR-myOSCAR exchange: " + (System.currentTimeMillis()-startTime) + "ms");
                 out.print("1");
             }catch(Exception e){
@@ -233,20 +233,20 @@ public class PHRExchangeAction extends DispatchAction {
         }
         return null;
     }
-    
+
     public void setPhrService(PHRService pServ){
         this.phrService = pServ;
     }
-    
-    public ActionForward setExchangeTimeNow(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) throws Exception {
-        if (request.getSession().getAttribute(phrService.SESSION_PHR_EXCHANGE_TIME) != null) {
-            request.getSession().setAttribute(phrService.SESSION_PHR_EXCHANGE_TIME, Calendar.getInstance().getTime());
+
+    public ActionForward setExchangeTimeNow(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) {
+        if (request.getSession().getAttribute(PHRService.SESSION_PHR_EXCHANGE_TIME) != null) {
+            request.getSession().setAttribute(PHRService.SESSION_PHR_EXCHANGE_TIME, Calendar.getInstance().getTime());
             log.debug("set exchange to 0");
         }
         log.debug("finished setting exchange to 0");
         return new ActionRedirect(request.getParameter("forwardto"));
     }
-    
+
         //returns a date that is intervalMinutes from now
     public static Date getNextExchangeTime() {
         int intervalMinutes = Integer.parseInt(OscarProperties.getInstance().getProperty(PHRService.OSCAR_PROPS_EXCHANGE_INTERVAL));
@@ -254,5 +254,5 @@ public class PHRExchangeAction extends DispatchAction {
         cal.add(Calendar.MINUTE, intervalMinutes);
         return cal.getTime();
     }
-    
+
 }

@@ -518,31 +518,31 @@ public class MSPReconcile {
     }
 
     if (excludeWCB) {
-      billingType += " and b.billingType != '" + this.BILLTYPE_WCB + "'";
+      billingType += " and b.billingType != '" + MSPReconcile.BILLTYPE_WCB + "'";
     }
 
     if (excludeMSP) {
-      billingType += " and b.billingType != '" + this.BILLTYPE_MSP + "'";
+      billingType += " and b.billingType != '" + MSPReconcile.BILLTYPE_MSP + "'";
     }
 
     if (excludePrivate) {
-      billingType += " and b.billingType != '" + this.BILLTYPE_PRI + "'";
+      billingType += " and b.billingType != '" + MSPReconcile.BILLTYPE_PRI + "'";
     }
 
     if (exludeICBC) {
-      billingType += " and b.billingType != '" + this.BILLTYPE_ICBC + "'";
+      billingType += " and b.billingType != '" + MSPReconcile.BILLTYPE_ICBC + "'";
     }
 
     String statusTypeClause = " and bm.billingstatus";
     if ("?".equals(statusType) || "$".equals(statusType)) {
       if ("?".equals(statusType)) {
-        statusTypeClause += " in ('" + this.PAIDWITHEXP + "','" + this.REJECTED +
-            "','" + this.HELD + "')";
+        statusTypeClause += " in ('" + MSPReconcile.PAIDWITHEXP + "','" + MSPReconcile.REJECTED +
+            "','" + MSPReconcile.HELD + "')";
       }
       else if ("$".equals(statusType)) {
-        statusTypeClause += " in ('" + this.PAIDWITHEXP + "','" +
-            this.PAIDPRIVATE +
-            "','" + this.SETTLED + "')";
+        statusTypeClause += " in ('" + MSPReconcile.PAIDWITHEXP + "','" +
+            MSPReconcile.PAIDPRIVATE +
+            "','" + MSPReconcile.SETTLED + "')";
       }
     }
     else {
@@ -594,7 +594,7 @@ public class MSPReconcile {
         b.providerLastName = rs.getString("last_name");
         b.quantity = rs.getString("billing_unit");
 
-        Object[] seqNumsArray = (Object[]) getSequenceNumbers(b.billMasterNo).
+        Object[] seqNumsArray = getSequenceNumbers(b.billMasterNo).
             toArray();
         Arrays.sort(seqNumsArray);
         //Assign the geatest sequence number to this field
@@ -940,7 +940,7 @@ public class MSPReconcile {
   public double getAmountPaid(String billingmaster_no, String billType) {
     double retval = 0.0;
     //for msp,icbc,wcb payments
-    if (!this.BILLTYPE_PRI.equalsIgnoreCase(billType)) {
+    if (!MSPReconcile.BILLTYPE_PRI.equalsIgnoreCase(billType)) {
       retval = getTotalPaidFromS00(billingmaster_no);
     }
     else {
@@ -988,7 +988,7 @@ public class MSPReconcile {
         "select  sum(amount_received) from billing_history where billingmaster_no = " +
         billingmaster_no;
     if (ignoreIA) {
-      historyQry += " and payment_type_id != " + this.PAYTYPE_IA;
+      historyQry += " and payment_type_id != " + MSPReconcile.PAYTYPE_IA;
     }
     String[] histAmount = SqlUtils.getRow(historyQry);
     if (histAmount != null && histAmount.length > 0) {
@@ -1139,14 +1139,14 @@ public class MSPReconcile {
    */
   public void updateBillingStatus(String billingNo, String stat,String billingMasterNo) {
     updateBillingStatusHlp2(billingMasterNo, stat);
-    String paymentMethod = this.PAYTYPE_ELECTRONIC;
-    if (this.BILLPATIENT.equals(stat) || this.PAIDPRIVATE.equals(stat)) {
+    String paymentMethod = MSPReconcile.PAYTYPE_ELECTRONIC;
+    if (MSPReconcile.BILLPATIENT.equals(stat) || MSPReconcile.PAIDPRIVATE.equals(stat)) {
       this.updateBillTypeHlp(billingNo, BILLTYPE_PRI);
-      paymentMethod = this.PAYTYPE_NA;
+      paymentMethod = MSPReconcile.PAYTYPE_NA;
     }
-    else if (this.WCB.equals(stat)) {
+    else if (MSPReconcile.WCB.equals(stat)) {
       this.updateBillTypeHlp(billingNo, BILLTYPE_WCB);
-    }else if (this.NOTSUBMITTED.equals(stat)){
+    }else if (MSPReconcile.NOTSUBMITTED.equals(stat)){
         this.updateBillTypeHlp(billingNo, BILLTYPE_MSP);
     }  //Changed because of issue 2972852
 //  else {
@@ -1200,8 +1200,8 @@ public class MSPReconcile {
   private void updatePaymentMethod(String billingNo, String paymentMethod) {
     updatePaymentMethodHlp(billingNo, paymentMethod);
     //if this is a private bill, update the status to bill patient
-    if (!this.PAYTYPE_ELECTRONIC.equals(paymentMethod)) {
-      this.updateBillingStatusHlp(billingNo, this.BILLPATIENT);
+    if (!MSPReconcile.PAYTYPE_ELECTRONIC.equals(paymentMethod)) {
+      this.updateBillingStatusHlp(billingNo, MSPReconcile.BILLPATIENT);
     }
   }
 
@@ -1226,8 +1226,8 @@ public class MSPReconcile {
           "from billing b,billingmaster bm " +
           "where b.billingtype = 'Pri' " +
           "and b.billing_no = bm.billing_no " +
-          "and bm.billingstatus not in('" + this.BILLPATIENT + "','" +
-          this.PAIDPRIVATE + "')";
+          "and bm.billingstatus not in('" + MSPReconcile.BILLPATIENT + "','" +
+          MSPReconcile.PAIDPRIVATE + "')";
 
       List rows = SqlUtils.getQueryResultsList(findPrivs);
 
@@ -1237,7 +1237,7 @@ public class MSPReconcile {
           //basically, if there is a private bill, we need to update its status
           //to BILLPATIENT if it's status isn't either BILLPATIENT or PAIDPRIVATE
           //This fixes a bug where the correct status is not set when a bill is changed from public to private
-          updateBillingStatusHlp(billingNos[0], this.BILLPATIENT);
+          updateBillingStatusHlp(billingNos[0], MSPReconcile.BILLPATIENT);
         }
       }
     }
@@ -1287,13 +1287,13 @@ public class MSPReconcile {
    */
   public void updateBillType(String billingNo, String type) {
     updateBillTypeHlp(billingNo, type);
-    String paymentMethod = this.PAYTYPE_ELECTRONIC;
-    if (this.BILLTYPE_PRI.equals(type)) {
-      this.updateBillingStatusHlp(billingNo, this.BILLPATIENT);
-      paymentMethod = this.PAYTYPE_NA;
+    String paymentMethod = MSPReconcile.PAYTYPE_ELECTRONIC;
+    if (MSPReconcile.BILLTYPE_PRI.equals(type)) {
+      this.updateBillingStatusHlp(billingNo, MSPReconcile.BILLPATIENT);
+      paymentMethod = MSPReconcile.PAYTYPE_NA;
     }
-    else if (this.BILLTYPE_WCB.equals(type)) {
-      this.updateBillingStatusHlp(billingNo, this.WCB);
+    else if (MSPReconcile.BILLTYPE_WCB.equals(type)) {
+      this.updateBillingStatusHlp(billingNo, MSPReconcile.WCB);
     }
     this.updatePaymentMethodHlp(billingNo, paymentMethod);
   }
@@ -1462,7 +1462,7 @@ public class MSPReconcile {
       orderByClause =
           "order by bs.sortOrder,bm.paymentMethod,b.demographic_name,bm.service_date";
     }
-    else if (this.REP_INVOICE.equals(type)) {
+    else if (MSPReconcile.REP_INVOICE.equals(type)) {
       orderByClause =
           "order by b.provider_no,bt.sortOrder,bm.service_date,b.demographic_name";
       c12 = currentC12Records();
@@ -1576,7 +1576,7 @@ public class MSPReconcile {
           }
         }
 
-        else if (this.REP_INVOICE.equals(type)) {
+        else if (MSPReconcile.REP_INVOICE.equals(type)) {
           double dblAmtOwing = this.getAmountOwing(b.billMasterNo, b.amount,
                                            b.billingtype);
           b.amtOwing = String.valueOf(dblAmtOwing);
@@ -1597,7 +1597,7 @@ public class MSPReconcile {
          * If the report is of type AR and it was paid with an explanation or is private
          * we need to get the difference between what was billed and what was paid
          **/
-        if (type.equals(this.REP_ACCOUNT_REC)) {
+        if (type.equals(MSPReconcile.REP_ACCOUNT_REC)) {
           double dblAmtOwing = this.getAmountOwing(b.billMasterNo, b.amount,
                                            b.billingtype);
           b.amtOwing = String.valueOf(dblAmtOwing);
@@ -1649,7 +1649,7 @@ public class MSPReconcile {
     //Gets the total 'paid' or adjusted for any type of bill from billinghistory
     double totalPaidFromHistory = getTotalPaidFromHistory(billingMasterNo, false);
     double totalPaidFromS00 = 0.0;
-    if (!this.BILLTYPE_PRI.equalsIgnoreCase(billingType)) {
+    if (!MSPReconcile.BILLTYPE_PRI.equalsIgnoreCase(billingType)) {
       //bills of type msp,icbc,wcb
       String qry = "SELECT t_paidamt,t_exp1 from teleplanS00" +
           " where teleplanS00.t_officeno =  '" +
@@ -1665,7 +1665,7 @@ public class MSPReconcile {
             break;
           }
           String paidAmount = rs.getString(1);
-          paidAmount = this.convCurValue(paidAmount);
+          paidAmount = MSPReconcile.convCurValue(paidAmount);
           Double dblAmtPaid = new Double(paidAmount);
           totalPaidFromS00 += dblAmtPaid.doubleValue();
           log.debug("paidAmount "+paidAmount);
@@ -1776,7 +1776,7 @@ public class MSPReconcile {
                                               UtilMisc.replace(endDate, "-", ""),
                                               excludeWCB, excludeMSP,
                                               excludePrivate, exludeICBC,
-                                              this.REP_PAYREF,"");
+                                              MSPReconcile.REP_PAYREF,"");
     String p = "SELECT teleplanS00.t_payment,b.billingtype,b.demographic_name,apptProvider_no,provider_no,payee_no,b.demographic_no,teleplanS00.t_paidamt,t_exp1,t_exp2,t_dataseq,bm.service_date,bm.paymentMethod,teleplanS00.t_ajc1," +
         " teleplanS00.t_aja1,teleplanS00.t_aja2,teleplanS00.t_aja3,teleplanS00.t_aja4,teleplanS00.t_aja5,teleplanS00.t_aja6,teleplanS00.t_aja7,bm.billingmaster_no,teleplanS00.t_practitionerno" +
         " FROM teleplanS00 left join billingmaster as bm on teleplanS00.t_officeno = bm.billingmaster_no,billing as b" +
@@ -1802,13 +1802,13 @@ public class MSPReconcile {
         b.demoNo = rs.getString("demographic_no");
         b.demoName = rs.getString("demographic_name");
 
-        if (!this.BILLTYPE_PRI.equalsIgnoreCase(b.billingtype)) {
-          b.amount = this.convCurValue(rs.getString("t_paidamt"));
+        if (!MSPReconcile.BILLTYPE_PRI.equalsIgnoreCase(b.billingtype)) {
+          b.amount = MSPReconcile.convCurValue(rs.getString("t_paidamt"));
         }
         else {
           b.amount = String.valueOf(getAmountPaid(rs.getString(
               "bm.billingmaster_no"),
-                                                  this.BILLTYPE_PRI));
+                                                  MSPReconcile.BILLTYPE_PRI));
           if (!StringUtils.isNumeric(b.amount)) {
             throw new RuntimeException("Amount not a number");
             //     b.amount = this.convCurValue(rs.getString("t_paidamt"));
@@ -1941,9 +1941,9 @@ public class MSPReconcile {
         " bh.creation_date,bh.amount_received,payment_type_id" +
         " FROM billing_history bh left join billingmaster bm on bh.billingmaster_no = bm.billingmaster_no ,billing b" +
         " where bm.billing_no = b.billing_no " +
-        " and bh.payment_type_id != " + this.PAYTYPE_IA + " " +
+        " and bh.payment_type_id != " + MSPReconcile.PAYTYPE_IA + " " +
         criteriaQry +
-        " and bm.billingstatus != '" + this.DELETED + "'";
+        " and bm.billingstatus != '" + MSPReconcile.DELETED + "'";
     MiscUtils.getLogger().debug(p);
     billSearch.list = new ArrayList();
     
@@ -2044,7 +2044,7 @@ public class MSPReconcile {
                                       boolean excludePrivate,
                                       boolean exludeICBC, String repType,String dateFieldOption) {
     String criteriaQry = "";
-    String dateField = this.REP_PAYREF.equals(repType) ?
+    String dateField = MSPReconcile.REP_PAYREF.equals(repType) ?
         "t_payment" : "service_date";
 
     //This class in need of significant refactoring,(especially this gawd-aweful section which was extracted from the getBills method purely to avoid code duplication
@@ -2053,7 +2053,7 @@ public class MSPReconcile {
       dateField = "creation_date";
     }
     if (providerNo != null && !providerNo.trim().equalsIgnoreCase("all")) {
-      if(this.REP_PAYREF.equals(repType)){
+      if(MSPReconcile.REP_PAYREF.equals(repType)){
         String[] row = SqlUtils.getRow("select ohip_no from provider where provider_no = " + providerNo);
         if(row != null && row.length > 0){
           String ohip_no = row[0];
@@ -2101,19 +2101,19 @@ public class MSPReconcile {
       criteriaQry += " and b.billingType != 'ICBC' ";
     }
 
-    if (repType.equals(this.REP_REJ)) {
-      criteriaQry += " and bm.billingstatus = '" + this.REJECTED + "'";
+    if (repType.equals(MSPReconcile.REP_REJ)) {
+      criteriaQry += " and bm.billingstatus = '" + MSPReconcile.REJECTED + "'";
     }
-    else if (repType.equals(this.REP_INVOICE)) {
-      criteriaQry += " and bm.billingstatus != '" + this.DELETED + "'";
+    else if (repType.equals(MSPReconcile.REP_INVOICE)) {
+      criteriaQry += " and bm.billingstatus != '" + MSPReconcile.DELETED + "'";
     }
-    else if (repType.equals(this.REP_ACCOUNT_REC)) {
-      criteriaQry += " and bm.billingstatus not in('" + this.DELETED + "','" +
-          this.BADDEBT + "')";
+    else if (repType.equals(MSPReconcile.REP_ACCOUNT_REC)) {
+      criteriaQry += " and bm.billingstatus not in('" + MSPReconcile.DELETED + "','" +
+          MSPReconcile.BADDEBT + "')";
     }
 
-    else if (repType.equals(this.REP_WO)) {
-      criteriaQry += " and bm.billingstatus = '" + this.BADDEBT + "'";
+    else if (repType.equals(MSPReconcile.REP_WO)) {
+      criteriaQry += " and bm.billingstatus = '" + MSPReconcile.BADDEBT + "'";
     }
     return criteriaQry;
   }
@@ -2340,9 +2340,9 @@ public class MSPReconcile {
         s21.setPaymentDate(rs.getString(1));
         s21.setPayeeNo(rs.getString(2));
         s21.setPayeeName(rs.getString(3));
-        s21.setAmtBilled(this.convCurValue(rs.getString(4)));
-        s21.setAmtPaid(this.convCurValue(rs.getString(5)));
-        s21.setCheque(this.convCurValue(rs.getString(6)));
+        s21.setAmtBilled(MSPReconcile.convCurValue(rs.getString(4)));
+        s21.setAmtPaid(MSPReconcile.convCurValue(rs.getString(5)));
+        s21.setCheque(MSPReconcile.convCurValue(rs.getString(6)));
       }
     }
     catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
@@ -2409,7 +2409,7 @@ public class MSPReconcile {
         "select billingmaster_no,bill_amount from billingmaster bm,billing b where bm.billing_no = b.billing_no  and b.demographic_no = " +
         demographicNo +
         " and bm.billingstatus not in('S','D','A') and b.billingtype = '" +
-        this.BILLTYPE_PRI + "'";
+        MSPReconcile.BILLTYPE_PRI + "'";
     
     ResultSet rs = null;
     try {
@@ -2465,11 +2465,11 @@ public class MSPReconcile {
       double amountOwing = Double.parseDouble(strOwing);
       log.debug("Amount Owing :"+dblAmtOwing+ " String version : "+strOwing+" and parsed as a double : "+amountOwing );
       if (amountOwing <= 0) {
-        if (this.BILLTYPE_PRI.equals(row[0])) {
-          this.updateBillingMasterStatus(billingmasterNo, this.PAIDPRIVATE);
+        if (MSPReconcile.BILLTYPE_PRI.equals(row[0])) {
+          this.updateBillingMasterStatus(billingmasterNo, MSPReconcile.PAIDPRIVATE);
         }
         else {
-          this.updateBillingMasterStatus(billingmasterNo, this.SETTLED);
+          this.updateBillingMasterStatus(billingmasterNo, MSPReconcile.SETTLED);
         }
       }else{
          log.debug("amount owing is less than or equal to 0"); 

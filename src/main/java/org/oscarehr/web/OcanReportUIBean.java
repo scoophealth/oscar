@@ -2108,7 +2108,7 @@ public class OcanReportUIBean implements CallbackHandler {
 		int hour = cal.get(GregorianCalendar.HOUR_OF_DAY);
 		int min = cal.get(GregorianCalendar.MINUTE);
 
-		return "OCAN" +  year + ( (month<10)?("0"+month):(month) )+ ((date<10)?("0"+date):(date)) + ((hour<10)?("0"+hour):(hour))+ ((min<10)?("0"+min):(min))+loggedInInfo.loggedInInfo.get().currentFacility.getOcanServiceOrgNumber() +  ( (increment<10)?(".00"+increment):(increment) ) + ".xml";
+		return "OCAN" +  year + ( (month<10)?("0"+month):(month) )+ ((date<10)?("0"+date):(date)) + ((hour<10)?("0"+hour):(hour))+ ((min<10)?("0"+min):(min))+LoggedInInfo.loggedInInfo.get().currentFacility.getOcanServiceOrgNumber() +  ( (increment<10)?(".00"+increment):(increment) ) + ".xml";
 	}
 
 	private static Date getStartDate(int year, int month) {

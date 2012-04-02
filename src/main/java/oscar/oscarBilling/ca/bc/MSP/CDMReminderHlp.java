@@ -26,6 +26,7 @@ package oscar.oscarBilling.ca.bc.MSP;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
@@ -63,7 +64,7 @@ public class CDMReminderHlp {
     alertCodes = createCDMCodeArray(cdmServiceCodes);
 
     final String remString = "SERVICE CODE";
-    List cdmPatients = (List)this.getCDMPatients(alertCodes);
+    List cdmPatients = this.getCDMPatients(alertCodes);
     List cdmPatientNos = extractPatientNos(cdmPatients);
     crt.resolveTicklers(cdmPatientNos, remString);
 
@@ -86,7 +87,7 @@ public class CDMReminderHlp {
           int daysPast = lgc.daysSinceCodeLastBilled(demoNo, cdmServiceCode);
           if (daysPast > 365) {
             GregorianCalendar cal = new GregorianCalendar();
-            cal.add(cal.DAY_OF_YEAR,-daysPast);
+            cal.add(Calendar.DAY_OF_YEAR,-daysPast);
             java.util.Date dateLastBilled = cal.getTime();
             SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yy");
             String newfmt = formatter.format(dateLastBilled);
@@ -131,10 +132,10 @@ public class CDMReminderHlp {
 
     String qry = "SELECT de.demographic_no,de.provider_no,dxresearch_code FROM dxresearch d, demographic de WHERE de.demographic_no=d.demographic_no " +
         " and d.dxresearch_code ";
-    qry += ut.constructInClauseString(codes, true);
+    qry += SqlUtils.constructInClauseString(codes, true);
     qry +=
         " and status = 'A' and patient_status = 'AC' order by de.demographic_no";
-    List lst = ut.getQueryResultsList(qry);
+    List lst = SqlUtils.getQueryResultsList(qry);
     return lst == null ? new ArrayList() : lst;
   }
 }

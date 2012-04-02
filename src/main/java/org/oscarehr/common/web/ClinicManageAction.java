@@ -20,7 +20,7 @@ public class ClinicManageAction extends DispatchAction {
         return view(mapping, form, request, response);
     }
 
-    public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         Clinic clinic = clinicDAO.getClinic();
         DynaActionForm frm = (DynaActionForm)form;
         frm.set("clinic",clinic);
@@ -28,11 +28,11 @@ public class ClinicManageAction extends DispatchAction {
         return mapping.findForward("success");
     }
 
-    public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         DynaActionForm frm = (DynaActionForm)form;
         Clinic clinic = (Clinic) frm.get("clinic");
         clinicDAO.save(clinic);
-        
+
         return mapping.findForward("success");
     }
 

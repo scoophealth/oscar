@@ -54,7 +54,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 	private static Logger log = MiscUtils.getLogger();
 
     public Document getDocument(String documentNo) {
-        Document document = (Document) getHibernateTemplate().get(Document.class, Long.parseLong(documentNo));
+        Document document = getHibernateTemplate().get(Document.class, Long.parseLong(documentNo));
         return document;
     }
     
@@ -67,7 +67,7 @@ public class DocumentDAO extends HibernateDaoSupport {
         Integer i=Integer.parseInt(docNo);
         String q="select d from Demographic d, CtlDocument c where c.id.module='demographic'"
                          + " and c.moduleId!='-1' and c.moduleId=d.DemographicNo and c.id.documentNo=? ";
-        List rs=(List)getHibernateTemplate().find(q,i);
+        List rs=getHibernateTemplate().find(q,i);
         if(rs.size()>0){
             d=(Demographic)rs.get(0);
         }

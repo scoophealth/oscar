@@ -53,7 +53,7 @@ public class SiteDao extends HibernateDaoSupport {
 	public void save(Site s) {
 		boolean isUpdate = s.getSiteId() != null && s.getSiteId() > 0;
 		if (isUpdate) {
-			Site old = (Site) getHibernateTemplate().get(Site.class,
+			Site old = getHibernateTemplate().get(Site.class,
 					s.getSiteId());
 			if (!old.getName().equals(s.getName())) {
 				// site name changed, need to update all references as it serves as PK
@@ -105,13 +105,13 @@ public class SiteDao extends HibernateDaoSupport {
 	}
 
 	public List<Site> getActiveSitesByProviderNo(String provider_no) {
-		Provider p = (Provider) getHibernateTemplate().get(Provider.class,
+		Provider p = getHibernateTemplate().get(Provider.class,
 				provider_no);
 
 		List<Site> rs = new ArrayList(p.getSites());
 		Iterator<Site> it = rs.iterator();
 		while (it.hasNext()) {
-			Site site = (Site) it.next();
+			Site site = it.next();
 			// remove inactive sites
 			if (site.getStatus() == 0)
 				it.remove();
@@ -127,7 +127,7 @@ public class SiteDao extends HibernateDaoSupport {
 	}
 
 	public Site getById(Integer id) {
-		return (Site) getHibernateTemplate().get(Site.class, id);
+		return getHibernateTemplate().get(Site.class, id);
 	}
 	
 	public Site getByLocation(String location) {

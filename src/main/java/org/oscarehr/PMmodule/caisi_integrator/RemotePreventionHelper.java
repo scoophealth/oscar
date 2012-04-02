@@ -25,7 +25,7 @@ import oscar.util.DateUtils;
 public final class RemotePreventionHelper {
 	private static Logger logger = MiscUtils.getLogger();
 
-	public static ArrayList<HashMap<String, Object>> getLinkedPreventionDataMap(Integer localDemographicId) throws MalformedURLException {
+	public static ArrayList<HashMap<String, Object>> getLinkedPreventionDataMap(Integer localDemographicId) {
 		ArrayList<HashMap<String, Object>> results = new ArrayList<HashMap<String, Object>>();
 
 		try {
@@ -54,7 +54,7 @@ public final class RemotePreventionHelper {
 		{
 			result.put("prevention_date_asDate", prevention.getPreventionDate().getTime());
 		}
-		
+
 		FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
 		providerPk.setIntegratorFacilityId(prevention.getFacilityPreventionPk().getIntegratorFacilityId());
 		providerPk.setCaisiItemId(prevention.getCaisiProviderId());
@@ -63,7 +63,7 @@ public final class RemotePreventionHelper {
 		{
 			result.put("provider_name", cachedProvider.getLastName()+", "+cachedProvider.getFirstName());
 		}
-		
+
 		return (result);
 	}
 
@@ -71,20 +71,20 @@ public final class RemotePreventionHelper {
 		if (b) return ("1");
 		else return ("0");
 	}
-	
+
 	public static HashMap<String,String> getRemotePreventionAttributesAsHashMap(CachedDemographicPrevention prevention) throws IOException, SAXException, ParserConfigurationException
 	{
 		Document doc=XmlUtils.toDocument(prevention.getAttributes());
 		Node root=doc.getFirstChild();
 		HashMap<String,String> result=new HashMap<String, String>();
-		
+
 		NodeList nodeList=root.getChildNodes();
 		for (int i=0; i<nodeList.getLength(); i++)
 		{
 			Node node=nodeList.item(i);
 			result.put(node.getNodeName(), node.getTextContent());
 		}
-		
+
 		return(result);
 	}
 }

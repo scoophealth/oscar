@@ -8,13 +8,13 @@ package org.oscarehr.phr.model;
 import java.sql.SQLException;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.datatype.DatatypeConfigurationException;
 
 import org.indivo.IndivoException;
 import org.indivo.client.ActionNotPerformedException;
 import org.indivo.xml.JAXBUtils;
+import org.indivo.xml.phr.DocumentGenerator;
 import org.indivo.xml.phr.contact.ConciseContactInformationType;
 import org.indivo.xml.phr.contact.NameType;
 import org.indivo.xml.phr.document.IndivoDocument;
@@ -43,7 +43,7 @@ import oscar.oscarEncounter.oscarMeasurements.model.MeasurementsExt;
 public class PHRMeasurement extends PHRDocument{
     static final String CODING_SERVICE_LOCATION = "oscar_internal_hardcoded";
     static final String CODING_SERVICE_NAME = "oscar_internal";
-    
+
     /** Creates a new instance of PHRMessage */
     public PHRMeasurement() {
         //super();
@@ -54,20 +54,20 @@ public class PHRMeasurement extends PHRDocument{
         //super();
         IndivoDocumentType document = getPhrMeasurementDocument(provider, measurement);
         JAXBContext docContext = JAXBContext.newInstance(IndivoDocumentType.class.getPackage().getName());
-        byte[] docContentBytes = JAXBUtils.marshalToByteArray((JAXBElement) new IndivoDocument(document), docContext);
+        byte[] docContentBytes = JAXBUtils.marshalToByteArray(new IndivoDocument(document), docContext);
         String docContentStr = new String(docContentBytes);
-        
+
         this.setPhrClassification(dataType);
         this.setReceiverOscar(demographicNo);
-        this.setReceiverType(this.TYPE_DEMOGRAPHIC);
+        this.setReceiverType(PHRDocument.TYPE_DEMOGRAPHIC);
         this.setReceiverMyOscarUserId(myOscarUserId);
         this.setSenderOscar(provider.getProviderNo());
-        this.setSenderType(this.TYPE_PROVIDER);
+        this.setSenderType(PHRDocument.TYPE_PROVIDER);
         this.setSenderMyOscarUserId(Long.parseLong(provider.getIndivoId()));
-        this.setSent(this.STATUS_SEND_PENDING);
+        this.setSent(PHRDocument.STATUS_SEND_PENDING);
         this.setDocContent(docContentStr);
     }
-    
+
     //when adding a new medication
     private IndivoDocumentType getPhrMeasurementDocument(EctProviderData.Provider provider, EctMeasurementsDataBean oscarMeasurement) throws JAXBException, IndivoException {
         String providerFullName = provider.getFirstName() + " " + provider.getSurname();
@@ -77,16 +77,16 @@ public class PHRMeasurement extends PHRDocument{
         org.indivo.xml.phr.vital.ObjectFactory measurementsFactory = new org.indivo.xml.phr.vital.ObjectFactory();
         VitalSign indivoMeasurementObject = measurementsFactory.createVitalSign(indivoMeasurement);
 
-        Element element = jaxbUtils.marshalToElement(indivoMeasurementObject, JAXBContext.newInstance("org.indivo.xml.phr.vital"));            
-        IndivoDocumentType document = generator.generateDefaultDocument(provider.getIndivoId(), providerFullName, PHRDocument.PHR_ROLE_PROVIDER, DocumentClassificationUrns.VITAL, ContentTypeQNames.VITAL, element);
+        Element element = JAXBUtils.marshalToElement(indivoMeasurementObject, JAXBContext.newInstance("org.indivo.xml.phr.vital"));
+        IndivoDocumentType document = DocumentGenerator.generateDefaultDocument(provider.getIndivoId(), providerFullName, PHRDocument.PHR_ROLE_PROVIDER, DocumentClassificationUrns.VITAL, ContentTypeQNames.VITAL, element);
         return document;
     }
-    
+
     private VitalSignType createPhrMeasurement(EctProviderData.Provider provider, EctMeasurementsDataBean measurement) {
         MeasurementMapConfig measurementMapConfig = new MeasurementMapConfig();
         CodingSystemReferenceType csrt = new CodingSystemReferenceType();
-        csrt.setServiceLocation(this.CODING_SERVICE_LOCATION);
-        csrt.setShortDescription(this.CODING_SERVICE_NAME);
+        csrt.setServiceLocation(PHRMeasurement.CODING_SERVICE_LOCATION);
+        csrt.setShortDescription(PHRMeasurement.CODING_SERVICE_NAME);
 
 
         NameType name = new NameType();
@@ -95,24 +95,24 @@ public class PHRMeasurement extends PHRDocument{
 
         ConciseContactInformationType providerContactInfo = new ConciseContactInformationType();
         providerContactInfo.getPersonName().add(name);
-        
+
         VitalSignType indivoMeasurement = new VitalSignType();
         String dataField = measurement.getDataField();
         if (measurement.getType().equalsIgnoreCase("bp")) {
             //Only for BP measurements
             String systolic = dataField.substring(0, dataField.indexOf('/')).trim();
             String diastolic = dataField.substring(dataField.indexOf('/')+1).trim();
-            
+
             CodedValueType mmHg = new CodedValueType();
             mmHg.setCode("mm[Hg]");
             mmHg.setHistoricalValue("mm[Hg]");
             mmHg.setCodingSystem(csrt);
-            
+
             CodedValueType bp = new CodedValueType();
             bp.setCode("bp");
             bp.setHistoricalValue("Blood Pressure");
             bp.setCodingSystem(csrt);
-            
+
             ResultType systolicResult = new ResultType();
             ResultType diastolicResult = new ResultType();
             systolicResult.setValue(Double.parseDouble(systolic));
@@ -128,7 +128,7 @@ public class PHRMeasurement extends PHRDocument{
             try {
                 Double dataFieldDouble = Double.parseDouble(dataField);
                 result.setValue(dataFieldDouble);
-                
+
             } catch (NumberFormatException nfe) {
                 result.setTextValue(dataField);
             }
@@ -142,11 +142,11 @@ public class PHRMeasurement extends PHRDocument{
             indivoMeasurement.setName(cvt);
             //Do not assign a unit code - don't know unit
             //will send measuring instruction if user needs to know
-            
+
             //try to obtain unit from measurementExt
             ImportExportMeasurements iem = new ImportExportMeasurements();
             try {
-                MeasurementsExt measurementExt = iem.getMeasurementsExtByKeyval(new Long(measurement.getId()), "unit");
+                MeasurementsExt measurementExt = ImportExportMeasurements.getMeasurementsExtByKeyval(new Long(measurement.getId()), "unit");
                 if (measurementExt != null) {
                     CodedValueType unitCVT = new CodedValueType();
                     unitCVT.setCode(measurementExt.getVal());
@@ -157,20 +157,20 @@ public class PHRMeasurement extends PHRDocument{
             } catch (SQLException e) {
                 MiscUtils.getLogger().error("Error", e);
             }
-            
+
         }
         //For all measurements
         indivoMeasurement.setComments(measurement.getMeasuringInstrc());
         indivoMeasurement.setSite("Family Physician Office");
         try {
-            indivoMeasurement.setDate(this.dateToXmlGregorianCalendar(measurement.getDateObservedAsDate()));
+            indivoMeasurement.setDate(PHRDocument.dateToXmlGregorianCalendar(measurement.getDateObservedAsDate()));
         } catch (DatatypeConfigurationException e) {
             MiscUtils.getLogger().error("Error", e);;
         }
-        indivoMeasurement.setOrigin(this.getClinicOrigin());  //not sure what to send here, just sending clinic name for tracking puproses
+        indivoMeasurement.setOrigin(PHRDocument.getClinicOrigin());  //not sure what to send here, just sending clinic name for tracking puproses
         indivoMeasurement.setProvider(providerContactInfo);
         return indivoMeasurement;
     }
-    
+
 }
 

@@ -11,7 +11,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -21,7 +20,6 @@ import org.oscarehr.decisionSupport.model.DSDemographicAccess;
 import org.oscarehr.decisionSupport.model.DSGuideline;
 import org.oscarehr.decisionSupport.model.DSGuidelineFactory;
 import org.oscarehr.decisionSupport.service.DSService;
-import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDemographic.data.DemographicData;
 
@@ -30,8 +28,8 @@ import oscar.oscarDemographic.data.DemographicData;
  * @author apavel
  */
 public class DSGuidelineAction extends DispatchAction {
-    private static Logger log = MiscUtils.getLogger();
-    private DSService dsService;
+
+	private DSService dsService;
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
        return super.execute(mapping, form, request, response);
@@ -48,7 +46,7 @@ public class DSGuidelineAction extends DispatchAction {
            return list(mapping,form,request,response);
     }
 
-    public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
         String providerNo = request.getParameter("provider_no");
         List<DSGuideline> providerGuidelines = new ArrayList();
         if (providerNo != null)

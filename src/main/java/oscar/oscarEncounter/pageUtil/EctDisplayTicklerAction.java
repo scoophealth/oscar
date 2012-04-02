@@ -92,7 +92,7 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
     int hash;
     long days;
     while(rs.next()) {
-        NavBarDisplayDAO.Item item = Dao.Item();                        
+        NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();                        
         serviceDate = rs.getDate("service_date");
         item.setDate(serviceDate);
         days = (today.getTime() - serviceDate.getTime())/(1000*60*60*24);

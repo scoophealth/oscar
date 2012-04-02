@@ -53,8 +53,8 @@ public class EctDefineNewMeasurementGroupAction extends Action {
         EctDefineNewMeasurementGroupForm frm = (EctDefineNewMeasurementGroupForm) form;                
         request.getSession().setAttribute("EctDefineNewMeasurementGroupForm", frm);
         
-        String groupName = (String) frm.getGroupName();
-        String styleSheet = (String) frm.getStyleSheet();
+        String groupName = frm.getGroupName();
+        String styleSheet = frm.getStyleSheet();
         
         ActionMessages errors = new ActionMessages();  
         EctValidation validate = new EctValidation();

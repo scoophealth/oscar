@@ -341,7 +341,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 
 	}
 
-	protected ByteArrayOutputStream generatePDFDocumentBytes(final HttpServletRequest req, final ServletContext ctx) throws DocumentException, java.io.IOException {
+	protected ByteArrayOutputStream generatePDFDocumentBytes(final HttpServletRequest req, final ServletContext ctx) throws DocumentException {
 		logger.debug("***in generatePDFDocumentBytes2 FrmCustomedPDFServlet.java***");
 		// added by vic, hsfo
 		Enumeration em = req.getParameterNames();
@@ -372,10 +372,10 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 		String clinicTel;
 		String clinicFax;
 		// check if satellite clinic is used
-		String useSatelliteClinic = (String) req.getParameter("useSC");
+		String useSatelliteClinic = req.getParameter("useSC");
 		logger.debug(useSatelliteClinic);
 		if (useSatelliteClinic != null && useSatelliteClinic.equalsIgnoreCase("true")) {
-			String scAddress = (String) req.getParameter("scAddress");
+			String scAddress = req.getParameter("scAddress");
 			logger.debug("clinic detail" + "=" + scAddress);
 			HashMap hm = parseSCAddress(scAddress);
 			clinicName = (String) hm.get("clinicName");
@@ -517,7 +517,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 				p.setSpacingBefore(10f);
 				document.add(p);
 			}
-			
+
 			// render QrCode
 			if (PrescriptionQrCodeUIBean.isPrescriptionQrCodeEnabledForCurrentProvider())
 			{

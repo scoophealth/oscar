@@ -37,7 +37,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 public class SurveyDAO extends HibernateDaoSupport {
 
     public OscarForm getForm(Long formId) {
-        return (OscarForm)this.getHibernateTemplate().get(OscarForm.class, formId);
+        return this.getHibernateTemplate().get(OscarForm.class, formId);
     }
 
     public void saveFormInstance(OscarFormInstance instance) {

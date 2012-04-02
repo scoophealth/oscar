@@ -1,45 +1,45 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
  */
 package oscar.form;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Properties;
-import java.util.Date;
-import java.util.Calendar;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
 
-import oscar.oscarEncounter.data.EctFormData;
-import oscar.util.UtilDateUtilities;
-import org.oscarehr.util.SpringUtils;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.MiscUtils;
-import oscar.form.model.FormRourke2009;
+import org.oscarehr.util.SpringUtils;
+
 import oscar.form.dao.Rourke2009DAO;
+import oscar.form.model.FormRourke2009;
+import oscar.oscarEncounter.data.EctFormData;
+import oscar.util.UtilDateUtilities;
 
 public class FrmRourke2009Record extends FrmRecord {
     public Properties getFormRecord(int demographicNo, int existingID)
@@ -49,7 +49,7 @@ public class FrmRourke2009Record extends FrmRecord {
         Demographic demo = demoDAO.getDemographicById(demographicNo);
         String updated = "false";
         if(existingID <= 0) {
-            
+
             if(demo != null) {
                 props.setProperty("demographic_no", String.valueOf(demographicNo));
                 props.setProperty("c_pName", demo.getFormattedName());
@@ -67,12 +67,12 @@ public class FrmRourke2009Record extends FrmRecord {
                 else {
                     postal = "";
                 }
-                
+
                 props.setProperty("c_fsa", postal);
             }
-            
+
         } else {
-            
+
             String sql = "SELECT * FROM formRourke2009 WHERE demographic_no = " +demographicNo +" AND ID = " +existingID;
             FrmRecordHelp frmRec = new FrmRecordHelp();
             frmRec.setDateFormat("dd/MM/yyyy");
@@ -81,20 +81,20 @@ public class FrmRourke2009Record extends FrmRecord {
                 + "year_of_birth, month_of_birth, date_of_birth, sex, postal "
                 + "FROM demographic WHERE demographic_no = " + demographicNo;
             demo = demoDAO.getDemographicById(demographicNo);
-            
+
             if(demo != null) {
                 String rourkeVal = props.getProperty("c_pName","");
                 String demoVal = demo.getFormattedName();
-                
+
                 if( !rourkeVal.equals(demoVal) ) {
                     props.setProperty("c_pName", demoVal);
                     updated = "true";
                 }
-                
+
                 rourkeVal = props.getProperty("c_birthDate","");
                 java.util.Date dob = UtilDateUtilities.calcDate(demo.getYearOfBirth(), demo.getMonthOfBirth(), demo.getDateOfBirth());
                 demoVal = UtilDateUtilities.DateToString(dob, "dd/MM/yyyy");
-                
+
                 if( !rourkeVal.equals(demoVal) ) {
                     props.setProperty("c_birthDate", demoVal);
                     updated = "true";
@@ -110,7 +110,7 @@ public class FrmRourke2009Record extends FrmRecord {
                         updated = "true";
                     }
                 }
-            }            
+            }
         }
         props.setProperty("updated", updated);
         return props;
@@ -120,8 +120,8 @@ public class FrmRourke2009Record extends FrmRecord {
         String demographic_no = props.getProperty("demographic_no");
         String sql = "SELECT * FROM formRourke2009 WHERE demographic_no=" +demographic_no +" AND ID=0";
         FrmRecordHelp frmRec = new FrmRecordHelp();
-        frmRec.setDateFormat("dd/MM/yyyy"); 
-        
+        frmRec.setDateFormat("dd/MM/yyyy");
+
         return frmRec.saveFormRecord(props, sql);
     }
 
@@ -139,7 +139,7 @@ public class FrmRourke2009Record extends FrmRecord {
     @Override
     public Properties getGraph(int demographicNo, int existingID)  throws SQLException {
     	String formClass = "Growth0_36";
-        Properties props = new Properties();        
+        Properties props = new Properties();
 
         if(existingID==0) {
             return props;
@@ -189,14 +189,14 @@ public class FrmRourke2009Record extends FrmRecord {
                     }
 
                     props.setProperty("c_Age", age);
-                    
+
                 }//end if
-                
-                
+
+
 				//now we add measurements from formGrowth0_36 form
-                
+
                 EctFormData.PatientForm[] pforms = EctFormData.getPatientFormsFromLocalAndRemote(String.valueOf(demographicNo), "formGrowth0_36");
-                if (pforms.length > 0) {	
+                if (pforms.length > 0) {
                 	EctFormData.PatientForm pfrm = pforms[0];
                 	FrmRecord rec = (new FrmRecordFactory()).factory(formClass);
                     java.util.Properties growthProps = rec.getFormRecord(demographicNo, pfrm.formId);
@@ -213,11 +213,11 @@ public class FrmRourke2009Record extends FrmRecord {
                     			dates = value.split("\\/");
                     			if( dates.length == 3 ) {
                     				date = dates[2] + "/" + dates[1] + "/" + dates[0];
-                    				props.setProperty(key,date);                    				
+                    				props.setProperty(key,date);
                     			}
-                    		}                    		                    		
+                    		}
                     	}
-                    	else if( key.startsWith("weight_") || key.startsWith("length_") || key.startsWith("headCirc_") ) {                    		
+                    	else if( key.startsWith("weight_") || key.startsWith("length_") || key.startsWith("headCirc_") ) {
                     		props.setProperty(key, growthProps.getProperty(key, ""));
                     	}
                     }
@@ -235,14 +235,12 @@ public class FrmRourke2009Record extends FrmRecord {
             catch( ClassNotFoundException e ) {
                 MiscUtils.getLogger().error("Cannot Find FormRourke2009 Class", e);
             }
-            catch( IOException e ) {
-            	MiscUtils.getLogger().error("Problem retrieving " + formClass, e);
-            }
+
         }
         return props;
     }
 
-    
+
     public String findActionValue(String submit) throws SQLException {
  		return ((new FrmRecordHelp()).findActionValue(submit));
     }

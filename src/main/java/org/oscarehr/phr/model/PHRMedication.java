@@ -51,6 +51,7 @@ import org.apache.log4j.Logger;
 import org.indivo.IndivoException;
 import org.indivo.client.ActionNotPerformedException;
 import org.indivo.xml.JAXBUtils;
+import org.indivo.xml.phr.DocumentGenerator;
 import org.indivo.xml.phr.contact.ConciseContactInformationType;
 import org.indivo.xml.phr.contact.NameType;
 import org.indivo.xml.phr.document.DocumentClassificationType;
@@ -122,7 +123,7 @@ public class PHRMedication extends PHRDocument {
 	private void parseDocument(IndivoDocumentType document, String providerNo) throws Exception {
 		logger.debug("------------------start parseDocument----------------------");
 		JAXBContext docContext = JAXBContext.newInstance("org.indivo.xml.phr.document");
-		byte[] docContentBytes = JAXBUtils.marshalToByteArray((JAXBElement) new IndivoDocument(document), docContext);
+		byte[] docContentBytes = JAXBUtils.marshalToByteArray(new IndivoDocument(document), docContext);
 		String docContent = new String(docContentBytes);
 
 		logger.debug("docContent=" + docContent);
@@ -144,11 +145,11 @@ public class PHRMedication extends PHRDocument {
 		med = (MedicationType) org.indivo.xml.phr.DocumentUtils.getDocumentAnyObject(document, messageContext.createUnmarshaller());
 		createDrugFromPhrMed(providerNo);
 		this.setPhrClassification(MedicalDataType.MEDICATION.name());
-		this.setReceiverType(this.TYPE_DEMOGRAPHIC);
+		this.setReceiverType(PHRDocument.TYPE_DEMOGRAPHIC);
 		this.setSenderOscar(null);// outside provider's oscar id is not useful
-		this.setSenderType(this.TYPE_PROVIDER);
+		this.setSenderType(PHRDocument.TYPE_PROVIDER);
 		this.setSenderMyOscarUserId(Long.parseLong(phr_id));
-		this.setSent(this.STATUS_NOT_SET);// need to change
+		this.setSent(PHRDocument.STATUS_NOT_SET);// need to change
 		this.setDocContent(docContent);
 		this.setDateExchanged(new Date());
 	}
@@ -177,17 +178,17 @@ public class PHRMedication extends PHRDocument {
 		// super();
 		IndivoDocumentType document = getPhrMedicationDocument(prov, drug);
 		JAXBContext docContext = JAXBContext.newInstance(IndivoDocumentType.class.getPackage().getName());
-		byte[] docContentBytes = JAXBUtils.marshalToByteArray((JAXBElement) new IndivoDocument(document), docContext);
+		byte[] docContentBytes = JAXBUtils.marshalToByteArray(new IndivoDocument(document), docContext);
 		String docContentStr = new String(docContentBytes);
 
 		this.setPhrClassification(MedicalDataType.MEDICATION.name());
 		this.setReceiverOscar(demographicNo);
-		this.setReceiverType(this.TYPE_DEMOGRAPHIC);
+		this.setReceiverType(PHRDocument.TYPE_DEMOGRAPHIC);
 		this.setReceiverMyOscarUserId(receiverMyOscarUserId);
 		this.setSenderOscar(prov.getProviderNo());
-		this.setSenderType(this.TYPE_PROVIDER);
+		this.setSenderType(PHRDocument.TYPE_PROVIDER);
 		this.setSenderMyOscarUserId(Long.parseLong(prov.getIndivoId()));
-		this.setSent(this.STATUS_SEND_PENDING);
+		this.setSent(PHRDocument.STATUS_SEND_PENDING);
 		this.setDocContent(docContentStr);
 	}
 
@@ -200,8 +201,8 @@ public class PHRMedication extends PHRDocument {
 		org.indivo.xml.phr.medication.ObjectFactory medFactory = new org.indivo.xml.phr.medication.ObjectFactory();
 		Medication med = medFactory.createMedication(medType);
 
-		Element element = jaxbUtils.marshalToElement(med, JAXBContext.newInstance("org.indivo.xml.phr.medication"));
-		IndivoDocumentType document = generator.generateDefaultDocument(prov.getIndivoId(), providerFullName, PHRDocument.PHR_ROLE_PROVIDER, DocumentClassificationUrns.MEDICATION, ContentTypeQNames.MEDICATION, element);
+		Element element = JAXBUtils.marshalToElement(med, JAXBContext.newInstance("org.indivo.xml.phr.medication"));
+		IndivoDocumentType document = DocumentGenerator.generateDefaultDocument(prov.getIndivoId(), providerFullName, PHRDocument.PHR_ROLE_PROVIDER, DocumentClassificationUrns.MEDICATION, ContentTypeQNames.MEDICATION, element);
 		return document;
 	}
 

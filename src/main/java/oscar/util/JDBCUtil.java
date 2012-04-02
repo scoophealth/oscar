@@ -1,31 +1,30 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 package oscar.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -72,8 +71,8 @@ public class JDBCUtil
 
           for (int i = 1; i <= colCount; i++)
           {
-             String columnName = strEscUtils.escapeXml(rsmd.getColumnName(i));
-             String value      = strEscUtils.escapeXml(oscar.Misc.getString(rs,i));
+             String columnName = StringEscapeUtils.escapeXml(rsmd.getColumnName(i));
+             String value      = StringEscapeUtils.escapeXml(oscar.Misc.getString(rs,i));
 
              Element node      = doc.createElement(columnName);
              node.appendChild(doc.createTextNode(value));
@@ -83,48 +82,48 @@ public class JDBCUtil
        rs.close();
        return doc;
     }
-    
-    public static void saveAsXML(Document doc, String fileName) throws IOException
+
+    public static void saveAsXML(Document doc, String fileName)
     {
         try{
             TransformerFactory transFactory = TransformerFactory.newInstance();
-            Transformer transformer = transFactory.newTransformer(); 
-            DOMSource source = new DOMSource(doc); 
+            Transformer transformer = transFactory.newTransformer();
+            DOMSource source = new DOMSource(doc);
             File newXML = new File(fileName);
             FileOutputStream os = new FileOutputStream(newXML);
             StreamResult result = new StreamResult(os);
-            
-            transformer.transform(source, result); 
+
+            transformer.transform(source, result);
             MiscUtils.getLogger().debug("Next is to call zip function!");
             zip z = new zip();
             z.write2Zip("xml");
         }
-        catch(Exception e){            
+        catch(Exception e){
             MiscUtils.getLogger().debug(e.getMessage() + "cannot saveAsXML");
             File newXML = new File(fileName);
             newXML.delete();
-        }     
+        }
     }
-    
+
     public static void toDataBase(InputStream inputStream, String fileName)
     {
         boolean validation = true;
         DOMParser parser = new DOMParser();
-        Document doc;        
-        
+        Document doc;
+
         try
-        {  
+        {
             //InputStream inputStream = file.getInputStream();
             InputSource source = new InputSource(inputStream);
             //String fileName = file.getFileName();
-            int indexForm = fileName.indexOf("_");        
-            int indexDemo = fileName.indexOf("_", indexForm+1);       
+            int indexForm = fileName.indexOf("_");
+            int indexDemo = fileName.indexOf("_", indexForm+1);
             int indexTimeStamp = fileName.indexOf(".",indexDemo);
             String formName = fileName.substring(0,indexForm);
             String demographicNo = fileName.substring(indexForm+1, indexDemo);
             String timeStamp = fileName.substring(indexDemo+1,indexTimeStamp);
-            
-            
+
+
             //check if the data existed in the database already...
             String sql = "SELECT * FROM " + formName + " WHERE demographic_no='"
                          + demographicNo + "' AND formEdited='" + timeStamp + "'";
@@ -135,38 +134,38 @@ public class JDBCUtil
                 sql = "SELECT * FROM " + formName + " WHERE demographic_no='"
                         + demographicNo + "' AND ID='0'";
                 MiscUtils.getLogger().debug("sql: " + sql);
-                rs = DBHandler.GetSQL(sql, true);  
-                rs.moveToInsertRow();        
+                rs = DBHandler.GetSQL(sql, true);
+                rs.moveToInsertRow();
                 //To validate or not
-                parser.setFeature( "http://xml.org/sax/features/validation",validation ); 
+                parser.setFeature( "http://xml.org/sax/features/validation",validation );
                 parser.parse(source);
                 doc = parser.getDocument();
                 rs = toResultSet(doc, rs);
                 rs.insertRow();
             }
             rs.close();
-        }   
+        }
         catch(Exception e)
         {
             MiscUtils.getLogger().debug("Errors " + e);
-            
+
         }
 
     }
-        
+
     private static ResultSet toResultSet(Node node, ResultSet rs) throws SQLException
-    {                                        
+    {
         int type = node.getNodeType();
-       
+
         if ( type == Node.ELEMENT_NODE ){
             NamedNodeMap nnm = node.getAttributes();
             String name = node.getNodeName();
             String value = "";
-            
+
             Node next = node.getFirstChild();
             if (next!=null){
                 type = next.getNodeType();
-                if (type == next.TEXT_NODE){
+                if (type == Node.TEXT_NODE){
 
                     value = next.getNodeValue();
                 }
@@ -175,14 +174,14 @@ public class JDBCUtil
             if(!name.equalsIgnoreCase("Results")&&!name.equalsIgnoreCase("Row")&&!name.equalsIgnoreCase("ID"))
                 rs.updateString(name, value);
         }
-        
+
         //recurse
         for(Node child = node.getFirstChild(); child != null; child = child.getNextSibling()){
             toResultSet(child,rs);
         }
-                        
+
         return rs;
-        
+
     }
-    
+
 }

@@ -72,7 +72,7 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 	}
 
 	public OscarForm getOscarForm(Long formId) {
-		return (OscarForm)this.getHibernateTemplate().get(OscarForm.class,formId);
+		return this.getHibernateTemplate().get(OscarForm.class,formId);
 	}
 
 	public void saveOscarFormInstance(OscarFormInstance instance) {
@@ -217,7 +217,7 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 		PrintWriter pout = new PrintWriter(out,true);
 		
 		//get form structure - output headers, and determine order to print out data elements
-		OscarForm form = (OscarForm)this.getHibernateTemplate().get(OscarForm.class,formId);
+		OscarForm form = this.getHibernateTemplate().get(OscarForm.class,formId);
 
 		//load headers
 		Map<String,String> keyMap = getHeaders(form);
@@ -259,7 +259,7 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 			
 			//we need to add the client data
 			long clientId = (Long)((Object[])result.get(x))[1];			
-			Demographic demographic = (Demographic)getHibernateTemplate().get(Demographic.class, (int)clientId);
+			Demographic demographic = getHibernateTemplate().get(Demographic.class, (int)clientId);
 			if(demographic != null) {
 				Timestamp ts = (java.sql.Timestamp)((Object[])result.get(x))[2];
 				SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -393,7 +393,7 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 		PrintWriter pout = new PrintWriter(out,true);
 		
 		//get form structure - output headers, and determine order to print out data elements
-		OscarForm form = (OscarForm)this.getHibernateTemplate().get(OscarForm.class,formId);
+		OscarForm form = this.getHibernateTemplate().get(OscarForm.class,formId);
 		
 		//get form instances, headers = instances
 		List result = this.getHibernateTemplate().find("select f.id,f.clientId,f.dateCreated from OscarFormInstance f where f.formId = ? order by f.clientId, f.dateCreated",formId);
@@ -473,7 +473,7 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 	}
 	
 	public void convertFormXMLToDb(Long formId) {
-		OscarForm form = (OscarForm)this.getHibernateTemplate().get(OscarForm.class,formId);
+		OscarForm form = this.getHibernateTemplate().get(OscarForm.class,formId);
 
 		SurveyDocument model = null;
 		try {

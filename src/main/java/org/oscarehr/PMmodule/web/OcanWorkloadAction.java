@@ -14,8 +14,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.dao.AdmissionDao;
-import org.oscarehr.common.dao.DemographicDao;
-import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.common.dao.OcanStaffFormDao;
 import org.oscarehr.common.dao.OcanStaffFormDataDao;
@@ -31,15 +29,13 @@ public class OcanWorkloadAction extends DispatchAction {
 
 	private OcanStaffFormDao ocanStaffFormDao = (OcanStaffFormDao) SpringUtils.getBean("ocanStaffFormDao");
 	private OcanStaffFormDataDao ocanStaffFormDataDao = (OcanStaffFormDataDao) SpringUtils.getBean("ocanStaffFormDataDao");
-	private DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
-	private ProgramDao programDao = (ProgramDao)SpringUtils.getBean("programDao");
 	private AdmissionDao admissionDao = (AdmissionDao)SpringUtils.getBean("admissionDao");
 
 	protected ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         return view(mapping,form,request,response);
     }
 
-	public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 		Integer facilityId = LoggedInInfo.loggedInInfo.get().currentFacility.getId();
 

@@ -256,7 +256,7 @@ public class EpsilonHandler  extends CMLHandler implements MessageHandler {
 	        try{
 	            
 	            Terser terser = new Terser(msg);
-	            result = getString(terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),5,0,1,1));
+	            result = getString(Terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),5,0,1,1));
 	            
 	            // format the result
 	            if (result.endsWith("."))
@@ -277,9 +277,9 @@ public class EpsilonHandler  extends CMLHandler implements MessageHandler {
 	            
 	            Terser terser = new Terser(msg);
 	            OBX obxSeg = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX();
-	            comment = terser.get(obxSeg,7,k,1,1);
+	            comment = Terser.get(obxSeg,7,k,1,1);
 	            if (comment == null)
-	                comment = terser.get(obxSeg,7,k,2,1);
+	                comment = Terser.get(obxSeg,7,k,2,1);
 	            
 	        }catch(Exception e){
 	            logger.error("Cannot return comment", e);
@@ -312,11 +312,11 @@ public class EpsilonHandler  extends CMLHandler implements MessageHandler {
 	            l--;
 	            
 	            int k = 0;
-	            String nextComment = terser.get(obxSeg,5,k,1,1);
+	            String nextComment = Terser.get(obxSeg,5,k,1,1);
 	            while(nextComment != null){
 	                comment = comment + nextComment.replaceAll("\\\\\\.br\\\\", "<br />");
 	                k++;
-	                nextComment = terser.get(obxSeg,5,k,1,1);
+	                nextComment = Terser.get(obxSeg,5,k,1,1);
 	            }
 	            
 	        } catch (Exception e) {

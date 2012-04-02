@@ -34,7 +34,7 @@ public class ProgramClientRestrictionDAO extends HibernateDaoSupport {
     }
 
     public ProgramClientRestriction find(int restrictionId) {
-        return setRelationships((ProgramClientRestriction) getHibernateTemplate().get(ProgramClientRestriction.class, restrictionId));
+        return setRelationships(getHibernateTemplate().get(ProgramClientRestriction.class, restrictionId));
     }
 
     public Collection<ProgramClientRestriction> findForProgram(int programId) {

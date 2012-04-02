@@ -25,6 +25,7 @@
 package oscar.decision;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Properties;
 
@@ -92,14 +93,14 @@ public class DesAntenatalPlannerChecklistHandler_99_12 extends DefaultHandler {
                         count = Integer.parseInt(atts.getValue(i));
                     }
                 }
-                cal.set(now.get(now.YEAR), now.get(now.MONTH), now.get(now.DAY_OF_MONTH));
-                cal.add(cal.DATE, count*7);
+                cal.set(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
+                cal.add(Calendar.DATE, count*7);
                 results += "<table border=0 cellspacing=1 cellpadding=1 width=\"100%\" datasrc='#xml_list'>\n";
                 results += "<tr bgcolor='#CCFFCC'><td width='5%'></td><td width='5%'></td><td colspan='1'><span CLASS='.title'>\n";
                 if (count == 0) {
                     results += "Initial Assessment - Week "+count;
                 } else {
-                    results += monthNames[cal.get(cal.MONTH)] + " " + cal.get(cal.DAY_OF_MONTH) + ", " + cal.get(cal.YEAR) +" - Week "+count;
+                    results += monthNames[cal.get(Calendar.MONTH)] + " " + cal.get(Calendar.DAY_OF_MONTH) + ", " + cal.get(Calendar.YEAR) +" - Week "+count;
                 }
                 
                 results += "</span></td></tr>";
@@ -221,7 +222,7 @@ public class DesAntenatalPlannerChecklistHandler_99_12 extends DefaultHandler {
 			now.setTime(df.parse(savedar1params.getProperty("finalEDB")) ); 
 		} catch (java.text.ParseException pe) {
 		}
-		now.add(now.DATE, -280);
+		now.add(Calendar.DATE, -280);
 	}
 
 }

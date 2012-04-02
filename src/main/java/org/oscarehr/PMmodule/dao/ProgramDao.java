@@ -134,7 +134,7 @@ public class ProgramDao extends HibernateDaoSupport {
             return null;
         }
 
-        Program program = (Program) getHibernateTemplate().get(Program.class, programId);
+        Program program = getHibernateTemplate().get(Program.class, programId);
 
         return program;
     }
@@ -164,7 +164,7 @@ public class ProgramDao extends HibernateDaoSupport {
             return null;
         }
 
-        Program program = (Program) getHibernateTemplate().get(Program.class, programId);
+        Program program = getHibernateTemplate().get(Program.class, programId);
 
         if (program != null) {
             name = program.getName();

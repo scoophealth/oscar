@@ -34,7 +34,7 @@ public class DefaultRoleAccessDAO extends HibernateDaoSupport {
     }
 
     public DefaultRoleAccess getDefaultRoleAccess(Long id) {
-        return (DefaultRoleAccess)this.getHibernateTemplate().get(DefaultRoleAccess.class, id);
+        return this.getHibernateTemplate().get(DefaultRoleAccess.class, id);
     }
 
     public List getDefaultRoleAccesses() {

@@ -466,7 +466,6 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFormRequestPrintPdf.java:ArrayList pdfDocs = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFormRequestUtil.java:teamVec = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctViewConsultationRequestsUtil.java:providerNo = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementFlowSheet.java://DO something   itemList = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementFlowSheet.java://Hashtable dsRulesHash = new Hashtable();   //Each items Rules ** Not sure what to do with yet</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementFlowSheet.java:ArrayList dsElements = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementFlowSheet.java:Hashtable indicatorHash = new Hashtable();   //color map for severity</ViolationValue>
@@ -707,7 +706,6 @@
         <ViolationValue>/src/main/java/oscar/oscarPrevention/Prevention.java:ArrayList messageList = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/Prevention.java:ArrayList reminder = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/Prevention.java:Hashtable preventionTypes = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarPrevention/Prevention.java:Hashtable warnings = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/Prevention.java:Vector v = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/Prevention.java:a = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/reports/ChildImmunizationReport.java:ArrayList returnReport = new ArrayList();</ViolationValue>
@@ -879,13 +877,11 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxInteractionData.java:static Hashtable  htable = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxInteractionData.java:static Hashtable working = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:ArrayList lst = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPharmacyData.java:ArrayList  pharmacyList =  new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPrescriptionData.java:ArrayList lst = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPrescriptionData.java:Vector vec = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxChoosePatientAction.java:HashMap hm = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxDeleteRxAction.java:HashMap hm = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxDeleteRxAction.java:Hashtable d = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxManagePharmacyAction.java:HashMap hm=new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java://Vector idWarningVec=new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Hashtable dsPrefs=new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Hashtable emptyHiddenRes=new Hashtable();</ViolationValue>
@@ -1643,29 +1639,32 @@
         <ViolationValue>/src/main/java/oscar/form/FrmAlphaRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmAnnualRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmAnnualV2Record.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmBCAR2007Record.java:ResultSet rs = (new DBHelp()).searchDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCAR2007Record.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/form/FrmBCAR2007Record.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCAR2007Record.java:import oscar.login.DBHelp;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCARRecord.java:DBHelp db = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCARRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/form/FrmBCARRecord.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCARRecord.java:import oscar.login.DBHelp;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCBrithSumMoRecord.java:DBHelp db = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCBrithSumMoRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/form/FrmBCBrithSumMoRecord.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCBrithSumMoRecord.java:import oscar.login.DBHelp;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCClientChartChecklistRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCClientChartChecklistRecord.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCClientChartChecklistRecord.java:import oscar.login.DBHelp;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmBCHPRecord.java:ResultSet rs = (new DBHelp()).searchDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCHPRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/form/FrmBCHPRecord.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCHPRecord.java:import oscar.login.DBHelp;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCINRRecord.java:DBHelp db = new DBHelp();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmBCINRRecord.java:ResultSet rs = (new DBHelp()).searchDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCINRRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/form/FrmBCINRRecord.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCINRRecord.java:ResultSet rs1 = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCINRRecord.java:ResultSet rs2 = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCINRRecord.java:import oscar.login.DBHelp;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCNewBornRecord.java:DBHelp db = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCNewBornRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/form/FrmBCNewBornRecord.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCNewBornRecord.java:import oscar.login.DBHelp;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmCESDRecord.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmCaregiverRecord.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -1710,6 +1709,7 @@
         <ViolationValue>/src/main/java/oscar/form/FrmMentalHealthRecord.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmONARRecord.java:DBHelp db = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmONARRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/form/FrmONARRecord.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmONARRecord.java:import oscar.login.DBHelp;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmOvulationRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmPalliativeCareRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -1819,7 +1819,6 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/BillingFormData.java:rs = DBHandler.GetSQL(qry);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/BillingFormData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/BillingHistoryDAO.java:DBHandler.RunSQL(qry);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/BillingHistoryDAO.java:rs = (ResultSet) DBHandler.GetSQL(qry);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/BillingHistoryDAO.java:rs = DBHandler.GetSQL(qry);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/BillingNote.java:DBHandler.RunSQL(notesql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/BillingNote.java:ResultSet rs = DBHandler.GetSQL(notesql);</ViolationValue>
@@ -1879,7 +1878,6 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingReviewImpl.java:import oscar.oscarDB.DBPreparedHandlerParam;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingReviewImpl.java:public List getBillingHist(String demoNo, int iPageSize, int iOffSet, DBPreparedHandlerParam[] pDateRange) throws Exception{</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/RAData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDocumentErrorReportUploadAction.java:DBHandler.RunSQL(sqlVer);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDocumentErrorReportUploadAction.java:ResultSet rsDemo = DBHandler.GetSQL(sqlDemo);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/data/BillingFormData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/data/BillingONDataHelp.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -2204,34 +2202,57 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptByExampleData.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptConsultReportData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptDemographicQueryBuilder.java:rs = DBHandler.GetSQL(stringBuffer.toString());</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptDemographicQueryLoader.java:rs = DBHandler.GetSQL("select * from demographicQueryFavourites where favId = '"+qId+"'");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptDemographicQuerySaver.java:DBHandler.RunSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptFluReportData.java:ResultSet resultset = DBHandler.GetSQL(s1);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptFluReportData.java:ResultSet resultset = DBHandler.GetSQL(s2);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptFluReportData.java:for (resultset = DBHandler.GetSQL(s); resultset.next(); arraylist</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptLabReportData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportConfigData.java:DBHelp dbObj = new DBHelp();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportConfigData.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportConfigData.java:if ("".equals(DBHelp.getString(rs,"caption"))) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportConfigData.java:if (DBHelp.getString(rs,"name").matches(RptTableShadowFieldConst.fieldName)) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportConfigData.java:if (DBHelp.updateDBRecord(sql)) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportConfigData.java:import oscar.login.DBHelp;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportConfigData.java:prop.setProperty("caption", DBHelp.getString(rs,"caption"));</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportConfigData.java:prop.setProperty("name", DBHelp.getString(rs,"name"));</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportConfigData.java:ret = DBHelp.updateDBRecord(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportConfigData.java:ret.add(DBHelp.getString(rs,"caption") + " |" + DBHelp.getString(rs,"name"));</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportConfigData.java:ret.add(DBHelp.getString(rs,"table_name"));</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportConfigData.java:ret[0].add(DBHelp.getString(rs,"table_name") + "." + DBHelp.getString(rs,"name"));</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportConfigData.java:ret[1].add(DBHelp.getString(rs,"caption"));</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportConfigData.java:ret[1].add(DBHelp.getString(rs,"name"));</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportCreator.java:DBHelp dbObj = new DBHelp();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportCreator.java:DBHelp.getString(rs,(String) vecFieldName.get(i)) == null ? "" : rs</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportCreator.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportCreator.java:String caption = DBHelp.getString(rs,"caption");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportCreator.java:import oscar.login.DBHelp;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportCreator.java:ret = DBHelp.getString(rs,"table_name");</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportCreator.java:ret.append( (ret.length() &lt; 8 ? " " : ", ") + DBHelp.getString(rs,"table_name") + "." + DBHelp.getString(rs,"name") );</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportCreator.java:ret.append(" as '" + StringEscapeUtils.escapeSql(DBHelp.getString(rs,"caption")) + "'");</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportCreator.java:vec.add(DBHelp.getString(rs,"table_name"));</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportFilter.java:DBHelp dbObj = new DBHelp();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportFilter.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportFilter.java:import oscar.login.DBHelp;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportFilter.java:ret = DBHelp.updateDBRecord(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportFilter.java:str[0] = DBHelp.getString(rs,"description");</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportFilter.java:str[1] = DBHelp.getString(rs,"value");</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportFilter.java:str[2] = DBHelp.getString(rs,"position");</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportFilter.java:str[4] = DBHelp.getString(rs,"javascript");</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportFilter.java:str[5] = DBHelp.getString(rs,"date_format");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportItem.java:DBHelp dbObj = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportItem.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportItem.java:import oscar.login.DBHelp;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportItem.java:prop.setProperty("" + rs.getInt("id"), DBHelp.getString(rs,"report_name"));</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportItem.java:ret = DBHelp.getString(rs,"report_name");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportItem.java:ret = DBHelp.updateDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptSearchData.java:DBHandler.RunSQL("update demographicQueryFavourites set archived = '0' where favId = '"+id+"'");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptSearchData.java:rs = DBHandler.GetSQL("select distinct patient_status from demographic where patient_status is not null order by patient_status");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptSearchData.java:rs = DBHandler.GetSQL("select distinct provider_no from demographic order by provider_no");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptSearchData.java:rs = DBHandler.GetSQL("select distinct roster_status from demographic where roster_status is not null order by roster_status");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptSearchData.java:rs = DBHandler.GetSQL("select favId, queryName from demographicQueryFavourites where archived = '1' order by queryName");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptTableFieldNameCaption.java:DBHelp dbObj = new DBHelp();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptTableFieldNameCaption.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptTableFieldNameCaption.java:import oscar.login.DBHelp;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptTableFieldNameCaption.java:ret = DBHelp.updateDBRecord(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptTableFieldNameCaption.java:ret.setProperty(DBHelp.getString(rs,"name"), DBHelp.getString(rs,"caption"));</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/VisitReportData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/data/RptMeasurementsData.java:for(rs=DBHandler.GetSQL(sql); rs.next();){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/data/RptMeasurementsData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -2254,7 +2275,12 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptByExamplesFavoriteAction.java:DBHandler.RunSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptByExamplesFavoriteAction.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptDownloadCSVServlet.java:DBHelp dbObj = new DBHelp();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptDownloadCSVServlet.java:ResultSet rs = DBHelp.searchDBRecord("select distinct demographic_no from formBCBirthSumMo");</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptDownloadCSVServlet.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptDownloadCSVServlet.java:ResultSet rs = DBHelp.searchDBRecord(subQuery);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptDownloadCSVServlet.java:import oscar.login.DBHelp;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptDownloadCSVServlet.java:rs = DBHelp.searchDBRecord(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptDownloadCSVServlet.java:rs = DBHelp.searchDBRecord(subQuery);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptFormQuery.java:DBHelp dbObj = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptFormQuery.java:import oscar.login.DBHelp;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptRehabStudyAction.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -2297,8 +2323,6 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL("SELECT * FROM diseases WHERE demographic_no = '" + getDemographicNo() + "'");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL("SELECT demographic_no, last_name, first_name, sex, year_of_birth, " + "month_of_birth, date_of_birth, address, city, province, postal, phone " + "FROM demographic WHERE last_name LIKE '" + surname + "%' AND first_name LIKE '" + firstName + "%'");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL("SELECT demographic_no, last_name, first_name, sex, year_of_birth, " + "month_of_birth, date_of_birth, address, city, province, postal, phone,hin " + "FROM demographic WHERE demographic_no = " + demographicNo);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPharmacyData.java:DBHandler.RunSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPharmacyData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPrescriptionData.java:DBHandler.RunSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPrescriptionData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPrescriptionData.java:rs = DBHandler.GetSQL("SELECT * FROM favorites WHERE favoriteid = " + favoriteId);</ViolationValue>
@@ -2343,7 +2367,7 @@
         <ViolationValue>/src/main/java/oscar/service/OscarSuperManager.java:throw new IllegalArgumentException("OscarSuperManager contains no dao with specified name: " + daoName);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/util/BackupDownload.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/util/DAO.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/util/DAO.java:public DBPreparedHandler getDBPreparedHandler() throws SQLException {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/util/DAO.java:public DBPreparedHandler getDBPreparedHandler() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/util/DAO.java:return new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/util/JDBCUtil.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/util/JDBCUtil.java:rs = DBHandler.GetSQL(sql, true);</ViolationValue>
@@ -2360,7 +2384,7 @@
         <ViolationValue>/src/main/java/oscar/util/SqlUtilBaseS.java:protected static String runPreparedSqlInsert(String preparedSql, DBPreparedHandlerParam[] params) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/util/SqlUtilBaseS.java:protected static void runPreparedSql(String preparedSql,DBPreparedHandlerParam[] params) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/util/SqlUtilBaseS.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/util/SqlUtils.java:rs = (ResultSet) DBHandler.GetSQL(qry);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/util/SqlUtils.java:rs = DBHandler.GetSQL(qry);</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/logReport.jsp:DBPreparedHandler dbObj = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/logReport.jsp:DBPreparedHandlerParam[] params = new DBPreparedHandlerParam[2];</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/logReport.jsp:params[0]= new DBPreparedHandlerParam(MyDateFormat.getSysDateEX(eDate, 1));</ViolationValue>
@@ -2432,40 +2456,6 @@
         <ViolationValue>/src/main/webapp/common/webAppContextAndSuperMgr.jsp:&lt;%@ page import="oscar.service.OscarSuperManager"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/common/webAppContextAndSuperMgr.jsp:OscarSuperManager oscarSuperManager = (OscarSuperManager)webApplicationContext.getBean("oscarSuperManager");</ViolationValue>
         <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:DBPreparedHandlerParam [] param =new DBPreparedHandlerParam[34];</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[0]=new DBPreparedHandlerParam(request.getParameter("last_name"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[10]=new DBPreparedHandlerParam(request.getParameter("year_of_birth"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[11]=new DBPreparedHandlerParam(request.getParameter("month_of_birth")!=null &amp;&amp; request.getParameter("month_of_birth").length()==1 ? "0"+request.getParameter("month_of_birth") : request.getParameter("month_of_birth"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[12]=new DBPreparedHandlerParam(request.getParameter("date_of_birth")!=null &amp;&amp; request.getParameter("date_of_birth").length()==1 ? "0"+request.getParameter("date_of_birth") : request.getParameter("date_of_birth"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[13]=new DBPreparedHandlerParam(request.getParameter("hin"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[14]=new DBPreparedHandlerParam(request.getParameter("ver"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[15]=new DBPreparedHandlerParam(request.getParameter("roster_status"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[16]=new DBPreparedHandlerParam(request.getParameter("patient_status"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[17]=new DBPreparedHandlerParam(MyDateFormat.getSysDate(request.getParameter("date_joined_year")+"-"+request.getParameter("date_joined_month")+"-"+request.getParameter("date_joined_date")));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[18]=new DBPreparedHandlerParam(request.getParameter("chart_no"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[19]=new DBPreparedHandlerParam(request.getParameter("staff"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[1]=new DBPreparedHandlerParam(request.getParameter("first_name"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[20]=new DBPreparedHandlerParam(request.getParameter("sex"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[21] = new DBPreparedHandlerParam(MyDateFormat.getSysDate(year + "-" + month + "-" + day));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[22] =  new DBPreparedHandlerParam(MyDateFormat.getSysDate(year + "-" + month + "-" + day));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[23]=new DBPreparedHandlerParam(request.getParameter("pcn_indicator"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[24]=new DBPreparedHandlerParam(request.getParameter("hc_type"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[25] =new DBPreparedHandlerParam(MyDateFormat.getSysDate( year + "-" + month + "-" + day));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[26] =new DBPreparedHandlerParam("&lt;rdohip&gt;" + request.getParameter("r_doctor_ohip") + "&lt;/rdohip&gt;" + "&lt;rd&gt;" + request.getParameter("r_doctor") + "&lt;/rd&gt;"+ (request.getParameter("family_doc")!=null? ("&lt;family_doc&gt;" + request.getParameter("family_doc") + "&lt;/family_doc&gt;") : ""));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[27] =new DBPreparedHandlerParam(request.getParameter("countryOfOrigin"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[28] =new DBPreparedHandlerParam(request.getParameter("newsletter"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[29] =new DBPreparedHandlerParam(request.getParameter("sin"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[2]=new DBPreparedHandlerParam(request.getParameter("address"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[30] =new DBPreparedHandlerParam(request.getParameter("title"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[31] =new DBPreparedHandlerParam(request.getParameter("official_lang"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[32] =new DBPreparedHandlerParam(request.getParameter("spoken_lang"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[33] =new DBPreparedHandlerParam(curUser_no);</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[3]=new DBPreparedHandlerParam(request.getParameter("city"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[4]=new DBPreparedHandlerParam(request.getParameter("province"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[5]=new DBPreparedHandlerParam(request.getParameter("postal"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[6]=new DBPreparedHandlerParam(request.getParameter("phone"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[7]=new DBPreparedHandlerParam(request.getParameter("phone2"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[8]=new DBPreparedHandlerParam(request.getParameter("email"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographicaddarecord.jsp:param[9]=new DBPreparedHandlerParam(StringUtils.trimToNull(request.getParameter("myOscarUserName")));</ViolationValue>
         <ViolationValue>/src/main/webapp/demographic/demographicappthistory.jsp:DBPreparedHandlerParam[] params= new DBPreparedHandlerParam[1];</ViolationValue>
         <ViolationValue>/src/main/webapp/demographic/demographicappthistory.jsp:params[0]= new DBPreparedHandlerParam(Integer.parseInt(request.getParameter("demographic_no")));</ViolationValue>
         <ViolationValue>/src/main/webapp/form/study/redirectstudysite.jsp:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -2604,7 +2594,6 @@
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/model/DSDemographicAccess.java:public boolean billedForNot(String searchStrings,Hashtable options) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED");  }</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/model/DSDemographicAccess.java:public boolean billedForNotall(String searchStrings,Hashtable options) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED"); }</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/model/DSDemographicAccess.java:public boolean billedForNotany(String searchStrings,Hashtable options) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED"); }</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/model/DSDemographicAccess.java:public int getAsInt(Hashtable options,String key){</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/model/DSGuidelineFactory.java:Hashtable paramHashtable = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/model/DSGuidelineFactory.java:_log.debug("THIS IS THE HASH STRING "+paramHashtable.toString());</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/model/DSGuidelineFactory.java:dsCondition.setParam(paramHashtable);</ViolationValue>
@@ -2673,7 +2662,7 @@
         <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable docStatus = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable docType = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable ht = (Hashtable) providers.get(i);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable ht = (Hashtable) queues.get(i);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable ht = queues.get(i);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable patientDocs = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable patientIdNames = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:Hashtable patientNumDoc = new Hashtable();</ViolationValue>
@@ -2710,7 +2699,7 @@
         <ViolationValue>/src/main/java/oscar/eform/actions/HtmlEditAction.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/eform/actions/HtmlEditAction.java:private Hashtable createHashtable(String fid, String formName, String formSubject, String formFileName, String formHtml, boolean patientIndependent, String roleType) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/eform/data/EForm.java:Hashtable data = EctMeasurementsDataBeanHandler.getLast(this.demographicNo, type);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/eform/data/EForm.java:Hashtable loaded = (Hashtable) EFormUtil.loadEForm(fid);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/eform/data/EForm.java:Hashtable loaded = EFormUtil.loadEForm(fid);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/eform/data/EForm.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/entities/MSPBill.java:public java.util.Hashtable explanations;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/entities/MSPBill.java:public java.util.Hashtable getExplanations() {</ViolationValue>
@@ -2731,7 +2720,7 @@
         <ViolationValue>/src/main/java/oscar/form/graphic/FrmPdfGraphicRourke.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/graphic/FrmPdfGraphicRourke.java:public Properties getGraphicXYProp(Vector xDate, Vector yHeight) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/pageUtil/FrmFormAction.java:Vector data2OSDSF = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/pageUtil/FrmFormAction.java:Vector measurementTypes = formProp.getMeasurementTypes();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/form/pageUtil/FrmFormAction.java:Vector measurementTypes = EctFormProp.getMeasurementTypes();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/pageUtil/FrmFormAction.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/pageUtil/FrmFormRHPreventionAction.java:Hashtable h = (Hashtable) currentWorkFlows.get(0);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/pageUtil/FrmFormRHPreventionAction.java:import java.util.Hashtable;</ViolationValue>
@@ -3117,7 +3106,6 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctViewConsultationRequestsUtil.java:this.patientWillBook = new Vector&lt;String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctViewConsultationRequestsUtil.java:urgency = new Vector&lt;String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctViewConsultationRequestsUtil.java:vSpecialist = new Vector&lt;String&gt;();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementFlowSheet.java://DO something   itemList = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementFlowSheet.java://Hashtable dsHash = null; //hash of the rules  ** might not be needed if it's in the object</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementFlowSheet.java://Hashtable dsRulesHash = new Hashtable();   //Each items Rules ** Not sure what to do with yet</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementFlowSheet.java://Hashtable measurementsFlowSheetInfo = null;   //Collenction of hash tables with details  ** CAN now be from itemList (Hoping)</ViolationValue>
@@ -3146,10 +3134,8 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:flowsheetDisplayNames = new Hashtable&lt;String, String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:flowsheets = new Hashtable&lt;String, MeasurementFlowSheet&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:private Element getRuleBaseElement(String ruleName,String measurement,Hashtable&lt;String,String&gt; recowarn){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:private Hashtable&lt;String,String&gt; getRecommendationHash(Element recowarn){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:public ArrayList&lt;String&gt; getFlowsheetsFromDxCodes(Vector coll) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:public Hashtable&lt;String, ArrayList&lt;String&gt;&gt; getDxTrigHash() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:public Hashtable&lt;String, String&gt; getFlowsheetDisplayNames(){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctGroupNameBeanHandler.java:Vector groupNameVector = new Vector();</ViolationValue>
@@ -3261,7 +3247,7 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/prop/EctFormProp.java:static private Vector measurementTypes;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/prop/EctFormProp.java:static public Vector getMeasurementTypes(){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/EctFindMeasurementTypeUtil.java:Vector measurementTypeVector = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/EctFindMeasurementTypeUtil.java:Vector measurementTypes = formProp.getMeasurementTypes();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/EctFindMeasurementTypeUtil.java:Vector measurementTypes = EctFormProp.getMeasurementTypes();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/EctFindMeasurementTypeUtil.java:Vector validations = mt.getValidationRules();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/EctFindMeasurementTypeUtil.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/EctFindMeasurementTypeUtil.java:measurementTypeVector.add(measurementTypes);</ViolationValue>
@@ -3390,7 +3376,7 @@
         <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgAddressBook.java:MiscUtils.getLogger().debug("the binsearch returned "+binSearch+" there are "+locationVector.size()+" in the locationVector ");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgAddressBook.java:displayRemoteNodes(nlst.item(i), out,depth,thePros,remoId,locationVector);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgAddressBook.java:displayRemoteNodes2(nlst.item(i), out,depth,reData,remoId,locationVector);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgAddressBook.java:if ( ( binSearch &gt; 0 ) &amp;&amp; ( ( (String) locationVector.elementAt(binSearch) ).equals( (String) remoteLocationId.elementAt(remoId)  ) )){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgAddressBook.java:if ( ( binSearch &gt; 0 ) &amp;&amp; ( ( (String) locationVector.elementAt(binSearch) ).equals( remoteLocationId.elementAt(remoId)  ) )){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgAddressBook.java:java.util.Vector vector = new java.util.Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgAddressBook.java:providerList = new java.util.Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgAddressBook.java:public java.util.Vector providerList;</ViolationValue>
@@ -3505,7 +3491,6 @@
         <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:public Vector getMsgVector(String demographic_no){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:return msgVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/Prevention.java:Hashtable preventionTypes = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarPrevention/Prevention.java:Hashtable warnings = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/Prevention.java:Vector a =  (Vector) preventionTypes.get(preventionType);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/Prevention.java:Vector v = (Vector) preventionTypes.get(pItem.name);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/Prevention.java:Vector v = new Vector();</ViolationValue>
@@ -3514,7 +3499,6 @@
         <ViolationValue>/src/main/java/oscar/oscarPrevention/Prevention.java:a = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/Prevention.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/Prevention.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarPrevention/Prevention.java:public Hashtable getWarningMsgs() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/Prevention.java:public Vector getPreventionData(String preventionType){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/PreventionDisplayConfig.java:Hashtable&lt;String,Map&lt;String,Object&gt;&gt; configHash = null;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/PreventionDisplayConfig.java:configHash = new Hashtable&lt;String,Map&lt;String,Object&gt;&gt;();</ViolationValue>
@@ -3659,8 +3643,8 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportCreator.java:Vector vec = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportCreator.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportCreator.java:public Vector query(String sql, Vector vecFieldName) throws SQLException {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportCreator.java:public static String getWhereValueClause(String value, Vector vec) throws SQLException {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportCreator.java:public static Vector getVarVec(String value) throws SQLException {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportCreator.java:public static String getWhereValueClause(String value, Vector vec)  {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportCreator.java:public static Vector getVarVec(String value) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportFilter.java:Vector ret = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportFilter.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportFilter.java:public Vector getNameList(String recordId, int n) throws SQLException {</ViolationValue>
@@ -3671,9 +3655,9 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptTableFieldNameCaption.java:Vector ret = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptTableFieldNameCaption.java:Vector vec = getMetaNameList(tableName);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptTableFieldNameCaption.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptTableFieldNameCaption.java:public Vector getFormTableNameList() throws SQLException {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptTableFieldNameCaption.java:public Vector getFormTableNameList() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptTableFieldNameCaption.java:public Vector getMetaNameList(String tableName) {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptTableFieldNameCaption.java:public Vector getTableNameCaption(String tableName) throws SQLException {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptTableFieldNameCaption.java:public Vector getTableNameCaption(String tableName)  {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptGroupNameBeanHandler.java:Vector groupNameVector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptGroupNameBeanHandler.java:groupNameVector.add(groupName);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptGroupNameBeanHandler.java:import java.util.Vector;</ViolationValue>
@@ -3731,7 +3715,7 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptFormQuery.java:Vector[] ret = new Vector[2];</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptFormQuery.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptFormQuery.java:private Vector getQueryValue(Vector vecValue, Vector vecDateFormat, HttpServletRequest request) throws Exception {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptFormQuery.java:private Vector[] getValueParam(HttpServletRequest request) throws Exception {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptFormQuery.java:private Vector[] getValueParam(HttpServletRequest request)  {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/pageUtil/RptFormQuery.java:public String getQueryWhere(Vector vecVarValue) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxCodeSearchBeanHandler.java:Vector dxCodeSearchBeanVector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxCodeSearchBeanHandler.java:dxCodeSearchBeanVector.add(bean);</ViolationValue>
@@ -3869,7 +3853,7 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:private Hashtable allergyWarnings = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:private Hashtable workingAllergyWarnings = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:public Vector getAtcCodes(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxWriteScriptAction.java:Vector comps = (Vector) dmono.components;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxWriteScriptAction.java:Vector comps = dmono.components;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxWriteScriptAction.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/DosingRecomendation.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/DosingRecomendation.java:public boolean valueInRangeOfDose(int val , Hashtable doseVal){</ViolationValue>
@@ -4008,7 +3992,7 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:log2.debug(s+" "+((Hashtable) obj).get(s)+" "+((Hashtable) obj).get(s).getClass().getName());</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:private static Vector getMyDrugrefInfo(String command, Vector drugs,String myDrugrefId) throws Exception {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:private static Vector getMyDrugrefInfo(String command, Vector drugs,String myDrugrefId) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:public static Object callWebserviceLite(String procedureName, Vector params){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:vec = (Vector) holbrook;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:vec = (Vector) obj;</ViolationValue>

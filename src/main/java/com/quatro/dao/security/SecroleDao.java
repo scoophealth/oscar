@@ -47,7 +47,7 @@ public class SecroleDao extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        Secrole result = (Secrole) this.getHibernateTemplate().get(Secrole.class, new Long(id));
+        Secrole result = this.getHibernateTemplate().get(Secrole.class, new Long(id));
 
         logger.debug("getRole: id=" + id + ",found=" + (result != null));
 

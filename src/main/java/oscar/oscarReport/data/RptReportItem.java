@@ -20,7 +20,7 @@ public class RptReportItem {
     int status = 1;
     DBHelp dbObj = new DBHelp();
 
-    public boolean insertRecord() throws SQLException {
+    public boolean insertRecord() {
         boolean ret = false;
         String sql = "insert into reportItem (report_name, status) values ('"
                 + StringEscapeUtils.escapeSql(report_name) + "', " + status + ")";
@@ -28,14 +28,14 @@ public class RptReportItem {
         return ret;
     }
 
-    public boolean deleteRecord(int recordId) throws SQLException {
+    public boolean deleteRecord(int recordId)  {
         boolean ret = false;
         String sql = "update reportItem set status=0 where id=" + recordId;
         ret = DBHelp.updateDBRecord(sql);
         return ret;
     }
 
-    public boolean unDeleteRecord(int recordId) throws SQLException {
+    public boolean unDeleteRecord(int recordId)  {
         boolean ret = false;
         String sql = "update reportItem set status=1 where id=" + recordId;
         ret = DBHelp.updateDBRecord(sql);
@@ -59,11 +59,11 @@ public class RptReportItem {
         Vector ret = new Vector();
         Properties prop = null;
         String sql = "select * from reportItem where status = " + n + " order by id";
-        ResultSet rs = dbObj.searchDBRecord(sql);
+        ResultSet rs = DBHelp.searchDBRecord(sql);
         while (rs.next()) {
             prop = new Properties();
             prop.setProperty("id", "" + rs.getInt("id"));
-            prop.setProperty("" + rs.getInt("id"), dbObj.getString(rs,"report_name"));
+            prop.setProperty("" + rs.getInt("id"), DBHelp.getString(rs,"report_name"));
             ret.add(prop);
         }
         rs.close();

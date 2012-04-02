@@ -62,7 +62,7 @@ public class ClientSearchAction2 extends BaseAction {
 		Program[] allBedProgramsInArr = programManager.getBedPrograms();
 
 		for(int i=0; i < allBedProgramsInArr.length; i++){
-			allBedPrograms.add((Program)allBedProgramsInArr[i]);
+			allBedPrograms.add(allBedProgramsInArr[i]);
 		}
 		request.setAttribute("allBedPrograms", allBedPrograms);
 		
@@ -80,7 +80,7 @@ public class ClientSearchAction2 extends BaseAction {
 		Program[] allBedProgramsInArr = programManager.getBedPrograms();
 
 		for(int i=0; i < allBedProgramsInArr.length; i++){
-			allBedPrograms.add((Program)allBedProgramsInArr[i]);
+			allBedPrograms.add(allBedProgramsInArr[i]);
 		}
 		request.setAttribute("allBedPrograms", allBedPrograms);
 		

@@ -18,7 +18,7 @@
  *  Department of Family Medicine
  *  McMaster University
  *  Hamilton
- *  Ontario, Canada   
+ *  Ontario, Canada
  *
  * MeasurementTemplateFlowSheetConfig.java
  *
@@ -29,7 +29,6 @@
 package oscar.oscarBilling.ca.bc.decisionSupport;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,8 +53,8 @@ public class BillingGuidelines  {
     private static Logger log = MiscUtils.getLogger();
 
     private List<DSGuideline> billingGuideLines = null ;
-    
-   
+
+
     static BillingGuidelines measurementTemplateFlowSheetConfig = new BillingGuidelines();
     static String region = "";
 
@@ -64,8 +63,8 @@ public class BillingGuidelines  {
     String[] filenamesON= {"ON250.xml","ON428.xml"};
     String[] filenameON250 = {"ON250.xml"};
     String[] filenameON428 = {"ON428.xml"};
-   
-   
+
+
     /**
      * Creates a new instance of MeasurementTemplateFlowSheetConfig
      */
@@ -78,13 +77,11 @@ public class BillingGuidelines  {
 
     static public BillingGuidelines getInstance(String code) {
         if (measurementTemplateFlowSheetConfig.billingGuideLines == null || !code.equals(region)) {
-            try {
+
                 region = code;
                 measurementTemplateFlowSheetConfig.loadGuidelines(region);
 
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            }
+
         }
         return measurementTemplateFlowSheetConfig;
     }
@@ -92,13 +89,11 @@ public class BillingGuidelines  {
     static public BillingGuidelines getInstance() {
         String tmpRegion = OscarProperties.getInstance().getProperty("billregion","");
         if (measurementTemplateFlowSheetConfig.billingGuideLines == null || !tmpRegion.equals(region)) {
-            try {
+
                 region = tmpRegion;
                 measurementTemplateFlowSheetConfig.loadGuidelines(region);
 
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            }
+
         }
         return measurementTemplateFlowSheetConfig;
     }
@@ -106,7 +101,7 @@ public class BillingGuidelines  {
     /**
      * Loads all the guidelines from preset files in this package.  This will probably change to load them from a table in the database.
      */
-    void loadGuidelines(String regionCode) throws FileNotFoundException {
+    void loadGuidelines(String regionCode) {
         log.debug("LOADING FLOWSSHEETS");
         billingGuideLines = new ArrayList();
 
@@ -157,8 +152,8 @@ public class BillingGuidelines  {
         return allResultingConsequences;
     }
 
-    
 
-    
+
+
 }
 

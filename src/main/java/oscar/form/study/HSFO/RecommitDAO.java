@@ -22,7 +22,7 @@ public class RecommitDAO {
 	 public RecommitDAO() {
 	 }
 
-	 public RecommitSchedule getLastSchedule(boolean statusFlag) throws SQLException{
+	 public RecommitSchedule getLastSchedule(boolean statusFlag) {
 
 		 PreparedStatement st = null;
 	     String sqlstatement ="select * from hsfo_recommit_schedule ";
@@ -70,7 +70,7 @@ public class RecommitDAO {
 	        return reSchedule;
 	 }
 
-	 public void updateLastSchedule(RecommitSchedule rd)throws SQLException{
+	 public void updateLastSchedule(RecommitSchedule rd) {
 		 PreparedStatement st = null;
 	     String sqlstatement ="update hsfo_recommit_schedule set id=?, status=?, "+
 	     		"memo=?, schedule_time=?,user_no=?,check_flag=? where id=?";
@@ -105,7 +105,7 @@ public class RecommitDAO {
 
 	 }
 
-	 public void insertchedule(RecommitSchedule rd)throws SQLException{
+	 public void insertchedule(RecommitSchedule rd) {
 		 PreparedStatement st = null;
 	     String sqlstatement ="insert into hsfo_recommit_schedule set status=?, "+
 	     		"memo=?, schedule_time=?,user_no=?,check_flag=?";
@@ -140,7 +140,7 @@ public class RecommitDAO {
 
 	 }
 
-	 public boolean isLastActivExpire() throws SQLException{
+	 public boolean isLastActivExpire() {
 		 boolean exp=false;
 		 RecommitSchedule rd=getLastSchedule(false);
 		 if (rd!=null && !"D".equalsIgnoreCase(rd.getStatus())){
@@ -149,7 +149,7 @@ public class RecommitDAO {
 		 return exp;
 	 }
 
-	 public void deActiveLast() throws SQLException{
+	 public void deActiveLast() {
 		 RecommitSchedule rd=getLastSchedule(false);
 		 if (rd!=null && !"D".equalsIgnoreCase(rd.getStatus())){
 			 rd.setStatus("D");
@@ -157,7 +157,7 @@ public class RecommitDAO {
 		 }
 	 }
 
-	 public String SynchronizeDemoInfo() throws SQLException{
+	 public String SynchronizeDemoInfo() {
 		 HSFODAO hsfoDao=new HSFODAO();
 		 List idList=hsfoDao.getAllPatientId();
 		 Iterator itr=idList.iterator();
@@ -187,7 +187,7 @@ public class RecommitDAO {
 		 return null;
 	 }
 
-	 public String checkProvider()throws SQLException{
+	 public String checkProvider() {
 		 HSFODAO hsfoDao=new HSFODAO();
 		 List idList=hsfoDao.getAllPatientId();
 		 Iterator itr=idList.iterator();

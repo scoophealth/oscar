@@ -122,7 +122,7 @@ public class IndivoAPService extends PHRService {
         
         IndivoDocumentType newPolicyDoc = prepareAccessPolicy(auth, permissionRecipientId, newPolicy);
         JAXBContext docContext = JAXBContext.newInstance(IndivoDocumentType.class.getPackage().getName());
-        byte[] newPolicyDocBytes = JAXBUtils.marshalToByteArray((JAXBElement) new IndivoDocument(newPolicyDoc), docContext);
+        byte[] newPolicyDocBytes = JAXBUtils.marshalToByteArray(new IndivoDocument(newPolicyDoc), docContext);
         String newPolicyDocStr = new String(newPolicyDocBytes);
         //log.debug("PolicyFile: " + newPolicyDocStr);
         action.setReceiverMyOscarUserId(Long.parseLong(receiverPhr));

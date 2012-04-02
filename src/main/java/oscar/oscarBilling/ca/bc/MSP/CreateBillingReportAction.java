@@ -133,15 +133,15 @@ public class CreateBillingReportAction extends OscarAction {
         //COnfigure Reponse Header
         cfgHeader(response, repType, docFmt);
         //select appropriate report retrieval method
-        if (repType.equals(msp.REP_ACCOUNT_REC) || repType.equals(msp.REP_INVOICE) || repType.equals(msp.REP_WO)) {
+        if (repType.equals(MSPReconcile.REP_ACCOUNT_REC) || repType.equals(MSPReconcile.REP_INVOICE) || repType.equals(MSPReconcile.REP_WO)) {
 
             billSearch = msp.getBillsByType(account, payee, provider, startDate, endDate, !showWCB, !showMSP, !showPriv, !showICBC, repType);
             String billCnt = String.valueOf(msp.getDistinctFieldCount(billSearch.list, "billing_no"));
             String demNoCnt = String.valueOf(msp.getDistinctFieldCount(billSearch.list, "demoNo"));
-            if (repType.equals(msp.REP_ACCOUNT_REC)) {
-                reportParams.put("amtSubmitted", msp.getTotalPaidByStatus(billSearch.list, msp.SUBMITTED));
+            if (repType.equals(MSPReconcile.REP_ACCOUNT_REC)) {
+                reportParams.put("amtSubmitted", msp.getTotalPaidByStatus(billSearch.list, MSPReconcile.SUBMITTED));
             }
-            else if (repType.equals(msp.REP_WO)) {
+            else if (repType.equals(MSPReconcile.REP_WO)) {
                 oscar.entities.Provider payeeProv = msp.getProvider(payee, 1);
                 oscar.entities.Provider provProv = msp.getProvider(provider, 0);
                 reportParams.put("provider", provider.equals("ALL")?"ALL":payeeProv.getFullName());
@@ -157,14 +157,14 @@ public class CreateBillingReportAction extends OscarAction {
             osc.fillDocumentStream(reportParams, outputStream, docFmt, reportInstream, billSearch.list);
 
         }
-        else if (repType.equals(msp.REP_MSPREM)) {
+        else if (repType.equals(MSPReconcile.REP_MSPREM)) {
             oscar.entities.Provider payeeProv = msp.getProvider(payee, 1);
             reportParams.put("payee", payeeProv.getFullName());
             reportParams.put("payeeno", payee);
             String s21id = request.getParameter("rano");
             osc.fillDocumentStream(reportParams, outputStream, docFmt, reportInstream, msp.getMSPRemittanceQuery(payee, s21id));
         }
-        else if (repType.equals(msp.REP_MSPREMSUM)) {
+        else if (repType.equals(MSPReconcile.REP_MSPREMSUM)) {
             String s21id = request.getParameter("rano");
             oscar.entities.S21 s21 = msp.getS21Record(s21id);
 
@@ -206,7 +206,7 @@ public class CreateBillingReportAction extends OscarAction {
 
         }
 
-        else if (repType.equals(msp.REP_PAYREF) || repType.equals(msp.REP_PAYREF_SUM)) {
+        else if (repType.equals(MSPReconcile.REP_PAYREF) || repType.equals(MSPReconcile.REP_PAYREF_SUM)) {
             billSearch = msp.getPayments(account, payee, provider, startDate, endDate, !showWCB, !showMSP, !showPriv, !showICBC);
             oscar.entities.Provider payeeProv = msp.getProvider(payee, 1);
             oscar.entities.Provider acctProv = msp.getProvider(account, 0);
@@ -238,7 +238,7 @@ public class CreateBillingReportAction extends OscarAction {
 
         }
 
-        else if (repType.equals(msp.REP_REJ)) {
+        else if (repType.equals(MSPReconcile.REP_REJ)) {
             billSearch = msp.getBillsByType(account, payee, provider, startDate, endDate, !showWCB, !showMSP, !showPriv, !showICBC, repType);
 
             for (Iterator iter = billSearch.list.iterator(); iter.hasNext();) {

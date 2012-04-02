@@ -75,7 +75,7 @@ public class NavBarDisplayDAO {
 	Date d;
 
 	for( int idx = 0; idx < 10; ++idx ) {
-		NavBarDisplayDAO.Item item = dao.Item();
+		NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
 		long num = rand.nextLong();
 		if( num < 0 ) num *= -1;
 		MiscUtils.getLogger().debug("Storing " + num);

@@ -105,7 +105,7 @@ public class EctDisplayConsultAction extends EctDisplayAction {
             String serviceDateStr;
             Date date;
             for (int idx = theRequests.ids.size() - 1; idx >= 0; --idx ){
-                NavBarDisplayDAO.Item item = Dao.Item();
+                NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
                 String service =  theRequests.service.get(idx);
                 String dateStr    =  theRequests.date.get(idx);
                 String status = theRequests.status.get(idx);
@@ -123,7 +123,7 @@ public class EctDisplayConsultAction extends EctDisplayAction {
                     serviceDateStr = "Error";
                     date = null;
                 }
-                url = "popupPage(700,960,'" + winName + "','" + request.getContextPath() + "/oscarEncounter/ViewRequest.do?de=" + bean.demographicNo + "&requestId=" + (String)theRequests.ids.get(idx) + "'); return false;";
+                url = "popupPage(700,960,'" + winName + "','" + request.getContextPath() + "/oscarEncounter/ViewRequest.do?de=" + bean.demographicNo + "&requestId=" + theRequests.ids.get(idx) + "'); return false;";
                 
                 item.setLinkTitle(service + " " + serviceDateStr);
                 service = StringUtils.maxLenString(service, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);

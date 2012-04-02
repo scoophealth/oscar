@@ -214,8 +214,8 @@ public class BillingReProcessBillAction extends Action {
       if (!persistedBillType.equals(billingStatus)) {
         //if the bill status was changed to "Bill Patient
         //And the persisted bill status is anything but private
-        if (msp.BILLPATIENT.equals(billingStatus) &&
-            !msp.PAIDPRIVATE.equals(persistedBillType)) {
+        if (MSPReconcile.BILLPATIENT.equals(billingStatus) &&
+            !MSPReconcile.PAIDPRIVATE.equals(persistedBillType)) {
           //get the correct the Private code representation
           //and correct code amount if applicable
           //yes, this is lame. Private codes are simply the standard msp

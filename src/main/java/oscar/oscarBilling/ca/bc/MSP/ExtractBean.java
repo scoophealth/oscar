@@ -43,8 +43,8 @@ import oscar.util.UtilMisc;
 
 
 public class ExtractBean extends Object implements Serializable {
-    private static Logger logger=MiscUtils.getLogger(); 
-	
+    private static Logger logger=MiscUtils.getLogger();
+
     private String ohipRecord;
     private String ohipClaim;
     private String ohipReciprocal;
@@ -115,7 +115,7 @@ public class ExtractBean extends Object implements Serializable {
                errorMsg = "";
 
                value = batchHeader;
-               
+
                query = "select * from billing where provider_ohip_no='"+ providerNo+"' and (status='O' or status='W') " + dateRange;
 
                MiscUtils.getLogger().debug("1st billing query "+query);
@@ -273,7 +273,7 @@ public class ExtractBean extends Object implements Serializable {
       if (eFlag.equals("1")){
          String query30 = "update billing set status='B' where billing_no='" + newInvNo + "'";
          try {
-            
+
         	 DBHandler.RunSQL(query30);
          }catch (SQLException e) {
             MiscUtils.getLogger().error("Error", e);
@@ -285,7 +285,7 @@ public class ExtractBean extends Object implements Serializable {
       if (eFlag.equals("1")){
          String query30 = "update billingmaster set billingstatus='B' where billingmaster_no='" + newInvNo + "'";
          try {
-            
+
         	 DBHandler.RunSQL(query30);
             createBillArchive(newInvNo);
          }catch (SQLException e) {
@@ -307,7 +307,7 @@ public class ExtractBean extends Object implements Serializable {
       if (eFlag.equals("1")){
          String nsql = "update log_teleplantx set claim='" + UtilMisc.mysqlEscape(logValue) + "' where log_no='"+ x +"'";
          try {
-            
+
         	 DBHandler.RunSQL(nsql);
          }catch (SQLException e) {
             MiscUtils.getLogger().error("Error", e);
@@ -322,7 +322,7 @@ public class ExtractBean extends Object implements Serializable {
          String nsql ="";
          nsql =  "insert into log_teleplantx (log_no, claim) values ('\\N','" + "New Log" + "')";
          try {
-            
+
         	 DBHandler.RunSQL(nsql);
             ResultSet  rs = DBHandler.GetSQL("SELECT LAST_INSERT_ID()");
             if (rs.next()){
@@ -492,7 +492,7 @@ public class ExtractBean extends Object implements Serializable {
         return dataLine;
     }
 
-    public boolean hasNoteRecord (ResultSet rs) throws SQLException{
+    public boolean hasNoteRecord (ResultSet rs) {
        boolean retval = false;
        try{
           String correspondenceCode = rs.getString("correspondence_code");
@@ -508,7 +508,7 @@ public class ExtractBean extends Object implements Serializable {
 
     public String getNoteRecord(ResultSet rs, String seqNo) throws SQLException{
        MSPBillingNote note = new MSPBillingNote();
-       return note.getN01(rs.getString("datacenter"), seqNo, rs.getString("payee_no"), rs.getString("practitioner_no"), "A", note.getNote(rs.getString("billingmaster_no")));
+       return MSPBillingNote.getN01(rs.getString("datacenter"), seqNo, rs.getString("payee_no"), rs.getString("practitioner_no"), "A", note.getNote(rs.getString("billingmaster_no")));
     }
 
     public String htmlContentHeaderGen(String providerNo,String output,String errorMsg){
@@ -563,7 +563,7 @@ public class ExtractBean extends Object implements Serializable {
     public static boolean HasBillingItemsToSubmit() {
       boolean tosubmit = false;
       try {
-         
+
          ResultSet rs =
          DBHandler.GetSQL("SELECT COUNT(billing_no) As `count` FROM billing WHERE status <> 'B' AND billingtype IN ('ICBC', 'WCB', 'MSP')");
          tosubmit = rs.next() && 0 < rs.getInt("count");

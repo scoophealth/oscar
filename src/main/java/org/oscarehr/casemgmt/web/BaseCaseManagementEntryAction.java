@@ -260,7 +260,7 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 	 * @param programId is optional, can be null for none.
 	 */
 	protected CaseManagementIssue newIssueToCIssue(CaseManagementEntryFormBean cform, Issue iss, Integer programId) {
-            return newIssueToCIssue((String) cform.getDemoNo(),iss,programId);
+            return newIssueToCIssue(cform.getDemoNo(),iss,programId);
 	}
 	
 	protected Map convertIssueListToMap(List issueList) {
@@ -274,13 +274,13 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 	
 	protected void updateIssueToConcern(ActionForm form) {
 		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
-		CheckBoxBean[] oldList = (CheckBoxBean[]) cform.getIssueCheckList();
+		CheckBoxBean[] oldList = cform.getIssueCheckList();
 		List caseiss = new ArrayList();
 		for (int i = 0; i < oldList.length; i++) {
 			if (!oldList[i].getIssue().isResolved())
 				caseiss.add(oldList[i].getIssue());
 		}
-		String demoNo = (String) cform.getDemoNo();
+		String demoNo = cform.getDemoNo();
 		caseManagementMgr.updateCurrentIssueToCPP(demoNo, caseiss);
 	}
 

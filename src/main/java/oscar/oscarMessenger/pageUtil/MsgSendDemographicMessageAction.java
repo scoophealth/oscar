@@ -60,7 +60,7 @@ public class MsgSendDemographicMessageAction extends Action {
            MsgSessionBean bean = new MsgSessionBean();
            bean.setProviderNo(provNo);
            ProviderData pd = new ProviderData();
-           bean.setUserName(pd.getProviderName(provNo));
+           bean.setUserName(ProviderData.getProviderName(provNo));
            request.getSession().setAttribute("msgSessionBean", bean); 
        } 
         

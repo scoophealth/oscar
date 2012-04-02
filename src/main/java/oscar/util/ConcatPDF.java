@@ -97,7 +97,7 @@ public class ConcatPDF {
             MiscUtils.getLogger().debug("Size of list = "+alist.size());
             while (f < alist.size()) {
                 // we create a reader for a certain document
-                String name = (String) alist.get(f);
+                String name = alist.get(f);
                 
                 PdfReader reader = new PdfReader(name);
                 reader.consolidateNamedDestinations();

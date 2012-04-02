@@ -61,7 +61,7 @@ public class IntakeCDao extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        Formintakec result = (Formintakec)this.getHibernateTemplate().get(Formintakec.class, id);
+        Formintakec result = this.getHibernateTemplate().get(Formintakec.class, id);
 
         if (log.isDebugEnabled()) {
             log.debug("getForm: id=" + id + ",found=" + (result != null));

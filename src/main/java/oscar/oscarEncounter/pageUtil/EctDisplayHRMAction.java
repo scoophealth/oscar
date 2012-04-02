@@ -173,7 +173,7 @@ public class EctDisplayHRMAction extends EctDisplayAction {
 
 								DateFormat formatter = new SimpleDateFormat(dbFormat);
 				String dateStr = hrmDocument.getTimeReceived().toString();
-				NavBarDisplayDAO.Item item = Dao.Item();
+				NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
 				try {
 					date = formatter.parse(dateStr);
 					serviceDateStr =  DateUtils.formatDate(date,request.getLocale()); 

@@ -93,7 +93,7 @@ public class FacilityManagerAction extends BaseAction {
 					Iterator<Admission> it = admissions.iterator();
 					while (it.hasNext()) {
 
-						Admission admission = (Admission) it.next();
+						Admission admission = it.next();
 
 						// Get demographic list by demographic_no
 						Demographic client = demographicDao.getClientByDemographicNo(admission.getClientId());

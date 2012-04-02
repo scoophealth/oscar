@@ -42,36 +42,36 @@ import org.oscarehr.util.MiscUtils;
 
 /**
  *Class used by the HSFO Study
- * 
+ *
  */
 public class HSFODAO {
-    
+
     /** Creates a new instance of HSFODAO */
     public HSFODAO() {
     }
-    
-    public void savePatient(PatientData patientData) throws SQLException{
+
+    public void savePatient(PatientData patientData) {
         if (isFirstRecord(patientData.getPatient_Id())){
             insertPatient(patientData);
         }else{
             updatePatient(patientData);
         }
     }
-    
-    public void insertPatient(PatientData patientData) throws SQLException {
+
+    public void insertPatient(PatientData patientData)  {
         PreparedStatement st = null;
         String sqlstatement ="INSERT into hsfo_patient " +
                 "(SiteCode,Patient_Id,FName,LName,BirthDate,Sex,PostalCode,Height,Height_unit,Ethnic_White,Ethnic_Black,Ethnic_EIndian,Ethnic_Pakistani,Ethnic_SriLankan,Ethnic_Bangladeshi,Ethnic_Chinese,Ethnic_Japanese,Ethnic_Korean,Ethnic_Hispanic,Ethnic_FirstNation,Ethnic_Other,Ethnic_Refused,Ethnic_Unknown,PharmacyName,PharmacyLocation,Sel_TimeAgoDx,EmrHCPId,ConsentDate)" +
                 "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) " ;
-        
+
         MiscUtils.getLogger().debug(sqlstatement);
-        
-		
+
+
         try {
-            
+
             Connection connect = DbConnectionFilter.getThreadLocalDbConnection();
             st = connect.prepareStatement(sqlstatement);
-            
+
             st.setString(1,patientData.getSiteCode());
             st.setString(2,patientData.getPatient_Id());
             st.setString(3,patientData.getFName());
@@ -108,7 +108,7 @@ public class HSFODAO {
         }catch (Exception ne) {
             MiscUtils.getLogger().debug("Other Error while inserting into the database : "+ ne.toString());
             MiscUtils.getLogger().error("Error", ne);
-        }finally {			
+        }finally {
 			if (st != null)
 				try {
 					st.close();
@@ -117,8 +117,8 @@ public class HSFODAO {
 			}
 		}
     }
-    
-    public void updatePatient(PatientData patientData) throws SQLException {
+
+    public void updatePatient(PatientData patientData)  {
         PreparedStatement st = null;
         String sqlstatement ="UPDATE hsfo_patient SET " +
                 "SiteCode = ? " + //1'" + patientData.getSiteCode() +
@@ -151,12 +151,12 @@ public class HSFODAO {
                 ",ConsentDate = ? " + //28'" + new java.sql.Date(patientData.getConsentDate().getTime()) +
                 " WHERE Patient_Id= ? ";  //29'" + patientData.getPatient_Id() +"'";
         MiscUtils.getLogger().debug(sqlstatement);
-        
+
         try {
-           
+
             Connection connect = DbConnectionFilter.getThreadLocalDbConnection();
             st = connect.prepareStatement(sqlstatement);
-            
+
             ///
             st.setString(1,patientData.getSiteCode());
             st.setString(2,patientData.getPatient_Id());
@@ -189,7 +189,7 @@ public class HSFODAO {
             st.setDate(28,new java.sql.Date(patientData.getConsentDate().getTime()) );
             st.setString(29,patientData.getPatient_Id());
             ///
-            
+
             st.executeUpdate();
             st.clearParameters();
         }catch (SQLException se) {
@@ -197,7 +197,7 @@ public class HSFODAO {
         }catch (Exception ne) {
             MiscUtils.getLogger().debug("Other Error while inserting into the database : "+ ne.toString());
         }finally {
-			
+
 			if (st != null)
 				try {
 					st.close();
@@ -205,18 +205,18 @@ public class HSFODAO {
                                     MiscUtils.getLogger().error("Error", e);
 			}
 		}
-        
+
     }
-    
-    public void lockVisit(int ID) throws SQLException {
-		 
-		 
+
+    public void lockVisit(int ID) {
+
+
             PreparedStatement st = null;
 	    String sqlstatement ="UPDATE form_hsfo_visit SET locked=true where ID=" + ID;
 	    MiscUtils.getLogger().debug(sqlstatement);
-	   
+
 	    try {
-                
+
                 Connection connect = DbConnectionFilter.getThreadLocalDbConnection();
 	        st = connect.prepareStatement(sqlstatement);
 	        st.executeUpdate();
@@ -226,7 +226,7 @@ public class HSFODAO {
 			 MiscUtils.getLogger().debug("Other Error while inserting into the database : "+ ne.toString());
        	    }
 	    	finally {
-			
+
 	    		if (st != null)
 	    			try {
 	    				st.clearParameters();
@@ -237,17 +237,17 @@ public class HSFODAO {
 		}
 	    //st.close();
 	 }
-	
-    
-    public int numberOfVisits(String demographic_no) throws SQLException {
+
+
+    public int numberOfVisits(String demographic_no)  {
         PreparedStatement st = null;
         String sqlstatement ="select distinct VisitDate_Id  from form_hsfo_visit where demographic_no = ? " ;
         int i = 0;
         MiscUtils.getLogger().debug(sqlstatement);
-       
+
         ResultSet rs=null;
         try {
-            
+
             Connection connect = DbConnectionFilter.getThreadLocalDbConnection();
             st = connect.prepareStatement(sqlstatement);
             st.setString(1,demographic_no);
@@ -263,7 +263,7 @@ public class HSFODAO {
         finally {
         	if (rs != null)
     			try {
-    				
+
     				rs.close();
     			} catch (SQLException e) {
                             MiscUtils.getLogger().error("Error", e);
@@ -276,29 +276,29 @@ public class HSFODAO {
                             MiscUtils.getLogger().error("Error", e);
 			}
         }
-        
+
         return i;
-        
+
     }
-    
-    public boolean hasMoreThanOneVisit(String demographic_no) throws SQLException {
-        boolean hasMoreThanOneVisit = false; 
+
+    public boolean hasMoreThanOneVisit(String demographic_no)  {
+        boolean hasMoreThanOneVisit = false;
         if (numberOfVisits(demographic_no) > 1){
             hasMoreThanOneVisit = true;
         }
         return hasMoreThanOneVisit;
     }
-    
-    
-    public boolean hasLockedVisit(String demographic_no) throws SQLException {
-            boolean hasLockedVisit = false; 
+
+
+    public boolean hasLockedVisit(String demographic_no) {
+            boolean hasLockedVisit = false;
             PreparedStatement st = null;
 	    String sqlstatement ="select * from form_hsfo_visit where locked=true and demographic_no = ?";
 	    MiscUtils.getLogger().debug(sqlstatement);
-	    
+
 	    ResultSet rs =null;
 	    try {
-                
+
                 Connection connect = DbConnectionFilter.getThreadLocalDbConnection();
 	        st = connect.prepareStatement(sqlstatement);
                 st.setString(1,demographic_no);
@@ -314,24 +314,24 @@ public class HSFODAO {
 	    	finally {
 	    	if (rs != null)
 	    			try {
-	    				
+
 	    				rs.close();
 	    			} catch (SQLException e) {
                                     MiscUtils.getLogger().error("Error", e);
 				}
     		if (st != null)
     			try {
-    				
+
     				st.close();
     			} catch (SQLException e) {
                             MiscUtils.getLogger().error("Error", e);
 			}
-    		
+
         }
             return hasLockedVisit;
     }
-    
-    public int insertVisit(VisitData visitData,String provider_no) throws SQLException {
+
+    public int insertVisit(VisitData visitData,String provider_no) {
         int id = -1;
         String TC_DHL = "";
         if (visitData.getTC_HDL_LabresultsDate() != null && !visitData.getTC_HDL_LabresultsDate().equals("")) {
@@ -380,15 +380,15 @@ public class HSFODAO {
                 "?,?,?,?,?,?,?,?,?,?," +
                 "?,?,?,?,?,?,?,?,?,?," +
                 "?,?,?,?)";
-                
+
         MiscUtils.getLogger().debug(sqlstatement);
-        
+
         try {
-            
+
             Connection connect = DbConnectionFilter.getThreadLocalDbConnection();
             st = connect.prepareStatement(sqlstatement);
             //////
-            
+
             st.setString(1,visitData.getPatient_Id());
             st.setString(2,provider_no);
             //now
@@ -483,8 +483,8 @@ public class HSFODAO {
             st.setDate(91, getSQLDate(visitData.getHDL_LabresultsDate()));
             st.setDate(92, getSQLDate(visitData.getA1C_LabresultsDate()));
             st.setBoolean(93,visitData.isLocked());
-            
-            
+
+
             //////
             st.executeUpdate();
             ResultSet rs = st.getGeneratedKeys();
@@ -501,10 +501,10 @@ public class HSFODAO {
             MiscUtils.getLogger().debug("Other Error while inserting into the database : "+ ne.toString());
         }
         finally {
-			
+
     		if (st != null)
     			try {
-    				
+
     				st.close();
     			} catch (SQLException e) {
                             MiscUtils.getLogger().error("Error", e);
@@ -512,8 +512,8 @@ public class HSFODAO {
         }
         return id;
     }
-    
-    
+
+
     public java.sql.Date getSQLDate(Date date){
         if ( date != null){
             return new java.sql.Date(date.getTime());
@@ -524,10 +524,10 @@ public class HSFODAO {
 	public void updatePatientDx(String patientId, int hsfoRxDx) {
 		String sql = "UPDATE hsfo_patient SET RxDx=?  WHERE Patient_Id=?";
 
-		
+
 		PreparedStatement ps = null;
 		try {
-			
+
 			Connection connect = DbConnectionFilter.getThreadLocalDbConnection();
 			ps = connect.prepareStatement(sql);
 			ps.setInt(1, hsfoRxDx);
@@ -538,7 +538,7 @@ public class HSFODAO {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
-			
+
 			if (ps != null)
 				try {
 					ps.close();
@@ -546,13 +546,13 @@ public class HSFODAO {
                                     MiscUtils.getLogger().error("Error", e);
 				}
 		}
-	
+
 	}
 
 	// added by vic, hsfo
 	/**
 	 * Get the Dx code of the patient.
-	 * 
+	 *
 	 * @return -1 if patient is not enrolled or hsfo is not enabled.
 	 */
 	public int retrievePatientDx(String patientId) {
@@ -560,14 +560,14 @@ public class HSFODAO {
 		String hsfo = oscar.OscarProperties.getInstance().getProperty("hsfo.loginSiteCode");
 		if (hsfo==null)
 			return -1;
-		
+
 		String sql = "SELECT RxDx FROM hsfo_patient WHERE Patient_Id=?";
 
-		
+
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			
+
 			Connection connect = DbConnectionFilter.getThreadLocalDbConnection();
 			ps = connect.prepareStatement(sql);
 			ps.setString(1, patientId);
@@ -598,24 +598,24 @@ public class HSFODAO {
 		}
 
 	}
-    public PatientData retrievePatientRecord(String ID) throws SQLException {
+    public PatientData retrievePatientRecord(String ID) {
         PatientData patientData = new PatientData();
-        
-        
+
+
         String query = "SELECT * FROM hsfo_patient WHERE Patient_Id='" + ID + "'";
         MiscUtils.getLogger().debug("query: " + query);
-       
+
         Statement sql =null;
         ResultSet result =null;
         try {
-            
+
             Connection connect = DbConnectionFilter.getThreadLocalDbConnection();
             sql = connect.createStatement();
             result = sql.executeQuery(query);
             MiscUtils.getLogger().debug("here " + query);
             // retrieve results and store into registrationData object
             while(result.next() ) {
-                
+
                 patientData.setSiteCode(result.getString("SiteCode"));
                 patientData.setPatient_Id(result.getString("Patient_Id"));
                 patientData.setFName(result.getString("FName"));
@@ -644,10 +644,10 @@ public class HSFODAO {
                 patientData.setSel_TimeAgoDx(result.getString("sel_TimeAgoDx"));
                 patientData.setEmrHCPId(result.getString("EmrHCPId"));
                 patientData.setConsentDate(result.getDate("ConsentDate"));
-                
+
                 MiscUtils.getLogger().debug("ID:" + result.getString("Patient_Id") + " Name:" + result.getString("FName"));
                 MiscUtils.getLogger().debug(patientData.getPatient_Id() + patientData.getFName() + patientData.getLName());
-                
+
             }
             //result.close();
             //sql.close();
@@ -658,14 +658,14 @@ public class HSFODAO {
         }finally {
         	if (result != null)
     			try {
-    				
+
     				result.close();
     			} catch (SQLException e) {
                             MiscUtils.getLogger().error("Error", e);
 			}
     		if (sql != null)
     			try {
-    				
+
     				sql.close();
     			} catch (SQLException e) {
                             MiscUtils.getLogger().error("Error", e);
@@ -673,19 +673,19 @@ public class HSFODAO {
         }
         return patientData;
     }
-    
-    
-    public boolean isFirstRecord(String ID) throws SQLException {
+
+
+    public boolean isFirstRecord(String ID) {
         //check if this is a new record
         boolean isFirstRecord = true;
-        
+
         String query = "SELECT FName FROM hsfo_patient WHERE Patient_Id='" + ID + "'";
         MiscUtils.getLogger().debug("query: " + query);
-       
+
         Statement sql =null;
         ResultSet result =null;
         try {
-           
+
            Connection connect = DbConnectionFilter.getThreadLocalDbConnection();
            sql = connect.createStatement();
            result = sql.executeQuery(query);
@@ -704,14 +704,14 @@ public class HSFODAO {
         }finally {
         	if (result != null)
     			try {
-    				
+
     				result.close();
     			} catch (SQLException e) {
                             MiscUtils.getLogger().error("Error", e);
 			}
     		if (sql != null)
     			try {
-    				
+
     				sql.close();
     			} catch (SQLException e) {
                             MiscUtils.getLogger().error("Error", e);
@@ -719,8 +719,8 @@ public class HSFODAO {
         }
         return isFirstRecord;
     }
-    
-    
+
+
     private VisitData parseVisitData(ResultSet result) throws Exception{
         VisitData visitData = new VisitData();
                 visitData.setID(result.getInt("ID"));
@@ -818,28 +818,28 @@ public class HSFODAO {
                 visitData.setLocked(result.getBoolean("Locked"));
                 return visitData;
     }
-    public List retrieveVisitRecord(String ID) throws SQLException {
-        
-        
+    public List retrieveVisitRecord(String ID) {
+
+
         List patientList = new LinkedList();
-        
+
         PreparedStatement query =null;
         ResultSet rs =null;
         try {
-            
+
             Connection connect = DbConnectionFilter.getThreadLocalDbConnection();
-            
+
             query = connect.prepareStatement("SELECT * FROM form_hsfo_visit where ID in (SELECT max(ID) FROM form_hsfo_visit WHERE Patient_Id = ? group by VisitDate_Id)");
             query.setString(1,ID);
-            
+
             rs = query.executeQuery();
             while (rs.next()){
-               patientList.add(parseVisitData(rs)); 
+               patientList.add(parseVisitData(rs));
             }
 //            rs.close();
 //            query.clearParameters();
 //            query.close();
-//            
+//
         }catch (SQLException se) {
             MiscUtils.getLogger().debug("SQL Error while retreiving from the database : "+ se.toString());
         }catch (Exception ne) {
@@ -847,34 +847,34 @@ public class HSFODAO {
         }finally {
         	if (rs != null)
     			try {
-    				
+
     				rs.close();
     			} catch (SQLException e) {
                             MiscUtils.getLogger().error("Error", e);
 			}
     		if (query != null)
     			try {
-    				
+
     				query.close();
     			} catch (SQLException e) {
                             MiscUtils.getLogger().error("Error", e);
 			}
         }
-        
+
         return patientList;
     }
-    
 
-    
-    
+
+
+
     public VisitData retrieveLatestRecord(Date visitdate,String demographic_no) throws SQLException {
 		 VisitData visitData = new VisitData();
-                 
+
                  Connection connect = DbConnectionFilter.getThreadLocalDbConnection();
 		 Statement sql = connect.createStatement();
 		 //String query = "SELECT MAX(FormEdited) as Max FROM form_hsfo_Visit WHERE VisitDate_Id='" + visitdate + "' and demographic_no = '"+demographic_no+"' ";
 		 String query = "SELECT ID FROM form_hsfo_Visit WHERE VisitDate_Id='" + visitdate + "' and demographic_no = '"+demographic_no+"' ";
-		 
+
                  MiscUtils.getLogger().debug("query1: " + query);
 		 String timestamp="";
 		 try {
@@ -890,7 +890,7 @@ public class HSFODAO {
 		 }catch (Exception ne) {
 			 MiscUtils.getLogger().debug("Other Error while retreiving to the database : "+ ne.toString());
 		 }
-		 
+
 		 String query2 = "SELECT DISTINCT * FROM form_hsfo_Visit WHERE ID='" + timestamp +"'";
 		 MiscUtils.getLogger().debug("query2: " + query2);
 		 try {
@@ -902,21 +902,21 @@ public class HSFODAO {
 				visitData.setVisitDate_Id(result.getDate("VisitDate_Id"));
 				visitData.setFormCreated(result.getDate("FormCreated"));
 				visitData.setFormEdited(result.getTimestamp("FormEdited"));
-				visitData.setDrugcoverage(result.getString("Drugcoverage")); 
+				visitData.setDrugcoverage(result.getString("Drugcoverage"));
 				visitData.setSBP(result.getInt("SBP"));
 				visitData.setSBP_goal(result.getInt("SBP_goal"));
 				visitData.setDBP(result.getInt("DBP"));
 				visitData.setDBP_goal(result.getInt("DBP_goal"));
 				visitData.setBptru_used(result.getString("Bptru_used"));
-				visitData.setWeight(result.getDouble("Weight")); 
-				visitData.setWeight_unit(result.getString("Weight_unit")); 
-				visitData.setWaist(result.getDouble("Waist")); 
-				visitData.setWaist_unit(result.getString("Waist_unit")); 
-				visitData.setTC_HDL(result.getDouble("TC_HDL")); 
-				visitData.setLDL(result.getDouble("LDL")); 
-				visitData.setHDL(result.getDouble("HDL")); 
-				visitData.setA1C(result.getDouble("A1C")); 
-				visitData.setNextvisit(result.getString("Nextvisit")); 
+				visitData.setWeight(result.getDouble("Weight"));
+				visitData.setWeight_unit(result.getString("Weight_unit"));
+				visitData.setWaist(result.getDouble("Waist"));
+				visitData.setWaist_unit(result.getString("Waist_unit"));
+				visitData.setTC_HDL(result.getDouble("TC_HDL"));
+				visitData.setLDL(result.getDouble("LDL"));
+				visitData.setHDL(result.getDouble("HDL"));
+				visitData.setA1C(result.getDouble("A1C"));
+				visitData.setNextvisit(result.getString("Nextvisit"));
 				visitData.setBpactionplan(result.getBoolean("Bpactionplan"));
 				visitData.setPressureOff(result.getBoolean("PressureOff"));
 				visitData.setPatientProvider(result.getBoolean("PatientProvider"));
@@ -924,7 +924,7 @@ public class HSFODAO {
 				visitData.setHome(result.getBoolean("Home"));
 				visitData.setCommunityRes(result.getBoolean("CommunityRes"));
 				visitData.setProRefer(result.getBoolean("ProRefer"));
-				visitData.setHtnDxType(result.getString("HtnDxType")); 
+				visitData.setHtnDxType(result.getString("HtnDxType"));
 				visitData.setDyslipid(result.getBoolean("Dyslipid"));
 				visitData.setDiabetes(result.getBoolean("Diabetes"));
 				visitData.setKidneyDis(result.getBoolean("KidneyDis"));
@@ -943,11 +943,11 @@ public class HSFODAO {
 				visitData.setExercise_minPerWk(result.getInt("exercise_minPerWk"));
 				visitData.setSmoking_cigsPerDay(result.getInt("smoking_cigsPerDay"));
 				visitData.setAlcohol_drinksPerWk(result.getInt("alcohol_drinksPerWk"));
-				visitData.setSel_DashDiet(result.getString("sel_DashDiet")); 
+				visitData.setSel_DashDiet(result.getString("sel_DashDiet"));
 				visitData.setSel_HighSaltFood(result.getString("sel_HighSaltFood"));
 				visitData.setSel_Stressed(result.getString("sel_Stressed"));
 				visitData.setLifeGoal(result.getString("LifeGoal"));
-				visitData.setFamHx_Htn(result.getBoolean("FamHx_Htn")); 
+				visitData.setFamHx_Htn(result.getBoolean("FamHx_Htn"));
 				visitData.setFamHx_Dyslipid(result.getBoolean("FamHx_Dyslipid"));
 				visitData.setFamHx_Diabetes(result.getBoolean("FamHx_Diabetes"));
 				visitData.setFamHx_KidneyDis(result.getBoolean("FamHx_KidneyDis"));
@@ -959,38 +959,38 @@ public class HSFODAO {
 				visitData.setDiuret_RxDecToday(result.getString("Diuret_RxDecToday"));
 				visitData.setAce_rx(result.getBoolean("Ace_rx"));
 				visitData.setAce_SideEffects(result.getBoolean("Ace_SideEffects"));
-				visitData.setAce_RxDecToday(result.getString("Ace_RxDecToday")); 
+				visitData.setAce_RxDecToday(result.getString("Ace_RxDecToday"));
 				visitData.setArecept_rx(result.getBoolean("Arecept_rx"));
 				visitData.setArecept_SideEffects(result.getBoolean("Arecept_SideEffects"));
 				visitData.setArecept_RxDecToday(result.getString("Arecept_RxDecToday"));
 				visitData.setBeta_rx(result.getBoolean("Beta_rx"));
 				visitData.setBeta_SideEffects(result.getBoolean("Beta_SideEffects"));
-				visitData.setBeta_RxDecToday(result.getString("Beta_RxDecToday")); 
+				visitData.setBeta_RxDecToday(result.getString("Beta_RxDecToday"));
 				visitData.setCalc_rx(result.getBoolean("Calc_rx"));
 				visitData.setCalc_SideEffects(result.getBoolean("Calc_SideEffects"));
-				visitData.setCalc_RxDecToday(result.getString("Calc_RxDecToday")); 
+				visitData.setCalc_RxDecToday(result.getString("Calc_RxDecToday"));
 				visitData.setAnti_rx(result.getBoolean("Anti_rx"));
 				visitData.setAnti_SideEffects(result.getBoolean("Anti_SideEffects"));
 				visitData.setAnti_RxDecToday(result.getString("Anti_RxDecToday"));
 				visitData.setStatin_rx(result.getBoolean("Statin_rx"));
 				visitData.setStatin_SideEffects(result.getBoolean("Statin_SideEffects"));
-				visitData.setStatin_RxDecToday(result.getString("Statin_RxDecToday")); 
+				visitData.setStatin_RxDecToday(result.getString("Statin_RxDecToday"));
 				visitData.setLipid_rx(result.getBoolean("Lipid_rx"));
 				visitData.setLipid_SideEffects(result.getBoolean("Lipid_SideEffects"));
 				visitData.setLipid_RxDecToday(result.getString("Lipid_RxDecToday"));
 				visitData.setHypo_rx(result.getBoolean("Hypo_rx"));
 				visitData.setHypo_SideEffects(result.getBoolean("Hypo_SideEffects"));
-				visitData.setHypo_RxDecToday(result.getString("Hypo_RxDecToday")); 
+				visitData.setHypo_RxDecToday(result.getString("Hypo_RxDecToday"));
 				visitData.setInsul_rx(result.getBoolean("Insul_rx"));
 				visitData.setInsul_SideEffects(result.getBoolean("Insul_SideEffects"));
-				visitData.setInsul_RxDecToday(result.getString("Insul_RxDecToday")); 
+				visitData.setInsul_RxDecToday(result.getString("Insul_RxDecToday"));
 				visitData.setOften_miss(result.getInt("Often_miss"));
-				visitData.setHerbal(result.getString("Herbal")); 
-				visitData.setTC_HDL_LabresultsDate(result.getDate("TC_HDL_LabresultsDate")); 
-				visitData.setLDL_LabresultsDate(result.getDate("LDL_LabresultsDate")); 
-				visitData.setHDL_LabresultsDate(result.getDate("HDL_LabresultsDate")); 
-				visitData.setA1C_LabresultsDate(result.getDate("A1C_LabresultsDate")); 
-				visitData.setLocked(result.getBoolean("Locked"));  	
+				visitData.setHerbal(result.getString("Herbal"));
+				visitData.setTC_HDL_LabresultsDate(result.getDate("TC_HDL_LabresultsDate"));
+				visitData.setLDL_LabresultsDate(result.getDate("LDL_LabresultsDate"));
+				visitData.setHDL_LabresultsDate(result.getDate("HDL_LabresultsDate"));
+				visitData.setA1C_LabresultsDate(result.getDate("A1C_LabresultsDate"));
+				visitData.setLocked(result.getBoolean("Locked"));
 		 }
 		 }catch (SQLException se) {
 				MiscUtils.getLogger().debug("SQL Error while retreiving from the database : "+ se.toString());
@@ -998,17 +998,17 @@ public class HSFODAO {
 			 MiscUtils.getLogger().debug("Other Error while retreiving to the database : "+ ne.toString());
 		 }
 		 }finally {
-	        	
+
 	    		if (sql != null)
 	    			try {
-	    				
+
 	    				sql.close();
 	    			} catch (SQLException e) {
                                     MiscUtils.getLogger().error("Error", e);
 				}
 	        }
-		
-	     
+
+
 	     return visitData;
 	 }
 
@@ -1016,30 +1016,30 @@ public class HSFODAO {
      public boolean isRecordExists(Date visitdate,String demographicNo) {
          boolean isRecordExists = false;
          PreparedStatement sql =null;
-         
+
          try{
             int ID=0;
-            
+
             Connection connect = DbConnectionFilter.getThreadLocalDbConnection();
             String query = "SELECT ID FROM form_hsfo_visit WHERE VisitDate_Id= ? and demographic_no = ?";
             sql = connect.prepareStatement(query);
             sql.setDate(1,new java.sql.Date(visitdate.getTime()));
             sql.setString(2,demographicNo);
             MiscUtils.getLogger().debug("query: " + query);
-             
+
             ResultSet result = sql.executeQuery();
             if(result.next() ) {
                 isRecordExists = true;
             }
-            MiscUtils.getLogger().debug("ID retrieved: " + ID); 
+            MiscUtils.getLogger().debug("ID retrieved: " + ID);
 //            sql.close();
          }catch(Exception e ){
                 MiscUtils.getLogger().error("Error", e);
          }finally {
-	        	
+
 	    		if (sql != null)
 	    			try {
-	    				
+
 	    				sql.close();
 	    			} catch (SQLException e) {
                                     MiscUtils.getLogger().error("Error", e);
@@ -1047,13 +1047,13 @@ public class HSFODAO {
 	        }
         return isRecordExists;
      }
-    
+
     //
-     
-     
+
+
      public VisitData retrieveSelectedRecord(int ID) throws SQLException {
 		 VisitData visitData = new VisitData();
-                 
+
                  Connection connect = DbConnectionFilter.getThreadLocalDbConnection();
 		 Statement sql = connect.createStatement();
 		 String query = "SELECT DISTINCT * FROM form_hsfo_visit WHERE  ID = " + ID;;
@@ -1067,21 +1067,21 @@ public class HSFODAO {
 				visitData.setVisitDate_Id(result.getDate("VisitDate_Id"));
 				visitData.setFormCreated(result.getDate("FormCreated"));
 				visitData.setFormEdited(result.getTimestamp("FormEdited"));
-				visitData.setDrugcoverage(result.getString("Drugcoverage")); 
+				visitData.setDrugcoverage(result.getString("Drugcoverage"));
 				visitData.setSBP(result.getInt("SBP"));
 				visitData.setSBP_goal(result.getInt("SBP_goal"));
 				visitData.setDBP(result.getInt("DBP"));
 				visitData.setDBP_goal(result.getInt("DBP_goal"));
 				visitData.setBptru_used(result.getString("Bptru_used"));
-				visitData.setWeight(result.getDouble("Weight")); 
-				visitData.setWeight_unit(result.getString("Weight_unit")); 
-				visitData.setWaist(result.getDouble("Waist")); 
-				visitData.setWaist_unit(result.getString("Waist_unit")); 
-				visitData.setTC_HDL(result.getDouble("TC_HDL")); 
-				visitData.setLDL(result.getDouble("LDL")); 
-				visitData.setHDL(result.getDouble("HDL")); 
-				visitData.setA1C(result.getDouble("A1C")); 
-				visitData.setNextvisit(result.getString("Nextvisit")); 
+				visitData.setWeight(result.getDouble("Weight"));
+				visitData.setWeight_unit(result.getString("Weight_unit"));
+				visitData.setWaist(result.getDouble("Waist"));
+				visitData.setWaist_unit(result.getString("Waist_unit"));
+				visitData.setTC_HDL(result.getDouble("TC_HDL"));
+				visitData.setLDL(result.getDouble("LDL"));
+				visitData.setHDL(result.getDouble("HDL"));
+				visitData.setA1C(result.getDouble("A1C"));
+				visitData.setNextvisit(result.getString("Nextvisit"));
 				visitData.setBpactionplan(result.getBoolean("Bpactionplan"));
 				visitData.setPressureOff(result.getBoolean("PressureOff"));
 				visitData.setPatientProvider(result.getBoolean("PatientProvider"));
@@ -1089,7 +1089,7 @@ public class HSFODAO {
 				visitData.setHome(result.getBoolean("Home"));
 				visitData.setCommunityRes(result.getBoolean("CommunityRes"));
 				visitData.setProRefer(result.getBoolean("ProRefer"));
-				visitData.setHtnDxType(result.getString("HtnDxType")); 
+				visitData.setHtnDxType(result.getString("HtnDxType"));
 				visitData.setDyslipid(result.getBoolean("Dyslipid"));
 				visitData.setDiabetes(result.getBoolean("Diabetes"));
 				visitData.setKidneyDis(result.getBoolean("KidneyDis"));
@@ -1108,11 +1108,11 @@ public class HSFODAO {
 				visitData.setExercise_minPerWk(result.getInt("exercise_minPerWk"));
 				visitData.setSmoking_cigsPerDay(result.getInt("smoking_cigsPerDay"));
 				visitData.setAlcohol_drinksPerWk(result.getInt("alcohol_drinksPerWk"));
-				visitData.setSel_DashDiet(result.getString("sel_DashDiet")); 
+				visitData.setSel_DashDiet(result.getString("sel_DashDiet"));
 				visitData.setSel_HighSaltFood(result.getString("sel_HighSaltFood"));
 				visitData.setSel_Stressed(result.getString("sel_Stressed"));
 				visitData.setLifeGoal(result.getString("LifeGoal"));
-				visitData.setFamHx_Htn(result.getBoolean("FamHx_Htn")); 
+				visitData.setFamHx_Htn(result.getBoolean("FamHx_Htn"));
 				visitData.setFamHx_Dyslipid(result.getBoolean("FamHx_Dyslipid"));
 				visitData.setFamHx_Diabetes(result.getBoolean("FamHx_Diabetes"));
 				visitData.setFamHx_KidneyDis(result.getBoolean("FamHx_KidneyDis"));
@@ -1124,49 +1124,49 @@ public class HSFODAO {
 				visitData.setDiuret_RxDecToday(result.getString("Diuret_RxDecToday"));
 				visitData.setAce_rx(result.getBoolean("Ace_rx"));
 				visitData.setAce_SideEffects(result.getBoolean("Ace_SideEffects"));
-				visitData.setAce_RxDecToday(result.getString("Ace_RxDecToday")); 
+				visitData.setAce_RxDecToday(result.getString("Ace_RxDecToday"));
 				visitData.setArecept_rx(result.getBoolean("Arecept_rx"));
 				visitData.setArecept_SideEffects(result.getBoolean("Arecept_SideEffects"));
 				visitData.setArecept_RxDecToday(result.getString("Arecept_RxDecToday"));
 				visitData.setBeta_rx(result.getBoolean("Beta_rx"));
 				visitData.setBeta_SideEffects(result.getBoolean("Beta_SideEffects"));
-				visitData.setBeta_RxDecToday(result.getString("Beta_RxDecToday")); 
+				visitData.setBeta_RxDecToday(result.getString("Beta_RxDecToday"));
 				visitData.setCalc_rx(result.getBoolean("Calc_rx"));
 				visitData.setCalc_SideEffects(result.getBoolean("Calc_SideEffects"));
-				visitData.setCalc_RxDecToday(result.getString("Calc_RxDecToday")); 
+				visitData.setCalc_RxDecToday(result.getString("Calc_RxDecToday"));
 				visitData.setAnti_rx(result.getBoolean("Anti_rx"));
 				visitData.setAnti_SideEffects(result.getBoolean("Anti_SideEffects"));
 				visitData.setAnti_RxDecToday(result.getString("Anti_RxDecToday"));
 				visitData.setStatin_rx(result.getBoolean("Statin_rx"));
 				visitData.setStatin_SideEffects(result.getBoolean("Statin_SideEffects"));
-				visitData.setStatin_RxDecToday(result.getString("Statin_RxDecToday")); 
+				visitData.setStatin_RxDecToday(result.getString("Statin_RxDecToday"));
 				visitData.setLipid_rx(result.getBoolean("Lipid_rx"));
 				visitData.setLipid_SideEffects(result.getBoolean("Lipid_SideEffects"));
 				visitData.setLipid_RxDecToday(result.getString("Lipid_RxDecToday"));
 				visitData.setHypo_rx(result.getBoolean("Hypo_rx"));
 				visitData.setHypo_SideEffects(result.getBoolean("Hypo_SideEffects"));
-				visitData.setHypo_RxDecToday(result.getString("Hypo_RxDecToday")); 
+				visitData.setHypo_RxDecToday(result.getString("Hypo_RxDecToday"));
 				visitData.setInsul_rx(result.getBoolean("Insul_rx"));
 				visitData.setInsul_SideEffects(result.getBoolean("Insul_SideEffects"));
-				visitData.setInsul_RxDecToday(result.getString("Insul_RxDecToday")); 
+				visitData.setInsul_RxDecToday(result.getString("Insul_RxDecToday"));
 				visitData.setOften_miss(result.getInt("Often_miss"));
-				visitData.setHerbal(result.getString("Herbal")); 
-				visitData.setTC_HDL_LabresultsDate(result.getDate("TC_HDL_LabresultsDate")); 
-				visitData.setLDL_LabresultsDate(result.getDate("LDL_LabresultsDate")); 
-				visitData.setHDL_LabresultsDate(result.getDate("HDL_LabresultsDate")); 
-				visitData.setA1C_LabresultsDate(result.getDate("A1C_LabresultsDate")); 
+				visitData.setHerbal(result.getString("Herbal"));
+				visitData.setTC_HDL_LabresultsDate(result.getDate("TC_HDL_LabresultsDate"));
+				visitData.setLDL_LabresultsDate(result.getDate("LDL_LabresultsDate"));
+				visitData.setHDL_LabresultsDate(result.getDate("HDL_LabresultsDate"));
+				visitData.setA1C_LabresultsDate(result.getDate("A1C_LabresultsDate"));
 				visitData.setLocked(result.getBoolean("Locked"));
-	    	
+
 		 }
 		 }catch (SQLException se) {
 				MiscUtils.getLogger().debug("SQL Error while retreiving from the database : "+ se.toString());
 		 }catch (Exception ne) {
 			 MiscUtils.getLogger().debug("Other Error while retreiving to the database : "+ ne.toString());
 		 }finally {
-	        	
+
 	    		if (sql != null)
 	    			try {
-	    				
+
 	    				sql.close();
 	    			} catch (SQLException e) {
                                     MiscUtils.getLogger().error("Error", e);
@@ -1174,17 +1174,17 @@ public class HSFODAO {
 	        }
 	     return visitData;
 	 }
-	 
-    
+
+
 
     public List getAllPatientId(){
     	List reList=new ArrayList();
     	String query = "SELECT Distinct Patient_Id FROM hsfo_patient";
-    	
+
     	Statement sql=null;
     	ResultSet result =null;
         try {
-           
+
             Connection connect = DbConnectionFilter.getThreadLocalDbConnection();
             sql = connect.createStatement();
             result = sql.executeQuery(query);
@@ -1202,14 +1202,14 @@ public class HSFODAO {
         }finally {
         	if (result != null)
     			try {
-    				
+
     				result.close();
     			} catch (SQLException e) {
                             MiscUtils.getLogger().error("Error", e);
 			}
     		if (sql != null)
     			try {
-    				
+
     				sql.close();
     			} catch (SQLException e) {
                             MiscUtils.getLogger().error("Error", e);
@@ -1217,24 +1217,24 @@ public class HSFODAO {
         }
     	return reList;
     }
-    
-    public List nullSafeRetrVisitRecord(String ID) throws SQLException {
-        
-        
+
+    public List nullSafeRetrVisitRecord(String ID) {
+
+
         String query = "SELECT * FROM form_hsfo_visit where ID in (SELECT max(ID) FROM form_hsfo_visit WHERE Patient_Id='" + ID + "' group by VisitDate_Id)";
-        
+
     	Statement sql=null;
     	ResultSet result =null;
-        
+
         List patientList = new LinkedList();
         try {
-            
+
             Connection connect = DbConnectionFilter.getThreadLocalDbConnection();
             sql = connect.createStatement();
             result = sql.executeQuery(query);
             MiscUtils.getLogger().debug("here " + query);
             // retrieve results and store into registrationData object
-            
+
             while(result.next() ) {
                 VisitData visitData = new VisitData();
                 visitData.setPatient_Id(result.getString("Patient_Id"));
@@ -1243,53 +1243,53 @@ public class HSFODAO {
                 visitData.setFormEdited(result.getTimestamp("FormEdited"));
                 visitData.setVisitDate_Id(result.getDate("VisitDate_Id"));
                 visitData.setDrugcoverage(result.getString("Drugcoverage"));
-                
+
                 visitData.setSBP(result.getInt("SBP"));
                 if (result.wasNull())
                 	visitData.setSBP(Integer.MIN_VALUE);
-                
+
                 visitData.setSBP_goal(result.getInt("SBP_goal"));
                 if (result.wasNull())
                 	visitData.setSBP_goal(Integer.MIN_VALUE);
-                
+
                 visitData.setDBP(result.getInt("DBP"));
                 if (result.wasNull())
                 	visitData.setSBP_goal(Integer.MIN_VALUE);
-                
+
                 visitData.setDBP_goal(result.getInt("DBP_goal"));
                 if (result.wasNull())
                 	visitData.setDBP_goal(Integer.MIN_VALUE);
-                
+
                 visitData.setBptru_used(result.getString("Bptru_used"));
-                
+
                 visitData.setWeight(result.getDouble("Weight"));
                 if (result.wasNull())
                 	visitData.setWeight(Double.MIN_VALUE);
-                
+
                 visitData.setWeight_unit(result.getString("Weight_unit"));
-                
+
                 visitData.setWaist(result.getDouble("Waist"));
                 if (result.wasNull())
                 	visitData.setWaist(Double.MIN_VALUE);
-                
+
                 visitData.setWaist_unit(result.getString("Waist_unit"));
-                
+
                 visitData.setTC_HDL(result.getDouble("TC_HDL"));
                 if (result.wasNull())
                 	visitData.setTC_HDL(Double.MIN_VALUE);
-                
+
                 visitData.setLDL(result.getDouble("LDL"));
                 if (result.wasNull())
                 	visitData.setLDL(Double.MIN_VALUE);
-                
+
                 visitData.setHDL(result.getDouble("HDL"));
                 if (result.wasNull())
                 	visitData.setHDL(Double.MIN_VALUE);
-                
+
                 visitData.setA1C(result.getDouble("A1C"));
                 if (result.wasNull())
                 	visitData.setA1C(Double.MIN_VALUE);
-                
+
                 visitData.setNextvisit(result.getString("Nextvisit"));
                 visitData.setBpactionplan(result.getBoolean("Bpactionplan"));
                 visitData.setPressureOff(result.getBoolean("PressureOff"));
@@ -1312,27 +1312,27 @@ public class HSFODAO {
                 visitData.setRisk_alcohol(result.getBoolean("Risk_alcohol"));
                 visitData.setRisk_stress(result.getBoolean("Risk_stress"));
                 visitData.setPtView(result.getString("PtView"));
-                
+
                 visitData.setChange_importance(result.getInt("Change_importance"));
                 if (result.wasNull())
                 	visitData.setChange_importance(Integer.MIN_VALUE);
-                
+
                 visitData.setChange_confidence(result.getInt("Change_confidence"));
                 if (result.wasNull())
                 	visitData.setChange_confidence(Integer.MIN_VALUE);
-                
+
                 visitData.setExercise_minPerWk(result.getInt("exercise_minPerWk"));
                 if (result.wasNull())
                 	visitData.setExercise_minPerWk(Integer.MIN_VALUE);
-                
+
                 visitData.setSmoking_cigsPerDay(result.getInt("smoking_cigsPerDay"));
                 if (result.wasNull())
                 	visitData.setSmoking_cigsPerDay(Integer.MIN_VALUE);
-                
+
                 visitData.setAlcohol_drinksPerWk(result.getInt("alcohol_drinksPerWk"));
                 if (result.wasNull())
                 	visitData.setAlcohol_drinksPerWk(Integer.MIN_VALUE);
-                
+
                 visitData.setSel_DashDiet(result.getString("sel_DashDiet"));
                 visitData.setSel_HighSaltFood(result.getString("sel_HighSaltFood"));
                 visitData.setSel_Stressed(result.getString("sel_Stressed"));
@@ -1374,11 +1374,11 @@ public class HSFODAO {
                 visitData.setInsul_rx(result.getBoolean("Insul_rx"));
                 visitData.setInsul_SideEffects(result.getBoolean("Insul_SideEffects"));
                 visitData.setInsul_RxDecToday(result.getString("Insul_RxDecToday"));
-                
+
                 visitData.setOften_miss(result.getInt("Often_miss"));
                 if (result.wasNull())
                 	visitData.setOften_miss(Integer.MIN_VALUE);
-                
+
                 visitData.setHerbal(result.getString("Herbal"));
                 visitData.setTC_HDL_LabresultsDate(result.getDate("TC_HDL_LabresultsDate"));
                 visitData.setLDL_LabresultsDate(result.getDate("LDL_LabresultsDate"));
@@ -1386,7 +1386,7 @@ public class HSFODAO {
                 visitData.setA1C_LabresultsDate(result.getDate("A1C_LabresultsDate"));
                 visitData.setLocked(result.getBoolean("Locked"));
                 patientList.add(visitData);
-                
+
             }
 //            result.close();
 //            sql.close();
@@ -1397,20 +1397,20 @@ public class HSFODAO {
         }finally {
         	if (result != null)
     			try {
-    				
+
     				result.close();
     			} catch (SQLException e) {
                             MiscUtils.getLogger().error("Error", e);
 			}
     		if (sql != null)
     			try {
-    				
+
     				sql.close();
     			} catch (SQLException e) {
                             MiscUtils.getLogger().error("Error", e);
 			}
         }
-        
+
         return patientList;
     }
 

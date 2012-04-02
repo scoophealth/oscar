@@ -43,22 +43,22 @@ import oscar.oscarDB.DBHandler;
  * @version
  */
 public class PatientListByAppt extends HttpServlet {
-    
+
     /** Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+    throws IOException {
         response.setContentType("plain/text");
         response.setHeader("Content-disposition", "attachment; filename=patientlist.txt");
-        
+
         String drNo = request.getParameter("provider_no");
         String datefrom = request.getParameter("date_from");
         String dateto = request.getParameter("date_to");
         try{
-            
-            
+
+
             java.sql.ResultSet rs;
             String sql = "select d.last_name, d.first_name, d.phone,  d.phone2, "+
                          "       a.appointment_date, a.start_time, a.type,     "+
@@ -66,8 +66,8 @@ public class PatientListByAppt extends HttpServlet {
                          "from   demographic d, appointment a, provider p       "+
                          "where  a.demographic_no=d.demographic_no              "+
                          "and    a.provider_no=p.provider_no                    ";
-                         
-            
+
+
             if(!drNo.equals("all")){
                 sql = sql + "and a.provider_no='"+drNo +"' ";
             }
@@ -79,7 +79,7 @@ public class PatientListByAppt extends HttpServlet {
             sql = sql + "order by a.appointment_date";
 
             rs = DBHandler.GetSQL(sql);
-            
+
             PrintStream ps = new PrintStream(response.getOutputStream());
 
               while(rs.next()){
@@ -99,9 +99,9 @@ public class PatientListByAppt extends HttpServlet {
         }
         catch(SQLException e){
             MiscUtils.getLogger().error("Error", e);
-        } 
+        }
     }
-    
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /** Handles the HTTP <code>GET</code> method.
      * @param request servlet request
@@ -111,7 +111,7 @@ public class PatientListByAppt extends HttpServlet {
     throws ServletException, IOException {
         processRequest(request, response);
     }
-    
+
     /** Handles the HTTP <code>POST</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -120,7 +120,7 @@ public class PatientListByAppt extends HttpServlet {
     throws ServletException, IOException {
         processRequest(request, response);
     }
-    
+
     /** Returns a short description of the servlet.
      */
     public String getServletInfo() {

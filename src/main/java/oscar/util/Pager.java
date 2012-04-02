@@ -88,7 +88,7 @@ public class Pager {
 
             if (offset < (length - size)) {
                 header += ("&nbsp;<a href=\"" + url + pref + "pager.offset=" +
-                ((int) offset + (int) size) + "\">" + prop.getString("pager.next.desc") + "</a>\n");
+                (offset + size) + "\">" + prop.getString("pager.next.desc") + "</a>\n");
             }
 
             header += "</font>";

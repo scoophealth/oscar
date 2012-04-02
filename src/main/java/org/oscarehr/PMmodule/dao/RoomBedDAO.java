@@ -97,7 +97,7 @@ public class RoomBedDAO extends HibernateDaoSupport {
     public void saveRoomBed(RoomBed roomBed) {
         updateHistory(roomBed);
 
-        roomBed = (RoomBed)getHibernateTemplate().merge(roomBed);
+        roomBed = getHibernateTemplate().merge(roomBed);
         getHibernateTemplate().flush();
 
         log.debug("saveRoomBed: " + roomBed);
