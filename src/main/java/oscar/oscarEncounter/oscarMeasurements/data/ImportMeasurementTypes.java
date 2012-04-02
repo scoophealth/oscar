@@ -93,9 +93,9 @@ public class ImportMeasurementTypes {
                vb.setMaxLength(v.getAttributeValue("maxLength"));
                vb.setMinLength(v.getAttributeValue("minLength"));
                mtb.addValidationRule(vb);
-               if(!fmtu.measurementTypeKeyIsFound(mtb)){
+               if(!EctFindMeasurementTypeUtil.measurementTypeKeyIsFound(mtb)){
                   log.debug("Needed to add"+mtb.getType());
-                  fmtu.addMeasurementType(mtb, "");
+                  EctFindMeasurementTypeUtil.addMeasurementType(mtb, "");
                   measurementReInitNeeded = true;
                }else{
                   log.debug("Didn't Need to add"+mtb.getType());

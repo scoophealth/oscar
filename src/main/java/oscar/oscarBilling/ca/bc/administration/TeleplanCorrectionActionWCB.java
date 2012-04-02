@@ -77,7 +77,7 @@ public class TeleplanCorrectionActionWCB
             }
 
             if (!StringUtils.isNullOrEmpty(status)) {
-                status = msp.NOTSUBMITTED.equals(data.getStatus()) ? msp.WCB : status;
+                status = MSPReconcile.NOTSUBMITTED.equals(data.getStatus()) ? MSPReconcile.WCB : status;
                 msp.updateBillingStatusWCB(data.getBillingNo(), status, data.getId());
             }
             BillingHistoryDAO dao = new BillingHistoryDAO();

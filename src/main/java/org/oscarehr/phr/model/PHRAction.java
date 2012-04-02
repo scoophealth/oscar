@@ -73,7 +73,7 @@ public class PHRAction {
 
 	public void setIndivoDocument(IndivoDocumentType document) throws JAXBException, IndivoException {
 		JAXBContext docContext = JAXBContext.newInstance(IndivoDocumentType.class.getPackage().getName());
-		byte[] docContentBytes = JAXBUtils.marshalToByteArray((JAXBElement) new IndivoDocument(document), docContext);
+		byte[] docContentBytes = JAXBUtils.marshalToByteArray(new IndivoDocument(document), docContext);
 		String docContentStr = new String(docContentBytes);
 		this.setDocContent(docContentStr);
 	}

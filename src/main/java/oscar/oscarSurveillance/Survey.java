@@ -177,9 +177,9 @@ public class Survey {
                if (doesPatientMeetCriteria(demographic_no)){
                   if(isPatientRandomlySelected()){
                      isinsurvey = true;
-                     addPatientToPeriod(demographic_no,provider_no,this.DEFFERED);   
+                     addPatientToPeriod(demographic_no,provider_no,Survey.DEFFERED);   
                   }else{
-                     addPatientToPeriod(demographic_no,provider_no,this.NOTSELECTED);                  
+                     addPatientToPeriod(demographic_no,provider_no,Survey.NOTSELECTED);                  
                   }
                }         
             }

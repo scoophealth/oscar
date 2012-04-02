@@ -14,6 +14,8 @@ import javax.xml.datatype.DatatypeConfigurationException;
 
 import org.indivo.IndivoException;
 import org.indivo.client.ActionNotPerformedException;
+import org.indivo.xml.JAXBUtils;
+import org.indivo.xml.phr.DocumentGenerator;
 import org.indivo.xml.phr.annotation.Annotation;
 import org.indivo.xml.phr.annotation.AnnotationType;
 import org.indivo.xml.phr.annotation.DocumentReferenceType;
@@ -54,8 +56,8 @@ public class PHRIndivoAnnotation extends PHRIndivoDocument {
         org.indivo.xml.phr.annotation.ObjectFactory annotationFactory = new org.indivo.xml.phr.annotation.ObjectFactory();
         Annotation indivoMeasurementObject = annotationFactory.createAnnotation(annotationType);
 
-        Element element = jaxbUtils.marshalToElement(indivoMeasurementObject, JAXBContext.newInstance("org.indivo.xml.phr.annotation"));
-        IndivoDocumentType document = generator.generateDefaultDocument(indivoId, providerPhrName, PHRDocument.PHR_ROLE_PROVIDER, DocumentClassificationUrns.ANNOTATION, ContentTypeQNames.ANNOTATION, element);
+        Element element = JAXBUtils.marshalToElement(indivoMeasurementObject, JAXBContext.newInstance("org.indivo.xml.phr.annotation"));
+        IndivoDocumentType document = DocumentGenerator.generateDefaultDocument(indivoId, providerPhrName, PHRDocument.PHR_ROLE_PROVIDER, DocumentClassificationUrns.ANNOTATION, ContentTypeQNames.ANNOTATION, element);
         return document;
     }
 

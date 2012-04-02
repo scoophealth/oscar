@@ -88,7 +88,7 @@ public class EctDisplayAppointmentHistoryAction extends EctDisplayAction {
     int index=0;
     for(Appointment sh:appts) {
     	if(index>=limit) break;
-    	NavBarDisplayDAO.Item item = Dao.Item();
+    	NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
     	//item.setDate(sh.getAppointmentDate());
     	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 

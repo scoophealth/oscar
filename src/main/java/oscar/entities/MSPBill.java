@@ -29,6 +29,7 @@ import java.util.Enumeration;
 
 import org.oscarehr.util.MiscUtils;
 
+import oscar.util.DateUtils;
 import oscar.util.UtilDateUtilities;
 
 /**
@@ -402,7 +403,7 @@ public class MSPBill {
       MiscUtils.getLogger().error("Error", e);
     }
     oscar.util.DateUtils ut = new oscar.util.DateUtils();
-    long daysOld = ut.getDifDays(new Date(), dt);
+    long daysOld = DateUtils.getDifDays(new Date(), dt);
     if (daysOld >= 0 && daysOld <= 30) {
       ret = "1";
     }

@@ -267,7 +267,7 @@ public class MyDateFormat {
 	   pDate = pDate.replace('-','/'); 
        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"); 
        try{
-         Date date = (Date)formatter.parse(pDate); 
+         Date date = formatter.parse(pDate); 
          Calendar cal=Calendar.getInstance();
          cal.setTime(date);
          return cal;

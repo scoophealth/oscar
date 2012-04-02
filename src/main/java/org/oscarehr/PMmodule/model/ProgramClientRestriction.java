@@ -147,7 +147,7 @@ public class ProgramClientRestriction implements Serializable {
     }
 
     public int hashCode() {   
-        return (int) (id ^ (id >>> 32));
+        return (id ^ (id >>> 32));
     }
 
 	public String getCommentId() {

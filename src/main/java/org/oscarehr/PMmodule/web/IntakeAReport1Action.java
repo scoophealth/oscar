@@ -180,7 +180,7 @@ public class IntakeAReport1Action extends BaseAction {
 
             if (prevDemoNo != demographicNo) {
                 Demographic demographic = clientMgr.getClientByDemographicNo(String.valueOf(demographicNo));
-                String clientStatus = (String) demographic.getPatientStatus();
+                String clientStatus = demographic.getPatientStatus();
                 if (clientStatus == null || clientStatus == "" || !clientStatus.equals("IN")) {
 
                     filteredIntakAs.add(intakeAs.get(i));

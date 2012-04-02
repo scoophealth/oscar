@@ -50,7 +50,7 @@ public class FrmGraphicAR {
         eDate = eDate.replace('/','-');
 
         GregorianCalendar s0 = getCalendarObj(fEDB);
-        s0.add(s0.DATE, -280);
+        s0.add(Calendar.DATE, -280);
 
         setWeekNum(s0.get(Calendar.YEAR)+"-"+(s0.get(Calendar.MONTH)+1)+"-"+s0.get(Calendar.DATE), eDate);
         return fWeek;
@@ -70,7 +70,7 @@ public class FrmGraphicAR {
     public Date getStartDate(String edb) {
         edb = edb.replace('/','-');
         GregorianCalendar s0 = getCalendarObj(edb);
-        s0.add(s0.DATE, -280);
+        s0.add(Calendar.DATE, -280);
         return (s0.getTime());
     }
     public String getHt(String height) {
@@ -114,9 +114,9 @@ public class FrmGraphicAR {
     private GregorianCalendar getCalendarObj(String strDate) {
         GregorianCalendar strg = new GregorianCalendar();
         strg.setTime(UtilDateUtilities.StringToDate(strDate) );
-        strg.set(strg.HOUR, 1);
-        strg.set(strg.MINUTE, 0);
-        strg.set(strg.SECOND, 0);
+        strg.set(Calendar.HOUR, 1);
+        strg.set(Calendar.MINUTE, 0);
+        strg.set(Calendar.SECOND, 0);
         return strg;
     }
 

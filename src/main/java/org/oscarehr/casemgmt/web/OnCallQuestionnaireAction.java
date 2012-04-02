@@ -13,25 +13,25 @@ import org.oscarehr.casemgmt.web.formbeans.OnCallQuestionnaireFormBean;
 
 public class OnCallQuestionnaireAction extends DispatchAction {
 	private OnCallManager mgr;
-	
+
 	public void setOnCallManager(OnCallManager mgr) {
 		this.mgr = mgr;
 	}
-	
+
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		return form(mapping,form,request,response);
 	}
-	
-	public ActionForward form(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+	public ActionForward form(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
 		return mapping.findForward("form");
 	}
-	
+
 	public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String providerNo = request.getParameter("providerNo");
 		String type = request.getParameter("type");
-		
+
 		OnCallQuestionnaireFormBean f = (OnCallQuestionnaireFormBean)form;
-		
+
 		OnCallQuestionnaire bean = new OnCallQuestionnaire();
 		bean.setProviderNo(providerNo);
 		bean.setType(type);
@@ -40,11 +40,11 @@ public class OnCallQuestionnaireAction extends DispatchAction {
 		bean.setNurse(f.getNurse());
 		bean.setPhysician_consult(f.getPhysician_consult());
 		bean.setType_health(f.getType_health());
-		
+
 		mgr.save(bean);
-		
+
 		return mapping.findForward("windowClose");
 	}
-	    
+
 
 }

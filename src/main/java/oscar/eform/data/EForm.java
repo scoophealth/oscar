@@ -104,7 +104,7 @@ public class EForm extends EFormBase {
 	}
 
 	public void loadEForm(String fid, String demographicNo) {
-		Hashtable loaded = (Hashtable) EFormUtil.loadEForm(fid);
+		Hashtable loaded = EFormUtil.loadEForm(fid);
 		this.fid = fid;
 		this.formName = (String) loaded.get("formName");
 		this.formHtml = (String) loaded.get("formHtml");
@@ -203,7 +203,8 @@ public class EForm extends EFormBase {
 	// ------------------Saving the Form (inserting fdid$value= statements)---------------------
 	public void setOpenerValues(ArrayList<String> names, ArrayList<String> values) {
 		StringBuilder html = new StringBuilder(this.formHtml);
-		String opener = EFormLoader.getInstance().getOpener(); // default: opener: "oscarOPEN="
+		EFormLoader.getInstance();
+		String opener = EFormLoader.getOpener(); // default: opener: "oscarOPEN="
                 int markerLoc = -1;
                 while ((markerLoc = getFieldIndex(html, markerLoc + 1)) >= 0) {
                         String fieldHeader = getFieldHeader(html, markerLoc);
@@ -232,7 +233,8 @@ public class EForm extends EFormBase {
 	// --------------------------Setting APs utilities----------------------------------------
 	public void setDatabaseAPs() {
 		StringBuilder html = new StringBuilder(this.formHtml);
-		String marker = EFormLoader.getInstance().getMarker(); // default: marker: "oscarDB="
+		EFormLoader.getInstance();
+		String marker = EFormLoader.getMarker(); // default: marker: "oscarDB="
 		for (int i = 0; i < 2; i++) { // run the following twice if "count"-type field is found
 			int markerLoc = -1;
 			while ((markerLoc = getFieldIndex(html, markerLoc + 1)) >= 0) {
@@ -257,7 +259,8 @@ public class EForm extends EFormBase {
 				if (!fieldType.equals("textarea")) {
 					pointer += apName.length();
 				}
-				DatabaseAP curAP = EFormLoader.getInstance().getAP(apName0);
+				EFormLoader.getInstance();
+				DatabaseAP curAP = EFormLoader.getAP(apName0);
 				if (curAP == null) curAP = getAPExtra(apName0, fieldHeader);
 				if (curAP == null) continue;
 				if (!setAP2nd) { // 1st run
@@ -280,7 +283,8 @@ public class EForm extends EFormBase {
 	// --------------------------Setting oscarOPEN behaviours ----------------------------------------
 	public void setOscarOPEN(String requestURI) {
 		StringBuilder html = new StringBuilder(this.formHtml);
-		String opener = EFormLoader.getInstance().getOpener(); // default: opener: "oscarOPEN="
+		EFormLoader.getInstance();
+		String opener = EFormLoader.getOpener(); // default: opener: "oscarOPEN="
                 int markerLoc = -1;
                 while ((markerLoc = getFieldIndex(html, markerLoc + 1)) >= 0) {
                         log.debug("=============START OPENER CYCLE===========");
@@ -294,7 +298,8 @@ public class EForm extends EFormBase {
                         log.debug("OPEN ==== " + efmName);
                         // sets up the pointer where to write the value
                         String fdid = EFormUtil.removeQuotes(EFormUtil.getAttribute(OPENER_VALUE, fieldHeader));
-                        String onclick = EFormLoader.getInstance().getOpenEform(requestURI, fdid, EFormUtil.removeQuotes(efmName), fieldName, this);
+                        EFormLoader.getInstance();
+						String onclick = EFormLoader.getOpenEform(requestURI, fdid, EFormUtil.removeQuotes(efmName), fieldName, this);
                         int pointer = EFormUtil.getAttributePos("onclick", fieldHeader);
                         String type = pointer<0 ? "onclick" : "onclick_append";
                         if (pointer<0) {
@@ -328,7 +333,8 @@ public class EForm extends EFormBase {
 
         public ArrayList<String> getOpenerNames() {
             ArrayList<String> openerNames = new ArrayList<String>();
-            String opener = EFormLoader.getInstance().getOpener(); // default: opener: "oscarOPEN="
+            EFormLoader.getInstance();
+			String opener = EFormLoader.getOpener(); // default: opener: "oscarOPEN="
             StringBuilder html = new StringBuilder(this.formHtml);
             int markerLoc = -1;
             while ((markerLoc = getFieldIndex(html, markerLoc + 1)) >= 0) {
@@ -415,7 +421,8 @@ public class EForm extends EFormBase {
 				type += "_ref";
 				if (ref_value == null) type += "name";
 			}
-			curAP = EFormLoader.getInstance().getAP("_eform_values_" + type);
+			EFormLoader.getInstance();
+			curAP = EFormLoader.getAP("_eform_values_" + type);
 			if (curAP != null) {
 				setSqlParams(VAR_NAME, field);
 				setSqlParams(REF_VAR_NAME, ref_name);
@@ -426,7 +433,8 @@ public class EForm extends EFormBase {
 		} else if (module.equals("o")) {
 			log.debug("SWITCHING TO OTHER_ID");
 			String table_name = "", table_id = "";
-			curAP = EFormLoader.getInstance().getAP("_other_id");
+			EFormLoader.getInstance();
+			curAP = EFormLoader.getAP("_other_id");
 			if (type.equalsIgnoreCase("patient")) {
 				table_name = OtherIdManager.DEMOGRAPHIC.toString();
 				table_id = this.demographicNo;

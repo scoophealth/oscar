@@ -52,7 +52,7 @@ public class ImageUploadAction extends Action {
          FormFile image = fm.getImage();
          try {
              byte[] imagebytes = image.getFileData();
-             OutputStream fos = this.getEFormImageOutputStream(image.getFileName());
+             OutputStream fos = ImageUploadAction.getEFormImageOutputStream(image.getFileName());
              fos.write(imagebytes);
          } catch (Exception e) { MiscUtils.getLogger().error("Error", e); }
          return mapping.findForward("success");

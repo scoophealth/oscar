@@ -32,7 +32,7 @@ public class ProviderSignitureDao extends HibernateDaoSupport {
 
     public boolean isOnSig(String providerNo) {
         String q = "FROM ProviderDefaultProgram pdp WHERE pdp.providerNo=?";
-        List rs = (List)getHibernateTemplate().find(q, providerNo);
+        List rs = getHibernateTemplate().find(q, providerNo);
         boolean rt = false;
         if (!rs.isEmpty()) {
             ProviderDefaultProgram pdp = (ProviderDefaultProgram)rs.get(0);
@@ -43,7 +43,7 @@ public class ProviderSignitureDao extends HibernateDaoSupport {
 
     public String getProviderSig(String providerNo) {
         String q = "FROM Providerext pet WHERE pet.providerNo=?";
-        List rs = (List)getHibernateTemplate().find(q, providerNo);
+        List rs = getHibernateTemplate().find(q, providerNo);
         if (rs.isEmpty()) {
             return "";
         }

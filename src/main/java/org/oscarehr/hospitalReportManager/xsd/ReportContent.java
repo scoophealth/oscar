@@ -95,7 +95,7 @@ public class ReportContent {
      *     byte[]
      */
     public void setMedia(byte[] value) {
-        this.media = ((byte[]) value);
+        this.media = value;
     }
 
 }

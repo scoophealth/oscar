@@ -49,7 +49,7 @@ public class ProgramFunctionalUserDAO extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        FunctionalUserType result = (FunctionalUserType)this.getHibernateTemplate().get(FunctionalUserType.class, id);
+        FunctionalUserType result = this.getHibernateTemplate().get(FunctionalUserType.class, id);
 
         if (log.isDebugEnabled()) {
             log.debug("getFunctionalUserType: id=" + id + ",found=" + (result != null));
@@ -100,7 +100,7 @@ public class ProgramFunctionalUserDAO extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        ProgramFunctionalUser result = (ProgramFunctionalUser)this.getHibernateTemplate().get(ProgramFunctionalUser.class, id);
+        ProgramFunctionalUser result = this.getHibernateTemplate().get(ProgramFunctionalUser.class, id);
 
         if (log.isDebugEnabled()) {
             log.debug("getFunctionalUser: id=" + id + ",found=" + (result != null));

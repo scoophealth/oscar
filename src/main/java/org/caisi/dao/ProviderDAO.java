@@ -39,7 +39,7 @@ public class ProviderDAO extends HibernateDaoSupport {
     }
 
     public Provider getProvider(String provider_no) {
-        return (Provider)getHibernateTemplate().get(Provider.class, provider_no);
+        return getHibernateTemplate().get(Provider.class, provider_no);
     }
 
     public Provider getProviderByName(String lastName, String firstName) {

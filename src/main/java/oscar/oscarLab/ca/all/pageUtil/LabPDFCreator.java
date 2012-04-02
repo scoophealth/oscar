@@ -212,7 +212,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
         // table headers
         cell.setColspan(1);
         cell.setBorder(15);
-        cell.setHorizontalAlignment(cell.ALIGN_CENTER);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell.setBackgroundColor(new Color(210, 212, 255));
         cell.setPhrase(new Phrase("Test Name(s)", boldFont));
         table.addCell(cell);
@@ -251,7 +251,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
                         linenum++;
                         cell.setPhrase(new Phrase(obrName, boldFont));
                         cell.setColspan(7);
-                        cell.setHorizontalAlignment(cell.ALIGN_LEFT);
+                        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
                         table.addCell(cell);
                         cell.setColspan(1);
                         obrFlag = true;
@@ -261,21 +261,21 @@ public class LabPDFCreator extends PdfPageEventHelper{
                     Font lineFont = new Font(bf, 8, Font.NORMAL, getTextColor(handler.getOBXAbnormalFlag(j, k)));
                     cell.setBackgroundColor(getHighlightColor(linenum));
                     linenum++;
-                    cell.setHorizontalAlignment(cell.ALIGN_LEFT);
+                    cell.setHorizontalAlignment(Element.ALIGN_LEFT);
                     cell.setPhrase(new Phrase( (obrFlag ? "   " : "")+obxName, lineFont ));
                     table.addCell(cell);
                     cell.setPhrase(new Phrase(handler.getOBXResult(j, k).replaceAll("<br\\s*/*>", "\n"), lineFont));
-                    cell.setHorizontalAlignment(cell.ALIGN_RIGHT);
+                    cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
                     table.addCell(cell);
-                    cell.setHorizontalAlignment(cell.ALIGN_CENTER);
+                    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                     cell.setPhrase(new Phrase((handler.isOBXAbnormal(j, k) ? handler.getOBXAbnormalFlag(j, k) : "N"), lineFont));
                     table.addCell(cell);
-                    cell.setHorizontalAlignment(cell.ALIGN_LEFT);
+                    cell.setHorizontalAlignment(Element.ALIGN_LEFT);
                     cell.setPhrase(new Phrase(handler.getOBXReferenceRange(j, k), lineFont));
                     table.addCell(cell);
                     cell.setPhrase(new Phrase(handler.getOBXUnits(j, k), lineFont));
                     table.addCell(cell);
-                    cell.setHorizontalAlignment(cell.ALIGN_CENTER);
+                    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                     cell.setPhrase(new Phrase(handler.getTimeStamp(j, k), lineFont));
                     table.addCell(cell);
                     cell.setPhrase(new Phrase(handler.getOBXResultStatus(j, k), lineFont));
@@ -287,7 +287,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
                         linenum++;
                         cell.setPaddingLeft(100);
                         cell.setColspan(7);
-                        cell.setHorizontalAlignment(cell.ALIGN_LEFT);
+                        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
                         for (int l=0; l < handler.getOBXCommentCount(j, k); l++){
                             
                             cell.setPhrase(new Phrase(handler.getOBXComment(j, k, l).replaceAll("<br\\s*/*>", "\n"), font));
@@ -304,7 +304,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
             // add obr comments
             if (handler.getObservationHeader(j, 0).equals(header)) {
                 cell.setColspan(7);
-                cell.setHorizontalAlignment(cell.ALIGN_LEFT);
+                cell.setHorizontalAlignment(Element.ALIGN_LEFT);
                 for (int k=0; k < handler.getOBRCommentCount(j); k++){
                     // the obrName should only be set if it has not been
                     // set already which will only have occured if the

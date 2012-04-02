@@ -47,7 +47,7 @@ public class RoleDAO extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        Role result = (Role) this.getHibernateTemplate().get(Role.class, id);
+        Role result = this.getHibernateTemplate().get(Role.class, id);
 
         log.debug("getRole: id=" + id + ",found=" + (result != null));
 

@@ -78,7 +78,7 @@ public final class RxUpdateFavoriteAction extends DispatchAction {
 				 ActionForm form,
 				 HttpServletRequest request,
 				 HttpServletResponse response)
-	throws IOException, ServletException {
+	{
             // Setup variables
             int favId = Integer.parseInt(request.getParameter("favoriteId"));
 

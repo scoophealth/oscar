@@ -208,7 +208,7 @@ public class DemoLabDataStruct{
        java.util.Date date = null;
        try{
           DateFormat formatter = new SimpleDateFormat("dd-MMM-yy");
-          date = (java.util.Date) formatter.parse(d);
+          date = formatter.parse(d);
        }catch(Exception e){}
        return date;
     }
@@ -217,7 +217,7 @@ public class DemoLabDataStruct{
        java.util.Date date = null;
        try{       
          DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-         date = (java.util.Date) formatter.parse(d);
+         date = formatter.parse(d);
        }catch(Exception e){}
        return date;
     }

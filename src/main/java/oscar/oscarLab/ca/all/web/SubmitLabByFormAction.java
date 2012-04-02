@@ -25,37 +25,37 @@ import oscar.oscarLab.ca.all.upload.handlers.MessageHandler;
 import oscar.oscarLab.ca.all.util.Utilities;
 
 public class SubmitLabByFormAction extends DispatchAction {
-	
+
 	Logger logger = MiscUtils.getLogger();
-	
-	public ActionForward manage(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		return mapping.findForward("manage");   
+
+	public ActionForward manage(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
+		return mapping.findForward("manage");
 	}
-	
+
 	public ActionForward saveManage(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.info("in save lab from form");
-		String labName = request.getParameter("labname");	
+		String labName = request.getParameter("labname");
 		String accession = request.getParameter("accession");
 		String labReqDate = request.getParameter("lab_req_date");
-		
+
 		String lastName = request.getParameter("lastname");
 		String firstName = request.getParameter("firstname");
 		String hin = request.getParameter("hin");
 		String sex = request.getParameter("sex");
 		String dob = request.getParameter("dob");
 		String phone = request.getParameter("phone");
-		
+
 		String billingNo = request.getParameter("billingNo");
 		String pLastName = request.getParameter("pLastname");
 		String pFirstName = request.getParameter("pFirstname");
 		String cc = request.getParameter("cc");
-		
+
 		SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-		
-		
+
+
 		Lab lab = new Lab();
-		lab.setLabName(labName);		
+		lab.setLabName(labName);
 		lab.setAccession(accession);
 		lab.setLabReqDate(dateTimeFormatter.parse(labReqDate));
 		lab.setLastName(lastName);
@@ -68,17 +68,17 @@ public class SubmitLabByFormAction extends DispatchAction {
 		lab.setProviderLastName(pLastName);
 		lab.setProviderFirstName(pFirstName);
 		lab.setCc(cc);
-		
+
     	int maxTest = Integer.parseInt(request.getParameter("test_num"));
     	for(int x=1;x<=maxTest;x++) {
-    		String id = request.getParameter("test_"+x+".id");    		
+    		String id = request.getParameter("test_"+x+".id");
     		if(id != null) {
     			logger.info("test #"+x);
     			String otherId = request.getParameter("test_"+x+".id");
     			if(otherId.length() == 0 || otherId.equals("0")) {
     				continue;
     			}
-    			
+
     			String testDate = request.getParameter("test_"+x+".valDate");
     			String testName = request.getParameter("test_"+x+".lab_test_name");
     			String testDescr = request.getParameter("test_"+x+".test_descr");
@@ -106,29 +106,29 @@ public class SubmitLabByFormAction extends DispatchAction {
     			test.setFlag(flag);
     			test.setStat(stat);
     			test.setNotes(labNotes);
-    			lab.getTests().add(test);    			    			
+    			lab.getTests().add(test);
     		}
     	}
-    	
-  
+
+
     	//generate the HL7 from the Lab object.
     	String hl7 = generateHL7(lab);
     	logger.info(hl7);
-    	
+
     	//save file
     	String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
     	String filename = "Lab"+providerNo+((int)(Math.random()*1000))+".hl7";
-    	ByteArrayInputStream is = new ByteArrayInputStream(hl7.getBytes());    	
+    	ByteArrayInputStream is = new ByteArrayInputStream(hl7.getBytes());
     	String filePath = Utilities.saveFile(is, filename);
     	is.close();
         File file = new File(filePath);
-        
+
         FileInputStream fis = new FileInputStream(filePath);
-        int checkFileUploadedSuccessfully = FileUploadCheck.addFile(file.getName(),fis,providerNo);            
+        int checkFileUploadedSuccessfully = FileUploadCheck.addFile(file.getName(),fis,providerNo);
         fis.close();
 
         String outcome = null;
-        
+
         if (checkFileUploadedSuccessfully != FileUploadCheck.UNSUCCESSFUL_SAVE){
             logger.info("filePath"+filePath);
             logger.info("Type :"+"CML");
@@ -138,14 +138,14 @@ public class SubmitLabByFormAction extends DispatchAction {
             }
             if((msgHandler.parse(getClass().getSimpleName(), filePath,checkFileUploadedSuccessfully)) != null)
                 outcome = "success";
-            
+
         }else{
             outcome = "uploaded previously";
         }
-        
+
         logger.info("outcome="+outcome);
-        
-        
+
+
 		return manage(mapping,form,request,response);
 	}
 
@@ -155,29 +155,29 @@ public class SubmitLabByFormAction extends DispatchAction {
 		sb.append(generatePID(lab)).append("\n");
 		sb.append(generateORC(lab)).append("\n");
 		sb.append(generateOBR(lab)).append("\n");
-		
+
 		for(LabTest test:lab.getTests()) {
 			sb.append(generateTest(test));
-		
+
 		}
 		return sb.toString();
 	}
-	
+
 	private String generateMSH(Lab lab) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		return "MSH|^~\\&|"+lab.getLabName()+"|"+lab.getLabName()+"|OSCAR|OSCAR|"+sdf.format(new Date())+"||ORU^R01|BAR20090309113608457|P|2.3|||ER|AL";
 	}
-	
+
 	private String generatePID(Lab lab) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		return "PID||||"+lab.getHin()+"|"+lab.getLastName()+"^"+lab.getFirstName()+"||"+sdf.format(lab.getDob())+"|"+lab.getSex()+"|||||"+lab.getPhone()+"||||||X"+lab.getHin();
 	}
-	
+
 	private String generateORC(Lab lab) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		return "ORC|RE|"+lab.getAccession()+"|||F|||||||"+lab.getBillingNo()+"^"+lab.getProviderLastName()+"^"+lab.getProviderFirstName()+"|||"+sdf.format(lab.getTests().get(0).getDate());
 	}
-	
+
 	private String generateOBR(Lab lab) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		StringBuilder ccString = new StringBuilder();
@@ -193,7 +193,7 @@ public class SubmitLabByFormAction extends DispatchAction {
 				ccString.append(idName[2]);
 			}
 		}
-		return "OBR|1|||UR^General Lab^L1^GENERAL LAB||"+sdf.format(lab.getLabReqDate())+"|"+sdf.format(lab.getTests().get(0).getDate())+"|||||||"+sdf.format(lab.getLabReqDate())+"||"+lab.getBillingNo()+"^"+lab.getProviderLastName()+"^"+lab.getProviderFirstName()+"||||||"+sdf.format(lab.getTests().get(0).getDate())+"||LAB|F|||"+ccString.toString();	
+		return "OBR|1|||UR^General Lab^L1^GENERAL LAB||"+sdf.format(lab.getLabReqDate())+"|"+sdf.format(lab.getTests().get(0).getDate())+"|||||||"+sdf.format(lab.getLabReqDate())+"||"+lab.getBillingNo()+"^"+lab.getProviderLastName()+"^"+lab.getProviderFirstName()+"||||||"+sdf.format(lab.getTests().get(0).getDate())+"||LAB|F|||"+ccString.toString();
 	}
 	/**
 	 * OBR ||placer_order_id||uni_service_id|||obs_datetime|||||||specimen_received_datetime||||||CCK^CCK|||||||R

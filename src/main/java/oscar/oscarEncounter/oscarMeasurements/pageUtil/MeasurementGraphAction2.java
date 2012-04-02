@@ -209,7 +209,7 @@ public class MeasurementGraphAction2 extends Action {
 
         if (typeIdName.equals("BP")) {
             log.debug("Using BP LOGIC FOR type 1 ");
-            EctMeasurementsDataBean sampleLine = (EctMeasurementsDataBean) list.get(0);
+            EctMeasurementsDataBean sampleLine = list.get(0);
             typeYAxisName = sampleLine.getTypeDescription();
             TimeSeries systolic = new TimeSeries("Systolic", Day.class);
             TimeSeries diastolic = new TimeSeries("Diastolic", Day.class);
@@ -226,7 +226,7 @@ public class MeasurementGraphAction2 extends Action {
         } else {
             log.debug("Not Using BP LOGIC FOR type 1 ");
             // get the name from the TimeSeries
-            EctMeasurementsDataBean sampleLine = (EctMeasurementsDataBean) list.get(0);
+            EctMeasurementsDataBean sampleLine = list.get(0);
             String typeLegendName = sampleLine.getTypeDisplayName();
             typeYAxisName = sampleLine.getTypeDescription(); // this should be the type of measurement
             TimeSeries newSeries = new TimeSeries(typeLegendName, Day.class);
@@ -309,7 +309,7 @@ public class MeasurementGraphAction2 extends Action {
 
         if (typeIdName.equals("BP")) {
             log.debug("Using BP LOGIC FOR type 1 ");
-            EctMeasurementsDataBean sampleLine = (EctMeasurementsDataBean) list.get(0);
+            EctMeasurementsDataBean sampleLine = list.get(0);
             typeYAxisName = sampleLine.getTypeDescription();
             TimeSeries systolic = new TimeSeries("Systolic", Day.class);
             TimeSeries diastolic = new TimeSeries("Diastolic", Day.class);
@@ -326,7 +326,7 @@ public class MeasurementGraphAction2 extends Action {
         } else {
             log.debug("Not Using BP LOGIC FOR type 1 ");
             // get the name from the TimeSeries
-            EctMeasurementsDataBean sampleLine = (EctMeasurementsDataBean) list.get(0);
+            EctMeasurementsDataBean sampleLine = list.get(0);
             String typeLegendName = sampleLine.getTypeDisplayName();
             typeYAxisName = sampleLine.getTypeDescription(); // this should be the type of measurement
             TimeSeries newSeries = new TimeSeries(typeLegendName, Day.class);
@@ -434,7 +434,7 @@ public class MeasurementGraphAction2 extends Action {
 
         if (typeIdName.equals("BP")) {
             log.debug("Using BP LOGIC FOR type 1 ");
-            EctMeasurementsDataBean sampleLine = (EctMeasurementsDataBean) list.get(0);
+            EctMeasurementsDataBean sampleLine = list.get(0);
             typeYAxisName = sampleLine.getTypeDescription();
             TimeSeries systolic = new TimeSeries("Systolic", Day.class);
             TimeSeries diastolic = new TimeSeries("Diastolic", Day.class);
@@ -449,7 +449,7 @@ public class MeasurementGraphAction2 extends Action {
         } else {
             log.debug("Not Using BP LOGIC FOR type 1 ");
             // get the name from the TimeSeries
-            EctMeasurementsDataBean sampleLine = (EctMeasurementsDataBean) list.get(0);
+            EctMeasurementsDataBean sampleLine = list.get(0);
             String typeLegendName = sampleLine.getTypeDisplayName();
             typeYAxisName = sampleLine.getTypeDescription(); // this should be the type of measurement
             TimeSeries newSeries = new TimeSeries(typeLegendName, Day.class);
@@ -737,7 +737,7 @@ public class MeasurementGraphAction2 extends Action {
          ArrayList<OHLCDataItem> dataItems = new ArrayList();
         if (typeIdName.equals("BP")) {
             log.debug("Using BP LOGIC FOR type 1 ");
-            EctMeasurementsDataBean sampleLine = (EctMeasurementsDataBean) list.get(0);
+            EctMeasurementsDataBean sampleLine = list.get(0);
             typeYAxisName = sampleLine.getTypeDescription();
             TimeSeries systolic = new TimeSeries("Systolic", Day.class);
             TimeSeries diastolic = new TimeSeries("Diastolic", Day.class);
@@ -752,7 +752,7 @@ public class MeasurementGraphAction2 extends Action {
         } else {
             log.debug("Not Using BP LOGIC FOR type 1 ");
             // get the name from the TimeSeries
-            EctMeasurementsDataBean sampleLine = (EctMeasurementsDataBean) list.get(0);
+            EctMeasurementsDataBean sampleLine = list.get(0);
             String typeLegendName = sampleLine.getTypeDisplayName();
             typeYAxisName = sampleLine.getTypeDescription(); // this should be the type of measurement
             TimeSeries newSeries = new TimeSeries(typeLegendName, Day.class);
@@ -841,7 +841,7 @@ public class MeasurementGraphAction2 extends Action {
 
         if (typeIdName.equals("BP")) {
             log.debug("Using BP LOGIC FOR type 1 ");
-            EctMeasurementsDataBean sampleLine = (EctMeasurementsDataBean) list.get(0);
+            EctMeasurementsDataBean sampleLine = list.get(0);
             typeYAxisName = sampleLine.getTypeDescription();
             TimeSeries systolic = new TimeSeries("Systolic", Day.class);
             TimeSeries diastolic = new TimeSeries("Diastolic", Day.class);
@@ -857,7 +857,7 @@ public class MeasurementGraphAction2 extends Action {
         } else {
             log.debug("Not Using BP LOGIC FOR type 1 ");
             // get the name from the TimeSeries
-            EctMeasurementsDataBean sampleLine = (EctMeasurementsDataBean) list.get(0);
+            EctMeasurementsDataBean sampleLine = list.get(0);
             String typeLegendName = sampleLine.getTypeDisplayName();
             typeYAxisName = sampleLine.getTypeDescription(); // this should be the type of measurement
 
@@ -878,7 +878,7 @@ public class MeasurementGraphAction2 extends Action {
 
             log.debug("list2 " + list2);
 
-            EctMeasurementsDataBean sampleLine2 = (EctMeasurementsDataBean) list2.get(0);
+            EctMeasurementsDataBean sampleLine2 = list2.get(0);
             String typeLegendName = sampleLine2.getTypeDisplayName();
             String typeYAxisName2 = sampleLine2.getTypeDescription(); // this should be the type of measurement
 

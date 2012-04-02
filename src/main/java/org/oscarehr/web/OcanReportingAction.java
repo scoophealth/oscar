@@ -142,7 +142,7 @@ public class OcanReportingAction extends DispatchAction {
 		return "OCAN";
 	}
 
-	public ActionForward generateIndividualNeedRatingOverTimeReport(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException  {
+	public ActionForward generateIndividualNeedRatingOverTimeReport(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)   {
 		String clientId = request.getParameter("client");
 		String[] assessments = request.getParameterValues("assessment");
 		String needsMet = request.getParameter("needs_met");
@@ -320,7 +320,7 @@ public class OcanReportingAction extends DispatchAction {
 		}
 	}
 
-	public ActionForward generateNeedRatingOverTimeReport(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException  {
+	public ActionForward generateNeedRatingOverTimeReport(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
 		String clientId = request.getParameter("client");
 		String[] assessments = request.getParameterValues("assessment");
 		String[] domains = request.getParameterValues("domains");
@@ -580,7 +580,7 @@ public class OcanReportingAction extends DispatchAction {
 		return "";
 	}
 
-	public ActionForward generateSummaryOfActionsAndCommentsReport(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException  {
+	public ActionForward generateSummaryOfActionsAndCommentsReport(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
 		String clientId = request.getParameter("client");
 		String[] assessments = request.getParameterValues("assessment");
 		String[] domains = request.getParameterValues("domains");

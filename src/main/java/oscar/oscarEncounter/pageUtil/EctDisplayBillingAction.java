@@ -111,12 +111,12 @@ public class EctDisplayBillingAction extends EctDisplayAction {
                         BillingClaimHeader1Data obj = (BillingClaimHeader1Data) aL.get(i);
                         BillingItemData itObj = (BillingItemData) aL.get(i+1);
 
-                        NavBarDisplayDAO.Item item = Dao.Item();
+                        NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
 
                         String dbFormat = "yyyy-MM-dd";
                         try {
                             DateFormat formatter = new SimpleDateFormat(dbFormat);
-                            date = (Date)formatter.parse(obj.getBilling_date());
+                            date = formatter.parse(obj.getBilling_date());
                         }
                         catch(ParseException e ) {
                                 MiscUtils.getLogger().debug("EctDisplayMsgAction: Error creating date " + e.getMessage());
@@ -173,12 +173,12 @@ public class EctDisplayBillingAction extends EctDisplayAction {
 
 
                         if (b != null && !b.reason.equals("D")){
-                            NavBarDisplayDAO.Item item = Dao.Item();
+                            NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
 
                             String dbFormat = "yyyy-MM-dd";
                             try {
                                 DateFormat formatter = new SimpleDateFormat(dbFormat);
-                                date = (Date)formatter.parse(b.getApptDate());
+                                date = formatter.parse(b.getApptDate());
                             }
                             catch(ParseException e ) {
                                     MiscUtils.getLogger().debug("EctDisplayMsgAction: Error creating date " + e.getMessage());

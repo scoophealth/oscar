@@ -32,7 +32,7 @@ public class FrmONARRecord extends FrmRecord {
                     + "address, city, province, postal, phone, phone2, "
                     + "year_of_birth, month_of_birth, date_of_birth, hin, chart_no FROM demographic WHERE demographic_no = "
                     + demographicNo;
-            ResultSet rs = db.searchDBRecord(sql);
+            ResultSet rs = DBHelp.searchDBRecord(sql);
             if (rs.next()) {
                 java.util.Date date = UtilDateUtilities.calcDate(oscar.Misc.getString(rs, "year_of_birth"), rs
                         .getString("month_of_birth"), oscar.Misc.getString(rs, "date_of_birth"));

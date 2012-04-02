@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -35,31 +34,31 @@ public abstract class PHRIndivoDocument extends PHRDocument {
 
     protected PHRIndivoDocument() {
     }
-    
+
     protected PHRIndivoDocument(ProviderData provider, String demographicNo, Long demographicPhrId) {
         this.setPhrClassification(getClassification());
         this.setReceiverOscar(demographicNo);
-        this.setReceiverType(this.TYPE_DEMOGRAPHIC);
+        this.setReceiverType(PHRDocument.TYPE_DEMOGRAPHIC);
         this.setReceiverMyOscarUserId(demographicPhrId);
         this.setSenderOscar(provider.getProviderNo());
-        this.setSenderType(this.TYPE_PROVIDER);
+        this.setSenderType(PHRDocument.TYPE_PROVIDER);
         this.setSenderMyOscarUserId(Long.parseLong(provider.getMyOscarId()));
-        this.setSent(this.STATUS_SEND_PENDING);
-        
+        this.setSent(PHRDocument.STATUS_SEND_PENDING);
+
     }
 
     protected abstract String getClassification();
-    
+
     protected void setDocContent(IndivoDocumentType document) throws JAXBException, IndivoException {
         JAXBContext docContext = JAXBContext.newInstance(IndivoDocumentType.class.getPackage().getName());
-        byte[] docContentBytes = JAXBUtils.marshalToByteArray((JAXBElement) new IndivoDocument(document), docContext);
+        byte[] docContentBytes = JAXBUtils.marshalToByteArray(new IndivoDocument(document), docContext);
         String docContentStr = new String(docContentBytes);
         this.setDocContent(docContentStr);
     }
-    
+
     public static PHRAction setDocContent(IndivoDocumentType document, PHRAction phrAction) throws JAXBException, IndivoException {
         JAXBContext docContext = JAXBContext.newInstance(IndivoDocumentType.class.getPackage().getName());
-        byte[] docContentBytes = JAXBUtils.marshalToByteArray((JAXBElement) new IndivoDocument(document), docContext);
+        byte[] docContentBytes = JAXBUtils.marshalToByteArray(new IndivoDocument(document), docContext);
         String docContentStr = new String(docContentBytes);
         phrAction.setDocContent(docContentStr);
         return phrAction;
@@ -69,7 +68,7 @@ public abstract class PHRIndivoDocument extends PHRDocument {
         String providerFullName = provider.getFirst_name() + " " + provider.getLast_name();
         return providerFullName;
     }
-    
+
     protected static AuthorType getAuthorType(ProviderData provider) {
         org.indivo.xml.phr.types.ObjectFactory authorObjectFactory = new org.indivo.xml.phr.types.ObjectFactory();
         AuthorType authorType = authorObjectFactory.createAuthorType();

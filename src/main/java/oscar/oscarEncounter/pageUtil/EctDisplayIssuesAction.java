@@ -88,9 +88,9 @@ public class EctDisplayIssuesAction extends EctDisplayAction {
 		
 		
 		for (int idx = 0; idx < issues_unr.size(); ++idx) {
-			NavBarDisplayDAO.Item item = navBarDisplayDAO.Item();
+			NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
 
-			CaseManagementIssue issue = (CaseManagementIssue) issues_unr.get(idx);
+			CaseManagementIssue issue = issues_unr.get(idx);
 			String tmp = issue.getIssue().getDescription();
 
 			String strTitle = StringUtils.maxLenString(tmp, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
@@ -113,7 +113,7 @@ public class EctDisplayIssuesAction extends EctDisplayAction {
 				
 				for (CachedDemographicIssue cachedDemographicIssue : remoteIssues) {
 					log.info(cachedDemographicIssue.getIssueDescription());
-					NavBarDisplayDAO.Item item = navBarDisplayDAO.Item();
+					NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
 
 					String strTitle = StringUtils.maxLenString(cachedDemographicIssue.getIssueDescription(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
 					item.setTitle(strTitle);

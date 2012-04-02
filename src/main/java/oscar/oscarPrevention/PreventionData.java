@@ -13,7 +13,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
  *
  * Jason Gallagher
- * 
+ *
  * This software was written for the
  * Department of Family Medicine
  * McMaster University
@@ -28,7 +28,6 @@
 
 package oscar.oscarPrevention;
 
-import java.net.MalformedURLException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -69,7 +68,7 @@ public class PreventionData {
 		// prevent instantiation
 	}
 
-	public static Integer insertPreventionData(String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, 
+	public static Integer insertPreventionData(String creator, String demoNo, String date, String providerNo, String providerName, String preventionType,
 			String refused, String nextDate, String neverWarn, ArrayList<Map<String,String>> list) {
 		Integer insertId = -1;
 		try {
@@ -83,10 +82,10 @@ public class PreventionData {
 			prevention.setNever(neverWarn.trim().equals("1"));
 			if (refused.trim().equals("1")) prevention.setRefused(true);
 			else if (refused.trim().equals("2")) prevention.setIneligible(true);
-		
+
 			preventionDao.persist(prevention);
 			if (prevention.getId()==null) return insertId;
-			
+
 			insertId = prevention.getId();
 			for (int i = 0; i < list.size(); i++) {
 				Map<String,String> h = list.get(i);
@@ -108,7 +107,7 @@ public class PreventionData {
 			preventionExt.setPreventionId(Integer.valueOf(preventionId));
 			preventionExt.setKeyval(keyval);
 			preventionExt.setVal(val);
-			
+
 			preventionExtDao.persist(preventionExt);
 		}
 		catch (Exception e) {
@@ -118,7 +117,7 @@ public class PreventionData {
 
 	public static Map<String,String> getPreventionKeyValues(String preventionId) {
 		Map<String,String> h = new HashMap<String,String>();
-		
+
 		try {
 			List<PreventionExt> preventionExts = preventionExtDao.findByPreventionId(Integer.valueOf(preventionId));
 			for (PreventionExt preventionExt : preventionExts) {
@@ -134,7 +133,7 @@ public class PreventionData {
 		try {
 			Prevention prevention = preventionDao.find(Integer.valueOf(id));
 			prevention.setDeleted(true);
-			
+
 			preventionDao.merge(prevention);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -145,7 +144,7 @@ public class PreventionData {
 		try {
 			Prevention prevention = preventionDao.find(Integer.valueOf(id));
 			prevention.setNextDate(UtilDateUtilities.StringToDate(date, "yyyy-MM-dd"));
-			
+
 			preventionDao.merge(prevention);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -174,7 +173,7 @@ public class PreventionData {
 
 	public static ArrayList<Map<String,Object>> getPreventionDataFromExt(String extKey, String extVal) {
 		ArrayList<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
-		
+
 		try {
 			List<PreventionExt> preventionExts = preventionExtDao.findByKeyAndValue(extKey, extVal);
 			for (PreventionExt preventionExt : preventionExts) {
@@ -210,14 +209,14 @@ public class PreventionData {
 	/**
 	 *Method to get a list of (demographic #, prevention dates, and key values) of a certain type <injectionTppe> from a start Date to an end Date with a Ext key value EG get all
 	 * Rh injection's product #, from 2006-12-12 to 2006-12-18
-	 * 
+	 *
 	 */
 	public static ArrayList<Map<String,Object>> getExtValues(String injectionType, Date startDate, Date endDate, String keyVal) {
 		ArrayList<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
-		
+
 		List<Prevention> preventions = preventionDao.findByTypeAndDate(injectionType, startDate, endDate);
 		for (Prevention prevention : preventions) {
-			
+
 			List<PreventionExt> preventionExts = preventionExtDao.findByPreventionIdAndKey(prevention.getId(), keyVal);
 			try {
 				for (PreventionExt preventionExt : preventionExts) {
@@ -238,21 +237,21 @@ public class PreventionData {
 
 	public static Date getDemographicDateOfBirth(String demoNo)
 	{
-		DemographicData dd = new DemographicData();		
+		DemographicData dd = new DemographicData();
 		return(dd.getDemographicDOB(demoNo));
-	}	
+	}
 
 	public static ArrayList<Map<String,Object>> getPreventionData(String demoNo) {
 		return getPreventionData(null, demoNo);
 	}
-	
+
 	public static ArrayList<Map<String,Object>> getPreventionData(String preventionType, String demoNo) {
 		ArrayList<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
-		
+
 		try {
 			Date dob = getDemographicDateOfBirth(demoNo);
 			Integer demographicId = Integer.valueOf(demoNo);
-			List<Prevention> preventions = preventionType==null ? preventionDao.findNotDeletedByDemographicId(demographicId) : preventionDao.findByTypeAndDemoNo(preventionType, demographicId); 
+			List<Prevention> preventions = preventionType==null ? preventionDao.findNotDeletedByDemographicId(demographicId) : preventionDao.findByTypeAndDemoNo(preventionType, demographicId);
 			for (Prevention prevention : preventions) {
 				Map<String,Object> h = new HashMap<String,Object>();
 				h.put("id", prevention.getId().toString());
@@ -260,11 +259,11 @@ public class PreventionData {
 				h.put("type", prevention.getPreventionType());
 				h.put("provider_no", prevention.getProviderNo());
 				h.put("provider_name", ProviderData.getProviderName(prevention.getProviderNo()));
-				
+
 				Date pDate = prevention.getPreventionDate();
 				h.put("prevention_date", blankIfNull(UtilDateUtilities.DateToString(pDate, "yyyy-MM-dd")));
 				h.put("prevention_date_asDate", pDate);
-				
+
 				String age = "N/A";
 				if (pDate != null) {
 					age = UtilDateUtilities.calcAgeAtDate(dob, pDate);
@@ -278,7 +277,7 @@ public class PreventionData {
 		return list;
 	}
 
-	public static ArrayList<HashMap<String,Object>> getLinkedRemotePreventionData(String preventionType, Integer localDemographicId) throws MalformedURLException {
+	public static ArrayList<HashMap<String,Object>> getLinkedRemotePreventionData(String preventionType, Integer localDemographicId) {
 		ArrayList<HashMap<String, Object>> allResults=RemotePreventionHelper.getLinkedPreventionDataMap(localDemographicId);
 		ArrayList<HashMap<String, Object>> filteredResults=new ArrayList<HashMap<String, Object>>();
 
@@ -287,14 +286,14 @@ public class PreventionData {
 				filteredResults.add(temp);
 			}
 		}
-			
+
 		return(filteredResults);
 	}
 
 	public static String getPreventionComment(String id) {
 		log.debug("Calling getPreventionComment " + id);
 		String comment = null;
-		
+
 		try {
 			List<PreventionExt> preventionExts = preventionExtDao.findByPreventionIdAndKey(Integer.valueOf(id),	"comments");
 			for (PreventionExt preventionExt : preventionExts) {
@@ -316,7 +315,7 @@ public class PreventionData {
 		oscar.oscarPrevention.Prevention p = new oscar.oscarPrevention.Prevention(sex, dob);
 
 		try {
-			
+
 			ResultSet rs;
 			sql = "Select * from preventions where  demographic_no = '" + demoNo + "'  and deleted != 1 order by prevention_type,prevention_date";
 			log.debug(sql);
@@ -335,7 +334,7 @@ public class PreventionData {
 	}
 
 	private static List<CachedDemographicPrevention> getRemotePreventions(Integer demographicId) {
-		
+
 		List<CachedDemographicPrevention> remotePreventions = null;
 
 		if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
@@ -373,7 +372,7 @@ public class PreventionData {
 		if (remotePreventions != null) {
 			for (CachedDemographicPrevention cachedDemographicPrevention : remotePreventions) {
 				if (preventionType.equals(cachedDemographicPrevention.getPreventionType())) {
-					
+
 					Map<String,Object> h = new HashMap<String,Object>();
 					h.put("integratorFacilityId", cachedDemographicPrevention.getFacilityPreventionPk().getIntegratorFacilityId());
 					h.put("integratorPreventionId", cachedDemographicPrevention.getFacilityPreventionPk().getCaisiItemId());
@@ -400,16 +399,16 @@ public class PreventionData {
 					}
 					else
 					{
-						h.put("age", "N/A");						
+						h.put("age", "N/A");
 					}
-										
+
 					preventions.add(h);
 				}
 			}
-			
+
 			Collections.sort(preventions, new PreventionsComparator());
 		}
-		
+
 		return(preventions);
 	}
 
@@ -418,14 +417,14 @@ public class PreventionData {
 		public int compare(Map<String,Object> o1, Map<String,Object> o2) {
 			Comparable date1=(Comparable)o1.get("prevention_date_asDate");
 			Comparable date2=(Comparable)o2.get("prevention_date_asDate");
-			
+
 			if (date1!=null && date2!=null)
 			{
 				if (date1 instanceof Calendar)
 				{
 					date1=((Calendar)date1).getTime();
 				}
-				
+
 				if (date2 instanceof Calendar)
 				{
 					date2=((Calendar)date2).getTime();
@@ -439,10 +438,10 @@ public class PreventionData {
 			}
 		}
 	}
-	
+
 	public static Map<String,Object> getPreventionById(String id) {
 		Map<String,Object> h = null;
-		
+
 		try {
 			Prevention prevention = preventionDao.find(Integer.valueOf(id));
 			if (prevention!=null) {
@@ -450,7 +449,7 @@ public class PreventionData {
 				String providerName = ProviderData.getProviderName(prevention.getProviderNo());
 				String preventionDate = UtilDateUtilities.DateToString(prevention.getPreventionDate(), "yyyy-MM-dd");
 
-				
+
 				addToHashIfNotNull(h, "id", prevention.getId().toString());
 				addToHashIfNotNull(h, "demographicNo", prevention.getDemographicId().toString());
 				addToHashIfNotNull(h, "provider_no", prevention.getProviderNo());
@@ -504,7 +503,7 @@ public class PreventionData {
 				addToHashIfNotNull(h, "summary", summary);
 				log.debug("1" + h.get("preventionType") + " " + h.size());
 				log.debug("id" + h.get("id"));
-				
+
 			}
 		}
 		catch (Exception e) {
@@ -524,7 +523,7 @@ public class PreventionData {
 			h.put(key, val);
 		}
 	}
-	
+
 	private static String blankIfNull(String s) {
 		if (s == null) return "";
 		return s;

@@ -48,7 +48,7 @@ public class BedCheckTimeDAO extends HibernateDaoSupport {
      * @see org.oscarehr.PMmodule.dao.BedCheckTimeDAO#getBedCheckTime(java.lang.Integer)
      */
     public BedCheckTime getBedCheckTime(Integer id) {
-        BedCheckTime bedCheckTime = (BedCheckTime)getHibernateTemplate().get(BedCheckTime.class, id);
+        BedCheckTime bedCheckTime = getHibernateTemplate().get(BedCheckTime.class, id);
         log.debug("getBedCheckTime: id " + id);
 
         return bedCheckTime;
@@ -117,7 +117,7 @@ public class BedCheckTimeDAO extends HibernateDaoSupport {
             values.add(programId);
         }
 
-        return (Object[])values.toArray(new Object[values.size()]);
+        return values.toArray(new Object[values.size()]);
     }
 
     List getBedCheckTimes(String query, Object[] values) {

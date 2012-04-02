@@ -99,7 +99,7 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
         ArrayList items = new ArrayList();
         String result;
         for (int i = 0 ; i < prevList.size(); i++){ 
-            NavBarDisplayDAO.Item item = Dao.Item();
+            NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
             HashMap<String,String> h = prevList.get(i);
             String prevName = h.get("name");
             ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(prevName, bean.demographicNo); 

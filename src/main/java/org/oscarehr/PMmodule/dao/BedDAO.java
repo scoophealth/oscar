@@ -67,14 +67,14 @@ public class BedDAO extends HibernateDaoSupport {
      * @return the bed
      */
     public Bed getBed(Integer bedId) {
-        Bed bed = (Bed) getHibernateTemplate().get(Bed.class, bedId);
+        Bed bed = getHibernateTemplate().get(Bed.class, bedId);
         log.debug("getBed: id " + bedId);
 
         return bed;
     }
 
     public BedType getBedType(Integer bedTypeId) {
-        BedType bedType = (BedType) getHibernateTemplate().get(BedType.class, bedTypeId);
+        BedType bedType = getHibernateTemplate().get(BedType.class, bedTypeId);
         log.debug("getBedType: id " + bedTypeId);
 
         return bedType;
@@ -195,7 +195,7 @@ public class BedDAO extends HibernateDaoSupport {
             values.add(active);
         }
 
-        return (Object[]) values.toArray(new Object[values.size()]);
+        return values.toArray(new Object[values.size()]);
     }
 
     List<Bed> getBeds(String query, Object[] values) {

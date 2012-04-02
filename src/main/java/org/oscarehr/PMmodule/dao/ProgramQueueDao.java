@@ -39,7 +39,7 @@ public class ProgramQueueDao extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        ProgramQueue result = (ProgramQueue) getHibernateTemplate().get(ProgramQueue.class, queueId);
+        ProgramQueue result = getHibernateTemplate().get(ProgramQueue.class, queueId);
 
         if (log.isDebugEnabled()) {
             log.debug("getProgramQueue: queueId=" + queueId + ",found=" + (result != null));

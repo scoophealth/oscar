@@ -43,7 +43,7 @@ public class StreetHealthReportManagerImpl implements StreetHealthReportManager 
 	        }
 
 	        for (int x = 0; x < clients.size(); x++) {
-	            Demographic client = (Demographic)clients.get(x);
+	            Demographic client = clients.get(x);
 	            if (client.getPatientStatus().equals("AC")) {
 	                // get current intake
 	                //Formintakec intake = this.getCurrentForm(client.getDemographicNo());

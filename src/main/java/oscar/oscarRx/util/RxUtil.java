@@ -417,7 +417,7 @@ public class RxUtil {
                     rx.setUnitName(qUnit);
                     return null; //if a quantity unit is specified, can't calculate duration.
                 } else {
-                    double takeMax = (double) rx.getTakeMax();
+                    double takeMax = rx.getTakeMax();
                     double nPerDay = findNPerDay(rx.getFrequencyCode());
                     double nDays = findNDays(rx.getDurationUnit());
                     p("qtyD--takeMax--nPerDay--nDays--" + qtyD + " " + takeMax + " " + nPerDay + " " + nDays);
@@ -561,7 +561,7 @@ public class RxUtil {
         } else {
         	//do we have some policies/restrictions we want to run?
         	policyViolations.addAll(RxInstructionPolicy.checkInstructions(instructions.trim()));
-        	
+
             String[] prns = {"\\s(?i)prn$", "^(?i)prn\\s+", "\\s+(?i)prn\\s+"};
             for (String s : prns) {
                 Pattern prnP = Pattern.compile(s);
@@ -649,7 +649,7 @@ public class RxUtil {
                     frequency = (instructions.substring(matcher.start(), matcher.end())).trim();
                     frequency=changeToStandardFrequencyCode(frequency);
                     String origFrequency = (instructions.substring(matcher.start(), matcher.end())).trim();
-                    
+
                     Pattern p2 = Pattern.compile("\\s*\\d*\\.*\\d+\\s+" + origFrequency); //allow to detect decimal number.
                     Matcher m2 = p2.matcher(instructions);
 
@@ -1009,7 +1009,7 @@ public class RxUtil {
             rx.setUnitName(null);
         }
         rx.setPolicyViolations(policyViolations);
-        
+
         p("below set special");
         HashMap hm = new HashMap();
         hm.put("takeMin", rx.getTakeMin());
@@ -1351,7 +1351,7 @@ public class RxUtil {
     public static void setSpecialQuantityRepeat(RxPrescriptionData.Prescription rx) {
 
         try {
-            
+
             ResultSet rs;
             if (rx.getRegionalIdentifier() != null && rx.getRegionalIdentifier().length() > 1) {
                 p("if1");
@@ -1394,7 +1394,7 @@ public class RxUtil {
                         rs = DBHandler.GetSQL(sql3);
                         if (rs.first()) {
                             setResultSpecialQuantityRepeat(rx, rs);
-                        } else {                            
+                        } else {
                         	setDefaultSpecialQuantityRepeat(rx);
                         }
                     } else {
@@ -1420,7 +1420,7 @@ public class RxUtil {
         String sql = "SELECT max(drugid) FROM drugs WHERE archived=0 AND archived_reason='' AND BN='" + StringEscapeUtils.escapeSql(rx.getBrandName()) + "' AND GN='" + StringEscapeUtils.escapeSql(rx.getGenericName()) + "' AND demographic_no=" + rx.getDemographicNo();
 
         try {
-            
+
             ResultSet rs;
             rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
@@ -1449,7 +1449,7 @@ public class RxUtil {
         boolean discontinuedLatest = false;
         String sql = "SELECT * FROM drugs WHERE archived=1 AND archived_reason<>'' AND ATC='" + rx.getAtcCode() + "' AND regional_identifier='" + rx.getRegionalIdentifier() + "' AND demographic_no=" + rx.getDemographicNo() + " order by drugid desc";
         try {
-            
+
             ResultSet rs;
             rs = DBHandler.GetSQL(sql);
             if (rs.next()) {//get the first result which has the largest drugid and hence the most recent result.
@@ -1541,7 +1541,7 @@ public class RxUtil {
         String sql ="SELECT distinct special_instruction from drugs where special_instruction!='NULL'";
         List<String> resultSpecInst=new ArrayList<String>();
         try {
-            
+
             ResultSet rs;
             rs = DBHandler.GetSQL(sql);
             while(rs.next()){
@@ -1677,7 +1677,7 @@ public class RxUtil {
         return returnRx;
 
     }
-    private static Vector getMyDrugrefInfo(String command, Vector drugs,String myDrugrefId) throws Exception {
+    private static Vector getMyDrugrefInfo(String command, Vector drugs,String myDrugrefId) {
         MiscUtils.getLogger().debug("3in getMyDrugrefInfo");
         RxMyDrugrefInfoAction.removeNullFromVector(drugs);
         Vector params = new Vector();

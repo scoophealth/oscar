@@ -79,7 +79,7 @@ public class RptFormQuery {
     }
 
     // vec[0] - value; vec[1] - dateformat
-    private Vector[] getValueParam(HttpServletRequest request) throws Exception {
+    private Vector[] getValueParam(HttpServletRequest request)  {
         Vector[] ret = new Vector[2];
         String serialNo = "";
         Vector vecValue = new Vector();

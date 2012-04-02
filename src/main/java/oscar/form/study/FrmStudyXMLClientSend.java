@@ -1,25 +1,25 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 // javac -classpath .;C:\jakarta-tomcat-4.0.6\common\lib;%CLASSPATH% SAClient.java
 /*activation.jar
@@ -79,8 +79,8 @@ public class FrmStudyXMLClientSend {
 	Properties param = new Properties();
 	Vector studyContent = new Vector();
 	Vector studyNo = new Vector();
-	String sql = null; 
-	ResultSet rs = null; 
+	String sql = null;
+	ResultSet rs = null;
 
 //	Properties studyTableName = null;
 	String dateYesterday = null;
@@ -89,7 +89,7 @@ public class FrmStudyXMLClientSend {
 	public static void main (String[] args) throws java.sql.SQLException, java.io.IOException  {
 		if (args.length != 3) {
 			MiscUtils.getLogger().debug("Please run: java path/FrmStudyXMLClient dbname WebServiceUrl");
-			return; 
+			return;
 		}
 		FrmStudyXMLClientSend aStudy = new FrmStudyXMLClientSend();
 
@@ -106,14 +106,14 @@ public class FrmStudyXMLClientSend {
 
 	}
 
-	private synchronized void init (String file, String url) throws java.sql.SQLException, java.io.IOException  {
+	private synchronized void init (String file, String url) throws java.io.IOException  {
 		URLService = url;
-		param.load(new FileInputStream(file)); 
+		param.load(new FileInputStream(file));
 
 		GregorianCalendar now=new GregorianCalendar();
-		now.add(now.DATE, -1);
+		now.add(Calendar.DATE, -1);
 		dateYesterday = now.get(Calendar.YEAR) +"-" +(now.get(Calendar.MONTH)+1) +"-"+now.get(Calendar.DAY_OF_MONTH) ;
-		now.add(now.DATE, +2);
+		now.add(Calendar.DATE, +2);
 		dateTomorrow = now.get(Calendar.YEAR) +"-" +(now.get(Calendar.MONTH)+1) +"-"+now.get(Calendar.DAY_OF_MONTH) ;
 	}
 
@@ -121,8 +121,8 @@ public class FrmStudyXMLClientSend {
         sql = "SELECT studydata_no, content from studydata where timestamp > '" + dateYesterday + "' and timestamp < '" + dateTomorrow + "' and status='ready' order by studydata_no";
         rs = DBHandler.GetSQL(sql);
         while(rs.next()) {
-			studyContent.add(oscar.Misc.getString(rs, "content")); 
-			studyNo.add(oscar.Misc.getString(rs, "studydata_no")); 
+			studyContent.add(oscar.Misc.getString(rs, "content"));
+			studyNo.add(oscar.Misc.getString(rs, "studydata_no"));
 		}
         rs.close();
 	}
@@ -134,7 +134,7 @@ public class FrmStudyXMLClientSend {
 	}
 
 
-	private void sendJaxmMsg (String aMsg, String u) throws java.sql.SQLException  {
+	private void sendJaxmMsg (String aMsg, String u)  {
 		try	{
 			System.setProperty("javax.net.ssl.trustStore", u);
 
@@ -160,7 +160,7 @@ public class FrmStudyXMLClientSend {
 			ap1.setContent(aMsg, "text/plain");
 
 			message.addAttachmentPart(ap1);
-			
+
 			URLEndpoint endPoint = new URLEndpoint (URLService);  //"https://67.69.12.115:8443/OscarComm/DummyReceiver");
 			SOAPMessage reply = connection.call(message, endPoint);
 

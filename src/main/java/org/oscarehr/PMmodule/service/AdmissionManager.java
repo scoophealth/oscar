@@ -309,7 +309,7 @@ public class AdmissionManager {
         }
         Integer[] dependentIds = new Integer[dependentList.size()];
         for(int i=0; i < dependentList.size(); i++ ){
-            dependentIds[i] = new Integer(((JointAdmission)dependentList.get(i)).getClientId().intValue());
+            dependentIds[i] = new Integer(dependentList.get(i).getClientId().intValue());
         }
         
         //Check whether all family members are under same bed program -> if not, display error message.

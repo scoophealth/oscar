@@ -83,8 +83,8 @@ public class CheckSurveillanceAction extends Action {
             forwardPath = forward.getPath();
       }                                      
       SurveillanceMaster sMaster = SurveillanceMaster.getInstance();
-      log.debug("Number of surveys "+sMaster.numSurveys());
-      if(!sMaster.surveysEmpty()){              
+      log.debug("Number of surveys "+SurveillanceMaster.numSurveys());
+      if(!SurveillanceMaster.surveysEmpty()){              
          ArrayList surveys = sMaster.getCurrentSurveys();
       
          String demographic_no = frm.getDemographicNo();

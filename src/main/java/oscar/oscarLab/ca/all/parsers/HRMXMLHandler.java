@@ -333,7 +333,7 @@ public class HRMXMLHandler implements MessageHandler {
 		try {
 			// Some examples
 			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-			java.util.Date date = (java.util.Date) formatter.parse(getDOB());
+			java.util.Date date = formatter.parse(getDOB());
 			age = UtilDateUtilities.calcAge(date);
 		} catch (ParseException e) {
 			logger.error("Could not get age", e);

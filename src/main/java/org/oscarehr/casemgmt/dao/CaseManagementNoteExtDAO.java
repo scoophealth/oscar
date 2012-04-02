@@ -35,7 +35,7 @@ public class CaseManagementNoteExtDAO extends HibernateDaoSupport {
 	private static Logger log = MiscUtils.getLogger();
 
 	public CaseManagementNoteExt getNoteExt(Long id) {
-		CaseManagementNoteExt noteExt = (CaseManagementNoteExt) this.getHibernateTemplate().get(CaseManagementNoteExt.class, id);
+		CaseManagementNoteExt noteExt = this.getHibernateTemplate().get(CaseManagementNoteExt.class, id);
 		return noteExt;
 	}
 	

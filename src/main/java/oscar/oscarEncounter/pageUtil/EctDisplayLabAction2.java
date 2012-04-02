@@ -126,7 +126,7 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
 			LinkedHashMap accessionMap = new LinkedHashMap();
 
 			for (int i = 0; i < labs.size(); i++) {
-				result = (LabResultData) labs.get(i);
+				result = labs.get(i);
 				if (result.accessionNumber == null || result.accessionNumber.equals("")) {
 					accessionMap.put("noAccessionNum" + i + result.labType, result);
 				} else {
@@ -136,7 +136,7 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
 			labs = new ArrayList(accessionMap.values());
 			logger.info("number of labs: " + labs.size());
 			for (int j = 0; j < labs.size(); j++) {
-				result = (LabResultData) labs.get(j);
+				result = labs.get(j);
 				Date date = result.getDateObj();
 				String formattedDate = DateUtils.getDate(date, "dd-MMM-yyyy", request.getLocale());
 				// String formattedDate = DateUtils.getDate(date);
@@ -177,7 +177,7 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
                 	labRead = "*";	
                 }
 				
-				NavBarDisplayDAO.Item item = Dao.Item();
+				NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
 				logger.info("Adding link: " + labDisplayName + " : " + formattedDate);
 				item.setLinkTitle(labDisplayName + " " + formattedDate);
 				labDisplayName = StringUtils.maxLenString(labDisplayName, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES); // +" "+formattedDate;

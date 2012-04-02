@@ -31,18 +31,18 @@ public class AppointmentStatusDAOHibernate extends HibernateDaoSupport
     }
 
     public AppointmentStatus getStatus(int ID) {
-        return (AppointmentStatus) getHibernateTemplate().get(AppointmentStatus.class, new Integer(ID));
+        return getHibernateTemplate().get(AppointmentStatus.class, new Integer(ID));
     }
 
     public void modifyStatus(int ID, String strDesc, String strColor) {
-        AppointmentStatus appts = (AppointmentStatus) getHibernateTemplate().get(AppointmentStatus.class, ID);
+        AppointmentStatus appts = getHibernateTemplate().get(AppointmentStatus.class, ID);
         appts.setDescription(strDesc);
         appts.setColor(strColor);
         getHibernateTemplate().saveOrUpdate(appts);
     }
 
     public void changeStatus(int ID, int iActive) {
-        AppointmentStatus appts = (AppointmentStatus) getHibernateTemplate().get(AppointmentStatus.class, ID);
+        AppointmentStatus appts = getHibernateTemplate().get(AppointmentStatus.class, ID);
         appts.setActive(iActive);
         getHibernateTemplate().saveOrUpdate(appts);
     }

@@ -70,9 +70,9 @@ public class SupServiceCodeAssocDAO {
           HashMap map = new HashMap();
           map.put("id", item[0]);
           map.put("billingServiceNo",
-                  this.getBillingServiceValue(item[1], this.VALUE_BY_ID));
+                  this.getBillingServiceValue(item[1], SupServiceCodeAssocDAO.VALUE_BY_ID));
           map.put("billingServiceTrayNo",
-                  this.getBillingServiceValue(item[2], this.VALUE_BY_ID));
+                  this.getBillingServiceValue(item[2], SupServiceCodeAssocDAO.VALUE_BY_ID));
           map.put("associationStatus", "");
           ret.add(map);
         }
@@ -96,7 +96,7 @@ public class SupServiceCodeAssocDAO {
       for (Iterator iter = list.iterator(); iter.hasNext(); ) {
         String[] item = (String[]) iter.next();
         if (item != null && item.length > 0) {
-          ret.put(this.getBillingServiceValue(item[0], this.VALUE_BY_ID),this.getBillingServiceValue(item[1], this.VALUE_BY_ID));
+          ret.put(this.getBillingServiceValue(item[0], SupServiceCodeAssocDAO.VALUE_BY_ID),this.getBillingServiceValue(item[1], SupServiceCodeAssocDAO.VALUE_BY_ID));
         }
       }
     }
@@ -113,9 +113,9 @@ public class SupServiceCodeAssocDAO {
     
     ResultSet rs = null;
     String primaryCodeId = this.getBillingServiceValue(primaryCode,
-        this.VALUE_BY_CODE);
+        SupServiceCodeAssocDAO.VALUE_BY_CODE);
     String secondaryCodeId = this.getBillingServiceValue(secondaryCode,
-        this.VALUE_BY_CODE);
+        SupServiceCodeAssocDAO.VALUE_BY_CODE);
 
     try {
       
@@ -165,9 +165,9 @@ public class SupServiceCodeAssocDAO {
    */
   private String getBillingServiceValue(String code, int type) {
     String ret = "";
-    String criteria = type == this.VALUE_BY_CODE ? "service_code" :
+    String criteria = type == SupServiceCodeAssocDAO.VALUE_BY_CODE ? "service_code" :
         "billingservice_no";
-    String select = type == this.VALUE_BY_CODE ? "billingservice_no" :
+    String select = type == SupServiceCodeAssocDAO.VALUE_BY_CODE ? "billingservice_no" :
         "service_code";
     List results = SqlUtils.getQueryResultsList(
         "select " + select + " from billingservice where " + criteria + "= '" +

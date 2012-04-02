@@ -94,7 +94,7 @@ public class EctDisplayConReportAction extends EctDisplayAction {
 
     List<EyeformConsultationReport> crs = crDao.getByDemographic(Integer.parseInt(bean.demographicNo));
     for(EyeformConsultationReport cr:crs) {
-    	NavBarDisplayDAO.Item item = Dao.Item();
+    	NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
     	item.setDate(cr.getDate());
 
     	String title = brDao.getById(cr.getReferralId()).getFormattedName() + " - " + cr.getStatus();

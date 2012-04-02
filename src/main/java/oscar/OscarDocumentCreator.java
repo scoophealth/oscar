@@ -60,10 +60,10 @@ public class OscarDocumentCreator {
           JRDataSource ds = (JRDataSource)dataSrc;
           print = JasperFillManager.fillReport(jasperReport, parameters,ds);
       }
-      if (docType.equals(this.PDF)) {
+      if (docType.equals(OscarDocumentCreator.PDF)) {
         JasperExportManager.exportReportToPdfStream(print, sos);
       }
-      else if (docType.equals(this.CSV)) {
+      else if (docType.equals(OscarDocumentCreator.CSV)) {
         this.exportReportToCSVStream(print, sos);
 
       }

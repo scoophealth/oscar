@@ -117,7 +117,7 @@ public class EctFindMeasurementTypeUtil {
 
         EctFormProp formProp = getEctMeasurementsType(is);
 
-        Vector measurementTypes = formProp.getMeasurementTypes();
+        Vector measurementTypes = EctFormProp.getMeasurementTypes();
 
         for(int i=0; i<measurementTypes.size(); i++){
             EctMeasurementTypesBean mt = (EctMeasurementTypesBean) measurementTypes.elementAt(i);

@@ -179,7 +179,7 @@ public class WCBTeleplanSubmission {
        StringBuilder sb = new StringBuilder();
        for (int i =0; i < s.length(); i++){
            char c = s.charAt(i);
-           int j = (int) c;
+           int j = c;
            MiscUtils.getLogger().debug(j+" : "+c);
            if(j < 32 || j > 126){
               c = '?';

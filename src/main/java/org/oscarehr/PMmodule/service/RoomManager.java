@@ -31,7 +31,6 @@ import org.oscarehr.PMmodule.dao.BedDAO;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.RoomDAO;
 import org.oscarehr.PMmodule.exception.DuplicateRoomNameException;
-import org.oscarehr.PMmodule.exception.RoomHasActiveBedsException;
 import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.Room;
@@ -105,7 +104,7 @@ public class RoomManager {
      * Get rooms
      * @return array of rooms that have beds assigned to them.
      */
-    
+
     public Room[] getRooms(Integer[][] roomsOccupancy) {
     	if(roomsOccupancy == null || roomsOccupancy[0] == null  ||  roomsOccupancy[0].length == 0){
     		return null;
@@ -118,7 +117,7 @@ public class RoomManager {
     	}
         return rooms;
     }
-    
+
     /**
      * Get assigned rooms
      * @return list of assigned rooms
@@ -129,10 +128,10 @@ public class RoomManager {
           for (Room room : rooms) {
             setAttributes(room);
           }
-        }  
+        }
         return rooms;
     }
-   
+
     /**
      * Get assigned rooms
      * @return list of assigned rooms
@@ -146,28 +145,28 @@ public class RoomManager {
         }
         return rooms;
     }
-    
-    
+
+
     /**
      * Get rooms that are not full
      * @return list of unfilled rooms
      */
     public Room[] getUnfilledRoomIds(Bed[] beds) {
-    	
+
     	List<Room> roomList = new ArrayList<Room>();
     	Integer[][] roomIdAndOccupancy = calculateOccupancyAsNumOfBedsAssignedToRoom(beds);
 
 		if(roomIdAndOccupancy == null){
 			return null;
 		}
-    	Room[] rooms = getRooms(roomIdAndOccupancy); 
+    	Room[] rooms = getRooms(roomIdAndOccupancy);
   	    //rooms subject to condition: roomCapacity - occupancy > 0
         for(int i=0; rooms != null  &&  i < rooms.length; i++){
-    		
+
     	  for(int j=0; j < roomIdAndOccupancy.length; j++){
-    			
+
     			if(  rooms[i].getId().intValue() == roomIdAndOccupancy[j][0].intValue() ){
-   			
+
     				if( rooms[i].getOccupancy().intValue() - roomIdAndOccupancy[j][1].intValue() >= 0 ){
     					roomList.add(rooms[i]);
     				}
@@ -178,39 +177,39 @@ public class RoomManager {
     	if(roomList == null || roomList.isEmpty()){
     		return null;
     	}
-        return (Room[]) roomList.toArray(new Room[roomList.size()]);
+        return roomList.toArray(new Room[roomList.size()]);
     }
-    
+
 	/**
 	 * Get available rooms
 	 *
 	 * @param facilityId
 	 * @param programId
-	 * @param active           
-	 * @return list of available bed rooms that have client assigned less than 
-	 * 			its occupancy limit. 
+	 * @param active
+	 * @return list of available bed rooms that have client assigned less than
+	 * 			its occupancy limit.
 	 */
     @SuppressWarnings("unchecked")
     public Room[] getAvailableRooms(Integer facilityId, Integer programId, Boolean active, String demographicNo) {
-    	//rooms of particular facilityId, programId, active=1, (assignedBed=1 or assignedBed=0) 
+    	//rooms of particular facilityId, programId, active=1, (assignedBed=1 or assignedBed=0)
     	Room[] rooms = roomDAO.getAvailableRooms(facilityId, programId, active);
-    	
+
     	List<RoomDemographic> roomDemograhics = null;
     	List<Room> availableRooms = new ArrayList<Room>();
-		
+
     	//get rooms that are not full or clients can still be assigned to these rooms
-    	//however, even if room capacity is reached, the rooms will still be added if that particular client is 
+    	//however, even if room capacity is reached, the rooms will still be added if that particular client is
     	//assigned to that particular room.
     	for(int i=0; rooms != null  &&  i < rooms.length; i++){
     			int totalClientsInRoom = 0;
-				//get  all (multiple) demographicNo  from  table  'room_demographic' via rooms[i].id	
+				//get  all (multiple) demographicNo  from  table  'room_demographic' via rooms[i].id
 				roomDemograhics = roomDemographicManager.getRoomDemographicByRoom(rooms[i].getId());
 				List<Integer> roomDemographicNumbers = new ArrayList<Integer>();
-				
+
 				if(roomDemograhics != null){
 					totalClientsInRoom = roomDemograhics.size();
 					for(int j=0; j < roomDemograhics.size(); j++){
-						roomDemographicNumbers.add(((RoomDemographic)roomDemograhics.get(j)).getId().getDemographicNo() );
+						roomDemographicNumbers.add(roomDemograhics.get(j).getId().getDemographicNo() );
 					}
 				}
 				//if client is assigned to this room, even if capacity reached, still display room in dropdown
@@ -222,11 +221,11 @@ public class RoomManager {
 							availableRooms.add(rooms[i]);
 					}
 				}
-    			
+
     	}
-    	
+
 		log.debug("getAvailableRooms(): availableRooms = " + availableRooms.size());
-		return (Room[]) availableRooms.toArray(new Room[availableRooms.size()]);
+		return availableRooms.toArray(new Room[availableRooms.size()]);
 	}
 
     private boolean isClientAssignedToThisRoom(Integer demographicNo, List<Integer> demographicNumbers){
@@ -235,7 +234,7 @@ public class RoomManager {
     			return false;
     		}
     		for(int i=0; i < demographicNumbers.size(); i++ ){
-	    		if(demographicNo.intValue() == ((Integer)demographicNumbers.get(i)).intValue()){
+	    		if(demographicNo.intValue() == demographicNumbers.get(i).intValue()){
 	    			return true;
 	    		}
     		}
@@ -244,9 +243,9 @@ public class RoomManager {
     		return false;
     	}
     }
-    
+
     /**
-     * Calculate occupancy number as number of beds assigned to each room when 
+     * Calculate occupancy number as number of beds assigned to each room when
      * assignedBed attribute is set to 'Y'
      * @param beds
      */
@@ -264,9 +263,9 @@ public class RoomManager {
     	for(int i=0; i < beds.length; i++){
     		roomIds[i] = beds[i].getRoomId();
     	}
-    	
-    	Arrays.sort( roomIds  );  
-		
+
+    	Arrays.sort( roomIds  );
+
 		//adding up repeated roomIds as the number of beds assigned to this roomId
     	if(roomIds != null  &&  roomIds.length > 0){
     		roomIdKey = roomIds[0];
@@ -287,25 +286,25 @@ public class RoomManager {
     			}
     		}
     	}
-    	
+
     	if(roomIdKeys == null  ||  roomIdKeys.size() <= 0){
     		return null;
     	}
-    	
-    	
+
+
     	roomsOccupancy = new Integer[roomIdKeys.size()][2];
     	for(int i=0; i < roomsOccupancy.length; i++){
-    		
+
 	        roomsOccupancy[i][0] = (Integer)roomIdKeys.get(i);
 	        roomsOccupancy[i][1] = (Integer)roomIdCounts.get(i);
     	}
-    	
+
     	return roomsOccupancy;
     }
-    
-    
+
+
     public boolean isAssignedBed( String roomId, Room[] rooms ){
-    	
+
     	if(roomId == null  ||  rooms == null){
     		return false;
     	}
@@ -322,7 +321,7 @@ public class RoomManager {
     	}
     	return false;
     }
-    
+
     /**
 	 * Test to see whether room is assigned with beds - return true or
 	 * assigned with no beds yet - return false
@@ -338,7 +337,7 @@ public class RoomManager {
     	}
     	return false;
     }
-    
+
     /**
 	 * Used by AdmissionManager during processDischarge()  to  delete discharged
      * program-related room/bed reservation records
@@ -353,12 +352,12 @@ public class RoomManager {
 		 *   - if true -->  return true -- delete  roomDemographic record
 		 *   - if false -->  return false -- do nothing
     	 */
-    	
+
     	if(demographicNo == null  ||  programId == null){
     		return false;
     	}
     	Program program=programDao.getProgram(programId);
-    	RoomDemographic roomDemographic = roomDemographicManager.getRoomDemographicByDemographic(demographicNo, (int)program.getFacilityId());
+    	RoomDemographic roomDemographic = roomDemographicManager.getRoomDemographicByDemographic(demographicNo, program.getFacilityId());
     	if(roomDemographic != null){
  	    	Room room = getRoom(roomDemographic.getId().getRoomId());
 	    	if(room != null  &&  programId.intValue() == room.getProgramId().intValue()){
@@ -367,7 +366,7 @@ public class RoomManager {
     	}
     	return false;
     }
-    
+
     /**
      * Get room types
      *
@@ -385,7 +384,7 @@ public class RoomManager {
      * @throws RoomHasActiveBedsException
      *             room has active beds
      */
-    public void addRooms(Integer facilityId, int numRooms) throws RoomHasActiveBedsException {
+    public void addRooms(Integer facilityId, int numRooms) {
         if (numRooms < 1) {
             handleException(new IllegalArgumentException("numRooms must be greater than or equal to 1"));
         }
@@ -405,7 +404,7 @@ public class RoomManager {
      * @throws RoomHasActiveBedsException
      *             room has active beds
      */
-    public void saveRooms(Room[] rooms) throws RoomHasActiveBedsException, DuplicateRoomNameException {
+    public void saveRooms(Room[] rooms) throws  DuplicateRoomNameException {
         if (rooms == null) {
             handleException(new IllegalArgumentException("rooms must not be null"));
         }
@@ -423,12 +422,12 @@ public class RoomManager {
         }
     }
 
-    void saveRoom(Room room) throws RoomHasActiveBedsException {
+    void saveRoom(Room room)  {
         validate(room);
         roomDAO.saveRoom(room);
     }
 
-    public void deleteRoom(Room room) throws RoomHasActiveBedsException {
+    public void deleteRoom(Room room)  {
         roomDAO.deleteRoom(room);
     }
 
@@ -445,7 +444,7 @@ public class RoomManager {
     }
 
     void setAttributes(Room room) {
-    	
+
     	if(room == null){
     		return;
     	}
@@ -459,7 +458,7 @@ public class RoomManager {
         }
     }
 
-    void validate(Room room) throws RoomHasActiveBedsException {
+    void validate(Room room)  {
         if (room == null) {
             handleException(new IllegalStateException("room must not be null"));
         }
@@ -469,7 +468,7 @@ public class RoomManager {
         validateProgram(room.getProgramId());
     }
 
-    void validateRoom(Room room) throws RoomHasActiveBedsException {
+    void validateRoom(Room room)  {
         Integer roomId = room.getId();
 
         if (roomId != null) {
@@ -480,7 +479,7 @@ public class RoomManager {
             if (!room.isActive() && bedDAO.getBedsByRoom(roomId, Boolean.TRUE).length > 0) {
                 handleException(new RoomHasActiveBedsException("room with id : " + roomId + " has active beds"));
             }
-*/            
+*/
         }
     }
 
@@ -515,5 +514,5 @@ public class RoomManager {
     public void setRoomDemographicManager(RoomDemographicManager roomDemographicManager) {
         this.roomDemographicManager = roomDemographicManager;
     }
-    
+
 }

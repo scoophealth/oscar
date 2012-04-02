@@ -54,7 +54,7 @@ public class SymptomChecklistReportUIBean {
 		return (symptomChecklistTemplateId);
 	}
 
-	public static ArrayList<MumpsSurveyResultsDisplayObject> getSymptomChecklistReportsResultList(HttpSession session, PHRAuthentication auth, int demographicId, int startIndex, int itemsToReturn) throws NotAuthorisedException_Exception {
+	public static ArrayList<MumpsSurveyResultsDisplayObject> getSymptomChecklistReportsResultList(HttpSession session, PHRAuthentication auth, int demographicId, int startIndex, int itemsToReturn)  {
 		String sessionKey = "SymptomChecklistReportsResultList:" + demographicId + ":" + startIndex + ":" + itemsToReturn;
 
 		@SuppressWarnings("unchecked")
@@ -68,7 +68,7 @@ public class SymptomChecklistReportUIBean {
 		return (results);
 	}
 
-	private static ArrayList<MumpsSurveyResultsDisplayObject> getSymptomChecklistReportsResultListNoCache(PHRAuthentication auth, int demographicId, int startIndex, int itemsToReturn) throws NotAuthorisedException_Exception {
+	private static ArrayList<MumpsSurveyResultsDisplayObject> getSymptomChecklistReportsResultListNoCache(PHRAuthentication auth, int demographicId, int startIndex, int itemsToReturn) {
 
 		Demographic demographic = demographicDao.getDemographicById(demographicId);
 

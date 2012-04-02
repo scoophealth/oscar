@@ -1,23 +1,23 @@
 /*
-* 
+*
 * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
+* This software is published under the GPL GNU General Public License.
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version. *
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+*
 * <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
+*
+* This software was written for
+* Centre for Research on Inner City Health, St. Michael's Hospital,
+* Toronto, Ontario, Canada
 */
 
 package org.caisi.core.web;
@@ -35,19 +35,19 @@ import org.caisi.model.Role;
 public class RoleAction extends DispatchAction {
 
 	//protected CaisiRoleManager roleManager;
-	
+
 	/*
 	public void setCaisiRoleManager(CaisiRoleManager roleManager) {
 		this.roleManager = roleManager;
 	}*/
-	
+
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 			return edit(mapping,form,request,response);
 	}
 
 	public ActionForward edit(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
+			HttpServletRequest request, HttpServletResponse response) {
 		log.debug("edit");
 		LazyValidatorForm roleForm = (LazyValidatorForm)form;
 		Role role=new Role();
@@ -56,9 +56,9 @@ public class RoleAction extends DispatchAction {
 		//request.setAttribute("roleList",existRole);
 		return mapping.findForward("edit");
 	}
-	
+
 	public ActionForward save(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
+			HttpServletRequest request, HttpServletResponse response) {
 		log.debug("save");
 		LazyValidatorForm roleForm = (LazyValidatorForm)form;
 		Role role = (Role)roleForm.get("role");
@@ -71,7 +71,7 @@ public class RoleAction extends DispatchAction {
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 					rt));
 			saveMessages(request, messages);
-			
+
 		}
 	*/
 		roleForm.set("role",new Role());
@@ -79,5 +79,5 @@ public class RoleAction extends DispatchAction {
 		//request.setAttribute("roleList",existRole);
 		return mapping.findForward("edit");
 	}
-	
+
 }

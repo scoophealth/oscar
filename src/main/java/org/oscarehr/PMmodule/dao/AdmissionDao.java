@@ -430,7 +430,7 @@ public class AdmissionDao extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        Admission admission = (Admission) this.getHibernateTemplate().get(Admission.class, id);
+        Admission admission = this.getHibernateTemplate().get(Admission.class, id);
 
         if (log.isDebugEnabled()) {
             log.debug("getAdmission: id= " + id + ", found: " + (admission != null));
@@ -613,7 +613,7 @@ public class AdmissionDao extends HibernateDaoSupport {
         String q = "Select a From Demographic d, Admission a " + "Where d.anonymous = ? and (d.PatientStatus=? or d.PatientStatus='' or d.PatientStatus=null) and d.DemographicNo=a.ClientId and a.AdmissionStatus='current' and a.programType != 'community'";                 
 
         String status = "AC"; // only show active clients
-        List rs = (List) getHibernateTemplate().find(q, new Object[] { "one-time-anonymous",status});
+        List rs = getHibernateTemplate().find(q, new Object[] { "one-time-anonymous",status});
 
         return rs;
     }
