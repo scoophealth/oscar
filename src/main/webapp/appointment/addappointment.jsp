@@ -410,8 +410,9 @@ function pasteAppt(multipleSameDayGroupAppt) {
         if (bMultipleSameDayGroupAppt){
             displayStyle="display:block";
         }
- %>
-<div id="tooManySameDayGroupApptWarning" style="<%=displayStyle%>">
+  }
+  %>
+  <div id="tooManySameDayGroupApptWarning" style="<%=displayStyle%>">
     <table width="98%" BGCOLOR="red" border=1 align='center'>
         <tr>
             <th>
@@ -423,9 +424,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
         </tr>
     </table>
 </div>
- <%
-  }
-
+<%
   if (!bFirstDisp && request.getParameter("demographic_no") != null && !request.getParameter("demographic_no").equals("")) {
 
         resultList = oscarSuperManager.find("appointmentDao", "search_demographic_statusroster", new Object [] {request.getParameter("demographic_no") });
@@ -836,7 +835,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
     </td>
     <td valign="top">
     <% 
-        String formTblProp = props.getProperty("appt_formTbl");
+        String formTblProp = props.getProperty("appt_formTbl","");
         String[] formTblNames = formTblProp.split(";");
                
         int numForms = 0;
