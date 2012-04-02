@@ -1,32 +1,32 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
 
 <%
-  
+
   String demographic_no = request.getParameter("demographic_no")!=null?request.getParameter("demographic_no"):("null") ;
   String form_no = request.getParameter("formId")!=null?request.getParameter("formId"):("0") ;
   String curUser_no = (String) session.getAttribute("user");
@@ -42,10 +42,15 @@
 <jsp:useBean id="checklist"
 	class="oscar.decision.DesAnnualReviewPlannerChecklist" scope="page" />
 <%@ include file="../../admin/dbconnection.jsp"%>
-<% 
-String [][] dbQueries=new String[][] { 
-{"search_demographic", "select last_name,first_name,sex,year_of_birth,month_of_birth,date_of_birth from demographic where demographic_no = ?" }, 
-{"search_des", "select * from desannualreviewplan where form_no <= ? and demographic_no = ? order by form_no desc, des_date desc, des_time desc limit 1 " }, 
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.DesAnnualReviewPlan" %>
+<%@page import="org.oscarehr.common.dao.DesAnnualReviewPlanDao" %>
+<%
+	DesAnnualReviewPlanDao desAnnualReviewPlanDao = SpringUtils.getBean(DesAnnualReviewPlanDao.class);
+%>
+<%
+String [][] dbQueries=new String[][] {
+{"search_demographic", "select last_name,first_name,sex,year_of_birth,month_of_birth,date_of_birth from demographic where demographic_no = ?" },
 };
 plannerBean.doConfigure(dbQueries);
 %>
@@ -61,11 +66,12 @@ plannerBean.doConfigure(dbQueries);
 </head>
 <body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1">
 <%
-  String[] param2 = {form_no, demographic_no};
-  ResultSet rsdemo = plannerBean.queryResults(param2, "search_des");
-  while (rsdemo.next()) { 
-    String risk_content = rsdemo.getString("risk_content");
-    String checklist_content = rsdemo.getString("checklist_content");
+
+	DesAnnualReviewPlan darp = desAnnualReviewPlanDao.search(Integer.parseInt(form_no),Integer.parseInt(demographic_no));
+
+	if (darp != null) {
+  		String risk_content      = darp.getRiskContent();
+  		String checklist_content = darp.getChecklistContent();
 %>
 <xml id="xml_list">
 <planner>
@@ -75,31 +81,31 @@ plannerBean.doConfigure(dbQueries);
 <%
     //set the riskdata bean from xml file
     Properties savedar1risk1 = risks.getRiskName(oscarVariables.getProperty("tomcat_path") +"webapps/"+ oscarVariables.getProperty("project_home") + "/decision/annualreview/desannualreviewplannerrisk.xml");
-  	StringBuffer tt; 
+  	StringBuffer tt;
     for (Enumeration e = savedar1risk1.propertyNames() ; e.hasMoreElements() ;) {
       tt = new StringBuffer().append(e.nextElement());
-      if(SxmlMisc.getXmlContent(risk_content, savedar1risk1.getProperty(tt.toString()))!= null) 
+      if(SxmlMisc.getXmlContent(risk_content, savedar1risk1.getProperty(tt.toString()))!= null)
         riskDataBean.setProperty(tt.toString(), savedar1risk1.getProperty(tt.toString()));  //set riskno
     }
   }
 
   //find the age and sex of the patient from demographic table
-  rsdemo = plannerBean.queryResults(demographic_no, "search_demographic");
+  ResultSet rsdemo = plannerBean.queryResults(demographic_no, "search_demographic");
   int age = 0;
   String sex = null, patientName =null;
-  while (rsdemo.next()) { 
+  while (rsdemo.next()) {
     age = UtilDateUtilities.calcAge(rsdemo.getString("year_of_birth"), rsdemo.getString("month_of_birth"),rsdemo.getString("date_of_birth"));
     sex = rsdemo.getString("sex");
 	patientName = rsdemo.getString("last_name") + ", "+ rsdemo.getString("first_name");
   }
   if (age>=65 && age <=85){
-    riskDataBean.setProperty("999", "checked" ); 
+    riskDataBean.setProperty("999", "checked" );
     if (sex.equals("f") || sex.equals("F"))
-      riskDataBean.setProperty("998", "checked" ); 
+      riskDataBean.setProperty("998", "checked" );
     if (sex.equals("m") || sex.equals("M"))
-      riskDataBean.setProperty("997", "checked" ); 
+      riskDataBean.setProperty("997", "checked" );
     if (age>=65 && age<=69)
-      riskDataBean.setProperty("996", "checked" ); 
+      riskDataBean.setProperty("996", "checked" );
   }
 
 %>
