@@ -673,8 +673,11 @@ public class JdbcBillingRAImpl {
 				prop.setProperty("account", account);
 				prop.setProperty("demo_name", demo_name);
 				prop.setProperty("demo_hin", demo_hin);
-                                prop.setProperty("demo_doc",famProviderNo);
-                                prop.setProperty("site", site);
+                prop.setProperty("demo_doc",famProviderNo);
+                if( site != null ) {
+                	prop.setProperty("site", site);
+                }
+                
 				ret.add(prop);
 			}
 			rsdemo.close();
