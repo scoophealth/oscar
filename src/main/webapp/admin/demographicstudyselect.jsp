@@ -1,8 +1,16 @@
+<%@page import="org.oscarehr.common.model.DemographicStudyPK"%>
 <%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*"
 	errorPage="errorpage.jsp"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.DemographicStudy" %>
+<%@page import="org.oscarehr.common.dao.DemographicStudyDao" %>
+
+<%
+	DemographicStudyDao demographicStudyDao = SpringUtils.getBean(DemographicStudyDao.class);
+%>
 <%
     //this is a quick independent page to let you add studying patient.
-    
+
     String demographic_no = request.getParameter("demographic_no")!=null ? request.getParameter("demographic_no") : "0";
     String curUser_no = (String) session.getAttribute("user");
     String strLimit1 = request.getParameter("limit1")!=null ? request.getParameter("limit1") : "0";
@@ -13,12 +21,9 @@
 <jsp:useBean id="studyBean" class="oscar.AppointmentMainBean"
 	scope="page" />
 
-<% 
-    String [][] dbQueries=new String[][] { 
-        {"delete_demostudy", "delete from demographicstudy where demographic_no = ?" }, 
-        {"save_demostudy", "insert into demographicstudy values (?,?,?,?)" }, 
-        {"search_study", "select s.* from study s order by s.study_no" }, 
-        {"search_demostudy", "select demographic_no from demographicstudy where demographic_no=? and study_no=? " }, 
+<%
+    String [][] dbQueries=new String[][] {
+        {"search_study", "select s.* from study s order by s.study_no" },
 	};
     studyBean.doConfigure(dbQueries);
 %>
@@ -29,39 +34,45 @@
 		String[] study_no = request.getParameterValues("study_no");
         String datetime = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd HH:mm:ss");
 
-		int rowsAffected = studyBean.queryExecuteUpdate(new String[]{demographic_no}, "delete_demostudy");
+        int rowsAffected = demographicStudyDao.removeByDemographicNo(Integer.parseInt(demographic_no));
 		if (study_no != null) {
 			for (int i = 0; i < study_no.length; i++) {
-    			rowsAffected = studyBean.queryExecuteUpdate(new String[]{demographic_no, study_no[i], curUser_no, datetime}, "save_demostudy");
+				DemographicStudy ds = new DemographicStudy();
+				ds.setId(new DemographicStudyPK());
+				ds.getId().setDemographicNo(Integer.parseInt(demographic_no));
+				ds.getId().setStudyNo(Integer.parseInt(study_no[i]));
+				ds.setProviderNo(curUser_no);
+				ds.setTimestamp(new java.util.Date());
+				demographicStudyDao.persist(ds);
 			}
-		} 
-        
+		}
+
 		out.println("<script language='JavaScript'>window.close();opener.refreshstudy();</script>);");
     }
 %>
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 <html>
@@ -109,17 +120,17 @@ function setfocus() {
     int ectsize=0;
     String datetime =null;
     String bgcolor = null;
-  
+
     rsdemo = studyBean.queryResults("search_study");
-    while (rsdemo.next()) { 
+    while (rsdemo.next()) {
     	nItems++;
 	    bgcolor = nItems%2==0?"#EEEEFF":"white";
-        rs = studyBean.queryResults(new String[]{demographic_no,rsdemo.getString("s.study_no")}, "search_demostudy");
+        DemographicStudy ds = demographicStudyDao.findByDemographicNoAndStudyNo(Integer.parseInt(demographic_no),rsdemo.getInt("s.study_no"));
 %>
 	<tr bgcolor="<%=bgcolor%>">
 		<td align='center'><input type="checkbox" name="study_no"
 			value="<%=rsdemo.getString("s.study_no")%>"
-			<%=demographic_no.equals(rs.next()?studyBean.getString(rs,"demographic_no"):"0") ? "checked" : "" %>></td>
+			<%=demographic_no.equals(ds!=null?ds.getId().getDemographicNo().toString():"0") ? "checked" : "" %>></td>
 		<td><%=studyBean.getString(rsdemo,"study_name")%></td>
 		<td align="center"><%=studyBean.getString(rsdemo,"description")%></td>
 	</tr>
