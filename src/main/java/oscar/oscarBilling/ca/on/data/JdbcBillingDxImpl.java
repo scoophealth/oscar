@@ -1,27 +1,21 @@
 package oscar.oscarBilling.ca.on.data;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.DiagnosticCodeDao;
+import org.oscarehr.common.model.DiagnosticCode;
+import org.oscarehr.util.SpringUtils;
 
 public class JdbcBillingDxImpl {
-	private static final Logger _logger = Logger
-			.getLogger(JdbcBillingDxImpl.class);
+	private DiagnosticCodeDao  diagnosticCodeDao = SpringUtils.getBean(DiagnosticCodeDao.class);
 
 	BillingONDataHelp dbObj = new BillingONDataHelp();
 
 	public String getDxDescription(String dxCode) {
 		String ret = "";
-		String sql = "select description from diagnosticcode where diagnostic_code='"
-				+ dxCode + "'";
-		ResultSet rs = dbObj.searchDBRecord(sql);
-		try {
-			while (rs.next()) {
-				ret = rs.getString("description");
-			}
-		} catch (SQLException e) {
-			_logger.error("getDxDescription(sql = " + sql + ")");
+		List<DiagnosticCode> dcodes = diagnosticCodeDao.findByDiagnosticCode(dxCode);
+		for(DiagnosticCode dcode:dcodes) {
+			ret = dcode.getDescription();
 		}
 		return ret;
 	}

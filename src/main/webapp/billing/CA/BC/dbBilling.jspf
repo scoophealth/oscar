@@ -68,14 +68,11 @@
     {"search_servicecode", "select c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype = ? and c.service_group =? order by c.service_order"},
     {"search_servicecode_detail", "select b.service_code, b.description, b.value, b.percentage from billingservice b where b.service_code=?"},
     {"save_bill_record", "insert into billingdetail (billing_no, service_code, service_desc, billing_amount, diagnostic_code, appointment_date, status, billingunit) values(?,?,?,?,?,?,?,?)"},
-    {"updatediagnostic", "update diagnosticcode set description=? where diagnostic_code=?"},
     {"searchapptstatus", "select status from appointment where appointment_no=? "},
     {"updateapptstatus", "update appointment set status=?, lastupdateuser=?, updatedatetime=now() where appointment_no=? "}, //provider_no=? and appointment_date=? and start_time=? and demographic_no=?"},
     {"search_bill", "select * from billing where billing_no= ?"},
     {"search_bill_record", "select * from billingdetail where billing_no=? and status <> 'D'"},
     {"search_ctl_diagnostic_code", "select diagnosticcode.diagnostic_code as dcode, diagnosticcode.description as des from diagnosticcode, ctl_diagcode where ctl_diagcode.diagnostic_code=diagnosticcode.diagnostic_code and ctl_diagcode.servicetype=? order by diagnosticcode.description"},
-    {"search_diagnostic_code", "select * from diagnosticcode where diagnostic_code like ?"},
-    {"search_diagnostic_text", "select * from diagnosticcode where description like ?"},
     {"searchappointmentday", "select appointment_no,provider_no, start_time,end_time,name,demographic_no,reason,notes,status from appointment where provider_no=? and appointment_date=? order by start_time "},
     {"search_demograph", "select *  from demographic where demographic_no=?"},
     {"search_encounter", "select * from encounter where demographic_no = ? order by encounter_date desc, encounter_time desc"},
@@ -126,7 +123,6 @@
 
     //NEW FOR BC
     {"search_teleplanbill", "select b.billing_no, b.demographic_no, b.demographic_name, b.update_date, b.status, b.billing_date, b.provider_no, b.visitdate, b.visittype from billing b, billingmaster bm where b.billing_no= bm.billing_no and bm.billingmaster_no=?"},
-    {"search_diagnostic_new_code", "select diagnostic_code, description from diagnosticcode where diagnostic_code like ? or diagnostic_code like ? or diagnostic_code like ? or description like ? or description like ? or description like ?"},
     {"save_tahd", "insert into teleplanS21 values('\\N',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"},
     {"save_tadt", "insert into teleplanS00 values('\\N',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"},
     {"save_tadt_s23","insert into teleplanS23 values('\\N',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"},
@@ -142,7 +138,6 @@
     {"search_taS25", "select * from teleplanS25 where s21_id=? and t_s25type<>? and t_practitionerno like ? order by s25_id, t_practitionerno"},
     {"search_tahd", "select s21_id, t_payment from teleplanS21 where filename=? and t_payment=? and t_payeeno=? order by t_payment"},
     {"search_taprovider", "select r.t_practitionerno, p.last_name,p.first_name from teleplanS00 r, provider p where p.ohip_no=r.t_practitionerno and r.s21_id=? group by r.t_practitionerno"},
-    {"updatedigcode", "update diagnosticcode set description=? where diagnostic_code=?"},
     {"search_bill_master", "select * from billingmaster where billing_no=? "},
 
     //

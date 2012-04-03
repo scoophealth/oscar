@@ -47,7 +47,10 @@
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.dao.ClinicLocationDao" %>
 <%@page import="org.oscarehr.common.model.ClinicLocation" %>
+<%@ page import="org.oscarehr.common.model.DiagnosticCode" %>
+<%@ page import="org.oscarehr.common.dao.DiagnosticCodeDao" %>
 <%
+	DiagnosticCodeDao diagnosticCodeDao = SpringUtils.getBean(DiagnosticCodeDao.class);
 	ClinicLocationDao clinicLocationDao = (ClinicLocationDao)SpringUtils.getBean("clinicLocationDao");
 %>
 <%
@@ -487,10 +490,10 @@ String proFirst="", proLast="", proOHIP="", proNo="";
  String diagDesc = "";
    ResultSet rsDiagCode = null;
      rsDiagCode = null;
- rsDiagCode = apptMainBean.queryResults(diagCode, "search_diagnostic_code");
- while(rsDiagCode.next()){
-  diagDesc = rsDiagCode.getString("description");
-  }
+ 	List<DiagnosticCode> results = diagnosticCodeDao.searchCode(diagCode);
+ 	for(DiagnosticCode result:results) {
+ 		diagDesc = result.getDescription();
+ 	}
     %>
 
 
