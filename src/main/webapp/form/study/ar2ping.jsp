@@ -1,26 +1,26 @@
-<%--  
+<%--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 --%>
 <%
@@ -39,11 +39,15 @@ if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp
 <%@ page import="org.chip.ping.xml.cddm.*"%>
 <%@ page import="oscar.OscarPingTalk"%>
 <%@ page import="oscar.oscarDemographic.data.*"%>
-
-<% 
-String [][] dbQueries=new String[][] { 
-    {"search_formar", "select * from formAR where demographic_no= ? order by formEdited desc, ID desc limit 0,1"}, 
-	{"search_desaprisk", "select risk_content, checklist_content from desaprisk where form_no <= ? and demographic_no = ? order by form_no desc, desaprisk_date desc, desaprisk_time desc limit 1 " }, 
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.Desaprisk" %>
+<%@page import="org.oscarehr.common.dao.DesapriskDao" %>
+<%
+	DesapriskDao desapriskDao = SpringUtils.getBean(DesapriskDao.class);
+%>
+<%
+String [][] dbQueries=new String[][] {
+    {"search_formar", "select * from formAR where demographic_no= ? order by formEdited desc, ID desc limit 0,1"},
 };
 studyBean.doConfigure(dbQueries);
 %>
@@ -90,10 +94,10 @@ Object obj = null ;
 String demoNo = request.getParameter("demographic_no");
 ResultSet rsdemo = studyBean.queryResults(demoNo, "search_formar");
 ResultSetMetaData md = rsdemo.getMetaData();
-if (rsdemo.next()) { 
+if (rsdemo.next()) {
 	for(int i = 1; i <= md.getColumnCount(); i++)  {
         String name = md.getColumnName(i);
-        
+
         // for "_a", to change to "A"
         String jaxbName = "" ;
         /*
@@ -122,12 +126,12 @@ if (rsdemo.next()) {
 			} else if ( Character.isLetter(c) && bCap ) {
 				bCap = false;
 				sb.append(Character.toUpperCase(c));
-			} else 
+			} else
 				sb.append(c);
 		}
 		jaxbName = sb.toString();
-        
-        
+
+
         String type = md.getColumnTypeName(i);
 		if (type.equals("TINY") || name.equals("ID")) {
 			prop.setProperty(jaxbName, "" + rsdemo.getInt(name) );
@@ -135,13 +139,13 @@ if (rsdemo.next()) {
 			prop.setProperty(jaxbName, (rsdemo.getString(name)==null?"":rsdemo.getString(name) ) );
 		}
 	}
-	
+
 	//get ar plan data
 	String formNo = "" + rsdemo.getInt("ID");
-	ResultSet rsrisk = studyBean.queryResults((new String[]{formNo, demoNo}), "search_desaprisk");
-	if (rsrisk.next()) { 
-		riskContent = rsrisk.getString("risk_content");
-		riskContent += rsrisk.getString("checklist_content");
+	Desaprisk desa = desapriskDao.search(Integer.parseInt(formNo), Integer.parseInt(demoNo));
+	if (desa != null) {
+		riskContent = desa.getRiskContent();
+		riskContent += desa.getChecklistContent();
 	}
 }
 
@@ -164,7 +168,7 @@ if(connected){
         Method[] theMethods = c.getMethods();
         for (int i = 0; i < theMethods.length; i++) {
 			String methodString = theMethods[i].getName();
-                
+
 			if (methodString.startsWith("set")) {
                 String fieldNameU = methodString.substring(3);
                 String fieldNameL = fieldNameU.substring(0, 1).toLowerCase()
@@ -186,8 +190,8 @@ if(connected){
 	CddmType cddmType = ping.getCddm(owner,originAgent,author,level1,level2,dataType);
 
 	connectErrorMsg = "The record was sent to PING server.<br><p><input type='button' name='but' onclick='window.close()' value='Close'>";
-    try{                                        
-        ping.sendCddm(actorTicket, patientPingId,cddmType);                                        
+    try{
+        ping.sendCddm(actorTicket, patientPingId,cddmType);
     }catch(Exception sendCon){
         connectErrorMsg = "<font style=\"font-size: 19px; color: red; font-family : tahoma, Arial,Helvetica,Sans Serif;\">Could Not Send to PHR</font>: " + patientPingId + " .<br><p><input type='button' name='but' onclick='window.close()' value='Close'>";
     }
