@@ -2,6 +2,7 @@ package org.oscarehr.common.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -15,6 +16,7 @@ public class DemographicStudy extends AbstractModel<DemographicStudyPK>{
 	@EmbeddedId
 	private DemographicStudyPK id;
 
+	@Column(name="provider_no")
 	private String providerNo;
 
 	@Temporal(TemporalType.TIMESTAMP)
