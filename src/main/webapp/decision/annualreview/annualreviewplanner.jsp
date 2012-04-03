@@ -1,26 +1,26 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 <%
@@ -50,13 +50,16 @@
 <jsp:useBean id="checklist"
 	class="oscar.decision.DesAnnualReviewPlannerChecklist" scope="page" />
 <%@ include file="../../admin/dbconnection.jsp"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.DesAnnualReviewPlan" %>
+<%@page import="org.oscarehr.common.dao.DesAnnualReviewPlanDao" %>
 <%
-  String[][] dbQueries = new String[][]{{"search_demographic", 
-          "select sex,year_of_birth,month_of_birth,date_of_birth from demographic where demographic_no = ?"}, {"search_des", 
-          "select * from desannualreviewplan where form_no <= ? and demographic_no = ? order by form_no desc, des_date desc, des_time desc limit 1 "
-          }, {"save_des", 
-          "insert into desannualreviewplan (des_date,des_time,provider_no,risk_content,checklist_content,demographic_no,form_no) values (?,?,?,?,?,?,? ) "
-          }};
+	DesAnnualReviewPlanDao desAnnualReviewPlanDao = SpringUtils.getBean(DesAnnualReviewPlanDao.class);
+%>
+<%
+  String[][] dbQueries = new String[][]{
+		{"search_demographic", "select sex,year_of_birth,month_of_birth,date_of_birth from demographic where demographic_no = ?"},
+  };
 
   plannerBean.doConfigure(dbQueries);
 %>
@@ -76,7 +79,7 @@
           //open a new popup window
           var page = "" + varpage;
 
-          windowprops = "height=" + vheight + ",width=" + vwidth + 
+          windowprops = "height=" + vheight + ",width=" + vwidth +
                   ",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=5,left=5";
 
           //360,680
@@ -89,20 +92,23 @@
 	action="annualreviewplanner.jsp?demographic_no=<%=demographic_no%>&formId=<%=form_no%>">
 <!--%@ include file="zgetarriskdata.jsp" % --> <%
       //save risk&checklist data if required
-      if (request.getParameter("submit") != null && 
+      if (request.getParameter("submit") != null &&
               (request.getParameter("submit").equals(" Save ") || request.getParameter("submit").equals("Save and Exit"))) {
-        GregorianCalendar now          = new GregorianCalendar();
-        String            form_date    = now.get(Calendar.YEAR) + "-" + (now.get(Calendar.MONTH) + 1) + "-" + now.get(
-                Calendar.DAY_OF_MONTH);
-        String            form_time    = now.get(Calendar.HOUR_OF_DAY) + ":" + now.get(Calendar.MINUTE) + ":" + now.get(
-                Calendar.SECOND);
+
         String            risk_content = "", checklist_content = "";
 
         risk_content = SxmlMisc.createXmlDataString(request, "risk_");
         checklist_content = SxmlMisc.createXmlDataString(request, "checklist_");
 
-        String[] param        = {form_date, form_time, curUser_no, risk_content, checklist_content, demographic_no, form_no};
-        int      rowsAffected = plannerBean.queryExecuteUpdate(param, "save_des");
+        DesAnnualReviewPlan darp = new DesAnnualReviewPlan();
+        darp.setDesDate(new java.util.Date());
+        darp.setDesTime(new java.util.Date());
+        darp.setProviderNo(curUser_no);
+        darp.setRiskContent(risk_content);
+        darp.setChecklistContent(checklist_content);
+        darp.setDemographicNo(Integer.parseInt(demographic_no));
+        darp.setFormNo(Integer.parseInt(form_no));
+        desAnnualReviewPlanDao.persist(darp);
       }
 
       //save & exit if required
@@ -117,12 +123,12 @@
       //	  riskDataBean.setProperty(riskdataname[i][0],"0");
       //  }
       //get the risk data from table desaprisk for other risk factors
-      String[]  param2 = {form_no, demographic_no};
-      ResultSet rsdemo = plannerBean.queryResults(param2, "search_des");
 
-      while (rsdemo.next()) {
-        String risk_content      = rsdemo.getString("risk_content");
-        String checklist_content = rsdemo.getString("checklist_content");
+      DesAnnualReviewPlan darp = desAnnualReviewPlanDao.search(Integer.parseInt(form_no),Integer.parseInt(demographic_no));
+
+      if (darp != null) {
+        String risk_content      = darp.getRiskContent();
+        String checklist_content = darp.getChecklistContent();
 %> <xml id="xml_list"> <planner> <%= risk_content %> <%= checklist_content %>
 </planner> </xml> <%
         //set the riskdata bean from xml file
@@ -138,13 +144,13 @@
         }
       }
       //find the age and sex of the patient from demographic table
-      rsdemo = plannerBean.queryResults(demographic_no, "search_demographic");
+      ResultSet rsdemo = plannerBean.queryResults(demographic_no, "search_demographic");
 
       int    age = 0;
       String sex = null;
 
       while (rsdemo.next()) {
-        age = UtilDateUtilities.calcAge(rsdemo.getString("year_of_birth"), rsdemo.getString("month_of_birth"), 
+        age = UtilDateUtilities.calcAge(rsdemo.getString("year_of_birth"), rsdemo.getString("month_of_birth"),
                 rsdemo.getString("date_of_birth"));
         sex = rsdemo.getString("sex");
       }
@@ -192,7 +198,7 @@
 		<%
             out.println(checklist.doStuff(oscarVariables.getProperty("tomcat_path") +"webapps/"+ oscarVariables.getProperty("project_home") + "/decision/annualreview/desannualreviewplannerriskchecklist.xml", riskDataBean));
 %>
-		
+
 	</tr>
 </table>
 <table bgcolor='silver' width='100%'>
