@@ -373,7 +373,7 @@ public class CaseManagementPrintPdf {
 //            else
 //                rworkingYcoord -= (ct.getLinesWritten() * ct.getLeading() + (ct.getLeading() * 2f));
 //        }
-        cb.endText();
+//        cb.endText();
     }
 
     public void printNotes(List<CaseManagementNote>notes) throws DocumentException{
