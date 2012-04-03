@@ -19,7 +19,10 @@ public class DemographicManager
 		Demographic result=demographicDao.getDemographicById(demographicId);
 		
 		//--- log action ---
-		LogAction.addLogSynchronous("DemographicManager.getDemographic", "demographicId="+demographicId);
+		if (result!=null)
+		{
+			LogAction.addLogSynchronous("DemographicManager.getDemographic", "demographicId="+demographicId);
+		}
 		
 		return(result);
 	}
@@ -29,7 +32,10 @@ public class DemographicManager
 		Demographic result=demographicDao.getDemographicByMyOscarUserName(myOscarUserName);
 		
 		//--- log action ---
-		LogAction.addLogSynchronous("DemographicManager.getDemographic", "demographicId="+result.getDemographicNo());
+		if (result!=null)
+		{
+			LogAction.addLogSynchronous("DemographicManager.getDemographic", "demographicId="+result.getDemographicNo());
+		}
 		
 		return(result);
 	}
