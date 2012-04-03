@@ -1,26 +1,26 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
-     * This software was written for the 
- * Department of Family Medicine 
+ *
+     * This software was written for the
+ * Department of Family Medicine
  * McMaster University
- * Hamilton 
- * Ontario, Canada 
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 <%@page
@@ -31,12 +31,12 @@
 
 <%
   if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
-  String demographic_no = request.getParameter("demographic_no"); 
-  
+  String demographic_no = request.getParameter("demographic_no");
+
   DemographicSets  ds = new DemographicSets();
-  ArrayList sets = ds.getDemographicSets();
-  
-  RptSearchData searchData  = new RptSearchData();    
+  List<String> sets = ds.getDemographicSets();
+
+  RptSearchData searchData  = new RptSearchData();
   ArrayList queryArray = searchData.getQueryTypes();
 
   String userRole = (String)session.getAttribute("userrole");
@@ -125,7 +125,7 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 		<td valign="top" class="MainTableRightColumn">
 		    <html:form action="/demographic/DiabetesExport" method="get"
 			onsubmit="return checkAll();">
-			
+
 		<table><tr>
     <% if (demographic_no!= null) { %>
 			<td colspan="2"><input type="hidden" name="demographicNo" value="<%=demographic_no%>"/>
@@ -135,7 +135,7 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 				    <html:option value="-1">--Select Set--</html:option>
 <%
 			    for (int i=0; i<sets.size(); i++) {
-				String setName = (String)sets.get(i);
+				String setName = sets.get(i);
 %>
 				<html:option value="<%=setName%>"><%=setName%></html:option>
 			    <%}%>

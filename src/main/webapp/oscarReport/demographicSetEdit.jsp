@@ -37,7 +37,7 @@
   String demographic_no = request.getParameter("demographic_no");
 
   DemographicSets  ds = new DemographicSets();
-  ArrayList sets = ds.getDemographicSets();
+  List<String> sets = ds.getDemographicSets();
 
   DemographicData dd = new DemographicData();
 
@@ -131,13 +131,13 @@ function disableifchecked(ele,nextDate){
 			<div><bean:message key="oscarReport.oscarReportDemoSetEdit.msgPatientSet"/>: <html:select property="patientSet">
 				<html:option value="-1"><bean:message key="oscarReport.oscarReportDemoSetEdit.msgOptionSet"/></html:option>
 				<% for ( int i = 0 ; i < sets.size(); i++ ){
-                            String s = (String) sets.get(i);%>
+                            String s = sets.get(i);%>
 				<html:option value="<%=s%>"><%=s%></html:option>
 				<%}%>
 			</html:select> <input type="submit" value="<bean:message key="oscarReport.oscarReportDemoSetEdit.btnDisplaySet"/>" /></div>
 
 		</html:form> <%if( request.getAttribute("SET") != null ) {
-                   ArrayList list = (ArrayList) request.getAttribute("SET");
+                   List<Map<String,String>> list = (List<Map<String,String>>) request.getAttribute("SET");
                    String setName = (String) request.getAttribute("setname");%>
 		<div><html:form action="/report/SetEligibility">
 			<input type="submit" value="<bean:message key="oscarReport.oscarReportDemoSetEdit.btnSetIneligible"/>" /> <bean:message key="oscarReport.oscarReportDemoSetEdit.msgIneligible"/><br>
@@ -156,8 +156,8 @@ function disableifchecked(ele,nextDate){
 					<th><bean:message key="oscarReport.oscarReportDemoSetEdit.msgEligibility" /></th>
 				</tr>
 				<%for (int i=0; i < list.size(); i++){
-                     Hashtable h = (Hashtable) list.get(i);
-                     org.oscarehr.common.model.Demographic demo = dd.getDemographic((String) h.get("demographic_no"));  %>
+                     Map<String,String> h = list.get(i);
+                     org.oscarehr.common.model.Demographic demo = dd.getDemographic(h.get("demographic_no"));  %>
 				<tr>
 					<td><input type="checkbox" name="demoNo"
 						value="<%=h.get("demographic_no")%>" />

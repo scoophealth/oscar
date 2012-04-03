@@ -99,7 +99,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     getListOfDINS();
 
     //Create Patient List from Patient Set
-    ArrayList patientList = new DemographicSets().getDemographicSet(setName);
+    List<String> patientList = new DemographicSets().getDemographicSet(setName);
 
     //Create export files
     String tmpDir = OscarProperties.getInstance().getProperty("TMP_DIR");

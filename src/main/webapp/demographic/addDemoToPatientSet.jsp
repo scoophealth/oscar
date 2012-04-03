@@ -3,12 +3,12 @@
 <%
     String demoNo = request.getParameter("demoNo");
     String patientSet = request.getParameter("patientSet");
-    
+
     DemographicSets ds = new DemographicSets();
-    ArrayList demoSet = ds.getDemographicSet(patientSet);
-    
+    java.util.List<String> demoSet = ds.getDemographicSet(patientSet);
+
     if (!demoSet.contains(demoNo)) {
-	ArrayList newSet = new ArrayList();
+	java.util.List<String> newSet = new ArrayList<String>();
 	newSet.add(demoNo);
 	ds.addDemographicSet(patientSet, newSet);
     }
@@ -22,6 +22,6 @@
     <body>
 
     Adding...
-    
+
     </body>
 </html>

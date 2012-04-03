@@ -11,9 +11,9 @@
  * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
- * 
+ *
  * Jason Gallagher
- * 
+ *
  * This software was written for the
  * Department of Family Medicine
  * McMaster University
@@ -28,14 +28,13 @@
 
 package oscar.oscarReport.data;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import org.apache.commons.lang.StringEscapeUtils;
-import org.oscarehr.util.MiscUtils;
-
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.common.dao.DemographicSetsDao;
+import org.oscarehr.util.SpringUtils;
 
 /**
  *
@@ -49,161 +48,118 @@ import oscar.oscarDB.DBHandler;
  */
 
 public class DemographicSets {
-   
-   
+
+	private DemographicSetsDao demographicSetsDao = SpringUtils.getBean(DemographicSetsDao.class);
+
+
    public DemographicSets() {
    }
-   
-   public void addDemographicSet(String setName, String demographic){      
-       ArrayList list = new ArrayList();
+
+   public void addDemographicSet(String setName, String demographic){
+       List<String> list = new ArrayList<String>();
        list.add(demographic);
        addDemographicSet(setName,list);
    }
-   
-   public void addDemographicSet(String setName, ArrayList demoList){      
-      try{
-         
-              
-         for (int i = 0; i < demoList.size(); i++){                            
-            String demographicNo = (String) demoList.get(i);
-            DBHandler.RunSQL("insert into demographicSets (set_name,demographic_no) values ('"+StringEscapeUtils.escapeSql(setName)+"','"+demographicNo+"')");
-         }
-      }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }            
+
+   public void addDemographicSet(String setName, List<String> demoList){
+
+	   for (int i = 0; i < demoList.size(); i++){
+		   String demographicNo = demoList.get(i);
+		   org.oscarehr.common.model.DemographicSets ds = new org.oscarehr.common.model.DemographicSets();
+		   ds.setName(setName);
+		   ds.setDemographicNo(Integer.parseInt(demographicNo));
+		   ds.setArchive("0");
+		   demographicSetsDao.persist(ds);
+	   }
+
    }
-   
-   
-   public ArrayList getDemographicSet(String setName){      
-      ArrayList retval = new ArrayList();
-      try{
-         
-         ResultSet rs = DBHandler.GetSQL("select * from demographicSets where archive != '1' and set_name = '"+StringEscapeUtils.escapeSql(setName)+"'");          
-         
-         while (rs.next()){
-            retval.add(oscar.Misc.getString(rs, "demographic_no"));            
-         }
-         rs.close();
-      }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }            
+
+
+   public List<String> getDemographicSet(String setName){
+      List<String> retval = new ArrayList<String>();
+      List<org.oscarehr.common.model.DemographicSets> dss = demographicSetsDao.findBySetName(setName);
+      for(org.oscarehr.common.model.DemographicSets ds:dss) {
+    	  retval.add(String.valueOf(ds.getDemographicNo()));
+      }
       return retval;
    }
-   
-   public ArrayList getDemographicSet(ArrayList setNames) {
-       ArrayList retval = new ArrayList();
-       StringBuilder strNames = new StringBuilder();
-       
-       for( int idx = 0; idx < setNames.size(); ++idx ) {
-           strNames.append("'" + StringEscapeUtils.escapeSql((String)setNames.get(idx)) + "'");
-           if( idx < (setNames.size()-1)) {
-               strNames.append(",");
-           }
+
+   public List<String> getDemographicSet(List<String> setNames) {
+       List<String> retval = new ArrayList<String>();
+
+       List<org.oscarehr.common.model.DemographicSets> dss = demographicSetsDao.findBySetNames(setNames);
+       for(org.oscarehr.common.model.DemographicSets ds:dss) {
+    	   retval.add(String.valueOf(ds.getDemographicNo()));
        }
-      try{
-         
-         ResultSet rs = DBHandler.GetSQL("select * from demographicSets where  archive != '1' and set_name in (" + strNames.toString() + ") group by demographic_no");          
-         
-         while (rs.next()){
-            retval.add(oscar.Misc.getString(rs, "demographic_no"));            
-         }
-         rs.close();
-      }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }            
+
       return retval;
    }
-   
-   public ArrayList getDemographicSetExt(String setName){      
-      ArrayList retval = new ArrayList();
-      try{
-         
-         ResultSet rs = DBHandler.GetSQL("select * from demographicSets  where archive != '1' and  set_name = '"+StringEscapeUtils.escapeSql(setName)+"'");          
-         
-         while (rs.next()){
-            Hashtable h = new Hashtable();
-            h.put("demographic_no",oscar.Misc.getString(rs, "demographic_no"));            
-            String el = oscar.Misc.getString(rs, "eligibility");
-            if (el == null || el.equalsIgnoreCase("null")){
-               el = "0";
-            }
-            h.put("eligibility",el);
-            retval.add(h);            
-         }
-         rs.close();
-      }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }            
+
+   public List<Map<String,String>> getDemographicSetExt(String setName){
+	   List<Map<String,String>> retval = new ArrayList<Map<String,String>>();
+
+      List<org.oscarehr.common.model.DemographicSets> dss = demographicSetsDao.findBySetName(setName);
+      for(org.oscarehr.common.model.DemographicSets ds:dss) {
+    	  Map<String,String> h = new HashMap<String,String>();
+          h.put("demographic_no",String.valueOf(ds.getDemographicNo()));
+          String el = ds.getEligibility();
+          if (el == null || el.equalsIgnoreCase("null")){
+             el = "0";
+          }
+          h.put("eligibility",el);
+          retval.add(h);
+      }
+
       return retval;
    }
-   
-   
-   public ArrayList getIneligibleDemographicSet(String setName){      
-      ArrayList retval = new ArrayList();
-      try{
-         
-         ResultSet rs = DBHandler.GetSQL("select * from demographicSets where set_name = '"+StringEscapeUtils.escapeSql(setName)+"' and eligibility = '1' ");          
-         
-         while (rs.next()){
-            retval.add(oscar.Misc.getString(rs, "demographic_no"));            
-         }
-         rs.close();
-      }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }            
+
+
+   public List<String> getIneligibleDemographicSet(String setName){
+      List<String> retval = new ArrayList<String>();
+      List<org.oscarehr.common.model.DemographicSets> dss = demographicSetsDao.findBySetNameAndEligibility(setName, "1");
+      for(org.oscarehr.common.model.DemographicSets ds:dss) {
+    	  retval.add(String.valueOf(ds.getDemographicNo()));
+      }
       return retval;
    }
-   
-   public ArrayList getEligibleDemographicSet(String setName){      
-      ArrayList retval = new ArrayList();
-      try{
-         
-         ResultSet rs = DBHandler.GetSQL("select * from demographicSets where set_name = '"+StringEscapeUtils.escapeSql(setName)+"' and eligibility = '0' ");          
-         
-         while (rs.next()){
-            retval.add(oscar.Misc.getString(rs, "demographic_no"));            
-         }
-         rs.close();
-      }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }            
+
+   public List<String> getEligibleDemographicSet(String setName){
+	      List<String> retval = new ArrayList<String>();
+	      List<org.oscarehr.common.model.DemographicSets> dss = demographicSetsDao.findBySetNameAndEligibility(setName, "0");
+	      for(org.oscarehr.common.model.DemographicSets ds:dss) {
+	    	  retval.add(String.valueOf(ds.getDemographicNo()));
+	      }
+	      return retval;
+   }
+
+
+   public List<String> setDemographicIneligible(String setName,String demoNo){
+      List<String> retval = new ArrayList<String>();
+      List<org.oscarehr.common.model.DemographicSets> dss = demographicSetsDao.findBySetNameAndDemographicNo(setName,Integer.parseInt(demoNo));
+      for(org.oscarehr.common.model.DemographicSets ds:dss) {
+    	  ds.setEligibility("1");
+    	  demographicSetsDao.merge(ds);
+      }
       return retval;
    }
-   
-   
-   public ArrayList setDemographicIneligible(String setName,String demoNo){      
-      ArrayList retval = new ArrayList();
-      try{
-         
-         DBHandler.RunSQL("update demographicSets set eligibility = '1' where set_name = '"+StringEscapeUtils.escapeSql(setName)+"' and demographic_no = '"+demoNo+"'");
-      }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }            
+
+   public List<String> setDemographicDelete(String setName,String demoNo){
+      List<String> retval = new ArrayList<String>();
+      List<org.oscarehr.common.model.DemographicSets> dss = demographicSetsDao.findBySetNameAndDemographicNo(setName,Integer.parseInt(demoNo));
+      for(org.oscarehr.common.model.DemographicSets ds:dss) {
+    	  ds.setArchive("1");
+    	  demographicSetsDao.merge(ds);
+      }
       return retval;
    }
-   
-   public ArrayList setDemographicDelete(String setName,String demoNo){      
-      ArrayList retval = new ArrayList();
-      try{
-         
-         DBHandler.RunSQL("update demographicSets set archive = '1' where set_name = '"+StringEscapeUtils.escapeSql(setName)+"' and demographic_no = '"+demoNo+"'");
-      }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }            
-      return retval;
+
+
+   public List<String> getDemographicSets(String demoNo) {
+	  return demographicSetsDao.findSetNamesByDemographicNo(Integer.parseInt(demoNo));
    }
-   
-   
-   public ArrayList getDemographicSets(String demoNo) {
-       ArrayList retval = new ArrayList();
-       try{
-         
-         ResultSet rs = DBHandler.GetSQL("select distinct set_name from demographicSets where archive = '1' and demographic_no = " + demoNo);
-         
-         while (rs.next()){
-            retval.add(oscar.Misc.getString(rs, "set_name"));            
-         }
-         rs.close();
-      }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }            
-      return retval;
-   }
-   
-   
-   public ArrayList getDemographicSets(){
-      ArrayList retval = new ArrayList();
-      try{
-         
-         ResultSet rs = DBHandler.GetSQL("select distinct set_name from demographicSets ");
-         
-         while (rs.next()){
-            retval.add(oscar.Misc.getString(rs, "set_name"));            
-         }
-         rs.close();
-      }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }            
-      return retval;
+
+
+   public List<String> getDemographicSets(){
+	   return demographicSetsDao.findSetNames();
    }
 }
