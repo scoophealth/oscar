@@ -141,7 +141,7 @@ public class ScheduleManager {
 	}
 
 	public void addAppointment(Appointment appointment) {
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+	    LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		Security security=loggedInInfo.loggedInSecurity;
 	    appointment.setCreatorSecurityId(security.getSecurityNo());
 	    appointment.setCreator(security.getUserName());
@@ -149,7 +149,7 @@ public class ScheduleManager {
 	    oscarAppointmentDao.persist(appointment);
 	    	    
 		//--- log action ---
-		LogAction.addLogSynchronous("AppointmentManager.addAppointment", appointment.toString());
+    	LogAction.addLogSynchronous("AppointmentManager.addAppointment", appointment.toString());
     }
 
 	public List<Appointment> getAppointmentsForPatient(Integer demographicId, int startIndex, int itemsToReturn) {
@@ -165,7 +165,10 @@ public class ScheduleManager {
 		Appointment result=oscarAppointmentDao.find(appointmentId);
 		
 		//--- log action ---
-		LogAction.addLogSynchronous("AppointmentManager.getAppointment", "appointmentId=" + appointmentId);
+		if (result!=null)
+		{
+			LogAction.addLogSynchronous("AppointmentManager.getAppointment", "appointmentId=" + appointmentId);
+		}
 		
 		return(result);
     }
