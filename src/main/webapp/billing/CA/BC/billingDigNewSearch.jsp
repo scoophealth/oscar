@@ -27,6 +27,12 @@
 
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" /><%@include file="dbBilling.jspf"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.DiagnosticCode" %>
+<%@ page import="org.oscarehr.common.dao.DiagnosticCodeDao" %>
+<%
+	DiagnosticCodeDao diagnosticCodeDao = SpringUtils.getBean(DiagnosticCodeDao.class);
+%>
 <%
 
   String search = "", search2 = "";
@@ -131,20 +137,21 @@ function CodeAttach(File0) {
   String searchType = "";
   // Retrieving Provider
   String Dcode = "", DcodeDesc = "";
-  rslocal = null;
-  rslocal = apptMainBean.queryResults(param, search);
-  while (rslocal.next()) {
-    intCount = intCount + 1;
-    Dcode = rslocal.getString("diagnostic_code");
-    DcodeDesc = rslocal.getString("description");
-    if (Count == 0) {
-      Count = 1;
-      color = "#FFFFFF";
-    }
-    else {
-      Count = 0;
-      color = "#EEEEFF";
-    }
+
+  List<DiagnosticCode> results = diagnosticCodeDao.newSearch(param[0],param[1],param[2],param[3],param[4],param[5]);
+  for(DiagnosticCode result:results) {
+	  intCount++;
+	  Dcode = result.getDiagnosticCode();
+	  DcodeDesc = result.getDescription();
+	   if (Count == 0) {
+		      Count = 1;
+		      color = "#FFFFFF";
+		    }
+		    else {
+		      Count = 0;
+		      color = "#EEEEFF";
+		    }
+
 %>
 	<tr bgcolor="<%=color%>">
 		<td><font face="Arial, Helvetica, sans-serif" size="2"> <%if (Dcode.compareTo(xcodeName) == 0 || Dcode.compareTo(xcodeName1) == 0 || Dcode.compareTo(xcodeName2) == 0) {      %>

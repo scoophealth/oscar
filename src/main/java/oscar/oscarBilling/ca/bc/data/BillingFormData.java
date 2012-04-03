@@ -32,7 +32,10 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.DiagnosticCodeDao;
+import org.oscarehr.common.model.DiagnosticCode;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.entities.BillingStatusType;
 import oscar.entities.PaymentType;
@@ -43,14 +46,16 @@ import oscar.util.UtilDateUtilities;
 
 public class BillingFormData {
   private static Logger _log = MiscUtils.getLogger();
+  private DiagnosticCodeDao diagnosticCodeDao = SpringUtils.getBean(DiagnosticCode.class);
+
 
   public ArrayList getPaymentTypes() {
     ArrayList types = new ArrayList();
     String sql = "select * from billing_payment_type";
-    
+
     ResultSet rs = null;
     try {
-      
+
       rs = DBHandler.GetSQL(sql);
 
       while (rs.next()) {
@@ -73,14 +78,14 @@ public class BillingFormData {
     return types;
   }
 
-  
+
   public String getProviderNo(String billno) {
     String providerNo = null;
     String sql = "select provider_no from billing where billing_no = "+billno;
-    
+
     ResultSet rs = null;
     try {
-      
+
       rs = DBHandler.GetSQL(sql);
 
       if (rs.next()) {
@@ -99,9 +104,9 @@ public class BillingFormData {
 
     return providerNo;
   }
-  
-  
-  
+
+
+
   /**
    * Returns a list of status type instances according to the supplied String array of allowable status codes
    * If the supplied array is null or empty, a full list is returned
@@ -142,7 +147,7 @@ public class BillingFormData {
       ArrayList lst = new ArrayList();
       BillingService billingservice;
 
-      
+
       ResultSet rs;
       String sql;
 
@@ -190,7 +195,7 @@ public class BillingFormData {
       ArrayList lst = new ArrayList();
       BillingService billingservice;
 
-      
+
       ResultSet rs;
       String sql;
 
@@ -231,7 +236,7 @@ public class BillingFormData {
       ArrayList lst = new ArrayList();
       Diagnostic diagnostic;
 
-      
+
       ResultSet rs;
       String sql;
 
@@ -270,7 +275,7 @@ public class BillingFormData {
       ArrayList lst = new ArrayList();
       Location location;
 
-      
+
       ResultSet rs;
       String sql;
 
@@ -307,7 +312,7 @@ public class BillingFormData {
       ArrayList lst = new ArrayList();
       BillingVisit billingvisit;
 
-      
+
       ResultSet rs;
       String sql;
 
@@ -344,7 +349,7 @@ public class BillingFormData {
       ArrayList lst = new ArrayList();
       BillingPhysician billingphysician;
 
-      
+
       ResultSet rs;
       String sql;
 
@@ -383,7 +388,7 @@ public class BillingFormData {
       ArrayList lst = new ArrayList();
       BillingForm billingForm;
 
-      
+
       ResultSet rs;
       String sql;
 
@@ -551,12 +556,12 @@ public class BillingFormData {
     }
 
   }
-  
-  
+
+
   public String getBillingType(String billNo) {
     String billType = null;
     try {
-      
+
       ResultSet rs;
       String sql;
 
@@ -579,7 +584,7 @@ public class BillingFormData {
     String provider_n = "";
     try {
 
-      
+
       ResultSet rs;
       String sql;
 
@@ -610,7 +615,7 @@ public class BillingFormData {
     String prac_no = "";
     try {
 
-      
+
       ResultSet rs;
       String sql;
 
@@ -641,7 +646,7 @@ public class BillingFormData {
     String prac_no = "";
     try {
 
-      
+
       ResultSet rs;
       String sql;
 
@@ -669,23 +674,8 @@ public class BillingFormData {
 
   public String getDiagDesc(String dx, String reg) {
     String dxdesc = "";
-    try {
-      
-      ResultSet rs;
-      String sql;
-      // SELECT b.service_code, b.description , b.value, b.percentage FROM BillingForm b, ctl_BillingForm c WHERE b.service_code=c.service_code and b.region='BC' and c.service_group='Group1';
-      sql = "SELECT description from diagnosticcode where diagnostic_code='" +
-          dx + "' and region='" + reg + "'";
-
-      rs = DBHandler.GetSQL(sql);
-      _log.debug("getDiagDesc " + sql);
-      while (rs.next()) {
-        dxdesc = rs.getString("description");
-      }
-      rs.close();
-    }
-    catch (SQLException e) {
-      _log.warn(e.getMessage());
+    for(DiagnosticCode dcode:diagnosticCodeDao.findByDiagnosticCodeAndRegion(dx, reg)) {
+    	dxdesc = dcode.getDescription();
     }
     return dxdesc;
   }
@@ -693,7 +683,7 @@ public class BillingFormData {
   public String getServiceDesc(String code, String reg) {
     String codeDesc = "";
     try {
-      
+
       ResultSet rs;
       String sql;
       sql = "select description from billingservice where service_code = '" +
@@ -714,7 +704,7 @@ public class BillingFormData {
     String ret = "";
 
     try {
-      
+
       ResultSet rs;
       String sql =
           "SELECT service_group_name FROM ctl_billingservice WHERE service_group='"
@@ -739,7 +729,7 @@ public class BillingFormData {
     String ret = "";
 
     try {
-      
+
       ResultSet rs;
       String sql =
           "SELECT service_group_name FROM ctl_billingservice WHERE service_group='" +
@@ -762,7 +752,7 @@ public class BillingFormData {
 
   public void setPrivateFees(BillingFormData.BillingService[] svc) {
     try {
-      
+
       ResultSet rs;
       for (int i = 0; i < svc.length; i++) {
         String sql = "SELECT value FROM billingservice WHERE service_code='A" +
@@ -795,9 +785,9 @@ public class BillingFormData {
         "w.billing_no = bm.billing_no left join demographic d " +
         "on w.demographic_no=d.demographic_no WHERE w.ID=" + formId;
     ResultSet rs = null;
-    
+
     try {
-      
+
       rs = DBHandler.GetSQL(qry);
     }
     catch (SQLException e) {

@@ -1,34 +1,34 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
 <%
-  if(session.getValue("user") == null) 
+  if(session.getValue("user") == null)
     response.sendRedirect("../../../logout.htm");
   String curUser_no,userfirstname,userlastname;
-  curUser_no = (String) session.getAttribute("user");      
+  curUser_no = (String) session.getAttribute("user");
   userfirstname = (String) session.getAttribute("userfirstname");
   userlastname = (String) session.getAttribute("userlastname");
 
@@ -37,7 +37,12 @@
 	import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
-
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.DiagnosticCode" %>
+<%@ page import="org.oscarehr.common.dao.DiagnosticCodeDao" %>
+<%
+	DiagnosticCodeDao diagnosticCodeDao = SpringUtils.getBean(DiagnosticCodeDao.class);
+%>
 <%@page import="org.oscarehr.util.MiscUtils"%><html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -50,17 +55,17 @@
       String formElement = request.getParameter("formElement");
       if ( formName != null && !formName.equals("") && formElement != null && !formElement.equals("") ){
          multipage = true;
-      }    
+      }
 
       if (multipage){%>
 function CodeAttach(File0, File1, File2) {
-     
+
       self.close();
       self.opener.document.<%=formName%>.<%=formElement%>.value = File0;
 }
       <%}else{%>
 function CodeAttach(File0, File1, File2) {
-      
+
       self.close();
       self.opener.document.BillingCreateBillingForm.xml_diagnostic_detail1.value = File0;
       self.opener.document.BillingCreateBillingForm.xml_diagnostic_detail2.value = File1;
@@ -74,33 +79,33 @@ function CodeAttach(File0, File1, File2) {
 <body>
 <%
  if (request.getParameter("update").equals("Confirm")) {
- 
- 
+
+
         String temp="";
         String[] param =new String[10];
         param[0] = "";
         param[1] = "";
         param[2] = "";
-	
+
 	int Count = 0;
-	
+
 	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 		temp=e.nextElement().toString();
-		if( temp.indexOf("code_")==-1 ) continue; 
+		if( temp.indexOf("code_")==-1 ) continue;
                  param[Count] = temp.substring(5).toUpperCase(); // + " |" + request.getParameter("codedesc_" + temp.substring(5));
                  Count = Count + 1;
-                   
+
       }
-    
+
     if (Count == 1) {
     param[1] = "";
     param[2] = "";
     }
         if (Count == 2) {
         param[2] = "";
-       
+
     }
-    
+
     if (Count ==0) {
     %>
 <p>No input selected</p>
@@ -111,9 +116,9 @@ function CodeAttach(File0, File1, File2) {
     %>
 <script LANGUAGE="JavaScript">
     <!--
-     CodeAttach('<%=param[0]%>','<%=param[1]%>', '<%=param[2]%>' ); 
+     CodeAttach('<%=param[0]%>','<%=param[1]%>', '<%=param[2]%>' );
     -->
-    
+
 </script>
 <%
 }
@@ -124,19 +129,17 @@ function CodeAttach(File0, File1, File2) {
   String code = request.getParameter("update");
   code = code.substring(6).trim();
 
-  
+
 
  int rowsAffected=0;
-    
-    String[] param1 =new String[2];
-	  param1[0]= request.getParameter(code);
-	  param1[1]=code;
-          try{
-  	 rowsAffected = apptMainBean.queryExecuteUpdate(param1,"updatedigcode");
-         }catch(Exception e){
-        	 MiscUtils.getLogger().error("Error", e);
-         }
- 
+
+
+          List<DiagnosticCode> results = diagnosticCodeDao.findByDiagnosticCode(code);
+          for(DiagnosticCode result:results) {
+        	  result.setDescription(request.getParameter(code));
+        	  diagnosticCodeDao.merge(result);
+          }
+
 
 %>
 <p>
