@@ -38,10 +38,6 @@ public class RxCodesData {
 	private CtlFrequencyDao ctlFrequencyDao = (CtlFrequencyDao)SpringUtils.getBean("ctlFrequencyDao");
 	private CtlSpecialInstructionsDao ctlSpecialInstructionsDao = (CtlSpecialInstructionsDao)SpringUtils.getBean("ctlSpecialInstructionsDao");
 
-    public Disease getDisease(String ICD9) {
-        return new Disease(ICD9);
-    }
-
     public FrequencyCode[] getFrequencyCodes() {
         FrequencyCode[] arr = {};
         ArrayList<FrequencyCode> lst = new ArrayList<FrequencyCode>();
@@ -67,18 +63,6 @@ public class RxCodesData {
         return arr;
     }
 
-    public class Disease {
-        String ICD9;
-        String diseaseName;
-
-        public Disease(String ICD9) {
-            this.ICD9 = ICD9;
-        }
-
-        public String getICD9() {
-            return this.ICD9;
-        }
-    }
 
         public class FrequencyCode {
             int freqId;

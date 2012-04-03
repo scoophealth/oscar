@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -40,7 +39,9 @@ import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicAllergy;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.common.dao.AllergyDao;
+import org.oscarehr.common.dao.DiseasesDao;
 import org.oscarehr.common.dao.PartialDateDao;
+import org.oscarehr.common.model.Diseases;
 import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -54,7 +55,7 @@ public class RxPatientData {
 	//private static final PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
 
 	private RxPatientData() {
-		// prevent instantitation
+		// prevent instantiation
 	}
 
 	/* Patient Search */
@@ -330,38 +331,20 @@ public class RxPatientData {
 			return(setAllergyArchive(allergyId, "0"));
 		}
 
-		public Disease[] getDiseases() {
-			Disease[] arr = {};
-			LinkedList lst = new LinkedList();
-			try {
-
-				ResultSet rs;
-				Disease d;
-				rs = DBHandler.GetSQL("SELECT * FROM diseases WHERE demographic_no = '" + getDemographicNo() + "'");
-				while (rs.next()) {
-					d = new Disease(rs.getInt("diseaseid"), oscar.Misc.getString(rs, "ICD9_E"), rs.getDate("entry_date"));
-					lst.add(d);
-				}
-				rs.close();
-				arr = (Disease[]) lst.toArray(arr);
-			} catch (SQLException e) {
-				MiscUtils.getLogger().error("Error", e);
-			}
-			return arr;
+		public Diseases[] getDiseases() {
+			DiseasesDao diseasesDao = SpringUtils.getBean(DiseasesDao.class);
+			List<Diseases> diseases = diseasesDao.findByDemographicNo(getDemographicNo());
+			return diseases.toArray(new Diseases[diseases.size()]);
 		}
 
-		public Disease addDisease(String ICD9, java.util.Date entryDate) throws SQLException {
-			Disease disease = new Disease(0, ICD9, entryDate);
-			disease.Save();
+		public Diseases addDisease(String ICD9, java.util.Date entryDate)  {
+			DiseasesDao diseasesDao = SpringUtils.getBean(DiseasesDao.class);
+			Diseases disease = new Diseases();
+			disease.setDemographicNo(getDemographicNo());
+			disease.setIcd9Entry(ICD9);
+			disease.setEntryDate(entryDate);
+			diseasesDao.persist(disease);
 			return disease;
-		}
-
-		// TODO should not delete
-		public boolean deleteDisease(int diseaseId) throws SQLException {
-
-			String sql = "DELETE FROM diseases WHERE diseaseid = " + diseaseId;
-			boolean b = DBHandler.RunSQL(sql);
-			return b;
 		}
 
 		public RxPrescriptionData.Prescription[] getPrescribedDrugsUnique() {
@@ -376,73 +359,6 @@ public class RxPatientData {
 			return new RxPrescriptionData().getPrescriptionScriptsByPatient(this.getDemographicNo());
 		}
 
-
-		public class Disease {
-			int diseaseId;
-			String ICD9;
-			java.util.Date entryDate;
-
-			public Disease(int diseaseId, String ICD9, java.util.Date entryDate) {
-				this.diseaseId = diseaseId;
-				this.ICD9 = ICD9;
-				this.entryDate = entryDate;
-			}
-
-			public int getDiseaseId() {
-				return this.diseaseId;
-			}
-
-			public String getICD9() {
-				return this.ICD9;
-			}
-
-			public void setICD9(String RHS) {
-				this.ICD9 = RHS;
-			}
-
-			public RxCodesData.Disease getDisease() {
-				return new RxCodesData().getDisease(this.getICD9());
-			}
-
-			public java.util.Date getEntryDate() {
-				return this.entryDate;
-			}
-
-			public void setEntryDate(java.util.Date RHS) {
-				this.entryDate = RHS;
-			}
-
-			public boolean Save() throws SQLException {
-				boolean b = false;
-
-				b = this.Save();
-				return b;
-			}
-
-			public boolean Save(DBHandler db) throws SQLException {
-				boolean b;
-				String sql;
-				if (this.getDiseaseId() == 0) {
-					sql = "INSERT INTO diseases (demographic_no, ICD9, entry_date) " + "VALUES (" + Patient.this.getDemographicNo() + ", '" + this.getICD9() + "', '" + this.getEntryDate() + "')";
-					b = DBHandler.RunSQL(sql);
-
-					sql = "SELECT Max(diseaseid) FROM diseases";
-					ResultSet rs = DBHandler.GetSQL(sql);
-
-					if (rs.next()) {
-						this.diseaseId = rs.getInt(1);
-					}
-
-					rs.close();
-				} else {
-					sql = "UPDATE diseases SET ICD9 = '" + this.getICD9() + "', " + "entry_date = '" + this.getEntryDate().toString() + "' " + "WHERE diseaseid = " + this.getDiseaseId();
-					b = DBHandler.RunSQL(sql);
-				}
-
-				return b;
-			}
-
-		}
 
 	}
 
