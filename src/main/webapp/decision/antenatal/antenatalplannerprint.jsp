@@ -1,32 +1,32 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
 
 <%
-  
+
   String demographic_no = request.getParameter("demographic_no")!=null?request.getParameter("demographic_no"):("null") ;
   String form_no = request.getParameter("formId")!=null?request.getParameter("formId"):("0") ;
   String curUser_no = (String) session.getAttribute("user");
@@ -42,11 +42,15 @@
 <jsp:useBean id="checklist"
 	class="oscar.decision.DesAntenatalPlannerChecklist_99_12" scope="page" />
 <%@ include file="../../admin/dbconnection.jsp"%>
-<% 
-String [][] dbQueries=new String[][] { 
-{"search_formarrisk", "select * from formAR where ID = ?" }, 
-{"search_desaprisk", "select * from desaprisk where form_no <= ? and demographic_no = ? order by form_no desc, desaprisk_date desc, desaprisk_time desc limit 1 " }, 
-//{"save_desaprisk", "insert into desaprisk (desaprisk_date,desaprisk_time,provider_no,risk_content,checklist_content,demographic_no,form_no) values (?,?,?,?,?,?,? ) " }, 
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.Desaprisk" %>
+<%@page import="org.oscarehr.common.dao.DesapriskDao" %>
+<%
+	DesapriskDao desapriskDao = SpringUtils.getBean(DesapriskDao.class);
+%>
+<%
+String [][] dbQueries=new String[][] {
+{"search_formarrisk", "select * from formAR where ID = ?" },
 };
 plannerBean.doConfigure(dbQueries);
 %>
@@ -66,12 +70,12 @@ plannerBean.doConfigure(dbQueries);
   //get the risk data from formAR1
   String finalEDB = null, wt=null, ht=null;
   String patientName = null;
-  
+
   ResultSet rsdemo = null ;
   if(!form_no.equals("0")) {
 	  rsdemo = plannerBean.queryResults(form_no, "search_formarrisk");
       ResultSetMetaData resultsetmetadata = rsdemo.getMetaData();
-      while (rsdemo.next()) { 
+      while (rsdemo.next()) {
           finalEDB = rsdemo.getString("c_finalEDB");
           patientName = rsdemo.getString("c_pName");
 	      wt = rsdemo.getString("pg1_wt");
@@ -87,11 +91,11 @@ plannerBean.doConfigure(dbQueries);
   }
 
   //get the risk data from table desaprisk for other risk factors
-  String[] param2 = {form_no, demographic_no};
-  rsdemo = plannerBean.queryResults(param2, "search_desaprisk");
-  while (rsdemo.next()) { 
-    String risk_content = rsdemo.getString("risk_content");
-    String checklist_content = rsdemo.getString("checklist_content");
+  Desaprisk darp = desapriskDao.search(Integer.parseInt(form_no),Integer.parseInt(demographic_no));
+
+  if (darp != null) {
+    String risk_content = darp.getRiskContent();
+    String checklist_content = darp.getChecklistContent();
 %>
 <xml id="xml_list">
 <planner>
@@ -103,7 +107,7 @@ plannerBean.doConfigure(dbQueries);
 
 
     String riskFilePath = "../webapps/"+oscarVariables.getProperty("project_home")+"/decision/antenatal/desantenatalplannerrisks_99_12.xml";
-    
+
     File file = new File(OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"desantenatalplannerrisks_99_12.xml");
     if(file.isFile() || file.canRead()) {
         riskFilePath = OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"desantenatalplannerrisks_99_12.xml";
@@ -111,8 +115,8 @@ plannerBean.doConfigure(dbQueries);
 
 
     //set the riskdata bean from xml file
-    Properties savedar1risk1 = risks.getRiskName(riskFilePath); //risk_55    
-  	StringBuffer tt; 
+    Properties savedar1risk1 = risks.getRiskName(riskFilePath); //risk_55
+  	StringBuffer tt;
 
     for (Enumeration e = savedar1risk1.propertyNames() ; e.hasMoreElements() ;) {
       tt = new StringBuffer().append(e.nextElement());
@@ -160,7 +164,7 @@ else {
 		    }
 		  }
     }
-  
+
     String checkListFilePath = "../webapps/"+oscarVariables.getProperty("project_home")+"/decision/antenatal/desantenatalplannerchecklist_99_12.xml";
 
     File file = new File(OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"desantenatalplannerchecklist_99_12.xml");
