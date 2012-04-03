@@ -75,7 +75,7 @@ public class RoomDAO extends HibernateDaoSupport {
 	 * @return room
 	 */
     public Room getRoom(Integer roomId) {
-		Room room = (Room) getHibernateTemplate().get(Room.class, roomId);
+		Room room = getHibernateTemplate().get(Room.class, roomId);
 		log.debug("getRoom: id: " + roomId);
 
 		return room;
@@ -90,7 +90,7 @@ public class RoomDAO extends HibernateDaoSupport {
 	 * @return room type
 	 */
     public RoomType getRoomType(Integer roomTypeId) {
-		RoomType roomType = (RoomType) getHibernateTemplate().get(RoomType.class, roomTypeId);
+		RoomType roomType = getHibernateTemplate().get(RoomType.class, roomTypeId);
 		log.debug("getRoom: id: " + roomTypeId);
 
 		return roomType;

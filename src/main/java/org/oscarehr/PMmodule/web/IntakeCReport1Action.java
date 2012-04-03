@@ -1,23 +1,23 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for 
- * Centre for Research on Inner City Health, St. Michael's Hospital, 
- * Toronto, Ontario, Canada 
+ *
+ * This software was written for
+ * Centre for Research on Inner City Health, St. Michael's Hospital,
+ * Toronto, Ontario, Canada
  */
 
 package org.oscarehr.PMmodule.web;
@@ -53,7 +53,7 @@ import org.oscarehr.util.MiscUtils;
 
 /**
  * create IntakeCReport1 Action
- * 
+ *
  * @author zhouke
  */
 public class IntakeCReport1Action extends BaseAction {
@@ -79,7 +79,7 @@ public class IntakeCReport1Action extends BaseAction {
 
     /**
      * excute
-     * 
+     *
      * @param mapping
      *            ActionMapping
      * @param form
@@ -164,7 +164,7 @@ public class IntakeCReport1Action extends BaseAction {
 
     /**
      * get data of dateList
-     * 
+     *
      * @param startDate
      *            Date
      * @param dateList
@@ -191,7 +191,7 @@ public class IntakeCReport1Action extends BaseAction {
 
     /**
      * initialize data of dataList
-     * 
+     *
      * @param dataList
      *            String[][]
      * @return String[][]
@@ -212,7 +212,7 @@ public class IntakeCReport1Action extends BaseAction {
 
     /**
      * initialize html data of dataList
-     * 
+     *
      * @param dataList
      *            String[][]
      * @return String[][]
@@ -230,7 +230,7 @@ public class IntakeCReport1Action extends BaseAction {
 
     /**
      * get data of dataList
-     * 
+     *
      * @param dateList
      *            Date[]
      * @param dataList
@@ -238,7 +238,7 @@ public class IntakeCReport1Action extends BaseAction {
      * @return String[][]
      * @throws ParseException
      */
-    private String[][] getDataList(Date[] dateList, String[][] dataList) throws ParseException {
+    private String[][] getDataList(Date[] dateList, String[][] dataList)  {
 
         int row = 0;
 
@@ -279,7 +279,7 @@ public class IntakeCReport1Action extends BaseAction {
         // // Waiting List Information Days Waited for Initial Assessment
         // dataList[row][2] = "Days Waited for Initial Assessment";
         // row++;
-        //       
+        //
         // // Waiting List Information Individuals Waiting for Service Initiation
         // dataList[row][2] = "Individuals Waiting for Service Initiation";
         // row++;
@@ -1836,7 +1836,7 @@ public class IntakeCReport1Action extends BaseAction {
 
     /**
      * get cohort count
-     * 
+     *
      * @param col
      *            int
      * @param rsList
@@ -1858,7 +1858,7 @@ public class IntakeCReport1Action extends BaseAction {
             Demographic demographic = new Demographic();
             Object[] cohort = (Object[]) rsList.get(idx);
             int row = 0;
-            
+
 
             // formintakec = (Formintakec) cohort[0];
             demographic = (Demographic) cohort[1];
@@ -1879,7 +1879,7 @@ public class IntakeCReport1Action extends BaseAction {
             if (CHECKBOX_ON.equals(formintakec.getCboxPreAdmission())) {
                 row++;
                 dataList[row][col] = Integer.toString(Integer.parseInt(dataList[row][col]) + 1);
-                
+
             }
             else {
                 dataList[row][col] = Integer.toString(Integer.parseInt(dataList[row][col]) + 1);
@@ -3676,7 +3676,7 @@ public class IntakeCReport1Action extends BaseAction {
 
     /**
      * write file
-     * 
+     *
      * @param request
      *            HttpServletRequest
      * @param dataList
@@ -3715,7 +3715,7 @@ public class IntakeCReport1Action extends BaseAction {
 
     /**
      * string change to date
-     * 
+     *
      * @param date
      *            String
      * @param pattern
@@ -3729,7 +3729,7 @@ public class IntakeCReport1Action extends BaseAction {
 
     /**
      * date change to string
-     * 
+     *
      * @param date
      *            Date
      * @param pattern
@@ -3742,7 +3742,7 @@ public class IntakeCReport1Action extends BaseAction {
 
     /**
      * add years
-     * 
+     *
      * @param date
      *            Date
      * @param years

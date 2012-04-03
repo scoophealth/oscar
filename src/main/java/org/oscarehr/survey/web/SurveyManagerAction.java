@@ -54,6 +54,7 @@ import org.oscarehr.survey.service.SurveyTestManager;
 import org.oscarehr.survey.web.formbean.PageNavEntry;
 import org.oscarehr.survey.web.formbean.SurveyManagerFormBean;
 import org.oscarehr.surveymodel.DateDocument;
+import org.oscarehr.surveymodel.DateDocument.Date.Enum;
 import org.oscarehr.surveymodel.Page;
 import org.oscarehr.surveymodel.Question;
 import org.oscarehr.surveymodel.Section;
@@ -579,10 +580,10 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 		if(question != null && question.getType().isSetDate()) {
 			DateDocument.Date.Enum enum1 = question.getType().getDate();
 			List dateFormats = new ArrayList();
-			for(int x=1;x<=enum1.table.lastInt();x++) {
+			for(int x=1;x<=Enum.table.lastInt();x++) {
 				LabelValueBean bean = new LabelValueBean();
-				bean.setValue(String.valueOf(enum1.table.forInt(x).intValue()));
-				bean.setLabel(enum1.table.forInt(x).toString());
+				bean.setValue(String.valueOf(Enum.table.forInt(x).intValue()));
+				bean.setLabel(Enum.table.forInt(x).toString());
 				dateFormats.add(bean);
 			}
 			formBean.setDateFormat(String.valueOf(enum1.intValue()));

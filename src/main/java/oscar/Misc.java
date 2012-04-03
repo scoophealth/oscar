@@ -544,7 +544,7 @@ public final class Misc {
 	public static String getStringJs(Object s) {
 		if (s == null) return "";
 		String s1 = replace((String) s, "'", "\\'");
-		return replace((String) s1, "\"", "&#34;");
+		return replace(s1, "\"", "&#34;");
 		// return ((String) s).replace("'", "\\'");
 	}
 
@@ -556,7 +556,7 @@ public final class Misc {
 		j = 0;
 		for (i = 0; i < sPin.length(); i++) {
 			char c = sPin.charAt(i);
-			j = j + (int) c;
+			j = j + c;
 			if (j > 127) j = j - 127;
 			sb.append((char) j);
 		}

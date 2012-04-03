@@ -121,7 +121,7 @@ public class RxCloneFavoritesDAOHibernate extends HibernateDaoSupport
     }
 
     public String getProviderName(String providerNo) {
-        return ((Provider) getHibernateTemplate().get(Provider.class, providerNo)).getFormattedName();
+        return getHibernateTemplate().get(Provider.class, providerNo).getFormattedName();
     }
 
 }

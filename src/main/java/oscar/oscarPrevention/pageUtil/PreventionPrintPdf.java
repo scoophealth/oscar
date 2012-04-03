@@ -120,7 +120,7 @@ public class PreventionPrintPdf {
         upperYcoord = document.top() - (font.getCalculatedLeading(LINESPACING)*2f);
         cb.beginText();
         for( int idx = 0; idx < clinic.length; ++idx ) {
-            cb.showTextAligned(cb.ALIGN_CENTER, clinic[idx], document.right()/2f, upperYcoord,0f);
+            cb.showTextAligned(PdfContentByte.ALIGN_CENTER, clinic[idx], document.right()/2f, upperYcoord,0f);
             upperYcoord -= font.getCalculatedLeading(LINESPACING);
         }
         
@@ -149,8 +149,8 @@ public class PreventionPrintPdf {
         
         //2 - calculate max num of lines a page can hold and number of pages of data we have
         pageHeight = upperYcoord - document.bottom();
-        maxLines = (int)Math.floor((double)pageHeight/((double)font.getCalculatedLeading(LINESPACING)+4d));
-        numPages = (int)Math.ceil((double)numLines/((double)maxLines*NUMCOLS));
+        maxLines = (int)Math.floor(pageHeight/(font.getCalculatedLeading(LINESPACING)+4d));
+        numPages = (int)Math.ceil(numLines/((double)maxLines*NUMCOLS));
         
         //3 - Start the column
         ct = new ColumnText(cb);
@@ -168,7 +168,7 @@ public class PreventionPrintPdf {
         //if we have > 1 element but less than a page of data, shrink maxLines so we can try to balance text in columns
         if( headerIds.length > 1 ) {
             if( curPage == numPages ) {
-                maxLines = (int)numLines / NUMCOLS;
+                maxLines = numLines / NUMCOLS;
             }
         }
         
@@ -200,7 +200,7 @@ public class PreventionPrintPdf {
             
         }
         
-        ct.showTextAligned(cb, Phrase.ALIGN_CENTER, new Phrase("-" + curPage + "-"), document.right()/2f, document.bottom()-(document.bottomMargin()/2f), 0f);
+        ColumnText.showTextAligned(cb, Phrase.ALIGN_CENTER, new Phrase("-" + curPage + "-"), document.right()/2f, document.bottom()-(document.bottomMargin()/2f), 0f);
         
         document.close();
     }
@@ -208,7 +208,7 @@ public class PreventionPrintPdf {
     private boolean breakPage(boolean pageBreak, float upperYcoord) {
         
         if( pageBreak ) {
-            ct.showTextAligned(cb, Phrase.ALIGN_CENTER, new Phrase("-" + curPage + "-"), document.right()/2f, document.bottom()-(document.bottomMargin()/2f), 0f);
+            ColumnText.showTextAligned(cb, Phrase.ALIGN_CENTER, new Phrase("-" + curPage + "-"), document.right()/2f, document.bottom()-(document.bottomMargin()/2f), 0f);
             ++curPage;
             try{
                 document.newPage();
@@ -238,7 +238,7 @@ public class PreventionPrintPdf {
             if( curPage == 1 && pageBreak) {
                 upperYcoord = document.top() - font.getCalculatedLeading(LINESPACING);
                 pageHeight = upperYcoord - document.bottom();
-                maxLines = (int)Math.floor((double)pageHeight/((double)font.getCalculatedLeading(LINESPACING)+4d));
+                maxLines = (int)Math.floor(pageHeight/(font.getCalculatedLeading(LINESPACING)+4d));
                 numPages = (int)Math.ceil(((double)numLines-totalLinesWritten)/((double)maxLines*NUMCOLS)) + 1;
             }
             pageBreak = breakPage(pageBreak, upperYcoord);

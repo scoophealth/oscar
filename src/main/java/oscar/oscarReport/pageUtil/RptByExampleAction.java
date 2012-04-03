@@ -90,7 +90,7 @@ public class RptByExampleAction extends Action {
                 //query = exampleData.replaceSQLString (";","",query);
                 //query = exampleData.replaceSQLString("\"", "\'", query);            
 
-                query = strEscUtils.escapeSql(query);
+                query = StringEscapeUtils.escapeSql(query);
                 
                 String sql = "INSERT INTO reportByExamples(providerNo, query, date) VALUES('" + providerNo + "','" + query + "', NOW())";
                 DBHandler.RunSQL(sql);

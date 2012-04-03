@@ -221,8 +221,8 @@ public class PFHTHandler implements MessageHandler {
 	            
 	            Terser t = new Terser(msg);
 	            Segment obxSeg = ((obrSegMap.get(obrSegKeySet.get(i))).get(j));
-	            String ident = getString(t.get(obxSeg, 3, 0, 1, 1 ));
-	            String subIdent = t.get(obxSeg, 3, 0, 1, 2);
+	            String ident = getString(Terser.get(obxSeg, 3, 0, 1, 1 ));
+	            String subIdent = Terser.get(obxSeg, 3, 0, 1, 2);
 	            
 	            if (subIdent != null)
 	                ident = ident+"&"+subIdent;
@@ -271,7 +271,7 @@ public class PFHTHandler implements MessageHandler {
 	        try{
 	            
 	            Terser terser = new Terser(msg);
-	            result = getString(terser.get(((OBX) ((ArrayList) obrSegMap.get(obrSegKeySet.get(i))).get(j)),5,0,1,1));
+	            result = getString(Terser.get(((OBX) ((ArrayList) obrSegMap.get(obrSegKeySet.get(i))).get(j)),5,0,1,1));
 	            
 	            // format the result
 	            if (result.endsWith("."))
@@ -295,7 +295,7 @@ public class PFHTHandler implements MessageHandler {
 	            // which will usually contain the units as well
 	            
 	            if (getOBXUnits(i, j).equals(""))
-	                ret = getString(terser.get(obxSeg,7,0,2,1));
+	                ret = getString(Terser.get(obxSeg,7,0,2,1));
 	            
 	            // may have to fall back to original reference range if the second
 	            // component is empty
@@ -335,7 +335,7 @@ public class PFHTHandler implements MessageHandler {
 	            // range for the units
 	            if (ret.equals("")){
 	                Terser terser = new Terser(msg);
-	                ret = getString(terser.get(obxSeg,7,0,2,1));
+	                ret = getString(Terser.get(obxSeg,7,0,2,1));
 	                
 	                // only display units from the formatted reference range if they
 	                // have not already been displayed as the reference range
@@ -457,7 +457,7 @@ public class PFHTHandler implements MessageHandler {
 	          
 	            obxcount = (obrSegMap.get(obrSegKeySet.get(i))).size();
 	            for (int k=0;k<obxcount;k++) {
-	            	if (terser.get(obxSeg,7,k,1,1)!=null && !terser.get(obxSeg,7,k,1,1).equals("") && (terser.get(obxSeg,7,count,2,1)!=null && !terser.get(obxSeg,7,count,2,1).equals(""))) {
+	            	if (Terser.get(obxSeg,7,k,1,1)!=null && !Terser.get(obxSeg,7,k,1,1).equals("") && (Terser.get(obxSeg,7,count,2,1)!=null && !Terser.get(obxSeg,7,count,2,1).equals(""))) {
 	            		count++;
 	            	}
 	            }
@@ -476,9 +476,9 @@ public class PFHTHandler implements MessageHandler {
 	           
 	            Terser terser = new Terser(msg);
 	            OBX obxSeg =  ( obrSegMap.get(obrSegKeySet.get(i))).get(j);
-	            comment = terser.get(obxSeg,7,k,1,1);
+	            comment = Terser.get(obxSeg,7,k,1,1);
 	            if (comment == null)
-	                comment = terser.get(obxSeg,7,k,2,1);
+	                comment = Terser.get(obxSeg,7,k,2,1);
 	            
 	        }catch(Exception e){
 	            logger.error("Cannot return comment", e);

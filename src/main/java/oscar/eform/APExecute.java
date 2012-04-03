@@ -46,7 +46,8 @@ public class APExecute {
     }
     
     public String execute(String ap,String demographicNo){
-        DatabaseAP dap = EFormLoader.getInstance().getAP(ap);
+        EFormLoader.getInstance();
+		DatabaseAP dap = EFormLoader.getAP(ap);
         String  sql = DatabaseAP.parserReplace("demographic", demographicNo, dap.getApSQL());
         String output = dap.getApOutput();
         MiscUtils.getLogger().debug("SQL----" + sql);

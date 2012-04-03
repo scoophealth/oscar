@@ -79,7 +79,7 @@ public final class RxStashAction extends DispatchAction {
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
-    throws IOException, ServletException {
+    {
 
 
         String wp=null;
@@ -124,7 +124,7 @@ public final class RxStashAction extends DispatchAction {
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
-    throws IOException, ServletException {
+    throws IOException {
                 MiscUtils.getLogger().debug("===========start in deletePrescribe ===========");
 
 

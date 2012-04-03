@@ -156,9 +156,9 @@ public class DefaultGenericHandler implements MessageHandler {
                 
             }else{
                 Segment obrSeg = (Segment) terser.getFinder().getRoot().get("OBR"+i);
-                obrName = getString(terser.get(obrSeg,4,0,2,1));
+                obrName = getString(Terser.get(obrSeg,4,0,2,1));
                 if (obrName.equals(""))
-                    obrName = getString(terser.get(obrSeg,4,0,1,1));
+                    obrName = getString(Terser.get(obrSeg,4,0,1,1));
                 
             }
             
@@ -177,7 +177,7 @@ public class DefaultGenericHandler implements MessageHandler {
                 timeStamp = formatDateTime(getString(terser.get("/.OBR-7-1")));
             }else{
                 Segment obrSeg = (Segment) terser.getFinder().getRoot().get("OBR"+i);
-                timeStamp = formatDateTime(getString(terser.get(obrSeg,7,0,1,1)));
+                timeStamp = formatDateTime(getString(Terser.get(obrSeg,7,0,1,1)));
             }
             return(timeStamp);
         }catch(Exception e){
@@ -298,7 +298,7 @@ public class DefaultGenericHandler implements MessageHandler {
             
             Structure[] nteSegs = terser.getFinder().getRoot().getAll(segments[k]);
             Segment nteSeg = (Segment) nteSegs[j];
-            return(getString(terser.get(nteSeg,3,0,1,1)));
+            return(getString(Terser.get(nteSeg,3,0,1,1)));
             
         }catch(Exception e){
             logger.error("Could not retrieve OBX comments", e);
@@ -347,7 +347,7 @@ public class DefaultGenericHandler implements MessageHandler {
             
             Structure[] nteSegs = terser.getFinder().getRoot().getAll(segments[k]);
             Segment nteSeg = (Segment) nteSegs[nteNum];
-            return(getString(terser.get(nteSeg,3,0,1,1)));
+            return(getString(Terser.get(nteSeg,3,0,1,1)));
             
         }catch(Exception e){
             logger.error("Could not retrieve OBX comments", e);
@@ -394,7 +394,7 @@ public class DefaultGenericHandler implements MessageHandler {
         try {
             // Some examples
             DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            java.util.Date date = (java.util.Date)formatter.parse(dob);
+            java.util.Date date = formatter.parse(dob);
             age = UtilDateUtilities.calcAge(date);
         } catch (ParseException e) {
             logger.error("Could not get age", e);
@@ -547,7 +547,7 @@ public class DefaultGenericHandler implements MessageHandler {
         
         try{
             Segment obxSeg = (Segment) obxSegs.get(j);
-            return (getString(terser.get(obxSeg, field, rep, comp, 1 )));
+            return (getString(Terser.get(obxSeg, field, rep, comp, 1 )));
         }catch(Exception e){
             return("");
         }

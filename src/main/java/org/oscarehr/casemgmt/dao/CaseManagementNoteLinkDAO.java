@@ -30,7 +30,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 public class CaseManagementNoteLinkDAO extends HibernateDaoSupport {
 
 	public CaseManagementNoteLink getNoteLink(Long id) {
-		CaseManagementNoteLink noteLink = (CaseManagementNoteLink) this.getHibernateTemplate().get(CaseManagementNoteLink.class, id);
+		CaseManagementNoteLink noteLink = this.getHibernateTemplate().get(CaseManagementNoteLink.class, id);
 		return noteLink;
 	}
 

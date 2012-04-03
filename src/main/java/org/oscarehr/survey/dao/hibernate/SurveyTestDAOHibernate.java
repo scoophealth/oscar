@@ -34,7 +34,7 @@ public class SurveyTestDAOHibernate extends HibernateDaoSupport implements
 		SurveyTestDAO {
 
 	public SurveyTestInstance getSurveyInstance(Long id) {
-		return (SurveyTestInstance)this.getHibernateTemplate().get(SurveyTestInstance.class,id);
+		return this.getHibernateTemplate().get(SurveyTestInstance.class,id);
 	}
 
 	public SurveyTestInstance getSurveyInstance(Long surveyId, Long clientId) {

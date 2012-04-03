@@ -56,7 +56,7 @@ public class TransferHSFOXmlAction extends Action
 			if(internalId==null || internalId.length()==0){
 				message.add("");
 				message.add("Unable to upload. Please go to the master page, and assign a internal doctor to this patient.");
-				request.setAttribute("HSFOmessage", (String) message.get(1));
+				request.setAttribute("HSFOmessage", message.get(1));
 				return mapping.findForward("HSFORE");
 			}
 		}

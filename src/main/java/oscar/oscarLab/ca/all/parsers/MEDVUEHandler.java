@@ -209,8 +209,8 @@ public class MEDVUEHandler implements MessageHandler {
 
 			Terser t = new Terser(msg);
 			
-			String ident = getString(t.get(obxseg, 3, 0, 1, 1));
-			String subIdent = t.get(obxseg, 3, 0, 1, 2);
+			String ident = getString(Terser.get(obxseg, 3, 0, 1, 1));
+			String subIdent = Terser.get(obxseg, 3, 0, 1, 2);
 
 			if (subIdent != null)
 				ident = ident + "&" + subIdent;
@@ -252,7 +252,7 @@ public class MEDVUEHandler implements MessageHandler {
 		String result = "";
 		try {
 			Terser terser = new Terser(msg);
-			result = getString(terser.get(obxseg, 5, 0, 1, 1));
+			result = getString(Terser.get(obxseg, 5, 0, 1, 1));
 		} catch (Exception e) {
 			logger.error("Exception returning result", e);
 		}
@@ -301,7 +301,7 @@ public class MEDVUEHandler implements MessageHandler {
 		String comment = "";
 		try {
 			Terser terser = new Terser(msg);
-			comment = terser.get(obxseg, 5, 0, 1, 1);
+			comment = Terser.get(obxseg, 5, 0, 1, 1);
 			
 		} catch (Exception e) {
 			logger.error("getOBRComment error", e);
@@ -324,7 +324,7 @@ public class MEDVUEHandler implements MessageHandler {
 		
 		try {
 			Terser terser = new Terser(msg);
-			comment = terser.get(obxseg, 5, 0, 1, 1);
+			comment = Terser.get(obxseg, 5, 0, 1, 1);
 			comment = comment.replaceAll("<P\\s*/*>", "<br/>");
 			splitComment = comment.split("<br/>");
 			

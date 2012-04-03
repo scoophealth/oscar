@@ -193,7 +193,7 @@ public class ClientReferralDAO extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        ClientReferral result = (ClientReferral)this.getHibernateTemplate().get(ClientReferral.class, id);
+        ClientReferral result = this.getHibernateTemplate().get(ClientReferral.class, id);
 
         if (log.isDebugEnabled()) {
             log.debug("getClientReferral: id=" + id + ",found=" + (result != null));

@@ -5,12 +5,10 @@
 
 package org.oscarehr.decisionSupport.model;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.jdom.JDOMException;
 import org.oscarehr.util.MiscUtils;
 
 /**
@@ -77,7 +75,7 @@ public abstract class DSGuideline {
     }
 
     public abstract List<DSConsequence> evaluate(String demographicNo) throws DecisionSupportException;
-    
+
     public abstract List<DSConsequence> evaluate(String demographicNo, String providerNo) throws DecisionSupportException;
 
     public boolean evaluateBoolean(String demographicNo) throws DecisionSupportException {
@@ -94,7 +92,7 @@ public abstract class DSGuideline {
     }
 
     //generally done automatically
-    public void parseFromXml() throws JDOMException, DecisionSupportParseException, IOException {
+    public void parseFromXml() throws DecisionSupportParseException {
         DSGuidelineFactory factory = new DSGuidelineFactory();
         DSGuideline newGuideline = factory.createGuidelineFromXml(getXml());
         setParsed(true);

@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -34,7 +33,7 @@ import org.oscarehr.util.SpringUtils;
 
 /**
  * TODO: Error handling, and access checks.
- * 
+ *
  * @author marc
  *
  */
@@ -45,17 +44,17 @@ public class CourseManagerAction extends DispatchAction {
 	private static ProgramManager programManager = (ProgramManager) SpringUtils.getBean("programManager");
 	private static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 	private static ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
-	
-	
+
+
 	public ActionForward createCourse(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
-		throws ServletException, IOException
+		throws IOException
 	{
-		DynaActionForm courseForm = (DynaActionForm) form;	
+		DynaActionForm courseForm = (DynaActionForm) form;
 		String name = (String)courseForm.get("name");
 		logger.info("creating course: " + name);
-		
+
 		String result = "";
-		
+
 		int facilityId = LoggedInInfo.loggedInInfo.get().currentFacility.getId();
 		try {
 			Program p = new Program();
@@ -81,20 +80,20 @@ public class CourseManagerAction extends DispatchAction {
 			logger.error("Error", e);
 			result = "Error Occured: " + e.getMessage();
 		}
-						
-    	response.getWriter().print(result); 
+
+    	response.getWriter().print(result);
     	return null;
-		
+
 	}
-	
+
 	public static List<Program> getCoursesByModerator() {
 		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 		SecRoleDao roleDao = (SecRoleDao)SpringUtils.getBean("secRoleDao");
 		SecRole role = roleDao.findByName("moderator");
-		
-		return programManager.getAllProgramsByRole(providerNo, role.getId());		
+
+		return programManager.getAllProgramsByRole(providerNo, role.getId());
 	}
-	
+
 	public static List<Program> getCourses() {
 		List<Program> programs = programDao.getAllPrograms();
 		List<Program> results = new ArrayList<Program>();
@@ -105,23 +104,23 @@ public class CourseManagerAction extends DispatchAction {
 		}
 		return results;
 	}
-	
+
 	public ActionForward getAllCourses(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
-    	throws ServletException, IOException
+    	throws IOException
     {
 		//check rights
-		
+
 		//get data, filter it only where this is defined as a course
 		List<Program> results = getCourses();
 
 		//serialize and return
     	JSONArray jsonArray = JSONArray.fromObject( results );
-    	response.getWriter().print(jsonArray);    	
+    	response.getWriter().print(jsonArray);
 		return null;
     }
 
 	public ActionForward getCourseDetails(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
-		throws ServletException, IOException
+		throws IOException
 	{
 		Integer id = null;
 		try {
@@ -131,13 +130,13 @@ public class CourseManagerAction extends DispatchAction {
 			return null;
 		}
 		Program p = programDao.getProgram(id);
-		
+
 		//p.get
 		ProgramManager programManager = (ProgramManager) SpringUtils.getBean("programManager");
 		@SuppressWarnings("unchecked")
 		List<ProgramProvider> programProviders = programManager.getProgramProviders(String.valueOf(id));
 		Map<String,CourseDetailBean> results = new HashMap<String,CourseDetailBean>();
-		
+
 		for(ProgramProvider pp:programProviders) {
 			//pp.get
 			CourseDetailBean result = new CourseDetailBean();
@@ -147,11 +146,11 @@ public class CourseManagerAction extends DispatchAction {
 			result.setRoleName(pp.getRole().getName());
 			results.put(pp.getProviderNo(),result);
 		}
-		
+
 		ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 		List<Provider> providerList = providerDao.getActiveProviders();
 		List<CourseDetailBean> r = new ArrayList<CourseDetailBean>();
-		
+
 		for(Provider provider:providerList) {
 			CourseDetailBean bean = new CourseDetailBean();
 			CourseDetailBean ab = results.get(provider.getProviderNo());
@@ -159,19 +158,19 @@ public class CourseManagerAction extends DispatchAction {
 				bean.setChecked(true);
 				bean.setRoleId(ab.getRoleId());
 				bean.setRoleName(ab.getRoleName());
-			} 
+			}
 			bean.setProviderName(provider.getFormattedName());
 			bean.setProviderNo(provider.getProviderNo());
 			r.add(bean);
 		}
-		
+
 		JSONArray jsonArray = JSONArray.fromObject( r );
     	response.getWriter().print(jsonArray);
-    	    	
+
 		return null;
 	}
 
-	public ActionForward getCourseStudents(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public ActionForward getCourseStudents(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		Integer id = null;
 		try {
 			id = Integer.parseInt(request.getParameter("id"));
@@ -180,12 +179,12 @@ public class CourseManagerAction extends DispatchAction {
 			return null;
 		}
 		logger.info("course id is " + id);
-		
+
 		List<Demographic> demographics = demographicDao.getDemographicsByExtKey("course",String.valueOf(id));
-	
+
 		logger.info("# of demographics in that course according to ext entry: " + demographics.size());
 		List<PatientDetailBean> results = new ArrayList<PatientDetailBean>();
-		
+
 		for(Demographic d:demographics) {
 			PatientDetailBean bean = new PatientDetailBean();
 			bean.setDemographicNo(d.getDemographicNo());
@@ -195,16 +194,16 @@ public class CourseManagerAction extends DispatchAction {
 			bean.setProviderName(provider.getFormattedName());
 			results.add(bean);
 		}
-		
+
 		JSONArray jsonArray = JSONArray.fromObject( results );
 		response.getWriter().print(jsonArray);
-		
+
 		return null;
-	
+
 	}
-	
+
 	public ActionForward getCourseProviders(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
-	throws ServletException, IOException
+	throws IOException
 {
 	Integer id = null;
 	try {
@@ -214,70 +213,70 @@ public class CourseManagerAction extends DispatchAction {
 		return null;
 	}
 	Program p = programDao.getProgram(id);
-	
+
 	//p.get
 	ProgramManager programManager = (ProgramManager) SpringUtils.getBean("programManager");
 	@SuppressWarnings("unchecked")
 	List<ProgramProvider> programProviders = programManager.getProgramProviders(String.valueOf(id));
 	List<CourseDetailBean> r = new ArrayList<CourseDetailBean>();
-	
-	for(ProgramProvider pp:programProviders) {		
-		CourseDetailBean bean = new CourseDetailBean();		
-		bean.setRoleId(pp.getRoleId());		
+
+	for(ProgramProvider pp:programProviders) {
+		CourseDetailBean bean = new CourseDetailBean();
+		bean.setRoleId(pp.getRoleId());
 		bean.setProviderName(pp.getProvider().getFormattedName());
 		bean.setProviderNo(pp.getProvider().getProviderNo());
 		r.add(bean);
 	}
-	
-	
-	
+
+
+
 	JSONArray jsonArray = JSONArray.fromObject( r );
 	response.getWriter().print(jsonArray);
-	    	
+
 	return null;
 }
-	
-	
-	public static List<SecRole> getRoles() throws ServletException, IOException {
+
+
+	public static List<SecRole> getRoles()  {
 		SecRoleDao roleDao = (SecRoleDao)SpringUtils.getBean("secRoleDao");
 		List<SecRole> roles = roleDao.findAll(null);
-		return roles;	
+		return roles;
 	}
-		
+
 
 	public static String createRoleSelectBox(String providerNo) {
 		return "<select><option>test - "+providerNo+"</option></select>";
 	}
-	
+
 	public ActionForward saveCourseDetails(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
-		throws ServletException, IOException
+
 	{
 		logger.info("save course details");
-		
-		int courseId = 0;		
+
+		int courseId = 0;
 		String tmpCourseId = request.getParameter("courseId");
 		courseId = Integer.parseInt(tmpCourseId);
-		
+
 		Map<String,String> dataMap = new HashMap<String,String>();
 		Map params = request.getParameterMap();
 		List<ProgramProvider> results = new ArrayList<ProgramProvider>();
-		
-		for(Object key:params.keySet()) {			
+
+		for(Object key:params.keySet()) {
 			if(((String)key).startsWith("checked_")) {
 				String providerNo = ((String)key).substring(8);
-				
-				String roleId = request.getParameter("role_"+providerNo);							
+
+				String roleId = request.getParameter("role_"+providerNo);
 				//logger.info("provider " + providerNo + " is checked with role id " + roleId);
-				
+
 				ProgramProvider pp = new ProgramProvider();
 				pp.setProgramId(new Long(courseId));
 				pp.setProviderNo(providerNo);
 				pp.setRoleId(Long.parseLong(roleId));
-				
+
 				results.add(pp);
-			}			
+			}
 		}
-		
+
 		//clear the current assignments
 		ProgramManager programManager = (ProgramManager) SpringUtils.getBean("programManager");
 		@SuppressWarnings("unchecked")
@@ -285,14 +284,14 @@ public class CourseManagerAction extends DispatchAction {
 		for(ProgramProvider pp:programProviders) {
 			programManager.deleteProgramProvider(String.valueOf(pp.getId()));
 		}
-		
+
 		for(ProgramProvider pp:results) {
 			programManager.saveProgramProvider(pp);
 		}
-		
+
 		logger.info("saved course");
 		return null;
 	}
-		
+
 }
 

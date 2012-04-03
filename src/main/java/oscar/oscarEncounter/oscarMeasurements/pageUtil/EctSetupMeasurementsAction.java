@@ -65,7 +65,7 @@ public final class EctSetupMeasurementsAction extends Action {
         String demo = null;
         if (bean!=null){
             request.getSession().setAttribute("EctSessionBean", bean);
-            demo = (String) bean.getDemographicNo();
+            demo = bean.getDemographicNo();
         }else{
             demo = request.getParameter("demographic_no");
         }   

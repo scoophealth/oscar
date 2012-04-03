@@ -379,7 +379,7 @@ public class RxDrugRef {
          Object object = null;
          try{
             XmlRpcClient server = new XmlRpcClient(server_url);
-            object = (Object) server.execute(procedureName, params);
+            object = server.execute(procedureName, params);
          }catch (XmlRpcException exception) {
                 logger.error("JavaClient: XML-RPC Fault #" +exception.code, exception);
          } catch (Exception exception) {

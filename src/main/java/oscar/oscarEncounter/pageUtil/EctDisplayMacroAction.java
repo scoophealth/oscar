@@ -89,7 +89,7 @@ public class EctDisplayMacroAction extends EctDisplayAction {
     List<Macro> shs = shDao.getAll();
 
     for(Macro sh:shs) {
-    	NavBarDisplayDAO.Item item = Dao.Item();                  
+    	NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();                  
     	//item.setDate(new Date());
     	String itemHeader = StringUtils.maxLenString(sh.getLabel(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);                      
         item.setLinkTitle(itemHeader);        

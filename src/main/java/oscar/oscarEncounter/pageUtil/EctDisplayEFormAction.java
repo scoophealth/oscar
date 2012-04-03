@@ -121,7 +121,7 @@ public class EctDisplayEFormAction extends EctDisplayAction {
 		        if(skip)
 		        	continue;
 		        
-	            NavBarDisplayDAO.Item item = Dao.Item();
+	            NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
 	            winName = eFormData.getFormName() + bean.demographicNo;            
 	            hash = Math.abs(winName.hashCode());            
 	            url = "popupPage( 700, 800, '" + hash + "', '" + request.getContextPath() + "/eform/efmshowform_data.jsp?fdid="+eFormData.getId()+"&appointment="+bean.appointmentNo+"&parentAjaxId="+cmd+"');";

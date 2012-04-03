@@ -102,10 +102,11 @@ public class EctDisplayFormAction extends EctDisplayAction {
 
 					String table = encounterForm.getFormTable();
 					if (!table.equalsIgnoreCase("")) {
-						EctFormData.PatientForm[] pforms = new EctFormData().getPatientFormsFromLocalAndRemote(bean.demographicNo, table);
+						new EctFormData();
+						EctFormData.PatientForm[] pforms = EctFormData.getPatientFormsFromLocalAndRemote(bean.demographicNo, table);
 						// if a form has been started for the patient, create a module item for it
 						if (pforms.length > 0) {							
-							NavBarDisplayDAO.Item item = Dao.Item();
+							NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
 							EctFormData.PatientForm pfrm = pforms[0];
 
 							// convert date to that specified in base class

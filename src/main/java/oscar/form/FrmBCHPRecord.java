@@ -75,7 +75,7 @@ public class FrmBCHPRecord extends FrmRecord {
 
             sql = "SELECT last_name, first_name, address, city, province, postal, phone,phone2, hin FROM demographic WHERE demographic_no = "
                     + demographicNo;
-            ResultSet rs = (new DBHelp()).searchDBRecord(sql);
+            ResultSet rs = DBHelp.searchDBRecord(sql);
             if (rs.next()) {
                 props.setProperty("pg1_patientName_cur", rs.getString("last_name")+", "+rs.getString("first_name"));
                 props.setProperty("pg1_phn_cur", rs.getString("hin"));

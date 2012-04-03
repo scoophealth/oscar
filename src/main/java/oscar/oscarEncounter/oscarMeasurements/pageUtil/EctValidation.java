@@ -31,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.commons.validator.GenericValidator;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
@@ -75,7 +76,7 @@ public class EctValidation{
         
         MiscUtils.getLogger().debug("matchRegExp function is called.");
         
-        if (!gValidator.isBlankOrNull(regExp) && !gValidator.isBlankOrNull(inputValue)){
+        if (!GenericValidator.isBlankOrNull(regExp) && !GenericValidator.isBlankOrNull(inputValue)){
             MiscUtils.getLogger().debug("both the regExp and inputValue is not blank nor null.");
             if(!inputValue.matches(regExp)){
                 MiscUtils.getLogger().debug("Regexp not matched");                                            
@@ -94,14 +95,14 @@ public class EctValidation{
         org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
         
         if ((dMax!=0) || (dMin!=0)){
-            if(gValidator.isDouble(inputValue)){
+            if(GenericValidator.isDouble(inputValue)){
                 double dValue = Double.parseDouble(inputValue);
                 
-                if (!gValidator.isInRange(dValue, dMin, dMax)){                                       
+                if (!GenericValidator.isInRange(dValue, dMin, dMax)){                                       
                     validation=false;
                 }
             }
-            else if(!gValidator.isBlankOrNull(inputValue)){                                
+            else if(!GenericValidator.isBlankOrNull(inputValue)){                                
                 validation=false;
             }
         }
@@ -115,7 +116,7 @@ public class EctValidation{
         org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
         
         if (iMax!=0){            
-            if(!gValidator.maxLength(inputValue, iMax)){                
+            if(!GenericValidator.maxLength(inputValue, iMax)){                
                     validation=false;
                 }                       
         }
@@ -128,7 +129,7 @@ public class EctValidation{
         org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
         
         if (iMin!=0){            
-            if(!gValidator.minLength(inputValue, iMin)){                
+            if(!GenericValidator.minLength(inputValue, iMin)){                
                     validation=false;
                 }                       
         }
@@ -141,7 +142,7 @@ public class EctValidation{
         org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
         
         
-        if(!gValidator.isInt(inputValue)){                                                 
+        if(!GenericValidator.isInt(inputValue)){                                                 
             validation=false;
         }
         

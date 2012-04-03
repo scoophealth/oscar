@@ -209,7 +209,7 @@ public class UtilDateUtilities {
       try {
          // Some examples
          DateFormat formatter = new SimpleDateFormat(datePattern);
-         date = (Date)formatter.parse(dateStr);                        
+         date = formatter.parse(dateStr);                        
       } catch (ParseException e) {
       }
       return date   ;     

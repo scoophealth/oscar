@@ -86,10 +86,10 @@ public class EctDisplayMsgAction extends EctDisplayAction {
                 msgData = new MsgMessageData(msgId);
                 msgSubject = StringUtils.maxLenString(msgData.getSubject(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
                 msgDate = msgData.getDate();
-                NavBarDisplayDAO.Item item = Dao.Item();
+                NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
                 try {                 
                     DateFormat formatter = new SimpleDateFormat(dbFormat);                                        
-                    date = (Date)formatter.parse(msgDate);
+                    date = formatter.parse(msgDate);
                     msgDate = DateUtils.formatDate(date, request.getLocale());                                                                                
                 }
                 catch(ParseException e ) {

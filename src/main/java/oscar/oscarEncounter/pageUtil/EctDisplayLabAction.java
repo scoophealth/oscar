@@ -109,7 +109,7 @@ public class EctDisplayLabAction extends EctDisplayAction {
                 url = request.getContextPath() + "/lab/CA/BC/labDisplay.jsp?segmentID="+result.segmentID+"&providerNo="+bean.providerNo;                
             }            
              
-            NavBarDisplayDAO.Item item = Dao.Item();
+            NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
             item.setLinkTitle(labDisplayName + " " + formattedDate);
             labDisplayName = StringUtils.maxLenString(labDisplayName, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES); // +" "+formattedDate;
             hash = winName.hashCode();

@@ -1,25 +1,25 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 package oscar.oscarRx.pageUtil;
 
@@ -58,7 +58,7 @@ import oscar.oscarEncounter.data.EctProgram;
 
 public final class RxDeleteRxAction extends DispatchAction {
     private DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
-    
+
 
     @Override
     public ActionForward unspecified(ActionMapping mapping,
@@ -67,28 +67,28 @@ public final class RxDeleteRxAction extends DispatchAction {
     HttpServletResponse response)
     throws IOException, ServletException {
 
-       
-        // Setup variables        
-        RxSessionBean bean =(RxSessionBean)request.getSession().getAttribute("RxSessionBean");                
+
+        // Setup variables
+        RxSessionBean bean =(RxSessionBean)request.getSession().getAttribute("RxSessionBean");
         if(bean==null) {
             response.sendRedirect("error.html");
             return null;
-        }        
-        String ip = request.getRemoteAddr();       
+        }
+        String ip = request.getRemoteAddr();
         try {
 
-            
+
             String drugList = ((RxDrugListForm)form).getDrugList();
 
             String[] drugArr = drugList.split(",");
             int drugId;
             int i;
-            
+
             for(i=0;i<drugArr.length;i++) {
                 try {
                     drugId = Integer.parseInt(drugArr[i]);
 
-                } catch (Exception e) { break; }                
+                } catch (Exception e) { break; }
                 // get original drug
                 Drug drug = drugDao.find(drugId);
                 setDrugDelete(drug);
@@ -98,7 +98,7 @@ public final class RxDeleteRxAction extends DispatchAction {
         }
         catch (Exception e) {
            MiscUtils.getLogger().error("Error", e);
-        }        
+        }
 
          return (mapping.findForward("success"));
     }
@@ -110,7 +110,7 @@ public final class RxDeleteRxAction extends DispatchAction {
     }
 
     public ActionForward Delete2(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)
-    throws IOException, ServletException {
+    throws IOException {
 
         MiscUtils.getLogger().debug("===========================Delete2 RxDeleteRxAction========================");
 
@@ -136,8 +136,8 @@ public final class RxDeleteRxAction extends DispatchAction {
          return null;
     }
     public ActionForward DeleteRxOnCloseRxBox(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)
-    throws IOException, ServletException {
-    
+    throws IOException {
+
         MiscUtils.getLogger().debug("===========================DeleteRxOnCloseRxBox RxDeleteRxAction========================");
         String randomId=request.getParameter("randomId");
 
@@ -174,7 +174,7 @@ public final class RxDeleteRxAction extends DispatchAction {
          return null;
     }
 public ActionForward clearStash(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)
-    throws IOException, ServletException {        
+    throws IOException {
         RxSessionBean bean = (RxSessionBean)request.getSession().getAttribute("RxSessionBean");
         if(bean==null) {
             response.sendRedirect("error.html");
@@ -185,7 +185,7 @@ public ActionForward clearStash(ActionMapping mapping,ActionForm form,HttpServle
     }
 
    public ActionForward clearReRxDrugList(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)
-    throws IOException, ServletException {
+    throws IOException {
         RxSessionBean bean = (RxSessionBean)request.getSession().getAttribute("RxSessionBean");
         if(bean==null) {
             response.sendRedirect("error.html");
@@ -196,7 +196,7 @@ public ActionForward clearStash(ActionMapping mapping,ActionForm form,HttpServle
         return null;
     }
    public ActionForward clearPHRMeds(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)
-    throws IOException, ServletException {
+    throws IOException {
         RxSessionBean bean = (RxSessionBean)request.getSession().getAttribute("RxSessionBean");
         if(bean==null) {
             response.sendRedirect("error.html");
@@ -224,7 +224,7 @@ public ActionForward clearStash(ActionMapping mapping,ActionForm form,HttpServle
      * @throws ServletException
      */
     //STILL NEED TO SAVE REASON AND COMMENT "would like to create a summary note in the echart"
-    public ActionForward Discontinue(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)throws IOException, ServletException {
+    public ActionForward Discontinue(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)throws IOException {
         String idStr = request.getParameter("drugId");
         int id = Integer.parseInt(idStr);
 
@@ -268,7 +268,7 @@ public ActionForward clearStash(ActionMapping mapping,ActionForm form,HttpServle
         }
 
         LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DISCONTINUE, LogConst.CON_PRESCRIPTION,""+drug.getId(), ip,""+drug.getDemographicId(),logStatement);
-       
+
         Hashtable d = new Hashtable();
         d.put("id",""+id);
         d.put("reason",reason);
@@ -315,7 +315,7 @@ public ActionForward clearStash(ActionMapping mapping,ActionForm form,HttpServle
 
         //create an entry in casemgmt note link
         CaseManagementNoteLink cmnl=new CaseManagementNoteLink();
-        cmnl.setTableName(cmnl.DRUGS);
+        cmnl.setTableName(CaseManagementNoteLink.DRUGS);
         cmnl.setTableId(Long.parseLong(idStr));//drug id
         cmnl.setNoteId(Long.parseLong(EDocUtil.getLastNoteId()));
 

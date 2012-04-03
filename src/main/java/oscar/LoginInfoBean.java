@@ -25,6 +25,7 @@
 package oscar;
 
 //import java.sql.*;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 public class LoginInfoBean {
@@ -63,7 +64,7 @@ public class LoginInfoBean {
   	boolean btemp = false;
   	//if time out and status is 1, return true
   	GregorianCalendar cal = (GregorianCalendar) starttime.clone();
-  	cal.add(cal.MINUTE, maxduration);
+  	cal.add(Calendar.MINUTE, maxduration);
   	if((cal.getTimeInMillis() < now.getTimeInMillis() ) ) 
       btemp = true; //starttime = starttime1;
 

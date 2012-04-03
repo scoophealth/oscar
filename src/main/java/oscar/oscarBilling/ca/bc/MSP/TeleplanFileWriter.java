@@ -410,7 +410,7 @@ public class TeleplanFileWriter {
     //TODO: DATA CENTER NUMBER IS HERE?? should that be from property?
     public String getNoteRecord(Billingmaster bm, String seqNo) {
        MSPBillingNote note = new MSPBillingNote();
-       return note.getN01(bm.getDatacenter(),seqNo,bm.getPayeeNo(),bm.getPractitionerNo(), "A", note.getNote(""+bm.getBillingmasterNo()));
+       return MSPBillingNote.getN01(bm.getDatacenter(),seqNo,bm.getPayeeNo(),bm.getPractitionerNo(), "A", note.getNote(""+bm.getBillingmasterNo()));
     }
 
 

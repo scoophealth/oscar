@@ -75,7 +75,7 @@ public class SupServiceCodeAssocActionForm
                                HttpServletRequest httpServletRequest) {
     ActionErrors errors = new ActionErrors();
     BillingAssociationPersistence per = new BillingAssociationPersistence();
-    if (this.MODE_EDIT.equals(this.actionMode)) {
+    if (SupServiceCodeAssocActionForm.MODE_EDIT.equals(this.actionMode)) {
       if (primaryCode == null || "".equals(primaryCode)){
        errors.add("",
                   new ActionMessage(

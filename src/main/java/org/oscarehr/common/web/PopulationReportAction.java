@@ -27,9 +27,9 @@ public class PopulationReportAction extends DispatchAction {
 
 	// Forwards
 	private static final String REPORT = "report";
-	
+
 	private PopulationReportManager populationReportManager;
-	
+
 	private static long lastDataRetrievedTime=0;
 	private static Date currentDateTime = null;
 	private static ShelterPopulation shelterPopulation = null;
@@ -39,23 +39,23 @@ public class PopulationReportAction extends DispatchAction {
 	private static Map<String, ReportStatistic> majorMentalIllnesses = null;
 	private static Map<String, ReportStatistic> seriousMedicalConditions = null;
 	private static Map<String, Map<String, String>> categoryCodeDescriptions = null;
-	
+
 	public void setPopulationReportManager(PopulationReportManager populationReportManager) {
 	    this.populationReportManager = populationReportManager;
     }
-	
+
 	@Override
 	protected ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	    return report(mapping, form, request, response);
 	}
 
-	public ActionForward report(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward report(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
 		// simple caching mechanism (because this report is open to the public and we don't want the public smacking our server around)
 		if (System.currentTimeMillis()-lastDataRetrievedTime>DateUtils.MILLIS_PER_HOUR)
 		{
 			lastDataRetrievedTime=System.currentTimeMillis();
-			
+
 			// get attributes
 			currentDateTime = Calendar.getInstance().getTime();
 			shelterPopulation = populationReportManager.getShelterPopulation();
@@ -65,8 +65,8 @@ public class PopulationReportAction extends DispatchAction {
 			majorMentalIllnesses = populationReportManager.getMajorMentalIllnesses();
 			seriousMedicalConditions = populationReportManager.getSeriousMedicalConditions();
 			categoryCodeDescriptions = populationReportManager.getCategoryCodeDescriptions();
-		}		
-		 
+		}
+
 		// set attributes
 		request.setAttribute("date", DateTimeFormatUtils.getStringFromDate(currentDateTime, DATE_FORMAT));
 		request.setAttribute("time", DateTimeFormatUtils.getStringFromTime(currentDateTime));
@@ -77,7 +77,7 @@ public class PopulationReportAction extends DispatchAction {
 		request.setAttribute("majorMentalIllnesses", majorMentalIllnesses);
 		request.setAttribute("seriousMedicalConditions", seriousMedicalConditions);
 		request.setAttribute("categoryCodeDescriptions", categoryCodeDescriptions);
-		
+
 		// forward to view page
 		return mapping.findForward(REPORT);
 	}

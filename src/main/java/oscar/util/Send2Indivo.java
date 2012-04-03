@@ -42,6 +42,8 @@ import org.indivo.IndivoException;
 import org.indivo.client.ActionNotPerformedException;
 import org.indivo.client.TalkClient;
 import org.indivo.client.TalkClientImpl;
+import org.indivo.xml.JAXBUtils;
+import org.indivo.xml.phr.DocumentGenerator;
 import org.indivo.xml.phr.binarydata.BinaryData;
 import org.indivo.xml.phr.binarydata.BinaryDataType;
 import org.indivo.xml.phr.contact.ConciseContactInformationType;
@@ -266,7 +268,7 @@ public class Send2Indivo {
             org.indivo.xml.phr.medication.ObjectFactory medFactory = new org.indivo.xml.phr.medication.ObjectFactory();
             
             Medication med = medFactory.createMedication(medType);            
-            Element element = jaxbUtils.marshalToElement(med, JAXBContext.newInstance("org.indivo.xml.phr.medication"));
+            Element element = JAXBUtils.marshalToElement(med, JAXBContext.newInstance("org.indivo.xml.phr.medication"));
             
             VersionBodyType body = version.getVersionBody();
             body.setAny(element);
@@ -318,9 +320,9 @@ public class Send2Indivo {
         BinaryData bd = binFactory.createBinaryData(binaryDataType);
 
         try {
-            Element element = jaxbUtils.marshalToElement(bd, JAXBContext.newInstance("org.indivo.xml.phr.binarydata"));
+            Element element = JAXBUtils.marshalToElement(bd, JAXBContext.newInstance("org.indivo.xml.phr.binarydata"));
              
-            IndivoDocumentType doc = generator.generateDefaultDocument(indivoId, indivoFullName, indivoRole,  DocumentClassificationUrns.BINARYDATA, ContentTypeQNames.BINARYDATA, element);
+            IndivoDocumentType doc = DocumentGenerator.generateDefaultDocument(indivoId, indivoFullName, indivoRole,  DocumentClassificationUrns.BINARYDATA, ContentTypeQNames.BINARYDATA, element);
 
             DocumentHeaderType header = doc.getDocumentHeader();
             ContentDescriptionType contentDescription = header.getContentDescription();

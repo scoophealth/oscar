@@ -140,7 +140,7 @@ public class EctDisplayDocsAction extends EctDisplayAction {
     
     			DateFormat formatter = new SimpleDateFormat(dbFormat);
     			String dateStr = curDoc.getObservationDate();
-    			NavBarDisplayDAO.Item item = Dao.Item();
+    			NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
     			try {
     				date = formatter.parse(dateStr);
     				serviceDateStr = DateUtils.formatDate(date, request.getLocale());

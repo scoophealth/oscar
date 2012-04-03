@@ -40,7 +40,7 @@ public class BillingNote {
       boolean hasNote = false;
       String notesql = "select * from billingnote where billingmaster_no = '"+billingmaster_no+"' and note_type = '2'";
       try{
-         
+
          ResultSet rs = DBHandler.GetSQL(notesql);
          if(rs.next()){
             hasNote = true;
@@ -64,15 +64,15 @@ public void addNote(String billingmaster_no,String provider_no,String note) thro
                         "'"+UtilMisc.mysqlEscape(note)+"'," +
                         "'2')";
 
-      
+
       DBHandler.RunSQL(notesql);
    }
 
-public void addNoteFromBillingNo(String billingNo, String provider,String note) throws SQLException{
+public void addNoteFromBillingNo(String billingNo, String provider,String note){
    note = oscar.Misc.removeNewLine(note);
    String sql = "select billingmaster_no from billingmaster where billing_no = '"+billingNo+"' ";
       try{
-         
+
          ResultSet rs = DBHandler.GetSQL(sql);
          while(rs.next()){
             String billingMasterNo =  rs.getString("billingmaster_no");
@@ -94,7 +94,7 @@ public void addNoteFromBillingNo(String billingNo, String provider,String note) 
       Note n = new Note();
       String notesql = "select * from billingnote where billingmaster_no = '"+billingmaster_no+"' and note_type = '2' order by createdate desc limit 1";
       try{
-      
+
       ResultSet rs = DBHandler.GetSQL(notesql);
       if(rs.next()){
          n.setBillingnote_no(rs.getString("billingnote_no"));
@@ -115,7 +115,7 @@ public void addNoteFromBillingNo(String billingNo, String provider,String note) 
       String retStr = "";
       String notesql = "select note from billingnote where billingmaster_no = '"+billingmaster_no+"' and note_type = '2' order by createdate desc limit 1 ";
       try{
-         
+
          ResultSet rs = DBHandler.GetSQL(notesql);
          if(rs.next()){
             retStr = rs.getString("note");

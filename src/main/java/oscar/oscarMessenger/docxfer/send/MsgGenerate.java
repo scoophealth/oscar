@@ -68,7 +68,7 @@ public class MsgGenerate {
         Element cfgRoot = cfg.getDocumentElement();
         NodeList cfgTables = cfgRoot.getChildNodes();
         for(int i=0; i<cfgTables.getLength(); i++) {
-            Node tbl = (Node)cfgTables.item(i);
+            Node tbl = cfgTables.item(i);
             
             if(tbl.getNodeType() == Node.ELEMENT_NODE) {
                 if(((Element)tbl).getTagName().equals("table")) {

@@ -140,21 +140,21 @@ public class FrmPdfGraphicRourke extends FrmPdfGraphic {
             curDate = createCalendar(xDate);                        
             
             //what months are we dealing with?
-            smonth = (float)startDate.get(Calendar.MONTH);
-            emonth = (float)curDate.get(Calendar.MONTH);
+            smonth = startDate.get(Calendar.MONTH);
+            emonth = curDate.get(Calendar.MONTH);
             
             //what fraction of each month do we have?
-            sday = (float)startDate.get(Calendar.DAY_OF_MONTH);
-            eday = (float)curDate.get(Calendar.DAY_OF_MONTH);
+            sday = startDate.get(Calendar.DAY_OF_MONTH);
+            eday = curDate.get(Calendar.DAY_OF_MONTH);
             
             MiscUtils.getLogger().debug("sday, eday " + sday + ", " + eday);
             
-            smonth += (sday / (float)startDate.getActualMaximum(Calendar.DAY_OF_MONTH));
-            emonth += (eday / (float)curDate.getActualMaximum(Calendar.DAY_OF_MONTH));                        
+            smonth += (sday / startDate.getActualMaximum(Calendar.DAY_OF_MONTH));
+            emonth += (eday / curDate.getActualMaximum(Calendar.DAY_OF_MONTH));                        
             
             //don't forget to add years
-            smonth += (float)startDate.get(Calendar.YEAR) * 12.0;
-            emonth += (float)curDate.get(Calendar.YEAR) * 12.0;
+            smonth += startDate.get(Calendar.YEAR) * 12.0;
+            emonth += curDate.get(Calendar.YEAR) * 12.0;
             
             if ( smonth > emonth ) {
                 MiscUtils.getLogger().debug("FrmPdfGraphicRourke: Start date after xDate");

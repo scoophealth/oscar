@@ -83,8 +83,8 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
         ArrayList<String> flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getUniveralFlowsheets();                            
         int hash;
         for (int f = 0; f < flowsheets.size();f++){
-            NavBarDisplayDAO.Item item = Dao.Item();
-            String flowsheetName = (String) flowsheets.get(f);
+            NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
+            String flowsheetName = flowsheets.get(f);
             if(securityMgr.hasReadAccess("_flowsheet."+flowsheetName, roleName$)) {
             	Flowsheet fs = null;
             	if((fs=flowsheetDao.findByName(flowsheetName)) != null) {
@@ -109,8 +109,8 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
         Vector dxCodes = dxRes.getActiveCodeListWithCodingSystem();        
         flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetsFromDxCodes(dxCodes);                            
         for (int f = 0; f < flowsheets.size();f++){
-            NavBarDisplayDAO.Item item = Dao.Item();
-            String flowsheetName = (String) flowsheets.get(f);
+            NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
+            String flowsheetName = flowsheets.get(f);
             if(securityMgr.hasReadAccess("_flowsheet."+flowsheetName, roleName$)) {
             	Flowsheet fs = null;
             	if((fs=flowsheetDao.findByName(flowsheetName)) != null) {
@@ -140,8 +140,8 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
         }
         flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetsFromPrograms(programs);                                   
         for (int f = 0; f < flowsheets.size();f++){
-            NavBarDisplayDAO.Item item = Dao.Item();
-            String flowsheetName = (String) flowsheets.get(f);
+            NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
+            String flowsheetName = flowsheets.get(f);
             if(securityMgr.hasReadAccess("_flowsheet."+flowsheetName, roleName$))  {
             	Flowsheet fs = null;
             	if((fs=flowsheetDao.findByName(flowsheetName)) != null) {
@@ -180,7 +180,7 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
         }            
 
         //finally we add specific measurements to module item list
-        String demo = (String) bean.getDemographicNo();
+        String demo = bean.getDemographicNo();
         oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler hd = new oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler(demo);
         oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean data;
         Vector measureTypes = (Vector) hd.getMeasurementsDataVector();
@@ -197,7 +197,7 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
             Vector measures = (Vector) hd.getMeasurementsDataVector();
             
             if(measures.size() > 0 ) {
-                NavBarDisplayDAO.Item item = Dao.Item();
+                NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
                 data = (oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean) measures.get(0);
                 Date date = data.getDateObservedAsDate();
                 if( date == null ) {

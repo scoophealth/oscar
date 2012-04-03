@@ -43,7 +43,7 @@ public class DxresearchReportAction extends DispatchAction {
     public void setDxresearchdao(DxresearchDAO dxresearchdao) {
         this.dxresearchdao = dxresearchdao;
     }
-   
+
 
     @Override
     protected ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -58,7 +58,7 @@ public class DxresearchReportAction extends DispatchAction {
 
     public ActionForward patientRegistedAll(ActionMapping mapping, ActionForm  form,
             HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
+             {
 
         List<String> providerNoList = new ArrayList<String>();
         String providerNo = request.getParameter("provider_no");
@@ -83,7 +83,7 @@ public class DxresearchReportAction extends DispatchAction {
 
     public ActionForward patientRegistedDistincted(ActionMapping mapping, ActionForm  form,
             HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
+             {
 
         List<String> providerNoList = new ArrayList<String>();
         String providerNo = request.getParameter("provider_no");
@@ -107,7 +107,7 @@ public class DxresearchReportAction extends DispatchAction {
 
     public ActionForward patientRegistedDeleted(ActionMapping mapping, ActionForm  form,
             HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
+            {
 
         List<String> providerNoList = new ArrayList<String>();
         String providerNo = request.getParameter("provider_no");
@@ -131,7 +131,7 @@ public class DxresearchReportAction extends DispatchAction {
 
     public ActionForward patientRegistedActive(ActionMapping mapping, ActionForm  form,
             HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
+             {
 
         List<String> providerNoList = new ArrayList<String>();
         String providerNo = request.getParameter("provider_no");
@@ -155,7 +155,7 @@ public class DxresearchReportAction extends DispatchAction {
 
     public ActionForward patientRegistedResolve(ActionMapping mapping, ActionForm  form,
             HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
+             {
 
         List<String> providerNoList = new ArrayList<String>();
         String providerNo = request.getParameter("provider_no");
@@ -179,7 +179,7 @@ public class DxresearchReportAction extends DispatchAction {
 
     public ActionForward editDesc( ActionMapping mapping, ActionForm  form,
                                 HttpServletRequest request, HttpServletResponse response)
-                                throws Exception
+
     {
       String editingCodeType = request.getParameter( "editingCodeType" );
       String editingCodeCode = request.getParameter( "editingCodeCode" );
@@ -245,7 +245,7 @@ public class DxresearchReportAction extends DispatchAction {
 
     public ActionForward clearSearchCode(ActionMapping mapping, ActionForm  form,
             HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
+             {
 
         DynaBean lazyForm = (DynaBean) form;
 

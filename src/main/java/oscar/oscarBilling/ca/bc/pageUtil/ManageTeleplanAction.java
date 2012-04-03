@@ -35,8 +35,8 @@ import java.io.FileReader;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Properties;
 import java.util.Map.Entry;
+import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -71,50 +71,50 @@ import oscar.util.UtilDateUtilities;
  * @author jay
  */
 public class ManageTeleplanAction extends DispatchAction {
-    
+
     private static Logger log = MiscUtils.getLogger();
-    
+
     /** Creates a new instance of ManageTeleplanAction */
     public ManageTeleplanAction() {
     }
-    
+
     public ActionForward unspecified(ActionMapping mapping, ActionForm  form,
            HttpServletRequest request, HttpServletResponse response)
            throws Exception {
            log.debug("UNSPECIFIED ACTION!");
            return mapping.findForward("success");
     }
-    
+
     public ActionForward setUserName(ActionMapping mapping, ActionForm  form,
            HttpServletRequest request, HttpServletResponse response)
-           throws Exception {
+            {
            log.debug("SET USER NA<E ACTION JACKSON");
            String username = request.getParameter("user");
            String password = request.getParameter("pass");
-           
+
            log.debug("username "+username+" password "+password);
-           
+
            //TODO: validate username - make sure url is not null
-           
+
            TeleplanUserPassDAO dao = new TeleplanUserPassDAO();
            dao.saveUpdateUsername(username);
            dao.saveUpdatePasssword(password);
            return mapping.findForward("success");
     }
-    
+
     public ActionForward updateBillingCodes(ActionMapping mapping, ActionForm  form,
            HttpServletRequest request, HttpServletResponse response)
            throws Exception {
-        
+
            TeleplanUserPassDAO dao = new TeleplanUserPassDAO();
            String[] userpass = dao.getUsernamePassword();
            TeleplanService tService = new TeleplanService();
            TeleplanAPI tAPI = tService.getTeleplanAPI(userpass[0],userpass[1]);
-           
+
            TeleplanResponse tr = tAPI.getAsciiFile("3");
-          
+
            log.debug("real filename "+tr.getRealFilename());
-           
+
            File file = tr.getFile();
            TeleplanCodesManager tcm = new TeleplanCodesManager();
            List list = tcm.parse(file);
@@ -164,7 +164,7 @@ public class ManageTeleplanAction extends DispatchAction {
            while(dxKeys.hasMoreElements()){
                String code = (String) dxKeys.nextElement();
                String desc = dxProp.getProperty(code);
-               
+
                    List<BillingDxCode> dxList = bDx.getByDxCode(code);
                    if (dxList == null || dxList.size() == 0){ //New Code
                         BillingDxCode dxCode = new BillingDxCode();
@@ -176,7 +176,7 @@ public class ManageTeleplanAction extends DispatchAction {
                         bDx.save(dxCode);
                    }
 /*
- We could change this to update descriptions of older codes.  But it would wipe out any customizations that had been made.                    
+ We could change this to update descriptions of older codes.  But it would wipe out any customizations that had been made.
  */
 //                   else{
 //                       if (dxList.size() > 1){
@@ -192,7 +192,7 @@ public class ManageTeleplanAction extends DispatchAction {
 //
 //                   }
 
-                   
+
            }
            return mapping.findForward("success");
     }
@@ -201,21 +201,21 @@ public class ManageTeleplanAction extends DispatchAction {
      *  2 = MSP ICD9 Codes (3 char)
 	*      1 = MSP Explanatory Codes List
      */
-    
+
     public ActionForward updateExplanatoryCodesList(ActionMapping mapping, ActionForm  form,
            HttpServletRequest request, HttpServletResponse response)
            throws Exception {
-        
+
 
            TeleplanUserPassDAO dao = new TeleplanUserPassDAO();
            String[] userpass = dao.getUsernamePassword();
            TeleplanService tService = new TeleplanService();
            TeleplanAPI tAPI = tService.getTeleplanAPI(userpass[0],userpass[1]);
-           
+
            TeleplanResponse tr = tAPI.getAsciiFile("1");
-           
+
            log.debug("real filename "+tr.getRealFilename());
-           
+
            File file = tr.getFile();
            BufferedReader buff = new BufferedReader(new FileReader(file));
 
@@ -274,10 +274,10 @@ public class ManageTeleplanAction extends DispatchAction {
            log.debug(sb.toString());
            return mapping.findForward("success");
     }
-    
-    
+
+
     public ActionForward commitUpdateBillingCodes(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response)
-           throws Exception {
+            {
            String[] codes = request.getParameterValues("codes");
            if (codes != null){
                for(String code: codes){
@@ -288,13 +288,13 @@ public class ManageTeleplanAction extends DispatchAction {
                   if (bcd.getBillingCodeByCode(nCode) == null){ //NEW CODE
                     bcd.addBillingCode(nCode,desc,fee);
                   }else{ //UPDATE PRICE
-                    bcd.updateBillingCodePrice(nCode,fee); 
+                    bcd.updateBillingCodePrice(nCode,fee);
                   }
                }
            }
            return mapping.findForward("success");
     }
-    
+
     public ActionForward getSequenceNumber(ActionMapping mapping, ActionForm  form,
            HttpServletRequest request, HttpServletResponse response)
            throws Exception {
@@ -302,14 +302,14 @@ public class ManageTeleplanAction extends DispatchAction {
            OscarProperties prop = OscarProperties.getInstance();
            String datacenter = prop.getProperty("dataCenterId","");
            if(datacenter.length() != 5){
-               //this.addMessages() //TODO:ADD MESSAGE ABOUT DATA CENTER NOT BEING CORRECT 
+               //this.addMessages() //TODO:ADD MESSAGE ABOUT DATA CENTER NOT BEING CORRECT
                 log.debug("returning because of datacenter #"+datacenter);
                 return mapping.findForward("success");
            }
            TeleplanUserPassDAO dao = new TeleplanUserPassDAO();
            String[] userpass = dao.getUsernamePassword();
            TeleplanService tService = new TeleplanService();
-           
+
            TeleplanAPI tAPI = null;
            try{
                 tAPI = tService.getTeleplanAPI(userpass[0],userpass[1]);
@@ -318,18 +318,18 @@ public class ManageTeleplanAction extends DispatchAction {
                request.setAttribute("error",e.getMessage());
                return mapping.findForward("success");
            }
-           
-           
+
+
            int sequenceNumber = tService.getSequenceNumber(tAPI,datacenter);
-        
+
            TeleplanSequenceDAO seq = new TeleplanSequenceDAO();
            seq.saveUpdateSequence(sequenceNumber);
            return mapping.findForward("success");
     }
-    
+
     public ActionForward setSequenceNumber(ActionMapping mapping, ActionForm  form,
            HttpServletRequest request, HttpServletResponse response)
-           throws Exception {
+            {
            log.debug("setSequenceNumber");
            String sequence = request.getParameter("num");
            int sequenceNumber = -1;
@@ -339,24 +339,24 @@ public class ManageTeleplanAction extends DispatchAction {
                //TODO: ADDED ERROR MESSAGE ABOUT THE NUMBER NOT BEING A NUMBER!
                return mapping.findForward("success");
            }
-           
+
            if (sequenceNumber < 0 || sequenceNumber > 9999999){
                //TODO: ADDED ERROR MESSAGE ABOUT NUMBER BEING OUT OF RANGE
                return mapping.findForward("success");
            }
-           
+
            TeleplanSequenceDAO seq = new TeleplanSequenceDAO();
            seq.saveUpdateSequence(sequenceNumber);
            return mapping.findForward("success");
     }
-    
-    
+
+
     public ActionForward sendFile(ActionMapping mapping, ActionForm  form,
            HttpServletRequest request, HttpServletResponse response)
            throws Exception {
            log.debug("sendFile Start");
            String id  = request.getParameter("id");
-           
+
            TeleplanUserPassDAO dao = new TeleplanUserPassDAO();
            String[] userpass = dao.getUsernamePassword();
            TeleplanService tService = new TeleplanService();
@@ -368,29 +368,29 @@ public class ManageTeleplanAction extends DispatchAction {
                request.setAttribute("error",e.getMessage());
                return mapping.findForward("submission");
            }
-           
-           
-           
+
+
+
            //TODO: validate username - make sure url is not null
            BillActivityDAO billActDAO = new BillActivityDAO();
            List l = billActDAO.getBillactivityByID(id);
-           
+
            Billactivity b = (Billactivity) l.get(0);
            String filename = b.getOhipfilename();
-           
+
            OscarProperties prop = OscarProperties.getInstance();
            String datacenter = prop.getProperty("HOME_DIR","");
-           
+
            File f = new File(datacenter,filename);
-           
-           
+
+
            if ( f != null && log.isDebugEnabled()){
                log.debug("File is Readable: "+f.canRead());
                log.debug("File exists: "+f.exists());
                log.debug("File Path " +f.getCanonicalPath());
            }
            log.info("sending file "+f.getAbsolutePath());
-           
+
            TeleplanResponse tr = tAPI.putMSPFile(f);
            log.debug("sendFile End"+tr.getResult());
            if(!tr.isSuccess()){
@@ -398,19 +398,19 @@ public class ManageTeleplanAction extends DispatchAction {
            }else{
                billActDAO.setStatusToSent(b);
            }
-           
-           
+
+
            return mapping.findForward("submission");
-    }  
-    
+    }
+
     public ActionForward remit(ActionMapping mapping, ActionForm  form,
            HttpServletRequest request, HttpServletResponse response)
-           throws Exception {
-           
+            {
+
            TeleplanUserPassDAO dao = new TeleplanUserPassDAO();
            String[] userpass = dao.getUsernamePassword();
            TeleplanService tService = new TeleplanService();
-           
+
            TeleplanAPI tAPI = null;
            try{
                 tAPI = tService.getTeleplanAPI(userpass[0],userpass[1]);
@@ -419,55 +419,54 @@ public class ManageTeleplanAction extends DispatchAction {
                request.setAttribute("error",e.getMessage());
                return mapping.findForward("success");
            }
-        
+
            TeleplanResponse tr = tAPI.getRemittance(true);
            log.debug(tr.toString());
            log.debug("real filename "+tr.getRealFilename());
            request.setAttribute("filename",tr.getRealFilename());
            return mapping.findForward("remit");
     }
-    
+
     public ActionForward setPass(ActionMapping mapping, ActionForm  form,
            HttpServletRequest request, HttpServletResponse response)
-           throws Exception {
+            {
            String newpass  = request.getParameter("newpass");
            TeleplanUserPassDAO dao = new TeleplanUserPassDAO();
            dao.saveUpdatePasssword(newpass);
            return mapping.findForward("success");
     }
-    
-            
+
+
     public ActionForward changePass(ActionMapping mapping, ActionForm  form,
-           HttpServletRequest request, HttpServletResponse response)
-           throws Exception {
-           
+           HttpServletRequest request, HttpServletResponse response) {
+
            String newpass  = request.getParameter("newpass");
            String confpass = request.getParameter("confpass");
-           
+
            //TODO: validate username - make sure url is not null
-           
-           if (!newpass.equals(confpass)){  
+
+           if (!newpass.equals(confpass)){
                return mapping.findForward("error");
            }
            //CHECK TELEPLAN
-           
+
            TeleplanUserPassDAO dao = new TeleplanUserPassDAO();
            String[] userpass = dao.getUsernamePassword();
-           
-           
+
+
            TeleplanAPI tAPI = new TeleplanAPI();
            try{
-              //THIS IS DIFFERENT BECAUSE THE NORMAL TELEPLAN SERVICE WILL THROW AN EXCEPTION BECAUSE IT CHECKS FOR RESULT OF SUCCESS.  
+              //THIS IS DIFFERENT BECAUSE THE NORMAL TELEPLAN SERVICE WILL THROW AN EXCEPTION BECAUSE IT CHECKS FOR RESULT OF SUCCESS.
                //IF PASSWORD HAS EXPIRED THE RESULTS is EXPIRED.PASSWORD
               TeleplanResponse tr = tAPI.login(userpass[0],userpass[1]);
-              
-              
+
+
            }catch(Exception e){
                log.debug(e.getMessage(),e);
                request.setAttribute("error",e.getMessage());
                return mapping.findForward("success");
            }
-           
+
            TeleplanResponse tr = tAPI.changePassword(userpass[0],userpass[1],newpass,confpass);
            log.debug("change password "+tr.getResult());
            if(!tr.isSuccess()){
@@ -477,8 +476,8 @@ public class ManageTeleplanAction extends DispatchAction {
            }
            return mapping.findForward("success");
     }
-    
-    
+
+
     public ActionForward checkElig(ActionMapping mapping, ActionForm  form,
            HttpServletRequest request, HttpServletResponse response)
            throws Exception {
@@ -490,11 +489,11 @@ public class ManageTeleplanAction extends DispatchAction {
            Demographic demo = dDao.getDemographic(demographicNo);
 
            Date billingDate = new Date();
-           
+
            TeleplanUserPassDAO dao = new TeleplanUserPassDAO();
            String[] userpass = dao.getUsernamePassword();
            TeleplanService tService = new TeleplanService();
-           
+
            TeleplanAPI tAPI = null;
            try{
                 tAPI = tService.getTeleplanAPI(userpass[0],userpass[1]);
@@ -503,7 +502,7 @@ public class ManageTeleplanAction extends DispatchAction {
                request.setAttribute("error",e.getMessage());
                return mapping.findForward("checkElig");
            }
-           
+
            String phn = demo.getHin();
            String dateofbirthyyyy= demo.getYearOfBirth();
            String dateofbirthmm= demo.getMonthOfBirth();
@@ -511,31 +510,31 @@ public class ManageTeleplanAction extends DispatchAction {
            String dateofserviceyyyy= UtilDateUtilities.justYear(billingDate);
            String dateofservicemm= UtilDateUtilities.justMonth(billingDate);
            String dateofservicedd= UtilDateUtilities.justDay(billingDate);
-           boolean patientvisitcharge= true; 
+           boolean patientvisitcharge= true;
            boolean lasteyeexam=true;
            boolean patientrestriction=true;
-           
+
            TeleplanResponse tr = tAPI.checkElig(phn,dateofbirthyyyy,dateofbirthmm,dateofbirthdd,dateofserviceyyyy,dateofservicemm,dateofservicedd,patientvisitcharge,lasteyeexam, patientrestriction);
            log.debug(tr.getResult());
            log.debug(tr.isSuccess());
            log.debug(tr.toString());
            request.setAttribute("Result",tr.getResult());
 
-           
+
            String realFile = tr.getRealFilename();
            if (realFile != null && !realFile.trim().equals("")){
                File file = tr.getFile();
                BufferedReader buff = new BufferedReader(new FileReader(file));
                StringBuilder sb = new StringBuilder();
                String line = null;
-               
+
                while ((line = buff.readLine()) != null) {
 
                   if (line != null && line.startsWith("ELIG_ON_DOS:")){
                       String el = line.substring(12).trim();
                       if(el.equalsIgnoreCase("no")){
                         request.setAttribute("Result","Failure");
-                        
+
                         line = "<span style=\"color:red; font-weight:bold;\">"+line+"</span>";
                       }
                   }
@@ -543,18 +542,18 @@ public class ManageTeleplanAction extends DispatchAction {
                   sb.append("<br>");
                }
                request.setAttribute("Msgs", sb.toString());//tr.getMsgs());
-            
+
            }else{
                request.setAttribute("Msgs", tr.getMsgs());
 
            }
-           
+
            //request.setAttribute("message",tr.toString());
            return mapping.findForward("checkElig");
     }
-    
-   
-    
-    
-    
+
+
+
+
+
 }

@@ -1,6 +1,5 @@
 package oscar.form.study.HSFO.pageUtil;
 
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,7 +29,7 @@ public class RecommitHSFOAction extends DispatchActionSupport {
 
     protected static Logger logger = Logger.getLogger(RecommitHSFOAction.class);
 
-    public ActionForward showSchedule(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws SQLException {
+    public ActionForward showSchedule(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
         LazyValidatorForm sform = (LazyValidatorForm)form;
         boolean sflag = false;// whether have current schedule
         boolean cflag = true;// whether copy the demographic info to
@@ -179,7 +178,7 @@ public class RecommitHSFOAction extends DispatchActionSupport {
 
     }
 
-    public ActionForward test(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward test(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
 
         return null;
     }

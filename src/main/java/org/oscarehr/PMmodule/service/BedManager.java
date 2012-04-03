@@ -323,7 +323,7 @@ public class BedManager {
     			}
     		}
     	}
-    	return (Bed[])bedList.toArray(new Bed[bedList.size()]);
+    	return bedList.toArray(new Bed[bedList.size()]);
     }
     /**
      * Get unreserved beds by roomId and clientBedId

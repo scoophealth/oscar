@@ -19,7 +19,6 @@ import org.caisi.dao.TicklerDAO;
 import org.caisi.model.CustomFilter;
 import org.caisi.model.Tickler;
 import org.oscarehr.PMmodule.dao.AdmissionDao;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Admission;
@@ -29,6 +28,7 @@ import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.common.dao.DemographicCustDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DxresearchDAO;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.PreventionDao;
@@ -165,7 +165,7 @@ public class OscarChartPrinter {
     }
 
 
-	public void printDocHeaderFooter() throws IOException, DocumentException {
+	public void printDocHeaderFooter() throws DocumentException {
     	String headerTitle = demographic.getFormattedName() + " " + demographic.getAge() + " " + demographic.getSex() + " DOB:" + demographic.getFormattedDob();
 
     	//set up document title and header
@@ -248,7 +248,7 @@ public class OscarChartPrinter {
     }
 
 
-	public void printMasterRecord() throws IOException, DocumentException {
+	public void printMasterRecord() throws DocumentException {
 		if( newPage ) {
             document.newPage();
             newPage=false;
@@ -380,8 +380,8 @@ public class OscarChartPrinter {
         @SuppressWarnings("unchecked")
 		ArrayList<HashMap<String,String>> demoR = demoRel.getDemographicRelationships(String.valueOf(demographic.getDemographicNo()));
 		for (int j=0; j<demoR.size(); j++) {
-		    HashMap<String,String> r = (HashMap<String,String>) demoR.get(j);
-		    String relationDemographicNo = (String) r.get("demographic_no");
+		    HashMap<String,String> r = demoR.get(j);
+		    String relationDemographicNo = r.get("demographic_no");
 		    Demographic relationDemographic = demographicDao.getClientByDemographicNo(Integer.parseInt(relationDemographicNo));
 		    String relation = r.get("relation");
 		    String subDecisionMaker = r.get("sub_decision_maker");
@@ -415,7 +415,7 @@ public class OscarChartPrinter {
 	}
 
 
-	public void printAppointmentHistory() throws IOException, DocumentException {
+	public void printAppointmentHistory() throws DocumentException {
 		if( newPage ) {
             document.newPage();
             newPage=false;
@@ -446,7 +446,7 @@ public class OscarChartPrinter {
 	}
 
 
-    public void printCPPItem(String heading, Collection<CaseManagementNote> notes) throws IOException, DocumentException {
+    public void printCPPItem(String heading, Collection<CaseManagementNote> notes) throws DocumentException {
         if( newPage )
             document.newPage();
       //  else
@@ -474,7 +474,7 @@ public class OscarChartPrinter {
 
 
 
-    public void printNotes(Collection<CaseManagementNote>notes, boolean compact) throws IOException, DocumentException{
+    public void printNotes(Collection<CaseManagementNote>notes, boolean compact) throws DocumentException{
 
         CaseManagementNote note;
         Font obsfont = new Font(bf, FONTSIZE, Font.UNDERLINE);
@@ -536,7 +536,7 @@ public class OscarChartPrinter {
 
 
 
-    public void printAllergies(List<Allergy> allergies) throws IOException, DocumentException {
+    public void printAllergies(List<Allergy> allergies) throws DocumentException {
     	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 
  /*
@@ -570,10 +570,10 @@ public class OscarChartPrinter {
 
 
 
-   public void printRx(String demoNo) throws IOException, DocumentException {
+   public void printRx(String demoNo) throws DocumentException {
         printRx(demoNo,null);
     }
-    public void printRx(String demoNo,List<CaseManagementNote> cpp) throws IOException, DocumentException {
+    public void printRx(String demoNo,List<CaseManagementNote> cpp) throws DocumentException {
         if( demoNo == null )
             return;
         /*
@@ -620,7 +620,7 @@ public class OscarChartPrinter {
     }
 
 
-    public void printPreventions() throws IOException, DocumentException {
+    public void printPreventions() throws DocumentException {
         List<Prevention> preventions = preventionDao.findNotDeletedByDemographicId(demographic.getDemographicNo());
 
         if(preventions.size()==0) {
@@ -649,7 +649,7 @@ public class OscarChartPrinter {
 
     }
 
-    public void printTicklers() throws IOException, DocumentException {
+    public void printTicklers() throws DocumentException {
     	TicklerDAO ticklerDao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
     	CustomFilter filter = new CustomFilter();
     	filter.setDemographic_no(String.valueOf(demographic.getDemographicNo()));
@@ -697,7 +697,7 @@ public class OscarChartPrinter {
 
     }
 
-    public void printDiseaseRegistry() throws IOException, DocumentException {
+    public void printDiseaseRegistry() throws DocumentException {
     	DxresearchDAO dxDao = (DxresearchDAO)SpringUtils.getBean("DxresearchDAO");
     	IssueDAO issueDao = (IssueDAO)SpringUtils.getBean("IssueDAO");
     	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -744,7 +744,7 @@ public class OscarChartPrinter {
 
     }
 
-    public void printCurrentAdmissions() throws IOException, DocumentException {
+    public void printCurrentAdmissions() throws DocumentException {
     	AdmissionDao admissionDao = (AdmissionDao)SpringUtils.getBean("admissionDao");
     	ProgramDao programDao = (ProgramDao)SpringUtils.getBean("programDao");
 
@@ -781,7 +781,7 @@ public class OscarChartPrinter {
 
     }
 
-    public void printPastAdmissions() throws IOException, DocumentException {
+    public void printPastAdmissions() throws DocumentException {
     	AdmissionDao admissionDao = (AdmissionDao)SpringUtils.getBean("admissionDao");
     	ProgramDao programDao = (ProgramDao)SpringUtils.getBean("programDao");
     	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -824,7 +824,7 @@ public class OscarChartPrinter {
 
     }
 
-    public void printCurrentIssues() throws IOException, DocumentException {
+    public void printCurrentIssues() throws  DocumentException {
     	CaseManagementIssueDAO cmIssueDao = (CaseManagementIssueDAO)SpringUtils.getBean("CaseManagementIssueDAO");
 
     	List<CaseManagementIssue> issues = cmIssueDao.getIssuesByDemographic(String.valueOf(demographic.getDemographicNo()));

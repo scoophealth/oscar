@@ -408,10 +408,10 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 			for (Object o : results) {
 				Intake intake = (Intake) o;
 
-				Demographic client = (Demographic) getHibernateTemplate().get(Demographic.class, intake.getClientId());
+				Demographic client = getHibernateTemplate().get(Demographic.class, intake.getClientId());
 				intake.setClient(client);
 
-				Provider staff = (Provider) getHibernateTemplate().get(Provider.class, intake.getStaffId());
+				Provider staff = getHibernateTemplate().get(Provider.class, intake.getStaffId());
 				intake.setStaff(staff);
 
 				intake.setProgramId(programId);

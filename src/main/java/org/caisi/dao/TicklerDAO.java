@@ -48,7 +48,7 @@ public class TicklerDAO extends HibernateDaoSupport {
     }
 
     public Tickler getTickler(Long id) {
-        return (Tickler)getHibernateTemplate().get(Tickler.class, id);
+        return getHibernateTemplate().get(Tickler.class, id);
     }
 
     public void addComment(Long tickler_id, String provider, String message) {
@@ -98,7 +98,7 @@ public class TicklerDAO extends HibernateDaoSupport {
         ArrayList paramList = new ArrayList();
         query = getTicklerQueryString(query,  paramList,  filter);
         Object params[] = paramList.toArray(new Object[paramList.size()]);
-        return (List)getHibernateTemplate().find(query + "order by t.service_date " + tickler_date_order, params);
+        return getHibernateTemplate().find(query + "order by t.service_date " + tickler_date_order, params);
     }
     
     public int getActiveTicklerCount(String providerNo){

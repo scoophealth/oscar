@@ -120,7 +120,7 @@ public class TicklerDAO extends HibernateDaoSupport {
         }
         Object params[] = paramList.toArray(new Object[paramList.size()]);
 
-        return (List)getHibernateTemplate().find(query + "order by t.service_date " + tickler_date_order, params);
+        return getHibernateTemplate().find(query + "order by t.service_date " + tickler_date_order, params);
     }
 
 }

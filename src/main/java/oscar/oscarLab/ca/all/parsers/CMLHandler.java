@@ -122,9 +122,9 @@ public class CMLHandler implements MessageHandler {
     public String getObservationHeader(int i, int j){
         try{
             Terser terser = new Terser(msg);
-            return (getString(terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),4,0,1,1))+" "+
-                    getString(terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),4,0,2,1))+" "+
-                    getString(terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),4,0,3,1))).trim();
+            return (getString(Terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),4,0,1,1))+" "+
+                    getString(Terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),4,0,2,1))+" "+
+                    getString(Terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),4,0,3,1))).trim();
         }catch(Exception e){
             return("");
         }
@@ -162,7 +162,7 @@ public class CMLHandler implements MessageHandler {
     public String getOBXResult(int i, int j){
         try{
             Terser terser = new Terser(msg);
-            return(getString(terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),5,0,1,1)));
+            return(getString(Terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),5,0,1,1)));
         }catch(Exception e){
             return("");
         }
@@ -329,7 +329,7 @@ public class CMLHandler implements MessageHandler {
         try {
             // Some examples
             DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            java.util.Date date = (java.util.Date)formatter.parse(dob);
+            java.util.Date date = formatter.parse(dob);
             age = UtilDateUtilities.calcAge(date);
         } catch (ParseException e) {
             logger.error("Could not get age", e);

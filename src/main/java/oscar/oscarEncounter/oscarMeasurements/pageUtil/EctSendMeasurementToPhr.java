@@ -57,7 +57,7 @@ public class EctSendMeasurementToPhr extends Action {
 	        
 	        EctMeasurementsDataBeanHandler hd = new EctMeasurementsDataBeanHandler(demographicNo);
 	        for (String measurementType: measurementTypeList) {
-	            List<EctMeasurementsDataBean> measurements =  hd.getMeasurementObjectByType(measurementType, demographicNo);
+	            List<EctMeasurementsDataBean> measurements =  EctMeasurementsDataBeanHandler.getMeasurementObjectByType(measurementType, demographicNo);
 	            for (EctMeasurementsDataBean measurement: measurements) {
 	                if (!phrService.isIndivoRegistered(measurementType, measurement.getId()+"")) {
 	                      PHRMeasurement phrMeasurement = new PHRMeasurement(provider, demographicNo, myOscarUserId, measurementType, measurement);

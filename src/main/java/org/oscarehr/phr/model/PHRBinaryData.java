@@ -13,7 +13,6 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 
 import org.indivo.IndivoException;
@@ -44,42 +43,42 @@ import oscar.oscarProvider.data.ProviderMyOscarIdData;
  * @author root
  */
 public class PHRBinaryData extends PHRDocument {
-    
+
     /** Creates a new instance of PHRBinaryDocument */
     public PHRBinaryData() {
     }
-    
+
     public PHRBinaryData(PHRAuthentication auth, ProviderData sender, String recipientOscarId, int recipientType, Long recipientMyOscarUserId, EDoc document) throws JAXBException, IndivoException {
         //Temp data: We're not setting the document just yet
-        
+
         GregorianCalendar calendar = new GregorianCalendar();
         String fname = document.getType() + calendar.get(Calendar.DAY_OF_MONTH) + "-" + String.valueOf(calendar.get(Calendar.MONTH)+1) + "-" + calendar.get(Calendar.YEAR);
-        
+
         BinaryDataType binaryDataType = getPhrBinaryData(document.getContentType(), document.getDescription(), fname, new byte[0]);
         IndivoDocumentType indivoDoc = getPhrBinaryDataDocument(sender, binaryDataType);
 
         this.setSenderMyOscarUserId(auth.getMyOscarUserId());
         this.setSenderOscar(sender.getProviderNo());
-        
+
         setConstructorData(recipientOscarId, recipientType, recipientMyOscarUserId, indivoDoc);
     }
 
-    public PHRBinaryData(Provider provider, String recipientOscarId, int recipientType, Long recipientMyOscarUserId, String documentType, String documentContentType, String documentDesription) throws JAXBException, IndivoException {        
+    public PHRBinaryData(Provider provider, String recipientOscarId, int recipientType, Long recipientMyOscarUserId, String documentType, String documentContentType, String documentDesription) throws JAXBException, IndivoException {
         //Temp data: We're not setting the document just yet
-        
+
         GregorianCalendar calendar = new GregorianCalendar();
         String fname = documentType + calendar.get(Calendar.DAY_OF_MONTH) + "-" + String.valueOf(calendar.get(Calendar.MONTH)+1) + "-" + calendar.get(Calendar.YEAR);
-        
+
         BinaryDataType binaryDataType = getPhrBinaryData(documentContentType, documentDesription, fname, new byte[0]);
         IndivoDocumentType indivoDoc = getPhrBinaryDataDocument(provider, binaryDataType);
         this.setSenderOscar(provider.getProviderNo());
         this.setSenderMyOscarUserId(Long.parseLong(ProviderMyOscarIdData.getMyOscarId(provider.getProviderNo())));
-        
+
         setConstructorData(recipientOscarId, recipientType, recipientMyOscarUserId, indivoDoc);
     }
 
 	private void setConstructorData(String recipientOscarId, int recipientType, long recipientMyOscarUserId, IndivoDocumentType indivoDoc) throws IndivoException, JAXBException {
-	    byte[] docContentBytes = JAXBUtils.marshalToByteArray((JAXBElement) new IndivoDocument(indivoDoc), JAXBContext.newInstance(IndivoDocumentType.class.getPackage().getName()));
+	    byte[] docContentBytes = JAXBUtils.marshalToByteArray(new IndivoDocument(indivoDoc), JAXBContext.newInstance(IndivoDocumentType.class.getPackage().getName()));
         String docContentStr = new String(docContentBytes);
         this.setPhrClassification(MedicalDataType.BINARY_DOCUMENT.name());
         this.setSenderType(PHRDocument.TYPE_PROVIDER);
@@ -88,19 +87,19 @@ public class PHRBinaryData extends PHRDocument {
         this.setReceiverMyOscarUserId(recipientMyOscarUserId);
         this.setDocContent(docContentStr);
     }
-    
+
     public static IndivoDocumentType mountDocument(String oscarId, IndivoDocumentType doc) throws JAXBException, IndivoException {
         EDoc eDoc = EDocUtil.getDoc(oscarId);
         byte[] data = EDocUtil.getFile(eDoc.getFilePath());
         JAXBContext binaryDataContext = JAXBContext.newInstance(BinaryData.class.getPackage().getName());
         BinaryDataType bdt = (BinaryDataType) DocumentUtils.getDocumentAnyObject(doc, binaryDataContext.createUnmarshaller());
         bdt.setData(data);
-        
+
         AuthorType author = doc.getDocumentHeader().getAuthor();
         IndivoDocumentType indivoDoc = getPhrBinaryDataDocument(author.getName(), author.getIndivoId(), author.getRole().getValue(), bdt);
         return indivoDoc;
     }
-        
+
     private BinaryDataType getPhrBinaryData(String mimeType, String fileDesc, String filename, byte[] data) {
         BinaryDataType binaryDataType = new BinaryDataType();
         binaryDataType.setMimeType(mimeType);
@@ -109,11 +108,11 @@ public class PHRBinaryData extends PHRDocument {
         binaryDataType.setData(data);
         return binaryDataType;
     }
-    
+
     private static IndivoDocumentType getPhrBinaryDataDocument(ProviderData sender, BinaryDataType binaryData) throws JAXBException, IndivoException {
         return getPhrBinaryDataDocument(sender.getFirst_name() + " " + sender.getLast_name(), sender.getMyOscarId(), PHRDocument.PHR_ROLE_PROVIDER, binaryData);
     }
-    
+
     private static IndivoDocumentType getPhrBinaryDataDocument(Provider provider, BinaryDataType binaryData) throws JAXBException, IndivoException {
         return getPhrBinaryDataDocument(provider.getFirstName() + " " + provider.getLastName(), ProviderMyOscarIdData.getMyOscarId(provider.getProviderNo()), PHRDocument.PHR_ROLE_PROVIDER, binaryData);
     }
@@ -124,12 +123,12 @@ public class PHRBinaryData extends PHRDocument {
         org.indivo.xml.phr.binarydata.ObjectFactory binFactory = new org.indivo.xml.phr.binarydata.ObjectFactory();
         BinaryData bd = binFactory.createBinaryData(binaryData);
 
-        Element element = jaxbUtils.marshalToElement(bd, JAXBContext.newInstance(BinaryData.class.getPackage().getName()));
-        IndivoDocumentType doc = generator.generateDefaultDocument(providerPhrId, providerFullName, providerRole,  DocumentClassificationUrns.BINARYDATA, ContentTypeQNames.BINARYDATA, element);
+        Element element = JAXBUtils.marshalToElement(bd, JAXBContext.newInstance(BinaryData.class.getPackage().getName()));
+        IndivoDocumentType doc = DocumentGenerator.generateDefaultDocument(providerPhrId, providerFullName, providerRole,  DocumentClassificationUrns.BINARYDATA, ContentTypeQNames.BINARYDATA, element);
         DocumentHeaderType header = doc.getDocumentHeader();
         ContentDescriptionType contentDescription = header.getContentDescription();
-        contentDescription.setDescription(binaryData.getFileDescription());         
+        contentDescription.setDescription(binaryData.getFileDescription());
         return doc;
     }
-    
+
 }

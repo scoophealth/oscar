@@ -75,13 +75,13 @@ public class EctDisplayDecisionSupportAlertsAction extends EctDisplayAction {
                     if (dsConsequence.getConsequenceType() != DSConsequence.ConsequenceType.warning)
                         continue;
                     index++;
-                    NavBarDisplayDAO.Item item = Dao.Item();
-                    winName = (String)dsConsequence.getConsequenceType().toString() + bean.demographicNo;
+                    NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
+                    winName = dsConsequence.getConsequenceType().toString() + bean.demographicNo;
                     
                     url = "popupPage(500,950,'" + winName + "','" + request.getContextPath() + "/oscarEncounter/decisionSupport/guidelineAction.do?method=detail&guidelineId=" + dsGuideline.getId() + "&provider_no=" + bean.providerNo + "&demographic_no=" + bean.demographicNo + "&parentAjaxId=" + cmd + "'); return false;";
                     //Date date = (Date)curform.get("formDateAsDate");
                     //String formattedDate = DateUtils.getDate(date,dateFormat,request.getLocale());
-                    key = StringUtils.maxLenString((String)dsConsequence.getText(), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES);
+                    key = StringUtils.maxLenString(dsConsequence.getText(), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES);
                     item.setLinkTitle(dsConsequence.getText());
                     key = StringEscapeUtils.escapeJavaScript(key);
                     js = "itemColours['" + key + "'] = '" + BGCOLOUR + "'; autoCompleted['" + key + "'] = \"" + url + "\"; autoCompList.push('" + key + "');";

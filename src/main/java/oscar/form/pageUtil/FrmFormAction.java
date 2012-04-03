@@ -104,7 +104,7 @@ public class FrmFormAction extends Action {
 
         Properties props = new Properties();
         EctFormProp formProp = EctFormProp.getInstance();
-        Vector measurementTypes = formProp.getMeasurementTypes();
+        Vector measurementTypes = EctFormProp.getMeasurementTypes();
         logger.debug("num measurements "+measurementTypes.size());
         String demographicNo = null;
         String providerNo = (String) session.getAttribute("user");
@@ -366,7 +366,7 @@ public class FrmFormAction extends Action {
         try{
 
             org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
-            if(!gValidator.isBlankOrNull(inputValue)){
+            if(!GenericValidator.isBlankOrNull(inputValue)){
                 //Find if the same data has already been entered into the system
                 String sql = "SELECT * FROM measurements WHERE demographicNo='"+demographicNo
                             + "' AND type='" + mt.getType() + "' AND dataField='"+inputValue

@@ -73,13 +73,13 @@ public final class WCBAction extends Action {
   String target = "success";
 
   BillingmasterDAO billingmasterDAO = null;
-  
+
   public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,HttpServletResponse response)throws Exception, ServletException {
       MiscUtils.getLogger().debug("In WCBAction Jackson");
-      
+
        WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
      billingmasterDAO = (BillingmasterDAO) ctx.getBean("BillingmasterDAO");
-      
+
 
     WCBForm frm = (WCBForm) form;
     request.setAttribute("WCBForm", frm);
@@ -131,21 +131,21 @@ public final class WCBAction extends Action {
    * and bill amount
    * @param frm WCBForm
    */
-  private void createWCBEntry(WCBForm frm) throws Exception{
-    // WCB wcb = new WCB(); 
-      
-   // BeanUtils.copyProperties(wcb,frm);  
+  private void createWCBEntry(WCBForm frm) {
+    // WCB wcb = new WCB();
+
+   // BeanUtils.copyProperties(wcb,frm);
 
 
    // billingmasterDAO.save(wcb);
 
-    
-    
-    MiscUtils.getLogger().debug("WOULD BE A GOOD TIME TO SAVE---  i still get called WCB ACTION");  
-      
-//    
+
+
+    MiscUtils.getLogger().debug("WOULD BE A GOOD TIME TO SAVE---  i still get called WCB ACTION");
+
+//
 //    try {
-//      
+//
 //      DBHandler.RunSQL(frm.SQL("0", "0"));
 //      List idList = SqlUtils.getQueryResultsList("SELECT max(ID) from wcb");
 //      if(idList!=null){

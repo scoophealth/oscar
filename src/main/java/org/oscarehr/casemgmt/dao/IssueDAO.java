@@ -38,7 +38,7 @@ public class IssueDAO extends HibernateDaoSupport {
 	private static Logger logger = MiscUtils.getLogger();
 	
     public Issue getIssue(Long id) {
-		return (Issue)getHibernateTemplate().get(Issue.class, id);
+		return getHibernateTemplate().get(Issue.class, id);
     }
 
     public List<Issue> getIssues() {
@@ -123,7 +123,7 @@ public class IssueDAO extends HibernateDaoSupport {
     	}
     	else
     	{
-    		codes = (List<String>)this.getHibernateTemplate().find("FROM Issue i WHERE i.type = ?", new Object[] {type.toLowerCase()});
+    		codes = this.getHibernateTemplate().find("FROM Issue i WHERE i.type = ?", new Object[] {type.toLowerCase()});
     	}
     	return codes;
     }

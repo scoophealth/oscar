@@ -116,7 +116,7 @@ public class BedDemographicDao extends HibernateDaoSupport {
      * @see org.oscarehr.PMmodule.dao.BedDemographicDao#getBedDemographicStatus(java.lang.Integer)
      */
     public BedDemographicStatus getBedDemographicStatus(Integer bedDemographicStatusId) {
-        BedDemographicStatus bedDemographicStatus = (BedDemographicStatus)getHibernateTemplate().get(BedDemographicStatus.class, bedDemographicStatusId);
+        BedDemographicStatus bedDemographicStatus = getHibernateTemplate().get(BedDemographicStatus.class, bedDemographicStatusId);
         log.debug("getBedDemographicStatus: id: " + (bedDemographicStatus != null?bedDemographicStatus.getId():null));
 
         return bedDemographicStatus;
@@ -150,7 +150,7 @@ public class BedDemographicDao extends HibernateDaoSupport {
     public void saveBedDemographic(BedDemographic bedDemographic) {
         updateHistory(bedDemographic);
 
-        bedDemographic = (BedDemographic)getHibernateTemplate().merge(bedDemographic);
+        bedDemographic = getHibernateTemplate().merge(bedDemographic);
         getHibernateTemplate().flush();
 
         log.debug("saveBedDemographic: " + bedDemographic);

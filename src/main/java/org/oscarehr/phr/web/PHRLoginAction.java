@@ -111,7 +111,7 @@ public class PHRLoginAction extends DispatchAction
 		//set next PHR Exchange for next available time
 		Calendar cal = Calendar.getInstance();
 		cal.roll(Calendar.HOUR_OF_DAY, false);
-		session.setAttribute(phrService.SESSION_PHR_EXCHANGE_TIME, cal.getTime());
+		session.setAttribute(PHRService.SESSION_PHR_EXCHANGE_TIME, cal.getTime());
 		ActionRedirect arr = new ActionRedirect(forwardTo);
 		log.debug("Correct user/pass, auth success");
 		return arr;

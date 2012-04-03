@@ -158,7 +158,7 @@ public class DmsInboxManageAction extends DispatchAction {
 		QueueDao queueDao = (QueueDao) SpringUtils.getBean("queueDao");
 		List<Hashtable> queues = queueDao.getQueues();
 		for (int i = 0; i < queues.size(); i++) {
-			Hashtable ht = (Hashtable) queues.get(i);
+			Hashtable ht = queues.get(i);
 			List<EDoc> EDocs = new ArrayList();
 			String queueId = (String) ht.get("id");
 			queueDocs.put(queueId, EDocs);
@@ -485,7 +485,7 @@ public class DmsInboxManageAction extends DispatchAction {
 		Hashtable<String, List<String>> ab_NormalDoc = new Hashtable();
 
 		for (int i = 0; i < labdocs.size(); i++) {
-			LabResultData data = (LabResultData) labdocs.get(i);
+			LabResultData data = labdocs.get(i);
 
 			List<String> segIDs = new ArrayList();
 			String labPatientId = data.getLabPatientId();
@@ -535,7 +535,7 @@ public class DmsInboxManageAction extends DispatchAction {
 
 			if (valType.equalsIgnoreCase("DOC")) {
 				if (typeDocLab.containsKey("DOC")) {
-					List<String> docids = (List<String>) typeDocLab.get("DOC");
+					List<String> docids = typeDocLab.get("DOC");
 					docids.add(keyDocLabId);// add doc id to list
 					typeDocLab.put("DOC", docids);
 				} else {
@@ -546,7 +546,7 @@ public class DmsInboxManageAction extends DispatchAction {
 				totalDocs++;
 			} else if (valType.equalsIgnoreCase("HL7")) {
 				if (typeDocLab.containsKey("HL7")) {
-					List<String> hl7ids = (List<String>) typeDocLab.get("HL7");
+					List<String> hl7ids = typeDocLab.get("HL7");
 					hl7ids.add(keyDocLabId);
 					typeDocLab.put("HL7", hl7ids);
 				} else {
@@ -740,7 +740,7 @@ public class DmsInboxManageAction extends DispatchAction {
 			}
 			List<ProviderInboxItem> providers = providerInboxRoutingDAO.getProvidersWithRoutingForDocument("DOC", Integer.toString(docid));
 			if (providers.size() > 0) {
-				ProviderInboxItem pii = (ProviderInboxItem) providers.get(0);
+				ProviderInboxItem pii = providers.get(0);
 				docStatus.put(docid, pii.getStatus());
 			}
 			if (patientDocs.containsKey(demoNo)) {
@@ -754,7 +754,7 @@ public class DmsInboxManageAction extends DispatchAction {
 			}
 			if (queueDocNos.containsKey(qid)) {
 
-				List<Integer> ds = (List<Integer>) queueDocNos.get(qid);
+				List<Integer> ds = queueDocNos.get(qid);
 				ds.add(docid);
 				queueDocNos.put(qid, ds);
 

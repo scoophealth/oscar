@@ -30,7 +30,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 public class FacilityMessageDAO extends HibernateDaoSupport  {
 
 	public FacilityMessage getMessage(Long id) {
-		return (FacilityMessage)this.getHibernateTemplate().get(FacilityMessage.class,id);
+		return this.getHibernateTemplate().get(FacilityMessage.class,id);
 	}
 	
 	@SuppressWarnings("unchecked")

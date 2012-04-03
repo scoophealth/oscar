@@ -33,6 +33,7 @@ import java.util.Vector;
 
 import noNamespace.SitePatientVisitRecordsDocument;
 
+import org.apache.commons.validator.GenericValidator;
 import org.apache.xmlbeans.XmlCalendar;
 import org.apache.xmlbeans.XmlOptions;
 import org.oscarehr.util.MiscUtils;
@@ -121,7 +122,7 @@ public class FrmToXMLUtil{
             setWhoWhatWhereWhen(obj,how,who,when,value);
             
              ///FLU SHOT
-            if (getFluShotBillingDate((String) dataProps.getProperty("demographic_no"))!=null){               
+            if (getFluShotBillingDate(dataProps.getProperty("demographic_no"))!=null){               
                addNewMethod = cls.getMethod("addNewBFluShotDoneThisSeason", new Class[] {});
                obj = addNewMethod.invoke(visit,new Object[]{});                       
                setWhoWhatWhereWhen(obj,how,who,when,"true");                 
@@ -136,7 +137,7 @@ public class FrmToXMLUtil{
                 MiscUtils.getLogger().debug("method "+methodCall);
                 org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
                 
-                if(mt.getType().equalsIgnoreCase("BP") && !gValidator.isBlankOrNull(dataProps.getProperty("SBPValue"))){
+                if(mt.getType().equalsIgnoreCase("BP") && !GenericValidator.isBlankOrNull(dataProps.getProperty("SBPValue"))){
                     methodCall = (String) nameProps.get("SBPValue");
                     if (methodCall != null){
                        cls = visit.getClass();
@@ -178,7 +179,7 @@ public class FrmToXMLUtil{
                     
                 }                
 
-                else if (methodCall != null && !gValidator.isBlankOrNull(dataProps.getProperty(itemName+"Value"))){                                                                               
+                else if (methodCall != null && !GenericValidator.isBlankOrNull(dataProps.getProperty(itemName+"Value"))){                                                                               
 
                    cls = visit.getClass();
 

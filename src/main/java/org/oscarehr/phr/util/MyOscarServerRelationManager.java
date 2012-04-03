@@ -31,7 +31,6 @@ import java.util.List;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.myoscar_server.ws.AccountWs;
-import org.oscarehr.myoscar_server.ws.InvalidRequestException_Exception;
 import org.oscarehr.myoscar_server.ws.NoSuchItemException_Exception;
 import org.oscarehr.myoscar_server.ws.Relation;
 import org.oscarehr.myoscar_server.ws.RelationshipTransfer2;
@@ -43,35 +42,35 @@ import oscar.oscarDemographic.data.DemographicData;
 
 public class MyOscarServerRelationManager {
 	private static final Logger logger=MiscUtils.getLogger();
-	
+
 	private static final int MAX_OBJECTS_TO_CACHE = 1024;
-	
+
 	private static QueueCache<String, List<RelationshipTransfer2>> relationDataCache = new QueueCache<String, List <RelationshipTransfer2>>(4, MAX_OBJECTS_TO_CACHE, DateUtils.MILLIS_PER_HOUR*2);
-	
+
 	private static List<RelationshipTransfer2> getRelationShipTransferFromServer(PHRAuthentication auth,String myoscarUsername) throws NoSuchItemException_Exception{
 		AccountWs accountWs=MyOscarServerWebServicesManager.getAccountWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
 		List<RelationshipTransfer2> relationList = accountWs.getRelationshipsByPrimaryPersonIdRelatedPersonId(auth.getMyOscarUserName(),myoscarUsername);
 		return relationList;
 	}
-	
+
 	private static String getCacheKey(String primaryUsername, String relatedUsername){
 		return(primaryUsername + ":" + relatedUsername);
 	}
-	
+
 	public static List<RelationshipTransfer2> getRelationData(PHRAuthentication auth,String myoscarUsername) throws NoSuchItemException_Exception{
-		
+
 		String cacheKey = getCacheKey(auth.getMyOscarUserName(), myoscarUsername);
 		List<RelationshipTransfer2> relationList = relationDataCache.get(cacheKey);
-		
+
 		if(relationList == null){
 			relationList = getRelationShipTransferFromServer(auth, myoscarUsername);
 			relationDataCache.put(cacheKey, relationList);
 		}
 		return relationList;
-	}	
-	
-	public static boolean hasPatientRelationship(PHRAuthentication auth,String myoscarUsername) throws InvalidRequestException_Exception, NoSuchItemException_Exception{
-		
+	}
+
+	public static boolean hasPatientRelationship(PHRAuthentication auth,String myoscarUsername) throws NoSuchItemException_Exception{
+
 		boolean patientRelationshipExists= false;
 		List<RelationshipTransfer2> relationList = getRelationData( auth, myoscarUsername);
 		if(relationList != null){
@@ -84,9 +83,9 @@ public class MyOscarServerRelationManager {
 		}
 		return patientRelationshipExists;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param auth
 	 * @param demoNo
 	 * @return True if relation was created
@@ -96,10 +95,10 @@ public class MyOscarServerRelationManager {
 		boolean relationCreated = false;
 		AccountWs accountWs=MyOscarServerWebServicesManager.getAccountWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
 
-		org.oscarehr.common.model.Demographic demo = new DemographicData().getDemographic(demoNo); 
+		org.oscarehr.common.model.Demographic demo = new DemographicData().getDemographic(demoNo);
         String myOscarUserName = demo.getMyOscarUserName();
         boolean patientRelationshipExists= MyOscarServerRelationManager.hasPatientRelationship(auth,myOscarUserName);
-                
+
         if (!patientRelationshipExists){
 		   accountWs.createRelationshipByUserName(auth.getMyOscarUserName(), myOscarUserName, Relation.PATIENT);
 		   relationCreated = true;
@@ -109,8 +108,8 @@ public class MyOscarServerRelationManager {
         }
         return relationCreated;
     }
-	
-	
-    
-	
+
+
+
+
 }
