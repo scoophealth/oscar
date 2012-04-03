@@ -1,4 +1,4 @@
-<!-- 
+<!--
  *
  * Copyright (c) 2006-. OSCARservice, OpenSoft System. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License.
@@ -29,7 +29,12 @@
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <% java.util.Properties oscarVariables = OscarProperties.getInstance(); %>
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
-
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.DiagnosticCode" %>
+<%@ page import="org.oscarehr.common.dao.DiagnosticCodeDao" %>
+<%
+	DiagnosticCodeDao diagnosticCodeDao = SpringUtils.getBean(DiagnosticCodeDao.class);
+%>
 <%//
 	if (session.getAttribute("user") == null) {
 		response.sendRedirect("../../../logout.jsp");
@@ -50,7 +55,7 @@ GstControlAction db = new GstControlAction();
 GstReport gstRep = new GstReport();
 gstProp = db.readDatabase();
 String gstFlag;
-String flag = gstProp.getProperty("gstFlag", ""); 
+String flag = gstProp.getProperty("gstFlag", "");
 String percent = gstProp.getProperty("gstPercent", "");
 BigDecimal stotal = new BigDecimal(0);
 BigDecimal gstTotal = new BigDecimal(0);
@@ -69,14 +74,14 @@ boolean dupServiceCode = false;
 	} else {
 		vecServiceParam = prepObj.getRequestFormCodeVec(request, "xml_", "1", "1");
 	}
-	
+
 	Vector<String>[] vecServiceParam0 = prepObj.getRequestCodeVec(request, "serviceCode", "serviceUnit", "serviceAt", BillingDataHlp.FIELD_SERVICE_NUM);
 	vecServiceParam[0].addAll(vecServiceParam0[0]);
 	vecServiceParam[1].addAll(vecServiceParam0[1]);
 	vecServiceParam[2].addAll(vecServiceParam0[2]);
 
         //Check whether there are duplicated service code existing
-        //User double click a service code, and then check off that 
+        //User double click a service code, and then check off that
         //service code in billingON page will cause duplicated service
         //code in billing review page.
         TreeMap<String,Integer> mapServiceParam = new TreeMap<String,Integer>();
@@ -85,9 +90,9 @@ boolean dupServiceCode = false;
         }
         if (mapServiceParam.size()!=vecServiceParam[0].size())
             dupServiceCode = true;
-        
+
         /////// hack used to order the billing codes
-        /////// Would make sense to change getServiceCodeReviewVec method to accept the hashtable 
+        /////// Would make sense to change getServiceCodeReviewVec method to accept the hashtable
         /////// But should cause that much of a performance hit. It's generally under 3 items
         String billReferalDate = request.getParameter("service_date");
         Vector v = new Vector();
@@ -99,13 +104,13 @@ boolean dupServiceCode = false;
             h.put("billReferenceDate", billReferalDate);
             v.add(h);
         }
-                
+
         Collections.sort(v,new BillingSortComparator());
-        
+
         vecServiceParam[0] = new Vector();
         vecServiceParam[1] = new Vector();
         vecServiceParam[2] = new Vector();
-        
+
         for (int ii = 0; ii < v.size(); ii++){
             Hashtable h = (Hashtable) v.get(ii);
             vecServiceParam[0].add((String) h.get("serviceCode") );
@@ -113,11 +118,11 @@ boolean dupServiceCode = false;
             vecServiceParam[2].add((String) h.get("serviceAt"));
         }
         ///////--------
-        
+
 	Vector vecCodeItem = prepObj.getServiceCodeReviewVec(vecServiceParam[0], vecServiceParam[1],vecServiceParam[2],billReferalDate);
 	Vector vecPercCodeItem = prepObj.getPercCodeReviewVec(vecServiceParam[0], vecServiceParam[1], vecCodeItem,billReferalDate);  //LINE CAUSING ERROR
 
-                        
+
         Properties propCodeDesc = (new JdbcBillingCodeImpl()).getCodeDescByNames(vecServiceParam[0]);
 			String dxDesc = prepObj.getDxDescription(request.getParameter("dxCode"));
 			String clinicview = oscarVariables.getProperty("clinic_view", "");
@@ -159,16 +164,16 @@ boolean dupServiceCode = false;
 			String warningMsg = "", errorMsg = "";
 			String r_doctor = "", r_doctor_ohip = "";
 			String demoFirst = "", demoLast = "", demoHIN = "", demoVer = "", demoDOB = "", demoDOBYY = "", demoDOBMM = "", demoDOBDD = "", demoHCTYPE = "";
-			String strPatientAddr = ""; 
+			String strPatientAddr = "";
 			sql = "select * from demographic where demographic_no=" + demo_no;
 			rs = dbObj.searchDBRecord(sql);
 			while (rs.next()) {
-				strPatientAddr = rs.getString("first_name") + " " + rs.getString("last_name") + "\n" 
-				+ rs.getString("address") + "\n" 
-				+ rs.getString("city") + ", " + rs.getString("province") + "\n" 
-				+ rs.getString("postal") + "\n" 
+				strPatientAddr = rs.getString("first_name") + " " + rs.getString("last_name") + "\n"
+				+ rs.getString("address") + "\n"
+				+ rs.getString("city") + ", " + rs.getString("province") + "\n"
+				+ rs.getString("postal") + "\n"
 				+ "Tel: " + rs.getString("phone") ;
-				
+
 				assgProvider_no = rs.getString("provider_no");
 				demoFirst = rs.getString("first_name");
 				demoLast = rs.getString("last_name");
@@ -235,7 +240,7 @@ boolean dupServiceCode = false;
 <title>OscarBilling</title>
 <link rel="stylesheet" type="text/css" href="billingON.css" />
 <script language="JavaScript">
-	
+
 	var bClick = false;
 	    function onSave() {
 
@@ -265,7 +270,7 @@ boolean dupServiceCode = false;
 		function settlePayment() {
 		  document.forms[0].payment.value = document.forms[0].total.value;
 		}
-		
+
 		function scriptAttach(elementName) {
 		     var d = elementName;
 		     t0 = escape("document.forms[0].elements[\'"+d+"\'].value");
@@ -278,11 +283,11 @@ boolean dupServiceCode = false;
                     if( element != null )
                         element.value = subtotal;
                 }
-		
+
 	//-->
 
 </script>
-	
+
 <style type="text/css">
 div.wrapper{
     background-color: #eeeeff;
@@ -377,7 +382,7 @@ window.onload=function(){
     <input type="hidden" name="billNo_old" id="billNo_old" value="<%=request.getParameter("billNo_old")%>" />
 	<input type="hidden" name="billStatus_old" id="billStatus_old" value="<%=request.getParameter("billStatus_old")%>" />
 	<input type="hidden" name="billForm" id="billForm" value="<%=request.getParameter("billForm")%>" />
-	
+
 <table border="0" cellpadding="0" cellspacing="2" width="100%" class="myIvory">
 	<tr>
 		<td>
@@ -393,7 +398,7 @@ window.onload=function(){
 		<td>
 		<table border="0" cellspacing="0" cellpadding="0" width="100%" class="myYellow">
 			<tr>
-				<td nowrap width="10%" align="center"><%=demoname%> <%=demoSex.equals("1") ? "Male" : "Female"%> 
+				<td nowrap width="10%" align="center"><%=demoname%> <%=demoSex.equals("1") ? "Male" : "Female"%>
 				<%=" DOB: " + demoDOBYY + "/" + demoDOBMM + "/" + demoDOBDD + " HIN: " + demoHIN + "" + demoVer%>
 				</td>
 				<td align="center"><%=wrongMsg%></td>
@@ -451,7 +456,7 @@ window.onload=function(){
 							request.getParameter("xml_location").indexOf("|") + 1)%> &nbsp;
 							<% if(request.getParameter("m_review")!=null) { out.println("<b>Manual: Y</b>"); } %>
 							</td>
-					
+
 					<% if (bMultisites) { %>
 						<td width="30%"><b>Billing Clinic</b></td>
 						<td width="20%" nowrap="nowrap"><%=request.getParameter("site")%>
@@ -482,12 +487,12 @@ window.onload=function(){
 		<td align="center">
 		<table border="1" width="100%" bordercolorlight="#99A005" bordercolordark="#FFFFFF">
 <%  boolean codeValid = true;
-    
+
     //validation of user entered service codes
     String serviceCodeValue = null;
     for (int i = 0; i < BillingDataHlp.FIELD_SERVICE_NUM; i++) {
 	serviceCodeValue = request.getParameter("serviceCode" + i);
-    
+
 	if (!serviceCodeValue.equals("")) {
 	    sql = "select distinct(service_code) from billingservice where  service_code='" + serviceCodeValue.trim().replaceAll("_","\\_") + "' and termination_date > '" + billReferalDate + "'";
             rs = dbObj.searchDBRecord(sql);
@@ -497,21 +502,20 @@ window.onload=function(){
 		<tr class="myErrorText"><td align=center>
 		    &nbsp;<br>
 		    Service code "<%=serviceCodeValue%>" is invalid. Please go back to correct it.
-		</td></tr>  
+		</td></tr>
 		<%
 	    }
 	}
     }
-    
+
     //validation of diagnostic code (dxcode)
     String dxCodeValue = null;
     for (int i = 0; i < 3; i++) {
 	if (i==0) dxCodeValue=request.getParameter("dxCode");
 	else dxCodeValue=request.getParameter("dxCode" + i);
 	if (!dxCodeValue.equals("")) {
-	    sql = "select diagnostic_code from diagnosticcode where diagnostic_code='" + dxCodeValue.trim() +"'";
-	    rs = dbObj.searchDBRecord(sql);
-	    if (!rs.next()) {
+		List<DiagnosticCode> dcodes = diagnosticCodeDao.findByDiagnosticCode(dxCodeValue.trim());
+		if(dcodes.size() == 0) {
 		codeValid = false;
 		%>
 		<tr class="myErrorText"><td align=center>
@@ -530,7 +534,7 @@ window.onload=function(){
 				<td colspan='3'>Calculation</td>
 				<td>Description</td>
 			</tr>
-<%  }  
+<%  }
 			//Vector[] vecServiceParam = prepObj.getRequestCodeVec(request, "serviceDate", "serviceUnit", "serviceAt", 8);
 			//Vector vecCodeItem = prepObj.getServiceCodeReviewVec(vecServiceParam[0], vecServiceParam[1],
 			//				vecServiceParam[2]);
@@ -542,7 +546,7 @@ window.onload=function(){
 				Vector vecPercNo = new Vector();
 				Vector vecPercMin = new Vector();
 				Vector vecPercMax = new Vector();
-				for(int i=0; i<vecServiceParam[0].size(); i++) { 
+				for(int i=0; i<vecServiceParam[0].size(); i++) {
 					String codeName = (String)vecServiceParam[0].get(i);
 					if(nCode<vecCodeItem.size() && codeName.equals((String) ((BillingReviewCodeItem)vecCodeItem.get(nCode)).getCodeName())) {
 						n++;
@@ -552,7 +556,7 @@ window.onload=function(){
                         String strWarning = (String)((BillingReviewCodeItem)vecCodeItem.get(nCode)).getMsg();
                                                 gstFlag = gstRep.getGstFlag(codeName,billReferalDate);  // Retrieve whether the code has gst involved
                                                 BigDecimal cTotal = new BigDecimal(codeTotal);
-                                                if ( gstFlag.equals("1") ){   // If it does, update the total with the gst calculated                                                    
+                                                if ( gstFlag.equals("1") ){   // If it does, update the total with the gst calculated
                                                     BigDecimal perc = new BigDecimal(percent);
                                                     BigDecimal hund = new BigDecimal(100);
                                                     stotal = cTotal;
@@ -567,7 +571,7 @@ window.onload=function(){
                                                 else {
                                                     gstbilledtotal = gstbilledtotal.add(cTotal).setScale(2, BigDecimal.ROUND_HALF_UP);
                                                 }
-                        if (codeValid) {                 
+                        if (codeValid) {
 			%>
 			<tr class="myGreen">
 				<td align='center' width='3%'><%=""+n %></td>
@@ -584,10 +588,10 @@ window.onload=function(){
 				</td>
 				<td width='25%'><%=propCodeDesc.getProperty(codeName, "") %></td>
 			</tr>
-			<%     
-                        }                        
+			<%
+                        }
 						nCode++;
-					} 
+					}
 					else if(nPerc<vecPercCodeItem.size() && codeName.equals((String) ((BillingReviewPercItem)vecPercCodeItem.get(nPerc)).getCodeName())) {
 			if (codeValid) {
                                             %>
@@ -596,7 +600,7 @@ window.onload=function(){
 				<td align='right' ><%=codeName %> (1)</td>
 				<td align='right'>
 		     <% }
-                                                
+
 						bPerc = true;
 						BillingReviewPercItem percItem = (BillingReviewPercItem)vecPercCodeItem.get(nPerc);
 						String percFee = percItem.getCodeFee();
@@ -607,11 +611,11 @@ window.onload=function(){
 							String percTotal = (Float.parseFloat((String)vecPercTotal.get(j)) )*Integer.parseInt(codeUnit) + "";
 				if (codeValid) {
                                                         %>
-						<input type="checkbox" name="percCode_<%=i %>" value="<%=percTotal %>" onclick="onCheckMaster();" /> <%=percTotal %><font size='-2'>(<%=vecPercFee.get(j) %>x<%=percFee %>x<%=codeUnit %>)</font> | 
+						<input type="checkbox" name="percCode_<%=i %>" value="<%=percTotal %>" onclick="onCheckMaster();" /> <%=percTotal %><font size='-2'>(<%=vecPercFee.get(j) %>x<%=percFee %>x<%=codeUnit %>)</font> |
 				<%
-                                }               
+                                }
                                                 }
-                                if (codeValid) {                
+                                if (codeValid) {
 				%> = <input type="text" name="percCodeSubtotal_<%=i %>" size="5" value="0.00" />
 				<input type="hidden" name="xserviceCode_<%=i %>" value="<%=codeName %>" />
 				<input type="hidden" name="xserviceUnit_<%=i %>" value="<%=codeUnit %>" />
@@ -619,7 +623,7 @@ window.onload=function(){
 				<td width='25%'><%=propCodeDesc.getProperty(codeName, "") %>
 				</td>
 			</tr>
-			<% 
+			<%
                                 }
 						nPerc++;
 						vecPercNo.add(""+i);
@@ -648,13 +652,13 @@ function onCheckMaster() {
 	var nMax = <%=vecPercMax.get(i)%>;
     	//alert(":" + document.forms[0].percCode_<%=iCheckNo%>.type);
     if(document.forms[0].percCode_<%=iCheckNo%>.length == undefined) {
-		if (document.forms[0].percCode_<%=iCheckNo%>.checked){ 
+		if (document.forms[0].percCode_<%=iCheckNo%>.checked){
 			nSubtotal = nSubtotal + eval(document.forms[0].percCode_<%=iCheckNo%>.value*100);
 		}
     }
 	for (n = 0; n < document.forms[0].percCode_<%=iCheckNo%>.length; n++){
 		// If a checkbox has been selected it will return true
-		if (document.forms[0].percCode_<%=iCheckNo%>[n].checked){ 
+		if (document.forms[0].percCode_<%=iCheckNo%>[n].checked){
 			nSubtotal = nSubtotal + eval(document.forms[0].percCode_<%=iCheckNo%>[n].value*100);
 		}
 		//alert(nSubtotal+"here:" +document.forms[0].percCode_2.length);
@@ -667,7 +671,7 @@ function onCheckMaster() {
 		//alert(ssubtotal.length + " : " + ssubtotal.indexOf("."));
 		ssubtotal = ssubtotal + "00".substring(0, (ssubtotal.length - ssubtotal.indexOf('.') - 1));
 	}
-	document.forms[0].percCodeSubtotal_<%=iCheckNo%>.value = ssubtotal; 
+	document.forms[0].percCodeSubtotal_<%=iCheckNo%>.value = ssubtotal;
 	if(nMin > document.forms[0].percCodeSubtotal_<%=iCheckNo%>.value) {
 		document.forms[0].percCodeSubtotal_<%=iCheckNo%>.value = nMin;
 	} else if (nMax < document.forms[0].percCodeSubtotal_<%=iCheckNo%>.value) {
@@ -709,7 +713,7 @@ function onCheckMaster() {
 		stotal = stotal + "00".substring(0, (stotal.length - stotal.indexOf('.') - 1));
 	}
         var num = new Number(stotal);
-	document.forms[0].total.value = num.toFixed(2); 
+	document.forms[0].total.value = num.toFixed(2);
 
 -->
 </script>
@@ -725,7 +729,7 @@ function onCheckMaster() {
 				    <input type="submit" name="submit" value="Save & Add Another Bill" onClick="onClickSave();"/>
                                     <% }else {%>
                                     <td><div class='myError'>Warning: Duplicated service codes. </div></td>
-                                    <%    } 
+                                    <%    }
                                     %>
                                     </td>
 			</tr>
@@ -746,28 +750,28 @@ function onCheckMaster() {
             	tempLoc = request.getParameter("siteId").trim();
             }
 		} else {
-			tempLoc = request.getParameter("site");			
+			tempLoc = request.getParameter("site");
 		}
 			%>
 			<textarea name="comment" cols=60 rows=4><%=tempLoc %></textarea>
 			</td>
 	</tr>
-<%      } 
+<%      }
   }     %>
 <%//
 if(request.getParameter("xml_billtype")!=null && !request.getParameter("xml_billtype").matches("ODP.*|WCB.*|NOT.*|BON.*")) {
 	JdbcBillingPageUtil pObj = new JdbcBillingPageUtil();
 	List al = pObj.getPaymentType();
-	
+
 	Billing3rdPartPrep privateObj = new Billing3rdPartPrep();
 	oscar.oscarRx.data.RxProviderData.Provider provider = new oscar.oscarRx.data.RxProviderData().getProvider((String) session.getAttribute("user"));
-	 
+
                 /*
-                = propClinic.getProperty("clinic_name", "") + "\n" 
-		+ propClinic.getProperty("clinic_address", "") + "\n" 
-		+ propClinic.getProperty("clinic_city", "") + ", " + propClinic.getProperty("clinic_province", "") + "\n" 
-		+ propClinic.getProperty("clinic_postal", "") + "\n" 
-		+ "Tel: " + propClinic.getProperty("clinic_phone", "") + "\n" 
+                = propClinic.getProperty("clinic_name", "") + "\n"
+		+ propClinic.getProperty("clinic_address", "") + "\n"
+		+ propClinic.getProperty("clinic_city", "") + ", " + propClinic.getProperty("clinic_province", "") + "\n"
+		+ propClinic.getProperty("clinic_postal", "") + "\n"
+		+ "Tel: " + propClinic.getProperty("clinic_phone", "") + "\n"
 		+ "Fax: " + propClinic.getProperty("clinic_fax", "") ;
                 */
         String strClinicAddr = provider.getClinicName().replaceAll("\\(\\d{6}\\)","") +"\n"
@@ -776,7 +780,7 @@ if(request.getParameter("xml_billtype")!=null && !request.getParameter("xml_bill
                              + provider.getClinicPostal() +"\n"
                              + "Tel: "+provider.getClinicPhone() +"\n"
                              + "Fax: "+provider.getClinicFax() ;
-                
+
 if (codeValid) { %>
 %>
 
@@ -795,7 +799,7 @@ if (bMultisites) {
   	else {
   		clinicAddress = s.getName()+"\n"+s.getAddress()+"\n"+s.getCity()+", "+s.getProvince()+" "+s.getPostal()+"\nTel: "+s.getPhone()+"\nFax: "+s.getFax();
   	}
-	
+
 } else {
 	String siteID = request.getParameter("siteId");
 	OscarProperties props2 = OscarProperties.getInstance();
@@ -826,7 +830,7 @@ if (bMultisites) {
 				<td colspan='2'>Private Billing</td>
 			</tr>
 			<tr><td width="80%">
-			
+
 			<table border="0" width="100%" >
 			<tr><td>Bill To [<a href=# onclick="scriptAttach('billto'); return false;">Search</a>]<br>
 			<textarea name="billto" value="" cols=30 rows=6><%=strPatientAddr %></textarea></td>
@@ -850,7 +854,7 @@ if (bMultisites) {
 			</td>
 			</tr>
 			</table>
-			
+
 			<td class="myGreen">
 			Payment Method:<br/>
 			<% for(int i=0; i<al.size(); i=i+2) { %>
@@ -858,9 +862,9 @@ if (bMultisites) {
 			<% } %>
 			</td></tr>
 			<tr>
-				<td colspan='2' align='center' bgcolor="silver"><input type="submit" name="submit" value="Save & Print Invoice" 
-					style="width: 120px;" /><input type="submit" name="submit" 
-					value="Settle & Print Invoice" onClick="document.forms['titlesearch'].btnPressed.value='Settle'; document.forms['titlesearch'].submit();javascript:popupPage(700,720,'billingON3rdInv.jsp');" style="width: 120px;" /> 
+				<td colspan='2' align='center' bgcolor="silver"><input type="submit" name="submit" value="Save & Print Invoice"
+					style="width: 120px;" /><input type="submit" name="submit"
+					value="Settle & Print Invoice" onClick="document.forms['titlesearch'].btnPressed.value='Settle'; document.forms['titlesearch'].submit();javascript:popupPage(700,720,'billingON3rdInv.jsp');" style="width: 120px;" />
 				<input type="hidden"  name="btnPressed" value="">
 				</td>
 			</tr>
@@ -875,7 +879,7 @@ if (bMultisites) {
 	<%}
 
 		%>
-	
+
 
 </table>
 <% if(bPerc) { out.println("* Click the code you want the % code to apply to [1 or 2 ...]."); } %>
@@ -889,27 +893,27 @@ function addToDiseaseRegistry(){
 	var url = "../../../oscarResearch/oscarDxResearch/dxResearch.do";
 	var data = Form.serialize(dxForm);
 	//alert ( data);
-	new Ajax.Updater('dxListing',url, {method: 'post',postBody: data,asynchronous:true,onComplete: getNewCurrentDxCodeList}); 
+	new Ajax.Updater('dxListing',url, {method: 'post',postBody: data,asynchronous:true,onComplete: getNewCurrentDxCodeList});
     }else{
        alert("Error: Nothing was selected");
     }
 }
 
-function validateItems(form){    
+function validateItems(form){
     var dxChecks;
-    var ret = false;    
-        
-    dxChecks = document.getElementsByName("xml_research");            
-     
-     for( idx = 0; idx < dxChecks.length; ++idx ) {   
+    var ret = false;
+
+    dxChecks = document.getElementsByName("xml_research");
+
+     for( idx = 0; idx < dxChecks.length; ++idx ) {
         if( dxChecks[idx].checked ) {
             ret = true;
             break;
         }
-     }             
+     }
     return ret;
 }
-    
+
 
 function getNewCurrentDxCodeList(origRequest){
    //alert("calling get NEW current Dx Code List");
@@ -917,7 +921,7 @@ function getNewCurrentDxCodeList(origRequest){
    var ran_number=Math.round(Math.random()*1000000);
    var params = "demographicNo=<%=demo_no%>&rand="+ran_number;  //hack to get around ie caching the page
    //alert(params);
-   new Ajax.Updater('dxFullListing',url, {method:'get',parameters:params,asynchronous:true}); 
+   new Ajax.Updater('dxFullListing',url, {method:'get',parameters:params,asynchronous:true});
    //alert(origRequest.responseText);
 }
 
@@ -940,8 +944,8 @@ function getNewCurrentDxCodeList(origRequest){
        </jsp:include>
        </div>
        <input type="button" value="Add To Disease Registry" onclick="addToDiseaseRegistry()"/>
-       <!--input type="button" value="check" onclick="getNewCurrentDxCodeList()"/> 
-<input type="button" value="check" onclick="validateItems()"/--> 
+       <!--input type="button" value="check" onclick="getNewCurrentDxCodeList()"/>
+<input type="button" value="check" onclick="validateItems()"/-->
        </form>
 </div>
 

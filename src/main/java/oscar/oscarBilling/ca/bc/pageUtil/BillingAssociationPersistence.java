@@ -29,7 +29,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.oscarehr.common.dao.DiagnosticCodeDao;
+import org.oscarehr.common.model.DiagnosticCode;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -47,6 +50,11 @@ import oscar.oscarDB.DBHandler;
  * @version 1.0
  */
 public class BillingAssociationPersistence {
+
+
+	private DiagnosticCodeDao diagnosticCodeDao = SpringUtils.getBean(DiagnosticCode.class);
+
+
   public BillingAssociationPersistence() {
 
   }
@@ -82,9 +90,9 @@ public class BillingAssociationPersistence {
     String qry =
         "insert into ctl_servicecodes_dxcodes(service_code,dxcode) values('" +
         svc + "','" + dx + "')";
-    
+
     try {
-      
+
       ret = DBHandler.RunSQL(qry);
 
     }
@@ -102,9 +110,9 @@ public class BillingAssociationPersistence {
     boolean ret = false;
     String qry = "delete from ctl_servicecodes_dxcodes where service_code = '" +
         svcCode + "'";
-    
+
     try {
-      
+
       ret = DBHandler.RunSQL(qry);
     }
     catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
@@ -120,11 +128,11 @@ public class BillingAssociationPersistence {
    */
   public List getServiceCodeAssocs() {
     ArrayList list = new ArrayList();
-    
+
     ResultSet rs = null;
     try {
       String qry = "select * from ctl_servicecodes_dxcodes";
-      
+
       rs = DBHandler.GetSQL(qry);
       String curSvcCode = "";
       ServiceCodeAssociation assoc = new ServiceCodeAssociation();
@@ -176,10 +184,12 @@ public class BillingAssociationPersistence {
    * @return boolean
    */
   public boolean dxcodeExists(String code) {
-    String qry =
-        "select diagnostic_code from diagnosticcode where diagnostic_code = '" +
-        code + "'";
-    return recordExists(qry);
+	  List<DiagnosticCode> dcode = diagnosticCodeDao.findByDiagnosticCode(code);
+	  if(dcode.size()>0) {
+		  return true;
+	  }
+
+	  return false;
   }
 
   /**
@@ -202,10 +212,10 @@ public class BillingAssociationPersistence {
    */
   public boolean recordExists(String qry) {
     boolean ret = false;
-    
+
     ResultSet rs = null;
     try {
-      
+
       rs = DBHandler.GetSQL(qry);
       if (rs.next()) {
         ret = true;
@@ -232,17 +242,17 @@ public class BillingAssociationPersistence {
    */
   public ServiceCodeAssociation getServiceCodeAssocByCode(String svcCode) {
     ServiceCodeAssociation assoc = new ServiceCodeAssociation();
-    
+
     ResultSet rs = null;
     try {
       String qry =
           "select * from ctl_servicecodes_dxcodes where service_code = '" +
           svcCode + "'";
-      
+
       rs = DBHandler.GetSQL(qry);
 
       while (rs.next()) {
-        
+
         String dxcode = rs.getString(3);
         assoc.addDXCode(dxcode);
         assoc.setServiceCode(svcCode);

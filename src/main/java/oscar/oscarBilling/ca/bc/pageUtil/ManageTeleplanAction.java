@@ -47,13 +47,14 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.DiagnosticCodeDao;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.DiagnosticCode;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.entities.Billactivity;
-import oscar.entities.BillingDxCode;
 import oscar.oscarBilling.ca.bc.MSP.MspErrorCodes;
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanAPI;
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanCodesManager;
@@ -63,7 +64,6 @@ import oscar.oscarBilling.ca.bc.Teleplan.TeleplanService;
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanUserPassDAO;
 import oscar.oscarBilling.ca.bc.data.BillActivityDAO;
 import oscar.oscarBilling.ca.bc.data.BillingCodeData;
-import oscar.oscarBilling.ca.bc.data.BillingDxCodeDAO;
 import oscar.util.UtilDateUtilities;
 
 /**
@@ -127,7 +127,7 @@ public class ManageTeleplanAction extends DispatchAction {
            HttpServletRequest request, HttpServletResponse response)
            throws Exception {
 
-           BillingDxCodeDAO bDx = (BillingDxCodeDAO) SpringUtils.getBean("BillingDxCodeDAO");
+           DiagnosticCodeDao bDx = SpringUtils.getBean(DiagnosticCodeDao.class);
 
            log.debug("UPDATE ICD  CODE WITH PARSING");
            TeleplanUserPassDAO dao = new TeleplanUserPassDAO();
@@ -165,32 +165,17 @@ public class ManageTeleplanAction extends DispatchAction {
                String code = (String) dxKeys.nextElement();
                String desc = dxProp.getProperty(code);
 
-                   List<BillingDxCode> dxList = bDx.getByDxCode(code);
+                   List<DiagnosticCode> dxList = bDx.getByDxCode(code);
                    if (dxList == null || dxList.size() == 0){ //New Code
-                        BillingDxCode dxCode = new BillingDxCode();
+                	   DiagnosticCode dxCode = new DiagnosticCode();
                         log.debug("Adding new code "+code+" desc : "+desc);
                         dxCode.setDiagnosticCode(code);
                         dxCode.setDescription(desc);
                         dxCode.setRegion("BC");
                         dxCode.setStatus("A");
-                        bDx.save(dxCode);
+                        bDx.persist(dxCode);
                    }
-/*
- We could change this to update descriptions of older codes.  But it would wipe out any customizations that had been made.
- */
-//                   else{
-//                       if (dxList.size() > 1){
 
-//                           for(BillingDxCode dx :dxList){
-
-//                           }
-//                           linesThatShouldnthappen ++;
-//                       }else{
-//                          BillingDxCode dx = dxList.get(0);
-//                          existingCodes++;
-//                       }
-//
-//                   }
 
 
            }
