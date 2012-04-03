@@ -234,7 +234,7 @@ public class CihiExportAction extends DispatchAction {
 
 	    //grab patient list from set
 	    DemographicSets demoSets = new DemographicSets();
-		ArrayList patientList = demoSets.getDemographicSet(frm.getString("patientSet"));
+		List<String> patientList = demoSets.getDemographicSet(frm.getString("patientSet"));
 
 		//make all xml files, zip them and save to document directory
 		String filename = this.make(frm, patientList, tmpDir);

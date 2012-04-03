@@ -28,7 +28,8 @@
 
 package oscar.oscarReport.pageUtil;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,20 +46,20 @@ import oscar.oscarReport.data.DemographicSets;
  * @author Jay Gallagher
  */
 public class DemographicSetEditAction extends Action {
-   
+
    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
-      String setName = request.getParameter("patientSet");             
+      String setName = request.getParameter("patientSet");
 
       DemographicSets dsets = new DemographicSets();
-      ArrayList list = dsets.getDemographicSetExt(setName);
-            
+      List<Map<String,String>> list = dsets.getDemographicSetExt(setName);
+
       request.setAttribute("SET", list);
       request.setAttribute("setname",setName);
-      
+
       return mapping.findForward("success");
-   }  
-   
+   }
+
    public DemographicSetEditAction() {
    }
-   
+
 }

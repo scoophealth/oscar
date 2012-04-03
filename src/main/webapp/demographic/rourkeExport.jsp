@@ -9,7 +9,7 @@
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
 <%
 if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
-String demographic_no = request.getParameter("demographic_no"); 
+String demographic_no = request.getParameter("demographic_no");
 String roleName = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
 %>
 <security:oscarSec roleName="<%=roleName%>" objectName="_admin" rights="r" reverse="true">
@@ -18,7 +18,7 @@ String roleName = (String)session.getAttribute("userrole") + "," + (String)sessi
 
 <%
 DemographicSets  ds = new DemographicSets();
-ArrayList setsList = ds.getDemographicSets();
+List<String> setsList = ds.getDemographicSets();
 
 %>
 
@@ -50,46 +50,46 @@ input.setright {
 <html:form action="/demographic/eRourkeExport.do" method="post">
 <h3>Vender Information</h3>
 <div class="container" style="width:100%;">
-<div class="vendor" style="float:right">	
+<div class="vendor" style="float:right">
 		<html:text styleClass="right" property="vendorBusinessName"></html:text>Vendor Business Name<br clear="right">
-		<html:text styleClass="right" readonly="true" property="vendorId"></html:text>Vendor ID<br clear="right">		
+		<html:text styleClass="right" readonly="true" property="vendorId"></html:text>Vendor ID<br clear="right">
 		<html:text styleClass="right" readonly="true" property="vendorCommonName"></html:text>Vendor Common Name<br clear="right">
 		<html:text styleClass="right" readonly="true" property="vendorSoftware"></html:text>Vendor Software<br clear="right">
 		<html:text styleClass="right" readonly="true" property="vendorSoftwareCommonName"></html:text>Vendor Software Common Name<br clear="right">
 		<html:text styleClass="right" readonly="true" property="vendorSoftwareVer"></html:text>Vendor Software Ver<br clear="right">
 		<html:text styleClass="right" readonly="true" property="installDate"></html:text>Vendor Install Date
 </div>
-				
-<div class="vendor" style="float:left;height:100%;">	
+
+<div class="vendor" style="float:left;height:100%;">
 	Organization Name<html:text styleClass="right" property="orgName"></html:text><br clear="right">
-	Contact Last Name<html:text styleClass="right" property="contactLName"></html:text><br clear="right">	
-	Contact First Name<html:text styleClass="right" property="contactFName"></html:text><br clear="right">	
+	Contact Last Name<html:text styleClass="right" property="contactLName"></html:text><br clear="right">
+	Contact First Name<html:text styleClass="right" property="contactFName"></html:text><br clear="right">
 	Contact Phone<html:text  styleClass="right" property="contactPhone"></html:text><br clear="right">
 	Contact Email<html:text styleClass="right" property="contactEmail"></html:text><br clear="right">
 	Contact Username<html:text styleClass="right" property="contactUserName"></html:text><br clear="right">
 	&nbsp;
 </div>
-</div>	
+</div>
 <div>
 			Extract Type<html:select property="extractType">
 				<html:option value="<%=DataExportDao.ROURKE%>"><%=DataExportDao.ROURKE%></html:option>
 			</html:select><br>
-		
-	
-	
+
+
+
 <html:select property="patientSet">
 	<html:option value="-1">--Select Set--</html:option>
-<% 
+<%
 String setName;
 for( int idx = 0; idx < setsList.size(); ++idx ) {
-	setName = (String)setsList.get(idx);
+	setName = setsList.get(idx);
 %>
 	<html:option value="<%=setName%>"><%=setName%></html:option>
 <%
 }
 %>
 </html:select>
-	
+
 <input type="submit" value="Run Report"/>
 </div>
 <h3>Previous Reports</h3>

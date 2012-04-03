@@ -1,26 +1,26 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
-     * This software was written for the 
- * Department of Family Medicine 
+ *
+     * This software was written for the
+ * Department of Family Medicine
  * McMaster University test2
- * Hamilton 
- * Ontario, Canada 
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 <%@page
@@ -48,9 +48,9 @@
 
   String demographicNo = request.getParameter("demographicNo");
   DemographicSets  ds = new DemographicSets();
-  ArrayList sets = ds.getDemographicSets();
-  
-//  oscar.oscarReport.data.RptSearchData searchData  = new oscar.oscarReport.data.RptSearchData();    
+  List<String> sets = ds.getDemographicSets();
+
+//  oscar.oscarReport.data.RptSearchData searchData  = new oscar.oscarReport.data.RptSearchData();
 //  ArrayList queryArray = searchData.getQueryTypes();
 
   String userRole = (String)session.getAttribute("userrole");
@@ -77,19 +77,19 @@
 
 <SCRIPT LANGUAGE="JavaScript">
 
-function showHideItem(id){ 
+function showHideItem(id){
     if(document.getElementById(id).style.display == 'none')
-        document.getElementById(id).style.display = ''; 
+        document.getElementById(id).style.display = '';
     else
-        document.getElementById(id).style.display = 'none'; 
+        document.getElementById(id).style.display = 'none';
 }
 
 function showItem(id){
-        document.getElementById(id).style.display = ''; 
+        document.getElementById(id).style.display = '';
 }
 
 function hideItem(id){
-        document.getElementById(id).style.display = 'none'; 
+        document.getElementById(id).style.display = 'none';
 }
 
 function showHideNextDate(id,nextDate,nexerWarn){
@@ -99,15 +99,15 @@ function showHideNextDate(id,nextDate,nexerWarn){
         hideItem(id);
         document.getElementById(nextDate).value = "";
         document.getElementById(nexerWarn).checked = false ;
-        
-    }        
+
+    }
 }
 
-function disableifchecked(ele,nextDate){        
-    if(ele.checked == true){       
-       document.getElementById(nextDate).disabled = true;       
-    }else{                      
-       document.getElementById(nextDate).disabled = false;              
+function disableifchecked(ele,nextDate){
+    if(ele.checked == true){
+       document.getElementById(nextDate).disabled = true;
+    }else{
+       document.getElementById(nextDate).disabled = false;
     }
 }
 
@@ -137,7 +137,7 @@ function checkAll(all) {
 	frm.exAlertsAndSpecialNeeds.checked = true;
 	frm.exCareElements.checked = true;
     } else {
-   	frm.exPersonalHistory.checked = false; 
+   	frm.exPersonalHistory.checked = false;
 	frm.exFamilyHistory.checked = false;
 	frm.exPastHealth.checked = false;
 	frm.exProblemList.checked = false;
@@ -218,7 +218,7 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 				String qName = sc.queryName;
 */
 			    for (int i=0; i<sets.size(); i++) {
-				String setName = (String)sets.get(i);
+				String setName = sets.get(i);
 %>
 				<html:option value="<%=setName%>"><%=setName%></html:option>
 			    <%}%>
@@ -249,7 +249,7 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 		       </td></tr></table>
 		   </td></tr></table>
                        <html:hidden property="pgpReady" value="<%=pgp_ready%>" />
-                       
+
 		    <p>&nbsp;</p>
 <%  boolean pgpReady = pgp_ready.equals("Yes") ? true : false;
     pgpReady = true; //To be removed after CMS4
