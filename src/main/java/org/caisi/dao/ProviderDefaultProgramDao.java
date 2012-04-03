@@ -32,7 +32,7 @@ public class ProviderDefaultProgramDao extends HibernateDaoSupport {
 
     public List getProgramByProviderNo(String providerNo) {
         String q = "FROM ProviderDefaultProgram pdp WHERE pdp.providerNo=?";
-        List rs = (List)getHibernateTemplate().find(q, providerNo);
+        List rs = getHibernateTemplate().find(q, providerNo);
         return rs;
     }
 
@@ -52,7 +52,7 @@ public class ProviderDefaultProgramDao extends HibernateDaoSupport {
     }
 
     public List getProviderSig(String providerNo) {
-        List rs = (List)getProgramByProviderNo(providerNo);
+        List rs = getProgramByProviderNo(providerNo);
         return rs;
     }
 

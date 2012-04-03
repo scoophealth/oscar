@@ -108,7 +108,7 @@ public class MeasurementInfo {
     
     public void getMeasurements(List<String> list){
         for (int i =0; i < list.size(); i++){
-           String measurement = (String) list.get(i);
+           String measurement = list.get(i);
            EctMeasurementsDataBeanHandler ect = new EctMeasurementsDataBeanHandler(demographicNo, measurement);
            Collection v = ect.getMeasurementsDataVector();
            measurementList.add(new ArrayList(v));

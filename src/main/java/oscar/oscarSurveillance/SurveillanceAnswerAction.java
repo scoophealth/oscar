@@ -88,7 +88,7 @@ public class SurveillanceAnswerAction extends Action {
       if (currentSurveyNum != null){
          try{
             int num = Integer.parseInt(currentSurveyNum);            
-            if (num < sir.numSurveys() ){
+            if (num < SurveillanceMaster.numSurveys() ){
                request.setAttribute("currentSurveyNum",  currentSurveyNum);
                forward = mapping.findForward("survey");
                String newURL = forward.getPath()+"?demographicNo="+demographic+"&proceed="+URLEncoder.encode(proceed, "UTF-8");  

@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 //import org.apache.commons.lang.StringUtils;
+import org.apache.commons.validator.GenericValidator;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -230,7 +231,7 @@ public class EctMeasurementsAction extends Action {
                         dateObserved = (String) frm.getValue(dateName);
 
                         org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
-                        if(!gValidator.isBlankOrNull(inputValue)){
+                        if(!GenericValidator.isBlankOrNull(inputValue)){
                             //Find if the same data has already been entered into the system
                             String sql = "SELECT * FROM measurements WHERE demographicNo='"+demographicNo+ "' AND dataField='"+inputValue
                                         +"' AND measuringInstruction='" + mInstrc + "' AND comments='" + comments

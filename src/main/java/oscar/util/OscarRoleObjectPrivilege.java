@@ -201,7 +201,7 @@ public class OscarRoleObjectPrivilege {
 
 			boolean[] check = { false, false };
 			for (int j = 0; j < vecPrivilName.size(); j++) {
-				check = checkRights((String) vecPrivilName.get(j), rightCustom);
+				check = checkRights(vecPrivilName.get(j), rightCustom);
 
 				if (check[0]) { // get the rights, stop comparing
 					return true;

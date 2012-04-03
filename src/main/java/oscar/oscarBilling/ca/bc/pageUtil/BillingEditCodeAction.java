@@ -48,7 +48,7 @@ import oscar.util.UtilDateUtilities;
 public final class BillingEditCodeAction extends DispatchAction {
      private static BillingServiceDao billingServiceDao = (BillingServiceDao) SpringUtils.getBean("billingServiceDao");
 
-    public ActionForward ajaxCodeUpdate(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)throws IOException, ServletException {
+    public ActionForward ajaxCodeUpdate(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)throws IOException  {
         String id  =  request.getParameter("id");
         String val =       request.getParameter("val");
         String billingServiceDate =       request.getParameter("billService");
@@ -74,7 +74,7 @@ public final class BillingEditCodeAction extends DispatchAction {
         return null;
     }
 
-    public ActionForward returnToSearch(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)    throws IOException, ServletException {
+    public ActionForward returnToSearch(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) {
         String whereTo = request.getParameter("whereTo");
         ActionForward retval;
         if(whereTo == null || whereTo.equals("") || whereTo.equals("null")){
@@ -92,7 +92,7 @@ public final class BillingEditCodeAction extends DispatchAction {
     HttpServletResponse response)
     throws IOException, ServletException {
 
-        
+
 
         if(request.getSession().getAttribute("user") == null  ){
             return (mapping.findForward("Logout"));

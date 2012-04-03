@@ -92,7 +92,7 @@ public class FrmBCAR2007Record extends FrmRecord {
 
             sql = "SELECT last_name, first_name, address, city, province, postal, phone,phone2, hin FROM demographic WHERE demographic_no = "
                     + demographicNo;
-            ResultSet rs = (new DBHelp()).searchDBRecord(sql);
+            ResultSet rs = DBHelp.searchDBRecord(sql);
             if (rs.next()) {
                 props.setProperty("c_surname_cur", rs.getString("last_name"));
                 props.setProperty("c_givenName_cur", rs.getString("first_name"));

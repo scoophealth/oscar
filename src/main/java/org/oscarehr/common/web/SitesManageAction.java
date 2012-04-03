@@ -25,10 +25,10 @@ public class SitesManageAction extends DispatchAction {
         return view(mapping, form, request, response);
     }
 
-    public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         List<Site> sites = siteDao.getAllSites();
-        
-        request.setAttribute("sites", sites);    	
+
+        request.setAttribute("sites", sites);
         return mapping.findForward("list");
     }
 
@@ -37,42 +37,42 @@ public class SitesManageAction extends DispatchAction {
 
     	Site s = new Site();
     	lazyForm.set("site", s);
-        
+
         return mapping.findForward("details");
     }
 
-    public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	DynaBean lazyForm = (DynaBean) form;
-    	
-    	Site s = (Site) lazyForm.get("site"); 
-    	
+
+    	Site s = (Site) lazyForm.get("site");
+
     	// verify mandatories
     	if (StringUtils.isBlank(s.getName())||StringUtils.isBlank(s.getShortName())) {
    			ActionMessages errors = this.getErrors(request);
  			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.required", "Site name or short name"));
     		this.saveErrors(request, errors);
-    	} 
+    	}
     	if (StringUtils.isBlank(s.getBgColor())) {
    			ActionMessages errors = this.getErrors(request);
  			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.required", "Theme color"));
     		this.saveErrors(request, errors);
     	}
-    	
-    	if (this.getErrors(request).size()>0)
-    		return mapping.findForward("details");    		
 
-    	
+    	if (this.getErrors(request).size()>0)
+    		return mapping.findForward("details");
+
+
     	siteDao.save(s);
-        
+
         return view(mapping, form, request, response);
     }
-    
+
     public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
     	DynaBean lazyForm = (DynaBean) form;
 
     	String siteId = request.getParameter("siteId");
         Site s = siteDao.getById(new Integer(siteId));
-    	
+
         lazyForm.set("site", s);
         return mapping.findForward("details");
     }
@@ -81,5 +81,5 @@ public class SitesManageAction extends DispatchAction {
 		this.siteDao = siteDao;
 	}
 
-   
+
 }

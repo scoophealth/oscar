@@ -821,7 +821,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		if (dependentList != null) {
 			dependentIds = new Integer[dependentList.size()];
 			for (int i = 0; i < dependentList.size(); i++) {
-				dependentIds[i] = new Integer(((JointAdmission) dependentList.get(i)).getClientId().intValue());
+				dependentIds[i] = new Integer(dependentList.get(i).getClientId().intValue());
 			}
 		}
 

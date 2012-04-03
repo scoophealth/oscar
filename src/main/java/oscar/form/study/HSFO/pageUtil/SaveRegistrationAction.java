@@ -1,26 +1,26 @@
 /*
  *  Copyright (C) 2007  Heart & Stroke Foundation
- 
+
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
     as published by the Free Software Foundation; either version 2
     of the License, or (at your option) any later version.
- 
+
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
- 
+
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- 
+
     <HSFO TEAM>
- 
+
    This software was written for the
    The Heart and Stroke Foundation of Ontario
    Toronto, Ontario, Canada
- 
+
  *
  * SaveRegistrationAction.java
  *
@@ -31,7 +31,6 @@
 package oscar.form.study.HSFO.pageUtil;
 
 
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -54,13 +53,13 @@ import oscar.form.study.HSFO.VisitData;
  * Class used to save data from the HSFO Study form
  */
 public class SaveRegistrationAction extends DispatchAction{
-    
+
     /** Creates a new instance of SaveRegistrationAction */
     public SaveRegistrationAction() {
     }
-    
-    
-    
+
+
+
     public boolean isStringEqual(HttpServletRequest request, String comp){
         String str = request.getParameter(comp);
         boolean ret = false;
@@ -76,7 +75,7 @@ public class SaveRegistrationAction extends DispatchAction{
         }
         return ret;
     }
-    
+
     public int getIntFromRequest(HttpServletRequest request, String comp){
         int val = 0;
         String str = request.getParameter(comp);
@@ -85,7 +84,7 @@ public class SaveRegistrationAction extends DispatchAction{
         }
         return val;
     }
-    
+
     public double getDoubleFromRequest(HttpServletRequest request, String comp){
         double val = 0.0;
         String str = request.getParameter(comp);
@@ -94,7 +93,7 @@ public class SaveRegistrationAction extends DispatchAction{
         }
         return val;
     }
-    
+
     public Date getDate(SimpleDateFormat formater,String year,String month,String day){
         String dateStr = year + "-" + month +"-" + day;
         java.util.Date parsedDate = null;
@@ -107,7 +106,7 @@ public class SaveRegistrationAction extends DispatchAction{
         }
         return parsedDate;
     }
-    
+
 //    public ActionForward registration(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response){
 //
 //        // TODO Auto-generated method stub
@@ -483,33 +482,33 @@ public class SaveRegistrationAction extends DispatchAction{
 //    }
 //
     public ActionForward flowsheet(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response){
-        
+
         MiscUtils.getLogger().debug("in submitfollowupservlet");
         int ID = Integer.parseInt(request.getParameter("ID"));
-        
-        
+
+
         MiscUtils.getLogger().debug("Record ID received: " + ID);
         String Patient_Id = request.getParameter("Patient_Id").toString().trim();
-        
-        
-        
-        
+
+
+
+
         /////NEW DATA
         String SiteCode = request.getParameter("SiteCode");
         SiteCode = "20";
-        
+
         //Not needed now String Patient_Id = request.getParameter("Patient_Id").toString().trim();
         String FName = request.getParameter("FName").toString().trim();
         String LName = request.getParameter("LName").toString().trim();
-        
+
         String BirthDate_year = request.getParameter("BirthDate_year").toString().trim();
         String BirthDate_month = request.getParameter("BirthDate_month").toString().trim();
         String BirthDate_day = request.getParameter("BirthDate_day").toString().trim();
         Date BirthDate = null;
-        
+
         SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
         String datestring = BirthDate_year + "-" + BirthDate_month +"-" + BirthDate_day;
-        
+
         try {
             java.util.Date parsedDate = formater.parse(datestring);
             java.sql.Date result = new java.sql.Date(parsedDate.getTime());
@@ -518,12 +517,12 @@ public class SaveRegistrationAction extends DispatchAction{
             MiscUtils.getLogger().debug("Error parsing date");
         }
         MiscUtils.getLogger().debug(BirthDate.toString());
-        
+
         String Sex = request.getParameter("Sex");
         String PostalCode = request.getParameter("PostalCode");
         double Height = Double.parseDouble(request.getParameter("Height"));
         String Height_unit = request.getParameter("Height_unit");
-        
+
         //Replaced copy and paste coded
         boolean Ethnic_White =  isStringEqual(request,"Ethnic_White");
         boolean Ethnic_Black = isStringEqual(request,"Ethnic_Black");
@@ -541,22 +540,22 @@ public class SaveRegistrationAction extends DispatchAction{
         boolean Ethnic_Other = isStringEqual(request,"Ethnic_Other");
         boolean Ethnic_Refused = isStringEqual(request,"Ethnic_Refused");
         boolean Ethnic_Unknown = isStringEqual(request,"Ethnic_Unknown");
-        
+
         String PharmacyName = request.getParameter("PharmacyName");
         String PharmacyLocation = request.getParameter("PharmacyLocation");
         String sel_TimeAgoDx = request.getParameter("sel_TimeAgoDx");
         String EmrHCPId1 = request.getParameter("EmrHCPId1");
         String EmrHCPId2 = request.getParameter("EmrHCPId2");
         String EmrHCPId = EmrHCPId1 + "-" + EmrHCPId2;
-        
-        
-        
-        
+
+
+
+
         String VisitDate_Id_year = request.getParameter("VisitDate_Id_year");
         String VisitDate_Id_month = request.getParameter("VisitDate_Id_month");
         String VisitDate_Id_day = request.getParameter("VisitDate_Id_day");
         Date VisitDate_Id = null;
-        
+
         String visitdatestring = VisitDate_Id_year + "-" + VisitDate_Id_month +"-" + VisitDate_Id_day;
         try {
             java.util.Date parsedDate = formater.parse(visitdatestring);
@@ -572,7 +571,7 @@ public class SaveRegistrationAction extends DispatchAction{
         int DBP = getIntFromRequest(request,"DBP");
         int DBP_goal = getIntFromRequest(request,"DBP_goal");
         String Bptru_used = request.getParameter("Bptru_used");
-        
+
         double Weight = getDoubleFromRequest(request,"Weight");
         String Weight_unit = request.getParameter("Weight_unit");
         double Waist = getDoubleFromRequest(request,"Waist");
@@ -582,7 +581,7 @@ public class SaveRegistrationAction extends DispatchAction{
         double HDL = getDoubleFromRequest(request,"HDL");
         double A1C = getDoubleFromRequest(request,"A1C");
         String Nextvisit = request.getParameter("Nextvisit");
-        
+
         boolean Bpactionplan = isStringEqual(request,"Bpactionplan");
         boolean PressureOff = isStringEqual(request,"PressureOff");
         boolean PatientProvider = isStringEqual(request,"PatientProvider");
@@ -604,20 +603,20 @@ public class SaveRegistrationAction extends DispatchAction{
         boolean Risk_alcohol = isStringEqual(request,"Risk_alcohol");
         boolean Risk_stress = isStringEqual(request,"Risk_stress");
         String PtView = request.getParameter("PtView");
-        
+
         int Change_importance = getIntFromRequest(request,"Change_importance");
         int Change_confidence = getIntFromRequest(request,"Change_confidence");
         int exercise_minPerWk = getIntFromRequest(request,"exercise_minPerWk");
         int smoking_cigsPerDay = getIntFromRequest(request,"smoking_cigsPerDay");
-        
+
         int alcohol_drinksPerWk = getIntFromRequest(request,"alcohol_drinksPerWk");
-        
+
         String sel_DashDiet = request.getParameter("sel_DashDiet");
         String sel_HighSaltFood = request.getParameter("sel_HighSaltFood");
         String sel_Stressed = request.getParameter("sel_Stressed");
         String LifeGoal = request.getParameter("LifeGoal");
-        
-        
+
+
         boolean FamHx_Htn = isStringEqual(request,"FamHx_Htn");
         boolean FamHx_Dyslipid = isStringEqual(request,"FamHx_Dyslipid");
         boolean FamHx_Diabetes = isStringEqual(request,"FamHx_Diabetes");
@@ -628,81 +627,81 @@ public class SaveRegistrationAction extends DispatchAction{
         boolean Diuret_rx = isStringEqual(request,"Diuret_rx");
         boolean Diuret_SideEffects = isStringEqual(request,"Diuret_SideEffects");
         String Diuret_RxDecToday = request.getParameter("Diuret_RxDecToday");
-        
+
         boolean Ace_rx = isStringEqual(request,"Ace_rx");
         boolean Ace_SideEffects = isStringEqual(request,"Ace_SideEffects");
         String Ace_RxDecToday = request.getParameter("Ace_RxDecToday");
-        
+
         boolean Arecept_rx = isStringEqual(request,"Arecept_rx");
         boolean Arecept_SideEffects = isStringEqual(request,"Arecept_SideEffects");
         String Arecept_RxDecToday = request.getParameter("Arecept_RxDecToday");
-        
+
         boolean Beta_rx = isStringEqual(request,"Beta_rx");
         boolean Beta_SideEffects = isStringEqual(request,"Beta_SideEffects");
         String Beta_RxDecToday = request.getParameter("Beta_RxDecToday");
-        
+
         boolean Calc_rx = isStringEqual(request,"Calc_rx");
         boolean Calc_SideEffects = isStringEqual(request,"Calc_SideEffects");
         String Calc_RxDecToday = request.getParameter("Calc_RxDecToday");
-        
+
         boolean Anti_rx = isStringEqual(request,"Anti_rx");
         boolean Anti_SideEffects = isStringEqual(request,"Anti_SideEffects");
         String Anti_RxDecToday = request.getParameter("Anti_RxDecToday");
         boolean Statin_rx = isStringEqual(request,"Statin_rx");
         boolean Statin_SideEffects = isStringEqual(request,"Statin_SideEffects");
         String Statin_RxDecToday = request.getParameter("Statin_RxDecToday");
-        
+
         boolean Lipid_rx = isStringEqual(request,"Lipid_rx");
         boolean Lipid_SideEffects = isStringEqual(request,"Lipid_SideEffects");
         String Lipid_RxDecToday = request.getParameter("Lipid_RxDecToday");
-        
+
         boolean Hypo_rx = isStringEqual(request,"Hypo_rx");
         boolean Hypo_SideEffects = isStringEqual(request,"Hypo_SideEffects");
         String Hypo_RxDecToday = request.getParameter("Hypo_RxDecToday");
         boolean Insul_rx = isStringEqual(request,"Insul_rx");
         boolean Insul_SideEffects = isStringEqual(request,"Insul_SideEffects");
         String Insul_RxDecToday = request.getParameter("Insul_RxDecToday");
-        
+
         int Often_miss = getIntFromRequest(request,"Often_miss");
-        
+
         String Herbal = request.getParameter("Herbal");
-        
+
         String TC_HDL_LabresultsDate_year = request.getParameter("TC_HDL_LabresultsDate_year");
         String TC_HDL_LabresultsDate_month = request.getParameter("TC_HDL_LabresultsDate_month");
         String TC_HDL_LabresultsDate_day = request.getParameter("TC_HDL_LabresultsDate_day");
         Date TC_HDL_LabresultsDate = getDate(formater,TC_HDL_LabresultsDate_year,TC_HDL_LabresultsDate_month,TC_HDL_LabresultsDate_day);
-        
+
         String LDL_LabresultsDate_year = request.getParameter("LDL_LabresultsDate_year");
         String LDL_LabresultsDate_month = request.getParameter("LDL_LabresultsDate_month");
         String LDL_LabresultsDate_day = request.getParameter("LDL_LabresultsDate_day");
         Date LDL_LabresultsDate = getDate(formater,LDL_LabresultsDate_year,LDL_LabresultsDate_month,LDL_LabresultsDate_day);
-        
+
         String HDL_LabresultsDate_year = request.getParameter("HDL_LabresultsDate_year");
         String HDL_LabresultsDate_month = request.getParameter("HDL_LabresultsDate_month");
         String HDL_LabresultsDate_day = request.getParameter("HDL_LabresultsDate_day");
         Date HDL_LabresultsDate = getDate(formater,HDL_LabresultsDate_year,HDL_LabresultsDate_month,HDL_LabresultsDate_day);
-        
+
         String A1C_LabresultsDate_year = request.getParameter("A1C_LabresultsDate_year");
         String A1C_LabresultsDate_month = request.getParameter("A1C_LabresultsDate_month");
         String A1C_LabresultsDate_day = request.getParameter("A1C_LabresultsDate_day");
         Date A1C_LabresultsDate = getDate(formater,A1C_LabresultsDate_year,A1C_LabresultsDate_month,A1C_LabresultsDate_day);
-        
+
         String consentDate_year = request.getParameter("consentDate_year");
         String consentDate_month = request.getParameter("consentDate_month");
         String consentDate_day = request.getParameter("consentDate_day");
         MiscUtils.getLogger().debug("consentDate_year "+consentDate_year+"  consentDate_month "+consentDate_month +" consentDate_day "+consentDate_day);
-        
+
         Date consentDate = getDate(formater,consentDate_year,consentDate_month,consentDate_day);
         MiscUtils.getLogger().debug(consentDate);
-        
+
 //		determine if data should be locked
         String savestring = request.getParameter("Save");
         MiscUtils.getLogger().debug("save: " + savestring);
         String submitstring = request.getParameter("Submit");
         MiscUtils.getLogger().debug("submit: " + submitstring);
         boolean locked = false;
-        
-        
+
+
         PatientData patientData = new PatientData();
         // store data in object
         patientData.setPatientData(
@@ -734,8 +733,8 @@ public class SaveRegistrationAction extends DispatchAction{
                 sel_TimeAgoDx,
                 EmrHCPId,
                 consentDate);
-        
-        
+
+
         VisitData visitData = new VisitData();
         // store data in object
         visitData.setVisitData(
@@ -833,29 +832,24 @@ public class SaveRegistrationAction extends DispatchAction{
                 HDL_LabresultsDate,
                 A1C_LabresultsDate,
                 locked);
-        
+
         MiscUtils.getLogger().debug("record id set as: " + visitData.getID());
         //XMLTranslate translator = new XMLTranslate();
-        
-        //translator.run(patientData, visitData);
-        
-        HSFODAO dao = new HSFODAO();
-        
-        //
-        try {
-            dao.savePatient(patientData);
-        } catch (SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-        }
 
-        try {
+        //translator.run(patientData, visitData);
+
+        HSFODAO dao = new HSFODAO();
+
+        //
+       dao.savePatient(patientData);
+
+
+
            int insertId = dao.insertVisit(visitData,(String) request.getSession().getAttribute("user"));
            MiscUtils.getLogger().debug(" insert ID to "+insertId);
            request.setAttribute("formId",new Integer(insertId));
-        } catch (SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-        }
-        
+
+
         request.setAttribute("demographic_no", visitData.getPatient_Id());
         request.setAttribute("visitDate", visitData.getVisitDate_Id());
         //request.setAttribute("fromURL", "SubmitFollowup");
@@ -864,8 +858,8 @@ public class SaveRegistrationAction extends DispatchAction{
             MiscUtils.getLogger().debug("forward exit");
             return mapping.findForward("exit");
         }
-        
+
         return mapping.findForward("success");
     }
-    
+
 }

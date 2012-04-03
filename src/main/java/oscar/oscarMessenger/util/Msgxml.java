@@ -125,7 +125,7 @@ public class Msgxml
             {
                 Node sub = node.getChildNodes().item(i);
 
-                if(sub.getNodeType()==sub.TEXT_NODE)
+                if(sub.getNodeType()==Node.TEXT_NODE)
                 {
                     ret += sub.getNodeValue();
                 }

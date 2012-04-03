@@ -58,7 +58,7 @@ public class ProgramAccessDAO extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        ProgramAccess result = (ProgramAccess)this.getHibernateTemplate().get(ProgramAccess.class, id);
+        ProgramAccess result = this.getHibernateTemplate().get(ProgramAccess.class, id);
 
         if (log.isDebugEnabled()) {
             log.debug("getProgramAccess: id=" + id + ",found=" + (result != null));
@@ -129,7 +129,7 @@ public class ProgramAccessDAO extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        AccessType result = (AccessType)this.getHibernateTemplate().get(AccessType.class, id);
+        AccessType result = this.getHibernateTemplate().get(AccessType.class, id);
 
         if (log.isDebugEnabled()) {
             log.debug("getAccessType: id=" + id + ",found=" + (result != null));

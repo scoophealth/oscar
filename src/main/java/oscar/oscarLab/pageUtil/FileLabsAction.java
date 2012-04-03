@@ -39,32 +39,32 @@ import org.oscarehr.util.MiscUtils;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 
 public class FileLabsAction extends DispatchAction {
-   
+
    public FileLabsAction() {
    }
-   
+
    public ActionForward unspecified(ActionMapping mapping,
    ActionForm form,
    HttpServletRequest request,
    HttpServletResponse response)
    throws ServletException, IOException {
-      
+
       String providerNo = (String) request.getSession().getAttribute("user");
       String searchProviderNo = request.getParameter("searchProviderNo");
       String status = request.getParameter("status");
-      
+
       String[] flaggedLabs = request.getParameterValues("flaggedLabs");
-      
+
       String[] labTypes = CommonLabResultData.getLabTypes();
       ArrayList listFlaggedLabs = new ArrayList();
 
       if(flaggedLabs != null && labTypes != null){
-         for (int i = 0; i < flaggedLabs.length; i++){            
+         for (int i = 0; i < flaggedLabs.length; i++){
             for (int j = 0; j < labTypes.length; j++){
                String s =  request.getParameter("labType"+flaggedLabs[i]+labTypes[j]);
 
                if (s != null){  //This means that the lab was of this type.
-                  String[] la =  new String[] {flaggedLabs[i],labTypes[j]}; 
+                  String[] la =  new String[] {flaggedLabs[i],labTypes[j]};
                   MiscUtils.getLogger().debug("ADDING lab "+flaggedLabs[i]+" of lab type "+labTypes[j]);
                   listFlaggedLabs.add(la);
                   j = labTypes.length;
@@ -73,9 +73,9 @@ public class FileLabsAction extends DispatchAction {
             }
          }
       }
-      
+
       String newURL = "";
-      
+
 
          CommonLabResultData.fileLabs(listFlaggedLabs, providerNo);
          newURL = mapping.findForward("success").getPath();
@@ -91,7 +91,7 @@ public class FileLabsAction extends DispatchAction {
    ActionForm form,
    HttpServletRequest request,
    HttpServletResponse response)
-   throws ServletException, IOException {
+   {
 
       String providerNo = (String) request.getSession().getAttribute("user");
       String flaggedLab=request.getParameter("flaggedLabId").trim();

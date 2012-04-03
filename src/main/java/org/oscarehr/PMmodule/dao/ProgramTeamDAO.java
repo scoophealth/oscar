@@ -83,7 +83,7 @@ public class ProgramTeamDAO extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        ProgramTeam result = (ProgramTeam) this.getHibernateTemplate().get(ProgramTeam.class, id);
+        ProgramTeam result = this.getHibernateTemplate().get(ProgramTeam.class, id);
 
         if (log.isDebugEnabled()) {
             log.debug("getProgramTeam: id=" + id + ",found=" + (result != null));

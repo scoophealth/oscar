@@ -431,7 +431,7 @@ public class SFTPConnector {
         }
 
 		//the provided key is 32 characters long string hex representation of a 128 hex key, get the 128-bit hex bytes
-		byte keyBytes[] = toHex(this.decryptionKey);
+		byte keyBytes[] = toHex(SFTPConnector.decryptionKey);
 
 		SecretKeySpec key = new SecretKeySpec(keyBytes, "AES");
 

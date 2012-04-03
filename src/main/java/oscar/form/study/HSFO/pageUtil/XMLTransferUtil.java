@@ -14,17 +14,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
-import noNamespace.HsfoHbpsDataDocument;
-import noNamespace.StringFollowUpInterval;
-import noNamespace.StringFrequency;
-import noNamespace.StringHtnDxType;
-import noNamespace.StringLengthUnit;
-import noNamespace.StringMassUnit;
-import noNamespace.StringPtChangeState;
-import noNamespace.StringRxToday;
-import noNamespace.StringSexNonEmpty;
-import noNamespace.StringTimeAgoHtnDx;
-import noNamespace.StringYesNo;
+import noNamespace.*;
 import noNamespace.HsfoHbpsDataDocument.HsfoHbpsData;
 import noNamespace.HsfoHbpsDataDocument.HsfoHbpsData.Site;
 import noNamespace.HsfoHbpsDataDocument.HsfoHbpsData.Site.SitePatient;
@@ -50,12 +40,6 @@ import noNamespace.HsfoHbpsDataDocument.HsfoHbpsData.Site.SitePatient.SelHeightU
 import noNamespace.HsfoHbpsDataDocument.HsfoHbpsData.Site.SitePatient.SelHtnDxAgoPreBsl;
 import noNamespace.HsfoHbpsDataDocument.HsfoHbpsData.Site.SitePatient.SelSex;
 import noNamespace.HsfoHbpsDataDocument.HsfoHbpsData.Site.SitePatient.SitePatientVisit;
-import noNamespace.HsfoHbpsDataDocument.HsfoHbpsData.Site.SitePatient.TxtEmrHcpID;
-import noNamespace.HsfoHbpsDataDocument.HsfoHbpsData.Site.SitePatient.TxtGivenNames;
-import noNamespace.HsfoHbpsDataDocument.HsfoHbpsData.Site.SitePatient.TxtPharmacyLocation;
-import noNamespace.HsfoHbpsDataDocument.HsfoHbpsData.Site.SitePatient.TxtPharmacyName;
-import noNamespace.HsfoHbpsDataDocument.HsfoHbpsData.Site.SitePatient.TxtPostalCodeFSA;
-import noNamespace.HsfoHbpsDataDocument.HsfoHbpsData.Site.SitePatient.TxtSurname;
 import noNamespace.HsfoHbpsDataDocument.HsfoHbpsData.Site.SitePatient.SitePatientVisit.BABPM;
 import noNamespace.HsfoHbpsDataDocument.HsfoHbpsData.Site.SitePatient.SitePatientVisit.BBPAP;
 import noNamespace.HsfoHbpsDataDocument.HsfoHbpsData.Site.SitePatient.SitePatientVisit.BCommunRes;
@@ -145,6 +129,12 @@ import noNamespace.HsfoHbpsDataDocument.HsfoHbpsData.Site.SitePatient.SitePatien
 import noNamespace.HsfoHbpsDataDocument.HsfoHbpsData.Site.SitePatient.SitePatientVisit.SelStressed;
 import noNamespace.HsfoHbpsDataDocument.HsfoHbpsData.Site.SitePatient.SitePatientVisit.SelWaistCircumfUnit;
 import noNamespace.HsfoHbpsDataDocument.HsfoHbpsData.Site.SitePatient.SitePatientVisit.SelWeightUnit;
+import noNamespace.HsfoHbpsDataDocument.HsfoHbpsData.Site.SitePatient.TxtEmrHcpID;
+import noNamespace.HsfoHbpsDataDocument.HsfoHbpsData.Site.SitePatient.TxtGivenNames;
+import noNamespace.HsfoHbpsDataDocument.HsfoHbpsData.Site.SitePatient.TxtPharmacyLocation;
+import noNamespace.HsfoHbpsDataDocument.HsfoHbpsData.Site.SitePatient.TxtPharmacyName;
+import noNamespace.HsfoHbpsDataDocument.HsfoHbpsData.Site.SitePatient.TxtPostalCodeFSA;
+import noNamespace.HsfoHbpsDataDocument.HsfoHbpsData.Site.SitePatient.TxtSurname;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.HttpClient;
@@ -170,7 +160,7 @@ public class XMLTransferUtil
 {
 	protected static Logger logger = Logger
 	.getLogger(XMLTransferUtil.class);
-	
+
 	public SimpleDateFormat dformat1 = new SimpleDateFormat(
 	"yyyy-MM-dd'T'HH:mm:ss");
 
@@ -232,14 +222,14 @@ public class XMLTransferUtil
 		}
 	}
 
-	public PatientData getDemographic(String demoNo) throws Exception
+	public PatientData getDemographic(String demoNo)
 	{
 
 		return hdao.retrievePatientRecord(demoNo);
 
 	}
 
-	public VisitData getSignedVisit(String patientId) throws Exception
+	public VisitData getSignedVisit(String patientId)
 	{
 		List pList = hdao.nullSafeRetrVisitRecord(patientId);
 		if (pList == null || pList.size() == 0)
@@ -260,19 +250,19 @@ public class XMLTransferUtil
 		return vs;
 	}
 
-	public String getSignedProvider(String patientId) throws Exception
+	public String getSignedProvider(String patientId)
 	{
 		VisitData vs = getSignedVisit(patientId);
 		return getProviderName(vs.getProvider_Id());
 	}
 
-	public Date getSignedDate(String patientId) throws Exception
+	public Date getSignedDate(String patientId)
 	{
 		VisitData vs = getSignedVisit(patientId);
 		return vs.getFormEdited();
 	}
 
-	public void addPatientToSite(Site site, PatientData pd) throws Exception
+	public void addPatientToSite(Site site, PatientData pd)
 	{
 		String dateString2 = dformat2.format(pd.getConsentDate());
 		String dateString1 = dformat1.format(getSignedDate(pd.getPatient_Id()));
@@ -298,7 +288,7 @@ public class XMLTransferUtil
 		TxtEmrHcpID tehid = patient.addNewTxtEmrHcpID();
 		DemographicData demoData = new DemographicData();
 		String providerId=demoData.getDemographic(patient.getEmrPatientKey()).getProviderNo();
-		
+
 //		if (pd.getEmrHCPId() == null)
 //			tehid.setValue("");
 //		else
@@ -459,7 +449,7 @@ public class XMLTransferUtil
 	}
 
 	public void addAllPatientVisit(SitePatient patient, String patientId)
-			throws Exception
+
 	{
 		List pList = hdao.nullSafeRetrVisitRecord(patientId);
 		if (pList == null || pList.size() == 0)
@@ -1356,7 +1346,7 @@ public class XMLTransferUtil
 	}
 
 	public HsfoHbpsDataDocument generateXML(String providerNo,
-			Integer demographicNo) throws Exception
+			Integer demographicNo)
 	{
 		HsfoHbpsDataDocument doc = HsfoHbpsDataDocument.Factory.newInstance();
 

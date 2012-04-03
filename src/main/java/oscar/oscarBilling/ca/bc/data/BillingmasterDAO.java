@@ -128,7 +128,7 @@ public class BillingmasterDAO {
 
  
     public Billing getBilling(int billingNo){
-        return (Billing) entityManager.find(Billing.class, billingNo);
+        return entityManager.find(Billing.class, billingNo);
     }
     
     

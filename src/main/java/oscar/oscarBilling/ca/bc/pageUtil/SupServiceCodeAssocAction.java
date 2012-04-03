@@ -46,17 +46,17 @@ public class SupServiceCodeAssocAction
 
     SupServiceCodeAssocDAO dao = new SupServiceCodeAssocDAO();
     ActionForward fwd = actionMapping.findForward("success");
-    if (!frm.MODE_VIEW.equals(frm.getActionMode())) {
+    if (!SupServiceCodeAssocActionForm.MODE_VIEW.equals(frm.getActionMode())) {
       ActionMessages errors = frm.validate(actionMapping, servletRequest);
       if (!errors.isEmpty()) {
         this.saveErrors(servletRequest,errors);
         fwd = actionMapping.getInputForward();
       }
       else {
-        if (frm.MODE_DELETE.equals(frm.getActionMode())) {
+        if (SupServiceCodeAssocActionForm.MODE_DELETE.equals(frm.getActionMode())) {
           dao.deleteServiceCodeAssociation(frm.getId());
         }
-        else if (frm.MODE_EDIT.equals(frm.getActionMode())) {
+        else if (SupServiceCodeAssocActionForm.MODE_EDIT.equals(frm.getActionMode())) {
           dao.saveOrUpdateServiceCodeAssociation(frm.getPrimaryCode(),
                                                  frm.getSecondaryCode());
         }

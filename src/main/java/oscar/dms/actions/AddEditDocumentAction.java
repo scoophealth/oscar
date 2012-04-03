@@ -294,7 +294,7 @@ public class AddEditDocumentAction extends DispatchAction {
 				cmm.saveNoteSimple(cmn);
 				// Add a noteLink to casemgmt_note_link
 				CaseManagementNoteLink cmnl = new CaseManagementNoteLink();
-				cmnl.setTableName(cmnl.DOCUMENT);
+				cmnl.setTableName(CaseManagementNoteLink.DOCUMENT);
 				cmnl.setTableId(Long.parseLong(EDocUtil.getLastDocumentNo()));
 				cmnl.setNoteId(Long.parseLong(EDocUtil.getLastNoteId()));
 

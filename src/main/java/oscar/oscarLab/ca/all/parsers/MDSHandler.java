@@ -498,7 +498,7 @@ public class MDSHandler implements MessageHandler {
         try {
             // Some examples
             DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            java.util.Date date = (java.util.Date)formatter.parse(dob);
+            java.util.Date date = formatter.parse(dob);
             age = UtilDateUtilities.calcAge(date);
         } catch (ParseException e) {
             logger.error("Could not get age", e);
@@ -561,7 +561,7 @@ public class MDSHandler implements MessageHandler {
     public String getServiceDate(){
         try{
             UtilDateUtilities dateUtil = new UtilDateUtilities();
-            Date mshDate = dateUtil.StringToDate(getMsgDate(), "yyyy-MM-dd hh:mm:ss");
+            Date mshDate = UtilDateUtilities.StringToDate(getMsgDate(), "yyyy-MM-dd hh:mm:ss");
             return( dateUtil.DateToString(mshDate, "dd-MMM-yyyy") );
         }catch(Exception e){
             return("");

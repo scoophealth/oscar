@@ -83,7 +83,7 @@ public class RptByExamplesFavoriteAction extends Action {
             //String queryWithEscapeChar = exampleData.replaceSQLString ("\"","\'",query);
            
             StringEscapeUtils strEscUtils = new StringEscapeUtils();                                
-            String queryWithEscapeChar = strEscUtils.escapeSql(query   );///queryWithEscapeChar);
+            String queryWithEscapeChar = StringEscapeUtils.escapeSql(query   );///queryWithEscapeChar);
             MiscUtils.getLogger().debug("escapeSql: " + queryWithEscapeChar);
             write2Database(providerNo, favoriteName, queryWithEscapeChar);            
         }

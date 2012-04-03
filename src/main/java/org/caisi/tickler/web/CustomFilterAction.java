@@ -1,23 +1,23 @@
 /*
-* 
+*
 * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
+* This software is published under the GPL GNU General Public License.
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version. *
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+*
 * <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
+*
+* This software was written for
+* Centre for Research on Inner City Health, St. Michael's Hospital,
+* Toronto, Ontario, Canada
 */
 
 
@@ -47,14 +47,14 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
 
 public class CustomFilterAction extends DispatchAction {
-	
+
 	private static Logger log = MiscUtils.getLogger();
 	private TicklerManager ticklerMgr = null;
 	private ProviderManager providerMgr = null;
 	private DemographicManagerTickler demographicMgr = null;
 	private ProgramManager programMgr = null;
-	
-	
+
+
 	public void setProgramManager(ProgramManager programMgr) {
 		this.programMgr = programMgr;
 	}
@@ -62,46 +62,46 @@ public class CustomFilterAction extends DispatchAction {
 	public void setTicklerManager(TicklerManager ticklerManager) {
 		this.ticklerMgr = ticklerManager;
 	}
-	
+
 	public void setDemographicManager(DemographicManagerTickler demographicManager) {
 		this.demographicMgr = demographicManager;
 	}
-	
+
 	public void setProviderManager(ProviderManager providerMgr) {
 		this.providerMgr = providerMgr;
 	}
-	
+
 	String getProviderNo(HttpServletRequest request) {
 		return (String)request.getSession().getAttribute("user");
 	}
-	
+
 	/* default to 'list' */
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		log.debug("unspecified");
 		return list(mapping,form,request,response);
 	}
-	
+
 	//TODO: need to forward to TicklerAction
 	public ActionForward run(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
+			HttpServletRequest request, HttpServletResponse response) {
 		log.debug("run");
 
 		return list(mapping,form,request,response);
 	}
-	
+
 	public ActionForward list(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
+			HttpServletRequest request, HttpServletResponse response) {
 		log.debug("list");
-	
+
 		request.setAttribute("custom_filters",ticklerMgr.getCustomFilters(this.getProviderNo(request)));
 		return mapping.findForward("customFilterList");
 	}
-/*	
+/*
 	public ActionForward edit(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		log.debug("edit");
-		
+
 		String name = request.getParameter("name");
 		if(name != null && !name.equals("")) {
 			CustomFilter filter = ticklerMgr.getCustomFilter(name);
@@ -115,7 +115,7 @@ public class CustomFilterAction extends DispatchAction {
 			}}
 			else
 				filter.setDemographic_webName("");
-				
+
 			DynaActionForm filterForm = (DynaActionForm)form;
 			filterForm.set("filter",filter);
 			request.setAttribute("customFilterForm",filterForm);
@@ -123,15 +123,15 @@ public class CustomFilterAction extends DispatchAction {
 			request.setAttribute("me_no",(String)request.getSession().getAttribute("user"));
 			request.setAttribute("me",providerMgr.getProvider((String)request.getSession().getAttribute("user")).getFormattedName());
 		}
-		
+
 		request.setAttribute("providers",providerMgr.getProviders());
 		request.setAttribute("priorityList",CustomFilter.priorityList);
 		request.setAttribute("statusList",CustomFilter.statusList);
-		
+
 		return mapping.findForward("customFilterForm");
 	}
-*/	
-        
+*/
+
         public ActionForward changeShortCutStatus(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
             log.debug("changeShortCutStatus");
@@ -144,18 +144,18 @@ public class CustomFilterAction extends DispatchAction {
             }
             request.setAttribute("custom_filters",ticklerMgr.getCustomFilters(this.getProviderNo(request)));
             return mapping.findForward("customFilterList");
-        } 
-        
+        }
+
 	public ActionForward edit(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		log.debug("edit");
-		
+
 		String id = request.getParameter("id");
 		if(id != null && !id.equals("")) {
 			CustomFilter filter = ticklerMgr.getCustomFilterById(Integer.valueOf(id));
 			/* get the demographic */
 			String demo_no=filter.getDemographic_no();
-			
+
 			if(!("".equals(demo_no))&&demo_no!=null)
 			{
 			Demographic demographic = demographicMgr.getDemographic(demo_no);
@@ -164,50 +164,50 @@ public class CustomFilterAction extends DispatchAction {
 			}}
 			else
 				filter.setDemographic_webName("");
-			
+
 			String filterName = filter.getName();
 			if(filterName!=null && filterName.equals("*Myticklers*")) {
 				filter.setAssignee(filter.getProviderNo());
 			}
-			
+
 			DynaActionForm filterForm = (DynaActionForm)form;
 			filterForm.set("filter",filter);
 			request.setAttribute("customFilterForm",filterForm);
 			request.setAttribute("custom_filter",filter);
-			request.setAttribute("me_no",(String)request.getSession().getAttribute("user"));
+			request.setAttribute("me_no",request.getSession().getAttribute("user"));
 			request.setAttribute("me",providerMgr.getProvider((String)request.getSession().getAttribute("user")).getFormattedName());
 		}
-		
+
 		request.setAttribute("providers",providerMgr.getProviders());
 		request.setAttribute("priorityList",CustomFilter.priorityList);
 		request.setAttribute("statusList",CustomFilter.statusList);
-		
+
 		request.setAttribute("programs", programMgr.getProgramDomainInCurrentFacilityForCurrentProvider(false));
 		return mapping.findForward("customFilterForm");
 	}
-	
-	
-	
+
+
+
 	/* save a custom filter */
 	public ActionForward save(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
+			HttpServletRequest request, HttpServletResponse response) {
 		log.debug("save");
-		
+
         DynaActionForm filterForm = (DynaActionForm)form;
         CustomFilter filter = (CustomFilter)filterForm.get("filter");
-                
+
         if("".equals(filter.getDemographic_webName())) {
         	filter.setDemographic_no("");
         }
         String[] providers = request.getParameterValues("provider");
         if(providers != null) {
-	        Set sProviders = new HashSet();	        
+	        Set sProviders = new HashSet();
 	        for(int x=0;x<providers.length;x++) {
 	        	sProviders.add(new Provider(providers[x]));
 	        }
 	        filter.setProviders(sProviders);
         }
-        
+
         String[] assignees = request.getParameterValues("assignee");
         if(assignees != null) {
 	        Set sAssignees = new HashSet();
@@ -217,20 +217,20 @@ public class CustomFilterAction extends DispatchAction {
 	        filter.setAssignees(sAssignees);
         }
         filter.setProviderNo(this.getProviderNo(request));
-        
+
         if("All Programs".equals(filter.getProgramId())) {
         	filter.setProgramId("");
         }
         ticklerMgr.saveCustomFilter(filter);
-        
+
         ActionMessages messages = new ActionMessages();
         messages.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage("filter.saved"));
         saveMessages(request,messages);
-        
-        
+
+
 		return list(mapping,form,request,response);
 	}
-	
+
 	/* delete a filter */
 	public ActionForward delete(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -240,9 +240,9 @@ public class CustomFilterAction extends DispatchAction {
 		for(int x=0;x<checks.length;x++) {
 			//ticklerMgr.deleteCustomFilter(checks[x]);
 			ticklerMgr.deleteCustomFilterById(Integer.valueOf(checks[x]));
-			
+
 		}
 		return list(mapping,form,request,response);
 	}
-	
+
 }

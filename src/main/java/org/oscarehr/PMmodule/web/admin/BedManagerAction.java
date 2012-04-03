@@ -40,7 +40,7 @@ public class BedManagerAction extends BaseAction {
     private ProgramManager programManager;
 
     private RoomManager roomManager;
-    
+
     private FacilityDao facilityDao;
 
     public void setFacilityDao(FacilityDao facilityDao) {
@@ -137,11 +137,7 @@ public class BedManagerAction extends BaseAction {
         try {
             roomManager.saveRooms(rooms);
         }
-        catch (RoomHasActiveBedsException e) {
-            ActionMessages messages = new ActionMessages();
-            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("room.active.beds.error", e.getMessage()));
-            saveMessages(request, messages);
-        }
+
         catch (DuplicateRoomNameException e) {
             ActionMessages messages = new ActionMessages();
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("room.duplicate.name.error", e.getMessage()));
@@ -259,7 +255,7 @@ public class BedManagerAction extends BaseAction {
     public ActionForward addRooms(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         BedManagerForm bForm = (BedManagerForm) form;
         Integer numRooms = bForm.getNumRooms();
-        
+
 /*????what is roomlines used for?
         Integer roomslines = 0;
         if ("".equals(request.getParameter("roomslines")) == false) {
@@ -276,14 +272,8 @@ public class BedManagerAction extends BaseAction {
         }
 */
         if (numRooms != null && numRooms > 0) {
-            try {
-                roomManager.addRooms(bForm.getFacilityId(), numRooms);
-            }
-            catch (RoomHasActiveBedsException e) {
-                ActionMessages messages = new ActionMessages();
-                messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("room.active.beds.error", e.getMessage()));
-                saveMessages(request, messages);
-            }
+            roomManager.addRooms(bForm.getFacilityId(), numRooms);
+
         }
 
         return manage(mapping, form, request, response);
@@ -294,9 +284,9 @@ public class BedManagerAction extends BaseAction {
         BedManagerForm bForm = (BedManagerForm) form;
         Integer numBeds = bForm.getNumBeds();
         Integer roomId = bForm.getBedRoomFilterForBed();
-        
+
         int occupancyOfRoom = roomManager.getRoom(roomId).getOccupancy().intValue();
-        
+
         //bedslines is the current total number of bed in the room.
         Integer bedslines = 0;
         if ("".equals(request.getParameter("bedslines")) == false) {
@@ -322,11 +312,11 @@ public class BedManagerAction extends BaseAction {
                 saveMessages(request, messages);
             }
         } else {
-        	
+
 	        	ActionMessages messages = new ActionMessages();
 	            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("message", "The number of the beds in this room already reaches the maximum."));
 	            saveMessages(request, messages);
-        	
+
         }
 
         return manage(mapping, form, request, response);
@@ -384,7 +374,7 @@ public class BedManagerAction extends BaseAction {
         }
         /*
          * List<Bed> filteredBedsList = null; Room[] filteredRooms = roomManager.getAssignedBedRooms(facilityId, bedFilteredProgram, bedStatusBoolean); for(int i=0; filteredRooms != null && i < filteredRooms.length; i++){
-         * 
+         *
          * if(filteredRooms[i] != null){ filteredBedsList = bedManager.getBedsByFilter(facilityId, filteredRooms[i].getId(), bedStatusBoolean, false); filteredBeds.addAll(filteredBedsList); } }
          */
 

@@ -295,7 +295,7 @@ public class ServiceCodeValidationLogic {
           java.util.Date dateSvcDate = fmt.parse(svcDate);
           double dblUnit = UtilMisc.safeParseDouble(unit);
           currentYearCount += dblUnit;
-          if (ut.getDifDays(currentDate, dateSvcDate) == 0) {
+          if (DateUtils.getDifDays(currentDate, dateSvcDate) == 0) {
             currentDayCount += dblUnit;
           }
           if (currentYearCount >= 6) {
@@ -353,7 +353,7 @@ public class ServiceCodeValidationLogic {
            java.util.Date currentDate = fmt.parse(serviceDate);
            double dblUnit = UtilMisc.safeParseDouble(unit);
            currentYearAvailable -= dblUnit;
-           if (ut.getDifDays(currentDate, dateSvcDate) == 0) {
+           if (DateUtils.getDifDays(currentDate, dateSvcDate) == 0) {
              currentDayAvailable -= dblUnit;
            }
          }

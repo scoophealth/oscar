@@ -80,12 +80,12 @@ public class RHWorkFlow implements WorkFlow {
 
     public ArrayList getActiveWorkFlowList(String demographicNo) {
         WorkFlowState wfs = new WorkFlowState();
-        return wfs.getActiveWorkFlowList(this.WORKFLOWTYPE,demographicNo);
+        return wfs.getActiveWorkFlowList(RHWorkFlow.WORKFLOWTYPE,demographicNo);
     }
 
     public ArrayList getActiveWorkFlowList() {
         WorkFlowState wfs = new WorkFlowState();
-        return wfs.getActiveWorkFlowList(this.WORKFLOWTYPE);
+        return wfs.getActiveWorkFlowList(RHWorkFlow.WORKFLOWTYPE);
     }
 
     public String getState(String state) {

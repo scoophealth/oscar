@@ -85,7 +85,7 @@ public class FormsDAO extends HibernateDaoSupport {
             Long id = (Long)values[0];
             Long providerNo = (Long)values[1];
             Date dateEdited = (Date)values[2];
-            Provider provider = (Provider)this.getHibernateTemplate().get(Provider.class,String.valueOf(providerNo));
+            Provider provider = this.getHibernateTemplate().get(Provider.class,String.valueOf(providerNo));
             fi.setFormId(id);
             fi.setProviderNo(providerNo);
             fi.setFormDate(dateEdited);

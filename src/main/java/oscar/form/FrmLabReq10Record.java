@@ -23,6 +23,7 @@ import java.util.Properties;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicForm;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk;
@@ -33,22 +34,20 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-import org.oscarehr.PMmodule.dao.ProviderDao;
-
 
 import oscar.util.UtilDateUtilities;
 
 public class FrmLabReq10Record extends FrmRecord {
 	private static Logger logger=MiscUtils.getLogger();
-	
+
 	private DemographicDao demographicDao=(DemographicDao) SpringUtils.getBean("demographicDao");
-	
+
 	public Properties getFormRecord(int demographicNo, int existingID) throws SQLException {
         Properties props = new Properties();
 
         if (existingID <= 0) {
         	Demographic demographic=demographicDao.getDemographicById(demographicNo);
-        	
+
             if (demographic!=null) {
                 props.setProperty("demographic_no", String.valueOf(demographic.getDemographicNo()));
                 props.setProperty("patientName", demographic.getLastName()+", "+ demographic.getFirstName());
@@ -82,13 +81,13 @@ public class FrmLabReq10Record extends FrmRecord {
             //get local clinic information
         	ClinicDAO clinicDao = (ClinicDAO)SpringUtils.getBean("clinicDAO");
         	Clinic clinic = clinicDao.getClinic();
-            
+
             	props.setProperty("clinicName",clinic.getClinicName()==null?"":clinic.getClinicName());
             	props.setProperty("clinicProvince",clinic.getClinicProvince()==null?"":clinic.getClinicProvince());
                 props.setProperty("clinicAddress", clinic.getClinicAddress()==null?"":clinic.getClinicAddress());
                 props.setProperty("clinicCity", clinic.getClinicCity()==null?"":clinic.getClinicCity());
                 props.setProperty("clinicPC", clinic.getClinicPostal()==null?"":clinic.getClinicPostal());
-            
+
 
         } else {
             String sql = "SELECT * FROM formLabReq10 WHERE demographic_no = " + demographicNo + " AND ID = "
@@ -99,23 +98,23 @@ public class FrmLabReq10Record extends FrmRecord {
         return props;
     }
 
-    public Properties getFormCustRecord(Properties props, String provNo) throws SQLException {
+    public Properties getFormCustRecord(Properties props, String provNo) {
         String demoProvider = props.getProperty("demoProvider", "");
         String xmlSpecialtyCode = "<xml_p_specialty_code>";
         String xmlSpecialtyCode2 = "</xml_p_specialty_code>";
-        
+
         ResultSet rs = null;
         String sql = null;
 
         if (!demoProvider.equals("")) {
-        	
+
         	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
         	Provider provider = providerDao.getProvider(provNo);
 
             if (demoProvider.equals(provNo) ) {
                 // from provider table
-                
-                    String comments = provider.getComments();                    
+
+                    String comments = provider.getComments();
                     String strSpecialtyCode = "00";
                     if( comments.indexOf(xmlSpecialtyCode) != -1 ) {
                         strSpecialtyCode = comments.substring(comments.indexOf(xmlSpecialtyCode) + xmlSpecialtyCode.length(), comments.indexOf(xmlSpecialtyCode2));
@@ -128,12 +127,12 @@ public class FrmLabReq10Record extends FrmRecord {
                     props.setProperty("reqProvName", provider.getFormattedName());
                     props.setProperty("provName", "MRP: " + provider.getFormattedName());
                     props.setProperty("practitionerNo", "0000-" + num + "-" + strSpecialtyCode);
-                
+
             } else {
-                // from provider table               
-                
+                // from provider table
+
                 String num = "";
-               
+
                     String comments = provider.getComments();
                     String strSpecialtyCode = "00";
                     if( comments.indexOf(xmlSpecialtyCode) != -1 ) {
@@ -144,31 +143,31 @@ public class FrmLabReq10Record extends FrmRecord {
                         }
                     }
                     num = provider.getOhipNo() == null ? "" : provider.getOhipNo();
-                    props.setProperty("reqProvName", provider.getFormattedName());                    
+                    props.setProperty("reqProvName", provider.getFormattedName());
                     props.setProperty("practitionerNo", "0000-" + num + "-" + strSpecialtyCode);
-                
+
 
                 // from provider table
                 provider = providerDao.getProvider(demoProvider);
-                
+
                     if( num.equals("") ) {
-                    	num = provider.getOhipNo() == null ? "" : provider.getOhipNo();                        
+                    	num = provider.getOhipNo() == null ? "" : provider.getOhipNo();
                         props.setProperty("practitionerNo", "0000-"+num+"-00");
                         props.setProperty("reqProvName", provider.getFormattedName());
                     }
                     props.setProperty("provName", "MRP: " + provider.getFormattedName());
-                                    
+
             }
         }
         //get local clinic information
         ClinicDAO clinicDao = (ClinicDAO)SpringUtils.getBean("clinicDAO");
     	Clinic clinic = clinicDao.getClinic();
-        
+
     	props.setProperty("clinicName",clinic.getClinicName()==null?"":clinic.getClinicName());
     	props.setProperty("clinicProvince",clinic.getClinicProvince()==null?"":clinic.getClinicProvince());
         props.setProperty("clinicAddress", clinic.getClinicAddress()==null?"":clinic.getClinicAddress());
         props.setProperty("clinicCity", clinic.getClinicCity()==null?"":clinic.getClinicCity());
-        props.setProperty("clinicPC", clinic.getClinicPostal()==null?"":clinic.getClinicPostal());                    
+        props.setProperty("clinicPC", clinic.getClinicPostal()==null?"":clinic.getClinicPostal());
 
         return props;
     }
@@ -198,28 +197,28 @@ public class FrmLabReq10Record extends FrmRecord {
         return ((new FrmRecordHelp()).createActionURL(where, action, demoId, formId));
     }
 
-    
+
     public static Properties getRemoteRecordProperties(Integer remoteFacilityId, Integer formId) throws IOException
     {
     	FacilityIdIntegerCompositePk pk=new FacilityIdIntegerCompositePk();
     	pk.setIntegratorFacilityId(remoteFacilityId);
     	pk.setCaisiItemId(formId);
-    	
+
     	DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs();
     	CachedDemographicForm form=demographicWs.getCachedDemographicForm(pk);
-    	
+
     	ByteArrayInputStream bais=new ByteArrayInputStream(form.getFormData().getBytes());
-    	
+
     	Properties p=new Properties();
     	p.load(bais);
-    	
+
     	// missing
         // props.setProperty("hcType", demographic.getHcType());
     	// props.setProperty("demoProvider", demographic.getProviderNo());
     	// props.setProperty("clinicProvince",oscar.Misc.getString(rs, "clinic_province"));
 
     	logger.debug("Remote properties : "+p);
-    	
+
     	return(p);
     }
 }

@@ -175,7 +175,7 @@ public class FrmData {
             while(rs.next()) {
                 ret[1] = oscar.Misc.getString(rs, "form_no");
             }
-            String[] xmlForm = (String[]) ret.clone();
+            String[] xmlForm = ret.clone();
              
             if ( formName.equals("AR1")){
                 //First check to see if there are records for 2005
@@ -185,7 +185,7 @@ public class FrmData {
                 String[] foo = ret[0].split(".jsp");
                 ret[0] = foo[0] + "pg1.jsp" + foo[1];
                 MiscUtils.getLogger().debug("getShortcutFormValue forwarding new AR1 to: " + ret[0]);
-                String[] first_pick =  (String[]) ret.clone();
+                String[] first_pick =  ret.clone();
                 
                 //Check if AR has any forms
                 if (ret[1].equals("0")){ 
@@ -207,7 +207,7 @@ public class FrmData {
                 String[] foo = ret[0].split(".jsp");
                 ret[0] = foo[0] + "pg2.jsp" + foo[1];
                 MiscUtils.getLogger().debug("getShortcutFormValue forwarding new AR2 to: " + ret[0]);
-                String[] first_pick =  (String[]) ret.clone();
+                String[] first_pick =  ret.clone();
                 if (ret[1].equals("0")){
                    ret = getShortcutFormValue(demoNo, "AR");
                    foo = ret[0].split(".jsp");

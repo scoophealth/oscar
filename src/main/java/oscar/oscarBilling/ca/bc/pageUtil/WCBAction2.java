@@ -4,16 +4,16 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details. 
- * 
+ * GNU General Public License for more details.
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * Jason Gallagher
  *
@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -47,21 +46,21 @@ import oscar.util.UtilDateUtilities;
 
 /**
  * These Actions Handle of all the interactions with WCB Billing
- * 
+ *
  * Save   -- this will always save a new form and not update an new one.
  * ================
- * Called from the WCB form.  Could be an update or a save.  
+ * Called from the WCB form.  Could be an update or a save.
  * Possible Forwarding mappings
- * - Billing form ( will need to pass 
+ * - Billing form ( will need to pass
  * - Just Save
  * - Save and Close.
  * - Print ( this is just an hl7 print right now)
- * 
+ *
  * @author jaygallagher
  */
 public class WCBAction2 extends DispatchAction {
 
-    public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception, ServletException {
+    public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         if (request.getSession().getAttribute("user") == null) {
             return (mapping.findForward("Logout"));
         }
@@ -92,7 +91,7 @@ public class WCBAction2 extends DispatchAction {
             request.setAttribute("WCBFormId",wcb.getId());
             return mapping.findForward("saveAndClose");
         }
-        
+
         if (request.getParameter("saveandbill") != null){
             request.setAttribute("WCBFormId",wcb.getId());
             request.setAttribute("icd9",wcb.getW_icd9());
@@ -100,7 +99,7 @@ public class WCBAction2 extends DispatchAction {
             List list = new ArrayList();
             String feeitem = wcb.getW_feeitem();
             String xfeeitem = wcb.getW_extrafeeitem();
-            
+
             if (feeitem != null && !feeitem.trim().equals("")){
                 list.add(feeitem);
             }
@@ -108,8 +107,8 @@ public class WCBAction2 extends DispatchAction {
                 list.add(xfeeitem);
             }
             request.setAttribute("billingcodes", list);
-            
-            
+
+
             return mapping.findForward("newbill");
         }
 

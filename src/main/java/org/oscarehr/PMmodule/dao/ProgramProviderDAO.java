@@ -118,7 +118,7 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        ProgramProvider result = (ProgramProvider)this.getHibernateTemplate().get(ProgramProvider.class, id);
+        ProgramProvider result = this.getHibernateTemplate().get(ProgramProvider.class, id);
 
         if (log.isDebugEnabled()) {
             log.debug("getProgramProvider: id=" + id + ",found=" + (result != null));

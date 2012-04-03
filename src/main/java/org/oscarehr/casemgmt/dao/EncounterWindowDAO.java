@@ -42,7 +42,7 @@ public class EncounterWindowDAO extends HibernateDaoSupport {
     }
     
     public EncounterWindow getWindow(String provider) {
-        EncounterWindow ectWin = (EncounterWindow)this.getHibernateTemplate().get(EncounterWindow.class,provider);
+        EncounterWindow ectWin = this.getHibernateTemplate().get(EncounterWindow.class,provider);
         return ectWin;
     }
     

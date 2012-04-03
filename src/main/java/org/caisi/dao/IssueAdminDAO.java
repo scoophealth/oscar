@@ -37,7 +37,7 @@ public class IssueAdminDAO extends HibernateDaoSupport {
     }
 
     public IssueAdmin getIssueAdmin(Long id) {
-        return (IssueAdmin)getHibernateTemplate().get(IssueAdmin.class, id);
+        return getHibernateTemplate().get(IssueAdmin.class, id);
     }
 
     public void saveIssueAdmin(IssueAdmin issueAdmin) {

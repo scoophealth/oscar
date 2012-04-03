@@ -202,7 +202,7 @@ public class SurveyManagerImpl implements SurveyManager, CustomReportDataSource 
 		List<LabelValueBean> results = new ArrayList<LabelValueBean>();
 		SurveyDocument.Survey survey = getFormModel(formId);
 		if(survey == null) {
-			return (LabelValueBean[])results.toArray(new LabelValueBean[results.size()]);
+			return results.toArray(new LabelValueBean[results.size()]);
 		}
 		
 		int pageId=1;
@@ -224,7 +224,7 @@ public class SurveyManagerImpl implements SurveyManager, CustomReportDataSource 
 				}
 			}
 		}
-		return (LabelValueBean[])results.toArray(new LabelValueBean[results.size()]);		
+		return results.toArray(new LabelValueBean[results.size()]);		
 	}
 	
 	public Item getItem(String formId, String id) {

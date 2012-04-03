@@ -21,7 +21,7 @@ import oscar.util.SqlUtils;
 public final class DBHelp {
     private static final Logger logger = MiscUtils.getLogger();
 
-    public static boolean updateDBRecord(String sql) throws SQLException {
+    public static boolean updateDBRecord(String sql) {
         try {
         	SqlUtils.update(sql);
             return(true);
@@ -31,15 +31,15 @@ public final class DBHelp {
         }
     }
 
-    public static ResultSet searchDBRecord(String sql) throws SQLException {
+    public static ResultSet searchDBRecord(String sql) {
         ResultSet ret = null;
         try {
-        	
+
             ret = DBHandler.GetSQL(sql);
         } catch (SQLException e) {
             logger.error("Error", e);
         }
-        
+
         return ret;
     }
 
@@ -47,7 +47,7 @@ public final class DBHelp {
     {
     	return oscar.Misc.getString(rs, columnName);
     }
-    
+
     public static String getString(ResultSet rs,int columnIndex) throws SQLException
     {
     	return oscar.Misc.getString(rs, columnIndex);

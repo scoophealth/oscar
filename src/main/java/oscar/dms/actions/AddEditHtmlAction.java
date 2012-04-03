@@ -126,7 +126,7 @@ public class AddEditHtmlAction extends Action {
 		if (cmn!=null) {
 		    cmm.saveNoteSimple(cmn);
 		    CaseManagementNoteLink cml = new CaseManagementNoteLink();
-		    cml.setTableName(cml.DOCUMENT);
+		    cml.setTableName(CaseManagementNoteLink.DOCUMENT);
 		    cml.setTableId(Long.valueOf(docId));
 		    cml.setNoteId(cmn.getId());
 		    cmm.saveNoteLink(cml);

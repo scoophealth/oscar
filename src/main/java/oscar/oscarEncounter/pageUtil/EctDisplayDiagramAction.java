@@ -71,7 +71,7 @@ public class EctDisplayDiagramAction extends EctDisplayAction {
         
         ArrayList<HashMap<String,? extends Object>> patientEforms = EFormUtil.listPatientEForms("eform_data.form_date", "current", bean.demographicNo, "Eye Form", null);
         for(int x=0;x<patientEforms.size();x++) {
-        	NavBarDisplayDAO.Item item = Dao.Item();
+        	NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
         	HashMap<String,? extends Object> form = patientEforms.get(x);
         	String strDate = (String)form.get("formDate");
         	String strTime = (String)form.get("formTime");

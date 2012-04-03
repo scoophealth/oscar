@@ -1,24 +1,24 @@
 
 /*
-* 
+*
 * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
+* This software is published under the GPL GNU General Public License.
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version. *
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+*
 * <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
+*
+* This software was written for
+* Centre for Research on Inner City Health, St. Michael's Hospital,
+* Toronto, Ontario, Canada
 */
 package org.caisi.core.web;
 
@@ -54,49 +54,49 @@ public class InfirmAction extends BaseAction
 	{
 		logger.debug("====> inside showProgram action.");
 
-		
 
-		HttpSession se = request.getSession();	
+
+		HttpSession se = request.getSession();
 		se.setAttribute("infirmaryView_initflag", "true");
-		String providerNo=(String) se.getAttribute("user");				
-				
+		String providerNo=(String) se.getAttribute("user");
+
 		//clear memory for programbean
 		//List memob=(List) se.getAttribute("infirmaryView_demographicBeans");
 		//if (memob!=null) memob.clear();
-		
+
 		List programBean;
-		
+
 		String archiveView = (String)request.getSession().getAttribute("archiveView");
 		/*
 		if(archiveView != null && archiveView.equals("true")){
-			
+
 			ProgramManager manager = getProgramManager();
-			programBean = manager.getProgramBeans(providerNo);	
+			programBean = manager.getProgramBeans(providerNo);
 			se.setAttribute("infirmaryView_programBeans",programBean );
 		}
 		else {
 			InfirmBedProgramManager manager=getInfirmBedProgramManager();
-			programBean=manager.getProgramBeans(providerNo);	
+			programBean=manager.getProgramBeans(providerNo);
 			se.setAttribute("infirmaryView_programBeans",programBean );
 		}
 		*/
 		InfirmBedProgramManager manager=getInfirmBedProgramManager();
 		Integer facilityId=null;
-		
+
 		// facility filtering
-        if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {   
+        if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
         	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
             facilityId = loggedInInfo.currentFacility.getId();
-        }        
+        }
 
-		programBean=manager.getProgramBeans(providerNo, facilityId);	
+		programBean=manager.getProgramBeans(providerNo, facilityId);
 		//programBean_oscarClinic = manager.getProgramForApptViewBeans(providerNo, facilityId);
-		//if(OscarProperties.getInstance().getBooleanProperty("oscarClinic", "true")) { 
+		//if(OscarProperties.getInstance().getBooleanProperty("oscarClinic", "true")) {
 		//	se.setAttribute("infirmaryView_programBeans",programBean_oscarClinic);
 		//} else {
 			se.setAttribute("infirmaryView_programBeans",programBean);
 		//}
-		
+
 		//set default program
 		int defaultprogramId=getInfirmBedProgramManager().getDefaultProgramId(providerNo);
 		boolean defaultInList=false;
@@ -117,21 +117,21 @@ public class InfirmAction extends BaseAction
 			programId=Integer.valueOf((String)se.getAttribute(SessionConstants.CURRENT_PROGRAM_ID)).intValue();
 		}
 		if (programId!=defaultprogramId) getInfirmBedProgramManager().setDefaultProgramId(providerNo,programId);
-		
+
 		se.setAttribute(SessionConstants.CURRENT_PROGRAM_ID,String.valueOf(programId));
-		
+
 		//if()
 		if(programId != 0) {
 			se.setAttribute("case_program_id",String.valueOf(programId));
 		}
-		
+
 		if(programId != 0) {
 			ProgramManager programManager = getProgramManager();
 			se.setAttribute("program_client_statuses",programManager.getProgramClientStatuses(new Integer(programId)));
-			
+
 		}
-		
-		
+
+
 		String[] programInfo = getInfirmBedProgramManager().getProgramInformation(programId);
 		if(programInfo[0] != null) {
 			se.setAttribute("infirmaryView_programAddress",programInfo[0].replaceAll("\\n", "<br>"));
@@ -148,7 +148,7 @@ public class InfirmAction extends BaseAction
 		} else {
 			se.setAttribute("infirmaryView_programFax","");
 		}
-		
+
 		Date dt;
 
 		if (se.getAttribute("infirmaryView_date")!=null)
@@ -157,13 +157,13 @@ public class InfirmAction extends BaseAction
 		}else{
 			dt=new Date();
 		}
-		
+
 		//release memory
 		//List memo=(List) se.getAttribute("infirmaryView_demographicBeans");
 		//if (memo!=null) memo.clear();
 		List demographicBeans = getInfirmBedProgramManager().getDemographicByBedProgramIdBeans(programId,dt,archiveView);
 		List filteredDemographicBeans = new ArrayList();
-		if( request.getParameter("infirmaryView_clientStatusId") != null) {		
+		if( request.getParameter("infirmaryView_clientStatusId") != null) {
 			//int statusId = new Integer(request.getParameter("infirmaryView_clientStatusId")).intValue();
 			String statusId = request.getParameter("infirmaryView_clientStatusId");
 			if(statusId.equals("0")){
@@ -171,13 +171,13 @@ public class InfirmAction extends BaseAction
 			}
 			else {
 			Admission admission = new Admission();
-			List admissions = new ArrayList();	
+			List admissions = new ArrayList();
 			Integer csi;
-			for(Iterator iter=demographicBeans.iterator();iter.hasNext();) {				
+			for(Iterator iter=demographicBeans.iterator();iter.hasNext();) {
 				LabelValueBean bean = (LabelValueBean)iter.next();
 				String demographicNo = bean.getValue();
 				admission = null;
-				admissions = null;				
+				admissions = null;
 				//admission = getAdmissionManager().getAdmission(String.valueOf(programId), new Integer(demographicNo));
 				if(archiveView!=null && archiveView.equals("true")){
 					admissions = getAdmissionManager().getAdmissions_archiveView(String.valueOf(programId), new Integer(demographicNo));
@@ -189,9 +189,9 @@ public class InfirmAction extends BaseAction
 						if(statusId!=null && statusId.equals(csi.toString())){
 							filteredDemographicBeans.add(bean);
 							break;
-						}				
+						}
 					}
-				
+
 				}
 				else {
 					admission = getAdmissionManager().getCurrentAdmission(String.valueOf(programId), new Integer(demographicNo));
@@ -199,10 +199,10 @@ public class InfirmAction extends BaseAction
 					{
 						csi = admission.getClientStatusId();
 						if(csi==null)
-							csi=0; 				
+							csi=0;
 						if(statusId!=null && statusId.equals(csi.toString())){
 							filteredDemographicBeans.add(bean);
-						}				
+						}
 					}
 				}
 			}
@@ -212,10 +212,10 @@ public class InfirmAction extends BaseAction
 			filteredDemographicBeans = demographicBeans;
 		}
 		se.setAttribute("infirmaryView_demographicBeans",filteredDemographicBeans);
-		
+
 		/*java.util.Enumeration enu =  se.getAttributeNames();
 		while (enu.hasMoreElements())
-			logger.info(enu.nextElement()); 
+			logger.info(enu.nextElement());
 		*/
 //		response.sendRedirect(se.getAttribute("infirmaryView_OscarURL")+"?"+se.getAttribute("infirmaryView_OscarQue"));
 		return null;
@@ -231,7 +231,7 @@ public class InfirmAction extends BaseAction
 		Boolean onsig=getInfirmBedProgramManager().getProviderSig(providerNo);
 		request.getSession().setAttribute("signOnNote",onsig);
 		int pid = getInfirmBedProgramManager().getDefaultProgramId(providerNo);
-		
+
 		/*Disable schedule view associated with the program. Make the default program id equal to "0".
 		String ppid1 = (String)request.getSession().getAttribute("programId_oscarView");
 		if(ppid1==null) {
@@ -242,7 +242,7 @@ public class InfirmAction extends BaseAction
 		}
 		*/
 		request.getSession().setAttribute("programId_oscarView","0");
-		
+
 		String ppid = (String)request.getSession().getAttribute("case_program_id");
 		if(ppid==null) {
 			request.getSession().setAttribute("case_program_id",String.valueOf(pid));
@@ -250,13 +250,13 @@ public class InfirmAction extends BaseAction
 			request.getSession().setAttribute("case_program_id", ppid);
 			getInfirmBedProgramManager().setDefaultProgramId(providerNo,Integer.valueOf(ppid).intValue());
 		}
-		
+
 		return null;
 	}
-	
+
 	public ActionForward toggleSig(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
-			throws Exception
+
 	{
 		logger.debug("====> inside toggleSig action.");
 		String providerNo=request.getParameter("providerNo");
@@ -265,6 +265,6 @@ public class InfirmAction extends BaseAction
 		request.getSession().setAttribute("signOnNote",onsig);
 		return null;
 	}
-	
+
 }
 

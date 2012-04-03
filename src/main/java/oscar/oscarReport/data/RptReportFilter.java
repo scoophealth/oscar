@@ -25,7 +25,7 @@ public class RptReportFilter {
     String date_format;
     DBHelp dbObj = new DBHelp();
 
-    public boolean insertRecord() throws SQLException {
+    public boolean insertRecord()  {
         boolean ret = false;
         String sql = "insert into reportFilter (report_id, description, value, position, status,order_no,javascript,date_format) values ("
                 + report_id
@@ -47,14 +47,14 @@ public class RptReportFilter {
         return ret;
     }
 
-    public boolean deleteRecord(int recordId) throws SQLException {
+    public boolean deleteRecord(int recordId) {
         boolean ret = false;
         String sql = "update reportFilter set status=0 where id=" + recordId;
         ret = DBHelp.updateDBRecord(sql);
         return ret;
     }
 
-    public boolean unDeleteRecord(int recordId) throws SQLException {
+    public boolean unDeleteRecord(int recordId) {
         boolean ret = false;
         String sql = "update reportFilter set status=1 where id=" + recordId;
         ret = DBHelp.updateDBRecord(sql);
@@ -66,15 +66,15 @@ public class RptReportFilter {
         Vector ret = new Vector();
         String[] str = null;
         String sql = "select * from reportFilter where status = " + n + " order by order_no";
-        ResultSet rs = dbObj.searchDBRecord(sql);
+        ResultSet rs = DBHelp.searchDBRecord(sql);
         while (rs.next()) {
             str = new String[6];
-            str[0] = dbObj.getString(rs,"description");
-            str[1] = dbObj.getString(rs,"value");
-            str[2] = dbObj.getString(rs,"position");
+            str[0] = DBHelp.getString(rs,"description");
+            str[1] = DBHelp.getString(rs,"value");
+            str[2] = DBHelp.getString(rs,"position");
             str[3] = "" + rs.getInt("order_no");
-            str[4] = dbObj.getString(rs,"javascript");
-            str[5] = dbObj.getString(rs,"date_format");
+            str[4] = DBHelp.getString(rs,"javascript");
+            str[5] = DBHelp.getString(rs,"date_format");
             ret.add(str);
         }
         rs.close();
@@ -86,15 +86,15 @@ public class RptReportFilter {
         String[] str = null;
         String sql = "select * from reportFilter where report_id=" + recordId + " and status = " + n
                 + " order by order_no";
-        ResultSet rs = dbObj.searchDBRecord(sql);
+        ResultSet rs = DBHelp.searchDBRecord(sql);
         while (rs.next()) {
             str = new String[6];
-            str[0] = dbObj.getString(rs,"description");
-            str[1] = dbObj.getString(rs,"value");
-            str[2] = dbObj.getString(rs,"position");
+            str[0] = DBHelp.getString(rs,"description");
+            str[1] = DBHelp.getString(rs,"value");
+            str[2] = DBHelp.getString(rs,"position");
             str[3] = "" + rs.getInt("order_no");
-            str[4] = dbObj.getString(rs,"javascript");
-            str[5] = dbObj.getString(rs,"date_format");
+            str[4] = DBHelp.getString(rs,"javascript");
+            str[5] = DBHelp.getString(rs,"date_format");
             ret.add(str);
         }
         rs.close();

@@ -23,9 +23,6 @@
  */
 package oscar.oscarRx.pageUtil;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -45,7 +42,7 @@ public final class RxRxPageSizeInfoAction extends DispatchAction {
 
     private static Logger logger = MiscUtils.getLogger();
 
-    public ActionForward view(ActionMapping mapping,ActionForm form, HttpServletRequest request,HttpServletResponse response)throws IOException, ServletException {
+    public ActionForward view(ActionMapping mapping,ActionForm form, HttpServletRequest request,HttpServletResponse response) {
         long start = System.currentTimeMillis();
         String provider = (String) request.getSession().getAttribute("user");
 

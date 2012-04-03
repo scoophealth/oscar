@@ -93,12 +93,12 @@ public class DSServiceMyDrugref extends DSService {
 
     }
 
-    public List<DSGuideline> fetchGuidelines(List<String> uuids) throws Exception {
-        
+    public List<DSGuideline> fetchGuidelines(List<String> uuids)  {
+
         RxMyDrugrefInfoAction myDrugrefAction = new RxMyDrugrefInfoAction();
         Vector params = new Vector();
         params.addElement(new Vector(uuids));
-        
+
         Vector<Hashtable> fetchedGuidelines = (Vector<Hashtable>) myDrugrefAction.callWebserviceLite("GetGuidelines", params);
         ArrayList newGuidelines = new ArrayList();
         for (Hashtable fetchedGuideline: fetchedGuidelines) {
@@ -109,7 +109,7 @@ public class DSServiceMyDrugref extends DSService {
 
             DSGuidelineFactory factory = new DSGuidelineFactory();
             DSGuideline newGuideline = factory.createBlankGuideline();
-            try { 
+            try {
                 newGuideline.setUuid((String) fetchedGuideline.get("uuid"));
                 newGuideline.setTitle((String) fetchedGuideline.get("name"));
                 newGuideline.setVersion(Integer.parseInt((String) fetchedGuideline.get("version")));
@@ -118,13 +118,13 @@ public class DSServiceMyDrugref extends DSService {
                 newGuideline.setSource("mydrugref");
                 newGuideline.setDateStart(new Date());
                 newGuideline.setStatus('A');
-                
+
                 newGuideline.setXml((String) fetchedGuideline.get("body"));
                 newGuidelines.add(newGuideline);
 
                 newGuideline.parseFromXml();
 
-                
+
             } catch (Exception e) {
                 DecisionSupportException newException = new DecisionSupportException("Error parsing drug with with title: '" + (String) fetchedGuideline.get("name") + "' uuid: '" + (String) fetchedGuideline.get("uuid") + "'", e);
                 logger.error("Error", newException);

@@ -3,20 +3,17 @@ package oscar.oscarLab.ca.all.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.util.MiscUtils;
-//import org.oscarehr.util.settings.dao.SettingsDAO;
-//import org.oscarehr.util.settings.model.Settings;
 
 /**
  * UI for managing current system settings
- * 
+ *
  * @author dritan
- * 
+ *
  */
 public class HRMWebHandler extends DispatchAction {
 
@@ -44,7 +41,7 @@ public class HRMWebHandler extends DispatchAction {
 		//Settings settings = (Settings) frm.get("settings");
 		//Settings settings = new Settings(request.getParameter("groupName"), request.getParameter("keyField"), request
 		//		.getParameter("valueField"));
-		
+
 		MiscUtils.getLogger().debug("settings : groupName" +request.getParameter("groupName")+"   keyField "+request.getParameter("keyField") +"   value  "+request.getParameter("valueField"));
 
 		//settingsDAO.save(settings);
@@ -65,7 +62,7 @@ public class HRMWebHandler extends DispatchAction {
 
 	/**
 	 * Show current settings for all or any given group - typed or selected from available.
-	 * 
+	 *
 	 * @param mapping
 	 * @param form
 	 * @param request
@@ -74,7 +71,7 @@ public class HRMWebHandler extends DispatchAction {
 	 * @throws Exception
 	 */
 	public ActionForward showSettings(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+			HttpServletResponse response)  {
 
 		return mapping.findForward("success");
 	}

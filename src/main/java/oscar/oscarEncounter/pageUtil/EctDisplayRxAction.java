@@ -121,7 +121,7 @@ public class EctDisplayRxAction extends EctDisplayAction {
             	continue;
             }
 
-            NavBarDisplayDAO.Item item = Dao.Item();
+            NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
 
             String styleColor = "";
             if (drug.isCurrent() && (drug.getEndDate().getTime() - now <= month)) {

@@ -125,14 +125,14 @@ public class ConsultationAttachDocs {
         for(int i = 0; i < docs.size(); ++i) {
             alreadyAttached = false;
             for(int j = 0; j < oldlist.size(); ++j) {                
-                if( ((EDoc)oldlist.get(j)).getDocId().equals((String)docs.get(i)) ) {                    
+                if( ((EDoc)oldlist.get(j)).getDocId().equals(docs.get(i)) ) {                    
                     alreadyAttached = true;
-                    keeplist.add((EDoc)oldlist.get(j));
+                    keeplist.add(oldlist.get(j));
                     break;
                 }
             }
             if( !alreadyAttached )
-                newlist.add((String)docs.get(i));
+                newlist.add(docs.get(i));
         }
         
         //now compare what we need to keep with what we have and remove association
