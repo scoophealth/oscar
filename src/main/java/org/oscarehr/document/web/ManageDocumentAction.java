@@ -63,6 +63,7 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.ProviderInboxRoutingDao;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.document.dao.DocumentDAO;
 import org.oscarehr.document.model.CtlDocument;
 import org.oscarehr.document.model.Document;
@@ -287,8 +288,13 @@ public class ManageDocumentAction extends DispatchAction {
 		WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(se.getServletContext());
 		CaseManagementManager cmm = (CaseManagementManager) ctx.getBean("caseManagementManager");
 		cmn.setProviderNo("-1");// set the provider no to be -1 so the editor appear as 'System'.
-		String provFirstName = EDocUtil.getProviderInfo("first_name", user_no);
-		String provLastName = EDocUtil.getProviderInfo("last_name", user_no);
+		Provider provider = EDocUtil.getProvider(user_no);
+		String provFirstName = "";
+		String provLastName = "";
+		if(provider!=null) {
+			provFirstName=provider.getFirstName();
+			provLastName=provider.getLastName();
+		}
 		String strNote = "Document" + " " + docDesc + " " + "created at " + now + " by " + provFirstName + " " + provLastName + ".";
 
 		// String strNote="Document"+" "+docDesc+" "+ "created at "+now+".";
@@ -378,7 +384,7 @@ public class ManageDocumentAction extends DispatchAction {
 		        true, // fill background with white
 		        true // block until drawing is done
 		        );
-		
+
 		log.debug("about to Print to stream");
 		File outfile = new File(documentCacheDir, d.getDocfilename() + "_" + pageNum + ".png");
 
