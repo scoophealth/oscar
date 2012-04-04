@@ -42,8 +42,6 @@ if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp
 String [][] dbQueries=new String[][] {
 	{"search_demographic", "select * from demographic where demographic_no=? "},
     {"search_formtype2diabete", "select * from formType2Diabetes where demographic_no= ? order by formEdited desc, ID desc limit 0,1"},
-    //{"search_echart", "select ongoingConcerns from eChart where demographicNo=? order by timeStamp desc limit 1"},
-    //{"search_drugs", "select * from drugs where demographic_no=? and rx_date >= ? order by rx_date desc, drugid desc "},
 };
 studyBean.doConfigure(dbQueries);
 %>
