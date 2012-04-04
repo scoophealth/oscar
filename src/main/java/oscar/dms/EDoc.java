@@ -34,6 +34,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.log4j.Logger;
 import org.apache.struts.upload.FormFile;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
@@ -72,7 +73,7 @@ public class EDoc extends TagObject implements Comparable {
 	private boolean indivoRegistered = false;
 	private int numberOfPages = 0;
 	private Integer appointmentNo = -1;
-	
+
 	/** Creates a new instance of EDoc */
 	public EDoc() {
 	}
@@ -245,11 +246,6 @@ public class EDoc extends TagObject implements Comparable {
 		this.moduleId = moduleId;
 	}
 
-	public String getModuleName() {
-		String moduleName = EDocUtil.getModuleName(module, moduleId);
-		return moduleName;
-	}
-
 	public String getType() {
 		return type;
 	}
@@ -295,7 +291,7 @@ public class EDoc extends TagObject implements Comparable {
 	}
 
 	public String getCreatorName() {
-		String creatorName = EDocUtil.getModuleName("provider", creatorId);
+		String creatorName = EDocUtil.getProviderName(creatorId);
 		return creatorName;
 	}
 
@@ -308,7 +304,7 @@ public class EDoc extends TagObject implements Comparable {
 	}
 
 	public String getResponsibleName() {
-		String responsibleName = EDocUtil.getModuleName("provider", responsibleId);
+		String responsibleName = EDocUtil.getProviderName(responsibleId);
 		return responsibleName;
 	}
 
@@ -405,8 +401,8 @@ public class EDoc extends TagObject implements Comparable {
 	public void setProgramId(Integer programId) {
 		this.programId = programId;
 	}
-	
-	
+
+
 
 	public Integer getAppointmentNo() {
 		return appointmentNo;
@@ -429,12 +425,16 @@ public class EDoc extends TagObject implements Comparable {
 	}
 
 	public String getReviewerName() {
-		String reviewerName = EDocUtil.getModuleName("provider", reviewerId);
+		String reviewerName = EDocUtil.getProviderName(reviewerId);
 		return reviewerName;
 	}
 
 	public String getReviewerOhip() {
-		return EDocUtil.getProviderInfo("ohip_no", reviewerId);
+		Provider provider = EDocUtil.getProvider(reviewerId);
+		if(provider != null) {
+			return provider.getOhipNo();
+		}
+		return "";
 	}
 
 	public void setReviewerId(String reviewerId) {
@@ -456,7 +456,7 @@ public class EDoc extends TagObject implements Comparable {
 	public void setNumberOfPages(int n) {
 		this.numberOfPages = n;
 	}
-	
+
 	@Override
     public String toString()
 	{

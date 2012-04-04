@@ -1,26 +1,26 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
+ *
+ * This software was written for the
+ * Department of Family Medicine
  * McMaster University test2
- * Hamilton 
- * Ontario, Canada 
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -259,7 +259,7 @@ for (String reportClass : reportClasses) {
 		</tr>
 		<tr>
 			<td>Added By:</td>
-			<td><%=EDocUtil.getModuleName("provider", formdata.getDocCreator())%></td>
+			<td><%=EDocUtil.getProviderName(formdata.getDocCreator())%></td>
 		</tr>
 		<tr>
 			<td>Responsible Provider:</td>
@@ -268,7 +268,7 @@ for (String reportClass : reportClasses) {
 				<option value="">---</option>
 		<% for (Hashtable pd : pdList) {
 			String selected = "";
-			if (formdata.getResponsibleId().equals((String)pd.get("providerNo"))) selected = "selected";
+			if (formdata.getResponsibleId().equals(pd.get("providerNo"))) selected = "selected";
 			%>
 				<option value="<%=pd.get("providerNo")%>" <%=selected%>><%=pd.get("lastName")%>, <%=pd.get("firstName")%></option>
 		<% } %>
@@ -308,7 +308,7 @@ for (String reportClass : reportClasses) {
 		<tr>
 		    <td colspan=2>
 			<% if (formdata.getReviewerId()!=null && !formdata.getReviewerId().equals("")) { %>
-			Reviewed: &nbsp; <%=EDocUtil.getModuleName("provider", formdata.getReviewerId())%>
+			Reviewed: &nbsp; <%=EDocUtil.getProviderName(formdata.getReviewerId())%>
 			&nbsp; [<%=formdata.getReviewDateTime()%>]
 			<% } else { %>
 			<input type="button" value="Reviewed" title="Click to set Reviewed" onclick="reviewed(this);" />
