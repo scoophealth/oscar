@@ -29,7 +29,7 @@
  */
 -->
 
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ include file="/casemgmt/taglibs.jsp"%>
 <%@taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>

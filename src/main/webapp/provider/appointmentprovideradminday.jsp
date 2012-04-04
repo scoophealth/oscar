@@ -73,7 +73,7 @@ if (bMultisites) {
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ taglib uri="/WEB-INF/special_tag.tld" prefix="special" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="myoscar" %>
 <%@ taglib uri="/WEB-INF/phr-tag.tld" prefix="phr" %>
 
@@ -183,7 +183,7 @@ public boolean patientHasOutstandingPrivateBills(String demographicNo){
     if( defaultServiceType == null ) {
         defaultServiceType = "";
     }
-    
+
     boolean bShortcutIntakeForm = oscarVariables.getProperty("appt_intake_form", "").equalsIgnoreCase("on") ? true : false;
 
     String newticklerwarningwindow=null;
@@ -1050,9 +1050,19 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 </tr>
 </table>
 
+<script>
+	jQuery(document).ready(function(){
+		jQuery.get("<%=request.getContextPath()%>/SystemMessage.do?method=view","html",function(data,textStatus){
+			jQuery("#system_message").html(data);
+		});
+		jQuery.get("<%=request.getContextPath()%>/FacilityMessage.do?method=view","html",function(data,textStatus){
+			jQuery("#facility_message").html(data);
+		});
+	});
+</script>
 
-<c:import url="/SystemMessage.do?method=view" />
-<c:import url="/FacilityMessage.do?method=view" />
+<div id="system_message"></div>
+<div id="facility_message"></div>
 <%
 if (caseload) {
 %>
@@ -1631,13 +1641,13 @@ if( OscarProperties.getInstance().getProperty("SHOW_PREVENTION_STOP_SIGNS","fals
 
 		String warning = prevMgr.getWarnings(String.valueOf(demographic_no));
 		warning = PreventionManager.checkNames(warning);
-				
+
 		String htmlWarning = "";
-		
+
 		if( !warning.equals("")) {
 			  htmlWarning = "<img src=\"../images/stop_sign.png\" height=\"14\" width=\"14\" title=\"" + warning +"\">&nbsp;";
-		} 
-	
+		}
+
 		out.print(htmlWarning);
 
 }
