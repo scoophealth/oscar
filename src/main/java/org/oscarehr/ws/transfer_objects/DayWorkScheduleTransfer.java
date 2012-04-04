@@ -33,6 +33,8 @@ public final class DayWorkScheduleTransfer {
 
 	public static DayWorkScheduleTransfer toTransfer(DayWorkSchedule dayWorkSchedule)
 	{
+		if (dayWorkSchedule==null) return(null);
+		
 		DayWorkScheduleTransfer dayWorkScheduleTransfer=new DayWorkScheduleTransfer();
 		
 		dayWorkScheduleTransfer.setHoliday(dayWorkSchedule.isHoliday());

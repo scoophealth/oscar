@@ -72,6 +72,8 @@ public final class AppointmentTypeTransfer {
 	}
 
 	public static AppointmentTypeTransfer toTransfer(AppointmentType appointmentType) {
+		if (appointmentType==null) return(null);
+		
 		AppointmentTypeTransfer appointmentTypeTransfer = new AppointmentTypeTransfer();
 
 		BeanUtils.copyProperties(appointmentType, appointmentTypeTransfer);

@@ -27,6 +27,8 @@ public final class CalendarScheduleCodePairTransfer {
     }
 
 	public static CalendarScheduleCodePairTransfer toTransfer(Map.Entry<? extends Calendar, Character> entry) {
+		if (entry==null) return(null);
+		
 		CalendarScheduleCodePairTransfer result = new CalendarScheduleCodePairTransfer();
 
 		result.setDate(entry.getKey());

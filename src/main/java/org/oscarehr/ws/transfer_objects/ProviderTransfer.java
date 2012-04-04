@@ -209,6 +209,8 @@ public final class ProviderTransfer {
 	}
 
 	public static ProviderTransfer toTransfer(Provider provider) {
+		if (provider==null) return(null);
+		
 		ProviderTransfer providerTransfer = new ProviderTransfer();
 
 		BeanUtils.copyProperties(provider, providerTransfer);
