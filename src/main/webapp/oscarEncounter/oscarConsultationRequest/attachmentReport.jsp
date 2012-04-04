@@ -1,26 +1,26 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
+ *
+ * This software was written for the
+ * Department of Family Medicine
  * McMaster University test2
- * Hamilton 
- * Ontario, Canada 
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -44,7 +44,7 @@ String module = "demographic";
 String demoNo= request.getParameter("demographicNo");
 String reqId = request.getParameter("reqId");
 String provNo = request.getParameter("providerNo");
-String demoName = EDocUtil.getModuleName(module, demoNo);
+String demoName = EDocUtil.getDemographicName(demoNo);
 
 ArrayList doctypes = EDocUtil.getDoctypes(module);
 
@@ -78,19 +78,19 @@ Rounded("div.leftplane","bottom","transparent","#EEEEFF","small border #ccccff")
 
 function checkAll(master){
    var frmList = document.forms[0].elements;
-   
+
    for (i =0; i < frmList.length; i++){
       if( frmList[i].type == "checkbox" && frmList[i] != master )
         frmList[i].checked = !frmList[i].checked;
    }
-      
+
 }
 
 function verifyChecks(t){
    var ret = false;
-   
+
    if( t.docNo != undefined ) {
-   
+
         if( t.docNo.length == undefined )
             ret = t.docNo.checked;
         else {
@@ -102,22 +102,22 @@ function verifyChecks(t){
             } //end for
         } //else if
    }
-   
-   if( !ret ) 
+
+   if( !ret )
         alert("<bean:message key="oscarEncounter.oscarConsultationRequest.PrintReport.pdfPrintErr"/>");
    return ret;
 }
 
-function popup1(height, width, url, windowName){   
-  var page = url;  
-  windowprops = "height="+height+",width="+width+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";  
-  var popup=window.open(url, windowName, windowprops);  
-  if (popup != null){  
-    if (popup.opener == null){  
-      popup.opener = self;  
-    }  
-  }  
-  popup.focus();  
+function popup1(height, width, url, windowName){
+  var page = url;
+  windowprops = "height="+height+",width="+width+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
+  var popup=window.open(url, windowName, windowprops);
+  if (popup != null){
+    if (popup.opener == null){
+      popup.opener = self;
+    }
+  }
+  popup.focus();
 }
 </script>
 
@@ -146,8 +146,8 @@ function popup1(height, width, url, windowName){
 		<html:form action="/oscarEncounter/oscarConsultation/printAttached"
 			onsubmit="return verifyChecks(this);">
 
-			<div class="documentLists"><%-- STUFF TO DISPLAY --%> <%                            
-                ArrayList consultdocs = EDocUtil.listDocs(demoNo, reqId, EDocUtil.ATTACHED);                                               
+			<div class="documentLists"><%-- STUFF TO DISPLAY --%> <%
+                ArrayList consultdocs = EDocUtil.listDocs(demoNo, reqId, EDocUtil.ATTACHED);
              %>
 			<div class="doclist">
 			<div class="headerline">
@@ -192,7 +192,7 @@ function popup1(height, width, url, windowName){
 						style="margin: 0px; padding: 0px;" /> <%}else{%> &nbsp; <%}%>
 					</td>
 					<td>
-					<% 
+					<%
                               String url = "documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(curdoc.getFileName()) + "&type=" + dStatus + "&doc_no=" + curdoc.getDocId();
                               if (curdoc.getStatus() == 'H') { %> <a
 						href="<%=url%>" target="_blank"> <% } else { %> <a
@@ -207,29 +207,29 @@ function popup1(height, width, url, windowName){
 				<%}
                 CommonLabResultData consultLabs = new CommonLabResultData();
                 ArrayList attachedLabs = consultLabs.populateLabResultsData(demoNo, reqId, CommonLabResultData.ATTACHED);
-                
+
                 LabResultData result;
                 String labURL;
                 String labDisplayName;
                 for(int idx = 0; idx < attachedLabs.size(); ++idx) {
                     result = (LabResultData) attachedLabs.get(idx);
-                    if ( result.isMDS() ){ 
+                    if ( result.isMDS() ){
                         labURL ="../../oscarMDS/SegmentDisplay.jsp?providerNo="+provNo+"&segmentID="+result.segmentID+"&status="+result.getReportStatus();
                         labDisplayName = result.getDiscipline()+" "+result.getDateTime();
-                    }else if (result.isCML()){ 
-                        labURL ="../../lab/CA/ON/CMLDisplay.jsp?providerNo="+provNo+"&segmentID="+result.segmentID; 
+                    }else if (result.isCML()){
+                        labURL ="../../lab/CA/ON/CMLDisplay.jsp?providerNo="+provNo+"&segmentID="+result.segmentID;
                         labDisplayName = result.getDiscipline()+" "+result.getDateTime();
                     }else if (result.isHL7TEXT()){
                         labDisplayName = result.getDiscipline();
                         labURL ="../../lab/CA/ALL/labDisplay.jsp?providerNo="+provNo+"&segmentID="+result.segmentID;
-                    }else{    
+                    }else{
                         labURL ="../../lab/CA/BC/labDisplay.jsp?segmentID="+result.segmentID+"&providerNo="+provNo;
                         labDisplayName = result.getDiscipline()+" "+result.getDateTime();
                     }
-                    
-                    
-                    
-                    
+
+
+
+
             %>
 				<tr>
 					<td>&nbsp;</td>
@@ -242,7 +242,7 @@ function popup1(height, width, url, windowName){
 
 				<%
                 }
-                
+
             if (consultdocs.size() == 0 && attachedLabs.size() == 0 ) {%>
 				<tr>
 					<td colspan="6">No attached documents to display</td>

@@ -57,6 +57,11 @@ public class Document extends AbstractModel<Integer> implements Serializable {
    // private Integer id;
     @Column(name = "doctype")
     private String doctype;
+
+    private String docClass;
+
+    private String docSubClass;
+
     @Basic(optional = false)
     @Column(name = "docdesc")
     private String docdesc;
@@ -74,6 +79,7 @@ public class Document extends AbstractModel<Integer> implements Serializable {
     private String responsible;
     @Column(name = "source")
     private String source;
+    private String sourceFacility;
     @Column(name = "program_id")
     private Integer programId;
     @Column(name = "updatedatetime")
@@ -101,7 +107,7 @@ public class Document extends AbstractModel<Integer> implements Serializable {
     private int numberOfPages;
     @Column(name="appointment_no")
     private int appointmentNo;
-    
+
     public Document() {
     }
 
@@ -122,7 +128,7 @@ public class Document extends AbstractModel<Integer> implements Serializable {
         this.numberOfPages = numberOfPages;
 //        this.id=this.documentNo;
     }
-    
+
     public Integer getId(){
         return documentNo;
     }
@@ -268,8 +274,32 @@ public class Document extends AbstractModel<Integer> implements Serializable {
 
 	public void setAppointmentNo(int appointmentNo) {
 		this.appointmentNo = appointmentNo;
-	}   
-    
-    
+	}
+
+	public String getDocClass() {
+    	return docClass;
+    }
+
+	public void setDocClass(String docClass) {
+    	this.docClass = docClass;
+    }
+
+	public String getDocSubClass() {
+    	return docSubClass;
+    }
+
+	public void setDocSubClass(String docSubClass) {
+    	this.docSubClass = docSubClass;
+    }
+
+	public String getSourceFacility() {
+    	return sourceFacility;
+    }
+
+	public void setSourceFacility(String sourceFacility) {
+    	this.sourceFacility = sourceFacility;
+    }
+
+
 
 }

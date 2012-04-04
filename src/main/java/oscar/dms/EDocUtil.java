@@ -37,6 +37,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicDocument;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
@@ -44,8 +45,15 @@ import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.common.dao.ConsultDocsDao;
 import org.oscarehr.common.dao.CtlDocTypeDao;
+import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.DocumentDao;
+import org.oscarehr.common.dao.IndivoDocsDao;
 import org.oscarehr.common.model.ConsultDocs;
 import org.oscarehr.common.model.CtlDocType;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Document;
+import org.oscarehr.common.model.IndivoDocs;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -53,7 +61,6 @@ import org.oscarehr.util.SpringUtils;
 import oscar.MyDateFormat;
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
-import oscar.oscarDB.DBPreparedHandlerParam;
 import oscar.util.DateUtils;
 import oscar.util.SqlUtilBaseS;
 import oscar.util.UtilDateUtilities;
@@ -62,6 +69,8 @@ import oscar.util.UtilDateUtilities;
 public final class EDocUtil extends SqlUtilBaseS {
 
 	private static ConsultDocsDao consultDocsDao = (ConsultDocsDao)SpringUtils.getBean("consultDocsDao");
+	private static DocumentDao documentDao = (DocumentDao)SpringUtils.getBean(DocumentDao.class);
+	private static IndivoDocsDao indivoDocsDao = (IndivoDocsDao)SpringUtils.getBean(IndivoDocsDao.class);
 
 	private static Logger logger = MiscUtils.getLogger();
 
@@ -83,37 +92,37 @@ public final class EDocUtil extends SqlUtilBaseS {
 
 	private static ProgramManager programManager = (ProgramManager) SpringUtils.getBean("programManager");
 	private static CaseManagementNoteLinkDAO caseManagementNoteLinkDao = (CaseManagementNoteLinkDAO) SpringUtils.getBean("CaseManagementNoteLinkDAO");
+	private static ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 	private static CtlDocTypeDao ctldoctypedao = (CtlDocTypeDao) SpringUtils.getBean("ctlDocTypeDao");
+	private static DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 
-	public static ArrayList getCurrentDocs(String tag) {
-		// return TagUtil.getObjects(tag, "EDoc");
-		return new ArrayList();
+	public static String getProviderName(String providerNo) {
+		if(providerNo == null || providerNo.length() == 0) {
+			return "";
+		}
+		Provider p = providerDao.getProvider(providerNo);
+		if(p != null) {
+			return p.getLastName().toUpperCase() + ", " + p.getFirstName().toUpperCase();
+		}
+		return "";
 	}
 
-	public static String getModuleName(String module, String moduleid) {
-		String sql = "SELECT * FROM " + module + " WHERE " + module + "_no LIKE '" + moduleid + "'";
-		ResultSet rs = getSQL(sql);
-		String moduleName = "";
-		try {
-			if (rs.next()) {
-				moduleName = oscar.Misc.getString(rs, "last_name").toUpperCase() + ", " + oscar.Misc.getString(rs, "first_name").toUpperCase();
-			}
-		} catch (SQLException sqe) {
-			logger.error("Error", sqe);
+	public static String getDemographicName(String demographicNo) {
+		if(demographicNo == null || demographicNo.length() == 0) {
+			return "";
 		}
-		return moduleName;
+		Demographic d = demographicDao.getDemographic(demographicNo);
+		if(d != null) {
+			return d.getLastName().toUpperCase() + ", " + d.getFirstName().toUpperCase();
+		}
+		return "";
 	}
 
-	public static String getProviderInfo(String fieldName, String providerNo) {
-		String sql = "SELECT * FROM provider WHERE provider_no='" + providerNo + "'";
-		ResultSet rs = getSQL(sql);
-		String info = "";
-		try {
-			if (rs.next()) info = rs.getString(fieldName);
-		} catch (SQLException sqe) {
-			logger.error("Error", sqe);
+	public static Provider getProvider(String providerNo) {
+		if(providerNo == null || providerNo.length() == 0) {
+			return null;
 		}
-		return info;
+		return providerDao.getProvider(providerNo);
 	}
 
 	public static ArrayList<String> getDoctypes(String module) {
@@ -144,48 +153,34 @@ public final class EDocUtil extends SqlUtilBaseS {
 	 * @return the new documentId
 	 */
 	public static String addDocumentSQL(EDoc newDocument) {
-		String preparedSQL = "INSERT INTO document (doctype, docClass, docSubClass, docdesc, docxml, docfilename, doccreator, source, sourceFacility, responsible, program_id, updatedatetime, status, contenttype, public1, observationdate,number_of_pages,appointment_no) VALUES (?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?)";
-		DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[18];
-		int counter = 0;
-		param[counter++] = new DBPreparedHandlerParam(newDocument.getType());
-		param[counter++] = new DBPreparedHandlerParam(newDocument.getDocClass());
-		param[counter++] = new DBPreparedHandlerParam(newDocument.getDocSubClass());
-		param[counter++] = new DBPreparedHandlerParam(newDocument.getDescription());
-		param[counter++] = new DBPreparedHandlerParam(newDocument.getHtml());
-		param[counter++] = new DBPreparedHandlerParam(newDocument.getFileName());
-		param[counter++] = new DBPreparedHandlerParam(newDocument.getCreatorId());
-		param[counter++] = new DBPreparedHandlerParam(newDocument.getSource());
-		param[counter++] = new DBPreparedHandlerParam(newDocument.getSourceFacility());
-		param[counter++] = new DBPreparedHandlerParam(newDocument.getResponsibleId());
-		param[counter++] = new DBPreparedHandlerParam(newDocument.getProgramId());
+		Document doc = new Document();
+		doc.setDoctype(newDocument.getType());
+		doc.setDocClass(newDocument.getDocClass());
+		doc.setDocSubClass(newDocument.getDocSubClass());
+		doc.setDocdesc(newDocument.getDescription());
+		doc.setDocxml(newDocument.getHtml());
+		doc.setDocfilename(newDocument.getFileName());
+		doc.setDoccreator(newDocument.getCreatorId());
+		doc.setSource(newDocument.getSource());
+		doc.setSourceFacility(newDocument.getSourceFacility());
+		doc.setResponsible(newDocument.getResponsibleId());
+		doc.setProgramId(newDocument.getProgramId());
+		doc.setUpdatedatetime(newDocument.getDateTimeStampAsDate());
+		doc.setStatus(newDocument.getStatus());
+		doc.setContenttype(newDocument.getContentType());
+		doc.setPublic1(Integer.parseInt(newDocument.getDocPublic()));
+		doc.setObservationdate(MyDateFormat.getSysDate(newDocument.getObservationDate()));
+		doc.setNumberOfPages(newDocument.getNumberOfPages());
+		doc.setAppointmentNo(newDocument.getAppointmentNo());
+		documentDao.persist(doc);
 
-		java.sql.Timestamp od1 = new java.sql.Timestamp(newDocument.getDateTimeStampAsDate().getTime());
-		param[counter++] = new DBPreparedHandlerParam(od1);
 
-		param[counter++] = new DBPreparedHandlerParam(String.valueOf(newDocument.getStatus()));
-		param[counter++] = new DBPreparedHandlerParam(newDocument.getContentType());
-		param[counter++] = new DBPreparedHandlerParam(newDocument.getDocPublic());
-		java.sql.Date od2 = MyDateFormat.getSysDate(newDocument.getObservationDate());
-		param[counter++] = new DBPreparedHandlerParam(od2);
-		param[counter++] = new DBPreparedHandlerParam(newDocument.getNumberOfPages());
-		param[counter++] = new DBPreparedHandlerParam(newDocument.getAppointmentNo());
-
-		/*
-		 * String documentSql = "INSERT INTO document (doctype, docdesc, docxml, docfilename, doccreator, updatedatetime, status, contenttype, public1, observationdate) " + "VALUES ('" +
-		 * org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getType()) + "', '" + org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getDescription()) + "', '" +
-		 * org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getHtml()) + "', '" + org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getFileName()) + "', '" + newDocument.getCreatorId() + "', '" + newDocument.getDateTimeStamp()
-		 * + "', '" + newDocument.getStatus() + "', '" + newDocument.getContentType() + "', '" + newDocument.getDocPublic() + "', '" + newDocument.getObservationDate() + "')";
-		 *
-		 * String document_no = runSQLinsert(documentSql); logger.debug("addDoc: " + documentSql);
-		 */
-
-		runPreparedSql(preparedSQL, param);
-		String document_no = getLastDocumentNo();
+		Integer document_no = doc.getId();
 		String ctlDocumentSql = "INSERT INTO ctl_document (module,module_id,document_no,status) VALUES ('" + newDocument.getModule() + "', " + newDocument.getModuleId() + ", " + document_no + ", '" + newDocument.getStatus() + "'  )";
 
 		logger.debug("in addDocumentSQL ,add ctl_document: " + ctlDocumentSql);
 		runSQL(ctlDocumentSql);
-		return document_no;
+		return document_no.toString();
 	}
 
 	//new method to let the user add a new DocumentType into the database
@@ -220,56 +215,51 @@ public final class EDocUtil extends SqlUtilBaseS {
 	}
 
 	public static void editDocumentSQL(EDoc newDocument, boolean doReview) {
-		String doctype = org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getType());
-		String docclass = org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getDocClass());
-		String docsubclass = org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getDocSubClass());
-		String docDescription = org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getDescription());
-		String docFileName = org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getFileName());
-		String html = org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getHtml());
 
-		String editDocSql = "UPDATE document " + "SET doctype='" + doctype + "', docClass='"+docclass+"', docSubClass='"+docsubclass+ "', " + "docdesc='" + docDescription + "', " + "source='" + newDocument.getSource() + "', " + "sourceFacility='" + newDocument.getSourceFacility() + "', " + "public1='" + newDocument.getDocPublic() + "', " + "responsible='" + newDocument.getResponsibleId() + "', " + "docxml='" + html + "'";
-		if (doReview) {
-			editDocSql += ", reviewer='" + newDocument.getReviewerId() + "', " + "reviewdatetime='" + newDocument.getReviewDateTime() + "'";
-		} else {
-			editDocSql += ", reviewer=NULL, reviewdatetime=NULL, observationdate=?, updatedatetime=?";
-		}
-		if (docFileName.length() > 0) {
-			editDocSql = editDocSql + ", docfilename='" + docFileName + "', contenttype='" + newDocument.getContentType() + "'";
-		}
-		editDocSql = editDocSql + " WHERE document_no=" + newDocument.getDocId();
-
-		if (doReview) {
-			runSQL(editDocSql);
-		} else {
-			DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[2];
-			java.sql.Date od1 = MyDateFormat.getSysDate(newDocument.getObservationDate());
-			param[0] = new DBPreparedHandlerParam(od1);
-			java.sql.Timestamp od2 = new java.sql.Timestamp(new Date().getTime());
-			param[1] = new DBPreparedHandlerParam(od2);
-			runPreparedSql(editDocSql, param);
+		Document doc = documentDao.find(Integer.parseInt(newDocument.getDocId()));
+		if(doc != null) {
+			doc.setDoctype(newDocument.getType());
+			doc.setDocClass(newDocument.getDocClass());
+			doc.setDocSubClass(newDocument.getDocSubClass());
+			doc.setDocdesc(newDocument.getDescription());
+			doc.setSource(newDocument.getSource());
+			doc.setSourceFacility(newDocument.getSourceFacility());
+			doc.setDocxml(newDocument.getHtml());
+			doc.setResponsible(newDocument.getResponsibleId());
+			doc.setPublic1(Integer.parseInt(newDocument.getDocPublic()));
+			if(doReview) {
+				doc.setReviewer(newDocument.getReviewerId());
+				doc.setReviewdatetime(newDocument.getReviewDateTimeDate());
+			} else {
+				doc.setReviewer(null);
+				doc.setReviewdatetime(null);
+				doc.setUpdatedatetime(newDocument.getDateTimeStampAsDate());
+				doc.setObservationdate(MyDateFormat.getSysDate(newDocument.getObservationDate()));
+			}
+			if(newDocument.getFileName().length()>0) {
+				doc.setDocfilename(newDocument.getFileName());
+				doc.setContenttype(newDocument.getContentType());
+			}
+			documentDao.merge(doc);
 		}
 	}
 
 	public static void indivoRegister(EDoc doc) {
-		StringBuilder sql = new StringBuilder("INSERT INTO indivoDocs (oscarDocNo, indivoDocIdx, docType, dateSent, `update`) VALUES(" + doc.getDocId() + ",'" + doc.getIndivoIdx() + "','document',now(),");
-
-		if (doc.isInIndivo()) sql.append("'U')");
-		else sql.append("'I')");
-
-		runSQL(sql.toString());
+		IndivoDocs id = new IndivoDocs();
+		id.setOscarDocNo(Integer.parseInt(doc.getDocId()));
+		id.setIndivoDocIdx(doc.getIndivoIdx());
+		id.setDocType("document");
+		id.setDateSent(new Date());
+		if(doc.isInIndivo()) {
+			id.setUpdate("U");
+		}else {
+			id.setUpdate("I");
+		}
+		indivoDocsDao.persist(id);
 	}
 
-	/*
-	 * document +----------------+--------------+------+-----+---------+----------------+ | Field | Type | Null | Key | Default | Extra | +----------------+--------------+------+-----+---------+----------------+ | document_no | int(6) | | PRI | NULL |
-	 * auto_increment | | doctype | varchar(20) | YES | | NULL | | | docdesc | varchar(255) | | | | | | docxml | text | YES | | NULL | | | docfilename | varchar(255) | | | | | | doccreator | varchar(30) | | | | | | updatedatetime | datetime | YES | | NULL
-	 * | | | status | char(1) | | | | | +----------------+--------------+------+-----+---------+----------------+
-	 *
-	 * ctl_document +-------------+-------------+------+-----+---------+-------+ | Field | Type | Null | Key | Default | Extra | +-------------+-------------+------+-----+---------+-------+ | module | varchar(30) | | | | | | module_id | int(6) | | | 0 | |
-	 * | document_no | int(6) | | | 0 | | | status | char(1) | YES | | NULL | | +-------------+-------------+------+-----+---------+-------+
-	 */
-
 	/**
-	 * Fetches all consult docs attached to specific consultation
+	 * Fetches all consult documents attached to specific consultation
 	 */
 	public static ArrayList<EDoc> listDocs(String demoNo, String consultationId, boolean attached) {
 		String sql = "SELECT DISTINCT d.document_no, d.doccreator, d.source, d.sourceFacility, d.responsible, d.program_id, d.doctype, d.docdesc, d.observationdate, d.status, d.docfilename, d.contenttype, d.reviewer, d.reviewdatetime, d.appointment_no FROM document d, ctl_document c " + "WHERE d.status=c.status AND d.status != 'D' AND c.document_no=d.document_no AND " + "c.module='demographic' AND c.module_id = " + demoNo;
@@ -645,24 +635,14 @@ public final class EDocUtil extends SqlUtilBaseS {
 	}
 
 	public String getDocumentName(String id) {
-		String filename = null;
-		try {
-			String sql = "select docfilename from document where document_no = '" + id + "'";
-			ResultSet rs = DBHandler.GetSQL(sql);
-			if (rs.next()) {
-				filename = oscar.Misc.getString(rs, "docfilename");
-			}
-			rs.close();
-		} catch (SQLException e) {
-			logger.error("Error", e);
+		Document d = documentDao.find(Integer.parseInt(id));
+		if(d != null) {
+			return d.getDocfilename();
 		}
-		return filename;
+		return null;
 	}
 
 	public static void undeleteDocument(String documentNo) {
-		// String nowDate = getDmsDateTime();
-		// String sql = "UPDATE document SET status='D', updatedatetime='" + nowDate + "' WHERE document_no=" + documentNo;
-		// runSQL(sql);
 
 		try {
 			String sql = "select status from ctl_document where document_no=" + documentNo;
@@ -672,14 +652,13 @@ public final class EDocUtil extends SqlUtilBaseS {
 				status = rs.getString("status");
 			}
 			rs.close();
-			DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[2];
-			java.sql.Date od1 = MyDateFormat.getSysDate(getDmsDateTime());
-			param[0] = new DBPreparedHandlerParam(status);
-			param[1] = new DBPreparedHandlerParam(od1);
 
-			String updateSql = "UPDATE document SET status=?, updatedatetime=? WHERE document_no=" + documentNo;
-
-			runPreparedSql(updateSql, param);
+			Document d = documentDao.find(Integer.parseInt(documentNo));
+			if(d != null) {
+				d.setStatus(status.toCharArray()[0]);
+				d.setUpdatedatetime( MyDateFormat.getSysDate(getDmsDateTime()));
+				documentDao.merge(d);
+			}
 
 		} catch (SQLException e) {
 			logger.error("Error", e);
@@ -687,17 +666,12 @@ public final class EDocUtil extends SqlUtilBaseS {
 	}
 
 	public static void deleteDocument(String documentNo) {
-		// String nowDate = getDmsDateTime();
-		// String sql = "UPDATE document SET status='D', updatedatetime='" + nowDate + "' WHERE document_no=" + documentNo;
-		// runSQL(sql);
-
-		DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[1];
-		java.sql.Date od1 = MyDateFormat.getSysDate(getDmsDateTime());
-		param[0] = new DBPreparedHandlerParam(od1);
-
-		String updateSql = "UPDATE document SET status='D', updatedatetime=? WHERE document_no=" + documentNo;
-
-		runPreparedSql(updateSql, param);
+		Document d = documentDao.find(Integer.parseInt(documentNo));
+		if(d != null) {
+			d.setStatus('D');
+			d.setUpdatedatetime(MyDateFormat.getSysDate(getDmsDateTime()));
+			documentDao.merge(d);
+		}
 	}
 
 	public static String getDmsDateTime() {
@@ -724,41 +698,38 @@ public final class EDocUtil extends SqlUtilBaseS {
 	}
 
 	public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String docClass, String docSubClass, String contentType, String observationDate, String updateDateTime, String docCreator, String responsible, String reviewer, String reviewDateTime, String source, String sourceFacility) throws SQLException {
-		String add_record_string1 = "insert into document (doctype,docClass,docSubClass,docdesc,docfilename,doccreator,responsible,updatedatetime,status,contenttype,public1,observationdate,reviewer,reviewdatetime,source,sourceFacility) values (?,?,?,?,?,?,?,?,'A',?,0,?,?,?,?,?)";
-		String add_record_string2 = "insert into ctl_document values ('demographic',?,?,'A')";
-		int key = 0;
 
-		Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
-		PreparedStatement add_record = conn.prepareStatement(add_record_string1);
+		Document doc = new Document();
+		doc.setDoctype(docType);
+		doc.setDocClass(docClass);
+		doc.setDocSubClass(docSubClass);
+		doc.setDocdesc(docDesc);
+		doc.setDocfilename(docFileName);
+		doc.setDoccreator(docCreator);
+		doc.setResponsible(responsible);
+		doc.setUpdatedatetime(MyDateFormat.getSysDate(updateDateTime));
+		doc.setStatus('A');
+		doc.setContenttype(contentType);
+		doc.setPublic1(0);
+		doc.setObservationdate(MyDateFormat.getSysDate(observationDate));
+		doc.setReviewer(reviewer);
+		doc.setReviewdatetime(MyDateFormat.getSysDate(reviewDateTime));
+		doc.setSource(source);
+		doc.setSourceFacility(sourceFacility);
+		documentDao.persist(doc);
 
-		add_record.setString(1, docType);
-		add_record.setString(2, docClass);
-		add_record.setString(3, docSubClass);
-		add_record.setString(4, docDesc);
-		add_record.setString(5, docFileName);
-		add_record.setString(6, docCreator);
-		add_record.setString(7, responsible);
-		add_record.setString(8, updateDateTime);
-		add_record.setString(9, contentType);
-		add_record.setString(10, observationDate);
-		add_record.setString(11, reviewer);
-		add_record.setString(12, reviewDateTime);
-		add_record.setString(13, source);
-		add_record.setString(14, sourceFacility);
 
-		add_record.executeUpdate();
-		ResultSet rs = add_record.getGeneratedKeys();
-		if (rs.next()) key = rs.getInt(1);
-		add_record.close();
-		rs.close();
+		int key=0;
+		if (doc.getDocumentNo() > 0) {
+			String add_record_string2 = "insert into ctl_document values ('demographic',?,?,'A')";
+			Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
+			PreparedStatement add_record = conn.prepareStatement(add_record_string2);
 
-		if (key > 0) {
-			add_record = conn.prepareStatement(add_record_string2);
 			add_record.setString(1, demoNo);
-			add_record.setString(2, getLastDocumentNo());
+			add_record.setString(2, doc.getDocumentNo().toString());
 
 			add_record.executeUpdate();
-			rs = add_record.getGeneratedKeys();
+			ResultSet rs = add_record.getGeneratedKeys();
 			if (rs.next()) key = rs.getInt(1);
 			add_record.close();
 			rs.close();
@@ -852,39 +823,11 @@ public final class EDocUtil extends SqlUtilBaseS {
 
 	public static boolean getDocReviewFlag(String docId) {
 		boolean flag = false;
-/* table "doc_manager" does not exist, unnecessary error log generated -> code disabled
-		try {
-
-			String sql = "select reviewed_flag from doc_manager where id=" + docId;
-			ResultSet rs = DBHandler.GetSQL(sql);
-			if (rs.next()) {
-				String reviewed = oscar.Misc.getString(rs, "reviewed_flag");
-				if (reviewed != null && "1".equalsIgnoreCase(reviewed.trim())) flag = true;
-			}
-			rs.close();
-		} catch (SQLException e) {
-			logger.error("Error", e);
-		}
-*/
 		return flag;
 	}
 
 	public static boolean getDocUrgentFlag(String docId) {
 		boolean flag = false;
-/* table "doc_manager" does not exist, unnecessary error log generated -> code disabled
-		try {
-
-			String sql = "select urgent from doc_manager where id=" + docId;
-			ResultSet rs = DBHandler.GetSQL(sql);
-			if (rs.next()) {
-				String urgent = oscar.Misc.getString(rs, "urgent");
-				if (urgent != null && "1".equalsIgnoreCase(urgent.trim())) flag = true;
-			}
-			rs.close();
-		} catch (SQLException e) {
-			logger.error("Error", e);
-		}
-*/
 		return flag;
 	}
 

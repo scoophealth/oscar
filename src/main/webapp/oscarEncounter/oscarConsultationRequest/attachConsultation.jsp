@@ -1,26 +1,26 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
+ *
+ * This software was written for the
+ * Department of Family Medicine
  * McMaster University test2
- * Hamilton 
- * Ontario, Canada 
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -54,10 +54,10 @@ if(demoNo == null && requestId == null ) response.sendRedirect("../error.jsp");
 if( demoNo == null || demoNo.equals("null")  ) {
     ConsultationAttachDocs docsUtil = new ConsultationAttachDocs(requestId);
     demoNo = docsUtil.getDemoNo();
-    
+
 }
 
-String patientName = EDocUtil.getModuleName(module, demoNo);
+String patientName = EDocUtil.getDemographicName(demoNo);
 String[] docType = {"D","L"};
 
 %>
@@ -71,10 +71,10 @@ String[] docType = {"D","L"};
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 <script type="text/javascript">
-//<!--   
+//<!--
 function setEmpty(selectbox) {
     var emptyTxt = "<bean:message key="oscarEncounter.oscarConsultationRequest.AttachDocPopup.empty"/>";
-    var emptyVal = "0";  
+    var emptyVal = "0";
     var op = document.createElement("option");
     try {
         selectbox.add(op);
@@ -82,26 +82,26 @@ function setEmpty(selectbox) {
         selectbox.add(op,null);
     }
     selectbox.options[0].text = emptyTxt;
-    selectbox.options[0].value = emptyVal;    
+    selectbox.options[0].value = emptyVal;
 }
-    
+
 function swap(srcName,dstName) {
     var src = document.getElementsByName(srcName)[0];
-    var dst = document.getElementsByName(dstName)[0];            
-    var opt;    
-        
+    var dst = document.getElementsByName(dstName)[0];
+    var opt;
+
     //if nothing or dummy is being transfered do nothing
     if( src.selectedIndex == -1 || src.options[0].value == "0" )
         return;
-        
-    //if dst has dummy clobber it with new options 
+
+    //if dst has dummy clobber it with new options
     if( dst.options[0].value == "0" )
         dst.remove(0);
-     
+
     for( var idx = src.options.length - 1; idx >= 0; --idx ) {
 
         if( src.options[idx].selected ) {
-            opt = document.createElement("option");            
+            opt = document.createElement("option");
             try {  //ie method of adding option
                 dst.add(opt);
                 dst.options[dst.options.length-1].text = src.options[idx].text;
@@ -112,25 +112,25 @@ function swap(srcName,dstName) {
                 dst.add(src.options[idx],null);
                 dst.options[dst.options.length-1].selected = false;
             }
-                        
+
         }
-    
+
     } //end for
-    
+
     if( src.options.length == 0 )
-        setEmpty(src);            
-            
+        setEmpty(src);
+
 }
 
 //if consultation has not been saved, load existing docs into proper select boxes
 function init() {
-    var attached = document.getElementsByName("attachedDocs")[0]; 
-    var available = document.getElementsByName("documents")[0]; 
-    
-    if( document.forms[0].requestId.value == "null" ) {        
+    var attached = document.getElementsByName("attachedDocs")[0];
+    var available = document.getElementsByName("documents")[0];
+
+    if( document.forms[0].requestId.value == "null" ) {
         var docs = window.opener.document.EctConsultationFormRequestForm.documents.value.split("|");
         var opt;
-        
+
         for( var idx = 0; idx < docs.length; ++idx ) {
             for( var i = available.options.length - 1; i >= 0; --i ) {
                 if( docs[idx] == available.options[i].value ) {
@@ -142,78 +142,78 @@ function init() {
                         attached.options[attached.options.length-1].className = available.options[i].className;
                         available.remove(i);
                     }catch(e) { //firefox method of adding option
-                        attached.add(available.options[i],null);                        
-                    } 
-                    
+                        attached.add(available.options[i],null);
+                    }
+
                     break;
                 }
-            
+
             } //end for
-    
-        } //end for                            
-    } //end if    
-    
+
+        } //end for
+    } //end if
+
     if( attached.options.length == 0 )
         setEmpty(attached);
-                
+
     if( available.options.length == 0 )
-        setEmpty(available);            
+        setEmpty(available);
 
 }
 
 function save() {
     var ret;
-    var ops = document.getElementsByName("attachedDocs")[0];        
-    
-    if( document.forms[0].requestId.value == "null" ) {                       
-       var saved = "";       
-       
+    var ops = document.getElementsByName("attachedDocs")[0];
+
+    if( document.forms[0].requestId.value == "null" ) {
+       var saved = "";
+
        //we don't want to initially save dummy
        if( ops.options.length == 1 && ops.options[0].value == "0" )
         ops.options.length = 0;
-       
-       var list = window.opener.document.getElementById("attachedList");       
+
+       var list = window.opener.document.getElementById("attachedList");
        var paragraph = window.opener.document.getElementById("attachDefault");
-       
+
        //if we are saving something we need to update list on parent form
        if( ops.options.length )
-            paragraph.innerHTML = "";                                                            
-       
+            paragraph.innerHTML = "";
+
        //delete what we have before adding new docs to list
        while(list.firstChild) {
             list.removeChild(list.firstChild);
        }
-       
+
        for( var idx = 0; idx < ops.options.length; ++idx ) {
             saved += ops.options[idx].value;
-            
+
             if( idx < ops.options.length - 1 )
-                saved += "|";       
-                
+                saved += "|";
+
             listElem = window.opener.document.createElement("li");
             listElem.innerHTML = ops.options[idx].innerHTML;
             listElem.className = ops.options[idx].className;
             list.appendChild(listElem);
-                            
+
        }
-                   
-       window.opener.document.EctConsultationFormRequestForm.documents.value = saved; 
-      
+
+       window.opener.document.EctConsultationFormRequestForm.documents.value = saved;
+
        if( list.childNodes.length == 0 )
             paragraph.innerHTML = "<bean:message key="oscarEncounter.oscarConsultationRequest.AttachDoc.Empty"/>";
-            
+
        ret = false;
        window.close();
-    }    
-    else {        
+    }
+    else {
         //but we will use dummy in updating an empty list
         for( var idx = 0; idx < ops.options.length; ++idx )
             ops.options[idx].selected = true;
-            
+
         window.opener.updateAttached();
         ret = true;
     }
-    
+
     return ret;
 }
 //-->
@@ -240,13 +240,13 @@ function save() {
 				property="demoNo" value="<%=demoNo%>" /> <html:hidden
 				property="providerNo" value="<%=providerNo%>" /> <html:select
 				style="width: 100%;" property="documents" multiple="1" size="10">
-				<%                
+				<%
                 ArrayList privatedocs = new ArrayList();
                 privatedocs = EDocUtil.listDocs(demoNo, requestId, EDocUtil.UNATTACHED);
-                EDoc curDoc;                
+                EDoc curDoc;
                 for(int idx = 0; idx < privatedocs.size(); ++idx)
                 {
-                    
+
                     curDoc = (EDoc)privatedocs.get(idx);
              %>
 				<html:option styleClass="doc"
@@ -254,10 +254,10 @@ function save() {
 				<%
                 }
                 CommonLabResultData labData = new CommonLabResultData();
-                
+
                 ArrayList labs = labData.populateLabResultsData(demoNo, requestId, CommonLabResultData.UNATTACHED);
                 LabResultData resData;
-                for(int idx = 0; idx < labs.size(); ++idx) 
+                for(int idx = 0; idx < labs.size(); ++idx)
                 {
                     resData = (LabResultData)labs.get(idx);
                     boolean displayFlag = true;
@@ -265,7 +265,7 @@ function save() {
                         if (!Hl7textResultsData.getMatchingLabs(resData.segmentID).endsWith(resData.segmentID))
                             displayFlag = false;
                     }
-                    
+
                     if(displayFlag){
                  %>
 				<html:option styleClass="lab"
@@ -282,23 +282,23 @@ function save() {
 				value="<<"/></td>
          <td style="width:45%; text-align:right">
            <html:select style="width: 100%;" property="attachedDocs" multiple="1" size="10">
-               <%                
+               <%
                 ArrayList privatedocs = new ArrayList();
                 privatedocs = EDocUtil.listDocs(demoNo, requestId, EDocUtil.ATTACHED);
-                EDoc curDoc;                
+                EDoc curDoc;
                 for(int idx = 0; idx < privatedocs.size(); ++idx)
                 {
-                    
+
                     curDoc = (EDoc)privatedocs.get(idx);
              %>
                     <html:option styleClass="doc" value="<%=docType[0]+curDoc.getDocId()%>"><%=StringUtils.maxLenString(curDoc.getDescription(),30,27,"...")%></html:option>
              <%
-                }                             
-                
+                }
+
                 CommonLabResultData labData = new CommonLabResultData();
                 ArrayList labs = labData.populateLabResultsData(demoNo, requestId, CommonLabResultData.ATTACHED);
                 LabResultData resData;
-                for(int idx = 0; idx < labs.size(); ++idx) 
+                for(int idx = 0; idx < labs.size(); ++idx)
                 {
                     resData = (LabResultData)labs.get(idx);
              %>
@@ -311,13 +311,13 @@ function save() {
       </tr>
   </table>
   <table width="100%">
-      <tr>        
+      <tr>
         <td style="text-align:center">
-            <input type="submit" class="btn" name="submit" value="<bean:message key="oscarEncounter.oscarConsultationRequest.AttachDocPopup.submit"/>" onclick="return save();"/> 
-        </td>       
+            <input type="submit" class="btn" name="submit" value="<bean:message key="oscarEncounter.oscarConsultationRequest.AttachDocPopup.submit"/>" onclick="return save();"/>
+        </td>
       </tr>
-      <tr>        
-        <td style="text-align:center"><span class="legend"><bean:message key="oscarEncounter.oscarConsultationRequest.AttachDoc.Legend"/></span><br/><span class="doc legend"><bean:message key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendDocs"/></span><br/><span class="lab legend"><bean:message key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendLabs"/></span></td>        
+      <tr>
+        <td style="text-align:center"><span class="legend"><bean:message key="oscarEncounter.oscarConsultationRequest.AttachDoc.Legend"/></span><br/><span class="doc legend"><bean:message key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendDocs"/></span><br/><span class="lab legend"><bean:message key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendLabs"/></span></td>
       </tr>
     </table>
  </html:form>

@@ -23,14 +23,14 @@
 
 package oscar.dms.actions;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.Hashtable;
-import java.io.File;
-import java.io.FileInputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,6 +50,7 @@ import org.oscarehr.common.dao.DocumentStorageDao;
 import org.oscarehr.common.dao.ProviderInboxRoutingDao;
 import org.oscarehr.common.dao.QueueDocumentLinkDao;
 import org.oscarehr.common.model.DocumentStorage;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
@@ -87,8 +88,8 @@ public class AddEditDocumentAction extends DispatchAction {
 			throw new FileNotFoundException();
 		}
 		File file = writeLocalFile(docFile, fileName);// write file to local dir
-		
-		
+
+
 		newDoc.setContentType(docFile.getContentType());
 		if (fileName.endsWith(".PDF") || fileName.endsWith(".pdf")) {
 			newDoc.setContentType("application/pdf");
@@ -123,7 +124,7 @@ public class AddEditDocumentAction extends DispatchAction {
 		return mapping.findForward("fastUploadSuccess");
 
 	}
-	
+
 	public int countNumOfPages(String fileName) {// count number of pages in a local pdf file
 
 		int numOfPage = 0;
@@ -239,7 +240,7 @@ public class AddEditDocumentAction extends DispatchAction {
 			// save local file
 			File file = writeLocalFile(docFile, fileName2);
 			newDoc.setContentType(docFile.getContentType());
-			
+
 
 			// if the document was added in the context of a program
 			String programIdStr = (String) request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
@@ -251,7 +252,7 @@ public class AddEditDocumentAction extends DispatchAction {
 			}
 			// ---
 			String doc_no = EDocUtil.addDocumentSQL(newDoc);
-			if(ConformanceTestHelper.enableConformanceOnlyTestFeatures){	
+			if(ConformanceTestHelper.enableConformanceOnlyTestFeatures){
 				storeDocumentInDatabase(file, Integer.parseInt(doc_no));
 			}
 			LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_DOCUMENT, doc_no, request.getRemoteAddr());
@@ -276,8 +277,13 @@ public class AddEditDocumentAction extends DispatchAction {
 				CaseManagementManager cmm = (CaseManagementManager) ctx.getBean("caseManagementManager");
 				cmn.setProviderNo("-1");// set the provider no to be -1 so the editor appear as 'System'.
 
-				String provFirstName = EDocUtil.getProviderInfo("first_name", fm.getDocCreator());
-				String provLastName = EDocUtil.getProviderInfo("last_name", fm.getDocCreator());
+				Provider provider = EDocUtil.getProvider(fm.getDocCreator());
+				String provFirstName = "";
+				String provLastName = "";
+				if(provider!=null) {
+					provFirstName=provider.getFirstName();
+					provLastName=provider.getLastName();
+				}
 
 				String strNote = "Document" + " " + docDesc + " " + "created at " + now + " by " + provFirstName + " " + provLastName + ".";
 
@@ -403,7 +409,7 @@ public class AddEditDocumentAction extends DispatchAction {
 		}
 		return file;
 	}
-	
+
 	public int storeDocumentInDatabase(File file, Integer documentNo){
 		Integer ret = 0;
 		try{
