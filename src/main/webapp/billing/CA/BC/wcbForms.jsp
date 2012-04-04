@@ -28,8 +28,8 @@
 <%@page import="oscar.oscarDemographic.data.*,org.oscarehr.util.SpringUtils"%>
 <%@page import="java.text.*, java.util.*, oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*,oscar.*,oscar.entities.*"%>
 <%@taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
-<%@taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%String demographicNo = request.getParameter("demographicNo");
   String wcbid = request.getParameter("wcbid");
   String billingcode = request.getParameter("billingcode"); 
