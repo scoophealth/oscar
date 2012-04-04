@@ -72,6 +72,8 @@ public final class ScheduleTemplateCodeTransfer {
 	}
 
 	public static ScheduleTemplateCodeTransfer toTransfer(ScheduleTemplateCode scheduleTemplateCode) {
+		if (scheduleTemplateCode==null) return(null);
+		
 		ScheduleTemplateCodeTransfer scheduleTemplateCodeTransfer = new ScheduleTemplateCodeTransfer();
 
 		BeanUtils.copyProperties(scheduleTemplateCode, scheduleTemplateCodeTransfer);

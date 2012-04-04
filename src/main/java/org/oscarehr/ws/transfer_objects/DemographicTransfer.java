@@ -463,6 +463,8 @@ public final class DemographicTransfer {
     }
 
 	public static DemographicTransfer toTransfer(Demographic demographic) {
+		if (demographic==null) return(null);
+		
 		DemographicTransfer demographicTransfer = new DemographicTransfer();
 
 		BeanUtils.copyProperties(demographic, demographicTransfer);

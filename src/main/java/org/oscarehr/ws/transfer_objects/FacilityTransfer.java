@@ -245,6 +245,8 @@ public final class FacilityTransfer {
     }
 
 	public static FacilityTransfer toTransfer(Facility facility) {
+		if (facility==null) return(null);
+		
 		FacilityTransfer facilityTransfer = new FacilityTransfer();
 
 		String[] ignores={"lastUpdated"};

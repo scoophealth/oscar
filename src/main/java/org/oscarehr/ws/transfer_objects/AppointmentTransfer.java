@@ -240,6 +240,8 @@ public final class AppointmentTransfer {
 	}
 
 	public static AppointmentTransfer toTransfer(Appointment appointment) {
+		if (appointment==null) return(null);
+		
 		AppointmentTransfer appointmentTransfer = new AppointmentTransfer();
 
 		String[] ignored = { "appointmentDate", "startTime", "endTime", "createDateTime", "updateDateTime", "creatorSecurityId" };
