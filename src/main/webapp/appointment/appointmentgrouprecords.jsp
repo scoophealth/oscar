@@ -102,21 +102,21 @@
 	            param[0]="C";
                     param[1]=userName;   //request.getParameter("createdatetime");
 	            param[2]=request.getParameter("appointment_no" + datano);  //request.getParameter("creator");
-	            Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no")+datano));
+	            Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no"+datano)));
 	            appointmentArchiveDao.archiveAppointment(appt);
 	            rowsAffected = oscarSuperManager.update("appointmentDao", "updatestatusc", param);
 			}
 
 		    //delete the selected appts
             if (request.getParameter("groupappt").equals("Group Delete")) {
-            	Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no")+datano));
+            	Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no"+datano)));
 	            appointmentArchiveDao.archiveAppointment(appt);
             	rowsAffected = oscarSuperManager.update("appointmentDao", "delete",
             			new Object [] {request.getParameter("appointment_no" + datano)});
             }
 
             if (request.getParameter("groupappt").equals("Group Update")) {
-            	Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no")+datano));
+            	Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no"+datano)));
 	            appointmentArchiveDao.archiveAppointment(appt);
             	rowsAffected = oscarSuperManager.update("appointmentDao", "delete",
             			new Object [] {request.getParameter("appointment_no" + datano)});
