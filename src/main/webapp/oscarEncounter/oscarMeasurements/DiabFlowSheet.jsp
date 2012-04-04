@@ -466,20 +466,24 @@ if (!medicationsResult.isEmpty()) {
 			medicationsList += "-" + RxUtil.FloatToString(Float.parseFloat(medicationsResult.get(i).get("takemax").toString()));
 		}
 
-		medicationsList += " " + medicationsResult.get(i).get("freqcode").toString();
-
+		if (medicationsResult.get(i).get("freqcode")!=null) {
+			medicationsList += " " + medicationsResult.get(i).get("freqcode").toString();
+		}
+		
 		if (medicationsResult.get(i).get("prn").toString().equals("1")) {
 			medicationsList += " PRN";
 		}
 
 		if (medicationsResult.get(i).get("duration") != null && !medicationsResult.get(i).get("duration").toString().equals("null")) {
 			medicationsList += " " + medicationsResult.get(i).get("duration").toString();
-			if (medicationsResult.get(i).get("durunit").toString().equals("D")) {
-				medicationsList += " Day";
-			} else if (medicationsResult.get(i).get("durunit").toString().equals("W")) {
-				medicationsList += " Week";
-			} else if (medicationsResult.get(i).get("durunit").toString().equals("M")) {
-				medicationsList += " Month";
+			if (medicationsResult.get(i).get("durunit")!=null) {
+				if (medicationsResult.get(i).get("durunit").toString().equals("D")) {
+					medicationsList += " Day";
+				} else if (medicationsResult.get(i).get("durunit").toString().equals("W")) {
+					medicationsList += " Week";
+				} else if (medicationsResult.get(i).get("durunit").toString().equals("M")) {
+					medicationsList += " Month";
+				}
 			}
 		}
 
