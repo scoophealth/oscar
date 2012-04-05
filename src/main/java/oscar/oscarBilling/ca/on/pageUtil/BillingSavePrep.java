@@ -159,7 +159,7 @@ public class BillingSavePrep {
 		claim1Header.setMan_review(val.getParameter("m_review") != null ? val.getParameter("m_review") : "");
 
 		if(val.getParameter("xml_slicode") != null) {
-			claim1Header.setLocation(val.getParameter("xml_slicode").substring(0, 3));
+			claim1Header.setLocation(val.getParameter("xml_slicode").trim());
 		}
 
 		claim1Header.setDemographic_no(val.getParameter("demographic_no"));
