@@ -196,7 +196,6 @@
         <ViolationValue>/src/main/java/oscar/billing/popup/ProcedimentoForm.java:this.procedimentos = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:ArrayList modules = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:ArrayList&lt;EDoc&gt; list = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:return new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/actions/AddEditDocumentAction.java:Hashtable errors = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/actions/AddEditHtmlAction.java:Hashtable errors = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/actions/CombinePDFAction.java:ArrayList alist = new ArrayList();</ViolationValue>
@@ -751,7 +750,6 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator2.java:ArrayList list2 = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/PageUtil/RunClinicalReportAction.java:Hashtable h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/PageUtil/RunClinicalReportAction.java:arrList = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/PatientSetDenominator.java:ArrayList list = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/ReportEvaluator.java:Collection v = ect.getMeasurementsDataVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/ReportEvaluator.java:Hashtable h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/ReportEvaluator.java:setReportResultList(new ArrayList());</ViolationValue>
@@ -763,9 +761,6 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/bean/RptByExampleQueryBeanHandler.java:public Collection getAllQueryVector(){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/bean/RptByExampleQueryBeanHandler.java:public Vector getFavoriteVector(){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/bean/RptByExampleQueryBeanHandler.java:public Vector getQueryVector(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/DemographicSets.java:ArrayList list = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/DemographicSets.java:ArrayList retval = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/DemographicSets.java:Hashtable h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/DoctorList.java:ArrayList dnl = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/ManageLetters.java:ArrayList list = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/ManageLetters.java:Hashtable h = new Hashtable();</ViolationValue>
@@ -949,7 +944,6 @@
         <ViolationValue>/src/main/java/oscar/oscarSurveillance/Survey.java:answers = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarSurveillance/Survey.java:providersParticipating = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarSurveillance/SurveyInfo.java:ArrayList list = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarTags/TagUtil.java:ArrayList ids = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarTickler/AutoTickler.java:ArrayList ticklerList = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarWaitingList/bean/WLPatientWaitingListBeanHandler.java:Vector patientWaitingListVector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarWaitingList/bean/WLPatientWaitingListBeanHandler.java:public Vector getPatientWaitingListVector(){</ViolationValue>
@@ -1089,7 +1083,6 @@
         <ViolationValue>/src/main/webapp/casemgmt/tripsearch.jsp:ArrayList list = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/webapp/casemgmt/tripsearch.jsp:Hashtable h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/decision/antenatal/antenatalplanner.jsp:HashMap dataMap = new HashMap();</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/addDemoToPatientSet.jsp:ArrayList newSet = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/webapp/demographic/demographicCohort.jsp:ArrayList arrDemo = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/webapp/demographic/demographicaddarecordhtm.jsp:Vector vecRef = new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/demographic/demographiceditdemographic.jsp:Vector vecRef = new Vector();</ViolationValue>
@@ -1597,33 +1590,7 @@
         <ViolationValue>/src/main/java/oscar/dbBillingData.java:DBPreparedHandler accessDB = null;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dbBillingData.java:accessDB = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dbBillingData.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[18];</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[1];</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[2];</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:import oscar.oscarDB.DBPreparedHandlerParam;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:param[0] = new DBPreparedHandlerParam(od1);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:param[0] = new DBPreparedHandlerParam(status);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:param[1] = new DBPreparedHandlerParam(od1);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:param[1] = new DBPreparedHandlerParam(od2);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:param[counter++] = new DBPreparedHandlerParam(String.valueOf(newDocument.getStatus()));</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:param[counter++] = new DBPreparedHandlerParam(newDocument.getAppointmentNo());</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:param[counter++] = new DBPreparedHandlerParam(newDocument.getContentType());</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:param[counter++] = new DBPreparedHandlerParam(newDocument.getCreatorId());</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:param[counter++] = new DBPreparedHandlerParam(newDocument.getDescription());</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:param[counter++] = new DBPreparedHandlerParam(newDocument.getDocClass());</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:param[counter++] = new DBPreparedHandlerParam(newDocument.getDocPublic());</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:param[counter++] = new DBPreparedHandlerParam(newDocument.getDocSubClass());</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:param[counter++] = new DBPreparedHandlerParam(newDocument.getFileName());</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:param[counter++] = new DBPreparedHandlerParam(newDocument.getHtml());</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:param[counter++] = new DBPreparedHandlerParam(newDocument.getNumberOfPages());</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:param[counter++] = new DBPreparedHandlerParam(newDocument.getProgramId());</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:param[counter++] = new DBPreparedHandlerParam(newDocument.getResponsibleId());</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:param[counter++] = new DBPreparedHandlerParam(newDocument.getSource());</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:param[counter++] = new DBPreparedHandlerParam(newDocument.getSourceFacility());</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:param[counter++] = new DBPreparedHandlerParam(newDocument.getType());</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:param[counter++] = new DBPreparedHandlerParam(od1);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:param[counter++] = new DBPreparedHandlerParam(od2);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/eform/EFormUtil.java:DBHandler.RunSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/eform/EFormUtil.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/eform/EFormUtil.java:ResultSet rs = DBHandler.GetSQL(sql1);</ViolationValue>
@@ -2182,16 +2149,6 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/SQLDenominator.java:ResultSet rs = DBHandler.GetSQL(exeSql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/SQLNumerator.java:ResultSet rs = DBHandler.GetSQL(sql.replaceAll("\\$\\{"+processString+"\\}", demographicNo));</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/bean/RptByExampleQueryBeanHandler.java:for(rs = DBHandler.GetSQL(sql); rs.next(); )</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/DemographicSets.java:DBHandler.RunSQL("insert into demographicSets (set_name,demographic_no) values ('"+StringEscapeUtils.escapeSql(setName)+"','"+demographicNo+"')");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/DemographicSets.java:DBHandler.RunSQL("update demographicSets set archive = '1' where set_name = '"+StringEscapeUtils.escapeSql(setName)+"' and demographic_no = '"+demoNo+"'");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/DemographicSets.java:DBHandler.RunSQL("update demographicSets set eligibility = '1' where set_name = '"+StringEscapeUtils.escapeSql(setName)+"' and demographic_no = '"+demoNo+"'");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/DemographicSets.java:ResultSet rs = DBHandler.GetSQL("select * from demographicSets  where archive != '1' and  set_name = '"+StringEscapeUtils.escapeSql(setName)+"'");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/DemographicSets.java:ResultSet rs = DBHandler.GetSQL("select * from demographicSets where  archive != '1' and set_name in (" + strNames.toString() + ") group by demographic_no");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/DemographicSets.java:ResultSet rs = DBHandler.GetSQL("select * from demographicSets where archive != '1' and set_name = '"+StringEscapeUtils.escapeSql(setName)+"'");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/DemographicSets.java:ResultSet rs = DBHandler.GetSQL("select * from demographicSets where set_name = '"+StringEscapeUtils.escapeSql(setName)+"' and eligibility = '0' ");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/DemographicSets.java:ResultSet rs = DBHandler.GetSQL("select * from demographicSets where set_name = '"+StringEscapeUtils.escapeSql(setName)+"' and eligibility = '1' ");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/DemographicSets.java:ResultSet rs = DBHandler.GetSQL("select distinct set_name from demographicSets ");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/DemographicSets.java:ResultSet rs = DBHandler.GetSQL("select distinct set_name from demographicSets where archive = '1' and demographic_no = " + demoNo);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/DoctorList.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/ObecData.java:DBPreparedHandler accessDB = null;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/ObecData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -2317,10 +2274,6 @@
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/pageUtil/dxResearchUpdateQuickListAction.java:ResultSet rsCode = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/dao/hibernate/RxCloneFavoritesDAOHibernate.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/dao/hibernate/RxCloneFavoritesDAOHibernate.java:public class RxCloneFavoritesDAOHibernate extends HibernateDaoSupport</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:b = DBHandler.RunSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:boolean b = DBHandler.RunSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL("SELECT * FROM diseases WHERE demographic_no = '" + getDemographicNo() + "'");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL("SELECT demographic_no, last_name, first_name, sex, year_of_birth, " + "month_of_birth, date_of_birth, address, city, province, postal, phone " + "FROM demographic WHERE last_name LIKE '" + surname + "%' AND first_name LIKE '" + firstName + "%'");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL("SELECT demographic_no, last_name, first_name, sex, year_of_birth, " + "month_of_birth, date_of_birth, address, city, province, postal, phone,hin " + "FROM demographic WHERE demographic_no = " + demographicNo);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPrescriptionData.java:DBHandler.RunSQL(sql);</ViolationValue>
@@ -2435,7 +2388,6 @@
         <ViolationValue>/src/main/webapp/billing/CA/BC/onSearch3rdBillAddr.jsp:oscar.oscarDB.DBPreparedHandler dbObj = new oscar.oscarDB.DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/BC/support/billingcodes.jsp:java.sql.ResultSet rs = DBHandler.GetSQL("SELECT service_code, description  FROM billingservice ORDER BY TRIM(description)");</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/BC/support/bodypart.jsp:java.sql.ResultSet rs = DBHandler.GetSQL("SELECT code, level1, level2, level3, usagenote FROM wcb_bp_code "+wherestr+"  ORDER BY level1, level2, level3");</ViolationValue>
-        <ViolationValue>/src/main/webapp/billing/CA/BC/support/icd9.jsp:java.sql.ResultSet rs = DBHandler.GetSQL("SELECT diagnostic_code, description FROM diagnosticcode where diagnostic_code like '"+searchStr+"' or description like '"+searchStr+"' ORDER BY diagnostic_code");</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/BC/support/natureinjury.jsp:java.sql.ResultSet rs = DBHandler.GetSQL("SELECT code, level1, level2, level3, usagenote FROM wcb_noi_code "+wherestr+" ORDER BY level1, level2, level3");</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/BC/support/providers.jsp:java.sql.ResultSet rs = DBHandler.GetSQL("SELECT first_name, last_name, ohip_no  FROM provider WHERE ohip_no&lt;&gt; '' ORDER BY first_name, last_name");</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/ON/billingONCorrection.jsp:&lt;%@ page import="oscar.login.DBHelp"%&gt;</ViolationValue>
@@ -3613,8 +3565,6 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/bean/RptByExampleQueryBeanHandler.java:return allQueryVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/bean/RptByExampleQueryBeanHandler.java:return favoriteVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/bean/RptByExampleQueryBeanHandler.java:return queryVector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/DemographicSets.java:Hashtable h = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/DemographicSets.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/ManageLetters.java:Hashtable h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/ManageLetters.java:Hashtable h = null;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/ManageLetters.java:import java.util.Hashtable;</ViolationValue>
@@ -4470,7 +4420,6 @@
         <ViolationValue>/src/main/webapp/oscarReport/LabReqReport.jsp:Hashtable h = (Hashtable) labRep.get(j);</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarReport/RptByExamplesAllFavorites.jsp:property="favoriteVector"&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarReport/RptViewAllQueryByExamples.jsp:property="queryVector"&gt;</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarReport/demographicSetEdit.jsp:Hashtable h = (Hashtable) list.get(i);</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarReport/oscarMeasurements/InitializeFrequencyOfRelevantTestsCDMReport.jsp:property="measurementTypeVector" indexId="ctr"&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarReport/oscarMeasurements/InitializeFrequencyOfRelevantTestsCDMReport.jsp:property="measuringInstrcVector" indexId="index"&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarReport/oscarMeasurements/InitializePatientsInAbnormalRangeCDMReport.jsp:property="measurementTypeVector" indexId="ctr"&gt;</ViolationValue>
@@ -4772,8 +4721,8 @@
         <ViolationValue>/src/main/webapp/schedule/scheduleDisplayTemplate.jsp:&lt;jsp:useBean id="dateTimeCodeBean" class="java.util.Hashtable"</ViolationValue>
         <ViolationValue>/src/main/webapp/schedule/scheduleDisplayTemplate.jsp:StringBuffer hourmin, hourCode = new StringBuffer((String)dateTimeCodeBean.get(provider));</ViolationValue>
         <ViolationValue>/src/main/webapp/schedule/scheduleDisplayTemplate.jsp:hourmin = new StringBuffer(hourCode.substring(ratio,ratio+1));</ViolationValue>
-        <ViolationValue>/src/main/webapp/schedule/schedulecreatedate.jsp:&lt;jsp:useBean id="scheduleDateBean" class="java.util.Hashtable"</ViolationValue>
-        <ViolationValue>/src/main/webapp/schedule/schedulecreatedate.jsp:&lt;jsp:useBean id="scheduleHolidayBean" class="java.util.Hashtable"</ViolationValue>
+        <ViolationValue>/src/main/webapp/schedule/schedulecreatedate.jsp:&lt;jsp:useBean id="scheduleDateBean" class="java.util.Hashtable"	scope="session" /&gt;</ViolationValue>
+        <ViolationValue>/src/main/webapp/schedule/schedulecreatedate.jsp:&lt;jsp:useBean id="scheduleHolidayBean" class="java.util.Hashtable" scope="session" /&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/schedule/schedulecreatedate.jsp:StringBuffer bgcolor = new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/webapp/schedule/schedulecreatedate.jsp:StringBuffer strHolidayName = new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/webapp/schedule/schedulecreatedate.jsp:StringBuffer strHour = new StringBuffer();</ViolationValue>
@@ -4786,13 +4735,13 @@
         <ViolationValue>/src/main/webapp/schedule/schedulecreatedate.jsp:strHolidayName = new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/webapp/schedule/schedulecreatedate.jsp:strHolidayName = new StringBuffer(aHScheduleHoliday.holiday_name) ;</ViolationValue>
         <ViolationValue>/src/main/webapp/schedule/schedulecreatedate.jsp:strHour = new StringBuffer();</ViolationValue>
-        <ViolationValue>/src/main/webapp/schedule/schedulecreatedate.jsp:strHour = new StringBuffer(SxmlMisc.getXmlContent(scheduleRscheduleBean.getAvailHour(now), weekdaytag[now.get(now.DAY_OF_WEEK)-1]));</ViolationValue>
+        <ViolationValue>/src/main/webapp/schedule/schedulecreatedate.jsp:strHour = new StringBuffer(SxmlMisc.getXmlContent(scheduleRscheduleBean.getAvailHour(now), weekdaytag[now.get(Calendar.DAY_OF_WEEK)-1]));</ViolationValue>
         <ViolationValue>/src/main/webapp/schedule/schedulecreatedate.jsp:strHour = new StringBuffer(aHScheduleDate.hour);</ViolationValue>
         <ViolationValue>/src/main/webapp/schedule/schedulecreatedate.jsp:strReason = new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/webapp/schedule/schedulecreatedate.jsp:strReason = new StringBuffer(aHScheduleDate.reason!=null?aHScheduleDate.reason:"");</ViolationValue>
         <ViolationValue>/src/main/webapp/schedule/scheduledatefinal.jsp:&lt;jsp:useBean id="scheduleDateBean" class="java.util.Hashtable"</ViolationValue>
         <ViolationValue>/src/main/webapp/schedule/scheduledatepopup.jsp:&lt;jsp:useBean id="scheduleDateBean" class="java.util.Hashtable"</ViolationValue>
-        <ViolationValue>/src/main/webapp/schedule/scheduledatesave.jsp:&lt;jsp:useBean id="scheduleDateBean" class="java.util.Hashtable"</ViolationValue>
+        <ViolationValue>/src/main/webapp/schedule/scheduledatesave.jsp:&lt;jsp:useBean id="scheduleDateBean" class="java.util.Hashtable" scope="session" /&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/schedule/scheduleflipview.jsp:&lt;jsp:useBean id="DateTimeCodeBean" class="java.util.Hashtable"</ViolationValue>
         <ViolationValue>/src/main/webapp/schedule/scheduleflipview.jsp:StringBuffer hourmin = null;</ViolationValue>
         <ViolationValue>/src/main/webapp/schedule/scheduleflipview.jsp:StringBuffer temp = null;</ViolationValue>
@@ -4804,7 +4753,7 @@
         <ViolationValue>/src/main/webapp/schedule/scheduleflipview.jsp:temp = new StringBuffer("|");</ViolationValue>
         <ViolationValue>/src/main/webapp/schedule/scheduleflipview.jsp:temp = new StringBuffer("||");</ViolationValue>
         <ViolationValue>/src/main/webapp/schedule/scheduleflipview.jsp:temp = new StringBuffer();</ViolationValue>
-        <ViolationValue>/src/main/webapp/schedule/scheduleholidaysetting.jsp:&lt;jsp:useBean id="scheduleHolidayBean" class="java.util.Hashtable"</ViolationValue>
+        <ViolationValue>/src/main/webapp/schedule/scheduleholidaysetting.jsp:&lt;jsp:useBean id="scheduleHolidayBean" class="java.util.Hashtable" scope="session" /&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/schedule/scheduleholidaysetting.jsp:StringBuffer bgcolor = new StringBuffer("white");</ViolationValue>
         <ViolationValue>/src/main/webapp/schedule/scheduleholidaysetting.jsp:StringBuffer strHolidayName = new StringBuffer("");</ViolationValue>
         <ViolationValue>/src/main/webapp/schedule/scheduleholidaysetting.jsp:bgcolor = new StringBuffer("ivory");</ViolationValue>
