@@ -2,6 +2,7 @@
 
     String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("start_time") ;
     String deepColor = "#CCCCFF", weakColor = "#EEEEFF" ;
+    int count = 0;	
 %>
 <%@ page
 	import="java.util.*, java.sql.*, oscar.*, java.text.*, oscar.login.*,java.net.*"
@@ -9,6 +10,8 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 
 <jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean"
 	scope="page" />
@@ -16,6 +19,7 @@
 <jsp:useBean id="providerBean" class="java.util.Properties"
 	scope="session" />
 <%@ include file="../admin/dbconnection.jsp"%>
+<c:set var="ctx" value="${pageContext.request.contextPath}" />
 <%@page import="org.oscarehr.common.dao.AppointmentArchiveDao" %>
 <%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
 <%@page import="org.oscarehr.common.model.Appointment" %>
@@ -32,10 +36,10 @@
     if (vLocale.getCountry().equals("BR")) {
         dbQueries=new String[][] {
 
-	 	{"search_daysheetall",       "select a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name, p.last_name, p.first_name, d.sex, d.hin, d.ver, d.family_doctor, d.provider_no as doc_no, d.phone, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name from (appointment a, provider p, demographic d) left join provider p2 on d.provider_no=p2.provider_no where a.provider_no=p.provider_no and a.demographic_no=d.demographic_no and d.demographic_no = a.demographic_no and a.appointment_date>=? and a.appointment_date<=? and a.provider_no=p.provider_no and a.status != 'C' order by p.last_name, p.first_name, a.appointment_date, "+orderby },
-            {"search_daysheetsingleall", "select a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name, p.last_name, p.first_name, d.sex, d.hin, d.ver, d.family_doctor, d.provider_no as doc_no, d.phone, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name from (appointment a, provider p, demographic d) left join provider p2 on d.provider_no=p2.provider_no where a.provider_no=p.provider_no and a.demographic_no=d.demographic_no and d.demographic_no = a.demographic_no and a.appointment_date>=? and a.appointment_date<=? and a.provider_no=? and a.status != 'C' and a.provider_no=p.provider_no order by a.appointment_date,"+orderby },
-            {"search_daysheetnew",       "select a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name, p.last_name, p.first_name, d.sex, d.hin, d.ver, d.family_doctor, d.provider_no as doc_no, d.phone, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name from (appointment a, provider p, demographic d) left join provider p2 on d.provider_no=p2.provider_no where a.provider_no=p.provider_no and a.demographic_no=d.demographic_no and d.demographic_no = a.demographic_no and a.appointment_date=? and a.provider_no=p.provider_no and a.status like 't%' order by p.last_name, p.first_name, a.appointment_date,"+orderby },
-            {"search_daysheetsinglenew", "select a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name, p.last_name, p.first_name, d.sex, d.hin, d.ver, d.family_doctor, d.provider_no as doc_no, d.phone, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name from (appointment a, provider p, demographic d) left join provider p2 on d.provider_no=p2.provider_no where a.provider_no=p.provider_no and a.demographic_no=d.demographic_no and d.demographic_no = a.demographic_no and a.appointment_date=? and a.provider_no=? and a.status like 't%' and a.provider_no=p.provider_no order by a.appointment_date,"+orderby },
+	 	{"search_daysheetall",       "select a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name,a.bookingSource, p.last_name, p.first_name, d.sex, d.hin, d.ver, d.family_doctor, d.provider_no as doc_no, d.phone, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name from (appointment a, provider p, demographic d) left join provider p2 on d.provider_no=p2.provider_no where a.provider_no=p.provider_no and a.demographic_no=d.demographic_no and d.demographic_no = a.demographic_no and a.appointment_date>=? and a.appointment_date<=? and a.provider_no=p.provider_no and a.status != 'C' order by p.last_name, p.first_name, a.appointment_date, "+orderby },
+            {"search_daysheetsingleall", "select a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name,a.bookingSource, p.last_name, p.first_name, d.sex, d.hin, d.ver, d.family_doctor, d.provider_no as doc_no, d.phone, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name from (appointment a, provider p, demographic d) left join provider p2 on d.provider_no=p2.provider_no where a.provider_no=p.provider_no and a.demographic_no=d.demographic_no and d.demographic_no = a.demographic_no and a.appointment_date>=? and a.appointment_date<=? and a.provider_no=? and a.status != 'C' and a.provider_no=p.provider_no order by a.appointment_date,"+orderby },
+            {"search_daysheetnew",       "select a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name,a.bookingSource, p.last_name, p.first_name, d.sex, d.hin, d.ver, d.family_doctor, d.provider_no as doc_no, d.phone, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name from (appointment a, provider p, demographic d) left join provider p2 on d.provider_no=p2.provider_no where a.provider_no=p.provider_no and a.demographic_no=d.demographic_no and d.demographic_no = a.demographic_no and a.appointment_date=? and a.provider_no=p.provider_no and a.status like 't%' order by p.last_name, p.first_name, a.appointment_date,"+orderby },
+            {"search_daysheetsinglenew", "select a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name,a.bookingSource, p.last_name, p.first_name, d.sex, d.hin, d.ver, d.family_doctor, d.provider_no as doc_no, d.phone, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name from (appointment a, provider p, demographic d) left join provider p2 on d.provider_no=p2.provider_no where a.provider_no=p.provider_no and a.demographic_no=d.demographic_no and d.demographic_no = a.demographic_no and a.appointment_date=? and a.provider_no=? and a.status like 't%' and a.provider_no=p.provider_no order by a.appointment_date,"+orderby },
 
             {"searchmygroupall",         "select * from mygroup where mygroup_no= ?"},
             {"update_apptstatus",        "update appointment set status='T', lastupdateuser=?, updatedatetime=now() where appointment_date=? and status='t' " },
@@ -44,10 +48,10 @@
     } else {
         dbQueries=new String[][] {
 
-	 {"search_daysheetall",       "select concat(d.year_of_birth,'/',d.month_of_birth,'/',d.date_of_birth)as dob, d.family_doctor, a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name, p.last_name, p.first_name, d.sex, d.hin, d.ver, d.family_doctor, d.provider_no as doc_no, d.phone, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name, d.chart_no from (appointment a, provider p) left join demographic d on a.demographic_no=d.demographic_no left join provider p2 on d.provider_no=p2.provider_no where a.appointment_date>=? and a.appointment_date<=? and a.start_time>=? and a.end_time<? and a.provider_no=p.provider_no and a.status != 'C' order by p.last_name, p.first_name, a.appointment_date, "+orderby },
-            {"search_daysheetsingleall", "select concat(d.year_of_birth,'/',d.month_of_birth,'/',d.date_of_birth)as dob, d.family_doctor, a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name, p.last_name, p.first_name, d.sex, d.hin, d.ver, d.family_doctor, d.provider_no as doc_no, d.phone, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name, d.chart_no  from (appointment a, provider p )left join demographic d on a.demographic_no=d.demographic_no left join provider p2 on d.provider_no=p2.provider_no where a.appointment_date>=? and a.appointment_date<=? and a.start_time>=? and a.end_time<? and a.provider_no=? and a.status != 'C' and a.provider_no=p.provider_no order by a.appointment_date,"+orderby },
-            {"search_daysheetnew",       "select concat(d.year_of_birth,'/',d.month_of_birth,'/',d.date_of_birth)as dob, d.family_doctor, a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name, p.last_name, p.first_name, d.sex, d.hin, d.ver, d.family_doctor, d.provider_no as doc_no, d.phone, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name, d.chart_no  from (appointment a, provider p) left join demographic d on a.demographic_no=d.demographic_no left join provider p2 on d.provider_no=p2.provider_no where a.appointment_date=? and a.provider_no=p.provider_no and a.status like binary 't' order by p.last_name, p.first_name, a.appointment_date,"+orderby },
-            {"search_daysheetsinglenew", "select concat(d.year_of_birth,'/',d.month_of_birth,'/',d.date_of_birth)as dob, d.family_doctor, a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name, p.last_name, p.first_name, d.sex, d.hin, d.ver, d.family_doctor, d.provider_no as doc_no, d.phone, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name, d.chart_no  from (appointment a, provider p) left join demographic d on a.demographic_no=d.demographic_no left join provider p2 on d.provider_no=p2.provider_no where a.appointment_date=? and a.provider_no=? and a.status like binary 't' and a.provider_no=p.provider_no order by a.appointment_date,"+orderby },
+	 {"search_daysheetall",       "select concat(d.year_of_birth,'/',d.month_of_birth,'/',d.date_of_birth)as dob, d.family_doctor, a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name,a.bookingSource, p.last_name, p.first_name, d.sex, d.hin, d.ver, d.family_doctor, d.provider_no as doc_no, d.phone, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name, d.chart_no from (appointment a, provider p) left join demographic d on a.demographic_no=d.demographic_no left join provider p2 on d.provider_no=p2.provider_no where a.appointment_date>=? and a.appointment_date<=? and a.start_time>=? and a.end_time<? and a.provider_no=p.provider_no and a.status != 'C' order by p.last_name, p.first_name, a.appointment_date, "+orderby },
+            {"search_daysheetsingleall", "select concat(d.year_of_birth,'/',d.month_of_birth,'/',d.date_of_birth)as dob, d.family_doctor, a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name,a.bookingSource, p.last_name, p.first_name, d.sex, d.hin, d.ver, d.family_doctor, d.provider_no as doc_no, d.phone, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name, d.chart_no  from (appointment a, provider p )left join demographic d on a.demographic_no=d.demographic_no left join provider p2 on d.provider_no=p2.provider_no where a.appointment_date>=? and a.appointment_date<=? and a.start_time>=? and a.end_time<? and a.provider_no=? and a.status != 'C' and a.provider_no=p.provider_no order by a.appointment_date,"+orderby },
+            {"search_daysheetnew",       "select concat(d.year_of_birth,'/',d.month_of_birth,'/',d.date_of_birth)as dob, d.family_doctor, a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name,a.bookingSource, p.last_name, p.first_name, d.sex, d.hin, d.ver, d.family_doctor, d.provider_no as doc_no, d.phone, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name, d.chart_no  from (appointment a, provider p) left join demographic d on a.demographic_no=d.demographic_no left join provider p2 on d.provider_no=p2.provider_no where a.appointment_date=? and a.provider_no=p.provider_no and a.status like binary 't' order by p.last_name, p.first_name, a.appointment_date,"+orderby },
+            {"search_daysheetsinglenew", "select concat(d.year_of_birth,'/',d.month_of_birth,'/',d.date_of_birth)as dob, d.family_doctor, a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, a.name,a.bookingSource, p.last_name, p.first_name, d.sex, d.hin, d.ver, d.family_doctor, d.provider_no as doc_no, d.phone, d.roster_status, p2.last_name as doc_last_name, p2.first_name as doc_first_name, d.chart_no  from (appointment a, provider p) left join demographic d on a.demographic_no=d.demographic_no left join provider p2 on d.provider_no=p2.provider_no where a.appointment_date=? and a.provider_no=? and a.status like binary 't' and a.provider_no=p.provider_no order by a.appointment_date,"+orderby },
 
             {"searchmygroupall",         "select * from mygroup where mygroup_no= ?"},
             {"update_apptstatus",        "update appointment set status='T', lastupdateuser=?, updatedatetime=now() where appointment_date=? and status='t' " },
@@ -130,10 +134,21 @@ td {
 	font-size: 16px;
 }
 </style>
+<script type="text/javascript" src="<c:out value="${ctx}/share/javascript/prototype.js"/>"></script>
 <script language="JavaScript">
 <!--
 
 //-->
+
+function hideOnSource(){
+	var selfBooked = document.getElementById('onlySelfBooked');
+	var list = $$('tr.oscar');
+	if(selfBooked.checked){
+		list.invoke('hide');   
+	}else{
+		list.invoke('show');
+	}
+}
 </script>
 </head>
 <%
@@ -167,7 +182,10 @@ td {
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 	<tr bgcolor="<%=deepColor%>">
-		<th><bean:message key="report.reportdaysheet.msgMainLabel" /></th>
+		<th><bean:message key="report.reportdaysheet.msgMainLabel" />
+		
+		<input type="checkbox" onclick="hideOnSource();" id="onlySelfBooked"/><bean:message key="report.reportdaysheet.msgSelfBookedCheck"/>
+		</th>
 		<th width="10%" nowrap><%=createtime%> <input type="button"
 			name="Button"
 			value="<bean:message key="report.reportdaysheet.btnPrint"/>"
@@ -192,7 +210,7 @@ td {
   parama[4] = provider_no;
   if(request.getParameter("dsmode")!=null && request.getParameter("dsmode").equals("all") ) {
 	  if(!provider_no.equals("*") && !provider_no.startsWith("_grp_") ) {
-	  rsdemo = daySheetBean.queryResults(parama, "search_daysheetsingleall");
+		  rsdemo = daySheetBean.queryResults(parama, "search_daysheetsingleall");
 
     } else { //select all providers
 	  rsdemo = daySheetBean.queryResults(new String[] {parama[0], parama[1], sTime, eTime}, "search_daysheetall");
@@ -289,13 +307,18 @@ td {
 		<% } else {%>
 		<TH width="10%"><b>DOB</b></TH>
 		<% }%>
+		
+		
+		<th><bean:message key="report.reportdaysheet.msgBookingStatus" /></th>
+		
 		<TH width="30%"><b><bean:message
 			key="report.reportdaysheet.msgComments" /></b></TH>
 	</tr>
 	<%
     }
+count++;
 %>
-<tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">
+<tr bgcolor="<%=bodd?"#EEEEFF":"white"%>"  class="<%=rsdemo.getString("bookingSource")==null?"oscar":"self"%>"    id="r<%=count %>" >
       <!--<td align="center" nowrap><%=rsdemo.getString("appointment_date")%></td>-->
       <td align="center" nowrap title="<%="End Time: "+rsdemo.getString("end_time")%>"><%=rsdemo.getString("start_time").substring(0,5)%></td>
       <td align="left"><%=rsdemo.getString("name")==null?".":""%><%=Misc.toUpperLowerCase(rsdemo.getString("name"))%></td>
@@ -318,6 +341,14 @@ td {
 %>
 		<td align="center">&nbsp;<%=dob==null?"":dob%></td>
 		<% }%>
+		
+		<td>
+			<%if(rsdemo.getString("bookingSource")==null){%>
+			&nbsp;
+			<%}else{%>
+			<bean:message key="report.reportdaysheet.msgSelfBooked"/>
+			<%}%>
+	    </td>
 		<td>
 		<% if ( rsdemo.getString("doc_no") != null && ! daySheetBean.getString(rsdemo,"doc_no").equals("") && ! daySheetBean.getString(rsdemo,"doc_no").equals(daySheetBean.getString(rsdemo,"provider_no")) ) {
 
