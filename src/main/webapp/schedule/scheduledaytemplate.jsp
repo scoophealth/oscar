@@ -1,50 +1,65 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
 <%
-  
+
 %>
 <%@ page
 	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*"
 	errorPage="../appointment/errorpage.jsp"%>
-<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="providerNameBean" class="oscar.Dict" scope="session" />
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.ScheduleTemplateCode" %>
+<%@ page import="org.oscarehr.common.dao.ScheduleTemplateCodeDao" %>
+<%
+	ScheduleTemplateCodeDao scheduleTemplateCodeDao = SpringUtils.getBean(ScheduleTemplateCodeDao.class);
+%>
+
 <% //save or delete the settings
   int rowsAffected = 0;
   if(request.getParameter("dboperation")!=null && request.getParameter("dboperation").compareTo(" Save ")==0 ) {
-    String[] param1 =new String[3];
-    param1[0]=request.getParameter("code");
-    param1[1]=request.getParameter("description");
-    param1[2]=request.getParameter("duration");
-    rowsAffected = scheduleMainBean.queryExecuteUpdate(request.getParameter("code"),"delete_scheduletemplatecode");
-    rowsAffected = scheduleMainBean.queryExecuteUpdate(param1,"add_scheduletemplatecode");
+    ScheduleTemplateCode code = scheduleTemplateCodeDao.getByCode(request.getParameter("code").toCharArray()[0]);
+    if(code != null) {
+    	scheduleTemplateCodeDao.remove(code.getId());
+    }
+
+    code = new ScheduleTemplateCode();
+    code.setCode(request.getParameter("code").toCharArray()[0]);
+    code.setDescription(request.getParameter("description"));
+    code.setDuration(request.getParameter("duration"));
+	code.setConfirm("N");
+	code.setBookinglimit(1);
+	scheduleTemplateCodeDao.persist(code);
   }
   if(request.getParameter("dboperation")!=null && request.getParameter("dboperation").equals("Delete") ) {
-    rowsAffected = scheduleMainBean.queryExecuteUpdate(request.getParameter("delcode"),"delete_scheduletemplatecode");
+    ScheduleTemplateCode code = scheduleTemplateCodeDao.getByCode(request.getParameter("delcode").toCharArray()[0]);
+    if(code != null) {
+    	scheduleTemplateCodeDao.remove(code.getId());
+    }
   }
 %>
 
@@ -93,7 +108,7 @@ function checkInput() {
 					<%
    ResultSet rsdemo = null;
    rsdemo = scheduleMainBean.queryResults("search_scheduletemplatecode");
-   while (rsdemo.next()) { 
+   while (rsdemo.next()) {
 	%>
 					<option value="<%=rsdemo.getString("code")%>"><%=rsdemo.getString("code")+" |"+rsdemo.getString("description")%></option>
 					<%
