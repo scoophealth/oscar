@@ -8,11 +8,11 @@ import javax.persistence.Table;
 @Table(name="scheduletemplate")
 public class ScheduleTemplate extends AbstractModel<ScheduleTemplatePrimaryKey> {
 
-	@EmbeddedId     
+	@EmbeddedId
 	private ScheduleTemplatePrimaryKey id;
 	private String summary;
 	private String timecode;
-	
+
 	public ScheduleTemplatePrimaryKey getId() {
 		return id;
 	}
@@ -32,7 +32,11 @@ public class ScheduleTemplate extends AbstractModel<ScheduleTemplatePrimaryKey> 
 	public void setTimecode(String timecode) {
     	this.timecode = timecode;
     }
-	
-	
-	
+
+	public void setId(ScheduleTemplatePrimaryKey id) {
+    	this.id = id;
+    }
+
+
+
 }

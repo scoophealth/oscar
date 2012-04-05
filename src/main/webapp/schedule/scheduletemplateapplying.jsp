@@ -1,38 +1,44 @@
 <%@ page
 	import="java.util.*, java.net.*, java.sql.*, oscar.*, oscar.util.*, java.text.*, java.lang.*, org.apache.struts.util.*"
 	errorPage="../appointment/errorpage.jsp"%>
-<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<jsp:useBean id="scheduleRscheduleBean" class="oscar.RscheduleBean"
-	scope="session" />
+<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<jsp:useBean id="scheduleRscheduleBean" class="oscar.RscheduleBean"	scope="session" />
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
-
-<!--  
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.ScheduleDate" %>
+<%@ page import="org.oscarehr.common.dao.ScheduleDateDao" %>
+<%@ page import="org.oscarehr.common.model.RSchedule" %>
+<%@ page import="org.oscarehr.common.dao.RScheduleDao" %>
+<%
+	ScheduleDateDao scheduleDateDao = SpringUtils.getBean(ScheduleDateDao.class);
+	RScheduleDao rScheduleDao = (RScheduleDao)SpringUtils.getBean("rScheduleDao");
+%>
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -46,7 +52,7 @@
 
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String CurRoleName = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-    
+
     boolean isSiteAccessPrivacy=false;
 %>
 
@@ -65,40 +71,40 @@
 <%!  String [] bgColors; %>
 <%!  List<String> excludedSites = new ArrayList<String>(); %>
 <%
-  
+
   String weekdaytag[] = {"SUN","MON","TUE","WED","THU","FRI","SAT"};
   boolean bAlternate =(request.getParameter("alternate")!=null&&request.getParameter("alternate").equals("checked") )?true:false;
   boolean bOrigAlt = false;
 
   OscarProperties props = OscarProperties.getInstance();
-  
+
   boolean bMoreAddr = bMultisites
   						? true
   						: (props.getProperty("scheduleSiteID", "").equals("") ? false : true);
   String [] addr;
-  
+
   if (bMultisites) {
-	//multisite starts =====================	  
+	//multisite starts =====================
 	  SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
-      List<Site> sites = siteDao.getActiveSitesByProviderNo(request.getParameter("provider_no")); 
-      List<Site> managerSites; 
+      List<Site> sites = siteDao.getActiveSitesByProviderNo(request.getParameter("provider_no"));
+      List<Site> managerSites;
 
 	  if (isSiteAccessPrivacy) {
 		  // login user have site manager role
 		  managerSites = siteDao.getActiveSitesByProviderNo(CurProviderNo);
-		  //build excluded sites list for sites that not in current site manager 
+		  //build excluded sites list for sites that not in current site manager
 		  for (Site site : sites) {
 			  if (!managerSites.contains(site)) {
 				  excludedSites.add(site.getName());
 			  }
 		  }
-		  
+
 	  }
 
 	  //login user have admin role
 	  addr = new String[sites.size()+1];
 	  bgColors = new String[sites.size()+1];
-  
+
       for (int i=0; i<sites.size(); i++) {
 		  addr[i]=sites.get(i).getName();
 		  bgColors[i]=sites.get(i).getBgColor();
@@ -107,14 +113,14 @@
 	  bgColors[sites.size()]="white";
 
 
-	//multisite ends =====================	 
+	//multisite ends =====================
   } else {
   	  addr = props.getProperty("scheduleSiteID", "").split("\\|");
   }
-  
+
 %>
 <%
-  String today = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd" );  
+  String today = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd" );
   String lastYear = (Integer.parseInt(today.substring(0,today.indexOf('-'))) - 2) + today.substring(today.indexOf('-'));
 
   if(request.getParameter("delete")!= null && request.getParameter("delete").equals("1") ) { //delete rschedule
@@ -123,25 +129,31 @@
     param[0]=request.getParameter("provider_no");
     param[1]=request.getParameter("sdate")!=null?request.getParameter("sdate"):today;
     ResultSet rsgroup = scheduleMainBean.queryResults(param,"search_rschedule_current1");
-    while (rsgroup.next()) { 
+    while (rsgroup.next()) {
       param[1]= rsgroup.getString("sdate");
       edate= rsgroup.getString("edate");
     }
-    
-    String[] param1 =new String[3];
-    param1[0]=param[0];
-    param1[1]="1";
-    param1[2]=param[1];
-    int rowsAffected = scheduleMainBean.queryExecuteUpdate(param1,"delete_rschedule");
+
+    List<RSchedule> rsl = rScheduleDao.findByProviderAvailableAndDate(request.getParameter("provider_no"),"1",MyDateFormat.getSysDate(request.getParameter("sdate")!=null?request.getParameter("sdate"):today));
+   	for(RSchedule rs:rsl) {
+   		rs.setStatus("D");
+   		rScheduleDao.merge(rs);
+   	}
 
 	if(request.getParameter("deldate")!= null && (request.getParameter("deldate").equals("b") || request.getParameter("deldate").equals("all")) ) { //delete scheduledate
-	  String dbOpt = "delete_scheduledate_all";
-	  if(request.getParameter("deldate").equals("b")) dbOpt = "delete_scheduledate_b"; 
-      String[] param0 =new String[3];
-      param0[0]=param[0];
-      param0[1]=param[1] ;
-      param0[2]=edate ;
-      rowsAffected = scheduleMainBean.queryExecuteUpdate(param0,dbOpt);
+	  if(request.getParameter("deldate").equals("b")) {
+		  List<ScheduleDate> sds = scheduleDateDao.findByProviderPriorityAndDateRange(request.getParameter("provider_no"),'b',MyDateFormat.getSysDate(request.getParameter("sdate")!=null?request.getParameter("sdate"):today), MyDateFormat.getSysDate(edate));
+		  for(ScheduleDate sd:sds) {
+			  sd.setStatus('D');
+			  scheduleDateDao.merge(sd);
+		  }
+	  } else {
+		  List<ScheduleDate> sds = scheduleDateDao.findByProviderAndDateRange(request.getParameter("provider_no"),MyDateFormat.getSysDate(request.getParameter("sdate")!=null?request.getParameter("sdate"):today), MyDateFormat.getSysDate(edate));
+		  for(ScheduleDate sd:sds) {
+			  sd.setStatus('D');
+			  scheduleDateDao.merge(sd);
+		  }
+	  }
 	}
     response.sendRedirect("scheduletemplateapplying.jsp?provider_no="+param[0]+"&provider_name="+URLEncoder.encode(request.getParameter("provider_name")) );
   } else {
@@ -162,61 +174,61 @@
 function displayTemplate(s) {
     var url = "scheduleDisplayTemplate.jsp?name=" + s[s.selectedIndex].value + "&providerid=<%=request.getParameter("provider_no")%>";
     var div = "template";
-    
-    var objAjax = new Ajax.Request (                        
+
+    var objAjax = new Ajax.Request (
                         url,
                         {
-                            method: 'get',                                                                                                               
-                            onSuccess: function(request) {                            
+                            method: 'get',
+                            onSuccess: function(request) {
                                             while( $(div).firstChild )
                                                 $(div).removeChild($(div).firstChild);
-                                                                                                                                         
+
                                             if( navigator.userAgent.indexOf("AppleWebKit") > -1 )
                                                 $(div).updateSafari(request.responseText);
                                             else
-                                                $(div).update(request.responseText);                                                                                            
-                                       }, 
+                                                $(div).update(request.responseText);
+                                       },
                             onFailure: function(request) {
                                             $(div).innerHTML = "<h3>Error:</h3>" + request.status;
                                         }
                         }
-                           
+
                   );
 }
 
-function selectrschedule(s) {    
+function selectrschedule(s) {
     var ref = "<rewrite:reWrite jspPage="scheduletemplateapplying.jsp"/>";
-    ref += "?provider_no=<%=request.getParameter("provider_no")%>&provider_name=<%=request.getParameter("provider_name")%>";    
+    ref += "?provider_no=<%=request.getParameter("provider_no")%>&provider_name=<%=request.getParameter("provider_name")%>";
     ref += "&sdate=" +s.options[s.selectedIndex].value;
     self.location.href = ref;
 }
 function onBtnDelete(s) {
-  if( confirm("<bean:message key="schedule.scheduletemplateapplying.msgDeleteConfirmation"/>") ) {        
+  if( confirm("<bean:message key="schedule.scheduletemplateapplying.msgDeleteConfirmation"/>") ) {
     var ref = "<rewrite:reWrite jspPage="scheduletemplateapplying.jsp"/>";
-    ref += "?provider_no=<%=request.getParameter("provider_no")%>&provider_name=<%=request.getParameter("provider_name")%>";    
+    ref += "?provider_no=<%=request.getParameter("provider_no")%>&provider_name=<%=request.getParameter("provider_name")%>";
     ref += "&sdate=" +s.options[s.selectedIndex].value;
     ref += "&delete=1&deldate=all";
-    self.location.href = ref;    
+    self.location.href = ref;
   }
 }
 
 function checkDate(y,m,d) {
-    var days = new Array(31,28,31,30,31,30,31,31,30,31,30,31);    
+    var days = new Array(31,28,31,30,31,30,31,31,30,31,30,31);
     var year, month, day;
-    
+
     //do we have sane values for date?
-    if( isNaN(year = parseInt(y)) || isNaN(month = parseInt(m)) || isNaN(day = parseInt(d)) )        
+    if( isNaN(year = parseInt(y)) || isNaN(month = parseInt(m)) || isNaN(day = parseInt(d)) )
         return false;
-    
+
     //are we dealing with a leap year?
     if( (year % 4 == 0) && (year % 100 != 0) )
         days[1] = 29;
     else if( (year % 4 == 0) && (year % 100 == 0) && (year % 400 == 0) )
         days[1] = 29;
-        
+
     if( (year < 1970) || (month < 1) || (month > 12) || (day < 1) || (day >days[month-1]) )
         return false;
-        
+
     return true;
 }
 function onChangeDates() {
@@ -227,12 +239,12 @@ function onChangeDatee() {
 }
 function onAlternate() {
   if(document.schedule.alternate.checked) {
-    a = self.location.href.lastIndexOf("&bFirstDisp=") > 0 ? "":"&bFirstDisp=0"; 
-    if(self.location.href.lastIndexOf("&alternate=") > 0 ) c = self.location.href; 
-    else c = self.location.href; 
+    a = self.location.href.lastIndexOf("&bFirstDisp=") > 0 ? "":"&bFirstDisp=0";
+    if(self.location.href.lastIndexOf("&alternate=") > 0 ) c = self.location.href;
+    else c = self.location.href;
 	  self.location.href = c + a + "&alternate=checked" ;
   } else {
-    a = self.location.href.lastIndexOf("&bFirstDisp=") > 0 ? "":"&bFirstDisp=0"; 
+    a = self.location.href.lastIndexOf("&bFirstDisp=") > 0 ? "":"&bFirstDisp=0";
     if(self.location.href.lastIndexOf("&alternate=") > 0 ) c = self.location.href.substring(0,self.location.href.lastIndexOf("&alternate="));
     else c = self.location.href;
 	  self.location.href = c + a ;
@@ -246,7 +258,7 @@ function addDataString() {
   var str1="";
   if(document.schedule.checksun.checked) {
     str += "1 ";
-    str1 += "<SUN>"+document.schedule.sunfrom1.value+"</SUN>"; 
+    str1 += "<SUN>"+document.schedule.sunfrom1.value+"</SUN>";
     <%=bMoreAddr? getJSstr("A7", "sunaddr1") : "" %>
     //alert("<A7>"+document.schedule.sunaddr1[document.schedule.sunaddr1.selectedIndex].text+"</A7>");
   }
@@ -261,7 +273,7 @@ function addDataString() {
   }
   if(document.schedule.checkmon.unchecked) {    str = str.replace("2 ","");  }
   if(document.schedule.checktue.checked) {
-    str += "3 ";  
+    str += "3 ";
 	str1 += "<TUE>"+document.schedule.tuefrom1.value+"</TUE>";
     <%=bMoreAddr? getJSstr("A2", "tueaddr1") : "" %>
   }
@@ -293,9 +305,9 @@ function addDataString() {
   }
   if(document.schedule.checksat.unchecked) {    str = str.replace("7 ","");  }
 
-	document.schedule.day_of_week.value = str; 
-	document.schedule.avail_hour.value = str1; 
-	
+	document.schedule.day_of_week.value = str;
+	document.schedule.avail_hour.value = str1;
+
 	if(document.schedule.syear.value=="" || document.schedule.smonth.value=="" || document.schedule.sday.value=="") {
 //	  alert("<bean:message key="schedule.scheduletemplateapplying.msgInputDate"/>"); return false;
 	} else {
@@ -307,7 +319,7 @@ function addDataStringB() {
   var str1="";
   if(document.schedule.checksun2.checked) {
     strB += "1 ";
-    str1 += "<SUN>"+document.schedule.sunfrom2.value+"</SUN>"; 
+    str1 += "<SUN>"+document.schedule.sunfrom2.value+"</SUN>";
     <%=bMoreAddr? getJSstr("A7", "sunaddr2") : "" %>
   }
   if(document.schedule.checksun2.unchecked) {
@@ -321,7 +333,7 @@ function addDataStringB() {
   }
   if(document.schedule.checkmon2.unchecked) {    strB = strB.replace("2 ","");  }
   if(document.schedule.checktue2.checked) {
-    strB += "3 ";  
+    strB += "3 ";
 	str1 += "<TUE>"+document.schedule.tuefrom2.value+"</TUE>";
     <%=bMoreAddr? getJSstr("A2", "tueaddr2") : "" %>
   }
@@ -353,8 +365,8 @@ function addDataStringB() {
   }
   if(document.schedule.checksat2.unchecked) {    strB = strB.replace("7 ","");  }
 
-	document.schedule.day_of_weekB.value = strB; 
-	document.schedule.avail_hourB.value = str1; 
+	document.schedule.day_of_weekB.value = strB;
+	document.schedule.avail_hourB.value = str1;
 	if(document.schedule.syear.value=="" || document.schedule.smonth.value=="" || document.schedule.sday.value=="") {
 //	  alert("<bean:message key="schedule.scheduletemplateapplying.msgInputDate"/>"); return false;
 	} else {
@@ -370,10 +382,10 @@ function addDataString1() {
 	  alert("<bean:message key="schedule.scheduletemplateapplying.msgInputCorrectDate"/>");
 	  return false;
 	}
-        
+
         var sDate = new Date(document.schedule.syear.value,document.schedule.smonth.value,document.schedule.sday.value);
         var eDate = new Date(document.schedule.eyear.value,document.schedule.emonth.value,document.schedule.eday.value);
-        
+
         if( sDate > eDate ) {
             alert("<bean:message key="schedule.scheduletemplateapplying.msgDateOrder"/>");
             return false;
@@ -389,15 +401,15 @@ function addDataString1() {
   //param1[1]="1";
   param1[1]=request.getParameter("sdate")!=null?request.getParameter("sdate"):today;
   ResultSet rsgroup = scheduleMainBean.queryResults(param1,"search_rschedule_current1");
-  
-  if (rsgroup.next()) { 
+
+  if (rsgroup.next()) {
     scheduleRscheduleBean.setRscheduleBean(rsgroup.getString("provider_no"),rsgroup.getString("sdate"),rsgroup.getString("edate"), rsgroup.getString("available"),rsgroup.getString("day_of_week"), rsgroup.getString("avail_hourB"), rsgroup.getString("avail_hour"), rsgroup.getString("creator"));
     if(rsgroup.getString("available").equals("A")&&request.getParameter("bFirstDisp")==null) bOrigAlt = true;
     //break;
   } else {
       rsgroup = null;
       rsgroup = scheduleMainBean.queryResults(param1,"search_rschedule_current2");
-      if (rsgroup.next()) { 
+      if (rsgroup.next()) {
         scheduleRscheduleBean.setRscheduleBean(rsgroup.getString("provider_no"),rsgroup.getString("sdate"),rsgroup.getString("edate"), rsgroup.getString("available"),rsgroup.getString("day_of_week"), rsgroup.getString("avail_hourB"), rsgroup.getString("avail_hour"), rsgroup.getString("creator"));
         if(rsgroup.getString("available").equals("A")&&request.getParameter("bFirstDisp")==null) bOrigAlt = true;
         //break;
@@ -469,7 +481,7 @@ function addDataString1() {
 
     String availhour = scheduleRscheduleBean.avail_hour;
     //String availhourB = scheduleRscheduleBean.avail_hourB;
-    
+
     StringTokenizer st = new StringTokenizer(scheduleRscheduleBean.day_of_week.substring(0,scheduleRscheduleBean.day_of_week.indexOf("|")==-1?scheduleRscheduleBean.day_of_week.length():scheduleRscheduleBean.day_of_week.indexOf("|")) );
     while (st.hasMoreTokens() ) {
       int j = Integer.parseInt(st.nextToken())-1;
@@ -481,7 +493,7 @@ function addDataString1() {
 		  while (sthour.hasMoreTokens() ) {
             param3[i][j]=sthour.nextToken(); j++;
           }
-		  
+
 		  if(bMoreAddr) {
 			if(SxmlMisc.getXmlContent(availhour, ("<A"+(i==0?7:i)+">"),"</A"+(i==0?7:i)+">") != null) {
 		    	  sthour = new StringTokenizer(SxmlMisc.getXmlContent(availhour, ("<A"+(i==0?7:i)+">"),"</A"+(i==0?7:i)+">"), "^");
@@ -506,7 +518,7 @@ function addDataString1() {
 					<%
   param1[1]=lastYear; //today - query for the future date
   rsgroup = scheduleMainBean.queryResults(param1,"search_rschedule_future1");
- 	while (rsgroup.next()) { 
+ 	while (rsgroup.next()) {
 %>
 					<option value="<%=rsgroup.getString("sdate")%>"
 						<%=request.getParameter("sdate")!=null?(rsgroup.getString("sdate").equals(request.getParameter("sdate"))?"selected":""):(rsgroup.getString("sdate").equals(scheduleRscheduleBean.sdate)?"selected":"")%>>
@@ -675,10 +687,10 @@ function tranbutton7_click() {
   if(bOrigAlt && request.getParameter("bFirstDisp")==null || bAlternate && request.getParameter("bFirstDisp")!=null) {
     String availhour = scheduleRscheduleBean.avail_hourB;
     //String availhourB = scheduleRscheduleBean.avail_hourB;
-    
+
     String stToken = "";
     if(scheduleRscheduleBean.day_of_week.indexOf("|")!=-1) stToken = scheduleRscheduleBean.day_of_week.substring(scheduleRscheduleBean.day_of_week.indexOf("|")+1);
-//scheduleRscheduleBean.day_of_week.indexOf("|")==-1?scheduleRscheduleBean.day_of_week.length():()    
+//scheduleRscheduleBean.day_of_week.indexOf("|")==-1?scheduleRscheduleBean.day_of_week.length():()
   for(int i=0; i<7; i++) {param2[i]="";}
   for(int i=0; i<7; i++) {
     for(int j=0; j<2; j++) {
@@ -693,18 +705,18 @@ function tranbutton7_click() {
 	  int i = j==7?0:j;
       param2[i]="checked";
       if(SxmlMisc.getXmlContent(availhour, ("<"+weekdaytag[i]+">"),"</"+weekdaytag[i]+">") != null) {
-	      StringTokenizer sthour = new StringTokenizer(SxmlMisc.getXmlContent(availhour, ("<"+weekdaytag[i]+">"),"</"+weekdaytag[i]+">"), "^"); 
+	      StringTokenizer sthour = new StringTokenizer(SxmlMisc.getXmlContent(availhour, ("<"+weekdaytag[i]+">"),"</"+weekdaytag[i]+">"), "^");
           j = 0;
 		  while (sthour.hasMoreTokens() ) {
-          	param3[i][j]=sthour.nextToken(); 
+          	param3[i][j]=sthour.nextToken();
           	j++;
           }
-		  
+
 		  if(bMoreAddr) {
-		      sthour = new StringTokenizer(SxmlMisc.getXmlContent(availhour, ("<A"+(i==0?7:i)+">"),"</A"+(i==0?7:i)+">"), "^"); 
+		      sthour = new StringTokenizer(SxmlMisc.getXmlContent(availhour, ("<A"+(i==0?7:i)+">"),"</A"+(i==0?7:i)+">"), "^");
 	          j = 0;
 			  while (sthour.hasMoreTokens() ) {
-	            param4[i][j]=sthour.nextToken(); 
+	            param4[i][j]=sthour.nextToken();
 	            j++;
 	          }
 		  }
@@ -828,14 +840,14 @@ function tranbuttonb7_click() {
    ResultSet rsdemo = null;
    String param = "Public";
    rsdemo = scheduleMainBean.queryResults(param, "search_scheduletemplate");
-   while (rsdemo.next()) { 
+   while (rsdemo.next()) {
 	%>
 							<option value="<%=rsdemo.getString("name")%>"><%=rsdemo.getString("name")+" |"+rsdemo.getString("summary")%></option>
 							<%
    }
    param =request.getParameter("provider_no");
    rsdemo = scheduleMainBean.queryResults(param, "search_scheduletemplate");
-   while (rsdemo.next()) { 
+   while (rsdemo.next()) {
 	%>
 							<option value="<%=rsdemo.getString("name")%>"><%=rsdemo.getString("name")+" |"+rsdemo.getString("summary")%></option>
 							<% }	%>
@@ -887,16 +899,16 @@ function tranbuttonb7_click() {
 %>
 </body>
 <%! String getSelectAddr(String s, String [] site, String sel) {
-	
+
 		boolean isExcludedSiteSelected = false;
-		if (bMultisites && excludedSites.contains(sel)) 	
+		if (bMultisites && excludedSites.contains(sel))
 			isExcludedSiteSelected = true; //"; text-decoration:line-through;";
-		
-		String ret = "<select name='" + s + "' "  + (isExcludedSiteSelected ? " disabled style='text-decoration:line-through;'  " : "")  
+
+		String ret = "<select name='" + s + "' "  + (isExcludedSiteSelected ? " disabled style='text-decoration:line-through;'  " : "")
 			+ " onchange='this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor'>";
 		int ind=0;
 		boolean isSiteSel=false;
-		
+
 		for(int i=0; i<site.length; i++) {
 			String t = site[i].equals(sel) ? " selected" : "";
 			if (site[i].equals(sel)) {
@@ -908,7 +920,7 @@ function tranbuttonb7_click() {
 				ind=i;
 				t = " selected";
 			}
-			
+
 			if ((isExcludedSiteSelected) || (!excludedSites.contains(site[i]))) {
 				ret += "<option value='" + site[i] + "'" + t + (bMultisites? " style='background-color:"+bgColors[i] + "'": "") +">" + site[i] + "</option>";
 			}
@@ -923,7 +935,7 @@ function tranbuttonb7_click() {
 %>
 <%! String getJSstr(String s, String obj) {
 		String ret = "";
-		ret +="str1 +=" + "\"<"+s+">\""+ "+" + "document.schedule." + obj 
+		ret +="str1 +=" + "\"<"+s+">\""+ "+" + "document.schedule." + obj
 		+ "[" + "document.schedule." + obj + ".selectedIndex" + "].text"+ "+" +"\"</"+s+">\";";
 		return ret;
 }

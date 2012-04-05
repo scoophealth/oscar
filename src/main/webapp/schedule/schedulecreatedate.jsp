@@ -1,13 +1,13 @@
 <%!
 //multisite starts =====================
-private	List<Site> sites; 
+private	List<Site> sites;
 private boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();
 
 private String getSiteHTML(String reason, List<Site> sites) {
-	 if (reason==null||reason.trim().length()==0) 
+	 if (reason==null||reason.trim().length()==0)
 		 return "";
-	 else 
-		 return "<span style='background-color:"+ApptUtil.getColorFromLocation(sites, reason)+"'>"+ApptUtil.getShortNameFromLocation(sites, reason)+"</span>";	
+	 else
+		 return "<span style='background-color:"+ApptUtil.getColorFromLocation(sites, reason)+"'>"+ApptUtil.getShortNameFromLocation(sites, reason)+"</span>";
 }
 %>
 <%
@@ -18,7 +18,7 @@ if (bMultisites) {
 //multisite ends =====================
 %>
 <%
-  
+
   String user_no = (String) session.getAttribute("user");
   String user_name = (String) session.getAttribute("userlastname")+","+ (String) session.getAttribute("userfirstname");
   boolean bAlternate =(request.getParameter("alternate")!=null&&request.getParameter("alternate").equals("checked") )?true:false;
@@ -30,20 +30,25 @@ if (bMultisites) {
 	errorPage="../appointment/errorpage.jsp"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<jsp:useBean id="scheduleRscheduleBean" class="oscar.RscheduleBean"
-	scope="session" />
-<jsp:useBean id="scheduleDateBean" class="java.util.Hashtable"
-	scope="session" />
-<jsp:useBean id="scheduleHolidayBean" class="java.util.Hashtable"
-	scope="session" />
+<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<jsp:useBean id="scheduleRscheduleBean" class="oscar.RscheduleBean"	scope="session" />
+<jsp:useBean id="scheduleDateBean" class="java.util.Hashtable"	scope="session" />
+<jsp:useBean id="scheduleHolidayBean" class="java.util.Hashtable" scope="session" />
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.ScheduleDate" %>
+<%@ page import="org.oscarehr.common.dao.ScheduleDateDao" %>
+<%@ page import="org.oscarehr.common.model.RSchedule" %>
+<%@ page import="org.oscarehr.common.dao.RScheduleDao" %>
+<%
+	ScheduleDateDao scheduleDateDao = SpringUtils.getBean(ScheduleDateDao.class);
+	RScheduleDao rScheduleDao = (RScheduleDao)SpringUtils.getBean("rScheduleDao");
+%>
 <%
   String provider_name = URLDecoder.decode(request.getParameter("provider_name"));
   String provider_no = request.getParameter("provider_no");
   if(provider_no==null || provider_no=="") response.sendRedirect("../logout.jsp");
-  
-  //to prepare calendar display  
+
+  //to prepare calendar display
   GregorianCalendar now = new GregorianCalendar();
   int year = now.get(Calendar.YEAR);
   int month = now.get(Calendar.MONTH)+1;
@@ -52,14 +57,14 @@ if (bMultisites) {
   now = new GregorianCalendar(year,month-1,1);
   String weekdaytag[] = {"SUN","MON","TUE","WED","THU","FRI","SAT"};
   String reasontag[] = {"A7","A1","A2","A3","A4","A5","A6"};
-  
+
   if(request.getParameter("bFirstDisp")!=null && request.getParameter("bFirstDisp").compareTo("0")==0) {
     year = Integer.parseInt(request.getParameter("year"));
     month = Integer.parseInt(request.getParameter("month"));
     day = Integer.parseInt(request.getParameter("day"));
 	  delta = Integer.parseInt(request.getParameter("delta"));
 	  now = new GregorianCalendar(year,month-1,1);
-  	now.add(now.MONTH, delta);
+  	now.add(Calendar.MONTH, delta);
     year = now.get(Calendar.YEAR);
     month = now.get(Calendar.MONTH)+1;
   }
@@ -77,17 +82,19 @@ if(request.getParameter("bFirstDisp")==null || request.getParameter("bFirstDisp"
     origEdate = "1970-01-01";
   else
     origEdate = MyDateFormat.getMysqlStandardDate(Integer.parseInt(request.getParameter("origeyear")),Integer.parseInt(request.getParameter("origemonth")),Integer.parseInt(request.getParameter("origeday")) );
-    
+
   int rowsAffected = 0;
   if(sdate.equals(scheduleRscheduleBean.sdate) ) {
-    String[] param1 =new String[3];
-    param1[0]=request.getParameter("provider_no");
-    param1[1]="1";
-    //param1[1]=request.getParameter("available");
-    param1[2]=sdate;
-    rowsAffected = scheduleMainBean.queryExecuteUpdate(param1,"delete_rschedule");
-    param1[1]="A";
-    rowsAffected = scheduleMainBean.queryExecuteUpdate(param1,"delete_rschedule");
+    List<RSchedule> rsl = rScheduleDao.findByProviderAvailableAndDate(request.getParameter("provider_no"),"1",MyDateFormat.getSysDate(sdate));
+	for(RSchedule rs:rsl) {
+		rs.setStatus("D");
+		rScheduleDao.merge(rs);
+	}
+	rsl = rScheduleDao.findByProviderAvailableAndDate(request.getParameter("provider_no"),"A",MyDateFormat.getSysDate(sdate));
+	for(RSchedule rs:rsl) {
+		rs.setStatus("D");
+		rScheduleDao.merge(rs);
+	}
   }
   //This code is for maintaining one schedule/person
   String[] searchParams = new String[15];
@@ -106,16 +113,16 @@ if(request.getParameter("bFirstDisp")==null || request.getParameter("bFirstDisp"
   searchParams[12] = edate;
   searchParams[13] = sdate;
   searchParams[14] = edate;
-  
+
   //check if existing schedule covers part or all of new schedule's time period
-  ResultSet rset = scheduleMainBean.queryResults(searchParams, "search_rschedule_overlaps");  
-  
+  ResultSet rset = scheduleMainBean.queryResults(searchParams, "search_rschedule_overlaps");
+
   if( rset.next() ) {
       scheduleOverlaps = rset.getInt(1) > 0;
   }
   rset.close();
 
-      
+
   //if the schedule is the same we are editing instead
   String[] searchParams1 = new String[3];
   searchParams1[0] = request.getParameter("provider_no");
@@ -127,49 +134,48 @@ if(request.getParameter("bFirstDisp")==null || request.getParameter("bFirstDisp"
     editingSchedule = rset.getInt(1) > 0;
   }
   rset.close();
-  
-  //save rschedule data 
-  if(bAlternate) 
+
+  //save rschedule data
+  if(bAlternate)
     scheduleRscheduleBean.setRscheduleBean(provider_no, sdate,edate,request.getParameter("available"),request.getParameter("day_of_week"), request.getParameter("day_of_weekB") ,request.getParameter("avail_hourB"), request.getParameter("avail_hour"), user_name);
   else
     scheduleRscheduleBean.setRscheduleBean(provider_no, sdate,edate,request.getParameter("available"),request.getParameter("day_of_week"), request.getParameter("avail_hourB"), request.getParameter("avail_hour"), user_name);
 
   if( editingSchedule ) {
-    String[] updateParams = new String[7];
-    updateParams[0] = scheduleRscheduleBean.day_of_week;
-    updateParams[1] = scheduleRscheduleBean.avail_hourB;
-    updateParams[2] = scheduleRscheduleBean.avail_hour;
-    updateParams[3] = scheduleRscheduleBean.creator;
-    updateParams[4] = scheduleRscheduleBean.provider_no;
-    updateParams[5] = scheduleRscheduleBean.available;
-    updateParams[6] = scheduleRscheduleBean.sdate;
-    rowsAffected = scheduleMainBean.queryExecuteUpdate(updateParams,"update_rschedule1");
+	List<RSchedule> rsl = rScheduleDao.findByProviderAvailableAndDate(scheduleRscheduleBean.provider_no,scheduleRscheduleBean.available,MyDateFormat.getSysDate(scheduleRscheduleBean.sdate));
+	for(RSchedule rs:rsl) {
+		rs.setDayOfWeek(scheduleRscheduleBean.day_of_week);
+		rs.setAvailHourB(scheduleRscheduleBean.avail_hourB);
+		rs.setAvailHour(scheduleRscheduleBean.avail_hour);
+		rs.setCreator(scheduleRscheduleBean.creator);
+		rScheduleDao.merge(rs);
+	}
   }
-  else { 
-    String[] param2 =new String[9];
-    param2[0]=scheduleRscheduleBean.provider_no; // or use request.getParameter("provider_no");
-    param2[1]=scheduleRscheduleBean.sdate;
-    param2[2]=scheduleRscheduleBean.edate;
-    param2[3]=scheduleRscheduleBean.available;
-    param2[4]=scheduleRscheduleBean.day_of_week;
-    param2[5]=scheduleRscheduleBean.avail_hourB;
-    param2[6]=scheduleRscheduleBean.avail_hour;
-    param2[7]=scheduleRscheduleBean.creator;
-    param2[8]=scheduleRscheduleBean.active;
-    rowsAffected = scheduleMainBean.queryExecuteUpdate(param2,"add_rschedule");
+  else {
+    RSchedule rs = new RSchedule();
+    rs.setProviderNo(scheduleRscheduleBean.provider_no);
+    rs.setsDate(MyDateFormat.getSysDate(scheduleRscheduleBean.sdate));
+    rs.seteDate(MyDateFormat.getSysDate(scheduleRscheduleBean.edate));
+    rs.setAvailable(scheduleRscheduleBean.available);
+    rs.setDayOfWeek(scheduleRscheduleBean.day_of_week);
+    rs.setAvailHourB(scheduleRscheduleBean.avail_hourB);
+    rs.setAvailHour(scheduleRscheduleBean.avail_hour);
+    rs.setCreator(scheduleRscheduleBean.creator);
+    rs.setStatus(scheduleRscheduleBean.active);
+    rScheduleDao.persist(rs);
   }
 
   //create scheduledate record and initial scheduleDateBean
   scheduleDateBean.clear();
   ResultSet rsgroup = scheduleMainBean.queryResults(request.getParameter("provider_no"),"search_scheduledate_c");
-  while (rsgroup.next()) { 
+  while (rsgroup.next()) {
     scheduleDateBean.put(rsgroup.getString("sdate"), new HScheduleDate(rsgroup.getString("available"), rsgroup.getString("priority"), rsgroup.getString("reason"), rsgroup.getString("hour"), rsgroup.getString("creator") ));
   }
 
   //initial scheduleHolidayBean record
   if(scheduleHolidayBean.isEmpty() ) {
     rsgroup = scheduleMainBean.queryResults("%","search_scheduleholiday");
-    while (rsgroup.next()) { 
+    while (rsgroup.next()) {
       scheduleHolidayBean.put(rsgroup.getString("sdate"), new HScheduleHoliday(rsgroup.getString("holiday_name") ));
     }
   }
@@ -178,12 +184,13 @@ if(request.getParameter("bFirstDisp")==null || request.getParameter("bFirstDisp"
   SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
   java.util.Date dnewEdate = df.parse(edate);
   java.util.Date dorigEdate = df.parse(origEdate);
-  
-  String[] param4 =new String[3];
-    param4[0]=provider_no;
-    param4[1]=sdate;
-    param4[2]= dnewEdate.before(dorigEdate) ? origEdate : edate;
-  rowsAffected = scheduleMainBean.queryExecuteUpdate(param4,"delete_scheduledate_b");
+
+  List<ScheduleDate> sds = scheduleDateDao.findByProviderPriorityAndDateRange(provider_no,'b',MyDateFormat.getSysDate(sdate), MyDateFormat.getSysDate(dnewEdate.before(dorigEdate) ? origEdate : edate));
+  for(ScheduleDate sd:sds) {
+	  sd.setStatus('D');
+	  scheduleDateDao.merge(sd);
+  }
+
   String[] param3 =new String[8];
   GregorianCalendar cal = new GregorianCalendar(y,m-1,d);
 //  GregorianCalendar cal = new GregorianCalendar(year,month-1,1);
@@ -192,48 +199,51 @@ if(request.getParameter("bFirstDisp")==null || request.getParameter("bFirstDisp"
     m = cal.get(Calendar.MONTH)+1;
     d = cal.get(Calendar.DATE);
     if(scheduleDateBean.get(y+"-"+MyDateFormat.getDigitalXX(m)+"-"+MyDateFormat.getDigitalXX(d)) ==null && scheduleRscheduleBean.getDateAvail(cal)) {
-      param3[0]=y+"-"+m+"-"+d;
-      param3[1]=provider_no;
-      param3[2]="1";
-      param3[3]="b";
-      param3[4]=scheduleRscheduleBean.getSiteAvail(cal);
-      param3[5]=scheduleRscheduleBean.getDateAvailHour(cal);//SxmlMisc.getXmlContent(scheduleRscheduleBean.avail_hour, ("<"+weekdaytag[i]+">"),"</"+weekdaytag[i]+">");
-      param3[6]=user_name;
-      param3[7]=scheduleRscheduleBean.active;
-      rowsAffected = scheduleMainBean.queryExecuteUpdate(param3,"add_scheduledate");
+      ScheduleDate sd = new ScheduleDate();
+      sd.setDate(MyDateFormat.getSysDate(y+"-"+m+"-"+d));
+      sd.setProviderNo(provider_no);
+      sd.setAvailable('1');
+      sd.setPriority('b');
+      sd.setReason(scheduleRscheduleBean.getSiteAvail(cal));
+      sd.setHour(scheduleRscheduleBean.getDateAvailHour(cal));
+      sd.setCreator(user_name);
+      sd.setStatus(scheduleRscheduleBean.active.toCharArray()[0]);
+      scheduleDateDao.persist(sd);
+
+
     }
     if((y+"-"+MyDateFormat.getDigitalXX(m)+"-"+MyDateFormat.getDigitalXX(d)).equals(edate)) break;
-        cal.add(cal.DATE, 1);
+        cal.add(Calendar.DATE, 1);
   }
 
 }
- 
+
 /////////////////////////////////////
 
 %>
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -305,7 +315,7 @@ function refresh() {
 		<center>
 		<%
 	//now = new GregorianCalendar(year, month+1, 1);
-  now.add(now.DATE, -1); 
+  now.add(Calendar.DATE, -1);
             DateInMonthTable aDate = new DateInMonthTable(year, month-1, 1);
             int [][] dateGrid = aDate.getMonthDateGrid();
 %>
@@ -371,16 +381,16 @@ function refresh() {
                 for (int j=0; j<7; j++) {
                   if(dateGrid[i][j]==0) out.println("<td></td>");
                   else {
-                    now.add(now.DATE, 1);
+                    now.add(Calendar.DATE, 1);
                     bgcolor = new StringBuffer("navy"); //default color for absence
                     strHour = new StringBuffer();
                     strReason = new StringBuffer();
                     strHolidayName = new StringBuffer();
                    if(scheduleRscheduleBean.getDateAvail(now) ) {
                       bgcolor = new StringBuffer("white"); //color for attendance
-                      strHour = new StringBuffer(SxmlMisc.getXmlContent(scheduleRscheduleBean.getAvailHour(now), weekdaytag[now.get(now.DAY_OF_WEEK)-1]));
+                      strHour = new StringBuffer(SxmlMisc.getXmlContent(scheduleRscheduleBean.getAvailHour(now), weekdaytag[now.get(Calendar.DAY_OF_WEEK)-1]));
                       if (bMultisites)
-                    	  strReason.append(SxmlMisc.getXmlContent(scheduleRscheduleBean.getAvailHour(now), reasontag[now.get(now.DAY_OF_WEEK)-1])); 
+                    	  strReason.append(SxmlMisc.getXmlContent(scheduleRscheduleBean.getAvailHour(now), reasontag[now.get(Calendar.DAY_OF_WEEK)-1]));
                     }
                     aHScheduleHoliday = (HScheduleHoliday) scheduleHolidayBean.get(year+"-"+MyDateFormat.getDigitalXX(month)+"-"+MyDateFormat.getDigitalXX(dateGrid[i][j]));
                     if (aHScheduleHoliday!=null) {
@@ -394,7 +404,7 @@ function refresh() {
                       strHour = new StringBuffer(aHScheduleDate.hour);
                       strReason = new StringBuffer(aHScheduleDate.reason!=null?aHScheduleDate.reason:"");
                     }
-                     
+
             %>
 			<td bgcolor='<%=bgcolor.toString()%>'><a href="#"
 				onclick="popupPage(260,500,'scheduledatepopup.jsp?provider_no=<%=provider_no%>&year=<%=year%>&month=<%=month%>&day=<%=dateGrid[i][j]%>&bFistDisp=1')">
@@ -402,7 +412,7 @@ function refresh() {
 				color="blue"><%=strHolidayName.toString()%></font> <br>
 			<font size="-2">&nbsp;<%=strHour.toString()%> <br>
 			&nbsp;<%=bMultisites?getSiteHTML(strReason.toString(), sites):strReason.toString()%></font></a></td>
-			<%    
+			<%
                   }
                 }
                 out.println("</tr>");
