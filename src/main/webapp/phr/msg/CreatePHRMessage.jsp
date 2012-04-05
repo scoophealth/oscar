@@ -38,7 +38,7 @@
 <%@ page import="java.util.Enumeration.*" %>
 <%@ page import="org.apache.commons.collections.iterators.*" %>
 <%@ page import="oscar.util.UtilDateUtilities,java.util.*" %>
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-html-el" prefix="html-el" %>
 
 <html:html locale="true">
