@@ -164,10 +164,20 @@ pharmacy = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemo
 String prefPharmacy = "";
 String prefPharmacyId="";
 if (pharmacy != null) {
-    prefPharmacy = pharmacy.getName();
+    prefPharmacy = pharmacy.getName().replace("'", "\\'");
     prefPharmacyId=String.valueOf(pharmacy.getId2());
     prefPharmacy=prefPharmacy.trim();
     prefPharmacyId=prefPharmacyId.trim();
+}
+
+String userAgent = request.getHeader("User-Agent");
+String browserType = "";
+if (userAgent != null) {
+	if (userAgent.toLowerCase().indexOf("ipad") > -1) {
+		browserType = "IPAD";
+	} else {
+		browserType = "ALL";
+	}
 }
 %>
 <link rel="stylesheet" type="text/css" href="styles.css" />
@@ -331,6 +341,22 @@ function addressSelect() {
 
 }
 
+
+function popupPrint(vheight,vwidth,varpage) { //open a new popup window
+	  var page = "" + varpage;
+	  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";//360,680
+	  var popup=window.open(page, "groupno", windowprops);
+	  if (popup != null) {
+	    if (popup.opener == null) {
+	      popup.opener = self;
+	    }
+	    popup.focus();
+	}
+}
+
+function resizeFrame(height) {
+	document.getElementById("preview").height = (parseInt(height) + 10) + "px";
+}
 
 </script>
 </head>

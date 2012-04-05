@@ -25,6 +25,23 @@
 <bean:define id="patient" type="oscar.oscarRx.data.RxPatientData.Patient" name="Patient" />
 
 <%
+String rx_enhance = OscarProperties.getInstance().getProperty("rx_enhance");
+%>	
+
+<% 
+if (rx_enhance!=null && rx_enhance.equals("true")) {
+	if (request.getParameter("ID") != null) { %>
+		<script>
+			window.opener.location = window.opener.location;
+			window.close();
+		</script>
+<%
+	} 
+}
+%>
+
+
+<%
         if (session.getAttribute("userrole") == null) response.sendRedirect("../logout.jsp");
         String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
         com.quatro.service.security.SecurityManager securityManager = new com.quatro.service.security.SecurityManager();
@@ -63,10 +80,7 @@
             //boolean all=true;
             boolean longterm_acute=true;
             boolean longterm_acute_inactive_external=true;
-            if(hm==null) {
-			// do nothing
-            }
-            else{
+            if(hm!=null) {
              if(hm.get("show_current")!=null)
                 show_current=(Boolean)hm.get("show_current");
              else

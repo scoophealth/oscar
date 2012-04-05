@@ -1,3 +1,4 @@
+<%@page import="oscar.OscarProperties"%>
 <%@page import="java.util.*" %>
 <%@page import="oscar.oscarRx.data.RxPrescriptionData" %>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-bean" prefix="bean"%>
@@ -13,6 +14,105 @@
 
 %>
 
+<%if (OscarProperties.getInstance().getProperty("rx_enhance")!=null && OscarProperties.getInstance().getProperty("rx_enhance").equals("true")) { %>
+<script type="text/javascript">
+
+    var errorMsg="<bean:message key='oscarRx.MyDrugref.InteractingDrugs.error.msgFailed' />" ;
+    //oscarLog("errorMsg="+errorMsg);
+            var interactStr='<%=interactingDrugList%>';
+            var randomIds='<%=allRandomIdInStash%>';
+                //clear all warnings
+                randomIds=randomIds.replace(/\[/, "");
+                randomIds=randomIds.replace(/\]/, "");
+                if(randomIds.length>0){
+                var randomIdArr=randomIds.split(",");
+                for(var h=0;h<randomIdArr.length;h++){
+                    var randId=randomIdArr[h];
+                    randId=randId.replace(/\s/g,"");//trim
+
+                    if (document.getElementById('major_'+randId) != null &&
+                    		document.getElementById('moderate_'+randId) != null &&
+                    		document.getElementById('minor_'+randId) != null &&
+                    		document.getElementById('unknown_'+randId) != null) {
+                    	document.getElementById('major_'+randId).style.display = "none";
+                    	document.getElementById('moderate_'+randId).style.display = "none";
+                    	document.getElementById('major_'+randId).innerHTML = "";
+                    	document.getElementById('moderate_'+randId).innerHTML = "";
+                    	document.getElementById('minor_'+randId).style.display = "none";
+                    	document.getElementById('minor_'+randId).innerHTML = "";
+                    	document.getElementById('unknown_'+randId).style.display = "none";
+                    	document.getElementById('unknown_'+randId).innerHTML = "";
+                    }
+                }
+                }
+
+
+            if(interactStr.length>0){
+                if(interactStr==errorMsg){
+                    document.getElementById("interactingDrugErrorMsg").style.display = "inline";
+                    document.getElementById("interactingDrugErrorMsg").innerHTML = "<span style='color:red'>"+errorMsg+"</span>";
+                }
+                else{
+                    document.getElementById("interactingDrugErrorMsg").style.display = "none";
+                    document.getElementById("interactingDrugErrorMsg").innerHTML = "";
+                var arr1=interactStr.split(",");
+                for(var i=0;i<arr1.length;i++){
+                    var str=arr1[i];
+                    var arr2=str.split("=");
+                    var id=arr2[0];
+                    var idArr = arr2[0].split("_");
+                    var significance = idArr[0].toUpperCase();
+                    var title=arr2[1];
+                    var interactionData = title.split("|");
+                    var effectStr = interactionData[0];
+                    var evidenceStr = interactionData[1];
+                    var drugName = interactionData[2];
+                    var htmlStr="<span title='"+drugName+"'><strong>" + significance + "</strong>: " + getEffect(effectStr) + ": " + drugName + " " + getEvidence(evidenceStr) + "</span>";
+                    id=id.replace(/\s/g,"");
+					if (document.getElementById(id) != null) {
+						document.getElementById(id).style.display = "inline";
+						document.getElementById(id).update(htmlStr);
+					}
+                }
+            }
+            }else{
+                document.getElementById("interactingDrugErrorMsg").style.display="none";
+                document.getElementById("interactingDrugErrorMsg").innerHTML = "";
+            }
+
+
+            function getEffect(str) {
+				switch(str) {
+				case "a":
+						return "<bean:message key='oscarRx.MyDrugref.InteractingDrugs.effect.AugmentsNoClinicalEffect' />";
+				case "A":
+						return "<bean:message key='oscarRx.MyDrugref.InteractingDrugs.effect.Augments' />";
+				case "i":
+						return "<bean:message key='oscarRx.MyDrugref.InteractingDrugs.effect.InhibitsNoClinicalEffect' />";
+				case "I":
+						return "<bean:message key='oscarRx.MyDrugref.InteractingDrugs.effect.Inhibits' />";
+				case "n": case "N":
+						return "<bean:message key='oscarRx.MyDrugref.InteractingDrugs.effect.NoEffect' />";
+					default:
+						return "<bean:message key='oscarRx.MyDrugref.InteractingDrugs.effect.Unknown' />";
+				}
+            }
+
+            function getEvidence(str) {
+                switch(str) {
+                case "P":
+                    	return "<bean:message key='oscarRx.MyDrugref.InteractingDrugs.evidence.Poor' />";
+                case "F":
+                		return "<bean:message key='oscarRx.MyDrugref.InteractingDrugs.evidence.Fair' />";
+                case "G":
+            			return "<bean:message key='oscarRx.MyDrugref.InteractingDrugs.evidence.Good' />";
+    			default:
+        				return "<bean:message key='oscarRx.MyDrugref.InteractingDrugs.evidence.Unknown' />";
+                }
+            }
+</script>
+
+<%}else{%>
 <script type="text/javascript">
 
     var errorMsg="<bean:message key='oscarRx.MyDrugref.InteractingDrugs.error.msgFailed' />" ;
@@ -65,3 +165,4 @@
             }
 
 </script>
+<%} %>
