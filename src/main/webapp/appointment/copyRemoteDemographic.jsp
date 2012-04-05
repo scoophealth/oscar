@@ -10,7 +10,12 @@
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
 <%@page import="org.oscarehr.util.WebUtils"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
+<%@ page import="org.oscarehr.PMmodule.model.Admission" %>
+<%@ page import="org.oscarehr.PMmodule.dao.AdmissionDao" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%
+	AdmissionDao admissionDao = (AdmissionDao)SpringUtils.getBean("admissionDao");
+%>
 <%
 	int remoteFacilityId = Integer.parseInt(request.getParameter("remoteFacilityId"));
 	int remoteDemographicId = Integer.parseInt(request.getParameter("demographic_no"));
@@ -20,16 +25,16 @@
 	DemographicDao demographicDao=(DemographicDao)SpringUtils.getBean("demographicDao");
 	demographicDao.saveClient(demographic);
 	Integer demoNoRightNow = demographic.getDemographicNo(); // temp use for debugging
-	
+
 	//--- link the demographic on the integrator so associated data shows up ---
 	DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs();
 	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 	String providerNo=loggedInInfo.loggedInProvider.getProviderNo();
 	demographicWs.linkDemographics(providerNo, demographic.getDemographicNo(), remoteFacilityId, remoteDemographicId);
-	
+
 
 	MiscUtils.getLogger().error("LINK DEMOGRAPHIC #### ProviderNo :"+providerNo+" ,demo No :"+ demographic.getDemographicNo()+" , remoteFacilityId :"+ remoteFacilityId+" ,remoteDemographicId "+ remoteDemographicId+" orig demo "+demoNoRightNow);
-	
+
 
 	//--- add to program so the caisi program access filtering doesn't cause a security problem ---
 	oscar.oscarEncounter.data.EctProgram program = new oscar.oscarEncounter.data.EctProgram(request.getSession());
@@ -38,22 +43,28 @@
        ResultSet rsProg = apptMainBean.queryResults("OSCAR", "search_program");
        if (rsProg.next())
        {
-          progId = rsProg.getString("id");      	 
+          progId = rsProg.getString("id");
        }
     }
-    String[] caisiParam = new String[4];
-    caisiParam[0] = demographic.getDemographicNo().toString();
-    caisiParam[1] = progId;
-    caisiParam[2] = providerNo;
+    GregorianCalendar cal=new GregorianCalendar();
+	String admissionDate=""+cal.get(GregorianCalendar.YEAR)+'-'+(cal.get(GregorianCalendar.MONTH)+1)+'-'+cal.get(GregorianCalendar.DAY_OF_MONTH);
 
-	GregorianCalendar cal=new GregorianCalendar();
-	caisiParam[3]=""+cal.get(GregorianCalendar.YEAR)+'-'+(cal.get(GregorianCalendar.MONTH)+1)+'-'+cal.get(GregorianCalendar.DAY_OF_MONTH);
+	Admission admission = new Admission();
+	admission.setClientId(demographic.getDemographicNo());
+	admission.setProgramId(Integer.parseInt(progId));
+	admission.setProviderNo(request.getParameter("staff"));
+	admission.setAdmissionDate(oscar.MyDateFormat.getSysDate(admissionDate));
+	admission.setAdmissionStatus("current");
+	admission.setTeamId(0);
+	admission.setTemporaryAdmission(false);
+	admission.setAdmissionFromTransfer(false);
+	admission.setDischargeFromTransfer(false);
+	admission.setRadioDischargeReason("0");
+	admission.setClientStatusId(0);
+    admissionDao.saveAdmission(admission);
 
-    apptMainBean.queryExecuteUpdate(caisiParam, "add2caisi_admission");	
-
-    
     //--- build redirect request ---
-    
+
     // WebUtils.dumpParameters(request);
 	// --- Dump Request Parameters Start ---
 	// duration=15
@@ -86,22 +97,22 @@
 	// remoteFacilityId=1
 	// name=ASDF,ASDF
 	// --- Dump Request Parameters End ---
-	
+
 	StringBuilder redirect=new StringBuilder();
 	redirect.append(request.getParameter("originalPage"));
 	redirect.append("?");
 
 	redirect.append("demographic_no=");
 	redirect.append(demographic.getDemographicNo());
-	
+
 	redirect.append("&doctor_no=");
 	redirect.append(request.getParameter("provider_no"));
-	
+
 	@SuppressWarnings("unchecked")
 	Enumeration<String> e = request.getParameterNames();
 	while (e.hasMoreElements()) {
 		String key = e.nextElement();
-		
+
 		if (key.equals("demographic_no") || key.equals("doctor_no") || key.equals("originalPage"))
 		{
 			// ignore these parameters
