@@ -1,26 +1,26 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -28,37 +28,42 @@
 /*
  * $RCSfile: AbstractApplication.java,v $ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * (your name here) 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ * (your name here)
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
 */
 --%>
 <%
-  
+
 %>
 <%@ page
 	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*"
 	errorPage="../appointment/errorpage.jsp"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<jsp:useBean id="scheduleHolidayBean" class="java.util.Hashtable"
-	scope="session" />
+<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<jsp:useBean id="scheduleHolidayBean" class="java.util.Hashtable" scope="session" />
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.ScheduleHoliday" %>
+<%@ page import="org.oscarehr.common.dao.ScheduleHolidayDao" %>
+<%
+	ScheduleHolidayDao scheduleHolidayDao = SpringUtils.getBean(ScheduleHolidayDao.class);
+%>
+
 <% //save or delete the holiday settings
   if(request.getParameter("dboperation")!=null && (request.getParameter("dboperation").compareTo(" Save ")==0 || request.getParameter("dboperation").equals("Delete")) ) {
     //save the record first, change holidaybean next
@@ -69,14 +74,19 @@
 	 temp=e.nextElement().toString();
 
          if( !temp.startsWith("sdate_") || request.getParameter(temp).equals("")) continue;
-      
-         rowsAffected = scheduleMainBean.queryExecuteUpdate(request.getParameter(temp),"delete_scheduleholiday");
+
+         ScheduleHoliday sh = scheduleHolidayDao.find(MyDateFormat.getSysDate(request.getParameter(temp)));
+         if(sh != null) {
+        	 scheduleHolidayDao.remove(sh.getId());
+         }
+
          scheduleHolidayBean.remove( request.getParameter(temp) );
 
          if(request.getParameter("dboperation").compareTo(" Save ")==0 ) {
-             param1[0]=request.getParameter(temp);
-             param1[1]=request.getParameter("holiday_name");
-             rowsAffected = scheduleMainBean.queryExecuteUpdate(param1,"add_scheduleholiday");
+             sh = new ScheduleHoliday();
+             sh.setId(MyDateFormat.getSysDate(request.getParameter(temp)));
+             sh.setHolidayName(request.getParameter("holiday_name"));
+             scheduleHolidayDao.persist(sh);
              scheduleHolidayBean.put(request.getParameter(temp), new HScheduleHoliday(request.getParameter("holiday_name") ));
          }
 
@@ -85,7 +95,7 @@
 %>
 
 <%
-  //to prepare calendar display  
+  //to prepare calendar display
   GregorianCalendar now = new GregorianCalendar();
   int year = now.get(Calendar.YEAR);
   int month = now.get(Calendar.MONTH)+1;
@@ -99,7 +109,7 @@
     day = Integer.parseInt(request.getParameter("day"));
 	  delta = Integer.parseInt(request.getParameter("delta")==null?"0":request.getParameter("delta"));
 	  now = new GregorianCalendar(year,month-1,1);
-  	now.add(now.MONTH, delta);
+  	now.add(Calendar.MONTH, delta);
     year = now.get(Calendar.YEAR);
     month = now.get(Calendar.MONTH)+1;
   }
@@ -108,7 +118,7 @@ if(request.getParameter("bFirstDisp")==null || request.getParameter("bFirstDisp"
   //create scheduleHolidayBean record
   scheduleHolidayBean.clear();
   ResultSet rsgroup = scheduleMainBean.queryResults("%","search_scheduleholiday");
-  while (rsgroup.next()) { 
+  while (rsgroup.next()) {
     scheduleHolidayBean.put(rsgroup.getString("sdate"), new HScheduleHoliday(rsgroup.getString("holiday_name") ));
   }
 }
@@ -182,7 +192,7 @@ function saveHoliday() {
 		</table>
 		<%
 	//now = new GregorianCalendar(year, month+1, 1);
-  now.add(now.DATE, -1); 
+  now.add(Calendar.DATE, -1);
   DateInMonthTable aDate = new DateInMonthTable(year, month-1, 1);
   int [][] dateGrid = aDate.getMonthDateGrid();
 %>
@@ -234,7 +244,7 @@ function saveHoliday() {
                 for (int j=0; j<7; j++) {
                   if(dateGrid[i][j]==0) out.println("<td></td>");
                   else {
-                    now.add(now.DATE, 1);
+                    now.add(Calendar.DATE, 1);
                     bgcolor = new StringBuffer("ivory");
                     strHolidayName = new StringBuffer("");
                     aHScheduleHoliday = (HScheduleHoliday) scheduleHolidayBean.get(year+"-"+MyDateFormat.getDigitalXX(month)+"-"+MyDateFormat.getDigitalXX(dateGrid[i][j]));
@@ -242,14 +252,14 @@ function saveHoliday() {
                       bgcolor = new StringBuffer("pink");
                       strHolidayName = new StringBuffer(aHScheduleHoliday.holiday_name) ;
                     }
-                      
+
             %>
 			<td bgcolor='<%=bgcolor.toString()%>'><font color="red"><%= dateGrid[i][j] %></font>
 			<input type="checkbox" name="sdate_<%=month+"_"+dateGrid[i][j]%>"
 				value="<%=year+"-"+MyDateFormat.getDigitalXX(month)+"-"+MyDateFormat.getDigitalXX(dateGrid[i][j])%>">
 			<font size="-2"> <br>
 			&nbsp;<%=strHolidayName.toString()%></font></td>
-			<%    
+			<%
                   }
                 }
                 out.println("</tr>");
