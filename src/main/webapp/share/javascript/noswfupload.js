@@ -78,7 +78,11 @@ var $ = {
             lastInput = wrap.dom.input;
             $.event.del(wrap.dom.input, "change", arguments.callee);
             for(var max = false, input = wrap.dom.input.cloneNode(true), i = 0, files = $.files(wrap.dom.input); i < files.length; i++){
-                var value   = files.item(i).fileName || (files.item(i).fileName = files.item(i).value.split("\\").pop()),
+                 if(!files.item(i).value){
+           if(!files.item(i).fileName) files.item(i).fileName=files.item(i).name;
+           if(!files.item(i).fileSize) files.item(i).fileSize=files.item(i).size;
+       }
+               var value   = files.item(i).fileName || (files.item(i).fileName = files.item(i).value.split("\\").pop()),
                     ext     = -1 !== value.indexOf(".") ? value.split(".").pop().toLowerCase() : "unknown";
                 if(wrap.fileType && -1 === wrap.fileType.indexOf("*." + ext)){
                     max = true;
@@ -286,7 +290,10 @@ var $ = {
                     };
                     upload.onloadstart(rpe);
                 };
-                if(handler.file.getAsBinary){
+                var formdata;
+       try{formdata = new FormData();formdata.append(handler.name, handler.file);}catch(e){}
+               if(formdata){xhr.send(formdata);}
+               else if(handler.file.getAsBinary){
                     var boundary = "AjaxUploadBoundary" + (new Date).getTime();
                     xhr.setRequestHeader("Content-Type", "multipart/form-data; boundary=" + boundary);
                     xhr[xhr.sendAsBinary ? "sendAsBinary" : "send"](multipart(boundary, handler.name, handler.file));
