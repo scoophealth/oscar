@@ -41,7 +41,6 @@
     {"search_provider_details", "select * from provider where provider_no=?"},
     {"search_document_content", "select * from document where status<>'D' and document_no=?"},
     {"search_provider_name", "select * from provider where provider_no like ?"},
-    {"save_ctl_document","insert into ctl_document values(?,?,?,?)"},
     {"search_document", "select * from document where status <> 'D' and docfilename=? or doctype=? or docdesc like ?  or doccreator = ? " + orderby},
     {"search_document_by_file_name","select * from document where status <> 'D' and docfilename=?" },
     {"match_document", "select distinct d.doccreator, d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime from document d, ctl_document c where d.doctype <> 'share' and  d.status=c.status and d.status <> 'D' and c.document_no=d.document_no and c.module=? and c.module_id=? and d.doctype like ? order by d.updatedatetime desc"},
