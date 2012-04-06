@@ -13,9 +13,13 @@
 <%@page import="org.oscarehr.common.dao.ProviderArchiveDao"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.apache.commons.beanutils.BeanUtils"%>
+<%@page import="org.oscarehr.common.model.ProviderSite"%>
+<%@page import="org.oscarehr.common.model.ProviderSitePK"%>
+<%@page import="org.oscarehr.common.dao.ProviderSiteDao"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%
 	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
+	ProviderSiteDao providerSiteDao = SpringUtils.getBean(ProviderSiteDao.class);
 %>
 <!--
 /*
@@ -165,10 +169,15 @@
             String[] sites = request.getParameterValues("sites");
             DBPreparedHandler dbObj = new DBPreparedHandler();
             String provider_no = request.getParameter("provider_no");
-            dbObj.queryExecuteUpdate("delete from providersite where provider_no = ?", new String[]{provider_no});
+            List<ProviderSite> pss = providerSiteDao.findByProviderNo(provider_no);
+            for(ProviderSite ps:pss) {
+            	providerSiteDao.remove(ps.getId());
+            }
             if (sites!=null) {
                 for (int i=0; i<sites.length; i++) {
-                    dbObj.queryExecuteUpdate("insert into providersite (provider_no, site_id) values (?,?)", new String[] {provider_no, String.valueOf(sites[i])});
+                	ProviderSite ps = new ProviderSite();
+                	ps.setId(new ProviderSitePK(provider_no,Integer.parseInt(sites[i])));
+                	providerSiteDao.persist(ps);
                 }
             }
         }

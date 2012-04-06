@@ -32,9 +32,14 @@
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.Provider" %>
 <%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@page import="org.oscarehr.common.model.ProviderSite"%>
+<%@page import="org.oscarehr.common.model.ProviderSitePK"%>
+<%@page import="org.oscarehr.common.dao.ProviderSiteDao"%>
 <%
 	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
+	ProviderSiteDao providerSiteDao = SpringUtils.getBean(ProviderSiteDao.class);
 %>
+
 <!--
 /*
  *
@@ -179,7 +184,9 @@ if (isOk && org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
 	String[] sites = request.getParameterValues("sites");
 	if (sites!=null)
 		for (int i=0; i<sites.length; i++) {
-			dbObj.queryExecuteUpdate("insert into providersite (provider_no, site_id) values (?,?)", new String[]{p.getProviderNo(), String.valueOf(sites[i])});
+			ProviderSite ps = new ProviderSite();
+        	ps.setId(new ProviderSitePK(p.getProviderNo(),Integer.parseInt(sites[i])));
+        	providerSiteDao.persist(ps);
 		}
 }
 
