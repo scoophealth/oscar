@@ -2358,32 +2358,9 @@
         <ViolationValue>/src/main/webapp/admin/providerRole.jsp:public void delCaisiPriv(DBHelp dbObj, String roleOld, String roleNew, String provNo, String curUser_no) throws java.sql.SQLException {</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/providerRole.jsp:public void updateCaisiPriv(DBHelp dbObj, String roleOld, String roleNew, String provNo, String curUser_no) throws java.sql.SQLException {</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/provideraddarecord.jsp:DBPreparedHandler dbObj = new DBPreparedHandler();</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/provideraddarecord.jsp:DBPreparedHandlerParam[] param2= new DBPreparedHandlerParam[1];</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/provideraddarecord.jsp:param2[0]= new DBPreparedHandlerParam(MyDateFormat.getSysDate(request.getParameter("dob")));</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:DBPreparedHandler dbObj = new DBPreparedHandler();</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:DBPreparedHandlerParam[] param =new DBPreparedHandlerParam[21];</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:param[0]=new DBPreparedHandlerParam(request.getParameter("last_name"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:param[10]=new DBPreparedHandlerParam(request.getParameter("email"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:param[11]=new DBPreparedHandlerParam(request.getParameter("ohip_no"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:param[12]=new DBPreparedHandlerParam(request.getParameter("rma_no"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:param[13]=new DBPreparedHandlerParam(request.getParameter("billing_no"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:param[14]=new DBPreparedHandlerParam(request.getParameter("hso_no"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:param[15]=new DBPreparedHandlerParam(request.getParameter("status"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:param[16]=new DBPreparedHandlerParam(SxmlMisc.createXmlDataString(request,"xml_p"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:param[17]=new DBPreparedHandlerParam(request.getParameter("provider_activity"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:param[18]=new DBPreparedHandlerParam(request.getParameter("practitionerNo"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:param[19]=new DBPreparedHandlerParam((String)session.getAttribute("user"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:param[1]=new DBPreparedHandlerParam(request.getParameter("first_name"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:param[20]=new DBPreparedHandlerParam(request.getParameter("provider_no"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:param[2]=new DBPreparedHandlerParam(request.getParameter("provider_type"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:param[3]=new DBPreparedHandlerParam(request.getParameter("specialty"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:param[4]=new DBPreparedHandlerParam(request.getParameter("team"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:param[5]=new DBPreparedHandlerParam(request.getParameter("sex"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:param[6]=new DBPreparedHandlerParam(MyDateFormat.getSysDate(request.getParameter("dob")));</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:param[7]=new DBPreparedHandlerParam(request.getParameter("address"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:param[8]=new DBPreparedHandlerParam(request.getParameter("phone"));</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:param[9]=new DBPreparedHandlerParam(request.getParameter("workphone"));</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/providerupdateprovider.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
+        <ViolationValue>/src/main/webapp/admin/providerupdateprovider.jsp:ResultSet siters = DBHelp.searchDBRecord(sqlString);</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/unLock.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/BC/onSearch3rdBillAddr.jsp:oscar.oscarDB.DBPreparedHandler dbObj = new oscar.oscarDB.DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/BC/support/billingcodes.jsp:java.sql.ResultSet rs = DBHandler.GetSQL("SELECT service_code, description  FROM billingservice ORDER BY TRIM(description)");</ViolationValue>
@@ -4012,7 +3989,6 @@
         <ViolationValue>/src/main/webapp/admin/addQueue.jsp:for(Hashtable qht:queues){</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/adminnewgroup.jsp:StringBuffer strbuf=new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/adminnewgroup.jsp:strbuf=new StringBuffer(e.nextElement().toString());</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/adminsavemygroup.jsp:StringBuffer strbuf=new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/gstreport.jsp:List pList = new Vector();;</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/gstreport.jsp:Vector list = gstReport.getGST(providerNo, startDate, endDate);</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/gstreport.jsp:pList= (Vector)(new JdbcBillingPageUtil()).getCurProviderStr();</ViolationValue>
@@ -4645,7 +4621,7 @@
         <ViolationValue>/src/main/webapp/receptionist/appointmentreceptionistadminmonth.jsp:strHour = new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/webapp/receptionist/appointmentreceptionistadminmonth.jsp:strReason = new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/webapp/receptionist/receptionistnewgroup.jsp:StringBuffer strbuf = new StringBuffer(e.nextElement().toString());</ViolationValue>
-        <ViolationValue>/src/main/webapp/receptionist/receptionistsavemygroup.jsp:StringBuffer strbuf = new StringBuffer(e.nextElement().toString());</ViolationValue>
+        <ViolationValue>/src/main/webapp/receptionist/receptionistsavemygroup.jsp:StringBuffer strbuf=new StringBuffer(e.nextElement().toString());</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:&lt;%for (Hashtable h : providers) {%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:ArrayList&lt;Hashtable&gt; list = (ArrayList) request.getAttribute("list");</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:ArrayList&lt;Hashtable&gt; providers = ProviderData.getProviderList();</ViolationValue>
