@@ -1,42 +1,47 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
-<%@ page import="java.util.*,java.sql.*"
-	errorPage="../provider/errorpage.jsp"%>
+<%@ page import="java.util.*,java.sql.*" errorPage="../provider/errorpage.jsp"%>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.MyGroup" %>
+<%@ page import="org.oscarehr.common.model.MyGroupPrimaryKey" %>
+<%@ page import="org.oscarehr.common.dao.MyGroupDao" %>
+<%
+	MyGroupDao myGroupDao = SpringUtils.getBean(MyGroupDao.class);
+%>
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="provider.providernewgroup.title" /></title>
 <script language="javascript">
-<!-- start javascript 
+<!-- start javascript
 function setfocus() {
   this.focus();
   document.UPDATEPRE.mygroup_no.focus();
@@ -57,7 +62,7 @@ function checkForm() {
 <body background="../images/gray_bg.jpg" bgproperties="fixed"
 	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <%
-  if ("Delete".equals(request.getParameter("submit_form")) ) { //delete the group member 
+  if ("Delete".equals(request.getParameter("submit_form")) ) { //delete the group member
     int rowsAffected=0;
     String[] param = new String[2];
 
@@ -65,8 +70,9 @@ function checkForm() {
   		StringBuffer strbuf=new StringBuffer(e.nextElement().toString());
   		if (strbuf.toString().indexOf("displaymode")!=-1 || strbuf.toString().indexOf("submit_form")!=-1) continue;
     	param[0]=request.getParameter(strbuf.toString());
-	    param[1]=strbuf.toString().substring( param[0].length() ); 
-	    rowsAffected = oscarSuperManager.update("providerDao", "deletegroupmember", param);
+	    param[1]=strbuf.toString().substring( param[0].length() );
+	    myGroupDao.deleteGroupMember(param[0],param[1]);
+      	rowsAffected = 1;
     }
     out.println("<script language='JavaScript'>self.close();</script>");
   }
@@ -118,7 +124,6 @@ function checkForm() {
 <%
    }
 %>
-			<INPUT TYPE="hidden" NAME="dboperation" VALUE='savemygroup'>
 			<INPUT TYPE="hidden" NAME="displaymode" VALUE='savemygroup'>
 
 		</table>
