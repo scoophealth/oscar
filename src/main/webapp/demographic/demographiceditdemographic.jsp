@@ -2364,7 +2364,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 								<td align="left">
 								<%
 
-                                 String date_joined = sdf.format(demographic.getDateJoined());
+								String date_joined = demographic.getDateJoined() != null  ? sdf.format(demographic.getDateJoined()) : null;
                                  String dateJoinedYear = "";
                                  String dateJoinedMonth = "";
                                  String dateJoinedDay = "";
