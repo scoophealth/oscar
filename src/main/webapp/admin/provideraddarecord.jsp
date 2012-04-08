@@ -2,15 +2,13 @@
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-    
+
     if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
     String curProvider_no = (String) session.getAttribute("user");
-    
+
     boolean isSiteAccessPrivacy=false;
 %>
-<security:oscarSec roleName="<%=roleName$%>"
-	objectName="_admin,_admin.userAdmin,_admin.torontoRfq" rights="r"
-	reverse="<%=true%>">
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.torontoRfq" rights="r" reverse="<%=true%>">
 	<%response.sendRedirect("../logout.jsp");%>
 </security:oscarSec>
 
@@ -20,8 +18,7 @@
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ page import="java.sql.*, java.util.*, oscar.*"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.sql.*, java.util.*, oscar.*" errorPage="errorpage.jsp"%>
 <%@ page import="oscar.log.LogAction,oscar.log.LogConst"%>
 <%@ page import="oscar.log.*, oscar.oscarDB.*"%>
 
@@ -29,10 +26,15 @@
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.oscarehr.common.model.Site"%>
 
-<%@ page
-	import="org.apache.commons.lang.StringEscapeUtils,oscar.oscarProvider.data.ProviderBillCenter,oscar.util.SqlUtils"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ page import="org.apache.commons.lang.StringEscapeUtils,oscar.oscarProvider.data.ProviderBillCenter,oscar.util.SqlUtils"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
+<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%
+	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
+%>
 <!--
 /*
  *
@@ -69,41 +71,40 @@
 <center>
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 	<tr bgcolor="#486ebd">
-		<th><font face="Helvetica" color="#FFFFFF"><bean:message
-			key="admin.provideraddrecord.description" /></font></th>
+		<th><font face="Helvetica" color="#FFFFFF">
+			<bean:message key="admin.provideraddrecord.description" />
+		</font></th>
 	</tr>
 </table>
 <%
 boolean isOk = false;
 int retry = 0;
 String curUser_no = (String)session.getAttribute("user");
-String [] param = new String[21];
-  param[0]=request.getParameter("provider_no");
-  param[1]=request.getParameter("last_name");
-  param[2]=request.getParameter("first_name");
-  param[3]=request.getParameter("provider_type");
-  if (!OscarProperties.getInstance().isTorontoRFQ()) {
-  param[4]=request.getParameter("specialty");
-  param[5]=request.getParameter("team");
-  param[6]=request.getParameter("sex");
-  
-//  param[7]=request.getParameter("dob");
-  
-  param[8]=request.getParameter("address");
-  param[9]=request.getParameter("phone");
-  param[10]=request.getParameter("workphone");
-  param[11]=request.getParameter("email");
-  param[12]=request.getParameter("ohip_no");
-  param[13]=request.getParameter("rma_no");
-  param[14]=request.getParameter("billing_no");
-  param[15]=request.getParameter("hso_no");
-  param[16]=request.getParameter("status");
-  param[17]=SxmlMisc.createXmlDataString(request,"xml_p");
-  param[18]=request.getParameter("provider_activity");
-  param[19]=request.getParameter("practitionerNo");
-  param[20]=(String)session.getAttribute("user");
-}
-  
+
+Provider p = new Provider();
+p.setProviderNo(request.getParameter("provider_no"));
+p.setLastName(request.getParameter("last_name"));
+p.setFirstName(request.getParameter("first_name"));
+p.setProviderType(request.getParameter("provider_type"));
+p.setSpecialty(request.getParameter("specialty"));
+p.setTeam(request.getParameter("team"));
+p.setSex(request.getParameter("sex"));
+p.setDob(MyDateFormat.getSysDate(request.getParameter("dob")));
+p.setAddress(request.getParameter("address"));
+p.setPhone(request.getParameter("phone"));
+p.setWorkPhone(request.getParameter("workphone"));
+p.setEmail(request.getParameter("email"));
+p.setOhipNo(request.getParameter("ohip_no"));
+p.setRmaNo(request.getParameter("rma_no"));
+p.setBillingNo(request.getParameter("billing_no"));
+p.setHsoNo(request.getParameter("hso_no"));
+p.setStatus(request.getParameter("status"));
+p.setComments(SxmlMisc.createXmlDataString(request,"xml_p"));
+p.setProviderActivity(request.getParameter("provider_activity"));
+p.setPractitionerNo(request.getParameter("practitionerNo"));
+p.setLastUpdateUser((String)session.getAttribute("user"));
+p.setLastUpdateDate(new java.util.Date());
+
 //multi-office provide id formalize check, can be turn off on properties multioffice.formalize.provider.id
 boolean isProviderFormalize = true;
 String  errMsgProviderFormalize = "admin.provideraddrecord.msgAdditionFailure";
@@ -116,7 +117,7 @@ if (org.oscarehr.common.IsPropertiesOn.isProviderFormalizeEnable()) {
 	OscarProperties props = OscarProperties.getInstance();
 
 	String[] provider_sites = {};
-	
+
 	// get provider id ranger
 	if (request.getParameter("provider_type").equalsIgnoreCase("doctor")) {
 		//provider is doctor, get provider id range from Property
@@ -127,7 +128,7 @@ if (org.oscarehr.common.IsPropertiesOn.isProviderFormalizeEnable()) {
 		//non-doctor role
 		provider_sites = request.getParameterValues("sites");
 		provider_sites = (provider_sites == null ? new String[] {} : provider_sites);
-		
+
 		if (provider_sites.length > 1) {
 			//non-doctor can only have one site
 			isProviderFormalize = false;
@@ -163,65 +164,33 @@ if (org.oscarehr.common.IsPropertiesOn.isProviderFormalizeEnable()) {
 }
 
 if (!org.oscarehr.common.IsPropertiesOn.isProviderFormalizeEnable() || isProviderFormalize) {
-for(int i=0; i< param.length; i++)
-{
-	if (param[i] == null) param[i] = "";
-}
+
 DBPreparedHandler dbObj = new DBPreparedHandler();
-while ((!isOk) && retry < 3) {
+
   // check if the provider no need to be auto generated
-  if (OscarProperties.getInstance().isProviderNoAuto()) 
+  if (OscarProperties.getInstance().isProviderNoAuto())
   {
-  	param[0]= dbObj.getNewProviderNo();
+  	p.setProviderNo(dbObj.getNewProviderNo());
   }
-  String	sql   = "insert into provider (provider_no,last_name,first_name,provider_type,specialty,team,sex,dob,address,phone,work_phone,email,ohip_no,rma_no,billing_no,hso_no,status,comments,provider_activity,practitionerNo,lastUpdateUser,lastUpdateDate) values (";
-	sql += "'" + param[0] + "',";
-	sql += "'" + StringEscapeUtils.escapeSql(param[1]) + "',";
-	sql += "'" + StringEscapeUtils.escapeSql(param[2]) + "',";
-	sql += "'" + StringEscapeUtils.escapeSql(param[3]) + "',";
-	sql += "'" + param[4] + "',";
-	sql += "'" + param[5] + "',";
-	sql += "'" + param[6] + "',";
-	sql += "?,";
-	sql += "'" + param[8] + "',";
-	sql += "'" + param[9] + "',";
-	sql += "'" + param[10] + "',";
-	sql += "'" + param[11] + "',";
-	sql += "'" + param[12] + "',";
-	sql += "'" + param[13] + "',";
-	sql += "'" + param[14] + "',";
-	sql += "'" + param[15] + "',";
-	sql += "'" + param[16] + "',";
-	sql += "'" + param[17] + "',";
-	sql += "'" + param[18] + "',";
-	sql += "'" + param[19] + "',";
-	sql += "'" + param[20] + "',";
-	sql += "now())";
-	DBPreparedHandlerParam[] param2= new DBPreparedHandlerParam[1];
-	param2[0]= new DBPreparedHandlerParam(MyDateFormat.getSysDate(request.getParameter("dob")));
-	isOk = (dbObj.queryExecuteUpdate(sql, param2)>0);
-	
-	retry ++;
-}
+  providerDao.saveProvider(p);
+  isOk=true;
 
 if (isOk && org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
 	String[] sites = request.getParameterValues("sites");
 	if (sites!=null)
 		for (int i=0; i<sites.length; i++) {
-			dbObj.queryExecuteUpdate("insert into providersite (provider_no, site_id) values (?,?)", new String[]{param[0], String.valueOf(sites[i])});
-		}	
+			dbObj.queryExecuteUpdate("insert into providersite (provider_no, site_id) values (?,?)", new String[]{p.getProviderNo(), String.valueOf(sites[i])});
+		}
 }
 
 if (isOk) {
-	String proId = param[0];
+	String proId = p.getPractitionerNo();
 	String ip = request.getRemoteAddr();
 	LogAction.addLog(curUser_no, LogConst.ADD, "adminAddUser", proId, ip);
 
 	ProviderBillCenter billCenter = new ProviderBillCenter();
-	billCenter.addBillCenter(request.getParameter("provider_no"),request.getParameter("billcenter")); 
+	billCenter.addBillCenter(request.getParameter("provider_no"),request.getParameter("billcenter"));
 
-//  int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation"));
-//  if (rowsAffected ==1) {
 %>
 <h1><bean:message key="admin.provideraddrecord.msgAdditionSuccess" />
 </h1>
@@ -237,7 +206,7 @@ else {
 	%>
 		<h1><bean:message key="<%=errMsgProviderFormalize%>" /> </h1>
 		Provider # range from : <%=min_value %> To : <%=max_value %>
-	<%		
+	<%
 		}
 	}
   //apptMainBean.closePstmtConn();

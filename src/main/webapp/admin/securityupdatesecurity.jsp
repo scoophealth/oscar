@@ -213,16 +213,11 @@
 		<td><input type="password" name="conPin" value="****" size="6" maxlength="6" /></td>
 	</tr>
 	<tr>
-		<td colspan="2" align="center"><input type="hidden"
-			name="security_no"
-			value="<%=provider.get("security_no")%>"> <input
-			type="hidden" name="dboperation" value="security_update_record">
-		<input type="hidden" name="displaymode" value="Security_Update_Record">
-		<input type="submit" name="subbutton"
-			value='<bean:message key="admin.securityupdatesecurity.btnSubmit"/>'>
-		<input type="button"
-			value="<bean:message key="admin.securityupdatesecurity.btnDelete"/>"
-			onclick="window.location='admincontrol.jsp?keyword=<%=provider.get("security_no")%>&displaymode=Security_Delete&dboperation=security_delete'">
+		<td colspan="2" align="center">
+			<input type="hidden" name="security_no" value="<%=provider.get("security_no")%>">
+			<input type="hidden" name="displaymode" value="Security_Update_Record">
+			<input type="submit" name="subbutton" value='<bean:message key="admin.securityupdatesecurity.btnSubmit"/>'>
+			<input type="button" value="<bean:message key="admin.securityupdatesecurity.btnDelete"/>" onclick="window.location='admincontrol.jsp?keyword=<%=provider.get("security_no")%>&displaymode=Security_Delete'">
 		</td>
 	</tr>
 <%

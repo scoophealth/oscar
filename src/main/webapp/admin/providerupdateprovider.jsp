@@ -8,36 +8,38 @@
 <%@ page import="org.oscarehr.common.model.ClinicNbr"%>
 <%@ page import="org.oscarehr.util.SpringUtils"%>
 <%@ page import="org.oscarehr.common.dao.ClinicNbrDao"%>
+<%@ page import="org.oscarehr.common.model.ProviderData"%>
+<%@ page import="org.oscarehr.common.dao.ProviderDataDao"%>
 <%@ page import="oscar.OscarProperties"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
 <%
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
+  ProviderDataDao providerDao = SpringUtils.getBean(ProviderDataDao.class);
 %>
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
@@ -73,15 +75,15 @@ function setfocus() {
 
 <security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
 	<%
-	isSiteAccessPrivacy=true; 
+	isSiteAccessPrivacy=true;
 	DBHelp dbObj = new DBHelp();
 	String sqlString = "SELECT site_id from providersite where provider_no=" + curProvider_no;
-	ResultSet siters = dbObj.searchDBRecord(sqlString);
+	ResultSet siters = DBHelp.searchDBRecord(sqlString);
 
 	while (siters.next()) {
 		siteIDs.add(siters.getInt("site_id"));
 	}
-	
+
 	siters.close();
 	%>
 </security:oscarSec>
@@ -134,21 +136,21 @@ function setfocus() {
 		<td><input type="text" index="4" name="first_name"
 			value="<%= apptMainBean.getString(rs,"first_name") %>" maxlength="30"></td>
 	</tr>
-	
-	
+
+
 <% if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) { %>
 	<tr>
 		<td>
 		<div align="right"><bean:message key="admin.provider.sitesAssigned" /><font color="red">:</font></div>
 		</td>
 		<td>
-<% 
+<%
 ProviderDao pDao = (ProviderDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("providerDao");
 Set<Site> psites = pDao.getProvider(provider_no).getSites();
 SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
-List<Site> sites = siteDao.getAllActiveSites(); 
+List<Site> sites = siteDao.getAllActiveSites();
 for (int i=0; i<sites.size(); i++) {
-%>		
+%>
 	<input type="checkbox" name="sites" value="<%= sites.get(i).getSiteId() %>" <%= psites.contains(sites.get(i))?"checked='checked'":"" %> <%=((!isSiteAccessPrivacy) || siteIDs.contains(sites.get(i).getSiteId()) ? "" : " disabled ") %>>
 	<%= sites.get(i).getName() %><br />
 <%
@@ -156,41 +158,15 @@ for (int i=0; i<sites.size(); i++) {
 %>
 		</td>
 	</tr>
-<% } %>	
-	
-	
-	
+<% } %>
+
+
+
 	<tr>
 		<td align="right"><bean:message key="admin.provider.formType" />:
 		</td>
 		<td>
-		<% if (vLocale.getCountry().equals("BR")) { %> <select
-			name="provider_type">
-			<option value="receptionist"
-				<% if (apptMainBean.getString(rs,"provider_type").equals("receptionist")) { %>
-				SELECTED <%}%>><bean:message
-				key="admin.provider.formType.optionReceptionist" /></option>
-			<option value="doctor"
-				<% if (apptMainBean.getString(rs,"provider_type").equals("doctor")) { %>
-				SELECTED <%}%>><bean:message
-				key="admin.provider.formType.optionDoctor" /></option>
-			<option value="doctor"><bean:message
-				key="admin.provider.formType.optionNurse" /></option>
-			<option value="doctor"><bean:message
-				key="admin.provider.formType.optionResident" /></option>
-			<option value="admin"
-				<% if (apptMainBean.getString(rs,"provider_type").equals("admin")) { %>
-				SELECTED <%}%>><bean:message
-				key="admin.provider.formType.optionAdmin" /></option>
-			<option value="admin_billing"
-				<% if (apptMainBean.getString(rs,"provider_type").equals("admin_billing")) { %>
-				SELECTED <%}%>><bean:message
-				key="admin.provider.formType.optionAdminBilling" /></option>
-			<option value="billing"
-				<% if (apptMainBean.getString(rs,"provider_type").equals("billing")) { %>
-				SELECTED <%}%>><bean:message
-				key="admin.provider.formType.optionBilling" /></option>
-		</select> <% } else { %> <select name="provider_type">
+			<select name="provider_type">
 			<option value="receptionist"
 				<% if (apptMainBean.getString(rs,"provider_type").equals("receptionist")) { %>
 				SELECTED <%}%>><bean:message
@@ -222,7 +198,6 @@ for (int i=0; i<sites.size(); i++) {
 					key="admin.provider.formType.optionErClerk" /></option>
 			</caisi:isModuleLoad>
 		</select> <!--input type="text" name="provider_type" value="<%= apptMainBean.getString(rs,"provider_type") %>" maxlength="15" -->
-		<% } %>
 		</td>
 	</tr>
 	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
@@ -372,7 +347,7 @@ for (int i=0; i<sites.size(); i++) {
 				%>
 					<option value="<%=tempNbr.getNbrValue()%>" <%=SxmlMisc.getXmlContent(rs.getString("comments"),"xml_p_nbr").startsWith(tempNbr.getNbrValue())?"selected":""%>><%=valueString%></option>
 				<%}%>
-				
+
 				</select>
 				</td>
 			</tr>
@@ -381,7 +356,7 @@ for (int i=0; i<sites.size(); i++) {
 			<td align="right">Bill Center:</td>
 			<td><select name="billcenter">
 				<option value=""></option>
-				<% 
+				<%
               ProviderBillCenter billCenter = new ProviderBillCenter();
               String billCode = "";
               String codeDesc = "";
@@ -389,7 +364,7 @@ for (int i=0; i<sites.size(); i++) {
               String currentBillCode = billCenter.getBillCenter(provider_no);
               for(int i=0;i<billCenter.getAllBillCenter().size();i++){
                   billCode=(String)keys.nextElement();
-                  codeDesc=(String)billCenter.getAllBillCenter().getProperty(billCode);
+                  codeDesc=billCenter.getAllBillCenter().getProperty(billCode);
               %>
 				<option value=<%= billCode %>
 					<%=currentBillCode.compareTo(billCode)==0?"selected":""%>><%= codeDesc%></option>
@@ -398,17 +373,8 @@ for (int i=0; i<sites.size(); i++) {
               %>
 			</select></td>
 		</tr>
-		<% if (vLocale.getCountry().equals("BR")) { %>
-		<tr>
-			<td align="right"><bean:message
-				key="admin.provider.formProviderActivity" />:</td>
-			<td><input type="text" name="provider_activity"
-				value="<%= apptMainBean.getString(rs,"provider_activity") %>"
-				size="5" maxlength="3"></td>
-		</tr>
-		<% } else { %>
+
 		<input type="hidden" name="provider_activity" value="">
-		<% }  %>
 
 
 	</caisi:isModuleLoad>

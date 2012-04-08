@@ -30,8 +30,6 @@ public class ProviderDao extends OscarSuperDao {
 			{"searchmygroupall", "select * from mygroup order by mygroup_no"},
 
 			{"searchmygroupno", "select mygroup_no from mygroup group by mygroup_no order by mygroup_no"},
-            {"deletegroupmember", "delete from mygroup where mygroup_no=? and provider_no=?"},
-            {"savemygroup", "insert into mygroup (mygroup_no,provider_no,last_name,first_name) values(?,?,?,?)" },
             {"updateapptstatus", "update appointment set status=?, lastupdateuser=?, updatedatetime=now() where appointment_no=? "},
             {"updatepreference", "update preference set start_hour=?, end_hour=?, every_min=?, mygroup_no=?, default_servicetype=?, color_template=? where provider_no=? "},
             {"add_preference", "insert into preference (provider_no, start_hour, end_hour, every_min, mygroup_no, default_servicetype, color_template) values (?, ?, ?, ?, ?, ?, ?)"},

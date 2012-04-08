@@ -402,7 +402,6 @@ for (int i=0; i<sites.size(); i++) {
 		<td colspan="2">
 		<div align="center"><%-- not quite sure why we need both dboperation and displaymode set to the same thing, but
                  that's the way I found it so that's the way I'll leave it... --%>
-		<input type="hidden" name="dboperation" value="provider_add_record">
 		<input type="hidden" name="displaymode" value="Provider_Add_Record">
 		<input type="submit" name="submitbtn"
 			value="<bean:message key="admin.provideraddrecordhtm.btnProviderAddRecord"/>">
