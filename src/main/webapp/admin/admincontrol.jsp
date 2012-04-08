@@ -123,10 +123,8 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
   String [][] dbQueries=null;
   if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
   dbQueries=new String[][] {
-    {"provider_add_record", "insert into provider (provider_no,last_name,first_name,provider_type,specialty,team,sex,dob,address,phone,work_phone,email,ohip_no,rma_no,billing_no,hso_no,status,comments,provider_activity,practitionerNo,lastUpdateUser,lastUpdateDate) values(?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,now())" },
     {"provider_search_titlename", "select provider_no,first_name,last_name,specialty,sex,team,phone,status from provider where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
     {"provider_search_detail", "select * from provider where provider_no=?"},
-    {"provider_update_record", "update provider set last_name=?,first_name=?, provider_type=?, specialty=?,team=?,sex=?,dob=?, address=?,phone=?,work_phone=?,email=?,ohip_no=?,rma_no=?,billing_no=?,hso_no=?,status=?, comments=?, provider_activity=?, practitionerNo=?, lastUpdateUser=?, lastUpdateDate=now()  where provider_no=? and provider_no!='super'"},
     {"search_provider_doc", "select * from provider where provider_type='doctor' and status='1' order by last_name"},
 
     {"demographic_search_titlename", "select demographic_no,first_name,last_name,roster_status,sex,year_of_birth,month_of_birth,date_of_birth  from demographic where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
@@ -136,20 +134,12 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"demographic_search_demoaddno", "select demographic_no from demographic where last_name=? and first_name =? and year_of_birth=? and month_of_birth=? and date_of_birth=? and hin=? and ver=?"},
     {"search_lastfirstnamedob", "select demographic_no from demographic where last_name=? and first_name=? and year_of_birth=? and month_of_birth=? and date_of_birth=?"},
 
-    {"security_add_record", "insert into security (user_name,password,provider_no,pin,b_ExpireSet,date_ExpireDate,b_LocalLockSet,b_RemoteLockSet) values(?,?,?,?,?,?,?,?)" },
     {"security_search_titlename", "select * from security where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
     {"security_search_detail", "select * from security where security_no=?"},
-    {"security_delete", "delete from security where security_no=? and provider_no!='super'"},
-    {"security_update_record", "update security set user_name=?,password=?,provider_no=?,pin=?,b_ExpireSet=?,date_ExpireDate=?,b_LocalLockSet=?,b_RemoteLockSet=? where security_no=?" },
-    {"security_update_record2", "update security set user_name=?,password=?,provider_no=?,b_ExpireSet=?,date_ExpireDate=?,b_LocalLockSet=?,b_RemoteLockSet=? where security_no=?" },
-    {"security_update_record3", "update security set user_name=?,provider_no=?,pin=?,b_ExpireSet=?,date_ExpireDate=?,b_LocalLockSet=?,b_RemoteLockSet=? where security_no=?" },
-    {"security_update_record4", "update security set user_name=?,provider_no=?,b_ExpireSet=?,date_ExpireDate=?,b_LocalLockSet=?,b_RemoteLockSet=? where security_no=?" },
 
     {"searchmygroupcount", "select count(provider_no) from mygroup where mygroup_no=? "},
     {"searchmygroupprovider", "select provider_no, last_name, first_name from mygroup where mygroup_no=? "},
     {"searchmygroupall", "select * from mygroup order by mygroup_no"},
-    {"deletegroupmember", "delete from mygroup where mygroup_no=? and provider_no=?"},
-    {"savemygroup", "insert into mygroup (mygroup_no,provider_no,last_name,first_name) values(?,?,?,?)" },
     {"searchprovider", "select provider_no, last_name, first_name from provider where provider_type='doctor' and status='1' order by last_name"},
     {"searchproviderall", "select provider_no, last_name, first_name from provider where status='1' order by last_name"},
 
@@ -167,10 +157,8 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
   };
 	}else{
 	dbQueries=new String[][] {
-    {"provider_add_record", "insert into provider (provider_no,last_name,first_name,provider_type,specialty,team,sex,dob,address,phone,work_phone,email,ohip_no,rma_no,billing_no,hso_no,status,comments,provider_activity,practitionerNo, lastUpdateUser, lastUpdateDate) values(?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,now())" },
     {"provider_search_titlename", "select provider_no,first_name,last_name,specialty,sex,team,phone,status from provider where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
     {"provider_search_detail", "select * from provider where provider_no=?"},
-    {"provider_update_record", "update provider set last_name=?,first_name=?, provider_type=?, specialty=?,team=?,sex=?,dob=?, address=?,phone=?,work_phone=?,email=?,ohip_no=?,rma_no=?,billing_no=?,hso_no=?,status=?, comments=?, provider_activity=?, practitionerNo=?, lastUpdateUser=?, lastUpdateDate=now()  where provider_no=? and provider_no!='super'"},
     {"search_provider_doc", "select * from provider where provider_type='doctor' and status='1' order by last_name"},
 
     {"demographic_search_titlename", "select demographic_no,first_name,last_name,roster_status,sex,year_of_birth,month_of_birth,date_of_birth  from demographic where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
@@ -179,20 +167,12 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"demographic_search_demoaddno", "select demographic_no from demographic where last_name=? and first_name =? and year_of_birth=? and month_of_birth=? and date_of_birth=? and hin=? and ver=?"},
     {"search_lastfirstnamedob", "select demographic_no from demographic where last_name=? and first_name=? and year_of_birth=? and month_of_birth=? and date_of_birth=?"},
 
-    {"security_add_record", "insert into security (user_name,password,provider_no,pin,b_ExpireSet,date_ExpireDate,b_LocalLockSet,b_RemoteLockSet) values(?,?,?,?,?,?,?,?)" },
     {"security_search_titlename", "select * from security where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
     {"security_search_detail", "select * from security where security_no=?"},
-    {"security_delete", "delete from security where security_no=? and provider_no!='super'"},
-    {"security_update_record", "update security set user_name=?,password=?,provider_no=?,pin=?,b_ExpireSet=?,date_ExpireDate=?,b_LocalLockSet=?,b_RemoteLockSet=? where security_no=?" },
-    {"security_update_record2", "update security set user_name=?,password=?,provider_no=?,b_ExpireSet=?,date_ExpireDate=?,b_LocalLockSet=?,b_RemoteLockSet=? where security_no=?" },
-    {"security_update_record3", "update security set user_name=?,provider_no=?,pin=?,b_ExpireSet=?,date_ExpireDate=?,b_LocalLockSet=?,b_RemoteLockSet=? where security_no=?" },
-    {"security_update_record4", "update security set user_name=?,provider_no=?,b_ExpireSet=?,date_ExpireDate=?,b_LocalLockSet=?,b_RemoteLockSet=? where security_no=?" },
 
     {"searchmygroupcount", "select count(provider_no) from mygroup where mygroup_no=? "},
     {"searchmygroupprovider", "select provider_no, last_name, first_name from mygroup where mygroup_no=? "},
     {"searchmygroupall", "select * from mygroup order by mygroup_no"},
-    {"deletegroupmember", "delete from mygroup where mygroup_no=? and provider_no=?"},
-    {"savemygroup", "insert into mygroup (mygroup_no,provider_no,last_name,first_name) values(?,?,?,?)" },
     {"searchprovider", "select provider_no, last_name, first_name from provider where provider_type='doctor' and status='1' order by last_name"},
     {"searchproviderall", "select provider_no, last_name, first_name from provider where status='1' order by last_name"},
 
@@ -223,7 +203,6 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"Security_Search" , "securitysearchresults.jsp"},
     {"Security_Update" , "securityupdatesecurity.jsp"},
     {"Security_Delete" , "securitydelete.jsp"},
-    {"Security_Update_Record" , "securityupdate.jsp"},
     {"Preference_Add_Record" , "preferenceaddpreference.jsp"},
     {"Preference_Search" , "preferencesearchresults.jsp"},
     {"Preference_Delete" , "preferencedelete.jsp"},

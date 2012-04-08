@@ -3,10 +3,16 @@
 	errorPage="errorpage.jsp"%>
 <%@ page import="oscar.log.*"%>
 <%@ page import="oscar.oscarDemographic.data.*"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.PMmodule.model.Admission" %>
+<%@ page import="org.oscarehr.PMmodule.dao.AdmissionDao" %>
+<%@ page import="org.oscarehr.common.dao.WaitingListDao" %>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <% java.util.Properties oscarVariables = oscar.OscarProperties.getInstance(); %>
-
+<%
+	AdmissionDao admissionDao = (AdmissionDao)SpringUtils.getBean("admissionDao");
+	WaitingListDao waitingListDao = (WaitingListDao)SpringUtils.getBean("waitingListDao");
+%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <!--
@@ -198,22 +204,31 @@
                 if( rsProg.next() )
                     progId = rsProg.getString("id");
             }
-            String[] caisiParam = new String[4];
-            caisiParam[0] = demographic.getDemographicNo().toString();
-            caisiParam[1] = progId;
-            caisiParam[2] = request.getParameter("staff");
+            String admissionDate=null;
 
     		String yearTmp = StringUtils.trimToNull(request.getParameter("date_joined_year"));
     		String monthTmp = StringUtils.trimToNull(request.getParameter("date_joined_month"));
     		String dayTmp = StringUtils.trimToNull(request.getParameter("date_joined_date"));
     		if (yearTmp!=null && monthTmp!=null && dayTmp!=null) {
-    			caisiParam[3] = yearTmp+"-"+monthTmp+"-"+dayTmp;
+    			admissionDate = yearTmp+"-"+monthTmp+"-"+dayTmp;
     		} else {
     			GregorianCalendar cal=new GregorianCalendar();
-    			caisiParam[3]=""+cal.get(GregorianCalendar.YEAR)+'-'+(cal.get(GregorianCalendar.MONTH)+1)+'-'+cal.get(GregorianCalendar.DAY_OF_MONTH);
+    			admissionDate=""+cal.get(GregorianCalendar.YEAR)+'-'+(cal.get(GregorianCalendar.MONTH)+1)+'-'+cal.get(GregorianCalendar.DAY_OF_MONTH);
     		}
 
-            apptMainBean.queryExecuteUpdate(caisiParam, "add2caisi_admission");
+    		Admission admission = new Admission();
+    		admission.setClientId(demographic.getDemographicNo());
+    		admission.setProgramId(Integer.parseInt(progId));
+    		admission.setProviderNo(request.getParameter("staff"));
+    		admission.setAdmissionDate(MyDateFormat.getSysDate(admissionDate));
+    		admission.setAdmissionStatus("current");
+    		admission.setTeamId(0);
+    		admission.setTemporaryAdmission(false);
+    		admission.setAdmissionFromTransfer(false);
+    		admission.setDischargeFromTransfer(false);
+    		admission.setRadioDischargeReason("0");
+    		admission.setClientStatusId(0);
+            admissionDao.saveAdmission(admission);
         } //end of new casemgmt
 
         //add democust record for alert
@@ -277,15 +292,18 @@
                 ResultSet rsWL = apptMainBean.queryResults(paramWLPosition, "search_waitingListPosition");
 
                 if(rsWL.next()){
-                    String[] paramWL = new String[6];
-                    paramWL[0] = request.getParameter("list_id");
-                    paramWL[1] = demographic.getDemographicNo().toString();
-                    paramWL[2] = request.getParameter("waiting_list_note");
-                    paramWL[3] = Integer.toString(rsWL.getInt("position") + 1);
-                    paramWL[4] = request.getParameter("waiting_list_referral_date");
-                    paramWL[5] = "N";
-                    if(paramWL[0]!=null && !paramWL[0].equals("") && !paramWL[0].equals("0"))
-                        apptMainBean.queryExecuteUpdate(paramWL, "add2WaitingList");
+
+                    String listId = request.getParameter("list_id");
+                    if(listId != null && !listId.equals("") && !listId.equals("0")) {
+	                    org.oscarehr.common.model.WaitingList waitingList = new org.oscarehr.common.model.WaitingList();
+	                    waitingList.setListId(Integer.parseInt(request.getParameter("list_id")));
+	                    waitingList.setDemographicNo(demographic.getDemographicNo());
+	                    waitingList.setNote(request.getParameter("waiting_list_note"));
+	                    waitingList.setPosition(rsWL.getInt("position")+1);
+	                    waitingList.setOnListSince(MyDateFormat.getSysDate(request.getParameter("waiting_list_referral_date")));
+	                    waitingList.setIsHistory("N");
+	                    waitingListDao.persist(waitingList);
+                    }
                 }
             }
 

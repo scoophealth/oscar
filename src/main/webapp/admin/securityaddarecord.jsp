@@ -31,7 +31,7 @@
 <%
     if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
     String curProvider_no = (String) session.getAttribute("user");
-    
+
     boolean isSiteAccessPrivacy=false;
 %>
 
@@ -89,7 +89,7 @@
 			setfocus('password');
 			return false;
 		}
-		
+
 		<%
 			boolean ignorePasswordReq=Boolean.parseBoolean(op.getProperty("IGNORE_PASSWORD_REQUIREMENTS"));
 			if (!ignorePasswordReq)
@@ -185,7 +185,7 @@
 		<td><select name="provider_no">
 			<option value="">-- select one --</option>
 <%
-	List<Map<String,Object>> resultList ; 
+	List<Map<String,Object>> resultList ;
     if (isSiteAccessPrivacy) {
     	Object[] param =new Object[1];
     	param[0] = curProvider_no;
@@ -254,11 +254,9 @@
 	</tr>
 	<tr>
 		<td colspan="2">
-		<div align="center"><input type="hidden" name="dboperation"
-			value="security_add_record"> <input type="hidden"
-			name="displaymode" value="Security_Add_Record"> <input
-			type="submit" name="subbutton"
-			value='<bean:message key="admin.securityaddarecord.btnSubmit"/>'>
+		<div align="center">
+		<input type="hidden" name="displaymode" value="Security_Add_Record">
+		<input type="submit" name="subbutton" value='<bean:message key="admin.securityaddarecord.btnSubmit"/>'>
 		</div>
 		</td>
 	</tr>
