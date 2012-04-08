@@ -26,8 +26,6 @@
   String [][] dbQueries=new String[][] {
 {"search_templatename", "select encountertemplate_name from encountertemplate where encountertemplate_name like ? order by encountertemplate_name" },
 {"search_template", "select * from encountertemplate where encountertemplate_name = ?" },
-{"delete_template", "delete from encountertemplate where encountertemplate_name = ? " },
-{"add_template", "insert into encountertemplate (encountertemplate_name, encountertemplate_value, creator, createdatetime) values (?,?,?,?)" },
   };
   apptMainBean.doConfigure(dbQueries);
 

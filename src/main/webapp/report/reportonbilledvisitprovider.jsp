@@ -35,6 +35,12 @@
 <%@ page import="java.util.*"%>
 <%@ page import="java.sql.*"%>
 <%@ page import="oscar.oscarBilling.data.BillingONDataHelp"%>
+<%@ page import="org.oscarehr.util.SpringUtils"%>
+<%@ page import="com.quatro.model.security.Secuserrole"%>
+<%@ page import="com.quatro.dao.security.SecuserroleDao"%>
+<%
+	SecuserroleDao secuserroleDao = (SecuserroleDao)SpringUtils.getBean("secuserroleDao");
+%>
 <%
   DBPreparedHandler dbObj = new DBPreparedHandler();
 
@@ -43,19 +49,19 @@
     String number = request.getParameter("providerId");
     String name   = request.getParameter("name" + number);
 
-    String sql = "update secUserRole set role_name='" + name + "' where provider_no='" + number + "'";
-
-    dbObj.queryExecuteUpdate(sql);
-  } 
+    List<Secuserrole> surs = secuserroleDao.findByProviderNo(number);
+    for(Secuserrole sur:surs) {
+    	secuserroleDao.updateRoleName(sur.getId(), name);
+    }
+  }
 
   // save the role list
   if (request.getParameter("submit") != null && request.getParameter("submit").equals("Add Role(s)")) {
     Properties prop  = new Properties();
-    String     query = "select u.provider_no from secUserRole u ";
-    ResultSet  rs    = dbObj.queryResults(query);
 
-    while (rs.next()) {
-      prop.setProperty(Misc.getString(rs,"provider_no"), "");
+    List<Secuserrole> surs=secuserroleDao.findAll();
+    for(Secuserrole sur:surs) {
+    	prop.setProperty(sur.getProviderNo(), "");
     }
 
     for (Enumeration e = request.getParameterNames(); e.hasMoreElements(); ) {
@@ -65,11 +71,11 @@
         continue;
       }
 
-      String value = request.getParameter(temp);
-      String sql   = "insert into secUserRole(provider_no, role_name) values('" + temp.substring(4, temp.length()) + "', '" +
-              value + "')";
+      Secuserrole sur = new Secuserrole();
+      sur.setProviderNo(temp.substring(4, temp.length()));
+      sur.setRoleName(request.getParameter(temp));
+      secuserroleDao.save(sur);
 
-      dbObj.queryExecuteUpdate(sql);
     }
   }
 %>
@@ -263,7 +269,7 @@ function submit(form) {
           for (int i = 0; i < oldRoleList.size(); i += 4) {
             k++;
 %>
-	
+
 	<tr bgcolor="<%=k%2==0?"white":color%>">
 		<form name="mySecform<%=i%>" action="reportonbilledvisitprovider.jsp"
 			method="POST">

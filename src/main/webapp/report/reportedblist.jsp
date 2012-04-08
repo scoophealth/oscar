@@ -1,40 +1,40 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
 <%
   if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
   String curUser_no = (String) session.getAttribute("user");
-  
+
   String strLimit1="0";
-  String strLimit2="1500";  
-  if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");  
+  String strLimit2="1500";
+  if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
 
   String startDate =null, endDate=null;
-  if(request.getParameter("startDate")!=null) startDate = request.getParameter("startDate");  
+  if(request.getParameter("startDate")!=null) startDate = request.getParameter("startDate");
   if(request.getParameter("endDate")!=null) endDate = request.getParameter("endDate");
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*"
@@ -42,6 +42,12 @@
 <jsp:useBean id="reportMainBean" class="oscar.AppointmentMainBean"
 	scope="page" />
 <jsp:useBean id="providerNameBean" class="oscar.Dict" scope="page" />
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.ReportTemp" %>
+<%@ page import="org.oscarehr.common.dao.ReportTempDao" %>
+<%
+	ReportTempDao reportTempDao = SpringUtils.getBean(ReportTempDao.class);
+%>
 <%  if(!reportMainBean.getBDoConfigure()) { %>
 <%@ include file="reportMainBeanConn.jspf"%>
 <% } %>
@@ -98,11 +104,14 @@ function setfocus() {
    int age=0;
    ResultSet rs=null ;
    rs = reportMainBean.queryResults("search_provider");
-   while (rs.next()) { 
+   while (rs.next()) {
       providerNameBean.setDef(reportMainBean.getString(rs,"provider_no"), new String( reportMainBean.getString(rs,"last_name")+","+reportMainBean.getString(rs,"first_name") ));
    }
-    
-   int rowsAffected = reportMainBean.queryExecuteUpdate("%", "delete_reporttemp");
+
+   List<ReportTemp> temps = reportTempDao.findAll();
+   for(ReportTemp temp:temps) {
+		reportTempDao.remove(temp.getId());
+   }
 	rs = reportMainBean.queryResults("search_form_demo");
 
    while (rs.next()) {
@@ -117,15 +126,24 @@ function setfocus() {
 	        param2[1]=rsdemo.getString("content")!=null?(SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_name")!=null?SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_name"):""):"";
 	        param2[2]=rsdemo.getString("provider_no");
 	        param2[3]="<age>"+(SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_age")!=null?SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_age"):"") + "</age>" +  "<gravida>"+(SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_gra")!=null?SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_gra"):"") + "</gravida>" +   "<term>"+(SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_term")!=null?SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_term"):"") + "</term>" +   "<phone>"+(SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_hp")!=null?SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_hp"):"") + "</phone>";
-	        param2[4]=curUser_no; 
-	 	    rowsAffected = reportMainBean.queryExecuteUpdate(itemp,param2,  "add_reporttemp"); //lock the table
-	   } 
-   } 
+	        param2[4]=curUser_no;
+
+	 	    ReportTemp temp = new ReportTemp();
+	 	    temp.setId(new org.oscarehr.common.model.ReportTempPK());
+	 	    temp.getId().setDemographicNo(Integer.parseInt(rsdemo.getString("demographic_no")));
+	 	    temp.getId().setEdb(MyDateFormat.getSysDate(param2[0]));
+	 	    temp.setDemoName(param2[1]);
+	 	    temp.setProviderNo(param2[2]);
+	 	    temp.setAddress(param2[3]);
+	 	    reportTempDao.persist(temp);
+
+	   }
+   }
 
 	String[] param =new String[4];
-	  param[1]=startDate; //"0001-01-01"; 
-	  param[0]=endDate; //"0001-01-01"; 
-	  param[2]=curUser_no; 
+	  param[1]=startDate; //"0001-01-01";
+	  param[0]=endDate; //"0001-01-01";
+	  param[2]=curUser_no;
 	  //param[3]="edb";
    int[] itemp1 = new int[2];
      itemp1[0] = Integer.parseInt(strLimit1);
@@ -133,10 +151,10 @@ function setfocus() {
 	rs = reportMainBean.queryResults(param, itemp1, "search_reporttemp"); //unlock the table
    boolean bodd=false;
    int nItems=0;
-  
+
    while (rs.next()) {
       bodd=bodd?false:true; //for the color of rows
-      nItems++; 
+      nItems++;
 %>
 	<tr bgcolor="<%=bodd?"ivory":"white"%>">
 		<td align="center"><%=nItems%></td>

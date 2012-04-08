@@ -69,7 +69,6 @@ String curUser_no = (String)session.getAttribute("user");
 		}
 
     } else if (request.getParameter("action").startsWith("add")) {
-      	// insert into the role_name
 		if(role_name.equals(request.getParameter("action").substring("add".length()))) {
 			SecRole secRole = new SecRole();
 			secRole.setName(role_name);
