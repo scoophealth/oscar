@@ -1095,7 +1095,6 @@ if(wLReadonly.equals("")){
                  </special:SpecialPlugin>
                  <special:SpecialPlugin moduleName="inboxmnger" reverse="true">
 			<tr>
-				<td><!--th><a href="javascript: function myFunction() {return false; }" onClick="popupPage(500,600,'demographicsummary.jsp?demographic_no=<%=demographic.getDemographicNo()%>')">Patient Summary</a> </th-->
 				<a href="javascript: function myFunction() {return false; }"
 					onClick="popupPage(710,970,'../dms/documentReport.jsp?function=demographic&doctype=lab&functionid=<%=demographic.getDemographicNo()%>&curUser=<%=curProvider_no%>')"><bean:message
 					key="demographic.demographiceditdemographic.msgDocuments" /></a></td>
