@@ -1,23 +1,23 @@
 /*
-* 
+*
 * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
+* This software is published under the GPL GNU General Public License.
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version. *
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+*
 * <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
+*
+* This software was written for
+* Centre for Research on Inner City Health, St. Michael's Hospital,
+* Toronto, Ontario, Canada
 */
 
 package org.oscarehr.PMmodule.model;
@@ -35,7 +35,8 @@ public class SecUserRole implements Serializable {
     private String _roleName;
     private String _providerNo;
     private boolean _active;
-    
+    private String orgCd;
+
 
 
     // constructors
@@ -74,7 +75,7 @@ public class SecUserRole implements Serializable {
         this._roleName = _roleName;
         this.hashCode = Integer.MIN_VALUE;
     }
-    
+
     /**
      * @hibernate.property
      *  column=activeyn
@@ -161,14 +162,14 @@ public class SecUserRole implements Serializable {
     public String toString () {
         return super.toString();
     }
-    
+
     /**
      * @return a csv of the roleNames, null if the list passed in is null., blank if the list passed in is 0 items.
      */
     public static String getRoleNameAsCsv(List<SecUserRole> secUserRoles)
     {
 		if (secUserRoles==null) return(null);
-		
+
 		StringBuilder sb = new StringBuilder();
 
 		for (SecUserRole secUserRole : secUserRoles)
@@ -179,4 +180,14 @@ public class SecUserRole implements Serializable {
 
 		return(sb.toString());
     }
+
+	public String getOrgCd() {
+    	return orgCd;
+    }
+
+	public void setOrgCd(String orgCd) {
+    	this.orgCd = orgCd;
+    }
+
+
 }

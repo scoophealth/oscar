@@ -1,23 +1,23 @@
 /*
-* 
+*
 * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
+* This software is published under the GPL GNU General Public License.
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version. *
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+*
 * <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
+*
+* This software was written for
+* Centre for Research on Inner City Health, St. Michael's Hospital,
+* Toronto, Ontario, Canada
 */
 
 package org.oscarehr.PMmodule.web.admin;
@@ -56,7 +56,7 @@ import org.oscarehr.util.MiscUtils;
 
 public class StaffManagerAction extends BaseAction {
 	private static Logger log = MiscUtils.getLogger();
-	
+
 	private FacilityDao facilityDao=null;
 
     private LogManager logManager;
@@ -64,43 +64,43 @@ public class StaffManagerAction extends BaseAction {
     private ProgramManager programManager;
 
     private ProviderManager providerManager;
-    
+
     private SecRoleDao secRoleDao;
-    
-    
+
+
     public void setSecRoleDao(SecRoleDao secRoleDao) {
     	this.secRoleDao = secRoleDao;
     }
-    
+
 
 	public void setFacilityDao(FacilityDao facilityDao) {
         this.facilityDao = facilityDao;
     }
-	
+
     public ActionForward add_to_facility(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        
+
         int facilityId=Integer.parseInt(request.getParameter("facility_id"));
         String providerId=request.getParameter("id");
 
         ProviderDao.addProviderToFacility(providerId, facilityId);
-        
+
         return edit(mapping,form,request,response);
     }
-        
+
     public ActionForward remove_from_facility(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        
+
         int facilityId=Integer.parseInt(request.getParameter("facility_id"));
         String providerId=request.getParameter("id");
 
         ProviderDao.removeProviderFromFacility(providerId, facilityId);
-        
+
         return edit(mapping,form,request,response);
     }
-        
+
     public void setEditAttributes(HttpServletRequest request, Provider provider) {
 		request.setAttribute("id",provider.getProviderNo());
 		request.setAttribute("providerName",provider.getFormattedName());
-		
+
 		/* programs the provider is already a staff member of */
 		List pp = programManager.getProgramProvidersByProvider(provider.getProviderNo());
 		for(Iterator iter=pp.iterator();iter.hasNext();) {
@@ -113,7 +113,7 @@ public class StaffManagerAction extends BaseAction {
 			p.setProgramName(name);
 		}
 		request.setAttribute("programs",sortProgramProviders(pp));
-		
+
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		List<Program> allPrograms = programManager.getCommunityPrograms(loggedInInfo.currentFacility.getId());
 		List<StaffEditProgramContainer> allProgramsInContainer = new ArrayList<StaffEditProgramContainer>();
@@ -123,42 +123,42 @@ public class StaffManagerAction extends BaseAction {
 		}
 		request.setAttribute("all_programs",allProgramsInContainer);
 	//	request.setAttribute("roles",roleManager.getRoles());
-		request.setAttribute("roles", secRoleDao.findAll(null));
-		
+		request.setAttribute("roles", secRoleDao.findAll());
+
 		List<Facility> allFacilities=facilityDao.findAll(true);
         request.setAttribute("all_facilities",allFacilities);
-        
+
         List<Integer> providerFacilities=ProviderDao.getFacilityIds(provider.getProviderNo());
         request.setAttribute("providerFacilities",providerFacilities);
 	}
-	
+
 	protected List sortProgramProviders(List pps) {
 		Collections.sort(pps,new Comparator() {
 			public int compare(Object o1, Object o2) {
 				ProgramProvider pp1  = (ProgramProvider)o1;
 				ProgramProvider pp2  = (ProgramProvider)o2;
-				
+
 				return pp1.getProgramName().compareTo(pp2.getProgramName());
 			}
 		}
 		);
 		return pps;
 	}
-	
+
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		return list(mapping,form,request,response);
 	}
-	
+
 	public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		//DynaActionForm providerForm = (DynaActionForm)form;
 		//StaffManagerViewFormBean formBean = (StaffManagerViewFormBean)providerForm.get("view");
-		
+
 		//request.setAttribute("providers",providerManager.getProviders());
 		//changed to get all active providers
 		request.setAttribute("providers",providerManager.getActiveProviders());
-		
+
         request.setAttribute("facilities",facilityDao.findAll(true));
-        
+
         //show programs which can be assigned to the provider
         request.setAttribute("programs",programManager.getAllPrograms("Any", "Any", 0));
 
@@ -170,32 +170,32 @@ public class StaffManagerAction extends BaseAction {
 		DynaActionForm providerForm = (DynaActionForm)form;
 
 		String facilityId = (String)providerForm.get("facilityId");
-		if(facilityId==null) facilityId="0"; 
+		if(facilityId==null) facilityId="0";
 		String programId = (String)providerForm.get("programId");
-		if(programId==null) programId="0"; 
+		if(programId==null) programId="0";
         if(facilityId.equals("0")){
         	providerForm.set("programId", "0");
         	programId="0";
         }
-        		
+
 		request.setAttribute("facilities",facilityDao.findAll(true));
         if(facilityId.equals("0")==false) request.setAttribute("programs",programManager.getAllPrograms("Any", "Any", Integer.valueOf(facilityId)));
 
 		request.setAttribute("providers",providerManager.getActiveProviders(facilityId, programId));
-        
+
 		logManager.log("read","full provider list","",request);
 		return mapping.findForward("list");
 	}
-	
-	
+
+
 	public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		DynaActionForm providerForm = (DynaActionForm)form;
 		String id = request.getParameter("id");
-		
+
 		if(this.isCancelled(request)) {
 			return list(mapping,form,request,response);
 		}
-		
+
 		if(id != null) {
 			Provider provider = providerManager.getProvider(id);
 
@@ -209,16 +209,16 @@ public class StaffManagerAction extends BaseAction {
             providerForm.set("provider",provider);
             setEditAttributes(request,provider);
 		}
-		
+
 		return mapping.findForward("edit");
 	}
-	
+
 	public ActionForward assign_team(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		DynaActionForm providerForm = (DynaActionForm)form;
 		Provider provider = (Provider)providerForm.get("provider");
 		ProgramProvider pp = (ProgramProvider)providerForm.get("program_provider");
 		ProgramProvider existingPP = null;
-		
+
 		existingPP = programManager.getProgramProvider(provider.getProviderNo(),String.valueOf(pp.getProgramId()));
 		String teamId = request.getParameter("teamId");
 		ProgramTeam team = programManager.getProgramTeam(teamId);
@@ -226,18 +226,18 @@ public class StaffManagerAction extends BaseAction {
 			existingPP.getTeams().add(team);
 			programManager.saveProgramProvider(existingPP);
 		}
-		
+
 		setEditAttributes(request,providerManager.getProvider(provider.getProviderNo()));
 		providerForm.set("program_provider",new ProgramProvider());
 		return mapping.findForward("edit");
 	}
-	
+
 	public ActionForward remove_team(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		DynaActionForm providerForm = (DynaActionForm)form;
 		Provider provider = (Provider)providerForm.get("provider");
 		ProgramProvider pp = (ProgramProvider)providerForm.get("program_provider");
 		ProgramProvider existingPP = null;
-		
+
 		existingPP = programManager.getProgramProvider(provider.getProviderNo(),String.valueOf(pp.getProgramId()));
 		String teamId = request.getParameter("teamId");
 		if (existingPP != null && teamId != null && teamId.length() > 0) {
@@ -251,18 +251,18 @@ public class StaffManagerAction extends BaseAction {
 			}
 			programManager.saveProgramProvider(existingPP);
 		}
-		
+
 		setEditAttributes(request,providerManager.getProvider(provider.getProviderNo()));
 		providerForm.set("program_provider",new ProgramProvider());
 		return mapping.findForward("edit");
 	}
-	
+
 	public ActionForward assign_role(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		DynaActionForm providerForm = (DynaActionForm)form;
 		Provider provider = (Provider)providerForm.get("provider");
 		ProgramProvider pp = (ProgramProvider)providerForm.get("program_provider");
 		ProgramProvider existingPP = null;
-		
+
 		if( (existingPP = programManager.getProgramProvider(provider.getProviderNo(),String.valueOf(pp.getProgramId())) ) != null) {
 			if(pp.getRoleId().longValue() == 0) {
 				programManager.deleteProgramProvider(String.valueOf(existingPP.getId()));
@@ -274,7 +274,7 @@ public class StaffManagerAction extends BaseAction {
 			pp.setProviderNo(provider.getProviderNo());
 			programManager.saveProgramProvider(pp);
 		}
-		
+
 		setEditAttributes(request,providerManager.getProvider(provider.getProviderNo()));
 		providerForm.set("program_provider",new ProgramProvider());
 		return mapping.findForward("edit");
@@ -284,9 +284,9 @@ public class StaffManagerAction extends BaseAction {
 		DynaActionForm providerForm = (DynaActionForm)form;
 		Provider provider = (Provider)providerForm.get("provider");
 		ProgramProvider pp = (ProgramProvider)providerForm.get("program_provider");
-		
+
 		programManager.deleteProgramProvider(String.valueOf(pp.getId()));
-		
+
 		setEditAttributes(request,providerManager.getProvider(provider.getProviderNo()));
 		providerForm.set("program_provider",new ProgramProvider());
 		return mapping.findForward("edit");

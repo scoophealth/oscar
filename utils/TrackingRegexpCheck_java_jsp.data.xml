@@ -2347,16 +2347,13 @@
         <ViolationValue>/src/main/webapp/admin/providerAddRole.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/providerAddRole.jsp:if(DBHelp.updateDBRecord(sql) ) {</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/providerAddRole.jsp:if(DBHelp.updateDBRecord(sql)) {</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerPrivilege.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerPrivilege.jsp:DBHelp.updateDBRecord(sql);</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerPrivilege.jsp:if(DBHelp.updateDBRecord(sql)){</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/providerRole.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerRole.jsp:DBHelp.updateDBRecord(sql);</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerRole.jsp:if(!"-".equals(roleNew) &amp;&amp; DBHelp.updateDBRecord(sql)){</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerRole.jsp:if(DBHelp.updateDBRecord(sql)){</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerRole.jsp:public void addCaisiPriv(DBHelp dbObj, String roleNew, String provNo, String curUser_no) throws java.sql.SQLException {</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerRole.jsp:public void delCaisiPriv(DBHelp dbObj, String roleOld, String roleNew, String provNo, String curUser_no) throws java.sql.SQLException {</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerRole.jsp:public void updateCaisiPriv(DBHelp dbObj, String roleOld, String roleNew, String provNo, String curUser_no) throws java.sql.SQLException {</ViolationValue>
+        <ViolationValue>/src/main/webapp/admin/providerRole.jsp:ResultSet rs = DBHelp.searchDBRecord(query);</ViolationValue>
+        <ViolationValue>/src/main/webapp/admin/providerRole.jsp:prop.setProperty("first_name", DBHelp.getString(rs,"first_name"));</ViolationValue>
+        <ViolationValue>/src/main/webapp/admin/providerRole.jsp:prop.setProperty("last_name", DBHelp.getString(rs,"last_name"));</ViolationValue>
+        <ViolationValue>/src/main/webapp/admin/providerRole.jsp:prop.setProperty("provider_no", DBHelp.getString(rs,"provider_no")==null?"":DBHelp.getString(rs,"provider_no"));</ViolationValue>
+        <ViolationValue>/src/main/webapp/admin/providerRole.jsp:prop.setProperty("role_id", DBHelp.getString(rs,"id")!=null?DBHelp.getString(rs,"id"):"");</ViolationValue>
+        <ViolationValue>/src/main/webapp/admin/providerRole.jsp:prop.setProperty("role_name", DBHelp.getString(rs,"role_name")!=null?DBHelp.getString(rs,"role_name"):"");</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/provideraddarecord.jsp:DBPreparedHandler dbObj = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/providerupdate.jsp:DBPreparedHandler dbObj = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/providerupdateprovider.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>

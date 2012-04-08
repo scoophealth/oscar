@@ -239,7 +239,7 @@ public class CourseManagerAction extends DispatchAction {
 
 	public static List<SecRole> getRoles()  {
 		SecRoleDao roleDao = (SecRoleDao)SpringUtils.getBean("secRoleDao");
-		List<SecRole> roles = roleDao.findAll(null);
+		List<SecRole> roles = roleDao.findAll();
 		return roles;
 	}
 

@@ -107,7 +107,7 @@ public class IssueAdminAction extends DispatchAction {
             issueAdminForm.set("issueAdmin", issueAdmin);
         }
         //request.setAttribute("caisiRoles", caisiRoleMgr.getRoles());
-	request.setAttribute("caisiRoles", secRoleDao.findAll(null));
+	request.setAttribute("caisiRoles", secRoleDao.findAll());
         return mapping.findForward("edit");
     }
     public ActionForward list(ActionMapping mapping, ActionForm form,

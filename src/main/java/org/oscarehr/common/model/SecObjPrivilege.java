@@ -8,18 +8,24 @@ import javax.persistence.Table;
 @Entity
 @Table(name="secObjPrivilege")
 public class SecObjPrivilege extends AbstractModel<SecObjPrivilegePrimaryKey> {
-	
+
 	@EmbeddedId
 	private SecObjPrivilegePrimaryKey id;
-	
+
 	private String privilege = "|0|";
 	private int priority = 0;
 	@Column(name="provider_no")
 	private String providerNo = null;
-	
+
 	public SecObjPrivilegePrimaryKey getId() {
 		return id;
 	}
+
+
+	public void setId(SecObjPrivilegePrimaryKey id) {
+    	this.id = id;
+    }
+
 
 	public String getPrivilege() {
 		return privilege;
@@ -44,7 +50,7 @@ public class SecObjPrivilege extends AbstractModel<SecObjPrivilegePrimaryKey> {
 	public void setProviderNo(String providerNo) {
 		this.providerNo = providerNo;
 	}
-	
-	
+
+
 
 }

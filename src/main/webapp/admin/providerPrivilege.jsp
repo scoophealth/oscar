@@ -22,9 +22,7 @@
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
-<security:oscarSec roleName="<%=roleName$%>"
-	objectName="_admin,_admin.userAdmin,_admin.torontoRfq" rights="*"
-	reverse="<%=true%>">
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.torontoRfq" rights="*" reverse="<%=true%>">
 	<%response.sendRedirect("../logout.jsp");%>
 </security:oscarSec>
 
@@ -35,52 +33,75 @@
 <%@ page import="oscar.login.*"%>
 <%@ page import="oscar.log.*"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@ page import="org.oscarehr.util.SpringUtils"%>
+<%@ page import="org.oscarehr.common.model.SecRole"%>
+<%@ page import="org.oscarehr.common.dao.SecRoleDao"%>
+<%@ page import="org.oscarehr.common.model.SecPrivilege"%>
+<%@ page import="org.oscarehr.common.dao.SecPrivilegeDao"%>
+<%@ page import="org.oscarehr.common.model.SecObjectName"%>
+<%@ page import="org.oscarehr.common.dao.SecObjectNameDao"%>
+<%@ page import="org.oscarehr.common.model.ProviderData"%>
+<%@ page import="org.oscarehr.common.dao.ProviderDataDao"%>
+<%@ page import="org.oscarehr.common.model.SecObjPrivilege"%>
+<%@ page import="org.oscarehr.common.model.SecObjPrivilegePrimaryKey"%>
+<%@ page import="org.oscarehr.common.dao.SecObjPrivilegeDao"%>
+<%@ page import="org.oscarehr.common.model.RecycleBin"%>
+<%@ page import="org.oscarehr.common.dao.RecycleBinDao"%>
 <%
-//if(session.getAttribute("user") == null )	response.sendRedirect("../logout.jsp");
-String curUser_no = (String)session.getAttribute("user");
-String ip = request.getRemoteAddr();
+	SecRoleDao secRoleDao = SpringUtils.getBean(SecRoleDao.class);
+	SecPrivilegeDao secPrivilegeDao = SpringUtils.getBean(SecPrivilegeDao.class);
+	SecObjectNameDao secObjectNameDao = (SecObjectNameDao)SpringUtils.getBean("secObjectNameDaoJpa");
+	ProviderDataDao providerDataDao = SpringUtils.getBean(ProviderDataDao.class);
+	SecObjPrivilegeDao secObjPrivilegeDao = SpringUtils.getBean(SecObjPrivilegeDao.class);
+	RecycleBinDao recycleBinDao = SpringUtils.getBean(RecycleBinDao.class);
+	String curUser_no = (String)session.getAttribute("user");
+	String ip = request.getRemoteAddr();
 %>
 
 <%
 String msg = "";
-DBHelp dbObj = new DBHelp();
+String sql = null;
+ResultSet rs = null;
+
 // get role from database
 Vector vecRoleName = new Vector();
-String	sql   = "select * from secRole order by role_name";
-ResultSet rs = dbObj.searchDBRecord(sql);
-while (rs.next()) {
-	vecRoleName.add(dbObj.getString(rs,"role_name"));
+
+List<SecRole> secRoles = secRoleDao.findAllOrderByRole();
+for(SecRole secRole:secRoles) {
+	vecRoleName.add(secRole.getName());
 }
+
+
+
 // get rights from database
 Vector vecRightsName = new Vector();
 Vector vecRightsDesc = new Vector();
-sql   = "select * from secPrivilege order by id";
-rs = dbObj.searchDBRecord(sql);
-while (rs.next()) {
-	vecRightsName.add(dbObj.getString(rs,"privilege"));
-	vecRightsDesc.add(dbObj.getString(rs,"description"));
+List<SecPrivilege> secPrivileges = secPrivilegeDao.findAll();
+for(SecPrivilege sp:secPrivileges) {
+	vecRightsName.add(sp.getPrivilege());
+	vecRightsDesc.add(sp.getDescription());
 }
+
 // get objId from database
 Vector vecObjectId = new Vector();
-sql   = "select objectName from secObjectName order by objectName";
-rs = dbObj.searchDBRecord(sql);
-while (rs.next()) {
-	vecObjectId.add(dbObj.getString(rs,"objectName"));
+List<SecObjectName> objectNames = secObjectNameDao.findAll();
+for(SecObjectName objectName:objectNames) {
+	vecObjectId.add(objectName.getId());
 }
-sql   = "select distinct(objectName) from secObjPrivilege order by objectName";
-rs = dbObj.searchDBRecord(sql);
-while (rs.next()) {
-	if(!vecObjectId.contains(dbObj.getString(rs,"objectName")))
-		vecObjectId.add(dbObj.getString(rs,"objectName"));
+
+List<String> distinctObjectNames = secObjectNameDao.findDistinctObjectNames();
+for(String objectName:distinctObjectNames) {
+	if(!vecObjectId.contains(objectName))
+		vecObjectId.add(objectName);
 }
+
 // get provider name from database
 Vector vecProviderName = new Vector();
 Vector vecProviderNo = new Vector();
-sql   = "select provider_no, last_name, first_name from provider order by last_name";
-rs = dbObj.searchDBRecord(sql);
-while (rs.next()) {
-	vecProviderNo.add(dbObj.getString(rs,"provider_no"));
-	vecProviderName.add(dbObj.getString(rs,"last_name") + "," + dbObj.getString(rs,"first_name"));
+List<ProviderData> providers = providerDataDao.findAllOrderByLastName();
+for(ProviderData provider:providers) {
+	vecProviderNo.add(provider.getId());
+	vecProviderName.add(provider.getLastName() + "," + provider.getFirstName());
 }
 
 // add the role list
@@ -111,16 +132,17 @@ if (request.getParameter("submit") != null && request.getParameter("submit").equ
 		String prefix = "priority$" + objectName;
 	    String priority = request.getParameter(prefix);
 	    if(objectName.equals("Name1") )  objectName = request.getParameter("object$Name1").trim();
-	    sql = "insert into secObjPrivilege(roleUserGroup, objectName,privilege,priority,provider_no) values('";
-	    sql += StringEscapeUtils.escapeSql(roleUserGroup) + "', '" + StringEscapeUtils.escapeSql(objectName.trim()) + "','";
-	    sql += privilege + "', " + priority + ",'";
-	    sql += curUser_no + "')";
-	    if(DBHelp.updateDBRecord(sql)){
-	    	msg += "Role/Obj/Rights " + roleUserGroup + "/" + objectName + "/" + privilege + " is added. ";
-		    LogAction.addLog(curUser_no, LogConst.ADD, LogConst.CON_PRIVILEGE, roleUserGroup +"|"+ objectName +"|"+privilege, ip);
-	    } else {
-	    	msg += "Role/Obj/Rights " + roleUserGroup + "/" + objectName + "/" + privilege + " is <font color='red'>NOT</font> added!!! ";
-	    }
+
+	    SecObjPrivilege sop = new SecObjPrivilege();
+	    sop.setId(new SecObjPrivilegePrimaryKey());
+		sop.getId().setRoleUserGroup(roleUserGroup);
+		sop.getId().setObjectName(objectName.trim());
+		sop.setPrivilege(privilege);
+		sop.setPriority(Integer.parseInt(priority));
+		sop.setProviderNo(curUser_no);
+		secObjPrivilegeDao.persist(sop);
+		msg += "Role/Obj/Rights " + roleUserGroup + "/" + objectName + "/" + privilege + " is added. ";
+	    LogAction.addLog(curUser_no, LogConst.ADD, LogConst.CON_PRIVILEGE, roleUserGroup +"|"+ objectName +"|"+privilege, ip);
 	}
 }
 
@@ -133,22 +155,25 @@ if (request.getParameter("buttonUpdate") != null && request.getParameter("button
     String priority   = request.getParameter("priority");
     String provider_no   = request.getParameter("provider_no");
 
-	sql = "select * from secObjPrivilege where roleUserGroup='" + roleUserGroup + "' and objectName='" + objectName + "'";
-	rs = dbObj.searchDBRecord(sql);
-	while (rs.next()) {
-		privilege = dbObj.getString(rs,"privilege");
-		priority = dbObj.getString(rs,"priority");
-		provider_no = dbObj.getString(rs,"provider_no");
-	}
-	sql = "insert into recyclebin (provider_no,updatedatetime,table_name,keyword,table_content) values(";
-	sql += "'" + curUser_no + "',";
-	sql += "'" + UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "',";
-	sql += "'" + "secObjPrivilege" + "',";
-	sql += "'" + roleUserGroup +"|"+ objectName + "',";
-	sql += "'" + "<roleUserGroup>" + roleUserGroup + "</roleUserGroup>" + "<objectName>" + objectName + "</objectName>";
-	sql += "<privilege>" + privilege + "</privilege>" + "<priority>" + priority + "</priority>";
-	sql += "<provider_no>" + provider_no + "</provider_no>" + "')";
-	DBHelp.updateDBRecord(sql);
+    SecObjPrivilege sop = secObjPrivilegeDao.find(new SecObjPrivilegePrimaryKey(roleUserGroup,objectName));
+    if(sop != null) {
+    	privilege = sop.getPrivilege();
+    	priority = String.valueOf(sop.getPriority());
+    	provider_no = sop.getProviderNo();
+    }
+
+    RecycleBin recycleBin = new RecycleBin();
+    recycleBin.setProviderNo(curUser_no);
+    recycleBin.setUpdateDateTime(new java.util.Date());
+    recycleBin.setTableName("secObjPrivilege");
+    recycleBin.setKeyword(roleUserGroup +"|"+ objectName );
+
+	String xml = "<roleUserGroup>" + roleUserGroup + "</roleUserGroup>" + "<objectName>" + objectName + "</objectName>";
+	xml += "<privilege>" + privilege + "</privilege>" + "<priority>" + priority + "</priority>";
+	xml += "<provider_no>" + provider_no + "</provider_no>";
+
+	recycleBin.setTableContent(xml);
+	recycleBinDao.persist(recycleBin);
 
 
     //String privilege = request.getParameter("privilege");
@@ -161,13 +186,19 @@ if (request.getParameter("buttonUpdate") != null && request.getParameter("button
     }
     priority   = request.getParameter("priority");
     provider_no   = curUser_no;
-    sql = "update secObjPrivilege set privilege='" + privilege + "', priority='" + priority + "',provider_no='" + provider_no + "'  where roleUserGroup='" + roleUserGroup + "' and objectName='" + objectName + "'";
-    if(DBHelp.updateDBRecord(sql)){
+
+    sop = secObjPrivilegeDao.find(new SecObjPrivilegePrimaryKey(roleUserGroup,objectName));
+    if(sop != null) {
+    	sop.setProviderNo(provider_no);
+    	sop.setPrivilege(privilege);
+    	sop.setPriority(Integer.parseInt(priority));
+    	secObjPrivilegeDao.merge(sop);
     	msg = "Role/Obj/Rights " + roleUserGroup + "/" + objectName + "/" + privilege + " is updated. ";
 	    LogAction.addLog(curUser_no, LogConst.UPDATE, LogConst.CON_PRIVILEGE, roleUserGroup +"|"+ objectName, ip);
     } else {
     	msg = "Role/Obj/Rights " + roleUserGroup + "/" + objectName + "/" + privilege + " is <font color='red'>NOT</font> updated!!! ";
     }
+
 }
 
 
@@ -180,27 +211,25 @@ if (request.getParameter("submit") != null && request.getParameter("submit").equ
     String priority   = request.getParameter("priority");
     String provider_no   = request.getParameter("provider_no");
 
-	sql = "select * from secObjPrivilege where roleUserGroup='" + roleUserGroup + "' and objectName='" + objectName + "'";
-	rs = dbObj.searchDBRecord(sql);
-	while (rs.next()) {
-		privilege = dbObj.getString(rs,"privilege");
-		priority = dbObj.getString(rs,"priority");
-		provider_no = dbObj.getString(rs,"provider_no");
-	}
-
-    sql = "delete from secObjPrivilege where roleUserGroup='" + roleUserGroup + "' and objectName='" + objectName + "'";
-    if(DBHelp.updateDBRecord(sql)){
+    SecObjPrivilege sop = secObjPrivilegeDao.find(new SecObjPrivilegePrimaryKey(roleUserGroup,objectName));
+    if(sop != null) {
+    	privilege = sop.getPrivilege();
+    	priority = String.valueOf(sop.getPriority());
+    	provider_no = sop.getProviderNo();
+    	secObjPrivilegeDao.remove(sop.getId());
     	msg = "Role/Obj/Rights " + roleUserGroup + "/" + objectName + "/" + privilege + " is deleted. ";
-    	sql = "insert into recyclebin (provider_no,updatedatetime,table_name,keyword,table_content) values(";
-    	sql += "'" + curUser_no + "',";
-    	sql += "'" + UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "',";
-    	sql += "'" + "secObjPrivilege" + "',";
-    	sql += "'" + roleUserGroup +"|"+ objectName + "',";
-    	sql += "'" + "<roleUserGroup>" + roleUserGroup + "</roleUserGroup>" + "<objectName>" + objectName + "</objectName>";
-    	sql += "<privilege>" + privilege + "</privilege>" + "<priority>" + priority + "</priority>";
-    	sql += "<provider_no>" + provider_no + "</provider_no>" + "')";
-		DBHelp.updateDBRecord(sql);
-	    LogAction.addLog(curUser_no, LogConst.DELETE, LogConst.CON_PRIVILEGE, roleUserGroup +"|"+ objectName, ip);
+
+    	RecycleBin recycleBin = new RecycleBin();
+    	recycleBin.setProviderNo(curUser_no);
+    	recycleBin.setUpdateDateTime(new java.util.Date());
+    	recycleBin.setTableName("secObjPrivilege");
+    	recycleBin.setKeyword(roleUserGroup +"|"+ objectName);
+    	String xml = "<roleUserGroup>" + roleUserGroup + "</roleUserGroup>" + "<objectName>" + objectName + "</objectName>";
+    	xml += "<privilege>" + privilege + "</privilege>" + "<priority>" + priority + "</priority>";
+    	xml += "<provider_no>" + provider_no + "</provider_no>";
+    	recycleBin.setTableContent(xml);
+    	recycleBinDao.persist(recycleBin);
+    	LogAction.addLog(curUser_no, LogConst.DELETE, LogConst.CON_PRIVILEGE, roleUserGroup +"|"+ objectName, ip);
     } else {
     	msg = "Role/Obj/Rights " + roleUserGroup + "/" + objectName + "/" + privilege + " is <font color='red'>NOT</font> deleted!!! ";
     }
@@ -266,22 +295,23 @@ String     color       = "#ccCCFF";
 Properties prop        = null;
 Vector<Properties>     vec         = new Vector<Properties>();
 
-String nameWhere = "".equals(keyword)||vecRoleName.contains(keyword)? "roleUserGroup":"objectName";
-String nameValue = keyword + "%";
-String orderBy = nameWhere.equals("objectName")? "objectName, roleUserGroup" : "roleUserGroup, objectName";
-String query = "select * from secObjPrivilege where " + nameWhere + " like '" + nameValue + "' order by " + orderBy;
-rs = dbObj.searchDBRecord(query);
-while (rs.next()) {
+List<SecObjPrivilege> sops = null;
+if("".equals(keyword)||vecRoleName.contains(keyword)) {
+	sops = secObjPrivilegeDao.findByRoleUserGroup(keyword+"%");
+} else {
+	sops = secObjPrivilegeDao.findByObjectName(keyword+"%");
+}
+for(SecObjPrivilege sop:sops) {
 	prop = new Properties();
-	prop.setProperty("roleUserGroup", dbObj.getString(rs,"roleUserGroup"));
-	prop.setProperty("objectName", dbObj.getString(rs,"objectName"));
-	prop.setProperty("privilege", dbObj.getString(rs,"privilege"));
-	prop.setProperty("priority", dbObj.getString(rs,"priority"));
+	prop.setProperty("roleUserGroup",sop.getId().getRoleUserGroup());
+	prop.setProperty("objectName",sop.getId().getObjectName());
+	prop.setProperty("privilege", sop.getPrivilege());
+	prop.setProperty("priority", String.valueOf(sop.getPriority()));
 	vec.add(prop);
 }
+
 %>
-<table width="100%" border="0" bgcolor="ivory" cellspacing="1"
-	cellpadding="1">
+<table width="100%" border="0" bgcolor="ivory" cellspacing="1" cellpadding="1">
 	<tr bgcolor="mediumaquamarine">
 		<th colspan="5" align="left">Role/Privilege List</th>
 	</tr>
@@ -297,9 +327,9 @@ while (rs.next()) {
 		String bgColor = color;
         for (int i = 0; i < vec.size(); i++) {
        		bgColor = bgColor.equals("#EEEEFF")?color:"#EEEEFF";
-       		String roleUser = ((Properties)vec.get(i)).getProperty("roleUserGroup", "");
+       		String roleUser = (vec.get(i)).getProperty("roleUserGroup", "");
        		String roleUserName = vecProviderNo.contains(roleUser)? "<font size='-1'>"+(String)vecProviderName.get(vecProviderNo.indexOf(roleUser))+"</font>": roleUser;
-       		String obj = ((Properties)vec.get(i)).getProperty("objectName", "");
+       		String obj = (vec.get(i)).getProperty("objectName", "");
 %>
 	<form name="myformrow<%=i%>" action="providerPrivilege.jsp"
 		method="POST">
@@ -308,7 +338,7 @@ while (rs.next()) {
 		<td><%= obj %></td>
 		<td align="left">
 		<%
-			String priv = ((Properties)vec.get(i)).getProperty("privilege", "");
+			String priv = (vec.get(i)).getProperty("privilege", "");
 			boolean bSet = true;
             for (int j = 0; j < vecRightsName.size(); j++) {
             	if(bSet&&((String)vecRightsName.get(j)).startsWith("o")) {
@@ -324,7 +354,7 @@ while (rs.next()) {
 			<option value="">-</option>
 			<%			for (int j = 10; j >=0; j--) {%>
 			<option value="<%=j%>"
-				<%= (""+j).equals(((Properties)vec.get(i)).getProperty("priority", ""))?"selected":"" %>><%= j %></option>
+				<%= (""+j).equals((vec.get(i)).getProperty("priority", ""))?"selected":"" %>><%= j %></option>
 			<%			} %>
 		</select></td>
 		<td align="center">
@@ -356,7 +386,7 @@ while (rs.next()) {
 	<%		for (int i = 0; i <= vecObjectId.size(); i++) {
 			if( i!=vecObjectId.size() && ((String)vecObjectId.get(i)).indexOf("$")>=0 ) { continue; }
 %>
-	
+
 	<tr bgcolor="<%=bgColor%>">
 		<td>
 		<%			if(i==0) { %> <select name="roleUserGroup"
@@ -387,12 +417,9 @@ while (rs.next()) {
 %> <input type="checkbox" name="object$<%=objName%>" /> <%= vecObjectId.get(i) %>
 		<%	if(objName.startsWith("_queue.")){
                     String d=null;
-                    sql   = "select description from secObjectName where objectName='"+objName+"'";
-                    rs = dbObj.searchDBRecord(sql);
-
-                    if (rs.next()) {
-                        d=dbObj.getString(rs,"description");
-
+                    SecObjectName son = secObjectNameDao.find(objName);
+                    if(son!=null) {
+                    	d=son.getDescription();
                     }
 
                     if(d==null || d.equalsIgnoreCase("null")||d.trim().length()==0){

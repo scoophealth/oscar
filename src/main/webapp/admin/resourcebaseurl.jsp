@@ -1,59 +1,62 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
 <%
-  
+
 %>
-<%@ page
-	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"
-	errorPage="../appointment/errorpage.jsp"%>
-<jsp:useBean id="baseurlBean" class="oscar.AppointmentMainBean"
-	scope="page" />
-
-<% 
-  String [][] dbQueries=new String[][] { 
-    {"delete_baseurl", "delete from property where name = ?"}, 
-
-    {"add_baseurl", "insert into property (name,value) values('resource_baseurl',?)"}, 
-    {"add_resource", "insert into property (name,value) values('resource',?)"}, 
-  };
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp"%>
+<jsp:useBean id="baseurlBean" class="oscar.AppointmentMainBean" scope="page" />
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.UserProperty" %>
+<%@ page import="org.oscarehr.common.dao.UserPropertyDAO" %>
+<%
+	UserPropertyDAO propertyDao = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
+%>
+<%
+  String [][] dbQueries=new String[][] {};
   String[][] responseTargets=new String[][] {  };
   baseurlBean.doConfigure(dbQueries,responseTargets);
 %>
 <%
   if(request.getParameter("submit_form")!=null && request.getParameter("submit_form").equals(" Save ") ) {
 
-	  int rowsAffected = baseurlBean.queryExecuteUpdate("resource_baseurl", "delete_baseurl");
-	  int rowsAffected1 = baseurlBean.queryExecuteUpdate("resource", "delete_baseurl");
+	  UserProperty up = propertyDao.getProp("resource_baseurl");
+	  if(up != null) {
+		  propertyDao.delete(up);
+	  }
+	  up = propertyDao.getProp("resource");
+	  if(up != null) {
+		  propertyDao.delete(up);
+	  }
 
-    rowsAffected = baseurlBean.queryExecuteUpdate(request.getParameter("resource_baseurl"), "add_baseurl");
-    rowsAffected1 = baseurlBean.queryExecuteUpdate(request.getParameter("resource_baseurl"), "add_resource");
+	  propertyDao.saveProp("resource_baseurl", request.getParameter("resource_baseurl"));
+	  propertyDao.saveProp("resource_baseurl", request.getParameter("resource"));
     out.println("<script language=\"JavaScript\"><!--");
     out.println("self.close();");
-    out.println("//--></SCRIPT>");  
+    out.println("//--></SCRIPT>");
   }
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
