@@ -35,7 +35,7 @@
 	SecRoleDao secRoleDao = (SecRoleDao) SpringUtils.getBean("secRoleDao");
 	
 	List<Program> allPrograms=programDao.getAllActivePrograms();
-	List<SecRole> allRoles=secRoleDao.findAll(null);
+	List<SecRole> allRoles=secRoleDao.findAll();
 %>
 
 <%@include file="/layouts/caisi_html_top.jspf"%>

@@ -45,4 +45,16 @@ public class ProviderDataDao extends AbstractDao<ProviderData> {
         if (results.size()>0) return results.get(0);
         return null;
     }
+
+    public List<ProviderData> findAllOrderByLastName() {
+
+    	String sqlCommand = "select x from ProviderData x order by x.lastName";
+
+        Query query = entityManager.createQuery(sqlCommand);
+
+        @SuppressWarnings("unchecked")
+        List<ProviderData> results = query.getResultList();
+
+        return results;
+    }
 }

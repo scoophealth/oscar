@@ -21,12 +21,12 @@
             <column name="activeyn" precision="1" scale="0" />
         </property>
         <property name="roleName_desc" formula="(select r.description from secRole r where r.role_Name=role_Name)"></property>
-	    <!-- 
-	    <property name="providerName" formula="(select concat(p.last_name, '\, ', p.first_name) from provider p where p.provider_no=provider_no)"></property>
-	    -->
-	    <property name="providerLName" formula="(select p.last_name from provider p where p.provider_no=provider_no)"></property> 
-	    <property name="providerFName" formula="(select p.first_name from provider p where p.provider_no=provider_no)"></property> 
+
+	    <property name="providerLName" formula="(select p.last_name from provider p where p.provider_no=provider_no)"></property>
+	    <property name="providerFName" formula="(select p.first_name from provider p where p.provider_no=provider_no)"></property>
+	    <!--
 	    <property name="lastUpdateDate" column="lastupdatedate"></property>
 		<property name="lastUpdateUser" column="lastupdateuser"></property>
+		-->
     </class>
 </hibernate-mapping>

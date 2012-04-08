@@ -29,6 +29,24 @@
 <%@ page import="oscar.log.*" %>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 <%@ page import="org.springframework.util.StringUtils" %>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.PMmodule.model.Program" %>
+<%@ page import="org.oscarehr.PMmodule.dao.ProgramDao" %>
+<%@ page import="org.oscarehr.PMmodule.model.ProgramProvider" %>
+<%@ page import="org.oscarehr.PMmodule.dao.ProgramProviderDAO" %>
+<%@ page import="org.oscarehr.common.model.SecRole" %>
+<%@ page import="org.oscarehr.common.dao.SecRoleDao" %>
+<%@ page import="com.quatro.model.security.Secuserrole" %>
+<%@ page import="com.quatro.dao.security.SecuserroleDao" %>
+<%@ page import="org.oscarehr.common.model.RecycleBin" %>
+<%@ page import="org.oscarehr.common.dao.RecycleBinDao" %>
+<%
+	ProgramDao programDao = SpringUtils.getBean(ProgramDao.class);
+	SecRoleDao secRoleDao = SpringUtils.getBean(SecRoleDao.class);
+	SecuserroleDao secUserRoleDao = (SecuserroleDao)SpringUtils.getBean("secuserroleDao");
+	RecycleBinDao recycleBinDao = SpringUtils.getBean(RecycleBinDao.class);
+	ProgramProviderDAO programProviderDao = (ProgramProviderDAO) SpringUtils.getBean("programProviderDAO");
+%>
 <%
 if(session.getAttribute("user") == null )
 	response.sendRedirect("../logout.jsp");
@@ -39,7 +57,7 @@ String curUser_no = (String)session.getAttribute("user");
 <%response.sendRedirect("../logout.jsp");%>
 </security:oscarSec>
 
-<%    
+<%
     boolean isSiteAccessPrivacy=false;
 %>
 
@@ -53,50 +71,46 @@ ArrayList<String> users = (ArrayList<String>)session.getServletContext().getAttr
 boolean newCaseManagement = false;
 
 if(!org.oscarehr.common.IsPropertiesOn.isCaisiEnable()) {
-	//This should only temporarily apply to oscar, not caisi.		    	
+	//This should only temporarily apply to oscar, not caisi.
 	//You cannot assign provider to one program "OSCAR" here if you have caisi enabled.
 	//If there is no program called "OSCAR", it will only assign empty program to the provider which is not acceptable.
 	if( users != null && users.size() > 0 )
-    	newCaseManagement = true; 
+    	newCaseManagement = true;
 }
-
-//Caisi roles; Declared in function section below
-roles.put("doctor","1");
-roles.put("locum","1");
-roles.put("nurse","2");
-
 
 String ip = request.getRemoteAddr();
 
 String msg = "";
 DBHelp dbObj = new DBHelp();
 
+String caisiProgram = null;
 
 //get caisi programid for oscar
 if( newCaseManagement ) {
-    String caisiQuery = "select id from program where name = 'OSCAR'";
-    ResultSet result = dbObj.searchDBRecord(caisiQuery);
-    if( result.next() )
-        caisiProgram = result.getString(1);
+	Program p = programDao.getProgramByName("OSCAR");
+	if(p != null) {
+		caisiProgram = String.valueOf(p.getId());
+	}
 }
 
 // get role from database
 Vector vecRoleName = new Vector();
 String	sql;
 String adminRoleName = "";
+
+
+String omit="";
 if (isSiteAccessPrivacy) {
-	//multisites ,remove admin role from dropdown list
-	OscarProperties props = OscarProperties.getInstance();
-	adminRoleName = props.getProperty("multioffice.admin.role.name", "");
-	sql   = "select * from secRole where role_name <> '" + adminRoleName + "' order by role_name";
+	omit = OscarProperties.getInstance().getProperty("multioffice.admin.role.name", "");
 }
-else {
-	sql   = "select * from secRole order by role_name";
+List<SecRole> secRoles = secRoleDao.findAllOrderByRole();
+for(SecRole secRole:secRoles) {
+	if(!secRole.getName().equals(omit)) {
+		vecRoleName.add(secRole.getName());
+	}
+
 }
-ResultSet rs = dbObj.searchDBRecord(sql);
-while (rs.next()) {
-	vecRoleName.add(dbObj.getString(rs,"role_name"));
-}
+
 
 // update the role
 if (request.getParameter("buttonUpdate") != null && request.getParameter("buttonUpdate").length() > 0) {
@@ -105,25 +119,39 @@ if (request.getParameter("buttonUpdate") != null && request.getParameter("button
     String roleOld = request.getParameter("roleOld");
     String roleNew = request.getParameter("roleNew");
 
-    sql = "update secUserRole set role_name='" + roleNew + "' where id='" + roleId + "'";
-    if(!"-".equals(roleNew) && DBHelp.updateDBRecord(sql)){
-    	msg = "Role " + roleNew + " is updated. (" + number + ")";
+    if(!"-".equals(roleNew)) {
+		Secuserrole secUserRole = secUserRoleDao.findById(Integer.parseInt(roleId));
+		if(secUserRole != null) {
+			secUserRole.setRoleName(roleNew);
+			secUserRoleDao.updateRoleName(Integer.parseInt(roleId),roleNew);
+			msg = "Role " + roleNew + " is updated. (" + number + ")";
 
-    	sql = "insert into recyclebin (provider_no,updatedatetime,table_name,keyword,table_content) values(";
-    	sql += "'" + curUser_no + "',";
-    	sql += "'" + UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "',";
-    	sql += "'" + "secUserRole" + "',";
-    	sql += "'" + number +"|"+ roleOld + "',";
-    	sql += "'" + "<provider_no>" + number + "</provider_no>" + "<role_name>" + roleOld + "</role_name>"  + "<role_id>" + roleId + "</role_id>" + "')";
-    	DBHelp.updateDBRecord(sql);
+			RecycleBin recycleBin = new RecycleBin();
+			recycleBin.setProviderNo(curUser_no);
+			recycleBin.setUpdateDateTime(new java.util.Date());
+			recycleBin.setTableName("secUserRole");
+			recycleBin.setKeyword(number +"|"+ roleOld);
+			recycleBin.setTableContent("<provider_no>" + number + "</provider_no>" + "<role_name>" + roleOld + "</role_name>"  + "<role_id>" + roleId + "</role_id>");
+			recycleBinDao.persist(recycleBin);
 
-    	LogAction.addLog(curUser_no, LogConst.UPDATE, LogConst.CON_ROLE, number +"|"+ roleOld +">"+ roleNew, ip);
-            
-            if( newCaseManagement )
-                updateCaisiPriv(dbObj, roleOld, roleNew, number, curUser_no);
-    } else {
-    	msg = "Role " + roleNew + " is <font color='red'>NOT</font> updated!!! (" + number + ")";
+			LogAction.addLog(curUser_no, LogConst.UPDATE, LogConst.CON_ROLE, number +"|"+ roleOld +">"+ roleNew, ip);
+
+			if( newCaseManagement ) {
+                ProgramProvider programProvider = programProviderDao.getProgramProvider(curUser_no, Long.valueOf(caisiProgram));
+                if(programProvider == null) {
+                	programProvider = new ProgramProvider();
+                }
+                programProvider.setProgramId( Long.valueOf(caisiProgram));
+                programProvider.setProviderNo(curUser_no);
+                programProvider.setRoleId(Long.valueOf(secRoleDao.findByName(roleNew).getId()));
+                programProviderDao.saveProgramProvider(programProvider);
+			}
+
+		} else {
+			msg = "Role " + roleNew + " is <font color='red'>NOT</font> updated!!! (" + number + ")";
+		}
     }
+
 }
 
 // add the role
@@ -131,17 +159,28 @@ if (request.getParameter("submit") != null && request.getParameter("submit").equ
     String number = request.getParameter("providerId");
     String roleNew = request.getParameter("roleNew");
 
-    sql = "insert into secUserRole(provider_no, role_name, activeyn) values('" + number + "', '" + StringEscapeUtils.escapeSql(roleNew) + "',1)";
-    if(!"-".equals(roleNew) && DBHelp.updateDBRecord(sql)){
-    	msg = "Role " + roleNew + " is added. (" + number + ")";
-
-    	LogAction.addLog(curUser_no, LogConst.ADD, LogConst.CON_ROLE, number +"|"+ roleNew, ip);
-            
-            if( newCaseManagement )
-                addCaisiPriv(dbObj, roleNew, number, curUser_no);
+    if(!"-".equals(roleNew)) {
+	    Secuserrole secUserRole = new Secuserrole();
+	    secUserRole.setProviderNo(number);
+	    secUserRole.setRoleName(roleNew);
+	    secUserRole.setActiveyn(1);
+	    secUserRoleDao.save(secUserRole);
+	    msg = "Role " + roleNew + " is added. (" + number + ")";
+	    LogAction.addLog(curUser_no, LogConst.ADD, LogConst.CON_ROLE, number +"|"+ roleNew, ip);
+	    if( newCaseManagement ) {
+            ProgramProvider programProvider = programProviderDao.getProgramProvider(curUser_no, Long.valueOf(caisiProgram));
+            if(programProvider == null) {
+            	programProvider = new ProgramProvider();
+            }
+            programProvider.setProgramId( Long.valueOf(caisiProgram));
+            programProvider.setProviderNo(curUser_no);
+            programProvider.setRoleId(Long.valueOf(secRoleDao.findByName(roleNew).getId()));
+            programProviderDao.saveProgramProvider(programProvider);
+	    }
     } else {
     	msg = "Role " + roleNew + " is <font color='red'>NOT</font> added!!! (" + number + ")";
     }
+
 }
 
 // delete the role
@@ -151,118 +190,36 @@ if (request.getParameter("submit") != null && request.getParameter("submit").equ
     String roleOld = request.getParameter("roleOld");
     String roleNew = request.getParameter("roleNew");
 
-    sql = "delete from secUserRole where id='" + roleId + "'";
-    if(DBHelp.updateDBRecord(sql)){
+    Secuserrole secUserRole = secUserRoleDao.findById(Integer.parseInt(roleId));
+    if(secUserRole != null) {
+    	secUserRoleDao.deleteById(secUserRole.getId());
     	msg = "Role " + roleOld + " is deleted. (" + number + ")";
 
-    	sql = "insert into recyclebin (provider_no,updatedatetime,table_name,keyword,table_content) values(";
-    	sql += "'" + curUser_no + "',";
-    	sql += "'" + UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "',";
-    	sql += "'" + "secUserRole" + "',";
-    	sql += "'" + number +"|"+ roleOld + "',";
-    	sql += "'" + "<provider_no>" + number + "</provider_no>" + "<role_name>" + roleOld + "</role_name>" + "')";
-		DBHelp.updateDBRecord(sql);
+    	RecycleBin recycleBin = new RecycleBin();
+		recycleBin.setProviderNo(curUser_no);
+		recycleBin.setUpdateDateTime(new java.util.Date());
+		recycleBin.setTableName("secUserRole");
+		recycleBin.setKeyword(number +"|"+ roleOld);
+		recycleBin.setTableContent("<provider_no>" + number + "</provider_no>" + "<role_name>" + roleOld + "</role_name>");
+		recycleBinDao.persist(recycleBin);
 
 		LogAction.addLog(curUser_no, LogConst.DELETE, LogConst.CON_ROLE, number +"|"+ roleOld, ip);
-            
-            if( newCaseManagement )
-                delCaisiPriv(dbObj, roleOld, roleNew, number, curUser_no);
+
+        if( newCaseManagement ) {
+            ProgramProvider programProvider = programProviderDao.getProgramProvider(curUser_no, Long.valueOf(caisiProgram));
+            if(programProvider != null) {
+            	programProviderDao.deleteProgramProvider(programProvider.getId());
+            }
+        }
     } else {
     	msg = "Role " + roleOld + " is <font color='red'>NOT</font> deleted!!! (" + number + ")";
     }
+
 }
 
 String keyword = request.getParameter("keyword")!=null?request.getParameter("keyword"):"";
 %>
 
-<%!
-        //Caisi role mapping; see top of file for init values
-        private java.util.HashMap<String,String> roles = new HashMap<String,String>();  
-        //caisi program id for oscar
-        private String caisiProgram;// = "10015";
-
-        //update caisi case management provider table so access can be granted and denied
-        public void updateCaisiPriv(DBHelp dbObj, String roleOld, String roleNew, String provNo, String curUser_no) throws java.sql.SQLException {
-            String sql;
-            ResultSet rs;
-            if( roleNew.equals("doctor") || roleNew.equals("nurse") || roleNew.equals("locum") ) {
-                if( roleOld.equals("doctor") || roleOld.equals("nurse") || roleOld.equals("locum") )
-                    sql = "UPDATE program_provider SET role_id = " + roles.get(roleNew) + " WHERE provider_no ='" + provNo + "'";                
-                else {
-                    sql = "SELECT role_id FROM program_provider WHERE provider_no = '" + provNo + "'";
-                    rs = dbObj.searchDBRecord(sql);
-                    if( rs.next() )
-                        sql = "UPDATE program_provider SET role_id = " + roles.get(roleNew) + " WHERE provider_no ='" + provNo + "'";
-                    else
-                        sql = "INSERT INTO program_provider (program_id,provider_no,role_id) Values('" + caisiProgram + "','" + provNo + "'," + roles.get(roleNew) + ")";
-                }
-
-                DBHelp.updateDBRecord(sql);
-            }
-            else {
-                if( roleOld.equals("doctor") || roleOld.equals("nurse") || roleOld.equals("locum") ) {
-                    sql = "SELECT role_name FROM secUserRole WHERE provider_no = '" + provNo + "' AND (role_name = 'doctor' OR role_name = 'nurse' OR role_name = 'locum')";
-                    rs = dbObj.searchDBRecord(sql);
-                    if(!rs.next()) {
-                        sql = "DELETE FROM program_provider WHERE provider_no = '" + provNo + "'";
-                        DBHelp.updateDBRecord(sql);
-                    }
-                }
-            }
-        }
-        
-        //add privelege to caisi casemanagement if needed
-        public void addCaisiPriv(DBHelp dbObj, String roleNew, String provNo, String curUser_no) throws java.sql.SQLException {
-            if( roleNew.equals("doctor") || roleNew.equals("nurse") || roleNew.equals("locum") ) {
-                String sql = "SELECT role_id FROM program_provider WHERE provider_no = '" + provNo + "'";
-                ResultSet rs = dbObj.searchDBRecord(sql);
-                
-                if( rs.next() )
-                    sql = "UPDATE program_provider SET role_id = " + roles.get(roleNew) + " WHERE provider_no ='" + provNo + "'";
-                else
-                    sql = "INSERT INTO program_provider (program_id,provider_no,role_id) Values('" + caisiProgram + "','" + provNo + "'," + roles.get(roleNew) + ")";
-                               
-                DBHelp.updateDBRecord(sql);
-            }
-        }
-        
-        //delete privilege from caisi casemanagement if needed
-        //set privilege to highest still assigned
-        public void delCaisiPriv(DBHelp dbObj, String roleOld, String roleNew, String provNo, String curUser_no) throws java.sql.SQLException {
-            if( (roleNew.equals("doctor") || roleNew.equals("nurse") || roleNew.equals("locum")) && roleNew.equals(roleOld) ) {
-                String sql = "SELECT role_name FROM secUserRole WHERE provider_no = '" + provNo + "' AND (role_name = 'doctor' OR role_name = 'nurse' OR role_name = 'locum')";
-                ResultSet rs = dbObj.searchDBRecord(sql);
-                if(!rs.next()) {
-                    sql = "DELETE FROM program_provider WHERE provider_no = '" + provNo + "'";
-                    DBHelp.updateDBRecord(sql);
-                }
-                else {
-                    sql = "SELECT cr.role_name AS name from secRole cr, program_provider pp WHERE pp.provider_no = '" + provNo + "' AND cr.role_no = pp.role_id";
-                    ResultSet rs1 = dbObj.searchDBRecord(sql);
-                    rs1.next();
-                    String caisiRole = rs1.getString("name");                    
-                    String highRole = null;
-                    do {
-                    	String curRole = rs.getString("role_name");
-                        if( curRole.equals("doctor") || curRole.equals("locum") ) {
-                            highRole = curRole;
-                            break;
-                        }
-                        else if( curRole.equals("nurse") )
-                            highRole = curRole;
-                        
-                    }while( rs.next());
-                    
-                    if( !caisiRole.equals(highRole) ) {
-                        sql = "UPDATE program_provider SET role_id = " + roles.get(highRole) + " WHERE provider_no = '" + provNo + "'";
-                        DBHelp.updateDBRecord(sql);
-                    }
-                    rs1.close();
-                }
-                rs.close();
-            }
-        }
-%>
   <html>
     <head>
       <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -316,7 +273,7 @@ if(temp.length>1) {
 }
 
 
-String query; 
+String query;
 
 if (isSiteAccessPrivacy){
 	//multisites: only select providers have same site with current user
@@ -331,15 +288,15 @@ else {
 	query += " p.provider_no=u.provider_no where p.last_name like '" + lastName + "' and p.first_name like '" + firstName + "' and p.status='1' order by p.first_name, p.last_name, u.role_name";
 }
 
-rs = dbObj.searchDBRecord(query);
+ResultSet rs = DBHelp.searchDBRecord(query);
 Vector<Properties> vec = new Vector<Properties>();
 while (rs.next()) {
 	Properties prop = new Properties();
-	prop.setProperty("provider_no", dbObj.getString(rs,"provider_no")==null?"":dbObj.getString(rs,"provider_no"));
-	prop.setProperty("first_name", dbObj.getString(rs,"first_name"));
-	prop.setProperty("last_name", dbObj.getString(rs,"last_name"));
-	prop.setProperty("role_id", dbObj.getString(rs,"id")!=null?dbObj.getString(rs,"id"):"");
-	prop.setProperty("role_name", dbObj.getString(rs,"role_name")!=null?dbObj.getString(rs,"role_name"):"");
+	prop.setProperty("provider_no", DBHelp.getString(rs,"provider_no")==null?"":DBHelp.getString(rs,"provider_no"));
+	prop.setProperty("first_name", DBHelp.getString(rs,"first_name"));
+	prop.setProperty("last_name", DBHelp.getString(rs,"last_name"));
+	prop.setProperty("role_id", DBHelp.getString(rs,"id")!=null?DBHelp.getString(rs,"id"):"");
+	prop.setProperty("role_name", DBHelp.getString(rs,"role_name")!=null?DBHelp.getString(rs,"role_name"):"");
 	vec.add(prop);
 }
 %>
@@ -369,7 +326,7 @@ while (rs.next()) {
 <%
         String[] colors = { "#ccCCFF", "#EEEEFF" };
         for (int i = 0; i < vec.size(); i++) {
-          	Properties item = (Properties) vec.get(i);
+          	Properties item = vec.get(i);
           	String providerNo = item.getProperty("provider_no", "");
 %>
       <form name="myform<%= providerNo %>" action="providerRole.jsp" method="POST">

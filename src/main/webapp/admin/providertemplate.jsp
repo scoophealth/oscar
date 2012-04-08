@@ -14,11 +14,14 @@
   String curUser_no = (String) session.getAttribute("user");
   String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*,oscar.util.*"
-	errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="page" />
-
+<%@ page import="java.util.*, java.sql.*, oscar.*,oscar.util.*"	errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="page" />
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.EncounterTemplate" %>
+<%@ page import="org.oscarehr.common.dao.EncounterTemplateDao" %>
+<%
+	EncounterTemplateDao encounterTemplateDao = SpringUtils.getBean(EncounterTemplateDao.class);
+%>
 <%
   String [][] dbQueries=new String[][] {
 {"search_templatename", "select encountertemplate_name from encountertemplate where encountertemplate_name like ? order by encountertemplate_name" },
@@ -32,18 +35,20 @@
   int rowsAffected = 0;
   if(request.getParameter("dboperation")!=null && (request.getParameter("dboperation").compareTo(" Save ")==0 ||
       request.getParameter("dboperation").equals("Delete") ) ) {
-	GregorianCalendar now=new GregorianCalendar();
-	String strDateTime=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)+" "
-					+	now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND);
 
-    String[] param = new String[4];
-    param[0] = request.getParameter("name");
-    param[1] = request.getParameter("value");
-    param[2] = request.getParameter("creator");
-    param[3] = strDateTime;
-    rowsAffected = apptMainBean.queryExecuteUpdate(param[0],"delete_template");
-    if(request.getParameter("dboperation")!=null && request.getParameter("dboperation").equals(" Save ") )
-      rowsAffected = apptMainBean.queryExecuteUpdate(param,"add_template");
+    EncounterTemplate et = encounterTemplateDao.find(request.getParameter("name"));
+    if(et != null) {
+    	encounterTemplateDao.remove(et.getId());
+    }
+
+    if(request.getParameter("dboperation")!=null && request.getParameter("dboperation").equals(" Save ") ) {
+    	et = new EncounterTemplate();
+    	et.setEncounterTemplateName( request.getParameter("name"));
+    	et.setEncounterTemplateValue(request.getParameter("value"));
+    	et.setCreatorProviderNo(request.getParameter("creator"));
+    	et.setCreatedDate(new java.util.Date());
+    	encounterTemplateDao.persist(et);
+    }
   }
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -105,13 +110,12 @@ function setfocus() {
 	<form name="edittemplate" method="post" action="providertemplate.jsp">
 	<tr bgcolor=<%=weakcolor%>>
 		<td width="95%" align='right'>
-			<bean:message key="admin.providertemplate.formEdit" /> : 
+			<bean:message key="admin.providertemplate.formEdit" /> :
 			<select name="name">
 			<%
-				EncounterTemplateDao encounterTemplateDao=(EncounterTemplateDao)SpringUtils.getBean("encounterTemplateDao");
 				List<EncounterTemplate> allTemplates=encounterTemplateDao.findAll();
-	  
-				for (EncounterTemplate encounterTemplate : allTemplates) 
+
+				for (EncounterTemplate encounterTemplate : allTemplates)
 				{
 					String templateName=StringEscapeUtils.escapeHtml(encounterTemplate.getEncounterTemplateName());
 					%>
