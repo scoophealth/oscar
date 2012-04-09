@@ -31,6 +31,7 @@ public class ProgramManagerViewFormBean extends ActionForm {
 	public static final String[] tabs = { "General", "Staff", "Teams", "Clients", "Queue", "Access", "Bed Check" , "Client Status", "Service Restrictions"};
 
 	private String tab;
+	private String subtab;
 	private String clientId;
 	private String queueId;
 	private Bed[] reservedBeds;
@@ -62,6 +63,20 @@ public class ProgramManagerViewFormBean extends ActionForm {
 	public void setTab(String tab) {
 		this.tab = tab;
 	}
+
+	/**
+     * @return the subtab
+     */
+    public String getSubtab() {
+    	return subtab;
+    }
+
+	/**
+     * @param subtab the subtab to set
+     */
+    public void setSubtab(String subtab) {
+    	this.subtab = subtab;
+    }
 
 	/**
 	 * @return Returns the clientId.
