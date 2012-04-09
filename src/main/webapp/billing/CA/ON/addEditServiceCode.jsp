@@ -29,15 +29,19 @@
   }
 %>
 <%@ page errorPage="../../../appointment/errorpage.jsp"
-	import="java.util.*,
-                                                           java.sql.*,
-                                                           oscar.*,
-                                                           java.text.*,
-                                                           java.lang.*,
-                                                           java.net.*"%>
+	import="java.util.*,java.sql.*,oscar.*,java.text.*, java.lang.*,java.net.*"%>
+
 <%@ page import="oscar.oscarBilling.ca.on.data.BillingONDataHelp"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ page import="org.oscarehr.util.SpringUtils, org.oscarehr.common.dao.CSSStylesDAO, org.oscarehr.common.model.CssStyle, java.util.List"%>
+<%@ page import="org.oscarehr.common.model.BillingService" %>
+<%@ page import="org.oscarehr.common.dao.BillingServiceDao" %>
+<%@ page import="org.oscarehr.billing.CA.ON.model.BillingPercLimit" %>
+<%@ page import="org.oscarehr.billing.CA.ON.dao.BillingPercLimitDao" %>
+<%
+	BillingServiceDao billingServiceDao = SpringUtils.getBean(BillingServiceDao.class);
+	BillingPercLimitDao billingPercLimitDao = SpringUtils.getBean(BillingPercLimitDao.class);
+%>
 <%
   int serviceCodeLen = 5;
   String msg = "Type in a service code and search first to see if it is available.";
@@ -58,59 +62,67 @@
 
     if(request.getParameter("action").startsWith("edit")) {
       	// update the service code
+
 		String serviceCode = request.getParameter("service_code");
-                String billingservice_no = request.getParameter("billingservice_no");
+        String billingservice_no = request.getParameter("billingservice_no");
 		if(serviceCode.equals(request.getParameter("action").substring("edit".length()))) {
-			String	sql   = "update billingservice set description='" + StringEscapeUtils.escapeSql(request.getParameter("description")) + "', ";
-			sql += " value='" + valuePara + "', ";
-			sql += " percentage='" + request.getParameter("percentage") + "', ";
-			sql += " billingservice_date='" + request.getParameter("billingservice_date") + "', ";
-			sql += " sliFlag=" + "true".equals(request.getParameter("sliFlag")) + ", ";
-                        sql += " termination_date='" + request.getParameter("termination_date") + "' ";
-                        String servicecodeStyle = request.getParameter("servicecode_style");
-                        String styleId;
-                        String[] tmp;
-                        if( !servicecodeStyle.startsWith("-1")) {
-                        	tmp = servicecodeStyle.split(",");
-                        	styleId = tmp[0];
-                        	sql += ", displaystyle=" + styleId + " ";
-                        }
-                        if( billingservice_no == null ) {
-                            sql += " where service_code = '" + serviceCode + "'";
-                        }
-                        else {
-                            sql += " where billingservice_no = " + billingservice_no;
-                        }
-	
-			if(request.getParameter("percentage").length()>1 && request.getParameter("min").length()>1 && request.getParameter("max").length()>1) {
-				String sqlMinMax = "select * from billingperclimit where service_code='" + serviceCode + "'";
-				boolean bAdd = true;
-				ResultSet rs1 = dbObj.searchDBRecord(sqlMinMax);
-				if (rs1.next()) {
-					bAdd = false;
-				}
-				if(bAdd) {
-					sqlMinMax = "insert into billingperclimit (service_code,min,max,effective_date) values('";
-					sqlMinMax += serviceCode + "', '";
-					sqlMinMax += request.getParameter("min") + "', '";
-					sqlMinMax += request.getParameter("max") + "','";
-                                        sqlMinMax += request.getParameter("billingservice_date") + "' )";
-					dbObj.updateDBRecord(sqlMinMax);
-				} else {
-					sqlMinMax = "update billingperclimit set min='";
-					sqlMinMax += request.getParameter("min") + "', max='";
-					sqlMinMax += request.getParameter("max") + "' where service_code='";
-					sqlMinMax += serviceCode + "' and effective_date = '";
-                                        sqlMinMax += request.getParameter("billingservice_date") + "'";                                        
-					dbObj.updateDBRecord(sqlMinMax);
+			BillingService bs = null;
+			if(billingservice_no != null) {
+				bs = billingServiceDao.find(Integer.parseInt(billingservice_no));
+			}else {
+				List<BillingService> bsList = billingServiceDao.findByServiceCode(serviceCode);
+				if(bsList.size()==1) {
+					bs = bsList.get(0);
+				}else if(bsList.size() > 1) {
+					msg = serviceCode + " is <font color='red'>NOT</font> updated. Action failed! Try edit it again." ;
+				    action = "search";
+
 				}
 			}
-			if(dbObj.updateDBRecord(sql)) {
-	  			msg = serviceCode + " is updated.<br>" + "Type in a service code and search first to see if it is available.";
+			if(bs != null) {
+				bs.setDescription(request.getParameter("description"));
+				bs.setValue(valuePara);
+				bs.setPercentage(request.getParameter("percentage"));
+				bs.setBillingserviceDate(MyDateFormat.getSysDate(request.getParameter("billingservice_date")));
+				bs.setSliFlag("true".equals(request.getParameter("sliFlag"))?true:false);
+				bs.setTerminationDate(MyDateFormat.getSysDate(request.getParameter("termination_date")));
+
+				 String servicecodeStyle = request.getParameter("servicecode_style");
+                 String styleId;
+                 String[] tmp;
+                 if( !servicecodeStyle.startsWith("-1")) {
+                 	tmp = servicecodeStyle.split(",");
+                 	bs.setDisplayStyle(Integer.parseInt(tmp[0]));
+                 }
+
+
+
+				if(request.getParameter("percentage").length()>1 && request.getParameter("min").length()>1 && request.getParameter("max").length()>1) {
+					List<BillingPercLimit> percLimits=billingPercLimitDao.findByServiceCode(serviceCode);
+					if(percLimits.size() == 0) {
+						BillingPercLimit percLimit = new BillingPercLimit();
+						percLimit.setService_code(serviceCode);
+						percLimit.setMin(request.getParameter("min"));
+						percLimit.setMax(request.getParameter("max"));
+						percLimit.setEffective_date(MyDateFormat.getSysDate(request.getParameter("billingservice_date")));
+						billingPercLimitDao.persist(percLimit);
+					}else {
+						BillingPercLimit percLimit= billingPercLimitDao.findByServiceCodeAndEffectiveDate(serviceCode,MyDateFormat.getSysDate(request.getParameter("billingservice_date")));
+						if(percLimit != null) {
+							percLimit.setMin(request.getParameter("min"));
+							percLimit.setMax(request.getParameter("max"));
+							billingPercLimitDao.merge(percLimit);
+						}
+					}
+
+				}
+
+				billingServiceDao.merge(bs);
+				msg = serviceCode + " is updated.<br>" + "Type in a service code and search first to see if it is available.";
 	  			action = "search";
 			    prop.setProperty("service_code", serviceCode);
-			} else {
-	  			msg = serviceCode + " is <font color='red'>NOT</font> updated. Action failed! Try edit it again." ;
+			}else {
+				msg = serviceCode + " is <font color='red'>NOT</font> updated. Action failed! Try edit it again." ;
 			    action = "edit" + serviceCode;
 			    prop.setProperty("service_code", serviceCode);
 			    prop.setProperty("description", request.getParameter("description"));
@@ -119,60 +131,54 @@
 			    prop.setProperty("billingservice_date", request.getParameter("billingservice_date"));
 			    prop.setProperty("sliFlag", request.getParameter("sliFlag"));
 			}
+
 		} else {
       		msg = "You can <font color='red'>NOT</font> save the service code - " + serviceCode + ". Please search the service code first.";
   			action = "search";
 		    prop.setProperty("service_code", serviceCode);
 		}
+
     } else if (request.getParameter("action").startsWith("add")) {
       	// insert into the service code
 		String serviceCode = request.getParameter("service_code");
 		if(serviceCode.equals(request.getParameter("action").substring("add".length()))) {
-			String	sql   = "insert into billingservice (service_compositecode, service_code, description, value, percentage, billingservice_date,specialty,region,anaesthesia, termination_date, displaystyle, sliFlag) values ('', '";
-			sql += serviceCode + "', '";
-			sql += request.getParameter("description") + "', '";
-			sql += valuePara + "', '";
-			sql += request.getParameter("percentage") + "', '";
-			sql += request.getParameter("billingservice_date") + "',";
-            sql += "'','ON','00', '" + request.getParameter("termination_date") + "'";
-            
-            String servicecodeStyle = request.getParameter("servicecode_style");
+			BillingService bs = new BillingService();
+			bs.setServiceCompositecode("");
+			bs.setServiceCode(serviceCode);
+			bs.setDescription(request.getParameter("description"));
+			bs.setValue(valuePara);
+			bs.setPercentage(request.getParameter("percentage"));
+			bs.setBillingserviceDate(MyDateFormat.getSysDate(request.getParameter("billingservice_date")));
+			bs.setSpecialty("");
+			bs.setRegion("ON");
+			bs.setAnaesthesia("00");
+			bs.setTerminationDate(MyDateFormat.getSysDate(request.getParameter("termination_date")));
+			bs.setSliFlag("true".equals(request.getParameter("sliFlag"))?true:false);
+
+			String servicecodeStyle = request.getParameter("servicecode_style");
             String styleId;
             String[] tmp;
             if( !servicecodeStyle.startsWith("-1")) {
             	tmp = servicecodeStyle.split(",");
-            	styleId = tmp[0];
-            	sql += "," + styleId + "";
+            	bs.setDisplayStyle(Integer.parseInt(tmp[0]));
             }
-            else {
-            	sql += ",NULL";
-            }
-            sql += "'," + "true".equals(request.getParameter("sliFlag")) + ")";
-            
+            bs.setGstFlag(false);
+
 			if(request.getParameter("percentage").length()>1 && request.getParameter("min").length()>1 && request.getParameter("max").length()>1) {
-				String sqlMinMax = "insert into billingperclimit (service_code, min, max, effective_date) values('";
-				sqlMinMax += serviceCode + "', '";
-				sqlMinMax += request.getParameter("min") + "', '";
-				sqlMinMax += request.getParameter("max") + "', '";
-                                sqlMinMax += request.getParameter("billingservice_date") +"' )";
-				dbObj.updateDBRecord(sqlMinMax);
+				BillingPercLimit bpl = new BillingPercLimit();
+				bpl.setService_code(serviceCode);
+				bpl.setMin(request.getParameter("min"));
+				bpl.setMax(request.getParameter("max"));
+				bpl.setEffective_date(MyDateFormat.getSysDate(request.getParameter("billingservice_date")));
+				billingPercLimitDao.persist(bpl);
 			}
-			if(dbObj.updateDBRecord(sql) ) {
-	  			msg = serviceCode + " is added.<br>" + "Type in a service code and search first to see if it is available.";
-	  			action = "search";
-			    prop.setProperty("service_code", serviceCode);
-			} else {
-	  			msg = serviceCode + " is <font color='red'>NOT</font> added. Action failed! Try edit it again." ;
-			    action = "add" + serviceCode;
-			    prop.setProperty("service_code", serviceCode);
-			    prop.setProperty("description", request.getParameter("description"));
-			    prop.setProperty("value", request.getParameter("value"));
-			    prop.setProperty("percentage", request.getParameter("percentage"));
-			    prop.setProperty("billingservice_date", request.getParameter("billingservice_date"));
-			    prop.setProperty("sliFlag", request.getParameter("sliFlag"));
-			    prop.setProperty("min", request.getParameter("min"));
-			    prop.setProperty("max", request.getParameter("max"));
-			}
+
+			billingServiceDao.persist(bs);
+
+  			msg = serviceCode + " is added.<br>" + "Type in a service code and search first to see if it is available.";
+  			action = "search";
+		    prop.setProperty("service_code", serviceCode);
+
 		} else {
       		msg = "You can <font color='red'>NOT</font> save the service code - " + serviceCode + ". Please search the service code first.";
   			action = "search";
@@ -186,102 +192,87 @@
     if(request.getParameter("service_code") == null || request.getParameter("service_code").length() != serviceCodeLen) {
       msg = "Please type in a right service code.";
     } else {
-        String serviceCode = request.getParameter("service_code");                
-                
-		String	sql   = "select * from billingservice where service_code='" + serviceCode + "'  order by billingservice_date desc";
-		ResultSet rs = dbObj.searchDBRecord(sql);
-                String tmp;
-                int count = 0;
-                
-		while (rs.next()) {
-                    ++count;
-                    codes.put(rs.getString("billingservice_date"), rs.getString("billingservice_no"));
+        String serviceCode = request.getParameter("service_code");
+
+        List<BillingService> bsList = billingServiceDao.findByServiceCode(serviceCode);
+        String tmp;
+        int count = 0;
+		for(BillingService bs:bsList) {
+			count++;
+
+                    codes.put(MyDateFormat.getMyStandardDate(bs.getBillingserviceDate()), bs.getId().toString());
                     if( count == 1 ) {
                         prop.setProperty("service_code", serviceCode);
-                        tmp = rs.getString("description") == null ? "" : rs.getString("description");
-                        prop.setProperty("description", tmp);
-                        tmp = rs.getString("value") == null ? "" : rs.getString("value");
-                        prop.setProperty("value", tmp);
-                        tmp = rs.getString("percentage") == null ? "" : rs.getString("percentage");
-                        prop.setProperty("percentage", tmp);                    
-                        tmp = rs.getString("billingservice_date") == null ? "" : rs.getString("billingservice_date");
-                        prop.setProperty("billingservice_date", tmp);
-                        tmp = rs.getString("sliFlag") == null ? "" : rs.getString("sliFlag");
-                        prop.setProperty("sliFlag", tmp);
-                        tmp = rs.getString("termination_date") == null ? "" : rs.getString("termination_date");
-                        prop.setProperty("termination_date", tmp);
-                        tmp = rs.getString("displaystyle") == null ? "" : rs.getString("displayStyle");
-                        prop.setProperty("displaystyle", tmp);
+                        prop.setProperty("description", oscar.util.StringUtils.noNull(bs.getDescription()));
+                        prop.setProperty("value", oscar.util.StringUtils.noNull(bs.getValue()));
+                        prop.setProperty("percentage", oscar.util.StringUtils.noNull(bs.getPercentage()));
+                        prop.setProperty("billingservice_date", oscar.util.StringUtils.noNull(MyDateFormat.getMyStandardDate(bs.getBillingserviceDate())));
+                        prop.setProperty("sliFlag", oscar.util.StringUtils.noNull(bs.getSliFlag().toString()));
+                        prop.setProperty("termination_date", oscar.util.StringUtils.noNull(MyDateFormat.getMyStandardDate(bs.getTerminationDate())));
+                        if(bs.getDisplayStyle()!=null)
+                        	prop.setProperty("displaystyle", oscar.util.StringUtils.noNull(bs.getDisplayStyle().toString()));
                         msg = "You can edit the service code by clicking 'Save' or add a new entry for this code by clicking 'Add Service Code'";
                         action = "edit" + serviceCode;
                         action2 = "add" + serviceCode;
 
-		    String sqlMinMax = "select * from billingperclimit where service_code='" + serviceCode + "' and effective_date = '" + prop.getProperty("billingservice_date") + "'";;
-			ResultSet rs2 = dbObj.searchDBRecord(sqlMinMax);
-			if (rs2.next()) {
-                            prop.setProperty("min", rs2.getString("min"));
-                            prop.setProperty("max", rs2.getString("max"));
-			}
+					    BillingPercLimit bpl = billingPercLimitDao.findByServiceCodeAndEffectiveDate(serviceCode, MyDateFormat.getSysDate(prop.getProperty("billingservice_date")));
+					    if(bpl!=null) {
+					    	prop.setProperty("min", bpl.getMin());
+                            prop.setProperty("max", bpl.getMax());
+					    }
                     }
                 }
 
-		CSSStylesDAO cssStylesDao = (CSSStylesDAO) SpringUtils.getBean("CSSStylesDAO");
-		styles = cssStylesDao.findAll();
-		
-		if( count == 0 ) {
-		    prop.setProperty("service_code", serviceCode);
-		    msg = "It is a NEW service code. You can add it.";
-		    action = "add" + serviceCode;
-		}
-	}
+				CSSStylesDAO cssStylesDao = (CSSStylesDAO) SpringUtils.getBean("CSSStylesDAO");
+				styles = cssStylesDao.findAll();
+
+				if( count == 0 ) {
+				    prop.setProperty("service_code", serviceCode);
+				    msg = "It is a NEW service code. You can add it.";
+				    action = "add" + serviceCode;
+				}
+			}
   }
   else if( request.getParameter("action") != null && request.getParameter("action").startsWith("single") ) {
       String serviceCode = request.getParameter("service_code");
-      
+
       int serviceNo = Integer.parseInt(request.getParameter("billingservice_no"));
-      String sql = "select * from billingservice where service_code = '" + serviceCode + "'  order by billingservice_date desc";
-      ResultSet rs = dbObj.searchDBRecord(sql);
-      
+
+      BillingService bs = billingServiceDao.find(serviceNo);
+
       String tmp;
     int count = 0;
 
-    while (rs.next()) {
+    if (bs != null) {
         ++count;
-        codes.put(rs.getString("billingservice_date"), rs.getString("billingservice_no"));
-        if( serviceNo == rs.getInt("billingservice_no") ) {
+        codes.put(MyDateFormat.getMyStandardDate(bs.getBillingserviceDate()), bs.getId().toString());
+
+        if( serviceNo == bs.getId().intValue() ) {
             prop.setProperty("service_code", serviceCode);
-            tmp = rs.getString("description") == null ? "" : rs.getString("description");
-            prop.setProperty("description", tmp);
-            tmp = rs.getString("value") == null ? "" : rs.getString("value");
-            prop.setProperty("value", tmp);
-            tmp = rs.getString("percentage") == null ? "" : rs.getString("percentage");
-            prop.setProperty("percentage", tmp);                    
-            tmp = rs.getString("billingservice_date") == null ? "" : rs.getString("billingservice_date");
-            prop.setProperty("billingservice_date", tmp);
-            tmp = rs.getString("sliFlag") == null ? "" : rs.getString("sliFlag");
-            prop.setProperty("sliFlag", tmp);
-            tmp = rs.getString("termination_date") == null ? "" : rs.getString("termination_date");
-            prop.setProperty("termination_date", tmp);
-            tmp = rs.getString("displaystyle") == null ? "" : rs.getString("displayStyle");
-            prop.setProperty("displaystyle", tmp);
+            prop.setProperty("description", oscar.util.StringUtils.noNull(bs.getDescription()));
+            prop.setProperty("value", oscar.util.StringUtils.noNull(bs.getValue()));
+            prop.setProperty("percentage", oscar.util.StringUtils.noNull(bs.getPercentage()));
+            prop.setProperty("billingservice_date", oscar.util.StringUtils.noNull(MyDateFormat.getMyStandardDate(bs.getBillingserviceDate())));
+            prop.setProperty("sliFlag", oscar.util.StringUtils.noNull(bs.getSliFlag().toString()));
+            prop.setProperty("termination_date", oscar.util.StringUtils.noNull(MyDateFormat.getMyStandardDate(bs.getTerminationDate())));
+            if(bs.getDisplayStyle()!=null)
+            	prop.setProperty("displaystyle", oscar.util.StringUtils.noNull(bs.getDisplayStyle().toString()));
             msg = "You can edit the service code by clicking 'Save' or add a new entry for this code by clicking 'Add Service Code'";
             action = "edit" + serviceCode;
             action2 = "add" + serviceCode;
 
-        String sqlMinMax = "select * from billingperclimit where service_code='" + serviceCode + "' and effective_date = '" + prop.getProperty("billingservice_date") + "'";
-
-            ResultSet rs2 = dbObj.searchDBRecord(sqlMinMax);
-            if (rs2.next()) {
-                prop.setProperty("min", rs2.getString("min"));
-                prop.setProperty("max", rs2.getString("max"));
-            }
+		    BillingPercLimit bpl = billingPercLimitDao.findByServiceCodeAndEffectiveDate(serviceCode, MyDateFormat.getSysDate(prop.getProperty("billingservice_date")));
+		    if(bpl!=null) {
+		    	prop.setProperty("min", bpl.getMin());
+                prop.setProperty("max", bpl.getMax());
+		    }
         }
     }
-    
+
     CSSStylesDAO cssStylesDao = (CSSStylesDAO) SpringUtils.getBean("CSSStylesDAO");
 	styles = cssStylesDao.findAll();
   }
-  
+
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -310,7 +301,7 @@
     		var tmp = value.split(",");
     		document.getElementById('displayStyle').value = tmp[1];
       	}
-            
+
 		function setfocus() {
 		  var optionElements = document.getElementById("servicecode_style");
 		  displayStyleText(optionElements.options[optionElements.selectedIndex].value);
@@ -407,11 +398,11 @@
 			ctrl.value = ctrl.value.toUpperCase();
 		}
 
-                
+
                 function fetchBillService(billno) {
                     document.getElementById('action').value="single" + billno;
                     var frm = document.getElementById("baseurl");
-                    frm.submit();                    
+                    frm.submit();
                 }
 //-->
 
@@ -448,9 +439,9 @@
         <%
             if( codes.size() > 1 ) {
                 Set dates = codes.keySet();
-                Iterator<String> i = dates.iterator();    
+                Iterator<String> i = dates.iterator();
                 String date;
-        %>                        
+        %>
         <tr>
             <td align="right"><b>Edit Entry</b></td>
             <td>
@@ -480,10 +471,10 @@
 					for( CssStyle cssStyle: styles ) {
 				%>
 						<option value="<%=cssStyle.getId()+","+cssStyle.getStyle()%>" <%=prop.getProperty("displaystyle", "").equals(cssStyle.getId().toString())?"selected":""%>><%=cssStyle.getName()%></option>
-				<%		
+				<%
 					}
-				
-				%>			
+
+				%>
 			</select>
 			&nbsp;<input id="displayStyle" type="text" style="width:75%;" readonly="readonly"/>
 		</td>
@@ -524,7 +515,7 @@
 		<td align="right"><b>Requires SLI Code</b></td>
 		<% String sliFlagValue = prop.getProperty("sliFlag", "0");
 		   sliFlagValue = sliFlagValue.equals("1") || sliFlagValue.equals("true") ? "checked" : "";
-		%>	
+		%>
 		<td><input type="checkbox" name="sliFlag"
 			id="sliFlag"
 			value="true" <%=sliFlagValue%>>
@@ -539,11 +530,11 @@
 			type="hidden" id="action" name="action" value=''> <input
 			type="submit" name="submitFrm"
 			value="<bean:message key="admin.resourcebaseurl.btnSave"/>"
-			onclick="document.getElementById('action').value='<%=action%>';return onSave();"> 
+			onclick="document.getElementById('action').value='<%=action%>';return onSave();">
                         <%
                         if( !action2.equals("") ) {
-                        %>                        
-                            <input type="submit" name="submitFrm" value="<bean:message key="admin.resourcebaseurl.btnAdd"/>" 
+                        %>
+                            <input type="submit" name="submitFrm" value="<bean:message key="admin.resourcebaseurl.btnAdd"/>"
                             onclick="document.getElementById('action').value='<%=action2%>';return onSave();">
                        <%}%>
                         <input type="button"
