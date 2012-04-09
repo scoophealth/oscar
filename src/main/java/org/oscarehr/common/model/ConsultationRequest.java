@@ -27,18 +27,18 @@ package org.oscarehr.common.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.FetchType;
-import javax.persistence.CascadeType;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -82,14 +82,20 @@ public class ConsultationRequest extends AbstractModel<Integer> implements Seria
 	private String sendTo;
 	private String concurrentProblems;
 	private String urgency;
-	private boolean patientWillBook;
+	private boolean patientWillBook;	
 	
 	@Column(name = "site_name")
 	private String siteName;
         
-        @Temporal(TemporalType.DATE)
-        private Date followUpDate;
-	
+    @Temporal(TemporalType.DATE)
+    private Date followUpDate;
+    @Column(name = "signature_img")
+    private String signatureImg;
+    private String letterheadName;
+    private String letterheadAddress;
+    private String letterheadPhone;
+    private String letterheadFax;
+    
 	@Override
     public Integer getId() {
 	    return(id);
@@ -261,5 +267,45 @@ public class ConsultationRequest extends AbstractModel<Integer> implements Seria
 
     public Integer getSpecialistId() {
         return this.professionalSpecialist.getId();
+    }
+
+	public String getSignatureImg() {
+	    return signatureImg;
+    }
+
+	public void setSignatureImg(String signatureImg) {
+	    this.signatureImg = signatureImg;
+    }
+
+	public String getLetterheadName() {
+	    return letterheadName;
+    }
+
+	public void setLetterheadName(String letterheadName) {
+	    this.letterheadName = letterheadName;
+    }
+
+	public String getLetterheadAddress() {
+	    return letterheadAddress;
+    }
+
+	public void setLetterheadAddress(String letterheadAddress) {
+	    this.letterheadAddress = letterheadAddress;
+    }
+
+	public String getLetterheadPhone() {
+	    return letterheadPhone;
+    }
+
+	public void setLetterheadPhone(String letterheadPhone) {
+	    this.letterheadPhone = letterheadPhone;
+    }
+
+	public String getLetterheadFax() {
+	    return letterheadFax;
+    }
+
+	public void setLetterheadFax(String letterheadFax) {
+	    this.letterheadFax = letterheadFax;
     }
 }

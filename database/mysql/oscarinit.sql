@@ -295,6 +295,11 @@ CREATE TABLE consultationRequests (
   patientWillBook tinyint(1),
   followUpDate date default NULL,
   site_name varchar(255),
+  signature_img VARCHAR(20),
+  letterheadName VARCHAR(20),
+  letterheadAddress TEXT,
+  letterheadPhone VARCHAR(50),
+  letterheadFax VARCHAR(50),
   PRIMARY KEY  (requestId)
 ) ;
 

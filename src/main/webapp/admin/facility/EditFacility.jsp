@@ -85,6 +85,10 @@
                            maxlength="70" styleId="facilityDesc" /></td>
                 </tr>
                 <tr class="b">
+					<td width="20%">Enable Digital Signatures:</td>
+					<td><html:checkbox property="facility.enableDigitalSignatures" /></td>
+				</tr>
+                <tr class="b">
                     <td>Enable Integrator:</td>
                     <td><html:checkbox property="facility.integratorEnabled" /></td>
                 </tr>

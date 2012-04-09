@@ -37,7 +37,7 @@ public class PharmacyInfo extends AbstractModel<Integer> {
 
 	private String phone2;
 
-	private String fax;
+	public String fax;
 
 	private String email;
 

@@ -60,7 +60,6 @@ import org.apache.struts.action.ActionMessages;
 import org.caisi.dao.TicklerDAO;
 import org.caisi.model.Tickler;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
@@ -84,6 +83,7 @@ import org.oscarehr.casemgmt.web.CaseManagementViewAction.IssueDisplay;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean;
 import org.oscarehr.common.dao.AppointmentArchiveDao;
 import org.oscarehr.common.dao.BillingServiceDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Demographic;
@@ -2617,7 +2617,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		}
 		printer.finish();
 
-		List<String> pdfDocs = new ArrayList<String>();
+		List<Object> pdfDocs = new ArrayList<Object>();
 		pdfDocs.add(fileName);
 
 		if (request.getParameter("printLabs") != null && request.getParameter("printLabs").equalsIgnoreCase("true")) {

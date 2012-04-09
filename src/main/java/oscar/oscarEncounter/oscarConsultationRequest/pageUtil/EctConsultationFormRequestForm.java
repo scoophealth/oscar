@@ -117,7 +117,7 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 	//multi-site
 	String siteName;
 
-
+	private String signatureImg;
 	private String patientFirstName;
 	private String patientLastName;
 	private String patientAddress;
@@ -137,6 +137,8 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 	private boolean eReferral = false;
 	private Integer hl7TextMessageId;
 
+	private String letterheadName, letterheadAddress, letterheadPhone, letterheadFax;
+	
 	public String getProfessionalSpecialistName() {
 		return (StringUtils.trimToEmpty(professionalSpecialistName));
 	}
@@ -570,6 +572,46 @@ public final class EctConsultationFormRequestForm extends ActionForm {
   	public void setSiteName(String str) {
 	  	this.siteName = str;
   	}
+
+	public String getSignatureImg() {
+	    return signatureImg;
+    }
+
+	public void setSignatureImg(String signatureImg) {
+	    this.signatureImg = signatureImg;
+    }
+
+	public String getLetterheadName() {
+	    return letterheadName;
+    }
+
+	public void setLetterheadName(String letterheadName) {
+	    this.letterheadName = letterheadName;
+    }
+
+	public String getLetterheadAddress() {
+	    return letterheadAddress;
+    }
+
+	public void setLetterheadAddress(String letterheadAddress) {
+	    this.letterheadAddress = letterheadAddress;
+    }
+
+	public String getLetterheadPhone() {
+	    return letterheadPhone;
+    }
+
+	public void setLetterheadPhone(String letterheadPhone) {
+	    this.letterheadPhone = letterheadPhone;
+    }
+
+	public String getLetterheadFax() {
+	    return letterheadFax;
+    }
+
+	public void setLetterheadFax(String letterheadFax) {
+	    this.letterheadFax = letterheadFax;
+    }
   
 
 }

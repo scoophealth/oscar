@@ -52,6 +52,7 @@ package oscar.util;
  */
 
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -85,21 +86,38 @@ public class ConcatPDF {
      * (This was an example known as PdfCopy.java)
      * @param args the command line arguments
      */
-    public static void concat(List<String> alist,OutputStream out) {
+    public static void concat(List<Object> alist,OutputStream out) {
         
         try {
             int pageOffset = 0;
             ArrayList master = new ArrayList();
             int f =0;
-            String outFile = "/Users/jay/test.pdf";
             Document document = null;
             PdfCopy  writer = null;
+            boolean fileAsStream = false;
+			PdfReader reader = null;
+			String name = "";
+			
             MiscUtils.getLogger().debug("Size of list = "+alist.size());
+            
             while (f < alist.size()) {
-                // we create a reader for a certain document
-                String name = alist.get(f);
+            	// we create a reader for a certain document
+    			Object o = alist.get(f);
+
+    			if (o instanceof InputStream) {
+    				name = "";
+    				fileAsStream = true;
+    			} else {
+    				name = (String) alist.get(f);
+    				fileAsStream = false;
+    			}
+    			
+    			if (fileAsStream) {
+    				reader = new PdfReader((InputStream) alist.get(f));
+    			} else {
+    				reader = new PdfReader(name);
+    			}
                 
-                PdfReader reader = new PdfReader(name);
                 reader.consolidateNamedDestinations();
                 // we retrieve the total number of pages
                 int n = reader.getNumberOfPages();

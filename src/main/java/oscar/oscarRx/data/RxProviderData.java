@@ -24,6 +24,9 @@
  */
 package oscar.oscarRx.data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.UserPropertyDAO;
@@ -36,15 +39,25 @@ public class RxProviderData {
 	private ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 	private UserPropertyDAO userPropertyDao = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
 	private ClinicDAO clinicDao = (ClinicDAO)SpringUtils.getBean("clinicDAO");
-
+	
+	public List<Provider> getAllProviders() {
+		List<org.oscarehr.common.model.Provider> providers = providerDao.getActiveProviders();
+		ArrayList<Provider> results = new ArrayList<Provider>();
+		for (org.oscarehr.common.model.Provider p : providers) {
+			results.add(convertProvider(p));
+		}
+		return results;
+	}
+	
     public Provider getProvider(String providerNo) {
-        Provider provider = null;
-
-
+        return convertProvider(providerDao.getProvider(providerNo));
+    }
+    
+    public Provider convertProvider(org.oscarehr.common.model.Provider p) {
     	String providerClinicPhone=null, surname=null, firstName=null,  clinicName=null, clinicAddress=null, clinicCity=null, clinicPostal=null, clinicPhone=null, clinicFax=null, clinicProvince=null, practitionerNo=null;
 
         //Get Provider from database
-        org.oscarehr.common.model.Provider p = providerDao.getProvider(providerNo);
+        
         if(p != null) {
         	surname = p.getLastName();
         	firstName = p.getFirstName();
@@ -55,7 +68,7 @@ public class RxProviderData {
         	providerClinicPhone = p.getWorkPhone();
         }
 
-        UserProperty prop = userPropertyDao.getProp(providerNo, "faxnumber");
+        UserProperty prop = userPropertyDao.getProp(p.getProviderNo(), "faxnumber");
         if(prop != null) {
         	clinicFax = prop.getValue();
         }
@@ -76,12 +89,8 @@ public class RxProviderData {
 
         if((clinicPhone.length()>15) && (providerClinicPhone != null && !providerClinicPhone.equals(""))) clinicPhone = providerClinicPhone;
 
-        provider = new Provider(providerNo, surname, firstName, clinicName, clinicAddress,
+        return new Provider(p.getProviderNo(), surname, firstName, clinicName, clinicAddress,
                 clinicCity, clinicPostal, clinicPhone, clinicFax, clinicProvince, practitionerNo);
-
-
-
-        return provider;
     }
 
     public class Provider{
