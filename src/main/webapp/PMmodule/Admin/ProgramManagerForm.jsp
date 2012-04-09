@@ -8,6 +8,7 @@
 <html:form action="/PMmodule/ProgramManager">
 
 	<html:hidden property="view.tab" />
+	<html:hidden property="view.subtab" />
 	<input type="hidden" name="id"
 		value="<c:out value="${requestScope.id}"/>" />
 	<input type="hidden" name="method" value="edit" />
@@ -19,6 +20,13 @@
 				function clickTab(name) {
 					document.programManagerForm.method.value='edit';
 					document.programManagerForm.elements['view.tab'].value=name;
+					document.programManagerForm.elements['view.subtab'].value=name;
+					document.programManagerForm.submit();
+				}
+				function clickTab2(tabName, subtabName) {
+					document.programManagerForm.method.value='edit';
+					document.programManagerForm.elements['view.tab'].value=tabName;
+					document.programManagerForm.elements['view.subtab'].value=subtabName;
 					document.programManagerForm.submit();
 				}
 			</script>
@@ -33,6 +41,7 @@
 			<div class="tabs">
 			<%
 					String selectedTab = request.getParameter("view.tab");
+					String selectedSubtab = request.getParameter("view.subtab");
 					/*
 					if (selectedTab == null || selectedTab.trim().equals("")) {
 						selectedTab = ProgramManagerViewFormBean.tabs[0];
@@ -148,10 +157,15 @@
 				<jsp:include page="/PMmodule/Admin/ProgramEdit/general.jsp" />
 			</security:oscarSec>
 
-			<%} else { %>
-			<jsp:include
-				page='<%="/PMmodule/Admin/ProgramEdit/" + selectedTab.toLowerCase().replaceAll(" ","_") + ".jsp"%>' />
-			<%} %>
+			<%} else {
+				if (selectedSubtab != null && !selectedTab.equals(selectedSubtab)) { %>
+				<jsp:include
+					page='<%="/PMmodule/Admin/ProgramEdit/" + selectedSubtab.toLowerCase().replaceAll(" ","_") + ".jsp"%>' />
+				<% } else { %>
+					<jsp:include
+						page='<%="/PMmodule/Admin/ProgramEdit/" + selectedTab.toLowerCase().replaceAll(" ","_") + ".jsp"%>' />
+				<%} 
+			}%>
 		</c:when>
 		<c:otherwise>
 			<%@ include file="/common/messages.jsp"%>

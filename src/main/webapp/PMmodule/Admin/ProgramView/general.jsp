@@ -27,7 +27,7 @@
 	<tr>
 		<th title="Programs">General Information</th>
 		<th title="Templates" class="nofocus">
-			<a onclick="javascript:clickTab('Vacancy Templates');return false;" href="javascript:void(0)">Vacancy Templates</a>
+			<a onclick="javascript:clickTab2('General','Vacancy Templates');return false;" href="javascript:void(0)">Vacancy Templates</a>
 		</th>
 	</tr>
 </table>

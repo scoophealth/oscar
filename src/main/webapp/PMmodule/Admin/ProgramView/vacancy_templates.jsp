@@ -26,7 +26,7 @@
 <table cellpadding="3" cellspacing="0" border="0">
 	<tr>
 		<th title="Programs" class="nofocus">
-			<a onclick="javascript:clickTab('General');return false;" href="javascript:void(0)">General Information</a>
+			<a onclick="javascript:clickTab2('General','General');return false;" href="javascript:void(0)">General Information</a>
 		</th>
 		<th title="Templates">Vacancy Templates</th>
 	</tr>
