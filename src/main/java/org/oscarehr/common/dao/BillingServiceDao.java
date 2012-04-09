@@ -39,7 +39,7 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 	public BillingServiceDao() {
 		super(BillingService.class);
 	}
-	
+
 	public boolean codeRequiresSLI(String code) {
 		Query query = entityManager.createQuery("select bs  from BillingService bs where bs.serviceCode like (:code) and sliFlag = TRUE");
 		query.setParameter("code", code + "%");
@@ -59,6 +59,14 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		return list;
 	}
 
+	public List<BillingService> findByServiceCode(String code) {
+		Query query = entityManager.createQuery("select bs  from BillingService bs where bs.serviceCode = ? order by bs.billingserviceDate desc");
+		query.setParameter(1, code);
+
+		@SuppressWarnings("unchecked")
+		List<BillingService> list = query.getResultList();
+		return list;
+	}
 	public List<BillingService> findBillingCodesByCode(String code, String region, int order) {
 		return findBillingCodesByCode(code, region, new Date(), order);
 	}
@@ -195,13 +203,13 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 			return null;
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
     public List<BillingService> findBillingCodesByFontStyle(Integer styleId) {
 		String sql = "select bs from BillingService bs where bs.displayStyle = ?";
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1, styleId);
-		
+
 		return query.getResultList();
 	}
 
