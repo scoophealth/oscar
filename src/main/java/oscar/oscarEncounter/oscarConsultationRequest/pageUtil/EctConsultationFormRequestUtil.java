@@ -198,7 +198,15 @@ public class EctConsultationFormRequestUtil {
                 allergies = oscar.Misc.getString(rs, "allergies");
                 sendTo = oscar.Misc.getString(rs, "sendTo");
                 status = oscar.Misc.getString(rs, "status");
-                appointmentNotes = oscar.Misc.getString(rs, "statusText");
+                
+                letterheadName = oscar.Misc.getString(rs, "letterheadName");
+                letterheadAddress = oscar.Misc.getString(rs, "letterheadAddress");
+                letterheadPhone = oscar.Misc.getString(rs, "letterheadPhone");
+                letterheadFax = oscar.Misc.getString(rs, "letterheadFax");
+
+                signatureImg = oscar.Misc.getString(rs, "signature_img");
+                
+                appointmentNotes = oscar.Misc.getString(rs, "statusText");                
                 if (appointmentNotes == null || appointmentNotes.equals("null")) {
                     appointmentNotes = new String();
                 }
@@ -420,4 +428,13 @@ public class EctConsultationFormRequestUtil {
     public String pwb;
     public String mrp = "";
     public String siteName;
+    public String signatureImg;
+    
+    public String letterheadName;
+    public String letterheadAddress;
+    public String letterheadPhone;
+    public String letterheadFax;
+    
+
+	
 }

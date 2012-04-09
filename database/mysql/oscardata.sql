@@ -1343,8 +1343,6 @@ INSERT INTO security(security_no,user_name,password,provider_no,pin) VALUES (128
 -- Dumping data for table 'serviceSpecialists'
 --
 
-INSERT INTO serviceSpecialists VALUES (53,297);
-
 --
 -- Dumping data for table 'specialistsJavascript'
 --

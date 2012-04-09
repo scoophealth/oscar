@@ -232,4 +232,11 @@ public class OscarProperties extends Properties {
 		return faxEnabled() || isRxFaxEnabled() || isConsultationFaxEnabled() || isRichEFormFaxEnabled();
 	}
 	
+	public boolean isRxSignatureEnabled() {
+		return isRxFaxEnabled() || isPropertyActive("rx_signature_enabled");
+	}
+	
+	public boolean isConsultationSignatureEnabled() {
+		return isPropertyActive("consultation_signature_enabled");
+	}
 }

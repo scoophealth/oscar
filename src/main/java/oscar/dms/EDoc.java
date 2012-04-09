@@ -354,7 +354,6 @@ public class EDoc extends TagObject implements Comparable {
 		else if (docPublic == null || docPublic.length() == 0) this.docPublic = "0";
 		else this.docPublic = docPublic;
 	}
-
 	/**
 	 *Returns true if document a PDF.
 	 */
@@ -365,6 +364,23 @@ public class EDoc extends TagObject implements Comparable {
 		return false;
 	}
 
+	/**
+	 * Returns true if this document's content type is that of an image.	
+	 * @return true if document is an image and false otherwise
+	 */
+	public boolean isImage() {
+		return this.contentType != null && !isPDF() && this.contentType.toLowerCase().contains("image/");
+	}
+	
+	/**
+	 * Returns true if this document is printable to PDF format.
+	 * @return true if this document is printable to PDF format and false otherwise
+	 */
+	public boolean isPrintable() {		
+		// At this time only PDF  and image files are supported.
+		return isPDF() || isImage();
+	}
+	
 	public String getObservationDate() {
 		return observationDate;
 	}

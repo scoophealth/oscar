@@ -84,7 +84,7 @@
 	<bean id="defaultRoleAccessDAO" class="org.oscarehr.PMmodule.dao.DefaultRoleAccessDAO" autowire="byName" />
 	<bean id="programClientStatusDAO" class="org.oscarehr.PMmodule.dao.ProgramClientStatusDAO" autowire="byName" />
 	<bean id="programTeamDAO" class="org.oscarehr.PMmodule.dao.ProgramTeamDAO" autowire="byName" />
-	<bean id="providerDefaultProgramDao" class="org.caisi.dao.ProviderDefaultProgramDao" autowire="byName" />
+	<bean id="providerDefaultProgramDao" class="org.caisi.dao.ProviderDefaultProgramDao" autowire="byName" />		
 	<bean id="bedProgramDao" class="org.caisi.dao.BedProgramDao" autowire="byName" />
 	<bean id="demographicDao" class="org.oscarehr.common.dao.DemographicDao" autowire="byName" />
 	<bean id="secUserRoleDao" class="org.oscarehr.PMmodule.dao.SecUserRoleDao" autowire="byName" />

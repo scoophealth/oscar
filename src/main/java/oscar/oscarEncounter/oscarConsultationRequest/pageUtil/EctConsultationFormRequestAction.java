@@ -55,21 +55,24 @@ import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.OruR01;
+import org.oscarehr.common.hl7.v2.oscar_to_oscar.OruR01.ObservationData;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.RefI12;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.SendingUtils;
-import org.oscarehr.common.hl7.v2.oscar_to_oscar.OruR01.ObservationData;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.ConsultationRequest;
 import org.oscarehr.common.model.ConsultationRequestExt;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.DigitalSignature;
 import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.DigitalSignatureUtils;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
 
+import oscar.OscarProperties;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
 import oscar.oscarLab.ca.all.pageUtil.LabPDFCreator;
@@ -108,20 +111,39 @@ public class EctConsultationFormRequestAction extends Action {
 
 		String requestId = "";
 
-                ConsultationRequestDao consultationRequestDao=(ConsultationRequestDao)SpringUtils.getBean("consultationRequestDao");
-                ConsultationRequestExtDao consultationRequestExtDao=(ConsultationRequestExtDao)SpringUtils.getBean("consultationRequestExtDao");
-                ProfessionalSpecialistDao professionalSpecialistDao=(ProfessionalSpecialistDao)SpringUtils.getBean("professionalSpecialistDao");
-                
-                String[] format = new String[] {"yyyy-MM-dd","yyyy/MM/dd"};
+		boolean newSignature = request.getParameter("newSignature") != null && request.getParameter("newSignature").equalsIgnoreCase("true");
+		String signatureId = "";
+		String signatureImg = frm.getSignatureImg();
+		
+		
+        ConsultationRequestDao consultationRequestDao=(ConsultationRequestDao)SpringUtils.getBean("consultationRequestDao");
+        ConsultationRequestExtDao consultationRequestExtDao=(ConsultationRequestExtDao)SpringUtils.getBean("consultationRequestExtDao");
+        ProfessionalSpecialistDao professionalSpecialistDao=(ProfessionalSpecialistDao)SpringUtils.getBean("professionalSpecialistDao");
+        
+        String[] format = new String[] {"yyyy-MM-dd","yyyy/MM/dd"};
 
 		if (submission.startsWith("Submit")) {
 
 			try {				
+								if (newSignature) {
+									LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+									DigitalSignature signature = DigitalSignatureUtils.storeDigitalSignatureFromTempFileToDB(loggedInInfo, signatureImg, Integer.parseInt(demographicNo));
+									if (signature != null) { signatureId = "" + signature.getId(); }
+								}
+				
+								
                                 ConsultationRequest consult = new ConsultationRequest();
                                 Date date = DateUtils.parseDate(frm.getReferalDate(), format);
                                 consult.setReferralDate(date);
                                 consult.setServiceId(new Integer(frm.getService()));
 
+                                consult.setSignatureImg(signatureId);
+                                
+                        		consult.setLetterheadName(frm.getLetterheadName());
+                        		consult.setLetterheadAddress(frm.getLetterheadAddress());
+                        		consult.setLetterheadPhone(frm.getLetterheadPhone());
+                        		consult.setLetterheadFax(frm.getLetterheadFax());
+                        		
                                 if( frm.getAppointmentYear() != null && !frm.getAppointmentYear().equals("") ) {
                                    date = DateUtils.parseDate(frm.getAppointmentYear() + "-" + frm.getAppointmentMonth() + "-" + frm.getAppointmentDay(), format);
                                    consult.setAppointmentDate(date);
@@ -172,20 +194,20 @@ public class EctConsultationFormRequestAction extends Action {
                                 		consultationRequestExtDao.persist(createExtEntry(requestId,name.substring(name.indexOf("_")+1),value));
                                 	}
                                 }
-					// now that we have consultation id we can save any attached docs as well
-					// format of input is D2|L2 for doc and lab
-					String[] docs = frm.getDocuments().split("\\|");
-
-					for (int idx = 0; idx < docs.length; ++idx) {
-						if (docs[idx].length() > 0) {
-							if (docs[idx].charAt(0) == 'D') EDocUtil.attachDocConsult(providerNo, docs[idx].substring(1), requestId);
-							else if (docs[idx].charAt(0) == 'L') ConsultationAttachLabs.attachLabConsult(providerNo, docs[idx].substring(1), requestId);
-						}
-					}
+                                // now that we have consultation id we can save any attached docs as well
+								// format of input is D2|L2 for doc and lab
+								String[] docs = frm.getDocuments().split("\\|");
+			
+								for (int idx = 0; idx < docs.length; ++idx) {
+									if (docs[idx].length() > 0) {
+										if (docs[idx].charAt(0) == 'D') EDocUtil.attachDocConsult(providerNo, docs[idx].substring(1), requestId);
+										else if (docs[idx].charAt(0) == 'L') ConsultationAttachLabs.attachLabConsult(providerNo, docs[idx].substring(1), requestId);
+									}
+								}
 			}
-                        catch (ParseException e) {
-                                MiscUtils.getLogger().error("Invalid Date", e);
-                        }
+	        catch (ParseException e) {
+	                MiscUtils.getLogger().error("Invalid Date", e);
+	        }
 
 
 			request.setAttribute("transType", "2");
@@ -196,12 +218,32 @@ public class EctConsultationFormRequestAction extends Action {
 
 			requestId = frm.getRequestId();
 
-			try {				                                
+			try {				     
+				
+								if (newSignature) {
+									LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+									DigitalSignature signature = DigitalSignatureUtils.storeDigitalSignatureFromTempFileToDB(loggedInInfo, signatureImg, Integer.parseInt(demographicNo));
+									if (signature != null) {
+										signatureId = "" + signature.getId();
+									} else {
+										signatureId = signatureImg;
+									}
+								} else {
+									signatureId = signatureImg;
+								}
+								
                                 ConsultationRequest consult = consultationRequestDao.find(new Integer(requestId));
                                 Date date = DateUtils.parseDate(frm.getReferalDate(), format);
                                 consult.setReferralDate(date);
                                 consult.setServiceId(new Integer(frm.getService()));
 
+                                consult.setSignatureImg(signatureId);
+                                
+                        		consult.setLetterheadName(frm.getLetterheadName());
+                        		consult.setLetterheadAddress(frm.getLetterheadAddress());
+                        		consult.setLetterheadPhone(frm.getLetterheadPhone());
+                        		consult.setLetterheadFax(frm.getLetterheadFax());
+                                
                                 Integer specId = new Integer(frm.getSpecialist());
                                 ProfessionalSpecialist professionalSpecialist=professionalSpecialistDao.find(specId);
                                 consult.setProfessionalSpecialist(professionalSpecialist);
@@ -261,7 +303,10 @@ public class EctConsultationFormRequestAction extends Action {
 		if (submission.endsWith("And Print Preview")) {
 
 			request.setAttribute("reqId", requestId);
-			if (IsPropertiesOn.propertiesOn("CONSULT_PRINT_PDF")) {
+			if (OscarProperties.getInstance().isConsultationFaxEnabled()) {
+				return mapping.findForward("printIndivica");
+			}
+			else if (IsPropertiesOn.propertiesOn("CONSULT_PRINT_PDF")) {
 				return mapping.findForward("printpdf");
 			} else if (IsPropertiesOn.propertiesOn("CONSULT_PRINT_ALT")) {
 				return mapping.findForward("printalt");
@@ -272,8 +317,12 @@ public class EctConsultationFormRequestAction extends Action {
 		} else if (submission.endsWith("And Fax")) {
 
 			request.setAttribute("reqId", requestId);
-
-			return mapping.findForward("fax");
+			if (OscarProperties.getInstance().isConsultationFaxEnabled()) {
+				return mapping.findForward("faxIndivica");
+			}	
+			else {
+				return mapping.findForward("fax");
+			}
 
 		} 
 		else if (submission.endsWith("esend"))

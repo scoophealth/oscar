@@ -1014,9 +1014,18 @@
 			<forward name="print" path="/oscarEncounter/oscarConsultationRequest/ConsultationFormPrint.jsp" />
 			<forward name="printalt" path="/oscarEncounter/oscarConsultationRequest/ConsultationFormPrint2.jsp" />
 			<forward name="printpdf" path="/oscarEncounter/oscarConsultationRequest/printPdf.do" />
+			<forward name="printIndivica" path="/oscarEncounter/oscarConsultationRequest/printPdf2.do" />
 			<forward name="fax" path="/oscarEncounter/oscarConsultationRequest/ConsultationFormFax.jsp" />
+			<forward name="faxIndivica" path="/oscarEncounter/oscarConsultationRequest/ConsultationFormFax.do" />			
 		</action>
 		<action input="/oscarEncounter/oscarconsultationRequest/ConsultationFormRequest.jsp" path="/oscarEncounter/oscarConsultationRequest/printPdf" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestPrintAction">
+			<forward name="error" path="/oscarEncounter/ViewRequest.do?error=error" />
+		</action>
+		<action input="/oscarEncounter/oscarconsultationRequest/ConsultationFormRequest.jsp" path="/oscarEncounter/oscarConsultationRequest/printPdf2" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestPrintAction2">
+			<forward name="error" path="/oscarEncounter/ViewRequest.do?error=error" />
+		</action>
+		<action input="/oscarEncounter/oscarconsultationRequest/ConsultationFormRequest.jsp" path="/oscarEncounter/oscarConsultationRequest/ConsultationFormFax" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormFaxAction">
+			<forward name="success" path="/oscarEncounter/oscarConsultationRequest/ConfirmConsultationRequest.jsp" />
 			<forward name="error" path="/oscarEncounter/ViewRequest.do?error=error" />
 		</action>
 		<action input="/oscarEncounter/oscarConsultationRequest/attachmentReport.jsp" name="FrmForm" path="/oscarEncounter/oscarConsultation/printAttached" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.ConsultationPrintDocsAction">
