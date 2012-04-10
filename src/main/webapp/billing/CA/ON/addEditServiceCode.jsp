@@ -139,7 +139,6 @@
 		}
 
     } else if (request.getParameter("action").startsWith("add")) {
-      	// insert into the service code
 		String serviceCode = request.getParameter("service_code");
 		if(serviceCode.equals(request.getParameter("action").substring("add".length()))) {
 			BillingService bs = new BillingService();
