@@ -38,12 +38,12 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.model.Billing;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import oscar.entities.Billing;
 import oscar.entities.Billingmaster;
 import oscar.entities.WCB;
 import oscar.oscarDB.DBHandler;
@@ -103,46 +103,46 @@ public class BillingmasterDAO {
     public void save(Billingmaster bm){
         entityManager.persist(bm);
     }
-    
+
     public void save(WCB wcb){
         if (wcb.getW_doi() == null){
             wcb.setW_doi(new Date());  //Fixes SF ID : 2962864
         }
         entityManager.persist(wcb);
     }
-    
+
     public void save(Billing billing){
         entityManager.persist(billing);
     }
-    
 
-    
+
+
     public void update(Billingmaster bm){
         entityManager.merge(bm);
     }
-    
+
     public void update(Billing billing){
         entityManager.merge(billing);
     }
-    
 
- 
+
+
     public Billing getBilling(int billingNo){
         return entityManager.find(Billing.class, billingNo);
     }
-    
-    
+
+
     public List<WCB> getWCBForms(int demographic){
         Query query = entityManager.createQuery("select wcb from WCB wcb where wcb.demographic_no = (:demographicNo) order by wcb.id desc");
         query.setParameter("demographicNo", demographic);
         List<WCB> list  = query.getResultList();
         return list;
     }
-    
+
     public List<WCB> getWCBForms(String demographic){
         return getWCBForms(Integer.parseInt(demographic));
     }
-    
+
     public WCB getWCBForm(String formID){
         if (formID == null){
             return null;
@@ -150,21 +150,21 @@ public class BillingmasterDAO {
         MiscUtils.getLogger().debug("\nFORM ID "+formID);
         return entityManager.find(WCB.class,Integer.parseInt(formID));
     }
-    
-    
+
+
     public Billingmaster getBillingMasterByBillingMasterNo(String billingNo){
         return getBillingmaster(billingNo);
     }
-       
+
     public void markListAsBilled(List list){                    //TODO: Should be set form CONST var
-        String query = "update billingmaster set billingstatus = 'B' where billingmaster_no in ("+ StringUtils.getCSV(list) +")"; 
-        try {             
-           
+        String query = "update billingmaster set billingstatus = 'B' where billingmaster_no in ("+ StringUtils.getCSV(list) +")";
+        try {
+
         	DBHandler.RunSQL(query);
         }catch (SQLException sqlexception) {
            MiscUtils.getLogger().debug(sqlexception.getMessage());
         }
     }
-    
-    
+
+
 }
