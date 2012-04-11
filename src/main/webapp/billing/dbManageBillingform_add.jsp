@@ -1,35 +1,43 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
 <%@ page
 	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"%>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%@ include file="dbBilling.jspf"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.CtlBillingService" %>
+<%@ page import="org.oscarehr.common.dao.CtlBillingServiceDao" %>
+<%@ page import="org.oscarehr.common.model.CtlDiagCode" %>
+<%@ page import="org.oscarehr.common.dao.CtlDiagCodeDao" %>
+<%
+	CtlBillingServiceDao ctlBillingServiceDao = SpringUtils.getBean(CtlBillingServiceDao.class);
+	CtlDiagCodeDao ctlDiagCodeDao = SpringUtils.getBean(CtlDiagCodeDao.class);
+%>
 <%
 
 
@@ -60,60 +68,46 @@ if (type.compareTo("") == 0 || group1.compareTo("") == 0 || group2.compareTo("")
 <%
 
 }
-else {  
-
-             
-             
-
-
-    String[] param =new String[7];
-	  param[0]=type;
-	  param[1]=typeid;
-	  param[2]="A007A";
-	  param[3]=group1;
-	  param[4]="Group1";
-	  param[5]="A";
-	  param[6]="1";
-	  int rowsAffected = apptMainBean.queryExecuteUpdate(param,"save_ctlbillservice");
-
-    String[] param0 =new String[7];
-	  param0[0]=type;
-	  param0[1]=typeid;
-	  param0[2]="A007A";
-	  param0[3]=group2;
-	  param0[4]="Group2";
-	  param0[5]="A";
-	  param0[6]="1";
-	  int rowsAffected0 = apptMainBean.queryExecuteUpdate(param0,"save_ctlbillservice");	    
-    String[] param00 =new String[7];
-	  param00[0]=type;
-	  param00[1]=typeid; 
-	  param00[2]="A007A";
-	  param00[3]=group3;
-	  param00[4]="Group3";
-	  param00[5]="A";
-	  param00[6]="1";
-	  int rowsAffected00 = apptMainBean.queryExecuteUpdate(param00,"save_ctlbillservice");
-	       
-	       
-	       
-	       String[] param3 =new String[3];
-		 	          	    	
-		 	          	    	   
-		 	          	    	  param3[0]=typeid;
-		 	          	    	  param3[1]="000";
-		 	          	    	  param3[2]="A";
-		 	          	    	  
-		 	          
-		 	     
-		 	           
-	        int   recordAffected = apptMainBean.queryExecuteUpdate(param3,"save_ctldiagcode");
-	           
-	    
-	    
+else {
+	CtlBillingService cbs = new CtlBillingService();
+	cbs.setServiceTypeName(type);
+	cbs.setServiceType(typeid);
+	cbs.setServiceCode("A007A");
+	cbs.setServiceGroupName(group1);
+	cbs.setServiceGroup("Group1");
+	cbs.setStatus("A");
+	cbs.setServiceOrder(1);
+    ctlBillingServiceDao.persist(cbs);
 
 
+    cbs = new CtlBillingService();
+	cbs.setServiceTypeName(type);
+	cbs.setServiceType(typeid);
+	cbs.setServiceCode("A007A");
+	cbs.setServiceGroupName(group2);
+	cbs.setServiceGroup("Group2");
+	cbs.setStatus("A");
+	cbs.setServiceOrder(1);
+    ctlBillingServiceDao.persist(cbs);
 
+    cbs = new CtlBillingService();
+	cbs.setServiceTypeName(type);
+	cbs.setServiceType(typeid);
+	cbs.setServiceCode("A007A");
+	cbs.setServiceGroupName(group3);
+	cbs.setServiceGroup("Group3");
+	cbs.setStatus("A");
+	cbs.setServiceOrder(1);
+    ctlBillingServiceDao.persist(cbs);
+
+	String[] param3 =new String[3];
+
+
+	CtlDiagCode cdc = new CtlDiagCode();
+	cdc.setServiceType(typeid);
+	cdc.setDiagnosticCode("000");
+	cdc.setStatus("A");
+	ctlDiagCodeDao.persist(cdc);
 
 %>
 <% response.sendRedirect("manageBillingform.jsp"); %>

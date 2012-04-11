@@ -1468,30 +1468,12 @@ CREATE TABLE billing_on_favourite (
   PRIMARY KEY  (id)
 ) ;
 
-CREATE TABLE billing_payment_type (
-  id int(11) NOT NULL auto_increment,
-  payment_type varchar(25) NOT NULL default '',
-  PRIMARY KEY  (id)
-) ;
-
 CREATE TABLE billing_on_errorCode (
   code varchar(5) NOT NULL,
   description varchar(255) NOT NULL default '',
   PRIMARY KEY  (code)
 ) ;
 
-CREATE TABLE billing_on_3rdPartyAddress (
-  id int(6) NOT NULL auto_increment,
-  attention varchar(100) NOT NULL,
-  company_name varchar(100) NOT NULL,
-  address varchar(200) NOT NULL default '',
-  city varchar(200) NOT NULL default '',
-  province varchar(10) NOT NULL default '',
-  postcode varchar(10) NOT NULL default '',
-  telephone varchar(15) NOT NULL default '',
-  fax varchar(15) NOT NULL default '',
-  PRIMARY KEY  (id)
-) ;
 
 CREATE TABLE billing_on_eareport (
   id int(12) NOT NULL auto_increment,

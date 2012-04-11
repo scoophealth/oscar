@@ -58,6 +58,11 @@ public class BillActivity extends AbstractModel<Integer> {
 
 	private String total;
 
+	@Column(name="sentdate")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date sentDate;
+
+
 	@Override
     public Integer getId() {
 		return id;
@@ -165,6 +170,14 @@ public class BillActivity extends AbstractModel<Integer> {
 
 	public void setTotal(String total) {
     	this.total = total;
+    }
+
+	public Date getSentDate() {
+    	return sentDate;
+    }
+
+	public void setSentDate(Date sentDate) {
+    	this.sentDate = sentDate;
     }
 
 

@@ -1,54 +1,60 @@
-<%--  
+<%--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 
  // a little bit change by Li 2004/02/16
  // only one rahd record? one rahd must have one radt record?
- // 
+ //
 --%>
 
 <%@ page
 	import="java.math.*, java.util.*, java.io.*, java.sql.*, java.net.*, oscar.*, oscar.util.*, oscar.MyDateFormat"
 	errorPage="errorpage.jsp"%>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<jsp:useBean id="documentBean" class="oscar.DocumentBean"
-	scope="request" />
-<%@ include file="../billing/dbBilling.jspf"%>
-
-<%  
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<jsp:useBean id="documentBean" class="oscar.DocumentBean" scope="request" />
+<%@ include file="dbBilling.jspf"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.RaHeader" %>
+<%@ page import="org.oscarehr.common.dao.RaHeaderDao" %>
+<%@ page import="org.oscarehr.common.model.RaDetail" %>
+<%@ page import="org.oscarehr.common.dao.RaDetailDao" %>
+<%
+RaHeaderDao raHeaderDao = SpringUtils.getBean(RaHeaderDao.class);
+RaDetailDao raDetailDao = SpringUtils.getBean(RaDetailDao.class);
+%>
+<%
 GregorianCalendar now=new GregorianCalendar();
 int curYear = now.get(Calendar.YEAR);
 int curMonth = (now.get(Calendar.MONTH)+1);
 int curDay = now.get(Calendar.DAY_OF_MONTH);
-  
+
 String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"); // String.valueOf(curYear)+"/"+String.valueOf(curMonth) + "/" + String.valueOf(curDay);
 %>
 
 
-<% 
+<%
 String filepath="", filename = "", header="", headerCount="", total="", paymentdate="", payable="", totalStatus="", deposit=""; //request.getParameter("filename");
 String transactiontype="", providerno="", specialty="", account="", patient_last="", patient_first="", provincecode="", newhin="", hin="", ver="", billtype="", location="";
 String servicedate="", serviceno="", servicecode="", amountsubmit="", amountpay="", amountpaysign="", explain="", error="";
@@ -66,7 +72,7 @@ filename = documentBean.getFilename();
 
 String url=request.getRequestURI();
 url = url.substring(1);
-url = url.substring(0,url.indexOf("/")); 
+url = url.substring(0,url.indexOf("/"));
 filepath = "/usr/local/OscarDocument/" + url +"/document/";
 FileInputStream file = new FileInputStream(filepath + filename);
 InputStreamReader reader = new InputStreamReader(file);
@@ -76,7 +82,7 @@ String nextline;
 while ((nextline=input.readLine())!=null){
 	header = nextline.substring(0,1);
 
-	if (header.compareTo("H") == 0) { 
+	if (header.compareTo("H") == 0) {
 		headerCount = nextline.substring(2,3);
 
 		if (headerCount.compareTo("1") == 0){
@@ -85,30 +91,30 @@ while ((nextline=input.readLine())!=null){
 			total = nextline.substring(59,68);
 			totalStatus = nextline.substring(68,69);
 			deposit = nextline.substring(69,77);
-   
+
 			totalsum = Integer.parseInt(total);
 			total = String.valueOf(totalsum);
 			if (total.compareTo("0") == 0){
 				total = "000";
 			}
 
-			total = total.substring(0, total.length()-2) + "." + total.substring(total.length()-2) + totalStatus;      
-   
+			total = total.substring(0, total.length()-2) + "." + total.substring(total.length()-2) + totalStatus;
+
 			String[] param2 = new String[2];
 			param2[0] = filename;
 			param2[1] = paymentdate;
 
 			ResultSet rsdemo = apptMainBean.queryResults(param2, "search_rahd");
-			while (rsdemo.next()) {   
+			while (rsdemo.next()) {
 				raNo = rsdemo.getString("raheader_no");
 			}
-             
+
 			//judge if it is empty in table radt
 			int radtNum = 0;
 			if (raNo!=null && raNo.length()>0) {
 				// can't make sure the record has only one result here
 				rsdemo = apptMainBean.queryResults(new String[]{raNo}, "search_radt");
-				while (rsdemo.next()) {   
+				while (rsdemo.next()) {
 					radtNum = rsdemo.getInt("count(raheader_no)");
 				}
 
@@ -119,22 +125,22 @@ while ((nextline=input.readLine())!=null){
 			if (raNo.compareTo("") == 0 || raNo == null || radtNum == 0){
 				recFlag = 1;
 
-				String[] param =new String[9];
-				param[0]=filename;
-				param[1]=paymentdate;
-				param[2]=payable; 
-				param[3]=total;
-				param[4]="0";
-				param[5]="0";
-				param[6]="N";
-				param[7]=nowDate;
-				param[8]="<xml_cheque>"+total+"</xml_cheque>";
-				int rowsAffected = apptMainBean.queryExecuteUpdate(param,"save_rahd");
+				RaHeader raHeader = new RaHeader();
+				raHeader.setFilename(filename);
+				raHeader.setPaymentDate(paymentdate);
+				raHeader.setPayable(payable);
+				raHeader.setTotalAmount(total);
+				raHeader.setRecords("0");
+				raHeader.setClaims("0");
+				raHeader.setStatus("N");
+				raHeader.setReadDate(nowDate);
+				raHeader.setContent("<xml_cheque>"+total+"</xml_cheque>");
+				raHeaderDao.persist(raHeader);
 
 				rsdemo = null;
 				rsdemo = apptMainBean.queryResults(param2, "search_rahd");
 				// can't make sure the record has only one result here
-				while (rsdemo.next()) {   
+				while (rsdemo.next()) {
 					raNo = rsdemo.getString("raheader_no");
 				}
 			}
@@ -170,7 +176,7 @@ while ((nextline=input.readLine())!=null){
 				account = String.valueOf(accountno);
 			}
 		}
-	   
+
 		if (headerCount.compareTo("5") == 0){
 			transactiontype = nextline.substring(14,15);
 			servicedate = nextline.substring(15,23);
@@ -188,29 +194,31 @@ while ((nextline=input.readLine())!=null){
 			amountpay  = String.valueOf(amountPaySum );
 			if (amountpay.compareTo("0") == 0)	amountpay = "000";
 
-			amountpay = amountpay.substring(0, amountpay.length()-2) + "." + amountpay.substring(amountpay.length()-2);      
+			amountpay = amountpay.substring(0, amountpay.length()-2) + "." + amountpay.substring(amountpay.length()-2);
 			amountSubmitSum = Integer.parseInt(amountsubmit);
 			amountsubmit  = String.valueOf(amountSubmitSum );
 			if (amountsubmit.compareTo("0") == 0) amountsubmit = "000";
 
-			amountsubmit =amountsubmit.substring(0, amountsubmit.length()-2) + "." + amountsubmit.substring(amountsubmit.length()-2);      
+			amountsubmit =amountsubmit.substring(0, amountsubmit.length()-2) + "." + amountsubmit.substring(amountsubmit.length()-2);
 			newhin = hin + ver;
 
 			// if it needs to write a radt record for the rahd record
 			if (recFlag > 0) {
-				String[] param4 =new String[11];
-				param4[0]=raNo;
-				param4[1]=providerno;
-				param4[2]=account; 
-				param4[3]=servicecode;
-				param4[4]=serviceno;
-				param4[5]=newhin;
-				param4[6]=amountsubmit;
-				param4[7]=amountpaysign+amountpay;
-				param4[8]=servicedate;
-				param4[9]=explain;
-				param4[10]=billtype;
-				int rowsAffected3 = apptMainBean.queryExecuteUpdate(param4,"save_radt");
+				RaDetail rd = new RaDetail();
+				rd.setRaHeaderNo(Integer.parseInt(raNo));
+				rd.setProviderOhipNo(providerno);
+				rd.setBillingNo(Integer.parseInt(account));
+				rd.setServiceCode(servicecode);
+				rd.setServiceCount(serviceno);
+				rd.setHin(newhin);
+				rd.setAmountClaim(amountsubmit);
+				rd.setAmountPay(amountpaysign+amountpay);
+				rd.setServiceDate(servicedate);
+				rd.setErrorCode(explain);
+				rd.setBillType(billtype);
+
+				raDetailDao.persist(rd);
+
 			}
 		}
 
@@ -221,7 +229,7 @@ while ((nextline=input.readLine())!=null){
 			abf_re = nextline.substring(23,30)+"."+nextline.substring(30,33);
 			abf_de = nextline.substring(33,40)+"."+nextline.substring(40,43);
 		}
-	   
+
 		if (headerCount.compareTo("7") == 0){
 			trans_code = nextline.substring(3,5);
 			if (trans_code.compareTo("10")==0) trans_code="Advance";
@@ -240,7 +248,7 @@ while ((nextline=input.readLine())!=null){
 			trans_message = nextline.substring(23,73);
 
 			transaction = transaction + "<tr><td width='14%'>"+trans_code+"</td><td width='12%'>"+trans_date+"</td><td width='17%'>"+cheque_indicator+"</td><td width='13%'>"+trans_amount+"</td><td width='44%'>"+trans_message+"</td></tr>";
-		} 
+		}
 
 		if (headerCount.compareTo("8") == 0){
 			message_txt = message_txt + nextline.substring(3,73)+"<br>";
@@ -255,9 +263,9 @@ if (transaction.compareTo("") != 0){
 
 balancefwd = "<xml_balancefwd><table width='100%' border='0' cellspacing='0' cellpadding='0'><tr><td colspan='4'>Balance Forward Record - Amount Brought Forward (ABF)</td></tr><tr><td>Claims Adjustment</td><td>Advances</td><td>Reductions</td><td>Deductions</td></tr><tr><td>"+abf_ca+"</td><td>"+abf_ad+"</td><td>"+abf_re+"</td><td>"+abf_de+"</td></tr></table></xml_balancefwd>";
 message = "<xml_message><tr><td>Message Facility Record</td></tr><tr><td>" + message_txt+"</td></tr></table></xml_message>";
-	 
-xml_ra = transaction + balancefwd + "<xml_cheque>"+total+"</xml_cheque>";	 
-	 
+
+xml_ra = transaction + balancefwd + "<xml_cheque>"+total+"</xml_cheque>";
+
 String[] param3 =new String[6];
 param3[0]=total;
 param3[1]=String.valueOf(count);
@@ -267,7 +275,7 @@ param3[4]=paymentdate;
 param3[5]=filename;
 // only one? for paymentdate, filename
 int rowsAffected1 = apptMainBean.queryExecuteUpdate(param3,"update_rahd");
- 
+
 %>
 
 
@@ -281,7 +289,7 @@ int rowsAffected1 = apptMainBean.queryExecuteUpdate(param3,"update_rahd");
 <!--
 var remote=null;
 
-  
+
 function rs(n,u,w,h,x) {
   args="width="+w+",height="+h+",resizable=yes,scrollbars=yes,status=0,top=60,left=30";
   remote=window.open(u,n,args);
@@ -341,7 +349,7 @@ ResultSet rsdemo = null;
 String[] param5 =new String[1];
 param5[0] = "D";
 rsdemo = apptMainBean.queryResults(param5, "search_all_rahd");
-while (rsdemo.next()) {   
+while (rsdemo.next()) {
 	raNo = rsdemo.getString("raheader_no");
 	nowDate = rsdemo.getString("readdate");
 	paymentdate = rsdemo.getString("paymentdate");

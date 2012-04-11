@@ -965,7 +965,6 @@ function showHideLayers() { //v3.0
 								value="<%=now.get(Calendar.HOUR_OF_DAY) + ":"
 					+ now.get(Calendar.MINUTE)%>">
 							<input type="hidden" name="billingservice_code" value="">
-							<input type="hidden" name="dboperation" value="save_bill">
 							<!-- <input type="hidden" name="appointment_date" value="<%=request.getParameter("appointment_date")%>"> -->
 							<input type="hidden" name="appointment_no"
 								value="<%=request.getParameter("appointment_no")%>">

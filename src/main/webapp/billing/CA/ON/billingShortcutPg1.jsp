@@ -126,10 +126,10 @@
   boolean bFirst = true;
   Vector vecHistD = new Vector();
   List aL = null;
-  
+
   OscarProperties props = OscarProperties.getInstance();
   if(!props.getProperty("isNewONbilling", "").equals("true")) {
-	  
+
   sql = "select billing_no,billing_date,visitdate,visitType, update_date, clinic_ref_code, content from billing " +
 		" where demographic_no=" + demo_no + " and status!='D' order by billing_date desc, billing_no desc limit 5";
   rs = dbObj.searchDBRecord(sql);
@@ -144,7 +144,7 @@
     propHist.setProperty("visitType", rs.getString("visitType"));
     propHist.setProperty("clinic_ref_code", rs.getString("clinic_ref_code"));
     vecHist.add(propHist);
-    
+
     // get the latest ref. doctor number
     if(bFirst && "checked".equals(SxmlMisc.getXmlContent(rs.getString("content"),"xml_referral")) ) {
         bFirst = false;
@@ -198,9 +198,9 @@
 			propHist.setProperty("diagnostic_code", iobj.getDx());
 			vecHistD.add(propHist);
 		}
-	  
+
   }
-  
+
   // display the fixed billing part
   // Retrieving Provider
   Vector vecProvider = new Vector();
@@ -214,7 +214,7 @@
     propT.setProperty("first_name",rs.getString("first_name"));
     propT.setProperty("proOHIP",rs.getString("provider_no"));
     vecProvider.add(propT);
-  } 
+  }
   // clinic location
   Vector vecLocation = new Vector();
   sql = "select * from clinic_location where clinic_no = 1 order by clinic_location_no";
@@ -355,7 +355,7 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-    <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>	
+    <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>HospitalBilling</title>
 <link rel="stylesheet" type="text/css" href="billingON.css" />
@@ -378,13 +378,13 @@
 window.focus();
 
 function checkSli() {
-	var needsSli = false; 
-    jQuery("input[name^=code_xml_]:checked").each(function() { 
-            needsSli = needsSli || eval(jQuery("input[name='sli_xml_" + this.name.substring(9) + "']").val());     
-    }); 
-    jQuery("input[name^=serviceDate][value!='']").each(function() { 
-            needsSli = needsSli || eval(jQuery("input[name='sli_xml_" + this.value + "']").val()); 
-    }); 
+	var needsSli = false;
+    jQuery("input[name^=code_xml_]:checked").each(function() {
+            needsSli = needsSli || eval(jQuery("input[name='sli_xml_" + this.name.substring(9) + "']").val());
+    });
+    jQuery("input[name^=serviceDate][value!='']").each(function() {
+            needsSli = needsSli || eval(jQuery("input[name='sli_xml_" + this.value + "']").val());
+    });
     return !needsSli || jQuery("select[name='xml_slicode']").get(0).selectedIndex != 0;
 }
 
@@ -412,7 +412,7 @@ function showHideLayers() { //v3.0
     function onNext() {
         //document.forms[0].submit.value="save";
         var ret = checkAllDates();
-        if (!(ret = checkSli())) {        	
+        if (!(ret = checkSli())) {
         	alert("You have selected billing codes that require an SLI code but have not provided an SLI code.");
         }
         return ret;
@@ -447,17 +447,17 @@ function showHideLayers() { //v3.0
         } else if(document.forms[0].xml_provider.value=="000000"){
         	alert("Please select a provider.");
             b = false;
-        } 
+        }
         <% if (!OscarProperties.getInstance().getBooleanProperty("rma_enabled", "true")) { %>
         else if(document.forms[0].xml_visittype.options[2].selected && (document.forms[0].xml_vdate.value=="" || document.forms[0].xml_vdate.value=="0000-00-00")){
         	alert("Need an admission date.");
             b = false;
-        } 
+        }
         <% } %>
 
 		if(document.forms[0].xml_vdate.value.length>0) {
         	b = checkServiceDate(document.forms[0].xml_vdate.value);
-        } 
+        }
         if(document.forms[0].billDate.value.length>0) {
         	var billDateA = document.forms[0].billDate.value.split("\n");
         	for (var i in billDateA) {
@@ -510,7 +510,7 @@ function checkServiceDate(s) {
 		return true;
 	}
 }
-    
+
     function isInteger(s){
         var i;
         for (i = 0; i < s.length; i++){
@@ -809,9 +809,9 @@ ctlCount = 0;
 						<td width="30%"><b><%if (OscarProperties.getInstance().getBooleanProperty("rma_enabled", "true")) { %> Clinic Nbr <% } else { %> <bean:message key="billing.billingCorrection.formVisitType"/> <% } %></b></td>
 						<td width="20%"><select name="xml_visittype">
 						<% if (OscarProperties.getInstance().getBooleanProperty("rma_enabled", "true")) { %>
-					    <% 
-					    ClinicNbrDao cnDao = (ClinicNbrDao) SpringUtils.getBean("clinicNbrDao"); 
-						ArrayList<ClinicNbr> nbrs = cnDao.findAll();									            
+					    <%
+					    ClinicNbrDao cnDao = (ClinicNbrDao) SpringUtils.getBean("clinicNbrDao");
+						ArrayList<ClinicNbr> nbrs = cnDao.findAll();
 			            ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 			            String providerSearch = apptProvider_no.equalsIgnoreCase("none") ? user_no : apptProvider_no;
 			            Provider p = providerDao.getProvider(providerSearch);
@@ -853,7 +853,7 @@ ctlCount = 0;
 								<%=srtBillType.startsWith("PAT")?"selected" : ""%>><bean:message key="billing.billingCorrection.formBillTypeP"/>
 							</option>
 							<option value="WCB | Worker's Compensation Board"
-								<%=srtBillType.startsWith("WCB")?"selected" : ""%>><bean:message key="billing.billingCorrection.formBillTypeW"/></option>						
+								<%=srtBillType.startsWith("WCB")?"selected" : ""%>><bean:message key="billing.billingCorrection.formBillTypeW"/></option>
 						</select></td>
 					</tr>
 					<tr>
@@ -887,57 +887,57 @@ ctlCount = 0;
 						<td><b><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode"/></b></td>
 				   	 	<td colspan="3">
 						<select name="xml_slicode">
-						
+
 							<option value="<%=clinicNo%>"><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.NA" /></option>
-						
+
 							<%if (SxmlMisc.getXmlContent(rs.getString("comments"),"xml_p_sli").trim().equals("HDS")) {%>
 								<option selected value="HDS "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.HDS" /></option>
 							<%} else { %>
 								<option value="HDS "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.HDS" /></option>
 							<%}%>
-							
+
 							<%if (SxmlMisc.getXmlContent(rs.getString("comments"),"xml_p_sli").trim().equals("HED")) {%>
 								<option selected value="HED "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.HED" /></option>
 							<%} else { %>
 								<option value="HED "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.HED" /></option>
 							<%}%>
-							
+
 							<%if (SxmlMisc.getXmlContent(rs.getString("comments"),"xml_p_sli").trim().equals("HIP")) {%>
 								<option selected value="HIP "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.HIP" /></option>
 							<%} else { %>
 								<option value="HIP "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.HIP" /></option>
 							<%}%>
-							
+
 							<%if (SxmlMisc.getXmlContent(rs.getString("comments"),"xml_p_sli").trim().equals("HOP")) {%>
 								<option selected value="HOP "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.HOP" /></option>
 							<%} else { %>
 								<option value="HOP "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.HOP" /></option>
 							<%}%>
-							
+
 							<%if (SxmlMisc.getXmlContent(rs.getString("comments"),"xml_p_sli").trim().equals("HRP")) {%>
 								<option selected value="HRP "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.HRP" /></option>
 							<%} else { %>
 								<option value="HRP "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.HRP" /></option>
 							<%}%>
-							
+
 							<%if (SxmlMisc.getXmlContent(rs.getString("comments"),"xml_p_sli").trim().equals("IHF")) {%>
 								<option selected value="IHF "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.IHF" /></option>
 							<%} else { %>
 								<option value="IHF "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.IHF" /></option>
 							<%}%>
-							
+
 							<%if (SxmlMisc.getXmlContent(rs.getString("comments"),"xml_p_sli").trim().equals("OFF")) {%>
 								<option selected value="OFF "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.OFF" /></option>
 							<%} else { %>
 								<option value="OFF "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.OFF" /></option>
 							<%}%>
-							
+
 							<%if (SxmlMisc.getXmlContent(rs.getString("comments"),"xml_p_sli").trim().equals("OTN")) {%>
 								<option selected value="OTN "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.OTN" /></option>
 							<%} else { %>
 								<option value="OTN "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.OTN" /></option>
 							<%}%>
-							</select> 
+							</select>
 				   		</td>
 					</tr>
 				<%} else {%>
@@ -954,7 +954,7 @@ ctlCount = 0;
 						<option value="IHF "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.IHF" /></option>
 						<option value="OFF "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.OFF" /></option>
 						<option value="OTN "><bean:message key="oscar.billing.CA.ON.billingON.OB.SLIcode.OTN" /></option>
-					</select> 
+					</select>
 				    </td>
 				</tr>
 				<%} %>
@@ -1028,7 +1028,7 @@ ctlCount = 0;
 						<td <%=serviceDesc.length()>30?"title=\""+serviceDesc+"\"":""%>><font
 							size="-1"><%=serviceDesc.length()>30?serviceDesc.substring(0,30)+"...":serviceDesc%>
 						<input type="hidden" name="desc_xml_<%=serviceCode%>"
-							value="<%=serviceDesc%>" /> 
+							value="<%=serviceDesc%>" />
 						<input type="hidden" name="sli_xml_<%=serviceCode%>" value="<%=serviceSLI%>" />
 							</font></td>
 						<td align="right"><font size="-1"><%=serviceDisp%></font> <input
@@ -1285,7 +1285,8 @@ ctlCount = 0;
       showOthers : true,
       multiple   : MA, // pass the initial or computed array of multiple dates to be initially selected
       onClose    : closed,
-      button     : "trigger"
+      button     : "trigger",
+      inputField : "billDate"
     });
   //]]>
 Calendar.setup( { inputField : "xml_vdate", ifFormat : "%Y-%m-%d", showsTime :false, button : "xml_vdate_cal", singleClick : true, step : 1 } );

@@ -75,7 +75,6 @@
 		    prop.setProperty("referral_no", referral_no);
 		}
     } else if (request.getParameter("action").startsWith("add")) {
-      	// insert into the referral_no
 		String referral_no = request.getParameter("referral_no");
 		if(referral_no.equals(request.getParameter("action").substring("add".length()))) {
 			Billingreferral billingReferral =  new Billingreferral();

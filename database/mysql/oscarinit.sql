@@ -9002,3 +9002,27 @@ CREATE TABLE `RemoteIntegratedDataCopy` (
   KEY RIDopy_demo_dataT_fac_arch (`demographic_no`,`datatype`,`facilityId`,`archived`), 
   KEY RIDopy_demo_dataT_sig_fac_arch (`demographic_no`,`datatype`,`signature`,`facilityId`,`archived`)
 );
+
+--
+-- Table structure for table `billing_payment_type`
+--
+
+CREATE TABLE billing_payment_type (
+  id int(11) NOT NULL auto_increment,
+  payment_type varchar(25) NOT NULL default '',
+  PRIMARY KEY  (id)
+);
+
+CREATE TABLE `billing_on_3rdPartyAddress` (
+  `id` int(6) NOT NULL auto_increment,
+  `attention` varchar(100) NOT NULL default '',
+  `company_name` varchar(100) NOT NULL default '',
+  `address` varchar(200) NOT NULL default '',
+  `city` varchar(200) NOT NULL default '',
+  `province` varchar(10) NOT NULL default '',
+  `postcode` varchar(10) NOT NULL default '',
+  `telephone` varchar(15) NOT NULL default '',
+  `fax` varchar(15) NOT NULL default '',
+  PRIMARY KEY  (`id`)
+) ;
+
