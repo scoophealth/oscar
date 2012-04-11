@@ -102,8 +102,16 @@ a:active, a:hover, #leftcol a:active, #leftcol a:hover {
 	background: #efefef;
 }
 
+.b td.beright {
+	text-align: right;
+}
+
 .b th {
 	color:black;
+}
+
+.b td div.horizonton {
+	float: left;
 }
 
 table, th, td {
@@ -188,6 +196,11 @@ body.docs {
 	background-color: #ddd;
 	color: #fff;
 	border-left: 1px solid #fff;
+}
+
+.tabs th.nofocus {
+	border-bottom: 2px solid #fff;
+	border-left: 2px solid #fff;
 }
 
 .tabs td {
