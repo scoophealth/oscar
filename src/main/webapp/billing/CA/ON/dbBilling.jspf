@@ -42,7 +42,7 @@
     {"search_provider_ohip_dt", "select * from provider where ohip_no like ? and ohip_no || null order by last_name"},
     {"search_demographic_details", "select * from demographic where demographic_no=?"},
     {"search_provider_name", "select * from provider where provider_no=?"},
-    {"save_bill", "insert into billing values('\\N',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"},
+    {"save_bill", "insert into billing values('\\N',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"},
     {"search_billing_no", "select billing_no from billing where demographic_no=?  order by update_date desc, update_time desc limit 0, 1"},
     {"search_billing_no_by_appt", "select max(billing_no) billing_no from billing where status <> 'D' and demographic_no=? and appointment_no=?  order by update_date desc, update_time desc limit 0, 1"},
     {"search_bill_center", "select * from billcenter where billcenter_desc like ?"},

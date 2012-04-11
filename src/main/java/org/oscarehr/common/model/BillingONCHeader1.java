@@ -1,8 +1,8 @@
 package org.oscarehr.common.model;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -18,10 +18,10 @@ import org.oscarehr.PMmodule.utility.Utility;
 
 @Entity
 @Table(name = "billing_on_cheader1")
-public class BillingONCHeader1 implements Serializable {
+public class BillingONCHeader1 extends AbstractModel<Integer> implements Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id
@@ -84,9 +84,9 @@ public class BillingONCHeader1 implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date timestamp;
 	private String clinic = null;
-	
+
 	public BillingONCHeader1() {}
-	
+
 	public BillingONCHeader1(Integer headerId, String transcId, String recId,
 			String hin, String ver, String dob, String payProgram,
 			String payee, String refNum, String faciltyNum, Date admissionDate,

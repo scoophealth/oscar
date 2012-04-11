@@ -149,6 +149,7 @@ CREATE TABLE billing (
   apptProvider_no varchar(6) default NULL,
   asstProvider_no varchar(6) default NULL,
   creator varchar(6) default NULL,
+  billingtype varchar(4) default 'MSP',
   PRIMARY KEY  (billing_no),
   KEY appointment_no (appointment_no,demographic_no),
   KEY demographic_no (demographic_no),

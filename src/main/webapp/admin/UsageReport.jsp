@@ -15,7 +15,10 @@
 <%@page import="org.oscarehr.common.model.ProviderInboxItem" %>
 <%@page import="org.oscarehr.casemgmt.dao.TicklerDAO" %>
 <%@page import="org.caisi.model.CustomFilter" %>
-<%@page import="org.oscarehr.document.dao.DocumentDAO" %><%
+<%@page import="org.oscarehr.document.dao.DocumentDAO" %>
+<%@page import="org.oscarehr.common.dao.BillingONCHeader1Dao" %>
+<%
+	BillingONCHeader1Dao billingONCHeader1Dao = SpringUtils.getBean(BillingONCHeader1Dao.class);
 String providerNo = request.getParameter("providerNo");
 
 OscarAppointmentDao appointmentDao          	=(OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
@@ -37,7 +40,7 @@ List<Provider> providers = providerDao.getActiveProviders();
     <head>
      	<title>EMR Usage Report</title>
      	<link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css" />
-           
+
     </head>
     <body class="mainbody">
          <table class="MainTable" id="scrollNumber1" name="encounterTable" style="margin: 0px;">
@@ -59,10 +62,10 @@ List<Provider> providers = providerDao.getActiveProviders();
             <tr>
             	<td class="MainTableLeftColumn">&nbsp;</td>
             	<td class="MainTableRightColumn">
-            		
+
 
 					<form action="UsageReport.jsp">
-					<label>Provider:</label> 
+					<label>Provider:</label>
 						<select name="providerNo">
 						<%
 						for(Provider provider:providers) {
@@ -70,75 +73,75 @@ List<Provider> providers = providerDao.getActiveProviders();
 							if(providerNo != null && providerNo.equals(provider.getProviderNo())) {
 								selected=" selected=\"selected\" ";
 							}
-							%><option value="<%=provider.getProviderNo()%>" <%=selected%>><%=provider.getFormattedName()%></option><%			
+							%><option value="<%=provider.getProviderNo()%>" <%=selected%>><%=provider.getFormattedName()%></option><%
 						}
 					%>
 						</select>
-						
+
 					<label>Start Date</label><input type="text" name="startDate"   value="<%=request.getParameter("startDate")%>"/>
 					<label>End Date</label><input type="text" name="endDate" value="<%=request.getParameter("endDate")%>"/>
 					<input type="submit" value="Run Report"/>
 					</form>
-            		
-            	
-            		<% 
+
+
+            		<%
 
 					 if(providerNo != null){
 						 DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 						 List<Demographic> demoList = demographicDao.getDemographicByProvider( providerNo);
-						 
+
 						 int total = demoList.size();
-						 int a0to19  = 0; 
+						 int a0to19  = 0;
 						 int a0to19m  = 0;
 						 int a0to19f  = 0;
-						 
+
 						 int a20to44 = 0;
 						 int a20to44m = 0;
 						 int a20to44f = 0;
-						 
+
 						 int a45to64 = 0;
 						 int a45to64m = 0;
 						 int a45to64f = 0;
-						 
+
 						 int a65to84 = 0;
 						 int a65to84m = 0;
 						 int a65to84f = 0;
-						 
+
 						 int a85plus = 0;
 						 int a85plusm = 0;
 						 int a85plusf = 0;
-						 
+
 						 for(Demographic demo:demoList){
 							 int age = demo.getAgeInYears();
 							 String sex = demo.getSex();
-							 
+
 							 if(age <= 19){
 								 a0to19++;
-								 a0to19m = checkMale(sex,a0to19m);	 
-								 a0to19f = checkFemale(sex,a0to19f); 
+								 a0to19m = checkMale(sex,a0to19m);
+								 a0to19f = checkFemale(sex,a0to19f);
 							 }else if (age >= 20 && age <= 44){
 								 a20to44++;
-								 a20to44m = checkMale(sex,a20to44m);	 
-								 a20to44f = checkFemale(sex,a20to44f); 
+								 a20to44m = checkMale(sex,a20to44m);
+								 a20to44f = checkFemale(sex,a20to44f);
 							 }else if (age >= 45 && age <=64){
 								 a45to64++;
-								 a45to64m = checkMale(sex,a45to64m);	 
-								 a45to64f = checkFemale(sex,a45to64f); 
+								 a45to64m = checkMale(sex,a45to64m);
+								 a45to64f = checkFemale(sex,a45to64f);
 							 }else if (age >=65 && age <= 84){
 								 a65to84++;
-								 a65to84m = checkMale(sex,a65to84m);	 
-								 a65to84f = checkFemale(sex,a65to84f); 
+								 a65to84m = checkMale(sex,a65to84m);
+								 a65to84f = checkFemale(sex,a65to84f);
 							 }else{
 								 a85plus++;
-								 a85plusm = checkMale(sex,a85plusm);	 
-								 a85plusf = checkFemale(sex,a85plusf); 
+								 a85plusm = checkMale(sex,a85plusm);
+								 a85plusf = checkFemale(sex,a85plusf);
 							 }
 						 }
-						 
-						 
+
+
 						 Date startDate = null;
 						 Date endDate   = null;
-						 	    
+
 						 try{
 						 	startDate = UtilDateUtilities.StringToDate(request.getParameter("startDate"));
 						 	endDate   = UtilDateUtilities.StringToDate(request.getParameter("endDate"));
@@ -146,9 +149,9 @@ List<Provider> providers = providerDao.getActiveProviders();
 					 		startDate = null;
 					 		endDate   = null;
 						 }
-						 
-						 int scheduledAppts       = appointmentDao.findByDateRangeAndProvider(startDate, endDate, providerNo).size(); 
-						 int billing              = billingDAO.getNumberOfDemographicsWithInvoicesForProvider(providerNo,startDate, endDate,true);
+
+						 int scheduledAppts       = appointmentDao.findByDateRangeAndProvider(startDate, endDate, providerNo).size();
+						 int billing              = billingONCHeader1Dao.getNumberOfDemographicsWithInvoicesForProvider(providerNo,startDate, endDate,true);
 						 int encounterNote        = caseManagementNoteDao.getNoteCountForProviderForDateRange(providerNo,startDate,endDate);
 						 int problemList          = caseManagementNoteDao.getNoteCountForProviderForDateRangeWithIssueId(providerNo,startDate,endDate,"Concerns");
 						 int storedDocuments      = documentDAO.getNumberOfDocumentsAttachedToAProviderDemographics(providerNo, startDate, endDate);
@@ -159,16 +162,16 @@ List<Provider> providers = providerDao.getActiveProviders();
 						 	customFilter.setStart_date(startDate);
 						 	customFilter.setEnd_date(endDate);
 						 	useOfRemindersAlerts += ticklerDAO.getTicklers(customFilter).size();
-						 	
+
 						 int labs                 = providerInboxRoutingDao.howManyDocumentsLinkedWithAProvider(providerNo);
-					
+
 					%>
-					
+
 					<div>
 					<h2>Practice Profile</h2>
-					
+
 					Practice Size: <%=demoList.size() %>
-					
+
 					<h2>Age and Gender Distribution</h2>
 					<table border=1 >
 						<tr>
@@ -207,12 +210,12 @@ List<Provider> providers = providerDao.getActiveProviders();
 							<td><%=divide(a85plus,a85plusm) %>%</td>
 							<td><%=divide(a85plus,a85plusf) %>%</td>
 						</tr>
-					
+
 					</table>
-					
+
 					<br><br><br>
-					
-					
+
+
 					<table border=1>
 						<tr>
 							<th>Scheduled Appts</th>
@@ -239,16 +242,16 @@ List<Provider> providers = providerDao.getActiveProviders();
 						</tr>
 					</table>
 					</div>
-					
+
 					<%}%>
-            	
+
             	</td>
             </tr>
             <tr>
 				<td class="MainTableBottomRowLeftColumn"></td>
 				<td class="MainTableBottomRowRightColumn"></td>
 			</tr>
-         </table>   
+         </table>
 	</body>
 </html>
 
