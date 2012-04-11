@@ -121,3 +121,5 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2011-03-24  0:01:22
+
+insert into OcanFormOption (ocanFormVersion, ocanDataCategory, ocanDataCategoryValue, ocanDataCategoryName) VALUES ('1.2','Practioner List','SIGOTHR','Significant Other');
