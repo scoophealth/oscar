@@ -1,4 +1,4 @@
-#Thu Mar 08 11:51:00 EST 2012
+#Wed Apr 11 15:09:23 EDT 2012
 eclipse.preferences.version=1
 org.eclipse.jdt.core.builder.cleanOutputFolder=ignore
 org.eclipse.jdt.core.builder.duplicateResourceTask=warning
@@ -85,7 +85,7 @@ org.eclipse.jdt.core.compiler.problem.unusedParameter=warning
 org.eclipse.jdt.core.compiler.problem.unusedParameterIncludeDocCommentReference=disabled
 org.eclipse.jdt.core.compiler.problem.unusedParameterWhenImplementingAbstract=disabled
 org.eclipse.jdt.core.compiler.problem.unusedParameterWhenOverridingConcrete=disabled
-org.eclipse.jdt.core.compiler.problem.unusedPrivateMember=error
+org.eclipse.jdt.core.compiler.problem.unusedPrivateMember=warning
 org.eclipse.jdt.core.compiler.problem.unusedWarningToken=warning
 org.eclipse.jdt.core.compiler.problem.varargsArgumentNeedCast=warning
 org.eclipse.jdt.core.compiler.source=1.6
