@@ -1,47 +1,47 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
-<% 
+<%
 if(session.getAttribute("user") == null)    response.sendRedirect("../../../../logout.jsp");
 String user_no="";
 user_no = (String) session.getAttribute("user");
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*"
-	errorPage="../../errorpage.jsp"%>
+	errorPage="../../../errorpage.jsp"%>
 
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
 <%@ include file="dbINR.jspf"%>
-<% 
+<%
 String temp="";
 String clinic_no= request.getParameter("clinic_no");
 String clinic_ref_code = request.getParameter("xml_location");
 String creator = request.getParameter("curUser");
-String updatedate = request.getParameter("curDate"); 
+String updatedate = request.getParameter("curDate");
 String verCode = request.getParameter("verCode");
 
 String demono="",demo_name="",demo_dob="",demo_hin="", billinginr_no="", provider_no="";
@@ -49,24 +49,24 @@ String demono="",demo_name="",demo_dob="",demo_hin="", billinginr_no="", provide
     String billing_unit="";
     int colorCount = 0;
        String color="";
-  int Count1 = 0;  
+  int Count1 = 0;
 
 for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 		temp=e.nextElement().toString();
-		if( temp.indexOf("inrbilling")==-1 ) continue; 
+		if( temp.indexOf("inrbilling")==-1 ) continue;
 //////////////////////////////////////////////////////////////////////////////////////
 // 	content+="<" +temp+ ">" +SxmlMisc.replaceHTMLContent(request.getParameter(temp))+ "</" +temp+ ">";
-//////////////////////////////////////////////////////////////////////////////////////  	
+//////////////////////////////////////////////////////////////////////////////////////
 
 
 
-   
-       
-       
+
+
+
      ResultSet rsdemo = null;
       rsdemo = apptMainBean.queryResults(temp.substring(10), "search_inrbilling_dt_billno");
-      while(rsdemo.next()){ 
-      
+      while(rsdemo.next()){
+
       demono = rsdemo.getString("demographic_no");
       demo_name = rsdemo.getString("demographic_name");
       demo_hin = rsdemo.getString("hin") + rsdemo.getString("ver");
@@ -79,9 +79,9 @@ for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
       service_desc = rsdemo.getString("service_desc");
       billing_amount = rsdemo.getString("billing_amount");
       billing_unit = rsdemo.getString("billing_unit");
-      
-      
-      
+
+
+
 	StringBuffer sotherBuffer = new StringBuffer(billing_amount);
 	int f = billing_amount.indexOf('.');
 	sotherBuffer.deleteCharAt(f);
@@ -91,7 +91,7 @@ for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 
 
 
-  String[] param =new String[23]; 
+  String[] param =new String[23];
 	  param[0]=clinic_no;
 	  param[1]=demono;
 	  param[2]=provider_no;
@@ -107,35 +107,35 @@ for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 	  param[12]="";
 	  param[13]=billing_amount;
 	  param[14]="O";
-	  param[15]=demo_dob; 
-	  param[16]=request.getParameter("xml_appointment_date"); 
-	  param[17]="00"; 
-	    param[18]=provider_ohip_no; 
-	  param[19]=provider_rma_no; 
-	  	  param[20]=""; 
-	  	  	  param[21]=""; 
-	  	  	  	  param[22]=creator; 
+	  param[15]=demo_dob;
+	  param[16]=request.getParameter("xml_appointment_date");
+	  param[17]="00";
+	    param[18]=provider_ohip_no;
+	  param[19]=provider_rma_no;
+	  	  param[20]="";
+	  	  	  param[21]="";
+	  	  	  	  param[22]=creator;
 	  int rowsAffected = apptMainBean.queryExecuteUpdate(param,"save_bill");
-	     
+
 	    String billNo = null;
 	    String[] param4 = new String[2];
 	    param4[0] = demono;
 	    param4[1] = "0";
 	    rsdemo = null;
-	     
+
 	    rsdemo = apptMainBean.queryResults(param4, "search_billing_no_by_appt");
-   while (rsdemo.next()) {   
+   while (rsdemo.next()) {
    billNo = rsdemo.getString("billing_no");
    }
-   
+
    int recordAffected=0;
          String[] param3 = new String[3];
                  param3[0] = "A";
                  param3[1] = request.getParameter("xml_appointment_date");
                  param3[2] = temp.substring(10);
           recordAffected = apptMainBean.queryExecuteUpdate(param3,"update_inrbilling_dt_billno");
-	
-   
+
+
    int recordCount = Integer.parseInt("1");
        for (int i=0;i<recordCount;i++){
        String[] param2 = new String[8];
@@ -147,13 +147,13 @@ for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
        param2[5] = request.getParameter("xml_appointment_date");
        param2[6] = "O";
         param2[7] = billing_unit;
-       
+
        recordAffected = apptMainBean.queryExecuteUpdate(param2,"save_bill_record");
-       
-       
-              }       
-              
-         
+
+
+              }
+
+
 	}
 }
 %>

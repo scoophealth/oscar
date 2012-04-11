@@ -17,7 +17,6 @@ CREATE TABLE billing_payment_type (
 --
 -- Table structure for table 'billinglocation'
 --
-alter table billing add column billingtype varchar(4) default 'MSP';
 
 CREATE TABLE billinglocation (
   billinglocation varchar(10) default '00',

@@ -42,13 +42,14 @@ import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.AppointmentArchiveDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.Billing;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import oscar.MyDateFormat;
 import oscar.OscarProperties;
-import oscar.entities.Billing;
 import oscar.entities.Billingmaster;
 import oscar.oscarBilling.ca.bc.MSP.MSPBillingNote;
 import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
@@ -56,7 +57,6 @@ import oscar.oscarBilling.ca.bc.data.BillingHistoryDAO;
 import oscar.oscarBilling.ca.bc.data.BillingNote;
 import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
 import oscar.service.OscarSuperManager;
-import oscar.util.UtilDateUtilities;
 
 public class BillingSaveBillingAction extends Action {
 
@@ -138,9 +138,9 @@ public class BillingSaveBillingAction extends Action {
                 bItem.getLineTotal();
             }
 
-            billing.setBillingNo(0);
+            billing.setId(0);
             billingmasterDAO.save(billing);
-            billingid = ""+billing.getBillingNo(); //getInsertIdFromBilling(billingSQL);
+            billingid = ""+billing.getId(); //getInsertIdFromBilling(billingSQL);
             //log.debug("billing id " + billingid + "   sql " + billingSQL);
             billingIds.add(billingid);
             if (paymentMode == 'E') {
@@ -336,13 +336,13 @@ public class BillingSaveBillingAction extends Action {
         bill.setAppointmentNo(apptNo);
         bill.setDemographicName(bean.getPatientName());
         bill.setHin(bean.getPatientPHN());
-        bill.setUpdateDate(UtilDateUtilities.DateToString(curDate));
-        bill.setBillingDate(bean.getServiceDate());
+        bill.setUpdateDate(curDate);
+        bill.setBillingDate(MyDateFormat.getSysDate(bean.getServiceDate()));
         bill.setTotal(bean.getGrandtotal());
         bill.setStatus(""+billingAccountStatus);
         bill.setDob(bean.getPatientDoB());
-        bill.setVisitdate(bean.getAdmissionDate());
-        bill.setVisittype(bean.getVisitType());
+        bill.setVisitDate(MyDateFormat.getSysDate(bean.getAdmissionDate()));
+        bill.setVisitType(bean.getVisitType());
         bill.setProviderOhipNo(bean.getBillingPracNo());
         bill.setApptProviderNo(bean.getApptProviderNo());
         bill.setCreator(bean.getCreator());
