@@ -62,7 +62,6 @@
 						prop.setProperty("service_code", serviceCode);
 					}
 				} else if (request.getParameter("action").startsWith("add")) {
-					// insert into the service code
 					String serviceCode = request.getParameter("service_code");
 					serviceCode = "_" + serviceCode;
 					if (serviceCode.equals(request.getParameter("action").substring("add".length()))) {

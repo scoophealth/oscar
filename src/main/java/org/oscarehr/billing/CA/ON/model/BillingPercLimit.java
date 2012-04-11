@@ -42,18 +42,17 @@ import org.oscarehr.common.model.AbstractModel;
 @Table(name="billingperclimit")
 public class BillingPercLimit extends AbstractModel<Integer> implements Serializable {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Integer id;
+
     private String service_code;
     private String min;
     private String max;
+    @Temporal(TemporalType.DATE)
     private Date effective_date;
-    private Integer id;
 
-    /**
-     * @return the service_code
-     */
-    @Override
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+	@Override
     public Integer getId() {
         return this.id;
     }
@@ -61,7 +60,7 @@ public class BillingPercLimit extends AbstractModel<Integer> implements Serializ
     public void setId(Integer id) {
         this.id = id;
     }
-    
+
     public String getService_code() {
         return service_code;
     }
@@ -104,7 +103,6 @@ public class BillingPercLimit extends AbstractModel<Integer> implements Serializ
     /**
      * @return the effective_date
      */
-    @Temporal(TemporalType.DATE)
     public Date getEffective_date() {
         return effective_date;
     }

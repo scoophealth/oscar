@@ -68,6 +68,7 @@
 	<context:component-scan base-package="org.oscarehr.hospitalReportManager.dao" />
 	<context:component-scan base-package="org.oscarehr.olis.dao" />
 	<context:component-scan base-package="org.oscarehr.billing.CA.ON.dao" />
+	<context:component-scan base-package="org.oscarehr.billing.CA.BC.dao" />
 	<context:component-scan base-package="org.oscarehr.billing.CA.dao" />
 
 </beans>

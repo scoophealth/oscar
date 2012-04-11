@@ -52,7 +52,7 @@ import oscar.oscarDB.DBHandler;
 public class BillingAssociationPersistence {
 
 
-	private DiagnosticCodeDao diagnosticCodeDao = SpringUtils.getBean(DiagnosticCode.class);
+	private DiagnosticCodeDao diagnosticCodeDao = SpringUtils.getBean(DiagnosticCodeDao.class);
 
 
   public BillingAssociationPersistence() {

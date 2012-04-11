@@ -1,26 +1,26 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -31,7 +31,12 @@
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <%@ include file="dbBilling.jspf"%>
-
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.RaHeader" %>
+<%@ page import="org.oscarehr.common.dao.RaHeaderDao" %>
+<%
+RaHeaderDao raHeaderDao = SpringUtils.getBean(RaHeaderDao.class);
+%>
 
 <html>
 <head>
@@ -53,7 +58,7 @@
 			onClick='window.close()'></th>
 	</tr>
 </table>
-<% 
+<%
 String filepath="", filename = "", header="", headerCount="", total="", paymentdate="", payable="", totalStatus="", deposit=""; //request.getParameter("filename");
 String transactiontype="", providerno="", specialty="", account="", patient_last="", patient_first="", provincecode="", hin="", ver="", billtype="", location="";
 String servicedate="", serviceno="", servicecode="", amountsubmit="", amountpay="", amountpaysign="", explain="", error="";
@@ -74,7 +79,7 @@ String nextline;
 while ((nextline=input.readLine())!=null){
 %>
 <% header = nextline.substring(0,1);
-   if (header.compareTo("H") == 0) { 
+   if (header.compareTo("H") == 0) {
    headerCount = nextline.substring(2,3);
    if (headerCount.compareTo("1") == 0){
    paymentdate = nextline.substring(21,29);
@@ -82,42 +87,43 @@ while ((nextline=input.readLine())!=null){
    total = nextline.substring(59,68);
    totalStatus = nextline.substring(68,69);
    deposit = nextline.substring(69,77);
-   
+
 
    totalsum = Integer.parseInt(total);
    total = String.valueOf(totalsum);
-   total = total.substring(0, total.length()-2) + "." + total.substring(total.length()-2);      
-   
+   total = total.substring(0, total.length()-2) + "." + total.substring(total.length()-2);
+
           String[] param2 = new String[2];
           param2[0] = filename;
           param2[1] = paymentdate;
               String raNo = "";
 	  	    ResultSet rsdemo = null;
 	  	    rsdemo = apptMainBean.queryResults(param2, "search_rahd");
-	     while (rsdemo.next()) {   
+	     while (rsdemo.next()) {
 	     raNo = rsdemo.getString("raheader_no");
 	  }
-             
+
            if (raNo.compareTo("") == 0 || raNo == null){
-          
-          
-	  String[] param =new String[4];
-	  param[0]=filename;
-	  param[1]=paymentdate;
-	  param[2]=total;
-	  param[3]="N";
-	  int rowsAffected = apptMainBean.queryExecuteUpdate(param,"save_rahd");
-	    
+
+        	   RaHeader raHeader = new RaHeader();
+        	   raHeader.setFilename(filename);
+        	   raHeader.setPaymentDate(paymentdate);
+        	   raHeader.setTotalAmount(total);
+        	   raHeader.setStatus("N");
+        	   raHeaderDao.persist(raHeader);
+
+
+
 			rsdemo = null;
 	 	    rsdemo = apptMainBean.queryResults(param2, "search_rahd");
-		     while (rsdemo.next()) {   
+		     while (rsdemo.next()) {
 		     raNo = rsdemo.getString("raheader_no");
 	     }
         }
 
 
    }
-     
+
       if (headerCount.compareTo("4") == 0){
       transactiontype = nextline.substring(14,15);
       providerno = nextline.substring(15,21);
@@ -129,12 +135,12 @@ while ((nextline=input.readLine())!=null){
       ver = nextline.substring(64,66);
       billtype = nextline.substring(66,69);
       location = nextline.substring(69,73);
-   
+
      count = count + 1;
       accountno= Integer.parseInt(account);
       account = String.valueOf(accountno);
             // proFirst = "";  proLast = ""; demoFirst =""; demoLast = "";  apptDate = "";   apptTime = "";
-    
+
       rslocal = null;
        rslocal = apptMainBean.queryResults(account, "search_bill_generic");
        while(rslocal.next()){
@@ -144,13 +150,13 @@ while ((nextline=input.readLine())!=null){
        demoLast = rslocal.getString("dl");
        apptDate = rslocal.getString("billing_date");
        apptTime = rslocal.getString("billing_time");
-          
-        }   
+
+        }
 %>
 
 <%
    }
-   
+
    if (headerCount.compareTo("5") == 0){
       transactiontype = nextline.substring(14,15);
       servicedate = nextline.substring(15,23);
@@ -167,16 +173,16 @@ while ((nextline=input.readLine())!=null){
       amountpay  = String.valueOf(amountPaySum );
       if (amountpay.compareTo("0") == 0){
       amountpay = "000";}
-      amountpay = amountpay.substring(0, amountpay.length()-2) + "." + amountpay.substring(amountpay.length()-2);      
+      amountpay = amountpay.substring(0, amountpay.length()-2) + "." + amountpay.substring(amountpay.length()-2);
        amountSubmitSum = Integer.parseInt(amountsubmit);
         amountsubmit  = String.valueOf(amountSubmitSum );
            if (amountsubmit.compareTo("0") == 0){
       amountsubmit = "000";}
-       amountsubmit =amountsubmit.substring(0, amountsubmit.length()-2) + "." + amountsubmit.substring(amountsubmit.length()-2);      
+       amountsubmit =amountsubmit.substring(0, amountsubmit.length()-2) + "." + amountsubmit.substring(amountsubmit.length()-2);
       if (explain.compareTo("  ")==0 || explain.compareTo("")==0){
       payFlag = 0;
       }
-      else{ 
+      else{
       if (explain.compareTo("I2")==0) {
       payFlag = 0;
       }
@@ -188,7 +194,7 @@ while ((nextline=input.readLine())!=null){
       if(checkAccount.compareTo(account) == 0){
       flag=0;       %>
 
-<%   
+<%
       }
       else {
       flag = 1;
@@ -199,7 +205,7 @@ while ((nextline=input.readLine())!=null){
       }
 
    }
-   
+
 
    }
 %>

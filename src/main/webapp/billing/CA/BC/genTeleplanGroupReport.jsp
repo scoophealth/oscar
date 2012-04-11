@@ -32,11 +32,15 @@
 <%@ page
 	import="java.util.*, java.sql.*, oscar.oscarBilling.ca.bc.MSP.*"%>
 <%@ include file="../../../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
 <%@ include file="dbBilling.jspf"%>
-
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.billing.CA.model.BillActivity" %>
+<%@ page import="org.oscarehr.billing.CA.dao.BillActivityDao" %>
+<%
+	BillActivityDao billActivityDao = SpringUtils.getBean(BillActivityDao.class);
+%>
 
 <% GregorianCalendar now=new GregorianCalendar();
    int curYear = now.get(Calendar.YEAR);
@@ -99,22 +103,24 @@
             if (fLength == 1) zero = "0";
             if (fLength == 2) zero = "00";
 
-            String[] param =new String[13];
-                     param[0]=request.getParameter("monthCode");
-                     param[1]=batchCount;
-                     param[2]="H" + request.getParameter("monthCode") + proOHIP + "_" + zero +  batchCount + ".htm";
-                     param[3]="H" + request.getParameter("monthCode") + billinggroup_no + "." + zero + batchCount;
-                     param[4]=proOHIP;
-                     param[5]=billinggroup_no;
-                     param[6]=request.getParameter("curUser");
-                     param[7]= extract.getHtmlCode();
-                     param[8]= extract.getValue();
-                     param[9]= extract.getOhipClaim()+"/"+extract.getOhipRecord();
-                     param[10]=request.getParameter("curDate");
-                     param[11]="A";
-                     param[12]= extract.getTotalAmount();
+    		BillActivity ba = new BillActivity();
+    		ba.setMonthCode(request.getParameter("monthCode"));
+    		ba.setBatchCount(Integer.parseInt(batchCount));
+    		ba.setHtmlFilename("H" + request.getParameter("monthCode") + proOHIP + "_" + zero +  batchCount + ".htm");
+    		ba.setOhipFilename("H" + request.getParameter("monthCode") + billinggroup_no + "." + zero + batchCount);
+    		ba.setProviderOhipNo(proOHIP);
+    		ba.setGroupNo(billinggroup_no);
+    		ba.setCreator(request.getParameter("curUser"));
+    		ba.setHtmlContext(extract.getHtmlCode());
+    		ba.setOhipContext(extract.getValue());
+    		ba.setClaimRecord(extract.getOhipClaim()+"/"+extract.getOhipRecord());
+    		ba.setUpdateDateTime(new java.util.Date());
+    		ba.setStatus("A");
+    		ba.setTotal(extract.getTotalAmount());
+    		billActivityDao.persist(ba);
 
-            int rowsAffected = apptMainBean.queryExecuteUpdate(param,"save_billactivity");
+
+            int rowsAffected = 1;
 
             extract.setHtmlFilename("H" + request.getParameter("monthCode") +proOHIP + "_" + zero + batchCount+".htm");
             extract.setOhipFilename("H" + request.getParameter("monthCode") + billinggroup_no + "." + zero + batchCount);
@@ -178,21 +184,24 @@
             if (fLength == 1) zero = "0";
             if (fLength == 2) zero = "00";
 
-            String[] param =new String[13];
-                     param[0]=request.getParameter("monthCode");
-                     param[1]=batchCount;
-                     param[2]="H" + request.getParameter("monthCode") + proOHIP + "_" + zero +  batchCount + ".htm";
-                     param[3]="H" + request.getParameter("monthCode") + billinggroup_no + "." + zero + batchCount;
-                     param[4]=proOHIP;
-                     param[5]=billinggroup_no;
-                     param[6]=request.getParameter("curUser");
-                     param[7]= extract.getValue();
-                     param[8]= extract.getHtmlCode();
-                     param[9]= extract.getOhipClaim()+"/"+extract.getOhipRecord();
-                     param[10]=request.getParameter("curDate");
-                     param[11]="A";
-                     param[12]=extract.getTotalAmount();
-            int rowsAffected = apptMainBean.queryExecuteUpdate(param,"save_billactivity");
+    		BillActivity ba = new BillActivity();
+    		ba.setMonthCode(request.getParameter("monthCode"));
+    		ba.setBatchCount(Integer.parseInt(batchCount));
+    		ba.setHtmlFilename("H" + request.getParameter("monthCode") + proOHIP + "_" + zero +  batchCount + ".htm");
+    		ba.setOhipFilename("H" + request.getParameter("monthCode") + billinggroup_no + "." + zero + batchCount);
+    		ba.setProviderOhipNo(proOHIP);
+    		ba.setGroupNo(billinggroup_no);
+    		ba.setCreator(request.getParameter("curUser"));
+    		ba.setHtmlContext(extract.getHtmlCode());
+    		ba.setOhipContext(extract.getValue());
+    		ba.setClaimRecord(extract.getOhipClaim()+"/"+extract.getOhipRecord());
+    		ba.setUpdateDateTime(new java.util.Date());
+    		ba.setStatus("A");
+    		ba.setTotal(extract.getTotalAmount());
+    		billActivityDao.persist(ba);
+
+
+            int rowsAffected = 1;
 
             extract.setHtmlFilename("H" + request.getParameter("monthCode") +proOHIP + "_" + zero + batchCount+".htm");
             extract.setOhipFilename("H" + request.getParameter("monthCode") + billinggroup_no  + "." + zero + batchCount);

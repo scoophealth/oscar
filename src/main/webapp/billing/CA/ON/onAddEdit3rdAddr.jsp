@@ -78,7 +78,6 @@
 					}
 
 				} else if (request.getParameter("action").startsWith("add")) {
-					// insert into the service code
 					String company_name = request.getParameter("company_name");
 					if (company_name.equals(request.getParameter("action").substring("add".length()))) {
 						Properties val = new Properties();

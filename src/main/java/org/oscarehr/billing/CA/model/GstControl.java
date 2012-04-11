@@ -39,7 +39,9 @@ import org.oscarehr.common.model.AbstractModel;
 @Entity
 @Table(name="gstControl")
 public class GstControl extends AbstractModel<Integer> implements Serializable {
-    
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private Boolean gstFlag;
     private BigDecimal gstPercent;
@@ -80,8 +82,6 @@ public class GstControl extends AbstractModel<Integer> implements Serializable {
     }
 
     @Override
-    @Id()
-    @GeneratedValue(strategy = GenerationType.AUTO)
     public Integer getId() {
         return id;
     }

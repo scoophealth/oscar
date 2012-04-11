@@ -166,16 +166,6 @@ public class JdbcBillingRAImpl {
 								+ UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd") + "','"
 								+ "<xml_cheque>" + total + "</xml_cheque>" + "')";
 						raNo = "" + dbObj.saveBillingRecord(sql);
-						// int rowsAffected =
-						// apptMainBean.queryExecuteUpdate(param, "save_rahd");
-
-						// rsdemo = null;
-						// rsdemo = apptMainBean.queryResults(param2,
-						// "search_rahd");
-						// can't make sure the record has only one result here
-						// while (rsdemo.next()) {
-						// raNo = rsdemo.getString("raheader_no");
-						// }
 					}
 				} // ends with "1"
 
@@ -279,10 +269,6 @@ public class JdbcBillingRAImpl {
 								+ amountpaysign + amountpay + "','" + servicedate + "','" + explain + "','" + billtype + "','" + claimno
 								+ "')";
 						int rowsAffected3 = dbObj.saveBillingRecord(sql);
-						// {"save_radt", "insert into radetail
-						// values('\\N',?,?,?,?,?,?,?,?,?,?,?)"},
-						// int rowsAffected3 =
-						// apptMainBean.queryExecuteUpdate(param4, "save_radt");
 					}
 				}
 

@@ -947,8 +947,8 @@ str = sBuffer.toString();
 	value="<%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)%>">
 <input type="hidden" name="billing_time"
 	value="<%=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)%>">
-<input type="hidden" name="billingservice_code" value=""> <input
-	type="hidden" name="dboperation" value="save_bill"> <input
+<input type="hidden" name="billingservice_code" value=""> 
+<input
 	type="hidden" name="appointment_date"
 	value="<%=request.getParameter("xml_appointment_date")%>"> <input
 	type="hidden" name="appointment_no"
