@@ -1,26 +1,26 @@
-<%--  
+<%--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 --%>
 
@@ -34,10 +34,14 @@ userlastname = (String) session.getAttribute("userlastname");
 <%@ page import="java.sql.*, java.util.*,java.net.*, oscar.MyDateFormat"
 	errorPage="../../errorpage.jsp"%>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%@ include file="dbINR.jspf"%>
-
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.billing.CA.model.BillingInr" %>
+<%@ page import="org.oscarehr.billing.CA.dao.BillingInrDao" %>
+<%
+	BillingInrDao billingInrDao= SpringUtils.getBean(BillingInrDao.class);
+%>
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -48,8 +52,8 @@ userlastname = (String) session.getAttribute("userlastname");
     }
     function closeit() {
     	//self.opener.refresh();
-      //self.close();      
-    }   
+      //self.close();
+    }
     //-->
 </script>
 </head>
@@ -62,26 +66,25 @@ userlastname = (String) session.getAttribute("userlastname");
 	</tr>
 </table>
 <%
-String[] param =new String[15]; 
-param[0]=request.getParameter("demoid");
-param[1]=request.getParameter("demo_name");
-param[2]=request.getParameter("demo_hin");
-param[3]=request.getParameter("demo_dob");
-param[4]=request.getParameter("provider_no");
-param[5]=request.getParameter("provider_ohip_no");
-param[6]=request.getParameter("provider_rma_no");
-param[7]=request.getParameter("doccreator");
-param[8]=request.getParameter("diag_code");
-param[9]=request.getParameter("service_code");
-param[10]=request.getParameter("service_desc");
-param[11]=request.getParameter("service_amount");
-param[12]=request.getParameter("service_unit");
-param[13]=request.getParameter("docdate");
-param[14]="N"; 
+BillingInr bi = new BillingInr();
+bi.setDemographicNo(Integer.parseInt(request.getParameter("demoid")));
+bi.setDemographicName(request.getParameter("demo_name"));
+bi.setHin(request.getParameter("demo_hin"));
+bi.setDob(request.getParameter("demo_dob"));
+bi.setProviderNo(Integer.parseInt(request.getParameter("provider_no")));
+bi.setProviderOhipNo(request.getParameter("provider_ohip_no"));
+bi.setProviderRmaNo(request.getParameter("provider_rma_no"));
+bi.setCreator(request.getParameter("doccreator"));
+bi.setDiagnosticCode(request.getParameter("diag_code"));
+bi.setServiceCode(request.getParameter("service_code"));
+bi.setServiceDesc(request.getParameter("service_desc"));
+bi.setBillingAmount(request.getParameter("service_amount"));
+bi.setBillingUnit(request.getParameter("service_unit"));
+bi.setCreateDateTime(new java.util.Date());
+bi.setStatus("N");
 
-int rowsAffected = apptMainBean.queryExecuteUpdate(param,"save_inrbilling");
-
-//	  int[] demo_no = new int[1]; demo_no[0]=Integer.parseInt(request.getParameter("demographic_no")); int rowsAffected = apptMainBean.queryExecuteUpdate(demo_no,param,request.getParameter("dboperation"));
+billingInrDao.persist(bi);
+int rowsAffected = 1;
 
 if (rowsAffected ==1) {
 %>
@@ -97,7 +100,7 @@ if (rowsAffected ==1) {
 <p>
 <h1>Sorry, addition has failed.</h1>
 </p>
-<%  
+<%
 }
 %>
 <p></p>

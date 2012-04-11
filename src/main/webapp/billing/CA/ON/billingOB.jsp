@@ -853,7 +853,6 @@ rslocal.close();
 							<input type="hidden" name="billing_time"
 								value="<%=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)%>">
 							<input type="hidden" name="billingservice_code" value="">
-							<input type="hidden" name="dboperation" value="save_bill">
 							<input type="hidden" name="appointment_no"
 								value="<%=request.getParameter("appointment_no")%>">
 							<input type="hidden" name="start_time"

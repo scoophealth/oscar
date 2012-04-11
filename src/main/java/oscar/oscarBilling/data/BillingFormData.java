@@ -39,7 +39,7 @@ import oscar.oscarDB.DBHandler;
 
 public class BillingFormData {
 
-	private DiagnosticCodeDao diagnosticCodeDao = SpringUtils.getBean(DiagnosticCode.class);
+	private DiagnosticCodeDao diagnosticCodeDao = SpringUtils.getBean(DiagnosticCodeDao.class);
 
     public String getBillingFormDesc(BillingForm[] billformlist,String billForm){
         for (int i = 0; i < billformlist.length; i++){

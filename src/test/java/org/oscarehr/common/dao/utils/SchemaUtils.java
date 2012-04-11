@@ -184,7 +184,7 @@ public class SchemaUtils
                 } else {
                     env = new String[]{};
                 }
-                
+
 		Process p = Runtime.getRuntime().exec(new String[] {"mysql","--user="+ConfigUtils.getProperty("db_user"),"--password="+ConfigUtils.getProperty("db_password"),"-e","source "+filename,ConfigUtils.getProperty("db_schema")},env, new File(dir));
 		BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
 		BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
@@ -230,6 +230,8 @@ public class SchemaUtils
 		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/measurementMapData.sql"),0);
 //		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/expire_oscardoc.sql"),0);
 
+		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/oscarinit_bc.sql"),0);
+		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/oscardata_bc.sql"),0);
 
 		createTableStatements.clear();
 		try {
@@ -251,7 +253,7 @@ public class SchemaUtils
 			}
 			rs.close();
 
-                        
+
 		}catch(SQLException e) {
 			MiscUtils.getLogger().error("Error:",e);
 		}

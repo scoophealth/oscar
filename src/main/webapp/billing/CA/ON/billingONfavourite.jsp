@@ -87,7 +87,6 @@
 					}
 
 				} else if (request.getParameter("action").startsWith("add")) {
-					// insert into the service code
 					String name = request.getParameter("name");
 					if (name.equals(request.getParameter("action").substring("add".length()))) {
 						String list = "";

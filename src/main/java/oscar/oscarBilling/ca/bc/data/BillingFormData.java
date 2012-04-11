@@ -46,7 +46,7 @@ import oscar.util.UtilDateUtilities;
 
 public class BillingFormData {
   private static Logger _log = MiscUtils.getLogger();
-  private DiagnosticCodeDao diagnosticCodeDao = SpringUtils.getBean(DiagnosticCode.class);
+  private DiagnosticCodeDao diagnosticCodeDao = SpringUtils.getBean(DiagnosticCodeDao.class);
 
 
   public ArrayList getPaymentTypes() {

@@ -155,17 +155,6 @@
 					int nNo = dbObj.addOneClaimHeaderRecord(claim1Header);
 					String billNo = "" + nNo;
 
-					//int rowsAffected = apptMainBean.queryExecuteUpdate(param, "save_bill");
-					//String billNo = null;
-					//String[] param4 = new String[2];
-					//param4[0] = demono;
-					//param4[1] = "0";
-					//rsdemo = null;
-					//rsdemo = apptMainBean.queryResults(param4, "search_billing_no_by_appt");
-					//while (rsdemo.next()) {
-					//	billNo = rsdemo.getString("billing_no");
-					//}
-
 					int recordAffected = 0;
 					String[] param3 = new String[3];
 					param3[0] = "A";
@@ -185,7 +174,6 @@
 						param2[6] = "O";
 						param2[7] = billing_unit;
 
-						//recordAffected = apptMainBean.queryExecuteUpdate(param2, "save_bill_record");
 					}
 
 					BillingItemData[] claimItem = new BillingItemData[recordCount];
