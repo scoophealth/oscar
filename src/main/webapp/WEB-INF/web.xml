@@ -195,7 +195,7 @@
 	</servlet>
 	<servlet>
 		<servlet-name>OscarDownload</servlet-name>
-		<servlet-class>OscarDownload</servlet-class>
+		<servlet-class>oscar.util.OscarDownload</servlet-class>
 		<load-on-startup>0</load-on-startup>
 	</servlet>
 	<servlet>
