@@ -49,6 +49,14 @@
 <%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
 <%@page import="org.oscarehr.common.model.Appointment" %>
 <%@page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.Billing" %>
+<%@ page import="org.oscarehr.common.dao.BillingDao" %>
+<%@ page import="org.oscarehr.billing.CA.model.BillingDetail" %>
+<%@ page import="org.oscarehr.billing.CA.dao.BillingDetailDao" %>
+<%
+	BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
+	BillingDetailDao billingDetailDao = SpringUtils.getBean(BillingDetailDao.class);
+%>
 <%
 	AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
 	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
@@ -78,31 +86,32 @@ function closeit() {
 </table>
 
 <%
-    String[] param =new String[23];
-	  param[0]=request.getParameter("clinic_no");
-	  param[1]=request.getParameter("demographic_no");
-	  param[2]=request.getParameter("provider_no");
-	  param[3]=request.getParameter("appointment_no");
-	  param[4]=request.getParameter("ohip_version");
-	  param[5]=request.getParameter("demographic_name");
-	  param[6]=request.getParameter("hin");
-	  param[7]=request.getParameter("billing_date");
-	  param[8]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("billing_time"));
-	  param[9]=request.getParameter("appointment_date");
-	  param[10]=request.getParameter("start_time");
-	  param[11]=request.getParameter("clinic_ref_code");
-	  param[12]=request.getParameter("content");
-	  param[13]=request.getParameter("total");
-	  param[14]=request.getParameter("billtype");
-	  param[15]=request.getParameter("demographic_dob");
-	  param[16]=request.getParameter("visitdate");
-	  param[17]=request.getParameter("visittype");
-	  param[18]=request.getParameter("pohip_no");
-	  param[19]=request.getParameter("prma_no");
-	  param[20]=request.getParameter("apptProvider_no");
-	  param[21]=request.getParameter("asstProvider_no");
-	  param[22]=request.getParameter("user_no");
-	  int rowsAffected = apptMainBean.queryExecuteUpdate(param,request.getParameter("dboperation"));
+Billing b = new Billing();
+b.setClinicNo(Integer.parseInt(request.getParameter("clinic_no")));
+b.setDemographicNo(Integer.parseInt(request.getParameter("demographic_no")));
+b.setProviderNo(request.getParameter("provider_no"));
+b.setAppointmentNo(Integer.parseInt(request.getParameter("appointment_no")));
+b.setOrganizationSpecCode(request.getParameter("ohip_version"));
+b.setDemographicName(request.getParameter("demographic_name"));
+b.setHin(request.getParameter("hin"));
+b.setUpdateDate(new java.util.Date());
+b.setUpdateTime(new java.util.Date());
+b.setBillingDate(MyDateFormat.getSysDate(request.getParameter("appointment_date")));
+b.setBillingTime(MyDateFormat.getSysTime(request.getParameter("start_time")));
+b.setClinicRefCode(request.getParameter("clinic_ref_code"));
+b.setContent(request.getParameter("content"));
+b.setTotal(request.getParameter("total"));
+b.setStatus(request.getParameter("billtype"));
+b.setDob(request.getParameter("demographic_dob"));
+b.setVisitDate(MyDateFormat.getSysDate(request.getParameter("visitdate")));
+b.setVisitType(request.getParameter("visittype"));
+b.setProviderOhipNo(request.getParameter("pohip_no"));
+b.setProviderRmaNo(request.getParameter("prma_no"));
+b.setApptProviderNo(request.getParameter("apptProvider_no"));
+b.setAsstProviderNo(request.getParameter("asstProvider_no"));
+b.setCreator(request.getParameter("user_no"));
+billingDao.persist(b);
+int rowsAffected=1;
 
 	String billNo = null;
 	String[] param4 = new String[2];
@@ -116,17 +125,17 @@ function closeit() {
     int recordAffected=0;
     int recordCount = Integer.parseInt(request.getParameter("record"));
     for (int i=0;i<recordCount;i++){
-        String[] param2 = new String[8];
-        param2[0] = billNo;
-        param2[1] = request.getParameter("billrec"+i);
-        param2[2] = request.getParameter("billrecdesc"+i);
-        param2[3] = request.getParameter("pricerec"+i);
-        param2[4] = request.getParameter("diagcode");
-        param2[5] = request.getParameter("appointment_date");
-        param2[6] = request.getParameter("billtype");
-        param2[7] = request.getParameter("billrecunit"+i);
 
-        recordAffected = apptMainBean.queryExecuteUpdate(param2,"save_bill_record");
+    	   BillingDetail bd = new BillingDetail();
+    	   bd.setBillingNo(Integer.parseInt(billNo));
+    	   bd.setServiceCode(request.getParameter("billrec"+i));
+    	   bd.setServiceDesc(request.getParameter("billrecdesc"+i));
+    	   bd.setBillingAmount(request.getParameter("pricerec"+i));
+    	   bd.setDiagnosticCode(request.getParameter("diagcode"));
+    	   bd.setAppointmentDate(oscar.MyDateFormat.getSysDate(request.getParameter("appointment_date")));
+    	   bd.setStatus(request.getParameter("billtype"));
+    	   bd.setBillingUnit(request.getParameter("billrecunit"+i));
+    	   billingDetailDao.persist(bd);
     }
 
 //	  int[] demo_no = new int[1]; demo_no[0]=Integer.parseInt(request.getParameter("demographic_no")); int rowsAffected = apptMainBean.queryExecuteUpdate(demo_no,param,request.getParameter("dboperation"));

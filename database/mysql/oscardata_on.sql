@@ -13151,14 +13151,7 @@ INSERT INTO encounterForm (form_name, form_value, form_table, hidden) VALUES ('L
 INSERT INTO encounterForm (form_name, form_value) VALUES ('Antenatal Lab Req','../form/formlabreq07.jsp?labType=AnteNatal&demographic_no=');
 insert into encounterForm (form_name,form_value,form_table,hidden) Values('Lab Req 2010','../form/formlabreq10.jsp?demographic_no=','formLabReq10',0);
 
-INSERT INTO billing_payment_type (id, payment_type) VALUES (1,'CASH');
-INSERT INTO billing_payment_type (id, payment_type) VALUES (2,'CHEQUE');
-INSERT INTO billing_payment_type (id, payment_type) VALUES (3,'VISA');
-INSERT INTO billing_payment_type (id, payment_type) VALUES (4,'MASTERCARD');
-INSERT INTO billing_payment_type (id, payment_type) VALUES (5,'AMEX');
-INSERT INTO billing_payment_type (id, payment_type) VALUES (6,'ELECTRONIC');
-INSERT INTO billing_payment_type (id, payment_type) VALUES (7,'DEBIT');
-INSERT INTO billing_payment_type (id, payment_type) VALUES (8,'ALTERNATE');
+INSERT INTO billing_payment_type (payment_type) VALUES ('ALTERNATE');
 
 insert into billing_on_errorCode values ('HCC', 'Not complex/vulnerable');
 insert into billing_on_errorCode values ('AC4', 'unacceptable Ref. #');

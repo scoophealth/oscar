@@ -247,7 +247,7 @@ public class MSPReconcile {
   private HashMap getRejectionDetails() {
     HashMap map = new HashMap();
     try {
-      
+
       String sql = "select t_officefolioclaimno, t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_exp7,t_payment  from teleplanC12,teleplanS21 where teleplanC12.s21_id = teleplanS21.s21_id and teleplanC12.status != 'E'";
       ResultSet rs = DBHandler.GetSQL(sql);
       while (rs.next()) {
@@ -283,7 +283,7 @@ public class MSPReconcile {
     Properties p = new Properties();
     String debugC12Records = "";
     try {
-      
+
       String sql = "select t_officefolioclaimno, t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_exp7  from teleplanC12 where teleplanC12.status != 'E'";
       debugC12Records = sql + "\n";
       ResultSet rs = DBHandler.GetSQL(sql);
@@ -303,7 +303,7 @@ public class MSPReconcile {
           p.put(s, def);
         }
         catch (NumberFormatException intEx) {
-        	MiscUtils.getLogger().error("Error", intEx);	
+        	MiscUtils.getLogger().error("Error", intEx);
           MiscUtils.getLogger().debug("Had trouble Parsing int from " +
                              rs.getString("t_officeno"));
         }
@@ -323,7 +323,7 @@ public class MSPReconcile {
   public String getS00String(String billingMasterNo) {
     String s = "";
     try {
-      
+
 
       String sql =
           "SELECT teleplanS00.t_exp1,teleplanS00.t_exp1,teleplanS00.t_exp2,teleplanS00.t_exp3,teleplanS00.t_exp4,teleplanS00.t_exp5,teleplanS00.t_exp6,teleplanS00.t_exp7 FROM teleplanS00 " +
@@ -368,7 +368,7 @@ public class MSPReconcile {
       Properties errorsProps = new Properties();
       if (count > 0) {
         try {
-          
+
           String sql = "select distinct t_officeno, t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_exp7 from teleplanS00 where t_officeno in (";
 
           for (int i = 0; i < justBillingMaster.size(); i++) {
@@ -429,7 +429,7 @@ public class MSPReconcile {
   public ArrayList getSequenceNumbers(String billingNo) {
     ArrayList retval = new ArrayList();
     try {
-      
+
       ResultSet rs = DBHandler.GetSQL(
           "select t_dataseq from teleplanC12 where t_officefolioclaimno = '" +
           forwardZero(billingNo, 7) + "'");
@@ -460,7 +460,7 @@ public class MSPReconcile {
   public Map getS00Map() {
     HashMap map = new HashMap();
     try {
-      
+
       ResultSet rs = DBHandler.GetSQL(
           "SELECT t_dataseq,CAST(t_officeno as SIGNED INTEGER) FROM teleplans00");
       while (rs.next()) {
@@ -569,7 +569,7 @@ public class MSPReconcile {
     billSearch.count = 0;
     billSearch.justBillingMaster = new ArrayList();
     try {
-      
+
       ResultSet rs = DBHandler.GetSQL(p);
       while (rs.next()) {
         Bill b = new Bill();
@@ -639,7 +639,7 @@ public class MSPReconcile {
 
     ArrayList list = new ArrayList();
     try {
-      
+
       ResultSet rs = DBHandler.GetSQL(p);
       while (rs.next()) {
         MSPBill b = new MSPBill();
@@ -900,7 +900,7 @@ public class MSPReconcile {
     ArrayList retval = new ArrayList();
     Properties p = new MspErrorCodes();
     try {
-      
+
       ResultSet rs = DBHandler.GetSQL("select distinct t_dataseq, t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_exp7 from teleplanC12 where t_officefolioclaimno = '" +
                                forwardZero(billingNo, 7) + "'");
       while (rs.next()) {
@@ -1004,7 +1004,7 @@ public class MSPReconcile {
     ArrayList retval = new ArrayList();
     Properties p = new MspErrorCodes();
     try {
-      
+
       ResultSet rs = DBHandler.GetSQL("select distinct t_dataseq, t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_exp7 from teleplanS00 where t_officeno = '" +
                                forwardZero(billingNo, 7) + "'");
       while (rs.next()) {
@@ -1037,7 +1037,7 @@ public class MSPReconcile {
     String name = null;
     String value = null;
     try {
-      
+
       ResultSet rs = DBHandler.GetSQL(
           "select * from billingmaster where billingmaster_no = '" + billingNo +
           "'");
@@ -1073,10 +1073,10 @@ public class MSPReconcile {
     try {
       rs = DBHandler.GetSQL("select count(*) as cou from bill_recipients where billingNo = " +recip.getBillingNo());
       boolean existingBill = false;
-      
+
       if(rs.next()){
          int i = rs.getInt("cou");
-         log.debug("rs has next :"+i); 
+         log.debug("rs has next :"+i);
          if (i > 0){
              existingBill = true;
              log.debug("i is greater than 0 :"+existingBill);
@@ -1123,12 +1123,12 @@ public class MSPReconcile {
     }
   }
 
-  //Updates the status of a bill but doesn't change it's type.  Created because a WCB bill can not be 
+  //Updates the status of a bill but doesn't change it's type.  Created because a WCB bill can not be
   //a WCB type Bill and a PRIVATE bill at the same time.
   public void updateBillingStatusWCB(String billingNo, String stat,String billingMasterNo) {
     updateBillingStatusHlp2(billingMasterNo, stat);
   }
-  
+
   /**
    * Updates the status of a the specified bill and adjusts the state of
    * of associated bill parameters including: bill type, payment method
@@ -1168,7 +1168,7 @@ public class MSPReconcile {
   //Only updates only the billingmaster status
   private void updateBillingStatusHlp2(String billingNo, String stat) {
     try {
-      
+
     	DBHandler.RunSQL("update billingmaster set billingstatus = '" + stat +
                 "' where billingmaster_no = '" + billingNo + "'");
     }
@@ -1176,10 +1176,10 @@ public class MSPReconcile {
       MiscUtils.getLogger().error("Error", e);
     }
   }
-  
+
   private void updateBillingStatusHlp(String billingNo, String stat) {
     try {
-      
+
     	DBHandler.RunSQL("update billingmaster set billingstatus = '" + stat +
                 "' where billing_no = '" + billingNo + "'");
     	DBHandler.RunSQL("update billing set status = '" + stat +
@@ -1254,9 +1254,9 @@ public class MSPReconcile {
   private void migratePrivateTransactions() {
     List privateTransactions = SqlUtils.getQueryResultsList("select billingmaster_no,amount_received,creation_date,payment_type_id from billing_private_transactions");
     if (privateTransactions != null) {
-      
+
       try {
-        
+
         for (Iterator iter = privateTransactions.iterator(); iter.hasNext(); ) {
           String[] item = (String[]) iter.next();
           String recExists = "select * from billing_history where " +
@@ -1307,9 +1307,9 @@ public class MSPReconcile {
     String updateBillingSQL = "update billing set billingtype = '" +
         billType + "' where billing_no ='" +
         billingNo + "'";
-    
+
     try {
-      
+
     	DBHandler.RunSQL(updateBillingSQL);
     }
     catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
@@ -1324,7 +1324,7 @@ public class MSPReconcile {
   public void updateBillingMasterStatus(String billingMasterNo, String stat) {
     log.debug("setting billingmaster_no "+billingMasterNo+ " to "+stat);
     try {
-      
+
     	DBHandler.RunSQL("update billingmaster set billingstatus = '" + stat +
                 "' where billingmaster_no = '" + billingMasterNo + "'");
     }
@@ -1339,7 +1339,7 @@ public class MSPReconcile {
     String currStat = "";
     String newStat = "";
     try {
-      
+
       ResultSet rs = DBHandler.GetSQL(
           "select billingstatus from billingmaster where billingmaster_no = '" +
           billingNo + "'");
@@ -1399,7 +1399,7 @@ public class MSPReconcile {
     }
     if (updated) {
       try {
-        
+
         MiscUtils.getLogger().debug("Updating billing no " + billingNo + " to " +
                            newStat);
         DBHandler.RunSQL("update billingmaster set billingstatus = '" + newStat +
@@ -1484,11 +1484,11 @@ public class MSPReconcile {
     billSearch.list = new ArrayList();
     billSearch.count = 0;
     billSearch.justBillingMaster = new ArrayList();
-    
+
     ResultSet rs = null;
     MiscUtils.getLogger().debug("p=" + p);
     try {
-      
+
 
       rs = DBHandler.GetSQL(p);
 
@@ -1641,7 +1641,7 @@ public class MSPReconcile {
   public double getAmountOwing(String billingMasterNo, String amountBilled,
                                String billingType) {
 
-    
+
     ResultSet rs = null;
     amountBilled = (amountBilled != null && !amountBilled.equals("")) ?
         amountBilled : "0.0";
@@ -1656,7 +1656,7 @@ public class MSPReconcile {
           this.forwardZero(billingMasterNo, 7) + "'";
       log.debug(qry);
       try {
-        
+
         rs = DBHandler.GetSQL(qry);
         while (rs.next()) {
           if (rs.getString(2).equals("HS")) {
@@ -1698,10 +1698,10 @@ public class MSPReconcile {
         "SELECT teleplanS00.t_exp1 FROM teleplanS00, billingmaster " +
         "where t_officeno = billingmaster_no " +
         "and billingmaster_no  = " + billNo;
-    
+
     ResultSet rs = null;
     try {
-      
+
       rs = DBHandler.GetSQL(qry);
       if (rs.next()) {
         code = rs.getString(1);
@@ -1729,10 +1729,10 @@ public class MSPReconcile {
     String desc = "";
     String qry = "select description from teleplan_refusal_code where code = '" +
         code + "'";
-    
+
     ResultSet rs = null;
     try {
-      
+
       rs = DBHandler.GetSQL(qry);
       if (rs.next()) {
         desc = rs.getString(1);
@@ -1788,10 +1788,10 @@ public class MSPReconcile {
     billSearch.list = new ArrayList();
     billSearch.count = 0;
     billSearch.justBillingMaster = new ArrayList();
-    
+
     ResultSet rs = null;
     try {
-      
+
       rs = DBHandler.GetSQL(p);
       while (rs.next()) {
         MSPBill b = new MSPBill();
@@ -1946,10 +1946,10 @@ public class MSPReconcile {
         " and bm.billingstatus != '" + MSPReconcile.DELETED + "'";
     MiscUtils.getLogger().debug(p);
     billSearch.list = new ArrayList();
-    
+
     ResultSet rs = null;
     try {
-      
+
       rs = DBHandler.GetSQL(p);
       while (rs.next()) {
         MSPBill b = new MSPBill();
@@ -2003,12 +2003,12 @@ public class MSPReconcile {
    */
   private String getPaymentMethodDesc(String id) {
     String desc = "";
-    
+
     ResultSet rs = null;
     String qry =
         "select payment_type from billing_payment_type where id = " + id;
     try {
-      
+
       rs = DBHandler.GetSQL(qry);
 
       if (rs.next()) {
@@ -2200,10 +2200,10 @@ public class MSPReconcile {
         " and teleplanS00.t_payeeno = " + payeeNo +
         " order by provider.first_name,t_servicedate,billing.demographic_name";
 
-    
+
     ResultSet rs = null;
     try {
-      
+
       rs = DBHandler.GetSQL(qry);
     }
     catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
@@ -2225,7 +2225,7 @@ public class MSPReconcile {
       prov.setLastName("");
       return prov;
     }
-    
+
     ResultSet rs = null;
     String criteriaStr = "provider_no";
     if (criteria == 1) {
@@ -2236,7 +2236,7 @@ public class MSPReconcile {
         " = '" +
         providerNo+"'";
     try {
-      
+
       rs = DBHandler.GetSQL(qry);
 
       if (rs.next()) {
@@ -2264,13 +2264,13 @@ public class MSPReconcile {
    */
   public List getAllProviders() {
     ArrayList list = new ArrayList();
-    
+
     ResultSet rs = null;
 
     String qry =
         "select * from provider where provider_type = 'doctor'";
     try {
-      
+
       rs = DBHandler.GetSQL(qry);
 
       while (rs.next()) {
@@ -2303,10 +2303,10 @@ public class MSPReconcile {
     String description = "";
     String qry = "SELECT adj_desc FROM teleplan_adj_codes where adj_code = '" +
         code + "'";
-    
+
     ResultSet rs = null;
     try {
-      
+
       rs = DBHandler.GetSQL(qry);
       if (rs.next()) {
         description = rs.getString(1);
@@ -2329,11 +2329,11 @@ public class MSPReconcile {
                        ":MSPReconcile.getS21Record(s21id)");
     String qry = "select t_payment,t_payeeno,t_payeename,t_amtbilled,t_amtpaid,t_cheque from teleplanS21 where status <> 'D' and s21_id = " +
         s21id + " order by t_payment desc";
-    
+
     ResultSet rs = null;
     oscar.entities.S21 s21 = new oscar.entities.S21();
     try {
-      
+
 
       rs = DBHandler.GetSQL(qry);
       if (rs.next()) {
@@ -2410,10 +2410,10 @@ public class MSPReconcile {
         demographicNo +
         " and bm.billingstatus not in('S','D','A') and b.billingtype = '" +
         MSPReconcile.BILLTYPE_PRI + "'";
-    
+
     ResultSet rs = null;
     try {
-      
+
       rs = DBHandler.GetSQL(billingMasterQry);
       while (rs.next()) {
         String billingmaster_no = rs.getString(1);
@@ -2425,7 +2425,8 @@ public class MSPReconcile {
     }
     finally {
       try {
-        rs.close();
+    	if(rs != null)
+    		rs.close();
       }
       catch (SQLException ex1) {MiscUtils.getLogger().error("Error", ex1);
       }
@@ -2456,10 +2457,10 @@ public class MSPReconcile {
                    "FROM billingmaster b, billing b1 " +
                    "WHERE b1.billing_no=b.billing_no " +
                    "AND billingmaster_no = " + billingmasterNo;
-    log.debug(sql);  
+    log.debug(sql);
     String[] row = SqlUtils.getRow(sql);
     if (row != null && row.length > 0) {
-      log.debug("Number of rows :"+row.length); 
+      log.debug("Number of rows :"+row.length);
       double dblAmtOwing = this.getAmountOwing(billingmasterNo, row[1], row[0]);
       String strOwing = String.valueOf(dblAmtOwing);
       double amountOwing = Double.parseDouble(strOwing);
@@ -2472,7 +2473,7 @@ public class MSPReconcile {
           this.updateBillingMasterStatus(billingmasterNo, MSPReconcile.SETTLED);
         }
       }else{
-         log.debug("amount owing is less than or equal to 0"); 
+         log.debug("amount owing is less than or equal to 0");
       }
     }
   }

@@ -10,6 +10,7 @@ import java.util.Set;
 
 import javassist.Modifier;
 
+import javax.persistence.EmbeddedId;
 import javax.persistence.Id;
 
 import org.oscarehr.common.model.DemographicExt;
@@ -29,6 +30,9 @@ public class EntityDataGenerator {
 	        Annotation annotations[] = f[i].getAnnotations();
 	        for (int j = 0; j < annotations.length; j++) {
 	            if(annotations[j].annotationType() == Id.class) {
+	            	isId=true;
+	            }
+	            if(annotations[j].annotationType() == EmbeddedId.class) {
 	            	isId=true;
 	            }
             }
@@ -57,6 +61,9 @@ public class EntityDataGenerator {
 	        }
 	        else if(f[i].getType() == boolean.class || f[i].getType() == Boolean.class) {
 	 	        	f[i].set(model,true);
+	        }
+	        else if(f[i].getType() == char.class || f[i].getType() == Character.class) {
+ 	        	f[i].set(model,'A');
 	        }
 	 	    else if(f[i].getType() == Set.class || f[i].getType() == List.class || f[i].getType() == Map.class) {
 	 	    	//ignore

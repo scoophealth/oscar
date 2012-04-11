@@ -2056,3 +2056,13 @@ VALUES
 	(NULL, '22','R .  M .  A .', 'A'),
 	(NULL, '33','AFP Ham Surgery RMA', 'A'),
 	(NULL, '98','Bill Directs', 'A');
+
+
+INSERT INTO billing_payment_type (id, payment_type) VALUES (1,'CASH');
+INSERT INTO billing_payment_type (id, payment_type) VALUES (2,'CHEQUE');
+INSERT INTO billing_payment_type (id, payment_type) VALUES (3,'VISA');
+INSERT INTO billing_payment_type (id, payment_type) VALUES (4,'MASTERCARD');
+INSERT INTO billing_payment_type (id, payment_type) VALUES (5,'AMEX');
+INSERT INTO billing_payment_type (id, payment_type) VALUES (6,'ELECTRONIC');
+INSERT INTO billing_payment_type (id, payment_type) VALUES (7,'DEBIT');
+

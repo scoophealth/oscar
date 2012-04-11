@@ -52,6 +52,8 @@ import org.oscarehr.common.model.AbstractModel;
 @Table(name = "billing_on_cheader1")
 public class BillingClaimHeader1 extends AbstractModel<Integer> implements Serializable {
 
+    @Id()
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private Integer header_id;
     private String transc_id;
@@ -88,6 +90,8 @@ public class BillingClaimHeader1 extends AbstractModel<Integer> implements Seria
     private Date timestamp1;
     private String clinic;
 
+    @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+    @JoinColumn(name="ch1_id", referencedColumnName="id")
     private List<BillingItem>billingItems = new ArrayList<BillingItem>();
 
     /** Creates a new instance of BillingClaimHeader1 */
@@ -96,8 +100,6 @@ public class BillingClaimHeader1 extends AbstractModel<Integer> implements Seria
     }
 
     @Override
-    @Id()
-    @GeneratedValue(strategy = GenerationType.AUTO)
     public Integer getId() {
         return id;
     }
@@ -409,8 +411,7 @@ public class BillingClaimHeader1 extends AbstractModel<Integer> implements Seria
     /**
      * @return the billingItems
      */
-    @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-    @JoinColumn(name="ch1_id", referencedColumnName="id")
+
     public List<BillingItem> getBillingItems() {
         return billingItems;
     }
@@ -465,12 +466,12 @@ public class BillingClaimHeader1 extends AbstractModel<Integer> implements Seria
     }
 
     @PostPersist
-    public void postPersist() {        
+    public void postPersist() {
         Iterator<BillingItem> i = this.billingItems.iterator();
         BillingItem item;
         while(i.hasNext()) {
             item = i.next();
-            item.setCh1_id(id);           
+            item.setCh1_id(id);
         }
     }
 }
