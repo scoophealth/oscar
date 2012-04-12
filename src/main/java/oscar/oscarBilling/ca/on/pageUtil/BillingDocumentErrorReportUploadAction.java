@@ -246,8 +246,8 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 	 */
 	private boolean reportXIsGenerated = true;
 
-	private ArrayList generateReportX(FileInputStream file) {
-		ArrayList messages = new ArrayList();
+	private ArrayList<String> generateReportX(FileInputStream file) {
+		ArrayList<String> messages = new ArrayList<String>();
 		messages.add("M01 | Message Reason         Length     Msg Type   Filler  Record Image");
 		messages.add("M02 | File:    File Name    Date:   Mail Date   Time: Mail Time     Process Date");
 		InputStreamReader reader = new InputStreamReader(file);

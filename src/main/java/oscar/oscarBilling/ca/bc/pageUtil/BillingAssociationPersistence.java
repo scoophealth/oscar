@@ -69,9 +69,9 @@ public class BillingAssociationPersistence {
     if (mode.equals("edit")) {
       this.deleteServiceCodeAssoc(assoc.getServiceCode());
     }
-    List dxcodes = assoc.getDxCodes();
-    for (Iterator iter = dxcodes.iterator(); iter.hasNext(); ) {
-      String item = (String) iter.next();
+    List<String> dxcodes = assoc.getDxCodes();
+    for (Iterator<String> iter = dxcodes.iterator(); iter.hasNext(); ) {
+      String item = iter.next();
       if (!item.equals("")) {
         this.newServiceCodeAssoc(assoc.getServiceCode(),
                                  item);
@@ -126,8 +126,8 @@ public class BillingAssociationPersistence {
    * Retrieves a list of ServiceCodeAssociation objects
    * @return List
    */
-  public List getServiceCodeAssocs() {
-    ArrayList list = new ArrayList();
+  public List<ServiceCodeAssociation> getServiceCodeAssocs() {
+    ArrayList<ServiceCodeAssociation> list = new ArrayList<ServiceCodeAssociation>();
 
     ResultSet rs = null;
     try {

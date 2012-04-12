@@ -1,23 +1,23 @@
 /*
-* 
+*
 * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
+* This software is published under the GPL GNU General Public License.
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version. *
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+*
 * <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
+*
+* This software was written for
+* Centre for Research on Inner City Health, St. Michael's Hospital,
+* Toronto, Ontario, Canada
 */
 
 package org.oscarehr.casemgmt.web;
@@ -45,7 +45,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import com.quatro.service.security.RolesManager;
 
 public class BaseCaseManagementViewAction extends DispatchAction {
-	
+
 	protected CaseManagementManager caseManagementMgr;
 	protected TicklerManager ticklerManager;
 	protected ClientImageManager clientImageMgr;
@@ -53,8 +53,8 @@ public class BaseCaseManagementViewAction extends DispatchAction {
 	protected ProgramManager programMgr;
 	protected AdmissionManager admissionMgr;
 	protected SurveyManager surveyMgr;
-	
-	
+
+
 	public ApplicationContext getAppContext() {
 		return WebApplicationContextUtils.getWebApplicationContext(getServlet().getServletContext());
 	}
@@ -66,40 +66,40 @@ public class BaseCaseManagementViewAction extends DispatchAction {
 	public void setAdmissionManager(AdmissionManager admMgr){
 		this.admissionMgr = admMgr;
 	}
-	
+
 	public void setCaseManagementManager(CaseManagementManager caseManagementMgr) {
 		this.caseManagementMgr = caseManagementMgr;
 	}
-	
+
 	public void setTicklerManager(TicklerManager mgr) {
 		this.ticklerManager = mgr;
 	}
-	
+
 	public void setClientImageManager(ClientImageManager mgr) {
 		this.clientImageMgr = mgr;
 	}
-	
+
 	public void setRolesManager(RolesManager mgr) {
 		this.roleMgr = mgr;
 	}
-	
+
 	public void setProgramManager(ProgramManager mgr) {
 		this.programMgr = mgr;
 	}
-	
+
 	public void setSurveyManager(SurveyManager mgr) {
 		this.surveyMgr = mgr;
 	}
-	
+
 	public String getDemographicNo(HttpServletRequest request) {
 		String demono= request.getParameter("demographicNo");
-		if (demono==null || "".equals(demono)) 
+		if (demono==null || "".equals(demono))
 			demono=(String)request.getSession().getAttribute("casemgmt_DemoNo");
 		else
 			request.getSession().setAttribute("casemgmt_DemoNo", demono);
 		return demono;
 	}
-	
+
 	public String getDemoName(String demoNo){
 		if (demoNo==null) return "";
 		return caseManagementMgr.getDemoName(demoNo);
@@ -117,26 +117,26 @@ public class BaseCaseManagementViewAction extends DispatchAction {
 
 	public String getProviderNo(HttpServletRequest request){
 		String providerNo=request.getParameter("providerNo");
-		if (providerNo==null) 
+		if (providerNo==null)
 			providerNo=(String)request.getSession().getAttribute("user");
 		return providerNo;
 	}
-	
+
 	@Deprecated
     public int getProviderId(HttpServletRequest request){
         return(Integer.parseInt(getProviderNo(request)));
     }
-    
+
 	public String getProviderName(HttpServletRequest request){
 		String providerNo=getProviderNo(request);
 		if (providerNo==null)
 			return "";
 		return caseManagementMgr.getProviderName(providerNo);
 	}
-	
+
 	protected String getImageFilename(String demoNo, HttpServletRequest request) {
 		ClientImage img = clientImageMgr.getClientImage(Integer.parseInt(demoNo));
-		
+
 		if(img != null) {
 			String path=request.getSession().getServletContext().getRealPath("/");
 			int encodedValue = (int)(Math.random()*Integer.MAX_VALUE);
@@ -153,27 +153,27 @@ public class BaseCaseManagementViewAction extends DispatchAction {
 		}
 		return null;
 	}
-	
-	public List notesOrderByDate(List notes,String providerNo,String demoNo)
+
+	public List<CaseManagementNote> notesOrderByDate(List<CaseManagementNote> notes,String providerNo,String demoNo)
 	{
-		List rtNotes=new ArrayList();
+		List<CaseManagementNote> rtNotes=new ArrayList<CaseManagementNote>();
 		int noteSize=notes.size();
 		for (int i=0; i<noteSize; i++){
-			Iterator itr=notes.iterator();
-			CaseManagementNote inote=(CaseManagementNote) itr.next();
+			Iterator<CaseManagementNote> itr=notes.iterator();
+			CaseManagementNote inote= itr.next();
 
 			// check note access here.
 			if(inote.getProgram_no() == null || inote.getProgram_no().length()==0) {
 				//didn't save this data at this time - older note
-				rtNotes.add(inote);		
+				rtNotes.add(inote);
 			} else {
-				if(caseManagementMgr.hasAccessRight(removeFirstSpace(caseManagementMgr.getCaisiRoleById(inote.getReporter_caisi_role()))+"notes","access",providerNo,demoNo,inote.getProgram_no())){				
-					rtNotes.add(inote);					
+				if(caseManagementMgr.hasAccessRight(removeFirstSpace(caseManagementMgr.getCaisiRoleById(inote.getReporter_caisi_role()))+"notes","access",providerNo,demoNo,inote.getProgram_no())){
+					rtNotes.add(inote);
 				}
 			}
-			
+
 			notes.remove(inote);
-			
+
 		}
 		return rtNotes;
 	}
@@ -186,11 +186,11 @@ public class BaseCaseManagementViewAction extends DispatchAction {
         return withSpaces.substring(0, spaceIndex)
             + withSpaces.substring(spaceIndex+1, withSpaces.length());
     }
-	
+
 	protected void addMessage(HttpServletRequest request, String key) {
 		ActionMessages messages = new ActionMessages();
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(key));
 		saveMessages(request, messages);
 	}
-	
+
 }

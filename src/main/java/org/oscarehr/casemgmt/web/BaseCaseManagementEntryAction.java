@@ -1,23 +1,23 @@
 /*
-* 
+*
 * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
+* This software is published under the GPL GNU General Public License.
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version. *
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+*
 * <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
+*
+* This software was written for
+* Centre for Research on Inner City Health, St. Michael's Hospital,
+* Toronto, Ontario, Canada
 */
 
 package org.oscarehr.casemgmt.web;
@@ -52,20 +52,20 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 
 	protected String relateIssueString = "Issues related to this note:";
 
-	
+
 	protected CaseManagementManager caseManagementMgr;
 	protected ClientImageManager clientImageMgr;
     protected ProviderManager providerMgr;
-    protected DxDao dxDao = (DxDao) SpringUtils.getBean("dxDao");	
-    
+    protected DxDao dxDao = (DxDao) SpringUtils.getBean("dxDao");
+
     public void setProviderManager(ProviderManager pmgr ) {
         this.providerMgr = pmgr;
     }
-        
+
 	public void setClientImageManager(ClientImageManager mgr) {
 		this.clientImageMgr = mgr;
 	}
-	
+
 	public void setCaseManagementManager(CaseManagementManager caseManagementMgr) {
 		this.caseManagementMgr = caseManagementMgr;
 	}
@@ -86,24 +86,24 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 		}
 		return caseManagementMgr.getDemoName(demoNo);
 	}
-	
+
 	protected String getDemoSex(String demoNo) {
             if(demoNo == null) {
                 return "";
             }
             return caseManagementMgr.getDemoGender(demoNo);
         }
-        
+
         protected String getDemoAge(String demoNo){
 		if (demoNo==null) return "";
 		return caseManagementMgr.getDemoAge(demoNo);
 	}
-	
+
 	protected String getDemoDOB(String demoNo){
 		if (demoNo==null) return "";
 		return caseManagementMgr.getDemoDOB(demoNo);
-	}	
-	
+	}
+
 
 	protected String getProviderNo(HttpServletRequest request) {
 		String providerNo = request.getParameter("providerNo");
@@ -112,31 +112,31 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 		}
 		return providerNo;
 	}
-		
+
 	protected String getProviderName(HttpServletRequest request) {
 		String providerNo = getProviderNo(request);
 		if (providerNo == null)	return "";
 		return caseManagementMgr.getProviderName(providerNo);
 	}
-        
+
         protected Provider getProvider(HttpServletRequest request) {
 		String providerNo = getProviderNo(request);
-		if (providerNo == null)	return null;                
+		if (providerNo == null)	return null;
 		return providerMgr.getProvider(providerNo);
 	}
 
-		
-	protected boolean inCaseIssue(Issue iss, List issues) {
-		Iterator itr = issues.iterator();
+
+	protected boolean inCaseIssue(Issue iss, List<CaseManagementIssue> issues) {
+		Iterator<CaseManagementIssue> itr = issues.iterator();
 		while (itr.hasNext())
 		{
-			CaseManagementIssue cIss = (CaseManagementIssue) itr.next();
+			CaseManagementIssue cIss = itr.next();
 			if (iss.getId().longValue() == cIss.getIssue_id())
 				return true;
 		}
 		return false;
 	}
-		
+
 	protected void SetChecked(CheckBoxBean[] checkedlist, int id) {
 		for (int i = 0; i < checkedlist.length; i++)
 		{
@@ -147,7 +147,7 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 			}
 		}
 	}
-	
+
 	protected boolean inCheckList(Long id, int[] list)	{
 		boolean ret = false;
 		for (int i = 0; i < list.length; i++) {
@@ -156,11 +156,11 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 		}
 		return ret;
 	}
-	
+
 	protected WebApplicationContext getSpringContext() {
 		return WebApplicationContextUtils.getWebApplicationContext(getServlet().getServletContext());
 	}
-	
+
 	/* remove related issue list from note */
 	protected String removeCurrentIssue(String noteString) {
 
@@ -201,13 +201,13 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 	}
 
 	/* create related issue string */
-	protected String createIssueString(Set issuelist) {
+	protected String createIssueString(Set<CaseManagementIssue> issuelist) {
 		if (issuelist.isEmpty())
 			return "";
 		String rt = "\n[" + relateIssueString;
-		Iterator itr = issuelist.iterator();
+		Iterator<CaseManagementIssue> itr = issuelist.iterator();
 		while (itr.hasNext()) {
-			CaseManagementIssue iss = (CaseManagementIssue) itr.next();
+			CaseManagementIssue iss =  itr.next();
 			rt = rt + "\n" + iss.getIssue().getDescription() + "\t\t\n";
 			if (iss.isCertain())
 				rt = rt + "certain" + "  ";
@@ -228,7 +228,7 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 		}
 		return rt + "]\n";
 	}
-        
+
         protected CaseManagementIssue newIssueToCIssue(String demoNo, Issue iss, Integer programId) {
             	CaseManagementIssue cIssue = new CaseManagementIssue();
 		// cIssue.setActive(true);
@@ -248,34 +248,34 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 		cIssue.setUpdate_date(new Date());
 		cIssue.setProgram_id(programId);
 		// add it to database
-		List uList = new ArrayList();
+		List<CaseManagementIssue> uList = new ArrayList<CaseManagementIssue>();
 		uList.add(cIssue);
 		caseManagementMgr.saveAndUpdateCaseIssues(uList);
 		// add new issues to ongoing concern
 		//caseManagementMgr.addNewIssueToConcern((String) cform.getDemoNo(), iss.getDescription());
 		return cIssue;
         }
-        
+
 	/**
 	 * @param programId is optional, can be null for none.
 	 */
 	protected CaseManagementIssue newIssueToCIssue(CaseManagementEntryFormBean cform, Issue iss, Integer programId) {
             return newIssueToCIssue(cform.getDemoNo(),iss,programId);
 	}
-	
-	protected Map convertIssueListToMap(List issueList) {
-		Map map = new HashMap();
-		for(Iterator iter=issueList.iterator();iter.hasNext();) {
-			CaseManagementIssue issue = (CaseManagementIssue)iter.next();
+
+	protected Map<Long,CaseManagementIssue> convertIssueListToMap(List<CaseManagementIssue> issueList) {
+		Map<Long,CaseManagementIssue> map = new HashMap<Long,CaseManagementIssue>();
+		for(Iterator<CaseManagementIssue> iter=issueList.iterator();iter.hasNext();) {
+			CaseManagementIssue issue = iter.next();
 			map.put(issue.getIssue().getId(), issue);
 		}
 		return map;
 	}
-	
+
 	protected void updateIssueToConcern(ActionForm form) {
 		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
 		CheckBoxBean[] oldList = cform.getIssueCheckList();
-		List caseiss = new ArrayList();
+		List<CaseManagementIssue> caseiss = new ArrayList<CaseManagementIssue>();
 		for (int i = 0; i < oldList.length; i++) {
 			if (!oldList[i].getIssue().isResolved())
 				caseiss.add(oldList[i].getIssue());
@@ -293,11 +293,11 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 				mHis = mHis.replaceAll("\r\n", "\n");
 				mHis = mHis.replaceAll("\r", "\n");
 			}
-			List allIssues = caseManagementMgr.getIssues(Integer.parseInt(cpp.getDemographic_no()));
-			
-			Iterator itr = allIssues.iterator();
+			List<CaseManagementIssue> allIssues = caseManagementMgr.getIssues(Integer.parseInt(cpp.getDemographic_no()));
+
+			Iterator<CaseManagementIssue> itr = allIssues.iterator();
 			while (itr.hasNext()) {
-				CaseManagementIssue cis = (CaseManagementIssue) itr.next();
+				CaseManagementIssue cis = itr.next();
 				String issustring = cis.getIssue().getDescription();
 				if (cis.isMajor() && cis.isResolved()) {
 					if (mHis!=null && mHis.indexOf(issustring) < 0)
