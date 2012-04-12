@@ -71,7 +71,7 @@ public class AppointmentDAO extends DAO {
 			unBilling(app, c);
 
 			for (int i = 0; i < app.getProcedimentoRealizado().size(); i++) {
-				ProcedimentoRealizado pr = (ProcedimentoRealizado) app.getProcedimentoRealizado().get(i);
+				ProcedimentoRealizado pr = app.getProcedimentoRealizado().get(i);
 
 				// appoitment_no
 				SqlUtils.fillPreparedStatement(pstmProc, 1, new Long(pr.getAppointment().getAppointmentNo()), FieldTypes.LONG);
@@ -81,7 +81,7 @@ public class AppointmentDAO extends DAO {
 			}
 
 			for (int i = 0; i < app.getDiagnostico().size(); i++) {
-				Diagnostico diag = (Diagnostico) app.getDiagnostico().get(i);
+				Diagnostico diag = app.getDiagnostico().get(i);
 
 				// appoitment_no
 				SqlUtils.fillPreparedStatement(pstmDiag, 1, new Long(diag.getAppointment().getAppointmentNo()), FieldTypes.LONG);
@@ -185,13 +185,14 @@ public class AppointmentDAO extends DAO {
 				appointment.setAppointmentDate(rs.getDate(10));
 			}
 		} finally {
+			//empty
 		}
 
 		return appointment;
 	}
 
-	public ArrayList listFatDoctor(String type, Provider provider) throws SQLException {
-		ArrayList list = new ArrayList();
+	public ArrayList<Appointment> listFatDoctor(String type, Provider provider) throws SQLException {
+		ArrayList<Appointment> list = new ArrayList<Appointment>();
 		String sql = "select a.appointment_no, a.appointment_date, a.provider_no, b.last_name, " + "b.first_name, a.demographic_no, c.last_name, c.first_name " + "from appointment a, provider b, demographic c " + "where a.provider_no = b.provider_no and " + "a.demographic_no = c.demographic_no ";
 
 		if (type.equals(Appointment.AGENDADO)) {
@@ -227,13 +228,14 @@ public class AppointmentDAO extends DAO {
 				list.add(app);
 			}
 		} finally {
+			//empty
 		}
 
 		return list;
 	}
 
-	public ArrayList listFatPatiente(Demographic demographic) throws SQLException {
-		ArrayList list = new ArrayList();
+	public ArrayList<Appointment> listFatPatiente(Demographic demographic) throws SQLException {
+		ArrayList<Appointment> list = new ArrayList<Appointment>();
 		String sql = "select a.appointment_no, a.appointment_date, a.provider_no, b.last_name, " + "b.first_name, a.billing " + "from appointment a, provider b, demographic c " + "where a.provider_no = b.provider_no and " + "a.demographic_no = c.demographic_no and " + "a.demographic_no = " + demographic.getDemographicNo() + " and " + "a.billing is not null " + "order by a.appointment_date desc";
 
 
@@ -253,6 +255,7 @@ public class AppointmentDAO extends DAO {
 				list.add(app);
 			}
 		} finally {
+			//empty
 		}
 
 		return list;

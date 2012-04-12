@@ -54,17 +54,18 @@ import oscar.oscarEncounter.data.EctProgram;
 import oscar.util.StringUtils;
 
 public class AddEFormAction extends Action {
-    
+
 	private static final Logger logger=MiscUtils.getLogger();
-	
+
     public ActionForward execute(ActionMapping mapping, ActionForm form,
                                 HttpServletRequest request, HttpServletResponse response) {
          logger.debug("==================SAVING ==============");
          HttpSession se = request.getSession();
-         Enumeration paramNamesE = request.getParameterNames();
+         @SuppressWarnings("unchecked")
+        Enumeration<String> paramNamesE = request.getParameterNames();
          //for each name="fieldname" value="myval"
-         ArrayList paramNames = new ArrayList();  //holds "fieldname, ...."
-         ArrayList paramValues = new ArrayList(); //holds "myval, ...."
+         ArrayList<String> paramNames = new ArrayList<String>();  //holds "fieldname, ...."
+         ArrayList<String> paramValues = new ArrayList<String>(); //holds "myval, ...."
          String fid = request.getParameter("efmfid");
          String demographic_no = request.getParameter("efmdemographic_no");
          String provider_no = request.getParameter("efmprovider_no");
@@ -73,7 +74,7 @@ public class AddEFormAction extends Action {
          if (subject == null) subject="";
          String curField = "";
          while (paramNamesE.hasMoreElements()) {
-             curField = (String) paramNamesE.nextElement();
+             curField = paramNamesE.nextElement();
              if( curField.equalsIgnoreCase("parentAjaxId"))
                  continue;
              paramNames.add(curField);
@@ -123,7 +124,7 @@ public class AddEFormAction extends Action {
         	 EFormData eFormData=toEFormData(curForm);
         	 eFormDataDao.persist(eFormData);
              String fdid = eFormData.getId().toString();
-             
+
              EFormUtil.addEFormValues(paramNames, paramValues, new Integer(fdid), new Integer(fid), new Integer(demographic_no)); //adds parsed values
 
              //post fdid to {eform_link} attribute
@@ -143,7 +144,7 @@ public class AddEFormAction extends Action {
          else {
              logger.debug("Warning! Form HTML exactly the same, new form data not saved.");
          }
-         
+
          return(mapping.findForward("close"));
     }
 
@@ -160,7 +161,7 @@ public class AddEFormAction extends Action {
 		eFormData.setFormData(eForm.getFormHtml());
 		eFormData.setPatientIndependent(eForm.getPatientIndependent());
 		eFormData.setRoleType(eForm.getRoleType());
-		
+
 	    return(eFormData);
     }
 }

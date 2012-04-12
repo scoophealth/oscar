@@ -127,14 +127,14 @@ public class Appointment {
      *
      * </p>
      */
-    public List procedimentoRealizado = new ArrayList(); // of type ProcedimentoRealizado
+    public List<ProcedimentoRealizado> procedimentoRealizado = new ArrayList<ProcedimentoRealizado>(); // of type ProcedimentoRealizado
 
     /**
      * <p>
      *
      * </p>
      */
-    public List diagnostico = new ArrayList(); // of type Diagnostico
+    public List<Diagnostico> diagnostico = new ArrayList<Diagnostico>(); // of type Diagnostico
 
     /**
      *
@@ -205,7 +205,7 @@ public class Appointment {
     /**
      * @return
      */
-    public List getDiagnostico() {
+    public List<Diagnostico> getDiagnostico() {
         return diagnostico;
     }
 
@@ -226,7 +226,7 @@ public class Appointment {
     /**
      * @return
      */
-    public List getProcedimentoRealizado() {
+    public List<ProcedimentoRealizado> getProcedimentoRealizado() {
         return procedimentoRealizado;
     }
 
@@ -288,7 +288,7 @@ public class Appointment {
     /**
      * @param collection
      */
-    public void setDiagnostico(List collection) {
+    public void setDiagnostico(List<Diagnostico> collection) {
         diagnostico = collection;
     }
 
@@ -309,7 +309,7 @@ public class Appointment {
     /**
      * @param collection
      */
-    public void setProcedimentoRealizado(List collection) {
+    public void setProcedimentoRealizado(List<ProcedimentoRealizado> collection) {
         procedimentoRealizado = collection;
     }
 
@@ -341,9 +341,9 @@ public class Appointment {
         status = string;
     }
 
-    public void addProcedimentos(List procedimento) {
+    public void addProcedimentos(List<FatFormularioProcedimento> procedimento) {
         for (int i = 0; i < procedimento.size(); i++) {
-            FatFormularioProcedimento formProc = (FatFormularioProcedimento) procedimento.get(i);
+            FatFormularioProcedimento formProc = procedimento.get(i);
             ProcedimentoRealizado pr = new ProcedimentoRealizado();
             pr.setAppointment(this);
             pr.setCadProcedimentos(formProc.getCadProcedimentos());
@@ -363,7 +363,7 @@ public class Appointment {
 
     public void removeProcedimentos(long id) {
         for (int i = 0; i < procedimentoRealizado.size(); i++) {
-            ProcedimentoRealizado pr = (ProcedimentoRealizado) procedimentoRealizado.get(i);
+            ProcedimentoRealizado pr = procedimentoRealizado.get(i);
             MiscUtils.getLogger().debug("pr " +
                 pr.getCadProcedimentos().getCoProcedimento());
 
@@ -375,7 +375,7 @@ public class Appointment {
 
     public void removeDiagnostico(String id) {
         for (int i = 0; i < diagnostico.size(); i++) {
-            Diagnostico diag = (Diagnostico) diagnostico.get(i);
+            Diagnostico diag = diagnostico.get(i);
 
             if (diag.getCadCid().getCoCid().toUpperCase().trim().equals(id.toUpperCase()
                                                                               .trim())) {

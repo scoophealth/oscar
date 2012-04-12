@@ -401,7 +401,6 @@ public class Allergy extends AbstractModel<Integer> {
         else return("Unknown "+severityCode);
     }
 
-    //Used for LogAction to insert into data column of log table
     public String getAuditString() {
         return getAllergyDisp();
     }

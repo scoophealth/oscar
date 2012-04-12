@@ -33,15 +33,15 @@ public class DatabaseAP {
     private String apName = null;
     private String apSQL = null;
     private String apOutput = null;
-    
+
     /** Creates a new instance of DatabaseAP */
     public DatabaseAP() {
     }
-    
+
     public DatabaseAP(String apName, String apSQL, String apOutput) {
         set(apName, apSQL, apOutput);
     }
-    
+
     public DatabaseAP(DatabaseAP ap2) {
         this.apName = ap2.getApName();
         this.apSQL = ap2.getApSQL();
@@ -52,16 +52,16 @@ public class DatabaseAP {
         this.apSQL = apSQL;
         this.apOutput = apOutput;
     }
-    
+
     public void setApName(String apName) { this.apName = apName; }
     public void setApSQL(String apSQL) { this.apSQL = apSQL; }
     public void setApOutput(String apOutput) { this.apOutput = apOutput; }
-    
+
     public String getApName() { return(apName); }
     public String getApSQL() { return(apSQL); }
     public String getApOutput() { return(apOutput); }
-    
-    
+
+
     public static String parserReplace(String name, String var, String str) {
         //replaces <$name$> with var in str
         StringBuilder strb = new StringBuilder(str);
@@ -75,9 +75,9 @@ public class DatabaseAP {
         }
         return strb.toString();
     }
-    public static ArrayList parserGetNames(String str) {
+    public static ArrayList<String> parserGetNames(String str) {
         StringBuilder strb = new StringBuilder(str);
-        ArrayList names = new ArrayList();
+        ArrayList<String> names = new ArrayList<String>();
         int tagstart = -2;
         int tagend;
         while ((tagstart = strb.indexOf("${", tagstart+2)) >= 0) {
@@ -98,5 +98,5 @@ public class DatabaseAP {
         }
         return strb.toString();
     }
-    
+
 }

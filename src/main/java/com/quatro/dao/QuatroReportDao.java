@@ -100,17 +100,6 @@ public class QuatroReportDao extends HibernateDaoSupport {
       
   	  public void SetReportDateSp(int reportNo, Date startDate, Date endDate, String spToRun){
 
-//        String sql="insert into ReportDateSPValue (reportNo, startDate, endDate, spToRun) VALUES (?, ?, ?,?)";
-/*
-          // this update record works
-  		  String sql="update ReportDateSPValue rv set startDate=?,endDate=?,spToRun=? where reportNo=?";
-          Query query = getSession().createQuery(sql);
-		  query.setParameter(0, startDate, Hibernate.DATE);
-		  query.setParameter(1, endDate, Hibernate.DATE);
-		  query.setParameter(2, spToRun, Hibernate.STRING);
-		  query.setParameter(3, reportNo);
-		  int rowx = query.executeUpdate();
-*/		  
     	  ReportDateSPValue rdsv= new ReportDateSPValue();
     	  rdsv.setReportNo(reportNo);
     	  rdsv.setStartDate(startDate);
