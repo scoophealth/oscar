@@ -341,17 +341,17 @@ public class EFormUtil {
 		runSQL(sql);
 	}
 
-	public static ArrayList getValues(ArrayList names, String sql) {
+	public static ArrayList<String> getValues(ArrayList<String> names, String sql) {
 		// gets the values for each column name in the sql (used by DatabaseAP)
 		ResultSet rs = getSQL(sql);
-		ArrayList values = new ArrayList();
+		ArrayList<String> values = new ArrayList<String>();
 		try {
 			while (rs.next()) {
-				values = new ArrayList();
+				values = new ArrayList<String>();
 				for (int i = 0; i < names.size(); i++) {
 					try {
-						values.add(oscar.Misc.getString(rs, (String) names.get(i)));
-						logger.debug("VALUE ====" + rs.getObject((String) names.get(i)) + "|");
+						values.add(oscar.Misc.getString(rs, names.get(i)));
+						logger.debug("VALUE ====" + rs.getObject(names.get(i)) + "|");
 					} catch (Exception sqe) {
 						values.add("<(" + names.get(i) + ")NotFound>");
 						logger.error("Error", sqe);
@@ -482,7 +482,7 @@ public class EFormUtil {
 
 	public static void addEFormToGroup(String groupName, String fid) {
 		try {
-			
+
 			String sql1 = "SELECT eform_groups.fid FROM eform_groups, eform WHERE eform_groups.fid=" + fid + " AND eform_groups.fid=eform.fid AND eform.status=1 AND eform_groups.group_name='" + groupName + "'";
 			ResultSet rs = DBHandler.GetSQL(sql1);
 			if (!rs.next()) {
@@ -686,7 +686,7 @@ public class EFormUtil {
 	// ------------------private
 	private static void runSQL(String sql) {
 		try {
-			
+
 			DBHandler.RunSQL(sql);
 		} catch (SQLException sqe) {
 			logger.error("Error", sqe);
@@ -695,7 +695,7 @@ public class EFormUtil {
 
 	private static String runSQLinsert(String sql) {
 		try {
-			
+
 			DBHandler.RunSQL(sql);
 			sql = "SELECT LAST_INSERT_ID()";
 			ResultSet rs = DBHandler.GetSQL(sql);
@@ -712,7 +712,7 @@ public class EFormUtil {
 	private static ResultSet getSQL(String sql) {
 		ResultSet rs = null;
 		try {
-			
+
 			rs = DBHandler.GetSQL(sql);
 		} catch (SQLException sqe) {
 			logger.error("Error", sqe);

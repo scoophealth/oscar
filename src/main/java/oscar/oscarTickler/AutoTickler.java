@@ -11,9 +11,9 @@
  * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
- * 
+ *
  * Jason Gallagher
- * 
+ *
  * This software was written for the
  * Department of Family Medicine
  * McMaster University
@@ -28,36 +28,34 @@
 
 package oscar.oscarTickler;
 
-import java.util.ArrayList;
 
 /**
  *
  * @author Jay Gallagher
  */
-      
+
 public class AutoTickler {
- 
+
    static AutoTickler autoTickler = new AutoTickler();
-   ArrayList ticklerList = new ArrayList();      
-   
+
    private AutoTickler() {
 
    }
-               
-   public static AutoTickler getInstance() {         
+
+   public static AutoTickler getInstance() {
 
       return autoTickler;
    }
-   
+
    public void addTickler(){
-       
+	   //empty
    }
-   
+
    public void callForTicklers(String providerNo){
       //This should run through the autoTicklers array and launch threads for each.
 
    TicklerWorker tw = new TicklerWorker();
-   tw.provider = providerNo;   
+   tw.provider = providerNo;
    tw.status = TicklerData.ACTIVE;
    tw.priority = TicklerData.NORMAL;
    tw.run();

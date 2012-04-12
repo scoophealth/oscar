@@ -40,28 +40,28 @@ import oscar.eform.data.DatabaseAP;
  * @author jay
  */
 public class APExecute {
-    
+
     /** Creates a new instance of APExecute */
     public APExecute() {
     }
-    
+
     public String execute(String ap,String demographicNo){
         EFormLoader.getInstance();
 		DatabaseAP dap = EFormLoader.getAP(ap);
         String  sql = DatabaseAP.parserReplace("demographic", demographicNo, dap.getApSQL());
         String output = dap.getApOutput();
         MiscUtils.getLogger().debug("SQL----" + sql);
-        ArrayList names = DatabaseAP.parserGetNames(output); //a list of ${apName} --> apName
+        ArrayList<String> names = DatabaseAP.parserGetNames(output); //a list of ${apName} --> apName
         sql = DatabaseAP.parserClean(sql);  //replaces all other ${apName} expressions with 'apName'
-        ArrayList values = EFormUtil.getValues(names, sql);
+        ArrayList<String> values = EFormUtil.getValues(names, sql);
         if (values.size() != names.size()) {
             output = "";
         } else {
             for (int i=0; i<names.size(); i++) {
-                output = DatabaseAP.parserReplace((String) names.get(i), (String) values.get(i), output);
+                output = DatabaseAP.parserReplace(names.get(i), values.get(i), output);
             }
         }
-        
+
         return output;
     }
 }
