@@ -103,7 +103,7 @@ public class BillingGuidelines  {
      */
     void loadGuidelines(String regionCode) {
         log.debug("LOADING FLOWSSHEETS");
-        billingGuideLines = new ArrayList();
+        billingGuideLines = new ArrayList<DSGuideline>();
 
         String[] filenames = filenameMap.get(regionCode);
         if( filenames != null ) {
@@ -137,7 +137,7 @@ public class BillingGuidelines  {
     public List<DSConsequence> evaluateAndGetConsequences(String demographicNo, String providerNo) {
         log.debug("passed in provider: " + providerNo + " demographicNo" + demographicNo);
         log.info("Decision Support 'evaluateAndGetConsequences' has been called, reading " + billingGuideLines.size() + " for this provider");
-        ArrayList<DSConsequence> allResultingConsequences = new ArrayList();
+        ArrayList<DSConsequence> allResultingConsequences = new ArrayList<DSConsequence>();
         for (DSGuideline dsGuideline: billingGuideLines) {
             try {
                 List<DSConsequence> newConsequences = dsGuideline.evaluate(demographicNo, providerNo);

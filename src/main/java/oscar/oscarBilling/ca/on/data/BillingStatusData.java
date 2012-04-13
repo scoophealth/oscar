@@ -14,8 +14,8 @@ public class BillingStatusData {
 	public BillingStatusData() {
 	}
 
-	public ArrayList getBills(String statusType, String providerNo, String startDate, String endDate, String demoNo) {
-		ArrayList list = new ArrayList();
+	public ArrayList<Hashtable<String,Object>> getBills(String statusType, String providerNo, String startDate, String endDate, String demoNo) {
+		ArrayList<Hashtable<String,Object>> list = new ArrayList<Hashtable<String,Object>>();
 
 		String providerQuery = "";
 		String startDateQuery = "";
@@ -44,7 +44,7 @@ public class BillingStatusData {
 			BillingONDataHelp db = new BillingONDataHelp();
 			ResultSet rs = db.searchDBRecord(sql);
 			while (rs.next()) {
-				Hashtable h = new Hashtable();
+				Hashtable<String,Object> h = new Hashtable<String,Object>();
 				h.put("billing_no", "" + rs.getInt("id"));
 				h.put("demographic_no", rs.getString("demographic_no"));
 				h.put("status", rs.getString("status"));

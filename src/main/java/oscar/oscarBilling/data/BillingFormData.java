@@ -56,7 +56,7 @@ public class BillingFormData {
 
         try {
 
-            ArrayList lst = new ArrayList();
+            ArrayList<BillingService> lst = new ArrayList<BillingService>();
             BillingService billingservice;
 
 
@@ -80,7 +80,7 @@ public class BillingFormData {
             }
 
             rs.close();
-            arr = (BillingService[])lst.toArray(arr);
+            arr = lst.toArray(arr);
 
         } catch (SQLException e) {
             MiscUtils.getLogger().error("Error", e);
@@ -96,7 +96,7 @@ public class BillingFormData {
 
         try {
 
-            ArrayList lst = new ArrayList();
+            ArrayList<Diagnostic> lst = new ArrayList<Diagnostic>();
             Diagnostic diagnostic;
 
 
@@ -119,7 +119,7 @@ public class BillingFormData {
             }
 
             rs.close();
-            arr = (Diagnostic[])lst.toArray(arr);
+            arr = lst.toArray(arr);
 
         } catch (SQLException e) {
             MiscUtils.getLogger().error("Error", e);
@@ -136,7 +136,7 @@ public class BillingFormData {
 
         try {
 
-            ArrayList lst = new ArrayList();
+            ArrayList<Location> lst = new ArrayList<Location>();
             Location location;
 
 
@@ -158,7 +158,7 @@ public class BillingFormData {
             }
 
             rs.close();
-            arr = (Location[])lst.toArray(arr);
+            arr = lst.toArray(arr);
 
         } catch (SQLException e) {
             MiscUtils.getLogger().error("Error", e);
@@ -175,7 +175,7 @@ public class BillingFormData {
 
         try {
 
-            ArrayList lst = new ArrayList();
+            ArrayList<BillingVisit> lst = new ArrayList<BillingVisit>();
             BillingVisit billingvisit;
 
 
@@ -197,7 +197,7 @@ public class BillingFormData {
             }
 
             rs.close();
-            arr = (BillingVisit[])lst.toArray(arr);
+            arr = lst.toArray(arr);
 
         } catch (SQLException e) {
             MiscUtils.getLogger().error("Error", e);
@@ -214,7 +214,7 @@ public class BillingFormData {
 
         try {
 
-            ArrayList lst = new ArrayList();
+            ArrayList<BillingPhysician> lst = new ArrayList<BillingPhysician>();
             BillingPhysician billingphysician;
 
 
@@ -236,7 +236,7 @@ public class BillingFormData {
             }
 
             rs.close();
-            arr = (BillingPhysician[])lst.toArray(arr);
+            arr = lst.toArray(arr);
 
         } catch (SQLException e) {
             MiscUtils.getLogger().error("Error", e);
@@ -255,7 +255,7 @@ public class BillingFormData {
 
         try {
 
-            ArrayList lst = new ArrayList();
+            ArrayList<BillingForm> lst = new ArrayList<BillingForm>();
             BillingForm billingForm;
 
 
@@ -277,7 +277,7 @@ public class BillingFormData {
             }
 
             rs.close();
-            arr = (BillingForm[])lst.toArray(arr);
+            arr = lst.toArray(arr);
 
         } catch (SQLException e) {
             MiscUtils.getLogger().error("Error", e);

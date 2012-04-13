@@ -302,22 +302,12 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/WcbHelper.java:claimList = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/WcbHelper.java:empList = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/Teleplan/TeleplanCodesManager.java:HashMap h = new HashMap();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/BillingFormData.java:ArrayList head = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/BillingFormData.java:ArrayList lst = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/BillingFormData.java:ArrayList types = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/BillingHistoryDAO.java:List list = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/DxReference.java:ArrayList list = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/DxReference.java:Map m = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/SupServiceCodeAssocDAO.java:HashMap map = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/SupServiceCodeAssocDAO.java:HashMap ret = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/SupServiceCodeAssocDAO.java:List ret = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/decisionSupport/BillingGuidelines.java:ArrayList&lt;DSConsequence&gt; allResultingConsequences = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/decisionSupport/BillingGuidelines.java:billingGuideLines = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingEditCodeAction.java:Map map = new HashMap();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingSaveBillingAction.java:ArrayList&lt;String&gt; billingIds = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingViewAction.java:ArrayList billItem = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingViewBean.java:ArrayList billingMasterNos = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingViewBean.java:ArrayList types = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/ServiceCodeAssociation.java:private List dxCodes = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/WCBAction2.java:List list = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/OHIP/ScheduleOfBenefits.java:ArrayList changes = new ArrayList();</ViolationValue>
@@ -335,11 +325,7 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/bean/BillingEDTOBECOutputSpecificationBeanHandler.java:Vector EDTOBECOutputSecifiationBeanVector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/bean/BillingEDTOBECOutputSpecificationBeanHandler.java:public Vector getEDTOBECOutputSecifiationBeanVector(){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingClaimsErrorReportBeanHandlerSave.java:Vector claimsErrorReportBeanVector = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingCodeData.java:ArrayList list = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingCodeData.java:Hashtable h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingDataHlp.java:public static Vector vecPaymentType = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingStatusData.java:ArrayList list = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingStatusData.java:Hashtable h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBilling3rdPartImpl.java:List ret = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingClaimImpl.java:* List ret = new Vector(); int retval = 0; Vector ohipName =</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingClaimImpl.java:List retval = new Vector();</ViolationValue>
@@ -366,8 +352,7 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDiskCreatePrep.java:Vector ret = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDiskCreatePrep.java:Vector vecTemp = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDiskCreatePrep.java:vecTemp = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDocumentErrorReportUploadAction.java:ArrayList messages = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDocumentErrorReportUploadAction.java:Vector outputSpecVector = hd.getEDTOBECOutputSecifiationBeanVector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDocumentErrorReportUploadAction.java:Vector&lt;BillingEDTOBECOutputSpecificationBean&gt; outputSpecVector = hd.getEDTOBECOutputSecifiationBeanVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingRAPrep.java:List ret = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingRAPrep.java:List rett = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingReviewPrep.java:Vector ret = new Vector();</ViolationValue>
@@ -379,7 +364,6 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSavePrep.java:Vector ret = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSpecPrep.java:List aL = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSpecPrep.java:Vector ret = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/data/BillingFormData.java:ArrayList lst = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDB/ResultSetBuilder.java:private Map attribs = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDB/ResultSetBuilder.java:private Map names = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/PrintDemoAddressLabelAction.java:HashMap parameters = new HashMap();</ViolationValue>
@@ -2710,13 +2694,15 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingClaimsErrorReportBeanHandlerSave.java:claimsErrorReportBeanVector.add(CERBean);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingClaimsErrorReportBeanHandlerSave.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingClaimsErrorReportBeanHandlerSave.java:obj.setClaimsErrorReportBeanVector(this.claimsErrorReportBeanVector);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingCodeData.java:Hashtable h = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingCodeData.java:Hashtable h = null;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingCodeData.java:ArrayList&lt;Hashtable&lt;String,String&gt;&gt; list = new ArrayList&lt;Hashtable&lt;String,String&gt;&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingCodeData.java:Hashtable&lt;String,String&gt; h = new Hashtable&lt;String,String&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingCodeData.java:Hashtable&lt;String,String&gt; h = null;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingCodeData.java:h = fillCodeDataHashtable(rs);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingCodeData.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingCodeData.java:list.add(fillCodeDataHashtable(rs));</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingCodeData.java:public Hashtable fillCodeDataHashtable(ResultSet rs) throws SQLException{</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingCodeData.java:public Hashtable searchBillingCode(String str){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingCodeData.java:public Hashtable&lt;String,String&gt; fillCodeDataHashtable(ResultSet rs) throws SQLException{</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingCodeData.java:public Hashtable&lt;String,String&gt; searchBillingCode(String str){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingCodeData.java:public List&lt;Hashtable&lt;String,String&gt;&gt; search(String str){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingData.java:ArrayList&lt;Hashtable&lt;String,Object&gt;&gt; list = new ArrayList&lt;Hashtable&lt;String,Object&gt;&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingData.java:Hashtable&lt;String,Object&gt; h = new Hashtable&lt;String,Object&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingData.java:import java.util.Hashtable;</ViolationValue>
@@ -2755,8 +2741,10 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingSortComparator.java:Hashtable h1 = (Hashtable) obj1;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingSortComparator.java:Hashtable h2 = (Hashtable) obj2;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingSortComparator.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingStatusData.java:Hashtable h = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingStatusData.java:ArrayList&lt;Hashtable&lt;String,Object&gt;&gt; list = new ArrayList&lt;Hashtable&lt;String,Object&gt;&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingStatusData.java:Hashtable&lt;String,Object&gt; h = new Hashtable&lt;String,Object&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingStatusData.java:import java.util.Hashtable;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingStatusData.java:public ArrayList&lt;Hashtable&lt;String,Object&gt;&gt; getBills(String statusType, String providerNo, String startDate, String endDate, String demoNo) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBilling3rdPartImpl.java:List ret = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBilling3rdPartImpl.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingClaimImpl.java:* List ret = new Vector(); int retval = 0; Vector ohipName =</ViolationValue>
@@ -2801,8 +2789,8 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDiskCreatePrep.java:private Vector getGrpHtmlfilename(List ohipNo, String groupNo, String monthCode, String batchNum) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDiskCreatePrep.java:private Vector getSoloHtmlfilename(String ohipNo, String monthCode, String batchNum) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDiskCreatePrep.java:vecTemp = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDocumentErrorReportUploadAction.java:BillingEDTOBECOutputSpecificationBean bean = (BillingEDTOBECOutputSpecificationBean) outputSpecVector</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDocumentErrorReportUploadAction.java:Vector outputSpecVector = hd.getEDTOBECOutputSecifiationBeanVector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDocumentErrorReportUploadAction.java:BillingEDTOBECOutputSpecificationBean bean = outputSpecVector.elementAt(i);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDocumentErrorReportUploadAction.java:Vector&lt;BillingEDTOBECOutputSpecificationBean&gt; outputSpecVector = hd.getEDTOBECOutputSecifiationBeanVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDocumentErrorReportUploadAction.java:for (int i = 0; i &lt; outputSpecVector.size(); i++) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDocumentErrorReportUploadAction.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingRAPrep.java:// ret - Vector = || ||</ViolationValue>

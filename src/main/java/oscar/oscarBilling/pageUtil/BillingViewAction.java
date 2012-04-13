@@ -39,6 +39,7 @@ import org.apache.struts.util.MessageResources;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
+import oscar.oscarBilling.pageUtil.BillingBillingManager.BillingItem;
 
 public final class BillingViewAction extends Action {
 
@@ -68,7 +69,7 @@ public final class BillingViewAction extends Action {
             bean.loadBilling(request.getParameter("billing_no"));
             oscar.oscarBilling.pageUtil.BillingBillingManager bmanager;
             bmanager = new BillingBillingManager();
-            ArrayList billItem = bmanager.getBillView(request.getParameter("billing_no"));
+            ArrayList<BillingItem> billItem = bmanager.getBillView(request.getParameter("billing_no"));
             MiscUtils.getLogger().debug("Calling getGrandTotal");
             bean.setBillItem(billItem);
             bean.setGrandtotal(bmanager.getGrandTotal(billItem));

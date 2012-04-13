@@ -25,6 +25,8 @@ package oscar.oscarBilling.ca.bc.pageUtil;
 
 import java.util.ArrayList;
 
+import oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem;
+
 public class BillingSessionBean implements java.io.Serializable{
   private String apptProviderNo = null;
   private String patientName = null;
@@ -37,7 +39,7 @@ public class BillingSessionBean implements java.io.Serializable{
   private String apptDate = null;
   private String apptStart = null;
   private String apptStatus = null;
-  private ArrayList billitem;
+  private ArrayList<BillingItem> billitem;
   private String xml_billtype = null;
   private String xml_location = null;
   private String xml_starttime = null;
@@ -353,11 +355,11 @@ public class BillingSessionBean implements java.io.Serializable{
     this.xml_visittype = RHS;
   }
 
-  public ArrayList getBillItem() {
+  public ArrayList<BillingItem> getBillItem() {
     return this.billitem;
   }
 
-  public void setBillItem(ArrayList RHS) {
+  public void setBillItem(ArrayList<BillingItem> RHS) {
     this.billitem = RHS;
   }
 
@@ -687,7 +689,7 @@ public class BillingSessionBean implements java.io.Serializable{
 
   // public void estUserName(){
   //     try{
-  //             
+  //
   //             java.sql.ResultSet rs;
   //             String sql = new String("select first_name, last_name from provider where provider_no = '"+providerNo+"'");
   //             rs = DBHandler.GetSQL(sql);
