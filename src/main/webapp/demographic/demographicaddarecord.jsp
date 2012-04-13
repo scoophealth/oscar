@@ -24,7 +24,7 @@
 
 --%>
 <%@ page
-	import="java.sql.*, java.util.*, oscar.oscarDB.*, oscar.MyDateFormat, oscar.oscarWaitingList.WaitingList, org.oscarehr.common.OtherIdManager"
+	import="java.sql.*, java.util.*, java.net.URLEncoder, oscar.oscarDB.*, oscar.MyDateFormat, oscar.oscarWaitingList.WaitingList, org.oscarehr.common.OtherIdManager"
 	errorPage="errorpage.jsp"%>
 <%@ page import="oscar.log.*"%>
 <%@ page import="org.oscarehr.common.model.DemographicExt" %>
@@ -78,6 +78,20 @@
 		<bean:message key="demographic.demographicaddarecord.title" /></font></th>
 	</tr>
 </table>
+<form method="post" name="addappt">
+<%
+        //If this is from adding appointment screen, then back to there
+        String fromAppt = request.getParameter("fromAppt");
+        String originalPage2 = request.getParameter("originalPage");
+        String provider_no2 = request.getParameter("provider_no");
+        String bFirstDisp2 = request.getParameter("bFirstDisp");
+        String year2 = request.getParameter("year");
+        String month2 = request.getParameter("month");
+        String day2 = request.getParameter("day");
+        String start_time2 = request.getParameter("start_time");
+        String end_time2 = request.getParameter("end_time");
+        String duration2 = request.getParameter("duration");
+%>
 
 <%
     String dem = null;
@@ -170,7 +184,8 @@
 	<br>
    <a href=# onClick="history.go(-1);return false;"><b>&lt;-<bean:message key="global.btnBack" /></b></a>
    <% return; }
-
+	
+	StringBuilder bufChart = null, bufName = null, bufNo = null, bufDoctorNo = null;
     // add checking hin duplicated record, if there is a HIN number
     // added check to see if patient has a bc health card and has a version code of 66, in this case you are aloud to have dup hin
     boolean hinDupCheckException = false;
@@ -191,6 +206,11 @@
 <br>
 <a href=# onClick="history.go(-1);return false;"><b>&lt;-<bean:message key="global.btnBack" /></b></a>
 	<% return; }  }
+    
+    bufName = new StringBuilder(request.getParameter("last_name")+ ","+ request.getParameter("first_name") );
+    bufNo = new StringBuilder( (apptMainBean.getString("demographic_no")) );
+    bufChart = new StringBuilder(apptMainBean.getString("chart_no"));
+    bufDoctorNo = new StringBuilder( apptMainBean.getString("provider_no") );
 
     demographicDao.save(demographic);
 
@@ -310,6 +330,17 @@
 
         } //end of waitingl list
 
+        //if(request.getParameter("fromAppt")!=null && request.getParameter("provider_no").equals("1")) {
+        if(start_time2!=null && !start_time2.equals("null")) {
+	%>
+	<script language="JavaScript">
+	<!--
+	document.addappt.action="../appointment/addappointment.jsp?user_id=<%=request.getParameter("creator")%>&provider_no=<%=provider_no2%>&bFirstDisp=<%=bFirstDisp2%>&appointment_date=<%=request.getParameter("appointment_date")%>&year=<%=year2%>&month=<%=month2%>&day=<%=day2%>&start_time=<%=start_time2%>&end_time=<%=end_time2%>&duration=<%=duration2%>&name=<%=URLEncoder.encode(bufName.toString())%>&chart_no=<%=URLEncoder.encode(bufChart.toString())%>&bFirstDisp=false&demographic_no=<%=dem.toString()%>&messageID=<%=request.getParameter("messageId")%>&doctor_no=<%=bufDoctorNo.toString()%>&notes=<%=request.getParameter("notes")%>&reason=<%=request.getParameter("reason")%>&location=<%=request.getParameter("location")%>&resources=<%=request.getParameter("resources")%>&type=<%=request.getParameter("type")%>&style=<%=request.getParameter("style")%>&billing=<%=request.getParameter("billing")%>&status=<%=request.getParameter("status")%>&createdatetime=<%=request.getParameter("createdatetime")%>&creator=<%=request.getParameter("creator")%>&remarks=<%=request.getParameter("remarks")%>";
+	document.addappt.submit();
+	//-->
+	</SCRIPT> 
+	<% } %>
+</form>
 
 
 %>

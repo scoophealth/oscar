@@ -474,6 +474,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
 
         }
 	}
+	if( request.getParameter("demographic_no")!=null && !"".equals(request.getParameter("demographic_no")) ) {
 	DemographicCust demographicCust = demographicCustDao.find(Integer.parseInt(request.getParameter("demographic_no")));
 
 		if (demographicCust != null && demographicCust.getAlert() != null && !demographicCust.getAlert().equals("") ) {
@@ -488,7 +489,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
 <%
 
 		}
-
+	}
   }
 
 
@@ -514,9 +515,14 @@ function pasteAppt(multipleSameDayGroupAppt) {
 	</tr>
 </table>
 <% } %>
-<FORM NAME="ADDAPPT" METHOD="post" ACTION="appointmentcontrol.jsp"
+<FORM NAME="ADDAPPT" METHOD="post" ACTION="<%=request.getContextPath()%>/appointment/appointmentcontrol.jsp"
 	onsubmit="return(calculateEndTime())"><INPUT TYPE="hidden"
 	NAME="displaymode" value="">
+	<input type="hidden" name="year" value="<%=request.getParameter("year") %>" >
+    <input type="hidden" name="month" value="<%=request.getParameter("month") %>" >
+    <input type="hidden" name="day" value="<%=request.getParameter("day") %>" >
+    <input type="hidden" name="fromAppt" value="1" >
+	
 <div class="header deep">
     <div class="title">
         <!-- We display a shortened title for the mobile version -->
@@ -545,13 +551,13 @@ function pasteAppt(multipleSameDayGroupAppt) {
                     <% for (int i = 0; i < allStatus.size(); i++) { %>
                     <option
                             value="<%=((AppointmentStatus)allStatus.get(i)).getStatus()%>"
-                            <%=((AppointmentStatus)allStatus.get(i)).getStatus().equals("t")?"SELECTED":""%>><%=((AppointmentStatus)allStatus.get(i)).getDescription()%></option>
+                            <%=((AppointmentStatus)allStatus.get(i)).getStatus().equals(request.getParameter("status"))?"SELECTED":""%>><%=((AppointmentStatus)allStatus.get(i)).getDescription()%></option>
                     <% } %>
             </select> <%
             }
             if (strEditable==null || !strEditable.equalsIgnoreCase("yes")){
             %> <INPUT TYPE="TEXT" NAME="status"
-					VALUE='<%=bFirstDisp?"t":request.getParameter("status").equals("")?"":request.getParameter("status")%>'
+					VALUE='<%=bFirstDisp?"t":request.getParameter("status")==null?"":request.getParameter("status").equals("")?"":request.getParameter("status")%>'
 					WIDTH="25" HEIGHT="20" border="0" hspace="2"> <%}%>
             </div>
         </li>

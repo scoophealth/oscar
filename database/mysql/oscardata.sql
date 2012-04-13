@@ -1487,6 +1487,13 @@ insert into `secObjectName` (`objectName`) values ('_pmm_agencyList');
 insert into `secObjectName` (`objectName`) values ('_newCasemgmt.apptHistory');
 insert into `secObjectName` (`objectName`) values ('_newCasemgmt.doctorName');
 
+insert into `secObjectName` (`objectName`) values ('_day');
+insert into `secObjectName` (`objectName`) values ('_month');
+insert into `secObjectName` (`objectName`) values ('_pref');
+insert into `secObjectName` (`objectName`) values ('_edoc');
+insert into `secObjectName` (`objectName`) values ('_tickler');
+insert into `secObjectName` (`objectName`) values ('_pmm_client.BedRoomReservation');
+
 insert into `secObjPrivilege` values('receptionist', '_appointment', 'x', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_demographic', 'x', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_billing', 'x', 0, '999998');
@@ -1577,7 +1584,12 @@ insert into `secObjPrivilege` values('doctor','_con','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_pmm_agencyList','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_newCasemgmt.apptHistory','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_newCasemgmt.doctorName','x',0,'999998');
-
+insert into `secObjPrivilege` values('doctor','_day','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_month','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_pref','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_edoc','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_tickler','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_pmm_client.BedRoomReservation','x',0,'999998');
 
 insert into `secObjPrivilege` values('admin', '_admin', 'x', 0, '999998');
 insert into `secObjPrivilege` values('admin','_masterLink','x',0,999998);
