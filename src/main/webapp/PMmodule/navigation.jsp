@@ -232,8 +232,8 @@
 		Management</a>
 		</caisi:isModuleLoad>
 		</span></div>
-                <%
-                if (org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility.isEnableOcanForms())
+                <%                
+                if (org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility!=null && org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility.isEnableOcanForms())
                 {
                 %>
                         <div>

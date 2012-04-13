@@ -106,6 +106,7 @@ insert into OcanFormOption values (1276,'1.2','IAR Consent','NOT_SPECIFIED','Not
 insert into OcanFormOption values (1277,'1.2','IAR Consent','GRANT','Grant');
 insert into OcanFormOption values (1278,'1.2','IAR Consent','DENY','Deny');
 
+insert into OcanFormOption values (1279,'1.2','Practioner List','SIGOTHR','Significant Other');
 
 
 /*!40000 ALTER TABLE `OcanFormOption` ENABLE KEYS */;
@@ -122,4 +123,3 @@ UNLOCK TABLES;
 
 -- Dump completed on 2011-03-24  0:01:22
 
-insert into OcanFormOption (ocanFormVersion, ocanDataCategory, ocanDataCategoryValue, ocanDataCategoryName) VALUES ('1.2','Practioner List','SIGOTHR','Significant Other');

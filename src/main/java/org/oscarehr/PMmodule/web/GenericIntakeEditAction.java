@@ -25,6 +25,7 @@
 package org.oscarehr.PMmodule.web;
 
 import java.net.MalformedURLException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.GregorianCalendar;
@@ -47,6 +48,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.RedirectingActionForward;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
@@ -83,7 +85,8 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 	private static final String EDIT = "edit";
 	private static final String PRINT = "print";
 	private static final String CLIENT_EDIT = "clientEdit";
-
+	private static final String APPT = "appointment";
+	
 	private ClientImageDAO clientImageDAO = null;
 	private SurveyManager surveyManager;
 
@@ -134,10 +137,37 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		request.getSession().setAttribute(SessionConstants.INTAKE_CLIENT_IS_DEPENDENT_OF_FAMILY, false);
 
 		request.getSession().setAttribute("intakeCurrentBedCommunityId", null);
+		
+		//set up appointment's attributes here: request.getSession().getAttribute("appointment_date");
 
 		ProgramUtils.addProgramRestrictions(request);
 
-		return mapping.findForward(EDIT);
+		ActionForward forward = mapping.findForward(EDIT);
+		StringBuilder path = new StringBuilder(forward.getPath());		
+		String fromAppt = request.getParameter("fromAppt");
+		
+		if( fromAppt!=null && "1".equals(fromAppt)) {
+			
+	        String originalPage2 = request.getParameter("originalPage");
+	        String provider_no2 = request.getParameter("provider_no");
+	        String bFirstDisp2 = request.getParameter("bFirstDisp");
+	        String year2 = request.getParameter("year");
+	        String month2 = request.getParameter("month");
+	        String day2 = request.getParameter("day");
+	        String start_time2 = request.getParameter("start_time");
+	        String end_time2 = request.getParameter("end_time");
+	        String duration2 = request.getParameter("duration");
+	        String bufName = "";
+	        String demographicNo = "";
+	        String bufDoctorNo = providerNo;
+	        String bufChart = "";
+			String addAppt = "?user_id="+providerNo+"&provider_no="+provider_no2+"&bFirstDisp="+bFirstDisp2+"&appointment_date="+request.getParameter("appointment_date")+"&year="+year2+"&month="+month2+"&day="+day2+"&start_time="+start_time2+"&end_time="+end_time2+"&duration="+duration2+"&name="+URLEncoder.encode(bufName.toString())+"&chart_no="+URLEncoder.encode(bufChart.toString())+"&bFirstDisp=false&demographic_no="+demographicNo+"&messageID="+request.getParameter("messageId")+"&doctor_no="+bufDoctorNo.toString()+"&notes="+request.getParameter("notes")+"&reason="+request.getParameter("reason")+"&location="+request.getParameter("location")+"&resources="+request.getParameter("resources")+"&apptType="+request.getParameter("apptType")+"&style="+request.getParameter("style")+"&billing="+request.getParameter("billing")+"&status="+request.getParameter("status")+"&createdatetime="+request.getParameter("createdatetime")+"&creator="+request.getParameter("creator")+"&remarks="+request.getParameter("remarks");
+			
+			path.append(addAppt);
+		}	
+			
+		return new ActionForward(path.toString());
+		//return mapping.findForward(EDIT);
 	}
 
 	public ActionForward blank(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -392,167 +422,191 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 			// save client information.
 			saveClient(client, providerNo);
 
-			// for RFQ:
-			if (OscarProperties.getInstance().isTorontoRFQ()) {
-				Integer clientId = client.getDemographicNo();
-				if (clientId != null && !"".equals(clientId)) {
-					oldId = getCurrentBedCommunityProgramId(client.getDemographicNo());
+			
+					// for RFQ:
+					if (OscarProperties.getInstance().isTorontoRFQ()) {
+						Integer clientId = client.getDemographicNo();
+						if (clientId != null && !"".equals(clientId)) {
+							oldId = getCurrentBedCommunityProgramId(client.getDemographicNo());
 
-					// Save 'external' program for RFQ.
-					admitExternalProgram(client.getDemographicNo(), providerNo, formBean.getSelectedExternalProgramId());
-				}
-				// get and set intake location
-				// client.setChildren(formBean.getProgramInDomainId());
-				Integer intakeLocationId = 0;
-				String intakeLocationStr = formBean.getProgramInDomainId();
-				if (intakeLocationStr == null || "".equals(intakeLocationStr)) {
-					Integer selectedBedCommunityProgramId = formBean.getSelectedBedCommunityProgramId();
-					if ("RFQ_admit".equals(saveWhich)) {
-						if (programManager.isBedProgram(selectedBedCommunityProgramId.toString())) {
-							intakeLocationId = selectedBedCommunityProgramId;
+							// Save 'external' program for RFQ.
+							admitExternalProgram(client.getDemographicNo(), providerNo, formBean.getSelectedExternalProgramId());
+						}
+						// get and set intake location
+						// client.setChildren(formBean.getProgramInDomainId());
+						Integer intakeLocationId = 0;
+						String intakeLocationStr = formBean.getProgramInDomainId();
+						if (intakeLocationStr == null || "".equals(intakeLocationStr)) {
+							Integer selectedBedCommunityProgramId = formBean.getSelectedBedCommunityProgramId();
+							if ("RFQ_admit".equals(saveWhich)) {
+								if (programManager.isBedProgram(selectedBedCommunityProgramId.toString())) {
+									intakeLocationId = selectedBedCommunityProgramId;
+								}
+								else {
+									if (formBean.getProgramInDomainId() != null && formBean.getProgramInDomainId().trim().length() > 0)
+										intakeLocationId = Integer.valueOf(formBean.getProgramInDomainId());
+								}
+							}
 						}
 						else {
-							if (formBean.getProgramInDomainId() != null && formBean.getProgramInDomainId().trim().length() > 0)
-								intakeLocationId = Integer.valueOf(formBean.getProgramInDomainId());
+							intakeLocationId = Integer.valueOf(intakeLocationStr);
+						}
+
+						intake.setIntakeLocation(intakeLocationId);
+					}
+
+					intake.setFacilityId(loggedInInfo.currentFacility.getId());
+
+					String admissionText = null;
+					String remoteReferralId = StringUtils.trimToNull(request.getParameter("remoteReferralId"));
+					if (remoteReferralId != null) {
+						admissionText = getAdmissionText(admissionText, remoteReferralId);
+					}
+
+					admitBedCommunityProgram(client.getDemographicNo(), providerNo, formBean.getSelectedBedCommunityProgramId(), saveWhich, admissionText);
+
+					if (remoteReferralId != null) {
+						// doing this after the admit is about as transactional as this is going to get for now.
+						ReferralWs referralWs;
+						try {
+							referralWs = CaisiIntegratorManager.getReferralWs();
+							referralWs.removeReferral(Integer.parseInt(remoteReferralId));
+						}
+						catch (Exception e) {
+							LOG.error("Unexpected error", e);
+						}
+					}
+
+					// if (!formBean.getSelectedServiceProgramIds().isEmpty() && "RFQ_admit".endsWith(saveWhich)) {
+					//if (!formBean.getSelectedServiceProgramIds().isEmpty()) { //should be able to discharge from all service programs.
+						admitServicePrograms(client.getDemographicNo(), providerNo, formBean.getSelectedServiceProgramIds(), null);
+					//}
+
+					if ("normal".equals(saveWhich) || "appointment".equals(saveWhich)) {
+						// normal intake saving . eg. seaton house
+						intake.setIntakeStatus("Signed");
+						intake.setId(null);
+						saveIntake(intake, client.getDemographicNo());
+					} else if("draft".equals(saveWhich)) {
+						intake.setIntakeStatus("Draft");
+						intake.setId(null);
+						saveIntake(intake, client.getDemographicNo());
+					}
+					else {
+						// RFQ intake saving...
+						if ("RFQ_temp".equals(saveWhich)) {
+							intake.setIntakeStatus("Unsigned");
+							saveUpdateIntake(intake, client.getDemographicNo());
+						}
+						else if ("RFQ_admit".equals(saveWhich)) {
+							intake.setIntakeStatus("Signed");
+							intake.setId(null);
+							saveIntake(intake, client.getDemographicNo());
+						}
+						else if ("RFQ_notAdmit".equals(saveWhich)) {
+							intake.setIntakeStatus("Signed");
+							intake.setId(null);
+							saveIntake(intake, client.getDemographicNo());
 						}
 					}
 				}
-				else {
-					intakeLocationId = Integer.valueOf(intakeLocationStr);
+				catch (ProgramFullException e) {
+					ActionMessages messages = new ActionMessages();
+					messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.full"));
+					saveErrors(request, messages);
+				}
+				catch (AdmissionException e) {
+					MiscUtils.getLogger().error("Error", e);
+					LOG.error("Error", e);
+
+					ActionMessages messages = new ActionMessages();
+					messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("message", e.getMessage()));
+					saveErrors(request, messages);
+				}
+				catch (ServiceRestrictionException e) {
+					ActionMessages messages = new ActionMessages();
+					messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.service_restricted", e.getRestriction().getComments(), e.getRestriction().getProvider()
+							.getFormattedName()));
+					saveErrors(request, messages);
 				}
 
-				intake.setIntakeLocation(intakeLocationId);
-			}
+				List<IntakeNodeJavascript> jsLocation = genericIntakeManager.getIntakeNodeJavascriptLocation(intake.getNode().getQuestionId());
+				
+				
+				setBeanProperties(formBean, intake, client, providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(
+						intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType), getCurrentBedCommunityProgramId(client.getDemographicNo()),
+						getCurrentServiceProgramIds(client.getDemographicNo()), getCurrentExternalProgramId(client.getDemographicNo()), loggedInInfo.currentFacility.getId(), nodeId, jsLocation);
 
-			intake.setFacilityId(loggedInInfo.currentFacility.getId());
+				String oldBedProgramId = String.valueOf(getCurrentBedCommunityProgramId(client.getDemographicNo()));
+				request.getSession().setAttribute("intakeCurrentBedCommunityId", oldBedProgramId);
 
-			String admissionText = null;
-			String remoteReferralId = StringUtils.trimToNull(request.getParameter("remoteReferralId"));
-			if (remoteReferralId != null) {
-				admissionText = getAdmissionText(admissionText, remoteReferralId);
-			}
+				String remoteFacilityIdStr = StringUtils.trimToNull(request.getParameter("remoteFacilityId"));
+				String remoteDemographicIdStr = StringUtils.trimToNull(request.getParameter("remoteDemographicId"));
+				if (remoteFacilityIdStr != null && remoteDemographicIdStr != null) {
+					try {
+						int remoteFacilityId = Integer.parseInt(remoteFacilityIdStr);
+						int remoteDemographicId = Integer.parseInt(remoteDemographicIdStr);
+						DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
 
-			admitBedCommunityProgram(client.getDemographicNo(), providerNo, formBean.getSelectedBedCommunityProgramId(), saveWhich, admissionText);
+						// link the clients
+						demographicWs.linkDemographics(providerNo, client.getDemographicNo(), remoteFacilityId, remoteDemographicId);
 
-			if (remoteReferralId != null) {
-				// doing this after the admit is about as transactional as this is going to get for now.
-				ReferralWs referralWs;
-				try {
-					referralWs = CaisiIntegratorManager.getReferralWs();
-					referralWs.removeReferral(Integer.parseInt(remoteReferralId));
-				}
-				catch (Exception e) {
-					LOG.error("Unexpected error", e);
-				}
-			}
+						// copy image if exists
+						{
+							DemographicTransfer demographicTransfer = demographicWs.getDemographicByFacilityIdAndDemographicId(remoteFacilityId, remoteDemographicId);
 
-			// if (!formBean.getSelectedServiceProgramIds().isEmpty() && "RFQ_admit".endsWith(saveWhich)) {
-			//if (!formBean.getSelectedServiceProgramIds().isEmpty()) { //should be able to discharge from all service programs.
-				admitServicePrograms(client.getDemographicNo(), providerNo, formBean.getSelectedServiceProgramIds(), null);
-			//}
-
-			if ("normal".equals(saveWhich)) {
-				// normal intake saving . eg. seaton house
-				intake.setIntakeStatus("Signed");
-				intake.setId(null);
-				saveIntake(intake, client.getDemographicNo());
-			} else if("draft".equals(saveWhich)) {
-				intake.setIntakeStatus("Draft");
-				intake.setId(null);
-				saveIntake(intake, client.getDemographicNo());
-			}
-			else {
-				// RFQ intake saving...
-				if ("RFQ_temp".equals(saveWhich)) {
-					intake.setIntakeStatus("Unsigned");
-					saveUpdateIntake(intake, client.getDemographicNo());
-				}
-				else if ("RFQ_admit".equals(saveWhich)) {
-					intake.setIntakeStatus("Signed");
-					intake.setId(null);
-					saveIntake(intake, client.getDemographicNo());
-				}
-				else if ("RFQ_notAdmit".equals(saveWhich)) {
-					intake.setIntakeStatus("Signed");
-					intake.setId(null);
-					saveIntake(intake, client.getDemographicNo());
-				}
-			}
-		}
-		catch (ProgramFullException e) {
-			ActionMessages messages = new ActionMessages();
-			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.full"));
-			saveErrors(request, messages);
-		}
-		catch (AdmissionException e) {
-			MiscUtils.getLogger().error("Error", e);
-			LOG.error("Error", e);
-
-			ActionMessages messages = new ActionMessages();
-			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("message", e.getMessage()));
-			saveErrors(request, messages);
-		}
-		catch (ServiceRestrictionException e) {
-			ActionMessages messages = new ActionMessages();
-			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.service_restricted", e.getRestriction().getComments(), e.getRestriction().getProvider()
-					.getFormattedName()));
-			saveErrors(request, messages);
-		}
-
-		List<IntakeNodeJavascript> jsLocation = genericIntakeManager.getIntakeNodeJavascriptLocation(intake.getNode().getQuestionId());
-		
-		
-		setBeanProperties(formBean, intake, client, providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(
-				intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType), getCurrentBedCommunityProgramId(client.getDemographicNo()),
-				getCurrentServiceProgramIds(client.getDemographicNo()), getCurrentExternalProgramId(client.getDemographicNo()), loggedInInfo.currentFacility.getId(), nodeId, jsLocation);
-
-		String oldBedProgramId = String.valueOf(getCurrentBedCommunityProgramId(client.getDemographicNo()));
-		request.getSession().setAttribute("intakeCurrentBedCommunityId", oldBedProgramId);
-
-		String remoteFacilityIdStr = StringUtils.trimToNull(request.getParameter("remoteFacilityId"));
-		String remoteDemographicIdStr = StringUtils.trimToNull(request.getParameter("remoteDemographicId"));
-		if (remoteFacilityIdStr != null && remoteDemographicIdStr != null) {
-			try {
-				int remoteFacilityId = Integer.parseInt(remoteFacilityIdStr);
-				int remoteDemographicId = Integer.parseInt(remoteDemographicIdStr);
-				DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
-
-				// link the clients
-				demographicWs.linkDemographics(providerNo, client.getDemographicNo(), remoteFacilityId, remoteDemographicId);
-
-				// copy image if exists
-				{
-					DemographicTransfer demographicTransfer = demographicWs.getDemographicByFacilityIdAndDemographicId(remoteFacilityId, remoteDemographicId);
-
-					if (demographicTransfer.getPhoto() != null) {
-						ClientImage clientImage = new ClientImage();
-						clientImage.setDemographic_no(client.getDemographicNo());
-						clientImage.setImage_data(demographicTransfer.getPhoto());
-						clientImage.setImage_type("jpg");
-						clientImageDAO.saveClientImage(clientImage);
+							if (demographicTransfer.getPhoto() != null) {
+								ClientImage clientImage = new ClientImage();
+								clientImage.setDemographic_no(client.getDemographicNo());
+								clientImage.setImage_data(demographicTransfer.getPhoto());
+								clientImage.setImage_type("jpg");
+								clientImageDAO.saveClientImage(clientImage);
+							}
+						}
+					}
+					catch (MalformedURLException e) {
+						LOG.error("Error", e);
+					}
+					catch (WebServiceException e) {
+						LOG.error("Error", e);
 					}
 				}
-			}
-			catch (MalformedURLException e) {
-				LOG.error("Error", e);
-			}
-			catch (WebServiceException e) {
-				LOG.error("Error", e);
-			}
-		}
-/*
-		GenericIntakeEditFormBean formBean2 = new GenericIntakeEditFormBean();
-		request.getSession().setAttribute("genericIntakeEditForm", formBean2);
-*/		
-		if (("RFQ_admit".equals(saveWhich) || "RFQ_notAdmit".equals(saveWhich)) && oldId != null) {
-			return clientEdit(mapping, form, request, response);
-		}
-		else if (request.getAttribute(Globals.ERROR_KEY) != null) {
-			return mapping.findForward(EDIT);
-		}
-		else {
-			return clientEdit(mapping, form, request, response);
-		}
+		/*
+				GenericIntakeEditFormBean formBean2 = new GenericIntakeEditFormBean();
+				request.getSession().setAttribute("genericIntakeEditForm", formBean2);
+		*/		
+				if (("RFQ_admit".equals(saveWhich) || "RFQ_notAdmit".equals(saveWhich)) && oldId != null) {
+					return clientEdit(mapping, form, request, response);
+				}
+				else if (request.getAttribute(Globals.ERROR_KEY) != null) {
+					return mapping.findForward(EDIT);
+				}
+				else if( "appointment".equals(saveWhich)) {
+					ActionForward forward = mapping.findForward(APPT);
+					StringBuilder path = new StringBuilder(forward.getPath());
+					String fromAppt = request.getParameter("fromAppt");
+			        String originalPage2 = request.getParameter("originalPage");
+			        String provider_no2 = request.getParameter("provider_no");
+			        String bFirstDisp2 = request.getParameter("bFirstDisp");
+			        String year2 = request.getParameter("year");
+			        String month2 = request.getParameter("month");
+			        String day2 = request.getParameter("day");
+			        String start_time2 = request.getParameter("start_time");
+			        String end_time2 = request.getParameter("end_time");
+			        String duration2 = request.getParameter("duration");
+			        String bufName = client.getDisplayName();
+			        Integer dem = client.getDemographicNo();
+			        String bufDoctorNo = client.getProviderNo();
+			        String bufChart = client.getChartNo();
+					String addAppt = "?user_id="+request.getParameter("creator")+"&provider_no="+provider_no2+"&bFirstDisp="+bFirstDisp2+"&appointment_date="+request.getParameter("appointment_date")+"&year="+year2+"&month="+month2+"&day="+day2+"&start_time="+start_time2+"&end_time="+end_time2+"&duration="+duration2+"&name="+URLEncoder.encode(bufName.toString())+"&chart_no="+URLEncoder.encode(bufChart.toString())+"&bFirstDisp=false&demographic_no="+dem.toString()+"&messageID="+request.getParameter("messageId")+"&doctor_no="+bufDoctorNo.toString()+"&notes="+request.getParameter("notes")+"&reason="+request.getParameter("reason")+"&location="+request.getParameter("location")+"&resources="+request.getParameter("resources")+"&type="+request.getParameter("apptType")+"&style="+request.getParameter("style")+"&billing="+request.getParameter("billing")+"&status="+request.getParameter("status")+"&createdatetime="+request.getParameter("createdatetime")+"&creator="+request.getParameter("creator")+"&remarks="+request.getParameter("remarks");
+					
+					path.append(addAppt);					
+					return new RedirectingActionForward(path.toString());
+
+				}
+				else {
+					return clientEdit(mapping, form, request, response);
+				}			
 	}
 
 	private String getAdmissionText(String admissionText, String remoteReferralId) {
@@ -596,7 +650,24 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 	}
 
 	public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		return save_all(mapping, form, request, response, "normal");
+		
+		String fromAppt = request.getParameter("fromAppt");
+		
+        String originalPage2 = request.getParameter("originalPage");
+        String provider_no2 = request.getParameter("provider_no");
+        String bFirstDisp2 = request.getParameter("bFirstDisp");
+        String year2 = request.getParameter("year");
+        String month2 = request.getParameter("month");
+        String day2 = request.getParameter("day");
+        String start_time2 = request.getParameter("start_time");
+        String end_time2 = request.getParameter("end_time");
+        String duration2 = request.getParameter("duration");
+        
+		if(fromAppt!=null && fromAppt.equals("1")) {
+			return save_all(mapping, form, request, response, "appointment");
+		} else {
+			return save_all(mapping, form, request, response, "normal");
+		}
 	}
 	
 	public ActionForward save_draft(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
