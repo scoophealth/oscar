@@ -43,6 +43,10 @@ own file and run maven with -Doscar_override_properties=/<full_path>/myoverrides
 -------------
 NetBeans Note
 -------------
+If you are running the unit tests, and using your own override properties file in Netbeans, use 
+-DargLine="-Doscar_override_properties=/<full_path>/myoverrides.properties"
+
+
 Add this to a netbeans build.xml file for it to build and run.
 
 <target name="-post-compile">
