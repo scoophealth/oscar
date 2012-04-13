@@ -43,7 +43,7 @@ import oscar.util.SqlUtils;
  * @version 1.0
  */
 public class BillingHistoryDAO {
-  
+
   public BillingHistoryDAO() {
   }
 
@@ -66,11 +66,11 @@ public class BillingHistoryDAO {
    * @param qry String - The string query
    * @return List - The List of BillHistory instances
    */
-  private List getBillHistoryHlp(String qry) {
-    List list = new ArrayList();
+  private List<BillHistory> getBillHistoryHlp(String qry) {
+    List<BillHistory> list = new ArrayList<BillHistory>();
     ResultSet rs = null;
     try {
-      
+
       rs = DBHandler.GetSQL(qry);
       while (rs.next()) {
         BillHistory bh = new BillHistory();
@@ -105,7 +105,7 @@ public class BillingHistoryDAO {
    * @param billingNo - The String billingNo Number
    * @return List - The List of BillHistory instances
    */
-  public List getBillHistoryByBillNo(String billingNo) {
+  public List<BillHistory> getBillHistoryByBillNo(String billingNo) {
     String qry = "select bh.id,bm.billingmaster_no,bh.billingstatus,bh.creation_date,bh.practitioner_no,bh.billingtype,bh.seqnum,bh.amount,bh.amount_received,bh.payment_type_id,bt.payment_type" +
         " from billingmaster bm,billing_history bh left join billing_payment_type bt on bh.payment_type_id = bt.id" +
         " where bh.billingmaster_no = bm.billingmaster_no" +
@@ -119,7 +119,7 @@ public class BillingHistoryDAO {
    * @param status String - The status of the BillingMaster  record
    */
   public void createBillingHistoryArchive(BillHistory history) {
-    
+
 
     String qry = "insert into billing_history(billingmaster_no,billingstatus,creation_date,practitioner_no,billingtype,seqNum,amount,amount_received,payment_type_id) values(" +
         history.getBillingMasterNo() + ",'" + history.getBillingStatus() +
@@ -128,7 +128,7 @@ public class BillingHistoryDAO {
         "','" + history.getSeqNum() + "','" + history.getAmount() + "','" +
         history.getAmountReceived() + "'," + history.getPaymentTypeId() + ")";
     try {
-      
+
     	DBHandler.RunSQL(qry);
       if(null == history.getPaymentTypeId()){
         throw new RuntimeException("Bill History: " + history.getBillingMasterNo() + " Payment type is '0'");
@@ -190,13 +190,13 @@ public class BillingHistoryDAO {
    * @param stat String - The status of the billingMaster records that will be archived
    */
   public void createBillingHistoryArchiveByBillNo(String billingNo) {
-    
+
     ResultSet rs = null;
     String qry =
         "SELECT billingmaster_no FROM billingmaster b WHERE b.billing_no = " +
         billingNo;
     try {
-      
+
       rs = DBHandler.GetSQL(qry);
       while (rs.next()) {
         String billMasterNo = rs.getString(1);

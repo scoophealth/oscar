@@ -46,6 +46,7 @@ import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 import oscar.oscarBilling.ca.bc.data.BillRecipient;
 import oscar.oscarBilling.ca.bc.data.BillingPreference;
 import oscar.oscarBilling.ca.bc.data.BillingPreferencesDAO;
+import oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem;
 import oscar.oscarDemographic.data.DemographicData;
 
 public final class BillingViewAction
@@ -70,12 +71,12 @@ public final class BillingViewAction
       BillingViewBean bean = new BillingViewBean();
       bean.loadBilling(request.getParameter("billing_no"));
       BillingBillingManager bmanager = new BillingBillingManager();
-      ArrayList billItem = new ArrayList();
+      ArrayList<BillingItem> billItem = new ArrayList<BillingItem>();
       String[] billingN = request.getParameterValues("billing_no");
 
       for (int i = 0; i < billingN.length; i++){
           log.debug("billn "+i+" "+billingN[i]);
-         ArrayList tempBillItem = bmanager.getBillView(billingN[i]);
+         ArrayList<BillingItem> tempBillItem = bmanager.getBillView(billingN[i]);
          billItem.addAll(tempBillItem);
       }
 
@@ -101,10 +102,10 @@ public final class BillingViewAction
       frm.setBillingNo(bean.getBillingNo());
       log.debug("End Demo Call billing No"+request.getParameter("billing_no"));
       //Loading bill Recipient Data
-      List billRecipList = bean.getBillRecipient(request.getParameter("billing_no"));
+      List<BillRecipient> billRecipList = bean.getBillRecipient(request.getParameter("billing_no"));
       if (!billRecipList.isEmpty()) {
         log.debug("Filling recep with last details");
-        BillRecipient rec = (BillRecipient) billRecipList.get(0);
+        BillRecipient rec = billRecipList.get(0);
         frm.setRecipientAddress(rec.getAddress());
         frm.setRecipientCity(rec.getCity());
         frm.setRecipientName(rec.getName());

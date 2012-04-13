@@ -86,7 +86,7 @@ public class BillingSaveBillingAction extends Action {
 
         Date curDate = new Date();
         String billingid = "";
-        ArrayList<String> billingIds = new ArrayList();
+        ArrayList<String> billingIds = new ArrayList<String>();
         String dataCenterId = OscarProperties.getInstance().getProperty("dataCenterId");
         String billingMasterId = "";
 

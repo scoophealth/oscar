@@ -1,29 +1,31 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 package oscar.oscarBilling.pageUtil;
 
 import java.util.ArrayList;
+
+import oscar.oscarBilling.pageUtil.BillingBillingManager.BillingItem;
 
 public class BillingSessionBean implements java.io.Serializable {
     private String apptProviderNo = null;
@@ -37,7 +39,7 @@ public class BillingSessionBean implements java.io.Serializable {
     private String apptDate 	  = null;
     private String apptStart      = null;
     private String apptStatus     = null;
-    private ArrayList billitem;
+    private ArrayList<BillingItem> billitem;
     private String xml_billtype   = null;
     private String xml_location   = null;
     private String xml_starttime  = null;
@@ -67,7 +69,7 @@ public class BillingSessionBean implements java.io.Serializable {
     private String patientAge = null;
     private String billingPracNo = null;
     private String billingGroupNo = null;
-    
+
     public String getPatientAge(){return this.patientAge;}
     public void   setPatientAge(String RHS){ this.patientAge = RHS;   }
     public String getBillingPracNo(){return this.billingPracNo;}
@@ -98,7 +100,7 @@ public class BillingSessionBean implements java.io.Serializable {
     public void   setBillingType(String RHS){ this.billingType = RHS;   }
     public String getAdmissionDate(){return this.xml_vdate;}
     public void   setAdmissionDate(String RHS){ this.xml_vdate = RHS;   }
-    
+
     public String 	getReferral1()   		{ 	    return this.refer1;    }
     public void 	setReferral1(String RHS){ this.refer1 = RHS;   }
     public String 	getReferral2()   		{ 		return this.refer2;   }
@@ -127,8 +129,8 @@ public class BillingSessionBean implements java.io.Serializable {
     public void 	setBillingProvider(String RHS)	    {	        this.xml_provider = RHS;	    }
     public String 	getVisitType()	    {	        return this.xml_visittype;	    }
     public void 	setVisitType(String RHS)	    {	        this.xml_visittype = RHS;	    }
-    public ArrayList getBillItem()	    {	        return this.billitem;	    }
-    public void 	setBillItem(ArrayList RHS)	    {	        this.billitem = RHS;	    }
+    public ArrayList<BillingItem> getBillItem()	    {	        return this.billitem;	    }
+    public void 	setBillItem(ArrayList<BillingItem> RHS)	    {	        this.billitem = RHS;	    }
     public String 	getApptProviderNo()    {        return this.apptProviderNo;    }
     public void 	setApptProviderNo(String RHS)    {        this.apptProviderNo = RHS;    }
     public String 	getPatientName()    {        return this.patientName;    }
@@ -151,10 +153,10 @@ public class BillingSessionBean implements java.io.Serializable {
     public void 	setApptStart(String RHS)    {	        this.apptStart = RHS;    }
     public String 	getApptStatus()		    {		        return this.apptStatus;		    }
     public void 	setApptStatus(String RHS)		    { 		        this.apptStatus = RHS;    }
-    
+
     // public void estUserName(){
     //     try{
-    //             
+    //
     //             java.sql.ResultSet rs;
     //             String sql = new String("select first_name, last_name from provider where provider_no = '"+providerNo+"'");
     //             rs = DBHandler.GetSQL(sql);
@@ -164,7 +166,7 @@ public class BillingSessionBean implements java.io.Serializable {
     //             rs.close();
     //     }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }
     // }
-    
-    
-    
+
+
+
 }

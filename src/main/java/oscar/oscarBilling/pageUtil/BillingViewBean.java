@@ -1,25 +1,25 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 package oscar.oscarBilling.pageUtil;
 
@@ -29,6 +29,7 @@ import java.util.ArrayList;
 
 import org.oscarehr.util.MiscUtils;
 
+import oscar.oscarBilling.pageUtil.BillingBillingManager.BillingItem;
 import oscar.oscarDB.DBHandler;
 
 public class BillingViewBean {
@@ -43,7 +44,7 @@ public class BillingViewBean {
     private String apptDate 	  = null;
     private String apptStart      = null;
     private String apptStatus     = null;
-    private ArrayList billitem;
+    private ArrayList<BillingItem> billitem;
     private String xml_billtype   = null;
     private String xml_location   = null;
     private String xml_starttime  = null;
@@ -73,22 +74,22 @@ public class BillingViewBean {
     private String patientAge = null;
     private String billingPracNo = null;
     private String billingGroupNo = null;
-    
+
     public void loadBilling(String billing_no) {
         try{
-            
+
             ResultSet rs;
             String sql;
-            
+
             sql = "select bi.billing_date, bi.visitdate, bi.apptProvider_no, bi.creator, bi.provider_no, b.billingmaster_no, b.billing_no, b.createdate, b.billingstatus,b.demographic_no, b.appointment_no, b.claimcode, b.datacenter, b.payee_no, b.practitioner_no, b.phn, b.name_verify, b.dependent_num,b.billing_unit,";
             sql = sql + "b.clarification_code, b.anatomical_area, b.after_hour, b.new_program, b.billing_code, b.bill_amount, b.payment_mode, b.service_date, b.service_to_day, b.submission_code, b.extended_submission_code, b.dx_code1, b.dx_code2, b.dx_code3, ";
             sql = sql + "b.dx_expansion, b.service_location, b.referral_flag1, b.referral_no1, b.referral_flag2, b.referral_no2, b.time_call, b.service_start_time, b.service_end_time, b.birth_date, b.office_number, b.correspondence_code, b.claim_comment ";
             sql = sql + "from billingmaster b, billing bi where bi.billing_no=b.billing_no and b.billing_no='" + billing_no+"'";
             MiscUtils.getLogger().debug(sql);
             rs = DBHandler.GetSQL(sql);
-            
+
             while(rs.next()){
-                
+
                 this.patientNo = rs.getString("demographic_no");
                 this.creator = rs.getString("creator");
                 this.apptProviderNo = rs.getString("apptProvider_no");
@@ -111,11 +112,11 @@ public class BillingViewBean {
             }
             //setBillItem(billingItemsArray);
             rs.close();
-            
+
         } catch (SQLException e){ MiscUtils.getLogger().error("Error", e);  }
-        
+
     }
-    
+
     public String getPatientAge(){return this.patientAge;}
     public void   setPatientAge(String RHS){ this.patientAge = RHS;   }
     public String getBillingPracNo(){return this.billingPracNo;}
@@ -146,7 +147,7 @@ public class BillingViewBean {
     public void   setBillingType(String RHS){ this.billingType = RHS;   }
     public String getAdmissionDate(){return this.xml_vdate;}
     public void   setAdmissionDate(String RHS){ this.xml_vdate = RHS;   }
-    
+
     public String 	getReferral1()   		{ 	    return this.refer1;    }
     public void 	setReferral1(String RHS){ this.refer1 = RHS;   }
     public String 	getReferral2()   		{ 		return this.refer2;   }
@@ -175,8 +176,8 @@ public class BillingViewBean {
     public void 	setBillingProvider(String RHS)	    {	        this.xml_provider = RHS;	    }
     public String 	getVisitType()	    {	        return this.xml_visittype;	    }
     public void 	setVisitType(String RHS)	    {	        this.xml_visittype = RHS;	    }
-    public ArrayList getBillItem()	    {	        return this.billitem;	    }
-    public void 	setBillItem(ArrayList RHS)	    {	        this.billitem = RHS;	    }
+    public ArrayList<BillingItem> getBillItem()	    {	        return this.billitem;	    }
+    public void 	setBillItem(ArrayList<BillingItem> RHS)	    {	        this.billitem = RHS;	    }
     public String 	getApptProviderNo()    {        return this.apptProviderNo;    }
     public void 	setApptProviderNo(String RHS)    {        this.apptProviderNo = RHS;    }
     public String 	getPatientName()    {        return this.patientName;    }
@@ -199,7 +200,7 @@ public class BillingViewBean {
     public void 	setApptStart(String RHS)    {	        this.apptStart = RHS;    }
     public String 	getApptStatus()		    {		        return this.apptStatus;		    }
     public void 	setApptStatus(String RHS)		    { 		        this.apptStatus = RHS;    }
-    
-    
-    
+
+
+
 }

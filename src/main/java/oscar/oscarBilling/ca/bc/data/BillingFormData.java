@@ -49,8 +49,8 @@ public class BillingFormData {
   private DiagnosticCodeDao diagnosticCodeDao = SpringUtils.getBean(DiagnosticCodeDao.class);
 
 
-  public ArrayList getPaymentTypes() {
-    ArrayList types = new ArrayList();
+  public ArrayList<PaymentType> getPaymentTypes() {
+    ArrayList<PaymentType> types = new ArrayList<PaymentType>();
     String sql = "select * from billing_payment_type";
 
     ResultSet rs = null;
@@ -112,13 +112,13 @@ public class BillingFormData {
    * If the supplied array is null or empty, a full list is returned
    * @return List
    */
-  public List getStatusTypes(String[] codes){
+  public List<BillingStatusType> getStatusTypes(String[] codes){
     String qry = "select * from billingstatus_types";
     if(codes!=null && codes.length > 0){
       qry+=" where billingstatus";
       qry+= " " + SqlUtils.constructInClauseString(codes,true);
     }
-    ArrayList head = new ArrayList();
+    ArrayList<BillingStatusType> head = new ArrayList<BillingStatusType>();
     // prepends a default empty bean to the list
     BillingStatusType tp = new BillingStatusType();
     tp.setBillingstatus("");
@@ -144,7 +144,7 @@ public class BillingFormData {
 
     try {
 
-      ArrayList lst = new ArrayList();
+      ArrayList<BillingService> lst = new ArrayList<BillingService>();
       BillingService billingservice;
 
 
@@ -174,7 +174,7 @@ public class BillingFormData {
       }
 
       rs.close();
-      arr = (BillingService[]) lst.toArray(arr);
+      arr = lst.toArray(arr);
 
     }
     catch (SQLException e) {
@@ -192,7 +192,7 @@ public class BillingFormData {
           _log.debug("In getServiceList 2 the one with the billing date");
     try {
       String billReferenceDate = UtilDateUtilities.DateToString(billingDate);
-      ArrayList lst = new ArrayList();
+      ArrayList<BillingService> lst = new ArrayList<BillingService>();
       BillingService billingservice;
 
 
@@ -218,7 +218,7 @@ public class BillingFormData {
       }
 
       rs.close();
-      arr = (BillingService[]) lst.toArray(arr);
+      arr = lst.toArray(arr);
 
     }
     catch (SQLException e) {
@@ -233,7 +233,7 @@ public class BillingFormData {
 
     try {
 
-      ArrayList lst = new ArrayList();
+      ArrayList<Diagnostic> lst = new ArrayList<Diagnostic>();
       Diagnostic diagnostic;
 
 
@@ -257,7 +257,7 @@ public class BillingFormData {
       }
 
       rs.close();
-      arr = (Diagnostic[]) lst.toArray(arr);
+      arr = lst.toArray(arr);
 
     }
     catch (SQLException e) {
@@ -272,7 +272,7 @@ public class BillingFormData {
 
     try {
 
-      ArrayList lst = new ArrayList();
+      ArrayList<Location> lst = new ArrayList<Location>();
       Location location;
 
 
@@ -294,7 +294,7 @@ public class BillingFormData {
       }
 
       rs.close();
-      arr = (Location[]) lst.toArray(arr);
+      arr = lst.toArray(arr);
 
     }
     catch (SQLException e) {
@@ -309,7 +309,7 @@ public class BillingFormData {
 
     try {
 
-      ArrayList lst = new ArrayList();
+      ArrayList<BillingVisit> lst = new ArrayList<BillingVisit>();
       BillingVisit billingvisit;
 
 
@@ -331,7 +331,7 @@ public class BillingFormData {
       }
 
       rs.close();
-      arr = (BillingVisit[]) lst.toArray(arr);
+      arr = lst.toArray(arr);
 
     }
     catch (SQLException e) {
@@ -346,7 +346,7 @@ public class BillingFormData {
 
     try {
 
-      ArrayList lst = new ArrayList();
+      ArrayList<BillingPhysician> lst = new ArrayList<BillingPhysician>();
       BillingPhysician billingphysician;
 
 
@@ -370,7 +370,7 @@ public class BillingFormData {
       }
 
       rs.close();
-      arr = (BillingPhysician[]) lst.toArray(arr);
+      arr = lst.toArray(arr);
 
     }
     catch (SQLException e) {
@@ -385,7 +385,7 @@ public class BillingFormData {
 
     try {
 
-      ArrayList lst = new ArrayList();
+      ArrayList<BillingForm> lst = new ArrayList<BillingForm>();
       BillingForm billingForm;
 
 
@@ -407,7 +407,7 @@ public class BillingFormData {
       }
 
       rs.close();
-      arr = (BillingForm[]) lst.toArray(arr);
+      arr = lst.toArray(arr);
 
     }
     catch (SQLException e) {

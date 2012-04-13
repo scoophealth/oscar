@@ -25,7 +25,6 @@
 package oscar.oscarBilling.ca.on.pageUtil;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -79,7 +78,6 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 		BillingDocumentErrorReportUploadForm frm = (BillingDocumentErrorReportUploadForm) form;
 		request.getSession().setAttribute("BillingDocumentErrorReportUploadForm", frm);
 		FormFile file1 = frm.getFile1();
-		ArrayList messages = new ArrayList();
 		ActionMessages errors = new ActionMessages();
 
 		if (!saveFile(file1)) {
@@ -110,7 +108,6 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 
 		try {
 			// retrieve the file data
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			InputStream stream = file.getInputStream();
 			OscarProperties props = OscarProperties.getInstance();
 
@@ -166,7 +163,7 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 			FileInputStream file = new FileInputStream(filepath + fileName);
 			MiscUtils.getLogger().debug("file path: " + filepath + fileName);
 			// Assign associated report Name
-			ArrayList messages = new ArrayList();
+			ArrayList<String> messages = new ArrayList<String>();
 			String ReportName = "";
 			String ReportFlag = "";
 
@@ -296,13 +293,12 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 	 */
 	private BillingEDTOBECOutputSpecificationBeanHandler generateReportR(FileInputStream file) {
 		BillingEDTOBECOutputSpecificationBeanHandler hd = new BillingEDTOBECOutputSpecificationBeanHandler(file);
-		Vector outputSpecVector = hd.getEDTOBECOutputSecifiationBeanVector();
+		Vector<BillingEDTOBECOutputSpecificationBean> outputSpecVector = hd.getEDTOBECOutputSecifiationBeanVector();
 		try {
 
 
 			for (int i = 0; i < outputSpecVector.size(); i++) {
-				BillingEDTOBECOutputSpecificationBean bean = (BillingEDTOBECOutputSpecificationBean) outputSpecVector
-						.elementAt(i);
+				BillingEDTOBECOutputSpecificationBean bean = outputSpecVector.elementAt(i);
 				String hin = bean.getHealthNo();
 				String responseCode = bean.getResponseCode();
 				int responseCodeNum = -1;

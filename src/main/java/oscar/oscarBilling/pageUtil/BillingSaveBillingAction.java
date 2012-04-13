@@ -45,6 +45,7 @@ import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarBilling.ca.bc.data.BillingHistoryDAO;
+import oscar.oscarBilling.pageUtil.BillingBillingManager.BillingItem;
 import oscar.oscarDB.DBHandler;
 import oscar.service.OscarSuperManager;
 
@@ -115,7 +116,7 @@ public class BillingSaveBillingAction extends Action {
       MiscUtils.getLogger().error("Error", e);
     }
 
-    ArrayList billItem = bean.getBillItem();
+    ArrayList<BillingItem> billItem = bean.getBillItem();
     for (int i = 0; i < billItem.size(); i++) {
       if (bean.getBillingType().compareTo("MSP") == 0) {
         if (bean.getPatientHCType().trim().compareTo(bean.getBillRegion().trim()) ==
@@ -187,17 +188,17 @@ public class BillingSaveBillingAction extends Action {
               bean.getPatientLastName().substring(0, 2) + "',"
               + "'" + "00" + "',"
               + "'" +
-              ( (oscar.oscarBilling.pageUtil.BillingBillingManager.BillingItem)
+              (
                billItem.get(i)).getUnit() + "',"
               + "'" + bean.getVisitLocation().substring(0, 2) + "',"
               + "'00',"
               + "'0',"
               + "'00',"
               + "'" +
-              ( (oscar.oscarBilling.pageUtil.BillingBillingManager.BillingItem)
+              (
                billItem.get(i)).getServiceCode() + "',"
               + "'" +
-              ( (oscar.oscarBilling.pageUtil.BillingBillingManager.BillingItem)
+              (
                billItem.get(i)).getDispLineTotal() + "',"
               + "'0',"
               + "'" + convertDate8Char(bean.getServiceDate()) + "',"
@@ -267,13 +268,13 @@ public class BillingSaveBillingAction extends Action {
               bean.getApptNo() + "','C02','" + dataCenterId + "', '" +
               bean.getBillingGroupNo() + "','" + bean.getBillingPracNo() +
               "','" + "0000000000" + "','" + "0000" + "','" + "00" + "','" +
-              ( (oscar.oscarBilling.pageUtil.BillingBillingManager.BillingItem)
+              (
                billItem.get(i)).getUnit() + "',";
           sql = sql + "'" + bean.getVisitLocation().substring(0, 2) +
               "','00','0','00','" +
-              ( (oscar.oscarBilling.pageUtil.BillingBillingManager.BillingItem)
+              (
                billItem.get(i)).getServiceCode() + "','" +
-              ( (oscar.oscarBilling.pageUtil.BillingBillingManager.BillingItem)
+              (
                billItem.get(i)).getDispLineTotal() + "','0','" +
               convertDate8Char(bean.getServiceDate()) + "','" + "00" + "','" +
               "0" + "',' ','" + bean.getDx1() + "', '" + bean.getDx2() + "','" +
