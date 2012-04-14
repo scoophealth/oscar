@@ -138,7 +138,7 @@
 		<tr class="b">
 			<td colspan="2" style="padding-left: 10%;">
 				<div class="horizonton">
-					<div style="margin-bottom: 3px;">Required Gender</div>
+					<div style="margin-bottom: 3px;">Gender List</div>
 					<div>
 						<select id="sourceOfGender" name="sourceOfGender" multiple="multiple" size="7"
 							style="width: 200px;">
@@ -156,7 +156,7 @@
 					</div>
 				</div>
 				<div class="horizonton">
-					<div style="margin-bottom: 3px;">Gender List</div>
+					<div style="margin-bottom: 3px;">Required Gender</div>
 					<div>
 						<select id="targetOfGender" name="targetOfGender" multiple="multiple" size="7"
 							style="width: 200px;">
@@ -176,7 +176,7 @@
 		<tr class="b">
 			<td colspan="2" style="padding-left: 10%;">
 				<div class="horizonton">
-					<div style="margin-bottom: 3px;">Required Diagnosis</div>
+					<div style="margin-bottom: 3px;">Diagnosis List</div>
 					<div>
 						<select id="sourceOfDiagnosis" name="sourceOfDiagnosis" multiple="multiple" size="7"
 							style="width: 200px;">
@@ -194,7 +194,7 @@
 					</div>
 				</div>
 				<div class="horizonton">
-					<div style="margin-bottom: 3px;">Diagnosis List</div>
+					<div style="margin-bottom: 3px;">Required Diagnosis</div>
 					<div>
 						<select id="targetOfDiagnosis" name="targetOfDiagnosis" multiple="multiple" size="7"
 							style="width: 200px;">
@@ -214,7 +214,7 @@
 		<tr class="b">
 			<td colspan="2" style="padding-left: 10%;">
 				<div class="horizonton">
-					<div style="margin-bottom: 3px;">Required Referral Type</div>
+					<div style="margin-bottom: 3px;">Referral Type List</div>
 					<div>
 						<select id="sourceOfReferralType" name="sourceOfReferralType" multiple="multiple" size="7"
 							style="width: 200px;">
@@ -232,7 +232,7 @@
 					</div>
 				</div>
 				<div class="horizonton">
-					<div style="margin-bottom: 3px;">Referral Type List</div>
+					<div style="margin-bottom: 3px;">Required Referral Type</div>
 					<div>
 						<select id="targetOfReferralType" name="targetOfReferralType" multiple="multiple" size="7"
 							style="width: 200px;">
@@ -252,7 +252,7 @@
 		<tr class="b">
 			<td colspan="2" style="padding-left: 10%;">
 				<div class="horizonton">
-					<div style="margin-bottom: 3px;">Required Support Type</div>
+					<div style="margin-bottom: 3px;">Support Type List</div>
 					<div>
 						<select id="sourceOfSupportType" name="sourceOfSupportType" multiple="multiple" size="7"
 							style="width: 200px;">
@@ -270,7 +270,7 @@
 					</div>
 				</div>
 				<div class="horizonton">
-					<div style="margin-bottom: 3px;">Support Type List</div>
+					<div style="margin-bottom: 3px;">Required Support Type</div>
 					<div>
 						<select id="targetOfSupportType" name="targetOfSupportType" multiple="multiple" size="7"
 							style="width: 200px;">
@@ -290,7 +290,7 @@
 		<tr class="b">
 			<td colspan="2" style="padding-left: 10%;">
 				<div class="horizonton">
-					<div style="margin-bottom: 3px;">Required Legal Status</div>
+					<div style="margin-bottom: 3px;">Legal Status List</div>
 					<div>
 						<select id="sourceOfLegalStatus" name="sourceOfLegalStatus" multiple="multiple" size="7"
 							style="width: 200px;">
@@ -308,7 +308,7 @@
 					</div>
 				</div>
 				<div class="horizonton">
-					<div style="margin-bottom: 3px;">Legal Status List</div>
+					<div style="margin-bottom: 3px;">Required Legal Status</div>
 					<div>
 						<select id="targetOfLegalStatus" name="targetOfLegalStatus" multiple="multiple" size="7"
 							style="width: 200px;">
