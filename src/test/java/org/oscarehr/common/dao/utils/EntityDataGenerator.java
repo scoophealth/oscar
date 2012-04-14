@@ -52,6 +52,12 @@ public class EntityDataGenerator {
 	        else if(f[i].getType() == long.class || f[i].getType() == Long.class) {
 	        	f[i].set(model,(long)(Math.random()*10000));
 	        }
+	        else if(f[i].getType() == float.class || f[i].getType() == Float.class) {
+	        	f[i].set(model,(float)(Math.random()*100));
+	        }
+	        else if(f[i].getType() == double.class || f[i].getType() == Double.class) {
+	        	f[i].set(model,Math.random()*100);
+	        }
 	        else if(f[i].getType() == Date.class) {
 	        	f[i].set(model,new Date());
 	        }

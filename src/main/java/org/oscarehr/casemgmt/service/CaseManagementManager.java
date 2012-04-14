@@ -1,23 +1,23 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for 
- * Centre for Research on Inner City Health, St. Michael's Hospital, 
- * Toronto, Ontario, Canada 
+ *
+ * This software was written for
+ * Centre for Research on Inner City Health, St. Michael's Hospital,
+ * Toronto, Ontario, Canada
  */
 
 package org.oscarehr.casemgmt.service;
@@ -41,7 +41,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.util.LabelValueBean;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.PMmodule.dao.ProgramAccessDAO;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.dao.ProviderDao;
@@ -82,6 +81,7 @@ import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.model.Messagetbl;
 import org.oscarehr.casemgmt.model.base.BaseHashAudit;
 import org.oscarehr.common.dao.AllergyDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Allergy;
@@ -206,22 +206,7 @@ public class CaseManagementManager {
 		String noteStr = note.getNote();
 		String noteHistory = note.getHistory();
 
-		// process noteStr, remove existing signed on string
-		// noteStr = removeSignature(noteStr);
-		/*
-		 * if (note.isSigned()) {
-		 * 
-		 * // add the time, signiture and role at the end of note String rolename=""; rolename= roleName; if (rolename == null) rolename = ""; // if have signiture setting, use signiture as username String tempS = null; //if
-		 * (providerSignitureDao.isOnSig(cproviderNo)) tempS = providerSignitureDao.getProviderSig(cproviderNo); if (tempS != null && !"".equals(tempS.trim())) userName = tempS;
-		 * 
-		 * if (userName != null && !"".equals(userName.trim())) { noteStr = noteStr + "\n[[Signed on " + dt.format(now) + " " + "by " + userName + "]]\n" ; } else noteStr = noteStr + "\n[[" + dt.format(now) + "]]\n";
-		 * 
-		 * } else {
-		 * 
-		 * // add time at the end of note noteStr = noteStr + "\n[[" + dt.format(now) + "]]\n"; }
-		 * 
-		 * / formate the "/n" in noteStr
-		 */
+
 		noteStr = noteStr.replaceAll("\r\n", "\n");
 		noteStr = noteStr.replaceAll("\r", "\n");
 
@@ -286,7 +271,7 @@ public class CaseManagementManager {
 	public List<CaseManagementNote> getNotes(String demographic_no) {
 		return caseManagementNoteDAO.getNotesByDemographic(demographic_no);
 	}
-	
+
 	@SuppressWarnings("unchecked")
     public List<CaseManagementNote> getNotes(String demographic_no, Integer maxNotes) {
 		return caseManagementNoteDAO.getNotesByDemographic(demographic_no, maxNotes);
@@ -297,7 +282,7 @@ public class CaseManagementManager {
 		List<CaseManagementNote> notes = caseManagementNoteDAO.getNotesByDemographic(demographic_no, issues);
 		return notes;
 	}
-    
+
     public List<CaseManagementNote> getNotes(String demographic_no, String[] issues, Integer maxNotes) {
     	@SuppressWarnings("unchecked")
 		List<CaseManagementNote> notes = caseManagementNoteDAO.getNotesByDemographic(demographic_no, issues, maxNotes);
@@ -778,7 +763,7 @@ public class CaseManagementManager {
 
 	/**
 	 * Analyzes the issues attached to each note belonging to the supplied Demographic, searching for the supplied issue ID. This method searches local issues only.
-	 * 
+	 *
 	 * @param issid the desired issue ID to find
 	 * @param demoNo the desired demographic ID to find issues for
 	 * @return true if some note for this demographic is attached to this issue, false otherwise
@@ -1007,9 +992,9 @@ public class CaseManagementManager {
 
 	/*
 	 * Get all notes which have been linked to issues
-	 * 
+	 *
 	 * @param issueIds csv of issue ids
-	 * 
+	 *
 	 * @param demoNo demographic to search for
 	 */
 	public List<CaseManagementNote> getIssueHistory(String issueIds, String demoNo) {
@@ -1163,7 +1148,7 @@ public class CaseManagementManager {
 
 		for (Iterator iter = pa.getRoles().iterator(); iter.hasNext();) {
 			Secrole accessRole = (Secrole) iter.next();
-			if (role.getId().longValue() == accessRole.getId().longValue()) {				
+			if (role.getId().longValue() == accessRole.getId().longValue()) {
 				return true;
 			}
 		}
@@ -1549,7 +1534,7 @@ public class CaseManagementManager {
 	 * This method takes in a string (template) eg "Signed on ${DATE} by {$USERSIGNATURE}" it then searches the string for values surrounded by ${ }. Once a value is found it looks in the map to see if there is a value for that key. If it doesn't find a
 	 * value in the map, it looks in the in recource bundle (this allows templates to be i18n compliant). If nothing is found in the resource bundle the value is added as a blank in the returned formatted string. This is the default signing line.
 	 * ECHART_SIGN_LINE=[${oscarEncounter.class.EctSaveEncounterAction.msgSigned} ${DATE} ${oscarEncounter.class.EctSaveEncounterAction.msgSigBy} ${USERSIGNATURE}]\n
-	 * 
+	 *
 	 * @param template string with template values used to create the String that is returned
 	 * @param rc The current locale's resource bundle
 	 * @param map Values that can be subtituted in.
