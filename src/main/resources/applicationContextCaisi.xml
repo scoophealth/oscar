@@ -156,15 +156,6 @@
 	-->
 
 
-	<!--   from Quatro start -->
-
-	<bean id="quatroReportDao" class="com.quatro.dao.QuatroReportDao" autowire="byName" />
-	<bean id="quatroReportManager" class="com.quatro.service.QuatroReportManager">
-		<property name="quatroReportDao" ref="quatroReportDao" />
-	</bean>
-
-	<!--  from Quatro end -->
-
 	<!-- DATIS Intake Exporter -->
 	<bean id="agencyInformationValidator" class="org.oscarehr.PMmodule.exporter.DATISAgencyInformationValidator" scope="prototype" />
 	<bean id="gamingFormValidator" class="org.oscarehr.PMmodule.exporter.DATISGamingFormValidator" scope="prototype" />
