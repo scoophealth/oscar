@@ -1,10 +1,10 @@
-<% long startTime = System.currentTimeMillis(); %>
+<%long startTime = System.currentTimeMillis();%>
 <%@page import="oscar.oscarRx.data.RxPatientData"%>
 <%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,java.net.*"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils,oscar.log.*"%>
 <%@page import="org.springframework.web.context.WebApplicationContext,oscar.oscarResearch.oscarDxResearch.bean.*"%>
 <%@page import="org.oscarehr.common.dao.FlowSheetCustomizerDAO,org.oscarehr.common.model.FlowSheetCustomization"%>
-<%@page import="org.oscarehr.common.dao.FlowSheetDrugDAO,org.oscarehr.common.model.FlowSheetDrug,org.oscarehr.util.MiscUtils"%>
+<%@page import="org.oscarehr.common.dao.FlowSheetDrugDAO,org.oscarehr.common.dao.FlowSheetDxDao,org.oscarehr.common.model.FlowSheetDrug,org.oscarehr.util.MiscUtils"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
@@ -13,7 +13,7 @@
 <%@page import="oscar.OscarProperties"%>
 
 <%
-    if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
+	if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
     //int demographic_no = Integer.parseInt(request.getParameter("demographic_no"));
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -25,24 +25,36 @@
     <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="r" reverse="<%=true%>">
         "You have no right to access this page!"
         <%
-         LogAction.addLog((String) session.getAttribute("user"), LogConst.NORIGHT+LogConst.READ, LogConst.CON_FLOWSHEET,  temp , request.getRemoteAddr(),demographic_no);
-        response.sendRedirect("../../noRights.html"); %>
+    	LogAction.addLog((String) session.getAttribute("user"), LogConst.NORIGHT+LogConst.READ, LogConst.CON_FLOWSHEET,  temp , request.getRemoteAddr(),demographic_no);
+            response.sendRedirect("../../noRights.html");
+    %>
     </security:oscarSec>
 </oscar:oscarPropertiesCheck>
 
-<%if (OscarProperties.getInstance().getBooleanProperty("new_flowsheet_enabled", "true")) { %>
-	<%if (temp.equals("diab2")) {%>
+<%
+	if (OscarProperties.getInstance().getBooleanProperty("new_flowsheet_enabled", "true")) {
+%>
+	<%
+		if (temp.equals("diab2")) {
+	%>
 		<jsp:forward page="DiabFlowSheet.jsp" />
-	<%} else if (temp.equals("diab3")) {%>
+	<%
+		} else if (temp.equals("diab3")) {
+	%>
 		<jsp:forward page="DiabFlowSheet.jsp" />
-	<%} else if (request.getAttribute("temp") != null && request.getAttribute("temp").equals("diab3")) {%>
+	<%
+		} else if (request.getAttribute("temp") != null && request.getAttribute("temp").equals("diab3")) {
+	%>
 		<jsp:forward page="DiabFlowSheet.jsp" />
-	<%}%>
-<%}%>
+	<%
+		}
+	%>
+<%
+	}
+%>
 
 <%
-
-    LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_FLOWSHEET,  temp , request.getRemoteAddr(),demographic_no);
+	LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_FLOWSHEET,  temp , request.getRemoteAddr(),demographic_no);
 
 
     int numElementsToShow = 4;
@@ -76,7 +88,7 @@
 
     FlowSheetCustomizerDAO flowSheetCustomizerDAO = (FlowSheetCustomizerDAO) ctx.getBean("flowSheetCustomizerDAO");
     FlowSheetDrugDAO flowSheetDrugDAO = (FlowSheetDrugDAO) ctx.getBean("flowSheetDrugDAO");
-
+	FlowSheetDxDao flowSheetDxDao = (FlowSheetDxDao) ctx.getBean("flowSheetDxDao");
     List custList = flowSheetCustomizerDAO.getFlowSheetCustomizations( temp,(String) session.getAttribute("user"),demographic_no);
 
     ////Start
@@ -114,7 +126,6 @@
     ArrayList<String> warnings = mi.getWarnings();
     ArrayList<String> recomendations = mi.getRecommendations();
     ArrayList comments = new ArrayList();
-
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -484,9 +495,9 @@ div.recommendations li{
                     dxResearchBean code = (dxResearchBean)patientDx.get(i);  // code.getEnd_date() code.getStart_date()
                     String desc = code.getDescription();
                     desc = org.apache.commons.lang.StringUtils.abbreviate(desc,lim) ;
-                    HashMap dxMap = flowSheetDrugDAO.getFlowSheetDxMap( temp, demographic_no);
+                    HashMap<String,String> dxMap = flowSheetDxDao.getFlowSheetDxMap( temp, demographic_no);
 
-                    String pDx = (String) dxMap.get(code.getType()+""+code.getDxSearchCode());
+                    String pDx = dxMap.get(code.getType()+""+code.getDxSearchCode());
 
             %>
             <li>
@@ -856,8 +867,7 @@ function createAddAll(d,t,h){
 </body>
 </html:html>
 
-<%!
-    String refused(Object re){
+<%!String refused(Object re){
         String ret = "Given";
         if (re instanceof java.lang.String){
 
@@ -891,8 +901,4 @@ function createAddAll(d,t,h){
        for (String measurement : measurements){
 
        }
-    }
-
-
-
-%>
+    }%>

@@ -27,15 +27,29 @@ package org.oscarehr.common.model;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  *
  * @author Jay Gallagher
  */
-public class CountryCode implements Serializable {
-    
-    private long id;
+@Entity
+@Table(name="country_codes")
+public class CountryCode extends AbstractModel<Integer> implements Serializable {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+	@Column(name="country_name")
     private String countryName;
+	@Column(name="country_id")
     private String countryId;
+	@Column(name="c_locale")
     private String clocale;
 
     public void setClocale(String cLocale) {
@@ -61,22 +75,13 @@ public class CountryCode implements Serializable {
     public String getCountryName() {
         return countryName;
     }
-   
-        
-    //country_name                                 | country_id | c_locale
-    
-    public long getId() {
+
+    public Integer getId() {
         return this.id;
     }
-    
-    public void setId(long id) {
+
+    public void setId(Integer id) {
         this.id = id;
     }
-    
-    
-    /** Creates a new instance of UserProperty */
-    public CountryCode() {
-    }
 
-    
 }

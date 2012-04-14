@@ -26,7 +26,7 @@
 	scope="page" />
 <%@ include file="../admin/dbconnection.jsp"%>
 <%
-  String [][] dbQueries=new String[][] {
+	String [][] dbQueries=new String[][] {
     {"search_provider", "select * from provider where provider_type='doctor' and status='1' order by last_name"},
     {"search_rsstatus", "select distinct roster_status from demographic where roster_status != '' and roster_status != 'RO' and roster_status != 'NR' and roster_status != 'TE' and roster_status != 'FS' "},
     {"search_ptstatus", "select distinct patient_status from demographic where patient_status != '' and patient_status != 'AC' and patient_status != 'IN' and patient_status != 'DE' and patient_status != 'MO' and patient_status != 'FI'"},
@@ -56,7 +56,7 @@
   String defaultCity = prov.equals("ON")&&billingCentre.equals("N") ? "Toronto":"";
 
   WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-  CountryCodeDAO ccDAO =  (CountryCodeDAO) ctx.getBean("countryCodeDAO");
+  CountryCodeDao ccDAO =  (CountryCodeDao) ctx.getBean("countryCodeDao");
 
   List<CountryCode> countryList = ccDAO.getAllCountryCodes();
 

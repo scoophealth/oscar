@@ -4,16 +4,16 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details. 
- * 
+ * GNU General Public License for more details.
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * Jason Gallagher
  *
@@ -25,7 +25,6 @@
  */
 package org.oscarehr.common.dao;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.oscarehr.common.model.FlowSheetCustomization;
@@ -38,11 +37,11 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * @author jaygallagher
  */
 public class FlowSheetDrugDAO extends HibernateDaoSupport {
-    
+
     public void save(FlowSheetDrug fsc) {
         this.getHibernateTemplate().saveOrUpdate(fsc);
     }
-    
+
     public FlowSheetCustomization getFlowSheetDrug(String id){
         List<FlowSheetCustomization> list = this.getHibernateTemplate().find("from FlowSheetDrug p where  p.id = ?", new Object[] {Long.parseLong(id)});
         if (list != null && list.size() > 0){
@@ -59,22 +58,5 @@ public class FlowSheetDrugDAO extends HibernateDaoSupport {
     public void save(FlowSheetDx dx){
         this.getHibernateTemplate().saveOrUpdate(dx);
     }
-    
-     public List<FlowSheetDx> getFlowSheetDx(String flowsheet,String demographic){
-        List<FlowSheetDx> list = this.getHibernateTemplate().find("from FlowSheetDx p where p.flowsheet = ? and p.archived = 0 and p.demographicNo = ?   ", new Object[] {flowsheet,Integer.parseInt(demographic)});
-        return list;
-     }
-     
-     public HashMap getFlowSheetDxMap(String flowsheet,String demographic){
-         List<FlowSheetDx> fldx = getFlowSheetDx( flowsheet, demographic);
-         HashMap hm = new HashMap();
-         
-         for (FlowSheetDx fs : fldx){
-             hm.put(fs.getDxCodeType()+fs.getDxCode(), fs.getProviderNo());
-         }
-         return hm;
-         
-     }
-    
-    
+
 }
