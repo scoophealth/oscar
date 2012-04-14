@@ -211,27 +211,10 @@
 	<bean name="/PMmodule/Admin/SysAdmin" class="org.oscarehr.PMmodule.web.admin.AdminHomeAction" singleton="false">
 	</bean>
 
-	<bean name="/PMmodule/Admin/ShowORGTree" class="com.quatro.web.admin.ShowORGTreeAction" singleton="false">
-		<property name="orgManager" ref="orgManager" />
-	</bean>
 	<bean name="/PMmodule/Admin/RoleManager" class="com.quatro.web.admin.RoleManagerAction" singleton="false">
 		<property name="rolesManager" ref="rolesManager" />
 		<property name="logManager" ref="logManager" />
 		<property name="lookupManager" ref="lookupManager" />
-	</bean>
-	<bean name="/PMmodule/Admin/UserManager" class="com.quatro.web.admin.UserManagerAction" singleton="false" autowire="byName">
-		<!--<property name="rolesManager" ref="rolesManager"/>-->
-		<property name="logManager" ref="logManager" />
-		<property name="usersManager" ref="usersManager" />
-		<!--<property name="orgManager" ref="orgManager"/>-->
-		<property name="lookupManager" ref="lookupManager" />
-	</bean>
-	<bean name="/PMmodule/Admin/UserSearch" class="com.quatro.web.admin.UserSearchAction" singleton="false">
-		<property name="rolesManager" ref="rolesManager" />
-		<property name="logManager" ref="logManager" />
-		<property name="usersManager" ref="usersManager" />
-	</bean>
-	<bean name="/PMmodule/Admin/UnlockAccount" class="oscar.login.UnlockAccountAction" singleton="false">
 	</bean>
 	<!-- admin End -->
 	<!-- Provider Property -->

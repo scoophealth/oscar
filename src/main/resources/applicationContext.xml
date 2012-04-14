@@ -54,7 +54,6 @@
 	<bean id="billingOnItemDao" class="oscar.oscarBilling.ca.on.dao.BillingOnItemDao" autowire="byName" />
 	<bean id="otherIdDao" class="org.oscarehr.common.dao.OtherIdDAO" autowire="byName" />
 
-	<!-- <bean id="topazDao" class="com.quatro.dao.TopazDao" autowire="byName" /> -->
 	<bean id="roomDAO" class="org.oscarehr.PMmodule.dao.RoomDAO" autowire="byName" />
 	<bean id="CaseManagementIssueDAO" class="org.oscarehr.casemgmt.dao.CaseManagementIssueDAO" autowire="byName" />
 	<bean id="caseManagementIssueDAO" class="org.oscarehr.casemgmt.dao.CaseManagementIssueDAO" autowire="byName" />
@@ -121,7 +120,6 @@
     <bean id="ocanSubmissionLogDao" class="org.oscarehr.PMmodule.dao.OcanSubmissionLogDao" autowire="byName" />
 
     <bean id="logDAO" class="org.oscarehr.PMmodule.dao.LogDAO" autowire="byName" />
-	<bean id="scratchPadDao" class="com.quatro.dao.ScratchPadDao" autowire="byName" />
 	<bean id="lookupDao" class="com.quatro.dao.LookupDao" autowire="byName" />
 	<bean id="documentDAO" class="org.oscarehr.document.dao.DocumentDAO" autowire="byName" />
 	<bean id="userAccessDao" class="com.quatro.dao.security.UserAccessDao" autowire="byName" />
@@ -168,9 +166,6 @@
 	<!-- OscarSuperManager manager provides business logic facade for jsp layer -->
 	<bean id="oscarSuperManager" class="oscar.service.OscarSuperManager" autowire="byName" init-method="init"/>
 
-	<bean id="scratchPadManager" class="com.quatro.service.ScratchPadManager">
-		<property name="scratchPadDao" ref="scratchPadDao" />
-	</bean>
 	<bean id="lookupManager" class="com.quatro.service.LookupManager" autowire="byName">
 		<property name="lookupDao" ref="lookupDao" />
 	</bean>
@@ -301,22 +296,17 @@
 	</bean>
 
 	<!-- Admin Start -->
-	<bean id="orgDao" class="com.quatro.dao.ORGDao" autowire="byName" />
 	<bean id="secobjprivilegeDao" class="com.quatro.dao.security.SecobjprivilegeDao" autowire="byName" />
 	<bean id="securityDao" class="com.quatro.dao.security.SecurityDao" autowire="byName" />
 	<bean id="secProviderDao" class="com.quatro.dao.security.SecProviderDao" autowire="byName" />
 	<bean id="secuserroleDao" class="com.quatro.dao.security.SecuserroleDao" autowire="byName" />
         <bean id="secObjectNameDao" class="com.quatro.dao.security.SecObjectNameDao" autowire="byName"/>
 
-	<bean id="orgManager" class="com.quatro.service.ORGManager" autowire="byName">
-		<property name="orgDao" ref="orgDao" />
-	</bean>
 	<bean id="rolesManager" class="com.quatro.service.security.RolesManager" autowire="byName">
 		<property name="secroleDao" ref="secroleDao" />
 		<property name="secobjprivilegeDao" ref="secobjprivilegeDao" />
 	</bean>
 
-	<bean id="usersManager" class="com.quatro.service.security.UsersManager" autowire="byName"/>
 	<bean id="onCallManager" class="org.oscarehr.casemgmt.service.OnCallManager">
 		<property name="onCallDao" ref="OnCallDAO" />
 	</bean>

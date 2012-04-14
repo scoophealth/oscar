@@ -385,11 +385,6 @@
 			<form-property name="form" type="org.oscarehr.PMmodule.web.formbean.ClientListsReportFormBean" />
 		</form-bean>
 
-		<form-bean name="quatroReportListForm" type="com.quatro.web.report.QuatroReportListForm" />
-		<form-bean name="quatroReportRunnerForm" type="com.quatro.web.report.QuatroReportRunnerForm" />
-		<form-bean name="quatroReportViewerForm" type="com.quatro.web.report.QuatroReportViewerForm" />
-		<form-bean name="quatroReportSaveTemplateForm" type="com.quatro.web.report.QuatroReportSaveTemplateForm" />
-
 		<!--
         <form-bean name="customReportForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="form" type="org.oscarehr.PMmodule.web.formbean.CustomReportFormBean" />
@@ -2333,19 +2328,6 @@
 			<forward name="list" path="page.admin.role.list" />
 			<forward name="edit" path="page.admin.role.edit" />
 			<forward name="functions" path="page.admin.role.functions" />
-		</action>
-		<action path="/PMmodule/Admin/UserManager" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="secuserForm" scope="request" validate="false">
-			<forward name="list" path="page.admin.user.list" />
-			<forward name="profile" path="page.admin.user.addRoles" />
-			<forward name="edit" path="page.admin.user.edit" />
-			<forward name="addRoles" path="page.admin.user.addRoles" />
-			<forward name="changePassword" path="page.admin.user.changePassword" />
-		</action>
-		<action path="/PMmodule/Admin/UserSearch" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="userSearchForm" scope="request" validate="false">
-			<forward name="list" path="page.admin.user.list" />
-		</action>
-		<action path="/PMmodule/Admin/UnlockAccount" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="userUnlockForm" scope="request" validate="false">
-			<forward name="list" path="page.admin.user.unlocklist" />
 		</action>
 
 		<action path="/saveWorkView" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" validate="false">
