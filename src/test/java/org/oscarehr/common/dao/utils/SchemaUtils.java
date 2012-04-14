@@ -185,7 +185,7 @@ public class SchemaUtils
                     env = new String[]{};
                 }
 
-		Process p = Runtime.getRuntime().exec(new String[] {"mysql","--user="+ConfigUtils.getProperty("db_user"),"--password="+ConfigUtils.getProperty("db_password"),"-e","source "+filename,ConfigUtils.getProperty("db_schema")},env, new File(dir));
+		Process p = Runtime.getRuntime().exec(new String[] {"mysql","--user="+ConfigUtils.getProperty("db_user"),"--password="+ConfigUtils.getProperty("db_password"),"--host="+ConfigUtils.getProperty("db_host"),"-e","source "+filename,ConfigUtils.getProperty("db_schema")},env, new File(dir));
 		BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
 		BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
