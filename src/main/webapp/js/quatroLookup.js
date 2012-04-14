@@ -79,54 +79,6 @@ function showLookup2(id, tableId, grandParentName, parentName, openerFormName, c
 	return false; 
 }
 
-function showLookupTree(tableId, grandParentName, parentName, openerFormName, codeFieldName, descFieldName, displayCode, appRoot) {
-    if(readOnly == true) return false;
-    var grandParentCode = null;
-    var parentCode = null;   
-
-    if(grandParentName!='') grandParentCode = document.getElementsByName(grandParentName)[0]; 
-    if(parentName!='') parentCode = document.getElementsByName(parentName)[0];    
-
-
-    codeField = document.getElementsByName(codeFieldName)[0]; 
-
-    codeField.focus();
-	
-	//open the lookup URL
-	var queryString = "?openerForm=" + openerFormName;
-	queryString = queryString + "&codeName=" + codeFieldName;
-	queryString = queryString + "&descName=" + descFieldName;
-	queryString = queryString + "&tableId=" + tableId;
-	var noParent = false;
-	if (parentCode != null) {	    
-		if (grandParentCode != null) {
-		    if(grandParentCode.value == "" ||  parentCode.value == "") {
-		        alert ("Please enter values in the box before");
-		        return;
-		     }
-			queryString += "&grandParentCode=" + grandParentCode.value + "&parentCode=" + parentCode.value;
-		} else {
-		    if(parentCode.value == "") {
-		        alert ("Please enter values in the box before");
-		        return;
-		     }
-			queryString += "&parentCode=" + parentCode.value;
-		}
-	}
-    if(delaySearch){
-        queryString += "&d=1";
-    }    
-    if(displayCode=="True"){
-        queryString += "&dc=1";
-    }
-        
-	var lookupURL = "/" + appRoot.replace("/", "") + "/Lookup/LookupTree.do" + queryString; 
-
-	delaySearch =false;
-	top.childWin = window.open(lookupURL,"_blank","resizable=yes,scrollbars=yes,status=yes,width=600,height=450,top=120, left=200");
-	top.childWin.focus();
-	return false;
-}
 
 function selectMe(code, desc, form_name, code_element_name, desc_element_name) {
    if(desc_element_name!=""){  //for both lookup tag and html dropdown

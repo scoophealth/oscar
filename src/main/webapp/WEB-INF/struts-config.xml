@@ -28,15 +28,6 @@
 			<form-property name="tableDef" type="com.quatro.model.LookupTableDefValue"></form-property>
 			<form-property name="codes" type="java.util.List"></form-property>
 		</form-bean>
-		<form-bean name="lookupTreeForm" type="org.apache.struts.validator.DynaValidatorForm">
-			<form-property name="tableDef" type="com.quatro.model.LookupTableDefValue"></form-property>
-			<form-property name="tree" type="net.sf.navigator.menu.MenuRepository"></form-property>
-			<form-property name="tableId" type="java.lang.String"></form-property>
-			<form-property name="keywordName" type="java.lang.String"></form-property>
-			<form-property name="openerForm" type="java.lang.String"></form-property>
-			<form-property name="codeName" type="java.lang.String"></form-property>
-			<form-property name="descName" type="java.lang.String"></form-property>
-		</form-bean>
 		<form-bean name="lookupCodeEditForm" type="com.quatro.web.lookup.LookupCodeEditForm">
 		</form-bean>
 		<form-bean name="clinicForm" type="org.apache.struts.validator.DynaValidatorForm">
@@ -2318,16 +2309,8 @@
 		<action path="/PMmodule/UnmergeClient" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="mergeClientForm" scope="request">
 			<forward name="view" path="page.pmm.client.merge" />
 		</action>
-		<action path="/Lookup/LookupTree" type="org.springframework.web.struts.DelegatingActionProxy" name="lookupTreeForm" scope="request" validate="false" parameter="method">
-			<forward name="tree" path="/PMmodule/lookup/LookupTree.jsp" />
-		</action>
 		<action path="/PMmodule/Admin/SysAdmin" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" validate="false">
 			<forward name="admin" path="page.admin.home" />
-		</action>
-		<action path="/PMmodule/Admin/RoleManager" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="secroleForm" scope="request" validate="false">
-			<forward name="list" path="page.admin.role.list" />
-			<forward name="edit" path="page.admin.role.edit" />
-			<forward name="functions" path="page.admin.role.functions" />
 		</action>
 
 		<action path="/saveWorkView" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" validate="false">

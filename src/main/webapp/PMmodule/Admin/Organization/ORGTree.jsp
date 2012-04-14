@@ -1,4 +1,3 @@
-<!-- Source:web/PMmodule/Admin/Organization/ProgramView/ORGTree.jsp -->
 <%@ include file="../../../taglibs.jsp"%>
 <%@page import="com.quatro.common.KeyConstants;"%>
 
@@ -11,8 +10,6 @@
 
 <c:set var="ctx" value="${pageContext.request.contextPath}"
 	scope="request" />
-<bean:define id="tree" name="lookupTreeForm" property="tree"
-	type="net.sf.navigator.menu.MenuRepository" />
 
 <table width="100%" height="100%" cellpadding="0px" cellspacing="0px">
 	<tr>
@@ -46,15 +43,8 @@
 
 		<table width="100%" border="0">
 			<tr>
-				<td colspan="2"><security:oscarSec
-					objectName="<%=KeyConstants.FUN_ADMIN_ORG %>"
-					rights="<%=KeyConstants.ACCESS_READ%>">
-					<menu:useMenuDisplayer name="ListMenu" repository="tree">
-						<c:forEach var="menu" items="${tree.topMenus}">
-							<menu-el:displayMenu name="${menu.name}" />
-						</c:forEach>
-					</menu:useMenuDisplayer>
-				</security:oscarSec></td>
+				<td colspan="2">
+				</td>
 			</tr>
 		</table>
 		</div>
