@@ -2,9 +2,6 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
         "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-	<bean name="/siteCheckLogin" class="oscar.login.SiteCheckAction" singleton="false">
-		<property name="secSiteManager" ref="secSiteManager" />
-	</bean>
 	<bean name="/shelterSelection" class="oscar.login.ShelterSelectionAction" singleton="false" autowire="byName" />
 
 	<bean name="/login/recordLogin" class="oscar.login.LoginAgreementAction" singleton="false">
@@ -193,9 +190,6 @@
 	<bean name="/Lookup/LookupList" class="com.quatro.web.lookup.LookupListAction" singleton="false">
 		<property name="lookupManager" ref="lookupManager" />
 	</bean>
-	<bean name="/Lookup/LookupTree" class="com.quatro.web.lookup.LookupTreeAction" singleton="false">
-		<property name="lookupManager" ref="lookupManager" />
-	</bean>
 	<bean name="/Lookup/LookupTableList" class="com.quatro.web.lookup.LookupTableListAction" singleton="false">
 		<property name="lookupManager" ref="lookupManager" />
 	</bean>
@@ -211,11 +205,6 @@
 	<bean name="/PMmodule/Admin/SysAdmin" class="org.oscarehr.PMmodule.web.admin.AdminHomeAction" singleton="false">
 	</bean>
 
-	<bean name="/PMmodule/Admin/RoleManager" class="com.quatro.web.admin.RoleManagerAction" singleton="false">
-		<property name="rolesManager" ref="rolesManager" />
-		<property name="logManager" ref="logManager" />
-		<property name="lookupManager" ref="lookupManager" />
-	</bean>
 	<!-- admin End -->
 	<!-- Provider Property -->
 	<bean name="/setProviderStaleDate" class="org.oscarehr.provider.web.ProviderPropertyAction" singleton="false">

@@ -83,20 +83,11 @@ String _appPath = request.getContextPath();
 				<th></th>
 
 				<th style="vertical-align: middle">
-					<security:oscarSec objectName="<%=KeyConstants.FUN_ADMIN_ROLE %>" rights="<%=KeyConstants.ACCESS_READ%>">
-						<html:link	action="/PMmodule/Admin/RoleManager.do">
-							<img ID="lnkCare1" src="<%=_appPath%>/images/Role-60.gif"
-								Height="60" Width="60" border="0" style="vertical-align: middle" />
-						</html:link>
-					</security:oscarSec>
 				</th>
 				<th style="vertical-align: middle">
 				<table align="left">
 					<tr>
 						<th align="left" valign="top" class="clsHomePageLabels" >
-							<security:oscarSec objectName="<%=KeyConstants.FUN_ADMIN_ROLE %>" rights="<%=KeyConstants.ACCESS_READ%>">
-								<html:link	action="/PMmodule/Admin/RoleManager.do">Role Management</html:link>
-					    	</security:oscarSec>
 					    </th>
 					</tr>
 				</table>
