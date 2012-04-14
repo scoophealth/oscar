@@ -2236,7 +2236,7 @@ CREATE TABLE formWCB (
   demographic_no int(10) NOT NULL default '0',
   provider_no int(10) default NULL,
   formCreated date default NULL,
-  formEdited timestamp(14) NOT NULL,
+  formEdited timestamp NOT NULL,
   w_freport char(1) default NULL,
   w_treatment char(1) default NULL,
   w_fname varchar(20) default NULL,
@@ -3111,7 +3111,7 @@ CREATE TABLE billing_history (
   billingstatus char(1) NOT NULL default '',
   creation_date datetime NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+);
 
 ALTER TABLE `billing_history` ADD COLUMN `practitioner_no` VARCHAR(10) NOT NULL DEFAULT '' AFTER `creation_date`,
 ADD COLUMN `billingtype` VARCHAR(4) NOT NULL DEFAULT '' AFTER `practitioner_no`,
