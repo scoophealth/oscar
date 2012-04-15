@@ -7,28 +7,10 @@
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:ArrayList newLst=new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:ArrayList paramList = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:if (tableDef==null) return(new ArrayList());</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/dao/QuatroReportDao.java:ArrayList paramList = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/dao/ScratchPadDao.java:ArrayList paramList = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/service/QuatroReportManager.java:List lst3= new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/service/security/RolesManager.java:ArrayList lstForDelete = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/service/security/UserAccessManager.java:Hashtable functionList = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/service/security/UserAccessManager.java:List orgList = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/service/security/UsersManager.java:ArrayList lstForDelete = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/util/Utility.java:ArrayList list = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/web/admin/RoleManagerAction.java:ArrayList funLst = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/web/admin/RoleManagerAction.java:ArrayList listForSave = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/web/admin/RoleManagerAction.java:ArrayList secobjprivilegeLst = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/web/admin/RoleManagerAction.java:Hashtable hashDup = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/web/admin/UserManagerAction.java:ArrayList profilelist = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/web/admin/UserManagerAction.java:ArrayList secUserRoleLst = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/web/admin/UserManagerAction.java:Hashtable hsforSave = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/web/admin/UserSearchAction.java:ArrayList surlist = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/web/report/QuatroReportRunnerForm.java:private ArrayList&lt;KeyValueBean&gt; exportFormatList= new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/web/report/QuatroReportRunnerForm.java:private ArrayList&lt;KeyValueBean&gt; operatorList= new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/web/report/QuatroReportRunnerForm.java:private ArrayList&lt;KeyValueBean&gt; orgSelectionList=new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/web/report/QuatroReportRunnerForm.java:private ArrayList&lt;KeyValueBean&gt; reportOptionList=new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/web/report/QuatroReportRunnerForm.java:private ArrayList&lt;ReportFilterValue&gt; filterFields= new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/web/report/QuatroReportRunnerForm.java:private ArrayList&lt;ReportTempCriValue&gt; templateCriteriaList=new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/caisi/core/web/InfirmAction.java:List admissions = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/caisi/core/web/InfirmAction.java:List filteredDemographicBeans = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/caisi/dao/TicklerDAO.java:ArrayList paramList = new ArrayList();</ViolationValue>
@@ -81,8 +63,6 @@
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/IntakeAReport1Action.java:List intakeA4Stats = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/admin/BedManagerAction.java:Map statusNames = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/admin/ProgramManagerAction.java:access.setRoles(new HashSet());</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/formbean/IncidentForm.java:clientSelectionList = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/formbean/IncidentForm.java:staffSelectionList = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/forms/SurveyExecuteAction.java:List pageNames = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/forms/SurveyExecuteAction.java:Map test = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/web/reports/ActivityReportAction.java:Map summaryMap = new LinkedHashMap();</ViolationValue>
@@ -105,15 +85,11 @@
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/web/CaseManagementViewAction.java:List teamMembers = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/web/CaseManagementViewAction.java:Set providers = new HashSet();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/web/CaseManagementViewAction.java:map = new HashMap();</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/CountryCodeDAO.java://        Hashtable retHash = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/DocumentResultsDao.java:ArrayList labResults =  new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/DxresearchDAO.java:listItems.addAll(new dxQuickListItemsHandler(quickListName).getDxQuickListItemsVector());</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/FlowSheetDrugDAO.java:HashMap hm = new HashMap();</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/ProviderInboxRoutingDao.java:ArrayList&lt;String&gt; listofAdditionalProviders = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/QueueDao.java:Hashtable ht=new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/QueueDao.java:List&lt;Hashtable&gt; r=new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/QueueDao.java:List&lt;Queue&gt; result=new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/UserDSMessagePrefsDAO.java:Hashtable retHash = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/web/DxresearchReportAction.java://          List editingCodeList = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/web/SearchDemographicAutoCompleteAction.java:Hashtable d = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/web/SearchDemographicAutoCompleteAction.java:Hashtable h = new Hashtable();</ViolationValue>
@@ -368,8 +344,6 @@
         <ViolationValue>/src/main/java/oscar/oscarDB/ResultSetBuilder.java:private Map names = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/PrintDemoAddressLabelAction.java:HashMap parameters = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/PrintDemoChartLabelAction.java:HashMap parameters = new HashMap();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicExt.java:ArrayList arr = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicExt.java:Hashtable retval =  new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicMerged.java:ArrayList tailArray = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicNameAgeString.java:h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicNameAgeString.java:static Hashtable hashtable = new Hashtable();</ViolationValue>
@@ -802,7 +776,7 @@
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListBeanHandler.java:public Collection getDxQuickListBeanVector(){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:Vector dxQuickListItemsVector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:Vector v = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:public Collection getDxQuickListItemsVector(){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:public Collection&lt;dxCodeSearchBean&gt; getDxQuickListItemsVector(){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxResearchBeanHandler.java:Vector dxResearchBeanVector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxResearchBeanHandler.java:Vector v = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxResearchBeanHandler.java:public Vector getDxResearchBeanVector(){</ViolationValue>
@@ -1219,8 +1193,6 @@
     </ViolationSet>
     <ViolationSet>
         <ViolationKey>.*BaseGenericIntakeAction.*|.*BaseAction.*</ViolationKey>
-        <ViolationValue>/src/main/java/com/quatro/web/lookup/LookupTreeAction.java:import org.oscarehr.PMmodule.web.BaseAction;</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/web/lookup/LookupTreeAction.java:public class LookupTreeAction extends BaseAction {</ViolationValue>
         <ViolationValue>/src/main/java/org/caisi/core/web/BaseAction.java:public class BaseAction extends DispatchActionSupport</ViolationValue>
         <ViolationValue>/src/main/java/org/caisi/core/web/InfirmAction.java:public class InfirmAction extends BaseAction</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/streethealth/StreetHealthIntakeReportAction.java:import org.oscarehr.PMmodule.web.BaseAction;</ViolationValue>
@@ -1264,8 +1236,6 @@
         <ViolationValue>/src/main/java/org/oscarehr/vaccine/VaccineProviderReportAction.java:public class VaccineProviderReportAction extends BaseAction {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/login/ShelterSelectionAction.java:import org.oscarehr.PMmodule.web.BaseAction;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/login/ShelterSelectionAction.java:public final class ShelterSelectionAction extends BaseAction {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/login/SiteCheckAction.java:import org.oscarehr.PMmodule.web.BaseAction;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/login/SiteCheckAction.java:public final class SiteCheckAction extends BaseAction {</ViolationValue>
     </ViolationSet>
     <ViolationSet>
         <ViolationKey>.*DBHandler\..*|.*getConnection\(.*|.*DBHandler\..*|.*DBPreparedHandler.*|.*DBHelp.*|.*\.selectIntList.*|.*\.selectStringList.*|.*OscarSuperManager.*|.*HibernateDaoSupport.*</ViolationKey>
@@ -1287,18 +1257,10 @@
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:params[i] = new DBPreparedHandlerParam(new java.sql.Date(MyDateFormat.getCalendar(fdv.getVal()).getTime().getTime()));</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:params[i] = new DBPreparedHandlerParam(new java.sql.Date(MyDateFormat.getCalendarwithTime(fdv.getVal()).getTime().getTime()));</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:public class LookupDao extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/dao/ORGDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/dao/ORGDao.java:public class ORGDao extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/dao/QuatroReportDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/dao/QuatroReportDao.java:public class QuatroReportDao extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/dao/ScratchPadDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/dao/ScratchPadDao.java:public class ScratchPadDao extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/security/SecObjectNameDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/security/SecObjectNameDao.java:public class SecObjectNameDao extends HibernateDaoSupport{</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/security/SecProviderDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/security/SecProviderDao.java:public class SecProviderDao extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/dao/security/SecSiteDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/dao/security/SecSiteDao.java:public class SecSiteDao extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/security/SecobjprivilegeDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/security/SecobjprivilegeDao.java:public class SecobjprivilegeDao extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/security/SecroleDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
@@ -1322,8 +1284,6 @@
         <ViolationValue>/src/main/java/org/caisi/dao/IssueAdminDAO.java:public class IssueAdminDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/caisi/dao/ProviderDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/caisi/dao/ProviderDAO.java:public class ProviderDAO extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/caisi/dao/ProviderDefaultProgramDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/caisi/dao/ProviderDefaultProgramDao.java:public class ProviderDefaultProgramDao extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/caisi/dao/TicklerDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/caisi/dao/TicklerDAO.java:public class TicklerDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/AdmissionDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
@@ -1443,43 +1403,11 @@
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/RoleProgramAccessDAO.java:public class RoleProgramAccessDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/TicklerDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/dao/TicklerDAO.java:public class TicklerDAO extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/BillingreferralDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/BillingreferralDao.java:public class BillingreferralDao extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/ClinicDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/ClinicDAO.java:public class ClinicDAO extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/CountryCodeDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/CountryCodeDAO.java:public class CountryCodeDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/DemographicDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/DemographicDao.java:public class DemographicDao extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/DxresearchDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/DxresearchDAO.java:public class DxresearchDAO extends HibernateDaoSupport{</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/FlowSheetCustomizerDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/FlowSheetCustomizerDAO.java:public class FlowSheetCustomizerDAO extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/FlowSheetDrugDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/FlowSheetDrugDAO.java:public class FlowSheetDrugDAO extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/Icd9Dao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/Icd9Dao.java:public class Icd9Dao extends HibernateDaoSupport{</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/OscarAnnotationDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/OscarAnnotationDAO.java:public class OscarAnnotationDAO extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/OtherIdDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/OtherIdDAO.java:public class OtherIdDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/PopulationReportDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/PopulationReportDao.java:public class PopulationReportDao extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/ProviderInboxRoutingDao.java:ResultSet rs= DBHandler.GetSQL("select * from incomingLabRules where archive = 0 and provider_no = '"+providerNo+"'");</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/ProviderInboxRoutingDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/ProviderInboxRoutingDao.java:public class ProviderInboxRoutingDao extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/QueueDocumentLinkDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/QueueDocumentLinkDao.java:public class QueueDocumentLinkDao extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/SiteDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/SiteDao.java:public class SiteDao extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/TicklerLinkDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/TicklerLinkDAO.java:public class TicklerLinkDAO extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/UserDSMessagePrefsDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/UserDSMessagePrefsDAO.java:public class UserDSMessagePrefsDAO extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/UserPropertyDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/UserPropertyDAO.java:public class UserPropertyDAO extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/ViewDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/ViewDAO.java:public class ViewDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/dao/DSGuidelineDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/dao/DSGuidelineDAO.java:public class DSGuidelineDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/document/dao/DocumentDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
@@ -1549,8 +1477,6 @@
         <ViolationValue>/src/main/java/oscar/eform/EFormUtil.java:ResultSet rs = DBHandler.GetSQL(sql1);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/eform/EFormUtil.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/eform/EfmData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/facility/IntegratorControlDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/facility/IntegratorControlDao.java:public class IntegratorControlDao extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/Frm2MinWalkRecord.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmARBloodWorkTest.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmARRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -2416,10 +2342,6 @@
         <ViolationValue>/src/main/java/com/quatro/service/security/SecurityManager.java:public void setUserFunctionAccessList(Hashtable functionAccessList) {</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/service/security/UserAccessManager.java:Hashtable functionList = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/service/security/UserAccessManager.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/web/admin/RoleManagerAction.java:Hashtable hashDup = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/web/admin/RoleManagerAction.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/web/admin/UserManagerAction.java:Hashtable hsforSave = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/web/admin/UserManagerAction.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/GenericIntakeDAO.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/GenericIntakeDAO.java:private void convertToReportStatistics(List&lt;?&gt; results, int size, SortedMap&lt;Integer, SortedMap&lt;String, ReportStatistic&gt;&gt; reportStatistics, Hashtable&lt;Integer, Integer&gt; resultHash) {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/PMmodule/dao/GenericIntakeDAO.java:public SortedMap&lt;Integer, SortedMap&lt;String, ReportStatistic&gt;&gt; getReportStatistics(Hashtable&lt;Integer,Integer&gt; answerIds, Set&lt;Integer&gt; intakeIds) {</ViolationValue>
@@ -2438,16 +2360,14 @@
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/web/CaseManagementViewAction.java:Vector v = OscarRoleObjectPrivilege.getPrivilegeProp(objectName);</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/web/CaseManagementViewAction.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/web/CaseManagementViewAction.java:return OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1));</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/CountryCodeDAO.java://        Hashtable retHash = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/CountryCodeDAO.java://    public Hashtable getHashofMessages(String providerNo,String name){</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/DxresearchDAO.java:listItems.addAll(new dxQuickListItemsHandler(quickListName).getDxQuickListItemsVector());</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/QueueDao.java:Hashtable ht=new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/QueueDao.java:List&lt;Hashtable&gt; r=new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/QueueDao.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/QueueDao.java:public List&lt;Hashtable&gt; getQueues(){</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/UserDSMessagePrefsDAO.java:Hashtable retHash = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/UserDSMessagePrefsDAO.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/dao/UserDSMessagePrefsDAO.java:public Hashtable getHashofMessages(String providerNo,String name){</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/common/dao/UserDSMessagePrefsDao.java:Hashtable&lt;String,Long&gt; retHash = new Hashtable&lt;String,Long&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/common/dao/UserDSMessagePrefsDao.java:import java.util.Hashtable;</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/common/dao/UserDSMessagePrefsDao.java:public Hashtable&lt;String,Long&gt; getHashofMessages(String providerNo,String name){</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/web/FlowSheetCustomAction.java:Hashtable&lt;String,String&gt; h = new Hashtable&lt;String,String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/web/FlowSheetCustomAction.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/web/SearchDemographicAutoCompleteAction.java:Hashtable d = new Hashtable();</ViolationValue>
@@ -2578,8 +2498,6 @@
         <ViolationValue>/src/main/java/oscar/entities/MSPBill.java:public java.util.Hashtable explanations;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/entities/MSPBill.java:public java.util.Hashtable getExplanations() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/entities/MSPBill.java:public void setExplanations(java.util.Hashtable explanations) {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmBCAR2007Record.java:Hashtable demoExt = ext.getAllValuesForDemo(""+demographicNo);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmBCAR2007Record.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCINRRecord.java:Vector ret = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCINRRecord.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCINRRecord.java:public Vector getINRLabData(int demographic_no) throws SQLException {</ViolationValue>
@@ -2833,10 +2751,6 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSpecPrep.java:public Vector getBillingClaimInrObj(HttpServletRequest requestData) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSpecPrep.java:public Vector getBillingClaimObj(HttpServletRequest requestData) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSpecPrep.java:public boolean addABillingRecord(Vector val) {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicExt.java:ArrayList hashtable2ArrayList(Hashtable h){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicExt.java:Hashtable retval =  new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicExt.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicExt.java:public Hashtable getAllValuesForDemo(String demo){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicNameAgeString.java:* @return Hashtable with these fields:</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicNameAgeString.java:* Used to get a Hashtable containing  lastName, firstName, sex, age</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicNameAgeString.java:Hashtable h = null;</ViolationValue>
@@ -3606,9 +3520,9 @@
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:dxQuickListItemsVector.add(bean);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:for ( int j = 0; j &lt; dxQuickListItemsVector.size();j++){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:public Collection getDxQuickListItemsVector(){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:public Collection getDxQuickListItemsVectorInPatientsList(Vector dxList){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:public Collection getDxQuickListItemsVectorNotInPatientsList(Vector dxList){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:public Collection&lt;dxCodeSearchBean&gt; getDxQuickListItemsVector(){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxQuickListItemsHandler.java:return dxQuickListItemsVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxResearchBeanHandler.java:Vector dxResearchBeanVector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarResearch/oscarDxResearch/bean/dxResearchBeanHandler.java:Vector v = new Vector();</ViolationValue>
@@ -3671,7 +3585,7 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxDeleteRxAction.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java://Vector idWarningVec=new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Enumeration e = ((Hashtable) obj).keys();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Hashtable dsPrefs = dsmessageDAO.getHashofMessages(provider,UserDSMessagePrefs.MYDRUGREF);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Hashtable dsPrefs = dsmessageDao.getHashofMessages(provider,UserDSMessagePrefs.MYDRUGREF);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Hashtable dsPrefs=new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Hashtable emptyHiddenRes=new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Hashtable h = (Hashtable) request.getSession().getAttribute("hideResources");</ViolationValue>
@@ -3680,6 +3594,8 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Hashtable hiddenResAttribute=(Hashtable)request.getSession().getAttribute("hideResources");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Hashtable ht=(Hashtable)all.get(i);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Hashtable ht=(Hashtable)all.get(x);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Hashtable&lt;String,Long&gt; dsPrefs = dsmessageDao.getHashofMessages(provider,UserDSMessagePrefs.MYDRUGREF);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Hashtable&lt;String,Long&gt; h = (Hashtable&lt;String,Long&gt;) request.getSession().getAttribute("hideResources");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:List&lt;Hashtable&gt; toRemove = new ArrayList&lt;Hashtable&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Object holbrook = ((Hashtable) obj).get("Holbrook Drug Interactions");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxMyDrugrefInfoAction.java:Vector all = new Vector();</ViolationValue>
@@ -4101,7 +4017,6 @@
         <ViolationValue>/src/main/webapp/decision/antenatal/antenatalplannerprint.jsp:StringBuffer tt;</ViolationValue>
         <ViolationValue>/src/main/webapp/decision/antenatal/antenatalplannerprint.jsp:tt = new StringBuffer().append(e.nextElement());</ViolationValue>
         <ViolationValue>/src/main/webapp/demographic/demographicaddarecordhtm.jsp:Vector vecRef = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/demographiceditdemographic.jsp:Hashtable demoExt = ext.getAllValuesForDemo(demographic_no);</ViolationValue>
         <ViolationValue>/src/main/webapp/demographic/demographiceditdemographic.jsp:Hashtable relHash = (Hashtable) relList.get(reCounter);</ViolationValue>
         <ViolationValue>/src/main/webapp/demographic/demographiceditdemographic.jsp:Vector vecRef = new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/demographic/demographicpdflabel.jsp:Vector vecRef = new Vector();</ViolationValue>
@@ -4110,12 +4025,8 @@
         <ViolationValue>/src/main/webapp/demographic/demographicsearch2apptresults.jsp:bufDoctorNo = new StringBuffer( apptMainBean.getString(rs,"provider_no") );</ViolationValue>
         <ViolationValue>/src/main/webapp/demographic/demographicsearch2apptresults.jsp:bufName = new StringBuffer( (apptMainBean.getString(rs,"last_name")+ ","+ apptMainBean.getString(rs,"first_name")) );</ViolationValue>
         <ViolationValue>/src/main/webapp/demographic/demographicsearch2apptresults.jsp:bufNo = new StringBuffer( (apptMainBean.getString(rs,"demographic_no")) );</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/shnfields.jsp:Hashtable demoExt = ext.getAllValuesForDemo(demographic_no);</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/shnfieldsView.jsp:Hashtable demoExt = ext.getAllValuesForDemo(demographic_no);</ViolationValue>
         <ViolationValue>/src/main/webapp/demographic/shnfieldsView.jsp:Hashtable h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/demographic/shnfieldsView.jsp:String getText(Hashtable h,String s){</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/vnativefields.jsp:Hashtable demoExt = ext.getAllValuesForDemo(demographic_no);</ViolationValue>
-        <ViolationValue>/src/main/webapp/demographic/vnativefieldsView.jsp:Hashtable demoExt = ext.getAllValuesForDemo(demographic_no);</ViolationValue>
         <ViolationValue>/src/main/webapp/demographic/vnativefieldsView.jsp:Hashtable h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/demographic/vnativefieldsView.jsp:Hashtable h2 = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/demographic/vnativefieldsView.jsp:String getArea(Hashtable h2,String s){</ViolationValue>

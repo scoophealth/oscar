@@ -27,6 +27,8 @@
 --%>
 <%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.ConformanceTestHelper"%>
+<%@page import="org.oscarehr.common.dao.DemographicExtDao" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%
@@ -37,6 +39,8 @@
     WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
     CountryCodeDao ccDAO =  (CountryCodeDao) ctx.getBean("countryCodeDao");
     List<CountryCode> countryList = ccDAO.getAllCountryCodes();
+
+    DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
 %>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_demographic"
 	rights="r" reverse="<%=true%>">
@@ -117,9 +121,8 @@
 
         Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
 	ProvinceNames pNames = ProvinceNames.getInstance();
-	oscar.oscarDemographic.data.DemographicExt ext = new oscar.oscarDemographic.data.DemographicExt();
-	ArrayList arr = ext.getListOfValuesForDemo(demographic_no);
-	Hashtable demoExt = ext.getAllValuesForDemo(demographic_no);
+	List<String[]> arr = demographicExtDao.getListOfValuesForDemo(demographic_no);
+	Map<String,String> demoExt = demographicExtDao.getAllValuesForDemo(demographic_no);
 
     GregorianCalendar now=new GregorianCalendar();
     int curYear = now.get(Calendar.YEAR);
@@ -1384,7 +1387,7 @@ if ( PatStat.equals(Dead) ) {%>
 						<h3>&nbsp;<bean:message
 							key="demographic.demographiceditdemographic.rxInteractionWarningLevel" /></h3>
                               <%
-                              	String warningLevel = (String)demoExt.get("rxInteractionWarningLevel");
+                              	String warningLevel = demoExt.get("rxInteractionWarningLevel");
                               	if(warningLevel==null) warningLevel="0";
 	          					String warningLevelStr = "Not Specified";
 	          					if(warningLevel.equals("1")) {warningLevelStr="Low";}
@@ -2476,7 +2479,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 					<b><bean:message key="demographic.demographiceditdemographic.primaryEMR" />:</b>
 
 				    <%
-				       	String primaryEMR = (String)demoExt.get("primaryEMR");
+				       	String primaryEMR = demoExt.get("primaryEMR");
 				       	if(primaryEMR==null) primaryEMR="0";
 				    %>
 					<input type="hidden" name="primaryEMROrig" value="<%=apptMainBean.getString(demoExt.get("primaryEMR"))%>" />

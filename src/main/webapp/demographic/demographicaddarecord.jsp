@@ -2,7 +2,8 @@
 	import="java.sql.*, java.util.*, oscar.oscarDB.*, oscar.MyDateFormat, oscar.oscarWaitingList.WaitingList, org.oscarehr.common.OtherIdManager"
 	errorPage="errorpage.jsp"%>
 <%@ page import="oscar.log.*"%>
-<%@ page import="oscar.oscarDemographic.data.*"%>
+<%@ page import="org.oscarehr.common.model.DemographicExt" %>
+<%@ page import="org.oscarehr.common.dao.DemographicExtDao" %>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.PMmodule.model.Admission" %>
 <%@ page import="org.oscarehr.PMmodule.dao.AdmissionDao" %>
@@ -12,6 +13,7 @@
 <%
 	AdmissionDao admissionDao = (AdmissionDao)SpringUtils.getBean("admissionDao");
 	WaitingListDao waitingListDao = (WaitingListDao)SpringUtils.getBean("waitingListDao");
+	DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -246,23 +248,22 @@
         int rowsAffected=1;
 
        dem = demographic.getDemographicNo().toString();
-       DemographicExt dExt = new DemographicExt();
 
        String proNo = (String) session.getValue("user");
-       dExt.addKey(proNo, dem, "hPhoneExt", request.getParameter("hPhoneExt"), "");
-       dExt.addKey(proNo, dem, "wPhoneExt", request.getParameter("wPhoneExt"), "");
-       dExt.addKey(proNo, dem, "demo_cell", request.getParameter("cellphone"), "");
-       dExt.addKey(proNo, dem, "cytolNum",  request.getParameter("cytolNum"),  "");
+       demographicExtDao.addKey(proNo, dem, "hPhoneExt", request.getParameter("hPhoneExt"), "");
+       demographicExtDao.addKey(proNo, dem, "wPhoneExt", request.getParameter("wPhoneExt"), "");
+       demographicExtDao.addKey(proNo, dem, "demo_cell", request.getParameter("cellphone"), "");
+       demographicExtDao.addKey(proNo, dem, "cytolNum",  request.getParameter("cytolNum"),  "");
 
-       dExt.addKey(proNo, dem, "ethnicity",     request.getParameter("ethnicity"),     "");
-       dExt.addKey(proNo, dem, "area",          request.getParameter("area"),          "");
-       dExt.addKey(proNo, dem, "statusNum",     request.getParameter("statusNum"),     "");
-       dExt.addKey(proNo, dem, "fNationCom",    request.getParameter("fNationCom"),    "");
-       dExt.addKey(proNo, dem, "given_consent", request.getParameter("given_consent"), "");
+       demographicExtDao.addKey(proNo, dem, "ethnicity",     request.getParameter("ethnicity"),     "");
+       demographicExtDao.addKey(proNo, dem, "area",          request.getParameter("area"),          "");
+       demographicExtDao.addKey(proNo, dem, "statusNum",     request.getParameter("statusNum"),     "");
+       demographicExtDao.addKey(proNo, dem, "fNationCom",    request.getParameter("fNationCom"),    "");
+       demographicExtDao.addKey(proNo, dem, "given_consent", request.getParameter("given_consent"), "");
 
-       dExt.addKey(proNo, dem, "rxInteractionWarningLevel", request.getParameter("rxInteractionWarningLevel"), "");
+       demographicExtDao.addKey(proNo, dem, "rxInteractionWarningLevel", request.getParameter("rxInteractionWarningLevel"), "");
 
-       dExt.addKey(proNo, dem, "primaryEMR", request.getParameter("primaryEMR"), "");
+       demographicExtDao.addKey(proNo, dem, "primaryEMR", request.getParameter("primaryEMR"), "");
 
 
        //for the IBD clinic
@@ -272,7 +273,7 @@
        if(oscarVariables.getProperty("demographicExt") != null) {
 	       String [] propDemoExt = oscarVariables.getProperty("demographicExt","").split("\\|");
 	       for(int k=0; k<propDemoExt.length; k++) {
-	           dExt.addKey(proNo,dem,propDemoExt[k],request.getParameter(propDemoExt[k].replace(' ','_')),"");
+	    	   demographicExtDao.addKey(proNo,dem,propDemoExt[k],request.getParameter(propDemoExt[k].replace(' ','_')),"");
 	       }
        }
        // customized key

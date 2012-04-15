@@ -1,47 +1,50 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 package oscar.form;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.Properties;
+
+import org.oscarehr.common.dao.DemographicExtDao;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.SxmlMisc;
 import oscar.login.DBHelp;
 import oscar.oscarDB.DBHandler;
-import oscar.oscarDemographic.data.DemographicExt;
 import oscar.util.UtilDateUtilities;
 
 public class FrmBCAR2007Record extends FrmRecord {
     private String _dateFormat = "dd/MM/yyyy";
+    private DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
 
     public Properties getFormRecord(int demographicNo, int existingID) throws SQLException {
         Properties props = new Properties();
 
         if (existingID <= 0) {
-            
+
             String sql = "SELECT demographic_no, last_name, first_name, sex, address, city, province, postal, phone, phone2, year_of_birth, month_of_birth, date_of_birth, hin, family_doctor FROM demographic WHERE demographic_no = "
                     + demographicNo;
             ResultSet rs = DBHandler.GetSQL(sql);
@@ -74,14 +77,13 @@ public class FrmBCAR2007Record extends FrmRecord {
                 String rd = SxmlMisc.getXmlContent(rs.getString("family_doctor"), "rd");
                 rd = rd != null ? rd : "";
                 props.setProperty("pg1_famPhy", rd);
-                
-                DemographicExt ext = new DemographicExt();
-                Hashtable demoExt = ext.getAllValuesForDemo(""+demographicNo);
-                String cell = (String) demoExt.get("demo_cell");
+
+                Map<String,String> demoExt = demographicExtDao.getAllValuesForDemo(""+demographicNo);
+                String cell = demoExt.get("demo_cell");
                 if ( cell != null ){
                     props.setProperty("c_phoneAlt2",cell );
                 }
-                
+
             }
             rs.close();
         } else {
@@ -103,9 +105,8 @@ public class FrmBCAR2007Record extends FrmRecord {
                 props.setProperty("c_phn_cur", rs.getString("hin"));
                 props.setProperty("c_phone_cur", rs.getString("phone"));
                 props.setProperty("c_phoneAlt1_cur", rs.getString("phone2"));
-                DemographicExt ext = new DemographicExt();
-                Hashtable demoExt = ext.getAllValuesForDemo(""+demographicNo);
-                String cell = (String) demoExt.get("demo_cell");
+                Map<String,String> demoExt = demographicExtDao.getAllValuesForDemo(""+demographicNo);
+                String cell = demoExt.get("demo_cell");
                 if ( cell != null ){
                     props.setProperty("c_phoneAlt2_cur",cell );
                 }

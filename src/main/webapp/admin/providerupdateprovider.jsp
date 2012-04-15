@@ -146,8 +146,9 @@ function setfocus() {
 		<td>
 <%
 ProviderDao pDao = (ProviderDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("providerDao");
-Set<Site> psites = pDao.getProvider(provider_no).getSites();
+
 SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
+List<Site> psites = siteDao.getActiveSitesByProviderNo(provider_no);
 List<Site> sites = siteDao.getAllActiveSites();
 for (int i=0; i<sites.size(); i++) {
 %>

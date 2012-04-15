@@ -66,14 +66,13 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.DemographicQueryFavourite;
 import org.oscarehr.common.model.Drug;
+import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.document.dao.DocumentDAO;
 import org.oscarehr.document.model.CtlDocument;
 import org.oscarehr.document.model.CtlDocumentPK;
 import org.oscarehr.document.model.Document;
-import org.oscarehr.dx.dao.DxResearchDAO;
-import org.oscarehr.dx.model.DxResearch;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -118,11 +117,11 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 
 
 
-	DxResearch getDxResearch(String codingSystem, String code,String status,Date startDate,Date updateDate,Integer demographicNo){
-		DxResearch dxresearch = new DxResearch();
+	Dxresearch getDxResearch(String codingSystem, String code,String status,Date startDate,Date updateDate,Integer demographicNo){
+		Dxresearch dxresearch = new Dxresearch();
 		dxresearch.setCodingSystem(codingSystem);
-		dxresearch.setCode(code);
-		dxresearch.setStatus(status);
+		dxresearch.setDxresearchCode(code);
+		dxresearch.setStatus(status.toCharArray()[0]);
 		dxresearch.setStartDate(startDate);
 		dxresearch.setUpdateDate(updateDate);
 		dxresearch.setDemographicNo(demographicNo);
@@ -632,7 +631,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		OscarAppointmentDao appointmentDao=(OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
 		ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 		DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
-		DxResearchDAO dxResearchDAO = (DxResearchDAO) SpringUtils.getBean("dxResearchDao");
+		DxresearchDAO dxResearchDAO = (DxresearchDAO) SpringUtils.getBean("dxresearchDAO");
 		AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
 		ProgramProviderDAO programProviderDAO = (ProgramProviderDAO) SpringUtils.getBean("programProviderDAO");
 		CaseManagementNoteDAO  caseManagementNoteDAO = (CaseManagementNoteDAO) SpringUtils.getBean("caseManagementNoteDAO");

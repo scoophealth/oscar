@@ -7,47 +7,42 @@ package org.oscarehr.common.dao;
 
 import java.util.List;
 
-import org.hibernate.Session;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.Icd9;
-import org.oscarehr.util.MiscUtils;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author toby
  */
-public class Icd9Dao extends HibernateDaoSupport{
-	
-	public List<Icd9> getIcd9Code(String icdCode){
-		return getHibernateTemplate().find("from Icd9 dx where dx.icd9 = ?",icdCode);
+@Repository
+public class Icd9Dao extends AbstractDao<Icd9>{
+
+	public Icd9Dao() {
+		super(Icd9.class);
 	}
-	
+
+	public List<Icd9> getIcd9Code(String icdCode){
+		Query query = entityManager.createQuery("select i from Icd9 where i.icd9=?");
+		query.setParameter(1, icdCode);
+
+		@SuppressWarnings("unchecked")
+		List<Icd9> results = query.getResultList();
+
+		return results;
+	}
+
 
     public List<Icd9> getIcd9(String query) {
-        List cList = null;
-        Session session = null;
-        try {
-            session = getSession();
-            cList = session.createCriteria(Icd9.class).add
-                    (Restrictions.or(
-                        Restrictions.like("icd9", "%" + query + "%"),
-                        Restrictions.like("description", "%" + query + "%")))
-                            .addOrder(Order.asc("description")).list();
-        } catch (Exception e) {
-            MiscUtils.getLogger().error("Error", e);
-        } finally {
-            if (session != null) {
-                releaseSession(session);
-            }
-        }
+		Query q = entityManager.createQuery("select i from Icd9 where i.icd9 like ? or i.description like ? order by i.description");
+		q.setParameter(1, "%"+query+"%");
+		q.setParameter(2, "%"+query+"%");
 
-        if (cList != null && cList.size() > 0) {
-            return cList;
-        } else {
-            return null;
-        }
+		@SuppressWarnings("unchecked")
+		List<Icd9> results = q.getResultList();
+
+		return results;
     }
 
 }

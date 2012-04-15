@@ -24,7 +24,6 @@ package org.oscarehr.common.model;
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.Set;
 
 /**
  * This is the object class that relates to the provider table. Any customizations belong here.
@@ -70,18 +69,6 @@ public class Provider implements Serializable, Comparable<Provider>{
 
 	public void setPractitionerNo(String practitionerNo) {
 		this.practitionerNo = practitionerNo;
-	}
-
-
-
-	private Set<Site> sites;
-
-	public Set<Site> getSites() {
-		return sites;
-	}
-
-	public void setSites(Set<Site> sites) {
-		this.sites = sites;
 	}
 
 	// constructors

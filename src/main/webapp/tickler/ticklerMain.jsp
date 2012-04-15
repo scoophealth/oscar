@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils,org.oscarehr.common.model.*"%>
-<%@page import="org.springframework.web.context.WebApplicationContext,oscar.oscarLab.ca.on.*"%>  
+<%@page import="org.springframework.web.context.WebApplicationContext,oscar.oscarLab.ca.on.*"%>
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -10,7 +10,7 @@
 </security:oscarSec>
 
 <%@ page import="java.util.*,java.text.*, java.sql.*, oscar.*, java.net.*,org.oscarehr.common.dao.*" %>
-<%@ page import="java.util.*,java.text.*, java.sql.*, oscar.*, java.net.*, org.oscarehr.common.dao.ViewDAO, org.oscarehr.common.model.View, org.springframework.web.context.WebApplicationContext, org.springframework.web.context.support.WebApplicationContextUtils" %>
+<%@ page import="java.util.*,java.text.*, java.sql.*, oscar.*, java.net.*, org.oscarehr.common.dao.ViewDao, org.oscarehr.common.model.View, org.springframework.web.context.WebApplicationContext, org.springframework.web.context.support.WebApplicationContextUtils" %>
 
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
@@ -27,14 +27,14 @@
   String strLimit2="5";
   if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
-  
-  
-  WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());  
-  ViewDAO viewDao =  (ViewDAO) ctx.getBean("UserViewDAO");
-  TicklerLinkDAO ticklerLinkDAO = (TicklerLinkDAO) ctx.getBean("ticklerLinkDAO");
-  
+
+
+  WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+  ViewDao viewDao =  (ViewDao) ctx.getBean("viewDao");
+  TicklerLinkDao ticklerLinkDao = (TicklerLinkDao) ctx.getBean("ticklerLinkDao");
+
   String role = (String)request.getSession().getAttribute("userrole");
-  Map<String,View> viewMap = viewDao.getView(View.TICKLER_VIEW,role);  
+  Map<String,View> viewMap = viewDao.getView(View.TICKLER_VIEW,role);
   View v;
   String providerview;
   String assignedTo;
@@ -44,14 +44,14 @@
   else {
       providerview = request.getParameter("providerview");
   }
-  
+
   if( request.getParameter("assignedTo") == null ) {
           assignedTo = "all";
   }
   else {
       assignedTo = request.getParameter("assignedTo");
   }
-  
+
 
 %>
 
@@ -71,7 +71,7 @@ GregorianCalendar now=new GregorianCalendar();
       ticklerview = request.getParameter("ticklerview");
   }
 
-  
+
   String xml_vdate;
    if( request.getParameter("xml_vdate") == null ) {
           xml_vdate = "";
@@ -87,7 +87,7 @@ GregorianCalendar now=new GregorianCalendar();
   else {
       xml_appointment_date = request.getParameter("xml_appointment_date");
   }
-  
+
 
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
 
@@ -133,15 +133,15 @@ GregorianCalendar now=new GregorianCalendar();
 <%@page import="oscar.oscarDB.DBHandler"%><html:html locale="true">
 <head>
 <title><bean:message key="tickler.ticklerMain.title"/></title>
-<!--Table Sorting Code -->      
+<!--Table Sorting Code -->
 <script type='text/javascript' src='<c:out value="${ctx}"/>/commons/scripts/sort_table/common.js'></script>
 <script type='text/javascript' src='<c:out value="${ctx}"/>/commons/scripts/sort_table/css.js'></script>
-<script type='text/javascript' src='<c:out value="${ctx}"/>/commons/scripts/sort_table/standardista-table-sorting.js'></script>      
+<script type='text/javascript' src='<c:out value="${ctx}"/>/commons/scripts/sort_table/standardista-table-sorting.js'></script>
 
 <!-- Prototype and scriptaculous -->
 <script src="<c:out value="${ctx}"/>/share/javascript/prototype.js" type="text/javascript"></script>
-<script src="<c:out value="${ctx}"/>/share/javascript/scriptaculous.js" type="text/javascript"></script>   
-      
+<script src="<c:out value="${ctx}"/>/share/javascript/scriptaculous.js" type="text/javascript"></script>
+
 <script language="JavaScript">
 function popupPage(vheight,vwidth,varpage) { //open a new popup window
   var page = "" + varpage;
@@ -197,7 +197,7 @@ var beginD = "1900-01-01"
 	e.checked = false;
 	//Unhighlight(e);
     }
-    
+
     function reportWindow(page) {
     windowprops="height=660, width=960, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes, top=0, left=0";
     var popup = window.open(page, "labreport", windowprops);
@@ -335,28 +335,28 @@ var beginD = "1900-01-01"
 	    ml.submit();
 	}
     }
-    
+
     function saveView() {
-    
+
         var url = "<c:out value="${ctx}"/>/saveWorkView.do";
         var role = "<%=(String)session.getAttribute("userrole")%>";
-        var params = "method=save&view_name=tickler&userrole=" + role + "&name=ticklerview&value=" + $F("ticklerview") + "&name=dateBegin&value=" + $F("xml_vdate") + "&name=dateEnd&value=" + $F("xml_appointment_date") + "&name=providerview&value=" + encodeURI($F("providerview")) + "&name=assignedTo&value=" + encodeURI($F("assignedTo"));        
+        var params = "method=save&view_name=tickler&userrole=" + role + "&name=ticklerview&value=" + $F("ticklerview") + "&name=dateBegin&value=" + $F("xml_vdate") + "&name=dateEnd&value=" + $F("xml_appointment_date") + "&name=providerview&value=" + encodeURI($F("providerview")) + "&name=assignedTo&value=" + encodeURI($F("assignedTo"));
         var sortables = document.getElementsByClassName('tableSortArrow');
-        
+
         var attrib = null;
         var columnId = -1;
         for( var idx = 0; idx < sortables.length; ++idx ) {
             attrib = sortables[idx].readAttribute("sortOrder");
             if( attrib != null ) {
-                columnId = sortables[idx].previous().readAttribute("columnId");        
+                columnId = sortables[idx].previous().readAttribute("columnId");
                 break;
             }
         }
-        
+
         if( columnId != -1 ) {
             params += "&name=columnId&value=" + columnId + "&name=sortOrder&value=" + attrib;
         }
-        
+
         //console.log(params);
         new Ajax.Request (
             url,
@@ -371,14 +371,14 @@ var beginD = "1900-01-01"
                 }
             }
         );
-        
+
     }
 
 </script>
 <style type="text/css">
 	<!--
 	A, BODY, INPUT, OPTION ,SELECT , TABLE, TEXTAREA, TD, TR {font-family:tahoma,sans-serif; font-size:11px;}
-        
+
 	TD.black              {font-weight: bold  ; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #FFFFFF; background-color: #666699   ;}
 	TD.lilac              {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #EEEEFF  ;}
 	TD.lilacRed              {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: red; background-color: #EEEEFF  ;}
@@ -506,11 +506,11 @@ var beginD = "1900-01-01"
 
           <!-- -->
           &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b><bean:message key="tickler.ticklerMain.msgAssignedTo"/></b></font>
-<% if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) 
+<% if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable())
 { // multisite start ==========================================
         	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
-          	List<Site> sites = siteDao.getActiveSitesByProviderNo(user_no); 
-      %> 
+          	List<Site> sites = siteDao.getActiveSitesByProviderNo(user_no);
+      %>
       <script>
 var _providers = [];
 <%	for (int i=0; i<sites.size(); i++) { %>
@@ -536,7 +536,7 @@ function changeSite(sel) {
 <% if (request.getParameter("assignedTo")!=null) { %>
       	<script>
      	changeSite(document.getElementById("site"));
-      	document.getElementById("assignedTo").value='<%=request.getParameter("assignedTo")%>';     	
+      	document.getElementById("assignedTo").value='<%=request.getParameter("assignedTo")%>';
       	</script>
 <% } // multisite end ==========================================
 } else {
@@ -587,9 +587,9 @@ function changeSite(sel) {
             <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="9%"><bean:message key="tickler.ticklerMain.msgCreationDate"/></th>
             <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="6%"><bean:message key="tickler.ticklerMain.Priority"/></th>
             <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="12%"><bean:message key="tickler.ticklerMain.taskAssignedTo"/></th>
-            
+
             <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="6%"><bean:message key="tickler.ticklerMain.msgStatus"/></th>
-            <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="39%"><bean:message key="tickler.ticklerMain.msgMessage"/></th>            
+            <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="39%"><bean:message key="tickler.ticklerMain.msgMessage"/></th>
         </TR>
     </thead>
     <tfoot>
@@ -604,8 +604,8 @@ function changeSite(sel) {
                                     <%}%>
                             <input type="button" name="button" value="<bean:message key="global.btnCancel"/>" onClick="window.close()" class="sbttn"> </td></tr>
                         </tfoot>
-                        <tbody>                               
-                            
+                        <tbody>
+
                             <%
                             String dateBegin = xml_vdate;
                             String dateEnd = xml_appointment_date;
@@ -621,23 +621,23 @@ function changeSite(sel) {
 			    			String[] param =new String[6];
                             boolean bodd=false;
                             param[0] = ticklerview;
-                            
+
                             param[1] = dateBegin;
                             param[2] = dateEnd;
-                            param[3] = providerview.equals("all") ? 
-                            		(isTeamOnly? 
-                            				"(p.provider_no='"+user_no+"' or p.team=(select pp.team from provider pp where pp.provider_no='"+user_no+"'))" 
-                            				: "d.provider_no like '%'") 
-                            		: "d.provider_no like '"+providerview+"'"; 
-                            param[4] = assignedTo.equals("all") ? "%" : assignedTo; 
-                            
-                            String colNames[] = new String[] {"last_name", "provider_last", "service_date", "update_date", "priority", "assignedLast", "status", "message"}; 
+                            param[3] = providerview.equals("all") ?
+                            		(isTeamOnly?
+                            				"(p.provider_no='"+user_no+"' or p.team=(select pp.team from provider pp where pp.provider_no='"+user_no+"'))"
+                            				: "d.provider_no like '%'")
+                            		: "d.provider_no like '"+providerview+"'";
+                            param[4] = assignedTo.equals("all") ? "%" : assignedTo;
+
+                            String colNames[] = new String[] {"last_name", "provider_last", "service_date", "update_date", "priority", "assignedLast", "status", "message"};
                             v = null;
                             String order = "service_date desc";
                             int col;
-                            if( viewMap != null ) { 
+                            if( viewMap != null ) {
                                 v = viewMap.get("columnId");
-                                if( v != null ) {                            
+                                if( v != null ) {
                                    col = Integer.parseInt(v.getValue()) - 1;
                                    order = colNames[col] + " ";
                                    v = viewMap.get("sortOrder");
@@ -646,23 +646,23 @@ function changeSite(sel) {
                                    }
                                 }
                             }
-                            
+
                             param[5] = order;
                             String sql = "select t.tickler_no, d.demographic_no, d.last_name,d.first_name, p.last_name as provider_last, p.first_name as provider_first, t.status,t.message,t.service_date, t.update_date, t.priority, p2.first_name AS assignedFirst, p2.last_name as assignedLast from tickler t LEFT JOIN provider p2 ON ( p2.provider_no=t.task_assigned_to), demographic d LEFT JOIN provider p ON ( p.provider_no=d.provider_no) where t.demographic_no=d.demographic_no and t.status='" + param[0] + "' and TO_DAYS(t.service_date) >=TO_DAYS('" + param[1] + "') and TO_DAYS(t.service_date)<=TO_DAYS('" + param[2] + "') and " + param[3] + " and t.task_assigned_to like '" + param[4] + "' order by " + param[5];
                             java.sql.PreparedStatement ps =  DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(sql);
-                              
+
                             rs = DBHandler.GetSQL(sql);
-                            
+
                             while (rs.next()) {
                             nItems = nItems +1;
-                            
+
                             if (oscar.Misc.getString(rs,"provider_last")==null || oscar.Misc.getString(rs,"provider_first")==null){
                             provider = "";
                             }
                             else{
                             provider = oscar.Misc.getString(rs,"provider_last") + ", " + oscar.Misc.getString(rs,"provider_first");
                             }
-                            
+
                             if (oscar.Misc.getString(rs,"assignedLast")==null || oscar.Misc.getString(rs,"assignedFirst")==null){
                             taskAssignedTo = "";
                             }
@@ -676,9 +676,9 @@ function changeSite(sel) {
                             long millisDifference = toDate.getTime() - grantdate.getTime();
                             long daysDifference = millisDifference / (1000 * 60 * 60 * 24);
                             if (daysDifference > 0){
-                            
+
                             %>
-                            
+
                             <tr >
                                 <TD width="3%"  ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><input type="checkbox" name="checkbox" value="<%=apptMainBean.getString(rs,"tickler_no")%>"></TD>
                                 <%
@@ -694,7 +694,7 @@ function changeSite(sel) {
                                     SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
                                     String service_date_str = dateFormat2.format(service_date);
                                     out.print(service_date_str);
-                                    %> 
+                                    %>
                                 </TD>
                                 <TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>">
                                     <%
@@ -702,7 +702,7 @@ function changeSite(sel) {
                                     dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
                                     service_date_str = dateFormat2.format(service_date);
                                     out.print(service_date_str);
-                                    %> 
+                                    %>
                                 </TD>
                                 <TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=apptMainBean.getString(rs,"priority")%></TD>
                                 <TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=taskAssignedTo%></TD>
@@ -727,7 +727,7 @@ function changeSite(sel) {
                                     SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
                                     String service_date_str = dateFormat2.format(service_date);
                                     out.print(service_date_str);
-                                    %> 
+                                    %>
                                 </TD>
                                 <TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>">
                                     <%
@@ -735,19 +735,19 @@ function changeSite(sel) {
                                     dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
                                     service_date_str = dateFormat2.format(service_date);
                                     out.print(service_date_str);
-                                    %> 
+                                    %>
                                 </TD>
                                 <TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=apptMainBean.getString(rs,"priority")%></TD>
                                 <TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=taskAssignedTo%></TD>
                                 <TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=apptMainBean.getString(rs,"status").equals("A")?stActive:apptMainBean.getString(rs,"status").equals("C")?stComplete:apptMainBean.getString(rs,"status").equals("D")?stDeleted:apptMainBean.getString(rs,"status")%></TD>
                                 <TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=apptMainBean.getString(rs,"message")%>
                                     <%
-                                    List<TicklerLink> linkList = ticklerLinkDAO.getLinkByTickler(new Long(rs.getLong("tickler_no")));
+                                    List<TicklerLink> linkList = ticklerLinkDao.getLinkByTickler(rs.getInt("tickler_no"));
                                     if (linkList != null){
                                     for(TicklerLink tl : linkList){
-                                    String type = tl.getTableName();  
+                                    String type = tl.getTableName();
                                     %>
-                                    
+
                                     <% if ( LabResultData.isMDS(type) ){ %>
                                     <a href="javascript:reportWindow('SegmentDisplay.jsp?segmentID=<%=tl.getTableId()%>&providerNo=<%=user_no%>&searchProviderNo=<%=user_no%>&status=')">ATT</a>
                                     <% }else if (LabResultData.isCML(type)){ %>
@@ -759,25 +759,25 @@ function changeSite(sel) {
                                     <% }else {%>
                                     <a href="javascript:reportWindow('../lab/CA/BC/labDisplay.jsp?segmentID=<%=tl.getTableId()%>&providerNo=<%=user_no%>&searchProviderNo=<%=user_no%>&status=')">ATT</a>
                                     <% }%>
-                                    
-                                    
-                                    
+
+
+
                                     <%}
-                                    
+
                                     }
-                                    
-                                    
+
+
                                     %>
-                                    
+
                                 </TD>
                             </tr>
                             <%
                             }
-                            
+
                             %>
-                            
+
                             <%}
-              
+
                             if (nItems == 0) {
                             %>
                             <tr><td colspan="8" class="white"><bean:message key="tickler.ticklerMain.msgNoMessages"/></td></tr>

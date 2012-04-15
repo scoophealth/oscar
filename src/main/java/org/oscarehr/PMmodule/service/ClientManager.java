@@ -38,6 +38,7 @@ import org.oscarehr.PMmodule.model.ProgramClientRestriction;
 import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicExt;
 import org.springframework.beans.factory.annotation.Required;
@@ -47,6 +48,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ClientManager {
 
     private DemographicDao dao;
+    private DemographicExtDao demographicExtDao;
     private ClientReferralDAO referralDAO;
     private JointAdmissionDAO jointAdmissionDAO;
     private ProgramQueueManager queueManager;
@@ -228,31 +230,31 @@ public class ClientManager {
     }
 
     public DemographicExt getDemographicExt(String id) {
-        return dao.getDemographicExt(Integer.valueOf(id));
+        return demographicExtDao.getDemographicExt(Integer.valueOf(id));
     }
 
     public List<DemographicExt> getDemographicExtByDemographicNo(int demographicNo) {
-        return dao.getDemographicExtByDemographicNo(demographicNo);
+        return demographicExtDao.getDemographicExtByDemographicNo(demographicNo);
     }
 
     public DemographicExt getDemographicExt(int demographicNo, String key) {
-        return dao.getDemographicExt(demographicNo, key);
+        return demographicExtDao.getDemographicExt(demographicNo, key);
     }
 
     public void updateDemographicExt(DemographicExt de) {
-        dao.updateDemographicExt(de);
+    	demographicExtDao.updateDemographicExt(de);
     }
 
     public void saveDemographicExt(int demographicNo, String key, String value) {
-        dao.saveDemographicExt(demographicNo, key, value);
+    	demographicExtDao.saveDemographicExt(demographicNo, key, value);
     }
 
     public void removeDemographicExt(String id) {
-        dao.removeDemographicExt(Integer.valueOf(id));
+    	demographicExtDao.removeDemographicExt(Integer.valueOf(id));
     }
 
     public void removeDemographicExt(int demographicNo, String key) {
-        dao.removeDemographicExt(demographicNo, key);
+    	demographicExtDao.removeDemographicExt(demographicNo, key);
     }
 
     public void setJointAdmissionDAO(JointAdmissionDAO jointAdmissionDAO) {
@@ -266,6 +268,11 @@ public class ClientManager {
     @Required
     public void setDemographicDao(DemographicDao dao) {
         this.dao = dao;
+    }
+
+    @Required
+    public void setDemographicExtDao(DemographicExtDao dao) {
+        this.demographicExtDao = dao;
     }
 
     @Required

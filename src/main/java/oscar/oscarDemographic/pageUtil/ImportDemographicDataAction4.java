@@ -78,6 +78,7 @@ import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.dao.DemographicArchiveDao;
 import org.oscarehr.common.dao.DemographicContactDao;
+import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.DrugReasonDao;
 import org.oscarehr.common.dao.PartialDateDao;
@@ -106,7 +107,6 @@ import oscar.appt.ApptStatusData;
 import oscar.dms.EDocUtil;
 import oscar.oscarDemographic.data.DemographicAddResult;
 import oscar.oscarDemographic.data.DemographicData;
-import oscar.oscarDemographic.data.DemographicExt;
 import oscar.oscarDemographic.data.DemographicRelationship;
 import oscar.oscarEncounter.data.EctProgram;
 import oscar.oscarEncounter.oscarMeasurements.data.ImportExportMeasurements;
@@ -186,6 +186,7 @@ import cdsDt.PersonNameStandard.OtherNames;
     DemographicArchiveDao demoArchiveDao = (DemographicArchiveDao) SpringUtils.getBean("demographicArchiveDao");
     ProviderDataDao providerDataDao = (ProviderDataDao) SpringUtils.getBean("providerDataDao");
     PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
+    DemographicExtDao demographicExtDao = (DemographicExtDao) SpringUtils.getBean("demographicExtDao");
 
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception  {
@@ -603,7 +604,6 @@ import cdsDt.PersonNameStandard.OtherNames;
             date_of_birth = UtilDateUtilities.DateToString(bDate,"dd");
         }
 
-        DemographicExt dExt = new DemographicExt();
         DemographicAddResult demoRes = null;
 
         //Check if Contact-only demographic exists
@@ -683,10 +683,10 @@ import cdsDt.PersonNameStandard.OtherNames;
 	            saveLinkNote(dmNote, CaseManagementNoteLink.DEMOGRAPHIC, Long.valueOf(demographicNo));
             }
 
-            if (!workExt.equals("")) dExt.addKey(primaryPhysician, demographicNo, "wPhoneExt", workExt);
-            if (!homeExt.equals("")) dExt.addKey(primaryPhysician, demographicNo, "hPhoneExt", homeExt);
-            if (!cellPhone.equals("")) dExt.addKey(primaryPhysician, demographicNo, "demo_cell", cellPhone);
-            if(courseId>0) dExt.addKey(primaryPhysician, demographicNo, "course", String.valueOf(courseId));
+            if (!workExt.equals("")) demographicExtDao.addKey(primaryPhysician, demographicNo, "wPhoneExt", workExt);
+            if (!homeExt.equals("")) demographicExtDao.addKey(primaryPhysician, demographicNo, "hPhoneExt", homeExt);
+            if (!cellPhone.equals("")) demographicExtDao.addKey(primaryPhysician, demographicNo, "demo_cell", cellPhone);
+            if(courseId>0) demographicExtDao.addKey(primaryPhysician, demographicNo, "course", String.valueOf(courseId));
 
 
             //Demographic Contacts
@@ -738,9 +738,9 @@ import cdsDt.PersonNameStandard.OtherNames;
                 	cDemoNo = demoRes.getId();
                     err_note.add("Contact-only patient "+cPatient+" (Demo no="+cDemoNo+") created");
 
-                    if (!workExt.equals("")) dExt.addKey("", cDemoNo, "wPhoneExt", workExt);
-                    if (!homeExt.equals("")) dExt.addKey("", cDemoNo, "hPhoneExt", homeExt);
-                    if (!cellPhone.equals("")) dExt.addKey("", cDemoNo, "demo_cell", cellPhone);
+                    if (!workExt.equals("")) demographicExtDao.addKey("", cDemoNo, "wPhoneExt", workExt);
+                    if (!homeExt.equals("")) demographicExtDao.addKey("", cDemoNo, "hPhoneExt", homeExt);
+                    if (!cellPhone.equals("")) demographicExtDao.addKey("", cDemoNo, "demo_cell", cellPhone);
                 }
                 insertIntoAdmission(cDemoNo);
 

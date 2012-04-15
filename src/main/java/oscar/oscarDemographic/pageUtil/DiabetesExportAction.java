@@ -38,15 +38,15 @@ import org.jdom.input.SAXBuilder;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.dao.PartialDateDao;
+import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.common.model.PartialDate;
-import org.oscarehr.dx.model.DxResearch;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarDemographic.data.DemographicData;
-import oscar.oscarDemographic.data.DemographicExt;
 import oscar.oscarEncounter.oscarMeasurements.data.ImportExportMeasurements;
 import oscar.oscarEncounter.oscarMeasurements.data.LabMeasurements;
 import oscar.oscarEncounter.oscarMeasurements.data.MeasurementMapConfig;
@@ -85,6 +85,7 @@ public class DiabetesExportAction extends Action {
     private static final Logger logger = MiscUtils.getLogger();
     private static final CaseManagementManager cmm = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
     private static final PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
+    private static final DemographicExtDao demographicExtDao = (DemographicExtDao) SpringUtils.getBean("demographicExtDao");
 
 
 public DiabetesExportAction(){}
@@ -510,9 +511,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         data = demographic.getEmail();
         if (StringUtils.filled(data)) demo.setEmail(data);
 
-        DemographicExt ext = new DemographicExt();
         HashMap<String,String> demoExt = new HashMap<String,String>();
-        demoExt.putAll(ext.getAllValuesForDemo(demoNo));
+        demoExt.putAll(demographicExtDao.getAllValuesForDemo(demoNo));
 
         String phoneNo = Util.onlyNum(demographic.getPhone());
         if (StringUtils.filled(phoneNo) && phoneNo.length()>=7) {
@@ -805,11 +805,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	String diagValue = "";
 	Date dateValue = null;
 	String dateFormat = null;
-	List<DxResearch> dxList = cmm.getDxByDemographicNo(demoNo);
-	for (DxResearch dx : dxList) {
+	List<Dxresearch> dxList = cmm.getDxByDemographicNo(demoNo);
+	for (Dxresearch dx : dxList) {
 	    if (diagValue.equals("E10.9")) break;
-	    if (dx.getCode().equals("25001")) diagValue = "E10.9";  //Type 1 diabetes
-	    else if (dx.getCode().equals("250")) diagValue = "E11.9";  //Type 2 diabetes
+	    if (dx.getDxresearchCode().equals("25001")) diagValue = "E10.9";  //Type 1 diabetes
+	    else if (dx.getDxresearchCode().equals("250")) diagValue = "E11.9";  //Type 2 diabetes
 	    else continue;
 
 	    dateValue = dx.getStartDate();

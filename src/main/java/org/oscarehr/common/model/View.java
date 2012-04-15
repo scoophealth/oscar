@@ -25,71 +25,72 @@
 
 package org.oscarehr.common.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 /**
  *
  * @author rjonasz
  *
- *mapped to View table
- *  +-----------+--------------+------+-----+---------+----------------+
-    | Field     | Type         | Null | Key | Default | Extra          |
-    +-----------+--------------+------+-----+---------+----------------+
-    | id        | int(10)      |      | PRI | NULL    | auto_increment |
-    | view_name | varchar(255) |      |     |         |                |
-    | name      | varchar(255) |      |     |         |                |
-    | value     | text         | YES  |     | NULL    |                |
-    | role      | varchar(255) |      |     |         |                |
-    +-----------+--------------+------+-----+---------+----------------+
  */
-public class View {
-    
+@Entity
+@Table(name="view")
+public class View extends AbstractModel<Integer> {
+
+	@Transient
     public static final String TICKLER_VIEW = "tickler";
-    
-    private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     private String view_name;
     private String name;
     private String value;
     private String role;
-    
+
     /** Creates a new instance of View */
     public View() {
     }
-    
-    public void setId(long id) {
+
+    public void setId(Integer id) {
         this.id = id;
     }
-    
-    public long getId() {
+
+    public Integer getId() {
         return this.id;
     }
-    
+
     public void setView_name(String view_name) {
         this.view_name = view_name;
     }
-    
+
     public String getView_name() {
         return this.view_name;
     }
-    
+
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public String getName() {
         return this.name;
     }
-    
+
     public void setValue(String value) {
         this.value = value;
     }
-    
+
     public String getValue() {
         return this.value;
     }
-    
+
     public void setRole(String role) {
         this.role = role;
     }
-    
+
     public String getRole() {
         return this.role;
     }

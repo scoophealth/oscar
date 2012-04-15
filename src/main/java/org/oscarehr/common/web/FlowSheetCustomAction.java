@@ -17,7 +17,7 @@ import org.apache.struts.actions.DispatchAction;
 import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
-import org.oscarehr.common.dao.FlowSheetCustomizerDAO;
+import org.oscarehr.common.dao.FlowSheetCustomizationDao;
 import org.oscarehr.common.dao.FlowSheetUserCreatedDao;
 import org.oscarehr.common.model.FlowSheetCustomization;
 import org.oscarehr.common.model.FlowSheetUserCreated;
@@ -35,11 +35,11 @@ import oscar.oscarEncounter.oscarMeasurements.util.TargetCondition;
 public class FlowSheetCustomAction extends DispatchAction {
     private static final Logger logger = MiscUtils.getLogger();
 
-    private FlowSheetCustomizerDAO flowSheetCustomizerDAO;
+    private FlowSheetCustomizationDao flowSheetCustomizationDao;
     private FlowSheetUserCreatedDao flowSheetUserCreatedDao = (FlowSheetUserCreatedDao) SpringUtils.getBean("flowSheetUserCreatedDao");
 
-    public void setFlowSheetCustomizerDAO(FlowSheetCustomizerDAO flowSheetCustomizerDAO) {
-        this.flowSheetCustomizerDAO = flowSheetCustomizerDAO;
+    public void setFlowSheetCustomizationDao(FlowSheetCustomizationDao flowSheetCustomizationDao) {
+        this.flowSheetCustomizationDao = flowSheetCustomizationDao;
     }
 
     @Override
@@ -114,7 +114,7 @@ public class FlowSheetCustomAction extends DispatchAction {
 
                 logger.debug("SAVE "+cust);
 
-                flowSheetCustomizerDAO.save(cust);
+                flowSheetCustomizationDao.persist(cust);
 
             }
         }
@@ -279,7 +279,7 @@ public class FlowSheetCustomAction extends DispatchAction {
             cust.setProviderNo((String) request.getSession().getAttribute("user"));
             logger.debug("UPDATE "+cust);
 
-            flowSheetCustomizerDAO.save(cust);
+            flowSheetCustomizationDao.persist(cust);
 
         }
         request.setAttribute("demographic",demographicNo);
@@ -301,7 +301,7 @@ public class FlowSheetCustomAction extends DispatchAction {
         cust.setProviderNo((String) request.getSession().getAttribute("user"));
         cust.setDemographicNo(demographicNo);
 
-        flowSheetCustomizerDAO.save(cust);
+        flowSheetCustomizationDao.persist(cust);
         logger.debug("DELETE "+cust);
 
         request.setAttribute("demographic",demographicNo);
@@ -316,10 +316,12 @@ public class FlowSheetCustomAction extends DispatchAction {
         String flowsheet = request.getParameter("flowsheet");
         String demographicNo = request.getParameter("demographic");
 
-        FlowSheetCustomization cust = flowSheetCustomizerDAO.getFlowSheetCustomization(id);
-        cust.setArchived(true);
-        cust.setArchivedDate(new Date());
-        flowSheetCustomizerDAO.save(cust);
+        FlowSheetCustomization cust = flowSheetCustomizationDao.getFlowSheetCustomization(id);
+        if(cust != null) {
+        	cust.setArchived(true);
+        	cust.setArchivedDate(new Date());
+        	flowSheetCustomizationDao.merge(cust);
+        }
         logger.debug("archiveMod "+cust);
 
         request.setAttribute("demographic",demographicNo);
