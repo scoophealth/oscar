@@ -1,26 +1,27 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for 
- * Centre for Research on Inner City Health, St. Michael's Hospital, 
- * Toronto, Ontario, Canada 
+ *
+ * This software was written for
+ * Centre for Research on Inner City Health, St. Michael's Hospital,
+ * Toronto, Ontario, Canada
  */
 
 package org.oscarehr.PMmodule.service;
+
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -47,11 +48,8 @@ import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramSignature;
 import org.oscarehr.PMmodule.model.ProgramTeam;
 import org.oscarehr.util.LoggedInInfo;
-import org.springframework.transaction.annotation.Transactional;
 
 import oscar.OscarProperties;
-
-@Transactional
 public class ProgramManager {
 
     private ProgramDao programDao;
@@ -129,11 +127,11 @@ public class ProgramManager {
     public String getProgramName(String programId) {
         return programDao.getProgramName(Integer.valueOf(programId));
     }
-    
+
     public Integer getProgramIdByProgramName(String programName) {
     	return programDao.getProgramIdByProgramName(programName);
     }
-    
+
     public List<Program> getAllPrograms() {
         return programDao.getAllPrograms();
     }
@@ -219,7 +217,7 @@ public class ProgramManager {
         programDao.removeProgram(Integer.valueOf(programId));
     }
 
-    public List getProgramProviders(String programId) {
+    public List<ProgramProvider> getProgramProviders(String programId) {
         return programProviderDAO.getProgramProviders(Long.valueOf(programId));
     }
 
@@ -342,7 +340,7 @@ public class ProgramManager {
     public List searchByFacility(Program criteria, Integer facilityId){
         return this.programDao.searchByFacility(criteria, facilityId);
     }
-    
+
     public Program getHoldingTankProgram() {
         return this.programDao.getHoldingTankProgram();
     }
@@ -364,7 +362,7 @@ public class ProgramManager {
         return programDomain;
     }
 
-    
+
     public List<Program> getActiveProgramDomain(String providerNo) {
         List<Program> programDomain = new ArrayList<Program>();
 
@@ -377,24 +375,24 @@ public class ProgramManager {
 
         return programDomain;
     }
-    
+
     public List<Program> getProgramDomainInCurrentFacilityForCurrentProvider(boolean activeOnly) {
     	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-    	
+
     	List<Program> programs = null;
-    	
+
     	if (activeOnly) programs=getActiveProgramDomain(loggedInInfo.loggedInProvider.getProviderNo());
     	else programs=getProgramDomain(loggedInInfo.loggedInProvider.getProviderNo());
-    	
+
     	List<Program> results = new ArrayList<Program>();
-    	for(Program program : programs) {    		
-    		if(program.getFacilityId()==loggedInInfo.currentFacility.getId().intValue()) { 
+    	for(Program program : programs) {
+    		if(program.getFacilityId()==loggedInInfo.currentFacility.getId().intValue()) {
     			results.add(program);
     		}
     	}
-    	return results;    	
+    	return results;
     }
-    
+
     public Program[] getCommunityPrograms() {
         return programDao.getCommunityPrograms();
     }
@@ -472,7 +470,7 @@ public class ProgramManager {
 
     public boolean hasAccessBasedOnCurrentFacility(Integer programId) {
     	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-    	
+
     	// if no program restrictions are defined.
         if (programId == null) return(true);
 
@@ -484,7 +482,7 @@ public class ProgramManager {
         	return false;
         }
     }
-    
+
     public List<Program> getAllProgramsByRole(String providerNo,int roleId) {
     	List<Program> results = new ArrayList<Program>();
     	List<ProgramProvider> ppList = programProviderDAO.getProgramProvidersByProvider(providerNo);

@@ -216,7 +216,6 @@ public class CihiExportPHC_VRSAction extends DispatchAction {
 
 	}
 
-	@SuppressWarnings("rawtypes")
     @Override
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		OscarProperties properties = OscarProperties.getInstance();
@@ -527,12 +526,12 @@ public class CihiExportPHC_VRSAction extends DispatchAction {
 				dateFullorPartial.setFullDate(cal);
 			}
 		} catch( Exception e ) {
-
+			//empty
 		}
 
 	}
 
-	@SuppressWarnings("unchecked")
+
     private void buildFamilyHistory(Demographic demo, PatientRecord patientRecord ) {
 		List<Issue> issueList = issueDAO.findIssueByCode(new String[] {"FamHistory","MedHistory"});
 		String[] famHistory = new String[issueList.size()];
@@ -596,7 +595,7 @@ public class CihiExportPHC_VRSAction extends DispatchAction {
                 	try {
                 		familyHistory.setAgeAtOnset(BigInteger.valueOf(Long.parseLong(age)));
                 	}catch(NumberFormatException e) {
-
+                		//empty
                 	}
                 }
 
@@ -635,7 +634,7 @@ public class CihiExportPHC_VRSAction extends DispatchAction {
         }
     }
 
-	@SuppressWarnings("unchecked")
+
     private void buildOngoingProblems(Demographic demo, PatientRecord patientRecord) {
 		List<Issue> issueList = issueDAO.findIssueByCode(new String[] {"Concerns"});
 		String[] onGoingConcerns = new String[] {issueList.get(0).getId().toString()};
@@ -738,7 +737,6 @@ public class CihiExportPHC_VRSAction extends DispatchAction {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
     private void buildRiskFactors(Demographic demo, PatientRecord patientRecord) {
 		List<Issue> issueList = issueDAO.findIssueByCode(new String[] {"RiskFactors"});
 		String[] riskFactor = new String[] {issueList.get(0).getId().toString()};
@@ -790,7 +788,7 @@ public class CihiExportPHC_VRSAction extends DispatchAction {
 		String[] severity = new String[] {"MI","MO","LT","NO"};
 		List<Allergy> allergies = allergyDAO.findAllergies(demo.getDemographicNo());
 		int index;
-		Calendar cal = Calendar.getInstance();
+
 		Date date;
         for( Allergy allergy: allergies ) {
             	AllergiesAndAdverseReactions xmlAllergies = patientRecord.addNewAllergiesAndAdverseReactions();
@@ -934,7 +932,6 @@ public class CihiExportPHC_VRSAction extends DispatchAction {
  *
  */
 
-	@SuppressWarnings("unchecked")
     private void buildProcedure(Demographic demo, PatientRecord patientRecord) {
 		List<Issue> issueList = issueDAO.findIssueByCode(new String[] {"MedHistory"});
 		String[] medhistory = new String[] {issueList.get(0).getId().toString()};
@@ -1022,7 +1019,7 @@ public class CihiExportPHC_VRSAction extends DispatchAction {
 			try {
 				handler = Factory.getHandler(labData.segmentID);
 
-				ArrayList headers = handler.getHeaders();
+				ArrayList<String> headers = handler.getHeaders();
 				OBRCount = handler.getOBRCount();
 	            for(i=0;i<headers.size();i++){
 	            	for ( j=0; j < OBRCount; j++){

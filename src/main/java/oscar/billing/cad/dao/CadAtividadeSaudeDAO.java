@@ -1,25 +1,25 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 /*
  * TipoMovHandler.java
@@ -44,8 +44,8 @@ import oscar.util.DAO;
  */
 public class CadAtividadeSaudeDAO extends DAO {
 
-    public List list(String codigo, String desc) throws SQLException {
-        List beans = null;
+    public List<CadAtividadesSaude> list(String codigo, String desc) throws SQLException {
+        List<CadAtividadesSaude> beans = null;
         String sql = "select co_atividade, ds_atividade from cad_atividades_saude ";
 
         if ((codigo != null) && !codigo.trim().equals("")) {
@@ -64,12 +64,12 @@ public class CadAtividadeSaudeDAO extends DAO {
 
         sql = sql + " order by ds_atividade";
 
-        
+
 
         ResultSet rs = DBHandler.GetSQL(sql);
 
         if (rs != null) {
-            beans = new ArrayList();
+            beans = new ArrayList<CadAtividadesSaude>();
 
             while (rs.next()) {
                 CadAtividadesSaude bean = new CadAtividadesSaude();

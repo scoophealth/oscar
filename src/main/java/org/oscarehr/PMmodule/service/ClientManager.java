@@ -72,7 +72,7 @@ public class ClientManager {
         return dao.getClients();
     }
 
-    public List search(ClientSearchFormBean criteria, boolean returnOptinsOnly,boolean excludeMerged) {
+    public List<Demographic> search(ClientSearchFormBean criteria, boolean returnOptinsOnly,boolean excludeMerged) {
         return dao.search(criteria, returnOptinsOnly,excludeMerged);
     }
     public List<Demographic> search(ClientSearchFormBean criteria) {
@@ -124,7 +124,7 @@ public class ClientManager {
         }
     }
 
-    public List searchReferrals(ClientReferral referral) {
+    public List<ClientReferral> searchReferrals(ClientReferral referral) {
         return referralDAO.search(referral);
     }
 
@@ -141,7 +141,7 @@ public class ClientManager {
     }
 
     public List<Long> getDependentsList(Long clientId) {
-        List<Long> list = new ArrayList();
+        List<Long> list = new ArrayList<Long>();
         List<JointAdmission> jadms = jointAdmissionDAO.getSpouseAndDependents(clientId);
         for (JointAdmission jadm : jadms) {
             list.add(jadm.getClientId());

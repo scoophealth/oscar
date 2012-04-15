@@ -354,7 +354,8 @@ public class DemographicDao extends HibernateDaoSupport {
  	}
 
  //Quatro Merge
- 	public List search(ClientSearchFormBean bean, boolean returnOptinsOnly,boolean excludeMerged) {
+ 	@SuppressWarnings("unchecked")
+    public List<Demographic> search(ClientSearchFormBean bean, boolean returnOptinsOnly,boolean excludeMerged) {
  		Criteria criteria = getSession().createCriteria(Demographic.class);
  		String firstName = "";
  		String lastName = "";
@@ -370,8 +371,7 @@ public class DemographicDao extends HibernateDaoSupport {
 
  		String sql = "";
 
- 		//@SuppressWarnings("unchecked")
- 		List results = null;
+ 		List<Demographic> results = null;
 
  		if (bean.getFirstName() != null && bean.getFirstName().length() > 0) {
  			firstName = bean.getFirstName();

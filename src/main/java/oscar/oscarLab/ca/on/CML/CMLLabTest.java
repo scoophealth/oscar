@@ -39,6 +39,7 @@ import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.on.CommonLabResultData;
+import oscar.oscarMDS.data.ReportStatus;
 import oscar.util.UtilDateUtilities;
 
 /**
@@ -47,15 +48,15 @@ import oscar.util.UtilDateUtilities;
  */
 public class CMLLabTest {
     private static Logger log = MiscUtils.getLogger();
-    
+
     public String locationId = null; //  2. (e.g. 70 = CML Mississauga)
     public String printDate  = null; //  3. YYYYMMDD
     public String printTime  = null; //  4. HH:MM
     public String totalBType = null; //  5. number of B-type lines (= # of reports)
     public String totalCType = null; //  6. number of C-type lines
     public String totalDType = null; //  7. number of D-type lines
-    
-    
+
+
     public String accessionNum = null;        //  2. CML Accession number (minus first char)
     public String physicianAccountNum = null; //  3. Physician Account number
     public String serviceDate = null;         //  4. YYYYMMDD
@@ -77,24 +78,24 @@ public class CMLLabTest {
     public String pPhone = null;              // 20. Patient: Phone number
     public String docPhone = null;            // 21. Physician: Phone number
     public String collectionDate = null;      // 22. Collection date "DD MMM YY"
-    
+
     public String labReportInfoId = null;
-    
+
     public String labID= null;
-    
-    public ArrayList labResults = null;
-    
+
+    public ArrayList<LabResult> labResults = null;
+
     public String demographicNo = null;
-    
+
     public String multiLabId = null;
-    
+
     public CMLLabTest() {
     }
-    
+
     public String getAge(){
     	return getAge(this.pDOB);
     }
-    
+
     public String getAge(String s){
         String age = "N/A";
         try {
@@ -107,14 +108,14 @@ public class CMLLabTest {
         }
         return age;
     }
-    
+
     public String getDemographicNo(){
         return demographicNo;
     }
-    
+
     private void populateDemoNo(String labId){
         try{
-            
+
             ResultSet rs = DBHandler.GetSQL("select demographic_no from patientLabRouting where lab_no = '"+labId+"' and lab_type = 'CML'");
             log.debug("select demographic_no from patientLabRouting where lab_no = '"+labId+"' and lab_type = 'CML'");
             if (rs.next()){
@@ -125,25 +126,25 @@ public class CMLLabTest {
                 }
             }
             rs.close();
-            
+
         }catch(Exception e){
             MiscUtils.getLogger().error("Error", e);
         }
         log.debug("going out "+this.demographicNo);
     }
-    
+
     public void populateLab(String labid){
         labID = labid;
-        
+
         CommonLabResultData data = new CommonLabResultData();
         this.multiLabId = data.getMatchingLabs(labid, "CML");
-                
+
         log.debug("lab id "+labid);
         try{
-            
+
             ResultSet rs = DBHandler.GetSQL("select * from labPatientPhysicianInfo where id = '"+labid+"'");
-            
-            
+
+
             if (rs.next()){
                 this.labReportInfoId = oscar.Misc.getString(rs, "labReportInfo_id");
                 this.accessionNum = oscar.Misc.getString(rs, "accession_num");
@@ -169,37 +170,37 @@ public class CMLLabTest {
                 this.collectionDate = oscar.Misc.getString(rs, "collection_date");
                 log.debug(" lab id "+labReportInfoId);
             }
-            
+
             rs.close();
-            
+
         }catch(Exception e){
             MiscUtils.getLogger().error("Error", e);
         }
-        
+
         if (labReportInfoId != null){
             log.debug(" filling labReport Info");
             populateLabReportInfo(labReportInfoId);
         }
-        
+
         if (labid != null){
             log.debug("Filling lab Result DAta");
             this.labResults =  populateLabResultData(labid);
         }
-        
+
         if (labid != null ){
             populateDemoNo(labid);
         }
-        
+
     }
-    
-    
+
+
     public String getDiscipline(String labid){
         String dis = "";
-        
+
         try{
-            
+
             ResultSet rs = DBHandler.GetSQL("select distinct title from labTestResults where title != '' and labPatientPhysicianInfo_id = '"+labid+"'");
-            ArrayList alist = new ArrayList();
+            ArrayList<String> alist = new ArrayList<String>();
             int count = 0;
             while (rs.next()){
                 String title = oscar.Misc.getString(rs, "title");
@@ -207,15 +208,15 @@ public class CMLLabTest {
                 alist.add(title);
                 log.debug("line "+title);
             }
-            
+
             if(alist.size() == 1 ){
-                dis = (String) alist.get(0); //Only one item
+                dis = alist.get(0); //Only one item
             }else if(alist.size() != 0) {
                 int lenAvail = 20 - ( alist.size() - 1);
                 if ( lenAvail > count){
                     StringBuilder s = new StringBuilder();
                     for(int i = 0; i < alist.size(); i++){
-                        s.append( (String) alist.get(i));
+                        s.append( alist.get(i));
                         if (i < (alist.size() -1)){
                             s.append("/");
                         }
@@ -225,8 +226,8 @@ public class CMLLabTest {
                     int charEach = lenAvail / alist.size();
                     StringBuilder s = new StringBuilder();
                     for(int i = 0; i < alist.size(); i++){
-                        String str = (String) alist.get(i);
-                        
+                        String str = alist.get(i);
+
                         s.append(  StringUtils.substring(str,0,charEach) );
                         if (i < (alist.size() -1)){
                             s.append("/");
@@ -240,18 +241,18 @@ public class CMLLabTest {
             MiscUtils.getLogger().error("Error", e);
         }
         return dis;
-        
+
     }
-    
-    public ArrayList getStatusArray(String labid){
+
+    public ArrayList<ReportStatus> getStatusArray(String labid){
         CommonLabResultData comLab = new CommonLabResultData();
         return comLab.getStatusArray(labid,"CML");
     }
-    
+
     private void populateLabReportInfo(String labid){
         //labID = labid;
         try{
-            
+
             ResultSet rs = DBHandler.GetSQL("select * from labReportInformation where id = '"+labid+"'");
             if (rs.next()){
                 this.locationId = oscar.Misc.getString(rs, "location_id");
@@ -266,12 +267,12 @@ public class CMLLabTest {
             MiscUtils.getLogger().error("Error", e);
         }
     }
-    
-    
-    private ArrayList populateLabResultData(String labid){
-        ArrayList alist = new ArrayList();
+
+
+    private ArrayList<LabResult> populateLabResultData(String labid){
+        ArrayList<LabResult> alist = new ArrayList<LabResult>();
         try{
-            
+
             ResultSet rs = DBHandler.GetSQL("select * from labTestResults where labPatientPhysicianInfo_id = '"+labid+"'");
             log.debug("select * from labTestResults where labPatientPhysicianInfo_id = '"+labid+"'");
             while (rs.next()){
@@ -279,13 +280,13 @@ public class CMLLabTest {
                 log.debug("line "+lineType);
                 if (lineType != null){
                     LabResult labRes = new LabResult();
-                    
+
                     labRes.title = oscar.Misc.getString(rs, "title");
                     if (labRes.title == null){ labRes.title = "" ;}
                     labRes.notUsed1 = oscar.Misc.getString(rs, "notUsed1");
                     labRes.locationId = oscar.Misc.getString(rs, "location_id");
                     labRes.last = oscar.Misc.getString(rs, "last");
-                    
+
                     if(lineType.equals("C")){
                         labRes.notUsed2 = oscar.Misc.getString(rs, "notUsed2");
                         labRes.testName = oscar.Misc.getString(rs, "test_name");
@@ -310,15 +311,15 @@ public class CMLLabTest {
         }
         return alist;
     }
-    
+
     public int findCMLAdnormalResults(String labId){
         int count = 0;
         String sql = null;
         try {
-            
-            
+
+
             sql = "select id from labTestResults where abn = 'A' and labPatientPhysicianInfo_id = '"+labId+"'";
-            
+
             ResultSet rs = DBHandler.GetSQL(sql);
             while(rs.next()){
                 count++;
@@ -329,16 +330,16 @@ public class CMLLabTest {
         }
         return count;
     }
-    
-    
+
+
     public class LabResult{
-        
+
         boolean labResult = true;
-        
+
         public boolean isLabResult(){ return labResult ;}
         public boolean isLabResultComment(){ return labResult ;}
-        
-        
+
+
         ///
         public String title = null;       //  2. Title
         public String notUsed1 = null;    //  3. Not used ?
@@ -351,14 +352,14 @@ public class CMLLabTest {
         public String result = null;      // 10. Result
         public String locationId = null;  // 11. Location Id (Test performed at)
         public String last = null;        // 12. Last Y or N
-        
-        
+
+
         //String title = null;       // 2. Title
         //String notUsed1 = null;    // 3. not used ?
         public String description = null; // 4. Description/Comment
         //String locationId = null;  // 5. Location Id
         //String last = null;        // 6. Last Y or N
-        
+
         ///
         public String getReferenceRange(){
             String retval ="";
@@ -375,30 +376,30 @@ public class CMLLabTest {
             }
             return retval;
         }
-        
+
     }
-    
+
     public class GroupResults{
         public String groupName = null;
-        private ArrayList labResults = null;
-        
+        private ArrayList<LabResult> labResults = null;
+
         public void addLabResult(LabResult l){
-            if (labResults == null){ labResults = new ArrayList(); }
+            if (labResults == null){ labResults = new ArrayList<LabResult>(); }
             labResults.add(l);
         }
-        
-        public ArrayList getLabResults(){
+
+        public ArrayList<LabResult> getLabResults(){
             return labResults;
         }
     }
-    
-    public ArrayList getGroupResults(ArrayList list){
-        ArrayList groups = new ArrayList();
+
+    public ArrayList<GroupResults> getGroupResults(ArrayList<LabResult> list){
+        ArrayList<GroupResults> groups = new ArrayList<GroupResults>();
         String currentGroup = "";
         GroupResults gResults = null;
         log.debug("start getGroupResults ... list size: "+list.size());
         for ( int i = 0; i < list.size(); i++){
-            LabResult lab = (LabResult) list.get(i);
+            LabResult lab = list.get(i);
             log.debug(" lab title "+lab.title+ " currentGroup "+currentGroup);
             if ( currentGroup.equals(lab.title) && gResults != null){
                 log.debug("old");
@@ -415,7 +416,7 @@ public class CMLLabTest {
         }
         return groups;
     }
-    
+
     private boolean filled(String s) {
     	return !(s==null || s.trim().equals(""));
     }

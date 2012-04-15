@@ -1,23 +1,23 @@
 /*
-* 
+*
 * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
+* This software is published under the GPL GNU General Public License.
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version. *
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+*
 * <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
+*
+* This software was written for
+* Centre for Research on Inner City Health, St. Michael's Hospital,
+* Toronto, Ontario, Canada
 */
 package org.oscarehr.PMmodule.model;
 
@@ -40,7 +40,7 @@ public class ProgramProvider implements Serializable {
     private Long _roleId;// many to one
     private Secrole _role;
     private Provider _provider;// collections
-    private java.util.Set _teams;
+    private java.util.Set<org.oscarehr.PMmodule.model.ProgramTeam> _teams;
     private String programName;
     private Program program;
 
@@ -180,7 +180,7 @@ public class ProgramProvider implements Serializable {
     /**
 	 * Return the value associated with the column: teams
      */
-    public java.util.Set getTeams () {
+    public java.util.Set<org.oscarehr.PMmodule.model.ProgramTeam> getTeams () {
         return this._teams;
     }
 
@@ -188,13 +188,13 @@ public class ProgramProvider implements Serializable {
 	 * Set the value related to the column: teams
      * @param _teams the teams value
      */
-    public void setTeams (java.util.Set _teams) {
+    public void setTeams (java.util.Set<org.oscarehr.PMmodule.model.ProgramTeam> _teams) {
         this._teams = _teams;
     }
 
     public void addToTeams (Object obj) {
-        if (null == this._teams) this._teams = new java.util.HashSet();
-        this._teams.add(obj);
+        if (null == this._teams) this._teams = new java.util.HashSet<org.oscarehr.PMmodule.model.ProgramTeam>();
+        this._teams.add((org.oscarehr.PMmodule.model.ProgramTeam)obj);
     }
 
     public boolean equals (Object obj) {

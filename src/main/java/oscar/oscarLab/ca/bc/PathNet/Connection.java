@@ -48,11 +48,11 @@ import oscar.oscarLab.ca.bc.PathNet.Communication.HTTP;
  * www.andromedia.ca
  */
 public class Connection {
-    private static Logger logger=MiscUtils.getLogger(); 
+    private static Logger logger=MiscUtils.getLogger();
 
     private boolean secure;
    private String url;
-   private static final 
+   private static final
    String LoginQuery      = "Page=Login&Mode=Silent&UserID=@username&Password=@password",
    RequestNewQuery        = "Page=HL7&Query=NewRequests",
    RequestNewPendingQuery = "Page=HL7&Query=NewRequests&Pending=Yes",
@@ -65,7 +65,7 @@ public class Connection {
       this.url = OscarProperties.getInstance().getProperty("pathnet_url");
       this.http = new HTTP(this.url);
    }
-   
+
    public boolean Open(String username, String password) {
       boolean success = true;
       try {
@@ -86,14 +86,14 @@ public class Connection {
     	  logger.error("Error - oscar.PathNet.Connection.Close - Message: "+ ex.getMessage(), ex);
       }
    }
-   public ArrayList Retrieve() {
-      ArrayList messages = null;
+   public ArrayList<String> Retrieve() {
+      ArrayList<String> messages = null;
       try {
          Document document = this.CreateDocument(this.CreateInputStream(RequestNewQuery));
-         
+
          if (document.getDocumentElement().getAttribute("MessageFormat").toUpperCase().equals("ORUR01") && document.getDocumentElement().getAttribute("Version").toUpperCase().equals("2.3")) {
             if (document.getDocumentElement().getAttribute("MessageCount").equals(String.valueOf(document.getDocumentElement().getChildNodes().getLength()))) {
-               messages = new ArrayList(document.getDocumentElement().getChildNodes().getLength());
+               messages = new ArrayList<String>(document.getDocumentElement().getChildNodes().getLength());
                for (int i = 0;i < document.getDocumentElement().getChildNodes().getLength(); i++) {
                   messages.add(document.getDocumentElement().getChildNodes().item(i).getFirstChild().getNodeValue());
                }
@@ -108,15 +108,15 @@ public class Connection {
       }
       return messages;
    }
-   
-   public ArrayList Retrieve(InputStream is) {
-      ArrayList messages = null;
+
+   public ArrayList<String> Retrieve(InputStream is) {
+      ArrayList<String> messages = null;
       try {
          Document document = this.CreateDocument(is);
-         
+
          if (document.getDocumentElement().getAttribute("MessageFormat").toUpperCase().equals("ORUR01") && document.getDocumentElement().getAttribute("Version").toUpperCase().equals("2.3")) {
             if (document.getDocumentElement().getAttribute("MessageCount").equals(String.valueOf(document.getDocumentElement().getChildNodes().getLength()))) {
-               messages = new ArrayList(document.getDocumentElement().getChildNodes().getLength());
+               messages = new ArrayList<String>(document.getDocumentElement().getChildNodes().getLength());
                for (int i = 0;i < document.getDocumentElement().getChildNodes().getLength(); i++) {
                   messages.add(document.getDocumentElement().getChildNodes().item(i).getFirstChild().getNodeValue());
                }
@@ -131,8 +131,8 @@ public class Connection {
       }
       return messages;
    }
-   
-   
+
+
    public void Acknowledge(boolean success) {
       try {
          this.CreateInputStream((success ? PositiveAckQuery : NegativeAckQuery)).close();

@@ -1,23 +1,23 @@
 /*
-* 
+*
 * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
+* This software is published under the GPL GNU General Public License.
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version. *
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+*
 * <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
+*
+* This software was written for
+* Centre for Research on Inner City Health, St. Michael's Hospital,
+* Toronto, Ontario, Canada
 */
 
 package org.oscarehr.PMmodule.dao;
@@ -39,16 +39,16 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
     private Logger log=MiscUtils.getLogger();
 
 	private static QueueCache<String, List<ProgramProvider>> programProviderByProviderProgramIdCache = new QueueCache<String, List<ProgramProvider>>(4, 100, DateUtils.MILLIS_PER_HOUR);
-	
+
 	private static String makeCacheKey(String providerNo, Long programId)
 	{
 		return(providerNo+':'+programId);
 	}
-	
+
 	@SuppressWarnings("unchecked")
     public List<ProgramProvider> getProgramProviderByProviderProgramId(String providerNo, Long programId) {
     	String cacheKey=makeCacheKey(providerNo, programId);
-    	
+
 		List<ProgramProvider> results = programProviderByProviderProgramIdCache.get(cacheKey);
 
     	if (results==null)
@@ -57,7 +57,7 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
     		results=getHibernateTemplate().find(q, new Object[] {programId, providerNo});
 			if (results != null) programProviderByProviderProgramIdCache.put(cacheKey, results);
     	}
-    		
+
         return results;
     }
 
@@ -65,19 +65,20 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
 	public List<ProgramProvider> getAllProgramProviders() {
 		return getHibernateTemplate().find("FROM ProgramProvider");
 	}
-	
+
     @SuppressWarnings("unchecked")
     public List<ProgramProvider> getProgramProviderByProviderNo(String providerNo) {
         String q = "select pp from ProgramProvider pp where pp.ProviderNo=?";
         return getHibernateTemplate().find(q, providerNo);
     }
 
-    public List getProgramProviders(Long programId) {
+    public List<ProgramProvider> getProgramProviders(Long programId) {
         if (programId == null || programId.intValue() < 0) {
             throw new IllegalArgumentException();
         }
 
-        List results = this.getHibernateTemplate().find("from ProgramProvider pp where pp.ProgramId = ?", programId);
+        @SuppressWarnings("unchecked")
+        List<ProgramProvider> results = this.getHibernateTemplate().find("from ProgramProvider pp where pp.ProgramId = ?", programId);
 
         if (log.isDebugEnabled()) {
             log.debug("getProgramProviders: programId=" + programId + ",# of results=" + results.size());
@@ -106,13 +107,13 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
         String queryStr = "from ProgramProvider pp where pp.ProviderNo = ? and pp.ProgramId in " +
                       "(select s.id from Program s where s.facilityId=? or s.facilityId is null)";
         List results = getHibernateTemplate().find(queryStr, new Object[] { providerNo, facilityId });
-        
+
         if (log.isDebugEnabled()) {
             log.debug("getProgramProvidersByProviderAndFacility: providerNo=" + providerNo + ",# of results=" + results.size());
         }
         return results;
     }
-    
+
     public ProgramProvider getProgramProvider(Long id) {
         if (id == null || id.intValue() < 0) {
             throw new IllegalArgumentException();
@@ -161,12 +162,12 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
 
         return result;
     }
-    
+
     public void saveProgramProvider(ProgramProvider pp) {
         if (pp == null) {
             throw new IllegalArgumentException();
         }
-        
+
         programProviderByProviderProgramIdCache.remove(makeCacheKey(pp.getProviderNo(), pp.getProgramId()));
         getHibernateTemplate().saveOrUpdate(pp);
 
@@ -258,7 +259,7 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
         }
         return results;
     }
-    
+
     public List<ProgramProvider> getProgramDomainByFacility(String providerNo, Integer facilityId) {
         if (providerNo == null || Long.valueOf(providerNo) == null) {
             throw new IllegalArgumentException();
@@ -273,8 +274,8 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
         }
         return results;
     }
-    
-    public boolean isThisProgramInProgramDomain(String providerNo, Integer programId) 
+
+    public boolean isThisProgramInProgramDomain(String providerNo, Integer programId)
 	{
 		if (providerNo == null || Long.valueOf(providerNo) == null)
 		{
@@ -288,9 +289,9 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
 		} else {
 			return false;
 		}
-		
+
 	}
-	
+
 
     @SuppressWarnings("unchecked")
     public List<Facility> getFacilitiesInProgramDomain(String providerNo) {
@@ -301,7 +302,7 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
 
         return results;
     }
-    
+
     @SuppressWarnings("unchecked")
     public List<FacilityMessage> getFacilityMessagesInProgramDomain(String providerNo) {
         if (providerNo == null || Long.valueOf(providerNo) == null) {
@@ -311,7 +312,7 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
 
         return results;
     }
-    
+
     public List<FacilityMessage> getFacilityMessagesByFacilityId(Integer facilityId) {
         if (facilityId == null || facilityId == null) {
             //throw new IllegalArgumentException();
