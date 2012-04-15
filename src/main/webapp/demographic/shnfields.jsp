@@ -1,10 +1,11 @@
 <%@page import="java.util.*"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@page import="org.oscarehr.common.dao.DemographicExtDao" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%
 String demographic_no = request.getParameter("demo");
-oscar.oscarDemographic.data.DemographicExt ext = new oscar.oscarDemographic.data.DemographicExt();
-Hashtable demoExt = ext.getAllValuesForDemo(demographic_no);
+DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
+Map<String,String> demoExt = demographicExtDao.getAllValuesForDemo(demographic_no);
 
 %>
 <tr>

@@ -1,46 +1,50 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for 
- * Centre for Research on Inner City Health, St. Michael's Hospital, 
- * Toronto, Ontario, Canada 
+ *
+ * This software was written for
+ * Centre for Research on Inner City Health, St. Michael's Hospital,
+ * Toronto, Ontario, Canada
  */
 
-package oscar.facility;
+package org.oscarehr.common.dao;
 
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.common.model.IntegratorControl;
 import org.oscarehr.util.MiscUtils;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.stereotype.Repository;
+@Repository
+public class IntegratorControlDao extends AbstractDao<IntegratorControl> {
 
-public class IntegratorControlDao extends HibernateDaoSupport {
-
-    public static final String REMOVE_DEMO_ID_CTRL = "RemoveDemographicIdentity";
+	public static final String REMOVE_DEMO_ID_CTRL = "RemoveDemographicIdentity";
     public static final String UPDATE_INTERVAL_CTRL = "UpdateInterval";
     public static final String INTERVAL_HR = "h";
     private static final Logger log=MiscUtils.getLogger();
 
-    public List<IntegratorControl> getAllByFacilityId(Integer facilityId) {
+    public IntegratorControlDao() {
+		super(IntegratorControl.class);
+	}
+
+	public List<IntegratorControl> getAllByFacilityId(Integer facilityId) {
         String queryStr = "FROM IntegratorControl c WHERE c.facilityId = "+facilityId+" ORDER BY c.control";
 
         @SuppressWarnings("unchecked")
-        List<IntegratorControl> rs = getHibernateTemplate().find(queryStr);
+        List<IntegratorControl> rs = entityManager.createQuery(queryStr).getResultList();
 
         return rs;
     }
@@ -117,7 +121,11 @@ public class IntegratorControlDao extends HibernateDaoSupport {
         if (ic == null) {
             throw new IllegalArgumentException();
         }
-        getHibernateTemplate().saveOrUpdate(ic);
+        if(ic.getId() == null || ic.getId().intValue() == 0) {
+        	persist(ic);
+        } else {
+        	merge(ic);
+        }
 
         if (log.isDebugEnabled()) {
             log.debug("saveIntegratorControl: " + ic.getId());

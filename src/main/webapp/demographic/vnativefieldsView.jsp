@@ -1,24 +1,25 @@
 <%@page import="java.util.*"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@page import="org.oscarehr.common.dao.DemographicExtDao" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%
 String demographic_no = request.getParameter("demo");
-oscar.oscarDemographic.data.DemographicExt ext = new oscar.oscarDemographic.data.DemographicExt();
-Hashtable demoExt = ext.getAllValuesForDemo(demographic_no);
+DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
+Map<String,String> demoExt = demographicExtDao.getAllValuesForDemo(demographic_no);
 
 Hashtable h = new Hashtable();
             h.put("-1","Not Set");
             h.put("1","Status On-reserve");
-            h.put("2","Status Off-reserve");	
-            h.put("3","Non-status on-reserve");	
-            h.put("4","Non-status off-reserve");	
-            h.put("5","Metis");	
-            h.put("6","Inuit");	
-            h.put("7","Asian");	
-            h.put("8","Caucasian");	
-            h.put("9","Hispanic");	
-            h.put("10","Black");	
-            h.put("11","Other");	
+            h.put("2","Status Off-reserve");
+            h.put("3","Non-status on-reserve");
+            h.put("4","Non-status off-reserve");
+            h.put("5","Metis");
+            h.put("6","Inuit");
+            h.put("7","Asian");
+            h.put("8","Caucasian");
+            h.put("9","Hispanic");
+            h.put("10","Black");
+            h.put("11","Other");
 
 Hashtable h2 = new Hashtable();
     h2.put("-1","Not Set");
@@ -50,7 +51,7 @@ String getEth(Hashtable h,String s){
         return (String) h.get(s);
     }
     return "";
-} 
+}
 
 
 String getArea(Hashtable h2,String s){
@@ -61,5 +62,5 @@ String getArea(Hashtable h2,String s){
 }
 
 
-          
+
  %>

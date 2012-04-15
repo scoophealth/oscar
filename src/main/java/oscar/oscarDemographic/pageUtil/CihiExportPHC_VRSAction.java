@@ -103,7 +103,7 @@ public class CihiExportPHC_VRSAction extends DispatchAction {
 	private AllergyDao allergyDAO;
 	private Hl7TextInfoDao hl7TextInfoDAO;
 	private PreventionDao preventionDao;
-	private DxresearchDAO dxResearchDAO;
+	private DxresearchDAO dxresearchDAO;
 	private Icd9Dao icd9Dao;
 	private PreventionExtDao preventionExtDao = (PreventionExtDao)SpringUtils.getBean("preventionExtDao");
 
@@ -191,12 +191,12 @@ public class CihiExportPHC_VRSAction extends DispatchAction {
     	this.clinicDAO = clinicDAO;
     }
 
-	public DxresearchDAO getDxResearchDAO() {
-		return dxResearchDAO;
+	public DxresearchDAO getDxresearchDAO() {
+		return dxresearchDAO;
 	}
 
-	public void setDxResearchDAO(DxresearchDAO dxResearchDAO) {
-		this.dxResearchDAO = dxResearchDAO;
+	public void setDxresearchDAO(DxresearchDAO dxresearchDAO) {
+		this.dxresearchDAO = dxresearchDAO;
 	}
 
 	public Icd9Dao getIcd9Dao() {
@@ -703,7 +703,7 @@ public class CihiExportPHC_VRSAction extends DispatchAction {
     }
 
 	private void buildOngoingproblemsDiseaseRegistry(Demographic demo, PatientRecord patientRecord) {
-		List<Dxresearch> dxResearchList = dxResearchDAO.getDxResearchItemsByPatient(demo.getDemographicNo());
+		List<Dxresearch> dxResearchList = dxresearchDAO.getDxResearchItemsByPatient(demo.getDemographicNo());
 		String description;
 		String dateFormat = "yyyy-MM-dd";
 		Date date;

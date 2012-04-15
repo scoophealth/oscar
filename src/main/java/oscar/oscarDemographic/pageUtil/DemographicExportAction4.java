@@ -62,6 +62,7 @@ import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.DemographicArchiveDao;
 import org.oscarehr.common.dao.DemographicContactDao;
+import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.dao.PartialDateDao;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.DemographicArchive;
@@ -84,7 +85,6 @@ import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
 import oscar.oscarClinic.ClinicData;
 import oscar.oscarDemographic.data.DemographicData;
-import oscar.oscarDemographic.data.DemographicExt;
 import oscar.oscarDemographic.data.DemographicRelationship;
 import oscar.oscarEncounter.oscarMeasurements.data.ImportExportMeasurements;
 import oscar.oscarEncounter.oscarMeasurements.data.LabMeasurements;
@@ -132,7 +132,7 @@ public class DemographicExportAction4 extends Action {
 	private static final HRMDocumentDao hrmDocDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
 	private static final HRMDocumentCommentDao hrmDocCommentDao = (HRMDocumentCommentDao) SpringUtils.getBean("HRMDocumentCommentDao");
 	private static final CaseManagementManager cmm = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
-
+	private static final DemographicExtDao demographicExtDao = (DemographicExtDao) SpringUtils.getBean("demographicExtDao");
 	private static final String PATIENTID = "Patient";
 	private static final String ALERT = "Alert";
 	private static final String ALLERGY = "Allergy";
@@ -225,14 +225,13 @@ public class DemographicExportAction4 extends Action {
 
 			// DEMOGRAPHICS
 			DemographicData d = new DemographicData();
-			DemographicExt ext = new DemographicExt();
 
 			org.oscarehr.common.model.Demographic demographic = d.getDemographic(demoNo);
 
 			if (demographic.getPatientStatus()!=null && demographic.getPatientStatus().equals("Contact-only")) continue;
 
 			HashMap<String,String> demoExt = new HashMap<String,String>();
-			demoExt.putAll(ext.getAllValuesForDemo(demoNo));
+			demoExt.putAll(demographicExtDao.getAllValuesForDemo(demoNo));
 
 			OmdCdsDocument omdCdsDoc = OmdCdsDocument.Factory.newInstance();
 			OmdCdsDocument.OmdCds omdCds = omdCdsDoc.addNewOmdCds();
@@ -2327,7 +2326,7 @@ public class DemographicExportAction4 extends Action {
 
 		org.oscarehr.common.model.Demographic relDemo = new DemographicData().getDemographic(contactId);
 		HashMap<String,String> relDemoExt = new HashMap<String,String>();
-		relDemoExt.putAll(new DemographicExt().getAllValuesForDemo(contactId));
+		relDemoExt.putAll(demographicExtDao.getAllValuesForDemo(contactId));
 
 		Util.writeNameSimple(contact.addNewName(), relDemo.getFirstName(), relDemo.getLastName());
 		if (StringUtils.empty(relDemo.getFirstName())) {

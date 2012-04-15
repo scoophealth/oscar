@@ -83,14 +83,14 @@ import org.oscarehr.casemgmt.model.base.BaseHashAudit;
 import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DrugDao;
+import org.oscarehr.common.dao.DxresearchDAO;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
+import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.UserProperty;
-import org.oscarehr.dx.dao.DxResearchDAO;
-import org.oscarehr.dx.model.DxResearch;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -130,7 +130,7 @@ public class CaseManagementManager {
 	private HashAuditDAO hashAuditDAO;
 	private EncounterWindowDAO ectWindowDAO;
 	private UserPropertyDAO userPropertyDAO;
-	private DxResearchDAO dxResearchDAO;
+	private DxresearchDAO dxresearchDAO;
 	private ProgramProviderDAO programProviderDao;
 	private ProgramAccessDAO programAccessDAO;
 
@@ -1499,8 +1499,8 @@ public class CaseManagementManager {
 		this.userPropertyDAO = dao;
 	}
 
-	public void setDxResearchDAO(DxResearchDAO dao) {
-		this.dxResearchDAO = dao;
+	public void setDxresearchDAO(DxresearchDAO dao) {
+		this.dxresearchDAO = dao;
 	}
 
 	public void saveToDx(String demographicNo, String code, String codingSystem, boolean association) {
@@ -1508,17 +1508,17 @@ public class CaseManagementManager {
 			codingSystem = "icd10";
 		}
 
-		DxResearch dx = new DxResearch();
-		dx.setCode(code);
+		Dxresearch dx = new Dxresearch();
+		dx.setDxresearchCode(code);
 		dx.setCodingSystem(codingSystem);
 		dx.setDemographicNo(Integer.parseInt(demographicNo));
 		dx.setStartDate(new Date());
 		dx.setUpdateDate(new Date());
-		dx.setStatus("A");
-		dx.setAssociation(association);
+		dx.setStatus('A');
+		dx.setAssociation(association?(byte)1:(byte)0);
 
-		if (!dxResearchDAO.entryExists(dx.getDemographicNo(), codingSystem, code)) {
-			this.dxResearchDAO.save(dx);
+		if (!dxresearchDAO.entryExists(dx.getDemographicNo(), codingSystem, code)) {
+			this.dxresearchDAO.save(dx);
 		}
 	}
 
@@ -1526,8 +1526,8 @@ public class CaseManagementManager {
 		saveToDx(demographicNo, code, null, false);
 	}
 
-	public List<DxResearch> getDxByDemographicNo(String demographicNo) {
-		return this.dxResearchDAO.getByDemographicNo(Integer.parseInt(demographicNo));
+	public List<Dxresearch> getDxByDemographicNo(String demographicNo) {
+		return this.dxresearchDAO.getByDemographicNo(Integer.parseInt(demographicNo));
 	}
 
 	/**

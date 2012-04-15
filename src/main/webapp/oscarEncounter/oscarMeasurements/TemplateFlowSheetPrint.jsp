@@ -1,8 +1,8 @@
 <% long startTime = System.currentTimeMillis(); %><%@page import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,java.net.*"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
-<%@page import="org.oscarehr.common.dao.FlowSheetCustomizerDAO,org.oscarehr.common.model.FlowSheetCustomization"%>
-<%@page import="org.oscarehr.common.dao.FlowSheetDrugDAO,org.oscarehr.common.model.FlowSheetDrug"%>
+<%@page import="org.oscarehr.common.dao.FlowSheetCustomizationDao,org.oscarehr.common.model.FlowSheetCustomization"%>
+<%@page import="org.oscarehr.common.dao.FlowSheetDrugDao,org.oscarehr.common.model.FlowSheetDrug"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
@@ -45,13 +45,13 @@
         phandout.add("WC");
         phandout.add("SMCD");
     }
-    
+
     /////ITEMS for printing
     if (request.getParameter("printView") != null){
         printView = true;
     }
     String[] elesToPrint = request.getParameterValues("printHP");
-       
+
     //For List of measurements Selected Put how they are to be printed
     Hashtable forPrint = new Hashtable();
     if (elesToPrint != null){
@@ -74,7 +74,7 @@
     }
     }
     /////
-    
+
     long startTimeToGetP = System.currentTimeMillis();
     Prevention p = PreventionData.getPrevention(demographic_no);
 
@@ -82,29 +82,29 @@
 
     String temp = request.getParameter("template");
     WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-            
-    FlowSheetCustomizerDAO flowSheetCustomizerDAO = (FlowSheetCustomizerDAO) ctx.getBean("flowSheetCustomizerDAO");
-    FlowSheetDrugDAO flowSheetDrugDAO = (FlowSheetDrugDAO) ctx.getBean("flowSheetDrugDAO");
-    
-    List custList = flowSheetCustomizerDAO.getFlowSheetCustomizations( temp,(String) session.getAttribute("user"),demographic_no);
-    
+
+    FlowSheetCustomizationDao flowSheetCustomizationDao = (FlowSheetCustomizationDao) ctx.getBean("flowSheetCustomizationDao");
+    FlowSheetDrugDao flowSheetDrugDAO = (FlowSheetDrugDao) ctx.getBean("flowSheetDrugDAO");
+
+    List<FlowSheetCustomization> custList = flowSheetCustomizationDao.getFlowSheetCustomizations( temp,(String) session.getAttribute("user"),demographic_no);
+
     ////Start
     MeasurementTemplateFlowSheetConfig templateConfig = MeasurementTemplateFlowSheetConfig.getInstance();
 
-    
+
     MeasurementFlowSheet mFlowsheet = templateConfig.getFlowSheet(temp,custList);
-    
+
     MeasurementInfo mi = new MeasurementInfo(demographic_no);
     List<String> measurementLs = mFlowsheet.getMeasurementList();
     ArrayList<String> measurements = new ArrayList(measurementLs);
     long startTimeToGetM = System.currentTimeMillis();
-     
+
     mi.getMeasurements(measurements);
 
     mFlowsheet.getMessages(mi);
 
     ArrayList recList = mi.getList();
-    
+
     mFlowsheet.sortToCurrentOrder(recList);
     StringBuffer recListBuffer = new StringBuffer();
     for(int i = 0; i < recList.size(); i++){
@@ -189,7 +189,7 @@ div.headPrevention a:visited { color:black; }
 </style>
 <style type="text/css" media="screen">
     .DoNotScreen{ display:none;}
-    
+
     div.headPrevention {
     position:relative;
     float:left;
@@ -386,11 +386,11 @@ div.recommendations li{
 <tr>
 <td class="MainTableLeftColumn DoNotPrint" valign="top">
    &nbsp;
-    
+
 
 </td>
 
-<td valign="top" class="MainTableRightColumn">    
+<td valign="top" class="MainTableRightColumn">
 <% if (warnings.size() > 0 || recomendations.size() > 0  || dsProblems) { %>
 <div class="recommendations DoNotPrint" >
     <span style="font-size:larger;"><%=flowSheet%> Recommendations</span>
@@ -426,7 +426,7 @@ div.recommendations li{
         FlowSheetItem item =  mFlowsheet.getFlowSheetItem(measure);
         setToPrint = phandout.contains(measure);
         String hidden= "";
-        
+
         if (item.isHide() || (forPrint.get(measure) == null && printView)  ){
             hidden= "display:none;";
         }
@@ -437,7 +437,7 @@ div.recommendations li{
 
             if(mtypeBean!=null) {
                 h.put("name",mtypeBean.getTypeDisplayName());
-                h.put("desc",mtypeBean.getTypeDesc());                
+                h.put("desc",mtypeBean.getTypeDesc());
             }
             String prevName = (String) h.get("name");
             ArrayList<EctMeasurementsDataBean> alist = mi.getMeasurementData(measure);
@@ -447,8 +447,8 @@ div.recommendations li{
             }else if(mi.hasWarning(measure)){
                 extraColour = "style=\"background-color: "+mFlowsheet.getWarningColour()+"\" ";
             }
-            
-            
+
+
 %>
     <input type="hidden" name="demographic_no" value="<%=demographic_no%>"/>
     <input type="hidden" name="template" value="<%=temp%>"/>
@@ -461,7 +461,7 @@ div.recommendations li{
        <input type="radio" name="printStyle<%=measure%>" value="num" ># Elements</input>
        <input type="text" name="numEle<%=measure%>" size="3"/>    <br>
        <input type="radio" name="printStyle<%=measure%>"  value="range">Range</input>
-       <input type="text" size="10" name="sDate<%=measure%>"/> <input type="text" name="eDate<%=measure%>" size="10"/> 
+       <input type="text" size="10" name="sDate<%=measure%>"/> <input type="text" name="eDate<%=measure%>" size="10"/>
     </div>
     <%}%>
     <div class="headPrevention">
@@ -477,16 +477,16 @@ div.recommendations li{
             <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
             <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData<%=Math.abs( item.getItemName().hashCode() ) %>')">
             </security:oscarSec>
-            
+
                 <span  style="font-weight:bold;"><%=item.getDisplayName()%></span>
-                
+
             <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
             </a>
 			</security:oscarSec>
         </p>
-        
+
     </div>
-   
+
     <%  int k = 0;
         for (EctMeasurementsDataBean mdb:alist){
             k++;
@@ -504,18 +504,18 @@ div.recommendations li{
                 com ="";
             }
             String hider = "";
-            
+
             int num =1000;
-            
+
             if (request.getParameter("num") != null){
                 num = Integer.parseInt(request.getParameter("num"));
             }
-                
-            
+
+
             if (request.getParameter("show") !=null && request.getParameter("show").equals("lastOnly")){
                 num =1;
             }
-            
+
             if( forPrint.get(measure) != null ){
                 Object oj = forPrint.get(measure);
                 if ( oj instanceof Integer){
@@ -530,23 +530,23 @@ div.recommendations li{
                     }
                 }
             }
-            
+
             if ( k > num){
                 hider = "style=\"display:none;\"";
             }
-            
-            
-            
+
+
+
 
             String indColour = "";
             if ( mdb.getIndicationColour() != null ){
                 indColour = "style=\"background-color:"+mFlowsheet.getIndicatorColour(mdb.getIndicationColour())+"\"";
             }
-            
+
             if (request.getParameter("show") !=null && request.getParameter("show").equals("outOfRange") && indColour.equals("")){
                 hider = "style=\"display:none;\"";
             }
-            
+
     %>
     <div class="preventionProcedure" <%=hider%>  onclick="javascript:popup(465,635,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData')" >
         <p <%=indColour%> title="fade=[on] header=[<%=hdata.get("age")%> -- Date:<%=hdata.get("prevention_date")%>] body=[<%=com%>&lt;br/&gt;Entered By:<%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%>]"><%=h2.get("value_name")%>: <%=hdata.get("age")%> <br/>
@@ -573,7 +573,7 @@ div.recommendations li{
        <input type="radio" name="printStyle<%=measure%>" value="num" ># Elements</input>
        <input type="text" name="numEle<%=measure%>" size="3"/>    <br>
        <input type="radio" name="printStyle<%=measure%>"  value="range">Range</input>
-       <input type="text" size="10" name="sDate<%=measure%>"/> <input type="text" name="eDate<%=measure%>" size="10"/> 
+       <input type="text" size="10" name="sDate<%=measure%>"/> <input type="text" name="eDate<%=measure%>" size="10"/>
     </div>
     <%}%>
 
@@ -599,23 +599,23 @@ div.recommendations li{
             }else{
                 com ="";
             }
-            
-            
-            
+
+
+
             ///////PREV
             String hider = "";
-            
+
             int num =1000;
-            
+
             if (request.getParameter("num") != null){
                 num = Integer.parseInt(request.getParameter("num"));
             }
-                
-            
+
+
             if (request.getParameter("show") !=null && request.getParameter("show").equals("lastOnly")){
                 num =1;
             }
-            
+
             if( forPrint.get(measure) != null ){
                 Object oj = forPrint.get(measure);
                 if ( oj instanceof Integer){
@@ -630,18 +630,18 @@ div.recommendations li{
                     }
                 }
             }
-            
+
             if ( k > num){
                 hider = "style=\"display:none;\"";
             }
-            
-            
-            
+
+
+
             //////PREV END
-            
-            
-            
-            
+
+
+
+
     %>
     <div class="preventionProcedure" <%=hider%> onclick="javascript:popup(465,635,'../../oscarPrevention/AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')" >
         <p <%=r(hdata.get("refused"))%> title="fade=[on] header=[<%=hdata.get("age")%> -- Date:<%=hdata.get("prevention_date")%>] body=[<%=com%>]" >Age: <%=hdata.get("age")%> <br/>
@@ -661,17 +661,17 @@ div.recommendations li{
 
     oscar.oscarRx.data.RxPrescriptionData prescriptData = new oscar.oscarRx.data.RxPrescriptionData();
     oscar.oscarRx.data.RxPrescriptionData.Prescription [] arr = {};
-    
+
     List<FlowSheetDrug> atcCodes = flowSheetDrugDAO.getFlowSheetDrugs(temp,demographic_no);
     for(FlowSheetDrug fsd : atcCodes){
-            arr = prescriptData.getPrescriptionScriptsByPatientATC(Integer.parseInt(demographic_no),fsd.getAtcCode());   
+            arr = prescriptData.getPrescriptionScriptsByPatientATC(Integer.parseInt(demographic_no),fsd.getAtcCode());
        String measure = fsd.getAtcCode();
        String hidden = "";
         if (forPrint.get(measure) == null && printView  ){
             hidden= "display:none;";
         }
-        
-        
+
+
 %>
 
 <div class="preventionSection" style="<%=hidden%>" >
@@ -682,7 +682,7 @@ div.recommendations li{
        <input type="radio" name="printStyle<%=fsd.getAtcCode()%>" value="num" ># Elements</input>
        <input type="text" name="numEle<%=fsd.getAtcCode()%>" size="3"/>    <br>
        <input type="radio" name="printStyle<%=fsd.getAtcCode()%>"  value="range">Range</input>
-       <input type="text" size="10" name="sDate<%=fsd.getAtcCode()%>"/> <input type="text" name="eDate<%=fsd.getAtcCode()%>" size="10"/> 
+       <input type="text" size="10" name="sDate<%=fsd.getAtcCode()%>"/> <input type="text" name="eDate<%=fsd.getAtcCode()%>" size="10"/>
     </div>
     <%}%>
     <div class="headPrevention">
@@ -698,20 +698,20 @@ div.recommendations li{
         out.flush();
         int k = 0;
         for (oscar.oscarRx.data.RxPrescriptionData.Prescription pres : arr){
-            
+
             String hider = "";
-            
+
             int num =1000;
-            
+
             if (request.getParameter("num") != null){
                 num = Integer.parseInt(request.getParameter("num"));
             }
-                
-            
+
+
             if (request.getParameter("show") !=null && request.getParameter("show").equals("lastOnly")){
                 num =1;
             }
-            
+
             if( forPrint.get(measure) != null ){
                 Object oj = forPrint.get(measure);
                 if ( oj instanceof Integer){
@@ -726,13 +726,13 @@ div.recommendations li{
                     }
                 }
             }
-            
+
             if ( k > num){
                 hider = "style=\"display:none;\"";
             }
-            
-            
-            
+
+
+
     %>
     <div class="preventionProcedure" <%=hider%> onclick="javascript:popup(465,635,'','addPreventionData')" >
         <p <%=""/*r(hdata.get("refused"))*/%> title="fade=[on] header=[<%=""/*hdata.get("age")*/%> -- Date:<%=""/*hdata.get("prevention_date")*/%>] body=[<%=""/*com*/%>]" ><%=pres.getBrandName()%> <br/>
@@ -755,7 +755,7 @@ div.recommendations li{
 
 <%if (printView){%>
    <input type="button" class="DoNotPrint" value="Print" onclick="javascript:window.print()">
-   <input type="button" class="DoNotPrint" value="Back" onclick="javascript:history.go(-1);">    
+   <input type="button" class="DoNotPrint" value="Back" onclick="javascript:history.go(-1);">
 <%}else{%>
 <input type="submit" value="Print Preview" class="DoNotPrint"/>
 <%}%>
@@ -821,5 +821,5 @@ div.recommendations li{
         }
         return ret;
     }
-    
+
 %>

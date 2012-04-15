@@ -23,7 +23,6 @@ import org.apache.struts.util.LabelValueBean;
 import org.apache.struts.validator.DynaValidatorForm;
 import org.caisi.dao.TicklerDAO;
 import org.caisi.model.Tickler;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.IssueDAO;
@@ -38,6 +37,8 @@ import org.oscarehr.common.dao.CaseManagementIssueNotesDao;
 import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.ConsultationRequestExtDao;
 import org.oscarehr.common.dao.DemographicContactDao;
+import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.dao.DocumentResultsDao;
 import org.oscarehr.common.dao.EFormGroupDao;
 import org.oscarehr.common.dao.EFormValueDao;
@@ -112,6 +113,7 @@ public class EyeformAction extends DispatchAction {
 	TicklerDAO ticklerDao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
 	//CppMeasurementsDao cppMeasurementsDao = (CppMeasurementsDao)SpringUtils.getBean("cppMeasurementsDao");
 	CaseManagementIssueNotesDao caseManagementIssueNotesDao=(CaseManagementIssueNotesDao)SpringUtils.getBean("caseManagementIssueNotesDao");
+	DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
 
 	   public ActionForward getConReqCC(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		   String requestId = request.getParameter("requestId");
@@ -756,7 +758,7 @@ public class EyeformAction extends DispatchAction {
 			//demographic_ext
 			String famName = new String();
 
-			DemographicExt famExt = demographicDao.getDemographicExt(demographic.getDemographicNo(),"Family_Doctor");
+			DemographicExt famExt = demographicExtDao.getDemographicExt(demographic.getDemographicNo(),"Family_Doctor");
 			if(famExt != null) {
 				famName = famExt.getValue();
 			}

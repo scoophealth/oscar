@@ -50,9 +50,6 @@
 			<!--    <form-property name="codesearch" type="java.lang.String" />  -->
 		</form-bean>
 
-		<form-bean name="annotationForm" type="org.apache.struts.validator.DynaValidatorForm">
-			<form-property name="oAnnotation" type="org.oscarehr.common.model.OscarAnnotation" />
-		</form-bean>
 		<form-bean name="addDocumentType" type="oscar.dms.data.AddDocumentTypeForm" />
 		<form-bean name="changeDocStatus" type="oscar.dms.data.ChangeDocStatusForm" />
 		<!-- login form bean -->
@@ -2227,11 +2224,6 @@
 		<action path="/report/DxresearchReport" name="DxresearchReportForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
 			<forward name="success" path="/oscarReport/oscarReportDxReg.jsp" />
                         <forward name="editdesc" path="/oscarReport/editCodeDesc.jsp" />
-		</action>
-
-		<action path="/OscarAnnotation" name="annotationForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
-			<forward name="success" path="/close.jsp" />
-			<forward name="formAnno" path="/common/Annotation.jsp" />
 		</action>
 
 

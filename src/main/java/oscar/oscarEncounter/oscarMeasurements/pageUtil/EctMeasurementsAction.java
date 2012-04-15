@@ -35,7 +35,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-//import org.apache.commons.lang.StringUtils;
 import org.apache.commons.validator.GenericValidator;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -43,7 +42,8 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.oscarehr.common.dao.FlowSheetCustomizerDAO;
+import org.oscarehr.common.dao.FlowSheetCustomizationDao;
+import org.oscarehr.common.model.FlowSheetCustomization;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -67,32 +67,32 @@ public class EctMeasurementsAction extends Action {
         //request.getSession().setAttribute("EctMeasurementsForm", frm);
 
         EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
-        
-        
+
+
         String demographicNo = null;
         String providerNo = (String) session.getAttribute("user");
-        
+
         //if form has demo use it since session bean could have been overwritten
         if( (demographicNo = (String)frm.getValue("demographicNo")) == null ) {
             if ( bean != null)
                 demographicNo = bean.getDemographicNo();
         }
-        
+
         String template = request.getParameter("template");
         MeasurementFlowSheet mFlowsheet = null;
         if (template != null){
             WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(session.getServletContext());
-            FlowSheetCustomizerDAO flowSheetCustomizerDAO = (FlowSheetCustomizerDAO) ctx.getBean("flowSheetCustomizerDAO");
+            FlowSheetCustomizationDao flowSheetCustomizationDao = (FlowSheetCustomizationDao) ctx.getBean("flowSheetCustomizationDao");
             MeasurementTemplateFlowSheetConfig templateConfig = MeasurementTemplateFlowSheetConfig.getInstance();
 
-            List custList = flowSheetCustomizerDAO.getFlowSheetCustomizations( template,(String) session.getAttribute("user"),demographicNo);
+            List<FlowSheetCustomization> custList = flowSheetCustomizationDao.getFlowSheetCustomizations( template,(String) session.getAttribute("user"),demographicNo);
             mFlowsheet = templateConfig.getFlowSheet(template,custList);
         }
-        
-        
-        
+
+
+
         //request.getSession().setAttribute("EctSessionBean", bean);
-        //TODO replace with a date format call.  Actaully revamp to use hibernate
+        //TODO replace with a date format call.  Actually revamp to use hibernate
         java.util.Calendar calender = java.util.Calendar.getInstance();
         String day =  Integer.toString(calender.get(java.util.Calendar.DAY_OF_MONTH));
         String month =  Integer.toString(calender.get(java.util.Calendar.MONTH)+1);
@@ -105,7 +105,7 @@ public class EctMeasurementsAction extends Action {
         String numType = (String) frm.getValue("numType");
         int iType = Integer.parseInt(numType);
 
-        
+
 
         MsgStringQuote str = new MsgStringQuote();
 
@@ -116,23 +116,23 @@ public class EctMeasurementsAction extends Action {
         }
 
         String textOnEncounter = ""; //"**"+StringUtils.rightPad(by,80,"*")+"\\n";
-        
+
         //if parent window content has changed then we need to propagate change so
         //we do not write to parent
-        String parentChanged = (String)frm.getValue("parentChanged");        
+        String parentChanged = (String)frm.getValue("parentChanged");
         request.setAttribute("parentChanged", parentChanged);
 
         boolean valid = true;
         try
             {
-                
+
                 EctValidation ectValidation = new EctValidation();
                 ActionMessages errors = new ActionMessages();
 
                 String inputValueName, inputTypeName, inputTypeDisplayName, mInstrcName, commentsName;
                 String dateName,validationName, inputValue, inputType, inputTypeDisplay, mInstrc;
                 String comments, dateObserved, validation;
-                
+
                 String regExp = null;
                 double dMax = 0;
                 double dMin = 0;
@@ -156,7 +156,7 @@ public class EctMeasurementsAction extends Action {
                     comments = (String) frm.getValue(commentsName);
                     dateObserved = (String) frm.getValue(dateName);
 
-                 
+
                     regExp = null;
                     dMax = 0;
                     dMin = 0;
@@ -190,7 +190,7 @@ public class EctMeasurementsAction extends Action {
                         saveErrors(request, errors);
                         valid = false;
                     }
-                    
+
                     if(!ectValidation.matchRegExp(regExp, inputValue)){
                         errors.add(inputValueName,
                         new ActionMessage("errors.invalid", inputTypeDisplay));
@@ -250,7 +250,7 @@ public class EctMeasurementsAction extends Action {
                                 if (mFlowsheet == null){
                                     textOnEncounter =  textOnEncounter + inputType + "    " + inputValue + " " + mInstrc + " " + comments + "\\n";
                                 }else{
-                                    textOnEncounter += mFlowsheet.getFlowSheetItem(inputType).getDisplayName()+"    "+inputValue + " " +  comments + "\\n";    
+                                    textOnEncounter += mFlowsheet.getFlowSheetItem(inputType).getDisplayName()+"    "+inputValue + " " +  comments + "\\n";
                                 }
                             }
                             rs.close();

@@ -4,16 +4,16 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details. 
- * 
+ * GNU General Public License for more details.
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * Jason Gallagher
  *
@@ -29,10 +29,11 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.ProviderInboxItem;
 import org.oscarehr.util.MiscUtils;
-import org.springframework.dao.support.DataAccessUtils;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.stereotype.Repository;
 
 import oscar.oscarDB.DBHandler;
 
@@ -40,38 +41,55 @@ import oscar.oscarDB.DBHandler;
  *
  * @author jay gallagher
  */
-public class ProviderInboxRoutingDao extends HibernateDaoSupport {
-    
-    public List getProvidersWithRoutingForDocument(String docType,String docId){
+@Repository
+public class ProviderInboxRoutingDao extends AbstractDao<ProviderInboxItem> {
+
+	public ProviderInboxRoutingDao() {
+		super(ProviderInboxItem.class);
+	}
+    public List<ProviderInboxItem> getProvidersWithRoutingForDocument(String docType,String docId){
         int dId = Integer.parseInt(docId);
-        List providers = this.getHibernateTemplate().find("from ProviderInboxItem where labType = ? and labNo = ?",new Object[] {docType,dId});
-        return providers;
+        Query query = entityManager.createQuery("select p from ProviderInboxItem p where p.labType = ? and p.labNo = ?");
+        query.setParameter(1, docType);
+        query.setParameter(2, dId);
+
+        @SuppressWarnings("unchecked")
+        List<ProviderInboxItem> results = query.getResultList();
+
+        return results;
     }
-    
+
     public boolean hasProviderBeenLinkedWithDocument(String docType,String docId,String providerNo){
         int dId = Integer.parseInt(docId);
+        Query query = entityManager.createQuery("select p from ProviderInboxItem p where p.labType = ? and p.labNo = ? and p.providerNo=?");
+        query.setParameter(1, docType);
+        query.setParameter(2, dId);
+        query.setParameter(3, providerNo);
 
+        @SuppressWarnings("unchecked")
+        List<ProviderInboxItem> results = query.getResultList();
 
-        int count = DataAccessUtils.intResult(getHibernateTemplate().find("select count(*) from ProviderInboxItem where labType = ? and labNo = ? and provider_no = ?",new Object[] {docType,dId,providerNo}));
-        if (count > 0){
-            return true;
-        }
-        return false;
+        return (results.size()>0);
     }
-    
-    
+
+
     public int howManyDocumentsLinkedWithAProvider(String providerNo){
-         int count = DataAccessUtils.intResult(getHibernateTemplate().find("select count(*) from ProviderInboxItem where provider_no = ?",new Object[] {providerNo}));
-         return count;
+    	Query query = entityManager.createQuery("select p from ProviderInboxItem p where p.providerNo=?");
+        query.setParameter(1, providerNo);
+
+        @SuppressWarnings("unchecked")
+        List<ProviderInboxItem> results = query.getResultList();
+
+        return results.size();
     }
-    
+
     public void addToProviderInbox(String providerNo,String labNo,String labType){
-        
-        ArrayList<String> listofAdditionalProviders = new ArrayList();
+
+        ArrayList<String> listofAdditionalProviders = new ArrayList<String>();
         boolean fileForMainProvider = false;
-        //TODO:Replace 
+        //TODO:Replace
         try{
-           ResultSet rs= DBHandler.GetSQL("select * from incomingLabRules where archive = 0 and provider_no = '"+providerNo+"'");   
+           ResultSet rs= DBHandler.GetSQL("select * from incomingLabRules where archive = 0 and provider_no = '"+providerNo+"'");
            while(rs.next()){
               String status = rs.getString("status");
               String frwdProvider = rs.getString("frwdProvider_no");
@@ -80,7 +98,7 @@ public class ProviderInboxRoutingDao extends HibernateDaoSupport {
                   fileForMainProvider = true;
               }
            }
-           
+
            ProviderInboxItem p = new ProviderInboxItem();
            p.setProviderNo(providerNo);
            p.setLabNo(labNo);
@@ -91,7 +109,7 @@ public class ProviderInboxRoutingDao extends HibernateDaoSupport {
                p.setStatus(ProviderInboxItem.NEW);
            }
            if (!hasProviderBeenLinkedWithDocument(labType,labNo,providerNo)){
-              this.getHibernateTemplate().save(p);
+        	   persist(p);
            }
            for (String s:listofAdditionalProviders){
                if (!hasProviderBeenLinkedWithDocument(labType,labNo,s)){
@@ -104,19 +122,19 @@ public class ProviderInboxRoutingDao extends HibernateDaoSupport {
                    }else{
                       p.setStatus(ProviderInboxItem.NEW);
                    }
-                   this.getHibernateTemplate().save(p);
+                 	persist(p);
                }
            }
-           
+
         }catch(Exception e){
             MiscUtils.getLogger().error("Error", e);
         }
-        
-       
-       
+
+
+
     }
-          
-    
-    
+
+
+
 
 }

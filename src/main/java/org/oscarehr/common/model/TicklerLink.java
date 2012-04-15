@@ -4,16 +4,16 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details. 
- * 
+ * GNU General Public License for more details.
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * Jason Gallagher
  *
@@ -25,31 +25,37 @@
  */
 package org.oscarehr.common.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  *
- CREATE TABLE `tickler_link` (
-  `id` int(10) NOT NULL auto_increment,
-  `table_name` char(3) NOT NULL,
-  `table_id` int(10) NOT NULL,
-  `tickler_no` int(10) NOT NULL,
-  PRIMARY KEY  (`id`)
- );
- * 
+ *
  * @author jaygallagher
  */
-public class TicklerLink {
-    
-    
-    private Long id;
-    private String tableName;
-    private Long tableId;
-    private Long ticklerNo;
+@Entity
+@Table(name="tickler_link")
+public class TicklerLink extends AbstractModel<Integer>{
 
-    public Long getId() {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+	@Column(name="table_name")
+    private String tableName;
+	@Column(name="table_id")
+    private Long tableId;
+	@Column(name="tickler_no")
+    private Integer ticklerNo;
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -69,11 +75,11 @@ public class TicklerLink {
         this.tableId = tableId;
     }
 
-    public Long getTicklerNo() {
+    public Integer getTicklerNo() {
         return ticklerNo;
     }
 
-    public void setTicklerNo(Long ticklerNo) {
+    public void setTicklerNo(Integer ticklerNo) {
         this.ticklerNo = ticklerNo;
     }
 

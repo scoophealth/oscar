@@ -568,8 +568,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
 
             <%
 				    // multisites start ==================
-				    boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable(
-);
+				    boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();
 				    SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
 				    List<Site> sites = siteDao.getActiveSitesByProviderNo((String) session.getAttribute("user"));
 				    // multisites end ==================
@@ -834,17 +833,17 @@ function pasteAppt(multipleSameDayGroupAppt) {
         <%}%>
     </td>
     <td valign="top">
-    <% 
+    <%
         String formTblProp = props.getProperty("appt_formTbl","");
         String[] formTblNames = formTblProp.split(";");
-               
+
         int numForms = 0;
         for (String formTblName : formTblNames){
             if ((formTblName != null) && !formTblName.equals("")) {
                 //form table name defined
                 resultList = oscarSuperManager.find("appointmentDao", "search_formtbl", new Object [] {formTblName});
                 if (resultList.size() > 0) {
-                    //form table exists                            
+                    //form table exists
                     Map mFormName = resultList.get(0);
                     String formName = (String) mFormName.get("form_name");
                     pageContext.setAttribute("formName", formName);
@@ -862,23 +861,23 @@ function pasteAppt(multipleSameDayGroupAppt) {
                     <th colspan="2">
                         <bean:message key="appointment.addappointment.msgFormsSaved"/>
                     </th>
-                </tr>              
+                </tr>
     <%              }%>
-             
+
                 <tr bgcolor="#c0c0c0" align="left">
                     <th style="padding-right: 20px"><c:out value="${formName}:"/></th>
     <%              if (formComplete){  %>
                         <td><bean:message key="appointment.addappointment.msgFormCompleted"/></td>
     <%              } else {            %>
                         <td><bean:message key="appointment.addappointment.msgFormNotCompleted"/></td>
-    <%              } %>               
+    <%              } %>
                 </tr>
-    <%                         
+    <%
                 }
             }
         }
-               
-        if (numForms > 0) {        
+
+        if (numForms > 0) {
     %>
          </table>
     <%  }   %>
