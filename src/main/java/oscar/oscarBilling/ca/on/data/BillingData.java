@@ -38,7 +38,7 @@ import org.oscarehr.util.MiscUtils;
 import oscar.oscarDB.DBHandler;
 
 /**
- * 
+ *
  * @author jay
  */
 public class BillingData {
@@ -47,8 +47,8 @@ public class BillingData {
 	public BillingData() {
 	}
 
-	public ArrayList getBills(String statusType, String providerNo, String startDate, String endDate, String demoNo) {
-		ArrayList list = new ArrayList();
+	public ArrayList<Hashtable<String,Object>> getBills(String statusType, String providerNo, String startDate, String endDate, String demoNo) {
+		ArrayList<Hashtable<String,Object>> list = new ArrayList<Hashtable<String,Object>>();
 
 		String providerQuery = "";
 		String startDateQuery = "";
@@ -83,10 +83,10 @@ public class BillingData {
 				+ demoQuery;
 		MiscUtils.getLogger().debug("bill status query " + p);
 		try {
-			
+
 			ResultSet rs = DBHandler.GetSQL(p);
 			while (rs.next()) {
-				Hashtable h = new Hashtable();
+				Hashtable<String,Object> h = new Hashtable<String,Object>();
 				h.put("billing_no", "" + rs.getInt("billing_no"));
 				h.put("demographic_no", rs.getString("demographic_no"));
 				h.put("status", rs.getString("status"));

@@ -99,11 +99,7 @@
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/service/CaseManagementManager.java:List rt = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/service/CaseManagementManager.java:Map map = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/service/CaseManagementManager.java:return new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/casemgmt/web/BaseCaseManagementEntryAction.java:List caseiss = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/casemgmt/web/BaseCaseManagementEntryAction.java:List uList = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/casemgmt/web/BaseCaseManagementEntryAction.java:Map map = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/web/BaseCaseManagementEntryAction.java:cIssue.setNotes(new HashSet());</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/casemgmt/web/BaseCaseManagementViewAction.java:List rtNotes=new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/web/CaseManagementViewAction.java:List filteredNotes = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/web/CaseManagementViewAction.java:List lcme = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/web/CaseManagementViewAction.java:List teamMembers = new ArrayList();</ViolationValue>
@@ -173,7 +169,6 @@
         <ViolationValue>/src/main/java/org/oscarehr/survey/web/formbean/SurveyExecuteDataBean.java:this.values = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/util/MiscUtils.java:Vector retVec=new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/util/OntarioMD.java:h  = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/BillingBean.java:billingItems = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/Misc.java:Hashtable H = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/Misc.java:Vector V = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/billing/cad/dao/CadAtividadeSaudeDAO.java:beans = new ArrayList();</ViolationValue>
@@ -184,14 +179,10 @@
         <ViolationValue>/src/main/java/oscar/billing/controler/ConsultaFaturamentoPacienteForm.java:this.consultas = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/billing/controler/ProcedimentoRealizadoForm.java:this.formularios = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/billing/controler/ProcedimentoRealizadoForm.java:this.procedimentosForm = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/billing/dao/AppointmentDAO.java:ArrayList list = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/billing/dao/DiagnosticoDAO.java:ArrayList list = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/billing/dao/ProcedimentoRealizadoDAO.java:ArrayList list = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/billing/dao/ProviderDAO.java:ArrayList list = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/billing/fat/dao/FatFormulariosDAO.java:ArrayList list = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/billing/model/Appointment.java:public List diagnostico = new ArrayList(); // of type Diagnostico</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/billing/model/Appointment.java:public List procedimentoRealizado = new ArrayList(); // of type ProcedimentoRealizado</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/billing/popup/AtividadeSaudeForm.java:this.atividades = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/billing/popup/CidForm.java:this.cid = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/billing/popup/ProcedimentoForm.java:this.procedimentos = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:ArrayList modules = new ArrayList();</ViolationValue>
@@ -233,20 +224,15 @@
         <ViolationValue>/src/main/java/oscar/eform/EFormUtil.java:ArrayList al = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/eform/EFormUtil.java:ArrayList fieldIndexList = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/eform/EFormUtil.java:ArrayList results = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/eform/EFormUtil.java:ArrayList values = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/eform/EFormUtil.java:ArrayList whole = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/eform/EFormUtil.java:ArrayList within = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/eform/EFormUtil.java:Hashtable curhash = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/eform/EFormUtil.java:Hashtable curht = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/eform/EFormUtil.java:else fileList = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/eform/EFormUtil.java:values = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/eform/EfmData.java:ret = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/eform/actions/AddEFormAction.java:ArrayList paramNames = new ArrayList();  //holds "fieldname, ...."</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/eform/actions/AddEFormAction.java:ArrayList paramValues = new ArrayList(); //holds "myval, ...."</ViolationValue>
         <ViolationValue>/src/main/java/oscar/eform/actions/HtmlEditAction.java:Hashtable curht = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/eform/actions/HtmlEditAction.java:Hashtable errors = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/eform/actions/ManageEFormAction.java:List eForms = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/eform/data/DatabaseAP.java:ArrayList names = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/entities/WCB.java:List errors = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCINRRecord.java:Vector ret = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/data/FrmData.java:ArrayList forms = new ArrayList();</ViolationValue>
@@ -327,11 +313,6 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/SupServiceCodeAssocDAO.java:List ret = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/decisionSupport/BillingGuidelines.java:ArrayList&lt;DSConsequence&gt; allResultingConsequences = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/decisionSupport/BillingGuidelines.java:billingGuideLines = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingAssociationPersistence.java:ArrayList list = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingBillingManager.java:ArrayList billingItemsArray = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingBillingManager.java:ArrayList lst = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingCreateBillingAction.java:HashMap mgmCodeCount = new HashMap();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingCreateBillingAction.java:private ArrayList patientDX = new ArrayList(); //List of disease codes for current patient</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingEditCodeAction.java:Map map = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingSaveBillingAction.java:ArrayList&lt;String&gt; billingIds = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingViewAction.java:ArrayList billItem = new ArrayList();</ViolationValue>
@@ -356,8 +337,6 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingClaimsErrorReportBeanHandlerSave.java:Vector claimsErrorReportBeanVector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingCodeData.java:ArrayList list = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingCodeData.java:Hashtable h = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingData.java:ArrayList list = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingData.java:Hashtable h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingDataHlp.java:public static Vector vecPaymentType = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingStatusData.java:ArrayList list = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingStatusData.java:Hashtable h = new Hashtable();</ViolationValue>
@@ -401,8 +380,6 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSpecPrep.java:List aL = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingSpecPrep.java:Vector ret = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/data/BillingFormData.java:ArrayList lst = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/pageUtil/BillingBillingManager.java:ArrayList billingItemsArray = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/pageUtil/BillingBillingManager.java:ArrayList lst = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDB/ResultSetBuilder.java:private Map attribs = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDB/ResultSetBuilder.java:private Map names = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/PrintDemoAddressLabelAction.java:HashMap parameters = new HashMap();</ViolationValue>
@@ -619,13 +596,6 @@
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/bc/PathNet/PathnetLabTest.java:return new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/bc/PathNet/PathnetResultsData.java:ArrayList labs = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/bc/PathNet/pageUtil/LabUploadAction.java:ArrayList warnings = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CML/ABCDParser.java:ArrayList arr = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CML/ABCDParser.java:ArrayList atypes = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CML/ABCDParser.java:ArrayList cdtypes = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CML/ABCDParser.java:ArrayList ctypes= new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CML/ABCDParser.java:ArrayList dtypes= new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CML/ABCDParser.java:Hashtable htable = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CML/ABCDParser.java:public ArrayList btypes = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CML/CMLLabTest.java:ArrayList alist = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CML/CMLLabTest.java:ArrayList groups = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CML/CMLLabTest.java:if (labResults == null){ labResults = new ArrayList(); }</ViolationValue>
@@ -944,7 +914,6 @@
         <ViolationValue>/src/main/java/oscar/oscarSurveillance/Survey.java:answers = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarSurveillance/Survey.java:providersParticipating = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarSurveillance/SurveyInfo.java:ArrayList list = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarTickler/AutoTickler.java:ArrayList ticklerList = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarWaitingList/bean/WLPatientWaitingListBeanHandler.java:Vector patientWaitingListVector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarWaitingList/bean/WLPatientWaitingListBeanHandler.java:public Vector getPatientWaitingListVector(){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarWaitingList/bean/WLWaitingListBeanHandler.java:List waitingListArrayList = new ArrayList();</ViolationValue>
@@ -2345,8 +2314,6 @@
         <ViolationValue>/src/main/webapp/admin/preferenceaddpreference.jsp:&lt;%@ page import="oscar.login.DBHelp"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/preferenceaddpreference.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/providerAddRole.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerAddRole.jsp:if(DBHelp.updateDBRecord(sql) ) {</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/providerAddRole.jsp:if(DBHelp.updateDBRecord(sql)) {</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/providerRole.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/providerRole.jsp:ResultSet rs = DBHelp.searchDBRecord(query);</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/providerRole.jsp:prop.setProperty("first_name", DBHelp.getString(rs,"first_name"));</ViolationValue>
@@ -2414,9 +2381,6 @@
         <ViolationValue>/src/main/webapp/oscarMDS/PatientSearch.jsp:import="java.util.*, java.sql.*,java.net.*, oscar.oscarDB.DBPreparedHandler, oscar.MyDateFormat, oscar.Misc"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/ViewScript.jsp:&lt;%@page import="oscar.service.OscarSuperManager"%&gt;&lt;html:html locale="true"&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/ViewScript2.jsp:&lt;%@page import="oscar.service.OscarSuperManager"%&gt;&lt;html:html locale="true"&gt;</ViolationValue>
-        <ViolationValue>/src/main/webapp/report/billingconvert.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
-        <ViolationValue>/src/main/webapp/report/billingconvert.jsp:DBHelp.updateDBRecord(sql);</ViolationValue>
-        <ViolationValue>/src/main/webapp/report/billingconvert.jsp:if(!DBHelp.updateDBRecord(sql)) {</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportBCARDemo2.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportapptsheet.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportbilledvisit.jsp:DBPreparedHandler db = new DBPreparedHandler();</ViolationValue>
@@ -2712,11 +2676,11 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/MSPReconcile.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingCreateBillingAction.java:Vector vCodes = new Vector(Arrays.asList(cnlsCodes));</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingCreateBillingAction.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/OHIP/ScheduleOfBenefits.java:Hashtable billingInfo = bc.searchBillingCode((String) newPricingInfo.get("feeCode")+"A");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/OHIP/ScheduleOfBenefits.java:Hashtable breakLine(String s){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/OHIP/ScheduleOfBenefits.java:Hashtable change = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/OHIP/ScheduleOfBenefits.java:Hashtable h = null;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/OHIP/ScheduleOfBenefits.java:Hashtable newPricingInfo = breakLine(str);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/OHIP/ScheduleOfBenefits.java:Hashtable&lt;String,String&gt; billingInfo = bc.searchBillingCode((String) newPricingInfo.get("feeCode")+"A");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/OHIP/ScheduleOfBenefits.java:h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/OHIP/ScheduleOfBenefits.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/OHIP/ScheduleOfBenefitsUpdateAction.java:Hashtable h = new Hashtable();</ViolationValue>
@@ -2753,8 +2717,10 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingCodeData.java:list.add(fillCodeDataHashtable(rs));</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingCodeData.java:public Hashtable fillCodeDataHashtable(ResultSet rs) throws SQLException{</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingCodeData.java:public Hashtable searchBillingCode(String str){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingData.java:Hashtable h = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingData.java:ArrayList&lt;Hashtable&lt;String,Object&gt;&gt; list = new ArrayList&lt;Hashtable&lt;String,Object&gt;&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingData.java:Hashtable&lt;String,Object&gt; h = new Hashtable&lt;String,Object&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingData.java:import java.util.Hashtable;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingData.java:public ArrayList&lt;Hashtable&lt;String,Object&gt;&gt; getBills(String statusType, String providerNo, String startDate, String endDate, String demoNo) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingDataHlp.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingDataHlp.java:public static Vector vecPaymentType = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingDiskNameData.java:Vector htmlfilename;</ViolationValue>
@@ -3274,11 +3240,6 @@
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/bc/PathNet/HL7/Node.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/bc/PathNet/HL7/Node.java:protected Hashtable data;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/bc/PathNet/HL7/Node.java:this.data = new Hashtable(fields.length);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CML/ABCDParser.java:Hashtable htable = getProviderHash(conn);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CML/ABCDParser.java:Hashtable htable = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CML/ABCDParser.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CML/ABCDParser.java:private Hashtable getProviderHash(Connection conn){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CML/ABCDParser.java:private void addToProviderLabTable(String docNum, Hashtable htable, String labId,Connection conn) throws SQLException{</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java://Hashtable return in list</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java:Hashtable h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java:Hashtable t = new Hashtable();</ViolationValue>

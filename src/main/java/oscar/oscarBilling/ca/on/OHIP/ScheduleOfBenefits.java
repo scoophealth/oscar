@@ -46,17 +46,17 @@ import oscar.oscarBilling.ca.on.data.BillingCodeData;
  * @author Jay Gallagher
  */
 public class ScheduleOfBenefits {
-   
-   
+
+
    public ScheduleOfBenefits() {
    }
-   
-   
+
+
    public List processNewFeeSchedule(InputStream is, boolean addNewCodes , boolean addChangedCodes){
-      ArrayList changes = new ArrayList();      
-      BillingCodeData bc = new BillingCodeData();      
+      ArrayList changes = new ArrayList();
+      BillingCodeData bc = new BillingCodeData();
       StringBuilder codesThatHaveBothGPSpec = new StringBuilder();
-      
+
       try {
          InputStreamReader isr = new InputStreamReader(is);
          BufferedReader in = new BufferedReader(isr);
@@ -67,39 +67,39 @@ public class ScheduleOfBenefits {
          while ((str = in.readLine()) != null) {
             total++;
             Hashtable newPricingInfo = breakLine(str);
-            Hashtable billingInfo = bc.searchBillingCode((String) newPricingInfo.get("feeCode")+"A");
+            Hashtable<String,String> billingInfo = bc.searchBillingCode((String) newPricingInfo.get("feeCode")+"A");
 
             BigDecimal gpBD   = getJBD((String) newPricingInfo.get("gpFees"));
             BigDecimal specBD = getJBD((String) newPricingInfo.get("specFee"));
             BigDecimal zeroBD = new BigDecimal("0.00");
-            
+
             if ( gpBD.compareTo(zeroBD) != 0 && specBD.compareTo(zeroBD) != 0 && gpBD.compareTo(specBD) != 0){
                codesThatHaveBothGPSpec.append(( (String) newPricingInfo.get("feeCode"))+":"+gpBD+" "+specBD+"\n");
             }
-            
+
             String moreprices = "(gp.:"+getJBD((String) newPricingInfo.get("gpFees"))+
                                 ")  (asst.:"+getJBD((String) newPricingInfo.get("assistantCompFee"))+
                                 ")  (spec.:"+getJBD((String) newPricingInfo.get("specFee"))+
                                 ")  (anaes:"+getJBD((String) newPricingInfo.get("anaesthetistFee"))+
                                 ")  (non-a:"+getJBD((String) newPricingInfo.get("nonAnaesthetistFee"))+")";
-            
-            String newPrice = (String) newPricingInfo.get("gpFees");                                             
-            double newDoub = (Double.parseDouble(newPrice))/10000;                                             
+
+            String newPrice = (String) newPricingInfo.get("gpFees");
+            double newDoub = (Double.parseDouble(newPrice))/10000;
             BigDecimal newPriceDec = new BigDecimal(newDoub).setScale(2, BigDecimal.ROUND_HALF_UP);
-            
+
             if( newPriceDec.compareTo(zeroBD) == 0){
                newPriceDec = getJBD((String) newPricingInfo.get("specFee"));
                if( newPriceDec.compareTo(zeroBD) == 0){
                   newPriceDec = getJBD((String) newPricingInfo.get("assistantCompFee"));
                }
             }
-            
+
             if(billingInfo == null){
                if (addNewCodes){
                   newfees++;
                   Hashtable change = new Hashtable();
                   change.put("oldprice", "--");
-                                                      
+
                   change.put("newprice",""+newPriceDec);
                   change.put("feeCode",newPricingInfo.get("feeCode")+"A");
                   change.put("diff","");
@@ -111,15 +111,15 @@ public class ScheduleOfBenefits {
                }
             }else{
                if (addChangedCodes){
-                  oldfees++;                  
-                  String oldPrice = (String) billingInfo.get("value");                    
+                  oldfees++;
+                  String oldPrice = billingInfo.get("value");
                   double oldDoub = 0.00;
                   try{
                       oldDoub = Double.parseDouble(oldPrice);
                   }   catch(Exception e){
                       oldDoub = 0.00;
-                  }               
-                  BigDecimal oldPriceDec = new BigDecimal(oldDoub).setScale(2, BigDecimal.ROUND_HALF_UP);                 
+                  }
+                  BigDecimal oldPriceDec = new BigDecimal(oldDoub).setScale(2, BigDecimal.ROUND_HALF_UP);
                   BigDecimal diffPriceDec = newPriceDec.subtract(oldPriceDec);
 
                   if ( oldPriceDec.compareTo(newPriceDec) != 0 ){
@@ -131,13 +131,13 @@ public class ScheduleOfBenefits {
                      change.put("numCodes",""+bc.searchNumBillingCode((String)newPricingInfo.get("feeCode")));
                      change.put("description",billingInfo.get("description"));
                      change.put("prices",moreprices);
-                     change.put("effectiveDate",    newPricingInfo.get("effectiveDate"));     
-                     change.put("terminactionDate", newPricingInfo.get("terminactionDate"));  
+                     change.put("effectiveDate",    newPricingInfo.get("effectiveDate"));
+                     change.put("terminactionDate", newPricingInfo.get("terminactionDate"));
                      change.put("prices",moreprices);
                      changes.add(change);
-                  }                                                             
+                  }
                }
-            }            
+            }
         }
         in.close();
 
@@ -146,29 +146,29 @@ public class ScheduleOfBenefits {
       } catch (IOException e) {
          MiscUtils.getLogger().error("Error", e);
       }
-      return changes;     
+      return changes;
    }
-   
+
    BigDecimal getBD(String s){
       double dgpFees = Double.parseDouble(s);
       BigDecimal bd = new BigDecimal(dgpFees);
       bd.setScale(2,BigDecimal.ROUND_UP);
       return bd;
    }
-   
+
    BigDecimal getBD4digit(String s){
-      double dgpFees = Double.parseDouble(s);     
+      double dgpFees = Double.parseDouble(s);
       BigDecimal bd = new BigDecimal((dgpFees/10000));
       bd.setScale(2,BigDecimal.ROUND_HALF_UP);
       return bd;
    }
-   
-   
-   BigDecimal getJBD(String s){      
-      double newDoub = (Double.parseDouble(s))/10000;                                             
+
+
+   BigDecimal getJBD(String s){
+      double newDoub = (Double.parseDouble(s))/10000;
       return new BigDecimal(newDoub).setScale(2, BigDecimal.ROUND_HALF_UP);
    }
-   
+
    Hashtable breakLine(String s){
 
       Hashtable h = null;
@@ -181,13 +181,13 @@ public class ScheduleOfBenefits {
          String specFee            = s.substring(42,53);
          String anaesthetistFee    = s.substring(53,64);
          String nonAnaesthetistFee = s.substring(64,75);
-                           
+
          h = new Hashtable();
-          h.put("feeCode", feeCode);            
-          h.put("effectiveDate", effectiveDate);     
-          h.put("terminactionDate", terminactionDate);  
-          h.put("gpFees", gpFees);            
-          h.put("assistantCompFee", assistantCompFee);  
+          h.put("feeCode", feeCode);
+          h.put("effectiveDate", effectiveDate);
+          h.put("terminactionDate", terminactionDate);
+          h.put("gpFees", gpFees);
+          h.put("assistantCompFee", assistantCompFee);
           h.put("specFee",specFee);
           h.put("anaesthetistFee", anaesthetistFee);
           h.put("nonAnaesthetistFee",nonAnaesthetistFee);
@@ -197,7 +197,7 @@ public class ScheduleOfBenefits {
          MiscUtils.getLogger().debug(feeCode+" "+effectiveDate+" "+terminactionDate+" "+gpFees+" "+assistantCompFee+" "+specFee+" "+anaesthetistFee+" "+nonAnaesthetistFee);
          MiscUtils.getLogger().debug(feeCode+" "+effectiveDate+" "+terminactionDate+" "+getJBD(gpFees)+" "+getJBD(assistantCompFee)+" "+getJBD(specFee)+" "+getJBD(anaesthetistFee)+" "+getJBD(nonAnaesthetistFee));
          MiscUtils.getLogger().debug(dgpFees+" "+(dgpFees/10000)+" "+bd.toString());
-         
+
       }
       return h;
    }

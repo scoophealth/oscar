@@ -64,7 +64,7 @@ public class BillingCreateBillingAction extends Action {
   private static final Logger log=MiscUtils.getLogger();
 
   private ServiceCodeValidationLogic vldt = new ServiceCodeValidationLogic();
-  private ArrayList patientDX = new ArrayList(); //List of disease codes for current patient
+  private ArrayList<String> patientDX = new ArrayList<String>(); //List of disease codes for current patient
 
   public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) throws IOException,ServletException {
     ActionMessages errors = new ActionMessages();
@@ -87,7 +87,7 @@ public class BillingCreateBillingAction extends Action {
     BillingSessionBean bean = (BillingSessionBean) request.getSession().getAttribute("billingSessionBean");
     org.oscarehr.common.model.Demographic demo = new DemographicData().getDemographic(bean.getPatientNo());
     this.patientDX = vldt.getPatientDxCodes(demo.getDemographicNo().toString());
-    ArrayList billItem = bmanager.getDups2(service, other_service1,
+    ArrayList<BillingItem> billItem = bmanager.getDups2(service, other_service1,
                                            other_service2, other_service3,
                                            other_service1_unit,
                                            other_service2_unit,
@@ -149,9 +149,9 @@ public class BillingCreateBillingAction extends Action {
     bean.setMva_claim_code(frm.getMva_claim_code());
     bean.setFacilityNum(frm.getFacilityNum());
     bean.setFacilitySubNum(frm.getFacilitySubNum());
-    ArrayList lst = billform.getPaymentTypes();
+    ArrayList<PaymentType> lst = billform.getPaymentTypes();
     for (int i = 0; i < lst.size(); i++) {
-      PaymentType tp = (PaymentType) lst.get(i);
+      PaymentType tp = lst.get(i);
       if (tp.getId().equals(payMeth)) {
         bean.setPaymentTypeName(tp.getPaymentType());
         break;
@@ -164,8 +164,8 @@ public class BillingCreateBillingAction extends Action {
         validateDxCodeList(bean, errors);
         validateServiceCodeTimes(billItem, frm, errors);
 
-        for (Iterator iter = billItem.iterator(); iter.hasNext(); ) {
-          BillingItem item = (BillingItem) iter.next();
+        for (Iterator<BillingItem> iter = billItem.iterator(); iter.hasNext(); ) {
+          BillingItem item =  iter.next();
           validateCDMCodeConditions(errors, demo.getDemographicNo().toString(),
                                     item.getServiceCode());
         }
@@ -195,8 +195,8 @@ public class BillingCreateBillingAction extends Action {
             BillingmasterDAO billingmasterDAO = (BillingmasterDAO) ctx.getBean("BillingmasterDAO");
             WCB wcbForm = billingmasterDAO.getWCBForm(request.getParameter("WCBid"));
 
-        for (Iterator iter = billItem.iterator(); iter.hasNext(); ) {
-            BillingItem item = (BillingItem) iter.next();
+        for (Iterator<BillingItem> iter = billItem.iterator(); iter.hasNext(); ) {
+            BillingItem item = iter.next();
             String sc = item.getServiceCode();
             boolean formNeeded = WCBCodes.getInstance().isFormNeeded(sc);
             MiscUtils.getLogger().debug("code:"+sc+" form needed "+formNeeded);
@@ -247,17 +247,17 @@ public class BillingCreateBillingAction extends Action {
    * @param billItem ArrayList
    * @param errors ActionMessages
    */
-  private void validateServiceCodeTimes(ArrayList billItems,
+  private void validateServiceCodeTimes(ArrayList<BillingItem> billItems,
                                         BillingCreateBillingForm frm,
                                         ActionMessages
                                         errors) {
     String qry = "select bt.billingservice_no,bt.timeRange " +
         "from billing_msp_servicecode_times bt";
 
-    List results = SqlUtils.getQueryResultsList(qry);
+    List<String[]> results = SqlUtils.getQueryResultsList(qry);
 
     for (int i = 0; i < billItems.size(); i++) {
-      BillingItem item = (BillingItem) billItems.get(i);
+      BillingItem item =  billItems.get(i);
       boolean noStartHour = frm.getXml_starttime_hr() == null ||
           "".equals(frm.getXml_starttime_hr());
       boolean noStartMinute = (frm.getXml_starttime_min() == null ||
@@ -270,8 +270,8 @@ public class BillingCreateBillingAction extends Action {
                              "".equals(frm.getXml_endtime_min()));
       boolean noEndTime = noEndHour && noEndMinute;
       String svcCode = item.getServiceCode();
-      for (Iterator iter = results.iterator(); iter.hasNext(); ) {
-        String[] elem = (String[]) iter.next();
+      for (Iterator<String[]> iter = results.iterator(); iter.hasNext(); ) {
+        String[] elem = iter.next();
         String codeToCompare = elem[0];
         if (codeToCompare.equals(svcCode)) {
           //if the specified code requires a start time
@@ -330,12 +330,12 @@ public class BillingCreateBillingAction extends Action {
    * @param demo Demographic
    * @param errors ActionMessages
    */
-  private void validateServiceCodeList(ArrayList billItems,
+  private void validateServiceCodeList(ArrayList<BillingItem> billItems,
                                        org.oscarehr.common.model.Demographic demo,
                                        ActionMessages errors) {
     BillingAssociationPersistence per = new BillingAssociationPersistence();
     for (int i = 0; i < billItems.size(); i++) {
-      BillingItem item = (BillingItem) billItems.get(i);
+      BillingItem item =  billItems.get(i);
       if (per.serviceCodeExists(item.
                                 getServiceCode())) {
         AgeValidator age = (AgeValidator) vldt.getAgeValidator(item.
@@ -371,9 +371,9 @@ public class BillingCreateBillingAction extends Action {
 
   private void validate00120(ActionMessages errors,
                              org.oscarehr.common.model.Demographic demo,
-                             ArrayList billItem, String serviceDate) {
-    for (Iterator iter = billItem.iterator(); iter.hasNext(); ) {
-      BillingItem item = (BillingItem) iter.next();
+                             ArrayList<BillingItem> billItem, String serviceDate) {
+    for (Iterator<BillingItem> iter = billItem.iterator(); iter.hasNext(); ) {
+      BillingItem item =  iter.next();
       String[] cnlsCodes = OscarProperties.getInstance().getProperty(
           "COUNSELING_CODES").split(",");
       Vector vCodes = new Vector(Arrays.asList(cnlsCodes));
@@ -400,33 +400,33 @@ public class BillingCreateBillingAction extends Action {
    */
   private void validatePatientManagementCodes(ActionMessages errors,
                                               org.oscarehr.common.model.Demographic demo,
-                                              ArrayList billItem,
+                                              ArrayList<BillingItem> billItem,
                                               String serviceDate) {
-    HashMap mgmCodeCount = new HashMap();
+    HashMap<String,Double> mgmCodeCount = new HashMap<String,Double>();
     mgmCodeCount.put("14015", new Double(0));
     mgmCodeCount.put("14016", new Double(0));
-    for (Iterator iter = billItem.iterator(); iter.hasNext(); ) {
-      BillingItem item = (BillingItem) iter.next();
+    for (Iterator<BillingItem> iter = billItem.iterator(); iter.hasNext(); ) {
+      BillingItem item =  iter.next();
       if (mgmCodeCount.containsKey(item.getServiceCode())) {
         //Increments the service code count by the number of units for
         //the current bill item
         Double svcCodeUnitCount = new Double(item.getUnit());
-        Double unitCount = (Double) mgmCodeCount.get(item.getServiceCode());
+        Double unitCount = mgmCodeCount.get(item.getServiceCode());
         unitCount = new Double(unitCount.doubleValue() +
                                svcCodeUnitCount.doubleValue());
         mgmCodeCount.remove(item.getServiceCode());
         mgmCodeCount.put(item.getServiceCode(), unitCount);
       }
     }
-    for (Iterator iter = mgmCodeCount.keySet().iterator(); iter.hasNext(); ) {
-      String key = (String) iter.next();
-      double count = ( (Double) mgmCodeCount.get(key)).doubleValue();
+    for (Iterator<String> iter = mgmCodeCount.keySet().iterator(); iter.hasNext(); ) {
+      String key = iter.next();
+      double count = ( mgmCodeCount.get(key)).doubleValue();
       if (count > 0) {
-        Map availableUnits = vldt.getCountAvailablePatientManagementUnits(demo.
+        Map<String,Double> availableUnits = vldt.getCountAvailablePatientManagementUnits(demo.
             getDemographicNo().toString(), key, serviceDate);
-        double dailyAvail = ( (Double) availableUnits.get(ServiceCodeValidationLogic.
+        double dailyAvail = ( availableUnits.get(ServiceCodeValidationLogic.
             DAILY_AVAILABLE_UNITS)).doubleValue();
-        double yearAvail = ( (Double) availableUnits.get(ServiceCodeValidationLogic.
+        double yearAvail = (availableUnits.get(ServiceCodeValidationLogic.
             ANNUAL_AVAILABLE_UNITS)).doubleValue();
 
         if ( (count > dailyAvail)) {
@@ -454,7 +454,7 @@ public class BillingCreateBillingAction extends Action {
                                          String serviceCode) {
     String cdmRulesQry =
         "SELECT serviceCode,conditionCode FROM billing_service_code_conditions";
-    List cdmRules = SqlUtils.getQueryResultsList(cdmRulesQry);
+    List<String[]> cdmRules = SqlUtils.getQueryResultsList(cdmRulesQry);
     List<String[] > cdmSvcCodes = vldt.getCDMCodes();
     for (String[] item:cdmSvcCodes){
       if (patientDX.contains(item[0])) {
@@ -488,9 +488,9 @@ public class BillingCreateBillingAction extends Action {
    */
   private void validateCodeLastBilled(HttpServletRequest request,
                                       ActionMessages errors, String demoNo) {
-    List cdmSvcCodes = vldt.getCDMCodes();
-    for (Iterator iter = cdmSvcCodes.iterator(); iter.hasNext(); ) {
-      String[] item = (String[]) iter.next();
+    List<String[]> cdmSvcCodes = vldt.getCDMCodes();
+    for (Iterator<String[]> iter = cdmSvcCodes.iterator(); iter.hasNext(); ) {
+      String[] item = iter.next();
       if (patientDX.contains(item[0])) {
         validateCodeLastBilledHlp(errors, demoNo, item[1]);
       }
@@ -504,10 +504,10 @@ public class BillingCreateBillingAction extends Action {
     int codeLastBilled = -1;
     String conditionCodeQuery = "select conditionCode from billing_service_code_conditions where serviceCode = '" +
         code + "'";
-    List conditions = SqlUtils.getQueryResultsList(conditionCodeQuery);
+    List<String[]> conditions = SqlUtils.getQueryResultsList(conditionCodeQuery);
 
-    for (Iterator iter = conditions.iterator(); iter.hasNext(); ) {
-      String[] row = (String[]) iter.next();
+    for (Iterator<String[]> iter = conditions.iterator(); iter.hasNext(); ) {
+      String[] row = iter.next();
       codeLastBilled = vldt.daysSinceCodeLastBilled(demoNo, row[0]);
       if (codeLastBilled < 365 && codeLastBilled > -1) {
         break;
