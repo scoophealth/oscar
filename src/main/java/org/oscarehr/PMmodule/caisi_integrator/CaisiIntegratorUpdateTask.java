@@ -1,23 +1,23 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for 
- * Centre for Research on Inner City Health, St. Michael's Hospital, 
- * Toronto, Ontario, Canada 
+ *
+ * This software was written for
+ * Centre for Research on Inner City Health, St. Michael's Hospital,
+ * Toronto, Ontario, Canada
  */
 
 package org.oscarehr.PMmodule.caisi_integrator;
@@ -406,7 +406,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 	/**
 	 * A check to compare the time being requested from the integrator and that last time the integrator requested. If the date being requested is before the last date requested return true. If a last date hasn't been stored return true.
-	 * 
+	 *
 	 * @param lastDataUpdated time requested from the integrator
 	 * @param lastPushUpdated prior time requested from the integrator
 	 * @return
@@ -442,9 +442,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			// This routine should never be used in real life, it should only be used in OMD testing to pass OMD requirements.
 			// There's some immediately visible problems with this routine,
 			// 1) the userProperty is stored on a per oscar instance, where as data and update times are synced on a per facility status, that means multiple facility systems will fail as the subsequent facilities will all have the wrong time.
-			// 2) The the userProperty and it's associated timestamp is stored before any processing has taken place, it should only be stored after full successful completion or else data will be missed upon failure or errors. 
+			// 2) The the userProperty and it's associated timestamp is stored before any processing has taken place, it should only be stored after full successful completion or else data will be missed upon failure or errors.
 			// 3) getDemographicIdsOpenedSinceTime does not return the correct demographic set, it returns everyone, not just the people admitted into this facility who have been openned, this is a consent/security violation and in some jurisdictions like ontario and possibly most of canada, maybe illegal.
-			
+
 			List<Integer> demographicIds = null;
 
 			UserProperty fullPushProp = userPropertyDao.getProp(UserProperty.INTEGRATOR_FULL_PUSH);
@@ -477,7 +477,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			userPropertyDao.saveProp(UserProperty.INTEGRATOR_FULL_PUSH, "0");
 			userPropertyDao.saveProp(UserProperty.INTEGRATOR_LAST_PUSH, format.format(now));
 			userPropertyDao.saveProp(UserProperty.INTEGRATOR_LAST_UPDATED, "" + lastDataUpdated.getTime());
-			
+
 			return(demographicIds);
 		}
 	}
@@ -1215,10 +1215,11 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private void pushEforms(Date lastDataUpdated, Facility facility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
 		logger.debug("pushing eforms facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
-		List<EFormData> eformDatas = eFormDataDao.findByDemographicId(demographicId);
+		List<EFormData> eformDatas = eFormDataDao.findByDemographicIdSinceLastDate(demographicId,lastDataUpdated);
 		if (eformDatas.size() == 0) return;
 
 		StringBuilder sentIds = new StringBuilder();
+		List<Integer> fdids = new ArrayList<Integer>();
 
 		for (EFormData eformData : eformDatas) {
 
@@ -1242,11 +1243,12 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			demographicService.setCachedEformData(cachedEformDatas);
 
 			sentIds.append("," + eformData.getId());
+			fdids.add(eformData.getId());
 		}
 
 		conformanceTestLog(facility, "EFormData", sentIds.toString());
 
-		List<EFormValue> eFormValues = eFormValueDao.findByDemographicId(demographicId);
+		List<EFormValue> eFormValues = eFormValueDao.findByFormDataIdList(fdids);
 		if (eFormValues.size() == 0) return;
 
 		for (EFormValue eFormValue : eFormValues) {

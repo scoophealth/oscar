@@ -1,20 +1,20 @@
 /*
  * Copyright (c) 2010. Department of Family Medicine, McMaster University. All Rights Reserved.
- * 
+ *
  * This software is published under the GPL GNU General Public License.
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details. 
- * 
+ * GNU General Public License for more details.
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This software was written for the
  * Department of Family Medicine
@@ -24,6 +24,8 @@
  */
 package org.oscarehr.common.dao;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -37,7 +39,7 @@ import org.springframework.stereotype.Repository;
 public class EFormDataDao extends AbstractDao<EFormData> {
 
 	private static final Logger logger=MiscUtils.getLogger();
-	
+
 	public EFormDataDao() {
 		super(EFormData.class);
 	}
@@ -49,7 +51,24 @@ public class EFormDataDao extends AbstractDao<EFormData> {
 
 		@SuppressWarnings("unchecked")
 		List<EFormData> results=query.getResultList();
-		
+
+		return(results);
+	}
+
+    public List<EFormData> findByDemographicIdSinceLastDate(Integer demographicId,Date lastDate)
+	{
+    	Calendar cal1 = Calendar.getInstance();
+    	cal1.setTime(lastDate);
+
+		Query query = entityManager.createQuery("select x from " + modelClass.getSimpleName() + " x where x.demographicId=?1 and x.formDate > ?2 or (x.formDate= ?3 and x.formTime >= ?4)");
+		query.setParameter(1, demographicId);
+		query.setParameter(2, lastDate);
+		query.setParameter(3, lastDate);
+		query.setParameter(4, lastDate);
+
+		@SuppressWarnings("unchecked")
+		List<EFormData> results=query.getResultList();
+
 		return(results);
 	}
 
@@ -65,9 +84,9 @@ public class EFormDataDao extends AbstractDao<EFormData> {
     	sb.append("select x from ");
     	sb.append(modelClass.getSimpleName());
     	sb.append(" x where x.demographicId=?1");
-    	
+
     	int counter=2;
-    	
+
     	if (current!=null)
     	{
     		sb.append(" and x.current=?");
@@ -83,14 +102,14 @@ public class EFormDataDao extends AbstractDao<EFormData> {
     	}
 
     	String sqlCommand=sb.toString();
-    	
+
     	logger.debug("SqlCommand="+sqlCommand);
-    	
+
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, demographicId);
 
     	counter=2;
-    	
+
     	if (current!=null)
     	{
     		query.setParameter(counter, current);
@@ -105,7 +124,7 @@ public class EFormDataDao extends AbstractDao<EFormData> {
 
     	@SuppressWarnings("unchecked")
 		List<EFormData> results=query.getResultList();
-		
+
 		return(results);
 	}
 }
