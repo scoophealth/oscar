@@ -20,7 +20,7 @@ package oscar.util;
  *  Department of Family Medicine
  *  McMaster University
  *  Hamilton
- *  Ontario, Canada   
+ *  Ontario, Canada
  *
  * ConcatPDF.java
  *
@@ -67,9 +67,9 @@ import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.SimpleBookmark;
 
 public class ConcatPDF {
-    
-    
-    public static void concat (ArrayList alist,String filename) {
+
+
+    public static void concat (ArrayList<Object> alist,String filename) {
         try{
         OutputStream os = new FileOutputStream(filename);
         concat(alist,os);
@@ -77,17 +77,17 @@ public class ConcatPDF {
             MiscUtils.getLogger().error("Error", e);
         }
     }
-    
-    
-    
-    
+
+
+
+
     /**
      * This class can be used to concatenate existing PDF files.
      * (This was an example known as PdfCopy.java)
      * @param args the command line arguments
      */
     public static void concat(List<Object> alist,OutputStream out) {
-        
+
         try {
             int pageOffset = 0;
             ArrayList master = new ArrayList();
@@ -97,9 +97,9 @@ public class ConcatPDF {
             boolean fileAsStream = false;
 			PdfReader reader = null;
 			String name = "";
-			
+
             MiscUtils.getLogger().debug("Size of list = "+alist.size());
-            
+
             while (f < alist.size()) {
             	// we create a reader for a certain document
     			Object o = alist.get(f);
@@ -111,13 +111,13 @@ public class ConcatPDF {
     				name = (String) alist.get(f);
     				fileAsStream = false;
     			}
-    			
+
     			if (fileAsStream) {
     				reader = new PdfReader((InputStream) alist.get(f));
     			} else {
     				reader = new PdfReader(name);
     			}
-                
+
                 reader.consolidateNamedDestinations();
                 // we retrieve the total number of pages
                 int n = reader.getNumberOfPages();
@@ -160,6 +160,6 @@ public class ConcatPDF {
             MiscUtils.getLogger().error("Error", e);
         }
     }
-   
+
 }
 

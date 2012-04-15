@@ -1,23 +1,23 @@
 /*
-* 
+*
 * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
+* This software is published under the GPL GNU General Public License.
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version. *
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+*
 * <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
+*
+* This software was written for
+* Centre for Research on Inner City Health, St. Michael's Hospital,
+* Toronto, Ontario, Canada
 */
 
 package org.oscarehr.PMmodule.dao;
@@ -30,6 +30,7 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Expression;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.ClientReferral;
+import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -64,7 +65,7 @@ public class ClientReferralDAO extends HibernateDaoSupport {
         // [ 1842692 ] RFQ Feature - temp change for pmm referral history report
         results = displayResult(results);
         // end of change
-        
+
         return results;
     }
 
@@ -89,45 +90,46 @@ public class ClientReferralDAO extends HibernateDaoSupport {
         results = displayResult(results);
         return results;
     }
-    
+
     // [ 1842692 ] RFQ Feature - temp change for pmm referral history report
     // - suggestion: to add a new field to the table client_referral (Referring program/agency)
-    public List displayResult(List lResult) {
+    public List<ClientReferral> displayResult(List<ClientReferral> lResult) {
     	List <ClientReferral> ret = new ArrayList <ClientReferral>();
     	//ProgramDao pd = new ProgramDao();
     	//AdmissionDao ad = new AdmissionDao();
-    	
-    	for(Object element : lResult) {
-    		ClientReferral cr = (ClientReferral) element;
+
+    	for(ClientReferral element : lResult) {
+    		ClientReferral cr = element;
 
             ClientReferral result = null;
-            List results = this.getHibernateTemplate().find("from ClientReferral r where r.ClientId = ? and r.Id < ? order by r.Id desc", new Object[] {cr.getClientId(), cr.getId()});
+            @SuppressWarnings("unchecked")
+            List<ClientReferral> results = this.getHibernateTemplate().find("from ClientReferral r where r.ClientId = ? and r.Id < ? order by r.Id desc", new Object[] {cr.getClientId(), cr.getId()});
 
             // temp - completionNotes/Referring program/agency, notes/External
         	String completionNotes = "";
         	String notes = "";
             if (!results.isEmpty()) {
-                result = (ClientReferral)results.get(0);
+                result = results.get(0);
             	completionNotes = result.getProgramName();
             	notes = isExternalProgram(Integer.parseInt(result.getProgramId().toString())) ? "Yes" : "No";
             } else {
             	// get program from table admission
-            	List lr = getAdmissions(Integer.parseInt(cr.getClientId().toString()));
-            	Admission admission = (Admission) lr.get(lr.size() - 1);
-            	completionNotes = admission.getProgramName(); 
+            	List<Admission> lr = getAdmissions(Integer.parseInt(cr.getClientId().toString()));
+            	Admission admission = lr.get(lr.size() - 1);
+            	completionNotes = admission.getProgramName();
             	notes = isExternalProgram(Integer.parseInt(admission.getProgramId().toString())) ? "Yes" : "No";
             }
-            
+
             // set the values for added report fields
             cr.setCompletionNotes(completionNotes);
             cr.setNotes(notes);
-            
+
         	ret.add(cr);
     	}
-    	
+
     	return ret;
     }
-    
+
     private boolean isExternalProgram(Integer programId) {
 		boolean result = false;
 
@@ -136,7 +138,8 @@ public class ClientReferralDAO extends HibernateDaoSupport {
 		}
 
 		String queryStr = "FROM Program p WHERE p.id = ? AND p.type = 'external'";
-		List rs = getHibernateTemplate().find(queryStr, programId);
+		@SuppressWarnings("unchecked")
+        List<Program> rs = getHibernateTemplate().find(queryStr, programId);
 
 		if (!rs.isEmpty()) {
 			result = true;
@@ -148,31 +151,32 @@ public class ClientReferralDAO extends HibernateDaoSupport {
 
 		return result;
 	}
-	
-    private List getAdmissions(Integer demographicNo) {
+
+    private List<Admission> getAdmissions(Integer demographicNo) {
         if (demographicNo == null || demographicNo <= 0) {
             throw new IllegalArgumentException();
         }
 
         String queryStr = "FROM Admission a WHERE a.ClientId=? ORDER BY a.AdmissionDate DESC";
-        List rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
+        @SuppressWarnings("unchecked")
+        List<Admission> rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
         return rs;
     }
     // end of change
 
+    @SuppressWarnings("unchecked")
     public List<ClientReferral> getActiveReferrals(Long clientId, Integer facilityId) {
         if (clientId == null || clientId.longValue() <= 0) {
             throw new IllegalArgumentException();
         }
 
-        @SuppressWarnings("unchecked")
         List<ClientReferral> results;
         if(facilityId==null){
           results = this.getHibernateTemplate().find("from ClientReferral cr where cr.ClientId = ? and (cr.Status = '"+ClientReferral.STATUS_ACTIVE+"' or cr.Status = '"+ClientReferral.STATUS_PENDING+"' or cr.Status = '"+ClientReferral.STATUS_UNKNOWN+"')", clientId);
         }else{
-          ArrayList paramList = new ArrayList();
-          String sSQL="from ClientReferral cr where cr.ClientId = ? and (cr.Status = '" + ClientReferral.STATUS_ACTIVE+"' or cr.Status = '" + 
-            ClientReferral.STATUS_PENDING + "' or cr.Status = '" + ClientReferral.STATUS_UNKNOWN + "')" + 
+          ArrayList<Object> paramList = new ArrayList<Object>();
+          String sSQL="from ClientReferral cr where cr.ClientId = ? and (cr.Status = '" + ClientReferral.STATUS_ACTIVE+"' or cr.Status = '" +
+            ClientReferral.STATUS_PENDING + "' or cr.Status = '" + ClientReferral.STATUS_UNKNOWN + "')" +
             " and ( (cr.FacilityId=?) or (cr.ProgramId in (select s.id from Program s where s.facilityId=?)))";
           paramList.add(clientId);
           paramList.add(facilityId);
@@ -180,7 +184,7 @@ public class ClientReferralDAO extends HibernateDaoSupport {
           Object params[] = paramList.toArray(new Object[paramList.size()]);
           results = getHibernateTemplate().find(sSQL, params);
         }
-        
+
         if (log.isDebugEnabled()) {
             log.debug("getActiveReferrals: clientId=" + clientId + ",# of results=" + results.size());
         }
@@ -215,7 +219,8 @@ public class ClientReferralDAO extends HibernateDaoSupport {
 
     }
 
-    public List search(ClientReferral referral) {
+    @SuppressWarnings("unchecked")
+    public List<ClientReferral> search(ClientReferral referral) {
         Criteria criteria = getSession().createCriteria(ClientReferral.class);
 
         if (referral != null && referral.getProgramId().longValue() > 0) {

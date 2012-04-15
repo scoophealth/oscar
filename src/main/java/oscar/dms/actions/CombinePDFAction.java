@@ -50,10 +50,10 @@ import oscar.util.UtilDateUtilities;
  * @author jay
  */
 public class CombinePDFAction extends Action {
-    
+
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         String[] files = request.getParameterValues("docNo");
-        ArrayList alist = new ArrayList();
+        ArrayList<Object> alist = new ArrayList<Object>();
         if (files != null){
             MiscUtils.getLogger().debug("size = "+files.length);
             EDocUtil docData = new EDocUtil();
@@ -66,17 +66,17 @@ public class CombinePDFAction extends Action {
                 response.setContentType("application/pdf");  //octet-stream
                 response.setHeader("Content-Disposition", "attachment; filename=\"combinedPDF-"+UtilDateUtilities.getToday("yyyy-MM-dd.hh.mm.ss")+".pdf\"");
                 try {
-                    ConcatPDF.concat(alist,response.getOutputStream());            
+                    ConcatPDF.concat(alist,response.getOutputStream());
                 } catch (IOException ex) {MiscUtils.getLogger().error("Error", ex);
-                }            
+                }
                 return null;
             }
-        }  
+        }
         return mapping.findForward("success");
     }
-    
+
     /** Creates a new instance of CombinePDFAction */
     public CombinePDFAction() {
     }
-    
+
 }

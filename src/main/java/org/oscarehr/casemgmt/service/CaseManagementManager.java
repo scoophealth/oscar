@@ -370,7 +370,7 @@ public class CaseManagementManager {
 		return this.caseManagementNoteExtDAO.getNoteExt(id);
 	}
 
-	public List getExtByNote(Long noteId) {
+	public List<CaseManagementNoteExt> getExtByNote(Long noteId) {
 		return this.caseManagementNoteExtDAO.getExtByNote(noteId);
 	}
 
@@ -536,13 +536,13 @@ public class CaseManagementManager {
 		return (null);
 	}
 
-	public List getMsgBeans(Integer demographicNo) {
-		Iterator iter = messagetblDAO.getMsgByDemoNo(demographicNo).iterator();
-		ArrayList al = new ArrayList();
+	public List<LabelValueBean> getMsgBeans(Integer demographicNo) {
+		Iterator<Messagetbl> iter = messagetblDAO.getMsgByDemoNo(demographicNo).iterator();
+		ArrayList<LabelValueBean> al = new ArrayList<LabelValueBean>();
 		int i = 0;
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy.mm.dd");
 		while (iter.hasNext()) {
-			Messagetbl mtbl = (Messagetbl) iter.next();
+			Messagetbl mtbl = iter.next();
 			al.add(new LabelValueBean(new Integer(i).toString(), mtbl.getThesubject() + "-" + sdf.format(mtbl.getThedate())));
 			i++;
 		}
@@ -595,22 +595,22 @@ public class CaseManagementManager {
 		return issueDAO.findIssueByCode(code);
 	}
 
-	public List getIssueInfoBySearch(String providerNo, String search, List accessRight) {
-		List issList = issueDAO.findIssueBySearch(search);
+	public List<Issue> getIssueInfoBySearch(String providerNo, String search, List accessRight) {
+		List<Issue> issList = issueDAO.findIssueBySearch(search);
 		// filter the issue list by role
-		List role = roleProgramAccessDAO.getAllRoleName();
-		List filteredIssue = new ArrayList();
+		List<String> role = roleProgramAccessDAO.getAllRoleName();
+		List<Issue> filteredIssue = new ArrayList<Issue>();
 
 		for (int i = 0; i < role.size(); i++) {
-			Iterator itr = issList.iterator();
-			String rl = (String) role.get(i);
+			Iterator<Issue> itr = issList.iterator();
+			String rl = role.get(i);
 			String right = rl.trim() + "issues";
 			boolean inaccessRight = inAccessRight(right, issueAccessType, accessRight);
 			if (inaccessRight) {
 
 				String iRole = rl;
 				while (itr.hasNext()) {
-					Issue iss = (Issue) itr.next();
+					Issue iss = itr.next();
 
 					if (iss.getRole().trim().equalsIgnoreCase(iRole.trim())) {
 						filteredIssue.add(iss);
@@ -723,22 +723,22 @@ public class CaseManagementManager {
 	}
 
 	/* get the filtered Notes by caisi role */
-	public List getFilteredNotes(String providerNo, String demographic_no) {
-		List allNotes = caseManagementNoteDAO.getNotesByDemographic(demographic_no);
-		List role = roleProgramAccessDAO.getAllRoleName();
-		List filteredNotes = new ArrayList();
-		Iterator itr = allNotes.iterator();
+	public List<CaseManagementIssue> getFilteredNotes(String providerNo, String demographic_no) {
+		List<CaseManagementNote> allNotes = caseManagementNoteDAO.getNotesByDemographic(demographic_no);
+		List<String> role = roleProgramAccessDAO.getAllRoleName();
+		List<CaseManagementIssue> filteredNotes = new ArrayList<CaseManagementIssue>();
+		Iterator<CaseManagementNote> itr = allNotes.iterator();
 		boolean added = false;
 		while (itr.hasNext()) {
-			CaseManagementNote note = (CaseManagementNote) itr.next();
+			CaseManagementNote note = itr.next();
 			added = false;
-			Set se = note.getIssues();
+			Set<CaseManagementIssue> se = note.getIssues();
 			if (se == null || se.size() == 0) {
-				Iterator isit = se.iterator();
+				Iterator<CaseManagementIssue> isit = se.iterator();
 				while (isit.hasNext()) {
-					CaseManagementIssue iss = (CaseManagementIssue) isit.next();
+					CaseManagementIssue iss = isit.next();
 					for (int i = 0; i < role.size(); i++) {
-						String rl = (String) role.get(i);
+						String rl = role.get(i);
 						if (iss.getIssue().getRole().trim().equalsIgnoreCase(rl.trim())) {
 							filteredNotes.add(iss);
 							added = true;
@@ -804,7 +804,7 @@ public class CaseManagementManager {
 	}
 
 	// TODO terrible performance here. TERRIBLE. at LEAST cache this - rwd
-	public List getAccessRight(String providerNo, String demoNo, String programId) {
+	public List<AccessType> getAccessRight(String providerNo, String demoNo, String programId) {
 		List<Integer> progList = new ArrayList<Integer>();
 
 		if (programId == null) {
@@ -819,25 +819,25 @@ public class CaseManagementManager {
 			return null;
 		}
 
-		List rt = new ArrayList();
+		List<AccessType> rt = new ArrayList<AccessType>();
 		Iterator<Integer> itr = progList.iterator();
 
 		while (itr.hasNext()) {
 			Integer pId = itr.next();
 
-			List ppList = programProviderDao.getProgramProviderByProviderProgramId(providerNo, pId.longValue());
-			List paList = programAccessDAO.getAccessListByProgramId(pId.longValue());
+			List<ProgramProvider> ppList = programProviderDao.getProgramProviderByProviderProgramId(providerNo, pId.longValue());
+			List<ProgramAccess> paList = programAccessDAO.getAccessListByProgramId(pId.longValue());
 
 			for (int i = 0; i < ppList.size(); i++) {
-				ProgramProvider pp = (ProgramProvider) ppList.get(i);
+				ProgramProvider pp =  ppList.get(i);
 				// add default role access
-				List arList = roleProgramAccessDAO.getDefaultAccessRightByRole(pp.getRoleId());
+				List<DefaultRoleAccess> arList = roleProgramAccessDAO.getDefaultAccessRightByRole(pp.getRoleId());
 				for (int j = 0; j < arList.size(); j++) {
-					DefaultRoleAccess ar = (DefaultRoleAccess) arList.get(j);
+					DefaultRoleAccess ar = arList.get(j);
 					addrt(rt, ar.getAccess_type());
 				}
 				for (int k = 0; k < paList.size(); k++) {
-					ProgramAccess pa = (ProgramAccess) paList.get(k);
+					ProgramAccess pa = paList.get(k);
 					if (pa.isAllRoles()) {
 						addrt(rt, pa.getAccessType());
 					} else if (roleInAccess(pp.getRoleId(), pa)) {
@@ -861,12 +861,12 @@ public class CaseManagementManager {
 		return rt;
 	}
 
-	public void addrt(List rt, AccessType at) {
+	public void addrt(List<AccessType> rt, AccessType at) {
 		if (at == null) return;
 
 		boolean hasIt = false;
 		for (int i = 0; i < rt.size(); i++) {
-			AccessType ac = (AccessType) rt.get(i);
+			AccessType ac = rt.get(i);
 			if (ac.getId().compareTo(at.getId()) == 0) hasIt = true;
 		}
 		if (!hasIt) rt.add(at);
@@ -945,10 +945,10 @@ public class CaseManagementManager {
 		return this.caseManagementNoteDAO.search(searchBean);
 	}
 
-	public List filterNotesByAccess(List notes, String providerNo) {
-		List filteredNotes = new ArrayList();
-		for (Iterator iter = notes.iterator(); iter.hasNext();) {
-			CaseManagementNote note = (CaseManagementNote) iter.next();
+	public List<CaseManagementNote> filterNotesByAccess(List<CaseManagementNote> notes, String providerNo) {
+		List<CaseManagementNote> filteredNotes = new ArrayList<CaseManagementNote>();
+		for (Iterator<CaseManagementNote> iter = notes.iterator(); iter.hasNext();) {
+			CaseManagementNote note = iter.next();
 			if (hasAccessRight(removeFirstSpace(getCaisiRoleById(note.getReporter_caisi_role())) + "notes", "access", providerNo, note.getDemographic_no(), note.getProgram_no())) {
 				filteredNotes.add(note);
 			}
@@ -1155,13 +1155,13 @@ public class CaseManagementManager {
 		return result;
 	}
 
-	public Map convertProgramAccessListToMap(List paList) {
-		Map map = new HashMap();
+	public Map<String,ProgramAccess> convertProgramAccessListToMap(List<ProgramAccess> paList) {
+		Map<String,ProgramAccess> map = new HashMap<String,ProgramAccess>();
 		if (paList == null) {
 			return map;
 		}
-		for (Iterator iter = paList.iterator(); iter.hasNext();) {
-			ProgramAccess pa = (ProgramAccess) iter.next();
+		for (Iterator<ProgramAccess> iter = paList.iterator(); iter.hasNext();) {
+			ProgramAccess pa =  iter.next();
 			map.put(pa.getAccessType().getName().toLowerCase(), pa);
 		}
 		return map;
@@ -1173,27 +1173,27 @@ public class CaseManagementManager {
 	 * @param search
 	 * @return
 	 */
-	public List searchIssues(String providerNo, String programId, String search) {
+	public List<Issue> searchIssues(String providerNo, String programId, String search) {
 		// Get Role - if no ProgramProvider record found, show no issues.
-		List ppList = programProviderDao.getProgramProviderByProviderProgramId(providerNo, new Long(programId));
+		List<ProgramProvider> ppList = programProviderDao.getProgramProviderByProviderProgramId(providerNo, new Long(programId));
 		if (ppList == null || ppList.isEmpty()) {
-			return new ArrayList();
+			return new ArrayList<Issue>();
 		}
-		ProgramProvider pp = (ProgramProvider) ppList.get(0);
+		ProgramProvider pp = ppList.get(0);
 		Secrole role = pp.getRole();
 
 		// get program accesses... program allows either all roles or not all roles (does this mean no roles?)
-		List paList = programAccessDAO.getAccessListByProgramId(new Long(programId));
-		Map paMap = convertProgramAccessListToMap(paList);
+		List<ProgramAccess> paList = programAccessDAO.getAccessListByProgramId(new Long(programId));
+		Map<String,ProgramAccess> paMap = convertProgramAccessListToMap(paList);
 
 		// get all roles
-		List allRoles = this.roleManager.getRoles();
+		List<Secrole> allRoles = this.roleManager.getRoles();
 
-		List allowableSearchRoles = new ArrayList();
-		for (Iterator iter = allRoles.iterator(); iter.hasNext();) {
-			Secrole r = (Secrole) iter.next();
+		List<Secrole> allowableSearchRoles = new ArrayList<Secrole>();
+		for (Iterator<Secrole> iter = allRoles.iterator(); iter.hasNext();) {
+			Secrole r = iter.next();
 			String key = "write " + r.getName().toLowerCase() + " issues";
-			ProgramAccess pa = (ProgramAccess) paMap.get(key);
+			ProgramAccess pa = paMap.get(key);
 			if (pa != null) {
 				if (pa.isAllRoles() || isRoleIncludedInAccess(pa, role)) {
 					allowableSearchRoles.add(r);
@@ -1209,7 +1209,7 @@ public class CaseManagementManager {
 			}
 		}
 
-		List issList = issueDAO.search(search, allowableSearchRoles);
+		List<Issue> issList = issueDAO.search(search, allowableSearchRoles);
 
 		return issList;
 	}
@@ -1234,27 +1234,27 @@ public class CaseManagementManager {
 		}
 
 		// Get Role - if no ProgramProvider record found, show no issues.
-		List ppList = programProviderDao.getProgramProviderByProviderProgramId(loggedInInfo.loggedInProvider.getProviderNo(), new Long(programId));
+		List<ProgramProvider> ppList = programProviderDao.getProgramProviderByProviderProgramId(loggedInInfo.loggedInProvider.getProviderNo(), new Long(programId));
 		if (ppList == null || ppList.isEmpty()) {
-			return new ArrayList();
+			return new ArrayList<CaseManagementIssue>();
 		}
 
-		ProgramProvider pp = (ProgramProvider) ppList.get(0);
+		ProgramProvider pp = ppList.get(0);
 		Secrole role = pp.getRole();
 
 		// Load up access list from program
-		List programAccessList = programAccessDAO.getAccessListByProgramId(new Long(programId));
-		Map programAccessMap = convertProgramAccessListToMap(programAccessList);
+		List<ProgramAccess> programAccessList = programAccessDAO.getAccessListByProgramId(new Long(programId));
+		Map<String,ProgramAccess> programAccessMap = convertProgramAccessListToMap(programAccessList);
 
 		// iterate through the issue list
-		for (Iterator iter = issues.iterator(); iter.hasNext();) {
-			CaseManagementIssue cmIssue = (CaseManagementIssue) iter.next();
+		for (Iterator<CaseManagementIssue> iter = issues.iterator(); iter.hasNext();) {
+			CaseManagementIssue cmIssue = iter.next();
 			String issueRole = cmIssue.getIssue().getRole().toLowerCase();
 			ProgramAccess pa = null;
 			boolean add = false;
 
 			// write
-			pa = (ProgramAccess) programAccessMap.get("write " + issueRole + " issues");
+			pa = programAccessMap.get("write " + issueRole + " issues");
 			if (pa != null) {
 				if (pa.isAllRoles() || isRoleIncludedInAccess(pa, role)) {
 					add = true;
@@ -1274,7 +1274,7 @@ public class CaseManagementManager {
 
 			pa = null;
 			// read
-			pa = (ProgramAccess) programAccessMap.get("read " + issueRole + " issues");
+			pa = programAccessMap.get("read " + issueRole + " issues");
 			if (pa != null) {
 				if (pa.isAllRoles() || isRoleIncludedInAccess(pa, role)) {
 					// filteredIssues.add(cmIssue);

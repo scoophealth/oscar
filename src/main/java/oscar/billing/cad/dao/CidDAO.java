@@ -1,25 +1,25 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 package oscar.billing.cad.dao;
 
@@ -47,7 +47,7 @@ public class CidDAO extends DAO {
             "where co_cid = '" +
             id + "'";
 
-        
+
 
         try {
             ResultSet rs = DBHandler.GetSQL(sql);
@@ -57,13 +57,14 @@ public class CidDAO extends DAO {
                 cid.setDsCid(rs.getString(2));
             }
         } finally {
+        	//empty
         }
 
         return cid;
     }
-    
-	public List list(String codigo, String desc) throws SQLException {
-		List beans = null;
+
+	public List<CadCid> list(String codigo, String desc) throws SQLException {
+		List<CadCid> beans = null;
 		String sql = "select co_cid, ds_cid from cad_cid where st_registro = 'A'";
 
 		if ((codigo != null) && !codigo.trim().equals("")) {
@@ -82,14 +83,14 @@ public class CidDAO extends DAO {
 
 		try {
 			ResultSet rs = pstmCid.executeQuery();
-			beans = new ArrayList();
+			beans = new ArrayList<CadCid>();
 
 			while (rs.next()) {
 				CadCid bean = new CadCid();
 				String temp=rs.getString("co_cid");
 				if (temp==null) temp="";
 				bean.setCoCid(temp);
-				
+
 				temp=rs.getString("ds_cid");
 				if (temp==null) temp="";
 				bean.setDsCid(temp);

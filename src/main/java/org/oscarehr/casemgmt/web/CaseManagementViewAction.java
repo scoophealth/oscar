@@ -306,17 +306,17 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		if (OscarProperties.getInstance().isCaisiLoaded() && !useNewCaseMgmt) {
 
 			logger.debug("Get program providers");
-			List teamMembers = new ArrayList();
-			List ps = programMgr.getProgramProviders(programId);
+			List<String> teamMembers = new ArrayList<String>();
+			List<ProgramProvider> ps = programMgr.getProgramProviders(programId);
 			current = System.currentTimeMillis();
 			logger.debug("Get program providers " + String.valueOf(current - start));
 			start = current;
 
-			for (Iterator j = ps.iterator(); j.hasNext();) {
-				ProgramProvider pp = (ProgramProvider) j.next();
+			for (Iterator<ProgramProvider> j = ps.iterator(); j.hasNext();) {
+				ProgramProvider pp = j.next();
 				logger.debug("Get program provider teams");
-				for (Iterator k = pp.getTeams().iterator(); k.hasNext();) {
-					ProgramTeam pt = (ProgramTeam) k.next();
+				for (Iterator<ProgramTeam> k = pp.getTeams().iterator(); k.hasNext();) {
+					ProgramTeam pt = k.next();
 					if (pt.getName().equals(teamName)) {
 						teamMembers.add(pp.getProvider().getFormattedName());
 					}
@@ -885,15 +885,15 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		}
 	}
 
-	private List applyRoleFilter(List notes, String[] roleId) {
+	private List<CaseManagementNote> applyRoleFilter(List<CaseManagementNote> notes, String[] roleId) {
 
 		// if no filter return everything
 		if (Arrays.binarySearch(roleId, "a") >= 0) return notes;
 
-		List filteredNotes = new ArrayList();
+		List<CaseManagementNote> filteredNotes = new ArrayList<CaseManagementNote>();
 
-		for (Iterator iter = notes.listIterator(); iter.hasNext();) {
-			CaseManagementNote note = (CaseManagementNote) iter.next();
+		for (Iterator<CaseManagementNote> iter = notes.listIterator(); iter.hasNext();) {
+			CaseManagementNote note = iter.next();
 
 			if (Arrays.binarySearch(roleId, note.getReporter_caisi_role()) >= 0) filteredNotes.add(note);
 		}
@@ -901,15 +901,15 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		return filteredNotes;
 	}
 
-	private List applyIssueFilter(List notes, String[] issueId) {
+	private List<CaseManagementNote> applyIssueFilter(List<CaseManagementNote> notes, String[] issueId) {
 
 		// if no filter return everything
 		if (Arrays.binarySearch(issueId, "a") >= 0) return notes;
 
-		List filteredNotes = new ArrayList();
+		List<CaseManagementNote> filteredNotes = new ArrayList<CaseManagementNote>();
 
-		for (Iterator iter = notes.listIterator(); iter.hasNext();) {
-			CaseManagementNote note = (CaseManagementNote) iter.next();
+		for (Iterator<CaseManagementNote> iter = notes.listIterator(); iter.hasNext();) {
+			CaseManagementNote note = iter.next();
 			List<CaseManagementIssue> issues = cmeIssueNotesDao.getNoteIssues((Integer.valueOf(note.getId().toString())));
 			for(CaseManagementIssue issue: issues) {
 				if (Arrays.binarySearch(issueId, String.valueOf(issue.getId())) >= 0) {
@@ -940,16 +940,16 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		return notes;
 	}
 
-	private List applyProviderFilters(List notes, Set providers, String[] providerNo) {
+	private List applyProviderFilters(List<CaseManagementNote> notes, Set providers, String[] providerNo) {
 		boolean filter = false;
-		List filteredNotes = new ArrayList();
+		List<CaseManagementNote> filteredNotes = new ArrayList<CaseManagementNote>();
 
 		if (providerNo != null && Arrays.binarySearch(providerNo, "a") < 0) {
 			filter = true;
 		}
 
-		for (Iterator iter = notes.iterator(); iter.hasNext();) {
-			CaseManagementNote note = (CaseManagementNote) iter.next();
+		for (Iterator<CaseManagementNote> iter = notes.iterator(); iter.hasNext();) {
+			CaseManagementNote note = iter.next();
 			providers.add(note.getProvider());
 			if (!filter) {
 				// no filter, add all
@@ -1222,7 +1222,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 		String providerNo = getProviderNo(request);
 		String demoNo = getDemographicNo(request);
-		Collection notes = null;
+		Collection<CaseManagementNote> notes = null;
 
 		String appointmentNo = request.getParameter("appointment_no");
 
@@ -1306,7 +1306,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		notes = caseManagementMgr.filterNotes(notes, programId);
 		this.caseManagementMgr.getEditors(notes);
 
-		List lcme = new ArrayList();
+		List<CaseManagementNoteExt> lcme = new ArrayList<CaseManagementNoteExt>();
 		for (Object obj : notes) {
 			CaseManagementNote cmn = (CaseManagementNote) obj;
 			lcme.addAll(caseManagementMgr.getExtByNote(cmn.getId()));

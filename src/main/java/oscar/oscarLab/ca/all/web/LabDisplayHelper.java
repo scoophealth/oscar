@@ -85,7 +85,7 @@ public class LabDisplayHelper {
 		XmlUtils.appendChildToRoot(doc, "hl7TextMessageBody", hl7Body);
 
 		try {
-			// okay serious hackage going on here. I'm just going to serialise the map and all it's values. *shrugs* it's one of those days and one of those features... 
+			// okay serious hackage going on here. I'm just going to serialise the map and all it's values. *shrugs* it's one of those days and one of those features...
 			// key=identifier, value = CommonLabTestValues.findValuesForTest() result
 			HashMap<String, ArrayList<Map<String, Serializable>>> mapOfTestValues = new HashMap<String, ArrayList<Map<String, Serializable>>>();
 			MessageHandler handler = Factory.getHandler(lab.getSegmentID());
@@ -180,14 +180,14 @@ public class LabDisplayHelper {
 	        Node rootNode = cachedDemographicLabResultXmlData.getFirstChild();
 	        String serialisedEncodedBytes = XmlUtils.getChildNodeTextContents(rootNode, "mapOfTestValues");
 	        byte[] serialisedDecodedBytes=MiscUtils.decodeBase64(serialisedEncodedBytes);
-	        
+
 	        @SuppressWarnings("unchecked")
             HashMap<String, ArrayList<Map<String, Serializable>>> result=(HashMap<String, ArrayList<Map<String, Serializable>>>) MiscUtils.deserialiseFromByteArray(serialisedDecodedBytes);
-	        
+
 	        return result;
         } catch (Exception e) {
 	        logger.error("Yikes, the hack code failed, good luck...", e);
-	        
+
 	        return(null);
         }
 	}
