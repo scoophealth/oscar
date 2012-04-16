@@ -96,6 +96,8 @@ public class Program implements Serializable {
     private String siteSpecificField;
     private boolean enableEncounterTime = false;
     private boolean enableEncounterTransportationTime = false;
+    private String emailNotificationAddressesCsv=null;
+    private Date lastReferralNotification=null;
 
     public String getSiteSpecificField() {
 		return siteSpecificField;
@@ -724,4 +726,19 @@ public class Program implements Serializable {
 		this.enableEncounterTransportationTime = enableEncounterTransportationTime;
 	}
 
+	public String getEmailNotificationAddressesCsv() {
+    	return emailNotificationAddressesCsv;
+    }
+
+	public void setEmailNotificationAddressesCsv(String emailNotificationAddressesCsv) {
+    	this.emailNotificationAddressesCsv = emailNotificationAddressesCsv;
+    }
+
+	public Date getLastReferralNotification() {
+    	return lastReferralNotification;
+    }
+
+	public void setLastReferralNotification(Date lastReferralNotification) {
+    	this.lastReferralNotification = lastReferralNotification;
+    }
 }

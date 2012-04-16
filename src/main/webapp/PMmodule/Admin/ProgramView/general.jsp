@@ -131,4 +131,12 @@
 		<td width="20%">Enable Mandatory Transportation Time:</td>
 		<td><c:out value="${program.enableEncounterTransportationTime}" /></td>
 	</tr>
+	<tr class="b">
+		<td width="20%">Email Notification Addresses (csv):</td>
+		<td><c:out value="${program.emailNotificationAddressesCsv}" /></td>
+	</tr>
+	<tr class="b">
+		<td width="20%">Last referral notificaiton time:</td>
+		<td><c:out value="${program.lastReferralNotification}" /></td>
+	</tr>
 </table>
