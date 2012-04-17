@@ -48,14 +48,14 @@ public class ConsultationAttachLabs {
     private String providerNo;
     private String demoNo;
     private String reqId;
-    private ArrayList docs;
+    private ArrayList<String> docs;
 
     /** Creates a new instance of ConsultationAttachLabs */
     public ConsultationAttachLabs(String provNo, String demo, String req, String[] d) {
         providerNo = provNo;
         demoNo = demo;
         reqId = req;
-        docs = new ArrayList(d.length);
+        docs = new ArrayList<String>(d.length);
 
         //if dummy entry skip
         if( !d[0].equals("0") ) {
@@ -70,15 +70,15 @@ public class ConsultationAttachLabs {
 
         //first we get a list of currently attached labs
         CommonLabResultData labResData = new CommonLabResultData();
-        ArrayList oldlist = labResData.populateLabResultsData(demoNo,reqId,CommonLabResultData.ATTACHED);
-        ArrayList newlist = new ArrayList();
-        ArrayList keeplist = new ArrayList();
+        ArrayList<LabResultData> oldlist = labResData.populateLabResultsData(demoNo,reqId,CommonLabResultData.ATTACHED);
+        ArrayList<String> newlist = new ArrayList<String>();
+        ArrayList<LabResultData> keeplist = new ArrayList<LabResultData>();
         boolean alreadyAttached;
         //add new documents to list and get ids of docs to keep attached
         for(int i = 0; i < docs.size(); ++i) {
             alreadyAttached = false;
             for(int j = 0; j < oldlist.size(); ++j) {
-                if( ((LabResultData)oldlist.get(j)).labPatientId.equals(docs.get(i)) ) {
+                if( (oldlist.get(j)).labPatientId.equals(docs.get(i)) ) {
                     alreadyAttached = true;
                     keeplist.add(oldlist.get(j));
                     break;
@@ -93,12 +93,12 @@ public class ConsultationAttachLabs {
             if( keeplist.contains(oldlist.get(i)))
                 continue;
 
-           detachLabConsult(((LabResultData)oldlist.get(i)).labPatientId, reqId);
+           detachLabConsult((oldlist.get(i)).labPatientId, reqId);
         }
 
         //now we can add association to new list
         for(int i = 0; i < newlist.size(); ++i)
-            attachLabConsult(providerNo, (String)newlist.get(i), reqId);
+            attachLabConsult(providerNo, newlist.get(i), reqId);
     }
 
     public static void detachLabConsult(String LabNo, String consultId) {

@@ -35,24 +35,24 @@ import ca.uhn.hl7v2.validation.impl.NoValidation;
  * @author wrighd
  */
 public class CMLHandler implements MessageHandler {
-    
+
     ORU_R01 msg = null;
     Logger logger = Logger.getLogger(CMLHandler.class);
-    
+
     /** Creates a new instance of CMLHandler */
     public CMLHandler(){
     }
-    
+
     public void init(String hl7Body) throws HL7Exception {
         Parser p = new PipeParser();
         p.setValidationContext(new NoValidation());
         msg = (ORU_R01) p.parse(hl7Body.replaceAll( "\n", "\r\n" ));
     }
-    
+
     public String getMsgType(){
         return("CML");
     }
-    
+
     public String getMsgDate(){
         try {
             //return(formatDateTime(msg.getMSH().getDateTimeOfMessage().getTimeOfAnEvent().getValue()));
@@ -62,18 +62,18 @@ public class CMLHandler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getMsgPriority(){
         return("");
     }
-    
+
     /**
      *  Methods to get information about the Observation Request
      */
     public int getOBRCount(){
         return(msg.getRESPONSE().getORDER_OBSERVATIONReps());
     }
-    
+
     public int getOBXCount(int i){
         try{
             return(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATIONReps());
@@ -81,7 +81,7 @@ public class CMLHandler implements MessageHandler {
             return(0);
         }
     }
-    
+
     public String getOBRName(int i){
         try{
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBR().getUniversalServiceIdentifier().getText().getValue()));
@@ -89,7 +89,7 @@ public class CMLHandler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getTimeStamp(int i, int j){
         try{
             return(formatDateTime(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBR().getObservationDateTime().getTimeOfAnEvent().getValue())));
@@ -97,7 +97,7 @@ public class CMLHandler implements MessageHandler {
             return("");
         }
     }
-    
+
     public boolean isOBXAbnormal(int i, int j){
         try{
             if(getOBXAbnormalFlag(i, j).equals("A")){
@@ -105,12 +105,12 @@ public class CMLHandler implements MessageHandler {
             }else{
                 return(false);
             }
-            
+
         }catch(Exception e){
             return(false);
         }
     }
-    
+
     public String getOBXAbnormalFlag(int i, int j){
         try{
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getAbnormalFlags(0).getValue()));
@@ -118,10 +118,9 @@ public class CMLHandler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getObservationHeader(int i, int j){
         try{
-            Terser terser = new Terser(msg);
             return (getString(Terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),4,0,1,1))+" "+
                     getString(Terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),4,0,2,1))+" "+
                     getString(Terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),4,0,3,1))).trim();
@@ -129,10 +128,10 @@ public class CMLHandler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getOBXIdentifier(int i, int j){
         try{
-    		Segment obxSeg = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX();	
+    		Segment obxSeg = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX();
     		String subIdent = Terser.get(obxSeg, 3, 0, 1, 2) ;
     		if(subIdent != null){ //HACK: for gdml labs generated with SubmitLabByFormAction
     			return getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getIdentifier().getValue())+"&"+subIdent;
@@ -142,7 +141,7 @@ public class CMLHandler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getOBXValueType(int i, int j){
         try{
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getValueType().getValue()));
@@ -150,7 +149,7 @@ public class CMLHandler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getOBXName(int i, int j){
         try{
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getText().getValue()));
@@ -158,16 +157,15 @@ public class CMLHandler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getOBXResult(int i, int j){
         try{
-            Terser terser = new Terser(msg);
             return(getString(Terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),5,0,1,1)));
         }catch(Exception e){
             return("");
         }
     }
-    
+
     public String getOBXReferenceRange(int i, int j){
         try{
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getReferencesRange().getValue()));
@@ -175,7 +173,7 @@ public class CMLHandler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getOBXUnits(int i, int j){
         try{
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getUnits().getIdentifier().getValue()));
@@ -183,7 +181,7 @@ public class CMLHandler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getOBXResultStatus(int i, int j){
         String status = "";
         try{
@@ -198,7 +196,7 @@ public class CMLHandler implements MessageHandler {
         }
         return status;
     }
-    
+
     public int getOBXFinalResultCount(){
         int obrCount = getOBRCount();
         int obxCount;
@@ -212,41 +210,41 @@ public class CMLHandler implements MessageHandler {
         }
         return count;
     }
-    
+
     /**
      *  Retrieve the possible segment headers from the OBX fields
      */
-    public ArrayList getHeaders(){
+    public ArrayList<String> getHeaders(){
         int i;
         int j;
-        int k = 0;
-        ArrayList headers = new ArrayList();
+
+        ArrayList<String> headers = new ArrayList<String>();
         String currentHeader;
         try{
             for (i=0; i < msg.getRESPONSE().getORDER_OBSERVATIONReps(); i++){
-                
+
                 for (j=0; j < msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATIONReps(); j++){
                     // only check the obx segment for a header if it is one that will be displayed
                     if (!getOBXName(i, j).equals("")){
                         currentHeader = getObservationHeader(i, j);
-                        
+
                         if (!headers.contains(currentHeader)){
                             logger.info("Adding header: '"+currentHeader+"' to list");
                             headers.add(currentHeader);
                         }
                     }
-                    
+
                 }
-                
+
             }
             return(headers);
         }catch(Exception e){
             logger.error("Could not create header list", e);
-            
+
             return(null);
         }
     }
-    
+
     /**
      *  Methods to get information from observation notes
      */
@@ -258,7 +256,7 @@ public class CMLHandler implements MessageHandler {
         return(0);
         // }
     }
-    
+
     public String getOBRComment(int i, int j){
        /* try {
             int lastOBX = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATIONReps() - 1;
@@ -267,7 +265,7 @@ public class CMLHandler implements MessageHandler {
         return("");
         //}
     }
-    
+
     /**
      *  Methods to get information from observation notes
      */
@@ -275,7 +273,7 @@ public class CMLHandler implements MessageHandler {
         int count = 0;
         try {
             count = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getNTEReps();
-            
+
             // a bug in getNTEReps() causes it to return 1 instead of 0 so we check to make
             // sure there actually is a comment there
             if (count == 1){
@@ -283,13 +281,13 @@ public class CMLHandler implements MessageHandler {
                 if (comment == null)
                     count = 0;
             }
-            
+
         } catch (Exception e) {
             logger.error("Error retrieving obx comment count", e);
         }
         return count;
     }
-    
+
     public String getOBXComment(int i, int j, int k){
         try {
             //int lastOBX = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATIONReps() - 1;
@@ -298,23 +296,23 @@ public class CMLHandler implements MessageHandler {
             return("");
         }
     }
-    
-    
+
+
     /**
      *  Methods to get information about the patient
      */
     public String getPatientName(){
         return(getFirstName()+" "+getLastName());
     }
-    
+
     public String getFirstName(){
         return(getString(msg.getRESPONSE().getPATIENT().getPID().getPatientName().getGivenName().getValue()));
     }
-    
+
     public String getLastName(){
         return(getString(msg.getRESPONSE().getPATIENT().getPID().getPatientName().getFamilyName().getValue()));
     }
-    
+
     public String getDOB(){
         try{
             return(formatDateTime(getString(msg.getRESPONSE().getPATIENT().getPID().getDateOfBirth().getTimeOfAnEvent().getValue())));
@@ -322,7 +320,7 @@ public class CMLHandler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getAge(){
         String age = "N/A";
         String dob = getDOB();
@@ -333,19 +331,19 @@ public class CMLHandler implements MessageHandler {
             age = UtilDateUtilities.calcAge(date);
         } catch (ParseException e) {
             logger.error("Could not get age", e);
-            
+
         }
         return age;
     }
-    
+
     public String getSex(){
         return(getString(msg.getRESPONSE().getPATIENT().getPID().getSex().getValue()));
     }
-    
+
     public String getHealthNum(){
         return(getString(msg.getRESPONSE().getPATIENT().getPID().getAlternatePatientID().getID().getValue()));
     }
-    
+
     public String getHomePhone(){
         String phone = "";
         int i=0;
@@ -364,7 +362,7 @@ public class CMLHandler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getWorkPhone(){
         String phone = "";
         int i=0;
@@ -383,11 +381,11 @@ public class CMLHandler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getPatientLocation(){
         return(getString(msg.getMSH().getSendingFacility().getNamespaceID().getValue()));
     }
-    
+
     public String getServiceDate(){
         try{
             return(formatDateTime(getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getORC().getOrderEffectiveDateTime().getTimeOfAnEvent().getValue())));
@@ -395,7 +393,7 @@ public class CMLHandler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getRequestDate(int i){
         try{
             return(formatDateTime(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBR().getRequestedDateTime().getTimeOfAnEvent().getValue())));
@@ -403,7 +401,7 @@ public class CMLHandler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getOrderStatus(){
         try{
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getORC().getOrderStatus().getValue()));
@@ -411,7 +409,7 @@ public class CMLHandler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getClientRef(){
         String docNum = "";
         int i=0;
@@ -430,7 +428,7 @@ public class CMLHandler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getAccessionNum(){
         String accessionNum = "";
         try{
@@ -444,7 +442,7 @@ public class CMLHandler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getDocName(){
         String docName = "";
         int i=0;
@@ -463,7 +461,7 @@ public class CMLHandler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getCCDocs(){
         String docName = "";
         int i=0;
@@ -482,16 +480,16 @@ public class CMLHandler implements MessageHandler {
             return("");
         }
     }
-    
-    public ArrayList getDocNums(){
-        ArrayList docNums = new ArrayList();
+
+    public ArrayList<String> getDocNums(){
+        ArrayList<String> docNums = new ArrayList<String>();
         String id;
         int i;
-        
+
         try{
             String providerId = msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getOrderingProvider(0).getIDNumber().getValue();
             docNums.add(providerId);
-            
+
             i=0;
             while((id = msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getResultCopiesTo(i).getIDNumber().getValue()) != null){
                 if (!id.equals(providerId))
@@ -500,23 +498,23 @@ public class CMLHandler implements MessageHandler {
             }
         }catch(Exception e){
             logger.error("Could not return doctor nums", e);
-            
+
         }
-        
+
         return(docNums);
     }
-    
+
     public String audit(){
         return "";
     }
-    
-    
+
+
     private String getFullDocName(XCN docSeg){
         String docName = "";
-        
+
         if(docSeg.getPrefixEgDR().getValue() != null)
             docName = docSeg.getPrefixEgDR().getValue();
-        
+
         if(docSeg.getGivenName().getValue() != null){
             if (docName.equals(""))
                 docName = docSeg.getGivenName().getValue();
@@ -547,23 +545,23 @@ public class CMLHandler implements MessageHandler {
             else
                 docName = docName +" "+ docSeg.getDegreeEgMD().getValue();
         }
-        
+
         return (docName);
     }
-    
-    
+
+
     protected String formatDateTime(String plain){
     	if (plain==null || plain.trim().equals("")) return "";
-    	
+
         String dateFormat = "yyyyMMddHHmmss";
         dateFormat = dateFormat.substring(0, plain.length());
         String stringFormat = "yyyy-MM-dd HH:mm:ss";
         stringFormat = stringFormat.substring(0, stringFormat.lastIndexOf(dateFormat.charAt(dateFormat.length()-1))+1);
-        
+
         Date date = UtilDateUtilities.StringToDate(plain, dateFormat);
         return UtilDateUtilities.DateToString(date, stringFormat);
     }
-    
+
     protected String getString(String retrieve){
         if (retrieve != null){
             retrieve.replaceAll("^", " ");
@@ -572,20 +570,20 @@ public class CMLHandler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getFillerOrderNumber(){
 		return "";
 	}
-    
+
     public String getEncounterId(){
     	return "";
     }
     public String getRadiologistInfo(){
 		return "";
 	}
-    
+
     public String getNteForOBX(int i, int j){
-    	
+
     	return "";
     }
 }

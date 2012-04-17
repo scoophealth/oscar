@@ -72,16 +72,16 @@ public class ChildImmunizationReport implements PreventionReport{
     }
 
 
-    public Hashtable runReport(ArrayList list,Date asofDate){
+    public Hashtable<String,Object> runReport(ArrayList<ArrayList<String>> list,Date asofDate){
         int inList = 0;
         double done= 0;
-        ArrayList returnReport = new ArrayList();
+        ArrayList<PreventionReportDisplay> returnReport = new ArrayList<PreventionReportDisplay>();
 
         int dontInclude = 0;
           for (int i = 0; i < list.size(); i ++){//for each  element in arraylist
-             ArrayList fieldList = (ArrayList) list.get(i);
+             ArrayList<String> fieldList = list.get(i);
              log.debug("list "+list.size());
-             String demo = (String) fieldList.get(0);
+             String demo = fieldList.get(0);
              log.debug("fieldList "+fieldList.size());
 
 			// search prevention_date prevention_type deleted refused
@@ -257,7 +257,7 @@ public class ChildImmunizationReport implements PreventionReport{
 
             Collections.sort(returnReport);
 
-          Hashtable h = new Hashtable();
+          Hashtable<String,Object> h = new Hashtable<String,Object>();
 
           h.put("up2date",""+Math.round(done));
           h.put("percent",percentStr);
