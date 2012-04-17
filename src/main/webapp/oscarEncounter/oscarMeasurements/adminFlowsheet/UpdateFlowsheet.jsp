@@ -42,25 +42,25 @@
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
  //TODO: MOVE THIS TO AN ACTION
 WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-FlowSheetCustomizerDAO flowSheetCustomizerDAO = (FlowSheetCustomizerDAO) ctx.getBean("flowSheetCustomizerDAO");
+FlowSheetCustomizationDao flowSheetCustomizationDao = (FlowSheetCustomizationDao) ctx.getBean("flowSheetCustomizationDao");
 MeasurementTemplateFlowSheetConfig templateConfig = MeasurementTemplateFlowSheetConfig.getInstance();
 
 String flowsheet   = request.getParameter("flowsheet");
 String measurement = request.getParameter("measurement");
 String demographic = request.getParameter("demographic");
 
-long start = System.currentTimeMillis() ;       
-List custList = flowSheetCustomizerDAO.getFlowSheetCustomizations( flowsheet,(String) session.getAttribute("user"),demographic);
+long start = System.currentTimeMillis() ;
+List<FlowSheetCustomization> custList = flowSheetCustomizationDao.getFlowSheetCustomizations( flowsheet,(String) session.getAttribute("user"),demographic);
 MeasurementFlowSheet mFlowsheet = templateConfig.getFlowSheet(flowsheet,custList);
-long end = System.currentTimeMillis() ;       
+long end = System.currentTimeMillis() ;
 long diff = end - start;
 
 Map h2 = mFlowsheet.getMeasurementFlowSheetInfo(measurement);
 List<Recommendation> dsR = mFlowsheet.getDSElements((String) h2.get("measurement_type"));
 FlowSheetItem fsi =mFlowsheet.getFlowSheetItem(measurement);
 //EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();
-%>    
-    
+%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html:html locale="true">
@@ -259,14 +259,14 @@ div.recommendations li{
             <tr>
                 <td >
                     Flowsheet : <%=flowsheet%>   - <%=measurement%>
-        
-                    Demographic : 
+
+                    Demographic :
                     <% if (demographic!=null) { %>
                     <oscar:nameage demographicNo="<%=demographic%>"/>  <!--  a href="EditFlowsheet.jsp?flowsheet=<%=flowsheet%>">Go to all patients</a  -->
                     <%}else{%>
-                        All Patients 
+                        All Patients
                     <%}%>
-                    
+
                 </td>
                 <td  >&nbsp;
 
@@ -281,11 +281,11 @@ div.recommendations li{
 <tr>
 <td class="MainTableLeftColumn" valign="top">
    sdfsdf
-   
-   
+
+
 </td>
 
-<td valign="top" class="MainTableRightColumn">    
+<td valign="top" class="MainTableRightColumn">
 <div style="margin-left:10px;">
       <form action="FlowSheetCustomAction.do">
             <input type="hidden" name="method" value="update"/>
@@ -293,80 +293,80 @@ div.recommendations li{
             <input type="hidden" name="measurement" value="<%=measurement%>"/>
             <input type="hidden" name="demographic" value="<%=demographic%>"/>
             <fieldset width="300px">
-               <input type="hidden" name="updater" value="yes"/> 
+               <input type="hidden" name="updater" value="yes"/>
                <input type="hidden" name="prevention_type" value="<%=h2.get("prevention_type")%>"/>
                <input type="hidden" name="measurement_type" value="<%=h2.get("measurement_type")%>" />
                 Display Name: <input type="text" name="display_name" value="<%= h2.get("display_name")%>" /><br>
                 Guideline:    <input type="text" name="guideline"   value="<%=h2.get("guideline")%>"   /><br>
                 Graphable: <select name="graphable"   >
                     <option  value="yes" <%=sel(""+h2.get("graphable"),"yes")%> >YES</option>
-                    <option  value="no"  <%=sel(""+h2.get("graphable"),"no")%> >NO</option> 
+                    <option  value="no"  <%=sel(""+h2.get("graphable"),"no")%> >NO</option>
                 </select>><br>
                 Value Name:<input type="text" name="value_name"   value="<%=h2.get("value_name")%>"    /><br>
                 <div>
                     <h3>Rule</h3>
                    <br/>
-                    
+
                     <%
                     int count = 0;
                     if (dsR != null) {
-                        for (Recommendation e : dsR) { count++; 
-                        %>     
+                        for (Recommendation e : dsR) { count++;
+                        %>
                             Strength:   <select name="strength<%=count%>">
                                             <option value="recommendation" <%=sel(e.getStrength(),"recommendation")%>    >Recommendation</option>
                                             <option value="warning"        <%=sel(e.getStrength(),"warning")%>>Warning</option>
                                         </select>
-                            Text: <input type="text" name="text<%=count%>" length="100"  value="<%=e.getText()%>" />    
-                                
+                            Text: <input type="text" name="text<%=count%>" length="100"  value="<%=e.getText()%>" />
+
                                <ul style="list-style-type: none;" >
                                <%
                                List<RecommendationCondition> conds = e.getRecommendationCondition() ;
                                int condCount = 0;
                                for(RecommendationCondition cond:conds){condCount++;%>
-                                 
-                               <li><select name="type<%=count%>c<%=condCount%>" >   
+
+                               <li><select name="type<%=count%>c<%=condCount%>" >
                                         <option value="monthrange"        <%=sel("monthrange", cond.getType())%>     >Month Range</option>
-                                        <option value="lastValueAsInt"    <%=sel("lastValueAsInt",cond.getType())%>  >Last Int Value </option>   
+                                        <option value="lastValueAsInt"    <%=sel("lastValueAsInt",cond.getType())%>  >Last Int Value </option>
                                    </select>
-                                   
+
                                    Param: <input type="text" name="param<%=count%>c<%=condCount%>" value="<%=s(cond.getParam())%>" />
                                    Value: <input type="text" name="value<%=count%>c<%=condCount%>" value="<%=cond.getValue()%>" />
                                </li>
-                                 
+
                                <%} condCount++;%>
-                              
-                               <li><select name="type<%=count%>c<%=condCount%>" >   
+
+                               <li><select name="type<%=count%>c<%=condCount%>" >
                                         <option value="monthrange"         >Month Range</option>
-                                        <option value="lastValueAsInt"     >Last Int Value </option>   
+                                        <option value="lastValueAsInt"     >Last Int Value </option>
                                    </select>
-                                   
+
                                    Param: <input type="text" name="param<%=count%>c<%=condCount%>"  />
                                    Value: <input type="text" name="value<%=count%>c<%=condCount%>"  />
                                </li>
                                </ul>
-                                    
-                            <br/> 
-                        <%  
+
+                            <br/>
+                        <%
                         }
                     }
                     count++;
                     %>
-                                       
+
                     NEW<br>
                     Strength:   <select name="strength<%=count%>">
                                     <option value="recommendation"     >Recommendation</option>
                                     <option value="warning">Warning</option>
                                 </select>
-                                Text: <input type="text" name="text<%=count%>" length="100"   />    
-                                
+                                Text: <input type="text" name="text<%=count%>" length="100"   />
+
                                <ul style="list-style-type: none;" >
-                             
-                              
-                               <li><select name="type<%=count%>c1" >   
+
+
+                               <li><select name="type<%=count%>c1" >
                                         <option value="monthrange"         >Month Range</option>
-                                        <option value="lastValueAsInt"     >Last Int Value </option>   
+                                        <option value="lastValueAsInt"     >Last Int Value </option>
                                    </select>
-                                   
+
                                    Param: <input type="text" name="param<%=count%>c1"  />
                                    Value: <input type="text" name="value<%=count%>c1"  />
                                </li>
@@ -375,41 +375,41 @@ div.recommendations li{
 
 
 
-                    <br/> 
-                </div>    
-                
-                
+                    <br/>
+                </div>
+
+
                 <div>
                     <%
                            Hashtable colourHash = mFlowsheet.getIndicatorHashtable();
                            List<TargetColour> list = fsi.getTargetColour();
-                    int targetCount = 0;   
+                    int targetCount = 0;
                     if (list !=null){
                     for(TargetColour tc:list){ targetCount++;%>
                         <div style="border: 1px;">
-                           <h3>Target <%=targetCount%></h3> 
-                           
+                           <h3>Target <%=targetCount%></h3>
+
                             <ul style="list-style-type: none;" >
                                <%
                                List<TargetCondition> conds = tc.getTargetConditions() ;
                                int condCount = 0;
                                for(TargetCondition cond:conds){condCount++;%>
-                                 
-                               <li><select name="targettype<%=targetCount%>c<%=condCount%>" >   
+
+                               <li><select name="targettype<%=targetCount%>c<%=condCount%>" >
                                    <option value="getDataAsDouble"     <%=sel("getDataAsDouble", cond.getType())%>  >Number Value</option>
                                         <option value="isMale"              <%=sel("isMale",cond.getType())%>> Is Male </option>
                                         <option value="isFemale"            <%=sel("isFemale",cond.getType())%>> Is Female </option>
                                         <option value="getNumberFromSplit"  <%=sel("getNumberFromSplit",cond.getType())%>> Number Split </option>
                                         <option value="isDataEqualTo"       <%=sel("isDataEqualTo",cond.getType())%>>  String </option>
                                    </select>
-                                   
+
                                    Param: <input type="text" name="targetparam<%=targetCount%>c<%=condCount%>" value="<%=s(cond.getParam())%>" />
                                    Value: <input type="text" name="targetvalue<%=targetCount%>c<%=condCount%>" value="<%=cond.getValue()%>" />
                                </li>
-                                 
+
                                <%}condCount++;%>
-                               
-                               <li><select name="targettype<%=targetCount%>c<%=condCount%>"> 
+
+                               <li><select name="targettype<%=targetCount%>c<%=condCount%>">
                                        <option value="-1">Not Set</option>
                                         <option value="getDataAsDouble"       >Number Value</option>
                                         <option value="isMale"              > Is Male </option>
@@ -417,35 +417,35 @@ div.recommendations li{
                                         <option value="getNumberFromSplit"  > Number Split </option>
                                         <option value="isDataEqualTo"       >  String </option>
                                    </select>
-                                   
+
                                    Param: <input type="text" name="targetparam<%=targetCount%>c<%=condCount%>" value="" />
                                    Value: <input type="text" name="targetvalue<%=targetCount%>c<%=condCount%>" value="" />
                                </li>
-                               
-                               
+
+
                            </ul>
-                           
+
                            <!-- div style="width:200px;" -->
                            <ul style="display: inline;  list-style-type: none; ">
                                <%Enumeration en = colourHash.keys();
                                while(en.hasMoreElements()){
                                  String colour = (String) en.nextElement();  %>
-                               
+
                                <li style="display:inline;background-color:<%=colourHash.get(colour)%>;">
                                    <input type="radio" name="col<%=targetCount%>" value="<%=colour%>" <%=s(colour,tc.getIndicationColor())%> ><%=colour%></input>
                                </li>
                                <%}%>
                            </ul>
-                           <!--  /div  -->     
-                        
-                   <%} 
+                           <!--  /div  -->
+
+                   <%}
                     }targetCount++;%>
-                   
-                   <h3>New Target <%=targetCount%></h3> 
-                           
+
+                   <h3>New Target <%=targetCount%></h3>
+
                             <ul style="list-style-type: none;" >
-                               
-                               <li><select name="targettype<%=targetCount%>c1"> 
+
+                               <li><select name="targettype<%=targetCount%>c1">
                                        <option value="-1">Not Set</option>
                                         <option value="getDataAsDouble"       >Number Value</option>
                                         <option value="isMale"              > Is Male </option>
@@ -453,14 +453,14 @@ div.recommendations li{
                                         <option value="getNumberFromSplit"  > Number Split </option>
                                         <option value="isDataEqualTo"       >  String </option>
                                    </select>
-                                   
+
                                    Param: <input type="text" name="targetparam<%=targetCount%>c1" value="" />
                                    Value: <input type="text" name="targetvalue<%=targetCount%>c1" value="" />
                                </li>
-                               
-                               
+
+
                            </ul>
-                           
+
                            <!-- div style="width:200px;" -->
                            <ul style="display: inline;  list-style-type: none; ">
                                <%Enumeration en = colourHash.keys();
@@ -474,12 +474,12 @@ div.recommendations li{
 
                     </div>
                 </div>
-                
+
                 <input type="submit" value="Update" />
             </fieldset>
-        </form>  
-    
-</div>    
+        </form>
+
+</div>
 </td>
 </tr>
 <tr>
@@ -524,8 +524,8 @@ div.recommendations li{
         }
         return ret;
     }
-    
-    
+
+
     String s(String s){
     if (s ==null || s.equalsIgnoreCase("null")){
         return "";
@@ -546,6 +546,6 @@ String sel(String s1,String s2){
     return "";
 }
 
-    
-    
+
+
 %>

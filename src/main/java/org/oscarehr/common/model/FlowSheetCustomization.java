@@ -4,16 +4,16 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details. 
- * 
+ * GNU General Public License for more details.
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * Jason Gallagher
  *
@@ -27,50 +27,58 @@ package org.oscarehr.common.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
 /**
  *
- * 
-   create table flowsheet_customization(
-      id int(10) NOT NULL auto_increment primary key,  
-      flowsheet varchar(40),
-      action varchar(10),
-      measurement varchar(255),
-      payload text,
-      provider_no varchar(6),
-      demographic_no int(10),
-      create_date datetime,
-      archived char(1) default '0',
-      archived_date datetime
-      
-     
-    ) ; 
-    
- * 
- * 
+ *
+ *
+ *
  * @author jaygallagher
  */
-public class FlowSheetCustomization {
+@Entity
+@Table(name="flowsheet_customization")
+public class FlowSheetCustomization extends AbstractModel<Integer>{
+	@Transient
     public static final String ADD = "add";
+	@Transient
     public static final String DELETE = "delete";
+	@Transient
     public static final String UPDATE = "update";
-    
-    private long    id;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer    id;
     private String flowsheet = null;
+    private String action = null;
     private String measurement = null;
     private String payload = null;
-    private String action = null;
+    @Column(name="provider_no")
     private String providerNo = null;
+    @Column(name="demographic_no")
     private String demographicNo = null;
-    private boolean archived = false;
+    @Column(name="create_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createDate = null;
+    private boolean archived = false;
+    @Column(name="archived_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date archivedDate = null;
 
-    
+
     public String toString(){
         return   " id:"+id+ " flowsheet:" +flowsheet+ " measurement:" + measurement + " payload:" + payload +  " action:"  + action +  " providerNo:"  +providerNo +" demographicNo:"+ demographicNo+" createDate:"+createDate+" archived:"+archived;
-    
+
     }
-        
+
     public String getFlowsheet() {
         return flowsheet;
     }
@@ -127,11 +135,11 @@ public class FlowSheetCustomization {
         this.archived = archived;
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

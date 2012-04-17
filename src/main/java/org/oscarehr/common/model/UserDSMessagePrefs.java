@@ -28,29 +28,50 @@ package org.oscarehr.common.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
 /**
  *
  * @author rjonasz
  */
-public class UserDSMessagePrefs implements Serializable {
-
+@Entity
+@Table(name="user_ds_message_prefs")
+public class UserDSMessagePrefs extends AbstractModel<Integer> implements Serializable {
+	@Transient
     public final static String MYDRUGREF = "mydrugref";
 
-    private long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+	@Column(name="resource_type")
     private String resourceType;
+	@Column(name="resource_id")
     private String resourceId;
+	@Column(name="resource_updated_date")
+	@Temporal(TemporalType.DATE)
     private Date resourceUpdatedDate;
+	@Column(name="provider_no")
     private String providerNo;
+	@Column(name="record_created")
+	@Temporal(TemporalType.DATE)
     private Date recordCreated;
     private Boolean archived;
 
 
 
-    public long getId() {
+    public Integer getId() {
         return this.id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

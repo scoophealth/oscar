@@ -24,8 +24,8 @@ import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.DxDao;
+import org.oscarehr.common.dao.DxresearchDAO;
 import org.oscarehr.common.model.DxAssociation;
-import org.oscarehr.dx.dao.DxResearchDAO;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -152,7 +152,7 @@ public class dxResearchLoadAssociationsAction extends DispatchAction {
     	CaseManagementIssueDAO cmiDao =(CaseManagementIssueDAO)SpringUtils.getBean("CaseManagementIssueDAO");
     	CaseManagementManager cmMgr = (CaseManagementManager)SpringUtils.getBean("caseManagementManager");
     	IssueDAO issueDao = (IssueDAO)SpringUtils.getBean("IssueDAO");
-    	DxResearchDAO dxrDao = (DxResearchDAO)SpringUtils.getBean("dxResearchDao");
+    	DxresearchDAO dxrDao = (DxresearchDAO)SpringUtils.getBean("dxresearchDao");
 
     	//clear existing entries
     	dxrDao.removeAllAssociationEntries();

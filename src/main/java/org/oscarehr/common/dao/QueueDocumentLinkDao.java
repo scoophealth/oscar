@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * 
+ *
  *
  * This software was written for the
  * Department of Family Medicine
@@ -27,42 +27,69 @@ package org.oscarehr.common.dao;
 
 import java.util.List;
 
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.QueueDocumentLink;
 import org.oscarehr.util.MiscUtils;
-import org.springframework.dao.support.DataAccessUtils;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author jackson bi
  */
+@Repository
+public class QueueDocumentLinkDao extends AbstractDao<QueueDocumentLink> {
 
-public class QueueDocumentLinkDao extends HibernateDaoSupport {
-    public List getQueueDocLinks(){
-        List queues=this.getHibernateTemplate().find("from QueueDocumentLink");
+	public QueueDocumentLinkDao() {
+		super(QueueDocumentLink.class);
+	}
+
+    public List<QueueDocumentLink> getQueueDocLinks(){
+    	Query query = entityManager.createQuery("SELECT q from QueueDocumentLink q");
+
+    	@SuppressWarnings("unchecked")
+        List<QueueDocumentLink> queues = query.getResultList();
         return queues;
     }
-    public List getActiveQueueDocLink(){
-        return this.getHibernateTemplate().find("from QueueDocumentLink where status=?",new Object[]{"A"});
+
+    public  List<QueueDocumentLink> getActiveQueueDocLink(){
+    	Query query = entityManager.createQuery("SELECT q from QueueDocumentLink q where q.status=?");
+    	query.setParameter(1, "A");
+
+    	@SuppressWarnings("unchecked")
+        List<QueueDocumentLink> queues = query.getResultList();
+
+       return queues;
     }
 
-    public List getQueueFromDocument(Integer docId){
-        List queues = this.getHibernateTemplate().find("from QueueDocumentLink where docId = ?",new Object[] {docId});
+    public  List<QueueDocumentLink> getQueueFromDocument(Integer docId){
+    	Query query = entityManager.createQuery("SELECT q from QueueDocumentLink q where q.docId=?");
+    	query.setParameter(1,docId);
+
+    	@SuppressWarnings("unchecked")
+        List<QueueDocumentLink> queues = query.getResultList();
+
         return queues;
     }
 
-    public List getDocumentFromQueue(Integer qId){
-        List queues = this.getHibernateTemplate().find("from QueueDocumentLink where queueId = ?",new Object[] {qId});
-        return queues;
+    public  List<QueueDocumentLink> getDocumentFromQueue(Integer qId){
+    	Query query = entityManager.createQuery("SELECT q from QueueDocumentLink q where queueId=?");
+    	query.setParameter(1, qId);
+
+    	@SuppressWarnings("unchecked")
+        List<QueueDocumentLink> queues = query.getResultList();
+
+    	return queues;
     }
 
     public boolean hasQueueBeenLinkedWithDocument(Integer dId,Integer qId){
-        int count = DataAccessUtils.intResult(getHibernateTemplate().find("select count(*) from QueueDocumentLink where docId = ? and queueId = ? ",new Object[] {dId,qId}));
-        if (count > 0){
-            return true;
-        }
-        else
-            return false;
+    	Query query = entityManager.createQuery("SELECT q from QueueDocumentLink q where q.docId=? and q.queueId=?");
+    	query.setParameter(1, dId);
+    	query.setParameter(2, qId);
+    	@SuppressWarnings("unchecked")
+        List<QueueDocumentLink> queues = query.getResultList();
+
+        return (queues.size()>0);
     }
     public boolean setStatusInactive(Integer docId){
         List<QueueDocumentLink> qs=getQueueFromDocument(docId);
@@ -70,7 +97,7 @@ public class QueueDocumentLinkDao extends HibernateDaoSupport {
             QueueDocumentLink q=qs.get(0);
             if(!q.getStatus().equals("I")){
                 q.setStatus("I");
-                this.getHibernateTemplate().update(q);
+                merge(q);
                 return true;
             }else{
                 return false;
@@ -86,7 +113,7 @@ public class QueueDocumentLinkDao extends HibernateDaoSupport {
                qdl.setDocId(dId);
                qdl.setStatus("A");
                qdl.setQueueId(qId);
-               this.getHibernateTemplate().save(qdl);
+               persist(qdl);
            }
         }catch(Exception e){
             MiscUtils.getLogger().error("Error", e);

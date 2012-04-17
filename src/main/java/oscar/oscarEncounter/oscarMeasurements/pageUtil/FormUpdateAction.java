@@ -20,9 +20,9 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.oscarehr.common.dao.FlowSheetCustomizerDAO;
-import org.oscarehr.common.dao.FlowSheetDrugDAO;
+import org.oscarehr.common.dao.FlowSheetCustomizationDao;
 import org.oscarehr.common.dao.MeasurementDao;
+import org.oscarehr.common.model.FlowSheetCustomization;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
@@ -62,10 +62,9 @@ public class FormUpdateAction extends Action {
 
 	    WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(session.getServletContext());
 
-	    FlowSheetCustomizerDAO flowSheetCustomizerDAO = (FlowSheetCustomizerDAO) ctx.getBean("flowSheetCustomizerDAO");
-	    FlowSheetDrugDAO flowSheetDrugDAO = (FlowSheetDrugDAO) ctx.getBean("flowSheetDrugDAO");
+	    FlowSheetCustomizationDao flowSheetCustomizationDao = (FlowSheetCustomizationDao) ctx.getBean("flowSheetCustomizationDao");
 
-		List custList = flowSheetCustomizerDAO.getFlowSheetCustomizations(temp,providerNo,demographic_no);
+		List<FlowSheetCustomization> custList = flowSheetCustomizationDao.getFlowSheetCustomizations(temp,providerNo,demographic_no);
 
 		MeasurementTemplateFlowSheetConfig templateConfig = MeasurementTemplateFlowSheetConfig.getInstance();
 		MeasurementFlowSheet mFlowsheet = templateConfig.getFlowSheet(temp,custList);

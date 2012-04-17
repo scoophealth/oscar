@@ -12,6 +12,7 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.FacilityDao;
+import org.oscarehr.common.dao.IntegratorControlDao;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SessionConstants;

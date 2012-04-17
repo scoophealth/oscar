@@ -27,28 +27,40 @@ package org.oscarehr.common.dao;
 
 import java.util.List;
 
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.Clinic;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author Jason Gallagher
  */
-public class ClinicDAO extends HibernateDaoSupport {
-    
-    /** Creates a new instance of UserPropertyDAO */
+@Repository
+public class ClinicDAO extends AbstractDao<Clinic> {
+
     public ClinicDAO() {
-    }
-   
-    public Clinic getClinic(){
-        List<Clinic> codeList = this.getHibernateTemplate().find("from Clinic");
-        return codeList.get(0);
-    }
-   
-    
-    public void save(Clinic clinic) {
-        this.getHibernateTemplate().saveOrUpdate(clinic);
+    	super(Clinic.class);
     }
 
-    
+    public Clinic getClinic(){
+    	Query query = entityManager.createQuery("select c from Clinic c");
+        @SuppressWarnings("unchecked")
+        List<Clinic> codeList = query.getResultList();
+        if(codeList.size()>0) {
+        	return codeList.get(0);
+        }
+        return null;
+    }
+
+
+    public void save(Clinic clinic) {
+        if(clinic.getId() != null && clinic.getId().intValue()>0) {
+        	merge(clinic);
+        } else {
+        	persist(clinic);
+        }
+    }
+
+
 }

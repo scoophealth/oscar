@@ -39,7 +39,6 @@ import org.oscarehr.common.dao.DrugReasonDao;
 import org.oscarehr.common.dao.Icd9Dao;
 import org.oscarehr.common.model.DrugReason;
 import org.oscarehr.common.model.Icd9;
-import org.oscarehr.dx.dao.DxResearchDAO;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -66,7 +65,6 @@ public final class RxReasonAction extends DispatchAction {
     		MessageResources mResources = MessageResources.getMessageResources( "oscarResources" );
     		DrugReasonDao drugReasonDao     = (DrugReasonDao) SpringUtils.getBean("drugReasonDao");
     		Icd9Dao icd9Dao = (Icd9Dao)  SpringUtils.getBean("Icd9DAO");
-    		DxResearchDAO dxResearchDAO  = (DxResearchDAO) SpringUtils.getBean("dxResearchDao");
 
             String codingSystem = request.getParameter("codingSystem");
             String primaryReasonFlagStr = request.getParameter("primaryReasonFlag");
