@@ -674,9 +674,15 @@ function changeSite(sel) {
                             java.util.Date grantdate = dateFormat.parse(vGrantdate);
                             java.util.Date toDate = new java.util.Date();
                             long millisDifference = toDate.getTime() - grantdate.getTime();
-                            long daysDifference = millisDifference / (1000 * 60 * 60 * 24);
-                            if (daysDifference > 0){
 
+                            long ONE_DAY_IN_MS = (1000 * 60 * 60 * 24);                                                      
+                            long daysDifference = millisDifference / (ONE_DAY_IN_MS);
+                            
+                            String numDaysUntilWarn = OscarProperties.getInstance().getProperty("tickler_warn_period");
+                            long ticklerWarnDays = Long.parseLong(numDaysUntilWarn);
+                            boolean ignoreWarning = (ticklerWarnDays < 0);
+                            if (!ignoreWarning && (daysDifference > ticklerWarnDays)){
+                            
                             %>
 
                             <tr >
