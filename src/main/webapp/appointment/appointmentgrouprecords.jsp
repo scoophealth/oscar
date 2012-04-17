@@ -109,17 +109,25 @@
 
 		    //delete the selected appts
             if (request.getParameter("groupappt").equals("Group Delete")) {
-            	Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no"+datano)));
-	            appointmentArchiveDao.archiveAppointment(appt);
-            	rowsAffected = oscarSuperManager.update("appointmentDao", "delete",
-            			new Object [] {request.getParameter("appointment_no" + datano)});
+            	if( request.getParameter("appointment_no"+datano) != null ) {
+            		Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no"+datano)));
+            		if( appt != null ) {
+	            		appointmentArchiveDao.archiveAppointment(appt);
+            			rowsAffected = oscarSuperManager.update("appointmentDao", "delete",
+            				new Object [] {request.getParameter("appointment_no" + datano)});
+            		}
+            	}
             }
 
-            if (request.getParameter("groupappt").equals("Group Update")) {
-            	Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no"+datano)));
-	            appointmentArchiveDao.archiveAppointment(appt);
-            	rowsAffected = oscarSuperManager.update("appointmentDao", "delete",
-            			new Object [] {request.getParameter("appointment_no" + datano)});
+            if (request.getParameter("groupappt").equals("Group Update")) {            	
+            	if( request.getParameter("appointment_no"+datano) != null ) {
+            		Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no"+datano)));
+            		if( appt != null ) {
+	            		appointmentArchiveDao.archiveAppointment(appt);
+            			rowsAffected = oscarSuperManager.update("appointmentDao", "delete",
+            				new Object [] {request.getParameter("appointment_no" + datano)});
+            		}
+            	}
 
                 String[] paramu = new String[19];
                         paramu[0]=request.getParameter("provider_no"+datano);
