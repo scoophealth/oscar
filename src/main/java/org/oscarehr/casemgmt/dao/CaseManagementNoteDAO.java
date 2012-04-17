@@ -1,23 +1,23 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for 
- * Centre for Research on Inner City Health, St. Michael's Hospital, 
- * Toronto, Ontario, Canada 
+ *
+ * This software was written for
+ * Centre for Research on Inner City Health, St. Michael's Hospital,
+ * Toronto, Ontario, Canada
  */
 
 package org.oscarehr.casemgmt.dao;
@@ -103,7 +103,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		List<CaseManagementNote> ret = this.getHibernateTemplate().find(hql, uuid);
 		return ret;
 	}
-	
+
 	public List<CaseManagementNote> getCPPNotes(String demoNo, long issueId, String staleDate) {
 		Date d;
 		GregorianCalendar cal = new GregorianCalendar(1970, 1, 1);
@@ -179,10 +179,10 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 			String hql = "select cmn from CaseManagementNote cmn where cmn.demographic_no = ? and cmn.id = (select max(cmn2.id) from CaseManagementNote cmn2 where cmn2.uuid = cmn.uuid) order by cmn.observation_date";
 			return getHibernateTemplate().find(hql, demographic_no);
 			//return getHibernateTemplate().findByNamedQuery("mostRecent", new Object[] { demographic_no });
-			
+
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
     public List<CaseManagementNote> getNotesByDemographic(String demographic_no, Integer maxNotes) {
 		if (OscarProperties.getInstance().getDbType().equals("oracle")) {
@@ -190,17 +190,17 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		}
 		else {
 			String hql = "select cmn from CaseManagementNote cmn where cmn.demographic_no = ? and cmn.id = (select max(cmn2.id) from CaseManagementNote cmn2 where cmn2.uuid = cmn.uuid) order by cmn.observation_date desc";
-			
+
 			HibernateTemplate Hibernatetemplate = getHibernateTemplate();
 			if( maxNotes != -1 ) {
-				Hibernatetemplate.setMaxResults(maxNotes);				
-			}			
-			
+				Hibernatetemplate.setMaxResults(maxNotes);
+			}
+
 			List<CaseManagementNote> list = Hibernatetemplate.find(hql, demographic_no);
 			Hibernatetemplate.setMaxResults(0);
 			return list;
 			//return getHibernateTemplate().findByNamedQuery("mostRecent", new Object[] { demographic_no });
-			
+
 		}
 	}
 
@@ -210,7 +210,8 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 	 * this.getHibernateTemplate().find("from CaseManagementNote cmn where cmn.demographic_no = ? ORDER BY cmn.update_date DESC", new Object[] {demographic_no}); }
 	 */
 
-	public List getActiveNotesByDemographic(String demographic_no, String[] issues) {
+	@SuppressWarnings("unchecked")
+    public List<CaseManagementNote> getActiveNotesByDemographic(String demographic_no, String[] issues) {
 		String list = null;
 		String hql;
 		if (issues != null) {
@@ -233,12 +234,12 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 			}
 		}
 
-		return new ArrayList();
+		return new ArrayList<CaseManagementNote>();
 	}
-	
+
 	@SuppressWarnings("unchecked")
     public List<CaseManagementNote> getNotesByDemographic(String demographic_no, String[] issueIds, Integer maxNotes) {
-		
+
 		HibernateTemplate hibernateTemplate = getHibernateTemplate();
 		if( maxNotes != -1 ) {
 			hibernateTemplate.setMaxResults(maxNotes);
@@ -265,14 +266,15 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 				retList = this.getHibernateTemplate().find(hql, new Object[] { id, demographic_no});
 			}
 		}
-		
+
 		hibernateTemplate.setMaxResults(0);
 		// String hql = "select distinct cmn from CaseManagementNote cmn where cmn.demographic_no = ? and cmn.issues.issue_id in (" + list +
 		// ") and cmn.id in (select max(cmn.id) from cmn GROUP BY uuid) ORDER BY cmn.observation_date asc";
 		return retList;
 	}
 
-	public List getNotesByDemographic(String demographic_no, String[] issueIds) {
+	@SuppressWarnings("unchecked")
+    public List<CaseManagementNote> getNotesByDemographic(String demographic_no, String[] issueIds) {
 		String list = null;
 		String hql;
 		if (issueIds != null) {
@@ -296,13 +298,13 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		}
 		// String hql = "select distinct cmn from CaseManagementNote cmn where cmn.demographic_no = ? and cmn.issues.issue_id in (" + list +
 		// ") and cmn.id in (select max(cmn.id) from cmn GROUP BY uuid) ORDER BY cmn.observation_date asc";
-		return new ArrayList();
+		return new ArrayList<CaseManagementNote>();
 	}
 
     public Collection<CaseManagementNote> findNotesByDemographicAndIssueCode(Integer demographic_no, String[] issueCodes) {
 		String issueCodeList=null;
 		if (issueCodes!=null && issueCodes.length>0) issueCodeList=SqlUtils.constructInClauseForStatements(issueCodes, true);
-		
+
 		String sqlCommand="select distinct casemgmt_note.note_id from issue,casemgmt_issue,casemgmt_issue_notes,casemgmt_note where casemgmt_issue.issue_id=issue.issue_id and casemgmt_issue.demographic_no='"+demographic_no+"' "+(issueCodeList!=null?"and issue.code in "+issueCodeList:"")+" and casemgmt_issue_notes.id=casemgmt_issue.id and casemgmt_issue_notes.note_id=casemgmt_note.note_id";
 		Session session=getSession();
 		List<CaseManagementNote> notes=new ArrayList<CaseManagementNote>();
@@ -325,14 +327,14 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 			CaseManagementNote existingNote=uniqueForUuid.get(note.getUuid());
 			if (existingNote==null || note.getUpdate_date().after(existingNote.getUpdate_date())) uniqueForUuid.put(note.getUuid(), note);
 		}
-		
+
 		// sort by observationdate
 		TreeMap<Date,CaseManagementNote> sortedResults=new TreeMap<Date,CaseManagementNote>();
 		for (CaseManagementNote note : uniqueForUuid.values())
 		{
 			sortedResults.put(note.getObservation_date(), note);
 		}
-		
+
 		return(sortedResults.values());
 	}
 
@@ -435,7 +437,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 	/**
 	 * Get the count of demographic Id's based on the providerId and encounterType, 2 numbers will be provided, the unique count and the non unique count (which just represents the
 	 * number of encounters in general) All encounter types are represented in the resulting hashMap, even ones with 0 counts.
-	 * 
+	 *
 	 * @param programId can be null at which point it's across the entire agency
 	 */
 	public static EncounterCounts getDemographicEncounterCountsByProgramAndRoleId(Integer programId, int roleId, Date startDate, Date endDate) {
@@ -443,7 +445,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		try {
 			EncounterCounts results = new EncounterCounts();
 			c = DbConnectionFilter.getThreadLocalDbConnection();
-			
+
 			// get the numbers broken down by encounter types
 			{
 				String sqlCommand = "select encounter_type,count(demographic_no), count(distinct demographic_no) from casemgmt_note where reporter_caisi_role=? and observation_date>=? and observation_date<?"+(programId==null?"":" and program_no=?")+" group by encounter_type";
@@ -461,8 +463,8 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 					results.uniqueCounts.put(encounterType, rs.getInt(3));
 				}
 			}
-			
-			// get the numbers in total, not broken down. 
+
+			// get the numbers in total, not broken down.
 			{
 				String sqlCommand = "select count(distinct demographic_no) from casemgmt_note where reporter_caisi_role=? and observation_date>=? and observation_date<?"+(programId==null?"":" and program_no=?");
 				PreparedStatement ps = c.prepareStatement(sqlCommand);
@@ -486,16 +488,16 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 			SqlUtils.closeResources(c, null, null);
 		}
 	}
-	
-	
+
+
 	/*
 	  select issue_id from issue where code = 'Concerns';
 	 */
 
-	
+
 	public int getNoteCountForProviderForDateRange(String providerNo,Date startDate,Date endDate){
 		int ret = 0;
-		
+
 		Connection c = null;
 		try {
 			c = DbConnectionFilter.getThreadLocalDbConnection();
@@ -504,7 +506,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		ps.setString(1, providerNo);
 		ps.setTimestamp(2, new Timestamp(startDate.getTime()));
 		ps.setTimestamp(3, new Timestamp(endDate.getTime()));
-		
+
 
 		ResultSet rs = ps.executeQuery();
 		rs.next();
@@ -515,10 +517,10 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		}
 		return ret;
 	}
-	
+
 	public int getNoteCountForProviderForDateRangeWithIssueId(String providerNo,Date startDate,Date endDate,String issueCode){
 		int ret = 0;
-		
+
 		Connection c = null;
 		try {
 			c = DbConnectionFilter.getThreadLocalDbConnection();
@@ -534,9 +536,9 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 				log.debug("Could not find issueCode "+issueCode);
 				return 0;
 			}
-			
+
 			log.debug("issue Code "+issueCode+" id :"+id);
-			
+
 			String sqlCommand = "select count(distinct uuid) from casemgmt_issue c, casemgmt_issue_notes cin, casemgmt_note cn where c.issue_id = ? and c.id = cin.id and cin.note_id = cn.note_id and cn.provider_no = ?  and observation_date >= ? and observation_date <= ?";
 			log.debug(sqlCommand);
 			ps = c.prepareStatement(sqlCommand);
@@ -544,7 +546,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 			ps.setString(2, providerNo);
 			ps.setTimestamp(3, new Timestamp(startDate.getTime()));
 			ps.setTimestamp(4, new Timestamp(endDate.getTime()));
-			
+
 
 			rs = ps.executeQuery();
 			rs.next();
@@ -571,24 +573,24 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 
         return rs;
     }
-    
+
 	public List<CaseManagementNote> getMostRecentNotesByAppointmentNo(int appointmentNo) {
 		String hql = "select distinct cmn.uuid from CaseManagementNote cmn where cmn.appointmentNo = ?";
 		List<String> tmp = this.getHibernateTemplate().find(hql, appointmentNo);
 		List<CaseManagementNote> mostRecents = new ArrayList<CaseManagementNote>();
 		for(String uuid:tmp) {
-			mostRecents.add(this.getMostRecentNote(uuid));			
+			mostRecents.add(this.getMostRecentNote(uuid));
 		}
 		return mostRecents;
 	}
-	
+
 	public List<CaseManagementNote> getMostRecentNotes(Integer demographicNo) {
 		String hql = "select distinct cmn.uuid from CaseManagementNote cmn where cmn.demographic_no = ?";
 		@SuppressWarnings("unchecked")
 		List<String> tmp = this.getHibernateTemplate().find(hql, new Object[]{String.valueOf(demographicNo)});
 		List<CaseManagementNote> mostRecents = new ArrayList<CaseManagementNote>();
 		for(String uuid:tmp) {
-			mostRecents.add(this.getMostRecentNote(uuid));			
+			mostRecents.add(this.getMostRecentNote(uuid));
 		}
 		return mostRecents;
 	}

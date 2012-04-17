@@ -1,23 +1,23 @@
 /*
-* 
+*
 * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
+* This software is published under the GPL GNU General Public License.
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version. *
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+*
 * <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
+*
+* This software was written for
+* Centre for Research on Inner City Health, St. Michael's Hospital,
+* Toronto, Ontario, Canada
 */
 
 package org.oscarehr.casemgmt.dao;
@@ -36,7 +36,7 @@ import com.quatro.model.security.Secrole;
 
 public class IssueDAO extends HibernateDaoSupport {
 	private static Logger logger = MiscUtils.getLogger();
-	
+
     public Issue getIssue(Long id) {
 		return getHibernateTemplate().get(Issue.class, id);
     }
@@ -49,20 +49,20 @@ public class IssueDAO extends HibernateDaoSupport {
         String code = "'" + StringUtils.join(codes,"','") + "'";
         return this.getHibernateTemplate().find("from Issue i where i.code in (" + code + ")");
     }
-    
-    public Issue findIssueByCode(String code) {        
+
+    public Issue findIssueByCode(String code) {
         List<Issue>list = this.getHibernateTemplate().find("from Issue i where i.code = ?", new Object[] {code});
         if( list.size() > 0 )
             return list.get(0);
-        
+
         return null;
     }
 
-    public Issue findIssueByTypeAndCode(String type, String code) {        
+    public Issue findIssueByTypeAndCode(String type, String code) {
         List<Issue>list = this.getHibernateTemplate().find("from Issue i where i.type=? and i.code = ?", new Object[] {type,code});
         if( list.size() > 0 )
             return list.get(0);
-        
+
         return null;
     }
 
@@ -70,16 +70,17 @@ public class IssueDAO extends HibernateDaoSupport {
         this.getHibernateTemplate().saveOrUpdate(issue);
     }
 
-    public List findIssueBySearch(String search) {
+    @SuppressWarnings("unchecked")
+    public List<Issue> findIssueBySearch(String search) {
         search = "%" + search + "%";
         search = search.toLowerCase();
         String sql = "from Issue i where lower(i.code) like ? or lower(i.description) like ?";
         return this.getHibernateTemplate().find(sql, new Object[] {search, search});
     }
 
-    public List search(String search, List roles) {
+    public List<Issue> search(String search, List<Secrole> roles) {
         if (roles.size() == 0) {
-            return new ArrayList();
+            return new ArrayList<Issue>();
         }
 
         StringBuilder buf = new StringBuilder();
@@ -87,7 +88,7 @@ public class IssueDAO extends HibernateDaoSupport {
             if (x != 0) {
                 buf.append(",");
             }
-            buf.append("\'" + StringEscapeUtils.escapeSql(((Secrole)roles.get(x)).getName()) + "\'");
+            buf.append("\'" + StringEscapeUtils.escapeSql((roles.get(x)).getName()) + "\'");
         }
         String roleList = buf.toString();
 
@@ -106,7 +107,7 @@ public class IssueDAO extends HibernateDaoSupport {
         logger.debug(sql);
         return this.getHibernateTemplate().find(sql, new Object[] {search, search});
     }
-    
+
     /**
      * Retrieves a list of Issue codes that have a type matching what is configured in oscar_mcmaster.properties as COMMUNITY_ISSUE_CODETYPE,
      * or an empty list if this property is not found.

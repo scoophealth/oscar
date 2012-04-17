@@ -42,10 +42,10 @@ public class CDMReminderHlp {
   public CDMReminderHlp() {
   }
 
-  private String[] createCDMCodeArray(List codes) {
+  private String[] createCDMCodeArray(List<String[]> codes) {
     String[] ret = new String[codes.size()];
     for (int i = 0; i < codes.size(); i++) {
-      String[] row = (String[]) codes.get(i);
+      String[] row = codes.get(i);
       ret[i] = row[0];
     }
     return ret;
@@ -70,7 +70,7 @@ public class CDMReminderHlp {
 
     for (Iterator iter = cdmPatients.iterator(); iter.hasNext(); ) {
     	MiscUtils.checkShutdownSignaled();
-    	
+
       String[] dxRecord = (String[]) iter.next();
       String demoNo = dxRecord[0];
       String provNo = dxRecord[1];
@@ -104,10 +104,10 @@ public class CDMReminderHlp {
     }
   }
 
-  private List extractPatientNos(List cdmPatients) {
-    ArrayList cdmPatientNos = new ArrayList();
-    for (Iterator iter = cdmPatients.iterator(); iter.hasNext(); ) {
-      String[] item = (String[]) iter.next();
+  private List<String> extractPatientNos(List<String[]> cdmPatients) {
+    ArrayList<String> cdmPatientNos = new ArrayList<String>();
+    for (Iterator<String[]> iter = cdmPatients.iterator(); iter.hasNext(); ) {
+      String[] item = iter.next();
       cdmPatientNos.add(item[0]);
     }
     return cdmPatientNos;
@@ -127,15 +127,14 @@ public class CDMReminderHlp {
    * @param provNo String
    * @return ArrayList
    */
-  private List getCDMPatients(String[] codes) {
-    SqlUtils ut = new SqlUtils();
+  private List<String[]> getCDMPatients(String[] codes) {
 
     String qry = "SELECT de.demographic_no,de.provider_no,dxresearch_code FROM dxresearch d, demographic de WHERE de.demographic_no=d.demographic_no " +
         " and d.dxresearch_code ";
     qry += SqlUtils.constructInClauseString(codes, true);
     qry +=
         " and status = 'A' and patient_status = 'AC' order by de.demographic_no";
-    List lst = SqlUtils.getQueryResultsList(qry);
-    return lst == null ? new ArrayList() : lst;
+    List<String[]> lst = SqlUtils.getQueryResultsList(qry);
+    return lst == null ? new ArrayList<String[]>() : lst;
   }
 }

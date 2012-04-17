@@ -95,7 +95,7 @@ public class CommonLabResultData {
 			labs.addAll(cmlLabs);
 		}
 		if (epsilon != null && epsilon.trim().equals("yes")) {
-			ArrayList cmlLabs = mDSData.populateCMLResultsData(demographicNo, reqId, attach);
+			ArrayList<LabResultData> cmlLabs = mDSData.populateCMLResultsData(demographicNo, reqId, attach);
 			labs.addAll(cmlLabs);
 		}
 
@@ -115,45 +115,45 @@ public class CommonLabResultData {
 
 		return labs;
 	}
-	
-	
+
+
     public ArrayList<LabResultData> populateLabResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status, boolean isPaged, Integer page, Integer pageSize, boolean mixLabsAndDocs, Boolean isAbnormal) {
-    		
+
     		ArrayList<LabResultData> labs = new ArrayList<LabResultData>();
     		oscar.oscarMDS.data.MDSResultsData mDSData = new oscar.oscarMDS.data.MDSResultsData();
-    		
+
     		OscarProperties op = OscarProperties.getInstance();
-    		
+
     		String cml = op.getProperty("CML_LABS");
     		String mds = op.getProperty("MDS_LABS");
     		String pathnet = op.getProperty("PATHNET_LABS");
     		String hl7text = op.getProperty("HL7TEXT_LABS");
-    		
-    		
+
+
     		if(!isPaged && cml != null && cml.trim().equals("yes")){
-    			ArrayList cmlLabs = mDSData.populateCMLResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+    			ArrayList<LabResultData> cmlLabs = mDSData.populateCMLResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
     			labs.addAll(cmlLabs);
     		}
-    		
+
     		if (!isPaged && mds != null && mds.trim().equals("yes")){
-    			ArrayList mdsLabs = mDSData.populateMDSResultsData2(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+    			ArrayList<LabResultData> mdsLabs = mDSData.populateMDSResultsData2(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
     			labs.addAll(mdsLabs);
-    		
+
     		}
     		if (!isPaged && pathnet != null && pathnet.trim().equals("yes")){
     			PathnetResultsData pathData = new PathnetResultsData();
-    			ArrayList pathLabs = pathData.populatePathnetResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+    			ArrayList<LabResultData> pathLabs = pathData.populatePathnetResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
     			labs.addAll(pathLabs);
     		}
-    		
+
     		if (hl7text != null && hl7text.trim().equals("yes")){
-    			ArrayList hl7Labs = Hl7textResultsData.populateHl7ResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+    			ArrayList<LabResultData> hl7Labs = Hl7textResultsData.populateHl7ResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
     			labs.addAll(hl7Labs);
-    		
-    		}		
+
+    		}
     		return labs;
     }
-	
+
     public ArrayList<LabResultData> populateLabResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String ackStatus, String docScanStatus, boolean isPaged, Integer page, Integer pageSize, boolean mixLabsAndDocs, Boolean isAbnormal) {
     		return populateLabResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, ackStatus, isPaged, page, pageSize, mixLabsAndDocs, isAbnormal);
     }
@@ -177,26 +177,26 @@ public class CommonLabResultData {
 		if (scannedDocStatus != null && (scannedDocStatus.equals("N") || scannedDocStatus.equals("I") || scannedDocStatus.equals(""))) {
 
 			if (epsilon != null && epsilon.trim().equals("yes")) {
-				ArrayList cmlLabs = mDSData.populateEpsilonResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+				ArrayList<LabResultData> cmlLabs = mDSData.populateEpsilonResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
 				labs.addAll(cmlLabs);
 			}
 
 			if (cml != null && cml.trim().equals("yes")) {
-				ArrayList cmlLabs = mDSData.populateCMLResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+				ArrayList<LabResultData> cmlLabs = mDSData.populateCMLResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
 				labs.addAll(cmlLabs);
 			}
 			if (mds != null && mds.trim().equals("yes")) {
-				ArrayList mdsLabs = mDSData.populateMDSResultsData2(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+				ArrayList<LabResultData> mdsLabs = mDSData.populateMDSResultsData2(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
 				labs.addAll(mdsLabs);
 			}
 			if (pathnet != null && pathnet.trim().equals("yes")) {
 				PathnetResultsData pathData = new PathnetResultsData();
-				ArrayList pathLabs = pathData.populatePathnetResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+				ArrayList<LabResultData> pathLabs = pathData.populatePathnetResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
 				labs.addAll(pathLabs);
 			}
 			if (hl7text != null && hl7text.trim().equals("yes")) {
 
-				ArrayList hl7Labs = Hl7textResultsData.populateHl7ResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+				ArrayList<LabResultData> hl7Labs = Hl7textResultsData.populateHl7ResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
 				labs.addAll(hl7Labs);
 			}
 		}
@@ -204,7 +204,7 @@ public class CommonLabResultData {
 		if (scannedDocStatus != null && (scannedDocStatus.equals("O") || scannedDocStatus.equals("I") || scannedDocStatus.equals(""))) {
 
 			DocumentResultsDao documentResultsDao = (DocumentResultsDao) SpringUtils.getBean("documentResultsDao");
-			ArrayList docs = documentResultsDao.populateDocumentResultsDataOfAllProviders(providerNo, demographicNo, status);
+			ArrayList<LabResultData> docs = documentResultsDao.populateDocumentResultsDataOfAllProviders(providerNo, demographicNo, status);
 			labs.addAll(docs);
 		}
 
@@ -328,9 +328,9 @@ public class CommonLabResultData {
 		}
 	}
 
-	public ArrayList getStatusArray(String labId, String labType) {
+	public ArrayList<ReportStatus> getStatusArray(String labId, String labType) {
 
-		ArrayList statusArray = new ArrayList();
+		ArrayList<ReportStatus> statusArray = new ArrayList<ReportStatus>();
 
 		String sql = "select provider.first_name, provider.last_name, provider.provider_no, providerLabRouting.status, providerLabRouting.comment, providerLabRouting.timestamp from provider, providerLabRouting where provider.provider_no = providerLabRouting.provider_no and providerLabRouting.lab_no='" + labId + "' and providerLabRouting.lab_type = '" + labType + "'";
 		try {
@@ -411,7 +411,7 @@ public class CommonLabResultData {
 		}
 	}
 
-	public static boolean updateLabRouting(ArrayList flaggedLabs, String selectedProviders) {
+	public static boolean updateLabRouting(ArrayList<String[]> flaggedLabs, String selectedProviders) {
 		boolean result;
 
 		try {
@@ -422,7 +422,7 @@ public class CommonLabResultData {
 			ProviderLabRouting plr = new ProviderLabRouting();
 			// MiscUtils.getLogger().info(flaggedLabs.size()+"--");
 			for (int i = 0; i < flaggedLabs.size(); i++) {
-				String[] strarr = (String[]) flaggedLabs.get(i);
+				String[] strarr = flaggedLabs.get(i);
 				String lab = strarr[0];
 				String labType = strarr[1];
 
@@ -457,12 +457,12 @@ public class CommonLabResultData {
 	}
 
 	// //
-	public static boolean fileLabs(ArrayList flaggedLabs, String provider) {
+	public static boolean fileLabs(ArrayList<String[]> flaggedLabs, String provider) {
 
 		CommonLabResultData data = new CommonLabResultData();
 
 		for (int i = 0; i < flaggedLabs.size(); i++) {
-			String[] strarr = (String[]) flaggedLabs.get(i);
+			String[] strarr = flaggedLabs.get(i);
 			String lab = strarr[0];
 			String labType = strarr[1];
 			String labs = data.getMatchingLabs(lab, labType);
@@ -498,7 +498,7 @@ public class CommonLabResultData {
 		} else if (lab_type.equals(LabResultData.DOCUMENT)) {
 			labs = lab_no;// one document is only linked to one patient.
 		}else if (lab_type.equals(LabResultData.HRM)){
-        		labs = lab_no; 
+        		labs = lab_no;
         	}
 
 		return labs;
@@ -577,7 +577,7 @@ public class CommonLabResultData {
 		return ret;
 	}
 
-	
+
 	public int getAckCount(String labId, String labType) {
 		int ret = 0;
 		try {

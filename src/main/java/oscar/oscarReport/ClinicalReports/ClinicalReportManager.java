@@ -47,31 +47,31 @@ import oscar.OscarProperties;
  * @author jay
  */
 public class ClinicalReportManager {
-    
+
     static ClinicalReportManager clinicalReportManager = new ClinicalReportManager();
-    
-    List numeratorList = null ; //new ArrayList();
-    List denominatorList = null ;// new ArrayList();
-    
-    Hashtable numeratorHash = null; // new Hashtable();
-    Hashtable denominatorHash = null; //new Hashtable();
-    
+
+    List<Numerator> numeratorList = null ; //new ArrayList();
+    List<Denominator> denominatorList = null ;// new ArrayList();
+
+    Hashtable<String,Object> numeratorHash = null; // new Hashtable();
+    Hashtable<String,Object> denominatorHash = null; //new Hashtable();
+
     boolean loaded = false;
-    
+
     /** Creates a new instance of ClinicalReportManager */
     private ClinicalReportManager() {
-        
+
     }
-    
+
     static public ClinicalReportManager getInstance(){
-        
+
         clinicalReportManager.loadReportsFromFile();
-        
+
         return clinicalReportManager;
     }
-    
+
     public void addNumerator(Numerator n){
-        
+
         if(!numeratorList.contains(n)){
             numeratorList.add(n);
         }
@@ -79,9 +79,9 @@ public class ClinicalReportManager {
         //    numeratorHash.put(n.getId(),n);
         //}
     }
-    
+
     public void addNumerator(Hashtable n,String id){
-        
+
         //if(!numeratorList.contains(n)){
         //    numeratorList.add(n);
         //}
@@ -89,7 +89,7 @@ public class ClinicalReportManager {
             numeratorHash.put(id,n);
         }
     }
-   
+
     public void addDenominator(Denominator d){
         if(!denominatorList.contains(d)){
             denominatorList.add(d);
@@ -98,23 +98,23 @@ public class ClinicalReportManager {
             denominatorHash.put(d.getId(),d);
         }
     }
-    
-    
-    public List getDenominatorList(){
+
+
+    public List<Denominator> getDenominatorList(){
         return denominatorList;
     }
-    
-    public List getNumeratorList(){
+
+    public List<Numerator> getNumeratorList(){
         return numeratorList;
     }
-    
+
     public Numerator getNumeratorById(String id){
        //return (Numerator) numeratorHash.get(id);
        Hashtable numerHash = (Hashtable) numeratorHash.get(id);
        String type = (String) numerHash.get("type");
        if (type != null && type.equals("SQL")){
           SQLNumerator sqlN = new SQLNumerator();
-                            
+
             sqlN.setNumeratorName((String) numerHash.get("numeratorName"));
             sqlN.setId((String) numerHash.get("id"));
             sqlN.setSQL((String) numerHash.get("sql"));
@@ -141,58 +141,59 @@ public class ClinicalReportManager {
        }
        return null;
     }
-    
+
     public Denominator getDenominatorById(String id){
         return (Denominator) denominatorHash.get(id);
     }
-    
+
+    @SuppressWarnings("unchecked")
     private void loadReportsFromFile(){
-        
+
         if(!loaded){
-            
-            numeratorList = new ArrayList();
-            denominatorList = new ArrayList();
-            numeratorHash = new Hashtable();
-            denominatorHash = new Hashtable();
-        
-            
+
+            numeratorList = new ArrayList<Numerator>();
+            denominatorList = new ArrayList<Denominator>();
+            numeratorHash = new Hashtable<String,Object>();
+            denominatorHash = new Hashtable<String,Object>();
+
+
             String[] flowsheetsArray = {"oscar/oscarReport/ClinicalReports/ClinicalReports.xml"
-                                        };             
-            
+                                        };
+
             OscarProperties properties = OscarProperties.getInstance();
-            String userConfigFilePath = (String)properties.get("CLINICAL_REPORT_CONFIG_FILE");            
+            String userConfigFilePath = (String)properties.get("CLINICAL_REPORT_CONFIG_FILE");
             boolean userConfigLoaded = false;
 
-            for ( int i = 0; i < flowsheetsArray.length;i++){  
+            for ( int i = 0; i < flowsheetsArray.length;i++){
                 InputStream is = null;
-                
+
                 if( userConfigFilePath != null && !userConfigLoaded ) {
                     try {
                         is = new FileInputStream(userConfigFilePath);
-                        userConfigLoaded = true;                    
+                        userConfigLoaded = true;
                     } catch( FileNotFoundException ex ) {MiscUtils.getLogger().error("Error", ex);
                         is = null;
                     }
-                }                                
-                
-                if( is == null ) {
-                    is = this.getClass().getClassLoader().getResourceAsStream(flowsheetsArray[i]);                
                 }
 
-                try{              
+                if( is == null ) {
+                    is = this.getClass().getClassLoader().getResourceAsStream(flowsheetsArray[i]);
+                }
+
+                try{
                     SAXBuilder parser = new SAXBuilder();
-                    Document doc = parser.build(is);        
+                    Document doc = parser.build(is);
                     Element root = doc.getRootElement();
 
 
-                    List meas = root.getChildren("Numerator");
+                    List<Element> meas = root.getChildren("Numerator");
                     for (int j = 0; j < meas.size(); j++){
-                        Element e = (Element) meas.get(j);
+                        Element e = meas.get(j);
                         String type = e.getAttributeValue("type");
                         if (type != null && type.equals("SQL")){
                             SQLNumerator sqlN = new SQLNumerator();
                             //TODO: What if one of the values is null;
-                            Hashtable h = new Hashtable();
+                            Hashtable<String,String> h = new Hashtable<String,String>();
                             h.put("type",type);
                             h.put("numeratorName",e.getAttributeValue("name"));
                             h.put("id",e.getAttributeValue("id"));
@@ -201,8 +202,8 @@ public class ClinicalReportManager {
                             h.put("outputfields",e.getAttributeValue("outputfields"));
                             }
                             addNumerator(h,e.getAttributeValue("id"));
-                            
-                            
+
+
                             sqlN.setNumeratorName(e.getAttributeValue("name"));
                             sqlN.setId(e.getAttributeValue("id"));
                             sqlN.setSQL(e.getText());
@@ -214,14 +215,14 @@ public class ClinicalReportManager {
                             droolsN.setNumeratorName(e.getAttributeValue("name"));
                             droolsN.setId(e.getAttributeValue("id"));
                             droolsN.setFile(e.getAttributeValue("file"));
-                            
-                            Hashtable h = new Hashtable();
+
+                            Hashtable<String,String> h = new Hashtable<String,String>();
                             h.put("type",type);
                             h.put("numeratorName",e.getAttributeValue("name"));
                             h.put("id",e.getAttributeValue("id"));
                             h.put("file",e.getAttributeValue("file"));
                             addNumerator(h,e.getAttributeValue("id"));
-                            
+
                             addNumerator(droolsN);
                        }
                        if (type != null && type.equals("DROOLS2")){
@@ -230,23 +231,23 @@ public class ClinicalReportManager {
                             droolsN.setId(e.getAttributeValue("id"));
                             droolsN.setFile(e.getAttributeValue("file"));
                             droolsN.parseReplaceValues(e.getAttributeValue("replaceKeys"));
-                            Hashtable h = new Hashtable();
+                            Hashtable<String,String> h = new Hashtable<String,String>();
                             h.put("type",type);
                             h.put("numeratorName",e.getAttributeValue("name"));
                             h.put("id",e.getAttributeValue("id"));
                             h.put("replaceKeys",e.getAttributeValue("replaceKeys"));
                             //h.put("file",e.getAttributeValue("file"));
                             addNumerator(h,e.getAttributeValue("id"));
-                            
+
                             addNumerator(droolsN);
-                       } 
-                       
+                       }
+
                    }
 
 
                    meas = root.getChildren("Denominator");
                    for (int j = 0; j < meas.size(); j++){
-                        Element e = (Element) meas.get(j);
+                        Element e = meas.get(j);
                         String type = e.getAttributeValue("type");
                         if (type != null && type.equals("SQL")){
                             SQLDenominator sqlD = new SQLDenominator();
@@ -262,7 +263,7 @@ public class ClinicalReportManager {
                             psD.setId(e.getAttributeValue("id"));
                             addDenominator(psD);
                         }
-                   } 
+                   }
                 }catch(Exception e){
                     MiscUtils.getLogger().error("Error", e);
                 }
@@ -270,6 +271,6 @@ public class ClinicalReportManager {
             }
         }
     }
-    
-    
+
+
 }
