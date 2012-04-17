@@ -17,7 +17,7 @@ public class ConfigUtils
 	{
 		try
         {
-			String overrideProperties=System.getProperty("oscar_properties");
+			String overrideProperties=System.getProperty("oscar_override_properties");
 			logger.info("loading "+overrideProperties);
 	        properties=getProperties(overrideProperties, "/over_ride_config.properties");
         }
