@@ -260,6 +260,10 @@ Program p = (Program)request.getAttribute("oldProgram");
 		<td width="20%">Enable Mandatory Transportation Time:</td>
 		<td><html:checkbox property="program.enableEncounterTransportationTime" /></td>
 	</tr>
+	<tr class="b">
+		<td width="20%">Email Notification Addresses (csv):</td>
+		<td><html:text property="program.emailNotificationAddressesCsv" /></td>
+	</tr>
 	<tr>
 		<td colspan="2"><input type="button" value="Save" onclick="return save()" /> <html:cancel /></td>
 	</tr>
