@@ -20,12 +20,10 @@
 		<property name="secObjectNameDao" ref="secObjectNameDao" />
 	</bean>
 
-	<bean name="/oscarEncounter/oscarMeasurements/adminFlowsheet/FlowSheetCustomAction" class="org.oscarehr.common.web.FlowSheetCustomAction">
-		<property name="flowSheetCustomizerDAO" ref="flowSheetCustomizerDAO" />
+	<bean name="/oscarEncounter/oscarMeasurements/adminFlowsheet/FlowSheetCustomAction" class="org.oscarehr.common.web.FlowSheetCustomAction" autowire="byName">
 	</bean>
 
-	<bean name="/oscarEncounter/oscarMeasurements/FlowSheetDrugAction" class="org.oscarehr.common.web.FlowSheetDrugAction">
-		<property name="flowSheetDrugDAO" ref="flowSheetDrugDAO" />
+	<bean name="/oscarEncounter/oscarMeasurements/FlowSheetDrugAction" class="org.oscarehr.common.web.FlowSheetDrugAction" autowire="byName">
 	</bean>
 
 	<bean name="/MeasurementHL7Uploader" class="oscar.oscarEncounter.oscarMeasurements.hl7.MeasurementHL7UploaderAction" autowire="byName" />
@@ -131,7 +129,7 @@
 		<property name="allergyDao" ref="AllergyDao" />
 		<property name="hl7TextInfoDAO" ref="hl7TextInfoDao" />
 		<property name="preventionDao" ref="preventionDao"/>
-		<property name="dxResearchDAO" ref="DxresearchDAO"></property>
+		<property name="dxresearchDAO" ref="dxresearchDAO"></property>
 		<property name="icd9Dao" ref="Icd9DAO"></property>
 	</bean>
 	<bean name="/demographic/eRourkeExport" class="oscar.oscarDemographic.pageUtil.RourkeExportAction" singleton="false">
@@ -212,7 +210,7 @@
 	</bean>
 
 	<bean name="/saveWorkView" class="org.oscarehr.provider.web.ProviderViewAction" singleton="false">
-		<property name="userViewDAO" ref="UserViewDAO" />
+		<property name="userViewDAO" ref="viewDao" />
 	</bean>
 
 	<bean name="/report/DxresearchReport" class="org.oscarehr.common.web.DxresearchReportAction" singleton="false">

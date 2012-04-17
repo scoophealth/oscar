@@ -87,9 +87,9 @@ import org.oscarehr.common.dao.EncounterFormDao;
 import org.oscarehr.common.dao.GroupNoteDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
+import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.common.model.GroupNoteLink;
 import org.oscarehr.common.model.UserProperty;
-import org.oscarehr.dx.model.DxResearch;
 import org.oscarehr.eyeform.EyeformInit;
 import org.oscarehr.eyeform.dao.FollowUpDao;
 import org.oscarehr.eyeform.dao.MacroDao;
@@ -340,10 +340,10 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 		}
 		/* Dx */
-		List<DxResearch> dxList = this.caseManagementMgr.getDxByDemographicNo(demoNo);
-		Map<String, DxResearch> dxMap = new HashMap<String, DxResearch>();
-		for (DxResearch dx : dxList) {
-			dxMap.put(dx.getCode(), dx);
+		List<Dxresearch> dxList = this.caseManagementMgr.getDxByDemographicNo(demoNo);
+		Map<String, Dxresearch> dxMap = new HashMap<String, Dxresearch>();
+		for (Dxresearch dx : dxList) {
+			dxMap.put(dx.getDxresearchCode(), dx);
 		}
 		request.setAttribute("dxMap", dxMap);
 

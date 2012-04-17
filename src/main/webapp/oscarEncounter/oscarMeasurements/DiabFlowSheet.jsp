@@ -3,8 +3,8 @@
 <%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,java.net.*, oscar.oscarRx.util.*"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils,oscar.log.*"%>
 <%@page import="org.springframework.web.context.WebApplicationContext,oscar.oscarResearch.oscarDxResearch.bean.*"%>
-<%@page import="org.oscarehr.common.dao.FlowSheetCustomizerDAO,org.oscarehr.common.model.FlowSheetCustomization"%>
-<%@page import="org.oscarehr.common.dao.FlowSheetDrugDAO,org.oscarehr.common.model.FlowSheetDrug"%>
+<%@page import="org.oscarehr.common.dao.FlowSheetCustomizationDao,org.oscarehr.common.model.FlowSheetCustomization"%>
+<%@page import="org.oscarehr.common.dao.FlowSheetDrugDao,org.oscarehr.common.model.FlowSheetDrug"%>
 <%@page import="org.oscarehr.common.dao.UserPropertyDAO,org.oscarehr.common.model.UserProperty"%>
 
 <%@page import="org.oscarehr.common.dao.AllergyDao"%>
@@ -45,10 +45,10 @@ boolean dsProblems = false;
 
 WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
 
-FlowSheetCustomizerDAO flowSheetCustomizerDAO = (FlowSheetCustomizerDAO) ctx.getBean("flowSheetCustomizerDAO");
-FlowSheetDrugDAO flowSheetDrugDAO = (FlowSheetDrugDAO) ctx.getBean("flowSheetDrugDAO");
+FlowSheetCustomizationDao flowSheetCustomizationDao = (FlowSheetCustomizationDao) ctx.getBean("flowSheetCustomizationDao");
+FlowSheetDrugDao flowSheetDrugDao = (FlowSheetDrugDao) ctx.getBean("flowSheetDrugDao");
 
-List custList = flowSheetCustomizerDAO.getFlowSheetCustomizations( temp,(String) session.getAttribute("user"),demographic_no);
+List<FlowSheetCustomization> custList = flowSheetCustomizationDao.getFlowSheetCustomizations( temp,(String) session.getAttribute("user"),demographic_no);
 
 ////Start
 MeasurementTemplateFlowSheetConfig templateConfig = MeasurementTemplateFlowSheetConfig.getInstance();
@@ -469,7 +469,7 @@ if (!medicationsResult.isEmpty()) {
 		if (medicationsResult.get(i).get("freqcode")!=null) {
 			medicationsList += " " + medicationsResult.get(i).get("freqcode").toString();
 		}
-		
+
 		if (medicationsResult.get(i).get("prn").toString().equals("1")) {
 			medicationsList += " PRN";
 		}
@@ -617,7 +617,7 @@ String date = year+"-"+month+"-"+day;
 	    			<%//This part here grabs the field name %>
 	    			<tr class="dataRow <%=currentSection%>" >
 					<td class="field">
-					<a style="color: black; text-decoration : underline;" href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'/oscar/oscarEncounter/oscarMeasurements/AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
+					<a style="color: black; text-decoration : underline;" href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'/oscar/oscarEncounter/oscarMeasurements/AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData<%=Math.abs(h.get("name").hashCode()) %>')">
 					<b><%=child.flowSheetItem.getDisplayName()%></b>
 					</a>
 					</td>

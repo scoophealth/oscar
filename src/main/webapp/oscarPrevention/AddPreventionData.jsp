@@ -1,44 +1,47 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
-     * This software was written for the 
- * Department of Family Medicine 
+ *
+     * This software was written for the
+ * Department of Family Medicine
  * McMaster University test2
- * Hamilton 
- * Ontario, Canada 
+ * Hamilton
+ * Ontario, Canada
  */
 -->
-<%@page import="java.text.SimpleDateFormat, oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*"%>
+<%@page import="oscar.oscarDemographic.data.DemographicData,java.text.SimpleDateFormat, java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*"%>
 <%@ page import="org.oscarehr.casemgmt.model.CaseManagementNoteLink" %>
 <%@ page import="org.oscarehr.casemgmt.service.CaseManagementManager" %>
 <%@ page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.common.dao.DemographicExtDao" %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 
 <%
+  DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
+
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
-  //int demographic_no = Integer.parseInt(request.getParameter("demographic_no")); 
-  String demographic_no = request.getParameter("demographic_no"); 
+  //int demographic_no = Integer.parseInt(request.getParameter("demographic_no"));
+  String demographic_no = request.getParameter("demographic_no");
   String id = request.getParameter("id");
   Map<String,Object> existingPrevention = null;
-  
+
   String providerName ="";
   String provider = (String) session.getValue("user");
   String dateFmt = "yyyy-MM-dd";
@@ -48,23 +51,23 @@
   String summary = "";
   boolean never = false;
   Map<String,String> extraData = new HashMap<String,String>();
-	boolean hasImportExtra = false; 
+	boolean hasImportExtra = false;
 	String annotation_display = CaseManagementNoteLink.DISP_PREV;
-  
+
   if (id != null){
-     
+
      existingPrevention = PreventionData.getPreventionById(id);
 
-     prevDate = (String) existingPrevention.get("preventionDate"); 
+     prevDate = (String) existingPrevention.get("preventionDate");
      providerName = (String) existingPrevention.get("providerName");
      provider = (String) existingPrevention.get("provider_no");
-     
+
      if ( existingPrevention.get("refused") != null && ((String)existingPrevention.get("refused")).equals("1") ){
         completed = "1";
      }else if ( existingPrevention.get("refused") != null && ((String)existingPrevention.get("refused")).equals("2") ){
         completed = "2";
      }
-     if ( existingPrevention.get("never") != null && ((String)existingPrevention.get("never")).equals("1") ){         
+     if ( existingPrevention.get("never") != null && ((String)existingPrevention.get("never")).equals("1") ){
         never = true;
      }
      nextDate = (String) existingPrevention.get("next_date");
@@ -73,29 +76,29 @@
      }
      summary = (String) existingPrevention.get("summary");
      extraData = PreventionData.getPreventionKeyValues(id);
-     
+
 	CaseManagementManager cmm = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
 	List<CaseManagementNoteLink> cml = cmm.getLinkByTableId(CaseManagementNoteLink.PREVENTIONS, Long.valueOf(id));
-	hasImportExtra = (cml.size()>0); 
+	hasImportExtra = (cml.size()>0);
   }
 
   String prevention = request.getParameter("prevention");
   if (prevention == null && existingPrevention != null){
       prevention = (String) existingPrevention.get("preventionType");
   }
-  
+
   String prevResultDesc = request.getParameter("prevResultDesc");
 
   PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
   HashMap<String,String> prevHash = pdc.getPrevention(prevention);
-  
+
   String layoutType = prevHash.get("layout");
   if ( layoutType == null){
       layoutType = "default";
   }
 
-  ArrayList providers = ProviderData.getProviderList();  
-  
+  ArrayList providers = ProviderData.getProviderList();
+
   //calc age at time of prevention
   Date dob = PreventionData.getDemographicDateOfBirth(demographic_no);
   SimpleDateFormat fmt = new SimpleDateFormat(dateFmt);
@@ -111,19 +114,19 @@
   genders.put("U", "Unknown");
 %>
 
-                         
+
 <html:html locale="true">
 
 <head>
 <title>
-oscarPrevention 
+oscarPrevention
 </title><!--I18n-->
 <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
-<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" /> 
-     
-<script type="text/javascript" src="../share/calendar/calendar.js" ></script>      
-<script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>" ></script>      
-<script type="text/javascript" src="../share/calendar/calendar-setup.js" ></script>      
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<script type="text/javascript" src="../share/calendar/calendar.js" ></script>
+<script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>" ></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js" ></script>
 
 <style type="text/css">
   div.ImmSet { background-color: #ffffff; }
@@ -132,32 +135,32 @@ oscarPrevention
   div.ImmSet li {  }
   div.ImmSet li a { text-decoration:none; color:blue;}
   div.ImmSet li a:hover { text-decoration:none; color:red; }
-  div.ImmSet li a:visited { text-decoration:none; color:blue;}  
-  
-  
+  div.ImmSet li a:visited { text-decoration:none; color:blue;}
+
+
   ////////
   div.prevention {  background-color: #999999; }
   div.prevention fieldset {width:35em; font-weight:bold; }
   div.prevention legend {font-weight:bold; }
-  
+
   ////////
 </style>
 
 <SCRIPT LANGUAGE="JavaScript">
 
-function showHideItem(id){ 
+function showHideItem(id){
     if(document.getElementById(id).style.display == 'none')
-        document.getElementById(id).style.display = ''; 
+        document.getElementById(id).style.display = '';
     else
-        document.getElementById(id).style.display = 'none'; 
+        document.getElementById(id).style.display = 'none';
 }
 
 function showItem(id){
-        document.getElementById(id).style.display = ''; 
+        document.getElementById(id).style.display = '';
 }
 
 function hideItem(id){
-        document.getElementById(id).style.display = 'none'; 
+        document.getElementById(id).style.display = 'none';
 }
 
 function showHideNextDate(id,nextDate,nexerWarn){
@@ -167,15 +170,15 @@ function showHideNextDate(id,nextDate,nexerWarn){
         hideItem(id);
         document.getElementById(nextDate).value = "";
         document.getElementById(nexerWarn).checked = false ;
-        
-    }        
+
+    }
 }
 
-function disableifchecked(ele,nextDate){        
-    if(ele.checked == true){       
-       document.getElementById(nextDate).disabled = true;       
-    }else{                      
-       document.getElementById(nextDate).disabled = false;              
+function disableifchecked(ele,nextDate){
+    if(ele.checked == true){
+       document.getElementById(nextDate).disabled = true;
+    }else{
+       document.getElementById(nextDate).disabled = false;
     }
 }
 </SCRIPT>
@@ -204,12 +207,12 @@ function disableifchecked(ele,nextDate){
                 text-align: center;
         }
 	td.middleGrid{
-	   border-left: 1pt solid #888888;	   
+	   border-left: 1pt solid #888888;
 	   border-right: 1pt solid #888888;
            text-align: center;
-	}	
-	
-	
+	}
+
+
 label{
 float: left;
 width: 120px;
@@ -260,18 +263,18 @@ clear: left;
 </style>
 
 <script type="text/javascript">
-  function hideExtraName(ele){ 
+  function hideExtraName(ele){
    //alert(ele);
     if (ele.options[ele.selectedIndex].value != -1){
        hideItem('providerName');
        //alert('hidding');
-    }else{                    
+    }else{
        showItem('providerName');
        document.getElementById('providerName').focus();
        //alert('showing');
-    }                       
+    }
   }
-</script>               
+</script>
 </head>
 
 <body class="BodyStyle" vlink="#0000FF" onload="disableifchecked(document.getElementById('neverWarn'),'nextDate');">
@@ -288,7 +291,7 @@ clear: left;
                             <%=nameage%>
                         </td>
                         <td  >&nbsp;
-							
+
                         </td>
                         <td style="text-align:right">
                                 <oscar:help keywords="prevention" key="app.top1"/> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
@@ -300,10 +303,14 @@ clear: left;
         <tr>
             <td class="MainTableLeftColumn" valign="top">
                &nbsp;
-<!--               
-               <%DemographicExt dExt = new DemographicExt();              
-                 String inelig = dExt.getValueForDemoKey(demographic_no,prevention+"Inelig");             
-                 if (inelig == null) inelig = "";
+<!--
+               <%
+                 org.oscarehr.common.model.DemographicExt ineligx = demographicExtDao.getDemographicExt(Integer.parseInt(demographic_no),prevention+"Inelig");
+				 String inelig = "";
+				 if(ineligx != null) {
+					 inelig = ineligx.getValue();
+				 }
+
                  if (inelig.equals("yes")){ %>
                     Patient Ineligible<br>
                     <a href="setPatientIneligible.jsp?prev=<%=prevention%>&demo=<%=demographic_no%>&elig=yes">Set Patient Eligible</a>
@@ -312,12 +319,12 @@ clear: left;
                  <%}%>
 -->
             </td>
-            <td valign="top" class="MainTableRightColumn">               
+            <td valign="top" class="MainTableRightColumn">
                <html:form action="/oscarPrevention/AddPrevention" >
                <input type="hidden" name="prevention" value="<%=prevention%>"/>
-               <input type="hidden" name="demographic_no" value="<%=demographic_no%>"/>              
+               <input type="hidden" name="demographic_no" value="<%=demographic_no%>"/>
                <% if ( id != null ) { %>
-               <input type="hidden" name="id" value="<%=id%>"/>               
+               <input type="hidden" name="id" value="<%=id%>"/>
                <input type="hidden" name="layoutType" value="<%=layoutType%>"/>
 	       <div class="prevention">
 		   <fieldset>
@@ -340,20 +347,20 @@ clear: left;
                             <input name="given" type="radio" value="ineligible" <%=checked(completed,"2")%>>Ineligible</input>
                          </div>
                          <div style="float:left;margin-left:30px;">
-                            <label for="prevDate" class="fields" >Date:</label>    <input type="text" name="prevDate" id="prevDate" value="<%=prevDate%>" size="9" > <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>                        
-                            <label for="provider" class="fields">Provider:</label> <input type="text" name="providerName" id="providerName" value="<%=providerName%>"/> 
-                                  <select onchange="javascript:hideExtraName(this);" id="providerDrop" name="provider">                          
+                            <label for="prevDate" class="fields" >Date:</label>    <input type="text" name="prevDate" id="prevDate" value="<%=prevDate%>" size="9" > <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>
+                            <label for="provider" class="fields">Provider:</label> <input type="text" name="providerName" id="providerName" value="<%=providerName%>"/>
+                                  <select onchange="javascript:hideExtraName(this);" id="providerDrop" name="provider">
                                       <%for (int i=0; i < providers.size(); i++) {
                                            Hashtable h = (Hashtable) providers.get(i);%>
                                         <option value="<%= h.get("providerNo")%>" <%= ( h.get("providerNo").equals(provider) ? " selected" : "" ) %>><%= h.get("lastName") %> <%= h.get("firstName") %></option>
-                                      <%}%>                    
+                                      <%}%>
                                       <option value="-1" <%= ( "-1".equals(provider) ? " selected" : "" ) %> >Other</option>
-                                  </select>                                      
+                                  </select>
                          </div>
-                   </fieldset>                                                                            
+                   </fieldset>
                    <fieldset >
                       <legend >Result</legend>
-             			 <label for="name">Name:</label> <input type="text" name="name" value="<%=str((extraData.get("name")),"")%>"/> <br/>         
+             			 <label for="name">Name:</label> <input type="text" name="name" value="<%=str((extraData.get("name")),"")%>"/> <br/>
                          <label for="location">Location:</label> <input type="text" name="location" value="<%=str((extraData.get("location")),"")%>"/> <br/>
                          <label for="route">Route:</label> <input type="text" name="route"   value="<%=str((extraData.get("route")),"")%>"/><br/>
 			 <label for="dose">Dose:</label> <input type="text" name="dose"  value="<%=str((extraData.get("dose")),"")%>"/><br/>
@@ -361,12 +368,12 @@ clear: left;
                          <label for="manufacture">Manufacture:</label> <input type="text" name="manufacture"   value="<%=str((extraData.get("manufacture")),"")%>"/><br/>
                    </fieldset>
                    <fieldset >
-                      <legend >Comments</legend>                   
-                      <textarea name="comments" ><%=str((extraData.get("comments")),"")%></textarea>                   
-                   </fieldset>                   
+                      <legend >Comments</legend>
+                      <textarea name="comments" ><%=str((extraData.get("comments")),"")%></textarea>
+                   </fieldset>
                </div>
                <script type="text/javascript">
-                  hideExtraName(document.getElementById('providerDrop'));                                    
+                  hideExtraName(document.getElementById('providerDrop'));
                </script>
                <%} else if(layoutType.equals("h1n1")) {%>
                <div class="prevention">
@@ -378,17 +385,17 @@ clear: left;
                             <input name="given" type="radio" value="ineligible" <%=checked(completed,"2")%>>Ineligible</input>
                          </div>
                          <div style="float:left;margin-left:30px;">
-                            <label for="prevDate" class="fields" >Date:</label>    <input type="text" name="prevDate" id="prevDate" value="<%=prevDate%>" size="9" > <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>                        
-                            <label for="provider" class="fields">Provider:</label> <input type="text" name="providerName" id="providerName" value="<%=providerName%>"/> 
-                                  <select onchange="javascript:hideExtraName(this);" id="providerDrop" name="provider">                          
+                            <label for="prevDate" class="fields" >Date:</label>    <input type="text" name="prevDate" id="prevDate" value="<%=prevDate%>" size="9" > <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>
+                            <label for="provider" class="fields">Provider:</label> <input type="text" name="providerName" id="providerName" value="<%=providerName%>"/>
+                                  <select onchange="javascript:hideExtraName(this);" id="providerDrop" name="provider">
                                       <%for (int i=0; i < providers.size(); i++) {
                                            Hashtable h = (Hashtable) providers.get(i);%>
                                         <option value="<%= h.get("providerNo")%>" <%= ( h.get("providerNo").equals(provider) ? " selected" : "" ) %>><%= h.get("lastName") %> <%= h.get("firstName") %></option>
-                                      <%}%>                    
+                                      <%}%>
                                       <option value="-1" <%= ( "-1".equals(provider) ? " selected" : "" ) %> >Other</option>
-                                  </select>                                      
+                                  </select>
                          </div>
-                   </fieldset>                                                                            
+                   </fieldset>
                    <fieldset>
                       <legend >Result</legend>
                          <label for="location">Location:</label> <input type="text" name="location" value="<%=str((extraData.get("location")),"")%>"/> <br/>
@@ -397,7 +404,7 @@ clear: left;
 			 <label for="dose1">Dose 1:</label> <input type="checkbox" name="dose1" value="true" <%=checked(str((extraData.get("dose1")),""),"true")%>/><br/>
                          <label for="dose2">Dose 2:</label> <input type="checkbox" name="dose2"  value="true" <%=checked(str((extraData.get("dose2")),""),"true")%>/><br/>
                          <label for="lot">Lot:</label> <input type="text" name="lot"  value="<%=str((extraData.get("lot")),"")%>"/><br/>
-                         <label for="manufacture">Manufacture:</label> <input type="text" name="manufacture"   value="<%=str((extraData.get("manufacture")),"")%>"/><br/>                         
+                         <label for="manufacture">Manufacture:</label> <input type="text" name="manufacture"   value="<%=str((extraData.get("manufacture")),"")%>"/><br/>
                    </fieldset>
                    <fieldset>
                        <legend>Info</legend>
@@ -405,7 +412,7 @@ clear: left;
                           if( gender == null ) {
                               gender = genders.get("U");
                           }
-                          
+
                        %>
                          <label for="gender">Gender:</label> <input type="text" name="gender" readonly value="<%=gender%>"/> <br/>
                          <label for="age">Age:</label> <input type="text" name="age" readonly value="<%=age%>"/><br/>
@@ -445,7 +452,7 @@ clear: left;
                             if( str((extraData.get("firstresponder")),"").equalsIgnoreCase("true")) {
                                 bothfirstresponders = true;
                            }
-                            
+
                          %>
                          <label for="firstresponderpolice">First Responder Police:</label> <input type="checkbox" name="firstresponderpolice" value="true" <%=bothfirstresponders == true ? "checked" : checked(str((extraData.get("firstresponderpolice")),""),"true")%>/><br/>
                          <label for="firstresponderfire">First Responder Fire:</label> <input type="checkbox" name="firstresponderfire" value="true" <%=bothfirstresponders == true ? "checked" : checked(str((extraData.get("firstresponderfire")),""),"true")%>/><br/>
@@ -454,54 +461,54 @@ clear: left;
                          <label for="firstnations">First Nations:</label> <input type="checkbox" name="firstnations" value="true" <%=checked(str((extraData.get("firstnations")),""),"true")%>/><br/>
                    </fieldset>
                    <fieldset >
-                      <legend >Comments</legend>                   
-                      <textarea name="comments" ><%=str((extraData.get("comments")),"")%></textarea>                   
-                   </fieldset>                   
+                      <legend >Comments</legend>
+                      <textarea name="comments" ><%=str((extraData.get("comments")),"")%></textarea>
+                   </fieldset>
                </div>
                <script type="text/javascript">
-                  hideExtraName(document.getElementById('providerDrop'));                                    
+                  hideExtraName(document.getElementById('providerDrop'));
                </script>
                <%}else if(layoutType.equals("PAPMAM")){/*next layout type*/%>
-               <div class="prevention">                                                                          
+               <div class="prevention">
                    <fieldset>
                       <legend>Prevention : <%=prevention%></legend>
-                         <div style="float:left;">                                                                              
+                         <div style="float:left;">
                             <input name="given" type="radio" value="given"   <%=checked(completed,"0")%>  >Completed</input><br/>
                             <input name="given" type="radio" value="refused" <%=checked(completed,"1")%>>Refused</input><br/>
                             <input name="given" type="radio" value="ineligible" <%=checked(completed,"2")%>>Ineligible</input><br/>
                          </div>
                          <div style="float:left;margin-left:30px;">
-                            <label for="prevDate" class="fields" >Date:</label>    <input type="text" name="prevDate" id="prevDate" value="<%=prevDate%>" size="9" > <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>                        
-                            <label for="provider" class="fields">Provider:</label> <input type="text" name="providerName" id="providerName"/> 
-                                  <select onchange="javascript:hideExtraName(this);" id="providerDrop" name="provider">                          
+                            <label for="prevDate" class="fields" >Date:</label>    <input type="text" name="prevDate" id="prevDate" value="<%=prevDate%>" size="9" > <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>
+                            <label for="provider" class="fields">Provider:</label> <input type="text" name="providerName" id="providerName"/>
+                                  <select onchange="javascript:hideExtraName(this);" id="providerDrop" name="provider">
                                       <%for (int i=0; i < providers.size(); i++) {
                                            Hashtable h = (Hashtable) providers.get(i);%>
                                         <option value="<%= h.get("providerNo")%>" <%= ( h.get("providerNo").equals(provider) ? " selected" : "" ) %>><%= h.get("lastName") %> <%= h.get("firstName") %></option>
-                                      <%}%>                    
+                                      <%}%>
                                       <option value="-1" >Other</option>
-                                  </select>                                      
+                                  </select>
                          </div>
-                   </fieldset>                                                                            
+                   </fieldset>
                    <fieldset >
                       <legend >Result</legend>
                       <% if (extraData.get("result") == null ){ extraData.put("result","pending");} %>
 			<%=prevResultDesc%><br />
                       <input type="radio" name="result" value="pending" <%=checked( (extraData.get("result")) ,"pending")%> >Pending</input><br/>
                       <input type="radio" name="result" value="normal"  <%=checked((extraData.get("result")),"normal")%> >Normal</input><br/>
-                      <input type="radio" name="result" value="abnormal" <%=checked((extraData.get("result")),"abnormal")%> >Abnormal</input> &nbsp;&nbsp;&nbsp;  Reason: <input type="text" name="reason" value="<%=str((extraData.get("reason")),"")%>"/>                      
+                      <input type="radio" name="result" value="abnormal" <%=checked((extraData.get("result")),"abnormal")%> >Abnormal</input> &nbsp;&nbsp;&nbsp;  Reason: <input type="text" name="reason" value="<%=str((extraData.get("reason")),"")%>"/>
                    </fieldset>
                    <fieldset >
-                      <legend >Comments</legend>                   
-                      <textarea name="comments" ><%=str((extraData.get("comments")),"")%></textarea>                   
-                   </fieldset>                   
+                      <legend >Comments</legend>
+                      <textarea name="comments" ><%=str((extraData.get("comments")),"")%></textarea>
+                   </fieldset>
                </div>
                <script type="text/javascript">
-                  hideExtraName(document.getElementById('providerDrop'));                                    
+                  hideExtraName(document.getElementById('providerDrop'));
                </script>
                <%}%>
-               
-               
-               <div class="prevention">                                                                          
+
+
+               <div class="prevention">
                    <fieldset>
                       <legend><a onclick="showHideNextDate('nextDateDiv','nextDate','nexerWarn')" href="javascript: function myFunction() {return false; }"   >Set Next Date</a></legend>
                         <div id="nextDateDiv" style="display:none;">
@@ -517,7 +524,7 @@ clear: left;
                <br/>
                <input type="submit" value="Save">
                <% if ( id != null ) { %>
-               <input type="submit" name="delete" value="Delete"/>               
+               <input type="submit" name="delete" value="Delete"/>
                <% } %>
                </html:form>
             </td>
@@ -534,7 +541,7 @@ clear: left;
 <script type="text/javascript">
 Calendar.setup( { inputField : "prevDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "date", singleClick : true, step : 1 } );
 Calendar.setup( { inputField : "nextDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "nextDateCal", singleClick : true, step : 1 } );
-</script>    
+</script>
 </body>
 </html:html>
 <%!
@@ -544,19 +551,19 @@ String completed(boolean b){
     if(b){ret="checked";}
     return ret;
     }
-     
+
 String refused(boolean b){
     String ret ="";
     if(!b){ret="checked";}
     return ret;
     }
-        
+
 String str(String first,String second){
     String ret = "";
     if(first != null){
-       ret = first;    
+       ret = first;
     }else if ( second != null){
-       ret = second;    
+       ret = second;
     }
     return ret;
   }

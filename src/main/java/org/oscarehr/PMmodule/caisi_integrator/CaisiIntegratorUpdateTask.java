@@ -101,11 +101,13 @@ import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.dao.CaseManagementIssueNotesDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DrugDao;
+import org.oscarehr.common.dao.DxresearchDAO;
 import org.oscarehr.common.dao.EFormDataDao;
 import org.oscarehr.common.dao.EFormValueDao;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.dao.GroupNoteDao;
 import org.oscarehr.common.dao.IntegratorConsentDao;
+import org.oscarehr.common.dao.IntegratorControlDao;
 import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.dao.MeasurementTypeDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
@@ -116,6 +118,7 @@ import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
+import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.common.model.EFormData;
 import org.oscarehr.common.model.EFormValue;
 import org.oscarehr.common.model.Facility;
@@ -127,8 +130,6 @@ import org.oscarehr.common.model.MeasurementType;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.UserProperty;
-import org.oscarehr.dx.dao.DxResearchDAO;
-import org.oscarehr.dx.model.DxResearch;
 import org.oscarehr.util.BenchmarkTimer;
 import org.oscarehr.util.CxfClientUtils;
 import org.oscarehr.util.DbConnectionFilter;
@@ -143,7 +144,6 @@ import org.w3c.dom.Document;
 import oscar.OscarProperties;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
-import oscar.facility.IntegratorControlDao;
 import oscar.form.FrmLabReq07Record;
 import oscar.log.LogAction;
 import oscar.oscarBilling.ca.on.dao.BillingOnItemDao;
@@ -189,7 +189,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private IntegratorControlDao integratorControlDao = (IntegratorControlDao) SpringUtils.getBean("integratorControlDao");
 	private MeasurementsExtDao measurementsExtDao = (MeasurementsExtDao) SpringUtils.getBean("measurementsExtDao");
 	private MeasurementMapDao measurementMapDao = (MeasurementMapDao) SpringUtils.getBean("measurementMapDao");
-	private DxResearchDAO dxresearchDao = (DxResearchDAO) SpringUtils.getBean("dxResearchDao");
+	private DxresearchDAO dxresearchDao = (DxresearchDAO) SpringUtils.getBean("dxresearchDAO");
 	private BillingOnItemDao billingOnItemDao = (BillingOnItemDao) SpringUtils.getBean("billingOnItemDao");
 	private EFormValueDao eFormValueDao = (EFormValueDao) SpringUtils.getBean("EFormValueDao");
 	private EFormDataDao eFormDataDao = (EFormDataDao) SpringUtils.getBean("EFormDataDao");
@@ -1144,12 +1144,12 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private void pushDxresearchs(Date lastDataUpdated, Facility facility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
 		logger.debug("pushing dxresearchs facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
-		List<DxResearch> dxresearchs = dxresearchDao.getByDemographicNo(demographicId);
+		List<Dxresearch> dxresearchs = dxresearchDao.getByDemographicNo(demographicId);
 		if (dxresearchs.size() == 0) return;
 
 		StringBuilder sentIds = new StringBuilder();
 
-		for (DxResearch dxresearch : dxresearchs) {
+		for (Dxresearch dxresearch : dxresearchs) {
 			if (dxresearch.getUpdateDate() != null && dxresearch.getUpdateDate().before(lastDataUpdated)) continue;
 
 			CachedDxresearch cachedDxresearch = new CachedDxresearch();
@@ -1158,11 +1158,11 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedDxresearch.setFacilityIdIntegerCompositePk(facilityIdIntegerCompositePk);
 
 			cachedDxresearch.setCaisiDemographicId(demographicId);
-			cachedDxresearch.setDxresearchCode(dxresearch.getCode());
+			cachedDxresearch.setDxresearchCode(dxresearch.getDxresearchCode());
 			cachedDxresearch.setCodingSystem(dxresearch.getCodingSystem());
 			cachedDxresearch.setStartDate(MiscUtils.toCalendar(dxresearch.getStartDate()));
 			cachedDxresearch.setUpdateDate(MiscUtils.toCalendar(dxresearch.getUpdateDate()));
-			cachedDxresearch.setStatus(dxresearch.getStatus());
+			cachedDxresearch.setStatus(String.valueOf(dxresearch.getStatus()));
 
 			ArrayList<CachedDxresearch> cachedDxresearchs = new ArrayList<CachedDxresearch>();
 			cachedDxresearchs.add(cachedDxresearch);

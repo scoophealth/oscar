@@ -1,40 +1,57 @@
 /*
-* 
+*
 * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
+* This software is published under the GPL GNU General Public License.
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version. *
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+*
 * <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
+*
+* This software was written for
+* Centre for Research on Inner City Health, St. Michael's Hospital,
+* Toronto, Ontario, Canada
 */
 
 package org.oscarehr.common.model;
 
 import java.io.Serializable;
 
-/**
- * This is the object class that relates to the demographicExt table. Any customizations belong here.
- */
-public class DemographicExt implements Serializable {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
+@Entity
+@Table(name="demographicExt")
+public class DemographicExt extends AbstractModel<Integer> implements Serializable {
+
+	@Transient
     private int hashCode = Integer.MIN_VALUE;// primary key
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;// fields
+	@Column(name="demographic_no")
     private Integer demographicNo;
-    private Integer providerNo;
+	@Column(name="provider_no")
+    private String providerNo;
+	@Column(name="key_val")
     private String key;
     private String value;
+    @Column(name="date_time")
+    @Temporal(TemporalType.TIMESTAMP)
     private java.util.Date dateCreated;
     private boolean hidden;
 
@@ -87,7 +104,7 @@ public class DemographicExt implements Serializable {
     /**
      * Return the value associated with the column: provider_no
      */
-    public Integer getProviderNo () {
+    public String getProviderNo () {
         return providerNo;
     }
 
@@ -95,7 +112,7 @@ public class DemographicExt implements Serializable {
      * Set the value related to the column: provider_no
      * @param providerNo the provider_no value
      */
-    public void setProviderNo (Integer providerNo) {
+    public void setProviderNo (String providerNo) {
         this.providerNo = providerNo;
     }
 

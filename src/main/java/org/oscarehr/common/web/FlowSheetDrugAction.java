@@ -10,7 +10,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
-import org.oscarehr.common.dao.FlowSheetDrugDAO;
+import org.oscarehr.common.dao.FlowSheetDrugDao;
 import org.oscarehr.common.dao.FlowSheetDxDao;
 import org.oscarehr.common.model.FlowSheetDrug;
 import org.oscarehr.common.model.FlowSheetDx;
@@ -20,12 +20,12 @@ import org.oscarehr.util.SpringUtils;
 public class FlowSheetDrugAction extends DispatchAction {
 
     private static final Logger log2 = MiscUtils.getLogger();
-    private FlowSheetDrugDAO flowSheetDrugDAO;
+    private FlowSheetDrugDao flowSheetDrugDao;
 
     private FlowSheetDxDao flowSheetDxDao = SpringUtils.getBean(FlowSheetDxDao.class);
 
-    public void setFlowSheetDrugDAO(FlowSheetDrugDAO flowSheetDrugDAO) {
-        this.flowSheetDrugDAO = flowSheetDrugDAO;
+    public void setFlowSheetDrugDao(FlowSheetDrugDao flowSheetDrugDao) {
+        this.flowSheetDrugDao = flowSheetDrugDao;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class FlowSheetDrugAction extends DispatchAction {
 
         log2.debug("SAVE " + cust);
 
-        flowSheetDrugDAO.save(cust);
+        flowSheetDrugDao.persist(cust);
 
         ActionForward ff = mapping.findForward("success");
         //ff.setRedirect(true);

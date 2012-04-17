@@ -29,6 +29,7 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.common.dao.DemographicCustDao;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.dao.DxresearchDAO;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.PreventionDao;
@@ -101,6 +102,7 @@ public class OscarChartPrinter {
     private DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
     private OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
     private PreventionDao preventionDao = (PreventionDao)SpringUtils.getBean("preventionDao");
+    private DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
 
 	public OscarChartPrinter(HttpServletRequest request, OutputStream os) throws DocumentException,IOException {
 		this.request = request;
@@ -305,7 +307,7 @@ public class OscarChartPrinter {
         phrase.add("Email: " + demographic.getEmail()  + "\n");
         phrase.add("Phone: " +  demographic.getPhone() + "\n");
 
-        List<DemographicExt> exts = demographicDao.getDemographicExtByDemographicNo(demographic.getDemographicNo());
+        List<DemographicExt> exts = demographicExtDao.getDemographicExtByDemographicNo(demographic.getDemographicNo());
         String phoneExt = null;
         String cell = null;
         for(DemographicExt ext:exts) {

@@ -49,7 +49,6 @@
 	<bean id="providerDao" class="org.oscarehr.PMmodule.dao.ProviderDao" autowire="byName" />
 	<bean id="bedDAO" class="org.oscarehr.PMmodule.dao.BedDAO" autowire="byName" />
 	<bean id="streetHealthDao" class="org.oscarehr.PMmodule.dao.StreetHealthDao" autowire="byName" />
-	<bean id="dxResearchDao" class="org.oscarehr.dx.dao.DxResearchDAO" autowire="byName" />
 	<bean id="billingOnItemDao" class="oscar.oscarBilling.ca.on.dao.BillingOnItemDao" autowire="byName" />
 	<bean id="otherIdDao" class="org.oscarehr.common.dao.OtherIdDAO" autowire="byName" />
 
@@ -96,12 +95,7 @@
 	<bean id="clinicDAO" class="org.oscarehr.common.dao.ClinicDAO" autowire="byName" />
 	<bean id="dataExportDAO" class="org.oscarehr.common.dao.DataExportDao" autowire="byName" />
 	<bean id="siteDao" class="org.oscarehr.common.dao.SiteDao" autowire="byName" />
-	<bean id="UserDSMessagePrefsDAO" class="org.oscarehr.common.dao.UserDSMessagePrefsDAO" autowire="byName" />
-	<bean id="flowSheetCustomizerDAO" class="org.oscarehr.common.dao.FlowSheetCustomizerDAO" autowire="byName"/>
-	<bean id="flowSheetDrugDAO" class="org.oscarehr.common.dao.FlowSheetDrugDAO" autowire="byName"/>
 	<bean id="facilityMessageDAO" class="org.caisi.dao.FacilityMessageDAO" autowire="byName" />
-	<bean id="ticklerLinkDAO" class="org.oscarehr.common.dao.TicklerLinkDAO" autowire="byName" />
-	<bean id="UserViewDAO" class="org.oscarehr.common.dao.ViewDAO" autowire="byName" />
 	<bean id="BillingmasterDAO" class="oscar.oscarBilling.ca.bc.data.BillingmasterDAO" autowire="byName" />
 	<bean id="BillingreferralDAO" class="org.oscarehr.common.dao.BillingreferralDao" autowire="byName" />
 	<bean id="DxresearchDAO" class="org.oscarehr.common.dao.DxresearchDAO" autowire="byName" />
@@ -127,7 +121,6 @@
 	<bean id="ProviderLabRoutingFavoritesDao" class="org.oscarehr.common.dao.ProviderLabRoutingFavoritesDao" autowire="byName"/>
 
         <bean id="queueDocumentLinkDAO" class="org.oscarehr.common.dao.QueueDocumentLinkDao" autowire="byName"/>
-	<bean id="integratorControlDao" class="oscar.facility.IntegratorControlDao" autowire="byName" />
 
 	<bean id="caseloadDao" class="org.oscarehr.common.dao.CaseloadDao" autowire="byName" />
 
@@ -236,7 +229,7 @@
 		<property name="admissionManager" ref="admissionManager" />
 		<property name="enabled" value="${casemgmt.note.password.enabled}" />
 		<property name="programManager" ref="programManager" />
-		<property name="dxResearchDAO" ref="dxResearchDao" />
+		<property name="dxresearchDAO" ref="dxresearchDAO" />
 		<property name="programProviderDao" ref="programProviderDAO" />
 		<property name="programAccessDAO" ref="programAccessDAO" />
 	</bean>
@@ -255,7 +248,7 @@
 	<bean id="programManager" class="org.oscarehr.PMmodule.service.ProgramManager" autowire="byName">
 		<property name="enabled" value="${pmm.refer.temporaryAdmission.enabled}" />
 	</bean>
-	<bean id="clientManager" class="org.oscarehr.PMmodule.service.ClientManager">
+	<bean id="clientManager" class="org.oscarehr.PMmodule.service.ClientManager" autowire="byName">
 		<property name="demographicDao" ref="demographicDao" />
 		<property name="clientReferralDAO" ref="clientReferralDAO" />
 		<property name="jointAdmissionDAO" ref="jointAdmissionDAO" />

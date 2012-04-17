@@ -22,7 +22,6 @@
 				<value>classpath:/com/quatro/model</value>
 				<value>classpath:/oscar/appt/status/model</value>
 				<value>classpath:/org/oscarehr/document/model</value>
-				<value>classpath:/org/oscarehr/dx/model</value>
 				<value>classpath:/oscar/oscarRx/model</value>
                 <value>classpath:/org/oscarehr/decisionSupport/model</value>
                 <value>classpath:/oscar/oscarEncounter/oscarMeasurements/model</value>
@@ -49,11 +48,10 @@
 		</property>
 	</bean>
 
-
+<!--
 	<bean id="auditSessionFactory" class="org.oscarehr.util.SpringHibernateLocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="mappingDirectoryLocations">
-			<!-- only *.hbm.xml will be loaded -->
 			<list>
 				<value>classpath:/org/oscarehr/common/model</value>
 				<value>classpath:/org/caisi/model</value>
@@ -75,5 +73,5 @@
 			</props>
 		</property>
 	</bean>
-
+-->
 </beans>

@@ -6,7 +6,7 @@
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo" %>
 <%@ page import="oscar.oscarRx.data.*,oscar.oscarProvider.data.ProviderMyOscarIdData,oscar.oscarDemographic.data.DemographicData,oscar.OscarProperties,oscar.log.*"%>
-<%@ page import="org.oscarehr.common.model.OscarAnnotation,org.oscarehr.common.model.*" %>
+<%@ page import="org.oscarehr.common.model.*" %>
 <%@page import="java.util.Enumeration"%>
 
 <%

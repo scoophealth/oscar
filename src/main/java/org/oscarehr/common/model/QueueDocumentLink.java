@@ -25,21 +25,34 @@
  */
 package org.oscarehr.common.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  *
  * @author jackson bi
  */
-public class QueueDocumentLink {
+@Entity
+@Table(name="queue_document_link")
+public class QueueDocumentLink extends AbstractModel<Integer>{
 
-    private int id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+	@Column(name="document_id")
     private int docId;
+	@Column(name="queue_id")
     private int queueId;
     private String status;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

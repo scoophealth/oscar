@@ -18,13 +18,17 @@
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-html-el" prefix="html-el" %>
 <%@ taglib uri="/WEB-INF/phr-tag.tld" prefix="phr" %>
 <%@ page import="oscar.oscarDemographic.data.DemographicData"%>
-<%@ page import="oscar.oscarDemographic.data.DemographicExt"%>
+<%@ page import="org.oscarehr.common.model.DemographicExt"%>
+<%@ page import="org.oscarehr.common.dao.DemographicExtDao"%>
+<%@ page import="org.oscarehr.util.SpringUtils"%>
 <%@ page import="oscar.oscarProvider.data.ProviderMyOscarIdData"%>
 <%@ page import="oscar.oscarProvider.data.ProviderData"%>
 <%@ page import="java.util.*"%>
 
 
 <%
+DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
+
 String demographicNo = request.getParameter("demographicNo");
 int demographicId=Integer.parseInt(demographicNo);
 
@@ -33,9 +37,8 @@ request.setAttribute("demographic", demographic);
 
 String defaultNewUserName=RegistrationHelper.getDefaultUserName(demographicId);
 
-DemographicExt demographicExt = new DemographicExt();
-String hPhoneExt = demographicExt.getValueForDemoKey(demographicNo, "hPhoneExt");
-String wPhoneExt = demographicExt.getValueForDemoKey(demographicNo, "wPhoneExt");
+String hPhoneExt = demographicExtDao.getValueForDemoKey(demographicNo, "hPhoneExt");
+String wPhoneExt = demographicExtDao.getValueForDemoKey(demographicNo, "wPhoneExt");
 if (hPhoneExt != null)
     request.setAttribute("demographicHomeExt", " " + hPhoneExt);
 if (wPhoneExt != null)

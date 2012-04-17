@@ -36,7 +36,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
-import org.oscarehr.common.dao.ViewDAO;
+import org.oscarehr.common.dao.ViewDao;
 import org.oscarehr.common.model.View;
 
 /**
@@ -44,38 +44,38 @@ import org.oscarehr.common.model.View;
  * @author rjonasz
  */
 public class ProviderViewAction extends DispatchAction {
-    
-    private ViewDAO userViewDAO;
-    
+
+    private ViewDao userViewDAO;
+
     /** Creates a new instance of ProviderViewAction */
     public ProviderViewAction() {
     }
-    
-    public void setUserViewDAO(ViewDAO userViewDAO) {
-        this.userViewDAO = userViewDAO;
+
+    public void setUserViewDAO(ViewDao viewDao) {
+        this.userViewDAO = viewDao;
     }
-    
+
      public ActionForward unspecified(ActionMapping actionmapping,
                                ActionForm actionform,
                                HttpServletRequest request,
                                HttpServletResponse response) {
-        
+
         return null;
     }
-           
+
       public ActionForward save(ActionMapping actionmapping,
                                ActionForm actionform,
                                HttpServletRequest request,
                                HttpServletResponse response) {
-          
+
          String view_name = request.getParameter("view_name");
          String role = (String)request.getSession().getAttribute("userrole");
          Map<String,View> map = this.userViewDAO.getView(view_name,role);
-         
+
          String [] names = request.getParameterValues("name");
          String [] values = request.getParameterValues("value");
          View v;
-         
+
          //first we delete any current view
          Set<String> keys = map.keySet();
          String key;
@@ -84,7 +84,7 @@ public class ProviderViewAction extends DispatchAction {
              v = map.get(key);
              this.userViewDAO.delete(v);
          }
-         
+
          //now we save new view
          for( int idx = 0; idx < names.length; ++idx ) {
              v = new View();
@@ -94,8 +94,8 @@ public class ProviderViewAction extends DispatchAction {
              v.setView_name(view_name);
              this.userViewDAO.saveView(v);
          }
-         
+
          return null;
      }
-      
+
 }
