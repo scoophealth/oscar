@@ -435,6 +435,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		Properties p = OscarProperties.getInstance();
 		boolean omdTestingOnly = Boolean.parseBoolean(p.getProperty("ENABLE_CONFORMANCE_ONLY_FEATURES"));
+		logger.info("Integrator push demographics, omdTestingOnly="+omdTestingOnly);
 
 		if (!omdTestingOnly) {
 			return (DemographicDao.getDemographicIdsAdmittedIntoFacility(facility.getId()));
@@ -499,6 +500,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			BenchmarkTimer benchTimer = new BenchmarkTimer("pushing demo facilityId:" + facility.getId() + ", demographicId:" + demographicId + "  " + demographicPushCount + " of " + demographicIds.size());
 
 			try {
+				demographicService.setLastPushDate(demographicId);
+				
 				pushDemographic(facility, demographicService, demographicId, facility.getId());
 				// it's safe to set the consent later so long as we default it to none when we send the original demographic data in the line above.
 				benchTimer.tag("pushDemographic");
