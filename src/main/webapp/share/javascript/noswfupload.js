@@ -216,7 +216,7 @@ var $ = {
             sendFile = function(handler, maxSize){
                 if(-1 < maxSize && maxSize < handler.file.fileSize){
                     if(isFunction(handler.onerror))
-                        handler.onerror();
+                        handler.onerror('file too big');
                     return;
                 };
                 for(var
@@ -245,7 +245,11 @@ var $ = {
                         } else {
                             setTimeout(function(){
                                 if(xhr.readyState === 4){
-                                    if(isFunction(handler.onload))
+                                    if(xhr.status == 500 && isFunction(handler.onerror)) {
+					var errortext = xhr.getResponseHeader('oscar_error');
+                                        handler.onerror(errortext);
+				    }
+                                    else if(isFunction(handler.onload))
                                         handler.onload(rpe, xhr);
                                 } else
                                     setTimeout(arguments.callee, 15);

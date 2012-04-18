@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -70,7 +71,7 @@ import com.lowagie.text.pdf.PdfReader;
 
 public class AddEditDocumentAction extends DispatchAction {
 	public ActionForward html5MultiUpload(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-
+		ResourceBundle props = ResourceBundle.getBundle("oscarResources");
 		Hashtable errors = new Hashtable();
 		AddEditDocumentForm fm = (AddEditDocumentForm) form;
 
@@ -84,11 +85,19 @@ public class AddEditDocumentAction extends DispatchAction {
 		fileName = newDoc.getFileName();
 		// save local file;
 		if (docFile.getFileSize() == 0) {
-			errors.put("uploaderror", "dms.error.uploadError");
-			throw new FileNotFoundException();
+			//errors.put("uploaderror", "dms.error.uploadError");
+			response.setHeader("oscar_error",props.getString("dms.addDocument.errorZeroSize") );
+			response.sendError(500,props.getString("dms.addDocument.errorZeroSize") );
+			return null;
+			//throw new FileNotFoundException();
 		}
 		File file = writeLocalFile(docFile, fileName);// write file to local dir
 
+		if(!file.exists() || file.length() < docFile.getFileSize()) {
+			response.setHeader("oscar_error",props.getString("dms.addDocument.errorNoWrite") );
+			response.sendError(500,props.getString("dms.addDocument.errorNoWrite") );
+			return null;
+		}
 
 		newDoc.setContentType(docFile.getContentType());
 		if (fileName.endsWith(".PDF") || fileName.endsWith(".pdf")) {
@@ -121,7 +130,7 @@ public class AddEditDocumentAction extends DispatchAction {
 
 		}
 
-		return mapping.findForward("fastUploadSuccess");
+		return null;
 
 	}
 
