@@ -1,0 +1,8 @@
+This is an urgent / immediate notification of a wait list event.
+
+demographic = ${demographic.lastName}, ${demographic.firstName}
+
+program = ${program.name}
+
+notes = ${notes}
+

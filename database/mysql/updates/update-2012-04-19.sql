@@ -1,0 +1,1 @@
+alter table IntegratorControl drop foreign key IntegratorControl_ibfk_1;
