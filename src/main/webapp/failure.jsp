@@ -25,7 +25,7 @@
  * Ontario, Canada 
  */
 -->
-<html:html locale="true">
+<html:html>
 
 <html>
 
