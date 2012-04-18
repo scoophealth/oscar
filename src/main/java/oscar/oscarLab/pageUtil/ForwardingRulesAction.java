@@ -55,30 +55,30 @@ import oscar.oscarLab.ForwardingRules;
  * @author wrighd
  */
 public class ForwardingRulesAction extends Action{
-    
+
     Logger logger = Logger.getLogger(ForwardingRulesAction.class);
-    
+
     /** Creates a new instance of ForwardingRulesAction */
     public ForwardingRulesAction() {
     }
-    
+
     public ActionForward execute(ActionMapping mapping,
             ActionForm form,
             HttpServletRequest request,
             HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         String providerNo = request.getParameter("providerNo");
         String operation = request.getParameter("operation");
-        
-        
+
+
         logger.info("ForwardingRulesAction performing: "+operation+" for provider: "+providerNo);
         if (operation.equals("update")){
             String[] providerNums = request.getParameterValues("providerNums");
             String status = request.getParameter("status");
-            
+
             try{
-                
+
                 // insert forwarding rules
                 if (providerNums != null){
                     String sql = "UPDATE incomingLabRules SET archive='1' WHERE provider_no='"+providerNo+"' AND frwdProvider_no='0' AND archive='0'";
@@ -88,10 +88,10 @@ public class ForwardingRulesAction extends Action{
                         DBHandler.RunSQL(sql);
                     }
                 }
-                
+
                 ForwardingRules fr = new ForwardingRules();
-                ArrayList temp = fr.getProviders(providerNo);
-                
+                ArrayList<ArrayList<String>> temp = fr.getProviders(providerNo);
+
                 // check if there rules are set to forward the labs
                 if (temp == null || temp.size() <= 0){
                     // insert a new rule setting the status to final without forwarding
@@ -112,7 +112,7 @@ public class ForwardingRulesAction extends Action{
                 logger.error("Could not update forwarding rules", e);
                 return mapping.findForward("failure");
             }
-            
+
         }else if (operation.equals("clear")){
             if (!clearRules(providerNo))
                 return mapping.findForward("failure");
@@ -121,13 +121,13 @@ public class ForwardingRulesAction extends Action{
             if (!removeRule(providerNo, remProviderNum))
                 return mapping.findForward("failure");
         }
-        
+
         return mapping.findForward("success");
     }
-    
+
     private boolean clearRules(String providerNo){
         try{
-            
+
             String sql = "UPDATE incomingLabRules SET archive='1' WHERE provider_no='"+providerNo+"'";
             DBHandler.RunSQL(sql);
         }catch(Exception e){
@@ -136,16 +136,16 @@ public class ForwardingRulesAction extends Action{
         }
         return true;
     }
-    
+
     private boolean removeRule(String providerNo, String remProviderNum){
         try{
             OscarProperties props = OscarProperties.getInstance();
             String autoFileLabs = props.getProperty("AUTO_FILE_LABS");
-            
+
             ForwardingRules fr = new ForwardingRules();
             String status = fr.getStatus(providerNo);
-            
-            
+
+
             if ( autoFileLabs != null && autoFileLabs.equalsIgnoreCase("yes") && status.equals("F")){
                 String sql = "UPDATE incomingLabRules SET archive='1' WHERE provider_no='"+providerNo+"' AND frwdProvider_no='"+remProviderNum+"'";
                 logger.info(sql);

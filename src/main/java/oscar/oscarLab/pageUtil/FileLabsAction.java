@@ -56,7 +56,7 @@ public class FileLabsAction extends DispatchAction {
       String[] flaggedLabs = request.getParameterValues("flaggedLabs");
 
       String[] labTypes = CommonLabResultData.getLabTypes();
-      ArrayList listFlaggedLabs = new ArrayList();
+      ArrayList<String[]> listFlaggedLabs = new ArrayList<String[]>();
 
       if(flaggedLabs != null && labTypes != null){
          for (int i = 0; i < flaggedLabs.length; i++){
@@ -97,7 +97,7 @@ public class FileLabsAction extends DispatchAction {
       String flaggedLab=request.getParameter("flaggedLabId").trim();
       String labType=request.getParameter("labType").trim();
 
-      ArrayList listFlaggedLabs = new ArrayList();
+      ArrayList<String[]> listFlaggedLabs = new ArrayList<String[]>();
       String[] la =  new String[] {flaggedLab,labType};
       listFlaggedLabs.add(la);
       CommonLabResultData.fileLabs(listFlaggedLabs, providerNo);

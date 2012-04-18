@@ -84,6 +84,7 @@ import org.oscarehr.common.dao.DrugReasonDao;
 import org.oscarehr.common.dao.PartialDateDao;
 import org.oscarehr.common.dao.ProviderDataDao;
 import org.oscarehr.common.model.Allergy;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicArchive;
 import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.Drug;
@@ -410,7 +411,7 @@ import cdsDt.PersonNameStandard.OtherNames;
 
         //Check duplicate
         DemographicData dd = new DemographicData();
-        ArrayList demodup = null;
+        ArrayList<Demographic> demodup = null;
         if (StringUtils.filled(hin)) demodup = dd.getDemographicWithHIN(hin);
         else demodup = dd.getDemographicWithLastFirstDOB(lastName, firstName, birthDate);
         if (demodup.size()>0) {

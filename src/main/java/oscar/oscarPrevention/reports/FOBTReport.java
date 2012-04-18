@@ -1,17 +1,17 @@
 /*
- *  Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. 
+ *  Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  *  This software is published under the GPL GNU General Public License.
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
  *  as published by the Free Software Foundation; either version 2
- *  of the License, or (at your option) any later version. 
+ *  of the License, or (at your option) any later version.
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details. 
+ *  GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  *  Jason Gallagher
  *
@@ -19,7 +19,7 @@
  *  Department of Family Medicine
  *  McMaster University
  *  Hamilton
- *  Ontario, Canada   
+ *  Ontario, Canada
  *
  *  FOBTReport.java
  *
@@ -60,20 +60,20 @@ public class FOBTReport implements PreventionReport{
     /** Creates a new instance of MammogramReport */
     public FOBTReport() {
     }
-    
-    public Hashtable runReport(ArrayList list,Date asofDate){
-        
+
+    public Hashtable<String,Object> runReport(ArrayList<ArrayList<String>> list,Date asofDate){
+
         int inList = 0;
         double done= 0,doneWithGrace = 0;
-        ArrayList returnReport = new ArrayList();
-        
-        for (int i = 0; i < list.size(); i ++){//for each  element in arraylist 
-             ArrayList fieldList = (ArrayList) list.get(i);       
-             String demo = (String) fieldList.get(0);  
+        ArrayList<PreventionReportDisplay> returnReport = new ArrayList<PreventionReportDisplay>();
 
-             //search   prevention_date prevention_type  deleted   refused 
-             ArrayList<Map<String,Object>> prevs = PreventionData.getPreventionData("FOBT",demo); 
-             ArrayList<Map<String,Object>> colonoscopys = PreventionData.getPreventionData("COLONOSCOPY",demo); 
+        for (int i = 0; i < list.size(); i ++){//for each  element in arraylist
+             ArrayList<String> fieldList = list.get(i);
+             String demo = fieldList.get(0);
+
+             //search   prevention_date prevention_type  deleted   refused
+             ArrayList<Map<String,Object>> prevs = PreventionData.getPreventionData("FOBT",demo);
+             ArrayList<Map<String,Object>> colonoscopys = PreventionData.getPreventionData("COLONOSCOPY",demo);
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;
              prd.bonusStatus = "N";
@@ -81,51 +81,53 @@ public class FOBTReport implements PreventionReport{
              Date prevDate = null;
              if(ineligible(prevs) || colonoscopywith5(colonoscopys,asofDate)){
                 prd.rank = 5;
-                prd.lastDate = "------"; 
-                prd.state = "Ineligible"; 
+                prd.lastDate = "------";
+                prd.state = "Ineligible";
                 prd.numMonths = "------";
                 prd.color = "grey";
                 inList++;
              }else if (prevs.size() == 0){// no info
                 prd.rank = 1;
                 prd.lastDate = "------";
-                prd.state = "No Info";                
+                prd.state = "No Info";
                 prd.numMonths = "------";
                 prd.color = "Magenta";
              }else{
             	 Map<String,Object> h = prevs.get(prevs.size()-1);
                 DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                 String prevDateStr = (String) h.get("prevention_date");
-                
+
                 try{
                    prevDate = formatter.parse(prevDateStr);
-                }catch (Exception e){}
+                }catch (Exception e){
+                	//empty
+                }
                 boolean refused = false;
                 if ( h.get("refused") != null && ((String) h.get("refused")).equals("1")){
                    refused = true;
                 }
-                
+
                 Calendar cal = Calendar.getInstance();
                 cal.add(Calendar.YEAR, -2);
-                Date dueDate = cal.getTime();                
+                Date dueDate = cal.getTime();
                 cal.add(Calendar.MONTH,-6);
                 Date cutoffDate = cal.getTime();
-                
+
                 Calendar cal2 = GregorianCalendar.getInstance();
                 cal2.add(Calendar.YEAR, -2);
-                Date dueDate2 = cal.getTime();
+                //Date dueDate2 = cal.getTime();
                 //cal2.roll(Calendar.YEAR, -1);
                 cal2.add(Calendar.MONTH,-6);
                 Date cutoffDate2 = cal2.getTime();
-                
+
                 log.info("cut 1 "+cutoffDate.toString()+ " cut 2 "+cutoffDate2.toString());
-               
-                // if prevDate is less than as of date and greater than 2 years prior 
+
+                // if prevDate is less than as of date and greater than 2 years prior
                 Calendar bonusEl = Calendar.getInstance();
-                bonusEl.setTime(asofDate);                
+                bonusEl.setTime(asofDate);
                 bonusEl.add(Calendar.MONTH,-30);
                 Date bonusStartDate = bonusEl.getTime();
-                
+
                 log.debug("\n\n\n prevDate "+prevDate);
                 log.debug("bonusEl date "+bonusStartDate+ " "+bonusStartDate.before(prevDate));
                 log.debug("asofDate date"+asofDate+" "+asofDate.after(prevDate));
@@ -136,35 +138,35 @@ public class FOBTReport implements PreventionReport{
                    prd.billStatus = "Y";
                    done++;
                 }
-                
-                //Calendar today = Calendar.getInstance(); 
+
+                //Calendar today = Calendar.getInstance();
                 //change as of date to run the report for a different year
                 String numMonths = "------";
                 if ( prevDate != null){
                    int num = UtilDateUtilities.getNumMonths(prevDate,asofDate);
                    numMonths = ""+num+" months";
                 }
-                
-                
-                //outcomes        
+
+
+                //outcomes
                 log.debug("due Date "+dueDate.toString()+" cutoffDate "+cutoffDate.toString()+" prevDate "+prevDate.toString());
                 log.debug("due Date  ("+dueDate.toString()+" ) After Prev ("+prevDate.toString() +" ) "+dueDate.after(prevDate));
                 log.debug("cutoff Date  ("+cutoffDate.toString()+" ) before Prev ("+prevDate.toString() +" ) "+cutoffDate.before(prevDate));
                 if (!refused && dueDate.after(prevDate) && cutoffDate.before(prevDate)){ // overdue
                    prd.rank = 2;
-                   prd.lastDate = prevDateStr;                
+                   prd.lastDate = prevDateStr;
                    prd.state = "due";
                    prd.numMonths = numMonths;
                    prd.color = "yellow"; //FF00FF
                    doneWithGrace++;
-                   
+
                 } else if (!refused && cutoffDate.after(prevDate)){ // overdue
                    prd.rank = 2;
-                   prd.lastDate = prevDateStr;                
+                   prd.lastDate = prevDateStr;
                    prd.state = "Overdue";
                    prd.numMonths = numMonths;
                    prd.color = "red"; //FF00FF
-                   
+
                 } else if (refused){  // recorded and refused
                    prd.rank = 3;
                    prd.lastDate = "-----";
@@ -180,7 +182,7 @@ public class FOBTReport implements PreventionReport{
 
                 } else if (dueDate.before(prevDate)  ){  // recorded done
                    prd.rank = 4;
-                   prd.lastDate = prevDateStr;                
+                   prd.lastDate = prevDateStr;
                    prd.state = "Up to date";
                    prd.numMonths = numMonths;
                    prd.color = "green";
@@ -189,7 +191,7 @@ public class FOBTReport implements PreventionReport{
              }
              letterProcessing( prd,"FOBF",asofDate,prevDate);
              returnReport.add(prd);
-             
+
           }
           String percentStr = "0";
           String percentWithGraceStr = "0";
@@ -202,11 +204,11 @@ public class FOBTReport implements PreventionReport{
              percentStr = ""+Math.round(percentage);
              percentWithGraceStr = ""+Math.round(percentageWithGrace);
           }
-          
+
           Collections.sort(returnReport);
-          
-          Hashtable h = new Hashtable();
-          
+
+          Hashtable<String,Object> h = new Hashtable<String,Object>();
+
           h.put("up2date",""+Math.round(done));
           h.put("percent",percentStr);
           h.put("percentWithGrace",percentWithGraceStr);
@@ -218,7 +220,7 @@ public class FOBTReport implements PreventionReport{
           log.debug("set returnReport "+returnReport);
           return h;
     }
-          
+
     boolean ineligible(Map<String,Object> h){
        boolean ret =false;
        if ( h.get("refused") != null && ((String) h.get("refused")).equals("2")){
@@ -226,7 +228,7 @@ public class FOBTReport implements PreventionReport{
        }
        return ret;
    }
-    
+
    boolean ineligible(ArrayList<Map<String,Object>> list){
        for (int i =0; i < list.size(); i ++){
     	   Map<String,Object> h =  list.get(i);
@@ -235,8 +237,8 @@ public class FOBTReport implements PreventionReport{
            }
        }
        return false;
-   } 
-   
+   }
+
    boolean colonoscopywith5(ArrayList<Map<String,Object>> list,Date asofDate){
        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
        Calendar cal = Calendar.getInstance();
@@ -246,24 +248,26 @@ public class FOBTReport implements PreventionReport{
        for (int i =0; i < list.size(); i ++){
     	   Map<String,Object> h = list.get(i);
            if ( h.get("refused") != null && ((String) h.get("refused")).equals("0")){
-                   
+
                 String prevDateStr = (String) h.get("prevention_date");
                 Date prevDate = null;
                 try{
                    prevDate = formatter.parse(prevDateStr);
-                }catch (Exception e){}
-                
+                }catch (Exception e){
+                	//empty
+                }
+
                 if (fiveyearcutoff.before(prevDate)){
                    log.debug("Colonoscopy within 5 years: Last colonoscopy "+formatter.format(prevDate)+ " 5 year mark "+formatter.format(fiveyearcutoff) );
-                   return true;   
+                   return true;
                 }
            }
        }
        return false;
-   } 
-    
-    
-   //TODO: THIS MAY NEED TO BE REFACTORED AT SOME POINT IF MAM and PAP are exactly the same  
+   }
+
+
+   //TODO: THIS MAY NEED TO BE REFACTORED AT SOME POINT IF MAM and PAP are exactly the same
    //If they don't have a MAM Test with guidelines
                 //Get last contact method?
                     //NO contact
@@ -277,13 +281,13 @@ public class FOBTReport implements PreventionReport{
                                         //SEnd L2
                                     //Was is L2
                                         //P1
-    
-   //Measurement Type will be 1 per Prevention report, with the dataField holding method ie L1, L2, P1 (letter 1 , letter 2, phone call 1) 
+
+   //Measurement Type will be 1 per Prevention report, with the dataField holding method ie L1, L2, P1 (letter 1 , letter 2, phone call 1)
    String LETTER1 = "L1";
    String LETTER2 = "L2";
    String PHONE1 = "P1";
    String CALLFU = "Follow Up";
-  
+
    private String letterProcessing(PreventionReportDisplay prd,String measurementType,Date asofDate, Date prevDate){
        if (prd != null){
           boolean inclUpToDate = false;
@@ -291,7 +295,7 @@ public class FOBTReport implements PreventionReport{
             Calendar cal = Calendar.getInstance();
             cal.setTime(asofDate);
             cal.add(Calendar.YEAR, -2);
-            Date dueDate = cal.getTime();                
+            Date dueDate = cal.getTime();
             cal.add(Calendar.MONTH,-6);
             Date cutoffDate = cal.getTime();
 
@@ -299,39 +303,39 @@ public class FOBTReport implements PreventionReport{
                 inclUpToDate = true;
             }
           }
-           
+
            if (prd.state.equals("No Info") || prd.state.equals("due") || prd.state.equals("Overdue") || inclUpToDate ){
 
               // Get LAST contact method
               EctMeasurementsDataBeanHandler measurementDataHandler = new EctMeasurementsDataBeanHandler(prd.demographicNo,measurementType);
               log.debug("getting followup data for "+prd.demographicNo);
-              
-              Collection followupData = measurementDataHandler.getMeasurementsDataVector();
+
+              Collection<EctMeasurementsDataBean> followupData = measurementDataHandler.getMeasurementsDataVector();
               //NO Contact
-              
+
               if ( followupData.size() == 0 ){
                   prd.nextSuggestedProcedure = this.LETTER1;
                   return this.LETTER1;
               }else{ //There has been contact
-                  EctMeasurementsDataBean measurementData = (EctMeasurementsDataBean) followupData.iterator().next();
+                  EctMeasurementsDataBean measurementData = followupData.iterator().next();
                   log.debug("fluData "+measurementData.getDataField());
-                  log.debug("lastFollowup "+measurementData.getDateObservedAsDate()+ " last procedure "+measurementData.getDateObservedAsDate());     
+                  log.debug("lastFollowup "+measurementData.getDateObservedAsDate()+ " last procedure "+measurementData.getDateObservedAsDate());
                   log.debug("toString: "+measurementData.toString());
                   prd.lastFollowup = measurementData.getDateObservedAsDate();
                   prd.lastFollupProcedure = measurementData.getDataField();
-                          
-                          
+
+
                   Calendar oneyear = Calendar.getInstance();
-                  oneyear.setTime(asofDate);                
+                  oneyear.setTime(asofDate);
                   oneyear.add(Calendar.YEAR,-1);
-                  
+
                   if ( measurementData.getDateObservedAsDate().before(oneyear.getTime())){
                       prd.nextSuggestedProcedure = this.LETTER1;
                       return this.LETTER1;
                   }else{ //AFTER CUTOFF DATE
-                      
+
                       Calendar threemonth = Calendar.getInstance();
-                      threemonth.setTime(asofDate);                
+                      threemonth.setTime(asofDate);
                       threemonth.add(Calendar.MONTH,-1);
                           if ( measurementData.getDateObservedAsDate().before(threemonth.getTime())){
                               if (prd.lastFollupProcedure.equals(this.LETTER1)){
@@ -344,7 +348,7 @@ public class FOBTReport implements PreventionReport{
                                   prd.nextSuggestedProcedure = "----";
                                   return "----";
                               }
-                          
+
                           }else if(prd.lastFollupProcedure.equals(this.LETTER2)){
                               prd.nextSuggestedProcedure = this.PHONE1;
                               return this.PHONE1;
@@ -355,14 +359,14 @@ public class FOBTReport implements PreventionReport{
                   }
 
 
-                  
+
               }
-          
-          
-          
-          
+
+
+
+
           }else if (prd.state.equals("Refused")){  //Not sure what to do about refused
-                //prd.lastDate = "-----";  
+                //prd.lastDate = "-----";
               prd.nextSuggestedProcedure = "----";
                 //prd.numMonths ;
           }else if(prd.state.equals("Ineligible")){
@@ -377,9 +381,9 @@ public class FOBTReport implements PreventionReport{
                log.debug("NOT SURE WHAT HAPPEND IN THE LETTER PROCESSING");
           }
        }
-       return null;         
+       return null;
    }
-    
+
 }
 
 
@@ -387,12 +391,12 @@ public class FOBTReport implements PreventionReport{
 
 
 //                  Calendar today = Calendar.getInstance();
-//                  today.setTime(asofDate); 
+//                  today.setTime(asofDate);
 //                  int num = UtilDateUtilities.getNumMonths(measurementData.getDateObservedAsDate(),today.getTime());
 //                  if (num > 12){
 //                        prd.nextSuggestedProcedure = this.LETTER1;
 //                        return this.LETTER1;
-//                  }else{ //AFTER CUTOFF DATE    
+//                  }else{ //AFTER CUTOFF DATE
 //                      if ( num > 3 ){
 //                          if (prd.lastFollupProcedure.equals(this.LETTER1)){
 //                                prd.nextSuggestedProcedure = this.LETTER2;
@@ -404,6 +408,6 @@ public class FOBTReport implements PreventionReport{
 //                              prd.nextSuggestedProcedure = "----";
 //                              return "----";
 //                          }
-//                          
+//
 //                        }
 //                  }

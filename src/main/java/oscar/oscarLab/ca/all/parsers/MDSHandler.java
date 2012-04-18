@@ -87,7 +87,7 @@ public class MDSHandler implements MessageHandler {
 	         *  Fill the OBX array list for use by future methods
 	         */
 	        for (int i=0; i < obrCount; i++){
-	            ArrayList obxSegs = new ArrayList();
+	            ArrayList<String> obxSegs = new ArrayList<String>();
 	            int count = 0;
 
 	            if (i == 0){

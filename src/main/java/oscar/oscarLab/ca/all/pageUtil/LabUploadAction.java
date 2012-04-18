@@ -90,8 +90,7 @@ public class LabUploadAction extends Action {
 		String audit = "";
 		Integer httpCode = 200;
 
-		@SuppressWarnings("unchecked")
-		ArrayList clientInfo = getClientInfo(service);
+		ArrayList<Object> clientInfo = getClientInfo(service);
 		PublicKey clientKey = (PublicKey) clientInfo.get(0);
 		String type = (String) clientInfo.get(1);
 

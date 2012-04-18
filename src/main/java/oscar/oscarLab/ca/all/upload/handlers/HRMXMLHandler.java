@@ -25,7 +25,7 @@
 /*
  * HL7Handler
  * Upload handler
- * 
+ *
  */
 package oscar.oscarLab.ca.all.upload.handlers;
 
@@ -43,7 +43,7 @@ import oscar.oscarLab.ca.all.upload.MessageUploader;
 import oscar.oscarLab.ca.all.util.Utilities;
 
 /**
- * 
+ *
  */
 public class HRMXMLHandler implements MessageHandler {
 
@@ -58,10 +58,10 @@ public class HRMXMLHandler implements MessageHandler {
 
 		int i = 0;
 		try {
-			ArrayList messages = Utilities.separateMessages(fileName);
+			ArrayList<String> messages = Utilities.separateMessages(fileName);
 			for (i = 0; i < messages.size(); i++) {
 
-				String msg = (String) messages.get(i);
+				String msg =  messages.get(i);
 				MessageUploader.routeReport("","HRMXML", msg, fileId);
 
 			}
@@ -85,7 +85,7 @@ public class HRMXMLHandler implements MessageHandler {
 	// recheck the abnormal status of the last 'n' labs
 	private void updateLabStatus(int n) throws SQLException {
 		String sql = "SELECT lab_no, result_status FROM hl7TextInfo ORDER BY lab_no DESC";
-		
+
 		Connection c  = DbConnectionFilter.getThreadLocalDbConnection();
 		PreparedStatement ps = c.prepareStatement(sql);
 		ResultSet rs= ps.executeQuery(sql);

@@ -98,7 +98,7 @@ public class LimitedUseLookup {
                     List<Element> lccNoteList = pcgGroup.getChildren("lccNote");
 
                     if (lccNoteList.size() > 0) {
-                        ArrayList<LimitedUseCode> luList = new ArrayList();
+                        ArrayList<LimitedUseCode> luList = new ArrayList<LimitedUseCode>();
                         for (Element lccNo : lccNoteList) {
                             luList.add(makeLUNote(lccNo));
                         }
