@@ -36,7 +36,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
@@ -61,11 +60,10 @@ import oscar.oscarLab.ca.on.CML.ABCDParser;
  */
 public class LabUploadAction extends Action {
    Logger _logger = Logger.getLogger(this.getClass());
-   
+
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
-       LabUploadForm frm = (LabUploadForm) form; 
+       LabUploadForm frm = (LabUploadForm) form;
        FormFile importFile = frm.getImportFile();
-       ArrayList warnings = new ArrayList();
        String filename = "";
        String proNo = (String) request.getSession().getAttribute("user");
        if(proNo == null){
@@ -75,24 +73,24 @@ public class LabUploadAction extends Action {
        String keyToMatch =  OscarProperties.getInstance().getProperty("CML_UPLOAD_KEY");
        MiscUtils.getLogger().debug("key="+key);
        String outcome = "";
-       
+
        //Checks to verify key is matched and file should be saved locally.
        if (key != null && keyToMatch != null && keyToMatch.equals(key)){
-           
-          try{  
-              
+
+          try{
+
              MiscUtils.getLogger().debug("Lab Upload content type = "+importFile.getContentType());
              InputStream is = importFile.getInputStream();
              filename = importFile.getFileName();
 
              String localFileName = saveFile(is, filename);
              is.close();
-             
-             
-             
+
+
+
              boolean fileUploadedSuccessfully = false;
              if (localFileName != null){
-                InputStream  fis = new FileInputStream(localFileName); 
+                InputStream  fis = new FileInputStream(localFileName);
                 int check = FileUploadCheck.UNSUCCESSFUL_SAVE;
                 try{
                     check = FileUploadCheck.addFile(filename,fis,proNo);
@@ -102,27 +100,27 @@ public class LabUploadAction extends Action {
                 }catch(Exception addFileEx){
                 	MiscUtils.getLogger().error("Error", addFileEx);
                    outcome = "databaseNotStarted";
-                }    
+                }
                 MiscUtils.getLogger().debug("Was file uploaded successfully ?"+fileUploadedSuccessfully);
-                fis.close();     
+                fis.close();
                 if (check != FileUploadCheck.UNSUCCESSFUL_SAVE){
-                    BufferedReader in = new BufferedReader(new FileReader(localFileName));                                       
-                    ABCDParser abc = new ABCDParser();     
-                    abc.parse(in);              
-                                 
+                    BufferedReader in = new BufferedReader(new FileReader(localFileName));
+                    ABCDParser abc = new ABCDParser();
+                    abc.parse(in);
+
                     abc.save(DbConnectionFilter.getThreadLocalDbConnection());
                     outcome = "uploaded";
                 }
              }else{
-                outcome="accessDenied";  //file could not save    
+                outcome="accessDenied";  //file could not save
                 MiscUtils.getLogger().debug("Could not save file :"+filename+" to disk");
              }
-             
-          }catch(Exception e){ 
-             MiscUtils.getLogger().error("Error", e); 
+
+          }catch(Exception e){
+             MiscUtils.getLogger().error("Error", e);
              outcome = "exception";
-          }  
-       
+          }
+
        }else{
           outcome = "accessDenied";
        }
@@ -130,36 +128,36 @@ public class LabUploadAction extends Action {
        MiscUtils.getLogger().debug("forwarding outcome "+outcome);
        return mapping.findForward("success");
     }
-   
-   
+
+
    public LabUploadAction() {
    }
-   
-   
+
+
    /**
-     * 
+     *
      * Save a Jakarta FormFile to a preconfigured place.
-     * 
+     *
      * @param file
      * @return
      */
    public static String saveFile(InputStream stream,String filename ){
-      String retVal = null;        
+      String retVal = null;
       boolean isAdded = true;
-        
+
       try {
          OscarProperties props = OscarProperties.getInstance();
-         //properties must exist            
+         //properties must exist
          String place= props.getProperty("DOCUMENT_DIR");
-            
+
          if(!place.endsWith("/"))
             place = new StringBuilder(place).insert(place.length(),"/").toString();
          retVal = place+"LabUpload."+filename+"."+(new Date()).getTime();
          MiscUtils.getLogger().debug(retVal);
-            
+
          //write the  file to the file specified
          OutputStream bos = new FileOutputStream(retVal);
-         int bytesRead = 0;            
+         int bytesRead = 0;
          while ((bytesRead = stream.read()) != -1){
             bos.write(bytesRead);
          }
@@ -170,14 +168,14 @@ public class LabUploadAction extends Action {
       }catch (FileNotFoundException fnfe) {
 
          MiscUtils.getLogger().debug("File not found");
-         MiscUtils.getLogger().error("Error", fnfe);            
+         MiscUtils.getLogger().error("Error", fnfe);
          return retVal;
 
       }catch (IOException ioe) {
          MiscUtils.getLogger().error("Error", ioe);
          return retVal;
-      }   
+      }
       return retVal;
    }
-   
+
 }

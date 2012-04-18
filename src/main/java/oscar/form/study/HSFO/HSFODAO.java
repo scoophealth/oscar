@@ -1177,8 +1177,8 @@ public class HSFODAO {
 
 
 
-    public List getAllPatientId(){
-    	List reList=new ArrayList();
+    public List<String> getAllPatientId(){
+    	List<String> reList=new ArrayList<String>();
     	String query = "SELECT Distinct Patient_Id FROM hsfo_patient";
 
     	Statement sql=null;

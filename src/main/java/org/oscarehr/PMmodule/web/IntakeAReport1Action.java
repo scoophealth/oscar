@@ -1,23 +1,23 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for 
- * Centre for Research on Inner City Health, St. Michael's Hospital, 
- * Toronto, Ontario, Canada 
+ *
+ * This software was written for
+ * Centre for Research on Inner City Health, St. Michael's Hospital,
+ * Toronto, Ontario, Canada
  */
 
 package org.oscarehr.PMmodule.web;
@@ -167,16 +167,16 @@ public class IntakeAReport1Action extends BaseAction {
         return(mapping.findForward(target));
     }
 
-    private List filterOutOnlyMostRecentClientIntakeAs(List intakeAs) {
+    private List<Formintakea> filterOutOnlyMostRecentClientIntakeAs(List<Formintakea> intakeAs) {
         if (intakeAMgr == null || intakeAs == null || intakeAs.size() <= 0) {
             return null;
         }
-        List filteredIntakAs = new ArrayList();
+        List<Formintakea> filteredIntakAs = new ArrayList<Formintakea>();
         long demographicNo = 0;
         long prevDemoNo = 0;
 
         for (int i = 0; i < intakeAs.size(); i++) {
-            demographicNo = ((Formintakea) intakeAs.get(i)).getDemographicNo().longValue();
+            demographicNo = ( intakeAs.get(i)).getDemographicNo().longValue();
 
             if (prevDemoNo != demographicNo) {
                 Demographic demographic = clientMgr.getClientByDemographicNo(String.valueOf(demographicNo));
@@ -295,7 +295,7 @@ public class IntakeAReport1Action extends BaseAction {
             	String yearTmp=StringUtils.trimToNull(intakeA.getYear());
             	String monthTmp=StringUtils.trimToNull(intakeA.getMonth());
             	String dayTmp=StringUtils.trimToNull(intakeA.getDay());
-            	
+
                 if ( yearTmp!= null && monthTmp != null && dayTmp != null) {
                     dob = UtilDateUtilities.calcAge(yearTmp, monthTmp, dayTmp);
                     totalDOB += dob;
@@ -315,7 +315,7 @@ public class IntakeAReport1Action extends BaseAction {
         return avgDOB;
     }
 
-    private List calculateNumOfClientsAdmittedInPeriod(IntakeAManager intakeAMgr, List intakeAs) {
+    private List calculateNumOfClientsAdmittedInPeriod(IntakeAManager intakeAMgr, List<Formintakea> intakeAs) {
         if (intakeAMgr == null || intakeAs == null || intakeAs.size() <= 0) {
             return null;
         }
@@ -337,17 +337,17 @@ public class IntakeAReport1Action extends BaseAction {
         Formintakea intakeAStats2RadioUncertain = new Formintakea();
         intakeAStats2RadioUncertain = intakeAMgr.setNewIntakeAObj(intakeAStats2RadioUncertain);
 
-        List intakeA4Stats = new ArrayList();
+        List<Formintakea> intakeA4Stats = new ArrayList<Formintakea>();
 
         int[] num = new int[90];
         for (int i = 0; i < num.length; i++) {
             num[i] = 0;
         }
 
-        ListIterator listIterator = intakeAs.listIterator();
+        ListIterator<Formintakea> listIterator = intakeAs.listIterator();
 
         while (listIterator.hasNext()) {
-            intakeA = (Formintakea) listIterator.next();
+            intakeA = listIterator.next();
 
             try {
 

@@ -108,7 +108,7 @@ public class GeneratePatientLettersAction extends Action {
         APExecute apExe = new APExecute();
         if (log.isTraceEnabled()) { log.trace("Compiled Jasper Report ");}
 
-        ArrayList fullPatientlist = new ArrayList();
+        ArrayList<Object> fullPatientlist = new ArrayList<Object>();
 
         //for each demographic generate a letter for that patient
         for (int i =0; i < demos.length; i++){

@@ -29,50 +29,50 @@ import ca.uhn.hl7v2.validation.impl.NoValidation;
  * @author David Daley, Ithream
  */
 public class ICLHandler extends DefaultGenericHandler implements MessageHandler {
-    
+
     Logger logger = Logger.getLogger(ICLHandler.class);
     ORU_R01 msg = null;
-    
+
     /** Creates a new instance of ICLHandler */
     public ICLHandler(){
     }
-    
+
     public void init(String hl7Body) throws HL7Exception {
         Parser p = new PipeParser();
         p.setValidationContext(new NoValidation());
         msg = (ORU_R01) p.parse(hl7Body.replaceAll( "\n", "\r\n" ));
     }
-    
+
     public String getMsgType(){
         return("ICL");
     }
-    
+
     public String getMsgPriority(){
         return("");
     }
     /*
      *  MSH METHODS
      */
-    
+
     public String getMsgDate(){
         return(formatDateTime(getString(msg.getMSH().getDateTimeOfMessage().getTimeOfAnEvent().getValue())));
     }
-    
+
     /*
      *  PID METHODS
      */
     public String getPatientName(){
         return(getFirstName()+" "+getLastName());
     }
-    
+
     public String getFirstName(){
         return(getString(msg.getRESPONSE().getPATIENT().getPID().getPatientName().getGivenName().getValue()));
     }
-    
+
     public String getLastName(){
         return(getString(msg.getRESPONSE().getPATIENT().getPID().getPatientName().getFamilyName().getValue()));
     }
-    
+
     public String getDOB(){
         try{
             return(formatDateTime(getString(msg.getRESPONSE().getPATIENT().getPID().getDateOfBirth().getTimeOfAnEvent().getValue())).substring(0, 10));
@@ -80,7 +80,7 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
             return("");
         }
     }
-    
+
     public String getAge(){
         String age = "N/A";
         String dob = getDOB();
@@ -94,7 +94,7 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
         }
         return age;
     }
-    
+
     public String getSex(){
 				try {
             return(getString(msg.getRESPONSE().getPATIENT().getPID().getSex().getValue()));
@@ -103,7 +103,7 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
 						return("");
 				}
     }
-    
+
     public String getHealthNum(){
 				try {
             return(getString(msg.getRESPONSE().getPATIENT().getPID().getPatientIDInternalID(0).getID().getValue()));
@@ -112,7 +112,7 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
 						return("");
 				}
     }
-    
+
     public String getHomePhone(){
         String phone = "";
         int i=0;
@@ -131,7 +131,7 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
             return("");
         }
     }
-    
+
     public String getWorkPhone(){
         String phone = "";
         int i=0;
@@ -150,11 +150,11 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
             return("");
         }
     }
-    
+
     public String getPatientLocation(){
         return(getString(msg.getMSH().getSendingFacility().getNamespaceID().getValue()));
     }
-    
+
     /*
      *  OBC METHODS
      */
@@ -165,7 +165,7 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
 
             // if accessionNum can't be found in the OBR record of the first observation,
             //  look for it in subsequent observation records
-            if (accessionNum != ""){                
+            if (accessionNum != ""){
                 return(accessionNum.substring(0,accessionNum.indexOf("-")));
             }
 
@@ -177,22 +177,22 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
             }
             // haven't found an accessionNum
             return("");
-            
+
         }catch(Exception e){
 
             logger.error("Could not return accession number", e);
             return("");
         }
     }
-    
+
     /*
      *  OBR METHODS
      */
-    
+
     public int getOBRCount(){
         return(msg.getRESPONSE().getORDER_OBSERVATIONReps());
     }
-    
+
     public String getOBRName(int i){
         try{
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBR().getUniversalServiceIdentifier().getText().getValue()));
@@ -200,7 +200,7 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
             return("");
         }
     }
-    
+
     public String getObservationHeader(int i, int j){
         try{
             //return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBR().getUniversalServiceIdentifier().getAlternateIdentifier().getValue()));
@@ -209,7 +209,7 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
             return("");
         }
     }
-    
+
     public int getOBRCommentCount(int i){
         try {
             int count = msg.getRESPONSE().getORDER_OBSERVATION(i).getNTEReps();
@@ -218,12 +218,11 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
             return(0);
         }
     }
-    
+
     public String getOBRComment(int i, int j){
         try {
 
             // ICL likes to thrown reserved characters in their comments -- this is to compensate
-            Terser terser = new Terser(msg);
             String obrComment = getString(Terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getNTE(j),3,0,1,1))+" "+
                     getString(Terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getNTE(j),3,0,2,1)).trim();
 
@@ -234,7 +233,7 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
         }
 
     }
-    
+
     public String getServiceDate(){
         try{
             String srvcDate = msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getObservationDateTime().getTimeOfAnEvent().getValue();
@@ -258,7 +257,7 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
             return("");
         }
     }
-    
+
     public String getOrderStatus(){
         // ICL status: U - Updated Final, F - Final, P - Partial
         // would like to return the least of the statuses, but 'U' not recognized upstream, so return 'F' if not 'P'
@@ -278,7 +277,7 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
         }
 
     }
-    
+
     public String getClientRef(){
         String docNum = "";
         try{
@@ -290,7 +289,7 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
             return("");
         }
     }
-    
+
     public String getDocName(){
         String docLastName = "";
         String docFirstName = "";
@@ -304,7 +303,7 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
             return("");
         }
     }
-    
+
     public String getCCDocs(){
         String docName = "";
         int i=0;
@@ -323,9 +322,9 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
             return("");
         }
     }
-    
-    public ArrayList getDocNums(){
-        ArrayList nums = new ArrayList();
+
+    public ArrayList<String> getDocNums(){
+        ArrayList<String> nums = new ArrayList<String>();
         String docNum;
         try{
             Terser terser = new Terser(msg);
@@ -345,8 +344,8 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
 
         return(nums);
     }
-    
-    
+
+
     /*
      *  OBX METHODS
      */
@@ -366,7 +365,7 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
         }
         return count;
     }
-    
+
     public String getOBXIdentifier(int i, int j){
         try{
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getIdentifier().getValue()));
@@ -375,7 +374,7 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
             return("");
         }
     }
-    
+
     public String getOBXName(int i, int j){
         try{
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getText().getValue()));
@@ -384,17 +383,16 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
             return("");
         }
     }
-    
+
     public String getOBXResult(int i, int j){
         try{
-            Terser terser = new Terser(msg);
             return(getString(Terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),5,0,1,1)));
         }catch(Exception e){
             logger.error("Error retrieving obx result", e);
             return("");
         }
     }
-    
+
     public String getOBXReferenceRange(int i, int j){
         try{
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getReferencesRange().getValue()));
@@ -403,7 +401,7 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
             return("");
         }
     }
-    
+
     public String getOBXUnits(int i, int j){
         try{
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getUnits().getIdentifier().getValue()));
@@ -412,7 +410,7 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
             return("");
         }
     }
-    
+
     public String getOBXResultStatus(int i, int j){
         try{
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservResultStatus().getValue()));
@@ -421,9 +419,9 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
             return("");
         }
     }
-    
+
     public int getOBXFinalResultCount(){
-        try{ 
+        try{
             int obrCount = getOBRCount();
             int obxCount;
             int count = 0;
@@ -435,8 +433,8 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
                         count++;
                 }
             }
-    
-    
+
+
             String orderStatus = getOrderStatus();
             // add extra so final reports are always the ordered as the latest except
             // if the report has been changed in which case that report should be the latest
@@ -444,7 +442,7 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
                 count = count + 100;
             else if (orderStatus.equalsIgnoreCase("C"))
                 count = count + 150;
-    
+
             return count;
         }catch(Exception e){
             logger.error("Error retrieving obx final result count", e);
@@ -452,7 +450,7 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
         }
 
     }
-    
+
     public String getTimeStamp(int i, int j){
         try{
             return(formatDateTime(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getDateTimeOfTheObservation().getTimeOfAnEvent().getValue())));
@@ -460,7 +458,7 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
             return("");
         }
     }
-    
+
     public boolean isOBXAbnormal(int i, int j){
         try{
             if (getOBXAbnormalFlag(i, j).equals("H") || getOBXAbnormalFlag(i,
@@ -469,12 +467,12 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
                 return(true);
             else
                 return(false);
-            
+
         }catch(Exception e){
             return(false);
         }
     }
-    
+
     public String getOBXAbnormalFlag(int i, int j){
         try{
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getAbnormalFlags(0).getValue()));
@@ -483,7 +481,7 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
             return("");
         }
     }
-    
+
     public int getOBXCommentCount(int i, int j){
         try {
             int count = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getNTEReps();
@@ -494,11 +492,10 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
         }
 
     }
-    
+
     public String getOBXComment(int i, int j, int k){
         try {
             // ICL likes to thrown reserved characters in their comments -- this is to compensate
-            Terser terser = new Terser(msg);
             String obxComment = getString(Terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getNTE(k),3,0,1,1))+" "+
                     getString(Terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getNTE(k),3,0,2,1)).trim();
 
@@ -509,56 +506,55 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
             return("");
         }
     }
-    
-    
-    
-    
-    
+
+
+
+
+
     /**
      *  Retrieve the possible segment headers from the OBX fields
      */
-    public ArrayList getHeaders(){
+    public ArrayList<String> getHeaders(){
         int i;
         int arraySize;
-        int k = 0;
-        
-        ArrayList headers = new ArrayList();
+
+        ArrayList<String> headers = new ArrayList<String>();
         String currentHeader;
-        
+
         try{
             for (i=0; i < msg.getRESPONSE().getORDER_OBSERVATIONReps(); i++){
-                
+
                 currentHeader = getObservationHeader(i, 0);
                 arraySize = headers.size();
                 if (arraySize == 0 || !currentHeader.equals(headers.get(arraySize-1))){
                     headers.add(currentHeader);
                 }
-                
+
             }
             return(headers);
         }catch(Exception e){
             logger.error("Could not create header list", e);
-            
+
             return(null);
         }
-        
+
     }
-    
+
     public String audit(){
         return "";
     }
-    
+
     /*
      *  END OF PUBLIC METHODS
      */
-    
-    
+
+
     private String getFullDocName(XCN docSeg){
         String docName = "";
-        
+
         if(docSeg.getPrefixEgDR().getValue() != null)
             docName = docSeg.getPrefixEgDR().getValue();
-        
+
         if(docSeg.getGivenName().getValue() != null){
             if (docName.equals("")){
                 docName = docSeg.getGivenName().getValue();
@@ -574,13 +570,13 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
             docName = docName +" "+ docSeg.getSuffixEgJRorIII().getValue();
         if(docSeg.getDegreeEgMD().getValue() != null)
             docName = docName +" "+ docSeg.getDegreeEgMD().getValue();
-        
+
         return (docName);
     }
-    
-    
-    
-    
+
+
+
+
     protected String getString(String retrieve){
         if (retrieve != null){
             return(retrieve.trim().replaceAll("\\\\\\.br\\\\", "<br />"));
@@ -588,7 +584,7 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
             return("");
         }
     }
-    
+
     public String getFillerOrderNumber(){
 		return "";
 	}
@@ -598,11 +594,11 @@ public class ICLHandler extends DefaultGenericHandler implements MessageHandler 
     public String getRadiologistInfo(){
 		return "";
 	}
-    
+
     public String getNteForOBX(int i, int j){
-    	
+
     	return "";
     }
-    
+
 }
 

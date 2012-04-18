@@ -1,17 +1,17 @@
 /**
  * Copyright (C) 2007.
  * Centre for Research on Inner City Health, St. Michael's Hospital, Toronto, Ontario, Canada.
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -91,26 +91,26 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 
 		return intake;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<Integer> getIntakeClientsByFacilityId(Integer facilityId) {
 		if(facilityId == null) {
 			throw new IllegalArgumentException("Parameter facilityId must be non-null");
 		}
-		
+
 		List<Integer> clientIds = getHibernateTemplate().find("select distinct i.clientId from Intake i where i.facilityId = ? order by i.clientId",
 				new Object[] { facilityId });
-		
+
 		return clientIds;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<Integer> getIntakeFacilityIds() {
 		List<Integer> facilityIds = getHibernateTemplate().find("select distinct i.facilityId from Intake i ");
-		
+
 		return facilityIds;
 	}
-	
+
 	/**
 	 * @see org.oscarehr.PMmodule.dao.GenericIntakeDAO#getIntakes(org.oscarehr.PMmodule.model.IntakeNode, java.lang.Integer, Integer)
 	 */
@@ -127,7 +127,7 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 
 		return intakes;
 	}
-	
+
 	/*
 	 * 1. get nodes.
 	 * foreach node, get intakes for that node
@@ -137,17 +137,17 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 		if (formType == null || clientId == null) {
 			throw new IllegalArgumentException("Parameters node and clientId must be non-null");
 		}
-		
+
 		List<IntakeNode> nodes = this.getIntakeNodesByType(formType);
 
 		for(IntakeNode node:nodes) {
 			List<?> results = getHibernateTemplate().find("from Intake i where i.node = ? and i.clientId = ? and (i.facilityId=? or i.facilityId is null) order by i.createdOn desc",
-					new Object[] { node, clientId, facilityId });			
+					new Object[] { node, clientId, facilityId });
 			List<Intake> intakes = convertToIntakes(results, programId);
 			intake_results.addAll(intakes);
 		}
-		
-		
+
+
 		return intake_results;
 	}
 
@@ -164,7 +164,7 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 
 		return intakes;
 	}
-	
+
 	public List<Intake> getRegIntakes(List<IntakeNode> nodes, Integer clientId, Integer programId, Integer facilityId) {
 		if (nodes.isEmpty() || clientId == null) {
 			throw new IllegalArgumentException("Parameters nodes and clientId must be non-null");
@@ -173,7 +173,7 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 		List<?> results = getHibernateTemplate().find("from Intake i where i.node = ? and i.clientId = ? and (i.facilityId=? or i.facilityId is null) order by i.createdOn desc",
 				new Object[] { nodes.get(0), clientId, facilityId });
 		List<Intake> intakes = convertToIntakes(results, programId);
-		
+
 		for (int i=1; i<nodes.size(); i++) {
 		    results = getHibernateTemplate().find("from Intake i where i.node = ? and i.clientId = ? and (i.facilityId=? or i.facilityId is null) order by i.createdOn desc",
 				new Object[] { nodes.get(i), clientId, facilityId });
@@ -215,7 +215,7 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 	public List<Integer> getIntakeNodesIdByClientId(Integer clientId) {
 		return getIntakeNodesIdByClientId(clientId,null);
 	}
-	
+
 	public List<Integer> getIntakeNodesIdByClientId(Integer clientId, Integer formType) {
 		if (clientId == null) {
 			throw new IllegalArgumentException("Parameters intakeId must be non-null");
@@ -225,8 +225,8 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 				new Object[] { clientId });
 		List<Intake> intakes = convertToIntakes(results, null);
 		LOG.info("get intakes: " + intakes.size());
-		
-		List<Integer> intakeNodeIds = new ArrayList();
+
+		List<Integer> intakeNodeIds = new ArrayList<Integer>();
 		for (Intake i : intakes) {
 			if(formType != null && i.getNode().getFormType() == formType) {
 				intakeNodeIds.add(i.getNode().getId());
@@ -259,7 +259,7 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 
 		//return intakeId;
 	}
-	
+
 	/**
 	 * @throws SQLException
 	 */
@@ -309,13 +309,13 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 		//		.find(
 		//				"select i.id, max(i.createdOn) from Intake i where i.node.id = ? and i.createdOn between ? and ? and i.createdOn = (select max(ii.createdOn) from Intake ii where ii.clientId = i.clientId) group by i.clientId",
 		//				new Object[] { nodeId, startCal.getTime(), endCal.getTime() });
-		
+
 		List<?> results = getHibernateTemplate()
 		.find(
 				"select i.id, i.createdOn from Intake i where i.node.id = ? and i.createdOn between ? and ? and i.createdOn = (select max(ii.createdOn) from Intake ii where ii.clientId = i.clientId group by ii.clientId)",
 				new Object[] { nodeId, startCal, endCal });
 
-		
+
 		SortedSet<Integer> intakeIds = convertToIntegers(results);
 
 		LOG.info("get latest intake ids: " + intakeIds.size());
@@ -332,7 +332,7 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 		}
 
 		SortedMap<Integer, SortedMap<String, ReportStatistic>> reportStatistics = new TreeMap<Integer, SortedMap<String, ReportStatistic>>();
-		
+
 		if (!intakeIds.isEmpty() && !answerIds.isEmpty()) {
 			List<?> results = getHibernateTemplate().find(
 					"select ia.node.id, ia.value, count(ia.value) from IntakeAnswer ia where ia.node.id in (" + convertToString(answerIds.keySet())
@@ -345,7 +345,7 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 	}
 
 	/**
-	 * This method will populate the totalIntakeCount and 
+	 * This method will populate the totalIntakeCount and
 	 */
 	public GenericIntakeReportStatistics getReportStatistics2(List<Integer> intakeIds, Set<Integer> answerIds) throws SQLException {
 
@@ -376,7 +376,7 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 				c.close();
 			}
 		}
-		
+
 		return(genericIntakeReportStatistics);
 	}
 
@@ -459,11 +459,11 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 			Integer nodeId = (Integer) tuple[0];
 			String value = (String) tuple[1];
 			Integer count = Integer.valueOf(tuple[2].toString());
-			
+
 			if (!reportStatistics.containsKey(nodeId)) {
 			    reportStatistics.put(nodeId, new TreeMap<String, ReportStatistic>());
 			}
-			
+
 			SortedMap<String, ReportStatistic> rpStNodeId = reportStatistics.get(nodeId);
 			if (rpStNodeId.containsKey(value)) {
 			    count += rpStNodeId.get(value).getCount();
@@ -479,7 +479,7 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 		//
 		// Integer nodeId = (Integer)tuple[0];
 		// String value = (String)tuple[1];
-		//            
+		//
 		// Integer count = Integer.valueOf(tuple[2].toString());
 		//
 		// if (!reportStatistics.containsKey(nodeId)) {
@@ -489,7 +489,7 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 		// reportStatistics.get(nodeId).put(value, new ReportStatistic(count, size));
 		// }
 	}
-	
+
 	/* the following codes are for street health report, not finished yet.
 	public List getCohort(Date EndDate, Date BeginDate, List clients) {
         if (BeginDate == null && EndDate == null) {
@@ -550,7 +550,7 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 		if (clientId == null) {
 			throw new IllegalArgumentException("clientId must be non-null");
 		}
-		
+
 		List<Intake> intakes = getIntakes(node, clientId, programId);
 		Intake intake = !intakes.isEmpty() ? intakes.get(0) : null;
 		LOG.info("get latest intake: " + intake);
@@ -558,7 +558,7 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 		return intake;
 	}
 	*/
-	
+
 	public List<IntakeNode> getIntakeNodesByType(Integer formType) {
 		return this.getHibernateTemplate().find("From IntakeNode n where n.formType = ? and n.publish_by is not null", new Object[] {formType});
 	}

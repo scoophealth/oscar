@@ -82,9 +82,9 @@ public class InfirmBedProgramManager {
         return rs;
     }
 
-    public List getProgramBeans() {
+    public List<LabelValueBean> getProgramBeans() {
         Iterator iter = bedProgramDao.getAllProgram().iterator();
-        ArrayList pList = new ArrayList();
+        ArrayList<LabelValueBean> pList = new ArrayList<LabelValueBean>();
         while (iter.hasNext()) {
             Program p = (Program)iter.next();
             if (p != null) {
@@ -95,10 +95,10 @@ public class InfirmBedProgramManager {
         return pList;
     }
 
-    public List getProgramBeans(String providerNo, Integer facilityId) {
-        if (providerNo == null || "".equalsIgnoreCase(providerNo.trim())) return new ArrayList();
+    public List<LabelValueBean> getProgramBeans(String providerNo, Integer facilityId) {
+        if (providerNo == null || "".equalsIgnoreCase(providerNo.trim())) return new ArrayList<LabelValueBean>();
         Iterator iter = programProviderDAOT.getProgramProvidersByProvider(providerNo).iterator();
-        ArrayList pList = new ArrayList();
+        ArrayList<LabelValueBean> pList = new ArrayList<LabelValueBean>();
         while (iter.hasNext()) {
             ProgramProvider p = (ProgramProvider)iter.next();
             if (p != null && p.getProgramId() != null && p.getProgramId().longValue() > 0) {
@@ -114,9 +114,9 @@ public class InfirmBedProgramManager {
     }
 
     public List getProgramForApptViewBeans(String providerNo, Integer facilityId) {
-        if (providerNo == null || "".equalsIgnoreCase(providerNo.trim())) return new ArrayList();
+        if (providerNo == null || "".equalsIgnoreCase(providerNo.trim())) return new ArrayList<LabelValueBean>();
         Iterator iter = programProviderDAOT.getProgramProvidersByProvider(providerNo).iterator();
-        ArrayList pList = new ArrayList();
+        ArrayList<LabelValueBean> pList = new ArrayList<LabelValueBean>();
         while (iter.hasNext()) {
             ProgramProvider p = (ProgramProvider)iter.next();
             if (p != null && p.getProgramId() != null && p.getProgramId().longValue() > 0) {
@@ -141,15 +141,15 @@ public class InfirmBedProgramManager {
         cal.set(Calendar.MINUTE, 59);
         cal.set(Calendar.SECOND, 59);
         dt = cal.getTime();
-        Iterator iter;
+        Iterator<Demographic> iter;
 
         if (archiveView != null && archiveView.equals("true")) iter = demographicDao.getArchiveDemographicByProgramOptimized(programId, dt, defdt).iterator();
         else iter = demographicDao.getActiveDemographicByProgram(programId, dt, defdt).iterator();
 
-        ArrayList demographicList = new ArrayList();
+        ArrayList<LabelValueBean> demographicList = new ArrayList<LabelValueBean>();
         Demographic de = null;
         while (iter.hasNext()) {
-            de = (Demographic)iter.next();
+            de = iter.next();
             //logger.info("demoName="+de.getLastName()+","+de.getFirstName()+"::"+"demoID="+de.getDemographicNo().toString());
             demographicList.add(new LabelValueBean(de.getLastName() + ", " + de.getFirstName(), de.getDemographicNo().toString()));
 

@@ -1,23 +1,23 @@
 /*
-* 
+*
 * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
+* This software is published under the GPL GNU General Public License.
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version. *
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+*
 * <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
+*
+* This software was written for
+* Centre for Research on Inner City Health, St. Michael's Hospital,
+* Toronto, Ontario, Canada
 */
 
 package org.oscarehr.PMmodule.dao;
@@ -44,9 +44,10 @@ public class IntakeCDao extends HibernateDaoSupport {
 
         Formintakec result = null;
 
-        List results = this.getHibernateTemplate().find("from Formintakec f where f.DemographicNo = ? order by FormEdited desc", demographicNo);
+        @SuppressWarnings("unchecked")
+        List<Formintakec> results = this.getHibernateTemplate().find("from Formintakec f where f.DemographicNo = ? order by FormEdited desc", demographicNo);
         if (!results.isEmpty()) {
-            result = (Formintakec)results.get(0);
+            result = results.get(0);
         }
 
         if (log.isDebugEnabled()) {
@@ -82,12 +83,12 @@ public class IntakeCDao extends HibernateDaoSupport {
         }
     }
 
-    public List getCohort(Date EndDate, Date BeginDate, List clients) {
+    public List<Object[]> getCohort(Date EndDate, Date BeginDate, List clients) {
         if (BeginDate == null && EndDate == null) {
-            return new ArrayList();
+            return new ArrayList<Object[]>();
         }
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-        List results = new ArrayList();
+        List<Object[]> results = new ArrayList<Object[]>();
 
         if (log.isDebugEnabled()) {
             log.debug("Getting Cohort: " + BeginDate + " to " + EndDate);
@@ -104,6 +105,7 @@ public class IntakeCDao extends HibernateDaoSupport {
                     admissionDate = formatter.parse(intake.getAdmissionDate());
                 }
                 catch (Exception e) {
+                	//empty
                 }
                 if (admissionDate == null) {
                     log.warn("invalid admission date for client #" + client.getDemographicNo());

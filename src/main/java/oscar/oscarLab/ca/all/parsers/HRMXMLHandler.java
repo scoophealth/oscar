@@ -1,7 +1,7 @@
 /*
  * HL7Handler.java
- * An HL7 lab parser, structure was borrowed from GDML template. Fixed to handle TDIS reports. 
- * 
+ * An HL7 lab parser, structure was borrowed from GDML template. Fixed to handle TDIS reports.
+ *
  */
 
 package oscar.oscarLab.ca.all.parsers;
@@ -46,7 +46,7 @@ import ca.uhn.hl7v2.HL7Exception;
 
 /**
  * TDIS HL7 Report Parser/Handler. Handles incoming HL7 files containing ITS or DEPARTMENTAL reports as part of the OBR/OBX segments.
- * 
+ *
  * @author dritan
  */
 public class HRMXMLHandler implements MessageHandler {
@@ -86,7 +86,7 @@ public class HRMXMLHandler implements MessageHandler {
 
 	}
 
-	private ArrayList getMatchingHL7Labs(String hl7Body) {
+	private ArrayList<String> getMatchingHL7Labs(String hl7Body) {
 		Base64 base64 = new Base64();
 		ArrayList<String> ret = new ArrayList<String>();
 		int monthsBetween = 0;
@@ -235,7 +235,7 @@ public class HRMXMLHandler implements MessageHandler {
 
 	/**
 	 * Return the result of the jth OBX at ith OBR. If it's an ITS^REPORT, the show nothing as this result will be fetched in the previous column.
-	 * 
+	 *
 	 * @param i
 	 * @param j
 	 * @param its
@@ -272,7 +272,7 @@ public class HRMXMLHandler implements MessageHandler {
 	/**
 	 * Retrieve the possible segment headers from the OBX fields
 	 */
-	public ArrayList getHeaders() {
+	public ArrayList<String> getHeaders() {
 		return headers;
 	}
 
@@ -410,7 +410,7 @@ public class HRMXMLHandler implements MessageHandler {
 
 	}
 
-	public ArrayList getDocNums() {
+	public ArrayList<String> getDocNums() {
 		return null;
 	}
 
@@ -451,7 +451,7 @@ public class HRMXMLHandler implements MessageHandler {
 
 	private String formatDateTime(String plain) {
 		if (plain==null || plain.trim().equals("")) return "";
-		
+
 		String dateFormat = "yyyyMMddHHmmss";
 		dateFormat = dateFormat.substring(0, plain.length());
 		String stringFormat = "yyyy-MM-dd HH:mm:ss";
@@ -477,20 +477,20 @@ public class HRMXMLHandler implements MessageHandler {
 	}
 
 	 public String getFillerOrderNumber(){
-			
-			
+
+
 			return "";
 		}
-	    
+
 	    public String getEncounterId(){
 	    	return "";
 	    }
 	    public String getRadiologistInfo(){
 			return "";
 		}
-	    
+
 	    public String getNteForOBX(int i, int j){
-	    	
+
 	    	return "";
 	    }
 }

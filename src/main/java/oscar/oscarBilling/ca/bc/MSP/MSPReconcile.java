@@ -362,7 +362,7 @@ public class MSPReconcile {
     Properties p;
     public ArrayList list;
     int count = 0;
-    ArrayList justBillingMaster;
+    ArrayList<String> justBillingMaster;
 
     public Properties getCurrentErrorMessages() {
       Properties errorsProps = new Properties();
@@ -373,7 +373,7 @@ public class MSPReconcile {
 
           for (int i = 0; i < justBillingMaster.size(); i++) {
 
-            sql += "'" + forwardZero( (String) justBillingMaster.get(i), 7) +
+            sql += "'" + forwardZero( justBillingMaster.get(i), 7) +
                 "'";
             if (i < (justBillingMaster.size() - 1)) {
               sql += ",";
@@ -567,7 +567,7 @@ public class MSPReconcile {
     MiscUtils.getLogger().debug("SQL "+p);
     billSearch.list = new ArrayList();
     billSearch.count = 0;
-    billSearch.justBillingMaster = new ArrayList();
+    billSearch.justBillingMaster = new ArrayList<String>();
     try {
 
       ResultSet rs = DBHandler.GetSQL(p);
@@ -1483,7 +1483,7 @@ public class MSPReconcile {
 
     billSearch.list = new ArrayList();
     billSearch.count = 0;
-    billSearch.justBillingMaster = new ArrayList();
+    billSearch.justBillingMaster = new ArrayList<String>();
 
     ResultSet rs = null;
     MiscUtils.getLogger().debug("p=" + p);
@@ -1787,7 +1787,7 @@ public class MSPReconcile {
 
     billSearch.list = new ArrayList();
     billSearch.count = 0;
-    billSearch.justBillingMaster = new ArrayList();
+    billSearch.justBillingMaster = new ArrayList<String>();
 
     ResultSet rs = null;
     try {
@@ -2126,11 +2126,11 @@ public class MSPReconcile {
    * @param fieldName String
    * @return int
    */
-  public int getDistinctFieldCount(List bills, String fieldName) {
-    ArrayList fieldValueList = new ArrayList(); //a lookup list containing all values that have been counted
+  public int getDistinctFieldCount(List<MSPBill> bills, String fieldName) {
+    ArrayList<String> fieldValueList = new ArrayList<String>(); //a lookup list containing all values that have been counted
     int colSize = bills.size();
     for (int i = 0; i < colSize; i++) {
-      MSPBill bill = (MSPBill) bills.get(i);
+      MSPBill bill =  bills.get(i);
       String propValue = beanut.getPropertyValue(bill, fieldName);
       //disgregard previously counted field value
       if (!fieldValueList.contains(propValue)) {
@@ -2262,8 +2262,8 @@ public class MSPReconcile {
    * @todo This belongs in a ProviderDAO class
    * @return ArrayList
    */
-  public List getAllProviders() {
-    ArrayList list = new ArrayList();
+  public List<oscar.entities.Provider> getAllProviders() {
+    ArrayList<oscar.entities.Provider> list = new ArrayList<oscar.entities.Provider>();
 
     ResultSet rs = null;
 

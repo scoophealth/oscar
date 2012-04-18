@@ -1,25 +1,25 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 package oscar.billing.fat.dao;
 
@@ -42,7 +42,7 @@ public class FatFormulariosDAO extends DAO {
 		FatFormularios form = new FatFormularios();
 		String sql = "select co_formulario, ds_formulario from fat_formularios where st_ativo = 'S' and co_formulario = " + id;
 
-		
+
 
 		try {
 		ResultSet rs = DBHandler.GetSQL(sql);
@@ -52,17 +52,18 @@ public class FatFormulariosDAO extends DAO {
 			form.setDsFormulario(oscar.Misc.getString(rs, 2));
 		}
 		} finally {
+			//empty
 		}
 
 		return form;
 	}
 
-    public List list() throws SQLException {
-        ArrayList list = new ArrayList();
+    public List<FatFormularios> list() throws SQLException {
+        ArrayList<FatFormularios> list = new ArrayList<FatFormularios>();
         String sql = "select co_formulario, ds_formulario from fat_formularios where st_ativo = 'S'";
 		MiscUtils.getLogger().debug("sql = " + sql);
 
-        
+
 
         try {
         ResultSet rs = DBHandler.GetSQL(sql);
@@ -76,18 +77,19 @@ public class FatFormulariosDAO extends DAO {
 			MiscUtils.getLogger().debug("adicionou reg");
         }
         } finally {
+        	//empty
         }
 
         return list;
     }
 
-    public List listProcedimentoByForm(String id) throws SQLException {
-        ArrayList list = new ArrayList();
+    public List<FatFormularioProcedimento> listProcedimentoByForm(String id) throws SQLException {
+        ArrayList<FatFormularioProcedimento> list = new ArrayList<FatFormularioProcedimento>();
         String sql =
             "select a.co_procedimento, b.ds_procedimento from rl_formulario_procedimento a, cad_procedimentos b where a.co_procedimento = b.co_procedimento and co_formulario = + " +
             id;
 
-        
+
 
         try {
             ResultSet rs = DBHandler.GetSQL(sql);
@@ -99,21 +101,22 @@ public class FatFormulariosDAO extends DAO {
 				formProc.getFatFormularios().setCoFormulario(Integer.parseInt(
 						id));
                 list.add(formProc);
-                
+
             }
         } finally {
+        	//empty
         }
 
         return list;
     }
 
-    public List listProcedimentoByProc(String[] ids) throws SQLException {
-        ArrayList list = new ArrayList();
+    public List<FatFormularioProcedimento> listProcedimentoByProc(String[] ids) throws SQLException {
+        ArrayList<FatFormularioProcedimento> list = new ArrayList<FatFormularioProcedimento>();
         String sql =
             "select a.co_procedimento, b.ds_procedimento, a.co_formulario from rl_formulario_procedimento a, cad_procedimentos b where a.co_procedimento = b.co_procedimento and a.co_procedimento in (" +
             getStrIn(ids) + ")";
 
-        
+
 
         try {
             ResultSet rs = DBHandler.GetSQL(sql);
@@ -126,6 +129,7 @@ public class FatFormulariosDAO extends DAO {
                 list.add(formProc);
             }
         } finally {
+        	//empty
         }
 
         return list;
