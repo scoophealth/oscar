@@ -1908,27 +1908,43 @@ function updateReRxDrugId(elementId){
        new Ajax.Request(url, {method: 'get',parameters:data});
    }
 }
- //represcribe a drug
-    function represcribe(element){
-        var elemId=element.id;
-        var ar=elemId.split("_");
-        var drugId=ar[1];
-        if(drugId!=null && $("reRxCheckBox_"+drugId).checked==true){
-            var url= "<c:out value="${ctx}"/>" + "/oscarRx/rePrescribe2.do?method=represcribeMultiple&rand=" +Math.floor(Math.random()*10001);
-            new Ajax.Updater('rxText',url, {method:'get',parameters:data,evalScripts:true,
-                insertion: Insertion.Bottom,onSuccess:function(transport){
-                    updateCurrentInteractions();
-                }});
-        }else if(drugId!=null){
-            var data="drugId="+drugId;
-            var url= "<c:out value="${ctx}"/>" + "/oscarRx/rePrescribe2.do?method=represcribe2&rand="+ Math.floor(Math.random()*10001);
-            new Ajax.Updater('rxText',url, {method:'get',parameters:data,evalScripts:true,
-                insertion: Insertion.Bottom,onSuccess:function(transport){
-                    updateCurrentInteractions();
-                }});
 
-       }
-    }
+
+function removeReRxDrugId(drugId){
+	 if(drugId!=null){
+	   var data="reRxDrugId="+drugId+"&action=removeFromReRxDrugIdList&rand="+Math.floor(Math.random()*10001);
+	   var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateReRxDrug";
+	   new Ajax.Request(url, {method: 'get',parameters:data});
+	}
+	}
+
+//represcribe a drug
+function represcribe(element, toArchive){
+  
+    var elemId=element.id;
+    var ar=elemId.split("_");
+    var drugId=ar[1];
+    if(drugId!=null && $("reRxCheckBox_"+drugId).checked==true){
+    	        	
+        var url= "<c:out value="${ctx}"/>" + "/oscarRx/rePrescribe2.do?method=represcribeMultiple&rand="+Math.floor(Math.random()*10001);
+        new Ajax.Updater('rxText',url, {method:'get',parameters:data,asynchronous:false,evalScripts:true,
+            insertion: Insertion.Bottom,onSuccess:function(transport){
+                updateCurrentInteractions();
+            }});
+    }else if(drugId!=null){
+        var dataUpdateId="reRxDrugId="+toArchive+"&action=addToReRxDrugIdList&rand="+Math.floor(Math.random()*10001);
+        var urlUpdateId= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateReRxDrug";
+        new Ajax.Request(urlUpdateId, {method: 'get',parameters:dataUpdateId});
+                	
+        var data="drugId="+drugId;
+        var url= "<c:out value="${ctx}"/>" + "/oscarRx/rePrescribe2.do?method=represcribe2&rand="+Math.floor(Math.random()*10001);
+        new Ajax.Updater('rxText',url, {method:'get',parameters:data,evalScripts:true,
+            insertion: Insertion.Bottom,onSuccess:function(transport){
+                updateCurrentInteractions();
+            }});
+
+   }
+}
 
 function updateQty(element){
         var elemId=element.id;
