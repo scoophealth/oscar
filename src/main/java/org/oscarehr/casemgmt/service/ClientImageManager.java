@@ -20,6 +20,7 @@
 * Toronto, Ontario, Canada 
 */
 
+
 package org.oscarehr.casemgmt.service;
 
 import org.oscarehr.casemgmt.dao.ClientImageDAO;

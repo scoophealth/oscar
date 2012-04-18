@@ -20,6 +20,7 @@
 * Toronto, Ontario, Canada 
 */
 
+
 package org.oscarehr.PMmodule.service.impl;
 
 import org.oscarehr.PMmodule.dao.BedCheckTimeDAO;

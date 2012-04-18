@@ -20,6 +20,7 @@
 * Toronto, Ontario, Canada 
 */
 
+
 package org.oscarehr.PMmodule.web.formbean;
 
 public class IntakeAFormBean {
