@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -24,17 +23,17 @@ import oscar.oscarLab.ca.on.LabResultData;
 import oscar.util.UtilDateUtilities;
 
 public class Hl7textResultsData {
-    
+
     private static Logger logger = MiscUtils.getLogger();
     private static MeasurementsDeletedDao measurementsDeletedDao = (MeasurementsDeletedDao) SpringUtils.getBean("measurementsDeletedDao");
-    
+
     private Hl7textResultsData() {
     	// no one should instantiate this
     }
-    
+
     public static void populateMeasurementsTable(String lab_no, String demographic_no){
         MessageHandler h = Factory.getHandler(lab_no);
-        
+
         java.util.Calendar calender = java.util.Calendar.getInstance();
         String day =  Integer.toString(calender.get(java.util.Calendar.DAY_OF_MONTH));
         String month =  Integer.toString(calender.get(java.util.Calendar.MONTH)+1);
@@ -43,24 +42,23 @@ public class Hl7textResultsData {
         String min = Integer.toString(calender.get(java.util.Calendar.MINUTE));
         String second = Integer.toString(calender.get(java.util.Calendar.SECOND));
         String dateEntered = year+"-"+month+"-"+day+" " + hour + ":" + min + ":" + second + ":";
-        
+
         try{
-            
+
             Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
-            
+
             //Check for other versions of this lab
             String[] matchingLabs = getMatchingLabs(lab_no).split(",");
             //if this lab is the latest version delete the measurements from the previous version and insert the new ones
-            
+
             int k = 0;
             while ( k < matchingLabs.length && !matchingLabs[k].equals(lab_no)){
                 k++;
             }
-            
+
             if(k != 0){
             	MeasurementsDeleted measurementsDeleted = new MeasurementsDeleted();
-                GregorianCalendar now=new GregorianCalendar();
-                
+
                 String sql = "SELECT m.* FROM measurements m LEFT JOIN measurementsExt e ON m.id = measurement_id AND e.keyval='lab_no' WHERE e.val='"+matchingLabs[k-1]+"'";
                 ResultSet rs = DBHandler.GetSQL(sql);
                 while(rs.next()){
@@ -74,22 +72,22 @@ public class Hl7textResultsData {
                 	measurementsDeleted.setDateEntered(UtilDateUtilities.StringToDate(oscar.Misc.getString(rs, "dateEntered"), "yyyy-MM-dd hh:mm:ss"));
                 	measurementsDeleted.setOriginalId(Integer.valueOf(oscar.Misc.getString(rs, "id")));
                 	measurementsDeletedDao.persist(measurementsDeleted);
-                    
+
                     sql = "DELETE FROM measurements WHERE id='"+oscar.Misc.getString(rs, "id")+"'";
                     DBHandler.RunSQL(sql);
                     //sql = "DELETE FROM measurementsExt WHERE measurement_id='"+oscar.Misc.getString(rs,"measurement_id")+"'";
                     //DBHandler.RunSQL(sql);
-                    
+
                 }
-                
+
             }
             // loop through the measurements for the lab and insert them
-            
+
             for (int i=0; i < h.getOBRCount(); i++){
                 for (int j=0; j < h.getOBXCount(i); j++){
 
                     String result = h.getOBXResult(i, j);
-                    
+
                     // only insert if there is a result and it is supposed to be viewed
                     if (result.equals("") || result.equals("DNR") || h.getOBXName(i, j).equals("") || h.getOBXResultStatus(i, j).equals("DNS"))
                         continue;
@@ -115,7 +113,7 @@ public class Hl7textResultsData {
                     for (int l=0; l<h.getOBXCommentCount(i,j); l++) {
                     	comments += comments.length()>0 ? "\n"+h.getOBXComment(i,j,l) : h.getOBXComment(i,j,l);
                 	}
-                    
+
                     String sql = "SELECT b.ident_code, type.measuringInstruction FROM measurementMap a, measurementMap b, measurementType type WHERE b.lab_type='FLOWSHEET' AND a.ident_code='"+identifier+"' AND a.loinc_code = b.loinc_code and type.type = b.ident_code";
                     PreparedStatement pstmt = conn.prepareStatement(sql);
                     String measType="";
@@ -125,10 +123,10 @@ public class Hl7textResultsData {
                         measType = oscar.Misc.getString(rs, "ident_code");
                         measInst = oscar.Misc.getString(rs, "measuringInstruction");
                     }else{
-                       logger.debug("CODE:"+identifier+ " needs to be mapped"); 
+                       logger.debug("CODE:"+identifier+ " needs to be mapped");
                     }
-                    
-                    
+
+
                     sql = "INSERT INTO measurements (type, demographicNo, providerNo, dataField, measuringInstruction, dateObserved, dateEntered )VALUES (?, ?, '0', ?, ?, ?, ?)";
                     logger.debug(sql);
                     pstmt = conn.prepareStatement(sql);
@@ -143,67 +141,67 @@ public class Hl7textResultsData {
                     String insertID = null;
                     if(rs.next())
                         insertID = oscar.Misc.getString(rs, 1);
-                    
+
                     String measurementExt = "INSERT INTO measurementsExt (measurement_id, keyval, val) VALUES (?,?,?)";
-                    
+
                     pstmt = conn.prepareStatement(measurementExt);
-                    
+
                     logger.debug("Inserting into measurementsExt id "+insertID+ " lab_no "+ lab_no);
                     pstmt.setString(1, insertID);
                     pstmt.setString(2, "lab_no");
                     pstmt.setString(3, lab_no);
                     pstmt.executeUpdate();
                     pstmt.clearParameters();
-                    
+
                     logger.debug("Inserting into measurementsExt id "+insertID+ " abnormal "+ abnormal);
                     pstmt.setString(1, insertID);
                     pstmt.setString(2, "abnormal");
                     pstmt.setString(3, abnormal);
                     pstmt.executeUpdate();
                     pstmt.clearParameters();
-                    
+
                     logger.debug("Inserting into measurementsExt id "+insertID+ " identifier "+ identifier);
                     pstmt.setString(1, insertID);
                     pstmt.setString(2, "identifier");
                     pstmt.setString(3, identifier);
                     pstmt.executeUpdate();
                     pstmt.clearParameters();
-                    
+
                     logger.debug("Inserting into measurementsExt id "+insertID+ " name "+ name);
                     pstmt.setString(1, insertID);
                     pstmt.setString(2, "name");
                     pstmt.setString(3, name);
                     pstmt.executeUpdate();
                     pstmt.clearParameters();
-                    
+
                     logger.debug("Inserting into measurementsExt id "+insertID+ " labname "+ labname);
                     pstmt.setString(1, insertID);
                     pstmt.setString(2, "labname");
                     pstmt.setString(3, labname);
                     pstmt.executeUpdate();
                     pstmt.clearParameters();
-		    
+
                     logger.debug("Inserting into measurementsExt id "+insertID+ " accession "+ accession);
                     pstmt.setString(1, insertID);
                     pstmt.setString(2, "accession");
                     pstmt.setString(3, accession);
                     pstmt.executeUpdate();
                     pstmt.clearParameters();
-		    
+
                     logger.debug("Inserting into measurementsExt id "+insertID+ " request_datetime "+ req_datetime);
                     pstmt.setString(1, insertID);
                     pstmt.setString(2, "request_datetime");
                     pstmt.setString(3, req_datetime);
                     pstmt.executeUpdate();
                     pstmt.clearParameters();
-                    
+
                     logger.debug("Inserting into measurementsExt id "+insertID+ " datetime "+ datetime);
                     pstmt.setString(1, insertID);
                     pstmt.setString(2, "datetime");
                     pstmt.setString(3, datetime);
                     pstmt.executeUpdate();
                     pstmt.clearParameters();
-                    
+
                     if (olis_status!=null && olis_status.length()>0) {
                         logger.debug("Inserting into measurementsExt id "+insertID+ " olis_status "+ olis_status);
                         pstmt.setString(1, insertID);
@@ -212,7 +210,7 @@ public class Hl7textResultsData {
                         pstmt.executeUpdate();
                         pstmt.clearParameters();
                     }
-		    
+
 		    if (unit!=null && unit.length()>0) {
 			logger.debug("Inserting into measurementsExt id "+insertID+ " unit "+ unit);
 			pstmt.setString(1, insertID);
@@ -221,7 +219,7 @@ public class Hl7textResultsData {
 			pstmt.executeUpdate();
 			pstmt.clearParameters();
 		    }
-		    
+
 		    if (refRange[0].length()>0) {
 			logger.debug("Inserting into measurementsExt id "+insertID+ " range "+ refRange[0]);
 			pstmt.setString(1, insertID);
@@ -247,7 +245,7 @@ public class Hl7textResultsData {
 			    pstmt.clearParameters();
 			}
 		    }
-		    
+
 		    if (comments!=null && comments.length()>0) {
 			logger.debug("Inserting into measurementsExt id "+insertID+ " comments "+ comments);
 			pstmt.setString(1, insertID);
@@ -266,28 +264,28 @@ public class Hl7textResultsData {
                     pstmt.clearParameters();
 
                     pstmt.close();
-                    
+
                 }
             }
-            
+
         }catch(Exception e){
             logger.error("Exception in HL7 populateMeasurementsTable", e);
         }
-        
+
     }
-    
+
     public static String getMatchingLabs(String lab_no){
         String sql = "SELECT a.lab_no, a.obr_date, b.obr_date as labDate FROM hl7TextInfo a, hl7TextInfo b WHERE a.accessionNum !='' AND a.accessionNum=b.accessionNum AND b.lab_no='"+lab_no+"' ORDER BY a.obr_date, a.final_result_count, a.lab_no";
         String ret = "";
         int monthsBetween = 0;
-        
+
         try{
-            
+
             ResultSet rs = DBHandler.GetSQL(sql);
-            
-            
+
+
             while(rs.next()) {
-                
+
                 //Accession numbers may be recycled, accession
                 //numbers for a lab should have lab dates within less than 4
                 //months of eachother even this is a large timespan
@@ -316,7 +314,7 @@ public class Hl7textResultsData {
         else
             return(ret);
     }
-    
+
     /**
      *Populates ArrayList with labs attached to a consultation request
      */
@@ -325,16 +323,16 @@ public class Hl7textResultsData {
                 "FROM hl7TextInfo hl7, patientLabRouting " +
                 "WHERE patientLabRouting.lab_no = hl7.lab_no "+
                 "AND patientLabRouting.lab_type = 'HL7' AND patientLabRouting.demographic_no=" + demographicNo+" GROUP BY hl7.lab_no";
-        
+
         String attachQuery = "SELECT consultdocs.document_no FROM consultdocs, patientLabRouting " +
                 "WHERE patientLabRouting.id = consultdocs.document_no AND " +
                 "consultdocs.requestId = " + consultationId + " AND consultdocs.doctype = 'L' AND consultdocs.deleted IS NULL ORDER BY consultdocs.document_no";
-        
+
         ArrayList<LabResultData> labResults = new ArrayList<LabResultData>();
         ArrayList<LabResultData> attachedLabs = new ArrayList<LabResultData>();
         try {
-            
-            
+
+
             ResultSet rs = DBHandler.GetSQL(attachQuery);
             while(rs.next()) {
                 LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
@@ -342,13 +340,13 @@ public class Hl7textResultsData {
                 attachedLabs.add(lbData);
             }
             rs.close();
-            
+
             LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
             LabResultData.CompareId c = lbData.getComparatorId();
             rs = DBHandler.GetSQL(sql);
-            
+
             while(rs.next()){
-                
+
                 lbData.segmentID = oscar.Misc.getString(rs, "lab_no");
                 lbData.labPatientId = oscar.Misc.getString(rs, "id");
                 lbData.dateTime = oscar.Misc.getString(rs, "obr_date");
@@ -356,12 +354,12 @@ public class Hl7textResultsData {
                 lbData.accessionNumber = oscar.Misc.getString(rs, "accessionNum");
                 lbData.finalResultsCount = rs.getInt("final_result_count");
                 lbData.label = oscar.Misc.getString(rs,"label");
-                
+
                 if( attached && Collections.binarySearch(attachedLabs, lbData, c) >= 0 )
                     labResults.add(lbData);
                 else if( !attached && Collections.binarySearch(attachedLabs, lbData, c) < 0 )
                     labResults.add(lbData);
-                
+
                 lbData = new LabResultData(LabResultData.HL7TEXT);
             }
             rs.close();
@@ -372,20 +370,20 @@ public class Hl7textResultsData {
     }
 
     public static ArrayList<LabResultData> getNotAckLabsFromLabNos(List<String> labNos){
-        ArrayList<LabResultData> ret=new ArrayList();
+        ArrayList<LabResultData> ret=new ArrayList<LabResultData>();
         LabResultData lrd=new LabResultData();
         for(String labNo:labNos){
             lrd=getNotAckLabResultDataFromLabNo(labNo);
             ret.add(lrd);
         }
-         return ret;      
+         return ret;
     }
-    
+
     public static LabResultData getNotAckLabResultDataFromLabNo(String labNo){
     LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
         String sql = "";
         try {
-            
+
 
                 // note to self: lab reports not found in the providerLabRouting table will not show up - need to ensure every lab is entered in providerLabRouting, with '0'
                 // for the provider number if unable to find correct provider
@@ -411,7 +409,7 @@ public class Hl7textResultsData {
             		logger.debug("Record found : "+sb.toString());
             	}
 
-                
+
                 lbData.labType = LabResultData.HL7TEXT;
                 lbData.segmentID = oscar.Misc.getString(rs, "lab_no");
                 //check if any demographic is linked to this lab
@@ -426,7 +424,7 @@ public class Hl7textResultsData {
                         lbData.setLabPatientId("-1");
                 }else{
                     lbData.setLabPatientId("-1");
-                }       
+                }
                 lbData.acknowledgedStatus ="U";
                 lbData.accessionNumber = oscar.Misc.getString(rs, "accessionNum");
                 lbData.healthNumber = oscar.Misc.getString(rs, "health_no");
@@ -467,7 +465,7 @@ public class Hl7textResultsData {
 
                 lbData.discipline = oscar.Misc.getString(rs, "discipline");
                 lbData.finalResultsCount = rs.getInt("final_result_count");
-                
+
             }
             rs.close();
         }catch(Exception e){
@@ -475,43 +473,43 @@ public class Hl7textResultsData {
         }
         return lbData;
     }
-    
+
     public static ArrayList<LabResultData> populateHl7ResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
-        
+
         if ( providerNo == null) { providerNo = ""; }
         if ( patientFirstName == null) { patientFirstName = ""; }
         if ( patientLastName == null) { patientLastName = ""; }
         if ( status == null ) { status = ""; }
-        
+
         patientHealthNumber=StringUtils.trimToNull(patientHealthNumber);
-        
+
         ArrayList<LabResultData> labResults =  new ArrayList<LabResultData>();
         String sql = "";
         try {
-            
+
             if ( demographicNo == null) {
                 // note to self: lab reports not found in the providerLabRouting table will not show up - need to ensure every lab is entered in providerLabRouting, with '0'
                 // for the provider number if unable to find correct provider
-                
+
                 sql = "select info.label,info.lab_no, info.sex, info.health_no, info.result_status, info.obr_date, info.priority, info.requesting_client, info.discipline, info.last_name, info.first_name, info.report_status, info.accessionNum, info.final_result_count, providerLabRouting.status " +
                         "from hl7TextInfo info, providerLabRouting " +
                         " where info.lab_no = providerLabRouting.lab_no "+
                         " AND providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"'" +
                         " AND providerLabRouting.lab_type = 'HL7' " +
                         " AND info.first_name like '"+patientFirstName+"%' AND info.last_name like '"+patientLastName+"%'";
-                
+
                 if (patientHealthNumber!=null) sql=sql+" AND info.health_no like '%"+patientHealthNumber+"%'";
-                
+
                 sql=sql+" ORDER BY info.lab_no DESC";
-                
+
             } else {
-                
+
                 sql = "select info.label,info.lab_no, info.sex, info.health_no, info.result_status, info.obr_date, info.priority, info.requesting_client, info.discipline, info.last_name, info.first_name, info.report_status, info.accessionNum, info.final_result_count " +
                         "from hl7TextInfo info, patientLabRouting " +
                         " where info.lab_no = patientLabRouting.lab_no "+
                         " AND patientLabRouting.lab_type = 'HL7' AND patientLabRouting.demographic_no='"+demographicNo+"' ORDER BY info.lab_no DESC";
             }
-            
+
             logger.debug(sql);
             ResultSet rs = DBHandler.GetSQL(sql);
             while(rs.next()){
@@ -527,7 +525,7 @@ public class Hl7textResultsData {
             		}
             		logger.debug("Record found : "+sb.toString());
             	}
-            	
+
                 LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
                 lbData.labType = LabResultData.HL7TEXT;
                 lbData.segmentID = oscar.Misc.getString(rs, "lab_no");
@@ -544,28 +542,28 @@ public class Hl7textResultsData {
                 }else{
                     lbData.setLabPatientId("-1");
                 }
-                
+
                 if (demographicNo == null && !providerNo.equals("0")) {
                     lbData.acknowledgedStatus = oscar.Misc.getString(rs, "status");
                 } else {
                     lbData.acknowledgedStatus ="U";
                 }
-                
+
                 lbData.accessionNumber = oscar.Misc.getString(rs, "accessionNum");
                 lbData.healthNumber = oscar.Misc.getString(rs, "health_no");
                 lbData.patientName = oscar.Misc.getString(rs, "last_name")+", "+oscar.Misc.getString(rs, "first_name");
                 lbData.sex = oscar.Misc.getString(rs, "sex");
                 lbData.label = oscar.Misc.getString(rs, "label");
-                
+
                 lbData.resultStatus = oscar.Misc.getString(rs, "result_status");
                 if (lbData.resultStatus.equals("A"))
                     lbData.abn = true;
-                
+
                 lbData.dateTime = oscar.Misc.getString(rs, "obr_date");
-                
+
                 //priority
                 String priority = oscar.Misc.getString(rs, "priority");
-                
+
                 if(priority != null && !priority.equals("")){
                     switch ( priority.charAt(0) ) {
                         case 'C' : lbData.priority = "Critical"; break;
@@ -578,17 +576,17 @@ public class Hl7textResultsData {
                 }else{
                     lbData.priority = "----";
                 }
-                
+
                 lbData.requestingClient = oscar.Misc.getString(rs, "requesting_client");
                 lbData.reportStatus =  oscar.Misc.getString(rs, "report_status");
-                
+
                 // the "C" is for corrected excelleris labs
                 if (lbData.reportStatus != null && (lbData.reportStatus.equals("F") || lbData.reportStatus.equals("C"))){
                     lbData.finalRes = true;
                 }else{
                     lbData.finalRes = false;
                 }
-                
+
                 lbData.discipline = oscar.Misc.getString(rs, "discipline");
                 lbData.finalResultsCount = rs.getInt("final_result_count");
                 labResults.add(lbData);
@@ -599,14 +597,14 @@ public class Hl7textResultsData {
         }
         return labResults;
     }
-    
+
     private static String[] splitRefRange(String refRangeTxt) {
 	refRangeTxt = refRangeTxt.trim();
 	String[] refRange = {"","",""};
 	String numeric = "-. 0123456789";
 	boolean textual = false;
 	if (refRangeTxt==null || refRangeTxt.length()==0) return refRange;
-	
+
 	for (int i=0; i<refRangeTxt.length(); i++) {
 	    if (!numeric.contains(refRangeTxt.subSequence(i,i+1))) {
 		if (i>0 || (refRangeTxt.charAt(i)!='>' && refRangeTxt.charAt(i)!='<')) {

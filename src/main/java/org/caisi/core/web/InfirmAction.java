@@ -161,8 +161,8 @@ public class InfirmAction extends BaseAction
 		//release memory
 		//List memo=(List) se.getAttribute("infirmaryView_demographicBeans");
 		//if (memo!=null) memo.clear();
-		List demographicBeans = getInfirmBedProgramManager().getDemographicByBedProgramIdBeans(programId,dt,archiveView);
-		List filteredDemographicBeans = new ArrayList();
+		List<LabelValueBean> demographicBeans = getInfirmBedProgramManager().getDemographicByBedProgramIdBeans(programId,dt,archiveView);
+		List<LabelValueBean> filteredDemographicBeans = new ArrayList<LabelValueBean>();
 		if( request.getParameter("infirmaryView_clientStatusId") != null) {
 			//int statusId = new Integer(request.getParameter("infirmaryView_clientStatusId")).intValue();
 			String statusId = request.getParameter("infirmaryView_clientStatusId");
@@ -171,18 +171,18 @@ public class InfirmAction extends BaseAction
 			}
 			else {
 			Admission admission = new Admission();
-			List admissions = new ArrayList();
+			List<Admission> admissions = new ArrayList<Admission>();
 			Integer csi;
-			for(Iterator iter=demographicBeans.iterator();iter.hasNext();) {
-				LabelValueBean bean = (LabelValueBean)iter.next();
+			for(Iterator<LabelValueBean> iter=demographicBeans.iterator();iter.hasNext();) {
+				LabelValueBean bean = iter.next();
 				String demographicNo = bean.getValue();
 				admission = null;
 				admissions = null;
 				//admission = getAdmissionManager().getAdmission(String.valueOf(programId), new Integer(demographicNo));
 				if(archiveView!=null && archiveView.equals("true")){
 					admissions = getAdmissionManager().getAdmissions_archiveView(String.valueOf(programId), new Integer(demographicNo));
-					for(Iterator i1=admissions.iterator();i1.hasNext();) {
-						admission = (Admission)i1.next();
+					for(Iterator<Admission> i1=admissions.iterator();i1.hasNext();) {
+						admission = i1.next();
 						csi = admission.getClientStatusId();
 						if(csi==null)
 							csi = 0;

@@ -27,8 +27,8 @@ import com.quatro.util.Utility;
 
 public class LookupDao extends HibernateDaoSupport {
 
-	/* Column property mappings defined by the generic idx 
-	 *  1 - Code 2 - Description 3 Active 
+	/* Column property mappings defined by the generic idx
+	 *  1 - Code 2 - Description 3 Active
 	 *  4 - Display Order, 5 - ParentCode 6 - Buf1 7 - CodeTree
 	 *  8 - Last Update User   9 - Last Update Date
 	 *  10 - 16 Buf3 - Buf9   17 - CodeCSV
@@ -38,13 +38,13 @@ public class LookupDao extends HibernateDaoSupport {
 	{
 	   return LoadCodeList(tableId,activeOnly,"",code,codeDesc);
 	}
-	
+
 	public LookupCodeValue GetCode(String tableId,String code)
 	{
 		if (code == null || "".equals(code)) return null;
 		List lst = LoadCodeList(tableId, false, code, "");
 		LookupCodeValue lkv = null;
-		if (lst.size()>0) 
+		if (lst.size()>0)
 		{
 			lkv = (LookupCodeValue) lst.get(0);
 		}
@@ -56,7 +56,7 @@ public class LookupDao extends HibernateDaoSupport {
 		String pCd=parentCode;
 		if("USR".equals(tableId)) parentCode=null;
 		LookupTableDefValue tableDef = GetLookupTableDef(tableId);
-		if (tableDef==null) return(new ArrayList());
+		if (tableDef==null) return(new ArrayList<LookupCodeValue>());
 		List fields = LoadFieldDefList(tableId);
 		DBPreparedHandlerParam [] params = new DBPreparedHandlerParam[100];
 		String fieldNames [] = new String[17];
@@ -90,7 +90,7 @@ public class LookupDao extends HibernateDaoSupport {
 					sSQL += " 1 field" + i + ",";
 				}
 				else
-				{				
+				{
 					sSQL += " null field" + i + ",";
 				}
 				fieldNames[i-1] = "field" + i;
@@ -98,19 +98,19 @@ public class LookupDao extends HibernateDaoSupport {
 		}
 		sSQL = sSQL.substring(0,sSQL.length()-1);
 	    sSQL +=" from " + tableDef.getTableName() ;
-		sSQL1 = oscar.Misc.replace(sSQL,"s.", "a.") + " a,";	    
+		sSQL1 = oscar.Misc.replace(sSQL,"s.", "a.") + " a,";
 		sSQL += " s where 1=1";
 	    int i= 0;
         if (activeFieldExists && activeOnly) {
-	    	sSQL += " and " + fieldNames[2] + "=?"; 
+	    	sSQL += " and " + fieldNames[2] + "=?";
 	    	params[i++] = new DBPreparedHandlerParam(1);
         }
 	   if (!Utility.IsEmpty(parentCode)) {
-	    	sSQL += " and " + fieldNames[4] + "=?"; 
+	    	sSQL += " and " + fieldNames[4] + "=?";
 	    	params[i++]= new DBPreparedHandlerParam(parentCode);
 	   }
 	   if (!Utility.IsEmpty(code)) {
-		   //org table is different from other tables 
+		   //org table is different from other tables
 		   if(tableId.equals("ORG")){
 			   sSQL += " and " + fieldNames[0] + " like ('%'||";
 		    	String [] codes = code.split(",");
@@ -138,10 +138,10 @@ public class LookupDao extends HibernateDaoSupport {
 		   }
 	   }
 	   if (!Utility.IsEmpty(codeDesc)) {
-	    	sSQL += " and upper(" + fieldNames[1] + ") like ?"; 
+	    	sSQL += " and upper(" + fieldNames[1] + ") like ?";
 	    	params[i++]= new DBPreparedHandlerParam("%" + codeDesc.toUpperCase() + "%");
-	   }	
-	   
+	   }
+
 	   if (tableDef.isTree()) {
 		 sSQL = sSQL1 + "(" + sSQL + ") b";
 		 sSQL += " where b." + fieldNames[6] + " like a." + fieldNames[6] + "||'%'";
@@ -157,10 +157,10 @@ public class LookupDao extends HibernateDaoSupport {
 	   {
 		   pars[j] = params[j];
 	   }
-	   
+
 	   DBPreparedHandler db = new DBPreparedHandler();
-	   ArrayList list = new ArrayList();
-	   
+	   ArrayList<LookupCodeValue> list = new ArrayList<LookupCodeValue>();
+
 	   try {
 		   ResultSet rs = db.queryResults(sSQL,pars);
 		   while (rs.next()) {
@@ -188,12 +188,12 @@ public class LookupDao extends HibernateDaoSupport {
 			rs.close();
 			//filter by programId for user
 			if("USR".equals(tableId) && !Utility.IsEmpty(pCd)){
-				List userLst = providerDao.getActiveProviders(new Integer(pCd));	
-				ArrayList newLst=new ArrayList();
+				List userLst = providerDao.getActiveProviders(new Integer(pCd));
+				ArrayList<LookupCodeValue> newLst=new ArrayList<LookupCodeValue>();
 				for(int n=0;n<userLst.size();n++){
 					SecProvider sp =(SecProvider)userLst.get(n);
 					for(int m=0;m<list.size();m++){
-						LookupCodeValue lv=(LookupCodeValue)list.get(m);					
+						LookupCodeValue lv=list.get(m);
 						if(lv.getCode().equals(sp.getProviderNo()))	newLst.add(lv);
 					}
 				}
@@ -209,9 +209,9 @@ public class LookupDao extends HibernateDaoSupport {
 
 	public LookupTableDefValue GetLookupTableDef(String tableId)
 	{
-		ArrayList paramList = new ArrayList();
+		ArrayList<String> paramList = new ArrayList<String>();
 
-		String sSQL="from LookupTableDefValue s where s.tableId= ?";		
+		String sSQL="from LookupTableDefValue s where s.tableId= ?";
 	    paramList.add(tableId);
 	    Object params[] = paramList.toArray(new Object[paramList.size()]);
 	    try{
@@ -221,13 +221,13 @@ public class LookupDao extends HibernateDaoSupport {
 	    	return null;
 	    }
 	}
-	public List LoadFieldDefList(String tableId) 
+	public List LoadFieldDefList(String tableId)
 	{
 		String sSql = "from FieldDefValue s where s.tableId=? order by s.fieldIndex ";
-		ArrayList paramList = new ArrayList();
+		ArrayList<String> paramList = new ArrayList<String>();
 	    paramList.add(tableId);
 	    Object params[] = paramList.toArray(new Object[paramList.size()]);
-		
+
 	    return getHibernateTemplate().find(sSql,params);
 	}
 	public List GetCodeFieldValues(LookupTableDefValue tableDef, String code)
@@ -235,7 +235,7 @@ public class LookupDao extends HibernateDaoSupport {
 		String tableName = tableDef.getTableName();
 		List fs = LoadFieldDefList(tableDef.getTableId());
 		String idFieldName = "";
-		
+
 		String sql = "select ";
 		for(int i=0; i<fs.size(); i++) {
 			FieldDefValue fdv = (FieldDefValue) fs.get(i);
@@ -249,12 +249,12 @@ public class LookupDao extends HibernateDaoSupport {
 			}
 		}
 		sql += " from " + tableName + " s";
-		sql += " where " + idFieldName + "='" + code + "'"; 
+		sql += " where " + idFieldName + "='" + code + "'";
 		DBPreparedHandler db = new DBPreparedHandler();
 		try {
 			ResultSet rs = db.queryResults(sql);
 			if (rs.next()) {
-				for(int i=0; i< fs.size(); i++) 
+				for(int i=0; i< fs.size(); i++)
 				{
 					FieldDefValue fdv = (FieldDefValue) fs.get(i);
 					String val = oscar.Misc.getString(rs, (i+1));
@@ -286,11 +286,11 @@ public class LookupDao extends HibernateDaoSupport {
 		}
 		return fs;
 	}
-	public List GetCodeFieldValues(LookupTableDefValue tableDef)
+	public List<List> GetCodeFieldValues(LookupTableDefValue tableDef)
 	{
 		String tableName = tableDef.getTableName();
 		List fs = LoadFieldDefList(tableDef.getTableId());
-		ArrayList codes = new ArrayList();
+		ArrayList<List> codes = new ArrayList<List>();
 		String sql = "select ";
 		for(int i=0; i<fs.size(); i++) {
 			FieldDefValue fdv = (FieldDefValue) fs.get(i);
@@ -307,7 +307,7 @@ public class LookupDao extends HibernateDaoSupport {
 		try {
 			ResultSet rs = db.queryResults(sql);
 			while (rs.next()) {
-				for(int i=0; i< fs.size(); i++) 
+				for(int i=0; i< fs.size(); i++)
 				{
 					FieldDefValue fdv = (FieldDefValue) fs.get(i);
 					String val = oscar.Misc.getString(rs, (i+1));
@@ -339,11 +339,11 @@ public class LookupDao extends HibernateDaoSupport {
 
 		ResultSet rs = db.queryResults(sql);
 		int id = 0;
-		if (rs.next()) 
+		if (rs.next())
 			 id = rs.getInt(1);
 		return id + 1;
 	}
-	
+
 	public String SaveCodeValue(boolean isNew, LookupTableDefValue tableDef, List fieldDefList) throws SQLException
 	{
 		String id = "";
@@ -358,7 +358,7 @@ public class LookupDao extends HibernateDaoSupport {
 		String tableId = tableDef.getTableId();
 		if ("OGN,SHL".indexOf(tableId)>=0)
 		{
-			SaveAsOrgCode(GetCode(tableId, id), tableId); 
+			SaveAsOrgCode(GetCode(tableId, id), tableId);
 		}
 		if ("PRP".equals(tableId)) {
 			OscarProperties prp = OscarProperties.getInstance();
@@ -376,7 +376,7 @@ public class LookupDao extends HibernateDaoSupport {
 		for(int i=0; i<fieldDefList.size(); i++)
 		{
 			FieldDefValue fdv = (FieldDefValue) fieldDefList.get(i);
-			
+
 			switch(fdv.getGenericIdx())
 			{
 			case 1:
@@ -424,7 +424,7 @@ public class LookupDao extends HibernateDaoSupport {
 				fdv.setVal(codeValue.getCodecsv());
 			}
 		}
-		if (isNew) 
+		if (isNew)
 		{
 			return InsertCodeValue(tableDef, fieldDefList);
 		}
@@ -440,11 +440,11 @@ public class LookupDao extends HibernateDaoSupport {
 
 		DBPreparedHandlerParam[] params = new DBPreparedHandlerParam[fieldDefList.size()];
 		String phs = "";
-		String sql = "insert into  " + tableName + "("; 
+		String sql = "insert into  " + tableName + "(";
 		for(int i=0; i< fieldDefList.size(); i++) {
 			FieldDefValue fdv = (FieldDefValue) fieldDefList.get(i);
 			sql += fdv.getFieldSQL() + ",";
-			phs +="?,"; 
+			phs +="?,";
 			if (fdv.getGenericIdx() == 1) {
 				if (fdv.isAuto())
 				{
@@ -474,9 +474,9 @@ public class LookupDao extends HibernateDaoSupport {
 		phs = phs.substring(0,phs.length()-1);
 		sql += ") values (" + phs + ")";
 
-		//check the existence of the code 
+		//check the existence of the code
 		LookupCodeValue lkv= GetCode(tableDef.getTableId(), idFieldVal);
-		if(lkv != null) 
+		if(lkv != null)
 		{
 			throw new SQLException("The Code Already Exists.");
 		}
@@ -503,7 +503,7 @@ public class LookupDao extends HibernateDaoSupport {
 				idFieldName = fdv.getFieldSQL();
 				idFieldVal = fdv.getVal();
 			}
-			
+
 			sql += fdv.getFieldSQL() + "=?,";
 			if ("S".equals(fdv.getFieldType()))
 			{
@@ -538,18 +538,18 @@ public class LookupDao extends HibernateDaoSupport {
 	}
 	public void SaveAsOrgCode(Program program) throws SQLException
 	{
-		
-		
+
+
 		String  programId = "0000000" + program.getId().toString();
 		programId = "P" + programId.substring(programId.length()-7);
 		String fullCode = "P" + program.getId();
-		
+
 		String facilityId = "0000000" + String.valueOf(program.getFacilityId());
-		facilityId = "F" + facilityId.substring(facilityId.length()-7); 
-		
+		facilityId = "F" + facilityId.substring(facilityId.length()-7);
+
 		LookupCodeValue fcd = GetCode("ORG", "F" + program.getFacilityId());
 		fullCode = fcd.getBuf1() + fullCode;
-		
+
 		boolean isNew = false;
 		LookupCodeValue pcd = GetCode("ORG", "P" + program.getId());
 		if (pcd == null) {
@@ -579,13 +579,13 @@ public class LookupDao extends HibernateDaoSupport {
 			String oldFullCode = oldCd.getBuf1();
 			String oldTreeCode = oldCd.getCodeTree();
 			String oldCsv = oldCd.getCodecsv();
-			
+
 			String newFullCode = newCd.getBuf1();
 			String newTreeCode = newCd.getCodeTree();
 			String newCsv = newCd.getCodecsv();
-			String sql = "update lst_orgcd set fullcode =replace(fullcode,'" + oldFullCode + "','" + newFullCode + "')" + 
-											  ",codetree =replace(codetree,'" + oldTreeCode + "','" + newTreeCode + "')" + 
-						                       ",codecsv =replace(codecsv,'" + oldCsv + "','" + newCsv + "')" + 
+			String sql = "update lst_orgcd set fullcode =replace(fullcode,'" + oldFullCode + "','" + newFullCode + "')" +
+											  ",codetree =replace(codetree,'" + oldTreeCode + "','" + newTreeCode + "')" +
+						                       ",codecsv =replace(codecsv,'" + oldCsv + "','" + newCsv + "')" +
 						 " where codecsv like '" + oldCsv + "_%'";
 
 			DBPreparedHandler db = new DBPreparedHandler();
@@ -596,8 +596,8 @@ public class LookupDao extends HibernateDaoSupport {
 			{
 			}
 		}
-	
-		
+
+
 	}
 
 	private void updateOrgStatus(String orgCd, LookupCodeValue newCd) throws SQLException
@@ -605,7 +605,7 @@ public class LookupDao extends HibernateDaoSupport {
 		LookupCodeValue oldCd = GetCode("ORG", orgCd);
 		if(!newCd.isActive()) {
 			String oldCsv = oldCd.getCodecsv();
-			
+
 			String sql = "update lst_orgcd set activeyn ='0' where codecsv like '" + oldCsv + "_%'";
 
 			DBPreparedHandler db = new DBPreparedHandler();
@@ -616,33 +616,33 @@ public class LookupDao extends HibernateDaoSupport {
 			{
 			}
 		}
-	
-		
+
+
 	}
 	public boolean inOrg(String org1,String org2){
 		boolean isInString=false;
 		String sql="From LstOrgcd a where  a.fullcode like '%"+"?'  ";
-		
+
 		LstOrgcd orgObj1 =(LstOrgcd)getHibernateTemplate().find(sql,new Object[] {org1});
 		LstOrgcd orgObj2 =(LstOrgcd)getHibernateTemplate().find(sql,new Object[] {org2});
 		if(orgObj2.getFullcode().indexOf(orgObj1.getFullcode())>0) isInString = true;
 		return isInString;
-		
+
 	}
 	public void SaveAsOrgCode(Facility facility) throws SQLException
 	{
-		
-		
+
+
 		String  facilityId = "0000000" + facility.getId().toString();
 		facilityId = "F" + facilityId.substring(facilityId.length()-7);
 		String fullCode = "F" + facility.getId();
-		
+
 		String orgId = "0000000" + String.valueOf(facility.getOrgId());
-		orgId = "S" + orgId.substring(orgId.length()-7); 
-		
+		orgId = "S" + orgId.substring(orgId.length()-7);
+
 		LookupCodeValue ocd = GetCode("ORG", "S" + facility.getOrgId());
 		fullCode = ocd.getBuf1() + fullCode;
-		
+
 		boolean isNew = false;
 		LookupCodeValue fcd = GetCode("ORG", "F" + facility.getId());
 		if (fcd == null) {
@@ -667,8 +667,8 @@ public class LookupDao extends HibernateDaoSupport {
 	}
 	public void SaveAsOrgCode(LookupCodeValue orgVal, String tableId) throws SQLException
 	{
-		
-		
+
+
 		String orgPrefix = tableId.substring(0,1);
 		String orgPrefixP = "R1";
 		if ("S".equals(orgPrefix)) orgPrefixP = "O";   //parent of Organization is R, parent of Shelter is O.
@@ -678,10 +678,10 @@ public class LookupDao extends HibernateDaoSupport {
 
 		String orgCd = orgPrefix + orgVal.getCode();
 		String parentCd = orgPrefixP + orgVal.getParentCode();
-		
+
 		LookupCodeValue pCd = GetCode("ORG",parentCd);
 		if(pCd == null) return;
-		
+
 		LookupCodeValue ocd = GetCode("ORG", orgCd);
 		boolean isNew = false;
 		if (ocd == null) {
@@ -709,7 +709,7 @@ public class LookupDao extends HibernateDaoSupport {
 		DBPreparedHandler db = new DBPreparedHandler();
 		db.procExecute(procName, params);
 	}
-	
+
 	public int getCountOfActiveClient(String orgCd) throws SQLException{
 		String sql = "select count(*) from admission where admission_status='" +  KeyConstants.INTAKE_STATUS_ADMITTED + "' and  'P' || program_id in (" +
 				" select code from lst_orgcd  where codecsv like '%' || '" +  orgCd  + ",' || '%')";
@@ -720,13 +720,13 @@ public class LookupDao extends HibernateDaoSupport {
 		try {
 			ResultSet rs = db.queryResults(sql);
 			int id = 0;
-			if (rs.next()) 
+			if (rs.next())
 				 id = rs.getInt(1);
 			if (id > 0) return id;
-			
+
 			rs.close();
 			rs = db.queryResults(sql1);
-			if (rs.next()) 
+			if (rs.next())
 				 id = rs.getInt(1);
 			rs.close();
 			return id;
@@ -736,7 +736,7 @@ public class LookupDao extends HibernateDaoSupport {
 		}
 	}
 
-	
+
 	public void setProviderDao(ProviderDao providerDao) {
 		this.providerDao = providerDao;
 	}

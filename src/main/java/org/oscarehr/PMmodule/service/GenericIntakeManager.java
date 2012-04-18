@@ -1,17 +1,17 @@
 /**
  * Copyright (C) 2007.
  * Centre for Research on Inner City Health, St. Michael's Hospital, Toronto, Ontario, Canada.
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -27,11 +27,11 @@ import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.AdmissionDao;
@@ -64,7 +64,7 @@ public class GenericIntakeManager {
 	private OcanXmlAdapterFactory adapterFactory = new OcanXmlAdapterFactory();
 
 	private static Logger logger = MiscUtils.getLogger();
-	
+
 	public void setGenericIntakeNodeDAO(
 			GenericIntakeNodeDAO genericIntakeNodeDAO) {
 		this.genericIntakeNodeDAO = genericIntakeNodeDAO;
@@ -160,7 +160,7 @@ public class GenericIntakeManager {
 	public Intake createIndepthIntake(String providerNo) {
 		return createIntake(getIndepthIntakeNode(), null, null, providerNo);
 	}
-	
+
 	public Intake createIntake(IntakeNode node, String providerNo) {
 		return createIntake(node, null, null, providerNo);
 	}
@@ -248,11 +248,11 @@ public class GenericIntakeManager {
 		return genericIntakeDAO.getRegIntakes(getRegIntakeNodes(clientId),
 				clientId, null, facilityId);
 	}
-	
+
 	public List<Integer> getIntakeClientsByFacilityId(Integer facilityId) {
 		return genericIntakeDAO.getIntakeClientsByFacilityId(facilityId);
 	}
-	
+
 	public List<Integer> getIntakeFacilityIds() {
 		return genericIntakeDAO.getIntakeFacilityIds();
 	}
@@ -287,7 +287,7 @@ public class GenericIntakeManager {
 		return genericIntakeDAO.getIntakesByType(formType, clientId,
 				null, facilityId);
 	}
-	
+
 	/**
 	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#getProgramsWithIntake(java.lang.Integer)
 	 */
@@ -567,7 +567,7 @@ public class GenericIntakeManager {
 			for (IntakeAnswer answer : source.getAnswers()) {
 				if(answer.getNode().getRepeating()) {
 					dest.getRepeatingAnswerMapped(answer.getNode().getIdStr(), answer.getIndex()).setValue(answer.getValue());
-				} else { 
+				} else {
 					dest.getAnswerMapped(answer.getNode().getIdStr()).setValue(	answer.getValue());
 				}
 			}
@@ -645,7 +645,7 @@ public class GenericIntakeManager {
 	private List<IntakeNode> getRegIntakeNodes(Integer clientId) {
 		List<Integer> nodeIds = genericIntakeDAO
 				.getIntakeNodesIdByClientId(clientId,1);
-		List<IntakeNode> nodeList = new ArrayList();
+		List<IntakeNode> nodeList = new ArrayList<IntakeNode>();
 		if (nodeIds.size() > 0) {
 			for (Integer i : nodeIds) {
 				nodeList.add(getIntakeNode(i));
@@ -828,7 +828,7 @@ public class GenericIntakeManager {
 
 		return builder.toString();
 	}
-	
+
 	public List<IntakeNode> getIntakeNodesByType(Integer formType) {
 		return genericIntakeDAO.getIntakeNodesByType(formType);
 	}
@@ -916,7 +916,7 @@ public class GenericIntakeManager {
 	 * beginDate, Date endDate) { return genericIntakeDAO.getCohort(beginDate,
 	 * endDate, demographicDao.getClients()); }
 	 */
-	
+
 
 	public List<IntakeNodeJavascript> getIntakeNodeJavascriptLocation(String questionId) {
 		if(questionId != null && questionId.length()>0) {
