@@ -244,8 +244,8 @@ public class MSPReconcile {
     return statusDesc;
   }
 
-  private HashMap getRejectionDetails() {
-    HashMap map = new HashMap();
+  private HashMap<String,Vector<String>> getRejectionDetails() {
+    HashMap<String,Vector<String>> map = new HashMap<String,Vector<String>>();
     try {
 
       String sql = "select t_officefolioclaimno, t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_exp7,t_payment  from teleplanC12,teleplanS21 where teleplanC12.s21_id = teleplanS21.s21_id and teleplanC12.status != 'E'";
@@ -253,7 +253,7 @@ public class MSPReconcile {
       while (rs.next()) {
         try {
           int i = Integer.parseInt(rs.getString("t_officefolioclaimno")); // this kludge rids leading zeros
-          Vector exp = new Vector();
+          Vector<String> exp = new Vector<String>();
           exp.add(rs.getString("t_exp1"));
           exp.add(rs.getString("t_exp2"));
           exp.add(rs.getString("t_exp3"));

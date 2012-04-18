@@ -10,7 +10,7 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *  GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * *  
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * *
  *
  *  This software was written for the
  *  Department of Family Medicine
@@ -78,7 +78,7 @@ import com.quatro.model.security.Secobjectname;
 
 public class DmsInboxManageAction extends DispatchAction {
 	private static Logger logger=MiscUtils.getLogger();
-	
+
 	private ProviderInboxRoutingDao providerInboxRoutingDAO = null;
 	private QueueDocumentLinkDao queueDocumentLinkDAO = null;
 	private SecObjectNameDao secObjectNameDao = null;
@@ -103,21 +103,21 @@ public class DmsInboxManageAction extends DispatchAction {
 	}
 
 	private void setProviderDocsInSession(ArrayList<EDoc> privatedocs, HttpServletRequest request) {
-		ArrayList providers = ProviderData.getProviderListOfAllTypes();
-		Hashtable providerDocs = new Hashtable();
+		ArrayList<Hashtable> providers = ProviderData.getProviderListOfAllTypes();
+		Hashtable<String,List<EDoc>> providerDocs = new Hashtable<String,List<EDoc>>();
 		for (int i = 0; i < providers.size(); i++) {
-			Hashtable ht = (Hashtable) providers.get(i);
-			List<EDoc> EDocs = new ArrayList();
+			Hashtable ht =  providers.get(i);
+			List<EDoc> EDocs = new ArrayList<EDoc>();
 			String providerNo = (String) ht.get("providerNo");
 			providerDocs.put(providerNo, EDocs);
 		}
 		for (int i = 0; i < privatedocs.size(); i++) {
 			EDoc eDoc = privatedocs.get(i);
-			List providerList = new ArrayList();
+			List<String> providerList = new ArrayList<String>();
 			String createrId = eDoc.getCreatorId();
 			if (providerDocs.containsKey(createrId)) {
-				List<EDoc> EDocs = new ArrayList();
-				EDocs = (List<EDoc>) providerDocs.get(createrId);
+				List<EDoc> EDocs = new ArrayList<EDoc>();
+				EDocs = providerDocs.get(createrId);
 				EDocs.add(eDoc);
 				providerDocs.put(createrId, EDocs);
 			}
@@ -129,20 +129,20 @@ public class DmsInboxManageAction extends DispatchAction {
 				String routingPId = pii.getProviderNo();
 
 				if (!routingPId.equals(createrId) && providerDocs.containsKey(routingPId)) {
-					List<EDoc> EDocs = new ArrayList();
-					EDocs = (List<EDoc>) providerDocs.get(routingPId);
+					List<EDoc> EDocs = new ArrayList<EDoc>();
+					EDocs = providerDocs.get(routingPId);
 					EDocs.add(eDoc);
 					providerDocs.put(routingPId, EDocs);
 				}
 			}
 		}
 		// remove providers which has no docs linked to
-		Enumeration keys = providerDocs.keys();
+		Enumeration<String> keys = providerDocs.keys();
 		while (keys.hasMoreElements()) {
-			String key = (String) keys.nextElement();
+			String key = keys.nextElement();
 
-			List<EDoc> EDocs = new ArrayList();
-			EDocs = (List<EDoc>) providerDocs.get(key);
+			List<EDoc> EDocs = new ArrayList<EDoc>();
+			EDocs = providerDocs.get(key);
 			if (EDocs == null || EDocs.size() == 0) {
 				providerDocs.remove(key);
 
@@ -159,14 +159,13 @@ public class DmsInboxManageAction extends DispatchAction {
 		List<Hashtable> queues = queueDao.getQueues();
 		for (int i = 0; i < queues.size(); i++) {
 			Hashtable ht = queues.get(i);
-			List<EDoc> EDocs = new ArrayList();
+			List<EDoc> EDocs = new ArrayList<EDoc>();
 			String queueId = (String) ht.get("id");
 			queueDocs.put(queueId, EDocs);
 		}
 		logger.debug("queueDocs=" + queueDocs);
 		for (int i = 0; i < privatedocs.size(); i++) {
 			EDoc eDoc = privatedocs.get(i);
-			List queueList = new ArrayList();
 			String docIdStr = eDoc.getDocId();
 			Integer docId = -1;
 			if (docIdStr != null && !docIdStr.equalsIgnoreCase("")) {
@@ -179,7 +178,7 @@ public class DmsInboxManageAction extends DispatchAction {
 				String qidStr = qidInt.toString();
 				logger.debug("qid in link=" + qidStr);
 				if (queueDocs.containsKey(qidStr)) {
-					List<EDoc> EDocs = new ArrayList();
+					List<EDoc> EDocs = new ArrayList<EDoc>();
 					EDocs = (List<EDoc>) queueDocs.get(qidStr);
 					EDocs.add(eDoc);
 					logger.debug("add edoc id to queue id=" + eDoc.getDocId());
@@ -192,7 +191,7 @@ public class DmsInboxManageAction extends DispatchAction {
 		Enumeration queueIds = queueDocs.keys();
 		while (queueIds.hasMoreElements()) {
 			String queueId = (String) queueIds.nextElement();
-			List<EDoc> eDocs = new ArrayList();
+			List<EDoc> eDocs = new ArrayList<EDoc>();
 			eDocs = (List<EDoc>) queueDocs.get(queueId);
 			if (eDocs == null || eDocs.size() == 0) {
 				queueDocs.remove(queueId);
@@ -215,11 +214,11 @@ public class DmsInboxManageAction extends DispatchAction {
 		}
 	}
 
-	private boolean isSegmentIDUnique(ArrayList doclabs, LabResultData data) {
+	private boolean isSegmentIDUnique(ArrayList<LabResultData> doclabs, LabResultData data) {
 		boolean unique = true;
 		String sID = (data.segmentID).trim();
 		for (int i = 0; i < doclabs.size(); i++) {
-			LabResultData lrd = (LabResultData) doclabs.get(i);
+			LabResultData lrd = doclabs.get(i);
 			if (sID.equals((lrd.segmentID).trim())) {
 				unique = false;
 				break;
@@ -235,14 +234,14 @@ public class DmsInboxManageAction extends DispatchAction {
 		String providerNo = request.getParameter("providerNo");
 		String searchProviderNo = request.getParameter("searchProviderNo");
 		String ackStatus = request.getParameter("ackStatus");
-		ArrayList<EDoc> docPreview = new ArrayList();
-		ArrayList labPreview = new ArrayList();
+		ArrayList<EDoc> docPreview = new ArrayList<EDoc>();
+		ArrayList<LabResultData> labPreview = new ArrayList<LabResultData>();
 
 		if (docs.length() == 0) {
 			// do nothing
 		} else {
 			String[] did = docs.split(",");
-			List<String> didList = new ArrayList();
+			List<String> didList = new ArrayList<String>();
 			for (int i = 0; i < did.length; i++) {
 				if (did[i].length() > 0) {
 					didList.add(did[i]);
@@ -256,7 +255,7 @@ public class DmsInboxManageAction extends DispatchAction {
 			// do nothing
 		} else {
 			String[] labids = labs.split(",");
-			List<String> ls = new ArrayList();
+			List<String> ls = new ArrayList<String>();
 			for (int i = 0; i < labids.length; i++) {
 				if (labids.length > 0) ls.add(labids[i]);
 			}
@@ -342,7 +341,7 @@ public class DmsInboxManageAction extends DispatchAction {
 		}
 		ArrayList<LabResultData> labdocs = comLab.populateLabResultsData2(searchProviderNo, demographicNo, request.getParameter("fname"), request.getParameter("lname"), request.getParameter("hnum"), ackStatus, scannedDocStatus);
 
-		ArrayList validlabdocs = new ArrayList();
+		ArrayList<LabResultData> validlabdocs = new ArrayList<LabResultData>();
 
 		DocumentResultsDao documentResultsDao = (DocumentResultsDao) SpringUtils.getBean("documentResultsDao");
 		// check privilege for documents only
@@ -487,14 +486,14 @@ public class DmsInboxManageAction extends DispatchAction {
 		for (int i = 0; i < labdocs.size(); i++) {
 			LabResultData data = labdocs.get(i);
 
-			List<String> segIDs = new ArrayList();
+			List<String> segIDs = new ArrayList<String>();
 			String labPatientId = data.getLabPatientId();
 			if (labPatientId == null || labPatientId.equals("-1")) labPatientId = "-1";
 
 			if (data.isAbnormal()) {
 				List<String> abns = ab_NormalDoc.get("abnormal");
 				if (abns == null) {
-					abns = new ArrayList();
+					abns = new ArrayList<String>();
 					abns.add(data.getSegmentID());
 				} else {
 					abns.add(data.getSegmentID());
@@ -503,7 +502,7 @@ public class DmsInboxManageAction extends DispatchAction {
 			} else {
 				List<String> ns = ab_NormalDoc.get("normal");
 				if (ns == null) {
-					ns = new ArrayList();
+					ns = new ArrayList<String>();
 					ns.add(data.getSegmentID());
 				} else {
 					ns.add(data.getSegmentID());
@@ -539,7 +538,7 @@ public class DmsInboxManageAction extends DispatchAction {
 					docids.add(keyDocLabId);// add doc id to list
 					typeDocLab.put("DOC", docids);
 				} else {
-					List<String> docids = new ArrayList();
+					List<String> docids = new ArrayList<String>();
 					docids.add(keyDocLabId);
 					typeDocLab.put("DOC", docids);
 				}
@@ -550,7 +549,7 @@ public class DmsInboxManageAction extends DispatchAction {
 					hl7ids.add(keyDocLabId);
 					typeDocLab.put("HL7", hl7ids);
 				} else {
-					List<String> hl7ids = new ArrayList();
+					List<String> hl7ids = new ArrayList<String>();
 					hl7ids.add(keyDocLabId);
 					typeDocLab.put("HL7", hl7ids);
 				}
@@ -576,7 +575,7 @@ public class DmsInboxManageAction extends DispatchAction {
 		List<String> abnormals = ab_NormalDoc.get("abnormal");
 
 		logger.debug("labdocs.size()="+labdocs.size());
-		
+
 		// set attributes
 		request.setAttribute("pageNum", pageNum);
 		request.setAttribute("docType", docType);

@@ -93,7 +93,7 @@ public class OscarDocumentCreator {
       else if (docType.equals(OscarDocumentCreator.CSV)) {
         this.exportReportToCSVStream(print, sos);
 
-      } else if (docType.equals(this.EXCEL)) {
+      } else if (docType.equals(OscarDocumentCreator.EXCEL)) {
     	this.exportReportToExcelStream(print,sos);
       }
 
@@ -133,11 +133,11 @@ public class OscarDocumentCreator {
     exp.exportReport();
   }
 
-  private void exportReportToExcelStream(JasperPrint jasperPrint, OutputStream os) 
+  private void exportReportToExcelStream(JasperPrint jasperPrint, OutputStream os)
   			throws JRException{
   	JRXlsExporter exp = new JRXlsExporter();
   	exp.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
-	exp.setParameter(JRExporterParameter.OUTPUT_STREAM, os);	
+	exp.setParameter(JRExporterParameter.OUTPUT_STREAM, os);
 	exp.setParameter(JRXlsExporterParameter.IGNORE_PAGE_MARGINS, Boolean.TRUE);
 	exp.setParameter(JRXlsExporterParameter.OFFSET_X, 0);
 	exp.setParameter(JRXlsExporterParameter.IS_IGNORE_CELL_BORDER, Boolean.FALSE);

@@ -55,7 +55,7 @@ public abstract class DSService {
         logger.debug("passed in provider: " + providerNo + " demographicNo" + demographicNo);
         List<DSGuideline> dsGuidelines = this.dsGuidelineDAO.getDSGuidelinesByProvider(providerNo);
         logger.info("Decision Support 'evaluateAndGetConsequences' has been called, reading " + dsGuidelines.size() + " for this provider");
-        ArrayList<DSConsequence> allResultingConsequences = new ArrayList();
+        ArrayList<DSConsequence> allResultingConsequences = new ArrayList<DSConsequence>();
         for (DSGuideline dsGuideline: dsGuidelines) {
             try {
                 List<DSConsequence> newConsequences = dsGuideline.evaluate(demographicNo);
@@ -79,7 +79,7 @@ public abstract class DSService {
     public List<DSGuideline> getDsGuidelinesByProvider(String provider) {
         return dsGuidelineDAO.getDSGuidelinesByProvider(provider);
     }
-    
+
     /**
      * @return the dsGuidelineDAO
      */

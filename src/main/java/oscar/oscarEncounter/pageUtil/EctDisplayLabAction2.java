@@ -72,7 +72,7 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
 			CommonLabResultData comLab = new CommonLabResultData();
 			ArrayList<LabResultData> labs = comLab.populateLabResultsData("", bean.demographicNo, "", "", "", "U");
 			logger.debug("local labs found : "+labs.size());
-			
+
 			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 			if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
 				ArrayList<LabResultData> remoteResults = CommonLabResultData.getRemoteLabs(Integer.parseInt(bean.demographicNo));
@@ -123,7 +123,7 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
 			StringBuilder func;
 			int hash;
 
-			LinkedHashMap accessionMap = new LinkedHashMap();
+			LinkedHashMap<String,LabResultData> accessionMap = new LinkedHashMap<String,LabResultData>();
 
 			for (int i = 0; i < labs.size(); i++) {
 				result = labs.get(i);
@@ -133,7 +133,7 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
 					if (!accessionMap.containsKey(result.accessionNumber + result.labType)) accessionMap.put(result.accessionNumber + result.labType, result);
 				}
 			}
-			labs = new ArrayList(accessionMap.values());
+			labs = new ArrayList<LabResultData>(accessionMap.values());
 			logger.info("number of labs: " + labs.size());
 			for (int j = 0; j < labs.size(); j++) {
 				result = labs.get(j);
@@ -142,7 +142,7 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
 				// String formattedDate = DateUtils.getDate(date);
 				func = new StringBuilder("popupPage(700,960,'");
 				label = result.getLabel();
-				
+
 				String remoteFacilityIdQueryString = "";
 				if (result.getRemoteFacilityId() != null) {
 					try {
@@ -174,9 +174,9 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
 				}
 				String labRead = "";
 				if(!oscarLogDao.hasRead(( (String) request.getSession().getAttribute("user")   ),"lab",result.segmentID)){
-                	labRead = "*";	
+                	labRead = "*";
                 }
-				
+
 				NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
 				logger.info("Adding link: " + labDisplayName + " : " + formattedDate);
 				item.setLinkTitle(labDisplayName + " " + formattedDate);
@@ -184,7 +184,7 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
 				hash = winName.hashCode();
 				hash = hash < 0 ? hash * -1 : hash;
 				func.append(hash + "','" + url + "'); return false;");
-				
+
 				item.setTitle(labRead+labDisplayName+labRead);
 				item.setURL(func.toString());
 				item.setDate(date);
@@ -192,7 +192,7 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
 					item.setColour("red");
 				}
 
-				
+
 				// item.setBgColour(bgcolour);
 				Dao.addItem(item);
 			}

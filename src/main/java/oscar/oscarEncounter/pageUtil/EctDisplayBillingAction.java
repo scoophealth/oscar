@@ -55,6 +55,7 @@ public class EctDisplayBillingAction extends EctDisplayAction {
 
     private static final String cmd = "Billing";
 
+    @SuppressWarnings("unchecked")
     public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
 
     	String appointmentNo = request.getParameter("appointment_no");
@@ -96,18 +97,18 @@ public class EctDisplayBillingAction extends EctDisplayAction {
                 }
                 ////
                 JdbcBillingReviewImpl dbObj = new JdbcBillingReviewImpl();
-                List aL = null;
+                List<Object> aL = null;
                 try{
                      aL   = dbObj.getBillingHist(bean.demographicNo, 10, 0, null);
                 }catch(Exception e){
 
                     MiscUtils.getLogger().error("Error", e);
                 }
-                int nItems=0;
+
                 for(int i=0; i<aL.size(); i=i+2) {
 
                         Date date = null;
-                        nItems++;
+
                         BillingClaimHeader1Data obj = (BillingClaimHeader1Data) aL.get(i);
                         BillingItemData itObj = (BillingItemData) aL.get(i+1);
 
@@ -151,7 +152,7 @@ public class EctDisplayBillingAction extends EctDisplayAction {
                 ////
                 MSPReconcile msp = new MSPReconcile();              //"ALL", "1999-01-01" ,"9999-99-99"
                 MSPReconcile.BillSearch bSearch = msp.getBills("%", null, null ,null,bean.demographicNo);//,true,true,true,true);
-                ArrayList list = bSearch.list;
+                ArrayList<MSPReconcile.Bill> list = bSearch.list;
 
                 MiscUtils.getLogger().debug("list size for bills is "+list.size());
 
@@ -163,13 +164,12 @@ public class EctDisplayBillingAction extends EctDisplayAction {
 //
 //                    MiscUtils.getLogger().error("Error", e);
 //                }
-                int nItems=0;
+
                 for(int i=0; i<list.size(); i++) {
 
                         Date date = null;
-                        nItems++;
 
-                        MSPReconcile.Bill b = (MSPReconcile.Bill) list.get(i);
+                        MSPReconcile.Bill b = list.get(i);
 
 
                         if (b != null && !b.reason.equals("D")){
