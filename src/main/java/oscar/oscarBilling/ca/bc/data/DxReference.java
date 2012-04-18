@@ -72,15 +72,16 @@ public class DxReference {
     /*
      * method looks in a paitnest
      */
-    public List getLatestDxCodes(String demo){
-       ArrayList list = new ArrayList();
+    @SuppressWarnings("unchecked")
+    public List<DxCode> getLatestDxCodes(String demo){
+       ArrayList<DxCode> list = new ArrayList<DxCode>();
        String nsql ="select dx_code1, dx_code2, dx_code3,service_date from billingmaster where demographic_no = ? and billingstatus != 'D' order by service_date desc";
        try {
 
             PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(nsql);
             pstmt.setString(1,demo);
             ResultSet rs = pstmt.executeQuery();
-            Map m = new HashMap();
+            Map<String,String> m = new HashMap<String,String>();
             while (rs.next()){
                 String sDate = rs.getString("service_date");
                 String[] dx = new String[3];

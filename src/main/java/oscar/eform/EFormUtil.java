@@ -175,13 +175,13 @@ public class EFormUtil {
 		return (results);
 	}
 
-	public static ArrayList listSecRole() {
+	public static ArrayList<String> listSecRole() {
 		// sends back a list of forms that were uploaded (those that can be added to the patient)
 		String sql = "";
 		sql = "SELECT role_name FROM secRole";
 
 		ResultSet rs = getSQL(sql);
-		ArrayList results = new ArrayList();
+		ArrayList<String> results = new ArrayList<String>();
 		try {
 			while (rs.next()) {
 				results.add(rsGetString(rs, "role_name"));
@@ -193,14 +193,14 @@ public class EFormUtil {
 		return (results);
 	}
 
-	public static ArrayList listImages() {
+	public static ArrayList<String> listImages() {
 		String imagePath = OscarProperties.getInstance().getProperty("eform_image");
 		logger.debug("Img Path: " + imagePath);
 		File dir = new File(imagePath);
 		String[] files = dir.list();
-		ArrayList fileList;
-		if (files != null) fileList = new ArrayList(Arrays.asList(files));
-		else fileList = new ArrayList();
+		ArrayList<String> fileList;
+		if (files != null) fileList = new ArrayList<String>(Arrays.asList(files));
+		else fileList = new ArrayList<String>();
 
 		return fileList;
 	}
@@ -248,11 +248,11 @@ public class EFormUtil {
 		return (results);
 	}
 
-	public static Hashtable loadEForm(String fid) {
+	public static Hashtable<String,Object> loadEForm(String fid) {
 		// opens an eform that was uploaded (used to fill out patient data)
 		String sql = "SELECT * FROM eform where fid=" + fid + " LIMIT 1";
 		ResultSet rs = getSQL(sql);
-		Hashtable curht = new Hashtable();
+		Hashtable<String,Object> curht = new Hashtable<String,Object>();
 		try {
 			rs.next();
 			// must have FID and form_name otherwise throws null pointer on the hashtable
@@ -439,14 +439,14 @@ public class EFormUtil {
 	}
 
 	// --------------eform groups---------
-	public static ArrayList getEFormGroups() {
+	public static ArrayList<Hashtable<String,String>> getEFormGroups() {
 		String sql;
 		sql = "SELECT DISTINCT eform_groups.group_name, count(*)-1 AS 'count' FROM eform_groups " + "LEFT JOIN eform ON eform.fid=eform_groups.fid WHERE eform.status=1 OR eform_groups.fid=0 " + "GROUP BY eform_groups.group_name;";
-		ArrayList al = new ArrayList();
+		ArrayList<Hashtable<String,String>> al = new ArrayList<Hashtable<String,String>>();
 		try {
 			ResultSet rs = getSQL(sql);
 			while (rs.next()) {
-				Hashtable curhash = new Hashtable();
+				Hashtable<String,String> curhash = new Hashtable<String,String>();
 				curhash.put("groupName", oscar.Misc.getString(rs, "group_name"));
 				curhash.put("count", oscar.Misc.getString(rs, "count"));
 				al.add(curhash);
@@ -457,14 +457,14 @@ public class EFormUtil {
 		return al;
 	}
 
-	public static ArrayList getEFormGroups(String demographic_no) {
+	public static ArrayList<Hashtable<String,String>> getEFormGroups(String demographic_no) {
 		String sql;
 		sql = "SELECT eform_groups.group_name, count(*)-1 AS 'count' FROM eform_groups " + "LEFT JOIN eform_data ON eform_data.fid=eform_groups.fid " + "WHERE (eform_data.status=1 AND eform_data.demographic_no=" + demographic_no + ") OR eform_groups.fid=0 " + "GROUP BY eform_groups.group_name";
-		ArrayList al = new ArrayList();
+		ArrayList<Hashtable<String,String>> al = new ArrayList<Hashtable<String,String>>();
 		try {
 			ResultSet rs = getSQL(sql);
 			while (rs.next()) {
-				Hashtable curhash = new Hashtable();
+				Hashtable<String,String> curhash = new Hashtable<String,String>();
 				curhash.put("groupName", oscar.Misc.getString(rs, "group_name"));
 				curhash.put("count", oscar.Misc.getString(rs, "count"));
 				al.add(curhash);
@@ -571,7 +571,7 @@ public class EFormUtil {
 		return (results);
 	}
 
-	public static void writeEformTemplate(ArrayList paramNames, ArrayList paramValues, EForm eForm, String fdid, String programNo, String context_path) {
+	public static void writeEformTemplate(ArrayList<String> paramNames, ArrayList<String> paramValues, EForm eForm, String fdid, String programNo, String context_path) {
 		String text = eForm != null ? eForm.getTemplate() : null;
 		if (blank(text)) return;
 
@@ -748,7 +748,7 @@ public class EFormUtil {
 		return m_return;
 	}
 
-	private static String putTemplateValues(ArrayList paramNames, ArrayList paramValues, String template) {
+	private static String putTemplateValues(ArrayList<String> paramNames, ArrayList<String> paramValues, String template) {
 		if (blank(template)) return template;
 
 		String tag = "$t{";
@@ -761,7 +761,7 @@ public class EFormUtil {
 			pointer = fieldEnd + 1;
 			String field = template.substring(fieldBegin + tag.length(), fieldEnd);
 			if (paramNames.contains(field)) {
-				nwTemplate += (String) paramValues.get(paramNames.indexOf(field));
+				nwTemplate +=  paramValues.get(paramNames.indexOf(field));
 			} else {
 				nwTemplate += "{" + field + "}";
 				logger.error("EForm Template Error! Cannot find input name {" + field + "} in eform");
@@ -890,8 +890,8 @@ public class EFormUtil {
 		return sCmIssu;
 	}
 
-	private static ArrayList getFieldIndices(String fieldtag, String s) {
-		ArrayList fieldIndexList = new ArrayList();
+	private static ArrayList<Integer> getFieldIndices(String fieldtag, String s) {
+		ArrayList<Integer> fieldIndexList = new ArrayList<Integer>();
 		if (blank(fieldtag) || blank(s)) return fieldIndexList;
 
 		fieldtag = fieldtag.toLowerCase();
@@ -927,8 +927,8 @@ public class EFormUtil {
 		return content;
 	}
 
-	private static ArrayList getWithin(String tag, String s) {
-		ArrayList within = new ArrayList();
+	private static ArrayList<String> getWithin(String tag, String s) {
+		ArrayList<String> within = new ArrayList<String>();
 		if (blank(tag) || blank(s)) return within;
 
 		ArrayList<String> w = getWhole(tag, s);
@@ -940,8 +940,8 @@ public class EFormUtil {
 		return within;
 	}
 
-	private static ArrayList getWhole(String tag, String s) {
-		ArrayList whole = new ArrayList();
+	private static ArrayList<String> getWhole(String tag, String s) {
+		ArrayList<String> whole = new ArrayList<String>();
 		if (blank(tag) || blank(s)) return whole;
 
 		String sBegin = "<" + tag;

@@ -44,22 +44,22 @@ import org.oscarehr.util.MiscUtils;
  * @author jay
  */
 public class RenalDosingFactory {
-    
-    static Hashtable currentDosingInformation = new Hashtable();
-    
+
+    static Hashtable<String,DosingRecomendation> currentDosingInformation = new Hashtable<String,DosingRecomendation>();
+
     static boolean loaded = false;
-    
-    
+
+
     /** Creates a new instance of RenalDosingFactory */
     protected RenalDosingFactory() {
     }
- 
+
     static public DosingRecomendation getDosingInformation(String atc){
         loadDosingInformation();
-        return (DosingRecomendation) currentDosingInformation.get(atc);
+        return  currentDosingInformation.get(atc);
     }
-    
-    
+
+
     static private void loadDosingInformation(){
         MiscUtils.getLogger().debug("current dosing size "+currentDosingInformation.size());
         if(!loaded){
@@ -67,74 +67,77 @@ public class RenalDosingFactory {
             RenalDosingFactory rdf  = new RenalDosingFactory();
             InputStream is = rdf.getClass().getClassLoader().getResourceAsStream(dosing);
 
-            try{              
+            try{
                 SAXBuilder parser = new SAXBuilder();
-                Document doc = parser.build(is);        
+                Document doc = parser.build(is);
                 Element root = doc.getRootElement();
 
-                
+
                 /*
                  <medication name="metformin" atccode="A10BA02">
                     <dose clcrrange="&gt;50">give 50% of dose</dose>
                     <dose clcrrange="10-50">give 25% of dose</dose>
                     <dose clcrrange="&lt;10">AVOID</dose>
-                    <moreinfo>    
+                    <moreinfo>
                         Normal dose: 500-850 mg BID
 
                         When CLcr< 50 mL/min:  Monitor blood glucose BID to QID with any medication change until stable.
                     </moreinfo>
                 </medication>
                     */
-                
-                List meas = root.getChildren("medication");
+
+                @SuppressWarnings("unchecked")
+                List<Element> meas = root.getChildren("medication");
                 for (int j = 0; j < meas.size(); j++){
-                        Element e = (Element) meas.get(j);
+                        Element e =  meas.get(j);
                         String atccode = e.getAttributeValue("atccode");
                         String name    = e.getAttributeValue("name");
-                        
+
                         DosingRecomendation rec = new DosingRecomendation();
                         rec.setAtccode(atccode);
                         rec.setName(name);
-                        List doses = e.getChildren("dose");
-                        ArrayList recDoses = new ArrayList();
+                        @SuppressWarnings("unchecked")
+                        List<Element> doses = e.getChildren("dose");
+                        ArrayList<Hashtable<String,String>> recDoses = new ArrayList<Hashtable<String,String>>();
                         for (int d = 0; d < doses.size(); d++){
-                            Element dose = (Element) doses.get(d);
+                            Element dose = doses.get(d);
                             MiscUtils.getLogger().debug(dose.getName());
-                            Hashtable h = new Hashtable();
+                            Hashtable<String,String> h = new Hashtable<String,String>();
                             String clcrrange = dose.getAttributeValue("clcrrange");
                             String recommendation = dose.getText();
-                            
+
                             MiscUtils.getLogger().debug("clcrrange "+clcrrange+" recommendation "+recommendation);
-                            
+
                             if(recommendation == null){recommendation = "";}
                             if (clcrrange == null){ clcrrange = ""; }
-                            
+
                             h.put("clcrrange",clcrrange);
                             h.put("recommendation",recommendation);
                             recDoses.add(h);
                         }
                         rec.setDose(recDoses);
-                        
-                        List moreinformation = e.getChildren("moreinfo");    
+
+                        @SuppressWarnings("unchecked")
+                        List<Element> moreinformation = e.getChildren("moreinfo");
                         StringBuilder sb = new StringBuilder();
                         for (int m = 0; m < moreinformation.size(); m++){
-                            Element info = (Element) moreinformation.get(m);
+                            Element info =  moreinformation.get(m);
                             sb.append(info.getText());
                         }
                         rec.setMoreinfo(sb.toString());
                         MiscUtils.getLogger().debug(rec.toString());
                         currentDosingInformation.put(rec.getAtccode(),rec);
-                        
+
                    }
-                   
+
                 }catch(Exception e){
                     MiscUtils.getLogger().error("Error", e);
                 }
                 loaded = true;
             }
- 
+
 }
-    
-    
-    
+
+
+
 }

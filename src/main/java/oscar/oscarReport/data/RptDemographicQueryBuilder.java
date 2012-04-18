@@ -11,9 +11,9 @@
  * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
- * 
+ *
  * Jason Gallagher
- * 
+ *
  * This software was written for the
  * Department of Family Medicine
  * McMaster University
@@ -25,6 +25,7 @@
 
 package oscar.oscarReport.data;
 import java.text.ParseException;
+import java.util.ArrayList;
 
 import org.oscarehr.util.MiscUtils;
 
@@ -60,12 +61,12 @@ public class RptDemographicQueryBuilder {
 
     public RptDemographicQueryBuilder() {
     }
-    
-    public java.util.ArrayList buildQuery(RptDemographicReportForm frm){
+
+    public java.util.ArrayList<ArrayList<String>> buildQuery(RptDemographicReportForm frm){
         return buildQuery(frm,null);
     }
 
-    public java.util.ArrayList buildQuery(RptDemographicReportForm frm,String asofRosterDate){
+    public java.util.ArrayList<ArrayList<String>> buildQuery(RptDemographicReportForm frm,String asofRosterDate){
       MiscUtils.getLogger().debug("in buildQuery");
 
         String[] select = frm.getSelect();
@@ -79,26 +80,26 @@ public class RptDemographicQueryBuilder {
         String[] patientStatus  = frm.getPatientStatus();
         String[] providers      = frm.getProviderNo();
 
-        
+
         String firstName        = frm.getFirstName();
         String lastName         = frm.getLastName();
         String sex              = frm.getSex();
-       
-        
+
+
 
         String orderBy          = frm.getOrderBy();
         String limit            = frm.getResultNum();
-        
-        
+
+
         String asofDate         = frm.getAsofDate();
 
-        
+
         if (UtilDateUtilities.getDateFromString(asofDate,"yyyy-MM-dd") == null){
            asofDate = "CURRENT_DATE";
         }else{
            asofDate = "'"+asofDate+"'";
         }
-        
+
 
         RptDemographicColumnNames demoCols = new RptDemographicColumnNames();
 
@@ -143,9 +144,11 @@ public class RptDemographicQueryBuilder {
         int yStyle= 0;
         try{
             yStyle = Integer.parseInt(yearStyle);
-        }catch (Exception e){}
+        }catch (Exception e){
+        	//empty
+        }
 
-        
+
        // value="0"> nothing specified
        // value="1">born before
        // value="2">born after
@@ -215,7 +218,7 @@ public class RptDemographicQueryBuilder {
                 if (!ageStyle.equals("2")){
                   // stringBuffer.append(" ( ( YEAR("+asofDate+") -YEAR (DATE_FORMAT(CONCAT((year_of_birth), '-', (month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'))) - (RIGHT("+asofDate+",5)<RIGHT(DATE_FORMAT(CONCAT((year_of_birth),'-',(month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'),5)) >  "+startYear+" and ( YEAR("+asofDate+") -YEAR (DATE_FORMAT(CONCAT((year_of_birth), '-', (month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'))) - (RIGHT("+asofDate+",5)<RIGHT(DATE_FORMAT(CONCAT((year_of_birth),'-',(month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'),5)) <  "+endYear+"  ) ");
                   MiscUtils.getLogger().debug("VERIFYING INT"+startYear);
-                  //check to see if its a number 
+                  //check to see if its a number
                   if ( verifyInt (startYear) ){
                      stringBuffer.append(" ( ( YEAR("+asofDate+") -YEAR (DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT("+asofDate+",5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'),5)) >  "+startYear+" ) ");
                   }else{
@@ -304,7 +307,9 @@ public class RptDemographicQueryBuilder {
        yStyle = 0;
        try{
             yStyle = Integer.parseInt(sex);
-       }catch (Exception e){}
+       }catch (Exception e){
+    	   //empty
+       }
        switch (yStyle){
             case 1:
                 whereClause();
@@ -348,16 +353,16 @@ public class RptDemographicQueryBuilder {
 
 
         MiscUtils.getLogger().debug("SEARCH SQL STATEMENT \n"+stringBuffer.toString());
-        java.util.ArrayList searchedArray = new java.util.ArrayList();
+        java.util.ArrayList<ArrayList<String>> searchedArray = new java.util.ArrayList<ArrayList<String>>();
         try{
-              
+
               java.sql.ResultSet rs;
               rs = DBHandler.GetSQL(stringBuffer.toString());
               MiscUtils.getLogger().debug(stringBuffer.toString());
 
               while (rs.next()) {
             	String demoNo = null;
-                java.util.ArrayList tempArr  = new java.util.ArrayList();
+                java.util.ArrayList<String> tempArr  = new java.util.ArrayList<String>();
                 for (int i = 0; i < select.length ; i++){
                    tempArr.add( oscar.Misc.getString(rs, select[i]) );
                    if ("demographic_no".equals(select[i])){
@@ -365,34 +370,32 @@ public class RptDemographicQueryBuilder {
                 	   MiscUtils.getLogger().debug("Demographic :"+demoNo +" is in the list");
                    }
                 }
-                
+
                 // need to check if they were rostered at this point to this provider  (asofRosterDate is only set if this is being called from prevention reports)
                 if(demoNo != null && asofRosterDate != null && providers != null && providers.length > 0){
                 	//Only checking the first doc.  Only one should be included for finding the cumulative bonus
                 	try {
 	                    if(!PreventionReportUtil.wasRosteredToThisProvider(Integer.parseInt(demoNo), DateUtils.parseDate(asofRosterDate,null),providers[0])){
-	                    	MiscUtils.getLogger().info("Demographic :"+demoNo+ " was not included in returned array because they were not rostered to "+providers[0]+  " on "+asofRosterDate); 
+	                    	MiscUtils.getLogger().info("Demographic :"+demoNo+ " was not included in returned array because they were not rostered to "+providers[0]+  " on "+asofRosterDate);
 	                    	continue;
 	                    }else{
-	                    	MiscUtils.getLogger().info("Demographic :"+demoNo+ " was included in returned array because they were not rostered to "+providers[0]+  " on "+asofRosterDate); 
+	                    	MiscUtils.getLogger().info("Demographic :"+demoNo+ " was included in returned array because they were not rostered to "+providers[0]+  " on "+asofRosterDate);
 	                    }
                     } catch (NumberFormatException e) {
-                    	MiscUtils.getLogger().error("Error", e); 
+                    	MiscUtils.getLogger().error("Error", e);
                     } catch (ParseException e) {
-                    	MiscUtils.getLogger().error("Error", e); 
-                    } 
+                    	MiscUtils.getLogger().error("Error", e);
+                    }
                 }
-                
-                
+
+
                 searchedArray.add(tempArr);
 
               }
 
-
-
               rs.close();
         }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }
-        
+
 
     return searchedArray;
     }
@@ -406,9 +409,9 @@ public class RptDemographicQueryBuilder {
       }
       return verify;
    }
-   
+
    String  getInterval(String startYear){
-      MiscUtils.getLogger().debug("in getInterval startYear "+startYear); 
+      MiscUtils.getLogger().debug("in getInterval startYear "+startYear);
       String str = "";
       if (startYear.charAt(startYear.length()-1) == 'm' ){
          str = startYear.substring(0,(startYear.length()-1)) + " month";

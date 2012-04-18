@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
 /**
  * Oscar super DAO implementation created to extract database access code from JSP files. This class should be extended by a scope named DAO class, i.e. AppointmentDao. Do not access methods of this class directly - use OscarSuperManager methods instead.
- * 
+ *
  * @author Eugene Petruhin
  */
 public abstract class OscarSuperDao extends JdbcDaoSupport {
@@ -24,7 +24,7 @@ public abstract class OscarSuperDao extends JdbcDaoSupport {
 	/**
 	 * Executes a parameterized select query identified by a key.<br>
 	 * Returned collection item is an automatically populated Map.
-	 * 
+	 *
 	 * @param queryName sql query key
 	 * @param params sql query parameters
 	 * @return List of Map objects created for each result set row
@@ -36,19 +36,19 @@ public abstract class OscarSuperDao extends JdbcDaoSupport {
 	/**
 	 * Executes a parameterized select query identified by a key.<br>
 	 * Returned collection item is a value object populated by a row mapper identified by the same key.
-	 * 
+	 *
 	 * @param queryName sql query key
 	 * @param params sql query parameters
 	 * @return List of value objects created for each result set row by a row mapper
 	 */
 	@SuppressWarnings("unchecked")
-	public List executeRowMappedSelectQuery(String queryName, Object[] params) {
+	public List<Object> executeRowMappedSelectQuery(String queryName, Object[] params) {
 		return getJdbcTemplate().query(getSqlQueryByKey(queryName), params, getRowMapperByKey(queryName));
 	}
 
 	/**
 	 * Executes a parameterized insert/update/delete query identified by a key.<br>
-	 * 
+	 *
 	 * @param queryName sql query key
 	 * @param params sql query parameters
 	 * @return number of affected rows
@@ -59,7 +59,7 @@ public abstract class OscarSuperDao extends JdbcDaoSupport {
 
 	/**
 	 * Retrieves a sql query associated with a query name or reports an error.
-	 * 
+	 *
 	 * @param key query name
 	 * @return sql query
 	 */
@@ -75,7 +75,7 @@ public abstract class OscarSuperDao extends JdbcDaoSupport {
 
 	/**
 	 * Retrieves a row mapper associated with a query name or reports an error.
-	 * 
+	 *
 	 * @param key query name
 	 * @return row mapper
 	 */

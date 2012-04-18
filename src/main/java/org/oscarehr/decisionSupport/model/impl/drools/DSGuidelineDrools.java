@@ -34,12 +34,12 @@ import oscar.oscarEncounter.oscarMeasurements.util.RuleBaseCreator;
  */
 public class DSGuidelineDrools extends DSGuideline {
     private static final Logger log=MiscUtils.getLogger();
-    
+
     Namespace namespace = Namespace.getNamespace("http://drools.org/rules");
     Namespace javaNamespace = Namespace.getNamespace("java", "http://drools.org/semantics/java");
     Namespace xsNs = Namespace.getNamespace("xs", "http://www.w3.org/2001/XMLSchema-instance");
-    
-    
+
+
     private final String demographicAccessObjectClassPath =  "org.oscarehr.decisionSupport.model.DSDemographicAccess";
 
 
@@ -73,14 +73,14 @@ public class DSGuidelineDrools extends DSGuideline {
 	                Class clas = Class.forName(dsp.getStrClass());
 	                Constructor constructor = clas.getConstructor();
 	                Object obj = constructor.newInstance();
-	
+
 	                workingMemory.assertObject(obj);
 	            }
             }
 
             workingMemory.fireAllRules();
             if (dsDemographicAccess.isPassedGuideline()) {
-                List<DSConsequence> returnDsConsequences = new ArrayList();
+                List<DSConsequence> returnDsConsequences = new ArrayList<DSConsequence>();
                 if (this.getConsequences() == null) return returnDsConsequences;
                 else {
                     for (DSConsequence dsConsequence: this.getConsequences()) {
@@ -88,6 +88,7 @@ public class DSGuidelineDrools extends DSGuideline {
                             returnDsConsequences.add(dsConsequence);
                     }
                         else if( dsConsequence.getConsequenceType() == DSConsequence.ConsequenceType.java ) {
+                            @SuppressWarnings("unchecked")
                             List<Object> javaConsequences = workingMemory.getObjects();
                             dsConsequence.setObjConsequence(javaConsequences);
                             returnDsConsequences.add(dsConsequence);
@@ -112,7 +113,7 @@ public class DSGuidelineDrools extends DSGuideline {
             throw new DecisionSupportException("Unable to instantiate class", e);
         }
     }
-    
+
     public List<DSConsequence> evaluate(String demographicNo, String providerNo) throws DecisionSupportException {
         if (_ruleBase == null)
             generateRuleBase();
@@ -141,14 +142,14 @@ public class DSGuidelineDrools extends DSGuideline {
 	                Class clas = Class.forName(dsp.getStrClass());
 	                Constructor constructor = clas.getConstructor();
 	                Object obj = constructor.newInstance();
-	
+
 	                workingMemory.assertObject(obj);
 	            }
             }
 
             workingMemory.fireAllRules();
             if (dsDemographicAccess.isPassedGuideline()) {
-                List<DSConsequence> returnDsConsequences = new ArrayList();
+                List<DSConsequence> returnDsConsequences = new ArrayList<DSConsequence>();
                 if (this.getConsequences() == null) return returnDsConsequences;
                 else {
                     for (DSConsequence dsConsequence: this.getConsequences()) {
@@ -156,6 +157,7 @@ public class DSGuidelineDrools extends DSGuideline {
                             returnDsConsequences.add(dsConsequence);
                     }
                         else if( dsConsequence.getConsequenceType() == DSConsequence.ConsequenceType.java ) {
+                            @SuppressWarnings("unchecked")
                             List<Object> javaConsequences = workingMemory.getObjects();
                             dsConsequence.setObjConsequence(javaConsequences);
                             returnDsConsequences.add(dsConsequence);
@@ -183,10 +185,10 @@ public class DSGuidelineDrools extends DSGuideline {
 
 
     public void generateRuleBase() throws DecisionSupportException {
-        ArrayList<Element> rules = new ArrayList();
-        ArrayList<Element> conditionElements = new ArrayList();
-        ArrayList<Element> lParameterElements = new ArrayList();
-        
+        ArrayList<Element> rules = new ArrayList<Element>();
+        ArrayList<Element> conditionElements = new ArrayList<Element>();
+        ArrayList<Element> lParameterElements = new ArrayList<Element>();
+
         if(this.getParameters() != null){
 	        for( DSParameter dsParameter: this.getParameters()) {
 	            Element parameterElement = this.getDroolsParameter(dsParameter);
@@ -194,7 +196,7 @@ public class DSGuidelineDrools extends DSGuideline {
 	        }
         }
         int paramCount=0;
-       
+
         for (DSCondition condition: this.getConditions()) {
             if (condition.getParam() != null && !condition.getParam().isEmpty()){
                 condition.setLabel("param"+paramCount);
@@ -207,10 +209,10 @@ public class DSGuidelineDrools extends DSGuideline {
         Element consequencesElement = this.getDroolsConsequences(this.getConsequences());
 
         rules.add(this.getRule(conditionElements, lParameterElements, consequencesElement));
-        
+
         RuleBaseCreator ruleBaseCreator = new RuleBaseCreator();
         try {
-            
+
             _ruleBase = ruleBaseCreator.getRuleBase(this.getTitle(), rules);
         } catch (Exception e) {
             throw new DecisionSupportException("Could not create a rule base for guideline '" + this.getTitle() + "'", e);
@@ -257,7 +259,7 @@ public class DSGuidelineDrools extends DSGuideline {
         accessClassParameter.addContent(accessClass);
         ruleElement.addContent(accessClassParameter);
 
-        
+
         for (DSCondition condition: this.getConditions()) {
             if (condition.getParam() != null && !condition.getParam().isEmpty()){
                 Element paramsHashEle = new Element("parameter", namespace);
@@ -265,7 +267,7 @@ public class DSGuidelineDrools extends DSGuideline {
                 Element paramClass = new Element("class", namespace);
                 paramClass.addContent("java.util.Hashtable");
                 paramsHashEle.addContent(paramClass);
-                ruleElement.addContent(paramsHashEle);   
+                ruleElement.addContent(paramsHashEle);
             }
         }
 
@@ -275,12 +277,12 @@ public class DSGuidelineDrools extends DSGuideline {
     }
 
     private Element getRule(Element conditionElement, Element consequenceElement) {
-        List<Element> conditionElements = new ArrayList();
+        List<Element> conditionElements = new ArrayList<Element>();
         conditionElements.add(conditionElement);
         return getRule(conditionElements, consequenceElement);
     }
-    
-    //multiple conditions because to handle OR statements, need to have multiple 
+
+    //multiple conditions because to handle OR statements, need to have multiple
     public Element getDroolsCondition(DSCondition condition) {
         String accessMethod = condition.getConditionType().getAccessMethod();
         Element javaCondition = new Element("condition", javaNamespace);

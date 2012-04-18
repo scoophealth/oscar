@@ -20,13 +20,13 @@ import oscar.oscarProvider.bean.ProviderNameBean;
 public class DoctorList {
     public DoctorList() {
     }
-    
-    public ArrayList getDoctorNameList(){
 
-        ArrayList dnl = new ArrayList();
+    public ArrayList<ProviderNameBean> getDoctorNameList(){
+
+        ArrayList<ProviderNameBean> dnl = new ArrayList<ProviderNameBean>();
         try{
-            
-            
+
+
             java.sql.ResultSet rs;
             String sql = "select last_name, first_name, provider_no from provider where provider_type='doctor'";
             rs = DBHandler.GetSQL(sql);
@@ -36,13 +36,13 @@ public class DoctorList {
                 pb.setProviderID(oscar.Misc.getString(rs, 3));
                 pb.setProviderName(oscar.Misc.getString(rs, 2)+ " " +oscar.Misc.getString(rs, 1));
                 dnl.add(pb);
-                
+
             }
         }
         catch(SQLException e)
         {
             MiscUtils.getLogger().error("Error", e);
-        } 
+        }
         return dnl;
     }
 }
