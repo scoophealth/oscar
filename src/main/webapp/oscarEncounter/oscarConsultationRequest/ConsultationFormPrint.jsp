@@ -216,7 +216,7 @@
         td.fillLine{
         border-bottom: 1pt solid #444444;
         font-size:10pt;
-        font-family: courier,Courier New,arial, verdana, tahoma, helvetica, sans serif;
+        font-family: arial, verdana, tahoma, helvetica, sans serif;
         }
 
         pre.text{
@@ -792,6 +792,9 @@ public String wrap(String in,int len) {
 		return x + "\n" + wrap(in.substring(in.indexOf("\n") + 1), len);
 	}
 	int place=Math.max(Math.max(in.lastIndexOf(" ",len),in.lastIndexOf("\t",len)),in.lastIndexOf("-",len));
+	if( place == 0 ) {
+		place = len;
+	}
 	return in.substring(0,place).trim()+"\n"+wrap(in.substring(place),len);
 }
 
