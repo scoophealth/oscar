@@ -79,6 +79,7 @@ import org.oscarehr.eyeform.model.SatelliteClinic;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+import org.springframework.beans.BeanUtils;
 
 import oscar.OscarProperties;
 import oscar.SxmlMisc;
@@ -997,20 +998,24 @@ public class EyeformAction extends DispatchAction {
 
 		public ActionForward saveConRequest(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 			log.info("saveConRequest");
+			ConsultationReportDao dao = (ConsultationReportDao)SpringUtils.getBean("consultationReportDao");
 
 			DynaValidatorForm crForm = (DynaValidatorForm) form;
 			EyeformConsultationReport cp = (EyeformConsultationReport) crForm.get("cp");
+			EyeformConsultationReport consultReport = null;
 			String id = request.getParameter("cp.id");
 			if(id != null && id.length()>0) {
-				cp.setId(Integer.parseInt(id));
+				consultReport = dao.find(Integer.parseInt(id));
+			} else {
+				consultReport = new EyeformConsultationReport();
 			}
-			@SuppressWarnings("unchecked")
+			BeanUtils.copyProperties(cp, consultReport, new String[]{"id","demographic","provider"});
+
 			List<Billingreferral> brs = brDao.getBillingreferral(cp.getReferralNo());
 			cp.setReferralId(brs.get(0).getBillingreferralNo());
-			if(cp.getDate()==null){
-				cp.setDate(new Date());
-			}
-			ConsultationReportDao dao = (ConsultationReportDao)SpringUtils.getBean("consultationReportDao");
+
+			cp.setDate(new Date());
+
 			if(cp.getId() != null && cp.getId()>0) {
 				dao.merge(cp);
 			} else {
