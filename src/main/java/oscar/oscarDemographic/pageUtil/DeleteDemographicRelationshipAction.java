@@ -18,7 +18,7 @@
  *  Department of Family Medicine
  *  McMaster University
  *  Hamilton
- *  Ontario, Canada   
+ *  Ontario, Canada
  *
  * DeleteDemographicRelationshipAction.java
  *
@@ -49,70 +49,70 @@ import oscar.oscarDemographic.data.DemographicRelationship;
  * @author jay
  */
 public class DeleteDemographicRelationshipAction extends Action {
-    
+
     /** Creates a new instance of DeleteDemographicRelationshipAction */
     public DeleteDemographicRelationshipAction() {
     }
-    
+
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) {
       String origDemo = request.getParameter("origDemo");
       String id = request.getParameter("id");
       String idRel = getRelationID(id);
-      
+
       DemographicRelationship demo = new DemographicRelationship();
       demo.deleteDemographicRelationship(id);
       demo.deleteDemographicRelationship(idRel);
-      
+
       String ip = request.getRemoteAddr();
       LogAction.addLog( (String) request.getSession().getAttribute("user"), LogConst.DELETE, LogConst.CON_DEMOGRAPHIC_RELATION, id, ip);
-      request.setAttribute("demo", origDemo);                   
+      request.setAttribute("demo", origDemo);
       return mapping.findForward("success");
    }
-    
+
     String getRelationID(String id) {
 	String relationID = "";
 	DemographicRelationship demo = new DemographicRelationship();
-	ArrayList dr = demo.getDemographicRelationshipsByID(id);
+	ArrayList<Hashtable<String,String>> dr = demo.getDemographicRelationshipsByID(id);
 	for (int i=0; i<dr.size(); i++) {
-	    Hashtable h = (Hashtable) dr.get(i);
-	    String demo_no = (String) h.get("demographic_no");
-	    String demo_r  = (String) h.get("relation_demographic_no");
-	    String rel     = (String) h.get("relation");
+	    Hashtable<String,String> h = dr.get(i);
+	    String demo_no =  h.get("demographic_no");
+	    String demo_r  =  h.get("relation_demographic_no");
+	    String rel     =  h.get("relation");
 	    String[] relOf = getRelationOf(rel);
-	    
+
 	    relationID = getRelationshipID(demo_r, demo_no, relOf);
 	}
 	return relationID;
     }
-    
+
     String getRelationshipID(String demo_no, String demo_r, String[] rel_of) {
 	String relationshipID = "";
 	DemographicRelationship demo = new DemographicRelationship();
-	ArrayList dr = demo.getDemographicRelationships(demo_no);
+	ArrayList<HashMap<String,String>> dr = demo.getDemographicRelationships(demo_no);
 	for (int i=0; i<dr.size(); i++) {
-	    HashMap h = (HashMap) dr.get(i);
-	    String demoRel = (String) h.get("demographic_no");
+		HashMap<String,String> h =  dr.get(i);
+	    String demoRel = h.get("demographic_no");
 	    if (demo_r.trim().equalsIgnoreCase(demoRel.trim())) {
-		String rel = (String) h.get("relation");
+		String rel = h.get("relation");
 		boolean matched = false;
 		if(rel_of!=null){
 		  for (int j=0; j<rel_of.length; j++) {
 		    if (rel.trim().equalsIgnoreCase(rel_of[j])) matched = true;
 		  }
-		}  
+		}
 		if (matched) {
-		    relationshipID = (String) h.get("id");
+		    relationshipID = h.get("id");
 		    i = dr.size();
 		}
 	    }
 	}
 	return relationshipID;
     }
-    
+
     String[] getRelationOf(String relation) {
 	relation = relation.trim().toLowerCase();
 	String[] relationOf = new String[3];
-	
+
 	if (relation.equals("child") || relation.equals("son") || relation.equals("daughter")) {
 	    relationOf[0] = "father";
 	    relationOf[1] = "mother";

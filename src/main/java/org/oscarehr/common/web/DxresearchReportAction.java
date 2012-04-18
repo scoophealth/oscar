@@ -7,13 +7,16 @@ package org.oscarehr.common.web;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.beanutils.DynaBean;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -21,16 +24,16 @@ import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.DxresearchDAO;
 import org.oscarehr.common.dao.MyGroupDao;
 import org.oscarehr.common.model.DxRegistedPTInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
 import oscar.OscarDocumentCreator;
 import oscar.oscarResearch.oscarDxResearch.bean.dxCodeSearchBean;
 import oscar.oscarResearch.oscarDxResearch.bean.dxQuickListBeanHandler;
 import oscar.oscarResearch.oscarDxResearch.bean.dxQuickListItemsHandler;
 import oscar.oscarResearch.oscarDxResearch.util.dxResearchCodingSystem;
-import org.oscarehr.util.MiscUtils;
-import org.apache.log4j.Logger;
 /**
  *
  * @author toby
@@ -87,7 +90,7 @@ public class DxresearchReportAction extends DispatchAction {
 
     public ActionForward patientExcelReport(ActionMapping mapping, ActionForm  form,
             HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
+             {
         ServletOutputStream outputStream = getServletOstream(response);
 
         List<DxRegistedPTInfo> patients = null;

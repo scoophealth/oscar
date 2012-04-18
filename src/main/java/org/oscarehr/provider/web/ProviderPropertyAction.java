@@ -1370,7 +1370,7 @@ public class ProviderPropertyAction extends DispatchAction {
         }
 
         frm.set("dateProperty", prop);
-        ArrayList<Hashtable> groups = EFormUtil.getEFormGroups();
+        ArrayList<Hashtable<String,String>> groups = EFormUtil.getEFormGroups();
         ArrayList groupList = new ArrayList();
         String name;
         groupList.add(new LabelValueBean("None",""));

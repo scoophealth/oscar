@@ -53,7 +53,7 @@ public class EForm extends EFormBase {
 	private static Logger log = MiscUtils.getLogger();
 
 	private String appointment_no = "-1";
-	private HashMap sql_params = new HashMap<String, String>();
+	private HashMap<String,String> sql_params = new HashMap<String, String>();
 	private String parentAjaxId = null;
         private String eform_link = null;
 	private HashMap<String, String> fieldValues = new HashMap<String, String>();
@@ -183,7 +183,7 @@ public class EForm extends EFormBase {
 	}
 
 	// ------------------Saving the Form (inserting value= statements)---------------------
-	public void setValues(ArrayList names, ArrayList values) {
+	public void setValues(ArrayList<String> names, ArrayList<String> values) {
             if (names.size() != values.size()) return;
             StringBuilder html = new StringBuilder(this.formHtml);
             int pointer = -1;
@@ -193,7 +193,7 @@ public class EForm extends EFormBase {
                 int i;
                 if ((i = names.indexOf(fieldName)) < 0) continue;
 
-                String val = (String)values.get(i);
+                String val = values.get(i);
                 pointer = nextSpot(html, pointer);
                 html = putValue(val, getFieldType(fieldHeader), pointer, html);
             }
@@ -253,7 +253,7 @@ public class EForm extends EFormBase {
 				int needing = needValueInForm;
 				String fieldType = getFieldType(fieldHeader); // textarea, text, hidden etc..
 				if ((fieldType.equals("")) || (apName0.equals(""))) continue;
-                                
+
 				// sets up the pointer where to write the value
 				int pointer = markerLoc + EFormUtil.getAttributePos(marker,fieldHeader) + marker.length() + 1;
 				if (!fieldType.equals("textarea")) {
@@ -320,7 +320,7 @@ public class EForm extends EFormBase {
 		this.formDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd");
 	}
 
-	public ActionMessages setMeasurements(ArrayList names, ArrayList values) {
+	public ActionMessages setMeasurements(ArrayList<String> names, ArrayList<String> values) {
 		return (WriteNewMeasurements.addMeasurements(names, values, this.demographicNo, this.providerNo));
 	}
 
@@ -578,14 +578,14 @@ public class EForm extends EFormBase {
 		if (!EFormUtil.blank(sql)) {
 			sql = replaceAllFields(sql);
 			log.debug("SQL----" + sql);
-			ArrayList names = DatabaseAP.parserGetNames(output); // a list of ${apName} --> apName
+			ArrayList<String> names = DatabaseAP.parserGetNames(output); // a list of ${apName} --> apName
 			sql = DatabaseAP.parserClean(sql); // replaces all other ${apName} expressions with 'apName'
-			ArrayList values = EFormUtil.getValues(names, sql);
+			ArrayList<String> values = EFormUtil.getValues(names, sql);
 			if (values.size() != names.size()) {
 				output = "";
 			} else {
 				for (int i = 0; i < names.size(); i++) {
-					output = DatabaseAP.parserReplace((String) names.get(i), (String) values.get(i), output);
+					output = DatabaseAP.parserReplace( names.get(i), values.get(i), output);
 				}
 			}
 		}
@@ -626,7 +626,7 @@ public class EForm extends EFormBase {
 
 	private String getSqlParams(String key) {
 		if (sql_params.containsKey(key)) {
-		    String val = (String) sql_params.get(key);
+		    String val =  sql_params.get(key);
 		    return val==null ? "" : val.replace("\"", "\\\"");
 		}
 		return "";
@@ -662,8 +662,8 @@ public class EForm extends EFormBase {
 
 			return -1;
 		}
-		
-		
+
+
 		/*  Code too slow, replaced with regex
 		if (html == null) return -1;
 

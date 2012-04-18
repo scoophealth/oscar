@@ -5,6 +5,7 @@
 
 package org.oscarehr.decisionSupport.service;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
@@ -36,22 +37,23 @@ public class DSServiceMyDrugref extends DSService {
 
     public void fetchGuidelinesFromService(String providerNo) {
 
-        Vector<String> params = new Vector();
+        Vector<String> params = new Vector<String>();
         params.addElement(this.getMyDrugrefId(providerNo));
         RxMyDrugrefInfoAction myDrugrefAction = new RxMyDrugrefInfoAction();
         try {
             logger.debug("CALLING MYDRUGREF");
-            Vector<Hashtable> providerGuidelines = (Vector) myDrugrefAction.callWebserviceLite("GetGuidelineIds", params);
+            @SuppressWarnings("unchecked")
+            Vector<Hashtable<String,String>> providerGuidelines = (Vector<Hashtable<String,String>>) myDrugrefAction.callWebserviceLite("GetGuidelineIds", params);
             if (providerGuidelines == null) {
                 logger.error("Could not get provider decision support guidelines from MyDrugref.");
                 return;
             }
             logger.debug("MyDrugref call returned: " + providerGuidelines.size() + " guidelines");
-            ArrayList<String> guidelinesToFetch = new ArrayList();
-            for (Hashtable providerGuideline: providerGuidelines) {
+            ArrayList<String> guidelinesToFetch = new ArrayList<String>();
+            for (Hashtable<String,String> providerGuideline: providerGuidelines) {
 
-                String uuid = (String) providerGuideline.get("uuid");
-                String versionNumberStr = (String) providerGuideline.get("version");
+                String uuid =  providerGuideline.get("uuid");
+                String versionNumberStr =  providerGuideline.get("version");
                 Integer versionNumber = Integer.parseInt(versionNumberStr);
 
                 logger.debug("uuid: " + uuid);
@@ -74,8 +76,8 @@ public class DSServiceMyDrugref extends DSService {
             }
             //Do mappings-guideline mappings;
             List<DSGuidelineProviderMapping> uuidsMapped = dsGuidelineDAO.getMappingsByProvider(providerNo);
-            for (Hashtable newMapping: providerGuidelines) {
-                String newUuid = (String) newMapping.get("uuid");
+            for (Hashtable<String,String> newMapping: providerGuidelines) {
+                String newUuid = newMapping.get("uuid");
                 DSGuidelineProviderMapping newUuidObj = new DSGuidelineProviderMapping(newUuid, providerNo);
                 if (uuidsMapped.contains(newUuidObj)) {
                     uuidsMapped.remove(newUuidObj);
@@ -100,8 +102,8 @@ public class DSServiceMyDrugref extends DSService {
         params.addElement(new Vector(uuids));
 
         Vector<Hashtable> fetchedGuidelines = (Vector<Hashtable>) myDrugrefAction.callWebserviceLite("GetGuidelines", params);
-        ArrayList newGuidelines = new ArrayList();
-        for (Hashtable fetchedGuideline: fetchedGuidelines) {
+        ArrayList<DSGuideline> newGuidelines = new ArrayList<DSGuideline>();
+        for (Hashtable<String,Serializable> fetchedGuideline: fetchedGuidelines) {
             logger.debug("Title: " + (String) fetchedGuideline.get("name"));
             logger.debug("Author: " + (String) fetchedGuideline.get("author"));
             logger.debug("UUID: " + (String) fetchedGuideline.get("uuid"));

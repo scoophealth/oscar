@@ -33,7 +33,7 @@ public class DSValueStatement extends DSValue {
             throw new IllegalArgumentException("Cannot get enum Operator from '" + symbol + "'");
         }
         private static String[] getOperatorSymbols() {
-            ArrayList<String> operatorSymbols = new ArrayList();
+            ArrayList<String> operatorSymbols = new ArrayList<String>();
             for (Operator currentOperator: Operator.values()) {
                 operatorSymbols.add(currentOperator.getSymbol());
             }
@@ -42,7 +42,7 @@ public class DSValueStatement extends DSValue {
         private String getSymbol() { return symbol; }
     }
 
-    private Operator operator;        
+    private Operator operator;
 
     public boolean testValue(String testValue) throws DecisionSupportException {
         try {
@@ -55,7 +55,7 @@ public class DSValueStatement extends DSValue {
                 case greaterThanEqualTo: return testValueInt >= valueInt;
                 case equal: return testValueInt == valueInt;
             }
-            
+
          //   if (this.operator == Operator.lessThan) {
          //       return testValueInt < valueInt;
          //   } else

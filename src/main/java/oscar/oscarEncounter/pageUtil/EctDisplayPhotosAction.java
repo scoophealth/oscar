@@ -60,9 +60,9 @@ public class EctDisplayPhotosAction extends EctDisplayAction {
  	if(!a) {
  		return true; //The link of tickler won't show up on new CME screen.
  	} else {
- 	  
+
  	String appointmentNo = request.getParameter("appointment_no");
- 		
+
 	//add for inbox manager
 	boolean inboxflag=oscar.util.plugin.IsPropertiesOn.propertiesOn("inboxmnger");
     //set lefthand module heading and link
@@ -94,7 +94,7 @@ public class EctDisplayPhotosAction extends EctDisplayAction {
 
     StringBuilder javascript = new StringBuilder("<script type=\"text/javascript\">");
     String js = new String();
-    ArrayList docList = EDocUtil.listDocs("demographic", bean.demographicNo, null, EDocUtil.PRIVATE, EDocUtil.SORT_OBSERVATIONDATE, "active");
+    ArrayList<EDoc> docList = EDocUtil.listDocs("demographic", bean.demographicNo, null, EDocUtil.PRIVATE, EDocUtil.SORT_OBSERVATIONDATE, "active");
     String dbFormat = "yyyy-MM-dd";
     String serviceDateStr = new String();
     String key;
@@ -103,7 +103,7 @@ public class EctDisplayPhotosAction extends EctDisplayAction {
     String BGCOLOUR = request.getParameter("hC");
     Date date;
     for (int i=0; i< docList.size(); i++) {
-        EDoc curDoc = (EDoc) docList.get(i);
+        EDoc curDoc = docList.get(i);
         if(!curDoc.getType().equals("photo")) {
         	continue;
         }

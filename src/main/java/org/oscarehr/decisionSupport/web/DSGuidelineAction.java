@@ -16,6 +16,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.decisionSupport.model.DSCondition;
+import org.oscarehr.decisionSupport.model.DSConsequence;
 import org.oscarehr.decisionSupport.model.DSDemographicAccess;
 import org.oscarehr.decisionSupport.model.DSGuideline;
 import org.oscarehr.decisionSupport.model.DSGuidelineFactory;
@@ -48,7 +49,7 @@ public class DSGuidelineAction extends DispatchAction {
 
     public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
         String providerNo = request.getParameter("provider_no");
-        List<DSGuideline> providerGuidelines = new ArrayList();
+        List<DSGuideline> providerGuidelines = new ArrayList<DSGuideline>();
         if (providerNo != null)
             providerGuidelines = dsService.getDsGuidelinesByProvider(providerNo);
         request.setAttribute("guidelines", providerGuidelines);
@@ -67,7 +68,7 @@ public class DSGuidelineAction extends DispatchAction {
         if (demographicNo == null) { //if just viewing details about guideline.
             request.setAttribute("guideline", dsGuideline);
             List<DSCondition> dsConditions = dsGuideline.getConditions();
-            List<ConditionResult> conditionResults = new ArrayList();
+            List<ConditionResult> conditionResults = new ArrayList<ConditionResult>();
             for (DSCondition dsCondition: dsConditions) {
                 conditionResults.add(new ConditionResult(dsCondition, null, null));
             }
@@ -75,14 +76,14 @@ public class DSGuidelineAction extends DispatchAction {
             return mapping.findForward("guidelineDetail");
         }
         List<DSCondition> dsConditions = dsGuideline.getConditions();
-        List<ConditionResult> conditionResults = new ArrayList();
+        List<ConditionResult> conditionResults = new ArrayList<ConditionResult>();
         for (DSCondition dsCondition: dsConditions) { //if viewing details about guideline in regards to patient
             DSGuideline testGuideline = factory.createBlankGuideline();
             //BeanUtils.copyProperties(dsCondition, testGuideline);
-            ArrayList<DSCondition> testCondition = new ArrayList();
+            ArrayList<DSCondition> testCondition = new ArrayList<DSCondition>();
             testCondition.add(dsCondition);
             testGuideline.setConditions(testCondition);
-            testGuideline.setConsequences(new ArrayList());
+            testGuideline.setConsequences(new ArrayList<DSConsequence>());
             testGuideline.setTitle(dsGuideline.getTitle());
             testGuideline.setParsed(true); //supress parsing of xml, othewrise would overwrite the condition
             boolean result = testGuideline.evaluateBoolean(demographicNo);
