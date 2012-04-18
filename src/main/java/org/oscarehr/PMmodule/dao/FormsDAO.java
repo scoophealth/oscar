@@ -1,23 +1,23 @@
 /*
-* 
+*
 * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
+* This software is published under the GPL GNU General Public License.
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version. *
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+*
 * <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
+*
+* This software was written for
+* Centre for Research on Inner City Health, St. Michael's Hospital,
+* Toronto, Ontario, Canada
 */
 
 package org.oscarehr.PMmodule.dao;
@@ -39,7 +39,7 @@ public class FormsDAO extends HibernateDaoSupport {
 
     public void saveForm(Object o) {
         this.getHibernateTemplate().save(o);
-        
+
         if(log.isDebugEnabled()) {
             log.debug("saveForm:" + o);
         }
@@ -47,11 +47,11 @@ public class FormsDAO extends HibernateDaoSupport {
 
     public Object getCurrentForm(String clientId, Class clazz) {
         Object result = null;
-        
+
         if(clientId == null || clazz == null) {
             throw new IllegalArgumentException();
         }
-        
+
         String className = clazz.getName();
         if(className.indexOf(".") != -1) {
             className = className.substring(className.lastIndexOf(".")+1);
@@ -60,11 +60,11 @@ public class FormsDAO extends HibernateDaoSupport {
         if(results.size()>0) {
             result =  results.get(0);
         }
-        
+
         if(log.isDebugEnabled()) {
             log.debug("getCurrentForm: clientId=" + clientId + ",class=" + clazz + ",found=" + (result!=null));
         }
-        
+
         return result;
     }
 
@@ -72,8 +72,8 @@ public class FormsDAO extends HibernateDaoSupport {
         if(clientId == null || clazz == null) {
             throw new IllegalArgumentException();
         }
-        
-        List formInfos = new ArrayList();
+
+        List<FormInfo> formInfos = new ArrayList<FormInfo>();
         String className = clazz.getName();
         if(className.indexOf(".") != -1) {
             className = className.substring(className.lastIndexOf(".")+1);
@@ -92,11 +92,11 @@ public class FormsDAO extends HibernateDaoSupport {
             fi.setProviderName(provider.getFormattedName());
             formInfos.add(fi);
         }
-        
+
         if(log.isDebugEnabled()) {
             log.debug("getFormInfo: clientId=" + clientId + ",class=" + clazz + ",# of results=" + formInfos.size());
         }
-        
+
         return formInfos;
     }
 }

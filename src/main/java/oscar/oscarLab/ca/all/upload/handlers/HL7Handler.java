@@ -25,7 +25,7 @@
 /*
  * HL7Handler
  * Upload handler
- * 
+ *
  */
 package oscar.oscarLab.ca.all.upload.handlers;
 
@@ -43,7 +43,7 @@ import oscar.oscarLab.ca.all.upload.MessageUploader;
 import oscar.oscarLab.ca.all.util.Utilities;
 
 /**
- * 
+ *
  */
 public class HL7Handler implements MessageHandler {
 
@@ -58,10 +58,10 @@ public class HL7Handler implements MessageHandler {
 
 		int i = 0;
 		try {
-			ArrayList messages = Utilities.separateMessages(fileName);
+			ArrayList<String> messages = Utilities.separateMessages(fileName);
 			for (i = 0; i < messages.size(); i++) {
 
-				String msg = (String) messages.get(i);
+				String msg =  messages.get(i);
 				MessageUploader.routeReport("","HL7", msg, fileId); //Setting serviceName="" for now
 
 			}
@@ -93,7 +93,7 @@ public class HL7Handler implements MessageHandler {
 			// only recheck the result status if it is not already set to
 			// abnormal
 			if (!oscar.Misc.getString(rs, "result_status").equals("A")) {
-				
+
 				oscar.oscarLab.ca.all.parsers.MessageHandler h = Factory.getHandler(oscar.Misc.getString(rs, "lab_no"));
 				int i = 0;
 				int j = 0;

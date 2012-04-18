@@ -1,25 +1,25 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 package oscar.form.data;
 
@@ -40,7 +40,7 @@ import oscar.util.UtilDateUtilities;
 public class FrmData {
     private static final Logger _log = MiscUtils.getLogger();
     private static EncounterFormDao encounterFormDao=(EncounterFormDao)SpringUtils.getBean("encounterFormDao");
-    
+
     public class Form {
         private String formName;
         private String formPage;
@@ -58,7 +58,7 @@ public class FrmData {
     }
 
     public Form[] getForms() {
-    	
+
     	List<EncounterForm> results=encounterFormDao.findAll();
 
     	ArrayList<Form> forms = new ArrayList<Form>();
@@ -67,7 +67,7 @@ public class FrmData {
             Form frm = new Form(encounterForm.getFormName(), encounterForm.getFormValue(), encounterForm.getFormTable());
             forms.add(frm);
     	}
-    	
+
     	return(forms.toArray(new Form[0]));
     }
 
@@ -91,9 +91,9 @@ public class FrmData {
     }
 
     public PatientForm[] getPatientForms(String demoNo, String table) throws SQLException {
-        ArrayList forms = new ArrayList();
+        ArrayList<PatientForm> forms = new ArrayList<PatientForm>();
 
-        
+
         String sql = "SELECT ID, demographic_no, formCreated, formEdited FROM " + table
                     + " WHERE demographic_no=" + demoNo + " ORDER BY ID DESC";
         ResultSet rs = DBHandler.GetSQL(sql);
@@ -105,14 +105,14 @@ public class FrmData {
 
         rs.close();
         PatientForm[] ret = {};
-        ret = (PatientForm[])forms.toArray(ret);
+        ret = forms.toArray(ret);
         return ret;
     }
 
     public PatientForm getCurrentPatientForm(String demoNo, String studyNo) throws SQLException {
         PatientForm frm = null;
 
-        
+
         String sql = "SELECT e.form_table from encounterForm e, study s where e.form_name = s.form_name and s.study_no = " + studyNo;
         String table = "";
         ResultSet rs = DBHandler.GetSQL(sql);
@@ -135,7 +135,7 @@ public class FrmData {
     public String[] getStudyNameLink(String studyNo) throws java.sql.SQLException {
         String[] ret = new String[2];
 
-        
+
         String sql = "SELECT study_name, study_link FROM study WHERE study_no=" + studyNo;
         ResultSet rs = DBHandler.GetSQL(sql);
         while(rs.next()) {
@@ -154,17 +154,17 @@ public class FrmData {
 
 		EncounterFormDao encounterFormDao=(EncounterFormDao) SpringUtils.getBean("encounterFormDao");
 		List<EncounterForm> forms=encounterFormDao.findByFormName(formName);
-		
+
 		for (EncounterForm encounterForm : forms)
 		{
             ret[0] = encounterForm.getFormValue();
             table = encounterForm.getFormTable();
 		}
 
-        
+
         String sql;
         ResultSet rs;
-        
+
 		ret[1] = "0";
         if (table.equals("form")) {
             String searchFormName = formName;
@@ -176,32 +176,32 @@ public class FrmData {
                 ret[1] = oscar.Misc.getString(rs, "form_no");
             }
             String[] xmlForm = ret.clone();
-             
+
             if ( formName.equals("AR1")){
                 //First check to see if there are records for 2005
-                
+
                 ret = getShortcutFormValue(demoNo, "AR2005");
-                MiscUtils.getLogger().debug("ret[0] is: " + ret[0]);                
+                MiscUtils.getLogger().debug("ret[0] is: " + ret[0]);
                 String[] foo = ret[0].split(".jsp");
                 ret[0] = foo[0] + "pg1.jsp" + foo[1];
                 MiscUtils.getLogger().debug("getShortcutFormValue forwarding new AR1 to: " + ret[0]);
                 String[] first_pick =  ret.clone();
-                
+
                 //Check if AR has any forms
-                if (ret[1].equals("0")){ 
+                if (ret[1].equals("0")){
                     ret = getShortcutFormValue(demoNo, "AR");
-                    MiscUtils.getLogger().debug("ret[0] is: " + ret[0]);                
+                    MiscUtils.getLogger().debug("ret[0] is: " + ret[0]);
                     foo = ret[0].split(".jsp");
                     ret[0] = foo[0] + "pg1.jsp" + foo[1];
                     MiscUtils.getLogger().debug("getShortcutFormValue forwarding new AR1 to: " + ret[0]);
-                    
+
                     if(ret[1].equals("0") && !xmlForm[1].equals("0")) { // Nothing found in AR but there are records in the old xml form
                         ret = xmlForm;
                     }else if (ret[1].equals("0")) {  // Nothing in either old form Go with new one
                         ret = first_pick;
                     }
                 }
-                
+
             }else if ( formName.equals("AR2")){
                 ret = getShortcutFormValue(demoNo, "AR");
                 String[] foo = ret[0].split(".jsp");
@@ -217,10 +217,10 @@ public class FrmData {
                         ret = xmlForm;
                    }else if (ret[1].equals("0")){  // Nothing in either old form Go with new one
                         ret = first_pick;
-                   } 
+                   }
                 }
             }
-            
+
             ////////////////////////
 //            if ( ret[1].equals("0") && formName.equals("AR1") ) { // ditto
 //                ret = getShortcutFormValue(demoNo, "AR2005");
@@ -243,7 +243,7 @@ public class FrmData {
 //            if ( ret[1].equals("0") && formName.equals("AR1") ) { // ditto
 //                ret = ret_backup;
 //            }
-//            
+//
 //            if ( ret[1].equals("0") && formName.equals("AR2") ) { // ditto
 //                ret = getShortcutFormValue(demoNo, "AR");
 //                String[] foo = ret[0].split(".jsp");
@@ -266,7 +266,7 @@ public class FrmData {
     public String getResource() throws java.sql.SQLException {
         String ret = "";
 
-        
+
         String sql = "SELECT value FROM property WHERE name='resource'";
         ResultSet rs = DBHandler.GetSQL(sql);
         while(rs.next()) {
@@ -277,13 +277,13 @@ public class FrmData {
         if(ret.compareTo("")==0)
             ret = "http://resource.oscarmcmaster.org/oscarResource/";
         return ret;
-        
+
     }
 
     public String getResource(String name) throws java.sql.SQLException {
         String ret = "";
 
-        
+
         String sql = "SELECT value FROM property WHERE name='" + name + "'";
         ResultSet rs = DBHandler.GetSQL(sql);
         while(rs.next()) {

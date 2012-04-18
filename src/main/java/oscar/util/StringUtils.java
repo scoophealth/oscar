@@ -44,11 +44,11 @@ public class StringUtils {
     public final static String ELLIPSIS = "...";
 
     /**
-     * use to have a maximum string length view 
+     * use to have a maximum string length view
      * ie "hello world !!!" would be "hello wor..."
      *
      *  with maxlength 13 and shorted 8 and added "..."
-     * 
+     *
      * BENZOICUM ACIDUM 1CH - 30CH
      *
      *  would equal
@@ -210,10 +210,10 @@ public class StringUtils {
                 ret = true;
             } catch (NumberFormatException e) {
                 ret = false;
-            } 
-            
+            }
+
                 return ret;
-           
+
         }
         return ret;
     }
@@ -242,9 +242,9 @@ public class StringUtils {
             fmt.parse(dateString);
             ret = true;
         } catch (ParseException ex) {
-        } 
+        }
             return ret;
-       
+
     }
 
     public static String readFileStream(FormFile file) {
@@ -286,8 +286,8 @@ public class StringUtils {
         return result.toString();
     }
 
-    public static ArrayList split(String rawString, String delimiter) {
-        ArrayList result = new ArrayList();
+    public static ArrayList<String> split(String rawString, String delimiter) {
+        ArrayList<String> result = new ArrayList<String>();
         StringTokenizer st = new StringTokenizer(rawString, delimiter);
 
         while (st.hasMoreTokens()) {
@@ -326,7 +326,7 @@ public class StringUtils {
     }
 
     /**
-     * Strips linebreaks   
+     * Strips linebreaks
      * Replace linebreaks and multiple spaces by a single space
      * johnchwk Apr 2008
      */
@@ -365,26 +365,26 @@ public class StringUtils {
 
         return mystringBuffer.toString();
     }
-    
+
     public static boolean nullSafeEquals(String s1, String s2) {
     	if (s1==null && s2==null) return true;
     	if (s1!=null)
     		return s1.equals(s2);
     	else
     		return s2==null;
-    	
+
     }
 
     public static boolean nullSafeEqualsIgnoreCase(String s1, String s2) {
 		return nullSafeEquals(s1.toUpperCase(), s2.toUpperCase());
     }
-    
+
     public static boolean containsIgnoreCase(String text, String searchWord) {
     	if (text==null || searchWord==null) return false;
-    	
+
     	text = text.toUpperCase();
     	searchWord = searchWord.toUpperCase();
-    	
+
     	return text.contains(searchWord);
     }
 

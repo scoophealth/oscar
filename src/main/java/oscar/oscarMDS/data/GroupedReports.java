@@ -30,27 +30,26 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 public class GroupedReports {
-    
+
     GroupedReports(String oBR, String hL7TimeStamp, String qString) {
-        resultsArray = new ArrayList();
         associatedOBR = oBR;
         queryString = qString;
         try{
             GregorianCalendar cal = new GregorianCalendar(Locale.ENGLISH);
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yy HH:mm", Locale.ENGLISH);
-            
+
             // boneheaded calendar numbers months from 0
             cal.set(Integer.parseInt(hL7TimeStamp.substring(0,4)), Integer.parseInt(hL7TimeStamp.substring(4,6))-1, Integer.parseInt(hL7TimeStamp.substring(6,8)),
                     Integer.parseInt(hL7TimeStamp.substring(8,10)), Integer.parseInt(hL7TimeStamp.substring(10,12)), Integer.parseInt(hL7TimeStamp.substring(12,14)));
-            
+
             timeStamp = dateFormat.format(cal.getTime());
         }catch(Exception e){
             timeStamp = "";
         }
     }
-    
+
     public String associatedOBR;
-    public ArrayList resultsArray;
+    public ArrayList<Results> resultsArray;
     public String timeStamp;
     public String queryString;
 }
