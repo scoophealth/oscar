@@ -93,8 +93,10 @@
                  if( !servicecodeStyle.startsWith("-1")) {
                  	tmp = servicecodeStyle.split(",");
                  	bs.setDisplayStyle(Integer.parseInt(tmp[0]));
-                 }
-
+                 }			
+            	 else {
+            		bs.setDisplayStyle(null);
+            	 }
 
 
 				if(request.getParameter("percentage").length()>1 && request.getParameter("min").length()>1 && request.getParameter("max").length()>1) {
