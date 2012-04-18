@@ -39,17 +39,17 @@ import org.oscarehr.util.MiscUtils;
  * @author jay
  */
 public class DosingRecomendation {
-    
+
     private String name = null;
     private String atccode = null;
     private String moreinfo = null;
-    private ArrayList Dose = null;
-    
+    private ArrayList<Hashtable<String,String>> Dose = null;
+
     public String toString(){
         return "name: "+name+" atccode: "+atccode;
-        
+
     }
-    
+
     /** Creates a new instance of DosingRecomendation */
     public DosingRecomendation() {
     }
@@ -78,33 +78,33 @@ public class DosingRecomendation {
         this.moreinfo = moreinfo;
     }
 
-    public ArrayList getDose() {
+    public ArrayList<Hashtable<String,String>> getDose() {
         return Dose;
     }
 
-    public void setDose(ArrayList Dose) {
+    public void setDose(ArrayList<Hashtable<String,String>> Dose) {
         this.Dose = Dose;
     }
 
 
-    
+
     /*
      *Evaluate string to form a comparison
      *Values are stored in a hashtable with the key clcrrange
      *Values will be in the form of:
-      
+
      "30-50"    between 30 and 50
      "&lt;15"   less than 15
      "&gt;50"   greater than 50
      */
-    public boolean valueInRangeOfDose(int val , Hashtable doseVal){
+    public boolean valueInRangeOfDose(int val , Hashtable<String,String> doseVal){
         boolean valueInRange = false;
         try{
-            String toParse  = (String) doseVal.get("clcrrange");
+            String toParse  =  doseVal.get("clcrrange");
 
             MiscUtils.getLogger().debug("TO PARSE: "+toParse);
             if (toParse == null){
-               return false;    
+               return false;
             }
 
             if (toParse.indexOf("-") != -1){ //between style
@@ -116,38 +116,38 @@ public class DosingRecomendation {
                     if (val >= lower && val <= upper){
                         valueInRange = true;
                     }
-                } 
+                }
 
             }else if (toParse.indexOf("&gt;") != -1 ||  toParse.indexOf(">") != -1 ){ // greater than style
                 toParse = toParse.replaceFirst("&gt;","");
                 toParse = toParse.replaceFirst(">","");
-                
+
                 int gt = Integer.parseInt(toParse);
                 if(val >= gt){
                     valueInRange = true;
-                }          
+                }
             }else if (toParse.indexOf("&lt;") != -1  ||  toParse.indexOf("<") != -1 ){ // less than style
                 toParse = toParse.replaceFirst("&lt;","");
                 toParse = toParse.replaceFirst("<","");
-                
-                int lt = Integer.parseInt(toParse);           
+
+                int lt = Integer.parseInt(toParse);
                 if(val <= lt){
                     valueInRange = true;
                 }
             }else if (!toParse.equals("")){ // less than style
-                int eq = Integer.parseInt(toParse); 
+                int eq = Integer.parseInt(toParse);
                 if(val == eq){
                     valueInRange = true;
                 }
             }
-            
-            
+
+
         }catch(Exception e){
             MiscUtils.getLogger().error("Error", e);
         }
         return valueInRange;
     }
-    
-    
-    
+
+
+
 }

@@ -164,7 +164,7 @@ public class DSDemographicAccess {
         } catch (NumberFormatException nfe) {
         	logger.error("Decision Support Exception, could not format demographicNo: " + demographicNo);
         }
-        return new ArrayList();
+        return new ArrayList<Prescription>();
     }
 
     //generally for testing
@@ -230,7 +230,7 @@ public class DSDemographicAccess {
     	logger.debug("IS AGE CALLED");
         String compareAge = getDemographicData().getAgeInYears() + "";
         if (statement.getValueUnit() != null) {
-            if (statement.getValueUnit().equals("y")) ;
+            if (statement.getValueUnit().equals("y")){/*empty*/}
             else if (statement.getValueUnit().equals("m")) compareAge = DemographicData.getAgeInMonths(getDemographicData()) + "";
             else if (statement.getValueUnit().equals("d")) compareAge = DemographicData.getAgeInDays(getDemographicData()) + "";
             else throw new DecisionSupportException("Cannot recognize unit: " + statement.getValueUnit());
@@ -345,7 +345,7 @@ public class DSDemographicAccess {
     	FlowSheetCustomizationDao flowSheetCustomizationDao = (FlowSheetCustomizationDao) SpringUtils.getBean("flowSheetCustomizationDao");
 
     	dxResearchBeanHandler dxRes = new dxResearchBeanHandler(demographicNo);
-        List dxCodes = dxRes.getActiveCodeListWithCodingSystem();
+        List<String> dxCodes = dxRes.getActiveCodeListWithCodingSystem();
         MeasurementTemplateFlowSheetConfig templateConfig = MeasurementTemplateFlowSheetConfig.getInstance();
         ArrayList<String> flowsheets = templateConfig.getFlowsheetsFromDxCodes(dxCodes);
 
@@ -388,7 +388,7 @@ public class DSDemographicAccess {
     public boolean flowsheetUptoDateNotall(String flowsheetId) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED");  }
     public boolean flowsheetUptoDateNotany(String flowsheetId) { return !flowsheetUptoDateAny(flowsheetId); };
 
-    public boolean paidAny(String searchStrings, Map options ) {
+    public boolean paidAny(String searchStrings, Map<String,String> options ) {
 
     	boolean retval = true;  //Set this optimistically that it has not been paid in the said number of days
     	if(options.containsKey("payer") && options.get("payer").equals("MSP")){
@@ -445,7 +445,7 @@ public class DSDemographicAccess {
     //          notInCalendarYear=true
     //          unitsBilledToday=<4
     //          requiresStartTime=true     not implemented yet.
-    public boolean billedForAny(String searchStrings,Hashtable options) {
+    public boolean billedForAny(String searchStrings,Hashtable<String,String> options) {
         boolean retval = false;
         if(options.containsKey("payer") && options.get("payer").equals("MSP")){
         	logger.debug("PAYER:MSP ");
@@ -498,7 +498,7 @@ public class DSDemographicAccess {
         return retval;
     }
 
-     public boolean billedForAny2(String searchStrings,Hashtable options) {
+     public boolean billedForAny2(String searchStrings,Hashtable<String,String> options) {
         boolean retval = false;
         String[] codes = searchStrings.replaceAll("\'","" ).split(",");
         for (String code: codes){

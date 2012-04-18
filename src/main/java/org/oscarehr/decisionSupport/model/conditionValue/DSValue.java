@@ -49,8 +49,8 @@ public abstract class DSValue {
     private String valueType;
     private String valueUnit;
     private String value;
-    
-    
+
+
     public DSValue() {
     }
 
@@ -98,7 +98,7 @@ public abstract class DSValue {
         if (stringQuotePattern.matcher(values).find()) {  //if has a pair of quotes with something in it - treat as a list of strings
             Pattern stringSeparatorPattern = Pattern.compile("'[\\s]*,");
             String[] separatedValues = stringSeparatorPattern.split(values); // [ ',' ] is absolutely illegal in a quoted string
-            ArrayList<String> dsValueStrArray = new ArrayList();
+            ArrayList<String> dsValueStrArray = new ArrayList<String>();
             for (String separatedValue: separatedValues) {
                 if (!separatedValue.trim().endsWith("'")) {
                     separatedValue = separatedValue.trim() + "'";
@@ -106,13 +106,13 @@ public abstract class DSValue {
                 dsValueStrArray.add(separatedValue);
                 _log.debug("Separated Value: " + separatedValue);
             }
-            
+
             dsValuesStr = dsValueStrArray.toArray(dsValuesStr);
             doHyphenSearch = false;
         } else {
             dsValuesStr = StringUtils.split(values, ",");
         }
-        ArrayList<DSValue> dsValues = new ArrayList();
+        ArrayList<DSValue> dsValues = new ArrayList<DSValue>();
         for (String dsValueStr: dsValuesStr) {
             int hyphenIndex = -1;
             if (doHyphenSearch)
@@ -150,8 +150,8 @@ public abstract class DSValue {
         String typeStr = null;
         String operator = null;
         String unit = null;
-        
-        
+
+
         //take out the type i.e. 'atc:'
         if (typeSeparatorIndex == -1) {
             valueStr = typeOperatorValueUnit.trim();

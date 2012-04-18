@@ -50,9 +50,9 @@ import oscar.dao.OscarSuperDao;
 		out.print(wl.get("name"));
 	}
  * </code>
- * 
+ *
  * @author Eugene Petruhin
- * 
+ *
  */
 public class OscarSuperManager {
 
@@ -105,7 +105,7 @@ public class OscarSuperManager {
 	 * Directs a call to a specified dao object that executes a parameterized
 	 * select query identified by a query name.<br>
 	 * Returned collection item is an automatically populated Map.
-	 * 
+	 *
 	 * @param daoName
 	 *            dao class key
 	 * @param queryName
@@ -123,7 +123,7 @@ public class OscarSuperManager {
 	 * select query identified by a query name.<br>
 	 * Returned collection item is a value object populated by a row mapper
 	 * identified by the same query name.
-	 * 
+	 *
 	 * @param daoName
 	 *            dao class key
 	 * @param queryName
@@ -133,15 +133,14 @@ public class OscarSuperManager {
 	 * @return List of value objects created for each result set row by a row
 	 *         mapper
 	 */
-	@SuppressWarnings("unchecked")
-	public List populate(String daoName, String queryName, Object[] params) {
+	public List<Object> populate(String daoName, String queryName, Object[] params) {
 		return getDao(daoName).executeRowMappedSelectQuery(queryName, params);
 	}
 
 	/**
 	 * Directs a call to a specified dao object that executes a parameterized
 	 * insert/update/delete query identified by a query name.<br>
-	 * 
+	 *
 	 * @param daoName
 	 *            dao class key
 	 * @param queryName
@@ -156,7 +155,7 @@ public class OscarSuperManager {
 
 	/**
 	 * Makes sure a requested dao is found or reported missing.
-	 * 
+	 *
 	 * @param daoName
 	 *            dao name
 	 * @return dao instance

@@ -69,17 +69,11 @@ public class EctSessionBean implements java.io.Serializable {
     public String oscarMsgID;
     public String oscarMsg = "";
     public String myoscarMsgId = null;
-    public ArrayList eChartIdArray;
-    public ArrayList socialHistoryArray;
-    public ArrayList familyHistoryArray;
-    public ArrayList medicalHistoryArray;
-    public ArrayList ongoingConcernsArray;
-    public ArrayList remindersArray;
-    public ArrayList appointmentsIdArray;
-    public ArrayList appointmentsNamesArray;
-    public ArrayList templateNames;
-    public ArrayList measurementGroupNames;
-    public String source;       
+    public ArrayList<String> appointmentsIdArray;
+    public ArrayList<String> appointmentsNamesArray;
+    public ArrayList<String> templateNames;
+    public ArrayList<String> measurementGroupNames;
+    public String source;
 
     public void resetAll() {
         eChartTimeStamp = null;
@@ -105,7 +99,7 @@ public class EctSessionBean implements java.io.Serializable {
         phone = "";
         roster = "";
         template = "";
-        oscarMsg = "";        
+        oscarMsg = "";
     }
 
     /**
@@ -115,18 +109,18 @@ public class EctSessionBean implements java.io.Serializable {
     public void setUpEncounterPage() {
         resetAll();
         String tmp;
-        
+
         String sql;
         ResultSet rs;
 
-        appointmentsIdArray = new ArrayList();
-        appointmentsNamesArray = new ArrayList();
-        templateNames = new ArrayList();
-        measurementGroupNames = new ArrayList();
+        appointmentsIdArray = new ArrayList<String>();
+        appointmentsNamesArray = new ArrayList<String>();
+        templateNames = new ArrayList<String>();
+        measurementGroupNames = new ArrayList<String>();
 
         //This block gets the patient age and
         try {
-            
+
             sql = "select * from demographic where demographic_no=" + demographicNo;
             rs = DBHandler.GetSQL(sql);
             while (rs.next()) {
@@ -154,7 +148,7 @@ public class EctSessionBean implements java.io.Serializable {
                 }
             }
             rs.close();
-            
+
             if(yearOfBirth!="" && yearOfBirth!=null)
             	patientAge = UtilDateUtilities
                     .calcAge(UtilDateUtilities.calcDate(yearOfBirth, monthOfBirth, dateOfBirth));
@@ -209,7 +203,7 @@ public class EctSessionBean implements java.io.Serializable {
 	            }
 	            rs.close();
     		}
-    		
+
             if (oscarMsgID != null) {
                 sql = "Select * from messagetbl where messageid = \'" + oscarMsgID + "\' ";
                 rs = DBHandler.GetSQL(sql);
@@ -225,11 +219,11 @@ public class EctSessionBean implements java.io.Serializable {
                 }
                 rs.close();
             }
-            
+
             if(myoscarMsgId != null){
             	oscarMsg = myoscarMsgId;
             }
-            
+
 
         } catch (java.sql.SQLException e) {
             MiscUtils.getLogger().error("Error", e);
@@ -239,22 +233,22 @@ public class EctSessionBean implements java.io.Serializable {
     /**
      * over loaded method sets up the encounter page as befits entrance from the select box of
      * today's appointments on the oscarEncounter.Index.jsp page
-     * 
+     *
      * @param appointmentNo
      */
     public void setUpEncounterPage(String appointmentNo) {
         resetAll();
-        appointmentsIdArray = new ArrayList();
-        appointmentsNamesArray = new ArrayList();
-        templateNames = new ArrayList();
+        appointmentsIdArray = new ArrayList<String>();
+        appointmentsNamesArray = new ArrayList<String>();
+        templateNames = new ArrayList<String>();
 
         String tmp;
-        
+
         ResultSet rs;
         String sql;
 
         try {
-            
+
             sql = "select * from appointment where appointment_no=" + appointmentNo;
             rs = DBHandler.GetSQL(sql);
             while (rs.next()) {
@@ -290,12 +284,12 @@ public class EctSessionBean implements java.io.Serializable {
             MiscUtils.getLogger().error("Error", e);
         }
         try {
-            //     
+            //
         	OscarProperties properties = OscarProperties.getInstance();
     		if( !Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
 	            sql = "select * from eChart where demographicNo='" + demographicNo + "' ORDER BY eChartId DESC limit 1";
 	            rs = DBHandler.GetSQL(sql);
-	            ;
+
 	            if (rs.next()) {
 	                eChartId = oscar.Misc.getString(rs, "eChartId");
 	                eChartTimeStamp = rs.getTimestamp("timeStamp");
@@ -324,7 +318,7 @@ public class EctSessionBean implements java.io.Serializable {
         //apointmentsIdArray and the appointmentsNamesArray are
         //already set up so no need to get them again
         try {
-            //            
+            //
             sql = "select * from demographic where demographic_no=" + demographicNo;
             rs = DBHandler.GetSQL(sql);
             while (rs.next()) {
@@ -351,7 +345,7 @@ public class EctSessionBean implements java.io.Serializable {
                 }
             }
             rs.close();
-            
+
             patientAge = UtilDateUtilities
                     .calcAge(UtilDateUtilities.calcDate(yearOfBirth, monthOfBirth, dateOfBirth));
         } catch (java.sql.SQLException e) {
@@ -361,24 +355,24 @@ public class EctSessionBean implements java.io.Serializable {
 
     /**
      * over loaded method sets up the encounter page for print
-     * 
+     *
      * @param eChartId, demographic_no
      */
     public void setUpEncounterPage(String echartid, String demographicNo) {
         resetAll();
 
-        
-        
+
+
         ResultSet rs;
         String sql;
 
         try {
-            
+
         	OscarProperties properties = OscarProperties.getInstance();
     		if( !Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
 	            sql = "select * from eChart where eChartId = " + echartid + " and demographicNo=" + demographicNo;
 	            rs = DBHandler.GetSQL(sql);
-	            
+
 	            if (rs.next()) {
 	                eChartId = echartid;
 	                eChartTimeStamp = rs.getTimestamp("timeStamp");
@@ -423,7 +417,7 @@ public class EctSessionBean implements java.io.Serializable {
                 }
             }
             rs.close();
-            
+
             patientAge = UtilDateUtilities
                     .calcAge(UtilDateUtilities.calcDate(yearOfBirth, monthOfBirth, dateOfBirth));
         } catch (java.sql.SQLException e) {

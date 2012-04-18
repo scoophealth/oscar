@@ -460,7 +460,7 @@ public final class EDocUtil extends SqlUtilBaseS {
 	}
 
 	public ArrayList<EDoc> getUnmatchedDocuments(String creator, String responsible, Date startDate, Date endDate, boolean unmatchedDemographics) {
-		ArrayList<EDoc> list = new ArrayList();
+		ArrayList<EDoc> list = new ArrayList<EDoc>();
 		// boolean matchedDemographics = true;
 		String sql = "SELECT DISTINCT c.module, c.module_id, d.doccreator, d.source, d.sourceFacility, d.responsible, d.program_id, d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime, d.contenttype, d.observationdate, d.appointment_no FROM document d, ctl_document c WHERE c.document_no=d.document_no AND c.module='demographic' and doccreator = ? and responsible = ? and updatedatetime >= ?  and updatedatetime <= ?";
 		if (unmatchedDemographics) {
@@ -567,10 +567,10 @@ public final class EDocUtil extends SqlUtilBaseS {
 		return resultDocs;
 	}
 
-	public static ArrayList listModules() {
+	public static ArrayList<String> listModules() {
 		String sql = "SELECT DISTINCT module FROM ctl_doctype";
 		ResultSet rs = getSQL(sql);
-		ArrayList modules = new ArrayList();
+		ArrayList<String> modules = new ArrayList<String>();
 		try {
 			while (rs.next()) {
 				modules.add(rsGetString(rs, "module"));

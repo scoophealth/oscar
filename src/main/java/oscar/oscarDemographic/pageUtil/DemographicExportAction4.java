@@ -156,7 +156,6 @@ public class DemographicExportAction4 extends Action {
 	OscarProperties oscarProperties = OscarProperties.getInstance();
 
 	@Override
-	@SuppressWarnings("static-access")
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String strEditable = oscarProperties.getProperty("ENABLE_EDIT_APPT_STATUS");
 
@@ -191,7 +190,7 @@ public class DemographicExportAction4 extends Action {
 			frm.addDemoIfNotPresent();
 			frm.setAsofDate(UtilDateUtilities.DateToString(asofDate));
 			RptDemographicQueryBuilder demoQ = new RptDemographicQueryBuilder();
-			ArrayList<ArrayList> list2 = demoQ.buildQuery(frm,UtilDateUtilities.DateToString(asofDate));
+			ArrayList<ArrayList<String>> list2 = demoQ.buildQuery(frm,UtilDateUtilities.DateToString(asofDate));
 			for (ArrayList<String> listDemo : list2) {
 				list.add(listDemo.get(0));
 			}
@@ -1447,7 +1446,7 @@ public class DemographicExportAction4 extends Action {
 			if (exAppointments) {
 				// APPOINTMENTS
 				OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");
-				List appts = oscarSuperManager.populate("appointmentDao", "export_appt", new String[] {demoNo});
+				List<Object> appts = oscarSuperManager.populate("appointmentDao", "export_appt", new String[] {demoNo});
 				ApptData ap = null;
 				for (int j=0; j<appts.size(); j++) {
 					ap = (ApptData)appts.get(j);
@@ -2269,13 +2268,13 @@ public class DemographicExportAction4 extends Action {
 
 	private void addDemographicRelationships(String demoNo, Demographics demo) {
 		DemographicRelationship demographicRelationship = new DemographicRelationship();
-		ArrayList demographicRelationships = demographicRelationship.getDemographicRelationships(demoNo);
+		ArrayList<HashMap<String,String>> demographicRelationships = demographicRelationship.getDemographicRelationships(demoNo);
 		HashMap<String,String> demoRel;
 
 		//create a list of contactIds
 		String[] contactId = new String[demographicRelationships.size()];
 		for (int j=0; j<demographicRelationships.size(); j++) {
-			demoRel = (HashMap<String,String>) demographicRelationships.get(j);
+			demoRel = demographicRelationships.get(j);
 			if (demoRel!=null) contactId[j] = demoRel.get("demographic_no");
 		}
 
@@ -2289,7 +2288,7 @@ public class DemographicExportAction4 extends Action {
 						continue LoopContacts;
 					}
 				}
-				demoRel = (HashMap<String,String>) demographicRelationships.get(j);
+				demoRel = demographicRelationships.get(j);
 				if (demoRel==null) continue;
 
 				Demographics.Contact contact = demo.addNewContact();
@@ -2297,7 +2296,7 @@ public class DemographicExportAction4 extends Action {
 				String ec=null, sdm=null, rel=null, contactNote=null;
 				//process multiple contact purposes
 				for (int k=j; k<demographicRelationships.size(); k++) {
-					demoRel = (HashMap<String,String>) demographicRelationships.get(k);
+					demoRel = demographicRelationships.get(k);
 					if (demoRel==null) continue;
 					if (!contactId[j].equals(demoRel.get("demographic_no"))) continue;
 
