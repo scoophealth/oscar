@@ -223,6 +223,7 @@ public class RxPrescriptionData {
         if (rePrescribe.getDispenseInterval()!=null) prescription.setDispenseInterval(rePrescribe.getDispenseInterval());
         if (rePrescribe.getRefillDuration()!=null) prescription.setRefillDuration(rePrescribe.getRefillDuration());
         if (rePrescribe.getRefillQuantity()!=null) prescription.setRefillQuantity(rePrescribe.getRefillQuantity());
+        prescription.setDrugReferenceId(rePrescribe.getDrugId());
 
         return prescription;
     }
@@ -1140,6 +1141,8 @@ public class RxPrescriptionData {
 
         private List<String> policyViolations = new ArrayList<String>();
 
+        private int drugReferenceId;
+        
         public List<String> getPolicyViolations() {
         	return policyViolations;
         }
@@ -1147,6 +1150,15 @@ public class RxPrescriptionData {
 		public void setPolicyViolations(List<String> policyViolations) {
         	this.policyViolations = policyViolations;
         }
+		
+		public void setDrugReferenceId(int drugId2) {
+			this.drugReferenceId = drugId2;
+			
+		}
+		
+		public int getDrugReferenceId() {
+			return drugReferenceId;
+		}
 
 		public boolean getStartDateUnknown() {
         	return startDateUnknown;

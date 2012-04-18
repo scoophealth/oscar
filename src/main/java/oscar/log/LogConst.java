@@ -61,6 +61,7 @@ public class LogConst {
     public static final String CON_PRIVILEGE = "privilege";
     public static final String CON_FORM = "form";
     public static final String CON_PRESCRIPTION = "prescription";
+    public static final String CON_MEDICATION = "medication";
     public static final String CON_DRUGS="drugs";
     public static final String CON_DRUGREASON="drugReason";
     public static final String CON_ALLERGY = "allergy";

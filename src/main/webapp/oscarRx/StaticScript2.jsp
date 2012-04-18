@@ -120,10 +120,13 @@ oscar.oscarRx.pageUtil.RxSessionBean rxBean = null;
             }});
        }
     }
-     //represcribe a drug
+    
+    //represcribe a drug
     function reRxDrugSearch3(reRxDrugId){
-        //location.href="SearchDrug3.jsp?reRxDrugId="+reRxDrugId;
-        //location.href='../oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=currentDemographicNo%>'
+        var dataUpdateId="reRxDrugId="+reRxDrugId+"&action=addToReRxDrugIdList&rand="+Math.floor(Math.random()*10001);
+        var urlUpdateId= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateReRxDrug";
+        new Ajax.Request(urlUpdateId, {method: 'get',parameters:dataUpdateId}); 
+    	 
         var data="drugId="+reRxDrugId;
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/rePrescribe2.do?method=saveReRxDrugIdToStash";
         new Ajax.Request(url, {method: 'post',parameters:data,asynchronous:false,onSuccess:function(transport){
