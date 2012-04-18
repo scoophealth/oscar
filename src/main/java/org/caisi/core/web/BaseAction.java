@@ -20,6 +20,7 @@
 * Toronto, Ontario, Canada 
 */
 
+
 package org.caisi.core.web;
 
 
@@ -74,4 +75,3 @@ public class BaseAction extends DispatchActionSupport
 		return mgr;
 	}
 }
-

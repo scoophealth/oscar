@@ -20,6 +20,7 @@
 * Toronto, Ontario, Canada 
 */
 
+
 package org.oscarehr.casemgmt.web;
 
 public class ProviderAccessRight
