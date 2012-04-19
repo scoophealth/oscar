@@ -2638,7 +2638,7 @@ create table FunctionalCentre
 
 CREATE TABLE IntegratorControl (
         id int auto_increment,
-        facilityId int not null, foreign key (facilityId) references Facility(id),
+        facilityId int not null,
         control varchar(80),
         execute boolean,
         PRIMARY KEY (id)
