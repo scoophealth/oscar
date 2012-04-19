@@ -20,6 +20,7 @@
 * Toronto, Ontario, Canada 
 */
 
+
 package org.oscarehr.survey.dao.oscar.hibernate;
 
 import java.io.OutputStream;
@@ -617,4 +618,3 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 			return 0;
 	}
 }
-

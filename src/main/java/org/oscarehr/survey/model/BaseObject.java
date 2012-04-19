@@ -20,6 +20,7 @@
 * Toronto, Ontario, Canada 
 */
 
+
 package org.oscarehr.survey.model;
 
 import org.apache.commons.lang.builder.EqualsBuilder;

@@ -20,6 +20,7 @@
 * Toronto, Ontario, Canada 
 */
 
+
 package org.oscarehr.er;
 
 import java.net.MalformedURLException;

@@ -20,6 +20,7 @@
 * Toronto, Ontario, Canada 
 */
 
+
 package org.oscarehr.common.dao;
 
 import java.util.List;
