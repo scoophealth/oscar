@@ -2,4 +2,10 @@ This is the daily notification of wait list status.
 
 program = ${program.name}
 
-and some more info...
+Between ${startDate} and ${endDate} there were ${admissionDemographicPairs.size} people admitted.
+
+#foreach( ${admissionDemographicPair} in ${admissionDemographicPairs} )
+    --------------------
+    ${admissionDemographicPair.demographic.firstName} ${admissionDemographicPair.demographic.lastName}
+    ${admissionDemographicPair.demographic.sex}
+#end
