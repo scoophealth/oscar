@@ -12,7 +12,6 @@ java jpa
 sql and database transactions
 spring ioc
 
-
 High level guideline
 --------------------
 

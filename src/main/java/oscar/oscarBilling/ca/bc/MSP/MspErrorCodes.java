@@ -1,11 +1,4 @@
 /*
- * MspErrorCodes.java
- *
- * Created on June 20, 2004, 6:41 PM
- */
-
-
-/*
  *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License.
@@ -28,7 +21,11 @@
  * Hamilton
  * Ontario, Canada
  */
-
+/*
+ * MspErrorCodes.java
+ *
+ * Created on June 20, 2004, 6:41 PM
+ */
 
 package oscar.oscarBilling.ca.bc.MSP;
 

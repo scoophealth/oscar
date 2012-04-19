@@ -1,5 +1,3 @@
-//Action that takes place when adding or editing template XML
-
 /*
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License.
@@ -23,7 +21,7 @@
  * Ontario, Canada
  */
 
-
+//Action that takes place when adding or editing template XML
 /*
  * GenerateReport.java
  *

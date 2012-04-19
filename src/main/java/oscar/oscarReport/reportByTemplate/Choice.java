@@ -1,5 +1,3 @@
-//This object represents every choice in parameters that have a list
-
 /*
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License.
@@ -22,6 +20,9 @@
  * Hamilton
  * Ontario, Canada
  */
+
+//This object represents every choice in parameters that have a list
+
 
 package oscar.oscarReport.reportByTemplate;
 
