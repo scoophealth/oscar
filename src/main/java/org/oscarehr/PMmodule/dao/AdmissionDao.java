@@ -571,6 +571,20 @@ public class AdmissionDao extends HibernateDaoSupport {
     }
 
     /**
+     * Get anyone who was admitted during the time frame (note this is admitted only, not was in the program).
+     * The startDate is inclusive and end date is exclusive.
+     */
+    public List<Admission> getAdmissionsByProgramAndAdmittedDate(int programId, Date startDate, Date endDate) {
+		String q = "FROM Admission a WHERE a.ProgramId=? and a.AdmissionDate>=? and a.AdmissionDate<?";
+
+		@SuppressWarnings("unchecked")
+        List<Admission> rs = this.getHibernateTemplate().find(q, new Object[] { new Integer(programId), startDate, endDate });
+        
+		return rs;    	
+    }
+    
+    
+    /**
      * Get anyone who was in the program during this time period.
      */
     public List<Admission> getAdmissionsByProgramAndDate(int programId, Date startDate, Date endDate) {

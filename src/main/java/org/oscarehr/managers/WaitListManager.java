@@ -2,17 +2,26 @@ package org.oscarehr.managers;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.mail.EmailException;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
+import org.oscarehr.PMmodule.dao.AdmissionDao;
+import org.oscarehr.PMmodule.dao.ProgramDao;
+import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.EmailUtils;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.VelocityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
@@ -25,7 +34,38 @@ public class WaitListManager
 	private static final String WAIT_LIST_URGENT_EMAIL_TEMPLATE_FILE="/wait_list_immediate_email_template.txt";
 	private static final String WAIT_LIST_DAILY_EMAIL_TEMPLATE_FILE="/wait_list_daily_email_notification_template.txt";
 	
+	@Autowired
+	private ProgramDao programDao;
+
+	@Autowired
+	private AdmissionDao admissionDao;
+
+	@Autowired
+	private DemographicDao demographicDao;
+
 	protected static Properties waitListProperties=getWaitListProperties();
+	
+	public static class AdmissionDemographicPair
+	{
+		private Admission admission;
+		private Demographic demographic;
+		
+		public Admission getAdmission() {
+        	return admission;
+        }
+		
+		public void setAdmission(Admission admission) {
+        	this.admission = admission;
+        }
+		
+		public Demographic getDemographic() {
+        	return demographic;
+        }
+		
+		public void setDemographic(Demographic demographic) {
+        	this.demographic = demographic;
+        }
+	}
 	
 	private static Properties getWaitListProperties() {
 		Properties p=new Properties();
@@ -51,7 +91,7 @@ public class WaitListManager
 		String emailTemplate=IOUtils.toString(is);
 		String emailSubject=waitListProperties.getProperty("immediate_subject");
 
-		sendNotification(emailSubject, emailTemplate, program, demographic, notes);		
+		sendNotification(emailSubject, emailTemplate, program, demographic, notes, null, null, null);		
 	}
 	
 	/**
@@ -68,13 +108,35 @@ public class WaitListManager
 		String emailTemplate=IOUtils.toString(is);
 		String emailSubject=waitListProperties.getProperty("daily_subject");
 
-// need to search the program for daily status here, put the info into the notes
+		// check if we need to run, might already have been run
+		Date lastNotificationdate=program.getLastReferralNotification();
+		// if first run, set default to a few days ago and let it sort itself out.
+		if (lastNotificationdate==null) lastNotificationdate=new Date(System.currentTimeMillis()-(DateUtils.MILLIS_PER_DAY*4));
+		Date today=new Date();
+		if (DateUtils.isSameDay(lastNotificationdate, today) || lastNotificationdate.after(today)) return;
 		
-		sendNotification(emailSubject, emailTemplate, program, demographic, null);		
+		// get a list of the admissions between since last notification date.
+		// send a notification for those admissions
+		// update last notification date
+		Date endDate=new Date(lastNotificationdate.getTime()+DateUtils.MILLIS_PER_DAY);
+		List<Admission> admissions=admissionDao.getAdmissionsByProgramAndAdmittedDate(program.getId(), lastNotificationdate, endDate);
+		logger.debug("For programId="+program.getId()+", "+lastNotificationdate+" to "+endDate+", admission count="+admissions.size());
+
+		ArrayList<AdmissionDemographicPair> admissionDemographicPairs=new ArrayList<AdmissionDemographicPair>();
+		for (Admission admission : admissions)
+		{
+			AdmissionDemographicPair admissionDemographicPair=new AdmissionDemographicPair();
+			admissionDemographicPair.setAdmission(admission);
+			admissionDemographicPair.setDemographic(demographicDao.getDemographicById(admission.getClientId()));
+			admissionDemographicPairs.add(admissionDemographicPair);
+		}
 		
+		sendNotification(emailSubject, emailTemplate, program, demographic, null, lastNotificationdate, endDate, admissionDemographicPairs);		
+		program.setLastReferralNotification(endDate);
+		programDao.saveProgram(program);
 	}
 
-	private void sendNotification(String emailSubject, String emailTemplate, Program program, Demographic demographic, String notes)
+	private void sendNotification(String emailSubject, String emailTemplate, Program program, Demographic demographic, String notes, Date startDate, Date endDate, ArrayList<AdmissionDemographicPair> admissionDemographicPairs)
 	{
 		String temp=program.getEmailNotificationAddressesCsv();
 		if (temp!=null)
@@ -85,6 +147,9 @@ public class WaitListManager
 			velocityContext.put("program", program);
 			velocityContext.put("demographic", demographic);
 			if (notes!=null) velocityContext.put("notes", notes);
+			if (startDate!=null) velocityContext.put("startDate", startDate);
+			if (endDate!=null) velocityContext.put("endDate", endDate);
+			if (admissionDemographicPairs!=null) velocityContext.put("admissionDemographicPairs", admissionDemographicPairs);
 
 			String mergedSubject=VelocityUtils.velocityEvaluate(velocityContext, emailSubject);
 			String mergedBody=VelocityUtils.velocityEvaluate(velocityContext, emailTemplate);
