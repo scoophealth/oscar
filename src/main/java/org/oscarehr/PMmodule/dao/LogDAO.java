@@ -20,6 +20,7 @@
 * Toronto, Ontario, Canada 
 */
 
+
 package org.oscarehr.PMmodule.dao;
 
 import org.oscarehr.PMmodule.model.Log;

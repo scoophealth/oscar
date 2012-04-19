@@ -20,6 +20,7 @@
 * Toronto, Ontario, Canada 
 */
 
+
 package org.oscarehr.PMmodule.service;
 
 import java.util.ArrayList;
@@ -516,4 +517,3 @@ public class AdmissionManager {
     
     }
 }
-
