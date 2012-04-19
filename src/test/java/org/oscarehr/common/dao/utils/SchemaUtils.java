@@ -59,10 +59,12 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 
 /**
@@ -72,6 +74,8 @@ import org.oscarehr.util.MiscUtils;
  */
 public class SchemaUtils
 {
+	private static Logger logger=MiscUtils.getLogger();
+	
 	public static boolean inited=false;
 	public static Map<String,String> createTableStatements = new HashMap<String,String>();
 
@@ -120,7 +124,8 @@ public class SchemaUtils
 	public static void createDatabaseAndTables() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException
 	{
 		String schema=ConfigUtils.getProperty("db_schema");
-
+		logger.info("using schema : "+schema);
+		
 		Connection c=getConnection();
 		try
 		{
@@ -208,7 +213,9 @@ public class SchemaUtils
                     env = new String[]{};
                 }
 
-		Process p = Runtime.getRuntime().exec(new String[] {"mysql","--user="+ConfigUtils.getProperty("db_user"),"--password="+ConfigUtils.getProperty("db_password"),"--host="+ConfigUtils.getProperty("db_host"),"-e","source "+filename,ConfigUtils.getProperty("db_schema")},env, new File(dir));
+        String[] commandString={"mysql","--user="+ConfigUtils.getProperty("db_user"),"--password="+ConfigUtils.getProperty("db_password"),"--host="+ConfigUtils.getProperty("db_host"),"-e","source "+filename,ConfigUtils.getProperty("db_schema")};
+        logger.info("Runtime exec command string : "+Arrays.toString(commandString));
+		Process p = Runtime.getRuntime().exec(commandString,env, new File(dir));
 		BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
 		BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
@@ -238,23 +245,26 @@ public class SchemaUtils
 
 	private static void runCreateTablesScript(Connection c) throws IOException
 	{
-		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/oscarinit.sql"),0);
+		String baseDir=System.getProperty("basedir");
+		logger.info("using baseDir : "+baseDir);
+				
+		assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/oscarinit.sql"),0);
 
-		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/oscarinit_on.sql"),0);
-		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/oscardata.sql"),0);
-		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/oscardata_on.sql"),0);
-		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/icd9.sql"),0);
+		assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/oscarinit_on.sql"),0);
+		assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/oscardata.sql"),0);
+		assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/oscardata_on.sql"),0);
+		assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/icd9.sql"),0);
 
-		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/caisi/initcaisi.sql"),0);
+		assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/caisi/initcaisi.sql"),0);
 
-		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/caisi/initcaisidata.sql"),0);
-		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/caisi/populate_issue_icd9.sql"),0);
-		//		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/icd9_issue_groups.sql"),0);
-		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/measurementMapData.sql"),0);
-//		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/expire_oscardoc.sql"),0);
+		assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/caisi/initcaisidata.sql"),0);
+		assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/caisi/populate_issue_icd9.sql"),0);
+		//		assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/icd9_issue_groups.sql"),0);
+		assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/measurementMapData.sql"),0);
+//		assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/expire_oscardoc.sql"),0);
 
-		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/oscarinit_bc.sql"),0);
-		assertEquals(loadFileIntoMySQL(System.getProperty("basedir") + "/database/mysql/oscardata_bc.sql"),0);
+		assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/oscarinit_bc.sql"),0);
+		assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/oscardata_bc.sql"),0);
 
 		createTableStatements.clear();
 		try {
