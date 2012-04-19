@@ -1,6 +1,3 @@
-package org.oscarehr.phr.util;
-
-
 /*
  *  Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  *  This software is published under the GPL GNU General Public License.
@@ -25,7 +22,7 @@ package org.oscarehr.phr.util;
  *  Ontario, Canada
  *
  */
-
+package org.oscarehr.phr.util;
 import java.util.List;
 
 import org.apache.commons.lang.time.DateUtils;

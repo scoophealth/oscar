@@ -1,5 +1,3 @@
-package oscar.oscarBilling.ca.bc.MSP;
-
 /*
  *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -23,6 +21,8 @@ package oscar.oscarBilling.ca.bc.MSP;
  * Hamilton
  * Ontario, Canada
  */
+package oscar.oscarBilling.ca.bc.MSP;
+
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

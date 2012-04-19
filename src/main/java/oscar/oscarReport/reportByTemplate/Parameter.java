@@ -1,5 +1,3 @@
-//This is an object representing each dynamic param in an sql query (i.e. billing_code) 
-
 /*
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License.
@@ -23,6 +21,7 @@
  * Ontario, Canada
  */
 
+//This is an object representing each dynamic param in an sql query (i.e. billing_code) 
 package oscar.oscarReport.reportByTemplate;
 
 /**

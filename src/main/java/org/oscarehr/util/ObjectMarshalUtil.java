@@ -1,4 +1,3 @@
-package org.oscarehr.util;
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. 
@@ -17,6 +16,7 @@ package org.oscarehr.util;
  * <OSCAR TEAM>
  * 
  */
+package org.oscarehr.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.StringWriter;

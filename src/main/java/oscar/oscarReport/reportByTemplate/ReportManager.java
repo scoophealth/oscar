@@ -1,9 +1,3 @@
-//This is the main utility object that:
-//   -Makes all database transactions (except one in GenerateReportAction)
-//   -Loads/saves all the reports
-//   -Saves/loads parameters
-//   -Parses/saves all XML
-
 /*
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License.
@@ -26,6 +20,12 @@
  * Hamilton
  * Ontario, Canada
  */
+//This is the main utility object that:
+//   -Makes all database transactions (except one in GenerateReportAction)
+//   -Loads/saves all the reports
+//   -Saves/loads parameters
+//   -Parses/saves all XML
+
 
 package oscar.oscarReport.reportByTemplate;
 import java.sql.ResultSet;
