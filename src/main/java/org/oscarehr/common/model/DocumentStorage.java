@@ -1,4 +1,3 @@
-package org.oscarehr.common.model;
 /*
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License.
@@ -21,6 +20,7 @@ package org.oscarehr.common.model;
  * Hamilton
  * Ontario, Canada
  */
+package org.oscarehr.common.model;
 
 import java.util.Date;
 

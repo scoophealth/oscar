@@ -1,5 +1,3 @@
-//This action generates the CSV and XLS files on request
-
 /*
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License.
@@ -22,6 +20,8 @@
  * Hamilton
  * Ontario, Canada
  */
+//This action generates the CSV and XLS files on request
+
 
 package oscar.oscarReport.reportByTemplate.actions;
 

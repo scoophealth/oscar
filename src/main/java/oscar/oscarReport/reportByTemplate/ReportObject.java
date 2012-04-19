@@ -1,4 +1,3 @@
-//This is an interface for classes representing each template 
 /*
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License.
@@ -21,6 +20,7 @@
  * Hamilton
  * Ontario, Canada
  */
+//This is an interface for classes representing each template 
 
 
 package oscar.oscarReport.reportByTemplate;

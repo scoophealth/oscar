@@ -1,6 +1,3 @@
-package org.oscarehr.util;
-
-
 /*
  *  Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
  *  This software is published under the GPL GNU General Public License.
@@ -23,6 +20,8 @@ package org.oscarehr.util;
  *
  *
  */
+
+package org.oscarehr.util;
 
 import java.util.ArrayList;
 import java.util.List;

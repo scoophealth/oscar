@@ -1,4 +1,3 @@
-package org.oscarehr.common.dao;
 /*
  * Copyright (c) 2010. Department of Family Medicine, McMaster University. All Rights Reserved.
  *
@@ -23,6 +22,7 @@ package org.oscarehr.common.dao;
  * Hamilton
  * Ontario, Canada
  */
+package org.oscarehr.common.dao;
 import java.util.List;
 
 import javax.persistence.Query;

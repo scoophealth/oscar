@@ -1,5 +1,3 @@
-package org.oscarehr.PMmodule.caisi_integrator;
-
 /*
  *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -18,6 +16,8 @@ package org.oscarehr.PMmodule.caisi_integrator;
  * <OSCAR TEAM>
  *
  */
+package org.oscarehr.PMmodule.caisi_integrator;
+
 
 import java.util.ArrayList;
 import java.util.List;

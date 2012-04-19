@@ -1,5 +1,3 @@
-package oscar.util;
-
 /*
  *  Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
  *  This software is published under the GPL GNU General Public License.
@@ -45,6 +43,8 @@ package oscar.util;
  *
  * itext@lowagie.com
  */
+package oscar.util;
+
 
 /**
  * This class demonstrates copying a PDF file using iText.
