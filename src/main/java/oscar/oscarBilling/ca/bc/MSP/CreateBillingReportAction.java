@@ -1,38 +1,27 @@
-/*
- *
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+/**
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. *
+ * of the License, or (at your option) any later version. 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ * GNU General Public License for more details.
  *
- * <OSCAR TEAM>
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This software was written for the
  * Department of Family Medicine
  * McMaster University
  * Hamilton
  * Ontario, Canada
- * AUTHOR: Joel Legris
- * DATE: May 13, 2005
- * DESCRIPTION:
- * This action class is responsible for receiveing input parameters from the
- Billing Reports Generation Screen. <p>The reports can be generated using the following
- criteria:</p>
- Payee: The person designated to receive a payment from BC MSP
- Practitioner: The Person responsible for providing the clinical service
- Insurer: The Organization responsible for providing medical coverage
- Start Date/End Date - Date range of the generated report records
- Account: The account that the billing transaction was performed under
-
  */
+
 
 package oscar.oscarBilling.ca.bc.MSP;
 

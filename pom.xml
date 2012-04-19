@@ -736,6 +736,48 @@
 
 	<build>
 		<plugins>
+        <plugin>
+            <groupId>com.mycila.maven-license-plugin</groupId>
+            <artifactId>maven-license-plugin</artifactId>
+            <configuration>
+                <header>utils/headers/mcmaster.txt</header>
+                <validHeaders>
+                        <validHeader>utils/headers/os.txt</validHeader>
+                        <validHeader>utils/headers/quatro.txt</validHeader>
+                        <validHeader>utils/headers/quatro2.txt</validHeader>
+                        <validHeader>utils/headers/md.txt</validHeader>
+                        <validHeader>utils/headers/caisi.txt</validHeader> 
+                        <validHeader>utils/headers/hs.txt</validHeader>
+                        <validHeader>utils/headers/pc.txt</validHeader>
+                        <validHeader>utils/headers/andromedia.txt</validHeader>
+                        <validHeader>utils/headers/lgpl.txt</validHeader>
+                        <validHeader>utils/headers/asl.txt</validHeader>
+                </validHeaders>
+                <includes>
+-                    <include>src/main/java/**/*.java</include> 
+                </includes>
+                <excludes>
+			<exclude>src/main/java/net/sf/jasperreports/renderers/BarbecueRenderer.java</exclude>
+			<exclude>src/main/java/oscar/oscarDB/ResultSetBuilder.java</exclude>
+			<exclude>src/main/java/oscar/login/UAgentInfo.java</exclude>
+                        <exclude>src/**/*.txt</exclude>
+                        <exclude>src/**/*.js</exclude>
+                        <exclude>database/**</exclude>
+                        <exclude>docs/**</exclude>
+                        <exclude>local_repo/**</exclude>
+                        <exclude>**/.gitignore</exclude>
+                </excludes>
+		<strictCheck>true</strictCheck>
+            </configuration>
+			<executions>
+				<execution>
+					<goals>
+						<goal>check</goal>
+					</goals>
+				</execution>
+			</executions>
+        </plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
