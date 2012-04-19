@@ -1,5 +1,3 @@
-//Action that takes place when uploading an XML template file
-
 /*
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License.
@@ -22,6 +20,8 @@
  * Hamilton
  * Ontario, Canada
  */
+
+//Action that takes place when uploading an XML template file
 
 
 /*
