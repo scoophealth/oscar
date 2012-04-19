@@ -516,7 +516,7 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery.js"></script>
 <script type="text/javascript" language="JavaScript">
 <!--
-
+jQuery.noConflict();
 
 function gotoBillingOB() {
     if(self.location.href.lastIndexOf("?") > 0) {
