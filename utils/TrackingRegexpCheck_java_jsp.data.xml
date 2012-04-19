@@ -2933,7 +2933,6 @@
         <ViolationValue>/src/main/java/oscar/oscarLab/FileUploadCheck.java:Hashtable&lt;String, String&gt; fileInfo = new Hashtable&lt;String, String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/FileUploadCheck.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/FileUploadCheck.java:public static Hashtable&lt;String, String&gt; getFileInfo(String md5sum) {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/SortHashtable.java:* SortHashtable.java</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/SortHashtable.java:/** Creates a new instance of SortHashtable */</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/SortHashtable.java:Date date1 = (Date) ((Hashtable) object).get("collDateDate");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/SortHashtable.java:Date date2 = (Date) ((Hashtable) object0).get("collDateDate");;</ViolationValue>
