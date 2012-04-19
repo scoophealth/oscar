@@ -57,24 +57,24 @@ String AbnFlag = "";
 	key="oscarMDS.segmentDisplay.title" /></title>
 <script language="javascript" type="text/javascript"
 	src="../share/javascript/Oscar.js"></script>
-	<script type="text/javascript" src="<%= request.getContextPath() %>/share/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/jquery/jquery-1.4.2.js"></script>
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 
      
        <script  type="text/javascript" charset="utf-8">
-      
-        $(function() {
-      	  $("#createLabel").click(function() {
-      	    $.ajax( {
-      	      type: "POST",      
-      	      url: '<%=request.getContextPath()%>'+"/lab/CA/ALL/createLabelTDIS.do",
-      	      dataType: "json",
-      	      data: { lab_no: $("#labNum").val(),accessionNum: $("#accNum").val(), label: $("#label").val() },
-      	      success: function(data) {
-      	    	  $("#labelspan").html(data.label);  
-      	      }
+       jQuery.noConflict();
+        jQuery(function() {
+        	jQuery("#createLabel").click(function() {
+        		jQuery.ajax( {
+      	      		type: "POST",      
+      	      		url: '<%=request.getContextPath()%>'+"/lab/CA/ALL/createLabelTDIS.do",
+      	      		dataType: "json",
+      	      		data: { lab_no: jQuery("#labNum").val(),accessionNum: jQuery("#accNum").val(), label: jQuery("#label").val() },
+      	      		success: function(data) {
+      	      			jQuery("#labelspan").html(data.label);  
+      	      	}
       	    });
       	  });
       });
