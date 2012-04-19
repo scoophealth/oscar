@@ -681,7 +681,7 @@ function changeSite(sel) {
                             String numDaysUntilWarn = OscarProperties.getInstance().getProperty("tickler_warn_period");
                             long ticklerWarnDays = Long.parseLong(numDaysUntilWarn);
                             boolean ignoreWarning = (ticklerWarnDays < 0);
-                            if (!ignoreWarning && (daysDifference > ticklerWarnDays)){
+                            if (!ignoreWarning && (daysDifference >= ticklerWarnDays)){
                             
                             %>
 
