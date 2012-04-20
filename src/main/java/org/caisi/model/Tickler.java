@@ -33,6 +33,8 @@ import java.util.Set;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class Tickler extends BaseObject {
 	private Long tickler_no;
@@ -86,6 +88,21 @@ public class Tickler extends BaseObject {
 	public void setService_date(Date service_date) {
 		this.service_date = service_date;
 	}
+        public String getStatusDesc(Locale locale) {
+            String statusStr = "";
+            ResourceBundle resourceBundle = ResourceBundle.getBundle("oscarResources", locale);
+            if (this.status == 'A'){
+                statusStr = resourceBundle.getString("tickler.ticklerMain.stActive");
+            }
+            else if (this.status == 'C') {               
+                statusStr = resourceBundle.getString("tickler.ticklerMain.stComplete");
+            }
+            else if (this.status == 'D') {                
+                statusStr = resourceBundle.getString("tickler.ticklerMain.stDeleted");
+            }
+            
+            return statusStr;
+        }
 	public char getStatus() {
 		return status;
 	}
@@ -103,6 +120,13 @@ public class Tickler extends BaseObject {
 	}
 	public void setTickler_no(Long tickler_no) {
 		this.tickler_no = tickler_no;
+	}
+        public String getUpdateDate() {
+		if(getUpdate_date() != null) {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			return formatter.format(getUpdate_date());
+		}
+		return "";
 	}
 	public Date getUpdate_date() {
 		return update_date;
