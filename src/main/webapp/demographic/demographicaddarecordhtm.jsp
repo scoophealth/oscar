@@ -1,4 +1,3 @@
-
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%
   if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
@@ -80,31 +79,34 @@
   // Use this value as the default value for province, as well
   String defaultProvince = HCType;
 %>
-<!--
-/*
- *
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License.
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
- *
- * <OSCAR TEAM>
- *
- * This software was written for the
- * Department of Family Medicine
- * McMaster University
- * Hamilton
- * Ontario, Canada
- */
--->
+
+<%--
+
+    Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
+    This software is published under the GPL GNU General Public License.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+    This software was written for the
+    Department of Family Medicine
+    McMaster University
+    Hamilton
+    Ontario, Canada
+
+--%>
+
+
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -367,14 +369,14 @@ function checkTitleSex(ttl) {
 function removeAccents(s){
         var r=s.toLowerCase();
         r = r.replace(new RegExp("\\s", 'g'),"");
-        r = r.replace(new RegExp("[абвгде]", 'g'),"a");
-        r = r.replace(new RegExp("з", 'g'),"c");
-        r = r.replace(new RegExp("[ийкл]", 'g'),"e");
-        r = r.replace(new RegExp("[мноп]", 'g'),"i");
-        r = r.replace(new RegExp("с", 'g'),"n");
-        r = r.replace(new RegExp("[туфхц]", 'g'),"o");
-        r = r.replace(new RegExp("[щъыь]", 'g'),"u");
-        r = r.replace(new RegExp("[эя]", 'g'),"y");
+        r = r.replace(new RegExp("[пїЅпїЅпїЅпїЅпїЅпїЅ]", 'g'),"a");
+        r = r.replace(new RegExp("пїЅ", 'g'),"c");
+        r = r.replace(new RegExp("[пїЅпїЅпїЅпїЅ]", 'g'),"e");
+        r = r.replace(new RegExp("[пїЅпїЅпїЅпїЅ]", 'g'),"i");
+        r = r.replace(new RegExp("пїЅ", 'g'),"n");
+        r = r.replace(new RegExp("[пїЅпїЅпїЅпїЅпїЅ]", 'g'),"o");
+        r = r.replace(new RegExp("[пїЅпїЅпїЅпїЅ]", 'g'),"u");
+        r = r.replace(new RegExp("[пїЅпїЅ]", 'g'),"y");
         r = r.replace(new RegExp("\\W", 'g'),"");
         return r;
 }
