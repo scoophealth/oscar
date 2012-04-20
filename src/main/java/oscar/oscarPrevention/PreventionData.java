@@ -250,6 +250,15 @@ public class PreventionData {
 			Integer demographicId = Integer.valueOf(demoNo);
 			List<Prevention> preventions = preventionType==null ? preventionDao.findNotDeletedByDemographicId(demographicId) : preventionDao.findByTypeAndDemoNo(preventionType, demographicId);
 			for (Prevention prevention : preventions) {
+				
+				/*
+				 * force case sensitive comparison of name; MySQL by default does case INsensitive
+				 * DTaP and dTap are considered the same by MySQL
+				 */
+				if( preventionType != null && !prevention.getPreventionType().equals(preventionType) ) {
+					continue;
+				}
+				
 				Map<String,Object> h = new HashMap<String,Object>();
 				h.put("id", prevention.getId().toString());
 				h.put("refused", prevention.isRefused()?"1":prevention.isIneligible()?"2":"0");
