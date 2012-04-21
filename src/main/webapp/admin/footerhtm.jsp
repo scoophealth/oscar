@@ -1,4 +1,3 @@
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -24,8 +23,6 @@
     Ontario, Canada
 
 --%>
-
-
 
 <hr width="100%" color="navy">
 <table border="0" cellspacing="0" cellpadding="0" width="100%">

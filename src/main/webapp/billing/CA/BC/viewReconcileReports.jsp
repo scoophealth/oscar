@@ -1,8 +1,3 @@
-<%
-  if(session.getValue("user") == null)
-    response.sendRedirect("../../../logout.jsp");
-%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -28,10 +23,11 @@
     Ontario, Canada
 
 --%>
-
-
-
- <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat" errorPage="errorpage.jsp" %>
+<%
+  if(session.getValue("user") == null)
+    response.sendRedirect("../../../logout.jsp");
+%>
+<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat" errorPage="errorpage.jsp" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="documentBean" class="oscar.DocumentBean" scope="request" />

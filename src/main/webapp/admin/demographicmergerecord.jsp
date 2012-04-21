@@ -1,5 +1,3 @@
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -25,8 +23,7 @@
     Ontario, Canada
 
 --%>
-
-
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 <%
 if(session.getValue("user") == null)
     response.sendRedirect("../login.htm");

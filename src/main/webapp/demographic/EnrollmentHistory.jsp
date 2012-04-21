@@ -1,19 +1,3 @@
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-<%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp"%>
-<%@page import="org.oscarehr.util.SpringUtils"%>
-<%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
-<%@page import="org.oscarehr.common.dao.DemographicDao"%>
-<%@page import="org.oscarehr.common.model.Demographic"%>
-<%@page import="org.oscarehr.common.dao.DemographicArchiveDao" %>
-<%@page import="org.oscarehr.common.model.DemographicArchive" %>
-<%@page import="java.util.List" %>
-<%@page import="java.util.Date" %>
-<%@page import="oscar.util.DateUtils" %>
-<%@page import="oscar.util.StringUtils" %>
-<%@page import="oscar.oscarDemographic.pageUtil.Util" %>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -39,10 +23,21 @@
     Ontario, Canada
 
 --%>
-
-
-
-
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
+<%@page import="org.oscarehr.common.dao.DemographicDao"%>
+<%@page import="org.oscarehr.common.model.Demographic"%>
+<%@page import="org.oscarehr.common.dao.DemographicArchiveDao" %>
+<%@page import="org.oscarehr.common.model.DemographicArchive" %>
+<%@page import="java.util.List" %>
+<%@page import="java.util.Date" %>
+<%@page import="oscar.util.DateUtils" %>
+<%@page import="oscar.util.StringUtils" %>
+<%@page import="oscar.oscarDemographic.pageUtil.Util" %>
 <html:html locale="true">
 <head>
 <title>Enrollment History</title>

@@ -1,23 +1,3 @@
-<%@ page
-	import="java.sql.*, java.util.*, oscar.oscarDB.*, oscar.MyDateFormat, oscar.oscarWaitingList.WaitingList, org.oscarehr.common.OtherIdManager"
-	errorPage="errorpage.jsp"%>
-<%@ page import="oscar.log.*"%>
-<%@ page import="org.oscarehr.common.model.DemographicExt" %>
-<%@ page import="org.oscarehr.common.dao.DemographicExtDao" %>
-<%@ page import="org.oscarehr.util.SpringUtils" %>
-<%@ page import="org.oscarehr.PMmodule.model.Admission" %>
-<%@ page import="org.oscarehr.PMmodule.dao.AdmissionDao" %>
-<%@ page import="org.oscarehr.common.dao.WaitingListDao" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<% java.util.Properties oscarVariables = oscar.OscarProperties.getInstance(); %>
-<%
-	AdmissionDao admissionDao = (AdmissionDao)SpringUtils.getBean("admissionDao");
-	WaitingListDao waitingListDao = (WaitingListDao)SpringUtils.getBean("waitingListDao");
-	DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
-%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -43,9 +23,25 @@
     Ontario, Canada
 
 --%>
-
-
-
+<%@ page
+	import="java.sql.*, java.util.*, oscar.oscarDB.*, oscar.MyDateFormat, oscar.oscarWaitingList.WaitingList, org.oscarehr.common.OtherIdManager"
+	errorPage="errorpage.jsp"%>
+<%@ page import="oscar.log.*"%>
+<%@ page import="org.oscarehr.common.model.DemographicExt" %>
+<%@ page import="org.oscarehr.common.dao.DemographicExtDao" %>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.PMmodule.model.Admission" %>
+<%@ page import="org.oscarehr.PMmodule.dao.AdmissionDao" %>
+<%@ page import="org.oscarehr.common.dao.WaitingListDao" %>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<% java.util.Properties oscarVariables = oscar.OscarProperties.getInstance(); %>
+<%
+	AdmissionDao admissionDao = (AdmissionDao)SpringUtils.getBean("admissionDao");
+	WaitingListDao waitingListDao = (WaitingListDao)SpringUtils.getBean("waitingListDao");
+	DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
+%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.model.Demographic" %>

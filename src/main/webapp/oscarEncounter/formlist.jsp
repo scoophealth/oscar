@@ -1,23 +1,3 @@
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ page
-	import="oscar.util.UtilMisc,oscar.oscarEncounter.data.*,java.net.*,java.util.*"%>
-<%
-	
-	String provNo = request.getParameter("provider_no");
-	String demoNo = request.getParameter("demographic_no");
-    String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF", tableTitle = "#99ccff";
-	String strLimit1="0";
-	String strLimit2="10";  
-	if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");  
-	if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
-%>
-
-<%
-	EctFormData.Form[] forms = EctFormData.getForms();
-	oscar.util.UtilDateUtilities dateConvert = new oscar.util.UtilDateUtilities();
-%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -43,8 +23,25 @@
     Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ page
+	import="oscar.util.UtilMisc,oscar.oscarEncounter.data.*,java.net.*,java.util.*"%>
+<%
+	
+	String provNo = request.getParameter("provider_no");
+	String demoNo = request.getParameter("demographic_no");
+    String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF", tableTitle = "#99ccff";
+	String strLimit1="0";
+	String strLimit2="10";  
+	if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");  
+	if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
+%>
 
-
+<%
+	EctFormData.Form[] forms = EctFormData.getForms();
+	oscar.util.UtilDateUtilities dateConvert = new oscar.util.UtilDateUtilities();
+%>
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>

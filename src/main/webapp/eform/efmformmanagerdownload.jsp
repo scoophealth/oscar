@@ -1,16 +1,3 @@
-<%  
-  String deepColor = "#CCCCFF" , weakColor = "#EEEEFF" ;
-  Vector<Hashtable> eforms = getEforms();
-  boolean gridlayout = false;
-  if(request.getParameter("grid") != null && request.getParameter("grid").equals("true")){
-     gridlayout = true;
-  }
-%>
-<%@ page import="oscar.eform.data.*, oscar.eform.*, java.util.*, oscar.util.*"%>
-<%@ page import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*,java.io.*,org.apache.xmlrpc.*"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -36,9 +23,18 @@
     Ontario, Canada
 
 --%>
-
-
-
+<%  
+  String deepColor = "#CCCCFF" , weakColor = "#EEEEFF" ;
+  Vector<Hashtable> eforms = getEforms();
+  boolean gridlayout = false;
+  if(request.getParameter("grid") != null && request.getParameter("grid").equals("true")){
+     gridlayout = true;
+  }
+%>
+<%@ page import="oscar.eform.data.*, oscar.eform.*, java.util.*, oscar.util.*"%>
+<%@ page import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*,java.io.*,org.apache.xmlrpc.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@page import="org.oscarehr.util.MiscUtils"%><html:html locale="true">
 <head>
     <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>

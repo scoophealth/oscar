@@ -1,4 +1,3 @@
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -24,7 +23,6 @@
     Ontario, Canada
 
 --%>
-
 
 <%@page import="oscar.oscarRx.data.RxPatientData"%>
 <%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>

@@ -1,12 +1,3 @@
-<%
-  if(session.getValue("user") == null)    response.sendRedirect("../logout.jsp");
-  int oox=0, ooy=0;
-%>
-<%@ page
-	import="java.util.*, java.sql.*, java.net.*, oscar.util.*, oscar.form.graphic.*"
-	errorPage="errorpage.jsp"%>
-<%@ page import="oscar.form.*"%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -32,8 +23,14 @@
     Ontario, Canada
 
 --%>
-
-
+<%
+  if(session.getValue("user") == null)    response.sendRedirect("../logout.jsp");
+  int oox=0, ooy=0;
+%>
+<%@ page
+	import="java.util.*, java.sql.*, java.net.*, oscar.util.*, oscar.form.graphic.*"
+	errorPage="errorpage.jsp"%>
+<%@ page import="oscar.form.*"%>
 <HTML>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>

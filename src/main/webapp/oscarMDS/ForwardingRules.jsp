@@ -1,18 +1,3 @@
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-<%@ page
-	import="oscar.oscarMDS.data.ProviderData, java.util.ArrayList, oscar.oscarLab.ForwardingRules, oscar.OscarProperties"%>
-
-<%
-
-ForwardingRules fr = new ForwardingRules();
-String providerNo = request.getParameter("providerNo");
-ArrayList frwdProviders = fr.getProviders(providerNo);
-%>
-
-<link rel="stylesheet" type="text/css" href="encounterStyles.css">
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -38,8 +23,20 @@ ArrayList frwdProviders = fr.getProviders(providerNo);
     Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ page
+	import="oscar.oscarMDS.data.ProviderData, java.util.ArrayList, oscar.oscarLab.ForwardingRules, oscar.OscarProperties"%>
 
+<%
 
+ForwardingRules fr = new ForwardingRules();
+String providerNo = request.getParameter("providerNo");
+ArrayList frwdProviders = fr.getProviders(providerNo);
+%>
+
+<link rel="stylesheet" type="text/css" href="encounterStyles.css">
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>

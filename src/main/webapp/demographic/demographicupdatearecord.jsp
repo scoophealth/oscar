@@ -1,19 +1,3 @@
-<%@ page
-	import="java.sql.*, java.util.*, oscar.MyDateFormat,oscar.oscarWaitingList.WaitingList, oscar.oscarWaitingList.util.WLWaitingListUtil, oscar.log.*, org.oscarehr.common.OtherIdManager"
-	errorPage="errorpage.jsp"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-<%@page import="org.oscarehr.common.dao.DemographicExtDao" %>
-<%@page import="org.oscarehr.common.model.DemographicExt" %>
-<%@page import="org.oscarehr.util.SpringUtils" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<%
-	java.util.Properties oscarVariables = oscar.OscarProperties.getInstance();
-	DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
-%>
-
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -39,8 +23,20 @@
     Ontario, Canada
 
 --%>
-
-
+<%@ page
+	import="java.sql.*, java.util.*, oscar.MyDateFormat,oscar.oscarWaitingList.WaitingList, oscar.oscarWaitingList.util.WLWaitingListUtil, oscar.log.*, org.oscarehr.common.OtherIdManager"
+	errorPage="errorpage.jsp"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@page import="org.oscarehr.common.dao.DemographicExtDao" %>
+<%@page import="org.oscarehr.common.model.DemographicExt" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%
+	java.util.Properties oscarVariables = oscar.OscarProperties.getInstance();
+	DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
+%>
 <%
     if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 %>

@@ -1,6 +1,3 @@
-<%@ page import="java.util.*"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -26,8 +23,8 @@
     Ontario, Canada
 
 --%>
-
-
+<%@ page import="java.util.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ page import="java.net.URLEncoder"%>
 <html>
 <head>

@@ -1,24 +1,3 @@
-<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*"
-	errorPage="../../errorpage.jsp"%>
-<%
-    //this is a quick independent page to let you select study.
-    
-    String demographic_no = request.getParameter("demographic_no")!=null ? request.getParameter("demographic_no") : "0";
-    String curUser_no = (String) session.getAttribute("user");
-    String deepColor = "#CCCCFF", weakColor = "#EEEEFF", rightColor = "gold" ;
-%>
-
-<jsp:useBean id="studyBean" class="oscar.AppointmentMainBean"
-	scope="page" />
-
-<% 
-    String [][] dbQueries=new String[][] { 
-        {"search_study", "select s.* from study s order by ? " }, 
-        {"search_demostudy", "select d.demographic_no, s.* from demographicstudy d left join study s on d.study_no=s.study_no where d.demographic_no=? and s.current1=1 order by d.study_no" }, 
-	};
-    studyBean.doConfigure(dbQueries);
-%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -44,8 +23,26 @@
     Ontario, Canada
 
 --%>
+<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*"
+	errorPage="../../errorpage.jsp"%>
+<%
+    //this is a quick independent page to let you select study.
+    
+    String demographic_no = request.getParameter("demographic_no")!=null ? request.getParameter("demographic_no") : "0";
+    String curUser_no = (String) session.getAttribute("user");
+    String deepColor = "#CCCCFF", weakColor = "#EEEEFF", rightColor = "gold" ;
+%>
 
+<jsp:useBean id="studyBean" class="oscar.AppointmentMainBean"
+	scope="page" />
 
+<% 
+    String [][] dbQueries=new String[][] { 
+        {"search_study", "select s.* from study s order by ? " }, 
+        {"search_demostudy", "select d.demographic_no, s.* from demographicstudy d left join study s on d.study_no=s.study_no where d.demographic_no=? and s.current1=1 order by d.study_no" }, 
+	};
+    studyBean.doConfigure(dbQueries);
+%>
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>

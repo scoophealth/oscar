@@ -1,26 +1,3 @@
-<%
-  
-
-  String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("appointment_date") ;
-  String demographic_no = request.getParameter("demographic_no")!=null?request.getParameter("demographic_no"):"0" ;
-  String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
-  String strLimit1="0";
-  String strLimit2="10";  
-  if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");  
-  if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
-%>
-<%@ page
-	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"
-	errorPage="../appointment/errorpage.jsp"%>
-<jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean"
-	scope="page" />
-<% 
-  String [][] dbQueries=new String[][] { 
-{"search_appt","select appointment_no, appointment_date,start_time, end_time, reason from appointment where demographic_no=? order by ? desc limit ? offset ?" }, 
-  };
-  daySheetBean.doConfigure(dbQueries);
-%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -46,8 +23,28 @@
     Ontario, Canada
 
 --%>
+<%
+  
 
-
+  String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("appointment_date") ;
+  String demographic_no = request.getParameter("demographic_no")!=null?request.getParameter("demographic_no"):"0" ;
+  String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
+  String strLimit1="0";
+  String strLimit2="10";  
+  if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");  
+  if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
+%>
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"
+	errorPage="../appointment/errorpage.jsp"%>
+<jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean"
+	scope="page" />
+<% 
+  String [][] dbQueries=new String[][] { 
+{"search_appt","select appointment_no, appointment_date,start_time, end_time, reason from appointment where demographic_no=? order by ? desc limit ? offset ?" }, 
+  };
+  daySheetBean.doConfigure(dbQueries);
+%>
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>

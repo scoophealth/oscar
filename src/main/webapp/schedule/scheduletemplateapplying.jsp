@@ -1,22 +1,3 @@
-<%@ page
-	import="java.util.*, java.net.*, java.sql.*, oscar.*, oscar.util.*, java.text.*, java.lang.*, org.apache.struts.util.*"
-	errorPage="../appointment/errorpage.jsp"%>
-<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<jsp:useBean id="scheduleRscheduleBean" class="oscar.RscheduleBean"	scope="session" />
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
-<%@ page import="org.oscarehr.util.SpringUtils" %>
-<%@ page import="org.oscarehr.common.model.ScheduleDate" %>
-<%@ page import="org.oscarehr.common.dao.ScheduleDateDao" %>
-<%@ page import="org.oscarehr.common.model.RSchedule" %>
-<%@ page import="org.oscarehr.common.dao.RScheduleDao" %>
-<%
-	ScheduleDateDao scheduleDateDao = SpringUtils.getBean(ScheduleDateDao.class);
-	RScheduleDao rScheduleDao = (RScheduleDao)SpringUtils.getBean("rScheduleDao");
-%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -42,9 +23,24 @@
     Ontario, Canada
 
 --%>
-
-
-
+<%@ page
+	import="java.util.*, java.net.*, java.sql.*, oscar.*, oscar.util.*, java.text.*, java.lang.*, org.apache.struts.util.*"
+	errorPage="../appointment/errorpage.jsp"%>
+<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<jsp:useBean id="scheduleRscheduleBean" class="oscar.RscheduleBean"	scope="session" />
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.ScheduleDate" %>
+<%@ page import="org.oscarehr.common.dao.ScheduleDateDao" %>
+<%@ page import="org.oscarehr.common.model.RSchedule" %>
+<%@ page import="org.oscarehr.common.dao.RScheduleDao" %>
+<%
+	ScheduleDateDao scheduleDateDao = SpringUtils.getBean(ScheduleDateDao.class);
+	RScheduleDao rScheduleDao = (RScheduleDao)SpringUtils.getBean("rScheduleDao");
+%>
 <%@page import="org.oscarehr.common.dao.SiteDao"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.oscarehr.common.model.Site"%><html:html locale="true">

@@ -1,23 +1,3 @@
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
-<%@ page
-	import="java.sql.*, java.util.*, oscar.SxmlMisc, oscar.oscarProvider.data.ProviderBillCenter"
-	errorPage="errorpage.jsp"%>
-<%@ page import="oscar.log.LogAction,oscar.log.LogConst"%>
-<%@ page import="org.oscarehr.common.model.ClinicNbr"%>
-<%@ page import="org.oscarehr.util.SpringUtils"%>
-<%@ page import="org.oscarehr.common.dao.ClinicNbrDao"%>
-<%@ page import="org.oscarehr.common.model.ProviderData"%>
-<%@ page import="org.oscarehr.common.dao.ProviderDataDao"%>
-<%@ page import="oscar.OscarProperties"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-
-<%
-  java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
-  ProviderDataDao providerDao = SpringUtils.getBean(ProviderDataDao.class);
-%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -43,8 +23,25 @@
     Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
+<%@ page
+	import="java.sql.*, java.util.*, oscar.SxmlMisc, oscar.oscarProvider.data.ProviderBillCenter"
+	errorPage="errorpage.jsp"%>
+<%@ page import="oscar.log.LogAction,oscar.log.LogConst"%>
+<%@ page import="org.oscarehr.common.model.ClinicNbr"%>
+<%@ page import="org.oscarehr.util.SpringUtils"%>
+<%@ page import="org.oscarehr.common.dao.ClinicNbrDao"%>
+<%@ page import="org.oscarehr.common.model.ProviderData"%>
+<%@ page import="org.oscarehr.common.dao.ProviderDataDao"%>
+<%@ page import="oscar.OscarProperties"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
-
+<%
+  java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
+  ProviderDataDao providerDao = SpringUtils.getBean(ProviderDataDao.class);
+%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 
 <%@page import="org.oscarehr.common.dao.SiteDao"%>

@@ -1,8 +1,3 @@
-<%
-  if(session.getAttribute("user") == null)
-    response.sendRedirect("../../../logout.jsp");
-%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -28,9 +23,10 @@
     Ontario, Canada
 
 --%>
-
-
-
+<%
+  if(session.getAttribute("user") == null)
+    response.sendRedirect("../../../logout.jsp");
+%>
 <%@ page
 	import="java.util.*, java.sql.*, oscar.oscarBilling.ca.bc.MSP.*"%>
 <%@ include file="../../../admin/dbconnection.jsp"%>

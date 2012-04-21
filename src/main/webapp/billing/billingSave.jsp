@@ -1,8 +1,3 @@
-<%
-  if(session.getValue("user") == null)
-    response.sendRedirect("../logout.jsp");
-%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -28,11 +23,10 @@
     Ontario, Canada
 
 --%>
-
-
-
-
-
+<%
+  if(session.getValue("user") == null)
+    response.sendRedirect("../logout.jsp");
+%>
 <%
     if(session.getValue("user") == null) response.sendRedirect("../logout.htm");
     String curUser_no,userfirstname,userlastname;

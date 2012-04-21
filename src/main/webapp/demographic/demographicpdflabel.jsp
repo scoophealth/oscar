@@ -1,5 +1,3 @@
-<%-- @ taglib uri="../WEB-INF/taglibs-log.tld" prefix="log" --%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -25,8 +23,7 @@
     Ontario, Canada
 
 --%>
-
-
+<%-- @ taglib uri="../WEB-INF/taglibs-log.tld" prefix="log" --%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");

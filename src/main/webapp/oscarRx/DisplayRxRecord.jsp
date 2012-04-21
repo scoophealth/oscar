@@ -1,22 +1,3 @@
-<%@page import="org.oscarehr.common.dao.DrugDao,org.oscarehr.common.model.Drug,org.oscarehr.util.MiscUtils,org.oscarehr.util.SpringUtils,org.oscarehr.PMmodule.dao.ProviderDao,org.oscarehr.common.dao.DemographicDao" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-<%
-String id = request.getParameter("id");
-
-DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
-ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
-DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
-
-Integer drugId = Integer.parseInt(id);
-
-Drug drug = drugDao.find(drugId);
-
-
-%>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -42,9 +23,24 @@ Drug drug = drugDao.find(drugId);
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.common.dao.DrugDao,org.oscarehr.common.model.Drug,org.oscarehr.util.MiscUtils,org.oscarehr.util.SpringUtils,org.oscarehr.PMmodule.dao.ProviderDao,org.oscarehr.common.dao.DemographicDao" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%
+String id = request.getParameter("id");
+
+DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
+ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
+DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+
+Integer drugId = Integer.parseInt(id);
+
+Drug drug = drugDao.find(drugId);
 
 
-
+%>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <%@page import="org.oscarehr.util.MiscUtils"%><html>
     <head>
         <script type="text/javascript" src="<%= request.getContextPath()%>/js/global.js"></script>

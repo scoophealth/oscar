@@ -1,6 +1,3 @@
-<%@ page session="true"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -26,8 +23,8 @@
     Ontario, Canada
 
 --%>
-
-
+<%@ page session="true"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <html:html>
 
 <html>

@@ -1,19 +1,3 @@
-<%@ page import="oscar.oscarProvider.data.*, oscar.oscarRx.data.*,oscar.OscarProperties, oscar.oscarClinic.ClinicData, java.util.*"%>
-<%@ page import="org.oscarehr.common.model.PharmacyInfo" %>
-<%@ page import="org.oscarehr.common.model.DemographicPharmacy" %>
-<%@ page import="org.oscarehr.common.dao.DemographicPharmacyDao" %>
-<%@ page import="org.oscarehr.common.dao.PharmacyInfoDao" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
-<%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo" %>
-<%@ page import="org.oscarehr.util.DigitalSignatureUtils"%>
-<%@ page import="org.oscarehr.util.LoggedInInfo"%>
-<%@ page import="org.oscarehr.ui.servlet.ImageRenderingServlet"%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -39,9 +23,21 @@
     Ontario, Canada
 
 --%>
-
-
-
+<%@ page import="oscar.oscarProvider.data.*, oscar.oscarRx.data.*,oscar.OscarProperties, oscar.oscarClinic.ClinicData, java.util.*"%>
+<%@ page import="org.oscarehr.common.model.PharmacyInfo" %>
+<%@ page import="org.oscarehr.common.model.DemographicPharmacy" %>
+<%@ page import="org.oscarehr.common.dao.DemographicPharmacyDao" %>
+<%@ page import="org.oscarehr.common.dao.PharmacyInfoDao" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo" %>
+<%@ page import="org.oscarehr.util.DigitalSignatureUtils"%>
+<%@ page import="org.oscarehr.util.LoggedInInfo"%>
+<%@ page import="org.oscarehr.ui.servlet.ImageRenderingServlet"%>
 <%! boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable(); %>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 

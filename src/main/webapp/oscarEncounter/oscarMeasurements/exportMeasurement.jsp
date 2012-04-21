@@ -1,7 +1,3 @@
-<%
-  if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
-%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -27,8 +23,9 @@
     Ontario, Canada
 
 --%>
-
-
+<%
+  if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
+%>
 <%@page contentType="text/xml"%>
 <%@page
 	import="oscar.oscarEncounter.oscarMeasurements.bean.*,oscar.oscarEncounter.oscarMeasurements.data.*"%>

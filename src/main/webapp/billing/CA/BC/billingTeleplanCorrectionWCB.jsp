@@ -1,17 +1,3 @@
-<%@taglib uri="/WEB-INF/security.tld" prefix="security"%>
-<%
-  	if (session.getAttribute("userrole") == null)
-	{
-	  response.sendRedirect("../logout.jsp");
-	  return;
-	}
-  String roleName$ = (String) session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-%>
-<security:oscarSec roleName="<%=roleName$%>"
-	objectName="_admin,_admin.billing" rights="r" reverse="<%=true%>">
-	<%response.sendRedirect("../logout.jsp");%>
-</security:oscarSec>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -37,8 +23,19 @@
     Ontario, Canada
 
 --%>
-
-
+<%@taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+  	if (session.getAttribute("userrole") == null)
+	{
+	  response.sendRedirect("../logout.jsp");
+	  return;
+	}
+  String roleName$ = (String) session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+%>
+<security:oscarSec roleName="<%=roleName$%>"
+	objectName="_admin,_admin.billing" rights="r" reverse="<%=true%>">
+	<%response.sendRedirect("../logout.jsp");%>
+</security:oscarSec>
 <%@page import="oscar.oscarBilling.ca.bc.data.*,oscar.*"%>
 <%@page
 	import="java.util.*,java.io.*,oscar.oscarBilling.ca.bc.MSP.*,oscar.oscarBilling.ca.bc.administration.*,java.sql.*"%>

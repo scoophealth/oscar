@@ -1,5 +1,3 @@
-<%@page import="java.text.*, java.util.*, oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*,oscar.*,oscar.entities.*"%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -25,10 +23,8 @@
     Ontario, Canada
 
 --%>
-
-
-
-  <style type="text/css">
+<%@page import="java.text.*, java.util.*, oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*,oscar.*,oscar.entities.*"%>
+<style type="text/css">
       ul.dxlist {
         margin-right:10px;
         margin-top:0px;

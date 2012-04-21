@@ -1,20 +1,3 @@
-<% 
-    if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.jsp");
-
-OscarProperties props = OscarProperties.getInstance();
-if(props.getProperty("isNewONbilling", "").equals("true")) {
-%>
-<jsp:forward page="onGenRAError.jsp" />
-<% } %>
-
-<%@ page
-	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"
-	errorPage="errorpage.jsp"%>
-
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<%@ include file="dbBilling.jspf"%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -40,8 +23,22 @@ if(props.getProperty("isNewONbilling", "").equals("true")) {
     Ontario, Canada
 
 --%>
+<% 
+    if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.jsp");
 
+OscarProperties props = OscarProperties.getInstance();
+if(props.getProperty("isNewONbilling", "").equals("true")) {
+%>
+<jsp:forward page="onGenRAError.jsp" />
+<% } %>
 
+<%@ page
+	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"
+	errorPage="errorpage.jsp"%>
+
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="dbBilling.jspf"%>
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>

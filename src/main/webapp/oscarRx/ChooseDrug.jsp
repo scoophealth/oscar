@@ -1,23 +1,3 @@
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
-<%@ page import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*, oscar.OscarProperties" %>
-<logic:notPresent name="RxSessionBean" scope="session">
-    <logic:redirect href="error.html" />
-</logic:notPresent>
-<logic:present name="RxSessionBean" scope="session">
-    <bean:define id="bean" type="oscar.oscarRx.pageUtil.RxSessionBean" name="RxSessionBean" scope="session" />
-    <logic:equal name="bean" property="valid" value="false">
-        <logic:redirect href="error.html" />
-    </logic:equal>
-</logic:present>
-<c:set var="ctx" value="${pageContext.request.contextPath}" />
-
-
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -43,9 +23,23 @@
     Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-
-
+<%@ page import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*, oscar.OscarProperties" %>
+<logic:notPresent name="RxSessionBean" scope="session">
+    <logic:redirect href="error.html" />
+</logic:notPresent>
+<logic:present name="RxSessionBean" scope="session">
+    <bean:define id="bean" type="oscar.oscarRx.pageUtil.RxSessionBean" name="RxSessionBean" scope="session" />
+    <logic:equal name="bean" property="valid" value="false">
+        <logic:redirect href="error.html" />
+    </logic:equal>
+</logic:present>
+<c:set var="ctx" value="${pageContext.request.contextPath}" />
 <html:html locale="true">
 <head>
 <title><bean:message key="ChooseDrug.title.DrugSearchResults"/></title>

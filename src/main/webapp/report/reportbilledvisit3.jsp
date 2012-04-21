@@ -1,14 +1,3 @@
-<%
-  //reportbilledvisit3.jsp?sdate=2002-04-15&edate=2003-03-31
-  
-  String curUser_no = (String) session.getAttribute("user");
-  String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("b.billing_date") ;
-  String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
-%>
-<%@ page
-	import="java.util.*, java.sql.*, oscar.*, java.text.*, oscar.oscarDB.*,java.net.*"
-	errorPage="../appointment/errorpage.jsp"%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -34,8 +23,16 @@
     Ontario, Canada
 
 --%>
-
-
+<%
+  //reportbilledvisit3.jsp?sdate=2002-04-15&edate=2003-03-31
+  
+  String curUser_no = (String) session.getAttribute("user");
+  String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("b.billing_date") ;
+  String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
+%>
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, java.text.*, oscar.oscarDB.*,java.net.*"
+	errorPage="../appointment/errorpage.jsp"%>
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>

@@ -1,26 +1,3 @@
-<%
-
-%>
-<%@ page
-	import="java.util.*, java.sql.*,java.io.*, oscar.util.*, java.text.*, java.net.*,sun.misc.*"
-	errorPage="../appointment/errorpage.jsp"%>
-<jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean"
-	scope="page" />
-<%@page import="org.oscarehr.util.SpringUtils" %>
-<%@page import="org.oscarehr.common.dao.DemographicDao" %>
-<%@page import="org.oscarehr.common.model.Demographic" %>
-<%
-	DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
-%>
-
-<%
-  String [][] dbQueries=new String[][] {
-{"search_demographic", "select demographic_no, month_of_birth, date_of_birth from demographic order by demographic_no" },
-  };
-  String[][] responseTargets=new String[][] {  };
-  daySheetBean.doConfigure(dbQueries,responseTargets);
-%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -46,8 +23,28 @@
     Ontario, Canada
 
 --%>
+<%
 
+%>
+<%@ page
+	import="java.util.*, java.sql.*,java.io.*, oscar.util.*, java.text.*, java.net.*,sun.misc.*"
+	errorPage="../appointment/errorpage.jsp"%>
+<jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean"
+	scope="page" />
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.DemographicDao" %>
+<%@page import="org.oscarehr.common.model.Demographic" %>
+<%
+	DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+%>
 
+<%
+  String [][] dbQueries=new String[][] {
+{"search_demographic", "select demographic_no, month_of_birth, date_of_birth from demographic order by demographic_no" },
+  };
+  String[][] responseTargets=new String[][] {  };
+  daySheetBean.doConfigure(dbQueries,responseTargets);
+%>
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>

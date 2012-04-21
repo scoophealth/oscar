@@ -1,4 +1,3 @@
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -25,8 +24,7 @@
 
 --%>
 
-
- <%
+<%
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>

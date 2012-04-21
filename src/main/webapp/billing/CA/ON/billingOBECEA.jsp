@@ -1,17 +1,3 @@
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-<% java.util.Properties oscarVariables = oscar.OscarProperties.getInstance(); %>
-<%   
-  if(session.getValue("user") == null)
-    response.sendRedirect("../../logout.jsp");
-  String user_no;
-  user_no = (String) session.getAttribute("user");
-           String docdownload = oscarVariables.getProperty("project_home") ;;
-           session.setAttribute("homepath", docdownload);      
-
-%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -37,8 +23,19 @@
     Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<% java.util.Properties oscarVariables = oscar.OscarProperties.getInstance(); %>
+<%   
+  if(session.getValue("user") == null)
+    response.sendRedirect("../../logout.jsp");
+  String user_no;
+  user_no = (String) session.getAttribute("user");
+           String docdownload = oscarVariables.getProperty("project_home") ;;
+           session.setAttribute("homepath", docdownload);      
 
-
+%>
 <html:html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>

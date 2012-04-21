@@ -1,7 +1,3 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-   "http://www.w3.org/TR/html4/loose.dtd">
-<%-- This JSP is the page that allows users to add templates by XML --%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -27,8 +23,9 @@
     Ontario, Canada
 
 --%>
-
-
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+<%-- This JSP is the page that allows users to add templates by XML --%>
 <%
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 %>
