@@ -1,26 +1,3 @@
-<%@page import="java.util.ArrayList"%>
-<%@page import="java.util.List"%>
-<%@page import="org.oscarehr.util.XmlUtils" %>
-<%@page import="java.util.Date"%>
-<%@page import="javax.crypto.Cipher"%>
-<%@page import="java.net.URLEncoder"%>
-<%@page import="java.security.*"%>
-<%@page import="java.security.spec.*"%>
-<%@page import="java.math.*"%>
-<%@page import="java.text.*"%>
-<%@page import="ca.mcmaster.plus.oscarws.Service"%>
-<%@page import="ca.mcmaster.plus.oscarws.ServiceSoap"%>
-<%@page import="ca.mcmaster.plus.oscarws.SearchPlusResponse"%>
-<%@page import="org.w3c.dom.Element"%>
-<%@page import="org.w3c.dom.Node"%>
-<%@page import="java.net.URL"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
-<c:set var="ctx" value="${pageContext.request.contextPath}" />
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-   "http://www.w3.org/TR/html4/loose.dtd">
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -46,8 +23,28 @@
     Ontario, Canada
 
 --%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.List"%>
+<%@page import="org.oscarehr.util.XmlUtils" %>
+<%@page import="java.util.Date"%>
+<%@page import="javax.crypto.Cipher"%>
+<%@page import="java.net.URLEncoder"%>
+<%@page import="java.security.*"%>
+<%@page import="java.security.spec.*"%>
+<%@page import="java.math.*"%>
+<%@page import="java.text.*"%>
+<%@page import="ca.mcmaster.plus.oscarws.Service"%>
+<%@page import="ca.mcmaster.plus.oscarws.ServiceSoap"%>
+<%@page import="ca.mcmaster.plus.oscarws.SearchPlusResponse"%>
+<%@page import="org.w3c.dom.Element"%>
+<%@page import="org.w3c.dom.Node"%>
+<%@page import="java.net.URL"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
+<c:set var="ctx" value="${pageContext.request.contextPath}" />
 
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
 <html>
     <head>
     	<script type="text/javascript" src="<c:out value="${ctx}/share/javascript/prototype.js"/>"></script>

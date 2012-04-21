@@ -1,26 +1,3 @@
-<%      
-if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
-String user_no = (String) session.getAttribute("user");
-String asstProvider_no = "";
-String color ="";
-String premiumFlag="";
-String service_form="", service_name="";
-%>
-
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*"
-	errorPage="errorpage.jsp"%>
-<%@ include file="../../../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<%@ include file="dbBilling.jspf"%>
-
-<%
-String clinicview = request.getParameter("billingform")==null?oscarVariables.getProperty("default_view"):request.getParameter("billingform");
-String reportAction=request.getParameter("reportAction")==null?"":request.getParameter("reportAction");
-%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -46,8 +23,28 @@ String reportAction=request.getParameter("reportAction")==null?"":request.getPar
     Ontario, Canada
 
 --%>
+<%      
+if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
+String user_no = (String) session.getAttribute("user");
+String asstProvider_no = "";
+String color ="";
+String premiumFlag="";
+String service_form="", service_name="";
+%>
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*"
+	errorPage="errorpage.jsp"%>
+<%@ include file="../../../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="dbBilling.jspf"%>
 
+<%
+String clinicview = request.getParameter("billingform")==null?oscarVariables.getProperty("default_view"):request.getParameter("billingform");
+String reportAction=request.getParameter("reportAction")==null?"":request.getParameter("reportAction");
+%>
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>

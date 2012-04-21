@@ -1,8 +1,3 @@
-<%
-  if (session.getValue("user") == null)
-    response.sendRedirect("../../../logout.jsp");
-%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -28,8 +23,10 @@
     Ontario, Canada
 
 --%>
-
-
+<%
+  if (session.getValue("user") == null)
+    response.sendRedirect("../../../logout.jsp");
+%>
 <%@taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>

@@ -1,19 +1,3 @@
-<%@ page import="java.lang.*" errorPage="errorpage.jsp"%>
-<%
-	if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
-	String demographic_no = request.getParameter("demographic_no") ;
-        boolean firstSearch  = request.getParameter("firstSearch") == null ? false : (request.getParameter("firstSearch")).equalsIgnoreCase("true")?true:false;    
-
-%>
-<html>
-<head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>Demographic Search</title>
-</head>
-<body
-	onload="<% if ( firstSearch) { %> document.forms[0].submit() <% } %>">
-
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -39,9 +23,20 @@
     Ontario, Canada
 
 --%>
+<%@ page import="java.lang.*" errorPage="errorpage.jsp"%>
+<%
+	if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
+	String demographic_no = request.getParameter("demographic_no") ;
+        boolean firstSearch  = request.getParameter("firstSearch") == null ? false : (request.getParameter("firstSearch")).equalsIgnoreCase("true")?true:false;    
 
-
-
+%>
+<html>
+<head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<title>Demographic Search</title>
+</head>
+<body
+	onload="<% if ( firstSearch) { %> document.forms[0].submit() <% } %>">
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 

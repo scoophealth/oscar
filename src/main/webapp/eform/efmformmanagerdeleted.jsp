@@ -1,11 +1,3 @@
-<%
-  
-  String deepColor = "#CCCCFF" , weakColor = "#EEEEFF" ;
-%>
-<%@ page import="oscar.eform.data.*, oscar.eform.*, java.util.*"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -31,8 +23,13 @@
     Ontario, Canada
 
 --%>
-
-
+<%
+  
+  String deepColor = "#CCCCFF" , weakColor = "#EEEEFF" ;
+%>
+<%@ page import="oscar.eform.data.*, oscar.eform.*, java.util.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%
 String orderByRequest = request.getParameter("orderby");
 String orderBy = "";

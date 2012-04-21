@@ -1,9 +1,3 @@
-<%
-  if (session.getValue("user") == null)
-    response.sendRedirect("../../../logout.jsp");
-  String user_no = (String) session.getAttribute("user");
-%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -29,8 +23,11 @@
     Ontario, Canada
 
 --%>
-
-
+<%
+  if (session.getValue("user") == null)
+    response.sendRedirect("../../../logout.jsp");
+  String user_no = (String) session.getAttribute("user");
+%>
 <%@page
 	import="java.util.*, java.sql.*, oscar.*, java.net.*,oscar.oscarBilling.ca.bc.pageUtil.*"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"

@@ -1,22 +1,3 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-   "http://www.w3.org/TR/html4/loose.dtd">
-<%
-//Lists forms available to add to patient
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
-  String demographic_no = request.getParameter("demographic_no"); 
-  String deepColor = "#CCCCFF" , weakColor = "#EEEEFF" ;
-  String country = request.getLocale().getCountry();
-  String parentAjaxId = request.getParameter("parentAjaxId");
-  String appointment = request.getParameter("appointment");
-  
-  LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-%>  
-
-<%@ page import = "java.util.*, java.sql.*, oscar.eform.*"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -42,8 +23,24 @@
     Ontario, Canada
 
 --%>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+<%
+//Lists forms available to add to patient
+  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  String demographic_no = request.getParameter("demographic_no"); 
+  String deepColor = "#CCCCFF" , weakColor = "#EEEEFF" ;
+  String country = request.getLocale().getCountry();
+  String parentAjaxId = request.getParameter("parentAjaxId");
+  String appointment = request.getParameter("appointment");
+  
+  LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+%>  
 
-
+<%@ page import = "java.util.*, java.sql.*, oscar.eform.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%@page import="org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.model.UserProperty" %>
 <%@include file="/common/webAppContextAndSuperMgr.jsp" %>
 <%

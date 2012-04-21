@@ -1,27 +1,3 @@
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-<%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp"%>
-<%@ page import="oscar.oscarRx.data.*"%>
-<%@page import="org.oscarehr.util.SpringUtils"%>
-<%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
-
-<logic:notPresent name="RxSessionBean" scope="session">
-	<logic:redirect href="error.html" />
-</logic:notPresent>
-<logic:present name="RxSessionBean" scope="session">
-	<bean:define id="bean" type="oscar.oscarRx.pageUtil.RxSessionBean"
-		name="RxSessionBean" scope="session" />
-	<logic:equal name="bean" property="valid" value="false">
-		<logic:redirect href="error.html" />
-	</logic:equal>
-</logic:present>
-<%
-oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
-%>
-
-
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -47,10 +23,27 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
     Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp"%>
+<%@ page import="oscar.oscarRx.data.*"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
 
-
-
-
+<logic:notPresent name="RxSessionBean" scope="session">
+	<logic:redirect href="error.html" />
+</logic:notPresent>
+<logic:present name="RxSessionBean" scope="session">
+	<bean:define id="bean" type="oscar.oscarRx.pageUtil.RxSessionBean"
+		name="RxSessionBean" scope="session" />
+	<logic:equal name="bean" property="valid" value="false">
+		<logic:redirect href="error.html" />
+	</logic:equal>
+</logic:present>
+<%
+oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
+%>
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>

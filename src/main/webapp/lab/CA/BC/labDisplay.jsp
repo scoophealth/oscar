@@ -1,22 +1,3 @@
-<%@page errorPage="../provider/errorpage.jsp"%>
-<%@ page
-	import="java.util.*, oscar.oscarMDS.data.*,oscar.oscarLab.ca.bc.PathNet.*,oscar.oscarLab.ca.on.CML.*"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
-<%
-
-
-
-
-PathnetLabTest lab = new PathnetLabTest();
-lab.populateLab(request.getParameter("segmentID"));
-
-String AbnFlag = "";
-%>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -42,9 +23,24 @@ String AbnFlag = "";
     Ontario, Canada
 
 --%>
+<%@page errorPage="../provider/errorpage.jsp"%>
+<%@ page
+	import="java.util.*, oscar.oscarMDS.data.*,oscar.oscarLab.ca.bc.PathNet.*,oscar.oscarLab.ca.on.CML.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
+<%
 
 
 
+
+PathnetLabTest lab = new PathnetLabTest();
+lab.populateLab(request.getParameter("segmentID"));
+
+String AbnFlag = "";
+%>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <%@page import="org.oscarehr.util.MiscUtils"%><html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>

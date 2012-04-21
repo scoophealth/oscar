@@ -1,4 +1,3 @@
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -25,9 +24,6 @@
 
 --%>
 
-
-
- 
 <%
 if(session.getAttribute("user") == null) response.sendRedirect("../../../../logout.htm");
 

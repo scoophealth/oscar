@@ -1,30 +1,3 @@
-<%@ page
-	import="java.util.*, java.sql.*,java.net.*, oscar.oscarDB.DBPreparedHandler, oscar.MyDateFormat, oscar.Misc"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-<% 
-
-// Apologies for the crap code.  Definitely could do with a major rewrite...
-
-  if(session.getValue("user") == null)    response.sendRedirect("../logout.jsp");
-  // String curProvider_no = (String) session.getAttribute("user");
-  String curProvider_no = request.getParameter("provider_no");
-  String strLimit1="0";
-  String strLimit2="10";
-  StringBuffer bufChart = null, bufName = null, bufNo = null;
-  if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
-  if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
-%>
-
-
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<jsp:useBean id="providerBean" class="java.util.Properties"
-	scope="session" />
-
-
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -50,12 +23,30 @@
     Ontario, Canada
 
 --%>
+<%@ page
+	import="java.util.*, java.sql.*,java.net.*, oscar.oscarDB.DBPreparedHandler, oscar.MyDateFormat, oscar.Misc"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<% 
+
+// Apologies for the crap code.  Definitely could do with a major rewrite...
+
+  if(session.getValue("user") == null)    response.sendRedirect("../logout.jsp");
+  // String curProvider_no = (String) session.getAttribute("user");
+  String curProvider_no = request.getParameter("provider_no");
+  String strLimit1="0";
+  String strLimit2="10";
+  StringBuffer bufChart = null, bufName = null, bufNo = null;
+  if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
+  if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
+%>
 
 
-
-
-
-
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<jsp:useBean id="providerBean" class="java.util.Properties"
+	scope="session" />
 <%@page import="oscar.oscarDB.DBHandler"%><html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>

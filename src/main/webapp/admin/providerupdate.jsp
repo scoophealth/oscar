@@ -1,27 +1,3 @@
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ page
-	import="java.sql.*, oscar.login.*, java.util.*,oscar.*,oscar.oscarDB.*,oscar.util.SqlUtils,oscar.oscarProvider.data.ProviderBillCenter"
-	errorPage="errorpage.jsp"%>
-
-<%@page import="org.oscarehr.common.dao.SiteDao"%>
-<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
-<%@page import="org.oscarehr.common.model.Site"%>
-<%@page import="org.oscarehr.common.model.Provider"%>
-<%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
-<%@page import="org.oscarehr.common.model.ProviderArchive"%>
-<%@page import="org.oscarehr.common.dao.ProviderArchiveDao"%>
-<%@page import="org.oscarehr.util.SpringUtils"%>
-<%@page import="org.apache.commons.beanutils.BeanUtils"%>
-<%@page import="org.oscarehr.common.model.ProviderSite"%>
-<%@page import="org.oscarehr.common.model.ProviderSitePK"%>
-<%@page import="org.oscarehr.common.dao.ProviderSiteDao"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<%
-	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
-	ProviderSiteDao providerSiteDao = SpringUtils.getBean(ProviderSiteDao.class);
-%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -47,8 +23,29 @@
     Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ page
+	import="java.sql.*, oscar.login.*, java.util.*,oscar.*,oscar.oscarDB.*,oscar.util.SqlUtils,oscar.oscarProvider.data.ProviderBillCenter"
+	errorPage="errorpage.jsp"%>
 
-
+<%@page import="org.oscarehr.common.dao.SiteDao"%>
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page import="org.oscarehr.common.model.Site"%>
+<%@page import="org.oscarehr.common.model.Provider"%>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
+<%@page import="org.oscarehr.common.model.ProviderArchive"%>
+<%@page import="org.oscarehr.common.dao.ProviderArchiveDao"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.apache.commons.beanutils.BeanUtils"%>
+<%@page import="org.oscarehr.common.model.ProviderSite"%>
+<%@page import="org.oscarehr.common.model.ProviderSitePK"%>
+<%@page import="org.oscarehr.common.dao.ProviderSiteDao"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%
+	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
+	ProviderSiteDao providerSiteDao = SpringUtils.getBean(ProviderSiteDao.class);
+%>
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>

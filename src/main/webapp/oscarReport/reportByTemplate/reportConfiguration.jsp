@@ -28,8 +28,6 @@
    "http://www.w3.org/TR/html4/loose.dtd">
 <%--This JSP is to configure the report before it is run, this is where the user fills in all the param--%>
 
-
-
 <%
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 %>

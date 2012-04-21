@@ -1,28 +1,3 @@
-<%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-
-<%
-    String formClass = "SF36Caregiver";
-    String formLink = "formSF36caregiver.jsp";
-
-    int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
-    int formId = Integer.parseInt(request.getParameter("formId"));
-    int provNo = Integer.parseInt((String) session.getAttribute("user"));
-    FrmRecord rec = (new FrmRecordFactory()).factory(formClass);
-    java.util.Properties props = rec.getFormRecord(demoNo, formId);
-
-    //FrmData fd = new FrmData();    String resource = fd.getResource(); resource = resource + "ob/riskinfo/";
-
-    //get project_home
-    String project_home = request.getContextPath().substring(1);	
-%>
-<%
-  boolean bView = false;
-  if (request.getParameter("view") != null && request.getParameter("view").equals("1")) bView = true; 
-%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -48,8 +23,30 @@
     Ontario, Canada
 
 --%>
+<%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
+<%
+    String formClass = "SF36Caregiver";
+    String formLink = "formSF36caregiver.jsp";
 
+    int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
+    int formId = Integer.parseInt(request.getParameter("formId"));
+    int provNo = Integer.parseInt((String) session.getAttribute("user"));
+    FrmRecord rec = (new FrmRecordFactory()).factory(formClass);
+    java.util.Properties props = rec.getFormRecord(demoNo, formId);
+
+    //FrmData fd = new FrmData();    String resource = fd.getResource(); resource = resource + "ob/riskinfo/";
+
+    //get project_home
+    String project_home = request.getContextPath().substring(1);	
+%>
+<%
+  boolean bView = false;
+  if (request.getParameter("view") != null && request.getParameter("view").equals("1")) bView = true; 
+%>
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>

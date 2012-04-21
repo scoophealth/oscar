@@ -1,12 +1,3 @@
-<%
-  
-  String deepColor = "#CCCCFF" , weakColor = "#EEEEFF" ;
-%>
-<%@ page
-	import="oscar.eform.data.*, oscar.eform.*, java.util.*, oscar.util.*,java.lang.String,org.apache.commons.lang.StringEscapeUtils"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -32,8 +23,14 @@
     Ontario, Canada
 
 --%>
-
-
+<%
+  
+  String deepColor = "#CCCCFF" , weakColor = "#EEEEFF" ;
+%>
+<%@ page
+	import="oscar.eform.data.*, oscar.eform.*, java.util.*, oscar.util.*,java.lang.String,org.apache.commons.lang.StringEscapeUtils"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%
    Hashtable curform = new Hashtable();
    Hashtable errors = new Hashtable();

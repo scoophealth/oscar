@@ -1,12 +1,3 @@
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page import="oscar.oscarMDS.data.ProviderData, java.util.ArrayList"%>
-
-<link rel="stylesheet" type="text/css" href="encounterStyles.css">
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -32,8 +23,14 @@
     Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="oscar.oscarMDS.data.ProviderData, java.util.ArrayList"%>
 
-
+<link rel="stylesheet" type="text/css" href="encounterStyles.css">
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <html>
 <head>

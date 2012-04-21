@@ -1,9 +1,3 @@
-<%@page import="org.oscarehr.caisi_integrator.ws.CachedProvider"%>
-<%@page import="org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk"%>
-<%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
-<%@page contentType="text/html"%>
-
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -29,9 +23,10 @@
     Ontario, Canada
 
 --%>
-
-
-
+<%@page import="org.oscarehr.caisi_integrator.ws.CachedProvider"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk"%>
+<%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
+<%@page contentType="text/html"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ include file="/casemgmt/taglibs.jsp"%>
 <%@taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>

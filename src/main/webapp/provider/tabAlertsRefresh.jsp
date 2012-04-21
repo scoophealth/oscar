@@ -1,6 +1,3 @@
-<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -26,8 +23,8 @@
     Ontario, Canada
 
 --%>
-
-
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%
     String curUser_no = (String) session.getAttribute("user");
     String tab = request.getParameter("id");

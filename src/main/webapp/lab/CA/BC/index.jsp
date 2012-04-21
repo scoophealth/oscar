@@ -1,26 +1,3 @@
-<%  
-	if(session.getAttribute("user") == null || !session.getAttribute("userprofession").equals("doctor")){
-    	response.sendRedirect("../../../logout.jsp");
-   }
-    String
-    	update_linking = "UPDATE hl7_link SET hl7_link.status='N' WHERE hl7_link.pid_id='@pid'",
-    	insert_auto_matching = "INSERT INTO hl7_link ( pid_id, demographic_no ) SELECT hl7_pid.pid_id, demographic.demographic_no FROM demographic, hl7_pid LEFT JOIN hl7_link ON hl7_pid.pid_id=hl7_link.pid_id WHERE demographic.hin=hl7_pid.external_id AND hl7_link.pid_id IS NULL",
-    	delete_linking = "DELETE FROM hl7_link WHERE hl7_link.pid_id='@pid'",
-    	insert_linking = "INSERT INTO hl7_link ( pid_id, demographic_no ) VALUES ('@pid', '@demo'); ",
-    	select_lab_matching = "SELECT DISTINCT hl7_pid.pid_id, hl7_pid.patient_name, hl7_pid.date_of_birth as birth, hl7_pid.sex, demographic.demographic_no, demographic.last_name, demographic.first_name, demographic.year_of_birth as year, demographic.month_of_birth as month, demographic.date_of_birth as day, hl7_obr.ordering_provider, hl7_obr.result_copies_to FROM hl7_pid left join hl7_link on hl7_link.pid_id=hl7_pid.pid_id left join demographic on hl7_link.demographic_no=demographic.demographic_no left join hl7_obr on hl7_pid.pid_id=hl7_obr.pid_id WHERE hl7_link.status='P' OR hl7_link.status is null;";
-    if(request.getParameterValues("chk")!= null){
-    	String[] values = request.getParameterValues("chk");
-    	for(int i = 0; i < values.length; ++i){
-    		DBHandler.RunSQL(update_linking.replaceAll("@pid", values[i]));
-    	}
-    }
-	DBHandler.RunSQL(insert_auto_matching);
-    if(request.getParameter("demo_id") != null && request.getParameter("pid") != null){
-    	DBHandler.RunSQL(delete_linking.replaceAll("@pid", request.getParameter("pid")));
-    	DBHandler.RunSQL(insert_linking.replaceAll("@pid", request.getParameter("pid")).replaceAll("@demo", request.getParameter("demo_id")));
-    }
-%>
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -46,8 +23,28 @@
     Ontario, Canada
 
 --%>
-
-
+<%  
+	if(session.getAttribute("user") == null || !session.getAttribute("userprofession").equals("doctor")){
+    	response.sendRedirect("../../../logout.jsp");
+   }
+    String
+    	update_linking = "UPDATE hl7_link SET hl7_link.status='N' WHERE hl7_link.pid_id='@pid'",
+    	insert_auto_matching = "INSERT INTO hl7_link ( pid_id, demographic_no ) SELECT hl7_pid.pid_id, demographic.demographic_no FROM demographic, hl7_pid LEFT JOIN hl7_link ON hl7_pid.pid_id=hl7_link.pid_id WHERE demographic.hin=hl7_pid.external_id AND hl7_link.pid_id IS NULL",
+    	delete_linking = "DELETE FROM hl7_link WHERE hl7_link.pid_id='@pid'",
+    	insert_linking = "INSERT INTO hl7_link ( pid_id, demographic_no ) VALUES ('@pid', '@demo'); ",
+    	select_lab_matching = "SELECT DISTINCT hl7_pid.pid_id, hl7_pid.patient_name, hl7_pid.date_of_birth as birth, hl7_pid.sex, demographic.demographic_no, demographic.last_name, demographic.first_name, demographic.year_of_birth as year, demographic.month_of_birth as month, demographic.date_of_birth as day, hl7_obr.ordering_provider, hl7_obr.result_copies_to FROM hl7_pid left join hl7_link on hl7_link.pid_id=hl7_pid.pid_id left join demographic on hl7_link.demographic_no=demographic.demographic_no left join hl7_obr on hl7_pid.pid_id=hl7_obr.pid_id WHERE hl7_link.status='P' OR hl7_link.status is null;";
+    if(request.getParameterValues("chk")!= null){
+    	String[] values = request.getParameterValues("chk");
+    	for(int i = 0; i < values.length; ++i){
+    		DBHandler.RunSQL(update_linking.replaceAll("@pid", values[i]));
+    	}
+    }
+	DBHandler.RunSQL(insert_auto_matching);
+    if(request.getParameter("demo_id") != null && request.getParameter("pid") != null){
+    	DBHandler.RunSQL(delete_linking.replaceAll("@pid", request.getParameter("pid")));
+    	DBHandler.RunSQL(insert_linking.replaceAll("@pid", request.getParameter("pid")).replaceAll("@demo", request.getParameter("demo_id")));
+    }
+%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 

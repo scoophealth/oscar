@@ -1,21 +1,3 @@
-<%@ page import="oscar.oscarEncounter.immunization.data.*"%>
-<%@ page
-	import="oscar.oscarEncounter.immunization.pageUtil.*, java.util.*, org.w3c.dom.*"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-<%
-    oscar.oscarEncounter.pageUtil.EctSessionBean bean = null;
-    if((bean=(oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("EctSessionBean"))==null)
-    {response.sendRedirect("error.jsp");
-    return;}
-    oscar.oscarEncounter.data.EctRemoteAttachments remoAttach = new oscar.oscarEncounter.data.EctRemoteAttachments();
-    remoAttach.estMessageIds(bean.getDemographicNo());
-    out.print(bean.getDemographicNo());
-%>
-
-
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -41,8 +23,21 @@
     Ontario, Canada
 
 --%>
-
-
+<%@ page import="oscar.oscarEncounter.immunization.data.*"%>
+<%@ page
+	import="oscar.oscarEncounter.immunization.pageUtil.*, java.util.*, org.w3c.dom.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%
+    oscar.oscarEncounter.pageUtil.EctSessionBean bean = null;
+    if((bean=(oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("EctSessionBean"))==null)
+    {response.sendRedirect("error.jsp");
+    return;}
+    oscar.oscarEncounter.data.EctRemoteAttachments remoAttach = new oscar.oscarEncounter.data.EctRemoteAttachments();
+    remoAttach.estMessageIds(bean.getDemographicNo());
+    out.print(bean.getDemographicNo());
+%>
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
