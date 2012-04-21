@@ -15,4 +15,5 @@
 	<handler name="TDIS"    className="TDISHandler" />
 	<handler name="MEDVUE"  className="MEDVUEHandler" />
     <handler name="PFHT"	className="PFHTHandler"/>
+    <handler name="Spire"	className="SpireHandler"/>
 </message-configuration>

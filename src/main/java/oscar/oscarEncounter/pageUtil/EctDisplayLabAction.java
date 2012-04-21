@@ -44,64 +44,64 @@ import oscar.util.StringUtils;
 
 public class EctDisplayLabAction extends EctDisplayAction {
 	private static final Logger logger=MiscUtils.getLogger();
-
+	
 	private static final String cmd = "labs";
-
-  public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
-
+    
+  public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {          
+     
 	  logger.debug("EctDisplayLabAction");
-
+	  
 	  CommonLabResultData comLab = new CommonLabResultData();
         ArrayList<LabResultData> labs = comLab.populateLabResultsData("",bean.demographicNo, "", "","","U");
         Collections.sort(labs);
 
         //set text for lefthand module title
         Dao.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.LeftNavBar.Labs"));
-
+        
         //set link for lefthand module title
         String winName = "Labs" + bean.demographicNo;
         String url = "popupPage(700,599,'" + winName + "','" + request.getContextPath() + "/lab/DemographicLab.jsp?demographicNo=" + bean.demographicNo + "'); return false;";
         Dao.setLeftURL(url);
-
+        
         //we're going to display popup menu of 2 selections - row display and grid display
         String menuId = "2";
         Dao.setRightHeadingID(menuId);
         Dao.setRightURL("return !showMenu('" + menuId + "', event);");
-        Dao.setMenuHeader(messages.getMessage("oscarEncounter.LeftNavBar.LabMenuHeading"));
-
+        Dao.setMenuHeader(messages.getMessage("oscarEncounter.LeftNavBar.LabMenuHeading"));                
+        
         winName = "AllLabs" + bean.demographicNo;
         url = "popupPage(700,1000, '" + winName + "','" + request.getContextPath() + "/lab/CumulativeLabValues2.jsp?demographic_no=" + bean.demographicNo + "')";
         Dao.addPopUpUrl(url);
         Dao.addPopUpText(messages.getMessage("oscarEncounter.LeftNavBar.LabMenuItem1"));
-
+        
         url = "popupPage(700,1000, '" + winName + "','" + request.getContextPath() + "/lab/CumulativeLabValues.jsp?demographic_no=" + bean.demographicNo + "')";
         Dao.addPopUpUrl(url);
         Dao.addPopUpText(messages.getMessage("oscarEncounter.LeftNavBar.LabMenuItem2"));
-
+             
         //now we add individual module items
         LabResultData result;
         String labDisplayName, label;
         //String bgcolour = "FFFFCC";
-        StringBuilder func;
+        StringBuilder func; 
         int hash;
         for( int idx = 0; idx < labs.size(); ++idx ) {
             result =  labs.get(idx);
             Date date = result.getDateObj();
-            String formattedDate = DateUtils.formatDate(date,request.getLocale());
+            String formattedDate = DateUtils.formatDate(date,request.getLocale());               
             func = new StringBuilder("popupPage(700,960,'");
             label = result.getLabel();
-
-            if ( result.isMDS() ){
+            
+            if ( result.isMDS() ){ 
             	if (label == null || label.equals("")) labDisplayName = result.getDiscipline();
-            	else labDisplayName = label;
+            	else labDisplayName = label;                
                 url = request.getContextPath() + "/oscarMDS/SegmentDisplay.jsp?providerNo="+bean.providerNo+"&segmentID="+result.segmentID+"&status="+result.getReportStatus();
-            }else if (result.isCML()){
+            }else if (result.isCML()){ 
             	if (label == null || label.equals("")) labDisplayName = result.getDiscipline();
-            	else labDisplayName = label;
-                url = request.getContextPath() + "/lab/CA/ON/CMLDisplay.jsp?providerNo="+bean.providerNo+"&segmentID="+result.segmentID;
+            	else labDisplayName = label; 
+                url = request.getContextPath() + "/lab/CA/ON/CMLDisplay.jsp?providerNo="+bean.providerNo+"&segmentID="+result.segmentID;                 
             }else if (result.isHL7TEXT()){
             	if (label == null || label.equals("")) labDisplayName = result.getDiscipline();
-            	else labDisplayName = label;
+            	else labDisplayName = label; 
                 url = request.getContextPath() + "/lab/CA/ALL/labDisplay.jsp?providerNo="+bean.providerNo+"&segmentID="+result.segmentID;
             }else {
             	if (label == null || label.equals("")) labDisplayName = result.getDiscipline();
@@ -114,17 +114,17 @@ public class EctDisplayLabAction extends EctDisplayAction {
             labDisplayName = StringUtils.maxLenString(labDisplayName, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES); // +" "+formattedDate;
             hash = winName.hashCode();
             hash = hash < 0 ? hash * -1 : hash;
-            func.append(hash + "','" + url + "'); return false;");
+            func.append(hash + "','" + url + "'); return false;");            
             item.setTitle(labDisplayName);
             item.setURL(func.toString());
             item.setDate(date);
             //item.setBgColour(bgcolour);
-            Dao.addItem(item);
+            Dao.addItem(item);            
         }
 
-        return true;
+        return true;  	
   }
-
+  
   public String getCmd() {
       return cmd;
   }
