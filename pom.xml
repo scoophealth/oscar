@@ -754,10 +754,12 @@
                         <validHeader>utils/headers/asl.txt</validHeader>
                 </validHeaders>
                 <includes>
--                    <include>src/main/java/**/*.java</include> 
--                    <include>src/test/java/**/*.java</include> 
+                    <include>src/main/java/**/*.java</include> 
+                    <include>src/test/java/**/*.java</include> 
+                    <include>src/main/webapp/**/*.jsp</include> 
                 </includes>
                 <excludes>
+			<exclude>src/main/webapp/jspspellcheck/*.jsp</exclude>
 			<exclude>src/main/java/net/sf/jasperreports/renderers/BarbecueRenderer.java</exclude>
 			<exclude>src/main/java/oscar/oscarDB/ResultSetBuilder.java</exclude>
 			<exclude>src/main/java/oscar/login/UAgentInfo.java</exclude>
