@@ -320,6 +320,9 @@
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/parsers/HHSEmrDownloadHandler.java:obrGroups = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/parsers/MDSHandler.java:obrGroups = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/bc/PathNet/PathnetLabTest.java:public ArrayList labResults = new ArrayList();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/Spire/SpireLabTest.java:ArrayList alist = new ArrayList();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/Spire/SpireLabTest.java:ArrayList groups = new ArrayList();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/Spire/SpireLabTest.java:if (labResults == null){ labResults = new ArrayList(); }</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMDS/data/MDSSegmentData.java:Hashtable mnemonics = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMDS/data/MDSSegmentData.java:Hashtable notes = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMDS/data/MDSSegmentData.java:notes.put(oscar.Misc.getString(rs, "associatedOBX"), new ArrayList());</ViolationValue>
@@ -1585,6 +1588,8 @@
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/Hl7textResultsData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/Hl7textResultsData.java:ResultSet rs2=DBHandler.GetSQL(sql2);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/Hl7textResultsData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/SpireResultsData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/SpireResultsData.java:ResultSet rs2=DBHandler.GetSQL(sql2);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/parsers/GDMLHandler.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/upload/ProviderLabRouting.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/upload/handlers/GDMLHandler.java:DBHandler.RunSQL(sql);</ViolationValue>
@@ -1636,6 +1641,13 @@
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabTestValues.java:ResultSet rs2 = DBHandler.GetSQL(sql2);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/LabResultData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/Spire/SpireLabTest.java://ResultSet rs = DBHandler.GetSQL("select distinct title from labTestResults where title != '' and labPatientPhysicianInfo_id = '"+labid+"'");</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/Spire/SpireLabTest.java:ResultSet rs = DBHandler.GetSQL("select * from labPatientPhysicianInfo where id = '"+labid+"'");</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/Spire/SpireLabTest.java:ResultSet rs = DBHandler.GetSQL("select * from labReportInformation where id = '"+labid+"'");</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/Spire/SpireLabTest.java:ResultSet rs = DBHandler.GetSQL("select * from labTestResults where labPatientPhysicianInfo_id = '"+labid+"'");</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/Spire/SpireLabTest.java:ResultSet rs = DBHandler.GetSQL("select demographic_no from patientLabRouting where lab_no = '"+labId+"' and lab_type = 'CML'");</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/Spire/SpireLabTest.java:ResultSet rs = DBHandler.GetSQL("select distinct discipline from hl7TextInfo where discipline != '' and lab_no = '"+labid+"'");</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/Spire/SpireLabTest.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/pageUtil/ForwardingRulesAction.java:DBHandler.RunSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/tld/LabTag.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/tld/UnclaimedLabTag.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
