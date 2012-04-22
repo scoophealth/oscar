@@ -61,6 +61,7 @@ import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProgramQueueManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
+import org.oscarehr.PMmodule.service.VacancyTemplateManager;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.caisi_integrator.ws.CachedProvider;
 import org.oscarehr.caisi_integrator.ws.DemographicTransfer;
@@ -72,6 +73,7 @@ import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.dao.FunctionalCentreDao;
 import org.oscarehr.common.model.FunctionalCentre;
 import org.oscarehr.util.MiscUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.quatro.service.security.RolesManager;
@@ -88,6 +90,8 @@ public class ProgramManagerAction extends BaseAction {
 	private ProgramManager programManager;
 	private ProviderManager providerManager;
 	private ProgramQueueManager programQueueManager;
+	@Autowired
+	private VacancyTemplateManager vacancyTemplateManager;
 	//private RoleManager roleManager;
 	private RolesManager roleManager;
 	private FunctionalCentreDao functionalCentreDao;
@@ -776,6 +780,18 @@ public class ProgramManagerAction extends BaseAction {
 			programManager.saveProgramSignature(programSignature);
 		}
 	}
+	
+
+	public ActionForward save_vacancy_template(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm programForm = (DynaActionForm) form;
+		
+		if (this.isCancelled(request)) {
+			return list(mapping, form, request, response);
+		}
+		
+		vacancyTemplateManager.save();
+		return edit(mapping, form, request, response);
+	}
 
 	public ActionForward save_access(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		DynaActionForm programForm = (DynaActionForm) form;
@@ -1225,5 +1241,19 @@ public class ProgramManagerAction extends BaseAction {
 	public void setRolesManager(RolesManager mgr) {
 		this.roleManager = mgr;
 	}
+
+	/**
+     * @return the vacancyTemplateManager
+     */
+    public VacancyTemplateManager getVacancyTemplateManager() {
+    	return vacancyTemplateManager;
+    }
+
+	/**
+     * @param vacancyTemplateManager the vacancyTemplateManager to set
+     */
+    public void setVacancyTemplateManager(VacancyTemplateManager vacancyTemplateManager) {
+    	this.vacancyTemplateManager = vacancyTemplateManager;
+    }
 
 }
