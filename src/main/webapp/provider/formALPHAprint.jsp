@@ -1,28 +1,31 @@
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
- */
--->
+
+<%--
+
+    Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
+    This software is published under the GPL GNU General Public License.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+    This software was written for the
+    Department of Family Medicine
+    McMaster University
+    Hamilton
+    Ontario, Canada
+
+--%>
+
+
 
 <%
   if(session.getValue("user") == null)  response.sendRedirect("../logout.jsp");
@@ -84,9 +87,9 @@
 		<TD WIDTH="50%" VALIGN="TOP"><FONT FACE="Arial, Helvetica"
 			Size="-1"><B>Social support</B></FONT> (<B><I>CA, WA,</I></B> <FONT
 			SIZE="-1">PD</FONT>)<BR>
-		<FONT SIZE="-1" FACE="Arial, Helvetica">•How does your
+		<FONT SIZE="-1" FACE="Arial, Helvetica">ï¿½How does your
 		partner/family feel about your pregnancy?</FONT><BR>
-		<FONT SIZE="-1" FACE="Arial, Helvetica">•Who will be helping
+		<FONT SIZE="-1" FACE="Arial, Helvetica">ï¿½Who will be helping
 		you when you go home with your baby?</FONT></TD>
 		<TD VALIGN="TOP" WIDTH="50%"><%=Misc.JSEscape(request.getParameter("xml_ff_socialsupport").equals("")?"&nbsp;":request.getParameter("xml_ff_socialsupport"))%></TD>
 	</TR>
@@ -94,9 +97,9 @@
 		<TD WIDTH="50%" VALIGN="TOP"><B><FONT Size="-1"
 			FACE="Arial, Helvetica">Recent stressful life events</FONT></B> (<B><I>CA,
 		WA, PD,</I></B> <FONT SIZE="-1">PI</FONT>)<BR>
-		<FONT SIZE="-1" FACE="Arial, Helvetica">•What life changes have
+		<FONT SIZE="-1" FACE="Arial, Helvetica">ï¿½What life changes have
 		you experiences this year?</FONT><BR>
-		<FONT SIZE="-1" FACE="Arial, Helvetica">•What changes are you
+		<FONT SIZE="-1" FACE="Arial, Helvetica">ï¿½What changes are you
 		planning during this pregnancy?</FONT></TD>
 		<TD VALIGN="TOP"><%=Misc.JSEscape(request.getParameter("xml_ff_recentstressfullifeevents").equals("")?"&nbsp;":request.getParameter("xml_ff_recentstressfullifeevents"))%></TD>
 	</TR>
@@ -104,9 +107,9 @@
 		<TD WIDTH="50%" VALIGN="TOP"><B><FONT SIZE="-1"
 			FACE="Arial, Helvetica">Couple's relationship</FONT></B> (<B><I>CD,
 		PD,</I></B> <FONT SIZE="-1">WA, CA</FONT>)<BR>
-		<FONT SIZE="-1" FACE="Arial, Helvetica">•How would you describe
+		<FONT SIZE="-1" FACE="Arial, Helvetica">ï¿½How would you describe
 		your relationship with your partner?</FONT><BR>
-		<FONT SIZE="-1" FACE="Arial, Helvetica">•What do you think your
+		<FONT SIZE="-1" FACE="Arial, Helvetica">ï¿½What do you think your
 		relationship will be like after the birth?</FONT></TD>
 		<TD VALIGN="TOP"><%=Misc.JSEscape(request.getParameter("xml_ff_couplerelationship").equals("")?"&nbsp;":request.getParameter("xml_ff_couplerelationship"))%></TD>
 	</TR>
@@ -117,14 +120,14 @@
 	<TR>
 		<TD WIDTH="50%" VALIGN="TOP"><FONT FACE="Arial, Helvetica"
 			Size="-1"><B>Prenatal care (late onset)</B></FONT> (<B><I>WA</I></B>)<BR>
-		<FONT SIZE="-1" FACE="Arial, Helvetica">•First prenatal visit
+		<FONT SIZE="-1" FACE="Arial, Helvetica">ï¿½First prenatal visit
 		in third trimester? (check records)</FONT></TD>
 		<TD VALIGN="TOP"><%=Misc.JSEscape(request.getParameter("xml_mf_prenatalcare").equals("")?"&nbsp;":request.getParameter("xml_mf_prenatalcare"))%></TD>
 	</TR>
 	<TR>
 		<TD WIDTH="50%" VALIGN="TOP"><B><FONT FACE="Arial, Helvetica"
 			Size="-1">Prenatal education (refusal or quit)</FONT></B> (<B><I>CA</I></B>)<BR>
-		<FONT SIZE="-1" FACE="Arial, Helvetica">•What are your plans
+		<FONT SIZE="-1" FACE="Arial, Helvetica">ï¿½What are your plans
 		for prenatal classes?</FONT></TD>
 		<TD VALIGN="TOP"><%=Misc.JSEscape(request.getParameter("xml_mf_prenataleducation").equals("")?"&nbsp;":request.getParameter("xml_mf_prenataleducation"))%></TD>
 	</TR>
@@ -132,25 +135,25 @@
 		<TD WIDTH="50%" VALIGN="TOP"><B><FONT FACE="Arial, Helvetica"
 			Size="-1">Feelings toward pregnancy after 20 weeks</FONT></B> (<B><I>CA,
 		WA</I></B>)<BR>
-		<FONT SIZE="-1" FACE="Arial, Helvetica">•How did you feel when
+		<FONT SIZE="-1" FACE="Arial, Helvetica">ï¿½How did you feel when
 		you just found out you were pregnant?</FONT><BR>
-		<FONT SIZE="-1" FACE="Arial, Helvetica">•How do you feel about
+		<FONT SIZE="-1" FACE="Arial, Helvetica">ï¿½How do you feel about
 		it now?</FONT></TD>
 		<TD VALIGN="TOP"><%=Misc.JSEscape(request.getParameter("xml_mf_feelingstopregnancy20").equals("")?"&nbsp;":request.getParameter("xml_mf_feelingstopregnancy20"))%></TD>
 	</TR>
 	<TR>
 		<TD WIDTH="50%" VALIGN="TOP"><B><FONT FACE="Arial, Helvetica"
 			Size="-1">Relationship with parents in childhood</FONT></B> (<B><I>CA</I></B>)<BR>
-		<FONT SIZE="-1" FACE="Arial, Helvetica">•How did you get along
+		<FONT SIZE="-1" FACE="Arial, Helvetica">ï¿½How did you get along
 		with your parents?</FONT><BR>
-		<FONT SIZE="-1" FACE="Arial, Helvetica">•Did you feel loved by
+		<FONT SIZE="-1" FACE="Arial, Helvetica">ï¿½Did you feel loved by
 		your parents?</FONT></TD>
 		<TD VALIGN="TOP"><%=Misc.JSEscape(request.getParameter("xml_mf_relationshipwithparents").equals("")?"&nbsp;":request.getParameter("xml_mf_relationshipwithparents"))%></TD>
 	</TR>
 	<TR>
 		<TD WIDTH="50%" VALIGN="TOP"><B><FONT FACE="Arial, Helvetica"
 			Size="-1">Self-esteem</FONT></B> (<B><I>CA,</I></B> <FONT SIZE="-1">WA</FONT>)<BR>
-		<FONT SIZE="-1" FACE="Arial, Helvetica">•What concerns do you
+		<FONT SIZE="-1" FACE="Arial, Helvetica">ï¿½What concerns do you
 		have about becoming/being a mother?</FONT></TD>
 		<TD VALIGN="TOP"><%=Misc.JSEscape(request.getParameter("xml_mf_selfesteem").equals("")?"&nbsp;":request.getParameter("xml_mf_selfesteem"))%></TD>
 	</TR>
@@ -158,16 +161,16 @@
 		<TD WIDTH="50%" VALIGN="TOP"><B><FONT FACE="Arial, Helvetica"
 			Size="-1">History of psychiatric/emotional problems</FONT></B> (<B><I>CA,
 		WA,</I></B> <FONT SIZE="-1">PD</FONT>)<BR>
-		<FONT SIZE="-1" FACE="Arial, Helvetica">•Have you ever had
+		<FONT SIZE="-1" FACE="Arial, Helvetica">ï¿½Have you ever had
 		emotional problems?</FONT><BR>
-		•<FONT SIZE="-1" FACE="Arial, Helvetica">Have you ever seen a
+		ï¿½<FONT SIZE="-1" FACE="Arial, Helvetica">Have you ever seen a
 		psychiatrist or therapist?</FONT></TD>
 		<TD VALIGN="TOP"><%=Misc.JSEscape(request.getParameter("xml_mf_historypsychiatricemaotional").equals("")?"&nbsp;":request.getParameter("xml_mf_historypsychiatricemaotional"))%></TD>
 	</TR>
 	<TR>
 		<TD WIDTH="50%" VALIGN="TOP"><B><FONT FACE="Arial, Helvetica"
 			Size="-1">Depression in this pregnancy</FONT></B> (<B><I>PD</I></B>)<BR>
-		<FONT SIZE="-1" FACE="Arial, Helvetica">•How has your mood been
+		<FONT SIZE="-1" FACE="Arial, Helvetica">ï¿½How has your mood been
 		during this pregnancy?</FONT></TD>
 		<TD VALIGN="TOP"><%=Misc.JSEscape(request.getParameter("xml_mf_depression").equals("")?"&nbsp;":request.getParameter("xml_mf_depression"))%></TD>
 	</TR>
@@ -187,4 +190,3 @@
 
 </BODY>
 </HTML>
-

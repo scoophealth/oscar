@@ -2,31 +2,34 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %><!--
-/*
- *
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License.
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
- *
- * <OSCAR TEAM>
- *
- * This software was written for the
- * Department of Family Medicine
- * McMaster University
- * Hamilton
- * Ontario, Canada
- */
--->
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+<%--
+
+    Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
+    This software is published under the GPL GNU General Public License.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+    This software was written for the
+    Department of Family Medicine
+    McMaster University
+    Hamilton
+    Ontario, Canada
+
+--%>
+
+
 
 
 
@@ -61,11 +64,11 @@ oscar.oscarRx.pageUtil.RxSessionBean rxBean = null;
 	rxBean.setDemographicNo(Integer.parseInt(request.getParameter("demographicNo")));
 
 	request.getSession().setAttribute("RxSessionBean", rxBean); %>
-	<!--  logic:redirect href="error.html" /-->	
+	<!--  logic:redirect href="error.html" /-->
 </logic:notPresent>
 <logic:present name="RxSessionBean" scope="session">
 	<bean:define id="bean" type="oscar.oscarRx.pageUtil.RxSessionBean" name="RxSessionBean" scope="session" />
-	<logic:equal name="bean" property="valid" value="false">		
+	<logic:equal name="bean" property="valid" value="false">
 		<logic:redirect href="error.html" />
 	</logic:equal>
 </logic:present>
@@ -100,7 +103,7 @@ oscar.oscarRx.pageUtil.RxSessionBean rxBean = null;
 
         ArrayList<StaticScriptBean.DrugDisplayData> drugs=StaticScriptBean.getDrugList(currentDemographicNo, regionalIdentifier, cn,bn,atc);
 
-	oscar.oscarRx.data.RxPatientData.Patient patient=RxPatientData.getPatient(currentDemographicNo);
+	oscar.oscarRx.data.RxPatientData.Patient patient=oscar.oscarRx.data.RxPatientData.getPatient(currentDemographicNo);
 	String annotation_display=org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;
 %>
 <script type="text/javascript" src="../share/javascript/prototype.js"/>"></script>
@@ -183,12 +186,12 @@ oscar.oscarRx.pageUtil.RxSessionBean rxBean = null;
 						<td><%=drug.providerName%></td>
 						<td><%
 						if(!drug.startDate.equals("0001/01/01") ){
-							out.print(drug.startDate);	
+							out.print(drug.startDate);
 						}
 						%></td>
 						<td><%
 						if(!drug.startDate.equals("0001/01/01") ){
-							out.print(drug.endDate);	
+							out.print(drug.endDate);
 						}
 						%></td>
 						<td><%
@@ -196,17 +199,17 @@ oscar.oscarRx.pageUtil.RxSessionBean rxBean = null;
 						out.print(partialDateDao.getDatePartial(drug.writtenDate, PartialDate.DRUGS, drug.localDrugId, PartialDate.DRUGS_WRITTENDATE));
 						}
 						%></td>
-                                                <td><a href="javascript:void(0);"   onclick="popup(600, 425,'DisplayRxRecord.jsp?id=<%=drug.localDrugId%>','displayRxWindow')"><%=drug.prescriptionDetails%></a> 
+                                                <td><a href="javascript:void(0);"   onclick="popup(600, 425,'DisplayRxRecord.jsp?id=<%=drug.localDrugId%>','displayRxWindow')"><%=drug.prescriptionDetails%></a>
 
                                                     <% if (drug.nonAuthoritative) { %>
                                                         &nbsp;<bean:message key="WriteScript.msgNonAuthoritative"></bean:message>
                                                      <%   } %>
-                                                     
-                                                     <% 
+
+                                                     <%
                                                         if (drug.pickupDate!=null &&  !drug.pickupDate.equals("") && !drug.pickupDate.equals("0000-00-00"))
                                                         {
                                                     %>&nbsp;<bean:message key="WriteScript.msgPickUpDate"></bean:message>&nbsp;<%=drug.pickupDate%>&nbsp;
-                                                            <% 
+                                                            <%
                                                         if (!((drug.pickupTime).equals("")) && !((drug.pickupTime).equals("12:00 AM")))
                                                         {
                                                         %>      &nbsp;<%=drug.pickupTime%>&nbsp;
@@ -214,7 +217,7 @@ oscar.oscarRx.pageUtil.RxSessionBean rxBean = null;
                                                          } %>
                                                     <%if(drug.eTreatmentType != null && !drug.eTreatmentType.equals("null")){ %>
                                                     	 &nbsp;<bean:message key="WriteScript.msgETreatmentType"/>:
-                                                    	
+
                                                     	<%if (drug.eTreatmentType.equals("CHRON")){%>
                                                     		<bean:message key="WriteScript.msgETreatment.Continuous"/>
                                                     	<%}else  if (drug.eTreatmentType.equals("ACU")){%>
@@ -224,13 +227,13 @@ oscar.oscarRx.pageUtil.RxSessionBean rxBean = null;
 														<%}else  if (drug.eTreatmentType.equals("PRNL")){%>
 															<bean:message key="WriteScript.msgETreatment.LongTermPRN"/>
 														<%}else  if (drug.eTreatmentType.equals("PRNS")){%>
-															<bean:message key="WriteScript.msgETreatment.ShortTermPRN"/> 
+															<bean:message key="WriteScript.msgETreatment.ShortTermPRN"/>
                                                     	<%}
                                                     }%>
                                                     <%if(drug.rxStatus != null && !drug.rxStatus.equals("null")){ %>
                                                     	 &nbsp;<bean:message key="WriteScript.msgRxStatus"/>: <%=drug.rxStatus%>
                                                     <%}%>
-                                                    	
+
                                                 </td>
                                                 <%
 							if (drug.customName==null)
@@ -262,8 +265,8 @@ oscar.oscarRx.pageUtil.RxSessionBean rxBean = null;
 										</html:form> --%>
                                                                                         <input type="button" align="top" value="Represcribe" style="width: 100px" class="ControlPushButton" onclick="javascript:reRxDrugSearch3('<%=drug.localDrugId%>');" />
                                                                                         <input type="button" align="top" value="Add to Favorites" style="width: 100px" class="ControlPushButton" onclick="javascript:addFavorite2(<%=drug.localDrugId%>, '<%=StringEscapeUtils.escapeJavaScript((drug.customName!=null&&(!drug.customName.equalsIgnoreCase("null")))?drug.customName:drug.brandName)%>');" />
-									
-                                                       
+
+
                                                     <%
 								}
 								else
