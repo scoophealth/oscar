@@ -27,6 +27,10 @@
 
 <%@ include file="/taglibs.jsp"%>
 <script type="text/javascript">
+	function save() {
+		document.programManagerForm.method.value='save_vacancy_template';
+		document.programManagerForm.submit()
+	}
     $(document).ready(
         function () {
             $('#addGender').click(
@@ -323,3 +327,9 @@
 		</tr>
 	</table>
 </fieldset>
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+	<tr>
+		<td colspan="2"><input type="button" value="Save" onclick="return save()" /> <html:cancel /></td>
+	</tr>
+</table>
+
