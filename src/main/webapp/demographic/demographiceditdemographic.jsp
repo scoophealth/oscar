@@ -1,30 +1,33 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%-- @ taglib uri="../WEB-INF/taglibs-log.tld" prefix="log" --%>
+
 <%--
-/*
- *
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License.
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
- *
- * <OSCAR TEAM>
- *
- * This software was written for the
- * Department of Family Medicine
- * McMaster University
- * Hamilton
- * Ontario, Canada
- */
+
+    Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
+    This software is published under the GPL GNU General Public License.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+    This software was written for the
+    Department of Family Medicine
+    McMaster University
+    Hamilton
+    Ontario, Canada
+
 --%>
+
+
 <%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.ConformanceTestHelper"%>
 <%@page import="org.oscarehr.common.dao.DemographicExtDao" %>
@@ -532,16 +535,16 @@ function newStatus1() {
 function removeAccents(s){
         var r=s.toLowerCase();
         r = r.replace(new RegExp("\\s", 'g'),"");
-        r = r.replace(new RegExp("[àáâãäå]", 'g'),"a");
-        r = r.replace(new RegExp("æ", 'g'),"ae");
-        r = r.replace(new RegExp("ç", 'g'),"c");
-        r = r.replace(new RegExp("[èéêë]", 'g'),"e");
-        r = r.replace(new RegExp("[ìíîï]", 'g'),"i");
-        r = r.replace(new RegExp("ñ", 'g'),"n");
-        r = r.replace(new RegExp("[òóôõö]", 'g'),"o");
+        r = r.replace(new RegExp("[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]", 'g'),"a");
+        r = r.replace(new RegExp("ï¿½", 'g'),"ae");
+        r = r.replace(new RegExp("ï¿½", 'g'),"c");
+        r = r.replace(new RegExp("[ï¿½ï¿½ï¿½ï¿½]", 'g'),"e");
+        r = r.replace(new RegExp("[ï¿½ï¿½ï¿½ï¿½]", 'g'),"i");
+        r = r.replace(new RegExp("ï¿½", 'g'),"n");
+        r = r.replace(new RegExp("[ï¿½ï¿½ï¿½ï¿½ï¿½]", 'g'),"o");
         r = r.replace(new RegExp("?", 'g'),"oe");
-        r = r.replace(new RegExp("[ùúûü]", 'g'),"u");
-        r = r.replace(new RegExp("[ýÿ]", 'g'),"y");
+        r = r.replace(new RegExp("[ï¿½ï¿½ï¿½ï¿½]", 'g'),"u");
+        r = r.replace(new RegExp("[ï¿½ï¿½]", 'g'),"y");
         r = r.replace(new RegExp("\\W", 'g'),"");
         return r;
 }
@@ -2624,4 +2627,3 @@ function callEligibilityWebService(url,id){
 }
 
 %>
-

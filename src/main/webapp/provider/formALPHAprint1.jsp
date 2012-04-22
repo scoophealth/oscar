@@ -1,28 +1,31 @@
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
- */
--->
+
+<%--
+
+    Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
+    This software is published under the GPL GNU General Public License.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+    This software was written for the
+    Department of Family Medicine
+    McMaster University
+    Hamilton
+    Ontario, Canada
+
+--%>
+
+
 
 <%
   if(session.getValue("user") == null)  response.sendRedirect("../logout.jsp");
@@ -70,11 +73,11 @@
 	<TR>
 		<TD WIDTH="50%" VALIGN="TOP"><FONT FACE="Arial" SIZE="-1">
 		<B>Alcohol/drug abuse (<I>WA, </I>CA)</B><BR>
-		•How many drinks of alcohol do you have per week?<BR>
-		•Are there times when you drink more than that?<BR>
-		•Do you or your partner use recreational drugs?<BR>
-		•Do you or your partner have a problem with alcohol or drugs?<BR>
-		•Consider CAGE (<B>C</B>ut down, <B>A</B>nnoyed, <B>G</B>uilty, <B>E</B>ye
+		ï¿½How many drinks of alcohol do you have per week?<BR>
+		ï¿½Are there times when you drink more than that?<BR>
+		ï¿½Do you or your partner use recreational drugs?<BR>
+		ï¿½Do you or your partner have a problem with alcohol or drugs?<BR>
+		ï¿½Consider CAGE (<B>C</B>ut down, <B>A</B>nnoyed, <B>G</B>uilty, <B>E</B>ye
 		opener)</FONT></TD>
 		<TD WIDTH="50%" VALIGN="TOP"><FONT FACE="Arial" SIZE="-1">&nbsp;</FONT></TD>
 	</TR>
@@ -86,37 +89,37 @@
 		<TD WIDTH="50%" VALIGN="TOP"><FONT FACE="Arial" SIZE="-1">
 		<B>Woman or partner experienced or witnessed abuse
 		(physical,&nbsp;emotional, sexual) (<I>CA, </I>WA)</B><BR>
-		•What was your parents' relationship like?<BR>
-		•Did your father ever scare or hurt your mother?<BR>
-		•Did your parents ever scare or hurt you?<BR>
-		•Were you ever sexually abused as a child?</FONT></TD>
+		ï¿½What was your parents' relationship like?<BR>
+		ï¿½Did your father ever scare or hurt your mother?<BR>
+		ï¿½Did your parents ever scare or hurt you?<BR>
+		ï¿½Were you ever sexually abused as a child?</FONT></TD>
 		<TD WIDTH="50%" VALIGN="TOP"><FONT FACE="Arial" SIZE="-1">&nbsp;</FONT></TD>
 	</TR>
 	<TR>
 		<TD WIDTH="50%" VALIGN="TOP"><FONT FACE="Arial" SIZE="-1">
 		<B>Current or past woman abuse (<I>WA</I>, CA, PD)</B><BR>
-		•How do you and your partner solve arguments?<BR>
-		•Do you ever feel frightened by what your partner says or does?<BR>
-		•Have you ever been hit/pushed/slapped by a partner?<BR>
-		•Has your partner ever humiliated you or psychologically abused you in
+		ï¿½How do you and your partner solve arguments?<BR>
+		ï¿½Do you ever feel frightened by what your partner says or does?<BR>
+		ï¿½Have you ever been hit/pushed/slapped by a partner?<BR>
+		ï¿½Has your partner ever humiliated you or psychologically abused you in
 		other ways?<BR>
-		•Have you ever been forced to have sex against your will?</FONT></TD>
+		ï¿½Have you ever been forced to have sex against your will?</FONT></TD>
 		<TD WIDTH="50%" VALIGN="TOP"><FONT FACE="Arial" SIZE="-1">&nbsp;</FONT></TD>
 	</TR>
 	<TR>
 		<TD WIDTH="50%" VALIGN="TOP"><FONT FACE="Arial" SIZE="-1">
 		<B>Previous child abuse by woman or partner (<I>CA</I>)</B><BR>
-		•Do you/your partner have children not living with you? If so, why?<BR>
-		•Have you ever had involvement with a child protection agency (i.e.,
+		ï¿½Do you/your partner have children not living with you? If so, why?<BR>
+		ï¿½Have you ever had involvement with a child protection agency (i.e.,
 		Children's Aid Society)?</FONT></TD>
 		<TD WIDTH="50%" VALIGN="TOP"><FONT FACE="Arial" SIZE="-1">&nbsp;</FONT></TD>
 	</TR>
 	<TR>
 		<TD WIDTH="50%" VALIGN="TOP"><FONT FACE="Arial" SIZE="-1">
 		<B>Child discipline (<I>CA</I>)</B><BR>
-		•How were you disciplined as a child?<BR>
-		•How do you think you will discipline your child?<BR>
-		•How do you deal with your kids at home when they misbehave?</FONT></TD>
+		ï¿½How were you disciplined as a child?<BR>
+		ï¿½How do you think you will discipline your child?<BR>
+		ï¿½How do you deal with your kids at home when they misbehave?</FONT></TD>
 		<TD WIDTH="50%" VALIGN="TOP"><FONT FACE="Arial" SIZE="-1">&nbsp;</FONT></TD>
 	</TR>
 	<TR>
