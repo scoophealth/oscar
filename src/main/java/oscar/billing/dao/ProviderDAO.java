@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -39,10 +39,11 @@ import oscar.util.DAO;
 
 public class ProviderDAO extends DAO {
     public ProviderDAO(Properties pvar)  {
+    	//empty
     }
 
-    public ArrayList list(int type) throws SQLException {
-        ArrayList list = new ArrayList();
+    public ArrayList<Provider> list(int type) throws SQLException {
+        ArrayList<Provider> list = new ArrayList<Provider>();
         String sql = "select provider_no, last_name, first_name from provider";
 
         if (type == Provider.DOCTOR) {

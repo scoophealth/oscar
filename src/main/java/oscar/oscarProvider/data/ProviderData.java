@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -85,7 +85,7 @@ public class ProviderData {
 | signed_confidentiality | date         | YES  |     | 0001-01-01 |       |
 +------------------------+--------------+------+-----+------------+-------+
 */
-   
+
    String provider_no;
    String last_name;
    String first_name;
@@ -113,23 +113,23 @@ public class ProviderData {
    String lastUpdateDate;
    String signed_confidentiality;
 
-   
+
    /** Creates a new instance of ProviderData */
-   public ProviderData() {            
+   public ProviderData() {
    }
-   
-   public ProviderData(String providerNo) {            
+
+   public ProviderData(String providerNo) {
       getProvider(providerNo);
    }
 
-   public List getProviderListWithInsuranceNo(){
+   public List<String> getProviderListWithInsuranceNo(){
        return getProviderListWithInsuranceNo("%");
    }
-   
-   public List getProviderListWithInsuranceNo(String insurerNo){
-        ArrayList list = new ArrayList();
+
+   public List<String> getProviderListWithInsuranceNo(String insurerNo){
+        ArrayList<String> list = new ArrayList<String>();
         try {
-                
+
                 ResultSet rs;
                 String sql = "select * from provider where provider_type='doctor' and ohip_no like '"+insurerNo+"' and ohip_no != '' order by last_name";
 
@@ -139,18 +139,18 @@ public class ProviderData {
                 }
 
                 rs.close();
-                               
+
             } catch (SQLException e) {
                 MiscUtils.getLogger().error("Error", e);
-            }         
+            }
         return list;
    }
-   
-  
-   
+
+
+
    public void getProvider(String providerNo){
           try {
-                
+
                 ResultSet rs;
                 String sql = "SELECT * FROM provider WHERE provider_no = '" + providerNo +"'";
 
@@ -186,11 +186,11 @@ public class ProviderData {
                 }
 
                 rs.close();
-                               
+
             } catch (SQLException e) {
                 MiscUtils.getLogger().error("Error", e);
-            }            
-      
+            }
+
    }
 
    /**
@@ -200,7 +200,7 @@ public class ProviderData {
    public java.lang.String getProviderNo() {
       return provider_no;
    }
-   
+
    /**
     * Setter for property provider_no.
     * @param provider_no New value of property provider_no.
@@ -208,7 +208,7 @@ public class ProviderData {
    public void setProviderNo(java.lang.String provider_no) {
       this.provider_no = provider_no;
    }
-   
+
    /**
     * Getter for property last_name.
     * @return Value of property last_name.
@@ -216,7 +216,7 @@ public class ProviderData {
    public java.lang.String getLast_name() {
       return last_name;
    }
-   
+
    /**
     * Setter for property last_name.
     * @param last_name New value of property last_name.
@@ -224,7 +224,7 @@ public class ProviderData {
    public void setLast_name(java.lang.String last_name) {
       this.last_name = last_name;
    }
-   
+
    /**
     * Getter for property first_name.
     * @return Value of property first_name.
@@ -232,7 +232,7 @@ public class ProviderData {
    public java.lang.String getFirst_name() {
       return first_name;
    }
-   
+
    /**
     * Setter for property first_name.
     * @param first_name New value of property first_name.
@@ -240,7 +240,7 @@ public class ProviderData {
    public void setFirst_name(java.lang.String first_name) {
       this.first_name = first_name;
    }
-   
+
    /**
     * Getter for property provider_type.
     * @return Value of property provider_type.
@@ -248,7 +248,7 @@ public class ProviderData {
    public java.lang.String getProvider_type() {
       return provider_type;
    }
-   
+
    /**
     * Setter for property provider_type.
     * @param provider_type New value of property provider_type.
@@ -256,7 +256,7 @@ public class ProviderData {
    public void setProvider_type(java.lang.String provider_type) {
       this.provider_type = provider_type;
    }
-   
+
    /**
     * Getter for property specialty.
     * @return Value of property specialty.
@@ -264,7 +264,7 @@ public class ProviderData {
    public java.lang.String getSpecialty() {
       return specialty;
    }
-   
+
    /**
     * Setter for property specialty.
     * @param specialty New value of property specialty.
@@ -272,7 +272,7 @@ public class ProviderData {
    public void setSpecialty(java.lang.String specialty) {
       this.specialty = specialty;
    }
-   
+
    /**
     * Getter for property team.
     * @return Value of property team.
@@ -280,7 +280,7 @@ public class ProviderData {
    public java.lang.String getTeam() {
       return team;
    }
-   
+
    /**
     * Setter for property team.
     * @param team New value of property team.
@@ -288,7 +288,7 @@ public class ProviderData {
    public void setTeam(java.lang.String team) {
       this.team = team;
    }
-   
+
    /**
     * Getter for property sex.
     * @return Value of property sex.
@@ -296,7 +296,7 @@ public class ProviderData {
    public java.lang.String getSex() {
       return sex;
    }
-   
+
    /**
     * Setter for property sex.
     * @param sex New value of property sex.
@@ -304,7 +304,7 @@ public class ProviderData {
    public void setSex(java.lang.String sex) {
       this.sex = sex;
    }
-   
+
    /**
     * Getter for property dob.
     * @return Value of property dob.
@@ -312,7 +312,7 @@ public class ProviderData {
    public java.lang.String getDob() {
       return dob;
    }
-   
+
    /**
     * Setter for property dob.
     * @param dob New value of property dob.
@@ -320,7 +320,7 @@ public class ProviderData {
    public void setDob(java.lang.String dob) {
       this.dob = dob;
    }
-   
+
    /**
     * Getter for property address.
     * @return Value of property address.
@@ -328,7 +328,7 @@ public class ProviderData {
    public java.lang.String getAddress() {
       return address;
    }
-   
+
    /**
     * Setter for property address.
     * @param address New value of property address.
@@ -336,7 +336,7 @@ public class ProviderData {
    public void setAddress(java.lang.String address) {
       this.address = address;
    }
-   
+
    /**
     * Getter for property phone.
     * @return Value of property phone.
@@ -344,7 +344,7 @@ public class ProviderData {
    public java.lang.String getPhone() {
       return phone;
    }
-   
+
    /**
     * Setter for property phone.
     * @param phone New value of property phone.
@@ -352,7 +352,7 @@ public class ProviderData {
    public void setPhone(java.lang.String phone) {
       this.phone = phone;
    }
-   
+
    /**
     * Getter for property work_phone.
     * @return Value of property work_phone.
@@ -360,7 +360,7 @@ public class ProviderData {
    public java.lang.String getWork_phone() {
       return work_phone;
    }
-   
+
    /**
     * Setter for property work_phone.
     * @param work_phone New value of property work_phone.
@@ -368,7 +368,7 @@ public class ProviderData {
    public void setWork_phone(java.lang.String work_phone) {
       this.work_phone = work_phone;
    }
-   
+
    /**
     * Getter for property ohip_no.
     * @return Value of property ohip_no.
@@ -376,7 +376,7 @@ public class ProviderData {
    public java.lang.String getOhip_no() {
       return ohip_no;
    }
-   
+
    /**
     * Setter for property ohip_no.
     * @param ohip_no New value of property ohip_no.
@@ -384,7 +384,7 @@ public class ProviderData {
    public void setOhip_no(java.lang.String ohip_no) {
       this.ohip_no = ohip_no;
    }
-   
+
    /**
     * Getter for property rma_no.
     * @return Value of property rma_no.
@@ -392,7 +392,7 @@ public class ProviderData {
    public java.lang.String getRma_no() {
       return rma_no;
    }
-   
+
    /**
     * Setter for property rma_no.
     * @param rma_no New value of property rma_no.
@@ -400,7 +400,7 @@ public class ProviderData {
    public void setRma_no(java.lang.String rma_no) {
       this.rma_no = rma_no;
    }
-   
+
    /**
     * Getter for property billing_no.
     * @return Value of property billing_no.
@@ -408,7 +408,7 @@ public class ProviderData {
    public java.lang.String getBilling_no() {
       return billing_no;
    }
-   
+
    /**
     * Setter for property billing_no.
     * @param billing_no New value of property billing_no.
@@ -416,7 +416,7 @@ public class ProviderData {
    public void setBilling_no(java.lang.String billing_no) {
       this.billing_no = billing_no;
    }
-   
+
    /**
     * Getter for property hso_no.
     * @return Value of property hso_no.
@@ -424,7 +424,7 @@ public class ProviderData {
    public java.lang.String getHso_no() {
       return hso_no;
    }
-   
+
    /**
     * Setter for property hso_no.
     * @param hso_no New value of property hso_no.
@@ -432,7 +432,7 @@ public class ProviderData {
    public void setHso_no(java.lang.String hso_no) {
       this.hso_no = hso_no;
    }
-   
+
    /**
     * Getter for property status.
     * @return Value of property status.
@@ -440,7 +440,7 @@ public class ProviderData {
    public java.lang.String getStatus() {
       return status;
    }
-   
+
    /**
     * Setter for property status.
     * @param status New value of property status.
@@ -448,7 +448,7 @@ public class ProviderData {
    public void setStatus(java.lang.String status) {
       this.status = status;
    }
-   
+
    /**
     * Getter for property comments.
     * @return Value of property comments.
@@ -456,7 +456,7 @@ public class ProviderData {
    public java.lang.String getComments() {
       return comments;
    }
-   
+
    /**
     * Setter for property comments.
     * @param comments New value of property comments.
@@ -464,7 +464,7 @@ public class ProviderData {
    public void setComments(java.lang.String comments) {
       this.comments = comments;
    }
-   
+
    /**
     * Getter for property provider_activity.
     * @return Value of property provider_activity.
@@ -472,7 +472,7 @@ public class ProviderData {
    public java.lang.String getProvider_activity() {
       return provider_activity;
    }
-   
+
    /**
     * Setter for property provider_activity.
     * @param provider_activity New value of property provider_activity.
@@ -552,19 +552,19 @@ public class ProviderData {
 
 
    //TODO: Add a cache of providers
-   public static ArrayList getProviderList (boolean inactive) {
-        try {            
-            
-            ArrayList result = new ArrayList();
+   public static ArrayList<Hashtable<String,String>> getProviderList (boolean inactive) {
+        try {
+
+            ArrayList<Hashtable<String,String>> result = new ArrayList<Hashtable<String,String>>();
             String active = " and status = '1' ";
             if (inactive){
                active = "";
             }
-            
+
             String sql = "select provider_no, first_name, last_name, ohip_no from provider where provider_type='doctor' "+active+" order by last_name , first_name";
-            ResultSet rs = DBHandler.GetSQL(sql);            
+            ResultSet rs = DBHandler.GetSQL(sql);
             while ( rs.next() ) {
-                Hashtable provider = new Hashtable();
+                Hashtable<String,String> provider = new Hashtable<String,String>();
                 provider.put("providerNo",oscar.Misc.getString(rs, "provider_no"));
                 provider.put("firstName",oscar.Misc.getString(rs, "first_name"));
                 provider.put("lastName",oscar.Misc.getString(rs, "last_name"));
@@ -575,16 +575,16 @@ public class ProviderData {
         }catch(Exception e){
             MiscUtils.getLogger().debug("exception in ProviderData:"+e);
             return null;
-        }        
+        }
     }
-   public static List searchProvider(String searchStr){
+   public static List<Hashtable<String,String>> searchProvider(String searchStr){
 	   return searchProvider(searchStr, false);
    }
-   
-   
-   public static List searchProvider(String searchStr,boolean onlyActive){
+
+
+   public static List<Hashtable<String,String>> searchProvider(String searchStr,boolean onlyActive){
        String sql="select provider_no, first_name, last_name from provider where ";
-       List retList=new ArrayList();
+       List<Hashtable<String,String>> retList=new ArrayList<Hashtable<String,String>>();
        String firstname=null;
        String lastname=null;
        if(searchStr.indexOf(",")!=-1){
@@ -599,7 +599,7 @@ public class ProviderData {
            sql+="last_name like '"+lastname+"%' ";
        if(lastname!=null && firstname!=null)
            sql+="last_name like '"+lastname+ "%' AND first_name like '"+firstname+"%' ";
-       
+
        if(onlyActive){
     	   if(lastname != null) {
     		   sql+=" and status = 1";
@@ -610,7 +610,7 @@ public class ProviderData {
        try{
            ResultSet rs=DBHandler.GetSQL(sql);
            while(rs.next()){
-               Hashtable provider=new Hashtable();
+               Hashtable<String,String> provider=new Hashtable<String,String>();
                provider.put("providerNo", oscar.Misc.getString(rs, "provider_no"));
                provider.put("firstName", oscar.Misc.getString(rs, "first_name"));
                provider.put("lastName", oscar.Misc.getString(rs, "last_name"));
@@ -621,13 +621,13 @@ public class ProviderData {
            MiscUtils.getLogger().error("Error", se);
            return null;
        }
-   
+
 
    }
-   public static ArrayList getProviderListOfAllTypes (boolean inactive) {
+   public static ArrayList<Hashtable<String,String>> getProviderListOfAllTypes (boolean inactive) {
         try {
-            
-            ArrayList result = new ArrayList();
+
+            ArrayList<Hashtable<String,String>> result = new ArrayList<Hashtable<String,String>>();
             String active = "where status = '1'";
             if (inactive){
                active = "";
@@ -636,7 +636,7 @@ public class ProviderData {
             String sql = "select provider_no, first_name, last_name, ohip_no from provider "+active+" order by last_name , first_name";
             ResultSet rs = DBHandler.GetSQL(sql);
             while ( rs.next() ) {
-                Hashtable provider = new Hashtable();
+            	Hashtable<String,String> provider = new Hashtable<String,String>();
                 provider.put("providerNo",oscar.Misc.getString(rs, "provider_no"));
                 provider.put("firstName",oscar.Misc.getString(rs, "first_name"));
                 provider.put("lastName",oscar.Misc.getString(rs, "last_name"));
@@ -650,48 +650,48 @@ public class ProviderData {
         }
     }
 
-   public static ArrayList getProviderListOfAllTypes () {
+   public static ArrayList<Hashtable<String,String>> getProviderListOfAllTypes () {
       return getProviderListOfAllTypes (false);
    }
 
-   public static ArrayList getProviderList () {
-      return getProviderList (false); 
+   public static ArrayList<Hashtable<String,String>> getProviderList () {
+      return getProviderList (false);
    }
-   
-              
+
+
     public static String getProviderName(String providerNo) {
            try {
-            
-            
-                                    
+
+
+
             String sql = "select first_name, last_name from provider where provider_no='"+providerNo+"'";
-            ResultSet rs = DBHandler.GetSQL(sql);            
-            if ( rs.next() ) {            
-                return ( oscar.Misc.getString(rs, "first_name") + " " + oscar.Misc.getString(rs, "last_name") );            
-            } else {                            
+            ResultSet rs = DBHandler.GetSQL(sql);
+            if ( rs.next() ) {
+                return ( oscar.Misc.getString(rs, "first_name") + " " + oscar.Misc.getString(rs, "last_name") );
+            } else {
                 return "";
             }
         }catch(Exception e){
             MiscUtils.getLogger().debug("exception in ProviderData:"+e);
             return null;
-        }        
+        }
     }
-    
+
     public String getMyOscarId() {
          if (myOscarId == null) this.initMyOscarId();
          return myOscarId;
     }
- 
+
     public void initMyOscarId() {
          this.myOscarId = ProviderMyOscarIdData.getMyOscarId(this.getProviderNo());
     }
     private String myOscarId = null;
-    
+
     public String getDefaultBillingView(String providerNo){
-    	
+
     	ProviderPreferenceDao providerPreferenceDao=(ProviderPreferenceDao)SpringUtils.getBean("providerPreferenceDao");
     	ProviderPreference providerPreference=providerPreferenceDao.find(providerNo);
-    	
+
     	if (providerPreference!=null) return(providerPreference.getDefaultServiceType());
     	else return(null);
     }
@@ -750,7 +750,7 @@ public class ProviderData {
         } else {
             this.provider_no = "-1001";
         }
-        
+
         //create new external provider
         this.first_name = filled(firstName) ? firstName : "";
         this.last_name = filled(lastName) ? lastName : "";
@@ -769,7 +769,7 @@ public class ProviderData {
             return null;
         }
         try {
-            
+
             ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
                 providerNo = oscar.Misc.getString(rs, 1);
@@ -785,20 +785,20 @@ public class ProviderData {
         try {
             String sql = "insert into provider values (?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?)";
             if (update) {
-                sql = "update provider set last_name=?      and first_name=?        and provider_type=? " + 
-                                      "and specialty=?      and team=?              and sex=? " + 
-                                      "and dob=?            and address=?           and phone=? " + 
-                                      "and work_phone=?     and ohip_no=?           and rma_no=? " + 
-                                      "and billing_no=?     and hso_no=?            and status=? " + 
-                                      "and comments=?       and provider_activity=? and practitionerNo=? " + 
-                                      "and init=?           and job_title=?         and email=? " + 
-                                      "and title=?          and lastUpdateUser=?    and lastUpdateDate=? " + 
+                sql = "update provider set last_name=?      and first_name=?        and provider_type=? " +
+                                      "and specialty=?      and team=?              and sex=? " +
+                                      "and dob=?            and address=?           and phone=? " +
+                                      "and work_phone=?     and ohip_no=?           and rma_no=? " +
+                                      "and billing_no=?     and hso_no=?            and status=? " +
+                                      "and comments=?       and provider_activity=? and practitionerNo=? " +
+                                      "and init=?           and job_title=?         and email=? " +
+                                      "and title=?          and lastUpdateUser=?    and lastUpdateDate=? " +
                                       "and signed_confidentiality=?     where provider_no=?";
             }
-            
+
             Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
             PreparedStatement write_rec = conn.prepareStatement(sql);
-            
+
             Integer i = update ? 1 : 2;
             write_rec.setString(i, last_name);
             write_rec.setString(i + 1, first_name);

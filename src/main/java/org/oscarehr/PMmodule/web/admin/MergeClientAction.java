@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -47,6 +47,7 @@ import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Provider;
 
 import com.quatro.common.KeyConstants;
 import com.quatro.model.security.NoAccessException;
@@ -93,11 +94,11 @@ public class MergeClientAction extends BaseAdminAction {
 				String providerNo = (String) request.getSession().getAttribute(
 						KeyConstants.SESSION_KEY_PROVIDERNO);
 				//List allBedPrograms = programManager.getBedPrograms(providerNo, shelterId);
-				List allPrograms = programManager.getPrograms(Program.PROGRAM_STATUS_ACTIVE,providerNo,shelterId);
+				List<Program> allPrograms = programManager.getPrograms(Program.PROGRAM_STATUS_ACTIVE,providerNo,shelterId);
 				String prgId = "";
 	//			for (Program prg : allBedPrograms) {
 				for (int i=0;i<allPrograms.size();i++) {
-					Program prg = (Program)allPrograms.get(i);
+					Program prg = allPrograms.get(i);
 					prgId += prg.getId().toString() + ",";
 				}
 				if (!"".equals(prgId))
@@ -108,14 +109,14 @@ public class MergeClientAction extends BaseAdminAction {
 					.searchMerged(formBean));
 			request.setAttribute("method", "mergedSearch");
 			setLookupLists(request);
-	
+
 			return mapping.findForward("view");
 		}
 		catch(NoAccessException e)
 		{
 			return mapping.findForward("failure");
 		}
-		
+
 	}
 
 	public ActionForward unmerge(ActionMapping mapping, ActionForm form,
@@ -123,7 +124,7 @@ public class MergeClientAction extends BaseAdminAction {
 		try {
 			super.getAccess(request, KeyConstants.FUN_ADMIN_MERGECLIENT,KeyConstants.ACCESS_WRITE);
 			setLookupLists(request);
-	
+
 			ActionMessages messages = new ActionMessages();
 			request.setAttribute("mergeAction", KeyConstants.CLIENT_MODE_MERGE);
 			if (request.getParameterValues("records") == null) {
@@ -132,14 +133,14 @@ public class MergeClientAction extends BaseAdminAction {
 				saveMessages(request, messages);
 				return mergedSearch(mapping, form, request, response);
 			}
-			ArrayList records = new ArrayList(Arrays.asList(request
+			ArrayList<String> records = new ArrayList<String>(Arrays.asList(request
 					.getParameterValues("records")));
-	
+
 			String providerNo = (String) request.getSession().getAttribute(
 					KeyConstants.SESSION_KEY_PROVIDERNO);
 			if (records.size() > 0) {
 				for (int i = 0; i < records.size(); i++) {
-					String demographic_no = (String) records.get(i);
+					String demographic_no = records.get(i);
 					try {
 						Integer clientId = Integer.valueOf(demographic_no);
 						ClientMerge cmObj =  mergeClientManager.getClientMerge(clientId);
@@ -158,7 +159,7 @@ public class MergeClientAction extends BaseAdminAction {
 				}
 				if (records.size() > 0) {
 					for (int i = 0; i < records.size(); i++) {
-						String demographic_no = (String) records.get(i);
+						String demographic_no = records.get(i);
 						try {
 							Integer clientId = Integer.valueOf(demographic_no);
 							ClientMerge cmObj =  mergeClientManager.getClientMerge(clientId);
@@ -184,7 +185,7 @@ public class MergeClientAction extends BaseAdminAction {
 		{
 			return mapping.findForward("failure");
 		}
-			
+
 	}
 
 	public ActionForward merge(ActionMapping mapping, ActionForm form,
@@ -192,9 +193,9 @@ public class MergeClientAction extends BaseAdminAction {
 		try {
 			super.getAccess(request, KeyConstants.FUN_ADMIN_MERGECLIENT,KeyConstants.ACCESS_WRITE);
 			setLookupLists(request);
-	
+
 			ActionMessages messages = new ActionMessages();
-			
+
 			if (request.getParameterValues("records") == null) {
 				messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"message.merge.errors.select", request.getContextPath()));
@@ -203,18 +204,18 @@ public class MergeClientAction extends BaseAdminAction {
 			}
 			boolean isSuccess = true;
 			request.setAttribute("mergeAction", KeyConstants.CLIENT_MODE_MERGE);
-			ArrayList records = new ArrayList(Arrays.asList(request
+			ArrayList<String> records = new ArrayList<String>(Arrays.asList(request
 					.getParameterValues("records")));
 			String head = request.getParameter("head");
-			
+
 			String providerNo = (String) request.getSession().getAttribute(
 					KeyConstants.SESSION_KEY_PROVIDERNO);
 			if (head != null && records.size() > 1 && records.contains(head)) {
-				for (int i = 0; i < records.size(); i++) 
+				for (int i = 0; i < records.size(); i++)
 				{
-					if (!((String) records.get(i)).equals(head)){					
-						Integer mergeClientNo = Integer.valueOf((String) records.get(i));
-						Demographic mClient =clientManager.getClientByDemographicNo((String) records.get(i));
+					if (!( records.get(i)).equals(head)){
+						Integer mergeClientNo = Integer.valueOf( records.get(i));
+						Demographic mClient =clientManager.getClientByDemographicNo( records.get(i));
 						if(mClient.isActive()){
 							messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 									"message.merge.errors.active.client", request.getContextPath()));
@@ -245,7 +246,7 @@ public class MergeClientAction extends BaseAdminAction {
 						}
 					}
 				}
-	
+
 			} else {
 				isSuccess = false;
 			}
@@ -272,10 +273,10 @@ public class MergeClientAction extends BaseAdminAction {
 		try {
 			super.getAccess(request, KeyConstants.FUN_ADMIN_MERGECLIENT);
 			DynaActionForm searchForm = (DynaActionForm) form;
-		
+
 			ClientSearchFormBean formBean = (ClientSearchFormBean) searchForm
 					.get("criteria");
-	
+
 			request.setAttribute("mergeAction", KeyConstants.CLIENT_MODE_MERGE);
 			if ("MyP".equals(formBean.getBedProgramId())) {
 				Integer shelterId = (Integer) request.getSession().getAttribute(
@@ -283,18 +284,18 @@ public class MergeClientAction extends BaseAdminAction {
 				String providerNo = (String) request.getSession().getAttribute(
 						KeyConstants.SESSION_KEY_PROVIDERNO);
 				//List allBedPrograms = programManager.getBedPrograms(providerNo, shelterId);
-				List allPrograms = programManager.getPrograms(Program.PROGRAM_STATUS_ACTIVE,providerNo,shelterId);
+				List<Program> allPrograms = programManager.getPrograms(Program.PROGRAM_STATUS_ACTIVE,providerNo,shelterId);
 				String prgId = "";
 	//			for (Program prg : allBedPrograms) {
 				for (int i=0;i<allPrograms.size();i++) {
-					Program prg = (Program)allPrograms.get(i);
+					Program prg = allPrograms.get(i);
 					prgId += prg.getId().toString() + ",";
 				}
 				if (!"".equals(prgId))
 					prgId = prgId.substring(0, prgId.length() - 1);
 				formBean.setBedProgramId(prgId);
 			}
-			List clients = clientManager.search(formBean, false, false);
+			List<Demographic> clients = clientManager.search(formBean, false, false);
 			request.setAttribute("clients", clients);
 			setLookupLists(request);
 			return mapping.findForward("view");
@@ -310,10 +311,10 @@ public class MergeClientAction extends BaseAdminAction {
 				KeyConstants.SESSION_KEY_SHELTERID);
 		String providerNo = (String) request.getSession().getAttribute(
 				KeyConstants.SESSION_KEY_PROVIDERNO);
-		List allBedPrograms = programManager.getBedPrograms(providerNo,
+		List<Program> allBedPrograms = programManager.getBedPrograms(providerNo,
 				shelterId);
 		request.setAttribute("allBedPrograms", allBedPrograms);
-		List allProviders = providerManager.getActiveProviders(providerNo,
+		List<Provider> allProviders = providerManager.getActiveProviders(providerNo,
 				shelterId);
 		request.setAttribute("allProviders", allProviders);
 		request.setAttribute("genders", lookupManager.LoadCodeList("GEN", true,

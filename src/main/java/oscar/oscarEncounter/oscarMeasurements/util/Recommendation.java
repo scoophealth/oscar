@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -39,34 +39,34 @@ import org.oscarehr.util.MiscUtils;
  */
 public class Recommendation {
     private static final Logger log=MiscUtils.getLogger();
-    
+
     private String strength = null;
     private String text = null;
-    private List<RecommendationCondition> recommendationCondition = new ArrayList();
-    
+    private List<RecommendationCondition> recommendationCondition = new ArrayList<RecommendationCondition>();
+
     private String ruleName = null;
     private String measurement =  null;
-    
-    
+
+
     public String toString(){
          return " strength "+strength+" text "+text+" ruleName "+ruleName+" measurement "+measurement;
     }
-    
+
     public Recommendation(){
-        
+
     }
-    
+
     public Recommendation(Element recowarn){
         //monthrange = recowarn.getAttributeValue("monthrange");
         strength = recowarn.getAttributeValue("strength") ;
         text = recowarn.getAttributeValue("message");
         List<Element> cond = recowarn.getChildren("condition");
         for(Element ele:cond){
-            recommendationCondition.add(new RecommendationCondition(ele));   
+            recommendationCondition.add(new RecommendationCondition(ele));
         }
-        
+
     }
-    
+
     public Recommendation(String measurement,String monthrange, String strength,String text){
         this.measurement = measurement;
         RecommendationCondition rec = new RecommendationCondition();
@@ -76,30 +76,30 @@ public class Recommendation {
         this.strength = strength;
         this.text = text;
     }
-    
+
     public Recommendation(Element recowarn,String ruleName, String measurement){
         //monthrange = recowarn.getAttributeValue("monthrange");
         strength = recowarn.getAttributeValue("strength") ;
         text = recowarn.getAttributeValue("message");
-        
+
         this.ruleName = ruleName;
         this.measurement = measurement;
-        
+
         List<Element> cond = recowarn.getChildren("condition");
         for(Element ele:cond){
-            recommendationCondition.add(new RecommendationCondition(ele));   
+            recommendationCondition.add(new RecommendationCondition(ele));
         }
-        
+
     }
-    
+
     public Element getRuleBaseElement(){
         return getRuleBaseElement(ruleName,measurement);
     }
-    
+
     public Element getRuleBaseElement(String ruleName,String measurement){
-        
+
         log.debug("LOADING RULES - getRuleBaseElement"+measurement);
-        ArrayList list = new ArrayList();
+        ArrayList<DSCondition> list = new ArrayList<DSCondition>();
         //String toParse = monthrange;
         String consequenceType = "Recommendation";
         if( strength != null){
@@ -108,30 +108,30 @@ public class Recommendation {
             }
         }
         String consequence = "";
-        
+
         String NUMMONTHS = "\"+m.getLastDateRecordedInMonths(\""+measurement+"\")+\"";
-        
-        
+
+
         for(RecommendationCondition cond: getRecommendationCondition()){
              cond.getRuleBaseElement(list,measurement);
         }
-        
+
         ////////88888
         if (text == null || text.trim().equals("")){
              consequence ="m.add"+consequenceType+"(\""+measurement+"\",\""+measurement+" hasn't been reviewed in \"+m.getLastDateRecordedInMonths(\""+measurement+"\")+\" months\");";
         }else if( text != null){
             String txt = text;
             log.debug("TRY TO REPLACE $NUMMONTHS:"+txt.indexOf("$NUMMONTHS")+" WITH "+NUMMONTHS+  " "+txt);
-            
+
             txt = txt.replaceAll("\\$NUMMONTHS", NUMMONTHS);
             log.debug("TEXT "+txt);
             consequence ="m.add"+consequenceType+"(\""+measurement+"\",\""+txt+"\");";
         }
-        
+
         RuleBaseCreator rcb = new RuleBaseCreator();
         Element ruleElement = rcb.getRule(ruleName, "oscar.oscarEncounter.oscarMeasurements.MeasurementInfo", list,  consequence) ;
-    
-        
+
+
         return ruleElement;
     }
 
@@ -158,8 +158,8 @@ public class Recommendation {
     public void setText(String text) {
         this.text = text;
     }
-    
-    
+
+
     public Element getFlowsheetXML(){
         Element e = new Element("recommendation");
         //    e.setAttribute("monthrange",monthrange);
@@ -169,12 +169,12 @@ public class Recommendation {
          if (text != null){
              e.setAttribute("message",text) ;
          }
-        
+
          log.debug("Number of Conditions "+getRecommendationCondition().size());
          for(RecommendationCondition cond : getRecommendationCondition() ){
              e.addContent(cond.getFlowsheetXML());//a cond.getFlowsheetXML();
          }
-       
+
          return e;
     }
 

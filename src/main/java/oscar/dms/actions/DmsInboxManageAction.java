@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -102,12 +102,12 @@ public class DmsInboxManageAction extends DispatchAction {
 	}
 
 	private void setProviderDocsInSession(ArrayList<EDoc> privatedocs, HttpServletRequest request) {
-		ArrayList<Hashtable> providers = ProviderData.getProviderListOfAllTypes();
+		ArrayList<Hashtable<String,String>> providers = ProviderData.getProviderListOfAllTypes();
 		Hashtable<String,List<EDoc>> providerDocs = new Hashtable<String,List<EDoc>>();
 		for (int i = 0; i < providers.size(); i++) {
-			Hashtable ht =  providers.get(i);
+			Hashtable<String,String>ht =  providers.get(i);
 			List<EDoc> EDocs = new ArrayList<EDoc>();
-			String providerNo = (String) ht.get("providerNo");
+			String providerNo =  ht.get("providerNo");
 			providerDocs.put(providerNo, EDocs);
 		}
 		for (int i = 0; i < privatedocs.size(); i++) {

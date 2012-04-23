@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -44,6 +44,7 @@ import org.apache.log4j.Logger;
 import org.drools.RuleBase;
 import org.drools.WorkingMemory;
 import org.drools.io.RuleBaseLoader;
+import org.jdom.Element;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
@@ -65,7 +66,7 @@ public class MeasurementFlowSheet {
     private String warningColour = null;
     private String recommendationColour = null;
 
-    Hashtable indicatorHash = new Hashtable();   //color map for severity
+    Hashtable<String,String> indicatorHash = new Hashtable<String,String>();   //color map for severity
     private String topHTMLFileName = null;
     private boolean universal;
     private boolean isMedical = true;
@@ -89,7 +90,7 @@ public class MeasurementFlowSheet {
 
     public FlowSheetItem addListItem(FlowSheetItem item){
         log.debug("ITEM "+ item.getItemName());
-        String dsRules = (String) item.getAllFields().get("ds_rules");  //ds_rules=
+        String dsRules = item.getAllFields().get("ds_rules");  //ds_rules=
         log.debug("DS RULES "+dsRules);
         if (dsRules != null   && !dsRules.equals("")){
            RuleBase rb = loadMeasurementRuleBase(dsRules);
@@ -160,7 +161,7 @@ public class MeasurementFlowSheet {
     public MeasurementFlowSheet() {
     }
 
-    public List getDSElements(String measurement){
+    public List<Recommendation> getDSElements(String measurement){
           FlowSheetItem fsi = (FlowSheetItem) itemList.get(measurement);
           return fsi.getRecommendations();
     }
@@ -177,7 +178,7 @@ public class MeasurementFlowSheet {
     }
 
 
-    public Map getMeasurementFlowSheetInfo(String measurement) {
+    public Map<String,String> getMeasurementFlowSheetInfo(String measurement) {
         if (itemList == null) {
          //DO something
         	itemList = new ListOrderedMap();
@@ -204,7 +205,7 @@ public class MeasurementFlowSheet {
 
 
 
-    public void updateMeasurementFlowSheetInfo(String measurement, Hashtable h) {
+    public void updateMeasurementFlowSheetInfo(String measurement, Hashtable<String,String> h) {
         FlowSheetItem item = new FlowSheetItem(h);
         itemList.put(measurement, item);
     }
@@ -214,7 +215,7 @@ public class MeasurementFlowSheet {
     }
 
 
-    public List getMeasurementList() {
+    public List<String> getMeasurementList() {
         return itemList.asList();
     }
 
@@ -264,14 +265,13 @@ public class MeasurementFlowSheet {
 
     public void loadRuleBase(){
         log.debug("LOADRULEBASE == "+name);
-        ArrayList dsElements = new ArrayList();
+        ArrayList<Element> dsElements = new ArrayList<Element>();
 
         if (itemList  != null){
            OrderedMapIterator iter = itemList.orderedMapIterator();
            while (iter.hasNext()) {
-              Object key = iter.next();
               FlowSheetItem fsi = (FlowSheetItem) iter.getValue();
-              List rules = fsi.getRecommendations();
+              List<Recommendation> rules = fsi.getRecommendations();
               if (rules !=null){
                   log.debug("# OF RULES FOR "+fsi.getItemName()+" "+rules.size());
                   for (Object obj: rules){
@@ -301,7 +301,7 @@ public class MeasurementFlowSheet {
                 MiscUtils.getLogger().error("Error", e);
             }
         }else{
-            if (true);
+        	//empty
         }
     }
 
@@ -341,7 +341,7 @@ public class MeasurementFlowSheet {
 
     public RuleBase loadMeasuremntRuleBase(List<TargetColour> targetColours){
         RuleBase measurementRuleBase = null;
-        List dsElements = new ArrayList();
+        List<Element> dsElements = new ArrayList<Element>();
          RuleBaseCreator rcb = new RuleBaseCreator();
             try{
                 int count = 0;
@@ -466,13 +466,13 @@ public class MeasurementFlowSheet {
     public String getIndicatorColour(String key) {
         String ret = null;
         if (key != null) {
-            ret = (String) indicatorHash.get(key);
+            ret = indicatorHash.get(key);
         }
         return ret;
     }
 
-    public Hashtable getIndicatorHashtable(){
-        return new Hashtable(indicatorHash);
+    public Hashtable<String,String> getIndicatorHashtable(){
+        return new Hashtable<String,String>(indicatorHash);
     }
 
     public ArrayList sortToCurrentOrder(ArrayList nonOrderedList) {

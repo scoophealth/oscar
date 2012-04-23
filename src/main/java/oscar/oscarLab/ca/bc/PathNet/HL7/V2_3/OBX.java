@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -39,14 +39,14 @@ import oscar.oscarLab.ca.bc.PathNet.HL7.Node;
  * www.andromedia.ca
  */
 public class OBX extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
-    private static Logger logger=MiscUtils.getLogger(); 
+    private static Logger logger=MiscUtils.getLogger();
 
-    private ArrayList note;
-   
-   private boolean update = false;;
-   
+    private ArrayList<NTE> note;
+
+   private boolean update = false;
+
    public OBX() {
-      note = new ArrayList();
+      note = new ArrayList<NTE>();
    }
    //If line starts with OBX then its parsed in the normal way
    //IF line starts with NTE then a new NTE object is created and added to the note ArrayList, parse method is called
@@ -61,25 +61,25 @@ public class OBX extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
       logger.error("Error During Parsing, Unknown Line - oscar.PathNet.HL7.V2_3.OBX - Message: " + line);
       return null;
    }
-   
+
    public int ToDatabase(int parent)throws SQLException {
       return booleanConvert(DBHandler.RunSQL(this.update? this.getUpdateSql(parent) : this.getInsertSql(parent) ));
    }
-   
-   
+
+
    public void setUpdate(boolean update) {
       this.update = update;
    }
-   
+
    public String getNote() {
       String notes = "";
       int size = note.size();
       for(int i = 0; i < size; ++i ) {
-         notes += ((NTE)note.get(i)).get("comment", "");
+         notes += (note.get(i)).get("comment", "");
       }
       return notes;
    }
-   
+
    protected String getUpdateSql(int parent) {
       String sql = "UPDATE hl7_obx SET ";
       String[] properties = this.getProperties();
@@ -89,7 +89,7 @@ public class OBX extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
       sql += "note='" + getNote() + "' WHERE obr_id='" + parent + "'";
       return sql;
    }
-   
+
    protected String getInsertSql(int parent) {
       String fields = "INSERT INTO hl7_obx ( obr_id";
       String values = "VALUES ('" + String.valueOf(parent) + "'";
@@ -102,7 +102,7 @@ public class OBX extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
       values += ", '" + getNote() + "'";
       return fields + ") " + values + ");";
    }
-   
+
    protected String[] getProperties() {
       return new String[] {
          "set_id",

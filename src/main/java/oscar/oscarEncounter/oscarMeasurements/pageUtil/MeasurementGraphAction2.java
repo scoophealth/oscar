@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -157,7 +157,7 @@ public class MeasurementGraphAction2 extends Action {
     ArrayList<EctMeasurementsDataBean> getList(String demographicNo, String typeIdName) {
         EctMeasurementsDataBeanHandler ectMeasure = new EctMeasurementsDataBeanHandler(demographicNo, typeIdName);
         Collection<EctMeasurementsDataBean> dataVector = ectMeasure.getMeasurementsDataVector();
-        ArrayList<EctMeasurementsDataBean> list = new ArrayList(dataVector);
+        ArrayList<EctMeasurementsDataBean> list = new ArrayList<EctMeasurementsDataBean>(dataVector);
         return list;
     }
 
@@ -184,14 +184,14 @@ public class MeasurementGraphAction2 extends Action {
 
     private static String[] getDrugSymbol(String demographic,String[] dins){
         String[] ret = new String[dins.length];
-        ArrayList list = new ArrayList();
+        ArrayList<String> list = new ArrayList<String>();
         oscar.oscarRx.data.RxPrescriptionData prescriptData = new oscar.oscarRx.data.RxPrescriptionData();
         for(String din:dins){
              oscar.oscarRx.data.RxPrescriptionData.Prescription [] arr =  prescriptData.getPrescriptionScriptsByPatientRegionalIdentifier(Integer.parseInt(demographic),din);
              list.add( arr[0].getBrandName() );
 
         }
-        ret = (String[]) list.toArray( new String[list.size()] );
+        ret = list.toArray( new String[list.size()] );
         return ret;
     }
 
@@ -204,7 +204,7 @@ public class MeasurementGraphAction2 extends Action {
              org.jfree.data.time.TimeSeriesCollection dataset = new org.jfree.data.time.TimeSeriesCollection();
 
         ArrayList<EctMeasurementsDataBean> list = getList(demographicNo, typeIdName);
-        ArrayList<OHLCDataItem> dataItems = new ArrayList();
+        ArrayList<OHLCDataItem> dataItems = new ArrayList<OHLCDataItem>();
         String typeYAxisName = "";
 
         if (typeIdName.equals("BP")) {
@@ -513,7 +513,7 @@ public class MeasurementGraphAction2 extends Action {
             ArrayList<Map<String, Serializable>> list = CommonLabTestValues.findValuesForTest(labType, demographicNo, testName, identifier);
 
             String typeYAxisName = "";
-            ArrayList<OHLCDataItem> dataItems = new ArrayList();
+            ArrayList<OHLCDataItem> dataItems = new ArrayList<OHLCDataItem>();
 
 
             String typeLegendName = "Lab Value";
@@ -615,7 +615,7 @@ public class MeasurementGraphAction2 extends Action {
                list = CommonLabTestValues.findValuesForTest(labType, demographicNo, testName, identifier);
             }
             String typeYAxisName = "";
-            ArrayList<OHLCDataItem> dataItems = new ArrayList();
+            ArrayList<OHLCDataItem> dataItems = new ArrayList<OHLCDataItem>();
 
 
             String typeLegendName = "Lab Value";
@@ -734,7 +734,7 @@ public class MeasurementGraphAction2 extends Action {
         org.jfree.data.time.TimeSeriesCollection dataset = new org.jfree.data.time.TimeSeriesCollection();
         ArrayList<EctMeasurementsDataBean> list = getList(demographicNo, typeIdName);
         String typeYAxisName = "";
-         ArrayList<OHLCDataItem> dataItems = new ArrayList();
+         ArrayList<OHLCDataItem> dataItems = new ArrayList<OHLCDataItem>();
         if (typeIdName.equals("BP")) {
             log.debug("Using BP LOGIC FOR type 1 ");
             EctMeasurementsDataBean sampleLine = list.get(0);
@@ -963,7 +963,7 @@ public class MeasurementGraphAction2 extends Action {
 
 
     private  Hashtable getMeasurementsExt(Integer measurementId) throws SQLException {
-	Hashtable hash = new Hashtable();
+	Hashtable<String,String> hash = new Hashtable<String,String>();
 	if (measurementId!=null) {
 
 	    String sql = "SELECT * FROM measurementsExt WHERE measurement_id=" + measurementId;

@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -38,8 +38,8 @@ import oscar.oscarEncounter.oscarMeasurements.util.TargetColour;
  * @author jaygallagher
  */
 public class FlowSheetItem {
-    
-    Map allFields = null;
+
+    Map<String,String> allFields = null;
     private String measurementType = null;
     private String preventionType = null;
     private String displayName = null;
@@ -52,13 +52,13 @@ public class FlowSheetItem {
     private RuleBase ruleBase = null;
     private String dsRulesFileName = null;
     private boolean hide = false;
-       
+
     @Override
     public String toString(){
         return " MEASUREMENT TYPE :"+measurementType +" PREV TYPE :"+preventionType+" dsRulesFileName :"+dsRulesFileName+" ruleBASE :"+ruleBase;
     }
-    
-   /* 
+
+   /*
     <item
         measurement_type="EDGI"
         display_name="Autonomic Neuropathy"
@@ -72,35 +72,35 @@ public class FlowSheetItem {
         guideline="Assess and discuss self-management challenges"
         graphable="no"
         value_name="Discussed"
-        possible_answer="Yes"/>         
-   
-    <item 
+        possible_answer="Yes"/>
+
+    <item
         prevention_type="Flu"
         display_name="Flu Vaccine"
         guideline="Annually"
         graphable="no"/>
-    */    
-    
+    */
+
     public FlowSheetItem(){
-        
+
     }
-    
-    public FlowSheetItem(Map hashtable){
+
+    public FlowSheetItem(Map<String,String> hashtable){
         allFields = hashtable;
-        
-        measurementType = (String) allFields.get("measurement_type");
-        preventionType = (String) allFields.get("prevention_type");
-        displayName = (String) allFields.get("display_name");
-        guideline = (String) allFields.get("guideline");
-        String graph = (String) allFields.get("graphable");
+
+        measurementType = allFields.get("measurement_type");
+        preventionType = allFields.get("prevention_type");
+        displayName = allFields.get("display_name");
+        guideline = allFields.get("guideline");
+        String graph = allFields.get("graphable");
         if (graph != null && graph.equals("yes")){
            graphable = true;
         }
-        dsRulesFileName = (String) allFields.get("ds_rules");
-        
-        valueName = (String) allFields.get("value_name");
-        possibleAnswer = (String) allFields.get("possible_answer");
-        
+        dsRulesFileName = allFields.get("ds_rules");
+
+        valueName = allFields.get("value_name");
+        possibleAnswer = allFields.get("possible_answer");
+
     }
 
     public String getMeasurementType() {
@@ -138,15 +138,15 @@ public class FlowSheetItem {
     public void setRecommendations(List<Recommendation> recommendations) {
         this.recommendations = recommendations;
     }
-    
+
     public String getItemName(){
         if (measurementType !=null){
             return measurementType;
         }
         return preventionType;
     }
-    
-    public Map getAllFields(){
+
+    public Map<String,String> getAllFields(){
         return allFields;
     }
 
@@ -173,6 +173,6 @@ public class FlowSheetItem {
     public void setTargetColour(List<TargetColour> targetColour) {
         this.targetColour =targetColour;
     }
-            
+
 
 }

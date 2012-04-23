@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -58,7 +58,7 @@ public class MDSHandler implements MessageHandler {
     Object msg = null;
     Object terser;
     ArrayList obrGroups = null;
-    HashMap headerMaps = new HashMap();
+    HashMap<String,String> headerMaps = new HashMap<String,String>();
     Logger logger = Logger.getLogger(MDSHandler.class);
 
     /** Creates a new instance of CMLHandler */
@@ -305,8 +305,8 @@ public class MDSHandler implements MessageHandler {
     /**
      *  Retrieve the possible segment headers from the OBX fields
      */
-    public ArrayList getHeaders(){
-        ArrayList headers = new ArrayList();
+    public ArrayList<String> getHeaders(){
+        ArrayList<String> headers = new ArrayList<String>();
         String currentHeader = "";
         String nextHeader;
         String headerNum;
@@ -585,7 +585,6 @@ public class MDSHandler implements MessageHandler {
 
     public String getServiceDate(){
         try{
-            UtilDateUtilities dateUtil = new UtilDateUtilities();
             Date mshDate = UtilDateUtilities.StringToDate(getMsgDate(), "yyyy-MM-dd hh:mm:ss");
             return( UtilDateUtilities.DateToString(mshDate, "dd-MMM-yyyy") );
         }catch(Exception e){
@@ -696,8 +695,8 @@ public class MDSHandler implements MessageHandler {
         }
     }
 
-    public ArrayList getDocNums(){
-        ArrayList nums = new ArrayList();
+    public ArrayList<String> getDocNums(){
+        ArrayList<String> nums = new ArrayList<String>();
         String docNum;
         try{
             if ((docNum = DynamicHapiLoaderUtils.terserGet(terser,"/.PV1-8-1")) != null){
@@ -778,7 +777,6 @@ public class MDSHandler implements MessageHandler {
     private String matchOBXToHeader(String obxSeg){
 
         int i=0;
-        String currentHeader = "";
         String headerNum = "null";
         try{
             String zmnNum = DynamicHapiLoaderUtils.terserGet(terser,"/.ZMN(0)-8-1");
@@ -802,7 +800,7 @@ public class MDSHandler implements MessageHandler {
         }
 
 
-        return( (String) headerMaps.get(headerNum) );
+        return(headerMaps.get(headerNum) );
 
     }
 

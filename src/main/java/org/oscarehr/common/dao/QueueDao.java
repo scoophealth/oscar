@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -65,7 +65,7 @@ public class QueueDao extends AbstractDao<Queue>{
     public List<Hashtable> getQueues(){
         String q="select q from Queue q";
         Query query=entityManager.createQuery(q);
-        List<Queue> result=new ArrayList();
+        List<Queue> result=new ArrayList<Queue>();
         result=query.getResultList();
         List<Hashtable> r=new ArrayList();
         for(Queue que:result){
@@ -83,7 +83,7 @@ public class QueueDao extends AbstractDao<Queue>{
         Integer ri=(Integer)query.getSingleResult();
         if(ri!=null){
             r=ri.toString();
-        }        
+        }
         return r;
     }
     public String getQueueName(int id){
@@ -96,7 +96,7 @@ public class QueueDao extends AbstractDao<Queue>{
         }else{
             return "";
         }
-            
+
     }
     public String getQueueid(String name){
         String q="select q from Queue q where q.name="+name;

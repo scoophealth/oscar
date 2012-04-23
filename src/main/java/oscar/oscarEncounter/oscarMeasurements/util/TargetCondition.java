@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -72,7 +72,7 @@ public class TargetCondition {
 
     }
 
-    public void getRuleBaseElement(ArrayList list){
+    public void getRuleBaseElement(ArrayList<DSCondition> list){
         log.debug("creating rules for "+type+" List contains "+list.size()+ " value "+value);
 
         if ("getDataAsDouble".equals(type)){
@@ -205,33 +205,4 @@ public class TargetCondition {
     public void setParam(String param) {
         this.param = param;
     }
-
-    public static void main(String[] args)  {
-        //String filename = "/Users/jaygallagher/Desktop/PATIENT.D
-        ArrayList list = new ArrayList();
-        TargetCondition tc = new TargetCondition();
-        tc.setType("getNumberFromSplit");
-
-
-
-
-
-        tc.setValue(">130/");
-        tc.getRuleBaseElement(list);
-
-
-        tc.setValue(">130/>80");
-        tc.getRuleBaseElement(list);
-
-
-        tc.setValue("140-120/>80");
-        tc.getRuleBaseElement(list);
-
-
-        tc.setValue(">130");
-        tc.getRuleBaseElement(list);
-
-
-    }
-
 }

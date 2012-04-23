@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -37,6 +37,7 @@ import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.on.CommonLabResultData;
+import oscar.oscarMDS.data.ReportStatus;
 import oscar.util.UtilDateUtilities;
 
 /**
@@ -44,9 +45,9 @@ import oscar.util.UtilDateUtilities;
  * @author Jay Gallagher
  */
 public class PathnetLabTest {
-    
+
     Logger logger = Logger.getLogger(PathnetLabTest.class);
-    
+
     String
 //select_pid_information = "SELECT patient_name, external_id, date_of_birth, patient_address, sex, home_number  FROM hl7_pid WHERE hl7_pid.pid_id='@pid'",
             select_header_information = "SELECT DISTINCT filler_order_number, requested_date_time, observation_date_time, ordering_provider, result_copies_to FROM hl7_obr WHERE pid_id = '@pid'",
@@ -56,8 +57,8 @@ public class PathnetLabTest {
             update_lab_report_viewed = "UPDATE hl7_link SET hl7_link.status='A' WHERE hl7_link.pid_id='@pid' AND hl7_link.status!='S';",
             select_doc_notes = "SELECT hl7_message.notes FROM hl7_pid, hl7_message WHERE hl7_pid.pid_id='@pid' AND hl7_pid.message_id=hl7_message.message_id;",
             update_doc_notes = "UPDATE hl7_pid, hl7_message SET hl7_message.notes='@notes' WHERE hl7_pid.pid_id='@pid' AND hl7_pid.message_id=hl7_message.message_id;";
-    
-    
+
+
     public String pName = "";          //  5. Patient: First name
     public String pSex = "";                //  7. Sex F or M
     public String pHealthNum = "";          //  8. Patient: Health number
@@ -65,7 +66,7 @@ public class PathnetLabTest {
     public String pPhone = "";
     public String patientLocation = "";
     public String pid = null;
-    
+
     public String serviceDate = "";
     public String status = ""; //.equals("F") ? "Final" : "Partial")
     public String docNum = "";
@@ -75,34 +76,34 @@ public class PathnetLabTest {
     public String ccedDocs = "";
     public String locationId = "";
     public String multiLabId = "";
-    
+
     public ArrayList labResults = new ArrayList();
-    
+
 //ArrayList labs = gResults.getLabResults();
 //for ( int l =0 ; l < labs.size() ; l++){
 //                            CMLLabTest.LabResult thisResult = (CMLLabTest.LabResult) labs.get(l);
 //                                <td valign="top" align="left"><a href="labValues.jsp?testName=<%=thisResult.testName%>&demo=<%=lab.getDemographicNo()%>&labType=BCP"><%=thisResult.testName %></a></td>
 //                        <%}/*for lab.size*/%>
 //                            <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=BCP&segmentID=<%= request.getParameter("segmentID")%>&name=<%=java.net.URLEncoder.encode(lab.pLastName+", "+lab.pFirstName )%>', 'searchPatientWindow')">
-    
-    
-    
+
+
+
     public PathnetLabTest() {
     }
-    
-    public ArrayList getStatusArray(String labID){
+
+    public ArrayList<ReportStatus> getStatusArray(String labID){
         CommonLabResultData comLab = new CommonLabResultData();
         return comLab.getStatusArray(labID,"BCP");
     }
-    
-    public ArrayList getGroupResults(ArrayList labResults){
-        return new ArrayList();
+
+    public ArrayList<GroupResults> getGroupResults(ArrayList<GroupResults> labResults){
+        return new ArrayList<GroupResults>();
     }
-    
+
     public String getDemographicNo(){
         return demographicNo;
     }
-    
+
     public Properties sepDocNameNum(String s){
         Properties h = new Properties();
         int i = s.indexOf("^");
@@ -114,16 +115,16 @@ public class PathnetLabTest {
         }
         return h;
     }
-    
+
     public String justGetDocName(String s){
         String ret = s;
         int i = s.indexOf("^");
         if (i != -1){
-            ret = s.substring(i+1).replaceAll("\\^", " ");;
+            ret = s.substring(i+1).replaceAll("\\^", " ");
         }
         return ret;
     }
-    
+
     public String getFirstVal(String s,String delimiter){
         String ret = s;
         int i = s.indexOf(delimiter);
@@ -132,19 +133,19 @@ public class PathnetLabTest {
         }
         return ret;
     }
-    
+
     public String getFirstValDash(String s){
         return getFirstVal(s,"-");
     }
-    
+
     public String getFirstValSpace(String s){
         return getFirstVal(s," ");
     }
-    
+
     public String getDemographicNumByLabId(String id){
         String ret = null;
         try{
-            
+
             String select_demoNo = "select demographic_no from patientLabRouting where lab_type = 'BCP' and lab_no = '"+id+"'";
             ResultSet rs  = DBHandler.GetSQL(select_demoNo);
             if(rs.next()){
@@ -159,14 +160,14 @@ public class PathnetLabTest {
         }
         return ret;
     }
-    
+
     public void populateLab(String labid){
 
         PathnetResultsData data = new PathnetResultsData();
         multiLabId = data.getMatchingLabs(labid);
         demographicNo = getDemographicNumByLabId(labid);
         try{
-            
+
             String select_pid_information = "SELECT pid_id, patient_name, external_id, date_of_birth, patient_address, sex, home_number,sending_facility  FROM hl7_pid, hl7_msh WHERE hl7_pid.message_id = '"+labid+"' and hl7_msh.message_id = hl7_pid.message_id";
             ResultSet rs = DBHandler.GetSQL(select_pid_information);
             if(rs.next()){
@@ -203,12 +204,12 @@ public class PathnetLabTest {
             MiscUtils.getLogger().error("Error", e);
         }
     }
-    
-    
+
+
     public String getAge(){
         return getAge(this.pDOB);
     }
-    
+
     public String getAge(String s){
         String age = "N/A";
         try {
@@ -217,40 +218,41 @@ public class PathnetLabTest {
             java.util.Date date = formatter.parse(s);
             age = UtilDateUtilities.calcAge(date);
         } catch (ParseException e) {
+        	//empty
         }
         return age;
     }
-    
+
     public static String removeCarat(String s){
         if(s!=null){
             return s.replaceAll("\\^", " ");
         }
         return s;
     }
-    
+
     public String justGetAccessionNumber(String s){
-        String[] ss = s.split("-");       
+        String[] ss = s.split("-");
         if (ss.length == 3)
             return ss[0];
         else
             return ss[1];
     }
-    
-  
-    public ArrayList getResultsOld(String pid){
-        ArrayList list = new ArrayList();
+
+
+    public ArrayList<GroupResults> getResultsOld(String pid){
+        ArrayList<GroupResults> list = new ArrayList<GroupResults>();
         try{
-            
+
             //ResultSet rs = DBHandler.GetSQL(select_lab_results.replaceAll("@pid", pid));
             ResultSet rs = DBHandler.GetSQL("select diagnostic_service_sect_id, universal_service_id, set_id, obr_id from hl7_obr where pid_id = '"+pid+"' ");
-            
+
             logger.info("select diagnostic_service_sect_id, universal_service_id, set_id, obr_id from hl7_obr where pid_id = '"+pid+"' ");
-           
+
             while(rs.next()){
                 GroupResults gr = new GroupResults();
                 gr.groupName = oscar.Misc.getString(rs, "diagnostic_service_sect_id")+ " " +oscar.Misc.getString(rs, "universal_service_id").substring(oscar.Misc.getString(rs, "universal_service_id").indexOf("^"));
                 String obrId = oscar.Misc.getString(rs, "obr_id");
-                
+
                 ResultSet rs2 = DBHandler.GetSQL("select set_id, observation_date_time,observation_result_status, observation_identifier, observation_results, units, reference_range, abnormal_flags, observation_result_status, note as obxnote from hl7_obx where obr_id = '"+obrId+"'");
                 logger.info("select set_id, observation_identifier, observation_results, units, reference_range, abnormal_flags, observation_result_status, note as obxnote from hl7_obx where obr_id = '"+obrId+"'");
                 while(rs2.next()){
@@ -276,15 +278,15 @@ public class PathnetLabTest {
         }catch(Exception e){MiscUtils.getLogger().error("Error", e);}
         return list;
     }
-    
-    public ArrayList getResults(String pid){
-        ArrayList list = new ArrayList();
+
+    public ArrayList<GroupResults> getResults(String pid){
+        ArrayList<GroupResults> list = new ArrayList<GroupResults>();
         try{
-            
+
             //ResultSet rs = DBHandler.GetSQL(select_lab_results.replaceAll("@pid", pid));
             ResultSet rs = DBHandler.GetSQL("select diagnostic_service_sect_id, universal_service_id, set_id, obr_id,note from hl7_obr where pid_id = '"+pid+"' ");
             logger.info("select diagnostic_service_sect_id, universal_service_id, set_id, obr_id,note from hl7_obr where pid_id = '"+pid+"' ");
-     
+
             GroupResults gr = null;
             while(rs.next()){
                 String gName = oscar.Misc.getString(rs, "diagnostic_service_sect_id");
@@ -323,17 +325,17 @@ public class PathnetLabTest {
         }catch(Exception e){MiscUtils.getLogger().error("Error", e);}
         return list;
     }
-    
-    
-    
+
+
+
     public class LabResult{
-        
+
         boolean labResult = true;
-        
+
         public boolean isLabResult(){ return labResult ;}
         public boolean isLabResultComment(){ return labResult ;}
-        
-        
+
+
         ///
         public String service_name = null;
         public String title = null;       //  2. Title
@@ -347,7 +349,7 @@ public class PathnetLabTest {
         public String result = null;      // 10. Result
         public String locationId = "";  // 11. Location Id (Test performed at )
         public String last = null;        // 12. Last Y or N
-        
+
         public String timeStamp = "";
         public String resultStatus = "";
         //String title = null;       // 2. Title
@@ -355,10 +357,10 @@ public class PathnetLabTest {
         public String description = null; // 4. Description/Comment
         //String locationId = null;  // 5. Location Id
         //String last = null;        // 6. Last Y or N
-        
+
         public String notes = null;
-        
-        
+
+
         public String getReferenceRange(){
             String retval ="";
             if (minimum != null && maximum != null){
@@ -372,25 +374,25 @@ public class PathnetLabTest {
             }
             return retval;
         }
-        
+
     }
-    
+
     public class GroupResults{
         public String groupName = null;
-        private ArrayList labResults = null;
-        public ArrayList headerResults = null;
-        
+        private ArrayList<LabResult> labResults = null;
+        public ArrayList<String> headerResults = null;
+
         public void addLabResult(LabResult l){
-            if (labResults == null){ labResults = new ArrayList(); }
+            if (labResults == null){ labResults = new ArrayList<LabResult>(); }
             labResults.add(l);
         }
-        
+
         public void addHeaderResults(String s){
             boolean add = true;
 
-            if (headerResults == null){ headerResults = new ArrayList(); }
+            if (headerResults == null){ headerResults = new ArrayList<String>(); }
             if ( headerResults.size() > 0){
-                String h = (String) headerResults.get((headerResults.size()-1));
+                String h = headerResults.get((headerResults.size()-1));
 
                 if(h.equals(s.replaceAll("\\\\\\.br\\\\", "<br/>"))){
                     add = false;
@@ -400,17 +402,17 @@ public class PathnetLabTest {
                 headerResults.add(s.replaceAll("\\\\\\.br\\\\", "<br/>"));
             }
         }
-        
-        public ArrayList getLabResults(){
-            if (labResults == null){ labResults = new ArrayList(); }
+
+        public ArrayList<LabResult> getLabResults(){
+            if (labResults == null){ labResults = new ArrayList<LabResult>(); }
             return labResults;
         }
-        
-        public ArrayList getHeaderResults(){
-            if (headerResults == null){ headerResults = new ArrayList(); }
+
+        public ArrayList<String> getHeaderResults(){
+            if (headerResults == null){ headerResults = new ArrayList<String>(); }
             return headerResults;
         }
-        
+
     }
 
     public String getLocationId() {
