@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -29,7 +29,6 @@ import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Properties;
@@ -46,13 +45,13 @@ import oscar.oscarDB.DBPreparedHandler;
 public class ObecData {
 	private static Logger logger = MiscUtils.getLogger();
 
-	public ArrayList demoList = null;
+	//public ArrayList demoList = null;
 	public String sql = "";
 	public String results = null;
 	public String text = null;
 	public String connect = null;
 	DBPreparedHandler accessDB = null;
-	
+
 	public ObecData() {
 	}
 
@@ -67,7 +66,7 @@ public class ObecData {
 			eDate = "9999/12/31";
 		}
 		try {
-			
+
 			String sql = "select d.demographic_no, d.last_name, d.first_name, LEFT(d.address, 32) as address, LEFT(d.city, 30) as city, d.postal, d.hin, d.ver, d.province from appointment a, demographic d where a.demographic_no=d.demographic_no and d.hin <> '' and a.appointment_date>= '" + sDate + "' and appointment_date<='" + eDate + "' and (d.province='Ontario' or d.province='ON' or d.province='ONTARIO') group by d.demographic_no order by d.last_name";
 			ResultSet rs = DBHandler.GetSQL(sql);
 			while (rs.next()) {
@@ -119,8 +118,8 @@ public class ObecData {
 		String obecFilename = "";
 
 		try {
-			
-			
+
+
 			String oscar_home = pp.getProperty("DOCUMENT_DIR");
 			Calendar calendar = new GregorianCalendar();
 			String randomDate = String.valueOf(calendar.get(Calendar.SECOND)) + String.valueOf(calendar.get(Calendar.MILLISECOND));

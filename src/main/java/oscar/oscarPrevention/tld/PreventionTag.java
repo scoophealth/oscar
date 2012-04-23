@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -43,44 +43,44 @@ import oscar.oscarPrevention.PreventionData;
  * @author Jay Gallagher
  */
 public class PreventionTag extends TagSupport {
-   
-  
+
+
    public PreventionTag() {
 	numWarnings = 0;
    }
-   
+
    public int doStartTag() throws JspException    {
-	Prevention p = PreventionData.getPrevention(demographicNo);  
+	Prevention p = PreventionData.getPrevention(demographicNo);
         try{
 	PreventionDS pf = PreventionDS.getInstance();
 	pf.getMessages(p);
         }catch(Exception e){
            MiscUtils.getLogger().error("Error", e);
         }
-	ArrayList warnings = p.getWarnings();      
-	
+	ArrayList<String> warnings = p.getWarnings();
+
         StringBuilder sb = new StringBuilder();
         if (warnings != null){
            numWarnings = warnings.size();
            for (int i = 0; i < warnings.size(); i++){
-              sb.append((String) warnings.get(i));
+              sb.append( warnings.get(i));
               sb.append("\n");
            }
 
         }
         String title = sb.toString();
         try{
-            JspWriter out = super.pageContext.getOut();            
+            JspWriter out = super.pageContext.getOut();
             if(numWarnings > 0)
                 out.print("<span style=\"color:red;\" title=\""+title+"\">  ");
             else
                 out.print("<span>  ");
         } catch(Exception eWriter) {
         	MiscUtils.getLogger().error("Error", eWriter);
-        }        
+        }
         return(EVAL_BODY_INCLUDE);
     }
-   
+
 
     public void setDemographicNo(String demographicNo)    {
        this.demographicNo = demographicNo;
@@ -90,11 +90,11 @@ public class PreventionTag extends TagSupport {
         return demographicNo;
     }
 
-    
+
 
     public int doEndTag()        throws JspException    {
        try{
-          JspWriter out = super.pageContext.getOut();         
+          JspWriter out = super.pageContext.getOut();
           out.print("</span>");
        }catch(Exception p) {MiscUtils.getLogger().error("Error",p);
        }

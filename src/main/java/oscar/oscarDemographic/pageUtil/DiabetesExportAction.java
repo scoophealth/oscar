@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -692,10 +692,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             String annotation = getNonDumpNote(CaseManagementNoteLink.LABTEST, Long.valueOf(lab_no), other_id);
             if (StringUtils.filled(annotation)) labResults.setPhysiciansNotes(annotation);
 
-	    	HashMap<String,String> labRoutingInfo = new HashMap<String,String>();
+	    	HashMap<String,Object> labRoutingInfo = new HashMap<String,Object>();
 	    	labRoutingInfo.putAll(ProviderLabRouting.getInfo(lab_no));
 
-	    	String info = labRoutingInfo.get("provider_no");
+	    	String info = (String)labRoutingInfo.get("provider_no");
 	    	if (info!=null && !"0".equals(info)) {
 	    		ProviderData pd = new ProviderData(info);
 	    		if (StringUtils.noNull(pd.getOhip_no()).length()<=6) {
@@ -704,7 +704,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    			Util.writeNameSimple(reviewer.addNewName(), pd.getFirst_name(), pd.getLast_name());
     			}
 	    	}
-	    	String timestamp = labRoutingInfo.get("timestamp");
+	    	String timestamp = (String)labRoutingInfo.get("timestamp");
     		if (StringUtils.filled(timestamp)) {
     			labResults.addNewDateTimeResultReviewed().setFullDate(Util.calDate(timestamp));
     		}

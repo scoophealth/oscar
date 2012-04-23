@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -40,29 +40,29 @@ import org.apache.struts.action.ActionMapping;
  * @author jay
  */
 public class RemoveClinicalReportFromHistoryAction extends Action {
-    
+
     /** Creates a new instance of RunClinicalReportAction */
     public RemoveClinicalReportFromHistoryAction() {
     }
-    
+
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) {
-        
+
         String id = request.getParameter("id");
         int nid = -1;
         try{
             nid = Integer.parseInt(id);
-        }catch(Exception e){}   
-        
+        }catch(Exception e){}
+
         //Could be a concurrency issue here if they opened up more than one report screen
-        ArrayList arrList =  (ArrayList)  request.getSession().getAttribute("ClinicalReports");
+        ArrayList<Integer> arrList =  (ArrayList<Integer>)  request.getSession().getAttribute("ClinicalReports");
         if (arrList != null && nid != -1){
-           arrList.remove(Integer.parseInt(id));     
+           arrList.remove(Integer.parseInt(id));
         }
         if (arrList != null && arrList.size() == 0){
             request.getSession().removeAttribute("ClinicalReports");
         }
         //request.getSession().setAttribute("ClinicalReports",arrList);
-        
+
         return mapping.findForward("success");
-     }    
+     }
 }

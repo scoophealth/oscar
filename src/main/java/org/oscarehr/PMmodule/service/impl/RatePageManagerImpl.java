@@ -44,15 +44,15 @@ public class RatePageManagerImpl implements RatePageManager {
 	public void rate(String pageName, int score) {
 		rateDao.rate(pageName, score);
 	}
-	
-	public List  allStatistic() {
-		List rs = rateDao.getAllRecord();
+
+	public List<RatingView>  allStatistic() {
+		List<RatePage> rs = rateDao.getAllRecord();
 		RatePage rp;
-		List al=new ArrayList();
+		List<RatingView> al=new ArrayList<RatingView>();
 		int i=0;
 		RatingView rv=null;
 		while (i<rs.size()) {
-			rp=(RatePage) rs.get(i);
+			rp= rs.get(i);
 			int v =rp.getVisitors().intValue();
 			double avs=rp.getScore().intValue()/v;
 			String name=rp.getPageName().substring(0, rp.getPageName().indexOf("."));
@@ -60,7 +60,7 @@ public class RatePageManagerImpl implements RatePageManager {
 			rv.setPageName(name);
 			rv.setAvrgScore(Double.toString(avs));
 			rv.setVstNumber(Integer.toString(v));
-			
+
 			al.add(i, rv);
 			i++;
 		}

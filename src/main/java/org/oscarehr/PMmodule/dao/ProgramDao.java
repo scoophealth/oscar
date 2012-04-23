@@ -158,7 +158,7 @@ public class ProgramDao extends HibernateDaoSupport {
 
         return result;
     }
-    
+
     public String getProgramName(Integer programId) {
         String name = null;
 
@@ -182,9 +182,9 @@ public class ProgramDao extends HibernateDaoSupport {
     }
 
     public Integer getProgramIdByProgramName(String programName) {
-    	
+
     	if(programName == null) return null;
-    	
+
     	List<Program> programs = getHibernateTemplate().find("FROM Program p WHERE p.name = ? ORDER BY p.id ", programName);
     	if(!programs.isEmpty()) {
     		return programs.get(0).getId();
@@ -192,12 +192,12 @@ public class ProgramDao extends HibernateDaoSupport {
     		return null;
     	}
     }
-    
-    public List getAllPrograms(String programStatus, String type, Integer facilityId, String providerNo,Integer shelterId)
+
+    public List<Program> getAllPrograms(String programStatus, String type, Integer facilityId, String providerNo,Integer shelterId)
     {
     	return getAllPrograms(programStatus, type,facilityId,null,providerNo,shelterId);
     }
-    public List getAllPrograms(String programStatus, String type, Integer facilityId, Integer clientId, String providerNo,Integer shelterId)
+    public List<Program> getAllPrograms(String programStatus, String type, Integer facilityId, Integer clientId, String providerNo,Integer shelterId)
     {
     	Criteria c = getSession().createCriteria(Program.class);
     	if (!(Utility.IsEmpty(programStatus))) {
@@ -215,10 +215,11 @@ public class ProgramDao extends HibernateDaoSupport {
     	}
     	c.add(Restrictions.sqlRestriction("id in " + Utility.getUserOrgSqlString(providerNo, shelterId)));
     	c.addOrder(Order.asc("name"));
-    	List list = c.list();
+    	@SuppressWarnings("unchecked")
+        List<Program> list = c.list();
     	for(int i=0; i<list.size(); i++)
     	{
-    		Program p = (Program) list.get(i);
+    		Program p = list.get(i);
     		if(p.getType().equals(KeyConstants.PROGRAM_TYPE_Service)) p.setNumOfMembers(p.getNumOfIntakes());
     	}
     	return 	list;
@@ -246,7 +247,7 @@ public class ProgramDao extends HibernateDaoSupport {
         List<Program> rs = getHibernateTemplate().find("FROM Program p WHERE p.programStatus = 'active' and p.type='Bed' ");
         return rs;
     }
-    
+
     public List <Program> getAllPrograms(String programStatus, String type, int facilityId)
     {
         @SuppressWarnings("unchecked")
@@ -262,7 +263,7 @@ public class ProgramDao extends HibernateDaoSupport {
     	}
     	return 	c.list();
     }
- 
+
     public List<Program> getPrograms() {
         String queryStr = "FROM Program p WHERE p.type != 'community' ORDER BY p.name";
 
@@ -328,8 +329,8 @@ public class ProgramDao extends HibernateDaoSupport {
         return (Program[]) list.toArray(new Program[list.size()]);
     }
 
-    public List<?> getServicePrograms() {
-        List<?> rs = getHibernateTemplate().find("FROM Program p WHERE p.type = 'Service' ORDER BY p.name");
+    public List<Program> getServicePrograms() {
+        List<Program> rs = getHibernateTemplate().find("FROM Program p WHERE p.type = 'Service' ORDER BY p.name");
 
         if (log.isDebugEnabled()) {
             log.debug("getServicePrograms: # of programs: " + rs.size());
@@ -391,7 +392,7 @@ public class ProgramDao extends HibernateDaoSupport {
         }
     }
 
-    public List search(Program program) {
+    public List<Program> search(Program program) {
         if (program == null) {
             throw new IllegalArgumentException();
         }
@@ -468,7 +469,7 @@ public class ProgramDao extends HibernateDaoSupport {
         return results;
     }
 
-    public List searchByFacility(Program program, Integer facilityId) {
+    public List<Program> searchByFacility(Program program, Integer facilityId) {
         if (program == null) {
             throw new IllegalArgumentException();
         }
@@ -540,7 +541,7 @@ public class ProgramDao extends HibernateDaoSupport {
         }
 
         criteria.add(Expression.eq("facilityId", facilityId));
-        
+
         criteria.addOrder(Order.asc("name"));
 
         List results = criteria.list();
@@ -551,7 +552,7 @@ public class ProgramDao extends HibernateDaoSupport {
 
         return results;
     }
-    
+
     public void resetHoldingTank() {
         Query q = getSession().createQuery("update Program set holdingTank = false");
         q.executeUpdate();
@@ -592,21 +593,21 @@ public class ProgramDao extends HibernateDaoSupport {
                 new Object[] { bedProgramId, clientId });
         return results;
     }
-    
+
     public boolean isInSameFacility(Integer programId1, Integer programId2) {
     	if (programId1 == null || programId1 <= 0) {
             throw new IllegalArgumentException();
         }
-    	
+
     	if (programId2 == null || programId2 <= 0) {
             throw new IllegalArgumentException();
         }
-    	
+
     	Program p1 = getProgram(programId1);
     	Program p2 = getProgram(programId2);
     	return(p1.getFacilityId()==p2.getFacilityId());
     }
-    
+
     public Program getProgramBySiteSpecificField(String value) {
         Program result = null;
 
@@ -619,7 +620,7 @@ public class ProgramDao extends HibernateDaoSupport {
 
         return result;
     }
-    
+
     public Program getProgramByName(String value) {
         Program result = null;
 

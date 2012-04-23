@@ -33,14 +33,14 @@ import org.oscarehr.util.MiscUtils;
 
 public class PreparedTicklerManager {
 
-	static Logger log=MiscUtils.getLogger(); 
-	
-	private List ticklers;
-	
+	static Logger log=MiscUtils.getLogger();
+
+	private List<PreparedTickler> ticklers;
+
 	public PreparedTicklerManager() {
-		ticklers = new ArrayList();
+		ticklers = new ArrayList<PreparedTickler>();
 	}
-	
+
 	/* loads up the runtime plugins */
 	public void setPath(String path) {
 		ticklers.clear();
@@ -56,13 +56,13 @@ public class PreparedTicklerManager {
 				}
 			}
 		}
-		
+
 	}
-	
+
 	public PreparedTickler loadClass(String className) {
 		PreparedTickler pt = null;
 		ClassLoader cl = Thread.currentThread().getContextClassLoader();
-		
+
 		try {
 			 pt = (PreparedTickler)cl.loadClass(className).newInstance();
 		}catch(Exception e) {
@@ -78,7 +78,7 @@ public class PreparedTicklerManager {
 
 	public PreparedTickler getTickler(String name) {
 		for(int x=0;x<ticklers.size();x++) {
-			PreparedTickler tickler = (PreparedTickler)ticklers.get(x);
+			PreparedTickler tickler = ticklers.get(x);
 			if(tickler.getName().equals(name)) {
 				return tickler;
 			}

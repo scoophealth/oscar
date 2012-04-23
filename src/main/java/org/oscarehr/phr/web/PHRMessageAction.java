@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -101,7 +101,7 @@ public class PHRMessageAction extends DispatchAction {
 		ArrayList<PHRMessage> messages = null;
 //		List<PHRAction> actionsPendingApproval = phrActionDAO.getActionsByStatus(PHRAction.STATUS_APPROVAL_PENDING, providerNo);
 		if (docs != null) {
-			messages = new ArrayList(docs.size());
+			messages = new ArrayList<PHRMessage>(docs.size());
 			for (int idx = 0; idx < docs.size(); ++idx) {
 				PHRDocument doc = (PHRDocument) docs.get(idx);
 				PHRMessage msg = new PHRMessage(doc);

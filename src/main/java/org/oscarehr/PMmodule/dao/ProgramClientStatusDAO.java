@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
+import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.ProgramClientStatus;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -80,7 +81,7 @@ public class ProgramClientStatusDAO extends HibernateDaoSupport {
         return !teams.isEmpty();
     }
 
-    public List getAllClientsInStatus(Integer programId, Integer statusId) {
+    public List<Admission> getAllClientsInStatus(Integer programId, Integer statusId) {
         if (programId == null || programId <= 0) {
             throw new IllegalArgumentException();
         }
@@ -89,7 +90,7 @@ public class ProgramClientStatusDAO extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        List results = this.getHibernateTemplate().find("from Admission a where a.ProgramId = ? and a.TeamId = ? and a.AdmissionStatus='current'", new Object[] {programId, statusId});
+        List<Admission> results = this.getHibernateTemplate().find("from Admission a where a.ProgramId = ? and a.TeamId = ? and a.AdmissionStatus='current'", new Object[] {programId, statusId});
 
         if (log.isDebugEnabled()) {
             log.debug("getAdmissionsInTeam: programId= " + programId + ",statusId=" + statusId + ",# results=" + results.size());

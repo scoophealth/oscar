@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -33,46 +33,47 @@ import org.oscarehr.PMmodule.model.ClientMerge;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class MergeClientDao extends HibernateDaoSupport {
-	
+
 	 public void merge(ClientMerge cmObj) {
 	        if (cmObj == null) {
 	            throw new IllegalArgumentException();
-	        }	       	     
+	        }
 	        this.getHibernateTemplate().saveOrUpdate(cmObj);
-	        
+
 	        String sql = "update ClientMerge a set a.mergedToClientId=? where a.mergedToClientId=?";
 	        getHibernateTemplate().bulkUpdate(sql, new Object[] {cmObj.getMergedToClientId(),cmObj.getClientId()});
 
 	        sql = "update Demographic a set a.merged=1 where a.DemographicNo=?";
 	        getHibernateTemplate().bulkUpdate(sql, cmObj.getClientId());
-	      
+
 	    }
-	
-	    public void unMerge(ClientMerge cmObj){		    	
+
+	    public void unMerge(ClientMerge cmObj){
 	    	String sql = "update ClientMerge c set c.deleted=1,c.providerNo=?, c.lastUpdateDate=?  where c.clientId=?";
 	    	 getHibernateTemplate().bulkUpdate(sql, new Object[]{cmObj.getProviderNo(),cmObj.getLastUpdateDate(),cmObj.getClientId()} );
 	    	 String sql1 = "update Demographic a set a.merged=0 where a.DemographicNo=?";
-		     getHibernateTemplate().bulkUpdate(sql1, cmObj.getClientId());	 
+		     getHibernateTemplate().bulkUpdate(sql1, cmObj.getClientId());
 	    }
-	    
+
 	    public Integer getHead(Integer demographic_no) {
 	        String queryStr = "FROM ClientMerge a WHERE a.deleted=0 and a.clientId =?";
-	        ClientMerge cmObj= (ClientMerge)getHibernateTemplate().find(queryStr, new Object[] {demographic_no });     
+	        ClientMerge cmObj= (ClientMerge)getHibernateTemplate().find(queryStr, new Object[] {demographic_no });
 	        return cmObj.getClientId();
 	    }
-	    
-	    public List getTail(Integer demographic_no){	        
-	        String sql = "from ClientMerge where mergedToClientId = ? and deleted = 0";	              
-	        List  lst= getHibernateTemplate().find(sql, new Object[] {demographic_no});
+
+	    public List<ClientMerge> getTail(Integer demographic_no){
+	        String sql = "from ClientMerge where mergedToClientId = ? and deleted = 0";
+	        @SuppressWarnings("unchecked")
+            List<ClientMerge>  lst= getHibernateTemplate().find(sql, new Object[] {demographic_no});
 	        return lst;
-	        
+
 	    }
 	    public ClientMerge getClientMerge(Integer demographic_no)
 	    {
 	        String queryStr = "FROM ClientMerge a WHERE a.clientId =?";
 	        List lst = getHibernateTemplate().find(queryStr, new Object[] {demographic_no });
 	        if(lst.size() == 0) return null;
-	        ClientMerge cmObj= (ClientMerge)lst.get(0);     
+	        ClientMerge cmObj= (ClientMerge)lst.get(0);
 	        return cmObj;
 	    }
 	    public String getMergedClientIds(Integer clientNo){

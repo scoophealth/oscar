@@ -38,7 +38,7 @@ public class ProgramTeamDAO extends HibernateDaoSupport {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.oscarehr.PMmodule.dao.ProgramTeamDAO#teamExists(java.lang.Integer)
      */
     public boolean teamExists(Integer teamId) {
@@ -50,7 +50,7 @@ public class ProgramTeamDAO extends HibernateDaoSupport {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.oscarehr.PMmodule.dao.ProgramTeamDAO#teamNameExists(java.lang.Integer, java.lang.String)
      */
     public boolean teamNameExists(Integer programId, String teamName) {
@@ -77,7 +77,7 @@ public class ProgramTeamDAO extends HibernateDaoSupport {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.oscarehr.PMmodule.dao.ProgramTeamDAO#getProgramTeam(java.lang.Integer)
      */
     public ProgramTeam getProgramTeam(Integer id) {
@@ -96,15 +96,15 @@ public class ProgramTeamDAO extends HibernateDaoSupport {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.oscarehr.PMmodule.dao.ProgramTeamDAO#getProgramTeams(java.lang.Integer)
      */
-    public List getProgramTeams(Integer programId) {
+    public List<ProgramTeam> getProgramTeams(Integer programId) {
         if (programId == null || programId.intValue() <= 0) {
             throw new IllegalArgumentException();
         }
 
-        List results = this.getHibernateTemplate().find("from ProgramTeam tp where tp.programId = ?", programId);
+        List<ProgramTeam> results = this.getHibernateTemplate().find("from ProgramTeam tp where tp.programId = ?", programId);
 
         if (log.isDebugEnabled()) {
             log.debug("getProgramTeams: programId=" + programId + ",# of results=" + results.size());
@@ -115,7 +115,7 @@ public class ProgramTeamDAO extends HibernateDaoSupport {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.oscarehr.PMmodule.dao.ProgramTeamDAO#saveProgramTeam(org.oscarehr.PMmodule.model.ProgramTeam)
      */
     public void saveProgramTeam(ProgramTeam team) {
@@ -132,7 +132,7 @@ public class ProgramTeamDAO extends HibernateDaoSupport {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.oscarehr.PMmodule.dao.ProgramTeamDAO#deleteProgramTeam(java.lang.Integer)
      */
     public void deleteProgramTeam(Integer id) {

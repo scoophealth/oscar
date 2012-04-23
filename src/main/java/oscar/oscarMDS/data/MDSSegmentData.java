@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -49,8 +49,8 @@ public class MDSSegmentData {
     public String clientNo;
     public String accessionNo;
     public ProviderData providers;
-    public ArrayList headersArray = new ArrayList();
-    public ArrayList statusArray = new ArrayList();
+    public ArrayList<Headers> headersArray = new ArrayList<Headers>();
+    public ArrayList<ReportStatus> statusArray = new ArrayList<ReportStatus>();
 
 
     public void populateMDSSegmentData(String SID) {
@@ -181,13 +181,13 @@ public class MDSSegmentData {
                     sql = "select reportGroupHeading from mdsZRG where segmentID='"+this.segmentID+"' and reportGroupID='"+oscar.Misc.getString(rs, "reportGroupID")+"' order by reportSequence";
                     ResultSet rs2;
                     rs2 = DBHandler.GetSQL(sql);
-                    ArrayList tempArray = new ArrayList();
+                    ArrayList<String> tempArray = new ArrayList<String>();
                     while (rs2.next()) {
                         tempArray.add(rs2.getString("reportGroupHeading"));
                     }
                     rs2.close();
                     String[] reportGroupHeading = new String[tempArray.size()];
-                    reportGroupHeading = (String[]) tempArray.toArray(reportGroupHeading);
+                    reportGroupHeading = tempArray.toArray(reportGroupHeading);
                     headersArray.add(new Headers(oscar.Misc.getString(rs, "reportGroupDesc"),oscar.Misc.getString(rs, "reportGroupID"), reportGroupHeading));
                 } else {
                     headersArray.add(new Headers(oscar.Misc.getString(rs, "reportGroupDesc"),oscar.Misc.getString(rs, "reportGroupID"), null));
@@ -199,7 +199,7 @@ public class MDSSegmentData {
 
             for(int i = 0;i< headersArray.size();i++){
 
-                sql = "select resultCode from mdsZMN where segmentID='"+this.segmentID+"' and reportGroup='"+((Headers)headersArray.get(i)).reportSequence+"'";
+                sql = "select resultCode from mdsZMN where segmentID='"+this.segmentID+"' and reportGroup='"+(headersArray.get(i)).reportSequence+"'";
                 rs=DBHandler.GetSQL(sql);
                 queryString = "";
                 while(rs.next()){
@@ -215,7 +215,7 @@ public class MDSSegmentData {
 
                 rs=DBHandler.GetSQL(sql);
                 while(rs.next()){
-                    ((Headers)headersArray.get(i)).groupedReportsArray.add(new GroupedReports(oscar.Misc.getString(rs, "associatedOBR"), oscar.Misc.getString(rs, "observationDateTime"), queryString));
+                    (headersArray.get(i)).groupedReportsArray.add(new GroupedReports(oscar.Misc.getString(rs, "associatedOBR"), oscar.Misc.getString(rs, "observationDateTime"), queryString));
                 }
                 rs.close();
             }
@@ -225,9 +225,9 @@ public class MDSSegmentData {
             Mnemonics thisOBXMnemonics = new Mnemonics();
 
             for(int i=0 ; i< (headersArray.size());i++){
-                for (int j =0 ; j< ((Headers)headersArray.get(i)).groupedReportsArray.size();j++){
-                    associatedOBR =(((Headers)headersArray.get(i)).groupedReportsArray.get(j)).associatedOBR;
-                    queryString =(((Headers)headersArray.get(i)).groupedReportsArray.get(j)).queryString;
+                for (int j =0 ; j< (headersArray.get(i)).groupedReportsArray.size();j++){
+                    associatedOBR =((headersArray.get(i)).groupedReportsArray.get(j)).associatedOBR;
+                    queryString =((headersArray.get(i)).groupedReportsArray.get(j)).queryString;
                     sql = "select * from mdsOBX where segmentID='"+this.segmentID+"' and associatedOBR='"+associatedOBR+"' and ("+queryString+")";
                     rs = DBHandler.GetSQL(sql);
                     while(rs.next()){
@@ -236,7 +236,7 @@ public class MDSSegmentData {
                         thisOBXMnemonics.update((Mnemonics)mnemonics.get(oscar.Misc.getString(rs, "observationIden").substring(1,oscar.Misc.getString(rs, "observationIden").indexOf('^'))));
 
 
-                        (((Headers)headersArray.get(i)).groupedReportsArray.get(j)).resultsArray.add(
+                        ((headersArray.get(i)).groupedReportsArray.get(j)).resultsArray.add(
                                 new Results(thisOBXMnemonics.reportName,
                                 thisOBXMnemonics.referenceRange,
                                 thisOBXMnemonics.units,
@@ -270,9 +270,9 @@ public class MDSSegmentData {
 
         for (int i=0; i < statusArray.size(); i++) {
 
-            if ( ((ReportStatus) statusArray.get(i)).getProviderNo().equals(providerNo) ) {
+            if ( ( statusArray.get(i)).getProviderNo().equals(providerNo) ) {
                 // logger.info("Status of "+i+" is : "+ ((ReportStatus) statusArray.get(i)).getStatus() );
-                return ( ((ReportStatus) statusArray.get(i)).getStatus().startsWith("Ack") );
+                return ( ( statusArray.get(i)).getStatus().startsWith("Ack") );
             }
         }
         return false;
