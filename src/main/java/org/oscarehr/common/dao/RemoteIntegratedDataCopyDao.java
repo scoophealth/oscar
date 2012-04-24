@@ -99,11 +99,29 @@ public class RemoteIntegratedDataCopyDao extends AbstractDao<RemoteIntegratedDat
 	
 	
 	public RemoteIntegratedDataCopy save(Integer demographicNo, Object obj,String providerNo, Integer facilityId) throws Exception{
+		return  save( demographicNo,  obj, providerNo,  facilityId, null) ;
+	}
+	/**
+	 * 
+	 * @param demographicNo
+	 * @param obj
+	 * @param providerNo
+	 * @param facilityId
+	 * @return Returns null if it already existed in the database.
+	 * @throws Exception
+	 */
+	public RemoteIntegratedDataCopy save(Integer demographicNo, Object obj,String providerNo, Integer facilityId,String type) throws Exception{
 		
 		if(obj == null){
 			throw new Exception("Can't save null");
 		}
-		String dataType = obj.getClass().getName();
+		if(type == null){
+			type = "";
+		}else{
+			type = "+"+type;
+		}
+		
+		String dataType = obj.getClass().getName()+type;
 		String marshalledObject = ObjectMarshalUtil.marshalToString(obj); 
         
 		MessageDigest md = MessageDigest.getInstance("SHA-1");
@@ -127,7 +145,7 @@ public class RemoteIntegratedDataCopyDao extends AbstractDao<RemoteIntegratedDat
 			archiveDataCopyExceptThisOne(rid);//Set all other notes besides this one to archived.
 			return rid;
 		}
-		throw new Exception("Already Exists in the database");
+		return null;
     	
 	}
 	

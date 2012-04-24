@@ -40,6 +40,7 @@ import javax.persistence.PersistenceException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicForm;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.common.dao.EncounterFormDao;
@@ -226,24 +227,36 @@ public class EctFormData {
 
 	public static ArrayList<PatientForm> getRemotePatientForms(Integer demographicId, String formName, String table) {
 		ArrayList<PatientForm> forms = new ArrayList<PatientForm>();
+		List<CachedDemographicForm> remoteForms = null;
+		table = StringUtils.trimToNull(table);
+		if (table == null) return (new ArrayList<PatientForm>());
+		
 		try {
-			table = StringUtils.trimToNull(table);
-			if (table == null) return (new ArrayList<PatientForm>());
+			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
-			List<CachedDemographicForm> remoteForms = demographicWs.getLinkedCachedDemographicForms(demographicId, table);
-
-			for (CachedDemographicForm cachedDemographicForm : remoteForms) {
-				Date date = cachedDemographicForm.getEditDate().getTime();
-				PatientForm frm = new PatientForm(formName, cachedDemographicForm.getFacilityIdIntegerCompositePk().getCaisiItemId(), cachedDemographicForm.getCaisiDemographicId(), date, date);
-				frm.setRemoteFacilityId(cachedDemographicForm.getFacilityIdIntegerCompositePk().getIntegratorFacilityId());
-				forms.add(frm);
+			if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return  (forms);
+			if(!CaisiIntegratorManager.isIntegratorOffline()){
+				DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+				remoteForms = demographicWs.getLinkedCachedDemographicForms(demographicId, table);
 			}
-
 		} catch (Exception e) {
-			logger.error("Error retriving remote forms", e);
+			logger.error("Error retriving remote forms :"+CaisiIntegratorManager.isIntegratorOffline(), e);
+			CaisiIntegratorManager.checkForConnectionError(e);
 		}
-
+		
+		
+		if (CaisiIntegratorManager.isIntegratorOffline()){
+			remoteForms = IntegratorFallBackManager.getRemoteForms(demographicId,table);	
+		}
+			
+		if (remoteForms == null) return (forms);
+			
+		for (CachedDemographicForm cachedDemographicForm : remoteForms) {
+			Date date = cachedDemographicForm.getEditDate().getTime();
+			PatientForm frm = new PatientForm(formName, cachedDemographicForm.getFacilityIdIntegerCompositePk().getCaisiItemId(), cachedDemographicForm.getCaisiDemographicId(), date, date);
+			frm.setRemoteFacilityId(cachedDemographicForm.getFacilityIdIntegerCompositePk().getIntegratorFacilityId());
+			forms.add(frm);
+		}
 		return (forms);
 	}
 

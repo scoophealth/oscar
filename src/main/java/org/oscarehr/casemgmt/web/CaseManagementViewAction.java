@@ -82,6 +82,7 @@ import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.casemgmt.web.CaseManagementViewAction.IssueDisplay;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementViewFormBean;
 import org.oscarehr.common.dao.CaseManagementIssueNotesDao;
 import org.oscarehr.common.dao.DemographicDao;
@@ -1020,27 +1021,36 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 
 		if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return;
-
+		List<CachedDemographicNote> linkedNotes  = null;
 		try {
-			List<CachedDemographicNote> linkedNotes = IntegratorFallBackManager.getLinkedNotes(demographicNo);
-
-			for (CachedDemographicNote cachedDemographicNote : linkedNotes) {
-				try {
-
-					// filter on issues to display
-					if (issueCodesToDisplay == null || hasIssueToBeDisplayed(cachedDemographicNote, issueCodesToDisplay)) {
-						// filter on role based access
-						if (caseManagementMgr.hasRole(cachedDemographicNote, programId)) {
-							notesToDisplay.add(new NoteDisplayIntegrator(cachedDemographicNote));
-						}
-					}
-				} catch (Exception e) {
-					logger.error("Unexpected error.", e);
-				}
+			if (!CaisiIntegratorManager.isIntegratorOffline()){
+			   linkedNotes = CaisiIntegratorManager.getLinkedNotes(demographicNo);
 			}
 		} catch (Exception e) {
 			logger.error("Unexpected error.", e);
+			CaisiIntegratorManager.checkForConnectionError(e);
 		}
+		
+		if(CaisiIntegratorManager.isIntegratorOffline()){
+		   linkedNotes = IntegratorFallBackManager.getLinkedNotes(demographicNo);	
+		}
+
+		if (linkedNotes == null) return;
+		for (CachedDemographicNote cachedDemographicNote : linkedNotes) {
+			try {
+
+				// filter on issues to display
+				if (issueCodesToDisplay == null || hasIssueToBeDisplayed(cachedDemographicNote, issueCodesToDisplay)) {
+					// filter on role based access
+					if (caseManagementMgr.hasRole(cachedDemographicNote, programId)) {
+						notesToDisplay.add(new NoteDisplayIntegrator(cachedDemographicNote));
+					}
+				}
+			} catch (Exception e) {
+				logger.error("Unexpected error.", e);
+			}
+		}
+		
 	}
 
 	private boolean hasIssueToBeDisplayed(CachedDemographicNote cachedDemographicNote, ArrayList<String> issueCodesToDisplay) {
