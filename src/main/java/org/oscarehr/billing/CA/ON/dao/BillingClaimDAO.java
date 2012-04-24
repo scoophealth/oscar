@@ -332,10 +332,11 @@ public class BillingClaimDAO extends AbstractDao<BillingClaimHeader1> {
     @SuppressWarnings("unchecked")
     public List<BillingClaimHeader1> getInvoices(String demographic_no, Integer limit) {
     	String sql = "select h1 from BillingClaimHeader1 h1 where " +
-                " h1.demographic_no = :demo and h1.status != 'D' order by h1.billing_date desc limit " + limit.toString();
+                " h1.demographic_no = :demo and h1.status != 'D' order by h1.billing_date desc";
         Query q = entityManager.createQuery(sql);
         
         q.setParameter("demo", new Integer(demographic_no));
+        q.setMaxResults(limit);
         
         return q.getResultList();
     }
