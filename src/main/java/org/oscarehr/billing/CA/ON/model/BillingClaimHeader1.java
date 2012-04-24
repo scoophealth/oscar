@@ -38,6 +38,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.PostLoad;
 import javax.persistence.PostPersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -475,5 +476,26 @@ public class BillingClaimHeader1 extends AbstractModel<Integer> implements Seria
             item = i.next();
             item.setCh1_id(id);
         }
+    }
+    
+    /*
+     * Filter deleted billing items from list
+     */
+    @PostLoad
+    public void postLoad() {
+    	ArrayList<BillingItem>tempItems = new ArrayList<BillingItem>();
+    	
+    	Iterator<BillingItem> i = this.billingItems.iterator();
+        BillingItem item;
+        while(i.hasNext()) {
+        	item = i.next();
+        	if( item.getStatus().equals("D")) {
+        		continue;
+        	}
+        	
+        	tempItems.add(item);
+        }
+        
+        this.billingItems = tempItems;
     }
 }

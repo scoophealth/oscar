@@ -107,16 +107,30 @@ public class NoteDisplayNonNote implements NoteDisplay {
 			}
 		}
 		
-		String name;
+		String pname, creator;
 		if( h1.getProvider_no() != null && h1.getProvider_no().length() > 0 ) {
 			provider = providerDao.getProvider(h1.getProvider_no());
-			name = provider == null ? "Not Set" : provider.getFormattedName();
+			pname = provider == null ? "Not Set" : provider.getFormattedName();
 		}
 		else {
-			name = "Not Set";
+			pname = "Not Set";
 		}
 		
-		tmpNote.append(" billed by " + name);
+		if( h1.getCreator() != null && h1.getCreator().length() > 0 ) {
+			provider = providerDao.getProvider(h1.getCreator());
+			creator = provider == null ? "Not Set" : provider.getFormattedName();
+		}
+		else {
+			creator = "Not Set";
+		}
+		
+		if( pname.equalsIgnoreCase(creator) ) {
+			tmpNote.append(" billed by " + creator);
+		}
+		else {
+			tmpNote.append(" billed by " + creator + " for " + pname);
+		}
+		
 		note = tmpNote.toString();
 		noteId = h1.getId();
 		linkInfo = "/billing/CA/ON/billingONCorrection.jsp?billing_no=" + noteId.toString();
