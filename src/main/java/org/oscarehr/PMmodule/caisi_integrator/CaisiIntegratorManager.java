@@ -27,11 +27,15 @@ package org.oscarehr.PMmodule.caisi_integrator;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map.Entry;
 
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
@@ -70,6 +74,7 @@ import org.oscarehr.util.CxfClientUtils;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.QueueCache;
+import org.oscarehr.util.SessionConstants;
 
 /**
  * This class is a manager for integration related functionality. <br />
@@ -90,6 +95,33 @@ public class CaisiIntegratorManager {
 	
 	/** data put here should be segmented by the requesting provider as part of the cache key */
 	private static QueueCache<String, Object> segmentedDataCache=new QueueCache<String, Object>(4, 100, DateUtils.MILLIS_PER_HOUR);
+	
+	public static void setIntegratorOffline(boolean status){
+		HttpSession session = LoggedInInfo.loggedInInfo.get().session;
+		if(status){
+		session.setAttribute(SessionConstants.INTEGRATOR_OFFLINE,true);
+		}else{
+			session.removeAttribute(SessionConstants.INTEGRATOR_OFFLINE);
+		}
+	}
+	
+	public static void checkForConnectionError(Throwable exception){
+		Throwable rootException = ExceptionUtils.getRootCause(exception);
+		MiscUtils.getLogger().debug("Exception: "+exception.getClass().getName()+" --- "+rootException.getClass().getName());
+				
+		if (rootException instanceof java.net.ConnectException){
+			setIntegratorOffline(true);
+		}
+	}
+	
+	public static boolean isIntegratorOffline(){
+		HttpSession session = LoggedInInfo.loggedInInfo.get().session;
+		Object object = session.getAttribute(SessionConstants.INTEGRATOR_OFFLINE);
+		if (object != null){
+			return true;
+		}
+		return false;
+	}
 	
 	public static boolean isEnableIntegratedReferrals() {
 		Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
@@ -117,12 +149,40 @@ public class CaisiIntegratorManager {
 		return (port);
 	}
 
-    public static List<CachedFacility> getRemoteFacilities() throws MalformedURLException {
+	
+
+	public static boolean haveAllRemoteFacilitiesSyncedIn(int seconds) throws MalformedURLException {
+		return haveAllRemoteFacilitiesSyncedIn(seconds,true);
+	}
+    		
+	public static boolean haveAllRemoteFacilitiesSyncedIn(int seconds,boolean useCachedData) throws MalformedURLException {
+		boolean synced = true;
+		Calendar timeConsideredStale = Calendar.getInstance();
 		
-    	@SuppressWarnings("unchecked")
-		List<CachedFacility> results=(List<CachedFacility>) basicDataCache.get("ALL_FACILITIES");
+		timeConsideredStale.add(Calendar.SECOND, -seconds);
+		
+		List<CachedFacility> remoteFacilities=  getRemoteFacilities(useCachedData);
+		for(CachedFacility remoteFacility : remoteFacilities){
+			Calendar lastDataUpdate = remoteFacility.getLastDataUpdate();
+			if( lastDataUpdate == null || timeConsideredStale.after(lastDataUpdate)){
+				synced = false;
+				break;
+			}
+		}
+		return synced;
+	}
+
+	
+	public static List<CachedFacility> getRemoteFacilities() throws MalformedURLException {
+		return getRemoteFacilities(true);
+	}
+	
+    public static List<CachedFacility> getRemoteFacilities(boolean useCachedData) throws MalformedURLException {
     	
-    	if (results==null)
+		@SuppressWarnings("unchecked")
+		List<CachedFacility> results=(List<CachedFacility>) basicDataCache.get("ALL_FACILITIES");
+    	    	
+    	if (!useCachedData  || results==null)
     	{
 			FacilityWs facilityWs = getFacilityWs();
 			results = Collections.unmodifiableList(facilityWs.getAllFacility());
@@ -130,9 +190,10 @@ public class CaisiIntegratorManager {
     	}
     	
 		return (results);
-	}
-
-	public static CachedFacility getRemoteFacility(int remoteFacilityId) throws MalformedURLException {
+	}	
+    
+	
+   public static CachedFacility getRemoteFacility(int remoteFacilityId) throws MalformedURLException {
 		for (CachedFacility facility : getRemoteFacilities()) {
 			if (facility.getIntegratorFacilityId().equals(remoteFacilityId)) return (facility);
 		}
