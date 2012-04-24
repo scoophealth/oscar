@@ -31,6 +31,7 @@
  <%@ page import="oscar.oscarEncounter.data.*, oscar.oscarProvider.data.*, oscar.util.UtilDateUtilities" %>
  <%@ page import="org.oscarehr.util.MiscUtils"%>
  <%@ page import="java.net.URLEncoder"%>
+ <%@ page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager, org.oscarehr.util.LoggedInInfo, org.oscarehr.common.model.Facility" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
     oscar.oscarEncounter.pageUtil.EctSessionBean bean = null;
@@ -38,6 +39,8 @@
         response.sendRedirect("error.jsp");
         return;
     }
+    
+    Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
 
     String demoNo = bean.demographicNo;
     EctPatientData.Patient pd = new EctPatientData().getPatient(demoNo);
@@ -121,7 +124,38 @@
 			<a id="quickChart" href="#" onclick="return viewFullChart(false);"><bean:message key="oscarEncounter.quickChart.msg"/></a>
 		<%
 		}
-		%>      
+		%>  
+		
+		
+		<%
+		if (facility.isIntegratorEnabled()){
+			int secondsTillConsideredStale = -1;
+			try{
+				secondsTillConsideredStale = Integer.parseInt(oscar.OscarProperties.getInstance().getProperty("seconds_till_considered_stale"));
+			}catch(Exception e){
+				MiscUtils.getLogger().error("OSCAR Property: seconds_till_considered_stale did not parse to an int",e);
+				secondsTillConsideredStale = -1;
+			}
+			
+			boolean allSynced = true;
+			
+			try{
+				allSynced  = CaisiIntegratorManager.haveAllRemoteFacilitiesSyncedIn(secondsTillConsideredStale,false); 
+				CaisiIntegratorManager.setIntegratorOffline(false);	
+			}catch(Exception remoteFacilityException){
+				MiscUtils.getLogger().error("Error checking Remote Facilities Sync status",remoteFacilityException);
+				CaisiIntegratorManager.checkForConnectionError(remoteFacilityException);
+			}
+			if(secondsTillConsideredStale != -1){  
+				allSynced = true; 
+			}
+		%>
+			<%if (CaisiIntegratorManager.isIntegratorOffline()) {%>
+    			<div style="background: none repeat scroll 0% 0% red; color: white; font-weight: bold; padding-left: 10px; margin-bottom: 2px;"><bean:message key="oscarEncounter.integrator.NA"/></div>
+    		<%}else if(!allSynced) {%>
+    			<div style="background: none repeat scroll 0% 0% orange; color: white; font-weight: bold; padding-left: 10px; margin-bottom: 2px;"><bean:message key="oscarEncounter.integrator.outOfSync"/></div>
+	    	<%}
+	    }%>    
    </span>
 </div>
 
