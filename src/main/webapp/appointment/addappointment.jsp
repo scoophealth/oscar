@@ -625,6 +625,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
             <INPUT TYPE="hidden" NAME="limit1" VALUE="0">
             <INPUT TYPE="hidden" NAME="limit2" VALUE="5">
             <INPUT TYPE="hidden" NAME="ptstatus" VALUE="active">
+			<input type="hidden" name="outofdomain" value="<%=OscarProperties.getInstance().getProperty("pmm.client.search.outside.of.domain.enabled","true")%>"/>
             <!--input type="hidden" name="displaymode" value="Search " -->
             <div class="label">
                 <INPUT TYPE="submit" style="width:auto;"
