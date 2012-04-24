@@ -37,8 +37,8 @@ public class ProgramFunctionalUserDAO extends HibernateDaoSupport {
 
     private static Logger log = MiscUtils.getLogger();
 
-    public List getFunctionalUserTypes() {
-        List results = this.getHibernateTemplate().find("from FunctionalUserType");
+    public List<FunctionalUserType> getFunctionalUserTypes() {
+        List<FunctionalUserType> results = this.getHibernateTemplate().find("from FunctionalUserType");
 
         if (log.isDebugEnabled()) {
             log.debug("getFunctionalUserTypes: # of results=" + results.size());
@@ -84,12 +84,12 @@ public class ProgramFunctionalUserDAO extends HibernateDaoSupport {
         }
     }
 
-    public List getFunctionalUsers(Long programId) {
+    public List<FunctionalUserType> getFunctionalUsers(Long programId) {
         if (programId == null || programId.intValue() <= 0) {
             throw new IllegalArgumentException();
         }
 
-        List results = this.getHibernateTemplate().find("from ProgramFunctionalUser pfu where pfu.ProgramId = ?", programId);
+        List<FunctionalUserType> results = this.getHibernateTemplate().find("from ProgramFunctionalUser pfu where pfu.ProgramId = ?", programId);
 
         if (log.isDebugEnabled()) {
             log.debug("getFunctionalUsers: programId=" + programId + ",# of results=" + results.size());

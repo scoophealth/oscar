@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -152,7 +152,7 @@ public class RecommitHSFOAction extends DispatchActionSupport {
                 XMLTransferUtil tfutil = new XMLTransferUtil();
                 RecommitDAO rDao = new RecommitDAO();
                 RecommitSchedule rs = rDao.getLastSchedule(false);
-                ArrayList message = new ArrayList();
+                ArrayList<String> message = new ArrayList<String>();
                 String retS = null;
                 if (!"D".equalsIgnoreCase(rs.getStatus())) {
                     rs.setStatus("D");
@@ -173,7 +173,7 @@ public class RecommitHSFOAction extends DispatchActionSupport {
                     }
                     message = tfutil.validateDoc(doc);
                     if (message.size() != 0) {
-                        rs.setMemo((String)message.get(0));
+                        rs.setMemo(message.get(0));
                         rDao.updateLastSchedule(rs);
                         return;
                     }
@@ -187,7 +187,7 @@ public class RecommitHSFOAction extends DispatchActionSupport {
                         logger.error("Error", e);
                         throw e;
                     }
-                    String msg = "Code: " + (String)message.get(0) + " " + (String)message.get(1);
+                    String msg = "Code: " + message.get(0) + " " + message.get(1);
                     rs.setMemo(msg);
                     rDao.updateLastSchedule(rs);
                 }

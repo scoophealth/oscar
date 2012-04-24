@@ -49,7 +49,7 @@ public class ProgramAccessDAO extends HibernateDaoSupport {
     		results=getHibernateTemplate().find(q, new Object[] {programId});
     		if (results!=null) programAccessListByProgramIdCache.put(programId, results);
     	}
-    		
+
         return results;
     }
 
@@ -96,7 +96,7 @@ public class ProgramAccessDAO extends HibernateDaoSupport {
 
         getHibernateTemplate().saveOrUpdate(pa);
         programAccessListByProgramIdCache.remove(pa.getProgramId());
-        
+
         if (log.isDebugEnabled()) {
             log.debug("saveProgramAccess:" + pa.getId());
         }
@@ -117,8 +117,8 @@ public class ProgramAccessDAO extends HibernateDaoSupport {
 
     }
 
-    public List getAccessTypes() {
-        List results = this.getHibernateTemplate().find("from AccessType at");
+    public List<AccessType> getAccessTypes() {
+        List<AccessType> results = this.getHibernateTemplate().find("from AccessType at");
 
         if (log.isDebugEnabled()) {
             log.debug("getAccessTypes: # of results=" + results.size());

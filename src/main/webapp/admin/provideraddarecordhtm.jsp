@@ -47,11 +47,11 @@
 
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
 
-  ArrayList<Hashtable> list = ProviderData.getProviderListOfAllTypes(true);
+  ArrayList<Hashtable<String,String>> list = ProviderData.getProviderListOfAllTypes(true);
   ArrayList<Integer> providerList = new ArrayList<Integer>();
-  for (Hashtable h : list) {
+  for (Hashtable<String,String> h : list) {
 	  try{
-      String pn = (String)h.get("providerNo");
+      String pn = h.get("providerNo");
       providerList.add(Integer.valueOf(pn));
 	  }catch(Exception alphaProviderNumber){} /*No need to do anything. Just want to avoid a NumberFormatException from provider numbers with alphanumeric Characters*/
   }
@@ -68,7 +68,7 @@
 <%
 	if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-    
+
     boolean isSiteAccessPrivacy=false;
 %>
 
@@ -96,7 +96,7 @@ function onsub() {
      document.searchprovider.provider_type.value==""  ) {
      alert("<bean:message key="global.msgInputKeyword"/>");
      return false;
-  } 
+  }
   if(!(document.searchprovider.provider_no.value=="-new-" || document.searchprovider.provider_no.value.match(/^\d+$/))){
   		alert("Provider No. must be a number.");
   		return false;
@@ -104,7 +104,7 @@ function onsub() {
   else {
     	return true;
   }
- 
+
 }
 function upCaseCtrl(ctrl) {
   ctrl.value = ctrl.value.toUpperCase();
@@ -155,7 +155,7 @@ function upCaseCtrl(ctrl) {
 		<td><input type="text" name="first_name" maxlength="30">
 		</td>
 	</tr>
-	
+
 <%
 		if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
 	%>
@@ -166,9 +166,9 @@ function upCaseCtrl(ctrl) {
 		<td>
 <%
 	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
-List<Site> sites = ( isSiteAccessPrivacy ? siteDao.getActiveSitesByProviderNo(curProvider_no) : siteDao.getAllActiveSites()); 
+List<Site> sites = ( isSiteAccessPrivacy ? siteDao.getActiveSitesByProviderNo(curProvider_no) : siteDao.getAllActiveSites());
 for (int i=0; i<sites.size(); i++) {
-%>		
+%>
 	<input type="checkbox" name="sites" value="<%=sites.get(i).getSiteId()%>"><%=sites.get(i).getName()%><br />
 <%
 	}
@@ -177,8 +177,8 @@ for (int i=0; i<sites.size(); i++) {
 	</tr>
 <%
 	}
-%>	
-	
+%>
+
 	<tr>
 		<td align="right"><bean:message key="admin.provider.formType" /><font
 			color="red">:</font></td>
@@ -344,7 +344,7 @@ for (int i=0; i<sites.size(); i++) {
 			%>
 				<option value="<%=tempNbr.getNbrValue()%>" ><%=valueString%></option>
 			<%}%>
-			
+
 			</select>
 			</td>
 		</tr>
@@ -354,7 +354,7 @@ for (int i=0; i<sites.size(); i++) {
 			<td align="right">Bill Center:</td>
 			<td><select name="billcenter">
 				<option value=""></option>
-				<% 
+				<%
                     ProviderBillCenter billCenter = new ProviderBillCenter();
                     String billCode = "";
                     String codeDesc = "";
@@ -362,7 +362,7 @@ for (int i=0; i<sites.size(); i++) {
 //                    Enumeration keys = billCenter.getAllBillCenter().propertyNames();
                     for(int i=0;i<billCenter.getAllBillCenter().size();i++){
                         billCode=(String)keys.nextElement();
-                        codeDesc=(String)billCenter.getAllBillCenter().getProperty(billCode);
+                        codeDesc=billCenter.getAllBillCenter().getProperty(billCode);
                 %>
 				<option value=<%= billCode %>><%= codeDesc%></option>
 				<%

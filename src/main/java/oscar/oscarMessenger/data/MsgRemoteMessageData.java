@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -43,7 +43,7 @@ import oscar.oscarDB.DBHandler;
        * @version 1.0
        */
 public  class MsgRemoteMessageData extends Thread{
-    private static Logger logger=MiscUtils.getLogger(); 
+    private static Logger logger=MiscUtils.getLogger();
 
          String messageId;
          String XMLMessage;
@@ -65,7 +65,7 @@ public  class MsgRemoteMessageData extends Thread{
             XMLMessage = new String();
             currentLocation = new String(CurrLoco);
          }
-    
+
 
          String replaceIllegalCharacters(String str){
             return str.replaceAll("&", "&amp;").replaceAll(">","&gt;").replaceAll("<","&lt;");
@@ -89,15 +89,15 @@ public  class MsgRemoteMessageData extends Thread{
             thedate    = new String();
             theaction  = new String();
             theAttach  = new String();
-            java.util.Vector providerNo = new java.util.Vector();
-            java.util.Vector locationID = new java.util.Vector();
+            java.util.Vector<String> providerNo = new java.util.Vector<String>();
+            java.util.Vector<String> locationID = new java.util.Vector<String>();
 
 
 
             XMLstring = new StringBuilder("<?xml version=\"1.0\" ?>\n <message>\n ");
 
             try{
-               
+
                java.sql.ResultSet rs_message, rs_whotoo;
                String sql_message = new String("Select * from messagetbl where messageid = '"+messageID+"'");
                String sql_whotoo = new String("Select * from messagelisttbl where message = '"+messageID+"'");
@@ -132,7 +132,7 @@ public  class MsgRemoteMessageData extends Thread{
 
                for ( int i = 0; i < providerNo.size(); i++){
 
-                     String locoId = (String) locationID.elementAt(i);
+                     String locoId = locationID.elementAt(i);
                   if ( locoId == null ){
                      locoId = currentLocation;
                   }
@@ -173,16 +173,15 @@ public  class MsgRemoteMessageData extends Thread{
 
 
          public void run(){
-     		
+
      		LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
 
     		try {
-                int i = 0;
                 XMLMessage = getXMLMessage(messageId);
                 SendMessageClient sendMessageClient = new SendMessageClient();
                 boolean how = false;
                 try{
-                int llll = 0;
+
                    how = sendMessageClient.sendMessage("localhost:3306/","oscar_spc",XMLMessage);
                 }catch(Exception e){
                     defunctMessage();
@@ -203,7 +202,7 @@ public  class MsgRemoteMessageData extends Thread{
 
         private void defunctMessage(){
         //sendMessage2(String message, String subject,String userName,String sentToWho,String userNo,java.util.ArrayList providers )
-        java.util.ArrayList aList = new java.util.ArrayList();
+        java.util.ArrayList<MsgProviderData> aList = new java.util.ArrayList<MsgProviderData>();
         StringBuilder stringBuffer = new StringBuilder("This message could not be delivered to remote Providers. \nPlease try again\n\n");
         MsgProviderData providerData = new MsgProviderData();
         providerData.locationId = currentLocation;

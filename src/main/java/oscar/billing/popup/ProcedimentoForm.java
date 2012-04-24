@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -41,12 +41,12 @@ public class ProcedimentoForm extends ActionForm {
     private String dispatch;
     private int strutsAction;
     private String strutsButton = "";
-    private List procedimentos;
+    private List<CadProcedimentos> procedimentos;
     private String codigoProc;
     private String descProc;
 
     public ProcedimentoForm() {
-        this.procedimentos = new ArrayList();
+        this.procedimentos = new ArrayList<CadProcedimentos>();
     }
 
     public int getStrutsAction() {
@@ -103,7 +103,7 @@ public class ProcedimentoForm extends ActionForm {
     }
 
     public CadProcedimentos getProcedimento(int i) {
-        return (CadProcedimentos) this.procedimentos.get(i);
+        return this.procedimentos.get(i);
     }
 
     /**
@@ -123,7 +123,7 @@ public class ProcedimentoForm extends ActionForm {
     /**
      * @return
      */
-    public List getProcedimentos() {
+    public List<CadProcedimentos> getProcedimentos() {
         return procedimentos;
     }
 
@@ -144,7 +144,7 @@ public class ProcedimentoForm extends ActionForm {
     /**
      * @param list
      */
-    public void setProcedimentos(List list) {
+    public void setProcedimentos(List<CadProcedimentos> list) {
         procedimentos = list;
     }
 }

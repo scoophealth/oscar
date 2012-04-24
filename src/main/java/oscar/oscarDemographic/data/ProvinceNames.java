@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -29,17 +29,17 @@ import java.util.ArrayList;
 
 import oscar.OscarProperties;
 
-public class ProvinceNames extends ArrayList {
-        
+public class ProvinceNames extends ArrayList<String> {
+
     public static ProvinceNames getInstance() {
         return pNames;
     }
-    
+
     private static boolean isDefined = true;
-    static ProvinceNames pNames = new ProvinceNames();         
-    
+    static ProvinceNames pNames = new ProvinceNames();
+
     private ProvinceNames() {
-        OscarProperties props = OscarProperties.getInstance();        
+        OscarProperties props = OscarProperties.getInstance();
         if (props.getProperty("province_names") == null || props.getProperty("province_names").equals("")) {
             isDefined = false;
             return;
@@ -49,8 +49,8 @@ public class ProvinceNames extends ArrayList {
             add(pNamesStr[i]);
         }
     }
-    
+
     public boolean isDefined() {
-        return isDefined;       
+        return isDefined;
     }
 }

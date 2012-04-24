@@ -46,6 +46,8 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import oscar.OscarProperties;
 import oscar.util.SqlUtils;
 
+import com.quatro.model.security.SecProvider;
+
 public class ProviderDao extends HibernateDaoSupport {
 	private static Logger log = MiscUtils.getLogger();
 
@@ -110,7 +112,7 @@ public class ProviderDao extends HibernateDaoSupport {
             firstname=firstname.trim();
             lastname=lastname.trim();
             String s="From Provider p where p.FirstName=? and p.LastName=?";
-            ArrayList paramList=new ArrayList();
+            ArrayList<Object> paramList=new ArrayList<Object>();
             paramList.add(firstname);
             paramList.add(lastname);
             Object params[]=paramList.toArray(new Object[paramList.size()]);
@@ -121,15 +123,15 @@ public class ProviderDao extends HibernateDaoSupport {
     	firstname=firstname.trim();
     	lastname=lastname.trim();
     	String s="From Provider p where p.FirstName like ? and p.LastName like ?";
-    	ArrayList paramList=new ArrayList();
+    	ArrayList<Object> paramList=new ArrayList<Object>();
     	paramList.add(firstname);
     	paramList.add(lastname);
     	Object params[]=paramList.toArray(new Object[paramList.size()]);
     	return getHibernateTemplate().find(s,params);
 	}
 
-    public List getActiveProviders(Integer programId) {
-        ArrayList paramList = new ArrayList();
+    public List<SecProvider> getActiveProviders(Integer programId) {
+        ArrayList<Object> paramList = new ArrayList<Object>();
 
     	String sSQL="FROM  SecProvider p where p.status='1' and p.providerNo in " +
     	"(select sr.providerNo from secUserRole sr, LstOrgcd o " +
@@ -145,7 +147,7 @@ public class ProviderDao extends HibernateDaoSupport {
 	}
 
 	public List<Provider> getActiveProviders(String facilityId, String programId) {
-		ArrayList paramList = new ArrayList();
+		ArrayList<Object> paramList = new ArrayList<Object>();
 
 		String sSQL;
 		List<Provider> rs;
@@ -199,7 +201,7 @@ public class ProviderDao extends HibernateDaoSupport {
 		return rs;
 	}
 
-    public List getActiveProviders(String providerNo, Integer shelterId) {
+    public List<Provider> getActiveProviders(String providerNo, Integer shelterId) {
     	//@SuppressWarnings("unchecked")
     	String sql;
     	if (shelterId == null || shelterId.intValue() == 0)
@@ -215,12 +217,12 @@ public class ProviderDao extends HibernateDaoSupport {
 			" where o.codecsv like '%S" + shelterId.toString()+ ",%' and o.codecsv like '%' || srb.orgcd || ',%' and srb.providerNo =?))" +
 			" ORDER BY p.LastName";
 
-    	ArrayList paramList = new ArrayList();
+    	ArrayList<Object> paramList = new ArrayList<Object>();
     	paramList.add(providerNo);
 
     	Object params[] = paramList.toArray(new Object[paramList.size()]);
 
-    	List rs = getHibernateTemplate().find(sql,params);
+    	List<Provider> rs = getHibernateTemplate().find(sql,params);
 
 		if (log.isDebugEnabled()) {
 			log.debug("getProviders: # of results=" + rs.size());

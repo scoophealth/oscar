@@ -107,8 +107,8 @@ if (request.getAttribute("completedForm") != null) {
     oldDoc = false;
 }
 
-ArrayList<Hashtable> pdList = new ProviderData().getProviderList();
-ArrayList doctypes = EDocUtil.getDoctypes(module);
+ArrayList<Hashtable<String,String>> pdList = new ProviderData().getProviderList();
+ArrayList<String> doctypes = EDocUtil.getDoctypes(module);
 String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_DOCUMENT;
 String annotation_tableid = editDocumentNo;
 Long now = new Date().getTime();
@@ -264,7 +264,7 @@ for (String reportClass : reportClasses) {
 				<option value=""><bean:message
 					key="dms.addDocument.formSelect" /></option>
 				<%for (int i=0; i<doctypes.size(); i++) {
-                             String doctype = (String) doctypes.get(i); %>
+                             String doctype = doctypes.get(i); %>
 				<option value="<%= doctype%>"
 					<%=(formdata.getDocType().equals(doctype))?" selected":""%>><%= doctype%></option>
 				<%}%>

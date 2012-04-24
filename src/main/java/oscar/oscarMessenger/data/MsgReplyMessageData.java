@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,14 +27,14 @@ package oscar.oscarMessenger.data;
 
 
 public class MsgReplyMessageData {
-    public java.util.ArrayList localList = null;
-    public java.util.ArrayList remoList = null;
+    public java.util.ArrayList<MsgProviderData> localList = null;
+    public java.util.ArrayList<MsgProviderData> remoList = null;
     String localId;
 
 
     public void estLists(){
-        localList = new java.util.ArrayList();
-        remoList = new java.util.ArrayList();
+        localList = new java.util.ArrayList<MsgProviderData>();
+        remoList = new java.util.ArrayList<MsgProviderData>();
 
         oscar.oscarMessenger.data.MsgMessageData messageData = new oscar.oscarMessenger.data.MsgMessageData();
         localId = messageData.getCurrentLocationId();
@@ -58,7 +58,7 @@ public class MsgReplyMessageData {
         boolean retval = false;
         if (remoList != null){
             for (int i = 0; i < remoList.size(); i++){
-                MsgProviderData pD = (MsgProviderData) remoList.get(i);
+                MsgProviderData pD = remoList.get(i);
                 if ( ( pD.providerNo.equals(proId) ) && ( pD.locationId.equals(locoId) ) ){
                     retval = true;
                     i = remoList.size();

@@ -84,7 +84,7 @@ if (request.getAttribute("completedForm") != null) {
     fileName = currentDoc.getFileName();
 }
 
-ArrayList<Hashtable> pdList = new ProviderData().getProviderList();
+ArrayList<Hashtable<String,String>> pdList = new ProviderData().getProviderList();
 ArrayList doctypes = EDocUtil.getDoctypes(formdata.getFunction());
 String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_DOCUMENT;
 String annotation_tableid = editDocumentNo;
@@ -266,7 +266,7 @@ for (String reportClass : reportClasses) {
 			<td>
 			    <select name="responsibleId">
 				<option value="">---</option>
-		<% for (Hashtable pd : pdList) {
+		<% for (Hashtable<String,String> pd : pdList) {
 			String selected = "";
 			if (formdata.getResponsibleId().equals(pd.get("providerNo"))) selected = "selected";
 			%>

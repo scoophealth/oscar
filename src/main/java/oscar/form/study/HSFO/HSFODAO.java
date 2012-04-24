@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -816,10 +816,10 @@ public class HSFODAO {
                 visitData.setLocked(result.getBoolean("Locked"));
                 return visitData;
     }
-    public List retrieveVisitRecord(String ID) {
+    public List<VisitData> retrieveVisitRecord(String ID) {
 
 
-        List patientList = new LinkedList();
+        List<VisitData> patientList = new LinkedList<VisitData>();
 
         PreparedStatement query =null;
         ResultSet rs =null;
@@ -1054,7 +1054,7 @@ public class HSFODAO {
 
                  Connection connect = DbConnectionFilter.getThreadLocalDbConnection();
 		 Statement sql = connect.createStatement();
-		 String query = "SELECT DISTINCT * FROM form_hsfo_visit WHERE  ID = " + ID;;
+		 String query = "SELECT DISTINCT * FROM form_hsfo_visit WHERE  ID = " + ID;
 		 MiscUtils.getLogger().debug("query: " + query);
 		 try {
 		 ResultSet result = sql.executeQuery(query);
@@ -1216,7 +1216,7 @@ public class HSFODAO {
     	return reList;
     }
 
-    public List nullSafeRetrVisitRecord(String ID) {
+    public List<VisitData> nullSafeRetrVisitRecord(String ID) {
 
 
         String query = "SELECT * FROM form_hsfo_visit where ID in (SELECT max(ID) FROM form_hsfo_visit WHERE Patient_Id='" + ID + "' group by VisitDate_Id)";
@@ -1224,7 +1224,7 @@ public class HSFODAO {
     	Statement sql=null;
     	ResultSet result =null;
 
-        List patientList = new LinkedList();
+        List<VisitData> patientList = new LinkedList<VisitData>();
         try {
 
             Connection connect = DbConnectionFilter.getThreadLocalDbConnection();

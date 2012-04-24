@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -58,31 +58,31 @@ import ca.uhn.hl7v2.validation.impl.NoValidation;
  * @author wrighd
  */
 public class PATHL7Handler implements MessageHandler {
-    
+
     Logger logger = Logger.getLogger(PATHL7Handler.class);
     ORU_R01 msg = null;
-    
+
     /** Creates a new instance of CMLHandler */
     public PATHL7Handler(){
     }
-    
+
     public void init(String hl7Body) throws HL7Exception {
         Parser p = new PipeParser();
         p.setValidationContext(new NoValidation());
         msg = (ORU_R01) p.parse(hl7Body.replaceAll( "\n", "\r\n" ));
     }
-    
+
     public String getMsgType(){
         return("PATHL7");
     }
-    
+
     public String getMsgPriority(){
         return("");
     }
     /*
      *  MSH METHODS
      */
-    
+
     public String getMsgDate(){
         //try {
         return(formatDateTime(getString(msg.getMSH().getDateTimeOfMessage().getTimeOfAnEvent().getValue())));
@@ -91,22 +91,22 @@ public class PATHL7Handler implements MessageHandler {
         //    return ("");
         //}
     }
-    
+
     /*
      *  PID METHODS
      */
     public String getPatientName(){
         return(getFirstName()+" "+getLastName());
     }
-    
+
     public String getFirstName(){
         return(getString(msg.getRESPONSE().getPATIENT().getPID().getPatientName().getGivenName().getValue()));
     }
-    
+
     public String getLastName(){
         return(getString(msg.getRESPONSE().getPATIENT().getPID().getPatientName().getFamilyName().getValue()));
     }
-    
+
     public String getDOB(){
         try{
             return(formatDateTime(getString(msg.getRESPONSE().getPATIENT().getPID().getDateOfBirth().getTimeOfAnEvent().getValue())).substring(0, 10));
@@ -114,7 +114,7 @@ public class PATHL7Handler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getAge(){
         String age = "N/A";
         String dob = getDOB();
@@ -125,19 +125,19 @@ public class PATHL7Handler implements MessageHandler {
             age = UtilDateUtilities.calcAge(date);
         } catch (ParseException e) {
             logger.error("Could not get age", e);
-            
+
         }
         return age;
     }
-    
+
     public String getSex(){
         return(getString(msg.getRESPONSE().getPATIENT().getPID().getSex().getValue()));
     }
-    
+
     public String getHealthNum(){
         return(getString(msg.getRESPONSE().getPATIENT().getPID().getPatientIDExternalID().getID().getValue()));
     }
-    
+
     public String getHomePhone(){
         String phone = "";
         int i=0;
@@ -153,11 +153,11 @@ public class PATHL7Handler implements MessageHandler {
             return(phone);
         }catch(Exception e){
             logger.error("Could not return phone number", e);
-            
+
             return("");
         }
     }
-    
+
     public String getWorkPhone(){
         String phone = "";
         int i=0;
@@ -173,15 +173,15 @@ public class PATHL7Handler implements MessageHandler {
             return(phone);
         }catch(Exception e){
             logger.error("Could not return phone number", e);
-            
+
             return("");
         }
     }
-    
+
     public String getPatientLocation(){
         return(getString(msg.getMSH().getSendingFacility().getNamespaceID().getValue()));
     }
-    
+
     /*
      *  OBC METHODS
      */
@@ -204,22 +204,22 @@ public class PATHL7Handler implements MessageHandler {
                     return nums[1];
                 else
                     return "";
-            }    
+            }
         }catch(Exception e){
             logger.error("Could not return accession number", e);
-            
+
             return("");
         }
     }
-    
+
     /*
      *  OBR METHODS
      */
-    
+
     public int getOBRCount(){
         return(msg.getRESPONSE().getORDER_OBSERVATIONReps());
     }
-    
+
     public String getOBRName(int i){
         try{
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBR().getUniversalServiceIdentifier().getText().getValue()));
@@ -227,7 +227,7 @@ public class PATHL7Handler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getObservationHeader(int i, int j){
         try{
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBR().getDiagnosticServiceSectionID().getValue()));
@@ -235,7 +235,7 @@ public class PATHL7Handler implements MessageHandler {
             return("");
         }
     }
-    
+
     public int getOBRCommentCount(int i){
         try {
             if ( !getOBRComment(i, 0).equals("") ){
@@ -247,7 +247,7 @@ public class PATHL7Handler implements MessageHandler {
             return(0);
         }
     }
-    
+
     public String getOBRComment(int i, int j){
         try {
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getNTE(j).getComment(0).getValue()));
@@ -255,7 +255,7 @@ public class PATHL7Handler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getServiceDate(){
         try{
             return(formatDateTime(getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getObservationDateTime().getTimeOfAnEvent().getValue())));
@@ -264,7 +264,7 @@ public class PATHL7Handler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getRequestDate(int i){
         try{
             return(formatDateTime(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBR().getRequestedDateTime().getTimeOfAnEvent().getValue())));
@@ -272,7 +272,7 @@ public class PATHL7Handler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getOrderStatus(){
         try{
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getResultStatus().getValue()));
@@ -280,7 +280,7 @@ public class PATHL7Handler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getClientRef(){
         String docNum = "";
         int i=0;
@@ -296,11 +296,11 @@ public class PATHL7Handler implements MessageHandler {
             return(docNum);
         }catch(Exception e){
             logger.error("Could not return doctor id numbers", e);
-            
+
             return("");
         }
     }
-    
+
     public String getDocName(){
         String docName = "";
         int i=0;
@@ -316,11 +316,11 @@ public class PATHL7Handler implements MessageHandler {
             return(docName);
         }catch(Exception e){
             logger.error("Could not return doctor names", e);
-            
+
             return("");
         }
     }
-    
+
     public String getCCDocs(){
         String docName = "";
         int i=0;
@@ -336,20 +336,20 @@ public class PATHL7Handler implements MessageHandler {
             return(docName);
         }catch(Exception e){
             logger.error("Could not return cc'ed doctors", e);
-            
+
             return("");
         }
     }
-    
-    public ArrayList getDocNums(){
-        ArrayList docNums = new ArrayList();
+
+    public ArrayList<String> getDocNums(){
+        ArrayList<String> docNums = new ArrayList<String>();
         String id;
         int i;
-        
+
         try{
             String providerId = msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getOrderingProvider(0).getIDNumber().getValue();
             docNums.add(providerId);
-            
+
             i=0;
             while((id = msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getResultCopiesTo(i).getIDNumber().getValue()) != null){
                 if (!id.equals(providerId))
@@ -358,13 +358,13 @@ public class PATHL7Handler implements MessageHandler {
             }
         }catch(Exception e){
             logger.error("Could not return doctor nums", e);
-            
+
         }
-        
+
         return(docNums);
     }
-    
-    
+
+
     /*
      *  OBX METHODS
      */
@@ -385,7 +385,7 @@ public class PATHL7Handler implements MessageHandler {
         }
         return count;
     }
-    
+
     public String getOBXIdentifier(int i, int j){
         try{
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getIdentifier().getValue()));
@@ -393,7 +393,7 @@ public class PATHL7Handler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getOBXValueType(int i, int j){
         try{
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getValueType().getValue()));
@@ -401,7 +401,7 @@ public class PATHL7Handler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getOBXName(int i, int j){
         try{
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getText().getValue()));
@@ -409,16 +409,15 @@ public class PATHL7Handler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getOBXResult(int i, int j){
         try{
-            Terser terser = new Terser(msg);
             return(getString(Terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),5,0,1,1)));
         }catch(Exception e){
             return("");
         }
     }
-    
+
     public String getOBXReferenceRange(int i, int j){
         try{
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getReferencesRange().getValue()));
@@ -426,7 +425,7 @@ public class PATHL7Handler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getOBXUnits(int i, int j){
         try{
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getUnits().getIdentifier().getValue()));
@@ -434,7 +433,7 @@ public class PATHL7Handler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getOBXResultStatus(int i, int j){
         try{
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservResultStatus().getValue()));
@@ -442,7 +441,7 @@ public class PATHL7Handler implements MessageHandler {
             return("");
         }
     }
-    
+
     public int getOBXFinalResultCount(){
         int obrCount = getOBRCount();
         int obxCount;
@@ -455,8 +454,8 @@ public class PATHL7Handler implements MessageHandler {
                     count++;
             }
         }
-        
-        
+
+
         String orderStatus = getOrderStatus();
         // add extra so final reports are always the ordered as the latest except
         // if the report has been changed in which case that report should be the latest
@@ -464,10 +463,10 @@ public class PATHL7Handler implements MessageHandler {
             count = count + 100;
         else if (orderStatus.equalsIgnoreCase("C"))
             count = count + 150;
-        
+
         return count;
     }
-    
+
     public String getTimeStamp(int i, int j){
         try{
             return(formatDateTime(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getDateTimeOfTheObservation().getTimeOfAnEvent().getValue())));
@@ -475,7 +474,7 @@ public class PATHL7Handler implements MessageHandler {
             return("");
         }
     }
-    
+
     public boolean isOBXAbnormal(int i, int j){
         try{
             String abnormalFlag = getOBXAbnormalFlag(i, j);
@@ -484,12 +483,12 @@ public class PATHL7Handler implements MessageHandler {
             }else{
                 return(false);
             }
-            
+
         }catch(Exception e){
             return(false);
         }
     }
-    
+
     public String getOBXAbnormalFlag(int i, int j){
         try{
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getAbnormalFlags(0).getValue()));
@@ -498,7 +497,7 @@ public class PATHL7Handler implements MessageHandler {
             return("");
         }
     }
-    
+
     public int getOBXCommentCount(int i, int j){
         try {
             if ( !getOBXComment(i, j, 0).equals("") ){
@@ -510,7 +509,7 @@ public class PATHL7Handler implements MessageHandler {
             return(0);
         }
     }
-    
+
     public String getOBXComment(int i, int j, int k){
         try {
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getNTE(k).getComment(0).getValue()));
@@ -518,57 +517,57 @@ public class PATHL7Handler implements MessageHandler {
             return("");
         }
     }
-    
-    
-    
-    
-    
+
+
+
+
+
     /**
      *  Retrieve the possible segment headers from the OBX fields
      */
-    public ArrayList getHeaders(){
+    public ArrayList<String> getHeaders(){
         int i;
         int arraySize;
         int k = 0;
-        
-        ArrayList headers = new ArrayList();
+
+        ArrayList<String> headers = new ArrayList<String>();
         String currentHeader;
-        
+
         try{
             for (i=0; i < msg.getRESPONSE().getORDER_OBSERVATIONReps(); i++){
-                
+
                 currentHeader = getObservationHeader(i, 0);
                 arraySize = headers.size();
                 if (arraySize == 0 || !currentHeader.equals(headers.get(arraySize-1))){
                     logger.info("Adding header: '"+currentHeader+"' to list");
                     headers.add(currentHeader);
                 }
-                
+
             }
             return(headers);
         }catch(Exception e){
             logger.error("Could not create header list", e);
-            
+
             return(null);
         }
-        
+
     }
-    
+
     public String audit(){
         return "";
     }
-    
+
     /*
      *  END OF PUBLIC METHODS
      */
-    
-    
+
+
     private String getFullDocName(XCN docSeg){
         String docName = "";
-        
+
         if(docSeg.getPrefixEgDR().getValue() != null)
             docName = docSeg.getPrefixEgDR().getValue();
-        
+
         if(docSeg.getGivenName().getValue() != null){
             if (docName.equals("")){
                 docName = docSeg.getGivenName().getValue();
@@ -584,23 +583,23 @@ public class PATHL7Handler implements MessageHandler {
             docName = docName +" "+ docSeg.getSuffixEgJRorIII().getValue();
         if(docSeg.getDegreeEgMD().getValue() != null)
             docName = docName +" "+ docSeg.getDegreeEgMD().getValue();
-        
+
         return (docName);
     }
-    
-    
+
+
     private String formatDateTime(String plain){
     	if (plain==null || plain.trim().equals("")) return "";
-    	
+
         String dateFormat = "yyyyMMddHHmmss";
         dateFormat = dateFormat.substring(0, plain.length());
         String stringFormat = "yyyy-MM-dd HH:mm:ss";
         stringFormat = stringFormat.substring(0, stringFormat.lastIndexOf(dateFormat.charAt(dateFormat.length()-1))+1);
-        
+
         Date date = UtilDateUtilities.StringToDate(plain, dateFormat);
         return UtilDateUtilities.DateToString(date, stringFormat);
     }
-    
+
     private String getString(String retrieve){
         if (retrieve != null){
             return(retrieve.trim().replaceAll("\\\\\\.br\\\\", "<br />"));
@@ -608,7 +607,7 @@ public class PATHL7Handler implements MessageHandler {
             return("");
         }
     }
-    
+
     public String getFillerOrderNumber(){
 		return "";
 	}
@@ -618,10 +617,10 @@ public class PATHL7Handler implements MessageHandler {
     public String getRadiologistInfo(){
 		return "";
 	}
-    
+
     public String getNteForOBX(int i, int j){
-    	
+
     	return "";
     }
-    
+
 }

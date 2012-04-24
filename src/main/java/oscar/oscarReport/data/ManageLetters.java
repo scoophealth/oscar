@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -56,18 +56,18 @@ import oscar.OscarDocumentCreator;
 
 
 public class ManageLetters {
-    
+
     /** Creates a new instance of ManageLetters */
     public ManageLetters() {
     }
-    
+
     //method to save a new report
     public void saveReport(String providerNo,String reportName,String fileName, byte[] in){
-        
-       
+
+
         try {
 
-            
+
             String s = "insert into report_letters (provider_no,report_name, file_name,report_file,date_time,archive) values (?,?,?,?,now(),'0')" ;
             PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(s);
             pstmt.setString(1,providerNo);
@@ -76,40 +76,40 @@ public class ManageLetters {
             pstmt.setBytes(4,in);
             pstmt.executeUpdate();
             pstmt.close();
-            
+
         }catch(Exception e){
             MiscUtils.getLogger().error("Error", e);
         }
     }
-    
+
     //method to archive an existing report
     public void archiveReport(String id){
-        
+
         try {
 
-            
+
             String s = "update report_letters set archive = '1' where id =  ?" ;
             PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(s);
             pstmt.setString(1,id);
             pstmt.executeUpdate();
             pstmt.close();
-            
+
         }catch(Exception e){
             MiscUtils.getLogger().error("Error", e);
         }
     }
-    
+
     //method getReport for id
     public JasperReport getReport(String id){
-        
+
         JasperReport  jasperReport = null;
         try {
 
-            
+
             String s = "select report_file from report_letters where id  = ?" ;
             PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(s);
             pstmt.setString(1,id);
-            
+
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()){
                 InputStream is = rs.getBinaryStream("report_file");
@@ -119,17 +119,17 @@ public class ManageLetters {
             }
             rs.close();
             pstmt.close();
-            
+
         }catch(Exception e){
             MiscUtils.getLogger().error("Error", e);
         }
         return jasperReport;
     }
-    
+
     public static String[] getReportParams(JasperReport  jasperReport){
         JRParameter[] jrp =  jasperReport.getParameters();
-        
-        ArrayList list = new ArrayList();
+
+        ArrayList<String> list = new ArrayList<String>();
         if(jrp != null){
             for (int i = 0 ; i < jrp.length; i++){
                 if(!jrp[i].isSystemDefined()){
@@ -137,28 +137,28 @@ public class ManageLetters {
                     MiscUtils.getLogger().debug("JRP "+i+" :"+jrp[i].getName());
                 }
             }
-                    
+
         }
         String[] s = new String[list.size()];
-        return (String[]) list.toArray(s);
+        return list.toArray(s);
     }
-    
+
     //method to write file to stream
     public void writeLetterToStream(String id,OutputStream out){
-        
-        
+
+
         try {
 
-            
+
             String s = "select report_file from report_letters where id  = ?" ;
             PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(s);
             pstmt.setString(1,id);
-            
+
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()){
-            
+
                 InputStream in = rs.getBinaryStream("report_file");
-            
+
                 // Transfer bytes from in to out
                 byte[] buf = new byte[1024];
                 int len;
@@ -170,25 +170,25 @@ public class ManageLetters {
             }
             rs.close();
             pstmt.close();
-            
+
         }catch(Exception e){
             MiscUtils.getLogger().error("Error", e);
         }
-        
-        
+
+
     }
-    
-    
-    
+
+
+
     //method to validate xml
-    
+
     //method to list active reports
-    public ArrayList getActiveReportList(){
-        
-        ArrayList list = new ArrayList();
+    public ArrayList<Hashtable<String,Object>> getActiveReportList(){
+
+        ArrayList<Hashtable<String,Object>> list = new ArrayList<Hashtable<String,Object>>();
         try {
 
-            
+
             String s = "select ID, provider_no , report_name, file_name, date_time from report_letters where archive = '0' order by date_time,report_name" ;
             PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(s);
             ResultSet rs = pstmt.executeQuery();
@@ -197,19 +197,19 @@ public class ManageLetters {
             }
             rs.close();
             pstmt.close();
-            
+
         }catch(Exception e){
             MiscUtils.getLogger().error("Error", e);
         }
         return list;
-    }   
-    
-    public Hashtable getReportData(String id){
-        
-        Hashtable h = null;
+    }
+
+    public Hashtable<String,Object> getReportData(String id){
+
+        Hashtable<String,Object> h = null;
         try {
 
-           
+
             String s = "select ID, provider_no , report_name, file_name, date_time from report_letters where ID = ?" ;
             PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(s);
             pstmt.setString(1,id);
@@ -224,9 +224,9 @@ public class ManageLetters {
         }
         return h;
     }
-    
-    private Hashtable getHashFromResultSet(ResultSet rs) throws Exception{
-        Hashtable h = new Hashtable();
+
+    private Hashtable<String,Object> getHashFromResultSet(ResultSet rs) throws Exception{
+        Hashtable<String,Object> h = new Hashtable<String,Object>();
         h.put("ID",oscar.Misc.getString(rs,"ID"));
         h.put("provider_no",oscar.Misc.getString(rs,"provider_no"));
         h.put("report_name",oscar.Misc.getString(rs,"report_name"));
@@ -234,10 +234,10 @@ public class ManageLetters {
         h.put("date_time",rs.getDate("date_time"));
         return h;
     }
-    
-    
+
+
     /*
-         
+
      create table log_letters(
             ID int(10) primary key auto_increment,
             date_time datetime,
@@ -245,14 +245,14 @@ public class ManageLetters {
             log text,
             report_id  int(10)
          )
-         
+
          */
     public void logLetterCreated(String providerNo,String reportId,String[] demos){
-        
-         
+
+
         try {
 
-            
+
             String s = "insert into log_letters (provider_no,report_id, log, date_time) values (?,?,?,now())" ;
             PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(s);
             pstmt.setString(1,providerNo);
@@ -261,13 +261,13 @@ public class ManageLetters {
 
             pstmt.executeUpdate();
             pstmt.close();
-            
+
         }catch(Exception e){
             MiscUtils.getLogger().error("Error", e);
         }
-        
+
     }
-    
+
     private String serializeDemographic(String[] demos){
         StringBuilder serialString = new StringBuilder();
         if(demos != null){
@@ -280,9 +280,9 @@ public class ManageLetters {
         }
         return serialString.toString();
     }
-    
+
     private String[] deSerializeDemographic(String demo){
         return demo.split(",");
     }
-    
+
 }

@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -40,24 +40,24 @@ public class MsgMessageData {
 
     boolean areRemotes = false;
     boolean areLocals = false;
-    java.util.ArrayList providerArrayList = null;
+    java.util.ArrayList<MsgProviderData> providerArrayList = null;
     String currentLocationId = null;
 
     private String messageSubject;
     private String messageDate;
     private String messageTime;
 
-    public MsgMessageData(){        
+    public MsgMessageData(){
     }
 
     public MsgMessageData(String msgID){
-        try{            
+        try{
             DBPreparedHandler db = new DBPreparedHandler();
-            String sql = "";                               
-            //sql = "select tbl.thedate, tbl.thesubject from msgDemoMap map, messagetbl tbl where demographic_no ='"+ demographic_no 
+            String sql = "";
+            //sql = "select tbl.thedate, tbl.thesubject from msgDemoMap map, messagetbl tbl where demographic_no ='"+ demographic_no
             //        + "' and tbl.messageid = map.messageID order by tbl.thedate";
             sql = "select thesubject, thedate, theime from messagetbl where messageid='"+msgID+"'";
-            
+
             ResultSet rs = db.queryResults(sql);
             if(rs.next()){
                 this.messageSubject = oscar.Misc.getString(rs, "thesubject");
@@ -65,7 +65,7 @@ public class MsgMessageData {
                 this.messageTime = oscar.Misc.getString(rs, "theime");
             }
         }
-        catch (java.sql.SQLException e){ 
+        catch (java.sql.SQLException e){
             MiscUtils.getLogger().debug("Message data not found");
         }
     }
@@ -91,10 +91,10 @@ public class MsgMessageData {
        * @return turns a String Array
        */
    public String[] getDups4(String[] strarray){
-		
-		java.util.Vector vector = new java.util.Vector();
+
+		java.util.Vector<String> vector = new java.util.Vector<String>();
 		String temp = new String();
-		
+
 
 		java.util.Arrays.sort(strarray);
 		temp ="";
@@ -107,7 +107,7 @@ public class MsgMessageData {
 		}
 	        String[] retval = new String[vector.size()];
                 for (int i =0; i < vector.size() ; i++ ){
-                   retval[i] = (String) vector.elementAt(i);
+                   retval[i] = vector.elementAt(i);
                 }
    	     return retval;
 	}
@@ -164,7 +164,7 @@ public class MsgMessageData {
     //=-------------------------------------------------------------------------
 
     ////////////////////////////////////////////////////////////////////////////
-     public String createSentToString(java.util.ArrayList providerList){
+     public String createSentToString(java.util.ArrayList<MsgProviderData> providerList){
 
             String sql = "select first_name, last_name from provider where ";
             StringBuilder temp = new StringBuilder(sql);
@@ -173,7 +173,7 @@ public class MsgMessageData {
 
             //create SQL statement with the provider numbers
             for (int i =0 ; i < providerList.size(); i++){
-              MsgProviderData proData = (MsgProviderData) providerList.get(i);
+              MsgProviderData proData = providerList.get(i);
               String proNo = proData.providerNo;
               if (i == (providerList.size() -1)){
                  temp.append(" provider_no = '"+proNo + "'");
@@ -313,8 +313,8 @@ public class MsgMessageData {
     //It parse through them and looks for an @
     //Providers wiht an @ are remote location providers
     //Its creates an arrayList of class provider
-    public java.util.ArrayList getProviderStructure(String[] providerArray){
-          providerArrayList = new java.util.ArrayList();
+    public java.util.ArrayList<MsgProviderData> getProviderStructure(String[] providerArray){
+          providerArrayList = new java.util.ArrayList<MsgProviderData>();
 
          for (int i =0 ; i < providerArray.length ; i++){
             MsgProviderData pD = new MsgProviderData();
@@ -335,11 +335,11 @@ public class MsgMessageData {
     }//-=-----------------------------------------------------------------------
 
     ////////////////////////////////////////////////////////////////////////////
-    public java.util.ArrayList getRemoteProvidersStructure(){
-        java.util.ArrayList arrayList = new java.util.ArrayList();
+    public java.util.ArrayList<MsgProviderData> getRemoteProvidersStructure(){
+        java.util.ArrayList<MsgProviderData> arrayList = new java.util.ArrayList<MsgProviderData>();
         if ( providerArrayList != null){
             for (int i = 0; i < providerArrayList.size(); i++){
-                MsgProviderData providerData = (MsgProviderData) providerArrayList.get(i);
+                MsgProviderData providerData = providerArrayList.get(i);
                 if (!providerData.locationId.equals(getCurrentLocationId())){
                     arrayList.add(providerData);
                 }
@@ -349,11 +349,11 @@ public class MsgMessageData {
     }//=------------------------------------------------------------------------
 
     ////////////////////////////////////////////////////////////////////////////
-    public java.util.ArrayList getLocalProvidersStructure(){
-        java.util.ArrayList arrayList = new java.util.ArrayList();
+    public java.util.ArrayList<MsgProviderData> getLocalProvidersStructure(){
+        java.util.ArrayList<MsgProviderData> arrayList = new java.util.ArrayList<MsgProviderData>();
         if ( providerArrayList != null){
             for (int i = 0; i < providerArrayList.size(); i++){
-                MsgProviderData providerData = (MsgProviderData) providerArrayList.get(i);
+                MsgProviderData providerData = providerArrayList.get(i);
 
                 if (providerData.locationId.equals(getCurrentLocationId())){
                     arrayList.add(providerData);
@@ -374,23 +374,23 @@ public class MsgMessageData {
 
 
 
-  public String getRemoteNames(java.util.ArrayList arrayList){
+  public String getRemoteNames(java.util.ArrayList<MsgProviderData> arrayList){
 
         String[] arrayOfLocations = new String[arrayList.size()];
         String[] sortedArrayOfLocations;
         MsgProviderData providerData ;
         for (int i = 0; i < arrayList.size();i++){
-            providerData        = (MsgProviderData) arrayList.get(i);
+            providerData        = arrayList.get(i);
             arrayOfLocations[i] = providerData.locationId;
         }
         sortedArrayOfLocations  =  getDups4(arrayOfLocations);
 
-        java.util.ArrayList vectOfSortedProvs = new java.util.ArrayList();
+        java.util.ArrayList <ArrayList<String> >vectOfSortedProvs = new java.util.ArrayList<ArrayList<String>>();
 
         for (int i = 0; i < sortedArrayOfLocations.length; i++){
-            java.util.ArrayList sortedProvs = new java.util.ArrayList();
+            java.util.ArrayList<String> sortedProvs = new java.util.ArrayList<String>();
             for (int j = 0; j < arrayList.size(); j++){
-                providerData = (MsgProviderData) arrayList.get(j);
+                providerData = arrayList.get(j);
                 if (providerData.locationId.equals( sortedArrayOfLocations[i] )){
 
                    sortedProvs.add(providerData.providerNo);
@@ -420,7 +420,7 @@ public class MsgMessageData {
         Document xmlDoc = Msgxml.parseXML(theAddressBook);
 
         if ( xmlDoc != null  ){
-           java.util.ArrayList sortedProvs = (java.util.ArrayList) vectOfSortedProvs.get(i);
+        	ArrayList<String> sortedProvs = vectOfSortedProvs.get(i);
 
            stringBuffer.append("<br/><br/>Providers at "+theLocationDesc+" receiving this message: <br/> ");
 
@@ -429,7 +429,7 @@ public class MsgMessageData {
 
            for (int z=0; z < sortedProvs.size(); z++){
 
-              String providerNo = (String) sortedProvs.get(z);
+              String providerNo = sortedProvs.get(z);
 
               for (int j = 0; j < lst.getLength(); j++){
                  Node currNode = lst.item(j);
@@ -452,22 +452,22 @@ public class MsgMessageData {
 
         return stringBuffer.toString();
   }
-  
+
   public String getSubject(String msgID){
       String subject=null;
-      try{            
+      try{
             DBPreparedHandler db = new DBPreparedHandler();
-            String sql = "";                               
-            //sql = "select tbl.thedate, tbl.thesubject from msgDemoMap map, messagetbl tbl where demographic_no ='"+ demographic_no 
+            String sql = "";
+            //sql = "select tbl.thedate, tbl.thesubject from msgDemoMap map, messagetbl tbl where demographic_no ='"+ demographic_no
             //        + "' and tbl.messageid = map.messageID order by tbl.thedate";
             sql = "select thesubject from messagetbl where messageid='"+msgID+"'";
-            
+
             ResultSet rs = db.queryResults(sql);
             if(rs.next()){
                 subject = oscar.Misc.getString(rs, "thesubject");
             }
         }
-        catch (java.sql.SQLException e){ 
+        catch (java.sql.SQLException e){
             subject="error: subject not found!";
         }
       return subject;
@@ -476,8 +476,8 @@ public class MsgMessageData {
   public String getSubject(){
       return this.messageSubject;
   }
-  
-  public String getDate(){         
+
+  public String getDate(){
       return this.messageDate;
   }
 

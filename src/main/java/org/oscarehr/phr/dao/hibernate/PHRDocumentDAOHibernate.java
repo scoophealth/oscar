@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -46,10 +46,10 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  */
 public class PHRDocumentDAOHibernate extends HibernateDaoSupport
 		implements PHRDocumentDAO {
-	
+
 	private static Logger log = MiscUtils.getLogger();
-        
-        
+
+
         public boolean hasIndex(String idx){
             final String index = idx;
             Long num =  (Long) getHibernateTemplate().execute(new HibernateCallback() {
@@ -64,48 +64,48 @@ public class PHRDocumentDAOHibernate extends HibernateDaoSupport
             if (num > 0 ){
                return true;
             }
-           return false; 
+           return false;
         }
-        
-        
+
+
         public boolean hasInde2x(String index){
             String sql = "select count(*) from PHRDocument p where p.phrClassification= '"+index+"'";
-            
+
             return   (((Long) getHibernateTemplate().iterate(sql).next()) == 1);
-		
+
         }
-        
-        public List getDocumentsReceived(String docType,String providerNo) {
-            // for messages 'urn:org:indivo:document:classification:message' 
+
+        public List<PHRDocument> getDocumentsReceived(String docType,String providerNo) {
+            // for messages 'urn:org:indivo:document:classification:message'
             String sql ="from PHRDocument d where d.phrClassification = ? and d.receiverOscar = ? and d.status <= 7 ORDER BY d.dateSent DESC";
             String[] f = new String[2];
             f[0] = docType;
-            f[1] = providerNo; 
-            List list = getHibernateTemplate().find(sql,f);
+            f[1] = providerNo;
+            List<PHRDocument> list = getHibernateTemplate().find(sql,f);
             return list;
         }
-        
-        public List getDocumentsSent(String docType,String providerNo) {
-            // for messages 'urn:org:indivo:document:classification:message' 
+
+        public List<PHRDocument> getDocumentsSent(String docType,String providerNo) {
+            // for messages 'urn:org:indivo:document:classification:message'
             String sql ="from PHRDocument d where d.phrClassification = ? and d.senderOscar = ? ORDER BY d.dateSent DESC";
             String[] f = new String[2];
             f[0] = docType;
-            f[1] = providerNo; 
-            List list = getHibernateTemplate().find(sql,f);
+            f[1] = providerNo;
+            List<PHRDocument> list = getHibernateTemplate().find(sql,f);
             return list;
         }
-        
-        public List getDocumentsArchived(String docType,String providerNo) {
-            // for messages 'urn:org:indivo:document:classification:message' 
+
+        public List<PHRDocument> getDocumentsArchived(String docType,String providerNo) {
+            // for messages 'urn:org:indivo:document:classification:message'
             String sql ="from PHRDocument d where d.phrClassification = ? and d.receiverOscar = ? and d.status > 7 ORDER BY d.dateSent DESC";
             String[] f = new String[2];
             f[0] = docType;
-            f[1] = providerNo; 
-            List list = getHibernateTemplate().find(sql,f);
+            f[1] = providerNo;
+            List<PHRDocument> list = getHibernateTemplate().find(sql,f);
             return list;
         }
         public List<PHRDocument> getDocumentsByReceiverSenderStatusClassification(Integer receiverType, Integer senderType, String phrClassification, String receiverOscar,Integer status){
-            
+
             String sql="from PHRDocument d where d.phrClassification=? and d.receiverOscar=? and d.status=? and d.senderType=? and d.receiverType=? order by d.dateSent desc";
             Object[] f={phrClassification,receiverOscar,status,senderType,receiverType};
 
@@ -113,40 +113,40 @@ public class PHRDocumentDAOHibernate extends HibernateDaoSupport
             return ret;
         }
         public PHRDocument getDocumentById(String id){
-            // for messages 'urn:org:indivo:document:classification:message' 
+            // for messages 'urn:org:indivo:document:classification:message'
             String sql ="from PHRDocument d where d.id = ? ";
-           
+
             List<PHRDocument> list = getHibernateTemplate().find(sql,new Integer(id));
-            
+
             if (list == null || list.size() == 0){
                 return null;
             }
-            
+
             return list.get(0);
         }
-        
+
         public PHRDocument getDocumentByIndex(String idx){
-            // for messages 'urn:org:indivo:document:classification:message' 
+            // for messages 'urn:org:indivo:document:classification:message'
             String sql ="from PHRDocument d where d.phrIndex = ? ";
 
             List<PHRDocument> list = getHibernateTemplate().find(sql,idx);
-            
+
             if (list == null || list.size() == 0){
                 return null;
             }
-            
+
             return list.get(0);
         }
-        
-        
+
+
         public void save(PHRDocument doc) {
 		this.getHibernateTemplate().save(doc);
 	}
-        
+
         public void update(PHRDocument doc){
             this.getHibernateTemplate().update(doc);
         }
-        
+
         public PHRMessage getMessageById(String idx){
             String sql ="from PHRDocument d where d.phrIndex = ? ";
             List<PHRMessage> list = getHibernateTemplate().find(sql,idx);
@@ -155,9 +155,9 @@ public class PHRDocumentDAOHibernate extends HibernateDaoSupport
             }
             return list.get(0);
         }
-        
-        public List getReferencedMessages(PHRDocument doc){
-            List list = null;    
+
+        public List<String> getReferencedMessages(PHRDocument doc){
+            List<String> list = null;
             try {
                 PHRMessage message = new PHRMessage(doc);
                 if (message.getReferenceMessage() != null){
@@ -168,18 +168,18 @@ public class PHRDocumentDAOHibernate extends HibernateDaoSupport
             }
             return list;
         }
-        
-        public List getReferencedMessagesById(String id){
+
+        public List<String> getReferencedMessagesById(String id){
             PHRMessage message = getMessageById(id);
-            List list = new ArrayList();
+            List<String> list = new ArrayList<String>();
             if (message.getReferenceMessage( ) == null){
                 return null;
             }
             list.add(message.getBody());
             return getReferenceMessagesById( list,  message.getReferenceMessage( ) );
         }
-        
-        public List getReferenceMessagesById(List list, String id){
+
+        public List<String> getReferenceMessagesById(List<String> list, String id){
             PHRMessage message = getMessageById(id);
             if (message.getReferenceMessage() != null){
                 list.add(message.getBody());
@@ -187,8 +187,8 @@ public class PHRDocumentDAOHibernate extends HibernateDaoSupport
             }
             return list;
         }
-        
-        
+
+
         public int countUnreadDocuments(final String classification, final String providerNo) {
             Long num =  (Long) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session)
@@ -200,12 +200,12 @@ public class PHRDocumentDAOHibernate extends HibernateDaoSupport
             });
             return num.intValue();
         }
-        
-    
+
+
     /**
      * Creates a new instance of PHRDocumentDAOHibernate
      */
     public PHRDocumentDAOHibernate() {
     }
-    
+
 }

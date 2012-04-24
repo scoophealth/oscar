@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -48,32 +48,32 @@ import oscar.oscarLab.ca.bc.PathNet.HL7.Message;
  * @author  root
  */
 public class PathNetController {
-    private static Logger logger=MiscUtils.getLogger(); 
+    private static Logger logger=MiscUtils.getLogger();
 
    /** Creates a new instance of PathNetController */
    public PathNetController() {
    }
-   
-   
+
+
    /**
     * @param args the command line arguments
     */
-   public static void main(String[] args) {                  
-      
+   public static void main(String[] args) {
+
       MiscUtils.getLogger().debug("Running PathNet Client...");
       if(args.length != 1) {
-         logger.info("Usage: PathNet Client pathOfPropertiesFile");	 
+         logger.info("Usage: PathNet Client pathOfPropertiesFile");
          System.exit(1);
       }
-      
-      logger.info("    propertiesFile:  " + args[0]);         	
-               
+
+      logger.info("    propertiesFile:  " + args[0]);
+
       try{
          init(args[0]);
       }catch(Exception e){
     	  logger.error("ERROR: Initializing DB : "+e.getMessage(), e);
          System.exit(1);
-      }                 
+      }
       try {
       OscarProperties.getInstance().readFromFile(args[0]);
       }
@@ -87,29 +87,29 @@ public class PathNetController {
       Connection connection = new Connection();
       String username = OscarProperties.getInstance().getProperty("pathnet_username");
       String password = OscarProperties.getInstance().getProperty("pathnet_password");
-      
+
       if (username == null) {
-         logger.error("ERROR: property pathnet_username was not found");         
+         logger.error("ERROR: property pathnet_username was not found");
       }
       if (password == null) {
     	  logger.error("ERROR: property pathnet_password was not found");
       }
       if (username == null || password == null){
-         System.exit(1);         
+         System.exit(1);
       }
-      
+
       if (connection.Open(username, password)) {
-         ArrayList messages = connection.Retrieve();
+         ArrayList<String> messages = connection.Retrieve();
             if (messages != null) {
                boolean success = true;
                try {
                   int size = messages.size();
-                  
+
                   String now =
                   new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
                   for (int i = 0; i < size; i++) {
                      Message message = new Message(now);
-                     message.Parse((String) messages.get(i));
+                     message.Parse(messages.get(i));
                      message.ToDatabase();
                   }
                }
@@ -124,12 +124,12 @@ public class PathNetController {
         	 logger.error("Error connecting to pathnet");
             System.exit(1);
          }
-      
+
    }
-   
+
    private static synchronized void init (String file) throws java.io.IOException  {
       Properties param = new Properties();
-      param.load(new FileInputStream(file)); 
+      param.load(new FileInputStream(file));
    }
-   
+
 }

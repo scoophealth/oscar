@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -36,7 +36,7 @@ import org.oscarehr.util.MiscUtils;
 import oscar.oscarDB.DBHandler;
 
 /**
- * 
+ *
  * @author jay
  */
 public class RAData {
@@ -49,14 +49,14 @@ public class RAData {
     // radetail_no | raheader_no | providerohip_no | billing_no | service_code |
     // service_count | hin | amountclaim | amountpay | service_date | error_code
     // | billtype |
-    public ArrayList getRAData(String billingNo) {
-        ArrayList list = new ArrayList();
+    public ArrayList<Hashtable<String,String>> getRAData(String billingNo) {
+        ArrayList<Hashtable<String,String>> list = new ArrayList<Hashtable<String,String>>();
         String sql = "Select * from radetail where billing_no = '" + StringEscapeUtils.escapeSql(billingNo) + "'";
         try {
-            
+
             ResultSet rs = DBHandler.GetSQL(sql);
             while (rs.next()) {
-                Hashtable h = new Hashtable();
+                Hashtable<String,String> h = new Hashtable<String,String>();
                 h.put("radetail_no", rs.getString("radetail_no"));
                 h.put("raheader_no", rs.getString("raheader_no"));
                 h.put("providerohip_no", rs.getString("providerohip_no"));
@@ -78,15 +78,15 @@ public class RAData {
         return list;
     }
 
-    public ArrayList getRADataIntern(String billingNo, String service_date, String ohip_no) {
-        ArrayList list = new ArrayList();
+    public ArrayList<Hashtable<String,String>> getRADataIntern(String billingNo, String service_date, String ohip_no) {
+        ArrayList<Hashtable<String,String>> list = new ArrayList<Hashtable<String,String>>();
         String sql = "Select * from radetail where billing_no = '" + StringEscapeUtils.escapeSql(billingNo) + "'";
         sql += " and service_date='" + service_date + "' and providerohip_no='" + ohip_no + "'";
         try {
-            
+
             ResultSet rs = DBHandler.GetSQL(sql);
             while (rs.next()) {
-                Hashtable h = new Hashtable();
+            	Hashtable<String,String> h = new Hashtable<String,String>();
                 h.put("radetail_no", rs.getString("radetail_no"));
                 h.put("raheader_no", rs.getString("raheader_no"));
                 h.put("providerohip_no", rs.getString("providerohip_no"));
@@ -161,7 +161,7 @@ public class RAData {
         boolean ret = false;
         String sql = "Select error_code from radetail where billing_no = '" + StringEscapeUtils.escapeSql(billingNo) + "'";
         try {
-            
+
             ResultSet rs = DBHandler.GetSQL(sql);
             while (rs.next()) {
                 if (errorCode.equals(rs.getString("error_code"))) {
