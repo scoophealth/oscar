@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -426,7 +426,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
                     Element rules  = e.getChild("rules");
                     if (rules !=null){
                        List<Element> recomends = rules.getChildren("recommendation");
-                       List ds = new ArrayList();
+                       List<Recommendation> ds = new ArrayList<Recommendation>();
                        for(Element reco: recomends){
                            ruleCount++;
                            //Hashtable recoHash =  getRecommendationHash( reco);
@@ -455,7 +455,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
                      </ruleset>
                      */
                     Element rulesets = e.getChild("ruleset");
-                    List<TargetColour> rs = new ArrayList();
+                    List<TargetColour> rs = new ArrayList<TargetColour>();
                     if (rulesets != null){
                         List<Element> rulez = rulesets.getChildren("rule");
                         if (rulez != null){
@@ -693,7 +693,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
     private Element getRuleBaseElement(String ruleName,String measurement,Hashtable<String,String> recowarn){
 
         log.debug("LOADING RULES - getRuleBaseElement");
-                    ArrayList list = new ArrayList();
+                    ArrayList<DSCondition> list = new ArrayList<DSCondition>();
         String toParse = recowarn.get("monthrange");
         String consequenceType = "Recommendation";
         if( recowarn.get("strength") != null){
@@ -891,7 +891,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
 
                     if (rules !=null){
                        List<Element> recomends = rules.getChildren("recommendation");
-                       List ds = new ArrayList();
+                       List<Recommendation> ds = new ArrayList<Recommendation>();
                        for(Element reco: recomends){
                            ruleCount++;
                            ds.add(new Recommendation(reco,"" + h.get("measurement_type")+ruleCount,"" + h.get("measurement_type")));
@@ -902,7 +902,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
 
 
                     Element rulesets = root.getChild("ruleset");
-                    List<TargetColour> rs = new ArrayList();
+                    List<TargetColour> rs = new ArrayList<TargetColour>();
                     if (rulesets != null){
                         List<Element> rulez = rulesets.getChildren("rule");
                         if (rulez != null){

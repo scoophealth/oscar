@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -45,23 +45,23 @@ public class ProcedimentoRealizadoDAO extends DAO {
 	 * @param id - the appointment id.
 	 * @returns a List of the procedures found.
 	 */
-    public List list(String id) throws SQLException {
-        ArrayList list = new ArrayList();
+    public List<ProcedimentoRealizado> list(String id) throws SQLException {
+        ArrayList<ProcedimentoRealizado> list = new ArrayList<ProcedimentoRealizado>();
         String sql =
             "select pr.co_procedimento, p.ds_procedimento, " +
             "pr.dt_realizacao, pr.co_tipo_atendimento " +
             "from cad_procedimento_realizado pr, cad_procedimentos p " +
             "where pr.co_procedimento = p.co_procedimento and " +
             "pr.appointment_no = " + id;
-            
+
         MiscUtils.getLogger().debug(sql);
 
-        
+
 
         try {
             ResultSet rs = DBHandler.GetSQL(sql);
-            
-            // for each procedure found, assemble the 
+
+            // for each procedure found, assemble the
             // object and put it in the list
             while (rs.next()) {
                 ProcedimentoRealizado pr = new ProcedimentoRealizado();
@@ -75,6 +75,7 @@ public class ProcedimentoRealizadoDAO extends DAO {
                 list.add(pr);
             }
         } finally {
+        	//empty
         }
 
         return list;
@@ -82,7 +83,7 @@ public class ProcedimentoRealizadoDAO extends DAO {
 
 
 	/**
-	 * Update the attendance type of all done procedures within a given 
+	 * Update the attendance type of all done procedures within a given
 	 * appointment. tomita - 14 nov 2003
 	 * @param id - the appointment id.
 	 * @param atType - the attendance type
@@ -92,13 +93,14 @@ public class ProcedimentoRealizadoDAO extends DAO {
         String sql = "UPDATE cad_procedimento_realizado " +
         	"SET co_tipo_atendimento = '" + atType + "' " +
         	"WHERE appointment_no = " + id;
-        	
+
         MiscUtils.getLogger().debug(sql);
 
-        
+
         try {
             DBHandler.RunSQL(sql);
         } finally {
+        	//empty
         }
 
         return;

@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -50,16 +50,16 @@ import oscar.util.UtilXML;
  * @apavel (Paul)
  */
 public class ReportManager {
-    
+
     /** Creates a new instance of reportManager */
     public ReportManager() {
     }
 
-    public ArrayList getReportTemplatesNoParam() {
+    public ArrayList<ReportObjectGeneric> getReportTemplatesNoParam() {
         String sql = "SELECT templateid, templatetitle, templatedescription FROM reportTemplates WHERE active=1";
-        ArrayList reports = new ArrayList();
+        ArrayList<ReportObjectGeneric> reports = new ArrayList<ReportObjectGeneric>();
         try {
-            
+
             ResultSet rs = DBHandler.GetSQL(sql);
             while (rs.next()) {
                 ReportObjectGeneric curReport = new ReportObjectGeneric(rs.getString("templateid"), rs.getString("templatetitle"), rs.getString("templatedescription"));
@@ -70,15 +70,15 @@ public class ReportManager {
         }
         return reports;
     }
-        
-    
-    
+
+
+
     //gets the ReportObject without the parameters (don't always need parameters, no need to parse XML)
     public ReportObject getReportTemplateNoParam(String templateid) {
         String sql = "SELECT * FROM reportTemplates WHERE templateId='" + templateid + "'";
         ReportObjectGeneric curReport = new ReportObjectGeneric();
         try {
-            
+
             ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
                 String templatetitle = rs.getString("templatetitle");
@@ -95,30 +95,30 @@ public class ReportManager {
     public ReportObject getReportTemplate(String templateid) {
         String sql = "SELECT * FROM reportTemplates WHERE templateId='" + templateid + "'";
         try {
-            
+
             ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
                 String templatetitle = rs.getString("templatetitle");
                 String templatedescription = rs.getString("templatedescription");
                 String type = rs.getString("type") == null?"":rs.getString("type");
                 String paramXML = rs.getString("templatexml");
-                ArrayList params = new ArrayList();
+                ArrayList<Parameter> params = new ArrayList<Parameter>();
                 if (!paramXML.equals("")) {
                     paramXML = UtilXML.escapeXML(paramXML);  //escapes anomalies such as "date >= {mydate}" the '>' character
                     SAXBuilder parser = new SAXBuilder();
-                    Document doc = parser.build(new java.io.ByteArrayInputStream(paramXML.getBytes()));        
+                    Document doc = parser.build(new java.io.ByteArrayInputStream(paramXML.getBytes()));
                     Element root = doc.getRootElement();
-                    List paramsXml = root.getChildren("param");
+                    List<Element> paramsXml = root.getChildren("param");
                     for (int i=0; i<paramsXml.size(); i++) {
-                        Element param = (Element) paramsXml.get(i);
+                        Element param = paramsXml.get(i);
                         String paramid = param.getAttributeValue("id");
                         if (paramid == null) return new ReportObjectGeneric(templateid, "Error: Param id not found");
                         String paramtype = param.getAttributeValue("type");
                         if (paramtype == null) return new ReportObjectGeneric(templateid, "Error: Param type not found on param '" + paramid + "'");
                         String paramdescription = param.getAttributeValue("description");
                         if (paramdescription == null) return new ReportObjectGeneric(templateid, "Error: Param description not found on param '" + paramid + "'");
-                        List choicesXml = param.getChildren("choice");
-                        ArrayList choices = new ArrayList();
+                        List<Element> choicesXml = param.getChildren("choice");
+                        ArrayList<Choice> choices = new ArrayList<Choice>();
                         String paramquery = param.getChildText("param-query"); //if retrieving choices from the DB
                         if (paramquery != null) {
                             ResultSet rschoices = DBHandler.GetSQL(paramquery);
@@ -131,7 +131,7 @@ public class ReportManager {
                             }
                         }
                         for (int i2=0; i2<choicesXml.size(); i2++) {
-                            Element choice = (Element) choicesXml.get(i2);
+                            Element choice = choicesXml.get(i2);
                             String choiceid = choice.getAttributeValue("id");
                             String choicetext = choice.getTextTrim();
                             if (choiceid == null) choiceid = choicetext;
@@ -152,7 +152,7 @@ public class ReportManager {
             return new ReportObjectGeneric(templateid, "Parameter Parsing Exception: check the configuration file");
         }
         /*
-         *   
+         *
 <param id="preventionType" type="list" description="Prevention Type">
       <element id="dTap">dTap</element>
       <element id="DTaP-IPV">DTaP-IPV</element>
@@ -167,11 +167,11 @@ public class ReportManager {
       <element id="VZ">VZ</element>
 </param>*/
     }
-    
+
     public String getSQL(String templateId) {
         String sql = "SELECT templatesql FROM reportTemplates WHERE templateid='" + templateId + "'";
         try {
-            
+
             ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
                 return rs.getString("templatesql");
@@ -181,12 +181,12 @@ public class ReportManager {
             return "";
         }
     }
-    
+
     public String getTemplateXml(String templateid) {
         String sql = "SELECT templatexml FROM reportTemplates WHERE templateid='" + templateid + "'";
         String xml = "";
         try {
-            
+
             ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) xml = rs.getString("templatexml");
             if (xml == null) xml = "";
@@ -195,13 +195,13 @@ public class ReportManager {
         }
         return xml;
     }
-    
+
     public String updateTemplateXml(String xmltext) {
         String sqldelete = "DELETE FROM reportTemplates";
         String sqlinsert = "INSERT INTO reportTemplates VALUES ('globalxml', 'Global XML file', '', '', '" +
                 StringEscapeUtils.escapeSql(UtilXML.unescapeXML(xmltext)) + "', 0)";
         try {
-            
+
             DBHandler.RunSQL(sqldelete);
             DBHandler.RunSQL(sqlinsert);
         } catch (SQLException sqe) {
@@ -227,22 +227,22 @@ CREATE TABLE reportTemplates (
             SAXBuilder parser = new SAXBuilder();
             xml = UtilXML.escapeXML(xml);  //escapes anomalies such as "date >= {mydate}" the '>' character
             //xml = UtilXML.escapeAllXML(xml, "<param-list>");  //escapes all markup in <report> tag, otherwise can't retrieve element.getText()
-            Document doc = parser.build(new java.io.ByteArrayInputStream(xml.getBytes()));        
+            Document doc = parser.build(new java.io.ByteArrayInputStream(xml.getBytes()));
             Element root = doc.getRootElement();
-            List reports = root.getChildren("report");
-            
+            List<Element> reports = root.getChildren("report");
+
             for (int i=0; i<reports.size(); i++) {
-                Element report = (Element) reports.get(i);
-                
+                Element report = reports.get(i);
+
                 String templateid = StringEscapeUtils.escapeSql(report.getAttributeValue("id"));
                 if (templateid == null) return "Error: Attribute 'id' missing in <report> tag";
-                
+
                 String templateTitle = StringEscapeUtils.escapeSql(report.getAttributeValue("title"));
                 if (templateTitle == null) return "Error: Attribute 'title' missing in <report> tag";
-                
+
                 String templateDescription = StringEscapeUtils.escapeSql(report.getAttributeValue("description"));
                 if (templateDescription == null) return "Error: Attribute 'description' missing in <report> tag";
-                
+
                 String querysql = StringEscapeUtils.escapeSql(report.getChildText("query"));
                 if (querysql == null || querysql.length() == 0) return "Error: The sql query is missing in <report> tag";
                 XMLOutputter reportout = new XMLOutputter();
@@ -260,7 +260,7 @@ CREATE TABLE reportTemplates (
                         "VALUES ('" + templateTitle + "', '" + templateDescription + "', '" + querysql + "', '" + reportXML + "', " + activeint + ")";
 
                 try {
-                    
+
                     DBHandler.RunSQL(sql);
                 } catch (SQLException sqe) {
                     MiscUtils.getLogger().error("Error", sqe);
@@ -272,10 +272,10 @@ CREATE TABLE reportTemplates (
             MiscUtils.getLogger().error("Error", e);
             return "Error parsing template file.";
         }
-        
+
         return "Saved Successfully";
     }
-    
+
     public Document readXml(String xml) throws Exception {
         SAXBuilder parser = new SAXBuilder();
         xml = UtilXML.escapeXML(xml);  //escapes anomalies such as "date >= {mydate}" the '>' character
@@ -290,15 +290,15 @@ CREATE TABLE reportTemplates (
         }
         return doc;
     }
-    
+
     //returns any error messages
     //templateId = null if adding a new template
     public String addUpdateTemplate(String templateId, Document templateXML) {
         try {
             Element rootElement = templateXML.getRootElement();
-            List reports = rootElement.getChildren();
+            List<Element> reports = rootElement.getChildren();
             for (int i=0; i<reports.size(); i++) {
-                Element report = (Element) reports.get(i);
+                Element report = reports.get(i);
 //reading title
                 String templateTitle = StringEscapeUtils.escapeSql(report.getAttributeValue("title"));
                 if (templateTitle == null) return "Error: Attribute 'title' missing in <report> tag";
@@ -309,7 +309,7 @@ CREATE TABLE reportTemplates (
                 String type = report.getChildTextTrim("type");
                 if( type == null ) {
                     type = "";
-                }               
+                }
 //reading sql
                 String querysql = StringEscapeUtils.escapeSql(report.getChildText("query"));
                 if (type.equalsIgnoreCase(ReportFactory.SQL_TYPE) && (querysql == null || querysql.length() == 0)) return "Error: The sql query is missing in <report> tag";
@@ -321,23 +321,23 @@ CREATE TABLE reportTemplates (
                 } catch (Exception e) {
                     activeint = 1;
                 }
-                
+
 //processing XML for sql storage
                 XMLOutputter templateout = new XMLOutputter();
                 String templateXMLstr = templateout.outputString(report).trim();
                 templateXMLstr = UtilXML.unescapeXML(templateXMLstr);
                 templateXMLstr = StringEscapeUtils.escapeSql(templateXMLstr);
                 String sql = "";
-            
-                if (templateId == null) 
+
+                if (templateId == null)
                     sql = "INSERT INTO reportTemplates (templatetitle, templatedescription, templatesql, templatexml, active, type) " +
                         "VALUES ('" + templateTitle + "', '" + templateDescription + "', '" + querysql + "', '" + templateXMLstr + "', " + activeint + ", '" + type + "')";
-                else 
+                else
                     sql = "UPDATE reportTemplates SET templatetitle='" + templateTitle + "', templatedescription='" + templateDescription + "', " +
-                        "templatesql='" + querysql + "', templatexml='" + templateXMLstr + "', active=" + activeint + ", type= '" + type + "' WHERE templateid='" + templateId + "'";                        
+                        "templatesql='" + querysql + "', templatexml='" + templateXMLstr + "', active=" + activeint + ", type= '" + type + "' WHERE templateid='" + templateId + "'";
 
                 try {
-                    
+
                     DBHandler.RunSQL(sql);
                 } catch (SQLException sqe) {
                     MiscUtils.getLogger().error("Error", sqe);
@@ -351,11 +351,11 @@ CREATE TABLE reportTemplates (
         }
         return "Saved Successfully";
     }
-    
+
     public String deleteTemplate(String templateid) {
         String sql = "DELETE FROM reportTemplates WHERE templateid='" + templateid + "'";
         try {
-            
+
             DBHandler.RunSQL(sql);
         } catch (SQLException sqe) {
             MiscUtils.getLogger().error("Error", sqe);
@@ -363,7 +363,7 @@ CREATE TABLE reportTemplates (
         }
         return "";
     }
-    
+
     public String addTemplate(String templateXML) {
         try {
             Document templateXMLdoc = readXml(templateXML);
@@ -373,7 +373,7 @@ CREATE TABLE reportTemplates (
             return "Error: Error parsing file, make sure the root element is set.";
         }
     }
-    
+
     public String updateTemplate(String templateId, String templateXML) {
         try {
             Document templateXMLdoc = readXml(templateXML);
@@ -383,5 +383,5 @@ CREATE TABLE reportTemplates (
             return "Error: Error parsing file";
         }
     }
-    
+
 }

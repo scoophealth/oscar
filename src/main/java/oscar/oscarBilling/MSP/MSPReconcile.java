@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -34,9 +34,9 @@ import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 
-public class MSPReconcile{    
-    public static String REJECTED           = "R"; 
-    public static String NOTSUBMITTED       = "O";    
+public class MSPReconcile{
+    public static String REJECTED           = "R";
+    public static String NOTSUBMITTED       = "O";
     public static String SUBMITTED          = "B";
     public static String SETTLED            = "S";
     public static String DELETED            = "D";
@@ -49,17 +49,17 @@ public class MSPReconcile{
     public static String CAPITATED          = "H";
     public static String DONOTBILL          = "N";
     public static String BILLPATIENT        = "P";
-            
+
     public Properties currentC12Records(){
         Properties p = new Properties();
-        try {            
-            
+        try {
+
             String sql = "select t_officefolioclaimno, t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_exp7  from teleplanC12 where status != 'E'";
             ResultSet rs = DBHandler.GetSQL(sql);
             while(rs.next()){
                     try{
-                      int i  = Integer.parseInt(rs.getString("t_officefolioclaimno"));  // this kludge rids leading zeros   
-                      String exp[] = new String[7];  
+                      int i  = Integer.parseInt(rs.getString("t_officefolioclaimno"));  // this kludge rids leading zeros
+                      String exp[] = new String[7];
                           exp[0] = rs.getString("t_exp1");
                           exp[1] = rs.getString("t_exp2");
                           exp[2] = rs.getString("t_exp3");
@@ -73,24 +73,24 @@ public class MSPReconcile{
                     }catch(NumberFormatException intEx){
                         MiscUtils.getLogger().debug("Had trouble Parsing int from "+rs.getString("t_officeno"));
                     }
-            }            
+            }
             rs.close();
         }catch(Exception e){
             MiscUtils.getLogger().error("Error", e);
-        }        
+        }
         return p;
     }
-            
+
     //
     public String getS00String(String billingNo){
         String s = "";
          int i = 0;
-        try {                       
-            
+        try {
+
             String sql = "select t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_exp7 teleplanS00 where t_mspctlno = '"+forwardZero(billingNo,7)+"'";
             ResultSet rs = DBHandler.GetSQL(sql);
-            while(rs.next()){             
-                      String exp[] = new String[7];  
+            while(rs.next()){
+                      String exp[] = new String[7];
                           exp[0] = rs.getString("t_exp1");
                           exp[1] = rs.getString("t_exp2");
                           exp[2] = rs.getString("t_exp3");
@@ -100,7 +100,7 @@ public class MSPReconcile{
                           exp[6] = rs.getString("t_exp7");
                       s = createCorrectionsString(exp);
                       i++;
-            }            
+            }
             rs.close();
         }catch(Exception e){
             MiscUtils.getLogger().error("Error", e);
@@ -108,7 +108,7 @@ public class MSPReconcile{
         if ( i > 1 ){  MiscUtils.getLogger().debug(" billingNo "+billingNo +" had " + i + "rows in the table"); }
         return s;
     }
-     
+
     private String createCorrectionsString(String[] exp){
         String retval = "";
         for (int i = 0 ; i < exp.length ; i++){
@@ -117,35 +117,35 @@ public class MSPReconcile{
            }
         }
         return retval;
-    }    
-                        
+    }
+
     public class BillSearch {
             Properties p ;
-            public ArrayList list;
+            public ArrayList<Bill> list;
             int count = 0;
-            ArrayList justBillingMaster ;
-            
+            ArrayList<String> justBillingMaster ;
+
             public Properties getCurrentErrorMessages(){
                 Properties errorsProps = new Properties();
-                if (count > 0) {                
-                   try {            
-                                                              
+                if (count > 0) {
+                   try {
+
                       String sql = "select distinct t_officeno, t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_exp7 from teleplanS00 where t_officeno in (";
-                    
+
                       for (int i = 0; i < justBillingMaster.size() ; i++){
-                          
-                         sql += "'"+forwardZero( (String) justBillingMaster.get(i),7)+"'";
+
+                         sql += "'"+forwardZero( justBillingMaster.get(i),7)+"'";
                          if ( i < ( justBillingMaster.size() - 1)){
                             sql += ",";
                          }
                       }
                       sql += ")";
-                      
+
                       ResultSet rs = DBHandler.GetSQL(sql);
                       while(rs.next()){
                          try{
-                            int i  = Integer.parseInt(rs.getString("t_officeno"));  // this kludge rids leading zeros   
-                            String exp[] = new String[7];  
+                            int i  = Integer.parseInt(rs.getString("t_officeno"));  // this kludge rids leading zeros
+                            String exp[] = new String[7];
                              exp[0] = rs.getString("t_exp1");
                              exp[1] = rs.getString("t_exp2");
                              exp[2] = rs.getString("t_exp3");
@@ -159,27 +159,27 @@ public class MSPReconcile{
                          }catch(NumberFormatException intEx){
                             MiscUtils.getLogger().debug("Had trouble Parsing int from "+rs.getString("t_mspctlno"));
                          }
-                      }            
+                      }
                       rs.close();                   }catch(Exception e){
                       MiscUtils.getLogger().error("Error", e);
                    }
-                }   
+                }
             return errorsProps;
-            }           
+            }
     }
-    
-    public ArrayList getSequenceNumbers(String billingNo){
-        ArrayList retval = new ArrayList();
-        try {            
-            
+
+    public ArrayList<String> getSequenceNumbers(String billingNo){
+        ArrayList<String> retval = new ArrayList<String>();
+        try {
+
             ResultSet rs = DBHandler.GetSQL("select t_dataseq from teleplanC12 where t_officefolioclaimno = '"+forwardZero(billingNo,7)+"'");
-            while(rs.next()){   
-              //String exp[] = new String[7];  
-              retval.add(rs.getString("t_dataseq"));                                     
+            while(rs.next()){
+              //String exp[] = new String[7];
+              retval.add(rs.getString("t_dataseq"));
             }
             rs = DBHandler.GetSQL("select t_dataseq from teleplanS00 where t_officeno = '"+forwardZero(billingNo,7)+"'");
-            while(rs.next()){   
-              retval.add(rs.getString("t_dataseq"));                                     
+            while(rs.next()){
+              retval.add(rs.getString("t_dataseq"));
             }
             rs.close();
         }catch(Exception e){
@@ -187,28 +187,28 @@ public class MSPReconcile{
         }
         return retval;
     }
-    
+
     public BillSearch getBills(String statusType, String providerNo, String startDate , String endDate){
-        
-        
+
+
         BillSearch billSearch = new BillSearch();
-        
+
         String providerQuery = "";
         String startDateQuery = "";
         String endDateQuery = "";
-        
+
         if (providerNo != null && !providerNo.trim().equalsIgnoreCase("all")){
-            providerQuery = " and provider_no = '"+providerNo+"'" ; 
+            providerQuery = " and provider_no = '"+providerNo+"'" ;
         }
-        
+
         if (startDate != null && !startDate.trim().equalsIgnoreCase("")){
             startDateQuery = " and ( to_days(service_date) > to_days('"+startDate+"')) ";
         }
-        
+
         if (endDate != null && !endDate.trim().equalsIgnoreCase("")){
             endDateQuery = " and ( to_days(service_date) < to_days('"+endDate+"')) ";
         }
-        
+
         String p =" select b.billing_no, b.demographic_no, b.demographic_name, b.update_date, "
                  +" b.status, b.apptProvider_no,b.appointment_no, b.billing_date,b.billing_time, bm.billingstatus, "
                  +" bm.bill_amount, bm.billing_code, bm.dx_code1, bm.dx_code2, bm.dx_code3,"
@@ -217,15 +217,15 @@ public class MSPReconcile{
                  +  providerQuery
                  +  startDateQuery
                  +  endDateQuery;
-        
-        
-        //String 
-        billSearch.list = new ArrayList();
+
+
+        //String
+        billSearch.list = new ArrayList<Bill>();
         billSearch.count = 0;
-        billSearch.justBillingMaster = new ArrayList();
-        
-        try {            
-            
+        billSearch.justBillingMaster = new ArrayList<String>();
+
+        try {
+
             ResultSet  rs = DBHandler.GetSQL(p);
             while(rs.next()){
             Bill b = new Bill();
@@ -239,13 +239,13 @@ public class MSPReconcile{
               b.apptTime = rs.getString("billing_time");
               b.reason = rs.getString("billingstatus");
               b.billMasterNo = rs.getString("billingmaster_no");
-              
+
               b.amount = rs.getString("bill_amount");
               b.code   = rs.getString("billing_code");
               b.dx1    = rs.getString("dx_code1");
               b.dx2    = rs.getString("dx_code2");
               b.dx3    = rs.getString("dx_code3");
-              
+
             billSearch.justBillingMaster.add(b.billMasterNo);
             billSearch.list.add(b);
             billSearch.count++;
@@ -256,17 +256,17 @@ public class MSPReconcile{
         }
         return billSearch;
     }
-    
-    public ArrayList getBillsMaster(String statusType){        
+
+    public ArrayList<Bill> getBillsMaster(String statusType){
         String p =" select b.billing_no, b.demographic_no, b.demographic_name, b.update_date, "
                  +" b.status, b.apptProvider_no,b.appointment_no, b.billing_date,b.billing_time, bm.billingstatus, "
                  +" bm.bill_amount, bm.billing_code, bm.dx_code1, bm.dx_code2, bm.dx_code3,"
                  +" b.provider_no, b.visitdate, b.visittype,bm.billingmaster_no from billing b, "
                  +" billingmaster bm where b.billing_no= bm.billing_no and bm.billingstatus = '"+statusType+"' ";
-  
-        ArrayList list = new ArrayList();
-        try {            
-            
+
+        ArrayList<Bill> list = new ArrayList<Bill>();
+        try {
+
             ResultSet  rs = DBHandler.GetSQL(p);
             while(rs.next()){
             Bill b = new Bill();
@@ -280,7 +280,7 @@ public class MSPReconcile{
               b.apptTime = rs.getString("billing_time");
               b.reason = rs.getString("billingstatus");
               b.billMasterNo = rs.getString("billingmaster_no");
-              
+
               b.amount = rs.getString("bill_amount");
               b.code   = rs.getString("billing_code");
               b.dx1    = rs.getString("dx_code1");
@@ -293,8 +293,8 @@ public class MSPReconcile{
             MiscUtils.getLogger().error("Error", e);
         }
         return list;
-    }    
-        
+    }
+
     public String getApptStyle(String s,String userno){
        String retval = "";
         if (s.equals("none")){
@@ -306,7 +306,7 @@ public class MSPReconcile{
                 retval = "Unmatched Appt. Doctor";
             }
          }
-        
+
     return  retval;
     }
 
@@ -321,26 +321,27 @@ public class MSPReconcile{
       public String apptTime = "";
       public String reason = "";
       public String billMasterNo = "";
-      
+
       public String code = "";
       public String amount = "";
       public String dx1 = "";
       public String dx2 = "";
       public String dx3 = "";
     }
-    
-    public ArrayList getAllC12Records(String billingNo){
-        ArrayList retval = new ArrayList();
+
+    public ArrayList<String> getAllC12Records(String billingNo){
+        ArrayList<String> retval = new ArrayList<String>();
         Properties p = new Properties();
         try {
             p.load(new FileInputStream("/home/jay/documents/PEMP/mspEditCodes.properties"));
         } catch (IOException e) {
-        }        
-        try {            
-            
+        	//empty
+        }
+        try {
+
             ResultSet rs = DBHandler.GetSQL("select distinct t_dataseq, t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_exp7 from teleplanC12 where t_officefolioclaimno = '"+forwardZero(billingNo,7)+"'");
-            while(rs.next()){   
-              String exp[] = new String[7];  
+            while(rs.next()){
+              String exp[] = new String[7];
               String seq = rs.getString("t_dataseq");
               exp[0] = rs.getString("t_exp1");
               exp[1] = rs.getString("t_exp2");
@@ -359,20 +360,20 @@ public class MSPReconcile{
         }catch(Exception e){
             MiscUtils.getLogger().error("Error", e);
         }
-        return retval;        
+        return retval;
     }
-     
-    public ArrayList getAllS00Records(String billingNo){
-        ArrayList retval = new ArrayList();
+
+    public ArrayList<String> getAllS00Records(String billingNo){
+        ArrayList<String> retval = new ArrayList<String>();
         Properties p = new Properties();
         try {
             p.load(new FileInputStream("/home/jay/documents/PEMP/mspEditCodes.properties"));
-        } catch (IOException e) { MiscUtils.getLogger().error("Error", e); }        
-        try {            
-            
+        } catch (IOException e) { MiscUtils.getLogger().error("Error", e); }
+        try {
+
             ResultSet rs = DBHandler.GetSQL("select distinct t_dataseq, t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_exp7 from teleplanS00 where t_officeno = '"+forwardZero(billingNo,7)+"'");
-            while(rs.next()){   
-              String exp[] = new String[7];  
+            while(rs.next()){
+              String exp[] = new String[7];
               String seq = rs.getString("t_dataseq");
               exp[0] = rs.getString("t_exp1");
               exp[1] = rs.getString("t_exp2");
@@ -391,50 +392,50 @@ public class MSPReconcile{
         }catch(Exception e){
             MiscUtils.getLogger().error("Error", e);
         }
-        return retval;        
+        return retval;
     }
-        
+
     public Properties getBillingMasterRecord(String billingNo){
         Properties p = null;
         String name = null;
         String value = null;
-        boolean foundBill = false;
-        try {            
-            
+
+        try {
+
             ResultSet rs = DBHandler.GetSQL("select * from billingmaster where billingmaster_no = '"+billingNo+"'");
-            if(rs.next()){   
-                p = new Properties();                
-                ResultSetMetaData md = rs.getMetaData();                
+            if(rs.next()){
+                p = new Properties();
+                ResultSetMetaData md = rs.getMetaData();
                 for(int i = 1; i <= md.getColumnCount(); i++)  {
-                    name = md.getColumnName(i);                    
+                    name = md.getColumnName(i);
                     value = rs.getString(i);
                     if (value == null){ value = new String();}
                     p.setProperty(name, value);
-                }	                
+                }
             }
             rs.close();
         }catch(Exception e){
             MiscUtils.getLogger().debug("name: "+name+" value: "+value);
             MiscUtils.getLogger().error("Error", e);
-        }        
+        }
         return p;
-    }    
-    
+    }
+
     public boolean updateStat(String stat,String billingNo){
         //get current status of bill
         boolean updated = true;
         String currStat ="";
         String newStat = "";
-        try {            
-            
+        try {
+
             ResultSet rs = DBHandler.GetSQL("select billingstatus from billingmaster where billingmaster_no = '"+billingNo+"'");
-            if(rs.next()){            
+            if(rs.next()){
                currStat = rs.getString("billingstatus");
-            }		
+            }
             rs.close();
         }catch(Exception e){
             MiscUtils.getLogger().error("Error", e);
-        }                         
+        }
         if (!currStat.equals(SETTLED)){
             if (stat.equals(REJECTED)){
                 newStat = REJECTED;
@@ -464,12 +465,12 @@ public class MSPReconcile{
                 newStat = BILLPATIENT;
             }
         }else{
-         updated = false; 
+         updated = false;
          MiscUtils.getLogger().debug("billing No "+billingNo+" is settled, will not be updated");
-        }            
+        }
         if (updated){
-            try {              
-                
+            try {
+
                 MiscUtils.getLogger().debug("Updating billing no "+billingNo+" to "+newStat);
                 DBHandler.RunSQL("update billingmaster set billingstatus = '"+newStat+"' where billingmaster_no = '"+billingNo+"'");
             }catch(Exception e){
@@ -486,8 +487,8 @@ public class MSPReconcile{
         }
         return returnZeroValue+y;
     }
-    
-    
+
+
     class BillRecord{
         String billingmaster_no   ;
         String billing_no              ;
@@ -547,7 +548,7 @@ public class MSPReconcile{
         String oin_address2            ;
         String oin_address3            ;
         String oin_address4            ;
-        String oin_postalcode  ;        
+        String oin_postalcode  ;
     }
-    
+
 }

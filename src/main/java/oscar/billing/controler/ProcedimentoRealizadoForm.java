@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -45,19 +45,19 @@ public class ProcedimentoRealizadoForm extends ActionForm {
     private int strutsAction;
     private String strutsButton = "";
     private String[] procedimentosChecked;
-    private Vector procedimentosForm;
+    private Vector<CadProcedimentos> procedimentosForm;
     private Appointment appointment;
-    private List formularios;
+    private List<FatFormularios> formularios;
     private FatFormularios formulario;
     private String coCid;
 	private String dsCid;
     private CadProcedimentos cadProcedimentos;
     private String tpAtendimento = "";	// attendance type - added in 13 nov 2003
-	
+
     public ProcedimentoRealizadoForm() {
         this.appointment = new Appointment();
-        this.procedimentosForm = new Vector();
-        this.formularios = new ArrayList();
+        this.procedimentosForm = new Vector<CadProcedimentos>();
+        this.formularios = new ArrayList<FatFormularios>();
         this.formulario = new FatFormularios();
         this.cadProcedimentos = new CadProcedimentos();
     }
@@ -135,7 +135,7 @@ public class ProcedimentoRealizadoForm extends ActionForm {
     /**
      * @return
      */
-    public Vector getProcedimentosForm() {
+    public Vector<CadProcedimentos> getProcedimentosForm() {
         return procedimentosForm;
     }
 
@@ -156,12 +156,12 @@ public class ProcedimentoRealizadoForm extends ActionForm {
     /**
      * @param list
      */
-    public void setProcedimentosForm(Vector list) {
+    public void setProcedimentosForm(Vector<CadProcedimentos> list) {
         procedimentosForm = list;
     }
 
     public CadProcedimentos getProcedimento(int i) {
-        return (CadProcedimentos) this.procedimentosForm.elementAt(i);
+        return this.procedimentosForm.elementAt(i);
     }
 
     /**
@@ -174,7 +174,7 @@ public class ProcedimentoRealizadoForm extends ActionForm {
     /**
      * @return
      */
-    public List getFormularios() {
+    public List<FatFormularios> getFormularios() {
         return formularios;
     }
 
@@ -188,10 +188,10 @@ public class ProcedimentoRealizadoForm extends ActionForm {
     /**
      * @param list
      */
-    public void setFormularios(List list) {
+    public void setFormularios(List<FatFormularios> list) {
         formularios = list;
     }
-    
+
 	/**
 	 * @return
 	 */

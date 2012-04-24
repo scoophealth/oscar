@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -33,19 +33,19 @@ import java.util.List;
 import org.oscarehr.util.MiscUtils;
 
 /**
- * Generic WorkFlow Description 
+ * Generic WorkFlow Description
  * @author jay
  */
 public class RHWorkFlow implements WorkFlow {
-    
+
     /** Creates a new instance of RHWorkFlow */
     static final String WORKFLOWTYPE = "RH";
-    static Hashtable states = null;
-    static ArrayList stateList = null;
+    static Hashtable<String,WFState> states = null;
+    static ArrayList<WFState> stateList = null;
     public RHWorkFlow() {
-        states = new Hashtable();
+        states = new Hashtable<String,WFState>();
         //TODO: CLEAN THIS UP WHEN THIS IS PROCESSED IN A XML FILE
-        
+
         WFState wf1 = new WFState("1","No Appt made","");
         WFState wf2 = new WFState("2","Appt Booked","");
         WFState wf3 = new WFState("3","Injection 28","");
@@ -53,15 +53,15 @@ public class RHWorkFlow implements WorkFlow {
         WFState wf5 = new WFState("5","Missed Appt","") ;
         WFState wf6 = new WFState("6","Follow up Appt Booked","");
         WFState wfC = new WFState("C","Closed","");
-         
+
          states.put("1",wf1);
          states.put("2",wf2);
          states.put("3",wf3);
          states.put("4",wf4);
          states.put("5",wf5);
          states.put("C",wfC);
-         
-         stateList = new ArrayList();
+
+         stateList = new ArrayList<WFState>();
          stateList.add(wf1);
          stateList.add(wf2);
          stateList.add(wf3);
@@ -69,10 +69,10 @@ public class RHWorkFlow implements WorkFlow {
          stateList.add(wf5);
          stateList.add(wfC);
     }
-    
-  
-    
-    
+
+
+
+
 
     public ArrayList getActiveWorkFlowList(String demographicNo) {
         WorkFlowState wfs = new WorkFlowState();
@@ -86,9 +86,9 @@ public class RHWorkFlow implements WorkFlow {
 
     public String getState(String state) {
         MiscUtils.getLogger().debug("state: "+state);
-        WFState wf = (WFState) states.get(state);
+        WFState wf =  states.get(state);
         MiscUtils.getLogger().debug("wf "+wf);
-        
+
         String ret = "None";
         if (wf != null){
             ret = wf.getName();
@@ -96,10 +96,10 @@ public class RHWorkFlow implements WorkFlow {
         return ret;
     }
 
-    public List getStates() { 
+    public List<WFState> getStates() {
         return stateList;
     }
-    
+
     public int addToWorkFlow(String providerNo, String demographicNo, Date endDate){
         WorkFlowState wfs = new WorkFlowState();
         return wfs.addToWorkFlow(WorkFlowState.RHWORKFLOW,providerNo,demographicNo,endDate,WorkFlowState.INIT_STATE);
@@ -115,7 +115,7 @@ public class RHWorkFlow implements WorkFlow {
         }
         return wfi;
     }
-    
+
     public WorkFlowInfo executeRules(WorkFlowDS wfDS,Hashtable hashtable) {
         WorkFlowInfo wfi = new WorkFlowInfo(hashtable);
         try{
@@ -125,19 +125,19 @@ public class RHWorkFlow implements WorkFlow {
         }
         return wfi;
     }
-    
-    
+
+
     public WorkFlowDS getWorkFlowDS(){
         return WorkFlowDSFactory.getWorkFlowDS("Rh_workflow.drl");
     }
-    
+
     public String getLink(String demographicNo,String workFlowId){
         return "../form/forwardshortcutname.jsp?formname=RH Form&amp;demographic_no="+demographicNo;
     }
-    
-    
- 
-    
-    
-    
+
+
+
+
+
+
 }

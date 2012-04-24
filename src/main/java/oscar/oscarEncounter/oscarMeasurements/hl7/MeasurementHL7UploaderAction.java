@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -191,7 +191,7 @@ public class MeasurementHL7UploaderAction extends DispatchActionSupport {
 				response.getWriter().println("Invalid HL7 ORU_R01 format/request: " + e.getMessage());
 			} catch (IOException e1) {
 				// TODO Auto-generated catch blockMiscUtils.getLogger().error("Error", e1);
-			} 
+			}
 			return null;
 		}
 
@@ -202,7 +202,7 @@ public class MeasurementHL7UploaderAction extends DispatchActionSupport {
 	/**
 	 * Extract encrypted data from http request. Assuming message file is attached as multipart request, and <LI>signature - signed by MD5WithRSA <LI>key - symetric key encrypted by client's private key <LI>service - the ID of client's public key in
 	 * oscar's 'publicKeys' table All keys are base64 encoded.
-	 * 
+	 *
 	 * @param form
 	 * @param request
 	 * @return
@@ -214,7 +214,7 @@ public class MeasurementHL7UploaderAction extends DispatchActionSupport {
 		String key = request.getParameter("key");
 		String service = request.getParameter("service");
 
-		ArrayList clientInfo = LabUploadAction.getClientInfo(service);
+		ArrayList<Object> clientInfo = LabUploadAction.getClientInfo(service);
 		PublicKey clientKey = (PublicKey) clientInfo.get(0);
 		String type = (String) clientInfo.get(1);
 

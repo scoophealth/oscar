@@ -150,7 +150,7 @@ public class ProviderPropertyAction extends DispatchAction {
              prop = new UserProperty();
          }
 
-         ArrayList serviceList = new ArrayList();
+         ArrayList<LabelValueBean> serviceList = new ArrayList<LabelValueBean>();
          serviceList.add(new LabelValueBean("M", "M"));
          serviceList.add(new LabelValueBean("F", "F"));
 
@@ -217,7 +217,7 @@ public class ProviderPropertyAction extends DispatchAction {
          }
 
          // Add all provinces / states to serviceList
-         ArrayList serviceList = constructProvinceList();
+         ArrayList<LabelValueBean> serviceList = constructProvinceList();
 
          request.setAttribute("dropOpts",serviceList);
 
@@ -431,7 +431,7 @@ public class ProviderPropertyAction extends DispatchAction {
         }
         QueueDao queueDao = (QueueDao) SpringUtils.getBean("queueDao");
         List<Hashtable> queues= queueDao.getQueues();
-        Collection viewChoices=new ArrayList();
+        Collection<LabelValueBean> viewChoices=new ArrayList<LabelValueBean>();
         viewChoices.add(new LabelValueBean("None","-1"));
         for(Hashtable ht:queues){
             viewChoices.add(new LabelValueBean((String)ht.get("queue"),(String)ht.get("id")));
@@ -476,7 +476,7 @@ public class ProviderPropertyAction extends DispatchAction {
              }//element of array has to match exactly with viewChoices values
          }
          prop.setValueArray(propertyArray);
-         Collection viewChoices=new ArrayList();
+         Collection<LabelValueBean> viewChoices=new ArrayList<LabelValueBean>();
          viewChoices.add(new LabelValueBean("Current","show_current"));
          viewChoices.add(new LabelValueBean("All","show_all"));
          viewChoices.add(new LabelValueBean("Active","active"));
@@ -1029,7 +1029,7 @@ public class ProviderPropertyAction extends DispatchAction {
          conUtil.estTeams();
          Vector<String> vect = conUtil.teamVec;
 
-         ArrayList serviceList = new ArrayList();
+         ArrayList<LabelValueBean> serviceList = new ArrayList<LabelValueBean>();
          serviceList.add(new  LabelValueBean("All","-1"));
          for (String s: vect ){
                  serviceList.add(new LabelValueBean(s,s));
@@ -1090,7 +1090,7 @@ public class ProviderPropertyAction extends DispatchAction {
          conUtil.estTeams();
          Vector<String> vect = conUtil.teamVec;
 
-         ArrayList serviceList = new ArrayList();
+         ArrayList<LabelValueBean> serviceList = new ArrayList<LabelValueBean>();
          serviceList.add(new  LabelValueBean("All","-1"));
          for (String s: vect ){
                  serviceList.add(new LabelValueBean(s,s));
@@ -1127,7 +1127,7 @@ public class ProviderPropertyAction extends DispatchAction {
          }
 
 
-         ArrayList serviceList = new ArrayList();
+         ArrayList<LabelValueBean> serviceList = new ArrayList<LabelValueBean>();
          try{
              ResultSet rs = DBHandler.GetSQL("select distinct servicetype, servicetype_name from ctl_billingservice where status='A'");
              while (rs.next()){
@@ -1182,7 +1182,7 @@ public class ProviderPropertyAction extends DispatchAction {
 
          this.userPropertyDAO.saveProp(prop);
 
-         ArrayList serviceList = new ArrayList();
+         ArrayList<LabelValueBean> serviceList = new ArrayList<LabelValueBean>();
          try{
              ResultSet rs = DBHandler.GetSQL("select distinct servicetype, servicetype_name from ctl_billingservice where status='A'");
              while (rs.next()){
@@ -1222,7 +1222,7 @@ public class ProviderPropertyAction extends DispatchAction {
              prop = new UserProperty();
          }
 
-         ArrayList serviceList = new ArrayList();
+         ArrayList<LabelValueBean> serviceList = new ArrayList<LabelValueBean>();
          serviceList.add(new LabelValueBean("Single Line", "single"));
          serviceList.add(new LabelValueBean("Multi Line", "multi"));
 
@@ -1276,9 +1276,9 @@ public class ProviderPropertyAction extends DispatchAction {
      }
     // Constructs a list of LabelValueBeans, to be used as the dropdown list
     // when viewing a HCType preference
-    public ArrayList constructProvinceList() {
+    public ArrayList<LabelValueBean> constructProvinceList() {
 
-         ArrayList provinces = new ArrayList();
+         ArrayList<LabelValueBean> provinces = new ArrayList<LabelValueBean>();
 
          provinces.add(new LabelValueBean("AB-Alberta", "AB"));
          provinces.add(new LabelValueBean("BC-British Columbia", "BC"));
@@ -1370,11 +1370,11 @@ public class ProviderPropertyAction extends DispatchAction {
 
         frm.set("dateProperty", prop);
         ArrayList<Hashtable<String,String>> groups = EFormUtil.getEFormGroups();
-        ArrayList groupList = new ArrayList();
+        ArrayList<LabelValueBean> groupList = new ArrayList<LabelValueBean>();
         String name;
         groupList.add(new LabelValueBean("None",""));
-         for (Hashtable h: groups ){
-             name = (String)h.get("groupName");
+         for (Hashtable<String,String> h: groups ){
+             name = h.get("groupName");
              groupList.add(new LabelValueBean(name,name));
          }
 

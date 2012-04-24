@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -77,7 +77,7 @@ public class ProviderLabRouting {
         if (!rs.next()){
 
             String status = fr.getStatus(provider_no);
-            ArrayList forwardProviders = fr.getProviders(provider_no);
+            ArrayList<ArrayList<String>> forwardProviders = fr.getProviders(provider_no);
             sql = "insert into providerLabRouting (provider_no, lab_no, status, lab_type) values('"+provider_no+"', '"+labId+"', '"+status+"', '"+labType+"')";
 
             pstmt = conn.prepareStatement(sql);
@@ -85,8 +85,8 @@ public class ProviderLabRouting {
 
             //forward lab to specified providers
             for (int j=0; j < forwardProviders.size(); j++){
-                logger.info("FORWARDING PROVIDER: "+((String) ((ArrayList) forwardProviders.get(j)).get(0)));
-                route(labId, ((String) ((ArrayList) forwardProviders.get(j)).get(0)), conn, labType);
+                logger.info("FORWARDING PROVIDER: "+((forwardProviders.get(j)).get(0)));
+                route(labId, ( ( forwardProviders.get(j)).get(0)), conn, labType);
             }
 
         // If the lab has already been sent to this provider check to make sure that
@@ -105,8 +105,8 @@ public class ProviderLabRouting {
         pstmt.close();
     }
 
-    public static Hashtable getInfo(String lab_no) throws SQLException {
-	Hashtable info = new Hashtable();
+    public static Hashtable<String,Object> getInfo(String lab_no) throws SQLException {
+	Hashtable<String,Object> info = new Hashtable<String,Object>();
 	String sql = "SELECT * FROM providerLabRouting WHERE lab_no='"+lab_no+"'";
 
 	ResultSet rs = DBHandler.GetSQL(sql);

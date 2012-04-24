@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -41,7 +41,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.OtherIdManager;
 import org.oscarehr.common.dao.DemographicDao;
@@ -87,7 +86,6 @@ public final class MessageUploader {
 		String retVal = "";
 		try {
 			MessageHandler h = Factory.getHandler(type, hl7Body);
-			Base64 base64 = new Base64();
 
 			String firstName = h.getFirstName();
 			String lastName = h.getLastName();
@@ -229,7 +227,7 @@ public final class MessageUploader {
 	 */
 	private static void providerRouteReport(String labId, ArrayList docNums, Connection conn, String altProviderNo, String labType) throws Exception {
 
-		ArrayList providerNums = new ArrayList();
+		ArrayList<String> providerNums = new ArrayList<String>();
 		PreparedStatement pstmt;
 		String sql = "";
 		if (docNums != null) {
@@ -260,7 +258,7 @@ public final class MessageUploader {
 		ProviderLabRouting routing = new ProviderLabRouting();
 		if (providerNums.size() > 0) {
 			for (int i = 0; i < providerNums.size(); i++) {
-				String provider_no = (String) providerNums.get(i);
+				String provider_no = providerNums.get(i);
 				routing.route(labId, provider_no, conn, "HL7");
 			}
 		} else {

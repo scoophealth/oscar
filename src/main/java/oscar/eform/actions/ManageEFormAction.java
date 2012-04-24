@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -59,7 +59,7 @@ public class ManageEFormAction extends DispatchAction {
         EForm eForm = new EForm(fid, "1");
         response.setHeader("Content-Disposition", "attachment; filename=\"" + eForm.getFormName().replaceAll("\\s", fid) + ".zip\"");
         EFormExportZip eFormExportZip = new EFormExportZip();
-        List eForms = new ArrayList();
+        List<EForm> eForms = new ArrayList<EForm>();
         eForms.add(eForm);
         eFormExportZip.exportForms(eForms, response.getOutputStream());
         return null;
@@ -130,9 +130,9 @@ public class ManageEFormAction extends DispatchAction {
         File exportFile = new File(documentDir,exportFilename);
 
         FileOutputStream fos = new FileOutputStream(exportFile);
-        
+
         EFormExportZip eFormExportZip = new EFormExportZip();
-        List eForms = new ArrayList();
+        List<EForm> eForms = new ArrayList<EForm>();
         eForms.add(eForm);
         eFormExportZip.exportForms(eForms, fos);
         fos.close();
@@ -150,8 +150,8 @@ public class ManageEFormAction extends DispatchAction {
         MiscUtils.getLogger().debug(new String(responseBody2));
         //TODO:Need to handle errors
 
-        
-        
+
+
         return mapping.findForward("success");
     }
 }

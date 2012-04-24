@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -87,7 +87,7 @@ public class ProgramClientRestrictionDAO extends HibernateDaoSupport {
     }
 
     public Collection<ProgramClientRestriction> findForClient(int demographicNo, int facilityId) {
-        ArrayList paramList = new ArrayList();
+        ArrayList<Object> paramList = new ArrayList<Object>();
         String sSQL="from ProgramClientRestriction pcr where pcr.enabled = true and " +
   		 "pcr.demographicNo = ? and pcr.programId in (select s.id from Program s where s.facilityId = ? or s.facilityId is null) " +
          "order by pcr.programId";
@@ -105,7 +105,7 @@ public class ProgramClientRestrictionDAO extends HibernateDaoSupport {
             setRelationships(pcr);
         }
         return pcrs;
-*/        
+*/
     }
 
     public Collection<ProgramClientRestriction> findDisabledForClient(int demographicNo) {
@@ -120,7 +120,7 @@ public class ProgramClientRestrictionDAO extends HibernateDaoSupport {
         pcr.setClient(demographicDao.getDemographic("" + pcr.getDemographicNo()));
         pcr.setProgram(programDao.getProgram(pcr.getProgramId()));
         pcr.setProvider(providerDao.getProvider(pcr.getProviderNo()));
-        
+
         return pcr;
     }
 

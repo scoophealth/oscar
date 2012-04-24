@@ -40,6 +40,7 @@ import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.dao.ProgramSignatureDao;
 import org.oscarehr.PMmodule.dao.ProgramTeamDAO;
 import org.oscarehr.PMmodule.model.AccessType;
+import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.DefaultRoleAccess;
 import org.oscarehr.PMmodule.model.FunctionalUserType;
 import org.oscarehr.PMmodule.model.Program;
@@ -157,10 +158,10 @@ public class ProgramManager {
     /**
       * facilityId can be null, it will return all programs optionally filtering by facility id if filtering is enabled.
      */
-    public List getPrograms(String programStatus, String providerNo,Integer shelterId) {
+    public List<Program> getPrograms(String programStatus, String providerNo,Integer shelterId) {
          return programDao.getAllPrograms(programStatus,null,null,providerNo,shelterId);
     }
-    public List getPrograms(Integer clientId,String providerNo,Integer shelterId) {
+    public List<Program> getPrograms(Integer clientId,String providerNo,Integer shelterId) {
         return programDao.getAllPrograms(Program.PROGRAM_STATUS_ACTIVE,null,null,clientId,providerNo,shelterId);
     }
     public List<Program> getPrograms(Integer facilityId) {
@@ -184,11 +185,11 @@ public class ProgramManager {
         return programDao.getBedPrograms(facilityId);
     }
 
-	public List getBedPrograms(String providerNo,Integer shelterId) {
+	public List<Program> getBedPrograms(String providerNo,Integer shelterId) {
         return programDao.getAllPrograms(Program.PROGRAM_STATUS_ACTIVE,Program.BED_TYPE,null,providerNo, shelterId);
     }
 
-    public List getServicePrograms() {
+    public List<Program> getServicePrograms() {
         return programDao.getServicePrograms();
     }
 
@@ -223,7 +224,7 @@ public class ProgramManager {
         return programProviderDAO.getProgramProviders(Long.valueOf(programId));
     }
 
-    public List getProgramProvidersByProvider(String providerNo) {
+    public List<ProgramProvider> getProgramProvidersByProvider(String providerNo) {
         return programProviderDAO.getProgramProvidersByProvider(providerNo);
     }
 
@@ -247,7 +248,7 @@ public class ProgramManager {
         programProviderDAO.deleteProgramProviderByProgramId(programId);
     }
 
-    public List getFunctionalUserTypes() {
+    public List<FunctionalUserType> getFunctionalUserTypes() {
         return programFunctionalUserDAO.getFunctionalUserTypes();
     }
 
@@ -263,7 +264,7 @@ public class ProgramManager {
         programFunctionalUserDAO.deleteFunctionalUserType(Long.valueOf(id));
     }
 
-    public List getFunctionalUsers(String programId) {
+    public List<FunctionalUserType> getFunctionalUsers(String programId) {
         return programFunctionalUserDAO.getFunctionalUsers(Long.valueOf(programId));
     }
 
@@ -283,7 +284,7 @@ public class ProgramManager {
         return programFunctionalUserDAO.getFunctionalUserByUserType(programId, userTypeId);
     }
 
-    public List getProgramTeams(String programId) {
+    public List<ProgramTeam> getProgramTeams(String programId) {
         return programTeamDAO.getProgramTeams(Integer.valueOf(programId));
     }
 
@@ -303,7 +304,7 @@ public class ProgramManager {
         return programTeamDAO.teamNameExists(programId, teamName);
     }
 
-    public List getProgramAccesses(String programId) {
+    public List<ProgramAccess> getProgramAccesses(String programId) {
         return programAccessDAO.getAccessListByProgramId(Long.valueOf(programId));
     }
 
@@ -319,7 +320,7 @@ public class ProgramManager {
         programAccessDAO.deleteProgramAccess(Long.valueOf(id));
     }
 
-    public List getAccessTypes() {
+    public List<AccessType> getAccessTypes() {
         return programAccessDAO.getAccessTypes();
     }
 
@@ -327,19 +328,19 @@ public class ProgramManager {
         return programAccessDAO.getAccessType(id);
     }
 
-    public List getAllProvidersInTeam(Integer programId, Integer teamId) {
+    public List<ProgramProvider> getAllProvidersInTeam(Integer programId, Integer teamId) {
         return this.programProviderDAO.getProgramProvidersInTeam(programId, teamId);
     }
 
-    public List getAllClientsInTeam(Integer programId, Integer teamId) {
+    public List<Admission> getAllClientsInTeam(Integer programId, Integer teamId) {
         return admissionDao.getAdmissionsInTeam(programId, teamId);
     }
 
-    public List search(Program criteria) {
+    public List<Program> search(Program criteria) {
         return this.programDao.search(criteria);
     }
 
-    public List searchByFacility(Program criteria, Integer facilityId){
+    public List<Program> searchByFacility(Program criteria, Integer facilityId){
         return this.programDao.searchByFacility(criteria, facilityId);
     }
 
@@ -399,9 +400,9 @@ public class ProgramManager {
         return programDao.getCommunityPrograms();
     }
 
-    public List getProgramBeans(String providerNo) {
-        if (providerNo == null || "".equalsIgnoreCase(providerNo.trim())) return new ArrayList();
-        ArrayList pList = new ArrayList();
+    public List<LabelValueBean> getProgramBeans(String providerNo) {
+        if (providerNo == null || "".equalsIgnoreCase(providerNo.trim())) return new ArrayList<LabelValueBean>();
+        ArrayList<LabelValueBean> pList = new ArrayList<LabelValueBean>();
         Program[] program = programDao.getCommunityPrograms();
         for (int i = 0; i < program.length; i++) {
             pList.add(new LabelValueBean(program[i].getName(), program[i].getId().toString()));
@@ -414,7 +415,7 @@ public class ProgramManager {
          */
     }
 
-    public List getDefaultRoleAccesses() {
+    public List<DefaultRoleAccess> getDefaultRoleAccesses() {
         return defaultRoleAccessDAO.getDefaultRoleAccesses();
     }
 
@@ -450,7 +451,7 @@ public class ProgramManager {
         return clientStatusDAO.clientStatusNameExists(programId, statusName);
     }
 
-    public List getAllClientsInStatus(Integer programId, Integer statusId) {
+    public List<Admission> getAllClientsInStatus(Integer programId, Integer statusId) {
         return clientStatusDAO.getAllClientsInStatus(programId, statusId);
     }
 

@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -35,6 +35,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import oscar.oscarMessenger.data.MsgProviderData;
 import oscar.oscarMessenger.util.MsgDemoMap;
 
 public class MsgCreateMessageAction extends Action {
@@ -61,8 +62,8 @@ public class MsgCreateMessageAction extends Action {
             String currLoco     = null;
             String messageId    = null;
             String demographic_no = ((MsgCreateMessageForm)form).getDemographic_no();
-            
-            java.util.ArrayList providerListing, localProviderListing, remoteProviderListing;
+
+            java.util.ArrayList<MsgProviderData> providerListing, localProviderListing, remoteProviderListing;
 
 
             subject.trim();
@@ -96,10 +97,10 @@ public class MsgCreateMessageAction extends Action {
                 remoteMessageData.start();
 
             }
-            
+
             //link msg and demogrpahic if both messageId and demographic_no are not null
             if (demographic_no != null && (demographic_no.equals("") || demographic_no.equals("null")) ){
-               demographic_no = null;               
+               demographic_no = null;
             }
             if(messageId!=null && demographic_no!=null){
                 MsgDemoMap msgDemoMap = new MsgDemoMap();
