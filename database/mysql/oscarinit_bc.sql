@@ -2362,7 +2362,8 @@ CREATE TABLE teleplanS00 (
   t_icbcwcb varchar(8) default NULL,
   t_insurercode char(2) default NULL,
   t_filler varchar(87) default NULL,
-  PRIMARY KEY  (s00_id)
+  PRIMARY KEY  (s00_id),
+  KEY t_officeno (t_officeno)
 );
 
 
@@ -3002,7 +3003,7 @@ CREATE TABLE `hl7_pid` (
  
 
 
-create index  teleplanS00_t_officeno on teleplanS00 (t_officeno(7));
+
 create index  billingmaster_billingstatus on billingmaster (billingstatus(1));
 create index  billingmaster_billing_no on billingmaster (billing_no);
 -- create index  demographic_no on formBCBirthSumMo (demographic_no);
