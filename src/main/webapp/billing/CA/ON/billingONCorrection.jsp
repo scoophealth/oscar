@@ -1,6 +1,6 @@
 <%--
 
-    Copyright (c) 2006-. OSCARservice, OpenSoft System. All Rights Reserved.
+    Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
     This software is published under the GPL GNU General Public License.
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
@@ -15,6 +15,12 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+    This software was written for the
+    Department of Family Medicine
+    McMaster University
+    Hamilton
+    Ontario, Canada
 
 --%>
 
@@ -37,7 +43,7 @@ if (bMultisites)
 				response.sendRedirect("../../../logout.htm");
 			String curUser_no, userfirstname, userlastname;
 			curUser_no = (String) session.getAttribute("user");
-
+			int MAXRECORDS = 6;  //number of billing items to display if record has less than 6
 			String UpdateDate = "";
 			String DemoNo = "";
 			String DemoName = "";
@@ -215,6 +221,7 @@ function search3rdParty(elementName) {
 function validateNum(el){
    var val = el.value;
    var tval = ""+val;
+
    if (isNaN(val)){
       alert("Item value must be numeric.");
       el.select();
@@ -234,6 +241,7 @@ function validateNum(el){
       el.focus();
       return false;
    }
+   
    return true;
 }
 
@@ -246,12 +254,22 @@ function validateAllItems(){
    }
 
    var billamt;
-   for( idx = 0; idx < 6; ++idx ) {
-       billamt = document.getElementById("billingamount" + idx);
-       if( billamt != undefined && !validateNum(billamt) )
+   for( idx = 0; idx < <%=MAXRECORDS%>; ++idx ) {
+       billamt = document.getElementById("billingamount" + idx);       
+       if( billamt != undefined && !validateNum(billamt) ) {    	   
            return false;
+       }
    }
-
+   
+   var statusOpts = document.getElementById("status");
+   var status = statusOpts.options[statusOpts.selectedIndex].value;
+   var payPrgrmOpts = document.getElementById("payProgram");
+   var payPrgrm = payPrgrmOpts.options[payPrgrmOpts.selectedIndex].value;   
+   if( status == "P" && (payPrgrm == "HCP" || payPrgrm == "RMB" || payPrgrm == "WCB" )) {
+	   alert("Pay Program does not match bill status.");
+	   return false;
+   }
+   
    return true;
 }
 function popupPage(vheight,vwidth,varpage) {
@@ -282,6 +300,28 @@ function checkSettle(status) {
         if( payElem != null ) {
             payElem.value = document.getElementById("billTotal").value;
         }
+    }
+    
+    //enable 3rd party elements
+    if( status == 'P') {
+    	document.getElementById("thirdParty").style.display = "inline";
+    	document.getElementById("thirdPartyPymnt").style.display = "inline";
+    	
+    	document.getElementById("payment").disabled = false;
+    	document.getElementById("oldPayment").disabled = false;
+    	document.getElementById("payDate").disabled = false;
+    	document.getElementById("refund").disabled = false;
+    	document.getElementById("billTo").disabled = false;
+    }
+    else {
+    	document.getElementById("thirdParty").style.display = "none";
+    	document.getElementById("thirdPartyPymnt").style.display = "none";
+    	
+    	document.getElementById("payment").disabled = true;
+    	document.getElementById("oldPayment").disabled = true;
+    	document.getElementById("payDate").disabled = true;
+    	document.getElementById("refund").disabled = true;
+    	document.getElementById("billTo").disabled = true;
     }
 
 }
@@ -397,19 +437,44 @@ function checkSettle(status) {
 					    }
 					}
 				}
-
+				boolean thirdParty = false;
+				Billing3rdPartPrep tObj = new Billing3rdPartPrep();
+				
 				if("HCP".equals(payProgram) || "RMB".equals(payProgram) || "WCB".equals(payProgram)
 						|| request.getParameter("billing_no").length() < 1) {
-					htmlPaid = "";
+					
+					Properties tProp = null;					
+					if( request.getParameter("billing_no").length() > 0 ) {
+						tProp = tObj.get3rdPartBillPropInactive(request.getParameter("billing_no").trim());						
+					}
+					
+					if( tProp == null || tProp.size() == 0 ) {
+						htmlPaid = "Paid<br><input type='text' id='payment' name='payment' size=5 value='0.00'/>" +
+							"<input type='hidden' id='oldPayment' name='oldPayment' value='0.00'/> <input type='hidden' id='payDate' name='payDate' value='" +
+                        	UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "'/><br> Refund<br><input type='text' id='refund' name='refund' size=5 value='0.00'/><br>";
+                        	payer = "";
+					}
+					else {
+						htmlPaid = "Paid<br><input type='text' id='payment' name='payment' size=5 value='"
+					    	+ tProp.getProperty("payment","0.00") + "' /><input type='hidden' id='oldPayment' name='oldPayment' value='"
+		                    + tProp.getProperty("payment","0.00") + "' /><input type='hidden' id='payDate' name='payDate' value='"
+		                    + UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "'/><br>";
+						htmlPaid += "Refund<br><input type='text' id='refund' name='refund' size=5 value='"
+							+ tProp.getProperty("refund") + "' /><br>";
+						payer = tProp.getProperty("billTo");
+                        if( payer == null ) {
+                        	payer = "";
+                       	}
+					}
 				} else {
-					Billing3rdPartPrep tObj = new Billing3rdPartPrep();
-					Properties tProp = tObj.get3rdPartBillProp(request.getParameter("billing_no").trim());
-					htmlPaid = "Paid</br><input type='text' id='payment' name='payment' size=5 value='"
-						+ tProp.getProperty("payment") + "' /><input type='hidden' name='oldPayment' value='"
-                                                + tProp.getProperty("payment") + "' /><input type='hidden' name='payDate' value='"
-                                                + UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "'/></br>";
-					htmlPaid += "Refund</br><input type='text' name='refund' size=5 value='"
-						+ tProp.getProperty("refund") + "' /></br>";
+					thirdParty = true;
+					Properties tProp = tObj.get3rdPartBillProp(request.getParameter("billing_no").trim());	
+					htmlPaid = "Paid<br><input type='text' id='payment' name='payment' size=5 value='"
+						+ tProp.getProperty("payment") + "' /><input type='hidden' id='oldPayment' name='oldPayment' value='"
+                                                + tProp.getProperty("payment") + "' /><input type='hidden' id='payDate' name='payDate' value='"
+                                                + UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "'/><br>";
+					htmlPaid += "Refund<br><input type='text' id='refund' name='refund' size=5 value='"
+						+ tProp.getProperty("refund") + "' /><br>";
                                         payer = tProp.getProperty("billTo");
                                         if( payer == null ) {
                                             payer = "";
@@ -466,12 +531,13 @@ if(bFlag) {
 <% } %>
 
 <form name="serviceform" method="post"
-	action="billingONCorrectionSave.jsp"
-	onsubmit="return validateAllItems()"><input type="hidden"
+	action="billingONCorrectionSave.jsp">
+	<input type="hidden"
 	name="xml_billing_no" value="<%=billNo%>" /> <input type="hidden"
 	name="update_date" value="<%=UpdateDate%>" />
     <input type="hidden" name="payDate" value="<%=UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss")%>" />
     <input type="hidden" name="demoNo" value="<%=DemoNo%>" />
+    <input type="hidden" name="oldStatus" value="<%=thirdParty ? "thirdParty" : "" %>" />
 <table width="600" border="0">
 	<tr class="myGreen">
 		<th align="left" colspan="2"><b><bean:message
@@ -619,7 +685,7 @@ if(bFlag) {
 		<td width="54%"><b><bean:message
 			key="billing.billingCorrection.formBillingType" />: </b> <input
 			type="hidden" name="xml_status" value="<%=BillType%>"> <select
-                        style="font-size: 80%;" name="status" onchange="checkSettle(this.options[this.selectedIndex].value);">
+                        style="font-size: 80%;" id="status" name="status" onchange="checkSettle(this.options[this.selectedIndex].value);">
 			<option value=""><bean:message
 				key="billing.billingCorrection.formSelectBillType" /></option>
 			<option value="H" <%=BillType.equals("H")?"selected":""%>><bean:message
@@ -645,7 +711,7 @@ if(bFlag) {
 		</select></td>
 		<td width="46%"><b> Pay Program:</b> <input type="hidden"
 			name="xml_payProgram" value="<%=BillDate%>" /><select
-			style="font-size: 80%;" name="payProgram">
+			style="font-size: 80%;" id="payProgram" name="payProgram">
 			<%for (int i = 0; i < BillingDataHlp.vecPaymentType.size(); i = i + 2) {
 
 					%>
@@ -842,19 +908,29 @@ function changeSite(sel) {
 
 				if (bFlag) {
 					if (recordObj.size() > 1) {
-						for (int i = 1; i < recordObj.size(); i++) {
+						int maxRecs = Math.max(recordObj.size(), MAXRECORDS);
+						for (int i = 1; i <= maxRecs; i++) {
 							//multisite. skip display if billing provider_no not in current access privacy
 							if (!isMultiSiteProvider) continue;
 
-							itemObj = (BillingItemData) recordObj.get(i);
+							if( i < recordObj.size() ) {
+								itemObj = (BillingItemData) recordObj.get(i);
 
-							serviceCode = itemObj.getService_code();
-							serviceDesc = obj.getBillingCodeDesc(serviceCode);
-							billAmount = itemObj.getFee();
-							diagCode = itemObj.getDx();
-							billingunit = itemObj.getSer_num();
+								serviceCode = itemObj.getService_code();
+								serviceDesc = obj.getBillingCodeDesc(serviceCode);
+								billAmount = itemObj.getFee();
+								diagCode = itemObj.getDx();
+								billingunit = itemObj.getSer_num();								
+								itemStatus = itemObj.getStatus().equals("S") ? "checked" : "";
+							}
+							else {
+								serviceCode = "";
+								serviceDesc = "";
+								billAmount = "";								
+								billingunit = "";								
+								itemStatus = "";
+							}
 							rowCount = rowCount + 1;
-							itemStatus = itemObj.getStatus().equals("S") ? "checked" : "";
 							%>
 
 	<tr>
@@ -862,7 +938,7 @@ function changeSite(sel) {
 			name="xml_service_code<%=rowCount%>" value="<%=serviceCode%>">
 		<input type="text" style="width: 100%"
 			name="servicecode<%=rowCount-1%>" value="<%=serviceCode%>"></th>
-		<td><a href=# onClick="scScriptAttach('servicecode<%=i-1%>')">Search</a></td>
+		<td><a href=# onClick="scScriptAttach('servicecode<%=rowCount-1%>')">Search</a></td>
 		<th><font size="-1"><%=serviceDesc%></th>
 		<th><input type="hidden" name="xml_billing_unit<%=rowCount%>"
 			value="<%=billingunit%>"> <input type="text"
@@ -881,21 +957,8 @@ function changeSite(sel) {
 						}
 					}
 
-					//for (int i = rowCount; i < 10; i++) {
-					rowCount++;
 						%>
-	<tr>
-		<td><input type="text" style="width: 100%"
-			name="servicecode<%=rowCount-1%>" value=""></td>
-		<td><a href=#
-			onClick="scScriptAttach('servicecode<%=rowCount-1%>')">Search</a></td>
-		<td>&nbsp;</td>
-		<td><input type="text" style="width: 100%"
-			name="billingunit<%=rowCount-1%>" value="" size="5" maxlength="5"></td>
-		<td align="right"><input type="text" style="width: 100%"
-			name="billingamount<%=rowCount-1%>" id="billingamount<%=rowCount-1%>"
-			value="" size="5" maxlength="5"></td>
-	</tr>
+	
 
 	<%//}
 
@@ -917,20 +980,19 @@ function changeSite(sel) {
 		<td colspan="2"></td>
 	</tr>
 	<tr>
-		<td colspan="2"><input type="submit" name="submit"
+		<td colspan="2"><input type="submit" name="submit" onclick="return validateAllItems();"
 			value="<bean:message key="billing.billingCorrection.btnSubmit"/>"></td>
-		<td colspan="4" align='right'><input type="submit" name="submit"
+		<td colspan="4" align='right'><input type="submit" name="submit" onclick="return validateAllItems();"
 			value="Submit&Correct Another"></td>
 	</tr>
 	<tr>
             <td colspan="6">
-                <%
-                if( payer.length() > 0 ) {%>
-                    <span style="float:right;">
+                
+                    <span id="thirdParty" style="float:right; <%=thirdParty ? "" : "display:none"%>">
                         <a href="#" onclick="search3rdParty('billTo');return false;"><bean:message key="billing.billingCorrection.msgPayer"/></a><br>
-                        <textarea name="billTo" value="" cols="32" rows=4><%=payer %></textarea>
+                        <textarea id="billTo" name="billTo" value="" cols="32" rows=4><%=payer %></textarea>
                     </span>
-                <%}%>
+                
                 <span style="float:left;">
                     <bean:message key="billing.billingCorrection.msgNotes"/>:<br>
                     <textarea name="comment" cols="32" value="" rows=4><%=comment %></textarea>
@@ -942,7 +1004,10 @@ function changeSite(sel) {
 		</td>
 	</tr>
 </table>
-<%=htmlPaid %></form>
+<div id="thirdPartyPymnt" style="<%=thirdParty ? "" : "display:none"%>"">
+<%=htmlPaid %>
+</div>
+</form>
 </body>
 <script type="text/javascript">
 Calendar.setup( { inputField : "xml_appointment_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "xml_appointment_date_cal", singleClick : true, step : 1 } );
