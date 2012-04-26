@@ -82,11 +82,12 @@ public class Hl7textResultsData {
             }
 
             if(k != 0){
-            	MeasurementsDeleted measurementsDeleted = new MeasurementsDeleted();
+            	MeasurementsDeleted measurementsDeleted;
 
                 String sql = "SELECT m.* FROM measurements m LEFT JOIN measurementsExt e ON m.id = measurement_id AND e.keyval='lab_no' WHERE e.val='"+matchingLabs[k-1]+"'";
                 ResultSet rs = DBHandler.GetSQL(sql);
                 while(rs.next()){
+                	measurementsDeleted  = new MeasurementsDeleted();
                 	measurementsDeleted.setType(oscar.Misc.getString(rs, "type"));
                 	measurementsDeleted.setDemographicNo(Integer.valueOf(oscar.Misc.getString(rs, "demographicNo")));
                 	measurementsDeleted.setProviderNo(oscar.Misc.getString(rs, "providerNo"));
