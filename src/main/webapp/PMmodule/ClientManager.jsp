@@ -37,6 +37,10 @@
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.PMmodule.service.AdmissionManager"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
+<%@page import="oscar.util.OscarRoleObjectPrivilege"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.List"%>
+<%@page import="java.util.Properties" %>
 
 <html:form action="/PMmodule/ClientManager.do">
 
@@ -78,7 +82,15 @@
 		<tr>
 			<%
 			boolean admin = false;
-		
+			boolean bedRoomReservation = false;
+			String roleName = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+			
+			ArrayList v = new ArrayList(OscarRoleObjectPrivilege.getPrivilegeProp("_pmm_client.BedRoomReservation"));
+			
+			if(OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties)v.get(0), (List<String>)v.get(1), (List<String>)v.get(2), "r")){
+				bedRoomReservation = true;
+			}
+			
 			if (session.getAttribute("userrole") != null && ((String) session.getAttribute("userrole")).indexOf("admin") != -1) {
 				admin = true;
 			}
@@ -110,6 +122,8 @@
 						continue;					
 				}
 				
+				if(!bedRoomReservation && "Bed/Room Reservation".equalsIgnoreCase(ClientManagerFormBean.tabs[x])) 
+					continue;
 				
 				if (ClientManagerFormBean.tabs[x].equals(selectedTab)) {
 			%>
@@ -124,7 +138,7 @@
 					
 					if (requireActiveTab && !activeInFacility)
 					{
-						%>
+						%>			
 			<td style="color: silver"><%=ClientManagerFormBean.tabs[x]%></td>
 			<%
 					}

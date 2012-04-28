@@ -869,12 +869,16 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 <ul id="navlist">
 
 <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+<security:oscarSec roleName="<%=roleName$%>" objectName="_day" rights="r">
 <li id="today">
     <a class="rightButton top" href="providercontrol.jsp?year=<%=curYear%>&month=<%=curMonth%>&day=<%=curDay%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewDaySched"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewDaySched"/>' ; return true"><bean:message key="global.today"/></a>
 </li>
+</security:oscarSec>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_month" rights="r">
  <li>
     <a href="providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=1&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=month&dboperation=searchappointmentmonth" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewMonthSched"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewMonthSched"/>' ; return true"><bean:message key="global.month"/></a>
  </li>
+ </security:oscarSec>
  <security:oscarSec roleName="<%=roleName$%>" objectName="_resource" rights="r">
  <li>
     <a href="#" ONCLICK ="popupPage2('<%=resourcebaseurl%>');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.viewResources"/>" onmouseover="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewResources"/>';return true"><bean:message key="oscarEncounter.Index.clinicalResources"/></a>
@@ -945,7 +949,7 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 </li>
 </security:oscarSec>
 </caisi:isModuleLoad>
-
+<security:oscarSec roleName="<%=roleName$%>" objectName="_pref" rights="r">
 <li>    <!-- remove this and let providerpreference check -->
     <caisi:isModuleLoad moduleName="ticklerplus">
 	<a href=# onClick ="popupPage(715,680,'providerpreference.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>&new_tickler_warning_window=<%=newticklerwarningwindow%>&default_pmm=<%=default_pmm%>&caisiBillingPreferenceNotDelete=<%=caisiBillingPreferenceNotDelete%>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' ; return true"><bean:message key="global.pref"/></a>
@@ -954,11 +958,15 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 	<a href=# onClick ="popupPage(715,680,'providerpreference.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' ; return true"><bean:message key="global.pref"/></a>
     </caisi:isModuleLoad>
 </li>
+</security:oscarSec>
  <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+<security:oscarSec roleName="<%=roleName$%>" objectName="_edoc" rights="r">
 <li>
    <a HREF="#" onclick="popup('700', '1024', '../dms/documentReport.jsp?function=provider&functionid=<%=curUser_no%>&curUser=<%=curUser_no%>', 'edocView');" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewEdoc"/>'><bean:message key="global.edoc"/></a>
 </li>
+</security:oscarSec>
  </caisi:isModuleLoad>
+ <security:oscarSec roleName="<%=roleName$%>" objectName="_tickler" rights="r">
 <li>
    <caisi:isModuleLoad moduleName="ticklerplus" reverse="true">
     <a HREF="#" ONCLICK ="popupPage2('../tickler/ticklerMain.jsp','<bean:message key="global.tickler"/>');return false;" TITLE='<bean:message key="global.tickler"/>'>
@@ -969,7 +977,7 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 	<span id="oscar_new_tickler"><bean:message key="global.btntickler"/></span></a>
    </caisi:isModuleLoad>
 </li>
-
+</security:oscarSec>
 <oscar:oscarPropertiesCheck property="OSCAR_LEARNING" value="yes">
 <li>
     <a HREF="#" ONCLICK ="popupPage2('../oscarLearning/CourseView.jsp','<bean:message key="global.courseview"/>');return false;" TITLE='<bean:message key="global.courseview"/>'>
