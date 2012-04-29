@@ -34,7 +34,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="ichppccode")
-public class Ichppccode extends AbstractModel<String> {
+public class Ichppccode extends AbstractCodeSystemModel<String> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -68,6 +68,16 @@ public class Ichppccode extends AbstractModel<String> {
 
 	public void setDescription(String description) {
     	this.description = description;
+    }
+
+	@Override
+    public String getCode() {
+	   return this.getId();
+    }
+
+	@Override
+    public String getCodingSystem() {
+	   return "ichppccode";
     }
 
 
