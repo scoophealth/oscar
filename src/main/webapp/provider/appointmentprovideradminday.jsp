@@ -29,12 +29,16 @@
 <%@page import="org.oscarehr.common.model.ProviderPreference"%>
 <%@page import="org.oscarehr.web.admin.ProviderPreferencesUIBean"%>
 <%@page import="org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.dao.DemographicDao, org.oscarehr.common.model.Demographic, org.oscarehr.common.model.UserProperty" %>
+<%@ page import="org.oscarehr.common.dao.MyGroupAccessRestrictionDao" %>
+<%@ page import="org.oscarehr.common.model.MyGroupAccessRestriction" %>
 <%
 	if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
 	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 
     boolean isSiteAccessPrivacy=false;
     boolean isTeamAccessPrivacy=false;
+    
+    MyGroupAccessRestrictionDao myGroupAccessRestrictionDao = SpringUtils.getBean(MyGroupAccessRestrictionDao.class);
 %>
 <security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
 	<%isSiteAccessPrivacy=true; %>
@@ -1175,33 +1179,39 @@ if (curProvider_no[provIndex].equals(provNum)) { %>
     	<% } %>
     	</select>
 <%} %>
-  <a href=# onClick = "popupPage(300,450,'providerchangemygroup.jsp?mygroup_no=<%=mygroupno%>' );return false;" title="<bean:message key="provider.appointmentProviderAdminDay.chGrpNo"/>"><bean:message key="global.group"/>:</a>
+  <span><bean:message key="global.group"/>:</span>
 
+<%
+	List<MyGroupAccessRestriction> restrictions = myGroupAccessRestrictionDao.findByProviderNo(curUser_no);
+%>
   <select id="mygroup_no" name="mygroup_no" onChange="changeGroup(this)">
   <option value=".<bean:message key="global.default"/>">.<bean:message key="global.default"/></option>
 
 
-<security:oscarSec roleName="<%=roleName$%>"
-	objectName="_team_schedule_only" rights="r" reverse="false">
+<security:oscarSec roleName="<%=roleName$%>" objectName="_team_schedule_only" rights="r" reverse="false">
 <%
 	String provider_no = curUser_no;
 	resultList = oscarSuperManager.find("providerDao", "searchloginteam", new Object[]{provider_no, provider_no});
 	for (Map provider : resultList) {
+		boolean skip = checkRestriction(restrictions,(String)provider.get("provider_no"));
+		if(!skip) {
+	
 %>
 <option value="<%=provider.get("provider_no")%>" <%=mygroupno.equals(provider.get("provider_no"))?"selected":""%>>
 		<%=provider.get("last_name")+", "+provider.get("first_name")%></option>
 <%
-	}
+	} }
 %>
 
 </security:oscarSec>
-<security:oscarSec roleName="<%=roleName$%>"
-	objectName="_team_schedule_only" rights="r" reverse="true">
+<security:oscarSec roleName="<%=roleName$%>" objectName="_team_schedule_only" rights="r" reverse="true">
 <%
 	request.getSession().setAttribute("archiveView","false");
 	resultList = oscarSuperManager.find("providerDao", "searchmygroupno", new Object[] {});
 	for (Map group : resultList) {
-		if (!bMultisites || siteGroups == null || siteGroups.size() == 0 || siteGroups.contains(group.get("mygroup_no"))) {
+		boolean skip = checkRestriction(restrictions,(String)group.get("mygroup_no"));
+	
+		if (!skip && (!bMultisites || siteGroups == null || siteGroups.size() == 0 || siteGroups.contains(group.get("mygroup_no")))) {
 %>
   <option value="<%="_grp_"+group.get("mygroup_no")%>"
 		<%=mygroupno.equals(group.get("mygroup_no"))?"selected":""%>><%=group.get("mygroup_no")%></option>
@@ -1211,7 +1221,9 @@ if (curProvider_no[provIndex].equals(provNum)) { %>
 
 	resultList = oscarSuperManager.find("providerDao", "searchprovider", new Object[] {});
 	for (Map provider : resultList) {
-		if (!bMultisites || siteProviderNos  == null || siteProviderNos.size() == 0 || siteProviderNos.contains(provider.get("provider_no"))) {
+		boolean skip = checkRestriction(restrictions,(String)provider.get("provider_no"));
+		
+		if (!skip && (!bMultisites || siteProviderNos  == null || siteProviderNos.size() == 0 || siteProviderNos.contains(provider.get("provider_no")))) {
 %>
   <option value="<%=provider.get("provider_no")%>" <%=mygroupno.equals(provider.get("provider_no"))?"selected":""%>>
 		<%=provider.get("last_name")+", "+provider.get("first_name")%></option>
@@ -1935,3 +1947,14 @@ document.onkeydown=function(e){
 </script>
 <!-- end of keycode block -->
 </html:html>
+
+<%!
+        public boolean checkRestriction(List<MyGroupAccessRestriction> restrictions, String name) {
+                for(MyGroupAccessRestriction restriction:restrictions) {
+                        if(restriction.getMyGroupNo().equals(name))
+                                return true;
+                }
+                return false;
+        }
+%>
+
