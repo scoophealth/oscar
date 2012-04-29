@@ -418,11 +418,36 @@ function autoFillHin(){
 </td></tr>
 <tr><td>
 <form method="post" name="adddemographic" action="demographicaddarecord.jsp"  onsubmit="return checkFormTypeIn()">
+<input type="hidden" name="fromAppt" value="<%=request.getParameter("fromAppt")%>">
+<input type="hidden" name="originalPage" value="<%=request.getParameter("originalPage")%>">
+<input type="hidden" name="bFirstDisp" value="<%=request.getParameter("bFirstDisp")%>">
+<input type="hidden" name="provider_no" value="<%=request.getParameter("provider_no")%>">
+<input type="hidden" name="start_time" value="<%=request.getParameter("start_time")%>">
+<input type="hidden" name="end_time" value="<%=request.getParameter("end_time")%>">
+<input type="hidden" name="duration" value="<%=request.getParameter("duration")%>">
+<input type="hidden" name="year" value="<%=request.getParameter("year")%>">
+<input type="hidden" name="month" value="<%=request.getParameter("month")%>">
+<input type="hidden" name="day" value="<%=request.getParameter("day")%>">
+<input type="hidden" name="appointment_date" value="<%=request.getParameter("appointment_date")%>">
+<input type="hidden" name="notes" value="<%=request.getParameter("notes")%>">
+<input type="hidden" name="reason" value="<%=request.getParameter("reason")%>">
+<input type="hidden" name="location" value="<%=request.getParameter("location")%>">
+<input type="hidden" name="resources" value="<%=request.getParameter("resources")%>">
+<input type="hidden" name="type" value="<%=request.getParameter("type")%>">
+<input type="hidden" name="style" value="<%=request.getParameter("style")%>">
+<input type="hidden" name="billing" value="<%=request.getParameter("billing")%>">
+<input type="hidden" name="status" value="<%=request.getParameter("status")%>">
+<input type="hidden" name="createdatetime" value="<%=request.getParameter("createdatetime")%>">
+<input type="hidden" name="creator" value="<%=request.getParameter("creator")%>">
+<input type="hidden" name="remarks" value="<%=request.getParameter("remarks")%>">
+
 <table border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="#EEEEFF">
+
     <tr>
       <td align="right"> <b><bean:message key="demographic.demographicaddrecordhtm.formLastName"/><font color="red">:</font> </b></td>
       <td align="left">
-        <input type="text" name="last_name" id="last_name" onBlur="upCaseCtrl(this)" size=30 />
+        <input type="text" name="last_name" id="last_name" onBlur="upCaseCtrl(this)" size=30 value=<%=request.getParameter("keyword")==null?"":request.getParameter("keyword")%>>
+
       </td>
       <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formFirstName"/><font color="red">:</font> </b> </td>
       <td align="left">

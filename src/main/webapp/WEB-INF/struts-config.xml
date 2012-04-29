@@ -1941,6 +1941,7 @@
 			<!-- <forward name="print" path="/PMmodule/GenericIntake/Print.jsp" redirect="true"/> -->
 			<forward name="print" path="/PMmodule/GenericIntake/PrintPreview.jsp" redirect="true" />
 			<forward name="clientEdit" path="/PMmodule/ClientManager.do" redirect="true" />
+			<forward name="appointment" path="/appointment/addappointment.jsp" redirect="true" />
 			<forward name="providerView" path="/PMmodule/ProviderInfo.do?method=view" redirect="true" />
 		</action>
 		<!-- Generic Intake -->
