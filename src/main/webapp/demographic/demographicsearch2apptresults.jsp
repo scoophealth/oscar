@@ -190,6 +190,29 @@ function searchAll() {
         <INPUT TYPE="hidden" NAME="limit2" VALUE="5">
         <input type="hidden" name="displaymode" value="Search ">
         <INPUT TYPE="hidden" NAME="ptstatus" VALUE="active">
+        
+        <input type="hidden" name="fromAppt" value="<%=request.getParameter("fromAppt")%>">
+		<input type="hidden" name="originalPage" value="<%=request.getParameter("originalPage")%>">
+		<input type="hidden" name="bFirstDisp" value="<%=request.getParameter("bFirstDisp")%>">
+		<input type="hidden" name="provider_no" value="<%=request.getParameter("provider_no")%>">
+		<input type="hidden" name="start_time" value="<%=request.getParameter("start_time")%>">
+		<input type="hidden" name="end_time" value="<%=request.getParameter("end_time")%>">
+		<input type="hidden" name="year" value="<%=request.getParameter("year")%>">
+		<input type="hidden" name="month" value="<%=request.getParameter("month")%>">
+		<input type="hidden" name="day" value="<%=request.getParameter("day")%>">
+		<input type="hidden" name="appointment_date" value="<%=request.getParameter("appointment_date")%>">
+		<input type="hidden" name="notes" value="<%=request.getParameter("notes")%>">
+		<input type="hidden" name="reason" value="<%=request.getParameter("reason")%>">
+		<input type="hidden" name="location" value="<%=request.getParameter("location")%>">
+		<input type="hidden" name="resources" value="<%=request.getParameter("resources")%>">
+		<input type="hidden" name="type" value="<%=request.getParameter("type")%>">
+		<input type="hidden" name="style" value="<%=request.getParameter("style")%>">
+		<input type="hidden" name="billing" value="<%=request.getParameter("billing")%>">
+		<input type="hidden" name="status" value="<%=request.getParameter("status")%>">
+		<input type="hidden" name="createdatetime" value="<%=request.getParameter("createdatetime")%>">
+		<input type="hidden" name="creator" value="<%=request.getParameter("creator")%>">
+		<input type="hidden" name="remarks" value="<%=request.getParameter("remarks")%>">
+		        
 	<%
   String temp=null;
 	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
@@ -408,15 +431,53 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 //-->
 </SCRIPT> <%
   }
-  if(nItems==0 && nLastPage<=0) {
-%> <caisi:isModuleLoad moduleName="caisi" reverse="true">
+  if(nItems==0 && nLastPage<=0) {	 
+	  	     
+      	java.util.HashMap<String, String> params = new java.util.HashMap<String, String>();
+      	params.put("originalPage", request.getParameter("originalPage"));
+      	params.put("provider_no", request.getParameter("provider_no"));
+		params.put("bFirstDisp", request.getParameter("bFirstDisp"));
+      	params.put("year", request.getParameter("year"));
+  		params.put("month", request.getParameter("month"));
+  		params.put("day", request.getParameter("day"));  		
+  		params.put("start_time", request.getParameter("start_time"));
+  		params.put("end_time", request.getParameter("end_time"));
+  		params.put("duration", request.getParameter("duration"));
+  		params.put("appointment_date", request.getParameter("appointment_date"));  		
+  		params.put("notes", request.getParameter("notes"));
+  		params.put("reason", request.getParameter("reason"));
+  		params.put("location", request.getParameter("location"));
+  		params.put("resources", request.getParameter("resources"));
+  		params.put("apptType", request.getParameter("type"));
+  		params.put("style", request.getParameter("style"));
+  		params.put("billing", request.getParameter("billing"));
+  		params.put("status", request.getParameter("status"));
+  		params.put("createdatetime", request.getParameter("createdatetime"));
+  		params.put("creator", request.getParameter("creator"));
+  		params.put("remarks", request.getParameter("remarks"));
+  		
+  		
+  		pageContext.setAttribute("apptParamsName", params);
+
+%> 
+	<caisi:isModuleLoad moduleName="caisi" reverse="true">
 	<bean:message key="demographic.search.noResultsWereFound" />
-        <div class="createNew">
-	<a href="../demographic/demographicaddarecordhtm.jsp"><bean:message
-		key="demographic.search.btnCreateNew" /></a>
-        </div>
-</caisi:isModuleLoad> <%
-    }
+    <div class="createNew">
+	 <a href="../demographic/demographicaddarecordhtm.jsp?fromAppt=1&originalPage=<%=request.getParameter("originalPage")%>&keyword=<%=request.getParameter("keyword")%>&notes=<%=request.getParameter("notes")%>&appointment_date=<%=request.getParameter("appointment_date")%>&year=<%=request.getParameter("year")%>&month=<%=request.getParameter("month")%>&day=<%=request.getParameter("day")%>&start_time=<%=request.getParameter("start_time")%>&end_time=<%=request.getParameter("end_time")%>&duration=<%=request.getParameter("duration")%>&bFirstDisp=false&provider_no=<%=request.getParameter("provider_no")%>&notes=<%=request.getParameter("notes")%>&reason=<%=request.getParameter("reason")%>&location=<%=request.getParameter("location")%>&resources=<%=request.getParameter("resources")%>&type=<%=request.getParameter("type")%>&style=<%=request.getParameter("style")%>&billing=<%=request.getParameter("billing")%>&status=<%=request.getParameter("status")%>&createdatetime=<%=request.getParameter("createdatetime")%>&creator=<%=request.getParameter("creator")%>&remarks=<%=request.getParameter("remarks")%>">
+
+	<bean:message key="demographic.search.btnCreateNew" />
+	</a>
+    </div>    
+    </caisi:isModuleLoad> 
+    
+ 	<caisi:isModuleLoad moduleName="caisi" reverse="false">
+  	<html:link action="/PMmodule/GenericIntake/Edit.do?method=create&type=quick&fromAppt=1" name="apptParamsName">
+   	<bean:message key="demographic.search.btnCreateNew" /> 
+   	</html:link>
+	</caisi:isModuleLoad> 
+
+<%
+   }
 %> <script language="JavaScript">
 <!--
 function last() {

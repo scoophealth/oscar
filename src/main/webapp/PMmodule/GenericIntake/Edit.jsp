@@ -302,7 +302,9 @@
 		for(IntakeNodeJavascript js:intakeEditForm.getJsLocation()) {
 	%>
 			<script type="text/javascript" src="<%= request.getContextPath() %><%=js.getLocation()%>"></script>
-	<%}}%>
+	<%}}  	
+	
+	%>
 			
 			
     <style>
@@ -330,6 +332,31 @@
 <input type="hidden" name="skip_validate" id="skip_validate" value="false"/>
 <input type="hidden" id="facility_name" name="facility_name" value="<%=org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility.getName()%>"/>
 <input type="hidden" id="ocan_service_org_number" name="ocan_service_org_number" value="<%=org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility.getOcanServiceOrgNumber()%>"/>
+
+<!--  If this is from adding appointment screen, save the intake and go back to there -->       
+<input  type="hidden" name="fromAppt" value="<%=request.getParameter("fromAppt")%>">
+<input  type="hidden" name="originalPage" value="<%=request.getParameter("originalPage")%>">
+<input  type="hidden" name="bFirstDisp" value="<%=request.getParameter("bFirstDisp")%>">
+<input  type="hidden" name="provider_no" value="<%=request.getParameter("provider_no")%>">
+<input  type="hidden" name="start_time" value="<%=request.getParameter("start_time")%>">
+<input  type="hidden" name="end_time" value="<%=request.getParameter("end_time")%>">
+<input  type="hidden" name="duration" value="<%=request.getParameter("duration")%>">
+<input  type="hidden" name="year" value="<%=request.getParameter("year")%>">
+<input  type="hidden" name="month" value="<%=request.getParameter("month")%>">
+<input  type="hidden" name="day" value="<%=request.getParameter("day")%>">
+<input  type="hidden" name="appointment_date" value="<%=request.getParameter("appointment_date")%>">
+<input  type="hidden" name="notes" value="<%=request.getParameter("notes")%>">
+<input  type="hidden" name="reason" value="<%=request.getParameter("reason")%>">
+<input  type="hidden" name="location" value="<%=request.getParameter("location")%>">
+<input  type="hidden" name="resources" value="<%=request.getParameter("resources")%>">
+<input  type="hidden" name="apptType" value="<%=request.getParameter("apptType")%>">
+<input  type="hidden" name="style" value="<%=request.getParameter("style")%>">
+<input  type="hidden" name="billing" value="<%=request.getParameter("billing")%>">
+<input  type="hidden" name="status" value="<%=request.getParameter("status")%>">
+<input  type="hidden" name="createdatetime" value="<%=request.getParameter("createdatetime")%>">
+<input  type="hidden" name="creator" value="<%=request.getParameter("creator")%>">
+<input  type="hidden" name="remarks" value="<%=request.getParameter("remarks")%>">
+
 
 <div id="layoutContainer" dojoType="LayoutContainer" layoutChildPriority="top-bottom" class="intakeLayoutContainer">
 <div id="topPane" dojoType="ContentPane" layoutAlign="top" class="intakeTopPane">
