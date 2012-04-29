@@ -485,7 +485,7 @@
 		<dependency>
 			<groupId>org.oscarehr</groupId>
 			<artifactId>ar2005</artifactId>
-			<version>SNAPSHOT</version>
+			<version>0.5-DRAFT</version>
 		</dependency>
 	
 		 <dependency>
