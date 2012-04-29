@@ -34,7 +34,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="icd9")
-public class Icd9 extends AbstractModel<Integer> implements java.io.Serializable {
+public class Icd9 extends AbstractCodeSystemModel<Integer> implements java.io.Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -70,6 +70,16 @@ public class Icd9 extends AbstractModel<Integer> implements java.io.Serializable
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+	@Override
+    public String getCode() {
+	    return getIcd9();
+    }
+
+	@Override
+    public String getCodingSystem() {
+	    return "icd9";
     }
 
 

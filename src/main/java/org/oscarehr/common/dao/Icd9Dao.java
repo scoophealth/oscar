@@ -42,7 +42,7 @@ import org.springframework.stereotype.Repository;
  * @author toby
  */
 @Repository
-public class Icd9Dao extends AbstractDao<Icd9>{
+public class Icd9Dao extends AbstractCodeSystemDao<Icd9>{
 
 	public Icd9Dao() {
 		super(Icd9.class);
@@ -68,6 +68,11 @@ public class Icd9Dao extends AbstractDao<Icd9>{
 		List<Icd9> results = q.getResultList();
 
 		return results;
+    }
+
+	@Override
+    public List<Icd9> searchCode(String term) {
+	    return getIcd9(term);
     }
 
 }
