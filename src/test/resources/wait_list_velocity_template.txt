@@ -1,10 +1,12 @@
-This is an urgent / immediate notification of a wait list event.
+test template
 
 #foreach( ${admissionDemographicPair} in ${admissionDemographicPairs} )
     --------------------
     ${admissionDemographicPair.demographic.firstName} ${admissionDemographicPair.demographic.lastName}
     ${admissionDemographicPair.demographic.sex}
 #end
+
+Between ${startDate} and ${endDate}
 
 program = ${program.name}
 

@@ -48,16 +48,14 @@ import org.oscarehr.util.VelocityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 @Service
-public class WaitListManager
-{
-	private static final Logger logger=MiscUtils.getLogger();
-	
-	private static final String WAIT_LIST_EMAIL_PROPERTIES_FILE="/wait_list_email.properties";
-	private static final String WAIT_LIST_URGENT_EMAIL_TEMPLATE_FILE="/wait_list_immediate_email_template.txt";
-	private static final String WAIT_LIST_DAILY_EMAIL_TEMPLATE_FILE="/wait_list_daily_email_notification_template.txt";
-	
+public class WaitListManager {
+	private static final Logger logger = MiscUtils.getLogger();
+
+	private static final String WAIT_LIST_EMAIL_PROPERTIES_FILE = "/wait_list_email.properties";
+	private static final String WAIT_LIST_URGENT_EMAIL_TEMPLATE_FILE = "/wait_list_immediate_email_template.txt";
+	private static final String WAIT_LIST_DAILY_EMAIL_TEMPLATE_FILE = "/wait_list_daily_email_notification_template.txt";
+
 	@Autowired
 	private ProgramDao programDao;
 
@@ -67,57 +65,72 @@ public class WaitListManager
 	@Autowired
 	private DemographicDao demographicDao;
 
-	protected static Properties waitListProperties=getWaitListProperties();
-	
-	public static class AdmissionDemographicPair
-	{
+	protected static Properties waitListProperties = getWaitListProperties();
+
+	public static class AdmissionDemographicPair {
 		private Admission admission;
 		private Demographic demographic;
-		
+
 		public Admission getAdmission() {
-        	return admission;
-        }
-		
+			return admission;
+		}
+
 		public void setAdmission(Admission admission) {
-        	this.admission = admission;
-        }
-		
+			this.admission = admission;
+		}
+
 		public Demographic getDemographic() {
-        	return demographic;
-        }
-		
+			return demographic;
+		}
+
 		public void setDemographic(Demographic demographic) {
-        	this.demographic = demographic;
-        }
+			this.demographic = demographic;
+		}
 	}
-	
+
 	private static Properties getWaitListProperties() {
-		Properties p=new Properties();
+		Properties p = new Properties();
 
 		try {
-			InputStream is = WaitListManager.class.getResourceAsStream(WAIT_LIST_EMAIL_PROPERTIES_FILE);
-	        p.load(is);
-        } catch (Exception e) {
-        	logger.error("Error reading properties file : "+WAIT_LIST_EMAIL_PROPERTIES_FILE, e);
-        }
-
-		return(p);
-    }
+			InputStream is = null;
+			try {
+				is = WaitListManager.class.getResourceAsStream(WAIT_LIST_EMAIL_PROPERTIES_FILE);
+				p.load(is);
+			} finally {
+				if (is != null) is.close();
+			}
+		} catch (Exception e) {
+			logger.error("Error reading properties file : " + WAIT_LIST_EMAIL_PROPERTIES_FILE, e);
+		}
+		return (p);
+	}
 
 	/**
 	 * This method will send an email immediately. The expectation is that 
 	 * when an urgent admission / referral is made, that code should call
 	 * this method immediately.
 	 */
-	public void sendImmediateNotification(Program program, Demographic demographic, String notes) throws IOException
-	{
-		InputStream is = WaitListManager.class.getResourceAsStream(WAIT_LIST_URGENT_EMAIL_TEMPLATE_FILE);
-		String emailTemplate=IOUtils.toString(is);
-		String emailSubject=waitListProperties.getProperty("immediate_subject");
+	public void sendImmediateNotification(Program program, Demographic demographic, Admission admission, String notes) throws IOException {
+		InputStream is = null;
+		String emailTemplate = null;
+		try {
+			is = WaitListManager.class.getResourceAsStream(WAIT_LIST_URGENT_EMAIL_TEMPLATE_FILE);
+			emailTemplate = IOUtils.toString(is);
+		} finally {
+			if (is != null) is.close();
+		}
 
-		sendNotification(emailSubject, emailTemplate, program, demographic, notes, null, null, null);		
+		String emailSubject = waitListProperties.getProperty("immediate_subject");
+
+		ArrayList<AdmissionDemographicPair> admissionDemographicPairs = new ArrayList<AdmissionDemographicPair>();
+		AdmissionDemographicPair admissionDemographicPair = new AdmissionDemographicPair();
+		admissionDemographicPair.setAdmission(admission);
+		admissionDemographicPair.setDemographic(demographic);
+		admissionDemographicPairs.add(admissionDemographicPair);
+
+		sendNotification(emailSubject, emailTemplate, program, notes, null, null, admissionDemographicPairs);
 	}
-	
+
 	/**
 	 * This method will check the given program for admissions/referrals 
 	 * in the last "day". It will then send an email if any admission/referrals 
@@ -126,67 +139,73 @@ public class WaitListManager
 	 * The expectation is that a background thread will call this method, not
 	 * end-user-actions.
 	 */
-	public void checkAndSendDailyNotification(Program program, Demographic demographic) throws IOException
-	{
-		InputStream is = WaitListManager.class.getResourceAsStream(WAIT_LIST_DAILY_EMAIL_TEMPLATE_FILE);
-		String emailTemplate=IOUtils.toString(is);
-		String emailSubject=waitListProperties.getProperty("daily_subject");
+	public void checkAndSendDailyNotification(Program program) throws IOException {
+		InputStream is = null;
+		String emailTemplate = null;
+		try {
+			is = WaitListManager.class.getResourceAsStream(WAIT_LIST_DAILY_EMAIL_TEMPLATE_FILE);
+			emailTemplate = IOUtils.toString(is);
+		} finally {
+			if (is != null) is.close();
+		}
+		
+		String emailSubject = waitListProperties.getProperty("daily_subject");
 
 		// check if we need to run, might already have been run
-		Date lastNotificationdate=program.getLastReferralNotification();
+		Date lastNotificationdate = program.getLastReferralNotification();
 		// if first run, set default to a few days ago and let it sort itself out.
-		if (lastNotificationdate==null) lastNotificationdate=new Date(System.currentTimeMillis()-(DateUtils.MILLIS_PER_DAY*4));
-		Date today=new Date();
+		if (lastNotificationdate == null) lastNotificationdate = new Date(System.currentTimeMillis() - (DateUtils.MILLIS_PER_DAY * 4));
+		Date today = new Date();
 		if (DateUtils.isSameDay(lastNotificationdate, today) || lastNotificationdate.after(today)) return;
-		
+
 		// get a list of the admissions between since last notification date.
 		// send a notification for those admissions
 		// update last notification date
-		Date endDate=new Date(lastNotificationdate.getTime()+DateUtils.MILLIS_PER_DAY);
-		List<Admission> admissions=admissionDao.getAdmissionsByProgramAndAdmittedDate(program.getId(), lastNotificationdate, endDate);
-		logger.debug("For programId="+program.getId()+", "+lastNotificationdate+" to "+endDate+", admission count="+admissions.size());
+		Date endDate = new Date(lastNotificationdate.getTime() + DateUtils.MILLIS_PER_DAY);
+		List<Admission> admissions = admissionDao.getAdmissionsByProgramAndAdmittedDate(program.getId(), lastNotificationdate, endDate);
+		logger.debug("For programId=" + program.getId() + ", " + lastNotificationdate + " to " + endDate + ", admission count=" + admissions.size());
 
-		ArrayList<AdmissionDemographicPair> admissionDemographicPairs=new ArrayList<AdmissionDemographicPair>();
-		for (Admission admission : admissions)
-		{
-			AdmissionDemographicPair admissionDemographicPair=new AdmissionDemographicPair();
+		ArrayList<AdmissionDemographicPair> admissionDemographicPairs = new ArrayList<AdmissionDemographicPair>();
+		for (Admission admission : admissions) {
+			AdmissionDemographicPair admissionDemographicPair = new AdmissionDemographicPair();
 			admissionDemographicPair.setAdmission(admission);
 			admissionDemographicPair.setDemographic(demographicDao.getDemographicById(admission.getClientId()));
 			admissionDemographicPairs.add(admissionDemographicPair);
 		}
-		
-		sendNotification(emailSubject, emailTemplate, program, demographic, null, lastNotificationdate, endDate, admissionDemographicPairs);		
+
+		sendNotification(emailSubject, emailTemplate, program, null, lastNotificationdate, endDate, admissionDemographicPairs);
 		program.setLastReferralNotification(endDate);
 		programDao.saveProgram(program);
 	}
 
-	private void sendNotification(String emailSubject, String emailTemplate, Program program, Demographic demographic, String notes, Date startDate, Date endDate, ArrayList<AdmissionDemographicPair> admissionDemographicPairs)
-	{
-		String temp=program.getEmailNotificationAddressesCsv();
-		if (temp!=null)
-		{
-			String fromAddress=waitListProperties.getProperty("from_address");
+	private void sendNotification(String emailSubject, String emailTemplate, Program program, String notes, Date startDate, Date endDate, ArrayList<AdmissionDemographicPair> admissionDemographicPairs) {
+		String temp = program.getEmailNotificationAddressesCsv();
+		if (temp != null) {
+			String fromAddress = waitListProperties.getProperty("from_address");
 
-			VelocityContext velocityContext=VelocityUtils.createVelocityContextWithTools();
-			velocityContext.put("program", program);
-			velocityContext.put("demographic", demographic);
-			if (notes!=null) velocityContext.put("notes", notes);
-			if (startDate!=null) velocityContext.put("startDate", startDate);
-			if (endDate!=null) velocityContext.put("endDate", endDate);
-			if (admissionDemographicPairs!=null) velocityContext.put("admissionDemographicPairs", admissionDemographicPairs);
+			VelocityContext velocityContext = getVelocityContext(program, notes, startDate, endDate, admissionDemographicPairs);
 
-			String mergedSubject=VelocityUtils.velocityEvaluate(velocityContext, emailSubject);
-			String mergedBody=VelocityUtils.velocityEvaluate(velocityContext, emailTemplate);
+			String mergedSubject = VelocityUtils.velocityEvaluate(velocityContext, emailSubject);
+			String mergedBody = VelocityUtils.velocityEvaluate(velocityContext, emailTemplate);
 
-			String[] splitEmailAddresses=temp.split(",");
-			for (String emailAddress : splitEmailAddresses)
-			{
+			String[] splitEmailAddresses = temp.split(",");
+			for (String emailAddress : splitEmailAddresses) {
 				try {
-	                EmailUtils.sendEmail(emailAddress, null, fromAddress, null, mergedSubject, mergedBody, null);
-                } catch (EmailException e) {
-	                logger.error("Unexpected error.", e);
-                }
+					EmailUtils.sendEmail(emailAddress, null, fromAddress, null, mergedSubject, mergedBody, null);
+				} catch (EmailException e) {
+					logger.error("Unexpected error.", e);
+				}
 			}
 		}
+	}
+
+	protected static VelocityContext getVelocityContext(Program program, String notes, Date startDate, Date endDate, ArrayList<AdmissionDemographicPair> admissionDemographicPairs) {
+		VelocityContext velocityContext = VelocityUtils.createVelocityContextWithTools();
+		velocityContext.put("program", program);
+		velocityContext.put("admissionDemographicPairs", admissionDemographicPairs);
+		if (notes != null) velocityContext.put("notes", notes);
+		if (startDate != null) velocityContext.put("startDate", startDate);
+		if (endDate != null) velocityContext.put("endDate", endDate);
+		return velocityContext;
 	}
 }
