@@ -24,16 +24,69 @@
 
 package org.oscarehr.managers;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.velocity.VelocityContext;
 import org.junit.Test;
+import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.managers.WaitListManager.AdmissionDemographicPair;
+import org.oscarehr.util.VelocityUtils;
 
 public class WaitListManagerTest {
 
 	@Test
-	public void testLoadingProperties()
-	{
-		String fromAddress=WaitListManager.waitListProperties.getProperty("from_address");
+	public void testLoadingProperties() {
+		String fromAddress = WaitListManager.waitListProperties.getProperty("from_address");
 		assertNotNull(fromAddress);
+	}
+
+	@Test
+	public void testVelocityMerge() throws IOException {
+		Program program = new Program();
+		program.setName("MyProgramName");
+
+		String notes = "some of my notes";
+
+		Calendar startCal = new GregorianCalendar(2012, 3, 4);
+		Calendar endCal = new GregorianCalendar(2012, 3, 5);
+
+		AdmissionDemographicPair a1 = new AdmissionDemographicPair();
+		Demographic d1 = new Demographic();
+		d1.setLastName("lastName1");
+		d1.setFirstName("firstName1");
+		d1.setSex("sex1");
+		a1.setDemographic(d1);
+
+		AdmissionDemographicPair a2 = new AdmissionDemographicPair();
+		Demographic d2 = new Demographic();
+		d2.setLastName("lastName2");
+		d2.setFirstName("firstName2");
+		d2.setSex("sex2");
+		a2.setDemographic(d2);
+
+		ArrayList<AdmissionDemographicPair> admissionDemographicPairs = new ArrayList<AdmissionDemographicPair>();
+		admissionDemographicPairs.add(a1);
+		admissionDemographicPairs.add(a2);
+
+		VelocityContext velocityContext = WaitListManager.getVelocityContext(program, notes, startCal.getTime(), endCal.getTime(), admissionDemographicPairs);
+
+		InputStream is = WaitListManagerTest.class.getResourceAsStream("/wait_list_velocity_template.txt");
+		String template = IOUtils.toString(is);
+
+		String mergedtemplate = VelocityUtils.velocityEvaluate(velocityContext, template);
+
+		is = WaitListManagerTest.class.getResourceAsStream("/wait_list_velocity_template_results.txt");
+		String expectedResults=IOUtils.toString(is);
+
+		assertEquals(expectedResults, mergedtemplate);
 	}
 }
