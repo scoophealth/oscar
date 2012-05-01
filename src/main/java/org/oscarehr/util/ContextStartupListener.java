@@ -27,6 +27,7 @@ package org.oscarehr.util;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorUpdateTask;
+import org.oscarehr.threads.WaitListEmailThread;
 
 import oscar.OscarProperties;
 
@@ -62,6 +63,8 @@ public class ContextStartupListener implements javax.servlet.ServletContextListe
 
 			CaisiIntegratorUpdateTask.startTask();
 
+			WaitListEmailThread.startTaskIfEnabled();
+
 			logger.info("Server processes starting completed. context=" + contextPath);
 		} catch (Exception e) {
 			logger.error("Unexpected error.", e);
@@ -75,6 +78,7 @@ public class ContextStartupListener implements javax.servlet.ServletContextListe
 		// logger.info("Server processes stopping. context=" + sce.getServletContext().getContextPath());
 		logger.info("Server processes stopping. context=" + contextPath);
 
+		WaitListEmailThread.stopTask();
 		CaisiIntegratorUpdateTask.stopTask();
 		VMStat.stopContinuousLogging();
 

@@ -6,7 +6,7 @@ test template
     ${admissionDemographicPair.demographic.sex}
 #end
 
-Between ${startDate} and ${endDate}
+Between ${startDate} and ${endDate} there were ${admissionDemographicPairs.size()} people admitted.
 
 program = ${program.name}
 
