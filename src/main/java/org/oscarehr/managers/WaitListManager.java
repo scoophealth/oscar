@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.mail.EmailException;
 import org.apache.log4j.Logger;
@@ -48,6 +49,8 @@ import org.oscarehr.util.VelocityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import oscar.OscarProperties;
+
 @Service
 public class WaitListManager {
 	private static final Logger logger = MiscUtils.getLogger();
@@ -55,6 +58,10 @@ public class WaitListManager {
 	private static final String WAIT_LIST_EMAIL_PROPERTIES_FILE = "/wait_list_email.properties";
 	private static final String WAIT_LIST_URGENT_EMAIL_TEMPLATE_FILE = "/wait_list_immediate_email_template.txt";
 	private static final String WAIT_LIST_DAILY_EMAIL_TEMPLATE_FILE = "/wait_list_daily_email_notification_template.txt";
+
+	protected static Properties waitListProperties = getWaitListProperties();
+	private static boolean enableEmailNotifications=Boolean.parseBoolean(OscarProperties.getInstance().getProperty("enable_wait_list_email_notifications"));
+	private static long waitListNotificationPeriod=Long.parseLong(OscarProperties.getInstance().getProperty("wait_list_email_notification_period"));
 
 	@Autowired
 	private ProgramDao programDao;
@@ -65,8 +72,7 @@ public class WaitListManager {
 	@Autowired
 	private DemographicDao demographicDao;
 
-	protected static Properties waitListProperties = getWaitListProperties();
-
+	
 	public static class AdmissionDemographicPair {
 		private Admission admission;
 		private Demographic demographic;
@@ -111,6 +117,8 @@ public class WaitListManager {
 	 * this method immediately.
 	 */
 	public void sendImmediateNotification(Program program, Demographic demographic, Admission admission, String notes) throws IOException {
+		if (!enableEmailNotifications) return;
+		
 		InputStream is = null;
 		String emailTemplate = null;
 		try {
@@ -139,7 +147,9 @@ public class WaitListManager {
 	 * The expectation is that a background thread will call this method, not
 	 * end-user-actions.
 	 */
-	public void checkAndSendDailyNotification(Program program) throws IOException {
+	public void checkAndSendIntervalNotification(Program program) throws IOException {
+		if (!enableEmailNotifications) return;
+
 		InputStream is = null;
 		String emailTemplate = null;
 		try {
@@ -152,18 +162,18 @@ public class WaitListManager {
 		String emailSubject = waitListProperties.getProperty("daily_subject");
 
 		// check if we need to run, might already have been run
-		Date lastNotificationdate = program.getLastReferralNotification();
+		Date lastNotificationDate = program.getLastReferralNotification();
 		// if first run, set default to a few days ago and let it sort itself out.
-		if (lastNotificationdate == null) lastNotificationdate = new Date(System.currentTimeMillis() - (DateUtils.MILLIS_PER_DAY * 4));
+		if (lastNotificationDate == null) lastNotificationDate = new Date(System.currentTimeMillis() - (DateUtils.MILLIS_PER_DAY * 4));
 		Date today = new Date();
-		if (DateUtils.isSameDay(lastNotificationdate, today) || lastNotificationdate.after(today)) return;
+		if (DateUtils.isSameDay(lastNotificationDate, today) || lastNotificationDate.after(today)) return;
 
 		// get a list of the admissions between since last notification date.
 		// send a notification for those admissions
 		// update last notification date
-		Date endDate = new Date(lastNotificationdate.getTime() + DateUtils.MILLIS_PER_DAY);
-		List<Admission> admissions = admissionDao.getAdmissionsByProgramAndAdmittedDate(program.getId(), lastNotificationdate, endDate);
-		logger.debug("For programId=" + program.getId() + ", " + lastNotificationdate + " to " + endDate + ", admission count=" + admissions.size());
+		Date endDate = new Date(lastNotificationDate.getTime() + waitListNotificationPeriod);
+		List<Admission> admissions = admissionDao.getAdmissionsByProgramAndAdmittedDate(program.getId(), lastNotificationDate, endDate);
+		logger.debug("For programId=" + program.getId() + ", " + lastNotificationDate + " to " + endDate + ", admission count=" + admissions.size());
 
 		ArrayList<AdmissionDemographicPair> admissionDemographicPairs = new ArrayList<AdmissionDemographicPair>();
 		for (Admission admission : admissions) {
@@ -173,13 +183,14 @@ public class WaitListManager {
 			admissionDemographicPairs.add(admissionDemographicPair);
 		}
 
-		sendNotification(emailSubject, emailTemplate, program, null, lastNotificationdate, endDate, admissionDemographicPairs);
+		sendNotification(emailSubject, emailTemplate, program, null, lastNotificationDate, endDate, admissionDemographicPairs);
 		program.setLastReferralNotification(endDate);
 		programDao.saveProgram(program);
 	}
 
 	private void sendNotification(String emailSubject, String emailTemplate, Program program, String notes, Date startDate, Date endDate, ArrayList<AdmissionDemographicPair> admissionDemographicPairs) {
-		String temp = program.getEmailNotificationAddressesCsv();
+		String temp = StringUtils.trimToNull(program.getEmailNotificationAddressesCsv())
+				;
 		if (temp != null) {
 			String fromAddress = waitListProperties.getProperty("from_address");
 
@@ -191,7 +202,7 @@ public class WaitListManager {
 			String[] splitEmailAddresses = temp.split(",");
 			for (String emailAddress : splitEmailAddresses) {
 				try {
-					EmailUtils.sendEmail(emailAddress, null, fromAddress, null, mergedSubject, mergedBody, null);
+					EmailUtils.sendEmail(emailAddress, emailAddress, fromAddress, fromAddress, mergedSubject, mergedBody, null);
 				} catch (EmailException e) {
 					logger.error("Unexpected error.", e);
 				}
