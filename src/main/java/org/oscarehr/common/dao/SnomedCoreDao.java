@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,48 +21,46 @@
  * Hamilton
  * Ontario, Canada
  */
-
-
 package org.oscarehr.common.dao;
 
 import java.util.List;
 
 import javax.persistence.Query;
 
-import org.oscarehr.common.model.Ichppccode;
+import org.oscarehr.common.model.Icd9;
+import org.oscarehr.common.model.SnomedCore;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class IchppccodeDao extends AbstractCodeSystemDao<Ichppccode>{
+public class SnomedCoreDao extends AbstractCodeSystemDao<SnomedCore> {
 
-	public IchppccodeDao() {
-		super(Ichppccode.class);
+	public SnomedCoreDao() {
+		super(SnomedCore.class);
 	}
-	
-	public List<Ichppccode> getIchppccodeCode(String term){
-		Query query = entityManager.createQuery("select i from Ichppccode where i.id=?");
-		query.setParameter(1, term);
+
+	public List<Icd9> getSnomedCoreCode(String snomedCoreCode){
+		Query query = entityManager.createQuery("select i from SnomedCore i where i.snomedCore=?");
+		query.setParameter(1, snomedCoreCode);
 
 		@SuppressWarnings("unchecked")
-		List<Ichppccode> results = query.getResultList();
+		List<Icd9> results = query.getResultList();
 
 		return results;
 	}
 
 
-    public List<Ichppccode> getIchppccode(String query) {
-		Query q = entityManager.createQuery("select i from Ichppccode where i.id like ? or i.description like ? order by i.description");
+    public List<SnomedCore> getSnomedCore(String query) {
+		Query q = entityManager.createQuery("select i from SnomedCore i where i.snomedCore like ? or i.description like ? order by i.description");
 		q.setParameter(1, "%"+query+"%");
 		q.setParameter(2, "%"+query+"%");
 
 		@SuppressWarnings("unchecked")
-		List<Ichppccode> results = q.getResultList();
+		List<SnomedCore> results = q.getResultList();
 
 		return results;
     }
 
-	@Override
-    public List<Ichppccode> searchCode(String term) {
-	    return getIchppccode(term);
+    public List<SnomedCore> searchCode(String term) {
+    	return getSnomedCore(term);
     }
 }
