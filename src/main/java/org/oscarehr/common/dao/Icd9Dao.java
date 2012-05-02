@@ -49,7 +49,7 @@ public class Icd9Dao extends AbstractCodeSystemDao<Icd9>{
 	}
 
 	public List<Icd9> getIcd9Code(String icdCode){
-		Query query = entityManager.createQuery("select i from Icd9 where i.icd9=?");
+		Query query = entityManager.createQuery("select i from Icd9 i where i.icd9=?");
 		query.setParameter(1, icdCode);
 
 		@SuppressWarnings("unchecked")
@@ -60,7 +60,7 @@ public class Icd9Dao extends AbstractCodeSystemDao<Icd9>{
 
 
     public List<Icd9> getIcd9(String query) {
-		Query q = entityManager.createQuery("select i from Icd9 where i.icd9 like ? or i.description like ? order by i.description");
+		Query q = entityManager.createQuery("select i from Icd9 i where i.icd9 like ? or i.description like ? order by i.description");
 		q.setParameter(1, "%"+query+"%");
 		q.setParameter(2, "%"+query+"%");
 

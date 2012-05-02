@@ -40,7 +40,7 @@ public class IchppccodeDao extends AbstractCodeSystemDao<Ichppccode>{
 	}
 	
 	public List<Ichppccode> getIchppccodeCode(String term){
-		Query query = entityManager.createQuery("select i from Ichppccode where i.id=?");
+		Query query = entityManager.createQuery("select i from Ichppccode i where i.id=?");
 		query.setParameter(1, term);
 
 		@SuppressWarnings("unchecked")
@@ -51,7 +51,7 @@ public class IchppccodeDao extends AbstractCodeSystemDao<Ichppccode>{
 
 
     public List<Ichppccode> getIchppccode(String query) {
-		Query q = entityManager.createQuery("select i from Ichppccode where i.id like ? or i.description like ? order by i.description");
+		Query q = entityManager.createQuery("select i from Ichppccode i where i.id like ? or i.description like ? order by i.description");
 		q.setParameter(1, "%"+query+"%");
 		q.setParameter(2, "%"+query+"%");
 
