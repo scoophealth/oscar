@@ -26,7 +26,6 @@
 package org.oscarehr.integration.born;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -54,9 +53,9 @@ public class AR2005BornConnector {
 		Statement st = conn.createStatement();
 		ResultSet rs = st.executeQuery("select * from formONAR");
 
-		AR2005Form2XML ar2005Form2XML = new AR2005Form2XML();
+		//AR2005Form2XML ar2005Form2XML = new AR2005Form2XML();
 		File file = File.createTempFile("born", ".xml");
-		ar2005Form2XML.generateXML(rs, new FileOutputStream(file));
+		//ar2005Form2XML.generateXML(rs, new FileOutputStream(file));
 
 		BornFtpManager ftpManager = new BornFtpManager();
 		String path = file.getPath();
