@@ -195,7 +195,7 @@ Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
                             </div>
                             <div id="browserInfo"><bean:message key="loginApplication.leftRmk1"/></div>
                             <bean:message key="loginApplication.leftRmk2" />
-                            <a href=# onClick='popupPage(500,700,"<bean:message key="loginApplication.gpltext"/>")'><bean:message key="loginApplication.gplLink"/></a>
+                            <a href=# onClick='popupPage(500,700,"http://www.gnu.org/licenses/gpl-2.0.txt")'><bean:message key="loginApplication.gplLink"/></a>
                             <br/>
                             <img style="width: 26px; height: 18px;" alt="<bean:message key="loginApplication.image.i18nAlt"/>"
                             title="<bean:message key="loginApplication.image.i18nTitle"/>"
