@@ -7,7 +7,7 @@ test template
     firstName2 lastName2
     sex2
 
-Between Wed Apr 04 00:00:00 EST 2012 and Thu Apr 05 00:00:00 EST 2012 there were 2 people admitted.
+Between 2012-4-4 0:0:0 and 2012-4-5 0:0:0 there were 2 people admitted.
 
 program = MyProgramName
 
