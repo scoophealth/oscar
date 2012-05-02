@@ -232,6 +232,9 @@ div.logoutBox {
 			<li><a href="#"
 				onclick='popupPage(360,600,&quot;<html:rewrite page="/admin/admincontrol.jsp"/>?displaymode=displaymygroup&amp;dboperation=searchmygroupall &quot;)'><bean:message
 				key="admin.admin.btnSearchGroupNoRecords" /></a></li>
+			<li><a href="#"
+				onclick='popupPage(360,600,&quot;<html:rewrite page="/admin/groupnoacl.jsp"/>&quot;)'><bean:message
+				key="admin.admin.btnGroupNoAcl" /></a></li>
 		</ul>
 		</div>
 	</caisi:isModuleLoad>
