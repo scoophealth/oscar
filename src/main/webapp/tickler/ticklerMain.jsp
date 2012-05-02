@@ -34,8 +34,8 @@
 <%response.sendRedirect("../noRights.html");%>
 </security:oscarSec>
 
-<%@ page import="java.util.*,java.text.*, java.sql.*, oscar.*, java.net.*, org.oscarehr.common.dao.*, org.caisi.model.Tickler, org.caisi.dao.TicklerDAO,org.caisi.model.CustomFilter,org.oscarehr.util.SpringUtils, org.oscarehr.PMmodule.dao.ProviderDao" %>
-<%@ page import="java.util.*,java.text.*, java.sql.*, oscar.*, java.net.*, org.oscarehr.common.dao.ViewDao, org.oscarehr.common.model.View, org.springframework.web.context.WebApplicationContext, org.springframework.web.context.support.WebApplicationContextUtils" %>
+<%@ page import="java.util.*,java.text.*, java.sql.*, oscar.*, java.net.*, org.oscarehr.common.dao.*, org.caisi.model.Tickler, org.caisi.model.TicklerComment,org.caisi.dao.TicklerDAO,org.caisi.model.CustomFilter,org.oscarehr.util.SpringUtils, org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@ page import="java.util.*,java.text.*, java.sql.*, oscar.*, java.net.*, org.oscarehr.common.dao.ViewDao, org.oscarehr.common.model.View, org.springframework.web.context.WebApplicationContext, org.springframework.web.context.support.WebApplicationContextUtils,org.oscarehr.util.LocaleUtils" %>
 
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
@@ -116,11 +116,9 @@ GregorianCalendar now=new GregorianCalendar();
 
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
 
-  ResourceBundle oscarR = ResourceBundle.getBundle("oscarResources",request.getLocale());
-
-  String stActive = oscarR.getString("tickler.ticklerMain.stActive");
-  String stComplete = oscarR.getString("tickler.ticklerMain.stComplete");
-  String stDeleted = oscarR.getString("tickler.ticklerMain.stDeleted");
+  String stActive = LocaleUtils.getMessage(request.getLocale(), "tickler.ticklerMain.stActive");
+  String stComplete = LocaleUtils.getMessage(request.getLocale(), "tickler.ticklerMain.stComplete");
+  String stDeleted = LocaleUtils.getMessage(request.getLocale(), "tickler.ticklerMain.stDeleted");
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -380,8 +378,8 @@ var beginD = "1900-01-01"
 	A, BODY, INPUT, OPTION ,SELECT , TABLE, TEXTAREA, TD, TR {font-family:tahoma,sans-serif; font-size:11px;}
 
 	TD.black              {font-weight: bold  ; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #FFFFFF; background-color: #666699   ;}
-	TD.lilac              {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #EEEEFF  ;}
-	TD.lilacRed              {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: red; background-color: #EEEEFF  ;}
+	TD.lilac              {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #EEEEFF  ;  padding-top: 4px;padding-bottom: 4px;}
+	TD.lilacRed              {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: red; background-color: #EEEEFF  ;  padding-top: 4px;padding-bottom: 4px;}
         
 	TD.boldlilac          {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #EEEEFF  ;}
 	TD.lilac A:link       {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #EEEEFF  ;}
@@ -394,9 +392,9 @@ var beginD = "1900-01-01"
 	TD.lilacRed A:hover      {font-weight: normal;                                                                            color: red; background-color: #CDCFFF  ;}
         TD.lilacRed A:focus    {font-weight: bold; font-size: 8pt ; font-family: verdana,arial,helvetica; color: white; background-color: #666699  ;}
         
-	TD.whiteRed              {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: red; background-color: #FFFFFF;}
+	TD.whiteRed              {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: red; background-color: #FFFFFF;  padding-top: 4px;padding-bottom: 4px;}
 
-	TD.white              {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
+	TD.white              {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;  padding-top: 4px;padding-bottom: 4px;}
 	TD.heading            {font-weight: bold  ; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #FDCB03; background-color: #666699   ;}
 	H2                    {font-weight: bold  ; font-size: 12pt; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
 	H3                    {font-weight: bold  ; font-size: 10pt; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
@@ -446,9 +444,9 @@ var beginD = "1900-01-01"
       <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4"><bean:message key="tickler.ticklerMain.msgTickler"/></font></b></font>
       </p>
     </td>
-  </tr>
+  </tr>        
 </table>
-      
+             
 <form name="serviceform" method="get" action="ticklerMain.jsp">
 <table width="100%" border="0" bgcolor="#EEEEFF">  
     <tr>
@@ -474,9 +472,9 @@ var beginD = "1900-01-01"
         <select id="ticklerview" name="ticklerview">
         <option value="A" <%=ticklerview.equals("A")?"selected":""%>><bean:message key="tickler.ticklerMain.formActive"/></option>
         <option value="C" <%=ticklerview.equals("C")?"selected":""%>><bean:message key="tickler.ticklerMain.formCompleted"/></option>
-        <option value="D" <%=ticklerview.equals("D")?"selected":""%>><bean:message key="tickler.ticklerMain.formDeleted"/></option>
+        <option value="D" <%=ticklerview.equals("D")?"selected":""%>><bean:message key="tickler.ticklerMain.formDeleted"/></option>                   
         </select>
-        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b><bean:message key="tickler.ticklerMain.formSelectProvider"/> </b></font>
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b><bean:message key="tickler.ticklerMain.msgCreator"/> </b></font>
 
         <select id="providerview" name="providerview">
         <option value="all" <%=providerview.equals("all")?"selected":""%>><bean:message key="tickler.ticklerMain.formAllProviders"/></option>
@@ -566,8 +564,13 @@ function changeSite(sel) {
     <thead>
         <TR bgcolor=#EEEEFF>
             <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="3%"></th>
+            <% 
+            boolean ticklerEditEnabled = Boolean.parseBoolean(OscarProperties.getInstance().getProperty("tickler_edit_enabled")); 
+            if (ticklerEditEnabled) { %>
+            <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="3%"></th>
+            <% }%>
             <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="17%"><bean:message key="tickler.ticklerMain.msgDemographicName"/></th>
-            <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="8%"><bean:message key="tickler.ticklerMain.msgDoctorName"/></th>
+            <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="8%"><bean:message key="tickler.ticklerMain.msgCreator"/></th>
             <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="9%"><bean:message key="tickler.ticklerMain.msgDate"/></th>
             <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="9%"><bean:message key="tickler.ticklerMain.msgCreationDate"/></th>
             <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="6%"><bean:message key="tickler.ticklerMain.Priority"/></th>
@@ -669,8 +672,11 @@ function changeSite(sel) {
                                 %>
 
                                 <tr >
-                                    <TD width="3%"  ROWSPAN="1" class="<%=cellColour%>"><input type="checkbox" name="checkbox" value="<%=t.getTickler_no()%>"></TD>                                    
-                                    <TD width="12%" ROWSPAN="1" class="<%=cellColour%>"><a href=# onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=demo.getDemographicNo()%>&displaymode=edit&dboperation=search_detail')"><%=demo.getLastName()%>,<%=demo.getFirstName()%></a></TD>                                    
+                                    <TD width="3%"  ROWSPAN="1" class="<%=cellColour%>"><input type="checkbox" name="checkbox" value="<%=t.getTickler_no()%>"></TD>
+                                    <%if (ticklerEditEnabled) { %>
+                                    <td width="3%" ROWSPAN="1" class="<%=cellColour%>"><a href=#  onClick="popupPage(600,800, '../tickler/ticklerEdit.jsp?tickler_no=<%=t.getTickler_no()%>')"><bean:message key="tickler.ticklerMain.editTickler"/></a></td>
+                                    <%}%>                                    
+                                    <TD width="12%" ROWSPAN="1" class="<%=cellColour%>"><a href=# onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=demo.getDemographicNo()%>&displaymode=edit&dboperation=search_detail')"><%=demo.getLastName()%>,<%=demo.getFirstName()%></a></TD>                                                                       
                                     <TD ROWSPAN="1" class="<%=cellColour%>"><%=t.getProvider().getLastName()%>,<%=t.getProvider().getFirstName()%></TD>
                                     <TD ROWSPAN="1" class="<%=cellColour%>"><%=t.getServiceDate()%></TD>
                                     <TD ROWSPAN="1" class="<%=cellColour%>"><%=t.getUpdateDate()%></TD>
@@ -704,11 +710,33 @@ function changeSite(sel) {
                                     </TD>
                                 </tr>
                                 <%
+                                    Set<TicklerComment> tcomments = t.getComments();
+                                    if (ticklerEditEnabled && !tcomments.isEmpty()) {
+                                        for (TicklerComment tc : tcomments) {
+                                %>
+                                    <tr>
+                                        <td width="3%"  ROWSPAN="1" class="<%=cellColour%>"></td>
+                                        <td width="3%" ROWSPAN="1" class="<%=cellColour%>"></td>
+                                        <td width="12%" ROWSPAN="1" class="<%=cellColour%>"></td>
+                                        <td ROWSPAN="1" class="<%=cellColour%>"><%=tc.getProvider().getLastName()%>,<%=tc.getProvider().getFirstName()%></td>
+                                        <td ROWSPAN="1" class="<%=cellColour%>"></td>
+                                        <% if (tc.isUpdateDateToday()) { %>
+                                        <td ROWSPAN="1" class="<%=cellColour%>"><%=tc.getUpdateTime(request.getLocale())%></td>
+                                        <% } else { %>
+                                        <td ROWSPAN="1" class="<%=cellColour%>"><%=tc.getUpdateDate(request.getLocale())%></td>
+                                        <% } %>
+                                        <td ROWSPAN="1" class="<%=cellColour%>"></td>
+                                        <td ROWSPAN="1" class="<%=cellColour%>"></td>
+                                        <td ROWSPAN="1" class="<%=cellColour%>"></td>
+                                        <td ROWSPAN="1" class="<%=cellColour%>"><%=tc.getMessage()%></td>
+                                    </tr>
+                                <%      }                                        
+                                    }
                             }
 
                             if (ticklers.isEmpty()) {
                             %>
-                            <tr><td colspan="8" class="white"><bean:message key="tickler.ticklerMain.msgNoMessages"/></td></tr>
+                            <tr><td colspan="8" class="white"><bean:message key="tickler.ticklerMain.msgNoMessages"/></td></tr>                                                            
                             <%}%>
                         </tbody>
 

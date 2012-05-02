@@ -1,0 +1,11 @@
+Hello ${tickler.demographic.firstName} ${tickler.demographic.lastName},
+
+The Information Nurse at ${clinic.clinicName} has been trying to contact you.  
+
+Please follow-up by,
+
+Visiting Us: We are located at ${clinic.clinicAddress}. 
+Calling Us: ${clinic.clinicPhone} and follow the prompts to speak with the nurse.  
+
+The Information Nurse is available between the hours of 11:00AM and 4:00PM.
+Thank-you.

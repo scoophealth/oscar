@@ -9213,3 +9213,12 @@ create table MyGroupAccessRestriction (
         primary key(id)
 );
 
+create table tickler_text_suggest (
+    id int(10) not null AUTO_INCREMENT, 
+    creator varchar(6) not null, 
+    suggested_text varchar(255) not null, 
+    create_date timestamp not null, 
+    active tinyint(1), 
+    PRIMARY KEY (id)
+);
+

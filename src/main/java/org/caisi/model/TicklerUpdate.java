@@ -24,7 +24,10 @@
 
 package org.caisi.model;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import org.oscarehr.common.model.Provider;
 
@@ -32,6 +35,9 @@ public class TicklerUpdate extends BaseObject {
 	private Long id;
 	private long tickler_no;
 	private char status;
+        private String assignedTo;
+        private String priority;
+        private Date serviceDate;
 	private String providerNo;
 	private Date update_date;
 	private Provider provider;
@@ -53,7 +59,29 @@ public class TicklerUpdate extends BaseObject {
 	}
 	public void setStatus(char status) {
 		this.status = status;
-	}
+	}        
+        public String getPriority() {
+            return this.priority;
+        }
+        public void setPriority(String priority) {
+            this.priority = priority;
+        }        
+        public Date getServiceDate() {
+            return this.serviceDate;
+        }
+        public String getServiceDate(Locale locale) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", locale);
+            return dateFormat.format(this.serviceDate);
+        }
+        public void setServiceDate(Date serviceDate) {
+            this.serviceDate = serviceDate;
+        }
+        public String getAssignedTo() {
+            return this.assignedTo;
+        }
+        public void setAssignedTo(String assignedTo){
+            this.assignedTo = assignedTo;
+        }
 	public long getTickler_no() {
 		return tickler_no;
 	}
