@@ -6,7 +6,7 @@ test template
     ${admissionDemographicPair.demographic.sex}
 #end
 
-Between ${startDate} and ${endDate} there were ${admissionDemographicPairs.size()} people admitted.
+Between ${dateTool.format("yyyy-M-d H:m:s",${startDate})} and ${dateTool.format("yyyy-M-d H:m:s",${endDate})} there were ${admissionDemographicPairs.size()} people admitted.
 
 program = ${program.name}
 
