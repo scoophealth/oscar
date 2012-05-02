@@ -25,6 +25,8 @@
 package org.caisi.model;
 
 import java.util.Date;
+import java.util.Locale;
+import oscar.util.DateUtils;
 
 import org.oscarehr.common.model.Provider;
 
@@ -63,6 +65,21 @@ public class TicklerComment extends BaseObject {
 	public Date getUpdate_date() {
 		return update_date;
 	}
+        
+        public String getUpdateTime(Locale locale) {
+            return DateUtils.formatTime(update_date, locale);                       
+        }
+        
+        public String getUpdateDateTime(Locale locale) {
+            return DateUtils.formatDateTime(this.update_date, locale);           
+        }
+        
+        public String getUpdateDate(Locale locale) {
+            return DateUtils.formatDate(this.update_date, locale);
+        }
+        public boolean isUpdateDateToday() {
+            return org.apache.commons.lang.time.DateUtils.isSameDay(update_date, new Date());            
+        }
 	public void setUpdate_date(Date update_date) {
 		this.update_date = update_date;
 	}

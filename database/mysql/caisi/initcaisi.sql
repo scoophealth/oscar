@@ -1857,7 +1857,10 @@ CREATE TABLE `program_clientstatus` (
 create table tickler_update (
 	id int(10) not null auto_increment,
 	tickler_no int(10) not null,
-	status char(1) not null,
+	status char(1),
+        assignedTo varchar(6),
+        serviceDate datetime,
+        priority varchar(6),
 	provider_no varchar(6) not null,
 	update_date datetime not null,
 	primary key(id)

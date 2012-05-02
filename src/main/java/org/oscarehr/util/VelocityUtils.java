@@ -68,6 +68,7 @@ public class VelocityUtils
     		VelocityEngine velocityEngine=new VelocityEngine();
 	        velocityEngine.setProperty(VelocityEngine.PARSER_POOL_SIZE, 10);
 	        velocityEngine.setProperty(VelocityEngine.RUNTIME_LOG_LOGSYSTEM_CLASS, Log4JLogChute.class.getName());
+                velocityEngine.setProperty("runtime.log.logsystem.log4j.logger", logger.getName());
 	        velocityEngine.init();
 	        return(velocityEngine);
         }

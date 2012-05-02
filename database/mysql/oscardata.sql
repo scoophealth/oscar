@@ -2216,3 +2216,23 @@ INSERT INTO `criteria_type_option` (`OPTION_ID`,`CRITERIA_TYPE_ID`,`DISPLAY_ORDE
 INSERT INTO `criteria_type_option` (`OPTION_ID`,`CRITERIA_TYPE_ID`,`DISPLAY_ORDER_NUMBER`,`OPTION_LABEL`,`OPTION_VALUE`,`RANGE_START_VALUE`,`RANGE_END_VALUE`) VALUES (113,21,3,'16 Years of age or older',NULL,16,120);
 INSERT INTO `criteria_type_option` (`OPTION_ID`,`CRITERIA_TYPE_ID`,`DISPLAY_ORDER_NUMBER`,`OPTION_LABEL`,`OPTION_VALUE`,`RANGE_START_VALUE`,`RANGE_END_VALUE`) VALUES (114,21,4,'18 years of age or older',NULL,18,120);
 
+insert into tickler_text_suggest (creator, suggested_text, create_date, active) values ("-1", "Advised Test Results", now(), "1");
+insert into tickler_text_suggest (creator, suggested_text, create_date, active) values ("-1", "Advised RTC see INFO", now(), "1");
+insert into tickler_text_suggest (creator, suggested_text, create_date, active) values ("-1", "Advised RTC see MD", now(), "1");
+insert into tickler_text_suggest (creator, suggested_text, create_date, active) values ("-1", "Advised RTC for Rx", now(), "1");
+insert into tickler_text_suggest (creator, suggested_text, create_date, active) values ("-1", "Advised RTC for Lab Work", now(), "1");
+insert into tickler_text_suggest (creator, suggested_text, create_date, active) values ("-1", "Advised RTC for immunization", now(), "1");
+insert into tickler_text_suggest (creator, suggested_text, create_date, active) values ("-1", "Declined treatment", now(), "1");
+insert into tickler_text_suggest (creator, suggested_text, create_date, active) values ("-1", "Don't call", now(), "1");
+insert into tickler_text_suggest (creator, suggested_text, create_date, active) values ("-1", "Letter sent", now(), "1");
+insert into tickler_text_suggest (creator, suggested_text, create_date, active) values ("-1", "Msg on ans. mach. to call clinic", now(), "1");
+insert into tickler_text_suggest (creator, suggested_text, create_date, active) values ("-1", "Msg with roomate to call clinic", now(), "1");
+insert into tickler_text_suggest (creator, suggested_text, create_date, active) values ("-1", "Phone - No Answer", now(), "1");
+insert into tickler_text_suggest (creator, suggested_text, create_date, active) values ("-1", "Notified", now(), "1");
+insert into tickler_text_suggest (creator, suggested_text, create_date, active) values ("-1", "Notified. Patient is asymptomatic.", now(), "1");
+insert into tickler_text_suggest (creator, suggested_text, create_date, active) values ("-1", "Prescription given", now(), "1");
+insert into tickler_text_suggest (creator, suggested_text, create_date, active) values ("-1", "Prescription phoned in to:", now(), "1");
+insert into tickler_text_suggest (creator, suggested_text, create_date, active) values ("-1", "Referral Booked", now(), "1");
+insert into tickler_text_suggest (creator, suggested_text, create_date, active) values ("-1", "Re-Booked for followup", now(), "1");
+insert into tickler_text_suggest (creator, suggested_text, create_date, active) values ("-1", "Returned for Lab Work", now(), "1");
+insert into tickler_text_suggest (creator, suggested_text, create_date, active) values ("-1", "Telephone Busy", now(), "1");

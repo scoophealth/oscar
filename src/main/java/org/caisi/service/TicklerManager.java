@@ -40,18 +40,29 @@ import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.springframework.transaction.annotation.Transactional;
+import org.oscarehr.util.EmailUtils;
+import org.apache.commons.mail.EmailException;
 
 import oscar.OscarProperties;
 
 import com.quatro.model.security.Secrole;
+import java.io.IOException;
+import java.io.InputStream;
+import org.apache.commons.io.IOUtils;
+import org.apache.velocity.VelocityContext;
 
+import org.oscarehr.util.SpringUtils;
+import org.oscarehr.util.VelocityUtils;
+import org.oscarehr.common.dao.ClinicDAO;
+import org.oscarehr.common.model.Clinic;
 /*
  * Updated by Eugene Petruhin on 16 dec 2008 while fixing #2422864 & #2317933 & #2379840
  * Updated by Eugene Petruhin on 24 dec 2008 while fixing #2459538
  */
 @Transactional
 public class TicklerManager {
-
+    private static final String TICKLER_EMAIL_TEMPLATE_FILE="/tickler_email_notification_template.txt";
+    
     private TicklerDAO ticklerDAO = null;
     private CustomFilterDAO customFilterDAO = null;
     private ProgramAccessDAO programAccessDAO;
@@ -285,5 +296,39 @@ public class TicklerManager {
 
     public void deleteCustomFilterById(Integer id) {
         customFilterDAO.deleteCustomFilterById(id);
+    }
+    
+    public void sendNotification(Tickler t) throws EmailException, IOException {
+        if (t == null) {
+            throw new IllegalArgumentException("Tickler object required to send tickler email");
+        }
+        
+        boolean ticklerEditEnabled = Boolean.parseBoolean(OscarProperties.getInstance().getProperty("tickler_edit_enabled"));        
+        boolean ticklerEmailEnabled = Boolean.parseBoolean(OscarProperties.getInstance().getProperty("tickler_email_enabled")); 
+        
+        if (ticklerEditEnabled & ticklerEmailEnabled) {
+            String emailTo = t.getDemographic().getEmail();
+            if (EmailUtils.isValidEmailAddress(emailTo)) { 
+
+                InputStream is = TicklerManager.class.getResourceAsStream(TICKLER_EMAIL_TEMPLATE_FILE);
+                String emailTemplate=IOUtils.toString(is);
+                String emailSubject=OscarProperties.getInstance().getProperty("tickler_email_subject");
+                String emailFrom=OscarProperties.getInstance().getProperty("tickler_email_from_address");
+
+                ClinicDAO clinicDao = (ClinicDAO)SpringUtils.getBean("clinicDAO");
+                Clinic c = clinicDao.getClinic();
+
+                VelocityContext velocityContext=VelocityUtils.createVelocityContextWithTools();            
+                velocityContext.put("tickler", t);
+                velocityContext.put("clinic", c);
+
+                String mergedSubject=VelocityUtils.velocityEvaluate(velocityContext, emailSubject);
+                String mergedBody=VelocityUtils.velocityEvaluate(velocityContext, emailTemplate);
+
+                EmailUtils.sendEmail(emailTo, null, emailFrom, null, mergedSubject, mergedBody, null);
+            }else {
+                throw new EmailException("Email Address is invalid");
+            }
+        }
     }
 }
