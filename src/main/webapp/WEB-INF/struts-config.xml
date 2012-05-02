@@ -2371,6 +2371,9 @@
 
 		<action path="/caseload/CaseloadContent" scope="request" type="org.oscarehr.caseload.CaseloadContentAction" parameter="method" />
 
+                <action path="/CodeSearch" type="org.oscarehr.common.web.CodeSearchService">
+                </action>
+
 	</action-mappings>
 	<controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" maxFileSize="25M" />
 	<message-resources parameter="oscarResources" null="false" />
