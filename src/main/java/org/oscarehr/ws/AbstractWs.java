@@ -35,7 +35,7 @@ import org.oscarehr.util.LoggedInInfo;
 
 import com.quatro.model.security.Security;
 
-public class AbstractWs
+public abstract class AbstractWs
 {
 	@Resource
     protected WebServiceContext context;
