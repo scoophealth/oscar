@@ -302,6 +302,9 @@ public class TicklerAction extends DispatchAction {
     public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         log.debug("edit");
         String programId = (String) request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
+        if(programId == null) {
+        	programId = String.valueOf(programMgr.getProgramIdByProgramName("OSCAR"));
+        }
         request.setAttribute("providers", providerMgr.getActiveProviders(null, programId));
         request.setAttribute("program_name", programMgr.getProgramName(programId));
         request.setAttribute("from", getFrom(request));
