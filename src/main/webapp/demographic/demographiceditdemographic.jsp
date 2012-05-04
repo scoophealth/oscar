@@ -707,8 +707,8 @@ function addToPatientSet(demoNo, patientSet) {
 var demographicNo='<%=demographic_no%>';
 
 
-function checkRosterStatus(){
-	<oscar:oscarPropertiesCheck property="FORCED_ROSTER_INTEGRATOR_LOCAL_STORE" value="yes">
+function checkRosterStatus(){	
+	<oscar:oscarPropertiesCheck property="FORCED_ROSTER_INTEGRATOR_LOCAL_STORE" value="yes">	
 	var rosterSelect = document.getElementById("roster_status");
 	if(rosterSelect.getValue() == "RO"){
 		var primaryEmr = document.getElementById("primaryEMR");
@@ -716,7 +716,7 @@ function checkRosterStatus(){
 		primaryEmr.disable(true);
 	}
 	</oscar:oscarPropertiesCheck>
-	
+	return true;
 }
 
 </script>

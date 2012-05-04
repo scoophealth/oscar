@@ -38,7 +38,7 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
  */
 public abstract class OscarSuperDao extends JdbcDaoSupport {
 
-	private static final Logger logger = MiscUtils.getLogger();
+	protected static final Logger logger = MiscUtils.getLogger();
 
 	protected abstract String[][] getDbQueries();
 
