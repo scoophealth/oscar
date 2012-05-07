@@ -26,6 +26,9 @@
 		</id>
 		<property name="tickler_no" />
 		<property name="status" />
+                <property name="assignedTo" />
+                <property name="priority" />
+                <property name="serviceDate" type="java.util.Date"/>
 		<property name="providerNo" column="provider_no" />
 		<property name="update_date" type="java.util.Date" />
 		<many-to-one name="provider" class="org.oscarehr.common.model.Provider"

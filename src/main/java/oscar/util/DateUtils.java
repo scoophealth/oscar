@@ -63,6 +63,11 @@ public final class DateUtils {
 	{
 		return(format(timeFormatString, date, locale));
 	}
+        
+        public static String formatDateTime(Date date, Locale locale)
+	{
+		return(formatDate(date, locale)+' '+formatTime(date, locale));
+	}
 	
 	/**
 	 * @param locale can be null
