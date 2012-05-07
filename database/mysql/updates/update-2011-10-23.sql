@@ -10,5 +10,5 @@ insert into ctl_doc_class (reportclass,subclass) values ("Lab Report","");
 
 update document set docClass="Diagnostic Test Report" where docClass="Diagnostic Test Reports";
 update document set docClass="Other Letter" where docClass="Other Letters";
-update document set reportclass="Consultant Report" where reportclass="Consult";
+update document set docClass="Consultant Report" where docClass="Consult";
 
