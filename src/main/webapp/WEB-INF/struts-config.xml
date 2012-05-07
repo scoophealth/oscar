@@ -523,6 +523,13 @@
 			<form-property name="selectedStyle" type="java.lang.String"></form-property>
 			<form-property name="editStyle" type="java.lang.String"></form-property>
 		</form-bean>
+                <form-bean name="serviceform" type="org.apache.struts.validator.DynaValidatorForm">
+                     <form-property name="emailDemographic" type="java.lang.Boolean" initial="false"></form-property>                
+                </form-bean>
+                <form-bean name="tsTicklerForm" type="org.apache.struts.validator.DynaValidatorForm">
+                    <form-property name="activeText" type="java.lang.String[]"></form-property>
+                    <form-property name="inactiveText" type="java.lang.String[]"></form-property>
+                </form-bean>
 	</form-beans>
 
 	<global-forwards>
@@ -2370,6 +2377,16 @@
 
 
 		<action path="/caseload/CaseloadContent" scope="request" type="org.oscarehr.caseload.CaseloadContentAction" parameter="method" />
+                
+                <action input="/tickler/ticklerEdit.jsp" name="serviceform" path="/tickler/EditTickler" scope="request" type="oscar.oscarTickler.pageUtil.EditTicklerAction" parameter="method">
+			<forward name="close" path="/closenreload.html" />
+                        <forward name="failure" path="/failure.jsp"/>
+                        <forward name="error" path="/errorpage.jsp" />
+		</action>
+                <action input="/tickler/ticklerTextSuggest.jsp" name="tsTicklerForm" path="/tickler/EditTicklerTextSuggest" scope="request" type="oscar.oscarTickler.pageUtil.EditTicklerAction" parameter="method">
+			<forward name="close" path="/closenreload.html" />
+                        <forward name="error" path="/errorpage.jsp" />
+		</action>
 
                 <action path="/CodeSearch" type="org.oscarehr.common.web.CodeSearchService">
                 </action>

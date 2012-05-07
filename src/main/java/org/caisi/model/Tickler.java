@@ -34,7 +34,7 @@ import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
 import java.util.Locale;
-import java.util.ResourceBundle;
+import org.oscarehr.util.LocaleUtils;
 
 public class Tickler extends BaseObject {
 	private Long tickler_no;
@@ -89,18 +89,16 @@ public class Tickler extends BaseObject {
 		this.service_date = service_date;
 	}
         public String getStatusDesc(Locale locale) {
-            String statusStr = "";
-            ResourceBundle resourceBundle = ResourceBundle.getBundle("oscarResources", locale);
+            String statusStr = "";            
             if (this.status == 'A'){
-                statusStr = resourceBundle.getString("tickler.ticklerMain.stActive");
+                statusStr = LocaleUtils.getMessage(locale,"tickler.ticklerMain.stActive");
             }
             else if (this.status == 'C') {               
-                statusStr = resourceBundle.getString("tickler.ticklerMain.stComplete");
+                statusStr = LocaleUtils.getMessage(locale,"tickler.ticklerMain.stComplete");
             }
             else if (this.status == 'D') {                
-                statusStr = resourceBundle.getString("tickler.ticklerMain.stDeleted");
+                statusStr = LocaleUtils.getMessage(locale,"tickler.ticklerMain.stDeleted");
             }
-            
             return statusStr;
         }
 	public char getStatus() {
