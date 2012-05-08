@@ -25,7 +25,31 @@
 --%>
 
 
+<%@page import="org.oscarehr.PMmodule.model.VacancyTemplate"%>
+<%@page import="org.oscarehr.PMmodule.model.Criteria"%>
+<%@page import="org.oscarehr.PMmodule.service.VacancyTemplateManager"%>
+<%@page import="org.oscarehr.PMmodule.model.Program"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%@page import="org.apache.commons.lang.StringUtils"%>
+<%@page import="java.util.List"%>
 <%@ include file="/taglibs.jsp"%>
+
+<%
+// is only populated if it's an existing form, i.e. new one off existing form
+	
+
+	// must be populated some how
+	int currentDemographicId=0;
+	
+	// must be populated some how
+	VacancyTemplate template = null;
+	String templateId = (String) request.getAttribute("vacancyTemplateId");
+	if (!StringUtils.isBlank(templateId) && !templateId.equalsIgnoreCase("null"))	{				
+		template=VacancyTemplateManager.getVacancyTemplateByTemplateId(Integer.parseInt(templateId));		
+	}	else	{	
+		template= new VacancyTemplate();
+	}
+%>
 <script type="text/javascript">
 	function save() {
 		document.programManagerForm.method.value='save_vacancy_template';
@@ -89,7 +113,10 @@
                     });
         });
 </script>
+
 <div class="tabs" id="tabs">
+<input type="hidden" name="vacancyTemplateId" id="vacancyTemplateId" value="<%=template.getId()%>" />
+<input type="hidden" name="programId" id="programId" value="<%=request.getAttribute("id")%>" />
 	<table cellpadding="3" cellspacing="0" border="0">
 		<tr>
 			<th title="Programs" class="nofocus"><a
@@ -99,41 +126,61 @@
 		</tr>
 	</table>
 </div>
+
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr class="b">
 		<td width="30%" class="beright">Template is active:</td>
-		<td><input type="checkbox" value="on"
-			name="program.templateActive"></td>
+		<td><input type="checkbox" value="on" <%=template.getActive()==true?"checked":"" %>
+			name="templateActive"></td>
 	</tr>
 	<tr class="b">
 		<td class="beright">Template Name:</td>
-		<td><input type="text" size="50" maxlength="50"
-			name="program.templateName"></td>
+		<td><input type="text" size="50" maxlength="50" value="<%=template.getName()==null?"":template.getName() %>"
+			name="templateName"></td>
 	</tr>
 	<tr class="b">
 		<td class="beright">Associated Program:</td>
-		<td><select name="program.associatedProgram">
-				<option selected="selected" value=" ">None Selected</option>
+		<td><select name="associatedProgramId">
+		<% 
+			List<Program> programs = VacancyTemplateManager.getPrograms(LoggedInInfo.loggedInInfo.get().currentFacility.getId());
+			for(Program p : programs) {
+				String selectedOrNot = "";
+				Integer programIdFromTemplate = template.getProgramId();
+				if(programIdFromTemplate !=null && programIdFromTemplate.intValue()==p.getId().intValue())
+					selectedOrNot = "selected";
+		%>				
+			<option value="<%=p.getId()%>" <%=selectedOrNot%> ><%=p.getName() %></option>
+		<%} %>
 		</select></td>
 	</tr>
 </table>
+<%
+			Criteria criteria = VacancyTemplateManager.getSelectedCriteria(template.getId(), "Age");
+			String ageMin = "", ageMax="",ageRequired="";
+			if(criteria !=null) {
+				ageMin = String.valueOf(criteria.getRangeStartValue());
+				ageMax = String.valueOf(criteria.getRangeEndValue());
+				ageRequired = (criteria.getCanBeAdhoc()==true?"selected":"");
+			}
+%>
 <fieldset>
 	<legend>Criteria Required For this Template</legend>
 	<table width="100%" border="1" cellspacing="2" cellpadding="3">
 		<tr class="b">
 			<td width="30%" class="beright">Requires specific age range:</td>
-			<td><input type="checkbox" value="on"
-				name="program.ageRangeRequired"></td>
+			<td><input type="checkbox" value="on" <%=ageRequired %>
+				name="ageRangeRequired"></td>
 		</tr>
+		
 		<tr class="b">
 			<td class="beright">Age Range Minimum:</td>
-			<td><input type="text" size="50" maxlength="50"
-				name="program.ageMinimum"></td>
+			<td><input type="text" size="50" maxlength="50" <%=ageMin%>
+				name="ageMinimum"></td>
 		</tr>
 		<tr class="b">
 			<td class="beright">Age Range Maximum:</td>
-			<td><input type="text" size="50" maxlength="50"
-				name="program.ageMaximum"></td>
+			<td><input type="text" size="50" maxlength="50" <%=ageMax %>
+				name="ageMaximum"></td>
 		</tr>
 	</table>
 	<br>
@@ -141,7 +188,7 @@
 		<tr class="b">
 			<td width="30%" class="beright">Requires Specific Gender:</td>
 			<td><input type="checkbox" value="on"
-				name="program.genderRequired"></td>
+				name="genderRequired"></td>
 		</tr>
 		<tr class="b">
 			<td colspan="2" style="padding-left: 10%;">
@@ -149,9 +196,8 @@
 					<div style="margin-bottom: 3px;">Gender List</div>
 					<div>
 						<select id="sourceOfGender" name="sourceOfGender" multiple="multiple" size="7"
-							style="width: 200px;">
-							<option value="male">male</option>
-							<option value="female">female</option>
+							style="width: 200px;">							
+							<%=VacancyTemplateManager.renderAsSelectOptions("Gender") %>
 						</select>
 					</div>
 				</div>
@@ -168,6 +214,7 @@
 					<div>
 						<select id="targetOfGender" name="targetOfGender" multiple="multiple" size="7"
 							style="width: 200px;">
+							<%=VacancyTemplateManager.renderAnswersAsSelectOptions(template.getId(), "Gender") %>
 						</select>
 					</div>
 				</div>
@@ -188,8 +235,7 @@
 					<div>
 						<select id="sourceOfDiagnosis" name="sourceOfDiagnosis" multiple="multiple" size="7"
 							style="width: 200px;">
-							<option value="01">Diagnosis 01</option>
-							<option value="02">Diagnosis 02</option>
+							<%=VacancyTemplateManager.renderAsSelectOptions("Mental health diagnosis") %>
 						</select>
 					</div>
 				</div>
@@ -206,6 +252,7 @@
 					<div>
 						<select id="targetOfDiagnosis" name="targetOfDiagnosis" multiple="multiple" size="7"
 							style="width: 200px;">
+							<%=VacancyTemplateManager.renderAnswersAsSelectOptions(template.getId(), "Mental health diagnosis") %>
 						</select>
 					</div>
 				</div>
@@ -226,8 +273,7 @@
 					<div>
 						<select id="sourceOfReferralType" name="sourceOfReferralType" multiple="multiple" size="7"
 							style="width: 200px;">
-							<option value="01">Referral Type 01</option>
-							<option value="02">Referral Type 02</option>
+							<%=VacancyTemplateManager.renderAsSelectOptions("Referral source") %>
 						</select>
 					</div>
 				</div>
@@ -244,6 +290,7 @@
 					<div>
 						<select id="targetOfReferralType" name="targetOfReferralType" multiple="multiple" size="7"
 							style="width: 200px;">
+							<%=VacancyTemplateManager.renderAnswersAsSelectOptions(template.getId(), "Referral source") %>
 						</select>
 					</div>
 				</div>
@@ -264,8 +311,7 @@
 					<div>
 						<select id="sourceOfSupportType" name="sourceOfSupportType" multiple="multiple" size="7"
 							style="width: 200px;">
-							<option value="01">Support Type 01</option>
-							<option value="02">Support Type 02</option>
+							<%=VacancyTemplateManager.renderAsSelectOptions("Support level") %>
 						</select>
 					</div>
 				</div>
@@ -282,6 +328,7 @@
 					<div>
 						<select id="targetOfSupportType" name="targetOfSupportType" multiple="multiple" size="7"
 							style="width: 200px;">
+							<%=VacancyTemplateManager.renderAnswersAsSelectOptions(template.getId(), "Support level") %>
 						</select>
 					</div>
 				</div>
@@ -302,8 +349,7 @@
 					<div>
 						<select id="sourceOfLegalStatus" name="sourceOfLegalStatus" multiple="multiple" size="7"
 							style="width: 200px;">
-							<option value="01">Legal Status 01</option>
-							<option value="02">Legal Status 02</option>
+							<%=VacancyTemplateManager.renderAsSelectOptions("Legal History") %>
 						</select>
 					</div>
 				</div>
@@ -320,6 +366,7 @@
 					<div>
 						<select id="targetOfLegalStatus" name="targetOfLegalStatus" multiple="multiple" size="7"
 							style="width: 200px;">
+							<%=VacancyTemplateManager.renderAnswersAsSelectOptions(template.getId(), "Legal History") %>
 						</select>
 					</div>
 				</div>
@@ -329,7 +376,7 @@
 </fieldset>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr>
-		<td colspan="2"><input type="button" value="Save" onclick="return save()" /> <html:cancel /></td>
+		 <td colspan="2"><input type="button" value="Save" onclick="return save()" /> <html:cancel /></td>
 	</tr>
 </table>
 

@@ -28,44 +28,36 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import org.oscarehr.PMmodule.model.VacancyTemplate;
+import org.oscarehr.PMmodule.model.Criteria;
 import org.oscarehr.common.dao.AbstractDao;
-import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class VacancyTemplateDAO extends AbstractDao<VacancyTemplate> {
+public class CriteriaDAO extends AbstractDao<Criteria> {
 
-	public VacancyTemplateDAO() {
-		super(VacancyTemplate.class);
+	public CriteriaDAO() {
+		super(Criteria.class);
 	}
 
-	public void saveVacancyTemplate(VacancyTemplate obj) {
-		try {
-			persist(obj);
-		} catch (Exception e) {
-			MiscUtils.getLogger().error("Error", e);
-		}
-	}
-	
-	public VacancyTemplate getVacancyTemplate(Integer templateId) {
-		String sqlCommand = "select * from vacancy_template where TEMPLATE_ID=?1 ";
+	@SuppressWarnings("unchecked")
+    public List<Criteria> getCriteriaByTemplateId(Integer templateId) {
+		String sqlCommand = "select * from criteria where TEMPLATE_ID=?1 ";
 
 		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
 		query.setParameter(1, templateId);
 		
-		return getSingleResultOrNull(query);	
+		return query.getResultList();
+		
 	}
 	
-	@SuppressWarnings("unchecked")
-    public List<VacancyTemplate> getVacancyTemplateByWlProgramId(Integer wlProgramId) {
-		String sqlCommand = "select * from vacancy_template where WL_PROGRAM_ID=?1 ";
+	public Criteria getCriteriaByTemplateIdAndTypeId(Integer templateId, Integer typeId) {
+		String sqlCommand = "select * from criteria where TEMPLATE_ID=?1 and CRITERIA_TYPE_ID=?2";
 
 		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
-		query.setParameter(1, wlProgramId);
+		query.setParameter(1, templateId);
+		query.setParameter(2, typeId);
 		
-		return query.getResultList();	
+		return getSingleResultOrNull(query);
+		
 	}
-	
-	
 }

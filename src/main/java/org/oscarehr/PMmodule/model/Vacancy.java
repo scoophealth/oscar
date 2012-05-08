@@ -41,7 +41,7 @@ import org.oscarehr.common.model.AbstractModel;
 public class Vacancy extends AbstractModel<Long> implements java.io.Serializable {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "VACANCY_ID", unique=true, nullable=false)
 	private Long vacancyId;
 	@Column(name = "TEMPLATE_ID", nullable = false)

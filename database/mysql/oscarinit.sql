@@ -9148,6 +9148,7 @@ CREATE TABLE `vacancy_template` (
   `PROGRAM_ID` int(11) NOT NULL,
   `NAME` varchar(32) NOT NULL,
   `ACTIVE` tinyint(1) NOT NULL,
+  `WL_PROGRAM_ID` int(11) NOT NULL,
   PRIMARY KEY (`TEMPLATE_ID`)
 );
 
