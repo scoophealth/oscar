@@ -35,6 +35,7 @@
 
 	<html:hidden property="view.tab" />
 	<html:hidden property="view.subtab" />
+	<html:hidden property="vacancyTemplateId" />
 	<input type="hidden" name="id"
 		value="<c:out value="${requestScope.id}"/>" />
 	<input type="hidden" name="method" value="edit" />
@@ -52,8 +53,12 @@
 				function clickTab2(tabName, subtabName) {
 					document.programManagerForm.method.value='edit';
 					document.programManagerForm.elements['view.tab'].value=tabName;
-					document.programManagerForm.elements['view.subtab'].value=subtabName;
+					document.programManagerForm.elements['view.subtab'].value=subtabName;					
 					document.programManagerForm.submit();
+				}
+				function clickLink(tabName, subtabName, id) {
+					document.programManagerForm.elements['vacancyTemplateId'].value=id;
+					clickTab2(tabName, subtabName);
 				}
 			</script>
 

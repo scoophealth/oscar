@@ -24,48 +24,27 @@
 
 package org.oscarehr.PMmodule.dao;
 
-import java.util.List;
-
 import javax.persistence.Query;
 
-import org.oscarehr.PMmodule.model.VacancyTemplate;
+import org.oscarehr.PMmodule.model.CriteriaType;
 import org.oscarehr.common.dao.AbstractDao;
-import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class VacancyTemplateDAO extends AbstractDao<VacancyTemplate> {
+public class CriteriaTypeDAO extends AbstractDao<CriteriaType> {
 
-	public VacancyTemplateDAO() {
-		super(VacancyTemplate.class);
+	public CriteriaTypeDAO() {
+		super(CriteriaType.class);
 	}
 
-	public void saveVacancyTemplate(VacancyTemplate obj) {
-		try {
-			persist(obj);
-		} catch (Exception e) {
-			MiscUtils.getLogger().error("Error", e);
-		}
-	}
-	
-	public VacancyTemplate getVacancyTemplate(Integer templateId) {
-		String sqlCommand = "select * from vacancy_template where TEMPLATE_ID=?1 ";
-
-		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
-		query.setParameter(1, templateId);
-		
-		return getSingleResultOrNull(query);	
-	}
-	
 	@SuppressWarnings("unchecked")
-    public List<VacancyTemplate> getVacancyTemplateByWlProgramId(Integer wlProgramId) {
-		String sqlCommand = "select * from vacancy_template where WL_PROGRAM_ID=?1 ";
+    public CriteriaType findByName(String fieldName) {
+		String sqlCommand = "select * from criteria_type where FIELD_NAME=?1 ";
 
 		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
-		query.setParameter(1, wlProgramId);
+		query.setParameter(1, fieldName);
 		
-		return query.getResultList();	
+		return (CriteriaType) query.getResultList().get(0);
+		
 	}
-	
-	
 }

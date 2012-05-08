@@ -28,6 +28,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -43,8 +44,16 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.dao.CriteriaDAO;
+import org.oscarehr.PMmodule.dao.CriteriaSelectionOptionDAO;
+import org.oscarehr.PMmodule.dao.CriteriaTypeDAO;
+import org.oscarehr.PMmodule.dao.CriteriaTypeOptionDAO;
+import org.oscarehr.PMmodule.dao.VacancyTemplateDAO;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.BedCheckTime;
+import org.oscarehr.PMmodule.model.Criteria;
+import org.oscarehr.PMmodule.model.CriteriaSelectionOption;
+import org.oscarehr.PMmodule.model.CriteriaTypeOption;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramAccess;
 import org.oscarehr.PMmodule.model.ProgramClientRestriction;
@@ -54,6 +63,7 @@ import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.model.ProgramSignature;
 import org.oscarehr.PMmodule.model.ProgramTeam;
+import org.oscarehr.PMmodule.model.VacancyTemplate;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.BedCheckTimeManager;
 import org.oscarehr.PMmodule.service.ClientRestrictionManager;
@@ -73,6 +83,7 @@ import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.dao.FunctionalCentreDao;
 import org.oscarehr.common.model.FunctionalCentre;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -95,6 +106,11 @@ public class ProgramManagerAction extends BaseAction {
 	//private RoleManager roleManager;
 	private RolesManager roleManager;
 	private FunctionalCentreDao functionalCentreDao;
+	private static VacancyTemplateDAO vacancyTemplateDAO = (VacancyTemplateDAO) SpringUtils.getBean("vacancyTemplateDAO");
+	private static CriteriaDAO criteriaDAO = (CriteriaDAO) SpringUtils.getBean("criteriaDAO");
+	private static CriteriaTypeDAO criteriaTypeDAO = (CriteriaTypeDAO) SpringUtils.getBean("criteriaTypeDAO");
+	private static CriteriaTypeOptionDAO criteriaTypeOptionDAO = (CriteriaTypeOptionDAO) SpringUtils.getBean("criteriaTypeOptionDAO");
+	private static CriteriaSelectionOptionDAO criteriaSelectionOptionDAO = (CriteriaSelectionOptionDAO) SpringUtils.getBean("criteriaSelectionOptionDAO");
 	
 	public void setFacilityDao(FacilityDao facilityDao) {
 		this.facilityDao = facilityDao;
@@ -150,6 +166,8 @@ public class ProgramManagerAction extends BaseAction {
 
 		String id = request.getParameter("id");
 
+		request.setAttribute("vacancyTemplateId", programForm.get("vacancyTemplateId"));
+		
 		if (isCancelled(request)) {
 			return list(mapping, form, request, response);
 		}
@@ -781,18 +799,174 @@ public class ProgramManagerAction extends BaseAction {
 		}
 	}
 	
+	public ActionForward viewVacancyTemplate(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm programForm = (DynaActionForm) form;
+		String programId = request.getParameter("programId");
+		String templateId = request.getParameter("templateId");
+		
+		request.setAttribute("templateId", templateId);
+		
+		VacancyTemplate vt = vacancyTemplateDAO.getVacancyTemplate(Integer.valueOf(templateId));
+		List<Criteria> criterias = criteriaDAO.getCriteriaByTemplateId(Integer.valueOf(templateId));
+		request.setAttribute("criterias",criterias);
+		
+		return mapping.findForward("edit");
+	}
 
 	public ActionForward save_vacancy_template(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		DynaActionForm programForm = (DynaActionForm) form;
+		DynaActionForm fm = (DynaActionForm) form;
 		
 		if (this.isCancelled(request)) {
 			return list(mapping, form, request, response);
 		}
-		
-		vacancyTemplateManager.save();
-		return edit(mapping, form, request, response);
-	}
+		/*
+		VacancyTemplate vt = (VacancyTemplate) fm.get("vacancyTemplate");
 
+		//VacancyTemplate vt = new VacancyTemplate();
+		vt.setName(request.getParameter("program.templateName"));
+		vt.setActive((request.getParameter("program.templateActive").equals("on"))?true:false);
+		vt.setProgramId(Integer.valueOf(request.getParameter("program.associatedProgram")));
+		vacancyTemplateManager.save(vt);	
+		*/
+		
+		HashMap<String,String[]> parameters=new HashMap(request.getParameterMap());
+		
+		//save tmeplate
+		String vacancyTemplateId = request.getParameter("vacancyTemplateId");
+		VacancyTemplate vacancyTemplate=VacancyTemplateManager.createVacancyTemplate(vacancyTemplateId);
+		vacancyTemplate.setName(request.getParameter("templateName"));
+		vacancyTemplate.setProgramId(Integer.parseInt(request.getParameter("associatedProgramId")));
+		if (request.getParameter("templateActive") == null) {
+			vacancyTemplate.setActive(false);
+		}		
+		vacancyTemplate.setWlProgramId(Integer.parseInt(request.getParameter("programId")));
+		VacancyTemplateManager.saveVacancyTemplate(vacancyTemplate);	
+		
+		//Save Criteria Gender 
+		Criteria criteria = new Criteria();		
+		criteria.setTemplateId(vacancyTemplate.getId());			
+		if(request.getParameter("genderRequired") == null) {
+			criteria.setCanBeAdhoc(false);
+		}
+		String[] gender = parameters.get("targetOfGender");
+		saveCriteria(criteria, gender);
+		
+		//Save Criteria diagnosis
+		criteria = new Criteria();	
+		criteria.setTemplateId(vacancyTemplate.getId());
+		criteria.setTemplateId(vacancyTemplate.getId());		
+		if(request.getParameter("diagnosisRequired") == null) {
+			criteria.setCanBeAdhoc(false);
+		}
+		String[] diagnosis = parameters.get("targetOfDiagnosis");
+		saveCriteria(criteria, diagnosis);
+		
+		//Save Criteria referralType
+		criteria = new Criteria();	
+		criteria.setTemplateId(vacancyTemplate.getId());
+		if(request.getParameter("referralTypeRequired") == null) {
+			criteria.setCanBeAdhoc(false);
+		}
+		String[] referralType = parameters.get("targetOfReferralType");
+		saveCriteria(criteria, referralType);
+		
+		//Save Criteria supportType
+		criteria = new Criteria();	
+		criteria.setTemplateId(vacancyTemplate.getId());
+		if(request.getParameter("supportTypeRequired") == null) {
+			criteria.setCanBeAdhoc(false);
+		}
+		String[] supportType = parameters.get("targetOfSupportType");
+		saveCriteria(criteria, supportType);
+		
+		//Save Criteria legalStatus
+		criteria = new Criteria();	
+		criteria.setTemplateId(vacancyTemplate.getId());
+		if(request.getParameter("legalStatusRequired") == null) {
+			criteria.setCanBeAdhoc(false);
+		}
+		String[] legalStatus = parameters.get("targetOfLegalStatus");
+		saveCriteria(criteria, legalStatus);
+		
+		/*
+		for(int i=0; i<gender.length; i++) {		
+			CriteriaTypeOption option = criteriaTypeOptionDAO.getCriteriaTypeOptionByOptionId(Integer.valueOf(gender[i]));
+			if(option!=null) {
+				criteria.setCriteriaTypeId(option.getCriteriaTypeId());
+			}
+			//criteria.setCriteriaValue(criteriaValue);
+			if(request.getParameter("genderRequired") == null) {
+				criteria.setCanBeAdhoc(false);
+			}
+			//criteria.setMatchScoreWeight(Double.parseDouble("0.5"));
+			VacancyTemplateAction.saveCriteria(criteria);
+			
+			//Save criteria_selection_option
+			CriteriaSelectionOption selectedOption = new CriteriaSelectionOption();
+			selectedOption.setCriteriaId(criteria.getId());
+			selectedOption.setOptionValue(option.getOptionValue());
+			VacancyTemplateAction.saveCriteriaSelectedOption(selectedOption);	
+		}
+		*/
+		
+		//select_one value should only be saved to criteria, don't need to be saved into criteria_selection_option table.
+		criteria = new Criteria();	
+		criteria.setTemplateId(vacancyTemplate.getId());
+		if(request.getParameter("ageRangeRequired") == null) {
+			criteria.setCanBeAdhoc(false);
+		}
+		String[] ages = parameters.get("targetOfAge"); //only one age
+		String ageValue = "";
+		if(ages!=null && ages.length>0)
+			ageValue = ages[0];
+		criteria.setCriteriaValue(ageValue);
+		if(request.getParameter("ageMinimum")!=null)
+			criteria.setRangeStartValue(Integer.valueOf(request.getParameter("ageMinimum")));
+		if(request.getParameter("ageMaximum")!=null)
+			criteria.setRangeEndValue(Integer.valueOf(request.getParameter("ageMaximum")));
+		criteria.setCriteriaTypeId(2); //
+		
+		VacancyTemplateManager.saveCriteria(criteria);
+		/*
+		CriteriaSelectionOption selectedOption = new CriteriaSelectionOption();
+		selectedOption.setCriteriaId(criteria.getId());
+		selectedOption.setOptionValue(""); //?
+		VacancyTemplateManager.saveCriteriaSelectedOption(selectedOption);
+		*/
+		
+		return edit(mapping, form, request, response);
+		
+	}
+	
+	private void saveCriteria(Criteria criteria, String [] paramValues) {	
+		if(paramValues==null || paramValues.length<1) 
+			return;
+		for(int i=0; i<paramValues.length; i++) {		
+			CriteriaTypeOption option = criteriaTypeOptionDAO.getCriteriaTypeOptionByOptionId(Integer.valueOf(paramValues[i]));
+			if(option!=null) {
+				criteria.setCriteriaTypeId(option.getCriteriaTypeId());
+			}
+			
+			//criteria.setMatchScoreWeight(Double.parseDouble("0.5"));
+			VacancyTemplateManager.saveCriteria(criteria);
+			
+			//Save criteria_selection_option
+			CriteriaSelectionOption selectedOption = new CriteriaSelectionOption();
+			selectedOption.setCriteriaId(criteria.getId());
+			selectedOption.setOptionValue(option.getOptionValue());
+			VacancyTemplateManager.saveCriteriaSelectedOption(selectedOption);	
+		}
+	}
+	
+	public ActionForward add_vacancy_template(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm templateForm = (DynaActionForm) form;
+		templateForm.set("vacancyTemplate", new VacancyTemplate());
+
+		setEditAttributes(request, null);
+
+		return mapping.findForward("edit");
+	}
+	
 	public ActionForward save_access(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		DynaActionForm programForm = (DynaActionForm) form;
 		Program program = (Program) programForm.get("program");
