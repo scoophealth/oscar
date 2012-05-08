@@ -39,6 +39,7 @@ import org.oscarehr.PMmodule.dao.ProgramFunctionalUserDAO;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.dao.ProgramSignatureDao;
 import org.oscarehr.PMmodule.dao.ProgramTeamDAO;
+import org.oscarehr.PMmodule.dao.VacancyTemplateDAO;
 import org.oscarehr.PMmodule.model.AccessType;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.DefaultRoleAccess;
@@ -50,6 +51,7 @@ import org.oscarehr.PMmodule.model.ProgramFunctionalUser;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramSignature;
 import org.oscarehr.PMmodule.model.ProgramTeam;
+import org.oscarehr.PMmodule.model.VacancyTemplate;
 import org.oscarehr.util.LoggedInInfo;
 
 import oscar.OscarProperties;
@@ -64,7 +66,8 @@ public class ProgramManager {
     private DefaultRoleAccessDAO defaultRoleAccessDAO;
     private ProgramClientStatusDAO clientStatusDAO;
     private ProgramSignatureDao programSignatureDao;
-
+    private VacancyTemplateDAO vacancyTemplateDao;
+    
     private boolean enabled;
 
     public boolean getEnabled() {
@@ -470,8 +473,16 @@ public class ProgramManager {
     public void saveProgramSignature(ProgramSignature programSignature) {
         programSignatureDao.saveProgramSignature(programSignature);
     }
+    
+    public VacancyTemplate getVacancyTemplate(Integer templateId) {
+    	return vacancyTemplateDao.getVacancyTemplate(templateId);
+    }
 
-    public boolean hasAccessBasedOnCurrentFacility(Integer programId) {
+	public void setVacancyTemplateDao(VacancyTemplateDAO vacancyTemplateDao) {
+    	this.vacancyTemplateDao = vacancyTemplateDao;
+    }
+
+	public boolean hasAccessBasedOnCurrentFacility(Integer programId) {
     	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 
     	// if no program restrictions are defined.

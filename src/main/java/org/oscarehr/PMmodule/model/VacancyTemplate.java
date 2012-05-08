@@ -37,33 +37,35 @@ import org.oscarehr.common.model.AbstractModel;
  */
 @Entity
 @Table(name = "vacancy_template")
-public class VacancyTemplate extends AbstractModel<Long> implements java.io.Serializable {
+public class VacancyTemplate extends AbstractModel<Integer> implements java.io.Serializable {
 
 	// Fields
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(unique=true, nullable=false)
-	private Long id;
-	@Column(name = "program_id")
-	private Long programId;
-	@Column(name = "name")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="TEMPLATE_ID", unique=true, nullable=false)
+	private Integer id;
+	@Column(name = "PROGRAM_ID")
+	private Integer programId;
+	@Column(name = "NAME")
 	private String name;
-	@Column(name = "active")
+	@Column(name = "ACTIVE")
 	private boolean active;
+	@Column(name = "WL_PROGRAM_ID")
+	private Integer wlProgramId;
 
 	// Constructors
 
 	/**
 	 * @return the id
 	 */
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -72,7 +74,7 @@ public class VacancyTemplate extends AbstractModel<Long> implements java.io.Seri
 	}
 
 	/** full constructor */
-	public VacancyTemplate(Long programId, String name, Boolean active) {
+	public VacancyTemplate(Integer programId, String name, Boolean active) {
 		this.programId = programId;
 		this.name = name;
 		this.active = active;
@@ -81,14 +83,14 @@ public class VacancyTemplate extends AbstractModel<Long> implements java.io.Seri
 	/**
 	 * @return the programId
 	 */
-	public Long getProgramId() {
+	public Integer getProgramId() {
 		return programId;
 	}
 
 	/**
 	 * @param programId the programId to set
 	 */
-	public void setProgramId(Long programId) {
+	public void setProgramId(Integer programId) {
 		this.programId = programId;
 	}
 
@@ -120,4 +122,13 @@ public class VacancyTemplate extends AbstractModel<Long> implements java.io.Seri
 		this.active = active;
 	}
 
+	public Integer getWlProgramId() {
+    	return wlProgramId;
+    }
+
+	public void setWlProgramId(Integer wlProgramId) {
+    	this.wlProgramId = wlProgramId;
+    }
+
+	
 }
