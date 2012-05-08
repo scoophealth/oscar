@@ -270,7 +270,7 @@ public class MeasurementFlowSheet {
         if (itemList  != null){
            OrderedMapIterator iter = itemList.orderedMapIterator();
            while (iter.hasNext()) {
-              FlowSheetItem fsi = (FlowSheetItem) iter.getValue();
+              FlowSheetItem fsi = (FlowSheetItem) iter.next();
               List<Recommendation> rules = fsi.getRecommendations();
               if (rules !=null){
                   log.debug("# OF RULES FOR "+fsi.getItemName()+" "+rules.size());
