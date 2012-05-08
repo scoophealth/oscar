@@ -28,44 +28,25 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import org.oscarehr.PMmodule.model.VacancyTemplate;
+import org.oscarehr.PMmodule.model.CriteriaSelectionOption;
 import org.oscarehr.common.dao.AbstractDao;
-import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class VacancyTemplateDAO extends AbstractDao<VacancyTemplate> {
+public class CriteriaSelectionOptionDAO extends AbstractDao<CriteriaSelectionOption> {
 
-	public VacancyTemplateDAO() {
-		super(VacancyTemplate.class);
+	public CriteriaSelectionOptionDAO() {
+		super(CriteriaSelectionOption.class);
 	}
 
-	public void saveVacancyTemplate(VacancyTemplate obj) {
-		try {
-			persist(obj);
-		} catch (Exception e) {
-			MiscUtils.getLogger().error("Error", e);
-		}
-	}
-	
-	public VacancyTemplate getVacancyTemplate(Integer templateId) {
-		String sqlCommand = "select * from vacancy_template where TEMPLATE_ID=?1 ";
-
-		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
-		query.setParameter(1, templateId);
-		
-		return getSingleResultOrNull(query);	
-	}
-	
 	@SuppressWarnings("unchecked")
-    public List<VacancyTemplate> getVacancyTemplateByWlProgramId(Integer wlProgramId) {
-		String sqlCommand = "select * from vacancy_template where WL_PROGRAM_ID=?1 ";
+    public List<CriteriaSelectionOption> getCriteriaSelectedOptionsByCriteriaId(Integer criteriaId) {
+		String sqlCommand = "select * from criteria_selection_option where CRITERIA_ID=?1 ";
 
 		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
-		query.setParameter(1, wlProgramId);
+		query.setParameter(1, criteriaId);
 		
-		return query.getResultList();	
+		return query.getResultList();
+		
 	}
-	
-	
 }

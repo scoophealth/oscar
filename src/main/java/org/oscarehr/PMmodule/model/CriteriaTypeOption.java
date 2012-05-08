@@ -36,13 +36,13 @@ import org.oscarehr.common.model.AbstractModel;
  */
 @Entity
 @Table(name = "criteria_type_option")
-public class CriteriaTypeOption extends AbstractModel<Long> implements java.io.Serializable  {
+public class CriteriaTypeOption extends AbstractModel<Integer> implements java.io.Serializable  {
 
 	// Fields
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "OPTION_ID", unique = true, nullable = false)
-	private Long optionId;
+	private Integer id;
 	@Column(name = "CRITERIA_TYPE_ID", nullable = false)
 	private Integer criteriaTypeId;
 	@Column(name = "DISPLAY_ORDER_NUMBER", nullable = false)
@@ -59,15 +59,15 @@ public class CriteriaTypeOption extends AbstractModel<Long> implements java.io.S
 	/**
 	 * @return the id
 	 */
-	public Long getId() {
-		return optionId;
+	public Integer getId() {
+		return id;
 	}
 
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(Long id) {
-		this.optionId = id;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	/** default constructor */

@@ -36,13 +36,13 @@ import org.oscarehr.common.model.AbstractModel;
  */
 @Entity
 @Table(name = "criteria")
-public class Criteria extends AbstractModel<Long> implements java.io.Serializable {
+public class Criteria extends AbstractModel<Integer> implements java.io.Serializable {
 
 	// Fields
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "CRITERIA_ID", unique = true, nullable = false)
-	private Long criteriaId;
+	private Integer id;
 	@Column(name = "CRITERIA_TYPE_ID", nullable = false)
 	private Integer criteriaTypeId;
 	@Column(name = "CRITERIA_VALUE")
@@ -56,26 +56,27 @@ public class Criteria extends AbstractModel<Long> implements java.io.Serializabl
 	@Column(name = "VACANCY_ID")
 	private Integer vacancyId;
 	@Column(name = "MATCH_SCORE_WEIGHT", nullable = false, precision = 22, scale = 0)
-	private Double matchScoreWeight;
+	private Double matchScoreWeight=1.0;
 	@Column(name = "CAN_BE_ADHOC", nullable = false)
-	private Boolean canBeAdhoc;
+	private Boolean canBeAdhoc=true;
 
 	/**
 	 * @return the id
 	 */
-	public Long getId() {
-		return criteriaId;
+	public Integer getId() {
+		return id;
 	}
 
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(Long id) {
-		this.criteriaId = id;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	/** default constructor */
 	public Criteria() {
+		
 	}
 
 	/** minimal constructor */
