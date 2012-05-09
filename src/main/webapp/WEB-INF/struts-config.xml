@@ -531,6 +531,9 @@
                     <form-property name="activeText" type="java.lang.String[]"></form-property>
                     <form-property name="inactiveText" type="java.lang.String[]"></form-property>
                 </form-bean>
+		<form-bean name="episodeForm" type="org.apache.struts.action.DynaActionForm">
+			<form-property name="episode" type="org.oscarehr.common.model.Episode"/>
+		</form-bean>
 	</form-beans>
 
 	<global-forwards>
@@ -2389,8 +2392,16 @@
                         <forward name="error" path="/errorpage.jsp" />
 		</action>
 
-                <action path="/CodeSearch" type="org.oscarehr.common.web.CodeSearchService">
-                </action>
+        <action path="/CodeSearch" type="org.oscarehr.common.web.CodeSearchService">
+        </action>
+        
+        <action path="/oscarEncounter/displayEpisodes" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayEpisodeAction" />
+
+		<action path="/Episode" type="org.oscarehr.common.web.EpisodeAction" name="episodeForm" parameter="method">
+			<forward name="list" path="/episode/episodeList.jsp" />
+			<forward name="form" path="/episode/episodeForm.jsp" />
+			<forward name="success" path="/episode/success.jsp" />
+		</action>
 
 	</action-mappings>
 	<controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" maxFileSize="25M" />
