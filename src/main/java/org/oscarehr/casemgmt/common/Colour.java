@@ -77,4 +77,5 @@ public class Colour {
     public  String reminders="996633";
     public  String invoices="254117";
     public  String consultation="6C2DC7";
+    public  String episode="CCFF66";
 }
