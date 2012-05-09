@@ -1,0 +1,68 @@
+Log4j 			ASL 2.0
+Commons-* 		ASL 2.0
+JUnit			Commons Public License v1.0
+servlet-api		SUN - not distributed
+jsp-api			SUN - not distributed
+JCS			ASL 2.0
+HAPI			Dual Licensed GPL/MPL
+Spring Framework	ASL 2.0
+MySQL Connector		GPL
+Hibernate		LGPL 2.1
+CGLIB			ASL 2.0
+CXF			ASL 2.0
+SL4J			MIT
+Struts			ASL 2.0
+JSTL			SUN
+Taglibs Standard	SUN
+iText			MPL/LGPL
+JSON-lib		ASL 2.0
+xmlrpc			ASL 2.0
+Drools			ASL 2.0
+JasperReports		LGPL
+Barbecue		Has it's own (http://barbecue.svn.sourceforge.net/viewvc/barbecue/trunk/barbecue/LICENSE.txt?view=markup)
+Joda-time		ASL 2.0
+Integrator		GPL
+MACPLUS			GPL
+batik			ASL 2.0
+Indivo			GPL(core)/LGPL(client)
+MyOSCAR			GPL
+jCharts			Has it's own (http://jcharts.sourceforge.net/license.html)
+CDS			GPL
+HSFO			GPL
+xmlbeans		ASL 2.0
+HttpClient		ASL 2.0
+Quartz			ASL 2.0
+CookieRevolver		LGPL
+betwixt			ASL 2.0
+javamail		SUN
+jfreechart		LGPL
+dm			GPL
+OCAN			GPL
+ar2005			GPL
+jspellchecker		MIT
+patientSiteVisit	GPL
+surveyModel		GPL
+jaxm			SUN
+poi			ASL 2.0
+ostermillerutils	GPL
+xacml			SUN
+pdfview			SUN
+displaytag		Artistic License (http://www.displaytag.org/10/license.html)
+zxing			ASL 2.0
+ping			LGPL
+jtidy			Has it's own (http://jtidy.sourceforge.net/license.html)
+TrackingBasicDataSource	GPL
+xerces			ASL 2.0
+janino			Has it's own (http://legacy.drools.codehaus.org/Janino+License)
+pluginframework		LGPL
+jsch			BSD Style (http://www.jcraft.com/jsch/LICENSE.txt)
+OLIS			GPL
+bouncycastle		MIT adaption (http://www.bouncycastle.org/licence.html)
+axis			ASL 2.0
+velocity		ASL 2.0
+
+
+
+
+
+
