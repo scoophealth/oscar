@@ -109,6 +109,13 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message
 	key="demographic.demographicaddrecordhtm.title" /></title>
+	
+<% if (OscarProperties.getInstance().getBooleanProperty("indivica_hc_read_enabled", "true")) { %>
+	<script language="javascript" src="<%=request.getContextPath() %>/hcHandler/hcHandler.js"></script>
+	<script language="javascript" src="<%=request.getContextPath() %>/hcHandler/hcHandlerNewDemographic.js"></script>
+	<link rel="stylesheet" href="<%=request.getContextPath() %>/hcHandler/hcHandler.css" type="text/css" />
+<% } %>
+	
 <!-- calendar stylesheet -->
 <link rel="stylesheet" type="text/css" media="all"
 	href="../share/calendar/calendar.css" title="win2k-cold-1" />
@@ -420,6 +427,11 @@ function autoFillHin(){
 <table width="100%" bgcolor="#CCCCFF">
 <tr><td class="RowTop">
     <b><bean:message key="demographic.record"/></b>
+    <% if (OscarProperties.getInstance().getBooleanProperty("indivica_hc_read_enabled", "true")) { %>
+		<span style="position: relative; float: right; font-style: italic; background: black; color: white; padding: 4px; font-size: 12px; border-radius: 3px;">
+			<span class="_hc_status_icon _hc_status_success"></span>Ready for Card Swipe
+		</span>
+	<% } %>
 </td></tr>
 <tr><td>
 <form method="post" name="adddemographic" action="demographicaddarecord.jsp"  onsubmit="return checkFormTypeIn()">
@@ -447,6 +459,29 @@ function autoFillHin(){
 <input type="hidden" name="remarks" value="<%=request.getParameter("remarks")%>">
 
 <table border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="#EEEEFF">
+
+    
+    <%if (OscarProperties.getInstance().getProperty("workflow_enhance")!=null && OscarProperties.getInstance().getProperty("workflow_enhance").equals("true")) { %>
+   		 <tr bgcolor="#CCCCFF">
+				<td colspan="4">
+				<div align="center"><input type="hidden" name="dboperation"
+					value="add_record"> <%
+          if (vLocale.getCountry().equals("BR")) { %> <input
+					type="hidden" name="dboperation2" value="add_record_ptbr">
+				<%}%> <%--
+						          <input type="submit" name="displaymode" value="<bean:message key="demographic.demographicaddrecordhtm.btnAddRecord"/>" onclick="document.forms['adddemographic'].displaymode.value='Add Record'; document.forms['adddemographic'].submit();">
+						--%> <input type="hidden" name="displaymode" value="Add Record">
+				<input type="submit" name="submit"
+					value="<bean:message key="demographic.demographicaddrecordhtm.btnAddRecord"/>">
+				<input type="button" name="Button"
+					value="<bean:message key="demographic.demographicaddrecordhtm.btnSwipeCard"/>"
+					onclick="window.open('zadddemographicswipe.htm','', 'scrollbars=yes,resizable=yes,width=600,height=300')";>
+				&nbsp; <input type="button" name="Button"
+					value="<bean:message key="demographic.demographicaddrecordhtm.btnCancel"/>"
+					onclick=self.close();></div>
+				</td>
+			</tr>
+    <%}%>
 
     <tr>
       <td align="right"> <b><bean:message key="demographic.demographicaddrecordhtm.formLastName"/><font color="red">:</font> </b></td>

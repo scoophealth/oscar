@@ -29,6 +29,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
+<%@ page import="oscar.OscarProperties"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils,oscar.oscarLab.ca.all.*,oscar.oscarMDS.data.*,oscar.oscarLab.ca.all.util.*"%>
 <%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*"%><%
 
@@ -112,6 +113,22 @@
                                                    $(str).value = args[2][2];//li.id;
                                                    args[0].getInputEl().value = args[2][0] + "("+args[2][1]+")";
                                                    selectedDemos.push(args[0].getInputEl().value);
+                                                   
+                                                   <%if (OscarProperties.getInstance().getProperty("workflow_enhance")!=null && OscarProperties.getInstance().getProperty("workflow_enhance").equals("true")) {%>
+                                                   	if (args[2][3] !== undefined) {
+                                                  		addDocToList(args[2][3], args[2][4] + " (MRP)", "<%=docId%>");
+                                              	   	}
+	                                               	if (args[2][6] !== undefined) {
+	                                               		addDocToList(args[2][6], args[2][7] + " (Internal #1)", "<%=docId%>");
+	                                               	}
+	                                               	if (args[2][8] !== undefined) {
+	                                               		addDocToList(args[2][8], args[2][9] + " (Internal #2)", "<%=docId%>");
+	                                               	}
+	                                               	if (args[2][10] !== undefined) {
+	                                               		addDocToList(args[2][10], args[2][11] + " (Internal #3)", "<%=docId%>");
+	                                               	}
+                                                   <%}%>
+                                                   
                                                    //enable Save button whenever a selection is made
                                                    $('save<%=docId%>').enable();
                                                    $('saveNext<%=docId%>').enable();

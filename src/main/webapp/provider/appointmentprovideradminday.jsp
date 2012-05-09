@@ -746,6 +746,13 @@ phrAsyncActivate();
     display: <%=showPersonal ? "inline" : "none"%>;
 }
 </style>
+
+<% if (OscarProperties.getInstance().getBooleanProperty("indivica_hc_read_enabled", "true")) { %>
+<script language="javascript" src="<%=request.getContextPath() %>/hcHandler/hcHandler.js"></script>
+<script language="javascript" src="<%=request.getContextPath() %>/hcHandler/hcHandlerAppointment.js"></script>
+<link rel="stylesheet" href="<%=request.getContextPath() %>/hcHandler/hcHandler.css" type="text/css" />
+<% } %>
+
 </head>
 <%if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable()){%>
 <body bgcolor="#EEEEFF" onload="load();" topmargin="0" leftmargin="0" rightmargin="0">
@@ -1946,6 +1953,9 @@ document.onkeydown=function(e){
 
 </script>
 <!-- end of keycode block -->
+<% if (OscarProperties.getInstance().getBooleanProperty("indivica_hc_read_enabled", "true")) { %>
+<%@include file="/hcHandler/hcHandler.html" %>
+<% } %>
 </html:html>
 
 <%!

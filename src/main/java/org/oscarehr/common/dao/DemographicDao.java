@@ -939,4 +939,11 @@ public class DemographicDao extends HibernateDaoSupport {
 
 		return  this.getHibernateTemplate().find(sql,params.toArray(new String[params.size()]));
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Demographic> getDemographicsByHealthNum(String hin) {
+		return this.getHibernateTemplate().find("from Demographic d where d.Hin=?", new Object[] { hin });
+	}
 }
+
+
