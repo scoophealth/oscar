@@ -2431,6 +2431,8 @@
 			<forward name="success" path="/episode/success.jsp" />
 		</action>
 
+		<action path="/indivica/HCSearch" type="org.oscarehr.common.web.HealthCardSearchAction" scope="request" validate="false" parameter="method" />
+
 	</action-mappings>
 	<controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" maxFileSize="25M" />
 	<message-resources parameter="oscarResources" null="false" />

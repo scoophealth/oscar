@@ -67,6 +67,7 @@
 <%@ page import="oscar.oscarEncounter.data.EctFormData"%>
 <%@page import="org.oscarehr.common.model.DemographicCust" %>
 <%@page import="org.oscarehr.common.dao.DemographicCustDao" %>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%
 	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
 %>
@@ -612,7 +613,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
             <div class="label"><bean:message key="Appointment.formDoctor" />:</div>
             <div class="input">
                 <INPUT type="TEXT" readonly
-                       value="<%=bFirstDisp ? "" : providerBean.getProperty(curDoctor_no,"")%>">
+                       value="<%=bFirstDisp ? "" : StringEscapeUtils.escapeHtml(providerBean.getProperty(curDoctor_no,""))%>">
             </div>
         </li>
         <li class="row deep">
@@ -697,7 +698,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
             <div class="label"><bean:message key="Appointment.formCreator" />:</div>
             <div class="input">
                 <INPUT TYPE="TEXT" NAME="user_id" readonly
-                    VALUE='<%=bFirstDisp?(userlastname+", "+userfirstname):request.getParameter("user_id").equals("")?"Unknown":request.getParameter("user_id")%>'
+                    VALUE='<%=bFirstDisp?(StringEscapeUtils.escapeHtml(userlastname)+", "+StringEscapeUtils.escapeHtml(userfirstname)):request.getParameter("user_id").equals("")?"Unknown":request.getParameter("user_id")%>'
                     WIDTH="25" HEIGHT="20" border="0" hspace="2">
             </div>
             <div class="space">&nbsp;</div>
@@ -713,7 +714,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
                 <INPUT TYPE="TEXT" NAME="createdatetime" readonly VALUE="<%=strDateTime%>" WIDTH="25" HEIGHT="20" border="0" hspace="2">
                 <INPUT TYPE="hidden" NAME="provider_no" VALUE="<%=curProvider_no%>">
                 <INPUT TYPE="hidden" NAME="dboperation" VALUE="add_apptrecord">
-                <INPUT TYPE="hidden" NAME="creator" VALUE='<%=userlastname+", "+userfirstname%>'>
+                <INPUT TYPE="hidden" NAME="creator" VALUE='<%=StringEscapeUtils.escapeHtml(userlastname)+", "+StringEscapeUtils.escapeHtml(userfirstname)%>'>
                 <INPUT TYPE="hidden" NAME="remarks" VALUE="">
             </div>
         </li>
