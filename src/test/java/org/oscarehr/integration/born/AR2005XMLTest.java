@@ -130,11 +130,11 @@ public class AR2005XMLTest {
 
 	void populateInitialLaboratoryInvestigations(InitialLaboratoryInvestigations initialLaboratoryInvestigations)  {
 		initialLaboratoryInvestigations.setHbResult("");
-		initialLaboratoryInvestigations.setHivResult("");
+		initialLaboratoryInvestigations.setHivResult(InitialLaboratoryInvestigations.HivResult.NEG);
 		initialLaboratoryInvestigations.setHivCounsel(false);
 		initialLaboratoryInvestigations.setMcvResult(0);
 		initialLaboratoryInvestigations.setAboResult(InitialLaboratoryInvestigations.AboResult.A);
-		initialLaboratoryInvestigations.setRhResult(InitialLaboratoryInvestigations.RhResult.RH_POSITIVE);
+		initialLaboratoryInvestigations.setRhResult(InitialLaboratoryInvestigations.RhResult.POS);
 		initialLaboratoryInvestigations.setPapResult("LSIL/?HSIL");
 		try {
 			initialLaboratoryInvestigations.setLastPapDate(this.createDate(dateFormatter.parse("2012/01/19")));
@@ -142,12 +142,14 @@ public class AR2005XMLTest {
 			MiscUtils.getLogger().warn("error",e);
 		}
 		initialLaboratoryInvestigations.setAntibodyResult("");
-		initialLaboratoryInvestigations.setGcResult("Neg/Neg");
+		initialLaboratoryInvestigations.setGcResultGonorrhea(InitialLaboratoryInvestigations.GcResultGonorrhea.NEG);
+		initialLaboratoryInvestigations.setGcResultChlamydia(InitialLaboratoryInvestigations.GcResultChlamydia.NEG);
+		
 		initialLaboratoryInvestigations.setRubellaResult("");
 		initialLaboratoryInvestigations.setUrineResult("no sig growth");
-		initialLaboratoryInvestigations.setHbsAgResult("");
-		initialLaboratoryInvestigations.setVdrlResult("");
-		initialLaboratoryInvestigations.setSickleCellResult("");
+		initialLaboratoryInvestigations.setHbsAgResult(InitialLaboratoryInvestigations.HbsAgResult.NDONE);
+		initialLaboratoryInvestigations.setVdrlResult(InitialLaboratoryInvestigations.VdrlResult.UNK);
+		initialLaboratoryInvestigations.setSickleCellResult(InitialLaboratoryInvestigations.SickleCellResult.NDONE);
 		PrenatalGeneticScreeningType prenatalGeneticScreening = initialLaboratoryInvestigations.addNewPrenatalGenericScreening();
 		populatePrenatalGeneticScreening(prenatalGeneticScreening);
 	}
@@ -389,7 +391,9 @@ public class AR2005XMLTest {
 		occ.setOther("");
 		patientInformation.setOccupation(occ);
 		patientInformation.setLevelOfEducation(PatientInformation.LevelOfEducation.ED_001);
-		patientInformation.setHin("2222222222");
+		PatientInformation.Hin hin = patientInformation.addNewHin();
+		hin.setStringValue("2222222222");
+		hin.setType(PatientInformation.Hin.Type.OHIP);		
 		patientInformation.setFileNo("");
 		patientInformation.setMaritalStatus(PatientInformation.MaritalStatus.MS_005);
 		PatientInformation.EthnicBackground eb = patientInformation.addNewEthnicBackground();
@@ -446,7 +450,7 @@ public class AR2005XMLTest {
 
 	void populateRecommendedImmunoprophylaxis(RecommendedImmunoprophylaxisType recommendedImmunoprophylaxis) {
 		recommendedImmunoprophylaxis.setRhNegative(Boolean.FALSE);
-		recommendedImmunoprophylaxis.setRhIgGiven("");
+		recommendedImmunoprophylaxis.setRhIgGiven(this.createDate(new Date()));
 		recommendedImmunoprophylaxis.setRubella(Boolean.FALSE);
 		recommendedImmunoprophylaxis.setNewbornHepIG(Boolean.FALSE);
 		recommendedImmunoprophylaxis.setHepBVaccine(Boolean.FALSE);
@@ -454,8 +458,8 @@ public class AR2005XMLTest {
 
 	void populateAdditionalLabInvestigations(AdditionalLabInvestigationsType additionalLabInvestigations) {
 		additionalLabInvestigations.setHb("");
-		additionalLabInvestigations.setBloodGroup("");
-		additionalLabInvestigations.setRh("");
+		additionalLabInvestigations.setBloodGroup(AdditionalLabInvestigationsType.BloodGroup.A);
+		additionalLabInvestigations.setRh(AdditionalLabInvestigationsType.Rh.N);
 		additionalLabInvestigations.setRepeatABS("");
 		additionalLabInvestigations.setGCT("");
 		additionalLabInvestigations.setGTT("");
