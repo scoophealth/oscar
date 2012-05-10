@@ -388,7 +388,7 @@ function navBarLoader() {
                   ctx + "/oscarEncounter/displayMessages.do?hC=<%=Colour.getInstance().messages%>",
                   ctx + "/oscarEncounter/displayMeasurements.do?hC=<%=Colour.getInstance().measurements%>",
                   ctx + "/oscarEncounter/displayConsultation.do?hC=<%=Colour.getInstance().consultation%>",
-                  ctx + "/oscarEncounter/displayHRM.do?hC="
+                  ctx + "/oscarEncounter/displayHRM.do?hC="                 
               ];
 
             var leftNavBarTitles = [ "preventions", "tickler", "Dx", "forms", "eforms", "docs","labs", "msgs", "measurements", "consultation","HRM"];
@@ -401,10 +401,11 @@ function navBarLoader() {
                   ctx + "/CaseManagementView.do?hc=<%=Colour.getInstance().familyHistory%>&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=FamHistory&title=" + famHistoryLabel + "&cmd=FamHistory"+ "&appointment_no="+appointmentNo,
                   ctx + "/oscarEncounter/displayIssues.do?hC=<%=Colour.getInstance().unresolvedIssues%>",
                   ctx + "/oscarEncounter/displayResolvedIssues.do?hC=<%=Colour.getInstance().resolvedIssues%>",
-                  ctx + "/oscarEncounter/displayDecisionSupportAlerts.do?providerNo=" + providerNo + "&demographicNo=" + demographicNo
+                  ctx + "/oscarEncounter/displayDecisionSupportAlerts.do?providerNo=" + providerNo + "&demographicNo=" + demographicNo,
+                  ctx + "/oscarEncounter/displayEpisodes.do?hC=<%=Colour.getInstance().episode%>"
               ];
 
-            var rightNavBarTitles = [ "allergies", "Rx", "OMeds", "RiskFactors", "FamHistory", "unresolvedIssues", "resolvedIssues", "Guidelines" ];
+            var rightNavBarTitles = [ "allergies", "Rx", "OMeds", "RiskFactors", "FamHistory", "unresolvedIssues", "resolvedIssues", "Guidelines","episode" ];
 
 
           var navbar = "leftNavBar";
