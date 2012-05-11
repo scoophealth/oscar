@@ -318,7 +318,7 @@ CREATE TABLE formONAR(
   pg1_formDate date default NULL,
   pg1_signature2 varchar(50) default NULL,
   pg1_formDate2 date default NULL,
-
+  
   c_riskFactors1 varchar(50) default NULL,
   c_planManage1 varchar(100) default NULL,
   c_riskFactors2 varchar(50) default NULL,
@@ -930,6 +930,27 @@ CREATE TABLE formONAR(
   pg4_formDate date default NULL,
   pg4_signature2 varchar(50) default NULL,
   pg4_formDate2 date default NULL,
+  
+  pg1_labExtra1Name varchar(20),
+  pg1_labExtra2Name varchar(20),
+  pg1_labExtra3Name varchar(20),
+  pg1_labExtra1Value varchar(20),
+  pg1_labExtra2Value varchar(20),
+  pg1_labExtra3Value varchar(20),
+  pg1_commentsAR1_2 text,
+  pg1_commentsAR1_3 text,
+  pg1_commentsAR1_4 text,
+  pg1_4ColCom tinyint(1),
+  pg1_lockPage tinyint(1),
+  
+  pg2_labExtra1Name varchar(20),
+  pg2_labExtra2Name varchar(20),
+  pg2_labExtra3Name varchar(20),
+  
+  pg2_labExtra1Value varchar(20),
+  pg2_labExtra2Value varchar(20),
+  pg2_labExtra3Value varchar(20),
+  
   PRIMARY KEY (ID)
 ) ;
 

@@ -49,6 +49,7 @@
 <%@ page import="org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.model.UserProperty" %>
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.dao.*,oscar.oscarEncounter.oscarMeasurements.model.Measurementmap" %>
 <%@ page import="org.oscarehr.casemgmt.service.CaseManagementManager, org.oscarehr.common.dao.Hl7TextMessageDao, org.oscarehr.common.model.Hl7TextMessage,org.oscarehr.common.dao.Hl7TextInfoDao,org.oscarehr.common.model.Hl7TextInfo"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -98,6 +99,14 @@ MessageHandler handler=null;
 String hl7 = null;
 String reqID = null, reqTableID = null;
 String remoteFacilityIdQueryString="";
+
+boolean bShortcutForm = OscarProperties.getInstance().getProperty("appt_formview", "").equalsIgnoreCase("on") ? true : false;
+String formName = bShortcutForm ? OscarProperties.getInstance().getProperty("appt_formview_name") : "";
+String formNameShort = formName.length() > 3 ? (formName.substring(0,2)+".") : formName;
+String formName2 = bShortcutForm ? OscarProperties.getInstance().getProperty("appt_formview_name2", "") : "";
+String formName2Short = formName2.length() > 3 ? (formName2.substring(0,2)+".") : formName2;
+boolean bShortcutForm2 = bShortcutForm && !formName2.equals("");
+
 
 if (remoteFacilityIdString==null) // local lab
 {
@@ -567,6 +576,16 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow')">
                                     <% } %>
 				    <input type="button" value="Req# <%=reqTableID%>" title="Link to Requisition" onclick="linkreq('<%=segmentID%>','<%=reqID%>');" />
+                                   
+                                   
+                                   	<% if (bShortcutForm) { %>
+									<input type="button" value="<%=formNameShort%>" onClick="popupStart(700, 1024, '../../../form/forwardshortcutname.jsp?formname=<%=formName%>&demographic_no=<%=demographicID%>', '<%=formNameShort%>')" />
+									<% } %>
+									<% if (bShortcutForm2) { %>
+									<input type="button" value="<%=formName2Short%>" onClick="popupStart(700, 1024, '../../../form/forwardshortcutname.jsp?formname=<%=formName2%>&demographic_no=<%=demographicID%>', '<%=formName2Short%>')" />
+									<% } %>
+                                   
+                                   
                                     <% if (!label.equals(null) && !label.equals("")) { %>
 										<button type="button" id="createLabel" value="Label" onclick="submitLabel(this);">Label</button>
 										<%} else { %>
