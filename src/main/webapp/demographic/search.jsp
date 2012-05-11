@@ -63,7 +63,7 @@
               dob.value = dob.value.substring(0, 4)+"-"+dob.value.substring(4, 6)+"-"+dob.value.substring(6, 8);
             }
             if(dob.value.length != 10) {
-              alert("<bean:message key="demographic.search.msgWrongDOB"/>");
+              alert('<bean:message key="demographic.search.msgWrongDOB"/>');
               typeInOK = false;
             }
             return typeInOK ;
@@ -126,7 +126,7 @@
 	<oscar:oscarPropertiesCheck
 	property="SHOW_FILE_IMPORT_SEARCH" value="yes">
            &nbsp;&nbsp;&nbsp;<a href="demographicImport.jsp"><b><font
-		size="+1">Import New Demographic</font></a>
+		size="+1"><bean:message	key="demographic.search.importNewDemographic" /></font></a>
 </oscar:oscarPropertiesCheck></p>
 <p><!--a href="http://204.92.240.253:8080/test/slt/Search.jsp"><font size="+1"><bean:message key="demographic.search.btnELearning"/></font></a--></p>
 </body>

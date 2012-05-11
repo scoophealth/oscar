@@ -98,21 +98,20 @@
             demoSets.addDemographicSet(setName,arrDemo);
             arrCurDemoSets.add(setName);
             %>
-            <p style="font-size:small; font-variant:small-caps">Saved <%=demoData.getDemographic(demoNo).getFirstName() + " " + demoData.getDemographic(demoNo).getLastName()%> to <%=setName%></p>
+            <p style="font-size:small; font-variant:small-caps"><bean:message key="demographic.demographiccohort.saved" /> <%=demoData.getDemographic(demoNo).getFirstName() + " " + demoData.getDemographic(demoNo).getLastName()%> <bean:message key="demographic.demographiccohort.to" /> <%=setName%></p>
             <%
             }
             }
             java.util.List<String> arrDemoSets = demoSets.getDemographicSets();
             pageContext.setAttribute("arrDemoSets", arrDemoSets);
-            %>
-            <h3>Current Patient Set(s)</h3>
+            %>  
+            <h3><bean:message key="demographic.demographiccohort.currentpatientset" /></h3>
             <ul>
                 <logic:iterate id="set" name="curSets">
                     <li><c:out value="${set}"/></li>
                 </logic:iterate>
             </ul>
-
-            <h3>Add to Patient Set:</h3>
+            <h3><bean:message key="demographic.demographiccohort.addtopatientset" /></h3>
             <ul>
                 <logic:iterate id="set" name="arrDemoSets">
                     <li><a href="demographicCohort.jsp?demographic_no=<%=demoNo%>&setName=<c:out value="${set}"/>"><c:out value="${set}"/></a></li>
@@ -121,8 +120,8 @@
             <br>
             <form method="get" action="demographicCohort.jsp">
                 <input type="hidden" name="demographic_no" value="<%=demoNo%>">
-                <h3>New Patient Set:</h3>
-                <input type="text" name="setName">&nbsp;<input type="submit" value="Save">
+                <h3><bean:message key="demographic.demographiccohort.newpatientset" /></h3>
+                <input type="text" name="setName">&nbsp;<input type="submit" value="<bean:message key="demographic.demographiccohort.save" />">
             </form>
         </div>
     </body>

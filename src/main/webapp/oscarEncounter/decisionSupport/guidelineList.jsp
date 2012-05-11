@@ -50,18 +50,18 @@ pageContext.setAttribute("provider_no", request.getParameter("provider_no"));
         <link rel="stylesheet" href="decisionSupport.css" type="text/css"></link>
     </head>
     <body>
-        <div style="font-size: 16px; font-weight: bold;">You currently have the following tips:</div>
-        <logic:present name="demographic_no"><div style="font-size: 10px;">Demographic No: <bean:write name="demographic_no"/></div></logic:present>
+        <div style="font-size: 16px; font-weight: bold;"><bean:message key="oscarencounter.guidelinelist.youcurrently" /></div>
+        <logic:present name="demographic_no"><div style="font-size: 10px;"><bean:message key="oscarencounter.guidelinelist.demographicno" /> <bean:write name="demographic_no"/></div></logic:present>
         <br>
         <table class="dsTable">
             <tr>
                 <th>Version</th>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Date Imported</th>
-                <th>Status</th>
+                <th><bean:message key="oscarencounter.guidelinelist.title" /></th>
+                <th><bean:message key="oscarencounter.guidelinelist.author" /></th>
+                <th><bean:message key="oscarencounter.guidelinelist.dateimported" /></th>
+                <th><bean:message key="oscarrx.showallergies.status" /></th>
                 <logic:present name="demographic_no">
-                    <th>Evaluate</th>
+                    <th><bean:message key="oscarencounter.guidelinelist.evaluated" /></th>
                 </logic:present>
 
             </tr>
@@ -74,8 +74,8 @@ pageContext.setAttribute("provider_no", request.getParameter("provider_no"));
                 <td><bean:write name="guideline" property="title"/></td>
                 <td><bean:write name="guideline" property="author"/></td>
                 <td><bean:write name="guideline" property="dateStart" format="MMM d, yyyy"/></td>
-                <td><logic:equal name="guideline" property="status" value="A"><span class="good">Active</span></logic:equal>
-                <logic:equal name="guideline" property="status" value="F"><span class="bad">Failed on <bean:write name="guideline" property="dateDecomissioned" format="MMM d, yyyy"/> - invalid definition</span></logic:equal>
+                <td><logic:equal name="guideline" property="status" value="A"><span class="good"><bean:message key="oscarencounter.guidelinelist.active" /> </span></logic:equal>
+                <logic:equal name="guideline" property="status" value="F"><span class="bad"><bean:message key="oscarencounter.guidelinelist.failedon" /> <bean:write name="guideline" property="dateDecomissioned" format="MMM d, yyyy"/> <bean:message key="oscarencounter.guidelinelist.invalid" /></span></logic:equal>
                 </td>
                 <%
                 if (request.getParameter("demographic_no") != null) {
@@ -84,9 +84,9 @@ pageContext.setAttribute("provider_no", request.getParameter("provider_no"));
                     pageContext.setAttribute("passed", passed);
                 %>
                 <td>
-                    <logic:equal name="passed" value="true"><span class="good">Passed</span></logic:equal>
-                    <logic:equal name="passed" value="false"><span class="bad">Failed</span></logic:equal>
-                    - <a href="<%=request.getContextPath()%>/oscarEncounter/decisionSupport/guidelineAction.do?method=detail&guidelineId=<bean:write name="guideline" property="id"/>&provider_no=<bean:write name="provider_no"/>&demographic_no=<bean:write name="demographic_no"/>">more info</a>
+                    <logic:equal name="passed" value="true"><span class="good"><bean:message key="oscarencounter.guidelinelist.passed" /></span></logic:equal>
+                    <logic:equal name="passed" value="false"><span class="bad"><bean:message key="oscarencounter.guidelinelist.failed" /></span></logic:equal>
+                    - <a href="<%=request.getContextPath()%>/oscarEncounter/decisionSupport/guidelineAction.do?method=detail&guidelineId=<bean:write name="guideline" property="id"/>&provider_no=<bean:write name="provider_no"/>&demographic_no=<bean:write name="demographic_no"/>"><bean:message key="oscarencounter.guidelinelist.moreinfo" /></a>
                 </td>
                 <%}%>
             </tr>

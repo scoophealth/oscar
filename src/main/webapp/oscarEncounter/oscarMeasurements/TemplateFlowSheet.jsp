@@ -471,17 +471,17 @@ div.recommendations li{
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
     <% if (recList.size() > 0){ %>
     <p><a class="DoNotPrint" href="javascript: function myFunction() {return false; }"  onclick="javascript:createAddAll(<%=demographic_no%>, '<%= URLEncoder.encode(temp,"UTF-8") %>', <%=Math.abs( "ADDTHEMALL".hashCode() ) %>)" TITLE="Add all measurements.">
-	    Add All
+	    <bean:message key="oscarencounter.templateflowsheet.addall" />
 	</a> </p>
     <p><a class="DoNotPrint" href="javascript: function myFunction() {return false; }"  onclick="javascript:fsPopup(760,670,'AddMeasurementData.jsp?demographic_no=<%=demographic_no%><%=recListBuffer.toString()%>&amp;template=<%=temp%>','addMeasurementData<%=Math.abs( "ADDTHEMALL".hashCode() ) %>')" TITLE="Add all overdue measurements.">
-        Add Overdue
+        <bean:message key="oscarencounter.templateflowsheet.addoverdue" />
     </a></p>
     <%}%>
     </security:oscarSec>
     <!-- only show disease registry and prescriptions for flowsheets which aren't medical in nature -->
     <% if (mFlowsheet.isMedical()) {%>
     <div class="leftBox">
-        <h3>&nbsp;Current Patients Dx List  <a class="DoNotPrint"  href="#" onclick="Element.toggle('dxFullListing'); return false;" style="font-size:x-small;" >show/hide</a></h3>
+        <h3>&nbsp;<bean:message key="oscarencounter.templateflowsheet.currentpatientdxlist" />  <a class="DoNotPrint"  href="#" onclick="Element.toggle('dxFullListing'); return false;" style="font-size:x-small;" ><bean:message key="oscarencounter.templateflowsheet.showhide" /></a></h3>
         <div class="wrapper" id="dxFullListing"  >
             <ul>
             <%
@@ -523,7 +523,7 @@ div.recommendations li{
 
     <security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r"  >
         <div class="leftBox">
-            <h3>&nbsp;Current Patient Rx List  <a class="DoNotPrint" href="#" onclick="Element.toggle('rxFullListing'); return false;" style="font-size:x-small;" >show/hide</a></h3>
+            <h3>&nbsp;<bean:message key="oscarencounter.templateflowsheet.currentpatientrxlist" />  <a class="DoNotPrint" href="#" onclick="Element.toggle('rxFullListing'); return false;" style="font-size:x-small;" ><bean:message key="oscarencounter.templateflowsheet.showhide" /></a></h3>
             <div class="wrapper" id="rxFullListing"  >
 
                 <%
@@ -562,7 +562,7 @@ div.recommendations li{
 
 
          <div class="leftBox">
-            <h3>&nbsp;Current Patient Allergy List  <a class="DoNotPrint" href="#" onclick="Element.toggle('allergFullListing'); return false;" style="font-size:x-small;" >show/hide</a></h3>
+            <h3>&nbsp;<bean:message key="oscarencounter.templateflowsheet.currentpatientallergylist" />  <a class="DoNotPrint" href="#" onclick="Element.toggle('allergFullListing'); return false;" style="font-size:x-small;" ><bean:message key="oscarencounter.templateflowsheet.showhide" /></a></h3>
             <div class="wrapper" id="allergFullListing"  >
 
                 <%
@@ -591,7 +591,7 @@ div.recommendations li{
     </security:oscarSec>
     <% } %>
 <div>
-   <input type="button" class="DoNotPrint" value="Print" onclick="javascript:window.print()">
+   <input type="button" class="DoNotPrint" value="<bean:message key="oscarencounter.templateflowsheet.print" />" onclick="javascript:window.print()">
 </div>
 </td>
 
@@ -599,7 +599,7 @@ div.recommendations li{
 <% if (warnings.size() > 0 || recomendations.size() > 0  || dsProblems) { %>
 <div class="recommendations">
     <span style="font-size:larger;"><%=flowSheet%> Recommendations</span>
-    <a href="#" onclick="Element.toggle('recomList'); return false;" style="font-size:x-small;" >show/hide</a>
+    <a href="#" onclick="Element.toggle('recomList'); return false;" style="font-size:x-small;" ><bean:message key="oscarencounter.templateflowsheet.showhide" /></a>
     <ul id="recomList" style="display:none;">
         <% for (String warn : warnings){ %>
         <li style="color: red;"><%=warn%></li>
