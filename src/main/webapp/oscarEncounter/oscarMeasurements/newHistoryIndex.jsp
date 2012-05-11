@@ -67,7 +67,7 @@
         <td>
             <table>
                 <tr>
-                    <th colspan='3'>Old Measurements Index</th>
+                    <th colspan='3'><bean:message key="oscarEncounter.oscarMeasurements.oldmesurementindex"/></th>
                 </tr>               
                 <tr>                                                       
                     <th align="left" class="Header" style="color:white" width="20">

@@ -99,8 +99,7 @@ function updateAjax() {
 <!--  -->
 <table class="MainTable" id="scrollNumber1" name="encounterTable">
 	<tr class="MainTableTopRow">
-		<td class="MainTableTopRowLeftColumn" width="175"><bean:message
-			key="eform.showmyform.msgMyForm" /></td>
+		<td class="MainTableTopRowLeftColumn" width="175"><bean:message key="eform.showmyform.msgMyForm" /></td>
 		<td class="MainTableTopRowRightColumn">
 		<table class="TopStatusBar">
 			<tr>
@@ -131,13 +130,9 @@ function updateAjax() {
 								<bean:message key="hrm.displayHRMDocList.reportType" />
 							</a>
 						</th>
-						<th><a
-							href="displayHRMDocList.jsp?demographic_no=<%=demographic_no%>&orderby=form_subject&group_view=<%=groupView%>&parentAjaxId=<%=parentAjaxId%>"><bean:message
-							key="hrm.displayHRMDocList.reportStatus" /></a></th>
-						<th><a
-							href="displayHRMDocList.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>&parentAjaxId=<%=parentAjaxId%>"><bean:message
-							key="hrm.displayHRMDocList.timeReceived" /></a></th>
-						<th>Category</th>
+						<th><a href="displayHRMDocList.jsp?demographic_no=<%=demographic_no%>&orderby=form_subject&group_view=<%=groupView%>&parentAjaxId=<%=parentAjaxId%>"><bean:message	key="hrm.displayHRMDocList.reportStatus" /></a></th>
+						<th><a href="displayHRMDocList.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>&parentAjaxId=<%=parentAjaxId%>"><bean:message key="hrm.displayHRMDocList.timeReceived" /></a></th>
+						<th><FONT COLOR="blue"><bean:message key="hrm.displayHRMDocList.category" /></FONT></th>
 					</tr>
 					<%
 						ArrayList<HashMap<String,? extends Object>> hrmdocs;

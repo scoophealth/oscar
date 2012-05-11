@@ -62,7 +62,7 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <!--I18n-->
-<title>Demographic Export</title>
+<title><bean:message key="demographic.demographicexport.title" /></title>
 <script src="../share/javascript/Oscar.js"></script>
 <link rel="stylesheet" type="text/css"
 	href="../share/css/OscarStandardLayout.css">
@@ -166,12 +166,12 @@ function checkAll(all) {
 <%
 if (!userRole.toLowerCase().contains("admin")) { %>
 <p>
-<h2>Sorry! Only administrators can export demographics.</h2>
+<h2><bean:message key="demographic.demographicexport.msgsorry" /></h2>
 
 <%
 } else if (!tmp_dir_ready) { %>
 <p>
-<h2>Error! Cannot perform demographic export. Please contact support.</h2>
+<h2><bean:message key="demographic.demographicexport.msgerror" /></h2>
 
 <%
 } else {
@@ -180,17 +180,15 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 <table class="MainTable" id="scrollNumber1" name="encounterTable">
 	<tr class="MainTableTopRow">
 		<td style="max-width:200px;" class="MainTableTopRowLeftColumn">
-		Demographic Export</td>
+		<bean:message key="demographic.demographicexport.title" /></td>
 		<td class="MainTableTopRowRightColumn">
 		<table class="TopStatusBar">
 			<tr>
-				<td>Export Demographic(s)</td>
+				<td><bean:message key="demographic.demographicexport.title" /></td>
 				<td>&nbsp;</td>
 				<td style="text-align: right"><oscar:help keywords="export demographic" key="app.top1"/> | <a
-					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
-					key="global.about" /></a> | <a
-					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
-					key="global.license" /></a></td>
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"><bean:message key="global.license" /></a></td>
 			</tr>
 		</table>
 		</td>
@@ -198,9 +196,9 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 	<tr>
 		<td class="MainTableLeftColumn" valign="top" nowrap="nowrap">
 		    <% if (demographicNo== null) { %>
-		    <a href="diabetesExport.jsp">Diabetes Export</a><br>
-            <a href='<c:out value="${ctx}/demographic/cihiExportOMD4.do"></c:out>'>CIHI Export</a><br>
-            <a href='<c:out value="${ctx}/demographic/eRourkeExport.do"></c:out>'>Rourke 2009 Export</a>
+		    <a href="diabetesExport.jsp"><bean:message key="demographic.demographicexport.diabetesexport" /></a><br>
+            <a href='<c:out value="${ctx}/demographic/cihiExportOMD4.do"></c:out>'><bean:message key="demographic.demographicexport.cihiexport" /></a><br>
+            <a href='<c:out value="${ctx}/demographic/eRourkeExport.do"></c:out>'><bean:message key="demographic.demographicexport.rourke2009export" /></a>
 		    <%} %>
 		</td>
 		<td valign="top" class="MainTableRightColumn">
@@ -208,10 +206,10 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 		    <div>
 		    <% if (demographicNo!= null) { %>
                             <html:hidden property="demographicNo" value="<%=demographicNo%>" />
-                            Exporting Demographic No. <%=demographicNo%>
+                            <bean:message key="demographic.demographicexport.exportingdemographicno" /><%=demographicNo%>
 		    <%} else {%>
-			    Patient Set: <html:select property="patientSet">
-				    <html:option value="-1">--Select Set--</html:option>
+			    <bean:message key="demographic.demographicexport.patientset" /><html:select property="patientSet">
+				    <html:option value="-1"><bean:message key="demographic.demographicexport.selectset" /></html:option>
 <%
 /*			    for (int i =0 ; i < queryArray.size(); i++){
 				RptSearchData.SearchCriteria sc = (RptSearchData.SearchCriteria) queryArray.get(i);
@@ -227,26 +225,26 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 		    <%}%>
 		    </div>
                     <p><table border="1"><tr><td>
-		       Export Categories:
+		       <bean:message key="demographic.demographicexport.exportcategories" />
 		       <table cellpadding="10"><tr><td>
-		       <html:checkbox property="exPersonalHistory">Personal History</html:checkbox><br>
-		       <html:checkbox property="exFamilyHistory">Family History</html:checkbox><br>
-		       <html:checkbox property="exPastHealth">Past Health</html:checkbox><br>
-		       <html:checkbox property="exProblemList">Problem List</html:checkbox><br>
-		       <html:checkbox property="exRiskFactors">Risk Factors</html:checkbox><br>
-		       <html:checkbox property="exAllergiesAndAdverseReactions">Allergies & Adverse Reactions</html:checkbox><br>
-		       <html:checkbox property="exMedicationsAndTreatments">Medications & Treatments</html:checkbox><br>
+		       <html:checkbox property="exPersonalHistory"><bean:message key="demographic.demographicexport.personalhistory" /></html:checkbox><br>
+		       <html:checkbox property="exFamilyHistory"><bean:message key="demographic.demographicexport.familyhistory" /></html:checkbox><br>
+		       <html:checkbox property="exPastHealth"><bean:message key="demographic.demographicexport.pasthealth" /></html:checkbox><br>
+		       <html:checkbox property="exProblemList"><bean:message key="demographic.demographicexport.problemlist" /></html:checkbox><br>
+		       <html:checkbox property="exRiskFactors"><bean:message key="demographic.demographicexport.riskfactors" /></html:checkbox><br>
+		       <html:checkbox property="exAllergiesAndAdverseReactions"><bean:message key="demographic.demographicexport.allergiesadversereaction" /></html:checkbox><br>
+		       <html:checkbox property="exMedicationsAndTreatments"><bean:message key="demographic.demographicexport.medicationstreatments" /></html:checkbox><br>
 		       </td><td>
-		       <html:checkbox property="exImmunizations">Immunizations</html:checkbox><br>
-		       <html:checkbox property="exLaboratoryResults">Laboratory Results</html:checkbox><br>
-		       <html:checkbox property="exAppointments">Appointments</html:checkbox><br>
-		       <html:checkbox property="exClinicalNotes">Clinical Notes</html:checkbox><br>
-		       <html:checkbox property="exReportsReceived">Reports Received</html:checkbox><br>
-		       <html:checkbox property="exCareElements">Care Elements</html:checkbox><br>
-		       <html:checkbox property="exAlertsAndSpecialNeeds">Alerts And Special Needs</html:checkbox>
+		       <html:checkbox property="exImmunizations"><bean:message key="demographic.demographicexport.immunization" /></html:checkbox><br>
+		       <html:checkbox property="exLaboratoryResults"><bean:message key="demographic.demographicexport.laboratoryresults" /></html:checkbox><br>
+		       <html:checkbox property="exAppointments"><bean:message key="demographic.demographicexport.appointments" /></html:checkbox><br>
+		       <html:checkbox property="exClinicalNotes"><bean:message key="demographic.demographicexport.clinicalnotes" /></html:checkbox><br>
+		       <html:checkbox property="exReportsReceived"><bean:message key="demographic.demographicexport.reportsreceived" /></html:checkbox><br>
+		       <html:checkbox property="exCareElements"><bean:message key="demographic.demographicexport.careelements" /></html:checkbox><br>
+		       <html:checkbox property="exAlertsAndSpecialNeeds"><bean:message key="demographic.demographicexport.alertsandspecialneeds" /></html:checkbox>
 		       </td><td>
-			   <input type="button" value="Check All" onclick="checkAll(true);"/><p>
-			   <input type="button" value="Check None" onclick="checkAll(false);"/>
+			   <input type="button" value="<bean:message key="checkall" />" onclick="checkAll(true);"/><p>
+			   <input type="button" value="<bean:message key="checknone" />" onclick="checkAll(false);"/>
 		       </td></tr></table>
 		   </td></tr></table>
                        <html:hidden property="pgpReady" value="<%=pgp_ready%>" />
@@ -255,9 +253,9 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 <%  boolean pgpReady = pgp_ready.equals("Yes") ? true : false;
     pgpReady = true; //To be removed after CMS4
     if (!pgpReady) { %>
-                    WARNING: PGP Encryption NOT available - cannot export!<br>
+                    <bean:message key="demographic.demographicexport.msgwarning" /><br>
 <%  } %>
-                    <input type="submit" value="Export (CMS spec 4.0)" <%=pgpReady?"":"disabled"%> />
+                    <input type="submit" value="<bean:message key="export" /> (CMS spec 4.0)" <%=pgpReady?"":"disabled"%> />
 		</html:form></td>
 	</tr>
 	<tr>
