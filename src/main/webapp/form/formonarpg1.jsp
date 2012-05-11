@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="oscar.OscarProperties"%>
 <%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -84,14 +85,28 @@
         document.forms[0].target = "";
         document.forms[0].action = "/<%=project_home%>/form/formname.do" ;
     }
+    
+    function setLock (checked) {
+    	formElems = document.forms[0].elements;
+    	for (var i=0; i<formElems.length; i++) {
+    		if (formElems[i].type == "text" || formElems[i].type == "textarea") {
+            		formElems[i].readOnly = checked;
+    		} else if ((formElems[i].type == "checkbox") && (formElems[i].id != "pg1_lockPage") && (formElems[i].id != "pg1_4ColCom")) {
+            		formElems[i].disabled = checked;
+    		}
+    	}
+    }
+    
     function onPrint() {
         document.forms[0].submit.value="print"; 
         var ret = checkAllDates();
+        setLock(false);
         if(ret==true)
         {
             document.forms[0].action = "../form/createpdf?__title=Antenatal+Record+Part+1&__cfgfile=onar1PrintCfgPg1&__template=onar1";
             document.forms[0].target="_blank";            
         }
+        setTimeout('setLock(wasLocked)', 500);
         return ret;
     }
     
@@ -102,6 +117,7 @@
     }
     window.onunload=refreshOpener;
     function onSave() {
+    	setLock(false);
         document.forms[0].submit.value="save";
         var ret = checkAllDates();
         if(ret==true)
@@ -122,6 +138,7 @@
         return(false);
     }
     function onSaveExit() {
+    	setLock(false);
         document.forms[0].submit.value="exit";
         var ret = checkAllDates();
         if(ret == true)
@@ -362,25 +379,35 @@ function calToday(field) {
 	field.value = calDate.getFullYear() + '/' + (varMonth) + '/' + varDate;
 }
 function calByLMP(obj) {
-	if (document.forms[0].pg1_menLMP.value!="" && valDate(document.forms[0].pg1_menLMP)==true) {
-		var str_date = document.forms[0].pg1_menLMP.value;
+        if (document.forms[0].pg1_menLMP.value!="" && valDate(document.forms[0].pg1_menLMP)==true) {
+                var str_date = document.forms[0].pg1_menLMP.value;
         var yyyy = str_date.substring(0, str_date.indexOf("/"));
         var mm = eval(str_date.substring(eval(str_date.indexOf("/")+1), str_date.lastIndexOf("/")) - 1);
         var dd  = str_date.substring(eval(str_date.lastIndexOf("/")+1));
-		var calDate=new Date();
-		calDate.setFullYear(yyyy);		
-		calDate.setDate(dd);
-		calDate.setMonth(mm);		
-		calDate.setHours("0");
-		
-		calDate.setDate(calDate.getDate() + 280);
-		
-		varMonth1 = calDate.getMonth()+1;
-		varMonth1 = varMonth1>9? varMonth1 : ("0"+varMonth1);
-		varDate1 = calDate.getDate()>9? calDate.getDate(): ("0"+calDate.getDate());
-		obj.value = calDate.getFullYear() + '/' + varMonth1 + '/' + varDate1;
-	}
+                var calDate=new Date();
+                calDate.setFullYear(yyyy);
+                calDate.setDate(dd);
+                calDate.setMonth(mm);
+                calDate.setHours("0");
+
+                calDate.setDate(calDate.getDate() + 280);
+
+                varMonth1 = calDate.getMonth()+1;
+                varMonth1 = varMonth1>9? varMonth1 : ("0"+varMonth1);
+                varDate1 = calDate.getDate()>9? calDate.getDate(): ("0"+calDate.getDate());
+                obj.value = calDate.getFullYear() + '/' + varMonth1 + '/' + varDate1;
+
+        }
 }
+
+	function commentMode (checked) {
+		var visible = checked ? "" : "none";
+		var span = checked ? "1" : "4";	
+		for (var n=2; n<=4; n++) {
+			document.getElementById("pg1_commentsCol_"+n).style.display = visible;
+		}
+		document.getElementById("pg1_commentsCol_1").colSpan = span; 
+	}
 
 </script>
 
@@ -454,7 +481,14 @@ Con Report</a> |
 		width="100%">
 		<tr>
 			<th><%=bView?"<font color='yellow'>VIEW PAGE: </font>" : ""%>ANTENATAL
-			RECORD 1</th>
+			RECORD 1
+			
+			<% if (!bView) { %>
+			(<input type="checkbox" name="pg1_lockPage" id="pg1_lockPage" onClick="setLock(this.checked);"
+			<%= props.getProperty("pg1_lockPage", "") %> /> Lock )
+			<% } %>
+			
+			</th>
 			<%
 	if (request.getParameter("historyet") != null) {
 		out.println("<input type=\"hidden\" name=\"historyet\" value=\"" + request.getParameter("historyet") + "\">" );
@@ -1669,8 +1703,18 @@ Con Report</a> |
 						maxlength="20"
 						value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_labHBsAg", "")) %>"></td>
 					</td>
-					<td></td>
-					<td></td>
+					<td>
+						<%if (OscarProperties.getInstance().getProperty("ar2005_enhance")!=null && OscarProperties.getInstance().getProperty("ar2005_enhance").equals("true")) {%>
+						<input type="text" name="pg1_labExtra1Name" size="10" maxlength="20" 
+							value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_labExtra1Name", "")) %>">
+						<%}%>
+					</td>
+					<td>
+						<%if (OscarProperties.getInstance().getProperty("ar2005_enhance")!=null && OscarProperties.getInstance().getProperty("ar2005_enhance").equals("true")) {%>
+						<input type="text" name="pg1_labExtra1Value" size="10" maxlength="20" 
+							value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_labExtra1Value", "")) %>">
+						<%}%>
+					</td>
 				</tr>
 				<tr>
 					<td>VDRL</td>
@@ -1678,8 +1722,18 @@ Con Report</a> |
 						maxlength="20"
 						value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_labVDRL", "")) %>"></td>
 					</td>
-					<td></td>
-					<td></td>
+					<td>
+						<%if (OscarProperties.getInstance().getProperty("ar2005_enhance")!=null && OscarProperties.getInstance().getProperty("ar2005_enhance").equals("true")) {%>
+						<input type="text" name="pg1_labExtra2Name" size="10" maxlength="20" 
+							value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_labExtra2Name", "")) %>">
+						<%}%>
+					</td>
+					<td>
+						<%if (OscarProperties.getInstance().getProperty("ar2005_enhance")!=null && OscarProperties.getInstance().getProperty("ar2005_enhance").equals("true")) {%>
+						<input type="text" name="pg1_labExtra2Value" size="10" maxlength="20" 
+							value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_labExtra2Value", "")) %>">
+						<%}%>
+					</td>
 				</tr>
 				<tr>
 					<td>Sickle Cell</td>
@@ -1687,8 +1741,18 @@ Con Report</a> |
 						maxlength="20"
 						value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_labSickle", "")) %>"></td>
 					</td>
-					<td></td>
-					<td></td>
+					<td>
+						<%if (OscarProperties.getInstance().getProperty("ar2005_enhance")!=null && OscarProperties.getInstance().getProperty("ar2005_enhance").equals("true")) {%>
+						<input type="text" name="pg1_labExtra3Name" size="10" maxlength="20" 
+									value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_labExtra3Name", "")) %>">
+						<%}%>
+					</td>
+					<td>
+						<%if (OscarProperties.getInstance().getProperty("ar2005_enhance")!=null && OscarProperties.getInstance().getProperty("ar2005_enhance").equals("true")) {%>
+						<input type="text" name="pg1_labExtra3Value" size="10" maxlength="20" 
+							value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_labExtra3Value", "")) %>">
+						<%}%>
+					</td>
 				</tr>
 			</table>
 			<br>
@@ -1739,12 +1803,44 @@ Con Report</a> |
 
 	<table width="100%" border="1" cellspacing="0" cellpadding="0">
 		<tr bgcolor="#CCCCCC">
-			<th colspan="4"><b>Comments</b></th>
+			<th colspan="4"><b>Comments</b>
+			<%if (OscarProperties.getInstance().getProperty("ar2005_enhance")!=null && OscarProperties.getInstance().getProperty("ar2005_enhance").equals("true")) {%>
+				(x4<input type="checkbox" name="pg1_4ColCom" id="pg1_4ColCom" onClick="commentMode(this.checked);"
+						<%= props.getProperty("pg1_4ColCom", "") %> <%= props.getProperty("pg1_4ColCom") == null ? "checked='checked'" : "" %> />)
+			<%}%>
+			</th>
 		</tr>
 		<tr>
+			<%if (OscarProperties.getInstance().getProperty("ar2005_enhance")!=null && OscarProperties.getInstance().getProperty("ar2005_enhance").equals("true")) {%>
+				<%
+						String commentSpan = "1";	
+						String commentDisplay = "";
+						if (props.getProperty("pg1_4ColCom") == "") {
+							commentSpan = "4";
+							commentDisplay = "display: none;";
+						}
+					 %>
+					<td colspan="<%= commentSpan %>" id="pg1_commentsCol_1">
+						<textarea name="pg1_commentsAR1" style="width: 100%;"
+							 cols="80" rows="5"><%= props.getProperty("pg1_commentsAR1", "") %></textarea>
+					</td>
+					<td colspan="1" id="pg1_commentsCol_2" style="<%= commentDisplay %>">
+						<textarea name="pg1_commentsAR1_2" style="width: 100%;"
+							 cols="80" rows="5"><%= props.getProperty("pg1_commentsAR1_2", "") %></textarea>
+					</td>
+					<td colspan="1" id="pg1_commentsCol_3" style="<%= commentDisplay %>">
+						<textarea name="pg1_commentsAR1_3" style="width: 100%;" 
+							cols="80" rows="5"><%= props.getProperty("pg1_commentsAR1_3", "") %></textarea>
+					</td>
+					<td colspan="1" id="pg1_commentsCol_4" style="<%= commentDisplay %>">
+						<textarea name="pg1_commentsAR1_4" style="width: 100%;" 
+							cols="80" rows="5"><%= props.getProperty("pg1_commentsAR1_4", "") %></textarea>
+					</td>
+			<%} else {%>
 			<td colspan="4"><textarea name="pg1_commentsAR1"
 				style="width: 100%" cols="80" rows="5"><%= props.getProperty("pg1_commentsAR1", "") %></textarea>
 			</td>
+			<%}%>
 		</tr>
 		<tr>
 			<td width="30%">Signature<br>
@@ -1808,6 +1904,13 @@ Con Report</a> |
 	</table>
 
 </html:form>
+<% if (bView || (props.getProperty("pg1_lockPage", "") != "")) { %>
+<script type="text/javascript">
+window.onload= function() {
+	setLock(true);
+}
+</script>
+<% } %>
 </body>
 <script type="text/javascript">
 Calendar.setup({ inputField : "pg1_menLMP", ifFormat : "%Y/%m/%d", showsTime :false, button : "pg1_menLMP_cal", singleClick : true, step : 1 });
