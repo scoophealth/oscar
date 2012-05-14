@@ -37,4 +37,6 @@ public abstract class FrmRecord {
     //public abstract String createActionURL(String where, String action, String demoId, String formId, String studyId, String studyName) throws SQLException ;
 
     public Properties getCaisiFormRecord(int demographicNo, int existingID, int providerNo, int programNo) throws SQLException { return new Properties();}
+     
+    public void setGraphType(String graphType) { /*Rourke needs to know whether plotting head circ or height*/ }
 }
