@@ -96,7 +96,7 @@ public class NoteDisplayNonNote implements NoteDisplay {
 
 		StringBuilder tmpNote = new StringBuilder();
 
-		List<BillingItem>items = h1.getBillingItems();
+		List<BillingItem>items = h1.getNonDeletedInvoices();
 		BillingItem item;
 		int size = items.size();
 		for(int idx = 0; idx < size; ++idx) {
