@@ -46,6 +46,7 @@ __fStartY	:	0.4
 __fEndY		:	18
 
 __finalEDB	:	c_birthDate
+__xDateScale	:	__xDateScale_1
 __dateFormat	:	dd/MM/yyyy
 
 __className	:	oscar.form.graphic.FrmPdfGraphicRourke

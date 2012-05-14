@@ -31,10 +31,13 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Properties;
 
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Measurement;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -44,10 +47,16 @@ import oscar.oscarEncounter.data.EctFormData;
 import oscar.util.UtilDateUtilities;
 
 public class FrmRourke2009Record extends FrmRecord {
+	private static final String HEAD_CIRCUMFERENCE_GRAPH = "HEAD_CIRC";
+	private static final String LENGTH_GRAPH = "LENGTH";
+	
+	private DemographicDao demoDAO = (DemographicDao)SpringUtils.getBean("demographicDao");
+	private String graphType;
+	
     public Properties getFormRecord(int demographicNo, int existingID)
             throws SQLException    {
         Properties props = new Properties();
-        DemographicDao demoDAO = (DemographicDao)SpringUtils.getBean("demographicDao");
+        
         Demographic demo = demoDAO.getDemographicById(demographicNo);
         String updated = "false";
         if(existingID <= 0) {
@@ -220,10 +229,127 @@ public class FrmRourke2009Record extends FrmRecord {
                     		}
                     	}
                     	else if( key.startsWith("weight_") || key.startsWith("length_") || key.startsWith("headCirc_") ) {
-                    		props.setProperty(key, growthProps.getProperty(key, ""));
+                    			props.setProperty(key, growthProps.getProperty(key, ""));
                     	}
+                    	                    	
                     }
                 }
+                
+                //now add measurements from Ht and Wt in measurements group
+                //first set up cutoff for first page = 2 years of age
+                //then set up cutoff for second page = 19 years of age
+                //then we can compare measurement dates and slot them accordingly
+                Demographic demographic = demoDAO.getClientByDemographicNo(demographicNo);
+                
+                
+                MeasurementDao measurementDao = (MeasurementDao)SpringUtils.getBean("measurementDao");
+                
+                
+                
+                Date mDateHt, mDateWt;
+                Date dob = demographic.getBirthDay().getTime();
+                String date;
+                int idx = 0;
+                String graphicPage;
+                float age;
+                
+                //set startdate for second page as defined in config file
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(dob);
+                cal.add(Calendar.YEAR, 2);
+                Date startDate = cal.getTime();
+                date = UtilDateUtilities.DateToString(startDate, "dd/MM/yyyy");
+                props.setProperty("__startDate", date);
+                List<Measurement> measurementsHt = measurementDao.findByType(demographicNo, "Ht");
+                List<Measurement> measurementsWt = measurementDao.findByType(demographicNo, "Wt");
+                
+                for( Measurement mHt : measurementsHt ) {
+                	graphicPage = null;
+                	
+                	
+                	if( mHt.getDateObserved() != null ) {
+                		mDateHt = mHt.getDateObserved();                		
+                	}
+                	else {
+                		mDateHt = mHt.getCreateDate();                		
+                	}
+                	                	
+                	age = this.calcYears(dob, mDateHt);
+                	MiscUtils.getLogger().info("Age " + age);
+                	if( age <= 2 ) {
+                		graphicPage = "0";
+                	}
+                	else if( age <= 19 ) {
+                		graphicPage = "1";
+                	}
+                	else {
+                		continue;
+                	}
+                	
+                	if( graphType.equals(FrmRourke2009Record.HEAD_CIRCUMFERENCE_GRAPH )) {
+                		for( Measurement mWt : measurementsWt ) {
+                			if( mWt.getDateObserved() != null ) {
+                        		mDateWt = mWt.getDateObserved();                		
+                        	}
+                        	else {
+                        		mDateWt = mWt.getCreateDate();                		
+                        	}
+                			
+                			if( mDateHt.compareTo(mDateWt) == 0 ) {
+                				//name = elementName_num_section_page
+                				props.setProperty("xVal_"+idx + "_1_" + graphicPage, mHt.getDataField());
+                				props.setProperty("yVal_"+idx + "_1_" + graphicPage, mWt.getDataField());
+                				break;
+                			}
+                		}
+                	}
+                	else if( graphType.equals(FrmRourke2009Record.LENGTH_GRAPH )) {                	
+                		date = UtilDateUtilities.DateToString(mDateHt, "dd/MM/yyyy");
+                	
+                		//name = elementName_num_section_page
+                		props.setProperty("xVal_"+idx + "_1_" + graphicPage, date);                	
+                		props.setProperty("yVal_"+idx + "_1_" + graphicPage, mHt.getDataField());
+                	}
+                	
+                	++idx;
+                }
+                
+                
+                if( graphType.equals(FrmRourke2009Record.LENGTH_GRAPH)) {
+	                for( Measurement m : measurementsWt ) {
+	                	graphicPage = null;
+	                	if( m.getDateObserved() != null ) {
+	                		mDateWt = m.getDateObserved();                		
+	                	}
+	                	else {
+	                		mDateWt = m.getCreateDate();                		
+	                	}
+	                	                	
+	                	age = this.calcYears(dob, mDateWt);
+	                	if( age <= 2 ) {
+	                		graphicPage = "0";
+	                	}
+	                	else if( age <= 19 ) {
+	                		graphicPage = "1";
+	                	}
+	                	else {
+	                		continue;
+	                	}
+	                	
+	                	date = UtilDateUtilities.DateToString(mDateWt, "dd/MM/yyyy");
+	                	
+	                	
+	                	props.setProperty("xVal_"+idx + "_0_" + graphicPage, date);                	
+	                	props.setProperty("yVal_"+idx + "_0_" + graphicPage, m.getDataField());
+	                	
+	                	++idx;
+	                }
+ 
+                }
+                //don't forget to set the xAxis scale for the 2 pages
+                props.setProperty("__xDateScale_1", String.valueOf(Calendar.MONTH));
+                props.setProperty("__xDateScale_2", String.valueOf(Calendar.YEAR));
+                
             }
             catch( NoSuchMethodException e ) {
                 MiscUtils.getLogger().error("No Such Method Called", e);
@@ -251,4 +377,25 @@ public class FrmRourke2009Record extends FrmRecord {
  		return ((new FrmRecordHelp()).createActionURL(where, action, demoId, formId));
     }
 
+    private float calcYears(Date startDate, Date endDate) {
+    	Calendar startCalendar = Calendar.getInstance();
+    	startCalendar.setTime(startDate);
+    	
+    	Calendar endCalendar = Calendar.getInstance();
+    	endCalendar.setTime(endDate);
+    	
+    	long time = endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis();
+    	float years = time/1000.0f/60.0f/60.0f/24.0f/365.0f;
+    	
+    	return years;
+    	
+    }
+
+	public String getGraphType() {
+    	return graphType;
+    }
+
+	public void setGraphType(String graphType) {
+    	this.graphType = graphType;
+    }
 }

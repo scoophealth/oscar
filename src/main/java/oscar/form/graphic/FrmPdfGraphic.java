@@ -25,8 +25,8 @@
 
 package oscar.form.graphic;
 
+import java.util.List;
 import java.util.Properties;
-import java.util.Vector;
 
 
 /**
@@ -36,5 +36,5 @@ import java.util.Vector;
 public abstract class FrmPdfGraphic {
     
     public abstract void init(Properties prop );    
-    public abstract Properties getGraphicXYProp(Vector xDate, Vector yHeight);
+    public abstract Properties getGraphicXYProp(List xDate, List yHeight);
 }
