@@ -43,6 +43,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.util.LabelValueBean;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.PMmodule.dao.ProgramAccessDAO;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.dao.ProviderDao;
@@ -56,7 +57,6 @@ import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicDrug;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
-import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.casemgmt.dao.CaseManagementCPPDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
@@ -483,10 +483,24 @@ public class CaseManagementManager {
 		}
 
 		try {
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
-			List<CachedDemographicDrug> drugs = demographicWs.getLinkedCachedDemographicDrugsByDemographicId(demographicId);
+			List<CachedDemographicDrug> remoteDrugs  = null;
+			try {
+				if (!CaisiIntegratorManager.isIntegratorOffline()){
+				   remoteDrugs = CaisiIntegratorManager.getDemographicWs().getLinkedCachedDemographicDrugsByDemographicId(demographicId);
+				}
+			} catch (Exception e) {
+				MiscUtils.getLogger().error("Unexpected error.", e);
+				CaisiIntegratorManager.checkForConnectionError(e);
+			}
+			
+			if(CaisiIntegratorManager.isIntegratorOffline()){
+			   remoteDrugs = IntegratorFallBackManager.getRemoteDrugs(demographicId);	
+			}
+			
+			
+			
 
-			for (CachedDemographicDrug cachedDrug : drugs) {
+			for (CachedDemographicDrug cachedDrug : remoteDrugs) {
 				if (viewAll) {
 					prescriptions.add(getPrescriptDrug(cachedDrug));
 				} else {

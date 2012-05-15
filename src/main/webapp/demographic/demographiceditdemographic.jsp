@@ -2475,7 +2475,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 						<option value="3" <%=(warningLevel.equals("3")?"selected=\"selected\"":"") %>>High</option>
 						<option value="4" <%=(warningLevel.equals("4")?"selected=\"selected\"":"") %>>None</option>
 					</select>
-					<oscar:oscarPropertiesCheck property="INTEGRATOR.LOCAL.STORE" value="yes">
+					<oscar:oscarPropertiesCheck property="INTEGRATOR_LOCAL_STORE" value="yes">
 					<b><bean:message key="demographic.demographiceditdemographic.primaryEMR" />:</b>
 
 				    <%

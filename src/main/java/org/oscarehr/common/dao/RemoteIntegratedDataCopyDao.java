@@ -75,6 +75,22 @@ public class RemoteIntegratedDataCopyDao extends AbstractDao<RemoteIntegratedDat
 		return null;
 	}
 	
+	public  RemoteIntegratedDataCopy findByType(Integer facilityId,String dataType){
+		String sqlCommand = "select x from RemoteIntegratedDataCopy x where x.dataType=?1  and x.facilityId = ?2 and x.archived != true order by x.id desc ";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, dataType);
+		query.setParameter(2, facilityId);
+		
+		@SuppressWarnings("unchecked")
+		List<RemoteIntegratedDataCopy> results=query.getResultList();
+		
+		if (results.size() > 0){
+			return results.get(0);
+		}
+		return null;
+	}
+	
 	
 	public  RemoteIntegratedDataCopy findByDemoTypeSignature(Integer facilityId, Integer demographicNo,String dataType,String signature){
 		String sqlCommand = "select x from RemoteIntegratedDataCopy x where x.demographicNo=?1 and x.dataType=?2 and x.signature=?3 and x.facilityId = ?4 and x.archived != true  ";

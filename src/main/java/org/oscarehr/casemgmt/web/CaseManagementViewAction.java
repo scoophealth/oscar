@@ -82,7 +82,6 @@ import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
-import org.oscarehr.casemgmt.web.CaseManagementViewAction.IssueDisplay;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementViewFormBean;
 import org.oscarehr.common.dao.CaseManagementIssueNotesDao;
 import org.oscarehr.common.dao.DemographicDao;
@@ -1097,8 +1096,23 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return;
 
 		try {
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
-			List<CachedDemographicIssue> remoteIssues = demographicWs.getLinkedCachedDemographicIssuesByDemographicId(demographicNo);
+			
+			
+			List<CachedDemographicIssue> remoteIssues  = null;
+			try {
+				if (!CaisiIntegratorManager.isIntegratorOffline()){
+				   DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+				   remoteIssues = demographicWs.getLinkedCachedDemographicIssuesByDemographicId(demographicNo);
+				}
+			} catch (Exception e) {
+				logger.error("Unexpected error.", e);
+				CaisiIntegratorManager.checkForConnectionError(e);
+			}
+			
+			if(CaisiIntegratorManager.isIntegratorOffline()){
+			   remoteIssues = IntegratorFallBackManager.getRemoteDemographicIssues(demographicNo);	
+			}
+			
 
 			for (CachedDemographicIssue cachedDemographicIssue : remoteIssues) {
 				try {

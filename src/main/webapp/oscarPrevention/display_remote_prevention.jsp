@@ -33,6 +33,9 @@
 <%@page import="org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention"%>
+<%@page import="org.oscarehr.util.LoggedInInfo" %>
+<%@page import="org.oscarehr.util.MiscUtils" %>
+<%@page import="org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" >
 
@@ -58,15 +61,35 @@
 	</head>
 	<body>
 		<%
+		    Integer demographicId = Integer.valueOf(request.getParameter("demographic_no"));
 			Integer remoteFacilityId=Integer.valueOf(request.getParameter("remoteFacilityId"));
 			Integer remotePreventionId=Integer.valueOf(request.getParameter("remotePreventionId"));
 			
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
-
 			FacilityIdIntegerCompositePk pk=new FacilityIdIntegerCompositePk();
 			pk.setIntegratorFacilityId(remoteFacilityId);
 			pk.setCaisiItemId(remotePreventionId);
-			CachedDemographicPrevention remotePrevention = demographicWs.getCachedDemographicPreventionsByPreventionId(pk);
+			CachedDemographicPrevention remotePrevention  = null;
+			
+			try {
+				if (!CaisiIntegratorManager.isIntegratorOffline()){
+					remotePrevention = CaisiIntegratorManager.getDemographicWs().getCachedDemographicPreventionsByPreventionId(pk);
+				}
+			} catch (Exception e) {
+				MiscUtils.getLogger().error("Unexpected error.", e);
+				CaisiIntegratorManager.checkForConnectionError(e);
+			}
+				
+			if(CaisiIntegratorManager.isIntegratorOffline()){
+				List<CachedDemographicPrevention> remotePreventions = IntegratorFallBackManager.getRemotePreventions(demographicId);
+				for(CachedDemographicPrevention prev:remotePreventions){
+					if ( prev.getFacilityPreventionPk().getIntegratorFacilityId() == remoteFacilityId && prev.getFacilityPreventionPk().getCaisiItemId() == remotePreventionId){
+						remotePrevention = prev;
+					}
+				}
+				
+			} 
+		
+			
 			
 			CachedFacility cachedFacility=CaisiIntegratorManager.getRemoteFacility(remoteFacilityId);
 			FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();

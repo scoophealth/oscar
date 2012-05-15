@@ -130,7 +130,7 @@ if (remoteFacilityIdString==null) // local lab
 }
 else // remote lab
 {
-	CachedDemographicLabResult remoteLabResult=LabDisplayHelper.getRemoteLab(Integer.parseInt(remoteFacilityIdString), remoteLabKey);
+	CachedDemographicLabResult remoteLabResult=LabDisplayHelper.getRemoteLab(Integer.parseInt(remoteFacilityIdString), remoteLabKey,Integer.parseInt(demographicID));
 	MiscUtils.getLogger().debug("retrieved remoteLab:"+ReflectionToStringBuilder.toString(remoteLabResult));
 	isLinkedToDemographic=true;
 	

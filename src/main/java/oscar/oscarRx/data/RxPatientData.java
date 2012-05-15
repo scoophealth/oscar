@@ -37,8 +37,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicAllergy;
-import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.dao.DiseasesDao;
 import org.oscarehr.common.dao.PartialDateDao;
@@ -256,9 +256,20 @@ public class RxPatientData {
 
 			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 			if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
-				try {
-					DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
-					List<CachedDemographicAllergy> remoteAllergies = demographicWs.getLinkedCachedDemographicAllergies(demographicNo);
+				try {	
+					List<CachedDemographicAllergy> remoteAllergies  = null;
+					try {
+						if (!CaisiIntegratorManager.isIntegratorOffline()){
+							remoteAllergies = CaisiIntegratorManager.getDemographicWs().getLinkedCachedDemographicAllergies(demographicNo);
+						}
+					} catch (Exception e) {
+						MiscUtils.getLogger().error("Unexpected error.", e);
+						CaisiIntegratorManager.checkForConnectionError(e);
+					}
+					
+					if(CaisiIntegratorManager.isIntegratorOffline()){
+						remoteAllergies = IntegratorFallBackManager.getRemoteAllergies(demographicNo);	
+					}
 
 					for (CachedDemographicAllergy remoteAllergy : remoteAllergies) {
 						Date date = null;

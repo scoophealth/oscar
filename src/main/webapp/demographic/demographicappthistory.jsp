@@ -27,6 +27,8 @@
 <%@page import="org.oscarehr.common.model.Site"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
+<%@page import="org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager" %>
+<%@page import="org.oscarehr.util.MiscUtils" %>
 <%!
 	private List<Site> sites = new ArrayList<Site>();
 	private HashMap<String,String[]> siteBgColor = new HashMap<String,String[]>();
@@ -223,10 +225,22 @@ function popupPageNew(vheight,vwidth,varpage) {
   int nItems=0;
   
   List<CachedAppointment> cachedAppointments = null;
-  if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled())
-  {
-	  DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs();
-		cachedAppointments=demographicWs.getLinkedCachedAppointments(Integer.parseInt(request.getParameter("demographic_no")));
+  if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()){
+		int demographicNo = Integer.parseInt(request.getParameter("demographic_no"));
+		try {
+			if (!CaisiIntegratorManager.isIntegratorOffline()){
+				cachedAppointments = CaisiIntegratorManager.getDemographicWs().getLinkedCachedAppointments(demographicNo);
+			}
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("Unexpected error.", e);
+			CaisiIntegratorManager.checkForConnectionError(e);
+		}
+		
+		if(CaisiIntegratorManager.isIntegratorOffline()){
+			cachedAppointments = IntegratorFallBackManager.getRemoteAppointments(demographicNo);	
+		}	
+		
+		
   }
   
   if (cachedAppointments != null) {

@@ -146,16 +146,21 @@
 				MiscUtils.getLogger().error("Error checking Remote Facilities Sync status",remoteFacilityException);
 				CaisiIntegratorManager.checkForConnectionError(remoteFacilityException);
 			}
-			if(secondsTillConsideredStale != -1){  
+			if(secondsTillConsideredStale == -1){  
 				allSynced = true; 
 			}
 		%>
 			<%if (CaisiIntegratorManager.isIntegratorOffline()) {%>
     			<div style="background: none repeat scroll 0% 0% red; color: white; font-weight: bold; padding-left: 10px; margin-bottom: 2px;"><bean:message key="oscarEncounter.integrator.NA"/></div>
     		<%}else if(!allSynced) {%>
-    			<div style="background: none repeat scroll 0% 0% orange; color: white; font-weight: bold; padding-left: 10px; margin-bottom: 2px;"><bean:message key="oscarEncounter.integrator.outOfSync"/></div>
-	    	<%}
-	    }%>    
+    			<div style="background: none repeat scroll 0% 0% orange; color: white; font-weight: bold; padding-left: 10px; margin-bottom: 2px;"><bean:message key="oscarEncounter.integrator.outOfSync"/>
+    			&nbsp;&nbsp;
+				<a href="javascript:void(0)" onClick="popupPage(600,175,'ViewICommun','<c:out value="${ctx}"/>/PMmodule/Admin/Facility/viewIntegratedCommunity2.jsp'); return false;" >Integrator</a>
+    			</div>
+	    	<%}else{%>
+	    		<a href="javascript:void(0)" onClick="popupPage(600,175,'ViewICommun','<c:out value="${ctx}"/>/PMmodule/Admin/Facility/viewIntegratedCommunity2.jsp'); return false;" >I</a>
+	    	<%}%>
+	  <%}%>    
    </span>
 </div>
 
