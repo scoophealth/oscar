@@ -36,8 +36,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.apache.struts.util.MessageResources;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicDrug;
-import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
@@ -92,8 +92,22 @@ public class EctDisplayRxAction extends EctDisplayAction {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
 			try {
-				DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
-				List<CachedDemographicDrug> remoteDrugs = demographicWs.getLinkedCachedDemographicDrugsByDemographicId(demographicId);
+				
+			
+				List<CachedDemographicDrug> remoteDrugs  = null;
+				try {
+					if (!CaisiIntegratorManager.isIntegratorOffline()){
+					   remoteDrugs = CaisiIntegratorManager.getDemographicWs().getLinkedCachedDemographicDrugsByDemographicId(demographicId);
+					}
+				} catch (Exception e) {
+					MiscUtils.getLogger().error("Unexpected error.", e);
+					CaisiIntegratorManager.checkForConnectionError(e);
+				}
+				
+				if(CaisiIntegratorManager.isIntegratorOffline()){
+				   remoteDrugs = IntegratorFallBackManager.getRemoteDrugs(demographicId);	
+				}
+				
 				logger.debug("remote Drugs : "+remoteDrugs.size());
 				
 				for (CachedDemographicDrug remoteDrug : remoteDrugs)

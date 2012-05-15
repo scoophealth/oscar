@@ -36,8 +36,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.apache.struts.util.MessageResources;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicAllergy;
-import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -100,9 +100,23 @@ public class EctDisplayAllergyAction extends EctDisplayAction {
 			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 			if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
 				try {
-					DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
-					List<CachedDemographicAllergy> remoteAllergies = demographicWs.getLinkedCachedDemographicAllergies(demographicId);
+					List<CachedDemographicAllergy> remoteAllergies  = null;
+					try {
+						if (!CaisiIntegratorManager.isIntegratorOffline()){
+							remoteAllergies = CaisiIntegratorManager.getDemographicWs().getLinkedCachedDemographicAllergies(demographicId);
+							MiscUtils.getLogger().debug("remoteAllergies retrieved "+remoteAllergies.size());
+						}
+					} catch (Exception e) {
+						MiscUtils.getLogger().error("Unexpected error.", e);
+						CaisiIntegratorManager.checkForConnectionError(e);
+					}
+					
+					if(CaisiIntegratorManager.isIntegratorOffline()){
+						remoteAllergies = IntegratorFallBackManager.getRemoteAllergies(demographicId);	
+						MiscUtils.getLogger().debug("fallBack Allergies retrieved "+remoteAllergies.size());
+					}
 
+					
 					for (CachedDemographicAllergy remoteAllergy : remoteAllergies)
 					{
 						Date date=null;

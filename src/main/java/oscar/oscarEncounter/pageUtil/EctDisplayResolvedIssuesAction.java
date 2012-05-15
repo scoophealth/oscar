@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.apache.struts.util.MessageResources;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicIssue;
 import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
@@ -109,7 +110,19 @@ public class EctDisplayResolvedIssuesAction extends EctDisplayAction {
 			try {
 				
 		
-				List<CachedDemographicIssue> remoteIssues = CaisiIntegratorManager.getDemographicWs().getLinkedCachedDemographicIssuesByDemographicId(demographicId);
+				List<CachedDemographicIssue> remoteIssues  = null;
+				try {
+					if (!CaisiIntegratorManager.isIntegratorOffline()){
+					   remoteIssues = CaisiIntegratorManager.getDemographicWs().getLinkedCachedDemographicIssuesByDemographicId(demographicId);
+					}
+				} catch (Exception e) {
+					MiscUtils.getLogger().error("Unexpected error.", e);
+					CaisiIntegratorManager.checkForConnectionError(e);
+				}
+				
+				if(CaisiIntegratorManager.isIntegratorOffline()){
+				   remoteIssues = IntegratorFallBackManager.getRemoteDemographicIssues(demographicId);	
+				}
 				
 				for (CachedDemographicIssue cachedDemographicIssue : remoteIssues) {
 					log.info(cachedDemographicIssue.getIssueDescription());

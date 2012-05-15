@@ -55,6 +55,7 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.PMmodule.dao.AdmissionDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.exception.AdmissionException;
@@ -96,7 +97,6 @@ import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
 import org.oscarehr.caisi_integrator.ws.CachedAdmission;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.CachedProgram;
-import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk;
 import org.oscarehr.caisi_integrator.ws.Gender;
 import org.oscarehr.caisi_integrator.ws.Referral;
@@ -1757,8 +1757,22 @@ public class ClientManagerAction extends BaseAction {
 		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
 
 			try {
-				DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
-				List<CachedAdmission> cachedAdmissions = demographicWs.getLinkedCachedAdmissionsByDemographicId(demographicId);
+				List<CachedAdmission> cachedAdmissions  = null;
+				try {
+					if (!CaisiIntegratorManager.isIntegratorOffline()){
+						cachedAdmissions = CaisiIntegratorManager.getDemographicWs().getLinkedCachedAdmissionsByDemographicId(demographicId);
+					}
+				} catch (Exception e) {
+					MiscUtils.getLogger().error("Unexpected error.", e);
+					CaisiIntegratorManager.checkForConnectionError(e);
+				}
+				
+				if(CaisiIntegratorManager.isIntegratorOffline()){
+					cachedAdmissions = IntegratorFallBackManager.getRemoteAdmissions(demographicId);	
+				}
+				
+				
+				
 
 				for (CachedAdmission cachedAdmission : cachedAdmissions)
 					admissionsForDisplay.add(new AdmissionForDisplay(cachedAdmission));

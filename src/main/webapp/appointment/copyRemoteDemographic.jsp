@@ -78,7 +78,7 @@
 	Admission admission = new Admission();
 	admission.setClientId(demographic.getDemographicNo());
 	admission.setProgramId(Integer.parseInt(progId));
-	admission.setProviderNo(request.getParameter("staff"));
+	admission.setProviderNo(providerNo);
 	admission.setAdmissionDate(oscar.MyDateFormat.getSysDate(admissionDate));
 	admission.setAdmissionStatus("current");
 	admission.setTeamId(0);

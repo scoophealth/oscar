@@ -78,6 +78,8 @@ public class BillingClaimHeader1 extends AbstractModel<Integer> implements Seria
     private String sex;
     private String province;
     private Date billing_date;
+    
+    @Temporal(TemporalType.TIME)
     private Date billing_time;
     private String total;
     private String paid;
@@ -269,7 +271,7 @@ public class BillingClaimHeader1 extends AbstractModel<Integer> implements Seria
         this.billing_date = date;
     }
 
-    @Temporal(TemporalType.TIME)
+   
     public Date getBilling_time() {
         return billing_time;
     }

@@ -31,8 +31,8 @@ import java.util.Locale;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicAllergy;
-import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.common.dao.PartialDateDao;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.PartialDate;
@@ -88,8 +88,20 @@ public final class AllergyHelperBean {
 
 	private static void addIntegratorAllergies(Integer demographicId, ArrayList<AllergyDisplay> results, Locale locale) {
 		try {
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
-			List<CachedDemographicAllergy> remoteAllergies = demographicWs.getLinkedCachedDemographicAllergies(demographicId);
+			List<CachedDemographicAllergy> remoteAllergies  = null;
+			try {
+				if (!CaisiIntegratorManager.isIntegratorOffline()){
+					remoteAllergies = CaisiIntegratorManager.getDemographicWs().getLinkedCachedDemographicAllergies(demographicId);
+				}
+			} catch (Exception e) {
+				MiscUtils.getLogger().error("Unexpected error.", e);
+				CaisiIntegratorManager.checkForConnectionError(e);
+			}
+			
+			if(CaisiIntegratorManager.isIntegratorOffline()){
+				remoteAllergies = IntegratorFallBackManager.getRemoteAllergies(demographicId);	
+			}
+			
 
 			for (CachedDemographicAllergy remoteAllergy : remoteAllergies) {
 				AllergyDisplay allergyDisplay = new AllergyDisplay();
