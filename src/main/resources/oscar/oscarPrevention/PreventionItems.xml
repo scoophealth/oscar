@@ -64,6 +64,13 @@ Varicella Immunoglobulin	VarIg
   		healthCanadaType="DT-IPV"
   		layout="injection" atc="" 
   		showIfMinRecordNum="1"/>
+
+	<item
+		resultDesc=""
+		desc="Tdap-IPV=diphtheria, tetanus and acellular pertussis for children 4 - 6 years of age; IPV=inactivated poliovirus; Adacel"
+		name="Tdap-IPV"		
+		layout="injection" atc="J07AJ52" minAge="4" maxAge="6"
+		showIfMinRecordNum="1" />
   		
 	<item
 		resultDesc=""
