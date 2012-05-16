@@ -1096,8 +1096,23 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return;
 
 		try {
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
-			List<CachedDemographicIssue> remoteIssues = demographicWs.getLinkedCachedDemographicIssuesByDemographicId(demographicNo);
+			
+			
+			List<CachedDemographicIssue> remoteIssues  = null;
+			try {
+				if (!CaisiIntegratorManager.isIntegratorOffline()){
+				   DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+				   remoteIssues = demographicWs.getLinkedCachedDemographicIssuesByDemographicId(demographicNo);
+				}
+			} catch (Exception e) {
+				logger.error("Unexpected error.", e);
+				CaisiIntegratorManager.checkForConnectionError(e);
+			}
+			
+			if(CaisiIntegratorManager.isIntegratorOffline()){
+			   remoteIssues = IntegratorFallBackManager.getRemoteDemographicIssues(demographicNo);	
+			}
+			
 
 			for (CachedDemographicIssue cachedDemographicIssue : remoteIssues) {
 				try {

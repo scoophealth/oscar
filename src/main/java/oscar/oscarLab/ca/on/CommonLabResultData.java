@@ -34,6 +34,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicLabResult;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.common.dao.DocumentResultsDao;
@@ -600,9 +601,21 @@ public class CommonLabResultData {
 	public static ArrayList<LabResultData> getRemoteLabs(Integer demographicId) {
 		ArrayList<LabResultData> results = new ArrayList<LabResultData>();
 
-		try {
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
-			List<CachedDemographicLabResult> labResults = demographicWs.getLinkedCachedDemographicLabResults(demographicId);
+		try {		
+			List<CachedDemographicLabResult> labResults  = null;
+			try {
+				if (!CaisiIntegratorManager.isIntegratorOffline()){
+					DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+					labResults = CaisiIntegratorManager.getDemographicWs().getLinkedCachedDemographicLabResults(demographicId);
+				}
+			} catch (Exception e) {
+				MiscUtils.getLogger().error("Unexpected error.", e);
+				CaisiIntegratorManager.checkForConnectionError(e);
+			}
+			
+			if(CaisiIntegratorManager.isIntegratorOffline()){
+				labResults = IntegratorFallBackManager.getLabResults(demographicId);	
+			}
 
 			for (CachedDemographicLabResult cachedDemographicLabResult : labResults) {
 				results.add(toLabResultData(cachedDemographicLabResult));

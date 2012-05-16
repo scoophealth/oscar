@@ -27,7 +27,6 @@
 <%@page import="org.w3c.dom.Document"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.CachedDemographicLabResult"%>
 <%@page import="oscar.oscarLab.ca.all.web.LabDisplayHelper"%>
-<%@page errorPage="../provider/errorpage.jsp"%>
 <%@ page
 	import="java.util.*,oscar.oscarLab.ca.on.*,oscar.oscarDemographic.data.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -58,7 +57,7 @@ if (!demographicNo.equals("null")){
 	}
 	else
 	{
-		CachedDemographicLabResult remoteLab=LabDisplayHelper.getRemoteLab(Integer.parseInt(remoteFacilityIdString), remoteLabKey);
+		CachedDemographicLabResult remoteLab=LabDisplayHelper.getRemoteLab(Integer.parseInt(remoteFacilityIdString), remoteLabKey,Integer.parseInt(demographicNo));
 		Document labContentsAsXml=LabDisplayHelper.getXmlDocument(remoteLab);
 		HashMap<String, ArrayList<Map<String, Serializable>>> mapOfTestValues=LabDisplayHelper.getMapOfTestValues(labContentsAsXml);
 		list=mapOfTestValues.get(identifier);

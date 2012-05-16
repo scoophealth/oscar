@@ -54,9 +54,23 @@ public final class RemotePreventionHelper {
 		ArrayList<HashMap<String, Object>> results = new ArrayList<HashMap<String, Object>>();
 
 		try {
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
-			List<CachedDemographicPrevention> preventions = demographicWs.getLinkedCachedDemographicPreventionsByDemographicId(localDemographicId);
-
+			
+			
+			List<CachedDemographicPrevention> preventions  = null;
+			try {
+				if (!CaisiIntegratorManager.isIntegratorOffline()){
+				   DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+				   preventions = demographicWs.getLinkedCachedDemographicPreventionsByDemographicId(localDemographicId);
+				}
+			} catch (Exception e) {
+				MiscUtils.getLogger().error("Unexpected error.", e);
+				CaisiIntegratorManager.checkForConnectionError(e);
+			}
+				
+			if(CaisiIntegratorManager.isIntegratorOffline()){
+			   preventions = IntegratorFallBackManager.getRemotePreventions(localDemographicId);
+			} 
+		 
 			for (CachedDemographicPrevention prevention : preventions) {
 				results.add(getPreventionDataMap(prevention));
 			}

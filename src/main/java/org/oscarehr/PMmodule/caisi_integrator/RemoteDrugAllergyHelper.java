@@ -25,7 +25,6 @@
 
 package org.oscarehr.PMmodule.caisi_integrator;
 
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,14 +43,26 @@ public class RemoteDrugAllergyHelper {
 		ArrayList<String> atcCodes = new ArrayList<String>();
 
 		try {
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
-			List<CachedDemographicDrug> remoteDrugs = demographicWs.getLinkedCachedDemographicDrugsByDemographicId(localDemographicId);
+			List<CachedDemographicDrug> remoteDrugs  = null;
+			try {
+				if (!CaisiIntegratorManager.isIntegratorOffline()){
+				   remoteDrugs = CaisiIntegratorManager.getDemographicWs().getLinkedCachedDemographicDrugsByDemographicId(localDemographicId);
+				}
+			} catch (Exception e) {
+				MiscUtils.getLogger().error("Unexpected error.", e);
+				CaisiIntegratorManager.checkForConnectionError(e);
+			}
+			
+			if(CaisiIntegratorManager.isIntegratorOffline()){
+			   remoteDrugs = IntegratorFallBackManager.getRemoteDrugs(localDemographicId);	
+			}
+			
 			for (CachedDemographicDrug remoteDrug : remoteDrugs) {
 				if (remoteDrug.getAtc() != null) atcCodes.add(remoteDrug.getAtc());
 			}
 
-		} catch (MalformedURLException e) {
-			logger.error("Error retriving remote drugs", e);
+		} catch (Exception e) {
+			logger.error("Error ", e);
 		}
 
 		return (atcCodes);
@@ -62,13 +73,27 @@ public class RemoteDrugAllergyHelper {
 		ArrayList<Allergy> results = new ArrayList<Allergy>();
 
 		try {
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
-			List<CachedDemographicAllergy> remoteAllergies = demographicWs.getLinkedCachedDemographicAllergies(localDemographicId);
+			
+			List<CachedDemographicAllergy> remoteAllergies  = null;
+			try {
+				if (!CaisiIntegratorManager.isIntegratorOffline()){
+					DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+					remoteAllergies = CaisiIntegratorManager.getDemographicWs().getLinkedCachedDemographicAllergies(localDemographicId);
+				}
+			} catch (Exception e) {
+				MiscUtils.getLogger().error("Unexpected error.", e);
+				CaisiIntegratorManager.checkForConnectionError(e);
+			}
+				
+			if(CaisiIntegratorManager.isIntegratorOffline()){
+			   remoteAllergies = IntegratorFallBackManager.getRemoteAllergies(localDemographicId);	
+			} 
+			
 			for (CachedDemographicAllergy remoteAllergy : remoteAllergies) {
 				results.add(convertRemoteAllergyToLocal(remoteAllergy));
 			}
 
-		} catch (MalformedURLException e) {
+		} catch (Exception e) {
 			logger.error("Error retriving remote drugs", e);
 		}
 

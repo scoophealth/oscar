@@ -114,6 +114,7 @@ public class UserProperty extends AbstractModel<Integer> implements Serializable
     @Transient public static final String INTEGRATOR_FULL_PUSH = "integrator_full_push";
     @Transient public static final String INTEGRATOR_LAST_PUSH = "integrator_last_push";
     @Transient public static final String INTEGRATOR_LAST_UPDATED = "integrator_last_updated";
+	public static final String INTEGRATOR_LAST_PULL_PRIMARY_EMR = "integrator_last_pull";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
