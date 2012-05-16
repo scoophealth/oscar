@@ -165,14 +165,12 @@ public class CaisiIntegratorManager {
 		for(CachedFacility remoteFacility : remoteFacilities){
 			Calendar lastDataUpdate = remoteFacility.getLastDataUpdate();
 			if( lastDataUpdate == null || timeConsideredStale.after(lastDataUpdate)){
-				synced = false;
-				break;
+				return false;
 			}
 		}
 		return synced;
 	}
 
-	
 	public static List<CachedFacility> getRemoteFacilities() throws MalformedURLException {
 		return getRemoteFacilities(true);
 	}

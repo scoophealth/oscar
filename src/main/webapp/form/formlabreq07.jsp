@@ -67,7 +67,7 @@
 	else // it's remote
 	{
 		MiscUtils.getLogger().debug("Getting remote form : "+remoteFacilityIdString+":"+formId);
-		props=FrmLabReq07Record.getRemoteRecordProperties(Integer.parseInt(remoteFacilityIdString), formId);
+		props=FrmLabReq07Record.getRemoteRecordProperties(Integer.parseInt(remoteFacilityIdString), formId,demoNo);
 		FrmRecordHelp.convertBooleanToChecked(props);
 	}
 	

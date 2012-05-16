@@ -39,6 +39,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
@@ -55,6 +56,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicDocument;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicDocumentContents;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
@@ -67,6 +69,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.document.dao.DocumentDAO;
 import org.oscarehr.document.model.CtlDocument;
 import org.oscarehr.document.model.Document;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -674,9 +677,36 @@ public class ManageDocumentAction extends DispatchAction {
 			remotePk.setIntegratorFacilityId(remoteFacilityId);
 			remotePk.setCaisiItemId(Integer.parseInt(doc_no));
 
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
-			CachedDemographicDocument remoteDocument = demographicWs.getCachedDemographicDocument(remotePk);
-			CachedDemographicDocumentContents remoteDocumentContents = demographicWs.getCachedDemographicDocumentContents(remotePk);
+			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+			
+			CachedDemographicDocument remoteDocument = null;
+			CachedDemographicDocumentContents remoteDocumentContents = null;
+			
+			try {
+				if (!CaisiIntegratorManager.isIntegratorOffline()){
+					DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+					remoteDocument = demographicWs.getCachedDemographicDocument(remotePk); 
+					remoteDocumentContents = demographicWs.getCachedDemographicDocumentContents(remotePk);
+				}
+			} catch (Exception e) {
+				MiscUtils.getLogger().error("Unexpected error.", e);
+				CaisiIntegratorManager.checkForConnectionError(e);
+			}
+			
+			if(CaisiIntegratorManager.isIntegratorOffline()){
+				Integer demographicId = IntegratorFallBackManager.getDemographicNoFromRemoteDocument(remotePk);
+				MiscUtils.getLogger().debug("got demographic no from remote document "+demographicId);
+				List<CachedDemographicDocument> remoteDocuments = IntegratorFallBackManager.getRemoteDocuments(demographicId);
+				for(CachedDemographicDocument demographicDocument: remoteDocuments){
+					if(demographicDocument.getFacilityIntegerPk().getIntegratorFacilityId() == remotePk.getIntegratorFacilityId() && demographicDocument.getFacilityIntegerPk().getCaisiItemId() == remotePk.getCaisiItemId() ){
+						remoteDocument = demographicDocument;
+						remoteDocumentContents = IntegratorFallBackManager.getRemoteDocument(demographicId, remotePk);
+						break;
+					}
+					MiscUtils.getLogger().error("End of the loop and didn't find the remoteDocument");
+				}
+			}
+			
 
 			docxml = remoteDocument.getDocXml();
 			contentType = remoteDocument.getContentType();

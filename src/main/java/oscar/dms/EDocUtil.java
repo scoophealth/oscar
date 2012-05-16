@@ -39,6 +39,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicDocument;
@@ -876,8 +877,23 @@ public final class EDocUtil extends SqlUtilBaseS {
 		ArrayList<EDoc> results = new ArrayList<EDoc>();
 
 		try {
-			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
-			List<CachedDemographicDocument> remoteDocuments = demographicWs.getLinkedCachedDemographicDocuments(demographicId);
+			
+			List<CachedDemographicDocument> remoteDocuments  = null;
+			try {
+				if (!CaisiIntegratorManager.isIntegratorOffline()){
+					DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+					remoteDocuments = CaisiIntegratorManager.getDemographicWs().getLinkedCachedDemographicDocuments(demographicId);
+				}
+			} catch (Exception e) {
+				MiscUtils.getLogger().error("Unexpected error.", e);
+				CaisiIntegratorManager.checkForConnectionError(e);
+			}
+			
+			if(CaisiIntegratorManager.isIntegratorOffline()){
+				MiscUtils.getLogger().debug("getting fall back documents for "+demographicId);
+				remoteDocuments = IntegratorFallBackManager.getRemoteDocuments(demographicId);	
+			}
+			
 
 			for (CachedDemographicDocument remoteDocument : remoteDocuments) {
 				results.add(toEDoc(remoteDocument));

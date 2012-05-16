@@ -31,12 +31,14 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicLabResult;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.FacilityIdLabResultCompositePk;
@@ -66,12 +68,41 @@ public class LabDisplayHelper {
 		return ("" + demographicId + ':' + segmentId + ':' + labType + ':' + labDateTime);
 	}
 
-	public static CachedDemographicLabResult getRemoteLab(Integer remoteFacilityId, String remoteLabKey) throws MalformedURLException {
-		DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+	public static CachedDemographicLabResult getRemoteLab(Integer remoteFacilityId, String remoteLabKey,Integer demographicId) throws MalformedURLException {
+		
 		FacilityIdLabResultCompositePk pk = new FacilityIdLabResultCompositePk();
 		pk.setIntegratorFacilityId(remoteFacilityId);
 		pk.setLabResultId(remoteLabKey);
-		CachedDemographicLabResult cachedDemographicLabResult = demographicWs.getCachedDemographicLabResult(pk);
+		CachedDemographicLabResult cachedDemographicLabResult = null;
+		
+		try {
+			if (!CaisiIntegratorManager.isIntegratorOffline()){
+				DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+				cachedDemographicLabResult = demographicWs.getCachedDemographicLabResult(pk);
+			}
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("Unexpected error.", e);
+			CaisiIntegratorManager.checkForConnectionError(e);
+		}
+			
+		if(CaisiIntegratorManager.isIntegratorOffline()){
+			List<CachedDemographicLabResult> labResults = IntegratorFallBackManager.getLabResults(demographicId);
+			for(CachedDemographicLabResult labResult:labResults){
+				if(labResult.getFacilityIdLabResultCompositePk().getIntegratorFacilityId() == pk.getIntegratorFacilityId() && 
+						labResult.getFacilityIdLabResultCompositePk().getLabResultId().equals(pk.getLabResultId()) ) {
+					cachedDemographicLabResult = labResult;
+					break;
+				}
+					
+					
+			}
+			
+			
+		} 
+		 
+		
+		
+		
 
 		return (cachedDemographicLabResult);
 	}

@@ -35,6 +35,7 @@ import java.util.Properties;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicForm;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk;
@@ -213,14 +214,34 @@ public class FrmLabReq07Record extends FrmRecord {
     }
 
 
-    public static Properties getRemoteRecordProperties(Integer remoteFacilityId, Integer formId) throws IOException
+    public static Properties getRemoteRecordProperties(Integer remoteFacilityId, Integer formId,Integer demoNo) throws IOException
     {
     	FacilityIdIntegerCompositePk pk=new FacilityIdIntegerCompositePk();
     	pk.setIntegratorFacilityId(remoteFacilityId);
     	pk.setCaisiItemId(formId);
 
-    	DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs();
-    	CachedDemographicForm form=demographicWs.getCachedDemographicForm(pk);
+    	CachedDemographicForm form = null;
+    	try {
+			if (!CaisiIntegratorManager.isIntegratorOffline()){
+				DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs();
+			    form=demographicWs.getCachedDemographicForm(pk);
+			}
+		} catch (Exception e) {
+			logger.error("Unexpected error.", e);
+			CaisiIntegratorManager.checkForConnectionError(e);
+		}
+    	
+    	
+		if(CaisiIntegratorManager.isIntegratorOffline()){
+			Integer demographicNo = 0;
+			List<CachedDemographicForm> forms = IntegratorFallBackManager.getRemoteForms(demoNo, "formLabReq07");
+			for(CachedDemographicForm f:forms){
+				if (f.getFacilityIdIntegerCompositePk().getCaisiItemId() == pk.getCaisiItemId() && f.getFacilityIdIntegerCompositePk().getIntegratorFacilityId() == pk.getIntegratorFacilityId()){
+					form = f;
+					break;
+				}
+			}
+		}
 
     	ByteArrayInputStream bais=new ByteArrayInputStream(form.getFormData().getBytes());
 

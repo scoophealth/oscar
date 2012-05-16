@@ -102,6 +102,7 @@ import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.dao.CaseManagementIssueNotesDao;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.DxresearchDAO;
 import org.oscarehr.common.dao.EFormDataDao;
@@ -119,6 +120,7 @@ import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.common.model.EFormData;
@@ -196,6 +198,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private EFormValueDao eFormValueDao = (EFormValueDao) SpringUtils.getBean("EFormValueDao");
 	private EFormDataDao eFormDataDao = (EFormDataDao) SpringUtils.getBean("EFormDataDao");
 	private GroupNoteDao groupNoteDao = (GroupNoteDao) SpringUtils.getBean("groupNoteDao");
+	private DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
 
 	private UserPropertyDAO userPropertyDao = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
 
@@ -233,9 +236,12 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	@Override
 	public void run() {
 		numberOfTimesRun++;
-		logger.debug("CaisiIntegratorUpdateTask starting #" + numberOfTimesRun);
+		
 
 		LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
+		
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		logger.debug("CaisiIntegratorUpdateTask starting #" + numberOfTimesRun+"  running as "+loggedInInfo.loggedInProvider);
 
 		try {
 			pushAllFacilities();
@@ -258,6 +264,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			try {
 				if (facility.isIntegratorEnabled()) {
 					pushAllDataForOneFacility(facility);
+					findChangedRecordsFromIntegrator(facility);
 				}
 			} catch (WebServiceException e) {
 				if (CxfClientUtils.isConnectionException(e)) {
@@ -1072,15 +1079,25 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
 			facilityIdIntegerCompositePk.setCaisiItemId(allergy.getAllergyId());
 			cachedAllergy.setFacilityIdIntegerCompositePk(facilityIdIntegerCompositePk);
-
-			cachedAllergy.setAgccs(allergy.getAgccs());
-			cachedAllergy.setAgcsp(allergy.getAgcsp());
+			
+			if(allergy.getAgccs() != null){
+			   cachedAllergy.setAgccs(allergy.getAgccs());
+			}
+			if(allergy.getAgcsp() != null){
+				cachedAllergy.setAgcsp(allergy.getAgcsp());
+			}
 			cachedAllergy.setAgeOfOnset(allergy.getAgeOfOnset());
 			cachedAllergy.setCaisiDemographicId(demographicId);
 			cachedAllergy.setDescription(allergy.getDescription());
 			cachedAllergy.setEntryDate(DateUtils.toGregorianCalendar(allergy.getEntryDate()));
-			cachedAllergy.setHiclSeqNo(allergy.getHiclSeqno());
-			cachedAllergy.setHicSeqNo(allergy.getHicSeqno());
+			
+			if(allergy.getHiclSeqno() != null){
+			   cachedAllergy.setHiclSeqNo(allergy.getHiclSeqno());
+			}
+			if(allergy.getHicSeqno() !=null){
+				cachedAllergy.setHicSeqNo(allergy.getHicSeqno());
+			}
+			
 			cachedAllergy.setLifeStage(allergy.getLifeStage());
 			cachedAllergy.setOnSetCode(allergy.getOnsetOfReaction());
 			if (allergy.getDrugrefId() != null) cachedAllergy.setPickId(Integer.parseInt(allergy.getDrugrefId()));
@@ -1365,6 +1382,91 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		throttleAndChecks();
 		conformanceTestLog(facility, "Measurements", sentIds.toString());
 	}
+	
+	
+	/*
+	1) demographicWs.getDemographicIdPushedAfterDateByRequestingFacility : 
+		which gets the local demographicId's which have changed, it will traverse linked records so if a linked record changes, your local id is reported as changed.
+
+	2) demographicWs.getDemographicsPushedAfterDate : 
+		which is a raw listing of the direct records which have changed, i.e. (facilityId, oscarDemographicId).
+	*/	
+	private void findChangedRecordsFromIntegrator(Facility facility) throws MalformedURLException {//throws IOException, ShutdownException {
+		logger.info("Start fetch data for facility : " + facility.getId() + " : " + facility.getName());
+		boolean integratorLocalStore = OscarProperties.getInstance().getBooleanProperty("INTEGRATOR_LOCAL_STORE","yes");
+		if(!integratorLocalStore){
+			logger.info("local store not enabled");
+			return;
+		}
+		DemographicWs demographicService = CaisiIntegratorManager.getDemographicWs();
+		
+		
+		Calendar nextTime = Calendar.getInstance();
+		
+		Date lastPushDate = new Date(0);
+		try{
+			UserProperty lastPull = userPropertyDao.getProp(UserProperty.INTEGRATOR_LAST_PULL_PRIMARY_EMR+"+"+facility.getId());
+			lastPushDate.setTime(Long.parseLong(lastPull.getValue()));
+		}catch(Exception epull){
+			MiscUtils.getLogger().error("lastPull Error:",epull);
+			lastPushDate = new Date(0);
+		}
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(lastPushDate);
+		
+		List<Integer> demographicNos = demographicService.getDemographicIdPushedAfterDateByRequestingFacility(cal);
+		
+		if(demographicNos.isEmpty()){
+			logger.debug("No demographics updated on the integrator");
+		}else{
+			logger.debug("demos changed "+demographicNos.size());
+		}
+		int demographicFetchCount = 0;
+		for(Integer demographicNo:demographicNos){
+			logger.debug("Demographic "+demographicNo+" updated on the integrator, primary emr ? ");
+			DemographicExt demographicExt = demographicExtDao.getLatestDemographicExt(demographicNo, "primaryEMR");
+			if (demographicExt != null && demographicExt.getValue().equals("1")){
+				demographicFetchCount++;
+				BenchmarkTimer benchTimer = new BenchmarkTimer("fetch and save for facilityId:" + facility.getId() + ", demographicId:" + demographicNo + "  " + demographicFetchCount + " of " + demographicNos.size());
+				IntegratorFallBackManager.saveLinkNotes(demographicNo);
+				benchTimer.tag("saveLinkedNotes");
+				IntegratorFallBackManager.saveRemoteForms(demographicNo);
+				benchTimer.tag("saveRemoteForms");
+				
+				
+				
+				IntegratorFallBackManager.saveDemographicIssues(demographicNo);
+				benchTimer.tag("saveDemographicIssues");
+				IntegratorFallBackManager.saveDemographicPreventions(demographicNo);
+				benchTimer.tag("saveDemographicPreventions");
+				IntegratorFallBackManager.saveDemographicDrugs(demographicNo);
+				benchTimer.tag("saveDemographicDrugs");
+				IntegratorFallBackManager.saveAdmissions(demographicNo);
+				benchTimer.tag("saveAdmissions");
+				IntegratorFallBackManager.saveAppointments(demographicNo);
+				benchTimer.tag("saveAppointments");
+				IntegratorFallBackManager.saveAllergies(demographicNo);
+				benchTimer.tag("saveAllergies");
+				IntegratorFallBackManager.saveDocuments(demographicNo);
+				benchTimer.tag("saveDocuments");
+				IntegratorFallBackManager.saveLabResults(demographicNo);
+				benchTimer.tag("saveLabResults");
+ 
+				//These don't exist
+				//IntegratorFallBackManager.saveMeasurements(demographicNo); // Not being displayed yet
+				//IntegratorFallBackManager.saveDxresearchs(demographicNo);  //Not being displayed yet
+				//IntegratorFallBackManager.saveBillingItems(demographicNo);//Not being displayed yet
+				//IntegratorFallBackManager.saveEforms(demographicNo);//Not being displayed yet
+
+				logger.debug(benchTimer.report());
+			}
+			userPropertyDao.saveProp(UserProperty.INTEGRATOR_LAST_PULL_PRIMARY_EMR+"+"+facility.getId(), "" + nextTime.getTime().getTime());
+		}
+		logger.info("End fetch data for facility : " + facility.getId() + " : " + facility.getName());
+	}
+
+
+	
 
 	/**
 	 * This method should not be used except during conformance testing. It will log all sends to the integrator. This is superfluous because all data is sent, we already know it's "all sent" even with out the logs.

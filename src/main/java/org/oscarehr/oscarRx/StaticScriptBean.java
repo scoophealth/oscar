@@ -35,10 +35,10 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicDrug;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.CachedProvider;
-import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.model.Drug;
@@ -111,14 +111,28 @@ public class StaticScriptBean {
 		// add remote drugs
 		if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
 			try {
-				DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
-				List<CachedDemographicDrug> remoteDrugs = demographicWs.getLinkedCachedDemographicDrugsByDemographicId(demographicId);
-				for (CachedDemographicDrug remoteDrug : remoteDrugs) {
-					if (regionalIdentifier != null)
-					{
-						if (regionalIdentifier.equals(remoteDrug.getRegionalIdentifier())) results.add(getDrugDisplayData(remoteDrug));
+				List<CachedDemographicDrug> remoteDrugs  = null;
+				try {
+					if (!CaisiIntegratorManager.isIntegratorOffline()){
+					   remoteDrugs = CaisiIntegratorManager.getDemographicWs().getLinkedCachedDemographicDrugsByDemographicId(demographicId);
 					}
-					else if (customName != null && !"null".equals(customName) && customName.equals(remoteDrug.getCustomName())) results.add(getDrugDisplayData(remoteDrug));
+				} catch (Exception e) {
+					MiscUtils.getLogger().error("Unexpected error.", e);
+					CaisiIntegratorManager.checkForConnectionError(e);
+				}
+				
+				if(CaisiIntegratorManager.isIntegratorOffline()){
+				   remoteDrugs = IntegratorFallBackManager.getRemoteDrugs(demographicId);	
+				}
+				
+				if(remoteDrugs != null){
+					for (CachedDemographicDrug remoteDrug : remoteDrugs) {
+						if (regionalIdentifier != null)
+						{
+							if (regionalIdentifier.equals(remoteDrug.getRegionalIdentifier())) results.add(getDrugDisplayData(remoteDrug));
+						}
+						else if (customName != null && !"null".equals(customName) && customName.equals(remoteDrug.getCustomName())) results.add(getDrugDisplayData(remoteDrug));
+					}
 				}
 			} catch (Exception e) {
 				logger.error("Unexpected error", e);

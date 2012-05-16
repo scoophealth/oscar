@@ -39,10 +39,10 @@ import java.util.Map;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.PMmodule.caisi_integrator.RemotePreventionHelper;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
-import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.dao.PreventionExtDao;
 import org.oscarehr.common.model.Prevention;
@@ -340,19 +340,23 @@ public class PreventionData {
 	}
 
 	private static List<CachedDemographicPrevention> getRemotePreventions(Integer demographicId) {
-
-		List<CachedDemographicPrevention> remotePreventions = null;
-
+		
+		List<CachedDemographicPrevention> remotePreventions  = null;
 		if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
+			
 			try {
-				DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
-				remotePreventions = demographicWs.getLinkedCachedDemographicPreventionsByDemographicId(demographicId);
+				if (!CaisiIntegratorManager.isIntegratorOffline()){
+					remotePreventions = CaisiIntegratorManager.getDemographicWs().getLinkedCachedDemographicPreventionsByDemographicId(demographicId);
+				}
+			} catch (Exception e) {
+				MiscUtils.getLogger().error("Unexpected error.", e);
+				CaisiIntegratorManager.checkForConnectionError(e);
 			}
-			catch (Exception e) {
-				log.error("Error", e);
-			}
+				
+			if(CaisiIntegratorManager.isIntegratorOffline()){
+				remotePreventions = IntegratorFallBackManager.getRemotePreventions(demographicId);
+			} 
 		}
-
 		return (remotePreventions);
 	}
 
