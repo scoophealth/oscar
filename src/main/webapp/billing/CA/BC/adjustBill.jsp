@@ -330,7 +330,7 @@ function calculateFee(){
  var billValue = document.getElementById("billValue").value;
  var billUnit  = document.getElementById("billingUnit").value;
  var roundedValue = Math.round(billValue * billUnit * 100)/100;
- document.getElementById("billingAmount").value = roundedValue;
+ document.getElementById("billingAmount").value = roundedValue.toFixed(2);
 }
 
 </script>
