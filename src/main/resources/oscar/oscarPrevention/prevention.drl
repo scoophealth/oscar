@@ -150,6 +150,20 @@
               prev.addWarning("DTaP-IPV", "Needs Third DTaP-IPV /HIB");
         </java:consequence>
     </rule>
+
+     <rule name="Tdap-IPV 1">
+       <parameter identifier="prev">
+           <class>oscar.oscarPrevention.Prevention</class>
+       </parameter>
+       <java:condition>prev.getAgeInMonths() &gt;= 48</java:condition>
+       <java:condition>prev.getAgeInMonths() &lt;= 72</java:condition>
+       <java:condition>prev.getNumberOfPreventionType("Tdap-IPV") == 0</java:condition>
+       <java:condition>!prev.isPreventionNever("Tdap-IPV")</java:condition>
+       <java:consequence>
+             prev.log("Tdap-IPV 1");
+             prev.addWarning("Tdap-IPV", "Needs Tdap-IPV vaccine");
+       </java:consequence>
+   </rule>
     
      <rule name="Rot 1">
        <parameter identifier="prev">

@@ -38,8 +38,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Properties;
-import java.util.Vector;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
@@ -52,6 +52,7 @@ import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.form.graphic.FrmGraphicFactory;
@@ -208,43 +209,72 @@ public class FrmPDFServlet extends HttpServlet {
             writer = PdfWriter.getInstance(document, baosPDF);
 
             String title = req.getParameter("__title") != null ? req.getParameter("__title") : "Unknown";
-            String[] cfgFile = req.getParameterValues("__cfgfile");
+            
             String template = req.getParameter("__template") != null ? req.getParameter("__template") + ".pdf" : "";
 
-            int cfgFileNo = 0;
+            int numPages = 1;
+            String pages = req.getParameter("__numPages");
+            if( pages != null ) {
+            	numPages = Integer.parseInt(pages);
+            }
+                                     
             Properties[] printCfg = null;
-            if (cfgFile != null) {
-                cfgFileNo = cfgFile.length;
-                printCfg = new Properties[cfgFileNo];
-                for (int i = 0; i < cfgFileNo; i++) {
-                    cfgFile[i] += ".txt";
-                    if (cfgFile[i].indexOf("/") > 0)
-                        cfgFile[i] = "";
-                    printCfg[i] = getCfgProp(cfgFile[i]);
+            int cfgFileNo;
+            String[] cfgFile = req.getParameterValues("__cfgfile");
+            
+            cfgFileNo = cfgFile == null ? 0 : cfgFile.length;
+            if( cfgFileNo > 0 ) {
+            	printCfg = new Properties[cfgFileNo];
+            	for (int idx2 = 0; idx2 < cfgFileNo; ++idx2) {
+                    cfgFile[idx2] += ".txt";
+                    if (cfgFile[idx2].indexOf("/") > 0) {
+                        cfgFile[idx2] = "";
+                    }
+                    
+                    printCfg[idx2] = getCfgProp(cfgFile[idx2]);
                 }
             }
+            
+            
+            
 
             //specify the page of the picture using __graphicPage, it may be used multiple times to specify multiple pages
-            //however the same graphic will be applied to all pages
             //ie. __graphicPage=2&__graphicPage=3
-            String[] cfgGraphicFile = req.getParameterValues("__cfgGraphicFile");
-            int cfgGraphicFileNo = cfgGraphicFile == null ? 0 : cfgGraphicFile.length;
-
+            //__cfgGraphicFile will be mapped to page 1, __cfgGraphicFile0 will be mapped to page 2 etc.
             String[] graphicPage = req.getParameterValues("__graphicPage");
             ArrayList<String> graphicPageArray = new ArrayList<String>();
+            
+            
             if (graphicPage != null){
-                graphicPageArray = new ArrayList<String>(Arrays.asList(graphicPage));
+                graphicPageArray = new ArrayList<String>(Arrays.asList(graphicPage));                
+            }                       
+            
+            Properties[][] graphicCfg = new Properties[numPages][];
+            String[] cfgGraphicFile;
+            String paramName;
+            int cfgGraphicFileNo;            
+            for( int idx = 0; idx < numPages; ++idx ) {
+            	if( idx == 0 ) {
+            		cfgGraphicFile = req.getParameterValues("__cfgGraphicFile");            		
+            	}
+            	else {
+            		paramName = "__cfgGraphicFile" + String.valueOf(idx);
+            		cfgGraphicFile = req.getParameterValues(paramName);
+            	}
+            	            	
+            	cfgGraphicFileNo = cfgGraphicFile == null ? 0: cfgGraphicFile.length;
+            	if( cfgGraphicFileNo == 0 ) {
+            		graphicCfg[idx] = null;            		
+            	}
+            	else {
+            		graphicCfg[idx] = new Properties[cfgGraphicFileNo];
+            		for( int idx2 = 0; idx2 < cfgGraphicFileNo; ++idx2 ) {
+            			cfgGraphicFile[idx2] += ".txt";
+            			graphicCfg[idx][idx2] = getCfgProp(cfgGraphicFile[idx2]);
+            		}
+            	}            	
             }
-
-            Properties[] graphicCfg = null;
-            if (cfgGraphicFileNo > 0) {
-                graphicCfg = new Properties[cfgGraphicFileNo];
-                for (int i = 0; i < cfgGraphicFileNo; i++) {
-                    cfgGraphicFile[i] += ".txt";
-                    graphicCfg[i] = getCfgProp(cfgGraphicFile[i]);
-                }
-            }
-
+            
             String[] cfgVal = null;
             StringBuilder tempName = null;
             String tempValue = null;
@@ -257,12 +287,77 @@ public class FrmPDFServlet extends HttpServlet {
                 props.setProperty(temp.toString(), req.getParameter(temp.toString()));
             }
 
-            for (Enumeration<String> e = req.getAttributeNames(); e.hasMoreElements(); ) {
-                temp = new StringBuilder(e.nextElement().toString());
-                props.setProperty(temp.toString(), req.getAttribute(temp.toString()).toString());
+            //initialise measurement collections = a list of pages sections measurements
+            List<List<List<String>>>xMeasurementValues = new ArrayList<List<List<String>>>();
+            List<List<List<String>>>yMeasurementValues = new ArrayList<List<List<String>>>();
+            for( int idx = 0; idx < numPages; ++idx ) {
+            	MiscUtils.getLogger().debug("Adding page " + idx);
+            	xMeasurementValues.add(new ArrayList<List<String>>());
+            	yMeasurementValues.add(new ArrayList<List<String>>());
             }
-
-
+            
+            String elementNum;
+            int page;
+            int section;
+            int index, index2, index3;
+            Properties measurements = new Properties();
+            
+            for (Enumeration<String> e = req.getAttributeNames(); e.hasMoreElements(); ) {
+                temp = new StringBuilder(e.nextElement().toString());                
+                measurements.setProperty(temp.toString(), req.getAttribute(temp.toString()).toString());
+                
+                //for graphing measurements of height and weight
+                //since we don't know how many there could be they cannot be defined in a config file
+                //save them here so they can be added to the graph vectors below    
+                //naming convention of measurements is xVal_num_section_page, yVal_num_section_page
+                //num uniquely identifies value so x num should = y num
+                //section allows graphing of more than one measurement axis e.g. if top of page is different graph than bottom of page see rourke
+                //page is the pdf page it should be plotted on
+                if( temp.toString().startsWith("xVal_") ) {
+                	MiscUtils.getLogger().debug("Processing " + temp.toString());
+                	
+                	index = temp.indexOf("_");
+                	index2 = temp.indexOf("_", index+1);
+                	elementNum = temp.substring(index+1,index2);
+                	
+                	index3 = temp.lastIndexOf("_");
+                	section = Integer.parseInt(temp.substring(index2 + 1, index3));                	
+                	page = Integer.parseInt(temp.substring(index3+1));
+                	
+                	//page is zero based, numPages is not
+                	if( page >= numPages ) {
+                		continue;
+                	}
+                	
+                	//if this is the first measurement of the section init array
+                	while( xMeasurementValues.get(page).size() <= section ) {
+                		MiscUtils.getLogger().debug("Adding section " + section);
+                		List<List<String>> list = xMeasurementValues.get(page);
+                		list.add(new ArrayList<String>());
+                	}
+                	                	
+                	while( yMeasurementValues.get(page).size() <= section ) {
+                		List<List<String>> list = yMeasurementValues.get(page);
+                		list.add(new ArrayList<String>());
+                	}
+                	
+                	xMeasurementValues.get(page).get(section).add((String)req.getAttribute(temp.toString()));
+                	MiscUtils.getLogger().debug("Setting xMeasurementDate to " + (String)req.getAttribute(temp.toString()));
+                	                	
+                	temp = new StringBuilder("yVal_");
+                	temp = temp.append(elementNum);
+                	temp = temp.append("_"+section);
+                	temp = temp.append("_"+page);
+                	MiscUtils.getLogger().debug("Key " + temp);
+                	tempValue = (String)req.getAttribute(temp.toString());                	
+                	yMeasurementValues.get(page).get(section).add(tempValue);
+                	MiscUtils.getLogger().debug("Setting yMeasurementValue to " + tempValue);
+                }
+                else {
+                	props.setProperty(temp.toString(), req.getAttribute(temp.toString()).toString());
+                }
+            }
+            
             document.addTitle(title);
             document.addSubject("");
             document.addKeywords("pdf, itext");
@@ -306,7 +401,8 @@ public class FrmPDFServlet extends HttpServlet {
             int i = 0;
             int p = 0;
             int fontFlags = 0;
-
+            String propValue;
+            
             while (i < n) {
                 document.newPage();
                 p++;
@@ -323,263 +419,299 @@ public class FrmPDFServlet extends HttpServlet {
                 //cb.showTextAligned(PdfContentByte.ALIGN_LEFT, "Cathy
                 // Pacific", 126, height-50, 0);
 
-                if (i > (cfgFileNo))
-                    continue;
-
-                String[] fontType;
-                for (Enumeration e = printCfg[i - 1].propertyNames(); e.hasMoreElements();) {
-                    tempName = new StringBuilder(e.nextElement().toString());
-                    cfgVal = printCfg[i - 1].getProperty(tempName.toString()).split(" *, *");
-
-                    if( cfgVal[4].indexOf(";") > -1 ) {
-                        fontType = cfgVal[4].split(";");
-                        if( fontType[1].trim().equals("italic") )
-                            fontFlags = Font.ITALIC;
-                        else if( fontType[1].trim().equals("bold") )
-                            fontFlags = Font.BOLD;
-                        else if( fontType[1].trim().equals("bolditalic") )
-                            fontFlags = Font.BOLDITALIC;
-                        else
-                            fontFlags = Font.NORMAL;
-                    } else {
-                        fontFlags = Font.NORMAL;
-                        fontType = new String[] { cfgVal[4].trim() };
-                    }
-
-                    if(fontType[0].trim().equals("BaseFont.HELVETICA")) {
-                        fontType[0] = BaseFont.HELVETICA;
-                        encoding = BaseFont.CP1252;  //latin1 encoding
-                    } else if(fontType[0].trim().equals("BaseFont.HELVETICA_OBLIQUE")) {
-                        fontType[0] = BaseFont.HELVETICA_OBLIQUE;
-                        encoding = BaseFont.CP1252;
-                    } else if(fontType[0].trim().equals("BaseFont.ZAPFDINGBATS")) {
-                        fontType[0] = BaseFont.ZAPFDINGBATS;
-                        encoding = BaseFont.ZAPFDINGBATS;
-                    } else {
-                        fontType[0] = BaseFont.COURIER;
-                        encoding = BaseFont.CP1252;
-                    }
-
-
-                    bf = BaseFont.createFont(fontType[0],encoding,BaseFont.NOT_EMBEDDED);
-
-                    // write in a rectangle area
-                    if (cfgVal.length >= 9) {
-                        Font font = new Font(bf, Integer.parseInt(cfgVal[5].trim()), fontFlags);
-                        //ct.setSimpleColumn(60, 300, 200, 500, 10,
-                        // Element.ALIGN_LEFT);
-                        //ct.addText(new Phrase(15, "xxxx xxxxx xxxxx xxxxx xxx
-                        // xxxxx xxxxx xxxx xxxxx xxxxxx xxxx xxxxxxx xxxxx
-                        // xxxx", font));
-                        ct.setSimpleColumn(Integer.parseInt(cfgVal[1].trim()), (height - Integer.parseInt(cfgVal[2]
-                                .trim())), Integer.parseInt(cfgVal[7].trim()), (height - Integer.parseInt(cfgVal[8]
-                                .trim())), Integer.parseInt(cfgVal[9].trim()), (cfgVal[0].trim().equals("left") ?
-                                    Element.ALIGN_LEFT: (cfgVal[0].trim().equals("right") ? Element.ALIGN_RIGHT :
-                                        Element.ALIGN_CENTER)));
-
-                        //ct.addText(new Phrase(12, props.getProperty(tempName.toString(), ""), font)); // page
-                        ct.setText(new Phrase(12, props.getProperty(tempName.toString(), ""), font));
-                        // size
-                        // leading
-                        // space between two
-                        // lines
-                        ct.go();
-                        continue;
-                    }
-
-                    // draw line directly
-                    if (tempName.toString().startsWith("__$line")) {
-                        cb.setRGBColorStrokeF(0f, 0f, 0f);
-                        cb.setLineWidth(Float.parseFloat(cfgVal[4].trim()));
-                        cb.moveTo(Float.parseFloat(cfgVal[0].trim()), Float.parseFloat(cfgVal[1].trim()));
-                        cb.lineTo(Float.parseFloat(cfgVal[2].trim()), Float.parseFloat(cfgVal[3].trim()));
-                        // stroke the lines
-                        cb.stroke();
-                        // write text directly
-
-                    } else if (tempName.toString().startsWith("__")) {
-                        cb.beginText();
-                        cb.setFontAndSize(bf, Integer.parseInt(cfgVal[5].trim()));
-                        cb
-                                .showTextAligned((cfgVal[0].trim().equals("left") ? PdfContentByte.ALIGN_LEFT
-                                : (cfgVal[0].trim().equals("right") ? PdfContentByte.ALIGN_RIGHT
-                                : PdfContentByte.ALIGN_CENTER)), (cfgVal.length >= 7 ? (cfgVal[6]
-                                .trim()) : props.getProperty(tempName.toString(), "")), Integer
-                                .parseInt(cfgVal[1].trim()), (height - Integer.parseInt(cfgVal[2].trim())), 0);
-
-                        cb.endText();
-                    } else if (tempName.toString().equals("forms_promotext")){
-                        if ( OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT") != null ){
-                            log.info("adding user placed forms_promotext");
-                            cb.beginText();
-                            cb.setFontAndSize(bf, Integer.parseInt(cfgVal[5].trim()));
-                            cb.showTextAligned((cfgVal[0].trim().equals("left") ? PdfContentByte.ALIGN_LEFT : (cfgVal[0].trim().equals("right") ? PdfContentByte.ALIGN_RIGHT : PdfContentByte.ALIGN_CENTER)),
-                                    OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT"),
-                                    Integer.parseInt(cfgVal[1].trim()),
-                                    (height - Integer.parseInt(cfgVal[2].trim())),
-                                    0);
-
-                            cb.endText();
-                        }
-                    } else { // write prop text
-
-                        cb.beginText();
-                        cb.setFontAndSize(bf, Integer.parseInt(cfgVal[5].trim()));
-                        cb
-                                .showTextAligned((cfgVal[0].trim().equals("left") ? PdfContentByte.ALIGN_LEFT
-                                : (cfgVal[0].trim().equals("right") ? PdfContentByte.ALIGN_RIGHT
-                                : PdfContentByte.ALIGN_CENTER)), (cfgVal.length >= 7 ? ((props
-                                .getProperty(tempName.toString(), "").equals("") ? "" : cfgVal[6].trim()))
-                                : props.getProperty(tempName.toString(), "")), Integer.parseInt(cfgVal[1]
-                                .trim()), (height - Integer.parseInt(cfgVal[2].trim())), 0);
-
-                        cb.endText();
-                    }
-
-                }
-
-                //----------
-                if ( OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT") != null && printCfg[i-1].getProperty("forms_promotext") == null){
-                    log.info("adding forms_promotext");
-
-                    // remove elements of the PDF file
-                    Rectangle rec = new Rectangle(160, 12, 465, 21);
-                    rec.setBackgroundColor(java.awt.Color.WHITE);
-                    cb.rectangle(rec);
-
-                    cb.beginText();
-                    cb.setFontAndSize(BaseFont.createFont(BaseFont.HELVETICA,BaseFont.CP1252,BaseFont.NOT_EMBEDDED), 6);
-                    cb.showTextAligned(PdfContentByte.ALIGN_CENTER, OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT"), width/2, 16, 0);
-                    cb.endText();
-                }
-                //----------
-
-                /* used to remove elements of the PDF file
-                log.debug("Writing rectangle")
-                Rectangle rec = new Rectangle(243, 791-140, 289, 791-129);
-                rec.setBackgroundColor(java.awt.Color.WHITE);
-                cb.rectangle(rec);*/
-
+                if ( i <= cfgFileNo ) {
+                    
+	                String[] fontType;
+	                for (Enumeration e = printCfg[i - 1].propertyNames(); e.hasMoreElements();) {
+	                    tempName = new StringBuilder(e.nextElement().toString());
+	                    cfgVal = printCfg[i - 1].getProperty(tempName.toString()).split(" *, *");
+	
+	                    if( cfgVal[4].indexOf(";") > -1 ) {
+	                        fontType = cfgVal[4].split(";");
+	                        if( fontType[1].trim().equals("italic") )
+	                            fontFlags = Font.ITALIC;
+	                        else if( fontType[1].trim().equals("bold") )
+	                            fontFlags = Font.BOLD;
+	                        else if( fontType[1].trim().equals("bolditalic") )
+	                            fontFlags = Font.BOLDITALIC;
+	                        else
+	                            fontFlags = Font.NORMAL;
+	                    } else {
+	                        fontFlags = Font.NORMAL;
+	                        fontType = new String[] { cfgVal[4].trim() };
+	                    }
+	
+	                    if(fontType[0].trim().equals("BaseFont.HELVETICA")) {
+	                        fontType[0] = BaseFont.HELVETICA;
+	                        encoding = BaseFont.CP1252;  //latin1 encoding
+	                    } else if(fontType[0].trim().equals("BaseFont.HELVETICA_OBLIQUE")) {
+	                        fontType[0] = BaseFont.HELVETICA_OBLIQUE;
+	                        encoding = BaseFont.CP1252;
+	                    } else if(fontType[0].trim().equals("BaseFont.ZAPFDINGBATS")) {
+	                        fontType[0] = BaseFont.ZAPFDINGBATS;
+	                        encoding = BaseFont.ZAPFDINGBATS;
+	                    } else {
+	                        fontType[0] = BaseFont.COURIER;
+	                        encoding = BaseFont.CP1252;
+	                    }
+	
+	
+	                    bf = BaseFont.createFont(fontType[0],encoding,BaseFont.NOT_EMBEDDED);
+	                    propValue = props.getProperty(tempName.toString());
+	                    //if not in regular config then check measurements
+	                    if(propValue == null ) {
+	                    	propValue = measurements.getProperty(tempName.toString(),"");
+	                    }
+	                    
+	                    // write in a rectangle area
+	                    if (cfgVal.length >= 9) {
+	                        Font font = new Font(bf, Integer.parseInt(cfgVal[5].trim()), fontFlags);
+	                        //ct.setSimpleColumn(60, 300, 200, 500, 10,
+	                        // Element.ALIGN_LEFT);
+	                        //ct.addText(new Phrase(15, "xxxx xxxxx xxxxx xxxxx xxx
+	                        // xxxxx xxxxx xxxx xxxxx xxxxxx xxxx xxxxxxx xxxxx
+	                        // xxxx", font));
+	                        ct.setSimpleColumn(Integer.parseInt(cfgVal[1].trim()), (height - Integer.parseInt(cfgVal[2]
+	                                .trim())), Integer.parseInt(cfgVal[7].trim()), (height - Integer.parseInt(cfgVal[8]
+	                                .trim())), Integer.parseInt(cfgVal[9].trim()), (cfgVal[0].trim().equals("left") ?
+	                                    Element.ALIGN_LEFT: (cfgVal[0].trim().equals("right") ? Element.ALIGN_RIGHT :
+	                                        Element.ALIGN_CENTER)));
+	
+	                        //ct.addText(new Phrase(12, props.getProperty(tempName.toString(), ""), font)); // page
+	                        ct.setText(new Phrase(12, propValue, font));
+	                        // size
+	                        // leading
+	                        // space between two
+	                        // lines
+	                        ct.go();
+	                        continue;
+	                    }
+	
+	                    // draw line directly
+	                    if (tempName.toString().startsWith("__$line")) {
+	                        cb.setRGBColorStrokeF(0f, 0f, 0f);
+	                        cb.setLineWidth(Float.parseFloat(cfgVal[4].trim()));
+	                        cb.moveTo(Float.parseFloat(cfgVal[0].trim()), Float.parseFloat(cfgVal[1].trim()));
+	                        cb.lineTo(Float.parseFloat(cfgVal[2].trim()), Float.parseFloat(cfgVal[3].trim()));
+	                        // stroke the lines
+	                        cb.stroke();
+	                        // write text directly
+	
+	                    } else if (tempName.toString().startsWith("__")) {
+	                        cb.beginText();
+	                        cb.setFontAndSize(bf, Integer.parseInt(cfgVal[5].trim()));
+	                        cb
+	                                .showTextAligned((cfgVal[0].trim().equals("left") ? PdfContentByte.ALIGN_LEFT
+	                                : (cfgVal[0].trim().equals("right") ? PdfContentByte.ALIGN_RIGHT
+	                                : PdfContentByte.ALIGN_CENTER)), (cfgVal.length >= 7 ? (cfgVal[6]
+	                                .trim()) : propValue), Integer
+	                                .parseInt(cfgVal[1].trim()), (height - Integer.parseInt(cfgVal[2].trim())), 0);
+	
+	                        cb.endText();
+	                    } else if (tempName.toString().equals("forms_promotext")){
+	                        if ( OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT") != null ){
+	                            log.info("adding user placed forms_promotext");
+	                            cb.beginText();
+	                            cb.setFontAndSize(bf, Integer.parseInt(cfgVal[5].trim()));
+	                            cb.showTextAligned((cfgVal[0].trim().equals("left") ? PdfContentByte.ALIGN_LEFT : (cfgVal[0].trim().equals("right") ? PdfContentByte.ALIGN_RIGHT : PdfContentByte.ALIGN_CENTER)),
+	                                    OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT"),
+	                                    Integer.parseInt(cfgVal[1].trim()),
+	                                    (height - Integer.parseInt(cfgVal[2].trim())),
+	                                    0);
+	
+	                            cb.endText();
+	                        }
+	                    } else { // write prop text
+	
+	                        cb.beginText();
+	                        cb.setFontAndSize(bf, Integer.parseInt(cfgVal[5].trim()));
+	                        cb
+	                                .showTextAligned((cfgVal[0].trim().equals("left") ? PdfContentByte.ALIGN_LEFT
+	                                : (cfgVal[0].trim().equals("right") ? PdfContentByte.ALIGN_RIGHT
+	                                : PdfContentByte.ALIGN_CENTER)), (cfgVal.length >= 7 ? ((propValue.equals("") ? "" : cfgVal[6].trim()))
+	                                : propValue), Integer.parseInt(cfgVal[1]
+	                                .trim()), (height - Integer.parseInt(cfgVal[2].trim())), 0);
+	
+	                        cb.endText();
+	                    }
+	
+	                }
+	
+	                //----------
+	                if ( OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT") != null && printCfg[i-1].getProperty("forms_promotext") == null){
+	                    log.info("adding forms_promotext");
+	
+	                    // remove elements of the PDF file
+	                    Rectangle rec = new Rectangle(160, 12, 465, 21);
+	                    rec.setBackgroundColor(java.awt.Color.WHITE);
+	                    cb.rectangle(rec);
+	
+	                    cb.beginText();
+	                    cb.setFontAndSize(BaseFont.createFont(BaseFont.HELVETICA,BaseFont.CP1252,BaseFont.NOT_EMBEDDED), 6);
+	                    cb.showTextAligned(PdfContentByte.ALIGN_CENTER, OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT"), width/2, 16, 0);
+	                    cb.endText();
+	                }
+	                
+	                
+                	
+                } //end if there are print properties
 
                 //graphic
-                if ((graphicPageArray.contains(Integer.toString(i)) || i == 1 && graphicPageArray.size() == 0 ) && cfgGraphicFileNo > 0) {
-
+                //if ((graphicPageArray.contains(Integer.toString(i)) || i == 1 && graphicPageArray.size() == 0 ) && cfgGraphicFileNo > 0) {
+                
                     int origX = 0;
                     int origY = 0;
 
                     String className = null;
-
-                    for (int k = 0; k < cfgGraphicFileNo; k++) {
-                        Vector<String> xDate = new Vector<String>();
-                        Vector<String> yHeight = new Vector<String>();
-                        Properties args = new Properties();
-
-                        for (Enumeration e = graphicCfg[k].propertyNames(); e.hasMoreElements();) {
-                            tempName = new StringBuilder(e.nextElement().toString());
-                            tempValue = graphicCfg[k].getProperty(tempName.toString()).trim();
-                            if (tempName.toString().equals("__finalEDB"))
-                                args.setProperty(tempName.toString(), props.getProperty(tempValue));
-                            else if (tempName.toString().equals("__dateFormat"))
-                                args.setProperty(tempName.toString(),tempValue);
-                            else if (tempName.toString().equals("__nMaxPixX"))
-                                args.setProperty(tempName.toString(),tempValue);
-                            else if (tempName.toString().equals("__nMaxPixY"))
-                                args.setProperty(tempName.toString(),tempValue);
-                            else if (tempName.toString().equals("__fStartX"))
-                                args.setProperty(tempName.toString(),tempValue);
-                            else if (tempName.toString().equals("__fEndX"))
-                                args.setProperty(tempName.toString(),tempValue);
-                            else if (tempName.toString().equals("__fStartY"))
-                                args.setProperty(tempName.toString(),tempValue);
-                            else if (tempName.toString().equals("__fEndY"))
-                                args.setProperty(tempName.toString(),tempValue);
-                            else if (tempName.toString().equals("__origX"))
-                                origX = Integer.parseInt(tempValue);
-                            else if (tempName.toString().equals("__origY"))
-                                origY = Integer.parseInt(tempValue);
-                            else if (tempName.toString().equals("__className"))
-                                className = tempValue;
-                            else {
-                                xDate.add(props.getProperty(tempName.toString()));
-                                yHeight.add(props.getProperty(tempValue));
-                            }
-                        } // end for read in
-
-                        FrmPdfGraphic pdfGraph = FrmGraphicFactory.create(className);
-                        pdfGraph.init(args);
-
-                        Properties gProp = pdfGraph.getGraphicXYProp(xDate, yHeight);
-
-                        //draw the pic
-                        cb.setLineWidth(1.5f);
-
-                        if (k % 2 == 0) {
-                            cb.setRGBColorStrokeF(0f, 0f, 255f);
-                        } else {
-                            cb.setRGBColorStrokeF(255f, 0f, 0f);
-                        }
-
-                        for (Enumeration e = gProp.propertyNames(); e.hasMoreElements();) {
-                            tempName = new StringBuilder(e.nextElement().toString());
-                            tempValue = gProp.getProperty(tempName.toString(), "");
-                            if (tempValue.equals(""))
-                                continue;
-
-                            cb.circle((origX + Float.parseFloat(tempName.toString())), (height - origY + Float
-                                    .parseFloat(tempValue)), 1.5f);
-                            cb.stroke();
-                        }
-                        /*
-                        if (fEDB != null && fEDB.length() >= 8) {
-                            //make the graphic class
-                            FrmPdfGraphicAR myClass = new FrmPdfGraphicAR();
-                            myClass.init(nMaxPixX, nMaxPixY, fStartX, fEndX, fStartY, fEndY, dateFormat, fEDB);
-                            Properties gProp = myClass.getGraphicXYProp(xDate, yHeight);
-
-                            //draw the pic
-                            cb.setLineWidth(1.5f);
-                            //cb.setRGBColorStrokeF(0f, 255f, 0f); //cb.circle(52f,
-                            // height - 751f, 1f);//cb.circle(52f, height - 609f,
-                            // 1f);
-                            for (Enumeration e = gProp.propertyNames(); e.hasMoreElements();) {
-                                tempName = new StringBuilder(e.nextElement().toString());
-                                tempValue = gProp.getProperty(tempName.toString(), "");
-                                if (tempValue.equals(""))
-                                    continue;
-
-                                cb.circle((origX + Float.parseFloat(tempName.toString())), (height - origY + Float
-                                        .parseFloat(tempValue)), 1.5f);
-                                cb.stroke();
-                            }
-                        }
-
-                        // general chart
-                        if (!bFormAR) {
-                            //make the graphic class
-                            FrmPdfGraphicGrowthChart myClass = new FrmPdfGraphicGrowthChart();
-                            myClass.init(nMaxPixX, nMaxPixY, fStartX, fEndX, fStartY, fEndY);
-                            Properties gProp = myClass.getGraphicXYProp(xDate, yHeight);
-
-                            //draw the pic
-                            cb.setLineWidth(1.5f);
-                            if (k % 2 == 0) {
-                                cb.setRGBColorStrokeF(0f, 0f, 255f);
-                            } else {
-                                cb.setRGBColorStrokeF(255f, 0f, 0f);
-                            }
-                            for (Enumeration e = gProp.propertyNames(); e.hasMoreElements();) {
-                                tempName = new StringBuilder(e.nextElement().toString());
-                                tempValue = gProp.getProperty(tempName.toString(), "");
-                                if (tempValue.equals(""))
-                                    continue;
-
-                                cb.circle((origX + Float.parseFloat(tempName.toString())), (height - origY + Float
-                                        .parseFloat(tempValue)), 1.5f);
-                                cb.stroke();
-                            }
-                        } // end of first pic */
-                    } // end of for loop
-                }
+                    Properties[] tempPropertiesArray;
+                    if( i <= graphicCfg.length ) {
+                    	tempPropertiesArray = graphicCfg[i-1];
+                    	MiscUtils.getLogger().debug("Plotting page " + i);
+                    }
+                    else {
+                    	tempPropertiesArray = null;
+                    	MiscUtils.getLogger().debug("Skipped Plotting page " + i);
+                    }
+                    String[] tempYcoords;
+                    
+                    //if there are properties to plot
+                    if( tempPropertiesArray != null ) {
+                    	MiscUtils.getLogger().debug("TEMP PROP LENGTH " + tempPropertiesArray.length);
+	                    for (int k = 0; k < tempPropertiesArray.length; k++) {
+	                    	//initialise with measurement values which are mapped to config file by form get graphic function
+	                    	List<String> xDate, yHeight;
+	                    	if( xMeasurementValues.get(i-1).size() > k && yMeasurementValues.get(i-1).size() > k ) {
+	                    		xDate = new ArrayList<String>(xMeasurementValues.get(i-1).get(k));
+	                    		yHeight = new ArrayList<String>(yMeasurementValues.get(i-1).get(k));
+	                    	}
+	                    	else {
+	                    		xDate = new ArrayList<String>();
+	                    		yHeight = new ArrayList<String>();
+	                    	}
+	                    	
+	                        Properties args = new Properties();
+	
+	                        
+	                        for (Enumeration e = tempPropertiesArray[k].propertyNames(); e.hasMoreElements();) {
+	                            tempName = new StringBuilder(e.nextElement().toString());
+	                            tempValue = tempPropertiesArray[k].getProperty(tempName.toString()).trim();
+	                            if (tempName.toString().equals("__finalEDB"))
+	                                args.setProperty(tempName.toString(), props.getProperty(tempValue));
+	                            else if (tempName.toString().equals("__xDateScale"))
+	                                args.setProperty(tempName.toString(), props.getProperty(tempValue));
+	                            else if (tempName.toString().equals("__dateFormat"))
+	                                args.setProperty(tempName.toString(),tempValue);
+	                            else if (tempName.toString().equals("__nMaxPixX"))
+	                                args.setProperty(tempName.toString(),tempValue);
+	                            else if (tempName.toString().equals("__nMaxPixY"))
+	                                args.setProperty(tempName.toString(),tempValue);
+	                            else if (tempName.toString().equals("__fStartX"))
+	                                args.setProperty(tempName.toString(),tempValue);
+	                            else if (tempName.toString().equals("__fEndX"))
+	                                args.setProperty(tempName.toString(),tempValue);
+	                            else if (tempName.toString().equals("__fStartY"))
+	                                args.setProperty(tempName.toString(),tempValue);
+	                            else if (tempName.toString().equals("__fEndY"))
+	                                args.setProperty(tempName.toString(),tempValue);
+	                            else if (tempName.toString().equals("__origX"))
+	                                origX = Integer.parseInt(tempValue);
+	                            else if (tempName.toString().equals("__origY"))
+	                                origY = Integer.parseInt(tempValue);
+	                            else if (tempName.toString().equals("__className"))
+	                                className = tempValue;
+	                            else {
+	                            	MiscUtils.getLogger().debug("Adding xDate " + tempName.toString() + " VAL: " + props.getProperty(tempName.toString()));
+	                            	MiscUtils.getLogger().debug("Adding yHeight " + tempValue + " VAL: " + props.getProperty(tempValue));
+	                                xDate.add(props.getProperty(tempName.toString()));
+	                                yHeight.add(props.getProperty(tempValue));
+	                            }
+	                        } // end for read in from config file                                                
+	                        
+	                        FrmPdfGraphic pdfGraph = FrmGraphicFactory.create(className);
+	                        pdfGraph.init(args);                        
+	                        
+	                        Properties gProp = pdfGraph.getGraphicXYProp(xDate, yHeight);
+	
+	                        //draw the pic
+	                        cb.setLineWidth(1.5f);
+	
+	                        if (k % 2 == 0) {
+	                            cb.setRGBColorStrokeF(0f, 0f, 255f);
+	                        } else {
+	                            cb.setRGBColorStrokeF(255f, 0f, 0f);
+	                        }
+	
+	                        
+	                        for (Enumeration e = gProp.propertyNames(); e.hasMoreElements();) {
+	                            tempName = new StringBuilder(e.nextElement().toString());
+	                            tempValue = gProp.getProperty(tempName.toString(), "");
+	                            
+	                            if (tempValue.equals("")) {
+	                                continue;
+	                            }
+	                            
+	                            tempYcoords = tempValue.split(",");
+	                            for( int idx = 0; idx < tempYcoords.length; ++idx ) {
+	                            	tempValue = tempYcoords[idx];
+	                            	MiscUtils.getLogger().debug("COORDS: cfg_pg " + k + " : " + String.valueOf(origX + Float.parseFloat(tempName.toString())) + ", " + String.valueOf(height - origY + Float
+	                                    .parseFloat(tempValue)));
+	
+	                            	cb.circle((origX + Float.parseFloat(tempName.toString())), (height - origY + Float
+	                                    .parseFloat(tempValue)), 1.5f);
+	                            	cb.stroke();
+	                            }
+	                        }
+	                        /*
+	                        if (fEDB != null && fEDB.length() >= 8) {
+	                            //make the graphic class
+	                            FrmPdfGraphicAR myClass = new FrmPdfGraphicAR();
+	                            myClass.init(nMaxPixX, nMaxPixY, fStartX, fEndX, fStartY, fEndY, dateFormat, fEDB);
+	                            Properties gProp = myClass.getGraphicXYProp(xDate, yHeight);
+	
+	                            //draw the pic
+	                            cb.setLineWidth(1.5f);
+	                            //cb.setRGBColorStrokeF(0f, 255f, 0f); //cb.circle(52f,
+	                            // height - 751f, 1f);//cb.circle(52f, height - 609f,
+	                            // 1f);
+	                            for (Enumeration e = gProp.propertyNames(); e.hasMoreElements();) {
+	                                tempName = new StringBuilder(e.nextElement().toString());
+	                                tempValue = gProp.getProperty(tempName.toString(), "");
+	                                if (tempValue.equals(""))
+	                                    continue;
+	
+	                                cb.circle((origX + Float.parseFloat(tempName.toString())), (height - origY + Float
+	                                        .parseFloat(tempValue)), 1.5f);
+	                                cb.stroke();
+	                            }
+	                        }
+	
+	                        // general chart
+	                        if (!bFormAR) {
+	                            //make the graphic class
+	                            FrmPdfGraphicGrowthChart myClass = new FrmPdfGraphicGrowthChart();
+	                            myClass.init(nMaxPixX, nMaxPixY, fStartX, fEndX, fStartY, fEndY);
+	                            Properties gProp = myClass.getGraphicXYProp(xDate, yHeight);
+	
+	                            //draw the pic
+	                            cb.setLineWidth(1.5f);
+	                            if (k % 2 == 0) {
+	                                cb.setRGBColorStrokeF(0f, 0f, 255f);
+	                            } else {
+	                                cb.setRGBColorStrokeF(255f, 0f, 0f);
+	                            }
+	                            for (Enumeration e = gProp.propertyNames(); e.hasMoreElements();) {
+	                                tempName = new StringBuilder(e.nextElement().toString());
+	                                tempValue = gProp.getProperty(tempName.toString(), "");
+	                                if (tempValue.equals(""))
+	                                    continue;
+	
+	                                cb.circle((origX + Float.parseFloat(tempName.toString())), (height - origY + Float
+	                                        .parseFloat(tempValue)), 1.5f);
+	                                cb.stroke();
+	                            }
+	                        } // end of first pic */
+	                    } // end of for loop
+                    } //end if there are properties to process
 
             }
 

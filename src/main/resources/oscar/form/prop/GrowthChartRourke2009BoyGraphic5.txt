@@ -1,0 +1,35 @@
+date_1			 :		weight_1
+date_2			 :		weight_2
+date_3			 :		weight_3
+date_4			 :		weight_4
+date_5			 :		weight_5
+date_6			 :		weight_6
+date_7			 :		weight_7
+date_8			 :		weight_8
+date_9			 :		weight_9
+date_10			 :		weight_10
+date_11			 :		weight_11
+date_12			 :		weight_12
+date_13			 :		weight_13
+date_14			 :		weight_14
+date_15			 :		weight_15
+date_16			 :		weight_16
+date_17			 :		weight_17
+date_18			 :		weight_18
+date_19			 :		weight_19
+date_20			 :		weight_20
+
+__origX		:	112
+__origY		:	721
+__nMaxPixX	:	422
+__nMaxPixY	:	353
+__fStartX	:	2
+__fEndX		:	19
+__fStartY	:	2
+__fEndY		:	93
+
+__finalEDB	:	__startDate
+__xDateScale	: __xDateScale_2	
+__dateFormat	:	dd/MM/yyyy
+
+__className	:	oscar.form.graphic.FrmPdfGraphicRourke

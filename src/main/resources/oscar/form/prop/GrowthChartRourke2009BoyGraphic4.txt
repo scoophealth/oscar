@@ -44,4 +44,6 @@ __fEndX		:	110
 __fStartY	:	1.4
 __fEndY		:	24.6
 
+__xDateScale	:	__xDateScale_1
+
 __className	:	oscar.form.graphic.FrmPdfGraphicGrowthChart
