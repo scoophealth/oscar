@@ -62,7 +62,13 @@ public final class FrmAction extends Action {
             log.info("SUBMIT " + String.valueOf(request.getParameter("submit") == null));
             //if we are graphing, we need to grab info from db and add it to request object
             if( request.getParameter("submit").equals("graph") )
-            {                
+            {
+            	//Rourke needs to know what type of graph is being plotted
+            	String graphType = request.getParameter("__graphType");
+            	if( graphType != null ) {
+            		rec.setGraphType(graphType);
+            	}
+            	
                props = rec.getGraph(Integer.parseInt(request.getParameter("demographic_no")), 
                        Integer.parseInt(request.getParameter("formId")));
                

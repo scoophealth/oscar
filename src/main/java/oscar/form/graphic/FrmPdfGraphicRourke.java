@@ -30,8 +30,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Properties;
-import java.util.Vector;
 
 import org.oscarehr.util.MiscUtils;
 
@@ -45,6 +45,7 @@ public class FrmPdfGraphicRourke extends FrmPdfGraphic {
     
     private final static String DATEFORMAT = new String("dd/MM/yyyy");    
     
+    int xDateScale;
     int nMaxPixX;
     int nMaxPixY;
     float fStartX;
@@ -58,6 +59,9 @@ public class FrmPdfGraphicRourke extends FrmPdfGraphic {
     Properties xyProp;
     
     public void init( Properties prop ) {
+    			xDateScale = Integer.parseInt(prop.getProperty("__xDateScale"));
+    	
+    	
                 String str = prop.getProperty("__nMaxPixX");
                 nMaxPixX = toInt(str);
                 
@@ -94,7 +98,8 @@ public class FrmPdfGraphicRourke extends FrmPdfGraphic {
                 
                 //use __finalEDB as place holder for start date
                 str = prop.getProperty("__finalEDB");
-                str = makeDateStr(str);                
+                str = makeDateStr(str);  
+                MiscUtils.getLogger().debug("Setting start date " + str);
                 startDate = createCalendar(str);
     }        
     
@@ -113,7 +118,7 @@ public class FrmPdfGraphicRourke extends FrmPdfGraphic {
         return cal;
     }
     
-    public Properties getGraphicXYProp(Vector xDate, Vector yHeight) {
+    public Properties getGraphicXYProp(List xDate, List yHeight) {
         xyProp = new Properties();
         String x,y;
 	for (int i = 0; i < xDate.size(); i++) {
@@ -154,8 +159,15 @@ public class FrmPdfGraphicRourke extends FrmPdfGraphic {
             emonth += (eday / curDate.getActualMaximum(Calendar.DAY_OF_MONTH));                        
             
             //don't forget to add years
-            smonth += startDate.get(Calendar.YEAR) * 12.0;
-            emonth += curDate.get(Calendar.YEAR) * 12.0;
+            switch (xDateScale) {
+            case Calendar.MONTH:
+            	smonth += startDate.get(Calendar.YEAR) * 12.0;
+                emonth += curDate.get(Calendar.YEAR) * 12.0;
+                break;
+            case Calendar.YEAR:
+            	smonth = (smonth/12.0f) + startDate.get(Calendar.YEAR);
+                emonth = (emonth/12.0f) + curDate.get(Calendar.YEAR);
+            }
             
             if ( smonth > emonth ) {
                 MiscUtils.getLogger().debug("FrmPdfGraphicRourke: Start date after xDate");
@@ -173,7 +185,16 @@ public class FrmPdfGraphicRourke extends FrmPdfGraphic {
             ycoord = deltaY * (ycoord - fStartY);
             
             MiscUtils.getLogger().debug("Graphic x y: " + xcoord + ", " + ycoord );
-            xyProp.setProperty(String.valueOf(xcoord), String.valueOf(ycoord));
+            
+            if( xyProp.containsKey(String.valueOf(xcoord)) ) {
+            	StringBuilder yvalue = new StringBuilder(xyProp.getProperty(String.valueOf(xcoord)));
+            	yvalue = yvalue.append(",");
+            	yvalue = yvalue.append(String.valueOf(ycoord));
+            	xyProp.setProperty(String.valueOf(xcoord), yvalue.toString());
+            }
+            else {
+            	xyProp.setProperty(String.valueOf(xcoord), String.valueOf(ycoord));
+            }
         }
     }
     

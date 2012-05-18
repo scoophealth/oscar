@@ -29,8 +29,8 @@
 
 package oscar.form.graphic;
 
+import java.util.List;
 import java.util.Properties;
-import java.util.Vector;
 
 import oscar.util.UtilDateUtilities;
 
@@ -107,7 +107,7 @@ public final class FrmPdfGraphicAR extends FrmPdfGraphic {
 		return;
 	}
 
-	public Properties getGraphicXYProp(Vector xDate, Vector yHeight) {
+	public Properties getGraphicXYProp(List xDate, List yHeight) {
 		prop = new Properties();
 		for (int i = 0; i < xDate.size(); i++) {
 			if (xDate.get(i) != null && yHeight.get(i) != null) {

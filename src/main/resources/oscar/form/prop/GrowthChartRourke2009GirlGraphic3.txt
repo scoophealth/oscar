@@ -44,6 +44,7 @@ __fEndX		:	24
 __fStartY	:	28
 __fEndY		:	54
 
+__xDateScale	:	__xDateScale_1
 __finalEDB	:	c_birthDate
 __dateFormat	:	dd/MM/yyyy
 

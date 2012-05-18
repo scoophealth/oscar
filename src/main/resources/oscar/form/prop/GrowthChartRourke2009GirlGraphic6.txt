@@ -1,0 +1,35 @@
+date_1			 :		length_1
+date_2			 :		length_2
+date_3			 :		length_3
+date_4			 :		length_4
+date_5			 :		length_5
+date_6			 :		length_6
+date_7			 :		length_7
+date_8			 :		length_8
+date_9			 :		length_9
+date_10			 :		length_10
+date_11			 :		length_11
+date_12			 :		length_12
+date_13			 :		length_13
+date_14			 :		length_14
+date_15			 :		length_15
+date_16			 :		length_16
+date_17			 :		length_17
+date_18			 :		length_18
+date_19			 :		length_19
+date_20			 :		length_20
+
+__origX		:	112
+__origY		:	609
+__nMaxPixX	:	422
+__nMaxPixY	:	508
+__fStartX	:	2
+__fEndX		:	19
+__fStartY	:	71
+__fEndY		:	202
+
+__finalEDB	:	__startDate
+__xDateScale	:	__xDateScale_2
+__dateFormat	:	dd/MM/yyyy
+
+__className	:	oscar.form.graphic.FrmPdfGraphicRourke
