@@ -38,11 +38,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.PostLoad;
 import javax.persistence.PostPersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.oscarehr.common.model.AbstractModel;
 
@@ -387,7 +387,7 @@ public class BillingClaimHeader1 extends AbstractModel<Integer> implements Seria
     /**
      * @return the timestamp1
      */
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     public Date getTimestamp1() {
         return timestamp1;
     }
@@ -468,8 +468,8 @@ public class BillingClaimHeader1 extends AbstractModel<Integer> implements Seria
      */
     public void setDemographic_name(String demographic_name) {
         this.demographic_name = demographic_name;
-    }
-
+    }    
+        
     @PostPersist
     public void postPersist() {
         Iterator<BillingItem> i = this.billingItems.iterator();
@@ -482,22 +482,20 @@ public class BillingClaimHeader1 extends AbstractModel<Integer> implements Seria
     
     /*
      * Filter deleted billing items from list
-     */
-    @PostLoad
-    public void postLoad() {
-    	ArrayList<BillingItem>tempItems = new ArrayList<BillingItem>();
+     */    
+    @Transient
+    public List<BillingItem> getNonDeletedInvoices() {
+    	List<BillingItem>tempItems = new ArrayList<BillingItem>();
     	
     	Iterator<BillingItem> i = this.billingItems.iterator();
         BillingItem item;
         while(i.hasNext()) {
-        	item = i.next();
-        	if( item.getStatus().equals("D")) {
-        		continue;
-        	}
-        	
-        	tempItems.add(item);
+        	item = i.next();        	
+        	if( !item.getStatus().equals("D")) {
+        		tempItems.add(item);
+        	}        	        	
         }
         
-        this.billingItems = tempItems;
+        return tempItems;
     }
 }
