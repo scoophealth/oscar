@@ -270,10 +270,11 @@ public class MeasurementFlowSheet {
         if (itemList  != null){
            OrderedMapIterator iter = itemList.orderedMapIterator();
            while (iter.hasNext()) {
-              FlowSheetItem fsi = (FlowSheetItem) iter.next();
+        	  String key = (String) iter.next();  //returns the key not the value.  Needed to advance the iterator
+              FlowSheetItem fsi = (FlowSheetItem) iter.getValue();
               List<Recommendation> rules = fsi.getRecommendations();
               if (rules !=null){
-                  log.debug("# OF RULES FOR "+fsi.getItemName()+" "+rules.size());
+                  log.debug("# OF RULES FOR "+fsi.getItemName()+" "+rules.size()+" key "+key);
                   for (Object obj: rules){
                      Recommendation rec = (Recommendation) obj;
                      dsElements.add(rec.getRuleBaseElement());
