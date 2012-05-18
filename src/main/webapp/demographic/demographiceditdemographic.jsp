@@ -663,6 +663,20 @@ function addToPatientSet(demoNo, patientSet) {
 </security:oscarSec>
 
 var demographicNo='<%=demographic_no%>';
+
+
+function checkRosterStatus(){
+	<oscar:oscarPropertiesCheck property="FORCED_ROSTER_INTEGRATOR_LOCAL_STORE" value="yes">
+	var rosterSelect = document.getElementById("roster_status");
+	if(rosterSelect.getValue() == "RO"){
+		var primaryEmr = document.getElementById("primaryEMR");
+		primaryEmr.value = "1";
+		primaryEmr.disable(true);
+	}
+	</oscar:oscarPropertiesCheck>
+	
+}
+
 </script>
 
 <style type="text/css">
@@ -738,7 +752,7 @@ div.demographicWrapper {
 }
 </style>
 </head>
-<body onLoad="setfocus(); checkONReferralNo(); formatPhoneNum();"
+<body onLoad="setfocus(); checkONReferralNo(); formatPhoneNum();checkRosterStatus();"
 	topmargin="0" leftmargin="0" rightmargin="0">
 <table class="MainTable" id="scrollNumber1" name="encounterTable">
 	<tr class="MainTableTopRow">
@@ -2128,7 +2142,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                   }
                                   %>
                                 <input type="hidden" name="initial_rosterstatus" value="<%=rosterStatus%>"/>
-								<select name="roster_status" style="width: 120" <%=getDisabled("roster_status")%>>
+								<select id="roster_status" name="roster_status" style="width: 120" <%=getDisabled("roster_status")%> onchange="checkRosterStatus()">
 									<option value=""></option>
 									<option value="RO"
 										<%=rosterStatus.equals("RO")?" selected":""%>>
