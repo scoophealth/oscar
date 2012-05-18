@@ -26,6 +26,7 @@
 package oscar.oscarEncounter.pageUtil;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -103,6 +104,8 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
             HashMap<String,String> h = prevList.get(i);
             String prevName = h.get("name");
             ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(prevName, bean.demographicNo);
+            Date demographicDateOfBirth=PreventionData.getDemographicDateOfBirth(bean.demographicNo);
+            PreventionData.addRemotePreventions(alist, Integer.valueOf(bean.demographicNo),prevName,demographicDateOfBirth);
             boolean show = pdc.display(h, bean.demographicNo,alist.size());
             if( show ) {
                 if( alist.size() > 0 ) {
@@ -110,10 +113,17 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
                     Map<String,String> hExt = PreventionData.getPreventionKeyValues((String)hdata.get("id"));
                     result = hExt.get("result");
 
-                    date = (Date)hdata.get("prevention_date_asDate");
+                    Object dateObj = hdata.get("prevention_date_asDate");
+                    if(dateObj instanceof Date){
+                    	date = (Date) dateObj;
+                    }else if(dateObj instanceof java.util.GregorianCalendar){
+                    	Calendar cal = (Calendar) dateObj;
+                    	date = cal.getTime();
+                    }
+                    
                     item.setDate(date);
 
-                    if( hdata.get("refused").equals("2") ) {
+                    if( hdata.get("refused") != null && hdata.get("refused").equals("2") ) {
                         item.setColour(inelligibleColour);
                     }
                     else if( result != null && result.equalsIgnoreCase("pending") ) {
