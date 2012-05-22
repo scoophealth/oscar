@@ -50,7 +50,7 @@ org.oscarehr.common.model.Demographic demographic =  dData.getDemographic(demogr
 
 ArrayList list = null;
 
-if (!demographicNo.equals("null")){
+if (!(demographicNo == null || demographicNo.equals("null"))){
 	if(remoteFacilityIdString==null)
 	{
 		list = CommonLabTestValues.findValuesForTest(labType, demographicNo, testName, identifier);
@@ -214,9 +214,10 @@ window.close();
 					key="oscarMDS.segmentDisplay.formDateTimeCompleted" /></td>
 			</tr>
 			<%  int linenum = 0;
+				
                             if (list != null){
-                               for (int i = 0 ;  i < list.size(); i++){
-                                   Hashtable h = (Hashtable) list.get(i);
+                               for (int i = 0 ;  i < list.size(); i++){                            	                               		                               	   
+                                   Map h = (Map) list.get(i);
                                    String lineClass = "NormalRes";
                                    if ( h.get("abn") != null && h.get("abn").equals("A")){
                                       lineClass = "AbnormalRes";
