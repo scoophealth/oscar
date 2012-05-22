@@ -273,7 +273,8 @@ br {
 							<td>Status:</td>
 							<td>
 								<%
-									String status = episode.getStatus();
+								    
+									String status = episode == null ? "Current" : episode.getStatus();
 									if(status == null || status.length()==0) {
 										status="Current";
 									}
