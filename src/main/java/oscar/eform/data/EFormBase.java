@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -25,6 +25,7 @@
 
 package oscar.eform.data;
 
+import java.util.ArrayList;
 import java.util.Properties;
 
 import oscar.util.StringBuilderUtils;
@@ -34,7 +35,7 @@ public class EFormBase {
     protected final String imageMarker = "${oscar_image_path}";
 	protected final String jsMarker = "${oscar_javascript_path}";
     protected String fdid;
-    protected String fid; 
+    protected String fid;
     protected String formName;
     protected String formSubject;
     protected String formHtml;
@@ -44,14 +45,16 @@ public class EFormBase {
     protected String providerNo;
     protected String formDate;
     protected String formTime;
-    protected boolean patientIndependent=false;;
+    protected boolean patientIndependent=false;
     protected String roleType;
-    
+
+    protected ArrayList<String> updateFields = new ArrayList<String>();
+
     public EFormBase() {
-        
+
     }
-    
-    public EFormBase(String fid, String formName, String formSubject, 
+
+    public EFormBase(String fid, String formName, String formSubject,
             String formFileName, String formHtml, String roleType) {
         this.fid = fid;
         this.formName = formName;
@@ -61,7 +64,7 @@ public class EFormBase {
         this.roleType = roleType;
         dateTimeStamp();
     }
-    
+
     public EFormBase(String fid, String formName, String formSubject,
             String formFileName, String formHtml, boolean patientIndependent, String roleType) {
         this.fid = fid;
@@ -86,11 +89,11 @@ public class EFormBase {
         }
         formHtml = html.toString();
     }
-    
+
     //------------getters/setters----
     public String getFormTime() {
         return formTime;
-    }    
+    }
     public void setFormTime(String formTime) {
         this.formTime = formTime;
     }
@@ -139,23 +142,23 @@ public class EFormBase {
     public void setFormSubject(String formSubject) {
         this.formSubject = formSubject;
     }
-    
+
     public String getProviderNo() {
         return providerNo;
     }
-    
+
     public void setProviderNo(String providerNo) {
         this.providerNo = providerNo;
     }
-    
+
     public void setFormFileName(String formFileName) {
         this.formFileName = formFileName;
     }
-    
+
     public String getFormFileName() {
         return formFileName;
     }
-    
+
     private void dateTimeStamp() {
        formDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd");
        formTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "HH:mm:ss");

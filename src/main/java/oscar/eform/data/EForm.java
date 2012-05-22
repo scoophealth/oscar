@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -276,6 +276,49 @@ public class EForm extends EFormBase {
 			formHtml = html.toString();
 			if (needValueInForm > 0) setAP2nd = true;
 			else i = 2;
+		}
+	}
+
+	// Gets all the fields that are "input" (i.e. write-to-database) fields.
+	public void setupInputFields() {
+		String marker = EFormLoader.getInputMarker();
+		StringBuilder html = new StringBuilder(this.formHtml);
+		int markerLoc;
+		int pointer = 0;
+		while ((markerLoc = StringBuilderUtils.indexOfIgnoreCase(html, marker, pointer)) >= 0) {
+			pointer = (markerLoc + marker.length());
+			updateFields.add(getFieldName(html, pointer));
+		}
+
+		generateInputCode();
+	}
+
+	private void generateInputCode() {
+		if (updateFields.size() > 0) {
+
+			StringBuilder html = new StringBuilder(this.formHtml);
+			int formEndLoc = StringBuilderUtils.indexOfIgnoreCase(html, "</form>", 0);
+			int scriptEndLoc = StringBuilderUtils.indexOfIgnoreCase(html, "</script>", 0);
+
+			if (formEndLoc < 0) formEndLoc = 1;
+
+			if (scriptEndLoc < 0) scriptEndLoc = 0;
+			else scriptEndLoc += 9;
+
+			String fieldValue = "";
+			for (String field : updateFields) {
+				fieldValue += field + "%";
+			}
+
+			html.insert(formEndLoc-1, "<span id='_oscardodatabaseupdatespan' style='position: absolute;' class='DoNotPrint'><input type='checkbox' name='_oscardodatabaseupdate' onchange='_togglehighlight()' /> Update Fields in Database<br />" +
+					"<input type='button' id='_oscarrefreshfieldsbtn' name='_oscarrefreshfieldsbtn' value='Refresh DB Fields' onclick='_refreshfields()' /></span> " +
+					"<input type='hidden' id='_oscarupdatefields' name='_oscarupdatefields' value='" + fieldValue + "' />" +
+					"<input type='hidden' id='_oscardemographicno' name='_oscardemographicno' value='" + this.demographicNo + "' />" +
+					"<input type='hidden' id='_oscarproviderno' name='_oscarproviderno' value='" + this.providerNo + "' />" +
+					"<input type='hidden' id='_oscarfid' name='_oscarfid' value='" + this.fid + "' />");
+
+			this.formHtml = html.insert(scriptEndLoc, "<script type='text/javascript' src='../share/javascript/jquery/jquery-1.4.2.js'></script>" +
+			"<script type='text/javascript' src='../js/eform_highlight.js'></script>").toString();
 		}
 	}
 
@@ -682,6 +725,36 @@ public class EForm extends EFormBase {
 
 		return min;
 		*/
+	}
+
+	private String getFieldName(StringBuilder html, int pointer) {
+		//pointer can be any place in the tag - isolates tag and sends back field type
+		int open = html.substring(0, pointer).lastIndexOf("<");
+		int close = html.substring(pointer).indexOf(">") + pointer + 1;
+		String tag = html.substring(open, close);
+		log.debug("TAG ====" + tag);
+		int start;  //<input type="^text".....
+		int end;    //<input type="text^"....
+		if ((start = tag.toLowerCase().indexOf(" name=")) >= 0) {
+			start += 6;
+			if (tag.charAt(start) == '"') {
+				start += 1;
+				end = tag.indexOf('"', start);
+			} else if (tag.charAt(start) == '\'') {
+				start += 1;
+				end = tag.indexOf('\'', start);
+			} else {
+				int nextSpace = tag.indexOf(" ", start);
+				int nextBracket = tag.indexOf(">", start);
+				if (nextSpace < 0) end = nextBracket;
+				else if ((nextBracket < 0) || (nextSpace < nextBracket)) end = nextSpace;
+				else end = nextBracket;
+			}
+
+			return tag.substring(start, end);
+		} else {
+			return "";
+		}
 	}
 
 	private String getFieldHeader(String html, int fieldIndex) {
