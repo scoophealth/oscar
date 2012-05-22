@@ -274,7 +274,7 @@
 			<artifactId>caisi_integrator_client_stubs</artifactId>
 			<version>SNAPSHOT</version>
 		</dependency>
-		
+
 		<!-- macplus -->
 		<dependency>
 			<groupId>ca.mcmaster.plus</groupId>
@@ -377,7 +377,7 @@
 			<version>0.0-SNAPSHOT</version>
 		</dependency>
 
-		<!-- cds cihi phc vrs -->	
+		<!-- cds cihi phc vrs -->
 		<dependency>
 			<groupId>cds</groupId>
 			<artifactId>cds_cihi_phcvrs</artifactId>
@@ -390,7 +390,7 @@
 			<artifactId>cds_cihi</artifactId>
 			<version>1.0</version>
 		</dependency>
-		
+
 		<!-- cds rourke -->
 		<dependency>
 			<groupId>cds</groupId>
@@ -503,7 +503,7 @@
 			<artifactId>ar2005</artifactId>
 			<version>0.9-DRAFT</version>
 		</dependency>
-	
+
 		 <dependency>
                         <groupId>jspellchecker</groupId>
                         <artifactId>jazzy-core</artifactId>
@@ -668,7 +668,7 @@
 			<artifactId>jsch</artifactId>
 			<version>0.1.29</version>
 		</dependency>
-		
+
 		<!-- OLIS -->
 		<dependency>
 			<groupId>ca.ssha.www</groupId>
@@ -686,7 +686,7 @@
                         <version>140</version>
                 </dependency>
 
-		<!-- AXIS2 (for OLIS) --> 
+		<!-- AXIS2 (for OLIS) -->
 
                <dependency>
                         <groupId>org.apache.axis2</groupId>
@@ -762,7 +762,7 @@
                         <validHeader>utils/headers/quatro.txt</validHeader>
                         <validHeader>utils/headers/quatro2.txt</validHeader>
                         <validHeader>utils/headers/md.txt</validHeader>
-                        <validHeader>utils/headers/caisi.txt</validHeader> 
+                        <validHeader>utils/headers/caisi.txt</validHeader>
                         <validHeader>utils/headers/hs.txt</validHeader>
                         <validHeader>utils/headers/pc.txt</validHeader>
                         <validHeader>utils/headers/andromedia.txt</validHeader>
@@ -772,9 +772,9 @@
                         <validHeader>utils/headers/indivica.txt</validHeader>
                 </validHeaders>
                 <includes>
-                    <include>src/main/java/**/*.java</include> 
-                    <include>src/test/java/**/*.java</include> 
-                    <include>src/main/webapp/**/*.jsp</include> 
+                    <include>src/main/java/**/*.java</include>
+                    <include>src/test/java/**/*.java</include>
+                    <include>src/main/webapp/**/*.jsp</include>
                 </includes>
                 <excludes>
 			<exclude>src/main/webapp/jspspellcheck/*.jsp</exclude>
@@ -885,7 +885,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
-				<!-- 
+				<!--
 				<executions>
 					<execution>
 						<phase>process-sources</phase>
@@ -907,7 +907,7 @@
 
 		     <plugin>
 		        <groupId>org.apache.maven.plugins</groupId>
-		        <artifactId>maven-surefire-plugin</artifactId>		       
+		        <artifactId>maven-surefire-plugin</artifactId>
 		        <configuration>
 		          <skipTests>false</skipTests>
 			  <excludes>
@@ -916,7 +916,7 @@
 		          </excludes>
 		        </configuration>
 		      </plugin>
-		
+
 	  <plugin>
 			  	<groupId>org.oscarehr</groupId>
         		<artifactId>oscar-il18n-check-plugin</artifactId>
@@ -928,14 +928,14 @@
     					<param>oscarResources_fr.properties</param>
     					<param>oscarResources_pt_BR.properties</param>
     				</otherResourceFiles>
-  				</configuration> 
+  				</configuration>
   				<dependencies>
   				    <dependency>
       					<groupId>com.google.code</groupId>
       					<artifactId>google-api-translate-java</artifactId>
       					<version>0.95</version>
-    				</dependency>  				
-  				</dependencies>    
+    				</dependency>
+  				</dependencies>
 <!--
 				<executions>
 					<execution>
@@ -944,11 +944,11 @@
 							<goal>check</goal>
 						</goals>
 					</execution>
-				</executions>  		   
+				</executions>
 -->
 
       		</plugin>
-       		
+
 			<plugin>
 				<groupId>org.oscarehr.maven.plugins</groupId>
 				<artifactId>repository_cleaner_plugin</artifactId>

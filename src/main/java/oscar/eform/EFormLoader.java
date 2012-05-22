@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -43,6 +43,8 @@ public class EFormLoader {
     static private Vector<DatabaseAP> eFormAPs = new Vector<DatabaseAP>();
     static private String marker = "oscarDB";
     static private String opener = "oscarOPEN";
+    static private String inputMarker = "oscarDBinput";
+
 
     static public EFormLoader getInstance() {
         if (_instance == null) {
@@ -95,7 +97,7 @@ public class EFormLoader {
     }
 
     public static String getMarker() { return marker; }
-
+    public static String getInputMarker() { return inputMarker; }
     public static String getOpener() { return opener; }
 
     public static String getOpenEform(String url, String fdid, String fname, String field, EForm efm) {
@@ -155,6 +157,8 @@ public class EFormLoader {
       digester.addBeanPropertySetter("eformap-config/databaseap/ap-name","apName");
       digester.addBeanPropertySetter("eformap-config/databaseap/ap-sql","apSQL");
       digester.addBeanPropertySetter("eformap-config/databaseap/ap-output","apOutput");
+      digester.addBeanPropertySetter("eformap-config/databaseap/ap-insql", "apInSQL");
+      digester.addBeanPropertySetter("eformap-config/databaseap/archive", "archive");
       digester.addSetNext("eformap-config/databaseap","addDatabaseAP");
       try {
           Properties op = oscar.OscarProperties.getInstance();

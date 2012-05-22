@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,10 +27,16 @@ package oscar.eform.data;
 
 import java.util.ArrayList;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 public class DatabaseAP {
     private String apName = null;
     private String apSQL = null;
     private String apOutput = null;
+    private String apInSQL = null;
+    private boolean isInputField = false;
+    private String archive;
+    
 
     /** Creates a new instance of DatabaseAP */
     public DatabaseAP() {
@@ -40,15 +46,36 @@ public class DatabaseAP {
         set(apName, apSQL, apOutput);
     }
 
+
+    public DatabaseAP(String apName, String apSQL, String apOutput, String apInSQL) {
+        set(apName, apSQL, apOutput, apInSQL);
+    }
+
     public DatabaseAP(DatabaseAP ap2) {
         this.apName = ap2.getApName();
         this.apSQL = ap2.getApSQL();
         this.apOutput = ap2.getApOutput();
+        this.apInSQL = ap2.getApInSQL();
     }
     public void set(String apName, String apSQL, String apOutput) {
         this.apName = apName;
         this.apSQL = apSQL;
         this.apOutput = apOutput;
+    }
+
+    public void set(String apName, String apSQL, String apOutput, String apInSQL) {
+        this.apName = apName;
+        this.apSQL = apSQL;
+        this.apOutput = apOutput;
+        this.apInSQL = apInSQL;
+    }
+    
+    public void set(String apName, String apSQL, String apOutput, String apInSQL, String archive) {
+        this.apName = apName;
+        this.apSQL = apSQL;
+        this.apOutput = apOutput;
+        this.apInSQL = apInSQL;
+        this.archive = archive;
     }
 
     public void setApName(String apName) { this.apName = apName; }
@@ -59,6 +86,28 @@ public class DatabaseAP {
     public String getApSQL() { return(apSQL); }
     public String getApOutput() { return(apOutput); }
 
+
+    public String getApInSQL() {
+		return apInSQL;
+	}
+
+	public void setApInSQL(String apInSQL) {
+		this.isInputField = true;
+		this.apInSQL = apInSQL;
+	}
+	
+
+	public String getArchive() {
+    	return archive;
+    }
+
+	public void setArchive(String archive) {
+    	this.archive = archive;
+    }
+
+	public boolean isInputField() {
+		return isInputField;
+	}
 
     public static String parserReplace(String name, String var, String str) {
         //replaces <$name$> with var in str
@@ -73,6 +122,18 @@ public class DatabaseAP {
         }
         return strb.toString();
     }
+    public static String parserReplace(String name, String var, DatabaseAP dbap, boolean inSql) {
+		String sql;
+		if (inSql) sql = dbap.getApInSQL();
+		else sql = dbap.getApSQL();
+
+		var = StringEscapeUtils.escapeSql(var);
+
+		sql = DatabaseAP.parserReplace(name, var, sql);
+
+		return sql;
+	}
+
     public static ArrayList<String> parserGetNames(String str) {
         StringBuilder strb = new StringBuilder(str);
         ArrayList<String> names = new ArrayList<String>();

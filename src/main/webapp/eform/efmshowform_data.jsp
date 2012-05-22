@@ -23,14 +23,9 @@
     Ontario, Canada
 
 --%>
-
-<%  
-//This Page handles both viewing uploaded forms (from admin screen) and viewing added forms
-//to the patient.
-%>
 <%@ page import="java.sql.*, oscar.eform.data.*"%>
 <%
-  String id = request.getParameter("fid");  
+	String id = request.getParameter("fid");
   if (id == null) {  // form exists in patient
       id = request.getParameter("fdid");
       String appointmentNo = request.getParameter("appointment");
@@ -48,6 +43,7 @@
   } else {  //if form is viewed from admin screen
       EForm eForm = new EForm(id, "-1"); //form cannot be submitted, demographic_no "-1" indicate this specialty
       eForm.setContextPath(request.getContextPath());
+      eForm.setupInputFields();
       eForm.setOscarOPEN(request.getRequestURI());
       eForm.setImagePath();
       out.print(eForm.getFormHtml());
