@@ -85,7 +85,7 @@ public class OscarPropertiesCheck extends TagSupport {
         
         try{            
             String oscarVal = OscarProperties.getInstance().getProperty(prop);
-            if (oscarVal!=null && oscarVal.equals(val)){
+            if (oscarVal.equals(val)){
                 conditionMet = true;
             }
             
