@@ -25,7 +25,7 @@
 <%@page contentType="text/javascript"%>
 <%@page import="org.oscarehr.casemgmt.common.Colour"%>
 
-	var numNotes;   //How many saved notes do we have?
+	var numNotes = 0;   //How many saved notes do we have?
     var ctx;        //url context
     var providerNo;
     var demographicNo;
@@ -251,6 +251,14 @@ function setupNotes(){
 
     $(caseNote).focus();
 }
+
+function setupOneNote(note) {
+	if (!NiftyCheck())
+		return;
+
+	Rounded("div#nc" + note, "all", "transparent", "#CCCCCC", "big border #000000");
+}
+
 var minDelta =  0.93;
 var minMain;
 var minWin;
@@ -352,6 +360,42 @@ function showIssueNotes() {
     for( idx in issueNoteUrls ) {
         loadDiv(idx,issueNoteUrls[idx],limit);
     }
+}
+
+var notesOffset = 0;
+var notesIncrement = 20;
+var notesRetrieveOk = false;
+var notesCurrentTop = null;
+var notesScrollCheckInterval = null;
+
+function notesIncrementAndLoadMore() {
+	if (notesRetrieveOk && $("encMainDiv").scrollTop == 0) {
+		notesOffset += notesIncrement;
+		notesRetrieveOk = false;
+		notesCurrentTop = $("encMainDiv").children[0].id;
+		notesLoader(notesOffset, notesIncrement, demographicNo);
+	}
+}
+
+function notesLoader(offset, numToReturn, demoNo) {
+	$("notesLoading").style.display = "inline";
+	var params = "method=viewNotes&offset=" + offset + "&numToReturn=" + numToReturn + "&demographicNo=" + demoNo;
+	new Ajax.Updater("encMainDiv",
+			ctx + "/CaseManagementView.do",
+			{
+				method: 'post',
+				postBody: params,
+				evalScripts: true,
+				insertion: Insertion.Top,
+				onSuccess: function(data) {
+					notesRetrieveOk = (data.responseText.replace(/\s+/g, '').length > 0);
+					if (!notesRetrieveOk) clearInterval(scrollCheckInterval);
+				},
+				onComplete: function() {
+					$("notesLoading").style.display = "none";
+					if (notesCurrentTop != null) $(notesCurrentTop).scrollIntoView();
+				}
+			});
 }
 
 function navBarLoader() {

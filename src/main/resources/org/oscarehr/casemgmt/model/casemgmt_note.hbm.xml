@@ -67,47 +67,17 @@
                 <property name="position" type="integer" column="position" />
 
 		<property name="appointmentNo" type="integer" column="appointmentNo"/>
-		
+
 		<property name="hourOfEncounterTime" type="integer" column="hourOfEncounterTime"/>
 		<property name="minuteOfEncounterTime" type="integer" column="minuteOfEncounterTime"/>
 		<property name="hourOfEncTransportationTime" type="integer" column="hourOfEncTransportationTime"/>
 		<property name="minuteOfEncTransportationTime" type="integer" column="minuteOfEncTransportationTime"/>
-		
+
 	</class>
 
 	<sql-query name="mostRecent">
 		<return alias="cmn" class="org.oscarehr.casemgmt.model.CaseManagementNote" />
-		select casemgmt_note.note_id as {cmn.id}, update_date as
-		{cmn.update_date}, observation_date as {cmn.observation_date},
-		demographic_no as {cmn.demographic_no}, provider_no as
-		{cmn.providerNo}, note as {cmn.note},
-		signed as {cmn.signed}, include_issue_innote as {cmn.includeissue},
-		signing_provider_no as {cmn.signing_provider_no},
-		encounter_type as {cmn.encounter_type}, billing_code as {cmn.billing_code},
-		program_no as {cmn.program_no},
-		reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as
-		{cmn.reporter_program_team}, history as {cmn.history},
-		uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, archived as {cmn.archived},
-                position as {cmn.position}, appointmentNo as {cmn.appointmentNo}, 
-        hourOfEncounterTime as {cmn.hourOfEncounterTime}, minuteOfEncounterTime as {cmn.minuteOfEncounterTime},
-        hourOfEncTransportationTime as {cmn.hourOfEncTransportationTime},
-        minuteOfEncTransportationTime as {cmn.minuteOfEncTransportationTime},
-		(select r.role_name from secRole r where r.role_no =
-		reporter_caisi_role) as {cmn.roleName},
-		(select p.name from program p where p.id = program_no) as {cmn.programName},
-		(select count(casemgmt_note.uuid) from casemgmt_note where
-		casemgmt_note.uuid = {cmn.uuid}) as {cmn.revision}, (select
-		min(casemgmt_note.update_date)
-		from casemgmt_note where casemgmt_note.uuid = {cmn.uuid}) as
-		{cmn.create_date} from casemgmt_note
-		left join (select max(note_id) as note_id from casemgmt_note where
-		demographic_no = ? group by uuid) recent
-		using(note_id) where recent.note_id = casemgmt_note.note_id order by
-		{cmn.observation_date} asc
-	</sql-query>
-	<sql-query name="mostRecentTime">
-		<return alias="cmn" class="org.oscarehr.casemgmt.model.CaseManagementNote" />
-		select casemgmt_note.note_id as {cmn.id}, update_date as
+		select high_priority casemgmt_note.note_id as {cmn.id}, update_date as
 		{cmn.update_date}, observation_date as {cmn.observation_date},
 		demographic_no as {cmn.demographic_no}, provider_no as
 		{cmn.providerNo}, note as {cmn.note},
@@ -131,9 +101,137 @@
 		from casemgmt_note where casemgmt_note.uuid = {cmn.uuid}) as
 		{cmn.create_date} from casemgmt_note
 		left join (select max(note_id) as note_id from casemgmt_note where
-		demographic_no = ? and observation_date >= ? group by uuid) recent
+		demographic_no = ? group by uuid) recent
 		using(note_id) where recent.note_id = casemgmt_note.note_id order by
 		{cmn.observation_date} asc
+	</sql-query>
+	<sql-query name="mostRecentTime">
+		<return alias="cmn" class="org.oscarehr.casemgmt.model.CaseManagementNote" />
+		select high_priority casemgmt_note.note_id as {cmn.id}, update_date as
+		{cmn.update_date}, observation_date as {cmn.observation_date},
+		demographic_no as {cmn.demographic_no}, provider_no as
+		{cmn.providerNo}, note as {cmn.note},
+		signed as {cmn.signed}, include_issue_innote as {cmn.includeissue},
+		signing_provider_no as {cmn.signing_provider_no},
+		encounter_type as {cmn.encounter_type}, billing_code as {cmn.billing_code},
+		program_no as {cmn.program_no},
+		reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as
+		{cmn.reporter_program_team}, history as {cmn.history},
+		uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, archived as {cmn.archived},
+                position as {cmn.position}, appointmentNo as {cmn.appointmentNo},
+        hourOfEncounterTime as {cmn.hourOfEncounterTime}, minuteOfEncounterTime as {cmn.minuteOfEncounterTime},
+        hourOfEncTransportationTime as {cmn.hourOfEncTransportationTime},
+        minuteOfEncTransportationTime as {cmn.minuteOfEncTransportationTime},
+		(select r.role_name from secRole r where r.role_no =
+		reporter_caisi_role) as {cmn.roleName},
+		(select p.name from program p where p.id = program_no) as {cmn.programName},
+		(select count(casemgmt_note.uuid) from casemgmt_note where
+		casemgmt_note.uuid = {cmn.uuid}) as {cmn.revision}, (select
+		min(casemgmt_note.update_date)
+		from casemgmt_note where casemgmt_note.uuid = {cmn.uuid}) as
+		{cmn.create_date} from casemgmt_note
+		left join (select max(note_id) as note_id from casemgmt_note where
+		demographic_no = ? and observation_date &gt;= ? group by uuid) recent
+		using(note_id) where recent.note_id = casemgmt_note.note_id order by
+		{cmn.observation_date} asc
+	</sql-query>
+	<sql-query name="mostRecentLimit">
+		<return alias="cmn" class="org.oscarehr.casemgmt.model.CaseManagementNote" />
+		select high_priority casemgmt_note.note_id as {cmn.id}, update_date as
+		{cmn.update_date}, observation_date as {cmn.observation_date},
+		demographic_no as {cmn.demographic_no}, provider_no as
+		{cmn.providerNo}, note as {cmn.note},
+		signed as {cmn.signed}, include_issue_innote as {cmn.includeissue},
+		signing_provider_no as {cmn.signing_provider_no},
+		encounter_type as {cmn.encounter_type}, billing_code as {cmn.billing_code},
+		program_no as {cmn.program_no},
+		reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as
+		{cmn.reporter_program_team}, history as {cmn.history},
+		uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, archived as {cmn.archived},
+                position as {cmn.position}, appointmentNo as {cmn.appointmentNo},
+		hourOfEncounterTime as {cmn.hourOfEncounterTime}, minuteOfEncounterTime as {cmn.minuteOfEncounterTime},
+        hourOfEncTransportationTime as {cmn.hourOfEncTransportationTime},
+        minuteOfEncTransportationTime as {cmn.minuteOfEncTransportationTime},
+		(select r.role_name from secRole r where r.role_no =
+		reporter_caisi_role) as {cmn.roleName},
+		(select p.name from program p where p.id = program_no) as {cmn.programName},
+		(select count(cmn3.uuid) from casemgmt_note cmn3 where
+		cmn3.uuid = {cmn.uuid}) as {cmn.revision}, (select
+		min(cmn3.update_date)
+		from casemgmt_note cmn3 where cmn3.uuid = {cmn.uuid}) as
+		{cmn.create_date} from casemgmt_note
+		left join (select max(note_id) as note_id from casemgmt_note where
+		demographic_no = ? group by uuid) recent
+		using(note_id) where recent.note_id = casemgmt_note.note_id order by
+		{cmn.observation_date} desc limit ?, ?
+	</sql-query>
+	<sql-query name="appointmentNotes">
+		<return alias="cmn" class="org.oscarehr.casemgmt.model.CaseManagementNote" />
+		select high_priority casemgmt_note.note_id as {cmn.id}, update_date as
+		{cmn.update_date}, observation_date as {cmn.observation_date},
+		demographic_no as {cmn.demographic_no}, provider_no as
+		{cmn.providerNo}, note as {cmn.note},
+		signed as {cmn.signed}, include_issue_innote as {cmn.includeissue},
+		signing_provider_no as {cmn.signing_provider_no},
+		encounter_type as {cmn.encounter_type}, billing_code as {cmn.billing_code},
+		program_no as {cmn.program_no},
+		reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as
+		{cmn.reporter_program_team}, history as {cmn.history},
+		uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, archived as {cmn.archived},
+                position as {cmn.position}, appointmentNo as {cmn.appointmentNo},
+		hourOfEncounterTime as {cmn.hourOfEncounterTime}, minuteOfEncounterTime as {cmn.minuteOfEncounterTime},
+        hourOfEncTransportationTime as {cmn.hourOfEncTransportationTime},
+        minuteOfEncTransportationTime as {cmn.minuteOfEncTransportationTime},
+		(select r.role_name from secRole r where r.role_no =
+		reporter_caisi_role) as {cmn.roleName},
+		(select p.name from program p where p.id = program_no) as {cmn.programName},
+		(select count(cmn3.uuid) from casemgmt_note cmn3 where
+		cmn3.uuid = {cmn.uuid}) as {cmn.revision}, (select
+		min(cmn3.update_date)
+		from casemgmt_note cmn3 where cmn3.uuid = {cmn.uuid}) as
+		{cmn.create_date} from casemgmt_note
+		left join (select max(note_id) as note_id from casemgmt_note where
+		appointmentNo = ? group by uuid) recent
+		using(note_id) where recent.note_id = casemgmt_note.note_id and casemgmt_note.appointmentNo = ? order by
+		{cmn.observation_date} asc
+	</sql-query>
+	<sql-query name="issueNotes">
+		<return alias="cmn" class="org.oscarehr.casemgmt.model.CaseManagementNote" />
+		select high_priority distinct casemgmt_note.note_id as {cmn.id}, casemgmt_note.update_date as
+		{cmn.update_date}, casemgmt_note.observation_date as {cmn.observation_date},
+		casemgmt_note.demographic_no as {cmn.demographic_no}, casemgmt_note.provider_no as
+		{cmn.providerNo}, casemgmt_note.note as {cmn.note},
+		casemgmt_note.signed as {cmn.signed}, casemgmt_note.include_issue_innote as {cmn.includeissue},
+		casemgmt_note.signing_provider_no as {cmn.signing_provider_no},
+		casemgmt_note.encounter_type as {cmn.encounter_type}, casemgmt_note.billing_code as {cmn.billing_code},
+		casemgmt_note.program_no as {cmn.program_no},
+		casemgmt_note.reporter_caisi_role as {cmn.reporter_caisi_role}, casemgmt_note.reporter_program_team as
+		{cmn.reporter_program_team}, casemgmt_note.history as {cmn.history},
+		casemgmt_note.uuid as {cmn.uuid}, casemgmt_note.password as {cmn.password}, casemgmt_note.locked as {cmn.locked},
+		casemgmt_note.archived as {cmn.archived}, casemgmt_note.position as {cmn.position},
+		casemgmt_note.appointmentNo as {cmn.appointmentNo},
+		casemgmt_note.hourOfEncounterTime as {cmn.hourOfEncounterTime}, casemgmt_note.minuteOfEncounterTime as {cmn.minuteOfEncounterTime},
+        casemgmt_note.hourOfEncTransportationTime as {cmn.hourOfEncTransportationTime},
+        casemgmt_note.minuteOfEncTransportationTime as {cmn.minuteOfEncTransportationTime},
+		(select r.role_name from secRole r where r.role_no =
+		reporter_caisi_role) as {cmn.roleName},
+		(select p.name from program p where p.id = program_no) as {cmn.programName},
+		(select count(cmn3.uuid) from casemgmt_note cmn3 where
+		cmn3.uuid = {cmn.uuid}) as {cmn.revision}, (select
+		min(cmn3.update_date)
+		from casemgmt_note cmn3 where cmn3.uuid = {cmn.uuid}) as
+		{cmn.create_date}
+		from casemgmt_issue_notes as cmin
+		left join casemgmt_note using (note_id)
+		left join casemgmt_issue as cmi using (id)
+		where cmi.issue_id in (?) and
+		casemgmt_note.demographic_no = ? and casemgmt_note.note_id in
+		(select max(cmn2.note_id)
+                from casemgmt_issue_notes as cmin2
+		left join casemgmt_note cmn2 USE INDEX (demographic_no) using (note_id)
+		left join casemgmt_issue as cmi2 using (id)
+		where cmn2.note_id = cmin2.note_id and cmin2.id = cmi2.id
+		and cmi2.issue_id in (?) and cmn2.demographic_no = ? group by cmn2.uuid)
 	</sql-query>
 	<sql-query name="mostRecentOra">
 		<return alias="cmn" class="org.oscarehr.casemgmt.model.CaseManagementNote" />
@@ -148,7 +246,7 @@
 		reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as
 		{cmn.reporter_program_team}, history as {cmn.history},
 		uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, archived as {cmn.archived},
-		appointmentNo as {cmn.appointmentNo}, 
+		appointmentNo as {cmn.appointmentNo},
 		hourOfEncounterTime as {cmn.hourOfEncounterTime}, minuteOfEncounterTime as {cmn.minuteOfEncounterTime},
         hourOfEncTransportationTime as {cmn.hourOfEncTransportationTime},
         minuteOfEncTransportationTime as {cmn.minuteOfEncTransportationTime},
@@ -187,7 +285,7 @@
 		(select min(n2.update_date) from casemgmt_note n2 where casemgmt_note.uuid =
 		n2.uuid) as {cmn.create_date} from casemgmt_note
 		inner join (select max(note_id) as note_id from casemgmt_note where
-		demographic_no = ? and observation_date >= ? group by uuid) recent
+		demographic_no = ? and observation_date &gt;= ? group by uuid) recent
 		using(note_id) order by {cmn.observation_date} asc
 	</sql-query>
 

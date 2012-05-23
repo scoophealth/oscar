@@ -154,8 +154,7 @@ public class CaseManagementManager {
 
 	// retrieve list of providers who have edited specific note
 	public void getEditors(CaseManagementNote note) {
-		List<Provider> providers;
-		providers = this.caseManagementNoteDAO.getEditors(note);
+		List<Provider> providers = this.caseManagementNoteDAO.getEditors(note);
 		if (providers == null) providers = new ArrayList<Provider>();
 		note.setEditors(providers);
 	}
@@ -169,6 +168,12 @@ public class CaseManagementManager {
 			if (providers == null) providers = new ArrayList<Provider>();
 			note.setEditors(providers);
 		}
+	}
+
+	public List<Provider> getAllEditors(String demographicNo) {
+		List<Provider> providers = this.caseManagementNoteDAO.getAllEditors(demographicNo);
+		if (providers == null) providers = new ArrayList<Provider>();
+		return providers;
 	}
 
 	public UserProperty getUserProperty(String provider_no, String name) {
@@ -268,31 +273,34 @@ public class CaseManagementManager {
 		return caseManagementNoteDAO.getNotesByDemographic(demographic_no, issues, staleDate);
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<CaseManagementNote> getNotes(String demographic_no) {
 		return caseManagementNoteDAO.getNotesByDemographic(demographic_no);
 	}
 
-	@SuppressWarnings("unchecked")
-    public List<CaseManagementNote> getNotes(String demographic_no, Integer maxNotes) {
+	public List<CaseManagementNote> getNotes(String demographic_no, Integer maxNotes) {
 		return caseManagementNoteDAO.getNotesByDemographic(demographic_no, maxNotes);
 	}
 
 	public List<CaseManagementNote> getNotes(String demographic_no, String[] issues) {
-		@SuppressWarnings("unchecked")
 		List<CaseManagementNote> notes = caseManagementNoteDAO.getNotesByDemographic(demographic_no, issues);
 		return notes;
 	}
 
     public List<CaseManagementNote> getNotes(String demographic_no, String[] issues, Integer maxNotes) {
-    	@SuppressWarnings("unchecked")
-		List<CaseManagementNote> notes = caseManagementNoteDAO.getNotesByDemographic(demographic_no, issues, maxNotes);
+    	List<CaseManagementNote> notes = caseManagementNoteDAO.getNotesByDemographic(demographic_no, issues, maxNotes);
 		return notes;
+	}
+
+    public List<CaseManagementNote> getNotesWithLimit(String demographic_no, Integer offset, Integer numToReturn) {
+		return caseManagementNoteDAO.getNotesByDemographicLimit(demographic_no, offset, numToReturn);
+	}
+
+	public List<CaseManagementNote> getNotesInDateRange(String demographic_no, Date startDate, Date endDate) {
+		return caseManagementNoteDAO.getNotesByDemographicDateRange(demographic_no, startDate, endDate);
 	}
 
 	/* Return only those notes with archived set to zero */
 	public List<CaseManagementNote> getActiveNotes(String demographic_no, String[] issues) {
-		@SuppressWarnings("unchecked")
 		List<CaseManagementNote> notes = caseManagementNoteDAO.getActiveNotesByDemographic(demographic_no, issues);
 		return notes;
 	}

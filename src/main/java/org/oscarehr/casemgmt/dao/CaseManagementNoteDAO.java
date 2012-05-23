@@ -72,6 +72,12 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 	}
 
 	@SuppressWarnings("unchecked")
+    public List<Provider> getAllEditors(String demographicNo) {
+		String hql = "select distinct p from Provider p, CaseManagementNote cmn where p.ProviderNo = cmn.providerNo and cmn.demographic_no = ?";
+		return this.getHibernateTemplate().find(hql, demographicNo);
+	}
+
+	@SuppressWarnings("unchecked")
 	public List<CaseManagementNote> getHistory(CaseManagementNote note) {
 		String uuid = note.getUuid();
 		return this.getHibernateTemplate().find("from CaseManagementNote cmn where cmn.uuid = ? order by cmn.update_date asc", uuid);
@@ -104,6 +110,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		List<CaseManagementNote> ret = this.getHibernateTemplate().find(hql, uuid);
 		return ret;
 	}
+
 
 	public List<CaseManagementNote> getCPPNotes(String demoNo, long issueId, String staleDate) {
 		Date d;
@@ -337,6 +344,16 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		}
 
 		return(sortedResults.values());
+	}
+
+    @SuppressWarnings("unchecked")
+	public List<CaseManagementNote> getNotesByDemographicDateRange(String demographic_no, Date startDate, Date endDate) {
+		return getHibernateTemplate().findByNamedQuery("mostRecentDateRange", new Object[] { demographic_no, startDate, endDate });
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CaseManagementNote> getNotesByDemographicLimit(String demographic_no, Integer offset, Integer numToReturn) {
+		return getHibernateTemplate().findByNamedQuery("mostRecentLimit", new Object[] { demographic_no, offset, numToReturn });
 	}
 
 	public void updateNote(CaseManagementNote note) {
