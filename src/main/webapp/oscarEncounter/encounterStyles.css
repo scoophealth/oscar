@@ -1,25 +1,25 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */ /* styles.css -- Style sheet for the UI prototype.
 
 	Colours used:
@@ -416,9 +416,9 @@ div.leftBox {
 	width: 100%;
 	margin-top: 2px;
 	/*margin-left:3px;
-   margin-right:1px;   
+   margin-right:1px;
    /*float: left;
-   border-left: 1px solid #6699cc;   
+   border-left: 1px solid #6699cc;
    border-right: 1px solid #6699cc;
    border-bottom: 1px solid #6699cc; */
 	background-color: #FFFFFF;
@@ -543,6 +543,7 @@ div.leftBox li { /*padding-right: 15px;*/
 }
 #encMainDiv {
     width: 99%; border-top: thin groove #000000; border-right: thin groove #000000; border-left: thin groove #000000; background-color: #FFFFFF; height: 410px; overflow: auto; margin-left: 2px;
+	position: relative;
 }
 .addItem {
     width: 10%; float: right; text-align: center;
@@ -728,3 +729,23 @@ div#issueNoteAssign { text-align: center; }
 }
 p.passwd, p.passwdErr { margin: 0px 3px; }
 p.passwdErr { color: red; }
+
+#notesLoading {
+	background-color: #AAAADD;
+    border: 1px solid black;
+    border-radius: 3px 3px 3px 3px;
+    box-shadow: 2px 2px 4px;
+    font-size: 12px;
+    margin-left: 20px;
+    padding: 4px;
+    position: absolute;
+    right: 50px;
+    text-align: center;
+    top: 25px;
+    width: 130px;
+    z-index: 4000;
+}
+
+#notesLoading img {
+	margin-right: 5px;
+}

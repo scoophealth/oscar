@@ -527,7 +527,7 @@
 			<form-property name="editStyle" type="java.lang.String"></form-property>
 		</form-bean>
                 <form-bean name="serviceform" type="org.apache.struts.validator.DynaValidatorForm">
-                     <form-property name="emailDemographic" type="java.lang.Boolean" initial="false"></form-property>                
+                     <form-property name="emailDemographic" type="java.lang.Boolean" initial="false"></form-property>
                 </form-bean>
                 <form-bean name="tsTicklerForm" type="org.apache.struts.validator.DynaValidatorForm">
                     <form-property name="activeText" type="java.lang.String[]"></form-property>
@@ -2070,6 +2070,7 @@
 		<action path="/CaseManagementView" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" input="/casemgmt/CaseManagementView.jsp" name="caseManagementViewForm">
 			<forward name="view" path="/casemgmt/CaseManagementView.jsp" />
 			<forward name="ajaxView" path="/casemgmt/ChartNotes.jsp" />
+			<forward name="ajaxDisplayNotes" path="/casemgmt/ChartNotesAjax.jsp" />
 			<forward name="page.casemgmt.view" path="page.casemgmt.view" />
 			<forward name="page.newcasemgmt.view" path="page.newcasemgmt.view" />
 			<forward name="domain-error" path="/casemgmt/domain-error.jsp" />
@@ -2420,7 +2421,7 @@
 
 
 		<action path="/caseload/CaseloadContent" scope="request" type="org.oscarehr.caseload.CaseloadContentAction" parameter="method" />
-                
+
                 <action input="/tickler/ticklerEdit.jsp" name="serviceform" path="/tickler/EditTickler" scope="request" type="oscar.oscarTickler.pageUtil.EditTicklerAction" parameter="method">
 			<forward name="close" path="/closenreload.html" />
                         <forward name="failure" path="/failure.jsp"/>
@@ -2433,7 +2434,7 @@
 
         <action path="/CodeSearch" type="org.oscarehr.common.web.CodeSearchService">
         </action>
-        
+
         <action path="/oscarEncounter/displayEpisodes" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayEpisodeAction" />
 
 		<action path="/Episode" type="org.oscarehr.common.web.EpisodeAction" name="episodeForm" parameter="method">
