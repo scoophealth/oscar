@@ -1490,7 +1490,11 @@ if ( PatStat.equals(Dead) ) {%>
 							<% if(oscarProps.getProperty("demographicLabelDoctor") != null) { out.print(oscarProps.getProperty("demographicLabelDoctor","")); } else { %>
 							<bean:message
 								key="demographic.demographiceditdemographic.formDoctor" />
-                                                    <% } %>:</span><span class="info"><%=providerBean.getProperty(demographic.getProviderNo(),"")%></span>
+                                                    <% } %>:</span><span class="info">
+                                                    <%if(demographic != null && demographic.getProviderNo() != null){%>	
+                                                           <%=providerBean.getProperty(demographic.getProviderNo(),"")%>
+                                                    <%}%>
+                                                    </span>
 							</li>
                                                     <li><span class="label"><bean:message
                                                             key="demographic.demographiceditdemographic.formNurse" />:</span><span class="info"><%=providerBean.getProperty(resident,"")%></span>
