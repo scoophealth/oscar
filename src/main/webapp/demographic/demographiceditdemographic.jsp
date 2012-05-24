@@ -26,6 +26,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%-- @ taglib uri="../WEB-INF/taglibs-log.tld" prefix="log" --%>
 <%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
+<%@page import="org.oscarehr.util.LoggedInInfo" %>
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.ConformanceTestHelper"%>
 <%@page import="org.oscarehr.common.dao.DemographicExtDao" %>
 <%@page import="org.oscarehr.util.SpringUtils" %>
@@ -828,6 +829,11 @@ div.demographicWrapper {
 				<bean:message key="demographic.demographiceditdemographic.msgNextAppt"/>: <oscar:nextAppt demographicNo='<%=demographic.getDemographicNo().toString()%>' />
 				</span>
 
+				<%LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+				if (loggedInInfo.currentFacility.isIntegratorEnabled()){%>
+        		<jsp:include page="../admin/IntegratorStatus.jspf"></jsp:include>
+        		<%}%>
+				
 				</td>
 			</tr>
 		</table>

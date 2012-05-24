@@ -38,7 +38,8 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <% 
   if(session.getAttribute("user") == null)    response.sendRedirect("../logout.htm");
   Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
@@ -93,6 +94,7 @@
         </script>
     <![endif]-->
 <% } %>
+<script language="javascript" type="text/javascript" src="../share/javascript/Oscar.js"></script>
 <script language="JavaScript">
 function setfocus() {
   this.focus();
@@ -149,7 +151,7 @@ function searchAll() {
 		onSubmit="return checkTypeIn()"><%--@ include file="zdemographictitlesearch.htm"--%>
     <div class="header deep">
         <div class="title"><bean:message
-            key="demographic.demographicsearch2apptresults.findPatient" /></div>
+            key="demographic.demographicsearch2apptresults.findPatient" /></div>  
     </div>
     <ul>
         <li>
@@ -241,6 +243,14 @@ function searchAll() {
                 <input type="checkbox" name="includeIntegratedResults" value="true"   <%="true".equals(request.getParameter("includeIntegratedResults"))?"checked":""%>/> <span style="font-size:small"><bean:message key="demographic.search.msgInclIntegratedResults"/></span>
                 <%}%>
         </li>
+        
+        <% if (loggedInInfo.currentFacility.isIntegratorEnabled()){%>
+        <li>
+        	<jsp:include page="../admin/IntegratorStatus.jspf"></jsp:include>
+        </li>
+        
+        <%}%>
+        
     </ul>
 	</form>
 </div>
