@@ -152,7 +152,7 @@ Integer localDemographicId = Integer.parseInt(request.getParameter("demographicI
 						<td><%=DateUtils.formatDate(demographic.getBirthDay(),request.getLocale())%></td>
 						<td <%=isHighlighted(highlight)%>><%=DateUtils.formatDate(demographicTransfer.getBirthDate(),request.getLocale())%></td>
 					</tr>
-					<%highlight = (demographicTransfer.getCity()!=null && !demographicTransfer.getCity().equals(demographic.getCity())); %>
+					<%highlight = (demographicTransfer.getCity()!=null && !demographicTransfer.getCity().equalsIgnoreCase(demographic.getCity())); %>
 					<tr>
 						<td>City:</td>
 						<td><%=StringUtils.noNull(demographic.getCity())%></td>
