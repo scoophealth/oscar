@@ -141,7 +141,7 @@ public final class ConformanceTestHelper {
 				Demographic demographic=demographicDao.getDemographicById(localDemographicId);
 				
 				if (demographicTransfer.getBirthDate()!=null &&  !(DateUtils.getNumberOfDaysBetweenTwoDates(demographicTransfer.getBirthDate(),demographic.getBirthDay()) == 0)) ret = true;
-				if (demographicTransfer.getCity()!=null && !demographicTransfer.getCity().equals(demographic.getCity())) ret = true;
+				if (demographicTransfer.getCity()!=null && !demographicTransfer.getCity().equalsIgnoreCase(demographic.getCity())) ret = true;
 				if (demographicTransfer.getFirstName()!=null && !demographicTransfer.getFirstName().equals(demographic.getFirstName())) ret = true;
 				if (demographicTransfer.getGender()!=null && !demographicTransfer.getGender().toString().equals(demographic.getSex())) ret = true;
 				if (demographicTransfer.getHin()!=null && !demographicTransfer.getHin().equals(demographic.getHin())) ret = true;
