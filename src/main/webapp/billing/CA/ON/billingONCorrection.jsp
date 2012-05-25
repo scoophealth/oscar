@@ -174,7 +174,9 @@ if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
 	src="../../../share/calendar/calendar-setup.js"></script>
 <script language="JavaScript">
 <!--
-function setfocus() {
+
+
+function setfocus() {	
 	document.form1.billing_no.focus();
 	document.form1.billing_no.select();
 }
@@ -300,10 +302,8 @@ function checkSettle(status) {
         if( payElem != null ) {
             payElem.value = document.getElementById("billTotal").value;
         }
-    }
-    
-    //enable 3rd party elements
-    if( status == 'P') {
+    }        
+    else if( status == 'P') {
     	document.getElementById("thirdParty").style.display = "inline";
     	document.getElementById("thirdPartyPymnt").style.display = "inline";
     	
