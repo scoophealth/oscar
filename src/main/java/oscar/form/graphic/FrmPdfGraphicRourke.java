@@ -59,8 +59,7 @@ public class FrmPdfGraphicRourke extends FrmPdfGraphic {
     Properties xyProp;
     
     public void init( Properties prop ) {
-    			xDateScale = Integer.parseInt(prop.getProperty("__xDateScale"));
-    	
+    			xDateScale = Integer.parseInt(prop.getProperty("__xDateScale","-1"));
     	
                 String str = prop.getProperty("__nMaxPixX");
                 nMaxPixX = toInt(str);
@@ -160,13 +159,14 @@ public class FrmPdfGraphicRourke extends FrmPdfGraphic {
             
             //don't forget to add years
             switch (xDateScale) {
-            case Calendar.MONTH:
-            	smonth += startDate.get(Calendar.YEAR) * 12.0;
-                emonth += curDate.get(Calendar.YEAR) * 12.0;
-                break;
             case Calendar.YEAR:
             	smonth = (smonth/12.0f) + startDate.get(Calendar.YEAR);
                 emonth = (emonth/12.0f) + curDate.get(Calendar.YEAR);
+            case Calendar.MONTH:
+            default:
+            	smonth += startDate.get(Calendar.YEAR) * 12.0;
+                emonth += curDate.get(Calendar.YEAR) * 12.0;
+                break;
             }
             
             if ( smonth > emonth ) {
