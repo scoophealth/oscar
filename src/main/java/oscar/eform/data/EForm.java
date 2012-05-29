@@ -31,6 +31,7 @@ import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionMessages;
 import org.oscarehr.common.OtherIdManager;
@@ -625,7 +626,7 @@ public class EForm extends EFormBase {
 	private String getSqlParams(String key) {
 		if (sql_params.containsKey(key)) {
 		    String val =  sql_params.get(key);
-		    return val==null ? "" : val.replace("\"", "\\\"");
+		    return val==null ? "" : StringEscapeUtils.escapeSql(val);
 		}
 		return "";
 	}
