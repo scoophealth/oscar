@@ -1,0 +1,7 @@
+This is an immediate notification of a vacancy change.
+
+vacancy = ${vacancy.templateId}  ${vacancy.status} 
+
+notes = ${notes}
+
+date = ${dateTool.format("yyyy-M-d H:m:s",${date})}
