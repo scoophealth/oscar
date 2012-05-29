@@ -83,10 +83,14 @@ else {
 Hl7TextMessageDao hl7TxtMsgDao = (Hl7TextMessageDao)SpringUtils.getBean("hl7TextMessageDao");
 MeasurementMapDao measurementMapDao = (MeasurementMapDao) SpringUtils.getBean("measurementMapDao");
 Hl7TextMessage hl7TextMessage = hl7TxtMsgDao.find(Integer.parseInt(segmentID));
-java.util.Date date = hl7TextMessage.getCreated();
-String stringFormat = "yyyy-MM-dd HH:mm";
-String dateLabReceived = UtilDateUtilities.DateToString(date, stringFormat);
 
+String dateLabReceived = "n/a";
+if(hl7TextMessage != null){
+	java.util.Date date = hl7TextMessage.getCreated();
+	String stringFormat = "yyyy-MM-dd HH:mm";
+    dateLabReceived = UtilDateUtilities.DateToString(date, stringFormat);
+}
+	
 boolean isLinkedToDemographic=false;
 ArrayList<ReportStatus> ackList=null;
 String multiLabId = null;
@@ -171,7 +175,7 @@ Hl7TextInfoDao hl7TextInfoDao = (Hl7TextInfoDao) SpringUtils.getBean("hl7TextInf
 int lab_no = Integer.parseInt(segmentID);
 Hl7TextInfo hl7Lab = hl7TextInfoDao.findLabId(lab_no);
 String label = "";
-if (hl7Lab.getLabel()!=null) label = hl7Lab.getLabel();
+if (hl7Lab != null && hl7Lab.getLabel()!=null) label = hl7Lab.getLabel();
 
 /********************** Converted to this sport *****************************/ 
 
