@@ -42,7 +42,7 @@
             cal.add(Calendar.YEAR, -1);
             Date cutoff = cal.getTime();
 
-            if( signdate.after(cutoff) ) {
+            if( signdate != null && signdate.after(cutoff) ) {
                 String proceedURL = (String)request.getSession().getAttribute("proceedURL");
                 proceedURL = request.getContextPath() + proceedURL;
                 request.getSession().setAttribute("proceedURL", null);                
