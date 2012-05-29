@@ -40,6 +40,7 @@ import org.apache.commons.lang.time.DateUtils;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
+import org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.CachedProgram;
 import org.oscarehr.caisi_integrator.ws.CachedProvider;
@@ -445,6 +446,26 @@ public class CaisiIntegratorManager {
 		
 		return (linkedNotes);
 	}
+    
+    
+  
+      public static List<CachedDemographicPrevention> getLinkedPreventions(Integer demographicNo) throws MalformedURLException{
+ 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		String sessionCacheKey="LINKED_PREVS:"+loggedInInfo.currentFacility.getId()+":"+loggedInInfo.loggedInProvider.getPractitionerNo()+":"+demographicNo;
+
+		@SuppressWarnings("unchecked")
+		List<CachedDemographicPrevention> remotePreventions=(List<CachedDemographicPrevention>) segmentedDataCache.get(sessionCacheKey);
+		
+		if (remotePreventions==null)
+		{
+			DemographicWs demographicWs = getDemographicWs();
+			remotePreventions = Collections.unmodifiableList(demographicWs.getLinkedCachedDemographicPreventionsByDemographicId(demographicNo));
+			segmentedDataCache.put(sessionCacheKey, remotePreventions);
+		}
+		
+		return (remotePreventions);
+	} 
+  
 	    
     /**
      * The purpose of this method is to retrieve a remote demographic record and populate it in a local demographic object. It is ready to be persisted.
