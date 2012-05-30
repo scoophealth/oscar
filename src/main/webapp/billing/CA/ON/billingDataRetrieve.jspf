@@ -24,10 +24,11 @@
  */
 -->
 <%@page import="org.oscarehr.util.SpringUtils" %>
-<%@page import="org.oscarehr.common.model.Billingreferral" %>
-<%@page import="org.oscarehr.common.dao.BillingreferralDao" %>
+<%@page import="org.oscarehr.common.model.ProfessionalSpecialist" %>
+<%@page import="org.oscarehr.common.dao.ProfessionalSpecialistDao" %>
 <%
-	BillingreferralDao billingReferralDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
+ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
+
 %>
 <%//
             rslocation = null;
@@ -56,9 +57,9 @@
                 r_doctor_ohip_s = SxmlMisc.getXmlContent(rslocation.getString("content"), "rdohip") == null ? ""
                         : SxmlMisc.getXmlContent(rslocation.getString("content"), "rdohip");
             }
-            Billingreferral billingReferral = billingReferralDao.getByReferralNo(r_doctor_ohip_s);
-            if(billingReferral != null) {
-            	r_doctor_s = billingReferral.getLastName() +","+billingReferral.getFirstName();
+            ProfessionalSpecialist specialist = professionalSpecialistDao.getByReferralNo(r_doctor_ohip_s);
+            if(specialist != null) {
+            	r_doctor_s = specialist.getLastName() +","+specialist.getFirstName();
             }
 
 

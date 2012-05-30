@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -66,14 +66,14 @@ public class EctConEditSpecialistsAction extends Action {
 
 		// not delete request, just update one entry
 		ProfessionalSpecialist professionalSpecialist=professionalSpecialistDao.find(Integer.parseInt(specId));
-		
+
 		int updater = 0;
 		request.setAttribute("fName", professionalSpecialist.getFirstName());
 		request.setAttribute("lName", professionalSpecialist.getLastName());
 		request.setAttribute("proLetters", professionalSpecialist.getProfessionalLetters());
 
 		request.setAttribute("address", professionalSpecialist.getStreetAddress());
-		
+
 		request.setAttribute("phone", professionalSpecialist.getPhoneNumber());
 		request.setAttribute("fax", professionalSpecialist.getFaxNumber());
 		request.setAttribute("website", professionalSpecialist.getWebSite());
@@ -84,7 +84,9 @@ public class EctConEditSpecialistsAction extends Action {
 		request.setAttribute("eDataOscarKey", professionalSpecialist.geteDataOscarKey());
 		request.setAttribute("eDataServiceKey", professionalSpecialist.geteDataServiceKey());
 		request.setAttribute("eDataServiceName", professionalSpecialist.geteDataServiceName());
-                request.setAttribute("annotation", professionalSpecialist.getAnnotation());
+		request.setAttribute("annotation", professionalSpecialist.getAnnotation());
+        request.setAttribute("referralNo", professionalSpecialist.getReferralNo());
+
 		request.setAttribute("upd", new Integer(updater));
 		EctConConstructSpecialistsScriptsFile constructSpecialistsScriptsFile = new EctConConstructSpecialistsScriptsFile();
 		request.setAttribute("verd", constructSpecialistsScriptsFile.makeFile());

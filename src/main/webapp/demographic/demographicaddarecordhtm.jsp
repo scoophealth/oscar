@@ -39,10 +39,10 @@
 <%@ page
 	import="org.springframework.web.context.*,org.springframework.web.context.support.*,org.oscarehr.common.dao.*,org.oscarehr.common.model.*"%>
 <%@page import="org.oscarehr.util.SpringUtils" %>
-<%@page import="org.oscarehr.common.model.Billingreferral" %>
-<%@page import="org.oscarehr.common.dao.BillingreferralDao" %>
+<%@page import="org.oscarehr.common.model.ProfessionalSpecialist" %>
+<%@page import="org.oscarehr.common.dao.ProfessionalSpecialistDao" %>
 <%
-	BillingreferralDao billingReferralDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
+	ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
 %>
 <jsp:useBean id="providerBean" class="java.util.Properties"
 	scope="session" />
@@ -1006,12 +1006,12 @@ function autoFillHin(){
 									  Properties prop = null;
 									  Vector vecRef = new Vector();
 
-                                      List<Billingreferral> billingReferrals = billingReferralDao.getBillingreferrals();
-                                      for(Billingreferral billingReferral:billingReferrals) {
+                                      List<ProfessionalSpecialist> specialists = professionalSpecialistDao.findAll();
+                                      for(ProfessionalSpecialist specialist : specialists) {
                                     	  prop = new Properties();
-                                          prop.setProperty("referral_no",billingReferral.getReferralNo());
-                                          prop.setProperty("last_name",billingReferral.getLastName());
-                                          prop.setProperty("first_name",billingReferral.getFirstName());
+                                          prop.setProperty("referral_no", specialist.getReferralNo());
+                                          prop.setProperty("last_name", specialist.getLastName());
+                                          prop.setProperty("first_name", specialist.getFirstName());
                                           vecRef.add(prop);
                                       }
                                   %> <select name="r_doctor"

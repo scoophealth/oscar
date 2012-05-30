@@ -45,7 +45,7 @@
         props = rec1.getDocInfo(props, props.getProperty("refdocno", ""));
         props.setProperty("doc_name",doctor_name);
     }
-    
+
     props.setProperty("formId", ""+formId);
     props.setProperty("provNo", ""+provNo);
     int i, k;
@@ -55,10 +55,10 @@
 
 
 <html:html locale="true">
-<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" /> 
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
 <script type="text/javascript" src="../share/calendar/calendar.js"></script>
-<script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>                                                            
-<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script> 
+<script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
 <head>
 <title>Letterhead</title>
 </head>
@@ -95,12 +95,12 @@
                 <TD><%=props.getProperty("cl_address1","")%></TD>
                 <TD ALIGN="right">Phone: <%=props.getProperty("cl_phone","")%></TD>
             </TR>
-            
+
             <TR>
                 <TD><%=props.getProperty("cl_address2","")%></TD>
                 <TD ALIGN="right">Fax: <%=props.getProperty("cl_fax","")%></TD>
             </TR>
-            
+
         </TABLE>
         <center>
             <TABLE WIDTH="100%" cols="2" style="font-size: 13px;">
@@ -108,46 +108,39 @@
                     <TABLE align="center" width="100%" style="border: 1px solid;">
                         <TR>
                             <TD align="left" width="20%">Date:</TD>
-                            <TD align="left"> 
+                            <TD align="left">
                                     <INPUT name = "consultTime" id="consultTime" style="border: none; font-size: 12px; text-decoration: underline; width: 80%;" TYPE="text" value="<%=props.getProperty("consultTime", "")%>"/><span id="dating"><a href="javascript: function myFunction() {return false; }"id="hlSDate"><small>Select Date</small></a></span>
                             </TD>
                         </TR>
                         <TR>
                             <TD align="left">To:</TD>
                             <TD align="left">
-                                    <INPUT name="t_name" style="border: none; font-size: 13px; text-decoration: underline; width: 80%; " type="text" value="<%=props.getProperty("t_name", "")%>" >&nbsp;</INPUT><span id="searching"><a href="javascript:search('billingreferral_no', 't_name', 't_address1', 't_address2', 't_phone', 't_fax')"><small>Search #</small></a></span>
-                                
+                                    <INPUT name="t_name" style="border: none; font-size: 13px; text-decoration: underline; width: 80%; " type="text" value="<%=props.getProperty("t_name", "")%>" >&nbsp;</INPUT><span id="searching"><a href="javascript:search('billingreferral_no', 't_name', 't_address', 't_phone', 't_fax')"><small>Search #</small></a></span>
+
                             </TD>
                         </TR>
                         <TR>
                                 <TD align="left">Address:</TD>
                                 <TD align="left">
-                                    
-                                    <INPUT value="<%=props.getProperty("t_address1", "")%>" id="t_address1" name = "t_address1" style="border: none; font-size: 13px; text-decoration: underline; width: 90%;" TYPE="text" >&nbsp;</INPUT>
-                                    
-                                </TD>
-                            </TR>
-                            <TR>
-                                <TD align="left">&nbsp;</TD>
-                                <TD align="left">
-                                    <INPUT value="<%=props.getProperty("t_address2", "")%>" id="t_address2" name = "t_address2" style="border: none; font-size: 13px; text-decoration: underline; width: 90%;" TYPE="text" >&nbsp;</INPUT>
-                                    
+
+                                    <textarea id="t_address" name = "t_address" style="font-size: 13px; text-decoration: underline; width: 90%;"><%=props.getProperty("t_address", "")%></textarea>
+
                                 </TD>
                             </TR>
                             <TR>
                                 <TD align="left">Phone:</TD>
                                 <TD align="left">
-                                    
+
                                     <INPUT value="<%=props.getProperty("t_phone", "")%>" id="t_phone" name = "t_phone" style="border: none; font-size: 13px; text-decoration: underline; width: 90%;" TYPE="text">&nbsp;</INPUT>
-                                    
+
                                 </TD>
                             </TR>
-                            <TR>			
+                            <TR>
                                 <TD align="left">Fax:</TD>
                                 <TD align="left">
-                                    
+
                                     <INPUT value="<%=props.getProperty("t_fax", "")%>" id="t_fax" name = "t_fax" style="border: none; font-size: 13px; text-decoration: underline; width: 90%;" TYPE="text">&nbsp;</INPUT>
-                                    
+
                                 </TD>
                             </TR>
                     </TABLE>
@@ -157,46 +150,46 @@
                         <TR>
                             <TD align="left" width="40%">Patient:</TD>
                             <TD align="left">
-                                
+
                                     <INPUT NAME="p_name" style="border: none; font-size: 13px; text-decoration: underline; width: 100%;" TYPE="text" value="<%=props.getProperty("p_name","")%>">
                                     </INPUT>
-                                
+
                             </TD>
                         </TR>
                         <TR>
                             <TD align="left">Address:</TD>
                             <TD align="left">
-                                
+
                                     <INPUT NAME="p_address1" style="border: none; font-size: 13px; text-decoration: underline; width: 100%;" TYPE="text" value="<%=props.getProperty("p_address1","")%>">
                                     </INPUT>
-                                
+
                             </TD>
                         </TR>
                         <TR>
                             <TD align="left">&nbsp;</TD>
                             <TD align="left">
-                                
+
                                     <INPUT NAME="p_address2" style="border: none; font-size: 13px; text-decoration: underline; width: 100%;" TYPE="text" value="<%=props.getProperty("p_address2","")%>">
-                                    </INPUT>			
-                                
+                                    </INPUT>
+
                             </TD>
                         </TR>
                         <TR>
                             <TD align="left">Phone:</TD>
                             <TD align="left">
                                 <INPUT NAME="p_phone" style="border: none; font-size: 13px; text-decoration: underline; width: 100%;" TYPE="text" value="<%=props.getProperty("p_phone","")%>">
-                                   </INPUT>			
-                                
+                                   </INPUT>
+
                             </TD>
                         </TR>
                         <TR>
                             <TD align="left">Birthdate:</TD>
                             <TD align="left">
                                 <INPUT NAME="p_birthdate" style="border: none; font-size: 13px; text-decoration: underline; width: 100%;" TYPE="text" value="<%=props.getProperty("p_birthdate","")%>">
-                                </INPUT>                           
+                                </INPUT>
                             </TD>
                         </TR>
-                        <TR>			
+                        <TR>
                             <TD align="left">Health Card No:</TD>
                             <TD align="left">
                                 <INPUT NAME="p_healthcard" style="border: none; font-size: 13px; text-decoration: underline; width: 100%;" TYPE="text" value="<%=props.getProperty("p_healthcard","")%>">
@@ -212,8 +205,7 @@
                 </div>
                 <script type="text/javascript">
                 document.forms[0].t_name.value = "<%=props.getProperty("t_name","")%>";
-                document.forms[0].t_address1.value = "<%=props.getProperty("t_address1","")%>";
-                document.forms[0].t_address2.value = "<%=props.getProperty("t_address2","")%>";
+                document.forms[0].t_address.value = "<%=props.getProperty("t_address","")%>";
                 document.forms[0].t_phone.value = "<%=props.getProperty("t_phone","")%>";
                 document.forms[0].t_fax.value = "<%=props.getProperty("t_fax","")%>";
                 </script>
@@ -221,7 +213,7 @@
     <textarea id="comments" name="comments" class="ta1" rows="60">
 <%= props.getProperty("comments", "")%>
     </textarea>
-</div> 
+</div>
         <div id="buttons">
             <input id="savebut" type="submit" value="Save" onclick="javascript: return onSave();" />
             <input id="saveexitbut" type="submit" value="Save and Exit" onclick="javascript: return onSaveExit();" />
@@ -236,7 +228,7 @@
         border: 1px solid;
         width: 100%;
         }
-        
+
         .tb2{
         width: 100%;
         border: 1px solid;
@@ -249,14 +241,14 @@
         font-family: arial, helvetica, sans-serif;
         width: 100%;
         }
-        
-        .ta1{ 
+
+        .ta1{
         width: 100%;
         align: center;
-        font-size: 13px;  
+        font-size: 13px;
         color: black;
         border: 1px dotted;
-        font-family: arial, helvetica, sans-serif; 
+        font-family: arial, helvetica, sans-serif;
         }
         .ta2{
         width: 100%;
@@ -266,11 +258,11 @@
         border: none;
         font-family: arial, helvetica, sans-serif;
         }
-        
-    </style>    
+
+    </style>
     </font>
 
-  
+
 <script type="text/javascript">
       function onPrint() {
         document.forms[0].submit.value="save";
@@ -281,15 +273,15 @@
         setVisibility('dating', 'hidden');
         str1 = document.getElementById("comments").value;
         str2 = str1.replace(/\n/g, "<br>");
-        
-        
+
+
         document.getElementById("textDiv").innerHTML = str2;
         setStyle('textDiv', 'position', 'absolute');
         setStyle('textareaDiv', 'position', 'relative');
         window.print();
 
         if( ret = confirm("Do you wish to make changes?"))
-        {        
+        {
         setStyle('textareaDiv', 'position', 'absolute');
         setStyle('textDiv', 'position', 'absolute');
         setVisibility('textDiv', 'hidden');
@@ -303,7 +295,7 @@
         }
         return(ret);
     }
-        
+
     function onSave() {
         document.forms[0].submit.value="save";
         ret = confirm("Are you sure you want to save this form?");
@@ -324,7 +316,7 @@
     function setStyle(obj,style,value){
 	getRef(obj).style[style]= value;
     }
-	
+
     function getRef(obj){
 	return (typeof obj == "string") ?
             document.getElementById(obj) : obj;
@@ -363,15 +355,14 @@ function rs(n,u,w,h,x) {
   args="width="+w+",height="+h+",resizable=yes,scrollbars=yes,status=0,top=60,left=30";
   remote=window.open(u,n,args);
 }
-function search(billno, toname, toaddress1, toaddress2, tophone, tofax) {
+function search(billno, toname, toaddress, tophone, tofax) {
      t0 = escape("document.forms[0].elements[\'"+billno+"\'].value");
      t2 = escape("document.forms[0].elements[\'"+toname+"\'].value");
-     t3 = escape("document.forms[0].elements[\'"+toaddress1+"\'].value");
-     t4 = escape("document.forms[0].elements[\'"+toaddress2+"\'].value");
+     t3 = escape("document.forms[0].elements[\'"+toaddress+"\'].value");
      t5 = escape("document.forms[0].elements[\'"+tophone+"\'].value");
      t6 = escape("document.forms[0].elements[\'"+tofax+"\'].value");
      //rs('att',('../billing/CA/ON/searchRefDoc.jsp?param='+t0+'&toname='+t2),600,600,1);
-     rs('att',('../billing/CA/ON/searchRefDoc.jsp?param='+t0+'&toname='+t2+'&toaddress1='+t3+'&toaddress2='+t4+'&tophone='+t5+'&tofax='+t6),600,600,1);
+     rs('att',('../billing/CA/ON/searchRefDoc.jsp?param='+t0+'&toname='+t2+'&toaddress='+t3+'&tophone='+t5+'&tofax='+t6),600,600,1);
 }
 
 function start(){
@@ -379,7 +370,7 @@ function start(){
 }
 </script>
     <script language='javascript'>
-       Calendar.setup({inputField:"consultTime",ifFormat:"%Y/%m/%d",showsTime:false,button:"hlSDate",singleClick:true,step:1});          
+       Calendar.setup({inputField:"consultTime",ifFormat:"%Y/%m/%d",showsTime:false,button:"hlSDate",singleClick:true,step:1});
    </script>
 </html:form>
 </html:html>
