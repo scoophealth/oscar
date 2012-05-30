@@ -728,7 +728,7 @@ div.logoutBox {
 	}
 %>
                         <li><a href="#"
-				onclick='popupPage(550,800,&quot;<html:rewrite page="/admin/ManageBillingReferral.do"/>&quot;);return false;'><bean:message key="admin.admin.billingreferralAdmin"/></a></li>
+				onclick='popupPage(550,800,&quot;<html:rewrite page="/oscarEncounter/oscarConsultationRequest/config/EditSpecialists.jsp"/>&quot;);return false;'><bean:message key="admin.admin.professionalSpecialistAdmin"/></a></li>
 			<li><a href="#"
 				onclick='popupPage(550,800,&quot;<html:rewrite page="/demographic/demographicExport.jsp"/>&quot;);return false;'><bean:message key="admin.admin.DemoExport"/></a></li>
                         <li><a href="#"

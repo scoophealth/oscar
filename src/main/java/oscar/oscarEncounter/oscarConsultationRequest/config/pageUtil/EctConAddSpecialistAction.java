@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -42,71 +42,116 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class EctConAddSpecialistAction extends Action {
-    
+
 	private static final Logger logger=MiscUtils.getLogger();
-	
+
 	private ProfessionalSpecialistDao professionalSpecialistDao=(ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
-	
+
 	@Override
-    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {        
-    	
-    	ProfessionalSpecialist professionalSpecialist=null;    	
-        EctConAddSpecialistForm addSpecailistForm = (EctConAddSpecialistForm)form;
-        
-        int whichType = addSpecailistForm.getwhichType();
-        if(whichType == 1) //create
-        {
-        	professionalSpecialist=new ProfessionalSpecialist();
-            populateFields(professionalSpecialist, addSpecailistForm);
-            professionalSpecialistDao.persist(professionalSpecialist);
-        }
-        else if (whichType == 2) // update
-        {
-            Integer specId = Integer.parseInt(addSpecailistForm.getSpecId());
-        	professionalSpecialist=professionalSpecialistDao.find(specId);
-            populateFields(professionalSpecialist, addSpecailistForm);
-            professionalSpecialistDao.merge(professionalSpecialist);
-        }
-        else
-        {
-        	logger.error("missed a case, whichType="+whichType);
-        }
-        
-        addSpecailistForm.resetForm();
-        
-        String added=""+professionalSpecialist.getFirstName()+" "+professionalSpecialist.getLastName();
-        request.setAttribute("Added", added);
-        return mapping.findForward("success");
-    }
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+	throws ServletException, IOException {
+
+		ProfessionalSpecialist professionalSpecialist=null;
+		EctConAddSpecialistForm addSpecailistForm = (EctConAddSpecialistForm)form;
+
+		int whichType = addSpecailistForm.getwhichType();
+		if(whichType == 1) //create
+		{
+			professionalSpecialist=new ProfessionalSpecialist();
+			populateFields(professionalSpecialist, addSpecailistForm);
+			if (professionalSpecialist.getReferralNo() != null && professionalSpecialist.getReferralNo().length() > 0) {
+				if (referralNoValid(professionalSpecialist.getReferralNo())) {
+					if (referralNoInUse(professionalSpecialist.getReferralNo())) {
+						request.setAttribute("refnoinuse", true);
+                		return mapping.findForward("success");
+					}
+				} else {
+					request.setAttribute("refnoinvalid", true);
+                	return mapping.findForward("success");
+				}
+			}
+			professionalSpecialistDao.persist(professionalSpecialist);
+		}
+		else if (whichType == 2) // update
+		{
+            request.setAttribute("upd", true);
+
+			Integer specId = Integer.parseInt(addSpecailistForm.getSpecId());
+			professionalSpecialist=professionalSpecialistDao.find(specId);
+			populateFields(professionalSpecialist, addSpecailistForm);
+			if (professionalSpecialist.getReferralNo() != null && professionalSpecialist.getReferralNo().length() > 0) {
+				if (referralNoValid(professionalSpecialist.getReferralNo())) {
+					if (referralNoInUse(professionalSpecialist.getReferralNo(), specId)) {
+						request.setAttribute("refnoinuse", true);
+						return mapping.findForward("success");
+					}
+				} else {
+					request.setAttribute("refnoinvalid", true);
+					return mapping.findForward("success");
+				}
+			}
+			professionalSpecialistDao.merge(professionalSpecialist);
+		}
+		else
+		{
+			logger.error("missed a case, whichType="+whichType);
+		}
+
+		addSpecailistForm.resetForm();
+
+		String added=""+professionalSpecialist.getFirstName()+" "+professionalSpecialist.getLastName();
+		request.setAttribute("Added", added);
+		return mapping.findForward("success");
+	}
+
+	private boolean referralNoInUse(String referralNo) {
+		return professionalSpecialistDao.getByReferralNo(referralNo) != null;
+	}
+
+	private boolean referralNoInUse(String referralNo, Integer specId) {
+		ProfessionalSpecialist specialist = professionalSpecialistDao.getByReferralNo(referralNo);
+		return (specialist != null && (specialist.getId().intValue() != specId.intValue()));
+	}
+
+	private boolean referralNoValid(String referralNo) {
+		try {
+			if (referralNo.length() == 6 &&	referralNo.compareTo("" + Integer.parseInt(referralNo)) == 0)
+				return true;
+		} catch (Exception e) {
+			MiscUtils.getLogger().info("Specified referral number invalid (" + referralNo + ")", e);
+		}
+
+		return false;
+	}
 
 	private void populateFields(ProfessionalSpecialist professionalSpecialist, EctConAddSpecialistForm addSpecailistForm) {
-	    professionalSpecialist.setFirstName(addSpecailistForm.getFirstName());
-        professionalSpecialist.setLastName(addSpecailistForm.getLastName());
-        professionalSpecialist.setProfessionalLetters(addSpecailistForm.getProLetters());
+		professionalSpecialist.setFirstName(addSpecailistForm.getFirstName());
+		professionalSpecialist.setLastName(addSpecailistForm.getLastName());
+		professionalSpecialist.setProfessionalLetters(addSpecailistForm.getProLetters());
 
-        String address = addSpecailistForm.getAddress();        
-        StringBuilder sb = new StringBuilder();              
-        for (int i =0 ; i < address.length(); i++){
-            int a = address.charAt(i);           
-            if ( a == 13 || a == 10 ){
-                sb.append(" ");                                
-            }else{
-                sb.append((char)a);                
-            }            
-        }
-        address = sb.toString();        
-        professionalSpecialist.setStreetAddress(addSpecailistForm.getAddress());
-        
-        professionalSpecialist.setPhoneNumber(addSpecailistForm.getPhone());
-        professionalSpecialist.setFaxNumber(addSpecailistForm.getFax());
-        professionalSpecialist.setWebSite(addSpecailistForm.getWebsite());
-        professionalSpecialist.setEmailAddress(addSpecailistForm.getEmail());
-        professionalSpecialist.setSpecialtyType(addSpecailistForm.getSpecType());
-        professionalSpecialist.seteDataUrl(addSpecailistForm.geteDataUrl());
-        professionalSpecialist.seteDataOscarKey(addSpecailistForm.geteDataOscarKey());
-        professionalSpecialist.seteDataServiceKey(addSpecailistForm.geteDataServiceKey());
-        professionalSpecialist.seteDataServiceName(addSpecailistForm.geteDataServiceName());
-        professionalSpecialist.setAnnotation(addSpecailistForm.getAnnotation());
-    }
+		String address = addSpecailistForm.getAddress();
+		StringBuilder sb = new StringBuilder();
+		for (int i =0 ; i < address.length(); i++){
+			int a = address.charAt(i);
+			if ( a == 13 || a == 10 ){
+				sb.append(" ");
+			}else{
+				sb.append((char)a);
+			}
+		}
+		address = sb.toString();
+		professionalSpecialist.setStreetAddress(addSpecailistForm.getAddress());
+
+		professionalSpecialist.setPhoneNumber(addSpecailistForm.getPhone());
+		professionalSpecialist.setFaxNumber(addSpecailistForm.getFax());
+		professionalSpecialist.setWebSite(addSpecailistForm.getWebsite());
+		professionalSpecialist.setEmailAddress(addSpecailistForm.getEmail());
+		professionalSpecialist.setSpecialtyType(addSpecailistForm.getSpecType());
+		professionalSpecialist.seteDataUrl(addSpecailistForm.geteDataUrl());
+		professionalSpecialist.seteDataOscarKey(addSpecailistForm.geteDataOscarKey());
+		professionalSpecialist.seteDataServiceKey(addSpecailistForm.geteDataServiceKey());
+		professionalSpecialist.seteDataServiceName(addSpecailistForm.geteDataServiceName());
+		professionalSpecialist.setAnnotation(addSpecailistForm.getAnnotation());
+		professionalSpecialist.setReferralNo(addSpecailistForm.getReferralNo());
+	}
 }

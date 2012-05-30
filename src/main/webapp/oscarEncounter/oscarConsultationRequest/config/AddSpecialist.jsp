@@ -34,7 +34,7 @@
 
 <%
   ResourceBundle oscarR = ResourceBundle.getBundle("oscarResources",request.getLocale());
-  
+
   String transactionType = new String(oscarR.getString("oscarEncounter.oscarConsultationRequest.config.AddSpecialist.addOperation"));
   int whichType = 1;
   if ( request.getAttribute("upd") != null){
@@ -116,6 +116,7 @@ function BackToOscar() {
                            thisForm.seteDataServiceKey( (String) request.getAttribute("eDataServiceKey"));
                            thisForm.seteDataServiceName( (String) request.getAttribute("eDataServiceName"));
                            thisForm.setAnnotation((String)request.getAttribute("annotation"));
+                           thisForm.setReferralNo((String)request.getAttribute("referralNo"));
                            }
                         %>
 						<html:hidden name="EctConAddSpecialistForm" property="specId" />
@@ -155,10 +156,20 @@ function BackToOscar() {
 						<tr>
 							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.specialistType" /></td>
 							<td><html:text name="EctConAddSpecialistForm" property="specType" /></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
+							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.referralNo" /></td>
+							<td colspan="4">
+								<% if (request.getAttribute("refnoinuse") != null) { %>
+									<span style="color: red;"><bean:message
+										key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.referralNoInUse" /></span><br />
+								<% } else if (request.getAttribute("refnoinvalid") != null) { %>
+									<span style="color: red;"><bean:message
+										key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.referralNoInvalid" /></span><br />
+								<% } %>
+								<html:text name="EctConAddSpecialistForm" property="referralNo" maxlength="6" />
+							</td>
+						</tr>
+						<tr>
+							<td colspan="7"><hr /></td>
 						</tr>
 						<tr>
 							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.eDataUrl" /></td>
@@ -178,7 +189,7 @@ function BackToOscar() {
 						</tr>
 						<tr>
 							<td colspan="6">
-								<input type="hidden" name="whichType" value="<%=whichType%>" /> 
+								<input type="hidden" name="whichType" value="<%=whichType%>" />
 								<input type="submit" name="transType" value="<%=transactionType%>" />
 							</td>
 						</tr>
