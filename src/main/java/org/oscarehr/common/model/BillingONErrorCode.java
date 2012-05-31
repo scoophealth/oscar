@@ -23,13 +23,11 @@
  */
 
 
-package org.oscarehr.billing.CA.ON.model;
+package org.oscarehr.common.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import org.oscarehr.common.model.AbstractModel;
 
 @Entity
 @Table(name="billing_on_errorCode")
@@ -48,6 +46,7 @@ public class BillingONErrorCode extends AbstractModel<String>{
     	this.description = description;
     }
 
+        @Override
 	public String getId() {
     	return id;
     }

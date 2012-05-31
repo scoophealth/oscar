@@ -356,4 +356,11 @@ public class ProviderDao extends HibernateDaoSupport {
 
 		return providerList;
 	}
+        
+        public List<Provider> getBillableProvidersOnTeam(Provider p) {                        
+            @SuppressWarnings("unchecked")
+            List<Provider> providers = this.getHibernateTemplate().find("from Provider p where status='1' and ohip_no!='' and p.team=? order by last_name, first_name", p.getTeam());            
+            
+            return providers;
+        }
 }

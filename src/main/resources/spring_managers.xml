@@ -11,6 +11,6 @@
 
 	<!-- Managed JPA Beans -->
  	<context:component-scan base-package="org.oscarehr.managers" />
-
+        <context:component-scan base-package="org.oscarehr.common.service" />
 </beans>
 	

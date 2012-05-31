@@ -23,8 +23,9 @@
  */
 
 
-package org.oscarehr.billing.CA.ON.model;
+package org.oscarehr.common.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -38,7 +39,7 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table(name="billing_on_ext")
-public class BillingONExt {
+public class BillingONExt extends AbstractModel<Integer> implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,63 +60,70 @@ public class BillingONExt {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateTime;
 
-	private String status;
-
+        @Column(name="status")
+        private char status = '1';
+        	     
+        @Column(name="payment_id")
+        private Integer paymentId;
+        
+        @Override
 	public Integer getId() {
-    	return id;
-    }
-
-	public void setId(Integer id) {
-    	this.id = id;
-    }
+            return id;
+        }
 
 	public int getBillingNo() {
-    	return billingNo;
-    }
+            return billingNo;
+        }
 
 	public void setBillingNo(int billingNo) {
-    	this.billingNo = billingNo;
-    }
+            this.billingNo = billingNo;
+        }
 
 	public int getDemographicNo() {
-    	return demographicNo;
-    }
-
+            return demographicNo;
+        }
+        
 	public void setDemographicNo(int demographicNo) {
-    	this.demographicNo = demographicNo;
-    }
+            this.demographicNo = demographicNo;
+        }
 
 	public String getKeyVal() {
-    	return keyVal;
-    }
+            return keyVal;
+        }
 
 	public void setKeyVal(String keyVal) {
-    	this.keyVal = keyVal;
-    }
+            this.keyVal = keyVal;
+        }
 
 	public String getValue() {
-    	return value;
-    }
+            return value;
+        }
 
 	public void setValue(String value) {
-    	this.value = value;
-    }
+            this.value = value;
+        }
 
 	public Date getDateTime() {
-    	return dateTime;
-    }
+            return dateTime;
+        }
 
 	public void setDateTime(Date dateTime) {
-    	this.dateTime = dateTime;
-    }
+            this.dateTime = dateTime;
+        }
 
-	public String getStatus() {
-    	return status;
-    }
+	public char getStatus() {
+            return status;
+        }
 
-	public void setStatus(String status) {
-    	this.status = status;
-    }
-
-
+	public void setStatus(char status) {
+            this.status = status;
+        }
+        
+        public Integer getPaymentId() {
+            return this.paymentId;
+        }
+        
+        public void setPaymentId(Integer paymentId) {
+            this.paymentId = paymentId;
+        }
 }

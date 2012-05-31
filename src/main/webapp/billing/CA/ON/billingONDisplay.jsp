@@ -300,7 +300,7 @@ if(bFlag) {
 <% } %>
 
 <form name="serviceform" method="post"
-	action="billingONCorrectionSave.jsp"
+	action=""
 	onsubmit="return validateAllItems()"><input type="hidden"
 	name="xml_billing_no" value="<%=billNo%>" /> <input type="hidden"
 	name="update_date" value="<%=UpdateDate%>" />
@@ -609,7 +609,7 @@ if(bFlag) {
 		</td>
 	</tr>
 </table>
-<form>
+</form>
 </body>
 <script type="text/javascript">
 Calendar.setup( { inputField : "xml_appointment_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "xml_appointment_date_cal", singleClick : true, step : 1 } );

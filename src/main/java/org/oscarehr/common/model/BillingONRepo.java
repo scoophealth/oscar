@@ -23,10 +23,10 @@
  */
 
 
-package org.oscarehr.billing.CA.ON.model;
+package org.oscarehr.common.model;
 
 import java.util.Date;
-
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -36,66 +36,59 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.oscarehr.common.model.AbstractModel;
+@Entity 
+@Table(name="billing_on_repo") 
+public class BillingONRepo extends AbstractModel<Integer> implements Serializable{
 
-@Entity
-@Table(name="billing_on_repo")
-public class BillingOnRepo extends AbstractModel<Integer> {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+    @Column(name="h_id")
+    private int hId;
 
-	@Column(name="h_id")
-	private int hId;
+    private String category;
 
-	private String category;
+    private String content;
 
-	private String content;
+    @Column(name="createdatetime")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createDateTime;
 
-	@Column(name="createdatetime")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date createDateTime;
-
-	public Integer getId() {
-    	return id;
+    @Override 
+    public Integer getId() {
+        return id;
     }
 
-	public void setId(Integer id) {
-    	this.id = id;
+    public int gethId() {
+        return hId;
     }
 
-	public int gethId() {
-    	return hId;
+    public void sethId(int hId) {
+        this.hId = hId;
     }
 
-	public void sethId(int hId) {
-    	this.hId = hId;
+    public String getCategory() {
+        return category;
     }
 
-	public String getCategory() {
-    	return category;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
-	public void setCategory(String category) {
-    	this.category = category;
+    public String getContent() {
+        return content;
     }
 
-	public String getContent() {
-    	return content;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-	public void setContent(String content) {
-    	this.content = content;
+    public Date getCreateDateTime() {
+        return createDateTime;
     }
 
-	public Date getCreateDateTime() {
-    	return createDateTime;
-    }
-
-	public void setCreateDateTime(Date createDateTime) {
-    	this.createDateTime = createDateTime;
-    }
-
-
+    public void setCreateDateTime(Date createDateTime) {
+        this.createDateTime = createDateTime;
+    }   
 }

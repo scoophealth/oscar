@@ -62,12 +62,9 @@ public class RaHeader extends AbstractModel<Integer> {
 
 	private String content;
 
+        @Override
 	public Integer getId() {
     	return id;
-    }
-
-	public void setId(Integer id) {
-    	this.id = id;
     }
 
 	public String getFilename() {

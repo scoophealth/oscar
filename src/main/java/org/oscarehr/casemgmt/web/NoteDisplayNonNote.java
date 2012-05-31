@@ -32,15 +32,16 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.oscarehr.PMmodule.dao.ProviderDao;
-import org.oscarehr.billing.CA.ON.model.BillingClaimHeader1;
-import org.oscarehr.billing.CA.ON.model.BillingItem;
+import org.oscarehr.common.model.BillingONCHeader1;
+import org.oscarehr.common.model.BillingONItem;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarEncounter.data.EctFormData.PatientForm;
 import oscar.oscarRx.data.RxPrescriptionData.Prescription;
-
+import org.oscarehr.common.service.BillingONService;
 /**
  * The echart seems to have non-note items in the note list. As a result this class will hold non-note items. A constructor can be made for each type of non-note item.
  */
@@ -84,40 +85,46 @@ public class NoteDisplayNonNote implements NoteDisplay {
 		isEncounterForm = true;
 	}
 
-	public NoteDisplayNonNote(BillingClaimHeader1 h1) {
+	public NoteDisplayNonNote(BillingONCHeader1 h1) {
 		Calendar cal1 = Calendar.getInstance();
 		Calendar cal2 = Calendar.getInstance();
 		date = null;
-		
-		if( h1.getBilling_date() != null ) {
-			cal1.setTime(h1.getBilling_date());
+		Date billDate = null;
+                try {
+                    billDate = h1.getBillingDate();   
+                    if(  billDate != null ) {
+			cal1.setTime(h1.getBillingDate());
 			
-			if( h1.getBilling_time() != null ) {
-				cal2.setTime(h1.getBilling_time());
+			if( h1.getBillingTime() != null ) {
+				cal2.setTime(h1.getBillingTime());
 				cal1.set(Calendar.HOUR_OF_DAY, cal2.get(Calendar.HOUR_OF_DAY));
 				cal1.set(Calendar.MINUTE, cal2.get(Calendar.MINUTE));
 				cal1.set(Calendar.SECOND, cal2.get(Calendar.SECOND));
 			}
 			
 			date = cal1.getTime();
-		}
-
+                    }                    
+                } catch (java.text.ParseException e) {
+                    MiscUtils.getLogger().error("Unexpected error",e);
+                }
+		
 		StringBuilder tmpNote = new StringBuilder();
+                BillingONService billingONService = (BillingONService) SpringUtils.getBean("billingONService");
+		List<BillingONItem>items = billingONService.getNonDeletedInvoices(h1.getId());
+		BillingONItem item;
 
-		List<BillingItem>items = h1.getNonDeletedInvoices();
-		BillingItem item;
 		int size = items.size();
 		for(int idx = 0; idx < size; ++idx) {
 			item = items.get(idx);
-			tmpNote.append(item.getService_code());
+			tmpNote.append(item.getServiceCode());
 			if( idx < size - 1 ) {
 				tmpNote.append("; ");
 			}
 		}
 		
 		String pname, creator;
-		if( h1.getProvider_no() != null && h1.getProvider_no().length() > 0 ) {
-			provider = providerDao.getProvider(h1.getProvider_no());
+		if( h1.getProviderNo() != null && h1.getProviderNo().length() > 0 ) {
+			provider = providerDao.getProvider(h1.getProviderNo());
 			pname = provider == null ? "Not Set" : provider.getFormattedName();
 		}
 		else {
