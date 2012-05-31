@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,45 +21,35 @@
  * Hamilton
  * Ontario, Canada
  */
+package org.oscarehr.common.dao;
 
+import static org.junit.Assert.assertNotNull;
 
-package org.oscarehr.billing.CA.model;
+import org.junit.Before;
+import org.junit.Test;
+import org.oscarehr.common.model.BillingONCHeader1;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.oscarehr.common.dao.utils.EntityDataGenerator;
+import org.oscarehr.common.dao.utils.SchemaUtils;
+import org.oscarehr.util.SpringUtils;
 
-import org.oscarehr.common.model.AbstractModel;
+public class BillingONCHeader1DaoTest extends DaoTestFixtures {
 
-@Entity
-@Table(name="billing_payment_type")
-public class BillingPaymentType extends AbstractModel<Integer>{
+	private BillingONCHeader1Dao dao = SpringUtils.getBean(BillingONCHeader1Dao.class);
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	public BillingONCHeader1DaoTest() {
+	}
 
-	@Column(name="payment_type")
-	private String paymentType;
+	@Before
+	public void before() throws Exception {
+		SchemaUtils.restoreTable("billing_on_cheader1","billing_on_item");
+	}
 
-	public Integer getId() {
-    	return id;
-    }
-
-	public void setId(Integer id) {
-    	this.id = id;
-    }
-
-	public String getPaymentType() {
-    	return paymentType;
-    }
-
-	public void setPaymentType(String paymentType) {
-    	this.paymentType = paymentType;
-    }
-
-
+	@Test
+	public void testCreate() throws Exception {
+		BillingONCHeader1 entity = new BillingONCHeader1();
+		EntityDataGenerator.generateTestDataForModelClass(entity);
+		dao.persist(entity);
+		assertNotNull(entity.getId());
+	}
 }

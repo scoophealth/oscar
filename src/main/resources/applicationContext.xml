@@ -34,7 +34,6 @@
 	<bean id="hl7HandlerMSHMappingDao" class="org.oscarehr.common.dao.HL7HandlerMSHMappingDao" autowire="byName" />
 	<!-- hibernated DAO -->
         <bean id="gstControlDao" class="org.oscarehr.billing.CA.dao.GstControlDao" autowire="byName" />
-        <bean id="billingClaimDAO" class="org.oscarehr.billing.CA.ON.dao.BillingClaimDAO" autowire="byName" />
 	<bean id="measurementsDao" class="oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsDao" autowire="byName"/>
 	<bean id="measurementsExtDao" class="oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsExtDao" autowire="byName"/>
 	<bean id="measurementMapDao" class="oscar.oscarEncounter.oscarMeasurements.dao.MeasurementMapDao" autowire="byName"/>

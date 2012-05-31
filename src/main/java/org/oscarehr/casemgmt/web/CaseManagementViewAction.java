@@ -67,8 +67,6 @@ import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramTeam;
 import org.oscarehr.PMmodule.model.SecUserRole;
-import org.oscarehr.billing.CA.ON.dao.BillingClaimDAO;
-import org.oscarehr.billing.CA.ON.model.BillingClaimHeader1;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicIssue;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNoteCompositePk;
@@ -94,11 +92,13 @@ import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.EFormDataDao;
 import org.oscarehr.common.dao.EncounterFormDao;
 import org.oscarehr.common.dao.GroupNoteDao;
+import org.oscarehr.common.dao.BillingONCHeader1Dao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.common.model.GroupNoteLink;
 import org.oscarehr.common.model.UserProperty;
+import org.oscarehr.common.model.BillingONCHeader1;
 import org.oscarehr.eyeform.EyeformInit;
 import org.oscarehr.eyeform.dao.FollowUpDao;
 import org.oscarehr.eyeform.dao.MacroDao;
@@ -134,7 +134,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	private GroupNoteDao groupNoteDao = (GroupNoteDao) SpringUtils.getBean("groupNoteDao");
 	private DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 	private CaseManagementIssueNotesDao cmeIssueNotesDao = (CaseManagementIssueNotesDao)SpringUtils.getBean("caseManagementIssueNotesDao");
-	private BillingClaimDAO billingClaimDao = (BillingClaimDAO)SpringUtils.getBean("billingClaimDAO");
+	private BillingONCHeader1Dao billingONCHeader1Dao = (BillingONCHeader1Dao)SpringUtils.getBean("billingONCHeader1Dao");
 	private EFormDataDao eFormDataDao = (EFormDataDao) SpringUtils.getBean("EFormDataDao");
 
 	static {
@@ -910,11 +910,11 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 
 	}
+	
+	private void fetchInvoices(ArrayList<NoteDisplay>notes, String demographicNo) {
+		List<BillingONCHeader1>bills = billingONCHeader1Dao.getInvoices(demographicNo, MAX_INVOICES);
 
-	private void fetchInvoices(ArrayList<NoteDisplay>notes, String demographic_no) {
-		List<BillingClaimHeader1>bills = billingClaimDao.getInvoices(demographic_no, MAX_INVOICES);
-
-		for( BillingClaimHeader1 h1 : bills ) {
+		for( BillingONCHeader1 h1 : bills ) {
 			notes.add(new NoteDisplayNonNote(h1));
 		}
 	}
@@ -1988,7 +1988,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 		List<Map<String,Object>>bills = null;
 		if( oscar.OscarProperties.getInstance().getProperty("billregion","").equalsIgnoreCase("ON") ) {
-			bills= billingClaimDao.getInvoicesMeta(demoNo);
+			bills= billingONCHeader1Dao.getInvoicesMeta(demoNo);
 			for( Map<String,Object> h1 : bills ) {
 				EChartNoteEntry e = new EChartNoteEntry();
 				e.setId(h1.get("id"));
@@ -2137,7 +2137,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			logger.info("FETCHED " + groupNotes.size() + " GROUP NOTES IN " + (System.currentTimeMillis()-intTime) + "ms");
 			intTime = System.currentTimeMillis();
 
-			List<BillingClaimHeader1> invoices = billingClaimDao.getInvoicesByIds(invoiceIds);
+			List<BillingONCHeader1> invoices = billingONCHeader1Dao.getInvoicesByIds(invoiceIds);
 
 			logger.info("FETCHED " + invoices.size() + " INVOICES IN " + (System.currentTimeMillis()-intTime) + "ms");
 			intTime = System.currentTimeMillis();
@@ -2214,8 +2214,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		return null;
 	}
 
-	public BillingClaimHeader1 findInvoice(Integer id, List<BillingClaimHeader1> invoices) {
-		for(BillingClaimHeader1 invoice:invoices) {
+	public BillingONCHeader1 findInvoice(Integer id, List<BillingONCHeader1> invoices) {
+		for(BillingONCHeader1 invoice:invoices) {
 			if(id.equals(invoice.getId())) {
 				invoices.remove(invoice);
 				return invoice;

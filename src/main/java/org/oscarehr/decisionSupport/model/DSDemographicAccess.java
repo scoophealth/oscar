@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.oscarehr.billing.CA.ON.dao.BillingClaimDAO;
+import org.oscarehr.common.dao.BillingONCHeader1Dao;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.common.dao.FlowSheetCustomizationDao;
@@ -393,7 +393,7 @@ public class DSDemographicAccess {
 
     	boolean retval = true;  //Set this optimistically that it has not been paid in the said number of days
     	if(options.containsKey("payer") && options.get("payer").equals("MSP")){
-    		BillingClaimDAO billingClaimONDAO = (BillingClaimDAO)SpringUtils.getBean("billingClaimDAO");
+    		BillingONCHeader1Dao billingONCHeader1Dao = (BillingONCHeader1Dao)SpringUtils.getBean("billingONCHeader1Dao");
     		String[] codes = searchStrings.replaceAll("'","" ).split(",");
 
     		if(options.containsKey("notInDays")){
@@ -401,7 +401,7 @@ public class DSDemographicAccess {
                 int numDays = -1;
                 for (String code: codes){
                     //This returns how many days since the last time this code was paid and -1 if it never has been settled
-                    numDays = billingClaimONDAO.getDaysSincePaid(code, demographicNo);
+                    numDays = billingONCHeader1Dao.getDaysSincePaid(code, demographicNo);
 
                     //If any of the codes has been paid in the number of days then return false
                     if (numDays < notInDays && numDays != -1){
@@ -410,7 +410,7 @@ public class DSDemographicAccess {
                     }
                     else {
                     	//if no paid bills in last number of days check to see if it has been billed within last 2 months and waits to be settled
-                    	numDays = billingClaimONDAO.getDaysSinceBilled(code, demographicNo);
+                    	numDays = billingONCHeader1Dao.getDaysSinceBilled(code, demographicNo);
 
                     	if( numDays < 60 && numDays != -1 ) {
                     		retval = false;
@@ -451,13 +451,13 @@ public class DSDemographicAccess {
         if(options.containsKey("payer") && options.get("payer").equals("MSP")){
         	logger.debug("PAYER:MSP ");
             ServiceCodeValidationLogic bcCodeValidation = null;
-            BillingClaimDAO billingClaimONDAO = null;
+            BillingONCHeader1Dao billingONCHeader1Dao = null;
             String billregion = OscarProperties.getInstance().getProperty("billregion", "");
             if( billregion.equalsIgnoreCase("BC") ) {
                 bcCodeValidation = new ServiceCodeValidationLogic();
             }
             else if( billregion.equalsIgnoreCase("ON") ) {
-                billingClaimONDAO = (BillingClaimDAO)SpringUtils.getBean("billingClaimDAO");
+                billingONCHeader1Dao = (BillingONCHeader1Dao)SpringUtils.getBean("billingONCHeader1Dao");
             }
             String[] codes = searchStrings.replaceAll("\'","" ).split(",");
 
@@ -481,7 +481,7 @@ public class DSDemographicAccess {
                         numDays = bcCodeValidation.daysSinceCodeLastBilled(demographicNo,code) ;
                      }
                      else if( billregion.equalsIgnoreCase("ON") ) {
-                         numDays = billingClaimONDAO.getDaysSinceBilled(code, demographicNo);
+                         numDays = billingONCHeader1Dao.getDaysSinceBilled(code, demographicNo);
                      }
 
                     //If any of the codes has been billed in the number of days then return false

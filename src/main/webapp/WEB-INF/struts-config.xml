@@ -539,6 +539,8 @@
 			<form-property name="episode" type="org.oscarehr.common.model.Episode"/>
 		</form-bean>
                 <form-bean name="groupPreference" type="org.apache.struts.action.DynaActionForm"/>
+		</form-bean>                
+                <form-bean name="billing3rdPartyPayment" type="org.apache.struts.validator.DynaValidatorForm"/>
 	</form-beans>
 
 	<global-forwards>
@@ -1527,7 +1529,7 @@
 			<forward name="success" path="/billing/CA/BC/billStatement.jsp" />
 		</action>
 
-		<action path="/billing/CA/ON/BatchBill" scope="request" parameter="method" type="org.springframework.web.struts.DelegatingActionProxy">
+		<action path="/billing/CA/ON/BatchBill" scope="request" parameter="method" type="org.oscarehr.billing.CA.ON.web.BatchBillAction">
 			<forward name="saved" path="/billing/CA/ON/batchsaved.jsp" />
 			<forward name="error" path="/billing/CA/ON/batcherror.jsp" />
 			<forward name="success" path="/billing/CA/ON/batchBilling.jsp" />
@@ -2501,6 +2503,12 @@
                     <forward name="changedForm" path="/admin/groupPreferences.jsp"/>
                  </action>
 		
+                <action input="/billing/CA/ON/billingONCorrection.jsp" name="billing3rdPartyPayment" path="/billing/CA/ON/BillingONCorrection" scope="request" type="oscar.oscarBilling.ca.on.pageUtil.BillingCorrectionAction" parameter="method">
+                        <forward name="success" path="/billing/CA/ON/billingONCorrection.jsp" />                        
+                        <forward name="failure" path="/failure.jsp" />
+                        <forward name="submitClose" path="/close.html" />
+                        <forward name="closeReload" path="/billing/CA/ON/billingONCorrection.jsp?billing_no="/>
+		</action>
 	</action-mappings>
 	<controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" maxFileSize="25M" />
 	<message-resources parameter="oscarResources" null="false" />

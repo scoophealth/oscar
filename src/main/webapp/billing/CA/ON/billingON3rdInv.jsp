@@ -17,192 +17,243 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@page import="org.oscarehr.util.SpringUtils"%>
-<%@page import="org.oscarehr.common.model.Demographic"%>
-<%@page import="org.oscarehr.common.dao.DemographicDao"%>
+<%@page import="oscar.util.DateUtils,org.oscarehr.util.SpringUtils, org.oscarehr.util.MiscUtils"%>
+<%@page import="java.util.Properties,java.util.Date,java.util.List,java.util.ArrayList,java.math.BigDecimal"%>
+<%@page import="org.oscarehr.common.dao.BillingONPaymentDao,org.oscarehr.common.model.BillingONPayment"%>
+<%@page import="org.oscarehr.common.dao.BillingServiceDao,org.oscarehr.common.model.BillingService"%>
+<%@page import="org.oscarehr.common.dao.ClinicDAO,org.oscarehr.common.model.Clinic"%>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao,org.oscarehr.common.model.Provider"%>
+<%@page import="org.oscarehr.common.dao.DemographicDao,org.oscarehr.common.model.Demographic"%>
+<%@page import="org.oscarehr.common.dao.BillingONExtDao,org.oscarehr.common.model.BillingONExt"%>
+<%@page import="org.oscarehr.common.dao.BillingONCHeader1Dao,org.oscarehr.common.model.BillingONCHeader1"%>
+<%@page import="org.oscarehr.common.model.BillingONItem, org.oscarehr.common.service.BillingONService"%> 
+
 <%
-String invNo = request.getParameter("billingNo");
-Billing3rdPartPrep privateObj = new Billing3rdPartPrep();
-Properties propClinic = privateObj.getLocalClinicAddr();
-Properties prop3rdPart = privateObj.get3rdPartBillProp(invNo);
-Properties prop3rdPayMethod = privateObj.get3rdPayMethod();
-Properties propGst = privateObj.getGst(invNo);
-//int gstFlag = 0;
-//if ( propGst.getProperty("gst", "") != "0.00" && propGst.getProperty("gst", "") != null ){
-//    gstFlag = 1;
-//}
+    String invoiceNoStr = request.getParameter("billingNo");
 
-BillingCorrectionPrep billObj = new BillingCorrectionPrep();
-List aL = billObj.getBillingRecordObj(invNo);
-BillingClaimHeader1Data ch1Obj = (BillingClaimHeader1Data) aL.get(0);
-DemographicDao demoDAO = (DemographicDao)SpringUtils.getBean("demographicDao");
-Demographic demo = demoDAO.getDemographic(ch1Obj.getDemographic_no());
+    Integer invoiceNo = null;
+    try {
+        invoiceNo = Integer.parseInt(invoiceNoStr);
+    } catch(NumberFormatException e) {
+        invoiceNoStr = "";
+        MiscUtils.getLogger().warn("Invalid Invoice No.");
+    }
+    
+    BillingONCHeader1Dao bCh1Dao = (BillingONCHeader1Dao) SpringUtils.getBean("billingONCHeader1Dao");
+    BillingONCHeader1 bCh1 = null;
+    
+    if (invoiceNo != null) 
+        bCh1 = bCh1Dao.find(invoiceNo);
+    
+    String billTo = ""; 
+    String remitTo = "";
+    BigDecimal totalOwed = new BigDecimal("0.00");
+    BigDecimal paidTotal = new BigDecimal("0.00");
+    BigDecimal refundTotal = new BigDecimal("0.00");
+    BigDecimal balanceOwing = new BigDecimal("0.00");
+    List<BillingONItem> billingItems = new ArrayList<BillingONItem>();
+    Demographic demo = null; 
+    String providerFormattedName = "";
+    String invoiceComment = "";
+    String invoiceRefNum = "";
+    String billingDateStr ="";
+    
+    if (bCh1 != null) {
+        BillingONExtDao billExtDao = (BillingONExtDao) SpringUtils.getBean("billingONExtDao");
+        BillingONPaymentDao billPaymentDao = (BillingONPaymentDao) SpringUtils.getBean("billingONPaymentDao");
 
-Properties gstProp = new Properties();
-GstControlAction db = new GstControlAction();
-gstProp = db.readDatabase();
+        DemographicDao demoDAO = (DemographicDao)SpringUtils.getBean("demographicDao");
+        ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
+        
+        billingDateStr = DateUtils.formatDate(bCh1.getBillingDate(),request.getLocale());
+        invoiceRefNum = bCh1.getRefNum();
+        
+        BillingONService billingONService = (BillingONService) SpringUtils.getBean("billingONService");
+        billingItems = billingONService.getNonDeletedInvoices(bCh1.getId());
 
-String percent = gstProp.getProperty("gstPercent", "");
+        invoiceComment = bCh1.getComment(); 
+        
+        totalOwed = new BigDecimal(bCh1.getTotal());
+        totalOwed = totalOwed.movePointLeft(2);
 
-oscar.OscarProperties props = oscar.OscarProperties.getInstance();
+        List<BillingONPayment> paymentRecords = billPaymentDao.find3rdPartyPayRecordsByBill(bCh1);
+        paidTotal = BillingONPaymentDao.calculatePaymentTotal(paymentRecords);
+        refundTotal = BillingONPaymentDao.calculateRefundTotal(paymentRecords);
+        balanceOwing = billingONService.calculateBalanceOwing(bCh1.getId(),paidTotal,refundTotal);
+
+        demo = demoDAO.getDemographic(bCh1.getDemographicNo().toString());
+        
+        Provider provider = providerDao.getProvider(bCh1.getProviderNo());
+        providerFormattedName = provider.getFormattedName();
+        
+        BillingONExt billToBillExt = billExtDao.getBillTo(bCh1);
+        
+        if (billToBillExt != null)
+            billTo = billToBillExt.getValue();
+
+        BillingONExt remitToBillExt = billExtDao.getRemitTo(bCh1);
+        
+        if (remitToBillExt != null)
+            remitTo = remitToBillExt.getValue();
+    }
+
+    ClinicDAO clinicDao = (ClinicDAO) SpringUtils.getBean("clinicDAO");
+    Clinic clinic = clinicDao.getClinic();              
+    oscar.OscarProperties props = oscar.OscarProperties.getInstance();
+
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<%@ page
-	import="java.util.*, oscar.util.*,oscar.oscarBilling.ca.on.pageUtil.*,oscar.oscarBilling.ca.on.data.*,oscar.oscarProvider.data.*,java.math.* ,oscar.oscarBilling.ca.on.administration.*"%>
-
 <html>
-<head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>Billing Invoice</title>
-<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
-<script>
-    jQuery.noConflict();
-</script>
-</head>
-<body>
-
-<table width="100%" border="0">
-	<tr>
-		<td><b><%=propClinic.getProperty("clinic_name", "") %></b><br />
-		<%=propClinic.getProperty("clinic_address", "") %><br />
-		<%=propClinic.getProperty("clinic_city", "") %>, <%=propClinic.getProperty("clinic_province", "") %><br />
-		<%=propClinic.getProperty("clinic_postal", "") %><br />
-		Tel.: <%=propClinic.getProperty("clinic_phone", "") %><br />
-
-		</td>
-		<td align="right" valign="top"><font size="+2"><b>Invoice
-		- <%=invNo %></b></font><br />
+    <head>
+        <title>Billing Invoice</title>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
+	<script>
+	    jQuery.noConflict();
+	</script>
+    </head>
+    
+    <body>
+        <% if (clinic != null) {%>
+        <table width="100%" border="0">
+            <tr>
+                <td><b><%=clinic.getClinicName()%></b><br />
+                       <%=clinic.getClinicAddress()%><br />
+                       <%=clinic.getClinicCity()%>, <%=clinic.getClinicProvince()%><br />
+                       <%=clinic.getClinicPostal()%><br />
+                        Tel.: <%=clinic.getClinicPhone()%><br />
+                </td>
+                <td align="right" valign="top">
+                    <font size="+2"><b>Invoice No. - <%=invoiceNoStr%></b></font><br />
 		<bean:message key="oscar.billing.CA.ON.3rdpartyinvoice.printDate"/>:<%=DateUtils.sumDate("yyyy-MM-dd HH:mm","0") %><br/>
               <% if (props.hasProperty("invoice_due_date")) {
                     Integer numDaysTilDue = Integer.parseInt(props.getProperty("invoice_due_date", "0")); 
                     Date serviceDate = null;
-                    try {
-                        serviceDate = DateUtils.parseDate(ch1Obj.getBilling_date(), request.getLocale());
-                    } catch (java.text.ParseException e) {}
+                    serviceDate = bCh1.getBillingDate();
                %>
                 <b><bean:message key="oscar.billing.CA.ON.3rdpartyinvoice.dueDate"/>:</b><%=DateUtils.sumDate(serviceDate, numDaysTilDue, request.getLocale())%>
               <% }%>
                 </td>               
-	</tr>       
-</table>
+            </tr>
+        </table>
+        <%}%>
 
-<hr>
+        <hr>
+
+        <table width="100%" border="0">
+            <tr>
+                <td width="50%" valign="top">Bill To<br />
+                    <pre><%=billTo%></pre>
+                </td>
+                <td valign="top">Remit To<br />
+                    <pre><%=remitTo%></pre>
+                </td>
+            </tr>
+        </table>
+
+<oscar:customInterface section="billingInvoice"/>
 <table width="100%" border="0">
 	<tr>
-		<td width="50%" valign="top">Bill To<br />
-		<pre><%=prop3rdPart.getProperty("billTo","") %>
-</pre></td>
-		<td valign="top">Remit To<br />
-		<pre><%=prop3rdPart.getProperty("remitTo","") %>
-</pre></td>
-	</tr>
-</table>
-<oscar:customInterface section="billingInvoice"/>
-<table border="0">
-	<tr>
-            <td id="ptName">Patient: <%=ch1Obj.getDemographic_name() %></td>
-            <td id="ptDemoNo"> (<%=ch1Obj.getDemographic_no() %>)</td>
-            <td id="ptGender"><%=ch1Obj.getSex().equals("1")? "Male":"Female" %></td>
-            <td id="ptDOB"> DOB: <%=ch1Obj.getDob() %></td>
+            <td id="ptName">Patient: <%=bCh1.getDemographicName() %></td>
+            <td id="ptDemoNo"> (<%=bCh1.getDemographicNo() %>)</td>
+            <td id="ptGender"><%=bCh1.getSex().equals("1")? "Male":"Female" %></td>
+            <td id="ptDOB"> DOB: <%=bCh1.getDob() %></td>
         </tr>
         <tr>    
-            <td id="ptHin">
-                Insurance No: <%=demo.getHin()%>
-            </td>
-	</tr>
-</table>
-<hr>
+		<td id="ptHin">
+                   Insurance No: <%=demo.getHin()%>
+                </td>
+            </tr>
+        </table>
 
-<table width="100%" border="0">
-	<tr>
-		<td><%=ch1Obj.getComment() %></td>
-	</tr>
-</table>
+        <hr>
 
-<table width="100%" border="0">
-	<tr>
-		<th>Service Date</th>
-		<th>Practitioner</th>
-		<th>Payee</th>
-		<th>Ref. Doctor</th>
-	</tr>
-	<tr align="center">
-		<td><%=ch1Obj.getBilling_date() %></td>
-		<td><%=(new ProviderData()).getProviderName(ch1Obj.getProviderNo()) %></td>
-<% Properties prop = oscar.OscarProperties.getInstance();
-   String payee = prop.getProperty("PAYEE", "");
-   payee = payee.trim();
-   if( payee.length() > 0 ) {
-%>
-    <td><%=payee%></td>
-<% } else { %>
-    <td><%=(new ProviderData()).getProviderName(ch1Obj.getProviderNo()) %></td>
-<% } %>
-		<td><%=ch1Obj.getRef_num() %></td>
-	</tr>
-</table>
-<hr />
+        <table width="100%" border="0">
+            <tr>
+                <td><%=invoiceComment%></td>
+            </tr>
+        </table>
 
-<table width="100%" border="0">
-	<tr>
-		<th>Item #:</th>
-		<th>Description</th>
-		<th>Service Code</th>
-		<th>Qty</th>
-		<th>Dx</th>
-		<th>Amount</th>
-	</tr>
-	<% for(int i=1; i<aL.size(); i++) { 
-	BillingItemData itemObj = (BillingItemData) aL.get(i);
-	String serviceDesc = billObj.getBillingCodeDesc(itemObj.getService_code());
-%>
-	<tr align="center">
-		<td><%=itemObj.getId() %></td>
-		<td><%=serviceDesc %></td>
-		<td><%=itemObj.getService_code() %></td>
-		<td><%=itemObj.getSer_num() %></td>
-		<td><%=itemObj.getDx() %></td>
-		<td align="right"><%=itemObj.getFee() %></td>
-	</tr>
-	<% } %>
-</table>
+        <table width="100%" border="0">
+            <tr>
+                <th>Service Date</th>
+                <th>Practitioner</th>
+                <th>Payee</th>
+                <th>Ref. Doctor</th>
+            </tr>
+            <tr align="center">
+                <td><%=billingDateStr%></td>
+                <td><%=providerFormattedName%></td>
 
-<hr />
-<% 
-BigDecimal bdBal = new BigDecimal(ch1Obj.getTotal()).setScale(2, BigDecimal.ROUND_HALF_UP);
-BigDecimal bdPay = new BigDecimal(prop3rdPart.getProperty("payment","0.00")).setScale(2, BigDecimal.ROUND_HALF_UP);
-BigDecimal bdRef = new BigDecimal(prop3rdPart.getProperty("refund","0.00")).setScale(2, BigDecimal.ROUND_HALF_UP);
-bdBal = bdBal.subtract(bdPay);
-bdBal = bdBal.subtract(bdRef);
-//BigDecimal bdGst = new BigDecimal(propGst.getProperty("gst", "")).setScale(2, BigDecimal.ROUND_HALF_UP);
-%>
-<table width="100%" border="0">
+                <% Properties prop = oscar.OscarProperties.getInstance();
+                   String payee = prop.getProperty("PAYEE", "");
+                   payee = payee.trim();
+                   if( payee.length() > 0 ) {
+                %>
+                <td><%=payee%></td>
+                <% } else { %>
+                <td><%=providerFormattedName%></td>
+                <% } %>
+                <td><%=invoiceRefNum%></td>
+            </tr>
+        </table>
 
-	<tr align="right">
-		<td width="86%">Total:</td>
-		<td><%=ch1Obj.getTotal()%></td>
-	</tr>
-	<tr align="right">
-		<td>Payments:</td>
-		<td><%=prop3rdPart.getProperty("payment","0.00") %></td>
-	</tr>
-	<tr align="right">
-		<td>Refunds:</td>
-		<td><%=prop3rdPart.getProperty("refund","0.00") %></td>
-	</tr>
+        <hr />
 
-	<tr align="right">
-		<td><b>Balance:</b></td>
-		<td><%=bdBal %></td>
-	</tr>
-	<tr align="right">
-		<td>(<%=prop3rdPayMethod.getProperty(prop3rdPart.getProperty("payMethod",""), "") %>)</td>
-		<td></td>
-	</tr>
-</table>
+        <table width="100%" border="0">
+            <tr>
+                <th>Item #:</th>
+                <th>Description</th>
+                <th>Service Code</th>
+                <th>Qty</th>
+                <th>Dx</th>
+                <th>Amount</th>
+            </tr>
+            <%             
+            BillingServiceDao billingServiceDao = (BillingServiceDao) SpringUtils.getBean("billingServiceDao");
+            
+            for(BillingONItem billItem : billingItems) { 	
+                BillingService bs = null;
+                if (billItem.getServiceCode().startsWith("_"))
+                    bs = billingServiceDao.searchPrivateBillingCode(billItem.getServiceCode(),billItem.getServiceDate());
+                else
+                    bs = billingServiceDao.searchBillingCode(billItem.getServiceCode(),"ON",billItem.getServiceDate());
+                   
+             %>
+            <tr align="center">
+                <td><%=billItem.getId() %></td>
+                <td><%=bs.getDescription()%></td>
+                <td><%=billItem.getServiceCode()%></td>
+                <td><%=billItem.getServiceCount()%></td>
+                <td><%=billItem.getDx()%></td>
+                <td align="right"><%=billItem.getFee()%></td>
+            </tr>
+            <% } %>
+        </table>
 
-</body>
+        <hr />
+
+        <table width="100%" border="0">
+            <tr align="right">
+                <td width="86%">Total:</td>
+                <td><%=totalOwed.toPlainString()%></td>
+            </tr>
+            <tr align="right">
+                <td>Payments:</td>
+                <td><%=paidTotal.toPlainString()%></td>
+            </tr>
+            <tr align="right">
+                <td>Refunds:</td>
+                <td><%=refundTotal.toPlainString()%></td>
+            </tr>
+
+            <tr align="right">
+                <td><b>Balance:</b></td>
+                <td><%=balanceOwing.toPlainString()%></td>
+            </tr>	
+        </table>
+    </body>
 </html>

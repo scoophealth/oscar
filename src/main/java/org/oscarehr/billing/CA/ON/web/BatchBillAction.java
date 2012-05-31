@@ -39,7 +39,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
-import org.oscarehr.billing.CA.ON.dao.BillingClaimDAO;
+import org.oscarehr.common.dao.BillingONCHeader1Dao;
 import org.oscarehr.common.dao.BatchBillingDAO;
 import org.oscarehr.common.model.BatchBilling;
 import org.oscarehr.util.MiscUtils;
@@ -51,8 +51,9 @@ import org.oscarehr.util.SpringUtils;
  */
 public class BatchBillAction extends DispatchAction {
 
-    private BillingClaimDAO billClaimDAO;
+    private BillingONCHeader1Dao billingONCHeader1Dao = (BillingONCHeader1Dao) SpringUtils.getBean("billingONCHeader1Dao");
 
+    @Override
     public ActionForward unspecified(ActionMapping actionMapping,
                                ActionForm actionForm,
                                HttpServletRequest request,
@@ -84,7 +85,7 @@ public class BatchBillAction extends DispatchAction {
             String[] temp;
             for( int idx = 0; idx < billingInfo.length; ++idx ) {
                 temp = billingInfo[idx].split(";");
-                this.billClaimDAO.createBill(temp[2], temp[1], temp[0], clinic_view, billingDate, curUser);
+                this.billingONCHeader1Dao.createBill(temp[2], temp[1], temp[0], clinic_view, billingDate, curUser);
             }
 
         }
@@ -130,7 +131,7 @@ public class BatchBillAction extends DispatchAction {
 			for( int idx = 0; idx < billingInfo.length; ++idx ) {
 				temp = billingInfo[idx].split(";");
 				//passed in order is billing provider, demographic no, service code, dx code
-				total = this.billClaimDAO.createBill(temp[3], temp[2], temp[0], temp[1], clinic_view, billingDate, curUser);
+				total = this.billingONCHeader1Dao.createBill(temp[3], temp[2], temp[0], temp[1], clinic_view, billingDate, curUser);
 				
 				batchBillingList = batchBillingDAO.find(Integer.parseInt(temp[2]), temp[0]);
 				batchBilling = batchBillingList.get(0);				
@@ -209,7 +210,7 @@ public class BatchBillAction extends DispatchAction {
     		List<BatchBilling> batchBillingList = batchBillingDAO.find(demographicNo, service_code);
     		BatchBilling batchBilling;
     		
-    		if( batchBillingList.size() == 0 ) {
+    		if( batchBillingList.isEmpty()) {
     			batchBilling = new BatchBilling();
     	
     			batchBilling.setDemographicNo(demographicNo);
@@ -235,21 +236,5 @@ public class BatchBillAction extends DispatchAction {
     	
     	return actionMapping.findForward("saved");
     	
-    }
-
-    /**
-     * @return the billClaimDAO
-     */
-    public BillingClaimDAO getBillClaimDAO() {
-        return billClaimDAO;
-    }
-
-    /**
-     * @param billClaimDAO the billClaimDAO to set
-     */
-    public void setBillClaimDAO(BillingClaimDAO billClaimDAO) {
-        this.billClaimDAO = billClaimDAO;
-    }
-
-
+    }   
 }

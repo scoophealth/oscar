@@ -23,31 +23,41 @@
  */
 
 
-package org.oscarehr.common.dao;
+package org.oscarehr.common.model;
 
-import java.util.List;
-import java.util.Date;
-import java.util.Locale;
-import javax.persistence.Query;
-import org.oscarehr.common.model.RaHeader;
-import org.springframework.stereotype.Repository;
-import oscar.util.DateUtils;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-@Repository
-public class RaHeaderDao extends AbstractDao<RaHeader>{
+@Entity
+@Table(name="billing_payment_type")
+public class BillingPaymentType extends AbstractModel<Integer>{
 
-	public RaHeaderDao() {
-		super(RaHeader.class);
-	}
-        
-        public List<RaHeader> getRaHeaderByDate(Date startDate, Date endDate, Locale locale) {
-            Query query = entityManager.createQuery("SELECT rah from RaHeader rah WHERE rah.paymentDate >= ? and rah.paymentDate < ? order by rah.id");
-            query.setParameter(1, DateUtils.formatDate(startDate, locale));
-            query.setParameter(2, DateUtils.formatDate(endDate, locale));
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-            @SuppressWarnings("unchecked")
-            List<RaHeader> results = query.getResultList();
+	@Column(name="payment_type")
+	private String paymentType;
 
-            return results;
-	}        
+	public Integer getId() {
+    	return id;
+    }
+
+	public void setId(Integer id) {
+    	this.id = id;
+    }
+
+	public String getPaymentType() {
+    	return paymentType;
+    }
+
+	public void setPaymentType(String paymentType) {
+    	this.paymentType = paymentType;
+    }
+
+
 }

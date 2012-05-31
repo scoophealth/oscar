@@ -21,30 +21,37 @@ package org.oscarehr.common.model;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import java.util.List;
 import javax.persistence.Id;
+import javax.persistence.Column;
+import javax.persistence.GenerationType;
+import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
+import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
+import javax.persistence.PostPersist;
 import org.oscarehr.PMmodule.utility.Utility;
+import oscar.util.DateUtils;
 
 @Entity
 @Table(name = "billing_on_cheader1")
 public class BillingONCHeader1 extends AbstractModel<Integer> implements Serializable {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1L;
+        
+        public static final String SETTLED = "S";
+        
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        private Integer id;
 	@Column(name = "header_id", nullable = false)
 	private Integer headerId;
 	@Column(name = "transc_id")
@@ -78,10 +85,13 @@ public class BillingONCHeader1 extends AbstractModel<Integer> implements Seriali
 	private String demographicName = null;
 	private String sex = "1";
 	private String province = "ON";
+        @Temporal(TemporalType.DATE)
 	@Column(name = "billing_date")
-	private String billingDate = null;
+	private Date billingDate = null;
+        @Temporal(TemporalType.TIME)
 	@Column(name = "billing_time")
-	private String billingTime = null; //time format
+	private Date billingTime = null; //time format        
+        @Column(name="total")
 	private String total = null;
 	private String paid = null;
 	private String status = null;
@@ -97,11 +107,14 @@ public class BillingONCHeader1 extends AbstractModel<Integer> implements Seriali
 	private String apptProviderNo = null;
 	@Column(name = "asstProvider_no")
 	private String asstProviderNo = null;
-	private String creator = null;
+	private String creator = null;        
 	@Column(name = "timestamp1", insertable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date timestamp;
+        private Date timestamp;
 	private String clinic = null;
+        @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+        @JoinColumn(name="ch1_id", referencedColumnName="id")
+        private List<BillingONItem>billingItems = new ArrayList<BillingONItem>(); 
 
 	public BillingONCHeader1() {}
 
@@ -114,7 +127,8 @@ public class BillingONCHeader1 extends AbstractModel<Integer> implements Seriali
 			Date billingDate, Date billingTime, Integer total, Integer paid,
 			String status, String comment, String visitType,
 			String providerOhipNo, String providerRmaNo, String apptProviderNo,
-			String asstProviderNo, String creator, Date timestamp, String clinic) {
+			String asstProviderNo, String creator, Date timestamp, String clinic,
+                        List<BillingONItem> billingItems) {
 		super();
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		this.headerId = headerId;
@@ -137,8 +151,8 @@ public class BillingONCHeader1 extends AbstractModel<Integer> implements Seriali
 		this.demographicName = demographicName;
 		this.sex = sex;
 		this.province = province;
-		this.billingDate = df.format(billingDate);
-		this.billingTime = df.format(billingTime);
+		this.billingDate = billingDate;
+		this.billingTime = billingTime;
 		this.total = Utility.toCurrency(total);
 		this.paid = Utility.toCurrency(paid);
 		this.status = status;
@@ -151,9 +165,10 @@ public class BillingONCHeader1 extends AbstractModel<Integer> implements Seriali
 		this.creator = creator;
 		this.timestamp = timestamp;
 		this.clinic = clinic;
+                this.billingItems = billingItems;
 	}
 
-
+        @Override
 	public Integer getId() {
 		return id;
 	}
@@ -239,11 +254,15 @@ public class BillingONCHeader1 extends AbstractModel<Integer> implements Seriali
 	}
 
 	public Date getAdmissionDate() throws ParseException  {
-		return (new SimpleDateFormat("yyyy-MM-dd")).parse(this.admissionDate);
+            if (this.admissionDate != null)
+		return DateUtils.parseDate(admissionDate,java.util.Locale.getDefault());
+            else
+                return null;
 	}
 
 	public void setAdmissionDate(Date admissionDate) {
-		this.admissionDate = (new SimpleDateFormat("yyyy-MM-dd")).format(admissionDate);
+            if (admissionDate != null) 
+		this.admissionDate = DateUtils.formatDate(admissionDate,java.util.Locale.getDefault());
 	}
 
 	public String getRefLabNum() {
@@ -319,19 +338,19 @@ public class BillingONCHeader1 extends AbstractModel<Integer> implements Seriali
 	}
 
 	public Date getBillingDate() throws ParseException {
-		return (new SimpleDateFormat("yyyy-MM-dd")).parse(this.billingDate);
+		return this.billingDate;
 	}
 
 	public void setBillingDate(Date billingDate) {
-		this.billingDate = (new SimpleDateFormat("yyyy-MM-dd")).format(billingDate);
+		this.billingDate = billingDate;
 	}
 
 	public Date getBillingTime() throws ParseException {
-		return (new SimpleDateFormat("HH:mm:ss")).parse(this.billingTime);
+		return this.billingTime;
 	}
 
 	public void setBillingTime(Date billingTime) {
-		this.billingTime = (new SimpleDateFormat("HH:mm:ss")).format(billingTime);
+		this.billingTime = billingTime;
 	}
 
 	public Long getTotal() {
@@ -339,9 +358,12 @@ public class BillingONCHeader1 extends AbstractModel<Integer> implements Seriali
 		else return 0L;
 	}
 
-	public void setTotal(Long total) {
-		if(total != null && this.total.length()>0) this.total = Utility.toCurrency(total/100);
-		else this.total = "0.00";
+	public void setTotal(Long total) {            
+		if(total != null) {                    
+                    this.total = Utility.toCurrency(total/100);                          
+                } else {                    
+                    this.total = "0.00";
+                }
 	}
 
 	public Long getPaid() {
@@ -350,7 +372,7 @@ public class BillingONCHeader1 extends AbstractModel<Integer> implements Seriali
 	}
 
 	public void setPaid(Long paid) {
-		if(paid != null && this.paid.length()>0) this.paid = Utility.toCurrency(paid/100);
+		if(paid != null) this.paid = Utility.toCurrency(paid*(0.01));
 		else this.paid = "0.00";
 	}
 
@@ -429,20 +451,37 @@ public class BillingONCHeader1 extends AbstractModel<Integer> implements Seriali
 	public void setClinic(String clinic) {
 		this.clinic = clinic;
 	}
+        
+        public List<BillingONItem> getBillingItems() {
+            return billingItems;
+        }
 
-	public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        public void setBillingItems(List<BillingONItem> billingItems) {
+            this.billingItems = billingItems;
+        }
+        
+        @PostPersist
+        public void postPersist() {            
+            for (BillingONItem b : this.billingItems) {
+                b.setCh1Id(this.id);
+            }                        
+        }
+                                                     
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
 
-        BillingONCHeader1 bill = (BillingONCHeader1) o;
+            BillingONCHeader1 bill = (BillingONCHeader1) o;
 
-        if (id != null ? !id.equals(bill.id) : bill.id != null) return false;
+            if (id != null ? !id.equals(bill.id) : bill.id != null) return false;
 
-        return true;
-    }
-
-    public int hashCode() {
-        return (id != null ? id.hashCode() : 0);
-    }
-
+            return true;
+        }
+        
+        @Override
+        public int hashCode() {
+            return (id != null ? id.hashCode() : 0);
+        }
+        
 }

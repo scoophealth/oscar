@@ -777,7 +777,6 @@ if(request.getParameter("xml_billtype")!=null && !request.getParameter("xml_bill
 	JdbcBillingPageUtil pObj = new JdbcBillingPageUtil();
 	List al = pObj.getPaymentType();
 
-	Billing3rdPartPrep privateObj = new Billing3rdPartPrep();
 	oscar.oscarRx.data.RxProviderData.Provider provider = new oscar.oscarRx.data.RxProviderData().getProvider((String) session.getAttribute("user"));
 
                 /*

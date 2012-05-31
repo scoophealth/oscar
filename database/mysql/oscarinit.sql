@@ -10971,3 +10971,8 @@ CREATE TABLE `eyeform_macro_billing` (
   PRIMARY KEY (`id`)
 );
 
+create table billing_on_payment (
+    payment_id int (10) NOT NULL auto_increment primary key, 
+    billing_no int(6) NOT NULL, 
+    pay_date timestamp NOT NULL
+);

@@ -17,140 +17,141 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
-<%! boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();
-	List<String> mgrSites = new ArrayList<String>();
-%>
+<%@page import="java.math.*,java.util.*,java.sql.*,oscar.*,java.net.*" errorPage="errorpage.jsp"%>
+<%@page import="oscar.oscarBilling.ca.on.data.*"%>
+<%@page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
+<%@page import="oscar.oscarDemographic.data.*"%>
+<%@page import="oscar.util.UtilDateUtilities"%>
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="oscar.util.DateUtils"%>
+<%@page import="org.oscarehr.common.model.BillingONItem"%>
+<%@page import="org.oscarehr.common.model.BillingONErrorCode, org.oscarehr.common.dao.BillingONErrorCodeDao"%>
+<%@page import="org.oscarehr.common.dao.BillingONEAReportDao, org.oscarehr.common.model.BillingONEAReport"%>
+<%@page import="org.oscarehr.common.model.RaDetail, org.oscarehr.common.dao.RaDetailDao"%>
+<%@page import="org.oscarehr.common.model.ClinicLocation, org.oscarehr.common.dao.ClinicLocationDao"%>
+<%@page import="org.oscarehr.common.dao.BillingONPaymentDao, org.oscarehr.common.model.BillingONPayment"%>
+<%@page import="org.oscarehr.common.model.Provider,org.oscarehr.PMmodule.dao.ProviderDao"%>
+<%@page import="org.oscarehr.common.dao.BillingONCHeader1Dao, org.oscarehr.common.model.BillingONCHeader1"%>
+<%@page import="org.oscarehr.common.model.BillingONExt, org.oscarehr.common.dao.BillingONExtDao"%>
+<%@page import="org.oscarehr.common.model.BillingService, org.oscarehr.common.dao.BillingServiceDao"%>
+<%@page import="org.oscarehr.common.model.ClinicNbr, org.oscarehr.common.dao.ClinicNbrDao"%>
+<%@page import="org.oscarehr.common.model.Site, org.oscarehr.common.dao.SiteDao"%>
+<%@page import="org.oscarehr.common.model.ProviderSite, org.oscarehr.common.dao.ProviderSiteDao"%>
+<%@page import="org.oscarehr.common.service.BillingONService"%> 
+
+<%@taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%@taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+
 <%
-if (bMultisites)
-{
-        	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
-          	List<Site> sites = siteDao.getActiveSitesByProviderNo((String) session.getAttribute("user"));
-          	for (Site s : sites) {
-          		mgrSites.add(s.getName());
-          	}
-}
- %>
-<%@ page import="oscar.login.DBHelp"%>
-<%// start
-			if (session.getAttribute("user") == null)
-				response.sendRedirect("../../../logout.htm");
-			String curUser_no, userfirstname, userlastname;
-			curUser_no = (String) session.getAttribute("user");
-			int MAXRECORDS = 6;  //number of billing items to display if record has less than 6
-			String UpdateDate = "";
-			String DemoNo = "";
-			String DemoName = "";
-			String DemoAddress = "";
-			String DemoCity = "";
-			String DemoProvince = "";
-			String DemoPostal = "";
-			String DemoDOB = "";
-                        String DemoRS = "";
-			String DemoSex = "";
-			String hin = "";
-			String location = "";
-			String BillLocation = "";
-			String BillLocationNo = "";
-			String BillDate = "";
-			String Provider = "";
-			String BillType = "";
-			String payProgram = "";
-			String BillTotal = "";
-			String visitdate = "";
-			String visittype = "";
-			String sliCode = "";
-			String BillDTNo = "";
-			String HCTYPE = "";
-			String HCSex = "";
-			String r_doctor_ohip = "";
-			String r_doctor = "";
-			String r_doctor_ohip_s = "";
-			String r_doctor_s = "";
-			String m_review = "";
-			String specialty = "";
-			String r_status = "";
-			String roster_status = "";
-			String comment = "";
-                        String payer = "";
-			String htmlPaid = "";
-			int rowCount = 0;
-			int rowReCount = 0;
-			ResultSet rslocation = null;
-			ResultSet rsPatient = null;
+    String userProviderNo = (String) session.getAttribute("user");
+    ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
+    
+    Provider userProvider = providerDao.getProvider(userProviderNo);
+    
+    if (userProvider == null)
+        response.sendRedirect("../logout.jsp");
+    
+    if(session.getAttribute("userrole") == null )  
+        response.sendRedirect("../logout.jsp");
+    
+    String roleName$ = (String)session.getAttribute("userrole") + "," + userProviderNo;
 
-			%>
-
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
-<%
-	if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
-	String curProvider_no = (String) session.getAttribute("user");
-
-	if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
-	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-
-	boolean isTeamBillingOnly=false;
     boolean isSiteAccessPrivacy=false;
     boolean isTeamAccessPrivacy=false;
-
-	boolean isMultiSiteProvider = true;
+    
 %>
-<security:oscarSec objectName="_team_billing_only" roleName="<%= roleName$ %>" rights="r" reverse="false">
-<% isTeamBillingOnly=true; %>
-</security:oscarSec>
 <security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
-	<%isSiteAccessPrivacy=true; %>
+    <%isSiteAccessPrivacy=true; %>
 </security:oscarSec>
+
 <security:oscarSec objectName="_team_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
-	<%isTeamAccessPrivacy=true; %>
+    <%isTeamAccessPrivacy=true; %>
 </security:oscarSec>
-
 <%
-HashMap<String,String> providerMap = new HashMap<String,String>();
-//multisites function
-if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
-	String sqlStr = "select provider_no from provider ";
-	if (isSiteAccessPrivacy)
-		sqlStr = "select distinct p.provider_no from provider p inner join providersite s on s.provider_no = p.provider_no "
-		 + " where s.site_id in (select site_id from providersite where provider_no = " + curProvider_no + ")";
-	if (isTeamAccessPrivacy)
-		sqlStr = "select distinct p.provider_no from provider p where team in (select team from provider "
-				+ " where team is not null and team <> '' and provider_no = " + curProvider_no + ")";
-	DBHelp dbObj = new DBHelp();
-	ResultSet rs = dbObj.searchDBRecord(sqlStr);
-	while (rs.next()) {
-		providerMap.put(rs.getString("provider_no"),"true");
-	}
-	rs.close();
-}
+    ProviderSiteDao providerSiteDao = (ProviderSiteDao) SpringUtils.getBean("providerSiteDao");
+    Set<String> providerAccessList = new HashSet<String>();
+    
+    //multisites function
+    if (isSiteAccessPrivacy) {
+        List<ProviderSite> providerSite = providerSiteDao.findByProviderNo(userProviderNo);
+        for (ProviderSite pSite : providerSite) {
+            providerAccessList.add(pSite.getId().getProviderNo());
+        }                       
+    }
+    
+    if (isTeamAccessPrivacy) {
+        List<Provider> providers = providerDao.getBillableProvidersOnTeam(userProvider);
+        for (Provider p : providers) {
+            providerAccessList.add(p.getProviderNo());
+        }            
+    }
+    
+    boolean isTeamBillingOnly=false;
+    boolean isMultiSiteProvider = true;
+%>
+<security:oscarSec objectName="_team_billing_only" roleName="<%=roleName$%>" rights="r" reverse="false">
+    <% isTeamBillingOnly=true; %>
+</security:oscarSec>
+<%    
+    boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();
+    List<String> mgrSites = new ArrayList<String>();
+
+    if (bMultisites) {
+        SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
+        List<Site> sites = siteDao.getActiveSitesByProviderNo(userProviderNo);
+        for (Site s : sites) {
+                mgrSites.add(s.getName());
+        }
+    }
+    
+    int MAXRECORDS = 6;  //number of billing items to display if record has less than 6
+    
+    String DemoNo = "";
+    String DemoName = "";
+    String DemoAddress = "";
+    String DemoCity = "";
+    String DemoProvince = "";
+    String DemoPostal = "";
+    String DemoDOB = "";
+    String DemoRS = "";
+    String DemoSex = "";
+    String hin = "";
+    String location = "";
+    String BillLocation = "";
+    String BillLocationNo = "";
+    String BillDate = "";
+    String Provider = "";
+    String BillType = "";
+    String payProgram = "";
+    String BillTotal = "";
+    String visitdate = "";
+    String visittype = "";
+    String sliCode = "";
+    String BillDTNo = "";
+    String HCTYPE = "";
+    String HCSex = "";
+    String r_doctor_ohip = "";
+    String r_doctor = "";
+    String r_doctor_ohip_s = "";
+    String r_doctor_s = "";
+    String m_review = "";
+    String specialty = "";
+    String r_status = "";
+    String roster_status = "";
+    String comment = "";
+
+    int rowCount = 0;
+    int rowReCount = 0;
+    ResultSet rslocation = null;
+    ResultSet rsPatient = null;			        
 %>
 
-<%@ page import="java.math.*,java.util.*,java.sql.*,oscar.*,java.net.*"
-	errorPage="errorpage.jsp"%>
-<%@ page import="oscar.oscarBilling.ca.on.data.*"%>
-<%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
-<%@ page import="oscar.oscarDemographic.data.*"%>
-<%@ page import="oscar.util.UtilDateUtilities"  %>
-
-<%GregorianCalendar now = new GregorianCalendar();
-			int curYear = now.get(Calendar.YEAR);
-			int curMonth = (now.get(Calendar.MONTH) + 1);
-			int curDay = now.get(Calendar.DAY_OF_MONTH);
-%>
-
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-
-<%@page import="org.oscarehr.common.dao.SiteDao"%>
-<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
-<%@page import="org.oscarehr.common.model.Site"%>
-<%@page import="org.oscarehr.common.model.Provider"%>
-<%@page import="org.oscarehr.util.SpringUtils"%>
-<%@page import="org.oscarehr.common.model.ClinicNbr"%>
-<%@page import="org.oscarehr.common.dao.ClinicNbrDao"%>
-
+<!DOCTYPE html>
 <html:html locale="true">
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
 <title><bean:message key="billing.billingCorrection.title" /></title>
 <link rel="stylesheet" type="text/css" href="billingON.css" />
 <!-- calendar stylesheet -->
@@ -260,11 +261,24 @@ function validateAllItems(){
    var status = statusOpts.options[statusOpts.selectedIndex].value;
    var payPrgrmOpts = document.getElementById("payProgram");
    var payPrgrm = payPrgrmOpts.options[payPrgrmOpts.selectedIndex].value;   
-   if( status == "P" && (payPrgrm == "HCP" || payPrgrm == "RMB" || payPrgrm == "WCB" )) {
+   var is3rdParty = true;
+   if (payPrgrm == "HCP" || payPrgrm == "RMB" || payPrgrm == "WCB" ){
+      is3rdParty = false;
+   }
+   if( status == "P" && !is3rdParty) {
 	   alert("Pay Program does not match bill status.");
 	   return false;
    }
    
+
+   var outstandingAmt = document.getElementById("outstandingBalance").value;
+
+   if ((outstandingAmt != "0.00") && (status == "S" && is3rdParty)) {
+       if(!confirm('Warning: Settling this invoice will also settle the outstanding balance as paid. Continue?')){ 
+          return false;
+       }
+   }
+                                     
    return true;
 }
 function popupPage(vheight,vwidth,varpage) {
@@ -289,31 +303,35 @@ function sanityCheck(id) {
     return false;
 }
 
+function checkPayProgram(payProgram) {
+    //enable 3rd party elements
+    if(payProgram == 'PAT' || payProgram == 'OCF' || payProgram == 'ODS' || payProgram == 'CPP' || payProgram == 'STD' || payProgram == 'IFH' ) {
+        document.getElementById("thirdParty").style.display = "inline";
+        document.getElementById("thirdPartyPymnt").style.display = "inline";
+
+        document.getElementById("billTo").disabled = false;
+    }
+    else {
+        document.getElementById("thirdParty").style.display = "none";
+        document.getElementById("thirdPartyPymnt").style.display = "none";
+        
+        document.getElementById("billTo").disabled = true;
+    }
+}
+
 function checkSettle(status) {
-    if( status == 'S' ) {
-        var payElem = document.getElementById("payment");
-        if( payElem != null ) {
-            payElem.value = document.getElementById("billTotal").value;
-        }
-    }        
-    else if( status == 'P') {
+        
+    //enable 3rd party elements
+    if( status == 'P') {
     	document.getElementById("thirdParty").style.display = "inline";
     	document.getElementById("thirdPartyPymnt").style.display = "inline";
     	
-    	document.getElementById("payment").disabled = false;
-    	document.getElementById("oldPayment").disabled = false;
-    	document.getElementById("payDate").disabled = false;
-    	document.getElementById("refund").disabled = false;
     	document.getElementById("billTo").disabled = false;
     }
-    else {
+    else if (status != 'S'){
     	document.getElementById("thirdParty").style.display = "none";
     	document.getElementById("thirdPartyPymnt").style.display = "none";
     	
-    	document.getElementById("payment").disabled = true;
-    	document.getElementById("oldPayment").disabled = true;
-    	document.getElementById("payDate").disabled = true;
-    	document.getElementById("refund").disabled = true;
     	document.getElementById("billTo").disabled = true;
     }
 
@@ -323,215 +341,206 @@ function checkSettle(status) {
 </script>
 </head>
 
-<body bgcolor="ivory" text="#000000" topmargin="0" leftmargin="0"
-	rightmargin="0" onLoad="setfocus()">
-<!--  <table width="100%" border="0" cellspacing="0" cellpadding="0">
-	<tr bgcolor="#000000">
-		<th height="40" width="10%"></th>
-		<th width="90%" align="left"><font face="Verdana, Arial" color="#FFFFFF" size="4"><bean:message
-			key="billing.billingCorrection.msgCorrection" /></font></th>
-	</tr>
-</table>
--->
+<body bgcolor="ivory" text="#000000" onLoad="setfocus()">
 <%//
-                                JdbcBillingRAImpl raObj = new JdbcBillingRAImpl();
-				BillingCorrectionPrep obj = new BillingCorrectionPrep();
-				List recordObj = null;
-				BillingClaimHeader1Data ch1Obj = new BillingClaimHeader1Data();
-				BillingItemData itemObj = null;
+    RaDetailDao raDetailDao = (RaDetailDao) SpringUtils.getBean("raDetailDao");
+    BillingONCHeader1Dao bCh1Dao = (BillingONCHeader1Dao) SpringUtils.getBean("billingONCHeader1Dao");
+    BillingServiceDao bServiceDao = (BillingServiceDao) SpringUtils.getBean("billingServiceDao");
+    
+    // bFlag - fill in data?
+    boolean bFlag = false;
+    
+    String billNo = request.getParameter("billing_no").trim();
+    String claimNo = request.getParameter("claim_no");
 
-				// bFlag - fill in data?
-				boolean bFlag = false;
-				String billNo = request.getParameter("billing_no").trim();
-                                String claimNo = request.getParameter("claim_no");
+    if( billNo == null || billNo.length() == 0 ) {
+        if( claimNo != null && claimNo.length() > 0 ) {
+            claimNo = claimNo.trim();
+            List<RaDetail> raDetails = raDetailDao.getRaDetailByClaimNo(claimNo);
+            if (!raDetails.isEmpty()) {
+                billNo = String.valueOf(raDetails.get(0).getBillingNo());
+            }
+        }
+    }
+    if (billNo != null && billNo.length() > 0) {
+            bFlag = true;
+    }
+    
+    Locale locale = request.getLocale();
+    BillingONCHeader1 bCh1 = null;
+    Integer billingNo = null;    
+    String createTimestamp = null;
+    String clinicSite = "";
 
-                                if( billNo == null || billNo.length() == 0 ) {
-                                    if( claimNo != null && claimNo.length() > 0 ) {
-                                        claimNo = claimNo.trim();
-                                        billNo = raObj.getRABilllingNo4ClaimNo(claimNo);
-                                    }
+    if (bFlag) {
 
-                                }
-				if (billNo != null && billNo.length() > 0) {
-					bFlag = true;
-				}
+        billingNo = Integer.parseInt(billNo);
+	bCh1 = bCh1Dao.find(billingNo);
 
-				if (bFlag) {
-					recordObj = obj.getBillingRecordObj(billNo);
-					if (recordObj != null && recordObj.size() > 0) {
+        if (bCh1 != null) {	
 
-						ch1Obj = (BillingClaimHeader1Data) recordObj.get(0);
+	    clinicSite = bCh1.getClinic();
 
-						//multisite. check provider no
-					    if ((isSiteAccessPrivacy || isTeamAccessPrivacy) && (providerMap.get(ch1Obj.getProviderNo())== null || !mgrSites.contains(ch1Obj.getClinic())))
-					    		isMultiSiteProvider = false;
+                //multisite. check provider no
+            if (((isSiteAccessPrivacy || isTeamAccessPrivacy) && !providerAccessList.contains(bCh1.getProviderNo())) 
+                 || (bMultisites && !mgrSites.contains(clinicSite))) { 
+                
+                isMultiSiteProvider = false;
+                
+                DemoNo = "";
+                DemoName = "";
+                DemoAddress = "";
+                DemoCity = "";
+                DemoProvince = "";
+                DemoPostal = "";
+                DemoDOB = "";
+                DemoSex = "";
+                r_doctor = "";
+                r_doctor_ohip_s = "";
+                r_doctor_s = "";
+                m_review = bCh1.getManReview();
+                specialty = "";
+                r_status = "";
+                roster_status = "";
 
-					    if 	(isMultiSiteProvider) {
-						UpdateDate = ch1Obj.getUpdate_datetime(); //.substring(0,10);
-						DemoNo = ch1Obj.getDemographic_no();
-						DemoName = ch1Obj.getDemographic_name();
-						DemoAddress = "";
-						DemoCity = "";
-						DemoProvince = "";
-						DemoPostal = "";
-						DemoDOB = ch1Obj.getDob();
-						DemoSex = ch1Obj.getSex().equals("1") ? "M" : "F";
+                out.write("<script>window.alert('sorry, billing access denied.')</script>");
+                bFlag = false;
+                billNo=null;
 
-						org.oscarehr.common.model.Demographic sdemo = (new DemographicData()).getDemographic(DemoNo);
-						hin = sdemo.getHin()+sdemo.getVer();
-						DemoDOB = sdemo.getYearOfBirth() + sdemo.getMonthOfBirth() + sdemo.getDateOfBirth();
-						DemoSex = sdemo.getSex();
-						DemoRS = sdemo.getRosterStatus();
-						//hin = ch1Obj.getHin() + ch1Obj.getVer();
-						location = ch1Obj.getFacilty_num();
-						BillLocation = "";
-						BillLocationNo = ch1Obj.getFacilty_num();
-						BillDate = ch1Obj.getBilling_date();
-						Provider = ch1Obj.getProviderNo();
-						BillType = ch1Obj.getStatus();
-						payProgram = ch1Obj.getPay_program();
-						BillTotal = ch1Obj.getTotal();
-						visitdate = ch1Obj.getAdmission_date();
-						visittype = ch1Obj.getVisittype();
-						sliCode = ch1Obj.getLocation();
-						BillDTNo = "";
-						HCTYPE = ch1Obj.getProvince();
-						HCSex = ch1Obj.getSex();
-						r_doctor_ohip = ch1Obj.getRef_num();
-						r_doctor = "";
-						r_doctor_ohip_s = "";
-						r_doctor_s = "";
-						m_review = ch1Obj.getMan_review();
-						specialty = "";
-						r_status = "";
-						roster_status = "";
-						comment = ch1Obj.getComment();
-						//paid = ch1Obj.getPaid();
-					}
-					    else {
-							UpdateDate = "";
-							DemoNo = "";
-							DemoName = "";
-							DemoAddress = "";
-							DemoCity = "";
-							DemoProvince = "";
-							DemoPostal = "";
-							DemoDOB = "";
-							DemoSex = "";
-							r_doctor = "";
-							r_doctor_ohip_s = "";
-							r_doctor_s = "";
-							m_review = ch1Obj.getMan_review();
-							specialty = "";
-							r_status = "";
-							roster_status = "";
+            }else {
+                createTimestamp = DateUtils.formatDateTime(bCh1.getTimestamp(), locale);                
+                DemoNo = bCh1.getDemographicNo().toString();
+                DemoName = bCh1.getDemographicName();
+                DemoAddress = "";
+                DemoCity = "";
+                DemoProvince = "";
+                DemoPostal = "";
+                DemoDOB = bCh1.getDob();
+                DemoSex = bCh1.getSex().equals("1") ? "M" : "F";
 
-							out.write("<script>window.alert('sorry, billing access denied.')</script>");
-					    }
-					}
-				}
-				boolean thirdParty = false;
-				Billing3rdPartPrep tObj = new Billing3rdPartPrep();
-				
-				if("HCP".equals(payProgram) || "RMB".equals(payProgram) || "WCB".equals(payProgram)
-						|| request.getParameter("billing_no").length() < 1) {
-					
-					Properties tProp = null;					
-					if( request.getParameter("billing_no").length() > 0 ) {
-						tProp = tObj.get3rdPartBillPropInactive(request.getParameter("billing_no").trim());						
-					}
-					
-					if( tProp == null || tProp.size() == 0 ) {
-						htmlPaid = "Paid<br><input type='text' id='payment' name='payment' size=5 value='0.00'/>" +
-							"<input type='hidden' id='oldPayment' name='oldPayment' value='0.00'/> <input type='hidden' id='payDate' name='payDate' value='" +
-                        	UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "'/><br> Refund<br><input type='text' id='refund' name='refund' size=5 value='0.00'/><br>";
-                        	payer = "";
-					}
-					else {
-						htmlPaid = "Paid<br><input type='text' id='payment' name='payment' size=5 value='"
-					    	+ tProp.getProperty("payment","0.00") + "' /><input type='hidden' id='oldPayment' name='oldPayment' value='"
-		                    + tProp.getProperty("payment","0.00") + "' /><input type='hidden' id='payDate' name='payDate' value='"
-		                    + UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "'/><br>";
-						htmlPaid += "Refund<br><input type='text' id='refund' name='refund' size=5 value='"
-							+ tProp.getProperty("refund") + "' /><br>";
-						payer = tProp.getProperty("billTo");
-                        if( payer == null ) {
-                        	payer = "";
-                       	}
-					}
-				} else {
-					thirdParty = true;
-					Properties tProp = tObj.get3rdPartBillProp(request.getParameter("billing_no").trim());	
-					htmlPaid = "Paid<br><input type='text' id='payment' name='payment' size=5 value='"
-						+ tProp.getProperty("payment") + "' /><input type='hidden' id='oldPayment' name='oldPayment' value='"
-                                                + tProp.getProperty("payment") + "' /><input type='hidden' id='payDate' name='payDate' value='"
-                                                + UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "'/><br>";
-					htmlPaid += "Refund<br><input type='text' id='refund' name='refund' size=5 value='"
-						+ tProp.getProperty("refund") + "' /><br>";
-                                        payer = tProp.getProperty("billTo");
-                                        if( payer == null ) {
-                                            payer = "";
-                                        }
-				}
+                BigDecimal billTotal = new BigDecimal(bCh1.getTotal());
+                billTotal = billTotal.movePointLeft(2);
 
+                org.oscarehr.common.model.Demographic sdemo = (new DemographicData()).getDemographic(DemoNo);
+                hin = sdemo.getHin()+sdemo.getVer();
+                DemoDOB = sdemo.getYearOfBirth() + sdemo.getMonthOfBirth() + sdemo.getDateOfBirth();
+                DemoSex = sdemo.getSex();
+                DemoRS = sdemo.getRosterStatus();
+                //hin = ch1Obj.getHin() + ch1Obj.getVer();
+                location = bCh1.getFaciltyNum();
+                BillLocation = "";
+                BillLocationNo = location;
+                BillDate = DateUtils.formatDate(bCh1.getBillingDate(), locale);
+                Provider = bCh1.getProviderNo();
+                BillType = bCh1.getStatus();
+                payProgram = bCh1.getPayProgram();
+                BillTotal = billTotal.toPlainString();
+		try {
+                	visitdate = DateUtils.formatDate(bCh1.getAdmissionDate(), locale);
+		}
+		catch (java.text.ParseException e) {
+			visitdate = "";
+		}
+                visittype = bCh1.getVisitType();
+                sliCode = bCh1.getLocation();
+                BillDTNo = "";
+                HCTYPE = bCh1.getProvince();
+                HCSex = bCh1.getSex();
+                r_doctor_ohip = bCh1.getRefNum();
+                r_doctor = "";
+                r_doctor_ohip_s = "";
+                r_doctor_s = "";
+                m_review = bCh1.getManReview();
+                specialty = "";
+                r_status = "";
+                roster_status = "";
+                comment = bCh1.getComment();
+            }
+        }
+    }
+    
+    boolean thirdParty = false;
+    BillingONExtDao bExtDao = (BillingONExtDao) SpringUtils.getBean("billingONExtDao");
+    BillingONExt bExtBillTo = null;
+    String payer = "";
+    
+    if (bFlag) { 
+        if("HCP".equals(payProgram) || "RMB".equals(payProgram) || "WCB".equals(payProgram)) {          				            
+            bExtBillTo = bExtDao.getBillToInactive(bCh1);	            				
+        } 
+        else {
+            thirdParty = true;                             
+            bExtBillTo = bExtDao.getBillTo(bCh1);
+        }     
+                 
+        if (bExtBillTo != null) {										
+            payer = nullToEmpty(bExtBillTo.getValue());
+        }
+    }               
 %>
-
-<table width="100%" border="0" class="myYellow">
-	<form name="form1" method="post" action="billingONCorrection.jsp">
-            <input type="hidden" id="billTotal" value="<%=BillTotal%>" />
-	<tr>
-		<th width="30%" align="left"><a
-			href="#" onclick="return sanityCheck('<%=nullToEmpty(ch1Obj.getId())%>');">
-		<bean:message key="billing.billingCorrection.formInvoiceNo" /></a></th>
-		<th width="10%"><input type="text" name="billing_no"
-			value="<%=nullToEmpty(ch1Obj.getId()) %>" maxsize="10"></th>
-		<th width="50%" align="left"><bean:message
-			key="billing.billingCorrection.msgLastUpdate" />: <%=nullToEmpty(ch1Obj.getUpdate_datetime())%></th>
-		<th><input type="submit" name="submit" value="Search"></th>
-	</tr>
-        <tr>
-		<th width="30%" align="left">
-                    OHIP Claim No
-		</th>
-		<th style="text-align:left;" colspan="3" width="10%"><input type="text" name="claim_no"
-			value="<%=nullToEmpty(claimNo)%>" maxsize="10"></th>
-	</tr>
-	</form>
-</table>
-
+<form name="form1" method="post" action="billingONCorrection.jsp">
+    <input type="hidden" id="billTotal" value="<%=BillTotal%>" />
+    
+    <table width="100%" border="0" class="myYellow">	
+            <tr>
+                    <th width="30%" align="left"><a
+                            href="#" onclick="return sanityCheck('<%=nullToEmpty(billNo)%>');">
+                    <bean:message key="billing.billingCorrection.formInvoiceNo" /></a></th>
+                    <th width="10%"><input type="text" name="billing_no"
+                            value="<%=nullToEmpty(billNo)%>" maxsize="10"></th>
+                    <th width="50%" align="left"><bean:message
+                            key="billing.billingCorrection.msgLastUpdate" />: <%=nullToEmpty(createTimestamp)%></th>
+                    <th><input type="submit" name="submit" value="Search"></th>
+            </tr>
+            <tr>
+                    <th width="30%" align="left">
+                        OHIP Claim No
+                    </th>
+                    <th style="text-align:left;" colspan="3" width="10%"><input type="text" name="claim_no"
+                            value="<%=nullToEmpty(claimNo)%>" maxsize="10"></th>
+            </tr>	
+    </table>
+</form>
 <!-- RA error -->
 <%
-if(bFlag) {
-	//billNo = "44071";
-	List lReject = obj.getBillingRejectList(billNo);
-	List lError = obj.getBillingExplanatoryList(billNo);
-	lError.addAll(lReject);
-	JdbcBillingErrorCodeImpl errorObj = new JdbcBillingErrorCodeImpl();
+    if(bFlag) {       
+        BillingONEAReportDao billingONEAReportDao = (BillingONEAReportDao) SpringUtils.getBean("billingONEAReportDao");
+	List<String> lReject = billingONEAReportDao.getBillingErrorList(billingNo);
+	List<String> lError = raDetailDao.getBillingExplanatoryList(billingNo);
+	lError.addAll(lReject);	
+        
+        BillingONErrorCodeDao billingONErrorCodeDao = (BillingONErrorCodeDao) SpringUtils.getBean("billingONErrorCodeDao");        
 %>
 <table width="100%" border="0" class="myIvory">
-	<% for(int i=0; i<lError.size(); i++) {
-	String codeNo = (String) lError.get(i);
-	if("".equals(codeNo)) continue;
-	String codeDesc = errorObj.getCodeDesc((String)lError.get(i));
-	codeDesc = codeDesc == null ? "Unknown" : codeDesc;
-%>
-	<tr>
-		<th width="10%"><b><%=codeNo %></b></th>
-		<td align="left"><%=codeDesc %></td>
-	</tr>
-	<% } %>
-</table>
-<% } %>
+<% 
+        for(int i=0; i<lError.size(); i++) {
+            String codeNo = (String) lError.get(i);
+            if("".equals(codeNo)) continue;
 
-<form name="serviceform" method="post"
-	action="billingONCorrectionSave.jsp">
-	<input type="hidden"
-	name="xml_billing_no" value="<%=billNo%>" /> <input type="hidden"
-	name="update_date" value="<%=UpdateDate%>" />
+            BillingONErrorCode errorCode = billingONErrorCodeDao.find(codeNo);
+            String codeDesc = errorCode.getDescription();
+            codeDesc = codeDesc == null ? "Unknown" : codeDesc;
+%>
+    <tr>
+        <th width="10%"><b><%=codeNo %></b></th>
+        <td align="left"><%=codeDesc %></td>
+    </tr>
+<%      } %>
+</table>
+<%  } 
+    String curSite = request.getParameter("site")==null?clinicSite:request.getParameter("site");
+%>
+
+<html:form action="/billing/CA/ON/BillingONCorrection"> 
+    
+    <input type="hidden" name="method" value="updateInvoice"/>
+    <input type="hidden" name="xml_billing_no" value="<%=billNo%>" /> 
+    <input type="hidden" name="update_date" value="<%=nullToEmpty(createTimestamp)%>"/>
     <input type="hidden" name="payDate" value="<%=UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss")%>" />
     <input type="hidden" name="demoNo" value="<%=DemoNo%>" />
     <input type="hidden" name="oldStatus" value="<%=thirdParty ? "thirdParty" : "" %>" />
-<table width="600" border="0">
+        
+    <table width="600" border="0">
 	<tr class="myGreen">
 		<th align="left" colspan="2"><b><bean:message
 			key="billing.billingCorrection.msgPatientInformation" /></b></th>
@@ -655,13 +664,7 @@ if(bFlag) {
 			key="billing.billingCorrection.formManualReview" />: <input
 			type="checkbox" name="m_review" value="Y"
 			<%=m_review.equals("Y")?"checked":""%>> </strong></td>
-	</tr>
-	<!--  tr bgcolor="#EEEEFF">
-		<td><strong><bean:message key="billing.billingCorrection.msgDoctor" />:
-		<input type="checkbox" name="referral" value="checkbox" <%=r_status.equals("checked")?"checked":""%>> </strong></td>
-		<td><strong><bean:message key="billing.billingCorrection.msgRoster" />:
-		<input type="hidden" name="roster" value="<%=roster_status%>"><%=roster_status%> </strong></td>
-	</tr>-->
+	</tr>	
 </table>
 
 <table width="600" border="0">
@@ -704,7 +707,7 @@ if(bFlag) {
 		</select></td>
 		<td width="46%"><b> Pay Program:</b> <input type="hidden"
 			name="xml_payProgram" value="<%=BillDate%>" /><select
-			style="font-size: 80%;" id="payProgram" name="payProgram">
+			style="font-size: 80%;" id="payProgram" name="payProgram" onchange="checkPayProgram(this.options[this.selectedIndex].value)">
 			<%for (int i = 0; i < BillingDataHlp.vecPaymentType.size(); i = i + 2) {
 
 					%>
@@ -723,10 +726,11 @@ if(bFlag) {
 			<option value=""><bean:message
 				key="billing.billingCorrection.msgSelectLocation" /></option>
 			<%//
-				List lLocation = obj.getFacilty_num();
-				for (int i = 0; i < lLocation.size(); i = i + 2) {
-					BillLocationNo = (String) lLocation.get(i);
-					BillLocation = (String) lLocation.get(i + 1);
+                                ClinicLocationDao clinicLocationDao = (ClinicLocationDao) SpringUtils.getBean("clinicLocationDao");
+                                List<ClinicLocation> clinicLocations = clinicLocationDao.findByClinicNo(1);				
+				for (ClinicLocation clinicLoc : clinicLocations) {
+					BillLocationNo = clinicLoc.getClinicLocationNo();
+					BillLocation = clinicLoc.getClinicLocationName();
 %>
 			<option value="<%=BillLocationNo%>"
 				<%=location.equals(BillLocationNo)?"selected":""%>><%=BillLocationNo%>
@@ -740,31 +744,29 @@ if(bFlag) {
 			key="billing.billingCorrection.formBillingPhysician" />: </b><br />
 
 <% // multisite start ==========================================
-String curSite = request.getParameter("site")==null?ch1Obj.getClinic():request.getParameter("site");
-if (bMultisites)
-{
-        	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
-          	List<Site> sites = siteDao.getActiveSitesByProviderNo((String) session.getAttribute("user"));
-          	// now get all providers eligible
+    if (bMultisites) {
+        SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
+        List<Site> sites = siteDao.getActiveSitesByProviderNo(userProviderNo);
+        // now get all providers eligible
 
 
-			List pList;
+                List pList;
 
-			if (isTeamBillingOnly || isTeamAccessPrivacy) {
-				pList = (new JdbcBillingPageUtil()).getCurTeamProviderStr((String) session.getAttribute("user"));
-			}
-			else if (isSiteAccessPrivacy) {
-				pList = (new JdbcBillingPageUtil()).getCurSiteProviderStr((String) session.getAttribute("user"));
-			}
-			else {
-				pList =  (new JdbcBillingPageUtil()).getCurProviderStr();
-			}
+                if (isTeamBillingOnly || isTeamAccessPrivacy) {
+                        pList = (new JdbcBillingPageUtil()).getCurTeamProviderStr(userProviderNo);
+                }
+                else if (isSiteAccessPrivacy) {
+                        pList = (new JdbcBillingPageUtil()).getCurSiteProviderStr(userProviderNo);
+                }
+                else {
+                        pList =  (new JdbcBillingPageUtil()).getCurProviderStr();
+                }
 
-          	HashSet<String> pros=new HashSet<String>();
-          	for (Object s:pList) {
-          		pros.add(((String)s).substring(0, ((String)s).indexOf("|")));
-          	}
-      %>
+        HashSet<String> pros=new HashSet<String>();
+        for (Object s:pList) {
+                pros.add(((String)s).substring(0, ((String)s).indexOf("|")));
+        }
+%>
       <script>
 var _providers = [];
 <%	for (int i=0; i<sites.size(); i++) { %>
@@ -794,7 +796,7 @@ function changeSite(sel) {
       	document.getElementById("provider_no").value='<%=Provider%>';
       	</script>
 <%  // multisite end ==========================================
-} else {
+    } else {
 %>
 		<select
 			id="provider_no" style="font-size: 80%;" name="provider_no">
@@ -805,10 +807,10 @@ function changeSite(sel) {
 			List pList;
 
 			if (isTeamBillingOnly || isTeamAccessPrivacy) {
-				pList = (new JdbcBillingPageUtil()).getCurTeamProviderStr((String) session.getAttribute("user"));
+				pList = (new JdbcBillingPageUtil()).getCurTeamProviderStr(userProviderNo);
 			}
 			else if (isSiteAccessPrivacy) {
-				pList = (new JdbcBillingPageUtil()).getCurSiteProviderStr((String) session.getAttribute("user"));
+				pList = (new JdbcBillingPageUtil()).getCurSiteProviderStr(userProviderNo);
 			}
 			else {
 				pList =  (new JdbcBillingPageUtil()).getCurProviderStr();
@@ -890,41 +892,53 @@ function changeSite(sel) {
 			key="billing.billingCorrection.formFee" /></b></th>
 		<th><font size="-1">Settle</font></th>
 	</tr>
-	<%//
-				String serviceCode = "";
-				String serviceDesc = "";
-				String billAmount = "";
-				String diagCode = "";
-				String diagDesc = "";
-				String billingunit = "";
-				String itemStatus = "";
+<%//
+        String serviceCode = "";
+        String serviceDesc = "";
+        String billAmount = "";
+        String diagCode = "";
+        String diagDesc = "";
+        String billingunit = "";
+        String itemStatus = "";
 
-				if (bFlag) {
-					if (recordObj.size() > 1) {
-						int maxRecs = Math.max(recordObj.size(), MAXRECORDS);
-						for (int i = 1; i <= maxRecs; i++) {
-							//multisite. skip display if billing provider_no not in current access privacy
-							if (!isMultiSiteProvider) continue;
+        if (bFlag) {
+            BillingONService billingONService = (BillingONService) SpringUtils.getBean("billingONService"); 
+            List<BillingONItem> bItems = billingONService.getNonDeletedInvoices(bCh1.getId());
+            
+            if (!bItems.isEmpty()) {
 
-							if( i < recordObj.size() ) {
-								itemObj = (BillingItemData) recordObj.get(i);
+                int maxRecs = Math.max(bItems.size(), MAXRECORDS);
+                for (int i = 0; i < maxRecs; i++) {
+                    //multisite. skip display if billing provider_no not in current access privacy
+                    if (!isMultiSiteProvider) 
+                        continue;
 
-								serviceCode = itemObj.getService_code();
-								serviceDesc = obj.getBillingCodeDesc(serviceCode);
-								billAmount = itemObj.getFee();
-								diagCode = itemObj.getDx();
-								billingunit = itemObj.getSer_num();								
-								itemStatus = itemObj.getStatus().equals("S") ? "checked" : "";
-							}
-							else {
-								serviceCode = "";
-								serviceDesc = "";
-								billAmount = "";								
-								billingunit = "";								
-								itemStatus = "";
-							}
-							rowCount = rowCount + 1;
-							%>
+                    serviceCode = "";
+                    serviceDesc = "";
+                    billAmount = "";								
+                    billingunit = "";								
+                    itemStatus = "";
+
+                    if(i < bItems.size()) {
+
+                        BillingONItem bItem = bItems.get(i);
+                   
+                        BillingService bService = null;                
+                        if (bItem.getServiceCode().startsWith("_"))                    
+                            bService = bServiceDao.searchPrivateBillingCode(bItem.getServiceCode(),bItem.getServiceDate());                
+                        else                    
+                            bService = bServiceDao.searchBillingCode(bItem.getServiceCode(),"ON",bItem.getServiceDate());
+
+                        serviceCode = bItem.getServiceCode();
+                        serviceDesc = bService.getDescription();
+                        billAmount = bItem.getFee();
+                        diagCode = bItem.getDx();
+                        billingunit = bItem.getServiceCount();								
+                        itemStatus = bItem.getStatus().equals("S") ? "checked" : "";                      
+                    }
+
+                    rowCount = rowCount + 1;
+%>
 
 	<tr>
 		<th width="25%"><input type="hidden"
@@ -932,7 +946,7 @@ function changeSite(sel) {
 		<input type="text" style="width: 100%"
 			name="servicecode<%=rowCount-1%>" value="<%=serviceCode%>"></th>
 		<td><a href=# onClick="scScriptAttach('servicecode<%=rowCount-1%>')">Search</a></td>
-		<th><font size="-1"><%=serviceDesc%></th>
+		<th><font size="-1"><%=serviceDesc%></font></th>
 		<th><input type="hidden" name="xml_billing_unit<%=rowCount%>"
 			value="<%=billingunit%>"> <input type="text"
 			style="width: 100%" name="billingunit<%=rowCount-1%>"
@@ -946,16 +960,10 @@ function changeSite(sel) {
 			name="itemStatus<%=rowCount-1%>" id="itemStatus<%=rowCount-1%>"
 			value="S" <%=itemStatus %>></td>
 	</tr>
-	<%//
-						}
-					}
-
-						%>
-	
-
-	<%//}
-
-				}
+<%		
+                }	
+            }  
+        }
 %>
 
 	<tr class="myGreen">
@@ -983,12 +991,12 @@ function changeSite(sel) {
                 
                     <span id="thirdParty" style="float:right; <%=thirdParty ? "" : "display:none"%>">
                         <a href="#" onclick="search3rdParty('billTo');return false;"><bean:message key="billing.billingCorrection.msgPayer"/></a><br>
-                        <textarea id="billTo" name="billTo" value="" cols="32" rows=4><%=payer %></textarea>
+                        <textarea id="billTo" name="billTo" cols="32" rows=4><%=payer%></textarea>
                     </span>
                 
                 <span style="float:left;">
                     <bean:message key="billing.billingCorrection.msgNotes"/>:<br>
-                    <textarea name="comment" cols="32" value="" rows=4><%=comment %></textarea>
+                    <textarea name="comment" cols="32" rows=4><%=comment %></textarea>
                 </span>
             </td>
 	</tr>
@@ -997,19 +1005,179 @@ function changeSite(sel) {
 		</td>
 	</tr>
 </table>
-<div id="thirdPartyPymnt" style="<%=thirdParty ? "" : "display:none"%>"">
-<%=htmlPaid %>
+
+</html:form>
+        
+
+<div id="thirdPartyPymnt" style="<%=thirdParty && isMultiSiteProvider ? "" : "display:none"%>">
+     <html:form action="/billing/CA/ON/BillingONCorrection"> 
+         <input type="hidden" name="method" value="add3rdPartyPayment"/>
+         <input type="hidden" name="billing_no" value="<%=billNo%>"/>
+         <input type="hidden" name="claim_no" value="<%=claimNo%>"/>
+    <%
+        if (request.getParameter("site")!=null) { %>   
+         <input type="hidden" name="site" value="<%=curSite%>"/>
+    <%  }  %>      
+
+    <%  String outstandingBalance = "";
+        if (bFlag) {
+            
+            try {
+                if (bCh1 != null) {
+                    BillingONPaymentDao billingONPaymentDao = (BillingONPaymentDao) SpringUtils.getBean("billingONPaymentDao");
+                    
+                    List<BillingONPayment> paymentRecords = billingONPaymentDao.find3rdPartyPayRecordsByBill(bCh1);
+                    BigDecimal totalPaid = BillingONPaymentDao.calculatePaymentTotal(paymentRecords);
+                    BigDecimal totalRefund = BillingONPaymentDao.calculateRefundTotal(paymentRecords);
+                    BigDecimal totalOwing = new BigDecimal("0.00");
+
+                    if ((BillTotal != null) && !BillTotal.isEmpty())
+                        totalOwing = new BigDecimal(BillTotal);
+                                                                                   
+    %>
+                <table width="100%" cellspacing="3">
+                    <tr class="myGreen">
+                        <td colspan="4" style="font-weight:bold"><bean:message key="billing.billingCorrection.msg3rdPartyPaymentInformation" /></td>
+                    </tr>
+                    <tr>
+                        <td><bean:message key="billing.billingCorrection.3rdPartyPayAmt"/>: $<input type="text" name="amtPaid" maxlength="7" style="width:50px"/></td>
+                        <td><bean:message key="billing.billingCorrection.3rdPartyPayMethod"/>:
+                            <select name="payMethod">
+                                <option value="1"><bean:message key="billing.billingCorrection.paymentCash"/></option>
+                                <option value="2"><bean:message key="billing.billingCorrection.paymentCheque"/></option>
+                                <option value="3"><bean:message key="billing.billingCorrection.paymentVisa"/></option>
+                                <option value="4"><bean:message key="billing.billingCorrection.paymentMasterCard"/></option>
+                                <option value="5"><bean:message key="billing.billingCorrection.paymentAmex"/></option>
+                                <option value="6"><bean:message key="billing.billingCorrection.paymentElectronic"/></option>
+                                <option value="7"><bean:message key="billing.billingCorrection.paymentDebit"/></option>
+                                <option value="8"><bean:message key="billing.billingCorrection.paymentAlternate"/></option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="radio" name="payType" value="P" checked/><bean:message key="billing.billingCorrection.typePayment"/>
+                            <input type="radio" name="payType" value="R" /><bean:message key="billing.billingCorrection.typeRefund"/>
+                        </td>
+                        <td>
+                            <input type="submit" name="addPayment" value="<bean:message key="billing.billingCorrection.addPayment"/>"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <table>
+                                <thead>
+                                    <th class="myYellow" style="font-weight:bold"><bean:message key="billing.billingCorrection.3rdPartyPaymentDate"/></th>
+                                    <th class="myYellow" style="font-weight:bold"><bean:message key="billing.billingCorrection.3rdPartyPayment"/></th>
+                                    <th class="myYellow" style="font-weight:bold"><bean:message key="billing.billingCorrection.3rdPartyRefund"/></th> 
+                                    <th colspan="2" class="myYellow" style="font-weight:bold"><bean:message key="billing.billingCorrection.3rdPartyPayMethod"/></th>                                 
+                                    <th colspan="3" class="myYellow" style="font-weight:bold"><bean:message key="billing.billingCorrection.3rdPartyPaymentOfficer"/></th>
+                                </thead>
+                                 
+                <%   
+                    for (BillingONPayment bPay : paymentRecords) {    
+                 %>
+                                 <tr>
+                <%                        
+                        BigDecimal payment = new BigDecimal("0.00");
+                        BigDecimal refund = new BigDecimal("0.00");
+                        String provider = "";
+                        String payDateStr = "";
+                        String payMethod = "";
+                        String payType = ""; 
+
+                        List<BillingONExt> payRecord = bPay.getBillingONExtItems();
+
+                        for (BillingONExt bExt : payRecord) { 
+                                                                                                                                          
+                           if (bExt.getKeyVal().equals("payment")){
+                               try {
+                                   payment = new BigDecimal(bExt.getValue());                                     
+                               } catch (java.lang.NumberFormatException e) {
+                                   payment = new BigDecimal("0.00");
+                               }
+                           }
+
+                           if (bExt.getKeyVal().equals("refund")) {
+                               try {
+                                    refund = new BigDecimal(bExt.getValue());   
+                               } catch (java.lang.NumberFormatException e) {
+                                    refund = new BigDecimal("0.00");
+                               }                                                                       
+                           }
+
+                           if (bExt.getKeyVal().equals("payDate"))
+                               payDateStr = bExt.getValue();
+
+                           if (bExt.getKeyVal().equals("provider_no")){
+                               provider = bExt.getValue();
+                               Provider pv = providerDao.getProvider(provider);
+                               provider = pv.getFormattedName();
+                           }
+
+                           if (bExt.getKeyVal().equals("payMethod")) {
+                               payMethod = bExt.getValue();  
+
+                               if (payMethod.equals("1"))
+                                   payMethod="Cash";
+                               else if (payMethod.equals("2"))
+                                   payMethod="Cheque";
+                               else if (payMethod.equals("3"))
+                                   payMethod="Visa";
+                               else if (payMethod.equals("4"))
+                                   payMethod="MasterCard";
+                               else if (payMethod.equals("5"))
+                                   payMethod="Amex";
+                               else if (payMethod.equals("6"))
+                                   payMethod="Electronic";
+                               else if (payMethod.equals("7"))
+                                   payMethod="Debit";
+                               else if (payMethod.equals("8"))
+                                   payMethod="Alternate";
+                               else 
+                                   payMethod="Unspecified";                                      
+                           }                        
+                        }                        
+                        %>
+                                        <td><%=payDateStr%></td>                    
+                                        <td><%=payment.toPlainString()%></td>
+                                        <td><%=refund.toPlainString()%></td>
+                                        <td colspan="2"><%=payMethod%></td>                                    
+                                        <td colspan="3"><%=provider%></td>
+                                  </tr>  
+                  <%} 
+                    outstandingBalance = totalOwing.subtract(totalPaid).add(totalRefund).toPlainString();%>
+
+                                <tfoot>
+                                    <tr style="margin: 10px">
+                                        <td class="myYellow" style="font-weight:bold"><bean:message key="billing.billingCorrection.3rdPartyTotal"/></td>
+                                        <td class="myYellow"><%=totalPaid.toPlainString()%></td>
+                                        <td class="myYellow"><%=totalRefund.toPlainString()%></td>
+                                        <td class="myYellow" style="font-weight:bold"><bean:message key="billing.billingCorrection.3rdPartyTotalOwing"/></td>
+                                        <td class="myYellow"><%=BillTotal%></td>
+                                        <td class="myYellow" style="font-weight:bold" colspan="2"><bean:message key="billing.billingCorrection.3rdPartyOutstandingBalance"/></td>
+                                        <td class="myYellow"><%=outstandingBalance%></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+    <%         
+                }            
+            } catch (NumberFormatException e) {}    
+        }
+    %>
+        <input type="hidden" id="outstandingBalance" value="<%=outstandingBalance%>"/>
+     </html:form>
 </div>
-</form>
-</body>
+
 <script type="text/javascript">
-Calendar.setup( { inputField : "xml_appointment_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "xml_appointment_date_cal", singleClick : true, step : 1 } );
-Calendar.setup( { inputField : "xml_vdate", ifFormat : "%Y-%m-%d", showsTime :false, button : "xml_vdate_cal", singleClick : true, step : 1 } );
+    Calendar.setup( { inputField : "xml_appointment_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "xml_appointment_date_cal", singleClick : true, step : 1 } );
+    Calendar.setup( { inputField : "xml_vdate", ifFormat : "%Y-%m-%d", showsTime :false, button : "xml_vdate_cal", singleClick : true, step : 1 } );
 </script>
-<%!String nullToEmpty(String str) {
-		return (str == null ? "" : str);
-	}
-
-	%>
-
+<%!
+    String nullToEmpty(String str) {
+        return (str == null ? "" : str);
+    }	
+%>
+</body>
 </html:html>

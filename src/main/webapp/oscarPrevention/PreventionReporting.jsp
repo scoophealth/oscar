@@ -27,7 +27,7 @@
         "http://www.w3.org/TR/html4/loose.dtd">
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarReport.data.*,oscar.oscarPrevention.pageUtil.*,java.net.*,oscar.eform.*"%>
-<%@page import="oscar.OscarProperties, org.oscarehr.util.SpringUtils, org.oscarehr.billing.CA.ON.dao.BillingClaimDAO" %>
+<%@page import="oscar.OscarProperties, org.oscarehr.util.SpringUtils, org.oscarehr.common.dao.BillingONCHeader1Dao" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
@@ -45,8 +45,8 @@
   String preventionText = "";
 
   String eformSearch = (String) request.getAttribute("eformSearch");
-  // EfmData efData = new EfmData();
-  BillingClaimDAO bcDAO = (BillingClaimDAO)SpringUtils.getBean("billingClaimDAO");
+  //EfmData efData = new EfmData();
+  BillingONCHeader1Dao bCh1Dao = (BillingONCHeader1Dao)SpringUtils.getBean("billingONCHeader1Dao");
 %>
 
 <html:html locale="true">
@@ -602,7 +602,7 @@ table.ele thead {
                           <td bgcolor="<%=dis.color%>"><%=providerName%></td>
                           <td bgcolor="<%=dis.color%>">
                               <% if( billCode != null && setBill ) {
-                                  numDays = bcDAO.getDaysSinceBilled(billCode, dis.demographicNo);
+                                  numDays = bCh1Dao.getDaysSinceBilled(billCode, dis.demographicNo);
                                   //we only want to enable billing if it has been a year since the last invoice was created
                                   enabled = numDays >= 0 && numDays < 365 ? "disabled" : "checked";
                               %>
