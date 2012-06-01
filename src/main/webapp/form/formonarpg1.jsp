@@ -368,15 +368,17 @@ function calByLMP(obj) {
         var mm = eval(str_date.substring(eval(str_date.indexOf("/")+1), str_date.lastIndexOf("/")) - 1);
         var dd  = str_date.substring(eval(str_date.lastIndexOf("/")+1));
 		var calDate=new Date();
-		calDate.setFullYear(yyyy);
-		calDate.setMonth(mm);
+		calDate.setFullYear(yyyy);		
 		calDate.setDate(dd);
-		calDate.setHours("8");
-		var odate = new Date(calDate.getTime() + (280 * 86400000));
-		varMonth1 = odate.getMonth()+1;
+		calDate.setMonth(mm);		
+		calDate.setHours("0");
+		
+		calDate.setDate(calDate.getDate() + 280);
+		
+		varMonth1 = calDate.getMonth()+1;
 		varMonth1 = varMonth1>9? varMonth1 : ("0"+varMonth1);
-		varDate1 = odate.getDate()>9? odate.getDate(): ("0"+odate.getDate());
-		obj.value = odate.getFullYear() + '/' + varMonth1 + '/' + varDate1;
+		varDate1 = calDate.getDate()>9? calDate.getDate(): ("0"+calDate.getDate());
+		obj.value = calDate.getFullYear() + '/' + varMonth1 + '/' + varDate1;
 	}
 }
 
