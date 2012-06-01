@@ -194,7 +194,14 @@ oscar.oscarRx.pageUtil.RxSessionBean rxBean = null;
 						out.print(partialDateDao.getDatePartial(drug.writtenDate, PartialDate.DRUGS, drug.localDrugId, PartialDate.DRUGS_WRITTENDATE));
 						}
 						%></td>
-                                                <td><a href="javascript:void(0);"   onclick="popup(600, 425,'DisplayRxRecord.jsp?id=<%=drug.localDrugId%>','displayRxWindow')"><%=drug.prescriptionDetails%></a>
+                                                <td>
+                                                <%if(drug.localDrugId != null){ %>
+                                                <a href="javascript:void(0);"   onclick="popup(600, 425,'DisplayRxRecord.jsp?id=<%=drug.localDrugId%>','displayRxWindow')">
+                                                <%}%>
+                                                <%=drug.prescriptionDetails%>
+                                                <%if(drug.localDrugId != null){ %>
+                                                </a>
+                                                <%}%>
 
                                                     <% if (drug.nonAuthoritative) { %>
                                                         &nbsp;<bean:message key="WriteScript.msgNonAuthoritative"></bean:message>
