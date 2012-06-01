@@ -761,6 +761,7 @@
                         <validHeader>utils/headers/andromedia.txt</validHeader>
                         <validHeader>utils/headers/lgpl.txt</validHeader>
                         <validHeader>utils/headers/asl.txt</validHeader>
+                        <validHeader>utils/headers/cmi.txt</validHeader>
                 </validHeaders>
                 <includes>
                     <include>src/main/java/**/*.java</include> 
