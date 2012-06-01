@@ -391,6 +391,11 @@ function autoFillHin(){
    	  last = removeAccents(last.substring(0,3)).toUpperCase();
    	  first = removeAccents(first.substring(0,1)).toUpperCase();
    	  yob = yob.substring(2,4);
+   	  
+   	  var sex = document.getElementById('sex').value;
+   	  if(sex == 'F'){
+   		  mob = parseInt(mob) + 50; 
+   	  }
 
       document.getElementById('hin').value = last + first + yob + mob + dob;
       hin.focus();
@@ -797,7 +802,7 @@ function autoFillHin(){
                                        sex = props.getProperty("defaultsex","");
                                    }
                                 %>
-                                <td align="left"><select name="sex">
+                                <td align="left"><select name="sex" id="sex">
                                     <option value="M"  <%= sex.equals("M") ? " selected": "" %>><bean:message
                                         key="demographic.demographicaddrecordhtm.formM" /></option>
                                     <option value="F"  <%= sex.equals("F") ? " selected": "" %>><bean:message
