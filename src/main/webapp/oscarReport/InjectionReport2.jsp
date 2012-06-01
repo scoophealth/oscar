@@ -120,10 +120,15 @@ table.ele {
 		Type:</label> <select name="injectionType">
 			<option value="RH" <%=selled ("RH",injectionType)%>>Rh</option>
 			<option value="DTaP-IPV" <%=selled ("DTaP-IPV",injectionType)%>>DTaP-IPV</option>
+			<option value="DTaP-IPV-Hib" <%=selled ("DTaP-IPV-Hib",injectionType)%>>DTaP-IPV-Hib</option>
 			<option value="Hib" <%=selled ("Hib",injectionType)%>>Hib</option>
+			<option value="HPV" <%=selled ("HPV",injectionType)%>>HPV</option>
 			<option value="Pneu-C" <%=selled ("Pneu-C",injectionType)%>>Pneu-C</option>
 			<option value="MMR" <%=selled ("MMR",injectionType)%>>MMR</option>
+			<option value="MMRV" <%=selled ("MMRV",injectionType)%>>MMRV</option>
 			<option value="MenC-C" <%=selled ("MenC-C",injectionType)%>>MenC-C</option>
+			<option value="Men-P-ACWY" <%=selled ("Men-P-ACWY",injectionType)%>>Men-P-ACWY</option>
+			<option value="Rot" <%=selled ("Rot",injectionType)%>>Rot</option>
 			<option value="VZ" <%=selled ("VZ",injectionType)%>>VZ</option>
 			<option value="HepB" <%=selled ("HepB",injectionType)%>>HepB</option>
 			<option value="dTap" <%=selled ("dTap",injectionType)%>>dTap</option>
@@ -132,6 +137,7 @@ table.ele {
 			<option value="HepA" <%=selled ("HepA",injectionType)%>>HepA</option>
 			<option value="HepAB" <%=selled ("HepAB",injectionType)%>>HepAB</option>
 			<option value="Rabies" <%=selled ("Rabies",injectionType)%>>Rabies</option>
+			
 			<option value="Tuberculosis"
 				<%=selled ("Tuberculosis",injectionType)%>>Tuberculosis</option>
 			<option value="Pneumovax" <%=selled ("Pneumovax",injectionType)%>>Pneumovax</option>
