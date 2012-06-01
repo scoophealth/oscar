@@ -98,13 +98,6 @@
 
     String curUser_no = (String)session.getAttribute("user");
 
-    //check to see if new case management is request
-    ArrayList users = (ArrayList)session.getServletContext().getAttribute("CaseMgmtUsers");
-    boolean newCaseManagement = false;
-
-    if( users != null && users.size() > 0 )
-        newCaseManagement = true;
-
   //if action is good, then give me the result
 	  //param[0]=Integer.parseIntdemographicaddarecord((new GregorianCalendar()).get(Calendar.MILLISECOND) ); //int
 	  //temp variables for test/set null dates
@@ -215,7 +208,7 @@
     demographicDao.save(demographic);
 
          //propagate demographic to caisi admission table
-        if( newCaseManagement ) {
+        
             //fetch programId associated with provider
             //if none(0) then check for OSCAR program; if available set it as default
             oscar.oscarEncounter.data.EctProgram program = new oscar.oscarEncounter.data.EctProgram(request.getSession());
@@ -250,7 +243,7 @@
     		admission.setRadioDischargeReason("0");
     		admission.setClientStatusId(0);
             admissionDao.saveAdmission(admission);
-        } //end of new casemgmt
+        
 
         //add democust record for alert
         String[] param2 =new String[6];
