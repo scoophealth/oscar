@@ -346,7 +346,7 @@ public class PreventionData {
 			
 			try {
 				if (!CaisiIntegratorManager.isIntegratorOffline()){
-					remotePreventions = CaisiIntegratorManager.getDemographicWs().getLinkedCachedDemographicPreventionsByDemographicId(demographicId);
+					remotePreventions = CaisiIntegratorManager.getLinkedPreventions(demographicId);
 				}
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Unexpected error.", e);
