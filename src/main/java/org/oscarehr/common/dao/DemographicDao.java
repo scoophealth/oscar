@@ -287,16 +287,18 @@ public class DemographicDao extends HibernateDaoSupport {
      }
 
      
-     public static List<Integer> getDemographicIdsOpenedSinceTime(String value) {
+     public static List<Integer> getDemographicIdsAlteredSinceTime(Date value) {
     	 Connection c = null;
     	 try {
     		 c = DbConnectionFilter.getThreadLocalDbConnection();
-    		 PreparedStatement ps = c.prepareStatement("SELECT DISTINCT demographic_no FROM log WHERE dateTime >= ? ");
-    		 ps.setString(1, value);
+    		 PreparedStatement ps = c.prepareStatement("SELECT DISTINCT demographic_no FROM log WHERE dateTime >= ? and action != 'read'");
+    		 ps.setDate(1, new java.sql.Date(value.getTime()));
     		 ResultSet rs = ps.executeQuery();
     		 ArrayList<Integer> results = new ArrayList<Integer>();
     		 while (rs.next()){
-    			 results.add(rs.getInt(1));
+    			 if(rs.getInt(1) != 0){
+    			    results.add(rs.getInt(1));
+    			 }
     		 }
     		 return(results);
     	 }catch (SQLException e) {
