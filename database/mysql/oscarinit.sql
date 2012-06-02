@@ -34,7 +34,7 @@ CREATE TABLE allergies (
   start_date date default NULL,
   age_of_onset char(4) default '0',
   severity_of_reaction char(1) default '0',
-  onset_of_reaction char(1) default '0', 
+  onset_of_reaction char(1) default '0',
   regional_identifier varchar(100),
   life_stage char(1),
   position int(10) not null,
@@ -457,7 +457,7 @@ CREATE TABLE demographic (
   children varchar(255),
   sourceOfIncome varchar(255),
   citizenship varchar(40),
-  sin varchar(15), 
+  sin varchar(15),
   country_of_origin char(4),
   newsletter varchar(32),
   anonymous varchar(32),
@@ -817,7 +817,7 @@ CREATE TABLE encounterForm (
   form_name varchar(30) NOT NULL default '',
   form_value varchar(255) NOT NULL default '',
   form_table varchar(50) NOT NULL default '',
-  hidden int(5) NOT NULL default '0',  
+  hidden int(5) NOT NULL default '0',
   PRIMARY KEY  (form_value)
 ) ;
 
@@ -837,7 +837,7 @@ CREATE TABLE encountertemplate (
 --
 -- Table structure for table `encounterWindow`
 --
-                                                                                                                                                             
+
 CREATE TABLE encounterWindow (
   provider_no varchar(6) NOT NULL default '',
   rowOneSize int(10) NOT NULL default '60',
@@ -905,7 +905,7 @@ CREATE TABLE form2MinWalk(
   demographic_no int(10) NOT NULL,
   provider_no int(10),
   formCreated date,
-  formEdited timestamp NOT NULL, 
+  formEdited timestamp NOT NULL,
   studyID varchar(20) NOT NULL DEFAULT 'N/A',
   distance varchar(255),
   Q1tried tinyint(1),
@@ -922,7 +922,7 @@ CREATE TABLE form2MinWalk(
   Q3LessThan16s tinyint(1),
   Q3LessThan11s tinyint(1),
   Q3From13To16s tinyint(1),
-  Q3Cmt varchar(255),    
+  Q3Cmt varchar(255),
   PRIMARY KEY  (ID)
 ) ;
 
@@ -2148,7 +2148,7 @@ CREATE TABLE formCaregiver(
   provider_no int(10),
   studyID varchar(20) NOT NULL DEFAULT 'N/A',
   formCreated date,
-  formEdited timestamp NOT NULL,    
+  formEdited timestamp NOT NULL,
   sexM tinyint(1),
   sexF tinyint(1),
   dobYear varchar(4),
@@ -2167,14 +2167,14 @@ CREATE TABLE formCaregiver(
   healthVG tinyint(1),
   healthG tinyint(1),
   healthF tinyint(1),
-  healthP tinyint(1),  
+  healthP tinyint(1),
   Q1Y tinyint(1),
   Q1N tinyint(1),
   Q2Y tinyint(1),
   Q2N tinyint(1),
   Q3Y tinyint(1),
   Q3N tinyint(1),
-  Q4Y tinyint(1),  
+  Q4Y tinyint(1),
   Q4N tinyint(1),
   Q5Y tinyint(1),
   Q5N tinyint(1),
@@ -2480,7 +2480,7 @@ CREATE TABLE formCESD(
   demographic_no int(10) NOT NULL,
   provider_no int(10),
   formCreated date,
-  formEdited timestamp NOT NULL,     
+  formEdited timestamp NOT NULL,
   studyID varchar(20) NOT NULL DEFAULT 'N/A',
   Q1Rare tinyint(1),
   Q1Some tinyint(1),
@@ -2561,7 +2561,7 @@ CREATE TABLE formCESD(
   Q20Rare tinyint(1),
   Q20Some tinyint(1),
   Q20Occ tinyint(1),
-  Q20Most tinyint(1),  
+  Q20Most tinyint(1),
   score int(2),
   PRIMARY KEY  (ID)
 ) ;
@@ -2574,7 +2574,7 @@ CREATE TABLE formCostQuestionnaire(
   demographic_no int(10) NOT NULL,
   provider_no int(10),
   formCreated date,
-  formEdited timestamp NOT NULL,     
+  formEdited timestamp NOT NULL,
   studyID varchar(20) NOT NULL DEFAULT 'N/A',
   seenDoctorY tinyint(1),
   seenDoctorN tinyint(1),
@@ -2614,7 +2614,7 @@ CREATE TABLE formCostQuestionnaire(
   emergencyAmbulance int(3),
   walkinN tinyint(1),
   walkinY tinyint(1),
-  walkin int(3),  
+  walkin int(3),
   itemPurchased1 varchar(255),
   itemCost1 double,
   itemPurchased2 varchar(255),
@@ -2647,7 +2647,7 @@ CREATE TABLE formGripStrength(
   demographic_no int(10) NOT NULL,
   provider_no int(10),
   formCreated date,
-  formEdited timestamp NOT NULL,     
+  formEdited timestamp NOT NULL,
   studyID varchar(20) NOT NULL DEFAULT 'N/A',
   dom1 varchar(5),
   nonDom1 varchar(5),
@@ -2668,20 +2668,20 @@ CREATE TABLE formLateLifeFDIDisability(
   demographic_no int(10) NOT NULL,
   provider_no int(10),
   formCreated date,
-  formEdited timestamp NOT NULL,     
+  formEdited timestamp NOT NULL,
   studyID varchar(20) NOT NULL DEFAULT 'N/A',
   D1VeryOften tinyint(1),
-  D1Often tinyint(1),  
+  D1Often tinyint(1),
   D1OnceInAWhile tinyint(1),
-  D1AlmostNever tinyint(1),  
+  D1AlmostNever tinyint(1),
   D1Never tinyint(1),
-  D1Not tinyint(1),  
+  D1Not tinyint(1),
   D1Little tinyint(1),
-  D1Somewhat tinyint(1), 
+  D1Somewhat tinyint(1),
   D1Alot tinyint(1),
   D1Completely tinyint(1),
   D2VeryOften tinyint(1),
-  D2Often tinyint(1), 
+  D2Often tinyint(1),
   D2OnceInAWhile tinyint(1),
   D2AlmostNever tinyint(1),
   D2Never tinyint(1),
@@ -2697,17 +2697,17 @@ CREATE TABLE formLateLifeFDIDisability(
   D3Never tinyint(1),
   D3Not tinyint(1),
   D3Little tinyint(1),
-  D3Somewhat tinyint(1),  
+  D3Somewhat tinyint(1),
   D3Alot tinyint(1),
-  D3Completely tinyint(1),  
+  D3Completely tinyint(1),
   D4VeryOften tinyint(1),
-  D4Often tinyint(1),  
+  D4Often tinyint(1),
   D4OnceInAWhile tinyint(1),
-  D4AlmostNever tinyint(1), 
+  D4AlmostNever tinyint(1),
   D4Never tinyint(1),
   D4Not tinyint(1),
   D4Little tinyint(1),
-  D4Somewhat tinyint(1), 
+  D4Somewhat tinyint(1),
   D4Alot tinyint(1),
   D4Completely tinyint(1),
   D5VeryOften tinyint(1),
@@ -2721,17 +2721,17 @@ CREATE TABLE formLateLifeFDIDisability(
   D5Alot tinyint(1),
   D5Completely tinyint(1),
   D6VeryOften tinyint(1),
-  D6Often tinyint(1),  
+  D6Often tinyint(1),
   D6OnceInAWhile tinyint(1),
-  D6AlmostNever tinyint(1),  
+  D6AlmostNever tinyint(1),
   D6Never tinyint(1),
-  D6Not tinyint(1),  
+  D6Not tinyint(1),
   D6Little tinyint(1),
-  D6Somewhat tinyint(1), 
+  D6Somewhat tinyint(1),
   D6Alot tinyint(1),
   D6Completely tinyint(1),
   D7VeryOften tinyint(1),
-  D7Often tinyint(1), 
+  D7Often tinyint(1),
   D7OnceInAWhile tinyint(1),
   D7AlmostNever tinyint(1),
   D7Never tinyint(1),
@@ -2747,17 +2747,17 @@ CREATE TABLE formLateLifeFDIDisability(
   D8Never tinyint(1),
   D8Not tinyint(1),
   D8Little tinyint(1),
-  D8Somewhat tinyint(1),  
+  D8Somewhat tinyint(1),
   D8Alot tinyint(1),
-  D8Completely tinyint(1),  
+  D8Completely tinyint(1),
   D9VeryOften tinyint(1),
-  D9Often tinyint(1),  
+  D9Often tinyint(1),
   D9OnceInAWhile tinyint(1),
-  D9AlmostNever tinyint(1), 
+  D9AlmostNever tinyint(1),
   D9Never tinyint(1),
   D9Not tinyint(1),
   D9Little tinyint(1),
-  D9Somewhat tinyint(1), 
+  D9Somewhat tinyint(1),
   D9Alot tinyint(1),
   D9Completely tinyint(1),
   D10VeryOften tinyint(1),
@@ -2769,19 +2769,19 @@ CREATE TABLE formLateLifeFDIDisability(
   D10Little tinyint(1),
   D10Somewhat tinyint(1),
   D10Alot tinyint(1),
-  D10Completely tinyint(1),  
+  D10Completely tinyint(1),
   D11VeryOften tinyint(1),
-  D11Often tinyint(1),  
+  D11Often tinyint(1),
   D11OnceInAWhile tinyint(1),
-  D11AlmostNever tinyint(1),  
+  D11AlmostNever tinyint(1),
   D11Never tinyint(1),
-  D11Not tinyint(1),  
+  D11Not tinyint(1),
   D11Little tinyint(1),
-  D11Somewhat tinyint(1), 
+  D11Somewhat tinyint(1),
   D11Alot tinyint(1),
   D11Completely tinyint(1),
   D12VeryOften tinyint(1),
-  D12Often tinyint(1), 
+  D12Often tinyint(1),
   D12OnceInAWhile tinyint(1),
   D12AlmostNever tinyint(1),
   D12Never tinyint(1),
@@ -2797,17 +2797,17 @@ CREATE TABLE formLateLifeFDIDisability(
   D13Never tinyint(1),
   D13Not tinyint(1),
   D13Little tinyint(1),
-  D13Somewhat tinyint(1),  
+  D13Somewhat tinyint(1),
   D13Alot tinyint(1),
-  D13Completely tinyint(1),  
+  D13Completely tinyint(1),
   D14VeryOften tinyint(1),
-  D14Often tinyint(1),  
+  D14Often tinyint(1),
   D14OnceInAWhile tinyint(1),
-  D14AlmostNever tinyint(1), 
+  D14AlmostNever tinyint(1),
   D14Never tinyint(1),
   D14Not tinyint(1),
   D14Little tinyint(1),
-  D14Somewhat tinyint(1), 
+  D14Somewhat tinyint(1),
   D14Alot tinyint(1),
   D14Completely tinyint(1),
   D15VeryOften tinyint(1),
@@ -2829,7 +2829,7 @@ CREATE TABLE formLateLifeFDIDisability(
   D16Little tinyint(1),
   D16Somewhat tinyint(1),
   D16Alot tinyint(1),
-  D16Completely tinyint(1),  
+  D16Completely tinyint(1),
   PRIMARY KEY  (ID)
 ) ;
 
@@ -2842,20 +2842,20 @@ CREATE TABLE formLateLifeFDIFunction(
   demographic_no int(10) NOT NULL,
   provider_no int(10),
   formCreated date,
-  formEdited timestamp NOT NULL,     
+  formEdited timestamp NOT NULL,
   studyID varchar(20) NOT NULL DEFAULT 'N/A',
   F1None tinyint(1),
-  F1ALittle tinyint(1),  
+  F1ALittle tinyint(1),
   F1Some tinyint(1),
-  F1ALot tinyint(1),  
+  F1ALot tinyint(1),
   F1Cannot tinyint(1),
-  F2None tinyint(1),  
+  F2None tinyint(1),
   F2ALittle tinyint(1),
-  F2Some tinyint(1), 
+  F2Some tinyint(1),
   F2ALot tinyint(1),
   F2Cannot tinyint(1),
   F3None tinyint(1),
-  F3ALittle tinyint(1), 
+  F3ALittle tinyint(1),
   F3Some tinyint(1),
   F3ALot tinyint(1),
   F3Cannot tinyint(1),
@@ -2871,17 +2871,17 @@ CREATE TABLE formLateLifeFDIFunction(
   F5Cannot tinyint(1),
   F6None tinyint(1),
   F6ALittle tinyint(1),
-  F6Some tinyint(1),  
+  F6Some tinyint(1),
   F6ALot tinyint(1),
-  F6Cannot tinyint(1),  
+  F6Cannot tinyint(1),
   F7None tinyint(1),
-  F7ALittle tinyint(1),  
+  F7ALittle tinyint(1),
   F7Some tinyint(1),
-  F7ALot tinyint(1), 
+  F7ALot tinyint(1),
   F7Cannot tinyint(1),
   F8None tinyint(1),
   F8ALittle tinyint(1),
-  F8Some tinyint(1), 
+  F8Some tinyint(1),
   F8ALot tinyint(1),
   F8Cannot tinyint(1),
   F9None tinyint(1),
@@ -2895,17 +2895,17 @@ CREATE TABLE formLateLifeFDIFunction(
   F10ALot tinyint(1),
   F10Cannot tinyint(1),
   F11None tinyint(1),
-  F11ALittle tinyint(1),  
+  F11ALittle tinyint(1),
   F11Some tinyint(1),
-  F11ALot tinyint(1),  
+  F11ALot tinyint(1),
   F11Cannot tinyint(1),
-  F12None tinyint(1),  
+  F12None tinyint(1),
   F12ALittle tinyint(1),
-  F12Some tinyint(1), 
+  F12Some tinyint(1),
   F12ALot tinyint(1),
   F12Cannot tinyint(1),
   F13None tinyint(1),
-  F13ALittle tinyint(1), 
+  F13ALittle tinyint(1),
   F13Some tinyint(1),
   F13ALot tinyint(1),
   F13Cannot tinyint(1),
@@ -2921,17 +2921,17 @@ CREATE TABLE formLateLifeFDIFunction(
   F15Cannot tinyint(1),
   F16None tinyint(1),
   F16ALittle tinyint(1),
-  F16Some tinyint(1),  
+  F16Some tinyint(1),
   F16ALot tinyint(1),
-  F16Cannot tinyint(1),  
+  F16Cannot tinyint(1),
   F17None tinyint(1),
-  F17ALittle tinyint(1),  
+  F17ALittle tinyint(1),
   F17Some tinyint(1),
-  F17ALot tinyint(1), 
+  F17ALot tinyint(1),
   F17Cannot tinyint(1),
   F18None tinyint(1),
   F18ALittle tinyint(1),
-  F18Some tinyint(1), 
+  F18Some tinyint(1),
   F18ALot tinyint(1),
   F18Cannot tinyint(1),
   F19None tinyint(1),
@@ -2943,19 +2943,19 @@ CREATE TABLE formLateLifeFDIFunction(
   F20ALittle tinyint(1),
   F20Some tinyint(1),
   F20ALot tinyint(1),
-  F20Cannot tinyint(1),  
+  F20Cannot tinyint(1),
   F21None tinyint(1),
-  F21ALittle tinyint(1),  
+  F21ALittle tinyint(1),
   F21Some tinyint(1),
-  F21ALot tinyint(1),  
+  F21ALot tinyint(1),
   F21Cannot tinyint(1),
-  F22None tinyint(1),  
+  F22None tinyint(1),
   F22ALittle tinyint(1),
-  F22Some tinyint(1), 
+  F22Some tinyint(1),
   F22ALot tinyint(1),
   F22Cannot tinyint(1),
   F23None tinyint(1),
-  F23ALittle tinyint(1), 
+  F23ALittle tinyint(1),
   F23Some tinyint(1),
   F23ALot tinyint(1),
   F23Cannot tinyint(1),
@@ -2971,17 +2971,17 @@ CREATE TABLE formLateLifeFDIFunction(
   F25Cannot tinyint(1),
   F26None tinyint(1),
   F26ALittle tinyint(1),
-  F26Some tinyint(1),  
+  F26Some tinyint(1),
   F26ALot tinyint(1),
-  F26Cannot tinyint(1),  
+  F26Cannot tinyint(1),
   F27None tinyint(1),
-  F27ALittle tinyint(1),  
+  F27ALittle tinyint(1),
   F27Some tinyint(1),
-  F27ALot tinyint(1), 
+  F27ALot tinyint(1),
   F27Cannot tinyint(1),
   F28None tinyint(1),
   F28ALittle tinyint(1),
-  F28Some tinyint(1), 
+  F28Some tinyint(1),
   F28ALot tinyint(1),
   F28Cannot tinyint(1),
   F29None tinyint(1),
@@ -3005,17 +3005,17 @@ CREATE TABLE formLateLifeFDIFunction(
   F32ALot tinyint(1),
   F32Cannot tinyint(1),
   FD7None tinyint(1),
-  FD7ALittle tinyint(1),  
+  FD7ALittle tinyint(1),
   FD7Some tinyint(1),
-  FD7ALot tinyint(1),  
+  FD7ALot tinyint(1),
   FD7Cannot tinyint(1),
-  FD8None tinyint(1),  
+  FD8None tinyint(1),
   FD8ALittle tinyint(1),
-  FD8Some tinyint(1), 
+  FD8Some tinyint(1),
   FD8ALot tinyint(1),
   FD8Cannot tinyint(1),
   FD14None tinyint(1),
-  FD14ALittle tinyint(1), 
+  FD14ALittle tinyint(1),
   FD14Some tinyint(1),
   FD14ALot tinyint(1),
   FD14Cannot tinyint(1),
@@ -3031,17 +3031,17 @@ CREATE TABLE formLateLifeFDIFunction(
   FD26Cannot tinyint(1),
   FD29None tinyint(1),
   FD29ALittle tinyint(1),
-  FD29Some tinyint(1),  
+  FD29Some tinyint(1),
   FD29ALot tinyint(1),
-  FD29Cannot tinyint(1),  
+  FD29Cannot tinyint(1),
   FD30None tinyint(1),
-  FD30ALittle tinyint(1),  
+  FD30ALittle tinyint(1),
   FD30Some tinyint(1),
-  FD30ALot tinyint(1), 
+  FD30ALot tinyint(1),
   FD30Cannot tinyint(1),
   FD32None tinyint(1),
   FD32ALittle tinyint(1),
-  FD32Some tinyint(1), 
+  FD32Some tinyint(1),
   FD32ALot tinyint(1),
   FD32Cannot tinyint(1),
   PRIMARY KEY  (ID)
@@ -3056,7 +3056,7 @@ CREATE TABLE formFalls(
   demographic_no int(10) NOT NULL,
   provider_no int(10),
   formCreated date,
-  formEdited timestamp NOT NULL, 
+  formEdited timestamp NOT NULL,
   studyID varchar(20) NOT NULL DEFAULT 'N/A',
   fallenLast12MY tinyint(1),
   fallenLast12MN tinyint(1),
@@ -3113,20 +3113,20 @@ CREATE TABLE formHomeFalls(
   demographic_no int(10) NOT NULL,
   provider_no int(10),
   formCreated date,
-  formEdited timestamp NOT NULL,     
+  formEdited timestamp NOT NULL,
   studyID varchar(20) NOT NULL DEFAULT 'N/A',
   floor1Y tinyint(1),
-  floor1N tinyint(1),  
+  floor1N tinyint(1),
   floor2Y tinyint(1),
-  floor2N tinyint(1),  
+  floor2N tinyint(1),
   floor3Y tinyint(1),
-  floor3N tinyint(1),  
+  floor3N tinyint(1),
   floor4Y tinyint(1),
-  floor4N tinyint(1), 
+  floor4N tinyint(1),
   floor4NA tinyint(1),
   furniture5Y tinyint(1),
   furniture5N tinyint(1),
-  furniture5NA tinyint(1), 
+  furniture5NA tinyint(1),
   furniture6Y tinyint(1),
   furniture6N tinyint(1),
   furniture6NA tinyint(1),
@@ -3142,17 +3142,17 @@ CREATE TABLE formHomeFalls(
   bathroom10NA tinyint(1),
   bathroom11Y tinyint(1),
   bathroom11N tinyint(1),
-  bathroom11NA tinyint(1),  
+  bathroom11NA tinyint(1),
   bathroom12Y tinyint(1),
-  bathroom12N tinyint(1),  
+  bathroom12N tinyint(1),
   bathroom12NA tinyint(1),
-  bathroom13Y tinyint(1),  
+  bathroom13Y tinyint(1),
   bathroom13N tinyint(1),
-  bathroom14Y tinyint(1), 
+  bathroom14Y tinyint(1),
   bathroom14N tinyint(1),
   bathroom15Y tinyint(1),
   bathroom15N tinyint(1),
-  storage16Y tinyint(1), 
+  storage16Y tinyint(1),
   storage16N tinyint(1),
   storage17Y tinyint(1),
   storage17N tinyint(1),
@@ -3189,7 +3189,7 @@ CREATE TABLE formIntakeInfo(
   demographic_no int(10) NOT NULL,
   provider_no int(10),
   formCreated date,
-  formEdited timestamp NOT NULL, 
+  formEdited timestamp NOT NULL,
   studyID varchar(20) NOT NULL DEFAULT 'N/A',
   sex varchar(1),
   dob date,
@@ -3221,7 +3221,7 @@ CREATE TABLE formIntakeInfo(
   otherSupportSiblings tinyint(1),
   otherSupportNeighbour tinyint(1),
   otherSupportChildren tinyint(1),
-  otherSupportGChildren tinyint(1),  
+  otherSupportGChildren tinyint(1),
   eduNoSchool tinyint(1),
   eduSomeCommunity tinyint(1),
   eduSomeElementary tinyint(1),
@@ -3234,7 +3234,7 @@ CREATE TABLE formIntakeInfo(
   incomeBelow10 tinyint(1),
   income40To50 tinyint(1),
   income10To20 tinyint(1),
-  incomeOver50 tinyint(1), 
+  incomeOver50 tinyint(1),
   income20To30 tinyint(1),
   incomeDoNotKnow tinyint(1),
   income30To40 tinyint(1),
@@ -3247,11 +3247,11 @@ CREATE TABLE formIntakeInfo(
   ActVolunteering int(4),
   ActCaregiving int(4),
   anyHealthPb varchar(255),
-  smkY tinyint(1), 
+  smkY tinyint(1),
   smkN tinyint(1),
   nbCigarettes int(5),
   howLongSmk varchar(20),
-  didSmkY tinyint(1), 
+  didSmkY tinyint(1),
   didSmkN tinyint(1),
   didNbCigarettes int(5),
   didHowLongSmk varchar(20),
@@ -3265,7 +3265,7 @@ CREATE TABLE formIntakeInfo(
   heartAttackDoNotKnow tinyint(1),
   anginaY tinyint(1),
   anginaRefused tinyint(1),
-  anginaN tinyint(1), 
+  anginaN tinyint(1),
   anginaDoNotKnow tinyint(1),
   heartFailureY tinyint(1),
   heartFailureRefused tinyint(1),
@@ -3273,8 +3273,8 @@ CREATE TABLE formIntakeInfo(
   heartFailureDoNotKnow tinyint(1),
   highBPY tinyint(1),
   highBPRefused tinyint(1),
-  highBPN tinyint(1), 
-  highBPDoNotKnow tinyint(1),  
+  highBPN tinyint(1),
+  highBPDoNotKnow tinyint(1),
   otherHeartDiseaseY tinyint(1),
   otherHeartDiseaseRefused tinyint(1),
   otherHeartDiseaseN tinyint(1),
@@ -3285,7 +3285,7 @@ CREATE TABLE formIntakeInfo(
   diabetesDoNotKnow tinyint(1),
   arthritisY tinyint(1),
   arthritisRefused tinyint(1),
-  arthritisN tinyint(1), 
+  arthritisN tinyint(1),
   arthritisDoNotKnow tinyint(1),
   strokeY tinyint(1),
   strokeRefused tinyint(1),
@@ -3297,8 +3297,8 @@ CREATE TABLE formIntakeInfo(
   cancerDoNotKnow tinyint(1),
   brokenHipY tinyint(1),
   brokenHipRefused tinyint(1),
-  brokenHipN tinyint(1), 
-  brokenHipDoNotKnow tinyint(1),  
+  brokenHipN tinyint(1),
+  brokenHipDoNotKnow tinyint(1),
   parkinsonY tinyint(1),
   parkinsonRefused tinyint(1),
   parkinsonN tinyint(1),
@@ -3309,16 +3309,16 @@ CREATE TABLE formIntakeInfo(
   lungDiseaseDoNotKnow tinyint(1),
   hearingPbY tinyint(1),
   hearingPbRefused tinyint(1),
-  hearingPbN tinyint(1), 
+  hearingPbN tinyint(1),
   hearingPbDoNotKnow tinyint(1),
   visionPbY tinyint(1),
   visionPbRefused tinyint(1),
   visionPbN tinyint(1),
-  visionPbDoNotKnow tinyint(1),  
+  visionPbDoNotKnow tinyint(1),
   osteoporosisY tinyint(1),
   osteoporosisRefused tinyint(1),
   osteoporosisN tinyint(1),
-  osteoporosisDoNotKnow tinyint(1),  
+  osteoporosisDoNotKnow tinyint(1),
   fibromyalgiaY tinyint(1),
   fibromyalgiaRefused tinyint(1),
   fibromyalgiaN tinyint(1),
@@ -3329,7 +3329,7 @@ CREATE TABLE formIntakeInfo(
   multiplesclerosisDoNotKnow tinyint(1),
   asthmaY tinyint(1),
   asthmaRefused tinyint(1),
-  asthmaN tinyint(1), 
+  asthmaN tinyint(1),
   asthmaDoNotKnow tinyint(1),
   backpainY tinyint(1),
   backpainRefused tinyint(1),
@@ -3352,14 +3352,14 @@ CREATE TABLE formInternetAccess(
   demographic_no int(10) NOT NULL,
   provider_no int(10),
   formCreated date,
-  formEdited timestamp NOT NULL, 
+  formEdited timestamp NOT NULL,
   studyID varchar(20) NOT NULL DEFAULT 'N/A',
   computerY tinyint(1),
   computerN tinyint(1),
   internetY tinyint(1),
   internetN tinyint(1),
   internetHome tinyint(1),
-  internetWork tinyint(1),  
+  internetWork tinyint(1),
   internetOther tinyint(1),
   internetOtherTx varchar(255),
   timeDaily varchar(2),
@@ -5014,7 +5014,7 @@ CREATE TABLE formSF36(
   demographic_no int(10) NOT NULL,
   provider_no int(10),
   formCreated date,
-  formEdited timestamp NOT NULL,     
+  formEdited timestamp NOT NULL,
   studyID varchar(20) NOT NULL DEFAULT 'N/A',
   Q1Ex tinyint(1),
   Q1VG tinyint(1),
@@ -5031,7 +5031,7 @@ CREATE TABLE formSF36(
   Q3aYesLot tinyint(1),
   Q3aYesLittle tinyint(1),
   Q3aNo tinyint(1),
-  Q3aCmt varchar(255),  
+  Q3aCmt varchar(255),
   Q3bYesLot tinyint(1),
   Q3bYesLittle tinyint(1),
   Q3bNo tinyint(1),
@@ -5117,7 +5117,7 @@ CREATE TABLE formSF36(
   Q6Extremely tinyint(1),
   Q6Cmt varchar(255),
   Q7None tinyint(1),
-  Q7VeryMild tinyint(1),  
+  Q7VeryMild tinyint(1),
   Q7Mild tinyint(1),
   Q7Moderate tinyint(1),
   Q7Severe tinyint(1),
@@ -5130,61 +5130,61 @@ CREATE TABLE formSF36(
   Q8Extremely tinyint(1),
   Q8Cmt varchar(255),
   Q9aAll tinyint(1),
-  Q9aMost tinyint(1), 
+  Q9aMost tinyint(1),
   Q9aSome tinyint(1),
   Q9aLittle tinyint(1),
   Q9aNone tinyint(1),
   Q9aCmt varchar(255),
   Q9bAll tinyint(1),
-  Q9bMost tinyint(1), 
+  Q9bMost tinyint(1),
   Q9bSome tinyint(1),
   Q9bLittle tinyint(1),
   Q9bNone tinyint(1),
   Q9bCmt varchar(255),
   Q9cAll tinyint(1),
-  Q9cMost tinyint(1), 
+  Q9cMost tinyint(1),
   Q9cSome tinyint(1),
   Q9cLittle tinyint(1),
   Q9cNone tinyint(1),
   Q9cCmt varchar(255),
   Q9dAll tinyint(1),
-  Q9dMost tinyint(1), 
+  Q9dMost tinyint(1),
   Q9dSome tinyint(1),
   Q9dLittle tinyint(1),
   Q9dNone tinyint(1),
   Q9dCmt varchar(255),
   Q9eAll tinyint(1),
-  Q9eMost tinyint(1), 
+  Q9eMost tinyint(1),
   Q9eSome tinyint(1),
   Q9eLittle tinyint(1),
   Q9eNone tinyint(1),
-  Q9eCmt varchar(255), 
+  Q9eCmt varchar(255),
   Q9fAll tinyint(1),
-  Q9fMost tinyint(1), 
+  Q9fMost tinyint(1),
   Q9fSome tinyint(1),
   Q9fLittle tinyint(1),
   Q9fNone tinyint(1),
   Q9fCmt varchar(255),
   Q9gAll tinyint(1),
-  Q9gMost tinyint(1), 
+  Q9gMost tinyint(1),
   Q9gSome tinyint(1),
   Q9gLittle tinyint(1),
   Q9gNone tinyint(1),
   Q9gCmt varchar(255),
   Q9hAll tinyint(1),
-  Q9hMost tinyint(1), 
+  Q9hMost tinyint(1),
   Q9hSome tinyint(1),
   Q9hLittle tinyint(1),
   Q9hNone tinyint(1),
   Q9hCmt varchar(255),
   Q9iAll tinyint(1),
-  Q9iMost tinyint(1), 
+  Q9iMost tinyint(1),
   Q9iSome tinyint(1),
   Q9iLittle tinyint(1),
   Q9iNone tinyint(1),
   Q9iCmt varchar(255),
   Q10All tinyint(1),
-  Q10Most tinyint(1), 
+  Q10Most tinyint(1),
   Q10Some tinyint(1),
   Q10Little tinyint(1),
   Q10None tinyint(1),
@@ -5193,26 +5193,26 @@ CREATE TABLE formSF36(
   Q11aMostTrue tinyint(1),
   Q11aNotSure tinyint(1),
   Q11aMostFalse tinyint(1),
-  Q11aDefFalse tinyint(1),  
+  Q11aDefFalse tinyint(1),
   Q11aCmt varchar(255),
   Q11bDefTrue tinyint(1),
   Q11bMostTrue tinyint(1),
   Q11bNotSure tinyint(1),
   Q11bMostFalse tinyint(1),
-  Q11bDefFalse tinyint(1),  
+  Q11bDefFalse tinyint(1),
   Q11bCmt varchar(255),
   Q11cDefTrue tinyint(1),
   Q11cMostTrue tinyint(1),
   Q11cNotSure tinyint(1),
   Q11cMostFalse tinyint(1),
-  Q11cDefFalse tinyint(1),  
+  Q11cDefFalse tinyint(1),
   Q11cCmt varchar(255),
   Q11dDefTrue tinyint(1),
   Q11dMostTrue tinyint(1),
   Q11dNotSure tinyint(1),
   Q11dMostFalse tinyint(1),
-  Q11dDefFalse tinyint(1),  
-  Q11dCmt varchar(255), 
+  Q11dDefFalse tinyint(1),
+  Q11dCmt varchar(255),
   Q12aNotAns tinyint(1),
   Q12aNot tinyint(1),
   Q12aLittle tinyint(1),
@@ -5232,8 +5232,8 @@ CREATE TABLE formSF36Caregiver(
   demographic_no int(10) NOT NULL,
   provider_no int(10),
   formCreated date,
-  formEdited timestamp NOT NULL, 
-  studyID varchar(20) NOT NULL DEFAULT 'N/A',   
+  formEdited timestamp NOT NULL,
+  studyID varchar(20) NOT NULL DEFAULT 'N/A',
   Q1Ex tinyint(1),
   Q1VG tinyint(1),
   Q1G tinyint(1),
@@ -5249,7 +5249,7 @@ CREATE TABLE formSF36Caregiver(
   Q3aYesLot tinyint(1),
   Q3aYesLittle tinyint(1),
   Q3aNo tinyint(1),
-  Q3aCmt varchar(255),  
+  Q3aCmt varchar(255),
   Q3bYesLot tinyint(1),
   Q3bYesLittle tinyint(1),
   Q3bNo tinyint(1),
@@ -5335,7 +5335,7 @@ CREATE TABLE formSF36Caregiver(
   Q6Extremely tinyint(1),
   Q6Cmt varchar(255),
   Q7None tinyint(1),
-  Q7VeryMild tinyint(1),  
+  Q7VeryMild tinyint(1),
   Q7Mild tinyint(1),
   Q7Moderate tinyint(1),
   Q7Severe tinyint(1),
@@ -5348,61 +5348,61 @@ CREATE TABLE formSF36Caregiver(
   Q8Extremely tinyint(1),
   Q8Cmt varchar(255),
   Q9aAll tinyint(1),
-  Q9aMost tinyint(1), 
+  Q9aMost tinyint(1),
   Q9aSome tinyint(1),
   Q9aLittle tinyint(1),
   Q9aNone tinyint(1),
   Q9aCmt varchar(255),
   Q9bAll tinyint(1),
-  Q9bMost tinyint(1), 
+  Q9bMost tinyint(1),
   Q9bSome tinyint(1),
   Q9bLittle tinyint(1),
   Q9bNone tinyint(1),
   Q9bCmt varchar(255),
   Q9cAll tinyint(1),
-  Q9cMost tinyint(1), 
+  Q9cMost tinyint(1),
   Q9cSome tinyint(1),
   Q9cLittle tinyint(1),
   Q9cNone tinyint(1),
   Q9cCmt varchar(255),
   Q9dAll tinyint(1),
-  Q9dMost tinyint(1), 
+  Q9dMost tinyint(1),
   Q9dSome tinyint(1),
   Q9dLittle tinyint(1),
   Q9dNone tinyint(1),
   Q9dCmt varchar(255),
   Q9eAll tinyint(1),
-  Q9eMost tinyint(1), 
+  Q9eMost tinyint(1),
   Q9eSome tinyint(1),
   Q9eLittle tinyint(1),
   Q9eNone tinyint(1),
-  Q9eCmt varchar(255), 
+  Q9eCmt varchar(255),
   Q9fAll tinyint(1),
-  Q9fMost tinyint(1), 
+  Q9fMost tinyint(1),
   Q9fSome tinyint(1),
   Q9fLittle tinyint(1),
   Q9fNone tinyint(1),
   Q9fCmt varchar(255),
   Q9gAll tinyint(1),
-  Q9gMost tinyint(1), 
+  Q9gMost tinyint(1),
   Q9gSome tinyint(1),
   Q9gLittle tinyint(1),
   Q9gNone tinyint(1),
   Q9gCmt varchar(255),
   Q9hAll tinyint(1),
-  Q9hMost tinyint(1), 
+  Q9hMost tinyint(1),
   Q9hSome tinyint(1),
   Q9hLittle tinyint(1),
   Q9hNone tinyint(1),
   Q9hCmt varchar(255),
   Q9iAll tinyint(1),
-  Q9iMost tinyint(1), 
+  Q9iMost tinyint(1),
   Q9iSome tinyint(1),
   Q9iLittle tinyint(1),
   Q9iNone tinyint(1),
   Q9iCmt varchar(255),
   Q10All tinyint(1),
-  Q10Most tinyint(1), 
+  Q10Most tinyint(1),
   Q10Some tinyint(1),
   Q10Little tinyint(1),
   Q10None tinyint(1),
@@ -5411,26 +5411,26 @@ CREATE TABLE formSF36Caregiver(
   Q11aMostTrue tinyint(1),
   Q11aNotSure tinyint(1),
   Q11aMostFalse tinyint(1),
-  Q11aDefFalse tinyint(1),  
+  Q11aDefFalse tinyint(1),
   Q11aCmt varchar(255),
   Q11bDefTrue tinyint(1),
   Q11bMostTrue tinyint(1),
   Q11bNotSure tinyint(1),
   Q11bMostFalse tinyint(1),
-  Q11bDefFalse tinyint(1),  
+  Q11bDefFalse tinyint(1),
   Q11bCmt varchar(255),
   Q11cDefTrue tinyint(1),
   Q11cMostTrue tinyint(1),
   Q11cNotSure tinyint(1),
   Q11cMostFalse tinyint(1),
-  Q11cDefFalse tinyint(1),  
+  Q11cDefFalse tinyint(1),
   Q11cCmt varchar(255),
   Q11dDefTrue tinyint(1),
   Q11dMostTrue tinyint(1),
   Q11dNotSure tinyint(1),
   Q11dMostFalse tinyint(1),
-  Q11dDefFalse tinyint(1),  
-  Q11dCmt varchar(255), 
+  Q11dDefFalse tinyint(1),
+  Q11dCmt varchar(255),
   Q12aNotAns tinyint(1),
   Q12aNot tinyint(1),
   Q12aLittle tinyint(1),
@@ -5449,7 +5449,7 @@ CREATE TABLE formSelfAdministered(
   demographic_no int(10) NOT NULL,
   provider_no int(10),
   formCreated date,
-  formEdited timestamp NOT NULL, 
+  formEdited timestamp NOT NULL,
   studyID varchar(20) NOT NULL DEFAULT 'N/A',
   sex varchar(1),
   dob date,
@@ -5490,7 +5490,7 @@ CREATE TABLE formSelfEfficacy(
   demographic_no int(10) NOT NULL,
   provider_no int(10),
   formCreated date,
-  formEdited timestamp NOT NULL,     
+  formEdited timestamp NOT NULL,
   studyID varchar(20) NOT NULL DEFAULT 'N/A',
   ex1 varchar(2),
   ex2 varchar(2),
@@ -5533,7 +5533,7 @@ CREATE TABLE formSelfEfficacy(
   controlDepress3 varchar(2),
   controlDepress4 varchar(2),
   controlDepress5 varchar(2),
-  controlDepress6 varchar(2),  
+  controlDepress6 varchar(2),
   manDprScore varchar(5),
   PRIMARY KEY  (ID)
 ) ;
@@ -5546,7 +5546,7 @@ CREATE TABLE formSelfManagement(
   demographic_no int(10) NOT NULL,
   provider_no int(10),
   formCreated date,
-  formEdited timestamp NOT NULL,     
+  formEdited timestamp NOT NULL,
   studyID varchar(20) NOT NULL DEFAULT 'N/A',
   ex1 int(1),
   ex2 int(1),
@@ -5586,7 +5586,7 @@ CREATE TABLE formSelfManagement(
   emotionalSupportY tinyint(1),
   emotionalSupportScore int(1),
   healthEducationN tinyint(1),
-  healthEducationY tinyint(1),  
+  healthEducationY tinyint(1),
   healthEducationHours int(4),
   healthEducationScore varchar(10),
   exercisePrgmN tinyint(1),
@@ -5608,7 +5608,7 @@ CREATE TABLE formTreatmentPref(
   demographic_no int(10) NOT NULL,
   provider_no int(10),
   formCreated date,
-  formEdited timestamp NOT NULL, 
+  formEdited timestamp NOT NULL,
   studyID varchar(20) NOT NULL DEFAULT 'N/A',
   treatmentGr tinyint(1),
   controlGr tinyint(1),
@@ -5765,13 +5765,13 @@ CREATE TABLE formType2Diabetes (
 # Connection: root@localhost:mysql.sock
 # Host: localhost
 # Saved: 2004-06-15 15:47:55
-# 
+#
 CREATE TABLE formVTForm(
   ID int(10) NOT NULL  auto_increment ,
   demographic_no int(10) NOT NULL,
   provider_no int(10),
   formCreated date,
-  formEdited timestamp NOT NULL,    
+  formEdited timestamp NOT NULL,
   visitCod varchar(10),
   HTValue varchar(10),
   HTDate varchar(10),
@@ -5841,7 +5841,7 @@ CREATE TABLE formVTForm(
   FTReComments varchar(255),
   iExValue varchar(10),
   iExDate varchar(10),
-  iExComments varchar(255), 
+  iExComments varchar(255),
   iDiaValue varchar(10),
   iDiaDate varchar(10),
   iDiaComments varchar(255),
@@ -6466,12 +6466,12 @@ CREATE TABLE mdsZRG (
 CREATE TABLE measurements(
   id int UNSIGNED AUTO_INCREMENT,
   type varchar(50) NOT NULL,
-  demographicNo int(10) NOT NULL default '0', 
+  demographicNo int(10) NOT NULL default '0',
   providerNo varchar(6) NOT NULL default '',
   dataField  varchar(255) NOT NULL,
-  measuringInstruction varchar(255) NOT NULL,  
-  comments varchar(255) NOT NULL, 
-  dateObserved datetime NOT NULL, 
+  measuringInstruction varchar(255) NOT NULL,
+  comments varchar(255) NOT NULL,
+  dateObserved datetime NOT NULL,
   dateEntered datetime NOT NULL,
   appointmentNo int(10) NOT NULL,
   PRIMARY KEY(id),
@@ -6486,8 +6486,8 @@ CREATE TABLE measurements(
 DROP TABLE IF EXISTS measurementCSSLocation;
 CREATE TABLE measurementCSSLocation(
   cssID int(9) NOT NULL auto_increment,
-  location varchar(255) NOT NULL,  
-  PRIMARY KEY  (cssID) 
+  location varchar(255) NOT NULL,
+  PRIMARY KEY  (cssID)
 ) ;
 
 --
@@ -6496,12 +6496,12 @@ CREATE TABLE measurementCSSLocation(
 CREATE TABLE measurementsDeleted(
   id int UNSIGNED AUTO_INCREMENT,
   type varchar(4) NOT NULL,
-  demographicNo int(10) NOT NULL default '0', 
+  demographicNo int(10) NOT NULL default '0',
   providerNo varchar(6) NOT NULL default '',
   dataField  varchar(10) NOT NULL,
-  measuringInstruction varchar(255) NOT NULL,  
-  comments varchar(255) NOT NULL, 
-  dateObserved datetime NOT NULL, 
+  measuringInstruction varchar(255) NOT NULL,
+  comments varchar(255) NOT NULL,
+  dateObserved datetime NOT NULL,
   dateEntered datetime NOT NULL,
   dateDeleted datetime NOT NULL,
   originalId int UNSIGNED NOT NULL,
@@ -6515,7 +6515,7 @@ DROP TABLE IF EXISTS measurementGroup;
 CREATE TABLE measurementGroup(
   `id` int(10) not null auto_increment primary key,
   name varchar(100) NOT NULL,
-  typeDisplayName varchar(255), 
+  typeDisplayName varchar(255),
   KEY name (name)
 );
 
@@ -6526,7 +6526,7 @@ CREATE TABLE measurementGroupStyle(
   groupID int(9) NOT NULL auto_increment,
   groupName varchar(100) NOT NULL,
   cssID int(9) NOT NULL,
-  PRIMARY KEY  (groupID) 
+  PRIMARY KEY  (groupID)
 ) ;
 
 
@@ -6539,8 +6539,8 @@ CREATE TABLE measurementType (
   id int UNSIGNED AUTO_INCREMENT,
   type varchar(4) NOT NULL,
   typeDisplayName varchar(255) NOT NULL,
-  typeDescription varchar(255) NOT NULL, 
-  measuringInstruction varchar(255) NOT NULL, 
+  typeDescription varchar(255) NOT NULL,
+  measuringInstruction varchar(255) NOT NULL,
   validation varchar(100) NOT NULL,
   createDate datetime not null,
   PRIMARY KEY(id),
@@ -6556,8 +6556,8 @@ CREATE TABLE measurementTypeDeleted (
   id int UNSIGNED AUTO_INCREMENT,
   type varchar(4) NOT NULL,
   typeDisplayName varchar(20) NOT NULL,
-  typeDescription varchar(255) NOT NULL, 
-  measuringInstruction varchar(255) NOT NULL, 
+  typeDescription varchar(255) NOT NULL,
+  measuringInstruction varchar(255) NOT NULL,
   validation varchar(100) NOT NULL,
   dateDeleted datetime NOT NULL,
   PRIMARY KEY(id)
@@ -6670,8 +6670,8 @@ create table ProviderPreference
 	lastUpdated datetime not null,
 	appointmentScreenLinkNameDisplayLength int not null,
 	defaultDoNotDeleteBilling  tinyint(1) not null,
-	defaultDxCode varchar(4) 
-	
+	defaultDxCode varchar(4)
+
 );
 
 --
@@ -6725,7 +6725,8 @@ CREATE TABLE professionalSpecialists (
   eDataServiceKey varchar(1024),
   eDataServiceName varchar(255),
   lastUpdated datetime not null,
-  annotation text
+  annotation text,
+  referralNo varchar(6)
 );
 
 --
@@ -6797,9 +6798,9 @@ CREATE TABLE providerLabRouting (
   id int(10) NOT NULL auto_increment,
   PRIMARY KEY  (`id`),
   KEY `labno_index`(`lab_no`)
-) ; 
+) ;
 
- 
+
 --
 -- Table structure for table quickList
 --
@@ -6814,7 +6815,7 @@ CREATE TABLE quickList(
 --
 -- Table structure for table quickListUser
 --
-CREATE TABLE quickListUser( 
+CREATE TABLE quickListUser(
   `id` int(10) not null auto_increment primary key,
   providerNo int(10) NOT NULL,
   quickListName varchar(10) NOT NULL,
@@ -6892,7 +6893,7 @@ CREATE TABLE recyclebin (
 --
 CREATE TABLE rehabStudy2004(
   studyID int(10) NOT NULL,
-  demographic_no int(10) NOT NULL,   
+  demographic_no int(10) NOT NULL,
   PRIMARY KEY  (studyID)
 ) ;
 
@@ -6943,7 +6944,7 @@ CREATE TABLE reportByExamples(
 CREATE TABLE reportByExamplesFavorite(
   id int(9) auto_increment ,
   providerNo varchar(6) NOT NULL,
-  query blob NOT NULL,  
+  query blob NOT NULL,
   name varchar(255) NOT NULL,
   PRIMARY KEY  (id)
 ) ;
@@ -7185,11 +7186,11 @@ CREATE TABLE validations(
   id int UNSIGNED AUTO_INCREMENT,
   name varchar(100) NOT NULL,
   regularExp varchar(100) ,
-  `maxValue` double, 
-  minValue double, 
-  maxLength int(3), 
-  minLength int(3), 
-  isNumeric bool, 
+  `maxValue` double,
+  minValue double,
+  maxLength int(3),
+  minLength int(3),
+  isNumeric bool,
   isTrue bool,
   isDate bool,
  PRIMARY KEY(id)
@@ -7206,7 +7207,7 @@ CREATE TABLE `waitingListName` (
   `create_date` datetime NOT NULL default '0000-00-00 00:00:00',
   `is_history` char(1) default 'N',
   PRIMARY KEY  (`ID`)
-); 
+);
 
 
 --
@@ -7245,7 +7246,7 @@ create table pharmacyInfo (
    addDate timestamp,
    status char (1) default '1'
 );
- 
+
 --
 -- Table structure for table `demographicPharmacy`
 --
@@ -7325,7 +7326,7 @@ CREATE TABLE `secRole` (
 
 
 create table secUserRole(
-  `id`  int(10) not null auto_increment,  
+  `id`  int(10) not null auto_increment,
   `provider_no` VARCHAR(6) not null,
   `role_name` VARCHAR(30) not null,
   `orgcd` VARCHAR(80) default 'R0000001',
@@ -7363,7 +7364,7 @@ CREATE TABLE `demographicSets` (
   `set_name` varchar(20) default NULL,
   `eligibility` char(1) default NULL,
   `archive` char(1) default 0
-); 
+);
 
 CREATE TABLE demographicQueryFavourites (
   favId int(9) NOT NULL auto_increment,
@@ -7387,7 +7388,7 @@ CREATE TABLE `reportItem` (
   `report_name` varchar(80) NOT NULL default '',
   `status` int(1) default 1,
   PRIMARY KEY  (`id`)
-); 
+);
 
 CREATE TABLE `reportConfig` (
   `id` int(7) NOT NULL auto_increment,
@@ -7458,7 +7459,7 @@ CREATE TABLE `table_modification` (
   `id` int(10) NOT NULL auto_increment primary key,
   `demographic_no` int(10) NOT NULL default '0',
   `provider_no` varchar(6) NOT NULL default '',
-  `modification_date` datetime default NULL,     
+  `modification_date` datetime default NULL,
   `modification_type` varchar(20) default NULL,
   `table_name` varchar(255) default NULL,
   `row_id` varchar(20) default NULL,
@@ -7511,7 +7512,7 @@ create table report_letters(
     KEY provider_no (`provider_no`),
     KEY date_time (`date_time`)
 );
-  
+
 create table log_letters(
     ID int(10) primary key auto_increment,
     date_time datetime,
@@ -7520,7 +7521,7 @@ create table log_letters(
     report_id  int(10),
     KEY report_id (`report_id`),
     KEY provider_no (`provider_no`),
-    KEY date_time (`date_time`) 
+    KEY date_time (`date_time`)
  );
 
 CREATE TABLE indivoDocs (
@@ -7661,7 +7662,7 @@ CREATE TABLE hash_audit (
 
 
 --
--- table for 3rd bill 
+-- table for 3rd bill
 --
 CREATE TABLE `gstControl` (
   `gstFlag` int(1) NOT NULL default '0',
@@ -7671,7 +7672,7 @@ CREATE TABLE `gstControl` (
 );
 
 --
--- provider -- bill center table 
+-- provider -- bill center table
 --
 CREATE TABLE `providerbillcenter` (
   `provider_no` varchar(6) NOT NULL default '""',
@@ -8193,17 +8194,17 @@ create table lst_orgcd
   activeyn     VARCHAR(1),
   orderbyindex int,
   codetree      VARCHAR(80),
-  primary key (code) 
+  primary key (code)
 );
 
 create index IDX_ORGCD_CODE on lst_orgcd (codetree);
 
 create table favoritesprivilege
-( 
+(
     id int(4) PRIMARY KEY NOT NULL auto_increment,
-    provider_no varchar(6), 
-    opentopublic tinyint(1), 
-    writeable tinyint(1) 
+    provider_no varchar(6),
+    opentopublic tinyint(1),
+    writeable tinyint(1)
 );
 
 
@@ -8216,7 +8217,7 @@ CREATE TABLE `appointment_status` (
   `active` int(1) NOT NULL default '1',
   `editable` int(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-); 
+);
 
 
 
@@ -8256,7 +8257,7 @@ CREATE TABLE `casemgmt_note_ext` (
 
 
   create table flowsheet_customization(
-      id int(10) NOT NULL auto_increment primary key,  
+      id int(10) NOT NULL auto_increment primary key,
       flowsheet varchar(40),
       action varchar(10),
       measurement varchar(255),
@@ -8266,9 +8267,9 @@ CREATE TABLE `casemgmt_note_ext` (
       create_date datetime,
       archived char(1) default '0',
       archived_date datetime
-      
-     
-    ) ; 
+
+
+    ) ;
 
 
 CREATE TABLE `tickler_link` (
@@ -8280,7 +8281,7 @@ CREATE TABLE `tickler_link` (
 ) ;
 
 create table flowsheet_drug (
-      id int(10) NOT NULL auto_increment primary key,  
+      id int(10) NOT NULL auto_increment primary key,
       flowsheet varchar(40),
       atc_code varchar(40),
       provider_no varchar(6),
@@ -8288,7 +8289,7 @@ create table flowsheet_drug (
       create_date datetime,
       archived char(1) default '0',
       archived_date datetime
-    ) ; 
+    ) ;
 
 CREATE TABLE `view` (
   `id` int(10) NOT NULL auto_increment,
@@ -8868,7 +8869,7 @@ CREATE TABLE SecurityToken (
 create table FlowSheetUserCreated(
   id int(10) auto_increment primary key,
   name varchar(4),
-  dxcodeTriggers varchar(255),	
+  dxcodeTriggers varchar(255),
   displayName varchar(255),
   warningColour varchar(20),
   recommendationColour varchar(20),
@@ -8948,11 +8949,11 @@ create table RemoteReferral
 );
 
 create table HL7HandlerMSHMapping (
-	id int(50) NOT NULL AUTO_INCREMENT, 
-	hospital_site varchar(255), 
-	facility varchar(100), 
-	facility_name varchar(255), 
-	notes varchar(255), 
+	id int(50) NOT NULL AUTO_INCREMENT,
+	hospital_site varchar(255),
+	facility varchar(100),
+	facility_name varchar(255),
+	notes varchar(255),
 	PRIMARY KEY (id)
 );
 
@@ -9002,7 +9003,7 @@ CREATE TABLE `RemoteIntegratedDataCopy` (
   provider_no varchar(6) ,
   archived tinyint(1) ,
   PRIMARY KEY  (`id`),
-  KEY RIDopy_demo_dataT_fac_arch (`demographic_no`,`datatype`,`facilityId`,`archived`), 
+  KEY RIDopy_demo_dataT_fac_arch (`demographic_no`,`datatype`,`facilityId`,`archived`),
   KEY RIDopy_demo_dataT_sig_fac_arch (`demographic_no`,`datatype`,`signature`,`facilityId`,`archived`)
 );
 
@@ -9123,7 +9124,7 @@ CREATE TABLE `program` (
   `abstinenceSupport` varchar(20),
   `physicalHealth` tinyint(1) not null,
   `mentalHealth` tinyint(1) not null,
-  `housing` tinyint(1) not null,  
+  `housing` tinyint(1) not null,
 	exclusiveView varchar(20) not null,
 	maximumServiceRestrictionDays int,
 	defaultServiceRestrictionDays int,
@@ -9215,11 +9216,11 @@ create table MyGroupAccessRestriction (
 );
 
 create table tickler_text_suggest (
-    id int(10) not null AUTO_INCREMENT, 
-    creator varchar(6) not null, 
-    suggested_text varchar(255) not null, 
-    create_date timestamp not null, 
-    active tinyint(1), 
+    id int(10) not null AUTO_INCREMENT,
+    creator varchar(6) not null,
+    suggested_text varchar(255) not null,
+    create_date timestamp not null,
+    active tinyint(1),
     PRIMARY KEY (id)
 );
 

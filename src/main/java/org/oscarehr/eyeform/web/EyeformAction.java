@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -57,7 +57,6 @@ import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.IsPropertiesOn;
 import org.oscarehr.common.dao.AllergyDao;
-import org.oscarehr.common.dao.BillingreferralDao;
 import org.oscarehr.common.dao.CaseManagementIssueNotesDao;
 import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.ConsultationRequestExtDao;
@@ -72,7 +71,6 @@ import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.dao.SiteDao;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Appointment;
-import org.oscarehr.common.model.Billingreferral;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicContact;
@@ -133,7 +131,7 @@ public class EyeformAction extends DispatchAction {
 	TestBookRecordDao testBookDao = (TestBookRecordDao)SpringUtils.getBean("TestBookDAO");
 	EyeFormDao eyeFormDao = (EyeFormDao)SpringUtils.getBean("EyeFormDao");
 	MeasurementsDao measurementsDao = (MeasurementsDao) SpringUtils.getBean("measurementsDao");
-	BillingreferralDao brDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
+	ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
 	ClinicDAO clinicDao = (ClinicDAO)SpringUtils.getBean("clinicDAO");
 	SiteDao siteDao = (SiteDao)SpringUtils.getBean("siteDao");
 	TicklerDAO ticklerDao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
@@ -830,12 +828,12 @@ public class EyeformAction extends DispatchAction {
 				request.setAttribute("newFlag", "false");
 				appNo = cp.getAppointmentNo();
 
-				Billingreferral refdoc = brDao.getById(cp.getReferralId());
-				if(refdoc != null) {
-					referraldoc = refdoc.getLastName() + "," + refdoc.getFirstName();
+				ProfessionalSpecialist specialist = professionalSpecialistDao.find(cp.getReferralId());
+				if(specialist != null) {
+					referraldoc = specialist.getLastName() + "," + specialist.getFirstName();
 					request.setAttribute("referral_doc_name", referraldoc);
-					cp.setReferralNo(refdoc.getReferralNo());
-					refNo = refdoc.getReferralNo();
+					cp.setReferralNo(specialist.getReferralNo());
+					refNo = specialist.getReferralNo();
 				}
 			}
 
@@ -847,19 +845,19 @@ public class EyeformAction extends DispatchAction {
 			//loades latest eyeform
 
 			if ("".equalsIgnoreCase(refNo)) {
-				String referal = demographic.getFamilyDoctor();
+				String referral = demographic.getFamilyDoctor();
 
-				if (referal != null && !"".equals(referal.trim())) {
-					Integer ref = getRefId(referal);
+				if (referral != null && !"".equals(referral.trim())) {
+					Integer ref = getRefId(referral);
 					cp.setReferralId(ref);
-					refNo = getRefNo(referal);
+					refNo = getRefNo(referral);
 
-					List refList = brDao.getBillingreferral(getRefNo(referal));
+					List<ProfessionalSpecialist> refList = professionalSpecialistDao.findByReferralNo(refNo);
 					if(refList.size()>0) {
-						Billingreferral tmp = ((Billingreferral)refList.get(0));
-						referraldoc = tmp.getLastName() + "," + tmp.getFirstName();
+						ProfessionalSpecialist refSpecialist = refList.get(0);
+						referraldoc = refSpecialist.getLastName() + "," + refSpecialist.getFirstName();
 						request.setAttribute("referral_doc_name", referraldoc);
-						cp.setReferralNo(tmp.getReferralNo());
+						cp.setReferralNo(refSpecialist.getReferralNo());
 					}
 				}
 			}
@@ -1036,8 +1034,9 @@ public class EyeformAction extends DispatchAction {
                         }
                         BeanUtils.copyProperties(cp, consultReport, new String[]{"id","demographic","provider"});
 
-			List<Billingreferral> brs = brDao.getBillingreferral(cp.getReferralNo());
-			cp.setReferralId(brs.get(0).getBillingreferralNo());
+			ProfessionalSpecialist professionalSpecialist = professionalSpecialistDao.getByReferralNo(cp.getReferralNo());
+			if (professionalSpecialist != null)
+				cp.setReferralId(professionalSpecialist.getId());
 
 			cp.setDate(new Date());
 
@@ -1078,9 +1077,9 @@ public class EyeformAction extends DispatchAction {
 				String subreferal = referal.substring(start + 8, end);
 				if (!"".equalsIgnoreCase(subreferal.trim())) {
 					ref = subreferal;
-					List refList = brDao.getBillingreferral(ref.trim());
-					if(refList.size()>0)
-						refNo = ((Billingreferral)refList.get(0)).getBillingreferralNo();
+					ProfessionalSpecialist professionalSpecialist = professionalSpecialistDao.getByReferralNo(ref.trim());
+					if(professionalSpecialist != null)
+						refNo = professionalSpecialist.getId();
 				}
 			}
 			return refNo;
@@ -1113,9 +1112,10 @@ public class EyeformAction extends DispatchAction {
                         }
                         BeanUtils.copyProperties(cp, consultReport, new String[]{"id","demographic","provider"});
 
-			@SuppressWarnings("unchecked")
-			List<Billingreferral> brs = brDao.getBillingreferral(cp.getReferralNo());
-			cp.setReferralId(brs.get(0).getBillingreferralNo());
+			ProfessionalSpecialist professionalSpecialist = professionalSpecialistDao.getByReferralNo(cp.getReferralNo());
+
+			if (professionalSpecialist != null)
+				cp.setReferralId(professionalSpecialist.getId());
 			if(cp.getDate()==null){
 				cp.setDate(new Date());
 			}
@@ -1139,9 +1139,7 @@ public class EyeformAction extends DispatchAction {
 			SimpleDateFormat sf = new SimpleDateFormat("MM/dd/yyyy");
 			request.setAttribute("date", sf.format(new Date()));
 
-			String referralNo = cp.getReferralNo();
-			Billingreferral br = brDao.getByReferralNo(referralNo);
-			request.setAttribute("refer", br);
+			request.setAttribute("refer", professionalSpecialist);
 
 			request.setAttribute("cp", cp);
 
