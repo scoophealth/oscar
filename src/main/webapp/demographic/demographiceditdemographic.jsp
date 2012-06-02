@@ -68,12 +68,12 @@
 <%@ page import="org.oscarehr.casemgmt.model.CaseManagementNoteLink" %>
 <%@ page import="org.oscarehr.casemgmt.service.CaseManagementManager" %>
 <%@ page import="org.oscarehr.util.SpringUtils"%>
-<%@page import="org.oscarehr.common.model.Billingreferral" %>
-<%@page import="org.oscarehr.common.dao.BillingreferralDao" %>
+<%@page import="org.oscarehr.common.model.ProfessionalSpecialist" %>
+<%@page import="org.oscarehr.common.dao.ProfessionalSpecialistDao" %>
 <%@page import="org.oscarehr.common.model.DemographicCust" %>
 <%@page import="org.oscarehr.common.dao.DemographicCustDao" %>
 <%
-	BillingreferralDao billingReferralDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
+	ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
 	DemographicCustDao demographicCustDao = (DemographicCustDao)SpringUtils.getBean("demographicCustDao");
 %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
@@ -2090,12 +2090,12 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                                   		// drop down list
 									  Properties prop = null;
 									  Vector vecRef = new Vector();
-                                      List<Billingreferral> billingReferrals = billingReferralDao.getBillingreferrals();
-                                      for(Billingreferral billingReferral:billingReferrals) {
+									  List<ProfessionalSpecialist> specialists = professionalSpecialistDao.findAll();
+                                      for(ProfessionalSpecialist specialist : specialists) {
                                     	  prop = new Properties();
-                                          prop.setProperty("referral_no",billingReferral.getReferralNo());
-                                          prop.setProperty("last_name",billingReferral.getLastName());
-                                          prop.setProperty("first_name",billingReferral.getFirstName());
+                                          prop.setProperty("referral_no", specialist.getReferralNo());
+                                          prop.setProperty("last_name", specialist.getLastName());
+                                          prop.setProperty("first_name", specialist.getFirstName());
                                           vecRef.add(prop);
                                       }
 

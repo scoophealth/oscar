@@ -55,10 +55,10 @@
 <jsp:useBean id="providerBean" class="java.util.Properties"
 	scope="session" />
 <%@page import="org.oscarehr.util.SpringUtils" %>
-<%@page import="org.oscarehr.common.model.Billingreferral" %>
-<%@page import="org.oscarehr.common.dao.BillingreferralDao" %>
+<%@page import="org.oscarehr.common.model.ProfessionalSpecialist" %>
+<%@page import="org.oscarehr.common.dao.ProfessionalSpecialistDao" %>
 <%
-	BillingreferralDao billingReferralDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
+	ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
 %>
 <%
   boolean bHospitalBilling = true;
@@ -253,9 +253,9 @@
 
   // set default value
   // use parameter -> history record
-  Billingreferral billingReferral = billingReferralDao.getByReferralNo(r_doctor_ohip);
-  if(billingReferral != null) {
-  	          	r_doctor = billingReferral.getLastName() + "," + billingReferral.getFirstName();
+  ProfessionalSpecialist specialist = professionalSpecialistDao.getByReferralNo(r_doctor_ohip);
+  if(specialist != null) {
+  	          	r_doctor = specialist.getLastName() + "," + specialist.getFirstName();
   }
 
   String paraName = request.getParameter("dxCode");
