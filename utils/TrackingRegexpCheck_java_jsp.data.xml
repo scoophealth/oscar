@@ -53,6 +53,7 @@
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/model/DSDemographicAccess.java:List&lt;dxResearchBean&gt; dxCodes = handler.getDxResearchBeanVector();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:Vector params = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/document/web/ManageDocumentAction.java:HashMap hm = new HashMap();</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/integration/born/ONAREnhancedFormToXML.java:ArrayList validationErrors = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:HashMap m = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:Hashtable result = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:Hashtable results = new Hashtable();</ViolationValue>
@@ -1151,6 +1152,7 @@
         <ViolationValue>/src/main/java/oscar/eform/EfmData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/Frm2MinWalkRecord.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmARBloodWorkTest.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/form/FrmAREnhancedBloodWorkTest.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmARRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmAdfRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmAdfV2Record.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -1225,6 +1227,10 @@
         <ViolationValue>/src/main/java/oscar/form/FrmMentalHealthForm42Record.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmMentalHealthRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmMentalHealthRecord.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/form/FrmONAREnhancedRecord.java:DBHelp db = new DBHelp();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/form/FrmONAREnhancedRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/form/FrmONAREnhancedRecord.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/form/FrmONAREnhancedRecord.java:import oscar.login.DBHelp;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmONARRecord.java:DBHelp db = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmONARRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmONARRecord.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
@@ -2178,14 +2184,6 @@
         <ViolationValue>/src/main/java/oscar/form/FrmBCINRRecord.java:public Vector getINRLabData(int demographic_no) throws SQLException {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmRhImmuneGlobulinRecord.java:Hashtable measurementHash = EctMeasurementsDataBeanHandler.getLast(""+demographicNo, "BLDT");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmRhImmuneGlobulinRecord.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/graphic/FrmPdfGraphic.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/graphic/FrmPdfGraphic.java:public abstract Properties getGraphicXYProp(Vector xDate, Vector yHeight);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/graphic/FrmPdfGraphicAR.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/graphic/FrmPdfGraphicAR.java:public Properties getGraphicXYProp(Vector xDate, Vector yHeight) {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/graphic/FrmPdfGraphicGrowthChart.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/graphic/FrmPdfGraphicGrowthChart.java:public Properties getGraphicXYProp(Vector xDate, Vector yHeight) {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/graphic/FrmPdfGraphicRourke.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/graphic/FrmPdfGraphicRourke.java:public Properties getGraphicXYProp(Vector xDate, Vector yHeight) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/pageUtil/FrmFormAction.java:Vector data2OSDSF = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/pageUtil/FrmFormAction.java:Vector measurementTypes = EctFormProp.getMeasurementTypes();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/pageUtil/FrmFormAction.java:import java.util.Vector;</ViolationValue>
@@ -2201,9 +2199,6 @@
         <ViolationValue>/src/main/java/oscar/form/pageUtil/FrmSetupSelectAction.java:if (encounterForm.isHidden()) formHiddenVector.add(encounterForm);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/pageUtil/FrmSetupSelectAction.java:session.setAttribute( "formHiddenVector", formHiddenVector );</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/pageUtil/FrmSetupSelectAction.java:session.setAttribute( "formShownVector", formShownVector.values() );</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/pdfservlet/FrmPDFServlet.java:Vector&lt;String&gt; xDate = new Vector&lt;String&gt;();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/pdfservlet/FrmPDFServlet.java:Vector&lt;String&gt; yHeight = new Vector&lt;String&gt;();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/pdfservlet/FrmPDFServlet.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/study/FrmStudyXMLClientSend.java:Vector studyContent = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/study/FrmStudyXMLClientSend.java:Vector studyNo = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/study/FrmStudyXMLClientSend.java:import java.util.Vector;</ViolationValue>
