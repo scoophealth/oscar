@@ -33,6 +33,7 @@ import org.oscarehr.common.dao.ConsultDocsDao;
 import org.oscarehr.common.model.ConsultDocs;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.OscarProperties;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
 
@@ -58,12 +59,19 @@ public class ConsultationAttachLabs {
         reqId = req;
         docs = new ArrayList<String>(d.length);
 
-        //if dummy entry skip
-        if( !d[0].equals("0") ) {
-            for(int idx = 0; idx < d.length; ++idx ) {
-                if( d[idx].charAt(0) == 'L')
-                    docs.add(d[idx].substring(1));
-            }
+        if (OscarProperties.getInstance().isPropertyActive("consultation_indivica_attachment_enabled")) {
+	        for(int idx = 0; idx < d.length; ++idx ) {
+	            docs.add(d[idx]);
+	        }
+        }
+        else {
+	        //if dummy entry skip
+	        if( !d[0].equals("0") ) {
+	            for(int idx = 0; idx < d.length; ++idx ) {
+	                if( d[idx].charAt(0) == 'L')
+	                    docs.add(d[idx].substring(1));
+	            }
+	        }
         }
     }
 
