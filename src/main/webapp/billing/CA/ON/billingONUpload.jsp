@@ -44,7 +44,7 @@ function onSubmit(){
 	var n = val1.lastIndexOf('\\');
 	val1 = val1.substring((n*1+1));
 	//alert(val1);
-	if (val1.substring(0,1) == "P" ){
+	if (val1.substring(0,1) == "P" || val1.substring(0,1) == "S"){
 		if (document.all){
 			document.all.form1.action="../../../servlet/oscar.DocumentUploadServlet";
 			document.all.form1.submit();

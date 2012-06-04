@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.fileupload.DiskFileUpload;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.io.FileUtils;
 import org.oscarehr.util.MiscUtils;
 
 public class DocumentUploadServlet extends HttpServlet {
@@ -48,33 +49,54 @@ public class DocumentUploadServlet extends HttpServlet {
 		forwardTo = OscarProperties.getInstance().getProperty("RA_FORWORD");
 		foldername = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
 
+		String inboxFolder = OscarProperties.getInstance().getProperty("ONEDT_INBOX");
+		String archiveFolder = OscarProperties.getInstance().getProperty("ONEDT_ARCHIVE");
+		
 		if (forwardTo == null || forwardTo.length() < 1)
 			return;
 
-		DiskFileUpload upload = new DiskFileUpload();
+		String providedFilename = request.getParameter("filename");
+		if (providedFilename != null) {
+			
+			File documentDirectory = new File(foldername);
+			File providedFile = new File(inboxFolder, providedFilename);
+			if (!providedFile.exists()) { providedFile = new File(archiveFolder, providedFilename); }
+			
+			FileUtils.copyFileToDirectory(providedFile, documentDirectory);
+			
+			fileheader = providedFilename;
+		} else {
 
-		try {
-			// Parse the request
-			List /* FileItem */items = upload.parseRequest(request);
-			// Process the uploaded items
-			Iterator iter = items.iterator();
-			while (iter.hasNext()) {
-				FileItem item = (FileItem) iter.next();
-
-				if (item.isFormField()) {
-				} else {
-					String pathName = item.getName();
-					String[] fullFile = pathName.split("[/|\\\\]");
-					File savedFile = new File(foldername, fullFile[fullFile.length - 1]);
-					fileheader = fullFile[fullFile.length - 1];
-					item.write(savedFile);
+			DiskFileUpload upload = new DiskFileUpload();
+	
+			try {
+				// Parse the request
+				@SuppressWarnings("unchecked")
+                List<FileItem> /* FileItem */items = upload.parseRequest(request);
+				// Process the uploaded items
+				Iterator<FileItem> iter = items.iterator();
+				while (iter.hasNext()) {
+					FileItem item = iter.next();
+	
+					if (item.isFormField()) { //
+					} else {
+						String pathName = item.getName();
+						String[] fullFile = pathName.split("[/|\\\\]");
+						File savedFile = new File(foldername, fullFile[fullFile.length - 1]);
+						fileheader = fullFile[fullFile.length - 1];
+						item.write(savedFile);
+						if (OscarProperties.getInstance().isPropertyActive("moh_file_management_enabled")) {
+							FileUtils.copyFileToDirectory(savedFile, new File(inboxFolder));
+						}
+					}
 				}
+			} catch (FileUploadException e) {
+				MiscUtils.getLogger().error("Error", e);
+			} catch (Exception e) {
+				MiscUtils.getLogger().error("Error", e);
 			}
-		} catch (FileUploadException e) {
-			MiscUtils.getLogger().error("Error", e);
-		} catch (Exception e) {
-			MiscUtils.getLogger().error("Error", e);
 		}
+		
 		DocumentBean documentBean = new DocumentBean();
 		request.setAttribute("documentBean", documentBean);
 		documentBean.setFilename(fileheader);

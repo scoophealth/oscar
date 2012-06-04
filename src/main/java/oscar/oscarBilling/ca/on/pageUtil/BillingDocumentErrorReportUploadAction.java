@@ -26,6 +26,7 @@
 package oscar.oscarBilling.ca.on.pageUtil;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -44,6 +45,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -81,14 +83,28 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 		FormFile file1 = frm.getFile1();
 		ActionMessages errors = new ActionMessages();
 
-		if (!saveFile(file1)) {
-			errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.fileNotAdded"));
-			saveErrors(request, errors);
-			return (new ActionForward(mapping.getInput()));
+		String filename = request.getParameter("filename") == null ? "null" : request.getParameter("filename");
+		
+		if (filename == "null") {
+			if (!saveFile(file1)) {
+				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.fileNotAdded"));
+				saveErrors(request, errors);
+				return (new ActionForward(mapping.getInput()));
+			} else {
+				if (getData(file1.getFileName(), "DOCUMENT_DIR", request))
+					return file1.getFileName().startsWith("L") ? mapping.findForward("outside") : mapping.findForward("success");
+				else {
+					errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.incorrectFileFormat"));
+					saveErrors(request, errors);
+					return (new ActionForward(mapping.getInput()));
+				}
+			}
 		} else {
-			if (getData(file1.getFileName(), request))
-				return mapping.findForward("success");
-			else {
+			if (getData(filename, "ONEDT_INBOX", request)) {
+				return filename.startsWith("L") ? mapping.findForward("outside") : mapping.findForward("success");
+			} else if (getData(filename, "ONEDT_ARCHIVE", request)) {
+				return filename.startsWith("L") ? mapping.findForward("outside") : mapping.findForward("success");
+			} else {
 				errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.incorrectFileFormat"));
 				saveErrors(request, errors);
 				return (new ActionForward(mapping.getInput()));
@@ -130,6 +146,8 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 
 			// close the stream
 			stream.close();
+			FileUtils.copyFileToDirectory(new File(retVal), new File(OscarProperties.getInstance().getProperty("ONEDT_INBOX")));
+			
 		} catch (FileNotFoundException e) {
 			MiscUtils.getLogger().error("File not found", e);
 			return isAdded = false;
@@ -151,13 +169,13 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 	 * @param file
 	 * @return
 	 */
-	private boolean getData(String fileName, HttpServletRequest request) {
+	private boolean getData(String fileName, String pathDir, HttpServletRequest request) {
 		boolean isGot = false;
 
 		try {
 			OscarProperties props = OscarProperties.getInstance();
 			// properties must exist
-			String filepath = props.getProperty("DOCUMENT_DIR");
+			String filepath = props.getProperty(pathDir);
 			boolean bNewBilling = props.getProperty("isNewONbilling", "").equals("true") ? true : false;
 			if (!filepath.endsWith("/"))
 				filepath = new StringBuilder(filepath).insert(filepath.length(), "/").toString();
@@ -168,29 +186,35 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 			String ReportName = "";
 			String ReportFlag = "";
 
-			if (fileName.substring(0, 1).compareTo("E") == 0) {
+			if (fileName.substring(0, 1).compareTo("E") == 0 || fileName.substring(0, 1).compareTo("F") == 0) {
 				ReportName = "Claims Error Report";
 				BillingClaimsErrorReportBeanHandler hd = generateReportE(file, bNewBilling, fileName);
 				request.setAttribute("claimsErrors", hd);
 				isGot = hd.verdict;
 			}
-			if (fileName.substring(0, 1).compareTo("B") == 0) {
+			else if (fileName.substring(0, 1).compareTo("B") == 0) {
 				ReportName = "Claim Batch Acknowledgement Report";
 				BillingClaimBatchAcknowledgementReportBeanHandler hd = generateReportB(file);
 				request.setAttribute("batchAcks", hd);
 				isGot = hd.verdict;
 			}
-			if (fileName.substring(0, 1).compareTo("X") == 0) {
+			else if (fileName.substring(0, 1).compareTo("X") == 0) {
 				ReportName = "Claim File Rejection Report";
 				messages = generateReportX(file);
 				request.setAttribute("messages", messages);
 				isGot = reportXIsGenerated;
 			}
-			if (fileName.substring(0, 1).compareTo("R") == 0) {
+			else if (fileName.substring(0, 1).compareTo("R") == 0) {
 				ReportName = "EDT OBEC Output Specification";
 				BillingEDTOBECOutputSpecificationBeanHandler hd = generateReportR(file);
 				request.setAttribute("outputSpecs", hd);
 				isGot = hd.verdict;
+			}
+			else if (fileName.substring(0,1).compareTo("L") == 0) {
+				ReportName = "OUTSIDE USE REPORT";
+				request.setAttribute("backupfilepath", filepath);
+				request.setAttribute("filename", fileName);
+				isGot = true;
 			}
 			request.setAttribute("ReportName", ReportName);
 		} catch (FileNotFoundException fnfe) {
