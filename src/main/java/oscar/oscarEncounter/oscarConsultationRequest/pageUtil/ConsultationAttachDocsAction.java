@@ -37,6 +37,8 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
 
+import oscar.OscarProperties;
+
 public class ConsultationAttachDocsAction
     extends Action {
 
@@ -51,15 +53,29 @@ public class ConsultationAttachDocsAction
         String requestId = frm.getString("requestId");
         String demoNo = frm.getString("demoNo");
         String provNo = frm.getString("providerNo");
-        String[] arrDocs = frm.getStrings("attachedDocs");
-                
-        ConsultationAttachDocs Doc = new ConsultationAttachDocs(provNo,demoNo,requestId,arrDocs);
-        Doc.attach();
         
-        ConsultationAttachLabs Lab = new ConsultationAttachLabs(provNo,demoNo,requestId,arrDocs);
-        Lab.attach();
-        return null;
-
+        if (!OscarProperties.getInstance().isPropertyActive("consultation_indivica_attachment_enabled")) {
+	        String[] arrDocs = frm.getStrings("attachedDocs");
+	                
+	        ConsultationAttachDocs Doc = new ConsultationAttachDocs(provNo,demoNo,requestId,arrDocs);
+	        Doc.attach();
+	        
+	        ConsultationAttachLabs Lab = new ConsultationAttachLabs(provNo,demoNo,requestId,arrDocs);
+	        Lab.attach();
+	        return null;
+        }
+        else { 
+        	String[] labs = request.getParameterValues("labNo");
+            String[] docs = request.getParameterValues("docNo");
+            if (labs == null) { labs = new String[] { }; }
+            if (docs == null) { docs = new String[] { }; }
+            
+            ConsultationAttachDocs Doc = new ConsultationAttachDocs(provNo,demoNo,requestId,docs);
+            Doc.attach();
+            
+            ConsultationAttachLabs Lab = new ConsultationAttachLabs(provNo,demoNo,requestId,labs);
+            Lab.attach();
+            return mapping.findForward("success");	
+        }
     }  
-
 }

@@ -261,6 +261,7 @@ public class EctConsultationFormRequestUtil {
     }
 
     public String getSpecailistsName(String id) {
+    	if (id == null || id.trim().length() == 0) { return "-1"; }
         String retval = new String();
         try {
 

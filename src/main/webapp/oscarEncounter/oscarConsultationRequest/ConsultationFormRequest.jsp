@@ -833,6 +833,8 @@ function importFromEnct(reqInfo,txtArea)
 
 }
 
+
+
 function updateAttached() {
     var t = setTimeout('fetchAttached()', 2000);
 }
@@ -1128,7 +1130,9 @@ function updateFaxButton() {
 
 	%>
 
+	<% if (!props.isConsultationFaxEnabled() || !OscarProperties.getInstance().isPropertyActive("consultation_dynamic_labelling_enabled")) { %>
 	<input type="hidden" name="providerNo" value="<%=providerNo%>">
+	<% } %>
 	<input type="hidden" name="demographicNo" value="<%=demo%>">
 	<input type="hidden" name="requestId" value="<%=requestId%>">
 	<input type="hidden" name="documents" value="">
@@ -1233,10 +1237,15 @@ function updateFaxButton() {
 								else
 								{
 									%>
+									<% if (OscarProperties.getInstance().isPropertyActive("consultation_indivica_attachment_enabled")) { %>
+									<a href="#" onclick="popup('<rewrite:reWrite jspPage="attachConsultation2.jsp"/>?provNo=<%=consultUtil.providerNo%>&demo=<%=demo%>&requestId=<%=requestId%>');return false;">
+										<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.attachDoc" />
+									</a>
+									<% } else { %>
 									<a href="#" onclick="popup('<rewrite:reWrite jspPage="attachConsultation.jsp"/>?provNo=<%=consultUtil.providerNo%>&demo=<%=demo%>&requestId=<%=requestId%>');return false;">
 										<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.attachDoc" />
 									</a>
-									<%
+									<% }
 								}
 							%>
 							</td>
@@ -1290,11 +1299,31 @@ function updateFaxButton() {
 					<% } %>
 					</td>
                                 </tr>
-                                <tr>
+                    <tr>
 					<td>
 
 					<table border=0 width="100%">
+						<% if (props.isConsultationFaxEnabled() && OscarProperties.getInstance().isPropertyActive("consultation_dynamic_labelling_enabled")) { %>
 						<tr>
+							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgAssociated2" />:</td>
+							<td align="right" class="tite1">
+								<html:select property="providerNo" onchange="switchProvider(this.value)">
+									<%
+										for (Provider p : prList) {
+											if (p.getProviderNo().compareTo("-1") != 0) {
+									%>
+									<option value="<%=p.getProviderNo() %>" <%=((consultUtil.providerNo != null && consultUtil.providerNo.equalsIgnoreCase(p.getProviderNo())) || (consultUtil.providerNo == null &&  providerNo.equalsIgnoreCase(p.getProviderNo())) ? "selected='selected'" : "") %>>
+										<%=p.getFirstName() %> <%=p.getSurname() %>
+									</option>
+									<% }
+
+								}
+								%>
+								</html:select>
+							</td>
+						</tr>
+						<% } %>
+						<tr>						
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formRefDate" />:
 							</td>
 							<td align="right" class="tite1">

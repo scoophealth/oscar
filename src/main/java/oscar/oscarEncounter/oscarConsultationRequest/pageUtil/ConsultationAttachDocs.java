@@ -31,6 +31,7 @@ import java.util.ArrayList;
 
 import org.oscarehr.util.MiscUtils;
 
+import oscar.OscarProperties;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
 import oscar.oscarDB.DBHandler;
@@ -60,12 +61,20 @@ public class ConsultationAttachDocs {
         reqId = req;
         docs = new ArrayList<String>(d.length);
 
+        if (OscarProperties.getInstance().isPropertyActive("consultation_indivica_attachment_enabled")) {
+	        for(int idx = 0; idx < d.length; ++idx ) {
+	            docs.add(d[idx]);
+	        }
+        }
+        else {
         //if dummy entry skip
-        if( !d[0].equals("0") ) {
-            for(int idx = 0; idx < d.length; ++idx ) {
-                if( d[idx].charAt(0) == 'D')
-                    docs.add(d[idx].substring(1));
-            }
+        
+	        if( !d[0].equals("0") ) {
+	            for(int idx = 0; idx < d.length; ++idx ) {
+	                if( d[idx].charAt(0) == 'D')
+	                    docs.add(d[idx].substring(1));
+	            }
+	        }
         }
     }
 

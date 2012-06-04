@@ -240,6 +240,8 @@ public class EctConsultationFormRequestAction extends Action {
 
                                 consult.setSignatureImg(signatureId);
                                 
+                                consult.setProviderNo(frm.getProviderNo());
+                                
                         		consult.setLetterheadName(frm.getLetterheadName());
                         		consult.setLetterheadAddress(frm.getLetterheadAddress());
                         		consult.setLetterheadPhone(frm.getLetterheadPhone());

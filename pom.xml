@@ -769,6 +769,7 @@
                         <validHeader>utils/headers/lgpl.txt</validHeader>
                         <validHeader>utils/headers/asl.txt</validHeader>
                         <validHeader>utils/headers/cmi.txt</validHeader>
+                        <validHeader>utils/headers/indivica.txt</validHeader>
                 </validHeaders>
                 <includes>
                     <include>src/main/java/**/*.java</include> 

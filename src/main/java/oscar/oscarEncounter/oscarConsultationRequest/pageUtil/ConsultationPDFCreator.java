@@ -429,8 +429,8 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 		Demographic demo = demoDAO.getDemographic(reqFrm.demoNo);
 		pro = proDAO.getProvider(demo.getProviderNo());
 		String famDocBillingNo = pro.getBillingNo();
-		infoTable.addCell(setFooterCell(cell, getResource("msgAssociated"), reqFrm.getProviderName(reqFrm.providerNo) + ((getlen(billingNo) > 0) ? " (" + billingNo + ")" : "")));
-		infoTable.addCell(setFooterCell(cell, getResource("msgFamilyDoc"), reqFrm.getFamilyDoctor() + ((getlen(famDocBillingNo) > 0) ? " (" + famDocBillingNo + ")" : "")));
+		infoTable.addCell(setFooterCell(cell, getResource("msgAssociated2"), reqFrm.getProviderName(reqFrm.providerNo) + ((getlen(billingNo) > 0) ? " (" + billingNo + ")" : "")));
+		infoTable.addCell(setFooterCell(cell, getResource("msgFamilyDoc2"), reqFrm.getFamilyDoctor() + ((getlen(famDocBillingNo) > 0) ? " (" + famDocBillingNo + ")" : "")));
 		if (getlen(reqFrm.signatureImg) > 0) {
 			addSignature(infoTable);
 		}
