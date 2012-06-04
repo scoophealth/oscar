@@ -404,7 +404,7 @@ public final class EDocUtil extends SqlUtilBaseS {
 		// docType = null or = "all" to show all doctypes
 		// select publicDoc and sorting from static variables for this class i.e. sort=EDocUtil.SORT_OBSERVATIONDATE
 		// sql base (prefix) to avoid repetition in the if-statements
-		String sql = "SELECT DISTINCT c.module, c.module_id, d.doccreator, d.source, d.sourceFacility, d.responsible, d.program_id, d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime, d.contenttype, d.observationdate, d.reviewer, d.reviewdatetime, d.appointment_no " + "FROM document d, ctl_document c WHERE c.document_no=d.document_no AND c.module='" + module + "'";
+		String sql = "SELECT DISTINCT c.module, c.module_id, d.doccreator, d.source, d.sourceFacility, d.docClass, d.docSubClass,d.responsible, d.program_id, d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime, d.contenttype, d.observationdate, d.reviewer, d.reviewdatetime, d.appointment_no " + "FROM document d, ctl_document c WHERE c.document_no=d.document_no AND c.module='" + module + "'";
 		// if-statements to select the where condition (suffix)
 		if (publicDoc.equals(PUBLIC)) {
 			if (docType == null || docType.equals("all") || docType.length() == 0) sql = sql + " AND d.public1=1";
@@ -435,6 +435,8 @@ public final class EDocUtil extends SqlUtilBaseS {
 				currentdoc.setSource(rsGetString(rs, "source"));
 				currentdoc.setSourceFacility(rsGetString(rs, "sourceFacility"));
 				currentdoc.setResponsibleId(rsGetString(rs, "responsible"));
+                                currentdoc.setDocClass(rsGetString(rs, "docClass"));
+				currentdoc.setDocSubClass(rsGetString(rs, "docSubClass"));
 				String temp = rsGetString(rs, "program_id");
 				if (temp != null && temp.length() > 0) currentdoc.setProgramId(Integer.valueOf(temp));
 				temp = rsGetString(rs, "appointment_no");
