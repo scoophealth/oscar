@@ -130,7 +130,9 @@ public class AR2005XMLTest {
 
 	void populateInitialLaboratoryInvestigations(InitialLaboratoryInvestigations initialLaboratoryInvestigations)  {
 		initialLaboratoryInvestigations.setHbResult("");
-		initialLaboratoryInvestigations.setHivResult(InitialLaboratoryInvestigations.HivResult.NEG);
+		//initialLaboratoryInvestigations.setHivResult(InitialLaboratoryInvestigations.HivResult.NEG);
+		initialLaboratoryInvestigations.setHivResult(InitialLaboratoryInvestigations.HivResult.Enum.forString("NEG"));
+		
 		initialLaboratoryInvestigations.setHivCounsel(false);
 		initialLaboratoryInvestigations.setMcvResult(0);
 		initialLaboratoryInvestigations.setAboResult(InitialLaboratoryInvestigations.AboResult.A);
@@ -459,7 +461,7 @@ public class AR2005XMLTest {
 	void populateAdditionalLabInvestigations(AdditionalLabInvestigationsType additionalLabInvestigations) {
 		additionalLabInvestigations.setHb("");
 		additionalLabInvestigations.setBloodGroup(AdditionalLabInvestigationsType.BloodGroup.A);
-		additionalLabInvestigations.setRh(AdditionalLabInvestigationsType.Rh.N);
+		additionalLabInvestigations.setRh(AdditionalLabInvestigationsType.Rh.NEG);
 		additionalLabInvestigations.setRepeatABS("");
 		additionalLabInvestigations.setGCT("");
 		additionalLabInvestigations.setGTT("");
