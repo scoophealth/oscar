@@ -74,6 +74,54 @@
 
 <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
 
+<style type="text/css">
+
+body{
+margin: 0;
+padding: 0;
+border: 0;
+overflow: hidden;
+height: 100%; 
+max-height: 100%; 
+}
+
+#framecontent{
+position: absolute;
+top: 0;
+bottom: 0; 
+left: 0;
+width: 200px; /*Width of frame div*/
+height: 100%;
+overflow: hidden; /*Disable scrollbars. Set to "scroll" to enable*/
+background: navy;
+color: white;
+}
+
+#maincontent{
+position: fixed;
+top: 0; 
+left: 200px; /*Set left value to WidthOfFrameDiv*/
+right: 0;
+bottom: 0;
+overflow: auto; 
+background: #fff;
+}
+
+.innertube{
+margin: 15px; /*Margins for inner DIV inside each DIV (to provide padding)*/
+}
+
+* html body{ /*IE6 hack*/
+padding: 0 0 0 200px; /*Set value to (0 0 0 WidthOfFrameDiv)*/
+}
+
+* html #maincontent{ /*IE6 hack*/
+height: 100%; 
+width: 100%; 
+}
+
+</style>
+
 <script>
 	$(document).ready(function() {
 		$("select[name='c_province']").val('<%= UtilMisc.htmlEscape(props.getProperty("c_province", "")) %>');
@@ -774,7 +822,15 @@ function calByLMP(obj) {
 </script>
 
 <body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1">
+<div id="framecontent">
+<div class="innertube">
+	Reminders
+</div>
+</div>
 
+
+<div id="maincontent">
+<div id="content_bar" class="innertube" style="background-color: #c4e9f6">
 <html:form action="/form/formname">
 	<input type="hidden" name="c_lastVisited"
 		value=<%=props.getProperty("c_lastVisited", "pg1")%> />
@@ -2835,7 +2891,10 @@ function calByLMP(obj) {
 	</table>
 
 </html:form>
+</div>
+</div>
 </body>
+
 <script type="text/javascript">
 Calendar.setup({ inputField : "pg1_menLMP", ifFormat : "%Y/%m/%d", showsTime :false, button : "pg1_menLMP_cal", singleClick : true, step : 1 });
 Calendar.setup({ inputField : "pg1_lastUsed", ifFormat : "%Y/%m/%d", showsTime :false, button : "pg1_lastUsed_cal", singleClick : true, step : 1 });

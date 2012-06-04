@@ -336,7 +336,7 @@
 </form>
 
 
-%>
+
 <p>
 <h2><bean:message key="demographic.demographicaddarecord.msgSuccessful" /></h2>
     <a href="demographiccontrol.jsp?demographic_no=<%=dem%>&displaymode=edit&dboperation=search_detail"><bean:message key="demographic.demographicaddarecord.goToRecord"/></a>

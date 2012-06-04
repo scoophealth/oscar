@@ -96,6 +96,55 @@
 <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
 <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
 
+
+<style type="text/css">
+
+body{
+margin: 0;
+padding: 0;
+border: 0;
+overflow: hidden;
+height: 100%; 
+max-height: 100%; 
+}
+
+#framecontent{
+position: absolute;
+top: 0;
+bottom: 0; 
+left: 0;
+width: 200px; /*Width of frame div*/
+height: 100%;
+overflow: hidden; /*Disable scrollbars. Set to "scroll" to enable*/
+background: navy;
+color: white;
+}
+
+#maincontent{
+position: fixed;
+top: 0; 
+left: 200px; /*Set left value to WidthOfFrameDiv*/
+right: 0;
+bottom: 0;
+overflow: auto; 
+background: #fff;
+}
+
+.innertube{
+margin: 15px; /*Margins for inner DIV inside each DIV (to provide padding)*/
+}
+
+* html body{ /*IE6 hack*/
+padding: 0 0 0 200px; /*Set value to (0 0 0 WidthOfFrameDiv)*/
+}
+
+* html #maincontent{ /*IE6 hack*/
+height: 100%; 
+width: 100%; 
+}
+
+</style>
+
 <script>
 
 	function validate() {
@@ -781,6 +830,16 @@ function calToday(field) {
 
 
 <body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
+<div id="framecontent">
+<div class="innertube">
+	Reminders
+</div>
+</div>
+
+
+<div id="maincontent">
+<div id="content_bar" class="innertube" style="background-color: #c4e9f6">
+
 <html:form action="/form/formname">
 
 	<input type="hidden" name="commonField" value="ar2_" />
@@ -1261,6 +1320,8 @@ function calToday(field) {
 	</table>
 
 </html:form>
+</div>
+</div>
 </body>
 <script type="text/javascript">
 Calendar.setup({ inputField : "ar2_rhIG", ifFormat : "%Y/%m/%d", showsTime :false, button : "ar2_rhIG_cal", singleClick : true, step : 1 });
