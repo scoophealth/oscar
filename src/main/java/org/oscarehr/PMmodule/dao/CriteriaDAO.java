@@ -50,14 +50,66 @@ public class CriteriaDAO extends AbstractDao<Criteria> {
 		
 	}
 	
-	public Criteria getCriteriaByTemplateIdAndTypeId(Integer templateId, Integer typeId) {
-		String sqlCommand = "select * from criteria where TEMPLATE_ID=?1 and CRITERIA_TYPE_ID=?2";
+	public Criteria getCriteriaByTemplateIdVacancyIdTypeId(Integer templateId, Integer vacancyId, Integer typeId) {
+		String sqlCommand = "";
+		if(templateId != null && vacancyId != null) {			
+			sqlCommand = "select * from criteria where TEMPLATE_ID=?1 and CRITERIA_TYPE_ID=?2 and VACANCY_ID=?3";
+			Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
+			query.setParameter(1, templateId);
+			query.setParameter(2, typeId);
+			query.setParameter(3, vacancyId);
+			return getSingleResultOrNull(query);
+			
+		} else if(templateId == null && vacancyId != null) 	{		
+			sqlCommand = "select * from criteria where TEMPLATE_ID is null and CRITERIA_TYPE_ID=?1 and VACANCY_ID=?2";
+			Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
+			query.setParameter(1, typeId);
+			query.setParameter(2, vacancyId);
+			return getSingleResultOrNull(query);
+			
+		} else if(templateId != null && vacancyId == null) 	{		
+			sqlCommand = "select * from criteria where TEMPLATE_ID=?1 and CRITERIA_TYPE_ID=?2 and VACANCY_ID is null";
+			Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
+			query.setParameter(1, templateId);
+			query.setParameter(2, typeId);
+			return getSingleResultOrNull(query);
+			
+		} else {
+			return null;
+		}
+		
+		
+	}
+	
+	public List<Criteria> getCriteriasByVacancyId(Integer vacancyId) {
+		String sqlCommand = "select * from criteria where VACANCY_ID=?1 ";
+
+		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
+		query.setParameter(1, vacancyId);
+		
+		return query.getResultList();
+		
+	}
+	
+	public List<Criteria> getRefinedCriteriasByVacancyId(Integer vacancyId) {
+		String sqlCommand = "select * from criteria where CAN_BE_ADHOC=1 and VACANCY_ID=?1 ";
+
+		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
+		query.setParameter(1, vacancyId);
+		
+		return query.getResultList();
+		
+	}
+	
+	public List<Criteria> getRefinedCriteriasByTemplateId(Integer templateId) {
+		String sqlCommand = "select * from criteria where CAN_BE_ADHOC=1 and TEMPLATE_ID=?1 ";
 
 		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
 		query.setParameter(1, templateId);
-		query.setParameter(2, typeId);
 		
-		return getSingleResultOrNull(query);
+		return query.getResultList();
 		
 	}
+	
+	
 }

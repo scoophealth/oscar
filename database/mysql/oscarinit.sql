@@ -9201,6 +9201,8 @@ CREATE TABLE `vacancy` (
   `STATUS` varchar(24) NOT NULL,
   `DATE_CLOSED` timestamp NULL,
   `REASON_CLOSED` varchar(255),
+  `WL_PROGRAM_ID` int(11) NOT NULL,
+  `DATE_CREATE` date NOT NULL,
   PRIMARY KEY (`VACANCY_ID`)
 );
 

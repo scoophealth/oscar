@@ -24,6 +24,7 @@
 
 package org.oscarehr.PMmodule.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -33,12 +34,14 @@ import org.oscarehr.PMmodule.dao.CriteriaSelectionOptionDAO;
 import org.oscarehr.PMmodule.dao.CriteriaTypeDAO;
 import org.oscarehr.PMmodule.dao.CriteriaTypeOptionDAO;
 import org.oscarehr.PMmodule.dao.ProgramDao;
+import org.oscarehr.PMmodule.dao.VacancyDAO;
 import org.oscarehr.PMmodule.dao.VacancyTemplateDAO;
 import org.oscarehr.PMmodule.model.Criteria;
 import org.oscarehr.PMmodule.model.CriteriaSelectionOption;
 import org.oscarehr.PMmodule.model.CriteriaType;
 import org.oscarehr.PMmodule.model.CriteriaTypeOption;
 import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.PMmodule.model.Vacancy;
 import org.oscarehr.PMmodule.model.VacancyTemplate;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
@@ -53,6 +56,7 @@ public class VacancyTemplateManager {
 	private static CriteriaTypeOptionDAO criteriaTypeOptionDAO = (CriteriaTypeOptionDAO) SpringUtils.getBean("criteriaTypeOptionDAO");
 	private static CriteriaSelectionOptionDAO criteriaSelectionOptionDAO = (CriteriaSelectionOptionDAO) SpringUtils.getBean("criteriaSelectionOptionDAO");
 	private static ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
+	private static VacancyDAO vacancyDAO= (VacancyDAO) SpringUtils.getBean("vacancyDAO");
 	
 	public static List<Program> getPrograms(Integer facilityId) {
 		return programDao.getProgramsByFacilityId(facilityId);
@@ -60,6 +64,11 @@ public class VacancyTemplateManager {
 	
 	public static List<VacancyTemplate> getVacancyTemplateByWlProgramId(Integer wlProgramId) {
 		List<VacancyTemplate> results = vacancyTemplateDAO.getVacancyTemplateByWlProgramId(wlProgramId);
+		return (results);
+	} 
+	
+	public static List<Vacancy> getVacanciesByWlProgramId(Integer wlProgramId) {
+		List<Vacancy> results = vacancyDAO.getVacanciesByWlProgramId(wlProgramId);
 		return (results);
 	} 
 	
@@ -83,85 +92,294 @@ public class VacancyTemplateManager {
 		return (c);
 	}
 	
-	public static String getSelectedOneValue(Integer templateId, String typeName) {
-		if(templateId==null)
-			return "";
-		CriteriaType ct = criteriaTypeDAO.findByName(typeName);
-		if(ct==null) 
-			return "";		
-		Criteria c = criteriaDAO.getCriteriaByTemplateIdAndTypeId(templateId, ct.getId());
-		if(c==null)
-			return "";
-		return c.getCriteriaValue();
+		
+	public static Criteria getSelectedCriteria(Integer templateId, Integer vacancyId, Integer typeId) {
+		if(templateId == null && typeId == null)
+			return null;
+		if(vacancyId == null && typeId == null)
+			return null;
+		if(vacancyId != null && typeId != null)
+			return criteriaDAO.getCriteriaByTemplateIdVacancyIdTypeId(null, vacancyId, typeId);	
+		else if (templateId != null && typeId != null)
+			return criteriaDAO.getCriteriaByTemplateIdVacancyIdTypeId(templateId, null, typeId);	
+		else
+			return criteriaDAO.getCriteriaByTemplateIdVacancyIdTypeId(templateId, vacancyId, typeId);	
 	}
 	
-	public static Criteria getSelectedCriteria(Integer templateId, String typeName) {
-		if(templateId==null)
-			return null;
-		CriteriaType ct = criteriaTypeDAO.findByName(typeName);
-		if(ct==null) 
-			return null;		
-		return criteriaDAO.getCriteriaByTemplateIdAndTypeId(templateId, ct.getId());		
+	public static List<CriteriaType> getAllCriteriaTypes() {
+		return criteriaTypeDAO.getAllCriteriaTypes();
 	}
+	
+	public static List<Criteria> getRefinedCriteriasByVacancyId(Integer vacancyId) {
+		return criteriaDAO.getRefinedCriteriasByVacancyId(vacancyId);
+	}
+	
+	public static List<Criteria> getCriteriasByVacancyId(Integer vacancyId) {
+		return criteriaDAO.getCriteriasByVacancyId(vacancyId);
+	}
+	
+	public static List<Criteria> getRefinedCriteriasByTemplateId(Integer templateId) {
+		return criteriaDAO.getRefinedCriteriasByTemplateId(templateId);
+	}
+	
+	public static List<VacancyTemplate> getActiveVacancyTemplatesByProgramId(Integer programId) {
+		if(programId == null)
+			return null;
+		return vacancyTemplateDAO.getActiveVacancyTemplatesByProgramId(programId);
+	}
+	
+	public static List<VacancyTemplate> getActiveVacancyTemplatesByWlProgramId(Integer programId) {
+		if(programId == null)
+			return null;
+		return vacancyTemplateDAO.getActiveVacancyTemplatesByWlProgramId(programId);
+	}
+	
+	public static CriteriaType getCriteriaTypeById(Integer id) {
+		return criteriaTypeDAO.find(id);
+	}
+	
+	public static Vacancy getVacancyById(Integer id) {
+		return vacancyDAO.find(id);
+	}
+	
 	/**
 	 * This method is meant to return a bunch of html <option> tags for each list element.
 	 */
-	public static String renderAsSelectOptions(String type) {
-		//get type id
-		CriteriaType ctype = criteriaTypeDAO.findByName(type);
-		List<CriteriaTypeOption> options = criteriaTypeOptionDAO.getCriteriaTypeOptionByTypeId(ctype.getId());
+	
+	public static String renderAllSelectOptions(Integer templateId, Integer vacancyId, Integer typeId) {
+		Criteria criteria = new Criteria();
+		criteria = getSelectedCriteria(templateId, vacancyId, typeId);
+		List<CriteriaSelectionOption> selectedOptions = new ArrayList<CriteriaSelectionOption>();
+		String min="", max="", required="", value="";
+		
+		if(criteria !=null) {				
+			if(criteria.getRangeStartValue() != null)
+				min = String.valueOf(criteria.getRangeStartValue());
+			
+			if(criteria.getRangeEndValue() != null) 
+				max = String.valueOf(criteria.getRangeEndValue());
+			
+			value = criteria.getCriteriaValue(); //value is criteria type option id if "select_one", or number if type is "number".
+			required = (criteria.getCanBeAdhoc()==true?"checked":"");
+			
+			selectedOptions = criteriaSelectionOptionDAO.getCriteriaSelectedOptionsByCriteriaId(criteria.getId());
+		}
+		
+		
+		//get type 
+		CriteriaType ctype = criteriaTypeDAO.find(typeId);
+		String type = ctype.getFieldName();
+		List<CriteriaTypeOption> options = criteriaTypeOptionDAO.getCriteriaTypeOptionByTypeId(typeId);		
+			
 		StringBuilder sb = new StringBuilder();
 
-		//sb.append("<option value=\"\" title=\"\">--- no selection ---</option>");
-
-		for (CriteriaTypeOption option : options) {
-			String label = option.getOptionLabel();
-			String htmlEscapedName = StringEscapeUtils.escapeHtml(label);
-			//String selected = (CdsClientFormData.containsAnswer(existingAnswers, option.getCdsDataCategory()) ? "selected=\"selected\"" : "");
-			String selectedOrNot = "selected";
-			sb.append("<option " + selectedOrNot + " value=\"" + StringEscapeUtils.escapeHtml(String.valueOf(option.getId())) + "\" title=\"" + htmlEscapedName + "\">" + htmlEscapedName + "</option>");
+		sb.append("<table width=\"100%\" border=\"1\" cellspacing=\"2\" cellpadding=\"3\"> ");
+		sb.append("<tr class=\"b\">");
+		sb.append("<td width=\"30%\" class=\"beright\">Requires ");sb.append(type);sb.append(":</td>");
+		sb.append("<td><input type=\"checkbox\" value=\"on\" ");
+		sb.append(required);
+		sb.append(" name=\"");
+		sb.append(type.toLowerCase().replaceAll(" ","_"));  //
+		sb.append("Required\"></td>");
+		sb.append("</tr>");
+		
+		if(ctype.getFieldType().equalsIgnoreCase("number")) {	
+			sb.append("<tr class=\"b\">");
+			sb.append("<td class=\"beright\">");
+			sb.append(type);
+			sb.append(" Value:</td>");
+			sb.append("<td><input type=\"text\" size=\"50\" maxlength=\"50\" value=\"");
+			sb.append(value);
+			sb.append("\" name=\"");
+			sb.append(type.toLowerCase().replaceAll(" ","_"));
+			sb.append("Number\"></td>");
+			sb.append("</tr>");
 		}
-
+		
+		if(ctype.getFieldType().equalsIgnoreCase("select_one_range")) {
+			sb.append("<tr class=\"b\">");
+			sb.append("<td class=\"beright\">");
+			sb.append(type);
+			sb.append(" Range Minimum:</td>");
+			sb.append("<td><input type=\"text\" size=\"50\" maxlength=\"50\" value=\"");
+			sb.append(min);
+			sb.append("\" name=\"");
+			sb.append(type.toLowerCase().replaceAll(" ","_"));
+			sb.append("Minimum\"></td>");
+			sb.append("</tr>");
+			sb.append("<tr class=\"b\">");
+			sb.append("<td class=\"beright\">");
+			sb.append(type);
+			sb.append(" Range Maximum:</td>");
+			sb.append("<td><input type=\"text\" size=\"50\" maxlength=\"50\" value=\"");
+			sb.append(max);
+			sb.append("\" name=\"");
+			sb.append(type.toLowerCase().replaceAll(" ","_"));
+			sb.append("Maximum\"></td>");
+			sb.append("</tr>");			
+			//sb.append("<tr>");
+		}
+			
+		if(!ctype.getFieldType().equalsIgnoreCase("number")) {			
+		
+			sb.append("<tr class=\"b\">");
+			sb.append("<td colspan=\"2\" style=\"padding-left: 10%;\">");
+			sb.append("<div class=\"horizonton\">");
+			sb.append("<div style=\"margin-bottom: 3px;\">");
+			sb.append(type); sb.append(" List</div>");
+			sb.append("<div>");
+			sb.append("<select id=\"sourceOf");
+			sb.append(type.toLowerCase().replaceAll(" ","_"));
+			sb.append("\" name=\"sourceOf");
+			sb.append(type.toLowerCase().replaceAll(" ","_"));
+			sb.append("\"");
+			
+			if(ctype.getFieldType().equalsIgnoreCase("select_multiple")) {
+				sb.append(" multiple=\"multiple\" size=\"7\" ");	
+			}
+			
+			sb.append(" style=\"width: 200px;\">");
+			
+			if(ctype.getFieldType().equalsIgnoreCase("select_one") || ctype.getFieldType().equalsIgnoreCase("select_one_range") )
+				sb.append("<option value=\"\"></option>");
+			
+			for (CriteriaTypeOption option : options) {
+				boolean skip = false;
+				String label = option.getOptionLabel();
+				String htmlEscapedName = StringEscapeUtils.escapeHtml(label);
+				String selectedOrNot = "";			
+				//if(option.getOptionValue()!=null && option.getOptionValue().equalsIgnoreCase(value))
+				if(option.getId()!=null && String.valueOf(option.getId()).equalsIgnoreCase(value))
+					selectedOrNot = "selected";
+				
+				if(selectedOptions != null) {
+					for(CriteriaSelectionOption cso : selectedOptions) {
+						//If the options selected, should be removed from source of list.
+						if( cso.getOptionValue() != null && cso.getOptionValue().equals(String.valueOf(option.getId())))
+								skip = true;
+					}
+				}
+				
+				if(skip)
+					continue;
+				
+				sb.append("<option " + selectedOrNot + " value=\"" + StringEscapeUtils.escapeHtml(String.valueOf(option.getId())) + "\" title=\"" + htmlEscapedName + "\">" + htmlEscapedName + "</option>");
+						
+			}
+			
+			sb.append("</select>");
+			sb.append("</div>");
+			sb.append("</div>");
+		}
+		
+	if(ctype.getFieldType().equalsIgnoreCase("select_multiple")) {
+		
+		sb.append("<div class=\"horizonton\" style=\"padding-top: 40px;\">");
+		sb.append("<div>");
+		sb.append("<input type=\"button\" id=\"add_"); 
+		sb.append(type.toLowerCase().replaceAll(" ","_")); 
+		sb.append("\" name=\"add_"); sb.append(type.toLowerCase().replaceAll(" ","_"));
+		sb.append("\" value=\">>\">");
+		sb.append("</div>");
+		sb.append("<div>");
+		sb.append("<input type=\"button\" id=\"remove_");
+		sb.append(type.toLowerCase().replaceAll(" ","_"));
+		sb.append("\" name=\"remove_");
+		sb.append(type.toLowerCase().replaceAll(" ","_"));
+		sb.append("\" value=\"<<\">");
+		sb.append("</div>");
+		sb.append("</div>");
+				
+		sb.append("<div class=\"horizonton\">");
+		sb.append("<div style=\"margin-bottom: 3px;\">Required ");
+		sb.append(type);
+		sb.append("</div>");
+		sb.append("<div>");
+		sb.append("<select id=\"targetOf");
+		sb.append(type.toLowerCase().replaceAll(" ","_"));
+		sb.append("\" name=\"targetOf");
+		sb.append(type.toLowerCase().replaceAll(" ","_"));
+		sb.append("\" multiple=\"multiple\" size=\"7\" ");
+		sb.append("style=\"width: 200px;\">");
+		
+		for(CriteriaSelectionOption cso : selectedOptions) {
+				//criteria_type_option's value is unique?
+				//value in criteria_selection_option is the same value in criteria_type_option? 
+				//CriteriaTypeOption option2 = criteriaTypeOptionDAO.getByValueAndTypeId(cso.getOptionValue(), ctype.getId());
+				
+				//value in criteria_selection_option is the id in criteria_type_option, this makes more sense as the value may not be unique or may be null
+				CriteriaTypeOption option2 = criteriaTypeOptionDAO.getCriteriaTypeOptionByOptionId(Integer.parseInt(cso.getOptionValue()));
+				String label = option2.getOptionLabel();
+				String htmlEscapedName = StringEscapeUtils.escapeHtml(label);
+				//String selected = (CdsClientFormData.containsAnswer(existingAnswers, option.getCdsDataCategory()) ? "selected=\"selected\"" : "");
+				String selected = "selected";
+				sb.append("<option " + selected + " value=\"" + StringEscapeUtils.escapeHtml(String.valueOf(option2.getId())) + "\" title=\"" + htmlEscapedName + "\">" + htmlEscapedName + "</option>");
+		}
+		
+		sb.append("</select>");
+		sb.append("</div>");
+		sb.append("</div>");
+		sb.append("</td>");
+		sb.append("</tr>");	
+		}
+		sb.append("</table>");
+		sb.append("<br>");
+		
+		if(ctype.getFieldType().equalsIgnoreCase("select_multiple")) {
+			sb.append("<script type=\"text/javascript\">");
+			sb.append(" $(document).ready(");
+		    sb.append("function () { ");		    
+		    sb.append("$('#");
+		    sb.append("remove_");
+			sb.append(type.toLowerCase().replaceAll(" ","_"));
+		    sb.append("').click(");
+            sb.append("function (e) {");
+            sb.append("$('#targetOf");
+            sb.append(type.toLowerCase().replaceAll(" ","_"));
+            sb.append(" > option:selected').appendTo('#sourceOf");
+            sb.append(type.toLowerCase().replaceAll(" ","_"));
+            sb.append("');");
+            sb.append("e.preventDefault();");
+            sb.append("});");
+            
+            sb.append("$('#");
+		    sb.append("add_");
+			sb.append(type.toLowerCase().replaceAll(" ","_"));
+		    sb.append("').click(");
+            sb.append("function (e) {");
+            sb.append("$('#sourceOf");
+            sb.append(type.toLowerCase().replaceAll(" ","_"));
+            sb.append(" > option:selected').appendTo('#targetOf");
+            sb.append(type.toLowerCase().replaceAll(" ","_"));
+            sb.append("');");
+            sb.append("e.preventDefault();");
+            sb.append("});");
+            
+		 	sb.append("});");
+		 	sb.append("</script>");
+		}
+		
 		return (sb.toString());
 	}
-
-	public static String renderAnswersAsSelectOptions(Integer templateId , String type) {		
-		if(templateId == null) 
-			return null;
 		
-		//get type id <- type name
-		CriteriaType ctype = criteriaTypeDAO.findByName(type);
-		
-		//get criteria id <- type id, template id
-		Criteria criteria = criteriaDAO.getCriteriaByTemplateIdAndTypeId(templateId, ctype.getId());
-		if(criteria == null)
-			return null;
-		
-		StringBuilder sb = new StringBuilder();
-		List<CriteriaSelectionOption> selectedOptions = criteriaSelectionOptionDAO.getCriteriaSelectedOptionsByCriteriaId(criteria.getId());
-		for(CriteriaSelectionOption cso : selectedOptions) {
-			//value is unique
-			CriteriaTypeOption option = criteriaTypeOptionDAO.getByValueAndTypeId(cso.getOptionValue(), ctype.getId());
-			String label = option.getOptionLabel();
-			String htmlEscapedName = StringEscapeUtils.escapeHtml(label);
-			//String selected = (CdsClientFormData.containsAnswer(existingAnswers, option.getCdsDataCategory()) ? "selected=\"selected\"" : "");
-			String selected = "selected";
-			sb.append("<option " + selected + " value=\"" + StringEscapeUtils.escapeHtml(String.valueOf(option.getId())) + "\" title=\"" + htmlEscapedName + "\">" + htmlEscapedName + "</option>");
-		}
-		return (sb.toString());
-		
+	public static VacancyTemplate createVacancyTemplate(String templateId)
+	{		
+		if(StringUtils.isBlank(String.valueOf(templateId)) || "0".equals(templateId) || templateId.equalsIgnoreCase("null")) {
+			VacancyTemplate vt = new VacancyTemplate();
+			vt.setActive(true);
+			return vt;
+		} else {
+			return vacancyTemplateDAO.getVacancyTemplate(Integer.valueOf(templateId));
+		}					
 	}
 	
-	public static VacancyTemplate createVacancyTemplate(String templateId)
-	{
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();		
-		VacancyTemplate vt =new VacancyTemplate();
-		if(StringUtils.isBlank(String.valueOf(templateId)) || "0".equals(templateId) || templateId.equalsIgnoreCase("null")) {
-			vt.setActive(true);
-		} else {
-			vt = vacancyTemplateDAO.getVacancyTemplate(Integer.valueOf(templateId));
-		}		
-		return(vt);		
+	public static void saveVacancy(Vacancy v) {			
+		if(v.getId()!=null) {
+			vacancyDAO.merge(v);			
+		} else {			
+			vacancyDAO.persist(v);
+		}
+		
 	}
 	
 	public static void saveVacancyTemplate(VacancyTemplate vt) {			

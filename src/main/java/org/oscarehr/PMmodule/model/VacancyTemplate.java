@@ -29,11 +29,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
 import org.oscarehr.common.model.AbstractModel;
 
 /**
- * VacanyTemplate entity. @author MyEclipse Persistence Tools
+ * VacanyTemplate entity. @author azhou
  */
 @Entity
 @Table(name = "vacancy_template")

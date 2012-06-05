@@ -25,17 +25,20 @@
 package org.oscarehr.PMmodule.web.admin;
 
 import java.net.MalformedURLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.ws.WebServiceException;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -53,6 +56,7 @@ import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.BedCheckTime;
 import org.oscarehr.PMmodule.model.Criteria;
 import org.oscarehr.PMmodule.model.CriteriaSelectionOption;
+import org.oscarehr.PMmodule.model.CriteriaType;
 import org.oscarehr.PMmodule.model.CriteriaTypeOption;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramAccess;
@@ -63,6 +67,7 @@ import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.model.ProgramSignature;
 import org.oscarehr.PMmodule.model.ProgramTeam;
+import org.oscarehr.PMmodule.model.Vacancy;
 import org.oscarehr.PMmodule.model.VacancyTemplate;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.BedCheckTimeManager;
@@ -165,8 +170,12 @@ public class ProgramManagerAction extends BaseAction {
 		DynaActionForm programForm = (DynaActionForm) form;
 
 		String id = request.getParameter("id");
-
-		request.setAttribute("vacancyTemplateId", programForm.get("vacancyTemplateId"));
+		
+		request.setAttribute("view.tab", request.getParameter("view.tab"));
+		if(request.getParameter("newVacancy")!=null && "true".equals(request.getParameter("newVacancy")))
+			request.setAttribute("vacancyOrTemplateId", "");
+		else
+			request.setAttribute("vacancyOrTemplateId", programForm.get("vacancyOrTemplateId"));
 		
 		if (isCancelled(request)) {
 			return list(mapping, form, request, response);
@@ -813,26 +822,110 @@ public class ProgramManagerAction extends BaseAction {
 		return mapping.findForward("edit");
 	}
 
-	public ActionForward save_vacancy_template(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		DynaActionForm fm = (DynaActionForm) form;
+	public ActionForward chooseTemplate(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		
+		DynaActionForm programForm = (DynaActionForm) form;
+		Program program = (Program) programForm.get("program");
+		
+		programForm.set("program", program);
+		
+		String programId = request.getParameter("programId");
+		String templateId = request.getParameter("requiredVacancyTemplateId");
+		
+		request.setAttribute("view.tab", "vacancy_add");
+		
+		VacancyTemplate vt = vacancyTemplateDAO.getVacancyTemplate(Integer.valueOf(templateId));
+		
+		request.setAttribute("selectedTemplate",vt);
+		
+		setEditAttributes(request, String.valueOf(program.getId()));
+		
+		return mapping.findForward("edit");
+	}
+	
+	public ActionForward save_vacancy(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		
+		DynaActionForm programForm = (DynaActionForm) form;
+		Program program = (Program) programForm.get("program");
 		
 		if (this.isCancelled(request)) {
 			return list(mapping, form, request, response);
 		}
-		/*
-		VacancyTemplate vt = (VacancyTemplate) fm.get("vacancyTemplate");
-
-		//VacancyTemplate vt = new VacancyTemplate();
-		vt.setName(request.getParameter("program.templateName"));
-		vt.setActive((request.getParameter("program.templateActive").equals("on"))?true:false);
-		vt.setProgramId(Integer.valueOf(request.getParameter("program.associatedProgram")));
-		vacancyTemplateManager.save(vt);	
-		*/
+				
+		HashMap<String,String[]> parameters=new HashMap(request.getParameterMap());
 		
+		Integer templateId = null;
+		String templateId_str = request.getParameter("requiredVacancyTemplateId");
+		if(!StringUtils.isBlank(templateId_str))
+			templateId = Integer.valueOf(templateId_str);
+		VacancyTemplate vacancyTemplate=VacancyTemplateManager.createVacancyTemplate(templateId_str);
+		
+		Vacancy vacancy = new Vacancy();
+		String vacancyId = request.getParameter("vacancyId");
+		if(!StringUtils.isBlank(vacancyId)) {
+			vacancy = VacancyTemplateManager.getVacancyById(Integer.valueOf(vacancyId));
+		}		
+		vacancy.setTemplateId(templateId);
+		vacancy.setStatus(parameters.get("vacancyStatus")[0]);
+		vacancy.setReasonClosed(parameters.get("reasonClosed")[0]);		
+			
+		String dateClosed = parameters.get("dateClosed")[0];
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", request.getLocale());
+		ResourceBundle props = ResourceBundle.getBundle("oscarResources", request.getLocale());
+		if (!StringUtils.isBlank(dateClosed)) {			
+			try {
+				Date dateClosedFormatted = formatter.parse(dateClosed);			
+				vacancy.setDateClosed(dateClosedFormatted);
+			} catch (Exception e){
+				logger.warn("warn", e);
+			}
+		}
+		
+		vacancy.setDateCreated(new Date());
+		
+		vacancy.setWlProgramId(program.getId());
+		VacancyTemplateManager.saveVacancy(vacancy);		
+			
+		//Save Criteria
+		//List<CriteriaType> typeList = VacancyTemplateManager.getAllCriteriaTypes();
+		//for(CriteriaType type : typeList) {	
+		List<Criteria> criteriaList = VacancyTemplateManager.getRefinedCriteriasByTemplateId(templateId);
+		for(Criteria c : criteriaList) {
+			CriteriaType type = VacancyTemplateManager.getCriteriaTypeById(c.getCriteriaTypeId());
+			Criteria newCriteria = new Criteria();			
+			newCriteria.setVacancyId(vacancy.getId());			
+			newCriteria.setMatchScoreWeight(1.0); //???
+					
+			String required = type.getFieldName().toLowerCase().replaceAll(" ","_")+"Required";
+			if(request.getParameter(required) == null) 
+				newCriteria.setCanBeAdhoc(false);
+			
+			String targetName = "targetOf"+ type.getFieldName().toLowerCase().replaceAll(" ","_");
+			String[] answers = parameters.get(targetName);
+			
+			saveTemplateOrVacancy(parameters, answers, type, newCriteria, request);
+			
+		}	
+		
+		setEditAttributes(request, String.valueOf(program.getId()));
+		
+		return edit(mapping, form, request, response);		
+		
+	}
+	
+	public ActionForward save_vacancy_template(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		
+		DynaActionForm programForm = (DynaActionForm) form;
+		Program program = (Program) programForm.get("program");
+		
+		if (this.isCancelled(request)) {
+			return list(mapping, form, request, response);
+		}
+				
 		HashMap<String,String[]> parameters=new HashMap(request.getParameterMap());
 		
 		//save tmeplate
-		String vacancyTemplateId = request.getParameter("vacancyTemplateId");
+		String vacancyTemplateId = request.getParameter("vacancyOrTemplateId");
 		VacancyTemplate vacancyTemplate=VacancyTemplateManager.createVacancyTemplate(vacancyTemplateId);
 		vacancyTemplate.setName(request.getParameter("templateName"));
 		vacancyTemplate.setProgramId(Integer.parseInt(request.getParameter("associatedProgramId")));
@@ -842,101 +935,82 @@ public class ProgramManagerAction extends BaseAction {
 		vacancyTemplate.setWlProgramId(Integer.parseInt(request.getParameter("programId")));
 		VacancyTemplateManager.saveVacancyTemplate(vacancyTemplate);	
 		
-		//Save Criteria Gender 
-		Criteria criteria = new Criteria();		
-		criteria.setTemplateId(vacancyTemplate.getId());			
-		if(request.getParameter("genderRequired") == null) {
-			criteria.setCanBeAdhoc(false);
-		}
-		String[] gender = parameters.get("targetOfGender");
-		saveCriteria(criteria, gender);
-		
-		//Save Criteria diagnosis
-		criteria = new Criteria();	
-		criteria.setTemplateId(vacancyTemplate.getId());
-		criteria.setTemplateId(vacancyTemplate.getId());		
-		if(request.getParameter("diagnosisRequired") == null) {
-			criteria.setCanBeAdhoc(false);
-		}
-		String[] diagnosis = parameters.get("targetOfDiagnosis");
-		saveCriteria(criteria, diagnosis);
-		
-		//Save Criteria referralType
-		criteria = new Criteria();	
-		criteria.setTemplateId(vacancyTemplate.getId());
-		if(request.getParameter("referralTypeRequired") == null) {
-			criteria.setCanBeAdhoc(false);
-		}
-		String[] referralType = parameters.get("targetOfReferralType");
-		saveCriteria(criteria, referralType);
-		
-		//Save Criteria supportType
-		criteria = new Criteria();	
-		criteria.setTemplateId(vacancyTemplate.getId());
-		if(request.getParameter("supportTypeRequired") == null) {
-			criteria.setCanBeAdhoc(false);
-		}
-		String[] supportType = parameters.get("targetOfSupportType");
-		saveCriteria(criteria, supportType);
-		
-		//Save Criteria legalStatus
-		criteria = new Criteria();	
-		criteria.setTemplateId(vacancyTemplate.getId());
-		if(request.getParameter("legalStatusRequired") == null) {
-			criteria.setCanBeAdhoc(false);
-		}
-		String[] legalStatus = parameters.get("targetOfLegalStatus");
-		saveCriteria(criteria, legalStatus);
-		
-		/*
-		for(int i=0; i<gender.length; i++) {		
-			CriteriaTypeOption option = criteriaTypeOptionDAO.getCriteriaTypeOptionByOptionId(Integer.valueOf(gender[i]));
-			if(option!=null) {
-				criteria.setCriteriaTypeId(option.getCriteriaTypeId());
-			}
-			//criteria.setCriteriaValue(criteriaValue);
-			if(request.getParameter("genderRequired") == null) {
-				criteria.setCanBeAdhoc(false);
-			}
-			//criteria.setMatchScoreWeight(Double.parseDouble("0.5"));
-			VacancyTemplateAction.saveCriteria(criteria);
+		//Save Criteria
+		List<CriteriaType> typeList = VacancyTemplateManager.getAllCriteriaTypes();
+		for(CriteriaType type : typeList) {
+			Criteria criteria = new Criteria();		
+			criteria.setTemplateId(vacancyTemplate.getId());			
+			String required = type.getFieldName().toLowerCase().replaceAll(" ","_")+"Required";
+			if(request.getParameter(required) == null) 
+				criteria.setCanBeAdhoc(false);			
+			String targetName = "targetOf"+ type.getFieldName().toLowerCase().replaceAll(" ","_");
+			String[] answers = parameters.get(targetName);
 			
-			//Save criteria_selection_option
-			CriteriaSelectionOption selectedOption = new CriteriaSelectionOption();
-			selectedOption.setCriteriaId(criteria.getId());
-			selectedOption.setOptionValue(option.getOptionValue());
-			VacancyTemplateAction.saveCriteriaSelectedOption(selectedOption);	
-		}
-		*/
+			saveTemplateOrVacancy(parameters, answers, type, criteria, request);
+			
+		}	
 		
-		//select_one value should only be saved to criteria, don't need to be saved into criteria_selection_option table.
-		criteria = new Criteria();	
-		criteria.setTemplateId(vacancyTemplate.getId());
-		if(request.getParameter("ageRangeRequired") == null) {
-			criteria.setCanBeAdhoc(false);
-		}
-		String[] ages = parameters.get("targetOfAge"); //only one age
-		String ageValue = "";
-		if(ages!=null && ages.length>0)
-			ageValue = ages[0];
-		criteria.setCriteriaValue(ageValue);
-		if(request.getParameter("ageMinimum")!=null)
-			criteria.setRangeStartValue(Integer.valueOf(request.getParameter("ageMinimum")));
-		if(request.getParameter("ageMaximum")!=null)
-			criteria.setRangeEndValue(Integer.valueOf(request.getParameter("ageMaximum")));
-		criteria.setCriteriaTypeId(2); //
+		setEditAttributes(request, String.valueOf(program.getId()));
 		
-		VacancyTemplateManager.saveCriteria(criteria);
-		/*
-		CriteriaSelectionOption selectedOption = new CriteriaSelectionOption();
-		selectedOption.setCriteriaId(criteria.getId());
-		selectedOption.setOptionValue(""); //?
-		VacancyTemplateManager.saveCriteriaSelectedOption(selectedOption);
-		*/
-		
-		return edit(mapping, form, request, response);
-		
+		return edit(mapping, form, request, response);		
 	}
+	
+	private void saveTemplateOrVacancy(HashMap<String, String[]> parameters, String[] answers, CriteriaType type, Criteria criteria, HttpServletRequest request) {
+		
+		if(type.getFieldType().equalsIgnoreCase("select_multiple")) {
+			
+			saveCriteria(criteria, answers);
+			
+		} else if(type.getFieldType().equalsIgnoreCase("select_one_range")) {
+			
+			String sourceName = "sourceOf" + type.getFieldName().toLowerCase().replaceAll(" ","_");
+			String[] singleAnswers = parameters.get(sourceName);
+			String answer = "";
+			if(singleAnswers!=null && singleAnswers.length>0)
+				answer = singleAnswers[0];
+			criteria.setCriteriaValue(answer);
+			
+			String minName = type.getFieldName().toLowerCase().replaceAll(" ","_")+"Minimum";
+			String maxName = type.getFieldName().toLowerCase().replaceAll(" ","_")+"Maximum";
+			if(!StringUtils.isBlank(request.getParameter(minName)))
+				criteria.setRangeStartValue(Integer.valueOf(request.getParameter(minName)));
+			if(!StringUtils.isBlank(request.getParameter(maxName)))
+				criteria.setRangeEndValue(Integer.valueOf(request.getParameter(maxName)));
+			
+			criteria.setCriteriaTypeId(type.getId()); 	
+			
+			VacancyTemplateManager.saveCriteria(criteria);
+		
+		} else if(type.getFieldType().equalsIgnoreCase("select_one")) {
+			
+			String sourceName = "sourceOf" + type.getFieldName().toLowerCase().replaceAll(" ","_");
+			String[] singleAnswers = parameters.get(sourceName);
+			String answer = "";
+			if(singleAnswers!=null && singleAnswers.length>0)
+				answer = singleAnswers[0];
+			criteria.setCriteriaValue(answer);
+			
+			criteria.setCriteriaTypeId(type.getId()); 	
+			
+			VacancyTemplateManager.saveCriteria(criteria);
+			
+		} else if(type.getFieldType().equalsIgnoreCase("number")) {
+			
+			String numberName = type.getFieldName().toLowerCase().replaceAll(" ","_") + "Number";
+			String[] numberAnswers = parameters.get(numberName);
+			String number = "";
+			if(numberAnswers!=null && numberAnswers.length>0)
+				number = numberAnswers[0];
+			criteria.setCriteriaValue(number);
+			
+			criteria.setCriteriaTypeId(type.getId());
+			
+			VacancyTemplateManager.saveCriteria(criteria);
+			
+		} else {
+			//do nothing for now
+		}
+}
 	
 	private void saveCriteria(Criteria criteria, String [] paramValues) {	
 		if(paramValues==null || paramValues.length<1) 
@@ -953,18 +1027,9 @@ public class ProgramManagerAction extends BaseAction {
 			//Save criteria_selection_option
 			CriteriaSelectionOption selectedOption = new CriteriaSelectionOption();
 			selectedOption.setCriteriaId(criteria.getId());
-			selectedOption.setOptionValue(option.getOptionValue());
+			selectedOption.setOptionValue(String.valueOf(option.getId()));
 			VacancyTemplateManager.saveCriteriaSelectedOption(selectedOption);	
 		}
-	}
-	
-	public ActionForward add_vacancy_template(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		DynaActionForm templateForm = (DynaActionForm) form;
-		templateForm.set("vacancyTemplate", new VacancyTemplate());
-
-		setEditAttributes(request, null);
-
-		return mapping.findForward("edit");
 	}
 	
 	public ActionForward save_access(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {

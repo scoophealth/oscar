@@ -26,31 +26,24 @@ package org.oscarehr.PMmodule.dao;
 
 import java.util.List;
 import javax.persistence.Query;
-import org.oscarehr.PMmodule.model.CriteriaType;
+import org.oscarehr.PMmodule.model.Vacancy;
 import org.oscarehr.common.dao.AbstractDao;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class CriteriaTypeDAO extends AbstractDao<CriteriaType> {
+public class VacancyDAO extends AbstractDao<Vacancy> {
 
-	public CriteriaTypeDAO() {
-		super(CriteriaType.class);
+	public VacancyDAO() {
+		super(Vacancy.class);
 	}
 
 	@SuppressWarnings("unchecked")
-    public CriteriaType findByName(String fieldName) {		
-		String sqlCommand = "select * from criteria_type where FIELD_NAME=?1 ";
+    public List<Vacancy> getVacanciesByWlProgramId(Integer wlProgramId) {
+		String sqlCommand = "select * from vacancy where WL_PROGRAM_ID=?1 ";
+
 		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
-		query.setParameter(1, fieldName);		
-		return (CriteriaType) query.getResultList().get(0);		
+		query.setParameter(1, wlProgramId);
+		
+		return query.getResultList();	
 	}
-	
-	@SuppressWarnings("unchecked")
-    public List<CriteriaType> getAllCriteriaTypes() {
-		String sqlCommand = "select * from criteria_type where WL_PROGRAM_ID=1 order by FIELD_TYPE DESC"; //Need to change WL_PROGRAM_ID
-		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
-		return query.getResultList();		
-	}
-	
-	
 }

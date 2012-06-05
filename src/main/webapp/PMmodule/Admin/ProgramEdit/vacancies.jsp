@@ -25,191 +25,52 @@
 --%>
 
 
+<%@page import="org.oscarehr.PMmodule.model.VacancyTemplate"%>
+<%@page import="org.oscarehr.PMmodule.model.Vacancy"%>
+<%@page import="org.oscarehr.PMmodule.service.VacancyTemplateManager"%>
+<%@page import="java.util.List"%>
+
 <%@ include file="/taglibs.jsp"%>
-<script type="text/javascript">
-    $(document).ready(
-        function () {
-            $('#addGender').click(
-                function (e) {
-                    $('#sourceOfGender > option:selected').appendTo('#targetOfGender');
-                    e.preventDefault();
-                });
-            $('#removeGender').click(
-                function (e) {
-                    $('#targetOfGender > option:selected').appendTo('#sourceOfGender');
-                    e.preventDefault();
-                });
-            
-            $('#addLanguage').click(
-                function (e) {
-                    $('#sourceOfLanguage > option:selected').appendTo('#targetOfLanguage');
-                    e.preventDefault();
-                });
-            $('#removeLanguage').click(
-                function (e) {
-                    $('#targetOfLanguage > option:selected').appendTo('#sourceOfLanguage');
-                    e.preventDefault();
-                });
-            
-            $('#addCriteria').click(
-                    function (e) {
-                        $('#sourceOfCriteria > option:selected').appendTo('#targetOfCriteria');
-                        e.preventDefault();
-                    });
-                $('#removeCriteria').click(
-                    function (e) {
-                        $('#targetOfCriteria > option:selected').appendTo('#sourceOfCriteria');
-                        e.preventDefault();
-                    });
-        });
-</script>
+
+<%	
+	String currentProgramId = (String) request.getAttribute("id");
+	List<Vacancy> vacancies = VacancyTemplateManager.getVacanciesByWlProgramId(Integer.valueOf(currentProgramId));
+		
+%>
+
 <div class="tabs" id="tabs">
+
+<input type="hidden" name="programId" id="programId" value="<%=request.getAttribute("id")%>" />
 	<table cellpadding="3" cellspacing="0" border="0">
-		<tr>
+		<tr>			
 			<th title="Templates">Vacancies</th>
 		</tr>
 	</table>
 </div>
+
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr class="b">
-		<td width="30%" class="beright">Requirement Template:</td>
-		<td><select name="program.associatedProgram">
-				<option selected="selected" value=" ">None Selected</option>
-		</select></td>
+		<td width="50%" class="beright">Vacancy's Template Name</td>
+		<td width="25%">Vacancy Status</td>
+		<td width="25%">Vacancy Create Date</td>
+	</tr>
+<%	for(Vacancy v : vacancies) { 
+		VacancyTemplate vt = VacancyTemplateManager.getVacancyTemplateByTemplateId(v.getTemplateId());
+%>
+	<tr class="b">
+		<td class="beright">
+		<a onclick="javascript:clickLink('Vacancy Add','Vacancy Add', '<%=v.getId() %>');return false;" href="javascript:void(0)"><%=(vt==null?"No Template for This Vacancy":vt.getName()) %></a>
+		<td><%= v.getStatus() %></td>
+		<td><%=v.getDateCreated() %> </td>
+	</tr>
+<% 	} %>
+	<tr class="b">
+		<td class="beright">		
+			<a onclick="javascript:clickLink('Vacancy Add','Vacancy Add', '');return false;" href="javascript:void(0)">Create New Vacancy</a>
+		</td>		
+		<td></td>
 	</tr>
 </table>
-<br>
-<fieldset>
-	<legend>Additional Criteria For this Vavancy/Service Opening</legend>
-	<table width="100%" border="1" cellspacing="2" cellpadding="3">
-		<tr class="b">
-			<td width="30%" class="beright">Requires Specific Gender:</td>
-			<td><input type="checkbox" value="on"
-				name="program.genderRequired"></td>
-		</tr>
-		<tr class="b">
-			<td colspan="2" style="padding-left: 10%;">
-				<div class="horizonton">
-					<div style="margin-bottom: 3px;">Gender List</div>
-					<div>
-						<select id="sourceOfGender" name="sourceOfGender" multiple="multiple" size="7"
-							style="width: 200px;">
-							<option value="male">male</option>
-							<option value="female">female</option>
-						</select>
-					</div>
-				</div>
-				<div class="horizonton" style="padding-top: 40px;">
-					<div>
-						<input type="button" id="addGender" name="addGender" value=">>">
-					</div>
-					<div>
-						<input type="button" id="removeGender" name="removeGender" value="<<">
-					</div>
-				</div>
-				<div class="horizonton">
-					<div style="margin-bottom: 3px;">Required Gender</div>
-					<div>
-						<select id="targetOfGender" name="targetOfGender" multiple="multiple" size="7"
-							style="width: 200px;">
-						</select>
-					</div>
-				</div>
-			</td>
-		</tr>
-	</table>
-	<br>
-	<table width="100%" border="1" cellspacing="2" cellpadding="3">
-		<tr class="b">
-			<td width="30%" class="beright">Requires Specific Language:</td>
-			<td><input type="checkbox" value="on"
-				name="program.languageRequired"></td>
-		</tr>
-		<tr class="b">
-			<td colspan="2" style="padding-left: 10%;">
-				<div class="horizonton">
-					<div style="margin-bottom: 3px;">Language List</div>
-					<div>
-						<select id="sourceOfLanguage" name="sourceOfLanguage" multiple="multiple" size="7"
-							style="width: 200px;">
-							<option value="fr">French</option>
-						</select>
-					</div>
-				</div>
-				<div class="horizonton" style="padding-top: 40px;">
-					<div>
-						<input type="button" id="addLanguage" name="addLanguage" value=">>">
-					</div>
-					<div>
-						<input type="button" id="removeLanguage" name="removeLanguage" value="<<">
-					</div>
-				</div>
-				<div class="horizonton">
-					<div style="margin-bottom: 3px;">Required Language</div>
-					<div>
-						<select id="targetOfLanguage" name="targetOfLanguage" multiple="multiple" size="7"
-							style="width: 200px;">
-						</select>
-					</div>
-				</div>
-			</td>
-		</tr>
-	</table>
-	<br>
-	<table width="100%" border="1" cellspacing="2" cellpadding="3">
-		<tr class="b">
-			<td width="30%" class="beright">Other Criteria Required:</td>
-			<td><input type="checkbox" value="on"
-				name="program.otherRequired"></td>
-		</tr>
-		<tr class="b">
-			<td colspan="2" style="padding-left: 10%;">
-				<div class="horizonton">
-					<div style="margin-bottom: 3px;">Criteria List</div>
-					<div>
-						<select id="sourceOfCriteria" name="sourceOfCriteria" multiple="multiple" size="7"
-							style="width: 200px;">
-							<option value="other">Other</option>
-						</select>
-					</div>
-				</div>
-				<div class="horizonton" style="padding-top: 40px;">
-					<div>
-						<input type="button" id="addCriteria" name="addCriteria" value=">>">
-					</div>
-					<div>
-						<input type="button" id="removeCriteria" name="removeCriteria" value="<<">
-					</div>
-				</div>
-				<div class="horizonton">
-					<div style="margin-bottom: 3px;">Required Criteria</div>
-					<div>
-						<select id="targetOfCriteria" name="targetOfCriteria" multiple="multiple" size="7"
-							style="width: 200px;">
-						</select>
-					</div>
-				</div>
-			</td>
-		</tr>
-	</table>
-</fieldset>
-<br>
-<table width="100%" border="1" cellspacing="2" cellpadding="3">
-	<tr class="b">
-		<td width="30%" class="beright">Match Closed:</td>
-		<td><input type="checkbox" value="on"
-			name="program.matchClosed"></td>
-	</tr>
-	<tr class="b">
-		<td class="beright">Date Closed:</td>
-		<td><select name="program.dateClosed">
-				<option selected="selected" value=" ">04/05/2010</option>
-		</select></td>
-	</tr>
-	<tr class="b">
-		<td class="beright">Reason Closed:</td>
-		<td><select name="program.reasonClosed">
-				<option selected="selected" value=" ">None Selected</option>
-		</select></td>
-	</tr>
-</table>
+
+
+</form>
