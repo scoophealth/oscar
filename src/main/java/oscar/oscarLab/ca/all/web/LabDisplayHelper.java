@@ -28,7 +28,6 @@ package oscar.oscarLab.ca.all.web;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,7 +67,7 @@ public class LabDisplayHelper {
 		return ("" + demographicId + ':' + segmentId + ':' + labType + ':' + labDateTime);
 	}
 
-	public static CachedDemographicLabResult getRemoteLab(Integer remoteFacilityId, String remoteLabKey,Integer demographicId) throws MalformedURLException {
+	public static CachedDemographicLabResult getRemoteLab(Integer remoteFacilityId, String remoteLabKey,Integer demographicId)  {
 		
 		FacilityIdLabResultCompositePk pk = new FacilityIdLabResultCompositePk();
 		pk.setIntegratorFacilityId(remoteFacilityId);

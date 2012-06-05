@@ -3819,7 +3819,6 @@
         <ViolationValue>/src/main/webapp/form/formselect.jsp:&lt;html:options collection="formHiddenVector" property="formName"</ViolationValue>
         <ViolationValue>/src/main/webapp/form/formselect.jsp:&lt;html:options collection="formShownVector" property="formName"</ViolationValue>
         <ViolationValue>/src/main/webapp/form/study/ar2ping.jsp:StringBuffer sb = new StringBuffer(N);</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CA/ON/labValues.jsp:Hashtable h = (Hashtable) list.get(i);</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/ON/labValuesGraph.jsp:Hashtable h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/ON/labValuesGraph.jsp:String getChecked(Hashtable h,String reg){</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/ON/labValuesGraph.jsp:StringBuffer sb = new StringBuffer();</ViolationValue>
