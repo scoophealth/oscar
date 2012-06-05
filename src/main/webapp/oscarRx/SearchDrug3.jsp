@@ -77,7 +77,10 @@ if (rx_enhance!=null && rx_enhance.equals("true")) {
 
             response.sendRedirect("../noRights.html");
     %>
-</security:oscarSec><logic:notPresent name="RxSessionBean" scope="session">
+</security:oscarSec>
+
+
+<logic:notPresent name="RxSessionBean" scope="session">
     <logic:redirect href="error.html" />
 </logic:notPresent>
 <logic:present name="RxSessionBean" scope="session">
@@ -94,6 +97,15 @@ if (rx_enhance!=null && rx_enhance.equals("true")) {
 			String usefav=request.getParameter("usefav");
             String favid=request.getParameter("favid");
             int demoNo=bean.getDemographicNo();
+%>
+<security:oscarSec roleName="<%=roleName$%>"
+	objectName='<%="_rx$"+demoNo%>' rights="o"
+	reverse="<%=false%>">
+<bean:message key="demographic.demographiceditdemographic.accessDenied"/>
+<% response.sendRedirect("../acctLocked.html"); %>
+</security:oscarSec>
+
+<%         
             String providerNo=bean.getProviderNo();
             //String reRxDrugId=request.getParameter("reRxDrugId");
             HashMap hm=(HashMap)session.getAttribute("profileViewSpec");

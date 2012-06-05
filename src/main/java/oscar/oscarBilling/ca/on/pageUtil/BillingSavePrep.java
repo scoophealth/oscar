@@ -250,7 +250,7 @@ public class BillingSavePrep {
 		claim1Header.setRef_lab_num("");
 		claim1Header.setMan_review("");
 
-		claim1Header.setLocation(val.getParameter("xml_slicode").substring(0, 3));
+		claim1Header.setLocation(val.getParameter("xml_slicode").trim());
 
 		claim1Header.setDemographic_no(val.getParameter("demographic_no"));
 		claim1Header.setProviderNo(val.getParameter("xml_provider"));

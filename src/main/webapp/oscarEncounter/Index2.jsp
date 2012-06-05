@@ -50,7 +50,7 @@
 <security:oscarSec roleName="<%=roleName$%>" objectName="<%=eChart$%>"
 	rights="o" reverse="<%=false%>">
 You have no rights to access the data!
-<% response.sendRedirect("../noRights.html");  %>
+<% response.sendRedirect("../acctLocked.html");  %>
 </security:oscarSec>
 
 <%-- only principal has the save rights --%>
