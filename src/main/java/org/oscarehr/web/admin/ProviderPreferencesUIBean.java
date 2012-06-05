@@ -130,9 +130,9 @@ public final class ProviderPreferencesUIBean {
 		if (temp != null) providerPreference.setAppointmentScreenLinkNameDisplayLength(Integer.parseInt(temp));
 
 		String[] formNames = request.getParameterValues("encounterFormName");
-		Collection<String> formNamesList = providerPreference.getAppointmentScreenForms();
-		formNamesList.clear();
+		Collection<String> formNamesList = providerPreference.getAppointmentScreenForms();		
 		if (formNames != null) {
+			formNamesList.clear();
 			for (String formName : formNames) {
 				formNamesList.add(formName);
 			}
@@ -140,9 +140,9 @@ public final class ProviderPreferencesUIBean {
 
 		// get eForms for appointment screen
 		String[] formIds = request.getParameterValues("eformId");
-		Collection<Integer> eFormsIdsList = providerPreference.getAppointmentScreenEForms();
-		eFormsIdsList.clear();
+		Collection<Integer> eFormsIdsList = providerPreference.getAppointmentScreenEForms();		
 		if (formIds != null) {
+			eFormsIdsList.clear();
 			for (String formId : formIds) {
 				eFormsIdsList.add(Integer.parseInt(formId));
 			}
