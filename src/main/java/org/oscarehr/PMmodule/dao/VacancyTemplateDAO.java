@@ -25,9 +25,7 @@
 package org.oscarehr.PMmodule.dao;
 
 import java.util.List;
-
 import javax.persistence.Query;
-
 import org.oscarehr.PMmodule.model.VacancyTemplate;
 import org.oscarehr.common.dao.AbstractDao;
 import org.oscarehr.util.MiscUtils;
@@ -67,5 +65,22 @@ public class VacancyTemplateDAO extends AbstractDao<VacancyTemplate> {
 		return query.getResultList();	
 	}
 	
+	@SuppressWarnings("unchecked")
+    public List<VacancyTemplate> getActiveVacancyTemplatesByProgramId(Integer programId) {
+		String sqlCommand = "select * from vacancy_template where ACTIVE=1 and PROGRAM_ID=?1 ";
+
+		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
+		query.setParameter(1, programId);
+		
+		return query.getResultList();	
+	}
 	
+	 public List<VacancyTemplate> getActiveVacancyTemplatesByWlProgramId(Integer programId) {
+			String sqlCommand = "select * from vacancy_template where ACTIVE=1 and WL_PROGRAM_ID=?1 ";
+
+			Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
+			query.setParameter(1, programId);
+			
+			return query.getResultList();	
+	}
 }

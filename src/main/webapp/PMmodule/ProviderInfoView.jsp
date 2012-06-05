@@ -53,8 +53,14 @@ includes:
 		title="Program Name">
 		<a
 			href="<html:rewrite action="/PMmodule/ProgramManagerView"/>?id=<c:out value="${program.programId}"/>"><c:out
-			value="${program.program.name}" /></a>
+			value="${program.program.name}" />
+		</a>
+		</display:column>
+		<display:column title="">
+		<a href="<html:rewrite action="/PMmodule/ProgramManager.do"/>?method=edit&view.tab=vacancy_add&newVacancy=true&id=<c:out value="${program.programId}" />">
+			New Vacancy </a>
 	</display:column>
+	
 	<display:column property="role.name" sortable="true" title="Role" />
 	<display:column property="program.type" sortable="true"
 		title="Program Type" />
