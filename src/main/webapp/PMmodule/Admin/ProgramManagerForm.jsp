@@ -29,13 +29,14 @@
 <%@ page import="org.oscarehr.PMmodule.web.formbean.*"%>
 <%@ page import="org.oscarehr.PMmodule.model.Program"%>
 <%@ page import="org.apache.struts.validator.DynaValidatorForm"%>
+<%@ page import="org.apache.commons.lang.StringUtils"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 
 <html:form action="/PMmodule/ProgramManager">
 
 	<html:hidden property="view.tab" />
 	<html:hidden property="view.subtab" />
-	<html:hidden property="vacancyTemplateId" />
+	<html:hidden property="vacancyOrTemplateId" />
 	<input type="hidden" name="id"
 		value="<c:out value="${requestScope.id}"/>" />
 	<input type="hidden" name="method" value="edit" />
@@ -57,7 +58,7 @@
 					document.programManagerForm.submit();
 				}
 				function clickLink(tabName, subtabName, id) {
-					document.programManagerForm.elements['vacancyTemplateId'].value=id;
+					document.programManagerForm.elements['vacancyOrTemplateId'].value=id;
 					clickTab2(tabName, subtabName);
 				}
 			</script>
@@ -72,6 +73,9 @@
 			<div class="tabs">
 			<%
 					String selectedTab = request.getParameter("view.tab");
+					if(StringUtils.isBlank(selectedTab)) {
+						selectedTab = (String) request.getAttribute("view.tab");
+					}
 					String selectedSubtab = request.getParameter("view.subtab");
 					/*
 					if (selectedTab == null || selectedTab.trim().equals("")) {
@@ -196,7 +200,7 @@
 			</security:oscarSec>
 
 			<%} else {
-				if (selectedSubtab != null && !selectedTab.equals(selectedSubtab)) { %>
+				if (selectedSubtab != null && selectedSubtab!="" && !selectedTab.equals(selectedSubtab)) { %>
 				<jsp:include
 					page='<%="/PMmodule/Admin/ProgramEdit/" + selectedSubtab.toLowerCase().replaceAll(" ","_") + ".jsp"%>' />
 				<% } else { %>

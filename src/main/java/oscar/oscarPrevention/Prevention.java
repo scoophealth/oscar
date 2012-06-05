@@ -315,6 +315,8 @@ public class Prevention {
    }
 
    private int getNumMonths(Date dStart, Date dEnd) {
+	    if(dStart==null || dEnd==null)
+	    	return -1;
         int i = 0;
         log.debug("Getting the number of months between "+getStrDate(dStart)+ " and "+getStrDate(dEnd) );
         Calendar calendar = Calendar.getInstance();
@@ -333,6 +335,7 @@ public class Prevention {
     }
 
    private int getNumYears(Date dStart, Date dEnd) {
+	   if(dStart==null || dEnd==null) return -1;
         int i = 0;
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(dStart);
@@ -347,6 +350,7 @@ public class Prevention {
 
    private int getNumDays(Date dStart, Date dEnd) {
         long diffDays = -1;
+        if(dStart == null || dEnd==null) return -1;
         try{
         long timeDiff = dStart.getTime() - dEnd.getTime();
         diffDays = timeDiff/(24*60*60*1000);

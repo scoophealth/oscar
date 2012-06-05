@@ -250,6 +250,13 @@
 -->
 
 <div>
+	
+		<span>Wait-list Management</span>
+		<div><span><a target='_blank' href='<c:out value="${ctx}"/>/PMmodule/incVacancyMatches.jsp'>New Vacancies</a></span></div>
+		<div><span><a target='_blank' href='<c:out value="${ctx}"/>/PMmodule/incVacancyList.jsp'>All Vacancies</a></span></div>
+</div>
+
+<div>
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_pmm_agencyList" rights="r">
 		<span>Information</span>
 		<div><span><a target='_blank'
