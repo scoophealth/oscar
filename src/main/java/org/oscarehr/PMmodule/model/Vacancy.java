@@ -22,7 +22,7 @@
  */
 package org.oscarehr.PMmodule.model;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,41 +30,51 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.oscarehr.common.model.AbstractModel;
 
 /**
- * Vacancy entity. @author MyEclipse Persistence Tools
+ * Vacancy entity. @author azhou
  */
 @Entity
 @Table(name = "vacancy")
-public class Vacancy extends AbstractModel<Long> implements java.io.Serializable {
+public class Vacancy extends AbstractModel<Integer> implements java.io.Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "VACANCY_ID", unique=true, nullable=false)
-	private Long vacancyId;
+	private Integer id;
 	@Column(name = "TEMPLATE_ID", nullable = false)
 	private Integer templateId;
 	@Column(name = "STATUS", nullable = false, length = 24)
 	private String status;
+	
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "DATE_CLOSED", length = 19)
-	private Timestamp dateClosed;
+	private Date dateClosed;
+	
 	@Column(name = "REASON_CLOSED")
 	private String reasonClosed;
-
+	@Column(name = "WL_PROGRAM_ID", nullable = false)
+	private Integer	wlProgramId;
+	
+	@Column(name = "DATE_CREATE", length = 19)
+	private Date dateCreated;
+	
 	/**
 	 * @return the id
 	 */
-	public Long getId() {
-		return vacancyId;
+	public Integer getId() {
+		return id;
 	}
 
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(Long id) {
-		this.vacancyId = id;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 	
 	/** default constructor */
@@ -78,7 +88,7 @@ public class Vacancy extends AbstractModel<Long> implements java.io.Serializable
 	}
 
 	/** full constructor */
-	public Vacancy(Integer templateId, String status, Timestamp dateClosed,
+	public Vacancy(Integer templateId, String status, Date dateClosed,
 			String reasonClosed) {
 		this.templateId = templateId;
 		this.status = status;
@@ -117,15 +127,24 @@ public class Vacancy extends AbstractModel<Long> implements java.io.Serializable
 	/**
      * @return the dateClosed
      */
-    public Timestamp getDateClosed() {
+    public Date getDateClosed() {
     	return dateClosed;
     }
 
 	/**
      * @param dateClosed the dateClosed to set
      */
-    public void setDateClosed(Timestamp dateClosed) {
+    public void setDateClosed(Date dateClosed) {
     	this.dateClosed = dateClosed;
+    }
+
+    
+	public Date getDateCreated() {
+    	return dateCreated;
+    }
+
+	public void setDateCreated(Date dateCreated) {
+    	this.dateCreated = dateCreated;
     }
 
 	/**
@@ -141,5 +160,15 @@ public class Vacancy extends AbstractModel<Long> implements java.io.Serializable
     public void setReasonClosed(String reasonClosed) {
     	this.reasonClosed = reasonClosed;
     }
+
+	public Integer getWlProgramId() {
+    	return wlProgramId;
+    }
+
+	public void setWlProgramId(Integer wlProgramId) {
+    	this.wlProgramId = wlProgramId;
+    }
+    
+    
 
 }
