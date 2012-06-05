@@ -171,7 +171,7 @@ if (bMultisites) {
 }
 //multisite ends =======================
 %>
-
+<%@ page import="oscar.dao.*" %>
 <%@ page
 	import="java.lang.*, java.util.*, java.text.*,java.net.*,java.sql.*,oscar.*"
 	errorPage="errorpage.jsp"%>
@@ -747,7 +747,7 @@ function refreshTabAlerts(id) {
 						size="-2" color="blue"><%=strHolidayName.toString()%></font> <%
   while (bFistEntry?it.hasNext():true) { 
     date = bFistEntry?it.next():date;
-    String _scheduleDate = year+"-"+MyDateFormat.getDigitalXX(month)+"-"+MyDateFormat.getDigitalXX(dateGrid[i][j]);
+    String _scheduleDate = year+"-"+MyDateFormat.getDigitalXX(month)+"-"+MyDateFormat.getDigitalXX(dateGrid[i][j]);    
     if(!String.valueOf(date.get("sdate")).equals(_scheduleDate) ) {
       bFistEntry = false;
       break;
@@ -756,12 +756,16 @@ function refreshTabAlerts(id) {
       if(String.valueOf(date.get("available")).equals("0")) continue;
     }
     if(isTeamOnly || !providerview.startsWith("_grp_",0) || myGrpBean.containsKey(String.valueOf(date.get("provider_no"))) ) {
-    	if (bMultisites && CurrentSiteMap.get(date.get("reason")) != null && ( selectedSite == null || "NONE".equals(date.get("reason")) || selectedSite.equals(date.get("reason")))) {
-%> <br>
-<% if (bMultisites) { out.print(getSiteHTML((String)date.get("reason"), sites)); } %>
-					<span class='datepname'>&nbsp;<%=providerNameBean.getShortDef(String.valueOf(date.get("provider_no")),"",NameMaxLen )%></span><span
+    	%>
+    <br><span class='datepname'>&nbsp;<%=providerNameBean.getShortDef(String.valueOf(date.get("provider_no")),"",NameMaxLen )%></span><span
 						class='datephour'><%=date.get("hour") %></span>
-<% if (!bMultisites) { %>						
+	<%
+    	if (bMultisites && CurrentSiteMap.get(date.get("reason")) != null && ( selectedSite == null || "NONE".equals(date.get("reason")) || selectedSite.equals(date.get("reason")))) {
+%> 
+<% if (bMultisites) { out.print(getSiteHTML((String)date.get("reason"), sites)); } %>
+					
+<% if (!bMultisites) { %>	
+					
 						<span class='datepreason'><%=date.get("reason") %></span>
 <% } %>
 <%  } } } %>
