@@ -29,6 +29,7 @@
 <%@page import="org.oscarehr.phr.PHRAuthentication"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%@page import="org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.model.UserProperty, org.springframework.web.context.support.WebApplicationContextUtils" %>
 <%
 if(session.getValue("user") == null) response.sendRedirect("../logout.htm");
 if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
@@ -146,6 +147,14 @@ String viewstatus = request.getParameter("viewstatus");
 if( viewstatus == null ) {
     viewstatus = "active";
 }
+
+UserPropertyDAO pref = (UserPropertyDAO) WebApplicationContextUtils.getWebApplicationContext(pageContext.getServletContext()).getBean("UserPropertyDAO"); 
+UserProperty up = pref.getProp(user_no, UserProperty.EDOC_BROWSER_IN_DOCUMENT_REPORT);
+Boolean DocumentBrowserLink=false;
+ 
+if ( up != null && up.getValue() != null && up.getValue().equals("yes")){ 
+   DocumentBrowserLink = true;
+                            }
 %>
 <html:html locale="true">
 <head>
@@ -373,7 +382,9 @@ function popup1(height, width, url, windowName){
                           }
                           %> <a id="plusminus<%=i%>"
 				href="javascript: showhide('documentsInnerDiv<%=i%>', 'plusminus<%=i%>');">
-			-- <%= currentkey%> </a> <span class="tabs"> <bean:message key="dms.documentReport.msgView"/>: <a
+			-- <%= currentkey%> </a>
+                            <%if(DocumentBrowserLink) {%><a href="../dms/documentBrowser.jsp?function=<%=module%>&functionid=<%=moduleid%>&categorykey=<%=currentkey%>"><bean:message key="dms.documentReport.msgBrowser"/></a><%}%>
+                            <span class="tabs"> <bean:message key="dms.documentReport.msgView"/>: <a
 				href="?function=<%=module%>&functionid=<%=moduleid%>">All</a> <% for (int i3=0; i3<doctypes.size(); i3++) { %>
 			| <a
 				href="?function=<%=module%>&functionid=<%=moduleid%>&view=<%=(String) doctypes.get(i3)%>"><%=(String) doctypes.get(i3)%></a>

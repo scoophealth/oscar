@@ -89,7 +89,9 @@ public class UserProperty extends AbstractModel<Integer> implements Serializable
     @Transient public final static String DEFAULT_DX_CODE = "default_dx_code";
     @Transient public final static String CPP_SINGLE_LINE="cpp_single_line";
     @Transient public final static String LAB_ACK_COMMENT="lab_ack_comment";
-
+    @Transient public final static String EDOC_BROWSER_IN_MASTER_FILE="edoc_browser_in_master_file";
+    @Transient public final static String EDOC_BROWSER_IN_DOCUMENT_REPORT="edoc_browser_in_document_report";
+  
 
     @Transient public static final String INTEGRATOR_DEMOGRAPHIC_SYNC = "integrator_demographic_sync";
     @Transient public static final String INTEGRATOR_DEMOGRAPHIC_ISSUES = "integrator_demographic_issues";
