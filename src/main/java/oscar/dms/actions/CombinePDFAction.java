@@ -50,6 +50,7 @@ public class CombinePDFAction extends Action {
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         String[] files = request.getParameterValues("docNo");
+        String ContentDisposition=request.getParameter("ContentDisposition");
         ArrayList<Object> alist = new ArrayList<Object>();
         if (files != null){
             MiscUtils.getLogger().debug("size = "+files.length);
@@ -61,7 +62,15 @@ public class CombinePDFAction extends Action {
             }
             if (alist.size() > 0 ){
                 response.setContentType("application/pdf");  //octet-stream
+                if(ContentDisposition!=null && ContentDisposition.equals("inline")) {
+                    response.setHeader("Transfer-Encoding", "chunked"); 
+                    response.setHeader("Cache-Control", "cache, must-revalidate"); // IE workaround
+                    response.setHeader("Pragma", "public"); // IE workaround
+                    response.setHeader("Content-Disposition", "inline; filename=\"combinedPDF-"+UtilDateUtilities.getToday("yyyy-MM-dd.hh.mm.ss")+".pdf\"");
+                } else {
+
                 response.setHeader("Content-Disposition", "attachment; filename=\"combinedPDF-"+UtilDateUtilities.getToday("yyyy-MM-dd.hh.mm.ss")+".pdf\"");
+                }
                 try {
                     ConcatPDF.concat(alist,response.getOutputStream());
                 } catch (IOException ex) {MiscUtils.getLogger().error("Error", ex);
