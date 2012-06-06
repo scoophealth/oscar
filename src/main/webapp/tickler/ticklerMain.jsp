@@ -63,6 +63,7 @@
   View v;
   String providerview;
   String assignedTo;
+  String mrpview;
   if( request.getParameter("providerview")==null ) {
           providerview = "all";
   }
@@ -76,7 +77,13 @@
   else {
       assignedTo = request.getParameter("assignedTo");
   }
-
+  
+  if( request.getParameter("mrpview") == null ) {
+	  mrpview = "all";
+  }
+  else {
+	  mrpview = request.getParameter("mrpview");
+  }
 
 %>
 
@@ -474,13 +481,27 @@ var beginD = "1900-01-01"
         <option value="C" <%=ticklerview.equals("C")?"selected":""%>><bean:message key="tickler.ticklerMain.formCompleted"/></option>
         <option value="D" <%=ticklerview.equals("D")?"selected":""%>><bean:message key="tickler.ticklerMain.formDeleted"/></option>                   
         </select>
-        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b><bean:message key="tickler.ticklerMain.msgCreator"/> </b></font>
+        &nbsp; &nbsp; <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b>MRP</b></font> 
+        <select id="mrpview" name="mrpview">
+        <option value="all" <%=mrpview.equals("all")?"selected":""%>><bean:message key="tickler.ticklerMain.formAllProviders"/></option>
+        <%
+        ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
+        List<Provider> providers = providerDao.getActiveProviders(); 
+        for (Provider p : providers) {  
+        %>
+        <option value="<%=p.getProviderNo()%>" <%=mrpview.equals(p.getProviderNo())?"selected":""%>><%=p.getLastName()%>,<%=p.getFirstName()%></option>
+        <%
+            }
+
+        %>
+          </select>
+        
+        &nbsp; &nbsp; <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b><bean:message key="tickler.ticklerMain.msgCreator"/> </b></font>
 
         <select id="providerview" name="providerview">
         <option value="all" <%=providerview.equals("all")?"selected":""%>><bean:message key="tickler.ticklerMain.formAllProviders"/></option>
         <%  
-            ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
-            List<Provider> providers = providerDao.getActiveProviders(); 
+            
             for (Provider p : providers) {              
         %>
         <option value="<%=p.getProviderNo()%>" <%=providerview.equals(p.getProviderNo())?"selected":""%>><%=p.getLastName()%>,<%=p.getFirstName()%></option>
@@ -609,6 +630,10 @@ function changeSite(sel) {
                             filter.setStatus(ticklerview);
                             filter.setStartDate(dateBegin);
                             filter.setEndDate(dateEnd);
+                            
+                            if( !mrpview.isEmpty() && !mrpview.equals("all")) {
+                            	filter.setMrp(mrpview);
+                            }
                             
                             if (!providerview.isEmpty() && !providerview.equals("all")) {
                                 filter.setProvider(providerview);
