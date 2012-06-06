@@ -125,6 +125,7 @@ public class TicklerDAO extends HibernateDaoSupport {
      }
     
     private String getTicklerQueryString(String query, List paramList, CustomFilter filter){
+    		boolean includeMRPClause = true;
             boolean includeProviderClause = true;
             boolean includeAssigneeClause = true;
             boolean includeStatusClause = true;
@@ -158,10 +159,18 @@ public class TicklerDAO extends HibernateDaoSupport {
             if (filter.getStatus().equals("") || filter.getStatus().equals("Z")) {
                     includeStatusClause = false;
             }
+            
+            if( filter.getMrp() == null || filter.getMrp().equals("All Providers") || filter.getMrp().equals("") ) {
+            	includeMRPClause = false;
+            }
 
             
             paramList.add(filter.getStart_date());
             paramList.add(new Date(filter.getEnd_date().getTime()+DateUtils.MILLIS_PER_DAY));
+            
+            if(includeMRPClause) {
+            	query = "select t from Tickler t, Demographic d where t.service_date >= ? and t.service_date <= ? and d.DemographicNo = cast(t.demographic_no as integer) and d.ProviderNo = '" + filter.getMrp() + "'";
+            }
 
             //TODO: IN clause
             if(includeProviderClause) {

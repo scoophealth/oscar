@@ -55,6 +55,7 @@ public class CustomFilter extends BaseObject {
 	private String status;
 	private String priority;
 
+	private String mrp;
 	private Set providers;
 	private Set assignees;
 	private Program program;
@@ -92,6 +93,14 @@ public class CustomFilter extends BaseObject {
 		setPriority("Normal");
 		this.setEnd_date(new Date());
 		setSort_order("asc");
+	}
+	
+	public String getMrp() {
+		return mrp;
+	}
+	
+	public void setMrp(String providerNumber) {
+		mrp = providerNumber;		
 	}
 
 	public Set getAssignees() {
