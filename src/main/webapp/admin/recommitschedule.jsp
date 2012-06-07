@@ -72,7 +72,7 @@ window.close();
 	<span style="color: red"><c:out
 		value="${requestScope.schedule_err}" /></span>
 	<h3>Schedule to resubmit hsfo xml</h3>
-	<nested:form action="/admin/RecommitHSFO">
+	<nested:form action="/admin/RecommitHSFO2">
 		<nested:hidden property="method" value="saveSchedule" />
 		<nested:hidden property="isCheck" />
 		<nested:hidden property="schedule_flag" />

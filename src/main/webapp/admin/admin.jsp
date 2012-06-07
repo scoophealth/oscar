@@ -802,6 +802,17 @@ div.logoutBox {
 				}
 			%>
 
+			  <%
+                                if (oscarVariables.getProperty("hsfo2.loginSiteCode", "") != null && !"".equalsIgnoreCase(oscarVariables.getProperty("hsfo2.loginSiteCode", "")))
+                                {
+                        %>
+                        <li><a href="#"
+                                onclick='popupPage(400,600,&quot;<html:rewrite page="/admin/RecommitHSFO2.do"/>?method=showSchedule&quot;);return false;'>schedule HSFO2 XML resubmit</a></li>
+                        <%
+                                }
+                        %>
+
+
 			<% if (OscarProperties.getInstance().isFaxEnabled()) { %>
             <li><a href="#" onclick='popupPage(600, 800,&quot;<html:rewrite page="/admin/faxStatus.do" />&quot;);return false;'><bean:message key="admin.faxStatus.faxStatus" /></a></li>
             <% } %>

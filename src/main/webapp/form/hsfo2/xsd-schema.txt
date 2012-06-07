@@ -1,0 +1,1220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="stringEmpty">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="stringFollowUpIntervalUnits">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value=""/>
+      <xs:enumeration value="mo"/>
+      <xs:enumeration value="wk"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="stringFrequency">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value=""/>
+      <xs:enumeration value="Always"/>
+      <xs:enumeration value="Often"/>
+      <xs:enumeration value="Sometimes"/>
+      <xs:enumeration value="Never"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="stringHtnDxType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value=""/>
+      <xs:enumeration value="ElevatedBpReadings"/>
+      <xs:enumeration value="PrimaryHtn"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="stringNonEmpty">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="32"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="stringPostalCode">
+    <xs:union memberTypes="stringEmpty">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[A-Z][0-9][A-Z][0-9][A-Z][0-9]"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="stringGoalView">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value=""/>
+      <xs:enumeration value="Uninterested"/>
+      <xs:enumeration value="Thinking"/>
+      <xs:enumeration value="Deciding"/>
+      <xs:enumeration value="TakingAction"/>
+      <xs:enumeration value="Maintaining"/>
+      <xs:enumeration value="Relapsing"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="stringHsfHmpStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Enrolled"/>
+      <xs:enumeration value="NotEnrolled"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="stringRxToday">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value=""/>
+      <xs:enumeration value="Same"/>
+      <xs:enumeration value="Increase"/>
+      <xs:enumeration value="Decrease"/>
+      <xs:enumeration value="Stop"/>
+      <xs:enumeration value="Start"/>
+      <xs:enumeration value="InClassSwitch"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="stringSex">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value=""/>
+      <xs:enumeration value="Male"/>
+      <xs:enumeration value="Female"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="stringTimeAgoHtnDx">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value=""/>
+      <xs:enumeration value="AtLeast1YrAgo"/>
+      <xs:enumeration value="Under1YrAgo"/>
+      <xs:enumeration value="NotDiag"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="stringYesNo">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value=""/>
+      <xs:enumeration value="Yes"/>
+      <xs:enumeration value="No"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="dateBirthDate">
+    <xs:union memberTypes="stringEmpty">
+      <xs:simpleType>
+        <xs:restriction base="xs:date">
+          <xs:minInclusive value="1901-01-01"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="dateRecent">
+    <xs:restriction base="xs:date">
+      <xs:minInclusive value="2000-01-01"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="dateTimeRecent">
+    <xs:restriction base="xs:dateTime">
+      <xs:minInclusive value="2000-01-01T00:00:00"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="dateHsfHmp">
+    <xs:restriction base="xs:date">
+      <xs:minInclusive value="2007-01-01"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="dateTimeHsfHmp">
+    <xs:restriction base="xs:dateTime">
+      <xs:minInclusive value="2007-01-01T00:00:00"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="integerSiteCode_key">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="1"/>
+      <xs:maxInclusive value="9999"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="integerPhysActivity_minPerWk">
+    <xs:union memberTypes="stringEmpty">
+      <xs:simpleType>
+        <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="999"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="integerSmoking_cigsPerDay">
+    <xs:union memberTypes="stringEmpty">
+      <xs:simpleType>
+        <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="99"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="integerAlcohol_drinksPerWk">
+    <xs:union memberTypes="stringEmpty">
+      <xs:simpleType>
+        <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="99"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="integerGoalImportance">
+    <xs:union memberTypes="stringEmpty">
+      <xs:simpleType>
+        <xs:restriction base="xs:integer">
+          <xs:minInclusive value="1"/>
+          <xs:maxInclusive value="10"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="integerGoalConfidence">
+    <xs:union memberTypes="stringEmpty">
+      <xs:simpleType>
+        <xs:restriction base="xs:integer">
+          <xs:minInclusive value="1"/>
+          <xs:maxInclusive value="10"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="integerSBP">
+    <xs:union memberTypes="stringEmpty">
+      <xs:simpleType>
+        <xs:restriction base="xs:integer">
+          <xs:minInclusive value="40"/>
+          <xs:maxInclusive value="300"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="integerDBP">
+    <xs:union memberTypes="stringEmpty">
+      <xs:simpleType>
+        <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="160"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="integerMissedMeds_perWk">
+    <xs:union memberTypes="stringEmpty">
+      <xs:simpleType>
+        <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="42"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+ <xs:simpleType name="integerFollowUpInterval">
+    <xs:union memberTypes="stringEmpty">
+      <xs:simpleType>
+        <xs:restriction base="xs:integer">
+          <xs:minInclusive value="1"/>
+          <xs:maxInclusive value="52"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="doubleHeight_cm">
+    <xs:union memberTypes="stringEmpty">
+      <xs:simpleType>
+        <xs:restriction base="xs:double">
+          <xs:minInclusive value="100.0"/>
+          <xs:maxInclusive value="250.0"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="doubleWeight_kg">
+    <xs:union memberTypes="stringEmpty">
+      <xs:simpleType>
+        <xs:restriction base="xs:double">
+          <xs:minInclusive value="35.0"/>
+          <xs:maxInclusive value="250.0"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="doubleWaistCircumf_cm">
+    <xs:union memberTypes="stringEmpty">
+      <xs:simpleType>
+        <xs:restriction base="xs:double">
+          <xs:minInclusive value="40.0"/>
+          <xs:maxInclusive value="200.0"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="doubleLDL_mM">
+    <xs:union memberTypes="stringEmpty">
+      <xs:simpleType>
+        <xs:restriction base="xs:double">
+          <xs:minInclusive value="0.5"/>
+          <xs:maxInclusive value="10.0"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="doubleTCtoHDL">
+    <xs:union memberTypes="stringEmpty">
+      <xs:simpleType>
+        <xs:restriction base="xs:double">
+          <xs:minInclusive value="1.0"/>
+          <xs:maxInclusive value="30.0"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="doubleHDL_mM">
+    <xs:union memberTypes="stringEmpty">
+      <xs:simpleType>
+        <xs:restriction base="xs:double">
+          <xs:minInclusive value="0.4"/>
+          <xs:maxInclusive value="8.0"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="doubleTriglycerides_mM">
+    <xs:union memberTypes="stringEmpty">
+      <xs:simpleType>
+        <xs:restriction base="xs:double">
+          <xs:minInclusive value="0.2"/>
+          <xs:maxInclusive value="30.0"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="doubleA1C_fraction">
+    <xs:union memberTypes="stringEmpty">
+      <xs:simpleType>
+        <xs:restriction base="xs:double">
+          <xs:minInclusive value="0.04"/>
+          <xs:maxInclusive value="0.25"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="doubleFBS_mM">
+    <xs:union memberTypes="stringEmpty">
+      <xs:simpleType>
+        <xs:restriction base="xs:double">
+          <xs:minInclusive value="2.0"/>
+          <xs:maxInclusive value="40.0"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="integerEGFR_mLPerMin">
+    <xs:union memberTypes="stringEmpty">
+      <xs:simpleType>
+        <xs:restriction base="xs:integer">
+          <xs:minInclusive value="5"/>
+          <xs:maxInclusive value="120"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="doubleACR_mgPermmol">
+    <xs:union memberTypes="stringEmpty">
+      <xs:simpleType>
+        <xs:restriction base="xs:double">
+          <xs:minInclusive value="0.0"/>
+          <xs:maxInclusive value="5000.0"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:element name="HsfHmpData">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Site" minOccurs="1" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="SitePatient" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="txt_Surname" minOccurs="1" maxOccurs="1">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="txt_GivenNames" minOccurs="1" maxOccurs="1">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="dat_BirthDate" minOccurs="1" maxOccurs="1">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="dateBirthDate" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="sel_Sex" minOccurs="1" maxOccurs="1">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="stringSex" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="txt_EmrHcpID" minOccurs="1" maxOccurs="1">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="txt_PostalCode" minOccurs="1" maxOccurs="1">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="stringPostalCode" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="sel_HsfHmpStatus" minOccurs="1" maxOccurs="1">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="stringHsfHmpStatus" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="dat_HsfHmpStatusDate" minOccurs="1" maxOccurs="1">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="dateHsfHmp" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="form_HsfHmpFlowsheet_Baseline" minOccurs="0" maxOccurs="1">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="dat_HmpBslVisitDate" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="dateHsfHmp" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_Ethnic_White" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_Ethnic_Black" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_Ethnic_EIndian" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_Ethnic_Pakistani" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_Ethnic_SriLankan" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_Ethnic_Bangladeshi" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_Ethnic_Chinese" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_Ethnic_Japanese" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_Ethnic_Korean" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_Ethnic_Hispanic" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_Ethnic_FirstNation" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_Ethnic_Other" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_Ethnic_Refused" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_Ethnic_Unknown" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="sel_HtnDxAgoAtHmpBsl" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="stringTimeAgoHtnDx" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_RxAtHmpBsl_diu" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_RxAtHmpBsl_ace" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_RxAtHmpBsl_arb" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_RxAtHmpBsl_bb" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_RxAtHmpBsl_ccb" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_RxAtHmpBsl_othhtn" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_RxAtHmpBsl_sta" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_RxAtHmpBsl_othlip" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_RxAtHmpBsl_oha" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_RxAtHmpBsl_ins" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_RxAtHmpBsl_asa" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="form_HsfHmpFlowsheet" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="sel_Risk_Weight" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="stringYesNo" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="sel_Risk_PhysActivity" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="stringYesNo" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="sel_Risk_Diet" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="stringYesNo" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="sel_Risk_Smoking" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="stringYesNo" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="sel_Risk_Alcohol" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="stringYesNo" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="sel_Risk_Stress" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="stringYesNo" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_Goal_Weight" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_Goal_PhysActivity" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_Goal_Salt" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_Goal_DashDiet" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_Goal_Smoking" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_Goal_Alcohol" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_Goal_Stress" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="int_PhysActivity_minPerWk" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="integerPhysActivity_minPerWk" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="int_Smoking_cigsPerDay" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="integerSmoking_cigsPerDay" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="int_Alcohol_drinksPerWk" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="integerAlcohol_drinksPerWk" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="sel_HighSalt" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="stringFrequency" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="sel_DashDiet" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="stringFrequency" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="sel_Stressed" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="stringFrequency" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="sel_GoalView" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="stringGoalView" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="int_GoalImportance" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="integerGoalImportance" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="int_GoalConfidence" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="integerGoalConfidence" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_RxSideEffects_diu" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="sel_RxToday_diu" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="stringRxToday" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_RxSideEffects_ace" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="sel_RxToday_ace" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="stringRxToday" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_RxSideEffects_arb" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="sel_RxToday_arb" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="stringRxToday" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_RxSideEffects_bb" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="sel_RxToday_bb" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="stringRxToday" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_RxSideEffects_ccb" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="sel_RxToday_ccb" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="stringRxToday" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_RxSideEffects_othhtn" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="sel_RxToday_othhtn" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="stringRxToday" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_RxSideEffects_sta" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="sel_RxToday_sta" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="stringRxToday" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_RxSideEffects_othlip" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="sel_RxToday_othlip" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="stringRxToday" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_RxSideEffects_oha" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="sel_RxToday_oha" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="stringRxToday" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_RxSideEffects_ins" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="sel_RxToday_ins" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="stringRxToday" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_RxSideEffects_asa" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="sel_RxToday_asa" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="stringRxToday" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="int_MissedMeds_perWk" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="integerMissedMeds_perWk" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="sel_HerbalMeds" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="stringYesNo" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="sel_AdequateDrugCoverage" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="stringYesNo" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="cmp_FollowUp" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="Interval" type="integerFollowUpInterval" use="required" />
+                              <xs:attribute name="Units" type="stringFollowUpIntervalUnits" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_HsfTool_TPO" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_HsfTool_BPAP" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_BpMon_Home" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_BpMon_Ambul" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_Refer_HCP" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="b_Refer_CommunRes" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:attribute name="value" type="xs:boolean" use="required" />
+                              <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                              <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      <xs:attribute name="VisitDate_key" type="dateHsfHmp" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="sel_HtnDx_type" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="stringHtnDxType" use="required" />
+                        <xs:attribute name="valueDate" type="dateRecent" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="b_Hx_Dyslipidemia" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="xs:boolean" use="required" />
+                        <xs:attribute name="valueDate" type="dateRecent" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="b_Hx_DM" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="xs:boolean" use="required" />
+                        <xs:attribute name="valueDate" type="dateRecent" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="b_Hx_Kidney" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="xs:boolean" use="required" />
+                        <xs:attribute name="valueDate" type="dateRecent" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="b_Hx_Obesity" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="xs:boolean" use="required" />
+                        <xs:attribute name="valueDate" type="dateRecent" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="b_Hx_CHD" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="xs:boolean" use="required" />
+                        <xs:attribute name="valueDate" type="dateRecent" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="b_Hx_StrokeTIA" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="xs:boolean" use="required" />
+                        <xs:attribute name="valueDate" type="dateRecent" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="b_Hx_Depression" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="xs:boolean" use="required" />
+                        <xs:attribute name="valueDate" type="dateRecent" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="b_FamHx_Htn" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="xs:boolean" use="required" />
+                        <xs:attribute name="valueDate" type="dateRecent" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="b_FamHx_Dyslipidemia" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="xs:boolean" use="required" />
+                        <xs:attribute name="valueDate" type="dateRecent" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="b_FamHx_DM" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="xs:boolean" use="required" />
+                        <xs:attribute name="valueDate" type="dateRecent" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="b_FamHx_Kidney" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="xs:boolean" use="required" />
+                        <xs:attribute name="valueDate" type="dateRecent" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="b_FamHx_Obesity" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="xs:boolean" use="required" />
+                        <xs:attribute name="valueDate" type="dateRecent" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="b_FamHx_CHD" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="xs:boolean" use="required" />
+                        <xs:attribute name="valueDate" type="dateRecent" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="b_FamHx_StrokeTIA" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="xs:boolean" use="required" />
+                        <xs:attribute name="valueDate" type="dateRecent" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="b_FamHx_Depression" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="xs:boolean" use="required" />
+                        <xs:attribute name="valueDate" type="dateRecent" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="cmp_BP" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="Systolic" type="integerSBP" use="required" />
+                        <xs:attribute name="Diastolic" type="integerDBP" use="required" />
+                        <xs:attribute name="AutoOfficeMonitor" type="stringYesNo" use="required" />
+                        <xs:attribute name="valueDate" type="dateRecent" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="dbl_Height_cm" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="doubleHeight_cm" use="required" />
+                        <xs:attribute name="valueDate" type="dateRecent" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="dbl_Weight_kg" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="doubleWeight_kg" use="required" />
+                        <xs:attribute name="valueDate" type="dateRecent" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="dbl_WaistCircumf_cm" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="doubleWaistCircumf_cm" use="required" />
+                        <xs:attribute name="valueDate" type="dateRecent" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="dbl_LDL_mM" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="doubleLDL_mM" use="required" />
+                        <xs:attribute name="valueDate" type="dateRecent" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="dbl_TCtoHDL" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="doubleTCtoHDL" use="required" />
+                        <xs:attribute name="valueDate" type="dateRecent" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="dbl_HDL_mM" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="doubleHDL_mM" use="required" />
+                        <xs:attribute name="valueDate" type="dateRecent" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="dbl_Triglycerides_mM" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="doubleTriglycerides_mM" use="required" />
+                        <xs:attribute name="valueDate" type="dateRecent" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="dbl_A1C_fraction" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="doubleA1C_fraction" use="required" />
+                        <xs:attribute name="valueDate" type="dateRecent" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="dbl_FBS_mM" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="doubleFBS_mM" use="required" />
+                        <xs:attribute name="valueDate" type="dateRecent" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="int_eGFR_mLPerMin" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="integerEGFR_mLPerMin" use="required" />
+                        <xs:attribute name="valueDate" type="dateRecent" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="dbl_ACR_mgPermmol" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="value" type="doubleACR_mgPermmol" use="required" />
+                        <xs:attribute name="valueDate" type="dateRecent" use="required" />
+                        <xs:attribute name="signedWho" type="stringNonEmpty" use="required" />
+                        <xs:attribute name="signedWhen" type="dateTimeRecent" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="EmrPatient_key" type="stringNonEmpty" use="required" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+           <xs:attribute name="HsfSiteCode_key" type="integerSiteCode_key" use="required" />
+           </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="versionDate" type="xs:date" use="required" fixed="2010-12-09"/>
+      <xs:attribute name="dataBeginDate" type="dateRecent" use="required" />
+      <xs:attribute name="dataEndDate" type="dateRecent" use="required" />
+      <xs:attribute name="extractedWho" type="stringNonEmpty" use="required" />
+      <xs:attribute name="extractedWhen" type="dateTimeHsfHmp" use="required" />
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
+
