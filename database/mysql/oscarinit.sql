@@ -9241,6 +9241,7 @@ create table Episode (
 
 CREATE TABLE formONAREnhanced(
   ID int(10) NOT NULL  auto_increment,
+  episodeId int(10),
   obxhx_num varchar(10) default '0',
   rf_num varchar(10) default '0',
   sv_num varchar(10) default '0',
@@ -10207,7 +10208,6 @@ CREATE TABLE formONAREnhanced(
   PRIMARY KEY (ID)
 ) ;
 
-
 CREATE TABLE form_hsfo2_visit (
  	ID int(10) NOT NULL auto_increment,
   demographic_no int(10) NOT NULL,
@@ -10385,3 +10385,17 @@ CREATE TABLE `hsfo_recommit_schedule` (
   `check_flag` tinyint(1) ,   
    PRIMARY KEY  (`id`)                     
    ) ; 
+
+CREATE TABLE `PageMonitor` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  pageName varchar(100) NOT NULL,
+  session varchar(100),
+  remoteAddr varchar(20),
+  locked tinyint(1),
+  updateDate timestamp not null,
+  timeout int(10),
+  providerNo varchar(10),
+  providerName varchar(100),
+  PRIMARY KEY (`id`)
+);
+

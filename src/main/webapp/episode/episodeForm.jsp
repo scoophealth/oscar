@@ -88,7 +88,8 @@
         	$('input[name="episode.status"]').val('<%=episode.getStatus()%>');
         	$('input[name="episode.id"]').val('<%=episode.getId()%>');
         	$( "#description" ).val('<%=episode.getDescription()%>');
-        	$('input[name="episode.codingSystem"]').val('<%=episode.getCodingSystem()%>');
+        	$('select[name="episode.codingSystem"]').val('<%=episode.getCodingSystem()%>');
+        	$('#search_coding_system').val('<%=episode.getCodingSystem()%>');
         	$('input[name="episode.demographicNo"]').val('<%=episode.getDemographicNo()%>');
         	$( "#startDate" ).val('<%=episode.getStartDateStr()%>');
         	$( "#endDate" ).val('<%=episode.getEndDateStr()%>');
@@ -282,7 +283,7 @@ br {
 								%>
 								<select id="episode.status" name="episode.status">
 									<option value="Current" <%=("Current".equals(status))?selected:"" %>>Current</option>									
-									<option value="Completed" <%=("Completed".equals(status))?selected:"" %>>Completed</option>
+									<option value="Complete" <%=("Complete".equals(status))?selected:"" %>>Completed</option>
 									<option value="Deleted" <%=("Deleted".equals(status))?selected:"" %>>Deleted</option>
 								</select>
 							</td>

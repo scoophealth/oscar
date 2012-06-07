@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,56 +21,46 @@
  * Hamilton
  * Ontario, Canada
  */
-
-
 package org.oscarehr.common.dao;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
 
-import org.oscarehr.common.model.Ichppccode;
+import org.oscarehr.common.model.PageMonitor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class IchppccodeDao extends AbstractCodeSystemDao<Ichppccode>{
+public class PageMonitorDao extends AbstractDao<PageMonitor>{
 
-	public IchppccodeDao() {
-		super(Ichppccode.class);
+	public PageMonitorDao() {
+		super(PageMonitor.class);
 	}
 	
-	public List<Ichppccode> getIchppccodeCode(String term){
-		Query query = entityManager.createQuery("select i from Ichppccode i where i.id=?");
-		query.setParameter(1, term);
-
+	public List<PageMonitor> findByPageName(String pageName) {
+		Query query = entityManager.createQuery("SELECT e FROM PageMonitor e WHERE e.pageName=? order by e.updateDate desc");
+		query.setParameter(1,pageName);
 		@SuppressWarnings("unchecked")
-		List<Ichppccode> results = query.getResultList();
-
+        List<PageMonitor> results = query.getResultList();
 		return results;
 	}
-
-
-    public List<Ichppccode> getIchppccode(String query) {
-		Query q = entityManager.createQuery("select i from Ichppccode i where i.id like ? or i.description like ? order by i.description");
-		q.setParameter(1, "%"+query+"%");
-		q.setParameter(2, "%"+query+"%");
-
-		@SuppressWarnings("unchecked")
-		List<Ichppccode> results = q.getResultList();
-
-		return results;
-    }
-
-	@Override
-    public List<Ichppccode> searchCode(String term) {
-	    return getIchppccode(term);
-    }
 	
-	@Override
-    public Ichppccode findByCode(String code) {
-		List<Ichppccode> results = getIchppccodeCode(code);
-		if(results.isEmpty())
-			return null;
-		return results.get(0);
+	public void updatePage(String pageName) {
+		Query query = entityManager.createQuery("SELECT e FROM PageMonitor e WHERE e.pageName=? order by e.updateDate desc");
+		query.setParameter(1,pageName);
+		@SuppressWarnings("unchecked")
+        List<PageMonitor> results = query.getResultList();
+		
+		for(PageMonitor result:results) {
+			Date now = new Date();
+			Calendar c = Calendar.getInstance();
+			c.setTime(result.getUpdateDate());
+			c.add(Calendar.SECOND,result.getTimeout());
+			if(c.getTime().before(now)) {
+				this.remove(result.getId());				
+			}
+		}
 	}
 }

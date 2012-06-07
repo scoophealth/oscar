@@ -2799,6 +2799,9 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayOcularProcedureAction.java:Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.ocularProcedure");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayOcularProcedureAction.java:a = OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1));</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayOcularProcedureAction.java:import java.util.Vector;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayPregnancyAction.java:Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.pregnancy");</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayPregnancyAction.java:a = OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1));</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayPregnancyAction.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayPreventionAction.java:Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.preventions");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayPreventionAction.java:a = OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1));</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayPreventionAction.java:import java.util.Vector;</ViolationValue>

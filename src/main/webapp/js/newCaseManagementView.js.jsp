@@ -402,10 +402,11 @@ function navBarLoader() {
                   ctx + "/oscarEncounter/displayIssues.do?hC=<%=Colour.getInstance().unresolvedIssues%>",
                   ctx + "/oscarEncounter/displayResolvedIssues.do?hC=<%=Colour.getInstance().resolvedIssues%>",
                   ctx + "/oscarEncounter/displayDecisionSupportAlerts.do?providerNo=" + providerNo + "&demographicNo=" + demographicNo,
-                  ctx + "/oscarEncounter/displayEpisodes.do?hC=<%=Colour.getInstance().episode%>"
+                  ctx + "/oscarEncounter/displayEpisodes.do?hC=<%=Colour.getInstance().episode%>",
+                  ctx + "/oscarEncounter/displayPregnancies.do?hC=<%=Colour.getInstance().episode%>"
               ];
 
-            var rightNavBarTitles = [ "allergies", "Rx", "OMeds", "RiskFactors", "FamHistory", "unresolvedIssues", "resolvedIssues", "Guidelines","episode" ];
+            var rightNavBarTitles = [ "allergies", "Rx", "OMeds", "RiskFactors", "FamHistory", "unresolvedIssues", "resolvedIssues", "Guidelines","episode","pregnancy" ];
 
 
           var navbar = "leftNavBar";
