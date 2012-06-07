@@ -2433,6 +2433,17 @@
 
 		<action path="/indivica/HCSearch" type="org.oscarehr.common.web.HealthCardSearchAction" scope="request" validate="false" parameter="method" />
 
+        <action path="/oscarEncounter/displayPregnancies" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayPregnancyAction" />
+
+		<action path="/Pregnancy" type="org.oscarehr.common.web.PregnancyAction" parameter="method">
+			<forward name="list" path="/pregnancy/list.jsp" />
+			<forward name="success" path="/pregnancy/success.jsp" />
+			<forward name="complete" path="/pregnancy/complete.jsp" />
+		</action>
+		
+		
+		 <action path="/PageMonitoringService" scope="request" type="org.oscarehr.common.web.PageMonitoringAction" parameter="method" />
+		
 	</action-mappings>
 	<controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" maxFileSize="25M" />
 	<message-resources parameter="oscarResources" null="false" />

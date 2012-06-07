@@ -35,4 +35,6 @@ public abstract class AbstractCodeSystemDao<T extends AbstractCodeSystemModel<?>
 
 	public abstract List<T> searchCode(String term);
 
+	public abstract T findByCode(String code);
+
 }

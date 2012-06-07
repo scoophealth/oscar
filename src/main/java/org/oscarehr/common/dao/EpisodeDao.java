@@ -23,6 +23,7 @@
  */
 package org.oscarehr.common.dao;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -48,6 +49,26 @@ public class EpisodeDao extends AbstractDao<Episode>{
 	public List<Episode> findAllCurrent(Integer demographicNo) {
 		Query query = entityManager.createQuery("SELECT e FROM Episode e WHERE e.status='Current' AND e.demographicNo=? ORDER BY e.startDate DESC");
 		query.setParameter(1,demographicNo);
+		@SuppressWarnings("unchecked")
+        List<Episode> results = query.getResultList();
+		return results;
+	}
+	
+	public List<Episode> findCurrentByCodeTypeAndCodes(Integer demographicNo, String codeType, Collection<String> codes) {
+		Query query = entityManager.createQuery("SELECT e FROM Episode e WHERE e.status='Current' AND e.demographicNo=:demographicNo AND e.codingSystem=:codingSystem AND e.code IN (:codes) ORDER BY e.startDate DESC");
+		query.setParameter("demographicNo",demographicNo);
+		query.setParameter("codingSystem", codeType);
+		query.setParameter("codes",codes);
+		@SuppressWarnings("unchecked")
+        List<Episode> results = query.getResultList();
+		return results;
+	}
+	
+	public List<Episode> findCompletedByCodeTypeAndCodes(Integer demographicNo, String codeType, Collection<String> codes) {
+		Query query = entityManager.createQuery("SELECT e FROM Episode e WHERE e.status='Complete' AND e.demographicNo=:demographicNo AND e.codingSystem=:codingSystem AND e.code IN (:codes) ORDER BY e.startDate DESC");
+		query.setParameter("demographicNo",demographicNo);
+		query.setParameter("codingSystem", codeType);
+		query.setParameter("codes",codes);
 		@SuppressWarnings("unchecked")
         List<Episode> results = query.getResultList();
 		return results;

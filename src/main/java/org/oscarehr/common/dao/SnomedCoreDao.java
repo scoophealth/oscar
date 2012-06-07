@@ -27,7 +27,6 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import org.oscarehr.common.model.Icd9;
 import org.oscarehr.common.model.SnomedCore;
 import org.springframework.stereotype.Repository;
 
@@ -38,12 +37,12 @@ public class SnomedCoreDao extends AbstractCodeSystemDao<SnomedCore> {
 		super(SnomedCore.class);
 	}
 
-	public List<Icd9> getSnomedCoreCode(String snomedCoreCode){
+	public List<SnomedCore> getSnomedCoreCode(String snomedCoreCode){
 		Query query = entityManager.createQuery("select i from SnomedCore i where i.snomedCore=?");
 		query.setParameter(1, snomedCoreCode);
 
 		@SuppressWarnings("unchecked")
-		List<Icd9> results = query.getResultList();
+		List<SnomedCore> results = query.getResultList();
 
 		return results;
 	}
@@ -62,5 +61,13 @@ public class SnomedCoreDao extends AbstractCodeSystemDao<SnomedCore> {
 
     public List<SnomedCore> searchCode(String term) {
     	return getSnomedCore(term);
+    }
+    
+    @Override
+    public SnomedCore findByCode(String code) {
+    	List<SnomedCore> results = getSnomedCoreCode(code);
+    	if(results.isEmpty())
+    		return null;
+    	return results.get(0);
     }
 }

@@ -26,13 +26,18 @@
 <%
 	int n = Integer.parseInt(request.getParameter("n"));
 %>
-<tr id="us_<%=n%>">
+<tr id="us_<%=n%>" >
+<script>
+$(document).ready(function() {
+	Calendar.setup({ inputField : "ar2_uDate<%=n %>", ifFormat : "%Y/%m/%d", showsTime :false, button : "ar2_uDate<%=n %>_cal", singleClick : true, step : 1 });	
+});
+</script>
 	<td>
 		<a href="javascript:void(0)" onclick="deleteUltraSound('<%=n%>'); return false;">[x]</a>
 	</td>
 
 	<td nowrap><input type="text" name="ar2_uDate<%=n %>"
-		id="ar2_uDate1" class="spe" onDblClick="calToday(this)" size="10"
+		id="ar2_uDate<%=n %>" class="spe" onDblClick="calToday(this)" size="10"
 		maxlength="10">
 	<img src="../images/cal.gif" id="ar2_uDate<%=n %>_cal"></td>
 	<td><input type="text" name="ar2_uGA<%=n %>" class="spe"

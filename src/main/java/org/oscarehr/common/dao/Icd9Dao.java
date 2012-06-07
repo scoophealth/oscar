@@ -74,5 +74,13 @@ public class Icd9Dao extends AbstractCodeSystemDao<Icd9>{
     public List<Icd9> searchCode(String term) {
 	    return getIcd9(term);
     }
+	
+	@Override
+    public Icd9 findByCode(String code) {
+	    List<Icd9> results =  getIcd9Code(code);
+	    if(results.isEmpty())
+	    	return null;
+	    return results.get(0);
+    }
 
 }
