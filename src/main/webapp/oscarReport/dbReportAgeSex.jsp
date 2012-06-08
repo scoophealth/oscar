@@ -41,10 +41,7 @@ GregorianCalendar now=new GregorianCalendar();
 
   String nowDate = String.valueOf(curYear)+"-"+String.valueOf(curMonth) + "-" + String.valueOf(curDay);
   int dob_yy=0, dob_dd=0, dob_mm=0, age=0;
-  List<ReportAgeSex> res = reportAgeSexDao.findBeforeReportDate(now.getTime());
-  for(ReportAgeSex ras:res) {
-	  reportAgeSexDao.remove(ras.getId());
-  }
+  reportAgeSexDao.deleteAllByDate(now.getTime());
 
   String demo_no="", demo_sex="", provider_no="", roster="", patient_status="", date_joined="";
   String demographic_dob="1800";
