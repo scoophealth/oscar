@@ -31,8 +31,7 @@ curUser_no = (String) session.getAttribute("user");
 userfirstname = (String) session.getAttribute("userfirstname");
 userlastname = (String) session.getAttribute("userlastname");
 %>
-<%@ page import="java.sql.*, java.util.*,java.net.*, oscar.MyDateFormat"
-	errorPage="../../errorpage.jsp"%>
+<%@ page import="java.sql.*, java.util.*,java.net.*, oscar.MyDateFormat"%>
 
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%@ include file="dbINR.jspf"%>
@@ -67,7 +66,7 @@ userlastname = (String) session.getAttribute("userlastname");
 </table>
 <%
 BillingInr bi = new BillingInr();
-bi.setDemographicNo(Integer.parseInt(request.getParameter("demoid")));
+bi.setDemographicNo(Integer.parseInt(request.getParameter("demoid").trim()));
 bi.setDemographicName(request.getParameter("demo_name"));
 bi.setHin(request.getParameter("demo_hin"));
 bi.setDob(request.getParameter("demo_dob"));
