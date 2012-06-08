@@ -706,7 +706,7 @@ function changeSite(sel) {
                                     <TD ROWSPAN="1" class="<%=cellColour%>"><%=t.getServiceDate()%></TD>
                                     <TD ROWSPAN="1" class="<%=cellColour%>"><%=t.getUpdateDate()%></TD>
                                     <TD ROWSPAN="1" class="<%=cellColour%>"><%=t.getPriority()%></TD>
-                                    <TD ROWSPAN="1" class="<%=cellColour%>"><%=t.getAssignee().getLastName()%>,<%=t.getAssignee().getFirstName()%></TD>
+                                    <TD ROWSPAN="1" class="<%=cellColour%>"><%=t.getAssignee() != null ? t.getAssignee().getLastName() + ", " + t.getAssignee().getFirstName() : "N/A"%></TD>
                                     <TD ROWSPAN="1" class="<%=cellColour%>"><%=t.getStatusDesc(request.getLocale())%></TD>
                                     <TD ROWSPAN="1" class="<%=cellColour%>"><%=t.getMessage()%>
                                         
