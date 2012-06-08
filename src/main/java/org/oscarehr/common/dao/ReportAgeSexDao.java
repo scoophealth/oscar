@@ -49,4 +49,11 @@ public class ReportAgeSexDao extends AbstractDao<ReportAgeSex>{
         List<ReportAgeSex> results = query.getResultList();
         return results;
     }
+    
+    public void deleteAllByDate(Date reportDate) {
+    	String sql = "delete from ReportAgeSex x where x.reportDate <= ?";
+    	Query query = entityManager.createQuery(sql);
+    	query.setParameter(1,reportDate);
+    	query.executeUpdate();
+    }
 }
