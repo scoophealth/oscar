@@ -1016,7 +1016,7 @@ public class ProgramManagerAction extends BaseAction {
 		if(paramValues==null || paramValues.length<1) 
 			return;
 		for(int i=0; i<paramValues.length; i++) {		
-			CriteriaTypeOption option = criteriaTypeOptionDAO.getCriteriaTypeOptionByOptionId(Integer.valueOf(paramValues[i]));
+			CriteriaTypeOption option = criteriaTypeOptionDAO.getByValue(paramValues[i]);
 			if(option!=null) {
 				criteria.setCriteriaTypeId(option.getCriteriaTypeId());
 			}
@@ -1027,7 +1027,8 @@ public class ProgramManagerAction extends BaseAction {
 			//Save criteria_selection_option
 			CriteriaSelectionOption selectedOption = new CriteriaSelectionOption();
 			selectedOption.setCriteriaId(criteria.getId());
-			selectedOption.setOptionValue(String.valueOf(option.getId()));
+			//selectedOption.setOptionValue(String.valueOf(option.getId()));
+			selectedOption.setOptionValue(option.getOptionValue());
 			VacancyTemplateManager.saveCriteriaSelectedOption(selectedOption);	
 		}
 	}

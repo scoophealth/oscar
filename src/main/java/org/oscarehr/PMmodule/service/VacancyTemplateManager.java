@@ -248,14 +248,14 @@ public class VacancyTemplateManager {
 				String label = option.getOptionLabel();
 				String htmlEscapedName = StringEscapeUtils.escapeHtml(label);
 				String selectedOrNot = "";			
-				//if(option.getOptionValue()!=null && option.getOptionValue().equalsIgnoreCase(value))
-				if(option.getId()!=null && String.valueOf(option.getId()).equalsIgnoreCase(value))
+				if(option.getOptionValue()!=null && option.getOptionValue().equalsIgnoreCase(value))
+				//if(option.getId()!=null && String.valueOf(option.getId()).equalsIgnoreCase(value))
 					selectedOrNot = "selected";
 				
 				if(selectedOptions != null) {
 					for(CriteriaSelectionOption cso : selectedOptions) {
 						//If the options selected, should be removed from source of list.
-						if( cso.getOptionValue() != null && cso.getOptionValue().equals(String.valueOf(option.getId())))
+						if( cso.getOptionValue() != null && cso.getOptionValue().equals(option.getOptionValue()))
 								skip = true;
 					}
 				}
@@ -263,7 +263,7 @@ public class VacancyTemplateManager {
 				if(skip)
 					continue;
 				
-				sb.append("<option " + selectedOrNot + " value=\"" + StringEscapeUtils.escapeHtml(String.valueOf(option.getId())) + "\" title=\"" + htmlEscapedName + "\">" + htmlEscapedName + "</option>");
+				sb.append("<option " + selectedOrNot + " value=\"" + StringEscapeUtils.escapeHtml(option.getOptionValue()) + "\" title=\"" + htmlEscapedName + "\">" + htmlEscapedName + "</option>");
 						
 			}
 			
@@ -305,15 +305,15 @@ public class VacancyTemplateManager {
 		for(CriteriaSelectionOption cso : selectedOptions) {
 				//criteria_type_option's value is unique?
 				//value in criteria_selection_option is the same value in criteria_type_option? 
-				//CriteriaTypeOption option2 = criteriaTypeOptionDAO.getByValueAndTypeId(cso.getOptionValue(), ctype.getId());
+				CriteriaTypeOption option2 = criteriaTypeOptionDAO.getByValueAndTypeId(cso.getOptionValue(), ctype.getId());
 				
 				//value in criteria_selection_option is the id in criteria_type_option, this makes more sense as the value may not be unique or may be null
-				CriteriaTypeOption option2 = criteriaTypeOptionDAO.getCriteriaTypeOptionByOptionId(Integer.parseInt(cso.getOptionValue()));
+				//CriteriaTypeOption option2 = criteriaTypeOptionDAO.getCriteriaTypeOptionByOptionId(Integer.parseInt(cso.getOptionValue()));
 				String label = option2.getOptionLabel();
 				String htmlEscapedName = StringEscapeUtils.escapeHtml(label);
 				//String selected = (CdsClientFormData.containsAnswer(existingAnswers, option.getCdsDataCategory()) ? "selected=\"selected\"" : "");
 				String selected = "selected";
-				sb.append("<option " + selected + " value=\"" + StringEscapeUtils.escapeHtml(String.valueOf(option2.getId())) + "\" title=\"" + htmlEscapedName + "\">" + htmlEscapedName + "</option>");
+				sb.append("<option " + selected + " value=\"" + StringEscapeUtils.escapeHtml(option2.getOptionValue()) + "\" title=\"" + htmlEscapedName + "\">" + htmlEscapedName + "</option>");
 		}
 		
 		sb.append("</select>");
