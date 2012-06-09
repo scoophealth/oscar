@@ -426,6 +426,8 @@ INSERT INTO encounterForm VALUES ('Letterhead', '../form/formConsultant.jsp?demo
 INSERT INTO `encounterForm`(`form_name`,`form_value`,`form_table`,`hidden`) VALUES ('CHF','../form/formchf.jsp?demographic_no=','formchf',0);
 INSERT INTO `encounterForm`(`form_name`,`form_value`,`form_table`,`hidden`) VALUES ('Health Passport', '../form/formbchp.jsp?demographic_no=', 'formBCHP', 0);
 insert into encounterForm values ('ON AR Enhanced','../form/formonarenhanced.jsp?demographic_no=','formONAREnhanced',0);
+INSERT INTO `encounterForm` (`form_name`, `form_value`, `form_table`, `hidden`) VALUES ('HMP Form','../form/HSFOForm2.do?demographic_no=','form_hsfo2_visit',1);
+
 --
 -- Dumping data for table 'encountertemplate'
 --

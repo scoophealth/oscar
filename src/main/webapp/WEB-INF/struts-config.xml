@@ -922,6 +922,7 @@
 			<forward name="graph" path="/form/createpdf" />
 			<forward name="failure" path="/oscarEncounter/error.jsp" />
 		</action>
+
 		<action name="inputForm" path="/admin/RecommitHSFO" parameter="method" scope="request" type="oscar.form.study.HSFO.pageUtil.RecommitHSFOAction">
 			<forward name="schedulePage" path="/admin/recommitschedule.jsp" />
 		</action>
@@ -934,6 +935,30 @@
 			<forward name="success" path="/form/HSFOform.do" />
 			<forward name="exit" path="/oscarEncounter/close.jsp" />
 		</action>
+
+          <!-- actions for HSFO2 begin -->
+	        <action name="inputForm" path="/admin/RecommitHSFO2" parameter="method" scope="request" type="oscar.form.study.hsfo2.pageUtil.RecommitHSFOAction" >
+       		     <forward name="schedulePage" path="/admin/recommitschedule.jsp" />
+       		 </action>
+	
+       		 <action name="HSFOForm2" path="/form/HSFOForm2" scope="request" type="oscar.form.study.hsfo2.pageUtil.ManageHSFOAction" >
+       		     <forward name="registration" path="/form/hsfo2/HSFORegistrationForm.jsp" />
+       		     <forward name="flowsheet" path="/form/hsfo2/HSFOFlowsheet.jsp" />
+       		     <forward name="graphs" path="/form/hsfo2/displayGraphs.jsp" />
+       		 </action>
+
+       		 <action name="FrmForm" path="/form/SaveHSFORegistrationForm2" scope="request"
+       		         type="oscar.form.study.hsfo2.pageUtil.SaveRegistrationAction"
+       		         parameter="dispatch">
+       		     <forward name="success" path="/form/HSFOForm2.do" />
+       		     <forward name="exit" path="/oscarEncounter/close.jsp" />
+       		 </action>
+       		 <action name="transferHSFOXml2" path="/form/HSFOXmlTransfer2" scope="request" type="oscar.form.study.hsfo2.pageUtil.TransferHSFOXmlAction" >
+       		     <forward name="HSFORE" path="/form/hsfo2/HSFOXmlResult.jsp" />
+       		 </action>
+
+        <!-- actions for HSFO2 end -->
+
 		<action name="FrmForm" path="/form/HSFOXmlTransfer" scope="request" type="oscar.form.study.HSFO.pageUtil.TransferHSFOXmlAction">
 			<forward name="HSFORE" path="/form/hsfoxmlresult.jsp" />
 		</action>

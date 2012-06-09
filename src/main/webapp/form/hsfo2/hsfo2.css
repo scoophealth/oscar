@@ -1,0 +1,70 @@
+
+body {margin-top: 0px;margin-left: 0px;}
+input {margin-top: 1px; margin-bottom: 1px; }
+table {margin: 0 0 0 0; border: 0 0 0 0; padding: 0 0 0 0; width: 100%; align: left;}
+tr {margin: 0 0 0 0; border: 0 0 0 0; padding: 0 0 0 0; width: 100%; align: left; }
+td {margin: 0 0 0 0; border: 0 0 0 0; padding: 0 0 0 0; text-align: left;}
+
+/*background-image: url(hsfo2_images/hsfo21.bak.jpg);background-position: 0px 0px;background-size: 766px 1008px;background-repeat: no-repeat;*/
+#page_1 {position:relative; overflow: hidden;margin-left: 2px;width: 1000px;height: 2000px;}
+#page_1 #id_1 {border:none;margin-left: 16px;margin-top: 6px;width: 749px;}
+#page_1 #id_2  {float:left;border:none;margin-top: 3px;width: 177px;}
+#page_1 #id_3  { margin-top: 0px; border-right: medium solid; border-bottom: medium solid;}
+
+.t-solidAll{border-top: medium solid; border-left: medium solid; border-bottom: medium solid; border-right: medium solid;}
+
+.t0{margin-left: 10px;font: bold 12px 'Arial';line-height: 15px;}
+.t-12px{font: 12px 'Arial';line-height: 15px;white-space: nowrap;}
+
+.t-medicalDx{font: 12px 'Arial';line-height: 10px;white-space: nowrap;}
+
+.tr0{height: 40px;}
+.tr2{height: 13px;}
+.tr-selection{height: 8px;}
+.tr-hight12{line-height: 12px;}
+.thinBottom{border-bottom: thin solid;}
+
+.td0{text-align: left;padding-left: 0px;padding-right: 0px;width: 120px;vertical-align: bottom;}
+.td1{text-align: center;padding-left: 0px;padding-right: 0px;width: 320px;vertical-align: middle;}
+.td2{text-align: center;padding-left: 0px;padding-right: 0px;width: 80px;vertical-align: top;}
+.td3{text-align: center;padding-left: 0px;padding-right: 0px;width: 40px;vertical-align: top;}
+.td-selection{height: 8px;}
+.td-solidRight{border-right: medium solid;}
+
+.i-no-vmargin{margin-top: 0px; margin-bottom: 0px}
+
+/* middle table */
+.t-m{margin-top: 2px;font: 12px 'Arial';line-height: 13px; border-top: medium solid; border-left: medium solid; border-bottom: medium solid; border-right: medium solid; }
+.td-m-fc{text-align: left;padding-left: 0px;padding-right: 0px;width: 272px;vertical-align: top; border-right: medium solid;}
+.td-m-sc{text-align: left;padding-left: 0px;padding-right: 0px;width: 182px;vertical-align: top; border-right: medium solid;}
+/*third column of middle table*/
+.td-m-tc{text-align: left;padding-left: 0px;padding-right: 0px;width: 244px;vertical-align: top;}
+.t-bottom{margin-top: 0px;font: 11px 'Arial';line-height: 12px; border: 0 0 0 0; }
+
+.t-ethnicity{font: 12px 'Arial';line-height: 8px;white-space: nowrap;}
+.t-lifestyleGoal{font: 12px 'Arial';line-height: 15px;white-space: nowrap; border-bottom: thin solid;}
+  
+.ft1{font: 11px 'Arial';line-height: 14px;white-space: nowrap;}
+.ft2{font: italic 12px 'Arial';line-height: 15px;white-space: nowrap;}
+.ft3{font: 12px 'Arial';text-decoration: underline;line-height: 13px;white-space: nowrap;}
+.ft4{font: bold 12px 'Arial';line-height: 13px;white-space: nowrap;}
+.ft5{font: 12px 'Arial';line-height: 14px;white-space: nowrap;}
+.ft6{font: 12px 'Arial';line-height: 15px;white-space: nowrap;}
+.ft7{font: bold 12px 'Arial';line-height: 9px;white-space: nowrap;}
+.ft8{font: 12px 'Arial';line-height: 12px;white-space: nowrap;}
+.ft11{font: bold 12px 'Arial';line-height: 15px;white-space: nowrap;}
+.ft12{font: bold 12px 'Arial';text-decoration: underline;line-height: 15px;white-space: nowrap;}
+.ft17{font: bold 11px 'Arial';line-height: 13px;white-space: nowrap;}
+.ft21{font: 11px 'Arial';line-height: 11px;white-space: nowrap;}
+.ft24{font: bold 12px 'Arial';line-height: 8px;white-space: nowrap;}
+.ft35{font: bold 12px 'Arial';text-decoration: underline;line-height: 14px;white-space: nowrap;}
+.ft37{font: bold 10px 'Arial';line-height: 11px;white-space: nowrap;}
+.ft47{font: 8px 'Arial';line-height: 9px;}
+.ft48{font: 9px 'Arial';line-height: 12px;}
+.ft11-12{font: 11px 'Arial';line-height: 12px;}
+
+.ft-postcode{font: bold 12px 'Arial';line-height: 7px;white-space: nowrap;}
+
+.ft-ethnicity{font: 12px 'Arial';line-height: 8px;white-space: nowrap;}
+.ft-diagnosed{font: bold 12px 'Arial';line-height: 12px;white-space: nowrap;}
+
