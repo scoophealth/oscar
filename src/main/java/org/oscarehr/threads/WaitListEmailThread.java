@@ -101,7 +101,7 @@ public class WaitListEmailThread extends TimerTask
 			try {
 	            Integer programId=new Integer(programIdString);
 	            Program program=programDao.getProgram(programId);
-	            waitListManager.checkAndSendIntervalNotification(program);
+	            waitListManager.checkAndSendAdmissionIntervalNotification(program);
             } catch (Exception e) {
 	         logger.error("Unexpected error processing programId="+programIdString, e);
             }
