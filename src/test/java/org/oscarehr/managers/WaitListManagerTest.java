@@ -36,6 +36,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.velocity.VelocityContext;
 import org.junit.Test;
 import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.PMmodule.model.Vacancy;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.managers.WaitListManager.AdmissionDemographicPair;
 import org.oscarehr.util.VelocityUtils;
@@ -76,7 +77,7 @@ public class WaitListManagerTest {
 		admissionDemographicPairs.add(a1);
 		admissionDemographicPairs.add(a2);
 
-		VelocityContext velocityContext = WaitListManager.getVelocityContext(program, notes, startCal.getTime(), endCal.getTime(), admissionDemographicPairs);
+		VelocityContext velocityContext = WaitListManager.getAdmissionVelocityContext(program, notes, startCal.getTime(), endCal.getTime(), admissionDemographicPairs);
 
 		InputStream is = WaitListManagerTest.class.getResourceAsStream("/wait_list_velocity_template.txt");
 		String template = IOUtils.toString(is);
@@ -87,5 +88,29 @@ public class WaitListManagerTest {
 		String expectedResults=IOUtils.toString(is);
 
 		assertEquals(expectedResults, mergedtemplate);
+	}
+	
+	@Test 
+	public void testVacancyMerge() throws IOException
+	{
+		Vacancy vacancy=new Vacancy();
+		vacancy.setTemplateId(1234);
+		vacancy.setStatus("test status");
+		
+		Calendar cal = new GregorianCalendar(2012, 3, 4);
+		
+		
+		VelocityContext velocityContext = WaitListManager.getVacancyVelocityContext(vacancy, "test notes", cal.getTime());
+
+		InputStream is = WaitListManagerTest.class.getResourceAsStream("/wait_list_immediate_vacancy_email_template.txt");
+		String template = IOUtils.toString(is);
+
+		String mergedtemplate = VelocityUtils.velocityEvaluate(velocityContext, template);
+
+		is = WaitListManagerTest.class.getResourceAsStream("/wait_list_immediate_vacancy_email_template_results.txt");
+		String expectedResults=IOUtils.toString(is);
+
+		assertEquals(expectedResults, mergedtemplate);
+		
 	}
 }

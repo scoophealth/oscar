@@ -9195,15 +9195,15 @@ CREATE TABLE `criteria_selection_option` (
   PRIMARY KEY (`SELECT_OPTION_ID`)
 );
 
-CREATE TABLE `vacancy` (
-  `VACANCY_ID` int(11) NOT NULL AUTO_INCREMENT,
-  `TEMPLATE_ID` int(11) NOT NULL,
-  `STATUS` varchar(24) NOT NULL,
-  `DATE_CLOSED` timestamp NULL,
-  `REASON_CLOSED` varchar(255),
+CREATE TABLE `Vacancy` (
+  `id` int(11) primary key NOT NULL AUTO_INCREMENT,
+  `templateId` int(11) NOT NULL,
+  `status` varchar(24) NOT NULL,
+  `dateClosed` timestamp NULL,
+  `reasonClosed` varchar(255),
   `WL_PROGRAM_ID` int(11) NOT NULL,
   `DATE_CREATE` date NOT NULL,
-  PRIMARY KEY (`VACANCY_ID`)
+  `emailNotificationAddressesCsv` varchar(255)
 );
 
 create table MyGroupAccessRestriction (

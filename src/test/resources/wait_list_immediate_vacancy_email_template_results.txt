@@ -1,0 +1,7 @@
+This is an immediate notification of a vacancy change.
+
+vacancy = 1234  test status 
+
+notes = test notes
+
+date = 2012-4-4 0:0:0

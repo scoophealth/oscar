@@ -22,6 +22,7 @@
  */
 package org.oscarehr.PMmodule.model;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -29,35 +30,28 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.apache.commons.lang.StringUtils;
 import org.oscarehr.common.model.AbstractModel;
 
-/**
- * Vacancy entity. @author azhou
- */
 @Entity
-@Table(name = "vacancy")
 public class Vacancy extends AbstractModel<Integer> implements java.io.Serializable {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "VACANCY_ID", unique=true, nullable=false)
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer id;
-	@Column(name = "TEMPLATE_ID", nullable = false)
+	@Column(nullable = false)
 	private Integer templateId;
-	@Column(name = "STATUS", nullable = false, length = 24)
+	@Column(nullable = false, length = 24)
 	private String status;
-	
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "DATE_CLOSED", length = 19)
 	private Date dateClosed;
-	
-	@Column(name = "REASON_CLOSED")
 	private String reasonClosed;
-	@Column(name = "WL_PROGRAM_ID", nullable = false)
+    private String emailNotificationAddressesCsv=null;
+    
+    @Column(name = "WL_PROGRAM_ID", nullable = false)
 	private Integer	wlProgramId;
 	
 	@Column(name = "DATE_CREATE", length = 19)
@@ -88,7 +82,7 @@ public class Vacancy extends AbstractModel<Integer> implements java.io.Serializa
 	}
 
 	/** full constructor */
-	public Vacancy(Integer templateId, String status, Date dateClosed,
+	public Vacancy(Integer templateId, String status, Timestamp dateClosed,
 			String reasonClosed) {
 		this.templateId = templateId;
 		this.status = status;
@@ -121,7 +115,7 @@ public class Vacancy extends AbstractModel<Integer> implements java.io.Serializa
      * @param status the status to set
      */
     public void setStatus(String status) {
-    	this.status = status;
+    	this.status = StringUtils.trimToNull(status);
     }
 
 	/**
@@ -158,9 +152,16 @@ public class Vacancy extends AbstractModel<Integer> implements java.io.Serializa
      * @param reasonClosed the reasonClosed to set
      */
     public void setReasonClosed(String reasonClosed) {
-    	this.reasonClosed = reasonClosed;
+    	this.reasonClosed = StringUtils.trimToNull(reasonClosed);
     }
 
+	public String getEmailNotificationAddressesCsv() {
+    	return emailNotificationAddressesCsv;
+    }
+
+	public void setEmailNotificationAddressesCsv(String emailNotificationAddressesCsv) {
+    	this.emailNotificationAddressesCsv = StringUtils.trimToNull(emailNotificationAddressesCsv);
+    }
 	public Integer getWlProgramId() {
     	return wlProgramId;
     }
@@ -168,7 +169,4 @@ public class Vacancy extends AbstractModel<Integer> implements java.io.Serializa
 	public void setWlProgramId(Integer wlProgramId) {
     	this.wlProgramId = wlProgramId;
     }
-    
-    
-
 }
