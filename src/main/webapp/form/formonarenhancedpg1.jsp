@@ -114,7 +114,7 @@ background: #fff;
 }
 
 .innertube{
-margin: 15px; /*Margins for inner DIV inside each DIV (to provide padding)*/
+margin: 5px; /*Margins for inner DIV inside each DIV (to provide padding)*/
 }
 
 * html body{ /*IE6 hack*/
@@ -179,7 +179,66 @@ width: 100%;
 		$("select[name='pg1_labHBsAg']").val('<%= UtilMisc.htmlEscape(props.getProperty("pg1_labHBsAg", "")) %>');
 		$("select[name='pg1_labVDRL']").val('<%= UtilMisc.htmlEscape(props.getProperty("pg1_labVDRL", "")) %>');
 		$("select[name='pg1_labSickle']").val('<%= UtilMisc.htmlEscape(props.getProperty("pg1_labSickle", "")) %>');
-
+		$("select[name='pg1_labRubella']").val('<%= UtilMisc.htmlEscape(props.getProperty("pg1_labRubella", "")) %>');
+	
+		if($("select[name='pg1_labRh']").val() == 'NEG'/* && getGAWeek() >= 9*/) {			
+			$("#rh_warn").show();
+		}		
+		
+		if($("select[name='pg1_labRubella']").val() == 'Non-Immune' ) {			
+			$("#rubella_warn").show();
+		}
+		
+		if($("select[name='pg1_labHBsAg']").val() == 'POS' ) {			
+			$("#hbsag_warn").show();
+		}
+		
+		if($("input[name='pg1_geneticA']").val().length>0 || $("input[name='pg1_geneticB']").val().length>0
+				|| $("input[name='pg1_geneticC']").val().length>0) {
+			$("#genetic_prompt").show();
+		}
+		
+		if($("input[name='c_bmi']").val().length > 0) {
+			var bmi = parseFloat($("input[name='c_bmi']").val());			
+			if(bmi > 30) {
+				$("#bmi30_warn").show();
+			}
+			if(bmi > 40) {
+				$("#bmi40_warn").show();
+			}
+			if(bmi <= 18.5) {
+				$("#bmi_low_warn").show();
+			}
+		}
+		
+		if($("select[name='pg1_ethnicBgMother']").val() == 'ANC005' || $("select[name='pg1_ethnicBgFather']").val() == 'ANC005') {
+			$("#sickle_cell_warn").show();
+		} 
+		
+		if($("select[name='pg1_ethnicBgMother']").val() == 'ANC005' || $("select[name='pg1_ethnicBgFather']").val() == 'ANC005') {
+			$("#thalassemia_warn").show();
+		}
+		if($("select[name='pg1_ethnicBgMother']").val() == 'ANC002' || $("select[name='pg1_ethnicBgFather']").val() == 'ANC002') {
+			$("#thalassemia_warn").show();
+		}
+		
+		if($("input[name='pg1_wt']").val().length == 0) {
+			$("#weight_warn").show();
+		}
+		
+		if($("input[name='pg1_ht']").val().length == 0) {
+			$("#height_warn").show();
+		}
+		
+		if($("input[name='c_bmi']").val().length == 0) {
+			$("#bmi_warn").show();
+		}
+		
+		
+		if($("input[name='pg1_labHb']").val().length > 0) {
+			var hgb_result = parseFloat($("input[name='pg1_labHb']").val());
+			$("#bmi_warn").show();
+		}
 	});
 </script>
 
@@ -201,12 +260,13 @@ width: 100%;
 			alert('Work phone must be in the following format 555-555-5555');
 			return false;
 		}
-		
+		/*
 		var finalEDB = $("input[name='c_finalEDB']").val();
 		if(finalEDB.trim().length==0) {
 			alert('Please set a final EDB');
 			return false;
 		}
+		*/
 		
 		patt1=new RegExp("^\\d{1,2}$");
 		if(!patt1.test($("input[name='pg1_age']").val())) {
@@ -891,6 +951,75 @@ function calByLMP(obj) {
 	}
 }
 
+/*
+ * This function takes the EDB, removes 40 weeks (280 days), then looks at the difference 
+ * between today and that start date to get the number of days into the pregnancy
+ */
+function getGADay() {
+	 var finalEDB = $("input[name='c_finalEDB']").val();
+	 if(finalEDB.length != 10) {
+		 return -1;
+	 }
+	 var year = finalEDB.substring(0,4);
+	 var month = finalEDB.substring(5,7)
+	 var day = finalEDB.substring(8,10)
+	 
+	 var edbDate=new Date(year,parseInt(month)-1,day);
+	 edbDate.setHours(0);
+	 edbDate.setMinutes(0);
+	 edbDate.setSeconds(0);
+	 edbDate.setMilliseconds(0);
+	 
+	 var startDate = new Date();
+	 startDate.setTime(edbDate.getTime()-(280*1000*60*60*24)  );
+	 startDate.setHours(0);		
+	 
+	 var today = new Date();
+	 today.setHours(0);
+	 today.setMinutes(0);
+	 today.setSeconds(0);
+	 today.setMilliseconds(0);
+	 
+	 if(today > startDate) {		
+		 var  days = daydiff(startDate,today);
+		 return days;
+	 }
+	 
+	 return -1;
+}
+
+function daydiff(first, second) {
+    return (second-first)/(1000*60*60*24)
+}
+
+function getGAWeek() {
+	var day = getGADay();
+	if(day > 0) {
+		week = parseInt(day / 7);	
+	}
+	return parseInt(week);
+}
+
+function getGA() {
+	var day = getGADay();
+	if(day > 0) {
+		week = parseInt(day / 7);
+		offset = day % 7;		
+	}
+	return parseInt(week) + "w+" + offset;
+}
+
+function updateAllergies() {
+	jQuery.ajax({url:'<%=request.getContextPath()%>/Pregnancy.do?method=getAllergies&demographicNo=<%=demoNo%>',async:true, dataType:'json', success:function(data) {
+		$("textarea[name='c_allergies']").val($("textarea[name='c_allergies']").val() + "\n" + data.value);
+	}});
+}
+
+function updateMeds() {
+	jQuery.ajax({url:'<%=request.getContextPath()%>/Pregnancy.do?method=getMeds&demographicNo=<%=demoNo%>',async:true, dataType:'json', success:function(data) {
+		$("textarea[name='c_meds']").val($("textarea[name='c_meds']").val() + "\n" + data.value);
+	}});
+}
 </script>
 
 <body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1">
@@ -905,6 +1034,71 @@ function calByLMP(obj) {
 	<div id="lock_req">
 		<input id="lock_req_btn" type="button" value="Request Lock" onclick="requestLock();"/>
 		<input style="display:none" id="lock_rel_btn" type="button" value="Release Lock" onclick="releaseLock();"/>
+	</div>
+	<br/><br/>
+	<div style="background-color:yellow;border:2px solid black;width:100%;color:black">
+		<table style="width:100%" border="0">
+			<tr>
+				<td><b>Warnings</b></td>
+			</tr>
+			<tr id="rh_warn" style="display:none">
+				<td>RH Negative</td>
+			</tr>
+			<tr id="rubella_warn" style="display:none">
+				<td>Rubella Non-Immune</td>
+			</tr>
+			
+			<tr id="hbsag_warn" style="display:none">
+				<td>HepB Surface Antigen</td>
+			</tr>
+			
+			<tr id="weight_warn" style="display:none">
+				<td>No Weight Entered</td>
+			</tr>
+			
+			<tr id="height_warn" style="display:none">
+				<td>No Height Entered</td>
+			</tr>
+			
+			<tr id="bmi_warn" style="display:none">
+				<td>No BMI Entered</td>
+			</tr>
+			
+			<tr id="bmi30_warn" style="display:none">
+				<td>BMI is High</td>
+			</tr>
+			<tr id="bmi40_warn" style="display:none">
+				<td>BMI is High</td>
+			</tr>
+			<tr id="bmi_low_warn" style="display:none">
+				<td>BMI is Low</td>
+			</tr>
+			<tr id="sickle_cell_warn" style="display:none">
+				<td>Risk: Sicle Cell</td>
+			</tr>
+			<tr id="thalassemia_warn" style="display:none">
+				<td>Risk: Thalassemia</td>
+			</tr>
+			
+		</table>	
+	</div>
+	
+		<br/><br/>
+	<div style="background-color:green;border:2px solid black;width:100%;color:black">
+		<table style="width:100%" border="0">
+			<tr>
+				<td><b>Prompts</b></td>
+			</tr>
+			
+			<tr id="strep_prompt" style="display:none">
+				<td><a href="javascript:void(0)" onClick="gbsReq();return false;">Print Req. for GBS </a></td>
+			</tr>
+			
+			<tr id="genetic_prompt" style="display:none">
+				<td><a href="javascript:void(0)" onClick="geneticReferral();return false;">Genetics Referral</a></td>
+			</tr>		
+					
+		</table>	
 	</div>
 </div>
 </div>
@@ -1942,12 +2136,11 @@ function calByLMP(obj) {
 	</table>
 	<table width="100%" border="1" cellspacing="0" cellpadding="0">
 		<tr>
-			<td width="50%">Allergies or Sensitivities (describe reaction
-			details)<br>
+			<td width="50%">Allergies or Sensitivities &nbsp;<a href="javascript:void(0)" onclick="updateAllergies();">Update from Chart</a><br>
 			<div align="center"><textarea name="c_allergies"
 				style="width: 100%" cols="30" rows="2"><%= props.getProperty("c_allergies", "") %></textarea></div>
 			</td>
-			<td width="50%">Medications/Herbals<br>
+			<td width="50%">Medications/Herbals&nbsp;<a href="javascript:void(0)" onclick="updateMeds();">Update from Chart</a><br>
 			<div align="center"><textarea name="c_meds" style="width: 100%"
 				cols="30" rows="2"><%= props.getProperty("c_meds", "") %></textarea></div>
 			</td>
@@ -2801,9 +2994,14 @@ function calByLMP(obj) {
 				</tr>
 				<tr>
 					<td>Rubella immune</td>
-					<td><input type="text" name="pg1_labRubella" size="10"
-						maxlength="20"
-						value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_labRubella", "")) %>">
+					<td>
+						<select name="pg1_labRubella">
+							<option value="NDONE">Not Done</option>
+							<option value="Non-Immune">Non-Immune</option>
+							<option value="Immune">Immune </option>
+							<option value="Indeterminate">Indeterminate</option>
+						</select>
+										
 					</td>
 					<td>Chlamydia</td>
 					<td>
