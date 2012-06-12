@@ -39,14 +39,15 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.BillingServiceDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.SiteDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Site;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
+import oscar.oscarProvider.data.ProviderBillCenter;
 
 public class JdbcBillingCreateBillingFile {
 	private static final Logger _logger = Logger.getLogger(JdbcBillingCreateBillingFile.class);
@@ -61,6 +62,10 @@ public class JdbcBillingCreateBillingFile {
 	private String batchHeader;
 	private BigDecimal bdFee = new BigDecimal((double) 0).setScale(2, BigDecimal.ROUND_HALF_UP);
 	private BigDecimal BigTotal = new BigDecimal((double) 0).setScale(2, BigDecimal.ROUND_HALF_UP);
+	public BigDecimal getBigTotal() {
+    	return BigTotal;
+    }
+
 	private String dateRange = "";
 	public String[] dbParam;
 	private double dFee;
@@ -97,12 +102,17 @@ public class JdbcBillingCreateBillingFile {
 	private String query;
 	private String rCount = "";
 	private int recordCount = 0;
+	public int getRecordCount() {
+    	return recordCount;
+    }
+
 	private String referral;
 	private java.util.Date today;
 	private String totalAmount;
 	private String value;
 	private String clinicBgColor;
 	private HashMap<String,String> clinicShortName;
+	private boolean summaryView;
 	
 	public JdbcBillingCreateBillingFile() {
 		formatter = new SimpleDateFormat("yyyyMMdd"); // yyyyMMddHmm");
@@ -176,7 +186,7 @@ public class JdbcBillingCreateBillingFile {
 		}
 
 		ret = "\n" + header1 + "\r" + header2;
-		if (header1.length() != 80)
+		if (header1.length() != 79)
 			errorFatalMsg += "Header 1 length wrong! - " + ch1Obj.getId() + "<br>";
 
 		return ret;
@@ -243,18 +253,24 @@ public class JdbcBillingCreateBillingFile {
 				+ "<td class='myGreen'>BILLDATE</td><td class='myGreen'>CODE</td>"
 				+ "<td align='right' class='myGreen'>BILLED</td>"
 				+ "<td align='right' class='myGreen'>DX</td><td align='right' class='myGreen'>Comment</td>"
-				+ "<td align='centre' class='myGreen'>SITE</td></tr>";;
+				+ "<td align='centre' class='myGreen'>SITE</td></tr>";
 		return ret;
 	}
 
 	
-	private String buildHTMLContentRecord(int invCount) {
+	private String buildHTMLContentRecord(int invCount,boolean simulation) {
 		String ret = null;
+		ret = "";
 		String styleClass = patientCount % 2 == 0 ? "myLightBlue" : "myIvory";
 		if (invCount == 0) {			
 			Demographic demo = demographicDao.getDemographic(ch1Obj.getDemographic_no());
-			
-			ret = "\n<tr><td class='" + styleClass + "'><a href=# onclick=\"popupPage(720,640,'billingONCorrection.jsp?billing_no="
+			ret += "\n<tr "+(summaryView ? "style='display:none;' class='record"+providerNo+"'": "")+">"; 
+			if (simulation) {
+				ret += "<td class='" + styleClass + "'>"
+					 + ch1Obj.getProvider_ohip_no()
+					 + "</td>";				
+			}
+			ret += "<td class='" + styleClass + "'><a href=# onclick=\"popupPage(720,640,'billingONCorrection.jsp?billing_no="
 					+ ch1Obj.getId()
 					+ "');return false;\">"
 					+ ch1Obj.getId()
@@ -279,7 +295,7 @@ public class JdbcBillingCreateBillingFile {
 					+ itemObj.getDx()
 					+ "</td><td class='" + styleClass + "'> &nbsp; &nbsp;" + referral + hcFlag + m_Flag + " </td></tr>";
 		} else {
-			ret = "\n<tr><td class='" + styleClass + "'>&nbsp;</td> <td class='" + styleClass + "'>&nbsp;</td><td class='" + styleClass + "'>&nbsp;</td><td class='" + styleClass + "'>&nbsp;</td><td class='" + styleClass + "'>&nbsp;</td>"
+			ret = "\n<tr "+(summaryView ? "style='display:none;' class='record"+providerNo+"'": "")+">"+(summaryView? "<td class='" + styleClass + "'>" : "")+"<td class='" + styleClass + "'>&nbsp;</td> <td class='" + styleClass + "'>&nbsp;</td><td class='" + styleClass + "'>&nbsp;</td><td class='" + styleClass + "'>&nbsp;</td><td class='" + styleClass + "'>&nbsp;</td>"
 					+ "<td class='" + styleClass + "'>&nbsp;</td> <td class='" + styleClass + "'>&nbsp;</td>" + "<td class='" + styleClass + "'>"
 					+ itemObj.getService_code() + "</td><td align='right' class='" + styleClass + "'>" + itemObj.getFee()
 					+ "</td><td align='right' class='" + styleClass + "'>" + itemObj.getDx()
@@ -322,7 +338,8 @@ public class JdbcBillingCreateBillingFile {
 		}
 		return ret;
 	}
-	private String buildHTMLContentTrailer() {
+	private String buildHTMLContentTrailer(boolean simulation) {
+		if (!simulation) {
 		htmlContent += "\n<tr><td colspan='11' class='myIvory'>&nbsp;</td></tr><tr><td colspan='7' class='myIvory'>OHIP No: "
 				+ bhObj.getProvider_reg_num()
 				+ ": "
@@ -330,14 +347,56 @@ public class JdbcBillingCreateBillingFile {
 				+ " RECORDS PROCESSED</td><td colspan='4' class='myIvory'>TOTAL: "
 				+ BigTotal.toString()
 				+ "\n</td></tr>" + "\n</table>";
-		// writeFile(value);
-		String checkSummary = errorMsg.equals("") ? "\n<table border='0' width='100%' bgcolor='green'><tr><td>Pass</td></tr></table>"
-				: "\n<table border='0' width='100%' bgcolor='orange'><tr><td>Please correct the errors and run this simulation again!</td></tr></table>";
+		}
+		
+		String checkSummary = "";
+
+		// Error is 0 if there is no error, otherwise 1 for a normal error, 2 for a fatal error, 3 for both.
+		int error = 0 | (errorMsg.equals("") ? 0 : 1) | (errorFatalMsg.equals("") ? 0 : 2);
+		String totalError = errorMsg + (error == 3 ? "<br>" : "") + errorFatalMsg;
+		String errorMsgHtml = "";
+		int errorCount = totalError.split("<br>").length;
+		if (error > 0) { 
+			if (errorCount > 3) {
+				int remainingErrors = totalError.indexOf("<br>",totalError.indexOf("<br>",totalError.indexOf("<br>") + 4) + 4);
+				errorMsgHtml  = "<tr><td colspan='12'><font color='black'>" 
+					        + totalError.substring(0, remainingErrors) 
+					        + "</font></td></tr>";
+				errorMsgHtml += "<tr><td colspan='12'><font color='black'>"
+							+ "<button onclick='jQuery(this).next().show();jQuery(this).hide();return false;'>Click here to see remaining "+(errorCount-3)+" results.</button>"
+							+ "<div style='display:none;'>"
+							+ totalError.substring(remainingErrors + 4)
+							+ "</div>"
+							+ "</font></td></tr>";
+			}
+			else {				
+				errorMsgHtml = "<tr><td colspan='12'><font color='black'>" + totalError + "</font></td></tr>";
+			}
+		}
+		if (error == 0) {
+			checkSummary = simulation 
+							? "\n<tr><td colspan='12'><table border='0' width='100%' bgcolor='green'><tr><td>Pass</td></tr></table></td></tr>"
+							: "\n<table border='0' width='100%' bgcolor='green'><tr><td>Pass</td></tr></table>";
+		}
+		else {
+			checkSummary = simulation
+							? "\n<tr><td colspan='12' style='padding:2px;'><table border='0' width='100%' style='border: 1px dashed red'><tr style='background-color: #CCCCCC;'><td>FAIL - Please correct the errors and run this simulation again!</td></tr>"
+									+ errorMsgHtml + "</table></td></tr>"
+							: "\n<table border='0' width='100%' bgcolor='orange'><tr><td>Please correct the errors and run this simulation again!</td></tr></table>";
+		}
+		
 		htmlValue += htmlContent + checkSummary;
-		htmlHeader = "<html><body><style type='text/css'><!-- .myGreen{  font-family: Arial, Helvetica, sans-serif;  font-size: 12px; font-style: normal;  line-height: normal;  font-weight: normal;  font-variant: normal;  text-transform: none;  color: #003366;  text-decoration: none; --></style>";
-		htmlFooter = "</body></html>";
+		if (!simulation) { 
+			htmlHeader = "<html><body><style type='text/css'><!-- .myGreen{  font-family: Arial, Helvetica, sans-serif;  font-size: 12px; font-style: normal;  line-height: normal;  font-weight: normal;  font-variant: normal;  text-transform: none;  color: #003366;  text-decoration: none; --></style>";
+			htmlFooter = "</body></html>";
+		}
+		else {
+			htmlValue += "<tr><td colspan='12'>&nbsp;</td></tr>";
+		}
 		htmlCode = htmlHeader + htmlValue + htmlFooter;
 		return htmlCode;
+
+		
 	}
 
 	private String buildSiteHTMLContentTrailer() {
@@ -359,13 +418,13 @@ public class JdbcBillingCreateBillingFile {
 	}
 	
 	private String buildItem() {
-		String ret = "\n" + itemObj.getTransc_id() + itemObj.getRec_id() + itemObj.getService_code() + space(2)
+		String ret = itemObj.getTransc_id() + itemObj.getRec_id() + itemObj.getService_code() + space(2)
 				+ rightJustify("0", 6, itemObj.getFee().replaceAll("\\.", ""))
 				+ rightJustify("0", 2, itemObj.getSer_num()) + itemObj.getService_date().replaceAll("-", "")
-				+ leftJustify(" ", 4, itemObj.getDx()) + space(11) + space(5) + space(2) + space(6) + space(25) + "\r";
-		if (ret.length() != 80)
+				+ leftJustify(" ", 4, itemObj.getDx()) + space(11) + space(5) + space(2) + space(6) + space(25);
+		if (ret.length() != 79)
 			errorFatalMsg += "Item length wrong! - " + ch1Obj.getId() + "<br>";
-		return ret;
+		return "\n" + ret + "\r";
 	}
 
 	private String buildTrailer() {
@@ -435,21 +494,59 @@ public class JdbcBillingCreateBillingFile {
 	}
 
 	public void createBillingFileStr(String bid, String status) {
+		createBillingFileStr(bid,status,false);
+	}
+	
+	public void createBillingFileStr(String bid, String status, boolean simulation) {
+		createBillingFileStr(bid, status, simulation, null);
+	}
+	public void createBillingFileStr(String bid, String status, boolean simulation, String mohOffice) {
+		createBillingFileStr(bid, status, simulation, mohOffice, false);
+	}
+	
+	public void createBillingFileStr(String bid, String status, boolean simulation, String mohOffice, boolean summaryView) {
+		createBillingFileStr(bid, status, simulation, mohOffice, summaryView, false);		
+	}
+	public void createBillingFileStr(String bid, String status, boolean simulation, String mohOffice, boolean summaryView, boolean useProviderMOH) {
+		this.summaryView = summaryView;
 		try {
 			if (!"0".equals(bid)) { // for simulation only
 				getBatchHeaderObj(bid);
+				if (useProviderMOH) {
+					ProviderBillCenter pbc = new ProviderBillCenter();
+					String billCenter = pbc.getBillCenter(providerNo);
+					if (billCenter != null && billCenter.length() == 1) {
+						bhObj.setMoh_office(billCenter);						
+					}
+					else {
+						bhObj.setMoh_office(mohOffice);
+					}
+				}
+				else if (mohOffice != null) {
+					bhObj.setMoh_office(mohOffice);
+				}
 			}
-			checkBatchHeader();
-			batchHeader = buildBatchHeader();
-			htmlValue = buildHTMLContentHeader();
+			
+			if (!simulation) {
+				checkBatchHeader();
+				batchHeader = buildBatchHeader();
+				htmlValue = buildHTMLContentHeader();
+			}
 			// start here
 			value = batchHeader;
 			BillingONDataHelp dbObj = new BillingONDataHelp();
+			
+			
+			BigDecimal proTotal = new BigDecimal(0.0).setScale(2, BigDecimal.ROUND_HALF_UP);
+			int proItem = 0;
+			String ohipNo = "";
+
 			// (status='O' or status='W')
 			query = "select * from billing_on_cheader1 where provider_no='" + providerNo + "' and  " + status + " "
 					+ dateRange + " and pay_program in ('HCP', 'WCB', 'RMB') order by billing_date, billing_time";
 			_logger.info("createBillingFileStr(sql = " + query + ")");
 			ResultSet rs = dbObj.searchDBRecord(query);
+			
 			while (rs.next()) {
 				// recreate judge
 				String bNo = "" + rs.getInt("id");
@@ -495,6 +592,7 @@ public class JdbcBillingCreateBillingFile {
 				ch1Obj.setComment(rs.getString("comment1"));
 				ch1Obj.setVisittype(rs.getString("visittype"));
 				ch1Obj.setProvider_ohip_no(rs.getString("provider_ohip_no"));
+				ohipNo = ch1Obj.getProvider_ohip_no();
 				ch1Obj.setProvider_rma_no(rs.getString("provider_rma_no"));
 				ch1Obj.setApptProvider_no(rs.getString("apptProvider_no"));
 				ch1Obj.setAsstProvider_no(rs.getString("asstProvider_no"));
@@ -517,7 +615,12 @@ public class JdbcBillingCreateBillingFile {
 				// specCode = rs.getString("status");
 				// content = rs.getString("content");
 				value += buildHeader1();
-				htmlContent += printErrorPartMsg();
+				if (!simulation) {
+					htmlContent += printErrorPartMsg();
+				} else {
+					errorPartMsg = "";
+				}
+			
 				// build billing detail
 				invCount = 0;
 				query = "select * from billing_on_item where ch1_id=" + ch1Obj.getId()
@@ -560,17 +663,27 @@ public class JdbcBillingCreateBillingFile {
 
 					dFee = Double.parseDouble(fee);
 					bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
-					BigTotal = BigTotal.add(bdFee);
+					proTotal = proTotal.add(bdFee);
+					BigTotal = BigTotal.add(bdFee);					
 					_logger.info("createBillingFileStr(BigTotal = " + BigTotal + ")");
 					checkItem();
 					value += buildItem();
 					_logger.info("createBillingFileStr(value = " + value + ")");
-					htmlContent += buildHTMLContentRecord(invCount);
-					htmlContent += printErrorPartMsg();
+					htmlContent += buildHTMLContentRecord(invCount,simulation);
+					if (!simulation) {
+						htmlContent += printErrorPartMsg();
+					} else {
+						errorPartMsg = "";
+					}
 					invCount++;
+					proItem++;
 				}
 				checkNoDetailRecord(invCount);
-				htmlContent += printErrorPartMsg();
+				if (!simulation) {
+					htmlContent += printErrorPartMsg();
+				} else {
+					errorPartMsg = "";					
+				}
 				if (eFlag.compareTo("1") == 0) {
 					updateHeader1BilledBatchId(ch1Obj.getId(), bhObj.getId());
 				}
@@ -581,10 +694,22 @@ public class JdbcBillingCreateBillingFile {
 			// percent = new BigDecimal((double) 0.01).setScale(2,
 			// BigDecimal.ROUND_HALF_UP);
 			// BigTotal = BigTotal.multiply(percent);
+			
+			if (summaryView) {
+				String items = htmlContent;
+				htmlContent = "<tr><td class='myIvory'>"+ohipNo+"</td><td class='myIvory'>"+proItem+"</td><td class='myIvory'>"+proTotal.toString()+"</td><td class='myIvory' colspan='6'><button id='recordShowButton"+providerNo+"' onclick='jQuery(\".record"+providerNo+"\").show();jQuery(this).hide();jQuery(\"#recordHideButton"+providerNo+"\").show();return false;'>Show record details.</button><button id='recordHideButton"+providerNo+"' style='display:none;' onclick='jQuery(\".record"+providerNo+"\").hide();jQuery(this).hide();jQuery(\"#recordShowButton"+providerNo+"\").show();return false;'>Hide record details.</button></td></tr>";
+				htmlContent  += "\n<tr style='display:none;' class='record"+providerNo+"'><td class='myGreen'>OHIP NO</td><td class='myGreen'>ACCT NO</td>"
+						+ "<td width='25%' class='myGreen'>NAME</td><td class='myGreen'>RO</td><td class='myGreen'>DOB</td><td class='myGreen'>Sex</td><td class='myGreen'>HEALTH #</td>"
+						+ "<td class='myGreen'>BILLDATE</td><td class='myGreen'>CODE</td>"
+						+ "<td align='right' class='myGreen'>BILLED</td>"
+						+ "<td align='right' class='myGreen'>DX</td><td align='right' class='myGreen'>Comment</td></tr>";
+				htmlContent += items;				
+			}
+			
 			BigTotal = BigTotal.setScale(2, BigDecimal.ROUND_HALF_UP);
 			value += buildTrailer();
 
-			htmlCode = buildHTMLContentTrailer();
+			htmlCode = buildHTMLContentTrailer(simulation);
 			// writeHtml(htmlCode);
 			ohipReciprocal = String.valueOf(hcCount);
 			ohipRecord = String.valueOf(rCount);

@@ -25,10 +25,14 @@
 <%@ page import="java.util.*" errorPage="errorpage.jsp"%>
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
+<%@ page import="oscar.oscarProvider.data.ProviderBillCenter"%>
+
 
 <%//
 			String diskId = request.getParameter("diskId");
 			String mohOffice = request.getParameter("billcenter");
+			boolean useProviderMOH = "true".equals(request.getParameter("useProviderMOH"));
+			String defaultMOH = mohOffice;
 
 			//get date from JdbcBillingClamImpl.getPrevDiskCreateDate(id), getDiskCreateDate(id)
 			JdbcBillingClaimImpl dateObj = new JdbcBillingClaimImpl();
@@ -43,6 +47,17 @@
 			if (lProvider != null && lProvider.size() == 1 && ((BillingProviderData) lProvider.get(0)).getBillingGroupNo().equals("0000")) {
 				BillingProviderData dataProvider = (BillingProviderData) lProvider.get(0);
 
+				if (useProviderMOH) {
+					ProviderBillCenter pbc = new ProviderBillCenter();
+					String billCenter = pbc.getBillCenter(dataProvider.getProviderNo());
+					if (billCenter != null && billCenter.length() == 1) {
+						mohOffice = billCenter;						
+					}
+					else {
+						mohOffice = defaultMOH;
+					}
+				}
+				
 				// create the billing file 
 				int headerId = obj.updateBatchHeader(dataProvider, diskId, mohOffice, "1", (String) session
 						.getAttribute("user"));
@@ -65,7 +80,7 @@
 				objFile.setDateRange(dateRange);
 				//
 				
-				objFile.createBillingFileStr("" + headerId, "(status='B')");
+				objFile.createBillingFileStr("" + headerId, "(status='B')", false, mohOffice, false, false);
 				objFile.writeFile(objFile.getValue());
 				objFile.writeHtml(objFile.getHtmlCode());
 				// update the diskname 
@@ -110,7 +125,7 @@
 						//}
 						objFile.setDateRange(dateRange);
 						//
-						objFile.createBillingFileStr("" + headerId, "(status='B')");
+						objFile.createBillingFileStr("" + headerId, "(status='B')", false, mohOffice, false, false);						
 						value += objFile.getValue() + "\n";
 						objFile.writeHtml(objFile.getHtmlCode());
 						objFile.updateDisknameSum(Integer.parseInt(diskId));

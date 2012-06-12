@@ -38,15 +38,28 @@
 			String mohOffice = request.getParameter("billcenter");
 			String BILLING_STATUS = "(status='O' or status='W' or status='I')";
 			int diskId = 0;
-                        int headerId = 0;
-                        ProviderBillCenter oriBillCenter = new ProviderBillCenter();
+            int headerId = 0;
+            ProviderBillCenter oriBillCenter = new ProviderBillCenter();
 
+            String dateRange = "";
+        	String dateBegin = request.getParameter("xml_vdate");
+        	String dateEnd = request.getParameter("xml_appointment_date");
+        	if (dateEnd.compareTo("") == 0)
+        		dateEnd = request.getParameter("curDate");
+        	if (dateBegin.compareTo("") == 0) {
+        		dateRange = " and billing_date <= '" + dateEnd + "'";
+        	} else {
+        		dateRange = " and billing_date >='" + dateBegin + "' and billing_date <='" + dateEnd + "'";
+        	}
+        	
+            String useProviderMOH = request.getParameter("useProviderMOH");
 			if (provider.compareTo("all") == 0) {
 				// if all, find who is solo, who is in group
 				BillingDiskCreatePrep obj = new BillingDiskCreatePrep();
 				List lProvider = obj.getCurSoloProvider();
 				for (int i = 0; i < lProvider.size(); i++) {
 					JdbcBillingCreateBillingFile objFile = new JdbcBillingCreateBillingFile();
+					objFile.setDateRange(dateRange);
 					BillingProviderData dataProvider = (BillingProviderData) lProvider.get(i);
 					diskId = obj.createNewSoloDiskName(dataProvider.getProviderNo(), (String) session
 							.getAttribute("user"));
@@ -64,7 +77,7 @@
 					objFile.setProviderNo(dataProvider.getProviderNo());
 					objFile.setOhipFilename(ohipFilename);
 					objFile.setHtmlFilename(htmlFilename);
-					objFile.createBillingFileStr("" + headerId, BILLING_STATUS);
+					objFile.createBillingFileStr("" + headerId, BILLING_STATUS, false, mohOffice, false, "on".equals(useProviderMOH));
 					objFile.writeFile(objFile.getValue());
 					objFile.writeHtml(objFile.getHtmlCode());
 					objFile.updateDisknameSum(diskId);
@@ -102,9 +115,10 @@
                                                 if (((BillingProviderData) lProvider2.get(i)).getBillingGroupNo().compareTo(StrGroupNo.toString())!=0)
                                                     continue;
                                                 objFile = new JdbcBillingCreateBillingFile();
-						BillingProviderData dataProvider = (BillingProviderData) lProvider2.get(i);
+                                                objFile.setDateRange(dateRange);
+												BillingProviderData dataProvider = (BillingProviderData) lProvider2.get(i);
                                                 String ohipFilename = obj.getOhipfilename(diskId);
-						String htmlFilename = obj.getHtmlfilename(diskId, dataProvider.getProviderNo());
+												String htmlFilename = obj.getHtmlfilename(diskId, dataProvider.getProviderNo());
                                                 boolean existBillCenter = oriBillCenter.hasBillCenter(dataProvider.getProviderNo());
                                                 // create the billing file with provider's own bill center
                                                 if (existBillCenter && oriBillCenter.getBillCenter(dataProvider.getProviderNo()).compareTo(mohOffice)!=0)
@@ -117,7 +131,7 @@
                         			objFile.setProviderNo(dataProvider.getProviderNo());
 						objFile.setOhipFilename(ohipFilename);
 						objFile.setHtmlFilename(htmlFilename);
-						objFile.createBillingFileStr("" + headerId, BILLING_STATUS);
+						objFile.createBillingFileStr("" + headerId, BILLING_STATUS, false, mohOffice, false, "on".equals(useProviderMOH));						
 						value += objFile.getValue() + "\n";
 						objFile.writeHtml(objFile.getHtmlCode());
 						objFile.updateDisknameSum(diskId);
@@ -131,6 +145,7 @@
 				List lProvider = new Vector();
 				lProvider.add(obj.getProviderObj(provider));
 				JdbcBillingCreateBillingFile objFile = new JdbcBillingCreateBillingFile();
+				objFile.setDateRange(dateRange);
 				for (int i = 0; i < lProvider.size(); i++) {
 					BillingProviderData dataProvider = (BillingProviderData) lProvider.get(i);
 					// not for group provider
@@ -147,8 +162,8 @@
 							.getAttribute("user"));
 					objFile.setProviderNo(dataProvider.getProviderNo());
 					objFile.setOhipFilename(ohipFilename);
-					objFile.setHtmlFilename(htmlFilename);
-					objFile.createBillingFileStr("" + headerId, BILLING_STATUS);
+					objFile.setHtmlFilename(htmlFilename);					
+					objFile.createBillingFileStr("" + headerId, BILLING_STATUS, false, mohOffice, false, "on".equals(useProviderMOH));
 					objFile.writeFile(objFile.getValue());
 					objFile.writeHtml(objFile.getHtmlCode());
 					objFile.updateDisknameSum(diskId);
