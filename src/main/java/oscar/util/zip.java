@@ -30,14 +30,20 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.Enumeration;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 public class zip
 {
+	
+	private static Logger logger = MiscUtils.getLogger();
+	
     /**
      * default contructor
      * this constructor is used to avoid unused local variables/for clean code
@@ -80,4 +86,58 @@ public class zip
             MiscUtils.getLogger().error("Error", e);
         }    
     }
+    
+    public static boolean unzipXML(String dirName, String fName) {
+    	int BUFFER = 2048;
+    	
+    	Enumeration<? extends ZipEntry> entries;
+    	boolean result = false;
+    	String fullpath = dirName + fName;	
+    	if (!fName.substring(fName.length()-4).equalsIgnoreCase(".zip")) {
+    		logger.error("unzipXML: "+fName+" does not have .zip extension.");
+    		return result;
+    	}
+    	BufferedOutputStream dest = null;
+    	BufferedInputStream is = null;
+    	ZipEntry entry;
+
+    	try {
+    		ZipFile zipfile = new ZipFile(fullpath);
+
+    		entries = zipfile.entries();
+    		while(entries.hasMoreElements()) {
+    			entry = entries.nextElement();
+    			String zName = entry.getName();
+    			is = new BufferedInputStream(zipfile.getInputStream(entry));
+    			int count;
+    			byte data[] = new byte[BUFFER];
+    			if (!zName.substring(zName.length()-4).equalsIgnoreCase(".zip")) {
+    				zName = zName+".xml";
+    			}
+    			File z = new File(dirName+zName);
+    			FileOutputStream fos = new FileOutputStream(z);
+    			dest = new BufferedOutputStream(fos, BUFFER);
+    			while ((count = is.read(data, 0, BUFFER)) != -1) {
+    				dest.write(data, 0, count);
+    			}
+    			dest.flush();
+    			dest.close();
+    			is.close();
+    		}
+    		zipfile.close();
+    		//nee to move zip file to archive folder
+    		File afile = new File(fullpath);
+    		File dir = new File(dirName+"unzip_archive/"); 
+    		Boolean success = afile.renameTo(new File(dir, afile.getName()));
+    		if (!success) {
+    			logger.error("oscar.util.zip.unzipXML: the zip file "+fullpath+" was not archived");
+    		}
+    	} catch(Exception e) {
+    		logger.error("oscar.util.zip.unzipXML Unhandled exception:", e);
+    		return result;
+    	} 
+    	result = true;
+    	return result;
+    }
 }
+

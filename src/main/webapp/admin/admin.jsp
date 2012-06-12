@@ -512,6 +512,9 @@ div.logoutBox {
 				key="admin.admin.btnINRBatchBilling" /></a></li>
 			<li><a href="#"
 				onclick='popupPage(600,900,&quot;<html:rewrite page="/billing/CA/ON/billingONUpload.jsp"/>&quot;);return false;'><bean:message key="admin.admin.uploadMOHFile"/></a></li>
+			<% if (OscarProperties.getInstance().isPropertyActive("moh_file_management_enabled")) { %>
+			<li><a href="#" onclick='popupPage(600,900,&quot;<html:rewrite page="/billing/CA/ON/viewMOHFiles.jsp"/>&quot;);return false;'><bean:message key="admin.admin.viewMOHFiles"/></a></li>
+			<% } %>
 			<li><a href="#"
 				onclick='popupPage(600,900,&quot;<html:rewrite page="/servlet/oscar.DocumentUploadServlet"/>&quot;);return false;'><bean:message
 				key="admin.admin.btnBillingReconcilliation" /></a></li>
