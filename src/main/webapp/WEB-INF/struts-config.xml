@@ -541,6 +541,8 @@
                 <form-bean name="groupPreference" type="org.apache.struts.action.DynaActionForm"/>
 		</form-bean>                
                 <form-bean name="billing3rdPartyPayment" type="org.apache.struts.validator.DynaValidatorForm"/>
+                <form-bean name="applyPractitionerPremium" type="org.apache.struts.validator.DynaValidatorForm"> 
+                </form-bean>
 	</form-beans>
 
 	<global-forwards>
@@ -2508,6 +2510,11 @@
                         <forward name="failure" path="/failure.jsp" />
                         <forward name="submitClose" path="/close.html" />
                         <forward name="closeReload" path="/billing/CA/ON/billingONCorrection.jsp?billing_no="/>
+		</action>
+                
+                <action input="/billing/CA/ON/genRADesc.jsp" name="applyPractitionerPremium" path="/billing/CA/ON/ApplyPractitionerPremium" scope="request" type="org.oscarehr.common.web.ApplyPractitionerPremiumAction" parameter="method">
+                        <forward name="success" path="/billing/CA/ON/genRADesc.jsp" />                        
+                        <forward name="failure" path="/failure.jsp" />                       
 		</action>
 	</action-mappings>
 	<controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" maxFileSize="25M" />

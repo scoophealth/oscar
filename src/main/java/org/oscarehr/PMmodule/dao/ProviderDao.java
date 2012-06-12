@@ -363,4 +363,21 @@ public class ProviderDao extends HibernateDaoSupport {
             
             return providers;
         }
+        
+        public List<Provider> getBillableProvidersByOHIPNo(String ohipNo) {                        
+            if (ohipNo == null || ohipNo.length() <= 0) {
+		throw new IllegalArgumentException();
+            }
+
+            @SuppressWarnings("unchecked")
+            List<Provider> providers = this.getHibernateTemplate().find("from Provider p where ohip_no=? order by last_name, first_name", ohipNo);            
+            
+            if(providers.size()>1) {
+                logger.warn("Found more than 1 provider with ohipNo="+ohipNo);
+            }
+            if(providers.isEmpty())
+                return null;
+            else		
+                return providers;
+        }
 }

@@ -55,12 +55,11 @@ public class BillingONExtDao extends AbstractDao<BillingONExt>{
     
     public BigDecimal getPayment(BillingONPayment paymentRecord) {
         
-        String sql = "select bExt from BillingONExt bExt where paymentId=? and billingNo=? and status=? and keyVal=?";
+        String sql = "select bExt from BillingONExt bExt where paymentId=? and billingNo=? and keyVal=?";
         Query query = entityManager.createQuery(sql);
         query.setParameter(1, paymentRecord.getId());
-        query.setParameter(2, paymentRecord.getBillingNo());
-        query.setParameter(3, '1');
-        query.setParameter(4, "payment");
+        query.setParameter(2, paymentRecord.getBillingNo());       
+        query.setParameter(3, "payment");
          
         @SuppressWarnings("unchecked")
         List<BillingONExt> results = query.getResultList();
@@ -86,12 +85,11 @@ public class BillingONExtDao extends AbstractDao<BillingONExt>{
     }
     
     public BigDecimal getRefund(BillingONPayment paymentRecord) {
-        String sql = "select bExt from BillingONExt bExt where paymentId=? and billingNo=? and status=? and keyVal=?";
+        String sql = "select bExt from BillingONExt bExt where paymentId=? and billingNo=? and keyVal=?";
         Query query = entityManager.createQuery(sql);
         query.setParameter(1, paymentRecord.getId());
-        query.setParameter(2, paymentRecord.getBillingNo());
-        query.setParameter(3, '1');
-        query.setParameter(4, "refund");
+        query.setParameter(2, paymentRecord.getBillingNo());       
+        query.setParameter(3, "refund");
          
         @SuppressWarnings("unchecked")
         List<BillingONExt> results = query.getResultList();

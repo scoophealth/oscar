@@ -25,28 +25,20 @@ package org.oscarehr.common.dao;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import javax.persistence.Query;
-import org.oscarehr.common.model.BillingService;
-import org.oscarehr.common.model.BillingONItem;
-import org.oscarehr.common.model.BillingONCHeader1;
 import org.apache.commons.lang.StringUtils;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.utility.DateUtils;
 import org.oscarehr.billing.CA.ON.model.BillingPercLimit;
 import org.oscarehr.billing.CA.dao.GstControlDao;
 import org.oscarehr.billing.CA.model.GstControl;
+import org.oscarehr.common.model.*;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 import oscar.OscarProperties;
-import org.oscarehr.common.model.Provider;
-import org.oscarehr.common.model.Demographic;
 import oscar.oscarBilling.ca.on.data.BillingDataHlp;
-import org.oscarehr.common.model.RaDetail;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 /**
@@ -373,12 +365,12 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         this.gstControlDao = gstControlDao;
     }
     
-     public BillingONItem findBillingONItem(BillingONCHeader1 ch1, RaDetail rad) {
+     public BillingONItem findBillingONItemByServiceCode(BillingONCHeader1 ch1, String serviceCode) {
         String sql = "select b1 from BillingONItem b1 where b1.ch1Id = :billId and b1.serviceCode = :code";
         
         Query q = entityManager.createQuery(sql);
         q.setParameter("billId", ch1.getId());
-        q.setParameter("code", rad.getServiceCode());
+        q.setParameter("code", serviceCode);
         
        BillingONItem b = null;
         
@@ -386,10 +378,35 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         List<BillingONItem> results = q.getResultList();
         if (!results.isEmpty()) {
             if (results.size() > 1) {
-                 MiscUtils.getLogger().warn("Duplicate service codes on same invoice. Id:" + ch1.getId() + " Service Code:" + rad.getServiceCode());
+                 MiscUtils.getLogger().warn("Duplicate service codes on same invoice. Id:" + ch1.getId() + " Service Code:" + serviceCode);
             }
             b = results.get(0);
         }
         return b;
-    }          
+    }
+     
+     public List<BillingONCHeader1> get3rdPartyInvoiceByProvider(Provider p, Date start, Date end, Locale locale) {
+         String sql = "select distinct bCh1 from BillingONPayment bPay, BillingONCHeader1 bCh1 where bPay.billingNo=bCh1.id and bCh1.providerNo=? and bPay.payDate >= ? and bPay.payDate < ? order by bCh1.id";
+         Query query = entityManager.createQuery(sql);        
+         query.setParameter(1, p.getProviderNo());  
+         query.setParameter(2, start);
+         query.setParameter(3, end);
+         
+        @SuppressWarnings("unchecked")
+        List<BillingONCHeader1> results = query.getResultList();
+        
+        return results;
+    }
+     
+     public List<BillingONCHeader1> get3rdPartyInvoiceByDate(Date start, Date end, Locale locale) {
+         String sql = "select distinct bCh1 from BillingONPayment bPay, BillingONCHeader1 bCh1 where bPay.billingNo=bCh1.id and bPay.payDate >= ? and bPay.payDate < ? order by bCh1.id";
+         Query query = entityManager.createQuery(sql);               
+         query.setParameter(1, start);
+         query.setParameter(2, end);
+         
+        @SuppressWarnings("unchecked")
+        List<BillingONCHeader1> results = query.getResultList();
+        
+        return results;
+    }
 }

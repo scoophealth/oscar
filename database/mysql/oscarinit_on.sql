@@ -3053,3 +3053,15 @@ CREATE TABLE `batch_billing` (
   `creator` varchar(6),
   PRIMARY KEY (`id`)
 );
+
+create table billing_on_premium (
+    premium_id int (10) NOT NULL auto_increment primary key, 
+    raheader_no int(6) NOT NULL, provider_no varchar(6), 
+    providerohip_no varchar(6) NOT NULL, 
+    pay_date date NOT NULL, 
+    amount_pay varchar(10) NOT NULL, 
+    status tinyint(1) NOT NULL, 
+    create_date timestamp NOT NULL, 
+    creator varchar(6) NOT NULL
+);
+

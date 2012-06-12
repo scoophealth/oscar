@@ -48,6 +48,7 @@ public class BillingONCHeader1 extends AbstractModel<Integer> implements Seriali
 	private static final long serialVersionUID = 1L;
         
         public static final String SETTLED = "S";
+        public static final String DELETED = "D";
         
 	@Id
         @GeneratedValue(strategy = GenerationType.AUTO)

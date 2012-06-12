@@ -17,6 +17,14 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+
+<%@page import="oscar.util.DateUtils"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.common.model.Provider,org.oscarehr.PMmodule.dao.ProviderDao"%>
+<%@page import="org.oscarehr.common.model.BillingONPremium, org.oscarehr.common.dao.BillingONPremiumDao"%>
 <%  
 if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
 %>
@@ -120,7 +128,7 @@ while ((nextline=input.readLine())!=null){
 		}
 
 		if (headerCount.compareTo("8") == 0){
-			message_txt = message_txt + nextline.substring(3,73)+"<br>";
+			message_txt = message_txt + nextline.substring(3,73)+"<br>";                       
 		}
 	}
 }
@@ -213,6 +221,73 @@ Colposcopy Total :
 <table bgcolor="#EEEEFF" bordercolor="#666666" border="1">
 	<%=transaction%>
 </table>
+
+<%
+    Integer raHeaderNo = Integer.parseInt(raNo);
+    
+    BillingONPremiumDao bPremiumDao = (BillingONPremiumDao) SpringUtils.getBean("billingONPremiumDao");
+    List<BillingONPremium> bPremiumList = bPremiumDao.getRAPremiumsByRaHeaderNo(raHeaderNo);
+    if (bPremiumList.isEmpty()) {
+        bPremiumDao.parseAndSaveRAPremiums(raHeaderNo, request.getLocale());
+        bPremiumList = bPremiumDao.getRAPremiumsByRaHeaderNo(raHeaderNo);
+    }
+    
+            
+    if (!bPremiumList.isEmpty()) {
+%>
+    <html:form action="/billing/CA/ON/ApplyPractitionerPremium">
+        <input type="hidden" name="rano" value="<%=raNo%>"/>
+        <input type="hidden" name="method" value="applyPremium"/>
+        <h3><bean:message key="oscar.billing.on.genRADesc.premiumTitle"/></h3>
+        <table>
+            <thead>
+                <th style="width:30px;font-family: helvetica; background-color: #486ebd; color:white;"><bean:message key="oscar.billing.on.genRADesc.applyPremium"/></th>
+                <th style="font-family: helvetica; background-color: #486ebd; color:white;"><bean:message key="oscar.billing.on.genRADesc.ohipNo"/></th>
+                <th style="font-family: helvetica; background-color: #486ebd; color:white;"><bean:message key="oscar.billing.on.genRADesc.providerName"/></th>
+                <th style="font-family: helvetica; background-color: #486ebd; color:white;"><bean:message key="oscar.billing.on.genRADesc.totalMonthlyPayment"/></th>
+                <th style="font-family: helvetica; background-color: #486ebd; color:white;"><bean:message key="oscar.billing.on.genRADesc.paymentDate"/></th>
+            </thead>
+    <%
+           
+            for (BillingONPremium premium : bPremiumList) {   
+                Integer premiumId = premium.getId();
+                ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
+                List<Provider> pList = providerDao.getBillableProvidersByOHIPNo(premium.getProviderOHIPNo());  
+                if ((pList != null) && !pList.isEmpty()) {
+                    String isChecked = "";
+                    if (premium.getStatus())
+                         isChecked = "checked";   
+    %>
+            <tr>
+                <td><input name="choosePremium<%=premiumId%>" type="checkbox" value="Y" <%=isChecked%>/>
+                <td><%=premium.getProviderOHIPNo()%></td>
+                <td><select name="providerNo<%=premiumId%>">
+    <%                     
+                    for (Provider p : pList) { 
+                        String selectedChoice = "";
+                        String providerNo = p.getProviderNo();
+                        String premiumProviderNo = premium.getProviderNo();
+                        if (premiumProviderNo != null && providerNo.equals(premiumProviderNo)) {
+                            selectedChoice = "selected=\"selected\"";
+                        }
+     %>
+                        <option value="<%=p.getProviderNo()%>" <%=selectedChoice%>><%=p.getFormattedName()%></option>
+    <%              } %>
+                    </select>
+                </td>
+                <td><%=premium.getAmountPay()%></td>
+                <td><%=DateUtils.formatDate(premium.getPayDate(), request.getLocale())%></td>
+            </tr>
+    <%                 
+                }
+            }        
+    %>
+            <tr>
+                <td colspan="5" style="text-align: right"><input type="submit" value="<bean:message key="oscar.billing.on.genRADesc.submitPremium"/>"/></td>
+            </tr>
+        </table>    
+    </html:form>
+<%      } %>
 <pre><%=message_txt%></pre>
 
 </body>
