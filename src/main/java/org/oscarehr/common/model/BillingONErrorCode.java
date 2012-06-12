@@ -25,6 +25,7 @@
 
 package org.oscarehr.common.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -34,6 +35,7 @@ import javax.persistence.Table;
 public class BillingONErrorCode extends AbstractModel<String>{
 
 	@Id
+        @Column(name = "code")
 	private String id;
 
 	private String description;

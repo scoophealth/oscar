@@ -32,7 +32,7 @@
 	String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
 %>
 <security:oscarSec roleName="<%=roleName$%>"
-	objectName="_admin,_admin.userAdmin,_admin.schedule,_admin.billing,_admin.resource,_admin.reporting,_admin.backup,_admin.messenger,_admin.eform,_admin.encounter,_admin.misc,_admin.torontoRfq"
+	objectName="_admin,_admin.userAdmin,_admin.schedule,_admin.billing,_admin.invoices,_admin.resource,_admin.reporting,_admin.backup,_admin.messenger,_admin.eform,_admin.encounter,_admin.misc,_admin.torontoRfq"
 	rights="r" reverse="<%=true%>">
 	<%
 		response.sendRedirect("../logout.jsp");
@@ -418,17 +418,11 @@ div.logoutBox {
 		</div>
 	</security:oscarSec>
 
-	<security:oscarSec roleName="<%=roleName$%>"
-		objectName="_admin,_admin.billing" rights="r" reverse="<%=false%>">
-		<%-- This links doesnt make sense on Brazil. There are other billing engines that we must use for billing --%>
-		<%
-			if (!country.equals("BR"))
-						{
-		%>
+        <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.invoices,_admin,_admin.billing" rights="r" reverse="<%=false%>">
 		<div class="adminBox">
 		<h3>&nbsp;<bean:message key="admin.admin.billing" /></h3>
 		<ul>
-
+            <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.billing" rights="r" reverse="<%=false%>">
 			<%
 				if (oscarVariables.getProperty("billregion", "").equals("BC"))
 								{
@@ -519,8 +513,8 @@ div.logoutBox {
 			<% } %>
 			<li><a href="#"
 				onclick='popupPage(600,900,&quot;<html:rewrite page="/servlet/oscar.DocumentUploadServlet"/>&quot;);return false;'><bean:message
-				key="admin.admin.btnBillingReconcilliation" /></a></li>
-			<!--  li><a href="#" onclick ='popupPage(600,900,&quot;<html:rewrite page="/billing/CA/ON/billingRA.jsp"/>&quot;);return false;'><bean:message key="admin.admin.btnBillingReconcilliation"/></a></li-->
+				key="admin.admin.btnBillingReconcilliation" /></a></li>                       
+                        <!--  li><a href="#" onclick ='popupPage(600,900,&quot;<html:rewrite page="/billing/CA/ON/billingRA.jsp"/>&quot;);return false;'><bean:message key="admin.admin.btnBillingReconcilliation"/></a></li-->
 			<!--  li><a href="#" onclick ='popupPage(600,1000,&quot;<html:rewrite page="/billing/CA/ON/billingOBECEA.jsp"/>&quot;);return false;'><bean:message key="admin.admin.btnEDTBillingReportGenerator"/></a></li-->
 			<li><a href="#"
 				onclick='popupPage(800,1000,&quot;<html:rewrite page="/billing/CA/ON/billStatus.jsp"/>&quot;);return false;'><bean:message key="admin.admin.invoiceRpts"/></a></li>
@@ -534,11 +528,13 @@ div.logoutBox {
 			<%
 				}
 			%>
+            </security:oscarSec>
+                        
+                <% if (oscarVariables.getProperty("billregion","").equals("ON")) { %>                	
+                        <li><a href="#" onclick="popupPage(800,1000,&quot;<html:rewrite page='/billing/CA/ON/billingONPayment.jsp'/>&quot;);return false;"><bean:message key="admin.admin.paymentReceived"/></a></li>
+                <% } %>
 		</ul>
 		</div>
-		<%
-			}
-		%>
 	</security:oscarSec>
 
 

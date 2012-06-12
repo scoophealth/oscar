@@ -37,6 +37,7 @@ import org.springframework.stereotype.Repository;
 import org.oscarehr.util.SpringUtils;
 import oscar.util.DateUtils;
 import java.util.Locale;
+
 /**
  *
  * @author mweston4
@@ -60,10 +61,24 @@ public class BillingONPaymentDao extends AbstractDao<BillingONPayment>{
         return this.billingONExtDao;
     }
     
-     public List<BillingONPayment> find3rdPartyPayRecordsByBill(BillingONCHeader1 bCh1) {
+    public List<BillingONPayment> find3rdPartyPayRecordsByBill(BillingONCHeader1 bCh1) {
         String sql = "select bPay from BillingONPayment bPay where billingNo=?";
         Query query = entityManager.createQuery(sql);
-        query.setParameter(1, bCh1.getId());       
+        query.setParameter(1, bCh1.getId());    
+                 
+        @SuppressWarnings("unchecked")
+        List<BillingONPayment> results = query.getResultList();
+                      
+        Collections.sort(results, BillingONPayment.BILLING_ON_PAYMENT_COMPARATOR);
+        return results;
+    }
+    
+    public List<BillingONPayment> find3rdPartyPayRecordsByBill(BillingONCHeader1 bCh1, Date startDate, Date endDate) {
+        String sql = "select bPay from BillingONPayment bPay where billingNo=? and payDate >= ? and payDate < ? order by payDate";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter(1, bCh1.getId());    
+        query.setParameter(2, startDate);
+        query.setParameter(3, endDate);    
          
         @SuppressWarnings("unchecked")
         List<BillingONPayment> results = query.getResultList();
@@ -148,7 +163,7 @@ public class BillingONPaymentDao extends AbstractDao<BillingONPayment>{
         
         billingPayment.getBillingONExtItems().add(bExt);                            
      }
-     
+          
      public static BigDecimal calculatePaymentTotal(List<BillingONPayment> paymentRecords) {
         
          BigDecimal paidTotal = new BigDecimal("0.00");
@@ -173,5 +188,5 @@ public class BillingONPaymentDao extends AbstractDao<BillingONPayment>{
          }
          
          return refundTotal;
-    }        
+    }       
 }

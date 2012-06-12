@@ -25,29 +25,14 @@
 
 package org.oscarehr.common.dao;
 
-import java.util.List;
-import java.util.Date;
-import java.util.Locale;
-import javax.persistence.Query;
 import org.oscarehr.common.model.RaHeader;
 import org.springframework.stereotype.Repository;
-import oscar.util.DateUtils;
+
 
 @Repository
 public class RaHeaderDao extends AbstractDao<RaHeader>{
 
 	public RaHeaderDao() {
 		super(RaHeader.class);
-	}
-        
-        public List<RaHeader> getRaHeaderByDate(Date startDate, Date endDate, Locale locale) {
-            Query query = entityManager.createQuery("SELECT rah from RaHeader rah WHERE rah.paymentDate >= ? and rah.paymentDate < ? order by rah.id");
-            query.setParameter(1, DateUtils.formatDate(startDate, locale));
-            query.setParameter(2, DateUtils.formatDate(endDate, locale));
-
-            @SuppressWarnings("unchecked")
-            List<RaHeader> results = query.getResultList();
-
-            return results;
-	}        
+	}                
 }
