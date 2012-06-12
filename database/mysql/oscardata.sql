@@ -1592,6 +1592,8 @@ insert into `secObjPrivilege` values('doctor','_pref','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_edoc','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_tickler','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_pmm_client.BedRoomReservation','x',0,'999998');
+insert into secObjPrivilege values ('doctor','_pregnancy','o',0,'999998');
+
 
 insert into `secObjPrivilege` values('admin', '_admin', 'x', 0, '999998');
 insert into `secObjPrivilege` values('admin','_masterLink','x',0,999998);
