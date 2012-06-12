@@ -57,6 +57,7 @@ String prov= (oscarVariables.getProperty("billregion","")).trim().toUpperCase();
 String userfirstname = (String) session.getAttribute("userfirstname");
 String userlastname = (String) session.getAttribute("userlastname");
 String mygroupno = providerPreference.getMyGroupNo();
+String resourcebaseurl = oscarVariables.getProperty("resource_base_url");
 
 String newticklerwarningwindow=null;
 String default_pmm=null;
@@ -79,7 +80,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 				</li>
 				<security:oscarSec roleName="<%=roleName$%>" objectName="_resource" rights="r">
 				<li>
-					<a href="#" ONCLICK ="popupPage2('http://www.oscarmanual.org/oscar-emr/');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.viewResources"/>">R<u>e</u>sources</a>
+                    <a href="#" ONCLICK ="popupPage2('<%=resourcebaseurl%>');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.viewResources"/>">R<u>e</u>sources</a>
 				</li>
 				</security:oscarSec>
 				<security:oscarSec roleName="<%=roleName$%>" objectName="_search" rights="r">
