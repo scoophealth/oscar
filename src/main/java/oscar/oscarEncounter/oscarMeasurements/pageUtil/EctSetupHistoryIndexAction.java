@@ -25,6 +25,8 @@
 
 package oscar.oscarEncounter.oscarMeasurements.pageUtil;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -34,8 +36,10 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
+import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
 
 public final class EctSetupHistoryIndexAction extends Action {
@@ -52,6 +56,10 @@ public final class EctSetupHistoryIndexAction extends Action {
 			request.getSession().setAttribute("EctSessionBean", bean);
 
 			oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler hd = new oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler(demo);
+			if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
+				List<EctMeasurementsDataBean> measureTypes = (List<EctMeasurementsDataBean>) hd.getMeasurementsDataVector ();
+				oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler.addRemoteMeasurementsTypes(measureTypes,Integer.parseInt(demo));
+			}
 
 			HttpSession session = request.getSession();
 			session.setAttribute("measurementsData", hd);

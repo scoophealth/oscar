@@ -291,10 +291,12 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupAddMeasurementTypeAction.java:Collection validations = hd.getValidationsVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupAddMeasuringInstructionAction.java:Collection typeDisplayName = typeHd.getTypeDisplayNameVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupAddMeasuringInstructionAction.java:Collection validations = validationHd.getValidationsVector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupDisplayHistoryAction.java:List&lt;EctMeasurementsDataBean&gt; measures = (List&lt;EctMeasurementsDataBean&gt;) hd.getMeasurementsDataVector ();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupEditMeasurementGroupAction.java:Collection allTypeDisplayName = hd.getTypeDisplayNameVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupEditMeasurementGroupAction.java:Collection existingTypeDisplayName = hd.getTypeDisplayNameVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupEditMeasurementGroupForm.java:private final Map values = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupGroupListAction.java:Collection groups = hd.getGroupNameVector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupHistoryIndexAction.java:List&lt;EctMeasurementsDataBean&gt; measureTypes = (List&lt;EctMeasurementsDataBean&gt;) hd.getMeasurementsDataVector ();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupMeasurementsAction.java:Vector mInstrcVector = hd.getMeasuringInstrcHdVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupMeasurementsAction.java:for(int i=0; i&lt;hd.getMeasurementTypeVector().size(); i++){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupStyleSheetListAction.java:Collection allStyleSheets = sshd.getStyleSheetNameVector();</ViolationValue>
@@ -2704,9 +2706,11 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupAddMeasurementTypeAction.java:Collection validations = hd.getValidationsVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupAddMeasuringInstructionAction.java:Collection typeDisplayName = typeHd.getTypeDisplayNameVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupAddMeasuringInstructionAction.java:Collection validations = validationHd.getValidationsVector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupDisplayHistoryAction.java:List&lt;EctMeasurementsDataBean&gt; measures = (List&lt;EctMeasurementsDataBean&gt;) hd.getMeasurementsDataVector ();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupEditMeasurementGroupAction.java:Collection allTypeDisplayName = hd.getTypeDisplayNameVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupEditMeasurementGroupAction.java:Collection existingTypeDisplayName = hd.getTypeDisplayNameVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupGroupListAction.java:Collection groups = hd.getGroupNameVector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupHistoryIndexAction.java:List&lt;EctMeasurementsDataBean&gt; measureTypes = (List&lt;EctMeasurementsDataBean&gt;) hd.getMeasurementsDataVector ();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupMeasurementsAction.java:EctMeasuringInstructionBeanHandler mInstrcs = (EctMeasuringInstructionBeanHandler) mInstrcVector.elementAt(i);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupMeasurementsAction.java:Vector mInstrcVector = hd.getMeasuringInstrcHdVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctSetupMeasurementsAction.java:for(int i=0; i&lt;hd.getMeasurementTypeVector().size(); i++){</ViolationValue>
@@ -3901,7 +3905,7 @@
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/AddMeasurementData.jsp:h = new Hashtable(ectMeasurementsForm.values);</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/Customization.jsp:&lt;%@ page import="java.util.Vector;"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/DisplayHistory.jsp:&lt;%@ page import="java.util.Vector"%&gt;</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/DisplayHistory.jsp:property="measurementsDataVector" indexId="ctr"&gt;</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/DisplayHistory.jsp:&lt;logic:iterate id="data" name="measurementsData" property="measurementsDataVector" indexId="ctr"&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/DisplayMeasurementStyleSheet.jsp:property="styleSheetNameVector" indexId="ctr"&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/DisplayMeasurementTypes.jsp:property="measurementTypeVector" indexId="ctr"&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/oscarMeasurements/HistoryIndex.jsp:&lt;%@ page import="java.util.Vector"%&gt;</ViolationValue>
