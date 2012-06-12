@@ -137,7 +137,7 @@ background: #fff;
 }
 
 .innertube{
-margin: 15px; /*Margins for inner DIV inside each DIV (to provide padding)*/
+margin: 5px; /*Margins for inner DIV inside each DIV (to provide padding)*/
 }
 
 * html body{ /*IE6 hack*/
@@ -204,6 +204,28 @@ width: 100%;
 		$("select[name='ar2_strep']").val('<%= UtilMisc.htmlEscape(props.getProperty("ar2_strep", "")) %>');
 		$("select[name='ar2_bloodGroup']").val('<%= abo %>');
 		$("select[name='ar2_rh']").val('<%= rh %>');
+				
+		
+		var ar1_rh = '<%=UtilMisc.htmlEscape(props.getProperty("pg1_labRh", ""))%>';
+		if(ar1_rh == 'NEG'/* && getGAWeek() >= 9*/) {			
+			$("#rh_warn").show();
+		}
+		if('<%=UtilMisc.htmlEscape(props.getProperty("pg1_labRubella", ""))%>' == 'Non-Immune' ) {			
+			$("#rubella_warn").show();
+		}
+		
+		if('<%=UtilMisc.htmlEscape(props.getProperty("pg1_labHBsAg", ""))%>' == 'POS' ) {			
+			$("#hbsag_warn").show();
+		}
+		
+				
+		if($("select[name='ar2_strep']").val() == 'NDONE' && getGAWeek()>=35) {
+			$("#strep_prompt").show();
+		}
+		
+		if(getGAWeek()>=36) {
+			$("#fetal_pos_prompt").show();
+		}
 	});
 	
 	function adjustDynamicListTotals() {		
@@ -460,6 +482,16 @@ function updatePageLock(lock) {
 		);
 		setTimeout(function(){updatePageLock(haveLock)},30000);
 		   
+}
+
+function gbsReq() {
+	var pen = confirm("Is the patient Penicillin Allergic?");
+	var demographic = '<%=props.getProperty("demographic_no", "0")%>';
+	var user = '<%=session.getAttribute("user")%>';
+	url = '<%=request.getContextPath()%>/form/formlabreq07.jsp?demographic_no='+demographic+'&formId=0&provNo='+user + '&fromSession=true';
+	jQuery.ajax({url:'<%=request.getContextPath()%>/Pregnancy.do?method=createGBSLabReq&demographicNo='+demographic + '&penicillin='+pen,async:false, success:function(data) {
+		popupPage(url);
+	}});		
 }
 </script>
 
@@ -900,6 +932,66 @@ function calToday(field) {
 	varDate = calDate.getDate()>9? calDate.getDate(): ("0"+calDate.getDate());
 	field.value = calDate.getFullYear() + '/' + (varMonth) + '/' + varDate;
 }
+
+
+/*
+ * This function takes the EDB, removes 40 weeks (280 days), then looks at the difference 
+ * between today and that start date to get the number of days into the pregnancy
+ */
+function getGADay() {
+	 var finalEDB = $("input[name='c_finalEDB']").val();
+	 if(finalEDB.length != 10) {
+		 return -1;
+	 }
+	 var year = finalEDB.substring(0,4);
+	 var month = finalEDB.substring(5,7)
+	 var day = finalEDB.substring(8,10)
+	 
+	 var edbDate=new Date(year,parseInt(month)-1,day);
+	 edbDate.setHours(0);
+	 edbDate.setMinutes(0);
+	 edbDate.setSeconds(0);
+	 edbDate.setMilliseconds(0);
+	 
+	 var startDate = new Date();
+	 startDate.setTime(edbDate.getTime()-(280*1000*60*60*24)  );
+	 startDate.setHours(0);		
+	 
+	 var today = new Date();
+	 today.setHours(0);
+	 today.setMinutes(0);
+	 today.setSeconds(0);
+	 today.setMilliseconds(0);
+	 
+	 if(today > startDate) {		
+		 var  days = daydiff(startDate,today);
+		 return days;
+	 }
+	 
+	 return -1;
+}
+
+function daydiff(first, second) {
+    return (second-first)/(1000*60*60*24)
+}
+
+function getGAWeek() {
+	var day = getGADay();
+	if(day > 0) {
+		week = parseInt(day / 7);	
+	}
+	return parseInt(week);
+}
+
+function getGA() {
+	var day = getGADay();
+	if(day > 0) {
+		week = parseInt(day / 7);
+		offset = day % 7;		
+	}
+	return parseInt(week) + "w+" + offset;
+}
+
 </script>
 
 
@@ -916,6 +1008,44 @@ function calToday(field) {
 		<input id="lock_req_btn" type="button" value="Request Lock" onclick="requestLock();"/>
 		<input style="display:none" id="lock_rel_btn" type="button" value="Release Lock" onclick="releaseLock();"/>
 	</div>
+	
+	<br/><br/>
+	<div style="background-color:yellow;border:2px solid black;width:100%;color:black">
+		<table style="width:100%" border="0">
+			<tr>
+				<td><b>Warnings</b></td>
+			</tr>
+			<tr id="rh_warn" style="display:none">
+				<td>RH Negative</td>
+			</tr>
+			<tr id="rubella_warn" style="display:none">
+				<td>Rubella Non-Immune</td>
+			</tr>
+			
+			<tr id="hbsag_warn" style="display:none">
+				<td>HepB Surface Antigen</td>
+			</tr>						
+		</table>	
+	</div>
+	
+	<br/><br/>
+	<div style="background-color:green;border:2px solid black;width:100%;color:black">
+		<table style="width:100%" border="0">
+			<tr>
+				<td><b>Prompts</b></td>
+			</tr>
+			
+			<tr id="strep_prompt" style="display:none">
+				<td><a href="javascript:void(0)" onClick="gbsReq();return false;">Print Req. for GBS </a></td>
+			</tr>
+			
+			<tr id="fetal_pos_prompt" style="display:none">
+				<td>Assess Fetal Position</td>
+			</tr>				
+		</table>	
+	</div>
+	
+
 </div>
 </div>
 

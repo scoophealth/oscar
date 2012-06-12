@@ -23,6 +23,7 @@
  */
 package org.oscarehr.common.web;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,19 +33,27 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.json.JSONObject;
+
 import org.apache.commons.lang.WordUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.apache.struts.util.LabelValueBean;
 import org.oscarehr.common.dao.AbstractCodeSystemDao;
+import org.oscarehr.common.dao.AllergyDao;
+import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.EpisodeDao;
 import org.oscarehr.common.model.AbstractCodeSystemModel;
+import org.oscarehr.common.model.Allergy;
+import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Episode;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.form.FrmLabReq07Record;
 import oscar.form.FrmONAREnhancedRecord;
 
 public class PregnancyAction extends DispatchAction {
@@ -160,4 +169,52 @@ public class PregnancyAction extends DispatchAction {
 		request.setAttribute("episodes",episodes);
 		return mapping.findForward("list");
 	}
+	
+	public ActionForward createGBSLabReq(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  throws SQLException {
+		Integer demographicNo = Integer.parseInt(request.getParameter("demographicNo"));
+		String penicillin = request.getParameter("penicillin");
+		
+		FrmLabReq07Record lr = new FrmLabReq07Record();
+		Properties p = lr.getFormRecord(demographicNo, 0);
+		p = lr.getFormCustRecord(p, LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+		if(penicillin != null && penicillin.equals("true")) {
+			p.setProperty("o_otherTests1","Vaginal Anal GBS with sensitivities (pt allergic to penicillin)");
+		} else {
+			p.setProperty("o_otherTests1","Vaginal Anal GBS");
+		}
+		
+		//int recId = lr.saveFormRecord(p);
+		request.getSession().setAttribute("labReq07"+demographicNo,p);
+	
+		return null;
+	}
+	
+	public ActionForward getAllergies(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  throws IOException {
+		Integer demographicNo = Integer.parseInt(request.getParameter("demographicNo"));
+		AllergyDao allergyDao = SpringUtils.getBean(AllergyDao.class);
+		List<Allergy> allergies = allergyDao.findActiveAllergies(demographicNo);
+		StringBuilder output = new StringBuilder();
+		for(Allergy allergy:allergies) {
+			output.append(allergy.getDescription() + ":" + allergy.getReaction() + "\n");
+		}
+		
+		JSONObject json = JSONObject.fromObject(new LabelValueBean("allergies",output.toString().trim()));
+		response.getWriter().println(json);
+		return null;
+	}
+	
+	public ActionForward getMeds(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  throws IOException {
+		Integer demographicNo = Integer.parseInt(request.getParameter("demographicNo"));
+		DrugDao drugDao = SpringUtils.getBean(DrugDao.class);
+		List<Drug> drugs = drugDao.findByDemographicId(demographicNo, false);
+		StringBuilder output = new StringBuilder();
+		for(Drug drug:drugs) {
+			output.append(drug.getSpecial() + "\n");			
+		}
+		
+		JSONObject json = JSONObject.fromObject(new LabelValueBean("meds",output.toString().trim()));
+		response.getWriter().println(json);
+		return null;
+	}
+		
 }
