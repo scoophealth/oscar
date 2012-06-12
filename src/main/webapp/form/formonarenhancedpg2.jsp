@@ -96,6 +96,12 @@
 <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
 <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
 
+<script>
+	$(document).ready(function(){	
+		window.moveTo(0, 0);
+		window.resizeTo(screen.availWidth, screen.availHeight);
+	});
+</script>
 
 <style type="text/css">
 
@@ -252,6 +258,7 @@ width: 100%;
 				if(x != total) {
 					$("#us_"+x).attr('id','us_'+total);				
 					$("input[name='ar2_uDate"+x+"']").attr('name','ar2_uDate'+total);
+					$("input[name='ar2_uGA"+x+"']").attr('name','ar2_uGA'+total);
 					$("input[name='ar2_uResults"+x+"']").attr('name','ar2_uResults'+total);						  
 				}
 			}			
@@ -381,6 +388,7 @@ for(int x=1;x<usNum+1;x++) {
 	jQuery.ajax({url:'onarenhanced_us.jsp?n='+<%=x%>,async:false, success:function(data) {
 	  jQuery("#us_container").append(data);
 	  setInput(<%=x%>,"ar2_uDate",'<%= props.getProperty("ar2_uDate"+x, "") %>');
+	  setInput(<%=x%>,"ar2_uGA",'<%= props.getProperty("ar2_uGA"+x, "") %>');
 	  setInput(<%=x%>,"ar2_uResults",'<%= props.getProperty("ar2_uResults"+x, "") %>');	  
 }});
 <%
@@ -388,6 +396,71 @@ for(int x=1;x<usNum+1;x++) {
 %>
 });
 
+
+$(document).ready(function(){
+	updatePageLock(false);
+});
+
+var lockData;
+var mylock=false;
+
+function requestLock() {
+	updatePageLock(true);
+}
+
+function releaseLock() {
+	updatePageLock(false);
+}
+
+function updatePageLock(lock) {
+	   haveLock=false;
+		$.ajax({
+		   type: "POST",
+		   url: "<%=request.getContextPath()%>/PageMonitoringService.do",
+		   data: { method: "update", page: "formonarenhanced<%=demoNo%>", lock: lock },
+		   dataType: 'json',
+		   success: function(data,textStatus) {
+			   lockData=data;
+				var locked=false;
+				var lockedProviderName='';
+				var providerNames='';
+				haveLock=false;
+			   $.each(data, function(key, val) {				
+			     if(val.locked) {
+			    	 locked=true;
+			    	 lockedProviderName=val.providerName;
+			     }
+			     if(val.locked==true && val.self==true) {
+					   haveLock=true;
+				   }
+			     if(providerNames.length > 0)
+			    	 providerNames += ",";
+			     providerNames += val.providerName;
+			     
+			   });
+
+			   var lockedMsg = locked?'<span style="color:red" title="'+lockedProviderName+'">&nbsp(locked)</span>':'';
+			   $("#lock_notification").html(
+				'<span title="'+providerNames+'">Viewers:'+data.length+lockedMsg+'</span>'	   
+			   );
+			   
+			  
+			   if(haveLock==true) { //i have the lock
+					$("#lock_req_btn").hide();
+				   	$("#lock_rel_btn").show();
+			   } else if(locked && !haveLock) { //someone else has lock.
+				   $("#lock_req_btn").hide();
+			   		$("#lock_rel_btn").hide();
+			   } else { //no lock
+				   $("#lock_req_btn").show();
+			   		$("#lock_rel_btn").hide();
+			   }
+		   }
+		 }
+		);
+		setTimeout(function(){updatePageLock(haveLock)},30000);
+		   
+}
 </script>
 
 </head>
@@ -767,6 +840,7 @@ var maxYear=9900;
 	function calcWeek(source) {
 <%
 String fedb = props.getProperty("c_finalEDB", "");
+
 String sDate = "";
 if (!fedb.equals("") && fedb.length()==10 ) {
 	FrmGraphicAR arG = new FrmGraphicAR();
@@ -833,6 +907,15 @@ function calToday(field) {
 <div id="framecontent">
 <div class="innertube">
 	Reminders
+	<br/>
+	<br/>
+	<div id="lock_notification">
+		<span title="">Viewers:</span>
+	</div>
+	<div id="lock_req">
+		<input id="lock_req_btn" type="button" value="Request Lock" onclick="requestLock();"/>
+		<input style="display:none" id="lock_rel_btn" type="button" value="Release Lock" onclick="releaseLock();"/>
+	</div>
 </div>
 </div>
 
@@ -891,7 +974,7 @@ function calToday(field) {
 				href="javascript: popupPage('formonarenhancedpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo+historyet%>&view=1');">
 			AR1</a> </td>
 			<td align="right"><b>Edit:</b> <a
-				href="formonarenhancedpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">AR1</a>
+				href="formonarenhancedpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>" onclick="return onSave();">AR1</a>
 			
 			<%if(((FrmONAREnhancedRecord)rec).isSendToPing(""+demoNo)) {	%> <a
 				href="study/ar2ping.jsp?demographic_no=<%=demoNo%>">Send to PING</a>
@@ -1311,7 +1394,7 @@ function calToday(field) {
 				href="javascript: popupPage('formonarenhancedpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">
 			AR1</a> </font></td>
 			<td align="right"><b>Edit:</b> <a
-				href="formonarenhancedpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">AR1</a>
+				href="formonarenhancedpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>" onclick="return onSave();">AR1</a>
 			</td>
 			<%
   }
@@ -1325,11 +1408,5 @@ function calToday(field) {
 </body>
 <script type="text/javascript">
 Calendar.setup({ inputField : "ar2_rhIG", ifFormat : "%Y/%m/%d", showsTime :false, button : "ar2_rhIG_cal", singleClick : true, step : 1 });
-
-//Calendar.setup({ inputField : "ar2_uDate1", ifFormat : "%Y/%m/%d", showsTime :false, button : "ar2_uDate1_cal", singleClick : true, step : 1 });
-//Calendar.setup({ inputField : "ar2_uDate2", ifFormat : "%Y/%m/%d", showsTime :false, button : "ar2_uDate2_cal", singleClick : true, step : 1 });
-//Calendar.setup({ inputField : "ar2_uDate3", ifFormat : "%Y/%m/%d", showsTime :false, button : "ar2_uDate3_cal", singleClick : true, step : 1 });
-//Calendar.setup({ inputField : "ar2_uDate4", ifFormat : "%Y/%m/%d", showsTime :false, button : "ar2_uDate4_cal", singleClick : true, step : 1 });
-
 </script>
 </html:html>

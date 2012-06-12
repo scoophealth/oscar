@@ -73,6 +73,12 @@
 <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
 
 <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
+<script>
+	$(document).ready(function(){	
+		window.moveTo(0, 0);
+		window.resizeTo(screen.availWidth, screen.availHeight);
+	});
+</script>
 
 <style type="text/css">
 
@@ -179,18 +185,18 @@ width: 100%;
 
 <script>
 	function validate() {		
-		var patt1=new RegExp("[a-zA-Z][0-9][a-zA-Z][0-9][a-zA-Z][0-9]");
+		var patt1=new RegExp("([a-zA-Z][0-9][a-zA-Z][0-9][a-zA-Z][0-9])?");
 		if(!patt1.test($("input[name='c_postal']").val())) {
 			alert('Postal Code must be in the following format A#A#A#');
 			return false;
 		}		
-		patt1=new RegExp("^[0-9]{3}\\-[0-9]{3}\\-[0-9]{4}$");	
+		patt1=new RegExp("^([0-9]{3}\\-[0-9]{3}\\-[0-9]{4})?$");	
 		if(!patt1.test( $("input[name='pg1_homePhone']").val() ) ) {
 			alert('Home phone must be in the following format 555-555-5555');
 			return false;
 		}
 			
-		patt1=new RegExp("^[0-9]{3}\\-[0-9]{3}\\-[0-9]{4}$");
+		patt1=new RegExp("^([0-9]{3}\\-[0-9]{3}\\-[0-9]{4})?$");
 		if(!patt1.test($("input[name='pg1_workPhone']").val())) {
 			alert('Work phone must be in the following format 555-555-5555');
 			return false;
@@ -208,7 +214,7 @@ width: 100%;
 			return false;
 		}
 		
-		patt1=new RegExp("^\\d{1,2}$");
+		patt1=new RegExp("(^\\d{1,2}$)?");
 		if($("input[name='pg1_partnerAge']").val().length > 0 && !patt1.test($("input[name='pg1_partnerAge']").val())) {
 			alert("Partner's age must be a number");
 			return false;
@@ -510,6 +516,72 @@ jQuery(document).ready(function() {
 		}
 	%>
 });
+
+$(document).ready(function(){
+	updatePageLock(false);
+});
+
+var lockData;
+var mylock=false;
+
+function requestLock() {
+	updatePageLock(true);
+}
+
+function releaseLock() {
+	updatePageLock(false);
+}
+
+function updatePageLock(lock) {
+	   haveLock=false;
+		$.ajax({
+		   type: "POST",
+		   url: "<%=request.getContextPath()%>/PageMonitoringService.do",
+		   data: { method: "update", page: "formonarenhanced<%=demoNo%>", lock: lock },
+		   dataType: 'json',
+		   success: function(data,textStatus) {
+			   lockData=data;
+				var locked=false;
+				var lockedProviderName='';
+				var providerNames='';
+				haveLock=false;
+			   $.each(data, function(key, val) {				
+			     if(val.locked) {
+			    	 locked=true;
+			    	 lockedProviderName=val.providerName;
+			     }
+			     if(val.locked==true && val.self==true) {
+					   haveLock=true;
+				   }
+			     if(providerNames.length > 0)
+			    	 providerNames += ",";
+			     providerNames += val.providerName;
+			     
+			   });
+
+			   var lockedMsg = locked?'<span style="color:red" title="'+lockedProviderName+'">&nbsp(locked)</span>':'';
+			   $("#lock_notification").html(
+				'<span title="'+providerNames+'">Viewers:'+data.length+lockedMsg+'</span>'	   
+			   );
+			   
+			  
+			   if(haveLock==true) { //i have the lock
+					$("#lock_req_btn").hide();
+				   	$("#lock_rel_btn").show();
+			   } else if(locked && !haveLock) { //someone else has lock.
+				   $("#lock_req_btn").hide();
+			   		$("#lock_rel_btn").hide();
+			   } else { //no lock
+				   $("#lock_req_btn").show();
+			   		$("#lock_rel_btn").hide();
+			   }
+		   }
+		 }
+		);
+		setTimeout(function(){updatePageLock(haveLock)},30000);
+		   
+}
+
 </script>
 <html:base />
 </head>
@@ -825,6 +897,15 @@ function calByLMP(obj) {
 <div id="framecontent">
 <div class="innertube">
 	Reminders
+	<br/>
+	<br/>
+	<div id="lock_notification">
+		<span title="">Viewers:</span>
+	</div>
+	<div id="lock_req">
+		<input id="lock_req_btn" type="button" value="Request Lock" onclick="requestLock();"/>
+		<input style="display:none" id="lock_rel_btn" type="button" value="Release Lock" onclick="releaseLock();"/>
+	</div>
 </div>
 </div>
 
@@ -873,7 +954,7 @@ function calByLMP(obj) {
 				href="javascript: popupPage('formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">AR2
 			</a>&nbsp;</td>
 			<td align="right"><b>Edit:</b> <a
-				href="formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">AR2</a>
+				href="formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>" onclick="return onSave();">AR2</a>
 			
 			<%if(((FrmONAREnhancedRecord)rec).isSendToPing(""+demoNo)) {	%> <a
 				href="study/ar2ping.jsp?demographic_no=<%=demoNo%>">Send to PING</a>
@@ -2880,7 +2961,7 @@ function calByLMP(obj) {
 				href="javascript: popupPage('formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">AR2
 			</a> </td>
 			<td align="right"><b>Edit:</b> <a
-				href="formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">AR2
+				href="formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>" onclick="return onSave();">AR2
 			</a> | <a
 				href="javascript: popupFixedPage(700,950,'../decision/antenatal/antenatalplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&query_name=search_formonarrisk');">AR
 			Planner</a></td>
