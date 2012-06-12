@@ -28,12 +28,19 @@ package oscar.oscarEncounter.oscarMeasurements.bean;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.caisi_integrator.ws.CachedMeasurement;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
@@ -309,4 +316,137 @@ public class EctMeasurementsDataBeanHandler {
         if (thisStr == null) return "";
         return thisStr;
     }
+    
+    
+    
+    private static List<CachedMeasurement> getRemoteMeasurements(Integer demographicId){
+    	List<CachedMeasurement> remoteMeasurements = null;
+    	try {
+			if (!CaisiIntegratorManager.isIntegratorOffline()){
+				remoteMeasurements = CaisiIntegratorManager.getLinkedMeasurements(demographicId);
+			}
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("Unexpected error.", e);
+			CaisiIntegratorManager.checkForConnectionError(e);
+		}
+
+		//if(CaisiIntegratorManager.isIntegratorOffline()){
+		//	remotePreventions = IntegratorFallBackManager.getRemotePreventions(demographicId);
+		//} 
+    	return remoteMeasurements;
+    }
+    
+    public static void addRemoteMeasurements(List<EctMeasurementsDataBean> alist,String measure,Integer demographicId){
+    	List<CachedMeasurement> remotePreventions  = null;
+		if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
+			
+			remotePreventions = getRemoteMeasurements(demographicId);
+			 		
+			if(remotePreventions != null){	
+				for (CachedMeasurement cm: remotePreventions){
+					if(measure.equals(cm.getType() )){
+						EctMeasurementsDataBean emdb = new EctMeasurementsDataBean();
+						emdb.setType(cm.getType());
+						// Integer cm.getCaisiDemographicId();
+						// String cm.getCaisiProviderId();
+						emdb.setDataField(cm.getDataField());
+						emdb.setMeasuringInstrc(cm.getMeasuringInstruction());
+						emdb.setComments(cm.getComments());
+						emdb.setDateObservedAsDate(cm.getDateObserved().getTime());
+						emdb.setDateEnteredAsDate(cm.getDateEntered().getTime());
+						String remoteFacility = "N/A";
+						try {
+							remoteFacility = CaisiIntegratorManager.getRemoteFacility(cm.getFacilityIdIntegerCompositePk().getIntegratorFacilityId()).getName();
+						}
+						catch (Exception e) {
+						 	MiscUtils.getLogger().error("Error", e);
+						}
+						emdb.setRemoteFacility(remoteFacility);
+						alist.add(emdb);
+					}
+				}
+			}
+			Collections.sort(alist, new EctMeasurementsDataBeanComparator());
+		}	
+    }
+    
+    
+    public static void addRemoteMeasurementsTypes(List<EctMeasurementsDataBean> alist,Integer demographicId){
+    	List<CachedMeasurement> remotePreventions  = null;
+
+		if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
+
+			remotePreventions = getRemoteMeasurements(demographicId);
+			if(remotePreventions != null){	
+				HashMap<String, String> map = new HashMap<String,String>();
+				for(EctMeasurementsDataBean mdb:alist){
+					if(mdb.getType() != null && !mdb.getType().equals("") && !map.containsKey(mdb.getType())){
+						map.put(mdb.getType(),mdb.getType());
+					}
+							
+				}
+
+				for (CachedMeasurement cm: remotePreventions){
+					if (cm.getType() != null && !cm.getType().equals("") && !map.containsKey(cm.getType())){ 
+						EctMeasurementsDataBean emdb = new EctMeasurementsDataBean();
+						emdb.setType(cm.getType());
+						emdb.setTypeDisplayName(cm.getType());
+						// Integer cm.getCaisiDemographicId();
+						// String cm.getCaisiProviderId();
+						emdb.setDataField(cm.getDataField());
+						emdb.setMeasuringInstrc(cm.getMeasuringInstruction());
+						emdb.setComments(cm.getComments());
+						emdb.setDateObservedAsDate(cm.getDateObserved().getTime());
+						emdb.setDateEnteredAsDate(cm.getDateEntered().getTime());
+						String remoteFacility = "N/A";
+						try {
+							remoteFacility = CaisiIntegratorManager.getRemoteFacility(cm.getFacilityIdIntegerCompositePk().getIntegratorFacilityId()).getName();
+						}
+						catch (Exception e) {
+						 	MiscUtils.getLogger().error("Error", e);
+						}
+						emdb.setRemoteFacility(remoteFacility);
+						alist.add(emdb);
+					}
+				
+				}
+			}
+
+			
+			
+			Collections.sort(alist, new EctMeasurementsDataBeanComparator());
+		}
+		
+    }
+    
+    
+    
+    public static class EctMeasurementsDataBeanComparator implements Comparator<EctMeasurementsDataBean>
+	{
+		public int compare(EctMeasurementsDataBean o1, EctMeasurementsDataBean o2) {
+			Comparable date1=o1.getDateObservedAsDate();
+			Comparable date2=o2.getDateObservedAsDate();
+
+			if (date1!=null && date2!=null)
+			{
+				if (date1 instanceof Calendar)
+				{
+					date1=((Calendar)date1).getTime();
+				}
+
+				if (date2 instanceof Calendar)
+				{
+					date2=((Calendar)date2).getTime();
+				}
+
+				return(date2.compareTo(date1));
+			}
+			else
+			{
+				return(0);
+			}
+		}
+	}
+    
+    
 }

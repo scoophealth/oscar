@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>org.oscarehr.caisi_integrator</groupId>
+  <artifactId>caisi_integrator_client_stubs</artifactId>
+  <versioning>
+    <versions>
+      <version>SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20120606164228</lastUpdated>
+  </versioning>
+</metadata>
