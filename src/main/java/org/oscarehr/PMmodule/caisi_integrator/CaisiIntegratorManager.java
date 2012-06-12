@@ -42,6 +42,7 @@ import org.apache.cxf.frontend.ClientProxy;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
+import org.oscarehr.caisi_integrator.ws.CachedMeasurement;
 import org.oscarehr.caisi_integrator.ws.CachedProgram;
 import org.oscarehr.caisi_integrator.ws.CachedProvider;
 import org.oscarehr.caisi_integrator.ws.ConnectException_Exception;
@@ -432,7 +433,7 @@ public class CaisiIntegratorManager {
     public static List<CachedDemographicNote> getLinkedNotes(Integer demographicNo) throws MalformedURLException 
     {
  		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		String sessionCacheKey="LINKED_NOTES:"+loggedInInfo.currentFacility.getId()+":"+loggedInInfo.loggedInProvider.getPractitionerNo()+":"+demographicNo;
+		String sessionCacheKey="LINKED_NOTES:"+loggedInInfo.currentFacility.getId()+":"+loggedInInfo.loggedInProvider.getProviderNo()+":"+demographicNo;
 
 		@SuppressWarnings("unchecked")
 		List<CachedDemographicNote> linkedNotes=(List<CachedDemographicNote>) segmentedDataCache.get(sessionCacheKey);
@@ -451,7 +452,7 @@ public class CaisiIntegratorManager {
   
       public static List<CachedDemographicPrevention> getLinkedPreventions(Integer demographicNo) throws MalformedURLException{
  		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		String sessionCacheKey="LINKED_PREVS:"+loggedInInfo.currentFacility.getId()+":"+loggedInInfo.loggedInProvider.getPractitionerNo()+":"+demographicNo;
+		String sessionCacheKey="LINKED_PREVS:"+loggedInInfo.currentFacility.getId()+":"+loggedInInfo.loggedInProvider.getProviderNo()+":"+demographicNo;
 
 		@SuppressWarnings("unchecked")
 		List<CachedDemographicPrevention> remotePreventions=(List<CachedDemographicPrevention>) segmentedDataCache.get(sessionCacheKey);
@@ -465,6 +466,24 @@ public class CaisiIntegratorManager {
 		
 		return (remotePreventions);
 	} 
+      
+      public static List<CachedMeasurement> getLinkedMeasurements(Integer demographicNo) throws MalformedURLException{
+   		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+  		String sessionCacheKey="LINKED_MEASUREMENTS:"+loggedInInfo.currentFacility.getId()+":"+loggedInInfo.loggedInProvider.getProviderNo()+":"+demographicNo;
+
+  		@SuppressWarnings("unchecked")
+  		List<CachedMeasurement> remoteMeasurements=(List<CachedMeasurement>) segmentedDataCache.get(sessionCacheKey);
+  		
+  		if (remoteMeasurements==null)
+  		{
+  			DemographicWs demographicWs = getDemographicWs();
+  			remoteMeasurements = Collections.unmodifiableList(demographicWs.getLinkedCachedDemographicMeasurementByDemographicId(demographicNo));
+  			segmentedDataCache.put(sessionCacheKey, remoteMeasurements);
+  		}
+  		
+  		return (remoteMeasurements);
+  	}   
+      
   
 	    
     /**

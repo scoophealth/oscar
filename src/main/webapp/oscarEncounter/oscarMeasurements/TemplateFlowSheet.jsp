@@ -30,6 +30,8 @@
 <%@page import="org.springframework.web.context.WebApplicationContext,oscar.oscarResearch.oscarDxResearch.bean.*"%>
 <%@page import="org.oscarehr.common.dao.FlowSheetCustomizationDao,org.oscarehr.common.model.FlowSheetCustomization"%>
 <%@page import="org.oscarehr.common.dao.FlowSheetDrugDao,org.oscarehr.common.dao.FlowSheetDxDao,org.oscarehr.common.model.FlowSheetDrug,org.oscarehr.util.MiscUtils"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.CachedMeasurement,org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager,org.oscarehr.util.LoggedInInfo" %>
+<%@page import="oscar.util.UtilDateUtilities" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
@@ -648,6 +650,9 @@ div.recommendations li{
             }
             String prevName = (String) h.get("name");
             ArrayList<EctMeasurementsDataBean> alist = mi.getMeasurementData(measure);
+            if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
+               EctMeasurementsDataBeanHandler.addRemoteMeasurements(alist,measure,Integer.parseInt(demographic_no));
+            }
             String extraColour = "";
             if(mi.hasRecommendation(measure)){
                 extraColour = "style=\"background-color: "+mFlowsheet.getRecommendationColour()+"\" ";
@@ -689,7 +694,7 @@ div.recommendations li{
             mFlowsheet.runRulesForMeasurement(mdb);
             Hashtable hdata = new Hashtable();//(Hashtable) alist.get(k);
             hdata.put("age",mdb.getDataField());
-            hdata.put("prevention_date",mdb.getDateObserved());
+            hdata.put("prevention_date",UtilDateUtilities.DateToString(mdb.getDateObservedAsDate()));
             hdata.put("id",""+mdb.getId());
             String com = mdb.getComments();
             boolean comb = false;
@@ -724,12 +729,17 @@ div.recommendations li{
             }
 
     %>
-    <div class="preventionProcedure" <%=hider%>  onclick="javascript:fsPopup(760,670,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData')" >
+    <div class="preventionProcedure" <%=hider%>  
+    <%if(mdb.getRemoteFacility() == null){ %>
+    onclick="javascript:fsPopup(760,670,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData')" 
+    <%}%>
+    >
         <p <%=indColour%> title="fade=[on] header=[<%=hdata.get("age")%> -- Date:<%=hdata.get("prevention_date")%>] body=[<%=com%>&lt;br/&gt;Entered By:<%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%>]"><%=h2.get("value_name")%>: <%=hdata.get("age")%> <br/>
             <%=hdata.get("prevention_date")%>&nbsp;<%=mdb.getNumMonthSinceObserved()%>M
             <%if (comb) {%>
             <span class="footnote"><%=comments.size()%></span>
             <%}%>
+           <%=getFromFacilityMsg(mdb) %> 
         </p>
     </div>
     <%}%>
@@ -898,4 +908,15 @@ function createAddAll(d,t,h){
        for (String measurement : measurements){
 
        }
-    }%>
+    }
+    
+    
+    public String getFromFacilityMsg(EctMeasurementsDataBean emdb){
+		if (emdb.getRemoteFacility()!=null)	return("<br /><span style=\"color:#990000\">(At facility : "+emdb.getRemoteFacility()+")<span>");
+		else return("");
+	}
+    
+    
+    
+    
+    %>

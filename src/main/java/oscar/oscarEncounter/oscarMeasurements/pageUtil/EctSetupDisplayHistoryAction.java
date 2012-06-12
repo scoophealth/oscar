@@ -25,6 +25,8 @@
 
 package oscar.oscarEncounter.oscarMeasurements.pageUtil;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -33,8 +35,10 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
+import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
 
 public final class EctSetupDisplayHistoryAction extends Action {
@@ -55,6 +59,10 @@ public final class EctSetupDisplayHistoryAction extends Action {
             request.setAttribute("demographicNo",demo);
             if(type!=null){
                 hd = new oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler(demo, type);
+                if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
+                	List<EctMeasurementsDataBean> measures = (List<EctMeasurementsDataBean>) hd.getMeasurementsDataVector ();
+                	oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler.addRemoteMeasurements(measures,type,Integer.parseInt(demo));
+                }
                 request.setAttribute("type", type);
             }            
             HttpSession session = request.getSession();

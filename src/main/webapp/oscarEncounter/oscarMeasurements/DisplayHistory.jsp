@@ -116,58 +116,53 @@
 					</security:oscarSec> 
 					
 				</tr>
-				<logic:iterate id="data" name="measurementsData"
-					property="measurementsDataVector" indexId="ctr">
-					<logic:present name="data" property="canPlot">
-						<tr class="data">
-							<td width="5"><img src="img/chart.gif"
-								title="<bean:message key="oscarEncounter.oscarMeasurements.displayHistory.plot"/>"
-								onclick="window.open('../../servlet/oscar.oscarEncounter.oscarMeasurements.pageUtil.ScatterPlotChartServlet?type=<bean:write name="data" property="type"/>&mInstrc=<bean:write name="data" property="measuringInstrc"/>')" /></td>
-							<td width="5"><a
-								title="<bean:write name="data" property="typeDescription" />"><bean:write
-								name="data" property="type" /></a></td>
-							<td width="20"><bean:write name="data"
-								property="providerFirstName" /> <bean:write name="data"
-								property="providerLastName" /></td>
-							<td width="200"><bean:write name="data"
-								property="measuringInstrc" /></td>
-							<td width="10"><bean:write name="data" property="dataField" /></td>
-							<td width="300"><bean:write name="data" property="comments" /></td>
-							<td width="150"><bean:write name="data"
-								property="dateObserved" /></td>
-							<td width="150"><bean:write name="data"
-								property="dateEntered" /></td>
-							<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">	
-							<td width="10"><input type="checkbox" name="deleteCheckbox"
-								value="<bean:write name="data" property="id" />"></td>
-							</security:oscarSec> 	
-							
-						</tr>
+				<logic:iterate id="data" name="measurementsData" property="measurementsDataVector" indexId="ctr">
+					<logic:present name="data" property="remoteFacility">
+						<tr class="data" style="background-color:#ffcccc" >
 					</logic:present>
-					<logic:notPresent name="data" property="canPlot">
-						<tr class="data">
-							<td width="5" colspan=2><a
-								title="<bean:write name="data" property="typeDescription" />"><bean:write
-								name="data" property="type" /></a></td>
-							<td width="20"><bean:write name="data"
-								property="providerFirstName" /> <bean:write name="data"
-								property="providerLastName" /></td>
-							<td width="200"><bean:write name="data"
-								property="measuringInstrc" /></td>
+					<logic:notPresent name="data" property="remoteFacility">
+					    <tr class="data" >
+					</logic:notPresent>
+						<logic:present name="data" property="canPlot">
+							<td width="5">
+								<img src="img/chart.gif" title="<bean:message key="oscarEncounter.oscarMeasurements.displayHistory.plot"/>"
+								onclick="window.open('../../servlet/oscar.oscarEncounter.oscarMeasurements.pageUtil.ScatterPlotChartServlet?type=<bean:write name="data" property="type"/>&mInstrc=<bean:write name="data" property="measuringInstrc"/>')" />
+							</td>
+							<td width="5">
+								<a title="<bean:write name="data" property="typeDescription" />"><bean:write name="data" property="type" /></a>
+							</td>
+						</logic:present>
+						<logic:notPresent name="data" property="canPlot">
+							<td width="5" colspan=2>
+								<a title="<bean:write name="data" property="typeDescription" />">
+								<bean:write name="data" property="type" /></a>
+							</td>
+						</logic:notPresent>		
+							<td width="20">
+								<bean:write name="data" property="providerFirstName" /> 
+								<bean:write name="data" property="providerLastName" />
+								<logic:present name="data" property="remoteFacility">
+									<br /><span style="color:#990000"> @: <bean:write name="data" property="remoteFacility" /><span>
+								</logic:present>
+							</td>
+							<td width="200"><bean:write name="data"	property="measuringInstrc" /></td>
 							<td width="10"><bean:write name="data" property="dataField" /></td>
 							<td width="300"><bean:write name="data" property="comments" /></td>
-							<td width="150"><bean:write name="data"
-								property="dateObserved" /></td>
-							<td width="150"><bean:write name="data"
-								property="dateEntered" /></td>
+							<td width="150"><bean:write name="data" property="dateObservedAsDate" format="yyyy-MM-dd" /></td>
+							<td width="150"><bean:write name="data" property="dateEnteredAsDate" format="yyyy-MM-dd"/></td>
 							<security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="w">
 							<td width="10">
-                              <input type="checkbox" name="deleteCheckbox" value="<bean:write name="data" property="id" />">
-                             </td>
-                             </security:oscarSec>
-						</tr>
-					</logic:notPresent>
-				</logic:iterate>
+							<logic:present name="data" property="remoteFacility">
+					    		&nbsp;
+							</logic:present>
+							<logic:notPresent name="data" property="remoteFacility">
+					    		<input type="checkbox" name="deleteCheckbox" value="<bean:write name="data" property="id" />">
+							</logic:notPresent>
+                              
+                            </td>
+                            </security:oscarSec>
+						</tr>					
+					</logic:iterate>
 				</td>
 				</tr>
 			</table>
