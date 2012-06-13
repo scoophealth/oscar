@@ -422,8 +422,8 @@ public class FluReport implements PreventionReport {
                   }else{ //AFTER CUTOFF DATE
                       //IS Last
                       Calendar today = Calendar.getInstance();
-                      int num = UtilDateUtilities.getNumMonths(fluData.getDateObservedAsDate(),today.getTime());
-                      if (num > 1 && prd.lastFollupProcedure.equals(this.LETTER1)){
+                      long num = UtilDateUtilities.getNumDays(fluData.getDateObservedAsDate(),today.getTime());
+                      if (num >= 28 && !prd.lastFollupProcedure.equals(this.PHONE1)){
                           prd.nextSuggestedProcedure = this.PHONE1;
                           log.debug("returning PHONE 1");
                           return this.PHONE1;

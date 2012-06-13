@@ -26,14 +26,19 @@
 package oscar.oscarEncounter.oscarMeasurements.pageUtil; 
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarPrevention.reports.FollowupManagement;
@@ -43,13 +48,13 @@ import oscar.util.UtilDateUtilities;
  *
  * @author jay
  */
-public class EctAddShortMeasurementAction extends Action{
+public class EctAddShortMeasurementAction extends DispatchAction{
     
     /** Creates a new instance of EctAddShortMeasurementAction */
     public EctAddShortMeasurementAction() {
     }
     
-    public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) throws IOException  {
+    public ActionForward unspecified(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) throws IOException  {
      
         //MARK IN MEASUREMENTS????
        String followUpType =  request.getParameter("followupType");//"FLUF";
@@ -66,6 +71,50 @@ public class EctAddShortMeasurementAction extends Action{
            response.getWriter().print("id="+id+"&followupValue="+followUpValue+"&Date="+UtilDateUtilities.DateToString(UtilDateUtilities.now()));        
        }
        return null;
+    }
+    
+    /*
+     * Add Measurements from prevention report.  Allow multiple values with multiple demos
+     */
+    public ActionForward addMeasurements(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) {
+    	String followUpType = request.getParameter("followUpType");
+    	String[] arrDemoContactMethods = request.getParameterValues("nsp");
+    	String providerNo = (String) request.getSession().getAttribute("user");
+    	Map<String,List<String>> nextContactMethods = new HashMap<String,List<String>>();
+    	String[] arrDemoMethod = null;
+    	List<String> demos;
+    	
+    	if( arrDemoContactMethods != null ) {
+    		
+	    	for( int idx = 0; idx < arrDemoContactMethods.length; ++idx ) {
+	    		arrDemoMethod = arrDemoContactMethods[idx].split(",");
+	    		if( arrDemoMethod.length != 2 ) {
+	    			continue;
+	    		}
+	    		
+	    		demos = nextContactMethods.get(arrDemoMethod[1]);
+	    		if( demos == null ) {
+	    			demos = new ArrayList<String>();    			
+	    			nextContactMethods.put(arrDemoMethod[1], demos);
+	    		}
+	    		
+	    		demos.add(arrDemoMethod[0]);
+	    	}
+    	
+    	}
+    	
+    	if( followUpType != null && !nextContactMethods.isEmpty() ) {
+    		String comment = null;
+    		FollowupManagement fup = new FollowupManagement();
+    		Set<String> keys = nextContactMethods.keySet();
+    		
+    		for( String key : keys ) {
+    			arrDemoMethod = nextContactMethods.get(key).toArray(arrDemoMethod);
+    			fup.markFollowupProcedure(followUpType,key,arrDemoMethod,providerNo,UtilDateUtilities.now(),comment);
+    		}
+    	}
+    	
+    	return null;
     }
     
 }
