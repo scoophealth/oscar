@@ -37,12 +37,17 @@ import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicForm;
+import org.oscarehr.caisi_integrator.ws.CachedProgram;
+import org.oscarehr.caisi_integrator.ws.CachedProvider;
+import org.oscarehr.caisi_integrator.ws.DemographicTransfer;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk;
+import org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk;
 import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -112,7 +117,6 @@ public class FrmLabReq07Record extends FrmRecord {
         ResultSet rs = null;
         String sql = null;
 
-        if (!demoProvider.equals("")) {
 
             if (demoProvider.equals(provNo) ) {
                 // from provider table
@@ -159,22 +163,24 @@ public class FrmLabReq07Record extends FrmRecord {
                 }
                 rs.close();
 
-                // from provider table
-                sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no FROM provider WHERE provider_no = "
-                        + demoProvider;
-                rs = DBHandler.GetSQL(sql);
-
-                if (rs.next()) {
-                    if( num.equals("") ) {
-                        num = oscar.Misc.getString(rs, "ohip_no");
-                        props.setProperty("practitionerNo", "0000-"+num+"-00");
-                    }
-                    props.setProperty("provName", oscar.Misc.getString(rs, "provName"));
-
+                if (!demoProvider.equals("")) {
+	                // from provider table
+	                sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no FROM provider WHERE provider_no = "
+	                        + demoProvider;
+	                rs = DBHandler.GetSQL(sql);
+	
+	                if (rs.next()) {
+	                    if( num.equals("") ) {
+	                        num = oscar.Misc.getString(rs, "ohip_no");
+	                        props.setProperty("practitionerNo", "0000-"+num+"-00");
+	                    }
+	                    props.setProperty("provName", oscar.Misc.getString(rs, "provName"));
+	
+	                }
+	                rs.close();
                 }
-                rs.close();
             }
-        }
+        
         //get local clinic information
        	Clinic clinic = clinicDao.getClinic();
     	if(clinic != null) {
@@ -184,7 +190,41 @@ public class FrmLabReq07Record extends FrmRecord {
     		props.setProperty("clinicCity",clinic.getClinicCity());
     		props.setProperty("clinicPC",clinic.getClinicPostal());
     	}
-
+    	
+    	if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
+    	//if patient was from integrator link up doc from other site
+	    	try{
+		    	Integer localDemographicId = Integer.parseInt(props.getProperty("demographic_no"));
+		    	DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+		    	List<DemographicTransfer> directLinks=demographicWs.getDirectlyLinkedDemographicsByDemographicId(localDemographicId);
+		    		
+		    	if (directLinks.size()>0){
+		    		props.setProperty("copy2clinician", "checked");
+		    		DemographicTransfer  demographicTransfer=directLinks.get(0);
+		    		        	
+		        	FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
+		        	providerPk.setIntegratorFacilityId(demographicTransfer.getIntegratorFacilityId());
+		        	providerPk.setCaisiItemId(demographicTransfer.getLastUpdateUser());
+		        	CachedProvider p = CaisiIntegratorManager.getProvider(providerPk);
+		        	if(p != null){
+			            props.setProperty("copyLname", p.getLastName());
+			            props.setProperty("copyFname", p.getFirstName());
+			    		
+			    		List<CachedProgram> cps = CaisiIntegratorManager.getAllPrograms();
+			    		for(CachedProgram cp:cps){
+			    			if(providerPk.getIntegratorFacilityId() == cp.getFacilityIdIntegerCompositePk().getIntegratorFacilityId() && "OSCAR".equals(cp.getName()) &&  cp.getAddress() != null){
+			    				props.setProperty("copyAddress", cp.getAddress());  
+			    			}
+			    		}
+			    		
+		        	}
+		    	}
+		    	
+	    	}catch(Exception e){
+	    		logger.error("error",e);
+	    	}		
+    	}
+    	
         return props;
     }
 
