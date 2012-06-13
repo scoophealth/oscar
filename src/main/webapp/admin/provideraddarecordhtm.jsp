@@ -359,12 +359,19 @@ for (int i=0; i<sites.size(); i++) {
                     String billCode = "";
                     String codeDesc = "";
                     Enumeration<?> keys = billCenter.getAllBillCenter().propertyNames();
-//                    Enumeration keys = billCenter.getAllBillCenter().propertyNames();
+                    String defaultBillCenter = OscarProperties.getInstance().getProperty("default_bill_center","");
+                                            
                     for(int i=0;i<billCenter.getAllBillCenter().size();i++){
+                        
                         billCode=(String)keys.nextElement();
+                        
+                        String selectedBillCenter = "";
+                        if (billCode.equalsIgnoreCase(defaultBillCenter))
+                            selectedBillCenter = "selected=\"selected\"";
+                        
                         codeDesc=billCenter.getAllBillCenter().getProperty(billCode);
                 %>
-				<option value=<%= billCode %>><%= codeDesc%></option>
+				<option value=<%= billCode %> <%=selectedBillCenter%>><%= codeDesc%></option>
 				<%
                     }
                 %>
