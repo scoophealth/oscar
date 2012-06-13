@@ -34,6 +34,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -264,19 +265,23 @@ public class FOBTReport implements PreventionReport{
 
 
    //TODO: THIS MAY NEED TO BE REFACTORED AT SOME POINT IF MAM and PAP are exactly the same
-   //If they don't have a MAM Test with guidelines
-                //Get last contact method?
-                    //NO contact
-                        //Send letter
-                    //Was it in longer than a year ago
-                        //NO
-                            //Send Letter 1
-                        //YES
-                              //Was it atleast 3months ago?
-                                    //WAS is L1
-                                        //SEnd L2
-                                    //Was is L2
-                                        //P1
+   //If they don't have a FOBT Test with guidelines
+ //Get contact methods
+   //NO contact
+       //Send letter
+   //Was last contact within a year ago
+       //NO
+           //Send Letter 1
+   //Was contact within the last year and at least one month ago
+           //Yes count it
+
+	//No contacts qualify 
+		//send letter 1
+	//One contact qualifies
+		//send letter 2
+	//Two contacts qualify
+		//Phone call
+	//Reached limit no contact suggested
 
    //Measurement Type will be 1 per Prevention report, with the dataField holding method ie L1, L2, P1 (letter 1 , letter 2, phone call 1)
    String LETTER1 = "L1";
@@ -313,27 +318,81 @@ public class FOBTReport implements PreventionReport{
                   prd.nextSuggestedProcedure = this.LETTER1;
                   return this.LETTER1;
               }else{ //There has been contact
-                  EctMeasurementsDataBean measurementData = followupData.iterator().next();
-                  log.debug("fluData "+measurementData.getDataField());
-                  log.debug("lastFollowup "+measurementData.getDateObservedAsDate()+ " last procedure "+measurementData.getDateObservedAsDate());
-                  log.debug("toString: "+measurementData.toString());
-                  prd.lastFollowup = measurementData.getDateObservedAsDate();
-                  prd.lastFollupProcedure = measurementData.getDataField();
-
-
+                  
                   Calendar oneyear = Calendar.getInstance();
                   oneyear.setTime(asofDate);
-                  oneyear.add(Calendar.YEAR,-1);
+                  oneyear.add(Calendar.YEAR,-1);                  
 
-                  if ( measurementData.getDateObservedAsDate().before(oneyear.getTime())){
-                      prd.nextSuggestedProcedure = this.LETTER1;
-                      return this.LETTER1;
-                  }else{ //AFTER CUTOFF DATE
+                  Calendar onemonth = Calendar.getInstance();
+                  onemonth.setTime(asofDate);
+                  onemonth.add(Calendar.MONTH,-1);
+                   
+                  Date observationDate = null;
+                  int count = 0;
+                  int index = 0;
+                  EctMeasurementsDataBean measurementData = null;
+                  
+                  @SuppressWarnings("unchecked")
+            	  Iterator<EctMeasurementsDataBean>iterator = followupData.iterator();                                    
+                  
+                  while(iterator.hasNext()) {
+                	  measurementData =  iterator.next();
+                	  observationDate = measurementData.getDateObservedAsDate();
+                	  
+                	  if( index == 0 ) {
+                          log.debug("fluData "+measurementData.getDataField());
+                          log.debug("lastFollowup "+measurementData.getDateObservedAsDate()+ " last procedure "+measurementData.getDateObservedAsDate());
+                          log.debug("toString: "+measurementData.toString());
+                          prd.lastFollowup = observationDate;
+                          prd.lastFollupProcedure = measurementData.getDataField();
 
-                      Calendar threemonth = Calendar.getInstance();
-                      threemonth.setTime(asofDate);
-                      threemonth.add(Calendar.MONTH,-1);
-                          if ( measurementData.getDateObservedAsDate().before(threemonth.getTime())){
+                          if ( measurementData.getDateObservedAsDate().before(oneyear.getTime())){
+                              prd.nextSuggestedProcedure = this.LETTER1;
+                              return this.LETTER1;
+                          }
+                          
+                          
+                          if( prd.lastFollupProcedure.equals(this.PHONE1)) {
+                        	  prd.nextSuggestedProcedure = "----";
+                        	  return "----";
+                          }
+                          
+                          
+
+                	  }
+                	  
+                	  
+                	  log.debug(prd.demographicNo + " obs" + observationDate + String.valueOf(observationDate.before(onemonth.getTime())) + " OneYear " + oneyear.getTime() + " " + String.valueOf(observationDate.after(oneyear.getTime())));
+                	  if( observationDate.before(onemonth.getTime()) && observationDate.after(oneyear.getTime())) {                		  
+                		  ++count;
+                	  }
+                	  else if( count > 1 && observationDate.after(oneyear.getTime()) ) {
+                		  ++count;
+                	  }
+                	  
+                	  
+                	  ++index;
+
+                  }
+                  
+                  switch (count) {
+                  case 0: 
+                   	  prd.nextSuggestedProcedure = this.LETTER1;
+                	  break;
+                  case 1:
+                	  prd.nextSuggestedProcedure = this.LETTER2;
+                	  break;
+                  case 2:
+                	  prd.nextSuggestedProcedure = this.PHONE1;
+                	  break;
+                  default:
+                	  prd.nextSuggestedProcedure = "----";
+                  }
+                  
+                  return prd.nextSuggestedProcedure;
+                      
+                      
+/*                      if ( measurementData.getDateObservedAsDate().before(onemonth.getTime())){
                               if (prd.lastFollupProcedure.equals(this.LETTER1)){
                                     prd.nextSuggestedProcedure = this.LETTER2;
                                     return this.LETTER2;
@@ -352,10 +411,9 @@ public class FOBTReport implements PreventionReport{
                               prd.nextSuggestedProcedure = "----";
                               return "----";
                           }
-                  }
-
-
-
+                  
+*/
+                      
               }
 
 
