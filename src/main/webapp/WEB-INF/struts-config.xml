@@ -262,6 +262,8 @@
 			<form-property name="newDefaultDocQueueProperty" type="org.oscarehr.common.model.UserProperty" />
             <form-property name="rxShowPatientDOBProperty" type="org.oscarehr.common.model.UserProperty"/>
             <form-property name="cppSingleLineProperty" type="org.oscarehr.common.model.UserProperty"/>
+            <form-property name="eDocBrowserInMasterFileProperty" type="org.oscarehr.common.model.UserProperty"/>
+            <form-property name="eDocBrowserInDocumentReportProperty" type="org.oscarehr.common.model.UserProperty"/>
             <form-property name="encounterWindowWidth" type="org.oscarehr.common.model.UserProperty"/>
             <form-property name="encounterWindowHeight" type="org.oscarehr.common.model.UserProperty"/>
             <form-property name="encounterWindowMaximize" type="org.oscarehr.common.model.UserProperty"/>
@@ -1402,6 +1404,9 @@
             <forward name="genIntegrator" path="/admin/setIntegratorProperties.jsp" />
             <forward name="genEncounterWindowSize"     path="/provider/setEncounterWindowSize.jsp"/>
             <forward name="genQuickChartSize"     path="/provider/setQuickChartSize.jsp"/>
+            <forward name="genEDocBrowserInDocumentReport"     path="/provider/setEDocBrowserInDocumentReport.jsp"/>
+            <forward name="genEDocBrowserInMasterFile"     path="/provider/setEDocBrowserInMasterFile.jsp"/>
+            
                  </action>
 		<action input="/provider/providerIndivoIdSetter.jsp" name="setMyOscarIdForm" path="/setMyOscarId" scope="request" type="oscar.oscarProvider.pageUtil.ProEditMyOscarIdAction">
 			<forward name="success" path="/provider/providerIndivoIdSetter.jsp" />

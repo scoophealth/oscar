@@ -1507,6 +1507,158 @@ public class ProviderPropertyAction extends DispatchAction {
 
 		return actionmapping.findForward("genCppSingleLine");
 	}
+    
+public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping,
+            ActionForm actionform,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+
+		DynaActionForm frm = (DynaActionForm)actionform;
+		String provider = (String) request.getSession().getAttribute("user");
+		UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.EDOC_BROWSER_IN_DOCUMENT_REPORT);
+
+		String propValue="";
+		if (prop == null){
+			prop = new UserProperty();
+		}else{
+			propValue=prop.getValue();
+		}
+
+		boolean checked;
+		if(propValue.equalsIgnoreCase("yes"))
+			checked=true;
+		else
+			checked=false;
+
+		prop.setChecked(checked);
+		request.setAttribute("eDocBrowserInDocumentReportProperty", prop);
+		request.setAttribute("providertitle","provider.setEDocBrowserInDocumentReport.title"); 
+		request.setAttribute("providermsgPrefs","provider.setEDocBrowserInDocumentReport.msgPrefs");
+		request.setAttribute("providermsgProvider","provider.setEDocBrowserInDocumentReport.msgProfileView");
+		request.setAttribute("providermsgEdit","provider.setEDocBrowserInDocumentReport.msgEdit");
+		request.setAttribute("providerbtnSubmit","provider.setEDocBrowserInDocumentReport.btnSubmit");
+		request.setAttribute("providermsgSuccess","provider.setEDocBrowserInDocumentReport.msgSuccess");
+		request.setAttribute("method","saveEDocBrowserInDocumentReport");
+
+		frm.set("eDocBrowserInDocumentReportProperty", prop);
+
+		return actionmapping.findForward("genEDocBrowserInDocumentReport");
+	}
+
+
+    public ActionForward saveEDocBrowserInDocumentReport(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){
+    	String provider=(String) request.getSession().getAttribute("user");
+
+    	DynaActionForm frm=(DynaActionForm)actionform;
+    	UserProperty Uprop=(UserProperty)frm.get("eDocBrowserInDocumentReportProperty");
+
+		boolean checked=false;
+		if(Uprop!=null)
+			checked = Uprop.isChecked();
+		UserProperty prop=this.userPropertyDAO.getProp(provider, UserProperty.EDOC_BROWSER_IN_DOCUMENT_REPORT);
+		if(prop==null){
+			prop=new UserProperty();
+			prop.setName(UserProperty.EDOC_BROWSER_IN_DOCUMENT_REPORT);
+			prop.setProviderNo(provider);
+		}
+		String propValue="no";
+		if(checked)
+			propValue="yes";
+
+		prop.setValue(propValue);
+		this.userPropertyDAO.saveProp(prop);
+
+		request.setAttribute("status", "success");
+		request.setAttribute("eDocBrowserInDocumentReportProperty",prop);
+		request.setAttribute("providertitle","provider.setEDocBrowserInDocumentReport.title");
+		request.setAttribute("providermsgPrefs","provider.setEDocBrowserInDocumentReport.msgPrefs");
+		request.setAttribute("providermsgProvider","provider.setEDocBrowserInDocumentReport.msgProfileView");
+		request.setAttribute("providermsgEdit","provider.setEDocBrowserInDocumentReport.msgEdit");
+		request.setAttribute("providerbtnSubmit","provider.setEDocBrowserInDocumentReport.btnSubmit");
+		if(checked)
+			request.setAttribute("providermsgSuccess","provider.setEDocBrowserInDocumentReport.msgSuccess_selected");
+		else
+			request.setAttribute("providermsgSuccess","provider.setEDocBrowserInDocumentReport.msgSuccess_unselected");
+		request.setAttribute("method","saveEDocBrowserInDocumentReport");
+
+		return actionmapping.findForward("genEDocBrowserInDocumentReport");
+	}
+
+    public ActionForward viewEDocBrowserInMasterFile(ActionMapping actionmapping,
+            ActionForm actionform,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+
+		DynaActionForm frm = (DynaActionForm)actionform;
+		String provider = (String) request.getSession().getAttribute("user");
+		UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.EDOC_BROWSER_IN_MASTER_FILE);
+
+		String propValue="";
+		if (prop == null){
+			prop = new UserProperty();
+		}else{
+			propValue=prop.getValue();
+		}
+
+		boolean checked;
+		if(propValue.equalsIgnoreCase("yes"))
+			checked=true;
+		else
+			checked=false;
+
+		prop.setChecked(checked);
+		request.setAttribute("eDocBrowserInMasterFileProperty", prop);
+		request.setAttribute("providertitle","provider.setEDocBrowserInMasterFile.title"); //=Select if you want to use Rx3
+		request.setAttribute("providermsgPrefs","provider.setEDocBrowserInMasterFile.msgPrefs"); //=Preferences
+		request.setAttribute("providermsgProvider","provider.setEDocBrowserInMasterFile.msgProfileView"); //=Use Rx3
+		request.setAttribute("providermsgEdit","provider.setEDocBrowserInMasterFile.msgEdit"); //=Do you want to use Rx3?
+		request.setAttribute("providerbtnSubmit","provider.setEDocBrowserInMasterFile.btnSubmit"); //=Save
+		request.setAttribute("providermsgSuccess","provider.setEDocBrowserInMasterFile.msgSuccess"); //=Rx3 Selection saved
+		request.setAttribute("method","saveEDocBrowserInMasterFile");
+
+		frm.set("eDocBrowserInMasterFileProperty", prop);
+
+		return actionmapping.findForward("genEDocBrowserInMasterFile");
+	}
+
+
+    public ActionForward saveEDocBrowserInMasterFile(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){
+    	String provider=(String) request.getSession().getAttribute("user");
+
+    	DynaActionForm frm=(DynaActionForm)actionform;
+    	UserProperty Uprop=(UserProperty)frm.get("eDocBrowserInMasterFileProperty");
+
+		boolean checked=false;
+		if(Uprop!=null)
+			checked = Uprop.isChecked();
+		UserProperty prop=this.userPropertyDAO.getProp(provider, UserProperty.EDOC_BROWSER_IN_MASTER_FILE);
+		if(prop==null){
+			prop=new UserProperty();
+			prop.setName(UserProperty.EDOC_BROWSER_IN_MASTER_FILE);
+			prop.setProviderNo(provider);
+		}
+		String propValue="no";
+		if(checked)
+			propValue="yes";
+
+		prop.setValue(propValue);
+		this.userPropertyDAO.saveProp(prop);
+
+		request.setAttribute("status", "success");
+		request.setAttribute("eDocBrowserInMasterFileProperty",prop);
+		request.setAttribute("providertitle","provider.setEDocBrowserInMasterFile.title");
+		request.setAttribute("providermsgPrefs","provider.setEDocBrowserInMasterFile.msgPrefs");
+		request.setAttribute("providermsgProvider","provider.setEDocBrowserInMasterFile.msgProfileView");
+		request.setAttribute("providermsgEdit","provider.setEDocBrowserInMasterFile.msgEdit");
+		request.setAttribute("providerbtnSubmit","provider.setEDocBrowserInMasterFile.btnSubmit");
+		if(checked)
+			request.setAttribute("providermsgSuccess","provider.setEDocBrowserInMasterFile.msgSuccess_selected");
+		else
+			request.setAttribute("providermsgSuccess","provider.setEDocBrowserInMasterFile.msgSuccess_unselected");
+		request.setAttribute("method","saveEDocBrowserInMasterFile");
+
+		return actionmapping.findForward("genEDocBrowserInMasterFile");
+	}
 
     public ActionForward viewCommentLab(ActionMapping actionmapping,
             ActionForm actionform,
