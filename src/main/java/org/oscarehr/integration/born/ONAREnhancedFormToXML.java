@@ -185,7 +185,7 @@ public class ONAREnhancedFormToXML {
 		prenatalGeneticScreening.setMSSIPSFTS(props.getProperty("pg1_geneticA", ""));
 		prenatalGeneticScreening.setEDBCVS(props.getProperty("pg1_geneticB", ""));
 		prenatalGeneticScreening.setMSAFP(props.getProperty("pg1_geneticC", ""));
-		prenatalGeneticScreening.setDeclined(props.getProperty("pg1_geneticA", "").length()>0?true:false);
+		prenatalGeneticScreening.setDeclined(props.getProperty("pg1_geneticD", "").length()>0?true:false);
 	}
 
 	void populateMedicalHistoryAndPhysicalExam(MedicalHistoryAndPhysicalExam medicalHistoryAndPhysicalExam)  {

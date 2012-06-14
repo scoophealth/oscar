@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 
@@ -55,6 +56,10 @@ import org.oscarehr.util.SpringUtils;
 
 import oscar.form.FrmLabReq07Record;
 import oscar.form.FrmONAREnhancedRecord;
+import oscar.form.FrmRecord;
+import oscar.form.FrmRecordFactory;
+import oscar.log.LogAction;
+import oscar.log.LogConst;
 
 public class PregnancyAction extends DispatchAction {
 
@@ -214,6 +219,72 @@ public class PregnancyAction extends DispatchAction {
 		
 		JSONObject json = JSONObject.fromObject(new LabelValueBean("meds",output.toString().trim()));
 		response.getWriter().println(json);
+		return null;
+	}
+	
+	public ActionForward saveFormAjax(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        int newID = 0;
+        FrmRecord rec = null;
+        JSONObject jsonObj = null;
+      
+        try {
+            FrmRecordFactory recorder = new FrmRecordFactory();
+            rec = recorder.factory(request.getParameter("form_class"));
+            Properties props = new Properties();
+                 
+            boolean bMulPage = request.getParameter("c_lastVisited") != null ? true : false;
+            String name;
+
+            if (bMulPage) {
+                String curPageNum = request.getParameter("c_lastVisited");
+                String commonField = request.getParameter("commonField") != null ? request
+                        .getParameter("commonField") : "&'";
+                curPageNum = curPageNum.length() > 3 ? ("" + curPageNum.charAt(0)) : curPageNum;
+
+                //copy an old record
+                props = rec.getFormRecord(Integer.parseInt(request.getParameter("demographic_no")), Integer
+                        .parseInt(request.getParameter("formId")));
+
+                //empty the current page
+                Properties currentParam = new Properties();
+                for (Enumeration varEnum = request.getParameterNames(); varEnum.hasMoreElements();) {
+                    name = (String) varEnum.nextElement();
+                    currentParam.setProperty(name, "");
+                }
+                for (Enumeration varEnum = props.propertyNames(); varEnum.hasMoreElements();) {
+                    name = (String) varEnum.nextElement();
+                    // kick off the current page elements, commonField on the current page
+                    if (name.startsWith(curPageNum + "_")
+                            || (name.startsWith(commonField) && currentParam.containsKey(name))) {
+                        props.remove(name);
+                    }
+                }
+            }
+
+            //update the current record
+            for (Enumeration varEnum = request.getParameterNames(); varEnum.hasMoreElements();) {
+                name = (String) varEnum.nextElement();                    
+                props.setProperty(name, request.getParameter(name));                    
+            }
+
+            props.setProperty("provider_no", (String) request.getSession().getAttribute("user"));
+            newID = rec.saveFormRecord(props);
+            String ip = request.getRemoteAddr();
+            LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, request
+                    .getParameter("form_class"), "" + newID, ip,request.getParameter("demographic_no"));
+
+            
+            jsonObj = JSONObject.fromObject(new LabelValueBean("result",String.valueOf(newID)));
+            
+
+        } catch (Exception ex) {
+           MiscUtils.getLogger().error("error",ex);
+           jsonObj = JSONObject.fromObject(new LabelValueBean("result","error"));
+           
+        }
+
+        response.getWriter().print(jsonObj.toString());
+        
 		return null;
 	}
 		
