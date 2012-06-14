@@ -76,8 +76,15 @@ function goback(){
 			face="Verdana" color="#0000FF"><b><i>Search </i></b></font></td>
 
 		<td width="10%" nowrap><font size="1" face="Verdana"
-			color="#0000FF"> <input type="radio" checked
-			name="search_mode" value="search_name"> Name </font></td>
+			color="#0000FF"> 
+<%
+    String searchMode = request.getParameter("search_mode");
+    if (searchMode == null || searchMode.isEmpty()) {
+        searchMode = OscarProperties.getInstance().getProperty("default_search_mode","search_name");
+    }
+%>
+                    <input type="radio" checked
+			name="search_mode" value="<%=searchMode%>"> Name </font></td>
 		<td nowrap><font size="1" face="Verdana" color="#0000FF">
 		<input type="radio" name="search_mode" value="search_phone">
 		Phone</font></td>

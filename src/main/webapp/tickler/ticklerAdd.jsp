@@ -252,7 +252,13 @@ var newD = newYear + "-" + newMonth + "-" + newDay;
 </td>
     </tr>
   <INPUT TYPE="hidden" NAME="orderby" VALUE="last_name" >
-				      <INPUT TYPE="hidden" NAME="search_mode" VALUE="search_name" >
+  <%
+    String searchMode = request.getParameter("search_mode");
+    if (searchMode == null || searchMode.isEmpty()) {
+        searchMode = OscarProperties.getInstance().getProperty("default_search_mode","search_name");
+    }
+%>
+				      <INPUT TYPE="hidden" NAME="search_mode" VALUE="<%=searchMode%>" >
 				      <INPUT TYPE="hidden" NAME="originalpage" VALUE="../tickler/ticklerAdd.jsp" >
 				      <INPUT TYPE="hidden" NAME="limit1" VALUE="0" >
 				      <INPUT TYPE="hidden" NAME="limit2" VALUE="5" >
