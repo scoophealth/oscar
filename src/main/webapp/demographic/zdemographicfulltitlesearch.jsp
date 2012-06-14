@@ -25,6 +25,7 @@
 --%>
 
 <%@ page import="java.lang.*"%>
+<%@page import="oscar.OscarProperties"%>
 
 <%
         boolean fromMessenger = request.getParameter("fromMessenger") == null ? false : (request.getParameter("fromMessenger")).equalsIgnoreCase("true")?true:false;
@@ -68,8 +69,8 @@ function searchOutOfDomain() {
 	<% String searchMode = request.getParameter("search_mode");
          String keyWord = request.getParameter("keyword");
          if (searchMode == null || searchMode.equals("")) {
-             searchMode = "search_name";
-         } 
+             searchMode = OscarProperties.getInstance().getProperty("default_search_mode","search_name");             
+         }  
          if (keyWord == null) {
              keyWord = "";
          }

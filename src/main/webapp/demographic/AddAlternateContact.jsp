@@ -41,6 +41,7 @@
 %>
 
 <%@page import="oscar.oscarDemographic.data.*,java.util.*"%>
+<%@page import="oscar.OscarProperties" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
@@ -100,8 +101,16 @@ function newWindow(file,window) {
 		<div>Name: <input type="text" name="keyword" size="25" value="" />
 
 		<input type="submit" name="Submit" value="Search" /> <input
-			type="hidden" name="orderby" value="last_name" /> <input
-			type="hidden" name="search_mode" value="search_name" /> <input
+			type="hidden" name="orderby" value="last_name" /> 
+                
+<%
+    String searchMode = request.getParameter("search_mode");
+    if (searchMode == null || searchMode.isEmpty()) {
+        searchMode = OscarProperties.getInstance().getProperty("default_search_mode","search_name");
+    }
+%>
+                <input
+			type="hidden" name="search_mode" value="<%=searchMode%>" /> <input
 			type="hidden" name="originalpage"
 			value="../demographic/AddAlternateContact.jsp" /> <input
 			type="hidden" name="limit1" value="0" /> <input type="hidden"
