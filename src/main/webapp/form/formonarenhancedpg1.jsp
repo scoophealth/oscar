@@ -297,13 +297,13 @@ width: 100%;
 						return false;
 					}
 				}
-				patt1=new RegExp("^\\d*$");
+				patt1=new RegExp("^(\\d*)?$");
 				if(!patt1.test($("input[name='pg1_oh_gest"+x+"']").val())) {
 					alert("Obstetrical Gestation Age must be a number");
 					return false;
 				}
 				
-				patt1=new RegExp("^\\d*$");
+				patt1=new RegExp("^(\\d*(\\.\\d*)?)?$");
 				if(!patt1.test($("input[name='pg1_length"+x+"']").val())) {
 					alert("Obstetrical Length of Labour must be a number");
 					return false;
@@ -521,12 +521,15 @@ function addObxHx() {
 		alert('Maximum number of rows is 10');
 		return;
 	}
+	
 	var total = jQuery("#obxhx_num").val();
 	total++;
+	
 	jQuery("#obxhx_num").val(total);
+	
 	jQuery.ajax({url:'onarenhanced_obxhx.jsp?n='+total,async:false, success:function(data) {
-		  jQuery("#obxhx_container").append(data);
-	}});
+		  jQuery("#obxhx_container tbody").append(data);		  
+	}});	
 }
 
 function deleteObxHx(id) {
@@ -560,7 +563,7 @@ jQuery(document).ready(function() {
 			
 		%>
 			jQuery.ajax({url:'onarenhanced_obxhx.jsp?n='+<%=x%>,async:false, success:function(data) {
-			  jQuery("#obxhx_container").append(data);
+			  jQuery("#obxhx_container tbody").append(data);
 			  setInput(<%=x%>,"pg1_year",'<%= props.getProperty("pg1_year"+x, "") %>');
 			  setInput(<%=x%>,"pg1_sex",'<%= props.getProperty("pg1_sex"+x, "") %>');
 			  setInput(<%=x%>,"pg1_oh_gest",'<%= props.getProperty("pg1_oh_gest"+x, "") %>');
@@ -681,6 +684,47 @@ function updatePageLock(lock) {
             window.onunload=null;
         adjustDynamicListTotals();
         return ret && ret1;
+    }
+    function onPageChange(url) {
+    	var result = false;
+    	var newID = 0;
+    	document.forms[0].submit.value="save";
+        var ret1 = validate();
+        var ret = checkAllDates();
+        if(ret==true && ret1==true)
+        {
+            reset();
+            ret = confirm("Are you sure you want to save this form?");
+            if(ret) {
+	            window.onunload=null;
+	            adjustDynamicListTotals();
+	            jQuery.ajax({
+	            	url:'<%=request.getContextPath()%>/Pregnancy.do?method=saveFormAjax',
+	            	data: $("form").serialize(),
+	            	async:false, 
+	            	dataType:'json', 
+	            	success:function(data) {
+	        			if(data.value == 'error') {
+	        				alert('Error saving form.');
+	        				result = false;	        				
+	        			} else {
+	        				result= true;
+	        				newID = parseInt(data.value);
+	        			}
+	        		}
+	            });
+            } else {
+            	url = url.replace('#id','<%=formId%>');
+            	location.href=url;
+            }
+        }
+        
+        if(result == true) {
+        	url = url.replace('#id',newID);
+        	location.href=url;
+        }
+          
+       return;
     }
     function onExit() {
         if(confirm("Are you sure you wish to exit without saving your changes?")==true)
@@ -1148,7 +1192,7 @@ function updateMeds() {
 				href="javascript: popupPage('formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">AR2
 			</a>&nbsp;</td>
 			<td align="right"><b>Edit:</b> <a
-				href="formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>" onclick="return onSave();">AR2</a>
+				href="javascript:void(0)" onclick="onPageChange('formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=#id&provNo=<%=provNo%>');">AR2</a>
 			
 			<%if(((FrmONAREnhancedRecord)rec).isSendToPing(""+demoNo)) {	%> <a
 				href="study/ar2ping.jsp?demographic_no=<%=demoNo%>">Send to PING</a>
@@ -2267,6 +2311,7 @@ function updateMeds() {
 		<tr>
 			<td valign="top">
 			<table width="100%" border="1" cellspacing="0" cellpadding="0" id="obxhx_container">
+				<thead>
 				<tr align="center">
 					<td width="20">No.</td>
 					<td width="40">Year</td>
@@ -2284,7 +2329,9 @@ function updateMeds() {
 					<font size="-1">SVB CS Ass'd</font></td>
 					<td nowrap>Comments regarding pregnancy and birth</td>
 				</tr>	
-				
+				</thead>
+				<tbody>
+				</tbody>
 			</table>
 			
 			<input type="hidden" id="obxhx_num" name="obxhx_num" value="<%= props.getProperty("obxhx_num", "0") %>"/>
@@ -2302,7 +2349,7 @@ function updateMeds() {
 	<table class="shrinkMe" width="100%" border="0" cellspacing="0"
 		cellpadding="0">
 		<tr rowspan="2">
-			<td width="65%">
+			<td width="65%" valign="top">
 
 			<table width="100%" border="1" cellspacing="0" cellpadding="0">
 				<tr>
@@ -2908,10 +2955,10 @@ function updateMeds() {
 					Laboratory Investigations</font></b></td>
 				</tr>
 				<tr>
-					<td width="30%">Test</td>
-					<td width="20%">Result</td>
-					<td width="30%">Test</td>
-					<td>Result</td>
+					<td width="30%"><b>Test</b></td>
+					<td width="20%"><b>Result</b></td>
+					<td width="30%"><b>Test</b></td>
+					<td><b>Result</b></td>
 				</tr>
 				<tr>
 					<td>Hb</td>
@@ -3039,8 +3086,8 @@ function updateMeds() {
 							<option value="UNK">Unknown</option>
 						</select>					
 					</td>
-					<td></td>
-					<td></td>
+					<td><input type="text" size="10" name="pg1_labCustom1Label" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_labCustom1Label", "")) %>"/></td>
+					<td><input type="text"  size="10" name="pg1_labCustom1Result" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_labCustom1Result", "")) %>"/></td>				
 				</tr>
 				<tr>
 					<td>Sickle Cell</td>
@@ -3053,10 +3100,13 @@ function updateMeds() {
 						</select>
 					
 					</td>
-					<td></td>
-					<td></td>
-				</tr>
+					<td><input type="text" size="10" name="pg1_labCustom2Label" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_labCustom2Label", "")) %>"/></td>
+					<td><input type="text"  size="10" name="pg1_labCustom2Result" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_labCustom2Result", "")) %>"/></td>					
+				</tr>				
 			</table>
+			<br/>
+			
+			
 			<br>
 			<table width="100%" border="1" cellspacing="0" cellpadding="0">
 				<tr>
@@ -3087,6 +3137,14 @@ function updateMeds() {
 						maxlength="20"
 						value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_geneticC", "")) %>"></td>
 					</td>
+				</tr>
+				<tr>
+					<td><input type="text" size="10" name="pg1_labCustom3Label" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_labCustom3Label", "")) %>"/></td>
+					<td><input type="text"  size="10" name="pg1_labCustom3Result" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_labCustom3Result", "")) %>"/></td>					
+				</tr>
+				<tr>
+					<td><input type="text" size="10" name="pg1_labCustom4Label" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_labCustom4Label", "")) %>"/></td>
+					<td><input type="text"  size="10" name="pg1_labCustom4Result" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_labCustom4Result", "")) %>"/></td>					
 				</tr>
 				<tr>
 					<td>d) Counseled and test declined, or too late</td>
@@ -3158,11 +3216,9 @@ function updateMeds() {
 			<td align="right"><b>View:</b> <a
 				href="javascript: popupPage('formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">AR2
 			</a> </td>
-			<td align="right"><b>Edit:</b> <a
-				href="formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>" onclick="return onSave();">AR2
-			</a> | <a
-				href="javascript: popupFixedPage(700,950,'../decision/antenatal/antenatalplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&query_name=search_formonarrisk');">AR
-			Planner</a></td>
+			<td align="right"><b>Edit:</b> 
+			<a
+				href="javascript:void(0)" onclick="onPageChange('formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=#id&provNo=<%=provNo%>');">AR2</a> </td>
 			<%
   }
 %>
