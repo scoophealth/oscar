@@ -24,6 +24,7 @@
 package org.oscarehr.common.web;
 
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -60,11 +61,26 @@ import oscar.form.FrmRecord;
 import oscar.form.FrmRecordFactory;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
+import oscar.login.DBHelp;
 
 public class PregnancyAction extends DispatchAction {
 
 	private EpisodeDao episodeDao = SpringUtils.getBean(EpisodeDao.class);
 
+	public static Integer getLatestFormIdByPregnancy(Integer episodeId) {
+		String sql = "SELECT id from formONAREnhanced WHERE episodeId="+episodeId+" ORDER BY formEdited DESC";                
+        ResultSet rs = DBHelp.searchDBRecord(sql);
+        try {
+	        if(rs.next()) {
+	        	Integer id = rs.getInt("id");
+	        	return id;
+	        }
+        }catch(SQLException e) {
+        	MiscUtils.getLogger().error("Error",e);
+        	return 0;
+        }
+		return 0;
+	}
 	
 	public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
 		Integer demographicNo = Integer.parseInt(request.getParameter("demographicNo"));
@@ -131,10 +147,12 @@ public class PregnancyAction extends DispatchAction {
 		//Integer demographicNo = Integer.parseInt(request.getParameter("demographicNo"));
 		Integer episodeId = Integer.parseInt(request.getParameter("episodeId"));
 		String endDate = request.getParameter("endDate");
+		String notes = request.getParameter("notes");
 		Episode e = episodeDao.find(episodeId);
 		if(e != null) {
 			e.setStatus("Complete");
 			e.setEndDateStr(endDate);
+			e.setNotes(notes);
 			episodeDao.merge(e); 
 			request.setAttribute("close", true);
 		} else {
@@ -148,7 +166,9 @@ public class PregnancyAction extends DispatchAction {
 		//Integer demographicNo = Integer.parseInt(request.getParameter("demographicNo"));
 		Integer episodeId = Integer.parseInt(request.getParameter("episodeId"));
 		Episode e = episodeDao.find(episodeId);
+		String notes = request.getParameter("notes");
 		if(e != null) {
+			e.setNotes(notes);
 			e.setStatus("Deleted");
 			e.setEndDate(new Date());
 			episodeDao.merge(e); 
@@ -214,7 +234,7 @@ public class PregnancyAction extends DispatchAction {
 		List<Drug> drugs = drugDao.findByDemographicId(demographicNo, false);
 		StringBuilder output = new StringBuilder();
 		for(Drug drug:drugs) {
-			output.append(drug.getSpecial() + "\n");			
+			output.append(drug.getSpecial().replaceAll("\n", " ") + "\n");			
 		}
 		
 		JSONObject json = JSONObject.fromObject(new LabelValueBean("meds",output.toString().trim()));

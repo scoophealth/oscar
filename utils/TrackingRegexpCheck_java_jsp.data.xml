@@ -1085,6 +1085,8 @@
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/PopulationReportDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/PopulationReportDao.java:public class PopulationReportDao extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/ProviderInboxRoutingDao.java:ResultSet rs= DBHandler.GetSQL("select * from incomingLabRules where archive = 0 and provider_no = '"+providerNo+"'");</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/common/web/PregnancyAction.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/common/web/PregnancyAction.java:import oscar.login.DBHelp;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/dao/DSGuidelineDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/dao/DSGuidelineDAO.java:public class DSGuidelineDAO extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/document/dao/DocumentDAO.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>

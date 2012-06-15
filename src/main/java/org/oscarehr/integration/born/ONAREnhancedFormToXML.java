@@ -469,6 +469,7 @@ public class ONAREnhancedFormToXML {
 		if(p.equals("SK")) {return "CA-SK";}
 		if(p.equals("YT")) {return "CA-YT";}
 		if(p.startsWith("US")) {return "USA";}
+		if(p.equals("OT")) {return "OUTC";}
 		return null;
 	}
 	void populatePatientInformation(PatientInformation patientInformation)   {

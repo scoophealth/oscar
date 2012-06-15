@@ -72,7 +72,11 @@
        adding a calendar a matter of 1 or 2 lines of code. -->
 <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
 
-<script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
+<script src="<%=request.getContextPath() %>/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+<script src="<%=request.getContextPath()%>/js/jquery-ui-1.8.18.custom.min.js"></script>
+<link rel="stylesheet" href="<%=request.getContextPath()%>/css/cupertino/jquery-ui-1.8.18.custom.css">
+
+
 <script>
 	$(document).ready(function(){	
 		window.moveTo(0, 0);
@@ -141,6 +145,7 @@ width: 100%;
 				$("input[name='c_partnerOccupationOther']").val("");
 			}
 		});
+				
 		$("select[name='pg1_partnerOccupation']").val('<%= UtilMisc.htmlEscape(props.getProperty("pg1_partnerOccupation", "")) %>');
 		if($("select[name='pg1_partnerOccupation']").val() == 'OTHER') {
 			$("input[name='c_partnerOccupationOther']").removeAttr('readonly');				
@@ -237,7 +242,14 @@ width: 100%;
 		
 		if($("input[name='pg1_labHb']").val().length > 0) {
 			var hgb_result = parseFloat($("input[name='pg1_labHb']").val());
-			$("#bmi_warn").show();
+			if(hgb_result < 110)
+				$("#hgb_warn").show();
+		}
+		
+		if($("input[name='pg1_labMCV']").val().length > 0) {
+			var mcv_result = parseFloat($("input[name='pg1_labMCV']").val());
+			if(mcv_result < 80)
+				$("#mcv_abn_prompt").show();
 		}
 	});
 </script>
@@ -577,6 +589,9 @@ jQuery(document).ready(function() {
 		}});
 		<%
 		}
+		if(obxHxNum == 0) {
+			%>addObxHx();<%
+		}
 	%>
 });
 
@@ -643,6 +658,28 @@ function updatePageLock(lock) {
 		);
 		setTimeout(function(){updatePageLock(haveLock)},30000);
 		   
+}
+
+$(document).ready(function() {
+	$("input[name='pg1_geneticD1']").bind('change',function(){
+		updateGeneticD();
+	});
+	$("input[name='pg1_geneticD2']").bind('change',function(){
+		updateGeneticD();
+	});
+		
+	var gttVal = $("input[name='pg1_geneticD']").val();	
+	if(gttVal.length > 0) {
+		var parts = gttVal.split("/");
+		if(parts[0] == 'checked')
+			$("input[name='pg1_geneticD1']").attr('checked',true);
+		if(parts[1] == 'checked')
+			$("input[name='pg1_geneticD2']").attr('checked',true);		
+	}
+});
+
+function updateGeneticD() {
+	$("input[name='pg1_geneticD']").val($("input[name='pg1_geneticD1']").attr('checked') + "/" + $("input[name='pg1_geneticD2']").attr('checked'));	
 }
 
 </script>
@@ -1055,17 +1092,58 @@ function getGA() {
 
 function updateAllergies() {
 	jQuery.ajax({url:'<%=request.getContextPath()%>/Pregnancy.do?method=getAllergies&demographicNo=<%=demoNo%>',async:true, dataType:'json', success:function(data) {
-		$("textarea[name='c_allergies']").val($("textarea[name='c_allergies']").val() + "\n" + data.value);
+		if($("textarea[name='c_allergies']").val().length == 0) 
+			$("textarea[name='c_allergies']").val(data.value);
+		else 
+			$("textarea[name='c_allergies']").val($("textarea[name='c_allergies']").val() + "\n" + data.value);
 	}});
 }
 
 function updateMeds() {
 	jQuery.ajax({url:'<%=request.getContextPath()%>/Pregnancy.do?method=getMeds&demographicNo=<%=demoNo%>',async:true, dataType:'json', success:function(data) {
-		$("textarea[name='c_meds']").val($("textarea[name='c_meds']").val() + "\n" + data.value);
+		if($("textarea[name='c_meds']").val().length == 0)
+			$("textarea[name='c_meds']").val(data.value);
+		else 
+			$("textarea[name='c_meds']").val($("textarea[name='c_meds']").val() + "\n" + data.value);
 	}});
 }
-</script>
 
+function mcvReq() {
+	$( "#dialog-form" ).dialog( "open" );
+	return false;
+}
+
+$(document).ready(function(){
+
+$( "#dialog-form" ).dialog({
+	autoOpen: false,
+	height: 275,
+	width: 450,
+	modal: true,
+	buttons: {
+		"Generate Requisition": function() {
+			var bValid = true;
+			$( this ).dialog( "close" );			
+		},
+		Cancel: function() {
+			$( this ).dialog( "close" );
+		}
+	},
+	close: function() {
+		
+	}
+});
+});
+</script>
+<style>
+.ui-widget-overlay
+        {
+            background: #000;
+            opacity: .7;
+            -moz-opacity: 0.7;
+            filter: alpha(opacity=70);
+        }
+</style>
 <body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1">
 <div id="framecontent">
 <div class="innertube">
@@ -1123,7 +1201,9 @@ function updateMeds() {
 			<tr id="thalassemia_warn" style="display:none">
 				<td>Risk: Thalassemia</td>
 			</tr>
-			
+			<tr id="hgb_warn" style="display:none">
+				<td>HGB low</td>
+			</tr>
 		</table>	
 	</div>
 	
@@ -1141,6 +1221,11 @@ function updateMeds() {
 			<tr id="genetic_prompt" style="display:none">
 				<td><a href="javascript:void(0)" onClick="geneticReferral();return false;">Genetics Referral</a></td>
 			</tr>		
+			
+			<tr id="mcv_abn_prompt" style="display:none">
+				<td><a href="javascript:void(0)" onClick="mcvReq();return false;">Low MCV</a></td>
+			</tr>
+					
 					
 		</table>	
 	</div>
@@ -1326,6 +1411,7 @@ function updateMeds() {
 					<option value="US-WI" >US-WI-Wisconsin</option>
 					<option value="US-WV" >US-WV-West Virginia</option>
 					<option value="US-WY" >US-WY-Wyoming</option>
+					<option value="OT" >Other</option>
 				</select>				
 			</td>
 			<td width="12%">Postal Code<br>
@@ -1537,8 +1623,8 @@ function updateMeds() {
 			</td>
 			<td width="20%" valign="top">Partner's Occupation<br>			
 				<select name="pg1_partnerOccupation" style="width: 100%">
-					<option value="OCC1290">Unknown</option>
-					<option value="OTHER">Other</option>			
+					<option value="OTHER">Other</option>	
+					<option value="OCC1290">Unknown</option>						
 					<option value="OCC0005">Agriculture \ Natural Resources</option>
 					<option value="OCC0010">Agriculture \ Natural Resources | Agriculture \ Farm Worker</option>
 					<option value="OCC0015">Agriculture \ Natural Resources | Environmental Field worker</option>
@@ -1831,8 +1917,8 @@ function updateMeds() {
 				maxlength="10" value="<%= props.getProperty("pg1_age", "") %>" /></td>
 			<td width="15%" valign="top">Occupation<br>
 				<select name="pg1_occupation" style="width: 100%">
-					<option value="OCC1290">Unknown</option>
-					<option value="OTHER">Other</option>			
+					<option value="OTHER">Other</option>	
+					<option value="OCC1290">Unknown</option>							
 					<option value="OCC0005">Agriculture \ Natural Resources</option>
 					<option value="OCC0010">Agriculture \ Natural Resources | Agriculture \ Farm Worker</option>
 					<option value="OCC0015">Agriculture \ Natural Resources | Environmental Field worker</option>
@@ -2370,8 +2456,7 @@ function updateMeds() {
 						</tr>
 						<tr>
 							<td width="6%">1.</td>
-							<td><a href=#
-								onClick='popupPage("<%=resource%>c1p1");return false;'>Bleeding</a></td>
+							<td>Bleeding</td>
 							<td><input type="checkbox" name="pg1_cp1"
 								<%= props.getProperty("pg1_cp1", "") %> /></td>
 							<td><input type="checkbox" name="pg1_cp1N"
@@ -2379,9 +2464,7 @@ function updateMeds() {
 						</tr>
 						<tr>
 							<td>2.</td>
-							<td><a href=#
-								onClick='popupPage("<%=resource%>c2p1");return false;'>Nausea,
-							vomiting</a></td>
+							<td>Nausea,	vomiting</td>
 							<td><input type="checkbox" name="pg1_cp2"
 								<%= props.getProperty("pg1_cp2", "") %> /></td>
 							<td><input type="checkbox" name="pg1_cp2N"
@@ -2389,8 +2472,7 @@ function updateMeds() {
 						</tr>
 						<tr>
 							<td>3.</td>
-							<td nowrap><a href=#
-								onClick='popupPage("<%=resource%>c3p1");return false;'>Smoking</a>
+							<td nowrap>Smoking
 							<font size=1> 
 								<select name="pg1_box3">
 									<option value="">Select</option>
@@ -2407,9 +2489,7 @@ function updateMeds() {
 						</tr>
 						<tr>
 							<td>4.</td>
-							<td><a href=#
-								onClick='popupPage("<%=resource%>c4p1");return false;'>Alcohol,
-							street drugs</a></td>
+							<td>Alcohol, street drugs</td>
 							<td><input type="checkbox" name="pg1_cp4"
 								<%= props.getProperty("pg1_cp4", "") %> /></td>
 							<td><input type="checkbox" name="pg1_cp4N"
@@ -2418,9 +2498,7 @@ function updateMeds() {
 						
 						<tr>
 							<td valign="top">5.</td>
-							<td><a href=#
-								onClick='popupPage("<%=resource%>c8p1");return false;'>Occup/Environ.
-							risks</a></td>
+							<td>Occup/Environ. risks</td>
 							<td><input type="checkbox" name="pg1_cp8"
 								<%= props.getProperty("pg1_cp8", "") %> /></td>
 							<td><input type="checkbox" name="pg1_cp8N"
@@ -2464,8 +2542,7 @@ function updateMeds() {
 						</tr>
 						<tr>
 							<td>9.</td>
-							<td><a href=#
-								onClick='popupPage("<%=resource%>c9p1");return false;'>Hypertension</a></td>
+							<td>Hypertension</td>
 							<td><input type="checkbox" name="pg1_yes9"
 								<%= props.getProperty("pg1_yes9", "") %>></td>
 							<td><input type="checkbox" name="pg1_no9"
@@ -2473,8 +2550,7 @@ function updateMeds() {
 						</tr>
 						<tr>
 							<td>10.</td>
-							<td><a href=#
-								onClick='popupPage("<%=resource%>c10p1");return false;'>Endocrine</a></td>
+							<td>Endocrine</td>
 							<td><input type="checkbox" name="pg1_yes10"
 								<%= props.getProperty("pg1_yes10", "") %>></td>
 							<td><input type="checkbox" name="pg1_no10"
@@ -2483,9 +2559,7 @@ function updateMeds() {
 						
 						<tr>
 							<td>11.</td>
-							<td><a href=#
-								onClick='popupPage("<%=resource%>c12p1");return false;'>Urinary
-							tract</a></td>
+							<td>Urinary tract</td>
 							<td><input type="checkbox" name="pg1_yes12"
 								<%= props.getProperty("pg1_yes12", "") %>></td>
 							<td><input type="checkbox" name="pg1_no12"
@@ -2493,8 +2567,7 @@ function updateMeds() {
 						</tr>
 						<tr>
 							<td>12.</td>
-							<td><a href=#
-								onClick='popupPage("<%=resource%>c13p1");return false;'>Cardiac/Pulmonary</a></td>
+							<td>Cardiac/Pulmonary</td>
 							<td><input type="checkbox" name="pg1_yes13"
 								<%= props.getProperty("pg1_yes13", "") %>></td>
 							<td><input type="checkbox" name="pg1_no13"
@@ -2502,9 +2575,7 @@ function updateMeds() {
 						</tr>
 						<tr>
 							<td>13.</td>
-							<td><a href=#
-								onClick='popupPage("<%=resource%>c14p1");return false;'>Liver,
-							hepatitis, GI</a></td>
+							<td>Liver, hepatitis, GI</td>
 							<td><input type="checkbox" name="pg1_yes14"
 								<%= props.getProperty("pg1_yes14", "") %>></td>
 							<td><input type="checkbox" name="pg1_no14"
@@ -2512,8 +2583,7 @@ function updateMeds() {
 						</tr>
 						<tr>
 							<td>14.</td>
-							<td><a href=#
-								onClick='popupPage("<%=resource%>c17p1");return false;'>Gynaecology/Breast</a></td>
+							<td>Gynaecology/Breast</td>
 							<td><input type="checkbox" name="pg1_yes17"
 								<%= props.getProperty("pg1_yes17", "") %>></td>
 							<td><input type="checkbox" name="pg1_no17"
@@ -2521,8 +2591,7 @@ function updateMeds() {
 						</tr>
 						<tr>
 							<td>15.</td>
-							<td><a href=#
-								onClick='popupPage("<%=resource%>c22p1");return false;'>Hem./Immunology</a></td>
+							<td>Hem./Immunology</td>
 							<td><input type="checkbox" name="pg1_yes22"
 								<%= props.getProperty("pg1_yes22", "") %>></td>
 							<td><input type="checkbox" name="pg1_no22"
@@ -2530,8 +2599,7 @@ function updateMeds() {
 						</tr>
 						<tr>
 							<td>16.</td>
-							<td><a href=#
-								onClick='popupPage("<%=resource%>c20p1");return false;'>Surgeries</a></td>
+							<td>Surgeries</td>
 							<td><input type="checkbox" name="pg1_yes20"
 								<%= props.getProperty("pg1_yes20", "") %>></td>
 							<td><input type="checkbox" name="pg1_no20"
@@ -2547,9 +2615,7 @@ function updateMeds() {
 						</tr>
 						<tr>
 							<td>18.</td>
-							<td><a href=#
-								onClick='popupPage("<%=resource%>c21p1");return false;'>Anesthetics
-							compl.</a></td>
+							<td>Anesthetics	compl.</td>
 							<td><input type="checkbox" name="pg1_yes21"
 								<%= props.getProperty("pg1_yes21", "") %>></td>
 							<td><input type="checkbox" name="pg1_no21"
@@ -2557,8 +2623,7 @@ function updateMeds() {
 						</tr>
 						<tr>
 							<td>19.</td>
-							<td><a href=#
-								onClick='popupPage("<%=resource%>c24p1");return false;'>Psychiatric</a></td>
+							<td>Psychiatric</td>
 							<td><input type="checkbox" name="pg1_yes24"
 								<%= props.getProperty("pg1_yes24", "") %>></td>
 							<td><input type="checkbox" name="pg1_no24"
@@ -2566,8 +2631,7 @@ function updateMeds() {
 						</tr>
 						<tr>
 							<td>20.</td>
-							<td><a href=#
-								onClick='popupPage("<%=resource%>c15p1");return false;'>Epilepsy/Neurological</a></td>
+							<td>Epilepsy/Neurological</td>
 							<td><input type="checkbox" name="pg1_yes15"
 								<%= props.getProperty("pg1_yes15", "") %>></td>
 							<td><input type="checkbox" name="pg1_no15"
@@ -2601,9 +2665,7 @@ function updateMeds() {
 						</tr>
 						<tr>
 							<td>22.</td>
-							<td><a href=#
-								onClick='popupPage("<%=resource%>c27p1");return false;'>At
-							risk population</a></td>
+							<td>At risk population</td>
 							<td align="center" valign="top"><input type="checkbox"
 								name="pg1_yes27" <%= props.getProperty("pg1_yes27", "") %>></td>
 							<td align="center" valign="top"><input type="checkbox"
@@ -2618,9 +2680,7 @@ function updateMeds() {
 						</tr>
 						<tr>
 							<td>23.</td>
-							<td><a href=#
-								onClick='popupPage("<%=resource%>c31p1");return false;'>Developmental
-							delay</a></td>
+							<td>Developmental delay</td>
 							<td align="center"><input type="checkbox" name="pg1_yes31"
 								<%= props.getProperty("pg1_yes31", "") %>></td>
 							<td align="center"><input type="checkbox" name="pg1_no31"
@@ -2628,9 +2688,7 @@ function updateMeds() {
 						</tr>
 						<tr>
 							<td>24.</td>
-							<td><a href=#
-								onClick='popupPage("<%=resource%>c32p1");return false;'>Congenital
-							anomalies</a></td>
+							<td>Congenital anomalies</td>
 							<td align="center"><input type="checkbox" name="pg1_yes32"
 								<%= props.getProperty("pg1_yes32", "") %>></td>
 							<td align="center"><input type="checkbox" name="pg1_no32"
@@ -2639,9 +2697,7 @@ function updateMeds() {
 						
 						<tr>
 							<td>25.</td>
-							<td><a href=#
-								onClick='popupPage("<%=resource%>c34p1");return false;'>Chromosomal
-							disorders</a></td>
+							<td>Chromosomal disorders</td>
 							<td align="center"><input type="checkbox" name="pg1_yes34"
 								<%= props.getProperty("pg1_yes34", "") %>></td>
 							<td align="center"><input type="checkbox" name="pg1_no34"
@@ -2649,9 +2705,7 @@ function updateMeds() {
 						</tr>
 						<tr>
 							<td>26.</td>
-							<td><a href=#
-								onClick='popupPage("<%=resource%>c35p1");return false;'>Genetic
-							disorders</a></td>
+							<td>Genetic disorders</td>
 							<td align="center" valign="top"><input type="checkbox"
 								name="pg1_yes35" <%= props.getProperty("pg1_yes35", "") %>></td>
 							<td align="center" valign="top"><input type="checkbox"
@@ -2665,9 +2719,7 @@ function updateMeds() {
 						</tr>
 						<tr>
 							<td>27.</td>
-							<td><a href=#
-								onClick='popupPage("<%=resource%>c40p1");return false;'>Varicella
-							susceptible</a></td>
+							<td>Varicella susceptible</td>
 							<td><input type="checkbox" name="pg1_idt40"
 								<%= props.getProperty("pg1_idt40", "") %>></td>
 							<td><input type="checkbox" name="pg1_idt40N"
@@ -2675,8 +2727,7 @@ function updateMeds() {
 						</tr>
 						<tr>
 							<td>28.</td>
-							<td><a href=#
-								onClick='popupPage("<%=resource%>c38p1");return false;'>STDs/HSV/BV</a></td>
+							<td>STDs/HSV/BV</td>
 							<td><input type="checkbox" name="pg1_idt38"
 								<%= props.getProperty("pg1_idt38", "") %>></td>
 							<td><input type="checkbox" name="pg1_idt38N"
@@ -2684,9 +2735,7 @@ function updateMeds() {
 						</tr>
 						<tr>
 							<td>29.</td>
-							<td><a href=#
-								onClick='popupPage("<%=resource%>c42p1");return false;'>Tuberculosis
-							risk</a></td>
+							<td>Tuberculosis risk</td>
 							<!--  input type="text" name="pg1_box42" size="10" maxlength="20" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_box42", "")) %>"></td>-->
 							<td><input type="checkbox" name="pg1_idt42"
 								<%= props.getProperty("pg1_idt42", "") %>></td>
@@ -2711,9 +2760,7 @@ function updateMeds() {
 						</tr>
 						<tr>
 							<td>31.</td>
-							<td><a href=#
-								onClick='popupPage("<%=resource%>c43p1");return false;'>Poor
-							social support</a></td>
+							<td>Poor social support</td>
 							<td><input type="checkbox" name="pg1_pdt43"
 								<%= props.getProperty("pg1_pdt43", "") %>></td>
 							<td><input type="checkbox" name="pg1_pdt43N"
@@ -2721,9 +2768,7 @@ function updateMeds() {
 						</tr>
 						<tr>
 							<td>32.</td>
-							<td><a href=#
-								onClick='popupPage("<%=resource%>c44p1");return false;'>Relationship
-							problems</a></td>
+							<td>Relationship problems</td>
 							<td><input type="checkbox" name="pg1_pdt44"
 								<%= props.getProperty("pg1_pdt44", "") %>></td>
 							<td><input type="checkbox" name="pg1_pdt44N"
@@ -2731,8 +2776,7 @@ function updateMeds() {
 						</tr>
 						<tr>
 							<td>33.</td>
-							<td><a href=#
-								onClick='popupPage("<%=resource%>c45p1");return false;'>Emotional/Depression</a></td>
+							<td>Emotional/Depression</td>
 							<td><input type="checkbox" name="pg1_pdt45"
 								<%= props.getProperty("pg1_pdt45", "") %>></td>
 							<td><input type="checkbox" name="pg1_pdt45N"
@@ -2740,9 +2784,7 @@ function updateMeds() {
 						</tr>
 						<tr>
 							<td>34.</td>
-							<td><a href=#
-								onClick='popupPage("<%=resource%>c46p1");return false;'>Substance
-							abuse</a></td>
+							<td>Substance abuse</td>
 							<td><input type="checkbox" name="pg1_pdt46"
 								<%= props.getProperty("pg1_pdt46", "") %>></td>
 							<td><input type="checkbox" name="pg1_pdt46N"
@@ -2750,9 +2792,7 @@ function updateMeds() {
 						</tr>
 						<tr>
 							<td>35.</td>
-							<td><a href=#
-								onClick='popupPage("<%=resource%>c47p1");return false;'>Family
-							violence</a></td>
+							<td>Family violence</td>
 							<td><input type="checkbox" name="pg1_pdt47"
 								<%= props.getProperty("pg1_pdt47", "") %>></td>
 							<td><input type="checkbox" name="pg1_pdt47N"
@@ -2760,9 +2800,7 @@ function updateMeds() {
 						</tr>
 						<tr>
 							<td>36.</td>
-							<td><a href=#
-								onClick='popupPage("<%=resource%>c48p1");return false;'>Parenting
-							concerns</a></td>
+							<td>Parenting concerns</td>
 							<td><input type="checkbox" name="pg1_pdt48"
 								<%= props.getProperty("pg1_pdt48", "") %>></td>
 							<td><input type="checkbox" name="pg1_pdt48N"
@@ -3114,18 +3152,14 @@ function updateMeds() {
 					<th>Result</th>
 				</tr>
 				<tr>
-					<td>a) All ages-<a href=#
-						onClick='popupPage("<%=resource%>c37p1");return false;'>MSS</a>,
-					IPS, FTS</td>
+					<td>a) All ages-MSS, IPS, FTS</td>
 					<td><input type="text" name="pg1_geneticA" size="10"
 						maxlength="20"
 						value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_geneticA", "")) %>"></td>
 					</td>
 				</tr>
 				<tr>
-					<td><a href=#
-						onClick='popupPage("<%=resource%>c26p1");return false;'>b) Age
-					&gt;= 35 at EDB-CVS/amnio</a></td>
+					<td>b) Age &gt;= 35 at EDB-CVS/amnio</td>
 					<td><input type="text" name="pg1_geneticB" size="10"
 						maxlength="20"
 						value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_geneticB", "")) %>"></td>
@@ -3147,9 +3181,17 @@ function updateMeds() {
 					<td><input type="text"  size="10" name="pg1_labCustom4Result" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_labCustom4Result", "")) %>"/></td>					
 				</tr>
 				<tr>
-					<td>d) Counseled and test declined, or too late</td>
-					<td align="center"><input type="checkbox" name="pg1_geneticD"
-						<%= props.getProperty("pg1_geneticD", "") %>></td>
+					<td>d) Counseled </td>
+					<td align="center">
+						<input type="hidden" name="pg1_geneticD" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_geneticD", "")) %>"/>
+						<input type="checkbox" name="pg1_geneticD1" <%= props.getProperty("pg1_geneticD1", "") %>>
+					</td>
+				</tr>
+				<tr>
+					<td>d) test declined, or too late</td>
+					<td align="center">
+						<input type="checkbox" name="pg1_geneticD2" <%= props.getProperty("pg1_geneticD2", "") %>>
+					</td>
 				</tr>
 			</table>
 
@@ -3238,6 +3280,25 @@ Calendar.setup({ inputField : "c_finalEDB", ifFormat : "%Y/%m/%d", showsTime :fa
 Calendar.setup({ inputField : "pg1_labLastPapDate", ifFormat : "%Y/%m/%d", showsTime :false, button : "pg1_labLastPapDate_cal", singleClick : true, step : 1 });
 
 </script>
+
+
+<div id="dialog-form" title="Create Lab Requisition">
+	<p class="validateTips"></p>
+
+	<form>
+	<fieldset>
+		<input type="checkbox" name="name" id="name" class="text ui-widget-content ui-corner-all" />
+		<label for="name">Ferritin</label>
+		
+		<br/>
+		<input type="checkbox" name="email" id="email" value="" class="text ui-widget-content ui-corner-all" />
+		<label for="email">Hb electrophoresis</label>
+				
+	</fieldset>
+	</form>
+</div>
+
+
 </html:html>
 
 <%!

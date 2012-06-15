@@ -90,10 +90,12 @@ div#demo
 			<table id="ocanTable" cellpadding="0" cellspacing="0" border="0" class="display" width="100%">
 				<thead>
 					<tr>
+						<th></th>
 						<th>Description</th>
 						<th>Start Date</th>
 						<th>End Date</th>
 						<th>Status</th>
+						<th>Notes</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -112,15 +114,23 @@ div#demo
 							if(episode.getEndDate() != null) {
 								endDateStr = dateFormatter.format(episode.getEndDate());
 							}
-
+							Integer formId = org.oscarehr.common.web.PregnancyAction.getLatestFormIdByPregnancy(episode.getId());
+							String url = request.getContextPath() + "/form/formonarenhancedpg1.jsp?demographic_no="+episode.getDemographicNo()+"&formId="+formId+"&provNo=" +
+								LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 					%>
 					<tr class="gradeB">
+						<td>
+							<a href="<%=url%>" title="Go to latest form" target="_blank"><img src="<%=request.getContextPath()%>/images/notepad.gif" border="0"></a>
+						</td>
 						<td>
 							<a href="<%=request.getContextPath()%>/Episode.do?method=edit&episode.id=<%=episode.getId()%>"><%=episode.getDescription() %></a>
 						</td>
 						<td style="text-align:center"><%=startDateStr %></td>
 						<td style="text-align:center"><%=endDateStr %></td>						
 						<td style="text-align:center"><%=episode.getStatus() %></td>
+						<td>
+							<%=episode.getNotes()!=null?episode.getNotes():"" %>
+						</td>
 					</tr>
 					<%
 						}
