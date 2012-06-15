@@ -120,6 +120,13 @@ public class FrmAREnhancedBloodWorkTest {
     	if(oscar.Misc.getString(rs,"pg1_labRh") != null  &&  oscar.Misc.getString(rs,"pg1_labRh").length() > 0 ){
     		props.setProperty("pg1_labRh", oscar.Misc.getString(rs,"pg1_labRh"));
     	}
+    	if(oscar.Misc.getString(rs,"pg1_labHBsAg") != null  &&  oscar.Misc.getString(rs,"pg1_labHBsAg").length() > 0 ){
+    		props.setProperty("pg1_labHBsAg", oscar.Misc.getString(rs,"pg1_labHBsAg"));
+    	}
+    	if(oscar.Misc.getString(rs,"pg1_labRubella") != null  &&  oscar.Misc.getString(rs,"pg1_labRubella").length() > 0 ){
+    		props.setProperty("pg1_labRubella", oscar.Misc.getString(rs,"pg1_labRubella"));
+    	}
+    	
 		return props;
 	}
 
