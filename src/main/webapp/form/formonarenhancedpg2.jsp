@@ -296,7 +296,7 @@ function addRiskFactor() {
 	total++;
 	jQuery("#rf_num").val(total);
 	jQuery.ajax({url:'onarenhanced_rf.jsp?n='+total,async:false, success:function(data) {
-		  jQuery("#rf_container").append(data);
+		  jQuery("#rf_container tbody").append(data);
 	}});
 }
 
@@ -328,7 +328,7 @@ function addSubsequentVisit() {
 	total++;
 	jQuery("#sv_num").val(total);
 	jQuery.ajax({url:'onarenhanced_sv.jsp?n='+total,async:false, success:function(data) {
-		  jQuery("#sv_container").append(data);
+		  jQuery("#sv_tbody").append(data);
 	}});
 }
 
@@ -344,7 +344,7 @@ function addUltraSound() {
 	total++;
 	jQuery("#us_num").val(total);
 	jQuery.ajax({url:'onarenhanced_us.jsp?n='+total,async:false, success:function(data) {
-		  jQuery("#us_container").append(data);
+		  jQuery("#us_container tbody").append(data);
 	}});
 }
 
@@ -365,7 +365,7 @@ jQuery(document).ready(function() {
 			int y=x+1;
 		%>
 		jQuery.ajax({url:'onarenhanced_rf.jsp?n='+<%=y%>,async:false, success:function(data) {
-			  jQuery("#rf_container").append(data);
+			  jQuery("#rf_container tbody").append(data);
 			  setInput(<%=y%>,"c_riskFactors",'<%= props.getProperty("c_riskFactors"+y, "") %>');
 			  setInput(<%=y%>,"c_planManage",'<%= props.getProperty("c_planManage"+y, "") %>');			 
 		}});
@@ -382,8 +382,8 @@ jQuery(document).ready(function() {
 	for(int x=0;x<svNum;x++) {
 		int y=x+1;
 	%>
-		jQuery.ajax({url:'onarenhanced_sv.jsp?n='+<%=y%>,async:false, success:function(data) {
-		  jQuery("#sv_container").append(data);
+		jQuery.ajax({url:'onarenhanced_sv.jsp?n='+<%=y%>,async:false, success:function(data) {			
+		  jQuery("#sv_tbody").append(data);		  
 		  setInput(<%=y%>,"pg2_date",'<%= props.getProperty("pg2_date"+y, "") %>');
 		  setInput(<%=y%>,"pg2_gest",'<%= props.getProperty("pg2_gest"+y, "") %>');
 		  setInput(<%=y%>,"pg2_wt",'<%= props.getProperty("pg2_wt"+y, "") %>');
@@ -393,7 +393,7 @@ jQuery(document).ready(function() {
 		  setInput(<%=y%>,"pg2_ht",'<%= props.getProperty("pg2_ht"+y, "") %>');
 		  setInput(<%=y%>,"pg2_presn",'<%= props.getProperty("pg2_presn"+y, "") %>');
 		  setInput(<%=y%>,"pg2_FHR",'<%= props.getProperty("pg2_FHR"+y, "") %>');
-		  setInput(<%=y%>,"pg2_comments",'<%= props.getProperty("pg2_comments"+y, "") %>');		 
+		  setInput(<%=y%>,"pg2_comments",'<%= props.getProperty("pg2_comments"+y, "") %>');		  
 	}});
 	<%
 	}
@@ -408,7 +408,7 @@ int usNum = Integer.parseInt(us);
 for(int x=1;x<usNum+1;x++) {			
 %>
 	jQuery.ajax({url:'onarenhanced_us.jsp?n='+<%=x%>,async:false, success:function(data) {
-	  jQuery("#us_container").append(data);
+	  jQuery("#us_container tbody").append(data);
 	  setInput(<%=x%>,"ar2_uDate",'<%= props.getProperty("ar2_uDate"+x, "") %>');
 	  setInput(<%=x%>,"ar2_uGA",'<%= props.getProperty("ar2_uGA"+x, "") %>');
 	  setInput(<%=x%>,"ar2_uResults",'<%= props.getProperty("ar2_uResults"+x, "") %>');	  
@@ -665,6 +665,55 @@ function gbsReq() {
         }
         adjustDynamicListTotals();
         return ret && ret1;
+    }
+    function onPageChange(url) {
+    	var result = false;
+    	var newID = 0;
+    	document.forms[0].submit.value="save";
+        var ret1 = validate();
+        var ret = checkAllDates();
+        if(ret==true && ret1==true)
+        {
+            reset();
+            ret = confirm("Are you sure you want to save this form?");
+            if(ret) {
+	            window.onunload=null;
+	            adjustDynamicListTotals();
+	            jQuery.ajax({
+	            	url:'<%=request.getContextPath()%>/Pregnancy.do?method=saveFormAjax',
+	            	data: $("form").serialize(),
+	            	async:false, 
+	            	dataType:'json', 
+	            	success:function(data) {
+	        			if(data.value == 'error') {
+	        				alert('Error saving form.');
+	        				result = false;	        				
+	        			} else {
+	        				result= true;
+	        				newID = parseInt(data.value);
+	        			}
+	        		}
+	            });
+            } else {
+            	url = url.replace('#id','<%=formId%>');
+            	location.href=url;
+            }
+        }
+        
+        if(result == true) {
+        	url = url.replace('#id',newID);
+        	location.href=url;
+        }
+          
+       return;
+    }
+    function onExit() {
+        if(confirm("Are you sure you wish to exit without saving your changes?")==true)
+        {
+        	refreshOpener();
+            window.close();
+        }
+        return(false);
     }
     function popupPage(varpage) {
         windowprops = "height=700,width=960"+
@@ -977,6 +1026,7 @@ function daydiff(first, second) {
 
 function getGAWeek() {
 	var day = getGADay();
+	var week = 0;
 	if(day > 0) {
 		week = parseInt(day / 7);	
 	}
@@ -992,6 +1042,29 @@ function getGA() {
 	return parseInt(week) + "w+" + offset;
 }
 
+$(document).ready(function() {
+	$("input[name='ar2_lab2GTT1']").bind('keyup',function(){
+		updateGtt();
+	});
+	$("input[name='ar2_lab2GTT2']").bind('keyup',function(){
+		updateGtt();
+	});
+	$("input[name='ar2_lab2GTT3']").bind('keyup',function(){
+		updateGtt();
+	});
+	
+	var gttVal = $("input[name='ar2_lab2GTT']").val();
+	if(gttVal.length > 0) {
+		var parts = gttVal.split("/");
+		$("input[name='ar2_lab2GTT1']").val(parts[0]);
+		$("input[name='ar2_lab2GTT2']").val(parts[1]);
+		$("input[name='ar2_lab2GTT3']").val(parts[2]);
+	}
+});
+
+function updateGtt() {
+	$("input[name='ar2_lab2GTT']").val($("input[name='ar2_lab2GTT1']").val() + "/" + $("input[name='ar2_lab2GTT2']").val() + "/" + $("input[name='ar2_lab2GTT3']").val());
+}
 </script>
 
 
@@ -1104,7 +1177,7 @@ function getGA() {
 				href="javascript: popupPage('formonarenhancedpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo+historyet%>&view=1');">
 			AR1</a> </td>
 			<td align="right"><b>Edit:</b> <a
-				href="formonarenhancedpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>" onclick="return onSave();">AR1</a>
+				href="javascript:void(0);" onclick="return onPageChange('formonarenhancedpg1.jsp?demographic_no=<%=demoNo%>&formId=#id&provNo=<%=provNo%>');">AR1</a>
 			
 			<%if(((FrmONAREnhancedRecord)rec).isSendToPing(""+demoNo)) {	%> <a
 				href="study/ar2ping.jsp?demographic_no=<%=demoNo%>">Send to PING</a>
@@ -1193,11 +1266,15 @@ function getGA() {
 			
 
 	<table width="100%" border="0" cellspacing="0" cellpadding="0" id="rf_container">
+		<thead>
 		<tr>
 			<th bgcolor="#CCCCCC" width="5%"></th>
 			<th bgcolor="#CCCCCC" width="30%">Identified Risk Factors</th>
 			<th bgcolor="#CCCCCC">Plan of Management</th>
-		</tr>		
+		</tr>	
+		</thead>
+		<tbody>
+		</tbody>	
 	</table>
 	<table width="100%" border="0" cellspacing="0" cellpadding="0">
 		<tr>
@@ -1209,13 +1286,21 @@ function getGA() {
 	
 		
 		<tr>
+			<%
+				if(ar1BloodWorkTestListSize == 9){ 
+			%>
 			<td colspan="2"
 				style="background-color: green; color: #FFFFFF; font-weight: bold;">
+				<%=ar1CompleteSignal%>
 			<% 
-        	if(ar1BloodWorkTestListSize == 9){ 
- 	 %> <%=ar1CompleteSignal%> <% 
- 	 } 
- 	 %>
+ 	 			} else {
+ 	 		%>
+ 	 			<td colspan="2"
+				style="background-color: red; color: #FFFFFF; font-weight: bold;">
+				AR1 labs Incomplete
+ 	 		<%
+ 	 			}
+ 	 		%>
 			</td>
 		</tr>
 
@@ -1252,6 +1337,7 @@ function getGA() {
 	<input type="hidden" id="sv_num" name="sv_num" value="<%= props.getProperty("sv_num", "0") %>"/>
 	
 	<table width="100%" border="1" cellspacing="0" cellpadding="0" id="sv_container">
+	<thead>
 		<tr align="center">
 			<td width="3%"></td>
 			<td width="7%">Date<br>
@@ -1263,6 +1349,7 @@ function getGA() {
 			<td width="7%">B.P.</td>
 			<td width="6%" colspan="2">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<thead>
 				<tr>
 					<td colspan="2" align="center">Urine</td>
 				</tr>
@@ -1270,6 +1357,7 @@ function getGA() {
 					<td>Pr</td>
 					<td>Gl</td>
 				</tr>
+				</thead>
 			</table>
 			</td>
 			<td width="7%">SFH</td>
@@ -1280,6 +1368,8 @@ function getGA() {
 			<td nowrap>Comments</td>
 			<!--  td nowrap width="4%">Cig./<br>day</td>-->
 		</tr>
+		</thead>
+		<tbody id="sv_tbody"></tbody>
 	</table>
 	<table width="100%" border="0" cellspacing="0" cellpadding="0">
 		<tr>
@@ -1305,12 +1395,15 @@ function getGA() {
 					<td colspan="3" align="center">
 					<div style="height:10em;overflow-y:scroll;width:100%">
 						<table width="100%" id="us_container">
+						<thead>
 							<tr>
 								<td width="5"></td>
 								<td align="center" width="12%">Date</td>
 								<td align="center" width="8%">GA</td>
 								<td width="50%" align="center">Result</td>
-							</tr>							
+							</tr>
+						</thead>
+						<tbody></tbody>							
 						</table>
 						<table width="100%" border="0" cellspacing="0" cellpadding="0">
 							<tr>
@@ -1375,10 +1468,14 @@ function getGA() {
 
 				<tr>
 					<th colspan="3">Discussion Topics</th>
-					<td>2 hr. GTT</td>
-					<td><input type="text" name="ar2_lab2GTT" size="10"
-						maxlength="10"
-						value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_lab2GTT", "")) %>"></td>
+					<td colspan="2" nowrap="nowrap">2 hr. GTT &nbsp;
+					
+						<input type="hidden" name="ar2_lab2GTT" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_lab2GTT", "")) %>"/> 
+						<input style="width:50px" type="text" name="ar2_lab2GTT1" size="4" maxlength="4">/
+						<input style="width:50px" type="text" name="ar2_lab2GTT2" size="4" maxlength="4">/
+						<input style="width:50px" type="text" name="ar2_lab2GTT3" size="4" maxlength="4">
+					
+					</td>					
 				</tr>
 				<tr>
 					<td colspan="3" rowspan="5">
@@ -1455,20 +1552,20 @@ function getGA() {
 					</td>
 				</tr>
 				<tr>
-					<td>&nbsp;</td>
-					<td>&nbsp;</td>
+					<td><input type="text" size="10" name="ar2_labCustom1Label" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_labCustom1Label", "")) %>"/></td>
+					<td><input type="text"  size="10" name="ar2_labCustom1Result" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_labCustom1Result", "")) %>"/></td>
 				</tr>
 				<tr>
-					<td>&nbsp;</td>
-					<td>&nbsp;</td>
+					<td><input type="text" size="10" name="ar2_labCustom2Label" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_labCustom2Label", "")) %>"/></td>
+					<td><input type="text"  size="10" name="ar2_labCustom2Result" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_labCustom2Result", "")) %>"/></td>
 				</tr>
 				<tr>
-					<td>&nbsp;</td>
-					<td>&nbsp;</td>
+					<td><input type="text" size="10" name="ar2_labCustom3Label" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_labCustom3Label", "")) %>"/></td>
+					<td><input type="text"  size="10" name="ar2_labCustom3Result" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_labCustom3Result", "")) %>"/></td>
 				</tr>
 				<tr>
-					<td>&nbsp;</td>
-					<td>&nbsp;</td>
+					<td><input type="text" size="10" name="ar2_labCustom4Label" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_labCustom4Label", "")) %>"/></td>
+					<td><input type="text"  size="10" name="ar2_labCustom4Result" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_labCustom4Result", "")) %>"/></td>
 				</tr>
 			</table>
 
@@ -1524,7 +1621,7 @@ function getGA() {
 				href="javascript: popupPage('formonarenhancedpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">
 			AR1</a> </font></td>
 			<td align="right"><b>Edit:</b> <a
-				href="formonarenhancedpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>" onclick="return onSave();">AR1</a>
+				href="javascript:void(0);" onclick="return onPageChange('formonarenhancedpg1.jsp?demographic_no=<%=demoNo%>&formId=#id&provNo=<%=provNo%>');">AR1</a>
 			</td>
 			<%
   }
