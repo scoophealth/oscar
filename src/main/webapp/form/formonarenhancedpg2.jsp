@@ -79,24 +79,21 @@
 %>
 <html:html locale="true">
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Antenatal Record 2</title>
 <html:base />
-<link rel="stylesheet" type="text/css"
-	href="<%=bView?"arStyleView.css" : "arStyle.css"%>">
-<!-- calendar stylesheet -->
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<link rel="stylesheet" type="text/css" href="<%=bView?"arStyleView.css" : "arStyle.css"%>">
 <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
-
-<!-- main calendar program -->
 <script type="text/javascript" src="../share/calendar/calendar.js"></script>
-
-<!-- language for the calendar -->
 <script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
-
-<!-- the following script defines the Calendar.setup helper function, which makes
-       adding a calendar a matter of 1 or 2 lines of code. -->
 <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
 <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
+<script src="<%=request.getContextPath()%>/js/jquery-ui-1.8.18.custom.min.js"></script>
+<script src="<%=request.getContextPath()%>/js/fg.menu.js"></script>
+
+
+<link rel="stylesheet" href="<%=request.getContextPath()%>/css/cupertino/jquery-ui-1.8.18.custom.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/css/fg.menu.css">
 
 <script>
 	$(document).ready(function(){	
@@ -154,6 +151,18 @@ width: 100%;
 </style>
 
 <script>
+	<%if(bView) { %>
+	$(document).ready(function(){
+		$('input[type="text"],input[type="checkbox"],select').each(function(){
+			$(this).attr("disabled", "disabled");
+		});		
+		$("#rf_add_btn").hide();
+		$("#sv_add_btn").hide();
+		$("#us_add_btn").hide();
+		$("#lock_req_btn").hide();
+	});
+	
+	<% } %>
 
 	function validate() {
 		for(var x=1;x<=54;x++) {
@@ -397,6 +406,15 @@ jQuery(document).ready(function() {
 		if(rfNum == 0) {
 			%>addRiskFactor();<%
 		}
+		if(bView) {
+			%>
+			$("a").each(function(){
+				if($(this).html() == '[x]') {
+					$(this).hide();
+				}
+			});
+			<%
+		}
 	%>
 	
 	
@@ -426,6 +444,16 @@ jQuery(document).ready(function() {
 	if(svNum == 0) {
 		%>addSubsequentVisit();<%
 	}
+	
+	if(bView) {
+		%>
+		$("a").each(function(){
+			if($(this).html() == '[x]') {
+				$(this).hide();
+			}
+		});
+		<%
+	}
 %>
 
 
@@ -447,12 +475,23 @@ for(int x=1;x<usNum+1;x++) {
 if(usNum == 0) {
 	%>addUltraSound();<%
 }
+if(bView) {
+	%>
+	$("a").each(function(){
+		if($(this).html() == '[x]') {
+			$(this).hide();
+		}
+	});
+	<%
+}
 %>
 });
 
 
 $(document).ready(function(){
+	<%if(!bView) { %>
 	updatePageLock(false);
+	<% } %>
 });
 
 var lockData;
@@ -517,13 +556,8 @@ function updatePageLock(lock) {
 }
 
 function gbsReq() {
-	var pen = confirm("Is the patient Penicillin Allergic?");
-	var demographic = '<%=props.getProperty("demographic_no", "0")%>';
-	var user = '<%=session.getAttribute("user")%>';
-	url = '<%=request.getContextPath()%>/form/formlabreq07.jsp?demographic_no='+demographic+'&formId=0&provNo='+user + '&fromSession=true';
-	jQuery.ajax({url:'<%=request.getContextPath()%>/Pregnancy.do?method=createGBSLabReq&demographicNo='+demographic + '&penicillin='+pen,async:false, success:function(data) {
-		popupPage(url);
-	}});		
+	$( "#gbs-req-form" ).dialog( "open" );
+	return false;
 }
 </script>
 
@@ -740,12 +774,17 @@ function gbsReq() {
        return;
     }
     function onExit() {
+    	<% if(!bView) { %>
         if(confirm("Are you sure you wish to exit without saving your changes?")==true)
         {
         	refreshOpener();
             window.close();
         }
         return(false);
+        <% } else { %>
+        	window.close();
+        	return false;
+        <% } %>
     }
     function popupPage(varpage) {
         windowprops = "height=700,width=960"+
@@ -1140,17 +1179,69 @@ $(document).ready(function(){
 	});
 	
 });
+
+$(document).ready(function(){
+	
+	$( "#gbs-req-form" ).dialog({
+		autoOpen: false,
+		height: 275,
+		width: 450,
+		modal: true,
+		buttons: {
+			"Generate Requisition": function() {			
+				$( this ).dialog( "close" );	
+				var penicillin = $("#penicillin").attr('checked');	
+				var demographic = '<%=props.getProperty("demographic_no", "0")%>';
+				var user = '<%=session.getAttribute("user")%>';
+				url = '<%=request.getContextPath()%>/form/formlabreq07.jsp?demographic_no='+demographic+'&formId=0&provNo='+user + '&fromSession=true';
+				jQuery.ajax({url:'<%=request.getContextPath()%>/Pregnancy.do?method=createGBSLabReq&demographicNo='+demographic + '&penicillin='+penicillin,async:false, success:function(data) {
+					popupPage(url);
+				}});								
+			},
+			Cancel: function() {
+				$( this ).dialog( "close" );
+			}
+		},
+		close: function() {
+			
+		}
+	});
+});
+
 </script>
 
+<% if(!bView) { %>
+<script type="text/javascript">    
+    $(function(){    			
+		$('#lab_menu').bind('click',function(){popPage('formlabreq07.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AnteNatal','LabReq')});
+		$('#gbs_menu').bind('click',function(){gbsReq();});
+    });
+</script>
+<% } %>
+<script>
+	$(function(){
+		$('#gest_age').html(getGA());
+	});
+</script>
+<style>
+.ui-widget-overlay
+        {
+            background: #000;
+            opacity: .7;
+            -moz-opacity: 0.7;
+            filter: alpha(opacity=70);
+        }
+</style>
 
 <body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
 <div id="framecontent">
 <div class="innertube">
-	Reminders
+	<div style="text-align:center;font-weight:bold;">Antenatal Pathway</div>
 	<br/>
+	<div style="text-align:left;">Gest. Age: <span id="gest_age"></span></div>
 	<br/>
 	<div id="lock_notification">
-		<span title="">Viewers:</span>
+		<span title="">Viewers: N/A</span>
 	</div>
 	<div id="lock_req">
 		<input id="lock_req_btn" type="button" value="Request Lock" onclick="requestLock();"/>
@@ -1158,7 +1249,16 @@ $(document).ready(function(){
 	</div>
 	
 	<br/><br/>
-	<div style="background-color:yellow;border:2px solid black;width:100%;color:black">
+	
+		<div style="background-color:yellow;border:2px solid black;width:100%;color:black">
+		<table style="width:100%" border="0">
+			<tr>
+				<td><b>Info</b></td>
+			</tr>			
+		</table>	
+	</div>
+	
+	<div style="background-color:orange;border:2px solid black;width:100%;color:black">
 		<table style="width:100%" border="0">
 			<tr>
 				<td><b>Warnings</b></td>
@@ -1185,35 +1285,32 @@ $(document).ready(function(){
 			<tr id="gct_diabetes_warn" style="display:none">
 				<td>Gestational Diabetes<br/><a href="http://www.diabetes.ca/diabetes-and-you/what/gestational/ " target="resource">Resource</a></td>
 			</tr>			
-			
-								
+
 		</table>	
-	</div>
-	
-	<br/><br/>
-	<div style="background-color:green;border:2px solid black;width:100%;color:black">
+	</div>		
+	<div style="background-color:#00FF00;border:2px solid black;width:100%;color:black">
 		<table style="width:100%" border="0">
 			<tr>
 				<td><b>Prompts</b></td>
 			</tr>
 			
+			<tr id="lab_prompt">
+				<td>Antenatal Lab<span style="float:right"><img id="lab_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>
+			</tr>	
+						
 			<tr id="strep_prompt" style="display:none">
-				<td><a href="javascript:void(0)" onClick="gbsReq();return false;">Print Req. for GBS </a></td>
+				<td>GBS<span style="float:right"><img id="gbs_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>
 			</tr>
 			
 			<tr id="2hrgtt_prompt" style="display:none">
-				<td><a href="javascript:void(0)" onClick="gttReq();return false;">Print Req. for 2hr GTT</a></td>
+				<td>GTT Req<span style="float:right"><img id="gtt_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>
 			</tr>
 			
 			<tr id="fetal_pos_prompt" style="display:none">
 				<td>Assess Fetal Position</td>
 			</tr>	
-			
-			
-						
 		</table>	
-	</div>
-	
+	</div>	
 
 </div>
 </div>
@@ -1265,8 +1362,7 @@ $(document).ready(function(){
 			<%
   if (!bView) {
 %>
-			<td><a
-				href="javascript: popPage('formlabreq07.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AnteNatal','LabReq');">LAB</a>
+			<td>
 			</td>
 
 			<td align="right"><b>View:</b> <a
@@ -1374,7 +1470,7 @@ $(document).ready(function(){
 	</table>
 	<table width="100%" border="0" cellspacing="0" cellpadding="0">
 		<tr>
-			<td colspan="3"><input type="button" value="Add New" onclick="addRiskFactor();"/></td>
+			<td colspan="3"><input id="rf_add_btn" type="button" value="Add New" onclick="addRiskFactor();"/></td>
 		</tr>
 	</table>
 	
@@ -1486,7 +1582,7 @@ $(document).ready(function(){
 	</table>
 	<table width="100%" border="0" cellspacing="0" cellpadding="0">
 		<tr>
-			<td colspan="10"><input type="button" value="Add New" onclick="addSubsequentVisit();"/></td>
+			<td colspan="10"><input id="sv_add_btn" type="button" value="Add New" onclick="addSubsequentVisit();"/></td>
 		</tr>
 	</table>
 	
@@ -1520,7 +1616,7 @@ $(document).ready(function(){
 						</table>
 						<table width="100%" border="0" cellspacing="0" cellpadding="0">
 							<tr>
-								<td colspan="4"><input type="button" value="Add New" onclick="addUltraSound();"/></td>
+								<td colspan="4"><input id="us_add_btn" type="button" value="Add New" onclick="addUltraSound();"/></td>
 							</tr>
 						</table>
 						</div>
@@ -1726,9 +1822,7 @@ $(document).ready(function(){
 			<%
   if (!bView) {
 %>
-			<td><a
-				href="javascript: popPage('formlabreq07.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AnteNatal','LabReq');">LAB</a>
-			</td>
+			<td></td>
 
 			<td align="right"><font size="-1"><b>View:</b> <a
 				href="javascript: popupPage('formonarenhancedpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">
@@ -1745,6 +1839,19 @@ $(document).ready(function(){
 </html:form>
 </div>
 </div>
+
+
+<div id="gbs-req-form" title="Create GBS Lab Requisition">
+	<p class="validateTips"></p>
+	<form>
+	<fieldset>
+		<input type="checkbox" name="penicillin" id="penicillin" class="text ui-widget-content ui-corner-all" />
+		<label for="ferritin">Patient Penicillin Allergic</label>				
+	</fieldset>
+	</form>
+</div>
+
+
 </body>
 <script type="text/javascript">
 Calendar.setup({ inputField : "ar2_rhIG", ifFormat : "%Y/%m/%d", showsTime :false, button : "ar2_rhIG_cal", singleClick : true, step : 1 });

@@ -59,22 +59,18 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Antenatal Record 1</title>
 <link rel="stylesheet" type="text/css" href="<%=bView?"arStyleView.css" : "arStyle.css"%>">
-<!-- calendar stylesheet -->
 <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
-
-<!-- main calendar program -->
 <script type="text/javascript" src="../share/calendar/calendar.js"></script>
-
-<!-- language for the calendar -->
 <script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
-
-<!-- the following script defines the Calendar.setup helper function, which makes
-       adding a calendar a matter of 1 or 2 lines of code. -->
 <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
 
 <script src="<%=request.getContextPath() %>/js/jquery-1.7.1.min.js" type="text/javascript"></script>
 <script src="<%=request.getContextPath()%>/js/jquery-ui-1.8.18.custom.min.js"></script>
+<script src="<%=request.getContextPath()%>/js/fg.menu.js"></script>
+
+
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/cupertino/jquery-ui-1.8.18.custom.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/css/fg.menu.css">
 
 
 <script>
@@ -82,6 +78,20 @@
 		window.moveTo(0, 0);
 		window.resizeTo(screen.availWidth, screen.availHeight);
 	});
+	
+	<%if(bView) { %>
+		$(document).ready(function(){
+			$('input[type="text"],input[type="checkbox"],select').each(function(){
+				$(this).attr("disabled", "disabled");
+			});
+			$("#update_allergies_link").hide();
+			$("#update_meds_link").hide();
+			$("#obxhx_add_btn").hide();
+			$("#lock_req_btn").hide();
+		});
+		
+	<% } %>
+	
 </script>
 
 <style type="text/css">
@@ -592,11 +602,23 @@ jQuery(document).ready(function() {
 		if(obxHxNum == 0) {
 			%>addObxHx();<%
 		}
+		
+		if(bView) {
+			%>
+			$("a").each(function(){
+				if($(this).html() == '[x]') {
+					$(this).hide();
+				}
+			});
+			<%
+		}
 	%>
 });
 
 $(document).ready(function(){
+	<% if(!bView) { %>
 	updatePageLock(false);
+	<% } %>
 });
 
 var lockData;
@@ -764,12 +786,17 @@ function updateGeneticD() {
        return;
     }
     function onExit() {
+    	<%if(!bView) {%>
         if(confirm("Are you sure you wish to exit without saving your changes?")==true)
         {
         	refreshOpener();
             window.close();
         }
         return(false);
+        <% } else {%>
+        	window.close();      
+        	return false;
+        <% } %>
     }
     function onSaveExit() {
         document.forms[0].submit.value="exit";
@@ -1046,23 +1073,24 @@ function getGADay() {
 	 var day = finalEDB.substring(8,10)
 	 
 	 var edbDate=new Date(year,parseInt(month)-1,day);
-	 edbDate.setHours(0);
+	 edbDate.setHours(8);
 	 edbDate.setMinutes(0);
 	 edbDate.setSeconds(0);
 	 edbDate.setMilliseconds(0);
-	 
+	 	 
 	 var startDate = new Date();
 	 startDate.setTime(edbDate.getTime()-(280*1000*60*60*24)  );
-	 startDate.setHours(0);		
-	 
+	 startDate.setHours(8);		
+	 	  
 	 var today = new Date();
-	 today.setHours(0);
+	 today.setHours(8);
 	 today.setMinutes(0);
 	 today.setSeconds(0);
 	 today.setMilliseconds(0);
 	 
-	 if(today > startDate) {		
+	 if(today > startDate) {			
 		 var  days = daydiff(startDate,today);
+		 days = Math.round(days);
 		 return days;
 	 }
 	 
@@ -1082,7 +1110,7 @@ function getGAWeek() {
 }
 
 function getGA() {
-	var day = getGADay();
+	var day = getGADay();	
 	if(day > 0) {
 		week = parseInt(day / 7);
 		offset = day % 7;		
@@ -1109,31 +1137,85 @@ function updateMeds() {
 }
 
 function mcvReq() {
-	$( "#dialog-form" ).dialog( "open" );
+	$( "#mcv-req-form" ).dialog( "open" );
 	return false;
 }
 
 $(document).ready(function(){
-
-$( "#dialog-form" ).dialog({
-	autoOpen: false,
-	height: 275,
-	width: 450,
-	modal: true,
-	buttons: {
-		"Generate Requisition": function() {
-			var bValid = true;
-			$( this ).dialog( "close" );			
+	$( "#genetic-ref-form" ).dialog({
+		autoOpen: false,
+		height: 275,
+		width: 450,
+		modal: true,
+		buttons: {
+			"Dismiss": function() {			
+				$( this ).dialog( "close" );	
+			}
 		},
-		Cancel: function() {
-			$( this ).dialog( "close" );
+		close: function() {
+			
 		}
-	},
-	close: function() {
+	});
+	
+	$( "#mcv-req-form" ).dialog({
+		autoOpen: false,
+		height: 275,
+		width: 450,
+		modal: true,
+		buttons: {
+			"Generate Requisition": function() {			
+				$( this ).dialog( "close" );	
+				var ferritin = $("#ferritin").attr('checked');
+				var hbElectrophoresis = $("#hbElectrophoresis").attr('checked');
+				var demographic = '<%=props.getProperty("demographic_no", "0")%>';
+				var user = '<%=session.getAttribute("user")%>';
+				url = '<%=request.getContextPath()%>/form/formlabreq07.jsp?demographic_no='+demographic+'&formId=0&provNo='+user + '&fromSession=true';
+				jQuery.ajax({url:'<%=request.getContextPath()%>/Pregnancy.do?method=createMCVLabReq&demographicNo='+demographic + '&ferritin='+ferritin+'&hb_electrophoresis='+hbElectrophoresis,async:false, success:function(data) {
+					popupPage(url);
+				}});
+			},
+			Cancel: function() {
+				$( this ).dialog( "close" );
+			}
+		},
+		close: function() {
+			
+		}
+	});
+});
+
+function geneticReferral() {
+	$( "#genetic-ref-form" ).dialog( "open" );
+}
+</script>
+
+<% if(!bView) { %>
+<script type="text/javascript">    
+    $(function(){    	
+		$('#thalassemia_menu').menu({ 
+			content: $('#thalassemia_menu_div').html(), 
+			showSpeed: 400 
+		});
+    
+		$('#sickle_cell_menu').menu({ 
+			content: $('#sickle_cell_menu_div').html(), 
+			showSpeed: 400 
+		});
+     	
+		$('#genetics_menu').menu({ 
+			content: $('#genetics_menu_div').html(), 
+			showSpeed: 400 
+		});
 		
-	}
-});
-});
+		$('#lab_menu').bind('click',function(){popPage('formlabreq07.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AnteNatal','LabReq')});
+		$('#mcv_menu').bind('click',function(){mcvReq();});
+    });
+</script>
+<% } %>
+<script>
+	$(function(){
+		$('#gest_age').html(getGA());
+	});
 </script>
 <style>
 .ui-widget-overlay
@@ -1147,11 +1229,12 @@ $( "#dialog-form" ).dialog({
 <body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1">
 <div id="framecontent">
 <div class="innertube">
-	Reminders
+	<div style="text-align:center;font-weight:bold;">Antenatal Pathway</div>
 	<br/>
+	<div style="text-align:left;">Gest. Age: <span id="gest_age"></span></div>
 	<br/>
 	<div id="lock_notification">
-		<span title="">Viewers:</span>
+		<span title="">Viewers: N/A</span>
 	</div>
 	<div id="lock_req">
 		<input id="lock_req_btn" type="button" value="Request Lock" onclick="requestLock();"/>
@@ -1161,10 +1244,36 @@ $( "#dialog-form" ).dialog({
 	<div style="background-color:yellow;border:2px solid black;width:100%;color:black">
 		<table style="width:100%" border="0">
 			<tr>
+				<td><b>Info</b></td>
+			</tr>
+
+			<tr id="weight_warn" style="display:none">
+				<td onClick="$('#pg1_wt').focus();">No Weight Entered</td>
+				
+			</tr>
+			
+			<tr id="height_warn" style="display:none">
+				<td onClick="$('#pg1_ht').focus();">No Height Entered</td>
+			</tr>
+			
+			<tr id="bmi_warn" style="display:none">
+				<td onClick="$('#c_bmi').focus();$('#c_bmi').dblclick();">No BMI Entered</td>
+			</tr>
+		</table>	
+	</div>
+	
+	
+	<div style="background-color:orange;border:2px solid black;width:100%;color:black">
+		<table style="width:100%" border="0">
+			<tr>
 				<td><b>Warnings</b></td>
 			</tr>
+			
+			<tr id="hgb_warn" style="display:none">
+				<td>HGB low</td>
+			</tr>
 			<tr id="rh_warn" style="display:none">
-				<td>RH Negative</td>
+				<td>RH Negative</td>				
 			</tr>
 			<tr id="rubella_warn" style="display:none">
 				<td>Rubella Non-Immune</td>
@@ -1173,57 +1282,42 @@ $( "#dialog-form" ).dialog({
 			<tr id="hbsag_warn" style="display:none">
 				<td>HepB Surface Antigen</td>
 			</tr>
-			
-			<tr id="weight_warn" style="display:none">
-				<td>No Weight Entered</td>
-			</tr>
-			
-			<tr id="height_warn" style="display:none">
-				<td>No Height Entered</td>
-			</tr>
-			
-			<tr id="bmi_warn" style="display:none">
-				<td>No BMI Entered</td>
-			</tr>
-			
+						
 			<tr id="bmi30_warn" style="display:none">
-				<td>BMI is High</td>
+				<td>BMI is High<span style="float:right"><img src="../images/right-circle-arrow-Icon.png" border="0"></span></td>
 			</tr>
 			<tr id="bmi40_warn" style="display:none">
-				<td>BMI is High</td>
+				<td>BMI is very High<span style="float:right"><img src="../images/right-circle-arrow-Icon.png" border="0"></span></td>
 			</tr>
 			<tr id="bmi_low_warn" style="display:none">
-				<td>BMI is Low</td>
+				<td>BMI is Low<span style="float:right"><img src="../images/right-circle-arrow-Icon.png" border="0"></span></td>
 			</tr>
 			<tr id="sickle_cell_warn" style="display:none">
-				<td>Risk: Sicle Cell</td>
+				<td>Risk: Sickle Cell<span style="float:right"><img  id="sickle_cell_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>
 			</tr>
 			<tr id="thalassemia_warn" style="display:none">
-				<td>Risk: Thalassemia</td>
+				<td>Risk: Thalassemia<span style="float:right"><img id="thalassemia_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>
 			</tr>
-			<tr id="hgb_warn" style="display:none">
-				<td>HGB low</td>
-			</tr>
+
 		</table>	
-	</div>
+	</div>	
 	
-		<br/><br/>
-	<div style="background-color:green;border:2px solid black;width:100%;color:black">
+	<div style="background-color:#00FF00;border:2px solid black;width:100%;color:black">
 		<table style="width:100%" border="0">
 			<tr>
 				<td><b>Prompts</b></td>
 			</tr>
 			
-			<tr id="strep_prompt" style="display:none">
-				<td><a href="javascript:void(0)" onClick="gbsReq();return false;">Print Req. for GBS </a></td>
-			</tr>
-			
+			<tr id="lab_prompt">
+				<td>Antenatal Lab<span style="float:right"><img id="lab_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>
+			</tr>	
+
 			<tr id="genetic_prompt" style="display:none">
-				<td><a href="javascript:void(0)" onClick="geneticReferral();return false;">Genetics Referral</a></td>
+				<td>Genetics Referral<span style="float:right"><img id="genetics_menu"  src="../images/right-circle-arrow-Icon.png" border="0" ></span></td>			
 			</tr>		
 			
 			<tr id="mcv_abn_prompt" style="display:none">
-				<td><a href="javascript:void(0)" onClick="mcvReq();return false;">Low MCV</a></td>
+				<td>Low MCV<span style="float:right"><img id="mcv_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>						
 			</tr>
 					
 					
@@ -1269,9 +1363,7 @@ $( "#dialog-form" ).dialog({
 			<%
   if (!bView) {
 %>
-			<td><a
-				href="javascript: popPage('formlabreq07.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AnteNatal','LabReq');">LAB</a>
-			</td>
+			<td></td>
 
 			<td align="right"><b>View:</b> <a
 				href="javascript: popupPage('formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">AR2
@@ -2266,11 +2358,11 @@ $( "#dialog-form" ).dialog({
 	</table>
 	<table width="100%" border="1" cellspacing="0" cellpadding="0">
 		<tr>
-			<td width="50%">Allergies or Sensitivities &nbsp;<a href="javascript:void(0)" onclick="updateAllergies();">Update from Chart</a><br>
+			<td width="50%">Allergies or Sensitivities &nbsp;<a id="update_allergies_link" href="javascript:void(0)" onclick="updateAllergies();">Update from Chart</a><br>
 			<div align="center"><textarea name="c_allergies"
 				style="width: 100%" cols="30" rows="2"><%= props.getProperty("c_allergies", "") %></textarea></div>
 			</td>
-			<td width="50%">Medications/Herbals&nbsp;<a href="javascript:void(0)" onclick="updateMeds();">Update from Chart</a><br>
+			<td width="50%">Medications/Herbals&nbsp;<a id="update_meds_link" href="javascript:void(0)" onclick="updateMeds();">Update from Chart</a><br>
 			<div align="center"><textarea name="c_meds" style="width: 100%"
 				cols="30" rows="2"><%= props.getProperty("c_meds", "") %></textarea></div>
 			</td>
@@ -2423,7 +2515,7 @@ $( "#dialog-form" ).dialog({
 			<input type="hidden" id="obxhx_num" name="obxhx_num" value="<%= props.getProperty("obxhx_num", "0") %>"/>
 			<table width="100%" border="1" cellspacing="0" cellpadding="0">			
 				<tr>
-					<td colspan="9"><input type="button" value="Add New" onclick="addObxHx();"/></td>
+					<td colspan="9"><input id="obxhx_add_btn" type="button" value="Add New" onclick="addObxHx();"/></td>
 				</tr>				
 			</table>
 		</td>
@@ -2851,11 +2943,11 @@ $( "#dialog-form" ).dialog({
 							<td colspan="4">&nbsp;</td>
 						</tr>
 						<tr>
-							<td colspan="4">Ht.<input type="text" name="pg1_ht"
+							<td colspan="4">Ht.<input type="text" id="pg1_ht" name="pg1_ht"
 								onDblClick="htEnglish2Metric(this);" size="5" maxlength="6"
 								value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_ht", "")) %>" />
 								<br/>
-							Wt.<input type="text" name="pg1_wt"
+							Wt.<input type="text" id="pg1_wt" name="pg1_wt"
 								onDblClick="wtEnglish2Metric(this);" size="5" maxlength="6"
 								value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_wt", "")) %>" />
 							</td>
@@ -2864,9 +2956,9 @@ $( "#dialog-form" ).dialog({
 							<td colspan="4">&nbsp;</td>
 						</tr>
 						<tr>
-							<td colspan="4">BMI<input type="text" name="c_bmi"
+							<td colspan="4">BMI<input type="text" id="c_bmi" name="c_bmi"
 								class="spe" onDblClick="calcBMIMetric(this);" size="6"
-								maxlength="6"
+								maxlength="6" title="Double click to automatically calculate BMI from height and weight"
 								value="<%= UtilMisc.htmlEscape(props.getProperty("c_bmi", "")) %>">
 							<br/>BP<input type="text" name="pg1_BP" size="6" maxlength="10"
 								value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_BP", "")) %>">
@@ -3252,9 +3344,7 @@ $( "#dialog-form" ).dialog({
 			<%
   if (!bView) {
 %>
-			<td><a
-				href="javascript: popPage('formlabreq07.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AnteNatal','LabReq');">LAB</a>
-			</td>
+			<td></td>
 			<td align="right"><b>View:</b> <a
 				href="javascript: popupPage('formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">AR2
 			</a> </td>
@@ -3282,22 +3372,58 @@ Calendar.setup({ inputField : "pg1_labLastPapDate", ifFormat : "%Y/%m/%d", shows
 </script>
 
 
-<div id="dialog-form" title="Create Lab Requisition">
+<div id="mcv-req-form" title="Create Lab Requisition">
 	<p class="validateTips"></p>
 
 	<form>
 	<fieldset>
-		<input type="checkbox" name="name" id="name" class="text ui-widget-content ui-corner-all" />
-		<label for="name">Ferritin</label>
+		<input type="checkbox" name="ferritin" id="ferritin" class="text ui-widget-content ui-corner-all" />
+		<label for="ferritin">Ferritin</label>
+		<a href="javascript:void(0);" onclick="return false;" title="Consider to rule out iron deficiency"><img border="0" src="../images/icon_help_sml.gif"/></a>
 		
 		<br/>
-		<input type="checkbox" name="email" id="email" value="" class="text ui-widget-content ui-corner-all" />
-		<label for="email">Hb electrophoresis</label>
-				
+		<input type="checkbox" name="hbElectrophoresis" id="hbElectrophoresis" value="" class="text ui-widget-content ui-corner-all" />
+		<label for="hbElectrophoresis">Hb electrophoresis</label>
+		<a href="javascript:void(0);" onclick="return false;" title="Consider to rule out Thalassemia in at-risk populations"><img border="0" src="../images/icon_help_sml.gif"/></a>
 	</fieldset>
 	</form>
 </div>
 
+<div id="genetic-ref-form" title="Genetic Support Tool">
+	<p>This tool provides guidance regarding the handling of abnormal genetic markers</p>
+	<br/>
+	<a href="http://www.sogc.org/guidelines/documents/gui217CPG0810.pdf" target="sogc">SOGC Guidance Document</a>
+	<br/>
+		<a href="javascript:void(0);" onclick="return false;" title="">Generate Referral</a>		
+		<br/>
+	
+</div>
+
+
+<div id="sickle_cell_menu_div" class="hidden">
+<ul>
+	<li><a href="javascript:void(0)" onclick="return false;">Guidelines</a></li>
+	<li><a href="javascript:void(0)" onclick="return false;">Patient Handout</a></li>
+	<li><a href="javascript:void(0)" onclick="return false;">Referral</a></li>
+	<li><a href="javascript:void(0)" onclick="return false;">Hide</a></li>
+</ul>
+</div>
+
+<div id="thalassemia_menu_div" class="hidden">
+<ul>
+	<li><a href="javascript:void(0)" onclick="return false;">Guidelines</a></li>
+	<li><a href="javascript:void(0)" onclick="return false;">Patient Handout</a></li>
+	<li><a href="javascript:void(0)" onclick="return false;">Referral</a></li>
+	<li><a href="javascript:void(0)" onclick="return false;">Hide</a></li>
+</ul>
+</div>
+
+<div id="genetics_menu_div" class="hidden">
+<ul>
+	<li><a href="http://www.sogc.org/guidelines/documents/gui217CPG0810.pdf" target="sogc">SOGC Guidelines</a></li>
+	<li><a href="javascript:void(0)" onclick="geneticReferral();">Referral</a></li>
+</ul>
+</div>
 
 </html:html>
 

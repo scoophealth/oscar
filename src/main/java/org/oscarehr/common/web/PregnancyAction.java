@@ -202,13 +202,34 @@ public class PregnancyAction extends DispatchAction {
 		FrmLabReq07Record lr = new FrmLabReq07Record();
 		Properties p = lr.getFormRecord(demographicNo, 0);
 		p = lr.getFormCustRecord(p, LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
-		if(penicillin != null && penicillin.equals("true")) {
+		if(penicillin != null && penicillin.equals("checked")) {
 			p.setProperty("o_otherTests1","Vaginal Anal GBS with sensitivities (pt allergic to penicillin)");
 		} else {
 			p.setProperty("o_otherTests1","Vaginal Anal GBS");
 		}
 		
 		//int recId = lr.saveFormRecord(p);
+		request.getSession().setAttribute("labReq07"+demographicNo,p);
+	
+		return null;
+	}
+
+	public ActionForward createMCVLabReq(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  throws SQLException {
+		Integer demographicNo = Integer.parseInt(request.getParameter("demographicNo"));
+		String ferritin = request.getParameter("ferritin");
+		String hbElectrophoresis = request.getParameter("hb_electrophoresis");
+				
+		FrmLabReq07Record lr = new FrmLabReq07Record();
+		Properties p = lr.getFormRecord(demographicNo, 0);
+		p = lr.getFormCustRecord(p, LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+		
+		if(ferritin != null && ferritin.equals("checked")) {
+			p.setProperty("b_ferritin","checked=\"checked\"");			
+		} 
+		if(hbElectrophoresis != null && hbElectrophoresis.equals("checked")) {
+			p.setProperty("o_otherTests1", "Hb Electrophoresis");
+		} 
+		
 		request.getSession().setAttribute("labReq07"+demographicNo,p);
 	
 		return null;
