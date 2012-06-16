@@ -28,7 +28,7 @@
 %>
 
 <tr align="center"  id="obxhx_<%=n%>">
-	<td><a href="javascript:void(0)" onclick="deleteObxHx('<%=n%>'); return false;">[x]</a>&nbsp;<%=n %></td>
+	<td><a dl="delete_link" href="javascript:void(0)" onclick="deleteObxHx('<%=n%>'); return false;">[x]</a>&nbsp;<%=n %></td>
 	<td>
 		<input type="text" name="pg1_year<%=n %>" size="5" maxlength="4" style="width: 90%"  />
 	</td>
