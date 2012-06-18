@@ -202,7 +202,7 @@ function checkAll(formId){
                         <%      sentStyle = "messengerButtonsD";
                             break;
                             case 2: %>
-                                <div class="DivContentTitle"><bean:message key="oscarMessenger.DisplayMessages.msgDeleted"/></div>
+                                <div class="DivContentTitle"><bean:message key="oscarMessenger.DisplayMessages.msgArchived"/></div>
                         <%      delStyle =  "messengerButtonsD";
                             break;
                             case 3: %>
@@ -306,9 +306,9 @@ function checkAll(formId){
                     <tr>
                         <td>
                             <%if (pageType == 0){%>
-                                    <input name="btnDelete" type="submit" value="<bean:message key="oscarMessenger.DisplayMessages.formDelete"/>">
+                                    <input name="btnDelete" type="submit" value="<bean:message key="oscarMessenger.DisplayMessages.formArchive"/>">
                             <%}else if (pageType == 2){%>
-                                    <input type="submit" value="<bean:message key="oscarMessenger.DisplayMessages.formUndelete"/>">
+                                    <input type="submit" value="<bean:message key="oscarMessenger.DisplayMessages.formUnarchive"/>">
                             <%}%>
                             &nbsp;
                         </td>
@@ -463,9 +463,9 @@ function checkAll(formId){
                                 <tr>
                                     <td>
                                          <%if (pageType == 0){%>
-                                            <input name="btnDelete" type="submit" value="<bean:message key="oscarMessenger.DisplayMessages.formDelete"/>">
+                                            <input name="btnDelete" type="submit" value="<bean:message key="oscarMessenger.DisplayMessages.formArchive"/>">
                                              <%}else if (pageType == 2){%>
-                                            <input type="submit" value="<bean:message key="oscarMessenger.DisplayMessages.formUndelete"/>">
+                                            <input type="submit" value="<bean:message key="oscarMessenger.DisplayMessages.formUnarchive"/>">
                                             <%}%>  
                                     </td>
                                     <%
