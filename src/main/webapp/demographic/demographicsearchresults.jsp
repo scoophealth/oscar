@@ -394,7 +394,7 @@ function popupEChart(vheight,vwidth,varpage) { //open a new popup window
 }
 %>
 
-<div class="createNew"><a href="demographicaddarecordhtm.jsp"><b><font size="+1"><bean:message
+<div class="createNew"><a href="demographicaddarecordhtm.jsp?search_mode=<%=searchMode%>&keyword=<%=keyWord%>"><b><font size="+1"><bean:message
 	key="demographic.search.btnCreateNew" /></font></b></a>
 <br>
 </div>

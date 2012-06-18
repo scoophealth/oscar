@@ -296,7 +296,7 @@ onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';"
   if(nItems==0 && nLastPage<=0) {
 %> <caisi:isModuleLoad moduleName="caisi" reverse="true">
 	<bean:message key="demographic.search.noResultsWereFound" />
-	<a href="../demographic/demographicaddarecordhtm.jsp"><bean:message
+	<a href="../demographic/demographicaddarecordhtm.jsp?search_mode=<%=request.getParameter("search_mode")%>&keyword=<%=request.getParameter("keyword")%>"><bean:message
 		key="demographic.search.btnCreateNew" /></a>
 </caisi:isModuleLoad> <%
     }

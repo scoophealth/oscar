@@ -32,6 +32,7 @@
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 
 <%@ page
 	import="java.util.*, java.sql.*, oscar.*, oscar.oscarDemographic.data.ProvinceNames, oscar.oscarDemographic.pageUtil.Util, oscar.oscarWaitingList.WaitingList"
@@ -107,6 +108,12 @@
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script> 
+   <script>
+     jQuery.noConflict();
+   </script>
+<oscar:customInterface section="adddemo"/>
+
 <title><bean:message
 	key="demographic.demographicaddrecordhtm.title" /></title>
 	
@@ -140,13 +147,6 @@
 
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <script language="JavaScript">
-
-function setfocus() {
-  this.focus();
-  document.adddemographic.last_name.focus();
-  document.adddemographic.last_name.select();
-  window.resizeTo(1000,700);
-}
 function upCaseCtrl(ctrl) {
 	ctrl.value = ctrl.value.toUpperCase();
 }
@@ -413,8 +413,8 @@ function autoFillHin(){
 </script>
 </head>
 <!-- Databases have alias for today. It is not necessary give the current date -->
-<!--<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus();showDate();"  topmargin="0" leftmargin="0" rightmargin="0">-->
-<body bgproperties="fixed" onLoad="setfocus();" topmargin="0"
+
+<body bgproperties="fixed" topmargin="0"
 	leftmargin="0" rightmargin="0">
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 	<tr bgcolor="#CCCCFF">
@@ -434,7 +434,7 @@ function autoFillHin(){
 	<% } %>
 </td></tr>
 <tr><td>
-<form method="post" name="adddemographic" action="demographicaddarecord.jsp"  onsubmit="return checkFormTypeIn()">
+<form method="post" id="adddemographic" name="adddemographic" action="demographicaddarecord.jsp" onsubmit="return checkFormTypeIn()">
 <input type="hidden" name="fromAppt" value="<%=request.getParameter("fromAppt")%>">
 <input type="hidden" name="originalPage" value="<%=request.getParameter("originalPage")%>">
 <input type="hidden" name="bFirstDisp" value="<%=request.getParameter("bFirstDisp")%>">
@@ -458,7 +458,7 @@ function autoFillHin(){
 <input type="hidden" name="creator" value="<%=request.getParameter("creator")%>">
 <input type="hidden" name="remarks" value="<%=request.getParameter("remarks")%>">
 
-<table border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="#EEEEFF">
+<table id="addDemographicTbl" border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="#EEEEFF">
 
     
     <%if (OscarProperties.getInstance().getProperty("workflow_enhance")!=null && OscarProperties.getInstance().getProperty("workflow_enhance").equals("true")) { %>
@@ -481,30 +481,51 @@ function autoFillHin(){
 					onclick=self.close();></div>
 				</td>
 			</tr>
-    <%}%>
+    <%}
 
-    <tr>
+   String lastNameVal = "";
+   String firstNameVal = "";
+   String chartNoVal = "";
+
+   if (searchMode != null) {
+      if (searchMode.equals("search_name")) {
+        int commaIdx = keyWord.indexOf(",");
+        if (commaIdx == -1) 
+	   lastNameVal = keyWord.trim();
+        else if (commaIdx == (keyWord.length()-1))
+           lastNameVal = keyWord.substring(0,keyWord.length()-1).trim();
+        else {
+           lastNameVal = keyWord.substring(0,commaIdx).trim();
+  	   firstNameVal = keyWord.substring(commaIdx+1).trim();
+        }
+   } else if (searchMode.equals("search_chart_no")) {
+	chartNoVal = keyWord;
+   }
+  }
+%>
+
+    <tr id="rowWithLastName" >
       <td align="right"> <b><bean:message key="demographic.demographicaddrecordhtm.formLastName"/><font color="red">:</font> </b></td>
-      <td align="left">
-        <input type="text" name="last_name" id="last_name" onBlur="upCaseCtrl(this)" size=30 value=<%=request.getParameter("keyword")==null?"":request.getParameter("keyword")%>>
+      <td id="lastName" align="left">
+        <input type="text" name="last_name" id="last_name" onBlur="upCaseCtrl(this)" size=30 value="<%=lastNameVal%>">
 
       </td>
-      <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formFirstName"/><font color="red">:</font> </b> </td>
-      <td align="left">
-        <input type="text" name="first_name" id="first_name" onBlur="upCaseCtrl(this)"  size=30>
+      <td align="right" id="firstNameLbl"><b><bean:message key="demographic.demographicaddrecordhtm.formFirstName"/><font color="red">:</font> </b> </td>
+      <td id="firstName" align="left">
+        <input type="text" name="first_name" id="first_name" onBlur="upCaseCtrl(this)"  value="<%=firstNameVal%>" size=30>
       </td>
     </tr>
     <tr>
-	<td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.msgDemoLanguage"/><font color="red">:</font></b></td>
-	<td align="left">
-	    <select name="official_lang">
+	<td id="languageLbl" align="right"><b><bean:message key="demographic.demographicaddrecordhtm.msgDemoLanguage"/><font color="red">:</font></b></td>
+	<td id="languageCell" align="left">
+	    <select id="official_lang" name="official_lang">
 		<option value="English" <%= vLocale.getLanguage().equals("en") ? " selected":"" %>><bean:message key="demographic.demographiceaddrecordhtm.msgEnglish"/></option>
 		<option value="French"  <%= vLocale.getLanguage().equals("fr") ? " selected":"" %>><bean:message key="demographic.demographiceaddrecordhtm.msgFrench"/></option>
 	    </select>
 	</td>
-	<td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.msgDemoTitle"/><font color="red">:</font></b></td>
-	<td align="left">
-	    <select name="title" onchange="checkTitleSex(value);">
+	<td id="titleLbl" align="right"><b><bean:message key="demographic.demographicaddrecordhtm.msgDemoTitle"/><font color="red">:</font></b></td>
+	<td id="titleCell" align="left">
+	    <select id="title" name="title" onchange="checkTitleSex(value);">
                 <option value=""><bean:message key="demographic.demographicaddrecordhtm.msgNotSet"/></option>
                 <option value="MS"><bean:message key="demographic.demographicaddrecordhtm.msgMs"/></option>
                 <option value="MISS"><bean:message key="demographic.demographicaddrecordhtm.msgMiss"/></option>
@@ -522,8 +543,8 @@ function autoFillHin(){
 	</td>
     </tr>
     <tr>
-        <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.msgSpoken"/>:</b></td>
-        <td><select name="spoken_lang">
+        <td id="spokenLbl" align="right"><b><bean:message key="demographic.demographicaddrecordhtm.msgSpoken"/>:</b></td>
+        <td id="spokenCell"><select name="spoken_lang">
 <%for (String sp_lang : Util.spokenLangProperties.getLangSorted()) { %>
                 <option value="<%=sp_lang %>"><%=sp_lang %></option>
 <%} %>
@@ -586,16 +607,16 @@ function autoFillHin(){
 			</tr>
 			<%}%>
 			<tr valign="top">
-				<td align="right"><b><bean:message
+				<td id="addrLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formAddress" />: </b></td>
-				<td align="left"><input type="text" name="address" size=40 />
+				<td id="addressCell" align="left"><input id="address" type="text" name="address" size=40 />
 				<% if (vLocale.getCountry().equals("BR")) { %> <b><bean:message
 					key="demographic.demographicaddrecordhtm.formAddressNo" />:</b> <input
-					type="text" name="address_no" size="6"> <%}%>
+					id="address_no" type="text" name="address_no" size="6"> <%}%>
 				</td>
-				<td align="right"><b><bean:message
+				<td id="cityLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formCity" />: </b></td>
-				<td align="left"><input type="text" name="city"
+				<td id="cityCell" align="left"><input type="text" id="city" name="city"
 					value="<%=defaultCity %>" /></td>
 			</tr>
 			<% if (vLocale.getCountry().equals("BR")) { %>
@@ -612,15 +633,15 @@ function autoFillHin(){
 			</tr>
 			<%}%>
 			<tr valign="top">
-				<td align="right"><b> <% if(oscarProps.getProperty("demographicLabelProvince") == null) { %>
+				<td id="provLbl" align="right"><b> <% if(oscarProps.getProperty("demographicLabelProvince") == null) { %>
 				<bean:message key="demographic.demographicaddrecordhtm.formprovince" />
 				<% } else {
           out.print(oscarProps.getProperty("demographicLabelProvince"));
       	 } %> : </b></td>
-				<td align="left">
+				<td id="provCell" align="left">
 				<% if (vLocale.getCountry().equals("BR")) { %> <input type="text"
 					name="province" value="<%=props.getProperty("billregion", "ON")%>">
-				<% } else { %> <select name="province">
+				<% } else { %> <select id="province" name="province">
 					<option value="OT"
 						<%=defaultProvince.equals("")||defaultProvince.equals("OT")?" selected":""%>>Other</option>
 					<%-- <option value="">None Selected</option> --%>
@@ -704,38 +725,38 @@ function autoFillHin(){
 					<% } %>
 				</select> <% } %>
 				</td>
-				<td align="right"><b> <% if(oscarProps.getProperty("demographicLabelPostal") == null) { %>
+				<td id="postalLbl" align="right"><b> <% if(oscarProps.getProperty("demographicLabelPostal") == null) { %>
 				<bean:message key="demographic.demographicaddrecordhtm.formPostal" />
 				<% } else {
           out.print(oscarProps.getProperty("demographicLabelPostal"));
       	 } %> : </b></td>
-				<td align="left"><input type="text" name="postal"
+				<td id="postalCell" align="left"><input type="text" id="postal" name="postal"
 					onBlur="upCaseCtrl(this)"></td>
 			</tr>
 
 			<tr valign="top">
-				<td align="right"><b><bean:message
+				<td id="phoneLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formPhoneHome" />: </b></td>
-				<td align="left"><input type="text" name="phone"
+				<td id="phoneCell" align="left"><input type="text" id="phone" name="phone"
 					onBlur="formatPhoneNum()"
 					value="<%=props.getProperty("phoneprefix", "905-")%>"> <bean:message
 					key="demographic.demographicaddrecordhtm.Ext" />:<input
-					type="text" name="hPhoneExt" value="" size="4" /></td>
-				<td align="right"><b><bean:message
+					type="text" id="hPhoneExt" name="hPhoneExt" value="" size="4" /></td>
+				<td id="phoneWorkLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formPhoneWork" />:</b></td>
-				<td align="left"><input type="text" name="phone2"
+				<td id="phoneWorkCell" align="left"><input type="text" name="phone2"
 					onBlur="formatPhoneNum()" value=""> <bean:message
 					key="demographic.demographicaddrecordhtm.Ext" />:<input type="text"
 					name="wPhoneExt" value="" style="display: inline" size="4" /></td>
 			</tr>
 			<tr valign="top">
-				<td align="right"><b><bean:message
+				<td id="phoneCellLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formPhoneCell" />: </b></td>
-				<td align="left"><input type="text" name="cellphone"
+				<td id="phoneCellCell" align="left"><input type="text" name="cellphone"
 					onBlur="formatPhoneNum()"></td>
-				<td align="right"><b><bean:message
+				<td id="newsletterLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formNewsLetter" />: </b></td>
-				<td align="left"><select name="newsletter">
+				<td id="newsletterCell" align="left"><select name="newsletter">
 					<option value="Unknown" selected><bean:message
 						key="demographic.demographicaddrecordhtm.formNewsLetter.optUnknown" /></option>
 					<option value="No"><bean:message
@@ -747,20 +768,20 @@ function autoFillHin(){
 				</select></td>
 			</tr>
 			<tr valign="top">
-				<td align="right"><b><bean:message
+				<td id="emailLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formEMail" />: </b></td>
-				<td align="left"><input type="text" name="email" value="">
+				<td id="emailCell" align="left"><input type="text" id="email" name="email" value="">
 				</td>
-				<td align="right"><b><bean:message
+				<td id="myOscarLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formMyOscarUserName" />:</b></td>
-				<td align="left"><input type="text" name="myOscarUserName" value="">
+				<td id="myOscarCell"  align="left"><input type="text" name="myOscarUserName" value="">
 				</td>
 			</tr>
 			<tr valign="top">
-				<td align="right"><b><bean:message
+				<td id="dobLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formDOB" /></b><font size="-2">(yyyymmdd)</font><b><font
 					color="red">:</font></b></td>
-				<td align="left" nowrap>
+				<td id="dobTbl" align="left" nowrap>
 				<table border="0" cellpadding="0" cellspacing="0">
 					<tr>
 						<td><input type="text" name="year_of_birth" size="4" id="year_of_birth"
@@ -823,7 +844,7 @@ function autoFillHin(){
 					</tr>
 				</table>
 				</td>
-				<td align="right"><b><bean:message
+				<td align="right" id="genderLbl"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formSex" /><font
 					color="red">:</font></b></td>
 
@@ -837,7 +858,7 @@ function autoFillHin(){
                                        sex = props.getProperty("defaultsex","");
                                    }
                                 %>
-                                <td align="left"><select name="sex" id="sex">
+                                <td id="gender" align="left"><select name="sex" id="sex">
                                     <option value="M"  <%= sex.equals("M") ? " selected": "" %>><bean:message
                                         key="demographic.demographicaddrecordhtm.formM" /></option>
                                     <option value="F"  <%= sex.equals("F") ? " selected": "" %>><bean:message
@@ -845,24 +866,24 @@ function autoFillHin(){
                                 </select></td>
 			</tr>
 			<tr valign="top">
-				<td align="right"><b><bean:message
+				<td align="right" id="hinLbl"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formHIN" />: </b></td>
-				<td align="left" nowrap><input type="text" name="hin" id="hin"
+				<td align="left" id="hinVer" nowrap><input type="text" name="hin" id="hin"
                                                                size="15" onfocus="autoFillHin()" > <b><bean:message
 					key="demographic.demographicaddrecordhtm.formVer" />: <input
-					type="text" name="ver" value="" size="3" onBlur="upCaseCtrl(this)">
+					type="text" id="ver" name="ver" value="" size="3" onBlur="upCaseCtrl(this)">
 				</b></td>
-				<td align="right"><b><bean:message
+				<td id="effDateLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formEFFDate" /></b><b>: </b></td>
-				<td align="left"><b> <input type="text"
-					name="eff_date_year" size="4" maxlength="4"> <input
-					type="text" name="eff_date_month" size="2" maxlength="2"> <input
-					type="text" name="eff_date_date" size="2" maxlength="2"> </b></td>
-			</tr>
+				<td id="effDate" align="left"><b> <input type="text"
+					id="eff_date_year" name="eff_date_year" size="4" maxlength="4"> <input
+					type="text" id="eff_date_month" name="eff_date_month" size="2" maxlength="2"> <input
+					type="text" id="eff_date_date" name="eff_date_date" size="2" maxlength="2"> </b></td>
+			</tr>                       
 			<tr>
-				<td align="right"><b><bean:message
+				<td id="hcTypeLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formHCType" />: </b></td>
-				<td>
+				<td id="hcType">
 				<% if(vLocale.getCountry().equals("BR")) { %> <input type="text"
 					name="hc_type" value=""> <% } else { %>
 				<select name="hc_type" id="hc_type">
@@ -948,10 +969,17 @@ function autoFillHin(){
           </select>
         <% }%>
       </td>
-      <td align="right">
+      <td id="renewDateLbl" align="right"><b>*<bean:message key="demographic.demographiceditdemographic.formHCRenewDate" />:</b></td>
+      <td id="renewDate" align="left"> <input type="text" id="hc_renew_date_year" name="hc_renew_date_year" size="4" maxlength="4" value="">
+                                       <input type="text" id="hc_renew_date_month" name="hc_renew_date_month" size="2" maxlength="2" value="">
+                                       <input type="text" id="hc_renew_date_date" name="hc_renew_date_date" size="2" maxlength="2" value="">
+      </td>
+     </tr>
+     <tr>
+      <td id="countryLbl" align="right">
          <b><bean:message key="demographic.demographicaddrecordhtm.msgCountryOfOrigin"/>:</b>
       </td>
-      <td>
+      <td id="countryCell" colspan="3">
           <select name="countryOfOrigin">
               <option value="-1"><bean:message key="demographic.demographicaddrecordhtm.msgNotSet"/></option>
               <%for(CountryCode cc : countryList){ %>
@@ -961,38 +989,39 @@ function autoFillHin(){
       </td>
     </tr>
     <tr valign="top">
-	<td  align="right"><b><bean:message key="demographic.demographicaddrecordhtm.msgSIN"/>:</b> </td>
-	<td align="left"  >
+	<td  id="sinNoLbl" align="right"><b><bean:message key="demographic.demographicaddrecordhtm.msgSIN"/>:</b> </td>
+	<td id="sinNoCell" align="left"  >
 	    <input type="text" name="sin">
 	</td>
 
 
-	<td  align="right"><b> <bean:message key="demographic.demographicaddrecordhtm.cytolNum"/>:</b> </td>
-	<td align="left"  >
+	<td  id="cytologyLbl" align="right"><b> <bean:message key="demographic.demographicaddrecordhtm.cytolNum"/>:</b> </td>
+	<td id="cytologyCell" align="left"  >
 	    <input type="text" name="cytolNum">
 
 	</td>
     </tr>
     <tr valign="top">
-      <td align="right"><b><% if(oscarProps.getProperty("demographicLabelDoctor") != null) { out.print(oscarProps.getProperty("demographicLabelDoctor","")); } else { %>
+      <td id="demoDoctorLbl" align="right"><b><% if(oscarProps.getProperty("demographicLabelDoctor") != null) { out.print(oscarProps.getProperty("demographicLabelDoctor","")); } else { %>
                                                 <bean:message key="demographic.demographicaddrecordhtm.formDoctor"/><% } %>
                                                 : </b></td>
-      <td align="left" >
+      <td id="demoDoctorCell" align="left" >
         <select name="staff">
           <%
   ResultSet rsdemo = addDemoBean.queryResults("search_provider");
   while (rsdemo.next()) {
+     String docProviderNo = rsdemo.getString("provider_no");
 %>
-					<option value="<%=rsdemo.getString("provider_no")%>"><%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",12)%></option>
+					<option id="doc<%=docProviderNo%>" value="<%=docProviderNo%>"><%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",12)%></option>
 					<%
   }
   rsdemo.close();
 %>
 					<option value=""></option>
 				</select></td>
-				<td align="right"><b><bean:message
+				<td id="nurseLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formNurse" />: </b></td>
-				<td><select name="cust1">
+				<td id="nurseCell" ><select name="cust1">
 					<option value=""></option>
 					<%
   rsdemo=addDemoBean.queryResults("search_provider");
@@ -1006,9 +1035,9 @@ function autoFillHin(){
 				</select></td>
 			</tr>
 			<tr valign="top">
-				<td align="right"><b><bean:message
+				<td id="midwifeLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formMidwife" />: </b></td>
-				<td><select name="cust4">
+				<td id="midwifeCell"><select name="cust4">
 					<option value=""></option>
 					<%
   rsdemo=addDemoBean.queryResults("search_provider");
@@ -1021,9 +1050,9 @@ function autoFillHin(){
   rsdemo.close();
 %>
 				</select></td>
-				<td align="right"><b><bean:message
+				<td id="residentLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formResident" />: </b></td>
-				<td align="left"><select name="cust2">
+				<td id="residentCell" align="left"><select name="cust2">
 					<option value=""></option>
 					<%
   rsdemo=addDemoBean.queryResults("search_provider");
@@ -1037,10 +1066,10 @@ function autoFillHin(){
 %>
 				</select></td>
 			</tr>
-			<tr valign="top">
-				<td align="right" height="10"><b><bean:message
+			<tr id="rowWithReferralDoc" valign="top">
+				<td id="referralDocLbl" align="right" height="10"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formReferalDoctor" />:</b></td>
-				<td align="left" height="10">
+				<td id="referralDocCell" align="left" height="10">
 				<% if(oscarProps.getProperty("isMRefDocSelectList", "").equals("true") ) {
                                   		// drop down list
 									  Properties prop = null;
@@ -1083,9 +1112,9 @@ document.forms[1].r_doctor_ohip.value = refNo;
 </script> <% } else {%> <input type="text" name="r_doctor" size="30" maxlength="40"
 					value=""> <% } %>
 				</td>
-				<td align="right" nowrap height="10"><b><bean:message
+				<td id="referralDocNoLbl" align="right" nowrap height="10"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formReferalDoctorN" />:</b></td>
-				<td align="left" height="10"><input type="text"
+				<td id="referralDocNoCell" align="left" height="10"><input type="text"
 					name="r_doctor_ohip" maxlength="6"> <% if("ON".equals(prov)) { %>
 								<a
 									href="javascript:referralScriptAttach2('r_doctor_ohip','r_doctor')"><bean:message key="demographic.demographiceditdemographic.btnSearch"/>
@@ -1093,10 +1122,10 @@ document.forms[1].r_doctor_ohip.value = refNo;
 				</td>
 			</tr>
 			<tr valign="top">
-				<td align="right" nowrap><b><bean:message
+				<td align="right" id="rosterStatusLbl" nowrap><b><bean:message
 					key="demographic.demographicaddrecordhtm.formPCNRosterStatus" />: </b></td>
-				<td align="left"><!--input type="text" name="roster_status" onBlur="upCaseCtrl(this)"-->
-				<select name="roster_status" style="width: 160">
+				<td id="rosterStatus" align="left"><!--input type="text" name="roster_status" onBlur="upCaseCtrl(this)"-->
+				<select id="roster_status"  name="roster_status" style="width: 160">
 					<option value=""></option>
 					<option value="RO"><bean:message key="demographic.demographicaddrecordhtm.RO-rostered" /></option>
 					<option value="NR"><bean:message key="demographic.demographicaddrecordhtm.NR-notrostered" /></option>
@@ -1108,21 +1137,21 @@ document.forms[1].r_doctor_ohip.value = refNo;
 					<% } // end while %>
 				</select> <input type="button" onClick="newStatus1();" value="<bean:message
 					key="demographic.demographicaddrecordhtm.AddNewRosterStatus"/> " /></td>
-				<td align="right" nowrap><b><bean:message
+				<td id="rosterDateLbl" align="right" nowrap><b><bean:message
 					key="demographic.demographicaddrecordhtm.formPCNDateJoined" />: </b></td>
-				<td align="left"><input type="text" name="roster_date_year"
+				<td id="rosterDateCell" align="left"><input type="text" name="roster_date_year"
 					size="4" maxlength="4"> <input type="text"
 					name="roster_date_month" size="2" maxlength="2"> <input
 					type="text" name="roster_date_date" size="2" maxlength="2">
 				</td>
 			</tr>
 			<tr valign="top">
-                            <td align="right"><b><bean:message
+                            <td id="ptStatusLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formPatientStatus" />:</b></td>
-				<td align="left">
+				<td id="ptStatusCell" align="left">
 				<% if (vLocale.getCountry().equals("BR")) { %> <input type="text"
 					name="patient_status" value="AC" onBlur="upCaseCtrl(this)">
-				<% } else { %> <select name="patient_status" style="width: 160">
+				<% } else { %> <select id="patient_status" name="patient_status" style="width: 160">
 					<option value="AC"><bean:message key="demographic.demographicaddrecordhtm.AC-Active" /></option>
 					<option value="IN"><bean:message key="demographic.demographicaddrecordhtm.IN-InActive" /></option>
 					<option value="DE"><bean:message key="demographic.demographicaddrecordhtm.DE-Deceased" /></option>
@@ -1136,9 +1165,9 @@ document.forms[1].r_doctor_ohip.value = refNo;
 					key="demographic.demographicaddrecordhtm.AddNewPatient"/> ">
 				<% } // end if...then...else %>
 				</td>
-				<td align="right"><b><bean:message
+				<td id="chartNoLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formChartNo" />:</b></td>
-				<td align="left"><input type="text" name="chart_no" value="">
+				<td id="chartNo" align="left"><input type="text" id="chart_no" name="chart_no" value="<%=chartNoVal%>">
 				</td>
 			</tr>
 
@@ -1178,11 +1207,11 @@ document.forms[1].r_doctor_ohip.value = refNo;
             }
     %>
 			<tr>
-				<td colspan="4">
+				<td id="waitListTbl" colspan="4">
 				<table border="1" width="100%">
 					<tr valign="top">
                                             <td align="right" width="15%" nowrap><b> <bean:message key="demographic.demographicaddarecordhtm.msgWaitList"/>: </b></td>
-						<td align="left" width="38%"><select name="list_id">
+						<td align="left" width="38%"><select id="name_list_id" name="list_id">
 							<% if(wLReadonly.equals("")){ %>
 							<option value="0">--Select Waiting List--</option>
 							<%}else{ %>
@@ -1199,7 +1228,7 @@ document.forms[1].r_doctor_ohip.value = refNo;
                                      %>
 						</select></td>
 						<td align="right" nowrap><b><bean:message key="demographic.demographicaddarecordhtm.msgWaitListNote"/>: </b></td>
-						<td align="left"><input type="text" name="waiting_list_note"
+						<td align="left"><input type="text" id="waiting_list_note" name="waiting_list_note"
 							size="36" <%=wLReadonly%>></td>
 					</tr>
 
@@ -1217,18 +1246,18 @@ document.forms[1].r_doctor_ohip.value = refNo;
 			</tr>
 
 			<tr valign="top">
-				<td align="right"><b><bean:message
+				<td id="joinDateLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formDateJoined" /></b><b>:
 				</b></td>
-				<td align="left"><input type="text" name="date_joined_year"
+				<td id="joinDateCell" align="left"><input type="text" name="date_joined_year"
 					size="4" maxlength="4" value="<%=curYear%>"> <input
 					type="text" name="date_joined_month" size="2" maxlength="2"
 					value="<%=curMonth%>"> <input type="text"
 					name="date_joined_date" size="2" maxlength="2" value="<%=curDay%>">
 				</td>
-				<td align="right"><b><bean:message
+				<td id="endDateLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formEndDate" /></b><b>: </b></td>
-				<td align="left"><input type="text" name="end_date_year"
+				<td id="endDateCell" align="left"><input type="text" name="end_date_year"
 					size="4" maxlength="4"> <input type="text"
 					name="end_date_month" size="2" maxlength="2"> <input
 					type="text" name="end_date_date" size="2" maxlength="2"></td>
@@ -1264,15 +1293,15 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 				<td colspan="4">
 				<table width="100%" bgcolor="#EEEEFF">
 					<tr>
-						<td width="10%" align="right"><font color="#FF0000"><b><bean:message
+						<td id="alertLbl" width="10%" align="right"><font color="#FF0000"><b><bean:message
 							key="demographic.demographicaddrecordhtm.formAlert" />: </b></font></td>
-						<td><textarea name="cust3" style="width: 100%" rows="2"></textarea>
+						<td id="alertCell"><textarea id="cust3" name="cust3" style="width: 100%" rows="2"></textarea>
 						</td>
 					</tr>
 					<tr>
-						<td align="right"><b><bean:message
+						<td id="notesLbl" align="right"><b><bean:message
 							key="demographic.demographicaddrecordhtm.formNotes" /> : </b></td>
-						<td><textarea name="content" style="width: 100%" rows="2"></textarea>
+						<td id="notesCell"><textarea id="content" name="content" style="width: 100%" rows="2"></textarea>
 						</td>
 					</tr>
 				</table>
@@ -1287,12 +1316,12 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 				<%}%> <%--
           <input type="submit" name="displaymode" value="<bean:message key="demographic.demographicaddrecordhtm.btnAddRecord"/>" onclick="document.forms['adddemographic'].displaymode.value='Add Record'; document.forms['adddemographic'].submit();">
 --%> <input type="hidden" name="displaymode" value="Add Record">
-				<input type="submit" name="submit"
+				<input type="submit" id="btnAddRecord" name="submit"
 					value="<bean:message key="demographic.demographicaddrecordhtm.btnAddRecord"/>">
-				<input type="button" name="Button"
+				<input type="button" id="btnSwipeCard" name="Button"
 					value="<bean:message key="demographic.demographicaddrecordhtm.btnSwipeCard"/>"
 					onclick="window.open('zadddemographicswipe.htm','', 'scrollbars=yes,resizable=yes,width=600,height=300')";>
-				&nbsp; <input type="button" name="Button"
+				&nbsp; <input type="button" id="btnCancel" name="Button"
 					value="<bean:message key="demographic.demographicaddrecordhtm.btnCancel"/>"
 					onclick=self.close();></div>
 				</td>
