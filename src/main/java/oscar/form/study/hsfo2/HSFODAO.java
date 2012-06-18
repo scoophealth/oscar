@@ -199,10 +199,7 @@ public class HSFODAO
   /**
    * check if this record is the first record for this patient in the hsfo system. it for both create new form or
    * history
-   * 
-   * @param ID
-   * @return
-   * @throws SQLException
+   *
    */
   public boolean isFirstRecord( String ID )  {
 	  if(patientDao.getHsfoPatientByPatientId(ID) == null)
@@ -384,6 +381,7 @@ public class HSFODAO
     }
     
     //SBP, DBP
+    /*Don't prepopulate BP in both baseline form and follow up form.
     if( "BP".equalsIgnoreCase( type ) )
     {
       String bps[] = dataField.split( "/" );   //130/79
@@ -393,7 +391,8 @@ public class HSFODAO
         visitData.setDBP( ConvertUtil.toInt( bps[1] ) );
       }
     }
-        
+    */
+    
     //LDL
     if( "LDL".equalsIgnoreCase( type ) )
     {
