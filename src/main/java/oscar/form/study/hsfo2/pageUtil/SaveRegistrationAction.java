@@ -273,9 +273,10 @@ public class SaveRegistrationAction extends DispatchAction
       String PharmacyLocation = ""; // request.getParameter("PharmacyLocation");
       String sel_TimeAgoDx = request.getParameter( "sel_TimeAgoDx" );
       String EmrHCPId1 = request.getParameter( "EmrHCPId1" );
-      String EmrHCPId2 = request.getParameter( "EmrHCPId2" );
-      String EmrHCPId = EmrHCPId1 + "-" + EmrHCPId2;
-            
+      //String EmrHCPId2 = request.getParameter( "EmrHCPId2" );
+      //String EmrHCPId = EmrHCPId1 + "-" + EmrHCPId2;
+      String EmrHCPId = request.getParameter( "EmrHCPId2" ); //should be the patient's doctor id
+      
       Date consentDate = new Date(); // getDate(formater,consentDate_year,consentDate_month,consentDate_day);
       
       // store data in object
