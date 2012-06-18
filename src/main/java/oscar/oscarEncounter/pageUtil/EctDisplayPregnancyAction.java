@@ -98,7 +98,7 @@ public class EctDisplayPregnancyAction extends EctDisplayAction {
 					Episode episode = existingCurEpisodes.get(0);
 					NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
 			    	String itemHeader = StringUtils.maxLenString(episode.getDescription(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
-			        item.setLinkTitle(itemHeader);
+			        item.setLinkTitle((episode.getNotes()!=null?episode.getNotes():""));
 			        item.setTitle(itemHeader);
 			        item.setDate(episode.getStartDate());
 			        int hash = Math.abs(winName.hashCode());
@@ -111,8 +111,8 @@ public class EctDisplayPregnancyAction extends EctDisplayAction {
 				for(Episode episode:existingPastEpisodes) {
 					NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
 			    	String itemHeader = StringUtils.maxLenString(episode.getDescription(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
-			        item.setLinkTitle(itemHeader);
-			        item.setTitle("<span style=\"color:red\">"+itemHeader+"</span>");
+			        item.setLinkTitle((episode.getNotes()!=null?episode.getNotes():""));
+			        item.setTitle("<span style=\"color:red\" title=\""+ (episode.getNotes()!=null?episode.getNotes():"") + "\">"+itemHeader+"</span>");
 			        item.setDate(episode.getStartDate());
 			        url = "return false;";
 			        item.setURL(url);

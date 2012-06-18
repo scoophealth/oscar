@@ -9236,7 +9236,8 @@ create table Episode (
         description varchar(255),
         status varchar(25),
         lastUpdateUser varchar(25) not null,
-        lastUpdateTime timestamp not null
+        lastUpdateTime timestamp not null,
+	notes text
 );
 
 CREATE TABLE formONAREnhanced(
@@ -9549,7 +9550,9 @@ CREATE TABLE formONAREnhanced(
   pg1_geneticA varchar(20) default NULL,
   pg1_geneticB varchar(20) default NULL,
   pg1_geneticC varchar(20) default NULL,
-  pg1_geneticD tinyint(1) default NULL,
+  pg1_geneticD varchar(20) default NULL,
+  pg1_geneticD1 tinyint(1) default NULL,
+  pg1_geneticD2 tinyint(1) default NULL,
   pg1_commentsAR1 text,
   pg1_signature varchar(50) default NULL,
   pg1_formDate date default NULL,
