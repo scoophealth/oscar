@@ -22,6 +22,9 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
 <%@ page errorPage="errorpage.jsp"
 	import="java.util.*,java.math.*,java.net.*,java.sql.*,oscar.util.*,oscar.*,oscar.appt.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.administration.*"%>
@@ -33,6 +36,12 @@
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.DiagnosticCode" %>
 <%@ page import="org.oscarehr.common.dao.DiagnosticCodeDao" %>
+
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
+<script>
+    jQuery.noConflict();
+</script>
+
 <%
 	DiagnosticCodeDao diagnosticCodeDao = SpringUtils.getBean(DiagnosticCodeDao.class);
 %>
@@ -232,7 +241,9 @@ boolean dupServiceCode = false;
 			String wrongMsg = errorMsg + warningMsg;
 
 			%>
-
+<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
+<c:set var="demographicNo" value="${param.demographic_no}" scope="request"/>
+<oscar:customInterface section="billingreview"/>
 
 <%@page import="org.oscarehr.common.dao.SiteDao"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
@@ -241,7 +252,9 @@ boolean dupServiceCode = false;
 <title>OscarBilling</title>
 <link rel="stylesheet" type="text/css" href="billingON.css" />
 <script language="JavaScript">
-
+        ctx = "<c:out value="${ctx}"/>";
+    	demographicNo = "<c:out value="${demographicNo}"/>";
+    
 	var bClick = false;
 	    function onSave() {
 
@@ -725,12 +738,12 @@ function onCheckMaster() {
 
 				<td colspan='3' align='center' bgcolor="silver">
 				    <input type="submit" name="button" value="Back to Edit" style="width: 120px;" />
-                                    <% if (codeValid & !dupServiceCode) { %>
+                                    <% if (codeValid && !dupServiceCode) { %>
                                     <input type="submit" name="submit" value="Save" style="width: 120px;" onClick="onClickSave();"/>
 				    <input type="submit" name="submit" value="Save & Add Another Bill" onClick="onClickSave();"/>
-                                    <% }else {%>
+                                    <% }else if (dupServiceCode){%>
                                     <td><div class='myError'>Warning: Duplicated service codes. </div></td>
-                                    <%    }
+                                    <% }
                                     %>
                                     </td>
 			</tr>
@@ -832,11 +845,11 @@ if (bMultisites) {
 			</tr>
 			<tr><td width="80%">
 
-			<table border="0" width="100%" >
+			<table id="privateBillInfo" border="0" width="100%" >
 			<tr><td>Bill To [<a href=# onclick="scriptAttach('billto'); return false;">Search</a>]<br>
-			<textarea name="billto" value="" cols=30 rows=6><%=strPatientAddr %></textarea></td>
+			<textarea name="billto" id="billTo" value="" cols=30 rows=6><%=strPatientAddr %></textarea></td>
 			<td>Remit To [<a href=# onclick="scriptAttach('remitto'); return false;">Search</a>]<br>
-			<textarea name="remitto" value="" cols=30 rows=6><%=clinicAddress%></textarea></td>
+			<textarea name="remitto" id="remitTo" value="" cols=30 rows=6><%=clinicAddress%></textarea></td>
 			</tr>
 			</table>
 			<table border="0" width="100%" >
@@ -864,7 +877,7 @@ if (bMultisites) {
 			</td></tr>
 			<tr>
 				<td colspan='2' align='center' bgcolor="silver"><input type="submit" name="submit" value="Save & Print Invoice"
-					style="width: 120px;" /><input type="submit" name="submit"
+					style="width: 120px;" /><input type="submit" name="submit" id="settlePrintBtn"
 					value="Settle & Print Invoice" onClick="document.forms['titlesearch'].btnPressed.value='Settle'; document.forms['titlesearch'].submit();javascript:popupPage(700,720,'billingON3rdInv.jsp');" style="width: 120px;" />
 				<input type="hidden"  name="btnPressed" value="">
 				</td>

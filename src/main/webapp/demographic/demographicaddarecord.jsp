@@ -157,6 +157,16 @@
 		} else {
 			demographic.setRosterDate(null);
 		}
+            
+            year = StringUtils.trimToNull(request.getParameter("hc_renew_date_year"));
+	    month = StringUtils.trimToNull(request.getParameter("hc_renew_date_month"));
+	    day = StringUtils.trimToNull(request.getParameter("hc_renew_date_date"));
+		if (year!=null && month!=null && day!=null) {
+			demographic.setHcRenewDate(MyDateFormat.getSysDate( year + "-" + month + "-" + day));
+		} else {
+			demographic.setHcRenewDate(null);
+		}
+            
 		demographic.setFamilyDoctor("<rdohip>" + request.getParameter("r_doctor_ohip") + "</rdohip>" + "<rd>" + request.getParameter("r_doctor") + "</rd>"+ (request.getParameter("family_doc")!=null? ("<family_doc>" + request.getParameter("family_doc") + "</family_doc>") : ""));
 		demographic.setCountryOfOrigin(request.getParameter("countryOfOrigin"));
 		demographic.setNewsletter(request.getParameter("newsletter"));
