@@ -35,6 +35,7 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.WordUtils;
@@ -47,10 +48,12 @@ import org.oscarehr.common.dao.AbstractCodeSystemDao;
 import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.EpisodeDao;
+import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.model.AbstractCodeSystemModel;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Episode;
+import org.oscarehr.common.model.Measurement;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -328,5 +331,42 @@ public class PregnancyAction extends DispatchAction {
         
 		return null;
 	}
+	
+	public ActionForward getMeasurementsAjax(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String demographicNo = request.getParameter("demographicNo");
+		String type = request.getParameter("type");
 		
+		MeasurementDao md = SpringUtils.getBean(MeasurementDao.class);
+		List<Measurement> m = md.findByType(Integer.parseInt(demographicNo), type);
+		
+		JSONArray json = JSONArray.fromObject(m);
+		response.getWriter().print(json.toString());
+		
+	    return null;
+	}
+	
+	public ActionForward saveMeasurementAjax(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String demographicNo = request.getParameter("demographicNo");
+		String type = request.getParameter("type");
+		String value = request.getParameter("value");
+		
+		MeasurementDao md = SpringUtils.getBean(MeasurementDao.class);
+		
+		Measurement m = new Measurement();
+		m.setAppointmentNo(0);
+		m.setComments("");
+		m.setDataField(value);
+		m.setDateObserved(new Date());
+		m.setDemographicId(Integer.parseInt(demographicNo));
+		m.setMeasuringInstruction("");
+		m.setProviderNo(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+		m.setType(type);
+		
+		md.persist(m);
+		
+		JSONObject jsonObj = JSONObject.fromObject(new LabelValueBean("result","success"));
+		response.getWriter().print(jsonObj);
+		
+	    return null;
+	}
 }

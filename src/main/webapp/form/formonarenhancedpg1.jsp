@@ -718,7 +718,7 @@ function updateGeneticD() {
         var ret = checkAllDates();
         if(ret==true)
         {
-            document.forms[0].action = "../form/createpdf?__title=Antenatal+Record+Part+1&__cfgfile=onar1PrintCfgPg1&__template=onar1";
+            document.forms[0].action = "../form/createpdf?__title=Antenatal+Record+Part+1&__cfgfile=onar1PrintCfgPg1&__cfgfile=onar1PrintCfgPg2&__template=onar1&__numPages=2";
             document.forms[0].target="_blank";            
         }
         return ret;
@@ -826,6 +826,18 @@ function updateGeneticD() {
         if (popup.opener == null) {
             popup.opener = self;
         }
+    }
+    
+ // open a new popup window
+    function popupPage(vheight,vwidth,varpage) { 
+      var page = "" + varpage;
+      windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
+      var popup=window.open(page, "attachment", windowprops);
+      if (popup != null) {
+        if (popup.opener == null) {
+          popup.opener = self; 
+        }
+      }
     }
 
     function popPage(varpage,pageName) {
@@ -1141,6 +1153,64 @@ function mcvReq() {
 	return false;
 }
 
+function pullVitals() {
+	//get values from chart
+	jQuery.ajax({url:'<%=request.getContextPath()%>/Pregnancy.do?method=getMeasurementsAjax&demographicNo=<%=demoNo%>&type=BP',async:false, dataType:'json',success:function(data) {
+		if(data.length>0) {
+			$('#bp_chart').val(data[0].dataField);
+			$('#moveToForm_bp').unbind("click").bind('click',function(){moveToForm('bp','pg1_BP');});
+		} else {
+			$('#moveToForm_bp').unbind("click").bind('click',function(){alert('No Available values in E-Chart');});
+		}
+	}});
+	$('#bp_form').val($('input[name="pg1_BP"]').val());
+	
+	jQuery.ajax({url:'<%=request.getContextPath()%>/Pregnancy.do?method=getMeasurementsAjax&demographicNo=<%=demoNo%>&type=HT',async:false, dataType:'json',success:function(data) {
+		if(data.length>0) {
+			$('#height_chart').val(data[0].dataField);	
+			$('#moveToForm_height').unbind("click").bind('click',function(){moveToForm('height','pg1_ht');});
+		} else {			
+			$('#moveToForm_height').unbind("click").bind('click',function(){alert('No Available values in E-Chart');});
+		}	
+	}});
+	$('#height_form').val($('input[name="pg1_ht"]').val());
+	
+	jQuery.ajax({url:'<%=request.getContextPath()%>/Pregnancy.do?method=getMeasurementsAjax&demographicNo=<%=demoNo%>&type=WT',async:false, dataType:'json',success:function(data) {
+		if(data.length>0) {
+			$('#weight_chart').val(data[0].dataField);	
+			$('#moveToForm_weight').unbind("click").bind('click',function(){moveToForm('weight','pg1_wt');});
+		} else {
+			$('#moveToForm_weight').unbind("click").bind('click',function(){alert('No Available values in E-Chart');});
+		}		
+	}});
+	$('#weight_form').val($('input[name="pg1_wt"]').val());
+
+	//disable
+	
+	
+	$( "#pull-vitals-form" ).dialog( "open" );
+	return false;
+}
+
+function vitalsSetValues() {
+	
+}
+
+function moveToForm(type,field) {
+	$('#'+type+'_form').val($('#'+type+'_chart').val());
+	$("input[name='"+field+"']").val($('#'+type+'_chart').val());
+}
+
+function moveToChart(type,mtype) {	
+	//save the measurement to chart
+	if($('#'+type+'_form').val().length>0) {
+		$('#'+type+'_chart').val($('#'+type+'_form').val());
+		jQuery.ajax({url:'<%=request.getContextPath()%>/Pregnancy.do?method=saveMeasurementAjax&demographicNo=<%=demoNo%>&type='+mtype+'&value='+$('#'+type+'_form').val(),async:false, dataType:'json',success:function(data) {
+			alert('Measurement saved to E-Chart');
+		}});
+	}
+}
+
 $(document).ready(function(){
 	$( "#genetic-ref-form" ).dialog({
 		autoOpen: false,
@@ -1182,6 +1252,24 @@ $(document).ready(function(){
 			
 		}
 	});
+	
+	
+	$( "#pull-vitals-form" ).dialog({
+		autoOpen: false,
+		height: 350,
+		width: 500,
+		modal: true,
+		buttons: {
+			"Dismiss": function() {	
+				$( this ).dialog( "close" );					
+			}
+		},
+		close: function() {
+			
+		}
+	});
+	
+	
 });
 
 function geneticReferral() {
@@ -1209,6 +1297,8 @@ function geneticReferral() {
 		
 		$('#lab_menu').bind('click',function(){popPage('formlabreq07.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AnteNatal','LabReq')});
 		$('#mcv_menu').bind('click',function(){mcvReq();});
+		$('#vitals_pull_menu').bind('click',function(){pullVitals();});
+		$('#lab_pull_menu').bind('click',function(){alert('Not yet implemented');});
     });
 </script>
 <% } %>
@@ -1318,6 +1408,14 @@ function geneticReferral() {
 			
 			<tr id="mcv_abn_prompt" style="display:none">
 				<td>Low MCV<span style="float:right"><img id="mcv_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>						
+			</tr>
+
+			<tr id="pull_vitals_prompt" >
+				<td>Vitals Integration<span style="float:right"><img id="vitals_pull_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>						
+			</tr>
+			
+			<tr id="pull_labs_prompt" >
+				<td>Labs Integration<span style="float:right"><img id="lab_pull_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>						
 			</tr>
 					
 					
@@ -3392,11 +3490,9 @@ Calendar.setup({ inputField : "pg1_labLastPapDate", ifFormat : "%Y/%m/%d", shows
 <div id="genetic-ref-form" title="Genetic Support Tool">
 	<p>This tool provides guidance regarding the handling of abnormal genetic markers</p>
 	<br/>
-	<a href="http://www.sogc.org/guidelines/documents/gui217CPG0810.pdf" target="sogc">SOGC Guidance Document</a>
 	<br/>
-		<a href="javascript:void(0);" onclick="return false;" title="">Generate Referral</a>		
-		<br/>
-	
+	<a href="javascript:void(0);" onclick="alert('Not yet implemented');return false;" title="">Generate Referral</a>		
+	<br/>	
 </div>
 
 
@@ -3421,8 +3517,65 @@ Calendar.setup({ inputField : "pg1_labLastPapDate", ifFormat : "%Y/%m/%d", shows
 <div id="genetics_menu_div" class="hidden">
 <ul>
 	<li><a href="http://www.sogc.org/guidelines/documents/gui217CPG0810.pdf" target="sogc">SOGC Guidelines</a></li>
+	<li><a href="<%=request.getContextPath()%>/pregnancy/genetics-provider-guide-e.pdf" target="sogc">Guide</a></li>	
 	<li><a href="javascript:void(0)" onclick="geneticReferral();">Referral</a></li>
 </ul>
+</div>
+
+
+<div id="pull-vitals-form" title="Vitals Tool">
+	<p class="validateTips"></p>
+
+	<form>
+	<fieldset>
+		<table>
+			<thead>
+				<tr>
+					<th></th>
+					<th>AR Form</th>
+					<th></th>
+					<th>E-Chart</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<td style="text-align:left">Height</td>
+				<td><input readonly="readonly" type="text" size="5" id="height_form" name="height_form" class="text ui-widget-content ui-corner-all"/></td>
+				<td>
+					<a id="moveToForm_height" href="javascript:void(0)" title="Copy from Chart to Form"><img src="../images/icons/132.png"/></a>
+					&nbsp;
+					<a id="moveToChart_height" href="javascript:void(0)" onClick="moveToChart('height','HT');" title="Copy from Form to Chart"><img src="../images/icons/131.png"/></a>
+				</td>
+				<td><input readonly="readonly" type="text" size="5" id="height_chart" name="height_chart" class="text ui-widget-content ui-corner-all"/></td>
+				<td><a href="javascript:void(0);" onClick="popupPage(300,800,'<%=request.getContextPath()%>/oscarEncounter/GraphMeasurements.do?demographic_no=<%=demoNo%>&type=HT');return false;"><img border="0" src="<%=request.getContextPath()%>/oscarEncounter/oscarMeasurements/img/chart.gif"/></a></td>			
+			</tr>
+			<tr>
+				<td style="text-align:left">Weight</td>
+				<td><input readonly="readonly" type="text" size="5" id="weight_form" name="weight_form" class="text ui-widget-content ui-corner-all"/></td>
+				<td>
+					<a id="moveToForm_weight" href="javascript:void(0)" title="Copy from Chart to Form"><img src="../images/icons/132.png"/></a>
+					&nbsp;
+					<a id="moveToChart_weight" href="javascript:void(0)" onClick="moveToChart('weight','WT');" title="Copy from Form to Chart"><img src="../images/icons/131.png"/></a>
+				</td>
+				<td><input readonly="readonly" type="text" size="5" id="weight_chart" name="weight_chart" class="text ui-widget-content ui-corner-all"/></td>
+				<td><a href="javascript:void(0);" onClick="popupPage(300,800,'<%=request.getContextPath()%>/oscarEncounter/GraphMeasurements.do?demographic_no=<%=demoNo%>&type=WT');return false;"><img border="0" src="<%=request.getContextPath()%>/oscarEncounter/oscarMeasurements/img/chart.gif"/></a></td>
+			</tr>
+			<tr>
+				<td style="text-align:left">BP</td>
+				<td><input readonly="readonly" type="text" size="5" id="bp_form" name="bp_form" class="text ui-widget-content ui-corner-all"/></td>
+				<td>
+					<a id="moveToForm_bp" href="javascript:void(0)" title="Copy from Chart to Form"><img src="../images/icons/132.png"/></a>
+					&nbsp;
+					<a id="moveToChart_bp" href="javascript:void(0)" onClick="moveToChart('bp','BP');" title="Copy from Form to Chart"><img src="../images/icons/131.png"/></a>
+				</td>
+				<td><input readonly="readonly" type="text" size="5" id="bp_chart" name="bp_chart" class="text ui-widget-content ui-corner-all"/></td>
+				<td><a href="javascript:void(0);" onClick="popupPage(300,800,'<%=request.getContextPath()%>/oscarEncounter/GraphMeasurements.do?demographic_no=<%=demoNo%>&type=BP');return false;"><img border="0" src="<%=request.getContextPath()%>/oscarEncounter/oscarMeasurements/img/chart.gif"/></a></td>						
+			</tr>
+			</tbody>
+		</table>
+	</fieldset>
+	</form>
 </div>
 
 </html:html>
