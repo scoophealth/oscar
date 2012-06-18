@@ -47,14 +47,14 @@
 <script src="<%=request.getContextPath() %>/js/jquery-1.7.1.min.js" type="text/javascript"></script>
 
 <title>Completion of Pregnancy</title>
+
+
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/share/css/OscarStandardLayout.css">
-
+<script type="text/javascript" language="JavaScript" src="<%=request.getContextPath()%>/share/javascript/Oscar.js"></script>
+<script src="<%=request.getContextPath() %>/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+<script src="<%=request.getContextPath()%>/js/jquery-ui-1.8.18.custom.min.js"></script>
+<link rel="stylesheet" href="<%=request.getContextPath()%>/css/cupertino/jquery-ui-1.8.18.custom.css">
 <style>
-body
-{
-	text-align: center;
-}
-
 div#demo
 {
 	margin-left: auto;
@@ -63,12 +63,6 @@ div#demo
 	text-align: left;
 }
 </style>
-
-<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/share/css/OscarStandardLayout.css">
-<script type="text/javascript" language="JavaScript" src="<%=request.getContextPath()%>/share/javascript/Oscar.js"></script>
-<script src="<%=request.getContextPath() %>/js/jquery-1.7.1.min.js" type="text/javascript"></script>
-<script src="<%=request.getContextPath()%>/js/jquery-ui-1.8.18.custom.min.js"></script>
-<link rel="stylesheet" href="<%=request.getContextPath()%>/css/cupertino/jquery-ui-1.8.18.custom.css">
 <script>
 	$(document).ready(function(){
 		$("#endDate").datepicker({ dateFormat: "yy-mm-dd" });
@@ -95,9 +89,9 @@ div#demo
 
 <body>
 
-<Br/>
-<h2 style="text-align:center">Pregnancy Management</h2>
-<br/>
+	<br/>
+	<h2 style="text-align:center">Pregnancy Management</h2>
+	<br/>
 <%
 	if(request.getAttribute("error") != null) {
 %>
@@ -107,21 +101,55 @@ div#demo
 	} 
 %>
 
-Set the date of completion to close this episode
-<form action="Pregnancy.do">
-<input type="hidden" name="method" value="doComplete"/>
-<input type="hidden" name="episodeId" value="<%=request.getParameter("episodeId")%>"/>
-<input id="endDate" name="endDate" type="text"/>
-<input type="submit" value="Submit" onclick="return validate();"/>
-</form>
-<br/>
-<br/>
-Delete this episode. Use this if the pregnancy was created in error.
-<form action="Pregnancy.do">
-<input type="hidden" name="method" value="doDelete"/>
-<input type="hidden" name="episodeId" value="<%=request.getParameter("episodeId")%>"/>
-<input type="submit" value="Submit" onclick="return confirm('Are you sure you want to delete this pregnancy?');"/>
-</form>
+	<form action="Pregnancy.do">
+		<fieldset>
+			<h5>Set the date of completion to close this episode</h5>
+			<table>
+				<tr>
+					<td><b>Completion Date:</b></td>
+					<td>
+						<input type="hidden" name="method" value="doComplete"/>
+						<input type="hidden" name="episodeId" value="<%=request.getParameter("episodeId")%>"/>
+						<input id="endDate" name="endDate" type="text"/>
+					</td>
+				</tr>
+				<tr>
+					<td><b>Notes:</b></td>
+					<td>
+						<textarea id="notes" name="notes" cols="40" rows="4"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<input type="submit" value="Submit" onclick="return validate();"/>
+					</td>
+				</tr>
+			</table>
+		</fieldset>
+	</form>
 
+	<br/>
+
+
+	<form action="Pregnancy.do">
+		<fieldset>
+			<h5>Delete this episode. Use this if the pregnancy was created in error.</h5>
+			<table>
+				<tr>
+					<td><b>Notes:</b></td>
+					<td>
+						<input type="hidden" name="method" value="doDelete"/>
+						<input type="hidden" name="episodeId" value="<%=request.getParameter("episodeId")%>"/>
+						<textarea id="notes" name="notes" cols="40" rows="4"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<input type="submit" value="Submit" onclick="return validate();"/>
+					</td>
+				</tr>
+			</table>
+		</fieldset>
+	</form>
 
 </html:html>

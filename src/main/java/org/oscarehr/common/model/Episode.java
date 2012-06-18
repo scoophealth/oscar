@@ -53,6 +53,7 @@ public class Episode extends AbstractModel<Integer> {
 	private String status;
 	private String lastUpdateUser;
 	private Date lastUpdateTime;
+	private String notes;
 
 	public Integer getId() {
     	return id;
@@ -147,4 +148,12 @@ public class Episode extends AbstractModel<Integer> {
 			return formatter.format(getEndDate());
 		return "";
 	}
+	public String getNotes() {
+    	return notes;
+    }
+	public void setNotes(String notes) {
+    	this.notes = notes;
+    }
+	
+	
 }

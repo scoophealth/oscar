@@ -74,6 +74,8 @@
 	}else{
 		rh = UtilMisc.htmlEscape(props.getProperty("ar2_rh", ""));
 	}
+	String hbsag = ar1Props.getProperty("pg1_labHBsAg","");
+	String rubella = ar1Props.getProperty("pg1_labRubella","");
 %>
 <html:html locale="true">
 <head>
@@ -226,6 +228,27 @@ width: 100%;
 		if(getGAWeek()>=36) {
 			$("#fetal_pos_prompt").show();
 		}
+		
+		if($("input[name='ar2_hb']").val().length > 0) {
+			var hgb_result = parseFloat($("input[name='ar2_hb']").val());
+			if(hgb_result < 110)
+				$("#hgb_warn").show();
+		}
+		
+		if($("input[name='ar2_lab1GCT']").val().length == 0 && getGAWeek() >=24 && getGAWeek() <= 28) {
+			$("#gct_warn").show();
+		}
+		
+		if($("input[name='ar2_lab1GCT']").val().length > 0) {
+			var val = parseFloat($("input[name='ar2_lab1GCT']").val());
+			if(val >= 7.8 && val <= 10.2) {
+				$("#2hrgtt_prompt").show();
+			}
+			if(val > 10.2) {
+				$("#gct_diabetes_warn").show();
+			}
+		}
+	
 	});
 	
 	function adjustDynamicListTotals() {		
@@ -371,6 +394,9 @@ jQuery(document).ready(function() {
 		}});
 		<%
 		}
+		if(rfNum == 0) {
+			%>addRiskFactor();<%
+		}
 	%>
 	
 	
@@ -397,6 +423,9 @@ jQuery(document).ready(function() {
 	}});
 	<%
 	}
+	if(svNum == 0) {
+		%>addSubsequentVisit();<%
+	}
 %>
 
 
@@ -414,6 +443,9 @@ for(int x=1;x<usNum+1;x++) {
 	  setInput(<%=x%>,"ar2_uResults",'<%= props.getProperty("ar2_uResults"+x, "") %>');	  
 }});
 <%
+}
+if(usNum == 0) {
+	%>addUltraSound();<%
 }
 %>
 });
@@ -1065,6 +1097,49 @@ $(document).ready(function() {
 function updateGtt() {
 	$("input[name='ar2_lab2GTT']").val($("input[name='ar2_lab2GTT1']").val() + "/" + $("input[name='ar2_lab2GTT2']").val() + "/" + $("input[name='ar2_lab2GTT3']").val());
 }
+
+$(document).ready(function(){
+	if('<%=rh%>' == 'NEG') {
+		$("input[name='ar2_rhNeg']").attr('checked',true);
+		$("#rhNegSpan").css('background-color','red');
+	}	
+	
+	$("input[name='ar2_rhNeg']").bind('change',function(){
+		if($("input[name='ar2_rhNeg']").attr('checked') == 'checked') {
+			$("#rhNegSpan").css('background-color','red');
+		} else {
+			$("#rhNegSpan").css('background-color','');
+		}
+	});
+	
+	
+	if('<%=hbsag%>' == 'POS') {
+		$("input[name='ar2_hepBIG']").attr('checked',true);
+		$("#hepbSpan").css('background-color','red');
+	}	
+	
+	$("input[name='ar2_hepBIG']").bind('change',function(){
+		if($("input[name='ar2_hepBIG']").attr('checked') == 'checked') {
+			$("#hepbSpan").css('background-color','red');
+		} else {
+			$("#hepbSpan").css('background-color','');
+		}
+	});
+	
+	if('<%=rubella%>' == 'Non-Immune' || '<%=rubella%>' == 'Indeterminate') {
+		$("input[name='ar2_rubella']").attr('checked',true);
+		$("#rubellaSpan").css('background-color','red');
+	}	
+	
+	$("input[name='ar2_rubella']").bind('change',function(){
+		if($("input[name='ar2_rubella']").attr('checked') == 'checked') {
+			$("#rubellaSpan").css('background-color','red');
+		} else {
+			$("#rubellaSpan").css('background-color','');
+		}
+	});
+	
+});
 </script>
 
 
@@ -1097,7 +1172,21 @@ function updateGtt() {
 			
 			<tr id="hbsag_warn" style="display:none">
 				<td>HepB Surface Antigen</td>
-			</tr>						
+			</tr>
+			
+			<tr id="hgb_warn" style="display:none">
+				<td>HGB Low</td>
+			</tr>
+			
+			<tr id="gct_warn" style="display:none">
+				<td>Perform 1hr GCT</td>
+			</tr>	
+			
+			<tr id="gct_diabetes_warn" style="display:none">
+				<td>Gestational Diabetes<br/><a href="http://www.diabetes.ca/diabetes-and-you/what/gestational/ " target="resource">Resource</a></td>
+			</tr>			
+			
+								
 		</table>	
 	</div>
 	
@@ -1112,9 +1201,16 @@ function updateGtt() {
 				<td><a href="javascript:void(0)" onClick="gbsReq();return false;">Print Req. for GBS </a></td>
 			</tr>
 			
+			<tr id="2hrgtt_prompt" style="display:none">
+				<td><a href="javascript:void(0)" onClick="gttReq();return false;">Print Req. for 2hr GTT</a></td>
+			</tr>
+			
 			<tr id="fetal_pos_prompt" style="display:none">
 				<td>Assess Fetal Position</td>
-			</tr>				
+			</tr>	
+			
+			
+						
 		</table>	
 	</div>
 	
@@ -1311,20 +1407,37 @@ function updateGtt() {
 			</th>
 		</tr>
 		<tr>
-			<td width="30%"><b>Rh neg.</b> <input type="checkbox"
-				name="ar2_rhNeg" <%= props.getProperty("ar2_rhNeg", "") %> />
-			&nbsp;&nbsp;&nbsp;<b>Rh IG Given:</b> <input type="text"
-				name="ar2_rhIG" id="ar2_rhIG" size="7" maxlength="10"
-				value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_rhIG", "")) %>">
-				<img src="../images/cal.gif" id="ar2_rhIG_cal">
+			<td width="30%" nowrap="nowrap">
+				<span id="rhNegSpan">
+					<b>Rh neg.</b> 
+					<input type="checkbox" name="ar2_rhNeg" <%= props.getProperty("ar2_rhNeg", "") %> />
+				</span>
+				&nbsp;&nbsp;&nbsp;
+			
+				<span>
+					<b>Rh IG Given:</b> 
+					<input type="text" name="ar2_rhIG" id="ar2_rhIG" size="7" maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_rhIG", "")) %>">
+					<img src="../images/cal.gif" id="ar2_rhIG_cal">
+				</span>
 			</td>
-			<td width="30%" nowrap><b>Rubella booster postpartum</b> <input
-				type="checkbox" name="ar2_rubella"
-				<%= props.getProperty("ar2_rubella", "") %> /></td>
-			<td><b>Newborn needs: Hep B IG</b> <input type="checkbox"
-				name="ar2_hepBIG" <%= props.getProperty("ar2_hepBIG", "") %> />
-			&nbsp;&nbsp;&nbsp;<b>Hep B vaccine</b> <input type="checkbox"
-				name="ar2_hepBVac" <%= props.getProperty("ar2_hepBVac", "") %> /></td>
+			
+			<td width="30%" nowrap>
+				<span id="rubellaSpan">
+					<b>Rubella booster postpartum</b> 
+					<input type="checkbox" name="ar2_rubella" <%= props.getProperty("ar2_rubella", "") %> />
+				</span>
+			</td>
+			<td>
+				<span id="hepbSpan">
+					<b>Newborn needs: Hep B IG</b> 
+					<input type="checkbox" name="ar2_hepBIG" <%= props.getProperty("ar2_hepBIG", "") %> />
+				</span>
+				&nbsp;&nbsp;&nbsp;
+				<span>
+					<b>Hep B vaccine</b> 
+					<input type="checkbox" name="ar2_hepBVac" <%= props.getProperty("ar2_hepBVac", "") %> />
+				</span>
+			</td>
 		</tr>
 	</table>
 	<table width="100%" border="0">
