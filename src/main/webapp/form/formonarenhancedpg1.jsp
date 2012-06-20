@@ -143,44 +143,14 @@ width: 100%;
 </style>
 
 <script>
-	$(document).ready(function() {
+	$(document).ready(function() {		
+		$("select[name='pg1_labCustom1Label']").val('<%= UtilMisc.htmlEscape(props.getProperty("pg1_labCustom1Label", "")) %>');
 		$("select[name='c_province']").val('<%= UtilMisc.htmlEscape(props.getProperty("c_province", "")) %>');
 		$("select[name='pg1_language']").val('<%= UtilMisc.htmlEscape(props.getProperty("pg1_language", "")) %>');		
 		$("select[name='pg1_partnerEduLevel']").val('<%= UtilMisc.htmlEscape(props.getProperty("pg1_partnerEduLevel", "")) %>');
-		$("select[name='pg1_partnerOccupation']").bind('change',function(){
-			if($("select[name='pg1_partnerOccupation']").val() == 'OTHER') {
-				$("input[name='c_partnerOccupationOther']").removeAttr('readonly');				
-			} else {
-				$("input[name='c_partnerOccupationOther']").attr('readonly','readonly');
-				$("input[name='c_partnerOccupationOther']").val("");
-			}
-		});
-				
-		$("select[name='pg1_partnerOccupation']").val('<%= UtilMisc.htmlEscape(props.getProperty("pg1_partnerOccupation", "")) %>');
-		if($("select[name='pg1_partnerOccupation']").val() == 'OTHER') {
-			$("input[name='c_partnerOccupationOther']").removeAttr('readonly');				
-		} else {
-			$("input[name='c_partnerOccupationOther']").attr('readonly','readonly');
-			$("input[name='c_partnerOccupationOther']").val("");
-		}
 		
 		$("select[name='pg1_eduLevel']").val('<%= UtilMisc.htmlEscape(props.getProperty("pg1_eduLevel", "")) %>');
-		$("select[name='pg1_occupation']").bind('change',function(){
-			if($("select[name='pg1_occupation']").val() == 'OTHER') {
-				$("input[name='pg1_occupationOther']").removeAttr('readonly');				
-			} else {
-				$("input[name='pg1_occupationOther']").attr('readonly','readonly');
-				$("input[name='pg1_occupationOther']").val("");
-			}
-		});
-		$("select[name='pg1_occupation']").val('<%= UtilMisc.htmlEscape(props.getProperty("pg1_occupation", "")) %>');
-		if($("select[name='pg1_occupation']").val() == 'OTHER') {
-			$("input[name='pg1_occupationOther']").removeAttr('readonly');				
-		} else {
-			$("input[name='pg1_occupationOther']").attr('readonly','readonly');
-			$("input[name='pg1_occupationOther']").val("");
-		}
-				
+		
 		$("select[name='pg1_ethnicBgMother']").val('<%= UtilMisc.htmlEscape(props.getProperty("pg1_ethnicBgMother", "")) %>');
 		$("select[name='pg1_ethnicBgFather']").val('<%= UtilMisc.htmlEscape(props.getProperty("pg1_ethnicBgFather", "")) %>');
 		$("select[name='c_hinType']").val('<%= UtilMisc.htmlEscape(props.getProperty("c_hinType", "")) %>');
@@ -302,7 +272,7 @@ width: 100%;
 			return false;
 		}
 	
-		for(var x=1;x<=10;x++) {
+		for(var x=1;x<=12;x++) {
 			if($('#obxhx_'+ x).length>0) {
 				//found a row
 				if($("input[name='pg1_year"+x+"']").val().length > 0) {
@@ -508,7 +478,7 @@ width: 100%;
 	
 	
 	function adjustDynamicListTotals() {
-		$('#obxhx_num').val(adjustDynamicListTotalsOH('obxhx_',10,true));
+		$('#obxhx_num').val(adjustDynamicListTotalsOH('obxhx_',12,true));
 	}
 	
 	function adjustDynamicListTotalsOH(name,max,adjust) {		
@@ -539,8 +509,8 @@ width: 100%;
 
 <script>
 function addObxHx() {
-	if(adjustDynamicListTotalsOH("obxhx_",10,false) >= 10) {
-		alert('Maximum number of rows is 10');
+	if(adjustDynamicListTotalsOH("obxhx_",12,false) >= 12) {
+		alert('Maximum number of rows is 12');
 		return;
 	}
 	
@@ -718,8 +688,16 @@ function updateGeneticD() {
         var ret = checkAllDates();
         if(ret==true)
         {
-            document.forms[0].action = "../form/createpdf?__title=Antenatal+Record+Part+1&__cfgfile=onar1PrintCfgPg1&__cfgfile=onar1PrintCfgPg2&__template=onar1&__numPages=2";
-            document.forms[0].target="_blank";            
+        	<%if(Integer.parseInt(props.getProperty("obxhx_num", "0")) > 6) {
+				%>
+				document.forms[0].action = "../form/createpdf?__title=Antenatal+Record+Part+1&__cfgfile=onar1enhancedPrintCfgPg1&__template=onar1&__numPages=1&postProcessor=ONAR1EnhancedPostProcessor&multiple=2&__title1=Antenatal+Record+Part+1&__cfgfile1=onar1enhancedPrintCfgPg2&__template1=onar1enhancedpg2&__numPages1=1&postProcessor1=ONAR1EnhancedPostProcessor";		           
+				<%
+			} else {
+				%>
+				document.forms[0].action = "../form/createpdf?__title=Antenatal+Record+Part+1&__cfgfile=onar1enhancedPrintCfgPg1&__template=onar1&__numPages=1&postProcessor=ONAR1EnhancedPostProcessor";		           
+				<%
+			} %>
+        	 document.forms[0].target="_blank";            
         }
         return ret;
     }
@@ -1275,6 +1253,73 @@ $(document).ready(function(){
 function geneticReferral() {
 	$( "#genetic-ref-form" ).dialog( "open" );
 }
+
+//limit size of textareas
+$(document).ready(function(){
+	$('textarea[name="pg1_commentsAR1"]').bind('keypress',function(){
+		var length = 885 - parseInt($('textarea[name="pg1_commentsAR1"]').val().length);
+		if(length<0) {
+			length=0;
+			$('textarea[name="pg1_commentsAR1"]').val($('textarea[name="pg1_commentsAR1"]').val().substring(0,885));
+		}
+		$('#comment_size').html(length + ' Characters left');
+	});
+	
+	var length = 885 - parseInt($('textarea[name="pg1_commentsAR1"]').val().length);
+	if(length<0) {
+		length=0;
+	}
+	$('#comment_size').html(length + ' Characters left');
+	
+	$('textarea[name="pg1_comments2AR1"]').bind('keypress',function(){
+		var length = 4160 - parseInt($('textarea[name="pg1_comments2AR1"]').val().length);
+		if(length<0) {
+			length=0;
+			$('textarea[name="pg1_comments2AR1"]').val($('textarea[name="pg1_comments2AR1"]').val().substring(0,4160));
+		}
+		$('#comment2_size').html(length + ' Characters left');
+	});
+	
+	length = 4160 - parseInt($('textarea[name="pg1_comments2AR1"]').val().length);
+	if(length<0) {
+		length=0;
+	}
+	$('#comment2_size').html(length + ' Characters left');
+	
+	
+	//meds
+	$('textarea[name="c_meds"]').bind('keypress',function(){
+		var length = 146 - parseInt($('textarea[name="c_meds"]').val().length);
+		if(length<0) {
+			length=0;
+			$('textarea[name="c_meds"]').val($('textarea[name="c_meds"]').val().substring(0,146));
+		}
+		$('#meds_size').html(length + ' Characters left');
+	});
+	
+	length = 146 - parseInt($('textarea[name="c_meds"]').val().length);
+	if(length<0) {
+		length=0;
+	}
+	$('#meds_size').html(length + ' Characters left');
+	
+	//allergies
+	$('textarea[name="c_allergies"]').bind('keypress',function(){
+		var length = 150 - parseInt($('textarea[name="c_allergies"]').val().length);
+		if(length<0) {
+			length=0;
+			$('textarea[name="c_allergies"]').val($('textarea[name="c_allergies"]').val().substring(0,150));
+		}
+		$('#allergies_size').html(length + ' Characters left');
+	});
+	
+	length = 150 - parseInt($('textarea[name="c_allergies"]').val().length);
+	if(length<0) {
+		length=0;
+	}
+	$('#allergies_size').html(length + ' Characters left');
+	
+});
 </script>
 
 <% if(!bView) { %>
@@ -1812,280 +1857,19 @@ function geneticReferral() {
 					</select>						
 			</td>
 			<td width="20%" valign="top">Partner's Occupation<br>			
-				<select name="pg1_partnerOccupation" style="width: 100%">
-					<option value="OTHER">Other</option>	
-					<option value="OCC1290">Unknown</option>						
-					<option value="OCC0005">Agriculture \ Natural Resources</option>
-					<option value="OCC0010">Agriculture \ Natural Resources | Agriculture \ Farm Worker</option>
-					<option value="OCC0015">Agriculture \ Natural Resources | Environmental Field worker</option>
-					<option value="OCC0020">Agriculture \ Natural Resources | Environmentalist</option>
-					<option value="OCC0025">Agriculture \ Natural Resources | Farmer</option>
-					<option value="OCC0030">Agriculture \ Natural Resources | Fisherman</option>
-					<option value="OCC0035">Agriculture \ Natural Resources | Forestry Worker</option>
-					<option value="OCC0040">Agriculture \ Natural Resources | Hunter</option>
-					<option value="OCC0045">Agriculture \ Natural Resources | Landscaper \ Gardener</option>
-					<option value="OCC0050">Agriculture \ Natural Resources | Miner</option>
-					<option value="OCC0055">Agriculture \ Natural Resources | Nuclear Plant Worker</option>
-					<option value="OCC0060">Agriculture \ Natural Resources | Oil & Gas Worker</option>
-					<option value="OCC0065">Agriculture \ Natural Resources | Other</option>
-					<option value="OCC0070">Art \ Culture \ Sport</option>
-					<option value="OCC0075">Art \ Culture \ Sport | Actor</option>
-					<option value="OCC0080">Art \ Culture \ Sport | Archivist</option>
-					<option value="OCC0085">Art \ Culture \ Sport | Artist</option>
-					<option value="OCC0090">Art \ Culture \ Sport | Athlete</option>
-					<option value="OCC0095">Art \ Culture \ Sport | Coach</option>
-					<option value="OCC0100">Art \ Culture \ Sport | Conductor</option>
-					<option value="OCC0105">Art \ Culture \ Sport | Conservator</option>
-					<option value="OCC0110">Art \ Culture \ Sport | Curator</option>
-					<option value="OCC0115">Art \ Culture \ Sport | Dancer</option>
-					<option value="OCC0120">Art \ Culture \ Sport | Director</option>
-					<option value="OCC0125">Art \ Culture \ Sport | Editor</option>
-					<option value="OCC0130">Art \ Culture \ Sport | Events co-ordinator</option>
-					<option value="OCC0135">Art \ Culture \ Sport | Exotic Dancer</option>
-					<option value="OCC0140">Art \ Culture \ Sport | Fashion Designer</option>
-					<option value="OCC0145">Art \ Culture \ Sport | Film producer</option>
-					<option value="OCC0150">Art \ Culture \ Sport | Fitness instructor</option>
-					<option value="OCC0155">Art \ Culture \ Sport | Golf course superintendant</option>
-					<option value="OCC0160">Art \ Culture \ Sport | Graphic Designer</option>
-					<option value="OCC0165">Art \ Culture \ Sport | Interior Designer</option>
-					<option value="OCC0170">Art \ Culture \ Sport | Jewellery designer</option>
-					<option value="OCC0175">Art \ Culture \ Sport | Journalist</option>
-					<option value="OCC0180">Art \ Culture \ Sport | Librarian</option>
-					<option value="OCC0185">Art \ Culture \ Sport | Musician</option>
-					<option value="OCC0190">Art \ Culture \ Sport | Other</option>
-					<option value="OCC0195">Art \ Culture \ Sport | Personal trainer</option>
-					<option value="OCC0200">Art \ Culture \ Sport | Photographer</option>
-					<option value="OCC0205">Art \ Culture \ Sport | Producer</option>
-					<option value="OCC0210">Art \ Culture \ Sport | Singer</option>
-					<option value="OCC0215">Art \ Culture \ Sport | Writer \ Author</option>
-					<option value="OCC0220">Govt. \ Business \ Admin.\ Finance</option>
-					<option value="OCC0225">Govt. \ Business \ Admin.\ Finance | Accountant</option>
-					<option value="OCC0230">Govt. \ Business \ Admin.\ Finance | Actuary</option>
-					<option value="OCC0235">Govt. \ Business \ Admin.\ Finance | Administrative Officer</option>
-					<option value="OCC0240">Govt. \ Business \ Admin.\ Finance | Auditor</option>
-					<option value="OCC0245">Govt. \ Business \ Admin.\ Finance | Bank Teller</option>
-					<option value="OCC0250">Govt. \ Business \ Admin.\ Finance | Banker</option>
-					<option value="OCC0255">Govt. \ Business \ Admin.\ Finance | Bookkeeper</option>
-					<option value="OCC0260">Govt. \ Business \ Admin.\ Finance | Business analyst</option>
-					<option value="OCC0265">Govt. \ Business \ Admin.\ Finance | Civil servant</option>
-					<option value="OCC0270">Govt. \ Business \ Admin.\ Finance | Clerk</option>
-					<option value="OCC0275">Govt. \ Business \ Admin.\ Finance | Company executive</option>
-					<option value="OCC0280">Govt. \ Business \ Admin.\ Finance | Consultant</option>
-					<option value="OCC0285">Govt. \ Business \ Admin.\ Finance | Director</option>
-					<option value="OCC0290">Govt. \ Business \ Admin.\ Finance | Executive assistant</option>
-					<option value="OCC0295">Govt. \ Business \ Admin.\ Finance | Financial Advisor \ Officer</option>
-					<option value="OCC0300">Govt. \ Business \ Admin.\ Finance | Government Official \ Legislator</option>
-					<option value="OCC0305">Govt. \ Business \ Admin.\ Finance | Human Resources Worker</option>
-					<option value="OCC0310">Govt. \ Business \ Admin.\ Finance | Import \ Export</option>
-					<option value="OCC0315">Govt. \ Business \ Admin.\ Finance | Insurance</option>
-					<option value="OCC0320">Govt. \ Business \ Admin.\ Finance | Investment Advisor</option>
-					<option value="OCC0325">Govt. \ Business \ Admin.\ Finance | Manager</option>
-					<option value="OCC0330">Govt. \ Business \ Admin.\ Finance | Mortgage broker</option>
-					<option value="OCC0335">Govt. \ Business \ Admin.\ Finance | Other</option>
-					<option value="OCC0340">Govt. \ Business \ Admin.\ Finance | Secretary \ Clerical</option>
-					<option value="OCC0345">Govt. \ Business \ Admin.\ Finance | Securities Agent</option>
-					<option value="OCC0350">Govt. \ Business \ Admin.\ Finance | Stock Broker</option>
-					<option value="OCC0355">Healthcare</option>
-					<option value="OCC0360">Healthcare | Aesthetician</option>
-					<option value="OCC0365">Healthcare | Behavioural therapist</option>
-					<option value="OCC0370">Healthcare | Chiropractor</option>
-					<option value="OCC0375">Healthcare | Dental Assistant</option>
-					<option value="OCC0380">Healthcare | Dental Hygienist</option>
-					<option value="OCC0385">Healthcare | Dentist</option>
-					<option value="OCC0390">Healthcare | Denturist</option>
-					<option value="OCC0395">Healthcare | Dietary Aide</option>
-					<option value="OCC0400">Healthcare | Dietician</option>
-					<option value="OCC0405">Healthcare | Genetics Counsellor</option>
-					<option value="OCC0410">Healthcare | Lab Technician</option>
-					<option value="OCC0415">Healthcare | LPN  (licenced practical nurse)</option>
-					<option value="OCC0420">Healthcare | Massage therapist</option>
-					<option value="OCC0425">Healthcare | Medical receptionist</option>
-					<option value="OCC0430">Healthcare | Medical Technologist \ Technician</option>
-					<option value="OCC0435">Healthcare | Midwife</option>
-					<option value="OCC0440">Healthcare | MRI technologist</option>
-					<option value="OCC0445">Healthcare | Nurse  (RN or BScN)</option>
-					<option value="OCC0450">Healthcare | Nutritionist</option>
-					<option value="OCC0455">Healthcare | Occupational Therapist  (OT)</option>
-					<option value="OCC0460">Healthcare | Optician \ Optometrist</option>
-					<option value="OCC0465">Healthcare | Other</option>
-					<option value="OCC0470">Healthcare | Paramedic</option>
-					<option value="OCC0475">Healthcare | Patient relations</option>
-					<option value="OCC0480">Healthcare | Personal care worker</option>
-					<option value="OCC0485">Healthcare | Pharmaceutical Rep.</option>
-					<option value="OCC0490">Healthcare | Pharmacist</option>
-					<option value="OCC0495">Healthcare | Pharmacy technician</option>
-					<option value="OCC0500">Healthcare | Physician</option>
-					<option value="OCC0505">Healthcare | Physiotherapist</option>
-					<option value="OCC0510">Healthcare | Prosthetist</option>
-					<option value="OCC0515">Healthcare | Psychologist</option>
-					<option value="OCC0520">Healthcare | Psychotherapist</option>
-					<option value="OCC0525">Healthcare | Public health inspector</option>
-					<option value="OCC0530">Healthcare | Radiation therapist</option>
-					<option value="OCC0535">Healthcare | Recreation worker</option>
-					<option value="OCC0540">Healthcare | Respiratory therapist</option>
-					<option value="OCC0545">Healthcare | Speech Therapist</option>
-					<option value="OCC0550">Healthcare | Veterinarian</option>
-					<option value="OCC0555">Home \ other</option>
-					<option value="OCC0560">Home \ other | Homemaker</option>
-					<option value="OCC0565">Home \ other | Other</option>
-					<option value="OCC0570">Home \ other | Recently immigrated - not working yet</option>
-					<option value="OCC0575">Home \ other | Self employed</option>
-					<option value="OCC0580">Home \ other | Unemployed</option>
-					<option value="OCC0585">Home \ other | Unknown</option>
-					<option value="OCC0590">Police \ Military \ Fire</option>
-					<option value="OCC0595">Police \ Military \ Fire | Airport screening officer</option>
-					<option value="OCC0600">Police \ Military \ Fire | Firefighter</option>
-					<option value="OCC0605">Police \ Military \ Fire | Law enforcement officer - other</option>
-					<option value="OCC0610">Police \ Military \ Fire | Military \ Soldier</option>
-					<option value="OCC0615">Police \ Military \ Fire | Other</option>
-					<option value="OCC0620">Police \ Military \ Fire | Police</option>
-					<option value="OCC0625">Police \ Military \ Fire | Private detective</option>
-					<option value="OCC0630">Police \ Military \ Fire | Sailor</option>
-					<option value="OCC0635">Police \ Military \ Fire | Security guard</option>
-					<option value="OCC0640">Processing \ Manufacturing</option>
-					<option value="OCC0645">Processing \ Manufacturing | Chemical Plant Worker</option>
-					<option value="OCC0650">Processing \ Manufacturing | Delivery \ supplies</option>
-					<option value="OCC0655">Processing \ Manufacturing | Distribution supervisor</option>
-					<option value="OCC0660">Processing \ Manufacturing | Factory \ Assembly Line Worker</option>
-					<option value="OCC0665">Processing \ Manufacturing | Fish Plant Worker</option>
-					<option value="OCC0670">Processing \ Manufacturing | Food processing</option>
-					<option value="OCC0675">Processing \ Manufacturing | Foundry Worker</option>
-					<option value="OCC0680">Processing \ Manufacturing | Inventory auditor - warehouse</option>
-					<option value="OCC0685">Processing \ Manufacturing | Labourer (Processing)</option>
-					<option value="OCC0690">Processing \ Manufacturing | Mineral \ Metal Processing Operator</option>
-					<option value="OCC0695">Processing \ Manufacturing | Other</option>
-					<option value="OCC0700">Processing \ Manufacturing | Printer</option>
-					<option value="OCC0705">Processing \ Manufacturing | Product manager</option>
-					<option value="OCC0710">Processing \ Manufacturing | Quality control</option>
-					<option value="OCC0715">Processing \ Manufacturing | Rubber Plant Worker</option>
-					<option value="OCC0720">Processing \ Manufacturing | Sheet metal worker</option>
-					<option value="OCC0725">Processing \ Manufacturing | Shipping \ Receiving</option>
-					<option value="OCC0730">Processing \ Manufacturing | Supervisor (Processing)</option>
-					<option value="OCC0735">Processing \ Manufacturing | Textile \ Dye Worker</option>
-					<option value="OCC0740">Processing \ Manufacturing | Warehouse manager</option>
-					<option value="OCC0745">Sales \ Service</option>
-					<option value="OCC0750">Sales \ Service | Animal Control Officer</option>
-					<option value="OCC0755">Sales \ Service | Automobile detailing</option>
-					<option value="OCC0760">Sales \ Service | Babysitter \ Nanny</option>
-					<option value="OCC0765">Sales \ Service | Baker</option>
-					<option value="OCC0770">Sales \ Service | Bartender</option>
-					<option value="OCC0775">Sales \ Service | Butcher</option>
-					<option value="OCC0780">Sales \ Service | Car rental agency</option>
-					<option value="OCC0785">Sales \ Service | Cashier</option>
-					<option value="OCC0790">Sales \ Service | Chef \ Cook</option>
-					<option value="OCC0795">Sales \ Service | Childcare Worker</option>
-					<option value="OCC0800">Sales \ Service | Cleaner</option>
-					<option value="OCC0805">Sales \ Service | Concierge</option>
-					<option value="OCC0810">Sales \ Service | Customer service agent</option>
-					<option value="OCC0815">Sales \ Service | Dry Cleaning \ Laundry Worker</option>
-					<option value="OCC0820">Sales \ Service | Esthetician</option>
-					<option value="OCC0825">Sales \ Service | Exterminator</option>
-					<option value="OCC0830">Sales \ Service | Funeral director</option>
-					<option value="OCC0835">Sales \ Service | Hairdresser \ Barber</option>
-					<option value="OCC0840">Sales \ Service | Housekeeper</option>
-					<option value="OCC0845">Sales \ Service | Insurance Agent</option>
-					<option value="OCC0850">Sales \ Service | Letter Carrier \ Postal Worker</option>
-					<option value="OCC0855">Sales \ Service | Manager</option>
-					<option value="OCC0860">Sales \ Service | Marketing</option>
-					<option value="OCC0865">Sales \ Service | Other</option>
-					<option value="OCC0870">Sales \ Service | Realtor</option>
-					<option value="OCC0875">Sales \ Service | Restauranteur</option>
-					<option value="OCC0880">Sales \ Service | Sales Rep.\ Salesperson</option>
-					<option value="OCC0885">Sales \ Service | Stocker</option>
-					<option value="OCC0890">Sales \ Service | Supervisor (sales\service)</option>
-					<option value="OCC0895">Sales \ Service | Telemarketer \ call centre agent</option>
-					<option value="OCC0900">Sales \ Service | Travel Agent</option>
-					<option value="OCC0905">Sales \ Service | Waitress \ Waiter \ Restaurant worker</option>
-					<option value="OCC0910">Sales \ Service | Wholesaler</option>
-					<option value="OCC0915">Science \ IT</option>
-					<option value="OCC0920">Science \ IT | Architect</option>
-					<option value="OCC0925">Science \ IT | Computer Programmer</option>
-					<option value="OCC0930">Science \ IT | Data entry</option>
-					<option value="OCC0935">Science \ IT | Draftsman \ Designer</option>
-					<option value="OCC0940">Science \ IT | Engineer</option>
-					<option value="OCC0945">Science \ IT | IT (Information Technology)</option>
-					<option value="OCC0950">Science \ IT | Other</option>
-					<option value="OCC0955">Science \ IT | Project manager</option>
-					<option value="OCC0960">Science \ IT | Research assistant</option>
-					<option value="OCC0965">Science \ IT | Research scientist</option>
-					<option value="OCC0970">Science \ IT | Scientist</option>
-					<option value="OCC0975">Science \ IT | Statistician</option>
-					<option value="OCC0980">Science \ IT | Systems Analyst</option>
-					<option value="OCC0985">Science \ IT | Technician \ Technologist</option>
-					<option value="OCC0990">Science \ IT | Web designer</option>
-					<option value="OCC0995">Soc. Science \ Education \ Religion</option>
-					<option value="OCC1000">Soc. Science \ Education \ Religion | Child & Youth worker</option>
-					<option value="OCC1005">Soc. Science \ Education \ Religion | Early Childhood Educator \ Daycare worker</option>
-					<option value="OCC1010">Soc. Science \ Education \ Religion | Judge</option>
-					<option value="OCC1015">Soc. Science \ Education \ Religion | Lawyer</option>
-					<option value="OCC1020">Soc. Science \ Education \ Religion | Military</option>
-					<option value="OCC1025">Soc. Science \ Education \ Religion | Minister \ Pastor</option>
-					<option value="OCC1030">Soc. Science \ Education \ Religion | Notary Public</option>
-					<option value="OCC1035">Soc. Science \ Education \ Religion | Other</option>
-					<option value="OCC1040">Soc. Science \ Education \ Religion | Post graduate studies</option>
-					<option value="OCC1045">Soc. Science \ Education \ Religion | Professor</option>
-					<option value="OCC1050">Soc. Science \ Education \ Religion | Psychologist</option>
-					<option value="OCC1055">Soc. Science \ Education \ Religion | Recreation therapist</option>
-					<option value="OCC1060">Soc. Science \ Education \ Religion | Religious Leader</option>
-					<option value="OCC1065">Soc. Science \ Education \ Religion | Social Worker</option>
-					<option value="OCC1070">Soc. Science \ Education \ Religion | Student  (college)</option>
-					<option value="OCC1075">Soc. Science \ Education \ Religion | Student  (high school)</option>
-					<option value="OCC1080">Soc. Science \ Education \ Religion | Teacher</option>
-					<option value="OCC1085">Soc. Science \ Education \ Religion | Teacher's aide \ Tutor</option>
-					<option value="OCC1090">Trades\Transport</option>
-					<option value="OCC1095">Trades\Transport | Aircraft technician</option>
-					<option value="OCC1100">Trades\Transport | Autobody shop</option>
-					<option value="OCC1105">Trades\Transport | Boiler maker</option>
-					<option value="OCC1110">Trades\Transport | Bus Driver</option>
-					<option value="OCC1115">Trades\Transport | Carpenter</option>
-					<option value="OCC1120">Trades\Transport | Construction worker</option>
-					<option value="OCC1125">Trades\Transport | Contractor</option>
-					<option value="OCC1130">Trades\Transport | Electrician</option>
-					<option value="OCC1135">Trades\Transport | Flight Attendant</option>
-					<option value="OCC1140">Trades\Transport | Flooring contractor</option>
-					<option value="OCC1145">Trades\Transport | Forklift operator</option>
-					<option value="OCC1150">Trades\Transport | Garbage Collector</option>
-					<option value="OCC1155">Trades\Transport | Gas Fitter</option>
-					<option value="OCC1160">Trades\Transport | Handyman</option>
-					<option value="OCC1165">Trades\Transport | Heavy equipment operator</option>
-					<option value="OCC1170">Trades\Transport | Janitor</option>
-					<option value="OCC1175">Trades\Transport | Labourer (Builder)</option>
-					<option value="OCC1180">Trades\Transport | Mechanic</option>
-					<option value="OCC1185">Trades\Transport | Miner</option>
-					<option value="OCC1190">Trades\Transport | Oil rig worker</option>
-					<option value="OCC1195">Trades\Transport | Other</option>
-					<option value="OCC1200">Trades\Transport | Packer</option>
-					<option value="OCC1205">Trades\Transport | Painter</option>
-					<option value="OCC1210">Trades\Transport | Pilot</option>
-					<option value="OCC1215">Trades\Transport | Plumber</option>
-					<option value="OCC1220">Trades\Transport | Power Station Operator</option>
-					<option value="OCC1225">Trades\Transport | Project manager</option>
-					<option value="OCC1230">Trades\Transport | Railway Conductor \ Worker</option>
-					<option value="OCC1235">Trades\Transport | Roofer</option>
-					<option value="OCC1240">Trades\Transport | Security \ Commissionaire</option>
-					<option value="OCC1245">Trades\Transport | Supervisor</option>
-					<option value="OCC1250">Trades\Transport | Tailor \ Dressmaker</option>
-					<option value="OCC1255">Trades\Transport | Taxi Driver</option>
-					<option value="OCC1260">Trades\Transport | Telecommunication \ Cable  Worker</option>
-					<option value="OCC1265">Trades\Transport | Telephone technician</option>
-					<option value="OCC1270">Trades\Transport | Tool & Die Maker</option>
-					<option value="OCC1275">Trades\Transport | Transportation Controller</option>
-					<option value="OCC1280">Trades\Transport | Truck Driver</option>
-					<option value="OCC1285">Trades\Transport | Welder</option>						
-				</select>
-				<br/>
-				<input type="text" name="c_partnerOccupationOther" size="10" style="width: 100%"
-				maxlength="20" readonly="readonly"
-				value="<%= UtilMisc.htmlEscape(props.getProperty("c_partnerOccupationOther", "")) %>" />
+				<input type="text" name="pg1_partnerOccupation" size="10" style="width: 100%"
+				maxlength="20" 
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_partnerOccupation", "")) %>" />
 			</td>
 			<td colspan="2" valign="top">Partner's Education level <br>
 					<select name="pg1_partnerEduLevel" style="width: 100%" >
 						<option value="UNK">Select</option>
 						<option value="ED001">College/University Completed</option>
-						<option value="ED002">College/University not Completed</option>
-						<option value="ED003">Grade School Completed</option>
+						<option value="ED002">College/University not Completed</option>						
 						<option value="ED004">High School Completed</option>
-						<option value="ED005">High School not Completed</option>						
+						<option value="ED005">High School not Completed</option>		
+						<option value="ED003">Grade School Completed</option>
+						<option value="ED006">Grade School not Completed</option>
 					</select>													
 			</td>
 			<td width="8%" valign="top">Age<br>
@@ -2106,280 +1890,19 @@ function geneticReferral() {
 			<input type="text" name="pg1_age" style="width: 100%" size="10"
 				maxlength="10" value="<%= props.getProperty("pg1_age", "") %>" /></td>
 			<td width="15%" valign="top">Occupation<br>
-				<select name="pg1_occupation" style="width: 100%">
-					<option value="OTHER">Other</option>	
-					<option value="OCC1290">Unknown</option>							
-					<option value="OCC0005">Agriculture \ Natural Resources</option>
-					<option value="OCC0010">Agriculture \ Natural Resources | Agriculture \ Farm Worker</option>
-					<option value="OCC0015">Agriculture \ Natural Resources | Environmental Field worker</option>
-					<option value="OCC0020">Agriculture \ Natural Resources | Environmentalist</option>
-					<option value="OCC0025">Agriculture \ Natural Resources | Farmer</option>
-					<option value="OCC0030">Agriculture \ Natural Resources | Fisherman</option>
-					<option value="OCC0035">Agriculture \ Natural Resources | Forestry Worker</option>
-					<option value="OCC0040">Agriculture \ Natural Resources | Hunter</option>
-					<option value="OCC0045">Agriculture \ Natural Resources | Landscaper \ Gardener</option>
-					<option value="OCC0050">Agriculture \ Natural Resources | Miner</option>
-					<option value="OCC0055">Agriculture \ Natural Resources | Nuclear Plant Worker</option>
-					<option value="OCC0060">Agriculture \ Natural Resources | Oil & Gas Worker</option>
-					<option value="OCC0065">Agriculture \ Natural Resources | Other</option>
-					<option value="OCC0070">Art \ Culture \ Sport</option>
-					<option value="OCC0075">Art \ Culture \ Sport | Actor</option>
-					<option value="OCC0080">Art \ Culture \ Sport | Archivist</option>
-					<option value="OCC0085">Art \ Culture \ Sport | Artist</option>
-					<option value="OCC0090">Art \ Culture \ Sport | Athlete</option>
-					<option value="OCC0095">Art \ Culture \ Sport | Coach</option>
-					<option value="OCC0100">Art \ Culture \ Sport | Conductor</option>
-					<option value="OCC0105">Art \ Culture \ Sport | Conservator</option>
-					<option value="OCC0110">Art \ Culture \ Sport | Curator</option>
-					<option value="OCC0115">Art \ Culture \ Sport | Dancer</option>
-					<option value="OCC0120">Art \ Culture \ Sport | Director</option>
-					<option value="OCC0125">Art \ Culture \ Sport | Editor</option>
-					<option value="OCC0130">Art \ Culture \ Sport | Events co-ordinator</option>
-					<option value="OCC0135">Art \ Culture \ Sport | Exotic Dancer</option>
-					<option value="OCC0140">Art \ Culture \ Sport | Fashion Designer</option>
-					<option value="OCC0145">Art \ Culture \ Sport | Film producer</option>
-					<option value="OCC0150">Art \ Culture \ Sport | Fitness instructor</option>
-					<option value="OCC0155">Art \ Culture \ Sport | Golf course superintendant</option>
-					<option value="OCC0160">Art \ Culture \ Sport | Graphic Designer</option>
-					<option value="OCC0165">Art \ Culture \ Sport | Interior Designer</option>
-					<option value="OCC0170">Art \ Culture \ Sport | Jewellery designer</option>
-					<option value="OCC0175">Art \ Culture \ Sport | Journalist</option>
-					<option value="OCC0180">Art \ Culture \ Sport | Librarian</option>
-					<option value="OCC0185">Art \ Culture \ Sport | Musician</option>
-					<option value="OCC0190">Art \ Culture \ Sport | Other</option>
-					<option value="OCC0195">Art \ Culture \ Sport | Personal trainer</option>
-					<option value="OCC0200">Art \ Culture \ Sport | Photographer</option>
-					<option value="OCC0205">Art \ Culture \ Sport | Producer</option>
-					<option value="OCC0210">Art \ Culture \ Sport | Singer</option>
-					<option value="OCC0215">Art \ Culture \ Sport | Writer \ Author</option>
-					<option value="OCC0220">Govt. \ Business \ Admin.\ Finance</option>
-					<option value="OCC0225">Govt. \ Business \ Admin.\ Finance | Accountant</option>
-					<option value="OCC0230">Govt. \ Business \ Admin.\ Finance | Actuary</option>
-					<option value="OCC0235">Govt. \ Business \ Admin.\ Finance | Administrative Officer</option>
-					<option value="OCC0240">Govt. \ Business \ Admin.\ Finance | Auditor</option>
-					<option value="OCC0245">Govt. \ Business \ Admin.\ Finance | Bank Teller</option>
-					<option value="OCC0250">Govt. \ Business \ Admin.\ Finance | Banker</option>
-					<option value="OCC0255">Govt. \ Business \ Admin.\ Finance | Bookkeeper</option>
-					<option value="OCC0260">Govt. \ Business \ Admin.\ Finance | Business analyst</option>
-					<option value="OCC0265">Govt. \ Business \ Admin.\ Finance | Civil servant</option>
-					<option value="OCC0270">Govt. \ Business \ Admin.\ Finance | Clerk</option>
-					<option value="OCC0275">Govt. \ Business \ Admin.\ Finance | Company executive</option>
-					<option value="OCC0280">Govt. \ Business \ Admin.\ Finance | Consultant</option>
-					<option value="OCC0285">Govt. \ Business \ Admin.\ Finance | Director</option>
-					<option value="OCC0290">Govt. \ Business \ Admin.\ Finance | Executive assistant</option>
-					<option value="OCC0295">Govt. \ Business \ Admin.\ Finance | Financial Advisor \ Officer</option>
-					<option value="OCC0300">Govt. \ Business \ Admin.\ Finance | Government Official \ Legislator</option>
-					<option value="OCC0305">Govt. \ Business \ Admin.\ Finance | Human Resources Worker</option>
-					<option value="OCC0310">Govt. \ Business \ Admin.\ Finance | Import \ Export</option>
-					<option value="OCC0315">Govt. \ Business \ Admin.\ Finance | Insurance</option>
-					<option value="OCC0320">Govt. \ Business \ Admin.\ Finance | Investment Advisor</option>
-					<option value="OCC0325">Govt. \ Business \ Admin.\ Finance | Manager</option>
-					<option value="OCC0330">Govt. \ Business \ Admin.\ Finance | Mortgage broker</option>
-					<option value="OCC0335">Govt. \ Business \ Admin.\ Finance | Other</option>
-					<option value="OCC0340">Govt. \ Business \ Admin.\ Finance | Secretary \ Clerical</option>
-					<option value="OCC0345">Govt. \ Business \ Admin.\ Finance | Securities Agent</option>
-					<option value="OCC0350">Govt. \ Business \ Admin.\ Finance | Stock Broker</option>
-					<option value="OCC0355">Healthcare</option>
-					<option value="OCC0360">Healthcare | Aesthetician</option>
-					<option value="OCC0365">Healthcare | Behavioural therapist</option>
-					<option value="OCC0370">Healthcare | Chiropractor</option>
-					<option value="OCC0375">Healthcare | Dental Assistant</option>
-					<option value="OCC0380">Healthcare | Dental Hygienist</option>
-					<option value="OCC0385">Healthcare | Dentist</option>
-					<option value="OCC0390">Healthcare | Denturist</option>
-					<option value="OCC0395">Healthcare | Dietary Aide</option>
-					<option value="OCC0400">Healthcare | Dietician</option>
-					<option value="OCC0405">Healthcare | Genetics Counsellor</option>
-					<option value="OCC0410">Healthcare | Lab Technician</option>
-					<option value="OCC0415">Healthcare | LPN  (licenced practical nurse)</option>
-					<option value="OCC0420">Healthcare | Massage therapist</option>
-					<option value="OCC0425">Healthcare | Medical receptionist</option>
-					<option value="OCC0430">Healthcare | Medical Technologist \ Technician</option>
-					<option value="OCC0435">Healthcare | Midwife</option>
-					<option value="OCC0440">Healthcare | MRI technologist</option>
-					<option value="OCC0445">Healthcare | Nurse  (RN or BScN)</option>
-					<option value="OCC0450">Healthcare | Nutritionist</option>
-					<option value="OCC0455">Healthcare | Occupational Therapist  (OT)</option>
-					<option value="OCC0460">Healthcare | Optician \ Optometrist</option>
-					<option value="OCC0465">Healthcare | Other</option>
-					<option value="OCC0470">Healthcare | Paramedic</option>
-					<option value="OCC0475">Healthcare | Patient relations</option>
-					<option value="OCC0480">Healthcare | Personal care worker</option>
-					<option value="OCC0485">Healthcare | Pharmaceutical Rep.</option>
-					<option value="OCC0490">Healthcare | Pharmacist</option>
-					<option value="OCC0495">Healthcare | Pharmacy technician</option>
-					<option value="OCC0500">Healthcare | Physician</option>
-					<option value="OCC0505">Healthcare | Physiotherapist</option>
-					<option value="OCC0510">Healthcare | Prosthetist</option>
-					<option value="OCC0515">Healthcare | Psychologist</option>
-					<option value="OCC0520">Healthcare | Psychotherapist</option>
-					<option value="OCC0525">Healthcare | Public health inspector</option>
-					<option value="OCC0530">Healthcare | Radiation therapist</option>
-					<option value="OCC0535">Healthcare | Recreation worker</option>
-					<option value="OCC0540">Healthcare | Respiratory therapist</option>
-					<option value="OCC0545">Healthcare | Speech Therapist</option>
-					<option value="OCC0550">Healthcare | Veterinarian</option>
-					<option value="OCC0555">Home \ other</option>
-					<option value="OCC0560">Home \ other | Homemaker</option>
-					<option value="OCC0565">Home \ other | Other</option>
-					<option value="OCC0570">Home \ other | Recently immigrated - not working yet</option>
-					<option value="OCC0575">Home \ other | Self employed</option>
-					<option value="OCC0580">Home \ other | Unemployed</option>
-					<option value="OCC0585">Home \ other | Unknown</option>
-					<option value="OCC0590">Police \ Military \ Fire</option>
-					<option value="OCC0595">Police \ Military \ Fire | Airport screening officer</option>
-					<option value="OCC0600">Police \ Military \ Fire | Firefighter</option>
-					<option value="OCC0605">Police \ Military \ Fire | Law enforcement officer - other</option>
-					<option value="OCC0610">Police \ Military \ Fire | Military \ Soldier</option>
-					<option value="OCC0615">Police \ Military \ Fire | Other</option>
-					<option value="OCC0620">Police \ Military \ Fire | Police</option>
-					<option value="OCC0625">Police \ Military \ Fire | Private detective</option>
-					<option value="OCC0630">Police \ Military \ Fire | Sailor</option>
-					<option value="OCC0635">Police \ Military \ Fire | Security guard</option>
-					<option value="OCC0640">Processing \ Manufacturing</option>
-					<option value="OCC0645">Processing \ Manufacturing | Chemical Plant Worker</option>
-					<option value="OCC0650">Processing \ Manufacturing | Delivery \ supplies</option>
-					<option value="OCC0655">Processing \ Manufacturing | Distribution supervisor</option>
-					<option value="OCC0660">Processing \ Manufacturing | Factory \ Assembly Line Worker</option>
-					<option value="OCC0665">Processing \ Manufacturing | Fish Plant Worker</option>
-					<option value="OCC0670">Processing \ Manufacturing | Food processing</option>
-					<option value="OCC0675">Processing \ Manufacturing | Foundry Worker</option>
-					<option value="OCC0680">Processing \ Manufacturing | Inventory auditor - warehouse</option>
-					<option value="OCC0685">Processing \ Manufacturing | Labourer (Processing)</option>
-					<option value="OCC0690">Processing \ Manufacturing | Mineral \ Metal Processing Operator</option>
-					<option value="OCC0695">Processing \ Manufacturing | Other</option>
-					<option value="OCC0700">Processing \ Manufacturing | Printer</option>
-					<option value="OCC0705">Processing \ Manufacturing | Product manager</option>
-					<option value="OCC0710">Processing \ Manufacturing | Quality control</option>
-					<option value="OCC0715">Processing \ Manufacturing | Rubber Plant Worker</option>
-					<option value="OCC0720">Processing \ Manufacturing | Sheet metal worker</option>
-					<option value="OCC0725">Processing \ Manufacturing | Shipping \ Receiving</option>
-					<option value="OCC0730">Processing \ Manufacturing | Supervisor (Processing)</option>
-					<option value="OCC0735">Processing \ Manufacturing | Textile \ Dye Worker</option>
-					<option value="OCC0740">Processing \ Manufacturing | Warehouse manager</option>
-					<option value="OCC0745">Sales \ Service</option>
-					<option value="OCC0750">Sales \ Service | Animal Control Officer</option>
-					<option value="OCC0755">Sales \ Service | Automobile detailing</option>
-					<option value="OCC0760">Sales \ Service | Babysitter \ Nanny</option>
-					<option value="OCC0765">Sales \ Service | Baker</option>
-					<option value="OCC0770">Sales \ Service | Bartender</option>
-					<option value="OCC0775">Sales \ Service | Butcher</option>
-					<option value="OCC0780">Sales \ Service | Car rental agency</option>
-					<option value="OCC0785">Sales \ Service | Cashier</option>
-					<option value="OCC0790">Sales \ Service | Chef \ Cook</option>
-					<option value="OCC0795">Sales \ Service | Childcare Worker</option>
-					<option value="OCC0800">Sales \ Service | Cleaner</option>
-					<option value="OCC0805">Sales \ Service | Concierge</option>
-					<option value="OCC0810">Sales \ Service | Customer service agent</option>
-					<option value="OCC0815">Sales \ Service | Dry Cleaning \ Laundry Worker</option>
-					<option value="OCC0820">Sales \ Service | Esthetician</option>
-					<option value="OCC0825">Sales \ Service | Exterminator</option>
-					<option value="OCC0830">Sales \ Service | Funeral director</option>
-					<option value="OCC0835">Sales \ Service | Hairdresser \ Barber</option>
-					<option value="OCC0840">Sales \ Service | Housekeeper</option>
-					<option value="OCC0845">Sales \ Service | Insurance Agent</option>
-					<option value="OCC0850">Sales \ Service | Letter Carrier \ Postal Worker</option>
-					<option value="OCC0855">Sales \ Service | Manager</option>
-					<option value="OCC0860">Sales \ Service | Marketing</option>
-					<option value="OCC0865">Sales \ Service | Other</option>
-					<option value="OCC0870">Sales \ Service | Realtor</option>
-					<option value="OCC0875">Sales \ Service | Restauranteur</option>
-					<option value="OCC0880">Sales \ Service | Sales Rep.\ Salesperson</option>
-					<option value="OCC0885">Sales \ Service | Stocker</option>
-					<option value="OCC0890">Sales \ Service | Supervisor (sales\service)</option>
-					<option value="OCC0895">Sales \ Service | Telemarketer \ call centre agent</option>
-					<option value="OCC0900">Sales \ Service | Travel Agent</option>
-					<option value="OCC0905">Sales \ Service | Waitress \ Waiter \ Restaurant worker</option>
-					<option value="OCC0910">Sales \ Service | Wholesaler</option>
-					<option value="OCC0915">Science \ IT</option>
-					<option value="OCC0920">Science \ IT | Architect</option>
-					<option value="OCC0925">Science \ IT | Computer Programmer</option>
-					<option value="OCC0930">Science \ IT | Data entry</option>
-					<option value="OCC0935">Science \ IT | Draftsman \ Designer</option>
-					<option value="OCC0940">Science \ IT | Engineer</option>
-					<option value="OCC0945">Science \ IT | IT (Information Technology)</option>
-					<option value="OCC0950">Science \ IT | Other</option>
-					<option value="OCC0955">Science \ IT | Project manager</option>
-					<option value="OCC0960">Science \ IT | Research assistant</option>
-					<option value="OCC0965">Science \ IT | Research scientist</option>
-					<option value="OCC0970">Science \ IT | Scientist</option>
-					<option value="OCC0975">Science \ IT | Statistician</option>
-					<option value="OCC0980">Science \ IT | Systems Analyst</option>
-					<option value="OCC0985">Science \ IT | Technician \ Technologist</option>
-					<option value="OCC0990">Science \ IT | Web designer</option>
-					<option value="OCC0995">Soc. Science \ Education \ Religion</option>
-					<option value="OCC1000">Soc. Science \ Education \ Religion | Child & Youth worker</option>
-					<option value="OCC1005">Soc. Science \ Education \ Religion | Early Childhood Educator \ Daycare worker</option>
-					<option value="OCC1010">Soc. Science \ Education \ Religion | Judge</option>
-					<option value="OCC1015">Soc. Science \ Education \ Religion | Lawyer</option>
-					<option value="OCC1020">Soc. Science \ Education \ Religion | Military</option>
-					<option value="OCC1025">Soc. Science \ Education \ Religion | Minister \ Pastor</option>
-					<option value="OCC1030">Soc. Science \ Education \ Religion | Notary Public</option>
-					<option value="OCC1035">Soc. Science \ Education \ Religion | Other</option>
-					<option value="OCC1040">Soc. Science \ Education \ Religion | Post graduate studies</option>
-					<option value="OCC1045">Soc. Science \ Education \ Religion | Professor</option>
-					<option value="OCC1050">Soc. Science \ Education \ Religion | Psychologist</option>
-					<option value="OCC1055">Soc. Science \ Education \ Religion | Recreation therapist</option>
-					<option value="OCC1060">Soc. Science \ Education \ Religion | Religious Leader</option>
-					<option value="OCC1065">Soc. Science \ Education \ Religion | Social Worker</option>
-					<option value="OCC1070">Soc. Science \ Education \ Religion | Student  (college)</option>
-					<option value="OCC1075">Soc. Science \ Education \ Religion | Student  (high school)</option>
-					<option value="OCC1080">Soc. Science \ Education \ Religion | Teacher</option>
-					<option value="OCC1085">Soc. Science \ Education \ Religion | Teacher's aide \ Tutor</option>
-					<option value="OCC1090">Trades\Transport</option>
-					<option value="OCC1095">Trades\Transport | Aircraft technician</option>
-					<option value="OCC1100">Trades\Transport | Autobody shop</option>
-					<option value="OCC1105">Trades\Transport | Boiler maker</option>
-					<option value="OCC1110">Trades\Transport | Bus Driver</option>
-					<option value="OCC1115">Trades\Transport | Carpenter</option>
-					<option value="OCC1120">Trades\Transport | Construction worker</option>
-					<option value="OCC1125">Trades\Transport | Contractor</option>
-					<option value="OCC1130">Trades\Transport | Electrician</option>
-					<option value="OCC1135">Trades\Transport | Flight Attendant</option>
-					<option value="OCC1140">Trades\Transport | Flooring contractor</option>
-					<option value="OCC1145">Trades\Transport | Forklift operator</option>
-					<option value="OCC1150">Trades\Transport | Garbage Collector</option>
-					<option value="OCC1155">Trades\Transport | Gas Fitter</option>
-					<option value="OCC1160">Trades\Transport | Handyman</option>
-					<option value="OCC1165">Trades\Transport | Heavy equipment operator</option>
-					<option value="OCC1170">Trades\Transport | Janitor</option>
-					<option value="OCC1175">Trades\Transport | Labourer (Builder)</option>
-					<option value="OCC1180">Trades\Transport | Mechanic</option>
-					<option value="OCC1185">Trades\Transport | Miner</option>
-					<option value="OCC1190">Trades\Transport | Oil rig worker</option>
-					<option value="OCC1195">Trades\Transport | Other</option>
-					<option value="OCC1200">Trades\Transport | Packer</option>
-					<option value="OCC1205">Trades\Transport | Painter</option>
-					<option value="OCC1210">Trades\Transport | Pilot</option>
-					<option value="OCC1215">Trades\Transport | Plumber</option>
-					<option value="OCC1220">Trades\Transport | Power Station Operator</option>
-					<option value="OCC1225">Trades\Transport | Project manager</option>
-					<option value="OCC1230">Trades\Transport | Railway Conductor \ Worker</option>
-					<option value="OCC1235">Trades\Transport | Roofer</option>
-					<option value="OCC1240">Trades\Transport | Security \ Commissionaire</option>
-					<option value="OCC1245">Trades\Transport | Supervisor</option>
-					<option value="OCC1250">Trades\Transport | Tailor \ Dressmaker</option>
-					<option value="OCC1255">Trades\Transport | Taxi Driver</option>
-					<option value="OCC1260">Trades\Transport | Telecommunication \ Cable  Worker</option>
-					<option value="OCC1265">Trades\Transport | Telephone technician</option>
-					<option value="OCC1270">Trades\Transport | Tool & Die Maker</option>
-					<option value="OCC1275">Trades\Transport | Transportation Controller</option>
-					<option value="OCC1280">Trades\Transport | Truck Driver</option>
-					<option value="OCC1285">Trades\Transport | Welder</option>						
-				</select>
-				<br/>
-				<input type="text" name="pg1_occupationOther" size="10" style="width: 100%"
-				maxlength="20" readonly="readonly"
-				value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_occupationOther", "")) %>" />			
+				<input type="text" name="pg1_occupation" size="10" style="width: 100%"
+				maxlength="20" 
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_occupation", "")) %>" />			
 			</td>
 			<td width="15%" valign="top">Educational level <br>
 					<select name="pg1_eduLevel" style="width: 100%" >
 						<option value="UNK">Select</option>
 						<option value="ED001">College/University Completed</option>
-						<option value="ED002">College/University not Completed</option>
-						<option value="ED003">Grade School Completed</option>
+						<option value="ED002">College/University not Completed</option>						
 						<option value="ED004">High School Completed</option>
-						<option value="ED005">High School not Completed</option>						
+						<option value="ED005">High School not Completed</option>		
+						<option value="ED003">Grade School Completed</option>
+						<option value="ED006">Grade School not Completed</option>		
 					</select>					
 			</td>
 			<td colspan="3" width="50%" valign="top">Ethnic or Racial backgrounds<br>
@@ -2458,11 +1981,18 @@ function geneticReferral() {
 		<tr>
 			<td width="50%">Allergies or Sensitivities &nbsp;<a id="update_allergies_link" href="javascript:void(0)" onclick="updateAllergies();">Update from Chart</a><br>
 			<div align="center"><textarea name="c_allergies"
-				style="width: 100%" cols="30" rows="2"><%= props.getProperty("c_allergies", "") %></textarea></div>
+				style="width: 100%" cols="30" rows="4"><%= props.getProperty("c_allergies", "") %></textarea></div>			
+			<%if(!bView) {%>
+				<span id="allergies_size">150 Characters left</span>		
+			<% } %>
 			</td>
+			
 			<td width="50%">Medications/Herbals&nbsp;<a id="update_meds_link" href="javascript:void(0)" onclick="updateMeds();">Update from Chart</a><br>
 			<div align="center"><textarea name="c_meds" style="width: 100%"
-				cols="30" rows="2"><%= props.getProperty("c_meds", "") %></textarea></div>
+				cols="30" rows="4"><%= props.getProperty("c_meds", "") %></textarea></div>
+				<%if(!bView) {%>
+				<span id="meds_size">146 Characters left</span>		
+				<% } %>
 			</td>
 		</tr>
 	</table>
@@ -3200,6 +2730,7 @@ function geneticReferral() {
 							<option value="NDONE">Not Done</option>
 							<option value="POS">Positive</option>
 							<option value="NEG">Negative</option>
+							<option value="IND">Indeterminate</option>
 							<option value="UNK">Unknown</option>
 						</select>					
 					</td>
@@ -3245,6 +2776,7 @@ function geneticReferral() {
 						<select name="pg1_labRh">
 							<option value="NDONE">Not Done</option>
 							<option value="POS">Positive</option>
+							<option value="WPOS">Weak Positive</option>
 							<option value="NEG">Negative</option>
 							<option value="UNK">Unknown</option>
 						</select>	
@@ -3314,7 +2846,16 @@ function geneticReferral() {
 							<option value="UNK">Unknown</option>
 						</select>					
 					</td>
-					<td><input type="text" size="10" name="pg1_labCustom1Label" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_labCustom1Label", "")) %>"/></td>
+					<td>
+						<select name="pg1_labCustom1Label">
+							<option value=""></option>
+							<option value="TSH">TSH</option>
+							<option value="Ferritin">Ferritin</option>
+							<option value="B12">B12</option>
+							<option value="Hgb electrophoresis">Hgb electrophoresis</option>
+							<option value="Parvovirus B19 titre">Parvovirus B19 titre</option>
+						</select>						
+					</td>
 					<td><input type="text"  size="10" name="pg1_labCustom1Result" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_labCustom1Result", "")) %>"/></td>				
 				</tr>
 				<tr>
@@ -3366,10 +2907,7 @@ function geneticReferral() {
 					<td><input type="text" size="10" name="pg1_labCustom3Label" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_labCustom3Label", "")) %>"/></td>
 					<td><input type="text"  size="10" name="pg1_labCustom3Result" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_labCustom3Result", "")) %>"/></td>					
 				</tr>
-				<tr>
-					<td><input type="text" size="10" name="pg1_labCustom4Label" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_labCustom4Label", "")) %>"/></td>
-					<td><input type="text"  size="10" name="pg1_labCustom4Result" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_labCustom4Result", "")) %>"/></td>					
-				</tr>
+				
 				<tr>
 					<td>d) Counseled </td>
 					<td align="center">
@@ -3402,6 +2940,25 @@ function geneticReferral() {
 				style="width: 100%" cols="80" rows="5"><%= props.getProperty("pg1_commentsAR1", "") %></textarea>
 			</td>
 		</tr>
+		<%if(!bView) {%>
+		<tr>
+			<td colspan="4" align="right"><span id="comment_size">885 Characters left</span></td>
+		</tr>
+		<% } %>
+		
+		<tr bgcolor="#CCCCCC">
+			<th colspan="4"><b>Extra Comments (Will print on a separate page)</b></th>
+		</tr>
+		<tr>
+			<td colspan="4"><textarea name="pg1_comments2AR1"
+				style="width: 100%" cols="80" rows="15"><%= props.getProperty("pg1_comments2AR1", "") %></textarea>
+			</td>
+		</tr>
+		<%if(!bView) {%>
+		<tr>
+			<td colspan="4" align="right"><span id="comment2_size">4160 Characters left</span></td>
+		</tr>
+		<% } %>
 		<tr>
 			<td width="30%">Signature<br>
 			<input type="text" name="pg1_signature" size="30" maxlength="50"
@@ -3578,6 +3135,28 @@ Calendar.setup({ inputField : "pg1_labLastPapDate", ifFormat : "%Y/%m/%d", shows
 	</form>
 </div>
 
+<div id="pull-labs-form" title="Lab Import Tool">
+	<p class="validateTips"></p>
+
+	<form>
+	<fieldset>
+		<table>
+			<thead>
+				<tr>
+					<th>Lab Test</th>
+					<th>Value</th>
+					<th>Reference Range</th>
+					<th>Date Observed</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				
+			</tbody>
+		</table>
+	</fieldset>
+	</form>
+</div>
 </html:html>
 
 <%!

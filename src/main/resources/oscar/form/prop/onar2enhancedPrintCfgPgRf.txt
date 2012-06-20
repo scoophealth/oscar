@@ -1,0 +1,51 @@
+c_lastName	: left, 50, 97, 0, BaseFont.HELVETICA, 8 
+c_firstName	: left, 188, 97, 0, BaseFont.HELVETICA, 8 
+pg1_baObs	: left, 50, 117, 0, BaseFont.HELVETICA, 8 , OBS
+pg1_baFP	: left, 55, 117, 0, BaseFont.HELVETICA, 8 , FP
+pg1_baMidwife	: left, 55, 117, 0, BaseFont.HELVETICA, 8 , Midwife
+c_ba	: left, 50, 117, 0, BaseFont.HELVETICA, 8 
+pg1_ncPed	: left, 188, 117, 0, BaseFont.HELVETICA, 8 , Ped
+pg1_ncFP	: left, 188, 117, 0, BaseFont.HELVETICA, 8 , FP
+pg1_ncMidwife	: left, 188, 117, 0, BaseFont.HELVETICA, 8 , Midwife
+c_nc	: left, 188, 117, 0, BaseFont.HELVETICA, 8 
+c_famPhys	: left, 50, 137, 0, BaseFont.HELVETICA, 8 
+
+c_finalEDB	: left, 218, 147, 0, BaseFont.HELVETICA, 9 
+
+c_gravida	: left, 50, 158, 0, BaseFont.HELVETICA, 8 
+c_term	: left, 78, 158, 0, BaseFont.HELVETICA, 8 
+c_prem	: left, 105, 158, 0, BaseFont.HELVETICA, 8 
+c_abort	: left, 130, 158, 0, BaseFont.HELVETICA, 8 
+c_living	: left, 160, 158, 0, BaseFont.HELVETICA, 8 
+
+c_riskFactors8	: left, 45, 182, 0, BaseFont.HELVETICA, 8 
+c_planManage8	: left, 223, 182, 0, BaseFont.HELVETICA, 8 
+c_riskFactors9	: left, 45, 195, 0, BaseFont.HELVETICA, 8 
+c_planManage9	: left, 223, 195, 0, BaseFont.HELVETICA, 8 
+c_riskFactors10	: left, 45, 209, 0, BaseFont.HELVETICA, 8 
+c_planManage10	: left, 223, 209, 0, BaseFont.HELVETICA, 8 
+c_riskFactors11	: left, 45, 221, 0, BaseFont.HELVETICA, 8 
+c_planManage11	: left, 223, 221, 0, BaseFont.HELVETICA, 8 
+c_riskFactors12	: left, 45, 234, 0, BaseFont.HELVETICA, 8 
+c_planManage12	: left, 223, 234, 0, BaseFont.HELVETICA, 8 
+c_riskFactors13	: left, 45, 248, 0, BaseFont.HELVETICA, 8 
+c_planManage13	: left, 223, 248, 0, BaseFont.HELVETICA, 8 
+c_riskFactors14	: left, 45, 260, 0, BaseFont.HELVETICA, 8 
+c_planManage14	: left, 223, 260, 0, BaseFont.HELVETICA, 8 
+c_riskFactors15	: left, 45, 272, 0, BaseFont.HELVETICA, 8 
+c_planManage15	: left, 223, 272, 0, BaseFont.HELVETICA, 8 
+c_riskFactors16	: left, 45, 286, 0, BaseFont.HELVETICA, 8 
+c_planManage16	: left, 223, 286, 0, BaseFont.HELVETICA, 8
+c_riskFactors17	: left, 45, 298, 0, BaseFont.HELVETICA, 8 
+c_planManage17	: left, 223, 298, 0, BaseFont.HELVETICA, 8 
+c_riskFactors18	: left, 45, 312, 0, BaseFont.HELVETICA, 8 
+c_planManage18	: left, 223, 312, 0, BaseFont.HELVETICA, 8 
+c_riskFactors19	: left, 45, 326, 0, BaseFont.HELVETICA, 8 
+c_planManage19	: left, 223, 326, 0, BaseFont.HELVETICA, 8 
+c_riskFactors20	: left, 45, 339, 0, BaseFont.HELVETICA, 8 
+c_planManage20	: left, 223, 339, 0, BaseFont.HELVETICA, 8 
+ 
+pg2_signature	: left, 60, 748, 0, BaseFont.HELVETICA, 8
+pg2_formDate	: left, 230, 748, 0, BaseFont.HELVETICA, 8
+pg2_signature2	: left, 320, 748, 0, BaseFont.HELVETICA, 8
+pg2_formDate2	: left, 490, 748, 0, BaseFont.HELVETICA, 8

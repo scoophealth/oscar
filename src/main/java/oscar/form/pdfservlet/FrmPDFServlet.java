@@ -32,7 +32,9 @@
 package oscar.form.pdfservlet;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -57,6 +59,7 @@ import org.oscarehr.util.MiscUtils;
 import oscar.OscarProperties;
 import oscar.form.graphic.FrmGraphicFactory;
 import oscar.form.graphic.FrmPdfGraphic;
+import oscar.util.ConcatPDF;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
@@ -102,9 +105,26 @@ public class FrmPDFServlet extends HttpServlet {
 
         ByteArrayOutputStream baosPDF = null;
 
-        try {
-            baosPDF = generatePDFDocumentBytes(req, this.getServletContext());
-
+        try {        	
+            File tmpFile = null;
+            
+            if(req.getParameter("multiple")!=null) {
+            	ArrayList<Object> files = new ArrayList<Object>();
+            	for(int x=0;x<Integer.parseInt(req.getParameter("multiple"));x++) {
+            		baosPDF = new ByteArrayOutputStream();
+                    baosPDF = generatePDFDocumentBytes(req, this.getServletContext(),baosPDF,x);
+            		tmpFile = File.createTempFile("formpdf", String.valueOf((int)Math.random()*10000));
+                    baosPDF.writeTo(new FileOutputStream(tmpFile));
+                    files.add(tmpFile.getAbsolutePath());
+            	}
+            	tmpFile = File.createTempFile("formpdf", String.valueOf((int)Math.random()*10000));
+            	ConcatPDF.concat(files, tmpFile.getAbsolutePath());
+            } else {
+            	baosPDF = new ByteArrayOutputStream();
+                baosPDF = generatePDFDocumentBytes(req, this.getServletContext(),baosPDF,0);
+            	tmpFile = File.createTempFile("formpdf", String.valueOf((int)Math.random()*10000));
+                baosPDF.writeTo(new FileOutputStream(tmpFile));
+            }
             StringBuilder sbFilename = new StringBuilder();
             sbFilename.append("filename_");
             //sbFilename.append(System.currentTimeMillis());
@@ -114,7 +134,6 @@ public class FrmPDFServlet extends HttpServlet {
             res.setHeader("Cache-Control", "max-age=0");
             //res.setHeader("Cache-Control","no-cache"); //HTTP 1.1
             res.setDateHeader("Expires", 0);
-
             res.setContentType("application/pdf");
 
             // The Content-disposition value will be inline
@@ -130,15 +149,24 @@ public class FrmPDFServlet extends HttpServlet {
 
             res.setHeader("Content-disposition", sbContentDispValue.toString());
 
-            res.setContentLength(baosPDF.size());
-
-            ServletOutputStream sos;
-
-            sos = res.getOutputStream();
-
-            baosPDF.writeTo(sos);
-
-            sos.flush();
+            
+            res.setContentLength((int)tmpFile.length());
+            
+            
+            ServletOutputStream sout = res.getOutputStream();  
+            FileInputStream fis = new FileInputStream(tmpFile);  
+            byte[] buffer = new byte[64000];  
+            int bytesRead = 0;  
+                                
+            while(true)  
+                {  
+                       bytesRead = fis.read(buffer);  
+                       if (bytesRead == -1)  
+                              break;  
+                                    
+                       sout.write(buffer,0,bytesRead);  
+                }  
+            
         } catch (DocumentException dex) {
             res.setContentType("text/html");
             PrintWriter writer = res.getWriter();
@@ -192,7 +220,7 @@ public class FrmPDFServlet extends HttpServlet {
      *NOTE: When working on these forms in linux, it helps to load the PDF file into gimp, switch to pt. coordinate system and use the mouse to find the coordinates.
      *Prepare to be bored!
      */
-    protected ByteArrayOutputStream generatePDFDocumentBytes(final HttpServletRequest req, final ServletContext ctx)
+    protected ByteArrayOutputStream generatePDFDocumentBytes(final HttpServletRequest req, final ServletContext ctx, ByteArrayOutputStream baosPDF, int multiple)
     throws DocumentException, java.io.IOException {
         // added by vic, hsfo
         if (HSFO_RX_DATA_KEY.equals(req.getParameter("__title")))
@@ -202,25 +230,26 @@ public class FrmPDFServlet extends HttpServlet {
         Document document = new Document();
         //document = new Document(psize, 50, 50, 50, 50);
 
-        ByteArrayOutputStream baosPDF = new ByteArrayOutputStream();
+        String suffix = (multiple>0)?String.valueOf(multiple):"";
+        
         PdfWriter writer = null;
 
         try {
             writer = PdfWriter.getInstance(document, baosPDF);
 
-            String title = req.getParameter("__title") != null ? req.getParameter("__title") : "Unknown";
+            String title = req.getParameter("__title"+suffix) != null ? req.getParameter("__title"+suffix) : "Unknown";
             
-            String template = req.getParameter("__template") != null ? req.getParameter("__template") + ".pdf" : "";
-
+            String template = req.getParameter("__template"+suffix) != null ? req.getParameter("__template"+suffix) + ".pdf" : "";
+                        
             int numPages = 1;
-            String pages = req.getParameter("__numPages");
+            String pages = req.getParameter("__numPages"+suffix);
             if( pages != null ) {
             	numPages = Integer.parseInt(pages);
             }
                                      
             Properties[] printCfg = null;
             int cfgFileNo;
-            String[] cfgFile = req.getParameterValues("__cfgfile");
+            String[] cfgFile = req.getParameterValues("__cfgfile"+suffix);
             
             cfgFileNo = cfgFile == null ? 0 : cfgFile.length;
             if( cfgFileNo > 0 ) {
@@ -241,7 +270,7 @@ public class FrmPDFServlet extends HttpServlet {
             //specify the page of the picture using __graphicPage, it may be used multiple times to specify multiple pages
             //ie. __graphicPage=2&__graphicPage=3
             //__cfgGraphicFile will be mapped to page 1, __cfgGraphicFile0 will be mapped to page 2 etc.
-            String[] graphicPage = req.getParameterValues("__graphicPage");
+            String[] graphicPage = req.getParameterValues("__graphicPage"+suffix);
             ArrayList<String> graphicPageArray = new ArrayList<String>();
             
             
@@ -255,10 +284,10 @@ public class FrmPDFServlet extends HttpServlet {
             int cfgGraphicFileNo;            
             for( int idx = 0; idx < numPages; ++idx ) {
             	if( idx == 0 ) {
-            		cfgGraphicFile = req.getParameterValues("__cfgGraphicFile");            		
+            		cfgGraphicFile = req.getParameterValues("__cfgGraphicFile"+suffix);            		
             	}
             	else {
-            		paramName = "__cfgGraphicFile" + String.valueOf(idx);
+            		paramName = "__cfgGraphicFile" + String.valueOf(idx) + suffix;
             		cfgGraphicFile = req.getParameterValues(paramName);
             	}
             	            	
@@ -285,6 +314,16 @@ public class FrmPDFServlet extends HttpServlet {
             for (Enumeration<String> e = req.getParameterNames(); e.hasMoreElements();) {
                 temp = new StringBuilder(e.nextElement().toString());
                 props.setProperty(temp.toString(), req.getParameter(temp.toString()));
+            }
+            
+            if(req.getParameter("postProcessor"+suffix)!=null) {
+            	String className = "oscar.form.pdfservlet."+req.getParameter("postProcessor"+suffix);
+            	try {
+            		FrmPDFPostValueProcessor pp = (FrmPDFPostValueProcessor)Class.forName(className).newInstance();
+            		props = pp.process(props);
+            	}catch(Exception e) {
+            		//ignore
+            	}
             }
 
             //initialise measurement collections = a list of pages sections measurements
@@ -424,6 +463,7 @@ public class FrmPDFServlet extends HttpServlet {
 	                String[] fontType;
 	                for (Enumeration e = printCfg[i - 1].propertyNames(); e.hasMoreElements();) {
 	                    tempName = new StringBuilder(e.nextElement().toString());
+	                    
 	                    cfgVal = printCfg[i - 1].getProperty(tempName.toString()).split(" *, *");
 	
 	                    if( cfgVal[4].indexOf(";") > -1 ) {
