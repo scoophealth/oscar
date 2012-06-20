@@ -192,10 +192,12 @@ ProviderData user = new ProviderData(strUser);
 					<%= patient.getCity() %>, <%= patient.getProvince() %> <%= patient.getPostal() %><br>
 					<%= patient.getPhone() %><br>
 					<b> <% if(!props.getProperty("showRxHin", "").equals("false")) { %>
-					<bean:message key="oscar.oscarRx.hin" /><%= patient.getHin() %> <% } %>
-					</b></td>
+					<bean:message key="oscar.oscarRx.hin" /><%= patient.getHin() %> <% } %>                                        
+					</b><br>
+                                        <% if(props.getProperty("showRxChartNo", "").equalsIgnoreCase("true")) { %>
+					<bean:message key="oscar.oscarRx.chartNo" /><%=patient.getChartNo()%> <% } %></td>
 					<td align=right valign=top><b> <%= oscar.oscarRx.util.RxUtil.DateToString(rxDate, "MMMM d, yyyy",request.getLocale()) %>
-					</b></td>
+					</b></td>                                        										
 				</tr>
 			</table>
 			</td>
