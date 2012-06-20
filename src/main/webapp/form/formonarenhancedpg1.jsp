@@ -47,7 +47,9 @@
     props.setProperty("c_lastVisited", "pg1");
 
     //get project_home
-    String project_home = request.getContextPath().substring(1);    
+    String project_home = request.getContextPath().substring(1);   
+    
+    if(props.getProperty("obxhx_num", "0").equals("")) {props.setProperty("obxhx_num","0");}
 %>
 <%
   boolean bView = false;
