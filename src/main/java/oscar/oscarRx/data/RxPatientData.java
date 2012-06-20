@@ -25,8 +25,6 @@
 
 package oscar.oscarRx.data;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -44,16 +42,16 @@ import org.oscarehr.common.dao.DiseasesDao;
 import org.oscarehr.common.dao.PartialDateDao;
 import org.oscarehr.common.model.Diseases;
 import org.oscarehr.common.model.PartialDate;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 
 public class RxPatientData {
 	private static Logger logger = MiscUtils.getLogger();
-
-	//private static final PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
+        private static final DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");	
 
 	private RxPatientData() {
 		// prevent instantiation
@@ -63,67 +61,26 @@ public class RxPatientData {
 
 	public static Patient[] PatientSearch(String surname, String firstName) {
 
-		Patient[] arr = {};
-		ArrayList lst = new ArrayList();
-		try {
-
-			ResultSet rs;
-			Patient p;
-			rs = DBHandler.GetSQL("SELECT demographic_no, last_name, first_name, sex, year_of_birth, " + "month_of_birth, date_of_birth, address, city, province, postal, phone " + "FROM demographic WHERE last_name LIKE '" + surname + "%' AND first_name LIKE '" + firstName + "%'");
-
-			while (rs.next()) {
-				p = new Patient(rs.getInt("demographic_no"), oscar.Misc.getString(rs, "last_name"), oscar.Misc.getString(rs, "first_name"), oscar.Misc.getString(rs, "sex"), calcDate(oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"), oscar.Misc.getString(rs, "date_of_birth")), oscar.Misc.getString(rs, "address"), oscar.Misc.getString(rs, "city"), oscar.Misc.getString(rs, "province"), oscar.Misc.getString(rs, "postal"), oscar.Misc.getString(rs, "phone"),
-				        oscar.Misc.getString(rs, "hin"));
-				lst.add(p);
-			}
-			rs.close();
-			arr = (Patient[]) lst.toArray(arr);
-		} catch (SQLException e) {
-			MiscUtils.getLogger().error("Error", e);
-		}
-		return arr;
-
+            Patient[] arr = {};	
+            List<Patient> patients = new ArrayList<Patient>();
+            List<Demographic> demographics = demographicDao.searchDemographic(surname + "," + firstName);     
+            for (Demographic demographic : demographics) {
+                Patient p = new Patient(demographic);
+                patients.add(p);
+            }
+            return (Patient[]) patients.toArray(arr);                
 	}
 
 	/* Patient Information */
 
 	public static Patient getPatient(int demographicNo) {
-
-		ResultSet rs;
-		Patient p = null;
-		try {
-			rs = DBHandler.GetSQL("SELECT demographic_no, last_name, first_name, sex, year_of_birth, " + "month_of_birth, date_of_birth, address, city, province, postal, phone,hin " + "FROM demographic WHERE demographic_no = " + demographicNo);
-
-			if (rs.next()) {
-				p = new Patient(rs.getInt("demographic_no"), oscar.Misc.getString(rs, "last_name"), oscar.Misc.getString(rs, "first_name"), oscar.Misc.getString(rs, "sex"), calcDate(oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"), oscar.Misc.getString(rs, "date_of_birth")), oscar.Misc.getString(rs, "address"), oscar.Misc.getString(rs, "city"), oscar.Misc.getString(rs, "province"), oscar.Misc.getString(rs, "postal"), oscar.Misc.getString(rs, "phone"),
-				        oscar.Misc.getString(rs, "hin"));
-				MiscUtils.getLogger().debug(oscar.Misc.getString(rs, "first_name"));
-			}
-			rs.close();
-		} catch (SQLException e) {
-			MiscUtils.getLogger().error("Error", e);
-		}
-
-		return p;
+            Demographic demographic = demographicDao.getDemographicById(demographicNo);	
+            return new Patient(demographic);		
 	}
 
-	public static Patient getPatient(String demographicNo) {
-
-		ResultSet rs;
-		Patient p = null;
-		try {
-			rs = DBHandler.GetSQL("SELECT demographic_no, last_name, first_name, sex, year_of_birth, " + "month_of_birth, date_of_birth, address, city, province, postal, phone,hin " + "FROM demographic WHERE demographic_no = " + demographicNo);
-
-			if (rs.next()) {
-				p = new Patient(rs.getInt("demographic_no"), oscar.Misc.getString(rs, "last_name"), oscar.Misc.getString(rs, "first_name"), oscar.Misc.getString(rs, "sex"), calcDate(oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"), oscar.Misc.getString(rs, "date_of_birth")), oscar.Misc.getString(rs, "address"), oscar.Misc.getString(rs, "city"), oscar.Misc.getString(rs, "province"), oscar.Misc.getString(rs, "postal"), oscar.Misc.getString(rs, "phone"),
-				        oscar.Misc.getString(rs, "hin"));
-			}
-			rs.close();
-		} catch (SQLException e) {
-			MiscUtils.getLogger().error("Error", e);
-		}
-
-		return p;
+	public static Patient getPatient(String demographicNo) {	
+            Demographic demographic = demographicDao.getDemographicById(Integer.parseInt(demographicNo));
+            return new Patient(demographic);
 	}
 
 	private static java.util.Date calcDate(String year, String month, String day) {
@@ -162,58 +119,65 @@ public class RxPatientData {
 		return age;
 	}
 
-	public static class Patient {
-		int demographicNo;
-		String surname;
-		String firstName;
-		String sex;
-		java.util.Date DOB;
-		String address;
-		String city;
-		String province;
-		String postal;
-		String phone;
-		String hin;
+	public static class Patient {		
+		private Demographic demographic = null;                
 		private static AllergyDao allergyDao = (AllergyDao) SpringUtils.getBean("allergyDao");
-		private PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
-
-		public Patient(int demographicNo, String surname, String firstName, String sex, java.util.Date DOB, String address, String city, String province, String postal, String phone, String hin) {
-
-			this.demographicNo = demographicNo;
-			this.surname = surname;
-			this.firstName = firstName;
-			this.sex = sex;
-			this.DOB = DOB;
-			this.address = address;
-			this.city = city;
-			this.province = province;
-			this.postal = postal;
-			this.phone = phone;
-			this.hin = hin;
-		}
-
+		private PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");               
+                
+                public Patient (Demographic demographic) {
+                    this.demographic = demographic;
+                    
+                     if (demographic == null)
+                            MiscUtils.getLogger().warn("Demographic is not set!");
+                }
+                		
+                public Demographic getDemographic() {
+                    return this.demographic;
+                }
+                
 		public int getDemographicNo() {
-			return this.demographicNo;
+                    if (demographic != null) {
+			return demographic.getDemographicNo();
+                    }else {
+                        MiscUtils.getLogger().warn("DemographicNo is not set!");
+                        return -1;
+                    }
 		}
 
 		public String getSurname() {
-			return this.surname;
+                    if (demographic != null)
+			return demographic.getLastName();
+                    else
+                        return "";
 		}
 
 		public String getFirstName() {
-			return this.firstName;
+                    if (demographic != null)
+			return demographic.getFirstName();
+                    else
+                        return "";
 		}
 
 		public String getSex() {
-			return this.sex;
+                    if (demographic != null)
+			return demographic.getSex();
+                    else
+                        return "";
 		}
 
 		public String getHin() {
-			return this.hin;
+                    if (demographic != null)
+			return demographic.getHin();
+                    else
+                        return "";
 		}
 
 		public java.util.Date getDOB() {
-			return this.DOB;
+                    Date dob = null;
+                    if (demographic != null)
+                        dob=demographic.getBirthDay().getTime();
+			                    
+                        return dob;
 		}
 
 		public int getAge() {
@@ -221,25 +185,47 @@ public class RxPatientData {
 		}
 
 		public String getAddress() {
-			return this.address;
+			if (demographic != null)
+			return demographic.getAddress();
+                    else
+                        return "";
 		}
 
 		public String getCity() {
-			return this.city;
+                    if (demographic != null)
+			return demographic.getCity();
+                    else
+                        return "";
 		}
 
 		public String getProvince() {
-			return this.province;
+                    if (demographic != null)
+			return demographic.getProvince();
+                    else
+                        return "";
 		}
 
 		public String getPostal() {
-			return this.postal;
+                    if (demographic != null)
+			return demographic.getPostal();
+                    else
+                        return "";
 		}
 
 		public String getPhone() {
-			return this.phone;
+                    if (demographic != null)
+			return demographic.getPhone();
+                    else
+                        return "";
 		}
 
+                public String getChartNo() {
+                    if (demographic != null)
+			return demographic.getChartNo();
+                    else
+                        return "";
+                }
+                
 		public org.oscarehr.common.model.Allergy getAllergy(int id) {
 
 			// I know none of this method makes sense, but I'm only converting this to JPA right now, too much work to fix it all to make sense.
@@ -250,8 +236,8 @@ public class RxPatientData {
 
 		public org.oscarehr.common.model.Allergy[] getAllergies() {
 			ArrayList<org.oscarehr.common.model.Allergy> results = new ArrayList<org.oscarehr.common.model.Allergy>();
-
-			List<org.oscarehr.common.model.Allergy> allergies = allergyDao.findAllergies(getDemographicNo());
+                        Integer demographicNo = getDemographicNo();
+			List<org.oscarehr.common.model.Allergy> allergies = allergyDao.findAllergies(demographicNo);
 			results.addAll(allergies);
 
 			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
@@ -277,7 +263,7 @@ public class RxPatientData {
 							date = remoteAllergy.getEntryDate().getTime();
 
 						org.oscarehr.common.model.Allergy a = new org.oscarehr.common.model.Allergy();
-						a.setDemographicNo(getDemographicNo());
+						a.setDemographicNo(demographicNo);
 						a.setId(remoteAllergy.getFacilityIdIntegerCompositePk().getCaisiItemId().intValue());
 						a.setEntryDate(date);
 						a.setDescription(remoteAllergy.getDescription());

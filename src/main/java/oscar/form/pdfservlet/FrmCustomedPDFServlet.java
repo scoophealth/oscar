@@ -69,6 +69,7 @@ import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfPageEventHelper;
 import com.lowagie.text.pdf.PdfWriter;
+import java.util.Locale;
 
 public class FrmCustomedPDFServlet extends HttpServlet {
 
@@ -192,6 +193,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 		private String patientName;
         private String patientDOB;
         private String patientHIN;
+        private String patientChartNo;
         private String pracNo;
 		private String sigDoctorName;
 		private String rxDate;
@@ -199,12 +201,13 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 		private String origPrintDate = null;
 		private String numPrint = null;
 		private String imgPath;
-
+                Locale locale = null;
+                
 		public EndPage() {
 		}
 
         public EndPage(String clinicName, String clinicTel, String clinicFax, String patientPhone, String patientCityPostal, String patientAddress,
-                String patientName,String patientDOB, String sigDoctorName, String rxDate,String origPrintDate,String numPrint, String imgPath, String patientHIN, String pracNo) {
+                String patientName,String patientDOB, String sigDoctorName, String rxDate,String origPrintDate,String numPrint, String imgPath, String patientHIN, String patientChartNo,String pracNo, Locale locale) {
 			this.clinicName = clinicName;
 			this.clinicTel = clinicTel;
 			this.clinicFax = clinicFax;
@@ -223,7 +226,9 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 			}
 			this.imgPath = imgPath;
 			this.patientHIN = patientHIN;
-			this.pracNo = pracNo;
+                        this.patientChartNo = patientChartNo;
+			this.pracNo = pracNo;     
+                        this.locale = locale;
 		}
 
 		@Override
@@ -246,23 +251,34 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 
 
 				float height = page.getHeight();
-                boolean showPatientDOB=false;
-                //head.writeSelectedRows(0, 1,document.leftMargin(), page.height() - document.topMargin()+ head.getTotalHeight(),writer.getDirectContent());
-                if(this.patientDOB!=null && this.patientDOB.length()>0){
-                    showPatientDOB=true;
-                }
-                //header table for patient's information.
-				PdfPTable head = new PdfPTable(1);
-				String newline = System.getProperty("line.separator");
-                String hStr=this.patientName;
-                if(showPatientDOB){
-                     hStr+="   DOB:"+this.patientDOB+"                               " + this.rxDate + newline;}
-                else{hStr+="                            " + this.rxDate + newline;}
+                                boolean showPatientDOB=false;
+                                //head.writeSelectedRows(0, 1,document.leftMargin(), page.height() - document.topMargin()+ head.getTotalHeight(),writer.getDirectContent());
+                                if(this.patientDOB!=null && this.patientDOB.length()>0){
+                                    showPatientDOB=true;
+                                }
+                                //header table for patient's information.
+                                                PdfPTable head = new PdfPTable(1);
+                                                String newline = System.getProperty("line.separator");
+                                StringBuilder hStr = new StringBuilder(this.patientName);
+                                if(showPatientDOB){
+                                     hStr.append("   DOB:").append(this.patientDOB).append("                               ").append(this.rxDate).append(newline);}
+                                else{
+                                    hStr.append("                            ").append(this.rxDate).append(newline);
+                                }
 
-                hStr+=this.patientAddress + newline + this.patientCityPostal + newline + this.patientPhone;
-                if (patientHIN != null && patientHIN.trim().length() > 0) { hStr+=newline + "Health Ins #. " + patientHIN; }
+                                hStr.append(this.patientAddress).append(newline).append(this.patientCityPostal).append(newline).append(this.patientPhone);
+                                
+                                if (patientHIN != null && patientHIN.trim().length() > 0) { 
+                                    hStr.append(newline).append("Health Ins #. ").append(patientHIN); 
+                                }
+
+                                if (patientChartNo != null && !patientChartNo.isEmpty()) {
+                                    String chartNoTitle = org.oscarehr.util.LocaleUtils.getMessage(locale, "oscar.oscarRx.chartNo");
+                                    hStr.append(newline).append(chartNoTitle).append(patientChartNo);
+                                }
+                                
 				BaseFont bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-				Phrase hPhrase = new Phrase(hStr, new Font(bf, 10));
+				Phrase hPhrase = new Phrase(hStr.toString(), new Font(bf, 10));
 				head.addCell(hPhrase);
 				head.setTotalWidth(272f);
 				head.writeSelectedRows(0, -1, 13f, height - 100f, cb);
@@ -447,7 +463,10 @@ public class FrmCustomedPDFServlet extends HttpServlet {
         String showPatientDOB=req.getParameter("showPatientDOB");
         String imgFile=req.getParameter("imgFile");
         String patientHIN=req.getParameter("patientHIN");
+        String patientChartNo = req.getParameter("patientChartNo");
         String pracNo=req.getParameter("pracNo");
+        Locale locale = req.getLocale();
+        
         boolean isShowDemoDOB=false;
         if(showPatientDOB!=null&&showPatientDOB.equalsIgnoreCase("true")){
             isShowDemoDOB=true;
@@ -537,7 +556,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 			document.setMargins(15, pageSize.getWidth() - 285f + 5f, 170, 60);// left, right, top , bottom
 
 			writer = PdfWriter.getInstance(document, baosPDF);
-			writer.setPageEvent(new EndPage(clinicName, clinicTel, clinicFax, patientPhone, patientCityPostal, patientAddress, patientName,patientDOB, sigDoctorName, rxDate, origPrintDate, numPrint, imgFile, patientHIN, pracNo));
+			writer.setPageEvent(new EndPage(clinicName, clinicTel, clinicFax, patientPhone, patientCityPostal, patientAddress, patientName,patientDOB, sigDoctorName, rxDate, origPrintDate, numPrint, imgFile, patientHIN, patientChartNo, pracNo, locale));
 			document.addTitle(title);
 			document.addSubject("");
 			document.addKeywords("pdf, itext");
