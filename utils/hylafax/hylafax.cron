@@ -1,0 +1,7 @@
+#!/bin/bash
+#
+# Hylafax cron provided by Indivica
+# Picks up the files dropped by OSCAR for faxing
+# Make sure you adjust the paths appropriately
+#
+for f in `ls /tmp/tomcat6-tmp/*.txt`; do sendfax -n -d \"`sed s"/ *//g" $f|tr -d "\n"`\" `echo $f | sed s"/txt/pdf/"`; rm $f; rm `echo $f | sed s"/txt/pdf/"`; done
