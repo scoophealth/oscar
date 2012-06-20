@@ -369,4 +369,42 @@ public class PregnancyAction extends DispatchAction {
 		
 	    return null;
 	}
+	
+	/*
+	 * Tests, and the LOINC code, I could find for it
+	 * 
+	 * Hemoglobin (718-7) 
+	 * HIV (public health - manually entered for now) (X50045) - hiv serology (GDML:HIV)
+	 * MCV (787-2)
+	 * ABO - GDML (4490) test name is "Blood Group" - includes RH. Textual though
+	 * RH (10331-7)
+	 * PAP Smear (GDML:GY04)
+	 * Antibody screen (8061-4)?? (GDML:4482) 
+	 * Gonnorhea
+	 * Rubella (25514-1)?
+	 * Chlamydia - urine GDML:CHLD
+	 * HbsAG (5196-1) GDML:HB1
+	 * Urine C&S
+	 * VDRL (public health) (X100666)
+	 * Sickle Cell
+	 */
+	public ActionForward getAR1Labs(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String demographicNo = request.getParameter("demographicNo");
+	
+		JSONArray json = new JSONArray();
+		
+		MeasurementDao md = SpringUtils.getBean(MeasurementDao.class);
+		List<Measurement> m = md.findByType(Integer.parseInt(demographicNo), "HEMO");
+		if(m.size()>0) {
+			json.add(m.get(0));
+		}
+		m = md.findByType(Integer.parseInt(demographicNo), "MCV");
+		if(m.size()>0) {
+			json.add(m.get(0));
+		}
+		
+		response.getWriter().print(json.toString());
+		
+	    return null;
+	}
 }

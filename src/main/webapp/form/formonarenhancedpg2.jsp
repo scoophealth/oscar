@@ -215,7 +215,9 @@ width: 100%;
 		$("select[name='ar2_strep']").val('<%= UtilMisc.htmlEscape(props.getProperty("ar2_strep", "")) %>');
 		$("select[name='ar2_bloodGroup']").val('<%= abo %>');
 		$("select[name='ar2_rh']").val('<%= rh %>');
-				
+		$("select[name='ar2_labCustom1Label']").val('<%= UtilMisc.htmlEscape(props.getProperty("ar2_labCustom1Label", "")) %>');
+		$("select[name='ar2_labCustom2Label']").val('<%= UtilMisc.htmlEscape(props.getProperty("ar2_labCustom2Label", "")) %>');
+			
 		
 		var ar1_rh = '<%=UtilMisc.htmlEscape(props.getProperty("pg1_labRh", ""))%>';
 		if(ar1_rh == 'NEG'/* && getGAWeek() >= 9*/) {			
@@ -261,17 +263,17 @@ width: 100%;
 	});
 	
 	function adjustDynamicListTotals() {		
-		$('#rf_num').val(adjustDynamicListTotalsRF('rf_',20));
-		$('#sv_num').val(adjustDynamicListTotalsSV('sv_',54));
-		$('#us_num').val(adjustDynamicListTotalsUS('us_',12));
+		$('#rf_num').val(adjustDynamicListTotalsRF('rf_',20,true));
+		$('#sv_num').val(adjustDynamicListTotalsSV('sv_',54,true));
+		$('#us_num').val(adjustDynamicListTotalsUS('us_',12,true));
 	}
 	
-	function adjustDynamicListTotalsRF(name,max) {		
+	function adjustDynamicListTotalsRF(name,max,adjust) {		
 		var total = 0;
 		for(var x=1;x<=max;x++) {
 			if($('#'+ name +x).length>0) {
 				total++;
-				if(x != total) {
+				if((x != total) && adjust) {
 					$("#rf_"+x).attr('id','rf_'+total);				
 					$("input[name='c_riskFactors"+x+"']").attr('name','c_riskFactors'+total);
 					$("input[name='c_planManage"+x+"']").attr('name','c_planManage'+total);				
@@ -281,12 +283,12 @@ width: 100%;
 		return total;
 	}
 	
-	function adjustDynamicListTotalsSV(name,max) {		
+	function adjustDynamicListTotalsSV(name,max,adjust) {		
 		var total = 0;
 		for(var x=1;x<=max;x++) {
 			if($('#'+ name +x).length>0) {
 				total++;
-				if(x != total) {					
+				if((x != total) && adjust) {			
 					$("#sv_"+x).attr('id','sv_'+total);				
 					$("input[name='pg2_date"+x+"']").attr('name','pg2_date'+total);
 					$("input[name='pg2_gest"+x+"']").attr('name','pg2_gest'+total);
@@ -304,12 +306,12 @@ width: 100%;
 		return total;
 	}
 	
-	function adjustDynamicListTotalsUS(name,max) {		
+	function adjustDynamicListTotalsUS(name,max,adjust) {		
 		var total = 0;
 		for(var x=1;x<=max;x++) {
 			if($('#'+ name +x).length>0) {
 				total++;
-				if(x != total) {
+				if((x != total) && adjust) {
 					$("#us_"+x).attr('id','us_'+total);				
 					$("input[name='ar2_uDate"+x+"']").attr('name','ar2_uDate'+total);
 					$("input[name='ar2_uGA"+x+"']").attr('name','ar2_uGA'+total);
@@ -324,6 +326,11 @@ width: 100%;
 
 <script>
 function addRiskFactor() {
+	if(adjustDynamicListTotalsRF("rf_",20,false) >= 20) {
+		alert('Maximum number of rows is 20');
+		return;
+	}
+	
 	var total = jQuery("#rf_num").val();
 	total++;
 	jQuery("#rf_num").val(total);
@@ -356,6 +363,11 @@ function setCheckbox(id,type,val) {
 }
 
 function addSubsequentVisit() {
+	if(adjustDynamicListTotalsSV("sv_",54,false) >= 54) {
+		alert('Maximum number of rows is 54');
+		return;
+	}
+	
 	var total = jQuery("#sv_num").val();
 	total++;
 	jQuery("#sv_num").val(total);
@@ -372,6 +384,11 @@ function deleteSubsequentVisit(id) {
 }
 
 function addUltraSound() {
+	if(adjustDynamicListTotalsUS("us_",12,false) >= 12) {
+		alert('Maximum number of rows is 12');
+		return;
+	}
+	
 	var total = jQuery("#us_num").val();
 	total++;
 	jQuery("#us_num").val(total);
@@ -577,7 +594,29 @@ function gbsReq() {
                 ret = false;
             }
             else {
-                document.forms[0].action = "../form/createpdf?__title=Antenatal+Record+Part+2&__cfgfile=onar2PrintCfgPg1&__cfgGraphicFile=onar2PrintGraphCfgPg1&__template=onar2";
+            	<%
+            	StringBuilder urlExt = new StringBuilder();
+            	int multiple=0;
+            	if(Integer.parseInt(props.getProperty("rf_num", "0")) > 7) {
+            		int num=multiple+1;
+            		urlExt.append("&__title"+num+"=Antenatal+Record+Part+2&__cfgfile"+num+"=onar2enhancedPrintCfgPgRf&__template"+num+"=onar2enhancedrf&__numPages"+num+"=1&postProcessor"+num+"=ONAR2EnhancedPostProcessor");
+            		multiple++;
+            	}
+            	if(Integer.parseInt(props.getProperty("sv_num", "0")) > 18) {
+            		int num=multiple+1;
+            		urlExt.append("&__title"+num+"=Antenatal+Record+Part+2&__cfgfile"+num+"=onar2enhancedPrintCfgPgSv&__template"+num+"=onar2enhancedsv&__numPages"+num+"=1&postProcessor"+num+"=ONAR2EnhancedPostProcessor");
+            		multiple++;
+            	}
+            	if(Integer.parseInt(props.getProperty("us_num", "0")) > 4) {
+            		int num=multiple+1;
+            		urlExt.append("&__title"+num+"=Antenatal+Record+Part+2&__cfgfile"+num+"=onar2enhancedPrintCfgPgUs&__template"+num+"=onar2enhancedus&__numPages"+num+"=1&postProcessor"+num+"=ONAR2EnhancedPostProcessor");
+            		multiple++;
+            	}
+            	if(multiple>0) {
+            		urlExt.append("&multiple="+(multiple+1));
+            	}
+            	%>
+                document.forms[0].action = "../form/createpdf?__title=Antenatal+Record+Part+2&__cfgfile=onar2enhancedPrintCfgPg1&__cfgGraphicFile=onar2PrintGraphCfgPg1&__template=onar2<%=urlExt.toString()%>&postProcessor=ONAR2EnhancedPostProcessor";
                 document.forms[0].target="_blank";       
             }
                 
@@ -1155,6 +1194,8 @@ $(document).ready(function(){
 	if('<%=hbsag%>' == 'POS') {
 		$("input[name='ar2_hepBIG']").attr('checked',true);
 		$("#hepbSpan").css('background-color','red');
+		$("input[name='ar2_hepBVac']").attr('checked',true);
+		$("#hepbSpan2").css('background-color','red');
 	}	
 	
 	$("input[name='ar2_hepBIG']").bind('change',function(){
@@ -1162,6 +1203,14 @@ $(document).ready(function(){
 			$("#hepbSpan").css('background-color','red');
 		} else {
 			$("#hepbSpan").css('background-color','');
+		}
+	});
+	
+	$("input[name='ar2_hepBVac']").bind('change',function(){
+		if($("input[name='ar2_hepBVac']").attr('checked') == 'checked') {
+			$("#hepbSpan2").css('background-color','red');
+		} else {
+			$("#hepbSpan2").css('background-color','');
 		}
 	});
 	
@@ -1529,7 +1578,7 @@ $(document).ready(function(){
 					<input type="checkbox" name="ar2_hepBIG" <%= props.getProperty("ar2_hepBIG", "") %> />
 				</span>
 				&nbsp;&nbsp;&nbsp;
-				<span>
+				<span id="hepbSpan2">
 					<b>Hep B vaccine</b> 
 					<input type="checkbox" name="ar2_hepBVac" <%= props.getProperty("ar2_hepBVac", "") %> />
 				</span>
@@ -1649,6 +1698,7 @@ $(document).ready(function(){
 						<select name="ar2_rh">
 							<option value="NDONE">Not Done</option>
 							<option value="POS">Positive</option>
+							<option value="WPOS">Weak Positive</option>
 							<option value="NEG">Negative</option>
 							<option value="UNK">Unknown</option>
 						</select>					
@@ -1698,7 +1748,7 @@ $(document).ready(function(){
 							<input type="checkbox" name="ar2_intercourse"
 								<%= props.getProperty("ar2_intercourse", "") %>>Intercourse<br>
 							<input type="checkbox" name="ar2_travel"
-								<%= props.getProperty("ar2_travel", "") %>>Travel<br>
+								<%= props.getProperty("ar2_travel", "") %>>Travel<br>							
 							<input type="checkbox" name="ar2_prenatal"
 								<%= props.getProperty("ar2_prenatal", "") %>>Prenatal
 							classes<br>
@@ -1751,9 +1801,7 @@ $(document).ready(function(){
 						<select name="ar2_strep">
 							<option value="NDONE">Not Done</option>
 							<option value="POSSWAB">Positive swab result</option>
-							<option value="POSSWAB">Positive swab result</option>
 							<option value="POSURINE">Urine Positive for GBS</option>
-							<option value="POSURINE">Group B Streptococcus </option>
 							<option value="NEGSWAB">Negative swab result</option>
 							<option value="DONEUNK">Done-result unknown</option>
 							<option value="UNK">Unknown if screened</option>						
@@ -1761,11 +1809,23 @@ $(document).ready(function(){
 					</td>
 				</tr>
 				<tr>
-					<td><input type="text" size="10" name="ar2_labCustom1Label" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_labCustom1Label", "")) %>"/></td>
+					<td>
+						<select name="ar2_labCustom1Label">
+							<option value=""></option>
+							<option value="chlamydia_toc">chlamydia TOC</option>
+							<option value="fu_urine">f/u urine</option>
+						</select>
+					</td>
 					<td><input type="text"  size="10" name="ar2_labCustom1Result" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_labCustom1Result", "")) %>"/></td>
 				</tr>
 				<tr>
-					<td><input type="text" size="10" name="ar2_labCustom2Label" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_labCustom2Label", "")) %>"/></td>
+					<td>
+						<select name="ar2_labCustom2Label">
+							<option value=""></option>
+							<option value="chlamydia_toc">chlamydia TOC</option>
+							<option value="fu_urine">f/u urine</option>
+						</select>
+					</td>
 					<td><input type="text"  size="10" name="ar2_labCustom2Result" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_labCustom2Result", "")) %>"/></td>
 				</tr>
 				<tr>

@@ -152,7 +152,7 @@ public class ONAREnhancedFormToXML {
 		initialLaboratoryInvestigations.setHbResult(props.getProperty("pg1_labHb", ""));
 		initialLaboratoryInvestigations.setHivResult(InitialLaboratoryInvestigations.HivResult.Enum.forString(props.getProperty("pg1_labHIV")));
 		initialLaboratoryInvestigations.setHivCounsel(props.getProperty("pg1_labHIVCounsel", "").length()>0?true:false);
-		if(props.getProperty("pg1_labMCV", "0").length()>0)
+		if(props.getProperty("pg1_labMCV", "").length()>0)
 			initialLaboratoryInvestigations.setMcvResult(Float.parseFloat(props.getProperty("pg1_labMCV", "0")));
 		else {
 			initialLaboratoryInvestigations.setMcvResult(0f);
@@ -447,8 +447,8 @@ public class ONAREnhancedFormToXML {
 		partnerInformation.setLastName(props.getProperty("c_partnerLastName", ""));
 		partnerInformation.setFirstName(props.getProperty("c_partnerFirstName", ""));
 		PartnerInformation.Occupation occ = partnerInformation.addNewOccupation();
-		occ.setValue(PartnerInformation.Occupation.Value.Enum.forString(props.getProperty("pg1_partnerOccupation")));
-		occ.setOther(props.getProperty("c_partnerOccupationOther", ""));
+		occ.setValue(PartnerInformation.Occupation.Value.OTHER);
+		occ.setOther(props.getProperty("c_partnerOccupation", ""));
 		partnerInformation.setOccupation(occ);
 		partnerInformation.setAge(props.getProperty("pg1_partnerAge", "").length()>0?Integer.parseInt(props.getProperty("pg1_partnerAge", "")):0);
 		partnerInformation.setEducationLevel(PartnerInformation.EducationLevel.Enum.forString(props.getProperty("pg1_partnerEduLevel")));
@@ -490,8 +490,8 @@ public class ONAREnhancedFormToXML {
 		}		
 		patientInformation.setAge(props.getProperty("pg1_age", "").length()>0?Integer.parseInt(props.getProperty("pg1_age")):0);
 		PatientInformation.Occupation occ = patientInformation.addNewOccupation();
-		occ.setValue(PatientInformation.Occupation.Value.Enum.forString(props.getProperty("pg1_occupation")));
-		occ.setOther(props.getProperty("pg1_occupationOther", ""));
+		occ.setValue(PatientInformation.Occupation.Value.OTHER);
+		occ.setOther(props.getProperty("pg1_occupation", ""));
 		patientInformation.setOccupation(occ);
 		patientInformation.setLevelOfEducation(PatientInformation.LevelOfEducation.Enum.forString((props.getProperty("pg1_eduLevel"))));
 		PatientInformation.Hin hin = patientInformation.addNewHin();
