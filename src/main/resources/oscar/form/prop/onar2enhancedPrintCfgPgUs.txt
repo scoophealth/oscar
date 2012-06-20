@@ -1,0 +1,51 @@
+c_lastName	: left, 50, 97, 0, BaseFont.HELVETICA, 8 
+c_firstName	: left, 188, 97, 0, BaseFont.HELVETICA, 8 
+pg1_baObs	: left, 50, 117, 0, BaseFont.HELVETICA, 8 , OBS
+pg1_baFP	: left, 55, 117, 0, BaseFont.HELVETICA, 8 , FP
+pg1_baMidwife	: left, 55, 117, 0, BaseFont.HELVETICA, 8 , Midwife
+c_ba	: left, 50, 117, 0, BaseFont.HELVETICA, 8 
+pg1_ncPed	: left, 188, 117, 0, BaseFont.HELVETICA, 8 , Ped
+pg1_ncFP	: left, 188, 117, 0, BaseFont.HELVETICA, 8 , FP
+pg1_ncMidwife	: left, 188, 117, 0, BaseFont.HELVETICA, 8 , Midwife
+c_nc	: left, 188, 117, 0, BaseFont.HELVETICA, 8 
+c_famPhys	: left, 50, 137, 0, BaseFont.HELVETICA, 8 
+
+c_finalEDB	: left, 218, 147, 0, BaseFont.HELVETICA, 9 
+
+c_gravida	: left, 50, 158, 0, BaseFont.HELVETICA, 8 
+c_term	: left, 78, 158, 0, BaseFont.HELVETICA, 8 
+c_prem	: left, 105, 158, 0, BaseFont.HELVETICA, 8 
+c_abort	: left, 130, 158, 0, BaseFont.HELVETICA, 8 
+c_living	: left, 160, 158, 0, BaseFont.HELVETICA, 8 
+
+ar2_uDate5	: left, 43, 200, 0, BaseFont.HELVETICA, 8 
+ar2_uGA5	: left, 87, 200, 0, BaseFont.HELVETICA, 8
+ar2_uResults5	: left, 115, 200, 0, BaseFont.HELVETICA, 8  
+ar2_uDate6	: left, 43, 214, 0, BaseFont.HELVETICA, 8 
+ar2_uGA6	: left, 87, 214, 0, BaseFont.HELVETICA, 8 
+ar2_uResults6	: left, 115, 214, 0, BaseFont.HELVETICA, 8  
+ar2_uDate7	: left, 43, 228, 0, BaseFont.HELVETICA, 8 
+ar2_uGA7	: left, 87, 228, 0, BaseFont.HELVETICA, 8 
+ar2_uResults7	: left, 115, 228, 0, BaseFont.HELVETICA, 8  
+ar2_uDate8	: left, 43, 242, 0, BaseFont.HELVETICA, 8 
+ar2_uGA8	: left, 87, 242, 0, BaseFont.HELVETICA, 8 
+ar2_uResults8	: left, 115, 242, 0, BaseFont.HELVETICA, 8  
+ar2_uDate9	: left, 43, 256, 0, BaseFont.HELVETICA, 8 
+ar2_uGA9	: left, 87, 256, 0, BaseFont.HELVETICA, 8 
+ar2_uResults9	: left, 115, 256, 0, BaseFont.HELVETICA, 8
+  
+ar2_uDate10	: left, 43, 270, 0, BaseFont.HELVETICA, 8 
+ar2_uGA10	: left, 87, 270, 0, BaseFont.HELVETICA, 8 
+ar2_uResults10	: left, 115, 270, 0, BaseFont.HELVETICA, 8  
+ar2_uDate11	: left, 43, 284, 0, BaseFont.HELVETICA, 8 
+ar2_uGA11	: left, 87, 284, 0, BaseFont.HELVETICA, 8 
+ar2_uResults11	: left, 115, 284, 0, BaseFont.HELVETICA, 8  
+ar2_uDate12	: left, 43, 298, 0, BaseFont.HELVETICA, 8 
+ar2_uGA12	: left, 87, 298, 0, BaseFont.HELVETICA, 8 
+ar2_uResults12	: left, 115, 298, 0, BaseFont.HELVETICA, 8  
+
+
+pg2_signature	: left, 60, 748, 0, BaseFont.HELVETICA, 8
+pg2_formDate	: left, 230, 748, 0, BaseFont.HELVETICA, 8
+pg2_signature2	: left, 320, 748, 0, BaseFont.HELVETICA, 8
+pg2_formDate2	: left, 490, 748, 0, BaseFont.HELVETICA, 8
