@@ -36,6 +36,7 @@ import org.oscarehr.common.model.Episode;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.oscarEncounter.data.EctFormData;
 import oscar.util.OscarRoleObjectPrivilege;
 import oscar.util.StringUtils;
 
@@ -87,6 +88,17 @@ public class EctDisplayPregnancyAction extends EctDisplayAction {
 		        Dao.addPopUpUrl("popupPage(700,1000,'"+winName+"', '"+ request.getContextPath() +"/Pregnancy.do?method=create&code=34801009&codetype=SnomedCore&demographicNo="+bean.demographicNo+"&appointment="+bean.appointmentNo+"')");
 		        Dao.addPopUpText("Ectopic");
 		   	    
+		        //check to see if they have an onar2005 form
+		        EctFormData.PatientForm[] pforms = EctFormData.getPatientForms(bean.demographicNo, "formONAR");
+		        EctFormData.PatientForm[] eforms = EctFormData.getPatientForms(bean.demographicNo, "formONAREnhanced");
+				
+		        if(pforms.length>0 && eforms.length == 0) {
+					Dao.addPopUpUrl("popupPage(700,1000,'"+winName+"', '"+ request.getContextPath() +"/Pregnancy.do?method=migrate&demographicNo="+bean.demographicNo+"')");
+			        Dao.addPopUpText("Migration tool");
+			   	    
+				}
+		        
+		        
 		        //check for an existing pregnancy
 				List<String> codes = new ArrayList<String>();
 				codes.add("72892002");

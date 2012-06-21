@@ -61,6 +61,9 @@
     if(props.getProperty("rf_num", "0").equals("")) {props.setProperty("rf_num","0");}
     if(props.getProperty("sv_num", "0").equals("")) {props.setProperty("sv_num","0");}
     if(props.getProperty("us_num", "0").equals("")) {props.setProperty("us_num","0");}
+    
+    String labReqVer = oscar.OscarProperties.getInstance().getProperty("onare_labreqver","07");
+    if(labReqVer.equals("")) {labReqVer="07";}
 %>
 <%
   boolean bView = false;
@@ -1359,7 +1362,7 @@ $(document).ready(function(){
 				var penicillin = $("#penicillin").attr('checked');	
 				var demographic = '<%=props.getProperty("demographic_no", "0")%>';
 				var user = '<%=session.getAttribute("user")%>';
-				url = '<%=request.getContextPath()%>/form/formlabreq07.jsp?demographic_no='+demographic+'&formId=0&provNo='+user + '&fromSession=true';
+				url = '<%=request.getContextPath()%>/form/formlabreq<%=labReqVer %>.jsp?demographic_no='+demographic+'&formId=0&provNo='+user + '&fromSession=true';
 				jQuery.ajax({url:'<%=request.getContextPath()%>/Pregnancy.do?method=createGBSLabReq&demographicNo='+demographic + '&penicillin='+penicillin,async:false, success:function(data) {
 					popupPage(url);
 				}});								
@@ -1429,7 +1432,7 @@ $(document).ready(function(){
 					var gct_ab = $("#gct_ab").attr('checked');
 					var gct_glu = $("#gct_glu").attr('checked');
 					var user = '<%=session.getAttribute("user")%>';
-					url = '<%=request.getContextPath()%>/form/formlabreq07.jsp?demographic_no=<%=demoNo%>&formId=0&provNo='+user + '&fromSession=true';
+					url = '<%=request.getContextPath()%>/form/formlabreq<%=labReqVer %>.jsp?demographic_no=<%=demoNo%>&formId=0&provNo='+user + '&fromSession=true';
 					var pregUrl = '<%=request.getContextPath()%>/Pregnancy.do?method=createGCTLabReq&demographicNo=<%=demoNo%>&hb='+gct_hb+'&urine='+gct_urine+'&antibody='+gct_ab+'&glucose='+gct_glu;
 					jQuery.ajax({url:pregUrl,async:false, success:function(data) {
 						popupPage(url);
@@ -1454,7 +1457,7 @@ $(document).ready(function(){
 					$( this ).dialog( "close" );			
 					var gtt_glu = $("#gtt_glu").attr('checked');
 					var user = '<%=session.getAttribute("user")%>';
-					url = '<%=request.getContextPath()%>/form/formlabreq07.jsp?demographic_no=<%=demoNo%>&formId=0&provNo='+user + '&fromSession=true';
+					url = '<%=request.getContextPath()%>/form/formlabreq<%=labReqVer %>.jsp?demographic_no=<%=demoNo%>&formId=0&provNo='+user + '&fromSession=true';
 					var pregUrl = '<%=request.getContextPath()%>/Pregnancy.do?method=createGTTLabReq&demographicNo=<%=demoNo%>&glucose='+gtt_glu;
 					jQuery.ajax({url:pregUrl,async:false, success:function(data) {
 						popupPage(url);
@@ -2299,7 +2302,7 @@ $(document).ready(function(){
 
 <div id="lab_menu_div" class="hidden">
 <ul>
-	<li><a href="javascript:void(0)" onclick="popPage('formlabreq07.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AnteNatal','LabReq')">Routine Prenatal</a></li>
+	<li><a href="javascript:void(0)" onclick="popPage('formlabreq<%=labReqVer %>.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AnteNatal','LabReq')">Routine Prenatal</a></li>
 	<li><a href="javascript:void(0)" onclick="gbsReq();return false;">GBS</a></li>
 	<li><a href="javascript:void(0)" onclick="gctReq();return false;">1 Hour GCT</a></li>
 	<li><a href="javascript:void(0)" onclick="gttReq();return false;">2 Hour GTT</a></li>
