@@ -320,7 +320,7 @@ request.setAttribute("pageMethod",pageMethod);
                                     <td>
                                         <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA<%if (pageMethod.equals("viewArchivedMessages")) {%>Current<%}%>">
                                             <html:link page="/phr/PhrMessage.do?method=viewArchivedMessages" styleClass="messengerButtons">
-                                                <bean:message key="oscarMessenger.DisplayMessages.msgDeleted"/>
+                                                <bean:message key="oscarMessenger.DisplayMessages.msgArchived"/>
                                             </html:link>
                                         </td></tr></table>
                                     </td>
@@ -540,13 +540,13 @@ request.setAttribute("pageMethod",pageMethod);
 						                            	if (message.isActive())
 						                            	{
 						                            		%>
-								                                   <bean:message key="oscarMessenger.DisplayMessages.formDelete"/>
+								                                   <bean:message key="oscarMessenger.DisplayMessages.formArchive"/>
 						                            		<%
 						                            	}
 						                            	else
 						                            	{
 						                            		%>
-								                                   <bean:message key="oscarMessenger.DisplayMessages.formUndelete"/>
+								                                   <bean:message key="oscarMessenger.DisplayMessages.formUnarchive"/>
 						                            		<%			                            		
 						                            	}
 					                            	%>
