@@ -62,17 +62,29 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.OscarProperties;
 import oscar.form.FrmLabReq07Record;
+import oscar.form.FrmLabReq10Record;
 import oscar.form.FrmONAREnhancedRecord;
+import oscar.form.FrmONARRecord;
 import oscar.form.FrmRecord;
 import oscar.form.FrmRecordFactory;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.login.DBHelp;
+import oscar.oscarEncounter.data.EctFormData;
 
 public class PregnancyAction extends DispatchAction {
 
 	private EpisodeDao episodeDao = SpringUtils.getBean(EpisodeDao.class);
+	
+	static String labReqVersion;
+	static {
+		labReqVersion = OscarProperties.getInstance().getProperty("onare_labreqver", "07");
+		if(labReqVersion == "") {
+			labReqVersion="10";
+		}
+	}
 
 	public static Integer getLatestFormIdByPregnancy(Integer episodeId) {
 		String sql = "SELECT id from formONAREnhanced WHERE episodeId="+episodeId+" ORDER BY formEdited DESC";                
@@ -222,18 +234,29 @@ public class PregnancyAction extends DispatchAction {
 		Integer demographicNo = Integer.parseInt(request.getParameter("demographicNo"));
 		String penicillin = request.getParameter("penicillin");
 		
-		FrmLabReq07Record lr = new FrmLabReq07Record();
-		Properties p = lr.getFormRecord(demographicNo, 0);
-		p = lr.getFormCustRecord(p, LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
-		if(penicillin != null && penicillin.equals("checked")) {
-			p.setProperty("o_otherTests1","Vaginal Anal GBS w/ sensitivities");
-			p.setProperty("o_otherTests2", "pt allergic to penicillin");
-		} else {
-			p.setProperty("o_otherTests1","Vaginal Anal GBS");
+		if(labReqVersion.equals("07")) {
+			FrmLabReq07Record lr = new FrmLabReq07Record();
+			Properties p = lr.getFormRecord(demographicNo, 0);		
+			p = lr.getFormCustRecord(p, LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+			if(penicillin != null && penicillin.equals("checked")) {
+				p.setProperty("o_otherTests1","Vaginal Anal GBS w/ sensitivities");
+				p.setProperty("o_otherTests2", "pt allergic to penicillin");
+			} else {
+				p.setProperty("o_otherTests1","Vaginal Anal GBS");
+			}
+			request.getSession().setAttribute("labReq07"+demographicNo,p);
+		}else {
+			FrmLabReq10Record lr = new FrmLabReq10Record();
+			Properties p = lr.getFormRecord(demographicNo, 0);		
+			p = lr.getFormCustRecord(p, LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+			if(penicillin != null && penicillin.equals("checked")) {
+				p.setProperty("o_otherTests1","Vaginal Anal GBS w/ sensitivities");
+				p.setProperty("o_otherTests2", "pt allergic to penicillin");
+			} else {
+				p.setProperty("o_otherTests1","Vaginal Anal GBS");
+			}
+			request.getSession().setAttribute("labReq10"+demographicNo,p);
 		}
-		
-		//int recId = lr.saveFormRecord(p);
-		request.getSession().setAttribute("labReq07"+demographicNo,p);
 	
 		return null;
 	}
@@ -242,20 +265,36 @@ public class PregnancyAction extends DispatchAction {
 		Integer demographicNo = Integer.parseInt(request.getParameter("demographicNo"));
 		String ferritin = request.getParameter("ferritin");
 		String hbElectrophoresis = request.getParameter("hb_electrophoresis");
-				
-		FrmLabReq07Record lr = new FrmLabReq07Record();
-		Properties p = lr.getFormRecord(demographicNo, 0);
-		p = lr.getFormCustRecord(p, LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
 		
-		if(ferritin != null && ferritin.equals("checked")) {
-			p.setProperty("b_ferritin","checked=\"checked\"");			
-		} 
-		if(hbElectrophoresis != null && hbElectrophoresis.equals("checked")) {
-			p.setProperty("o_otherTests1", "Hb Electrophoresis");
-		} 
+		if(labReqVersion.equals("07")) {
+			FrmLabReq07Record lr = new FrmLabReq07Record();
+			Properties p = lr.getFormRecord(demographicNo, 0);
+			p = lr.getFormCustRecord(p, LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+			
+			if(ferritin != null && ferritin.equals("checked")) {
+				p.setProperty("b_ferritin","checked=\"checked\"");			
+			} 
+			if(hbElectrophoresis != null && hbElectrophoresis.equals("checked")) {
+				p.setProperty("o_otherTests1", "Hb Electrophoresis");
+			}
+			request.getSession().setAttribute("labReq07"+demographicNo,p);
+			
+		} else {
+			FrmLabReq10Record lr = new FrmLabReq10Record();
+			Properties p = lr.getFormRecord(demographicNo, 0);
+			p = lr.getFormCustRecord(p, LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+			
+			if(ferritin != null && ferritin.equals("checked")) {
+				p.setProperty("b_ferritin","checked=\"checked\"");			
+			} 
+			if(hbElectrophoresis != null && hbElectrophoresis.equals("checked")) {
+				p.setProperty("o_otherTests1", "Hb Electrophoresis");
+			}
+			request.getSession().setAttribute("labReq10"+demographicNo,p);
+			
+		}
 		
-		request.getSession().setAttribute("labReq07"+demographicNo,p);
-	
+		
 		return null;
 	}
 	
@@ -480,26 +519,45 @@ Repeat antibody screen
 		String glucose = request.getParameter("glucose");
 		
 		
-		FrmLabReq07Record lr = new FrmLabReq07Record();
-		Properties p = lr.getFormRecord(demographicNo, 0);
-		p = lr.getFormCustRecord(p, LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
-		
-		if(hb != null && hb.equals("checked")) {
-			p.setProperty("h_cbc","checked=\"checked\"");			
+		if(labReqVersion.equals("07")) {
+			FrmLabReq07Record lr = new FrmLabReq07Record();
+			Properties p = lr.getFormRecord(demographicNo, 0);
+			p = lr.getFormCustRecord(p, LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+			
+			if(hb != null && hb.equals("checked")) {
+				p.setProperty("h_cbc","checked=\"checked\"");			
+			}
+			if(urine != null && urine.equals("checked")) {
+				p.setProperty("m_urine","checked=\"checked\"");
+			}
+			if(antibody != null && antibody.equals("checked")) {			
+				p.setProperty("i_repeatPrenatalAntibodies","checked=\"checked\"");
+			}
+			if(glucose != null && glucose.equals("checked")) {
+				p.setProperty("o_otherTests1","1 Hr 50gm GLUCOSE Screen");
+			}
+
+			request.getSession().setAttribute("labReq07"+demographicNo,p);
+		} else {
+			FrmLabReq10Record lr = new FrmLabReq10Record();
+			Properties p = lr.getFormRecord(demographicNo, 0);
+			p = lr.getFormCustRecord(p, LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+			
+			if(hb != null && hb.equals("checked")) {
+				p.setProperty("h_cbc","checked=\"checked\"");			
+			}
+			if(urine != null && urine.equals("checked")) {
+				p.setProperty("m_urine","checked=\"checked\"");
+			}
+			if(antibody != null && antibody.equals("checked")) {			
+				p.setProperty("i_repeatPrenatalAntibodies","checked=\"checked\"");
+			}
+			if(glucose != null && glucose.equals("checked")) {
+				p.setProperty("o_otherTests1","1 Hr 50gm GLUCOSE Screen");
+			}
+
+			request.getSession().setAttribute("labReq10"+demographicNo,p);			
 		}
-		if(urine != null && urine.equals("checked")) {
-			p.setProperty("m_urine","checked=\"checked\"");
-		}
-		if(antibody != null && antibody.equals("checked")) {			
-			p.setProperty("i_repeatPrenatalAntibodies","checked=\"checked\"");
-		}
-		if(glucose != null && glucose.equals("checked")) {
-			p.setProperty("o_otherTests1","1 Hr 50gm GLUCOSE Screen");
-		}
-		
-		//int recId = lr.saveFormRecord(p);
-		request.getSession().setAttribute("labReq07"+demographicNo,p);
-	
 		return null;
 	}
 	
@@ -508,17 +566,25 @@ Repeat antibody screen
 		String glucose = request.getParameter("glucose");
 		
 		
-		FrmLabReq07Record lr = new FrmLabReq07Record();
-		Properties p = lr.getFormRecord(demographicNo, 0);
-		p = lr.getFormCustRecord(p, LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
-				
-		if(glucose != null && glucose.equals("checked")) {
-			p.setProperty("o_otherTests1","2 Hr 75gm GLUCOSE Screen");
+		if(labReqVersion.equals("07")) {
+			FrmLabReq07Record lr = new FrmLabReq07Record();
+			Properties p = lr.getFormRecord(demographicNo, 0);
+			p = lr.getFormCustRecord(p, LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+					
+			if(glucose != null && glucose.equals("checked")) {
+				p.setProperty("o_otherTests1","2 Hr 75gm GLUCOSE Screen");
+			}
+			request.getSession().setAttribute("labReq07"+demographicNo,p);
+		} else {
+			FrmLabReq10Record lr = new FrmLabReq10Record();
+			Properties p = lr.getFormRecord(demographicNo, 0);
+			p = lr.getFormCustRecord(p, LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+					
+			if(glucose != null && glucose.equals("checked")) {
+				p.setProperty("o_otherTests1","2 Hr 75gm GLUCOSE Screen");
+			}
+			request.getSession().setAttribute("labReq10"+demographicNo,p);
 		}
-		
-		//int recId = lr.saveFormRecord(p);
-		request.getSession().setAttribute("labReq07"+demographicNo,p);
-	
 		return null;
 	}
 	
@@ -562,5 +628,251 @@ Repeat antibody screen
 		}
 		
 		return results;
+	}
+	
+	public ActionForward migrate(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
+		Integer demographicNo = Integer.parseInt(request.getParameter("demographicNo"));
+
+		//check for an existing pregnancy
+		List<String> codes = new ArrayList<String>();
+		codes.add("72892002");
+		codes.add("47200007");
+		codes.add("16356006");
+		codes.add("34801009");
+		List<Episode> existingEpisodes = episodeDao.findCurrentByCodeTypeAndCodes(demographicNo,"SnomedCore",codes);
+		if(existingEpisodes.size() > 0) {
+			request.setAttribute("warning","There is already a pregnancy in progress. Migration will use this episode, and copy data over the current form");			
+		}
+						
+		return mapping.findForward("migrate");
+	}
+	
+	public ActionForward doPreMigrate(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
+		Integer demographicNo = Integer.parseInt(request.getParameter("demographicNo"));
+		
+		EctFormData.PatientForm[] pforms = EctFormData.getPatientForms(String.valueOf(demographicNo), "formONAR");
+		if(pforms == null || pforms.length==0) {
+			request.setAttribute("message", "Error: Couldn't find existing AR2005 form");
+			return mapping.findForward("migrate");
+		}
+		
+		String formId = pforms[0].getFormId();
+		
+		FrmONARRecord ar2005 = new FrmONARRecord();
+		Properties p = null;
+		try {
+			p = ar2005.getFormRecord(demographicNo, Integer.parseInt(formId));
+		}catch(SQLException ex) {
+			request.setAttribute("message", "Error: Couldn't read existing AR2005 form");
+			return mapping.findForward("migrate");
+		}
+			
+		request.setAttribute("props", p);
+				
+		return mapping.findForward("pre-migrate");
+	}
+	public ActionForward doMigrate(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
+		Integer demographicNo = Integer.parseInt(request.getParameter("demographicNo"));
+		Episode e = null;
+		//check for an existing pregnancy
+		List<String> codes = new ArrayList<String>();
+		codes.add("72892002");
+		codes.add("47200007");
+		codes.add("16356006");
+		codes.add("34801009");
+		List<Episode> existingEpisodes = episodeDao.findCurrentByCodeTypeAndCodes(demographicNo,"SnomedCore",codes);
+		if(existingEpisodes.size() == 0) {
+			//create the pregnancy episode 
+			AbstractCodeSystemDao dao = (AbstractCodeSystemDao)SpringUtils.getBean(WordUtils.uncapitalize("SnomedCore") + "Dao");
+			AbstractCodeSystemModel mod = dao.findByCode("72892002");
+
+			if(mod == null) {
+				request.setAttribute("error","There was an internal error processing this request, please contact your system administrator");
+				return mapping.findForward("success");
+			}
+			
+			//create pregnancy episode
+			e = new Episode();
+			e.setCode("72892002");
+			e.setCodingSystem("SnomedCore");
+			e.setDemographicNo(demographicNo);
+			e.setDescription("");
+			e.setLastUpdateTime(new Date());
+			e.setLastUpdateUser(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+			e.setStatus("Current");
+			e.setStartDate(new Date());
+			e.setDescription(mod.getDescription());
+			episodeDao.persist(e);						
+		} else {
+			e = existingEpisodes.get(0);
+		}
+	
+		EctFormData.PatientForm[] pforms = EctFormData.getPatientForms(String.valueOf(demographicNo), "formONAR");
+		if(pforms == null || pforms.length==0) {
+			request.setAttribute("message", "Error: Couldn't find existing AR2005 form");
+			return mapping.findForward("migrate");
+		}
+		
+		String formId = pforms[0].getFormId();
+		
+		FrmONARRecord ar2005 = new FrmONARRecord();
+		Properties p = null;
+		try {
+			p = ar2005.getFormRecord(demographicNo, Integer.parseInt(formId));
+		}catch(SQLException ex) {
+			request.setAttribute("message", "Error: Couldn't read existing AR2005 form");
+			return mapping.findForward("migrate");
+		}
+		
+		FrmONAREnhancedRecord f = new FrmONAREnhancedRecord();
+		Properties newProps = null;
+		try {
+			newProps = f.getFormRecord(demographicNo, 0);
+		}catch(SQLException ex) {
+			request.setAttribute("message", "Error: Couldn't create new enhanced form");
+			return mapping.findForward("migrate");
+		}
+		newProps.setProperty("episodeId", String.valueOf(e.getId()));
+		
+		for(Object key:p.keySet()) {
+			String val = p.getProperty((String)key);
+			newProps.setProperty((String)key, val);
+		}
+		
+		if(p.getProperty("pg1_msMarried","").length()>0) {
+			newProps.setProperty("pg1_maritalStatus", "M");
+		}
+		if(p.getProperty("pg1_msCommonLaw","").length()>0) {
+			newProps.setProperty("pg1_maritalStatus", "CL");
+		}
+		if(p.getProperty("pg1_msSingle","").length()>0) {
+			newProps.setProperty("pg1_maritalStatus", "S");
+		}
+		
+		if(p.getProperty("pg1_naDietRes","").length()>0) {
+			newProps.setProperty("pg1_naDiet", "on");
+		}
+		if(p.getProperty("pg1_naDietBal","").length()>0) {
+			newProps.setProperty("pg1_naDietN", "on");
+		}
+		if(p.getProperty("pg1_pExOther","").length()>0) {
+			newProps.setProperty("pg1_pExOtherDesc", p.getProperty("pg1_pExOther",""));
+		}
+		
+		if(p.getProperty("pg1_pExOtherN","").length()>0) {
+			newProps.setProperty("pg1_pExOther", "on");
+		}
+		if(p.getProperty("pg1_pExOtherA","").length()>0) {
+			newProps.setProperty("pg1_pExOtherA", "on");
+		}
+		if(p.getProperty("pg1_geneticD","").length()>0) {
+			newProps.setProperty("pg1_geneticD", "checked/checked");			
+		} 
+		
+		int obxNum = 0;
+		for(int x=0;x<6;x++) {
+			int n = x+1;
+			if(p.getProperty("pg1_year"+n,"").length()>0 || p.getProperty("pg1_sex"+n,"").length()>0 || p.getProperty("pg1_oh_gest"+n,"").length()>0
+					|| p.getProperty("pg1_weight"+n,"").length()>0 || p.getProperty("pg1_length"+n,"").length()>0 || p.getProperty("pg1_place"+n,"").length()>0 
+					|| p.getProperty("pg1_svb"+n,"").length()>0 || p.getProperty("pg1_cs"+n,"").length()>0 || p.getProperty("pg1_ass"+n,"").length()>0 || 
+					p.getProperty("pg1_oh_comments"+n,"").length()>0 ) {
+				obxNum = n;
+			}
+		}		
+		newProps.setProperty("obxhx_num",String.valueOf(obxNum));
+		
+		int rfNum = 0;
+		for(int x=0;x<7;x++) {
+			int n = x+1;
+			if(p.getProperty("c_riskFactors"+n,"").length()>0 || p.getProperty("c_planManage"+n,"").length()>0) {
+				rfNum = n;
+			}
+		}		
+		newProps.setProperty("rf_num",String.valueOf(rfNum));
+		
+		int svNum = 0;
+		for(int x=0;x<18;x++) {
+			int n = x+1;
+			if(p.getProperty("pg2_year"+n,"").length()>0 || p.getProperty("pg2_gest"+n,"").length()>0 || p.getProperty("pg2_wt"+n,"").length()>0
+					|| p.getProperty("pg2_BP"+n,"").length()>0 || p.getProperty("pg2_urinePr"+n,"").length()>0 || p.getProperty("pg2_urineGl"+n,"").length()>0 
+					|| p.getProperty("pg2_presn1"+n,"").length()>0 || p.getProperty("pg2_FHR"+n,"").length()>0 || p.getProperty("pg2_comments"+n,"").length()>0 ) {
+				svNum = n;
+			}
+		}		
+		for(int x=0;x<18;x++) {
+			int n = x+19;
+			if(p.getProperty("pg3_year"+n,"").length()>0 || p.getProperty("pg3_gest"+n,"").length()>0 || p.getProperty("pg3_wt"+n,"").length()>0
+					|| p.getProperty("pg3_BP"+n,"").length()>0 || p.getProperty("pg3_urinePr"+n,"").length()>0 || p.getProperty("pg3_urineGl"+n,"").length()>0 
+					|| p.getProperty("pg3_presn1"+n,"").length()>0 || p.getProperty("pg3_FHR"+n,"").length()>0 || p.getProperty("pg3_comments"+n,"").length()>0 ) {
+				svNum = n;
+			}
+		}
+		
+		for(int x=0;x<18;x++) {
+			int n = x+37;
+			if(p.getProperty("pg4_year"+n,"").length()>0 || p.getProperty("pg4_gest"+n,"").length()>0 || p.getProperty("pg4_wt"+n,"").length()>0
+					|| p.getProperty("pg4_BP"+n,"").length()>0 || p.getProperty("pg4_urinePr"+n,"").length()>0 || p.getProperty("pg4_urineGl"+n,"").length()>0 
+					|| p.getProperty("pg4_presn1"+n,"").length()>0 || p.getProperty("pg4_FHR"+n,"").length()>0 || p.getProperty("pg4_comments"+n,"").length()>0 ) {
+				svNum = n;
+			}
+		}		
+				
+		newProps.setProperty("sv_num",String.valueOf(svNum));
+
+		int usNum = 0;
+		for(int x=0;x<4;x++) {
+			int n = x+1;
+			if(p.getProperty("ar2_uDate"+n,"").length()>0 || p.getProperty("ar2_uGA"+n,"").length()>0 || p.getProperty("ar2_uResults"+n,"").length()>0) {
+				usNum = n;
+			}
+		}		
+		newProps.setProperty("us_num",String.valueOf(usNum));
+				
+		
+		//convert the subsequent visits in pages 3/4 to pg2_
+		for(Object key:p.keySet()) {
+			String val = p.getProperty((String)key);
+			if(((String)key).startsWith("pg3")) {
+				newProps.setProperty(((String)key).replaceAll("pg3", "pg2"), val);
+			}
+			if(((String)key).startsWith("pg4")) {
+				newProps.setProperty(((String)key).replaceAll("pg4", "pg2"), val);
+			}
+		}
+		
+		//grab manual ones from the form
+		newProps.setProperty("c_province",request.getParameter("c_province"));
+		newProps.setProperty("pg1_language",request.getParameter("pg1_language"));
+		newProps.setProperty("pg1_partnerEduLevel",request.getParameter("pg1_partnerEduLevel"));
+		newProps.setProperty("pg1_eduLevel",request.getParameter("pg1_eduLevel"));
+		newProps.setProperty("pg1_ethnicBgMother",request.getParameter("pg1_ethnicBgMother"));
+		newProps.setProperty("pg1_ethnicBgFather",request.getParameter("pg1_ethnicBgFather"));
+		newProps.setProperty("c_hinType",request.getParameter("c_hinType"));
+		newProps.setProperty("pg1_box3",request.getParameter("pg1_box3"));
+		newProps.setProperty("pg1_labHIV",request.getParameter("pg1_labHIV"));
+		newProps.setProperty("pg1_labABO",request.getParameter("pg1_labABO"));
+		newProps.setProperty("pg1_labRh",request.getParameter("pg1_labRh"));
+		newProps.setProperty("pg1_labGC",request.getParameter("pg1_labGC"));
+		newProps.setProperty("pg1_labChlamydia",request.getParameter("pg1_labChlamydia"));
+		newProps.setProperty("pg1_labRubella",request.getParameter("pg1_labRubella"));
+		newProps.setProperty("pg1_labHBsAg",request.getParameter("pg1_labHBsAg"));
+		newProps.setProperty("pg1_labVDRL",request.getParameter("pg1_labVDRL"));
+		newProps.setProperty("pg1_labSickle",request.getParameter("pg1_labSickle"));
+		newProps.setProperty("ar2_bloodGroup",request.getParameter("ar2_bloodGroup"));
+		newProps.setProperty("ar2_rh",request.getParameter("ar2_rh"));
+		newProps.setProperty("ar2_strep",request.getParameter("ar2_strep"));		
+		newProps.setProperty("ar2_lab2GTT",request.getParameter("ar2_lab2GTT"));
+		
+		
+		try {
+			f.saveFormRecord(newProps);
+		}catch(SQLException ex) {
+			request.setAttribute("message", "Error: Couldn't save new enhanced form");
+			return mapping.findForward("migrate");
+		}
+				
+		request.setAttribute("message", "Migration Successful");
+		
+		return mapping.findForward("migrate");
 	}
 }
