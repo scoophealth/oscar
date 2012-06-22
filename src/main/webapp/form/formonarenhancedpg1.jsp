@@ -25,6 +25,9 @@
 --%>
 
 <%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*"%>
+<%@ page import="org.oscarehr.common.web.PregnancyAction"%>
+<%@ page import="java.util.List"%>
+<%@ page import="org.apache.struts.util.LabelValueBean"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -48,6 +51,11 @@
 
     //get project_home
     String project_home = request.getContextPath().substring(1);   
+    
+    //load eform groups
+    List<LabelValueBean> cytologyForms = PregnancyAction.getEformsByGroup("Cytology");
+    List<LabelValueBean> ultrasoundForms = PregnancyAction.getEformsByGroup("Ultrasound");
+    List<LabelValueBean> ipsForms = PregnancyAction.getEformsByGroup("IPS");
     
     if(props.getProperty("obxhx_num", "0").equals("")) {props.setProperty("obxhx_num","0");}
 %>
@@ -76,6 +84,62 @@
 
 
 <script>
+
+function loadCytologyForms() {
+<%
+	if(cytologyForms != null) {
+		if(cytologyForms.size()==0) {
+			%>
+				alert('No Cytology Forms configured');
+			<%
+		} else if(cytologyForms.size() == 1) {
+			%>
+			popPage('<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=cytologyForms.get(0).getValue()%>&demographic_no=<%=demoNo%>&appointment=0','cytology');			
+			<%
+		} else {
+			%>$( "#cytology-eform-form" ).dialog( "open" );<%
+		}
+	}
+%>
+}
+
+function loadUltrasoundForms() {
+	<%
+		if(ultrasoundForms != null) {
+			if(ultrasoundForms.size()==0) {
+				%>
+					alert('No Ultrasound Forms configured');
+				<%
+			} else if(ultrasoundForms.size() == 1) {
+				%>
+				popPage('<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=ultrasoundForms.get(0).getValue()%>&demographic_no=<%=demoNo%>&appointment=0','ultrasound');			
+				<%
+			} else {
+				%>$( "#ultrasound-eform-form" ).dialog( "open" );<%
+			}
+		}
+	%>
+	}
+	
+	
+function loadIPSForms() {
+	<%
+		if(ipsForms != null) {
+			if(ipsForms.size()==0) {
+				%>
+					alert('No IPS Forms configured');
+				<%
+			} else if(ipsForms.size() == 1) {
+				%>
+				popPage('<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=ipsForms.get(0).getValue()%>&demographic_no=<%=demoNo%>&appointment=0','ipsform');			
+				<%
+			} else {
+				%>$( "#ips-eform-form" ).dialog( "open" );<%
+			}
+		}
+	%>
+	}
+	
 	$(document).ready(function(){	
 		window.moveTo(0, 0);
 		window.resizeTo(screen.availWidth, screen.availHeight);
@@ -145,6 +209,71 @@ width: 100%;
 </style>
 
 <script>
+	function rhWarning() {
+		if($("select[name='pg1_labRh']").val() == 'NEG'/* && getGAWeek() >= 9*/) {			
+			$("#rh_warn").show();
+		} else {
+			$("#rh_warn").hide();
+		}
+	}
+	
+	function rhogamWarning() {
+		if($("select[name='pg1_labRh']").val() == 'NEG' && getGAWeek() <= 28) {			
+			$("#rhogam_warn").show();
+		} else {
+			$("#rhogam_warn").hide();
+		}
+	}
+
+	function rubellaWarning() {
+		if($("select[name='pg1_labRubella']").val() == 'Non-Immune' ) {			
+			$("#rubella_warn").show();
+		} else {
+			$("#rubella_warn").hide();
+		}
+	}
+	
+	function hbsagWarning() {
+		if($("select[name='pg1_labHBsAg']").val() == 'POS' ) {			
+			$("#hbsag_warn").show();
+		} else {
+			$("#hbsag_warn").hide();
+		}
+	}
+
+	function geneticWarning() {
+		if($("input[name='pg1_geneticA']").val().length>0 || $("input[name='pg1_geneticB']").val().length>0
+				|| $("input[name='pg1_geneticC']").val().length>0 || $("input[name='pg1_labCustom3Result']").val().length>0) {
+			$("#genetic_prompt").show();
+		} else {
+			$("#genetic_prompt").hide();
+		}
+	}
+
+	function bmiWarning() {
+		if($("input[name='c_bmi']").val().length > 0) {
+			var bmi = parseFloat($("input[name='c_bmi']").val());			
+			if(bmi > 30 && bmi < 40) {
+				$("#bmi30_warn").show();
+			} else {
+				$("#bmi30_warn").hide();
+			}
+			if(bmi >= 40) {
+				$("#bmi40_warn").show();
+			} else {
+				$("#bmi40_warn").hide();
+			}
+			if(bmi <= 18.5) {
+				$("#bmi_low_warn").show();
+			} else {
+				$("#bmi_low_warn").hide();
+			}
+		} else {
+			$("#bmi30_warn").hide();
+			$("#bmi40_warn").hide();
+			$("#bmi_low_warn").hide();
+		} 
+	}
 	$(document).ready(function() {		
 		$("select[name='pg1_labCustom1Label']").val('<%= UtilMisc.htmlEscape(props.getProperty("pg1_labCustom1Label", "")) %>');
 		$("select[name='c_province']").val('<%= UtilMisc.htmlEscape(props.getProperty("c_province", "")) %>');
@@ -168,37 +297,43 @@ width: 100%;
 		$("select[name='pg1_labSickle']").val('<%= UtilMisc.htmlEscape(props.getProperty("pg1_labSickle", "")) %>');
 		$("select[name='pg1_labRubella']").val('<%= UtilMisc.htmlEscape(props.getProperty("pg1_labRubella", "")) %>');
 	
-		if($("select[name='pg1_labRh']").val() == 'NEG'/* && getGAWeek() >= 9*/) {			
-			$("#rh_warn").show();
-		}		
+
+
 		
-		if($("select[name='pg1_labRubella']").val() == 'Non-Immune' ) {			
-			$("#rubella_warn").show();
-		}
+		rhWarning();
+		rubellaWarning();
+		hbsagWarning();
+		geneticWarning();
+		bmiWarning();
+		rhogamWarning();
 		
-		if($("select[name='pg1_labHBsAg']").val() == 'POS' ) {			
-			$("#hbsag_warn").show();
-		}
+		/*
+		$("select[name='pg1_labRh']").bind('change',function(){
+			rhWarning();
+		});
 		
-		if($("input[name='pg1_geneticA']").val().length>0 || $("input[name='pg1_geneticB']").val().length>0
-				|| $("input[name='pg1_geneticC']").val().length>0) {
-			$("#genetic_prompt").show();
-		}
+		$("select[name='pg1_labRubella']").bind('change',function(){			
+			rubellaWarning();
+		});	
 		
-		if($("input[name='c_bmi']").val().length > 0) {
-			var bmi = parseFloat($("input[name='c_bmi']").val());			
-			if(bmi > 30) {
-				$("#bmi30_warn").show();
-			}
-			if(bmi > 40) {
-				$("#bmi40_warn").show();
-			}
-			if(bmi <= 18.5) {
-				$("#bmi_low_warn").show();
-			}
-		}
+		$("select[name='pg1_labHBsAg']").bind('change',function(){
+			hbsagWarning();
+		});
 		
+		$("input[name='pg1_geneticA'],input[name='pg1_geneticB'],input[name='pg1_geneticC'],input[name='pg1_labCustom3Result']").bind('blur',function(){
+			geneticWarning();
+		});
+				
+		$("input[name='c_bmi']").bind('blur',function(){
+			bmiWarning();
+		});
+			
+		*/
 		if($("select[name='pg1_ethnicBgMother']").val() == 'ANC005' || $("select[name='pg1_ethnicBgFather']").val() == 'ANC005') {
+			$("#sickle_cell_warn").show();
+		}
+		
+		if($("select[name='pg1_labSickle']").val() == 'POS') {
 			$("#sickle_cell_warn").show();
 		} 
 		
@@ -233,6 +368,21 @@ width: 100%;
 			if(mcv_result < 80)
 				$("#mcv_abn_prompt").show();
 		}
+		
+		$("input[name='pg1_ht']").bind('keypress',function(){
+			$("input[name='c_bmi']").val('');
+			bmiWarning();
+		});
+		$("input[name='pg1_wt']").bind('keypress',function(){
+			$("input[name='c_bmi']").val('');
+			bmiWarning();
+		});
+		
+		if($("input[name='pg1_cp3']").attr('checked') == 'checked') {
+			$("#smoking_warn").show();
+			bmiWarning();
+		}
+		
 	});
 </script>
 
@@ -590,11 +740,29 @@ jQuery(document).ready(function() {
 $(document).ready(function(){
 	<% if(!bView) { %>
 	updatePageLock(false);
+	watchFormVersion();
 	<% } %>
 });
 
+function watchFormVersion() {
+		$.ajax({
+		   type: "POST",
+		   url: "<%=request.getContextPath()%>/Pregnancy.do",
+		   data: { method: "getLatestFormIdByPregnancy", episodeId: '<%=props.getProperty("episodeId","0")%>'},
+		   dataType: 'json',
+		   success: function(data,textStatus) {
+			  if(data.value != '<%=formId%>') {
+				  $("#outdated_warn").show();
+			  } else {
+				  $("#outdated_warn").hide();
+			  }
+		   }
+		});
+		setTimeout(function(){watchFormVersion()},60000);
+		   
+}
+
 var lockData;
-var mylock=false;
 
 function requestLock() {
 	updatePageLock(true);
@@ -670,6 +838,12 @@ $(document).ready(function() {
 		if(parts[1] == 'checked')
 			$("input[name='pg1_geneticD2']").attr('checked',true);		
 	}
+	
+	$("input[name='pg1_psCertN']").bind('click',function(){
+		if($("input[name='pg1_psCertN']").attr('checked') == 'checked') {
+			$( "#dating-us-form" ).dialog( "open" );
+		}
+	});
 });
 
 function updateGeneticD() {
@@ -1064,7 +1238,8 @@ function getGADay() {
 	 var month = finalEDB.substring(5,7)
 	 var day = finalEDB.substring(8,10)
 	 
-	 var edbDate=new Date(year,parseInt(month)-1,day);
+	 var edbDate=new Date(year,parseInt(month.substring(0,1)=='0'?month.substring(1,2):month)-1,day);
+	 
 	 edbDate.setHours(8);
 	 edbDate.setMinutes(0);
 	 edbDate.setSeconds(0);
@@ -1207,6 +1382,96 @@ $(document).ready(function(){
 		}
 	});
 	
+	$( "#dating-us-form" ).dialog({
+		autoOpen: false,
+		height: 275,
+		width: 450,
+		modal: true,
+		buttons: {
+			"Dismiss": function() {			
+				$( this ).dialog( "close" );	
+			}
+		},
+		close: function() {
+			
+		}
+	});
+	
+	$( "#1st-visit-form" ).dialog({
+		autoOpen: false,
+		height: 300,
+		width: 450,
+		modal: true,
+		buttons: {
+			"Dismiss": function() {			
+				$( this ).dialog( "close" );	
+			}
+		},
+		close: function() {
+			
+		}
+	});
+	
+	$( "#16wk-visit-form" ).dialog({
+		autoOpen: false,
+		height: 300,
+		width: 450,
+		modal: true,
+		buttons: {
+			"Dismiss": function() {			
+				$( this ).dialog( "close" );	
+			}
+		},
+		close: function() {
+			
+		}
+	});
+	
+	$( "#cytology-eform-form" ).dialog({
+		autoOpen: false,
+		height: 300,
+		width: 450,
+		modal: true,
+		buttons: {
+			"Dismiss": function() {			
+				$( this ).dialog( "close" );	
+			}
+		},
+		close: function() {
+			
+		}
+	});
+	
+	$( "#ultrasound-eform-form" ).dialog({
+		autoOpen: false,
+		height: 300,
+		width: 450,
+		modal: true,
+		buttons: {
+			"Dismiss": function() {			
+				$( this ).dialog( "close" );	
+			}
+		},
+		close: function() {
+			
+		}
+	});
+	
+	$( "#ips-eform-form" ).dialog({
+		autoOpen: false,
+		height: 300,
+		width: 450,
+		modal: true,
+		buttons: {
+			"Dismiss": function() {			
+				$( this ).dialog( "close" );	
+			}
+		},
+		close: function() {
+			
+		}
+	});
+	
 	$( "#mcv-req-form" ).dialog({
 		autoOpen: false,
 		height: 275,
@@ -1256,6 +1521,13 @@ function geneticReferral() {
 	$( "#genetic-ref-form" ).dialog( "open" );
 }
 
+function firstVisitTool() {
+	$( "#1st-visit-form" ).dialog( "open" );
+}
+
+function wk16VisitTool() {
+	$( "#16wk-visit-form" ).dialog( "open" );
+}
 //limit size of textareas
 $(document).ready(function(){
 	$('textarea[name="pg1_commentsAR1"]').bind('keypress',function(){
@@ -1342,10 +1614,33 @@ $(document).ready(function(){
 			showSpeed: 400 
 		});
 		
-		$('#lab_menu').bind('click',function(){popPage('formlabreq07.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AnteNatal','LabReq')});
+		$('#lab_menu').menu({ 
+			content: $('#lab_menu_div').html(), 
+			showSpeed: 400 
+		});
+		
+		$('#forms_menu').menu({ 
+			content: $('#forms_menu_div').html(), 
+			showSpeed: 400 
+		});
+		
+		//$('#lab_menu').bind('click',function(){});
 		$('#mcv_menu').bind('click',function(){mcvReq();});
 		$('#vitals_pull_menu').bind('click',function(){pullVitals();});
 		$('#lab_pull_menu').bind('click',function(){alert('Not yet implemented');});
+		
+		$("#credit_valley_genetic_btn").bind('click',function(e){
+			e.preventDefault();
+			popPage('<%=request.getContextPath()%>/Pregnancy.do?method=loadEformByName&name=Prenatal Screening (IPS) Credit Valley&demographicNo=<%=demoNo%>','credit_valley_lab_req');
+		});
+		
+		$("#north_york_genetic_btn").bind('click',function(e){
+			e.preventDefault();
+			popPage('<%=request.getContextPath()%>/Pregnancy.do?method=loadEformByName&name=1Prenatal Screening - North York&demographicNo=<%=demoNo%>','north_york_lab_req');
+		});
+		
+		$("#1st_visit_menu").bind('click',function(){firstVisitTool();});
+		$("#16wk_visit_menu").bind('click',function(){wk16VisitTool();});
     });
 </script>
 <% } %>
@@ -1377,7 +1672,27 @@ $(document).ready(function(){
 		<input id="lock_req_btn" type="button" value="Request Lock" onclick="requestLock();"/>
 		<input style="display:none" id="lock_rel_btn" type="button" value="Release Lock" onclick="releaseLock();"/>
 	</div>
-	<br/><br/>
+	<div id="outdated_warn">
+		<span title="The form you are viewing is no longer the latest version, please refresh.">Warning: Not latest version</span>
+	</div>
+	
+	<br/>
+
+	<div style="background-color:magenta;border:2px solid black;width:100%;color:black">
+		<table style="width:100%" border="0">
+			<tr>
+				<td><b>Visit Checklist</b></td>				
+			</tr>			
+			<tr id="first_visit">
+				<td>First Visit<span style="float:right"><img id="1st_visit_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>
+			</tr>
+			<tr id="16wk_visit">
+				<td>16 week Visit<span style="float:right"><img id="16wk_visit_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>
+			</tr>
+		</table>	
+	</div>
+	
+	
 	<div style="background-color:yellow;border:2px solid black;width:100%;color:black">
 		<table style="width:100%" border="0">
 			<tr>
@@ -1412,6 +1727,9 @@ $(document).ready(function(){
 			<tr id="rh_warn" style="display:none">
 				<td>RH Negative</td>				
 			</tr>
+			<tr id="rhogam_warn" style="display:none">
+				<td title="Consider Rhogam for pt @ 28 wks. and sooner if bleeding">Consider Rhogam</td>				
+			</tr>
 			<tr id="rubella_warn" style="display:none">
 				<td>Rubella Non-Immune</td>
 			</tr>
@@ -1421,21 +1739,30 @@ $(document).ready(function(){
 			</tr>
 						
 			<tr id="bmi30_warn" style="display:none">
-				<td>BMI is High<span style="float:right"><img src="../images/right-circle-arrow-Icon.png" border="0"></span></td>
+				<td>BMI is High</td>
 			</tr>
 			<tr id="bmi40_warn" style="display:none">
-				<td>BMI is very High<span style="float:right"><img src="../images/right-circle-arrow-Icon.png" border="0"></span></td>
+				<td>BMI is very High</td>
 			</tr>
 			<tr id="bmi_low_warn" style="display:none">
-				<td>BMI is Low<span style="float:right"><img src="../images/right-circle-arrow-Icon.png" border="0"></span></td>
+				<td>BMI is Low</td>
+			</tr>
+			<tr id="smoking_warn" style="display:none">
+				<td>Goal: Smoking Cessation</td>
 			</tr>
 			<tr id="sickle_cell_warn" style="display:none">
-				<td>Risk: Sickle Cell<span style="float:right"><img  id="sickle_cell_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>
+				<td>Risk: Sickle Cell</td>
 			</tr>
 			<tr id="thalassemia_warn" style="display:none">
-				<td>Risk: Thalassemia<span style="float:right"><img id="thalassemia_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>
+				<td>Risk: Thalassemia</td>
 			</tr>
-
+			<tr id="genetic_prompt" style="display:none">
+				<td>Genetics Referral<span style="float:right"><img id="genetics_menu"  src="../images/right-circle-arrow-Icon.png" border="0" ></span></td>			
+			</tr>		
+			
+			<tr id="mcv_abn_prompt" style="display:none">
+				<td>Low MCV<span style="float:right"><img id="mcv_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>						
+			</tr>
 		</table>	
 	</div>	
 	
@@ -1446,17 +1773,12 @@ $(document).ready(function(){
 			</tr>
 			
 			<tr id="lab_prompt">
-				<td>Antenatal Lab<span style="float:right"><img id="lab_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>
+				<td>Labs<span style="float:right"><img id="lab_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>
 			</tr>	
-
-			<tr id="genetic_prompt" style="display:none">
-				<td>Genetics Referral<span style="float:right"><img id="genetics_menu"  src="../images/right-circle-arrow-Icon.png" border="0" ></span></td>			
-			</tr>		
-			
-			<tr id="mcv_abn_prompt" style="display:none">
-				<td>Low MCV<span style="float:right"><img id="mcv_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>						
+			<tr id="forms_prompt" >
+				<td>Forms<span style="float:right"><img id="forms_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>						
 			</tr>
-
+			
 			<tr id="pull_vitals_prompt" >
 				<td>Vitals Integration<span style="float:right"><img id="vitals_pull_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>						
 			</tr>
@@ -3046,14 +3368,38 @@ Calendar.setup({ inputField : "pg1_labLastPapDate", ifFormat : "%Y/%m/%d", shows
 	</form>
 </div>
 
-<div id="genetic-ref-form" title="Genetic Support Tool">
-	<p>This tool provides guidance regarding the handling of abnormal genetic markers</p>
-	<br/>
-	<br/>
-	<a href="javascript:void(0);" onclick="alert('Not yet implemented');return false;" title="">Generate Referral</a>		
-	<br/>	
+<div id="genetic-ref-form" title="IPS Support Tool">
+	<form>
+		<fieldset>
+			<table>
+				<tbody>
+					<tr>
+						<td><button id="credit_valley_genetic_btn">Lab Requisition</button></td>
+						<td>Credit Valley Hospital</td>
+					</tr>
+					<tr>
+						<td><button id="north_york_genetic_btn">Lab Requisition</button></td>
+						<td>North York Hospital</td>
+					</tr>
+				</tbody>
+			</table>
+		</fieldset>
+	</form>	
 </div>
 
+<div id="lab_menu_div" class="hidden">
+<ul>
+	<li><a href="javascript:void(0)" onclick="popPage('formlabreq07.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AnteNatal','LabReq')">Routine Prenatal</a></li>
+	<li><a href="javascript:void(0)" onclick="loadCytologyForms();">Cytology</a></li>
+</ul>
+</div>
+
+<div id="forms_menu_div" class="hidden">
+<ul>
+	<li><a href="javascript:void(0)" onclick="loadUltrasoundForms();">Ultrasound</a></li>
+	<li><a href="javascript:void(0)" onclick="loadIPSForms();">IPS</a></li>
+</ul>
+</div>
 
 <div id="sickle_cell_menu_div" class="hidden">
 <ul>
@@ -3077,7 +3423,7 @@ Calendar.setup({ inputField : "pg1_labLastPapDate", ifFormat : "%Y/%m/%d", shows
 <ul>
 	<li><a href="http://www.sogc.org/guidelines/documents/gui217CPG0810.pdf" target="sogc">SOGC Guidelines</a></li>
 	<li><a href="<%=request.getContextPath()%>/pregnancy/genetics-provider-guide-e.pdf" target="sogc">Guide</a></li>	
-	<li><a href="javascript:void(0)" onclick="geneticReferral();">Referral</a></li>
+	<li><a href="javascript:void(0)" onclick="geneticReferral();">IPS Forms</a></li>
 </ul>
 </div>
 
@@ -3159,6 +3505,169 @@ Calendar.setup({ inputField : "pg1_labLastPapDate", ifFormat : "%Y/%m/%d", shows
 	</fieldset>
 	</form>
 </div>
+
+<div id="1st-visit-form" title="First Visit">
+	<form>
+		<fieldset>
+			<table>
+				<tbody>
+					<tr>
+						<td>
+							Enter Height, Weight, and BMI
+							<a href="javascript:void(0);" onclick="return false;" title="Enter values in form under Physical Examination"><img border="0" src="../images/icon_help_sml.gif"/></a>			
+						</td>
+					</tr>					
+					<tr>
+						<td>
+							Order routine Prenatal Labs
+							<a href="javascript:void(0);" onclick="return false;" title="Click on 'Labs' menu item under Prompts, and choose Routine Prenatal"><img border="0" src="../images/icon_help_sml.gif"/></a>		
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Order Integrated Prenatal Screening (IPS)
+							<a href="javascript:void(0);" onclick="return false;" title="Click on 'Forms' menu item under Prompts, and choose IPS"><img border="0" src="../images/icon_help_sml.gif"/></a>		
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Order Ultrasound (Dating,IPS, or 18wk)
+							<a href="javascript:void(0);" onclick="return false;" title="Click on 'Forms' menu item under Prompts, and choose Ultrasound"><img border="0" src="../images/icon_help_sml.gif"/></a>		
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Order Pap Smear
+							<a href="javascript:void(0);" onclick="return false;" title="Click on 'Labs' menu item under Prompts, and choose Cytology"><img border="0" src="../images/icon_help_sml.gif"/></a>		
+						</td>
+					</tr>					
+				</tbody>
+			</table>
+		</fieldset>
+	</form>	
+</div>
+
+
+<div id="16wk-visit-form" title="16 week Visit">
+	<form>
+		<fieldset>
+			<table>
+				<tbody>
+					<tr>
+						<td>
+							Order 18 week morphology ultrasound
+							<a href="javascript:void(0);" onclick="return false;" title="Click on 'Forms' menu item under Prompts, and choose Ultrasound"><img border="0" src="../images/icon_help_sml.gif"/></a>		
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</fieldset>
+	</form>	
+</div>
+
+
+
+<div id="cytology-eform-form" title="Cytology Forms">
+	<form>
+		<fieldset>
+			<table>
+				<tbody>
+				<%
+					if(cytologyForms != null) {
+						for(LabelValueBean bean:cytologyForms) {
+							%>
+							<tr>
+								<td><button onClick="popPage('<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=bean.getValue()%>&demographic_no=<%=demoNo%>&appointment=0','cytology');return false;">Open</button></td>
+								<td><%=bean.getLabel() %></td>
+							</tr>
+							<%
+						}
+					}
+				%>										
+				</tbody>
+			</table>
+		</fieldset>
+	</form>	
+</div>
+
+
+
+<div id="ultrasound-eform-form" title="Ultrasound Forms">
+	<form>
+		<fieldset>
+			<table>
+				<tbody>
+				<%
+					if(ultrasoundForms != null) {
+						for(LabelValueBean bean:ultrasoundForms) {
+							%>
+							<tr>
+								<td><button onClick="popPage('<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=bean.getValue()%>&demographic_no=<%=demoNo%>&appointment=0','ultrasound');return false;">Open</button></td>
+								<td><%=bean.getLabel() %></td>
+							</tr>
+							<%
+						}
+					}
+				%>										
+				</tbody>
+			</table>
+		</fieldset>
+	</form>	
+</div>
+
+
+
+
+<div id="ips-eform-form" title="IPS Forms">
+	<form>
+		<fieldset>
+			<table>
+				<tbody>
+				<%
+					if(ipsForms != null) {
+						for(LabelValueBean bean:ipsForms) {
+							%>
+							<tr>
+								<td><button onClick="popPage('<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=bean.getValue()%>&demographic_no=<%=demoNo%>&appointment=0','ipsform');return false;">Open</button></td>
+								<td><%=bean.getLabel() %></td>
+							</tr>
+							<%
+						}
+					}
+				%>										
+				</tbody>
+			</table>
+		</fieldset>
+	</form>	
+</div>
+
+
+<div id="dating-us-form" title="Dating Ultrasound">
+	<p>Do you want to arrange a dating ultrasound?</p>
+	<form>
+		<fieldset>
+			<table>
+				<tbody>
+				<%
+					if(ultrasoundForms != null) {
+						for(LabelValueBean bean:ultrasoundForms) {
+							%>
+							<tr>
+								<td><button onClick="popPage('<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=bean.getValue()%>&demographic_no=<%=demoNo%>&appointment=0','ultrasound');return false;">Open</button></td>
+								<td><%=bean.getLabel() %></td>
+							</tr>
+							<%
+						}
+					}
+				%>										
+				</tbody>
+			</table>
+		</fieldset>
+	</form>	
+</div>
+
+
+
 </html:html>
 
 <%!

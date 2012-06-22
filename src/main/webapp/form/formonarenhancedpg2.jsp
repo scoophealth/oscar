@@ -26,6 +26,9 @@
 
 <%@ page
 	import="oscar.form.graphic.*, oscar.util.*, oscar.form.*, oscar.form.data.*"%>
+<%@ page import="org.oscarehr.common.web.PregnancyAction"%>
+<%@ page import="java.util.List"%>
+<%@ page import="org.apache.struts.util.LabelValueBean"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -48,6 +51,12 @@
 
     //get project_home
     String project_home = request.getContextPath().substring(1);   
+    
+    //load eform groups
+    List<LabelValueBean> cytologyForms = PregnancyAction.getEformsByGroup("Cytology");
+    List<LabelValueBean> ultrasoundForms = PregnancyAction.getEformsByGroup("Ultrasound");
+    List<LabelValueBean> ipsForms = PregnancyAction.getEformsByGroup("IPS");
+ 
     
     if(props.getProperty("rf_num", "0").equals("")) {props.setProperty("rf_num","0");}
     if(props.getProperty("sv_num", "0").equals("")) {props.setProperty("sv_num","0");}
@@ -168,6 +177,62 @@ width: 100%;
 	
 	<% } %>
 
+
+	function loadCytologyForms() {
+	<%
+		if(cytologyForms != null) {
+			if(cytologyForms.size()==0) {
+				%>
+					alert('No Cytology Forms configured');
+				<%
+			} else if(cytologyForms.size() == 1) {
+				%>
+				popPage('<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=cytologyForms.get(0).getValue()%>&demographic_no=<%=demoNo%>&appointment=0','cytology');			
+				<%
+			} else {
+				%>$( "#cytology-eform-form" ).dialog( "open" );<%
+			}
+		}
+	%>
+	}
+
+	function loadUltrasoundForms() {
+		<%
+			if(ultrasoundForms != null) {
+				if(ultrasoundForms.size()==0) {
+					%>
+						alert('No Ultrasound Forms configured');
+					<%
+				} else if(ultrasoundForms.size() == 1) {
+					%>
+					popPage('<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=ultrasoundForms.get(0).getValue()%>&demographic_no=<%=demoNo%>&appointment=0','ultrasound');			
+					<%
+				} else {
+					%>$( "#ultrasound-eform-form" ).dialog( "open" );<%
+				}
+			}
+		%>
+		}
+		
+		
+	function loadIPSForms() {
+		<%
+			if(ipsForms != null) {
+				if(ipsForms.size()==0) {
+					%>
+						alert('No IPS Forms configured');
+					<%
+				} else if(ipsForms.size() == 1) {
+					%>
+					popPage('<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=ipsForms.get(0).getValue()%>&demographic_no=<%=demoNo%>&appointment=0','ipsform');			
+					<%
+				} else {
+					%>$( "#ips-eform-form" ).dialog( "open" );<%
+				}
+			}
+		%>
+		}
+	
 	function validate() {
 		for(var x=1;x<=54;x++) {
 			if($('#sv_'+ x).length>0) {
@@ -223,10 +288,16 @@ width: 100%;
 		$("select[name='ar2_labCustom2Label']").val('<%= UtilMisc.htmlEscape(props.getProperty("ar2_labCustom2Label", "")) %>');
 			
 		
-		var ar1_rh = '<%=UtilMisc.htmlEscape(props.getProperty("pg1_labRh", ""))%>';
-		if(ar1_rh == 'NEG'/* && getGAWeek() >= 9*/) {			
+		if($("select[name='ar2_rh']").val() == 'NEG'/* && getGAWeek() >= 9*/) {			
 			$("#rh_warn").show();
 		}
+		
+		if($("select[name='ar2_rh']").val() == 'NEG' && getGAWeek() <= 28) {			
+			$("#rhogam_warn").show();
+		} else {
+			$("#rhogam_warn").hide();
+		}
+		
 		if('<%=UtilMisc.htmlEscape(props.getProperty("pg1_labRubella", ""))%>' == 'Non-Immune' ) {			
 			$("#rubella_warn").show();
 		}
@@ -351,7 +422,6 @@ function deleteRiskFactor(id) {
 }
 
 function setInput(id,type,val) {
-	//alert("input[name='"+type+id+"']" + "=" + val);
 	jQuery("input[name='"+type+id+"']").each(function() {
 		jQuery(this).val(val);
 	});
@@ -1032,7 +1102,7 @@ var maxYear=9900;
         return b;
     }
 
-	function calcWeek(source) {
+	function calcWeek(source) {		
 <%
 String fedb = props.getProperty("c_finalEDB", "");
 
@@ -1043,7 +1113,7 @@ if (!fedb.equals("") && fedb.length()==10 ) {
     sDate = UtilDateUtilities.DateToString(edbDate, "MMMMM dd, yyyy"); //"yy,MM,dd");
 %>
 	    var delta = 0;
-        var str_date = getDateField(source.name);
+        var str_date = getDateField(source.name);        
         if (str_date.length < 10) return;
         var yyyy = str_date.substring(0, str_date.indexOf("/"));
         var mm = eval(str_date.substring(eval(str_date.indexOf("/")+1), str_date.lastIndexOf("/")) - 1);
@@ -1073,10 +1143,6 @@ if (!fedb.equals("") && fedb.length()==10 ) {
 		if(name.indexOf("ar2_")>=0) {
 			n1 = name.substring(eval(name.indexOf("A")+1));
 			name = "ar2_uDate" + n1;
-		} else if (n1>36) {
-			name = "pg4_date" + n1;
-		} else if (n1<=36 && n1>18) {
-			name = "pg3_date" + n1;
 		} else {
 			name = "pg2_date" + n1;
 		}
@@ -1088,7 +1154,7 @@ if (!fedb.equals("") && fedb.length()==10 ) {
 	    }
         return temp;
     }
-function calToday(field) {
+function calToday(field) {	
 	var calDate=new Date();
 	varMonth = calDate.getMonth()+1;
 	varMonth = varMonth>9? varMonth : ("0"+varMonth);
@@ -1105,29 +1171,31 @@ function getGADay() {
 	 var finalEDB = $("input[name='c_finalEDB']").val();
 	 if(finalEDB.length != 10) {
 		 return -1;
-	 }
+	 }	 
 	 var year = finalEDB.substring(0,4);
 	 var month = finalEDB.substring(5,7)
 	 var day = finalEDB.substring(8,10)
 	 
-	 var edbDate=new Date(year,parseInt(month)-1,day);
-	 edbDate.setHours(0);
+	 
+	 var edbDate=new Date(year,parseInt(month.substring(0,1)=='0'?month.substring(1,2):month)-1,day);
+	 edbDate.setHours(8);
 	 edbDate.setMinutes(0);
 	 edbDate.setSeconds(0);
 	 edbDate.setMilliseconds(0);
 	 
 	 var startDate = new Date();
 	 startDate.setTime(edbDate.getTime()-(280*1000*60*60*24)  );
-	 startDate.setHours(0);		
-	 
+	 startDate.setHours(8);		
+	 	  
 	 var today = new Date();
-	 today.setHours(0);
+	 today.setHours(8);
 	 today.setMinutes(0);
 	 today.setSeconds(0);
 	 today.setMilliseconds(0);
 	 
-	 if(today > startDate) {		
+	 if(today > startDate) {			
 		 var  days = daydiff(startDate,today);
+		 days = Math.round(days);
 		 return days;
 	 }
 	 
@@ -1140,7 +1208,6 @@ function daydiff(first, second) {
 
 function getGAWeek() {
 	var day = getGADay();
-	var week = 0;
 	if(day > 0) {
 		week = parseInt(day / 7);	
 	}
@@ -1149,6 +1216,7 @@ function getGAWeek() {
 
 function getGA() {
 	var day = getGADay();
+	
 	if(day > 0) {
 		week = parseInt(day / 7);
 		offset = day % 7;		
@@ -1234,6 +1302,51 @@ $(document).ready(function(){
 });
 
 $(document).ready(function(){
+
+	$( "#cytology-eform-form" ).dialog({
+		autoOpen: false,
+		height: 300,
+		width: 450,
+		modal: true,
+		buttons: {
+			"Dismiss": function() {			
+				$( this ).dialog( "close" );	
+			}
+		},
+		close: function() {
+			
+		}
+	});
+	
+	$( "#ultrasound-eform-form" ).dialog({
+		autoOpen: false,
+		height: 300,
+		width: 450,
+		modal: true,
+		buttons: {
+			"Dismiss": function() {			
+				$( this ).dialog( "close" );	
+			}
+		},
+		close: function() {
+			
+		}
+	});
+	
+	$( "#ips-eform-form" ).dialog({
+		autoOpen: false,
+		height: 300,
+		width: 450,
+		modal: true,
+		buttons: {
+			"Dismiss": function() {			
+				$( this ).dialog( "close" );	
+			}
+		},
+		close: function() {
+			
+		}
+	});	
 	
 	$( "#gbs-req-form" ).dialog({
 		autoOpen: false,
@@ -1266,15 +1379,172 @@ $(document).ready(function(){
 <% if(!bView) { %>
 <script type="text/javascript">    
     $(function(){    			
-		$('#lab_menu').bind('click',function(){popPage('formlabreq07.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AnteNatal','LabReq')});
 		$('#gbs_menu').bind('click',function(){gbsReq();});
+		$("#gd_menu").bind('click',function(){popPage('http://www.diabetes.ca/diabetes-and-you/what/gestational/','resource')});
+		$("#gct_menu").bind('click',function(){gctReq();});
+		$("#gtt_menu").bind('click',function(){gttReq();});
+	    
+		$('#lab_menu').menu({ 
+			content: $('#lab_menu_div').html(), 
+			showSpeed: 400 
+		});
+		
+		$('#forms_menu').menu({ 
+			content: $('#forms_menu_div').html(), 
+			showSpeed: 400 
+		});
+		
     });
 </script>
 <% } %>
 <script>
+	function wk24VisitTool() {
+		$( "#24wk-visit-form" ).dialog( "open" );	
+	}
+	function wk35VisitTool() {
+		$( "#35wk-visit-form" ).dialog( "open" );
+	}
+	function ddVisitTool() {
+		$( "#dd-visit-form" ).dialog( "open" );
+	}
+	
 	$(function(){
+		
+		$("#24wk_visit_menu").bind('click',function(){wk24VisitTool();});
+		$("#35wk_visit_menu").bind('click',function(){wk35VisitTool();});
+		$("#dd_visit_menu").bind('click',function(){ddVisitTool();});
+		
 		$('#gest_age').html(getGA());
+		
+		$( "#gct-req-form" ).dialog({
+			autoOpen: false,
+			height: 275,
+			width: 450,
+			modal: true,
+			buttons: {
+				"Generate Requisition": function() {			
+					$( this ).dialog( "close" );			
+					var gct_hb = $("#gct_hb").attr('checked');
+					var gct_urine = $("#gct_urine").attr('checked');
+					var gct_ab = $("#gct_ab").attr('checked');
+					var gct_glu = $("#gct_glu").attr('checked');
+					var user = '<%=session.getAttribute("user")%>';
+					url = '<%=request.getContextPath()%>/form/formlabreq07.jsp?demographic_no=<%=demoNo%>&formId=0&provNo='+user + '&fromSession=true';
+					var pregUrl = '<%=request.getContextPath()%>/Pregnancy.do?method=createGCTLabReq&demographicNo=<%=demoNo%>&hb='+gct_hb+'&urine='+gct_urine+'&antibody='+gct_ab+'&glucose='+gct_glu;
+					jQuery.ajax({url:pregUrl,async:false, success:function(data) {
+						popupPage(url);
+					}});
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+				
+			}
+		});
+		
+		$( "#gtt-req-form" ).dialog({
+			autoOpen: false,
+			height: 275,
+			width: 450,
+			modal: true,
+			buttons: {
+				"Generate Requisition": function() {			
+					$( this ).dialog( "close" );			
+					var gtt_glu = $("#gtt_glu").attr('checked');
+					var user = '<%=session.getAttribute("user")%>';
+					url = '<%=request.getContextPath()%>/form/formlabreq07.jsp?demographic_no=<%=demoNo%>&formId=0&provNo='+user + '&fromSession=true';
+					var pregUrl = '<%=request.getContextPath()%>/Pregnancy.do?method=createGTTLabReq&demographicNo=<%=demoNo%>&glucose='+gtt_glu;
+					jQuery.ajax({url:pregUrl,async:false, success:function(data) {
+						popupPage(url);
+					}});
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+				
+			}
+		});
+		
+		$( "#ips-form" ).dialog({
+			autoOpen: false,
+			height: 275,
+			width: 450,
+			modal: true,
+			buttons: {
+				"Dismiss": function() {			
+					$( this ).dialog( "close" );	
+				}
+			},
+			close: function() {
+				
+			}
+		});
+		
+		$( "#24wk-visit-form" ).dialog({
+			autoOpen: false,
+			height: 300,
+			width: 450,
+			modal: true,
+			buttons: {
+				"Dismiss": function() {			
+					$( this ).dialog( "close" );	
+				}
+			},
+			close: function() {
+				
+			}
+		});
+		
+		$( "#35wk-visit-form" ).dialog({
+			autoOpen: false,
+			height: 300,
+			width: 450,
+			modal: true,
+			buttons: {
+				"Dismiss": function() {			
+					$( this ).dialog( "close" );	
+				}
+			},
+			close: function() {
+				
+			}
+		});
+		
+		$( "#dd-visit-form" ).dialog({
+			autoOpen: false,
+			height: 300,
+			width: 450,
+			modal: true,
+			buttons: {
+				"Dismiss": function() {			
+					$( this ).dialog( "close" );	
+				}
+			},
+			close: function() {
+				
+			}
+		});
+		
 	});
+	
+	function gctReq() {
+		$( "#gct-req-form" ).dialog( "open" );
+		return false;
+	}
+	
+	function gttReq() {
+		$( "#gtt-req-form" ).dialog( "open" );
+		return false;
+	}
+	
+	function ipsForms() {
+		$( "#ips-form" ).dialog( "open" );
+	}
+
 </script>
 <style>
 .ui-widget-overlay
@@ -1301,9 +1571,29 @@ $(document).ready(function(){
 		<input style="display:none" id="lock_rel_btn" type="button" value="Release Lock" onclick="releaseLock();"/>
 	</div>
 	
+		
 	<br/><br/>
+
+	<div style="background-color:magenta;border:2px solid black;width:100%;color:black">
+		<table style="width:100%" border="0">
+			<tr>
+				<td><b>Visit Checklist</b></td>				
+			</tr>			
+			<tr id="24wk_visit">
+				<td>24 week Visit<span style="float:right"><img id="24wk_visit_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>
+			</tr>
+			<tr id="35wk_visit">
+				<td>35 week Visit<span style="float:right"><img id="35wk_visit_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>
+			</tr>
+			<!-- 
+			<tr id="dd_visit">
+				<td>Due Date<span style="float:right"><img id="dd_visit_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>
+			</tr>
+			-->
+		</table>	
+	</div>
 	
-		<div style="background-color:yellow;border:2px solid black;width:100%;color:black">
+	<div style="background-color:yellow;border:2px solid black;width:100%;color:black">
 		<table style="width:100%" border="0">
 			<tr>
 				<td><b>Info</b></td>
@@ -1319,6 +1609,9 @@ $(document).ready(function(){
 			<tr id="rh_warn" style="display:none">
 				<td>RH Negative</td>
 			</tr>
+			<tr id="rhogam_warn" style="display:none">
+				<td title="Consider Rhogam for pt @ 28 wks. and sooner if bleeding">Consider Rhogam</td>				
+			</tr>
 			<tr id="rubella_warn" style="display:none">
 				<td>Rubella Non-Immune</td>
 			</tr>
@@ -1332,13 +1625,17 @@ $(document).ready(function(){
 			</tr>
 			
 			<tr id="gct_warn" style="display:none">
-				<td>Perform 1hr GCT</td>
+				<td>Perform 1hr GCT<span style="float:right"><img id="gct_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>				
 			</tr>	
 			
 			<tr id="gct_diabetes_warn" style="display:none">
-				<td>Gestational Diabetes<br/><a href="http://www.diabetes.ca/diabetes-and-you/what/gestational/ " target="resource">Resource</a></td>
+				<td>Gestational Diabetes<span style="float:right"><img id="gd_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>
 			</tr>			
 
+			<tr id="2hrgtt_prompt" style="display:none">
+				<td>GTT Req<span style="float:right"><img id="gtt_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>
+			</tr>
+			
 		</table>	
 	</div>		
 	<div style="background-color:#00FF00;border:2px solid black;width:100%;color:black">
@@ -1348,17 +1645,18 @@ $(document).ready(function(){
 			</tr>
 			
 			<tr id="lab_prompt">
-				<td>Antenatal Lab<span style="float:right"><img id="lab_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>
+				<td>Labs<span style="float:right"><img id="lab_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>
 			</tr>	
-						
+			
+			<tr id="forms_prompt" >
+				<td>Forms<span style="float:right"><img id="forms_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>						
+			</tr>
+			
 			<tr id="strep_prompt" style="display:none">
 				<td>GBS<span style="float:right"><img id="gbs_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>
 			</tr>
 			
-			<tr id="2hrgtt_prompt" style="display:none">
-				<td>GTT Req<span style="float:right"><img id="gtt_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>
-			</tr>
-			
+
 			<tr id="fetal_pos_prompt" style="display:none">
 				<td>Assess Fetal Position</td>
 			</tr>	
@@ -1915,6 +2213,199 @@ $(document).ready(function(){
 	</form>
 </div>
 
+<div id="gct-req-form" title="Create Lab Requisition">
+	<p class="validateTips"></p>
+
+	<form>
+	<fieldset>
+		<input type="checkbox" name="gct_hb" id="gct_hb" checked="checked" class="text ui-widget-content ui-corner-all" />
+		<label for="gct_hb">Hb</label>		
+		<br/>
+		<input type="checkbox" name="gct_urine" id="gct_urine" checked="checked" value="" class="text ui-widget-content ui-corner-all" />
+		<label for="gct_urine">Urine C&S</label>
+		<br/>
+		<input type="checkbox" name="gct_ab" id="gct_ab" checked="checked" value="" class="text ui-widget-content ui-corner-all" />
+		<label for="gct_ab">Repeat antibody screen</label>
+		<br/>
+		<input type="checkbox" name="gct_glu" id="gct_glu" checked="checked" value="" class="text ui-widget-content ui-corner-all" />
+		<label for="gct_glu">1 hour 50 gm glucose screen</label>								
+	</fieldset>
+	</form>
+</div>
+
+<div id="gtt-req-form" title="Create Lab Requisition">
+	<p class="validateTips"></p>
+
+	<form>
+	<fieldset>
+		<input type="checkbox" name="gtt_glu" id="gtt_glu" checked="checked" class="text ui-widget-content ui-corner-all" />
+		<label for="gtt_glu">2 hour 75m glucose screen</label>							
+	</fieldset>
+	</form>
+</div>
+
+
+<div id="24wk-visit-form" title="24 week Visit">
+	<form>
+		<fieldset>
+			<table>
+				<tbody>
+					<tr>
+						<td>
+							Order 1 Hour GCT
+							<a href="javascript:void(0);" onclick="return false;" title="Click on 'Labs' menu item under Prompts, and choose 1 Hour GCT"><img border="0" src="../images/icon_help_sml.gif"/></a>		
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</fieldset>
+	</form>	
+</div>
+
+<div id="35wk-visit-form" title="35 week Visit">
+	<form>
+		<fieldset>
+			<table>
+				<tbody>
+					<tr>
+						<td>
+							Order GBS Lab
+							<a href="javascript:void(0);" onclick="return false;" title="Click on 'Labs' menu item under Prompts, and choose GBS"><img border="0" src="../images/icon_help_sml.gif"/></a>		
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Consider ultrasound for position
+							<a href="javascript:void(0);" onclick="return false;" title="Click on 'Forms' menu item under Prompts, and choose Ultrasound"><img border="0" src="../images/icon_help_sml.gif"/></a>		
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</fieldset>
+	</form>	
+</div>
+
+<div id="dd-visit-form" title="Due Date Visit">
+	<form>
+		<fieldset>
+			<table>
+				<tbody>
+					
+				</tbody>
+			</table>
+		</fieldset>
+	</form>	
+</div>
+
+<div id="lab_menu_div" class="hidden">
+<ul>
+	<li><a href="javascript:void(0)" onclick="popPage('formlabreq07.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AnteNatal','LabReq')">Routine Prenatal</a></li>
+	<li><a href="javascript:void(0)" onclick="gbsReq();return false;">GBS</a></li>
+	<li><a href="javascript:void(0)" onclick="gctReq();return false;">1 Hour GCT</a></li>
+	<li><a href="javascript:void(0)" onclick="gttReq();return false;">2 Hour GTT</a></li>
+</ul>
+</div>
+
+<div id="forms_menu_div" class="hidden">
+<ul>
+	<li><a href="javascript:void(0)" onclick="loadUltrasoundForms();">Ultrasound</a></li>
+	<li><a href="javascript:void(0)" onclick="loadIPSForms();">IPS</a></li></ul>
+</div>
+
+<div id="ips-form" title="IPS Support Tool">
+	<form>
+		<fieldset>
+			<table>
+				<tbody>
+					<tr>
+						<td><button id="credit_valley_genetic_btn">Lab Requisition</button></td>
+						<td>Credit Valley Hospital</td>
+					</tr>
+					<tr>
+						<td><button id="north_york_genetic_btn">Lab Requisition</button></td>
+						<td>North York Hospital</td>
+					</tr>
+				</tbody>
+			</table>
+		</fieldset>
+	</form>	
+</div>
+
+
+
+<div id="cytology-eform-form" title="Cytology Forms">
+	<form>
+		<fieldset>
+			<table>
+				<tbody>
+				<%
+					if(cytologyForms != null) {
+						for(LabelValueBean bean:cytologyForms) {
+							%>
+							<tr>
+								<td><button onClick="popPage('<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=bean.getValue()%>&demographic_no=<%=demoNo%>&appointment=0','cytology');return false;">Open</button></td>
+								<td><%=bean.getLabel() %></td>
+							</tr>
+							<%
+						}
+					}
+				%>										
+				</tbody>
+			</table>
+		</fieldset>
+	</form>	
+</div>
+
+
+
+<div id="ultrasound-eform-form" title="Ultrasound Forms">
+	<form>
+		<fieldset>
+			<table>
+				<tbody>
+				<%
+					if(ultrasoundForms != null) {
+						for(LabelValueBean bean:ultrasoundForms) {
+							%>
+							<tr>
+								<td><button onClick="popPage('<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=bean.getValue()%>&demographic_no=<%=demoNo%>&appointment=0','ultrasound');return false;">Open</button></td>
+								<td><%=bean.getLabel() %></td>
+							</tr>
+							<%
+						}
+					}
+				%>										
+				</tbody>
+			</table>
+		</fieldset>
+	</form>	
+</div>
+
+
+
+
+<div id="ips-eform-form" title="IPS Forms">
+	<form>
+		<fieldset>
+			<table>
+				<tbody>
+				<%
+					if(ipsForms != null) {
+						for(LabelValueBean bean:ipsForms) {
+							%>
+							<tr>
+								<td><button onClick="popPage('<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=bean.getValue()%>&demographic_no=<%=demoNo%>&appointment=0','ipsform');return false;">Open</button></td>
+								<td><%=bean.getLabel() %></td>
+							</tr>
+							<%
+						}
+					}
+				%>										
+				</tbody>
+			</table>
+		</fieldset>
+	</form>	
+</div>
 
 </body>
 <script type="text/javascript">
