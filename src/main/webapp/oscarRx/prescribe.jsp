@@ -188,6 +188,19 @@ if(listRxDrugs!=null){
            <input id="prnVal_<%=rand%>"  style="display:none" <%if(prnStr.trim().length()==0){%>value="false"<%} else{%>value="true" <%}%> />
        </div>
        <div id="rx_more_<%=rand%>" style="display:none;padding:2px;">
+       <bean:message key="WriteScript.msgPrescribedRefill"/>:
+       	  &nbsp;
+       	  <bean:message key="WriteScript.msgPrescribedRefillDuration"/>
+       	  <input type="text" size="6" id="refillDuration_<%=rand%>" name="refillDuration_<%=rand%>" value="<%=refillDuration%>"
+       	   onchange="if(isNaN(this.value)||this.value<0){alert('Refill duration must be number (of days)');this.focus();return false;}return true;" /><bean:message key="WriteScript.msgPrescribedRefillDurationDays"/>
+       	  &nbsp;       	  
+       	  <bean:message key="WriteScript.msgPrescribedRefillQuantity"/>
+       	  <input type="text" size="6" id="refillQuantity_<%=rand%>" name="refillQuantity_<%=rand%>" value="<%=refillQuantity%>" />
+       	  <br/>       	  
+       	  <bean:message key="WriteScript.msgPrescribedDispenseInterval"/>
+       	  <input type="text" size="6" id="dispenseInterval_<%=rand%>" name="dispenseInterval_<%=rand%>" value="<%=dispenseInterval%>" />
+       	  <br/>
+       
           <bean:message key="WriteScript.msgPrescribedByOutsideProvider"/>
           <input type="checkbox" id="ocheck_<%=rand%>" name="ocheck_<%=rand%>" onclick="$('otext_<%=rand%>').toggle();" <%if(isOutsideProvider){%> checked="true" <%}else{}%>/>
           <div id="otext_<%=rand%>" <%if(isOutsideProvider){%>style="display:table;padding:2px;"<%}else{%>style="display:none;padding:2px;"<%}%> >
@@ -205,7 +218,9 @@ if(listRxDrugs!=null){
           <bean:message key="WriteScript.msgNo"/>
             <input type="checkbox"  name="patientComplianceN_<%=rand%>" id="patientComplianceN_<%=rand%>" <%if(patientCompliance!=null && !patientCompliance) {%> checked="true" <%}%> /><br/>
 
-
+		<bean:message key="WriteScript.msgNonAuthoritative"/>
+            <input type="checkbox" name="nonAuthoritativeN_<%=rand%>" id="nonAuthoritativeN_<%=rand%> " <%if(nonAuthoritative) {%> checked="true" <%}%> /><br/>
+		
 
         <label style="float:left;width:80px;">Start Date:</label>
            <input type="text" id="rxDate_<%=rand%>" name="rxDate_<%=rand%>" value="<%=startDate%>"/>
@@ -216,6 +231,42 @@ if(listRxDrugs!=null){
            <input type="text" id="writtenDate_<%=rand%>"  name="writtenDate_<%=rand%>" value="<%=writtenDate%>" />
            <a href="javascript:void(0);" style="float:right;margin-top:0px;padding-top:0px;" onclick="addFav('<%=rand%>','<%=drugName%>')">Add to Favorite</a>
        </div>
+       
+       <bean:message key="WriteScript.msgComment"/>:
+           <input type="text" id="comment_<%=rand%>" name="comment_<%=rand%>" value="<%=comment%>" size="60"/>
+           <br/>  
+           <bean:message key="WriteScript.msgETreatmentType"/>:     
+           <select name="eTreatmentType_<%=rand%>">
+           		<option>--</option>
+                         <option value="CHRON" <%=eTreatmentType.equals("CHRON")?"selected":""%>><bean:message key="WriteScript.msgETreatment.Continuous"/></option>
+ 				<option value="ACU" <%=eTreatmentType.equals("ACU")?"selected":""%>><bean:message key="WriteScript.msgETreatment.Acute"/></option>
+ 				<option value="ONET" <%=eTreatmentType.equals("ONET")?"selected":""%>><bean:message key="WriteScript.msgETreatment.OneTime"/></option>
+ 				<option value="PRNL" <%=eTreatmentType.equals("PRNL")?"selected":""%>><bean:message key="WriteScript.msgETreatment.LongTermPRN"/></option>
+ 				<option value="PRNS" <%=eTreatmentType.equals("PRNS")?"selected":""%>><bean:message key="WriteScript.msgETreatment.ShortTermPRN"/></option>           </select>
+           <select name="rxStatus_<%=rand%>">
+           		<option>--</option>
+                         <option value="New" <%=rxStatus.equals("New")?"selected":""%>><bean:message key="WriteScript.msgRxStatus.New"/></option>
+                         <option value="Active" <%=rxStatus.equals("Active")?"selected":""%>><bean:message key="WriteScript.msgRxStatus.Active"/></option>
+                         <option value="Suspended" <%=rxStatus.equals("Suspended")?"selected":""%>><bean:message key="WriteScript.msgRxStatus.Suspended"/></option>
+                         <option value="Aborted" <%=rxStatus.equals("Aborted")?"selected":""%>><bean:message key="WriteScript.msgRxStatus.Aborted"/></option>
+                         <option value="Completed" <%=rxStatus.equals("Completed")?"selected":""%>><bean:message key="WriteScript.msgRxStatus.Completed"/></option>
+                         <option value="Obsolete" <%=rxStatus.equals("Obsolete")?"selected":""%>><bean:message key="WriteScript.msgRxStatus.Obsolete"/></option>
+                         <option value="Nullified" <%=rxStatus.equals("Nullified")?"selected":""%>><bean:message key="WriteScript.msgRxStatus.Nullified"/></option>
+           </select>
+                <br/>                
+                <bean:message key="WriteScript.msgDrugForm"/>: 
+                <%if(rx.getDrugFormList()!=null && rx.getDrugFormList().indexOf(",")!=-1){ %>
+                <select name="drugForm_<%=rand%>">
+                	<%
+                		String[] forms = rx.getDrugFormList().split(",");
+                		for(String form:forms) {
+                	%>
+                		<option value="<%=form%>" <%=form.equals(drugForm)?"selected":"" %>><%=form%></option>
+                	<% } %>
+                </select>    
+				<%} else { %>
+					<%=drugForm%>
+				<% } %>
 
            <div id="renalDosing_<%=rand%>" ></div>
            <div id="luc_<%=rand%>" style="margin-top:2px;"></div>
