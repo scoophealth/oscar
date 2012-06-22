@@ -9243,6 +9243,7 @@ create table Episode (
 CREATE TABLE formONAREnhanced(
   ID int(10) NOT NULL  auto_increment,
   episodeId int(10),
+  sent_to_born tinyint(1) default 0,
   obxhx_num varchar(10) default '0',
   rf_num varchar(10) default '0',
   sv_num varchar(10) default '0',
@@ -10444,5 +10445,13 @@ CREATE TABLE `PageMonitor` (
   providerNo varchar(10),
   providerName varchar(100),
   PRIMARY KEY (`id`)
+);
+
+create table BornTransmissionLog(
+        id integer not null auto_increment,
+        submitDateTime timestamp not null,
+        success tinyint(1) default 0,
+        filename varchar(100) not null,
+        primary key(id)
 );
 

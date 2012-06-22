@@ -31,7 +31,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 /**
- * This class will determine which AR2005 forms need to be sent to
+ * This class will determine which ONAREnhanced forms need to be sent to
  * BORN, and perform the transaction.
  *
  * It will also check for any error files, and email any errors

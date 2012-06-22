@@ -1997,7 +1997,7 @@ $(document).ready(function(){
 							<option value="B">B</option>
 							<option value="AB">AB</option>
 							<option value="O">O</option>
-							<option value="UNK">Unknown</option>
+							<option value="UN">Unknown</option>
 						</select>		
 						/
 						<select name="ar2_rh">
