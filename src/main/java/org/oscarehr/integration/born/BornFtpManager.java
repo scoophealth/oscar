@@ -31,7 +31,9 @@ import java.io.FileInputStream;
 import org.apache.commons.net.ftp.FTPFile;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.integration.file.remote.session.Session;
-import org.springframework.integration.ftp.session.DefaultFtpSessionFactory;
+import org.springframework.integration.ftp.session.DefaultFtpsSessionFactory;
+
+import oscar.OscarProperties;
 
 public class BornFtpManager {
 
@@ -40,10 +42,12 @@ public class BornFtpManager {
 	}
 
 	public void uploadDataToRepository(String path, String filename) throws Exception {
-		DefaultFtpSessionFactory ftpFactory = (DefaultFtpSessionFactory)SpringUtils.getBean("ftpClientFactory");
-		Session<FTPFile> session = ftpFactory.getSession();
+		String remotePath = OscarProperties.getInstance().getProperty("born_ftps_remote_dir","");
+		DefaultFtpsSessionFactory ftpFactory = (DefaultFtpsSessionFactory)SpringUtils.getBean("ftpClientFactory");		
+		Session<FTPFile> session = ftpFactory.getSession();			
 		if(session.isOpen()) {
-			session.write(new FileInputStream(path + File.separator + filename), filename);
+			session.write(new FileInputStream(path + File.separator + filename),remotePath + File.separator +filename);
 		}
 	}
 }
+

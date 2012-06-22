@@ -30,12 +30,13 @@
 <%
 	String demographicNo = request.getParameter("demographic_no");
 	String formId = request.getParameter("formId");
+    String episodeId = request.getParameter("episodeId");
 
 	response.setContentType ("text/xml");
 	response.setHeader ("Content-Disposition", "attachment; filename=\"ar.xml\"");
 
 	ONAREnhancedFormToXML gen = new ONAREnhancedFormToXML();
-	gen.generateXMLAndValidate(response.getOutputStream(),LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(),demographicNo, Integer.parseInt(formId));
+	gen.generateXMLAndValidate(response.getOutputStream(),LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(),demographicNo, Integer.parseInt(formId),Integer.parseInt(episodeId));
 	response.getOutputStream().flush();
 	response.getOutputStream().close();
 	%>

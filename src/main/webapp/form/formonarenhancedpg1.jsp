@@ -397,7 +397,7 @@ width: 100%;
 			alert('Postal Code must be in the following format A#A#A#');
 			return false;
 		}		
-		patt1=new RegExp("^([0-9]{3}\\-[0-9]{3}\\-[0-9]{4})?$");	
+		patt1=new RegExp("^[0-9]{3}\\-[0-9]{3}\\-[0-9]{4}$");	
 		if(!patt1.test( $("input[name='pg1_homePhone']").val() ) ) {
 			alert('Home phone must be in the following format 555-555-5555');
 			return false;
@@ -1276,6 +1276,7 @@ function daydiff(first, second) {
 }
 
 function getGAWeek() {
+	var week;
 	var day = getGADay();
 	if(day > 0) {
 		week = parseInt(day / 7);	
@@ -1284,7 +1285,9 @@ function getGAWeek() {
 }
 
 function getGA() {
-	var day = getGADay();	
+	var day = getGADay();
+	var week;
+	var offset;
 	if(day > 0) {
 		week = parseInt(day / 7);
 		offset = day % 7;		
@@ -1653,7 +1656,8 @@ $(document).ready(function(){
 <% } %>
 <script>
 	$(function(){
-		$('#gest_age').html(getGA());
+		if($("input[name='c_finalEDB']").val().length>0)
+			$('#gest_age').html(getGA());
 	});
 </script>
 <style>
@@ -1851,7 +1855,7 @@ $(document).ready(function(){
 			</td>
 			
 			<td align="right"><a
-				href="formonarenhancedxml.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">XML</a>			
+				href="formonarenhancedxml.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&episodeId=<%=props.getProperty("episodeId","0")%>">XML</a>			
 			</td>
 			
 			<%
@@ -2194,7 +2198,7 @@ $(document).ready(function(){
 			</td>
 			<td colspan="2" valign="top">Partner's Education level <br>
 					<select name="pg1_partnerEduLevel" style="width: 100%" >
-						<option value="UNK">Select</option>
+						<option value="UN">Select</option>
 						<option value="ED001">College/University Completed</option>
 						<option value="ED002">College/University not Completed</option>						
 						<option value="ED004">High School Completed</option>
@@ -2227,7 +2231,7 @@ $(document).ready(function(){
 			</td>
 			<td width="15%" valign="top">Educational level <br>
 					<select name="pg1_eduLevel" style="width: 100%" >
-						<option value="UNK">Select</option>
+						<option value="UN">Select</option>
 						<option value="ED001">College/University Completed</option>
 						<option value="ED002">College/University not Completed</option>						
 						<option value="ED004">High School Completed</option>
