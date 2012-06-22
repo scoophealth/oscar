@@ -47,11 +47,15 @@ import org.apache.struts.util.LabelValueBean;
 import org.oscarehr.common.dao.AbstractCodeSystemDao;
 import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.dao.DrugDao;
+import org.oscarehr.common.dao.EFormDao;
+import org.oscarehr.common.dao.EFormGroupDao;
 import org.oscarehr.common.dao.EpisodeDao;
 import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.model.AbstractCodeSystemModel;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Drug;
+import org.oscarehr.common.model.EForm;
+import org.oscarehr.common.model.EFormGroup;
 import org.oscarehr.common.model.Episode;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.util.LoggedInInfo;
@@ -83,6 +87,22 @@ public class PregnancyAction extends DispatchAction {
         	return 0;
         }
 		return 0;
+	}
+
+	public ActionForward getLatestFormIdByPregnancy(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  throws IOException {
+		String episodeId = request.getParameter("episodeId");
+		
+		Integer formId = 0;
+		if(episodeId != null) {
+			try {
+				formId = getLatestFormIdByPregnancy(Integer.parseInt(episodeId));
+			}catch(NumberFormatException e) {
+				//empty
+			}
+		}
+		JSONObject json = JSONObject.fromObject(new LabelValueBean("formId",String.valueOf(formId)));
+		response.getWriter().println(json);
+		return null;
 	}
 	
 	public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
@@ -206,7 +226,8 @@ public class PregnancyAction extends DispatchAction {
 		Properties p = lr.getFormRecord(demographicNo, 0);
 		p = lr.getFormCustRecord(p, LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
 		if(penicillin != null && penicillin.equals("checked")) {
-			p.setProperty("o_otherTests1","Vaginal Anal GBS with sensitivities (pt allergic to penicillin)");
+			p.setProperty("o_otherTests1","Vaginal Anal GBS w/ sensitivities");
+			p.setProperty("o_otherTests2", "pt allergic to penicillin");
 		} else {
 			p.setProperty("o_otherTests1","Vaginal Anal GBS");
 		}
@@ -258,7 +279,20 @@ public class PregnancyAction extends DispatchAction {
 		List<Drug> drugs = drugDao.findByDemographicId(demographicNo, false);
 		StringBuilder output = new StringBuilder();
 		for(Drug drug:drugs) {
-			output.append(drug.getSpecial().replaceAll("\n", " ") + "\n");			
+			if(drug.getBrandName() != null && drug.getBrandName().length()>0) {
+				if(output.length()>0)
+					output.append(",");
+				output.append(drug.getBrandName());
+			}
+			else if(drug.getCustomName() != null && drug.getCustomName().length()>0) {
+				if(output.length()>0)
+					output.append(",");
+				output.append(drug.getCustomName());
+			} else {
+				if(output.length()>0)
+					output.append(",");
+				output.append(drug.getSpecial());
+			}
 		}
 		
 		JSONObject json = JSONObject.fromObject(new LabelValueBean("meds",output.toString().trim()));
@@ -406,5 +440,127 @@ public class PregnancyAction extends DispatchAction {
 		response.getWriter().print(json.toString());
 		
 	    return null;
+	}
+	
+	public ActionForward loadEformByName(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
+		EFormDao eformDao = (EFormDao)SpringUtils.getBean("EFormDao");
+		//Prenatal Screening (IPS) Credit Valley
+		//Prenatal Screening - North York
+		String demographicNo = request.getParameter("demographicNo");
+		String name=request.getParameter("name");
+		String apptNo = request.getParameter("appointmentNo");
+		if(apptNo == null) {
+			apptNo="0";
+		}
+		EForm eform = eformDao.findByName(name);
+		
+		if(eform != null) {
+			ActionForward af = new ActionForward();
+			af.setPath("/eform/efmformadd_data.jsp?fid="+eform.getId()+"&demographic_no="+demographicNo+"&appointment="+apptNo);
+			af.setRedirect(true);
+			return af;			
+		} else {
+			ActionForward af = new ActionForward();
+			af.setPath("/pregnancy/eform_not_found.jsp");
+			return af;
+		}
+	}
+	
+	/*
+	 * Hb
+Urine C&S
+Repeat antibody screen
+1 hour 50 gm glucose screen
+	 */
+	public ActionForward createGCTLabReq(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  throws SQLException {
+		Integer demographicNo = Integer.parseInt(request.getParameter("demographicNo"));
+		String hb = request.getParameter("hb");
+		String urine = request.getParameter("urine");
+		String antibody = request.getParameter("antibody");
+		String glucose = request.getParameter("glucose");
+		
+		
+		FrmLabReq07Record lr = new FrmLabReq07Record();
+		Properties p = lr.getFormRecord(demographicNo, 0);
+		p = lr.getFormCustRecord(p, LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+		
+		if(hb != null && hb.equals("checked")) {
+			p.setProperty("h_cbc","checked=\"checked\"");			
+		}
+		if(urine != null && urine.equals("checked")) {
+			p.setProperty("m_urine","checked=\"checked\"");
+		}
+		if(antibody != null && antibody.equals("checked")) {			
+			p.setProperty("i_repeatPrenatalAntibodies","checked=\"checked\"");
+		}
+		if(glucose != null && glucose.equals("checked")) {
+			p.setProperty("o_otherTests1","1 Hr 50gm GLUCOSE Screen");
+		}
+		
+		//int recId = lr.saveFormRecord(p);
+		request.getSession().setAttribute("labReq07"+demographicNo,p);
+	
+		return null;
+	}
+	
+	public ActionForward createGTTLabReq(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  throws SQLException {
+		Integer demographicNo = Integer.parseInt(request.getParameter("demographicNo"));
+		String glucose = request.getParameter("glucose");
+		
+		
+		FrmLabReq07Record lr = new FrmLabReq07Record();
+		Properties p = lr.getFormRecord(demographicNo, 0);
+		p = lr.getFormCustRecord(p, LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+				
+		if(glucose != null && glucose.equals("checked")) {
+			p.setProperty("o_otherTests1","2 Hr 75gm GLUCOSE Screen");
+		}
+		
+		//int recId = lr.saveFormRecord(p);
+		request.getSession().setAttribute("labReq07"+demographicNo,p);
+	
+		return null;
+	}
+	
+	public ActionForward getEformsByGroupAjax(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {		
+		String name = request.getParameter("name");
+		EFormDao eformDao = (EFormDao)SpringUtils.getBean("EFormDao");		
+		EFormGroupDao eformGroupDao = (EFormGroupDao)SpringUtils.getBean("EFormGroupDao");
+		List<LabelValueBean> results = new ArrayList<LabelValueBean>();
+		
+		List<EFormGroup> items = eformGroupDao.getByGroupName(name);
+		for(EFormGroup item:items) {
+			if(item.getFormId()>0) {
+				EForm eform = eformDao.find(item.getFormId());
+				if(eform != null) {
+					LabelValueBean bean = new LabelValueBean(eform.getFormName(),String.valueOf(item.getFormId()));
+					results.add(bean);
+				}
+			}
+		}
+		
+		JSONArray jsonObj = JSONArray.fromObject(results);
+		response.getWriter().print(jsonObj);
+		
+	    return null;
+	}
+	
+	public static List<LabelValueBean> getEformsByGroup(String name) {		
+		EFormDao eformDao = (EFormDao)SpringUtils.getBean("EFormDao");		
+		EFormGroupDao eformGroupDao = (EFormGroupDao)SpringUtils.getBean("EFormGroupDao");
+		List<LabelValueBean> results = new ArrayList<LabelValueBean>();
+		
+		List<EFormGroup> items = eformGroupDao.getByGroupName(name);
+		for(EFormGroup item:items) {
+			if(item.getFormId()>0) {
+				EForm eform = eformDao.find(item.getFormId());
+				if(eform != null) {
+					LabelValueBean bean = new LabelValueBean(eform.getFormName(),String.valueOf(item.getFormId()));
+					results.add(bean);
+				}
+			}
+		}
+		
+		return results;
 	}
 }
