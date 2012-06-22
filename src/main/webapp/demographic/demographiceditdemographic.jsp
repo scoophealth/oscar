@@ -3012,7 +3012,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 									onclick="window.location='../report/GenerateEnvelopes.do?demos=<%=demographic.getDemographicNo()%>'">
 								<input type="button" size="110" name="Button"
 									value="<bean:message key="demographic.demographiceditdemographic.btnCreatePDFLabel"/>"
-									onclick="window.location='printDemoLabelAction.do?demographic_no=<%=demographic.getDemographicNo()%>'">
+									onclick="window.location='printDemoLabelAction.do?demographic_no=<%=demographic.getDemographicNo()%>&appointment_no=<%=appointment%>'">
 								<input type="button" size="110" name="Button"
 									value="<bean:message key="demographic.demographiceditdemographic.btnCreatePDFAddressLabel"/>"
 									onclick="window.location='printDemoAddressLabelAction.do?demographic_no=<%=demographic.getDemographicNo()%>'">
