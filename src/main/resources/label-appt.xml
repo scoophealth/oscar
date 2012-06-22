@@ -1,0 +1,137 @@
+
+<!--
+    Document   : label-appt.xml
+    Created on : June 21, 2012, 4:11 PM
+    Author     : mweston4
+    Description:
+        Purpose of the document follows.
+-->
+
+<?xml version="1.0" encoding="UTF-8"  ?>
+
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport name="label" columnCount="1" printOrder="Vertical"
+	orientation="Portrait" pageWidth="350" pageHeight="75" columnWidth="200"
+	columnSpacing="0" leftMargin="0" rightMargin="0" topMargin="10"
+	bottomMargin="0" whenNoDataType="NoPages" isTitleNewPage="false"
+	isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+	<reportFont name="sansserif" isDefault="false" fontName="sansserif"
+		size="10" isBold="false" isItalic="false" isUnderline="false"
+		isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252"
+		isPdfEmbedded="false" />
+
+	<parameter name="demo" isForPrompting="true" class="java.lang.String" />
+        <parameter name="appt" isForPrompting="true" class="java.lang.String"/>
+	<queryString><![CDATA[select d.last_name, d.chart_no, d.first_name, d.address, d.city , d.province, d.postal, d.phone, d.phone2, d.year_of_birth, d.month_of_birth, d.date_of_birth, d.hin, d.ver, d.sex, CONCAT(p.last_name, ', ' ,p.first_name) as doc_name from demographic d, appointment a, provider p where d.demographic_no=a.demographic_no and a.demographic_no=$P{demo} and a.provider_no=p.provider_no and a.appointment_no=$P{appt}]]></queryString>
+
+	<field name="last_name" class="java.lang.String" />
+	<field name="chart_no" class="java.lang.String" />
+	<field name="first_name" class="java.lang.String" />
+	<field name="address" class="java.lang.String" />
+	<field name="city" class="java.lang.String" />
+	<field name="province" class="java.lang.String" />
+	<field name="postal" class="java.lang.String" />
+	<field name="phone" class="java.lang.String" />
+	<field name="phone2" class="java.lang.String" />
+	<field name="year_of_birth" class="java.lang.String" />
+	<field name="month_of_birth" class="java.lang.String" />
+	<field name="date_of_birth" class="java.lang.String" />
+	<field name="hin" class="java.lang.String" />
+	<field name="ver" class="java.lang.String" />
+	<field name="sex" class="java.lang.String" />
+	<field name="doc_name" class="java.lang.String" />
+
+	<variable name="nowyear" class="java.lang.Integer" resetType="None"
+		calculation="Nothing">
+		<variableExpression><![CDATA[new java.lang.Integer( 1900 +  (new java.util.Date().getYear()) )]]></variableExpression>
+	</variable>
+	<variable name="useryear" class="java.lang.Integer" resetType="None"
+		calculation="Nothing">
+		<variableExpression><![CDATA[new java.lang.Integer($F{year_of_birth})]]></variableExpression>
+	</variable>
+	<background>
+		<band height="0" isSplitAllowed="true">
+		</band>
+	</background>
+	<title>
+		<band height="60" isSplitAllowed="true">
+			<textField isStretchWithOverflow="false" isBlankWhenNull="false"
+				evaluationTime="Now" hyperlinkType="None" hyperlinkTarget="Self">
+				<reportElement mode="Opaque" x="17" y="0" width="330"
+					height="14" key="textField" positionType="Float" />
+				<box topBorder="None" topBorderColor="#000000" leftBorder="None"
+					leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000"
+					bottomBorder="None" bottomBorderColor="#000000" />
+				<textElement>
+					<font size="12" isBold="true" isUnderline="true" />
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{last_name} + "," + $F{first_name} + "   " + "CHART#:" + $F{chart_no}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="false" isBlankWhenNull="false"
+				evaluationTime="Now" hyperlinkType="None" hyperlinkTarget="Self">
+				<reportElement mode="Opaque" x="17" y="15" width="330"
+					height="14" key="textField" positionType="Float" />
+				<box topBorder="None" topBorderColor="#000000" leftBorder="None"
+					leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000"
+					bottomBorder="None" bottomBorderColor="#000000" />
+				<textElement>
+					<font size="12" />
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["HIN:" + $F{hin} + " " + $F{ver} + "   " + "SEX:" + $F{sex} + "  " + "DOB:" +$F{date_of_birth} + "/" + $F{month_of_birth} + "/" + $F{year_of_birth} + "  AGE:" + (new java.lang.Integer(  ($V{nowyear}.intValue()) -($V{useryear}.intValue()) )).toString()]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="false" isBlankWhenNull="false"
+				evaluationTime="Now" hyperlinkType="None" hyperlinkTarget="Self">
+				<reportElement mode="Opaque" x="17" y="30" width="330"
+					height="14" key="textField" positionType="Float" />
+				<box topBorder="None" topBorderColor="#000000" leftBorder="None"
+					leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000"
+					bottomBorder="None" bottomBorderColor="#000000" />
+				<textElement>
+					<font size="12" />
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{address} + " " + $F{city} + "," + $F{province} + " " + $F{postal}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="false" isBlankWhenNull="false"
+				evaluationTime="Now" hyperlinkType="None" hyperlinkTarget="Self">
+				<reportElement mode="Opaque" x="17" y="45" width="330"
+					height="14" key="textField" positionType="Float" />
+				<box topBorder="None" topBorderColor="#000000" leftBorder="None"
+					leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000"
+					bottomBorder="None" bottomBorderColor="#000000" />
+				<textElement>
+					<font size="12" />
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["HOME: " + $F{phone} + "   " + "Dr. " + $F{doc_name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="0" isSplitAllowed="true">
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="0" isSplitAllowed="true">
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="0" isSplitAllowed="true">
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="0" isSplitAllowed="true">
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="0" isSplitAllowed="true">
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="0" isSplitAllowed="true">
+		</band>
+	</summary>
+</jasperReport>

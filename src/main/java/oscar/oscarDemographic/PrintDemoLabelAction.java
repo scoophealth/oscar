@@ -22,6 +22,7 @@ import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarAction;
 import oscar.OscarDocumentCreator;
+import oscar.OscarProperties;
 
 public class PrintDemoLabelAction extends OscarAction {
     
@@ -39,16 +40,32 @@ public class PrintDemoLabelAction extends OscarAction {
 
         HashMap<String,String> parameters = new HashMap<String,String>();
         parameters.put("demo", request.getParameter("demographic_no"));
+
+        Integer apptNo = null;
+        try {
+            apptNo = Integer.parseInt(request.getParameter("appointment_no"));
+        }catch(NumberFormatException e) {}
+
+        String defaultLabelPath = System.getProperty("user.home") + "/label.xml";       
+        String labelPath = OscarProperties.getInstance().getProperty("pdfLabelMRP",defaultLabelPath);
+        String apptProviderLabelPath = OscarProperties.getInstance().getProperty("pdfLabelApptProvider","");
+
+        if (apptNo != null && !apptProviderLabelPath.isEmpty()) {
+            parameters.put("appt", String.valueOf(apptNo));
+            labelPath = apptProviderLabelPath;
+        }
+
         ServletOutputStream sos = null;
         InputStream ins = null;
         
         
         logger.debug("user home: " + System.getProperty("user.home"));
         try {
-            ins = new FileInputStream(System.getProperty("user.home") + "/label.xml");
+            ins = new FileInputStream(labelPath);
+            logger.debug("loading from :" + labelPath + " " + ins);
         }
         catch (FileNotFoundException ex1) {
-            logger.debug("label.xml not found in user home using default instead");
+            logger.warn("label xml file not found at " + labelPath + " using default instead");
         }
         if (ins == null){
             try {
