@@ -1,0 +1,176 @@
+alter table formONAREnhanced add pg2_date55 date default NULL;
+alter table formONAREnhanced add pg2_gest55 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_ht55 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_wt55 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_presn55 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_FHR55 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_urinePr55 char(3) default NULL;
+alter table formONAREnhanced add pg2_urineGl55 char(3) default NULL;
+alter table formONAREnhanced add pg2_BP55 varchar(8) default NULL;
+alter table formONAREnhanced add pg2_comments55 varchar(255) default NULL;
+
+alter table formONAREnhanced add pg2_date56 date default NULL;
+alter table formONAREnhanced add pg2_gest56 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_ht56 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_wt56 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_presn56 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_FHR56 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_urinePr56 char(3) default NULL;
+alter table formONAREnhanced add pg2_urineGl56 char(3) default NULL;
+alter table formONAREnhanced add pg2_BP56 varchar(8) default NULL;
+alter table formONAREnhanced add pg2_comments56 varchar(255) default NULL;
+
+alter table formONAREnhanced add pg2_date57 date default NULL;
+alter table formONAREnhanced add pg2_gest57 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_ht57 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_wt57 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_presn57 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_FHR57 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_urinePr57 char(3) default NULL;
+alter table formONAREnhanced add pg2_urineGl57 char(3) default NULL;
+alter table formONAREnhanced add pg2_BP57 varchar(8) default NULL;
+alter table formONAREnhanced add pg2_comments57 varchar(255) default NULL;
+
+alter table formONAREnhanced add pg2_date58 date default NULL;
+alter table formONAREnhanced add pg2_gest58 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_ht58 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_wt58 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_presn58 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_FHR58 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_urinePr58 char(3) default NULL;
+alter table formONAREnhanced add pg2_urineGl58 char(3) default NULL;
+alter table formONAREnhanced add pg2_BP58 varchar(8) default NULL;
+alter table formONAREnhanced add pg2_comments58 varchar(255) default NULL;
+
+alter table formONAREnhanced add pg2_date59 date default NULL;
+alter table formONAREnhanced add pg2_gest59 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_ht59 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_wt59 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_presn59 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_FHR59 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_urinePr59 char(3) default NULL;
+alter table formONAREnhanced add pg2_urineGl59 char(3) default NULL;
+alter table formONAREnhanced add pg2_BP59 varchar(8) default NULL;
+alter table formONAREnhanced add pg2_comments59 varchar(255) default NULL;
+
+alter table formONAREnhanced add pg2_date60 date default NULL;
+alter table formONAREnhanced add pg2_gest60 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_ht60 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_wt60 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_presn60 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_FHR60 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_urinePr60 char(3) default NULL;
+alter table formONAREnhanced add pg2_urineGl60 char(3) default NULL;
+alter table formONAREnhanced add pg2_BP60 varchar(8) default NULL;
+alter table formONAREnhanced add pg2_comments60 varchar(255) default NULL;
+
+alter table formONAREnhanced add pg2_date61 date default NULL;
+alter table formONAREnhanced add pg2_gest61 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_ht61 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_wt61 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_presn61 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_FHR61 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_urinePr61 char(3) default NULL;
+alter table formONAREnhanced add pg2_urineGl61 char(3) default NULL;
+alter table formONAREnhanced add pg2_BP61 varchar(8) default NULL;
+alter table formONAREnhanced add pg2_comments61 varchar(255) default NULL;
+
+alter table formONAREnhanced add pg2_date62 date default NULL;
+alter table formONAREnhanced add pg2_gest62 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_ht62 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_wt62 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_presn62 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_FHR62 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_urinePr62 char(3) default NULL;
+alter table formONAREnhanced add pg2_urineGl62 char(3) default NULL;
+alter table formONAREnhanced add pg2_BP62 varchar(8) default NULL;
+alter table formONAREnhanced add pg2_comments62 varchar(255) default NULL;
+
+alter table formONAREnhanced add pg2_date63 date default NULL;
+alter table formONAREnhanced add pg2_gest63 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_ht63 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_wt63 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_presn63 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_FHR63 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_urinePr63 char(3) default NULL;
+alter table formONAREnhanced add pg2_urineGl63 char(3) default NULL;
+alter table formONAREnhanced add pg2_BP63 varchar(8) default NULL;
+alter table formONAREnhanced add pg2_comments63 varchar(255) default NULL;
+
+alter table formONAREnhanced add pg2_date64 date default NULL;
+alter table formONAREnhanced add pg2_gest64 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_ht64 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_wt64 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_presn64 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_FHR64 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_urinePr64 char(3) default NULL;
+alter table formONAREnhanced add pg2_urineGl64 char(3) default NULL;
+alter table formONAREnhanced add pg2_BP64 varchar(8) default NULL;
+alter table formONAREnhanced add pg2_comments64 varchar(255) default NULL;
+
+alter table formONAREnhanced add pg2_date65 date default NULL;
+alter table formONAREnhanced add pg2_gest65 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_ht65 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_wt65 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_presn65 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_FHR65 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_urinePr65 char(3) default NULL;
+alter table formONAREnhanced add pg2_urineGl65 char(3) default NULL;
+alter table formONAREnhanced add pg2_BP65 varchar(8) default NULL;
+alter table formONAREnhanced add pg2_comments65 varchar(255) default NULL;
+
+alter table formONAREnhanced add pg2_date66 date default NULL;
+alter table formONAREnhanced add pg2_gest66 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_ht66 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_wt66 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_presn66 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_FHR66 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_urinePr66 char(3) default NULL;
+alter table formONAREnhanced add pg2_urineGl66 char(3) default NULL;
+alter table formONAREnhanced add pg2_BP66 varchar(8) default NULL;
+alter table formONAREnhanced add pg2_comments66 varchar(255) default NULL;
+
+alter table formONAREnhanced add pg2_date67 date default NULL;
+alter table formONAREnhanced add pg2_gest67 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_ht67 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_wt67 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_presn67 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_FHR67 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_urinePr67 char(3) default NULL;
+alter table formONAREnhanced add pg2_urineGl67 char(3) default NULL;
+alter table formONAREnhanced add pg2_BP67 varchar(8) default NULL;
+alter table formONAREnhanced add pg2_comments67 varchar(255) default NULL;
+
+alter table formONAREnhanced add pg2_date68 date default NULL;
+alter table formONAREnhanced add pg2_gest68 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_ht68 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_wt68 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_presn68 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_FHR68 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_urinePr68 char(3) default NULL;
+alter table formONAREnhanced add pg2_urineGl68 char(3) default NULL;
+alter table formONAREnhanced add pg2_BP68 varchar(8) default NULL;
+alter table formONAREnhanced add pg2_comments68 varchar(255) default NULL;
+
+alter table formONAREnhanced add pg2_date69 date default NULL;
+alter table formONAREnhanced add pg2_gest69 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_ht69 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_wt69 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_presn69 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_FHR69 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_urinePr69 char(3) default NULL;
+alter table formONAREnhanced add pg2_urineGl69 char(3) default NULL;
+alter table formONAREnhanced add pg2_BP69 varchar(8) default NULL;
+alter table formONAREnhanced add pg2_comments69 varchar(255) default NULL;
+
+alter table formONAREnhanced add pg2_date70 date default NULL;
+alter table formONAREnhanced add pg2_gest70 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_ht70 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_wt70 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_presn70 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_FHR70 varchar(6) default NULL;
+alter table formONAREnhanced add pg2_urinePr70 char(3) default NULL;
+alter table formONAREnhanced add pg2_urineGl70 char(3) default NULL;
+alter table formONAREnhanced add pg2_BP70 varchar(8) default NULL;
+alter table formONAREnhanced add pg2_comments70 varchar(255) default NULL;
+
