@@ -25,4 +25,21 @@
 	<bean name="trustManager" class="org.apache.commons.net.util.TrustManagerUtils.TrustManager">
 		<constructor-arg value="false"/>
 	</bean>
+	
+	<bean id="bornScheduledTask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="timerTask">
+			<bean class="org.oscarehr.common.service.BORNSchedulerJob">
+			</bean>
+		</property>
+		<property name="delay" value="480000" />
+		<property name="period" value="3600000" />		<!--  every 60 mins-->
+	</bean>
+	
+		<bean id="scheduler" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="bornScheduledTask" />
+			</list>
+		</property>
+	</bean>
 </beans>

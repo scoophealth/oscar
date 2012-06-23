@@ -52,14 +52,41 @@ public class ONAREnhancedBornConnector {
 		
 	}
 
-	public void updateToSent(int formId) throws Exception {
+	public void updateToSent(int formId) throws Exception {		
 		Connection conn = org.oscarehr.util.DbConnectionFilter.getThreadLocalDbConnection();
-		Statement st = conn.createStatement();
-		int res = st.executeUpdate("update formONAREnhanced set sent_to_born=1 where id="+formId);		
+		try {
+			Statement st = conn.createStatement();
+			int res = st.executeUpdate("update formONAREnhanced set sent_to_born=1 where id="+formId);
+			st.close();
+		}finally {
+			//conn.close();
+		}
+	}
+	
+	public String getFileSuffix() throws Exception {
+		Connection conn = org.oscarehr.util.DbConnectionFilter.getThreadLocalDbConnection();
+		int num = 0;
+		try {
+			Statement st = conn.createStatement();
+			String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+			ResultSet rs = st.executeQuery("select count(*) as count from BornTransmissionLog where submitDateTime >= '" + today + " 00:00:00' and submitDateTime <= '" + today + " 23:59:59'");
+			if(rs.next()) {
+				num = rs.getInt("count");
+			}
+		}finally {
+			//conn.close();
+		}
+		num++;
+		String tmp = String.valueOf(num);
+		while(tmp.length() <3) {tmp = "0"+tmp;}
+		return tmp;
 	}
 	
 	public String updateBorn() throws Exception {
-
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		String dt = sdf.format(new Date());				
+		String filename =  "/BORN_"+OscarProperties.getInstance().getProperty("born_orgid", "")+"_AR_T_"+dt+"_"+getFileSuffix()+".xml";
+		
 		Connection conn = org.oscarehr.util.DbConnectionFilter.getThreadLocalDbConnection();
 		Statement st = conn.createStatement();
 		ResultSet rs = st.executeQuery("select demographic_no,id,formEdited,c_finalEDB,sent_to_born,pg1_signature,pg2_signature,episodeId from (select demographic_no,id,formEdited,c_finalEDB,sent_to_born,pg1_signature,pg2_signature,episodeId from formONAREnhanced where c_finalEDB!='' ORDER BY formEdited DESC) AS x  GROUP BY demographic_no");
@@ -77,10 +104,8 @@ public class ONAREnhancedBornConnector {
 		implicitNamespaces.put("","http://www.oscarmcmaster.org/AR2005");
 		opts.setSaveImplicitNamespaces(implicitNamespaces);
 		opts.setSaveNamespacesFirst();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-		String dt = sdf.format(new Date());		
 		String tmpPath = System.getProperty("java.io.tmpdir");
-		String filename =  "/BORN_HOSPCVH_AR_T_"+dt+"_001.xml";
+		
 		OutputStream os = new FileOutputStream(tmpPath + File.separator + filename);
 		PrintWriter pw = new PrintWriter(os,true);
 		pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ARRecordSet xmlns=\"http://www.oscarmcmaster.org/AR2005\">");

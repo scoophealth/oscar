@@ -1,3 +1,5 @@
+printer_info	: center, 304, 20, 0, BaseFont.HELVETICA, 6 
+
 c_lastName	: left, 50, 97, 0, BaseFont.HELVETICA, 8 
 c_firstName	: left, 188, 97, 0, BaseFont.HELVETICA, 8 
 pg1_baObs	: left, 50, 117, 0, BaseFont.HELVETICA, 8 , OBS

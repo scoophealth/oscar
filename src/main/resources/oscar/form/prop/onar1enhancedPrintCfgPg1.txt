@@ -1,3 +1,5 @@
+printer_info	: center, 304, 20, 0, BaseFont.HELVETICA, 6 
+
 c_lastName	: left, 50, 97, 0, BaseFont.HELVETICA, 8 
 c_firstName	: left, 182, 97, 0, BaseFont.HELVETICA, 8 
 c_address	: left, 50, 118, 0, BaseFont.HELVETICA, 8 

@@ -1817,6 +1817,7 @@ $(document).ready(function(){
 	<input type="hidden" name="form_class" value="<%=formClass%>" />
 	<input type="hidden" name="form_link" value="<%=formLink%>" />
 	<input type="hidden" name="formId" value="<%=formId%>" />
+	<input type="hidden" name="sent_to_born" value="0" />
 	<!--input type="hidden" name="ID" value="<%= props.getProperty("ID", "0") %>" /-->
 	<input type="hidden" name="provider_no"
 		value=<%=request.getParameter("provNo")%> />

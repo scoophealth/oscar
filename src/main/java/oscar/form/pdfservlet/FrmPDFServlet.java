@@ -13,8 +13,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
@@ -30,6 +32,7 @@ import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
@@ -301,7 +304,22 @@ public class FrmPDFServlet extends HttpServlet {
             		//ignore
             	}
             }
-
+            
+            String currentDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date());
+            int totalPages = 1;
+            if(req.getParameter("multiple")!=null)
+            	totalPages = Integer.parseInt(req.getParameter("multiple"));
+            String currentUser = LoggedInInfo.loggedInInfo.get().loggedInProvider.getFormattedName();
+            String pg = suffix.length()==0||suffix.equals("0")?"0":suffix;                        
+            String currentPage = String.valueOf(Integer.parseInt(pg)+1);
+            
+            props.setProperty("total_pages",String.valueOf(totalPages));
+            props.setProperty("current_page",currentPage);
+            props.setProperty("current_user", currentUser);
+            props.setProperty("current_date", currentDate);
+            
+            props.setProperty("printer_info", "Printed on " + currentDate + " by " + currentUser + ": Page " + currentPage + " of " + totalPages );
+            
             //initialise measurement collections = a list of pages sections measurements
             List<List<List<String>>>xMeasurementValues = new ArrayList<List<List<String>>>();
             List<List<List<String>>>yMeasurementValues = new ArrayList<List<List<String>>>();

@@ -1,3 +1,5 @@
+printer_info	: center, 304, 20, 0, BaseFont.HELVETICA, 6 
+
 c_lastName	: left, 50, 97, 0, BaseFont.HELVETICA, 8 
 c_firstName	: left, 188, 97, 0, BaseFont.HELVETICA, 8 
 pg1_baObs	: left, 50, 117, 0, BaseFont.HELVETICA, 8 , OBS
@@ -416,6 +418,27 @@ pg2_presn54	: left, 253, 668, 0, BaseFont.HELVETICA, 8
 pg2_FHR54	: left, 285, 668, 0, BaseFont.HELVETICA, 8 
 pg2_comments54	: left, 310, 668, 0, BaseFont.HELVETICA, 8
 
+pg2_date55	: left, 41, 681, 0, BaseFont.HELVETICA, 8 
+pg2_gest55	: left, 87, 681, 0, BaseFont.HELVETICA, 8 
+pg2_wt55	: left, 137, 681, 0, BaseFont.HELVETICA, 8 
+pg2_BP55	: left, 167, 681, 0, BaseFont.HELVETICA, 8 
+pg2_urinePr55	: left, 199, 681, 0, BaseFont.HELVETICA, 8 
+pg2_urineGl55	: left, 211, 681, 0, BaseFont.HELVETICA, 8 
+pg2_ht55	: left, 227, 681, 0, BaseFont.HELVETICA, 8 
+pg2_presn55	: left, 253, 681, 0, BaseFont.HELVETICA, 8 
+pg2_FHR55	: left, 285, 681, 0, BaseFont.HELVETICA, 8 
+pg2_comments55	: left, 310, 681, 0, BaseFont.HELVETICA, 8
+
+pg2_date56	: left, 41, 694, 0, BaseFont.HELVETICA, 8 
+pg2_gest56	: left, 87, 694, 0, BaseFont.HELVETICA, 8 
+pg2_wt56	: left, 137, 694, 0, BaseFont.HELVETICA, 8 
+pg2_BP56	: left, 167, 694, 0, BaseFont.HELVETICA, 8 
+pg2_urinePr56	: left, 199, 694, 0, BaseFont.HELVETICA, 8 
+pg2_urineGl56	: left, 211, 694, 0, BaseFont.HELVETICA, 8 
+pg2_ht56	: left, 227, 694, 0, BaseFont.HELVETICA, 8 
+pg2_presn56	: left, 253, 694, 0, BaseFont.HELVETICA, 8 
+pg2_FHR56	: left, 285, 694, 0, BaseFont.HELVETICA, 8 
+pg2_comments56	: left, 310, 694, 0, BaseFont.HELVETICA, 8
 pg2_signature	: left, 60, 748, 0, BaseFont.HELVETICA, 8
 pg2_formDate	: left, 230, 748, 0, BaseFont.HELVETICA, 8
 pg2_signature2	: left, 320, 748, 0, BaseFont.HELVETICA, 8

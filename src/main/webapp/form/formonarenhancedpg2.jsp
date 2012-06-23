@@ -174,6 +174,7 @@ width: 100%;
 		});		
 		$("#rf_add_btn").hide();
 		$("#sv_add_btn").hide();
+		$("#sv_badd_btn").hide();
 		$("#us_add_btn").hide();
 		$("#lock_req_btn").hide();
 	});
@@ -237,7 +238,7 @@ width: 100%;
 		}
 	
 	function validate() {
-		for(var x=1;x<=54;x++) {
+		for(var x=1;x<=70;x++) {
 			if($('#sv_'+ x).length>0) {
 				var patt1=new RegExp("^(\\d{4}/\\d{2}/\\d{2})?$");
 				if(!patt1.test($("input[name='pg2_date"+x+"']").val())) {
@@ -342,7 +343,7 @@ width: 100%;
 	
 	function adjustDynamicListTotals() {		
 		$('#rf_num').val(adjustDynamicListTotalsRF('rf_',20,true));
-		$('#sv_num').val(adjustDynamicListTotalsSV('sv_',54,true));
+		$('#sv_num').val(adjustDynamicListTotalsSV('sv_',70,true));
 		$('#us_num').val(adjustDynamicListTotalsUS('us_',12,true));
 	}
 	
@@ -439,9 +440,15 @@ function setCheckbox(id,type,val) {
 	});
 }
 
+function addBulkSubsequentVisit(times) {
+	for(var x=0;x<parseInt(times);x++) {
+		addSubsequentVisit();
+	}	
+}
+
 function addSubsequentVisit() {
-	if(adjustDynamicListTotalsSV("sv_",54,false) >= 54) {
-		alert('Maximum number of rows is 54');
+	if(adjustDynamicListTotalsSV("sv_",70,false) >= 70) {
+		alert('Maximum number of rows is 70');
 		return;
 	}
 	
@@ -682,6 +689,11 @@ function gbsReq() {
             	if(Integer.parseInt(props.getProperty("sv_num", "0")) > 18) {
             		int num=multiple+1;
             		urlExt.append("&__title"+num+"=Antenatal+Record+Part+2&__cfgfile"+num+"=onar2enhancedPrintCfgPgSv&__template"+num+"=onar2enhancedsv&__numPages"+num+"=1&postProcessor"+num+"=ONAR2EnhancedPostProcessor");
+            		multiple++;
+            	}
+            	if(Integer.parseInt(props.getProperty("sv_num", "0")) > 56) {
+            		int num=multiple+1;
+            		urlExt.append("&__title"+num+"=Antenatal+Record+Part+2&__cfgfile"+num+"=onar2enhancedPrintCfgPgSv2&__template"+num+"=onar2enhancedsv&__numPages"+num+"=1&postProcessor"+num+"=ONAR2EnhancedPostProcessor");
             		multiple++;
             	}
             	if(Integer.parseInt(props.getProperty("us_num", "0")) > 4) {
@@ -1685,6 +1697,7 @@ $(document).ready(function(){
 	<input type="hidden" name="form_class" value="<%=formClass%>" />
 	<input type="hidden" name="form_link" value="<%=formLink%>" />
 	<input type="hidden" name="formId" value="<%=formId%>" />
+	<input type="hidden" name="sent_to_born" value="0" />
 	<input type="hidden" name="ID"
 		value="<%= props.getProperty("ID", "0") %>" />
 	<input type="hidden" name="provider_no"
@@ -1908,7 +1921,7 @@ $(document).ready(function(){
 			<td width="7%">GA<br>
 			(weeks)</td>
 			<td width="7%"><!--  a href=# onclick="javascript:onWtSVG(); return false;"-->Weight<br>
-			(Kg)</a></td>
+			(Kg)<!--</a>--><a href="javascript:void(0);" onClick="return false;"><img src="<%=request.getContextPath()%>/oscarEncounter/oscarMeasurements/img/chart.gif" border=0"/></a></td>
 			<td width="7%">B.P.</td>
 			<td width="6%" colspan="2">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -1936,7 +1949,7 @@ $(document).ready(function(){
 	</table>
 	<table width="100%" border="0" cellspacing="0" cellpadding="0">
 		<tr>
-			<td colspan="10"><input id="sv_add_btn" type="button" value="Add New" onclick="addSubsequentVisit();"/></td>
+			<td colspan="10"><input id="sv_add_btn" type="button" value="Add New" onclick="addSubsequentVisit();"/>&nbsp;<input id="sv_badd_btn" type="button" value="Add 5" onclick="addBulkSubsequentVisit(5);"/></td>
 		</tr>
 	</table>
 	
