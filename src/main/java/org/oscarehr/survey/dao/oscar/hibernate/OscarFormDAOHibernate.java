@@ -21,7 +21,6 @@
  * Toronto, Ontario, Canada
  */
 
-
 package org.oscarehr.survey.dao.oscar.hibernate;
 
 import java.io.OutputStream;
