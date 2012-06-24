@@ -21,7 +21,6 @@
  * Toronto, Ontario, Canada
  */
 
-
 package oscar.ocan.task;
 
 import java.io.ByteArrayInputStream;

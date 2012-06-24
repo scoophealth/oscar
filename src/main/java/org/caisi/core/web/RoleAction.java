@@ -21,7 +21,6 @@
  * Toronto, Ontario, Canada
  */
 
-
 package org.caisi.core.web;
 
 import javax.servlet.http.HttpServletRequest;

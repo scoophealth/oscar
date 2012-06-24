@@ -21,7 +21,6 @@
  * Toronto, Ontario, Canada
  */
 
-
 package org.caisi.core.web;
 
 import org.apache.struts.actions.DispatchAction;

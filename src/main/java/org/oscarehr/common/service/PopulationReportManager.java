@@ -21,7 +21,6 @@
  * Toronto, Ontario, Canada
  */
 
-
 package org.oscarehr.common.service;
 
 import java.util.LinkedHashMap;
