@@ -21,7 +21,6 @@
  * Toronto, Ontario, Canada
  */
 
-
 package org.caisi.tickler.web;
 
 import java.text.SimpleDateFormat;

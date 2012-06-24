@@ -21,7 +21,6 @@
  * Toronto, Ontario, Canada
  */
 
-
 package org.caisi.tickler.prepared.runtime;
 
 import java.io.File;

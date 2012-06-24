@@ -21,7 +21,6 @@
  * Toronto, Ontario, Canada
  */
 
-
 package org.oscarehr.PMmodule.web.adapter;
 
 import org.oscarehr.PMmodule.model.IntakeNode;
