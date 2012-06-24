@@ -21,7 +21,6 @@
  * Toronto, Ontario, Canada
  */
 
-
 package org.oscarehr.common.dao;
 
 import javax.persistence.Query;

@@ -21,7 +21,6 @@
  * Toronto, Ontario, Canada
  */
 
-
 package org.oscarehr.PMmodule.caisi_integrator;
 
 import java.io.ByteArrayOutputStream;
