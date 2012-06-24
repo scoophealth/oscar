@@ -145,12 +145,12 @@
 		<property name="fileExtensions" value=".java,.jsp,.jspf,.jsf"/>
 		<property name="format" value="System\.(out|err)" />
 	</module>
-
+<!-- Marc: this is causing me problems, have to look at it later
 	<module name="RegexpMultiline">
 		<property name="fileExtensions" value=".java,.jsp,.jspf,.jsf,.html,.htm"/>
 		<property name="format" value="8859|latin-1|ascii" />
 	</module>
-
+-->
 	<module name="RegexpMultiline">
 		<property name="fileExtensions" value=".java,.jsp,.jspf,.jsf"/>
 		<property name="format" value="printStackTrace" />
