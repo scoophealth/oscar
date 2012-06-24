@@ -20,7 +20,6 @@
  * Centre for Research on Inner City Health, St. Michael's Hospital,
  * Toronto, Ontario, Canada
  */
-
 package org.oscarehr.util;
 
 public class EncounterUtil {
