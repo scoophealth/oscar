@@ -21,7 +21,6 @@
  * Toronto, Ontario, Canada
  */
 
-
 package org.oscarehr.casemgmt.model;
 
 import java.util.ArrayList;

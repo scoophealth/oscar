@@ -21,7 +21,6 @@
  * Toronto, Ontario, Canada
  */
 
-
 package org.oscarehr.casemgmt.common;
 
 public class SecurityAccess extends BasicTag

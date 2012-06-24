@@ -21,7 +21,6 @@
  * Toronto, Ontario, Canada
  */
 
-
 package org.oscarehr.PMmodule.web.utils;
 
 import java.sql.Timestamp;

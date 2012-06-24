@@ -21,7 +21,6 @@
  * Toronto, Ontario, Canada
  */
 
-
 package org.oscarehr.survey.service.impl;
 
 import org.oscarehr.survey.dao.oscar.OscarFormDAO;

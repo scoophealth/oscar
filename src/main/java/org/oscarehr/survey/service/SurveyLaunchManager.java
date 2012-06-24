@@ -21,7 +21,6 @@
  * Toronto, Ontario, Canada
  */
 
-
 package org.oscarehr.survey.service;
 
 import org.oscarehr.survey.model.Survey;
