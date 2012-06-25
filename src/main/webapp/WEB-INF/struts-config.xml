@@ -2447,6 +2447,8 @@
 			<forward name="list" path="/pregnancy/list.jsp" />
 			<forward name="success" path="/pregnancy/success.jsp" />
 			<forward name="complete" path="/pregnancy/complete.jsp" />
+			<forward name="migrate" path="/pregnancy/migrate.jsp" />
+			<forward name="pre-migrate" path="/pregnancy/premigrate.jsp" />
 		</action>
 		
 		

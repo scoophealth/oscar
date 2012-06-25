@@ -58,6 +58,9 @@
     List<LabelValueBean> ipsForms = PregnancyAction.getEformsByGroup("IPS");
     
     if(props.getProperty("obxhx_num", "0").equals("")) {props.setProperty("obxhx_num","0");}
+    
+    String labReqVer = oscar.OscarProperties.getInstance().getProperty("onare_labreqver","07");
+    if(labReqVer.equals("")) {labReqVer="07";}
 %>
 <%
   boolean bView = false;
@@ -277,6 +280,7 @@ width: 100%;
 	$(document).ready(function() {		
 		$("select[name='pg1_labCustom1Label']").val('<%= UtilMisc.htmlEscape(props.getProperty("pg1_labCustom1Label", "")) %>');
 		$("select[name='c_province']").val('<%= UtilMisc.htmlEscape(props.getProperty("c_province", "")) %>');
+		$("select[name='pg1_maritalStatus']").val('<%= UtilMisc.htmlEscape(props.getProperty("pg1_maritalStatus", "")) %>');
 		$("select[name='pg1_language']").val('<%= UtilMisc.htmlEscape(props.getProperty("pg1_language", "")) %>');		
 		$("select[name='pg1_partnerEduLevel']").val('<%= UtilMisc.htmlEscape(props.getProperty("pg1_partnerEduLevel", "")) %>');
 		
@@ -866,11 +870,14 @@ function updateGeneticD() {
         {
         	<%if(Integer.parseInt(props.getProperty("obxhx_num", "0")) > 6) {
 				%>
-				document.forms[0].action = "../form/createpdf?__title=Antenatal+Record+Part+1&__cfgfile=onar1enhancedPrintCfgPg1&__template=onar1&__numPages=1&postProcessor=ONAR1EnhancedPostProcessor&multiple=2&__title1=Antenatal+Record+Part+1&__cfgfile1=onar1enhancedPrintCfgPg2&__template1=onar1enhancedpg2&__numPages1=1&postProcessor1=ONAR1EnhancedPostProcessor";		           
+					document.forms[0].action = "../form/createpdf?__title=Antenatal+Record+Part+1&__cfgfile=onar1enhancedPrintCfgPg1&__template=onar1&__numPages=1&postProcessor=ONAR1EnhancedPostProcessor&multiple=2&__title1=Antenatal+Record+Part+1&__cfgfile1=onar1enhancedPrintCfgPg2&__template1=onar1enhancedpg2&__numPages1=1&postProcessor1=ONAR1EnhancedPostProcessor";		           				
 				<%
 			} else {
 				%>
-				document.forms[0].action = "../form/createpdf?__title=Antenatal+Record+Part+1&__cfgfile=onar1enhancedPrintCfgPg1&__template=onar1&__numPages=1&postProcessor=ONAR1EnhancedPostProcessor";		           
+				if($("textarea[name='pg1_comments2AR1']").val().length > 0)
+					document.forms[0].action = "../form/createpdf?__title=Antenatal+Record+Part+1&__cfgfile=onar1enhancedPrintCfgPg1&__template=onar1&__numPages=1&postProcessor=ONAR1EnhancedPostProcessor&multiple=2&__title1=Antenatal+Record+Part+1&__cfgfile1=onar1enhancedPrintCfgPg2&__template1=onar1enhancedpg2&__numPages1=1&postProcessor1=ONAR1EnhancedPostProcessor";				
+				else
+					document.forms[0].action = "../form/createpdf?__title=Antenatal+Record+Part+1&__cfgfile=onar1enhancedPrintCfgPg1&__template=onar1&__numPages=1&postProcessor=ONAR1EnhancedPostProcessor";		           
 				<%
 			} %>
         	 document.forms[0].target="_blank";            
@@ -1484,9 +1491,9 @@ $(document).ready(function(){
 				var hbElectrophoresis = $("#hbElectrophoresis").attr('checked');
 				var demographic = '<%=props.getProperty("demographic_no", "0")%>';
 				var user = '<%=session.getAttribute("user")%>';
-				url = '<%=request.getContextPath()%>/form/formlabreq07.jsp?demographic_no='+demographic+'&formId=0&provNo='+user + '&fromSession=true';
+				url = '<%=request.getContextPath()%>/form/formlabreq<%=labReqVer%>.jsp?demographic_no='+demographic+'&formId=0&provNo='+user + '&fromSession=true';
 				jQuery.ajax({url:'<%=request.getContextPath()%>/Pregnancy.do?method=createMCVLabReq&demographicNo='+demographic + '&ferritin='+ferritin+'&hb_electrophoresis='+hbElectrophoresis,async:false, success:function(data) {
-					popupPage(url);
+					popPage(url,'LabReq');
 				}});
 			},
 			Cancel: function() {
@@ -3389,7 +3396,7 @@ Calendar.setup({ inputField : "pg1_labLastPapDate", ifFormat : "%Y/%m/%d", shows
 
 <div id="lab_menu_div" class="hidden">
 <ul>
-	<li><a href="javascript:void(0)" onclick="popPage('formlabreq07.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AnteNatal','LabReq')">Routine Prenatal</a></li>
+	<li><a href="javascript:void(0)" onclick="popPage('formlabreq<%=labReqVer %>.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AnteNatal','LabReq')">Routine Prenatal</a></li>
 	<li><a href="javascript:void(0)" onclick="loadCytologyForms();">Cytology</a></li>
 </ul>
 </div>
