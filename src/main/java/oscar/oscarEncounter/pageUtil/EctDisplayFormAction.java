@@ -105,7 +105,8 @@ public class EctDisplayFormAction extends EctDisplayAction {
 						new EctFormData();
 						EctFormData.PatientForm[] pforms = EctFormData.getPatientFormsFromLocalAndRemote(bean.demographicNo, table);
 						// if a form has been started for the patient, create a module item for it
-						if (pforms.length > 0) {							
+						if (pforms.length > 0) {	
+														
 							NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
 							EctFormData.PatientForm pfrm = pforms[0];
 
@@ -159,7 +160,21 @@ public class EctDisplayFormAction extends EctDisplayAction {
 							// set item link title text
 							item.setLinkTitle(fullTitle + " " + serviceDateStr);
 
-							Dao.addItem(item);
+							
+							//sorry I have to do this, since the "hidden" field, doesn't mean hidden.
+							//this is a fix so that when they've migrated to the enhanced form, the 
+							//regular one is hidden. It's still accessible from the list mode off
+							//the tab header though, if they really need to get to it.
+							boolean dontAdd=false;
+							if(table.equals("formONAR")) {
+								//check to see if we have an enhanced one
+								EctFormData.PatientForm[] pf = EctFormData.getPatientFormsFromLocalAndRemote(bean.demographicNo, "formONAREnhanced");
+								if(pf.length>0) {
+									dontAdd=true;
+								}
+							}
+							if(!dontAdd)
+								Dao.addItem(item);
 						}
 					}
 
