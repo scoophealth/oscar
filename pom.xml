@@ -822,6 +822,24 @@
 			<exclude>src/main/java/oscar/billing/popup/CidForm.java</exclude>
 			<exclude>src/main/java/oscar/billing/popup/ProcedimentoAction.java</exclude>
 			<exclude>src/main/java/oscar/billing/popup/ProcedimentoForm.java</exclude>
+			<exclude>src/main/java/oscar/form/FrmAdfRecord.java</exclude>
+			<exclude>src/main/java/oscar/form/FrmAdfV2Record.java</exclude>
+			<exclude>src/main/java/oscar/form/FrmBCARRecord.java</exclude>
+			<exclude>src/main/java/oscar/form/FrmBCBrithSumMoRecord.java</exclude>
+			<exclude>src/main/java/oscar/form/FrmBCClientChartChecklistRecord.java</exclude>
+			<exclude>src/main/java/oscar/form/FrmBCINRRecord.java</exclude>
+			<exclude>src/main/java/oscar/form/FrmBCNewBornRecord.java</exclude>
+			<exclude>src/main/java/oscar/form/FrmGrowth0_36Record.java</exclude>
+			<exclude>src/main/java/oscar/form/FrmGrowthChartRecord.java</exclude>
+			<exclude>src/main/java/oscar/form/FrmInvoiceRecord.java</exclude>
+			<exclude>src/main/java/oscar/form/FrmONARRecord.java</exclude>
+			<exclude>src/main/java/oscar/form/FrmOvulationRecord.java</exclude>
+			<exclude>src/main/java/oscar/form/graphic/FrmPdfGraphicAR.java</exclude>
+			<exclude>src/main/java/oscar/form/graphic/FrmPdfGraphicGrowthChart.java</exclude>
+			<exclude>src/main/java/oscar/form/pdfservlet/FrmPDFServlet.java</exclude>
+			<exclude>src/main/java/oscar/form/study/FrmStudyPING_DiabetesRecord.java</exclude>
+
+
                 </excludes>
 		<strictCheck>true</strictCheck>
             </configuration>
