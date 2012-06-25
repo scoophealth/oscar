@@ -777,6 +777,8 @@
                     <include>src/main/webapp/**/*.jsp</include>
                 </includes>
                 <excludes>
+			<exclude>src/main/webapp/oscarReport/patientlist.jsp</exclude>
+			<exclude>src/main/java/oscar/oscarReport/data/DoctorList.java</exclude>
 			<exclude>src/main/webapp/jspspellcheck/*.jsp</exclude>
 			<exclude>src/main/java/net/sf/jasperreports/renderers/BarbecueRenderer.java</exclude>
 			<exclude>src/main/java/oscar/oscarDB/ResultSetBuilder.java</exclude>
