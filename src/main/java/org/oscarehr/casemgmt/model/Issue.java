@@ -36,6 +36,15 @@ public class Issue extends BaseObject {
 	private Date update_date;
 	private String priority;
     private String type;
+    private Integer sortOrderId;
+    
+	public Integer getSortOrderId() {
+    	return sortOrderId;
+    }
+
+	public void setSortOrderId(Integer sortOrderId) {
+    	this.sortOrderId = sortOrderId;
+    }
 
 	public Issue() {
 		update_date = new Date();

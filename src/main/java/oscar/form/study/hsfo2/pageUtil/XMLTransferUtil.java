@@ -281,7 +281,7 @@ public class XMLTransferUtil
 
   }
 
-  public Hsfo2Visit getSignedVisit( String patientId, String startDate, String endDate )
+  public Hsfo2Visit getSignedVisit( String patientId, String startDate, String endDate ) 
   {
     List pList = hdao.nullSafeRetrVisitRecord( patientId, startDate, endDate );
     if ( pList == null || pList.size() == 0 )
