@@ -501,7 +501,7 @@
 		<dependency>
 			<groupId>org.oscarehr</groupId>
 			<artifactId>ar2005</artifactId>
-			<version>0.10-DRAFT</version>
+			<version>0.11-DRAFT</version>
 		</dependency>
 
 		 <dependency>
@@ -987,6 +987,7 @@
 			  <excludes>
 		            <exclude>**/AR2005*.java</exclude>
 		            <exclude>**/OntarioMDSpec4DataTest.java</exclude>
+		            <exclude>**/ONAREnhancedBornConnectorTest.java</exclude>
 		          </excludes>
 		        </configuration>
 		      </plugin>
