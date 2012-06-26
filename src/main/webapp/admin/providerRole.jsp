@@ -23,7 +23,6 @@
     Ontario, Canada
 
 --%>
-
 <%-- Updated by Eugene Petruhin on 09 dec 2008 while fixing #2392669 --%>
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
