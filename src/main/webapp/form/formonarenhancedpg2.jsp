@@ -1223,6 +1223,7 @@ function daydiff(first, second) {
 
 function getGAWeek() {
 	var day = getGADay();
+	var week;
 	if(day > 0) {
 		week = parseInt(day / 7);	
 	}
@@ -1231,7 +1232,8 @@ function getGAWeek() {
 
 function getGA() {
 	var day = getGADay();
-	
+	var week;
+	var offset;
 	if(day > 0) {
 		week = parseInt(day / 7);
 		offset = day % 7;		
