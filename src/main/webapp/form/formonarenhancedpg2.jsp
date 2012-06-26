@@ -1923,7 +1923,7 @@ $(document).ready(function(){
 			<td width="7%">GA<br>
 			(weeks)</td>
 			<td width="7%"><!--  a href=# onclick="javascript:onWtSVG(); return false;"-->Weight<br>
-			(Kg)<!--</a>--><a href="javascript:void(0);" onClick="return false;"><img src="<%=request.getContextPath()%>/oscarEncounter/oscarMeasurements/img/chart.gif" border=0"/></a></td>
+			(Kg)<!--</a>--></td>
 			<td width="7%">B.P.</td>
 			<td width="6%" colspan="2">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
