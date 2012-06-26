@@ -23,8 +23,8 @@
     Ontario, Canada
 
 --%>
-<%@ page import="java.sql.*, java.util.*, oscar.*, oscar.util.*, org.oscarehr.common.OtherIdManager"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.sql.*, java.util.*, oscar.*, oscar.util.*, org.oscarehr.common.OtherIdManager"%>
+<%@ page import="org.oscarehr.event.EventService"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
@@ -35,6 +35,7 @@
 <%
 	AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
 	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
+    String changedStatus = null;
 %>
 <html:html locale="true">
 <head>
@@ -55,8 +56,15 @@
   int rowsAffected = 0;
   Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no")));
   appointmentArchiveDao.archiveAppointment(appt);
+  
+  //Did the appt status change ?
+  if(!appt.getStatus().equals(request.getParameter("status"))){
+	  changedStatus = request.getParameter("status");
+  }
+  
   if (request.getParameter("buttoncancel")!=null && (request.getParameter("buttoncancel").equals("Cancel Appt") || request.getParameter("buttoncancel").equals("No Show"))) {
 	  String[] param = new String[3];
+	  changedStatus = request.getParameter("buttoncancel").equals("Cancel Appt")?"C":"N";
 	  param[0]=request.getParameter("buttoncancel").equals("Cancel Appt")?"C":"N";
 	  param[1]=updateuser;  //request.getParameter("creator");
 	  param[2]=request.getParameter("appointment_no");
@@ -99,6 +107,12 @@
 	String apptNo = request.getParameter("appointment_no");
 	String mcNumber = request.getParameter("appt_mc_number");
 	OtherIdManager.saveIdAppointment(apptNo, "appt_mc_number", mcNumber);
+	
+	if(changedStatus != null){
+		EventService eventService = SpringUtils.getBean(EventService.class); //updating an appt from the appt update screen delete doesn't work
+		eventService.appointmentStatusChanged(this,apptNo.toString(), appt.getProviderNo(), changedStatus);
+	}
+	// End External Prescriber 
   } else {
 %>
 <p>

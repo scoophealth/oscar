@@ -39,15 +39,10 @@
   if (request.getParameter("bFirstDisp")!=null) bFirstDisp = (request.getParameter("bFirstDisp")).equals("true");
 %>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
-<%@ page
-	import="oscar.oscarDemographic.data.*, java.util.*, java.sql.*, oscar.appt.*, oscar.*, java.text.*, java.net.*, org.oscarehr.common.OtherIdManager"
-	errorPage="errorpage.jsp"%>
-<%@ page import="oscar.appt.status.service.AppointmentStatusMgr"
-	errorPage="errorpage.jsp"%>
-<%@ page import="oscar.appt.status.model.AppointmentStatus"
-	errorPage="errorpage.jsp"%>
-<%@ page import="org.oscarehr.common.dao.DemographicDao, org.oscarehr.common.model.Demographic, org.oscarehr.util.SpringUtils"
-         errorPage="errorpage.jsp"%>
+<%@page import="oscar.oscarDemographic.data.*, java.util.*, java.sql.*, oscar.appt.*, oscar.*, java.text.*, java.net.*, org.oscarehr.common.OtherIdManager"%>
+<%@ page import="oscar.appt.status.service.AppointmentStatusMgr"%>
+<%@ page import="oscar.appt.status.model.AppointmentStatus"%>
+<%@ page import="org.oscarehr.common.dao.DemographicDao, org.oscarehr.common.model.Demographic, org.oscarehr.util.SpringUtils"%>
 <%@ page import="oscar.oscarEncounter.data.EctFormData"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -551,7 +546,7 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
                     width="25">
             </div>
         </li>
-			<% if(providerBean.getProperty(doctorNo)!=null) {%>
+			<% if(providerBean != null && doctorNo != null && providerBean.getProperty(doctorNo)!=null) {%>
         <li class="row weak">
             <div class="label"></div>
             <div class="input"></div>
