@@ -777,6 +777,61 @@
                     <include>src/main/webapp/**/*.jsp</include>
                 </includes>
                 <excludes>
+			<exclude>src/main/webapp/form/formadf.jsp</exclude>
+			<exclude>src/main/webapp/form/formadfv2.jsp</exclude>
+			<exclude>src/main/webapp/form/formbcar.jsp</exclude>
+			<exclude>src/main/webapp/form/formbcarpg1.jsp</exclude>
+			<exclude>src/main/webapp/form/formbcarpg1namepopup.jsp</exclude>
+			<exclude>src/main/webapp/form/formbcarpg2.jsp</exclude>
+			<exclude>src/main/webapp/form/formbcarpg3.jsp</exclude>
+			<exclude>src/main/webapp/form/formbcbirthsummo.jsp</exclude>
+			<exclude>src/main/webapp/form/formbcclientchartchecklist.jsp</exclude>
+			<exclude>src/main/webapp/form/formbcinr.jsp</exclude>
+			<exclude>src/main/webapp/form/formbcnewborn.jsp</exclude>
+			<exclude>src/main/webapp/form/formbcnewbornpg1.jsp</exclude>
+			<exclude>src/main/webapp/form/formbcnewbornpg2.jsp</exclude>
+			<exclude>src/main/webapp/form/formbcnewbornpg3.jsp</exclude>
+			<exclude>src/main/webapp/form/formGrowth0_36.jsp</exclude>
+			<exclude>src/main/webapp/form/formGrowth0_36Print.jsp</exclude>
+			<exclude>src/main/webapp/form/formGrowthChart.jsp</exclude>
+			<exclude>src/main/webapp/form/formGrowthChartPrint.jsp</exclude>
+			<exclude>src/main/webapp/form/formimmunallergy.jsp</exclude>
+			<exclude>src/main/webapp/form/formInvoice.jsp</exclude>
+			<exclude>src/main/webapp/form/formonar.jsp</exclude>
+			<exclude>src/main/webapp/form/formonarpg1.jsp</exclude>
+			<exclude>src/main/webapp/form/formonarpg2.jsp</exclude>
+			<exclude>src/main/webapp/form/formonarpg3.jsp</exclude>
+			<exclude>src/main/webapp/form/formonarpg4.jsp</exclude>
+			<exclude>src/main/webapp/form/formovulation.jsp</exclude>
+			<exclude>src/main/webapp/form/study/ar2ping.jsp</exclude>
+			<exclude>src/main/webapp/form/study/dm2ping.jsp</exclude>
+			<exclude>src/main/webapp/form/study/dmdata.jsp</exclude>
+			<exclude>src/main/webapp/form/study/formar2ping.jsp</exclude>
+			<exclude>src/main/webapp/form/study/formarpg1.jsp</exclude>
+			<exclude>src/main/webapp/form/study/formarpg2.jsp</exclude>
+			<exclude>src/main/webapp/form/study/formarpg3.jsp</exclude>
+			<exclude>src/main/webapp/form/study/formdiabete2ping.jsp</exclude>
+			<exclude>src/main/webapp/report/onbillingtotal.jsp</exclude>
+			<exclude>src/main/webapp/report/reportBCARDemo2.jsp</exclude>
+			<exclude>src/main/webapp/report/reportBCARDemo.jsp</exclude>
+			<exclude>src/main/webapp/report/reportbcedblist.jsp</exclude>
+			<exclude>src/main/webapp/report/reportbilledvisit1.jsp</exclude>
+			<exclude>src/main/webapp/report/reportbilledvisit2.jsp</exclude>
+			<exclude>src/main/webapp/report/reportbilledvisit3.jsp</exclude>
+			<exclude>src/main/webapp/report/reportbilledvisit.jsp</exclude>
+			<exclude>src/main/webapp/report/reportdxvisit.jsp</exclude>
+			<exclude>src/main/webapp/report/reportFilter.jsp</exclude>
+			<exclude>src/main/webapp/report/reportFormCaption.jsp</exclude>
+			<exclude>src/main/webapp/report/reportFormConfig.jsp</exclude>
+			<exclude>src/main/webapp/report/reportFormDemoConfig.jsp</exclude>
+			<exclude>src/main/webapp/report/reportFormOrder.jsp</exclude>
+			<exclude>src/main/webapp/report/reportFormRecord.jsp</exclude>
+			<exclude>src/main/webapp/report/reportonbilledphcp.jsp</exclude>
+			<exclude>src/main/webapp/report/reportonbilledvisit.jsp</exclude>
+			<exclude>src/main/webapp/report/reportonbilledvisitprovider.jsp</exclude>
+			<exclude>src/main/webapp/report/reportonedblist.jsp</exclude>
+			<exclude>src/main/webapp/report/reportResult.jsp</exclude>
+
 			<exclude>src/main/webapp/billing/billingBrazil.jsp</exclude>
 			<exclude>src/main/webapp/billing/billingBrazilSuccess.jsp</exclude>
 			<exclude>src/main/webapp/billing/billingConsFatMedBrazil.jsp</exclude>
