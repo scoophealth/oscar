@@ -757,7 +757,7 @@
             <artifactId>maven-license-plugin</artifactId>
             <configuration>
                 <header>utils/headers/mcmaster.txt</header>
-                <validHeaders>
+		<validHeaders>
                         <validHeader>utils/headers/os.txt</validHeader>
                         <validHeader>utils/headers/quatro.txt</validHeader>
                         <validHeader>utils/headers/quatro2.txt</validHeader>
@@ -777,6 +777,13 @@
                     <include>src/main/webapp/**/*.jsp</include>
                 </includes>
                 <excludes>
+			<exclude>src/main/webapp/billing/billingBrazil.jsp</exclude>
+			<exclude>src/main/webapp/billing/billingBrazilSuccess.jsp</exclude>
+			<exclude>src/main/webapp/billing/billingConsFatMedBrazil.jsp</exclude>
+			<exclude>src/main/webapp/billing/billingConsFatPatBrazil.jsp</exclude>
+			<exclude>src/main/webapp/popup/atividade.jsp</exclude>
+			<exclude>src/main/webapp/popup/cid.jsp</exclude>
+			<exclude>src/main/webapp/popup/procedimento.jsp</exclude>
 			<exclude>src/main/java/oscar/entities/S21.java</exclude>
 			<exclude>src/main/java/oscar/entities/S22.java</exclude>
 			<exclude>src/main/java/oscar/entities/S23.java</exclude>
