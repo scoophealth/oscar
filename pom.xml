@@ -777,6 +777,19 @@
                     <include>src/main/webapp/**/*.jsp</include>
                 </includes>
                 <excludes>
+			<exclude>src/main/java/oscar/entities/S21.java</exclude>
+			<exclude>src/main/java/oscar/entities/S22.java</exclude>
+			<exclude>src/main/java/oscar/entities/S23.java</exclude>
+			<exclude>src/main/java/oscar/oscarBilling/ca/bc/MSP/CDMReminderHlp.java</exclude>
+			<exclude>src/main/java/oscar/oscarBilling/ca/bc/MSP/CreateBillingReportActionForm.java</exclude>
+			<exclude>src/main/java/oscar/oscarBilling/ca/bc/MSP/CreateBillingReportAction.java</exclude>
+			<exclude>src/main/java/oscar/oscarBilling/ca/bc/MSP/ServiceCodeValidationLogic.java</exclude>
+			<exclude>src/main/java/oscar/oscarBilling/ca/bc/MSP/ServiceCodeValidator.java</exclude>
+			<exclude>src/main/java/oscar/oscarBilling/ca/bc/MSP/SexValidator.java</exclude>
+			<exclude>src/main/java/oscar/oscarDemographic/PrintDemoAddressLabelAction.java</exclude>
+			<exclude>src/main/java/oscar/oscarDemographic/PrintDemoChartLabelAction.java</exclude>
+			<exclude>src/main/java/oscar/oscarDemographic/PrintDemoLabelAction.java</exclude>
+			<exclude>src/main/java/oscar/OscarDocumentCreator.java</exclude>
 			<exclude>src/main/webapp/oscarReport/patientlist.jsp</exclude>
 			<exclude>src/main/java/oscar/oscarReport/data/DoctorList.java</exclude>
 			<exclude>src/main/webapp/jspspellcheck/*.jsp</exclude>
