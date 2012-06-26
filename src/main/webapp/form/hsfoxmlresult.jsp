@@ -1,6 +1,6 @@
 <%--
 
-    Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
+    Copyright (C) 2007  Heart & Stroke Foundation
     This software is published under the GPL GNU General Public License.
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
@@ -23,5 +23,4 @@
     Ontario, Canada
 
 --%>
-
 <%=(String)request.getAttribute("HSFOmessage")%>
