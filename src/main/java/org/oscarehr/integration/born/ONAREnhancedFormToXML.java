@@ -24,6 +24,7 @@
 package org.oscarehr.integration.born;
 
 import java.io.OutputStream;
+import java.io.Writer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarmcmaster.ar2005.AR1;
 import org.oscarmcmaster.ar2005.AR2;
 import org.oscarmcmaster.ar2005.ARRecord;
+import org.oscarmcmaster.ar2005.ARRecordDocument;
 import org.oscarmcmaster.ar2005.ARRecordSet;
 import org.oscarmcmaster.ar2005.ARRecordSetDocument;
 import org.oscarmcmaster.ar2005.AdditionalLabInvestigationsType;
@@ -82,12 +84,14 @@ public class ONAREnhancedFormToXML {
 	String demographicNo;
 	String providerNo;
 	int formId;
+	int episodeId;
 	
-	public void generateXMLAndValidate(OutputStream os, String providerNo,String demographicNo, int formId) throws Exception {
+	public void generateXMLAndValidate(OutputStream os, String providerNo,String demographicNo, int formId, int episodeId) throws Exception {
 		this.demographicNo = demographicNo;
 		this.providerNo = providerNo;
 		this.formId = formId;
-	    FrmRecord rec = (new FrmRecordFactory()).factory("ONAREnhanced");
+		this.episodeId = episodeId;
+		FrmRecord rec = (new FrmRecordFactory()).factory("ONAREnhanced");
 	    props = rec.getFormRecord(Integer.parseInt(demographicNo), formId);
 
 		ARRecordSetDocument recordSetD = ARRecordSetDocument.Factory.newInstance();
@@ -112,22 +116,52 @@ public class ONAREnhancedFormToXML {
 		}
 		recordSetD.save(os,opts);
 	}
+	
+	public boolean addXmlToStream(Writer os, XmlOptions opts, String providerNo,String demographicNo, int formId, int episodeId) throws Exception {
+		this.demographicNo = demographicNo;
+		this.providerNo = providerNo;
+		this.formId = formId;
+		this.episodeId = episodeId;	    
+	    FrmRecord rec = (new FrmRecordFactory()).factory("ONAREnhanced");
+	    props = rec.getFormRecord(Integer.parseInt(demographicNo), formId);	    
+		//ARRecord arRecord = ARRecord.Factory.newInstance();
+		ARRecordDocument arRecordDoc = ARRecordDocument.Factory.newInstance();
+		ARRecord arRecord = arRecordDoc.addNewARRecord();
+		AR1 ar1 = arRecord.addNewAR1();
+		populateAr1(ar1,providerNo);
+		AR2 ar2 = arRecord.addNewAR2();
+		populateAr2(ar2);		
+		XmlOptions m_validationOptions = new XmlOptions();		
+		ArrayList validationErrors = new ArrayList();
+		m_validationOptions.setErrorListener(validationErrors);
+		if(arRecordDoc.validate(m_validationOptions)) {
+			arRecordDoc.save(os,opts);
+			return true;
+		} else {
+			MiscUtils.getLogger().warn("form failed validation:"+formId);
+			for(Object o:validationErrors) {
+				MiscUtils.getLogger().warn(o);
+			}
+			//arRecordDoc.save(os,opts);			
+		}
+		return false;
+	}
 
 	void populateAr1(AR1 ar1, String providerNo)  {
 		ar1.setDemographicNo(Integer.parseInt(demographicNo));
-		ar1.setProviderNo(providerNo);
+		ar1.setProviderNo(props.getProperty("provider_no"));
 		Calendar formCreatedDate = Calendar.getInstance();
 		try {
 			formCreatedDate.setTime(dateFormatter2.parse(props.getProperty("formCreated")));
 		}catch(ParseException e) {}
+		
 		ar1.setFormCreated(formCreatedDate);
 		Calendar formEditedDate = Calendar.getInstance();
 		try {
 			formEditedDate.setTime(dateFormatter3.parse(props.getProperty("formEdited")));
 		}catch(ParseException e) {}
 		ar1.setFormEdited(formEditedDate);
-		//TODO:episode
-		ar1.setEpisodeId(1);
+		ar1.setEpisodeId(episodeId);
 		ar1.setId(formId);
 		PatientInformation patientInformation = ar1.addNewPatientInformation();
 		PartnerInformation partnerInformation = ar1.addNewPartnerInformation();
@@ -324,10 +358,16 @@ public class ONAREnhancedFormToXML {
 	void populatePhysicalExamination(PhysicalExaminationType physicalExamination)  {
 		if(props.getProperty("pg1_ht", "").length()>0)
 			physicalExamination.setHeight(Float.valueOf(props.getProperty("pg1_ht")));
+		else
+			physicalExamination.setHeight(0);
 		if(props.getProperty("pg1_wt", "").length()>0)
 			physicalExamination.setWeight(Float.valueOf(props.getProperty("pg1_wt")));
+		else
+			physicalExamination.setWeight(0);
 		if(props.getProperty("c_bmi", "").length()>0)
 			physicalExamination.setBmi(Float.valueOf(props.getProperty("c_bmi")));
+		else
+			physicalExamination.setBmi(0);
 		physicalExamination.setBp(props.getProperty("pg1_BP",""));
 
 		physicalExamination.setThyroid(getNormalAbnormalNullType("pg1_thyroid","pg1_thyroidA"));
@@ -351,12 +391,18 @@ public class ONAREnhancedFormToXML {
 		int length = Integer.parseInt(props.getProperty("obxhx_num","0"));
 		for(int x=0;x<length;x++) {
 			int n = x+1;
+			if(props.getProperty("pg1_year"+n,"").length()==0 && props.getProperty("pg1_sex"+n,"").length()==0 && props.getProperty("pg1_oh_gest"+n,"").length()==0
+					&& props.getProperty("pg1_weight"+n,"").length()==0 && props.getProperty("pg1_length"+n,"").length()==0 && props.getProperty("pg1_place"+n,"").length()==0 
+					&& props.getProperty("pg1_svb"+n,"").length()==0 && props.getProperty("pg1_cs"+n,"").length()==0 && props.getProperty("pg1_ass"+n,"").length()==0 && 
+					props.getProperty("pg1_oh_comments"+n,"").length()==0 ) {
+				continue;
+			}
 			ObstetricalHistoryItemList item1 = obstetricalHistory.addNewObsList();
 			item1.setYear(props.getProperty("pg1_year"+n,"0").length()>0?Integer.parseInt(props.getProperty("pg1_year"+n, "0")):0);
-			item1.setSex(ObstetricalHistoryItemList.Sex.Enum.forString(props.getProperty("pg1_sex"+n)));
+			item1.setSex(ObstetricalHistoryItemList.Sex.Enum.forString(props.getProperty("pg1_sex"+n).toUpperCase()));
 			item1.setGestAge(props.getProperty("pg1_oh_gest"+n,"0").length()>0?Integer.parseInt(props.getProperty("pg1_oh_gest"+n, "0")):0);
 			item1.setBirthWeight(props.getProperty("pg1_weight"+n,""));
-			item1.setLengthOfLabour(props.getProperty("pg1_length"+n,"0").length()>0?Integer.parseInt(props.getProperty("pg1_length"+n, "0")):0);
+			item1.setLengthOfLabour(props.getProperty("pg1_length"+n,"0").length()>0?Float.parseFloat(props.getProperty("pg1_length"+n, "0")):0);
 			item1.setPlaceOfBirth(props.getProperty("pg1_place"+n,""));
 			if(props.getProperty("pg1_svb"+n,"").length()>0)
 				item1.setTypeOfDelivery(ObstetricalHistoryItemList.TypeOfDelivery.SVAG);
@@ -384,6 +430,8 @@ public class ONAREnhancedFormToXML {
 			try {
 				pregnancyHistory.setLMP(createDate(dateFormatter.parse(props.getProperty("pg1_menLMP"))));
 			}catch(ParseException e) {}
+		} else {
+			pregnancyHistory.setLMP(null);
 		}
 		pregnancyHistory.setLMPCertain(this.getYesNoNullType("pg1_psCertY","pg1_psCertN"));
 		pregnancyHistory.setMenCycle(props.getProperty("pg1_menCycle", ""));
@@ -492,13 +540,22 @@ public class ONAREnhancedFormToXML {
 		PatientInformation.Occupation occ = patientInformation.addNewOccupation();
 		occ.setValue(PatientInformation.Occupation.Value.OTHER);
 		occ.setOther(props.getProperty("pg1_occupation", ""));
-		patientInformation.setOccupation(occ);
+		patientInformation.setOccupation(occ);		
 		patientInformation.setLevelOfEducation(PatientInformation.LevelOfEducation.Enum.forString((props.getProperty("pg1_eduLevel"))));
 		PatientInformation.Hin hin = patientInformation.addNewHin();
 		hin.setStringValue(props.getProperty("c_hin", ""));
 		hin.setType(PatientInformation.Hin.Type.Enum.forString(props.getProperty("c_hinType")));		
 		patientInformation.setFileNo(props.getProperty("c_fileNo", ""));
-		patientInformation.setMaritalStatus(PatientInformation.MaritalStatus.Enum.forString(props.getProperty("pg1_maritalStatus")));
+		String maritalStatus = props.getProperty("pg1_maritalStatus").toUpperCase();
+		if(maritalStatus.equals("M") || maritalStatus.equals("CL")) {
+			patientInformation.setMaritalStatus(PatientInformation.MaritalStatus.Enum.forString("MS005"));
+		}
+		else if(maritalStatus.equals("S") ) {
+			patientInformation.setMaritalStatus(PatientInformation.MaritalStatus.Enum.forString("MS015"));
+		}else {
+			patientInformation.setMaritalStatus(PatientInformation.MaritalStatus.Enum.forString("UN"));
+		}
+
 		PatientInformation.EthnicBackground eb = patientInformation.addNewEthnicBackground();
 		PatientInformation.EthnicBackground.Value v1 = eb.addNewValue();
 		v1.setParent(EthnicBackground.Value.Parent.MATERNAL);
@@ -523,6 +580,9 @@ public class ONAREnhancedFormToXML {
 		int rfLength = Integer.parseInt(rfLengthStr);
 		for(int x=0;x<rfLength;x++) {
 			int y = x+1;
+			if(props.getProperty("c_riskFactors"+y, "").length()==0 && props.getProperty("c_planManage"+y, "").length() == 0) {
+				continue;
+			}
 			RiskFactorItemType riskFactorItem = ar2.addNewRiskFactorList();			
 			riskFactorItem.setRiskFactor(props.getProperty("c_riskFactors"+y, ""));
 			riskFactorItem.setPlanOfManagement(props.getProperty("c_planManage"+y, ""));
@@ -536,6 +596,11 @@ public class ONAREnhancedFormToXML {
 		int svLength = Integer.parseInt(svLengthStr);
 		for(int x=0;x<svLength;x++) {
 			int y = x+1;
+			if(props.getProperty("pg2_year"+y,"").length()==0 && props.getProperty("pg2_gest"+y,"").length()==0 && props.getProperty("pg2_wt"+y,"").length()==0
+					&& props.getProperty("pg2_BP"+y,"").length()==0 && props.getProperty("pg2_urinePr"+y,"").length()==0 && props.getProperty("pg2_urineGl"+y,"").length()==0 
+					&& props.getProperty("pg2_presn1"+y,"").length()==0 && props.getProperty("pg2_FHR"+y,"").length()==0 && props.getProperty("pg2_comments"+y,"").length()==0 ) {
+				continue;
+			}
 			SubsequentVisitItemType visit = ar2.addNewSubsequentVisitList();
 			if(props.getProperty("pg2_date"+y, "").length()>0) {
 				try {
@@ -561,6 +626,9 @@ public class ONAREnhancedFormToXML {
 		int usLength = Integer.parseInt(usLengthStr);
 		for(int x=0;x<usLength;x++) {
 			int y = x+1;
+			if(props.getProperty("ar2_uDate"+y).length()==0 && props.getProperty("ar2_uGA"+y).length()==0 && props.getProperty("ar2_uResults"+y).length()==0) {
+				continue;
+			}			
 			UltrasoundType ultrasound = ar2.addNewUltrasound();
 			if(props.getProperty("ar2_uDate"+y).length()>0) {
 				try {
@@ -617,13 +685,15 @@ public class ONAREnhancedFormToXML {
 			signatures.setDate(null);
 		}
 		
-		signatures.setSignature2(props.getProperty("pg1_signature2", ""));
-		if(props.getProperty("pg1_formDate2", "").length()>0) {
-			try {
-				signatures.setDate2(createDate(dateFormatter.parse((props.getProperty("pg1_formDate2")))));
-			}catch(ParseException e) {}
-		} else {
-			signatures.setDate2(null);
+		if(props.getProperty("pg1_signature2", "").length()>0){ 
+			signatures.setSignature2(props.getProperty("pg1_signature2", ""));
+			if(props.getProperty("pg1_formDate2", "").length()>0) {
+				try {
+					signatures.setDate2(createDate(dateFormatter.parse((props.getProperty("pg1_formDate2")))));
+				}catch(ParseException e) {}
+			} else {
+				signatures.setDate2(null);
+			}
 		}
 	}
 	
@@ -637,13 +707,15 @@ public class ONAREnhancedFormToXML {
 			signatures.setDate(null);
 		}
 		
-		signatures.setSignature2(props.getProperty("pg2_signature2", ""));
-		if(props.getProperty("pg2_formDate2", "").length()>0) {
-			try {
-				signatures.setDate2(createDate(dateFormatter.parse((props.getProperty("pg2_formDate2")))));
-			}catch(ParseException e) {}
-		} else {
-			signatures.setDate2(null);
+		if(props.getProperty("pg2_signature2", "").length()>0) {
+			signatures.setSignature2(props.getProperty("pg2_signature2", ""));
+			if(props.getProperty("pg2_formDate2", "").length()>0) {
+				try {
+					signatures.setDate2(createDate(dateFormatter.parse((props.getProperty("pg2_formDate2")))));
+				}catch(ParseException e) {}
+			} else {
+				signatures.setDate2(null);
+			}
 		}
 
 	}
