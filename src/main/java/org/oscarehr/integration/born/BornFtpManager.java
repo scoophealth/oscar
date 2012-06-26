@@ -44,9 +44,15 @@ public class BornFtpManager {
 	public void uploadDataToRepository(String path, String filename) throws Exception {
 		String remotePath = OscarProperties.getInstance().getProperty("born_ftps_remote_dir","");
 		DefaultFtpsSessionFactory ftpFactory = (DefaultFtpsSessionFactory)SpringUtils.getBean("ftpClientFactory");		
-		Session<FTPFile> session = ftpFactory.getSession();			
-		if(session.isOpen()) {
-			session.write(new FileInputStream(path + File.separator + filename),remotePath + File.separator +filename);
+		Session<FTPFile> session = null;		
+		try {
+			session = ftpFactory.getSession();		
+			if(session.isOpen()) {
+				session.write(new FileInputStream(path + File.separator + filename),remotePath + File.separator +filename);
+			}
+		}finally {
+			if(session!=null && session.isOpen())
+				session.close();
 		}
 	}
 }
