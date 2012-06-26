@@ -24,8 +24,7 @@
 
 --%>
 
-<%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat,org.oscarehr.event.EventService"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 <%@page import="org.oscarehr.common.dao.AppointmentArchiveDao" %>
@@ -44,6 +43,10 @@
     param[2]=request.getParameter("appointment_no");
     Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no")));
     appointmentArchiveDao.archiveAppointment(appt);
+    
+    EventService eventService = SpringUtils.getBean(EventService.class);//This is when the icon is clicked in the appt screen
+	eventService.appointmentStatusChanged(this,request.getParameter("appointment_no"), request.getParameter("provider_no"), request.getParameter("statusch"));
+    
     int rowsAffected = oscarSuperManager.update("providerDao", request.getParameter("dboperation"), param);
     if (rowsAffected == 1) {//add_record
       int view=0;
