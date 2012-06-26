@@ -17,7 +17,6 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
-
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ page import="oscar.login.DBHelp"%>
 

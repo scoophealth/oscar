@@ -23,7 +23,6 @@
     Ontario, Canada
 
 --%>
-
 <%
   if (session.getAttribute("user") == null)    response.sendRedirect("../logout.jsp");
 %>
