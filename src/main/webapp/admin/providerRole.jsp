@@ -141,12 +141,12 @@ if (request.getParameter("buttonUpdate") != null && request.getParameter("button
 			LogAction.addLog(curUser_no, LogConst.UPDATE, LogConst.CON_ROLE, number +"|"+ roleOld +">"+ roleNew, ip);
 
 			if( newCaseManagement ) {
-                ProgramProvider programProvider = programProviderDao.getProgramProvider(curUser_no, Long.valueOf(caisiProgram));
+                ProgramProvider programProvider = programProviderDao.getProgramProvider(number, Long.valueOf(caisiProgram));
                 if(programProvider == null) {
                 	programProvider = new ProgramProvider();
                 }
                 programProvider.setProgramId( Long.valueOf(caisiProgram));
-                programProvider.setProviderNo(curUser_no);
+                programProvider.setProviderNo(number);
                 programProvider.setRoleId(Long.valueOf(secRoleDao.findByName(roleNew).getId()));
                 programProviderDao.saveProgramProvider(programProvider);
 			}
@@ -172,12 +172,12 @@ if (request.getParameter("submit") != null && request.getParameter("submit").equ
 	    msg = "Role " + roleNew + " is added. (" + number + ")";
 	    LogAction.addLog(curUser_no, LogConst.ADD, LogConst.CON_ROLE, number +"|"+ roleNew, ip);
 	    if( newCaseManagement ) {
-            ProgramProvider programProvider = programProviderDao.getProgramProvider(curUser_no, Long.valueOf(caisiProgram));
+            ProgramProvider programProvider = programProviderDao.getProgramProvider(number, Long.valueOf(caisiProgram));
             if(programProvider == null) {
             	programProvider = new ProgramProvider();
             }
             programProvider.setProgramId( Long.valueOf(caisiProgram));
-            programProvider.setProviderNo(curUser_no);
+            programProvider.setProviderNo(number);
             programProvider.setRoleId(Long.valueOf(secRoleDao.findByName(roleNew).getId()));
             programProviderDao.saveProgramProvider(programProvider);
 	    }
@@ -210,7 +210,7 @@ if (request.getParameter("submit") != null && request.getParameter("submit").equ
 		LogAction.addLog(curUser_no, LogConst.DELETE, LogConst.CON_ROLE, number +"|"+ roleOld, ip);
 
         if( newCaseManagement ) {
-            ProgramProvider programProvider = programProviderDao.getProgramProvider(curUser_no, Long.valueOf(caisiProgram));
+            ProgramProvider programProvider = programProviderDao.getProgramProvider(number, Long.valueOf(caisiProgram));
             if(programProvider != null) {
             	programProviderDao.deleteProgramProvider(programProvider.getId());
             }
