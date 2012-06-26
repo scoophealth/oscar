@@ -27,6 +27,7 @@ import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.integration.born.ONAREnhancedBornConnector;
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
 public class BORNSchedulerJob extends TimerTask {
@@ -41,8 +42,12 @@ public class BORNSchedulerJob extends TimerTask {
 			ONAREnhancedBornConnector c = new ONAREnhancedBornConnector();
 			c.updateBorn();
 			
+			logger.info("done BORN upload job");
+			
 		}catch(Throwable e ) {
 			logger.error("Error",e);
+		} finally {
+			DbConnectionFilter.releaseAllThreadDbResources();
 		}
 	}
 }
