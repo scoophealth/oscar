@@ -775,8 +775,21 @@
                     <include>src/main/java/**/*.java</include>
                     <include>src/test/java/**/*.java</include>
                     <include>src/main/webapp/**/*.jsp</include>
-                </includes>
+		</includes>
                 <excludes>
+			<exclude>src/main/webapp/billing/CA/BC/billingAccountReports.jsp</exclude>
+			<exclude>src/main/webapp/billing/CA/BC/billingPreferences.jsp</exclude>
+			<exclude>src/main/webapp/billing/CA/BC/billingSVCTrayAssoc.jsp</exclude>
+			<exclude>src/main/webapp/billing/CA/BC/billTransactions.jsp</exclude>
+			<exclude>src/main/webapp/billing/CA/BC/billType_frag.jsp</exclude>
+			<exclude>src/main/webapp/billing/CA/BC/deletePrivateCode.jsp</exclude>
+			<exclude>src/main/webapp/billing/CA/BC/dxcode_svccode_assoc.jsp</exclude>
+			<exclude>src/main/webapp/billing/CA/BC/manageSVCDXAssoc.jsp</exclude>
+			<exclude>src/main/webapp/billing/CA/BC/receivePayment.jsp</exclude>
+			<exclude>src/main/webapp/billing/CA/BC/saveAssocs.jsp</exclude>
+			<exclude>src/main/webapp/billing/CA/BC/settleBG.jsp</exclude>
+			<exclude>src/main/webapp/report/tabulardaysheetreport.jsp</exclude>
+
 			<exclude>src/main/webapp/form/formadf.jsp</exclude>
 			<exclude>src/main/webapp/form/formadfv2.jsp</exclude>
 			<exclude>src/main/webapp/form/formbcar.jsp</exclude>
