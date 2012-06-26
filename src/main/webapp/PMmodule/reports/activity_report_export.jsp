@@ -22,7 +22,6 @@
     Toronto, Ontario, Canada
 
 --%>
-
 <%@page import="org.apache.commons.lang.time.DateUtils"%>
 <%@page import="oscar.util.SqlUtils"%>
 <%@page import="java.util.*"%>
