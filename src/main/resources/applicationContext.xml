@@ -340,6 +340,15 @@
                </props>
             </property>
         </bean>
-
-
+		
+		<bean id="eventService" class="org.oscarehr.event.EventService"/> 
+		<bean id="applicationEventMulticaster" class="org.springframework.context.event.SimpleApplicationEventMulticaster">  
+              <property name="taskExecutor">  
+                  <!--  bean class="org.springframework.core.task.SimpleAsyncTaskExecutor"/ -->  
+                  <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor"/>
+              </property>  
+		</bean>
+		
+		
+		
 </beans>
