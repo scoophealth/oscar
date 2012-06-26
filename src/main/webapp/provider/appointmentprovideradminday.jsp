@@ -212,7 +212,19 @@ public boolean patientHasOutstandingPrivateBills(String demographicNo){
     if( defaultServiceType == null ) {
         defaultServiceType = "";
     }
+    
+    Collection<Integer> eforms = providerPreference2.getAppointmentScreenEForms();
+    StringBuilder eformIds = new StringBuilder();
+    for( Integer eform : eforms ) {
+    	eformIds = eformIds.append("&eformId=" + eform);
+    }
 
+    Collection<String> forms = providerPreference2.getAppointmentScreenForms();
+    StringBuilder ectFormNames = new StringBuilder();
+    for( String formName : forms ) {
+    	ectFormNames = ectFormNames.append("&encounterFormName=" + formName);
+    }
+    
     boolean bShortcutIntakeForm = oscarVariables.getProperty("appt_intake_form", "").equalsIgnoreCase("on") ? true : false;
 
     String newticklerwarningwindow=null;
@@ -633,10 +645,10 @@ if(newGroupNo.indexOf("_grp_") != -1) {
 	var programId = 0;
 	var programId_forCME = document.getElementById("bedprogram_no").value;
 
-	popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&caisiBillingPreferenceNotDelete=<%=caisiBillingPreferenceNotDelete%>&new_tickler_warning_window=<%=newticklerwarningwindow%>&default_pmm=<%=default_pmm%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&default_servicetype=<%=defaultServiceType%>&mygroup_no="+newGroupNo+"&programId_oscarView="+programId+"&case_program_id="+programId_forCME);
+	popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&caisiBillingPreferenceNotDelete=<%=caisiBillingPreferenceNotDelete%>&new_tickler_warning_window=<%=newticklerwarningwindow%>&default_pmm=<%=default_pmm%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&default_servicetype=<%=defaultServiceType%>&mygroup_no="+newGroupNo+"&programId_oscarView="+programId+"&case_program_id="+programId_forCME + "<%=eformIds.toString()%><%=ectFormNames.toString()%>");
 <%}else {%>
   var programId=0;
-  popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&default_servicetype=<%=defaultServiceType%>&mygroup_no="+newGroupNo+"&programId_oscarView="+programId);
+  popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&default_servicetype=<%=defaultServiceType%>&mygroup_no="+newGroupNo+"&programId_oscarView="+programId + "<%=eformIds.toString()%><%=ectFormNames.toString()%>");
 <%}%>
 }
 

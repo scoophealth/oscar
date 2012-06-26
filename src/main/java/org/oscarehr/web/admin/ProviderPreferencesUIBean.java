@@ -129,8 +129,9 @@ public final class ProviderPreferencesUIBean {
 
 		String[] formNames = request.getParameterValues("encounterFormName");
 		Collection<String> formNamesList = providerPreference.getAppointmentScreenForms();		
-		if (formNames != null) {
-			formNamesList.clear();
+
+		formNamesList.clear();
+		if( formNames != null ) {
 			for (String formName : formNames) {
 				formNamesList.add(formName);
 			}
@@ -139,12 +140,14 @@ public final class ProviderPreferencesUIBean {
 		// get eForms for appointment screen
 		String[] formIds = request.getParameterValues("eformId");
 		Collection<Integer> eFormsIdsList = providerPreference.getAppointmentScreenEForms();		
-		if (formIds != null) {
-			eFormsIdsList.clear();
+		
+		eFormsIdsList.clear();
+		if( formIds != null ) {
 			for (String formId : formIds) {
 				eFormsIdsList.add(Integer.parseInt(formId));
 			}
 		}
+		
 
 		providerPreferenceDao.merge(providerPreference);
 

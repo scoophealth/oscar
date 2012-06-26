@@ -1,12 +1,15 @@
 <%@page import="org.oscarehr.web.AppointmentProviderAdminDayUIBean"%>
-<%@page import="java.util.Collection"%>
+<%@page import="java.util.Collection, java.util.Collections, java.util.List, java.util.ArrayList"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.oscarehr.common.model.ProviderPreference"%>
 <%
 	if (providerPreference!=null)
 	{
 		Collection<String> formNames=providerPreference.getAppointmentScreenForms();
-		for (String formNameTemp : formNames)
+		List<String>formNamesList = new ArrayList<String>(formNames);
+		Collections.sort(formNamesList);
+		
+		for (String formNameTemp : formNamesList)
 		{
 			String trimmedEscapedLinkName=StringEscapeUtils.escapeHtml(AppointmentProviderAdminDayUIBean.getLengthLimitedLinkName(formNameTemp));
 			String escapedLinkName=StringEscapeUtils.escapeHtml(formNameTemp);

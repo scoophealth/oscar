@@ -84,6 +84,19 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
   int endHour=providerPreference.getEndHour();
   int everyMin=providerPreference.getEveryMin();
   int view=0;
+
+  Collection<Integer> eforms = providerPreference.getAppointmentScreenEForms();
+  StringBuilder eformIds = new StringBuilder();
+  for( Integer eform : eforms ) {
+  	eformIds = eformIds.append("&eformId=" + eform);
+  }
+
+  Collection<String> forms = providerPreference.getAppointmentScreenForms();
+  StringBuilder ectFormNames = new StringBuilder();
+  for( String formName : forms ) {
+  	ectFormNames = ectFormNames.append("&encounterFormName=" + formName);
+  }
+  
   
   boolean isMygroupnoNumber = true;
   
@@ -324,10 +337,10 @@ function popupOscarRx(vheight,vwidth,varpage) { //open a new popup window
             var newGroupNo = s.options[s.selectedIndex].value.substring(5) ;
             <%if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){%>
             {
-                popupOscarRx(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&new_tickler_warning_window=<%=n_t_w_w%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo);
+                popupOscarRx(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&new_tickler_warning_window=<%=n_t_w_w%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo) + "<%=eformIds.toString()%><%=ectFormNames.toString()%>";
             }
             <%}else {%>
-                popupOscarRx(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo);
+                popupOscarRx(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo + "<%=eformIds.toString()%><%=ectFormNames.toString()%>");
             <%}%>
         } 
         else 
