@@ -1580,6 +1580,12 @@ function updateFaxButton() {
 							</td>
 							<td class="tite2"><%=thisForm.getPatientWPhone()%></td>
 						</tr>
+                                                <tr>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgEmail" />:
+							</td>
+							<td class="tite2"><%=thisForm.getPatientEmail()%></td>
+						</tr>
 						<tr>
 							<td class="tite4"><bean:message
 								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgBirthDate" />:

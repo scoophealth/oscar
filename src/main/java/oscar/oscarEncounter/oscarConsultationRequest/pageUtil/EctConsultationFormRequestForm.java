@@ -100,6 +100,7 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 	private String patientAddress;
 	private String patientPhone;
 	private String patientWPhone;
+        private String patientEmail;
 	private String patientDOB;
 	private String patientSex;
 	private String patientHealthNum;
@@ -436,6 +437,14 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 		this.patientWPhone = patientWPhone;
 	}
 
+        public void setPatientEmail(String patientEmail) {
+            this.patientEmail = patientEmail;
+        }
+        
+        public String getPatientEmail() {
+            return (StringUtils.trimToEmpty(patientEmail));
+        }
+        
 	public String getPatientDOB() {
 		return (StringUtils.trimToEmpty(patientDOB));
 	}

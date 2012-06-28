@@ -169,6 +169,7 @@ public class EctViewRequestAction extends Action {
             thisForm.setPatientPhone(demo.getPhone());
             thisForm.setPatientSex(demo.getSex());
             thisForm.setPatientWPhone(demo.getPhone2());
+            thisForm.setPatientEmail(demo.getEmail());
             thisForm.setPatientAge(demo.getAge());
 
             ProviderDao provDao = (ProviderDao)SpringUtils.getBean("providerDao");
@@ -215,6 +216,7 @@ public class EctViewRequestAction extends Action {
         thisForm.setPatientPhone(consultUtil.patientPhone);
         thisForm.setPatientSex(consultUtil.patientSex);
         thisForm.setPatientWPhone(consultUtil.patientWPhone);
+        thisForm.setPatientEmail(consultUtil.patientEmail);
         thisForm.setPatientAge(consultUtil.patientAge);
         
         thisForm.setProviderName(consultUtil.getProviderName(consultUtil.providerNo));
@@ -276,6 +278,7 @@ public class EctViewRequestAction extends Action {
         thisForm.setPatientPhone(demographic.getPhone());
         thisForm.setPatientSex(demographic.getSex());
 //        thisForm.setPatientWPhone(patientAddress);
+        thisForm.setPatientEmail(demographic.getEmail());
         
         // referring provider
         PRD referringPrd=RefI12.getPrdByRoleId(refI12, "RP");
