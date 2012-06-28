@@ -134,7 +134,7 @@ position: absolute;
 top: 0;
 bottom: 0; 
 left: 0;
-width: 200px; /*Width of frame div*/
+width: 190px; /*Width of frame div*/
 height: 100%;
 overflow: hidden; /*Disable scrollbars. Set to "scroll" to enable*/
 background: navy;
@@ -144,7 +144,7 @@ color: white;
 #maincontent{
 position: fixed;
 top: 0; 
-left: 200px; /*Set left value to WidthOfFrameDiv*/
+left: 190px; /*Set left value to WidthOfFrameDiv*/
 right: 0;
 bottom: 0;
 overflow: auto; 
@@ -1431,7 +1431,9 @@ $(document).ready(function(){
 		$("#35wk_visit_menu").bind('click',function(){wk35VisitTool();});
 		$("#dd_visit_menu").bind('click',function(){ddVisitTool();});
 		
-		$('#gest_age').html(getGA());
+		var ga = getGA();
+		if(ga != 'NaNw+undefined')
+			$('#gest_age').html(ga);
 		
 		$( "#gct-req-form" ).dialog({
 			autoOpen: false,
@@ -1726,23 +1728,18 @@ $(document).ready(function(){
   }
 %> <input type="submit" value="Exit"
 				onclick="javascript:return onExit();" /> <input type="submit"
-				value="Print" onclick="javascript:return onPrint();" /></td>
+				value="Print" onclick="javascript:return onPrint();" />
 
 			<%
   if (!bView) {
 %>
-			<td>
-			</td>
-
-			<td align="right"><b>View:</b> <a
+&nbsp;&nbsp;&nbsp;
+			<b>View:</b> <a
 				href="javascript: popupPage('formonarenhancedpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo+historyet%>&view=1');">
-			AR1</a> </td>
-			<td align="right"><b>Edit:</b> <a
+			AR1</a> &nbsp;&nbsp;&nbsp;
+			<b>Edit:</b> <a
 				href="javascript:void(0);" onclick="return onPageChange('formonarenhancedpg1.jsp?demographic_no=<%=demoNo%>&formId=#id&provNo=<%=provNo%>');">AR1</a>
-			
-			<%if(((FrmONAREnhancedRecord)rec).isSendToPing(""+demoNo)) {	%> <a
-				href="study/ar2ping.jsp?demographic_no=<%=demoNo%>">Send to PING</a>
-			<% }	%>
+					
 			</td>
 			<%
   }
@@ -2198,16 +2195,16 @@ $(document).ready(function(){
   }
 %> <input type="submit" value="Exit"
 				onclick="javascript:return onExit();" /> <input type="submit"
-				value="Print" onclick="javascript:return onPrint();" /></td>
+				value="Print" onclick="javascript:return onPrint();" />
 			<%
   if (!bView) {
 %>
-			<td></td>
-
-			<td align="right"><font size="-1"><b>View:</b> <a
+	&nbsp;&nbsp;&nbsp;
+			<font size="-1"><b>View:</b> <a
 				href="javascript: popupPage('formonarenhancedpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">
-			AR1</a> </font></td>
-			<td align="right"><b>Edit:</b> <a
+			AR1</a> </font>
+			&nbsp;&nbsp;&nbsp;
+			<b>Edit:</b> <a
 				href="javascript:void(0);" onclick="return onPageChange('formonarenhancedpg1.jsp?demographic_no=<%=demoNo%>&formId=#id&provNo=<%=provNo%>');">AR1</a>
 			</td>
 			<%

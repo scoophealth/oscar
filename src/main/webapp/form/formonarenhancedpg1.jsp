@@ -179,7 +179,7 @@ position: absolute;
 top: 0;
 bottom: 0; 
 left: 0;
-width: 200px; /*Width of frame div*/
+width: 190px; /*Width of frame div*/
 height: 100%;
 overflow: hidden; /*Disable scrollbars. Set to "scroll" to enable*/
 background: navy;
@@ -189,7 +189,7 @@ color: white;
 #maincontent{
 position: fixed;
 top: 0; 
-left: 200px; /*Set left value to WidthOfFrameDiv*/
+left: 190px; /*Set left value to WidthOfFrameDiv*/
 right: 0;
 bottom: 0;
 overflow: auto; 
@@ -1838,26 +1838,18 @@ $(document).ready(function(){
 				onclick="javascript:return onExit();" /> <input type="submit"
 				value="Print" onclick="javascript:return onPrint();" />
             
-</td>
+
 			<%
   if (!bView) {
 %>
-			<td></td>
-
-			<td align="right"><b>View:</b> <a
+&nbsp;&nbsp;&nbsp;
+			<b>View:</b> <a
 				href="javascript: popupPage('formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">AR2
-			</a>&nbsp;</td>
-			<td align="right"><b>Edit:</b> <a
-				href="javascript:void(0)" onclick="onPageChange('formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=#id&provNo=<%=provNo%>');">AR2</a>
-			
-			<%if(((FrmONAREnhancedRecord)rec).isSendToPing(""+demoNo)) {	%> <a
-				href="study/ar2ping.jsp?demographic_no=<%=demoNo%>">Send to PING</a>
-			<% }	%>
+				</a>&nbsp;&nbsp;&nbsp;
+			<b>Edit:</b> <a
+				href="javascript:void(0)" onclick="onPageChange('formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=#id&provNo=<%=provNo%>');">AR2</a>			
 			</td>
 			
-			<td align="right"><a
-				href="formonarenhancedxml.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&episodeId=<%=props.getProperty("episodeId","0")%>">XML</a>			
-			</td>
 			
 			<%
   }
@@ -3331,15 +3323,16 @@ $(document).ready(function(){
   }
 %> <input type="submit" value="Exit"
 				onclick="javascript:return onExit();" /> <input type="submit"
-				value="Print" onclick="javascript:return onPrint();" /></td>
+				value="Print" onclick="javascript:return onPrint();" />
 			<%
   if (!bView) {
 %>
-			<td></td>
-			<td align="right"><b>View:</b> <a
+&nbsp;&nbsp;&nbsp;
+			<b>View:</b> <a
 				href="javascript: popupPage('formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">AR2
-			</a> </td>
-			<td align="right"><b>Edit:</b> 
+			</a> 
+			&nbsp;&nbsp;&nbsp;
+			<b>Edit:</b> 
 			<a
 				href="javascript:void(0)" onclick="onPageChange('formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=#id&provNo=<%=provNo%>');">AR2</a> </td>
 			<%
@@ -3435,7 +3428,7 @@ Calendar.setup({ inputField : "pg1_labLastPapDate", ifFormat : "%Y/%m/%d", shows
 <ul>
 	<li><a href="http://www.sogc.org/guidelines/documents/gui217CPG0810.pdf" target="sogc">SOGC Guidelines</a></li>
 	<li><a href="<%=request.getContextPath()%>/pregnancy/genetics-provider-guide-e.pdf" target="sogc">Guide</a></li>	
-	<li><a href="javascript:void(0)" onclick="geneticReferral();">IPS Forms</a></li>
+	<li><a href="javascript:void(0)" onclick="loadIPSForms();">IPS Forms</a></li>
 </ul>
 </div>
 
