@@ -304,7 +304,11 @@ public class PregnancyAction extends DispatchAction {
 		List<Allergy> allergies = allergyDao.findActiveAllergies(demographicNo);
 		StringBuilder output = new StringBuilder();
 		for(Allergy allergy:allergies) {
-			output.append(allergy.getDescription() + ":" + allergy.getReaction() + "\n");
+			output.append(allergy.getDescription());
+			if(allergy.getReaction()!=null) {
+				output.append(":" + allergy.getReaction()); 
+			}
+			output.append("\n");
 		}
 		
 		JSONObject json = JSONObject.fromObject(new LabelValueBean("allergies",output.toString().trim()));
@@ -318,6 +322,9 @@ public class PregnancyAction extends DispatchAction {
 		List<Drug> drugs = drugDao.findByDemographicId(demographicNo, false);
 		StringBuilder output = new StringBuilder();
 		for(Drug drug:drugs) {
+			if(drug.isArchived() || drug.isDeleted() || drug.isDiscontinued() || drug.isExpired()) {
+				continue;
+			}
 			if(drug.getBrandName() != null && drug.getBrandName().length()>0) {
 				if(output.length()>0)
 					output.append(",");
