@@ -393,6 +393,9 @@ width: 100%;
 
 <script>
 	function validate() {		
+		if($("input[name='c_postal']").val().length == 7 && $("input[name='c_postal']").val().indexOf(' ') != -1) {
+			$("input[name='c_postal']").val($("input[name='c_postal']").val().replace(' ',''));
+		}
 		var patt1=new RegExp("([a-zA-Z][0-9][a-zA-Z][0-9][a-zA-Z][0-9])?");
 		if(!patt1.test($("input[name='c_postal']").val())) {
 			alert('Postal Code must be in the following format A#A#A#');
@@ -1889,7 +1892,7 @@ $(document).ready(function(){
 			</td>
 			<td width="25%">Apt/Suite/Unit<br>
 			<input type="text" name="c_apt" style="width: 100%" size="20"
-				maxlength="20"
+				maxlength="10"
 				value="<%= UtilMisc.htmlEscape(props.getProperty("c_apt", "")) %>" />
 			</td>
 		</tr>
@@ -1980,7 +1983,7 @@ $(document).ready(function(){
 			</td>
 			<td width="12%">Postal Code<br>
 			<input type="text" name="c_postal" style="width: 100%" size="7"
-				maxlength="10"
+				maxlength="7"
 				value="<%= UtilMisc.htmlEscape(props.getProperty("c_postal", "")) %>" />
 			</td>
 			<td colspan="2" width="25%">Partner's Last Name<br>
