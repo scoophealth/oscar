@@ -28,6 +28,7 @@
 <%@ page import="org.oscarehr.common.web.PregnancyAction"%>
 <%@ page import="java.util.List"%>
 <%@ page import="org.apache.struts.util.LabelValueBean"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -278,7 +279,7 @@ width: 100%;
 		} 
 	}
 	$(document).ready(function() {		
-		$("select[name='pg1_labCustom1Label']").val('<%= UtilMisc.htmlEscape(props.getProperty("pg1_labCustom1Label", "")) %>');
+		$("select[name='pg1_labCustom1Label']").val('<%= UtilMisc.htmlEscape(UtilMisc.htmlEscape(props.getProperty("pg1_labCustom1Label", ""))) %>');
 		$("select[name='c_province']").val('<%= UtilMisc.htmlEscape(props.getProperty("c_province", "")) %>');
 		$("select[name='pg1_maritalStatus']").val('<%= UtilMisc.htmlEscape(props.getProperty("pg1_maritalStatus", "")) %>');
 		$("select[name='pg1_language']").val('<%= UtilMisc.htmlEscape(props.getProperty("pg1_language", "")) %>');		
@@ -712,16 +713,16 @@ jQuery(document).ready(function() {
 		%>
 			jQuery.ajax({url:'onarenhanced_obxhx.jsp?n='+<%=x%>,async:false, success:function(data) {
 			  jQuery("#obxhx_container tbody").append(data);
-			  setInput(<%=x%>,"pg1_year",'<%= props.getProperty("pg1_year"+x, "") %>');
-			  setInput(<%=x%>,"pg1_sex",'<%= props.getProperty("pg1_sex"+x, "") %>');
-			  setInput(<%=x%>,"pg1_oh_gest",'<%= props.getProperty("pg1_oh_gest"+x, "") %>');
-			  setInput(<%=x%>,"pg1_weight",'<%= props.getProperty("pg1_weight"+x, "") %>');
-			  setInput(<%=x%>,"pg1_length",'<%= props.getProperty("pg1_length"+x, "") %>');
-			  setInput(<%=x%>,"pg1_place",'<%= props.getProperty("pg1_place"+x, "") %>');
+			  setInput(<%=x%>,"pg1_year",'<%= StringEscapeUtils.escapeJavaScript(props.getProperty("pg1_year"+x, "")) %>');
+			  setInput(<%=x%>,"pg1_sex",'<%= StringEscapeUtils.escapeJavaScript(props.getProperty("pg1_sex"+x, "")) %>');
+			  setInput(<%=x%>,"pg1_oh_gest",'<%= StringEscapeUtils.escapeJavaScript(props.getProperty("pg1_oh_gest"+x, "")) %>');
+			  setInput(<%=x%>,"pg1_weight",'<%= StringEscapeUtils.escapeJavaScript(props.getProperty("pg1_weight"+x, "")) %>');
+			  setInput(<%=x%>,"pg1_length",'<%= StringEscapeUtils.escapeJavaScript(props.getProperty("pg1_length"+x, "")) %>');
+			  setInput(<%=x%>,"pg1_place",'<%= StringEscapeUtils.escapeJavaScript(props.getProperty("pg1_place"+x, "")) %>');
 			  setCheckbox(<%=x%>,"pg1_svb",'<%= (props.getProperty("pg1_svb"+x, "").length()>0)?"true":"false" %>');
 			  setCheckbox(<%=x%>,"pg1_cs",'<%= (props.getProperty("pg1_cs"+x, "").length()>0)?"true":"false" %>');
 			  setCheckbox(<%=x%>,"pg1_ass",'<%= (props.getProperty("pg1_ass"+x, "").length()>0)?"true":"false" %>');
-			  setInput(<%=x%>,"pg1_oh_comments",'<%= props.getProperty("pg1_oh_comments"+x, "") %>');
+			  setInput(<%=x%>,"pg1_oh_comments",'<%= StringEscapeUtils.escapeJavaScript(props.getProperty("pg1_oh_comments"+x, "")) %>');
 		}});
 		<%
 		}
@@ -752,7 +753,7 @@ function watchFormVersion() {
 		$.ajax({
 		   type: "POST",
 		   url: "<%=request.getContextPath()%>/Pregnancy.do",
-		   data: { method: "getLatestFormIdByPregnancy", episodeId: '<%=props.getProperty("episodeId","0")%>'},
+		   data: { method: "getLatestFormIdByPregnancy", episodeId: '<%=StringEscapeUtils.escapeJavaScript(props.getProperty("episodeId","0"))%>'},
 		   dataType: 'json',
 		   success: function(data,textStatus) {
 			  if(data.value != '<%=formId%>') {
@@ -1492,7 +1493,7 @@ $(document).ready(function(){
 				$( this ).dialog( "close" );	
 				var ferritin = $("#ferritin").attr('checked');
 				var hbElectrophoresis = $("#hbElectrophoresis").attr('checked');
-				var demographic = '<%=props.getProperty("demographic_no", "0")%>';
+				var demographic = '<%=StringEscapeUtils.escapeJavaScript(props.getProperty("demographic_no", "0"))%>';
 				var user = '<%=session.getAttribute("user")%>';
 				url = '<%=request.getContextPath()%>/form/formlabreq<%=labReqVer%>.jsp?demographic_no='+demographic+'&formId=0&provNo='+user + '&fromSession=true';
 				jQuery.ajax({url:'<%=request.getContextPath()%>/Pregnancy.do?method=createMCVLabReq&demographicNo='+demographic + '&ferritin='+ferritin+'&hb_electrophoresis='+hbElectrophoresis,async:false, success:function(data) {
@@ -1873,11 +1874,11 @@ $(document).ready(function(){
 		<tr>
 			<td valign="top" width="50%">Patient's Last Name<br>
 			<input type="text" name="c_lastName" style="width: 100%" size="30"
-				maxlength="60" value="<%= props.getProperty("c_lastName", "") %>" />
+				maxlength="60" value="<%= UtilMisc.htmlEscape(props.getProperty("c_lastName", "")) %>" />
 			</td>
 			<td valign="top" colspan='2'>Patient's First Name<br>
 			<input type="text" name="c_firstName" style="width: 100%" size="30"
-				maxlength="60" value="<%= props.getProperty("c_firstName", "") %>" />
+				maxlength="60" value="<%= UtilMisc.htmlEscape(props.getProperty("c_firstName", "")) %>" />
 			</td>
 		</tr>
 		<tr>
@@ -1985,11 +1986,11 @@ $(document).ready(function(){
 			<td colspan="2" width="25%">Partner's Last Name<br>
 			<input type="text" name="c_partnerLastName" style="width: 100%"
 				size="30" maxlength="60"
-				value="<%= props.getProperty("c_partnerLastName", "") %>" /></td>
+				value="<%= UtilMisc.htmlEscape(props.getProperty("c_partnerLastName", "")) %>" /></td>
 			<td colspan="2" width="25%">Partner's First Name<br>
 			<input type="text" name="c_partnerFirstName" style="width: 100%"
 				size="30" maxlength="60"
-				value="<%= props.getProperty("c_partnerFirstName", "") %>" /></td>
+				value="<%= UtilMisc.htmlEscape(props.getProperty("c_partnerFirstName", "")) %>" /></td>
 		</tr>
 		<tr>
 			<td width="15%" valign="top">Telephone - Home<br>
@@ -1999,7 +2000,7 @@ $(document).ready(function(){
 			</td>
 			<td width="15%" valign="top">Telephone - Work<br>
 			<input type="text" name="pg1_workPhone" size="15" style="width: 100%"
-				maxlength="20" value="<%= props.getProperty("pg1_workPhone", "") %>" />
+				maxlength="20" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_workPhone", "")) %>" />
 			</td>
 			<td colspan='2' valign="top">Language<br>
 					<select name="pg1_language"  style="width: 100%">
@@ -2202,7 +2203,7 @@ $(document).ready(function(){
 			</td>
 			<td width="8%" valign="top">Age<br>
 			<input type="text" name="pg1_partnerAge" style="width: 100%" size="5"
-				maxlength="5" value="<%= props.getProperty("pg1_partnerAge", "") %>" />
+				maxlength="5" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_partnerAge", "")) %>" />
 			</td>
 		</tr>
 	</table>
@@ -2212,11 +2213,11 @@ $(document).ready(function(){
 			<td valign="top" width="12%">Date of birth<br>
 			<input type="text" name="pg1_dateOfBirth" style="width: 100%"
 				size="10" maxlength="10"
-				value="<%= props.getProperty("pg1_dateOfBirth", "") %>"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_dateOfBirth", "")) %>"
 				readonly="true" /></td>
 			<td width="8%" valign="top">Age<br>
 			<input type="text" name="pg1_age" style="width: 100%" size="10"
-				maxlength="10" value="<%= props.getProperty("pg1_age", "") %>" /></td>
+				maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_age", "")) %>" /></td>
 			<td width="15%" valign="top">Occupation<br>
 				<input type="text" name="pg1_occupation" size="10" style="width: 100%"
 				maxlength="20" 
@@ -2298,18 +2299,18 @@ $(document).ready(function(){
 				<%= props.getProperty("pg1_ncFP", "") %> />FP <input type="checkbox"
 				name="pg1_ncMidwife" <%= props.getProperty("pg1_ncMidwife", "") %> />Midwife<br>
 			</font> <input type="text" name="c_nc" size="10" style="width: 100%"
-				maxlength="25" value="<%= props.getProperty("c_nc", "") %>" /></td>
+				maxlength="25" value="<%= UtilMisc.htmlEscape(props.getProperty("c_nc", "")) %>" /></td>
 			<td>Family physician<br>
 			<input type="text" name="c_famPhys" size="30" maxlength="80"
 				style="width: 100%"
-				value="<%= props.getProperty("c_famPhys", "") %>" /></td>
+				value="<%= UtilMisc.htmlEscape(props.getProperty("c_famPhys", "")) %>" /></td>
 		</tr>
 	</table>
 	<table width="100%" border="1" cellspacing="0" cellpadding="0">
 		<tr>
 			<td width="50%">Allergies or Sensitivities &nbsp;<a id="update_allergies_link" href="javascript:void(0)" onclick="updateAllergies();">Update from Chart</a><br>
 			<div align="center"><textarea name="c_allergies"
-				style="width: 100%" cols="30" rows="4"><%= props.getProperty("c_allergies", "") %></textarea></div>			
+				style="width: 100%" cols="30" rows="4"><%= UtilMisc.htmlEscape(props.getProperty("c_allergies", "")) %></textarea></div>			
 			<%if(!bView) {%>
 				<span id="allergies_size">150 Characters left</span>		
 			<% } %>
@@ -2317,7 +2318,7 @@ $(document).ready(function(){
 			
 			<td width="50%">Medications/Herbals&nbsp;<a id="update_meds_link" href="javascript:void(0)" onclick="updateMeds();">Update from Chart</a><br>
 			<div align="center"><textarea name="c_meds" style="width: 100%"
-				cols="30" rows="4"><%= props.getProperty("c_meds", "") %></textarea></div>
+				cols="30" rows="4"><%= UtilMisc.htmlEscape(props.getProperty("c_meds", "")) %></textarea></div>
 				<%if(!bView) {%>
 				<span id="meds_size">146 Characters left</span>		
 				<% } %>
@@ -2375,7 +2376,7 @@ $(document).ready(function(){
 			<td valign="top" nowrap>EDB (by dates)</br>
 			<input type="text" name="pg1_menEDB" id="pg1_menEDB" class="spe"
 				onDblClick="calByLMP(this);" size="10" maxlength="10"
-				value="<%= props.getProperty("pg1_menEDB", "") %>" /> <img
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_menEDB", "")) %>" /> <img
 				src="../images/cal.gif" id="pg1_menEDB_cal"></td>
 
 
@@ -2386,7 +2387,7 @@ $(document).ready(function(){
 					<td valign="top" align="center"><font size="+1"><b>Final
 					EDB</font></b></font><br>
 					<input type="text" name="c_finalEDB" id="c_finalEDB" size="10"
-						maxlength="10" value="<%= props.getProperty("c_finalEDB", "") %>" />
+						maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("c_finalEDB", "")) %>" />
 					<img src="../images/cal.gif" id="c_finalEDB_cal"></td>
 					<td width="40%"><u>Dating Method</u></br>
 					<input type="checkbox" name="pg1_edbByDate"
@@ -3265,7 +3266,7 @@ $(document).ready(function(){
 		</tr>
 		<tr>
 			<td colspan="4"><textarea name="pg1_commentsAR1"
-				style="width: 100%" cols="80" rows="5"><%= props.getProperty("pg1_commentsAR1", "") %></textarea>
+				style="width: 100%" cols="80" rows="5"><%= UtilMisc.htmlEscape(props.getProperty("pg1_commentsAR1", "")) %></textarea>
 			</td>
 		</tr>
 		<%if(!bView) {%>
@@ -3279,7 +3280,7 @@ $(document).ready(function(){
 		</tr>
 		<tr>
 			<td colspan="4"><textarea name="pg1_comments2AR1"
-				style="width: 100%" cols="80" rows="15"><%= props.getProperty("pg1_comments2AR1", "") %></textarea>
+				style="width: 100%" cols="80" rows="15"><%= UtilMisc.htmlEscape(props.getProperty("pg1_comments2AR1", "")) %></textarea>
 			</td>
 		</tr>
 		<%if(!bView) {%>
