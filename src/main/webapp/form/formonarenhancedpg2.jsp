@@ -29,6 +29,7 @@
 <%@ page import="org.oscarehr.common.web.PregnancyAction"%>
 <%@ page import="java.util.List"%>
 <%@ page import="org.apache.struts.util.LabelValueBean"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -90,8 +91,8 @@
 	}else{
 		rh = UtilMisc.htmlEscape(props.getProperty("ar2_rh", ""));
 	}
-	String hbsag = ar1Props.getProperty("pg1_labHBsAg","");
-	String rubella = ar1Props.getProperty("pg1_labRubella","");
+	String hbsag = UtilMisc.htmlEscape(ar1Props.getProperty("pg1_labHBsAg",""));
+	String rubella = UtilMisc.htmlEscape(ar1Props.getProperty("pg1_labRubella",""));
 %>
 <html:html locale="true">
 <head>
@@ -285,11 +286,11 @@ width: 100%;
 	}
 
 	$(document).ready(function() {
-		$("select[name='ar2_strep']").val('<%= UtilMisc.htmlEscape(props.getProperty("ar2_strep", "")) %>');
+		$("select[name='ar2_strep']").val('<%= StringEscapeUtils.escapeJavaScript(props.getProperty("ar2_strep", "")) %>');
 		$("select[name='ar2_bloodGroup']").val('<%= abo %>');
 		$("select[name='ar2_rh']").val('<%= rh %>');
-		$("select[name='ar2_labCustom1Label']").val('<%= UtilMisc.htmlEscape(props.getProperty("ar2_labCustom1Label", "")) %>');
-		$("select[name='ar2_labCustom2Label']").val('<%= UtilMisc.htmlEscape(props.getProperty("ar2_labCustom2Label", "")) %>');
+		$("select[name='ar2_labCustom1Label']").val('<%= StringEscapeUtils.escapeJavaScript(props.getProperty("ar2_labCustom1Label", "")) %>');
+		$("select[name='ar2_labCustom2Label']").val('<%= StringEscapeUtils.escapeJavaScript(props.getProperty("ar2_labCustom2Label", "")) %>');
 			
 		
 		if($("select[name='ar2_rh']").val() == 'NEG'/* && getGAWeek() >= 9*/) {			
@@ -302,11 +303,11 @@ width: 100%;
 			$("#rhogam_warn").hide();
 		}
 		
-		if('<%=UtilMisc.htmlEscape(props.getProperty("pg1_labRubella", ""))%>' == 'Non-Immune' ) {			
+		if('<%=StringEscapeUtils.escapeJavaScript(props.getProperty("pg1_labRubella", ""))%>' == 'Non-Immune' ) {			
 			$("#rubella_warn").show();
 		}
 		
-		if('<%=UtilMisc.htmlEscape(props.getProperty("pg1_labHBsAg", ""))%>' == 'POS' ) {			
+		if('<%=StringEscapeUtils.escapeJavaScript(props.getProperty("pg1_labHBsAg", ""))%>' == 'POS' ) {			
 			$("#hbsag_warn").show();
 		}
 		
@@ -499,8 +500,8 @@ jQuery(document).ready(function() {
 		%>
 		jQuery.ajax({url:'onarenhanced_rf.jsp?n='+<%=y%>,async:false, success:function(data) {
 			  jQuery("#rf_container tbody").append(data);
-			  setInput(<%=y%>,"c_riskFactors",'<%= props.getProperty("c_riskFactors"+y, "") %>');
-			  setInput(<%=y%>,"c_planManage",'<%= props.getProperty("c_planManage"+y, "") %>');			 
+			  setInput(<%=y%>,"c_riskFactors",'<%= StringEscapeUtils.escapeJavaScript(props.getProperty("c_riskFactors"+y, "")) %>');
+			  setInput(<%=y%>,"c_planManage",'<%= StringEscapeUtils.escapeJavaScript(props.getProperty("c_planManage"+y, "")) %>');			 
 		}});
 		<%
 		}
@@ -529,16 +530,16 @@ jQuery(document).ready(function() {
 	%>
 		jQuery.ajax({url:'onarenhanced_sv.jsp?n='+<%=y%>,async:false, success:function(data) {			
 		  jQuery("#sv_tbody").append(data);		  
-		  setInput(<%=y%>,"pg2_date",'<%= props.getProperty("pg2_date"+y, "") %>');
-		  setInput(<%=y%>,"pg2_gest",'<%= props.getProperty("pg2_gest"+y, "") %>');
-		  setInput(<%=y%>,"pg2_wt",'<%= props.getProperty("pg2_wt"+y, "") %>');
-		  setInput(<%=y%>,"pg2_BP",'<%= props.getProperty("pg2_BP"+y, "") %>');
-		  setInput(<%=y%>,"pg2_urinePr",'<%= props.getProperty("pg2_urinePr"+y, "") %>');
-		  setInput(<%=y%>,"pg2_urineGl",'<%= props.getProperty("pg2_urineGl"+y, "") %>');
-		  setInput(<%=y%>,"pg2_ht",'<%= props.getProperty("pg2_ht"+y, "") %>');
-		  setInput(<%=y%>,"pg2_presn",'<%= props.getProperty("pg2_presn"+y, "") %>');
-		  setInput(<%=y%>,"pg2_FHR",'<%= props.getProperty("pg2_FHR"+y, "") %>');
-		  setInput(<%=y%>,"pg2_comments",'<%= props.getProperty("pg2_comments"+y, "") %>');		  
+		  setInput(<%=y%>,"pg2_date",'<%= StringEscapeUtils.escapeJavaScript(props.getProperty("pg2_date"+y, "")) %>');
+		  setInput(<%=y%>,"pg2_gest",'<%= StringEscapeUtils.escapeJavaScript(props.getProperty("pg2_gest"+y, "")) %>');
+		  setInput(<%=y%>,"pg2_wt",'<%= StringEscapeUtils.escapeJavaScript(props.getProperty("pg2_wt"+y, "")) %>');
+		  setInput(<%=y%>,"pg2_BP",'<%= StringEscapeUtils.escapeJavaScript(props.getProperty("pg2_BP"+y, "")) %>');
+		  setInput(<%=y%>,"pg2_urinePr",'<%= StringEscapeUtils.escapeJavaScript(props.getProperty("pg2_urinePr"+y, "")) %>');
+		  setInput(<%=y%>,"pg2_urineGl",'<%= StringEscapeUtils.escapeJavaScript(props.getProperty("pg2_urineGl"+y, "")) %>');
+		  setInput(<%=y%>,"pg2_ht",'<%= StringEscapeUtils.escapeJavaScript(props.getProperty("pg2_ht"+y, "")) %>');
+		  setInput(<%=y%>,"pg2_presn",'<%= StringEscapeUtils.escapeJavaScript(props.getProperty("pg2_presn"+y, "")) %>');
+		  setInput(<%=y%>,"pg2_FHR",'<%= StringEscapeUtils.escapeJavaScript(props.getProperty("pg2_FHR"+y, "")) %>');
+		  setInput(<%=y%>,"pg2_comments",'<%= StringEscapeUtils.escapeJavaScript(props.getProperty("pg2_comments"+y, "")) %>');		  
 	}});
 	<%
 	}
@@ -567,9 +568,9 @@ for(int x=1;x<usNum+1;x++) {
 %>
 	jQuery.ajax({url:'onarenhanced_us.jsp?n='+<%=x%>,async:false, success:function(data) {
 	  jQuery("#us_container tbody").append(data);
-	  setInput(<%=x%>,"ar2_uDate",'<%= props.getProperty("ar2_uDate"+x, "") %>');
-	  setInput(<%=x%>,"ar2_uGA",'<%= props.getProperty("ar2_uGA"+x, "") %>');
-	  setInput(<%=x%>,"ar2_uResults",'<%= props.getProperty("ar2_uResults"+x, "") %>');	  
+	  setInput(<%=x%>,"ar2_uDate",'<%= StringEscapeUtils.escapeJavaScript(props.getProperty("ar2_uDate"+x, "")) %>');
+	  setInput(<%=x%>,"ar2_uGA",'<%= StringEscapeUtils.escapeJavaScript(props.getProperty("ar2_uGA"+x, "")) %>');
+	  setInput(<%=x%>,"ar2_uResults",'<%= StringEscapeUtils.escapeJavaScript(props.getProperty("ar2_uResults"+x, "")) %>');	  
 }});
 <%
 }
@@ -1758,11 +1759,11 @@ $(document).ready(function(){
 		<tr>
 			<td valign="top" width="50%">Patient's Last Name<br>
 			<input type="text" name="c_lastName" style="width: 100%" size="30"
-				maxlength="60" value="<%= props.getProperty("c_lastName", "") %>" />
+				maxlength="60" value="<%= UtilMisc.htmlEscape(props.getProperty("c_lastName", "")) %>" />
 			</td>
 			<td valign="top">Patient's First Name<br>
 			<input type="text" name="c_firstName" style="width: 100%" size="30"
-				maxlength="60" value="<%= props.getProperty("c_firstName", "") %>" />
+				maxlength="60" value="<%= UtilMisc.htmlEscape(props.getProperty("c_firstName", "")) %>" />
 			</td>
 		</tr>
 		
@@ -1784,17 +1785,17 @@ $(document).ready(function(){
 			<td width="25%" colspan="5">Family physician<br>
 			<input type="text" name="c_famPhys" size="30" maxlength="80"
 				style="width: 100%"
-				value="<%= props.getProperty("c_famPhys", "") %>" /></td>
+				value="<%= UtilMisc.htmlEscape(props.getProperty("c_famPhys", "")) %>" /></td>
 			<td valign="top" rowspan="4" width="25%"><b>Final EDB</b>
 			(yyyy/mm/dd)<br>
 			<input type="text" name="c_finalEDB" style="width: 100%" size="10"
-				maxlength="10" value="<%= props.getProperty("c_finalEDB", "") %>">
+				maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("c_finalEDB", "")) %>">
 			</td>
 			<td valign="top" rowspan="4" width="25%">Allergies or
 			Sensitivities<br/>
-			<textarea name="c_allergies" style="width: 100%" cols="30" rows="3"><%= props.getProperty("c_allergies", "") %></textarea></td>
+			<textarea name="c_allergies" style="width: 100%" cols="30" rows="3"><%= UtilMisc.htmlEscape(props.getProperty("c_allergies", "")) %></textarea></td>
 			<td valign="top" rowspan="4">Medications / Herbals<br/>
-			<textarea name="c_meds" style="width: 100%" cols="30" rows="3"><%= props.getProperty("c_meds", "") %></textarea></td>
+			<textarea name="c_meds" style="width: 100%" cols="30" rows="3"><%= UtilMisc.htmlEscape(props.getProperty("c_meds", "")) %></textarea></td>
 		</tr>
 		<tr>
 			<td bgcolor="#CCCCCC" width="5%">G<br/>
@@ -1872,7 +1873,7 @@ $(document).ready(function(){
 			<td width="30%" nowrap="nowrap">
 				<span id="rhNegSpan">
 					<b>Rh neg.</b> 
-					<input type="checkbox" name="ar2_rhNeg" <%= props.getProperty("ar2_rhNeg", "") %> />
+					<input type="checkbox" name="ar2_rhNeg" <%= UtilMisc.htmlEscape(props.getProperty("ar2_rhNeg", "")) %> />
 				</span>
 				&nbsp;&nbsp;&nbsp;
 			
