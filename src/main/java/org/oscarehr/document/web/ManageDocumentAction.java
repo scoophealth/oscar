@@ -65,12 +65,15 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.ProviderInboxRoutingDao;
+import org.oscarehr.common.dao.SecRoleDao;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.SecRole;
 import org.oscarehr.document.dao.DocumentDAO;
 import org.oscarehr.document.model.CtlDocument;
 import org.oscarehr.document.model.Document;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -305,7 +308,11 @@ public class ManageDocumentAction extends DispatchAction {
 		cmn.setSigned(true);
 		cmn.setSigning_provider_no("-1");
 		cmn.setProgram_no(prog_no);
-		cmn.setReporter_caisi_role("1");
+		
+		SecRoleDao secRoleDao = (SecRoleDao) SpringUtils.getBean("secRoleDao");
+		SecRole doctorRole = secRoleDao.findByName("doctor");		
+		cmn.setReporter_caisi_role(doctorRole.getId().toString());
+		
 		cmn.setReporter_program_team("0");
 		cmn.setPassword("NULL");
 		cmn.setLocked(false);

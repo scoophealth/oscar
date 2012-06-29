@@ -30,6 +30,9 @@
 		org.oscarehr.casemgmt.model.CaseManagementNote,
 		org.oscarehr.casemgmt.model.CaseManagementNoteLink,
 		org.oscarehr.casemgmt.service.CaseManagementManager,
+		org.oscarehr.common.dao.SecRoleDao,
+		org.oscarehr.common.model.SecRole,
+		org.oscarehr.util.SpringUtils,
 		oscar.oscarEncounter.data.EctProgram,
 		java.util.Date, java.util.List"%>
 <%@page import="oscar.log.LogAction, oscar.log.LogConst"%>
@@ -233,7 +236,11 @@
 	    cmNote.setSigning_provider_no(provider);
 	    cmNote.setSigned(true);
 	    cmNote.setProgram_no(program_no);
-	    cmNote.setReporter_caisi_role("2");  //secRole for "nurse"
+	    
+	    SecRoleDao secRoleDao = (SecRoleDao) SpringUtils.getBean("secRoleDao");
+		SecRole doctorRole = secRoleDao.findByName("doctor");		
+		cmNote.setReporter_caisi_role(doctorRole.getId().toString());
+	    	    
 	    cmNote.setReporter_program_team("0");
 	    cmNote.setNote(note);
             String historyStr;

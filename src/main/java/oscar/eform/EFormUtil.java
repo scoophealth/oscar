@@ -57,8 +57,10 @@ import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.EFormDataDao;
 import org.oscarehr.common.dao.EFormValueDao;
+import org.oscarehr.common.dao.SecRoleDao;
 import org.oscarehr.common.model.EFormData;
 import org.oscarehr.common.model.EFormValue;
+import org.oscarehr.common.model.SecRole;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -933,7 +935,11 @@ public class EFormUtil {
 		cmNote.setSigning_provider_no(providerNo);
 		cmNote.setSigned(true);
 		cmNote.setHistory("");
-		cmNote.setReporter_caisi_role("1"); // caisi_role for "doctor"
+		
+		SecRoleDao secRoleDao = (SecRoleDao) SpringUtils.getBean("secRoleDao");
+		SecRole doctorRole = secRoleDao.findByName("doctor");		
+		cmNote.setReporter_caisi_role(doctorRole.getId().toString());		
+		
 		cmNote.setReporter_program_team("0");
 		cmNote.setProgram_no(programNo);
 		cmNote.setUuid(UUID.randomUUID().toString());

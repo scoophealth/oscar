@@ -46,7 +46,9 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.DrugDao;
+import org.oscarehr.common.dao.SecRoleDao;
 import org.oscarehr.common.model.Drug;
+import org.oscarehr.common.model.SecRole;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
@@ -304,7 +306,11 @@ public ActionForward clearStash(ActionMapping mapping,ActionForm form,HttpServle
         cmn.setSigned(true);
         cmn.setSigning_provider_no(user);
         cmn.setProgram_no(prog_no);
-        cmn.setReporter_caisi_role("1");//1 for doctor, 2 for nurse
+        
+        SecRoleDao secRoleDao = (SecRoleDao) SpringUtils.getBean("secRoleDao");
+		SecRole doctorRole = secRoleDao.findByName("doctor");		
+		cmn.setReporter_caisi_role(doctorRole.getId().toString());
+                
         cmn.setReporter_program_team("0");
         cmn.setPassword("NULL");
         cmn.setLocked(false);
