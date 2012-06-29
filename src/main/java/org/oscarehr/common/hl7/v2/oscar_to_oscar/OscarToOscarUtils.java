@@ -49,15 +49,28 @@ public final class OscarToOscarUtils {
 	}
 
 	public static AbstractMessage pipeParserParse(String hl7Message) throws EncodingNotSupportedException, HL7Exception {
-		try {
-	        // convert \n to \r as per hl7 spec section 2.8
-	        hl7Message = hl7Message.replaceAll("\n", "\r");
-	        // the above will have converted \r\n to \r\r so fix that too
-	        hl7Message = hl7Message.replaceAll("\r\r", "\r");
-
-	        AbstractMessage message = (AbstractMessage) pipeParser.parse(hl7Message);
-	        return (message);
-        } catch (HL7Exception e) {
+		try
+		{
+			try {
+				AbstractMessage message = (AbstractMessage) pipeParser.parse(hl7Message);
+		        return (message);
+	        } 
+			catch (EncodingNotSupportedException e)
+			{
+				// make a feeble attempt at fixing line feed characters
+				// sometimes this doesn't work because HAPI sprinkles 0A or 0D's around fields within a segment sometimes for no good reason at all, which causes this to break up a segment into multiple lines and barf.
+				
+				// convert \n to \r as per hl7 spec section 2.8
+		        hl7Message = hl7Message.replaceAll("\n", "\r");
+		        // the above will have converted \r\n to \r\r so fix that too
+		        hl7Message = hl7Message.replaceAll("\r\r", "\r");
+	
+		        AbstractMessage message = (AbstractMessage) pipeParser.parse(hl7Message);
+		        return (message);
+			}
+		}
+		catch (HL7Exception e) {
+		
         	logger.error("Unable to parse message : "+hl7Message);
         	throw(e);
         }
