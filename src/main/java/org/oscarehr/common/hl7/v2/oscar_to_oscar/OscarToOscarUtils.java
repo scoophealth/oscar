@@ -49,13 +49,18 @@ public final class OscarToOscarUtils {
 	}
 
 	public static AbstractMessage pipeParserParse(String hl7Message) throws EncodingNotSupportedException, HL7Exception {
-		// convert \n to \r as per hl7 spec section 2.8
-		hl7Message = hl7Message.replaceAll("\n", "\r");
-		// the above will have converted \r\n to \r\r so fix that too
-		hl7Message = hl7Message.replaceAll("\r\r", "\r");
+		try {
+	        // convert \n to \r as per hl7 spec section 2.8
+	        hl7Message = hl7Message.replaceAll("\n", "\r");
+	        // the above will have converted \r\n to \r\r so fix that too
+	        hl7Message = hl7Message.replaceAll("\r\r", "\r");
 
-		AbstractMessage message = (AbstractMessage) pipeParser.parse(hl7Message);
-		return (message);
+	        AbstractMessage message = (AbstractMessage) pipeParser.parse(hl7Message);
+	        return (message);
+        } catch (HL7Exception e) {
+        	logger.error("Unable to parse message : "+hl7Message);
+        	throw(e);
+        }
 	}
 
 	public static void dumpMessageToDebugger(AbstractMessage message) {

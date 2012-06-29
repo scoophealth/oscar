@@ -123,20 +123,23 @@ public class LabUploadAction extends Action {
 
 
 				is = new FileInputStream(file);
-				int check = FileUploadCheck.addFile(file.getName(), is, "0");
-				if (check != FileUploadCheck.UNSUCCESSFUL_SAVE) {
-					if ((audit = msgHandler.parse(service, filePath, check)) != null) {
-						outcome = "uploaded";
-						httpCode = HttpServletResponse.SC_OK;
+				try {
+					int check = FileUploadCheck.addFile(file.getName(), is, "0");
+					if (check != FileUploadCheck.UNSUCCESSFUL_SAVE) {
+						if ((audit = msgHandler.parse(service, filePath, check)) != null) {
+							outcome = "uploaded";
+							httpCode = HttpServletResponse.SC_OK;
+						} else {
+							outcome = "upload failed";
+							httpCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+						}
 					} else {
-						outcome = "upload failed";
-						httpCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+						outcome = "uploaded previously";
+						httpCode = HttpServletResponse.SC_CONFLICT;
 					}
-				} else {
-					outcome = "uploaded previously";
-					httpCode = HttpServletResponse.SC_CONFLICT;
+				} finally {
+					is.close();
 				}
-				is.close();
 			} else {
 				logger.info("failed to validate");
 				outcome = "validation failed";
@@ -248,7 +251,6 @@ public class LabUploadAction extends Action {
 			}
 
 			publicKey = base64.decode(keyString.getBytes(MiscUtils.ENCODING));
-			;
 			X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(publicKey);
 			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 			Key = keyFactory.generatePublic(pubKeySpec);
