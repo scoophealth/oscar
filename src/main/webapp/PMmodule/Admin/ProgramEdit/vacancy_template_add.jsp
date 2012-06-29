@@ -61,6 +61,30 @@
 	}    
 </script>
 
+<script>
+
+function changeVacancyTemplateType(selectBox, type) {
+		var selectBoxId = selectBox.id;
+		var selectBoxValue = selectBox.options[selectBox.selectedIndex].value;
+		var typeName = type.toLowerCase().replace(/ /g,"_");
+		
+		if(document.getElementById("sourceOf" + typeName) == null) {
+				$.get('Admin/ProgramEdit/vacancy_template_range.jsp?typeSelected='+type+'&optionValueSelected='+selectBoxValue, function(data) {
+					  $("#block_"+typeName).append(data);					 
+					});														
+			}
+		
+			if(document.getElementById("sourceOf" + typeName) != null) {
+				
+				$("#block_vacancyType_"+typeName).remove();
+								
+				$.get('Admin/ProgramEdit/vacancy_template_range.jsp?typeSelected='+type+'&optionValueSelected='+selectBoxValue, function(data) {
+					  $("#block_"+typeName).append(data);					 
+					});	
+			}
+
+}
+</script>
 <div class="tabs" id="tabs">
 <input type="hidden" name="vacancyOrTemplateId" id="vacancyOrTemplateId" value="<%=template.getId()%>" />
 <input type="hidden" name="programId" id="programId" value="<%=request.getAttribute("id")%>" />
@@ -107,7 +131,8 @@
 	
 	<% 
 		
-		List<CriteriaType> typeList = VacancyTemplateManager.getAllCriteriaTypes();
+		//List<CriteriaType> typeList = VacancyTemplateManager.getAllCriteriaTypes();
+		List<CriteriaType> typeList = VacancyTemplateManager.getAllCriteriaTypesByWlProgramId(Integer.parseInt((String)request.getAttribute("id")));
 		for(CriteriaType criteriaType : typeList) {
 	%>
 			<%=VacancyTemplateManager.renderAllSelectOptions(template.getId(), null, criteriaType.getId())%>

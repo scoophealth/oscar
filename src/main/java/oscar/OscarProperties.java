@@ -315,4 +315,19 @@ public class OscarProperties extends Properties {
 		return Integer.parseInt(prop);
 	}
 
+	public static String getIntakeProgramAccessServiceId() {
+		return oscarProperties.getProperty("form_intake_program_access_service_id");
+	}
+	
+	public static String getIntakeProgramCashServiceId() {
+		return oscarProperties.getProperty("form_intake_program_cash_service_id");
+	}
+	
+	public static String getIntakeProgramAccessFId() {
+		return oscarProperties.getProperty("form_intake_program_access_fid");
+	}
+	
+	public static String getIntakeProgramCashFId() {
+		return oscarProperties.getProperty("form_intake_program_cash_fid");
+	}
 }

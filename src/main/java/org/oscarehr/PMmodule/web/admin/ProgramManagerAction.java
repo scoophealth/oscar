@@ -941,7 +941,8 @@ public class ProgramManagerAction extends BaseAction {
 		VacancyTemplateManager.saveVacancyTemplate(vacancyTemplate);	
 		
 		//Save Criteria
-		List<CriteriaType> typeList = VacancyTemplateManager.getAllCriteriaTypes();
+		//List<CriteriaType> typeList = VacancyTemplateManager.getAllCriteriaTypes();
+		List<CriteriaType> typeList = VacancyTemplateManager.getAllCriteriaTypesByWlProgramId(Integer.parseInt(request.getParameter("programId")));
 		for(CriteriaType type : typeList) {
 			Criteria criteria = new Criteria();		
 			criteria.setTemplateId(vacancyTemplate.getId());			
@@ -962,7 +963,7 @@ public class ProgramManagerAction extends BaseAction {
 	
 	private void saveTemplateOrVacancy(HashMap<String, String[]> parameters, String[] answers, CriteriaType type, Criteria criteria, HttpServletRequest request) {
 		
-		if(type.getFieldType().equalsIgnoreCase("select_multiple")) {
+		if(type.getFieldType().equalsIgnoreCase("select_multiple") || type.getFieldType().equalsIgnoreCase("select_multiple_narrowing")) {
 			
 			saveCriteria(criteria, answers);
 			
