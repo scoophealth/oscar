@@ -25,7 +25,9 @@
 package org.oscarehr.PMmodule.dao;
 
 import java.util.List;
+
 import javax.persistence.Query;
+
 import org.oscarehr.PMmodule.model.Vacancy;
 import org.oscarehr.common.dao.AbstractDao;
 import org.springframework.stereotype.Repository;
@@ -39,9 +41,9 @@ public class VacancyDAO extends AbstractDao<Vacancy> {
 
 	@SuppressWarnings("unchecked")
     public List<Vacancy> getVacanciesByWlProgramId(Integer wlProgramId) {
-		String sqlCommand = "select * from vacancy where WL_PROGRAM_ID=?1 ";
+		String sqlCommand = "select x from Vacancy x where x.wlProgramId=?1 ";
 
-		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
+		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, wlProgramId);
 		
 		return query.getResultList();	

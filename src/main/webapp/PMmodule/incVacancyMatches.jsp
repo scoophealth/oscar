@@ -23,18 +23,17 @@
 
 --%>
 
-<%@page import="org.caisi.wl.VacancyQuery"%>
-<%@page import="org.caisi.wl.VacancyDisplayBO"%>
-<%@ page language="java" import="java.util.*"%>
-<%@page import="org.caisi.wl.MatchBO"%>
-<%@page import="org.caisi.wl.TopMatchesQuery"%>
-<%@page import="org.caisi.wl.WaitListService_Service"%>
+<%@page language="java" import="java.util.*"%>
+<%@page import="org.oscarehr.PMmodule.wlservice.VacancyQuery"%>
+<%@page import="org.oscarehr.PMmodule.wlmatch.VacancyDisplayBO"%>
+<%@page import="org.oscarehr.PMmodule.wlmatch.MatchBO"%>
+<%@page import="org.oscarehr.PMmodule.wlservice.TopMatchesQuery"%>
 <%@page import="javax.xml.datatype.XMLGregorianCalendar"%>
 <%@page import="javax.xml.datatype.DatatypeFactory"%>
-<%@page import="org.caisi.wl.MatchParam"%>
-<%@page import="org.caisi.wl.WaitListService"%>
+<%@page import="org.oscarehr.PMmodule.wlservice.MatchParam"%>
+<%@page import="org.oscarehr.PMmodule.wlservice.WaitListService"%>
 <% 
-WaitListService s=new WaitListService_Service().getWaitListServicePort(); 
+WaitListService s=new WaitListService(); 
 
 String act=request.getParameter("action");
 try{ 
@@ -48,12 +47,11 @@ if(act!=null && act.length()>0){
 		MatchParam p=new MatchParam();
 		p.setClientID(Integer.parseInt(request.getParameter("clientID")));
 		p.setVacancyID(Integer.parseInt(request.getParameter("vacancyID")));
-		p.setContactDateTime(DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar()));
+		p.setContactDateTime(new Date());
 		s.recordClientContact(p);
 	}
 } 
 }catch(Throwable t){
-	;
 }
 Integer vacancyID=null;
 try{

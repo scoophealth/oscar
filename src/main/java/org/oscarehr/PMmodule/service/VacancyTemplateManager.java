@@ -110,6 +110,10 @@ public class VacancyTemplateManager {
 		return criteriaTypeDAO.getAllCriteriaTypes();
 	}
 	
+	public static List<CriteriaType> getAllCriteriaTypesByWlProgramId(Integer programId) {
+		return criteriaTypeDAO.getAllCriteriaTypesByWlProgramId(programId);
+	}
+	
 	public static List<Criteria> getRefinedCriteriasByVacancyId(Integer vacancyId) {
 		return criteriaDAO.getRefinedCriteriasByVacancyId(vacancyId);
 	}
@@ -142,6 +146,8 @@ public class VacancyTemplateManager {
 		return vacancyDAO.find(id);
 	}
 	
+	
+	
 	/**
 	 * This method is meant to return a bunch of html <option> tags for each list element.
 	 */
@@ -159,7 +165,7 @@ public class VacancyTemplateManager {
 			if(criteria.getRangeEndValue() != null) 
 				max = String.valueOf(criteria.getRangeEndValue());
 			
-			value = criteria.getCriteriaValue(); //value is criteria type option id if "select_one", or number if type is "number".
+			value = criteria.getCriteriaValue(); //value is criteria type option value if "select_one", or number if type is "number".
 			required = (criteria.getCanBeAdhoc()==true?"checked":"");
 			
 			selectedOptions = criteriaSelectionOptionDAO.getCriteriaSelectedOptionsByCriteriaId(criteria.getId());
@@ -196,30 +202,7 @@ public class VacancyTemplateManager {
 			sb.append("</tr>");
 		}
 		
-		if(ctype.getFieldType().equalsIgnoreCase("select_one_range")) {
-			sb.append("<tr class=\"b\">");
-			sb.append("<td class=\"beright\">");
-			sb.append(type);
-			sb.append(" Range Minimum:</td>");
-			sb.append("<td><input type=\"text\" size=\"50\" maxlength=\"50\" value=\"");
-			sb.append(min);
-			sb.append("\" name=\"");
-			sb.append(type.toLowerCase().replaceAll(" ","_"));
-			sb.append("Minimum\"></td>");
-			sb.append("</tr>");
-			sb.append("<tr class=\"b\">");
-			sb.append("<td class=\"beright\">");
-			sb.append(type);
-			sb.append(" Range Maximum:</td>");
-			sb.append("<td><input type=\"text\" size=\"50\" maxlength=\"50\" value=\"");
-			sb.append(max);
-			sb.append("\" name=\"");
-			sb.append(type.toLowerCase().replaceAll(" ","_"));
-			sb.append("Maximum\"></td>");
-			sb.append("</tr>");			
-			//sb.append("<tr>");
-		}
-			
+		
 		if(!ctype.getFieldType().equalsIgnoreCase("number")) {			
 		
 			sb.append("<tr class=\"b\">");
@@ -234,11 +217,13 @@ public class VacancyTemplateManager {
 			sb.append(type.toLowerCase().replaceAll(" ","_"));
 			sb.append("\"");
 			
-			if(ctype.getFieldType().equalsIgnoreCase("select_multiple")) {
+			if(ctype.getFieldType().equalsIgnoreCase("select_multiple") || ctype.getFieldType().equalsIgnoreCase("select_multiple_narrowing")) {
 				sb.append(" multiple=\"multiple\" size=\"7\" ");	
 			}
 			
-			sb.append(" style=\"width: 200px;\">");
+			sb.append(" onchange='changeVacancyTemplateType(this,\"");
+			sb.append(type);
+			sb.append("\");' style=\"width: 200px;\">");
 			
 			if(ctype.getFieldType().equalsIgnoreCase("select_one") || ctype.getFieldType().equalsIgnoreCase("select_one_range") )
 				sb.append("<option value=\"\"></option>");
@@ -256,7 +241,9 @@ public class VacancyTemplateManager {
 					for(CriteriaSelectionOption cso : selectedOptions) {
 						//If the options selected, should be removed from source of list.
 						if( cso.getOptionValue() != null && cso.getOptionValue().equals(option.getOptionValue()))
-								skip = true;
+							skip = true;
+						else if(ctype.getFieldType().equalsIgnoreCase("select_multiple_narrowing"))
+							skip = true;
 					}
 				}
 				
@@ -269,10 +256,53 @@ public class VacancyTemplateManager {
 			
 			sb.append("</select>");
 			sb.append("</div>");
-			sb.append("</div>");
+			sb.append("</div>");	
+			
+			
 		}
-		
-	if(ctype.getFieldType().equalsIgnoreCase("select_multiple")) {
+				
+	
+		if(ctype.getFieldType().equalsIgnoreCase("select_one_range")) {
+			  if(criteria!=null) {
+				//results from selection of type will go into this block
+				sb.append("<div id=\"block_");
+				sb.append(type.toLowerCase().replaceAll(" ","_"));
+				sb.append("\">");
+				sb.append("<div id=\"block_vacancyType_");
+				sb.append(type.toLowerCase().replaceAll(" ","_"));
+				sb.append("\">");
+				sb.append("<table>");
+				sb.append("<tr class=\"b\">");
+				sb.append("<td class=\"beright\">");				
+				sb.append(type);
+				sb.append(" Range Minimum:</td>");
+				sb.append("<td><input type=\"text\" size=\"50\" maxlength=\"50\" value=\"");
+				sb.append(min);
+				sb.append("\" name=\"");
+				sb.append(type.toLowerCase().replaceAll(" ","_"));
+				sb.append("Minimum\"></td>");
+				sb.append("</tr>");
+				sb.append("<tr class=\"b\">");
+				sb.append("<td class=\"beright\">");
+				sb.append(type);
+				sb.append(" Range Maximum:</td>");
+				sb.append("<td><input type=\"text\" size=\"50\" maxlength=\"50\" value=\"");
+				sb.append(max);
+				sb.append("\" name=\"");
+				sb.append(type.toLowerCase().replaceAll(" ","_"));
+				sb.append("Maximum\"></td>");
+				sb.append("</tr>");			
+				sb.append("</table>");
+				sb.append("</div>");
+				sb.append("</div>");
+			  } else {
+				//results from selection of type will go into this block
+					sb.append("<div id=\"block_");
+					sb.append(type.toLowerCase().replaceAll(" ","_"));
+					sb.append("\">");
+					sb.append("</div>");
+			  }
+		} else if(ctype.getFieldType().equalsIgnoreCase("select_multiple") || ctype.getFieldType().equalsIgnoreCase("select_multiple_narrowing") ) {
 		
 		sb.append("<div class=\"horizonton\" style=\"padding-top: 40px;\">");
 		sb.append("<div>");
@@ -319,13 +349,15 @@ public class VacancyTemplateManager {
 		sb.append("</select>");
 		sb.append("</div>");
 		sb.append("</div>");
-		sb.append("</td>");
-		sb.append("</tr>");	
+			
 		}
+		sb.append("</td>");
+		sb.append("</tr>");
+		
 		sb.append("</table>");
 		sb.append("<br>");
 		
-		if(ctype.getFieldType().equalsIgnoreCase("select_multiple")) {
+		if(ctype.getFieldType().equalsIgnoreCase("select_multiple") || ctype.getFieldType().equalsIgnoreCase("select_multiple_narrowing")) {
 			sb.append("<script type=\"text/javascript\">");
 			sb.append(" $(document).ready(");
 		    sb.append("function () { ");		    

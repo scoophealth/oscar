@@ -24,10 +24,8 @@
 package org.oscarehr.PMmodule.web;
 
 import java.util.Date;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.log4j.Logger;
+import javax.servlet.http.HttpServletRequest;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.AgencyManager;
 import org.oscarehr.PMmodule.service.BedCheckTimeManager;
@@ -74,7 +72,10 @@ abstract class BaseGenericIntakeAction extends BaseAction {
 	
 	// Session Attributes
 	protected static final String CLIENT = "client";
-
+	protected static final String APPOINTMENT = "appointment";
+	protected static final String DEMOGRAPHIC_NO = "demographic_no";
+	protected static final String FORM_ID = "fid";
+	
     protected LookupManager lookupManager;
 
     protected CaseManagementManager caseManagementManager;
