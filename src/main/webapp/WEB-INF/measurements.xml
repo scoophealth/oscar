@@ -19,6 +19,9 @@
 	<map loinc_code="4537-7" name="SEDIMENTATION RATE (ESR)" />
 	<map loinc_code="777-3" name="PLATELET COUNT" />
 	<map loinc_code="788-0" name="RDW" />
+    <map loinc_code="33914-3" name="Estimated GFR/BSA.pred SerPl MDRD-ArVRat" />
+    <map loinc_code="39469-2" name="LDLc SerPl Calc-sCnc" />
+    <map loinc_code="32309-7" name="Cholest/HDLc SerPl-sRto " />
 	<map loinc_code="NULL" name="NULL" />
 	<map loinc_code="751-8" name="ABSOLUTE:      NEUTS" />
 	<map loinc_code="731-0" name="     (A)       LYMPH" />
@@ -72,6 +75,7 @@
 	<map loinc_code="5804-0" name="       PROTEIN" />
 	<map loinc_code="5802-4" name="       NITRITE" />
 	<map loinc_code="5799-2" name="       LEUCOCYTE ESTERASE" />
+    <map loinc_code="5794-3" name="       Hemoglobin Ur Ql Strip" />
 	<map loinc_code="NULL" name="NULL" />
 	<map loinc_code="NULL" name=" URINALYSIS: MICROSCOPIC" />
 	<map loinc_code="13945-1" name="       RBC" />
