@@ -336,11 +336,10 @@ var maxYear=3100;
 
 			<table width="100%" class="topTable">
 				<tr>
-					<td class="title" colspan="3" nowrap="true">LABORATORY
-					REQUISITION</td>
+					<td class="title" colspan="3" nowrap="nowrap">LABORATORY REQUISITION</td>
 				</tr>
 				<tr>
-					<td colspan="3" nowrap="true">Requisitioning
+					<td colspan="3" nowrap="nowrap">Requisitioning
 					Physician/Practitioner:<br>
 					<input type="hidden" style="width: 100%" name="provName"
 						value="<%=props.getProperty("provName", "")%>" /> <input
@@ -348,8 +347,12 @@ var maxYear=3100;
 						value="<%=props.getProperty("reqProvName", "")%>" /> <%=props.getProperty("reqProvName", "")%>&nbsp;<br>
 					<%-- Dr. Hunter wants the form to say "Physician" instead of "Family Physician".  This is a quick and dirty hack to make it work.  This
      should really be rewritten more elegantly at some later point in time. --%>
-					<br><%=oscarProps.getProperty("clinic_no", "").startsWith("1022")?"Physician:":"Family Physician:"%><br>
-					<%=props.getProperty("provName", "")==null?"":props.getProperty("provName", "")%>&nbsp;<br>
+     
+     				<% if(!oscarProps.getProperty("lab_req_override","true").equals("true")){ %>
+						<%=oscarProps.getProperty("clinic_no", "").startsWith("1022")?"Physician:":"Family Physician:"%><br>					
+						<%=props.getProperty("provName", "")==null?"":props.getProperty("provName", "")%>&nbsp;<br>
+					<% } %>
+					
 					<input type="hidden" style="width: 100%" name="clinicName"
 						value="<%=props.getProperty("clinicName","")%>" /> <%=props.getProperty("clinicName","")%>&nbsp;<br>
 					<input type="hidden" style="width: 100%" name="clinicAddress"
