@@ -1852,6 +1852,8 @@ $(document).ready(function(){
 				</a>&nbsp;&nbsp;&nbsp;
 			<b>Edit:</b> <a
 				href="javascript:void(0)" onclick="onPageChange('formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=#id&provNo=<%=provNo%>');">AR2</a>			
+			&nbsp;
+			<a href="formonarenhancedxml.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&episodeId=<%=props.getProperty("episodeId","0")%>">XML</a>
 			</td>
 			
 			

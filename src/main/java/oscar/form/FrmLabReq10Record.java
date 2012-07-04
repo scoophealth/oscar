@@ -47,6 +47,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.OscarProperties;
 import oscar.util.UtilDateUtilities;
 
 public class FrmLabReq10Record extends FrmRecord {
@@ -171,6 +172,16 @@ public class FrmLabReq10Record extends FrmRecord {
 
             }
         }
+        
+        //lab_req_override=true
+    	OscarProperties oscarProps = OscarProperties.getInstance();
+    	if(oscarProps.getProperty("lab_req_provider","").length()>0) {
+    		props.setProperty("reqProvName", oscarProps.getProperty("lab_req_provider"));
+    	}
+    	if(oscarProps.getProperty("lab_req_billing_no","").length()>0) {
+    		props.setProperty("practitionerNo", oscarProps.getProperty("lab_req_billing_no"));
+    	}
+    	
         //get local clinic information
         ClinicDAO clinicDao = (ClinicDAO)SpringUtils.getBean("clinicDAO");
     	Clinic clinic = clinicDao.getClinic();
