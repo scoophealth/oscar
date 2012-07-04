@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="oscar.OscarProperties"%>
 <%@page import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*"%>
 <%@page import="org.oscarehr.phr.PHRAuthentication, org.oscarehr.phr.util.MyOscarUtils" %>
 <%@page import="org.oscarehr.common.dao.DemographicDao, org.oscarehr.common.model.Demographic" %>
@@ -603,9 +604,13 @@ text-align:left;
 		<div class="preventionProcedure" onclick="<%=onClickCode%>">
 		<p <%=r(hdata.get("refused"),result)%>>Age: <%=hdata.get("age")%> <br />
 		<!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date")%>
-		<%if (hExt.get("comments") != null && (hExt.get("comments")).length()>0) {%>
+		<%if (hExt.get("comments") != null && (hExt.get("comments")).length()>0) {
+                    if (oscar.OscarProperties.getInstance().getBooleanProperty("prevention_show_comments","yes")){%>
+                    <div class="comments"><span><%=hExt.get("comments")%></span></div>
+               <%   } else { %>
             <span class="footnote">1</span>
-            <%}%>
+            <%      }
+                 }%>
 		<%=getFromFacilityMsg(hdata)%></p>
 		</div>
 		<%}%>
@@ -651,9 +656,13 @@ text-align:left;
 			onclick="javascript:popup(465,635,'AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')">
 		<p <%=r(hdata.get("refused"), result)%>>Age: <%=hdata.get("age")%> <br />
 		<!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date")%>
-		<%if (hExt.get("comments") != null && (hExt.get("comments")).length()>0) {%>
+		<%if (hExt.get("comments") != null && (hExt.get("comments")).length()>0) {
+                     if (oscar.OscarProperties.getInstance().getBooleanProperty("prevention_show_comments","yes")){ %>
+                     <div class="comments"><span><%=hExt.get("comments")%></span></div>
+               <%   } else { %>                
             <span class="footnote">1</span>
-            <%}%>
+            <%      }
+                }%>
 		</p>
 		</div>
 		<%}%>
@@ -726,9 +735,8 @@ text-align:left;
 			<input type="button" name="sendToPhrButton" value="Send To MyOscar (PDF)" style="display: none;" onclick="sendToPhr(this)">
 -->
 		</td>
-
-		<input type="hidden" id="nameAge" name="nameAge"
-			value="<oscar:nameage demographicNo="<%=demographic_no%>"/> DOB:<%=demographicDob%>">
+            
+                <input type="hidden" id="demographicNo" name="demographicNo" value="<%=demographic_no%>"/> 		
 
 		<%
 		    for (int i = 0 ; i < prevList.size(); i++){
@@ -743,23 +751,29 @@ text-align:left;
 		<%
 		            for (int k = 0; k < alist.size(); k++){
 		            	Map<String,Object> hdata = alist.get(k);
+                                Map<String,String> hExt = PreventionData.getPreventionKeyValues((String)hdata.get("id"));
 		    %>
 		<input type="hidden" id="preventProcedureAge<%=i%>-<%=k%>"
 			name="preventProcedureAge<%=i%>-<%=k%>"
-			value="Age: <%=hdata.get("age")%>">
+			value="<%=hdata.get("age")%>">
 		<input type="hidden" id="preventProcedureDate<%=i%>-<%=k%>"
 			name="preventProcedureDate<%=i%>-<%=k%>"
-			value="Date: <%=hdata.get("prevention_date")%>">
-		<%}
-		        }
+			value="<%=hdata.get("prevention_date")%>">
+                    <%  String comments = hExt.get("comments");
+                        if (comments != null && !comments.isEmpty() && OscarProperties.getInstance().getBooleanProperty("prevention_show_comments","true")) {%>      
+                <input type="hidden" id="preventProcedureComments<%=i%>-<%=k%>"
+			name="preventProcedureComments<%=i%>-<%=k%>"
+			value="<%=comments%>">
+                    <% }
+                            	     }
+                                       }
 		    } //for there are preventions
-
 		    %>
 		</form>
 	</tr>
 </table>
 </body>
-</html:html>
+</html:html> 
 <%!
 String refused(Object re){
         String ret = "Given";
