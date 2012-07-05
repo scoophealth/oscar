@@ -23,10 +23,13 @@
  */
 package org.oscarehr.event;
 
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
 public class EventService implements ApplicationEventPublisherAware {
+	Logger logger = MiscUtils.getLogger();
 	protected ApplicationEventPublisher applicationEventPublisher;
 	
 	@Override
@@ -43,6 +46,8 @@ public class EventService implements ApplicationEventPublisherAware {
 	 * 
 	 */
 	public void appointmentStatusChanged(Object source,String appointment_no, String provider_no,String status){
+		logger.debug("appointmentStatusChanged thrown by "+source.getClass().getName()+" appt# "+appointment_no+" status "+status);
+		
 		applicationEventPublisher.publishEvent(new AppointmentStatusChangeEvent(source,appointment_no, provider_no,status));
 	}
 	/*

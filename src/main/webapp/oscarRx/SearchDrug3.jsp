@@ -46,6 +46,8 @@
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="java.util.ArrayList,oscar.oscarRx.data.RxPrescriptionData"%>
+<%@page import="org.oscarehr.common.model.ProviderPreference"%>
+<%@page import="org.oscarehr.web.admin.ProviderPreferencesUIBean"%>
 <bean:define id="patient" type="oscar.oscarRx.data.RxPatientData.Patient" name="Patient" />
 
 <%
@@ -166,7 +168,28 @@ if (rx_enhance!=null && rx_enhance.equals("true")) {
             oscar.oscarRx.data.RxPrescriptionData.Prescription[] prescribedDrugs;
                         prescribedDrugs = patient.getPrescribedDrugScripts(); //this function only returns drugs which have an entry in prescription and drugs table
                         String script_no = "";
-
+                        
+            //This checks if the provider has the ExternalPresriber feature enabled, if so then a link appear for the provider to access the ExternalPrescriber
+            ProviderPreference providerPreference=ProviderPreferencesUIBean.getLoggedInProviderPreference();
+            
+            boolean eRxEnabled= false;
+            String eRx_SSO_URL = null;
+            String eRxUsername = null;
+            String eRxPassword = null;
+            String eRxFacility = null;
+            String eRxTrainingMode="0"; //not in training mode
+            
+            if(providerPreference!=null){
+            	eRxEnabled = providerPreference.isERxEnabled();
+                eRx_SSO_URL = providerPreference.getERx_SSO_URL();
+                eRxUsername = providerPreference.getERxUsername();
+                eRxPassword = providerPreference.getERxPassword();
+                eRxFacility = providerPreference.getERxFacility();
+                	                
+                boolean eRxTrainingModeTemp = providerPreference.isERxTrainingMode();
+                if(eRxTrainingModeTemp) eRxTrainingMode="1";
+             }
+             
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
@@ -847,6 +870,10 @@ body {
                                                     	if(OscarProperties.getInstance().getProperty("oscarrx.medrec","false").equals("true")) {
                                                 %>
                                                     <input id="completeMedRecButton" type="button"  onclick="completeMedRec();" value="Complete Med Rec" />
+                                                <% } %>
+                                                
+                                                <% if(eRxEnabled) { %>
+													<a href="<%=eRx_SSO_URL%>User=<%=eRxUsername%>&Password=<%=eRxPassword%>&Clinic=<%=eRxFacility%>&PatientIdPMIS=<%=patient.getDemographicNo()%>&IsTraining=<%=eRxTrainingMode%>"><bean:message key="SearchDrug.eRx.msgExternalPrescriber"/></a>
                                                 <% } %>
                                             </td>
                                         </tr>
