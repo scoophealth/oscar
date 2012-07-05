@@ -3412,6 +3412,7 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("atc",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("atc2text",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("atcFromBrand",params);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("get_atcs_by_din",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("drug2atclist",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("druglist2atclist",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("getAISameByDrugCode",params);</ViolationValue>
@@ -3462,6 +3463,7 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector  atc2text(String code){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector atc(String drug){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector atcFromBrand(String drug){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector atcFromDIN(String din){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector drug2atclist(String drug){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector druglist2atclist(Vector druglist){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:public Vector getAISameByDrugCode(String drugRefId){</ViolationValue>

@@ -6670,8 +6670,13 @@ create table ProviderPreference
 	lastUpdated datetime not null,
 	appointmentScreenLinkNameDisplayLength int not null,
 	defaultDoNotDeleteBilling  tinyint(1) not null,
-	defaultDxCode varchar(4)
-
+	defaultDxCode varchar(4),
+	eRxEnabled tinyint(1) not null,
+    eRx_SSO_URL varchar(128),
+    eRxUsername varchar(32),
+    eRxPassword varchar(64),
+    eRxFacility varchar(32),
+    eRxTrainingMode tinyint(1) not null
 );
 
 --
