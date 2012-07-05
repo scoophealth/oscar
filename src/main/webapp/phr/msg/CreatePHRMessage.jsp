@@ -33,7 +33,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ page import="org.w3c.dom.*" %>
-<%@ page import="oscar.oscarDemographic.data.*" %>
+<%@ page import="oscar.oscarDemographic.data.*,org.oscarehr.common.model.Demographic" %>
 <%@ page import="javax.servlet.http.HttpServletRequest.*" %>
 <%@ page import="java.util.Iterator.*" %>
 <%@ page import="java.util.Enumeration.*" %>
@@ -41,7 +41,9 @@
 <%@ page import="oscar.util.UtilDateUtilities,java.util.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-html-el" prefix="html-el" %>
-
+<%
+Demographic demographic= null;
+%>
 <html:html locale="true">
 
 <head>
@@ -259,6 +261,10 @@
 		                                                        </td>
 		                                                    </tr>
 	                                        			<%
+	                                        		
+	                                        			String myOscarUserName=replyToMessage.getSenderPersonUserName();
+	    		                                		demographic=MyOscarUtils.getDemographicByMyOscarUserName(myOscarUserName);
+	    		                                		
 	                                        		}
 	                                        	%>
                                                 <tr>
@@ -268,6 +274,8 @@
                                                 </tr>
                                             </table>
                                            
+                                            <input type="hidden" name="andPasteToEchart" id="andPasteToEchart"/>
+                                            <input type="submit" class="ControlPushButton" value="<bean:message key="oscarMessenger.CreateMessage.btnSendMessage"/>" >
 	                                     	<%
                                         		if (replyToMessage!=null)
                                         		{
@@ -275,6 +283,25 @@
                                         				<input type="hidden" name="replyToMessageId" value="<%=replyToMessageId%>" />
                                         				<input type="hidden" name="method" value="sendReply" />
                                         				<input type="hidden" name="demographicNo" value="<%=request.getParameter("demographicNo")%>" />
+                                        				
+                                            			<input type="submit" 
+                                            			<%if (demographic == null){%>
+		                                   					disabled="disabled"
+		                                   					title="<bean:message key="global.no.myoscar.account.registered"/>"
+		                                				<%}%> 
+                                            				class="ControlPushButton" value="<bean:message key="oscarMessenger.CreateMessage.btnSendMessageCpyToeChart"/>" onclick="setCpyToChart();" >
+                                            			<input type="button" 
+                                            				<%if (demographic == null){%>
+		                                   						disabled="disabled"
+		                                   						title="<bean:message key="global.no.myoscar.account.registered"/>"
+		                                					<%}%> 
+                                            				class="ControlPushButton" value="<bean:message key="oscarMessenger.CreateMessage.btnOpenEchart"/>" onclick="gotoEchart2('<%=request.getParameter("demographicNo")%>','<%=replyToMessageId%>');" />
+                                            			<input type="button" 
+                                            				<%if (demographic == null){%>
+		                                   						disabled="disabled"
+		                                   						title="<bean:message key="global.no.myoscar.account.registered"/>"
+		                                					<%}%> 
+                                            				class="ControlPushButton" value="<bean:message key="oscarMessenger.CreateMessage.btnPasteToEchart"/>" onclick="paste2Echart();"/>
                                         			<%
                                         		}
                                         		else
@@ -285,11 +312,6 @@
                                         			<%
                                         		}
                                         	%>
-                                        	<input type="hidden" name="andPasteToEchart" id="andPasteToEchart"/>
-                                            <input type="submit" class="ControlPushButton" value="<bean:message key="oscarMessenger.CreateMessage.btnSendMessage"/>" >
-                                            <input type="submit" class="ControlPushButton" value="<bean:message key="oscarMessenger.CreateMessage.btnSendMessageCpyToeChart"/>" onclick="setCpyToChart();" >
-                                            <input type="button" class="ControlPushButton" value="<bean:message key="oscarMessenger.CreateMessage.btnOpenEchart"/>" onclick="gotoEchart2('<%=request.getParameter("demographicNo")%>','<%=replyToMessageId%>');" />
-                                            <input type="button" class="ControlPushButton" value="<bean:message key="oscarMessenger.CreateMessage.btnPasteToEchart"/>" onclick="paste2Echart();"/>
                                         </td>
                                     </tr>
                                     </html:form>                                                                                                                                                                            
