@@ -1185,7 +1185,65 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 			                                     </tr>  
 			                                <%} 
                                       
-                                   }	else if ((!handler.getOBXResultStatus(j, k).equals("TDIS") && !handler.getMsgType().equals("EPSILON")) )  { %>
+                                   } else if ((!handler.getOBXResultStatus(j, k).equals("TDIS") && handler.getMsgType().equals("Spire")) )  { %>
+											<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
+                                           <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %>')"><%=obxName %></a>                                         
+                                           &nbsp;<%if(loincCode != null){ %>
+                                                	<a href="javascript:popupStart('660','1000','http://apps.nlm.nih.gov/medlineplus/services/mpconnect.cfm?mainSearchCriteria.v.cs=2.16.840.1.113883.6.1&mainSearchCriteria.v.c=<%=loincCode%>&informationRecipient.languageCode.c=en')"> info</a>
+                                                	<%} %> </td>
+                                           <% 	if (handler.getOBXResult( j, k).length() > 20) {
+													%>
+													
+													<td align="left" colspan="4"><%= handler.getOBXResult( j, k) %></td>
+                                          
+													<% 	String abnormalFlag = handler.getOBXAbnormalFlag(j, k);
+														if (abnormalFlag != null && abnormalFlag.length() > 0) {
+													 %>
+		                                           <td align="center">
+		                                                   <%= abnormalFlag%>
+		                                           </td>
+		                                           <% } %>
+		                                           
+		                                           <% 	String refRange = handler.getOBXReferenceRange(j, k);
+														if (refRange != null && refRange.length() > 0) {
+													 %>
+		                                           <td align="left"><%=refRange%></td>
+		                                           <% } %>
+		                                           
+		                                           <% 	String units = handler.getOBXUnits(j, k);
+														if (units != null && units.length() > 0) {
+													 %>
+		                                           <td align="left"><%=units %></td>
+		                                           <% } %>
+												<%
+												} else {
+												%>
+												   <td align="right" colspan="1"><%= handler.getOBXResult( j, k) %></td>                                          
+		                                           <td align="center"> <%= handler.getOBXAbnormalFlag(j, k)%> </td>
+		                                           <td align="left"> <%=handler.getOBXReferenceRange(j, k)%> </td>
+		                                           <td align="left"> <%=handler.getOBXUnits(j, k) %> </td>													
+												<% 
+												} 
+												%>
+                                           
+                                           <td align="center"><%= handler.getTimeStamp(j, k) %></td>
+                                           <td align="center"><%= handler.getOBXResultStatus(j, k) %></td>
+                                                                                     
+                                      		<td align="center" valign="top">
+	                                                <a href="javascript:void(0);" title="Annotation" onclick="window.open('<%=request.getContextPath()%>/annotation/annotation.jsp?display=<%=annotation_display%>&amp;table_id=<%=segmentID%>&amp;demo=<%=demographicID%>&amp;other_id=<%=String.valueOf(j) + "-" + String.valueOf(k) %>','anwin','width=400,height=500');">
+	                                                	<%if(!isPrevAnnotation){ %><img src="../../../images/notes.gif" alt="rxAnnotation" height="16" width="13" border="0"/><%}else{ %><img src="../../../images/filledNotes.gif" alt="rxAnnotation" height="16" width="13" border="0"/> <%} %>
+	                                                </a>
+                                                </td>
+                                       </tr> 
+                                     
+                                       <%for (l=0; l < handler.getOBXCommentCount(j, k); l++){%>
+                                            <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
+                                               <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBXComment(j, k, l)%></pre></td>
+                                            </tr>  
+                                       <%}  
+                                      			
+                                      
+                                    } else if ((!handler.getOBXResultStatus(j, k).equals("TDIS") && !handler.getMsgType().equals("EPSILON")) )  { %>
                                       		<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
                                            <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %>')"><%=obxName %></a>                                         
                                            &nbsp;<%if(loincCode != null){ %>
@@ -1271,8 +1329,40 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                           } // end for if (PFHT)
                           
                               } //end for j=0; j<obrCount;
-                        
                           } // // end for headersfor i=0... (headers) line 625
+                          
+							if (handler.getMsgType().equals("Spire")) {
+								
+								int numZDS = ((SpireHandler)handler).getNumZDSSegments();
+								String lineClass = "NormalRes";
+								int lineNumber = 0;
+								MiscUtils.getLogger().info("HERE: " + numZDS);
+								
+								if (numZDS > 0) { %>
+									<tr class="Field2">
+		                               <td width="25%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formTestName"/></td>
+		                               <td width="15%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formResult"/></td>
+		                               <td width="15%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formProvider"/></td>
+		                               <td width="15%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formDateTimeCompleted"/></td>
+		                               <td width="6%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formNew"/></td>
+		                            </tr>
+								<% 
+								}
+								
+								for (int m=0; m < numZDS; m++) { 
+									%>
+									<tr bgcolor="<%=(lineNumber % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
+										<td valign="top" align="left"> <%=((SpireHandler)handler).getZDSName(m)%> </td>
+										<td align="right"><%= ((SpireHandler)handler).getZDSResult(m) %></td>
+										<td align="center"><%= ((SpireHandler)handler).getZDSProvider(m) %></td>
+										<td align="center"><%= ((SpireHandler)handler).getZDSTimeStamp(m) %></td>
+										<td align="center"><%= ((SpireHandler)handler).getZDSResultStatus(m) %></td>
+									</tr> 
+									<%
+									lineNumber++;
+								}
+							}
+                          
                            %>
                        </table>
                        <%
