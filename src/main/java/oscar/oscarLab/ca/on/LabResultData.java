@@ -36,6 +36,7 @@ import org.oscarehr.util.MiscUtils;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.bc.PathNet.PathnetResultsData;
 import oscar.oscarLab.ca.on.CML.CMLLabTest;
+import oscar.oscarLab.ca.on.Spire.SpireLabTest;
 import oscar.util.StringUtils;
 import oscar.util.UtilDateUtilities;
 
@@ -54,6 +55,7 @@ public class LabResultData implements Comparable{
     public static String EXCELLERIS = "BCP"; //EXCELLERIS
     public static String DOCUMENT = "DOC"; //INTERNAL DOCUMENT
     public static String HRM = "HRM";
+    public static String Spire = "Spire";
     
     //HL7TEXT handles all messages types recieved as a hl7 formatted string
     public static String HL7TEXT = "HL7";
@@ -103,8 +105,9 @@ public class LabResultData implements Comparable{
                 labType = EPSILON;
         }else if (HRM.equals(labT)) {
         		labType = HRM;
+        }else if (Spire.equals(labT)) {
+        		labType = Spire;
         }
-
         
     }
     
@@ -214,8 +217,10 @@ public class LabResultData implements Comparable{
         }else if (EXCELLERIS.equals(this.labType)){
             PathnetResultsData prd = new PathnetResultsData();
             this.discipline = prd.findPathnetDisipline(this.segmentID);
+        }else if (Spire.equals(this.labType)){
+            SpireLabTest spire = new SpireLabTest();
+            this.discipline = spire.getDiscipline(this.segmentID);
         }
-        
         return this.discipline;
     }
     
@@ -289,7 +294,7 @@ public class LabResultData implements Comparable{
     public Date getDateObj(){
         if (EXCELLERIS.equals(this.labType)){
             this.dateTimeObr = UtilDateUtilities.getDateFromString(this.getDateTime(), "yyyy-MM-dd HH:mm:ss");
-        }else if(HL7TEXT.equals(this.labType)){
+        }else if(HL7TEXT.equals(this.labType) || Spire.equals(this.labType)){
             this.dateTimeObr = UtilDateUtilities.getDateFromString(this.getDateTime(), "yyyy-MM-dd HH:mm:ss");
         }else if(CML.equals(this.labType)){
             String date="";
