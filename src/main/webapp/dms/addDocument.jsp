@@ -239,6 +239,31 @@ function checkDefaultDate(object, defaultValue) {
    }
 }
 
+function newDocType(){
+	var newOpt = prompt("Please enter new document type:", "");
+	if (newOpt != "") {
+	    document.getElementById("docType").options[document.getElementById("docType").length] = new Option(newOpt, newOpt);
+	    document.getElementById("docType").options[document.getElementById("docType").length-1].selected = true;
+		
+	    } else {
+	    alert("Invalid entry");
+	}
+	
+}
+
+function newDocTypeLink(){
+	var newOpt = prompt("Please enter new document type:", "");
+	if (newOpt != "") {
+	    document.getElementById("docType1").options[document.getElementById("docType1").length] = new Option(newOpt, newOpt);
+	    document.getElementById("docType1").options[document.getElementById("docType1").length-1].selected = true;
+		
+	    } else {
+	    alert("Invalid entry");
+	}
+	
+}
+
+
 var docSubClassList = [
         <% for (int i=0; i<subClasses.size(); i++) { %>
 "<%=subClasses.get(i)%>"<%=(i<subClasses.size()-1)?",":""%>
@@ -271,8 +296,7 @@ var docSubClassList = [
 	<input type="hidden" name="parentAjaxId" value="<%=parentAjaxId%>">
 	<input type="hidden" name="curUser" value="<%=curUser%>">
 	<input type="hidden" name="appointmentNo" value="<%=formdata.getAppointmentNo()%>"/>
-	<select name="docType" onchange="checkSel(this)"
-		<% if (docerrors.containsKey("typemissing")) {%> class="warning" <%}%>>
+	<select id="docType" name="docType" style="width: 160" > 
 		<option value=""><bean:message key="dms.addDocument.formSelect" /></option>
 		<%
                                    for (int i=0; i<doctypes.size(); i++) {
@@ -281,6 +305,7 @@ var docSubClassList = [
 			<%=(formdata.getDocType().equals(doctype))?" selected":""%>><%= doctype%></option>
 		<%}%>
 	</select>
+	<input id="docTypeinput1" type="button" size="20" onClick="newDocType();" value="<bean:message key="dms.documentEdit.formAddNewDocType"/>" /> 
 	<% if (module.equals("provider")) {%>
                                 Public: <input type="checkbox"
 		name="docPublic" <%=formdata.getDocPublic() + " "%> value="checked">
@@ -344,18 +369,16 @@ for (String reportClass : reportClasses) {
 	<input type="hidden" name="observationDate"
 		value="<%=formdata.getObservationDate()%>">
 		<input type="hidden" name="appointmentNo" value="<%=formdata.getAppointmentNo()%>"/>
-	<select name="docType" onchange="checkSel(this)"
-		<% if (linkhtmlerrors.containsKey("typemissing")) {%> class="warning"
-		<%}%>>
-		<option value=""><bean:message
-			key="dms.addDocument.formSelect" /></option>
+	<select id="docType1" name="docType" style="width: 160" > 
+ 		<option value=""><bean:message key="dms.addDocument.formSelect" /></option> 
 		<%
-                                   for (int i=0; i<doctypes.size(); i++) {
-                                      String doctype = (String) doctypes.get(i); %>
+         for (int i1=0; i1<doctypes.size(); i1++) {
+                                      String doctype = (String) doctypes.get(i1); %>
 		<option value="<%= doctype%>"
 			<%=(formdata.getDocType().equals(doctype))?" selected":""%>><%= doctype%></option>
 		<%}%>
 	</select>
+	<input id="docTypeinput1" type="button" size="20" onClick="newDocTypeLink();" value="<bean:message key="dms.documentEdit.formAddNewDocType"/>" />  
 	<% if (module.equals("provider")) {%>
                                 Public: <input type="checkbox"
 		name="docPublic" <%=formdata.getDocPublic() + " "%> value="checked">

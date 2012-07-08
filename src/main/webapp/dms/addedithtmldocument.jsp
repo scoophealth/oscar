@@ -229,6 +229,17 @@ for (String reportClass : reportClasses) {
             "<%=subClasses.get(i)%>"<%=(i<subClasses.size()-1)?",":""%>
 <% } %>
             ];
+            
+function newDocType(){ 
+	var newOpt = prompt("Please enter new document type:", ""); 
+	if (newOpt != "") { 
+		document.getElementById("docType").options[document.getElementById("docType").length] = new Option(newOpt, newOpt); 
+		document.getElementById("docType").options[document.getElementById("docType").length-1].selected = true;                 
+	} else { 
+		alert("Invalid entry"); 
+	}
+} 
+
         </script>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
@@ -257,19 +268,16 @@ for (String reportClass : reportClasses) {
 	<table width="100%" height="100%" class="layouttable">
 		<tr>
 			<td width="180px">Type:</td>
-			<td><select name="docType" id="docType"
-				onchange="checkSel(this)"
-				<% if (linkhtmlerrors.containsKey("typemissing")) {%>
-				class="warning" <%}%>>
-				<option value=""><bean:message
-					key="dms.addDocument.formSelect" /></option>
-				<%for (int i=0; i<doctypes.size(); i++) {
-                             String doctype = doctypes.get(i); %>
-				<option value="<%= doctype%>"
-					<%=(formdata.getDocType().equals(doctype))?" selected":""%>><%= doctype%></option>
-				<%}%>
-                            </select>
-                        </td>
+				<td> 
+					<select id="docType" name="docType" style="width: 160" > 
+					<option value=""><bean:message key="dms.addDocument.formSelect" /></option> 
+					<% for (int i=0; i<doctypes.size(); i++) { 
+						String doctype = doctypes.get(i); %> 
+						<option value="<%= doctype%>" <%=(formdata.getDocType().equals(doctype))?" selected":""%>><%= doctype%></option> 
+					<%}%> 
+					</select> 
+					<input id="docTypeinput" type="button" size="20" onClick="newDocType();" value="<bean:message key="dms.documentEdit.formAddNewDocType"/> " /> 
+				</td> 
                 </tr>
                 <tr>
                         <td><bean:message key="dms.addDocument.msgDocClass"/>:</td>
