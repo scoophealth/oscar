@@ -40,6 +40,8 @@ public class CtlDocTypeDao extends AbstractDao<CtlDocType>{
 		super(CtlDocType.class);
 	}
 
+	
+	
 	public void changeDocType(String docType, String module, String status){
 		String sql = "UPDATE CtlDocType SET status =?1 WHERE module =?2 AND doctype =?3";
 		Query query = entityManager.createQuery(sql);
@@ -81,4 +83,14 @@ public class CtlDocTypeDao extends AbstractDao<CtlDocType>{
 		return results;
 
 	}
+
+
+
+	public void addDocType(String docType, String module) {		
+        CtlDocType d = new CtlDocType();
+        d.setDocType(docType);
+        d.setModule(module);
+        d.setStatus("A");
+        entityManager.persist(d);
+    }
 }
