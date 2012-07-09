@@ -23,7 +23,15 @@
  */
 package org.oscarehr.common.web;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -32,6 +40,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -881,5 +890,79 @@ Repeat antibody screen
 		request.setAttribute("message", "Migration Successful");
 		
 		return mapping.findForward("migrate");
+	}
+	
+	public ActionForward getFundalImage(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException  {
+		
+		List<Point2D.Double> points = new ArrayList<Point2D.Double>();
+		int index=1;
+		while(true) {
+			String ga = request.getParameter("ga"+index);
+			String cm = request.getParameter("fh"+index);
+			if(ga == null || cm == null)
+				break;
+			
+			String weeks = null;
+			String offset = null;
+			try {
+				weeks = ga.substring(0,ga.indexOf("w"));
+				offset = "0";
+				if(ga.indexOf("+")!=-1)
+					offset = ga.substring(ga.indexOf("+")+1);
+			}catch(Exception e) {
+				MiscUtils.getLogger().warn("Error",e);
+			}
+			
+			if(weeks != null && offset != null) {
+				try {
+					double gaa = Integer.parseInt(weeks) + (Integer.parseInt(offset)/7);
+					double cma = Double.parseDouble(cm);
+					Point2D.Double p = new Point2D.Double(gaa,cma);
+					points.add(p);
+				}catch(NumberFormatException e) {
+					MiscUtils.getLogger().warn("Error",e);
+				}
+			}
+			index++;
+		}
+		
+		File file = new File(request.getSession().getServletContext().getRealPath("/") + "WEB-INF/classes/oscar/form/prop/fundal_graph.png");		 
+		BufferedImage bufferedImage = ImageIO.read(file);
+		Graphics2D g = bufferedImage.createGraphics();
+		g.setColor(Color.black);
+		g.setStroke(new BasicStroke(2));
+	         
+		int xStart = 23;  //each week is 10.25pixels
+		int yStart = 318; //each height is 10.6pixels		 
+		int width=7;		
+		int height=7;		 		 
+		int startingWeek=20;		 
+		int startingHeight=15;
+		 
+		Point2D.Double lastPoint = null;
+		
+		for(Point2D.Double p:points) {
+			if(p.x<startingWeek || p.x>42)
+				continue;
+			if(p.y<startingHeight || p.y>45)
+				continue;
+						
+			Rectangle r = new Rectangle((int)(xStart+(10.25*(p.x-startingWeek)) -(width/2)), (int)(yStart-(10.60*(p.y-startingHeight))-(height/2)), width, height);		
+			g.fill(r);
+			
+			if(lastPoint != null) {
+				g.drawLine((int)(xStart+(10.25*(lastPoint.x-startingWeek))), (int)(yStart-(10.60*(lastPoint.y-startingHeight))), 
+						(int)(xStart+(10.25*(p.x-startingWeek))), (int)(yStart-(10.60*(p.y-startingHeight))));
+			}
+			lastPoint = p;
+		}
+		  
+		g.dispose();		  
+		response.setContentType("image/png");		  
+		OutputStream outputStream = response.getOutputStream();		  
+		ImageIO.write(bufferedImage, "png", outputStream);		  		  
+		outputStream.close();
+		
+		  return null;
 	}
 }

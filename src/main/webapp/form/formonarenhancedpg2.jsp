@@ -107,6 +107,8 @@
 <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
 <script src="<%=request.getContextPath()%>/js/jquery-ui-1.8.18.custom.min.js"></script>
 <script src="<%=request.getContextPath()%>/js/fg.menu.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/js/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
 
 
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/cupertino/jquery-ui-1.8.18.custom.css">
@@ -1429,7 +1431,25 @@ $(document).ready(function(){
 		$("#gd_menu").bind('click',function(){popPage('http://www.diabetes.ca/diabetes-and-you/what/gestational/','resource')});
 		$("#gct_menu").bind('click',function(){gctReq();});
 		$("#gtt_menu").bind('click',function(){gttReq();});
-	    
+		$('#graph_menu').bind('click',function(){
+			
+			//gest,ht
+			var params="";
+			for(var x=1;x<=70;x++) {
+				var gest = $("input[name='pg2_gest"+x+"']").val();
+				var ht = $("input[name='pg2_ht"+x+"']").val();
+				if(gest != undefined && gest.length>0 && ht != undefined && ht.length>0) {					
+					params = params + "&ga"+x+"="+escape(gest)+"&fh"+x+"="+escape(ht);
+				}
+			}
+			
+			$("#fundal_link").attr('href','<%=request.getContextPath()%>/Pregnancy.do?method=getFundalImage'+params);
+			$("#fundal_link").fancybox({type:'image'});
+			$("#fundal_link").click();			
+			
+		});
+		
+		
 		$('#lab_menu').menu({ 
 			content: $('#lab_menu_div').html(), 
 			showSpeed: 400 
@@ -1645,6 +1665,12 @@ $(document).ready(function(){
 		<table style="width:100%" border="0">
 			<tr>
 				<td><b>Info</b></td>
+				<tr id="graph">
+				<td>
+					Fundal Height Graph<span style="float:right"><img id="graph_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span>
+					<div style="display:none"><a href="#" id="fundal_link">dummy link</a></div>	
+				</td>
+			</tr>
 			</tr>			
 		</table>	
 	</div>
