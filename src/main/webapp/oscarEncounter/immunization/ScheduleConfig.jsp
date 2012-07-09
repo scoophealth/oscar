@@ -109,7 +109,7 @@ for(int i=0; i<cfgSet.size(); i++) {
 // cfgSet.getAttribute("name")
 %>
 			<div style="font-weight: bold"><input type="checkbox"
-				name="chkSet<%--=i--%>" value="<%=(String)cfgId.get(i)%>" /> <%=(String)cfgSet.get(i)%>;
+				name="chkSet<%--=i--%>" value="<%=cfgId.get(i)%>" /> <%=(String)cfgSet.get(i)%>;
 			</div>
 			<%
 }
