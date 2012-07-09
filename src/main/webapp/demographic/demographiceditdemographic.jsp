@@ -1110,7 +1110,7 @@ if(wLReadonly.equals("")){
 				<phr:indivoRegistered provider="<%=curProvider_no%>"
 					demographic="<%=demographic_no%>">
                                 <tr class="Header">
-				     <td style="font-weight: bold">f<bean:message key="global.personalHealthRecord"/></td>
+				     <td style="font-weight: bold"><bean:message key="global.personalHealthRecord"/></td>
                                 </tr>
 					<tr>
 						<td>
