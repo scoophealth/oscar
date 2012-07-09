@@ -1,0 +1,1 @@
+alter table mygroup add default_billing_form varchar(10);

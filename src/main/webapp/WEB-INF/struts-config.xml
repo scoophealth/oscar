@@ -538,6 +538,7 @@
 		<form-bean name="episodeForm" type="org.apache.struts.action.DynaActionForm">
 			<form-property name="episode" type="org.oscarehr.common.model.Episode"/>
 		</form-bean>
+                <form-bean name="groupPreference" type="org.apache.struts.action.DynaActionForm"/>
 	</form-beans>
 
 	<global-forwards>
@@ -2493,6 +2494,12 @@
 			scope="request" validate="false" parameter="method" />
 
             <action path="/BillingONReview" scope="request" type="org.oscarehr.common.web.BillingONReviewAction" parameter="method" />
+                 
+                 <action path="/admin/GroupPreference" name="groupPreference" scope="request" type="org.oscarehr.common.web.GroupPreferenceAction" parameter="method">
+                    <forward name="saved" path="/close.html"/>
+                    <forward name="changedForm" path="/admin/groupPreferences.jsp"/>
+                 </action>
+		
 	</action-mappings>
 	<controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" maxFileSize="25M" />
 	<message-resources parameter="oscarResources" null="false" />
