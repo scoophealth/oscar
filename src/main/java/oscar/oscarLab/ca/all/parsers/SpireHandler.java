@@ -35,27 +35,26 @@ package oscar.oscarLab.ca.all.parsers;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
+import oscar.oscarLab.ca.all.spireHapiExt.v23.message.ORU_R01;
 import oscar.util.UtilDateUtilities;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.Segment;
-import ca.uhn.hl7v2.model.v23.datatype.XCN;
 import ca.uhn.hl7v2.model.v23.datatype.CN;
-//import ca.uhn.hl7v2.model.v23.message.ORU_R01;
-//import ca.uhn.hl7v2.parser.Parser;
-import ca.uhn.hl7v2.parser.PipeParser;
+import ca.uhn.hl7v2.model.v23.datatype.XCN;
 import ca.uhn.hl7v2.parser.CustomModelClassFactory;
 import ca.uhn.hl7v2.parser.ModelClassFactory;
+import ca.uhn.hl7v2.parser.PipeParser;
 import ca.uhn.hl7v2.util.Terser;
 import ca.uhn.hl7v2.validation.impl.NoValidation;
-
-import oscar.oscarLab.ca.all.spireHapiExt.v23.message.ORU_R01;
+//import ca.uhn.hl7v2.model.v23.message.ORU_R01;
+//import ca.uhn.hl7v2.parser.Parser;
 //import oscar.oscarLab.ca.all.spireHapiExt.v23.segment.ZDS;
 
 class Lines {
@@ -474,7 +473,7 @@ public class SpireHandler implements MessageHandler {
     public String getOBXResult(int i, int j){
         try{
             Terser terser = new Terser(msg);
-            return(getString(terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),5,0,1,1)));
+            return(getString(Terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),5,0,1,1)));
         }catch(Exception e){
             return("");
         }
@@ -720,7 +719,7 @@ public class SpireHandler implements MessageHandler {
         try {
             // Some examples
             DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            java.util.Date date = (java.util.Date)formatter.parse(dob);
+            java.util.Date date = formatter.parse(dob);
             age = UtilDateUtilities.calcAge(date);
         } catch (ParseException e) {
             logger.error("Could not get age", e);

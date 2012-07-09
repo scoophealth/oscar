@@ -95,7 +95,7 @@ public class SpireLabTest {
         try {
             // Some examples
             DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-            java.util.Date date = (java.util.Date)formatter.parse(s);
+            java.util.Date date = formatter.parse(s);
             age = UtilDateUtilities.calcAge(date);
         } catch (Exception e) {
         	// this is okay, either null or invalid format
