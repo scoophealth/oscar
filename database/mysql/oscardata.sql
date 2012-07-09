@@ -1196,7 +1196,7 @@ INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringI
 -- Dumping data for table 'mygroup'
 --
 
-INSERT INTO mygroup VALUES ('IT Support','88888','Support','IT',NULL);
+INSERT INTO mygroup VALUES ('IT Support','88888','Support','IT',NULL,NULL);
 
 --
 -- Dumping data for table 'oscarcommlocations'
