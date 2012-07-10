@@ -35,7 +35,6 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionRedirect;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.service.PHRService;
@@ -108,8 +107,7 @@ public class PHRLoginAction extends DispatchAction
 		Calendar cal = Calendar.getInstance();
 		cal.roll(Calendar.HOUR_OF_DAY, false);
 		session.setAttribute(PHRService.SESSION_PHR_EXCHANGE_TIME, cal.getTime());
-		ActionRedirect arr = new ActionRedirect(forwardTo);
 		log.debug("Correct user/pass, auth success");
-		return arr;
+		return ar;
 	}
 }

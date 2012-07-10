@@ -996,6 +996,8 @@
 			<forward name="guidelineList" path="/oscarEncounter/decisionSupport/guidelineList.jsp" />
 			<forward name="guidelineDetail" path="/oscarEncounter/decisionSupport/guidelineDetail.jsp" />
 		</action>
+		<action path="/oscarEncounter/displayMyOscar" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayMyOscarAction"></action>
+		
 
 		<action input="/Index.jsp" path="/oscarEncounter/SaveEncounter" scope="request" type="oscar.oscarEncounter.pageUtil.EctSaveEncounterAction">
 			<forward name="saveAndStay" path="/oscarEncounter/Index.jsp?saved=true" />
@@ -2299,6 +2301,7 @@
 			<forward name="create" path="/phr/msg/CreatePHRMessage.jsp" />
 			<forward name="document_not_found" path="/phr/PHRDocNotFound.jsp" />
 			<forward name="echart" path="/oscarEncounter/IncomingEncounter.do"/>
+			<forward name="loginAndRedirect" path="/phr/PHRLoginAndRedirect.jsp" />
 		</action>
 		<action path="/phr/Login" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
 		</action>
