@@ -150,6 +150,16 @@ public class PHRMessageAction extends DispatchAction {
 		// PHRAuthentication auth = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
 		String demographicNo = request.getParameter("demographicNo");
 		String provNo = (String) request.getSession().getAttribute("user");
+		
+		PHRAuthentication auth = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
+        
+        if (auth == null || auth.getMyOscarUserId() == null) {
+            request.setAttribute("forwardToOnSuccess", request.getContextPath() + "/phr/PhrMessage.do?method=createMessage&providerNo="+provNo+"&demographicNo=" + demographicNo);
+            return mapping.findForward("loginAndRedirect");
+        }
+		
+		
+		
 		DemographicData dd = new DemographicData();
 		org.oscarehr.common.model.Demographic d = dd.getDemographic(demographicNo);
 		ProviderData pp = new ProviderData();

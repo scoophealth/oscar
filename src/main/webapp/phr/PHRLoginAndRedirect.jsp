@@ -40,6 +40,8 @@ on Libraries node in Projects view can be used to add the JSTL 1.1 library.
 
 <%@ page import="org.oscarehr.phr.PHRAuthentication"%>
 <%@ page import="oscar.oscarProvider.data.ProviderData"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<c:set var="ctx" value="${pageContext.request.contextPath}"/>
 
 <%
 String errorMsg = (String) request.getAttribute("error_msg");
@@ -155,7 +157,12 @@ pageContext.setAttribute("forwardToOnSuccess",request.getAttribute("forwardToOnS
                                <center>Redirecting ... <a href="javascript:;" onclick="redirect('<bean:write name="forwardToOnSuccess"/>');">redirect now</a></center>
                                <%-- if no errors and logged in, close window--%>
                                <%if (!errors) {%>
-                                    <script type="text/javascript" language="JavaScript">startRedirectTimeout('<bean:write name="forwardToOnSuccess"/>')</script>
+                                    <script type="text/javascript" language="JavaScript">
+                                    if(window.opener.popColumn){
+                                    	window.opener.popColumn('<c:out value="${ctx}"/>/oscarEncounter/displayMyOscar.do?hC=','myoscar','myoscar','','');
+                                    }
+                                    startRedirectTimeout('<%=request.getAttribute("forwardToOnSuccess")%>');
+                                    </script>
                                <%}%>
                            </logic:present>
 
