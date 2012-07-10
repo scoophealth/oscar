@@ -63,8 +63,8 @@ import oscar.OscarProperties;
 import oscar.oscarLab.ca.all.Hl7textResultsData;
 import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.oscarLab.ca.all.parsers.HHSEmrDownloadHandler;
-import oscar.oscarLab.ca.all.parsers.SpireHandler;
 import oscar.oscarLab.ca.all.parsers.MessageHandler;
+import oscar.oscarLab.ca.all.parsers.SpireHandler;
 import oscar.util.UtilDateUtilities;
 
 public final class MessageUploader {
@@ -362,7 +362,7 @@ public final class MessageUploader {
 		ProviderLabRouting routing = new ProviderLabRouting();
 		if (providerNums.size() > 0) {
 			for (int i = 0; i < providerNums.size(); i++) {
-				String provider_no = (String) providerNums.get(i);
+				String provider_no = providerNums.get(i);
 				routing.route(labId, provider_no, conn, "HL7");
 			}
 		} else {

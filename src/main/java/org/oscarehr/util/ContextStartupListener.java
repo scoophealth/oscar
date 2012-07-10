@@ -25,9 +25,15 @@ package org.oscarehr.util;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorUpdateTask;
+import org.oscarehr.PMmodule.dao.ProgramDao;
+import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
+import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.threads.WaitListEmailThread;
 
 import oscar.OscarProperties;
+
+import com.quatro.dao.security.SecroleDao;
 
 public class ContextStartupListener implements javax.servlet.ServletContextListener {
 	private static final Logger logger = MiscUtils.getLogger();
@@ -59,6 +65,8 @@ public class ContextStartupListener implements javax.servlet.ServletContextListe
 			MiscUtils.setShutdownSignaled(false);
 			MiscUtils.registerShutdownHook();
 
+			createOscarProgramIfNecessary();
+			
 			CaisiIntegratorUpdateTask.startTask();
 
 			WaitListEmailThread.startTaskIfEnabled();
@@ -70,6 +78,29 @@ public class ContextStartupListener implements javax.servlet.ServletContextListe
 		}
 	}
 
+	private void createOscarProgramIfNecessary() {
+		ProgramDao programDao = (ProgramDao)SpringUtils.getBean("programDao");
+		SecroleDao secRoleDao = (SecroleDao)SpringUtils.getBean("secroleDao");
+		ProgramProviderDAO programProviderDao = (ProgramProviderDAO)SpringUtils.getBean("programProviderDAO");
+		
+		Program p = programDao.getProgramByName("OSCAR");
+		if(p !=null) 
+			return;
+		p = new Program();
+		p.setFacilityId(1);
+		p.setName("OSCAR");
+		p.setMaxAllowed(99999);
+		p.setType("Bed");
+		p.setProgramStatus("active");
+		programDao.saveProgram(p);
+		
+		ProgramProvider pp = new ProgramProvider();
+		pp.setProviderNo("999998");
+		pp.setProgramId(p.getId().longValue());
+		pp.setRoleId(secRoleDao.getRoleByName("doctor").getId());
+		programProviderDao.saveProgramProvider(pp);
+		
+	}
 	@Override
     public void contextDestroyed(javax.servlet.ServletContextEvent sce) {
 		// need tc6 for this?

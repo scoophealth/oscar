@@ -31,26 +31,26 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.oscarehr.common.dao.Hsfo2RecommitScheduleDao;
-import org.oscarehr.common.model.Hsfo2RecommitSchedule;
-import org.oscarehr.util.DbConnectionFilter;
-import org.oscarehr.util.SpringUtils;
-
-import org.oscarehr.util.MiscUtils;
-import org.apache.log4j.Logger;
-import oscar.form.study.hsfo2.pageUtil.XMLTransferUtil.SoapElementKey;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.validator.LazyValidatorForm;
+import org.hsfo.v2.HsfHmpDataDocument;
+import org.oscarehr.common.dao.Hsfo2RecommitScheduleDao;
+import org.oscarehr.common.model.Hsfo2RecommitSchedule;
+import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.web.struts.DispatchActionSupport;
-import org.apache.struts.validator.LazyValidatorForm;
-import org.hsfo.v2.HsfHmpDataDocument;
+
+import oscar.form.study.hsfo2.pageUtil.XMLTransferUtil.SoapElementKey;
 
 public class RecommitHSFOAction extends DispatchActionSupport
 {
@@ -311,7 +311,7 @@ public class RecommitHSFOAction extends DispatchActionSupport
   }
 
   public ActionForward test( ActionMapping mapping, ActionForm form, HttpServletRequest request,
-                             HttpServletResponse response ) throws Exception
+                             HttpServletResponse response ) 
   {
 
     return null;

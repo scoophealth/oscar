@@ -37,7 +37,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -46,27 +45,19 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
-import org.oscarehr.common.model.Hsfo2Patient;
-import org.oscarehr.common.model.Hsfo2Visit;
-
-import org.w3c.dom.Node;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
-import oscar.OscarProperties;
-import oscar.form.study.hsfo2.HSFODAO;
-import oscar.oscarProvider.data.ProviderData;
-
+import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlCalendar;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlError;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlOptions;
 import org.apache.xmlbeans.impl.tool.PrettyPrinter;
-import org.oscarehr.util.MiscUtils;
-
+import org.hsfo.v2.*;
 import org.hsfo.v2.HsfHmpDataDocument.HsfHmpData;
 import org.hsfo.v2.HsfHmpDataDocument.HsfHmpData.Site;
 import org.hsfo.v2.HsfHmpDataDocument.HsfHmpData.Site.SitePatient;
@@ -189,8 +180,14 @@ import org.hsfo.v2.HsfHmpDataDocument.HsfHmpData.Site.SitePatient.TxtEmrHcpID;
 import org.hsfo.v2.HsfHmpDataDocument.HsfHmpData.Site.SitePatient.TxtGivenNames;
 import org.hsfo.v2.HsfHmpDataDocument.HsfHmpData.Site.SitePatient.TxtPostalCode;
 import org.hsfo.v2.HsfHmpDataDocument.HsfHmpData.Site.SitePatient.TxtSurname;
-import org.hsfo.v2.*;
-import org.apache.log4j.Logger;
+import org.oscarehr.common.model.Hsfo2Patient;
+import org.oscarehr.common.model.Hsfo2Visit;
+import org.oscarehr.util.MiscUtils;
+import org.w3c.dom.Node;
+
+import oscar.OscarProperties;
+import oscar.form.study.hsfo2.HSFODAO;
+import oscar.oscarProvider.data.ProviderData;
 
 public class XMLTransferUtil
 {
@@ -277,14 +274,14 @@ public class XMLTransferUtil
     }
   }
 
-  public Hsfo2Patient getDemographic( String demoNo ) throws Exception
+  public Hsfo2Patient getDemographic( String demoNo ) 
   {
 
     return hdao.retrievePatientRecord( demoNo );
 
   }
 
-  public Hsfo2Visit getSignedVisit( String patientId, String startDate, String endDate ) throws Exception
+  public Hsfo2Visit getSignedVisit( String patientId, String startDate, String endDate )
   {
     List pList = hdao.nullSafeRetrVisitRecord( patientId, startDate, endDate );
     if ( pList == null || pList.size() == 0 )
@@ -305,13 +302,13 @@ public class XMLTransferUtil
     return vs;
   }
 
-  public String getSignedProvider( String patientId, String startDate, String endDate ) throws Exception
+  public String getSignedProvider( String patientId, String startDate, String endDate ) 
   {
     Hsfo2Visit vs = getSignedVisit( patientId, startDate, endDate );
      return getProviderName( vs.getProvider_no());
   }
 
-  public Date getSignedDate( String patientId, String startDate, String endDate ) throws Exception
+  public Date getSignedDate( String patientId, String startDate, String endDate ) 
   {
     Hsfo2Visit vs = getSignedVisit( patientId, startDate, endDate );
     if( vs!=null)
@@ -329,7 +326,7 @@ public class XMLTransferUtil
    *          : the baseLine visit data, namely the initial patient data
    * @throws Exception
    */
-  public void addPatientToSite( Site site, Hsfo2Patient pd, Hsfo2Visit baseLineVd, Calendar startDate, Calendar endDate) throws Exception
+  public void addPatientToSite( Site site, Hsfo2Patient pd, Hsfo2Visit baseLineVd, Calendar startDate, Calendar endDate)
   {
     if ( baseLineVd == null )
       baseLineVd = ( new HSFODAO() ).getPatientBaseLineVisitData( pd );
@@ -487,7 +484,7 @@ public class XMLTransferUtil
   }
   
   
-  public void addFinalSection( Hsfo2Visit baseLineVd, SitePatient patient, String patientId, Calendar startDate, Calendar endDate, Calendar visitDateValue, XmlCalendar visitDate, XmlCalendar when, String who ) throws Exception
+  public void addFinalSection( Hsfo2Visit baseLineVd, SitePatient patient, String patientId, Calendar startDate, Calendar endDate, Calendar visitDateValue, XmlCalendar visitDate, XmlCalendar when, String who ) 
   {	
 	if(visitDateValue.after(startDate) && visitDateValue.before(endDate)) 
 	{    
@@ -832,7 +829,7 @@ public class XMLTransferUtil
   }
 
 
-  public void addAllPatientVisitFinalSection( SitePatient patient, String patientId, String startDateStr, String endDateStr, Calendar startDate, Calendar endDate, Calendar visitDateValue, XmlCalendar visitDate, XmlCalendar when, String who ) throws Exception
+  public void addAllPatientVisitFinalSection( SitePatient patient, String patientId, String startDateStr, String endDateStr, Calendar startDate, Calendar endDate, Calendar visitDateValue, XmlCalendar visitDate, XmlCalendar when, String who ) 
   {
     List pList = hdao.nullSafeRetrVisitRecord( patientId, startDateStr, endDateStr );
     if ( pList == null || pList.size() == 0 )
@@ -1957,7 +1954,7 @@ public class XMLTransferUtil
    * } /
    *******************/
 
-  public HsfHmpDataDocument generateDataVaultXML( String providerNo, Integer demographicNo ) throws Exception
+  public HsfHmpDataDocument generateDataVaultXML( String providerNo, Integer demographicNo ) 
   {
     // using a long range of beginDate/endDate
     Calendar beginDate = Calendar.getInstance();
@@ -1968,7 +1965,7 @@ public class XMLTransferUtil
   }
 
   public HsfHmpDataDocument generateDataVaultXML( String providerNo, Integer demographicNo, Calendar dataBeginDate,
-                                                  Calendar dataEndDate ) throws Exception
+                                                  Calendar dataEndDate ) 
   {
     HsfHmpDataDocument doc = HsfHmpDataDocument.Factory.newInstance();
 
@@ -2052,7 +2049,7 @@ public class XMLTransferUtil
         while ( iter.hasNext() ) {
         	XmlError error = (XmlError)iter.next();        	
         	String errorMessage = error.getMessage();
-        	XmlCursor cursor = (XmlCursor) error.getCursorLocation();
+        	XmlCursor cursor = error.getCursorLocation();
         	cursor.toParent();
         	String loc = cursor.xmlText();       	
         	
