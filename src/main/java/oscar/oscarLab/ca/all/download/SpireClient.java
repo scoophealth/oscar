@@ -23,14 +23,19 @@
  */
 package oscar.oscarLab.ca.all.download;
 
-import java.net.*;
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.List;
 import java.util.TimerTask;
-import com.jcraft.jsch.*;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
+
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 
 /**
  * 
