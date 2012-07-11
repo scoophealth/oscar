@@ -393,19 +393,18 @@ public class HSFODAO
     }
     */
     
-    //LDL
+ //LDL
     if( "LDL".equalsIgnoreCase( type ) )
     {
       visitData.setLDL( ConvertUtil.toDouble( dataField ) );
-      visitData.setLDL_LabresultsDate( dateObserved );
+      visitData.setLDL_LabresultsDate( dateObserved );      
     }
     
     // TC/HDL
-    //if( "TCHL".equalsIgnoreCase( type ) )
     if( "TCHD".equalsIgnoreCase( type ) )
     {
       visitData.setTC_HDL( ConvertUtil.toDouble( dataField ) );
-      visitData.setTC_HDL_LabresultsDate( dateObserved );
+      visitData.setTC_HDL_LabresultsDate( dateObserved );      
     }
     
     //HDL
@@ -413,13 +412,15 @@ public class HSFODAO
     {
       visitData.setHDL( ConvertUtil.toDouble( dataField ) );
       visitData.setHDL_LabresultsDate( dateObserved );
+      
     }
     
-    //Triglycerides: TRIG
-    if( "TRIG".equalsIgnoreCase( type ) )
+    //Triglycerides: TRIG -> TG?
+    if( "TG".equalsIgnoreCase( type ) )
     {
       visitData.setTriglycerides( ConvertUtil.toDouble( dataField ) );
-      visitData.setHDL_LabresultsDate( dateObserved );
+      visitData.setTC_HDL_LabresultsDate( dateObserved );
+      
     }
     
     //A1C
@@ -443,13 +444,12 @@ public class HSFODAO
       visitData.setEgfrDate( dateObserved );
     }
     
-    //ACR
-    if( "ACR".equalsIgnoreCase( type ) )
+    //ACR - Alb creat ratio (albumin creatinine ratio)
+    if( "ACR".equalsIgnoreCase( type ) )    
     {
       visitData.setAcr( ConvertUtil.toInt( dataField ) );
-      visitData.setA1C_LabresultsDate( dateObserved );
+      visitData.setEgfrDate( dateObserved );
     }
-    
   }
   
   public void saveDataToMeasurements( Hsfo2Visit visitData, Hsfo2Patient patientData, int patientId, String providerNo )
