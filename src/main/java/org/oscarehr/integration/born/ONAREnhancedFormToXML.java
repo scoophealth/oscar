@@ -44,6 +44,7 @@ import org.oscarmcmaster.ar2005.ARRecordSetDocument;
 import org.oscarmcmaster.ar2005.AdditionalLabInvestigationsType;
 import org.oscarmcmaster.ar2005.BirthAttendants;
 import org.oscarmcmaster.ar2005.CurrentPregnancyType;
+import org.oscarmcmaster.ar2005.CustomLab;
 import org.oscarmcmaster.ar2005.DatingMethods;
 import org.oscarmcmaster.ar2005.DiscussionTopicsType;
 import org.oscarmcmaster.ar2005.FamilyHistoryType;
@@ -179,6 +180,7 @@ public class ONAREnhancedFormToXML {
 		populateMedicalHistoryAndPhysicalExam(medicalHistoryAndPhysicalExam);
 		populateInitialLaboratoryInvestigations(initialLaboratoryInvestigations);
 		ar1.setComments(props.getProperty("pg1_commentsAR1", ""));
+		ar1.setExtraComments(props.getProperty("pg1_comments2AR1", ""));
 		setSignaturesAR1(ar1.addNewSignatures());
 	}
 
@@ -213,6 +215,12 @@ public class ONAREnhancedFormToXML {
 		initialLaboratoryInvestigations.setSickleCellResult(InitialLaboratoryInvestigations.SickleCellResult.Enum.forString(props.getProperty("pg1_labSickle", "")));
 		PrenatalGeneticScreeningType prenatalGeneticScreening = initialLaboratoryInvestigations.addNewPrenatalGenericScreening();
 		populatePrenatalGeneticScreening(prenatalGeneticScreening);
+		CustomLab cl1 = initialLaboratoryInvestigations.addNewCustomLab1();
+		cl1.setLabel(props.getProperty("pg1_labCustom1Label", ""));
+		cl1.setResult(props.getProperty("pg1_labCustom1Result", ""));
+		CustomLab cl2 = initialLaboratoryInvestigations.addNewCustomLab2();
+		cl2.setLabel(props.getProperty("pg1_labCustom2Label", ""));
+		cl2.setResult(props.getProperty("pg1_labCustom2Result", ""));
 	}
 
 	void populatePrenatalGeneticScreening(PrenatalGeneticScreeningType prenatalGeneticScreening)  {
@@ -220,6 +228,9 @@ public class ONAREnhancedFormToXML {
 		prenatalGeneticScreening.setEDBCVS(props.getProperty("pg1_geneticB", ""));
 		prenatalGeneticScreening.setMSAFP(props.getProperty("pg1_geneticC", ""));
 		prenatalGeneticScreening.setDeclined(props.getProperty("pg1_geneticD", "").length()>0?true:false);
+		CustomLab cl1 = prenatalGeneticScreening.addNewCustomLab1();
+		cl1.setLabel(props.getProperty("pg1_labCustom3Label", ""));
+		cl1.setResult(props.getProperty("pg1_labCustom3Result", ""));
 	}
 
 	void populateMedicalHistoryAndPhysicalExam(MedicalHistoryAndPhysicalExam medicalHistoryAndPhysicalExam)  {
@@ -496,7 +507,7 @@ public class ONAREnhancedFormToXML {
 		partnerInformation.setFirstName(props.getProperty("c_partnerFirstName", ""));
 		PartnerInformation.Occupation occ = partnerInformation.addNewOccupation();
 		occ.setValue(PartnerInformation.Occupation.Value.OTHER);
-		occ.setOther(props.getProperty("c_partnerOccupation", ""));
+		occ.setOther(props.getProperty("pg1_partnerOccupation", ""));
 		partnerInformation.setOccupation(occ);
 		partnerInformation.setAge(props.getProperty("pg1_partnerAge", "").length()>0?Integer.parseInt(props.getProperty("pg1_partnerAge", "")):0);
 		partnerInformation.setEducationLevel(PartnerInformation.EducationLevel.Enum.forString(props.getProperty("pg1_partnerEduLevel")));
@@ -672,7 +683,18 @@ public class ONAREnhancedFormToXML {
 		additionalLabInvestigations.setGCT(props.getProperty("ar2_lab1GCT", ""));
 		additionalLabInvestigations.setGTT(props.getProperty("ar2_lab2GTT", ""));
 		additionalLabInvestigations.setGBS(AdditionalLabInvestigationsType.GBS.Enum.forString(props.getProperty("ar2_strep")));
-
+		CustomLab cl1 = additionalLabInvestigations.addNewCustomLab1();
+		cl1.setLabel(props.getProperty("ar2_labCustom1Label", ""));
+		cl1.setResult(props.getProperty("ar2_labCustom1Result", ""));
+		CustomLab cl2 = additionalLabInvestigations.addNewCustomLab2();
+		cl2.setLabel(props.getProperty("ar2_labCustom2Label", ""));
+		cl2.setResult(props.getProperty("ar2_labCustom2Result", ""));
+		CustomLab cl3 = additionalLabInvestigations.addNewCustomLab3();
+		cl3.setLabel(props.getProperty("ar2_labCustom3Label", ""));
+		cl3.setResult(props.getProperty("ar2_labCustom3Result", ""));
+		CustomLab cl4 = additionalLabInvestigations.addNewCustomLab4();
+		cl4.setLabel(props.getProperty("ar2_labCustom4Label", ""));
+		cl4.setResult(props.getProperty("ar2_labCustom4Result", ""));
 	}
 	
 	void setSignaturesAR1(SignatureType signatures) {
