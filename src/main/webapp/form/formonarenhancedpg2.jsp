@@ -661,6 +661,11 @@ function gbsReq() {
 	$( "#gbs-req-form" ).dialog( "open" );
 	return false;
 }
+
+function showPrintDialog() {
+	$( "#print-dialog" ).dialog( "open" );
+	return false;
+}
 </script>
 
 </head>
@@ -1381,6 +1386,29 @@ $(document).ready(function(){
 				jQuery.ajax({url:'<%=request.getContextPath()%>/Pregnancy.do?method=createGBSLabReq&demographicNo='+demographic + '&penicillin='+penicillin,async:false, success:function(data) {
 					popupPage(url);
 				}});								
+			},
+			Cancel: function() {
+				$( this ).dialog( "close" );
+			}
+		},
+		close: function() {
+			
+		}
+	});
+	
+	$( "#print-dialog" ).dialog({
+		autoOpen: false,
+		height: 275,
+		width: 450,
+		modal: true,
+		buttons: {
+			"Print": function() {			
+				$( this ).dialog( "close" );	
+				var printAr1 = $("#print_ar1").attr('checked');
+				var printAr2 = $("#print_ar2").attr('checked');	
+				var demographic = '<%=props.getProperty("demographic_no", "0")%>';
+				var user = '<%=session.getAttribute("user")%>';
+											
 			},
 			Cancel: function() {
 				$( this ).dialog( "close" );
@@ -2421,6 +2449,20 @@ $(document).ready(function(){
 			</table>
 		</fieldset>
 	</form>	
+</div>
+
+
+<div id="print-dialog" title="Print Antenatal Record">
+	<p class="validateTips"></p>
+	<form>
+	<fieldset>
+		<input type="checkbox" name="print_ar1" id="print_ar1" class="text ui-widget-content ui-corner-all" />
+		<label for="print_ar1">AR1</label>
+		<br/>
+		<input type="checkbox" name="print_ar2" id="print_ar2" class="text ui-widget-content ui-corner-all" />
+		<label for="print_ar2">AR2</label>						
+	</fieldset>
+	</form>
 </div>
 
 </body>

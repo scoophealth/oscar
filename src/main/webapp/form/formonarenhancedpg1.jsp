@@ -401,7 +401,7 @@ width: 100%;
 			alert('Postal Code must be in the following format A#A#A#');
 			return false;
 		}		
-		patt1=new RegExp("^[0-9]{3}\\-[0-9]{3}\\-[0-9]{4}$");	
+		patt1=new RegExp("^([0-9]{3}\\-[0-9]{3}\\-[0-9]{4})?$");	
 		if(!patt1.test( $("input[name='pg1_homePhone']").val() ) ) {
 			alert('Home phone must be in the following format 555-555-5555');
 			return false;
