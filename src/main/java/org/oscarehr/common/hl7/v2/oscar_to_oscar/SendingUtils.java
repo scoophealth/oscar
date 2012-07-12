@@ -45,15 +45,22 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.model.ProfessionalSpecialist;
+import org.oscarehr.util.CxfClientUtils;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
@@ -105,7 +112,7 @@ public final class SendingUtils {
 		HttpPost httpPost = new HttpPost(url);
 		httpPost.setEntity(multipartEntity);
 
-		HttpClient httpClient = new DefaultHttpClient();
+		HttpClient httpClient = getTrustAllHttpClient();
 		httpClient.getParams().setParameter("http.connection.timeout", CONNECTION_TIME_OUT);
 		HttpResponse httpResponse = httpClient.execute(httpPost);
 		int statusCode=httpResponse.getStatusLine().getStatusCode();
@@ -113,6 +120,28 @@ public final class SendingUtils {
 		return (statusCode);
 	}
 
+	private static HttpClient getTrustAllHttpClient()
+	{
+		try {
+	        SSLContext sslContext = SSLContext.getInstance("TLS");
+	        TrustManager[] temp =new TrustManager[1];
+	        temp[0]=new CxfClientUtils.TrustAllManager();
+	        sslContext.init(null, temp, null);
+	        
+	        SSLSocketFactory sslSocketFactory = new SSLSocketFactory(sslContext);
+	        sslSocketFactory.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+	        
+	        HttpClient httpClient=new DefaultHttpClient();
+	        ClientConnectionManager connectionManager = httpClient.getConnectionManager();
+	        SchemeRegistry schemeRegistry = connectionManager.getSchemeRegistry();
+	        schemeRegistry.register(new Scheme("https", sslSocketFactory, 443));
+	        return(new DefaultHttpClient(connectionManager, httpClient.getParams()));
+        } catch (Exception e) {
+	        logger.error("Unexpected error", e);
+	        return(null);
+        }
+	}
+	
 	private static byte[] encryptEncryptionKey(SecretKey senderSecretKey, PublicKey receiverOscarKey) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
 		Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
 		cipher.init(Cipher.ENCRYPT_MODE, receiverOscarKey);
