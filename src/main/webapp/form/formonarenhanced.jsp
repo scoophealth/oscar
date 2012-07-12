@@ -28,7 +28,7 @@
 <%
     int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
     int formId = Integer.parseInt(request.getParameter("formId"));
-
+	String pg = request.getParameter("pg");
 	// for oscarcitizens
     String historyet = request.getParameter("historyet") == null ? "" : ("&historyet=" + request.getParameter("historyet"));
 
@@ -40,7 +40,11 @@
 			FrmRecord rec = (new FrmRecordFactory()).factory("ONAREnhanced");
 			java.util.Properties props = rec.getFormRecord(demoNo, formId);
 
-			pageContext.forward("formonarenhanced" + props.getProperty("c_lastVisited", "pg1") 
+			String suffix =  props.getProperty("c_lastVisited", "pg1");
+			if(pg != null && pg.length()>0) {
+				suffix = "pg"+pg;
+			}
+			pageContext.forward("formonarenhanced" + suffix
 				+ ".jsp?demographic_no=" + demoNo + "&formId=" + formId + historyet)  ;
 		}
 		return;
