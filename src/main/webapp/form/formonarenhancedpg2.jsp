@@ -1431,6 +1431,12 @@ $(document).ready(function(){
 		$("#gd_menu").bind('click',function(){popPage('http://www.diabetes.ca/diabetes-and-you/what/gestational/','resource')});
 		$("#gct_menu").bind('click',function(){gctReq();});
 		$("#gtt_menu").bind('click',function(){gttReq();});
+		
+		if(isFundalHeightOffTarget()) {
+			$("#fundal_graph_text").css('color','red');
+		}
+		
+		
 		$('#graph_menu').bind('click',function(){
 			
 			//gest,ht
@@ -1442,6 +1448,7 @@ $(document).ready(function(){
 					params = params + "&ga"+x+"="+escape(gest)+"&fh"+x+"="+escape(ht);
 				}
 			}
+			
 			
 			$("#fundal_link").attr('href','<%=request.getContextPath()%>/Pregnancy.do?method=getFundalImage'+params);
 			$("#fundal_link").fancybox({type:'image'});
@@ -1613,6 +1620,93 @@ $(document).ready(function(){
 		$( "#ips-form" ).dialog( "open" );
 	}
 
+	function isFundalHeightOffTarget() {
+		var off=false;
+		
+		for(var x=1;x<=70;x++) {
+			var gest = $("input[name='pg2_gest"+x+"']").val();
+			var ht = $("input[name='pg2_ht"+x+"']").val();
+			if(gest != undefined && gest.length>0 && ht != undefined && ht.length>0) {		
+				var wks = gest.substring(0,gest.indexOf('w'));
+				var offset=0;
+				if(gest.indexOf('+')!=-1) {
+					offset = gest.substring(gest.indexOf('+')+1);
+				}
+				var gatmp = parseInt(wks) + (parseInt(offset)/7);
+				var fh = parseFloat(ht);
+				
+				if(gatmp >= 20 && gatmp < 21) {
+					if(fh < 15.5 || fh > 23)
+						off=true;
+				} else if(gatmp >= 21 && gatmp < 22) {
+					if(fh < 16 || fh > 24.5)
+						off=true;
+				} else if(gatmp >= 22 && gatmp < 23) {
+					if(fh < 16.5 || fh > 26)
+						off=true;
+				} else if(gatmp >= 23 && gatmp < 24) {
+					if(fh < 17.5 || fh > 26.5)
+						off=true;
+				} else if(gatmp >= 24 && gatmp < 25) {
+					if(fh < 19 || fh > 27.5)
+						off=true;
+				} else if(gatmp >= 25 && gatmp < 26) {
+					if(fh < 20 || fh > 29)
+						off=true;
+				} else if(gatmp >= 26 && gatmp < 27) {
+					if(fh < 21 || fh > 29.5)
+						off=true;
+				} else if(gatmp >= 27 && gatmp < 28) {
+					if(fh < 21 || fh > 31)
+						off=true;
+				} else if(gatmp >= 28 && gatmp < 29) {
+					if(fh < 24 || fh > 32)
+						off=true;
+				} else if(gatmp >= 29 && gatmp < 30) {
+					if(fh < 25.5 || fh > 33)
+						off=true;
+				} else if(gatmp >= 30 && gatmp < 31) {
+					if(fh < 26 || fh > 34)
+						off=true;
+				} else if(gatmp >= 31 && gatmp < 32) {
+					if(fh < 28 || fh > 35)
+						off=true;
+				} else if(gatmp >= 32 && gatmp < 33) {
+					if(fh < 28 || fh > 36)
+						off=true;
+				} else if(gatmp >= 33 && gatmp < 34) {
+					if(fh < 28.5 || fh > 36)
+						off=true;
+				} else if(gatmp >= 34 && gatmp < 35) {
+					if(fh < 29 || fh > 37)
+						off=true;
+				} else if(gatmp >= 35 && gatmp < 36) {
+					if(fh < 29.5 || fh > 37.5)
+						off=true;
+				} else if(gatmp >= 36 && gatmp < 37) {
+					if(fh < 30.5 || fh > 38)
+						off=true;
+				} else if(gatmp >= 37 && gatmp < 38) {
+					if(fh < 31 || fh > 39)
+						off=true;
+				} else if(gatmp >= 38 && gatmp < 39) {
+					if(fh < 32 || fh > 39.5)
+						off=true;
+				} else if(gatmp >= 39 && gatmp < 40) {
+					if(fh < 32 || fh > 40)
+						off=true;
+				} else if(gatmp >= 40 && gatmp < 41) {
+					if(fh < 32.5 || fh > 40.5)
+						off=true;
+				} else if(gatmp >= 42 ) {
+					if(fh < 33 || fh > 41)
+						off=true;
+				}				
+				
+			}
+		}		
+		return off;
+	}
 </script>
 <style>
 .ui-widget-overlay
@@ -1667,7 +1761,7 @@ $(document).ready(function(){
 				<td><b>Info</b></td>
 				<tr id="graph">
 				<td>
-					Fundal Height Graph<span style="float:right"><img id="graph_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span>
+					<span id="fundal_graph_text">Fundus Height Graph</span><span style="float:right"><img id="graph_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span>
 					<div style="display:none"><a href="#" id="fundal_link">dummy link</a></div>	
 				</td>
 			</tr>
