@@ -2,6 +2,9 @@
 
 # This script is used to setup the config to run the server / tomcat.
 
+#export JAVA_HOME=${APP_ROOT}/openjdk1.7.0.3/jvm/java-1.7.0-openjdk-1.7.0.3.x86_64
+#export PATH=${JAVA_HOME}/bin:${PATH}
+
 export WORKING_ROOT=`pwd`
 
 export CATALINA_BASE=${WORKING_ROOT}/catalina_base
