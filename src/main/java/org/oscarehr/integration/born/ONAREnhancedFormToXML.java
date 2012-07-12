@@ -510,7 +510,7 @@ public class ONAREnhancedFormToXML {
 		occ.setOther(props.getProperty("pg1_partnerOccupation", ""));
 		partnerInformation.setOccupation(occ);
 		partnerInformation.setAge(props.getProperty("pg1_partnerAge", "").length()>0?Integer.parseInt(props.getProperty("pg1_partnerAge", "")):0);
-		partnerInformation.setEducationLevel(PartnerInformation.EducationLevel.Enum.forString(props.getProperty("pg1_partnerEduLevel")));
+		partnerInformation.setEducationLevel(PartnerInformation.EducationLevel.Enum.forString(props.getProperty("pg1_partnerEduLevel")));		
 	}
 
 	String convertProvince(String p) {

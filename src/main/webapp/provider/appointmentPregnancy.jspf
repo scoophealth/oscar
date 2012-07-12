@@ -1,0 +1,32 @@
+<%@page import="org.oscarehr.web.AppointmentProviderAdminDayUIBean"%>
+<%@page import="java.util.Collection, java.util.Collections, java.util.List, java.util.ArrayList"%>
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="org.oscarehr.common.model.ProviderPreference"%>
+<%@page import="org.oscarehr.common.dao.PregnancyFormsDao" %>
+<%
+//do they have an enhanced form started?
+String demographicNoStr = request.getParameter("demographicNo");
+if(demographicNoStr == null || demographicNoStr.length()==0)
+	return;
+
+int demographicNo = Integer.parseInt(demographicNoStr);
+
+int enhancedFormId = PregnancyFormsDao.getLatestFormIdByDemographicNo(demographicNo);
+
+if(enhancedFormId>0) {
+	%>|<a href="#" onClick="popupPage2('<%=request.getContextPath()%>/form/forwardshortcutname.jsp?formname=ON AR Enhanced&demographic_no=<%=demographicNo%>')">AR1</a>
+   	  |<a href="#" onClick="popupPage2('<%=request.getContextPath()%>/form/forwardshortcutname.jsp?formname=ON AR Enhanced&demographic_no=<%=demographicNo%>&pg=2')">AR2</a>
+	<%
+	return;
+}
+
+int nonEnhancedFormId = PregnancyFormsDao.getLatestAR2005FormIdByDemographicNo(demographicNo);
+if(nonEnhancedFormId > 0) {
+	%>|<a href="#" onClick="popupPage2('<%=request.getContextPath()%>/form/forwardshortcutname.jsp?formname=AR2005&demographic_no=<%=demographicNo%>')">AR1</a>
+	|<a href="#" onClick="popupPage2('<%=request.getContextPath()%>/form/forwardshortcutname.jsp?formname=AR2005&demographic_no=<%=demographicNo%>&pg=2')">AR2</a>
+	
+	<%
+	return;
+}
+
+%>

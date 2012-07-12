@@ -32,7 +32,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -60,6 +59,7 @@ import org.oscarehr.common.dao.EFormDao;
 import org.oscarehr.common.dao.EFormGroupDao;
 import org.oscarehr.common.dao.EpisodeDao;
 import org.oscarehr.common.dao.MeasurementDao;
+import org.oscarehr.common.dao.PregnancyFormsDao;
 import org.oscarehr.common.model.AbstractCodeSystemModel;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Drug;
@@ -80,7 +80,6 @@ import oscar.form.FrmRecord;
 import oscar.form.FrmRecordFactory;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
-import oscar.login.DBHelp;
 import oscar.oscarEncounter.data.EctFormData;
 
 public class PregnancyAction extends DispatchAction {
@@ -95,20 +94,7 @@ public class PregnancyAction extends DispatchAction {
 		}
 	}
 
-	public static Integer getLatestFormIdByPregnancy(Integer episodeId) {
-		String sql = "SELECT id from formONAREnhanced WHERE episodeId="+episodeId+" ORDER BY formEdited DESC";                
-        ResultSet rs = DBHelp.searchDBRecord(sql);
-        try {
-	        if(rs.next()) {
-	        	Integer id = rs.getInt("id");
-	        	return id;
-	        }
-        }catch(SQLException e) {
-        	MiscUtils.getLogger().error("Error",e);
-        	return 0;
-        }
-		return 0;
-	}
+
 
 	public ActionForward getLatestFormIdByPregnancy(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  throws IOException {
 		String episodeId = request.getParameter("episodeId");
@@ -116,7 +102,7 @@ public class PregnancyAction extends DispatchAction {
 		Integer formId = 0;
 		if(episodeId != null) {
 			try {
-				formId = getLatestFormIdByPregnancy(Integer.parseInt(episodeId));
+				formId = PregnancyFormsDao.getLatestFormIdByPregnancy(Integer.parseInt(episodeId));
 			}catch(NumberFormatException e) {
 				//empty
 			}

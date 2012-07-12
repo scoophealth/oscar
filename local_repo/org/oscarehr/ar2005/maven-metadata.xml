@@ -2,19 +2,11 @@
 <metadata>
   <groupId>org.oscarehr</groupId>
   <artifactId>ar2005</artifactId>
-  <version>SNAPSHOT</version>
+  <version>0.12-DRAFT</version>
   <versioning>
     <versions>
-      <version>SNAPSHOT</version>
-      <version>0.4-DRAFT</version>
-      <version>0.5-DRAFT</version>
-      <version>0.7-DRAFT</version>
-      <version>0.8-DRAFT</version>
-      <version>0.9-DRAFT</version>
-      <version>0.10-DRAFT</version>
-      <version>0.11-DRAFT</version>
       <version>0.12-DRAFT</version>
     </versions>
-    <lastUpdated>20120710233151</lastUpdated>
+    <lastUpdated>20120712144351</lastUpdated>
   </versioning>
 </metadata>

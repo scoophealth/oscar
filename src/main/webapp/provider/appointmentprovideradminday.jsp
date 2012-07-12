@@ -1791,6 +1791,14 @@ if( OscarProperties.getInstance().getProperty("SHOW_PREVENTION_STOP_SIGNS","fals
       <%String appointment_no=appointment.get("appointment_no").toString();%>
 	  <%@include file="appointmentFormsLinks.jspf" %>
 
+	<oscar:oscarPropertiesCheck property="appt_pregnancy" value="true" defaultVal="false">
+		
+		<c:set var="demographicNo" value="<%=demographic_no %>" />
+	   <jsp:include page="appointmentPregnancy.jspf" >
+	   	<jsp:param value="${demographicNo}" name="demographicNo"/>
+	   </jsp:include>
+
+	</oscar:oscarPropertiesCheck>
 
       <!--Inline display of reason -->
       <oscar:oscarPropertiesCheck property="SHOW_APPT_REASON_TOOLTIP" value="yes" defaultVal="true"><span class="reason"><bean:message key="provider.appointmentProviderAdminDay.Reason"/>:<%=UtilMisc.htmlEscape(reason)%></span></oscar:oscarPropertiesCheck>
