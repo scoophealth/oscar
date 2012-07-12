@@ -89,7 +89,7 @@ public class ONAREnhancedBornConnector {
 		
 		Connection conn = org.oscarehr.util.DbConnectionFilter.getThreadLocalDbConnection();
 		Statement st = conn.createStatement();
-		ResultSet rs = st.executeQuery("select demographic_no,id,formEdited,c_finalEDB,sent_to_born,pg1_signature,pg2_signature,episodeId from (select demographic_no,id,formEdited,c_finalEDB,sent_to_born,pg1_signature,pg2_signature,episodeId from formONAREnhanced where c_finalEDB!='' ORDER BY formEdited DESC) AS x  GROUP BY demographic_no");
+		ResultSet rs = st.executeQuery("select demographic_no,id,formEdited,c_finalEDB,sent_to_born,pg1_signature,pg2_signature,episodeId from (select demographic_no,id,formEdited,c_finalEDB,sent_to_born,pg1_signature,pg2_signature,episodeId from formONAREnhanced where c_finalEDB!='' AND c_finalEDB IS NOT NULL ORDER BY formEdited DESC) AS x  GROUP BY demographic_no");
 		
 		ONAREnhancedFormToXML xml = new ONAREnhancedFormToXML();
 		HashMap<String,String> suggestedPrefixes = new HashMap<String,String>();
@@ -105,40 +105,49 @@ public class ONAREnhancedBornConnector {
 		opts.setSaveImplicitNamespaces(implicitNamespaces);
 		opts.setSaveNamespacesFirst();
 		String tmpPath = System.getProperty("java.io.tmpdir");
-		
-		OutputStream os = new FileOutputStream(tmpPath + File.separator + filename);
-		PrintWriter pw = new PrintWriter(os,true);
-		pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ARRecordSet xmlns=\"http://www.oscarmcmaster.org/AR2005\">");
-		
-		List<Integer> formIdsSent = new ArrayList<Integer>();
 		int total = 0;		
-		while(rs.next()) {
-			try {
-				int demographicNo = rs.getInt("demographic_no");
-				int id = rs.getInt("id");
-				boolean sent = rs.getBoolean("sent_to_born");
-				String pg1Signature = rs.getString("pg1_signature");
-				String pg2Signature = rs.getString("pg2_signature");
-				int episodeId = rs.getInt("episodeId");
-				/*
-				if(pg1Signature== null || pg2Signature==null || pg1Signature.length()==0 || pg2Signature.length()==0) {
-					continue;
+		OutputStream os = null;
+		PrintWriter pw = null;
+		List<Integer> formIdsSent = new ArrayList<Integer>();
+		
+		try {
+			os = new FileOutputStream(tmpPath + File.separator + filename);
+			pw = new PrintWriter(os,true);
+			pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ARRecordSet xmlns=\"http://www.oscarmcmaster.org/AR2005\">");
+			
+			
+			while(rs.next()) {
+				try {
+					int demographicNo = rs.getInt("demographic_no");
+					int id = rs.getInt("id");
+					boolean sent = rs.getBoolean("sent_to_born");
+					String pg1Signature = rs.getString("pg1_signature");
+					String pg2Signature = rs.getString("pg2_signature");
+					int episodeId = rs.getInt("episodeId");
+					//rs.getString("c_finalEDB");
+					/*
+					if(pg1Signature== null || pg2Signature==null || pg1Signature.length()==0 || pg2Signature.length()==0) {
+						continue;
+					}
+					*/
+					if(!sent) {
+						MiscUtils.getLogger().info("Adding form "+ id +" for patient " + demographicNo);
+						xml.addXmlToStream(pw,opts, null, String.valueOf(demographicNo), id, episodeId);				
+						total++;
+						formIdsSent.add(id);				
+					}
+				}catch(Exception e) {
+					MiscUtils.getLogger().warn("Unable to add record");
 				}
-				*/
-				if(!sent) {
-					MiscUtils.getLogger().info("Adding form "+ id +" for patient " + demographicNo);
-					xml.addXmlToStream(pw,opts, null, String.valueOf(demographicNo), id, episodeId);				
-					total++;
-					formIdsSent.add(id);				
-				}
-			}catch(Exception e) {
-				MiscUtils.getLogger().warn("Unable to add record");
+			}
+			
+			pw.println("</ARRecordSet>");			
+		} finally {
+			if(pw != null) {
+				pw.flush();
+				pw.close();
 			}
 		}
-		
-		pw.println("</ARRecordSet>");
-		pw.flush();
-		pw.close();
 		
 		if(total == 0) {
 			MiscUtils.getLogger().info("No new forms found");
