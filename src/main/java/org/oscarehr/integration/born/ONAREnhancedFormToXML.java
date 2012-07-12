@@ -537,7 +537,7 @@ public class ONAREnhancedFormToXML {
 		patientInformation.setAddress(props.getProperty("c_address", ""));
 		patientInformation.setApt(props.getProperty("c_apt", ""));
 		patientInformation.setCity(props.getProperty("c_city", ""));
-		patientInformation.setProvince(PatientInformation.Province.Enum.forString(convertProvince(props.getProperty("c_province", ""))));
+		patientInformation.setProvince(PatientInformation.Province.Enum.forString(convertProvince(props.getProperty("c_province", ""))));		
 		patientInformation.setPostalCode(props.getProperty("c_postal", ""));
 		patientInformation.setHomePhone(props.getProperty("pg1_homePhone", "").replaceAll("\\-", ""));
 		patientInformation.setWorkPhone(props.getProperty("pg1_workPhone", "").replaceAll("\\-", ""));
