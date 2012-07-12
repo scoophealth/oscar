@@ -52,6 +52,7 @@
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.SecRole" %>
 <%@ page import="org.oscarehr.common.dao.SecRoleDao" %>
+<%@ page import="org.oscarehr.PMmodule.utility.RoleCache" %>
 <%
 	SecRoleDao secRoleDao = SpringUtils.getBean(SecRoleDao.class);
 %>
@@ -83,6 +84,7 @@ String curUser_no = (String)session.getAttribute("user");
 		if(secRole != null) {
 			secRole.setName(role_name);
 			secRoleDao.merge(secRole);
+			RoleCache.reload();
 			msg = role_name + " is updated.<br>" + "Type in a role name and search it first to see if it is available.";
   			action = "search";
 		    prop.setProperty("role_name", role_name);
@@ -99,6 +101,7 @@ String curUser_no = (String)session.getAttribute("user");
 			secRole.setName(role_name);
 			secRole.setDescription(role_name);
 			secRoleDao.persist(secRole);
+			RoleCache.reload();
 
   			msg = role_name + " is added.<br>" + "Type in a role name and search it first to see if it is available.";
   			action = "search";

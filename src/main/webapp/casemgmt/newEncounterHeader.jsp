@@ -111,22 +111,6 @@
         <%=getEChartLinks() %>
         &nbsp;&nbsp;
         
-        <%
-		String strFullChart = request.getParameter("fullChart"); 
-		boolean quickChart =  strFullChart == null || strFullChart.equals("") || strFullChart.equalsIgnoreCase("false");	
-		if( quickChart ) {
-		%>		
-			<a id="quickChart" href="#" onclick="return viewFullChart(true);"><bean:message key="oscarEncounter.fullChart.msg"/></a>		
-		<%
-		}
-		else {
-		%>
-			<a id="quickChart" href="#" onclick="return viewFullChart(false);"><bean:message key="oscarEncounter.quickChart.msg"/></a>
-		<%
-		}
-		%>  
-		
-		
 		<%
 		if (facility.isIntegratorEnabled()){
 			int secondsTillConsideredStale = -1;

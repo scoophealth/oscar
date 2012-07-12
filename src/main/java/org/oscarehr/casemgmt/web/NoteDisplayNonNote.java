@@ -23,6 +23,8 @@
 
 package org.oscarehr.casemgmt.web;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -45,7 +47,8 @@ import oscar.oscarRx.data.RxPrescriptionData.Prescription;
 public class NoteDisplayNonNote implements NoteDisplay {
 
 	private static ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
-
+	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	
 	private Integer noteId;
 	private Date date;
 	private String note;
@@ -56,7 +59,12 @@ public class NoteDisplayNonNote implements NoteDisplay {
 	private String linkInfo;
 
 	public NoteDisplayNonNote(HashMap<String, ? extends Object> eform) {
-		date = (Date) eform.get("formDateAsDate");
+		try {
+			date = (formatter.parse((String)eform.get("formDate") + " " + (String)eform.get("formTime")));
+		}catch(ParseException e) {
+			date = (Date) eform.get("formDateAsDate");			
+		}
+		
 		note = eform.get("formName") + " : " + eform.get("formSubject");
 		provider = providerDao.getProvider((String) eform.get("providerNo"));
 		isEformData = true;
@@ -64,6 +72,8 @@ public class NoteDisplayNonNote implements NoteDisplay {
 	}
 
 	public NoteDisplayNonNote(PatientForm patientForm) {
+		//SimpleDateFormat sdf = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
+		
 		date = patientForm.edited;
 		if( date == null ) {
 			date = patientForm.created;

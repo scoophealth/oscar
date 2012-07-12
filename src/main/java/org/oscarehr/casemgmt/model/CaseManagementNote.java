@@ -81,8 +81,11 @@ public class CaseManagementNote extends BaseObject {
 	private Integer minuteOfEncounterTime;
 	private Integer hourOfEncTransportationTime;
 	private Integer minuteOfEncTransportationTime;
-	
+
 	CaseManagementNoteLinkDAO caseManagementNoteLinkDao = (CaseManagementNoteLinkDAO) SpringUtils.getBean("CaseManagementNoteLinkDAO");
+
+	private CaseManagementNoteLink cmnLink = null;
+	private boolean cmnLinkRetrieved = false;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -476,7 +479,11 @@ public class CaseManagementNote extends BaseObject {
 	}
 
 	private boolean isLinkTo(Integer tableName) {
-		CaseManagementNoteLink cmnLink = caseManagementNoteLinkDao.getLastLinkByNote(this.id);
+		if (!cmnLinkRetrieved) {
+			cmnLink = caseManagementNoteLinkDao.getLastLinkByNote(this.id);
+			cmnLinkRetrieved = true;
+		}
+
 		if (cmnLink!=null && cmnLink.getTableName().equals(tableName)) {
 			return true;
 		}
@@ -490,17 +497,14 @@ public class CaseManagementNote extends BaseObject {
             //get drug id from cmn_link table
             RxPrescriptionData rxData = new RxPrescriptionData();
             // create Prescription
-            RxPrescriptionData.Prescription[] rxs = rxData.getPrescriptionScriptsByPatientDrugId(Integer.parseInt(this.getDemographic_no()), drugId);
-            if(rxs.length>0)
-                return rxs[0];
-            else
-                return null;
-        }else
-        
-            return null;
+            RxPrescriptionData.Prescription rx = rxData.getLatestPrescriptionScriptByPatientDrugId(Integer.parseInt(this.getDemographic_no()), drugId);
+            return rx;
+        }
+
+        return null;
     }
-   
- 
+
+
 
 	public int getAppointmentNo() {
 		return appointmentNo;
@@ -541,6 +545,6 @@ public class CaseManagementNote extends BaseObject {
 	public void setMinuteOfEncTransportationTime(Integer minuteOfEncTransportationTime) {
     	this.minuteOfEncTransportationTime = minuteOfEncTransportationTime;
     }
-    
-    
+
+
 }

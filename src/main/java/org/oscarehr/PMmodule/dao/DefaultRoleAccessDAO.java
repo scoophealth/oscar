@@ -41,6 +41,10 @@ public class DefaultRoleAccessDAO extends HibernateDaoSupport {
     public List<DefaultRoleAccess> getDefaultRoleAccesses() {
         return this.getHibernateTemplate().find("from DefaultRoleAccess dra ORDER BY role_id");
     }
+    
+    public List<DefaultRoleAccess> findAll() {
+        return this.getHibernateTemplate().find("from DefaultRoleAccess dra");
+    }
 
     public void saveDefaultRoleAccess(DefaultRoleAccess dra) {
         this.getHibernateTemplate().saveOrUpdate(dra);

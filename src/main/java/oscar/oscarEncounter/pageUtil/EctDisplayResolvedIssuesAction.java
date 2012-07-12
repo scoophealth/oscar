@@ -96,7 +96,8 @@ public class EctDisplayResolvedIssuesAction extends EctDisplayAction {
 
 			item.setTitle(strTitle);
 			item.setLinkTitle(tmp);
-			url = "$('check_issue').value=" + issue.getIssue_id() + ";return filter();";
+			//issues value=			
+			url = "setIssueCheckbox('"+issue.getId()+"');return filter(false);";
 			item.setURL(url);
 			navBarDisplayDAO.addItem(item);
 		}
@@ -123,19 +124,29 @@ public class EctDisplayResolvedIssuesAction extends EctDisplayAction {
 				}
 				
 				for (CachedDemographicIssue cachedDemographicIssue : remoteIssues) {
+					if(cachedDemographicIssue.isResolved()!=null && !cachedDemographicIssue.isResolved())
+						continue;
+					
 					log.info(cachedDemographicIssue.getIssueDescription());
 					NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
 
 					String strTitle = StringUtils.maxLenString(cachedDemographicIssue.getIssueDescription(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
 					item.setTitle(strTitle);
-					
+															
 					item.setLinkTitle(cachedDemographicIssue.getIssueDescription());
 					
 					// no link for now, will make this work later ... maybe
-					url = "return fasle;";
+					url = "return false;";
 					item.setURL(url);
 					
-					navBarDisplayDAO.addItem(item);	
+					boolean skip=false;
+					for(int x=0;x<navBarDisplayDAO.numItems();x++) {
+						if(navBarDisplayDAO.getItem(x).getTitle().equals(strTitle)) {
+							skip=true;break;
+						}
+					}
+					if(!skip)
+						navBarDisplayDAO.addItem(item);	
 					
 				}
 			} catch(Exception e ) {

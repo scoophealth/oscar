@@ -271,6 +271,15 @@ public class ProgramDao extends HibernateDaoSupport {
 
         return rs;
     }
+    
+    public List<Program> getActivePrograms() {
+        String queryStr = "FROM Program p WHERE p.type != 'community' and p.programStatus='active'";
+
+        @SuppressWarnings("unchecked")
+        List<Program> rs = getHibernateTemplate().find(queryStr);
+
+        return rs;
+    }
 
     /**
      * @param facilityId is allowed to be null

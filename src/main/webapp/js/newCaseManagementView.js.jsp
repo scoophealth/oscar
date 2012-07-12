@@ -379,7 +379,10 @@ function notesIncrementAndLoadMore() {
 
 function notesLoader(offset, numToReturn, demoNo) {
 	$("notesLoading").style.display = "inline";
-	var params = "method=viewNotes&offset=" + offset + "&numToReturn=" + numToReturn + "&demographicNo=" + demoNo;
+	var params = "method=viewNotesOpt&offset=" + offset + "&numToReturn=" + numToReturn + "&demographicNo=" + demoNo;
+	var params2 = jQuery("input[name='filter_providers'],input[name='filter_roles'],input[name='issues'],input[name='note_sort']").serialize();
+	if(params2.length>0)
+		params = params + "&" + params2;
 	new Ajax.Updater("encMainDiv",
 			ctx + "/CaseManagementView.do",
 			{
@@ -3164,3 +3167,17 @@ function autoCompleteShowMenuCPP(element, update) {
     	currentNoteText += jQuery("#noteEditTxt").val();
     	jQuery("#caseNote_note"+currentNoteId).val(currentNoteText);
     }
+    
+  	function selectGroup(programId,demographicNo) {
+  			var noteId = document.forms["caseManagementEntryForm"].noteId.value;
+		 	var url='groupNoteSelect.jsp?programId='+programId + '&demographicNo='+demographicNo;
+	    	popupPage(600,700,'group',url);
+
+	}	
+	
+	function setIssueCheckbox(val) {
+		jQuery("input[name='issues']").each(function(){
+			if(jQuery(this).val() == val)
+				jQuery(this).attr("checked","checked");
+		});
+	}

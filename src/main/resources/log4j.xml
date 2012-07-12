@@ -77,6 +77,10 @@
 		<priority value="WARN" />
 	</category>
 
+	<category name="org.apache.cxf.service.factory.ReflectionServiceFactoryBean">
+		<priority value="WARN" />
+	</category>
+	
 	<category name="org.hibernate.cfg">
 		<priority value="WARN" />
 	</category>

@@ -29,6 +29,8 @@ import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.PMmodule.utility.ProgramAccessCache;
+import org.oscarehr.PMmodule.utility.RoleCache;
 import org.oscarehr.threads.WaitListEmailThread;
 
 import oscar.OscarProperties;
@@ -70,13 +72,24 @@ public class ContextStartupListener implements javax.servlet.ServletContextListe
 			CaisiIntegratorUpdateTask.startTask();
 
 			WaitListEmailThread.startTaskIfEnabled();
-
+			
+			//Run some optimizations
+			loadCaches();
 			logger.info("Server processes starting completed. context=" + contextPath);
 		} catch (Exception e) {
 			logger.error("Unexpected error.", e);
 			throw (new RuntimeException(e));
 		}
 	}
+	
+	public void loadCaches() {
+		ProgramDao programDao = (ProgramDao)SpringUtils.getBean("programDao");
+		for(Program program:programDao.getActivePrograms()) {
+			ProgramAccessCache.setAccessMap(program.getId().longValue());
+		}
+		RoleCache.reload();
+	}
+	
 
 	private void createOscarProgramIfNecessary() {
 		ProgramDao programDao = (ProgramDao)SpringUtils.getBean("programDao");

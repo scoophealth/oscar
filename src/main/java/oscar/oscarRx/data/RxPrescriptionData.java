@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -239,7 +239,7 @@ public class RxPrescriptionData {
 
         try {
             // Get Prescription from database
-            
+
             ResultSet rs;
 
             Prescription p;
@@ -383,7 +383,7 @@ public class RxPrescriptionData {
 
         try {
             // Get Prescription from database
-            
+
             ResultSet rs;
 
             Prescription p;
@@ -413,7 +413,7 @@ public class RxPrescriptionData {
 
         try {
             // Get Prescription from database
-            
+
             ResultSet rs;
 
             Prescription p;
@@ -443,7 +443,7 @@ public class RxPrescriptionData {
 
         try {
             // Get Prescription from database
-            
+
             ResultSet rs;
 
             Prescription p;
@@ -464,6 +464,29 @@ public class RxPrescriptionData {
         return arr;
     }
 
+    public Prescription getLatestPrescriptionScriptByPatientDrugId(int demographicNo, String drugId) {
+        Prescription prescription = null;
+
+        String sql = "SELECT d.* FROM drugs d WHERE  " + "d.demographic_no = " + demographicNo + " and d.drugId = '" + drugId + "' " + "ORDER BY position, rx_date DESC, drugId DESC, limit 0,1";
+
+        try {
+            // Get Prescription from database
+
+            ResultSet rs = DBHandler.GetSQL(sql);
+
+            if (rs.next()) {
+                prescription = getPrescriptionFromRS(rs, demographicNo);
+            }
+            rs.close();
+            DbConnectionFilter.getThreadLocalDbConnection().close();
+
+        } catch (SQLException e) {
+            logger.error(sql, e);
+        }
+
+        return prescription;
+    }
+
     // ////
 
     /*
@@ -478,7 +501,7 @@ public class RxPrescriptionData {
 
         try {
             // Get Prescription from database
-            
+
             ResultSet rs;
 
             Prescription p;
@@ -565,7 +588,7 @@ public class RxPrescriptionData {
 
         try {
             // Get Prescription from database
-            
+
             ResultSet rs;
 
             Prescription p;
@@ -648,7 +671,7 @@ public class RxPrescriptionData {
 
         try {
             // Get Prescription from database
-            
+
             ResultSet rs;
 
             Prescription p;
@@ -743,7 +766,7 @@ public class RxPrescriptionData {
 
         try {
             // Get Prescription from database
-            
+
             ResultSet rs, rs2;
             String sql = "SELECT * FROM drugs d WHERE d.archived = 0 AND d.demographic_no = " + demographicNo + " ORDER BY position DESC,rx_date DESC, drugId DESC";
             String indivoSql = "SELECT indivoDocIdx FROM indivoDocs i WHERE i.oscarDocNo = ? and docType = 'Rx' limit 1";
@@ -754,7 +777,7 @@ public class RxPrescriptionData {
 
             while (rs.next()) {
                 boolean b = true;
-                
+
                 for (int i = 0; i < lst.size(); i++) {
                     Prescription p2 = (Prescription) lst.get(i);
 
@@ -856,7 +879,7 @@ public class RxPrescriptionData {
         LinkedList lst = new LinkedList();
 
         try {
-            
+
             ResultSet rs;
             Favorite favorite;
 
@@ -887,7 +910,7 @@ public class RxPrescriptionData {
         Favorite favorite = null;
 
         try {
-            
+
             ResultSet rs;
 
             rs = DBHandler.GetSQL("SELECT * FROM favorites WHERE favoriteid = " + favoriteId);
@@ -913,7 +936,7 @@ public class RxPrescriptionData {
         boolean ret = false;
 
         try {
-            
+
             String sql = "DELETE FROM favorites WHERE favoriteid = " + favoriteId;
 
             DBHandler.RunSQL(sql);
@@ -940,7 +963,7 @@ public class RxPrescriptionData {
         int demographic_no = bean.getDemographicNo();
         String date_prescribed = oscar.oscarRx.util.RxUtil.DateToString(oscar.oscarRx.util.RxUtil.Today(), "yyyy/MM/dd");
         String date_printed = date_prescribed;
-        
+
         StringBuilder textView = new StringBuilder();
         String retval = null;
 
@@ -978,7 +1001,7 @@ public class RxPrescriptionData {
         String txt;
         for (int i = 0; i < bean.getStashSize(); i++) {
             Prescription rx = bean.getStashItem(i);
-            
+
             String fullOutLine = rx.getFullOutLine();
             if (fullOutLine == null || fullOutLine.length() < 6) {
                 logger.error("Drug full outline appears to be null or empty : " + fullOutLine, new IllegalStateException("full out line appears wrong"));
@@ -988,11 +1011,11 @@ public class RxPrescriptionData {
             textView.append("\n" + txt);
         }
         // textView.append();
-        
+
         String sql = " insert into prescription " + " (provider_no,demographic_no,date_prescribed,date_printed,textView,lastUpdateDate) " + " values " + " ( '" + provider_no + "', " + "   '" + demographic_no + "', " + "   '" + date_prescribed + "', " + "   '" + date_printed + "', " + "   '" + StringEscapeUtils.escapeSql(textView.toString()) + "', now()) ";
         try {
 
-            
+
 
             DBHandler.RunSQL(sql);
 
@@ -1015,7 +1038,7 @@ public class RxPrescriptionData {
     public void setScriptComment(String scriptNo, String comment) {
         String sql = "update prescription set rx_comments = '" + StringEscapeUtils.escapeSql(comment) + "' where script_no = " + scriptNo;
         try {
-            
+
             DBHandler.RunSQL(sql);
         } catch (SQLException e) {
             logger.error("unexpected error", e);
@@ -1029,7 +1052,7 @@ public class RxPrescriptionData {
         String sql = "select rx_comments from  prescription where script_no = " + scriptNo;
         logger.debug("SQL " + sql);
         try {
-            
+
             ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
                 ret = rs.getString("rx_comments");
@@ -1110,12 +1133,12 @@ public class RxPrescriptionData {
         private Integer dispenseInterval = 0;
         private int position = 0;
         private String comment = null;
-        
+
         private String drugFormList = "";
         private String datesReprinted = "";
-        
-        private List<String> policyViolations = new ArrayList<String>();                
-        
+
+        private List<String> policyViolations = new ArrayList<String>();
+
         public List<String> getPolicyViolations() {
         	return policyViolations;
         }
@@ -1175,7 +1198,7 @@ public class RxPrescriptionData {
 		public String getETreatmentType(){
         	return eTreatmentType;
         }
-        
+
         public void setETreatmentType(String treatmentType){
         	eTreatmentType = treatmentType;
         }
@@ -1355,7 +1378,7 @@ public class RxPrescriptionData {
         public void setRxDate(java.util.Date RHS) {
             this.rxDate = RHS;
         }
-        
+
         public java.util.Date getPickupDate() {
             return this.pickupDate;
         }
@@ -1387,11 +1410,11 @@ public class RxPrescriptionData {
         public void setWrittenDate(java.util.Date RHS) {
             this.writtenDate = RHS;
         }
-        
+
         public String getWrittenDateFormat() {
         	return this.writtenDateFormat;
         }
-        
+
         public void setWrittenDateFormat(String RHS) {
         	this.writtenDateFormat = RHS;
         }
@@ -1655,7 +1678,7 @@ public class RxPrescriptionData {
 
 	public boolean isNonAuthoritative() {
             return this.nonAuthoritative;
-        } 
+        }
 
         public boolean isPastMed() {
             return this.pastMed;
@@ -1915,7 +1938,7 @@ public class RxPrescriptionData {
             	{
             		drug.setArchived(true);
             		drugDao.merge(drug);
-            	}            	
+            	}
             } catch (Exception e) {
                 logger.error("unexpected error", e);
             }
@@ -1935,7 +1958,7 @@ public class RxPrescriptionData {
                     update = "I";
                 }
 
-                
+
                 String sql = "INSERT INTO indivoDocs (oscarDocNo, indivoDocIdx, docType, dateSent, `update`)" + " VALUES(" + String.valueOf(getDrugId()) + ",'" + getIndivoIdx() + "','" + docType + "',now(),'" + update + "')";
 
                 DBHandler.RunSQL(sql);
@@ -1950,11 +1973,11 @@ public class RxPrescriptionData {
         public boolean Print() {
             boolean ret = false;
             try {
-                
+
                 ResultSet rs;
                 String sql = "SELECT dates_reprinted, now() FROM prescription WHERE script_no = " + this.getScript_no();
                 String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
-                
+
                 rs = DBHandler.GetSQL(sql);
 
                 if (rs.next()) {
@@ -1965,7 +1988,7 @@ public class RxPrescriptionData {
                     } else {
                         dates_reprinted = now + ";" + providerNo;
                     }
-                    
+
                     sql = "UPDATE prescription SET dates_reprinted = '" + dates_reprinted + "' WHERE script_no = " + this.getScript_no();
                     DBHandler.RunSQL(sql);
                     ret = true;
@@ -1981,16 +2004,16 @@ public class RxPrescriptionData {
         }
 
         public int getNextPosition() throws SQLException {
-       	 String sql = "SELECT Max(position) FROM drugs WHERE demographic_no=" + this.getDemographicNo();               
+       	 String sql = "SELECT Max(position) FROM drugs WHERE demographic_no=" + this.getDemographicNo();
             ResultSet rs = DBHandler.GetSQL(sql);
-            
+
             int position = 0;
-            if (rs.next()) {                  
-               position = rs.getInt(1);                  
+            if (rs.next()) {
+               position = rs.getInt(1);
             }
        	 return (position+1);
         }
-        
+
         public boolean Save(String scriptId) {
             boolean b = false;
             //     p("inside Save now");
@@ -2015,7 +2038,7 @@ public class RxPrescriptionData {
                 logger.error("drug special after escaping appears to be null or empty : " + escapedSpecial, new IllegalStateException("Drug special is invalid after escaping."));
             }
             try {
-                
+
                 ResultSet rs;
                 String sql;
 
@@ -2032,7 +2055,7 @@ public class RxPrescriptionData {
                 	} else {
                 		endDate = RxUtil.DateToString(this.getEndDate());
                 	}
-                	
+
                     sql = "SELECT drugid FROM drugs WHERE archived = 0 AND " + "provider_no = '" + this.getProviderNo() + "' AND " + "demographic_no = " +
                             this.getDemographicNo() + " AND " + "rx_date = '" + RxUtil.DateToString(this.getRxDate()) + "' AND " + "end_date = '" +
                             RxUtil.DateToString(this.getEndDate()) + "' AND " + "written_date = '" + RxUtil.DateToString(this.getWrittenDate()) + "' AND " + "BN = '" +
@@ -2059,7 +2082,7 @@ public class RxPrescriptionData {
                     // if it doesn't already exist add it.
                     if (this.getDrugId() == 0) {
                     	int position = this.getNextPosition();
-                    	
+
                     	DrugDao drugDao=(DrugDao) SpringUtils.getBean("drugDao");
                     	Drug drug=new Drug();
 
@@ -2107,14 +2130,14 @@ public class RxPrescriptionData {
                     	drug.setRxStatus(getRxStatus());
                     	drug.setDispenseInterval(getDispenseInterval());
                     	drug.setRefillQuantity(getRefillQuantity());
-                    	drug.setRefillDuration(getRefillDuration());                    	
+                    	drug.setRefillDuration(getRefillDuration());
                     	drug.setHideFromCpp(false);
                     	drug.setPosition(position);
                     	drug.setComment(getComment());
                     	drug.setStartDateUnknown(getStartDateUnknown());
 
                     	drugDao.persist(drug);
-                    	
+
                         drugId = drug.getId();
 
                         b = true;
@@ -2124,7 +2147,7 @@ public class RxPrescriptionData {
 
                 	DrugDao drugDao=(DrugDao) SpringUtils.getBean("drugDao");
                 	Drug drug=drugDao.find(getDrugId());
-                	
+
                     // create_date is not updated
                 	// the fields set are based on previous code, I don't know the details of why which are and are not set and can not audit it at this point in time.
                 	drug.setProviderNo(getProviderNo());
@@ -2453,7 +2476,7 @@ public class RxPrescriptionData {
             this.customInstr = customInstr;
             this.dosage = dosage;
         }
-        
+
         public Favorite(int favoriteId, String providerNo, String favoriteName, String BN, int GCN_SEQNO, String customName, float takeMin, float takeMax, String frequencyCode, String duration, String durationUnit, String quantity, int repeat, boolean nosubs,
                 boolean prn, String special, String GN, String atc, String regionalIdentifier, String unit, String unitName, String method, String route, String drugForm, boolean customInstr, String dosage) {
             this.favoriteId = favoriteId;
@@ -2661,7 +2684,7 @@ if (getSpecial() == null || getSpecial().length() < 4) {
             }
 
             try {
-                
+
                 ResultSet rs;
                 String sql;
 
@@ -2848,7 +2871,7 @@ if (getSpecial() == null || getSpecial().length() < 4) {
         }
 
     }
-    
+
     public static boolean addToFavorites(String providerNo, String favoriteName, Drug drug) {
         Favorite fav = new Favorite(0, providerNo, favoriteName, drug.getBrandName(), drug.getGcnSeqNo(), drug.getCustomName(), drug.getTakeMin(), drug.getTakeMax(), drug.getFreqCode(), drug.getDuration(), drug.getDurUnit(), drug.getQuantity(), drug.getRepeat(), drug.isNoSubs(), drug.isPrn(), drug.getSpecial(), drug.getGenericName(), drug.getAtc(), drug.getRegionalIdentifier(), drug.getUnit(), drug.getUnitName(), drug.getMethod(), drug.getRoute(),
         		drug.getDrugForm(), drug.isCustomInstructions(), drug.getDosage());
