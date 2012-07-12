@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Query;
 
@@ -337,6 +338,40 @@ public class BillingClaimDAO extends AbstractDao<BillingClaimHeader1> {
         
         q.setParameter("demo", new Integer(demographic_no));
         q.setMaxResults(limit);
+        
+        return q.getResultList();
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<BillingClaimHeader1> getInvoices(String demographic_no) {
+    	String sql = "select h1 from BillingClaimHeader1 h1 where " +
+                " h1.demographic_no = :demo and h1.status != 'D' order by h1.billing_date desc";
+        Query q = entityManager.createQuery(sql);
+        
+        q.setParameter("demo", new Integer(demographic_no));
+        
+        return q.getResultList();
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<BillingClaimHeader1> getInvoicesByIds(List<Integer> ids) {
+    	if(ids.size()==0) return new ArrayList<BillingClaimHeader1>();
+    	
+    	String sql = "select h1 from BillingClaimHeader1 h1 where h1.id in (:ids)";
+        Query q = entityManager.createQuery(sql);
+        
+        q.setParameter("ids", ids);
+        
+        return q.getResultList();
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<Map<String,Object>> getInvoicesMeta(String demographic_no) {
+    	String sql = "select new map(h1.id as id, h1.billing_date as billing_date, h1.billing_time as billing_time, h1.provider_no as provider_no) from BillingClaimHeader1 h1 where " +
+                " h1.demographic_no = :demo and h1.status != 'D' order by h1.billing_date desc";
+        Query q = entityManager.createQuery(sql);
+        
+        q.setParameter("demo", new Integer(demographic_no));
         
         return q.getResultList();
     }

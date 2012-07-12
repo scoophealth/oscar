@@ -897,7 +897,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		StringBuilder sentIds = new StringBuilder();
 
-		for (CaseManagementNote localNote : localNotes) {
+		for (CaseManagementNote localNote : localNotes) {	
 			try {
 				// if it's locked or if it's not in this facility ignore it.
 				if (localNote.isLocked() || !programIds.contains(Integer.parseInt(localNote.getProgram_no()))) continue;

@@ -67,6 +67,7 @@ import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.billing.CA.dao.GstControlDao;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
+import org.oscarehr.casemgmt.common.EChartNoteEntry;
 import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteExtDAO;
@@ -1869,7 +1870,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
 
 		String demono = request.getParameter("amp;demographicNo");
-
+		if(demono == null)
+			demono = request.getParameter("demographicNo");
+		
 		// get current providerNo
 		// String providerNo = request.getParameter("amp;providerNo");
 		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
@@ -2055,6 +2058,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		k = 0;
 
 		String programIdStr = (String) session.getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
+		if(programIdStr==null)
+			programIdStr = (String) session.getAttribute("case_program_id");		
 		Integer programId = null;
 		if (programIdStr != null) programId = Integer.valueOf(programIdStr);
 
@@ -2895,14 +2900,45 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		return sb.toString();
 	}
 
+	/**
+	 * gets all the notes
+	 * if we have a key, and the note is locked, consider it
+	 * caisi - filter notes
+	 * grab the last one, where i am provider, and it's not signed
+	 * 
+	 * @param request
+	 * @param demono
+	 * @param providerNo
+	 * @return
+	 */
 	public CaseManagementNote getLastSaved(HttpServletRequest request, String demono, String providerNo) {
 		HttpSession session = request.getSession();
-		CaseManagementNote note = null;
-		List notes = null;
-
+		//CaseManagementNote note = null;
+		List<EChartNoteEntry> entries = new ArrayList<EChartNoteEntry>();		
+		
+		//Gets some of the note data, no relationships, not the note/history..just enough
+		List<Map<String,Object>> notes = this.caseManagementNoteDao.getUnsignedRawNoteInfoMapByDemographic(demono);		
+		Map<String,Object> filteredNotes = new LinkedHashMap<String,Object>();
+				
+		//This gets rid of old revisions (better than left join on a computed subset of itself
+		for(Map<String,Object> note:notes) {		
+			if(filteredNotes.get(note.get("uuid"))!=null)
+				continue;			
+			filteredNotes.put((String)note.get("uuid"),true);
+			EChartNoteEntry e = new EChartNoteEntry();
+			e.setId(note.get("id"));
+			e.setDate((Date)note.get("observation_date"));
+			e.setProviderNo((String)note.get("providerNo"));
+			e.setProgramId(Integer.parseInt((String)note.get("program_no")));
+			e.setRole((String)note.get("reporter_caisi_role"));
+			e.setType("local_note");
+			entries.add(e);
+			
+		}	
+		
 		// UserProperty prop = caseManagementMgr.getUserProperty(providerNo, UserProperty.STALE_NOTEDATE);
-		notes = caseManagementMgr.getNotes(demono);
-		notes = manageLockedNotes(notes, false, this.getUnlockedNotesMap(request));
+		//notes = caseManagementMgr.getNotes(demono);
+		//notes = manageLockedNotes(notes, false, this.getUnlockedNotesMap(request));
 
 		String programId = (String) session.getAttribute("case_program_id");
 
@@ -2910,18 +2946,23 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			programId = "0";
 		}
 
-		notes = caseManagementMgr.filterNotes(notes, programId);
+		entries = caseManagementMgr.filterNotes1(entries, programId);
 
-		for (int idx = notes.size() - 1; idx >= 0; --idx) {
-			CaseManagementNote n = (CaseManagementNote) notes.get(idx);
-			if (!n.isSigned() && n.getProviderNo().equals(providerNo)) {
-				note = n;
-				session.setAttribute("newNote", "false");
-				break;
-			}
+		Collections.sort(entries,EChartNoteEntry.getDateComparatorDesc());
+		
+		Map unlockedNotesMap = this.getUnlockedNotesMap(request);
+		for(EChartNoteEntry entry:entries) {
+			CaseManagementNote n = caseManagementMgr.getNote(String.valueOf(entry.getId()));
+			if(n.isLocked() && unlockedNotesMap.get(entry.getId()) != null ) {
+				n.setLocked(false);				
+			}				
+			if(n.getProviderNo().equals(providerNo)) {
+				session.setAttribute("newNote", "false");				
+				return n;
+			}					
 		}
-
-		return note;
+		
+		return null;
 	}
 
 	protected Map getUnlockedNotesMap(HttpServletRequest request) {

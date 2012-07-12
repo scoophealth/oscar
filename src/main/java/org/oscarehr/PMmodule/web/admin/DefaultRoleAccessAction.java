@@ -32,6 +32,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
 import org.oscarehr.PMmodule.model.DefaultRoleAccess;
 import org.oscarehr.PMmodule.service.ProgramManager;
+import org.oscarehr.PMmodule.utility.RoleCache;
 import org.oscarehr.PMmodule.web.BaseAction;
 
 import com.quatro.service.security.RolesManager;
@@ -70,6 +71,7 @@ public class DefaultRoleAccessAction extends  BaseAction {
 		request.setAttribute("roles",roleManager.getRoles());
 		request.setAttribute("access_types", programManager.getAccessTypes());
 		
+		RoleCache.reload();
 		return mapping.findForward("form");
 	}
 	
@@ -86,6 +88,8 @@ public class DefaultRoleAccessAction extends  BaseAction {
 		}
 		this.addMessage(request,"message","Saved Access");
 		
+		RoleCache.reload();
+		
 		return mapping.findForward("rlist");
 	}		
 	
@@ -97,6 +101,8 @@ public class DefaultRoleAccessAction extends  BaseAction {
 		}
 		
 		this.addMessage(request,"message","Removed Access");
+		
+		RoleCache.reload();
 		
 		return mapping.findForward("rlist");
 	}

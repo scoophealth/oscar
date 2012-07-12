@@ -29,6 +29,7 @@ import java.util.List;
 import javax.persistence.NonUniqueResultException;
 
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
+import org.oscarehr.casemgmt.model.Issue;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class CaseManagementIssueDAO extends HibernateDaoSupport {
@@ -46,6 +47,14 @@ public class CaseManagementIssueDAO extends HibernateDaoSupport {
     @SuppressWarnings("unchecked")
     public List<CaseManagementIssue> getIssuesByNote(Integer noteId, Boolean resolved) {
         return getHibernateTemplate().find("from CaseManagementIssue cmi where cmi.notes.id = ? "+(resolved!=null?" and cmi.resolved="+resolved:"")+" order by cmi.resolved", new Object[] {noteId});
+    }
+    
+    @SuppressWarnings("unchecked")
+    public Issue getIssueByCmnId(Integer cmnIssueId) {
+        List<Issue> result = getHibernateTemplate().find("select issue from CaseManagementIssue cmi where cmi.id = ?", new Object[] {cmnIssueId});
+        if(result.size()>0)
+        	return result.get(0);
+        return null;
     }
 
     public CaseManagementIssue getIssuebyId(String demo, String id) {

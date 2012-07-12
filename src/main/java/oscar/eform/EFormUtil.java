@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
@@ -239,6 +240,71 @@ public class EFormUtil {
 				curht.put("formName", eFormData.getFormName());
 				curht.put("formSubject", eFormData.getSubject());
 				curht.put("formDate", eFormData.getFormDate().toString());
+				curht.put("formTime", eFormData.getFormTime().toString());
+				curht.put("formDateAsDate", eFormData.getFormDate());
+				curht.put("roleType", eFormData.getRoleType());
+				curht.put("providerNo", eFormData.getProviderNo());
+				results.add(curht);
+			}
+		} catch (Exception sqe) {
+			logger.error("Error", sqe);
+		}
+		return (results);
+	}
+	
+	public static ArrayList<HashMap<String,? extends Object>> listPatientEFormsNoData(String demographic_no, String userRoles) {
+
+		Boolean current = true;
+		
+		List<Map<String,Object>> allEformDatas = eFormDataDao.findByDemographicIdCurrentPatientIndependentNoData(Integer.parseInt(demographic_no), current, false);
+		
+
+		ArrayList<HashMap<String, ? extends Object>> results = new ArrayList<HashMap<String, ? extends Object>>();
+		try {
+			for (Map<String,Object> eFormData : allEformDatas) {
+				// filter eform by role type
+				String tempRole = StringUtils.trimToNull((String)eFormData.get("roleType"));
+				if (userRoles != null && tempRole != null) {
+					// ojectName: "_admin,_admin.eform"
+					// roleName: "doctor,admin"
+					String objectName = "_eform." + tempRole;
+					Vector v = OscarRoleObjectPrivilege.getPrivilegeProp(objectName);
+					if (!OscarRoleObjectPrivilege.checkPrivilege(userRoles, (Properties) v.get(0), (Vector) v.get(1))) {
+						continue;
+					}
+				}
+				HashMap<String, Object> curht = new HashMap<String, Object>();
+				curht.put("fdid", String.valueOf(eFormData.get("id")));
+				curht.put("fid",  String.valueOf(eFormData.get("formId")));
+				curht.put("formName", eFormData.get("formName"));
+				curht.put("formSubject", eFormData.get("subject"));
+				curht.put("formDate",  String.valueOf(eFormData.get("formDate")));
+				curht.put("formTime",  String.valueOf(eFormData.get("formTime")));
+				curht.put("formDateAsDate", eFormData.get("formDate"));
+				curht.put("roleType", eFormData.get("roleType"));
+				curht.put("providerNo", eFormData.get("providerNo"));
+				results.add(curht);
+			}
+		} catch (Exception sqe) {
+			logger.error("Error", sqe);
+		}
+		return (results);
+	}
+	
+	public static ArrayList<HashMap<String,? extends Object>> loadEformsByFdis(List<Integer> ids) {
+
+		List<EFormData> allEformDatas = eFormDataDao.findByFdids(ids);
+
+		ArrayList<HashMap<String, ? extends Object>> results = new ArrayList<HashMap<String, ? extends Object>>();
+		try {
+			for (EFormData eFormData : allEformDatas) {				
+				HashMap<String, Object> curht = new HashMap<String, Object>();
+				curht.put("fdid", eFormData.getId().toString());
+				curht.put("fid", eFormData.getFormId().toString());
+				curht.put("formName", eFormData.getFormName());
+				curht.put("formSubject", eFormData.getSubject());
+				curht.put("formDate", eFormData.getFormDate().toString());
+				curht.put("formTime", eFormData.getFormTime().toString());
 				curht.put("formDateAsDate", eFormData.getFormDate());
 				curht.put("roleType", eFormData.getRoleType());
 				curht.put("providerNo", eFormData.getProviderNo());

@@ -49,18 +49,21 @@ public class NoteDisplayLocal implements NoteDisplay {
 	private String location;
 	private boolean isCpp = false;
 
+	private List<CaseManagementIssue> caseManagementIssues;
+
 	public NoteDisplayLocal(CaseManagementNote caseManagementNote) {
 		this.caseManagementNote = caseManagementNote;
+		this.caseManagementIssues=caseManagementIssueNotesDao.getNoteIssues(getNoteId());
 
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		if (loggedInInfo != null) editable = !caseManagementNote.isSigned() || (loggedInInfo.loggedInProvider.getProviderNo().equals(caseManagementNote.getProviderNo()) && !caseManagementNote.isLocked());
 
-		isCpp=calculateIsCpp();
+		this.isCpp=calculateIsCpp();
+
 	}
 
 	public boolean containsIssue(String issueCode) {
-		List<CaseManagementIssue> caseManagementIssues=caseManagementIssueNotesDao.getNoteIssues(getNoteId());
-		for (CaseManagementIssue caseManagementIssue : caseManagementIssues) {
+		for (CaseManagementIssue caseManagementIssue : this.caseManagementIssues) {
 			if (caseManagementIssue.getIssue().getCode().equals(issueCode)) {
 					return(true);
 			}
@@ -70,8 +73,7 @@ public class NoteDisplayLocal implements NoteDisplay {
 
 	private boolean calculateIsCpp()
 	{
-		List<CaseManagementIssue> caseManagementIssues=caseManagementIssueNotesDao.getNoteIssues(getNoteId());
-		for (CaseManagementIssue caseManagementIssue : caseManagementIssues)
+		for (CaseManagementIssue caseManagementIssue : this.caseManagementIssues)
 		{
 			for (int cppIdx = 0; cppIdx < CppUtils.cppCodes.length; cppIdx++)
 			{

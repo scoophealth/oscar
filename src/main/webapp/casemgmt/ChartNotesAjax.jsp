@@ -63,9 +63,9 @@
 <%@page import="org.oscarehr.common.dao.EncounterTemplateDao"%>
 <%@page import="org.oscarehr.casemgmt.web.CheckBoxBean"%>
 
-<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
-
 <%
+String ctx = request.getContextPath();
+
 Facility facility = org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility;
 ProfessionalSpecialistDao professionalSpecialistDao=(ProfessionalSpecialistDao)SpringUtils.getBean("professionalSpecialistDao");
 CaseManagementManager caseManagementManager=(CaseManagementManager)SpringUtils.getBean("caseManagementManager");
@@ -237,8 +237,15 @@ Integer offset = Integer.parseInt(request.getParameter("offset"));
 
 		boolean fulltxt;
 		pos = noteSize - 1;
+
+		String issuesToHide = OscarProperties.getInstance().getProperty("encounter.hide_notes_with_issue","");
+		String[] is =issuesToHide.split(",");
+
+		boolean remoteCapableProfessionalSpecialists = professionalSpecialistDao.hasRemoteCapableProfessionalSpecialists();
+
 		for (idx = 0; idx < noteSize; ++idx)
 		{
+
 			NoteDisplay note = notesToDisplay.get(idx);
 			noteStr = note.getNote();
 			Integer noteId = note.getNoteId();
@@ -248,20 +255,23 @@ Integer offset = Integer.parseInt(request.getParameter("offset"));
 			String dispStatus = " ";
 			if (noteId!=null)
 			{
-				doc = EDocUtil.getDocFromNote((long)noteId.intValue());
-				if (doc != null)
-				{
-					dispDocNo = doc.getDocId();
-					dispFilename = doc.getFileName();
-					Character status = doc.getStatus();
-
-					if (status == 'A')
+				if (note.isDocument()) {
+					doc = EDocUtil.getDocFromNote((long)noteId.intValue());
+					if (doc != null)
 					{
-						dispStatus = "active";
+						dispDocNo = doc.getDocId();
+						dispFilename = doc.getFileName();
+						Character status = doc.getStatus();
+
+						if (status == 'A')
+						{
+							dispStatus = "active";
+						}
+						//find docname, docno and docstatus
 					}
-					//find docname, docno and docstatus
 				}
 			}
+
 			noteStr = StringEscapeUtils.escapeHtml(noteStr);
 			// for remote notes, the full text is always shown.
 			fulltxt = fullTxtFormat.get(pos) || note.getRemoteFacilityId()!=null;
@@ -282,7 +292,6 @@ Integer offset = Integer.parseInt(request.getParameter("offset"));
 			boolean hideDocumentNotes = OscarProperties.getInstance().isPropertyActive("encounter.hide_document_notes");
 			boolean hideEformNotes = OscarProperties.getInstance().isPropertyActive("encounter.hide_eform_notes");
 			//boolean hideMetaData = OscarProperties.getInstance().isPropertyActive("encounter.hide_metadata");
-			String issuesToHide = OscarProperties.getInstance().getProperty("encounter.hide_notes_with_issue","");
 
 			String noteDisplay = "block";
 			if(note.isCpp() && hideCppNotes) {
@@ -296,7 +305,6 @@ Integer offset = Integer.parseInt(request.getParameter("offset"));
 			}
 
 			if(!noteDisplay.equals("none") && issuesToHide.length()>0) {
-				String[] is =issuesToHide.split(",");
 				for(String i:is) {
 					if(note.containsIssue(i)) {
 						noteDisplay="none";
@@ -324,7 +332,7 @@ Integer offset = Integer.parseInt(request.getParameter("offset"));
 						<script>
 							savedNoteId=<%=note.getNoteId()%>;
 						</script>
-						<img title="<bean:message key="oscarEncounter.print.title"/>" id='print<%=note.getNoteId()%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>" onclick="togglePrint(<%=note.getNoteId()%>, event)" style='float: right; margin-right: 5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'>
+						<img title="<bean:message key="oscarEncounter.print.title"/>" id='print<%=note.getNoteId()%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>" onclick="togglePrint(<%=note.getNoteId()%>, event)" style='float: right; margin-right: 5px;' src='<%=ctx %>/oscarEncounter/graphics/printer.png'>
 						<textarea tabindex="7" cols="84" rows="10" class="txtArea" wrap="hard" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><%=note.getNote() %></textarea>
 						<div class="sig" style="display:inline;<%=bgColour%>" id="sig<%=note.getNoteId()%>"><%@ include file="noteIssueList.jsp"%></div>
 
@@ -356,13 +364,13 @@ Integer offset = Integer.parseInt(request.getParameter("offset"));
 							{
 							%>
 	 							<img title="<bean:message key="oscarEncounter.MinDisplay.title"/>" id='quitImg<%=note.getNoteId()%>' alt="<bean:message key="oscarEncounter.MinDisplay.title"/>" onclick="minView(event)"
-								style='float: right; margin-right: 5px; margin-bottom: 3px; margin-top: 2px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'>
+								style='float: right; margin-right: 5px; margin-bottom: 3px; margin-top: 2px;' src='<%=ctx %>/oscarEncounter/graphics/triangle_up.gif'>
 							<%
 		 					}
 							else
 							{
 							%>
-								<img title="<bean:message key="oscarEncounter.MaxDisplay.title"/>" id='quitImg<%=note.getNoteId()%>' name='fullViewTrigger' alt="Maximize Display" onclick="fullView(event)" style='float: right; margin-right: 5px; margin-top: 2px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_down.gif'>
+								<img title="<bean:message key="oscarEncounter.MaxDisplay.title"/>" id='quitImg<%=note.getNoteId()%>' name='fullViewTrigger' alt="Maximize Display" onclick="fullView(event)" style='float: right; margin-right: 5px; margin-top: 2px;' src='<%=ctx %>/oscarEncounter/graphics/triangle_down.gif'>
 							<%
 							}
 						}
@@ -377,7 +385,7 @@ Integer offset = Integer.parseInt(request.getParameter("offset"));
 						if (note.isGroupNote()) // if it's a remote note, say where if came from on the top of the note
 						{
 					 	%>
-						 	<div style="background-color:#33FFCC; text-align:right">Group Note - Editable note in this <a target="_blank" href="<html:rewrite action="/PMmodule/ClientManager.do"/>?id=<%=note.getLocation() %>">client</a></div>
+						 	<div style="background-color:#33FFCC; text-align:right">Group Note - Editable note in this <a  href="javascript:void()" onClick="popupPage(700,1000,'Master1','<%=request.getContextPath()%>/demographic/demographiccontrol.jsp?demographic_no=<%=note.getLocation() %>&displaymode=edit&dboperation=search_detail');return false;">client</a></div>
 						<%
 						}
 
@@ -385,7 +393,7 @@ Integer offset = Integer.parseInt(request.getParameter("offset"));
 						{
 
 					 	%>
-						 	<img title="<bean:message key="oscarEncounter.print.title"/>" id='print<%=globalNoteId%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>" onclick="togglePrint('<%=globalNoteId%>'   , event)" style='float: right; margin-right: 5px; margin-top: 2px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'>
+						 	<img title="<bean:message key="oscarEncounter.print.title"/>" id='print<%=globalNoteId%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>" onclick="togglePrint('<%=globalNoteId%>'   , event)" style='float: right; margin-right: 5px; margin-top: 2px;' src='<%=ctx %>/oscarEncounter/graphics/printer.png'>
 						<%
 						}
 
@@ -405,7 +413,7 @@ Integer offset = Integer.parseInt(request.getParameter("offset"));
 								<%
 								}
 
-					 			if (professionalSpecialistDao.hasRemoteCapableProfessionalSpecialists())
+					 			if (remoteCapableProfessionalSpecialists)
 					 			{
 					 			%>
 					 				<a href="" onclick="window.open('<%=request.getContextPath()+"/lab/CA/ALL/sendOruR01.jsp?noteId="+note.getNoteId()%>', 'eSend');return(false);" title="<bean:message key="oscarEncounter.eSendTitle"/>" style="float: right; margin-right: 5px; font-size: 10px;"><bean:message key="oscarEncounter.eSend" /></a>
@@ -521,7 +529,8 @@ Integer offset = Integer.parseInt(request.getParameter("offset"));
 					 		String addr = request.getContextPath() + "/annotation/annotation.jsp?atbname=" + atbname + "&table_id=" + String.valueOf(note.getNoteId()) + "&display=EChartNote&demo=" + demographicNo;
 						%>
 							<input id="anno<%=note.getNoteId()%>" height="10px;" width="10px" type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/annotation.png"/>" title='<bean:message key="oscarEncounter.Index.btnAnnotation"/>' style='float: right; margin-right: 5px; margin-bottom: 3px;' onclick="window.open('<%=addr%>','anwin','width=400,height=500');$('annotation_attribname').value='<%=atbname%>'; return false;">
-						<%} %>
+						<%}
+						%>
 							<%-- render the note contents here --%>
 			  				<div id="txt<%=note.getNoteId()%>" style="<%=(note.isDocument()||note.isCpp()||note.isEformData()||note.isEncounterForm()||note.isInvoice())?(bgColour+";color:white;font-size:10px"):""%>">
 		  						<%=noteStr%>
@@ -565,7 +574,7 @@ Integer offset = Integer.parseInt(request.getParameter("offset"));
 						{
 			 			%>
 						 	<img title="<bean:message key="oscarEncounter.MinDisplay.title"/>" id='bottomQuitImg<%=note.getNoteId()%>' alt="<bean:message key="oscarEncounter.MinDisplay.title"/>" onclick="minView(event)" style='float: right; margin-right: 5px; margin-bottom: 3px;'
-							src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'>
+							src='<%=ctx %>/oscarEncounter/graphics/triangle_up.gif'>
 						<%
 				 		}
 
@@ -798,7 +807,7 @@ Integer offset = Integer.parseInt(request.getParameter("offset"));
     //flag for determining if we want to submit case management entry form with enter key pressed in auto completer text box
     var submitIssues = false;
    //AutoCompleter for Issues
-    <c:url value="/CaseManagementEntry.do?method=issueList&demographicNo=${demographicNo}&providerNo=${param.providerNo}" var="issueURL" />
+    <c:url value="/CaseManagementEntry.do?method=issueList&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="issueURL" />
     var issueAutoCompleter = new Ajax.Autocompleter("issueAutocomplete", "issueAutocompleteList", "<c:out value="${issueURL}"/>", {minChars: 3, indicator: 'busy', afterUpdateElement: saveIssueId, onShow: autoCompleteShowMenu, onHide: autoCompleteHideMenu});
 
     <%int MaxLen = 20;

@@ -76,6 +76,7 @@ import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProgramQueueManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.service.VacancyTemplateManager;
+import org.oscarehr.PMmodule.utility.ProgramAccessCache;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.caisi_integrator.ws.CachedProvider;
 import org.oscarehr.caisi_integrator.ws.DemographicTransfer;
@@ -382,6 +383,7 @@ public class ProgramManagerAction extends BaseAction {
 		this.setEditAttributes(request, String.valueOf(program.getId()));
 		programForm.set("access", new ProgramAccess());
 
+		ProgramAccessCache.setAccessMap(program.getId());
 		return edit(mapping, form, request, response);
 	}
 
@@ -467,6 +469,8 @@ public class ProgramManagerAction extends BaseAction {
 
 		setEditAttributes(request, String.valueOf(program.getId()));
 
+		ProgramAccessCache.setAccessMap(program.getId());
+		
 		return mapping.findForward("edit");
 	}
 
@@ -748,6 +752,8 @@ public class ProgramManagerAction extends BaseAction {
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
 		saveMessages(request, messages);
 
+		ProgramAccessCache.setAccessMap(program.getId());
+		
 		logManager.log("write", "edit program", String.valueOf(program.getId()), request);
 
 		setEditAttributes(request, String.valueOf(program.getId()));
@@ -1072,6 +1078,8 @@ public class ProgramManagerAction extends BaseAction {
 		programForm.set("access", new ProgramAccess());
 		setEditAttributes(request, String.valueOf(program.getId()));
 
+		ProgramAccessCache.setAccessMap(program.getId());
+		
 		return mapping.findForward("edit");
 	}
 

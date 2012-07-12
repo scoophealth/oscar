@@ -66,4 +66,27 @@ public class CaseManagementIssueNotesDao {
     	List<CaseManagementIssue> results=query.getResultList();
         return(results);
     }
+    
+    public List<Integer> getNoteIdsWhichHaveIssues(String[] issueId)
+    {
+    	if(issueId == null || issueId.length==0)
+    		return null;
+    	if(issueId.length==1 && issueId[0].equals(""))
+    		return null;
+    	
+    	StringBuilder issueIdList = new StringBuilder();
+    	for(String i:issueId) {
+    		if(issueIdList.length()>0)
+    			issueIdList.append(",");
+    		issueIdList.append(i);
+    	}
+    	String sql = "select note_id  from casemgmt_issue_notes where id in ("+issueIdList.toString() + ")";
+    	
+    	Query query=entityManager.createNativeQuery(sql);
+    	
+        @SuppressWarnings("unchecked")
+    	List<Integer> results=query.getResultList();
+        return(results);
+    }
+    
 }

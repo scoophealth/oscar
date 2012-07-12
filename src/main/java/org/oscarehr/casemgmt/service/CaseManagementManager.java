@@ -53,9 +53,12 @@ import org.oscarehr.PMmodule.model.ProgramAccess;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
+import org.oscarehr.PMmodule.utility.ProgramAccessCache;
+import org.oscarehr.PMmodule.utility.RoleCache;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicDrug;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
+import org.oscarehr.casemgmt.common.EChartNoteEntry;
 import org.oscarehr.casemgmt.dao.CaseManagementCPPDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
@@ -294,7 +297,7 @@ public class CaseManagementManager {
     public List<CaseManagementNote> getNotesWithLimit(String demographic_no, Integer offset, Integer numToReturn) {
 		return caseManagementNoteDAO.getNotesByDemographicLimit(demographic_no, offset, numToReturn);
 	}
-
+    
 	public List<CaseManagementNote> getNotesInDateRange(String demographic_no, Date startDate, Date endDate) {
 		return caseManagementNoteDAO.getNotesByDemographicDateRange(demographic_no, startDate, endDate);
 	}
@@ -307,6 +310,10 @@ public class CaseManagementManager {
 
 	public List<CaseManagementIssue> getIssues(int demographic_no) {
 		return caseManagementIssueDAO.getIssuesByDemographicOrderActive(demographic_no, null);
+	}
+	
+	public Issue getIssueIByCmnIssueId(int cmnIssueId) {
+		return caseManagementIssueDAO.getIssueByCmnId(cmnIssueId);
 	}
 
 	public List<CaseManagementIssue> getIssuesByNote(int noteId) {
@@ -1026,6 +1033,7 @@ public class CaseManagementManager {
 		return this.caseManagementNoteDAO.getIssueHistory(issueIds, demoNo);
 	}
 
+	
 	/**
 	 * @param issues Unfiltered Set of issues
 	 * @param providerNo provider reading issues
@@ -1050,16 +1058,17 @@ public class CaseManagementManager {
 		ProgramProvider pp = (ProgramProvider) ppList.get(0);
 		Secrole role = pp.getRole();
 
+		Map programAccessMap = ProgramAccessCache.getAccessMap(new Long(programId));
 		// Load up access list from program
-		@SuppressWarnings("unchecked")
-		List programAccessList = programAccessDAO.getAccessListByProgramId(new Long(programId));
-		@SuppressWarnings("unchecked")
-		Map programAccessMap = convertProgramAccessListToMap(programAccessList);
+		//@SuppressWarnings("unchecked")
+		//List programAccessList = programAccessDAO.getAccessListByProgramId(new Long(programId));
+		//@SuppressWarnings("unchecked")
+		//Map programAccessMap = convertProgramAccessListToMap(programAccessList);
 
 		// iterate through the issue list
 		for (CaseManagementNote cmNote : notes) {
 			String noteRole = cmNote.getReporter_caisi_role();
-			String noteRoleName = roleManager.getRole(noteRole).getName().toLowerCase();
+			String noteRoleName = RoleCache.getRole(Long.valueOf(noteRole)).getName().toLowerCase();
 			ProgramAccess pa = null;
 			boolean add = false;
 
@@ -1105,6 +1114,101 @@ public class CaseManagementManager {
 		if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
 			filteredNotes = notesFacilityFiltering(filteredNotes);
 		}
+
+		return filteredNotes;
+	}
+	
+	/**
+	 * @param issues Unfiltered Set of issues
+	 * @param providerNo provider reading issues
+	 * @param programId program provider is logged into
+	 */
+	public List<EChartNoteEntry> filterNotes1(Collection<EChartNoteEntry> notes, String programId) {
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+
+		List<EChartNoteEntry> filteredNotes = new ArrayList<EChartNoteEntry>();
+
+		if (notes.isEmpty()) {
+			return filteredNotes;
+		}
+
+		// Get Role - if no ProgramProvider record found, show no issues.
+		@SuppressWarnings("unchecked")
+		List ppList = programProviderDao.getProgramProviderByProviderProgramId(loggedInInfo.loggedInProvider.getProviderNo(), new Long(programId));
+		if (ppList == null || ppList.isEmpty()) {
+			for(EChartNoteEntry note:notes) {
+				if(!note.getType().equals("local_note") && !note.getType().equals("remote_note"))
+					filteredNotes.add(note);
+			}
+			return filteredNotes;
+		}
+
+		ProgramProvider pp = (ProgramProvider) ppList.get(0);
+		Secrole role = pp.getRole();
+
+		Map programAccessMap = ProgramAccessCache.getAccessMap(new Long(programId));
+		
+		// iterate through the issue list
+		for (EChartNoteEntry cmNote : notes) {
+			if(!cmNote.getType().equals("local_note") && !cmNote.getType().equals("remote_note")) {
+				filteredNotes.add(cmNote);
+				continue;
+			}
+			String noteRole = null;
+			String noteRoleName = "";
+			
+			if(cmNote.getType().equals("local_note")) {
+				noteRole = cmNote.getRole();
+				noteRoleName = RoleCache.getRole(Long.valueOf(noteRole)).getName().toLowerCase();
+			}
+			if(cmNote.getType().equals("remote_note")) {				
+				noteRoleName = cmNote.getRole();
+			}
+			ProgramAccess pa = null;
+			boolean add = false;
+
+			// write
+			pa = null;
+			// read
+			pa = (ProgramAccess) programAccessMap.get("read " + noteRoleName + " notes");
+			if (pa != null) {
+				if (pa.isAllRoles() || isRoleIncludedInAccess(pa, role)) {
+					// filteredIssues.add(cmIssue);
+					add = true;
+				}
+			} else {
+				logger.debug(noteRoleName + " is null");
+				if (Long.valueOf(noteRole).longValue() == role.getId().longValue()) {
+					// default
+					logger.debug("noteRole " + noteRole + " = Provider Role from secRole " + role.getId());
+					add = true;
+				}
+			}
+
+			// apply defaults
+			if (!add) {
+				if (Long.valueOf(noteRole).longValue() == role.getId().longValue()) {
+					logger.debug("noteRole " + noteRole + " = Provider Role from secRole " + role.getId());
+					add = true;
+				}
+			}
+
+			// global default role access
+			String accessName = "read " + noteRoleName + " notes";
+			if (RoleCache.hasAccess(accessName, role.getId())) {
+				add = true;
+			}
+
+			// did it pass the test?
+			if (add) {
+				filteredNotes.add(cmNote);
+			}
+		}
+
+		// filter notes based on facility
+		//if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
+		//	filteredNotes = notesFacilityFiltering(filteredNotes);
+		//}
 
 		return filteredNotes;
 	}

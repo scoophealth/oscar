@@ -78,8 +78,9 @@ boolean newCaseManagement = false;
 if(!org.oscarehr.common.IsPropertiesOn.isCaisiEnable()) {
 	//This should only temporarily apply to oscar, not caisi.
 	//You cannot assign provider to one program "OSCAR" here if you have caisi enabled.
-	//If there is no program called "OSCAR", it will only assign empty program to the provider which is not acceptable.	
-    newCaseManagement = true;
+	//If there is no program called "OSCAR", it will only assign empty program to the provider which is not acceptable.
+	if(( users != null && users.size() > 0 ) || OscarProperties.getInstance().getProperty("CASEMANAGEMENT", "").equalsIgnoreCase("all"))
+    	newCaseManagement = true;
 }
 
 String ip = request.getRemoteAddr();

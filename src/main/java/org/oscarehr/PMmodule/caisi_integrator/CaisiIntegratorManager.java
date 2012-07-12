@@ -40,13 +40,13 @@ import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention;
+import org.oscarehr.caisi_integrator.ws.CachedDemographicNoteCompositePk;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.CachedMeasurement;
 import org.oscarehr.caisi_integrator.ws.CachedProgram;
 import org.oscarehr.caisi_integrator.ws.CachedProvider;
 import org.oscarehr.caisi_integrator.ws.ConnectException_Exception;
 import org.oscarehr.caisi_integrator.ws.DemographicTransfer;
-import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.DemographicWsService;
 import org.oscarehr.caisi_integrator.ws.DuplicateHinExceptionException;
 import org.oscarehr.caisi_integrator.ws.FacilityConsentPair;
@@ -65,6 +65,7 @@ import org.oscarehr.caisi_integrator.ws.ProviderWsService;
 import org.oscarehr.caisi_integrator.ws.ReferralWs;
 import org.oscarehr.caisi_integrator.ws.ReferralWsService;
 import org.oscarehr.caisi_integrator.ws.SetConsentTransfer;
+import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.IntegratorConsent;
@@ -484,6 +485,41 @@ public class CaisiIntegratorManager {
   	}   
       
   
+    public static List<CachedDemographicNote> getLinkedNotesMetaData(Integer demographicNo) throws MalformedURLException 
+    {
+ 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		String sessionCacheKey="LINKED_NOTES_META:"+loggedInInfo.currentFacility.getId()+":"+loggedInInfo.loggedInProvider.getPractitionerNo()+":"+demographicNo;
+
+		@SuppressWarnings("unchecked")
+		List<CachedDemographicNote> linkedNotes=(List<CachedDemographicNote>) segmentedDataCache.get(sessionCacheKey);
+		
+		if (linkedNotes==null)
+		{
+			DemographicWs demographicWs = getDemographicWs();
+			linkedNotes = Collections.unmodifiableList(demographicWs.getLinkedCachedDemographicNoteMetaData(demographicNo));
+			segmentedDataCache.put(sessionCacheKey, linkedNotes);
+		}
+		
+		return (linkedNotes);
+	}
+    
+    public static List<CachedDemographicNote> getLinkedNotes(List<CachedDemographicNoteCompositePk> ids) throws MalformedURLException 
+    {
+ 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		String sessionCacheKey="LINKED_NOTES_META:"+loggedInInfo.currentFacility.getId()+":"+loggedInInfo.loggedInProvider.getPractitionerNo()+":"+ids;
+
+		@SuppressWarnings("unchecked")
+		List<CachedDemographicNote> linkedNotes=(List<CachedDemographicNote>) segmentedDataCache.get(sessionCacheKey);
+		
+		if (linkedNotes==null)
+		{
+			DemographicWs demographicWs = getDemographicWs();
+			linkedNotes = Collections.unmodifiableList(demographicWs.getLinkedCachedDemographicNotesByIds(ids));
+			segmentedDataCache.put(sessionCacheKey, linkedNotes);
+		}
+		
+		return (linkedNotes);
+	}
 	    
     /**
      * The purpose of this method is to retrieve a remote demographic record and populate it in a local demographic object. It is ready to be persisted.

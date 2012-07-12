@@ -26,6 +26,7 @@ package org.oscarehr.casemgmt.web;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -35,6 +36,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -65,10 +67,12 @@ import org.oscarehr.billing.CA.ON.dao.BillingClaimDAO;
 import org.oscarehr.billing.CA.ON.model.BillingClaimHeader1;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicIssue;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
+import org.oscarehr.caisi_integrator.ws.CachedDemographicNoteCompositePk;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.NoteIssue;
 import org.oscarehr.casemgmt.common.Colour;
+import org.oscarehr.casemgmt.common.EChartNoteEntry;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
@@ -83,6 +87,7 @@ import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementViewFormBean;
 import org.oscarehr.common.dao.CaseManagementIssueNotesDao;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.EFormDataDao;
 import org.oscarehr.common.dao.EncounterFormDao;
 import org.oscarehr.common.dao.GroupNoteDao;
 import org.oscarehr.common.model.Demographic;
@@ -126,6 +131,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	private DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 	private CaseManagementIssueNotesDao cmeIssueNotesDao = (CaseManagementIssueNotesDao)SpringUtils.getBean("caseManagementIssueNotesDao");
 	private BillingClaimDAO billingClaimDao = (BillingClaimDAO)SpringUtils.getBean("billingClaimDAO");
+	private EFormDataDao eFormDataDao = (EFormDataDao) SpringUtils.getBean("EFormDataDao");
 
 	static {
 		//temporary..need something generic;
@@ -1700,21 +1706,17 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	}
 
 	private static String getCppColour(NoteDisplay noteDisplay) {
-		CaseManagementIssueNotesDao caseManagementIssueNotesDao = (CaseManagementIssueNotesDao) SpringUtils.getBean("caseManagementIssueNotesDao");
-		List<CaseManagementIssue> caseManagementIssues = caseManagementIssueNotesDao.getNoteIssues(noteDisplay.getNoteId());
-		for (CaseManagementIssue caseManagementIssue : caseManagementIssues) {
-			if ("OMeds".equals(caseManagementIssue.getIssue().getCode())) return (Colour.getInstance().omed);
-			else if ("FamHistory".equals(caseManagementIssue.getIssue().getCode())) return (Colour.getInstance().familyHistory);
-			else if ("RiskFactors".equals(caseManagementIssue.getIssue().getCode())) return (Colour.getInstance().riskFactors);
-			else if ("SocHistory".equals(caseManagementIssue.getIssue().getCode())) return (Colour.getInstance().socialHistory);
-			else if ("MedHistory".equals(caseManagementIssue.getIssue().getCode())) return (Colour.getInstance().medicalHistory);
-			else if ("Concerns".equals(caseManagementIssue.getIssue().getCode())) return (Colour.getInstance().ongoingConcerns);
-			else if ("Reminders".equals(caseManagementIssue.getIssue().getCode())) return (Colour.getInstance().reminders);
-			else return Colour.getInstance().prevention;
-		}
+		Colour colour = Colour.getInstance();
 
-		logger.error("Missing cpp colour : noteId=" + noteDisplay.getNoteId());
-		return (null);
+		if (noteDisplay.containsIssue("OMeds")) return (colour.omed);
+		else if (noteDisplay.containsIssue("FamHistory")) return (colour.familyHistory);
+		else if (noteDisplay.containsIssue("RiskFactors")) return (colour.riskFactors);
+		else if (noteDisplay.containsIssue("SocHistory")) return (colour.socialHistory);
+		else if (noteDisplay.containsIssue("MedHistory")) return (colour.medicalHistory);
+		else if (noteDisplay.containsIssue("Concerns")) return (colour.ongoingConcerns);
+		else if (noteDisplay.containsIssue("Reminders")) return (colour.reminders);
+		else return colour.prevention;
+
 	}
 
 	public static CaseManagementNote getLatestCppNote(String demographicNo, long issueId, int appointmentNo, boolean filterByAppointment) {
@@ -1813,4 +1815,488 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		return "";
 	}
 
+
+	public ActionForward viewNotesOpt(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		// response.setCharacterEncoding("UTF-8");
+		long start = System.currentTimeMillis();
+		CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean) form;
+
+		HttpSession se = request.getSession();
+		if (se.getAttribute("userrole") == null) return mapping.findForward("expired");
+
+
+		String demoNo = getDemographicNo(request);
+
+		logger.debug("is client in program");
+		// need to check to see if the client is in our program domain
+		// if not...don't show this screen!
+		String roles = (String) se.getAttribute("userrole");
+		if (OscarProperties.getInstance().isOscarLearning() && roles != null && roles.indexOf("moderator") != -1) {
+			logger.info("skipping domain check..provider is a moderator");
+		} else if (!caseManagementMgr.isClientInProgramDomain(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), demoNo)) {
+			return mapping.findForward("domain-error");
+		}
+		String programId = (String) request.getSession().getAttribute("case_program_id");
+
+		viewCurrentIssuesTab_newCmeNotesOpt(request, caseForm, demoNo, programId);
+
+		return mapping.findForward("ajaxDisplayNotes");
+	}
+
+
+	private void viewCurrentIssuesTab_newCmeNotesOpt(HttpServletRequest request, CaseManagementViewFormBean caseForm, String demoNo, String programId) throws Exception {
+		List<EChartNoteEntry> entries = new ArrayList<EChartNoteEntry>();
+
+		int demographicId=Integer.parseInt(demoNo);
+		long startTime = System.currentTimeMillis();
+		long intTime = System.currentTimeMillis();
+
+		//Gets some of the note data, no relationships, not the note/history..just enough
+		List<Map<String,Object>> notes = this.caseManagementNoteDao.getRawNoteInfoMapByDemographic(demoNo);
+		Map<String,Object> filteredNotes = new LinkedHashMap<String,Object>();
+
+		//This gets rid of old revisions (better than left join on a computed subset of itself
+		for(Map<String,Object> note:notes) {
+			if(filteredNotes.get(note.get("uuid"))!=null)
+				continue;
+			filteredNotes.put((String)note.get("uuid"),true);
+			EChartNoteEntry e = new EChartNoteEntry();
+			e.setId(note.get("id"));
+			e.setDate((Date)note.get("observation_date"));
+			e.setProviderNo((String)note.get("providerNo"));
+			e.setProgramId(Integer.parseInt((String)note.get("program_no")));
+			e.setRole((String)note.get("reporter_caisi_role"));
+			e.setType("local_note");
+			entries.add(e);
+
+		}
+		logger.info("FETCHED " + notes.size() + " NOTE META IN " + (System.currentTimeMillis()-intTime) + "ms");
+		intTime = System.currentTimeMillis();
+
+		List<CachedDemographicNote> remoteNotesInfo = getRemoteNoteIds(demographicId);
+		if(remoteNotesInfo != null) {
+			for(CachedDemographicNote note:remoteNotesInfo) {
+				EChartNoteEntry e = new EChartNoteEntry();
+				e.setId(note.getCachedDemographicNoteCompositePk());
+				e.setDate(note.getObservationDate().getTime());
+				e.setProviderNo(note.getObservationCaisiProviderId());
+				e.setRole(note.getRole());
+				e.setType("remote_note");
+				entries.add(e);
+			}
+		}
+
+		if(remoteNotesInfo != null)
+			logger.info("FETCHED " + remoteNotesInfo.size() + " REMOTE NOTE META IN " + (System.currentTimeMillis()-intTime) + "ms");
+		intTime = System.currentTimeMillis();
+
+		List<GroupNoteLink> groupNotesInfo = this.getGroupNoteIds(demographicId);
+		if(groupNotesInfo != null) {
+			for(GroupNoteLink note:groupNotesInfo) {
+				EChartNoteEntry e = new EChartNoteEntry();
+				e.setId(note.getNoteId());
+				e.setDate(note.getCreated());
+				//e.setProviderNo(note.get);
+				//e.setRoleId(roleId)
+				e.setType("group_note");
+				entries.add(e);
+			}
+		}
+
+		if(groupNotesInfo != null)
+			logger.info("FETCHED " + groupNotesInfo.size() + " GROUP NOTES META IN " + (System.currentTimeMillis()-intTime) + "ms");
+		intTime = System.currentTimeMillis();
+
+
+		String roleName = (String) request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
+		ArrayList<HashMap<String, ? extends Object>> eForms = EFormUtil.listPatientEFormsNoData(demoNo, roleName);
+		for(HashMap<String, ? extends Object> eform:eForms) {
+			EChartNoteEntry e = new EChartNoteEntry();
+			e.setId(eform.get("fdid"));
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			e.setDate(sdf.parse((String)eform.get("formDate") + " " + (String)eform.get("formTime")));
+			e.setProviderNo((String)eform.get("providerNo"));
+			e.setType("eform");
+			entries.add(e);
+		}
+
+		logger.info("FETCHED " + eForms.size() + " EFORMS META IN " + (System.currentTimeMillis()-intTime) + "ms");
+		intTime = System.currentTimeMillis();
+
+		ArrayList<PatientForm> allPatientForms=EctFormData.getGroupedPatientFormsFromAllTables(demographicId);
+		for (PatientForm patientForm : allPatientForms) {
+			EChartNoteEntry e = new EChartNoteEntry();
+			e.setId(new String[]{patientForm.getFormName(),patientForm.getFormId()});
+			SimpleDateFormat sdf = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
+			e.setDate(sdf.parse(patientForm.getEdited()));
+			//e.setProviderNo(patientForm.get);
+			//e.setProgramId(Integer.parseInt((String)note[3]));
+			//e.setRoleId(Integer.parseInt((String)note[4]));
+			e.setType("encounter_form");
+			entries.add(e);
+		}
+
+		logger.info("FETCHED " + allPatientForms.size() + " FORMS IN " + (System.currentTimeMillis()-intTime) + "ms");
+		intTime = System.currentTimeMillis();
+
+
+		List<Map<String,Object>>bills = null;
+		if( oscar.OscarProperties.getInstance().getProperty("billregion","").equalsIgnoreCase("ON") ) {
+			bills= billingClaimDao.getInvoicesMeta(demoNo);
+			for( Map<String,Object> h1 : bills ) {
+				EChartNoteEntry e = new EChartNoteEntry();
+				e.setId(h1.get("id"));
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				e.setDate(sdf.parse(h1.get("billing_date") + " " + h1.get("billing_time")));
+				e.setProviderNo((String)h1.get("provider_no"));
+				//e.setProgramId(Integer.parseInt((String)note[3]));
+				//e.setRoleId(Integer.parseInt((String)note[4]));
+				e.setType("invoice");
+				entries.add(e);
+			}
+
+			logger.info("FETCHED " + bills.size() + " INVIOCES META IN " + (System.currentTimeMillis()-intTime) + "ms");
+			intTime = System.currentTimeMillis();
+
+		}
+
+
+
+		//we now have this huge list
+		//sort it by date or whatever
+		if(request.getParameter("note_sort") != null && request.getParameter("note_sort").length()>0) {
+			String sort = request.getParameter("note_sort");
+			if("observation_date_desc".equals(sort)) {
+				Collections.sort(entries, EChartNoteEntry.getDateComparatorDesc());
+			} else if("observation_date_asc".equals(sort)) {
+				Collections.sort(entries, EChartNoteEntry.getDateComparator());
+			}
+		} else {
+			Collections.sort(entries, EChartNoteEntry.getDateComparator());
+		}
+
+		logger.info("SORTED " + entries.size() + " IN " + (System.currentTimeMillis()-intTime) + "ms");
+		intTime = System.currentTimeMillis();
+
+
+		//apply CAISI permission filter - local notes
+		entries = caseManagementMgr.filterNotes1(entries, programId);
+		logger.info("FILTER NOTES (CAISI) " + (System.currentTimeMillis() - intTime) + "ms");
+		intTime = System.currentTimeMillis();
+
+		//TODO: role based filter for eforms?
+
+		//apply provider filter
+		entries = applyProviderFilter(entries, caseForm.getFilter_providers());
+		logger.info("FILTER NOTES PROVIDER " + (System.currentTimeMillis() - intTime) + "ms");
+		intTime = System.currentTimeMillis();
+
+		//apply role filter
+		entries = applyRoleFilter1(entries, caseForm.getFilter_roles());
+		logger.info("FILTER NOTES ROLES " + (System.currentTimeMillis() - intTime) + "ms");
+		intTime = System.currentTimeMillis();
+
+		//apply issues filter
+		String[] checkedIssues = request.getParameterValues("issues");
+		entries = applyIssueFilter1(entries,checkedIssues);
+		logger.info("FILTER NOTES ISSUES " + (System.currentTimeMillis() - intTime) + "ms");
+		intTime = System.currentTimeMillis();
+
+		//TODO: issue filter for remote notes
+		if(checkedIssues != null && checkedIssues.length>0) {
+			for(String cmnIssueId:checkedIssues) {
+				if(cmnIssueId.length()>0) {
+					Issue issue = this.caseManagementMgr.getIssueIByCmnIssueId(Integer.parseInt(cmnIssueId));
+					if(issue != null) {
+						issue.getCode();
+						issue.getType();
+					}
+				}
+			}
+		}
+
+		List<EChartNoteEntry> slice = new ArrayList<EChartNoteEntry>();
+
+		int numToReturn = 20;
+		if (request.getParameter("numToReturn") != null && request.getParameter("numToReturn").length()>0) {
+			numToReturn = Integer.parseInt(request.getParameter("numToReturn"));
+		}
+
+		if (request.getParameter("offset") == null || request.getParameter("offset").equalsIgnoreCase("0")) {
+			//this is the first fetch, we want the last items up to numToReturn
+			int endOfTheList = entries.size();
+			int startingPoint = endOfTheList-numToReturn;
+			if(startingPoint<0)
+				startingPoint=0;
+			for(int x=startingPoint;x<endOfTheList;x++){
+				slice.add(entries.get(x));
+			}
+		} else {
+			int offset = Integer.parseInt(request.getParameter("offset"));
+			if(entries.size() >= offset) {
+				int endingPoint = entries.size()-offset;
+				int startingPoint = endingPoint-numToReturn;
+				if(startingPoint < 0)
+					startingPoint = 0;
+				for(int x=startingPoint;x<endingPoint;x++){
+					slice.add(entries.get(x));
+				}
+			}
+			request.setAttribute("moreNotes", true);
+		}
+
+		logger.info("CREATED SLICE OF SIZE  " + slice.size() + " IN " + (System.currentTimeMillis()-intTime) + "ms");
+		intTime = System.currentTimeMillis();
+
+
+		//we now have the slice we want to return
+		ArrayList<NoteDisplay> notesToDisplay = new ArrayList<NoteDisplay>();
+
+		if(slice.size() > 0) {
+			//figure out what we need to retrieve
+			List<Long> localNoteIds = new ArrayList<Long>();
+			List<CachedDemographicNoteCompositePk> remoteNoteIds = new ArrayList<CachedDemographicNoteCompositePk>();
+			List<Long> groupNoteIds = new ArrayList<Long>();
+			List<Integer> invoiceIds = new ArrayList<Integer>();
+
+			for(EChartNoteEntry entry:slice) {
+				if(entry.getType().equals("local_note")) {
+					localNoteIds.add((Long)entry.getId());
+				}
+				else if(entry.getType().equals("remote_note")) {
+					remoteNoteIds.add((CachedDemographicNoteCompositePk)entry.getId());
+				}
+				else if(entry.getType().equals("invoice")) {
+					invoiceIds.add((Integer)entry.getId());
+				}
+				else if(entry.getType().equals("group_note")) {
+					groupNoteIds.add(((Integer)entry.getId()).longValue());
+				}
+			}
+
+			List<CaseManagementNote> localNotes = caseManagementNoteDao.getNotes(localNoteIds);
+
+			logger.info("FETCHED " + localNotes.size() + " NOTES IN " + (System.currentTimeMillis()-intTime) + "ms");
+			intTime = System.currentTimeMillis();
+
+			List<CachedDemographicNote> remoteNotes =new ArrayList<CachedDemographicNote>();
+			if(remoteNoteIds != null && remoteNoteIds.size()>0)
+				remoteNotes = CaisiIntegratorManager.getLinkedNotes(remoteNoteIds);
+
+			logger.info("FETCHED " + remoteNotes.size() + " REMOTE NOTES IN " + (System.currentTimeMillis()-intTime) + "ms");
+			intTime = System.currentTimeMillis();
+
+			List<CaseManagementNote> groupNotes = caseManagementNoteDao.getNotes(groupNoteIds);
+
+			logger.info("FETCHED " + groupNotes.size() + " GROUP NOTES IN " + (System.currentTimeMillis()-intTime) + "ms");
+			intTime = System.currentTimeMillis();
+
+			List<BillingClaimHeader1> invoices = billingClaimDao.getInvoicesByIds(invoiceIds);
+
+			logger.info("FETCHED " + invoices.size() + " INVOICES IN " + (System.currentTimeMillis()-intTime) + "ms");
+			intTime = System.currentTimeMillis();
+
+			this.caseManagementMgr.getEditors(localNotes);
+			for(EChartNoteEntry entry:slice) {
+				if(entry.getType().equals("local_note")) {
+					notesToDisplay.add(new NoteDisplayLocal(findNote((Long)entry.getId(),localNotes)));
+				}
+				else if(entry.getType().equals("remote_note")) {
+					notesToDisplay.add(new NoteDisplayIntegrator(findRemoteNote((CachedDemographicNoteCompositePk)entry.getId(),remoteNotes)));
+				}
+				else if(entry.getType().equals("eform")) {
+					notesToDisplay.add(new NoteDisplayNonNote(findEform((String)entry.getId(),eForms)));
+				}
+				else if(entry.getType().equals("encounter_form")) {
+					notesToDisplay.add(new NoteDisplayNonNote(findPatientForm((String[])entry.getId(),allPatientForms)));
+				}
+				else if(entry.getType().equals("invoice")) {
+					notesToDisplay.add(new NoteDisplayNonNote(findInvoice((Integer)entry.getId(),invoices)));
+				}
+				else if(entry.getType().equals("group_note")) {
+					CaseManagementNote note = findNote(((Integer)entry.getId()).longValue(),groupNotes);
+					NoteDisplayLocal disp = new NoteDisplayLocal(note);
+					disp.setReadOnly(true);
+					disp.setGroupNote(true);
+					disp.setLocation(String.valueOf(note.getDemographic_no()));
+					notesToDisplay.add(disp);
+				}
+			}
+
+		}
+		logger.info("Total Time to load the notes=" + (System.currentTimeMillis()-startTime) + "ms.");
+		request.setAttribute("notesToDisplay", notesToDisplay);
+	}
+
+	public CaseManagementNote findNote(Long id, List<CaseManagementNote> notes) {
+		for(CaseManagementNote note:notes) {
+			if(id.equals(note.getId())) {
+				notes.remove(note);
+				return note;
+			}
+		}
+		return null;
+	}
+
+	public CachedDemographicNote findRemoteNote(CachedDemographicNoteCompositePk id, List<CachedDemographicNote> notes) {
+		for(CachedDemographicNote note:notes) {
+			if(id.getIntegratorFacilityId().equals(note.getCachedDemographicNoteCompositePk().getIntegratorFacilityId()) && id.getUuid().equals(note.getCachedDemographicNoteCompositePk().getUuid())) {
+				//notes.remove(note);
+				return note;
+			}
+		}
+		return null;
+	}
+
+	public HashMap<String, ? extends Object> findEform(String id, ArrayList<HashMap<String, ? extends Object>> eforms) {
+		for(HashMap<String, ? extends Object> eform:eforms) {
+			if(id.equals(eform.get("fdid"))) {
+				eforms.remove(eform);
+				return eform;
+			}
+		}
+		return null;
+	}
+
+	public PatientForm findPatientForm(String[] id, List<PatientForm> forms) {
+		for(PatientForm form:forms) {
+			if(id[0].equals(form.getFormName()) && id[1].equals(form.getFormId())) {
+				forms.remove(form);
+				return form;
+			}
+		}
+		return null;
+	}
+
+	public BillingClaimHeader1 findInvoice(Integer id, List<BillingClaimHeader1> invoices) {
+		for(BillingClaimHeader1 invoice:invoices) {
+			if(id.equals(invoice.getId())) {
+				invoices.remove(invoice);
+				return invoice;
+			}
+		}
+		return null;
+	}
+
+	private List<CachedDemographicNote> getRemoteNoteIds(int demographicNo) {
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+
+		if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return null;
+		List<CachedDemographicNote> linkedNotes  = null;
+		try {
+			if (!CaisiIntegratorManager.isIntegratorOffline()){
+			   linkedNotes = CaisiIntegratorManager.getLinkedNotesMetaData(demographicNo);
+			}
+		} catch (Exception e) {
+			logger.error("Unexpected error.", e);
+			CaisiIntegratorManager.checkForConnectionError(e);
+		}
+
+		if(CaisiIntegratorManager.isIntegratorOffline()){
+			//TODO: No idea how this works
+		  // linkedNotes = IntegratorFallBackManager.getLinkedNotes(demographicNo);
+		}
+
+		if (linkedNotes == null) return null;
+
+		return linkedNotes;
+
+	}
+
+	private List<EChartNoteEntry> applyProviderFilter(List<EChartNoteEntry> notes, String[] providerNo) {
+		boolean filter = false;
+		List<EChartNoteEntry> filteredNotes = new ArrayList<EChartNoteEntry>();
+
+		if (providerNo != null && Arrays.binarySearch(providerNo, "a") < 0) {
+			filter = true;
+			Arrays.sort(providerNo);
+		}
+
+		for (Iterator<EChartNoteEntry> iter = notes.iterator(); iter.hasNext();) {
+			EChartNoteEntry note = iter.next();
+			if(!note.getType().equals("local_note") && !note.getType().equals("eform") && !note.getType().equals("encounter_form")
+					&& !note.getType().equals("invoice")) {
+				filteredNotes.add(note);
+				continue;
+			}
+			if (!filter) {
+				filteredNotes.add(note);
+
+			} else {
+				if(note.getProviderNo()==null) continue;
+				if (Arrays.binarySearch(providerNo, note.getProviderNo()) >= 0)
+				filteredNotes.add(note);
+			}
+		}
+
+		return filteredNotes;
+	}
+
+	private List<EChartNoteEntry> applyRoleFilter1(List<EChartNoteEntry> notes, String[] roleId) {
+
+		if(roleId == null || roleId.length==0) {
+			return notes;
+		}
+		// if no filter return everything
+		if (Arrays.binarySearch(roleId, "a") >= 0) {
+			return notes;
+		}
+
+		Arrays.sort(roleId);
+
+		List<EChartNoteEntry> filteredNotes = new ArrayList<EChartNoteEntry>();
+
+		for (Iterator<EChartNoteEntry> iter = notes.listIterator(); iter.hasNext();) {
+			EChartNoteEntry note = iter.next();
+			if(!note.getType().equals("local_note")) {
+				filteredNotes.add(note);
+				continue;
+			}
+
+			if (Arrays.binarySearch(roleId, note.getRole()) >= 0)
+				filteredNotes.add(note);
+		}
+
+		return filteredNotes;
+	}
+
+	private List<EChartNoteEntry> applyIssueFilter1(List<EChartNoteEntry> notes, String[] issueId) {
+
+		if(issueId == null || issueId.length==0)
+			return notes;
+
+		// if no filter return everything
+		if (Arrays.binarySearch(issueId, "a") >= 0)
+			return notes;
+
+		List<EChartNoteEntry> filteredNotes = new ArrayList<EChartNoteEntry>();
+
+		List<Integer> noteIds = cmeIssueNotesDao.getNoteIdsWhichHaveIssues(issueId);
+
+		//Integer
+		if(noteIds != null) {
+			for(EChartNoteEntry note:notes) {
+				if(!note.getType().equals("local_note")) {
+					filteredNotes.add(note);
+					continue;
+				}
+				Integer tmp =((Long)note.getId()).intValue();
+				if(noteIds.contains(tmp)) {
+					filteredNotes.add(note);
+				}
+			}
+		}
+
+
+		return filteredNotes;
+	}
+
+	private List<GroupNoteLink> getGroupNoteIds(int demographicNo) {
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+
+		if (!loggedInInfo.currentFacility.isEnableGroupNotes()) return new ArrayList<GroupNoteLink>();
+
+		return groupNoteDao.findLinksByDemographic(demographicNo);
+
+	}
 }

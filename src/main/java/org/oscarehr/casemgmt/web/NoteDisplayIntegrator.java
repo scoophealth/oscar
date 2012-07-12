@@ -32,6 +32,7 @@ import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.CachedProgram;
 import org.oscarehr.caisi_integrator.ws.CachedProvider;
+import org.oscarehr.caisi_integrator.ws.CodeType;
 import org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk;
 import org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk;
 import org.oscarehr.caisi_integrator.ws.NoteIssue;
@@ -80,7 +81,16 @@ public class NoteDisplayIntegrator implements NoteDisplay {
 	    	// issue descriptions
 			for (NoteIssue noteIssue : cachedDemographicNote.getIssues())
 			{
-				Issue issue=issueDao.findIssueByTypeAndCode(noteIssue.getCodeType().name().toLowerCase(), noteIssue.getIssueCode());
+				String ct = "";
+				if(noteIssue.getCodeType() == CodeType.ICD_10) {
+					ct = "icd10";
+				}
+				else if(noteIssue.getCodeType() == CodeType.ICD_9) {
+					ct = "icd9";
+				} else {
+					ct = noteIssue.getCodeType().name().toLowerCase();
+				}
+				Issue issue=issueDao.findIssueByTypeAndCode(ct, noteIssue.getIssueCode());
 				if (issue!=null) issueDescriptions.add(issue.getDescription());
 				else issueDescriptions.add(noteIssue.getCodeType().name()+':'+noteIssue.getIssueCode());
 			}
