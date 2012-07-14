@@ -160,6 +160,9 @@ function showHideBillPref() {
     $("billingONpref").toggle();
 }
 
+function showHideERxPref() {
+    $("eRxPref").toggle();
+}
 </script>
 <style type="text/css">
 	.preferenceTable td
@@ -187,6 +190,14 @@ function showHideBillPref() {
 	{
 		font-size:12px;
 	}
+	
+	table.eRxTableCenter
+	{
+        width:50%; 
+		margin-left:25%; 
+		margin-right:25%;
+    }
+	
 </style>
 </head>
 
@@ -198,7 +209,7 @@ function showHideBillPref() {
 	}
 %>
 
-<body bgproperties="fixed"  onLoad="setfocus();showHideBillPref();" topmargin="0"leftmargin="0" rightmargin="0" style="font-family:sans-serif">
+<body bgproperties="fixed"  onLoad="setfocus();showHideBillPref();showHideERxPref();" topmargin="0"leftmargin="0" rightmargin="0" style="font-family:sans-serif">
 	<FORM NAME = "UPDATEPRE" METHOD="post" ACTION="providerupdatepreference.jsp" onSubmit="return(checkTypeInAll())">
 
 		<div style="background-color:<%=deepcolor%>;text-align:center;font-weight:bold">
@@ -636,6 +647,79 @@ Event.observe('rxInteractionWarningLevel', 'change', function(event) {
       <tr>
           <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewEDocBrowserInMasterFile');return false;"><bean:message key="provider.btnSetEDocBrowserInMasterFile"/></a></td>
       </tr>
+
+
+	 <oscar:oscarPropertiesCheck property="utils.erx.enabled" value="true">
+	 	<security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r">
+        <tr>
+        	<td align="center">
+            	<a href=# onClick ="showHideERxPref();return false;"><bean:message key="provider.eRx.btnPrefLink"/></a>
+            </td>
+        </tr>
+        <tr>
+			<td align="center">
+            	<div id="eRxPref">
+                <%  
+            	String eRxEnabledChecked="unchecked";
+                String eRxTrainingModeChecked="unchecked";
+                                        
+				boolean eRxEnabled = false;
+                String eRx_SSO_URL = "";
+                String eRxUsername = "";
+                String eRxPassword = "";
+                String eRxFacility = "";
+                boolean eRxTrainingMode = false;
+                                                        
+                if (providerPreference != null){                                       
+                	eRxEnabled = providerPreference.isERxEnabled();
+                    if(eRxEnabled) eRxEnabledChecked = "checked";
+                                
+                    eRx_SSO_URL = providerPreference.getERx_SSO_URL();
+                    eRxUsername = providerPreference.getERxUsername();
+                    eRxPassword = providerPreference.getERxPassword();
+                    eRxFacility = providerPreference.getERxFacility();
+                                
+                    eRxTrainingMode = providerPreference.isERxTrainingMode();
+                    if(eRxTrainingMode) eRxTrainingModeChecked = "checked";
+                                
+                    if(eRx_SSO_URL==null || "null".equalsIgnoreCase(eRx_SSO_URL)) eRx_SSO_URL=OscarProperties.getInstance().getProperty("utils.erx.oscarerx_sso_url");
+                    if(eRxUsername==null || "null".equalsIgnoreCase(eRxUsername)) eRxUsername="";
+                    if(eRxPassword==null || "null".equalsIgnoreCase(eRxPassword)) eRxPassword="";
+                    if(eRxFacility==null || "null".equalsIgnoreCase(eRxFacility)) eRxFacility="";
+                }
+                %>
+                	<table class="eRxTableCenter">
+                    	<tr>
+                        	<td><bean:message key="provider.eRx.labelEnable"/>:</td>
+                          	<td><input name="erx_enable" title="Enable the External Prescriber" type="checkbox" <%=eRxEnabledChecked%> /></td>
+                        </tr>
+                        <tr>
+                          	<td><bean:message key="provider.eRx.labelUser"/>:</td>
+                      		<td><input name="erx_username" type="text" value="<%=eRxUsername%>" title="Username to access the External Prescriber"/></td>
+                        </tr>
+                        <tr>
+                          	<td><bean:message key="provider.eRx.labelPassword"/>:</td>
+                          	<td><input name="erx_password" type="password" value="<%=eRxPassword%>" title="Password to access the External Prescriber" /></td>
+                        <tr>
+                        </tr>
+                          	<td><bean:message key="provider.eRx.labelFacility"/>:</td>
+                          	<td><input name="erx_facility" type="text" value="<%=eRxFacility%>" title="The Facility ID assigned to you by the External Prescriber" /><br></td>
+                        <tr>
+                        </tr>
+                          	<td><bean:message key="provider.eRx.labelTrainingMode"/>:</td>
+                          	<td><input name="erx_training_mode" type="checkbox" title="Enable Training Mode" <%=eRxTrainingModeChecked%> /></td>
+                        </tr>
+                        <tr>
+                          	<td><bean:message key="provider.eRx.labelURL"/>:</td>
+                          	<td><input name="erx_sso_url" type="text" value="<%=eRx_SSO_URL%>" title="The URL to access the Web Interface from OSCAR Rx" /></td>
+                        </tr>
+                     </table>
+                  </div>
+              </td>
+          </tr>
+        </security:oscarSec>
+  </oscar:oscarPropertiesCheck>
+
 
 </table>
 </FORM>

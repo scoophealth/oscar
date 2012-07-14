@@ -36,7 +36,26 @@ public class ProviderDataDao extends AbstractDao<ProviderData> {
 	public ProviderDataDao() {
 		super(ProviderData.class);
 	}
+	
+	
 
+	@SuppressWarnings("unchecked")
+	public ProviderData findByOhipNumber(String ohipNumber) {
+		Query query;
+		List<ProviderData> results;
+		String sqlCommand = "SELECT x FROM ProviderData x WHERE x.ohipNo=?";
+		
+		query = this.entityManager.createQuery(sqlCommand);
+		query.setParameter(1, ohipNumber);
+		
+		results = query.getResultList();
+		if (results.size() > 0) {
+			return results.get(0);
+		}
+		// If we get here, there were no results
+		return null;
+	}
+	
     public ProviderData findByProviderNo(String providerNo) {
 
     	String sqlCommand = "select x from ProviderData x where x.id=?1";

@@ -85,6 +85,18 @@ public class RxDrugRef {
          Vector vec = (Vector) callWebservice("atc",params);         
          return vec;         
      }
+     
+     /**
+     *returns all matching ATC codes for a given Drug Identification Number.
+     *Search is case insensitive
+     */
+     public Vector atcFromDIN(String din){
+    	 Vector params = new Vector();
+    	 params.addElement(din);
+    	 Vector vec = (Vector) callWebservice("get_atcs_by_din",params);         
+    	 return vec;         
+     }
+     
 
      /**
      *returns all matching ATC codes for a given (fraction of) a drug brand name.
