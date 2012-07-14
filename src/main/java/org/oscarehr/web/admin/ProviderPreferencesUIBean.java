@@ -148,6 +148,22 @@ public final class ProviderPreferencesUIBean {
 			}
 		}
 		
+	     // external prescriber prefs
+		providerPreference.setERxEnabled(WebUtils.isChecked(request,"erx_enable"));
+		
+		temp = StringUtils.trimToNull(request.getParameter("erx_username"));
+		if (temp != null) providerPreference.setERxUsername(temp);
+		
+		temp = StringUtils.trimToNull(request.getParameter("erx_password"));
+		if (temp != null) providerPreference.setERxPassword(temp);
+		
+		temp = StringUtils.trimToNull(request.getParameter("erx_facility"));
+		if (temp != null) providerPreference.setERxFacility(temp);
+		
+		providerPreference.setERxTrainingMode(WebUtils.isChecked(request,"erx_training_mode"));
+		
+		temp = StringUtils.trimToNull(request.getParameter("erx_sso_url"));
+		if (temp != null) providerPreference.setERx_SSO_URL(temp);
 
 		providerPreferenceDao.merge(providerPreference);
 
