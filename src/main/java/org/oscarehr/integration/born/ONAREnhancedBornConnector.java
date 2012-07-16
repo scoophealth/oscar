@@ -124,6 +124,10 @@ public class ONAREnhancedBornConnector {
 					String pg1Signature = rs.getString("pg1_signature");
 					String pg2Signature = rs.getString("pg2_signature");
 					int episodeId = rs.getInt("episodeId");
+					String postalCode = rs.getString("c_postal");
+					if(postalCode == null || postalCode.length() == 0) {
+						continue;
+					}
 					//rs.getString("c_finalEDB");
 					/*
 					if(pg1Signature== null || pg2Signature==null || pg1Signature.length()==0 || pg2Signature.length()==0) {

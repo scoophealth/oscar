@@ -416,7 +416,7 @@ width: 100%;
 		if($("input[name='c_postal']").val().length == 7 && $("input[name='c_postal']").val().indexOf(' ') != -1) {
 			$("input[name='c_postal']").val($("input[name='c_postal']").val().replace(' ',''));
 		}
-		var patt1=new RegExp("[a-zA-Z][0-9][a-zA-Z][0-9][a-zA-Z][0-9]");
+		var patt1=new RegExp("([a-zA-Z][0-9][a-zA-Z][0-9][a-zA-Z][0-9])?");
 		if(!patt1.test($("input[name='c_postal']").val())) {
 			alert('Postal Code must be in the following format A#A#A#');
 			return false;
@@ -2301,8 +2301,10 @@ $(document).ready(function(){
 				<select name="pg1_maritalStatus">
 					<option value="UN">Unknown</option>
 					<option value="M">Married</option>
-					<option value="CL">Common Law</option>					
-					<option value="S">Single</option>
+					<option value="CL">Common Law</option>
+					<option value="DS">Divorced/Separated</option>									
+					<option value="S">Single</option>					
+					
 					
 				</select>
 			</td>

@@ -796,7 +796,7 @@ Repeat antibody screen
 		for(int x=0;x<18;x++) {
 			int n = x+1;
 			if(p.getProperty("pg2_year"+n,"").length()>0 || p.getProperty("pg2_gest"+n,"").length()>0 || p.getProperty("pg2_wt"+n,"").length()>0
-					|| p.getProperty("pg2_BP"+n,"").length()>0 || p.getProperty("pg2_urinePr"+n,"").length()>0 || p.getProperty("pg2_urineGl"+n,"").length()>0 
+					|| p.getProperty("pg2_BP"+n,"").length()>0 || p.getProperty("pg2_urinePr"+n,"").length()>0 /*|| p.getProperty("pg2_urineGl"+n,"").length()>0*/ 
 					|| p.getProperty("pg2_presn1"+n,"").length()>0 || p.getProperty("pg2_FHR"+n,"").length()>0 || p.getProperty("pg2_comments"+n,"").length()>0 ) {
 				svNum = n;
 			}
@@ -804,7 +804,7 @@ Repeat antibody screen
 		for(int x=0;x<18;x++) {
 			int n = x+19;
 			if(p.getProperty("pg3_year"+n,"").length()>0 || p.getProperty("pg3_gest"+n,"").length()>0 || p.getProperty("pg3_wt"+n,"").length()>0
-					|| p.getProperty("pg3_BP"+n,"").length()>0 || p.getProperty("pg3_urinePr"+n,"").length()>0 || p.getProperty("pg3_urineGl"+n,"").length()>0 
+					|| p.getProperty("pg3_BP"+n,"").length()>0 || p.getProperty("pg3_urinePr"+n,"").length()>0 /*|| p.getProperty("pg3_urineGl"+n,"").length()>0*/ 
 					|| p.getProperty("pg3_presn1"+n,"").length()>0 || p.getProperty("pg3_FHR"+n,"").length()>0 || p.getProperty("pg3_comments"+n,"").length()>0 ) {
 				svNum = n;
 			}
@@ -813,7 +813,7 @@ Repeat antibody screen
 		for(int x=0;x<18;x++) {
 			int n = x+37;
 			if(p.getProperty("pg4_year"+n,"").length()>0 || p.getProperty("pg4_gest"+n,"").length()>0 || p.getProperty("pg4_wt"+n,"").length()>0
-					|| p.getProperty("pg4_BP"+n,"").length()>0 || p.getProperty("pg4_urinePr"+n,"").length()>0 || p.getProperty("pg4_urineGl"+n,"").length()>0 
+					|| p.getProperty("pg4_BP"+n,"").length()>0 || p.getProperty("pg4_urinePr"+n,"").length()>0 /*|| p.getProperty("pg4_urineGl"+n,"").length()>0*/ 
 					|| p.getProperty("pg4_presn1"+n,"").length()>0 || p.getProperty("pg4_FHR"+n,"").length()>0 || p.getProperty("pg4_comments"+n,"").length()>0 ) {
 				svNum = n;
 			}
