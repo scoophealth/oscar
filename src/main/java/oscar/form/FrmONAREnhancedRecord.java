@@ -42,7 +42,7 @@ public class FrmONAREnhancedRecord extends FrmRecord {
             DBHelp db = new DBHelp();
             String sql = "SELECT demographic_no, last_name, first_name, sex, "
                     + "address, city, province, postal, phone, phone2, "
-                    + "year_of_birth, month_of_birth, date_of_birth, hin, chart_no FROM demographic WHERE demographic_no = "
+                    + "year_of_birth, month_of_birth, date_of_birth, hin, hc_type, chart_no FROM demographic WHERE demographic_no = "
                     + demographicNo;
             ResultSet rs = DBHelp.searchDBRecord(sql);
             if (rs.next()) {
@@ -60,6 +60,13 @@ public class FrmONAREnhancedRecord extends FrmRecord {
                 props.setProperty("c_province", oscar.Misc.getString(rs, "province"));
                 props.setProperty("c_postal", oscar.Misc.getString(rs, "postal"));
                 props.setProperty("c_hin", oscar.Misc.getString(rs, "hin"));
+                if(oscar.Misc.getString(rs, "hc_type").equals("ON")) {
+                	 props.setProperty("c_hinType","OHIP");
+                } else if(oscar.Misc.getString(rs, "hc_type").equals("QC")) {
+                	 props.setProperty("c_hinType","RAMQ");
+                } else {
+                	 props.setProperty("c_hinType","OTHER");
+                }
                 props.setProperty("c_fileNo", oscar.Misc.getString(rs, "chart_no"));
                 props.setProperty("pg1_dateOfBirth", UtilDateUtilities.DateToString(date, "yyyy/MM/dd"));
                 props.setProperty("pg1_age", String.valueOf(UtilDateUtilities.calcAge(oscar.Misc.getString(rs, "year_of_birth"), rs
