@@ -47,23 +47,31 @@ import javax.persistence.TemporalType;
 @Table(name="batch_billing")
 public class BatchBilling  extends AbstractModel<Integer> implements Serializable {
 	private static final long serialVersionUID = 1L;
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(unique=true, nullable=false)
 	private Integer id;
+	@Column(name="billing_provider_no")	
 	private String billingProviderNo;
+	@Column(name="create_date", nullable=false)	
 	private Timestamp createDate;
+	@Column(name="lastbilled_date")
+	@Temporal(TemporalType.DATE)		
 	private Date lastbilled_date;
 	private String creator;
+	@Column(name="demographic_no")	
 	private int demographicNo;
+	@Column(length=5)	
 	private String dxcode;
+	@Column(name="service_code", length=10)		
 	private String serviceCode;
+	@Column(name="billing_amount")	
 	private String billing_amount;
 
     public BatchBilling() {
     }
 
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(unique=true, nullable=false)
 	public Integer getId() {
 		return this.id;
 	}
@@ -73,7 +81,6 @@ public class BatchBilling  extends AbstractModel<Integer> implements Serializabl
 	}
 
 
-	@Column(name="billing_provider_no")
 	public String getBillingProviderNo() {
 		return this.billingProviderNo;
 	}
@@ -83,7 +90,6 @@ public class BatchBilling  extends AbstractModel<Integer> implements Serializabl
 	}
 
 
-	@Column(name="create_date", nullable=false)
 	public Timestamp getCreateDate() {
 		return this.createDate;
 	}
@@ -102,7 +108,6 @@ public class BatchBilling  extends AbstractModel<Integer> implements Serializabl
 	}
 
 
-	@Column(name="demographic_no")
 	public int getDemographicNo() {
 		return this.demographicNo;
 	}
@@ -112,7 +117,6 @@ public class BatchBilling  extends AbstractModel<Integer> implements Serializabl
 	}
 
 
-	@Column(length=5)
 	public String getDxcode() {
 		return this.dxcode;
 	}
@@ -122,7 +126,6 @@ public class BatchBilling  extends AbstractModel<Integer> implements Serializabl
 	}
 
 
-	@Column(name="service_code", length=10)	
 	public String getServiceCode() {
 		return this.serviceCode;
 	}
@@ -131,8 +134,6 @@ public class BatchBilling  extends AbstractModel<Integer> implements Serializabl
 		this.serviceCode = serviceCode;
 	}
 
-	@Column(name="lastbilled_date")
-	@Temporal(TemporalType.DATE)	
 	public Date getLastBilledDate() {
 	    return lastbilled_date;
     }
@@ -142,7 +143,6 @@ public class BatchBilling  extends AbstractModel<Integer> implements Serializabl
     }
 
 
-	@Column(name="billing_amount")
 	public String getBillingAmount() {
 	    return billing_amount;
     }
