@@ -21,14 +21,14 @@
 
 		<repository>
 			<id>local_repo</id>
-			<url>file://local_repo</url>
+			<url>file://${project.basedir}/local_repo</url>
 		</repository>
 	</repositories>
 
 	<pluginRepositories>
         	<pluginRepository>
 			<id>local_repo</id>
-			<url>file://local_repo</url>
+			<url>file://${project.basedir}/local_repo</url>
         	</pluginRepository>
 	</pluginRepositories>
 
