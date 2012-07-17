@@ -393,10 +393,30 @@ width: 100%;
 
 <script>
 	function validate() {		
+		if($("input[name='c_lastName']").val().length == 0) {
+			alert('Must include last name');
+			return false;
+		}
+		if($("input[name='c_firstName']").val().length == 0) {
+			alert('Must include last name');
+			return false;
+		}
+		
+		if($("input[name='pg1_dateOfBirth']").val().length == 0) {
+			alert('Must include Date of Birth');
+			return false;
+		}
+		
+		if($("select[name='c_hinType']").val() != 'OTHER' && $("input[name='c_hin']").val().length==0 ) {
+			alert('Must include OHIP/RAMQ identifier, or set type to OTHER');
+			return false;
+		}
+		
+		
 		if($("input[name='c_postal']").val().length == 7 && $("input[name='c_postal']").val().indexOf(' ') != -1) {
 			$("input[name='c_postal']").val($("input[name='c_postal']").val().replace(' ',''));
 		}
-		var patt1=new RegExp("([a-zA-Z][0-9][a-zA-Z][0-9][a-zA-Z][0-9])?");
+		var patt1=new RegExp("[a-zA-Z][0-9][a-zA-Z][0-9][a-zA-Z][0-9]");
 		if(!patt1.test($("input[name='c_postal']").val())) {
 			alert('Postal Code must be in the following format A#A#A#');
 			return false;
@@ -2219,7 +2239,7 @@ $(document).ready(function(){
 			<input type="text" name="pg1_dateOfBirth" style="width: 100%"
 				size="10" maxlength="10"
 				value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_dateOfBirth", "")) %>"
-				readonly="true" /></td>
+				/></td>
 			<td width="8%" valign="top">Age<br>
 			<input type="text" name="pg1_age" style="width: 100%" size="10"
 				maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("pg1_age", "")) %>" /></td>
