@@ -1373,6 +1373,21 @@ $(document).ready(function(){
 		}
 	});	
 	
+	$( "#edb-update-form" ).dialog({
+		autoOpen: false,
+		height: 300,
+		width: 450,
+		modal: true,
+		buttons: {
+			"Dismiss": function() {			
+				$( this ).dialog( "close" );	
+			}
+		},
+		close: function() {
+			
+		}
+	});
+	
 	$( "#gbs-req-form" ).dialog({
 		autoOpen: false,
 		height: 275,
@@ -1431,6 +1446,15 @@ $(document).ready(function(){
 		$("#gd_menu").bind('click',function(){popPage('http://www.diabetes.ca/diabetes-and-you/what/gestational/','resource')});
 		$("#gct_menu").bind('click',function(){gctReq();});
 		$("#gtt_menu").bind('click',function(){gttReq();});
+		$("#edb_menu").bind('click',function(){
+			var usNum = checkSOGCGuidelineForEDB();
+			if(usNum > 0) {
+				var usDate = $("#ar2_uDate"+usNum).val();
+				var usGA = $("#ar2_uGA"+usNum).val();
+				$("#edb_update_table tbody").append("<tr><td><input type=\"button\" onClick=\"updateEDB();\" value=\"Update\"/></td><td>Due to Ultrasound #"+usNum+" completed on "+usDate+", SOGC recommends a new EDB of "+newEDB.toLocaleFormat('%Y/%m/%d')+"</td></tr>");
+				$( "#edb-update-form" ).dialog( "open" );
+			}			
+		});
 		
 		if(isFundalHeightOffTarget()) {
 			$("#fundal_graph_text").css('color','red');
@@ -1707,6 +1731,148 @@ $(document).ready(function(){
 		}		
 		return off;
 	}
+	
+	function parseDate(input) {
+		  var parts = input.match(/(\d+)/g);
+		  // new Date(year, month [, date [, hours[, minutes[, seconds[, ms]]]]])
+		  return new Date(parts[0], parts[1]-1, parts[2]); // months are 0-based
+		}
+
+	
+	var newEDB=null;
+	var us1=false;
+	var us2=false;
+	
+	function updateEDB() {
+		$("#c_finalEDB").val(newEDB.toLocaleFormat('%Y/%m/%d'));
+		if (us1 && !$("input[name='pg1_edbByT1']")){
+			$("form[name='FrmForm']").append("<input type=\"checkbox\" name=\"pg1_edbByT1\" checked=\"checked\"/>");
+		}
+		if (us2 && !$("input[name='pg1_edbByT2']")){	
+			$("form[name='FrmForm']").append("<input type=\"checkbox\" name=\"pg1_edbByT2\" checked=\"checked\"/>");
+		}
+		
+		$("#edb-update-form").dialog('close');
+		
+		$("#saveBtn").click();
+		
+		return false;
+	}
+	
+	function checkSOGCGuidelineForEDB() {		
+		//get LMP
+		var lmp = '<%=props.getProperty("pg1_menLMP")%>';
+		var edb = '<%=props.getProperty("c_finalEDB")%>';
+		
+		var dLMP = parseDate(lmp);
+		dLMP.setHours(8);
+		dLMP.setMinutes(0);
+		dLMP.setSeconds(0);
+		
+	
+		//edb based on dates
+		var dateEDB = new Date();
+		dateEDB.setTime(dLMP.getTime()+(280*1000*60*60*24)  );
+		dateEDB.setHours(8);		
+		dateEDB.setMinutes(0);
+		dateEDB.setSeconds(0);
+		
+		
+		//current EDB in form
+		var curEDB = parseDate(edb);
+		curEDB.setHours(8);		
+		curEDB.setMinutes(0);
+		curEDB.setSeconds(0);
+					
+		var us1diff=0;
+		var us2diff=0;
+		var usNum=0;
+		
+		//is there a 1st trimester U/S
+		var numUS = '<%=props.getProperty("us_num", "0")%>';
+		for(var x=1;x<=numUS;x++) {			
+			//get the date and the GA
+			var usDateStr = $("#ar2_uDate"+x).val(); // yyyy/m//dd
+			var usGA = $("#ar2_uGA"+x).val();
+			
+			
+			if(usDateStr == undefined || usDateStr.length == 0 || usGA == undefined || usGA.length == 0)
+				continue;
+			
+			//determine if this U/S falls into the 1st trimester U/S date range of 11w+0 to 13w+6
+			var usDate = parseDate(usDateStr);
+			usDate.setHours(8);
+			usDate.setMinutes(0);
+			usDate.setSeconds(0);
+			
+			//where does this U/S fall under in terms of GA given LMP
+			var diff = (usDate.getTime() - dLMP.getTime())/1000/60/60/24;
+			
+			//first trimester?
+			if(diff >= 77 && diff <= 97) {
+				var week = parseInt(usGA.substring(0,usGA.indexOf('w')));
+				var offset = 0;
+				if(usGA.indexOf('+')!=-1) {
+					offset = parseInt(usGA.substring(usGA.indexOf('+')+1));
+				}				
+				var day = (week*7)+offset;
+				
+				if(Math.abs(diff-day) > 5) {
+					us1=true;
+					us1diff = day-diff;
+					usNum=x;					
+				}
+			}
+			
+			//2nd trimester?
+			if(diff >= 98 && diff <= 195) {
+				var week = parseInt(usGA.substring(0,usGA.indexOf('w')));
+				var offset = 0;
+				if(usGA.indexOf('+')!=-1) {
+					offset = parseInt(usGA.substring(usGA.indexOf('+')+1));
+				}				
+				var day = (week*7)+offset;
+				
+				if(Math.abs(diff-day) > 10) {
+					us2=true;
+					us2diff = day-diff;
+					usNum=x;
+				}
+			}
+						
+		}
+		
+		if(us2 && us1) {
+			us2=false;
+		}
+		
+		if(us1) {		
+			dLMP.setTime(dLMP.getTime()+(us1diff*24*60*60*1000));
+			var suggestedEDB = new Date();
+			suggestedEDB.setTime(dLMP.getTime()+(280*1000*60*60*24));	
+			newEDB=suggestedEDB;
+			//alert((Math.abs(curEDB.getTime()-suggestedEDB.getTime())/24/60/60/1000));
+			//is this diff then what's in the form now
+			if((Math.abs(curEDB.getTime()-suggestedEDB.getTime())/24/60/60/1000) >= 0.9) {			
+				$("#edb_warn").show();
+				return usNum;
+			}
+		}
+		if(us2) {			
+			dLMP.setTime(dLMP.getTime()+(us2diff*24*60*60*1000));
+			var suggestedEDB = new Date();
+			suggestedEDB.setTime(dLMP.getTime()+(280*1000*60*60*24));
+			newEDB=suggestedEDB;
+			//is this diff then what's in the form now
+			if((Math.abs(curEDB.getTime()-suggestedEDB.getTime())/24/60/60/1000) >= 0.9) {			
+				$("#edb_warn").show();
+				return usNum;
+			}
+		}
+		return 0;
+	}
+	
+	$(document).ready(function(){checkSOGCGuidelineForEDB();});
 </script>
 <style>
 .ui-widget-overlay
@@ -1773,6 +1939,9 @@ $(document).ready(function(){
 		<table style="width:100%" border="0">
 			<tr>
 				<td><b>Warnings</b></td>
+			</tr>
+			<tr id="edb_warn" style="display:none">
+				<td>Update EDB<span style="float:right"><img id="edb_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span></td>
 			</tr>
 			<tr id="rh_warn" style="display:none">
 				<td>RH Negative</td>
@@ -1871,7 +2040,7 @@ $(document).ready(function(){
 			<td align="left">
 			<%
   if (!bView) {
-%> <input type="submit" value="Save"
+%> <input type="submit" value="Save" id="saveBtn"
 				onclick="javascript:return onSave();" /> <input type="submit"
 				value="Save and Exit" onclick="javascript:return onSaveExit();" /> <%
   }
@@ -1936,7 +2105,7 @@ $(document).ready(function(){
 				value="<%= UtilMisc.htmlEscape(props.getProperty("c_famPhys", "")) %>" /></td>
 			<td valign="top" rowspan="4" width="25%"><b>Final EDB</b>
 			(yyyy/mm/dd)<br>
-			<input type="text" name="c_finalEDB" style="width: 100%" size="10"
+			<input type="text" id="c_finalEDB" name="c_finalEDB" style="width: 100%" size="10"
 				maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("c_finalEDB", "")) %>">
 			</td>
 			<td valign="top" rowspan="4" width="25%">Allergies or
@@ -2565,6 +2734,19 @@ $(document).ready(function(){
 						}
 					}
 				%>										
+				</tbody>
+			</table>
+		</fieldset>
+	</form>	
+</div>
+
+<div id="edb-update-form" title="EDB Update">
+	<p>The EDB should be updated according to SOGC guideline (<a target="_sogc" href="http://sogc.org/guidelines/documents/gui214CPG0809.pdf">link</a>)</p>
+	<form>
+		<fieldset>
+			<table id="edb_update_table">
+				<tbody>
+				
 				</tbody>
 			</table>
 		</fieldset>
