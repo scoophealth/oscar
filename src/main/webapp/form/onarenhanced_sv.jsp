@@ -45,9 +45,11 @@
 	<td width="4%"><input type="text" name="pg2_urinePr<%=n%>" size="2"
 		maxlength="3" style="width: 90%"
 		></td>
-	<td width="4%"><input type="text" name="pg2_urineGl<%=n%>" size="2"
+		<!-- 
+	<td width="4%"><input type="text" name="pg2_urineGl<=n>" size="2"
 		maxlength="3" style="width: 90%"
 		></td>
+		-->
 	<td><input type="text" name="pg2_ht<%=n%>" size="6" maxlength="6"
 		onDblClick="htEnglish2Metric(this);" style="width: 90%"
 		></td>

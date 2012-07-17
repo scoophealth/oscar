@@ -563,7 +563,9 @@ public class ONAREnhancedFormToXML {
 		}
 		else if(maritalStatus.equals("S") ) {
 			patientInformation.setMaritalStatus(PatientInformation.MaritalStatus.Enum.forString("MS015"));
-		}else {
+		} else if(maritalStatus.equals("DS") ) {
+			patientInformation.setMaritalStatus(PatientInformation.MaritalStatus.Enum.forString("MS010"));
+		} else {
 			patientInformation.setMaritalStatus(PatientInformation.MaritalStatus.Enum.forString("UN"));
 		}
 
@@ -608,7 +610,7 @@ public class ONAREnhancedFormToXML {
 		for(int x=0;x<svLength;x++) {
 			int y = x+1;
 			if(props.getProperty("pg2_year"+y,"").length()==0 && props.getProperty("pg2_gest"+y,"").length()==0 && props.getProperty("pg2_wt"+y,"").length()==0
-					&& props.getProperty("pg2_BP"+y,"").length()==0 && props.getProperty("pg2_urinePr"+y,"").length()==0 && props.getProperty("pg2_urineGl"+y,"").length()==0 
+					&& props.getProperty("pg2_BP"+y,"").length()==0 && props.getProperty("pg2_urinePr"+y,"").length()==0/* && props.getProperty("pg2_urineGl"+y,"").length()==0*/ 
 					&& props.getProperty("pg2_presn1"+y,"").length()==0 && props.getProperty("pg2_FHR"+y,"").length()==0 && props.getProperty("pg2_comments"+y,"").length()==0 ) {
 				continue;
 			}
@@ -624,7 +626,8 @@ public class ONAREnhancedFormToXML {
 			visit.setWeight(props.getProperty("pg2_wt"+y, "").length()>0?Integer.parseInt(props.getProperty("pg2_wt"+y, "")):0);
 			visit.setBp(props.getProperty("pg2_BP"+y, ""));
 			visit.setUrinePR(props.getProperty("pg2_urinePr"+y, ""));
-			visit.setUrineGI(props.getProperty("pg2_urineGl"+y, ""));
+			/*visit.setUrineGI(props.getProperty("pg2_urineGl"+y, ""));*/
+			visit.setUrineGI("");
 			visit.setSFH(props.getProperty("pg2_ht"+y, ""));
 			visit.setPresentationPosition(props.getProperty("pg2_presn"+y, ""));
 			visit.setFHRFm(props.getProperty("pg2_FHR"+y, ""));
