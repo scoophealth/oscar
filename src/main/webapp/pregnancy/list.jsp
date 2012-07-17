@@ -114,7 +114,7 @@ div#demo
 							if(episode.getEndDate() != null) {
 								endDateStr = dateFormatter.format(episode.getEndDate());
 							}
-							Integer formId = org.oscarehr.common.web.PregnancyAction.getLatestFormIdByPregnancy(episode.getId());
+							Integer formId = org.oscarehr.common.dao.PregnancyFormsDao.getLatestFormIdByPregnancy(episode.getId());
 							String url = request.getContextPath() + "/form/formonarenhancedpg1.jsp?demographic_no="+episode.getDemographicNo()+"&formId="+formId+"&provNo=" +
 								LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 					%>
