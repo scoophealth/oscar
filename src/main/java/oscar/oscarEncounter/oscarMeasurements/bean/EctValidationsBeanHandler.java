@@ -160,7 +160,7 @@ public class EctValidationsBeanHandler {
             if(validation.getIsDate()!=null)
                 isDate = "'" + validation.getIsDate() + "'";
             
-            String sql ="INSERT INTO validations(name, regularExp, minValue, maxValue, minLength, maxLength, isNumeric, isDate) VALUES('"            
+            String sql ="INSERT INTO validations(`name`, `regularExp`, `minValue`, `maxValue`, `minLength`, `maxLength`, `isNumeric`, `isDate`) VALUES('"            
                         + validation.getName() + "', "
                         + regularExp + "," 
                         + minValue + "," 
