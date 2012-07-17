@@ -1141,7 +1141,7 @@ public class DemographicExportAction4 extends Action {
 									String unit1 = Util.leadingNum(strength[2]).equals("") ? "1" : Util.leadingNum(strength[2]);
 									String unit2 = Util.trailingTxt(strength[2]).equals("") ? "unit" : Util.trailingTxt(strength[2]);
 
-									drugM.setAmount(Util.leadingNum(strength[0])+"/"+Util.leadingNum(strength[2]));
+									drugM.setAmount(Util.leadingNum(strength[0])+"/"+unit1);
 									drugM.setUnitOfMeasure(Util.trailingTxt(strength[0])+"/"+unit2);
 								}
 							} else {
