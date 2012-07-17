@@ -10920,6 +10920,7 @@ CREATE TABLE `hsfo_recommit_schedule` (
 CREATE TABLE `PageMonitor` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   pageName varchar(100) NOT NULL,
+  pageId varchar(255) NOT NULL,
   session varchar(100),
   remoteAddr varchar(20),
   locked tinyint(1),
