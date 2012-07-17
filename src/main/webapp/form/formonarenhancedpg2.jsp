@@ -377,7 +377,7 @@ width: 100%;
 					$("input[name='pg2_wt"+x+"']").attr('name','pg2_wt'+total);
 					$("input[name='pg2_BP"+x+"']").attr('name','pg2_BP'+total);
 					$("input[name='pg2_urinePr"+x+"']").attr('name','pg2_urinePr'+total);
-					$("input[name='pg2_urineGl"+x+"']").attr('name','pg2_urineGl'+total);
+					//$("input[name='pg2_urineGl"+x+"']").attr('name','pg2_urineGl'+total);
 					$("input[name='pg2_ht"+x+"']").attr('name','pg2_ht'+total);
 					$("input[name='pg2_presn"+x+"']").attr('name','pg2_presn'+total);
 					$("input[name='pg2_FHR"+x+"']").attr('name','pg2_FHR'+total);
@@ -537,7 +537,7 @@ jQuery(document).ready(function() {
 		  setInput(<%=y%>,"pg2_wt",'<%= StringEscapeUtils.escapeJavaScript(props.getProperty("pg2_wt"+y, "")) %>');
 		  setInput(<%=y%>,"pg2_BP",'<%= StringEscapeUtils.escapeJavaScript(props.getProperty("pg2_BP"+y, "")) %>');
 		  setInput(<%=y%>,"pg2_urinePr",'<%= StringEscapeUtils.escapeJavaScript(props.getProperty("pg2_urinePr"+y, "")) %>');
-		  setInput(<%=y%>,"pg2_urineGl",'<%= StringEscapeUtils.escapeJavaScript(props.getProperty("pg2_urineGl"+y, "")) %>');
+		 //removed urineGl
 		  setInput(<%=y%>,"pg2_ht",'<%= StringEscapeUtils.escapeJavaScript(props.getProperty("pg2_ht"+y, "")) %>');
 		  setInput(<%=y%>,"pg2_presn",'<%= StringEscapeUtils.escapeJavaScript(props.getProperty("pg2_presn"+y, "")) %>');
 		  setInput(<%=y%>,"pg2_FHR",'<%= StringEscapeUtils.escapeJavaScript(props.getProperty("pg2_FHR"+y, "")) %>');
@@ -2248,7 +2248,9 @@ $(document).ready(function(){
 				</tr>
 				<tr align="center">
 					<td>Pr</td>
+					<!-- 
 					<td>Gl</td>
+					-->
 				</tr>
 				</thead>
 			</table>
