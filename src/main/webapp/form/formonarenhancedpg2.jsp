@@ -614,7 +614,7 @@ function updatePageLock(lock) {
 		$.ajax({
 		   type: "POST",
 		   url: "<%=request.getContextPath()%>/PageMonitoringService.do",
-		   data: { method: "update", page: "formonarenhanced<%=demoNo%>", lock: lock },
+		   data: { method: "update", page: "formonarenhanced", pageId: "<%=demoNo%>", lock: lock },
 		   dataType: 'json',
 		   success: function(data,textStatus) {
 			   lockData=data;

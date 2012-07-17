@@ -40,6 +40,8 @@ public class PageMonitor extends AbstractModel<Integer> {
     private Integer	id;
 	
 	private String pageName;
+        
+        private String pageId;
 	
 	private String session;
 	
@@ -74,6 +76,14 @@ public class PageMonitor extends AbstractModel<Integer> {
 	public void setPageName(String pageName) {
     	this.pageName = pageName;
     }
+        
+        public String getPageId() {
+            return pageId;
+        }
+        
+        public void setPageId(String pageId) {
+            this.pageId = pageId;
+        }
 
 	public String getSession() {
     	return session;

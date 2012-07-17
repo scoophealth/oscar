@@ -87,7 +87,15 @@
 <%@page import="org.oscarehr.common.dao.SiteDao"%>
 <%@page import="org.oscarehr.common.model.Site"%><html:html locale="true">
 <head>
+<script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
+<script src="<%=request.getContextPath()%>/js/jquery-ui-1.8.18.custom.min.js"></script>
+<script src="<%=request.getContextPath()%>/js/fg.menu.js"></script>
+
+<link rel="stylesheet" href="<%=request.getContextPath()%>/css/cupertino/jquery-ui-1.8.18.custom.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/css/fg.menu.css">
+
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/checkDate.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/Oscar.js"></script>
 <% if (isMobileOptimized) { %>
     <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width" />
@@ -138,14 +146,47 @@ function checkTypeNum(typeIn) {
 }
 
 function checkTimeTypeIn(obj) {
+  var colonIdx;
   if(!checkTypeNum(obj.value) ) {
 	  alert ("<bean:message key="Appointment.msgFillTimeField"/>");
-	} else {
-	  if(obj.value.indexOf(':')==-1) {
-	    if(obj.value.length < 3) alert("<bean:message key="Appointment.msgFillValidTimeField"/>");
-	    obj.value = obj.value.substring(0, obj.value.length-2 )+":"+obj.value.substring( obj.value.length-2 );
-	  }
-	}
+  } else {
+      colonIdx = obj.value.indexOf(':');
+      if(colonIdx==-1) {
+        if(obj.value.length < 3) alert("<bean:message key="Appointment.msgFillValidTimeField"/>");
+        obj.value = obj.value.substring(0, obj.value.length-2 )+":"+obj.value.substring( obj.value.length-2 );
+  }
+}
+          
+  var hours = "";
+  var minutes = "";  
+
+  colonIdx = obj.value.indexOf(':');  
+  if (colonIdx < 1)
+      hours = "00";     
+  else if (colonIdx == 1)
+      hours = "0" + obj.value.substring(0,1);
+  else
+      hours = obj.value.substring(0,2);
+  
+  minutes = obj.value.substring(colonIdx+1,colonIdx+3);
+  if (minutes.length == 1)
+    minutes = "0" + minutes;
+  else if (minutes.length < 2)
+    minutes = "00";
+
+  obj.value = hours + ":" + minutes;    
+}
+
+var readOnly=false;
+function checkDateTypeIn(obj) {
+    if (obj.value == '') {
+        alert("Date cannot be empty");
+        return false;
+    } else { 
+        obj.value = obj.value.replace(/\//g,"-");
+        if (!check_date(obj.name))
+          return false;
+    } 
 }
 
 function calculateEndTime() {
@@ -303,7 +344,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
   GregorianCalendar caltime =new GregorianCalendar( );
   caltime.setTime(apptDate);
   caltime.add(GregorianCalendar.MINUTE, Integer.parseInt(duration)-1 );
-
+  
   String [] param = new String[9] ;
   param[0] = dateString2;
   param[1] = curProvider_no;
@@ -317,7 +358,158 @@ function pasteAppt(multipleSameDayGroupAppt) {
 
   List<Map<String,Object>> resultList = oscarSuperManager.find("appointmentDao", "search_appt", param);
   long apptnum = resultList.size() > 0 ? (Long)resultList.get(0).get("n") : 0;
+  
+  OscarProperties props = OscarProperties.getInstance();
+  
+  String timeoutSeconds = props.getProperty("appointment_locking_timeout","0");
+  int timeoutSecs = 0; 
+  try { 
+    timeoutSecs = Integer.parseInt(timeoutSeconds);
+  }catch (NumberFormatException e) {}
+  
+  int hourInt = caltime.get(Calendar.HOUR_OF_DAY); 
+  String hour = String.valueOf(hourInt);
+  if (hour.length() == 0)
+      hour = "00";
+   else if (hour.length() == 1)
+      hour = "0" + hour;
+  
+  int minuteInt = caltime.get(Calendar.MINUTE); 
+  String minute = String.valueOf(minuteInt);
+   if (minute.length() == 0)
+      minute = "00";
+   else if (minute.length() == 1) 
+      minute = "0" + minute;  
+  
+   if (timeoutSecs > 0) {
+%>
 
+<script>
+        var timers = new Array();
+
+	$(document).ready(function(){
+           $(window).bind('beforeunload',function(){cancelPageLock();
+           });
+           //cancel any page view/locks held by provider on clicking 'X'
+           $("form#addappt").submit(function() {$(window).unbind('beforeunload');
+           });
+
+           calculateEndTime();
+           var endTime = document.forms[0].end_time.value;
+           var startTime = document.forms[0].start_time.value;
+           var apptDate = document.forms[0].appointment_date.value; 
+           updatePageLock(100,apptDate,startTime,endTime);	   
+	});
+        
+        function checkPageLock() {
+           $("#searchBtn").attr("disabled","disabled");
+           calculateEndTime();
+           var endTime = document.forms[0].end_time.value;
+           var startTime = document.forms[0].start_time.value;
+           var apptDate = document.forms[0].appointment_date.value;
+           updatePageLock(100,apptDate,startTime,endTime);
+           
+        }
+        
+        function updatePageLock(timeout, apptDate, startTime, endTime) {
+
+           for (var i = 0; i < timers.length; i++) {
+                clearTimeout(timers[i]);               
+           }
+                      
+	   haveLock=false;
+           $.ajax({
+               type: "POST",
+               url: "<%=request.getContextPath()%>/PageMonitoringService.do",
+               data: { method: "update", page: "addappointment", pageId: "<%=curProvider_no%>|" + apptDate + "|" + startTime + "|" + endTime, lock: true, timeout: <%=timeoutSeconds%>, cleanupExisting: true},
+               dataType: 'json',
+               async: false,
+               success: function(data,textStatus) {
+                       lockData=data;
+                            var locked=false;
+                            var lockedProviderName='';
+                            var providerNames='';
+                            haveLock=false;
+                       $.each(data, function(key, val) {				
+                         if(val.locked) {
+                             locked=true;
+                             lockedProviderName=val.providerName;
+                         }
+                         if(val.locked==true && val.self==true) {
+                                       haveLock=true;
+                               }
+                         if(providerNames.length > 0)
+                             providerNames += ",";
+                         providerNames += val.providerName;
+
+                       });
+
+                       var lockedMsg = locked?'<span style="color:red" title="'+lockedProviderName+'">&nbsp(locked)</span>':'';
+                       $("#lock_notification").html(
+                            '<span title="'+providerNames+'">Viewers:'+data.length+lockedMsg+'</span>'	   
+                       );
+
+
+                       if(haveLock==true) { //i have the lock
+                            $("#addButton").show(); 
+                            $("#printButton").show();
+                            $("#addPrintPreviewButton").show(); 
+                            $("#pasteButton").show(); 
+                            $("#apptRepeatButton").show(); 
+                       } else if(locked && !haveLock) { //someone else has lock.
+                            $("#addButton").hide(); 
+                            $("#printButton").hide();
+                            $("#addPrintPreviewButton").hide(); 
+                            $("#pasteButton").hide(); 
+                            $("#apptRepeatButton").hide();                          
+                       } else { //no lock
+                            $("#addButton").show(); 
+                            $("#printButton").show();
+                            $("#addPrintPreviewButton").show(); 
+                            $("#pasteButton").show(); 
+                            $("#apptRepeatButton").show();                                 
+                       }
+                       $("#searchBtn").removeAttr("disabled");
+               }
+             }
+            );
+            
+            timers.push(setTimeout(function(){updatePageLock(5000, apptDate, startTime, endTime)},timeout));      
+        }
+        
+        function cancelPageLock() {
+           calculateEndTime();
+           var endTime = document.forms[0].end_time.value;
+           var startTime = document.forms[0].start_time.value;
+           var apptDate = document.forms[0].appointment_date.value;
+           
+           for (var i = 0; i < timers.length; i++) {
+               clearTimeout(timers[i]);               
+           }
+           
+           $.ajax({
+               type: "POST",
+               url: "<%=request.getContextPath()%>/PageMonitoringService.do",
+               data: { method: "cancel", page: "addappointment", pageId: "<%=curProvider_no%>|" + apptDate + "|" + startTime + "|" + endTime},
+               dataType: 'json',
+               async: false,
+               success: function(data,textStatus) {}
+           });
+        }
+
+</script>
+
+<%
+ } else {        
+%>
+<script>
+    function checkPageLock() { //don't do anything unless timeout/locking is enabled.
+    }
+    function cancelPageLock() { //don't do anything unless timeout/locking is enabled.
+    }
+</script>
+<%
+  }
   String deepcolor = apptnum==0?"#CCCCFF":"gold", weakcolor = apptnum==0?"#EEEEFF":"ivory";
   if (!isMobileOptimized) {
 %>
@@ -369,6 +561,11 @@ function pasteAppt(multipleSameDayGroupAppt) {
 </head>
 <body bgproperties="fixed"
 	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0" bottommargin="0">
+ <% if (timeoutSecs >0) { %>
+    <div id="lock_notification">
+        <span title="">Viewers: N/A</span>
+    </div>
+ <% } %>
 <%
   String patientStatus = "";
   String disabled="";
@@ -385,7 +582,6 @@ function pasteAppt(multipleSameDayGroupAppt) {
 
   //to show Alert msg
 
-  OscarProperties props = OscarProperties.getInstance();
   boolean bMultipleSameDayGroupAppt = false;
   String displayStyle = "display:none";
   String myGroupNo = (String) session.getAttribute("groupno");
@@ -516,7 +712,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
 	</tr>
 </table>
 <% } %>
-<FORM NAME="ADDAPPT" METHOD="post" ACTION="<%=request.getContextPath()%>/appointment/appointmentcontrol.jsp"
+<FORM NAME="ADDAPPT" id="addappt" METHOD="post" ACTION="<%=request.getContextPath()%>/appointment/appointmentcontrol.jsp"
 	onsubmit="return(calculateEndTime())"><INPUT TYPE="hidden"
 	NAME="displaymode" value="">
 	<input type="hidden" name="year" value="<%=request.getParameter("year") %>" >
@@ -540,7 +736,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
             <div class="input">
                 <INPUT TYPE="TEXT" NAME="appointment_date"
                     VALUE="<%=dateString2%>" WIDTH="25" HEIGHT="20" border="0"
-                    hspace="2">
+                    hspace="2" onChange="checkDateTypeIn(this);checkPageLock()">
             </div>
             <div class="space">&nbsp;</div>
             <div class="label"><bean:message key="Appointment.formStatus" />:</div>
@@ -567,7 +763,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
             <div class="input">
                 <INPUT TYPE="TEXT" NAME="start_time"
                     VALUE='<%=request.getParameter("start_time")%>' WIDTH="25"
-                    HEIGHT="20" border="0" onChange="checkTimeTypeIn(this)">
+                    HEIGHT="20" border="0" onChange="checkTimeTypeIn(this);checkPageLock()">
             </div>
             <div class="space">&nbsp;</div>
 
@@ -604,7 +800,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
             <div class="label"><bean:message key="Appointment.formDuration" />:</div> <!--font face="arial"> End Time :</font-->
             <div class="input">
                 <INPUT TYPE="TEXT" NAME="duration"
-                        VALUE="<%=duration%>" WIDTH="25" HEIGHT="20" border="0" hspace="2">
+                        VALUE="<%=duration%>" WIDTH="25" HEIGHT="20" border="0" hspace="2" onChange="checkPageLock()">
                 <INPUT TYPE="hidden" NAME="end_time"
                         VALUE='<%=request.getParameter("end_time")%>' WIDTH="25"
                         HEIGHT="20" border="0" hspace="2" onChange="checkTimeTypeIn(this)">
@@ -641,7 +837,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
 			<input type="hidden" name="outofdomain" value="<%=OscarProperties.getInstance().getProperty("pmm.client.search.outside.of.domain.enabled","true")%>"/> 
             <!--input type="hidden" name="displaymode" value="Search " -->
             <div class="label">
-                <INPUT TYPE="submit" style="width:auto;"
+                <INPUT TYPE="submit" name="searchBtn" id="searchBtn" style="width:auto;"
                     onclick="document.forms['ADDAPPT'].displaymode.value='Search '"
                     VALUE="<bean:message key="appointment.addappointment.btnSearch"/>">
             </div>
@@ -801,7 +997,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
           %>
           <input type="button" id="pasteButton" value="Paste" onclick="pasteAppt(<%=(numSameDayGroupApptsPaste > 0)%>);">
         <% }%>
-          <INPUT TYPE="RESET" id="backButton" class="leftButton top" VALUE="<bean:message key="appointment.addappointment.btnCancel"/>" onClick="window.close();">
+          <INPUT TYPE="RESET" id="backButton" class="leftButton top" VALUE="<bean:message key="appointment.addappointment.btnCancel"/>" onClick="cancelPageLock();window.close();">
        <% if (!props.getProperty("allowMultipleSameDayGroupAppt", "").equalsIgnoreCase("no")) {%>
           <input type="button" id="apptRepeatButton" value="<bean:message key="appointment.addappointment.btnRepeat"/>" onclick="onButRepeat()" <%=disabled%>>
       <%  } %>
