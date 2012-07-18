@@ -211,6 +211,7 @@ public class ONAR1EnhancedPostProcessor implements FrmPDFPostValueProcessor {
 
 
 		if(p.getProperty("pg1_partnerEduLevel","").equals("UNK")) {p.setProperty("pg1_partnerEduLevel", "");}
+		if(p.getProperty("pg1_partnerEduLevel","").equals("UN")) {p.setProperty("pg1_partnerEduLevel", "");}
 		if(p.getProperty("pg1_partnerEduLevel","").equals("ED001")) {p.setProperty("pg1_partnerEduLevel", "Post Secondary");}		
 		if(p.getProperty("pg1_partnerEduLevel","").equals("ED002")) {p.setProperty("pg1_partnerEduLevel", "Post Sec. N/Completed");}
 		if(p.getProperty("pg1_partnerEduLevel","").equals("ED003")) {p.setProperty("pg1_partnerEduLevel", "Grade School Completed");}
@@ -219,7 +220,8 @@ public class ONAR1EnhancedPostProcessor implements FrmPDFPostValueProcessor {
 		if(p.getProperty("pg1_partnerEduLevel","").equals("ED006")) {p.setProperty("pg1_partnerEduLevel", "Grade School N/Completed");}
 
 		//max 19
-		if(p.getProperty("pg1_eduLevel","").equals("UNK")) {p.setProperty("pg1_partnerEduLevel", "");}
+		if(p.getProperty("pg1_eduLevel","").equals("UN")) {p.setProperty("pg1_eduLevel", "");}		
+		if(p.getProperty("pg1_eduLevel","").equals("UNK")) {p.setProperty("pg1_eduLevel", "");}
 		if(p.getProperty("pg1_eduLevel","").equals("ED001")) {p.setProperty("pg1_eduLevel", "Post Secondary");}		
 		if(p.getProperty("pg1_eduLevel","").equals("ED002")) {p.setProperty("pg1_eduLevel", "Post Sec. N/Completed");}
 		if(p.getProperty("pg1_eduLevel","").equals("ED003")) {p.setProperty("pg1_eduLevel", "Grade School Completed");}
@@ -227,17 +229,18 @@ public class ONAR1EnhancedPostProcessor implements FrmPDFPostValueProcessor {
 		if(p.getProperty("pg1_eduLevel","").equals("ED005")) {p.setProperty("pg1_eduLevel", "High School N/Completed");}
 		if(p.getProperty("pg1_eduLevel","").equals("ED006")) {p.setProperty("pg1_eduLevel", "Grade School N/Completed");}
 
-		if(p.getProperty("pg1_maritalStatus","").equals("UN")) {p.setProperty("pg1_maritalStatus", "Unknown");}
+		if(p.getProperty("pg1_maritalStatus","").equals("UN")) {p.setProperty("pg1_maritalStatus", "");}
 		if(p.getProperty("pg1_maritalStatus","").equals("M")) {p.setProperty("pg1_maritalStatus", "Married");}
 		if(p.getProperty("pg1_maritalStatus","").equals("CL")) {p.setProperty("pg1_maritalStatus", "Common Law");}
 		if(p.getProperty("pg1_maritalStatus","").equals("S")) {p.setProperty("pg1_maritalStatus", "Single");}
+		if(p.getProperty("pg1_maritalStatus","").equals("DS")) {p.setProperty("pg1_maritalStatus", "Separated/Divorced");}
 
 		//smoking amt
 		if(p.getProperty("pg1_box3","").equals("LESS10")) {p.setProperty("pg1_box3", "<10");}
 		if(p.getProperty("pg1_box3","").equals("UP20")) {p.setProperty("pg1_box3", "<20");}
 		if(p.getProperty("pg1_box3","").equals("OVER20")) {p.setProperty("pg1_box3", ">20");}
 		
-		
+		if(p.getProperty("pg1_ethnicBgMother","").equals("Unknown")) {p.setProperty("pg1_ethnicBgMother", "");}		
 		if(p.getProperty("pg1_ethnicBgMother","").equals("UN")) {p.setProperty("pg1_ethnicBgMother", "");}
 		if(p.getProperty("pg1_ethnicBgMother","").equals("ANC001")) {p.setProperty("pg1_ethnicBgMother", "Aboriginal");}
 		if(p.getProperty("pg1_ethnicBgMother","").equals("ANC002")) {p.setProperty("pg1_ethnicBgMother", "Asian");}
@@ -245,6 +248,7 @@ public class ONAR1EnhancedPostProcessor implements FrmPDFPostValueProcessor {
 		if(p.getProperty("pg1_ethnicBgMother","").equals("ANC007")) {p.setProperty("pg1_ethnicBgMother", "Caucasian");}
 		if(p.getProperty("pg1_ethnicBgMother","").equals("OTHER")) {p.setProperty("pg1_ethnicBgMother", "Other");}
 		
+		if(p.getProperty("pg1_ethnicBgFather","").equals("Unknown")) {p.setProperty("pg1_ethnicBgFather", "");}		
 		if(p.getProperty("pg1_ethnicBgFather","").equals("UN")) {p.setProperty("pg1_ethnicBgFather", "");}
 		if(p.getProperty("pg1_ethnicBgFather","").equals("ANC001")) {p.setProperty("pg1_ethnicBgFather", "Aboriginal");}
 		if(p.getProperty("pg1_ethnicBgFather","").equals("ANC002")) {p.setProperty("pg1_ethnicBgFather", "Asian");}
@@ -265,7 +269,7 @@ public class ONAR1EnhancedPostProcessor implements FrmPDFPostValueProcessor {
 			ethnic = "Unknown" + " / " + ethnicF;
 		}
 		if(ethnicM.length() == 0 && ethnicF.length() ==0) {
-			ethnic = "Unknown" + " / " + "Unknown";
+			ethnic = "";
 		}
 		
 		p.setProperty("pg1_ethnicBg",ethnic);
@@ -295,6 +299,7 @@ public class ONAR1EnhancedPostProcessor implements FrmPDFPostValueProcessor {
 		if(p.getProperty("pg1_labVDRL","").equals("NDONE")) {p.setProperty("pg1_labVDRL", "");}
 		if(p.getProperty("pg1_labSickle","").equals("NDONE")) {p.setProperty("pg1_labSickle", "");}
 		
+		if(p.getProperty("pg1_labABO","").equals("NDONE")) {p.setProperty("pg1_labABO", "");}
 		
 		
 		return p;
