@@ -6676,7 +6676,8 @@ create table ProviderPreference
     eRxUsername varchar(32),
     eRxPassword varchar(64),
     eRxFacility varchar(32),
-    eRxTrainingMode tinyint(1) not null
+    eRxTrainingMode tinyint(1) not null,
+    encryptedMyOscarPassword varbinary(255)
 );
 
 --

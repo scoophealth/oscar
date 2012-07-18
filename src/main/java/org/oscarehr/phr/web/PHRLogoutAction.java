@@ -22,7 +22,6 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.phr.web;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,30 +34,42 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionRedirect;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.common.dao.ProviderPreferenceDao;
+import org.oscarehr.common.model.ProviderPreference;
 import org.oscarehr.phr.PHRAuthentication;
-import org.oscarehr.phr.service.PHRService;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
-/**
- *
- * @author jay
- */
 public class PHRLogoutAction extends DispatchAction {
-     private static Logger log = MiscUtils.getLogger();
-    
-    /**
-     * Creates a new instance of PHRLoginAction
-     */
-    public PHRLogoutAction() {
-    }
-    
-     
-    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-       HttpSession session = request.getSession();
-       session.removeAttribute(PHRAuthentication.SESSION_PHR_AUTH);
-       session.removeAttribute(PHRService.SESSION_PHR_EXCHANGE_TIME);
-       String forwardTo = request.getParameter("forwardto");
-       ActionRedirect ar = new ActionRedirect(forwardTo);
-       return ar;
-    }
+	private static Logger log = MiscUtils.getLogger();
+
+	public PHRLogoutAction() {
+	}
+
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		HttpSession session = request.getSession();
+		session.removeAttribute(PHRAuthentication.SESSION_PHR_AUTH);
+
+		clearSavedMyOscarPassword();
+
+		String forwardTo = request.getParameter("forwardto");
+		ActionRedirect ar = new ActionRedirect(forwardTo);
+		return ar;
+	}
+
+	private void clearSavedMyOscarPassword() {
+		try {
+			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+
+			ProviderPreferenceDao providerPreferenceDao = (ProviderPreferenceDao) SpringUtils.getBean("providerPreferenceDao");
+			ProviderPreference providerPreference = providerPreferenceDao.find(loggedInInfo.loggedInProvider.getProviderNo());
+			if (providerPreference.getEncryptedMyOscarPassword() != null) {
+				providerPreference.setEncryptedMyOscarPassword(null);
+				providerPreferenceDao.merge(providerPreference);
+			}
+		} catch (Exception e) {
+			log.error("Error clearing myoscarPassword.", e);
+		}
+	}
 }

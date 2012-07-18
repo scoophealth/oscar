@@ -28,6 +28,7 @@ package org.oscarehr.util;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Random;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -36,16 +37,17 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import javax.servlet.http.HttpSession;
 
-import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
 
 public final class EncryptionUtils
 {
 	private static final Logger logger = MiscUtils.getLogger();
 	private static final MessageDigest messageDigest = initMessageDigest();
-	private static final QueueCache<String, byte[]> sha1Cache=new QueueCache<String,byte[]>(4, 2048);
-	private static final int MAX_SHA_KEY_CACHE_SIZE=2048;
+	private static final QueueCache<String, byte[]> sha1Cache = new QueueCache<String, byte[]>(4, 2048);
+	private static final int MAX_SHA_KEY_CACHE_SIZE = 2048;
+	private static final String MANGLED_SECRET_KEY_SESSION_KEY=EncryptionUtils.class.getName()+".MANGLED_SECRET_KEY";
 
 	private static MessageDigest initMessageDigest()
 	{
@@ -70,17 +72,17 @@ public final class EncryptionUtils
 	 */
 	public static byte[] getSha1(String s)
 	{
-		byte[] b=sha1Cache.get(s);
+		byte[] b = sha1Cache.get(s);
 
-		if (b==null)
+		if (b == null)
 		{
-			b=getSha1NoCache(s);
-			if (s.length()<MAX_SHA_KEY_CACHE_SIZE) sha1Cache.put(s, b);
+			b = getSha1NoCache(s);
+			if (s.length() < MAX_SHA_KEY_CACHE_SIZE) sha1Cache.put(s, b);
 		}
-		
+
 		return(b);
 	}
-	
+
 	/**
 	 * We're only really using this to encrypt passwords so it's not too often so synchronisation on 1 instance shouldn't be too bad.
 	 */
@@ -92,7 +94,7 @@ public final class EncryptionUtils
 		{
 			synchronized (messageDigest)
 			{
-				return(messageDigest.digest(s.getBytes()));
+				return(messageDigest.digest(s.getBytes("UTF-8")));
 			}
 		}
 		catch (Exception e)
@@ -102,38 +104,91 @@ public final class EncryptionUtils
 		}
 	}
 
-	public static byte[] generateEncryptionKey() throws NoSuchAlgorithmException
+	/**
+	 * Assumes AES 128
+	 */
+	public static SecretKey generateEncryptionKey() throws NoSuchAlgorithmException
 	{
 		KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
 		keyGenerator.init(128);
 
 		SecretKey secretKey = keyGenerator.generateKey();
-		return(secretKey.getEncoded());
+		return(secretKey);
 	}
 
-	public static byte[] encrypt(SecretKeySpec secretKeySpec, byte[] plainData) throws IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException
+	/**
+	 * Assumes AES 128
+	 * A deterministic key generator based on the seed.
+	 */
+	public static SecretKeySpec generateEncryptionKey(String seed)
 	{
-		if (secretKeySpec == null) return(plainData);
+		byte[] sha1 = getSha1(seed);
+
+		SecretKeySpec secretKey = new SecretKeySpec(sha1, 0, 16, "AES");
+		return(secretKey);
+	}
+
+	/**
+	 * Assumes AES 128
+	 */
+	public static byte[] encrypt(SecretKey secretKey, byte[] plainData) throws IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException
+	{
+		if (secretKey == null) return(plainData);
 
 		Cipher cipher = Cipher.getInstance("AES");
-		cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
+		cipher.init(Cipher.ENCRYPT_MODE, secretKey);
 		byte[] results = cipher.doFinal(plainData);
 		return(results);
 	}
 
-	public static byte[] decrypt(SecretKeySpec secretKeySpec, byte[] encryptedData) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException
+	/**
+	 * Assumes AES 128
+	 */
+	public static byte[] decrypt(SecretKey secretKey, byte[] encryptedData) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException
 	{
-		if (secretKeySpec == null) return(encryptedData);
+		if (secretKey == null) return(encryptedData);
 
 		Cipher cipher = Cipher.getInstance("AES");
-		cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
+		cipher.init(Cipher.DECRYPT_MODE, secretKey);
 		byte[] results = cipher.doFinal(encryptedData);
 		return(results);
 	}
-
-	public static void main(String... argv)
+	
+	/**
+	 * deterministically mangle the byte input, doesn't have to be complex, just something different.
+	 * Reason being we don't want to just sha1 the oscar_password as the encryption key because
+	 * that's already stored in the db as the password record.
+	 */
+	public static String deterministicallyMangle(String s)
 	{
-		String temp = "one two three four";
-		logger.info(new String(Hex.encodeHex(getSha1(temp))));
+		Random random=new Random(s.length());
+
+		StringBuilder sb=new StringBuilder();
+		
+		for (int i=0; i< s.length(); i++)
+		{
+			sb.append(random.nextInt(s.charAt(i)));
+			
+		}
+				
+		return(sb.toString());
+	}
+	
+	public static SecretKeySpec getSecretKeyFromDeterministicallyMangledPassword(String unmangledPassword)
+	{
+		String mangledPassword=deterministicallyMangle(unmangledPassword);
+		SecretKeySpec secretKeySpec=EncryptionUtils.generateEncryptionKey(mangledPassword);
+		return(secretKeySpec);
+	}
+	
+	public static void setDeterministicallyMangledPasswordSecretKeyIntoSession(HttpSession session, String unmangledPassword)
+	{
+		SecretKeySpec secretKeySpec=getSecretKeyFromDeterministicallyMangledPassword(unmangledPassword);
+		session.setAttribute(MANGLED_SECRET_KEY_SESSION_KEY, secretKeySpec);
+	}
+	
+	public static SecretKeySpec getDeterministicallyMangledPasswordSecretKeyFromSession(HttpSession session)
+	{
+		return (SecretKeySpec) (session.getAttribute(MANGLED_SECRET_KEY_SESSION_KEY));
 	}
 }
