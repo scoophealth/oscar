@@ -1,0 +1,271 @@
+ c_newBornID     : left, 30, 50, 0, BaseFont.HELVETICA, 8
+ singleton       : left, 134, 37, 0, BaseFont.HELVETICA, 8 , X
+ twinA           : left, 190, 37, 0, BaseFont.HELVETICA, 8 , X
+ twinB           : left, 190, 48, 0, BaseFont.HELVETICA, 8 , X
+ tripletA        : left, 246, 37, 0, BaseFont.HELVETICA, 8 , X
+ tripletB        : left, 246, 48, 0, BaseFont.HELVETICA, 8 , X
+ tripletC        : left, 246, 59, 0, BaseFont.HELVETICA, 8 , X
+ gestAge         : left, 172, 65, 0, BaseFont.HELVETICA, 8
+ gestWks         : left, 216, 65, 0, BaseFont.HELVETICA, 8
+ pg1_gravida     : left, 42, 87, 0, BaseFont.HELVETICA, 8
+ pg1_term        : left, 75, 87, 0, BaseFont.HELVETICA, 8
+ pg1_preterm     : left, 100, 87, 0, BaseFont.HELVETICA, 8
+ pg1_abortion    : left, 126, 87, 0, BaseFont.HELVETICA, 8
+ pg1_living      : left, 146, 87, 0, BaseFont.HELVETICA, 8
+ pg1_EDD         : left, 190, 87, 0, BaseFont.HELVETICA, 8
+ __surname       : left, 310, 40, 0, BaseFont.HELVETICA, 6 , SURNAME  
+ c_surname       : left, 310, 50, 0, BaseFont.HELVETICA, 8
+ __givenName     : left, 453, 40, 0, BaseFont.HELVETICA, 6 , GIVEN NAME 
+ c_givenName     : left, 453, 50, 0, BaseFont.HELVETICA, 8
+ __address       : left, 310, 60, 0, BaseFont.HELVETICA, 6 , ADDRESS
+ c_address       : left, 310, 70, 0, BaseFont.HELVETICA, 8
+ c_city          : left, 310, 80, 0, BaseFont.HELVETICA, 8
+ c_province      : left, 370, 80, 0, BaseFont.HELVETICA, 8
+ c_postal        : left, 390, 80, 0, BaseFont.HELVETICA, 8
+ __phoneNumber   : left, 454, 70, 0, BaseFont.HELVETICA, 6 , PHONE NUMBER
+ c_phone         : left, 454, 80, 0, BaseFont.HELVETICA, 8
+ __hin           : left, 310, 100, 0, BaseFont.HELVETICA, 6 , PERSONAL HEALTH NUMBER 
+ c_phn           : left, 310, 110, 0, BaseFont.HELVETICA, 8
+ __physicianName : left, 454, 100, 0, BaseFont.HELVETICA, 6 , PHYSICIAN / MIDWIFE NAME
+ c_phyMid        : left, 454, 110, 0, BaseFont.HELVETICA, 8
+ labNoLabour1    : left, 32, 121, 0, BaseFont.HELVETICA, 8 , X
+ labSpontaneous1 : left, 32, 134, 0, BaseFont.HELVETICA, 8 , X
+ labAugmented1   : left, 32, 145, 0, BaseFont.HELVETICA, 8 , X
+ labArm1         : left, 90, 145, 0, BaseFont.HELVETICA, 8 , X
+ labOxytocin1    : left, 132, 145, 0, BaseFont.HELVETICA, 8 , X
+ labOtherChk1    : left, 185, 145, 0, BaseFont.HELVETICA, 8 , X
+ labOther1       : left, 223, 144, 0, BaseFont.HELVETICA, 8
+ labIndication1  : left, 322, 142, 0, BaseFont.HELVETICA, 8
+ labInduced2     : left, 32, 159, 0, BaseFont.HELVETICA, 8 , X
+ labFoley2       : left, 80, 159, 0, BaseFont.HELVETICA, 8 , X
+ labArm2         : left, 118, 160, 0, BaseFont.HELVETICA, 8 , X
+ labOxytocin2    : left, 156, 160, 0, BaseFont.HELVETICA, 8 , X
+ labProstaglandin2 : left, 202, 160, 0, BaseFont.HELVETICA, 8 , X
+ labNumInserted  : left, 306, 160, 0, BaseFont.HELVETICA, 8 , 
+ labOtherChk2    : left, 325, 161, 0, BaseFont.HELVETICA, 8 , X
+ labOther2       : left, 355, 160, 0, BaseFont.HELVETICA, 8
+ labIndication2  : left, 355, 160, 0, BaseFont.HELVETICA, 8
+ labAmnFluClear  : left, 65, 191, 0, BaseFont.HELVETICA, 8 , X
+ labAmnFluMeco   : left, 110, 191, 0, BaseFont.HELVETICA, 8 , X
+ labAmnFluBloody : left, 172, 191, 0, BaseFont.HELVETICA, 8 , X
+ labInterAusc    : left, 103, 203, 0, BaseFont.HELVETICA, 8 , X
+ labExtEfm       : left, 204, 203, 0, BaseFont.HELVETICA, 8 , X
+ labIntEfm       : left, 273, 203, 0, BaseFont.HELVETICA, 8 , X
+ labIupc         : left, 339, 203, 0, BaseFont.HELVETICA, 8 , X
+ labIndicationEFM : left, 451, 203, 0, BaseFont.HELVETICA, 8 ,
+ labFetalBld     : left, 32, 215, 0, BaseFont.HELVETICA, 8, X
+ labFetalBldPh   : left, 170, 214, 0, BaseFont.HELVETICA, 8
+ labFetalBldBe   : left, 257, 214, 0, BaseFont.HELVETICA, 8
+ labCephalic     : left, 99, 230, 0, BaseFont.HELVETICA, 8 , X
+ labBreech     : left, 150, 230, 0, BaseFont.HELVETICA, 8 , X
+ labFrank     : left, 189, 230, 0, BaseFont.HELVETICA, 8 , X
+ labComplete     : left, 189, 242, 0, BaseFont.HELVETICA, 8 , X
+ labIncomplete     : left, 189, 253, 0, BaseFont.HELVETICA, 8 , X
+ labFootling     : left, 189, 265, 0, BaseFont.HELVETICA, 8 , X
+ labOtherPresentation : left, 32, 274, 0, BaseFont.HELVETICA, 8 ,
+ AnalgesiaNone : left, 243, 238, 0, BaseFont.HELVETICA, 8 , X
+ AnalgesiaOpioids : left, 279, 238, 0, BaseFont.HELVETICA, 8 , X
+ AnalgesiaEntonox : left, 330, 238, 0, BaseFont.HELVETICA, 8 , X
+ AnalgesiaLocal	: left, 243, 251, 0, BaseFont.HELVETICA, 8 , X
+ AnalgesiaPudendal	: left, 279, 251, 0, BaseFont.HELVETICA, 8 , X
+ AnalgesiaOther	: left, 330, 251, 0, BaseFont.HELVETICA, 8 , X
+ AnalgesiaOthertext	: left, 363, 248, 0, BaseFont.HELVETICA, 8 ,
+LabourEpidural 	: left, 271, 265, 0, BaseFont.HELVETICA, 8 , X
+LabourSpinal	: left, 318, 265, 0, BaseFont.HELVETICA, 8 , X
+LabourCombined	: left, 359, 265, 0, BaseFont.HELVETICA, 8 , X
+CSEpidural	: left, 271, 278, 0, BaseFont.HELVETICA, 8 , X
+CSSpinal	: left, 318, 278, 0, BaseFont.HELVETICA, 8 , X
+CSCombined	: left, 359, 278, 0, BaseFont.HELVETICA, 8 , X
+CSGeneral 	: left, 416, 278, 0, BaseFont.HELVETICA, 8 , X
+ProphylacticNone : left, 462, 240, 0, BaseFont.HELVETICA, 8 , X
+ProphylacticIntrapartum : left, 462, 251, 0, BaseFont.HELVETICA, 8 , X
+ProphylacticIntrapartumDoses : left, 550, 250, 0, BaseFont.HELVETICA, 8 ,
+ProphylacticIntraoperative : left, 462, 262, 0, BaseFont.HELVETICA, 8 , X
+ProphylacticOther : left, 462, 275, 0, BaseFont.HELVETICA, 8 , X
+ProphylacticOtherText  : left, 494, 273, 0, BaseFont.HELVETICA, 8 ,
+ delFetalPosLab  : left, 178, 303, 0, BaseFont.HELVETICA, 8
+ delOther  : left, 189, 321, 0, BaseFont.HELVETICA, 8, X
+ delOA  : left, 129, 319, 0, BaseFont.HELVETICA, 8, X
+ delOP  : left, 160, 321, 0, BaseFont.HELVETICA, 8, X
+ delOtherText  : left, 225, 320, 0, BaseFont.HELVETICA, 8
+delVBACCandidateNo : left, 96, 352, 0, BaseFont.HELVETICA, 8, X
+delVBACCandidateYes : left, 125, 352, 0, BaseFont.HELVETICA, 8, X
+delVBACCandidateElective : left, 212, 352, 0, BaseFont.HELVETICA, 8, X
+delVBACCandidateCS : left, 270, 352, 0, BaseFont.HELVETICA, 8, X
+ delSvd          : left, 32, 335, 0, BaseFont.HELVETICA, 8 , X
+ delAssiDel      : left, 32, 367, 0, BaseFont.HELVETICA, 8 , X
+ delVacuum       : left, 82, 367, 0, BaseFont.HELVETICA, 8 ,X
+ delOutlet       : left, 140, 375, 0, BaseFont.HELVETICA, 8 , X
+ delLow          : left, 140, 388, 0, BaseFont.HELVETICA, 8 , X
+ delMid          : left, 140, 400, 0, BaseFont.HELVETICA, 8 , X
+ delRotation     : left, 140, 412, 0, BaseFont.HELVETICA, 8 , X
+ delEasy         : left, 200, 377, 0, BaseFont.HELVETICA, 8 , X
+ delModDiff      : left, 200, 388, 0, BaseFont.HELVETICA, 8 , X
+ delDiff         : left, 200, 400, 0, BaseFont.HELVETICA, 8 , X
+ delCesSect      : left, 32, 427, 0, BaseFont.HELVETICA, 8 , X
+ delPrim         : left, 85, 427, 0, BaseFont.HELVETICA, 8 , X
+ delRepeat       : left, 136, 427, 0, BaseFont.HELVETICA, 8 , X
+ delCesSectNo    : left, 200, 427, 0, BaseFont.HELVETICA, 8 
+ delPrimaryIndication : left, 120, 440, 0, BaseFont.HELVETICA, 8
+ delElective        : left, 41, 455, 0, BaseFont.HELVETICA, 8 , X
+ delUrgent : left, 85, 455, 0, BaseFont.HELVETICA, 8 , X
+ delEmergent : left, 125, 455, 0, BaseFont.HELVETICA, 8 , X
+ delDecisionDate : left, 90, 470, 0, BaseFont.HELVETICA, 8 ,
+ delDecisionHrs : left, 165, 470, 0, BaseFont.HELVETICA, 8 ,
+ delDecisionCM : left, 220, 470, 0, BaseFont.HELVETICA, 8 ,
+ delDecisionMaternalPosition : left, 32, 500, 0, BaseFont.HELVETICA, 8 ,
+ birTimeHour1    : right, 121, 540, 0, BaseFont.HELVETICA, 11
+ birTimeDate1    : right, 211, 540, 0, BaseFont.HELVETICA, 11
+ birTimeHour2    : right, 121, 560, 0, BaseFont.HELVETICA, 11
+ birTimeDate2    : right, 211, 560, 0, BaseFont.HELVETICA, 11
+ birTimeHour3    : right, 121, 580, 0, BaseFont.HELVETICA, 11
+ birTimeDate3    : right, 211, 580, 0, BaseFont.HELVETICA, 11
+ birTimeHour4    : right, 121, 595, 0, BaseFont.HELVETICA, 11
+ birTimeDate4    : right, 211, 595, 0, BaseFont.HELVETICA, 11
+ birTimeHour5    : right, 121, 615, 0, BaseFont.HELVETICA, 11
+ birTimeDate5    : right, 211, 615, 0, BaseFont.HELVETICA, 11
+ birDurHour1     : left, 276, 540, 0, BaseFont.HELVETICA, 8
+ birDurMin1      : left, 306, 540, 0, BaseFont.HELVETICA, 8
+ birDurHour2     : left, 276, 560, 0, BaseFont.HELVETICA, 8
+ birDurMin2      : left, 306, 560, 0, BaseFont.HELVETICA, 8
+ birDurHour3     : left, 276, 575, 0, BaseFont.HELVETICA, 8
+ birDurMin3      : left, 306, 575, 0, BaseFont.HELVETICA, 8
+ birDurRupHour   : left, 300, 615, 0, BaseFont.HELVETICA, 8
+ birMale         : left, 32, 632, 0, BaseFont.HELVETICA, 8 , X
+ birFemale       : left, 32, 645, 0, BaseFont.HELVETICA, 8 , X
+ birAmbiguous    : left, 32, 656, 0, BaseFont.HELVETICA, 8 , X
+ birApgar1       : left, 121, 656, 0, BaseFont.HELVETICA, 8
+ birApgar5       : left, 180, 656, 0, BaseFont.HELVETICA, 8
+ birApgar10      : left, 225, 656, 0, BaseFont.HELVETICA, 8
+ birWeight       : left, 275, 656, 0, BaseFont.HELVETICA, 8
+ comLabNormal    : left, 32, 685, 0, BaseFont.HELVETICA, 8 , X
+ comLabNormalSpec : left, 137, 684, 0, BaseFont.HELVETICA, 8
+ comLabPlaHosp   : left, 281, 671, 0, BaseFont.HELVETICA, 8 , X
+ comLabPlaHome   : left, 333, 671, 0, BaseFont.HELVETICA, 8 , X
+ comLabPlaTran   : left, 376, 671, 0, BaseFont.HELVETICA, 8 , X
+ comLabPlaTranText : left, 410, 669, 0, BaseFont.HELVETICA, 8 ,
+ comLabBirth     : left, 32, 690, 0, BaseFont.HELVETICA, 8 , _, 459, 744, 9
+ conObste        : left, 31, 742, 0, BaseFont.HELVETICA, 8 , X
+ conPedia        : left, 121, 742, 0, BaseFont.HELVETICA, 8 , X
+ conFamPhy       : left, 31, 751, 0, BaseFont.HELVETICA, 8 , X
+ conOther        : left, 121, 751, 0, BaseFont.HELVETICA, 8 , X
+ conOtherTxt	 : left, 153, 749, 0, BaseFont.HELVETICA, 8
+ conRmSignat     : left, 200, 741, 0, BaseFont.HELVETICA, 8
+ conMdSignat     : left, 340, 741, 0, BaseFont.HELVETICA, 8
+ delOxyNone : left, 322, 293, 0, BaseFont.HELVETICA, 8 , X
+ delOxyIM        : left, 362, 293, 0, BaseFont.HELVETICA, 8 , X
+ delOxyIV        : left, 390, 293, 0, BaseFont.HELVETICA, 8 , X
+ delOxyInfusion  : left, 419, 293, 0, BaseFont.HELVETICA, 8 , X
+ delPlaCompY     : left, 323, 320, 0, BaseFont.HELVETICA, 8 , X
+ delPlaCompN     : left, 356, 320, 0, BaseFont.HELVETICA, 8 , X
+ delPlaMaternalEffort : left, 284, 330, 0, BaseFont.HELVETICA, 8 , X
+ delPlaControlledTraction : left, 284, 346, 0, BaseFont.HELVETICA, 8 , X
+ delPlaManual : left, 284, 362, 0, BaseFont.HELVETICA, 8 , X
+ delPlaOperative : left, 284, 379, 0, BaseFont.HELVETICA, 8 , X
+ delPlaPSPY      : left, 350, 393, 0, BaseFont.HELVETICA, 8 , X
+ delPlaPSPN      : left, 382, 393, 0, BaseFont.HELVETICA, 8 , X
+ delCord2 : left, 318, 425, 0, BaseFont.HELVETICA, 8 , X
+ delCord3 : left, 342, 425, 0, BaseFont.HELVETICA, 8 , X
+ delCordGassesYes : left, 342, 438, 0, BaseFont.HELVETICA, 8 , X
+ delCordGassesNo : left, 374, 438, 0, BaseFont.HELVETICA, 8 , X
+ delCordClampedEarly : left, 342, 451, 0, BaseFont.HELVETICA, 8 , X
+ delCordClampedLate : left, 342, 466, 0, BaseFont.HELVETICA, 8 , X
+ delCordAbormalitiesComplications  : left, 284, 485, 0, BaseFont.HELVETICA, 8 ,
+ delPerIntact    : left, 409, 320, 0, BaseFont.HELVETICA, 8 , X
+ delPerLaceration : left, 409, 333, 0, BaseFont.HELVETICA, 8 , X
+ delPer1         : left, 460, 332, 0, BaseFont.HELVETICA, 8 , X
+ delPer2         : left, 484, 332, 0, BaseFont.HELVETICA, 8 , X
+ delPer3         : left, 509, 332, 0, BaseFont.HELVETICA, 8 , X
+ delPer4         : left, 530, 332, 0, BaseFont.HELVETICA, 8 , X
+ delPerEpisio    : left, 409, 345, 0, BaseFont.HELVETICA, 8 , X
+ delPerMidline   : left, 465, 345, 0, BaseFont.HELVETICA, 8 , X
+ delPerMedio     : left, 507, 345, 0, BaseFont.HELVETICA, 8 , X
+ delPerCerTear   : left, 409, 357, 0, BaseFont.HELVETICA, 8 , X
+ delPerOthTrau   : left, 409, 369, 0, BaseFont.HELVETICA, 8 , X
+ delPerOthTrauSpec : left, 470, 368, 0, BaseFont.HELVETICA, 8
+ delEstSpoY1     : left, 495, 389, 0, BaseFont.HELVETICA, 8 , X
+ delEstSpoN1     : left, 522, 389, 0, BaseFont.HELVETICA, 8 , X
+ delEstSpoInit1  : left, 552, 389, 0, BaseFont.HELVETICA, 8
+ delEstSpoY2     : left, 495, 404, 0, BaseFont.HELVETICA, 8 , X
+ delEstSpoN2     : left, 522, 404, 0, BaseFont.HELVETICA, 8 , X
+ delEstSpoInit2  : left, 552, 404, 0, BaseFont.HELVETICA, 8
+ delPerSutu      : left, 460, 415, 0, BaseFont.HELVETICA, 8
+ delEstBld1      : left, 408, 449, 0, BaseFont.HELVETICA, 8 , X
+ delEstBld2      : left, 455, 449, 0, BaseFont.HELVETICA, 8 , X
+ delEstBld3      : left, 515, 449, 0, BaseFont.HELVETICA, 8 , X 
+ delEstBldY      : left, 489, 464, 0, BaseFont.HELVETICA, 8 , X
+ delEstBldN      : left, 518, 464, 0, BaseFont.HELVETICA, 8 , X
+delEstBldMedication : left, 432, 475, 0, BaseFont.HELVETICA, 8 , X
+delEstBldBloodProducts : left, 432, 487, 0, BaseFont.HELVETICA, 8 , X
+ delEstBldOther  : left, 432, 498, 0, BaseFont.HELVETICA, 8 , X
+ delEstBldOtherSpec : left, 482, 494, 0, BaseFont.HELVETICA, 8
+ delOtherSpec    : left, 228, 400, 0, BaseFont.HELVETICA, 8
+ delBreech       : left, 41, 418, 0, BaseFont.HELVETICA, 8 , X
+ delFrank        : left, 121, 418, 0, BaseFont.HELVETICA, 8 , X
+ delComplete     : left, 121, 430, 0, BaseFont.HELVETICA, 8 , X
+ delIncomplete   : left, 121, 441, 0, BaseFont.HELVETICA, 8 , X
+ delFootling     : left, 121, 454, 0, BaseFont.HELVETICA, 8 , X
+ delSpont        : left, 180, 418, 0, BaseFont.HELVETICA, 8 , X
+ delAssit        : left, 180, 430, 0, BaseFont.HELVETICA, 8 , X
+ delForHead      : left, 180, 442, 0, BaseFont.HELVETICA, 8 , X
+ delExtracted    : left, 180, 454, 0, BaseFont.HELVETICA, 8 , X
+ delVersion      : left, 180, 465, 0, BaseFont.HELVETICA, 8 , X
+ delOtherPres    : left, 41, 477, 0, BaseFont.HELVETICA, 8 , X
+ delOtherPresSpec : left, 154, 475, 0, BaseFont.HELVETICA, 8
+ delAnaNone      : left, 293, 278, 0, BaseFont.HELVETICA, 8 , X
+ delAnaNarcotics : left, 344, 278, 0, BaseFont.HELVETICA, 8 , X
+ delAnaEpidu     : left, 401, 278, 0, BaseFont.HELVETICA, 8 , X
+ delAnaN2O2      : left, 293, 293, 0, BaseFont.HELVETICA, 8 , X
+ delAnaLocal     : left, 344, 293, 0, BaseFont.HELVETICA, 8 , X
+ delAnaSpinal    : left, 401, 293, 0, BaseFont.HELVETICA, 8 , X
+ delAnaCSE       : left, 293, 309, 0, BaseFont.HELVETICA, 8 , X
+ delAnaPudendal  : left, 344, 309, 0, BaseFont.HELVETICA, 8 , X
+ delAnaGen       : left, 401, 309, 0, BaseFont.HELVETICA, 8 , X
+ delAnaOther     : left, 293, 321, 0, BaseFont.HELVETICA, 8 , X
+ delAnaOtherSpec : left, 355, 320, 0, BaseFont.HELVETICA, 8
+ delOxyIMDose    : left, 541, 274, 0, BaseFont.HELVETICA, 8
+ delOxyOther     : left, 455, 304, 0, BaseFont.HELVETICA, 8 , X
+ delOxyOtherSpec : left, 516, 304, 0, BaseFont.HELVETICA, 8
+ delOxySign      : left, 494, 318, 0, BaseFont.HELVETICA, 8
+ delPlaSpont     : left, 293, 342, 0, BaseFont.HELVETICA, 8 , X
+ delPlaAssis     : left, 365, 342, 0, BaseFont.HELVETICA, 8 , X
+ delPlaManOper   : left, 293, 356, 0, BaseFont.HELVETICA, 8 , X
+ delPla2         : left, 528, 356, 0, BaseFont.HELVETICA, 8 , X
+ delPla3         : left, 558, 356, 0, BaseFont.HELVETICA, 8 , X
+ delPlaCGSN      : left, 528, 371, 0, BaseFont.HELVETICA, 8 , X
+ delPlaCGSY      : left, 558, 371, 0, BaseFont.HELVETICA, 8 , X
+ delPlaAbnormal  : left, 295, 379, 0, BaseFont.HELVETICA, 7 
+ delIndPrinc     : left, 80, 516, 0, BaseFont.HELVETICA, 8
+ delIndOther     : left, 323, 516, 0, BaseFont.HELVETICA, 8
+ birFHR          : left, 302, 686, 0, BaseFont.HELVETICA, 8
+ birDelBy        : left, 387, 520, 0, BaseFont.HELVETICA, 8
+ birDelMD        : left, 379, 533, 0, BaseFont.HELVETICA, 8 , X
+ birDelRM        : left, 403, 533, 0, BaseFont.HELVETICA, 8 , X
+ birDelRN        : left, 427, 533, 0, BaseFont.HELVETICA, 8 , X
+ birDelOther     : left, 451, 533, 0, BaseFont.HELVETICA, 8 , X
+ birDelOtherSpec : left, 510, 533, 0, BaseFont.HELVETICA, 8
+ birMDPres       : left, 385, 550, 0, BaseFont.HELVETICA, 8 ,
+ birNurPres      : left, 385, 585, 0, BaseFont.HELVETICA, 8 , 
+ birOtherPres    : left, 385, 622, 0, BaseFont.HELVETICA, 8 ,
+delStillbirthAntepartum : left, 386, 653, 0, BaseFont.HELVETICA, 8 , X
+delStillbirthIntrapartum : left, 443, 654, 0, BaseFont.HELVETICA, 8 , X
+ consultTo       : left, 85, 729, 0, BaseFont.HELVETICA, 7 
+ __formDate	  : left, 310, 18, 0, BaseFont.HELVETICA, 6, Date 
+ pg1_formDate : left, 310, 28, 0, BaseFont.HELVETICA, 8
+ __motherID	  : left, 453, 18, 0, BaseFont.HELVETICA, 6, MOTHER'S I.D. NUMBER
+ pg1_motherID : left, 453, 28, 0, BaseFont.HELVETICA, 8  
+ __admisDateTime	 : left, 490, 745, 0, BaseFont.HELVETICA, 6, ADMISSION:
+ admisDateTime	 : left, 535, 745, 0, BaseFont.HELVETICA, 6
+ __dischargeDateTime	 : left, 490, 754, 0, BaseFont.HELVETICA, 6, DISCHARGE:
+ dischargeDateTime	 : left, 535, 754, 0, BaseFont.HELVETICA, 6
+ __conLosTxtPre	 : left, 260, 703, 0, BaseFont.HELVETICA, 6 , L.O.S.:
+ conLos			 : left, 285, 703, 0, BaseFont.HELVETICA, 8
+ __conLosTxtPos	 : left, 302, 703, 0, BaseFont.HELVETICA, 6 , hr
+ __ppLosTxtPre	 : left, 260, 714, 0, BaseFont.HELVETICA, 6 , PP LOS:
+ ppLos			 : left, 285, 714, 0, BaseFont.HELVETICA, 8 
+ __ppLosTxtPos	 : left, 302, 714, 0, BaseFont.HELVETICA, 6 , hr
+
+
+ 
+ 
+  
