@@ -144,15 +144,6 @@ public class ERxCommunicator {
     }
 
     /**
-     * Returns the logger.
-     * 
-     * @return The current value of logger.
-     */
-    public Logger getLogger() {
-        return this.logger;
-    }
-
-    /**
      * Get the password that this communicator will use when connecting.
      * 
      * @return the password
@@ -407,16 +398,6 @@ public class ERxCommunicator {
      */
     public void setLocale(String locale) {
         this.locale = locale;
-    }
-
-    /**
-     * Changes the value of logger.
-     * 
-     * @param logger
-     *            The new logger.
-     */
-    public void setLogger(Logger logger) {
-        logger = logger;
     }
 
     /**
