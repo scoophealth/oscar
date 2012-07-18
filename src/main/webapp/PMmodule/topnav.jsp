@@ -31,6 +31,10 @@
 <%@ page import="java.util.Calendar" %>
 <%@ page import="java.net.URLEncoder" %>
 
+<%@page import="org.oscarehr.common.model.Property" %>
+<%@page import="org.oscarehr.common.dao.PropertyDao"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+
 <%@ include file="/taglibs.jsp"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 
@@ -58,6 +62,21 @@ String userfirstname = (String) session.getAttribute("userfirstname");
 String userlastname = (String) session.getAttribute("userlastname");
 String mygroupno = providerPreference.getMyGroupNo();
 String resourcebaseurl = oscarVariables.getProperty("resource_base_url");
+
+try{
+	//update resourcebaseurl if resource url set by provider
+	PropertyDao propDao = (PropertyDao)SpringUtils.getBean("propertyDao");
+	Property p = propDao.checkByName("resource_baseurl");
+		
+	if(p!=null){
+		if(p.getValue()!=null && p.getValue().length()>0){
+			resourcebaseurl = p.getValue();
+		}
+	}
+		
+}catch (Exception e) {
+	//do nothing
+}
 
 String newticklerwarningwindow=null;
 String default_pmm=null;
