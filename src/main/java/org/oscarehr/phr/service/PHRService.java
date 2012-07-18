@@ -58,8 +58,8 @@ import org.indivo.xml.talk.SendMessageResultType;
 import org.oscarehr.common.service.myoscar.MyOscarMedicalDataManagerUtils;
 import org.oscarehr.myoscar_server.ws.AccountWs;
 import org.oscarehr.myoscar_server.ws.LoginResultTransfer;
-import org.oscarehr.myoscar_server.ws.LoginWs;
 import org.oscarehr.myoscar_server.ws.MedicalDataTransfer3;
+import org.oscarehr.myoscar.managers.MyOscarAccountManager;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
 import org.oscarehr.myoscar_server.ws.MedicalDataWs;
 import org.oscarehr.myoscar_server.ws.MessageWs;
@@ -97,16 +97,11 @@ import oscar.oscarProvider.data.ProviderMyOscarIdData;
 import oscar.oscarRx.data.RxPrescriptionData;
 
 public class PHRService {
-	// What the key in the session is (value is PHRAuthentication type)
-	public static final String SESSION_PHR_EXCHANGE_TIME = "PHR_EXCHANGE_TIME";
-	// What the key in OscarProperties is - in seconds (value is int)
-	public static final String OSCAR_PROPS_EXCHANGE_INTERVAL = "MY_OSCAR_EXCHANGE_INTERVAL";
-
 	private static final Logger logger = MiscUtils.getLogger();
 	protected PHRDocumentDAO phrDocumentDAO;
 	protected PHRActionDAO phrActionDAO;
 
-	public boolean canAuthenticate(String providerNo) {
+	public static boolean canAuthenticate(String providerNo) {
 		String myOscarLoginId = ProviderMyOscarIdData.getMyOscarId(providerNo);
 		if (myOscarLoginId == null) {
 			return false;
@@ -115,7 +110,7 @@ public class PHRService {
 		}
 	}
 
-	public boolean validAuthentication(PHRAuthentication auth) {
+	public static boolean validAuthentication(PHRAuthentication auth) {
 
 		if (auth == null) {
 			return false;
@@ -132,7 +127,7 @@ public class PHRService {
 		return true;
 	}
 
-	public PHRAuthentication authenticate(String providerNo, String password) {
+	public static PHRAuthentication authenticate(String providerNo, String password) {
 		// see authenticateIndivoId for exception explanation
 		ProviderData providerData = new ProviderData();
 		providerData.setProviderNo(providerNo);
@@ -144,19 +139,14 @@ public class PHRService {
 		return phrAuth;
 	}
 
-	// used to authenticate demographics and perhaps admin account
-	private PHRAuthentication authenticateIndivoId(String indivoId, String password) {
+	private static PHRAuthentication authenticateIndivoId(String indivoId, String password) {
         try {
-    		LoginWs loginWs = MyOscarServerWebServicesManager.getLoginWs();
-    		logger.debug("MyOscar Login attempt :" + indivoId);
-
-    		LoginResultTransfer loginResult = loginWs.login2(indivoId, password);
-			logger.debug("MyOscar Login success:" + indivoId);
-
+			LoginResultTransfer loginResultTransfer=MyOscarAccountManager.login(indivoId, indivoId);
+			
 			PHRAuthentication phrAuth = new PHRAuthentication();
 			phrAuth.setMyOscarUserName(indivoId);
-			phrAuth.setMyOscarUserId(loginResult.getPerson().getId());
-			phrAuth.setMyOscarPassword(loginResult.getSecurityTokenKey());
+			phrAuth.setMyOscarUserId(loginResultTransfer.getPerson().getId());
+			phrAuth.setMyOscarPassword(loginResultTransfer.getSecurityTokenKey());
 
 			return phrAuth;
         } catch (NotAuthorisedException_Exception e) {
