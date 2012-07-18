@@ -282,7 +282,10 @@ public class ONAREnhancedFormToXML {
 		currentPregnancy.setBleeding(getYesNoNullType("pg1_cp1","pg1_cp1N"));
 		currentPregnancy.setNausea(getYesNoNullType("pg1_cp2","pg1_cp2N"));
 		currentPregnancy.setSmoking(getYesNoNullType("pg1_cp3","pg1_cp3N"));
-		currentPregnancy.setCigsPerDay(CurrentPregnancyType.CigsPerDay.OVER_20);
+		if(props.getProperty("pg1_box3", "") != null)
+			currentPregnancy.setCigsPerDay(CurrentPregnancyType.CigsPerDay.Enum.forString(props.getProperty("pg1_box3", "")));
+		else
+			currentPregnancy.setCigsPerDay(CurrentPregnancyType.CigsPerDay.X);
 		currentPregnancy.setAlcoholDrugs(getYesNoNullType("pg1_cp4","pg1_cp4N"));
 		currentPregnancy.setOccEnvRisks(getYesNoNullType("pg1_cp8","pg1_cp8N"));
 		currentPregnancy.setDietaryRes(getYesNoNullType("pg1_naDiet","pg1_naDietN"));
@@ -474,11 +477,16 @@ public class ONAREnhancedFormToXML {
 		datingMethods.setT1US(props.getProperty("pg1_edbByT1", "").length()>0?true:false);
 		datingMethods.setT2US(props.getProperty("pg1_edbByT2", "").length()>0?true:false);
 		datingMethods.setArt(props.getProperty("pg1_edbByART", "").length()>0?true:false);
-		pregnancyHistory.setGravida(props.getProperty("c_gravida", "").length()>0?Integer.parseInt(props.getProperty("c_gravida", "")):0);
-		pregnancyHistory.setTerm(props.getProperty("c_term", "").length()>0?Integer.parseInt(props.getProperty("c_term", "")):0);
-		pregnancyHistory.setPremature(props.getProperty("c_prem", "").length()>0?Integer.parseInt(props.getProperty("c_prem", "")):0);
-		pregnancyHistory.setAbortuses(props.getProperty("c_abort", "").length()>0?Integer.parseInt(props.getProperty("c_abort", "")):0);
-		pregnancyHistory.setLiving(props.getProperty("c_living", "").length()>0?Integer.parseInt(props.getProperty("c_living", "")):0);
+		if(props.getProperty("c_gravida", "").length()>0)
+			pregnancyHistory.setGravida(Integer.parseInt(props.getProperty("c_gravida", "")));		
+		if(props.getProperty("c_term", "").length()>0)
+			pregnancyHistory.setTerm(Integer.parseInt(props.getProperty("c_term", "")));
+		if(props.getProperty("c_prem", "").length()>0)
+		pregnancyHistory.setPremature(Integer.parseInt(props.getProperty("c_prem", "")));
+		if(props.getProperty("c_abort", "").length()>0)
+			pregnancyHistory.setAbortuses(Integer.parseInt(props.getProperty("c_abort", "")));
+		if(props.getProperty("c_living", "").length()>0)
+		pregnancyHistory.setLiving(Integer.parseInt(props.getProperty("c_living", "")));
 	}
 
 
