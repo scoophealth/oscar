@@ -52,6 +52,9 @@ import org.oscarehr.common.model.ProviderPreference;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.decisionSupport.service.DSService;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.phr.util.MyOscarUtils;
+import org.oscarehr.util.EncryptionUtils;
+import org.oscarehr.util.LoggedInUserFilter;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
@@ -137,16 +140,17 @@ public final class LoginAction extends DispatchAction {
             HttpSession session = request.getSession(false);
             if (session != null) {
                 session.invalidate();
-                session = request.getSession(); // Create a new session for this user
-                LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-                loggedInInfo.session=session;
             }
+            session = request.getSession(); // Create a new session for this user
+            LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+            loggedInInfo.session=session;
 
             logger.debug("Assigned new session for: " + strAuth[0] + " : " + strAuth[3] + " : " + strAuth[4]);
             LogAction.addLog(strAuth[0], LogConst.LOGIN, LogConst.CON_LOGIN, "", ip);
 
             // initial db setting
             Properties pvar = OscarProperties.getInstance();
+            EncryptionUtils.setDeterministicallyMangledPasswordSecretKeyIntoSession(session, password);
             
 
             // get View Type
@@ -179,6 +183,7 @@ public final class LoginAction extends DispatchAction {
                     session.setAttribute("caisiBillingPreferenceNotDelete", String.valueOf(providerPreference.getDefaultDoNotDeleteBilling()));
                     
                     default_pmm = providerPreference.getDefaultCaisiPmm();
+                    @SuppressWarnings("unchecked")
                     ArrayList<String> newDocArr = (ArrayList<String>)request.getSession().getServletContext().getAttribute("CaseMgmtUsers");    
                     if("enabled".equals(providerPreference.getDefaultNewOscarCme())) {
                     	newDocArr.add(providerNo);
@@ -245,6 +250,9 @@ public final class LoginAction extends DispatchAction {
             session.setAttribute(SessionConstants.LOGGED_IN_PROVIDER, provider);
             session.setAttribute(SessionConstants.LOGGED_IN_SECURITY, cl.getSecurity());
 
+	    loggedInInfo = LoggedInUserFilter.generateLoggedInInfoFromSession(request);
+	    MyOscarUtils.attemptMyOscarAutoLoginIfNotAlreadyLoggedIn(loggedInInfo);
+            
             List<Integer> facilityIds = ProviderDao.getFacilityIds(provider.getProviderNo());
             if (facilityIds.size() > 1) {
                 return(new ActionForward("/select_facility.jsp?nextPage=" + where));
