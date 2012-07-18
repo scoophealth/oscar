@@ -123,6 +123,10 @@ public class SchemaUtils
 	 */
 	public static void createDatabaseAndTables() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException
 	{
+		boolean skipDbInit = false;
+		if(System.getProperty("oscar.dbinit.skip") != null && System.getProperty("oscar.dbinit.skip").equalsIgnoreCase("true")) 
+			skipDbInit=true;
+		
 		String schema=ConfigUtils.getProperty("db_schema");
 		logger.info("using schema : "+schema);
 		
@@ -130,7 +134,10 @@ public class SchemaUtils
 		try
 		{
 			Statement s=c.createStatement();
-			s.executeUpdate("create database "+schema);
+			
+			if(!skipDbInit) {
+				s.executeUpdate("create database "+schema);				
+			}
 			s.executeUpdate("use "+schema);
 
 			runCreateTablesScript(c);
@@ -245,53 +252,82 @@ public class SchemaUtils
 
 	private static void runCreateTablesScript(Connection c) throws IOException
 	{
-		String baseDir=System.getProperty("basedir");
-		logger.info("using baseDir : "+baseDir);
-				
-		assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/oscarinit.sql"),0);
+		boolean skipDbInit = false;
+		if(System.getProperty("oscar.dbinit.skip") != null && System.getProperty("oscar.dbinit.skip").equalsIgnoreCase("true")) 
+			skipDbInit=true;
+		
+		if(!skipDbInit) {
+			String baseDir=System.getProperty("basedir");
+			logger.info("using baseDir : "+baseDir);
+					
+			assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/oscarinit.sql"),0);
+	
+			assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/oscarinit_on.sql"),0);
+			assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/oscardata.sql"),0);
+			assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/oscardata_on.sql"),0);
+			assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/icd9.sql"),0);
+	
+			assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/caisi/initcaisi.sql"),0);
+	
+			assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/caisi/initcaisidata.sql"),0);
+			assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/caisi/populate_issue_icd9.sql"),0);
+			//		assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/icd9_issue_groups.sql"),0);
+			assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/measurementMapData.sql"),0);
+	//		assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/expire_oscardoc.sql"),0);
+	
+			assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/oscarinit_bc.sql"),0);
+			assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/oscardata_bc.sql"),0);
 
-		assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/oscarinit_on.sql"),0);
-		assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/oscardata.sql"),0);
-		assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/oscardata_on.sql"),0);
-		assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/icd9.sql"),0);
 
-		assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/caisi/initcaisi.sql"),0);
-
-		assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/caisi/initcaisidata.sql"),0);
-		assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/caisi/populate_issue_icd9.sql"),0);
-		//		assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/icd9_issue_groups.sql"),0);
-		assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/measurementMapData.sql"),0);
-//		assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/expire_oscardoc.sql"),0);
-
-		assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/oscarinit_bc.sql"),0);
-		assertEquals(loadFileIntoMySQL(baseDir + "/database/mysql/oscardata_bc.sql"),0);
-
-		createTableStatements.clear();
-		try {
-			ResultSet rs = c.getMetaData().getTables(ConfigUtils.getProperty("db_schema"), null, "%", null);
-			while(rs.next()) {
-				String tableName = rs.getString("TABLE_NAME");
-				Statement stmt2 = c.createStatement();
-				ResultSet rs2 = stmt2.executeQuery("show create table " + tableName + ";");
-				if(rs2.next()) {
-					String sql = rs2.getString(2);
-					createTableStatements.put(tableName, sql);
-
-					Statement stmt = c.createStatement();
-					stmt.executeUpdate("alter table "+ tableName + " rename to " + tableName + "_maventest");
-					stmt.close();
+		 
+			createTableStatements.clear();
+			try {
+				ResultSet rs = c.getMetaData().getTables(ConfigUtils.getProperty("db_schema"), null, "%", null);
+				while(rs.next()) {
+					String tableName = rs.getString("TABLE_NAME");				
+					Statement stmt2 = c.createStatement();
+					ResultSet rs2 = stmt2.executeQuery("show create table " + tableName + ";");
+					if(rs2.next()) {
+						String sql = rs2.getString(2);	
+						createTableStatements.put(tableName, sql);
+	
+						Statement stmt = c.createStatement();
+						stmt.executeUpdate("alter table "+ tableName + " rename to " + tableName + "_maventest");
+						stmt.close();
+					}
+					rs2.close();
+					stmt2.close();
 				}
-				rs2.close();
-				stmt2.close();
+				rs.close();
+	
+	
+			}catch(SQLException e) {
+				MiscUtils.getLogger().error("Error:",e);
 			}
-			rs.close();
-
-
-		}catch(SQLException e) {
-			MiscUtils.getLogger().error("Error:",e);
+		} else {
+			//we're assuming a db ready to go..we just need to build the createTableStatementsMap
+			createTableStatements.clear();
+			try {
+				ResultSet rs = c.getMetaData().getTables(ConfigUtils.getProperty("db_schema"), null, "%", null);
+				while(rs.next()) {
+					String tableName = rs.getString("TABLE_NAME");				
+					Statement stmt2 = c.createStatement();
+					ResultSet rs2 = stmt2.executeQuery("show create table " + tableName + ";");
+					if(rs2.next()) {
+						String sql = rs2.getString(2).replaceAll(tableName, tableName.substring(0,tableName.length()-10));	
+						createTableStatements.put(tableName.substring(0,tableName.length()-10), sql);							
+					}
+					rs2.close();
+					stmt2.close();
+				}
+				rs.close();
+	
+	
+			}catch(SQLException e) {
+				MiscUtils.getLogger().error("Error:",e);
+			}
 		}
-
-
+				
 		inited=true;
 	}
 
@@ -314,7 +350,11 @@ public class SchemaUtils
 	 */
 	public static void dropAndRecreateDatabase() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException
 	{
-		dropDatabaseIfExists();
+		boolean skipDbInit = false;
+		if(System.getProperty("oscar.dbinit.skip") != null && System.getProperty("oscar.dbinit.skip").equalsIgnoreCase("true")) 
+			skipDbInit=true;
+		if(!skipDbInit)
+			dropDatabaseIfExists();
 		createDatabaseAndTables();
 	}
 
