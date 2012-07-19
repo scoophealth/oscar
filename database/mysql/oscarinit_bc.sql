@@ -2364,7 +2364,7 @@ CREATE TABLE teleplanS00 (
   t_filler varchar(87) default NULL,
   PRIMARY KEY  (s00_id),
   KEY t_officeno (t_officeno)
-);
+) ;
 
 
 
@@ -3562,6 +3562,4 @@ CREATE TABLE `formBCClientChartChecklist` (
   `c3rd54` varchar(40) default NULL,
   PRIMARY KEY  (`ID`)
 ) ;
-
-
 
