@@ -1423,6 +1423,8 @@ $(document).ready(function(){
 				$( this ).dialog( "close" );	
 				var printAr1 = $("#print_ar1").attr('checked');
 				var printAr2 = $("#print_ar2").attr('checked');	
+				var printLocation = $("#print_location").val();
+				var printMethod = $("#print_method").val();
 				var demographic = '<%=props.getProperty("demographic_no", "0")%>';
 				var user = '<%=session.getAttribute("user")%>';
 				
@@ -1438,6 +1440,14 @@ $(document).ready(function(){
 				if ((typeof printAr1 == "undefined") && (typeof printAr2 == "undefined")) {
 					return;
 				}
+				
+				   
+				if(printLocation.length>0) {
+					jQuery.ajax({type:"POST",url:'<%=request.getContextPath()%>/Pregnancy.do?method=recordPrint',data: {printLocation:printLocation,printMethod:printMethod,resourceName:'ONAREnhanced',resourceId:$('#episodeId').val()},async:true, success:function(data) {
+						//do nothing at this time
+					}});					
+				}
+								
 								
 				var ret = checkAllDates();
 		        if(ret==true)
@@ -1499,6 +1509,22 @@ $(document).ready(function(){
 			
 		}
 	});
+	
+	
+	$( "#print-log-dialog" ).dialog({
+		autoOpen: false,
+		height: 350,
+		width: 650,
+		modal: true,
+		buttons: {
+			Dismiss: function() {
+				$( this ).dialog( "close" );
+			}
+		},
+		close: function() {
+			
+		}
+	});
 });
 
 </script>
@@ -1524,6 +1550,15 @@ $(document).ready(function(){
 			$("#fundal_graph_text").css('color','red');
 		}
 		
+		$("#print_log_menu").bind('click',function(){
+			jQuery.ajax({type:"POST",url:'<%=request.getContextPath()%>/Pregnancy.do?method=getPrintData',data: {resourceName:'ONAREnhanced',resourceId:$('#episodeId').val()},dataType:'json',async:true, success:function(data) {
+				$("#print_log_table tbody").html("");
+				$.each(data, function(key, val) {
+					$("#print_log_table tbody").append('<tr><td>'+val.formattedDateString+'</td><td>'+val.providerName+'</td><td>'+val.externalLocation+'</td><td>'+val.externalMethod+'</td></tr>');					
+				});
+				$( "#print-log-dialog" ).dialog("open");
+			}});
+		});
 		
 		$('#graph_menu').bind('click',function(){
 			
@@ -1989,13 +2024,19 @@ $(document).ready(function(){
 		<table style="width:100%" border="0">
 			<tr>
 				<td><b>Info</b></td>
-				<tr id="graph">
+			</tr>
+			<tr id="graph">
 				<td>
 					<span id="fundal_graph_text">Fundus Height Graph</span><span style="float:right"><img id="graph_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span>
 					<div style="display:none"><a href="#" id="fundal_link">dummy link</a></div>	
+				</td>			
+			</tr>	
+			<tr>
+				<td>
+					Printing Log
+					<span style="float:right"><img id="print_log_menu" src="../images/right-circle-arrow-Icon.png" border="0"></span>
 				</td>
-			</tr>
-			</tr>			
+			</tr>		
 		</table>	
 	</div>
 	
@@ -2080,9 +2121,11 @@ $(document).ready(function(){
 		value="<%= props.getProperty("demographic_no", "0") %>" />
 	<input type="hidden" name="formCreated"
 		value="<%= props.getProperty("formCreated", "") %>" />
+	<input type="hidden" id="episodeId" name="episodeId"
+		value="<%= props.getProperty("episodeId", "") %>" />		
 	<input type="hidden" name="form_class" value="<%=formClass%>" />
 	<input type="hidden" name="form_link" value="<%=formLink%>" />
-	<input type="hidden" name="formId" value="<%=formId%>" />
+	<input type="hidden" id="formId" name="formId" value="<%=formId%>" />
 	<input type="hidden" name="sent_to_born" value="0" />
 	<input type="hidden" name="ID"
 		value="<%= props.getProperty("ID", "0") %>" />
@@ -2311,7 +2354,7 @@ $(document).ready(function(){
 					<td colspan="2" align="center">Urine</td>
 				</tr>
 				<tr align="center">
-					<td>Pr</td>
+					<td colspan="2">Pr</td>
 					<!-- 
 					<td>Gl</td>
 					-->
@@ -2828,9 +2871,50 @@ $(document).ready(function(){
 		<label for="print_ar1">AR1</label>
 		<br/>
 		<input type="checkbox" name="print_ar2" id="print_ar2" checked="checked" class="text ui-widget-content ui-corner-all" />
-		<label for="print_ar2">AR2</label>						
+		<label for="print_ar2">AR2</label>
+		<br/>
+		<table>
+			<tr>
+				<td>External Location:</td>
+				<td>
+					<select name="print_location" id="print_location" class="text ui-widget-content ui-corner-all">
+						<option value="none">None</option>
+						<option value="hospital">Hospital</option>
+						<option value="patient">Patient</option>
+						<option value="other">Other</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>Method of Transfer:</td>
+				<td>
+					<select name="print_method" id="print_method" class="text ui-widget-content ui-corner-all">
+						<option value="none">None</option>
+						<option value="fax">Fax</option>
+						<option value="mail">Mail</option>
+						<option value="email">Email</option>
+					</select>
+				</td>
+			</tr>
+		</table>
+							
 	</fieldset>
 	</form>
+</div>
+
+<div id="print-log-dialog" title="Print Log" style="background-color:white">	
+	<table id="print_log_table" style="width:100%">
+		<thead style="text-align:left">
+			<tr>
+				<th>Date</th>
+				<th>Provider</th>
+				<th>External Location</th>
+				<th>Method of Transfer</th>
+			</tr>
+		</thead>
+		<tbody>		
+		</tbody>
+	</table>
 </div>
 
 </body>

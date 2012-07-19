@@ -42,9 +42,10 @@
 	<td><input type="text" name="pg2_BP<%=n%>" size="6" maxlength="8"
 		style="width: 100%"
 		></td>
-	<td width="4%"><input type="text" name="pg2_urinePr<%=n%>" size="2"
+	<td width="4%" colspan="2"><input type="text" name="pg2_urinePr<%=n%>" size="2"
 		maxlength="3" style="width: 90%"
 		></td>
+		
 		<!-- 
 	<td width="4%"><input type="text" name="pg2_urineGl<=n>" size="2"
 		maxlength="3" style="width: 90%"
