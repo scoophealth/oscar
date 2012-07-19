@@ -38,6 +38,7 @@
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-html-el" prefix="html-el" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -73,6 +74,7 @@ PHRAuthentication phrAuthentication= MyOscarUtils.getPHRAuthentication(session);
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<c:out value="${ctx}"/>/js/jquery.js"></script>
 <script type="text/javascript">
 	function checkLevel(level) {
 		if (level=="") {
@@ -83,13 +85,9 @@ PHRAuthentication phrAuthentication= MyOscarUtils.getPHRAuthentication(session);
 	}
 </script>
 <title><bean:message key="phr.verification.title"/></title>
-<link rel="stylesheet" type="text/css"
-	href="../share/css/OscarStandardLayout.css">
+<link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
 
-<script type="text/javascript" language="JavaScript"
-	src="../share/javascript/prototype.js"></script>
-<script type="text/javascript" language="JavaScript"
-	src="../share/javascript/Oscar.js"></script>
+<script type="text/javascript" language="JavaScript" src="../share/javascript/Oscar.js"></script>
 
 <style type="text/css">
 table.outline {
@@ -181,11 +179,22 @@ br {
 				<td>
 					<bean:message key="phr.verification.title"/> &nbsp; <oscar:nameage demographicNo="<%=demographicNo%>"/> &nbsp; <oscar:phrverification demographicNo="<%=demographicNo%>"><bean:message key="phr.verification.link"/></oscar:phrverification> 
 					&nbsp;
-					<%if(phrAuthentication !=null && !MyOscarServerRelationManager.hasPatientRelationship(phrAuthentication,myOscarUserName)){%>
-					<a href="UserManagement.do?method=addPatientRelationship&demoNo=<%=demographicNo%>"><bean:message key="phr.verification.addPatientRelationship"/></a>
-					<%}else{%>
-					<bean:message key="phr.verification.patientRelationshipExists"/>
+					
+					<%if(demographicNo!=null){%>
+					<div id="relationshipMessage"></div>    
+					<script type="text/javascript">
+					$.ajax({
+					    url: '<c:out value="${ctx}"/>/phr/PatientRelationship.jspf?demoNo=<%=demographicNo%>&myOscarUserName=<%=myOscarUserName%>',
+					    dataType: 'html',
+					    timeout: 5000,
+					    cache: false,
+					    error: function() { alert("Error talking to server."); },
+					    success: function(data) {
+					      $("#relationshipMessage").html(data);
+					    }
+					  });
 					<%}%>
+					</script>    
 				</td>
 			</tr>
 		</table>
