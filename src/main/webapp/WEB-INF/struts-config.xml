@@ -2319,6 +2319,7 @@
 			<forward name="msgIndex" path="/phr/PhrMessage.do?method=viewMessages" />
 			<forward name="registrationLetter" path="/admin/MyoscarConfiguration.jsp" />
 			<forward name="viewVerification" path="/phr/PHRVerification.jsp" />
+			<forward name="relationfragment" path="/phr/PatientRelationship.jspf"/>
 		</action>
 		<action input="/oscarEncounter/oscarMeasurements/HistoryIndex.jsp" name="FrmForm" path="/oscarEncounter/oscarMeasurements/SendToPhr" parameter="method" scope="request" type="org.springframework.web.struts.DelegatingActionProxy">
 			<forward name="finished" path="/phr/response.jsp"></forward>

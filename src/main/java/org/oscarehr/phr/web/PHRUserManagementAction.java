@@ -545,13 +545,15 @@ public class PHRUserManagementAction extends DispatchAction {
     		WebUtils.dumpParameters(request);
     	}
     	String demoNo = request.getParameter("demoNo");
+    	String myOscarUserName = request.getParameter("myOscarUserName");
 
     	PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(request.getSession());
     	boolean patientRelationshipCreated = MyOscarServerRelationManager.addPatientRelationship(auth,  demoNo );
     	log.debug("Patient Added: "+patientRelationshipCreated);
-        ActionRedirect ar = new ActionRedirect(mapping.findForward("viewVerification"));
-        ar.addParameter("demographic_no", demoNo);
-        return ar;
+		request.setAttribute("myOscarUserName",myOscarUserName);
+		request.setAttribute("demoNo",demoNo);
+		return mapping.findForward("relationfragment");
+    	
     }
 
 }
