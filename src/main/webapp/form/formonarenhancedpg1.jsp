@@ -1549,6 +1549,86 @@ $(document).ready(function(){
 	});
 	
 	
+	$( "#print-dialog" ).dialog({
+		autoOpen: false,
+		height: 275,
+		width: 450,
+		modal: true,
+		buttons: {
+			"Print": function() {			
+				$( this ).dialog( "close" );	
+				var printAr1 = $("#print_ar1").attr('checked');
+				var printAr2 = $("#print_ar2").attr('checked');	
+				var demographic = '<%=props.getProperty("demographic_no", "0")%>';
+				var user = '<%=session.getAttribute("user")%>';
+				
+				var obxNum = $("#obxhx_num").val();
+				var extraComments = $("#pg1_comments2AR1").val();
+				var hasExtraComments = (extraComments.length>0);
+				var rfNum = '<%=props.getProperty("rf_num", "0")%>';
+				var svNum = '<%=props.getProperty("sv_num", "0")%>';
+				var usNum = '<%=props.getProperty("us_num", "0")%>';
+								
+				if ((typeof printAr1 == "undefined") && (typeof printAr2 == "undefined")) {
+					return;
+				}
+				var ret = checkAllDates();
+		        if(ret==true)
+		        {
+		        	document.forms[0].submit.value="print"; 
+		        	document.forms[0].target="_blank";        
+		        	var url = "../form/createpdf?";
+		        	var multiple=0;
+		        	if (!(typeof printAr1 == "undefined")) {
+			        	url += "__title=Antenatal+Record+Part+1&__cfgfile=onar1enhancedPrintCfgPg1&__template=onar1&__numPages=1&postProcessor=ONAR1EnhancedPostProcessor";		        	
+			        	
+			        	if((obxNum.length>0 && parseInt(obxNum)>6) || hasExtraComments) {
+			        		multiple++;
+			        		url = url+"&__title1=Antenatal+Record+Part+1&__cfgfile1=onar1enhancedPrintCfgPg2&__template1=onar1enhancedpg2&__numPages1=1&postProcessor1=ONAR1EnhancedPostProcessor";		        		
+			        	}
+		        	}
+		        	if (!(typeof printAr2 == "undefined")) {
+		        		if (!(typeof printAr1 == "undefined")) {
+		        			multiple++;
+		        			url+="__title"+multiple+"=Antenatal+Record+Part+2&__cfgfile"+multiple+"=onar2enhancedPrintCfgPg1&__cfgGraphicFile"+multiple+"=onar2PrintGraphCfgPg1&__template"+multiple+"=onar2&postProcessor"+multiple+"=ONAR2EnhancedPostProcessor";
+		        		} else {
+		        			url+="__title=Antenatal+Record+Part+2&__cfgfile=onar2enhancedPrintCfgPg1&__cfgGraphicFile=onar2PrintGraphCfgPg1&__template=onar2&postProcessor=ONAR2EnhancedPostProcessor";
+		        		}
+		        		
+			        	if(rfNum.length>0 && parseInt(rfNum)>7) {
+			        		multiple++;		        		
+			        		url = url+"&__title"+multiple+"=Antenatal+Record+Part+2&__cfgfile"+multiple+"=onar2enhancedPrintCfgPgRf&__template"+multiple+"=onar2enhancedrf&__numPages"+multiple+"=1&postProcessor"+multiple+"=ONAR2EnhancedPostProcessor";    	
+			        	}
+			        	if(svNum.length>0 && parseInt(svNum)>18) {
+			        		multiple++;	
+			        		url = url+"&__title"+multiple+"=Antenatal+Record+Part+2&__cfgfile"+multiple+"=onar2enhancedPrintCfgPgSv&__template"+multiple+"=onar2enhancedsv&__numPages"+multiple+"=1&postProcessor"+multiple+"=ONAR2EnhancedPostProcessor";
+			        	}
+			        	if(svNum.length>0 && parseInt(svNum)>56) {
+			        		multiple++;	
+			        		url = url+"&__title"+multiple+"=Antenatal+Record+Part+2&__cfgfile"+multiple+"=onar2enhancedPrintCfgPgSv2&__template"+multiple+"=onar2enhancedsv&__numPages"+multiple+"=1&postProcessor"+multiple+"=ONAR2EnhancedPostProcessor";
+			        	}
+			        	if(usNum.length>0 && parseInt(usNum)>4) {
+			        		multiple++;
+			        		url=url+"&__title"+multiple+"=Antenatal+Record+Part+2&__cfgfile"+multiple+"=onar2enhancedPrintCfgPgUs&__template"+multiple+"=onar2enhancedus&__numPages"+multiple+"=1&postProcessor"+multiple+"=ONAR2EnhancedPostProcessor";
+			        	}
+		        	}
+		        	if(multiple>0) {
+		        		url=url+"&multiple="+(multiple+1);
+		        	}
+		        	//go to it
+		        	document.forms[0].action=url;
+		        	$("#printBtn").click();
+		        }
+				
+			},
+			Cancel: function() {
+				$( this ).dialog( "close" );
+			}
+		},
+		close: function() {
+			
+		}
+	});
 });
 
 function geneticReferral() {
@@ -1683,6 +1763,11 @@ $(document).ready(function(){
 		if($("input[name='c_finalEDB']").val().length>0)
 			$('#gest_age').html(getGA());
 	});
+	
+	function onPrint2() {
+		$( "#print-dialog" ).dialog( "open" );
+		return false;
+	}
 </script>
 <style>
 .ui-widget-overlay
@@ -1854,13 +1939,14 @@ $(document).ready(function(){
 			<td align="left">
 			<%
   if (!bView) {
-%> <input type="submit" value="Save"
-				onclick="javascript:return onSave();" /> <input type="submit"
-				value="Save and Exit" onclick="javascript:return onSaveExit();" /> <%
+%> 
+	<input type="submit" value="Save" onclick="javascript:return onSave();" /> 
+	<input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();" /> <%
   }
-%> <input type="submit" value="Exit"
-				onclick="javascript:return onExit();" /> <input type="submit"
-				value="Print" onclick="javascript:return onPrint();" />
+%> 
+	<input type="submit" value="Exit" onclick="javascript:return onExit();" /> 
+	<input type="submit" value="Print" onclick="javascript:return onPrint2();" />
+    <span style="display:none"><input id="printBtn" type="submit" value="PrintIt"/></span>
             
 
 			<%
@@ -3306,7 +3392,7 @@ $(document).ready(function(){
 			<th colspan="4"><b>Extra Comments (Will print on a separate page)</b></th>
 		</tr>
 		<tr>
-			<td colspan="4"><textarea name="pg1_comments2AR1"
+			<td colspan="4"><textarea id="pg1_comments2AR1" name="pg1_comments2AR1"
 				style="width: 100%" cols="80" rows="15"><%= UtilMisc.htmlEscape(props.getProperty("pg1_comments2AR1", "")) %></textarea>
 			</td>
 		</tr>
@@ -3351,7 +3437,7 @@ $(document).ready(function(){
   }
 %> <input type="submit" value="Exit"
 				onclick="javascript:return onExit();" /> <input type="submit"
-				value="Print" onclick="javascript:return onPrint();" />
+				value="Print" onclick="javascript:return onPrint2();" />
 			<%
   if (!bView) {
 %>
@@ -3697,6 +3783,19 @@ Calendar.setup({ inputField : "pg1_labLastPapDate", ifFormat : "%Y/%m/%d", shows
 			</table>
 		</fieldset>
 	</form>	
+</div>
+
+<div id="print-dialog" title="Print Antenatal Record">
+	<p class="validateTips"></p>
+	<form>
+	<fieldset>
+		<input type="checkbox" name="print_ar1" id="print_ar1" checked="checked" class="text ui-widget-content ui-corner-all" />
+		<label for="print_ar1">AR1</label>
+		<br/>
+		<input type="checkbox" name="print_ar2" id="print_ar2" checked="checked" class="text ui-widget-content ui-corner-all" />
+		<label for="print_ar2">AR2</label>						
+	</fieldset>
+	</form>
 </div>
 
 
