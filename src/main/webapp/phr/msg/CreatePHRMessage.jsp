@@ -27,13 +27,13 @@
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
 <%@page import="org.oscarehr.phr.PHRAuthentication"%>
-<%@page import="org.oscarehr.phr.util.MyOscarMessageManager"%>
+<%@page import="org.oscarehr.phr.util.MyOscarMessageManager,org.oscarehr.phr.util.MyOscarServerRelationManager"%>
 <%@page import="org.oscarehr.myoscar_server.ws.MessageTransfer"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ page import="org.w3c.dom.*" %>
-<%@ page import="oscar.oscarDemographic.data.*,org.oscarehr.common.model.Demographic" %>
+<%@ page import="oscar.oscarDemographic.data.*,org.oscarehr.common.model.Demographic,org.oscarehr.common.dao.DemographicDao,org.oscarehr.util.SpringUtils" %>
 <%@ page import="javax.servlet.http.HttpServletRequest.*" %>
 <%@ page import="java.util.Iterator.*" %>
 <%@ page import="java.util.Enumeration.*" %>
@@ -41,8 +41,14 @@
 <%@ page import="oscar.util.UtilDateUtilities,java.util.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-html-el" prefix="html-el" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
 <%
 Demographic demographic= null;
+String DemographicNo = null;
+String myOscarUserName = null;
+PHRAuthentication phrAuthentication=MyOscarUtils.getPHRAuthentication(session);
+DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+
 %>
 <html:html locale="true">
 
@@ -84,6 +90,7 @@ Demographic demographic= null;
     }
 </style>
 <script type="text/javascript" src="../../share/javascript/Oscar.js"></script>
+<script type="text/javascript" src="<c:out value="${ctx}"/>/js/jquery.js"></script>
 <script language="javascript">
 
     var browserName=navigator.appName; 
@@ -123,9 +130,7 @@ Demographic demographic= null;
        }catch (e){
           alert ("ERROR: could not paste to EMR");
        }
-    }
-
-    
+    }    
 </script>
 </head>
 
@@ -194,14 +199,22 @@ Demographic demographic= null;
                             		try
                             		{
                             			replyToMessageId=new Long(request.getParameter("replyToMessageId"));
-                            			PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
-                            			replyToMessage=MyOscarMessageManager.getMessage(auth.getMyOscarUserId(), auth.getMyOscarPassword(), replyToMessageId);
+                            			
+                            			replyToMessage=MyOscarMessageManager.getMessage(phrAuthentication.getMyOscarUserId(), phrAuthentication.getMyOscarPassword(), replyToMessageId);
+                            			myOscarUserName=replyToMessage.getSenderPersonUserName();
+                                		demographic=MyOscarUtils.getDemographicByMyOscarUserName(myOscarUserName);
                             		}
                             		catch (Exception e)
                             		{
                             			// this is okay, if the request is not a reply this will happen.
                             		}
-                            	
+                            		if (demographic == null){
+                            			String demographcNo = request.getParameter("demographicNo");
+                            			if(demographcNo != null && !demographcNo.equalsIgnoreCase("null")){
+                            				demographic = demographicDao.getDemographic(demographcNo);
+                            				myOscarUserName = demographic.getMyOscarUserName();
+                            			}
+                            		}
                             	%>
                                 <html:form action="/phr/PhrMessage">
                                     <tr>
@@ -228,7 +241,23 @@ Demographic demographic= null;
 			                                                    	<html-el:text readonly="readonly" name="to" property="to" size="30" value="${toName}"/>
 			                                        			<%
 			                                        		}
-			                                        	%>                                            
+			                                        	%>    
+			                                        	
+			                                        	<%if(demographic!=null){ %>
+														<div id="relationshipMessage"></div>    
+														<script type="text/javascript">
+														$.ajax({
+														    url: '../PatientRelationship.jspf?demoNo=<%=demographic.getDemographicNo()%>&myOscarUserName=<%=myOscarUserName%>',
+														    dataType: 'html',
+														    timeout: 7000,
+														    cache: false,
+														    error: function() { alert("Error talking to server."); },
+														    success: function(data) {
+														      $("#relationshipMessage").html(data);
+														    }
+														  });
+														<%}%>
+														</script>                                
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -261,10 +290,6 @@ Demographic demographic= null;
 		                                                        </td>
 		                                                    </tr>
 	                                        			<%
-	                                        		
-	                                        			String myOscarUserName=replyToMessage.getSenderPersonUserName();
-	    		                                		demographic=MyOscarUtils.getDemographicByMyOscarUserName(myOscarUserName);
-	    		                                		
 	                                        		}
 	                                        	%>
                                                 <tr>
