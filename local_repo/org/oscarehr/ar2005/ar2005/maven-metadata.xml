@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <metadata>
-  <groupId>org.oscarehr</groupId>
+  <groupId>org.oscarehr.ar2005</groupId>
   <artifactId>ar2005</artifactId>
   <version>0.12-DRAFT</version>
   <versioning>
     <versions>
       <version>0.12-DRAFT</version>
     </versions>
-    <lastUpdated>20120718143055</lastUpdated>
+    <lastUpdated>20120719124949</lastUpdated>
   </versioning>
 </metadata>

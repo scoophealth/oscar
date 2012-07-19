@@ -142,7 +142,7 @@ public class ONAREnhancedBornConnector {
 						}
 					}
 				}catch(Exception e) {
-					MiscUtils.getLogger().warn("Unable to add record");
+					MiscUtils.getLogger().warn("Unable to add record",e);
 				}
 			}
 			

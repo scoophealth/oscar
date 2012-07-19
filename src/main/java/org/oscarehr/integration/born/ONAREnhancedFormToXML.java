@@ -373,15 +373,15 @@ public class ONAREnhancedFormToXML {
 		if(props.getProperty("pg1_ht", "").length()>0)
 			physicalExamination.setHeight(Float.valueOf(props.getProperty("pg1_ht")));
 		else
-			physicalExamination.setHeight(0);
+			physicalExamination.setNilHeight();
 		if(props.getProperty("pg1_wt", "").length()>0)
 			physicalExamination.setWeight(Float.valueOf(props.getProperty("pg1_wt")));
 		else
-			physicalExamination.setWeight(0);
+			physicalExamination.setNilWeight();
 		if(props.getProperty("c_bmi", "").length()>0)
 			physicalExamination.setBmi(Float.valueOf(props.getProperty("c_bmi")));
 		else
-			physicalExamination.setBmi(0);
+			physicalExamination.setNilBmi();
 		physicalExamination.setBp(props.getProperty("pg1_BP",""));
 
 		physicalExamination.setThyroid(getNormalAbnormalNullType("pg1_thyroid","pg1_thyroidA"));
