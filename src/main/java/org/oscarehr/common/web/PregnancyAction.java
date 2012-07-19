@@ -52,6 +52,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.util.LabelValueBean;
+import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.AbstractCodeSystemDao;
 import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.dao.DrugDao;
@@ -60,6 +61,7 @@ import org.oscarehr.common.dao.EFormGroupDao;
 import org.oscarehr.common.dao.EpisodeDao;
 import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.dao.PregnancyFormsDao;
+import org.oscarehr.common.dao.PrintResourceLogDao;
 import org.oscarehr.common.model.AbstractCodeSystemModel;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Drug;
@@ -67,6 +69,7 @@ import org.oscarehr.common.model.EForm;
 import org.oscarehr.common.model.EFormGroup;
 import org.oscarehr.common.model.Episode;
 import org.oscarehr.common.model.Measurement;
+import org.oscarehr.common.model.PrintResourceLog;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -950,5 +953,41 @@ Repeat antibody screen
 		outputStream.close();
 		
 		  return null;
+	}
+	
+	public ActionForward recordPrint(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
+		String printLocation = request.getParameter("printLocation");
+		String printMethod = request.getParameter("printMethod");
+		String resourceName = request.getParameter("resourceName");
+		String resourceId = request.getParameter("resourceId");
+		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+		
+		PrintResourceLog item = new PrintResourceLog();
+		item.setDateTime(new Date());
+		item.setExternalLocation(printLocation);
+		item.setExternalMethod(printMethod);
+		item.setProviderNo(providerNo);
+		item.setResourceId(resourceId);
+		item.setResourceName(resourceName);
+		
+		PrintResourceLogDao dao = SpringUtils.getBean(PrintResourceLogDao.class);
+		dao.persist(item);
+		
+		return null;
+	}
+	
+	public ActionForward getPrintData(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		PrintResourceLogDao dao = SpringUtils.getBean(PrintResourceLogDao.class);
+		ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
+		String resourceName = request.getParameter("resourceName");
+		String resourceId = request.getParameter("resourceId");
+		List<PrintResourceLog> results = dao.findByResource(resourceName, resourceId);
+		
+		for(PrintResourceLog l:results) {
+			l.setProviderName(providerDao.getProviderName(l.getProviderNo()));
+		}
+		JSONArray json = JSONArray.fromObject(results);
+		response.getWriter().print(json.toString());
+		return null;
 	}
 }
