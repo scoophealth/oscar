@@ -8773,7 +8773,7 @@ CREATE TABLE drugReason (
   PRIMARY KEY  (id),
   KEY (drugId),
   KEY (archivedFlag),
-  KEY (codingSystem,code)
+  KEY `codingSystem` (`codingSystem`(30),`code`(30))
 );
 
 CREATE TABLE `appointmentType` (
@@ -9009,7 +9009,7 @@ CREATE TABLE `RemoteIntegratedDataCopy` (
   archived tinyint(1) ,
   PRIMARY KEY  (`id`),
   KEY RIDopy_demo_dataT_fac_arch (`demographic_no`,`datatype`,`facilityId`,`archived`),
-  KEY RIDopy_demo_dataT_sig_fac_arch (`demographic_no`,`datatype`,`signature`,`facilityId`,`archived`)
+  KEY `RIDopy_demo_dataT_sig_fac_arch` (`demographic_no`,`datatype`(165),`signature`(165),`facilityId`,`archived`)
 );
 
 --
