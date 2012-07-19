@@ -664,7 +664,7 @@ function gbsReq() {
 	return false;
 }
 
-function showPrintDialog() {
+function onPrint2() {
 	$( "#print-dialog" ).dialog( "open" );
 	return false;
 }
@@ -1425,7 +1425,71 @@ $(document).ready(function(){
 				var printAr2 = $("#print_ar2").attr('checked');	
 				var demographic = '<%=props.getProperty("demographic_no", "0")%>';
 				var user = '<%=session.getAttribute("user")%>';
-											
+				
+				var rfNum = $("#rf_num").val();
+				var svNum = $("#sv_num").val();
+				var usNum = $("#us_num").val();					
+				
+				
+				var obxNum = '<%=props.getProperty("obxhx_num", "0")%>';				
+				var extraComments = '<%=props.getProperty("pg1_comments2AR1", "")%>';
+				var hasExtraComments = (extraComments.length>0);
+								
+				if ((typeof printAr1 == "undefined") && (typeof printAr2 == "undefined")) {
+					return;
+				}
+								
+				var ret = checkAllDates();
+		        if(ret==true)
+		        {		        	
+		        	document.forms[0].submit.value="print"; 
+		        	document.forms[0].target="_blank";        
+		        	var url = "../form/createpdf?";
+		        	var multiple=0;
+		        	if (!(typeof printAr1 == "undefined")) {
+			        	url += "__title=Antenatal+Record+Part+1&__cfgfile=onar1enhancedPrintCfgPg1&__template=onar1&__numPages=1&postProcessor=ONAR1EnhancedPostProcessor";		        	
+			        	
+			        	if((obxNum.length>0 && parseInt(obxNum)>6) || hasExtraComments) {
+			        		multiple++;
+			        		url = url+"&__title1=Antenatal+Record+Part+1&__cfgfile1=onar1enhancedPrintCfgPg2&__template1=onar1enhancedpg2&__numPages1=1&postProcessor1=ONAR1EnhancedPostProcessor";		        		
+			        	}
+		        	}
+		        	if (!(typeof printAr2 == "undefined")) {
+		        		if( document.forms[0].c_finalEDB.value == "" && !confirm("<bean:message key="oscarEncounter.formOnar.msgNoEDB"/>")) {
+		                   return;
+		                }		        		
+		        		if (!(typeof printAr1 == "undefined")) {
+		        			multiple++;
+		        			url+="__title"+multiple+"=Antenatal+Record+Part+2&__cfgfile"+multiple+"=onar2enhancedPrintCfgPg1&__cfgGraphicFile"+multiple+"=onar2PrintGraphCfgPg1&__template"+multiple+"=onar2&postProcessor"+multiple+"=ONAR2EnhancedPostProcessor";
+		        		} else {
+		        			url+="__title=Antenatal+Record+Part+2&__cfgfile=onar2enhancedPrintCfgPg1&__cfgGraphicFile=onar2PrintGraphCfgPg1&__template=onar2&postProcessor=ONAR2EnhancedPostProcessor";
+		        		}
+		        		
+			        	if(rfNum.length>0 && parseInt(rfNum)>7) {
+			        		multiple++;		        		
+			        		url = url+"&__title"+multiple+"=Antenatal+Record+Part+2&__cfgfile"+multiple+"=onar2enhancedPrintCfgPgRf&__template"+multiple+"=onar2enhancedrf&__numPages"+multiple+"=1&postProcessor"+multiple+"=ONAR2EnhancedPostProcessor";    	
+			        	}
+			        	if(svNum.length>0 && parseInt(svNum)>18) {
+			        		multiple++;	
+			        		url = url+"&__title"+multiple+"=Antenatal+Record+Part+2&__cfgfile"+multiple+"=onar2enhancedPrintCfgPgSv&__template"+multiple+"=onar2enhancedsv&__numPages"+multiple+"=1&postProcessor"+multiple+"=ONAR2EnhancedPostProcessor";
+			        	}
+			        	if(svNum.length>0 && parseInt(svNum)>56) {
+			        		multiple++;	
+			        		url = url+"&__title"+multiple+"=Antenatal+Record+Part+2&__cfgfile"+multiple+"=onar2enhancedPrintCfgPgSv2&__template"+multiple+"=onar2enhancedsv&__numPages"+multiple+"=1&postProcessor"+multiple+"=ONAR2EnhancedPostProcessor";
+			        	}
+			        	if(usNum.length>0 && parseInt(usNum)>4) {
+			        		multiple++;
+			        		url=url+"&__title"+multiple+"=Antenatal+Record+Part+2&__cfgfile"+multiple+"=onar2enhancedPrintCfgPgUs&__template"+multiple+"=onar2enhancedus&__numPages"+multiple+"=1&postProcessor"+multiple+"=ONAR2EnhancedPostProcessor";
+			        	}
+		        	}
+		        	if(multiple>0) {
+		        		url=url+"&multiple="+(multiple+1);
+		        	}
+		        	//go to it
+		        	document.forms[0].action=url;
+		        	$("#printBtn").click();
+		        }
+				
 			},
 			Cancel: function() {
 				$( this ).dialog( "close" );
@@ -2046,8 +2110,8 @@ $(document).ready(function(){
   }
 %> <input type="submit" value="Exit"
 				onclick="javascript:return onExit();" /> <input type="submit"
-				value="Print" onclick="javascript:return onPrint();" />
-
+				value="Print" onclick="javascript:return onPrint2();" />
+<span style="display:none"><input id="printBtn" type="submit" value="PrintIt"/></span>
 			<%
   if (!bView) {
 %>
@@ -2324,7 +2388,7 @@ $(document).ready(function(){
 					
 					<td>
 						<select name="ar2_bloodGroup">
-							<option value="NDONE">Not Done</option>
+							<option value="ND">Not Done</option>
 							<option value="A">A</option>
 							<option value="B">B</option>
 							<option value="AB">AB</option>
@@ -2515,7 +2579,7 @@ $(document).ready(function(){
   }
 %> <input type="submit" value="Exit"
 				onclick="javascript:return onExit();" /> <input type="submit"
-				value="Print" onclick="javascript:return onPrint();" />
+				value="Print" onclick="javascript:return onPrint2();" />
 			<%
   if (!bView) {
 %>
@@ -2760,10 +2824,10 @@ $(document).ready(function(){
 	<p class="validateTips"></p>
 	<form>
 	<fieldset>
-		<input type="checkbox" name="print_ar1" id="print_ar1" class="text ui-widget-content ui-corner-all" />
+		<input type="checkbox" name="print_ar1" id="print_ar1" checked="checked" class="text ui-widget-content ui-corner-all" />
 		<label for="print_ar1">AR1</label>
 		<br/>
-		<input type="checkbox" name="print_ar2" id="print_ar2" class="text ui-widget-content ui-corner-all" />
+		<input type="checkbox" name="print_ar2" id="print_ar2" checked="checked" class="text ui-widget-content ui-corner-all" />
 		<label for="print_ar2">AR2</label>						
 	</fieldset>
 	</form>

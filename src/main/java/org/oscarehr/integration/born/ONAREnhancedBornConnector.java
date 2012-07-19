@@ -136,9 +136,10 @@ public class ONAREnhancedBornConnector {
 					*/
 					if(!sent) {
 						MiscUtils.getLogger().info("Adding form "+ id +" for patient " + demographicNo);
-						xml.addXmlToStream(pw,opts, null, String.valueOf(demographicNo), id, episodeId);				
-						total++;
-						formIdsSent.add(id);				
+						if(xml.addXmlToStream(pw,opts, null, String.valueOf(demographicNo), id, episodeId)) {				
+							total++;
+							formIdsSent.add(id);
+						}
 					}
 				}catch(Exception e) {
 					MiscUtils.getLogger().warn("Unable to add record");

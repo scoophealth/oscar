@@ -13,6 +13,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,6 +37,8 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
+import oscar.form.FrmRecord;
+import oscar.form.FrmRecordFactory;
 import oscar.form.graphic.FrmGraphicFactory;
 import oscar.form.graphic.FrmPdfGraphic;
 import oscar.util.ConcatPDF;
@@ -287,8 +290,20 @@ public class FrmPDFServlet extends HttpServlet {
             StringBuilder tempName = null;
             String tempValue = null;
 
+            //load from DB
+            int demoNo = Integer.parseInt(req.getParameter("demographic_no"));
+            int formId = Integer.parseInt(req.getParameter("formId"));
+            String formClass=req.getParameter("form_class");
+            FrmRecord record = (new FrmRecordFactory()).factory(formClass);
+            java.util.Properties props = new Properties();
+            try {
+            	props = record.getFormRecord(demoNo, formId);
+            }catch(SQLException e) {
+            	MiscUtils.getLogger().error("Error",e);
+            }
+            
             // get the print prop values
-            Properties props = new Properties();
+            //Properties props = new Properties();
             StringBuilder temp = new StringBuilder("");
             for (Enumeration<String> e = req.getParameterNames(); e.hasMoreElements();) {
                 temp = new StringBuilder(e.nextElement().toString());
