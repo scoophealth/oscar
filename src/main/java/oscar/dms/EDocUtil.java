@@ -199,6 +199,11 @@ public final class EDocUtil extends SqlUtilBaseS {
     	ctldoctypedao.changeDocType(docType, module, status);
     }
 
+    /** new method to let the user add a new DocumentType into the database */ 
+    public static void addDocTypeSQL(String docType, String module){ 
+    	ctldoctypedao.addDocType(docType, module);         
+    } 
+    
 	public static void detachDocConsult(String docNo, String consultId) {
 		List<ConsultDocs> consultDocs = consultDocsDao.findByRequestIdDocumentNoAndDocumentType(Integer.parseInt(consultId), Integer.parseInt(docNo), "D");
     	for(ConsultDocs consultDoc:consultDocs) {

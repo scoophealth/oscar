@@ -382,13 +382,25 @@ function popup1(height, width, url, windowName){
                           }
                           %> <a id="plusminus<%=i%>"
 				href="javascript: showhide('documentsInnerDiv<%=i%>', 'plusminus<%=i%>');">
-			-- <%= currentkey%> </a>
-                            <%if(DocumentBrowserLink) {%><a href="../dms/documentBrowser.jsp?function=<%=module%>&functionid=<%=moduleid%>&categorykey=<%=currentkey%>"><bean:message key="dms.documentReport.msgBrowser"/></a><%}%>
-                            <span class="tabs"> <bean:message key="dms.documentReport.msgView"/>: <a
-				href="?function=<%=module%>&functionid=<%=moduleid%>">All</a> <% for (int i3=0; i3<doctypes.size(); i3++) { %>
-			| <a
-				href="?function=<%=module%>&functionid=<%=moduleid%>&view=<%=(String) doctypes.get(i3)%>"><%=(String) doctypes.get(i3)%></a>
-			<%}%> </span></div>
+			-- <%= currentkey%> </a> 
+			<!-- Enter the deleted code here -->
+			<%if(DocumentBrowserLink) {%><a href="../dms/documentBrowser.jsp?function=<%=module%>&functionid=<%=moduleid%>&categorykey=<%=currentkey%>"><bean:message key="dms.documentReport.msgBrowser"/></a><%}%>
+			<span class="tabs"> <bean:message key="dms.documentReport.msgView"/>: 
+			<select id="viewdoctype" name="view"
+				style="text-size: 8px; margin-bottom: -4px;"
+				onchange="window.location.href='?function=<%=module%>&functionid=<%=moduleid%>&view='+this.options[this.selectedIndex].value;">
+			
+			    <option value="">All</option>
+				<%
+                 for (int i3=0; i3<doctypes.size(); i3++) {
+                           String doctype = (String) doctypes.get(i3); %>
+				<option value="<%= doctype%>"
+				<%=(view.equalsIgnoreCase(doctype))? "selected":""%>><%= doctype%></option>
+				<%}%>
+			
+			</select>
+			</span>
+			</div>
 			</div>
 			<div id="documentsInnerDiv<%=i%>" style="background-color: #f2f7ff;">
 			<table id="privateDocs" class="docTable">

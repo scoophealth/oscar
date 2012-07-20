@@ -261,6 +261,13 @@ public class AddEditDocumentAction extends DispatchAction {
 			if(fm.getAppointmentNo() != null && fm.getAppointmentNo().length()>0) {
 				newDoc.setAppointmentNo(Integer.parseInt(fm.getAppointmentNo()));
 			}
+			
+		 	// If a new document type is added, include it in the database to create filters 
+		 	if (!EDocUtil.getDoctypes(fm.getFunction()).contains(fm.getDocType())){ 
+		 		EDocUtil.addDocTypeSQL(fm.getDocType(),fm.getFunction());
+		 	} 
+		 	
+			
 			// ---
 			String doc_no = EDocUtil.addDocumentSQL(newDoc);
 			if(ConformanceTestHelper.enableConformanceOnlyTestFeatures){
