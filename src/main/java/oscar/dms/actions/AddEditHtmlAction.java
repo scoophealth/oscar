@@ -57,6 +57,9 @@ public class AddEditHtmlAction extends Action {
         AddEditDocumentForm fm = (AddEditDocumentForm) form;
         Hashtable errors = new Hashtable();
         String fileName = "";
+        if (!EDocUtil.getDoctypes(fm.getFunction()).contains(fm.getDocType())){ 
+        	EDocUtil.addDocTypeSQL(fm.getDocType(),fm.getFunction());
+        } 
         if ((fm.getDocDesc().length() == 0) || (fm.getDocDesc().equals("Enter Title"))) {
              errors.put("descmissing", "dms.error.descriptionInvalid");
              request.setAttribute("linkhtmlerrors", errors);
