@@ -227,6 +227,40 @@ public class AdmissionDao extends HibernateDaoSupport {
 
     }
 
+	public List<Admission> getDischargedAdmissions(Integer demographicNo) {
+		if (demographicNo == null || demographicNo <= 0) {
+			throw new IllegalArgumentException();
+		}
+
+		String queryStr = "FROM Admission a WHERE a.ClientId=? AND a.AdmissionStatus='discharged' ORDER BY a.AdmissionDate DESC";
+		@SuppressWarnings("unchecked")
+		List<Admission> dischargedAdmissions = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
+
+		if (log.isDebugEnabled()) {
+			log.debug("getDischargedAdmissions for clientId " + demographicNo + ", # of admissions: " + dischargedAdmissions.size());
+		}
+
+		List<Admission> currentAdmissions = getCurrentAdmissions(demographicNo);
+
+		List<Admission> fullyDischargedAdmissions = new ArrayList<Admission>();
+
+		for (Admission d : dischargedAdmissions) {
+			boolean isDischarged = true;
+
+			for (Admission a : currentAdmissions) {
+				if (d.getProgramId().intValue() == a.getProgramId().intValue()) {
+					isDischarged = false;
+				}
+			}
+
+			if (isDischarged)
+				fullyDischargedAdmissions.add(d);
+		}
+
+		return fullyDischargedAdmissions;
+
+	}
+
     public List<Admission> getCurrentAdmissionsByFacility(Integer demographicNo, Integer facilityId) {
         if (demographicNo == null || demographicNo <= 0) {
             throw new IllegalArgumentException();

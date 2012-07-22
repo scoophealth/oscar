@@ -394,6 +394,15 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		this.getHibernateTemplate().save(note);
 	}
 
+	public Object saveAndReturn(CaseManagementNote note) {
+		if (note.getUuid() == null) {
+			UUID uuid = UUID.randomUUID();
+			note.setUuid(uuid.toString());
+		}
+
+		return this.getHibernateTemplate().save(note);
+	}
+
 	public List search(CaseManagementSearchBean searchBean) {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 

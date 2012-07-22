@@ -141,7 +141,7 @@ public class DefaultRoleAccess  implements Serializable {
         else {
             DefaultRoleAccess mObj = (DefaultRoleAccess) obj;
             if (null == this.getId() || null == mObj.getId()) return false;
-            else return (this.getId().equals(mObj.getId()));
+            else return (this.getId().longValue() == mObj.getId().longValue());
         }
     }
 

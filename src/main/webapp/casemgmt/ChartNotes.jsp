@@ -442,7 +442,13 @@ try
 	<input type="hidden" name="pStartDate" id="pStartDate" value="">
 	<input type="hidden" name="pEndDate" id="pEndDate" value="">
 	<input type="hidden" id="annotation_attribname" name="annotation_attribname" value="">
-
+	<%
+ 	if (OscarProperties.getInstance().getBooleanProperty("note_program_ui_enabled", "true")) {
+ 	%>
+ 		<input type="hidden" name="_note_program_no" value="" />
+ 		<input type="hidden" name="_note_role_id" value="" />
+ 	<% } %>
+ 	
 	<span id="notesLoading">
 		<img src="<c:out value="${ctx}/images/DMSLoader.gif" />">Loading Notes...
 	</span>

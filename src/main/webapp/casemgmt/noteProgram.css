@@ -1,0 +1,193 @@
+/*
+ * Copyright (c) 2008-2012 Indivica Inc.
+ *
+ * This software is made available under the terms of the
+ * GNU General Public License, Version 2, 1991 (GPLv2).
+ * License details are available via "indivica.ca/gplv2"
+ * and "gnu.org/licenses/gpl-2.0.html".
+ */
+
+._program {
+	text-align: right;
+	position: relative;
+}
+
+._program .program {
+	background-color: #CCCCFF;
+    border-radius: 6px 0 0 0;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 10px;
+    padding: 3px 8px;
+    margin-top: 3px;
+}
+
+._program .popup {
+    -moz-user-select: none;
+    border-radius: 4px 4px 4px 4px;
+    display: block;
+    left: 300px;
+    padding: 4px;
+    position: absolute;
+    top: -84px;
+    z-index: 300;
+}
+
+._program .popup .arrow {
+	border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid #555555;
+    bottom: -3px;
+    position: absolute;
+    right: 30px;
+}
+
+._program .popup .contents {
+	background-color: #CCCCCC;
+    border: 1px solid black;
+    border-radius: 6px 6px 6px 6px;
+    box-shadow: 0 0 4px #555555;
+    color: white;
+    padding: 4px;
+    width: 250px;
+}
+
+._program .popup .contents .selects .selectProgram {
+	width: 250px;
+	margin-bottom: 5px;
+}
+
+._program .popup .contents .selects .role {
+	width: 250px;
+}
+
+._program .popup .contents .selects {
+	width: 250px;
+}
+
+._program .popup .contents .under {
+	text-align: right;
+	margin-top: 4px;
+}
+
+._program .popup .contents .under .errorMessage {
+	font-weight: bold;
+	color: red;
+	margin-right: 10px;
+	position: relative;
+	top: 1px;
+}
+
+._program .popup .contents .under input {
+	margin-left: 3px;
+}
+
+._program .popup .contents .under input.scopeBtn {
+	margin-right: 7px;
+}
+
+._program .popup .contents .under input.saveBtn {
+	font-weight: bold;
+}
+
+._program_screen {
+	background: rgba(0,0,0,0.7);
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	z-index: 400;
+	top: 0;
+	left: 0;
+	font-size: 13px;
+}
+
+._program_screen ._scopeBox {
+	width: 550px;
+	height: 400px;
+	background: white;
+	border-radius: 5px;
+	padding: 10px;
+	overflow-y: auto;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-left: -275px;
+	margin-top: -200px;
+}
+
+._program_screen ._scopeBox .boxTitle {
+	font-size: 20px;
+	border-bottom: 1px solid black;
+	margin-bottom: 10px;
+}
+
+._program_screen .scopeBox .loading {
+	font-size: 20px;
+	text-align: center;
+	margin: 10px;
+}
+
+._program_screen ._scopeBox table {
+	width: 100%;
+	font-size: 12px;
+}
+
+._program_screen ._scopeBox table th {
+	width: 200px;
+	text-align: right;
+	padding-right: 10px;
+}
+
+._program_screen ._scopeBox .explanation {
+	margin: 5px 0 5px 0;
+}
+
+._program_screen ._scopeBox table tr.NO_ACCESS {
+	background: #880000;
+	color: white;
+}
+
+._program_screen ._scopeBox table tr.ROLE {
+	background: #008800;
+	color: white;
+}
+
+._program_screen ._scopeBox table tr.ROLE_GLOBAL {
+	background: #00CC00;
+	color: white;
+}
+
+._program_screen ._scopeBox table tr.ALL_ROLES {
+	background: #550088;
+	color: white;
+}
+
+._program_screen table td, ._program_screen table th {
+	font-size: 11px;
+}
+
+.uiBigBarBtn {
+	position: relative;
+	float: right;
+	line-height: 14px;
+	border-radius: 2px;
+	border: 1px solid #656565;
+	background: #656565;
+	color: white;
+	font-weight: bold;
+	font-size: 16px;
+	cursor: pointer;
+	padding: 4px 4px 2px 4px;
+	top: -1px;
+	margin-left: 4px;
+}
+
+.uiBigBarBtn:hover {
+	color: #656565;
+	background: white;
+}
+
+.uiBigBarBtn .text {
+	position: relative;
+	top: -3px;
+}

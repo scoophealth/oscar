@@ -1,4 +1,4 @@
-<%--
+/*
 
 
     Copyright (c) 2005-2012. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved.
@@ -21,10 +21,7 @@
     Centre for Research on Inner City Health, St. Michael's Hospital,
     Toronto, Ontario, Canada
 
---%>
-<%@page import="org.oscarehr.PMmodule.web.ProgramUtils"%>
-<%@ page import="org.oscarehr.PMmodule.model.Intake" %>
-<%@page contentType="text/javascript"%>
+*/
 
 if (!Array.prototype.indexOf)
 {

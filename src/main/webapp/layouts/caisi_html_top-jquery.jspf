@@ -46,7 +46,7 @@
 		<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery.validate.min.js"></script>
 
 
-		<script type="text/javascript" src="<%=request.getContextPath()%>/js/genericIntake.js.jsp"></script>		
+		<script type="text/javascript" src="<%=request.getContextPath()%>/js/genericIntake.js"></script>
 	</head>
 	<body>
 		<div class="composite">

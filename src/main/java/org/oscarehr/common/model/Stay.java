@@ -37,7 +37,7 @@ public class Stay {
 	private Interval interval;
 
 	public Stay(Date admission, Date discharge, Date start, Date end) {
-		DateTime admissionDateTime = admission.after(start) ? new DateTime(admission) : new DateTime(start);
+		DateTime admissionDateTime = (admission != null && admission.after(start)) ? new DateTime(admission) : new DateTime(start);
 		DateTime dischargeDateTime = (discharge != null) ? new DateTime(discharge) : new DateTime(end);
 		
 		try {
