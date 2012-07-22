@@ -26,11 +26,28 @@ package oscar.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.List;
 import java.util.TreeMap;
 
 import org.springframework.jdbc.core.RowMapper;
 
+import oscar.OscarProperties;
+
 import oscar.appt.ApptData;
+
+import oscar.oscarClinic.ClinicData;
+
+import org.oscarehr.common.hl7.v2.HL7A04Data;
+
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.dao.DemographicDao;
+
+import oscar.oscarDemographic.data.DemographicData;
+
+//import org.oscarehr.PMmodule.model.Program;
+//import org.oscarehr.PMmodule.dao.ProgramDao;
+
+import org.oscarehr.util.SpringUtils;
 
 /**
  * Oscar Appointment DAO implementation created to extract database access code
@@ -47,6 +64,83 @@ public class AppointmentDao extends OscarSuperDao {
 	public AppointmentDao() {
 		rowMappers.put("export_appt", new ExportApptDataRowMapper());
 	}
+	
+	/**
+	 * Executes a parameterized insert/update/delete query identified by a key.<br>
+	 * 
+	 * @param queryName sql query key
+	 * @param params sql query parameters
+	 * @return number of affected rows
+	 */
+	public int executeUpdateQuery(String queryName, Object[] params) {
+		int result = super.executeUpdateQuery(queryName, params);
+		
+		// Generate our HL7 A04 file when we add an appointment
+		// Should we also generate an HL7 A04 when we import an appointment?
+		if (OscarProperties.getInstance().isHL7A04GenerationEnabled() && 
+			queryName.equalsIgnoreCase("add_apptrecord") && result == 1) {
+			generateHL7A04(params);
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * 
+	 */ 
+	private void generateHL7A04(Object[] params) {
+		try {	
+			String[] param2 = new String[7];
+			param2[0] = params[0].toString(); //provider_no
+			param2[1] = params[1].toString(); //appointment_date
+			param2[2] = params[2].toString(); //start_time
+			param2[3] = params[3].toString(); //end_time
+			param2[4] = params[13].toString(); //createdatetime
+			param2[5] = params[14].toString(); //creator
+			param2[6] = params[16].toString(); //demographic_no
+			
+			// get appointment data
+			ApptData appData = new ApptData();
+			List<Map<String, Object>> apptInfo = this.executeSelectQuery("search_appt_data", param2);
+			if (apptInfo.size() > 0) {
+				appData.setAppointment_no( 		apptInfo.get(0).get("appointment_no").toString() );
+				appData.setAppointment_date( 	apptInfo.get(0).get("appointment_date").toString() );
+				appData.setStart_time( 			apptInfo.get(0).get("start_time").toString() );
+				appData.setEnd_time( 			apptInfo.get(0).get("end_time").toString() );
+				appData.setNotes( 				apptInfo.get(0).get("notes").toString() );
+				appData.setReason( 				apptInfo.get(0).get("reason").toString() );
+				appData.setStatus( 				apptInfo.get(0).get("status").toString() );
+				appData.setProviderFirstName( 	apptInfo.get(0).get("first_name").toString() );
+				appData.setProviderLastName( 	apptInfo.get(0).get("last_name").toString() );
+				appData.setOhipNo( 				apptInfo.get(0).get("ohip_no").toString() );
+				appData.setUrgency( 			apptInfo.get(0).get("urgency").toString() );				
+			}
+				
+			// get demographic data
+			DemographicData demoData = new DemographicData();
+			Demographic demo = demoData.getDemographic(params[16].toString());
+			
+			// get clinic name/id
+			ClinicData clinicData = new ClinicData();
+			
+			//Program program = null;
+			DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+			List programs = demographicDao.getDemoProgramCurrent( demo.getDemographicNo() );
+			/*
+			if ( apptInfo.get(0).get("adm_program_id").toString() != null ) {
+				Integer programId = new Integer( apptInfo.get(0).get("adm_program_id").toString() );
+				ProgramDao programDao = (ProgramDao)SpringUtils.getBean("programDao");
+				program = programDao.getProgram( programId );
+			}
+			*/
+			
+			// generate A04 HL7
+			HL7A04Data A04Obj = new HL7A04Data(demo, appData, clinicData, programs);
+			A04Obj.save();
+		} catch (Exception e) {
+			logger.error("Unable to generate HL7 A04 file.", e);
+		}
+	}
 
 	private String [][] dbQueries = new String[][] {
             {"search_appt", "select count(appointment_no) AS n from appointment where appointment_date = ? and provider_no = ? and status !='C' and ((start_time>= ? and start_time<= ?) or (end_time>= ? and end_time<= ?) or (start_time<= ? and end_time>= ?) ) and program_id=?" },
@@ -56,6 +150,8 @@ public class AppointmentDao extends OscarSuperDao {
             {"search_appt_future", "select appt.appointment_date, appt.start_time, appt.status, p.last_name, p.first_name from appointment appt, provider p where appt.provider_no = p.provider_no and appt.demographic_no = ? and appt.appointment_date >= ? and appt.appointment_date < ? order by appointment_date desc, start_time desc" },
             {"search_appt_past", "select appt.appointment_date, appt.start_time, appt.status, p.last_name, p.first_name from appointment appt, provider p where appt.provider_no = p.provider_no and appt.demographic_no = ? and appt.appointment_date < ? and appt.appointment_date > ? order by appointment_date desc, start_time desc"},
             {"search_appt_no", "select appointment_no from appointment where provider_no=? and appointment_date=? and start_time=? and end_time=? and createdatetime=? and creator=? and demographic_no=? order by appointment_no desc limit 1"},
+            
+            {"search_appt_data", "select app.*, prov.first_name, prov.last_name, prov.ohip_no, adm.program_id as adm_program_id from provider prov, appointment app left join admission adm on app.demographic_no = adm.client_id where app.provider_no = prov.provider_no and app.provider_no=? and app.appointment_date=? and app.start_time=? and app.end_time=? and app.createdatetime=? and app.creator=? and app.demographic_no=? order by app.appointment_no desc limit 1"},
 
             {"add_apptrecord", "insert into appointment (provider_no,appointment_date,start_time,end_time,name, notes,reason,location,resources,type, style,billing,status,createdatetime,creator, remarks, demographic_no, program_id,urgency) values(?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?)" },
             {"search_waitinglist", "select wl.listID, wln.name from waitingList wl, waitingListName wln where wl.demographic_no=? and wln.ID=wl.listID and wl.is_history ='N' order by wl.listID"},
