@@ -109,6 +109,11 @@ public class ClinicData {
         }
     }
     
+    public String getClinicNo() {
+		fillClinicData();
+		return clinic_no;    
+	}
+    
     public String getClinicName(){
        fillClinicData();
        return clinic_name;        

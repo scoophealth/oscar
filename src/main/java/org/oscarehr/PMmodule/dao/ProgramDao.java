@@ -131,7 +131,7 @@ public class ProgramDao extends HibernateDaoSupport {
     }
 
     public Program getProgram(Integer programId) {
-        if (programId == null || programId <= 0) {
+        if (programId == null || programId.intValue() <= 0) {
             return null;
         }
 
@@ -181,9 +181,9 @@ public class ProgramDao extends HibernateDaoSupport {
     }
 
     public Integer getProgramIdByProgramName(String programName) {
-
+    	
     	if(programName == null) return null;
-
+    	
     	List<Program> programs = getHibernateTemplate().find("FROM Program p WHERE p.name = ? ORDER BY p.id ", programName);
     	if(!programs.isEmpty()) {
     		return programs.get(0).getId();
@@ -246,7 +246,7 @@ public class ProgramDao extends HibernateDaoSupport {
         List<Program> rs = getHibernateTemplate().find("FROM Program p WHERE p.programStatus = 'active' and p.type='Bed' ");
         return rs;
     }
-
+    
     public List <Program> getAllPrograms(String programStatus, String type, int facilityId)
     {
         @SuppressWarnings("unchecked")
@@ -262,7 +262,7 @@ public class ProgramDao extends HibernateDaoSupport {
     	}
     	return 	c.list();
     }
-
+ 
     public List<Program> getPrograms() {
         String queryStr = "FROM Program p WHERE p.type != 'community' ORDER BY p.name";
 
@@ -549,7 +549,7 @@ public class ProgramDao extends HibernateDaoSupport {
         }
 
         criteria.add(Expression.eq("facilityId", facilityId));
-
+        
         criteria.addOrder(Order.asc("name"));
 
         List results = criteria.list();
@@ -560,7 +560,7 @@ public class ProgramDao extends HibernateDaoSupport {
 
         return results;
     }
-
+    
     public void resetHoldingTank() {
         Query q = getSession().createQuery("update Program set holdingTank = false");
         q.executeUpdate();
@@ -601,21 +601,21 @@ public class ProgramDao extends HibernateDaoSupport {
                 new Object[] { bedProgramId, clientId });
         return results;
     }
-
+    
     public boolean isInSameFacility(Integer programId1, Integer programId2) {
     	if (programId1 == null || programId1 <= 0) {
             throw new IllegalArgumentException();
         }
-
+    	
     	if (programId2 == null || programId2 <= 0) {
             throw new IllegalArgumentException();
         }
-
+    	
     	Program p1 = getProgram(programId1);
     	Program p2 = getProgram(programId2);
     	return(p1.getFacilityId()==p2.getFacilityId());
     }
-
+    
     public Program getProgramBySiteSpecificField(String value) {
         Program result = null;
 
@@ -628,7 +628,7 @@ public class ProgramDao extends HibernateDaoSupport {
 
         return result;
     }
-
+    
     public Program getProgramByName(String value) {
         Program result = null;
 
