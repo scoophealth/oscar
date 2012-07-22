@@ -88,6 +88,12 @@ public class ProgramAccessDAO extends HibernateDaoSupport {
         return result;
     }
 
+	@SuppressWarnings("unchecked")
+	public List<ProgramAccess> getProgramAccessListByType(Long programId, String accessType) {
+		String q = "from ProgramAccess pa where pa.ProgramId = ? and pa.AccessType.Name like ?";
+		return this.getHibernateTemplate().find(q, new Object[] { programId, accessType });
+	}
+
     public void saveProgramAccess(ProgramAccess pa) {
         if (pa == null) {
             throw new IllegalArgumentException();

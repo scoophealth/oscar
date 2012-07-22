@@ -116,7 +116,7 @@ public class InfirmAction extends BaseAction
 		if (se.getAttribute(SessionConstants.CURRENT_PROGRAM_ID)!=null){
 			programId=Integer.valueOf((String)se.getAttribute(SessionConstants.CURRENT_PROGRAM_ID)).intValue();
 		}
-		if (programId!=defaultprogramId) getInfirmBedProgramManager().setDefaultProgramId(providerNo,programId);
+		//if (programId!=defaultprogramId) getInfirmBedProgramManager().setDefaultProgramId(providerNo,programId);
 
 		se.setAttribute(SessionConstants.CURRENT_PROGRAM_ID,String.valueOf(programId));
 
@@ -248,7 +248,7 @@ public class InfirmAction extends BaseAction
 			request.getSession().setAttribute("case_program_id",String.valueOf(pid));
 		} else {
 			request.getSession().setAttribute("case_program_id", ppid);
-			getInfirmBedProgramManager().setDefaultProgramId(providerNo,Integer.valueOf(ppid).intValue());
+			//getInfirmBedProgramManager().setDefaultProgramId(providerNo,Integer.valueOf(ppid).intValue());
 		}
 
 		return null;

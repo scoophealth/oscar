@@ -31,10 +31,11 @@
 <% if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp"); %>
 <%@ page import="java.util.Enumeration, org.apache.commons.lang.StringEscapeUtils" %>
 <%@page import="org.oscarehr.casemgmt.web.formbeans.*, org.oscarehr.casemgmt.model.CaseManagementNote"%>
-<%@page import="org.oscarehr.common.dao.UserPropertyDAO" %>
+<%@page import="org.oscarehr.common.dao.UserPropertyDAO, oscar.OscarProperties" %>
 <%@page import="org.oscarehr.common.model.UserProperty" %>
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.util.LoggedInInfo" %>
+<%@page import="org.oscarehr.casemgmt.common.Colour" %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
@@ -61,6 +62,13 @@
 	<link rel="stylesheet" href="<c:out value="${ctx}"/>/css/casemgmt.css" type="text/css">
     <link rel="stylesheet" href="<c:out value="${ctx}"/>/oscarEncounter/encounterStyles.css" type="text/css">
     <link rel="stylesheet" type="text/css" href="<c:out value="${ctx}"/>/css/print.css" media="print">
+
+   <script src="<c:out value="${ctx}/js/jquery.js"/>"></script>
+   <script>
+     jQuery.noConflict();
+   </script>
+
+
     <script src="<c:out value="${ctx}"/>/share/javascript/prototype.js" type="text/javascript"></script>
     <script src="<c:out value="${ctx}"/>/share/javascript/scriptaculous.js" type="text/javascript"></script>
 
@@ -97,13 +105,37 @@
   <!-- phr popups -->
   <script type="text/javascript" src="<c:out value="${ctx}/phr/phr.js"/>"></script>
 
+<script type="text/javascript">
+var Colour = {
+	prevention: '<%=Colour.getInstance().prevention%>',
+	tickler: '<%=Colour.getInstance().tickler%>',
+	disease: '<%=Colour.getInstance().disease%>',
+	forms: '<%=Colour.getInstance().forms%>',
+	eForms: '<%=Colour.getInstance().eForms%>',
+	documents: '<%=Colour.getInstance().documents%>',
+	labs: '<%=Colour.getInstance().labs%>',
+	messages: '<%=Colour.getInstance().messages%>',
+	measurements: '<%=Colour.getInstance().measurements%>',
+	consultation: '<%=Colour.getInstance().consultation%>',
+	allergy: '<%=Colour.getInstance().allergy%>',
+	rx: '<%=Colour.getInstance().rx%>',
+	omed: '<%=Colour.getInstance().omed%>',
+	riskFactors: '<%=Colour.getInstance().riskFactors%>',
+	familyHistory: '<%=Colour.getInstance().familyHistory%>',
+	unresolvedIssues: '<%=Colour.getInstance().unresolvedIssues%>',
+	resolvedIssues: '<%=Colour.getInstance().resolvedIssues%>',
+	episode: '<%=Colour.getInstance().episode%>',
+	pregancies: '<%=Colour.getInstance().episode%>'
+};
+</script>
+
   <!--js code for newCaseManagementView.jsp -->
   <script type="text/javascript" src="<c:out value="${ctx}/js/newCaseManagementView.js.jsp"/>"></script>
 
-   <script src="<c:out value="${ctx}/js/jquery.js"/>"></script>
-   <script>
-     jQuery.noConflict();
-   </script>
+<% if (OscarProperties.getInstance().getBooleanProperty("note_program_ui_enabled", "true")) { %>
+	<link rel="stylesheet" href="<c:out value="${ctx}/casemgmt/noteProgram.css" />" />
+	<script type="text/javascript" src="<c:out value="${ctx}/casemgmt/noteProgram.js" />"></script>
+  <% } %>
 
    <script type="text/javascript">
 
@@ -588,6 +620,7 @@
         msgPasswd = "<bean:message key="Logon.passWord"/>";
         btnMsgUnlock = "<bean:message key="oscarEncounter.Index.btnUnLock"/>";
         editLabel = "<bean:message key="oscarEncounter.edit.msgEdit"/>";
+        annotationLabel = "<bean:message key="oscarEncounter.Index.btnAnnotation"/>";
         month[0] = "<bean:message key="share.CalendarPopUp.msgJan"/>";
         month[1] = "<bean:message key="share.CalendarPopUp.msgFeb"/>";
         month[2] = "<bean:message key="share.CalendarPopUp.msgMar"/>";
@@ -778,6 +811,47 @@ function doscroll(){
                        <input type="submit" id="cancelprintOp" style="border: 1px solid #7682b1;" value="Cancel" onclick="$('printOps').style.display='none';">
                        <input type="submit" id="clearprintOp" style="border: 1px solid #7682b1;" value="Clear" onclick="$('printOps').style.display='none'; return clearAll(event);">
                    </div>
+
+<%
+if (OscarProperties.getInstance().getBooleanProperty("note_program_ui_enabled", "true")) {
+%>
+	<span class="popup" style="display: none;" id="_program_popup">
+		<div class="arrow"></div>
+		<div class="contents">
+			<div class="selects">
+				<select class="selectProgram"></select>
+				<select class="role"></select>
+			</div>
+			<div class="under">
+	 			<div class="errorMessage"></div>
+	 			<input type="button" class="scopeBtn" value="View Note Scope" />
+	 			<input type="button" class="closeBtn" value="Close" />
+	 			<input type="button" class="saveBtn" value="Save" />
+	 		</div>
+		</div>
+	</span>
+
+	<div id="_program_scope" class="_program_screen" style="display: none;">
+		<div class="_scopeBox">
+			<div class="boxTitle"><span class="text">Note Permission Summary</span><span class="uiBigBarBtn"><span class="text">x</span></span></div>
+			<table class="details">
+				<tr>
+					<th>Program Name (of this note)</th>
+					<td class="programName">...</td>
+				</tr>
+				<tr>
+					<th>Role Name (of this note)</th>
+					<td class="roleName">...</td>
+				</tr>
+			</table>
+			<div class="explanation">The following is a summary of what kind of access providers in the above program have to this note.</div>
+			<div class="loading">Loading...</div>
+			<table class="permissions"></table>
+		</div>
+	</div>
+<%
+}
+%>
               </form>
           </div>
 
