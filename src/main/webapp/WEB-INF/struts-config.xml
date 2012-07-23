@@ -1737,6 +1737,7 @@
 			<forward name="report" path="/billing/CA/ON/batchBillingCode.jsp" />
 		</action>
 		<action input="/demographic/demographicImport.jsp" name="LabUploadForm" path="/billing/CA/ON/benefitScheduleUpload" scope="request" type="oscar.oscarBilling.ca.on.OHIP.ScheduleOfBenefitsUploadAction">
+			<forward name="forceUpdate" path="/billing/CA/ON/benefitScheduleChange.do" />
 			<forward name="success" path="/billing/CA/ON/ScheduleOfBenefitsUpload.jsp" />
 		</action>
 		<action input="/admin/uploadEntryText.jsp" name="LabUploadForm" path="/admin/uploadEntryText" scope="request" type="oscar.login.UploadLoginTextAction">
