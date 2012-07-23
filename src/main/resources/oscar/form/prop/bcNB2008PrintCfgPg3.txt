@@ -1,0 +1,164 @@
+Section9DatePg3      : left, 60,  60, 0, BaseFont.HELVETICA, 8
+Section9YesPg3      : left, 113,  44, 0, BaseFont.HELVETICA, 8 , X
+Section9PassedPg3  : left, 140, 44, 0, BaseFont.HELVETICA, 8 , X
+Section9PassedWithRiskFactorPg3    : left, 140,  54, 0, BaseFont.HELVETICA, 8 , X
+Section9NoPg3  : left, 113,  63, 0, BaseFont.HELVETICA, 8 , X
+Section9DeclinedPg3   : left, 140,  63, 0, BaseFont.HELVETICA, 8 , X
+Section9NAPg3  : left, 180,  63, 0, BaseFont.HELVETICA, 8 , X
+Section9CommentPg3     : left, 154,  70, 0, BaseFont.HELVETICA, 7
+Section9AdditionalScreeningPg3 : left, 113,  88, 0, BaseFont.HELVETICA, 8 , X
+Section9DiagnosticAssessmentPg3    : left, 190,  88, 0, BaseFont.HELVETICA, 8 , X
+Section9OtherPg3   : left, 273,  88, 0, BaseFont.HELVETICA, 8 , X
+Section9OtherCommentPg3  : left, 300, 87, 0, BaseFont.HELVETICA, 8
+Section9PrintNamePg3   : left, 145, 105, 0, BaseFont.HELVETICA, 8
+Section9SignaturePg3   : left, 265, 105, 0, BaseFont.HELVETICA, 8
+Section10DatePg3      : left, 60,  134, 0, BaseFont.HELVETICA, 8
+Section10MetabolicScreeningAgePg3   : left, 215, 125, 0, BaseFont.HELVETICA, 8
+Section10MetabolicScreeningYesPg3   : left, 230, 125, 0, BaseFont.HELVETICA, 8, X
+Section10MetabolicScreeningNoPg3   : left, 252, 125, 0, BaseFont.HELVETICA, 8, X
+Section10MetabolicScreeningCommentPg3   : left, 300, 125, 0, BaseFont.HELVETICA, 8
+Section10MetabolicScreeningBilirubinScreeningAgePg3   : left, 200, 134, 0, BaseFont.HELVETICA, 8
+Section10MetabolicScreeningBilirubinScreeningYesPg3   : left, 212, 136, 0, BaseFont.HELVETICA, 8, X
+Section10MetabolicScreeningBilirubinScreeningNoPg3   : left, 235, 136, 0, BaseFont.HELVETICA, 8, X
+Section10MetabolicScreeningBilirubinScreeningCommentPg3   : left, 285, 134, 0, BaseFont.HELVETICA, 8
+Section11DatePg3      : left, 60,  177, 0, BaseFont.HELVETICA, 8
+Section11HBsAgYesPg3   : left, 198, 168, 0, BaseFont.HELVETICA, 8, X
+Section11HBsAgNoPg3   : left, 224, 168, 0, BaseFont.HELVETICA, 8, X
+Section11HBsAgVaccinePg3   : left, 254, 168, 0, BaseFont.HELVETICA, 8, X
+Section11HepatitisBPg3   : left, 305, 168, 0, BaseFont.HELVETICA, 8, X
+Section11HIVYesPg3   : left, 198, 177, 0, BaseFont.HELVETICA, 8, X
+Section11HIVNoPg3   : left, 224, 177, 0, BaseFont.HELVETICA, 8, X
+Section11HIVInitiatedPg3  : left, 254, 177, 0, BaseFont.HELVETICA, 8, X
+Section11StrepYesPg3  : left, 224, 187, 0, BaseFont.HELVETICA, 8, X
+Section11StrepNoPg3   : left, 254, 187, 0, BaseFont.HELVETICA, 8, X
+Section11CommentPg3  : left, 308, 187, 0, BaseFont.HELVETICA, 8
+Section12DatePg3      : left, 60,  215, 0, BaseFont.HELVETICA, 8
+Section121hPg3 : left, 192, 206, 0, BaseFont.HELVETICA, 8, X
+Section12_1_2hPg3 : left, 227, 206, 0, BaseFont.HELVETICA, 8, X
+Section12_2_24hPg3 : left, 264, 206, 0, BaseFont.HELVETICA, 8, X
+Section12_g24hPg3 : left, 305, 206, 0, BaseFont.HELVETICA, 8, X
+Section12NAPg3 : left, 340, 206, 0, BaseFont.HELVETICA, 8, X
+Section12CommentPg3 : left, 413, 204, 0, BaseFont.HELVETICA, 8
+Section12ExclusiveBreastmilkPg3 : left, 114, 215, 0, BaseFont.HELVETICA, 8, X
+Section12PartialBreastmilkPg3 : left, 199, 215, 0, BaseFont.HELVETICA, 8, X
+Section12BreasmilkSubstitutePg3 : left, 274, 215, 0, BaseFont.HELVETICA, 8, X
+Section12SupplementationPg3 : left, 450, 215, 0, BaseFont.HELVETICA, 8
+Section13Note1DatePg3 : left, 60, 260, 0, BaseFont.HELVETICA, 8
+Section13Note2DatePg3 : left, 60, 275, 0, BaseFont.HELVETICA, 8
+Section13Note3DatePg3 : left, 60, 290, 0, BaseFont.HELVETICA, 8
+ProblemListYesPg3 : left, 207, 237, 0, BaseFont.HELVETICA, 8, X
+ProblemListNoPg3 : left, 239, 237, 0, BaseFont.HELVETICA, 8, X
+ProblemListSeeNotesPg3 : left, 268, 237, 0, BaseFont.HELVETICA, 8, X
+Section13NotePg3 : left, 115, 260, 0, BaseFont.HELVETICA, 8
+Section13Note2Pg3 : left, 115, 275, 0, BaseFont.HELVETICA, 8
+Section13Note3Pg3 : left, 115, 290, 0, BaseFont.HELVETICA, 8
+Section13Note1DateResolvedPg3 : left, 530, 260, 0, BaseFont.HELVETICA, 8
+Section13Note2DateResolvedPg3 : left, 530, 275, 0, BaseFont.HELVETICA, 8
+Section13Note3DateResolvedPg3 : left, 530, 290, 0, BaseFont.HELVETICA, 8
+Section14Date1Pg3 : left, 60, 315, 0, BaseFont.HELVETICA, 8
+Section14Date2Pg3 : left, 60, 331, 0, BaseFont.HELVETICA, 8
+Section14Date3Pg3 : left, 60, 345, 0, BaseFont.HELVETICA, 8
+Section14Date4Pg3 : left, 60, 363, 0, BaseFont.HELVETICA, 8
+Section14Date5Pg3 : left, 60, 379, 0, BaseFont.HELVETICA, 8
+Section14Date6Pg3 : left, 60, 395, 0, BaseFont.HELVETICA, 8
+Section14Date7Pg3 : left, 60, 411, 0, BaseFont.HELVETICA, 8
+Section14Date8Pg3 : left, 60, 426, 0, BaseFont.HELVETICA, 8
+Section14ProgressNotes1Pg3 : left, 115, 315, 0, BaseFont.HELVETICA, 8
+Section14ProgressNotes2Pg3 : left, 115, 331, 0, BaseFont.HELVETICA, 8
+Section14ProgressNotes3Pg3 : left, 115, 345, 0, BaseFont.HELVETICA, 8
+Section14ProgressNotes4Pg3 : left, 115, 363, 0, BaseFont.HELVETICA, 8
+Section14ProgressNotes5Pg3 : left, 115, 379, 0, BaseFont.HELVETICA, 8
+Section14ProgressNotes6Pg3 : left, 115, 395, 0, BaseFont.HELVETICA, 8
+Section14ProgressNotes7Pg3 : left, 115, 411, 0, BaseFont.HELVETICA, 8
+Section14ProgressNotes8Pg3 : left, 115, 426, 0, BaseFont.HELVETICA, 8
+Section1512hPg3 : left, 118, 452, 0, BaseFont.HELVETICA, 8, X
+Section151314hPg3 : left, 154, 452, 0, BaseFont.HELVETICA, 8, X
+Section152548hPg3 : left, 191, 452, 0, BaseFont.HELVETICA, 8, X
+Section154972hPg3 : left, 231, 452, 0, BaseFont.HELVETICA, 8, X
+Section15GT72Pg3 : left, 277, 452, 0, BaseFont.HELVETICA, 8, X
+Section15HCPg3 : left, 145, 466, 0, BaseFont.HELVETICA, 8
+Section15WeightPg3 : left, 218, 466, 0, BaseFont.HELVETICA, 8
+Section15WeightLossPg3 : left, 302, 466, 0, BaseFont.HELVETICA, 8
+Section15GeneralNormalPg3 : left, 142, 502, 0, BaseFont.HELVETICA, 8, X
+Section15GeneralAbnormalPg3 : left, 170, 502, 0, BaseFont.HELVETICA, 8, X
+Section15GeneralCommentPg3 : left, 187, 502, 0, BaseFont.HELVETICA, 8
+Section15SkinNormalPg3 : left, 142, 522, 0, BaseFont.HELVETICA, 8, X
+Section15SkinAbnormalPg3 : left, 170, 522, 0, BaseFont.HELVETICA, 8, X
+Section15SkinCommentPg3 : left, 187, 522, 0, BaseFont.HELVETICA, 8
+Section15HeadNormalPg3 : left, 142, 538, 0, BaseFont.HELVETICA, 8, X
+Section15HeadAbnormalPg3 : left, 171, 538, 0, BaseFont.HELVETICA, 8, X
+Section15HeadCommentPg3 : left, 187, 538, 0, BaseFont.HELVETICA, 8
+Section15EENTNormalPg3 : left, 142, 554, 0, BaseFont.HELVETICA, 8, X
+Section15EENTAbnormalPg3 : left, 171, 554, 0, BaseFont.HELVETICA, 8, X
+Section15EENTCommentPg3 : left, 187, 554, 0, BaseFont.HELVETICA, 8
+Section15RespiratoryNormalPg3 : left, 142, 570, 0, BaseFont.HELVETICA, 8, X
+Section15RespiratoryAbnormalPg3 : left, 171, 570, 0, BaseFont.HELVETICA, 8, X
+Section15RespiratoryCommentPg3 : left, 187, 570, 0, BaseFont.HELVETICA, 8
+
+
+Section15CVSNormalPg3  : left, 142, 585, 0, BaseFont.HELVETICA, 8, X
+Section15CVSAbnormalPg3  : left, 171, 585, 0, BaseFont.HELVETICA, 8, X
+Section15CVSCommentPg3  : left, 187, 585, 0, BaseFont.HELVETICA, 8
+Section15AbdomenNormalPg3  : left, 142, 600, 0, BaseFont.HELVETICA, 8, X
+Section15AbdomenAbnormalPg3  : left, 171, 600, 0, BaseFont.HELVETICA, 8, X
+Section15AbdomenCommentPg3  : left, 187, 600, 0, BaseFont.HELVETICA, 8
+Section15UnbilicalCordNormalPg3  : left, 142, 617, 0, BaseFont.HELVETICA, 8, X
+Section15UnbilicalCordAbnormalPg3  : left, 171, 617, 0, BaseFont.HELVETICA, 8, X
+Section15UnbilicalCordCommentPg3  : left, 187, 619, 0, BaseFont.HELVETICA, 8
+Section15GenitorectalNormalPg3  : left, 142, 635, 0, BaseFont.HELVETICA, 8, X
+Section15GenitorectalAbnormalPg3  : left, 171, 635, 0, BaseFont.HELVETICA, 8, X
+Section15GenitorectalCommentPg3  : left, 187, 635, 0, BaseFont.HELVETICA, 8
+Section15MusculoskeletalNormalPg3  : left, 142, 651, 0, BaseFont.HELVETICA, 8, X
+Section15MusculoskeletalAbnormalPg3  : left, 171, 651, 0, BaseFont.HELVETICA, 8, X
+Section15MusculoskeletalCommentPg3  : left, 187, 651, 0, BaseFont.HELVETICA, 8
+Section15NeurologicalNormalPg3  : left, 142, 671, 0, BaseFont.HELVETICA, 8, X
+Section15NeurologicalAbnormalPg3  : left, 171, 671, 0, BaseFont.HELVETICA, 8, X
+Section15NeurologicalCommentPg3  : left, 187, 671, 0, BaseFont.HELVETICA, 8
+Section15OtherNormalPg3  : left, 142, 689, 0, BaseFont.HELVETICA, 8, X
+Section15OtherAbnormalPg3  : left, 171, 689, 0, BaseFont.HELVETICA, 8, X
+Section15OtherCommentPg3  : left, 187, 689, 0, BaseFont.HELVETICA, 8
+DatePg3  : left, 85, 720, 0, BaseFont.HELVETICA, 8
+SIGNATUREPg3  : left, 187, 720, 0, BaseFont.HELVETICA, 8
+Section16TextPg3  : left, 350, 450, 0, BaseFont.HELVETICA, 8
+Section16ExclusivePg3  : left, 354, 497, 0, BaseFont.HELVETICA, 8, X
+Section16PartialPg3  : left, 438, 497, 0, BaseFont.HELVETICA, 8, X
+Section16SubstitutePg3  : left, 512, 497, 0, BaseFont.HELVETICA, 8, X
+Section16CommentPg3  : left, 355, 518, 0, BaseFont.HELVETICA, 8
+ProblemsrequiringFollowupPg3  : left, 350, 543, 0, BaseFont.HELVETICA, 8
+Section17HomePg3  : left, 351, 603, 0, BaseFont.HELVETICA, 8, X
+Section17AdoptionPg3  : left, 387, 603, 0, BaseFont.HELVETICA, 8, X
+Section17FosterPg3  : left, 430, 603, 0, BaseFont.HELVETICA, 8, X
+Section17OtherHospitalPg3  : left, 487, 603, 0, BaseFont.HELVETICA, 8, X
+Section17OtherPg3  : left, 351, 612, 0, BaseFont.HELVETICA, 8, X
+Section17OtherHospitalSpecifyPg3  : left, 541, 602, 0, BaseFont.HELVETICA, 8
+Section18FamilyPhsicianPg3  : left, 351, 660, 0, BaseFont.HELVETICA, 8, X
+Section18FamilyPhsicianDatePg3  : left, 430, 655, 0, BaseFont.HELVETICA, 8
+Section18MidwifePg3  : left, 351, 672, 0, BaseFont.HELVETICA, 8, X
+Section18MidwifeDatePg3  : left, 430, 669, 0, BaseFont.HELVETICA, 8
+Section18PediatricianPg3  : left, 351, 685, 0, BaseFont.HELVETICA, 8, X
+Section18PediatricianDatePg3  : left, 430, 681, 0, BaseFont.HELVETICA, 8
+Section18OtherConsultantPg3  : left, 351, 698, 0, BaseFont.HELVETICA, 8, X
+Section18OtherConsultantDatePg3  : left, 430, 693, 0, BaseFont.HELVETICA, 8
+Section18PublicHealthNursePg3  : left, 351, 711, 0, BaseFont.HELVETICA, 8, X
+Section18PublicHealthNurseDatePg3  : left, 430, 709, 0, BaseFont.HELVETICA, 8
+Section18MinistryforChildernPg3  : left, 351, 724, 0, BaseFont.HELVETICA, 8, X
+Section18MinistryforChildernDatePg3  : left, 430, 721, 0, BaseFont.HELVETICA, 8
+NeonatalDeathPg3  : left, 493, 629, 0, BaseFont.HELVETICA, 8, X
+AutopsyConsentedPg3  : left, 493, 639, 0, BaseFont.HELVETICA, 8, X
+
+__hospitalName    : left, 358, 33, 0, BaseFont.HELVETICA, 6 , HOSPITAL NAME
+ c_hospitalName    : left, 358, 43, 0, BaseFont.HELVETICA, 6
+ __date    : left, 499, 33, 0, BaseFont.HELVETICA, 6 , DATE
+ pg1_formDate    : left, 499, 43, 0, BaseFont.HELVETICA, 6
+ __surname    : left, 358, 57, 0, BaseFont.HELVETICA, 6 , SURNAME
+ c_surname    : left, 358, 67, 0, BaseFont.HELVETICA, 8
+ __givenName    : left, 499, 57, 0, BaseFont.HELVETICA, 6 , GIVEN NAME
+ c_givenName    : left, 499, 67, 0, BaseFont.HELVETICA, 8
+ __address    : left, 358, 81, 0, BaseFont.HELVETICA, 6 , ADDRESS
+ c_address    : left, 358, 91, 0, BaseFont.HELVETICA, 6
+ c_province    : left, 358, 101, 0, BaseFont.HELVETICA, 6
+ c_postal    : left, 378, 101, 0, BaseFont.HELVETICA, 6
+ __phoneNumber    : left, 499, 101, 0, BaseFont.HELVETICA, 6 , PHONE NUMBER
+ c_phone    : left, 499, 111, 0, BaseFont.HELVETICA, 6
+ __physicianName    : left, 358, 122, 0, BaseFont.HELVETICA, 6 , PHYSICIAN / MIDWIFE NAME
+ c_phyMid    : left, 358, 132, 0, BaseFont.HELVETICA, 8
