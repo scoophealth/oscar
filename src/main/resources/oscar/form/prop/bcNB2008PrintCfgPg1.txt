@@ -1,0 +1,252 @@
+MothersName     : left, 69,  40, 0, BaseFont.HELVETICA, 8
+MothersAge     : left, 238,  39, 0, BaseFont.HELVETICA, 8
+MothersHospitalID    : left, 280,  39, 0, BaseFont.HELVETICA, 8
+SurNewBorn   : left, 71,  62, 0, BaseFont.HELVETICA, 8
+FathersName  : left, 220,  62, 0, BaseFont.HELVETICA, 8
+FathersAge  : left, 330,  62, 0, BaseFont.HELVETICA, 8
+G : left, 90,  78, 0, BaseFont.HELVETICA, 8
+T : left, 118,  80, 0, BaseFont.HELVETICA, 8
+P : left, 147,  78, 0, BaseFont.HELVETICA, 8
+A : left, 175,  79, 0, BaseFont.HELVETICA, 8
+L : left, 205,  80, 0, BaseFont.HELVETICA, 8
+EDD : left, 243,  78, 0, BaseFont.HELVETICA, 8
+LMP : left, 295,  83, 0, BaseFont.HELVETICA, 8, X
+US : left, 324,  83, 0, BaseFont.HELVETICA, 8, X
+BloodGroup : left, 125,  96, 0, BaseFont.HELVETICA, 8
+Rh : left, 180,  96, 0, BaseFont.HELVETICA, 8
+Antibodies : left, 250,  97, 0, BaseFont.HELVETICA, 8
+ExposuretoSubstancesTobacco : left, 155,  116, 0, BaseFont.HELVETICA, 8, X
+ExposuretoSubstancesAlcohol : left, 199,  116, 0, BaseFont.HELVETICA, 8, X
+ExposuretoSubstancesMedication : left, 241,  116, 0, BaseFont.HELVETICA, 8, X
+ExposuretoSubstancesOther : left, 74,  123, 0, BaseFont.HELVETICA, 8, X
+ExposuretoSubstancesOtherText : left, 107,  124, 0, BaseFont.HELVETICA, 8
+ExposuretoSubstancesOtherRisk : left, 70,  141, 0, BaseFont.HELVETICA, 8
+
+HeartRate1min : left, 192,  188, 0, BaseFont.HELVETICA, 8
+HeartRate5min : left, 214,  188, 0, BaseFont.HELVETICA, 8
+HeartRate10min : left, 237,  188, 0, BaseFont.HELVETICA, 8
+Resp1min : left, 192,  210, 0, BaseFont.HELVETICA, 8
+Resp5min : left, 214,  210, 0, BaseFont.HELVETICA, 8
+Resp10min : left, 237,  210, 0, BaseFont.HELVETICA, 8
+MuscleTone1min : left, 192,  235, 0, BaseFont.HELVETICA, 8
+MuscleTone5min : left, 214,  235, 0, BaseFont.HELVETICA, 8
+MuscleTone10min : left, 237,  235, 0, BaseFont.HELVETICA, 8
+ResptoStim1min : left, 192,  255, 0, BaseFont.HELVETICA, 8
+ResptoStim5min : left, 214,  255, 0, BaseFont.HELVETICA, 8
+ResptoStim10min : left, 237,  255, 0, BaseFont.HELVETICA, 8
+Colour1min : left, 192,  275, 0, BaseFont.HELVETICA, 8
+Colour5min : left, 214,  275, 0, BaseFont.HELVETICA, 8
+Colour10min : left, 237,  275, 0, BaseFont.HELVETICA, 8
+Total1min : left, 192,  292, 0, BaseFont.HELVETICA, 8
+Total5min : left, 212,  292, 0, BaseFont.HELVETICA, 8
+Total10min : left, 237,  292, 0, BaseFont.HELVETICA, 8
+SkinToSkin : left, 314,  170, 0, BaseFont.HELVETICA, 8, X
+RadiantWarmer : left, 373,  170, 0, BaseFont.HELVETICA, 8, X
+PositionedOther : left, 450,  170, 0, BaseFont.HELVETICA, 8, X
+PositionedOtherText : left, 490,  165, 0, BaseFont.HELVETICA, 8
+AmnioticFluidClear : left, 314,  181, 0, BaseFont.HELVETICA, 8, X
+AmnioticFluidMeconium : left, 373,  181, 0, BaseFont.HELVETICA, 8, X
+AmnioticFluidBloody : left, 450,  180, 0, BaseFont.HELVETICA, 8, X
+SuctionOropharyngeal : left, 303,  191, 0, BaseFont.HELVETICA, 8, X
+SuctionTrachea : left, 373,  191, 0, BaseFont.HELVETICA, 8, X
+SuctionMecBelowCords : left, 422,  191, 0, BaseFont.HELVETICA, 8, X
+SuctionStomachAspirated : left, 508,  190, 0, BaseFont.HELVETICA, 8, X
+OxygenNone : left, 313,  201, 0, BaseFont.HELVETICA, 8, X
+OxygenFreeFlow : left, 359,  201, 0, BaseFont.HELVETICA, 8, X
+OxygenStart : left, 445,  199, 0, BaseFont.HELVETICA, 8
+OxygenStop : left, 520,  199, 0, BaseFont.HELVETICA, 8
+
+
+
+OxygenIPPV : left, 359,  211, 0, BaseFont.HELVETICA, 8, X
+OxygenIPPVStart : left, 444,  211, 0, BaseFont.HELVETICA, 8
+OxygenIPPVStop : left, 519,  211, 0, BaseFont.HELVETICA, 8
+OxygenSeeExpanded : left, 359, 222, 0, BaseFont.HELVETICA, 8, X
+OxygenCordGases : left, 310,  234, 0, BaseFont.HELVETICA, 8, X
+OxygenNotDone : left, 420,  234, 0, BaseFont.HELVETICA, 8, X
+Section3Tempeature : left, 305,  245, 0, BaseFont.HELVETICA, 8
+Section3PulseOximetryYes : left, 437,  248, 0, BaseFont.HELVETICA, 8, X
+Section3PulseOximetryNo : left, 472,  248, 0, BaseFont.HELVETICA, 8, X
+Section3HeartRate : left, 306,  256, 0, BaseFont.HELVETICA, 8
+Section3HeartRateMin : left, 407,  257, 0, BaseFont.HELVETICA, 8
+Section3HeartRateSec : left, 445,  257, 0, BaseFont.HELVETICA, 8
+Section3Respirations : left, 306,  270, 0, BaseFont.HELVETICA, 8
+Section3MinTimetoSpontaneousBrathingMin : left, 459,  270, 0, BaseFont.HELVETICA, 8
+Section3MinTimetoSpontaneousBrathingSec : left, 494,  270, 0, BaseFont.HELVETICA, 8
+
+Section3SigRMRN1 : left, 260,  293, 0, BaseFont.HELVETICA, 8
+Section3SigRMRN2 : left, 375,  293, 0, BaseFont.HELVETICA, 8
+Section3SigMD : left, 485,  293, 0, BaseFont.HELVETICA, 8
+
+Section4Birthdate : left, 129,  315, 0, BaseFont.HELVETICA, 8
+Section4time : left, 210,  315, 0, BaseFont.HELVETICA, 8
+Section4DeliveryType : left, 115,   340, 0, BaseFont.HELVETICA, 8
+Section4NewBornHospital : left, 215,  340, 0, BaseFont.HELVETICA, 8
+Section4Sig1 : left, 110,  360, 0, BaseFont.HELVETICA, 8
+Section4Sig2 : left, 110,  381, 0, BaseFont.HELVETICA, 8
+Section4VoidedYes : left, 82,  403, 0, BaseFont.HELVETICA, 8, X
+Section4VoidedNo : left, 126,  403, 0, BaseFont.HELVETICA, 8, X
+Section4MeconiumYes : left, 171,  403, 0, BaseFont.HELVETICA, 8, X
+Section4MeconiumNo : left, 208,  403, 0, BaseFont.HELVETICA, 8, X
+
+Section4BreastfeedingYes : left, 171,  420, 0, BaseFont.HELVETICA, 8, X
+Section4BreastfeedingNo : left, 209,  420, 0, BaseFont.HELVETICA, 8, X
+
+Section5CordbloodYes : left, 141,  444, 0, BaseFont.HELVETICA, 8, X
+Section5CordbloodNo : left, 187,  444, 0, BaseFont.HELVETICA, 8, X
+Section5EyeProphylaxisErthromycin : left, 81,  465, 0, BaseFont.HELVETICA, 8, X
+Section5EyeProphylaxisOther : left, 140,  465, 0, BaseFont.HELVETICA, 8, X
+Section5EyeProphylaxisOtherText : left, 167,  463, 0, BaseFont.HELVETICA, 8
+Section5EyeProphylaxisInformedRefusal : left, 81,  474, 0, BaseFont.HELVETICA, 8, X
+Section5EyeProphylaxisTime : left, 235,  470, 0, BaseFont.HELVETICA, 6
+Section5sig1 : left, 110,  487, 0, BaseFont.HELVETICA, 8
+
+Section5VitaminKPO : left, 81,  509, 0, BaseFont.HELVETICA, 8, X
+Section5VitaminKIM : left, 113,  509, 0, BaseFont.HELVETICA, 8, X
+Section5VitaminKDosage : left, 162,  505, 0, BaseFont.HELVETICA, 8
+Section5VitaminKSite : left, 190,  505, 0, BaseFont.HELVETICA, 8
+Section5VitaminKTime : left, 235,  515, 0, BaseFont.HELVETICA, 8
+Section5VitaminKInformedRefusal : left, 81,  517, 0, BaseFont.HELVETICA, 8, X
+
+Section5VitaminKSig2 : left, 110,  541, 0, BaseFont.HELVETICA, 8
+Section6BirthweightG : left, 140,  575, 0, BaseFont.HELVETICA, 8
+Section6BirthweightPercent : left, 225,  575, 0, BaseFont.HELVETICA, 8
+Section6LengthCM : left, 140,  590, 0, BaseFont.HELVETICA, 8
+Section6LengthPercent : left, 225,  590, 0, BaseFont.HELVETICA, 8
+Section6HeadCircumferenceCM : left, 140,  605, 0, BaseFont.HELVETICA, 8
+Section6HeadCircumferencePercent : left, 225,  605, 0, BaseFont.HELVETICA, 8
+Section6Preterm : left, 81,  623, 0, BaseFont.HELVETICA, 8, X
+Section6Term : left, 141,  623, 0, BaseFont.HELVETICA, 8, X
+Section6Postterm : left, 189,  623, 0, BaseFont.HELVETICA, 8, X
+
+Section6SGA : left, 81,  636, 0, BaseFont.HELVETICA, 8, X
+Section6AGA : left, 141,  636, 0, BaseFont.HELVETICA, 8, X
+Section6LGA : left, 189,  636, 0, BaseFont.HELVETICA, 8, X
+
+Section7MaceratedYes : left, 197,  657, 0, BaseFont.HELVETICA, 8, X
+Section7MaceratedNo : left, 214,  657, 0, BaseFont.HELVETICA, 8, X
+Section7IUGRYes : left, 197,  666, 0, BaseFont.HELVETICA, 8, X
+Section7IUGRNo : left, 214,  666, 0, BaseFont.HELVETICA, 8, X
+Section7RetroplacentalClotYes : left, 197,  676, 0, BaseFont.HELVETICA, 8, X
+Section7RetroplacentalClotNo : left, 214,  676, 0, BaseFont.HELVETICA, 8, X
+Section7EvidenceofAnemiaYes : left, 197,  685, 0, BaseFont.HELVETICA, 8, X
+Section7EvidenceofAnemiaNo : left, 214,  685, 0, BaseFont.HELVETICA, 8, X
+Section7AutopsyConsentedYes : left, 197,  694, 0, BaseFont.HELVETICA, 8, X
+Section7AutopsyConsentedNo : left, 214,  694, 0, BaseFont.HELVETICA, 8, X
+Section7ObviousAnomalyYes : left, 197,  704, 0, BaseFont.HELVETICA, 8, X
+Section7ObviousAnomalyNo : left, 214,  704, 0, BaseFont.HELVETICA, 8, X
+Section7ObviousAnomalyText : left, 70,  716, 0, BaseFont.HELVETICA, 8
+Section7umbilicalCM : left, 232,  716, 0, BaseFont.HELVETICA, 8
+
+Section8GestationalAgeAntenatalHistory : left, 312,  329, 0, BaseFont.HELVETICA, 8
+Section8GestationalAgeByExam : left, 440,  327, 0, BaseFont.HELVETICA, 8
+Section8Male : left, 525,  313, 0, BaseFont.HELVETICA, 8, X
+Section8Female : left, 563,  313, 0, BaseFont.HELVETICA, 8, X
+Section8Undifferentiated : left, 525,  327, 0, BaseFont.HELVETICA, 8, X
+
+Section8GeneralApperanceNormal : left, 305,  357, 0, BaseFont.HELVETICA, 8, X
+Section8GeneralApperanceAbnormal : left, 330,  357, 0, BaseFont.HELVETICA, 8, X
+Section8GeneralApperanceComments : left, 390,  356, 0, BaseFont.HELVETICA, 8
+
+Section8SkinNormal : left, 305,  379, 0, BaseFont.HELVETICA, 8, X
+Section8SkinPallor : left, 330,  379, 0, BaseFont.HELVETICA, 8, X
+Section8SkinBruising : left, 330,  390, 0, BaseFont.HELVETICA, 8, X
+Section8SkinPetechiae : left, 330,  402, 0, BaseFont.HELVETICA, 8, X
+
+
+
+
+Section8SkinMecStaining	 : left, 391,  379, 0, BaseFont.HELVETICA, 8, X
+
+Section8SkinPeeling : left, 391,  390, 0, BaseFont.HELVETICA, 8, X
+Section8SkinJaundice : left, 391,  402, 0, BaseFont.HELVETICA, 8, X
+
+Section8SkinText : left, 440,  390, 0, BaseFont.HELVETICA, 8
+
+Section8HeadNormal : left, 305,  421, 0, BaseFont.HELVETICA, 8, X
+Section8HeadAbnormal : left, 330,  421, 0, BaseFont.HELVETICA, 8, X
+Section8HeadText : left, 390,  420, 0, BaseFont.HELVETICA, 8
+
+Section8EENTNormal : left, 306,  440, 0, BaseFont.HELVETICA, 8, X
+Section8EENTCleftLipPalate : left, 330,  440, 0, BaseFont.HELVETICA, 8, X
+Section8EENTSuspectedChoanalAtresia : left, 390,  440, 0, BaseFont.HELVETICA, 8, X
+Section8EENTMicrognathia : left, 330,  450, 0, BaseFont.HELVETICA, 8, X
+Section8EENTText : left, 480,  440, 0, BaseFont.HELVETICA, 8
+
+Section8RespiratoryNormal : left, 306,  465, 0, BaseFont.HELVETICA, 8, X
+Section8RespiratoryGrunting : left, 330,  465, 0, BaseFont.HELVETICA, 8, X
+Section8RespiratoryNasalFlaring : left, 330,  475, 0, BaseFont.HELVETICA, 8, X
+Section8RespiratoryShallowBreathing : left, 391,  464, 0, BaseFont.HELVETICA, 8, X
+Section8RespiratoryTachypnea : left, 391,  475, 0, BaseFont.HELVETICA, 8, X
+Section8RespiratoryRetracting : left, 330,  487, 0, BaseFont.HELVETICA, 8, X
+Section8RespiratoryText : left, 450,  480, 0, BaseFont.HELVETICA, 8
+
+
+Section8CVSNormal : left, 306,  504, 0, BaseFont.HELVETICA, 8, X
+Section8CVSMurmur : left, 330,  504, 0, BaseFont.HELVETICA, 8, X
+Section8CVSAbnDelayedFemoralPulses : left, 390,  504, 0, BaseFont.HELVETICA, 8, X
+Section8CVSCentralCyanosis : left, 330,  516, 0, BaseFont.HELVETICA, 8, X
+Section8CVSAbnormalRateRhythm : left, 390,  517, 0, BaseFont.HELVETICA, 8, X
+Section8CVSText : left, 480,  515, 0, BaseFont.HELVETICA, 8
+
+
+
+Section8AbdomenNormal : left, 306,  533, 0, BaseFont.HELVETICA, 8, X
+Section8AbdomenScaphoid : left, 330,  532, 0, BaseFont.HELVETICA, 8, X
+Section8AbdomenSpienomegaly : left, 391,  532, 0, BaseFont.HELVETICA, 8, X
+Section8AbdomenDistended : left, 330,  542, 0, BaseFont.HELVETICA, 8, X
+Section8AbdomenAbnormalMass : left, 391,  542, 0, BaseFont.HELVETICA, 8, X
+Section8AbdomenHepatomegaly : left, 330,  553, 0, BaseFont.HELVETICA, 8, X
+Section8AbdomenText : left, 450,  542, 0, BaseFont.HELVETICA, 8
+
+Section8UmbilicalCordNormal : left, 306,  569, 0, BaseFont.HELVETICA, 8, X
+Section8UmbilicalCordMecStained : left, 330,  569, 0, BaseFont.HELVETICA, 8, X
+Section8UmbilicalCord2Vessels : left, 330,  580, 0, BaseFont.HELVETICA, 8, X
+Section8UmbilicalCordThin : left, 391,  569, 0, BaseFont.HELVETICA, 8, X
+Section8UmbilicalCordText : left, 420,  567, 0, BaseFont.HELVETICA, 8
+
+
+Section8GenitorectalNormal : left, 306,  596, 0, BaseFont.HELVETICA, 8, X
+Section8GenitorectalHypospadias : left, 331,  596, 0, BaseFont.HELVETICA, 8, X
+Section8GenitorectalImperforateAnus : left, 331,  608, 0, BaseFont.HELVETICA, 8, X
+Section8GenitorectalUndescendedTestes : left, 391,  598, 0, BaseFont.HELVETICA, 8, X
+Section8GenitorectalText : left, 465,  595, 0, BaseFont.HELVETICA, 8
+
+
+Section8MusculoSkeletalNormal : left, 306,  621, 0, BaseFont.HELVETICA, 8, X
+Section8MusculoSkeletalSpine : left, 331,  621, 0, BaseFont.HELVETICA, 8, X
+Section8MusculoSkeletalExtremityAbnormality : left, 391,  621, 0, BaseFont.HELVETICA, 8, X
+Section8MusculoSkeletalHipAbnormality : left, 331,  632, 0, BaseFont.HELVETICA, 8, X
+Section8MusculoSkeletaltext : left, 470,  621, 0, BaseFont.HELVETICA, 8
+
+
+Section8NeurologicalNormal : left, 306,  648, 0, BaseFont.HELVETICA, 8, X
+Section8NeurologicalHypotonia : left, 331,  648, 0, BaseFont.HELVETICA, 8, X
+Section8NeurologicalJittery : left, 391,  648, 0, BaseFont.HELVETICA, 8, X
+Section8NeurologicalCry : left, 331,  659, 0, BaseFont.HELVETICA, 8, X
+Section8NeurologicalReflexes : left, 391,  659, 0, BaseFont.HELVETICA, 8, X
+Section8NeurologicalText : left, 440,  650, 0, BaseFont.HELVETICA, 8
+
+
+Section12Other : left, 260,  680, 0, BaseFont.HELVETICA, 8
+
+Section8DATE : left, 275,  720, 0, BaseFont.HELVETICA, 8
+Section8TIME : left, 340,  720, 0, BaseFont.HELVETICA, 8
+Section8SIGNATURE : left, 380,  720, 0, BaseFont.HELVETICA, 8
+
+ __hospitalName    : left, 358, 33, 0, BaseFont.HELVETICA, 6 , HOSPITAL NAME
+ c_hospitalName    : left, 358, 43, 0, BaseFont.HELVETICA, 6
+ __date    : left, 499, 33, 0, BaseFont.HELVETICA, 6 , DATE
+ pg1_formDate    : left, 499, 43, 0, BaseFont.HELVETICA, 6
+ __surname    : left, 358, 57, 0, BaseFont.HELVETICA, 6 , SURNAME
+ c_surname    : left, 358, 67, 0, BaseFont.HELVETICA, 8
+ __givenName    : left, 499, 57, 0, BaseFont.HELVETICA, 6 , GIVEN NAME
+ c_givenName    : left, 499, 67, 0, BaseFont.HELVETICA, 8
+ __address    : left, 358, 81, 0, BaseFont.HELVETICA, 6 , ADDRESS
+ c_address    : left, 358, 91, 0, BaseFont.HELVETICA, 6
+ c_province    : left, 358, 101, 0, BaseFont.HELVETICA, 6
+ c_postal    : left, 378, 101, 0, BaseFont.HELVETICA, 6
+ __phoneNumber    : left, 499, 101, 0, BaseFont.HELVETICA, 6 , PHONE NUMBER
+ c_phone    : left, 499, 111, 0, BaseFont.HELVETICA, 6
+ __physicianName    : left, 358, 122, 0, BaseFont.HELVETICA, 6 , PHYSICIAN / MIDWIFE NAME
+ c_phyMid    : left, 358, 132, 0, BaseFont.HELVETICA, 8
