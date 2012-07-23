@@ -1200,6 +1200,23 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			newNote = true;
 		}
 
+		// Checks whether the user can set the program via the UI - if so, make sure that they can't screw it up if they do
+		if (OscarProperties.getInstance().getBooleanProperty("note_program_ui_enabled", "true")) {
+			String noteProgramNo = request.getParameter("_note_program_no");
+			String noteRoleId = request.getParameter("_note_role_id");
+
+			if (noteProgramNo != null && noteRoleId != null && noteProgramNo.trim().length() > 0 && noteRoleId.trim().length() > 0) {
+				if (noteProgramNo.equalsIgnoreCase("-2") || noteRoleId.equalsIgnoreCase("-2")) {
+					throw new Exception("Patient is not admitted to any programs user has access to. [roleId=-2, programNo=-2]");
+				} else if (!noteProgramNo.equalsIgnoreCase("-1") && !noteRoleId.equalsIgnoreCase("-1")) {
+					note.setProgram_no(noteProgramNo);
+					note.setReporter_caisi_role(noteRoleId);
+				}
+			} else {
+				throw new Exception("Missing role id or program number. [roleId=" + noteRoleId + ", programNo=" + noteProgramNo + "]");
+			}
+		}
+
 		if (sessionBean.appointmentNo != null && sessionBean.appointmentNo.length() > 0) {
 			note.setAppointmentNo(Integer.parseInt(sessionBean.appointmentNo));
 		}

@@ -72,7 +72,7 @@
 		</script>
 
 <script type="text/javascript"
-	src="<html:rewrite page="/js/genericIntake.js.jsp" />"></script>
+	src="<html:rewrite page="/js/genericIntake.js" />"></script>
 
 <script type="text/javascript" src="<html:rewrite page="/js/jquery.js" />"></script>
 <script type="text/javascript" src="<html:rewrite page="/js/topnav.js" />"></script>

@@ -98,7 +98,7 @@
 </nested:empty>
 </div>
 
-<div style="margin: 5px 0px 0px 3px; font-size: 11px;"><span style="float: left;"><bean:message key="oscarEncounter.editors.title"/>:</span> <nested:equal
+<div style="margin-left: 3px; font-size: 11px;"><span style="float: left;"><bean:message key="oscarEncounter.editors.title"/>:</span> <nested:equal
 	name="newNote" value="false">
 	<ul style="list-style: none inside none; margin: 0px;">
 		<nested:iterate indexId="eIdx" id="editor" property="caseNote.editors"
