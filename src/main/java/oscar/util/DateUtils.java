@@ -309,6 +309,18 @@ public final class DateUtils {
 
 	}
 
+        public static String sumDate(Date startDate, int numDaysAdded, Locale locale) {
+            String sumDateStr = "INVALID DATE";
+            if (startDate != null) {
+                Calendar calendar = new GregorianCalendar();          
+                calendar.setTime(startDate);
+                calendar.add(Calendar.DATE,numDaysAdded);
+                Date sumDate = calendar.getTime();
+                sumDateStr = formatDate(sumDate, locale);
+            }
+            return sumDateStr;
+        }
+        
 	public static String sumDate(String format, String pSum) {
 
 		int iSum = new Integer(pSum).intValue();
