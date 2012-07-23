@@ -114,4 +114,15 @@ public class Secrole implements java.io.Serializable {
 	public void setName(String name) {
 		this.roleName = name;
 	}
+
+	public boolean equals(Object obj) {
+		if (obj == null) return false;
+		if (!(obj instanceof Secrole)) return false;
+
+		Secrole r = (Secrole) obj;
+		if (r.getId() == null || this.getId() == null) return false;
+		if (this.getId().longValue() == r.getId().longValue()) return true;
+
+		return false;
+	}
 }
