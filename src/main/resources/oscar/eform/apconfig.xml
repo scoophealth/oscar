@@ -252,9 +252,11 @@
     </databaseap>
     <databaseap>
         <ap-name>allergies_des</ap-name>
-        <ap-sql>SELECT GROUP_CONCAT(allergies.DESCRIPTION SEPARATOR ', ')as allergy FROM allergies, demographic
-                WHERE demographic.demographic_no=${demographic} AND allergies.demographic_no=demographic.demographic_no</ap-sql>
-        <ap-output>${allergy}</ap-output>
+        <ap-sql>SELECT IF ((SELECT COUNT(*) FROM allergies, demographic	WHERE ( demographic.demographic_no=${demographic} AND allergies.demographic_no=demographic.demographic_no AND allergies.archived=1))>0, 
+			CONCAT((SELECT GROUP_CONCAT(allergies.DESCRIPTION SEPARATOR ', ') FROM allergies, demographic WHERE demographic.demographic_no=${demographic} AND allergies.demographic_no=demographic.demographic_no AND allergies.archived != 1),' \n','archived allergies:',(SELECT GROUP_CONCAT(allergies.DESCRIPTION SEPARATOR ', ') FROM allergies, demographic WHERE demographic.demographic_no=${demographic} AND allergies.demographic_no=demographic.demographic_no AND allergies.archived = 1)), 
+			(SELECT GROUP_CONCAT(allergies.DESCRIPTION SEPARATOR ', ') FROM allergies, demographic WHERE demographic.demographic_no=${demographic} AND allergies.demographic_no=demographic.demographic_no AND allergies.archived != 1)) 
+			as allergy</ap-sql>
+		<ap-output>${allergy}</ap-output>
     </databaseap>
     <databaseap>
 		<ap-name>allergies_des_no_archived</ap-name>
