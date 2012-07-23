@@ -716,7 +716,7 @@ function checkRosterStatus(){
 		primaryEmr.disable(true);
 	}
 	</oscar:oscarPropertiesCheck>
-	
+	return true;
 }
 
 </script>
