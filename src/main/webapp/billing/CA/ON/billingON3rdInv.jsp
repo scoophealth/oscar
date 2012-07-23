@@ -18,6 +18,7 @@
 
 --%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.oscarehr.common.dao.DemographicDao"%>
@@ -45,6 +46,7 @@ gstProp = db.readDatabase();
 
 String percent = gstProp.getProperty("gstPercent", "");
 
+oscar.OscarProperties props = oscar.OscarProperties.getInstance();
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -73,8 +75,18 @@ String percent = gstProp.getProperty("gstPercent", "");
 		</td>
 		<td align="right" valign="top"><font size="+2"><b>Invoice
 		- <%=invNo %></b></font><br />
-		Date:<%=DateUtils.sumDate("yyyy-MM-dd HH:mm","0") %></td>
-	</tr>
+		<bean:message key="oscar.billing.CA.ON.3rdpartyinvoice.printDate"/>:<%=DateUtils.sumDate("yyyy-MM-dd HH:mm","0") %><br/>
+              <% if (props.hasProperty("invoice_due_date")) {
+                    Integer numDaysTilDue = Integer.parseInt(props.getProperty("invoice_due_date", "0")); 
+                    Date serviceDate = null;
+                    try {
+                        serviceDate = DateUtils.parseDate(ch1Obj.getBilling_date(), request.getLocale());
+                    } catch (java.text.ParseException e) {}
+               %>
+                <b><bean:message key="oscar.billing.CA.ON.3rdpartyinvoice.dueDate"/>:</b><%=DateUtils.sumDate(serviceDate, numDaysTilDue, request.getLocale())%>
+              <% }%>
+                </td>               
+	</tr>       
 </table>
 
 <hr>
