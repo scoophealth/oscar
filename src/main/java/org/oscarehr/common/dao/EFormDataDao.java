@@ -184,6 +184,34 @@ public class EFormDataDao extends AbstractDao<EFormData> {
 
 		return(results);
 	}
+
+    public List<EFormData> findPatientIndependent(Boolean current)
+	{
+    	StringBuilder sb=new StringBuilder();
+    	sb.append("select x from ");
+    	sb.append(modelClass.getSimpleName());
+    	sb.append(" x where x.patientIndependent=true");
+
+    	if (current!=null)
+    	{
+    		sb.append(" and x.current=?1");
+    	}
+
+    	String sqlCommand=sb.toString();
+    	logger.debug("SqlCommand="+sqlCommand);
+
+		Query query = entityManager.createQuery(sqlCommand);
+		
+    	if (current!=null)
+    	{
+    		query.setParameter(1, current);
+    	}
+
+    	@SuppressWarnings("unchecked")
+		List<EFormData> results=query.getResultList();
+
+		return(results);
+	}
     
     public List<EFormData> findByFdids(List<Integer> ids)
 	{

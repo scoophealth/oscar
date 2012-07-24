@@ -47,6 +47,11 @@ public class UnRemEFormAction extends Action {
         	 eFormData.setCurrent(true);
         	 eFormDataDao.merge(eFormData);
          }
+         
+         if ("independent".equals(request.getParameter("callpage")))
+         {
+        	 return mapping.findForward("independent");
+         }
          return mapping.findForward("success");
     }
     

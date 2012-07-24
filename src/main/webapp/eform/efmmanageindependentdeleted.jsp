@@ -28,28 +28,16 @@
 <%@page import="org.oscarehr.web.eform.EfmPatientFormList"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
-	String demographic_no = request.getParameter("demographic_no");
 	String deepColor = "#CCCCFF", weakColor = "#EEEEFF";
 
 	if (session.getAttribute("userrole") == null) response.sendRedirect("../logout.jsp");
-	String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
 	String country = request.getLocale().getCountry();
+	
 	String orderByRequest = request.getParameter("orderby");
 	String orderBy = "";
 	if (orderByRequest == null) orderBy = EFormUtil.DATE;
 	else if (orderByRequest.equals("form_subject")) orderBy = EFormUtil.SUBJECT;
 	else if (orderByRequest.equals("form_name")) orderBy = EFormUtil.NAME;
-
-	String groupView = request.getParameter("group_view");
-	if (groupView == null)
-	{
-		groupView = "";
-	}
-
-	String appointment = request.getParameter("appointment");
-	String parentAjaxId = request.getParameter("parentAjaxId");
-
-	boolean isMyOscarAvailable = EfmPatientFormList.isMyOscarAvailable(Integer.parseInt(demographic_no));	
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -63,7 +51,7 @@
 	href="../share/css/OscarStandardLayout.css">
 <link rel="stylesheet" type="text/css"
 	href="../share/css/eformStyle.css">
-<script type="text/javascript" language="javascript">
+<script type="text/javascript">
 function popupPage(varpage, windowname) {
     var page = "" + varpage;
     windowprops = "height=700,width=800,location=no,"
@@ -83,22 +71,12 @@ function checkSelectBox() {
         return false;
     }
 }
-
-function updateAjax() {
-    var parentAjaxId = "<%=parentAjaxId%>";    
-    if( parentAjaxId != "null" ) {
-        window.opener.document.forms['encForm'].elements['reloadDiv'].value = parentAjaxId;
-        window.opener.updateNeeded = true;    
-    }
-
-}
 </script>
-<script type="text/javascript" language="JavaScript"
-	src="../share/javascript/Oscar.js"></script>
+<script type="text/javascript" src="../share/javascript/Oscar.js"></script>
 </head>
 
-<body onunload="updateAjax()" class="BodyStyle" vlink="#0000FF">
-<!--  -->
+<body class="BodyStyle" vlink="#0000FF">
+
 <table class="MainTable" id="scrollNumber1" name="encounterTable">
 	<tr class="MainTableTopRow">
 		<td class="MainTableTopRowLeftColumn" width="175"><bean:message
@@ -119,91 +97,45 @@ function updateAjax() {
 	</tr>
 	<tr>
 		<td class="MainTableLeftColumn" valign="top">
-		        <%  if (country.equals("BR")) { %>
-                    <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&appointment=<%=appointment%>&displaymode=edit&dboperation=search_detail_ptbr"><bean:message key="demographic.demographiceditdemographic.btnMasterFile" /></a>
-                <%}else{%>
-                    <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&appointment=<%=appointment%>&displaymode=edit&dboperation=search_detail"><bean:message key="demographic.demographiceditdemographic.btnMasterFile" /></a>
-                <%}%>
-                <br>
-                <a href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>&appointment=<%=appointment%>&parentAjaxId=<%=parentAjaxId%>" class="current"> <bean:message key="eform.showmyform.btnAddEForm"/></a><br/>
-                <a href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>&appointment=<%=appointment%>&parentAjaxId=<%=parentAjaxId%>"><bean:message key="eform.calldeletedformdata.btnGoToForm"/></a><br/>
-                <a href="efmpatientformlistdeleted.jsp?demographic_no=<%=demographic_no%>&appointment=<%=appointment%>&parentAjaxId=<%=parentAjaxId%>"><bean:message key="eform.showmyform.btnDeleted"/></a>
-                
-				<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.eform" rights="r" reverse="<%=false%>" >
-                <br/>
-                <a href="#" onclick="javascript: return popup(600, 750, '../eform/efmformmanager.jsp', 'manageeforms');" style="color: #835921;"><bean:message key="eform.showmyform.msgManageEFrm"/></a>
-                </security:oscarSec>
-		
-		<jsp:include page="efmviewgroups.jsp">
-			<jsp:param name="url" value="../eform/efmpatientformlist.jsp" />
-			<jsp:param name="groupView" value="<%=groupView%>" />
-			<jsp:param name="patientGroups" value="1" />
-			<jsp:param name="parentAjaxId" value="<%=parentAjaxId%>" />
-		</jsp:include>
-		
+                <a href="../admin/admin.jsp"><bean:message key="eform.independent.btnBack" /></a><br>
+                <a href="efmmanageindependent.jsp"><bean:message key="eform.independent.btnCurrent"/></a><br/>
+                <a href="efmmanageindependentdeleted.jsp"><bean:message key="eform.independent.btnDeleted"/></a>
 		</td>
 		<td class="MainTableRightColumn" valign="top">
 
-			<form action="efmpatientformlistSendPhrAction.jsp">
-				<input type="hidden" name="clientId" value="<%=demographic_no%>" />
-				<table class="elements" width="100%">
+				<table class="elements" style="width:100%">
 					<tr bgcolor=<%=deepColor%>>
-						<%
-							if (isMyOscarAvailable)
-							{
-								%>
-									<th>&nbsp;</th>
-								<%
-							}
-						%>
 						<th>
-							<a href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>&orderby=form_name&group_view=<%=groupView%>&parentAjaxId=<%=parentAjaxId%>">
+							<a href="efmmanageindependent.jsp?orderby=form_name">
 								<bean:message key="eform.showmyform.btnFormName" />
 							</a>
 						</th>
 						<th><a
-							href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>&orderby=form_subject&group_view=<%=groupView%>&parentAjaxId=<%=parentAjaxId%>"><bean:message
+							href="efmmanageindependent.jsp?orderby=form_subject"><bean:message
 							key="eform.showmyform.btnSubject" /></a></th>
 						<th><a
-							href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>&parentAjaxId=<%=parentAjaxId%>"><bean:message
+							href="efmmanageindependent.jsp"><bean:message
 							key="eform.showmyform.formDate" /></a></th>
 						<th><bean:message key="eform.showmyform.msgAction" /></th>
 					</tr>
 					<%
 						ArrayList<HashMap<String,? extends Object>> eForms;
-						if (groupView.equals(""))
-						{
-							eForms = EFormUtil.listPatientEForms(orderBy, EFormUtil.CURRENT, demographic_no, roleName$);
-						}
-						else
-						{
-							eForms = EFormUtil.listPatientEForms(orderBy, EFormUtil.CURRENT, demographic_no, groupView, roleName$);
-						}
+						eForms = EFormUtil.listPatientIndependentEForms(orderBy, EFormUtil.DELETED);
 						
 						for (int i = 0; i < eForms.size(); i++)
 						{
 							HashMap<String,? extends Object> curform = eForms.get(i);
 					%>
 					<tr bgcolor="<%=((i % 2) == 1)?"#F2F2F2":"white"%>">
-						<%
-							if (isMyOscarAvailable)
-							{
-								%>
-									<td>
-										<input type="checkbox" name="sendToPhr" value="<%=curform.get("fdid")%>" />
-									</td>
-								<%
-							}
-						%>
 						<td><a href="#"
-							ONCLICK="popupPage('efmshowform_data.jsp?fdid=<%=curform.get("fdid")%>&appointment=<%=appointment%>', '<%="FormP" + i%>'); return false;"
+							ONCLICK="popupPage('efmshowform_data.jsp?fdid=<%=curform.get("fdid")%>', '<%="FormP" + i%>'); return false;"
 							TITLE="<bean:message key="eform.showmyform.msgViewFrm"/>"
 							onmouseover="window.status='<bean:message key="eform.showmyform.msgViewFrm"/>'; return true"><%=curform.get("formName")%></a></td>
 						<td><%=curform.get("formSubject")%></td>
 						<td align='center'><%=curform.get("formDate")%></td>
 						<td align='center'><a
-							href="../eform/removeEForm.do?fdid=<%=curform.get("fdid")%>&group_view=<%=groupView%>&demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>" onClick="javascript: return confirm('Are you sure you want to delete this eform?');"><bean:message
-							key="eform.uploadimages.btnDelete" /></a></td>
+							href="../eform/unRemoveEForm.do?callpage=independent&fdid=<%=curform.get("fdid")%>" onClick="javascript: return confirm('Are you sure you want to restore this eform?');"><bean:message
+							key="global.btnRestore" /></a></td>
 					</tr>
 					<%
 						}
@@ -218,9 +150,6 @@ function updateAjax() {
 						}
 					%>
 				</table>
-				<input type="submit" value="Send To PHR" />
-			</form>
-		
 		</td>
 	</tr>
 	<tr>
