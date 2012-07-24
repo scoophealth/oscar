@@ -174,7 +174,7 @@ Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
                         <input type="text" name="username" value="" size="15" maxlength="15" autocomplete="off"/>
                         <br/>                
                         <bean:message key="loginApplication.formPwd"/><br/>
-                        <input type="password" name="password" value="" size="15" maxlength="15" autocomplete="off"/><br/>
+                        <input type="password" name="password" value="" size="15" maxlength="32" autocomplete="off"/><br/>
                                 <input type="submit" value="<bean:message key="index.btnSignIn"/>" />
                         <br/>
                         <bean:message key="index.formPIN"/>: 
