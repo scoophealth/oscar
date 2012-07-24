@@ -64,7 +64,7 @@ import org.indivo.xml.phr.types.DurationType;
 import org.indivo.xml.phr.urns.ContentTypeQNames;
 import org.indivo.xml.phr.urns.DocumentClassificationUrns;
 import org.oscarehr.common.model.Drug;
-import org.oscarehr.myoscar_server.ws.MedicalDataTransfer2;
+import org.oscarehr.myoscar_server.ws.MedicalDataTransfer3;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.XmlUtils;
@@ -95,7 +95,7 @@ public class PHRMedication extends PHRDocument {
 		parseDocument(doc, providerNo);
 	}
 
-	public PHRMedication(MedicalDataTransfer2 medicalDataTransfer, String demoId, Long receiverMyOscarUserId, String providerNo) throws Exception {
+	public PHRMedication(MedicalDataTransfer3 medicalDataTransfer, String demoId, Long receiverMyOscarUserId, String providerNo) throws Exception {
 		setReceiverInfo(demoId, receiverMyOscarUserId);
 		parseDocument(medicalDataTransfer, providerNo);
 	}
@@ -150,7 +150,7 @@ public class PHRMedication extends PHRDocument {
 		this.setDateExchanged(new Date());
 	}
 
-	private void parseDocument(MedicalDataTransfer2 medicalDataTransfer, String providerNo) throws Exception {
+	private void parseDocument(MedicalDataTransfer3 medicalDataTransfer, String providerNo) throws Exception {
 		logger.debug("------------------start parseDocument----------------------");
 
 		if (medicalDataTransfer.getDateOfData() != null) setDateSent(medicalDataTransfer.getDateOfData().getTime());
@@ -336,7 +336,7 @@ public class PHRMedication extends PHRDocument {
 		else drug.setSpecial("");
 	}
 
-	public void createDrugFromMedicalDataTransfer(String providerNo, MedicalDataTransfer2 medicalDataTransfer) throws IOException, SAXException, ParserConfigurationException {
+	public void createDrugFromMedicalDataTransfer(String providerNo, MedicalDataTransfer3 medicalDataTransfer) throws IOException, SAXException, ParserConfigurationException {
 		Document doc = XmlUtils.toDocument(medicalDataTransfer.getData());
 //		XmlMapWrapper docAsMap = new XmlMapWrapper(doc);
 //
