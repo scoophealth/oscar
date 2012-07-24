@@ -49,7 +49,7 @@ import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.RemoteDataLogDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.RemoteDataLog;
-import org.oscarehr.myoscar_server.ws.MedicalDataTransfer2;
+import org.oscarehr.myoscar_server.ws.MedicalDataTransfer3;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
 import org.oscarehr.myoscar_server.ws.MedicalDataWs;
 import org.oscarehr.phr.PHRAuthentication;
@@ -220,7 +220,7 @@ public class PHRGenericSendToPhrAction extends DispatchAction {
 			GregorianCalendar dateOfData=new GregorianCalendar();
 			if (eDoc.getDateTimeStampAsDate()!=null) dateOfData.setTime(eDoc.getDateTimeStampAsDate());
 			
-			MedicalDataTransfer2 medicalDataTransfer=new MedicalDataTransfer2();
+			MedicalDataTransfer3 medicalDataTransfer=new MedicalDataTransfer3();
 			medicalDataTransfer.setActive(true);
 			medicalDataTransfer.setCompleted(true);
 			medicalDataTransfer.setData(docAsString);
@@ -233,7 +233,7 @@ public class PHRGenericSendToPhrAction extends DispatchAction {
 			medicalDataTransfer.setOriginalSourceId(loggedInInfo.currentFacility.getName()+":eDoc:"+eDoc.getDocId());
 			medicalDataTransfer.setOwningPersonId(patientMyOscarUserId);
 						
-			Long medicalDataId=medicalDataWs.addMedicalData2(medicalDataTransfer);
+			Long medicalDataId=medicalDataWs.addMedicalData3(medicalDataTransfer);
 			
 			// log the send
 			RemoteDataLogDao remoteDataLogDao=(RemoteDataLogDao) SpringUtils.getBean("remoteDataLogDao");
@@ -249,7 +249,7 @@ public class PHRGenericSendToPhrAction extends DispatchAction {
 			MyOscarMessageManager.sendMessage(auth.getMyOscarUserId(), auth.getMyOscarPassword(), patientMyOscarUserId, subject, message);
 
 			//--- send annotations ---
-			medicalDataWs.addMedicalDataAnnotation(medicalDataId, message);
+			medicalDataWs.addMedicalDataAnnotation2(patientMyOscarUserId, medicalDataId, message);
 			
 			return mapping.findForward("loginPage");
             
