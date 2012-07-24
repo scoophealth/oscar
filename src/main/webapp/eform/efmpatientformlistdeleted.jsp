@@ -152,7 +152,7 @@ function updateAjax() {
 				<td><%=curform.get("formSubject")%></td>
 				<td align='center'><%=curform.get("formDate")%></td>
 				<td align='center'><a
-					href="../eform/unRemoveEForm.do?fdid=<%=curform.get("fdid")%>&demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>" onClick="javascript: return confirm('Are you sure you want to delete this eform?');"><bean:message
+					href="../eform/unRemoveEForm.do?fdid=<%=curform.get("fdid")%>&demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>" onClick="javascript: return confirm('Are you sure you want to restore this eform?');"><bean:message
 					key="global.btnRestore" /></a></td>
 			</tr>
 			<%

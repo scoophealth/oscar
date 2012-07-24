@@ -1684,9 +1684,11 @@
 		</action>
 		<action input="/eform/efmpatientformlist.jsp" path="/eform/removeEForm" scope="request" type="oscar.eform.actions.RemEFormAction">
 			<forward name="success" path="/eform/efmpatientformlist.jsp" />
+			<forward name="independent" path="/eform/efmmanageindependent.jsp" />
 		</action>
 		<action input="/eform/efmpatientformlistdeleted.jsp" name="unRemoveEForm" path="/eform/unRemoveEForm" scope="request" type="oscar.eform.actions.UnRemEFormAction">
 			<forward name="success" path="/eform/efmpatientformlistdeleted.jsp" />
+			<forward name="independent" path="/eform/efmmanageindependentdeleted.jsp" />
 		</action>
 		<action input="/eform/efmimagemanager.jsp" name="deleteEFormImage" path="/eform/deleteImage" scope="request" type="oscar.eform.actions.DelImageAction">
 			<forward name="success" path="/eform/efmimagemanager.jsp" />
