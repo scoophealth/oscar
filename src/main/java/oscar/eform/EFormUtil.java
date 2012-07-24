@@ -254,6 +254,39 @@ public class EFormUtil {
 		}
 		return (results);
 	}
+
+	public static ArrayList<HashMap<String,? extends Object>> listPatientIndependentEForms(String sortBy, String deleted) {
+
+		Boolean current = null;
+		if (deleted.equals("deleted")) current = false;
+		else if (deleted.equals("current")) current = true;
+
+		List<EFormData> allEformDatas = eFormDataDao.findPatientIndependent(current);
+
+		if (NAME.equals(sortBy)) Collections.sort(allEformDatas, EFormData.FORM_NAME_COMPARATOR);
+		else if (SUBJECT.equals(sortBy)) Collections.sort(allEformDatas, EFormData.FORM_SUBJECT_COMPARATOR);
+		else Collections.sort(allEformDatas, EFormData.FORM_DATE_COMPARATOR);
+
+		ArrayList<HashMap<String, ? extends Object>> results = new ArrayList<HashMap<String, ? extends Object>>();
+		try {
+			for (EFormData eFormData : allEformDatas) {
+				HashMap<String, Object> curht = new HashMap<String, Object>();
+				curht.put("fdid", eFormData.getId().toString());
+				curht.put("fid", eFormData.getFormId().toString());
+				curht.put("formName", eFormData.getFormName());
+				curht.put("formSubject", eFormData.getSubject());
+				curht.put("formDate", eFormData.getFormDate().toString());
+				curht.put("formTime", eFormData.getFormTime().toString());
+				curht.put("formDateAsDate", eFormData.getFormDate());
+				curht.put("roleType", eFormData.getRoleType());
+				curht.put("providerNo", eFormData.getProviderNo());
+				results.add(curht);
+			}
+		} catch (Exception sqe) {
+			logger.error("Error", sqe);
+		}
+		return (results);
+	}
 	
 	public static ArrayList<HashMap<String,? extends Object>> listPatientEFormsNoData(String demographic_no, String userRoles) {
 

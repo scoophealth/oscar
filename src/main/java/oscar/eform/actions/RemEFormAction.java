@@ -47,6 +47,11 @@ public class RemEFormAction extends Action {
         	 eFormData.setCurrent(false);
         	 eFormDataDao.merge(eFormData);
          }
+         
+         if ("independent".equals(request.getParameter("callpage")))
+         {
+        	 return mapping.findForward("independent");
+         }
          return mapping.findForward("success");
     }
     
