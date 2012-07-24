@@ -99,14 +99,14 @@ function checkPwdPolicy() {
 			key="provider.providerchangepassword.msgEnterOld" /> <b><bean:message
 			key="provider.providerchangepassword.formOldPassword" />:</b></font></td>
 		<td><input type=password name="oldpassword" value="" size=20
-			maxlength=10></td>
+			maxlength=32></td>
 	</tr>
 	<tr>
 		<td width="50%" align="right"><font face="arial"><bean:message
 			key="provider.providerchangepassword.msgChooseNew" /> <b><bean:message
 			key="provider.providerchangepassword.formNewPassword" />:</b></font></td>
 		<td><input type=password name="mypassword" value="" size=20
-			maxlength=10> <font size="-2">(<bean:message
+			maxlength=32> <font size="-2">(<bean:message
 			key="provider.providerchangepassword.msgAtLeast" />
 			<%=op.getProperty("password_min_length")%> <bean:message
 			key="provider.providerchangepassword.msgSymbols" />)</font></td>
@@ -116,7 +116,7 @@ function checkPwdPolicy() {
 			key="provider.providerchangepassword.msgConfirm" /> <b><bean:message
 			key="provider.providerchangepassword.formNewPassword" />:</b></font></td>
 		<td><input type=password name="confirmpassword" value="" size=20
-			maxlength=10> <font size="-2">(<bean:message
+			maxlength=32> <font size="-2">(<bean:message
 			key="provider.providerchangepassword.msgAtLeast" />
 			<%=op.getProperty("password_min_length")%> <bean:message
 			key="provider.providerchangepassword.msgSymbols" />)</font></td>
