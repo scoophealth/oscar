@@ -748,6 +748,13 @@
 			</exclusions>
 		</dependency>
 
+		<dependency>
+			<groupId>org.oscarehr</groupId>
+			<artifactId>utils</artifactId>
+			<version>SNAPSHOT</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
