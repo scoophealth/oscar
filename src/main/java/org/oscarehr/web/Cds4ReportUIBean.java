@@ -50,10 +50,10 @@ import org.oscarehr.common.model.CdsFormOption;
 import org.oscarehr.common.model.CdsHospitalisationDays;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.FunctionalCentre;
-import org.oscarehr.util.AccumulatorMap;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.utils.AccumulatorMap;
 
 import oscar.util.DateUtils;
 
