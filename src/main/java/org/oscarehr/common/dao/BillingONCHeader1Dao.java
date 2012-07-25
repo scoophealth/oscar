@@ -409,4 +409,18 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         
         return results;
     }
+
+    public BillingONCHeader1 getLastOHIPBillingDateForServiceCode (String demographicNo, String serviceCode) {            
+        String sql = "select b from BillingONItem i, BillingONCHeader1 b where i.ch1Id=b.id and i.status!='D' and i.serviceCode=? and b.demographicNo=?  and (b.payProgram='HCP' or b.payProgram='RMB' or b.payProgram='WCB') and (b.status='S' or b.status='O' or b.status='B') order by b.billingDate desc";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter(1,serviceCode);
+        query.setParameter(2,Integer.parseInt(demographicNo));
+        
+        List<BillingONCHeader1> results = query.getResultList();
+        BillingONCHeader1 result = null;
+        if (results.size() > 0) {
+            result = results.get(0);            
+        }
+        return result;
+    }
 }
