@@ -733,13 +733,13 @@ for(ConsultationRequestExt ext:exts) {
             </tr>
             <tr>
             <td class="subTitles">
-                <%-- Dr. Hunter wants the form to say "Physician" instead of "Family Physician".  This is a quick and dirty hack to make it work.  This
-                should really be rewritten more elegantly at some later point in time. --%>
-       <% if (props.getProperty("clinic_no", "").startsWith("1022")) { %>
-                Physician
+                <%-- A more permanent, but I will not say elegant, implemenation of this "Physician indicator by a new property and other language support. --%>
+	   <% if (props.getProperty("CONSULT_PHYSICIAN_IS_REFERRING", "").startsWith("true") ) 
+          { 
+          	%><bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgReferringIsPhysician"/>
        <% } else if(props.getProperty("isSpecialist", "").startsWith("true")) { %>
                 Doctor
-		<% } else { %>
+	   <% } else { %>
                 <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgFamilyDoc"/>
        <% } %>
                 : <%=reqFrm.getFamilyDoctor() %>
