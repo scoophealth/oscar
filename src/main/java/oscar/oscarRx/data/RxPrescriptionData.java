@@ -36,6 +36,7 @@ import java.util.Locale;
 import java.util.Vector;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DrugDao;
@@ -91,7 +92,7 @@ public class RxPrescriptionData {
 		prescription.setTakeMax(drug.getTakeMax());
 		prescription.setFrequencyCode(drug.getFreqCode());
 		String dur = drug.getDuration();
-		if (dur.equalsIgnoreCase("null")) dur = "";
+		if(StringUtils.isBlank(dur) || dur.equalsIgnoreCase("null") ) dur = "";
 		prescription.setDuration(dur);
 		prescription.setDurationUnit(drug.getDurUnit());
 		prescription.setQuantity(drug.getQuantity());
