@@ -41,10 +41,11 @@ import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.SentToPHRTracking;
 import org.oscarehr.myoscar_server.ws.ItemAlreadyExistsException_Exception;
 import org.oscarehr.myoscar_server.ws.ItemCompletedException_Exception;
-import org.oscarehr.myoscar_server.ws.MedicalDataTransfer2;
+import org.oscarehr.myoscar_server.ws.MedicalDataTransfer3;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
 import org.oscarehr.myoscar_server.ws.NoSuchItemException_Exception;
 import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
+import org.oscarehr.myoscar_server.ws.UnsupportedEncodingException_Exception;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.util.MyOscarServerWebServicesManager;
 import org.oscarehr.util.LoggedInInfo;
@@ -60,7 +61,7 @@ public final class ImmunizationsManager {
 	
 	private static HashMap<String,String> preventionExtLabels = null; 
 
-	public static void sendImmunizationsToMyOscar(PHRAuthentication auth, Integer demographicId) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException, NotAuthorisedException_Exception, NoSuchItemException_Exception, ItemCompletedException_Exception {
+	public static void sendImmunizationsToMyOscar(PHRAuthentication auth, Integer demographicId) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException, NotAuthorisedException_Exception, NoSuchItemException_Exception, ItemCompletedException_Exception, UnsupportedEncodingException_Exception {
 		// get last synced info
 
 		// get the items for the person which are changed since last sync
@@ -79,7 +80,7 @@ public final class ImmunizationsManager {
 			if (preventionExt.containsKey("result")) continue; //prevention tests are filtered out
 			
 			logger.debug("sendImmunizationsToMyOscar : preventionId=" + prevention.getId());
-			MedicalDataTransfer2 medicalDataTransfer = toMedicalDataTransfer(auth, prevention, preventionExt);
+			MedicalDataTransfer3 medicalDataTransfer = toMedicalDataTransfer(auth, prevention, preventionExt);
 
 			try {
 				MyOscarMedicalDataManagerUtils.addMedicalData(auth, medicalDataTransfer, OSCAR_IMMUNIZATIONS_DATA_TYPE, prevention.getId());
@@ -130,12 +131,12 @@ public final class ImmunizationsManager {
 	}
 	
 
-	private static MedicalDataTransfer2 toMedicalDataTransfer(PHRAuthentication auth, Prevention prevention, HashMap<String,String> preventionExt) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException {
+	private static MedicalDataTransfer3 toMedicalDataTransfer(PHRAuthentication auth, Prevention prevention, HashMap<String,String> preventionExt) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException {
 
 		String providerNo = prevention.getProviderNo();
 
 		if (providerNo != null) {
-			MedicalDataTransfer2 medicalDataTransfer = MyOscarMedicalDataManagerUtils.getEmptyMedicalDataTransfer2(auth, prevention.getPreventionDate(), providerNo, prevention.getDemographicId());
+			MedicalDataTransfer3 medicalDataTransfer = MyOscarMedicalDataManagerUtils.getEmptyMedicalDataTransfer3(auth, prevention.getPreventionDate(), providerNo, prevention.getDemographicId());
 			medicalDataTransfer.setCompleted(false); // preventions are changeable, therefore, they're never completed
 
 			Document doc = toXml(prevention, preventionExt);
