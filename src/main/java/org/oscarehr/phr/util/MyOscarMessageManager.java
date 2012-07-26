@@ -35,6 +35,7 @@ import org.oscarehr.myoscar_server.ws.MessageTransfer;
 import org.oscarehr.myoscar_server.ws.MessageWs;
 import org.oscarehr.myoscar_server.ws.NoSuchItemException_Exception;
 import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
+import org.oscarehr.myoscar_server.ws.UnsupportedEncodingException_Exception;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -94,8 +95,9 @@ public class MyOscarMessageManager {
 	/**
 	 * @return Returns the ID of the new message that is created ie the reply message.
 	 * @throws NoSuchItemException_Exception 
+	 * @throws UnsupportedEncodingException_Exception 
 	 */
-	public static Long sendReply(Long myOscarUserId, String myOscarPassword, Long messageId, String contents) throws NotAuthorisedException_Exception, NoSuchItemException_Exception
+	public static Long sendReply(Long myOscarUserId, String myOscarPassword, Long messageId, String contents) throws NotAuthorisedException_Exception, NoSuchItemException_Exception, UnsupportedEncodingException_Exception
 	{
 		MessageWs messageWs=MyOscarServerWebServicesManager.getMessageWs(myOscarUserId, myOscarPassword);
 		Long repliedMessageId = messageWs.replyToMessage(messageId, contents);
@@ -103,7 +105,7 @@ public class MyOscarMessageManager {
 		return repliedMessageId;
 	}
 
-	public static void sendMessage(Long myOscarUserId, String myOscarPassword, Long recipientPersonId, String subject, String contents) throws NotAuthorisedException_Exception
+	public static void sendMessage(Long myOscarUserId, String myOscarPassword, Long recipientPersonId, String subject, String contents) throws NotAuthorisedException_Exception, UnsupportedEncodingException_Exception
 	{
 		MessageWs messageWs=MyOscarServerWebServicesManager.getMessageWs(myOscarUserId, myOscarPassword);
 		messageWs.sendMessage(recipientPersonId, subject, contents);
