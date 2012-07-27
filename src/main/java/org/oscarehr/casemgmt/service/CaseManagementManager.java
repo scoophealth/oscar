@@ -1178,18 +1178,26 @@ public class CaseManagementManager {
 				}
 			} else {
 				logger.debug(noteRoleName + " is null");
-				if (Long.valueOf(noteRole).longValue() == role.getId().longValue()) {
-					// default
-					logger.debug("noteRole " + noteRole + " = Provider Role from secRole " + role.getId());
-					add = true;
+				try {
+					if (Long.valueOf(noteRole).longValue() == role.getId().longValue()) {
+						// default
+						logger.debug("noteRole " + noteRole + " = Provider Role from secRole " + role.getId());
+						add = true;
+					}
+				} catch (NumberFormatException ex) {
+					logger.error("noteRole cannot be parsed: noteRole = " + noteRole);
 				}
 			}
 
 			// apply defaults
 			if (!add) {
-				if (Long.valueOf(noteRole).longValue() == role.getId().longValue()) {
-					logger.debug("noteRole " + noteRole + " = Provider Role from secRole " + role.getId());
-					add = true;
+				try {
+					if (Long.valueOf(noteRole).longValue() == role.getId().longValue()) {
+						logger.debug("noteRole " + noteRole + " = Provider Role from secRole " + role.getId());
+						add = true;
+					}
+				} catch (NumberFormatException ex) {
+					logger.error("noteRole cannot be parsed: noteRole = " + noteRole);
 				}
 			}
 
