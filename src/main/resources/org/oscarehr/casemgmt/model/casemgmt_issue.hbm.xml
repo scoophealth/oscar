@@ -23,7 +23,7 @@
 	<class name="org.oscarehr.casemgmt.model.CaseManagementIssue"
 		table="casemgmt_issue">
 		<id name="id" column="id" unsaved-value="0">
-			<generator class="increment" />
+			<generator class="native" />
 		</id>
 		<property name="demographic_no" />
 		<property name="issue_id" />
