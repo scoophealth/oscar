@@ -1118,7 +1118,7 @@
 			<plugin>
 				<groupId>org.oscarehr.maven.plugins</groupId>
 				<artifactId>repository_cleaner_plugin</artifactId>
-				<version>0.1-SNAPSHOT</version>
+				<version>0.2-SNAPSHOT</version>
 				<configuration>
 					<groupIdsToRemove>
 						<param>org.oscarehr.myoscar_server</param>
