@@ -70,7 +70,7 @@ Tickler tickler = new Tickler();
    ticklerDAO.saveTickler(tickler);
 
 
-   if (docType != null && docId != null && !docType.trim().equals("") && !docId.trim().equals("")){
+   if (docType != null && docId != null && !docType.trim().equals("") && !docId.trim().equals("") && !docId.equalsIgnoreCase("null") ){
 
       long ticklerNo = tickler.getTickler_no();
       if (ticklerNo > 0){
