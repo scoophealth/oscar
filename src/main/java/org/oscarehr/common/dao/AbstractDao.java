@@ -81,6 +81,8 @@ public abstract class AbstractDao<T extends AbstractModel<?>> {
 	}
 
 	protected T getSingleResultOrNull(Query query) {
+		query.setMaxResults(1);
+		
 		@SuppressWarnings("unchecked")
 		List<T> results = query.getResultList();
 		if (results.size() == 1) return (results.get(0));
