@@ -230,11 +230,13 @@ public final class MessageUploader {
 			} else {
 				Integer limit = null;
 				boolean orderByLength = false;
+				String search = null;
 				if (type.equals("Spire")) {
 					limit = new Integer(1);
 					orderByLength = true;
+					search = "provider_no";
 				}
-				providerRouteReport(String.valueOf(insertID), docNums, DbConnectionFilter.getThreadLocalDbConnection(), demProviderNo, type, "provider_no", limit, orderByLength);
+				providerRouteReport(String.valueOf(insertID), docNums, DbConnectionFilter.getThreadLocalDbConnection(), demProviderNo, type, search, limit, orderByLength);
 			}
 			retVal = h.audit();
 			if(results != null) {
