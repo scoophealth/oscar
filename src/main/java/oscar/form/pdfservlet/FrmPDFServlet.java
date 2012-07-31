@@ -768,7 +768,7 @@ public class FrmPDFServlet extends HttpServlet {
             baosPDF.reset();
             throw dex;
         } finally {
-            if (document != null)
+            if (document.isOpen())
                 document.close();
             if (writer != null)
                 writer.close();
