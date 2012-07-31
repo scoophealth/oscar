@@ -12,6 +12,12 @@
 			<groupId>com.puppycrawl.tools</groupId>
 			<artifactId>checkstyle</artifactId>
 			<version>5.3</version>
+			<exclusions>
+      				<exclusion>
+        				<groupId>com.sun</groupId>
+        				<artifactId>tools</artifactId>
+      				</exclusion>
+    			</exclusions>
 		</dependency>
 	</dependencies>
 
