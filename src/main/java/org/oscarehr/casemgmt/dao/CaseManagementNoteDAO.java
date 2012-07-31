@@ -213,7 +213,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 	
 	@SuppressWarnings("unchecked")
 	public List<Map<String,Object>> getUnsignedRawNoteInfoMapByDemographic(String demographic_no) {
-		String hql = "select new map(cmn.id as id,cmn.observation_date as observation_date,cmn.providerNo as providerNo,cmn.program_no as program_no,cmn.reporter_caisi_role as reporter_caisi_role,cmn.uuid as uuid, cmn.update_date as update_date) from CaseManagementNote cmn where cmn.demographic_no = ? and cmn.signed=? order by cmn.update_date DESC";
+		String hql = "select new map(cmn.id as id,cmn.observation_date as observation_date,cmn.providerNo as providerNo,cmn.program_no as program_no,cmn.reporter_caisi_role as reporter_caisi_role,cmn.uuid as uuid, cmn.update_date as update_date) from CaseManagementNote cmn where cmn.demographic_no = ? and cmn.signed=? and cmn.id = (select max(cmn2.id) from CaseManagementNote cmn2 where cmn2.uuid = cmn.uuid) order by cmn.update_date DESC";
 		return getHibernateTemplate().find(hql, new Object[]{demographic_no,false});			
 	}
 
