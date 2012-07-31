@@ -880,6 +880,7 @@
 			<exclude>src/main/java/oscar/oscarDB/ResultSetBuilder.java</exclude>
 			<exclude>src/main/java/oscar/login/UAgentInfo.java</exclude>
 			<exclude>src/main/webapp/lab/CA/ON/uploadComplete.jsp</exclude>
+			<exclude>src/main/webapp/lab/CA/ALL/uploadComplete.jsp</exclude>
                         <exclude>src/**/*.txt</exclude>
                         <exclude>src/**/*.js</exclude>
                         <exclude>database/**</exclude>
