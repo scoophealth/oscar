@@ -674,9 +674,9 @@ public class EyeformAction extends DispatchAction {
 	   public void printCppItem(PdfRecordPrinter printer, String header, String issueCode, int demographicNo, int appointmentNo, boolean includePrevious) throws DocumentException {
 		   Collection<CaseManagementNote> notes = null;
 		   if(!includePrevious) {
-			    notes = filterNotesByAppointment(caseManagementNoteDao.findNotesByDemographicAndIssueCode(demographicNo, new String[] {issueCode}),appointmentNo);
+			    notes = filterNotesByAppointment(caseManagementNoteDao.findNotesByDemographicAndIssueCodeInEyeform(demographicNo, new String[] {issueCode}),appointmentNo);
 		   } else {
-			   notes = filterNotesByPreviousOrCurrentAppointment(caseManagementNoteDao.findNotesByDemographicAndIssueCode(demographicNo, new String[] {issueCode}),appointmentNo);
+			   notes = filterNotesByPreviousOrCurrentAppointment(caseManagementNoteDao.findNotesByDemographicAndIssueCodeInEyeform(demographicNo, new String[] {issueCode}),appointmentNo);
 		   }
 		   if(notes.size()>0) {
 			   printer.printCPPItem(header, notes);
@@ -853,7 +853,7 @@ public class EyeformAction extends DispatchAction {
 					refNo = getRefNo(referral);
 
 					List<ProfessionalSpecialist> refList = professionalSpecialistDao.findByReferralNo(refNo);
-					if(refList.size()>0) {
+					if(refList!=null && refList.size()>0) {
 						ProfessionalSpecialist refSpecialist = refList.get(0);
 						referraldoc = refSpecialist.getLastName() + "," + refSpecialist.getFirstName();
 						request.setAttribute("referral_doc_name", referraldoc);
