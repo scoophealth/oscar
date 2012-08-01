@@ -298,6 +298,10 @@ public class EctConsultationFormRequestAction extends Action {
 			request.setAttribute("transType", "1");
 
 		}
+		else if( submission.equalsIgnoreCase("And Print Preview")) {
+			requestId = frm.getRequestId();
+		}
+				
 
 		frm.setRequestId("");
 
