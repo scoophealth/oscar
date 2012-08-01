@@ -1121,13 +1121,17 @@
 				<version>0.2-SNAPSHOT</version>
 				<configuration>
 					<groupIdsToRemove>
-						<param>org.oscarehr.myoscar_server</param>
-						<param>org.oscarehr.caisi_integrator</param>
+						<param>org.oscarehr.caisi_integrator.caisi_integrator_client_stubs</param>
+						<param>org.oscarehr.myoscar_server.myoscar_server_client_stubs</param>
+						<param>org.oscarehr.ar2005.ar2005</param>
 						<param>org.oscarehr.utils</param>
-						<param>org.oscarehr.ar2005</param>
-						<param>dm</param>
-						<param>cds</param>
-						<param>ca.ssha.www</param>
+						<param>dm.dm</param>
+						<param>cds.cds</param>
+						<param>cds.cds_cihi_phcvrs</param>
+						<param>cds.cds_cihi</param>
+						<param>cds.cds_rourke</param>
+						<param>cds.cds_hrm</param>
+						<param>ca.ssha.www.olis-service</param>
 					</groupIdsToRemove>
 				</configuration>
 				<executions>
