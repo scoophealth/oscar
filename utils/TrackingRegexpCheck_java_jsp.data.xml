@@ -1213,7 +1213,6 @@
         <ViolationValue>/src/main/java/oscar/form/FrmDischargeSummaryRecord.java:ResultSet rs0 = DBHandler.GetSQL(sql0);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmDischargeSummaryRecord.java:ResultSet rs1 = DBHandler.GetSQL(sql1);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmDischargeSummaryRecord.java:ResultSet rs2 = DBHandler.GetSQL(sql2);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmDischargeSummaryRecord.java:ResultSet rs4 = DBHandler.GetSQL(sql4);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmDischargeSummaryRecord.java:ResultSet rs5 = DBHandler.GetSQL(sql5);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmDischargeSummaryRecord.java:ResultSet rs_cr1 = DBHandler.GetSQL(sql_cr1);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmDischargeSummaryRecord.java:ResultSet rs_cr2 = DBHandler.GetSQL(sql_cr2);</ViolationValue>
@@ -1221,6 +1220,8 @@
         <ViolationValue>/src/main/java/oscar/form/FrmDischargeSummaryRecord.java:ResultSet rs_cr3 = DBHandler.GetSQL(sql_cr3);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmDischargeSummaryRecord.java:ResultSet rs_cr4 = DBHandler.GetSQL(sql_cr4);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmDischargeSummaryRecord.java:ResultSet rs_cr5 = DBHandler.GetSQL(sql_cr5);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/form/FrmDischargeSummaryRecord.java:rs4 = DBHandler.GetSQL(sql4);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/form/FrmDischargeSummaryRecord.java:rs5 = DBHandler.GetSQL(sql5);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmFallsRecord.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmGripStrengthRecord.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmGrowth0_36Record.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -2029,7 +2030,6 @@
         <ViolationValue>/src/main/webapp/report/reportpatientchartlistspecial.jsp:&lt;%@ page import="oscar.login.DBHelp"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportpatientchartlistspecial.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/webapp/system/dbcpMonitor.jsp:ResultSet rsProcessList = DBHandler.GetSQL("show processlist");</ViolationValue>
-
         <ViolationValue>/src/main/java/oscar/form/FrmBCNewBorn2008Record.java:import oscar.login.DBHelp;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCNewBorn2008Record.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCNewBorn2008Record.java:DBHelp db = new DBHelp();</ViolationValue>

@@ -29,20 +29,20 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.model.Allergy;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
 public class FrmDischargeSummaryRecord extends FrmRecord {
-
-	public Properties getCaisiFormRecord(int demographicNo, int existingID, int providerNo, int programNo) throws SQLException  {
+	private static Logger logger=MiscUtils.getLogger();
+	public Properties getCaisiFormRecord(int demographicNo, int existingID, int providerNo, int programNo) {
         Properties props = new Properties();
         if (existingID <= 0) {
-
-
             /**************will delete this section later *****************************/
             /* For Client Report in Seaton House */
             /* ******************
@@ -126,49 +126,88 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
             *******************end *************************/
 
             String sql0 = "SELECT name AS programName FROM program WHERE id='"+programNo+"'";
-            ResultSet rs0 = DBHandler.GetSQL(sql0);
-            if(rs0.next()) {
-            	props.setProperty("programName",oscar.Misc.getString(rs0, "programName"));
+            
+            try {
+	            ResultSet rs0 = DBHandler.GetSQL(sql0);
+	            if(rs0.next()) {
+	            	props.setProperty("programName",oscar.Misc.getString(rs0, "programName"));
+	            }
+	            rs0.close();
+            } catch (SQLException e) {
+	            // TODO Auto-generated catch block
+	            logger.error("",e);
             }
-            rs0.close();
+            
+            
+            
 
             String sql = "SELECT demographic_no, CONCAT(CONCAT(last_name, ', '), first_name) AS clientName, year_of_birth, month_of_birth, date_of_birth, CONCAT(hin,ver) AS ohip FROM demographic WHERE demographic_no = "
                     + demographicNo;
-            ResultSet rs = DBHandler.GetSQL(sql);
-            if (rs.next()) {
-                Date dob = UtilDateUtilities.calcDate(oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"),
-                        oscar.Misc.getString(rs, "date_of_birth"));
-                props.setProperty("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
-                props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
-                        "yyyy/MM/dd"));
-                //props.setProperty("formEdited",
-                // UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy-MM-dd
-                // HH:mm:ss"));
-                props.setProperty("birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
-                props.setProperty("clientName", oscar.Misc.getString(rs, "clientName"));
-                props.setProperty("ohip",oscar.Misc.getString(rs, "ohip"));
+            
+            
+            
+            try {
+	            ResultSet rs = DBHandler.GetSQL(sql);
+	            if (rs.next()) {
+	                Date dob = UtilDateUtilities.calcDate(oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"),
+	                        oscar.Misc.getString(rs, "date_of_birth"));
+	                props.setProperty("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
+	                props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
+	                        "yyyy/MM/dd"));
+	                //props.setProperty("formEdited",
+	                // UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy-MM-dd
+	                // HH:mm:ss"));
+	                props.setProperty("birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
+	                props.setProperty("clientName", oscar.Misc.getString(rs, "clientName"));
+	                props.setProperty("ohip",oscar.Misc.getString(rs, "ohip"));
+	            }
+	            rs.close();
+            } catch (SQLException e) {
+	            // TODO Auto-generated catch block
+	            logger.error("",e);
             }
-            rs.close();
+            
+            
+            
 
             String sql1 = "SELECT CONCAT(CONCAT(last_name,', '),first_name) AS providerName FROM provider WHERE provider_no='"+providerNo+"'";
-            ResultSet rs1 = DBHandler.GetSQL(sql1);
-            if(rs1.next()) {
-            	props.setProperty("providerName",rs1.getString("providerName"));
+            
+            
+            
+            try {
+	            ResultSet rs1 = DBHandler.GetSQL(sql1);
+	            if(rs1.next()) {
+	            	props.setProperty("providerName",rs1.getString("providerName"));
+	            }
+	            rs1.close();
+            } catch (SQLException e) {
+	            // TODO Auto-generated catch block
+	            logger.error("",e);
             }
-            rs1.close();
+            
+            
 
             //String sql2 = "SELECT admission_date,discharge_date,admission_notes FROM admission where client_id="+demographicNo+" and program_id="+programNo+" and admission_status='discharged' ORDER BY discharge_date DESC ";
             String sql2 = "SELECT admission_date,discharge_date,admission_notes FROM admission where client_id="+demographicNo+" and program_id="+programNo+" and admission_status='current' ORDER BY admission_date DESC ";
-            ResultSet rs2 = DBHandler.GetSQL(sql2);
-            if(rs2.next()){
-            	if(rs2.isFirst()) {
-            		String admitDate = oscar.Misc.getString(rs2, "admission_date").substring(0,10);
-            		String admitDate_r = admitDate.replace("-", "/");
-            		props.setProperty("admitDate",admitDate_r);
+           
+            
+            try {
+	            ResultSet rs2 = DBHandler.GetSQL(sql2);
+	            if(rs2.next()){
+	            	if(rs2.isFirst()) {
+	            		String admitDate = oscar.Misc.getString(rs2, "admission_date").substring(0,10);
+	            		String admitDate_r = admitDate.replace("-", "/");
+	            		props.setProperty("admitDate",admitDate_r);
 
-            	}
+	            	}
+	            }
+	            rs2.close();
+            } catch (SQLException e) {
+	            // TODO Auto-generated catch block
+	            logger.error("",e);
             }
-            rs2.close();
+            
+            
 
             AllergyDao allergyDao=(AllergyDao) SpringUtils.getBean("allergyDao");
             List<Allergy> allergies=allergyDao.findAllergies(demographicNo);
@@ -184,45 +223,98 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
             props.setProperty("allergies",allergiesString.toString());
 
             StringBuilder issues = new StringBuilder();
+            
+            
             String sql4 = "SELECT issue_id from casemgmt_issue where demographic_no="+demographicNo+" and resolved=0";
-            ResultSet rs4 = DBHandler.GetSQL(sql4);
-            while(rs4.next()) {
-            	String sql5 = "SELECT description from issue where issue_id="+oscar.Misc.getString(rs4, "issue_id");
-            	ResultSet rs5 = DBHandler.GetSQL(sql5);
-            	if(rs5.next()) {
-            		if(rs4.isFirst()) {
-            			issues.append(oscar.Misc.getString(rs5, "description"));
-            		}
-            		else {
-            			issues.append(";");
-            			issues.append(oscar.Misc.getString(rs5, "description"));
-            		}
-            	}
-            	rs5.close();
+             
+            ResultSet rs4 = null;
+            
+            try {
+	            rs4 = DBHandler.GetSQL(sql4);
+	            while(rs4.next()) {
+	            	
+	            	String sql5 = "SELECT description from issue where issue_id="+oscar.Misc.getString(rs4, "issue_id");
+	            	ResultSet rs5 = DBHandler.GetSQL(sql5);
+	            	if(rs5.next()) {
+	            		if(rs4.isFirst()) {
+	            			issues.append(oscar.Misc.getString(rs5, "description"));
+	            		}
+	            		else {
+	            			issues.append(";");
+	            			issues.append(oscar.Misc.getString(rs5, "description"));
+	            		}
+	            	}
+	            	rs5.close();    	
+	            	
+	            }
+            } catch (SQLException e) {
+
+	            logger.error("",e);
+            } finally {
+                props.setProperty("currentIssues",issues.toString());
+	            if(rs4 != null) {
+	                try {
+		                rs4.close();
+	                } catch (SQLException e) {
+
+		                logger.error("",e);
+	                }
+	            }
             }
-            props.setProperty("currentIssues",issues.toString());
-            rs4.close();
+            
+
 
             StringBuilder prescriptions = new StringBuilder();
             //select d.rx_date,d.special,d.end_date, d.archived,d.BN,d.GCN_SEQNO,d.customName from Drug d where d.demographic_no = ? ORDER BY d.rx_date DESC, d.id DESC";
             String sql5 = "SELECT special from drugs where demographic_no="+demographicNo+" and archived=0 ORDER BY rx_date DESC, drugid DESC";
-            ResultSet rs5 = DBHandler.GetSQL(sql5);
-            while(rs5.next()) {
-            	if(rs5.isFirst()) {
-            		prescriptions.append(oscar.Misc.getString(rs5, "special"));
-            	}
-            	else {
-            		//prescriptions.append(";");
-            		prescriptions.append(oscar.Misc.getString(rs5, "special"));
-            	}
+            ResultSet rs5 = null;
+            
+            try {
+	            rs5 = DBHandler.GetSQL(sql5);
+	            while(rs5.next()) {
+	            	if(rs5.isFirst()) {
+	            		prescriptions.append(oscar.Misc.getString(rs5, "special"));
+	            	}
+	            	else {
+	            		//prescriptions.append(";");
+	            		prescriptions.append(oscar.Misc.getString(rs5, "special"));
+	            	}
+	            }
+	            props.setProperty("prescriptionSummary", prescriptions.toString());
+	            rs5.close();
+            } catch (SQLException e) {
+
+	            logger.error("",e);
+            } finally {
+            	
+            	if(rs5 != null) {
+	                try {
+		                rs5.close();
+	                } catch (SQLException e) {
+
+		                logger.error("",e);
+	                }
+	            }
             }
-            props.setProperty("prescriptionSummary", prescriptions.toString());
-            rs5.close();
+            
+            
+            
         } else {
+        	
+        	    	
             String sql = "SELECT * FROM formDischargeSummary WHERE demographic_no = " + demographicNo + " AND ID = "
                     + existingID;
-            props = (new FrmRecordHelp()).getFormRecord(sql);
+            
+            try {
+	            props = (new FrmRecordHelp()).getFormRecord(sql);
+            } catch (SQLException e) {
+            	logger.error("", e);
+            }
+            
         }
+        
+        
+        
 
         return props;
     }

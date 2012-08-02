@@ -96,7 +96,7 @@ public class FrmRourkeRecord extends FrmRecord {
     }
 ///////////////////////////////////
 
-    public Properties getGraph(int demographicNo, int existingID)  throws SQLException {
+    public Properties getGraph(int demographicNo, int existingID)  {
         Properties props = new Properties();
 
         
@@ -118,34 +118,42 @@ public class FrmRourkeRecord extends FrmRecord {
                 + "FROM formRourke "
                 + "WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;
 
-            rs = DBHandler.GetSQL(sql);
+            
+            	try {
+	                rs = DBHandler.GetSQL(sql);
 
-            if(rs.next())           {
-                ResultSetMetaData md = rs.getMetaData();
-                String value;
+	                if(rs.next())           {
+	                    ResultSetMetaData md = rs.getMetaData();
+	                    String value;
 
-                for(int i=1; i<=md.getColumnCount(); i++)            {
-                    String name = md.getColumnName(i);
+	                    for(int i=1; i<=md.getColumnCount(); i++)            {
+	                        String name = md.getColumnName(i);
 
-                    if(md.getColumnTypeName(i).equalsIgnoreCase("date"))               {
-                        value = UtilDateUtilities.DateToString(rs.getDate(i), "yyyy/MM/dd");
-                    } else {
-                        value = oscar.Misc.getString(rs, i);
-                    }
+	                        if(md.getColumnTypeName(i).equalsIgnoreCase("date"))               {
+	                            value = UtilDateUtilities.DateToString(rs.getDate(i), "yyyy/MM/dd");
+	                        } else {
+	                            value = oscar.Misc.getString(rs, i);
+	                        }
 
-                    if(i<=6) {
-                        name = name.substring(2);
-                    }  else {
-                        name = name.substring(3);
-                    }
+	                        if(i<=6) {
+	                            name = name.substring(2);
+	                        }  else {
+	                            name = name.substring(3);
+	                        }
 
-                    if(value!=null) {
-                        props.setProperty(name, value);
-                    }
-                }//end for
+	                        if(value!=null) {
+	                            props.setProperty(name, value);
+	                        }
+	                    }//end for
 
-            }//end if
-            rs.close();
+	                }//end if
+	                rs.close();
+                } catch (SQLException e) {
+
+                	MiscUtils.getLogger().error("", e);
+                }
+            
+            
         }
         return props;
     }
