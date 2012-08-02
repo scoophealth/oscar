@@ -8852,6 +8852,22 @@ CREATE TABLE `HRMSubClass` (
   PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `HRMDocumentComment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `providerNo` varchar(20),
+  `hrmDocumentId` int(11),
+  `comment` text,
+  `commentTime` datetime,
+  `deleted` tinyint(1),
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `HRMProviderConfidentialityStatement` (
+  `providerNo` varchar(20),
+  `statement` text,
+  PRIMARY KEY (`providerNo`)
+);
+
 create table document_storage (
 	id int(10)  NOT NULL auto_increment primary key,
 	documentNo int(10),
