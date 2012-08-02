@@ -118,7 +118,7 @@ public class FrmRourke2006Record extends FrmRecord {
     }
 ///////////////////////////////////
 
-    public Properties getGraph(int demographicNo, int existingID)  throws SQLException {
+    public Properties getGraph(int demographicNo, int existingID) {
         Properties props = new Properties();
 
         
@@ -137,28 +137,32 @@ public class FrmRourke2006Record extends FrmRecord {
                 + "FROM formRourke2006 "
                 + "WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;
              
-            rs = DBHandler.GetSQL(sql);
+            try {
+	            rs = DBHandler.GetSQL(sql);
 
-            if(rs.next())           {
-                ResultSetMetaData md = rs.getMetaData();
-                String value;
+	            if(rs.next())           {
+	                ResultSetMetaData md = rs.getMetaData();
+	                String value;
 
-                for(int i=1; i<=md.getColumnCount(); i++)            {
-                    String name = md.getColumnName(i);
+	                for(int i=1; i<=md.getColumnCount(); i++)            {
+	                    String name = md.getColumnName(i);
 
-                    if(md.getColumnTypeName(i).equalsIgnoreCase("date"))               {
-                        value = UtilDateUtilities.DateToString(rs.getDate(i), "dd/MM/yyyy");
-                    } else {
-                        value = oscar.Misc.getString(rs, i);
-                    }
-                    
-                    if(value!=null) {                        
-                        props.setProperty(name, value);
-                    }
-                }//end for
+	                    if(md.getColumnTypeName(i).equalsIgnoreCase("date"))               {
+	                        value = UtilDateUtilities.DateToString(rs.getDate(i), "dd/MM/yyyy");
+	                    } else {
+	                        value = oscar.Misc.getString(rs, i);
+	                    }
+	                    
+	                    if(value!=null) {                        
+	                        props.setProperty(name, value);
+	                    }
+	                }//end for
 
-            }//end if
-            rs.close();
+	            }//end if
+	            rs.close();
+            } catch (SQLException e) {
+            	MiscUtils.getLogger().error("Error", e);
+            }
         }
         return props;
     }

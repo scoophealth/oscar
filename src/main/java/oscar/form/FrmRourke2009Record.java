@@ -147,8 +147,8 @@ public class FrmRourke2009Record extends FrmRecord {
 	return retval;
     }
 ///////////////////////////////////
-    @Override
-    public Properties getGraph(int demographicNo, int existingID)  throws SQLException {
+  
+    public Properties getGraph(int demographicNo, int existingID) {
     	String formClass = "Growth0_36";
         Properties props = new Properties();
 
@@ -210,29 +210,35 @@ public class FrmRourke2009Record extends FrmRecord {
                 if (pforms.length > 0) {
                 	EctFormData.PatientForm pfrm = pforms[0];
                 	FrmRecord rec = (new FrmRecordFactory()).factory(formClass);
-                    java.util.Properties growthProps = rec.getFormRecord(demographicNo, pfrm.formId);
-                    Enumeration<Object> keys = growthProps.keys();
-                    String key;
-                    String value;
-                    String[] dates;
-                    String date;
-                    while( keys.hasMoreElements() ) {
-                    	key = (String) keys.nextElement();
-                    	if( key.startsWith("date_")) {
-                    		value = growthProps.getProperty(key, "");
-                    		if( !value.equals("")) {
-                    			dates = value.split("\\/");
-                    			if( dates.length == 3 ) {
-                    				date = dates[2] + "/" + dates[1] + "/" + dates[0];
-                    				props.setProperty(key,date);
-                    			}
-                    		}
-                    	}
-                    	else if( key.startsWith("weight_") || key.startsWith("length_") || key.startsWith("headCirc_") ) {
-                    			props.setProperty(key, growthProps.getProperty(key, ""));
-                    	}
-                    	                    	
-                    }
+                	
+	                    try {
+	                        java.util.Properties growthProps = rec.getFormRecord(demographicNo, pfrm.formId);
+	                        Enumeration<Object> keys = growthProps.keys();
+	                        String key;
+	                        String value;
+	                        String[] dates;
+	                        String date;
+	                        while( keys.hasMoreElements() ) {
+	                        	key = (String) keys.nextElement();
+	                        	if( key.startsWith("date_")) {
+	                        		value = growthProps.getProperty(key, "");
+	                        		if( !value.equals("")) {
+	                        			dates = value.split("\\/");
+	                        			if( dates.length == 3 ) {
+	                        				date = dates[2] + "/" + dates[1] + "/" + dates[0];
+	                        				props.setProperty(key,date);
+	                        			}
+	                        		}
+	                        	}
+	                        	else if( key.startsWith("weight_") || key.startsWith("length_") || key.startsWith("headCirc_") ) {
+	                        			props.setProperty(key, growthProps.getProperty(key, ""));
+	                        	}
+	                        	                    	
+	                        }
+                        } catch (SQLException e) {
+
+                        	MiscUtils.getLogger().error("", e);
+                        }
                 }
                 
                 //now add measurements from Ht and Wt in measurements group
