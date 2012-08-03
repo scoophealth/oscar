@@ -35,7 +35,10 @@
     String doctor_name = rec1.getProvName(provNo);          // Retrieve the doctors name from provNo
     if (formId <= 0){
         props = rec1.getInitRefDoc(props, demoNo);
-        props = rec1.getDocInfo(props, props.getProperty("refdocno", ""));
+        String refdocNo = props.getProperty("refdocno", "");
+        if( !"".equals(refdocNo)) {
+        	props = rec1.getDocInfo(props, refdocNo);
+        }
         props.setProperty("doc_name",doctor_name);
     }
 
@@ -355,7 +358,7 @@ function search(billno, toname, toaddress, tophone, tofax) {
      t5 = escape("document.forms[0].elements[\'"+tophone+"\'].value");
      t6 = escape("document.forms[0].elements[\'"+tofax+"\'].value");
      //rs('att',('../billing/CA/ON/searchRefDoc.jsp?param='+t0+'&toname='+t2),600,600,1);
-     rs('att',('../billing/CA/ON/searchRefDoc.jsp?param='+t0+'&toname='+t2+'&toaddress='+t3+'&tophone='+t5+'&tofax='+t6),600,600,1);
+     rs('att',('../billing/CA/ON/searchRefDoc.jsp?param='+t0+'&toname='+t2+'&toaddress='+t3+'&tophone='+t5+'&tofax='+t6+'&submit=Search&keyword='+document.forms[0].elements[toname].value),600,600,1);
 }
 
 function start(){
