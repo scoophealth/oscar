@@ -74,9 +74,10 @@
 
 	  if ("search_name".equals(search_mode)) {
 	    String[] temp = keyword.split("\\,\\p{Space}*");
-	    if (temp.length>1) {
+	    
+	    if (temp.length>1) {		
 	      professionalSpecialists = professionalSpecialistDao.findByFullName(temp[0], temp[1]);
-	    } else {
+	    } else {		
 	    	professionalSpecialists = professionalSpecialistDao.findByLastName(temp[0]);
 	    }
 	  } else if("specialty".equals(search_mode)){
@@ -137,16 +138,26 @@
 		  self.close();
 		}
 		<%}}%>
-                <%if(toname.length()>0){%>
-                function typeInData3(billno, toname, toaddress, tophone, tofax){
-                self.close();
-                opener.<%=param%> = billno;
-                opener.<%=toname%> = toname;
-                opener.<%=toaddress1%> = toaddress;
-                opener.<%=tophone%> = tophone;
-                opener.<%=tofax%> = tofax;
-                }
-                <%}%>
+                
+         function typeInData3(billno, toname, toaddress, tophone, tofax){
+         	self.close();
+         	<%if( param.length() > 0 ) {%>
+            	opener.<%=param%> = billno;
+            <%}
+              if( toname.length() > 0 ) {%>
+            	opener.<%=toname%> = toname;
+            <%}
+              if( toaddress1.length() > 0 ) {%>
+            	opener.<%=toaddress1%> = toaddress;
+            <%}
+              if( tophone.length() > 0 ) {%>
+            	opener.<%=tophone%> = tophone;
+            <%}
+              if( tofax.length() > 0 ) {%>
+            	opener.<%=tofax%> = tofax;
+            <%}%>
+         }
+                
 -->
 
       </script>
@@ -209,9 +220,9 @@
 			String bgColor = i%2==0?"#EEEEFF":"ivory";
 			String strOnClick;
                         if ( param2.length() <= 0){
-                            strOnClick = "typeInData3('" + prop.getProperty("referral_no","") + "', '" + prop.getProperty("to_name", "") + "', '" + prop.getProperty("to_address", "") + "', '" + prop.getProperty("phone", "") + "', '" + prop.getProperty("to_fax", "") + "')" ;
+                            strOnClick = "typeInData3('" + StringEscapeUtils.escapeJavaScript(prop.getProperty("referral_no","")) + "', '" + StringEscapeUtils.escapeJavaScript(prop.getProperty("to_name", "")) + "', '" + StringEscapeUtils.escapeJavaScript(prop.getProperty("to_address", "")) + "', '" + StringEscapeUtils.escapeJavaScript(prop.getProperty("phone", "")) + "', '" + StringEscapeUtils.escapeJavaScript(prop.getProperty("to_fax", "")) + "')" ;
                         } else {
-                            strOnClick = param2.length()>0? "typeInData2('" + prop.getProperty("referral_no", "") + "','"+StringEscapeUtils.escapeJavaScript(prop.getProperty("last_name", "")+ "," + prop.getProperty("first_name", "")) + "')"
+                            strOnClick = param2.length()>0? "typeInData2('" + StringEscapeUtils.escapeJavaScript(prop.getProperty("referral_no", "")) + "','"+StringEscapeUtils.escapeJavaScript(prop.getProperty("last_name", "")+ "," + prop.getProperty("first_name", "")) + "')"
 				: "typeInData1('" + prop.getProperty("referral_no", "") + "')";
                                 }
         %>
