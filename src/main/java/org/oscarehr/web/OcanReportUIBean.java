@@ -475,7 +475,10 @@ public class OcanReportUIBean implements CallbackHandler {
 		}
 
 		Text t2 = new Text();
-		t2.setValue("<ConsentSubmission xsi:schemaLocation=\"http://www.ehealthontario.ca/CCIMConsentSubmission-1.0.xsd\" xmlns=\"http://www.ehealthontario.ca/CCIM\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" + cs.toString() + "</ConsentSubmission>");
+		String cs1 = cs.toString().replace("<xml-fragment xmlns:ccim=\"http://www.ehealthontario.ca/CCIM\">", "");
+		String cs2 = cs1.replace("</xml-fragment>", "");
+	        String cs3 = cs2.replaceAll("ccim:","");
+		t2.setValue("<ConsentSubmission xsi:schemaLocation=\"http://www.ehealthontario.ca/CCIMConsentSubmission-1.0.xsd\" xmlns=\"http://www.ehealthontario.ca/CCIM\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" + cs3 + "</ConsentSubmission>");
 		consent.setText(t2);
 
 		SubmissionContent sc = new SubmissionContent();
