@@ -310,7 +310,7 @@
     //propT.setProperty("headerTitle1",rs.getString("service_group_name"));
 	vecCodeCol1.add(propT);
   }
-  if(vecCodeCol1.size()>0) {
+  if(!vecCodeCol1.isEmpty()) {
 	  sql = "select service_code,status from ctl_billingservice_premium where ";
 	  for(int i=0; i<vecCodeCol1.size(); i++) {
 	  	sql += (i==0?"":" or ") + "service_code='" + ((Properties)vecCodeCol1.get(i)).getProperty("serviceCode") + "'";
@@ -334,15 +334,16 @@
     propT.setProperty("serviceSLI", Misc.getStr(rs.getString("sliFlag"), "false"));
 	vecCodeCol2.add(propT);
   }
-  sql = "select service_code,status from ctl_billingservice_premium where ";
-  for(int i=0; i<vecCodeCol2.size(); i++) {
-  	sql += (i==0?"":" or ") + "service_code='" + ((Properties)vecCodeCol2.get(i)).getProperty("serviceCode") + "'";
+  if( !vecCodeCol2.isEmpty() ) {
+  	sql = "select service_code,status from ctl_billingservice_premium where ";
+  	for(int i=0; i<vecCodeCol2.size(); i++) {
+  		sql += (i==0?"":" or ") + "service_code='" + ((Properties)vecCodeCol2.get(i)).getProperty("serviceCode") + "'";
+  	}
+  	rs = dbObj.searchDBRecord(sql);
+  	while (rs.next()) {
+    	propPremium.setProperty(rs.getString("service_code"), "A");
+  	}
   }
-  rs = dbObj.searchDBRecord(sql);
-  while (rs.next()) {
-    propPremium.setProperty(rs.getString("service_code"), "A");
-  }
-
   sql = "select c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage, b.sliFlag from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype ='"
    + ctlBillForm + "' and c.service_group ='" + "Group3" + "' and b.billingservice_date in (select max(b2.billingservice_date) from billingservice b2 where b2.billingservice_date <= now() and b2.service_code = b.service_code) order by c.service_order";
   rs = dbObj.searchDBRecord(sql);
@@ -356,15 +357,17 @@
     propT.setProperty("serviceSLI", Misc.getStr(rs.getString("sliFlag"), "false"));
 	vecCodeCol3.add(propT);
   }
-  sql = "select service_code,status from ctl_billingservice_premium where ";
-  for(int i=0; i<vecCodeCol3.size(); i++) {
-  	sql += (i==0?"":" or ") + "service_code='" + ((Properties)vecCodeCol3.get(i)).getProperty("serviceCode") + "'";
+  
+  if( !vecCodeCol3.isEmpty() ) {
+  	sql = "select service_code,status from ctl_billingservice_premium where ";
+  	for(int i=0; i<vecCodeCol3.size(); i++) {
+  		sql += (i==0?"":" or ") + "service_code='" + ((Properties)vecCodeCol3.get(i)).getProperty("serviceCode") + "'";
+  	}
+  	rs = dbObj.searchDBRecord(sql);
+  	while (rs.next()) {
+    	propPremium.setProperty(rs.getString("service_code"), "A");
+  	}
   }
-  rs = dbObj.searchDBRecord(sql);
-  while (rs.next()) {
-    propPremium.setProperty(rs.getString("service_code"), "A");
-  }
-
   // create msg
   msg += errorMsg + warningMsg;
 
