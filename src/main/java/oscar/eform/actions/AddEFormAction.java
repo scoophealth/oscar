@@ -47,6 +47,7 @@ import org.oscarehr.common.dao.DemographicArchiveDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.EFormDataDao;
 import org.oscarehr.common.model.EFormData;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -81,9 +82,9 @@ public class AddEFormAction extends Action {
 		ArrayList<String> paramValues = new ArrayList<String>(); //holds "myval, ...."
 		String fid = request.getParameter("efmfid");
 		String demographic_no = request.getParameter("efmdemographic_no");
-		String provider_no = request.getParameter("efmprovider_no");
 		String eform_link = request.getParameter("eform_link");
 		String subject = request.getParameter("subject");
+		String provider_no = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 
 		boolean doDatabaseUpdate = false;
 
