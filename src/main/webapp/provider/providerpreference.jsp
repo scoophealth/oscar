@@ -649,7 +649,7 @@ Event.observe('rxInteractionWarningLevel', 'change', function(event) {
       </tr>
 
 
-	 <oscar:oscarPropertiesCheck property="utils.erx.enabled" value="true">
+	 <oscar:oscarPropertiesCheck property="util.erx.enabled" value="true">
 	 	<security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r">
         <tr>
         	<td align="center">
@@ -682,7 +682,7 @@ Event.observe('rxInteractionWarningLevel', 'change', function(event) {
                     eRxTrainingMode = providerPreference.isERxTrainingMode();
                     if(eRxTrainingMode) eRxTrainingModeChecked = "checked";
                                 
-                    if(eRx_SSO_URL==null || "null".equalsIgnoreCase(eRx_SSO_URL)) eRx_SSO_URL=OscarProperties.getInstance().getProperty("utils.erx.oscarerx_sso_url");
+                    if(eRx_SSO_URL==null || "null".equalsIgnoreCase(eRx_SSO_URL)) eRx_SSO_URL=OscarProperties.getInstance().getProperty("util.erx.oscarerx_sso_url");
                     if(eRxUsername==null || "null".equalsIgnoreCase(eRxUsername)) eRxUsername="";
                     if(eRxPassword==null || "null".equalsIgnoreCase(eRxPassword)) eRxPassword="";
                     if(eRxFacility==null || "null".equalsIgnoreCase(eRxFacility)) eRxFacility="";
