@@ -314,7 +314,10 @@ Integer offset = Integer.parseInt(request.getParameter("offset"));
 			}
 
 			//String metaDisplay = (hideMetaData)?"none":"block";
-			String globalNoteId = note.getNoteId().toString();
+			String globalNoteId = null;
+			if(note.getNoteId() != null){
+				globalNoteId = note.getNoteId().toString();
+			}
 
 			if (note.getRemoteFacilityId() != null) {
 				globalNoteId = "UUID" + note.getUuid();
