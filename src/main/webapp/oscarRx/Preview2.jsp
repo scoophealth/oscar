@@ -265,7 +265,7 @@ if(prop!=null && prop.getValue().equalsIgnoreCase("yes")){
                                                 		finalFax = faxProp.getValue();
                                                 	}
                                                 	
-                                                	request.setAttribute("phone",finalPhone);
+                                                	request.setAttribute("phone",finalPhone);                                                                                                                
                                                 
                                              	%>
                                                             <input type="hidden" name="clinicName"
@@ -275,7 +275,9 @@ if(prop!=null && prop.getValue().equalsIgnoreCase("yes")){
                                                             <input type="hidden" name="clinicFax"
                                                                     value="<%=finalFax%>" />
                                                     </c:otherwise>
-                                            </c:choose> <input type="hidden" name="patientName"
+                                            </c:choose> 
+                                            
+                                                            <input type="hidden" name="patientName"
                                                     value="<%= StringEscapeUtils.escapeHtml(patient.getFirstName())+ " " +StringEscapeUtils.escapeHtml(patient.getSurname()) %>" />
                                             <input type="hidden" name="patientDOB" value="<%= StringEscapeUtils.escapeHtml(patientDOBStr) %>" />
                                             <input type="hidden" name="pharmaFax" value="<%=pharmaFax%>" />
@@ -291,10 +293,15 @@ if(prop!=null && prop.getValue().equalsIgnoreCase("yes")){
                                             							  check == 3 ? ", " : check == 2 ? "" : " ",
                                             							  patient.getProvince(),
 																		  patient.getPostal());
+                                            String ptChartNo = ""; 
+                                            if(props.getProperty("showRxChartNo", "").equalsIgnoreCase("true")) {
+                                                ptChartNo = patient.getChartNo();
+                                            } 
                                             
                                             %>
                                             <input type="hidden" name="patientCityPostal" value="<%= StringEscapeUtils.escapeHtml(patientPostal)%>" />
                                             <input type="hidden" name="patientHIN" value="<%= StringEscapeUtils.escapeHtml(patient.getHin()) %>" />
+                                            <input type="hidden" name="patientChartNo" value="<%=StringEscapeUtils.escapeHtml(ptChartNo)%>" />
                                             <input type="hidden" name="patientPhone"
                                                     value="<bean:message key="RxPreview.msgTel"/><%=StringEscapeUtils.escapeHtml(patient.getPhone()) %>" />
 
@@ -378,8 +385,10 @@ if(prop!=null && prop.getValue().equalsIgnoreCase("yes")){
                                                             <%= patientPostal %><br>
                                                             <%= patient.getPhone() %><br>
                                                             <b> <% if(!props.getProperty("showRxHin", "").equals("false")) { %>
-                                                            <bean:message key="oscar.oscarRx.hin" /><%= patient.getHin() %> <% } %>
-                                                            </b></td>
+                                                            <bean:message key="oscar.oscarRx.hin" /><%= patient.getHin() %> <% } %>                                                            
+                                                            </b><br>
+                                                                <% if(props.getProperty("showRxChartNo", "").equalsIgnoreCase("true")) { %>
+                                                            <bean:message key="oscar.oscarRx.chartNo" /><%=ptChartNo%><% } %></td>
                                                             <td align=right valign=top><b> <%= oscar.oscarRx.util.RxUtil.DateToString(rxDate, "MMMM d, yyyy",request.getLocale()) %>
                                                             </b></td>
                                                     </tr>
