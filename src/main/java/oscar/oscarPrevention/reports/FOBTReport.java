@@ -70,7 +70,9 @@ public class FOBTReport implements PreventionReport{
 
              //search   prevention_date prevention_type  deleted   refused
              ArrayList<Map<String,Object>> prevs = PreventionData.getPreventionData("FOBT",demo);
+             PreventionData.addRemotePreventions(prevs, Integer.parseInt(demo),"FOBT",null);
              ArrayList<Map<String,Object>> colonoscopys = PreventionData.getPreventionData("COLONOSCOPY",demo);
+             PreventionData.addRemotePreventions(colonoscopys, Integer.parseInt(demo),"COLONOSCOPY",null);
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;
              prd.bonusStatus = "N";
