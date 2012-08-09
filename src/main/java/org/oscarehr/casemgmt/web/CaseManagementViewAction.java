@@ -520,6 +520,16 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		public String resolved = null;
 		public String role = null;
 		public String priority = null;
+		public Integer sortOrderId = null;
+		
+		
+		public Integer getSortOrderId() {
+        	return sortOrderId;
+        }
+
+		public void setSortOrderId(Integer sortOrderId) {
+        	this.sortOrderId = sortOrderId;
+        }
 
 		public String getCodeType() {
 			return codeType;
@@ -738,6 +748,20 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		Collections.sort(checkBoxBeanList, cbbComparator);
 	}
 
+	public void sortIssuesByOrderId(ArrayList<CheckBoxBean> checkBoxBeanList) {
+		Comparator<CheckBoxBean> cbbComparator = new Comparator<CheckBoxBean>() {
+			public int compare(CheckBoxBean o1, CheckBoxBean o2) {
+				if (o1.getIssueDisplay() != null && o2.getIssueDisplay() != null && o1.getIssueDisplay().sortOrderId != null) {
+					return (o1.getIssueDisplay().sortOrderId.compareTo(o2.getIssueDisplay().sortOrderId));
+				} else return (0);
+			}
+		};
+
+		Collections.sort(checkBoxBeanList, cbbComparator);
+	}
+	/**
+	 * New CME
+	 */
 	private void viewCurrentIssuesTab_newCmeNotes(HttpServletRequest request, CaseManagementViewFormBean caseForm, String demoNo, String programId) throws Exception {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		String providerNo = loggedInInfo.loggedInProvider.getProviderNo();
@@ -1234,6 +1258,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		issueDisplay.priority = issue.getPriority();
 		issueDisplay.resolved = cmi.isResolved() ? "resolved" : "unresolved";
 		issueDisplay.role = issue.getRole();
+		issueDisplay.sortOrderId = issue.getSortOrderId();
+		
 		return issueDisplay;
 	}
 
