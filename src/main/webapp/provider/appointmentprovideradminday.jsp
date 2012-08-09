@@ -751,6 +751,33 @@ phrAsyncActivate();
 
 */
 
+function refreshSameLoc(mypage) {
+ var X =  (window.pageXOffset?window.pageXOffset:window.document.body.scrollLeft);
+ var Y =  (window.pageYOffset?window.pageYOffset:window.document.body.scrollTop);
+ window.location.href = mypage+"&x="+X+"&y="+Y;
+}
+
+function scrollOnLoad() {
+  var X = getParameter("x");
+  var Y = getParameter("y");
+  if(X!=null && Y!=null) {
+    window.scrollTo(parseInt(X),parseInt(Y));
+  }
+}
+
+function getParameter(paramName) {
+  var searchString = window.location.search.substring(1);
+  var i,val;
+  var params = searchString.split("&");
+
+  for (i=0;i<params.length;i++) {
+    val = params[i].split("=");
+    if (val[0] == paramName) {
+      return val[1];
+    }
+  }
+  return null;
+}
 </script>
 
 <style type="text/css">
@@ -769,7 +796,7 @@ phrAsyncActivate();
 <%if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable()){%>
 <body bgcolor="#EEEEFF" onload="load();" topmargin="0" leftmargin="0" rightmargin="0">
 <%}else{%>
-<body bgcolor="#EEEEFF" onLoad="refreshAllTabAlerts();" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgcolor="#EEEEFF" onLoad="refreshAllTabAlerts();scrollOnLoad();" topmargin="0" leftmargin="0" rightmargin="0">
 <%}%>
 
 <% boolean isTeamScheduleOnly = false; %>
@@ -1610,7 +1637,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
             <%
 			    if (as.getNextStatus() != null && !as.getNextStatus().equals("")) {
             %>
-            <a class="apptStatus" href="providercontrol.jsp?appointment_no=<%=appointment.get("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=&statusch=<%=as.getNextStatus()%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%><%=isWeekView?"&viewWeek=1":""%>" title="<%=as.getTitle()%> " >
+            <a class="apptStatus" href=# onclick="refreshSameLoc('providercontrol.jsp?appointment_no=<%=appointment.get("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=&statusch=<%=as.getNextStatus()%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%><%=isWeekView?"&viewWeek=1":""%>');" title="<%=as.getTitle()%> " >
             <%
 				}
 			    if (as.getNextStatus() != null) {
