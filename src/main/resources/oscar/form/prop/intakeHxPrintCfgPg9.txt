@@ -1,0 +1,9 @@
+General: left, 73, 142, 0, BaseFont.HELVETICA, 8, _, 561, 184, 8
+Nervous: left, 73, 193, 40, BaseFont.HELVETICA, 8, _, 561, 231, 8
+HEENT: left, 73, 244, 40, BaseFont.HELVETICA, 8, _, 561, 284, 8
+Neck: left, 73, 294, 40, BaseFont.HELVETICA, 8, _, 561, 335, 8
+Chest: left, 73, 346, 40, BaseFont.HELVETICA, 8, _, 561, 386, 8
+Heart: left, 73, 396, 40, BaseFont.HELVETICA, 8, _, 561, 438, 8
+Gastrointestinal: left, 73, 447, 40, BaseFont.HELVETICA, 8, _, 561, 489, 8
+GenitalsUrinary: left, 73, 499, 40, BaseFont.HELVETICA, 8, _, 561, 539, 8
+GeneralPsychiatric: left, 73, 549, 40, BaseFont.HELVETICA, 8, _, 561, 588, 8
