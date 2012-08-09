@@ -1,0 +1,8 @@
+TakeOtherDrugs : left, 99, 117, 0, BaseFont.HELVETICA, 8
+CurrentDrug1  : left, 101, 167, 0, BaseFont.HELVETICA, 8
+CurrentDrug2 : left, 101, 189, 0, BaseFont.HELVETICA, 8
+CurrentDrug3  : left, 101, 212, 0, BaseFont.HELVETICA, 8
+CurrentDrug4 : left, 101, 234, 0, BaseFont.HELVETICA, 8
+CurrentDrug5  : left, 101, 257, 0, BaseFont.HELVETICA, 8
+CurrentDrug6  : left, 101, 279, 0, BaseFont.HELVETICA, 8
+CurrentDrug7 : left, 101, 301, 0, BaseFont.HELVETICA, 8

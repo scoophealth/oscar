@@ -1,0 +1,27 @@
+AllergicYesNo : left, 213, 101, 0, BaseFont.HELVETICA, 10
+DrugAllergy1 : left, 101, 167, 0, BaseFont.HELVETICA, 10
+DrugAllergyRS1 : left, 384, 167, 0, BaseFont.HELVETICA, 10
+DrugAllergy2 : left, 101, 188, 0, BaseFont.HELVETICA, 10
+DrugAllergyRS2 : left, 384, 188, 0, BaseFont.HELVETICA, 10
+DrugAllergy3 : left, 101, 212, 0, BaseFont.HELVETICA, 10
+DrugAllergyRS3 : left, 384, 212, 0, BaseFont.HELVETICA, 10
+DrugAllergy4 : left, 101, 234, 0, BaseFont.HELVETICA, 10
+DrugAllergyRS4 : left, 384, 234, 0, BaseFont.HELVETICA, 10
+DrugAllergy5 : left, 101, 257, 0, BaseFont.HELVETICA, 10
+DrugAllergyRS5 : left, 384, 257, 0, BaseFont.HELVETICA, 10
+DrugAllergy6 : left, 101, 279, 0, BaseFont.HELVETICA, 10
+DrugAllergyRS6 : left, 384, 279, 0, BaseFont.HELVETICA, 10
+DrugAllergy7 : left, 101, 302, 0, BaseFont.HELVETICA, 10
+DrugAllergyRS7 : left, 384, 302, 0, BaseFont.HELVETICA, 10
+DrugAllergy8 : left, 101, 325, 0, BaseFont.HELVETICA, 10
+DrugAllergyRS8 : left, 384, 325, 0, BaseFont.HELVETICA, 10
+AllergicShotsYesNo : left, 266, 349, 0, BaseFont.HELVETICA, 10
+AllergicNonDrugYesNo : left, 252, 374, 0, BaseFont.HELVETICA, 10
+allergicbee : left, 143, 422, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+allergicragweed : left, 315, 422, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+allergicOtherPollens : left, 143, 446, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+allergicgrasses: left, 315, 446, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+allergicdust: left, 143, 468, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+allergicanimal : left, 315, 468, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+allergicother: left, 143, 492, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+allergicfood: left, 315, 492, 0, BaseFont.ZAPFDINGBATS, 8, \u2715

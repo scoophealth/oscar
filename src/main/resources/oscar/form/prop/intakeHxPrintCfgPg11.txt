@@ -1,0 +1,12 @@
+hadSexualIntercourse: left, 247, 129, 0, BaseFont.HELVETICA, 8
+sexWithMale: left, 234, 153, 0, BaseFont.HELVETICA, 8
+sexWithFemale: left, 243, 178, 0, BaseFont.HELVETICA, 8
+ageHadSex: left, 296, 203, 0, BaseFont.HELVETICA, 8
+partnersLastYear: left, 372, 228, 0, BaseFont.HELVETICA, 8
+HowOftenUseCondoms: left, 220, 255, 0, BaseFont.HELVETICA, 8
+hadSTD: left, 324, 306, 0, BaseFont.HELVETICA, 8
+hadHPV: left, 167, 331, 0, BaseFont.HELVETICA, 8
+hadchlamydia: left, 125, 357, 0, BaseFont.HELVETICA, 8
+hadgonorrhea: left, 125, 382, 0, BaseFont.HELVETICA, 8
+hadHSV2: left, 143, 407, 0, BaseFont.HELVETICA, 8
+hadsyphilis: left, 112, 433, 0, BaseFont.HELVETICA, 8

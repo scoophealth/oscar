@@ -1,0 +1,9 @@
+SeatBelt : left, 237, 101, 0, BaseFont.HELVETICA, 8
+smoker: left, 208, 127, 0, BaseFont.HELVETICA, 8
+HowMuchSmoke: left, 333, 154, 0, BaseFont.HELVETICA, 8
+smokeInPast: left, 199, 179, 0, BaseFont.HELVETICA, 8
+UseDrugs: left, 242, 204, 0, BaseFont.HELVETICA, 8
+Alcohol: left, 175, 229, 0, BaseFont.HELVETICA, 8
+HowManyDrinks: left, 334, 255, 0, BaseFont.HELVETICA, 8
+HowManyDrinksWeek: left, 320, 280, 0, BaseFont.HELVETICA, 8
+exercise: left, 332, 306, 0, BaseFont.HELVETICA, 8

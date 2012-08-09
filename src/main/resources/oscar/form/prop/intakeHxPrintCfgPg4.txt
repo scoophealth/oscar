@@ -1,0 +1,27 @@
+SeriousIllness : left, 143, 117, 0, BaseFont.HELVETICA, 8
+PastIllness1 : left, 108, 166, 0, BaseFont.HELVETICA, 8
+IllnessAge1 : left,  453, 166, 0, BaseFont.HELVETICA, 8
+PastIllness2 : left,  108, 188, 0, BaseFont.HELVETICA, 8
+IllnessAge2 : left,  453, 188, 0, BaseFont.HELVETICA, 8
+PastIllness3 : left,  108, 211, 0, BaseFont.HELVETICA, 8
+IllnessAge3 : left,  453, 211, 0, BaseFont.HELVETICA, 8
+PastIllness4 : left,  108, 234, 0, BaseFont.HELVETICA, 8
+IllnessAge4 : left,  453, 234, 0, BaseFont.HELVETICA, 8
+PastIllness5 : left,  108, 255, 0, BaseFont.HELVETICA, 8
+IllnessAge5 : left,  453, 255, 0, BaseFont.HELVETICA, 8
+PastIllness6 : left,  108, 279, 0, BaseFont.HELVETICA, 8
+IllnessAge6 : left,  453, 279, 0, BaseFont.HELVETICA, 8
+operations : left,  215, 303, 0, BaseFont.HELVETICA, 8
+NameofOperation1 : left, 124, 354, 0, BaseFont.HELVETICA, 8
+NameofOperationAge1 : left, 454, 354, 0, BaseFont.HELVETICA, 8
+NameofOperation2 : left, 124, 374, 0, BaseFont.HELVETICA, 8
+NameofOperationAge2 : left, 454, 374, 0, BaseFont.HELVETICA, 8
+NameofOperation3 : left, 124,398, 0, BaseFont.HELVETICA, 8
+NameofOperationAge3 : left, 454, 398, 0, BaseFont.HELVETICA, 8
+NameofOperation4 : left, 124, 420, 0, BaseFont.HELVETICA, 8
+NameofOperationAge4 : left, 454, 420, 0, BaseFont.HELVETICA, 8
+NameofOperation5 : left, 124, 444, 0, BaseFont.HELVETICA, 8
+NameofOperationAge5 : left, 454,444, 0, BaseFont.HELVETICA, 8
+NameofOperation6 : left, 124, 466, 0, BaseFont.HELVETICA, 8
+NameofOperationAge6 : left, 454, 466, 0, BaseFont.HELVETICA, 8
+
