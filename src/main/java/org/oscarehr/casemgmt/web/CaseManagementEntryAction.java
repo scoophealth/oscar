@@ -408,6 +408,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			caseManagementViewAction.addLocalIssues(checkBoxBeanList, demographicNo, false, programId);
 			caseManagementViewAction.addRemoteIssues(checkBoxBeanList, demographicNo, false);
 
+			caseManagementViewAction.sortIssuesByOrderId(checkBoxBeanList);
+			
 			checkedList = checkBoxBeanList.toArray(new CheckBoxBean[checkBoxBeanList.size()]);
 			/*
 			 * List<CaseManagementIssue> issues = caseManagementMgr.filterIssues(caseManagementMgr.getIssues(Integer.parseInt(demono)), programIdString); checkedList = new CheckBoxBean[issues.size()]; // set issue checked list
@@ -2352,7 +2354,13 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		oldList[ind.intValue()].getIssue().setUpdate_date(new Date());
 		iss.add(oldList[ind.intValue()].getIssue());
 		caseManagementMgr.saveAndUpdateCaseIssues(iss);
-
+		
+		//Change issueDisplay if this issue is successfully saved.
+		sessionFrm.getIssueCheckList()[ind.intValue()].getIssueDisplay().setAcute(oldList[ind.intValue()].getIssue().isAcute()?"acute":"chronic");
+		sessionFrm.getIssueCheckList()[ind.intValue()].getIssueDisplay().setCertain(oldList[ind.intValue()].getIssue().isCertain()?"certain":"uncertain");
+		sessionFrm.getIssueCheckList()[ind.intValue()].getIssueDisplay().setMajor(oldList[ind.intValue()].getIssue().isMajor()?"major":"not major");
+		sessionFrm.getIssueCheckList()[ind.intValue()].getIssueDisplay().setResolved(oldList[ind.intValue()].getIssue().isResolved()?"resolved":"unresolved");
+		
 		if (OscarProperties.getInstance().isCaisiLoaded()) {
 			String providerNo = this.getProviderNo(request);
 
@@ -2367,7 +2375,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		}
 
 		String ajax = request.getParameter("ajax");
-		if (ajax != null && ajax.equalsIgnoreCase("true")) {
+		if (ajax != null && ajax.equalsIgnoreCase("true")) {			
 			request.setAttribute("caseManagementEntryForm", sessionFrm);
 			return mapping.findForward("issueList_ajax");
 		} else return mapping.findForward("view");

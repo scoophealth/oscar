@@ -2214,12 +2214,12 @@ function saveNoteAjax(method, chain) {
             alert(assignIssueError);
             return false;
         }
-
+/* the observationDate could be the default one as today.
         if( requireObsDate && $("observationDate").value.length == 0 ) {
             alert(assignObservationDateError);
             return false;
         }
-
+*/
         if($("encTypeSelect0") != null && $("encTypeSelect0").options[$("encTypeSelect0").selectedIndex].value.length == 0 ) {
         	alert(assignEncTypeError);
         	return false;
