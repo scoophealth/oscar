@@ -67,6 +67,7 @@ public class MammogramReport implements PreventionReport{
 
              //search   prevention_date prevention_type  deleted   refused
              ArrayList<Map<String,Object>>  prevs = PreventionData.getPreventionData("MAM",demo);
+             PreventionData.addRemotePreventions(prevs, Integer.parseInt(demo),"MAM",null);
              ArrayList<Map<String,Object>> noFutureItems =  removeFutureItems(prevs, asofDate);
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;

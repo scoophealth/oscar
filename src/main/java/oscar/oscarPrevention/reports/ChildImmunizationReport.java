@@ -83,9 +83,13 @@ public class ChildImmunizationReport implements PreventionReport{
 
 			// search prevention_date prevention_type deleted refused
 			ArrayList<Map<String, Object>> prevs1 = PreventionData.getPreventionData("DTap-IPV", demo);
+			PreventionData.addRemotePreventions(prevs1, Integer.parseInt(demo),"DTap-IPV",null);
 			ArrayList<Map<String, Object>> prevsDtapIPVHIB = PreventionData.getPreventionData("DTaP-IPV-Hib", demo);
+			PreventionData.addRemotePreventions(prevsDtapIPVHIB, Integer.parseInt(demo),"DTaP-IPV-Hib",null);
 			ArrayList<Map<String, Object>> prevs2 = PreventionData.getPreventionData("Hib", demo);
+			PreventionData.addRemotePreventions(prevs2, Integer.parseInt(demo),"Hib",null);
 			ArrayList<Map<String, Object>> prevs4 = PreventionData.getPreventionData("MMR",demo);
+			PreventionData.addRemotePreventions(prevs4, Integer.parseInt(demo),"MMR",null);
 
              //need to compile accurate dtap numbers
 			 Map<String, Object> hDtapIpv, hDtapIpvHib;
