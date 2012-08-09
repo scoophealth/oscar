@@ -253,10 +253,21 @@ Integer offset = Integer.parseInt(request.getParameter("offset"));
 			String dispDocNo = "";
 			String dispFilename = "";
 			String dispStatus = " ";
+			String globalNoteId = "";
+			
+			if (note.getRemoteFacilityId() != null) {
+				globalNoteId = "UUID" + note.getUuid();
+			}
+			
 			if (noteId!=null)
 			{
+			    globalNoteId = note.getNoteId().toString();
+			    
 				if (note.isDocument()) {
+				    
+				    globalNoteId = "DOC" + note.getNoteId();
 					doc = EDocUtil.getDocFromNote((long)noteId.intValue());
+					
 					if (doc != null)
 					{
 						dispDocNo = doc.getDocId();
@@ -269,6 +280,10 @@ Integer offset = Integer.parseInt(request.getParameter("offset"));
 						}
 						//find docname, docno and docstatus
 					}
+				} else if (note.isEformData()) {												
+					globalNoteId = "EFORM" + note.getNoteId();
+				} else if (note.isInvoice()) {
+					globalNoteId = "INV" + note.getNoteId();
 				}
 			}
 
@@ -314,20 +329,6 @@ Integer offset = Integer.parseInt(request.getParameter("offset"));
 			}
 
 			//String metaDisplay = (hideMetaData)?"none":"block";
-			String globalNoteId = null;
-			if(note.getNoteId() != null){
-				globalNoteId = note.getNoteId().toString();
-			}
-
-			if (note.getRemoteFacilityId() != null) {
-				globalNoteId = "UUID" + note.getUuid();
-			} else if (note.isDocument()) {
-				globalNoteId = "DOC" + note.getNoteId();
-			} else if (note.isEformData()) {
-				globalNoteId = "EFORM" + note.getNoteId();
-			} else if (note.isInvoice()) {
-				globalNoteId = "INV" + note.getNoteId();
-			}
 		%>
 		<div id="nc<%=offset%><%=idx+1%>" style="display:<%=noteDisplay %>" class="note<%=note.isDocument()||note.isCpp()||note.isEformData()||note.isEncounterForm()||note.isInvoice()?"":" noteRounded"%>">
 			<input type="hidden" id="signed<%=globalNoteId%>" value="<%=note.isSigned()%>">
