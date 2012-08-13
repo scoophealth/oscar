@@ -26,6 +26,7 @@
 package oscar.eform.actions;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.http.HttpServletRequest;
@@ -131,7 +132,7 @@ public class DisplayImageAction extends DownloadAction{
                     contentType = "text/javascript";
                 }else if(extension(file.getName()).equalsIgnoreCase("css")){ // for GIF
                     contentType = "text/css";
-                }else if(extension(file.getName()).equalsIgnoreCase("html") || extension(file.getName()).equalsIgnoreCase("htm")){ // for HTML
+                }else if(extension(file.getName()).equalsIgnoreCase("rtl") || extension(file.getName()).equalsIgnoreCase("html") || extension(file.getName()).equalsIgnoreCase("htm")){ // for HTML
                     contentType = "text/html";
                 }else{
                     throw new Exception("please check the file type or update mimetypes.default file to include the "+"."+extension(file.getName()));
@@ -184,14 +185,31 @@ public class DisplayImageAction extends DownloadAction{
      * This method used to list images for eform generator
      *
      */
- public String[] visitAllFiles(File dir) {
-    String[] children=null;
-    if (dir.isDirectory()) {
-         children = dir.list();
-        for (int i=0; i<children.length; i++) {
-            visitAllFiles(new File(dir, children[i]));
-        }
+    public String[] visitAllFiles(File dir) {
+    	String[] children=null;
+    	if (dir.isDirectory()) {
+    		children = dir.list();
+    		for (int i=0; i<children.length; i++) {
+    			visitAllFiles(new File(dir, children[i]));
+    		}
+    	}
+    	return children;
     }
-     return children;
-}
+    
+	public static String[] getRichTextLetterTemplates(File dir) {
+		ArrayList<String> results = getFiles(dir, ".*(rtl)$", null);				
+		return results.toArray(new String[0]);
+	}
+	
+	public static ArrayList<String> getFiles(File dir, String ext, ArrayList<String> files) {
+		if (files == null) { files = new ArrayList<String>(); }
+		if (dir.isDirectory()) {			
+			for (String fileName : dir.list()) {
+				if (fileName.toLowerCase().matches(ext)) {
+					files.add(fileName);
+				}
+			}
+		}
+		return files;
+	}
 }

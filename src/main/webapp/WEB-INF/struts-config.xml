@@ -1669,10 +1669,20 @@
 		<action input="/eform/efmformmanager.jsp" name="FrmForm" path="/eform/manageEForm" scope="request" type="oscar.eform.actions.ManageEFormAction" parameter="method">
 			<forward name="success" path="/eform/efmformmanager.jsp" />
 		</action>
-		<action input="/eform/efmformadd_data.jsp" name="saveEForm" path="/eform/addEForm" scope="request" type="oscar.eform.actions.AddEFormAction">
+		<action input="/eform/efmformrtl_config.jsp" path="/eform/IndivicaRichTextLetterSettings" scope="request" type="oscar.eform.actions.RTLSettingsAction">
+			<forward name="success" path="/eform/efmformrtl_config.jsp" />
+		</action>
+		
+		<action input="/eform/efmformadd_data.jsp" path="/eform/addEForm" scope="request" type="oscar.eform.actions.AddEFormAction">
+			<forward name="close" path="/eform/efmclosewindow.jsp" />
+			<forward name="fax" path="/eform/efmformfax_send.jsp" />
+			<forward name="print" path="/eform/efmformprint.do" />
+		</action>
+		<action input="/eform/efmformadd_data.jsp" scope="request"
+			path="/eform/efmformprint" type="oscar.eform.actions.PrintAction">
 			<forward name="close" path="/eform/efmclosewindow.jsp" />
 		</action>
-		<action input="/eform/efmpatientformlist.jsp" name="removeEForm" path="/eform/removeEForm" scope="request" type="oscar.eform.actions.RemEFormAction">
+		<action input="/eform/efmpatientformlist.jsp" path="/eform/removeEForm" scope="request" type="oscar.eform.actions.RemEFormAction">
 			<forward name="success" path="/eform/efmpatientformlist.jsp" />
 		</action>
 		<action input="/eform/efmpatientformlistdeleted.jsp" name="unRemoveEForm" path="/eform/unRemoveEForm" scope="request" type="oscar.eform.actions.UnRemEFormAction">

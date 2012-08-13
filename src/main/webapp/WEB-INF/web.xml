@@ -274,6 +274,37 @@
 		<url-pattern>/LabViewForPdfGenerationServlet</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>EFormViewForPdfGenerationServlet</servlet-name>
+		<servlet-class>oscar.eform.util.EFormViewForPdfGenerationServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>EFormViewForPdfGenerationServlet</servlet-name>
+		<url-pattern>/EFormViewForPdfGenerationServlet</url-pattern>
+	</servlet-mapping>
+
+
+
+	<servlet>
+		<servlet-name>EFormSignatureViewForPdfGenerationServlet</servlet-name>
+		<servlet-class>oscar.eform.util.EFormSignatureViewForPdfGenerationServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>EFormSignatureViewForPdfGenerationServlet</servlet-name>
+		<url-pattern>/EFormSignatureViewForPdfGenerationServlet</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>EFormImageViewForPdfGenerationServlet</servlet-name>
+		<servlet-class>oscar.eform.util.EFormImageViewForPdfGenerationServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>EFormImageViewForPdfGenerationServlet</servlet-name>
+		<url-pattern>/EFormImageViewForPdfGenerationServlet</url-pattern>
+	</servlet-mapping>
 
 	<servlet>
 		<servlet-name>DATISExportTest</servlet-name>

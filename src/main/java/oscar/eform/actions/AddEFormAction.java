@@ -191,7 +191,7 @@ public class AddEFormAction extends Action {
 			EForm prevForm = new EForm(prev_fdid);
 			if (prevForm!=null) {
 				sameform = curForm.getFormHtml().equals(prevForm.getFormHtml());
-			}
+			}			
 		}
 		if (!sameform) {
 			EFormDataDao eFormDataDao=(EFormDataDao)SpringUtils.getBean("EFormDataDao");
@@ -205,19 +205,43 @@ public class AddEFormAction extends Action {
 			if (eform_link!=null) {
 				se.setAttribute(eform_link, fdid);
 			}
+			
+			if (fax) {
+				request.setAttribute("fdid", fdid);
+				return(mapping.findForward("fax"));
+			}
+			
+			else if (print) {
+				request.setAttribute("fdid", fdid);
+				return(mapping.findForward("print"));
+			}
 
-			//write template message to echart
-			String program_no = new EctProgram(se).getProgram(provider_no);
-			String path = request.getRequestURL().toString();
-			String uri = request.getRequestURI();
-			path = path.substring(0, path.indexOf(uri));
-			path += request.getContextPath();
-
-			EFormUtil.writeEformTemplate(paramNames, paramValues, curForm, fdid, program_no, path);
+			else {
+				//write template message to echart
+				String program_no = new EctProgram(se).getProgram(provider_no);
+				String path = request.getRequestURL().toString();
+				String uri = request.getRequestURI();
+				path = path.substring(0, path.indexOf(uri));
+				path += request.getContextPath();
+	
+				EFormUtil.writeEformTemplate(paramNames, paramValues, curForm, fdid, program_no, path);
+			}
+			
 		}
 		else {
 			logger.debug("Warning! Form HTML exactly the same, new form data not saved.");
+			if (fax) {
+				request.setAttribute("fdid", prev_fdid);
+				return(mapping.findForward("fax"));
+			}
+			
+			else if (print) {
+				request.setAttribute("fdid", prev_fdid);
+				return(mapping.findForward("print"));
+			}
 		}
+		
+		
 
 		return(mapping.findForward("close"));
 	}
