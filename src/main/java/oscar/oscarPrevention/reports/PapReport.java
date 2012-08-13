@@ -68,6 +68,7 @@ public class PapReport implements PreventionReport {
              String demo = fieldList.get(0);
              //search   prevention_date prevention_type  deleted   refused
              ArrayList<Map<String,Object>>  prevs = PreventionData.getPreventionData("PAP",demo);
+             PreventionData.addRemotePreventions(prevs, Integer.parseInt(demo),"PAP",null);
              ArrayList<Map<String,Object>> noFutureItems =  removeFutureItems(prevs, asofDate);
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;
@@ -89,7 +90,7 @@ public class PapReport implements PreventionReport {
              }else{
                 DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                 Map<String,Object> h = noFutureItems.get(noFutureItems.size()-1);
-
+             
                 boolean refused = false;
                 boolean dateIsRefused = false;
                 if ( h.get("refused") != null && ((String) h.get("refused")).equals("1")){
