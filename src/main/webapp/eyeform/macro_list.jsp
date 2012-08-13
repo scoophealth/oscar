@@ -119,16 +119,18 @@ public String getFollowupWeb(Macro macro) {
 	if(macro.getFollowupNo()>0) {
 		ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 		Provider provider = providerDao.getProvider(macro.getFollowupDoctorId());
-		return macro.getFollowupNo() + " " + macro.getFollowupUnit() + " with Dr. " + provider.getFormattedName();
+		if(provider!=null)
+			return macro.getFollowupNo() + " " + macro.getFollowupUnit() + " with Dr. " + provider.getFormattedName();
 	}
 	return new String();
 }
 
 public String getTicklerWeb(Macro macro) {
-	if(macro.getTicklerRecipient().length()>0) {
+	if(macro.getTicklerRecipient()!=null && macro.getTicklerRecipient().length()>0) {
 		ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 		Provider provider = providerDao.getProvider(macro.getTicklerRecipient());
-		return provider.getFormattedName();
+		if(provider!=null)
+		 	return provider.getFormattedName();
 	}
 	return new String();
 }

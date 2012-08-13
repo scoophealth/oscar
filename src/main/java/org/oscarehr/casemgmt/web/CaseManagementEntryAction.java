@@ -539,6 +539,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		CaseManagementNote note;
 		boolean newNote = false;
 		// we don't want to try to remove an issue from a new note so we test here
+		if(noteId.isEmpty())
+			noteId = "0";
+
 		if (noteId.equals("0")) {
 
 			note = new CaseManagementNote();
