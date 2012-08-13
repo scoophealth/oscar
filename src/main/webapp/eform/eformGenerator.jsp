@@ -24,7 +24,7 @@
 
 --%>
 
-<%@ page import="oscar.eform.actions.DisplayImageAction,java.lang.*,java.io.File,oscar.OscarProperties,java.io.*,oscar.eform.*,oscar.eform.data.*,java.util.*"%>
+<%@ page import="oscar.eform.actions.DisplayImageAction,java.lang.*,java.io.File,oscar.OscarProperties,java.io.*,oscar.eform.*,oscar.eform.data.*,java.util.*,org.apache.log4j.Logger"%>
 <!--
 /*  Shelter Lee's eForm Generator v4 modified after Amos Raphenya by Peter Hutten-Czapski
  *
@@ -93,14 +93,21 @@ function getCheckedValue(radioObj) {
 var BGWidth = 0;
 var BGHeight = 0;
 
+
 function loadImage(){
+	var img = document.getElementById('imageName');
+	var bg = document.getElementById('BGImage');
 
-var img = document.getElementById('imageName');
-var myCnv = document.getElementById('myCanvas');
-var bg = document.getElementById('BGImage');
-//Boilerplate mod to set the path for image function
-bg.src = ("<%=request.getContextPath()%>"+"/eform/displayImage.do?imagefile="+img.value);
+	//Boilerplate mod to set the path for image function
+	bg.src = ("<%=request.getContextPath()%>"+"/eform/displayImage.do?imagefile="+img.value);	
+}
 
+function finishLoadingImage() {
+
+	var img = document.getElementById('imageName');
+	var myCnv = document.getElementById('myCanvas');
+	var bg = document.getElementById('BGImage');
+	
 	document.getElementById('OrientCustom').value = document.getElementById('OrientCustomValue').value;
 	BGWidth = parseInt(getCheckedValue(document.getElementsByName('Orientation')));
 	bg.width = BGWidth;
@@ -115,6 +122,7 @@ bg.src = ("<%=request.getContextPath()%>"+"/eform/displayImage.do?imagefile="+im
 	jg.clear();
 	drawPageOutline();
 }
+
 function drawPageOutline(){
 	if (BGWidth <= 800){
 		drawPortraitOutline();
@@ -619,7 +627,7 @@ function resetAll(){
 		l[0].selected = true;
 	document.getElementById('DefaultCheckmark').checked = false;
 	clearGraphics(jg);
-	loadImage();
+	finishLoadingImage();
 }
 
 function GetTextTop(){
@@ -638,16 +646,41 @@ function GetTextTop(){
 		textTop += "&lt;/script&gt;\n\n"
 	}
 	//load jsgraphic scripts for drawing in checkbox or freehand signatures
-	if(document.getElementById('DefaultCheckmark').checked || document.getElementById('DrawSign').checked){
+	if(document.getElementById('DefaultCheckmark').checked <% if (!OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_signature_enabled")) { %>|| document.getElementById('DrawSign').checked<%}%>){
 		textTop += "&lt;!-- js graphics scripts --&gt;\n"
-		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;${oscar_image_path}jsgraphics.js&quot;&gt;&lt;/script&gt;\n"
+		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;$%7Boscar_image_path%7Djsgraphics.js&quot;&gt;&lt;/script&gt;\n"
 	}
+	<% if (OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_print_enabled") || OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_fax_enabled") || OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_signature_enabled")) { %>
+	textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;$%7Boscar_javascript_path%7Djquery/jquery-1.4.2.js&quot;&gt;&lt;/script&gt;\n";
+	<% } %>
+	
+	<% if (OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_print_enabled")) { %>
+	textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;$%7Boscar_javascript_path%7Deforms/printControl.js&quot;&gt;&lt;/script&gt;\n";
+	<% } %>
+	
+	<% if (OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_fax_enabled")) { %>
+	if (document.getElementById("includeFaxControl").checked) {
+		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;$%7Boscar_javascript_path%7Deforms/faxControl.js&quot;&gt;&lt;/script&gt;\n";
+	}
+	<% } %>	
+		
+	<% if (!OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_signature_enabled")) { %>
 	//load mouse function scripts for freehand signatures
 	if(document.getElementById('DrawSign').checked){
 		textTop += "&lt;!-- mousefunction scripts --&gt;\n"
-		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;${oscar_image_path}mouse.js&quot;&gt;&lt;/script&gt;\n\n"
+		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;$%7Boscar_image_path%7Dmouse.js&quot;&gt;&lt;/script&gt;\n\n"
 	}
+	<%} %>
 	if (document.getElementById('AddSignature').checked){
+	<% if (OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_signature_enabled")) { %>		
+		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;$%7Boscar_javascript_path%7Deforms/signatureControl.jsp&quot;&gt;&lt;/script&gt;\n";
+		textTop += "&lt;script type=&quot;text/javascript&quot;&gt;";	
+		textTop += "if (typeof jQuery != &quot;undefined&quot; &amp;&amp; typeof signatureControl != &quot;undefined&quot;) {";
+		textTop += "jQuery(document).ready(function() {";
+		textTop += "signatureControl.initialize({eform:true, height:"+SignatureHolderH+", width:"+SignatureHolderW+", top:"+SignatureHolderY+", left:"+SignatureHolderX+"});";
+		textTop += "});}";
+		textTop +="&lt;/script&gt;\n";
+		<% } else { %> //
 		textTop += "&lt;script language=&quot;javascript&quot;&gt;\n"
 		textTop += "function show(x){\n"
 		textTop += "\tdocument.getElementById(x).style.display = 'block';\n"
@@ -656,6 +689,7 @@ function GetTextTop(){
 		textTop += "\tdocument.getElementById(x).style.display = 'none';\n"
 		textTop += "}\n"
 		textTop += "&lt;/script&gt;\n\n"
+		<% } %>
 	}
 	//printing script
 	textTop += "&lt;script language=&quot;javascript&quot;&gt;\n"
@@ -733,6 +767,7 @@ function GetTextTop(){
 		textTop += "&lt;/style&gt; \n"
 		textTop += "&lt;![endif]--&gt; \n\n"
 	}
+	<% if (!OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_signature_enabled")) { %>
 	//autoloading signature images
 	var List = document.getElementsByName('UserSignatureListItem');
 	if (document.getElementById('AutoSign').checked){
@@ -747,7 +782,7 @@ function GetTextTop(){
 			var ListItemArr =  ListItem.split('|')
 			var UserName = ListItemArr[0];
 			var FileName = ListItemArr[1];
-			textTop +="\timages[" + i + "]='${oscar_image_path}" + FileName + "'\n"
+			textTop +="\timages[" + i + "]='$%7Boscar_image_path%7D" + FileName + "'\n"
 		}
 		textTop += "\t// start preloading\n"
 		textTop += "\tfor(i=0; i&lt;=images.length; i++){\n"
@@ -779,10 +814,10 @@ function GetTextTop(){
 			var FileName = ListItemArr[1];
 			if (i <1){
 				textTop += "\t\t\tif (DoctorName.indexOf('" + UserName + "') &gt;= 0){\n"
-				textTop += "\t\t\t\tSignatureHolder.innerHTML = &quot;&lt;img id='SignatureImage' src='${oscar_image_path}" + FileName + "'&gt;&quot;;\n"
+				textTop += "\t\t\t\tSignatureHolder.innerHTML = &quot;&lt;img id='SignatureImage' src='$%7Boscar_image_path%7D" + FileName + "'&gt;&quot;;\n"
 			} else if (i>=1){
 				textTop += "\t\t\t}else if(DoctorName.indexOf('" + UserName + "') &gt;= 0){\n"
-				textTop += "\t\t\t\tSignatureHolder.innerHTML = &quot;&lt;img id='SignatureImage' src='${oscar_image_path}" + FileName + "'&gt;&quot;;\n"
+				textTop += "\t\t\t\tSignatureHolder.innerHTML = &quot;&lt;img id='SignatureImage' src='$%7Boscar_image_path%7D" + FileName + "'&gt;&quot;;\n"
 			}
 		}
 		textTop += "\t\t\t} else {\n"
@@ -797,10 +832,10 @@ function GetTextTop(){
 			var FileName = ListItemArr[1];
 			if (i<1){
 				textTop += "\t\t\tif (CurrentUserName.indexOf('" + UserName + "') &gt;= 0){\n"
-				textTop += "\t\t\t\tSignatureHolder.innerHTML = &quot;&lt;img id='SignatureImage' src='${oscar_image_path}" + FileName + "'&gt;&quot;;\n"
+				textTop += "\t\t\t\tSignatureHolder.innerHTML = &quot;&lt;img id='SignatureImage' src='$%7Boscar_image_path%7D" + FileName + "'&gt;&quot;;\n"
 			} else if (i>=1){
 				textTop += "\t\t\t}else if(CurrentUserName.indexOf('" + UserName + "') &gt;= 0){\n"
-				textTop += "\t\t\t\tSignatureHolder.innerHTML = &quot;&lt;img id='SignatureImage' src='${oscar_image_path}" + FileName + "'&gt;&quot;;\n"
+				textTop += "\t\t\t\tSignatureHolder.innerHTML = &quot;&lt;img id='SignatureImage' src='$%7Boscar_image_path%7D" + FileName + "'&gt;&quot;;\n"
 			}
 		}
 		textTop += "\t\t\t} else {\n"
@@ -845,12 +880,13 @@ function GetTextTop(){
 		textTop += "}\n"
 		textTop += "&lt;/script&gt;\n\n"
 	}
-	//relayer background images and signatures to bottom
+	//relayer background images and signatures to bottom	
 	if (document.getElementById('AddSignature').checked){
 		textTop += "&lt;script type=&quot;text/javascript&quot;&gt;\n"
 		textTop += "function reorderSignature(){\n"
 		textTop += "\tdocument.getElementById('BGImage').style.zIndex = '-10';\n"
 	}
+		
 	if (document.getElementById('AutoSign').checked){
 		textTop += "\tdocument.getElementById('SignatureHolder').style.zIndex = '-9';\n"
 		textTop += "\tdocument.getElementById('SignatureImage').style.zIndex = '-8';\n"
@@ -863,7 +899,7 @@ function GetTextTop(){
 		textTop += "}\n"
 		textTop += "&lt;/script&gt;\n\n"
 	}
-
+	<% } %>
 	//</head>
 	textTop += "&lt;/head&gt;\n\n"
 	//<body>
@@ -873,6 +909,7 @@ function GetTextTop(){
 	if (document.getElementById('preCheckGender').checked){
 		textTop += "checkGender();"
 	}
+	<% if (!OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_signature_enabled")) { %>
 	//auto load signature image, default to 'current_user'
 	if (document.getElementById('AutoSign').checked){
 		textTop += "reloadSignature();"
@@ -881,9 +918,10 @@ function GetTextTop(){
 	if (document.getElementById('DrawSign').checked){
 		textTop += "init();"
 	}
+	<% } %>
 	textTop += "&quot;&gt;\n"
 	//<img> background image
-	textTop += "&lt;img id='BGImage' src=&quot;${oscar_image_path}";
+	textTop += "&lt;img id='BGImage' src=&quot;$%7Boscar_image_path%7D";
 	textTop += document.getElementById('imageName').value;
 	textTop += "&quot; style=&quot;position: absolute; left: 0px; top: 0px; width:"
 	textTop += BGWidth;
@@ -1045,6 +1083,7 @@ function GetTextBottom(){
 		textBottom += parseInt(FTopLeftY - CheckboxOffset);
 		textBottom += "px&quot;&gt;\n\n"
 	}
+	<% if (!OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_signature_enabled")) { %>
 	//auto load signature images
 	if (document.getElementById('AutoSign').checked){
 		textBottom +="&lt;input type=&quot;hidden&quot; name=&quot;DoctorName&quot; id=&quot;DoctorName&quot; oscarDB=doctor&gt;\n"
@@ -1116,17 +1155,20 @@ function GetTextBottom(){
 		textBottom += "		onmousemove=&quot;DrawPreview();&quot;&gt; \n"
 		textBottom += "&lt;/div&gt;\n"
 	}
+	<% } %>
 
 	//bottom submit boxes
-	textBottom += "\n\n &lt;div class=&quot;DoNotPrint&quot; id=&quot;BottomButtons&quot; style=&quot;position: absolute; top:"
+	textBottom += "\n\n &lt;div class=&quot;DoNotPrint&quot; style=&quot;position: absolute; top:"
 	textBottom += BGHeight;
-	textBottom += "px; left:0px;&quot;&gt;\n"
+	textBottom += "px; left:0px;&quot; id=&quot;BottomButtons&quot; &gt;\n"
 	textBottom += "\t &lt;table&gt;&lt;tr&gt;&lt;td&gt;\n"
 	textBottom += "\t\t Subject: &lt;input name=&quot;subject&quot; size=&quot;40&quot; type=&quot;text&quot;&gt; \n"
 	textBottom += "\t\t	&lt;input value=&quot;Submit&quot; name=&quot;SubmitButton&quot; id=&quot;SubmitButton&quot; type=&quot;submit&quot; onclick=&quot;"
+	<% if (!OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_signature_enabled")) { %>
 	if (document.getElementById('DrawSign').checked){
 		textBottom += " SubmitImage();"
 	}
+	<% } %>
 	textBottom += " releaseDirtyFlag();&quot;&gt; \n"
 	textBottom += "\t\t\t&lt;input value=&quot;Reset&quot; name=&quot;ResetButton&quot; id=&quot;ResetButton&quot; type=&quot;reset&quot;&gt; \n"
 	textBottom += "\t\t	&lt;input value=&quot;Print&quot; name=&quot;PrintButton&quot; id=&quot;PrintButton&quot; type=&quot;button&quot; onclick=&quot;formPrint();&quot;&gt; \n"
@@ -1189,11 +1231,13 @@ function GetTextBottom(){
 		textBottom += "&lt;/script&gt;\n"
 	}
 
+	<% if (!OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_signature_enabled")) { %>
 	//script for drawing signatures
 	if (document.getElementById('DrawSign').checked){
 		textBottom += "&lt;!-- freehand signature scripts --&gt;\n"
-		textBottom += "&lt;script type=&quot;text/javascript&quot; src=&quot;${oscar_image_path}SignatureScripts.js&quot;&gt;&lt;/script&gt;\n"
+		textBottom += "&lt;script type=&quot;text/javascript&quot; src=&quot;$%7Boscar_image_path%7DSignatureScripts.js&quot;&gt;&lt;/script&gt;\n"
 	}
+	<% } %> 
 	//</body></html>
 	textBottom += "&lt;/body&gt;\n&lt;/html&gt;\n";
 }
@@ -1211,13 +1255,19 @@ for (j=0; (j < (DrawData.length) ); j++){
 		GetTextMiddle(GetTextMiddleParameter);
 	}
 
+<% if (OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_signature_enabled")) { %>
+if (document.getElementById('AddSignature').checked){
+	textMiddle +="&lt;div id=&quot;signatureDisplay&quot;&gt;&lt;/div&gt;";
+	textMiddle +="&lt;input type=&quot;hidden&quot; name=&quot;signatureValue&quot; id=&quot;signatureValue&quot; value=&quot;&quot; &gt;&lt;/input&gt;";
+}
+<% } %>
 textBottom = "";
 GetTextBottom();
 
 text = textTop  + textMiddle + textBottom;
 
 //popup modified at this point PHC
-return text;
+return unescape(text);
 }
 
 //this function used for injecting html in to Edit E-Form in efmformmanageredit.jsp w/ variable formHtml
@@ -2453,8 +2503,8 @@ function _CompInt(x, y)
 	onmouseout="SetDrawOff();"
 	onmousedown="if (event.preventDefault) event.preventDefault(); SetMouseDown();SetStart();"
 	onmousemove=""
-	onmouseup="SetMouseUp(); DrawMarker();loadInputList();">
-
+	onmouseup="SetMouseUp(); DrawMarker();loadInputList();"
+	onload="finishLoadingImage()">
 
 <h1><bean:message key="eFormGenerator.title"/></h1>
 
@@ -2540,6 +2590,15 @@ function _CompInt(x, y)
 			</div>
 </div>
 <hr>
+<% if (OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_signature_enabled")) { %>
+<span class='h2'>4. <bean:message key="eFormGenerator.signature"/></span><a onclick="show('Section4');"><bean:message key="eFormGenerator.expand"/></a>/<a onclick="hide('Section4');"><bean:message key="eFormGenerator.collapse"/></a>
+<div id="Section4">
+		<div id="Section4a">
+			<input type="radio" name="inputType" id="IndivicaSignature" value="checkbox" onclick="document.getElementById('AddSignature').checked=true;SetSwitchOn(this.id);"><span><bean:message key="eFormGenerator.signatureCheckbox"/></span>
+			<input type="checkbox" name="AddSignature" id="AddSignature" style="display:none">
+		</div>		
+</div>
+<% } else { %>
 <span class='h2'>4. <bean:message key="eFormGenerator.signature"/></span><a onclick="show('Section4');"><bean:message key="eFormGenerator.expand"/></a>/<a onclick="hide('Section4');"><bean:message key="eFormGenerator.collapse"/></a>
 <div id="Section4">
 	<p>
@@ -2570,6 +2629,7 @@ function _CompInt(x, y)
 			</div>
 	</p>
 </div>
+<% } %>
 
 <hr>
 <span class='h2'>5. <bean:message key="eFormGenerator.input"/></span> <a onclick="show('Section5');"><bean:message key="eFormGenerator.expand"/></a>/<a onclick="hide('Section5');"><bean:message key="eFormGenerator.collapse"/></a></span>
@@ -2822,6 +2882,11 @@ function _CompInt(x, y)
 	<input name="ScaleCheckmark" id="ScaleCheckmark" type="checkbox"><bean:message key="eFormGenerator.miscCheckmarksScale"/><br>
 	<input name="DefaultCheckmark" id="DefaultCheckmark" type="checkbox"><bean:message key="eFormGenerator.miscCheckmarksDraw"/>
 </p>
+<% if (OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_fax_enabled")) { %>
+<p><span class='h2'><bean:message key="eFormGenerator.fax"/></span><br>
+	<input name="includeFaxControl" id="includeFaxControl" type="checkBox"><bean:message key="eFormGenerator.faxDescription"/>
+</p>
+<% } %>
 </div>
 <hr>
 <span class='h2'>8. <bean:message key="eFormGenerator.generate"/></span><a onclick="show('Section8');"><bean:message key="eFormGenerator.expand"/></a>/<a onclick="hide('Section8');"><bean:message key="eFormGenerator.collapse"/></a>
@@ -2896,7 +2961,7 @@ var CheckboxSwitch = false;
 var MaleSwitch = false;
 var FemaleSwitch = false;
 var SignatureBoxSwitch = false;
-
+var IndivicaSignatureSwitch = false;
 function SetSwitchesOff(){
 	TextSwitch = false;
 	TextboxSwitch = false;
@@ -2904,6 +2969,7 @@ function SetSwitchesOff(){
 	MaleSwitch = false;
 	FemaleSwitch = false;
 	SignatureBoxSwitch = false;
+	IndivicaSignatureSwitch = false;
 }
 
 var DrawTool = "Text";
@@ -2924,7 +2990,10 @@ function SetSwitchOn(n){
 		FemaleSwitch = true;
 	}else if (n=="SignatureBox"){
 		SignatureBoxSwitch = true;
+	}else if (n=="IndivicaSignature") {
+		IndivicaSignatureSwitch = true;
 	}
+	
 }
 
 
@@ -3185,7 +3254,7 @@ function DrawMarker(){
 			DrawMale(jg,x0,y0);
 		}else if(FemaleSwitch){
 			DrawFemale(jg,x0,y0);
-		}else if (SignatureBoxSwitch){
+		}else if (SignatureBoxSwitch || IndivicaSignatureSwitch){
 			DrawSignatureBox(jg,x0,y0,width,height);
 		}
 	}

@@ -67,6 +67,7 @@ import org.oscarehr.util.SpringUtils;
 import oscar.OscarProperties;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
+import oscar.eform.actions.DisplayImageAction;
 import oscar.eform.data.EForm;
 import oscar.eform.data.EFormBase;
 import oscar.oscarDB.DBHandler;
@@ -1091,6 +1092,20 @@ public class EFormUtil {
 			}
 		}
 		return sentWho;
+	}
+	
+	public static ArrayList<String> listRichTextLetterTemplates() {
+		String imagePath = OscarProperties.getInstance().getProperty("eform_image");
+		MiscUtils.getLogger().debug("Img Path: " + imagePath);
+		File dir = new File(imagePath);
+		String[] files = DisplayImageAction.getRichTextLetterTemplates(dir);
+		ArrayList<String> fileList;
+		if( files != null )
+			fileList = new ArrayList<String>(Arrays.asList(files));
+		else
+			fileList = new ArrayList<String>();
+
+		return fileList;
 	}
 
 }

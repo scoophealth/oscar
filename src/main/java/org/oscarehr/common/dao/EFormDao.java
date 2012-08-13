@@ -77,4 +77,40 @@ public class EFormDao extends AbstractDao<EForm> {
 
 		return(results);
 	}
+    
+    public boolean isIndivicaRTLEnabled() { 
+
+    	StringBuilder sb=new StringBuilder();
+    	sb.append("select x from ");
+    	sb.append(modelClass.getSimpleName());
+    	sb.append(" x where x.formName='Rich Text Letter' and x.subject='Rich Text Letter Generator - Indivica'");
+       	Query query = entityManager.createQuery(sb.toString());
+    	
+		@SuppressWarnings("unchecked")
+		List<EForm> forms = query.getResultList();
+		
+		boolean enabled = false;
+		for (EForm form : forms) {
+			enabled |= form.isCurrent();
+		}
+		
+		return enabled;	
+    }
+    
+    public void setIndivicaRTLEnabled(boolean enabled) { 
+
+    	StringBuilder sb=new StringBuilder();
+    	sb.append("select x from ");
+    	sb.append(modelClass.getSimpleName());
+    	sb.append(" x where x.formName='Rich Text Letter' and x.subject='Rich Text Letter Generator - Indivica'");
+       	Query query = entityManager.createQuery(sb.toString());
+    	
+		@SuppressWarnings("unchecked")
+		List<EForm> forms = query.getResultList();
+		for (EForm form : forms) {
+			form.setCurrent(enabled);			
+			enabled |= form.isCurrent();
+			merge(form);
+		}
+    }
 }
