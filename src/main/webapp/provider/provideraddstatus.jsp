@@ -53,7 +53,7 @@
       if(request.getParameter("view")!=null) view=Integer.parseInt(request.getParameter("view")); //0-multiple views, 1-single view
       String strView=(view==0)?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") );
       String strViewAll=request.getParameter("viewall")==null?"0":(request.getParameter("viewall")) ;
-      String displaypage="providercontrol.jsp?year="+request.getParameter("year")+"&month="+request.getParameter("month")+"&day="+request.getParameter("day") +"&view="+  strView  +"&displaymode=day&dboperation=searchappointmentday" +"&viewall=" +strViewAll;
+      String displaypage="providercontrol.jsp?year="+request.getParameter("year")+"&month="+request.getParameter("month")+"&day="+request.getParameter("day") +"&view="+  strView  +"&displaymode=day&dboperation=searchappointmentday" +"&viewall=" +strViewAll+"&x="+request.getParameter("x")+"&y="+request.getParameter("y");
     if (request.getParameter("viewWeek") != null) {
        displaypage += "&provider_no=" + request.getParameter("provider_no");
     }
