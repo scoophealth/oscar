@@ -372,6 +372,46 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		return(sortedResults.values());
 	}
 
+	public Collection<CaseManagementNote> findNotesByDemographicAndIssueCodeInEyeform(Integer demographic_no, String[] issueCodes) {
+                String issueCodeList=null;
+                if (issueCodes!=null && issueCodes.length>0) issueCodeList=SqlUtils.constructInClauseForStatements(issueCodes, true);
+
+                String sqlCommand="select distinct casemgmt_note.note_id from issue,casemgmt_issue,casemgmt_issue_notes,casemgmt_note where casemgmt_issue.issue_id=issue.issue_id and casemgmt_issue.demographic_no='"+demographic_no+"' "+(issueCodeList!=null?"and issue.code in "+issueCodeList:"")+" and casemgmt_issue_notes.id=casemgmt_issue.id and casemgmt_issue_notes.note_id=casemgmt_note.note_id order by casemgmt_note.note_id DESC";
+                Session session=getSession();
+                List<CaseManagementNote> notes=new ArrayList<CaseManagementNote>();
+                try
+                {
+                        SQLQuery query=session.createSQLQuery(sqlCommand);
+                        @SuppressWarnings("unchecked")
+                        List<Integer> ids=query.list();
+                        for (Integer id : ids) notes.add(getNote(id.longValue()));
+                }
+                finally
+                {
+                        session.close();
+                }
+
+                // make unique for appointmentNo
+                HashMap<Integer,CaseManagementNote> uniqueForApptId=new HashMap<Integer,CaseManagementNote>();
+                for (CaseManagementNote note : notes)
+                {
+                        CaseManagementNote existingNote=uniqueForApptId.get(note.getAppointmentNo());
+                        if (existingNote==null || note.getUpdate_date().after(existingNote.getUpdate_date())) uniqueForApptId.put(note.getAppointmentNo(), note);
+                }
+
+                // sort by observationdate
+                //observation date is same for cpp in eyeform
+                //sort by update update
+                TreeMap<Date,CaseManagementNote> sortedResults=new TreeMap<Date,CaseManagementNote>();
+                for (CaseManagementNote note : uniqueForApptId.values())
+                {
+                        sortedResults.put(note.getUpdate_date(), note);
+                }
+
+                return(sortedResults.values());
+        }
+
+
     @SuppressWarnings("unchecked")
 	public List<CaseManagementNote> getNotesByDemographicDateRange(String demographic_no, Date startDate, Date endDate) {
 		return getHibernateTemplate().findByNamedQuery("mostRecentDateRange", new Object[] { demographic_no, startDate, endDate });
