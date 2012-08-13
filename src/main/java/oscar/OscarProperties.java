@@ -225,12 +225,49 @@ public class OscarProperties extends Properties {
 		return isPropertyActive("consultation_fax_enabled");
 	}
 	
-	public boolean isRichEFormFaxEnabled() {
-		return isPropertyActive("richeform_fax_enabled");
+	public boolean isEFormSignatureEnabled() {
+		return isPropertyActive("eform_signature_enabled");
+	}
+	
+	public boolean isEFormFaxEnabled() {
+		return isPropertyActive("eform_fax_enabled");
 	}
 	
 	public boolean isFaxEnabled() {
-		return faxEnabled() || isRxFaxEnabled() || isConsultationFaxEnabled() || isRichEFormFaxEnabled();
+		return faxEnabled() || isRxFaxEnabled() || isConsultationFaxEnabled() || isEFormFaxEnabled();
+	}
+
+	public boolean isRxSignatureEnabled() {
+		return isRxFaxEnabled() || isPropertyActive("rx_signature_enabled");
+	}
+	
+	public boolean isConsultationSignatureEnabled() {
+		return isPropertyActive("consultation_signature_enabled");
+	}
+	
+	public boolean isSpireClientEnabled() {
+		return isPropertyActive("SPIRE_CLIENT_ENABLED");
+	}
+	
+	public int getSpireClientRunFrequency() {
+		String prop = getProperty("spire_client_run_frequency");
+		return Integer.parseInt(prop);
+	}
+	
+	public String getSpireServerUser() {
+		return getProperty("spire_server_user");
+	}
+	
+	public String getSpireServerPassword() {
+		return getProperty("spire_server_password");
+	}
+	
+	public String getSpireServerHostname() {
+		return getProperty("spire_server_hostname");
+	}
+	
+	public String getSpireDownloadDir() {
+		return getProperty("spire_download_dir");
 	}
 
 	public String getHL7A04BuildDirectory() {
@@ -277,37 +314,5 @@ public class OscarProperties extends Properties {
 		String prop = getProperty("EMERALD_HL7_A04_TRANSPORT_PORT", "3987"); // default to port 3987
 		return Integer.parseInt(prop);
 	}
-	
-	public boolean isRxSignatureEnabled() {
-		return isRxFaxEnabled() || isPropertyActive("rx_signature_enabled");
-	}
-	
-	public boolean isConsultationSignatureEnabled() {
-		return isPropertyActive("consultation_signature_enabled");
-	}
-	
-	public boolean isSpireClientEnabled() {
-		return isPropertyActive("SPIRE_CLIENT_ENABLED");
-	}
-	
-	public int getSpireClientRunFrequency() {
-		String prop = getProperty("spire_client_run_frequency");
-		return Integer.parseInt(prop);
-	}
-	
-	public String getSpireServerUser() {
-		return getProperty("spire_server_user");
-	}
-	
-	public String getSpireServerPassword() {
-		return getProperty("spire_server_password");
-	}
-	
-	public String getSpireServerHostname() {
-		return getProperty("spire_server_hostname");
-	}
-	
-	public String getSpireDownloadDir() {
-		return getProperty("spire_download_dir");
-	}
+
 }

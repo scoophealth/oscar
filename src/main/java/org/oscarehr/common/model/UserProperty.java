@@ -61,7 +61,7 @@ public class UserProperty extends AbstractModel<Integer> implements Serializable
     @Transient public final static String DOC_DEFAULT_QUEUE="doc_default_queue";
     @Transient public final static String HC_TYPE= "HC_Type";
     @Transient public final static String DEFAULT_SEX= "default_sex";
-
+    @Transient public final static String EFORM_REFER_FAX = "eform_refer_fax";
     @Transient public final static String EFORM_FAVOURITE_GROUP = "favourite_eform_group";
     @Transient public final static String RX_SHOW_PATIENT_DOB="rx_show_patient_dob";
 

@@ -160,5 +160,5 @@ public class EctConDisplayServiceUtil
     public Vector specIdVec;
     public Vector serviceName;
     public Vector serviceId;
-    private ArrayList<String> referralNoVec;
+    public ArrayList<String> referralNoVec;
 }

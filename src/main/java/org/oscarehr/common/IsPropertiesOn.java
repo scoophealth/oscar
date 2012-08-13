@@ -56,4 +56,8 @@ public class IsPropertiesOn {
 	public static boolean isProviderFormalizeEnable() {
 		return propertiesOn("multioffice.formalize.provider.id");
 	}
+	
+	public static boolean isIndivicaRichTextLetterEnable() {
+		return propertiesOn("indivica_rich_text_letter_enabled");
+	}
 }

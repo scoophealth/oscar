@@ -37,6 +37,8 @@ import org.apache.struts.action.ActionMessages;
 import org.oscarehr.common.OtherIdManager;
 import org.oscarehr.common.dao.EFormDataDao;
 import org.oscarehr.common.model.EFormData;
+import org.oscarehr.ui.servlet.ImageRenderingServlet;
+import org.oscarehr.util.DigitalSignatureUtils;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -650,7 +652,7 @@ public class EForm extends EFormBase {
 		return (html);
 	}
 
-	private String replaceAllFields(String sql) {
+	public String replaceAllFields(String sql) {
 		sql = DatabaseAP.parserReplace("demographic", demographicNo, sql);
 		sql = DatabaseAP.parserReplace("provider", providerNo, sql);
 		sql = DatabaseAP.parserReplace("appt_no", appointment_no, sql);
@@ -826,5 +828,41 @@ public class EForm extends EFormBase {
 		String refFid = EFormUtil.getEFormIdByName(eform_name);
 		if (EFormUtil.blank(refFid)) refFid = fid;
 		return refFid;
+	}
+	
+	public void setSignatureCode(String contextPath, String userAgent, String demographicNo, String providerId) {
+		String signatureRequestId = DigitalSignatureUtils.generateSignatureRequestId(providerId);
+		String imageUrl = contextPath+"/imageRenderingServlet?source="+ImageRenderingServlet.Source.signature_preview.name()+"&"+DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY+"="+signatureRequestId;
+		String storedImgUrl = contextPath+"/imageRenderingServlet?source="+ImageRenderingServlet.Source.signature_stored.name()+"&digitalSignatureId=";
+
+		StringBuilder html = new StringBuilder(this.formHtml);
+		int signatureLoc = StringBuilderUtils.indexOfIgnoreCase(html, signatureMarker, 0);
+
+		if (signatureLoc > -1) {
+			String browserType = "";
+			if (userAgent != null) {
+				if (userAgent.toLowerCase().indexOf("ipad") > -1) {
+					browserType = "IPAD";
+				} else {
+					browserType = "ALL";
+				}
+			}
+
+			String signatureCode = "<script type='text/javascript' src='${oscar_javascript_path}../jquery/jquery-1.4.2.js'></script>" +
+			"<script type='text/javascript' src='${oscar_javascript_path}signature.js'></script>" +
+			"<script type='text/javascript'>\n" +
+			"var _signatureRequestId = '" + signatureRequestId + "';\n" + 
+			"var _imageUrl = '" + imageUrl + "';\n" +
+			"var _storedImgUrl = '" + storedImgUrl + "';\n" +
+			"var _contextPath = '" + contextPath + "';\n" + 
+			"var _digitalSignatureRequestIdKey = '" + DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY + "';\n" +
+			"var _browserType = '" + browserType + "';\n" +
+			"var _demographicNo = '" + demographicNo + "';\n" +
+			"</script>";
+
+
+			html.replace(signatureLoc, signatureLoc + signatureMarker.length(), signatureCode);
+			this.formHtml = html.toString();
+		}
 	}
 }
