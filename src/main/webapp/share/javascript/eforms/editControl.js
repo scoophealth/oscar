@@ -317,6 +317,8 @@ function existsTemplate(template) {
 }
 
 function loadDefaultTemplate() {
+	// Skipping loading of default template if the letter already has content.
+	if (editControlContents(cfg_editorname).trim() != '') { return; }
 	if (existsTemplate(cfg_template)) {
 		var selected = cfg_template;
 		window.frames[0].location = cfg_filesrc + selected; //FF & IE ***ASSUMES 1 iframe!
