@@ -24,6 +24,9 @@
 
 --%>
 
+<%@page import="org.oscarehr.common.model.StudyLogin"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.common.dao.StudyLoginDao"%>
 <%
 	if(session.getValue("user") == null || !( ((String) session.getValue("userprofession")).equalsIgnoreCase("doctor") ))
 		response.sendRedirect("../../logout.jsp");
@@ -33,24 +36,20 @@
 <%
 //http://192.168.2.4/PDSsecurity/logindd.asp?DI=PEPPER&UN=yilee18&PW=515750564848564853485353544852485248484851575150
 
-    int provNo = Integer.parseInt((String) session.getAttribute("user"));
+	String providerNo = (String) session.getAttribute("user");
     String studyId = request.getParameter("study_no");
 
 	String baseURL = "http://competeii.mcmaster.ca/PDSsecurity/login.asp";
 	String username = "yilee18";
 	String password = "515750564848564853485353544852485248484851575150";
 
-	 
-    String sql = "SELECT * from studylogin where provider_no=" + provNo + " and study_no = " + studyId + " and current1=1" ;
-	ResultSet rs = DBHandler.GetSQL(sql);
-	while(rs.next()) {
-		baseURL = oscar.Misc.getString(rs,"remote_login_url");
-		username = oscar.Misc.getString(rs,"username");
-		password = oscar.Misc.getString(rs,"password");
+	StudyLoginDao dao = SpringUtils.getBean(StudyLoginDao.class);
+	for(StudyLogin login : dao.find(providerNo, studyId)){
+		baseURL = login.getRemoteLoginUrl();
+		username = login.getUsername();
+		password = login.getPassword();
 	}
-
-	rs.close();
-
+	
 	String studyURL = baseURL + "?DI=PEPPER&DIPatID=&UN=" + username + "&PW=" + password ;
 	response.sendRedirect(studyURL);
 %>
