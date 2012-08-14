@@ -1872,8 +1872,10 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 				<tr>
 					<td colspan=2>
 
-						<input type="hidden" name="newSignature" id="newSignature" value="false" />
+						<input type="hidden" name="newSignature" id="newSignature" value="true" />
 						<input type="hidden" name="signatureImg" id="signatureImg" value="<%=(consultUtil.signatureImg != null ? consultUtil.signatureImg : "") %>" />
+						<input type="hidden" name="newSignatureImg" id="newSignatureImg" value="<%=signatureRequestId %>" />
+
 						<div id="signatureShow" style="display: none;">
 							<img id="signatureImgTag" src="" />
 						</div>

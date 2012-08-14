@@ -72,7 +72,7 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
-
+import org.apache.commons.lang.StringUtils;
 import oscar.OscarProperties;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
@@ -115,7 +115,12 @@ public class EctConsultationFormRequestAction extends Action {
 		boolean newSignature = request.getParameter("newSignature") != null && request.getParameter("newSignature").equalsIgnoreCase("true");
 		String signatureId = "";
 		String signatureImg = frm.getSignatureImg();
-		
+		if(StringUtils.isBlank(signatureImg)) {
+			signatureImg = request.getParameter("newSignatureImg");
+			if(signatureImg ==null) 
+				signatureImg = "";
+		}
+	
 		
         ConsultationRequestDao consultationRequestDao=(ConsultationRequestDao)SpringUtils.getBean("consultationRequestDao");
         ConsultationRequestExtDao consultationRequestExtDao=(ConsultationRequestExtDao)SpringUtils.getBean("consultationRequestExtDao");
