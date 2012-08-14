@@ -32,8 +32,9 @@ import java.sql.Statement;
 import org.oscarehr.util.DbConnectionFilter;
 
 /**
- * deprecated Use JPA instead, no new code should be written against this class.
+ * @deprecated Use JPA instead, no new code should be written against this class.
  */
+@Deprecated
 public final class DBHandler {
 
 	private DBHandler() {
