@@ -39,9 +39,11 @@
 	String providerNo = (String) session.getAttribute("user");
     String studyId = request.getParameter("study_no");
 
-	String baseURL = "http://competeii.mcmaster.ca/PDSsecurity/login.asp";
-	String username = "yilee18";
-	String password = "515750564848564853485353544852485248484851575150";
+	oscar.OscarProperties op = oscar.OscarProperties.getInstance();
+
+	String baseURL = op.getProperty("redirectstudysite_default_baseURL");
+	String username = op.getProperty("redirectstudysite_default_username");
+	String password = op.getProperty("redirectstudysite_default_password");
 
 	StudyLoginDao dao = SpringUtils.getBean(StudyLoginDao.class);
 	for(StudyLogin login : dao.find(providerNo, studyId)){
