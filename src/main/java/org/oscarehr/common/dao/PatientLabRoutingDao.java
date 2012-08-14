@@ -22,7 +22,6 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.common.dao;
 
 import javax.persistence.Query;
@@ -33,19 +32,38 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class PatientLabRoutingDao extends AbstractDao<PatientLabRouting> {
 
+	public static final String HL7 = "HL7";
+
 	public PatientLabRoutingDao() {
 		super(PatientLabRouting.class);
 	}
-	
+
 	/**
+	 * Finds routing record containing reference to the demographic record with the 
+	 * specified lab results reference number of {@link #HL7} lab type. 
+	 * 
 	 * LabId is also refereed to as Lab_no, and segmentId.
 	 */
-    public PatientLabRouting findDemographicByLabId(Integer labId) {
+	public PatientLabRouting findDemographicByLabId(Integer labId) {
+		return findDemographics(HL7, labId);
+	}
 
-    	String sqlCommand="select x from "+ this.modelClass.getName() +" x where x.labType='HL7' and x.labNumber=?1";    	
-    	Query query = entityManager.createQuery(sqlCommand);
-		query.setParameter(1, labId);
-		return(getSingleResultOrNull(query));
-    }
+	/**
+	 * Finds routing record containing reference to the demographic record with the 
+	 * specified lab type and lab results reference number. 
+	 * 
+	 * @param labType
+	 * 		Type of the lab record to look up
+	 * @param labNo
+	 * 		Number of the lab record to look up
+	 * @return
+	 * 		Returns the container pointing to the demographics or null of no matching container is found.
+	 */
+	public PatientLabRouting findDemographics(String labType, Integer labNo) {
+		Query query = entityManager.createQuery("FROM " + modelClass.getSimpleName() + " AS r WHERE r.labType = :labType AND r.labNumber = :labNo");
+		query.setParameter("labType", labType);
+		query.setParameter("labNo", labNo);
+		return getSingleResultOrNull(query);
+	}
 
 }
