@@ -198,8 +198,8 @@ public class JdbcBillingCreateBillingFile {
 		checkHeader2();
 		String header2 = "\n" + "HER" + str1Hin + hcLast + hcFirst + ch1Obj.getSex() + ch1Obj.getProvince() + space(47)
 				+ "\r";
-		if (header2.length() != 80)
-			errorFatalMsg += "Header 2 length wrong! - " + ch1Obj.getId() + "<br>";
+		if (header2.length() != 81)
+			errorFatalMsg += "Header 2 length wrong! - " + ch1Obj.getId() + " length = " + header2.length() + "<br>";
 		return header2;
 	}
 
@@ -288,7 +288,7 @@ public class JdbcBillingCreateBillingFile {
 					+ itemObj.getDx()
 					+ "</td><td class='" + styleClass + "'> &nbsp; &nbsp;" + referral + hcFlag + m_Flag + " </td></tr>";
 		} else {
-			ret = "\n<tr "+(summaryView ? "style='display:none;' class='record"+providerNo+"'": "")+">"+(summaryView? "<td class='" + styleClass + "'>" : "")+"<td class='" + styleClass + "'>&nbsp;</td> <td class='" + styleClass + "'>&nbsp;</td><td class='" + styleClass + "'>&nbsp;</td><td class='" + styleClass + "'>&nbsp;</td><td class='" + styleClass + "'>&nbsp;</td>"
+			ret = "\n<tr "+(summaryView ? "style='display:none;' class='record"+providerNo+"'": "")+">"+ "<td class='" + styleClass + "'>&nbsp;</td>" + "<td class='" + styleClass + "'>&nbsp;</td> <td class='" + styleClass + "'>&nbsp;</td><td class='" + styleClass + "'>&nbsp;</td><td class='" + styleClass + "'>&nbsp;</td><td class='" + styleClass + "'>&nbsp;</td>"
 					+ "<td class='" + styleClass + "'>&nbsp;</td> <td class='" + styleClass + "'>&nbsp;</td>" + "<td class='" + styleClass + "'>"
 					+ itemObj.getService_code() + "</td><td align='right' class='" + styleClass + "'>" + itemObj.getFee()
 					+ "</td><td align='right' class='" + styleClass + "'>" + itemObj.getDx()
