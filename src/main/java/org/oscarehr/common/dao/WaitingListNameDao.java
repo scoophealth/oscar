@@ -22,16 +22,29 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.common.dao;
+
+import javax.persistence.Query;
 
 import org.oscarehr.common.model.WaitingListName;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class WaitingListNameDao extends AbstractDao<WaitingListName>{
+public class WaitingListNameDao extends AbstractDao<WaitingListName> {
 
 	public WaitingListNameDao() {
 		super(WaitingListName.class);
+	}
+
+	/**
+	 * Gets the number of waiting list names where history flag is set to "N".
+	 * 
+	 * @return
+	 * 		Gets the number of waiting lists.
+	 */
+	public long countActiveWatingListNames() {
+		Query query = entityManager.createQuery("SELECT COUNT(*) FROM WaitingListName n WHERE n.isHistory = 'N'");
+		query.setMaxResults(1);
+		return (Long) query.getSingleResult();
 	}
 }

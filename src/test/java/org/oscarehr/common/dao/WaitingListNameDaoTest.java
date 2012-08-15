@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,37 +21,27 @@
  * Hamilton
  * Ontario, Canada
  */
+package org.oscarehr.common.dao;
 
-package oscar.oscarWaitingList;
+import static org.junit.Assert.assertTrue;
 
-import org.oscarehr.common.dao.WaitingListNameDao;
+import org.junit.Before;
+import org.junit.Test;
+import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.util.SpringUtils;
 
-/*
- * This class is an interface with the file WEB-INF/classes
- * It is a singleton class. Do not instaciate it, use the method getInstance().
- * Every time that the properties file changes, tomcat must be restarted.
- */
-public class WaitingList {
+public class WaitingListNameDaoTest extends DaoTestFixtures {
 
-	private WaitingList() {
+	private WaitingListNameDao dao = SpringUtils.getBean(WaitingListNameDao.class);
 
+	@Before
+	public void before() throws Exception {
+		SchemaUtils.restoreTable("waitingListName");
 	}
 
-	/**
-	* @return WaitingList the instance of WaitingList 
-	*/
-	public static WaitingList getInstance() {
-		return new WaitingList();
-	}
-
-	public boolean checkWaitingListTable() {
-		WaitingListNameDao dao = SpringUtils.getBean(WaitingListNameDao.class);
+	@Test
+	public void testCountActiveWatingListNames() {
 		long count = dao.countActiveWatingListNames();
-		return count > 0;
-	}
-
-	public boolean getFound() {
-		return checkWaitingListTable();
+		assertTrue(count >= 0);
 	}
 }
