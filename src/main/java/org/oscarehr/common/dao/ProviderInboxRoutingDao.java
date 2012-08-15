@@ -22,20 +22,17 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.common.dao;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Query;
 
+import org.oscarehr.common.model.IncomingLabRules;
 import org.oscarehr.common.model.ProviderInboxItem;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
-
-import oscar.oscarDB.DBHandler;
 
 /**
  *
@@ -47,94 +44,95 @@ public class ProviderInboxRoutingDao extends AbstractDao<ProviderInboxItem> {
 	public ProviderInboxRoutingDao() {
 		super(ProviderInboxItem.class);
 	}
-    public List<ProviderInboxItem> getProvidersWithRoutingForDocument(String docType,String docId){
-        int dId = Integer.parseInt(docId);
-        Query query = entityManager.createQuery("select p from ProviderInboxItem p where p.labType = ? and p.labNo = ?");
-        query.setParameter(1, docType);
-        query.setParameter(2, dId);
 
-        @SuppressWarnings("unchecked")
-        List<ProviderInboxItem> results = query.getResultList();
+	public List<ProviderInboxItem> getProvidersWithRoutingForDocument(String docType, String docId) {
+		int dId = Integer.parseInt(docId);
+		Query query = entityManager.createQuery("select p from ProviderInboxItem p where p.labType = ? and p.labNo = ?");
+		query.setParameter(1, docType);
+		query.setParameter(2, dId);
 
-        return results;
-    }
+		@SuppressWarnings("unchecked")
+		List<ProviderInboxItem> results = query.getResultList();
 
-    public boolean hasProviderBeenLinkedWithDocument(String docType,String docId,String providerNo){
-        int dId = Integer.parseInt(docId);
-        Query query = entityManager.createQuery("select p from ProviderInboxItem p where p.labType = ? and p.labNo = ? and p.providerNo=?");
-        query.setParameter(1, docType);
-        query.setParameter(2, dId);
-        query.setParameter(3, providerNo);
+		return results;
+	}
 
-        @SuppressWarnings("unchecked")
-        List<ProviderInboxItem> results = query.getResultList();
+	public boolean hasProviderBeenLinkedWithDocument(String docType, String docId, String providerNo) {
+		int dId = Integer.parseInt(docId);
+		Query query = entityManager.createQuery("select p from ProviderInboxItem p where p.labType = ? and p.labNo = ? and p.providerNo=?");
+		query.setParameter(1, docType);
+		query.setParameter(2, dId);
+		query.setParameter(3, providerNo);
 
-        return (results.size()>0);
-    }
+		@SuppressWarnings("unchecked")
+		List<ProviderInboxItem> results = query.getResultList();
 
+		return (results.size() > 0);
+	}
 
-    public int howManyDocumentsLinkedWithAProvider(String providerNo){
-    	Query query = entityManager.createQuery("select p from ProviderInboxItem p where p.providerNo=?");
-        query.setParameter(1, providerNo);
+	public int howManyDocumentsLinkedWithAProvider(String providerNo) {
+		Query query = entityManager.createQuery("select p from ProviderInboxItem p where p.providerNo=?");
+		query.setParameter(1, providerNo);
 
-        @SuppressWarnings("unchecked")
-        List<ProviderInboxItem> results = query.getResultList();
+		@SuppressWarnings("unchecked")
+		List<ProviderInboxItem> results = query.getResultList();
 
-        return results.size();
-    }
+		return results.size();
+	}
 
-    public void addToProviderInbox(String providerNo,String labNo,String labType){
+	/**
+	 * Adds lab results to the provider inbox
+	 * 
+	 * @param providerNo
+	 * 		Provider to add lab results to
+	 * @param labNo
+	 * 		Document id to be added to the inbox
+	 * @param labType
+	 * 		Type of the document to be added. Available document types are defined in {@link oscar.oscarLab.ca.on.LabResultData} class.
+	 * 
+	 */
+	// TODO Replace labType parameter with an enum
+	@SuppressWarnings("unchecked")
+    public void addToProviderInbox(String providerNo, String labNo, String labType) {
+		ArrayList<String> listofAdditionalProviders = new ArrayList<String>();
+		boolean fileForMainProvider = false;
 
-        ArrayList<String> listofAdditionalProviders = new ArrayList<String>();
-        boolean fileForMainProvider = false;
-        //TODO:Replace
-        try{
-           ResultSet rs= DBHandler.GetSQL("select * from incomingLabRules where archive = 0 and provider_no = '"+providerNo+"'");
-           while(rs.next()){
-              String status = rs.getString("status");
-              String frwdProvider = rs.getString("frwdProvider_no");
-              listofAdditionalProviders.add(frwdProvider);
-              if (status != null && status.equals("F")){
-                  fileForMainProvider = true;
-              }
-           }
+		try {
+			Query rulesQuery = entityManager.createQuery("FROM IncomingLabRules r WHERE r.archive = 0 AND r.providerNo = :providerNo");
+			rulesQuery.setParameter("providerNo", providerNo);
 
-           ProviderInboxItem p = new ProviderInboxItem();
-           p.setProviderNo(providerNo);
-           p.setLabNo(labNo);
-           p.setLabType(labType);
-           if (fileForMainProvider){
-               p.setStatus(ProviderInboxItem.FILE);
-           }else{
-               p.setStatus(ProviderInboxItem.NEW);
-           }
-           if (!hasProviderBeenLinkedWithDocument(labType,labNo,providerNo)){
-        	   persist(p);
-           }
-           for (String s:listofAdditionalProviders){
-               if (!hasProviderBeenLinkedWithDocument(labType,labNo,s)){
-                   p = new ProviderInboxItem();
-                   p.setProviderNo(s);
-                   p.setLabNo(labNo);
-                   p.setLabType(labType);
-                   if (fileForMainProvider){
-                      p.setStatus(ProviderInboxItem.FILE);
-                   }else{
-                      p.setStatus(ProviderInboxItem.NEW);
-                   }
-                 	persist(p);
-               }
-           }
+			for (IncomingLabRules rules : (List<IncomingLabRules>) rulesQuery.getResultList()) {
+				String status = rules.getStatus();
+				String frwdProvider = rules.getFrwdProviderNo();
 
-        }catch(Exception e){
-            MiscUtils.getLogger().error("Error", e);
-        }
+				listofAdditionalProviders.add(frwdProvider);
+				if (status != null && status.equals("F")) fileForMainProvider = true;
+			}
 
+			ProviderInboxItem p = new ProviderInboxItem();
+			p.setProviderNo(providerNo);
+			p.setLabNo(labNo);
+			p.setLabType(labType);
+			p.setStatus(fileForMainProvider ? ProviderInboxItem.FILE : ProviderInboxItem.NEW);
 
+			if (!hasProviderBeenLinkedWithDocument(labType, labNo, providerNo)) persist(p);
 
-    }
+			for (String s : listofAdditionalProviders) {
+				if (!hasProviderBeenLinkedWithDocument(labType, labNo, s)) {
+					p = new ProviderInboxItem();
 
+					p.setProviderNo(s);
+					p.setLabNo(labNo);
+					p.setLabType(labType);
+					p.setStatus(fileForMainProvider ? ProviderInboxItem.FILE : ProviderInboxItem.NEW);
 
+					persist(p);
+				}
+			}
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("Error", e);
+		}
 
+	}
 
 }
