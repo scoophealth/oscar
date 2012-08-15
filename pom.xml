@@ -612,13 +612,6 @@
 			<version>r938</version>
 		</dependency>
 
-		<!-- tracking data source, can be removed once we fix our database access -->
-		<dependency>
-			<groupId>TrackingBasicDataSource</groupId>
-			<artifactId>TrackingBasicDataSource</artifactId>
-			<version>0.0-SNAPSHOT</version>
-		</dependency>
-
 		<!-- xerces -->
 		<dependency>
 			<groupId>xerces</groupId>

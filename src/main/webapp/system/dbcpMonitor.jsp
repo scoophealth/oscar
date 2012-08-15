@@ -54,13 +54,15 @@ detect those and search the source.
 <%@page import="java.util.Map.Entry"%>
 
 <%
-        BasicDataSource basicDataSource = (BasicDataSource) SpringUtils.getBean("dataSource");
+	BasicDataSource basicDataSource = (BasicDataSource) SpringUtils.getBean("dataSource");
+	
+	int numActive = basicDataSource.getNumActive();
+	int numIdle = basicDataSource.getNumIdle();
+	
+	ResultSet rsProcessList = DBHandler.GetSQL("show processlist");
 
-        int numActive = basicDataSource.getNumActive();
-        int numIdle = basicDataSource.getNumIdle();
-
-        ResultSet rsProcessList = DBHandler.GetSQL("show processlist");
-
+	String logDebugMapToError=request.getParameter("logDebugMapToError");
+	if (logDebugMapToError!=null) TrackingBasicDataSource.logDebugMapToError();
 %>
 
 
@@ -201,7 +203,7 @@ detect those and search the source.
     <h3>----- DataSource Connection Monitor -----</h3>
 
 	<br />
-        <font color="blue">DataSource connections : <%=TrackingBasicDataSource.debugMap.size()%></font>
+        <font color="blue">DataSource connections : <%=TrackingBasicDataSource.debugMap.size()%></font> &nbsp;&nbsp; <a href="?logDebugMapToError=true">write map to stderr</a>
 	<br /><br />
 	<%
         //make local copy of the map to prevent thread interruption
