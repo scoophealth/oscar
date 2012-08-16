@@ -44,6 +44,7 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.OscarProperties;
 import oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler;
 import oscar.oscarResearch.oscarDxResearch.bean.dxResearchBeanHandler;
@@ -89,8 +90,13 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
 			com.quatro.service.security.SecurityManager securityMgr = new com.quatro.service.security.SecurityManager();
 
 			ArrayList<String> flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getUniveralFlowsheets();
+			
+			if (!OscarProperties.getInstance().getBooleanProperty("new_flowsheet_enabled", "true")) {
+				flowsheets.remove("diab3");
+			}
+			
 			int hash;
-			for (int f = 0; f < flowsheets.size(); f++) {
+			for (int f = 0; f < flowsheets.size(); f++) {	
 				NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
 				String flowsheetName = flowsheets.get(f);
 				if (securityMgr.hasReadAccess("_flowsheet." + flowsheetName, roleName$)) {
