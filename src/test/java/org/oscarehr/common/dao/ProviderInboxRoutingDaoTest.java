@@ -24,13 +24,19 @@
 package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
+import javax.persistence.PersistenceException;
+
+import org.hibernate.HibernateException;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.ProviderInboxItem;
 import org.oscarehr.util.SpringUtils;
+
+import oscar.oscarLab.ca.on.LabResultData;
 
 public class ProviderInboxRoutingDaoTest extends DaoTestFixtures {
 
@@ -39,10 +45,9 @@ public class ProviderInboxRoutingDaoTest extends DaoTestFixtures {
 	public ProviderInboxRoutingDaoTest() {
 	}
 
-
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("providerLabRouting");
+		SchemaUtils.restoreTable("providerLabRouting", "incomingLabRules");
 	}
 
 	@Test
@@ -52,5 +57,19 @@ public class ProviderInboxRoutingDaoTest extends DaoTestFixtures {
 		dao.persist(entity);
 
 		assertNotNull(entity.getId());
+	}
+
+	@Test
+	public void testAddToProviderRoutingBox() {
+		try {
+			dao.addToProviderInbox("1", "1", LabResultData.DOCUMENT);
+		} catch (PersistenceException e) {
+			fail("Error related to JPA configuration");
+		} catch (HibernateException e) {
+			fail("Error related to Hibernate configuration");
+		} catch (Exception e) {
+			// TODO add proper pre-initialization populate lab routing rules, result data, provider data and make sure that the routing works   
+			// just swallow for now
+		}
 	}
 }
