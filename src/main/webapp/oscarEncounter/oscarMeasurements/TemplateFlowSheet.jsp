@@ -62,11 +62,7 @@
 	if (OscarProperties.getInstance().getBooleanProperty("new_flowsheet_enabled", "true")) {
 %>
 	<%
-		if (temp.equals("diab2")) {
-	%>
-		<jsp:forward page="DiabFlowSheet.jsp" />
-	<%
-		} else if (temp.equals("diab3")) {
+		if (temp.equals("diab3")) {
 	%>
 		<jsp:forward page="DiabFlowSheet.jsp" />
 	<%
