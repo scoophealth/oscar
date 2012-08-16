@@ -26,9 +26,11 @@ package org.oscarehr.casemgmt.model;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.caisi.model.BaseObject;
@@ -86,6 +88,40 @@ public class CaseManagementNote extends BaseObject {
 
 	private CaseManagementNoteLink cmnLink = null;
 	private boolean cmnLinkRetrieved = false;
+
+	public Map<String, Object> getMap() {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+
+		map.put("id", id);
+		map.put("update_date", update_date);
+		map.put("create_date", create_date);
+		map.put("observation_date", observation_date);
+		map.put("demographic_no", demographic_no);
+		map.put("note", note);
+		map.put("signed", signed);
+		map.put("includeissue", includeissue);
+		map.put("provider_no", providerNo);
+		map.put("signing_provider_no", signing_provider_no);
+		map.put("encounter_type", encounter_type);
+		map.put("billing_code", billing_code);
+		map.put("program_no", program_no);
+		map.put("reporter_caisi_role", reporter_caisi_role);
+		map.put("reporter_caisi_team", reporter_program_team);
+		map.put("history", history);
+		map.put("provider", provider);
+		map.put("editors", editors);
+		map.put("role_name", roleName);
+		map.put("program_name", programName);
+		map.put("uuid", uuid);
+		map.put("revision", revision);
+		map.put("locked", locked);
+		map.put("archived", archived);
+		map.put("remote", remote);
+		map.put("facility_name", facilityName);
+		map.put("appointment_no", appointmentNo);
+
+		return map;
+	}
 
 	@Override
 	public boolean equals(Object obj) {

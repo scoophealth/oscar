@@ -371,7 +371,7 @@ public class NotePermissionsAction extends DispatchAction {
 
 	}
 
-	public HashMap<Program, List<Secrole>> getAllProviderAccessibleRolesForDemo(String providerNo, String demoNo) {
+	public static HashMap<Program, List<Secrole>> getAllProviderAccessibleRolesForDemo(String providerNo, String demoNo) {
 		ProgramProviderDAO programProviderDao = (ProgramProviderDAO) SpringUtils.getBean("programProviderDAO");
 		ProgramAccessDAO programAccessDAO = (ProgramAccessDAO) SpringUtils.getBean("programAccessDAO");
 		SecroleDao secroleDao = (SecroleDao) SpringUtils.getBean("secroleDao");

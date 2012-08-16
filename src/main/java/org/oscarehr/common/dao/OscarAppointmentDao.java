@@ -31,6 +31,7 @@ import javax.persistence.Query;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.AppointmentArchive;
 import org.oscarehr.common.model.Facility;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Repository;
 
@@ -187,7 +188,7 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 
 		return rs;
 	}
-	
+
 	/**
 	 * @return return results ordered by appointmentDate, most recent first
 	 */
@@ -220,5 +221,21 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 				" AND appt.appointmentDate >= CURRENT_DATE ORDER BY appt.appointmentDate");
 		query.setParameter("demographicNo", demographicId);
 		return query.getResultList();
+	}
+
+	public Appointment findDemoAppointmentToday(Integer demographicNo) {
+		Appointment appointment = null;
+
+		String sql = "SELECT a FROM Appointment a WHERE a.demographicNo = ? AND a.appointmentDate=DATE(NOW())";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, demographicNo);
+
+		try {
+			appointment = (Appointment) query.getSingleResult();
+		} catch (Exception e) {
+			MiscUtils.getLogger().info("Couldn't find appointment for demographic " + demographicNo + " today.");
+		}
+
+		return appointment;
 	}
 }

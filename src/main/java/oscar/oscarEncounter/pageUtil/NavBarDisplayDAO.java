@@ -29,7 +29,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.oscarehr.util.MiscUtils;
@@ -40,368 +42,384 @@ import org.oscarehr.util.MiscUtils;
  */
 
 public class NavBarDisplayDAO {
-    public final static int ALPHASORT = 0;
-    public final static int DATESORT = 1;
-    public final static int DATESORT_ASC = 2;
+	public final static int ALPHASORT = 0;
+	public final static int DATESORT = 1;
+	public final static int DATESORT_ASC = 2;
 
-    private String LeftHeading;
-    private String RightHeading;
-    private String LeftURL;
-    private String RightURL;
-    private String JavaScript;
-    private String PopUpHeader;
-    private ArrayList<Item> Items;
-    private ArrayList<String> PopUpMenuURLS;
-    private ArrayList<String> PopUpMenuNames;
-    private String headingColour = null;
-    private String reloadUrl = null;
+	private String LeftHeading;
+	private String RightHeading;
+	private String LeftURL;
+	private String RightURL;
+	private String JavaScript;
+	private String PopUpHeader;
+	private ArrayList<Item> Items;
+	private ArrayList<String> PopUpMenuURLS;
+	private ArrayList<String> PopUpMenuNames;
+	private String headingColour = null;
+	private String reloadUrl = null;
 
-    /** Creates a new instance of NavBarDisplayDAO */
-    public NavBarDisplayDAO() {
-        LeftHeading = null;
-        RightHeading = null;
-        LeftURL = null;
-        RightURL = null;
-        JavaScript = null;
-        PopUpHeader = null;
-        Items = new ArrayList<Item>();
-        PopUpMenuURLS = new ArrayList<String>();
-        PopUpMenuNames = new ArrayList<String>();
-    }
-
-    public static void main(String[] args) {
-	NavBarDisplayDAO dao = new NavBarDisplayDAO();
-	Random rand = new Random(System.currentTimeMillis());
-	Date d;
-
-	for( int idx = 0; idx < 10; ++idx ) {
-		NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
-		long num = rand.nextLong();
-		if( num < 0 ) num *= -1;
-		MiscUtils.getLogger().debug("Storing " + num);
-		item.setTitle("" + num);
-		d = new Date(num);
-		item.setDate(d);
-		dao.addItem(item);
+	/** Creates a new instance of NavBarDisplayDAO */
+	public NavBarDisplayDAO() {
+		LeftHeading = null;
+		RightHeading = null;
+		LeftURL = null;
+		RightURL = null;
+		JavaScript = null;
+		PopUpHeader = null;
+		Items = new ArrayList<Item>();
+		PopUpMenuURLS = new ArrayList<String>();
+		PopUpMenuNames = new ArrayList<String>();
 	}
 
-	dao.sortItems(NavBarDisplayDAO.ALPHASORT);
+	public Map<String, Object> getMap() {
+		HashMap<String, Object> map = new HashMap<String, Object>();
 
-	MiscUtils.getLogger().debug("Alphabetically Sorted:");
-	for( int idx = 0; idx < 10; ++idx)
-		MiscUtils.getLogger().debug(idx + ": " + dao.getItem(idx).getTitle());
+		map.put("LeftHeading", LeftHeading);
+		map.put("RightHeading", RightHeading);
+		map.put("LeftURL", LeftURL);
+		map.put("RightURL", RightURL);
+		map.put("PopUpHeader", PopUpHeader);
+		map.put("Items", Items);
+		map.put("PopUpMenuURLS", PopUpMenuURLS);
+		map.put("PopUpMenuNames", PopUpMenuNames);
+		map.put("headingColour", headingColour);
 
-	dao.sortItems(NavBarDisplayDAO.DATESORT_ASC);
+		return map;
+	}
 
-	MiscUtils.getLogger().debug("Chronologically Sorted:");
-	for( int idx = 0; idx < 10; ++idx)
-		MiscUtils.getLogger().debug(idx + ": " + dao.getItem(idx).getDate().toString());
+	public static void main(String[] args) {
+		NavBarDisplayDAO dao = new NavBarDisplayDAO();
+		Random rand = new Random(System.currentTimeMillis());
+		Date d;
 
-    }
+		for( int idx = 0; idx < 10; ++idx ) {
+			NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
+			long num = rand.nextLong();
+			if( num < 0 ) num *= -1;
+			MiscUtils.getLogger().debug("Storing " + num);
+			item.setTitle("" + num);
+			d = new Date(num);
+			item.setDate(d);
+			dao.addItem(item);
+		}
 
-    public void setLeftHeading(String h) {
-        LeftHeading = h;
-    }
+		dao.sortItems(NavBarDisplayDAO.ALPHASORT);
 
-    public String getLeftHeading() {
-        if( LeftHeading == null )
-            return new String("");
+		MiscUtils.getLogger().debug("Alphabetically Sorted:");
+		for( int idx = 0; idx < 10; ++idx)
+			MiscUtils.getLogger().debug(idx + ": " + dao.getItem(idx).getTitle());
 
-        return LeftHeading;
-    }
+		dao.sortItems(NavBarDisplayDAO.DATESORT_ASC);
 
-    public void setRightHeadingID(String h) {
-        RightHeading = h;
-    }
+		MiscUtils.getLogger().debug("Chronologically Sorted:");
+		for( int idx = 0; idx < 10; ++idx)
+			MiscUtils.getLogger().debug(idx + ": " + dao.getItem(idx).getDate().toString());
 
-    public String getRightHeadingID() {
-        if( RightHeading == null )
-            return new String("");
+	}
 
-        return RightHeading;
-    }
+	public void setLeftHeading(String h) {
+		LeftHeading = h;
+	}
 
-    public void setLeftURL( String url ) {
-        LeftURL = url;
-    }
+	public String getLeftHeading() {
+		if( LeftHeading == null )
+			return new String("");
 
-    public String getLeftURL() {
-        if( LeftURL == null )
-            return new String("");
+		return LeftHeading;
+	}
 
-        return LeftURL;
-    }
+	public void setRightHeadingID(String h) {
+		RightHeading = h;
+	}
 
-     public void setRightURL( String url ) {
-        RightURL = url;
-    }
+	public String getRightHeadingID() {
+		if( RightHeading == null )
+			return new String("");
 
-    public String getRightURL() {
-        if( RightURL == null )
-            return new String("");
+		return RightHeading;
+	}
 
-        return RightURL;
-    }
+	public void setLeftURL( String url ) {
+		LeftURL = url;
+	}
 
-    public void setMenuHeader(String heading) {
-        PopUpHeader = heading;
-    }
+	public String getLeftURL() {
+		if( LeftURL == null )
+			return new String("");
 
-    public String getMenuHeader() {
-        if( PopUpHeader == null )
-            return new String("");
+		return LeftURL;
+	}
 
-        return PopUpHeader;
-    }
+	public void setRightURL( String url ) {
+		RightURL = url;
+	}
 
-    public void setJavaScript(String js) {
-        JavaScript = js;
-    }
+	public String getRightURL() {
+		if( RightURL == null )
+			return new String("");
 
-    public String getJavaScript() {
-        return JavaScript;
-    }
+		return RightURL;
+	}
 
-    public void addPopUpUrl(String url) {
-        PopUpMenuURLS.add(url);
-    }
+	public void setMenuHeader(String heading) {
+		PopUpHeader = heading;
+	}
 
-    public String getPopUpUrl(int i) {
-        return PopUpMenuURLS.get(i);
-    }
+	public String getMenuHeader() {
+		if( PopUpHeader == null )
+			return new String("");
 
-    public void addPopUpText(String txt) {
-        PopUpMenuNames.add(txt);
-    }
+		return PopUpHeader;
+	}
 
-    public String getPopUpText(int i) {
-        return PopUpMenuNames.get(i);
-    }
+	public void setJavaScript(String js) {
+		JavaScript = js;
+	}
 
-    public int numPopUpMenuItems() {
-        return PopUpMenuURLS.size();
-    }
+	public String getJavaScript() {
+		return JavaScript;
+	}
 
-    public void addItem(Item i) {
-        Items.add(i);
-    }
+	public void addPopUpUrl(String url) {
+		PopUpMenuURLS.add(url);
+	}
 
-    public Item getItem(int idx) {
-        return Items.get(idx);
-    }
+	public String getPopUpUrl(int i) {
+		return PopUpMenuURLS.get(i);
+	}
 
-    public static Item Item() {
-        return new Item();
-    }
+	public void addPopUpText(String txt) {
+		PopUpMenuNames.add(txt);
+	}
 
-    public int numItems() {
-        return Items.size();
-    }
+	public String getPopUpText(int i) {
+		return PopUpMenuNames.get(i);
+	}
 
-    public void sortItems(int order ) {
-        switch(order) {
-            case DATESORT:
-                Collections.sort(Items, new Chronologic());
-                break;
-            case DATESORT_ASC:
-                Collections.sort(Items, new ChronologicAsc());
-                break;
-            case ALPHASORT:
-                Collections.sort(Items);
-        }
+	public int numPopUpMenuItems() {
+		return PopUpMenuURLS.size();
+	}
 
-    }
+	public void addItem(Item i) {
+		Items.add(i);
+	}
 
-    public void sortItems(List list, int order ) {
-        switch(order) {
-            case DATESORT:
-                Collections.sort(list, new Chronologic());
-                break;
-            case DATESORT_ASC:
-                Collections.sort(list, new ChronologicAsc());
-                break;
-            case ALPHASORT:
-                Collections.sort(list);
-        }
+	public Item getItem(int idx) {
+		return Items.get(idx);
+	}
 
-    }
+	public static Item Item() {
+		return new Item();
+	}
 
-    /**
-     *Item class holds list information for each row in left navbar of encounter form
-     */
-    public static class Item implements Comparable {
-        private String title;
-        private String value;
-        private String linkTitle;
-        private String URL;
-        private String colour;
-        private String bgColour;
-        private Date date;
-        private boolean URLJavaScript;
+	public int numItems() {
+		return Items.size();
+	}
 
-        public Item() {
-            title = "";
-            linkTitle = "";
-            URL = "";
-            colour = "";
-            bgColour = "";
-            date = null;
-            setURLJavaScript(true);
-        }
+	public void sortItems(int order ) {
+		switch(order) {
+		case DATESORT:
+			Collections.sort(Items, new Chronologic());
+			break;
+		case DATESORT_ASC:
+			Collections.sort(Items, new ChronologicAsc());
+			break;
+		case ALPHASORT:
+			Collections.sort(Items);
+		}
 
-        public void setTitle( String t ) {
-            title = t;
-        }
+	}
 
-        public String getTitle() {
-            return title;
-        }
+	public void sortItems(List list, int order ) {
+		switch(order) {
+		case DATESORT:
+			Collections.sort(list, new Chronologic());
+			break;
+		case DATESORT_ASC:
+			Collections.sort(list, new ChronologicAsc());
+			break;
+		case ALPHASORT:
+			Collections.sort(list);
+		}
 
-        public void setLinkTitle(String t) {
-            linkTitle = t;
-        }
+	}
 
-        public String getLinkTitle() {
-            return linkTitle;
-        }
+	/**
+	 *Item class holds list information for each row in left navbar of encounter form
+	 */
+	 public static class Item implements Comparable {
+		 private String title;
+		 private String value;
+		 private String linkTitle;
+		 private String URL;
+		 private String colour;
+		 private String bgColour;
+		 private Date date;
+		 private boolean URLJavaScript;
 
-        public void setURL(String url) {
-            URL = url;
-        }
+		 public Item() {
+			 title = "";
+			 linkTitle = "";
+			 URL = "";
+			 colour = "";
+			 bgColour = "";
+			 date = null;
+			 setURLJavaScript(true);
+		 }
 
-        public String getURL() {
-            return URL;
-        }
+		 public void setTitle( String t ) {
+			 title = t;
+		 }
 
-        public void setColour(String c ) {
-            colour = c;
-        }
+		 public String getTitle() {
+			 return title;
+		 }
 
-        public String getColour() {
-            return colour;
-        }
+		 public void setLinkTitle(String t) {
+			 linkTitle = t;
+		 }
 
-        public void setBgColour(String c ) {
-            bgColour = c;
-        }
+		 public String getLinkTitle() {
+			 return linkTitle;
+		 }
 
-        public String getBgColour() {
-            return bgColour;
-        }
+		 public void setURL(String url) {
+			 URL = url;
+		 }
 
-        public void setDate(Date d) {
-            date = d;
-        }
+		 public String getURL() {
+			 return URL;
+		 }
 
-        public Date getDate() {
-            return date;
-        }
+		 public void setColour(String c ) {
+			 colour = c;
+		 }
 
-        public boolean isURLJavaScript() {
-	        return URLJavaScript;
-        }
+		 public String getColour() {
+			 return colour;
+		 }
 
-		public void setURLJavaScript(boolean uRLJavaScript) {
-	        URLJavaScript = uRLJavaScript;
-        }
+		 public void setBgColour(String c ) {
+			 bgColour = c;
+		 }
 
-		//default compare is alphabetical
-        public int compareTo( Object o ) throws NullPointerException {
-            if( o == null )
-                throw new NullPointerException();
+		 public String getBgColour() {
+			 return bgColour;
+		 }
 
-            Item i = (Item)o;
+		 public void setDate(Date d) {
+			 date = d;
+		 }
 
-            return title.compareTo(i.getTitle());
-        }
+		 public Date getDate() {
+			 return date;
+		 }
 
-        public boolean equals( Object o ) {
-            if( o == null )
-                return false;
+		 public boolean isURLJavaScript() {
+			 return URLJavaScript;
+		 }
 
-            return (compareTo(o) == 0);
-        }
+		 public void setURLJavaScript(boolean uRLJavaScript) {
+			 URLJavaScript = uRLJavaScript;
+		 }
 
-        public int hashCode() {
-            return title.hashCode();
-        }
+		 //default compare is alphabetical
+		 public int compareTo( Object o ) throws NullPointerException {
+			 if( o == null )
+				 throw new NullPointerException();
 
-        public String getValue() {
-            return value;
-        }
+			 Item i = (Item)o;
 
-        public void setValue(String value) {
-            this.value = value;
-        }
-    }
+			 return title.compareTo(i.getTitle());
+		 }
 
-    public class Chronologic implements Comparator {
-        public int compare( Object o1, Object o2 ) {
-            Item i1 = (Item)o1;
-            Item i2 = (Item)o2;
+		 public boolean equals( Object o ) {
+			 if( o == null )
+				 return false;
 
-            Date d1 = i1.getDate();
-            Date d2 = i2.getDate();
+			 return (compareTo(o) == 0);
+		 }
 
-            if( d1 == null && d2 != null )
-                return -1;
-            else if( d1 != null && d2 == null )
-                return 1;
-            else if( d1 == null && d2 == null )
-                return 0;
-            else
-                return i1.getDate().compareTo(i2.getDate());
-        }
-    }
+		 public int hashCode() {
+			 return title.hashCode();
+		 }
 
-     public class ChronologicAsc implements Comparator {
-        public int compare( Object o1, Object o2 ) {
-            Item i1 = (Item)o1;
-            Item i2 = (Item)o2;
-            Date d1 = i1.getDate();
-            Date d2 = i2.getDate();
+		 public String getValue() {
+			 return value;
+		 }
 
-            /*if( d1.before(d2) )
+		 public void setValue(String value) {
+			 this.value = value;
+		 }
+	 }
+
+	 public class Chronologic implements Comparator {
+		 public int compare( Object o1, Object o2 ) {
+			 Item i1 = (Item)o1;
+			 Item i2 = (Item)o2;
+
+			 Date d1 = i1.getDate();
+			 Date d2 = i2.getDate();
+
+			 if( d1 == null && d2 != null )
+				 return -1;
+			 else if( d1 != null && d2 == null )
+				 return 1;
+			 else if( d1 == null && d2 == null )
+				 return 0;
+			 else
+				 return i1.getDate().compareTo(i2.getDate());
+		 }
+	 }
+
+	 public class ChronologicAsc implements Comparator {
+		 public int compare( Object o1, Object o2 ) {
+			 Item i1 = (Item)o1;
+			 Item i2 = (Item)o2;
+			 Date d1 = i1.getDate();
+			 Date d2 = i2.getDate();
+
+			 /*if( d1.before(d2) )
                 return 1;
             else if( d1.after(d2) )
                 return -1;
             else
                 return 0;
-             */
-            if( d1 == null && d2 != null )
-                return -1;
-            else if( d1 != null && d2 == null )
-                return 1;
-            else if( d1 == null && d2 == null )
-                return 0;
-            else
-                return -(i1.getDate().compareTo(i2.getDate()));
-        }
-    }
+			  */
+			 if( d1 == null && d2 != null )
+				 return -1;
+			 else if( d1 != null && d2 == null )
+				 return 1;
+			 else if( d1 == null && d2 == null )
+				 return 0;
+			 else
+				 return -(i1.getDate().compareTo(i2.getDate()));
+		 }
+	 }
 
-    public String getHeadingColour() {
-        return headingColour;
-    }
+	 public String getHeadingColour() {
+		 return headingColour;
+	 }
 
-    public void setHeadingColour(String headingColour) {
-        this.headingColour = headingColour;
-    }
+	 public void setHeadingColour(String headingColour) {
+		 this.headingColour = headingColour;
+	 }
 
-    public boolean hasHeadingColour(){
-        boolean hasHeadingColour = false;
-        if (this.headingColour != null){
-           hasHeadingColour = true;
-        }
-        return hasHeadingColour;
-    }
+	 public boolean hasHeadingColour(){
+		 boolean hasHeadingColour = false;
+		 if (this.headingColour != null){
+			 hasHeadingColour = true;
+		 }
+		 return hasHeadingColour;
+	 }
 
-	public String getReloadUrl() {
-    	return reloadUrl;
-    }
+	 public String getReloadUrl() {
+		 return reloadUrl;
+	 }
 
-	public void setReloadUrl(String reloadUrl) {
-    	this.reloadUrl = reloadUrl;
-    }
+	 public void setReloadUrl(String reloadUrl) {
+		 this.reloadUrl = reloadUrl;
+	 }
 
 
 }

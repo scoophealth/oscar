@@ -10649,3 +10649,21 @@ CREATE TABLE `PrintResourceLog` (
   PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `eyeform_macro_def` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `macroName` varchar(255),
+  `lastUpdated` datetime,
+  `copyFromLastImpression` tinyint(1),
+  `impressionText` text,
+  `planText` text,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `eyeform_macro_billing` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `macroId` int(11),
+  `billingServiceCode` varchar(50),
+  `multiplier` double,
+  PRIMARY KEY (`id`)
+);
+
