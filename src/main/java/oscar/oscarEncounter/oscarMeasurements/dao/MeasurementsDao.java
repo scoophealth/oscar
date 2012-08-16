@@ -140,4 +140,36 @@ public class MeasurementsDao extends HibernateDaoSupport {
 		}
 		return null;
 	}
+
+	public HashMap<String, Measurements> getMeasurementsPriorToDate(String demographicNo, Date d) {
+		String queryStr = "From Measurements m WHERE m.demographicNo = " + demographicNo + " AND m.dateObserved <= ?";
+
+    	List<Measurements> rs = getHibernateTemplate().find(queryStr, new Object[] { d } );
+    	HashMap<String,Measurements> map = new HashMap<String,Measurements>();
+
+    	for(Measurements m:rs) {
+    		map.put(m.getType(), m);
+    	}
+
+    	return map;
+	}
+
+	public List<Date> getDatesForMeasurements(String demographicNo, String[] types) {
+		StringBuilder sb = new StringBuilder();
+    	for(String type:types) {
+    		if(sb.length()>0) {
+    			sb.append(",");
+    		}
+    		sb.append("'");
+    		sb.append(StringEscapeUtils.escapeSql(type));
+    		sb.append("'");
+    	}
+
+		String queryStr = "SELECT DISTINCT m.dateObserved FROM Measurements m WHERE m.demographicNo = '" +
+			StringEscapeUtils.escapeSql(demographicNo) + "' AND m.type IN (" + sb.toString() + ") ORDER BY m.dateObserved DESC";
+
+		List<Date> results = getHibernateTemplate().find(queryStr);
+
+		return results;
+	}
 }

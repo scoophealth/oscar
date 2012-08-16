@@ -38,7 +38,7 @@
 
     boolean isSiteAccessPrivacy=false;
     boolean isTeamAccessPrivacy=false;
-    
+
     MyGroupAccessRestrictionDao myGroupAccessRestrictionDao = SpringUtils.getBean(MyGroupAccessRestrictionDao.class);
 %>
 <security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
@@ -213,7 +213,7 @@ public boolean patientHasOutstandingPrivateBills(String demographicNo){
     if( defaultServiceType == null ) {
         defaultServiceType = "";
     }
-    
+
     Collection<Integer> eforms = providerPreference2.getAppointmentScreenEForms();
     StringBuilder eformIds = new StringBuilder();
     for( Integer eform : eforms ) {
@@ -225,7 +225,7 @@ public boolean patientHasOutstandingPrivateBills(String demographicNo){
     for( String formName : forms ) {
     	ectFormNames = ectFormNames.append("&encounterFormName=" + formName);
     }
-    
+
     boolean bShortcutIntakeForm = oscarVariables.getProperty("appt_intake_form", "").equalsIgnoreCase("on") ? true : false;
 
     String newticklerwarningwindow=null;
@@ -1226,7 +1226,7 @@ if (curProvider_no[provIndex].equals(provNum)) { %>
 	for (Map provider : resultList) {
 		boolean skip = checkRestriction(restrictions,(String)provider.get("provider_no"));
 		if(!skip) {
-	
+
 %>
 <option value="<%=provider.get("provider_no")%>" <%=mygroupno.equals(provider.get("provider_no"))?"selected":""%>>
 		<%=provider.get("last_name")+", "+provider.get("first_name")%></option>
@@ -1241,7 +1241,7 @@ if (curProvider_no[provIndex].equals(provNum)) { %>
 	resultList = oscarSuperManager.find("providerDao", "searchmygroupno", new Object[] {});
 	for (Map group : resultList) {
 		boolean skip = checkRestriction(restrictions,(String)group.get("mygroup_no"));
-	
+
 		if (!skip && (!bMultisites || siteGroups == null || siteGroups.size() == 0 || siteGroups.contains(group.get("mygroup_no")))) {
 %>
   <option value="<%="_grp_"+group.get("mygroup_no")%>"
@@ -1253,7 +1253,7 @@ if (curProvider_no[provIndex].equals(provNum)) { %>
 	resultList = oscarSuperManager.find("providerDao", "searchprovider", new Object[] {});
 	for (Map provider : resultList) {
 		boolean skip = checkRestriction(restrictions,(String)provider.get("provider_no"));
-		
+
 		if (!skip && (!bMultisites || siteProviderNos  == null || siteProviderNos.size() == 0 || siteProviderNos.contains(provider.get("provider_no")))) {
 %>
   <option value="<%=provider.get("provider_no")%>" <%=mygroupno.equals(provider.get("provider_no"))?"selected":""%>>
@@ -1724,6 +1724,12 @@ if( OscarProperties.getInstance().getProperty("SHOW_PREVENTION_STOP_SIGNS","fals
 
 
 <%= (bShortcutIntakeForm) ? "| <a href='#' onClick='popupPage(700, 1024, \"formIntake.jsp?demographic_no="+demographic_no+"\")' title='Intake Form'>In</a>" : "" %>
+
+<!--  eyeform open link -->
+<% if (oscar.OscarProperties.getInstance().isPropertyActive("new_eyeform_enabled") && !isWeekView) { %>
+	| <a href="#" onClick='popupPage(800, 1280, "../eyeform/eyeform.jsp?demographic_no=<%=demographic_no %>&appointment_no=<%=appointment.get("appointment_no")%>");return false;' title="EyeForm">EF</a>
+<% } %>
+
 <!-- billing code block -->
 <% if (!isWeekView) { %>
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r">
@@ -1804,7 +1810,7 @@ if( OscarProperties.getInstance().getProperty("SHOW_PREVENTION_STOP_SIGNS","fals
 	  <%@include file="appointmentFormsLinks.jspf" %>
 
 	<oscar:oscarPropertiesCheck property="appt_pregnancy" value="true" defaultVal="false">
-		
+
 		<c:set var="demographicNo" value="<%=demographic_no %>" />
 	   <jsp:include page="appointmentPregnancy.jspf" >
 	   	<jsp:param value="${demographicNo}" name="demographicNo"/>
