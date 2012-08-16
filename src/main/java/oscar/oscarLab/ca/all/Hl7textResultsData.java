@@ -140,8 +140,9 @@ public class Hl7textResultsData {
                     	comments += comments.length()>0 ? "\n"+h.getOBXComment(i,j,l) : h.getOBXComment(i,j,l);
                 	}
 
-                    String sql = "SELECT b.ident_code, type.measuringInstruction FROM measurementMap a, measurementMap b, measurementType type WHERE b.lab_type='FLOWSHEET' AND a.ident_code='"+identifier+"' AND a.loinc_code = b.loinc_code and type.type = b.ident_code";
+                    String sql = "SELECT b.ident_code, type.measuringInstruction FROM measurementMap a, measurementMap b, measurementType type WHERE b.lab_type='FLOWSHEET' AND a.ident_code=? AND a.loinc_code = b.loinc_code and type.type = b.ident_code";
                     PreparedStatement pstmt = conn.prepareStatement(sql);
+                    pstmt.setString(1, identifier);
                     String measType="";
                     String measInst="";
                     ResultSet rs = pstmt.executeQuery();

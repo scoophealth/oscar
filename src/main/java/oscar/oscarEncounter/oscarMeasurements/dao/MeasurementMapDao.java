@@ -47,10 +47,10 @@ public class MeasurementMapDao extends HibernateDaoSupport {
         }
 
         public List<Measurementmap> getMapsByIdent(String identCode) {
-            String queryStr = "FROM Measurementmap m WHERE m.identCode = '"+identCode+"' ORDER BY m.id";
-
+            String queryStr = "FROM Measurementmap m WHERE m.identCode=? ORDER BY m.id";
+			
             @SuppressWarnings("unchecked")
-            List<Measurementmap> rs = getHibernateTemplate().find(queryStr);
+            List<Measurementmap> rs = getHibernateTemplate().find(queryStr, new Object[]{identCode});
 
             return rs;
         }
