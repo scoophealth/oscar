@@ -51,6 +51,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.ProviderPreference;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.decisionSupport.service.DSService;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
@@ -137,6 +138,8 @@ public final class LoginAction extends DispatchAction {
             if (session != null) {
                 session.invalidate();
                 session = request.getSession(); // Create a new session for this user
+                LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+                loggedInInfo.session=session;
             }
 
             logger.debug("Assigned new session for: " + strAuth[0] + " : " + strAuth[3] + " : " + strAuth[4]);
