@@ -72,8 +72,7 @@ public class FrmBCNewBorn2008Record extends FrmRecord {
 
             sql = "SELECT last_name, first_name, address, city, province, postal, phone,phone2, hin FROM demographic WHERE demographic_no = "
                     + demographicNo;
-            DBHelp db = new DBHelp();
-            ResultSet rs = db.searchDBRecord(sql);
+            ResultSet rs = DBHelp.searchDBRecord(sql);
             if (rs.next()) {
                 props.setProperty("c_surname_cur", oscar.Misc.getString(rs,"last_name"));
                 props.setProperty("c_givenName_cur", oscar.Misc.getString(rs,"first_name"));

@@ -222,9 +222,7 @@ public class InfirmAction extends BaseAction
 	}
 
 	public ActionForward getSig(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception
-	{
+			HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("====> inside getSig action.");
 		String providerNo=request.getParameter("providerNo");
 		if (providerNo==null) providerNo=(String) request.getSession().getAttribute("user");

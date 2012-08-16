@@ -23,14 +23,22 @@
  */
 package org.oscarehr.common.hl7.v2;
 
-import java.net.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.FilenameFilter;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.net.Socket;
 import java.util.TimerTask;
-
-import oscar.OscarProperties;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
+
+import oscar.OscarProperties;
 
 /**
  * Class HL7A04TransportTask
@@ -228,7 +236,7 @@ public class EmeraldHL7A04TransportTask extends TimerTask {
 			if (messageReceivedPart == null)
 				break;
 			messageReceived += messageReceivedPart;
-			if ((int)messageReceivedPart.charAt(0) == 28) // (char)0x1c
+			if (messageReceivedPart.charAt(0) == 28) // (char)0x1c
 				break;
 		}
 		
