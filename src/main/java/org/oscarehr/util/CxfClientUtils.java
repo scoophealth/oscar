@@ -51,8 +51,13 @@ import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.WSPasswordCallback;
 import org.apache.ws.security.handler.WSHandlerConstants;
 
+import oscar.OscarProperties;
+
 public class CxfClientUtils
 {
+	private static long connectionTimeout=Long.parseLong(OscarProperties.getInstance().getProperty("web_service_client.connection_timeout_ms"));
+	private static long receiveTimeout=Long.parseLong(OscarProperties.getInstance().getProperty("web_service_client.received_timeout_ms"));
+	
 	public static class TrustAllManager implements X509TrustManager
 	{
 		@Override
@@ -140,9 +145,9 @@ public class CxfClientUtils
 	{
 		HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
 
-		httpClientPolicy.setConnectionTimeout(4000);
+		httpClientPolicy.setConnectionTimeout(connectionTimeout);
 		httpClientPolicy.setAllowChunking(false);
-		httpClientPolicy.setReceiveTimeout(10000);
+		httpClientPolicy.setReceiveTimeout(receiveTimeout);
 
 		httpConduit.setClient(httpClientPolicy);
 	}
