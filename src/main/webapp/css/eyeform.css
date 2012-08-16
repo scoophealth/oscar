@@ -1,0 +1,869 @@
+body {
+	font-family: Verdana,Tahoma,Arial,sans-serif;
+	font-size: 10px;
+	line-height: 11px;
+}
+
+#leftBar {
+	width: 200px;
+	padding-right: 10px;
+	position: relative;
+	float: left;
+	border-right: 1px solid #9D9D9D;
+	margin-bottom: 10px;
+}
+
+#formContent {
+	position: relative;
+	float: left;
+	width: 80%;
+}
+
+#complaint {
+	background: #375F85;
+	color: white;
+	padding: 2px;
+	padding-left: 10px;
+	margin-left: 8px;
+	display: none;
+	cursor: pointer;
+}
+
+#complaint .title {
+	font-weight: bold;
+	margin-right: 5px;
+}
+
+.formBoxes {
+	margin-left: 8px;
+	width: 99.4%;
+	overflow: auto;
+}
+
+.smallBox {
+	width: 32.93%;
+	border: 1px solid #9D9D9D;
+	margin-right: 2px;
+	position: relative;
+	float: left;
+	margin-top: 2px;
+}
+
+.smallBox .title, .wideBox .title, .halfBox .title {
+	background: #9D9D9D;
+	font-weight: bold;
+	padding: 2px;
+	padding-left: 8px;
+	color: white;
+	cursor: default;
+	height: 12px;
+}
+
+.wideBox {
+	width: 99%;
+	border: 1px solid #9D9D9D;
+	position: relative;
+	float: left;
+	margin-left: 8px;
+	margin-top: 2px;
+}
+
+.halfBox {
+	width: 49.59%;
+	border: 1px solid #9D9D9D;
+	margin-right: 2px;
+	position: relative;
+	float: left;
+	margin-top: 2px;
+}
+
+.tallHalfBox {
+	height: 200px;
+}
+
+.boxTitleLink .title:hover {
+	cursor: pointer;
+	background-color: #7D7D7D;
+}
+
+.content {
+	padding: 4px;
+	clear: both;
+	overflow: auto;
+	height: 88.5%;
+}
+
+.explanation {
+	color: #9D9D9D;
+    font-style: italic;
+    margin: 0 0 2px 5px;
+}
+
+.showAllBtn {
+	display: none;
+}
+
+.smallBox .content {
+	height: 70px;
+}
+
+#leftBar .smallBox .content {
+	height: auto;
+	min-height: 10px;
+}
+
+#leftBar .smallBox .content ul li.oldEntry {
+	display: none;
+}
+
+#leftBar .smallBox .content .showAllBtn {
+	display: inline-block;
+	border: 1px solid #656565;
+	margin-top: 3px;
+}
+
+.content ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.content ul li strong {
+	margin-right: 8px;
+}
+
+.content ul li {
+	padding-bottom: 2px;
+}
+
+.content ul li a {
+	color: black;
+	text-decoration: none;
+}
+
+.content ul li:hover, .content ul li.openBox {
+	background: #757575;
+	color: white;
+	cursor: pointer;
+}
+
+.content ul li.updating:hover {
+	background: white;
+	color: black;
+}
+
+.content ul li .archiveNoteBtn {
+	display: none;
+	float: right;
+	position: relative;
+	line-height: 10px;
+	border: 1px solid white;
+}
+
+.content ul li .archiveNoteBtn:hover {
+	border: 1px solid #656565;
+}
+
+.content ul li:hover .archiveNoteBtn {
+	display: block;
+}
+
+#leftBar .smallBox {
+	width: 100%;
+	display: block;
+}
+
+.highlight {
+	border: 1px solid #757575;
+}
+
+.highlight .title {
+	background: #757575;
+}
+
+.lastVisit {
+	color: darkred;
+	font-style: italic;
+}
+
+.thisVisit {
+	font-weight: bold;
+	color: brown;
+}
+
+th {
+	text-align: left;
+}
+
+.highlight .title .uiBarBtn {
+	background: #A5A5A5;
+}
+
+.highlight .title .uiBarBtn:hover {
+	color: #656565;
+	background: white;
+}
+
+.uiBarBtn {
+	position: relative;
+	float: right;
+	line-height: 8px;
+	border-radius: 2px;
+	background: #656565;
+	color: white;
+	font-weight: bold;
+	font-size: 12px;
+	cursor: pointer;
+	padding: 2px;
+	top: -1px;
+	margin-left: 4px;
+}
+
+.uiBarBtn:hover, .uiBarBtnOn {
+	color: #656565;
+	background: white;
+}
+
+.uiBarBtn .text {
+	position: relative;
+	top: -1px;
+}
+
+.uiBarBtn .smallerText {
+	font-size: 9px;
+}
+
+.content .historyList .item {
+	padding: 4px;
+}
+
+.content .historyList .item:hover {
+	background: #656565;
+	color: white;
+	cursor: pointer;
+}
+
+
+.uiTooltip {
+	display: inline-block;
+	position: absolute;
+}
+
+.uiTooltip .tooltipContent {
+	font-size: 12px;
+	color: white;
+	background: black;
+	display: inline-block;
+	padding: 4px;
+	padding-left: 8px;
+	padding-right: 8px;
+	padding-bottom: 6px;
+	font-style: normal;
+}
+
+.uiTooltip .tooltipArrow {
+	width: 0;
+	height: 0;
+	border-top: 8px solid transparent;
+	border-bottom: 8px solid transparent;
+	border-left: 8px solid black;
+	position: relative;
+	bottom: 8px;
+}
+
+td {
+	vertical-align: top;
+	padding-right: 10px;
+}
+
+.btn {
+	vertical-align: middle;
+}
+
+
+.uiBtn {
+	margin-top: 10px;
+	-moz-user-select: none;
+	background: #A5A5A5;
+	border: 1px solid #858585;
+	color: #FFFFFF;
+	text-shadow: 0 1px rgba(0, 0, 0, 0.1);
+	border-radius: 2px;
+	cursor: pointer;
+	font-size: 11px;
+	font-weight: bold;
+	height: 27px;
+	line-height: 27px;
+	margin-right: 16px;
+	min-width: 56px;
+	outline: 0 none;
+	padding: 0 8px;
+	text-align: center;
+	position: relative;
+	display: inline-block;
+}
+
+.floatRight {
+	position: relative;
+	float: right;
+}
+
+.saveSignExitBtn {
+	background: #858585;
+	border: 1px solid #555555;
+	margin-right: 0;
+}
+
+.saveBtn {
+	background: #858585;
+	border: 1px solid #555555;
+	margin-right: 5px;
+}
+
+#billBtn {
+	background: #375F85;
+	border: 1px solid #042B52;
+	margin-right: 5px;
+	margin-left: 10px;
+}
+
+#patientInfo {
+	margin: 8px;
+	margin-left: 10px;
+	padding-bottom: 4px;
+	font-size: 14px;
+	border-bottom: 1px solid black;
+	margin-right: 0px;
+}
+
+#patientInfo .name {
+	font-weight: bold;
+	margin-right: 10px;
+}
+
+#patientInfo .mrp {
+	padding-left: 10px;
+}
+
+#patientInfo .uiBarBtn {
+	line-height: 10px;
+	border: 1px solid white;
+}
+
+#patientInfo .uiBarBtn:hover, #patientInfo .uiBarBtnOn {
+	border: 1px solid #656565;
+}
+
+#measurementsTable {
+	position: absolute;
+	pading: 10px;
+	margin: 10px;
+	border: 1px solid black;
+	background: white;
+	z-index: 200;
+}
+
+#closeMeasurementsBtn {
+	position: relative;
+	float: right;
+}
+
+.content ul li input, #complaintBox {
+	border: 0;
+	border-bottom: 1px dashed black;
+	width: 100%;
+}
+
+#complaintBox {
+	display: none;
+	width: 85%;
+	color: white;
+	background: #375F85;
+}
+
+.planTable th {
+	vertical-align: middle;
+	text-align: right;
+	font-weight: normal;
+	font-size: 10px;
+}
+
+.measurementsTitle {
+	cursor: move;
+	color: white;
+    font-size: 14px;
+    height: 50px;
+    background: #C5C5C5;
+}
+
+.measurementsTitle span {
+	position: relative;
+	float: left;
+	margin: 18px 10px 10px 5px;
+}
+
+.popoutBox {
+	border: 3px solid #6D6D6D;
+	width: 550px;
+	position: absolute;
+	background: white;
+	box-shadow: 0px 0px 5px black;
+	z-index: 400;
+}
+
+.popoutBox .arrow {
+	border-top: 8px solid transparent;
+	border-bottom: 8px solid transparent;
+	border-right: 8px solid #6D6D6D;
+	width: 0;
+	height: 0;
+	position: absolute;
+	top: 60px;
+	left: -10px;
+}
+
+.popoutBox .topArrow {
+	border-left: 8px solid transparent;
+	border-right: 8px solid transparent;
+	border-bottom: 8px solid #6D6D6D;
+	position: absolute;
+	width: 0;
+	height: 0;
+	top: -10px;
+	left: 283px;
+}
+
+.popoutBox table th {
+	font-size: 12px;
+	vertical-align: top;
+	padding-top: 7px;
+	text-align: right;
+}
+
+.popoutBox .boxContent .boxTitle {
+	font-size: 14px;
+	font-weight: bold;
+	margin-bottom: 10px;
+	padding: 10px;
+	background: #6D6D6D;
+	color: white;
+	cursor: move;
+}
+
+.popoutBox .boxContent .explanation {
+	padding-left: 7px;
+	padding-bottom: 4px;
+	font-size: 12px;
+}
+
+.popoutBox .boxContent table {
+	padding-left: 5px;
+}
+
+.popoutBox .boxContent .uiBtn {
+	margin-bottom: 10px;
+}
+
+.popoutBox .boxContent .fullBoxContent {
+	background: #6D6D6D;
+	color: white;
+	padding: 10px;
+	padding-top: 5px;
+	font-size: 12px;
+	cursor: default;
+}
+
+.popoutBox .boxContent .fullBoxContent .messageContent {
+	line-height: 13px;
+}
+
+.popoutBox .boxContent .fullBoxContent .details {
+	padding-top: 10px;
+}
+
+.popoutBox .uiCloseBtn {
+	background: white;
+	color: #656565;
+	height: 10px;
+	width: 9px;
+}
+
+.popoutBox .uiCloseBtn .text {
+	left: 1px;
+	top: 0;
+}
+
+#newSpecsTable th {
+	text-align: left;
+	width: auto;
+}
+
+.newSpecsBox th {
+	width: 100px;
+	padding-right: 5px;
+}
+
+.newSpecsBox select {
+	margin-top: 3px;
+}
+
+.measurementsContent {
+	height: 600px;
+	overflow-y: scroll;
+}
+
+.measurementsBox {
+	width: 750px;
+}
+
+.measurementItem, .mainMeasurements em {
+	margin-right: 4px;
+}
+
+.openAddList {
+	width: auto;
+	background: #6D6D6D;
+}
+
+#planSendTicklerTo {
+	margin-bottom: 10px;
+}
+
+.loaderImg {
+	margin-left: 10px;
+	display: none;
+}
+
+#saveMsg {
+	margin-top: 20px;
+	font-size: 20px;
+	margin-right: 15px;
+}
+
+.highlightTime {
+	background-color: yellow;
+}
+
+#highlightSlider {
+	width: 95%;
+	margin-bottom: 4px;
+	margin-left: 5px;
+}
+
+.ui-slider-horizontal {
+	height: 0.5em;
+}
+
+.ui-slider .ui-slider-handle {
+	height: 0.95em;
+	width: 0.95em;
+}
+
+.highlightBox {
+	border: 1px solid #9D9D9D;
+	border-radius: 5px;
+	padding: 4px;
+	margin-bottom: 4px;
+	cursor: default;
+}
+
+.listBox .boxContent .fullBoxContent .uiBarBtn {
+	width: auto;
+}
+
+.macroBox {
+	background-color: #9D9D9D;
+	margin-bottom: 5px;
+	margin-top: 3px;
+}
+
+.macroBtn {
+	width: 12px;
+	font-size: 12px;
+	top: 0px;
+	line-height: 16px;
+	padding-left: 5px;
+	padding-right: 5px;
+	margin-top: 5px;
+	margin-right: 4px;
+}
+
+.macroBox input {
+	margin-left: 4px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	padding: 2px;
+	width: 80%;
+	border: 1px solid #9D9D9D;
+}
+
+.macroListBox {
+	width: 640px;
+}
+
+.macroBillingItem {
+	padding: 3px 5px 3px 5px;
+	margin: 6px;
+	background: #9D9D9D;
+	color: white;
+	cursor: default;
+	user-select: none;
+	border-radius: 5px;
+	white-space: nowrap;
+	position: relative;
+	float: left;
+}
+
+.macroBillingItem .removeBillingItem {
+	color: #9D9D9D;
+	font-weight: bold;
+	background: white;
+	border-radius: 4px;
+	line-height: 14px;
+	padding: 0 5px 3px 5px;
+	font-size: 12px;
+	display: inline-block;
+}
+
+.macroBillingItem:hover {
+	background: #375F85;
+}
+
+.macroBillingItem:hover .removeBillingItem {
+	color: #375F85;
+	cursor: pointer;
+}
+
+.dxBillingItem {
+	background: #375F85;
+}
+
+.dxBillingItem .removeBillingItem {
+	color: #375F85;
+}
+
+.dxBillingItem:hover {
+	background: #ADAB6F;
+}
+
+.dxBillingItem:hover .removeBillingItem {
+	color: #ADAB6F;
+}
+
+.macroListBox input, .macroListBox textarea {
+	width: 335px;
+}
+
+.macroListBox .macroList {
+	width: 175px;
+	height: 300px;
+	margin-bottom: 10px;
+}
+
+.macroListBox .macroControls {
+	padding-top: 5px;
+	padding-right: 3px;
+	background-color: #9D9D9D;
+	height: 15px;
+}
+
+.planInputBox {
+	width: 450px;
+}
+
+#macroImpressionBox {
+	width: 340px;
+	position: relative;
+	top: -1px;
+	resize: none;
+}
+
+.autocompleteList {
+	position: absolute;
+	z-index: 40;
+	border: 1px solid #ADADAD;
+	background: white;
+}
+
+.autocompleteList .listItem {
+	padding: 5px 4px 8px 5px;
+	border-bottom: 1px dotted #ADADAD;
+	color: black;
+}
+
+.autocompleteList .listItem .autocompleteTitle {
+	font-weight: bold;
+	padding-right: 4px;
+	color: #375F85;
+}
+
+.autocompleteList .listItem:hover .autocompleteTitle, .autocompleteList .selectedListItem .autocompleteTitle {
+	color: white;
+}
+
+.autocompleteList .listItem:hover, .autocompleteList .selectedListItem {
+	background-color: #375F85;
+	cursor: pointer;
+	color: white;
+}
+
+#macroAutocomplete {
+	top: 24px;
+	left: 4px;
+}
+
+.macroField {
+	border: 2px solid red;
+}
+
+#planBox {
+	width: 98%;
+}
+
+
+.measurementsTable {
+	width: 100%;
+}
+
+.selectedMeasurementsTable {
+	background-color: #EFEFEF;
+}
+
+.measurementsTable:hover {
+	background-color: #656565;
+	color: white;
+	cursor: pointer;
+}
+
+.measurementsTable .measurementsDate {
+	width: 20%;
+}
+
+.measurementsTable .measurementsDetail {
+	width: 80%;
+}
+
+
+/* Billing box */
+.billInputItem {
+	display: inline-block;
+	padding-bottom: 4px;
+}
+
+#dxCodeMaximumError, #billCodeMaximumError, #dateError {
+	margin: 3px;
+	font-weight: bold;
+	color: red;
+	display: none;
+}
+
+
+.smallBoxTextarea {
+	border: medium none;
+    font-family: Verdana,Tahoma,Arial,sans-serif;
+    font-size: 10px;
+    height: 90%;
+    padding: 4px;
+    resize: none;
+    width: 98.75%;
+}
+
+.smallBox .textBoxContent {
+	height: 78px;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+}
+
+
+#billDate {
+	width: 125px;
+}
+
+.calendar {
+	z-index: 400;
+}
+
+#billDateBtn {
+	margin-left: 2px;
+    position: relative;
+    top: 2px;
+}
+
+#billingHalfBox {
+	display: none;
+}
+
+#measurementsSavingMessage {
+	font-weight: bold;
+	margin: 4px;
+	font-size: 12px;
+	cursor: default;
+	display: none;
+}
+
+.appointmentSelectBtn {
+	margin: 5px;
+	position: relative;
+	bottom: 3px;
+	font-size: 11px;
+}
+
+.appointmentSelectBtn .appointmentDate .appointmentDateText {
+	margin-right: 4px;
+}
+
+.appointmentSelectBtn:hover .appointmentDate,
+.appointmentSelectBtnOn .appointmentDate {
+	border-color: #656565;
+	color: #656565;
+	background: white;
+}
+
+.appointmentSelectBtn .appointmentDate, .appointmentSelectBtn .appointmentListBtn {
+	border: 1px solid #656565;
+	border-radius: 2px;
+	background: #656565;
+	color: white;
+	padding: 2px 4px;
+	border-radius: 3px;
+	cursor: pointer;
+}
+
+.appointmentSelectBtn .appointmentList {
+	display: none;
+	position: absolute;
+	top: 18px;
+	border: 1px solid #656565;
+	max-height: 100px;
+	overflow-y: auto;
+	width: 200px;
+	left: 0;
+	background-color: white;
+	z-index: 2000;
+}
+
+.appointmentSelectBtn .appointmentList .listItem {
+	cursor: pointer;
+	margin-bottom: 2px;
+	padding: 3px 3px 3px 6px;
+	display: block;
+
+}
+
+.appointmentSelectBtn .appointmentList .listItem:hover {
+	background: #656565;
+	color: white;
+}
+
+.appointmentSelectBtn .appointmentShowTodayBtn {
+	display: none;
+	padding: 3px 0 2px 0;
+	margin: 3px;
+	cursor: pointer;
+	color: #656565;
+}
+
+.appointmentSelectBtn .appointmentShowTodayBtn:hover {
+	color: #375F85;
+}

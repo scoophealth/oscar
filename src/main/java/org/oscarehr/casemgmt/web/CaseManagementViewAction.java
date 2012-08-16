@@ -48,6 +48,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
+import net.sf.json.processors.JsDateJsonBeanProcessor;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.log4j.Logger;
@@ -1123,8 +1127,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return;
 
 		try {
-			
-			
+
+
 			List<CachedDemographicIssue> remoteIssues  = null;
 			try {
 				if (!CaisiIntegratorManager.isIntegratorOffline()){
@@ -1135,11 +1139,11 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 				logger.error("Unexpected error.", e);
 				CaisiIntegratorManager.checkForConnectionError(e);
 			}
-			
+
 			if(CaisiIntegratorManager.isIntegratorOffline()){
-			   remoteIssues = IntegratorFallBackManager.getRemoteDemographicIssues(demographicNo);	
+			   remoteIssues = IntegratorFallBackManager.getRemoteDemographicIssues(demographicNo);
 			}
-			
+
 
 			for (CachedDemographicIssue cachedDemographicIssue : remoteIssues) {
 				try {
@@ -1272,7 +1276,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		return mapping.findForward("displayNote");
 	}
 
-	public ActionForward listNotes(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+	public ActionForward listNotes(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("List Notes start");
 
 		String providerNo = getProviderNo(request);
@@ -1372,6 +1376,25 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		 * oscar.OscarProperties p = oscar.OscarProperties.getInstance(); String noteSort = p.getProperty("CMESort", ""); if (noteSort.trim().equalsIgnoreCase("UP")) request.setAttribute("Notes", sortNotes(notes, "observation_date_asc")); else
 		 * request.setAttribute("Notes", sortNotes(notes, "observation_date_desc"));
 		 */
+
+		boolean isJsonRequest = request.getParameter("json") != null && request.getParameter("json").equalsIgnoreCase("true");
+        if (isJsonRequest) {
+        	HashMap<String, Object> hashMap = new HashMap<String, Object>();
+
+        	List<HashMap<String, Object>> notesList = new ArrayList<HashMap<String, Object>>();
+        	for (Object cmn : notes)
+        		notesList.add((HashMap<String, Object>) ((CaseManagementNote) cmn).getMap());
+
+        	hashMap.put("Items", notesList);
+        	hashMap.put("RightURL", addUrl);
+        	hashMap.put("Issues", issues);
+
+        	JsonConfig config = new JsonConfig();
+        	config.registerJsonBeanProcessor(java.sql.Date.class, new JsDateJsonBeanProcessor());
+        	JSONObject json = JSONObject.fromObject(hashMap, config);
+        	response.getOutputStream().write(json.toString().getBytes());
+        	return null;
+        }
 
 		return mapping.findForward("listNotes");
 	}

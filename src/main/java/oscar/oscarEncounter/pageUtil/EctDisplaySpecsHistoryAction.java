@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -94,7 +94,8 @@ public class EctDisplaySpecsHistoryAction extends EctDisplayAction {
     	String itemHeader = StringUtils.maxLenString(title, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
     	item.setTitle(itemHeader);
 
-        item.setLinkTitle(sh.toString3());
+    	item.setValue(sh.getId().toString());
+    	item.setLinkTitle(sh.toString3());
 
         int hash = Math.abs(winName.hashCode());
         url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/eyeform/SpecsHistory.do?specs.id="+ sh.getId() +"'); return false;";
