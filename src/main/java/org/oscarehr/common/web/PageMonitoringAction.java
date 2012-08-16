@@ -24,9 +24,11 @@
 package org.oscarehr.common.web;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,8 +44,6 @@ import org.oscarehr.common.model.PageMonitor;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-import java.util.Locale;
-import java.text.ParseException;
 
 public class PageMonitoringAction extends DispatchAction {
 	
@@ -154,7 +154,7 @@ public class PageMonitoringAction extends DispatchAction {
 		return null;
     }
     
-    public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
         String pageName = request.getParameter("page");
         String pageId = request.getParameter("pageId");    	
         String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();

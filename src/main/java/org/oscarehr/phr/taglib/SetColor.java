@@ -57,7 +57,7 @@ public class SetColor extends TagSupport {
 
 
         try {
-            if (phrAuth == null || !phrService.validAuthentication(phrAuth) || providerNo == null) {
+            if (phrAuth == null || !PHRService.validAuthentication(phrAuth) || providerNo == null) {
                 pageContext.getOut().print(noAuthorizationHtml);
             } else if (phrService.hasUnreadMessages(providerNo)) {
                 pageContext.getOut().print(newMessagesHtml);
