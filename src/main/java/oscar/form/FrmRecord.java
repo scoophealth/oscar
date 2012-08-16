@@ -22,21 +22,34 @@
  * Ontario, Canada
  */
 
-
 package oscar.form;
 
 import java.sql.SQLException;
 import java.util.Properties;
 
 public abstract class FrmRecord {
-    public abstract Properties getFormRecord(int demographicNo, int existingID) throws SQLException  ;
-    public abstract int saveFormRecord(Properties props) throws SQLException ;
-    public abstract String findActionValue(String submit) throws SQLException ;
-    public abstract String createActionURL(String where, String action, String demoId, String formId) throws SQLException ;
-    public Properties getGraph(int demographicNo, int existingID) throws SQLException  { return new Properties(); }
-    //public abstract String createActionURL(String where, String action, String demoId, String formId, String studyId, String studyName) throws SQLException ;
+	public abstract Properties getFormRecord(int demographicNo, int existingID) throws SQLException;
 
-    public Properties getCaisiFormRecord(int demographicNo, int existingID, int providerNo, int programNo) throws SQLException { return new Properties();}
-     
-    public void setGraphType(String graphType) { /*Rourke needs to know whether plotting head circ or height*/ }
+	public abstract int saveFormRecord(Properties props) throws SQLException;
+
+	public abstract String findActionValue(String submit) throws SQLException;
+
+	public abstract String createActionURL(String where, String action, String demoId, String formId) throws SQLException;
+
+	/**
+	 * @throws SQLException
+	 */
+	public Properties getGraph(int demographicNo, int existingID) throws SQLException {
+		return new Properties();
+	}
+
+	/**
+	 * @throws SQLException
+	 */
+	public Properties getCaisiFormRecord(int demographicNo, int existingID, int providerNo, int programNo) throws SQLException {
+		return new Properties();
+	}
+
+	public void setGraphType(String graphType) { /*Rourke needs to know whether plotting head circ or height*/
+	}
 }

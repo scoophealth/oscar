@@ -38,12 +38,12 @@ import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicAllergy;
 import org.oscarehr.common.dao.AllergyDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DiseasesDao;
 import org.oscarehr.common.dao.PartialDateDao;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Diseases;
 import org.oscarehr.common.model.PartialDate;
-import org.oscarehr.common.model.Demographic;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -68,7 +68,7 @@ public class RxPatientData {
                 Patient p = new Patient(demographic);
                 patients.add(p);
             }
-            return (Patient[]) patients.toArray(arr);                
+            return patients.toArray(arr);                
 	}
 
 	/* Patient Information */

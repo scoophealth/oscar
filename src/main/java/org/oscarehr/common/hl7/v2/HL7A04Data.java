@@ -23,31 +23,28 @@
  */
 package org.oscarehr.common.hl7.v2;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
+
+import oscar.OscarProperties;
+import oscar.appt.ApptData;
+import oscar.oscarClinic.ClinicData;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.v23.message.ADT_A04;
-import ca.uhn.hl7v2.model.v23.segment.MSH;
 import ca.uhn.hl7v2.model.v23.segment.EVN;
+import ca.uhn.hl7v2.model.v23.segment.MSH;
 import ca.uhn.hl7v2.model.v23.segment.PID;
 import ca.uhn.hl7v2.model.v23.segment.PV1;
 import ca.uhn.hl7v2.parser.Parser;
 import ca.uhn.hl7v2.parser.PipeParser;
-
-import org.apache.log4j.Logger;
-
-import oscar.oscarClinic.ClinicData;
-import oscar.appt.ApptData;
-
-import org.oscarehr.util.MiscUtils;
-import oscar.OscarProperties;
-
-import java.util.Date;
-import java.util.List;
-import java.text.SimpleDateFormat;
-
-import java.io.FileWriter;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.File;
 
 /**
  * Class HL7A04Data
@@ -91,7 +88,7 @@ public class HL7A04Data
     /**
      * Constructor
      */
-	public HL7A04Data( org.oscarehr.common.model.Demographic demograph, ApptData appData, ClinicData clinicData, List programs) throws HL7Exception {
+	public HL7A04Data( org.oscarehr.common.model.Demographic demograph, ApptData appData, ClinicData clinicData, List programs) {
         this.setDemographicData(demograph);
         this.setAppData(appData);
         this.setClinicData(clinicData);
@@ -101,7 +98,7 @@ public class HL7A04Data
     /**
      * Constructor
      */
-	public HL7A04Data( org.oscarehr.common.model.Demographic demograph, ApptData appData, ClinicData clinicData) throws HL7Exception {
+	public HL7A04Data( org.oscarehr.common.model.Demographic demograph, ApptData appData, ClinicData clinicData) {
         this.setDemographicData(demograph);
         this.setAppData(appData);
         this.setClinicData(clinicData);

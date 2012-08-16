@@ -2029,6 +2029,16 @@
         <ViolationValue>/src/main/webapp/report/reportpatientchartlistspecial.jsp:&lt;%@ page import="oscar.login.DBHelp"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportpatientchartlistspecial.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/webapp/system/dbcpMonitor.jsp:ResultSet rsProcessList = DBHandler.GetSQL("show processlist");</ViolationValue>
+
+        <ViolationValue>/src/main/java/oscar/form/FrmBCNewBorn2008Record.java:import oscar.login.DBHelp;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/form/FrmBCNewBorn2008Record.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/form/FrmBCNewBorn2008Record.java:DBHelp db = new DBHelp();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/form/FrmBCNewBorn2008Record.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
+        
+        <ViolationValue>/src/main/java/oscar/form/FrmBCBirthSumMo2008Record.java:import oscar.login.DBHelp;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/form/FrmBCBirthSumMo2008Record.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/form/FrmBCBirthSumMo2008Record.java:DBHelp db = new DBHelp();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/form/FrmBCBirthSumMo2008Record.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
     </ViolationSet>
     <ViolationSet>
         <ViolationKey>.*StringBuffer.*|.*Hashtable.*|.*Vector.*</ViolationKey>
