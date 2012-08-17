@@ -111,7 +111,7 @@ public class PFHTHandler implements MessageHandler {
 	    }
 
 	    private ArrayList<String> getMatchingPFHTlabs(String hl7Body){
-	        Base64 base64 = new Base64();
+	        Base64 base64 = new Base64(0);
 	        ArrayList<String> ret = new ArrayList<String>();
 	        int monthsBetween = 0;
 	        Hl7TextInfoDao hl7TextInfoDao = (Hl7TextInfoDao) SpringUtils.getBean("hl7TextInfoDao");

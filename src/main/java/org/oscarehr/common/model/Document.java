@@ -69,7 +69,7 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "Document.findByObservationdate", query = "SELECT d FROM Document d WHERE d.observationdate = :observationdate"),
     @NamedQuery(name = "Document.findByReviewer", query = "SELECT d FROM Document d WHERE d.reviewer = :reviewer"),
     @NamedQuery(name = "Document.findByReviewdatetime", query = "SELECT d FROM Document d WHERE d.reviewdatetime = :reviewdatetime"),
-    @NamedQuery(name = "Document.findByNumberOfPages", query = "SELECT d FROM Document d WHERE d.numberOfPages = :numberOfPages"),
+    @NamedQuery(name = "Document.findByNumberOfPages", query = "SELECT d FROM Document d WHERE d.numberofpages = :numberofpages"),
     @NamedQuery(name = "Document.findPhotosByAppointmentNo", query = "SELECT d FROM Document d WHERE d.appointmentNo = :appointmentNo and d.doctype='photo'")})
 public class Document extends AbstractModel<Integer> implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -129,9 +129,9 @@ public class Document extends AbstractModel<Integer> implements Serializable {
     private Date reviewdatetime;
     @Basic(optional = false)
     @Column(name = "number_of_pages")
-    private int numberOfPages;
+    private int numberofpages;
     @Column(name="appointment_no")
-    private int appointmentNo;
+    private Integer appointmentNo;
 
     public Document() {
     }
@@ -150,7 +150,7 @@ public class Document extends AbstractModel<Integer> implements Serializable {
         this.status = status;
         this.contenttype = contenttype;
         this.public1 = public1;
-        this.numberOfPages = numberOfPages;
+        this.numberofpages = numberOfPages;
 //        this.id=this.documentNo;
     }
 
@@ -285,19 +285,19 @@ public class Document extends AbstractModel<Integer> implements Serializable {
         this.reviewdatetime = reviewdatetime;
     }
 
-    public int getNumberOfPages() {
-        return numberOfPages;
+    public int getNumberofpages() {
+        return numberofpages;
     }
 
-    public void setNumberOfPages(int numberOfPages) {
-        this.numberOfPages = numberOfPages;
+    public void setNumberofpages(int numberOfPages) {
+        this.numberofpages = numberOfPages;
     }
 
-	public int getAppointmentNo() {
+	public Integer getAppointmentNo() {
 		return appointmentNo;
 	}
 
-	public void setAppointmentNo(int appointmentNo) {
+	public void setAppointmentNo(Integer appointmentNo) {
 		this.appointmentNo = appointmentNo;
 	}
 

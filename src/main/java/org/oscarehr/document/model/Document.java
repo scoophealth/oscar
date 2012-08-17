@@ -51,7 +51,7 @@ public  class Document  implements Serializable {
 	public static String PROP_DOCFILENAME = "docfilename";
 	public static String PROP_ID = "id";
 	public static String PROP_DOCTYPE = "doctype";
-
+	public static String PROP_NUMBEROFPAGES = "numberOfPages";
 
 	// constructors
 	public Document () {
@@ -108,6 +108,7 @@ public  class Document  implements Serializable {
 	private java.lang.String contenttype;
 	private java.lang.Byte m_public;
 	private java.util.Date observationdate;
+	private Integer numberOfPages;
 
 
 
@@ -300,7 +301,21 @@ public  class Document  implements Serializable {
 	public void setObservationdate (java.util.Date observationdate) {
 		this.observationdate = observationdate;
 	}
+	
+	/**
+	 * Return the value associated with the column: number_of_pages
+	 */
+	public Integer getNumberOfPages() {
+		return numberOfPages;
+	}
 
+	/**
+	 * Set the value related to the column: number_of_pages
+	 * @param numberOfPages the numberOfPages value
+	 */
+	public void setNumberOfPages(Integer numberOfPages) {
+		this.numberOfPages = numberOfPages;
+	}
 
         public String toString(){
            return "doctype "+ doctype

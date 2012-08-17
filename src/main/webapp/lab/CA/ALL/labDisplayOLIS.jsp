@@ -18,8 +18,7 @@
 <%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProperties"%>
 <%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo"%>
 <%
-
-String segmentID = request.getParameter("segmentID");
+	String segmentID = request.getParameter("segmentID");
 String originalSegmentID = segmentID;
 String providerNo = request.getParameter("providerNo");
 String searchProviderNo = request.getParameter("searchProviderNo");
@@ -32,7 +31,7 @@ String reqTableID = reqIDL==null ? "" : reqIDL.toString();
 
 PatientLabRoutingDao plrDao = preview ? null : (PatientLabRoutingDao) SpringUtils.getBean("patientLabRoutingDao");
 PatientLabRouting plr = preview ? null : plrDao.findDemographicByLabId(Integer.valueOf(segmentID));
-String demographicID = preview || plr.getDemographicNumber() == null ? "" : plr.getDemographicNumber().toString();
+String demographicID = preview || plr.getDemographicNo() == null ? "" : plr.getDemographicNo().toString();
 
 
 if(demographicID != null && !demographicID.equals("")){
@@ -75,7 +74,7 @@ if (handlerMain instanceof OLISHL7Handler) {
 	handler = (OLISHL7Handler) handlerMain;
 }
 else {
-	%> <jsp:forward page="labDisplay.jsp" /> <%
+%> <jsp:forward page="labDisplay.jsp" /> <%
 }
 if (!preview && "true".equals(request.getParameter("showLatest"))) {
 

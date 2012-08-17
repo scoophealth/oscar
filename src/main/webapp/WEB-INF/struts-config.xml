@@ -215,6 +215,7 @@
 		<form-bean name="billingPreferencesActionForm" type="oscar.oscarBilling.ca.bc.pageUtil.BillingPreferencesActionForm" />
 		<form-bean name="supServiceCodeAssocActionForm" type="oscar.oscarBilling.ca.bc.pageUtil.SupServiceCodeAssocActionForm" />
 		<form-bean name="eDocsAddEditDocument" type="oscar.dms.data.AddEditDocumentForm" />
+		<form-bean name="documentUploadForm" type="oscar.dms.data.DocumentUploadForm" />
 		<form-bean name="addLinkDoc" type="oscar.dms.data.AddEditDocumentForm" />
 		<form-bean name="addEditHtmlDoc" type="oscar.dms.data.AddEditDocumentForm" />
 		<form-bean name="ManagePatientLettersForm" type="oscar.oscarReport.pageUtil.ManagePatientLettersForm" />
@@ -691,11 +692,10 @@
 			<forward name="success2" path="/oscarEncounter/Index2.jsp" />
 		</action>
 
-		<action name="FrmForm" path="/dms/inboxManage" scope="request" parameter="method" type="org.springframework.web.struts.DelegatingActionProxy">
-			<forward name="doclabPreview" path="/dms/previewDocHL7Inbox.jsp" />
-			<forward name="dms_index" path="/oscarMDS/Index.jsp" />
-            <forward name="document_in_queues" path="/oscarMDS/documentsInQueues.jsp" />
-		</action>
+		<action name="FrmForm" path="/dms/inboxManage" scope="request"  parameter="method" type="org.springframework.web.struts.DelegatingActionProxy">
+            <forward name="dms_index" path="/oscarMDS/Index.jsp" />
+            <forward name="dms_page" path="/oscarMDS/Page.jsp" />
+        </action>
 
 		<action input="/oscarRx/ChooseDrug.jsp" path="/oscarRx/chooseDrug" scope="request" type="oscar.oscarRx.pageUtil.RxChooseDrugAction">
 			<forward name="success" path="/oscarRx/WriteScript.jsp" />
@@ -2306,6 +2306,13 @@
 			<forward name="success" path="/dms/undocument.jsp" />
 			<forward name="displaySingleDoc" path="/dms/MultiPageDocDisplay.jsp" />
 		</action>
+		
+		<action path="/dms/SplitDocument" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
+        	<forward name="success" path="/oscarMDS/Splitclose.jsp" />
+        </action>
+
+		<action input="/dms/documentUploader.jsp" name="documentUploadForm" path="/dms/documentUpload" type="oscar.dms.actions.DocumentUploadAction"  parameter="method" scope="request" validate="false">
+        </action>
 
 		<action path="/PhrRetrieve" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
 			<forward name="report" path="/PMmodule/vaccine/vaccine_provider_report.jsp" />

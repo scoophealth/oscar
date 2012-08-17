@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -42,20 +42,20 @@ public class PatientLabRouting extends AbstractModel<Integer> {
 
 	@Column(name = "lab_no")
 	/** This is also referred to as segmentId in parts of the code... */
-	private int labNumber;
+	private int labNo;
 
 	@Column(name = "lab_type")
 	private String labType;
-	
-	@Column(name = "demographic_no")
-	private Integer demographicNumber;
 
-	public int getLabNumber() {
-    	return labNumber;
+	@Column(name = "demographic_no")
+	private Integer demographicNo;
+
+	public int getLabNo() {
+    	return labNo;
     }
 
-	public void setLabNumber(int labNumber) {
-    	this.labNumber = labNumber;
+	public void setLabNo(int labNo) {
+    	this.labNo = labNo;
     }
 
 	public String getLabType() {
@@ -66,12 +66,12 @@ public class PatientLabRouting extends AbstractModel<Integer> {
     	this.labType = labType;
     }
 
-	public Integer getDemographicNumber() {
-    	return demographicNumber;
+	public Integer getDemographicNo() {
+    	return demographicNo;
     }
 
-	public void setDemographicNumber(Integer demographicNumber) {
-    	this.demographicNumber = demographicNumber;
+	public void setDemographicNo(Integer demographicNo) {
+    	this.demographicNo = demographicNo;
     }
 
 	@Override

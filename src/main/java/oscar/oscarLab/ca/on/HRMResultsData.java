@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -26,6 +26,7 @@
 package oscar.oscarLab.ca.on;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -55,7 +56,7 @@ public class HRMResultsData {
 	public HRMResultsData() {
 	}
 
-	public Collection<LabResultData> populateHRMdocumentsResultsData(String providerNo, Integer page, Integer pageSize, String status) {
+	public Collection<LabResultData> populateHRMdocumentsResultsData(String providerNo, String status, Date newestDate, Date oldestDate) {
 		if (providerNo == null || "".equals(providerNo)) {
 			providerNo = "%";
 		} else if (providerNo.equalsIgnoreCase("0")) {
@@ -74,7 +75,7 @@ public class HRMResultsData {
 			viewed = 2;
 		}
 
-		List<HRMDocumentToProvider> hrmDocResultsProvider = hrmDocumentToProviderDao.findByProviderNoLimit(providerNo, page, pageSize, viewed, signedOff);
+		List<HRMDocumentToProvider> hrmDocResultsProvider = hrmDocumentToProviderDao.findByProviderNoLimit(providerNo, newestDate, oldestDate, viewed, signedOff);
 
 		// the key = SendingFacility+':'+ReportNumber+':'+DeliverToUserID as per HRM spec can be used to signify duplicate report
 		HashMap<String,LabResultData> labResults=new HashMap<String,LabResultData>();
@@ -99,7 +100,7 @@ public class HRMResultsData {
 			if (hrmReport == null) continue;
 
 			hrmReport.setHrmDocumentId(id);
-			
+
 			if (hrmDocResultsDemographic.size() > 0) {
 				Demographic demographic = demographicDao.getDemographic(hrmDocResultsDemographic.get(0).getDemographicNo());
 				if (demographic != null) {
@@ -132,17 +133,17 @@ public class HRMResultsData {
 			else // there exists an entry like this one
 			{
 				HRMReport previousHrmReport=labReports.get(duplicateKey);
-				
+
 				logger.debug("Duplicate report found : previous="+previousHrmReport.getHrmDocumentId()+", current="+hrmReport.getHrmDocumentId());
-				
+
 				// if the current entry is newer than the previous one then replace it, other wise just keep the previous entry
 				if (isNewer(hrmReport, previousHrmReport))
 				{
 					LabResultData olderLabData=labResults.get(duplicateKey);
-					
+
 					lbData.getDuplicateLabIds().addAll(olderLabData.getDuplicateLabIds());
 					lbData.getDuplicateLabIds().add(previousHrmReport.getHrmDocumentId());
-					
+
 					labResults.put(duplicateKey,lbData);
 					labReports.put(duplicateKey, hrmReport);
 				}
@@ -178,7 +179,7 @@ public class HRMResultsData {
 			String previousDatePart=previousUid.substring(0, previousUid.indexOf('^'));
 			long currentDateNum=Long.parseLong(currentDatePart);
 			long previousDateNum=Long.parseLong(previousDatePart);
-			
+
 			if (currentDateNum>previousDateNum) return(true);
 			if (currentDateNum<previousDateNum) return(false);
 			// if they are equal, then we can not determine it based on this field
@@ -190,44 +191,44 @@ public class HRMResultsData {
 		}
 
 		logger.debug("could not determine newer based on messageUniqueId");
-		
+
 		// try to pick the one that's not canceled.
 		if (!"C".equals(currentEntry.getResultStatus()) && "C".equals(previousEntry.getResultStatus())) return(true);
 		if ("C".equals(currentEntry.getResultStatus()) && !"C".equals(previousEntry.getResultStatus())) return(false);
 		// if both canceled or neither canceled then we can't figure it out from this field.
-	
+
 		// at this point I have to make a random guess, we know it's a duplicate but we can't tell which is newer.
 		return(currentEntry.getHrmDocumentId()>previousEntry.getHrmDocumentId());
 	}
 
 	/*
 	 * public List<LabResultData> populateHRMdocumentsResultsData(String providerNo){
-	 * 
-	 * 
+	 *
+	 *
 	 * List<HRMDocumentToProvider> hrmDocResultsProvider = hrmDocumentToProviderDao.findByProviderNo(providerNo);
-	 * 
-	 * 
+	 *
+	 *
 	 * ArrayList<LabResultData> labResults = new ArrayList<LabResultData>();
-	 * 
+	 *
 	 * for (HRMDocumentToProvider hrmDocResult : hrmDocResultsProvider) { String id = hrmDocResult.getHrmDocumentId(); LabResultData lbData = new LabResultData(LabResultData.HRM);
-	 * 
+	 *
 	 * List<HRMDocument> hrmDocument = hrmDocumentDao.findById(Integer.parseInt(id));
-	 * 
-	 * 
+	 *
+	 *
 	 * lbData.dateTime = hrmDocument.get(0).getTimeReceived().toString(); lbData.acknowledgedStatus = "U"; lbData.reportStatus = hrmDocument.get(0).getReportStatus(); lbData.segmentID = hrmDocument.get(0).getId().toString(); lbData.patientName =
 	 * "Not, Assigned";
-	 * 
+	 *
 	 * // check if patient is matched List<HRMDocumentToDemographic> hrmDocResultsDemographic = hrmDocumentToDemographicDao.findByHrmDocumentId(hrmDocument.get(0).getId().toString()); if (hrmDocResultsDemographic.size()>0) { Demographic demographic =
 	 * demographicDao.getDemographic(hrmDocResultsDemographic.get(0).getDemographicNo()); if (demographic != null) { lbData.patientName = demographic.getLastName()+","+demographic.getFirstName(); lbData.isMatchedToPatient = true; } } else { HRMReport
 	 * hrmReport = HRMReportParser.parseReport(hrmDocument.get(0).getReportFile()); lbData.sex = hrmReport.getGender(); lbData.healthNumber = hrmReport.getHCN(); lbData.patientName = hrmReport.getLegalName(); lbData.reportStatus =
 	 * hrmReport.getResultStatus(); lbData.priority = "----"; lbData.requestingClient = ""; lbData.discipline = "HRM"; lbData.resultStatus = hrmReport.getResultStatus();
-	 * 
+	 *
 	 * }
-	 * 
+	 *
 	 * labResults.add(lbData);
-	 * 
+	 *
 	 * }
-	 * 
+	 *
 	 * return labResults; }
 	 */
 
