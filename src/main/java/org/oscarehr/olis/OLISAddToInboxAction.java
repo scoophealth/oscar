@@ -102,6 +102,6 @@ public class OLISAddToInboxAction extends DispatchAction {
 	private static String getDemographicIdFromLab(String labType, int labNo) {
 		PatientLabRoutingDao dao = SpringUtils.getBean(PatientLabRoutingDao.class);
 		PatientLabRouting routing = dao.findDemographics(labType, labNo);
-		return routing == null ? "" : String.valueOf(routing.getDemographicNumber());
+		return routing == null ? "" : String.valueOf(routing.getDemographicNo());
 	}
 }

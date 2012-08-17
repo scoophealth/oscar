@@ -34,6 +34,8 @@ import org.oscarehr.common.model.ProviderInboxItem;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
+import oscar.oscarLab.ca.on.CommonLabResultData;
+
 /**
  *
  * @author jay gallagher
@@ -44,6 +46,14 @@ public class ProviderInboxRoutingDao extends AbstractDao<ProviderInboxItem> {
 	public ProviderInboxRoutingDao() {
 		super(ProviderInboxItem.class);
 	}
+    
+
+
+
+    public boolean removeLinkFromDocument(String docType, String docId, String providerNo) {
+    	int dId = Integer.parseInt(docId);
+    	return CommonLabResultData.updateReportStatus(dId, providerNo, 'X', "Archived", "DOC");    	
+    }
 
 	public List<ProviderInboxItem> getProvidersWithRoutingForDocument(String docType, String docId) {
 		int dId = Integer.parseInt(docId);

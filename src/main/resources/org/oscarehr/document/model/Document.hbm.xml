@@ -31,6 +31,7 @@
 			not-null="true" length="1" />
 		<property name="observationdate" column="observationdate"
 			type="date" not-null="false" length="10" />
+		
 
 
 	</class>

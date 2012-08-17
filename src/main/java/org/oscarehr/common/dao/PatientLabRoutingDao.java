@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -23,6 +23,8 @@
  */
 
 package org.oscarehr.common.dao;
+
+import java.util.List;
 
 import javax.persistence.Query;
 
@@ -60,10 +62,23 @@ public class PatientLabRoutingDao extends AbstractDao<PatientLabRouting> {
 	 * 		Returns the container pointing to the demographics or null of no matching container is found.
 	 */
 	public PatientLabRouting findDemographics(String labType, Integer labNo) {
-		Query query = entityManager.createQuery("FROM " + modelClass.getSimpleName() + " AS r WHERE r.labType = :labType AND r.labNumber = :labNo");
-		query.setParameter("labType", labType);
-		query.setParameter("labNo", labNo);
-		return getSingleResultOrNull(query);
+    		String sqlCommand="select x from "+ this.modelClass.getName() +" x where x.labType=?1 and x.labNo=?2";
+    		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, labType);
+		query.setParameter(2, labNo);
+		return(getSingleResultOrNull(query));
 	}
+
+    @SuppressWarnings("unchecked")
+    public List<PatientLabRouting> findDocByDemographic(String docNum) {
+
+    	String query = "select x from " + modelClass.getName() + " x where x.labNo=? and x.labType=?";
+    	Query q = entityManager.createQuery(query);
+
+    	q.setParameter(1, Integer.parseInt(docNum));
+    	q.setParameter(2, "DOC");
+
+    	return q.getResultList();
+    }
 
 }

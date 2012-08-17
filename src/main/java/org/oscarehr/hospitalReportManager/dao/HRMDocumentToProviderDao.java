@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -25,6 +25,7 @@
 
 package org.oscarehr.hospitalReportManager.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -39,7 +40,7 @@ public class HRMDocumentToProviderDao extends AbstractDao<HRMDocumentToProvider>
 	public HRMDocumentToProviderDao() {
 		super(HRMDocumentToProvider.class);
 	}
-	
+
 	public List<HRMDocumentToProvider> findAllUnsigned(Integer page, Integer pageSize) {
 		String sql = "select x from " + this.modelClass.getName() + " x where (x.signedOff IS NULL or x.signedOff = 0)";
 		Query query = entityManager.createQuery(sql);
@@ -49,7 +50,7 @@ public class HRMDocumentToProviderDao extends AbstractDao<HRMDocumentToProvider>
 		List<HRMDocumentToProvider> documentToProviders = query.getResultList();
 		return documentToProviders;
 	}
-	
+
 	public List<HRMDocumentToProvider> findByProviderNo(String providerNo, Integer page, Integer pageSize) {
 		String sql = "select x from " + this.modelClass.getName() + " x where x.providerNo=?";
 		Query query = entityManager.createQuery(sql);
@@ -60,28 +61,34 @@ public class HRMDocumentToProviderDao extends AbstractDao<HRMDocumentToProvider>
 		List<HRMDocumentToProvider> documentToProviders = query.getResultList();
 		return documentToProviders;
 	}
-	
-	public List<HRMDocumentToProvider> findByProviderNoLimit(String providerNo, Integer page, Integer limit, Integer viewed, Integer signedOff) {
-		String sql = "";
+
+	public List<HRMDocumentToProvider> findByProviderNoLimit(String providerNo, Date newestDate, Date oldestDate, Integer viewed, Integer signedOff) {
+		String sql = "select x from " + this.modelClass.getName() + " x, HRMDocument h where x.hrmDocumentId=h.id and x.providerNo like ? and x.signedOff=?";
+		if (newestDate != null)
+			sql += " and h.reportDate <= :newest";
+		if (oldestDate != null)
+			sql += " and h.reportDate >= :oldest";
 		if (viewed != 2)
-			sql = "select x from " + this.modelClass.getName() + " x where x.providerNo like ? and x.signedOff=? and x.viewed=?";
-		else
-			sql = "select x from " + this.modelClass.getName() + " x where x.providerNo like ? and x.signedOff=?";
-		
+			sql += " and x.viewed = :viewed";
+
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1, providerNo);
 		query.setParameter(2, signedOff);
 
-		if (viewed != 2)
-			query.setParameter(3, viewed);
+		if (newestDate != null)
+			query.setParameter("newest", newestDate);
 
-		query.setFirstResult(page * limit);
-		query.setMaxResults(limit);
+		if (oldestDate != null)
+			query.setParameter("oldest", oldestDate);
+
+		if (viewed != 2)
+			query.setParameter("viewed", viewed);
+
 		@SuppressWarnings("unchecked")
 		List<HRMDocumentToProvider> documentToProviders = query.getResultList();
 		return documentToProviders;
 	}
-	
+
 
 	public List<HRMDocumentToProvider> findByHrmDocumentId(String hrmDocumentId) {
 		String sql = "select x from " + this.modelClass.getName() + " x where x.hrmDocumentId=?";
@@ -91,7 +98,7 @@ public class HRMDocumentToProviderDao extends AbstractDao<HRMDocumentToProvider>
 		List<HRMDocumentToProvider> documentToProviders = query.getResultList();
 		return documentToProviders;
 	}
-	
+
 	public List<HRMDocumentToProvider> findByHrmDocumentIdNoSystemUser(String hrmDocumentId) {
 		String sql = "select x from " + this.modelClass.getName() + " x where x.hrmDocumentId=? and x.providerNo != '-1'";
 		Query query = entityManager.createQuery(sql);
@@ -100,7 +107,7 @@ public class HRMDocumentToProviderDao extends AbstractDao<HRMDocumentToProvider>
 		List<HRMDocumentToProvider> documentToProviders = query.getResultList();
 		return documentToProviders;
 	}
-	
+
 	public HRMDocumentToProvider findByHrmDocumentIdAndProviderNo(String hrmDocumentId, String providerNo) {
 		String sql = "select x from " + this.modelClass.getName() + " x where x.hrmDocumentId=? and x.providerNo=?";
 		Query query = entityManager.createQuery(sql);

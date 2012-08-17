@@ -119,4 +119,17 @@ public class QueueDocumentLinkDao extends AbstractDao<QueueDocumentLink> {
             MiscUtils.getLogger().error("Error", e);
         }
     }
+    
+    public void addToQueueDocumentLink(Integer qId,Integer dId){
+        try{
+            if(!hasQueueBeenLinkedWithDocument(dId,qId)){
+               QueueDocumentLink qdl = new QueueDocumentLink();
+               qdl.setDocId(dId);
+               qdl.setQueueId(qId);
+               persist(qdl);
+           }
+        }catch(Exception e){
+        	MiscUtils.getLogger().error("Error", e);
+        }
+    }
 }

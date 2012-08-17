@@ -171,7 +171,7 @@ public class LabUploadAction extends Action {
 	 */
 	public static InputStream decryptMessage(InputStream is, String skey, PublicKey pkey) {
 
-		Base64 base64 = new Base64();
+		Base64 base64 = new Base64(0);
 
 		// Decrypt the secret key and the message
 		try {
@@ -204,7 +204,7 @@ public class LabUploadAction extends Action {
 	 * Check that the signature 'sigString' matches the message InputStream 'msgIS' thus verifying that the message has not been altered.
 	 */
 	public static boolean validateSignature(PublicKey key, String sigString, File input) {
-		Base64 base64 = new Base64();
+		Base64 base64 = new Base64(0);
 		byte[] buf = new byte[1024];
 
 		try {
@@ -235,7 +235,7 @@ public class LabUploadAction extends Action {
 	public static ArrayList<Object> getClientInfo(String service) {
 
 		PublicKey Key = null;
-		Base64 base64 = new Base64();
+		Base64 base64 = new Base64(0);
 		String keyString = "";
 		String type = "";
 		byte[] publicKey;
@@ -270,7 +270,7 @@ public class LabUploadAction extends Action {
 	private static PrivateKey getServerPrivate() {
 
 		PrivateKey Key = null;
-		Base64 base64 = new Base64();
+		Base64 base64 = new Base64(0);
 		byte[] privateKey;
 
 		try {

@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -33,9 +33,6 @@ package oscar.oscarLab.ca.all.parsers;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -56,6 +53,8 @@ import javax.xml.validation.SchemaFactory;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.Hl7TextInfoDao;
+import org.oscarehr.common.model.Hl7TextMessageInfo;
 import org.oscarehr.hospitalReportManager.SFTPConnector;
 import org.oscarehr.hospitalReportManager.xsd.DateFullOrPartial;
 import org.oscarehr.hospitalReportManager.xsd.HealthCard;
@@ -63,8 +62,8 @@ import org.oscarehr.hospitalReportManager.xsd.OmdCds;
 import org.oscarehr.hospitalReportManager.xsd.PatientRecord;
 import org.oscarehr.hospitalReportManager.xsd.PhoneNumber;
 import org.oscarehr.hospitalReportManager.xsd.ReportsReceived;
-import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.util.UtilDateUtilities;
 import ca.uhn.hl7v2.HL7Exception;
@@ -112,45 +111,37 @@ public class HRMXMLHandler implements MessageHandler {
 	}
 
 	private ArrayList<String> getMatchingHL7Labs(String hl7Body) {
-		Base64 base64 = new Base64();
+		Base64 base64 = new Base64(0);
 		ArrayList<String> ret = new ArrayList<String>();
 		int monthsBetween = 0;
+		Hl7TextInfoDao hl7TextInfoDao = (Hl7TextInfoDao) SpringUtils.getBean("hl7TextInfoDao");
 
 		try {
-
-			// BZ 17: Original query takes about 10 seconds to execute
-			String sql = "SELECT m2.message, a.lab_no AS lab_no_A, b.lab_no AS lab_no_B, a.obr_date, b.obr_date as labDate " + "FROM hl7TextInfo a, hl7TextInfo b, hl7TextMessage m2 " + "WHERE m2.lab_id = a.lab_no AND a.accessionNum !='' " + "AND a.accessionNum=b.accessionNum " + "AND b.lab_no IN ( SELECT lab_id FROM hl7TextMessage WHERE message='" + (new String(base64.encode(hl7Body.getBytes("ASCII")), "ASCII")) + "' ) " + "ORDER BY a.obr_date, a.lab_no";
-			Connection c = DbConnectionFilter.getThreadLocalDbConnection();
-			PreparedStatement ps = c.prepareStatement(sql);
-			ResultSet rs = ps.executeQuery(sql);
-
-			while (rs.next()) {
-				// Accession numbers may be recycled, accession
-				// numbers for a lab should have lab dates within less than 4
-				// months of eachother even this is a large timespan
-				Date dateA = UtilDateUtilities.StringToDate(oscar.Misc.getString(rs, "obr_date"), "yyyy-MM-dd hh:mm:ss");
-				Date dateB = UtilDateUtilities.StringToDate(oscar.Misc.getString(rs, "labDate"), "yyyy-MM-dd hh:mm:ss");
+			List<Hl7TextMessageInfo> matchingLabs = hl7TextInfoDao.getMatchingLabs(hl7Body);
+			for ( Hl7TextMessageInfo l: matchingLabs ) {
+				Date dateA = UtilDateUtilities.StringToDate(l.labDate_A,"yyyy-MM-dd hh:mm:ss");
+				Date dateB = UtilDateUtilities.StringToDate(l.labDate_B,"yyyy-MM-dd hh:mm:ss");
 				if (dateA.before(dateB)) {
 					monthsBetween = UtilDateUtilities.getNumMonths(dateA, dateB);
 				} else {
 					monthsBetween = UtilDateUtilities.getNumMonths(dateB, dateA);
 				}
 				if (monthsBetween < 4) {
-					ret.add(new String(base64.decode(oscar.Misc.getString(rs, "message").getBytes("ASCII")), "ASCII"));
+					ret.add(new String(base64.decode(l.message.getBytes("ASCII")), "ASCII"));
 				}
-
-				// only return labs up to the one being initialized
-				if (oscar.Misc.getString(rs, "lab_no_A").equals(oscar.Misc.getString(rs, "lab_no_B"))) break;
+				if (l.lab_no_A==l.lab_no_B)
+					break;
 			}
-			rs.close();
-			// db.CloseConn();
+
+
 		} catch (Exception e) {
 			logger.error("Exception in HL7 getMatchingLabs: ", e);
 		}
 
 		// if there have been no labs added to the database yet just return this
 		// lab
-		if (ret.size() == 0) ret.add(hl7Body);
+		if (ret.size() == 0)
+			ret.add(hl7Body);
 		return ret;
 	}
 
