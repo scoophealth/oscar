@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -144,8 +144,15 @@ public class CommonLabResultData {
     		}
 
     		if (hl7text != null && hl7text.trim().equals("yes")){
-    			ArrayList<LabResultData> hl7Labs = Hl7textResultsData.populateHl7ResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
-    			labs.addAll(hl7Labs);
+    			if (isPaged) {
+    		        ArrayList<LabResultData> hl7Labs = Hl7textResultsData.populateHl7ResultsData(providerNo, demographicNo, patientFirstName, patientLastName,
+    		        												   patientHealthNumber, status, true, page, pageSize, mixLabsAndDocs, isAbnormal);
+    		        labs.addAll(hl7Labs);
+                }
+                else {
+                	ArrayList<LabResultData> hl7Labs = Hl7textResultsData.populateHl7ResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+    		        labs.addAll(hl7Labs);
+                }
 
     		}
     		return labs;
@@ -301,9 +308,9 @@ public class CommonLabResultData {
 			String sql = "select id, status from providerLabRouting where lab_type = '" + labType + "' and provider_no = '" + providerNo + "' and lab_no = '" + labNo + "'";
 
 			ResultSet rs = db.queryResults(sql);
-
-			if (rs.next()) { //
-
+			boolean empty = true;
+			while (rs.next()) { //
+				empty = false;
 				String id = oscar.Misc.getString(rs, "id");
 				sql = "update providerLabRouting set status='" + status + "', comment=? where id = '" + id + "'";
 				if (!oscar.Misc.getString(rs, "status").equals("A")) {
@@ -311,7 +318,8 @@ public class CommonLabResultData {
 					db.queryExecute(sql, new String[] { comment });
 
 				}
-			} else {
+			} 
+			if (empty) {
 
 				sql = "insert ignore into providerLabRouting (provider_no, lab_no, status, comment,lab_type) values ('" + providerNo + "', '" + labNo + "', '" + status + "', ?,'" + labType + "')";
 				db.queryExecute(sql, new String[] { comment });
@@ -608,7 +616,7 @@ public class CommonLabResultData {
 	public static ArrayList<LabResultData> getRemoteLabs(Integer demographicId) {
 		ArrayList<LabResultData> results = new ArrayList<LabResultData>();
 
-		try {		
+		try {
 			List<CachedDemographicLabResult> labResults  = null;
 			try {
 				if (!CaisiIntegratorManager.isIntegratorOffline()){
@@ -619,9 +627,9 @@ public class CommonLabResultData {
 				MiscUtils.getLogger().error("Unexpected error.", e);
 				CaisiIntegratorManager.checkForConnectionError(e);
 			}
-			
+
 			if(CaisiIntegratorManager.isIntegratorOffline()){
-				labResults = IntegratorFallBackManager.getLabResults(demographicId);	
+				labResults = IntegratorFallBackManager.getLabResults(demographicId);
 			}
 
 			for (CachedDemographicLabResult cachedDemographicLabResult : labResults) {

@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,6 +27,7 @@ package org.oscarehr.document.web;
 
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -55,6 +56,8 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.jpedal.PdfDecoder;
+import org.jpedal.fonts.FontMappings;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicDocument;
@@ -136,6 +139,9 @@ public class ManageDocumentAction extends DispatchAction {
 				for (String proNo : flagproviders) {
 					providerInboxRoutingDAO.addToProviderInbox(proNo, documentId, LabResultData.DOCUMENT);
 				}
+
+				// Removes the link to the "0" provider so that the document no longer shows up as "unclaimed"
+				providerInboxRoutingDAO.removeLinkFromDocument("DOC", documentId, "0");
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Error", e);
 			}
@@ -200,6 +206,27 @@ public class ManageDocumentAction extends DispatchAction {
 
 		return null;
 	}
+
+	public ActionForward removeLinkFromDocument(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response) {
+		String docType = request.getParameter("docType");
+		String docId = request.getParameter("docId");
+		String providerNo = request.getParameter("providerNo");
+
+		providerInboxRoutingDAO.removeLinkFromDocument(docType, docId, providerNo);
+		HashMap hm = new HashMap();
+		hm.put("linkedProviders", providerInboxRoutingDAO.getProvidersWithRoutingForDocument(docType, docId));
+
+		JSONObject jsonObject = JSONObject.fromObject(hm);
+		try {
+			response.getOutputStream().write(jsonObject.toString().getBytes());
+		} catch (IOException e) {
+			MiscUtils.getLogger().error("Error",e);
+		}
+
+		return null;
+	}
+
 
 	public ActionForward documentUpdate(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
@@ -331,7 +358,7 @@ public class ManageDocumentAction extends DispatchAction {
 	 * private void savePatientLabRouting(String demog,String docId,String docType){ CommonLabResultData.updatePatientLabRouting(docId, demog, docType); }
 	 */
 
-	private File getDocumentCacheDir(String docdownload) {
+	private static File getDocumentCacheDir(String docdownload) {
 		// File cacheDir = new File(docdownload+"_cache");
 		File docDir = new File(docdownload);
 		String documentDirName = docDir.getName();
@@ -363,7 +390,68 @@ public class ManageDocumentAction extends DispatchAction {
 		return outfile;
 	}
 
-	public File createCacheVersion2(Document d, Integer pageNum) throws Exception {
+
+	public static void deleteCacheVersion(org.oscarehr.document.model.Document d, int pageNum) {
+		File documentCacheDir = getDocumentCacheDir(oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR"));
+		//pageNum=pageNum-1;
+		File outfile = new File(documentCacheDir,d.getDocfilename()+"_"+pageNum+".png");
+		if (outfile.exists()){
+			outfile.delete();
+		}
+	}
+
+	private File hasCacheVersion(org.oscarehr.document.model.Document d, int pageNum){
+		File documentCacheDir = getDocumentCacheDir(oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR"));
+		//pageNum= pageNum-1;
+		File outfile = new File(documentCacheDir,d.getDocfilename()+"_"+pageNum+".png");
+		if (!outfile.exists()){
+			outfile = null;
+		}
+		return outfile;
+	}
+
+	public File createCacheVersion2(Document d, Integer pageNum) {
+		String docdownload = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
+		File documentDir = new File(docdownload);
+		File documentCacheDir = getDocumentCacheDir(docdownload);
+		log.debug("Document Dir is a dir" + documentDir.isDirectory());
+		File file = new File(documentDir, d.getDocfilename());
+		PdfDecoder decode_pdf  = new PdfDecoder(true);
+		File ofile = null;
+		try {
+
+			FontMappings.setFontReplacements();
+
+			decode_pdf.useHiResScreenDisplay(true);
+
+			decode_pdf.setExtractionMode(0, 96, 96/72f);
+
+			FileInputStream is = new FileInputStream(file);
+
+			decode_pdf.openPdfFileFromInputStream(is, false);
+
+			BufferedImage image_to_save = decode_pdf.getPageAsImage(pageNum);
+
+
+
+			decode_pdf.getObjectStore().saveStoredImage( documentCacheDir.getCanonicalPath() + "/" + d.getDocfilename() + "_" + pageNum + ".png", image_to_save, true, false, "png");
+
+			decode_pdf.flushObjectValues(true);
+
+			decode_pdf.closePdfFile();
+
+			ofile = new File(documentCacheDir, d.getDocfilename() + "_" + pageNum + ".png");
+
+
+
+		}catch(Exception e) {
+			log.error("Error decoding pdf file " + d.getDocfilename());
+			decode_pdf.closePdfFile();
+		}
+
+		return ofile;
+
+		/*
 
 		String docdownload = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
 		File documentDir = new File(docdownload);
@@ -409,7 +497,7 @@ public class ManageDocumentAction extends DispatchAction {
 			if (outs != null) outs.close();
 		}
 		return outfile;
-
+*/
 	}
 
 	public File createCacheVersion(Document d) throws Exception {
@@ -462,8 +550,16 @@ public class ManageDocumentAction extends DispatchAction {
 
 	}
 
+	public ActionForward showPage(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		return getPage(mapping, form, request, response, Integer.parseInt(request.getParameter("page")));
+	}
+
+	public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response){
+		return getPage(mapping, form, request, response, 0);
+	}
+
 	// PNG version
-	public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+	public ActionForward getPage(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response, int pageNum) {
 
 		try {
 			String doc_no = request.getParameter("doc_no");
@@ -474,11 +570,10 @@ public class ManageDocumentAction extends DispatchAction {
 			Document d = documentDAO.getDocument(doc_no);
 			log.debug("Document Name :" + d.getDocfilename());
 
-			File outfile = hasCacheVersion(d);
-			if (outfile == null) {
-				outfile = createCacheVersion(d);
+			File outfile = hasCacheVersion(d, pageNum);
+			if (outfile == null){
+				outfile = createCacheVersion2( d, pageNum);
 			}
-
 			response.setContentType("image/png");
 			// response.setHeader("Content-Disposition", "attachment;filename=\"" + filename+ "\"");
 			// read the file name.
@@ -685,21 +780,21 @@ public class ManageDocumentAction extends DispatchAction {
 			remotePk.setCaisiItemId(Integer.parseInt(doc_no));
 
 			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-			
+
 			CachedDemographicDocument remoteDocument = null;
 			CachedDemographicDocumentContents remoteDocumentContents = null;
-			
+
 			try {
 				if (!CaisiIntegratorManager.isIntegratorOffline()){
 					DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
-					remoteDocument = demographicWs.getCachedDemographicDocument(remotePk); 
+					remoteDocument = demographicWs.getCachedDemographicDocument(remotePk);
 					remoteDocumentContents = demographicWs.getCachedDemographicDocumentContents(remotePk);
 				}
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Unexpected error.", e);
 				CaisiIntegratorManager.checkForConnectionError(e);
 			}
-			
+
 			if(CaisiIntegratorManager.isIntegratorOffline()){
 				Integer demographicId = IntegratorFallBackManager.getDemographicNoFromRemoteDocument(remotePk);
 				MiscUtils.getLogger().debug("got demographic no from remote document "+demographicId);
@@ -713,7 +808,7 @@ public class ManageDocumentAction extends DispatchAction {
 					MiscUtils.getLogger().error("End of the loop and didn't find the remoteDocument");
 				}
 			}
-			
+
 
 			docxml = remoteDocument.getDocXml();
 			contentType = remoteDocument.getContentType();

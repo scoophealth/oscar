@@ -90,7 +90,7 @@ public final class MessageUploader {
 		String retVal = "";
 		try {
 			MessageHandler h = Factory.getHandler(type, hl7Body);
-			Base64 base64 = new Base64();
+			Base64 base64 = new Base64(0);
 
 			String firstName = h.getFirstName();
 			String lastName = h.getLastName();

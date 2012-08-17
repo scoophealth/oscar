@@ -60,7 +60,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 public class MiscUtils {
 	
 	public static final String ENCODING = "UTF-8";
-	private static final Base64 base64 = new Base64();
+	private static final Base64 base64 = new Base64(0);
 	private static boolean shutdownSignaled = false;
 	private static Thread shutdownHookThread = null;
 

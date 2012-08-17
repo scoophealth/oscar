@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -50,14 +50,14 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * @author jaygallagher
  */
 public class DocumentDAO extends HibernateDaoSupport {
-	
+
 	private static Logger log = MiscUtils.getLogger();
 
     public Document getDocument(String documentNo) {
         Document document = getHibernateTemplate().get(Document.class, Long.parseLong(documentNo));
         return document;
     }
-    
+
     public void save(Document document){
         getHibernateTemplate().saveOrUpdate(document);
     }
@@ -73,7 +73,7 @@ public class DocumentDAO extends HibernateDaoSupport {
         }
         return d;
     }
-    
+
     public CtlDocument getCtrlDocument(Integer docId) {
         List cList = null;
         Session session = null;
@@ -89,21 +89,21 @@ public class DocumentDAO extends HibernateDaoSupport {
                releaseSession(session);
             }
         }
-                
+
         if (cList != null && cList.size()>0){
             return (CtlDocument)cList.get(0);
         }else{
             return null;
         }
     }
-    
-    
+
+
     public void saveCtlDocument(CtlDocument ctlDocument){
 
         getHibernateTemplate().saveOrUpdate(ctlDocument);
 
     }
-  
+
     public int getNumberOfDocumentsAttachedToAProviderDemographics(String providerNo,Date startDate,Date endDate){
        	String sql = "select count(*) from ctl_document c, demographic d,document doc where c.module_id = d.demographic_no and c.document_no = doc.document_no   and d.provider_no = ? and doc.observationdate >= ? and doc.observationdate <= ? ";
        	int ret = 0;
@@ -114,7 +114,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 			ps.setString(1, providerNo);
 			ps.setTimestamp(2, new Timestamp(startDate.getTime()));
 			ps.setTimestamp(3, new Timestamp(endDate.getTime()));
-			
+
 			ResultSet rs = ps.executeQuery();
 			if(rs.next()){
 			   ret=rs.getInt(1);
@@ -122,9 +122,15 @@ public class DocumentDAO extends HibernateDaoSupport {
 		}catch(Exception e){
 			log.error("Error counting documents for provider :"+providerNo,e);
 		}
-		return ret;	
-    	
-    	
+		return ret;
+
+
     }
-   
+
+    public void subtractPages(String documentNo, Integer i) {
+    	Document doc = getDocument(documentNo);
+    	doc.setNumberOfPages(doc.getNumberOfPages()-i);
+    	save(doc);
+    }
+
 }

@@ -185,156 +185,272 @@ public class LabPDFCreator extends PdfPageEventHelper{
 
 
     /*
-     *  Given the name of a lab category this method will add the category header,
-     *  the test result headers and the test results for that category.
-     */
-    private void addLabCategory(String header) throws DocumentException{
+	 * Given the name of a lab category this method will add the category
+	 * header, the test result headers and the test results for that category.
+	 */
+	private void addLabCategory(String header) throws DocumentException {
 
-        float[] mainTableWidths = {5f, 3f, 1f, 3f, 2f, 4f, 2f};
-        PdfPTable table = new PdfPTable(mainTableWidths);
-        table.setHeaderRows(3);
-        table.setWidthPercentage(100);
+		float[] mainTableWidths = { 5f, 3f, 1f, 3f, 2f, 4f, 2f };
+		PdfPTable table = new PdfPTable(mainTableWidths);
+		table.setHeaderRows(3);
+		table.setWidthPercentage(100);
 
-        PdfPCell cell = new PdfPCell();
-        // category name
-        cell.setPadding(3);
-        cell.setPhrase(new Phrase("  "));
-        cell.setBorder(0);
-        cell.setColspan(7);
-        table.addCell(cell);
-        cell.setBorder(15);
-        cell.setPadding(3);
-        cell.setColspan(2);
-        cell.setPhrase(new Phrase(header.replaceAll("<br\\s*/*>", "\n"), new Font(bf, 12, Font.BOLD)));
-        table.addCell(cell);
-        cell.setPhrase(new Phrase("  "));
-        cell.setBorder(0);
-        cell.setColspan(5);
-        table.addCell(cell);
+		PdfPCell cell = new PdfPCell();
+		// category name
+		cell.setPadding(3);
+		cell.setPhrase(new Phrase("  "));
+		cell.setBorder(0);
+		cell.setColspan(7);
+		table.addCell(cell);
+		cell.setBorder(15);
+		cell.setPadding(3);
+		cell.setColspan(2);
+		cell.setPhrase(new Phrase(header.replaceAll("<br\\s*/*>", "\n"),
+				new Font(bf, 12, Font.BOLD)));
+		table.addCell(cell);
+		cell.setPhrase(new Phrase("  "));
+		cell.setBorder(0);
+		cell.setColspan(5);
+		table.addCell(cell);
 
-        // table headers
-        cell.setColspan(1);
-        cell.setBorder(15);
-        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        cell.setBackgroundColor(new Color(210, 212, 255));
-        cell.setPhrase(new Phrase("Test Name(s)", boldFont));
-        table.addCell(cell);
-        cell.setPhrase(new Phrase("Result", boldFont));
-        table.addCell(cell);
-        cell.setPhrase(new Phrase("Abn", boldFont));
-        table.addCell(cell);
-        cell.setPhrase(new Phrase("Reference Range", boldFont));
-        table.addCell(cell);
-        cell.setPhrase(new Phrase("Units", boldFont));
-        table.addCell(cell);
-        cell.setPhrase(new Phrase("Date/Time Completed", boldFont));
-        table.addCell(cell);
-        cell.setPhrase(new Phrase("Status", boldFont));
-        table.addCell(cell);
+		// table headers
+		cell.setColspan(1);
+		cell.setBorder(15);
+		cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+		cell.setBackgroundColor(new Color(210, 212, 255));
+		cell.setPhrase(new Phrase("Test Name(s)", boldFont));
+		table.addCell(cell);
+		cell.setPhrase(new Phrase("Result", boldFont));
+		table.addCell(cell);
+		cell.setPhrase(new Phrase("Abn", boldFont));
+		table.addCell(cell);
+		cell.setPhrase(new Phrase("Reference Range", boldFont));
+		table.addCell(cell);
+		cell.setPhrase(new Phrase("Units", boldFont));
+		table.addCell(cell);
+		cell.setPhrase(new Phrase("Date/Time Completed", boldFont));
+		table.addCell(cell);
+		cell.setPhrase(new Phrase("Status", boldFont));
+		table.addCell(cell);
 
-        //add test results
-        int obrCount = handler.getOBRCount();
-        int linenum = 0;
-        cell.setBorder(12);
-        cell.setBorderColor(Color.WHITE);
+		// add test results
+		int obrCount = handler.getOBRCount();
+		int linenum = 0;
+		cell.setBorder(12);
+		cell.setBorderColor(Color.BLACK); // cell.setBorderColor(Color.WHITE);
+		cell.setBackgroundColor(new Color(255, 255, 255));
 
-        for (int j=0; j < obrCount; j++){
-            boolean obrFlag = false;
-            int obxCount = handler.getOBXCount(j);
-            for (int k=0; k < obxCount; k++){
-                String obxName = handler.getOBXName(j, k);
+		if (handler.getMsgType().equals("MEDVUE")) {
 
-                // ensure that the result is a real result
-                if ( !handler.getOBXResultStatus(j, k).equals("DNS") && !obxName.equals("") && handler.getObservationHeader(j, k).equals(header)){ // <<--  DNS only needed for MDS messages
-                    String obrName = handler.getOBRName(j);
+			//cell.setBackgroundColor(getHighlightColor(linenum));
+			linenum++;
+			cell.setPhrase(new Phrase(handler.getRadiologistInfo(), boldFont));
+			cell.setColspan(7);
+			cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+			table.addCell(cell);
+			cell.setPaddingLeft(100);
+			cell.setColspan(7);
+			cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+			cell.setPhrase(new Phrase(handler.getOBXComment(1, 1, 1)
+					.replaceAll("<br\\s*/*>", "\n"), font));
+			table.addCell(cell);
 
-                    // add the obrname if necessary
-                    if(!obrFlag && !obrName.equals("") && !(obxName.contains(obrName) && obxCount < 2)){
-                        cell.setBackgroundColor(getHighlightColor(linenum));
-                        linenum++;
-                        cell.setPhrase(new Phrase(obrName, boldFont));
-                        cell.setColspan(7);
-                        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-                        table.addCell(cell);
-                        cell.setColspan(1);
-                        obrFlag = true;
-                    }
+		} else {
+			for (int j = 0; j < obrCount; j++) {
+				boolean obrFlag = false;
+				int obxCount = handler.getOBXCount(j);
+				for (int k = 0; k < obxCount; k++) {
+					String obxName = handler.getOBXName(j, k);
+					
+					if (!handler.getOBXResultStatus(j, k).equals("TDIS")) {
 
-                    // add the obx results and info
-                    Font lineFont = new Font(bf, 8, Font.NORMAL, getTextColor(handler.getOBXAbnormalFlag(j, k)));
-                    cell.setBackgroundColor(getHighlightColor(linenum));
-                    linenum++;
-                    cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-                    cell.setPhrase(new Phrase( (obrFlag ? "   " : "")+obxName, lineFont ));
-                    table.addCell(cell);
-                    cell.setPhrase(new Phrase(handler.getOBXResult(j, k).replaceAll("<br\\s*/*>", "\n"), lineFont));
-                    cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-                    table.addCell(cell);
-                    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                    cell.setPhrase(new Phrase((handler.isOBXAbnormal(j, k) ? handler.getOBXAbnormalFlag(j, k) : "N"), lineFont));
-                    table.addCell(cell);
-                    cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-                    cell.setPhrase(new Phrase(handler.getOBXReferenceRange(j, k), lineFont));
-                    table.addCell(cell);
-                    cell.setPhrase(new Phrase(handler.getOBXUnits(j, k), lineFont));
-                    table.addCell(cell);
-                    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                    cell.setPhrase(new Phrase(handler.getTimeStamp(j, k), lineFont));
-                    table.addCell(cell);
-                    cell.setPhrase(new Phrase(handler.getOBXResultStatus(j, k), lineFont));
-                    table.addCell(cell);
+						// ensure that the result is a real result
+						if ((!handler.getOBXResultStatus(j, k).equals("DNS")
+								&& !obxName.equals("")
+								&& handler.getObservationHeader(j, k).equals(
+										header)) || 
+								(handler.getMsgType().equals("EPSILON") && handler.getOBXIdentifier(j,k).equals(header) && !obxName.equals("")) 
+								|| (handler.getMsgType().equals("PFHT") && !obxName.equals("") && handler.getObservationHeader(j,k).equals(header))) { // <<-- DNS only needed for
+													// MDS messages
+							String obrName = handler.getOBRName(j);
 
-                    // add obx comments
-                    if (handler.getOBXCommentCount(j, k) > 0){
-                        cell.setBackgroundColor(getHighlightColor(linenum));
-                        linenum++;
-                        cell.setPaddingLeft(100);
-                        cell.setColspan(7);
-                        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-                        for (int l=0; l < handler.getOBXCommentCount(j, k); l++){
+							// add the obrname if necessary
+							if (!obrFlag
+									&& !obrName.equals("")
+									&& !(obxName.contains(obrName) && obxCount < 2)) {
+								// cell.setBackgroundColor(getHighlightColor(linenum));
+								linenum++;
+								cell.setPhrase(new Phrase(obrName, boldFont));
+								cell.setColspan(7);
+								cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+								table.addCell(cell);
+								cell.setColspan(1);
+								obrFlag = true;
+							}
 
-                            cell.setPhrase(new Phrase(handler.getOBXComment(j, k, l).replaceAll("<br\\s*/*>", "\n"), font));
-                            table.addCell(cell);
+							// add the obx results and info
+							Font lineFont = new Font(bf, 8, Font.NORMAL,
+									getTextColor(handler.getOBXAbnormalFlag(j,
+											k)));
+							// cell.setBackgroundColor(getHighlightColor(linenum));
+							linenum++;
+							cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+							cell.setPhrase(new Phrase((obrFlag ? "   " : "")
+									+ obxName, lineFont));
+							table.addCell(cell);
+							cell.setPhrase(new Phrase(handler
+									.getOBXResult(j, k).replaceAll(
+											"<br\\s*/*>", "\n"), lineFont));
+							cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+							table.addCell(cell);
+							cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+							cell.setPhrase(new Phrase(
+									(handler.isOBXAbnormal(j, k) ? handler
+											.getOBXAbnormalFlag(j, k) : "N"),
+									lineFont));
+							table.addCell(cell);
+							cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+							cell.setPhrase(new Phrase(handler
+									.getOBXReferenceRange(j, k), lineFont));
+							table.addCell(cell);
+							cell.setPhrase(new Phrase(
+									handler.getOBXUnits(j, k), lineFont));
+							table.addCell(cell);
+							cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+							cell.setPhrase(new Phrase(handler
+									.getTimeStamp(j, k), lineFont));
+							table.addCell(cell);
+							cell.setPhrase(new Phrase(handler
+									.getOBXResultStatus(j, k), lineFont));
+							table.addCell(cell);
+							
+						if(!handler.getMsgType().equals("PFHT")) {
+							// add obx comments
+							if (handler.getOBXCommentCount(j, k) > 0) {
+								// cell.setBackgroundColor(getHighlightColor(linenum));
+								linenum++;
+								cell.setPaddingLeft(100);
+								cell.setColspan(7);
+								cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+								for (int l = 0; l < handler.getOBXCommentCount(
+										j, k); l++) {
 
-                        }
-                        cell.setPadding(3);
-                        cell.setColspan(1);
-                    }
+									cell.setPhrase(new Phrase(handler
+											.getOBXComment(j, k, l).replaceAll(
+													"<br\\s*/*>", "\n"), font));
+									table.addCell(cell);
 
-                }
-            }
+								}
+								cell.setPadding(3);
+								cell.setColspan(1);
+							}
+						}
+						// if (DNS)
+						} else if ((handler.getMsgType().equals("EPSILON") && handler.getOBXIdentifier(j,k).equals(header) && obxName.equals("")) || (handler.getMsgType().equals("PFHT") && obxName.equals("")&& handler.getObservationHeader(j,k).equals(header))){
+							// cell.setBackgroundColor(getHighlightColor(linenum));
+							linenum++;
+							cell.setPaddingLeft(100);
+							cell.setColspan(7);
+							cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+							cell.setPhrase(new Phrase(handler
+									.getOBXResult(j, k).replaceAll(
+											"<br\\s*/*>", "\n"), font));
+							table.addCell(cell);
+							cell.setPadding(3);
+							cell.setColspan(1);
+						
+						}
+						if (handler.getMsgType().equals("PFHT") && !handler.getNteForOBX(j,k).equals("") && handler.getNteForOBX(j,k)!=null) {
+							// cell.setBackgroundColor(getHighlightColor(linenum));
+							linenum++;
+							cell.setPaddingLeft(100);
+							cell.setColspan(7);
+							cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+							cell.setPhrase(new Phrase(handler.getNteForOBX(j, k).replaceAll("<br\\s*/*>", "\n"),font));
+							table.addCell(cell);
+							cell.setPadding(3);
+							cell.setColspan(1);
+							
+							if (handler.getOBXCommentCount(j, k) > 0) {
+								// cell.setBackgroundColor(getHighlightColor(linenum));
+								linenum++;
+								cell.setPaddingLeft(100);
+								cell.setColspan(7);
+								cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+								for (int l = 0; l < handler.getOBXCommentCount(
+										j, k); l++) {
 
-            // add obr comments
-            if (handler.getObservationHeader(j, 0).equals(header)) {
-                cell.setColspan(7);
-                cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-                for (int k=0; k < handler.getOBRCommentCount(j); k++){
-                    // the obrName should only be set if it has not been
-                    // set already which will only have occured if the
-                    // obx name is "" or if it is the same as the obr name
-                    if(!obrFlag && handler.getOBXName(j, 0).equals("")){
-                        cell.setBackgroundColor(getHighlightColor(linenum));
-                        linenum++;
+									cell.setPhrase(new Phrase(handler
+											.getOBXComment(j, k, l).replaceAll(
+													"<br\\s*/*>", "\n"), font));
+									table.addCell(cell);
 
-                        cell.setPhrase(new Phrase(handler.getOBRName(j), boldFont));
-                        table.addCell(cell);
-                        obrFlag = true;
-                    }
+								}
+								cell.setPadding(3);
+								cell.setColspan(1);
+							}
+						}
+					} else {
+						if (handler.getOBXCommentCount(j, k) > 0) {
+							// cell.setBackgroundColor(getHighlightColor(linenum));
+							linenum++;
+							cell.setPaddingLeft(100);
+							cell.setColspan(7);
+							cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+							for (int l = 0; l < handler
+									.getOBXCommentCount(j, k); l++) {
 
-                    cell.setBackgroundColor(getHighlightColor(linenum));
-                    linenum++;
-                    cell.setPaddingLeft(100);
-                    cell.setPhrase(new Phrase(handler.getOBRComment(j, k).replaceAll("<br\\s*/*>", "\n"), font));
-                    table.addCell(cell);
-                    cell.setPadding(3);
-                }
-                cell.setColspan(1);
-            }
-        }
-        document.add(table);
+								cell.setPhrase(new Phrase(handler
+										.getOBXComment(j, k, l).replaceAll(
+												"<br\\s*/*>", "\n"), font));
+								table.addCell(cell);
 
+							}
+							cell.setPadding(3);
+							cell.setColspan(1);
+						}
+					} // if (!handler.getOBXResultStatus(j, k).equals("TDIS"))
 
-    }
+				}
+				
+			if (!handler.getMsgType().equals("PFHT")) {
+				// add obr comments
+				if (handler.getObservationHeader(j, 0).equals(header)) {
+					cell.setColspan(7);
+					cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+					for (int k = 0; k < handler.getOBRCommentCount(j); k++) {
+						// the obrName should only be set if it has not been
+						// set already which will only have occured if the
+						// obx name is "" or if it is the same as the obr name
+						if (!obrFlag && handler.getOBXName(j, 0).equals("")) {
+							// cell.setBackgroundColor(getHighlightColor(linenum));
+							linenum++;
+
+							cell.setPhrase(new Phrase(handler.getOBRName(j),
+									boldFont));
+							table.addCell(cell);
+							obrFlag = true;
+						}
+
+						// cell.setBackgroundColor(getHighlightColor(linenum));
+						linenum++;
+						cell.setPaddingLeft(100);
+						cell.setPhrase(new Phrase(handler.getOBRComment(j, k)
+								.replaceAll("<br\\s*/*>", "\n"), font));
+						table.addCell(cell);
+						cell.setPadding(3);
+					}
+					cell.setColspan(1);
+				}
+			}
+			} // for (j)
+
+		}// if (isMEDVUE)
+
+		document.add(table);
+
+	}
+
 
     /*
      *  getTextColor will return the the color corresponding to the abnormal

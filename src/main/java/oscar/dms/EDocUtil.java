@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -173,7 +173,7 @@ public final class EDocUtil extends SqlUtilBaseS {
 		doc.setContenttype(newDocument.getContentType());
 		doc.setPublic1(Integer.parseInt(newDocument.getDocPublic()));
 		doc.setObservationdate(MyDateFormat.getSysDate(newDocument.getObservationDate()));
-		doc.setNumberOfPages(newDocument.getNumberOfPages());
+		doc.setNumberofpages(newDocument.getNumberOfPages());
 		doc.setAppointmentNo(newDocument.getAppointmentNo());
 		documentDao.persist(doc);
 
@@ -199,11 +199,11 @@ public final class EDocUtil extends SqlUtilBaseS {
     	ctldoctypedao.changeDocType(docType, module, status);
     }
 
-    /** new method to let the user add a new DocumentType into the database */ 
-    public static void addDocTypeSQL(String docType, String module){ 
-    	ctldoctypedao.addDocType(docType, module);         
-    } 
-    
+    /** new method to let the user add a new DocumentType into the database */
+    public static void addDocTypeSQL(String docType, String module){
+    	ctldoctypedao.addDocType(docType, module);
+    }
+
 	public static void detachDocConsult(String docNo, String consultId) {
 		List<ConsultDocs> consultDocs = consultDocsDao.findByRequestIdDocumentNoAndDocumentType(Integer.parseInt(consultId), Integer.parseInt(docNo), "D");
     	for(ConsultDocs consultDoc:consultDocs) {
@@ -884,7 +884,7 @@ public final class EDocUtil extends SqlUtilBaseS {
 		ArrayList<EDoc> results = new ArrayList<EDoc>();
 
 		try {
-			
+
 			List<CachedDemographicDocument> remoteDocuments  = null;
 			try {
 				if (!CaisiIntegratorManager.isIntegratorOffline()){
@@ -895,12 +895,12 @@ public final class EDocUtil extends SqlUtilBaseS {
 				MiscUtils.getLogger().error("Unexpected error.", e);
 				CaisiIntegratorManager.checkForConnectionError(e);
 			}
-			
+
 			if(CaisiIntegratorManager.isIntegratorOffline()){
 				MiscUtils.getLogger().debug("getting fall back documents for "+demographicId);
-				remoteDocuments = IntegratorFallBackManager.getRemoteDocuments(demographicId);	
+				remoteDocuments = IntegratorFallBackManager.getRemoteDocuments(demographicId);
 			}
-			
+
 
 			for (CachedDemographicDocument remoteDocument : remoteDocuments) {
 				results.add(toEDoc(remoteDocument));
@@ -944,4 +944,11 @@ public final class EDocUtil extends SqlUtilBaseS {
 
 	    return(eDoc);
     }
+
+	public static void subtractOnePage(String docId) {
+		Document doc = documentDao.find(Integer.parseInt(docId));
+		doc.setNumberofpages(doc.getNumberofpages()-1);
+
+		documentDao.merge(doc);
+	}
 }

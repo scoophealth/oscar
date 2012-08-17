@@ -45,7 +45,7 @@ function onSubmitCheck(){
 	}
 	if(!check_date('endDate')){
 		return false;
-	}	
+	}
 }
 
 </script>
@@ -55,7 +55,7 @@ function onSubmitCheck(){
 </head>
 
 <body>
-<form method="post" action="../dms/inboxManage.do" onSubmit="return onSubmitCheck();"> 
+<form method="get" action="../dms/inboxManage.do" onSubmit="return onSubmitCheck();">
     <input type="hidden" name="method" value="prepareForIndexPage"/>
 <table width="100%" height="100%" border="0">
 	<tr class="MainTableTopRow">
@@ -93,7 +93,7 @@ function onSubmitCheck(){
 				</td>
 				<td><input type="text" name="hnum" size="15"></td>
 			</tr>
-			
+
 			<tr>
 				<td>Start Date:(yyyy-mm-dd)
 				</td>
@@ -104,15 +104,15 @@ function onSubmitCheck(){
 				</td>
 				<td><input type="text" name="endDate" size="15" id="endDate"></td>
 			</tr>
-			
-			
-			
+
+
+
 			<tr>
 				<td valign="top"><bean:message
 					key="oscarMDS.search.formPhysician" />:</td>
 				<td><select name="searchProviderNo" size="10">
 					<optgroup>
-						<option value=""><bean:message
+						<option value="-1"><bean:message
 							key="oscarMDS.search.formPhysicianAll" /></option>
 						<option value="0"><bean:message
 							key="oscarMDS.search.formPhysicianUnclaimed" /></option>

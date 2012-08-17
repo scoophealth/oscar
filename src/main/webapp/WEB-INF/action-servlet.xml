@@ -14,6 +14,9 @@
 		<property name="documentDAO" ref="documentDAO" />
 		<property name="providerInboxRoutingDAO" ref="providerInboxRoutingDAO" />
 	</bean>
+	<bean name="/dms/SplitDocument" class="org.oscarehr.document.web.SplitDocumentAction">
+		<property name="documentDAO" ref="documentDAO" />
+	</bean>
 	<bean name="/dms/inboxManage" class="oscar.dms.actions.DmsInboxManageAction">
 		<property name="providerInboxRoutingDAO" ref="providerInboxRoutingDAO" />
 		<property name="queueDocumentLinkDAO" ref="queueDocumentLinkDAO" />

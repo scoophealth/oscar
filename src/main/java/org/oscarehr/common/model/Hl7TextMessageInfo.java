@@ -9,13 +9,17 @@
 
 package org.oscarehr.common.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
-public class Hl7TextMessageInfo extends AbstractModel<Integer>{
+@Table(name = "hl7TextMessageInfo")
+public class Hl7TextMessageInfo extends AbstractModel<Integer> implements Serializable {
 	
 	
 	public String message;

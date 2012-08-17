@@ -26,10 +26,10 @@ import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
-import org.oscarehr.common.model.HL7HandlerMSHMapping;
-import org.oscarehr.common.model.Hl7TextMessageInfo;
 import org.oscarehr.common.dao.HL7HandlerMSHMappingDao;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
+import org.oscarehr.common.model.HL7HandlerMSHMapping;
+import org.oscarehr.common.model.Hl7TextMessageInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarLab.ca.all.pageUtil.ORUR01Manager;
@@ -158,7 +158,7 @@ public class TDISHandler implements MessageHandler {
 	}
 
 	private ArrayList<String> getMatchingHL7Labs(String hl7Body) {
-		Base64 base64 = new Base64();
+		Base64 base64 = new Base64(0);
 		ArrayList<String> ret = new ArrayList<String>();
 		int monthsBetween = 0;
 		Hl7TextInfoDao hl7TextInfoDao = (Hl7TextInfoDao) SpringUtils.getBean("hl7TextInfoDao");
