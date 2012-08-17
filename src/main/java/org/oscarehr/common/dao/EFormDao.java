@@ -83,7 +83,7 @@ public class EFormDao extends AbstractDao<EForm> {
     	StringBuilder sb=new StringBuilder();
     	sb.append("select x from ");
     	sb.append(modelClass.getSimpleName());
-    	sb.append(" x where x.formName='Rich Text Letter' and x.subject='Rich Text Letter Generator - Indivica'");
+    	sb.append(" x where x.formName='Rich Text Letter' and x.subject='Rich Text Letter Generator'");
        	Query query = entityManager.createQuery(sb.toString());
     	
 		@SuppressWarnings("unchecked")
@@ -102,7 +102,7 @@ public class EFormDao extends AbstractDao<EForm> {
     	StringBuilder sb=new StringBuilder();
     	sb.append("select x from ");
     	sb.append(modelClass.getSimpleName());
-    	sb.append(" x where x.formName='Rich Text Letter' and x.subject='Rich Text Letter Generator - Indivica'");
+    	sb.append(" x where x.formName='Rich Text Letter' and x.subject='Rich Text Letter Generator'");
        	Query query = entityManager.createQuery(sb.toString());
     	
 		@SuppressWarnings("unchecked")
