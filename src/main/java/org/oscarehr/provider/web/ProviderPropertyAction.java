@@ -1948,7 +1948,65 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
 
         return viewIntegratorProperties(mapping, form, request, response);
     }
+ public ActionForward viewPatientNameLength(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request, HttpServletResponse response) {
 
+		DynaActionForm frm = (DynaActionForm)actionform;
+		String provider = (String) request.getSession().getAttribute("user");
+
+		UserProperty length = this.userPropertyDAO.getProp(provider, UserProperty.PATIENT_NAME_LENGTH);
+
+		if (length == null){
+			length = new UserProperty();
+		}
+
+
+		request.setAttribute("patientnameLength",length);
+
+
+		request.setAttribute("providertitle","provider.patientNameLength.title"); 
+		request.setAttribute("providermsgPrefs","provider.patientNameLength.msgPrefs"); 
+		request.setAttribute("providermsgProvider","provider.patientNameLength.msgProvider"); 
+		request.setAttribute("providermsgEdit","provider.patientNameLength.msgEdit"); 
+		request.setAttribute("providerbtnSubmit","provider.patientNameLength.btnSubmit"); 
+		request.setAttribute("providermsgSuccess","provider.patientNameLength.msgSuccess"); 
+		request.setAttribute("method","savePatientNameLength");
+
+		frm.set("patientNameLength", length);
+
+		return actionmapping.findForward("genPatientNameLength");
+    }
+
+    public ActionForward savePatientNameLength(ActionMapping actionmapping,ActionForm actionform, HttpServletRequest request, HttpServletResponse response) {
+
+		DynaActionForm frm = (DynaActionForm)actionform;
+		UserProperty s = (UserProperty)frm.get("patientNameLength");
+
+		String length = s != null ? s.getValue() : "";
+
+		String provider = (String) request.getSession().getAttribute("user");
+
+		UserProperty wProperty = this.userPropertyDAO.getProp(provider,UserProperty.PATIENT_NAME_LENGTH);
+		if( wProperty == null ) {
+			wProperty = new UserProperty();
+			wProperty.setProviderNo(provider);
+			wProperty.setName(UserProperty.PATIENT_NAME_LENGTH);
+		}
+		wProperty.setValue(length);
+		userPropertyDAO.saveProp(wProperty);
+
+
+		request.setAttribute("status", "success");
+		request.setAttribute("providertitle","provider.patientNameLength.title"); //=Set myDrugref ID
+		request.setAttribute("providermsgPrefs","provider.patientNameLength.msgPrefs"); //=Preferences"); //
+		request.setAttribute("providermsgProvider","provider.patientNameLength.msgProvider"); //=myDrugref ID
+		request.setAttribute("providermsgEdit","provider.patientNameLength.msgEdit"); //=Enter your desired login for myDrugref
+		request.setAttribute("providerbtnSubmit","provider.patientNameLength.btnSubmit"); //=Save
+		request.setAttribute("providermsgSuccess","provider.patientNameLength.msgSuccess"); //=myDrugref Id saved
+		request.setAttribute("method","savePatientNameLength");
+
+		return actionmapping.findForward("genPatientNameLength");
+	}
+    
     /**
      * Creates a new instance of ProviderPropertyAction
      */
