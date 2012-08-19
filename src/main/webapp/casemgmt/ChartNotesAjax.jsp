@@ -115,7 +115,7 @@ if (request.getParameter("caseManagementEntryForm") == null)
 }
 
 Integer offset = Integer.parseInt(request.getParameter("offset"));
-
+int maxId = 0;
 %>
 
 <c:if test="${not empty notesToDisplay}">
@@ -242,7 +242,9 @@ Integer offset = Integer.parseInt(request.getParameter("offset"));
 		String[] is =issuesToHide.split(",");
 
 		boolean remoteCapableProfessionalSpecialists = professionalSpecialistDao.hasRemoteCapableProfessionalSpecialists();
-
+		
+		int currentNcId = 0;
+		String strCurrentNcId = null;
 		for (idx = 0; idx < noteSize; ++idx)
 		{
 
@@ -260,7 +262,7 @@ Integer offset = Integer.parseInt(request.getParameter("offset"));
 			}
 			
 			if (noteId!=null)
-			{
+			{			    
 			    globalNoteId = note.getNoteId().toString();
 			    
 				if (note.isDocument()) {
@@ -327,10 +329,17 @@ Integer offset = Integer.parseInt(request.getParameter("offset"));
 					}
 				}
 			}
+			
+			strCurrentNcId = offset.toString() + String.valueOf(idx+1);
+			currentNcId = Integer.parseInt(strCurrentNcId);
+			
+			if( currentNcId > maxId ) {
+			    maxId = currentNcId;
+			}
 
 			//String metaDisplay = (hideMetaData)?"none":"block";
 		%>
-		<div id="nc<%=offset%><%=idx+1%>" style="display:<%=noteDisplay %>" class="note<%=note.isDocument()||note.isCpp()||note.isEformData()||note.isEncounterForm()||note.isInvoice()?"":" noteRounded"%>">
+		<div id="nc<%=offset > 0 ? offset : ""%><%=idx+1%>" style="display:<%=noteDisplay %>" class="note<%=note.isDocument()||note.isCpp()||note.isEformData()||note.isEncounterForm()||note.isInvoice()?"":" noteRounded"%>">
 			<input type="hidden" id="signed<%=globalNoteId%>" value="<%=note.isSigned()%>">
 			<input type="hidden" id="full<%=globalNoteId%>" value="<%=fulltxt || (note.getNoteId() !=null && note.getNoteId().equals(savedId))%>">
 			<input type="hidden" id="bgColour<%=globalNoteId%>" value="<%=bgColour%>">
@@ -549,7 +558,7 @@ Integer offset = Integer.parseInt(request.getParameter("offset"));
 					 		String atbname = "anno" + String.valueOf(new Date().getTime());
 					 		String addr = request.getContextPath() + "/annotation/annotation.jsp?atbname=" + atbname + "&table_id=" + String.valueOf(note.getNoteId()) + "&display=EChartNote&demo=" + demographicNo;
 						%>
-							<input id="anno<%=globalNoteId%>" style="height:10px;width:10px" type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/annotation.png"/>" title='<bean:message key="oscarEncounter.Index.btnAnnotation"/>' style='float: right; margin-right: 5px; margin-bottom: 3px;' onclick="window.open('<%=addr%>','anwin','width=400,height=500');$('annotation_attribname').value='<%=atbname%>'; return false;">
+							<input type="image" id="anno<%=globalNoteId%>" src='<%=ctx %>/oscarEncounter/graphics/annotation.png' title='<bean:message key="oscarEncounter.Index.btnAnnotation"/>' style="float: right; margin-right: 5px; margin-bottom: 3px; height:10px;width:10px" onclick="window.open('<%=addr%>','anwin','width=400,height=500');$('annotation_attribname').value='<%=atbname%>'; return false;">
 						<%}
 						%>
 							<%-- render the note contents here --%>
@@ -765,9 +774,14 @@ Integer offset = Integer.parseInt(request.getParameter("offset"));
 	}
 	%>	
 	
+<script type="text/javascript">
+	maxNcId = <%=maxId%>;
+</script>
+
 
 <% if (request.getAttribute("moreNotes") == null) { %>
-<script type="text/javascript">
+<script type="text/javascript">	
+
 	jQuery(document).ready(function() {
 		<%
 		String singleLineFormat="false";
