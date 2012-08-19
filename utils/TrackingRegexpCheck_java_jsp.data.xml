@@ -40,7 +40,6 @@
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/model/CaseManagementIssue.java:protected Set notes = new HashSet();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/service/CaseManagementManager.java:HashMap map = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/web/BaseCaseManagementEntryAction.java:cIssue.setNotes(new HashSet());</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/casemgmt/web/CaseManagementViewAction.java:Set providers = new HashSet();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/casemgmt/web/CaseManagementViewAction.java:map = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/DxresearchDAO.java:listItems.addAll(new dxQuickListItemsHandler(quickListName).getDxQuickListItemsVector());</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/QueueDao.java:Hashtable ht=new Hashtable();</ViolationValue>
@@ -1113,6 +1112,10 @@
         <ViolationValue>/src/main/java/org/oscarehr/survey/dao/oscar/hibernate/OscarFormDAOHibernate.java:public class OscarFormDAOHibernate extends HibernateDaoSupport implements</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/util/AppointmentUtil.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/util/DbConnectionFilter.java:Connection c = ((DataSource) SpringUtils.getBean("dataSource")).getConnection();</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/util/TrackingBasicDataSource.java:Connection c = trackConnection(super.getConnection());</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/util/TrackingBasicDataSource.java:Connection c = trackConnection(super.getConnection(username, password));</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/util/TrackingBasicDataSource.java:public Connection getConnection() throws SQLException {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/util/TrackingBasicDataSource.java:public Connection getConnection(String username, String password) throws SQLException {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/AppointmentMainBean.java:dbPH=new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/AppointmentMainBean.java:if(aKeyword[0].getParamType().equals(DBPreparedHandlerParam.PARAM_STRING) &amp;&amp;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/AppointmentMainBean.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
@@ -1174,6 +1177,9 @@
         <ViolationValue>/src/main/java/oscar/form/FrmBCARRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCARRecord.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCARRecord.java:import oscar.login.DBHelp;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/form/FrmBCBirthSumMo2008Record.java:DBHelp db = new DBHelp();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/form/FrmBCBirthSumMo2008Record.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/form/FrmBCBirthSumMo2008Record.java:import oscar.login.DBHelp;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCBrithSumMoRecord.java:DBHelp db = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCBrithSumMoRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCBrithSumMoRecord.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
@@ -1190,6 +1196,9 @@
         <ViolationValue>/src/main/java/oscar/form/FrmBCINRRecord.java:ResultSet rs1 = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCINRRecord.java:ResultSet rs2 = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCINRRecord.java:import oscar.login.DBHelp;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/form/FrmBCNewBorn2008Record.java:DBHelp db = new DBHelp();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/form/FrmBCNewBorn2008Record.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/form/FrmBCNewBorn2008Record.java:import oscar.login.DBHelp;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCNewBornRecord.java:DBHelp db = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCNewBornRecord.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/form/FrmBCNewBornRecord.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
@@ -2020,14 +2029,6 @@
         <ViolationValue>/src/main/webapp/report/reportpatientchartlistspecial.jsp:&lt;%@ page import="oscar.login.DBHelp"%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportpatientchartlistspecial.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/webapp/system/dbcpMonitor.jsp:ResultSet rsProcessList = DBHandler.GetSQL("show processlist");</ViolationValue>
-
-        <ViolationValue>/src/main/java/oscar/form/FrmBCNewBorn2008Record.java:import oscar.login.DBHelp;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmBCNewBorn2008Record.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmBCNewBorn2008Record.java:DBHelp db = new DBHelp();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmBCBirthSumMo2008Record.java:import oscar.login.DBHelp;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmBCBirthSumMo2008Record.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/form/FrmBCBirthSumMo2008Record.java:DBHelp db = new DBHelp();</ViolationValue>
-
     </ViolationSet>
     <ViolationSet>
         <ViolationKey>.*StringBuffer.*|.*Hashtable.*|.*Vector.*</ViolationKey>
@@ -3421,7 +3422,6 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("atc",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("atc2text",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("atcFromBrand",params);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("get_atcs_by_din",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("drug2atclist",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("druglist2atclist",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("getAISameByDrugCode",params);</ViolationValue>
@@ -3433,6 +3433,7 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("getProductData",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("getRouteFromDrugCode",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("getStrengths",params);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("get_atcs_by_din",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("get_drug",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("interaction",params);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = (Vector) callWebservice("interaction_by_drugnames",params);</ViolationValue>
