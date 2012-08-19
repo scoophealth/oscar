@@ -3014,8 +3014,10 @@ function autoCompleteShowMenuCPP(element, update) {
         var pos;
         var imgId;
 
-        for( idx = 0; idx <= numNotes; ++idx ) {
+        for( idx = 1; idx <= maxNcId; ++idx ) {
+        	
         	if($("nc"+idx) == null) continue;
+        	noteDate = null;
             notesDiv = $("nc" + idx).down('div');
             noteId = notesDiv.id.substr(1);  //get note id
             if(noteId==0) continue;
@@ -3030,7 +3032,7 @@ function autoCompleteShowMenuCPP(element, update) {
 
             //trim leading and trailing whitespace from date
             noteDate = noteDate.replace(/^\s+|\s+$/g,"");
-
+			
             if( noteDate != null ) {
                 //grab date and splice off time and format for js date object
                 noteDate = noteDate.substr(0,noteDate.indexOf(" "));
@@ -3038,6 +3040,7 @@ function autoCompleteShowMenuCPP(element, update) {
                 formatdate = tmp[1] + " " + tmp[0] + ", " + tmp[2];
                 msnote = Date.parse(formatdate);
                 pos = noteIsQeued(noteId);
+                                
                 if( msnote >= msbeg && msnote <= msend ) {
                     if( pos == -1 )
                         addPrintQueue(noteId);
@@ -3148,7 +3151,10 @@ function autoCompleteShowMenuCPP(element, update) {
        Event.stop(e);
 
         //cycle through container divs for each note
-        for( idx = 1; idx <= numNotes; ++idx ) {
+        for( idx = 1; idx <= maxNcId; ++idx ) {
+        
+        	if( $("nc" + idx) == null ) continue;
+        	
             notesDiv = $("nc" + idx).down('div');
             noteId = notesDiv.id.substr(1);  //get note id
             imgId = "print"+noteId;
@@ -3180,7 +3186,10 @@ function autoCompleteShowMenuCPP(element, update) {
         //$("notes2print").value = "";
 
         //cycle through container divs for each note
-        for( idx = 1; idx <= numNotes; ++idx ) {
+        for( idx = 1; idx <= maxNcId; ++idx ) {
+        
+        	if( $("nc" + idx) == null ) continue;
+        
             notesDiv = $("nc" + idx).down('div');
             noteId = notesDiv.id.substr(1);  //get note id
           //if print img present, add note to print queue if not already there
