@@ -69,30 +69,15 @@ jQuery("document").ready(function() {
 });
 
 function togglediv(el) {
-	var tmp = document.getElementById('s_' + el.id.substring(el.id.indexOf('_')+1));
-	if(effectMap[tmp.id] == 'down') {
-		new Effect.BlindUp(tmp,{ duration: 0.1 });
-		effectMap[tmp.id] = 'up';
-	} else {
-		new Effect.BlindDown(tmp,{ duration: 0.1 });
-		effectMap[tmp.id] = 'down';
-	}
+	jQuery('#s_' + el.id.substring(el.id.indexOf('_')+1)).toggle();
 }
 
 function expanddiv(el) {
-	var tmp = document.getElementById('s_' + el.id.substring(el.id.indexOf('_')+1));
-	if(effectMap[tmp.id] != 'down') {
-		new Effect.BlindDown(tmp,{ duration: 0.1 });
-		effectMap[tmp.id] = 'down';
-	}
+	jQuery('#s_' + el.id.substring(el.id.indexOf('_')+1)).show();
 }
 
 function collapsediv(el) {
-	var tmp = document.getElementById('s_' + el.id.substring(el.id.indexOf('_')+1));
-	if(effectMap[tmp.id] == 'down') {
-		new Effect.BlindUp(tmp,{ duration: 0.1 });
-		effectMap[tmp.id] = 'up';
-	}
+	jQuery('#s_' + el.id.substring(el.id.indexOf('_')+1)).hide();
 }
 
 function whiteField(el){

@@ -142,6 +142,11 @@ public class CaseManagementManager {
 
 	private static final Logger logger = MiscUtils.getLogger();
 
+
+	public CaseManagementIssue getIssueByIssueCode(String demo, String issue_code) {
+		return this.caseManagementIssueDAO.getIssuebyIssueCode(demo, issue_code);
+	}
+
 	/*
 	 * check to see if issue has been saved for this demo beforeif it has return issue; else return null
 	 */
@@ -297,7 +302,7 @@ public class CaseManagementManager {
     public List<CaseManagementNote> getNotesWithLimit(String demographic_no, Integer offset, Integer numToReturn) {
 		return caseManagementNoteDAO.getNotesByDemographicLimit(demographic_no, offset, numToReturn);
 	}
-    
+
 	public List<CaseManagementNote> getNotesInDateRange(String demographic_no, Date startDate, Date endDate) {
 		return caseManagementNoteDAO.getNotesByDemographicDateRange(demographic_no, startDate, endDate);
 	}
@@ -311,7 +316,7 @@ public class CaseManagementManager {
 	public List<CaseManagementIssue> getIssues(int demographic_no) {
 		return caseManagementIssueDAO.getIssuesByDemographicOrderActive(demographic_no, null);
 	}
-	
+
 	public Issue getIssueIByCmnIssueId(int cmnIssueId) {
 		return caseManagementIssueDAO.getIssueByCmnId(cmnIssueId);
 	}
@@ -368,6 +373,10 @@ public class CaseManagementManager {
 
 	public Issue getIssue(String issue_id) {
 		return this.issueDAO.getIssue(Long.valueOf(issue_id));
+	}
+
+	public Issue getIssueByCode(String issueCode) {
+		return this.issueDAO.findIssueByCode(issueCode);
 	}
 
 	public CaseManagementNote getNote(String note_id) {
@@ -506,13 +515,13 @@ public class CaseManagementManager {
 				MiscUtils.getLogger().error("Unexpected error.", e);
 				CaisiIntegratorManager.checkForConnectionError(e);
 			}
-			
+
 			if(CaisiIntegratorManager.isIntegratorOffline()){
-			   remoteDrugs = IntegratorFallBackManager.getRemoteDrugs(demographicId);	
+			   remoteDrugs = IntegratorFallBackManager.getRemoteDrugs(demographicId);
 			}
-			
-			
-			
+
+
+
 
 			for (CachedDemographicDrug cachedDrug : remoteDrugs) {
 				if (viewAll) {
@@ -1033,7 +1042,7 @@ public class CaseManagementManager {
 		return this.caseManagementNoteDAO.getIssueHistory(issueIds, demoNo);
 	}
 
-	
+
 	/**
 	 * @param issues Unfiltered Set of issues
 	 * @param providerNo provider reading issues
@@ -1117,7 +1126,7 @@ public class CaseManagementManager {
 
 		return filteredNotes;
 	}
-	
+
 	/**
 	 * @param issues Unfiltered Set of issues
 	 * @param providerNo provider reading issues
@@ -1147,7 +1156,7 @@ public class CaseManagementManager {
 		Secrole role = pp.getRole();
 
 		Map programAccessMap = ProgramAccessCache.getAccessMap(new Long(programId));
-		
+
 		// iterate through the issue list
 		for (EChartNoteEntry cmNote : notes) {
 			if(!cmNote.getType().equals("local_note") && !cmNote.getType().equals("remote_note")) {
@@ -1156,12 +1165,12 @@ public class CaseManagementManager {
 			}
 			String noteRole = null;
 			String noteRoleName = "";
-			
+
 			if(cmNote.getType().equals("local_note")) {
 				noteRole = cmNote.getRole();
 				noteRoleName = RoleCache.getRole(Long.valueOf(noteRole)).getName().toLowerCase();
 			}
-			if(cmNote.getType().equals("remote_note")) {				
+			if(cmNote.getType().equals("remote_note")) {
 				noteRoleName = cmNote.getRole();
 			}
 			ProgramAccess pa = null;
