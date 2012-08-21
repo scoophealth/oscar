@@ -40,6 +40,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.util.LabelValueBean;
+import org.oscarehr.common.dao.CtlBillingServiceDao;
 import org.oscarehr.common.dao.QueueDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Facility;
@@ -1124,22 +1125,13 @@ public class ProviderPropertyAction extends DispatchAction {
          String provider = (String) request.getSession().getAttribute("user");
          UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.WORKLOAD_MANAGEMENT);
 
-         if (prop == null){
+         if (prop == null)
              prop = new UserProperty();
-         }
 
-
-         ArrayList<LabelValueBean> serviceList = new ArrayList<LabelValueBean>();
-         try{
-             ResultSet rs = DBHandler.GetSQL("select distinct servicetype, servicetype_name from ctl_billingservice where status='A'");
-             while (rs.next()){
-                 String servicetype     = rs.getString("servicetype");
-                 String servicetypename = rs.getString("servicetype_name");
-                 serviceList.add(new LabelValueBean(servicetypename,servicetype));
-             }
-         }catch(Exception e){
-             MiscUtils.getLogger().error("Error", e);
-         }
+         ArrayList<LabelValueBean> serviceList = new ArrayList<LabelValueBean>();         
+		 CtlBillingServiceDao dao = SpringUtils.getBean(CtlBillingServiceDao.class);
+		 for (Object[] service : dao.getUniqueServiceTypes())
+			serviceList.add(new LabelValueBean(String.valueOf(service[0]), String.valueOf(service[1])));
          serviceList.add(new  LabelValueBean("None",""));
 
          request.setAttribute("dropOpts",serviceList);
