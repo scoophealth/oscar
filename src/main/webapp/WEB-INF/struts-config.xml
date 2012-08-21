@@ -322,8 +322,8 @@
 			<form-property name="client_status" type="org.oscarehr.PMmodule.model.ProgramClientStatus" />
 			<form-property name="searchStatus" type="java.lang.String"></form-property>
 			<form-property name="searchType" type="java.lang.String"></form-property>
-			<form-property name="searchFacilityId" type="java.lang.String"></form-property>	
-			<form-property name="vacancyOrTemplateId" type="java.lang.String"></form-property>		
+			<form-property name="searchFacilityId" type="java.lang.String"></form-property>
+			<form-property name="vacancyOrTemplateId" type="java.lang.String"></form-property>
 		</form-bean>
 		<form-bean name="agencyManagerForm" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="agency" type="org.oscarehr.PMmodule.model.Agency" />
@@ -943,7 +943,7 @@
 	        <action name="inputForm" path="/admin/RecommitHSFO2" parameter="method" scope="request" type="oscar.form.study.hsfo2.pageUtil.RecommitHSFOAction" >
        		     <forward name="schedulePage" path="/admin/recommitschedule.jsp" />
        		 </action>
-	
+
        		 <action name="HSFOForm2" path="/form/HSFOForm2" scope="request" type="oscar.form.study.hsfo2.pageUtil.ManageHSFOAction" >
        		     <forward name="registration" path="/form/hsfo2/HSFORegistrationForm.jsp" />
        		     <forward name="flowsheet" path="/form/hsfo2/HSFOFlowsheet.jsp" />
@@ -998,7 +998,7 @@
 			<forward name="guidelineDetail" path="/oscarEncounter/decisionSupport/guidelineDetail.jsp" />
 		</action>
 		<action path="/oscarEncounter/displayMyOscar" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayMyOscarAction"></action>
-		
+
 
 		<action input="/Index.jsp" path="/oscarEncounter/SaveEncounter" scope="request" type="oscar.oscarEncounter.pageUtil.EctSaveEncounterAction">
 			<forward name="saveAndStay" path="/oscarEncounter/Index.jsp?saved=true" />
@@ -1027,7 +1027,7 @@
 		</action>
 		<action input="/oscarConsultationRequest/ViewConsultationRequests.jsp" name="EctViewConsultationRequestsForm" path="/oscarEncounter/ViewConsultation" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsAction">
 			<forward name="success" path="/oscarEncounter/oscarConsultationRequest/ViewConsultationRequests.jsp" />
-			
+
 		</action>
 		<action input="/oscarConsultationRequest/ViewConsultationRequests.jsp" name="EctViewRequestForm" path="/oscarEncounter/ViewRequest" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewRequestAction">
 			<forward name="failESend" path="/oscarEncounter/ViewRequest.do" />
@@ -1410,7 +1410,6 @@
             <forward name="genEDocBrowserInDocumentReport"     path="/provider/setEDocBrowserInDocumentReport.jsp"/>
             <forward name="genEDocBrowserInMasterFile"     path="/provider/setEDocBrowserInMasterFile.jsp"/>
             <forward name="genPatientNameLength"     path="/provider/setPatientNameLength.jsp"/>
-            
                  </action>
 		<action input="/provider/providerIndivoIdSetter.jsp" name="setMyOscarIdForm" path="/setMyOscarId" scope="request" type="oscar.oscarProvider.pageUtil.ProEditMyOscarIdAction">
 			<forward name="success" path="/provider/providerIndivoIdSetter.jsp" />
@@ -2197,6 +2196,15 @@
 			<forward name="list" path="/eyeform/conreportlist.jsp" />
 		</action>
 
+		<action path="/eyeform/SendTickler" type="org.oscarehr.eyeform.EyeformSendTicklerAction"
+			scope="request" validate="false">
+		</action>
+
+		<action path="/eyeform/Util" type="org.oscarehr.eyeform.EyeformUtilAction"
+			scope="request" parameter="method">
+		</action>
+
+
 		<action path="/casemgmt/ExtPrintRegistry" type="org.oscarehr.casemgmt.web.ExtPrintRegistryAction" parameter="method" scope="request">
 		</action>
 
@@ -2477,10 +2485,10 @@
 			<forward name="migrate" path="/pregnancy/migrate.jsp" />
 			<forward name="pre-migrate" path="/pregnancy/premigrate.jsp" />
 		</action>
-		
-		
+
+
 		 <action path="/PageMonitoringService" scope="request" type="org.oscarehr.common.web.PageMonitoringAction" parameter="method" />
-		
+
 		<action path="/casemgmt/NotePermissions" type="org.oscarehr.casemgmt.web.NotePermissionsAction"
 			scope="request" validate="false" parameter="method" />
 

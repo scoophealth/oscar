@@ -1995,6 +1995,15 @@ insert into issue (code,description,role,update_date,priority,type) values ('Ocu
 insert into issue (code,description,role,update_date,priority,type) values ('PatientLog','Patient Log','nurse',now(),NULL,'system');
 insert into issue (`code`,`description`,`role`,`update_date`) Values('CurrentHistory','Current History', 'nurse', now());
 
+INSERT INTO `issue` (`code`, `description`, `role`, `update_date`, `priority`, `type`)
+VALUES
+        ('eyeformFollowUp', 'Follow-Up Item for Eyeform', 'nurse', NOW(), NULL, 'system'),
+        ('eyeformCurrentIssue', 'Current Presenting Issue Item for Eyeform', 'nurse', NOW(), NULL, 'system'),
+        ('eyeformPlan', 'Plan Item for Eyeform', 'nurse', NOW(), NULL, 'system'),
+        ('eyeformImpression', 'Impression History Item for Eyeform', 'nurse', NOW(), NULL, 'system'),
+        ('eyeformProblem', 'Problem List Item for Eyeform', 'nurse', NOW(), NULL, 'system');
+
+
 insert into HRMCategory values (null, 'General Oscar Lab', 'DEFAULT');
 insert into HRMCategory values (null, 'Oscar HRM Category CT:ABDW' ,'CT:ABDW');
 insert into HRMCategory values (null, 'Oscar HRM Category RAD:CSP5' ,'RAD:CSP5');
