@@ -37,6 +37,7 @@ import oscar.oscarDB.DBHandler;
 import oscar.util.DAO;
 
 
+@Deprecated
 public class ProviderDAO extends DAO {
     public ProviderDAO(Properties pvar)  {
     	//empty

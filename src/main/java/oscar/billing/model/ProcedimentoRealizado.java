@@ -16,6 +16,7 @@ import oscar.billing.cad.model.CadTiposAtendimento;
  * Bean for a done procedure.
  * </p>
  */
+@Deprecated
 public class ProcedimentoRealizado {
     ///////////////////////////////////////
     // attributes

@@ -12,6 +12,7 @@ import oscar.billing.fat.model.FatBpa;
  * Bean used for attendance type
  * </p>
  */
+@Deprecated
 public class CadTiposAtendimento {
 
 	///////////////////////////////////////

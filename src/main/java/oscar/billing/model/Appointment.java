@@ -46,6 +46,7 @@ import oscar.billing.fat.model.FatFormularioProcedimento;
  *
  * </p>
  */
+@Deprecated
 public class Appointment {
     public static final String TODOS = "T";
     public static final String PENDENTE = "D";

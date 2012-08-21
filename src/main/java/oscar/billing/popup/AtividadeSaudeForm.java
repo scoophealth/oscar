@@ -13,6 +13,7 @@ import org.apache.struts.action.ActionMapping;
 import oscar.billing.cad.model.CadProcedimentos;
 
 
+@Deprecated
 public class AtividadeSaudeForm extends ActionForm {
     private String dispatch;
     private int strutsAction;

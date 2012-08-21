@@ -15,6 +15,7 @@ import oscar.billing.model.Provider;
  *
  * </p>
  */
+@Deprecated
 public class CadAtividadesSaude {
     ///////////////////////////////////////
     // attributes

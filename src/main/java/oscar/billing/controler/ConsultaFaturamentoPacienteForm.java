@@ -10,7 +10,7 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 
-
+@Deprecated
 public class ConsultaFaturamentoPacienteForm extends ActionForm {
     private String dispatch;
     private int strutsAction;

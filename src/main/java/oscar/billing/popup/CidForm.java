@@ -13,7 +13,7 @@ import org.apache.struts.action.ActionMapping;
 import oscar.billing.cad.model.CadCid;
 import oscar.billing.cad.model.CadProcedimentos;
 
-
+@Deprecated
 public class CidForm extends ActionForm {
     private String dispatch;
     private int strutsAction;

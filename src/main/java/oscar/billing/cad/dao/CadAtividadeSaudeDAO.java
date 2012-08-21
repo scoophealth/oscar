@@ -20,6 +20,7 @@ import oscar.util.DAO;
  *
  * @author  lilian
  */
+@Deprecated
 public class CadAtividadeSaudeDAO extends DAO {
 
     public List<CadAtividadesSaude> list(String codigo, String desc) throws SQLException {

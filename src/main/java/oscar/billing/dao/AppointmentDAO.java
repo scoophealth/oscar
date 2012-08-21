@@ -48,6 +48,7 @@ import oscar.util.DateUtils;
 import oscar.util.FieldTypes;
 import oscar.util.SqlUtils;
 
+@Deprecated
 public class AppointmentDAO extends DAO {
 
 	AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");

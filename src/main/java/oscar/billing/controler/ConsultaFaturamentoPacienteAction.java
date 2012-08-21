@@ -14,7 +14,7 @@ import org.oscarehr.util.MiscUtils;
 import oscar.billing.dao.AppointmentDAO;
 import oscar.util.OscarAction;
 
-
+@Deprecated
 public class ConsultaFaturamentoPacienteAction extends OscarAction {
     private static Logger logger = MiscUtils.getLogger();
 

@@ -14,6 +14,7 @@ import java.util.TreeSet;
  *
  * </p>
  */
+@Deprecated
 public class FatFormularios {
     ///////////////////////////////////////
     // attributes
