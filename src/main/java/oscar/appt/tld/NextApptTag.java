@@ -22,11 +22,8 @@
  * Ontario, Canada
  */
 
-
 package oscar.appt.tld;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -35,76 +32,73 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.oscarehr.common.dao.OscarAppointmentDao;
+import org.oscarehr.common.model.Appointment;
 import org.oscarehr.util.MiscUtils;
-
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.util.SpringUtils;
 
 /**
  *
  * @author jay
  */
 public class NextApptTag extends TagSupport {
-    
-    /** Creates a new instance of NextApptTag */
-    public NextApptTag() {
-    }
-    
-    public void setDemographicNo(String demoNo1)    {
-       demoNo = demoNo1;
-    }
 
-    public String getDemographicNo()    {
-        return demoNo;
-    }
+	private String demoNo = null;
+	private String date = null;
+	private String format = null;
 
-    public int doStartTag() throws JspException    {
-       Date nextApptDate = null;
-       if (demoNo != null && !demoNo.equalsIgnoreCase("") && !demoNo.equalsIgnoreCase("null")){
-           try {
-              String sql = "select * from appointment where demographic_no = '"+demoNo+"' and status not like '%C%' and appointment_date >= now() order by appointment_date";
-              ResultSet rs = DBHandler.GetSQL(sql);
-              if (rs.next()) {
-                 nextApptDate = rs.getDate("appointment_date");
-              }
-              rs.close();
-           }catch(SQLException e)        {
-             MiscUtils.getLogger().error("Error", e);
-           } 
-       }    
-       String s = "";
-       try{
-          if ( nextApptDate != null ){    
-             Format formatter = new SimpleDateFormat("yyyy-MM-dd");
-             s = formatter.format(nextApptDate);
-          }
-          JspWriter out = super.pageContext.getOut();          
-          out.print(s);                          
-       }catch(Exception p) {MiscUtils.getLogger().error("Error",p);
-       }
-       return(SKIP_BODY);
-    }
+	/** Creates a new instance of NextApptTag */
+	public NextApptTag() {
+	}
 
-    public int doEndTag()        throws JspException    {
-       return EVAL_PAGE;
-    }
+	public void setDemographicNo(String demoNo1) {
+		demoNo = demoNo1;
+	}
 
-    private String demoNo =null;
-    private String date = null;
-    private String format = null;    
+	public String getDemographicNo() {
+		return demoNo;
+	}
 
-    public String getDate() {
-        return date;
-    }
+	public int doStartTag() throws JspException {
+		Date nextApptDate = null;
+		if (demoNo != null && !demoNo.equalsIgnoreCase("") && !demoNo.equalsIgnoreCase("null")) {
+			Integer demographicId = Integer.parseInt(demoNo);
+			OscarAppointmentDao dao = SpringUtils.getBean(OscarAppointmentDao.class);
+			for (Appointment appt : dao.findNonCancelledFutureAppointments(demographicId))
+				nextApptDate = appt.getAppointmentDate();
+		}
 
-    public void setDate(String date) {
-        this.date = date;
-    }
+		String s = "";
+		try {
+			if (nextApptDate != null) {
+				Format formatter = new SimpleDateFormat("yyyy-MM-dd");
+				s = formatter.format(nextApptDate);
+			}
+			JspWriter out = super.pageContext.getOut();
+			out.print(s);
+		} catch (Exception p) {
+			MiscUtils.getLogger().error("Error", p);
+		}
+		return (SKIP_BODY);
+	}
 
-    public String getFormat() {
-        return format;
-    }
+	public int doEndTag() throws JspException {
+		return EVAL_PAGE;
+	}
 
-    public void setFormat(String format) {
-        this.format = format;
-    }
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public String getFormat() {
+		return format;
+	}
+
+	public void setFormat(String format) {
+		this.format = format;
+	}
 }
