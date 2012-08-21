@@ -34,6 +34,7 @@ import org.w3c.dom.Element;
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilXML;
 
+@Deprecated
 class Location {
 
     public Element getLocal(Document doc) throws SQLException {

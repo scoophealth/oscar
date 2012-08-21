@@ -35,6 +35,7 @@ import org.w3c.dom.NodeList;
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilXML;
 
+@Deprecated
 class AddressBook {
 
     public Element getLocalAddressBook(Document doc) throws SQLException {
