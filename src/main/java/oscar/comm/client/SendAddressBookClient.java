@@ -35,6 +35,7 @@ import org.w3c.dom.NodeList;
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilXML;
 
+@Deprecated
 public class SendAddressBookClient {
     public boolean sendAddressBook(String databaseURL, String databaseName)
             throws OscarCommClientException {

@@ -29,7 +29,6 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
-import java.sql.ResultSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,7 +42,6 @@ import org.apache.struts.util.LabelValueBean;
 import org.oscarehr.common.dao.CtlBillingServiceDao;
 import org.oscarehr.common.dao.QueueDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
-import org.oscarehr.common.dao.CtlBillingServiceDao;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.util.LoggedInInfo;
@@ -52,7 +50,6 @@ import org.oscarehr.util.SpringUtils;
 
 import oscar.eform.EFormUtil;
 import oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil;
-import oscar.oscarDB.DBHandler;
 
 /**
  *
