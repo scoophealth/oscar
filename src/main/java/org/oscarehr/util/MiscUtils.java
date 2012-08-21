@@ -57,7 +57,7 @@ import org.apache.log4j.xml.DOMConfigurator;
  * upon startup as it may have been set true by a previous context stop
  * even though the jvm itself has not restarted.
  */
-public class MiscUtils {
+public final class MiscUtils {
 	
 	public static final String ENCODING = "UTF-8";
 	private static final Base64 base64 = new Base64(0);

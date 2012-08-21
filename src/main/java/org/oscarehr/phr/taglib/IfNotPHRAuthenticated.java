@@ -42,7 +42,7 @@ import org.oscarehr.phr.PHRAuthentication;
 public class IfNotPHRAuthenticated extends TagSupport
 {
 
-	Logger log = Logger.getLogger(IfTimeToExchange.class);
+	Logger log = Logger.getLogger(IfNotPHRAuthenticated.class);
 
 	@Override
 	public int doStartTag()

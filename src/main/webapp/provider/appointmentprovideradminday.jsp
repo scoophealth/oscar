@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
 <%@page import="org.oscarehr.common.model.Appointment.BookingSource"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@page import="org.oscarehr.common.model.Provider,org.oscarehr.common.model.BillingONCHeader1"%>
@@ -721,33 +722,6 @@ var pars = "id=" + id;
 var myAjax = new Ajax.Updater(id, url, {method: 'get', parameters: pars});
 }
 
-<%
-//<oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
-//<phr:IfTimeToExchange>
-//phrExchangeGo('../phrExchange.do');
-//</phr:IfTimeToExchange>
-//</oscar:oscarPropertiesCheck>
-%>
-/*
-// myoscar JavaScript server call --we are using the JSP check instead (see above)
-function phrAsyncActivate() {
-var interval = 10;
-var date = new Date();
-var curr_min = d.getMinutes();
-var timeleft = curr_min%interval + 4;
-setTimeout(phrAsyncGo2, timeleft);
-}
-function phrAsyncGo2() {
-alert("executing");
-new Ajax.Request('../phrAsync.do', { method:'get' });
-phrAsyncActivate();
-}
-
-
-
-
-*/
-
 function refreshSameLoc(mypage) {
  var X =  (window.pageXOffset?window.pageXOffset:window.document.body.scrollLeft);
  var Y =  (window.pageYOffset?window.pageYOffset:window.document.body.scrollTop);
@@ -1051,7 +1025,7 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 </oscar:oscarPropertiesCheck>
  <oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
     <myoscar:indivoRegistered provider="<%=curUser_no%>">
-
+	<%MyOscarUtils.attemptMyOscarAutoLoginIfNotAlreadyLoggedInAsynchronously(LoggedInInfo.loggedInInfo.get());%>
     <li>
 	<a HREF="#" ONCLICK ="popup('600', '1024','../phr/PhrMessage.do?method=viewMessages','INDIVOMESSENGER2<%=curUser_no%>')" title='<bean:message key="global.myoscar"/>'><phr:setColor><bean:message key="global.btnmyoscar"/></phr:setColor></a>
     </li>
