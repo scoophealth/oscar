@@ -356,6 +356,8 @@ request.setAttribute("pageMethod",pageMethod);
                                                     </logic:present>
                                                     Status: <b>Not logged in</b><br/>
                                                     <%=providerName%> password: <input type="password" id="phrPassword" name="phrPassword" style="font-size: 8px; width: 40px;"> <a href="javascript: document.forms['phrLogin'].submit()">Login</a>
+                                                    <br />
+                                                    Keep me logged in <input type="checkbox" checked="checked" name="saveMyOscarPassword" />
                                                     <input type="hidden" name="forwardto" value="<%=request.getServletPath()%>?method=<%=request.getParameter("method")%>">
                                                 </form>
                                             </div>

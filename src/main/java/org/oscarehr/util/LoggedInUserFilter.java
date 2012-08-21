@@ -53,13 +53,7 @@ public class LoggedInUserFilter implements javax.servlet.Filter {
 
 			// set new / current data
 			HttpServletRequest request = (HttpServletRequest) tmpRequest;
-			HttpSession session = request.getSession();
-			LoggedInInfo x = new LoggedInInfo();
-			x.session = session;
-			x.currentFacility = (Facility) session.getAttribute(SessionConstants.CURRENT_FACILITY);
-			x.loggedInProvider = (Provider) session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
-			x.loggedInSecurity = (Security) session.getAttribute(SessionConstants.LOGGED_IN_SECURITY);
-			x.initiatingCode = request.getRequestURI();
+			LoggedInInfo x = generateLoggedInInfoFromSession(request);
 			LoggedInInfo.loggedInInfo.set(x);
 
 			logger.debug("LoggedInUserFilter chainning");
@@ -71,5 +65,19 @@ public class LoggedInUserFilter implements javax.servlet.Filter {
 
 	public void destroy() {
 		// can't think of anything to do right now.
+	}
+	
+	public static LoggedInInfo generateLoggedInInfoFromSession(HttpServletRequest request)
+	{
+		HttpSession session=request.getSession();
+		
+		LoggedInInfo x = new LoggedInInfo();
+		x.session = session;
+		x.currentFacility = (Facility) session.getAttribute(SessionConstants.CURRENT_FACILITY);
+		x.loggedInProvider = (Provider) session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
+		x.loggedInSecurity = (Security) session.getAttribute(SessionConstants.LOGGED_IN_SECURITY);
+		x.initiatingCode = request.getRequestURI();
+	
+		return(x);
 	}
 }

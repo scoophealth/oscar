@@ -49,9 +49,6 @@ public class TestActionW extends Action {
      private static Logger log = MiscUtils.getLogger();
      private DSService dsService;
     
-    /**
-     * Creates a new instance of PHRLoginAction
-     */
     public TestActionW() {
     }
     
