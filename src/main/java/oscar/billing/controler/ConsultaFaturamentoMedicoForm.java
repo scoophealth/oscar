@@ -13,7 +13,7 @@ import org.apache.struts.action.ActionMapping;
 import oscar.billing.model.Appointment;
 import oscar.billing.model.Provider;
 
-
+@Deprecated
 public class ConsultaFaturamentoMedicoForm extends ActionForm {
     private String dispatch;
     private int strutsAction;

@@ -15,7 +15,7 @@ import oscar.billing.cad.model.CadCid;
 import oscar.oscarDB.DBHandler;
 import oscar.util.DAO;
 
-
+@Deprecated
 public class CidDAO extends DAO {
 
     public CadCid retrieve(String id) throws SQLException {

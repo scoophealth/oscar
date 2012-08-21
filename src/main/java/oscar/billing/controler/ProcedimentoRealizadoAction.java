@@ -26,7 +26,7 @@ import oscar.billing.fat.dao.FatFormulariosDAO;
 import oscar.billing.model.ProcedimentoRealizado;
 import oscar.util.OscarAction;
 
-
+@Deprecated
 public class ProcedimentoRealizadoAction extends OscarAction {
     private static Logger logger = MiscUtils.getLogger();
 

@@ -17,7 +17,7 @@ import oscar.billing.cad.model.CadCid;
 import oscar.util.OscarAction;
 import oscar.util.PagerDef;
 
-
+@Deprecated
 public class CidAction extends OscarAction {
     private static Logger logger = MiscUtils.getLogger();
 

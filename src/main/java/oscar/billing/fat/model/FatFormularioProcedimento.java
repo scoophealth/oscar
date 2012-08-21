@@ -13,6 +13,7 @@ import oscar.billing.cad.model.CadProcedimentos;
  *
  * </p>
  */
+@Deprecated
 public class FatFormularioProcedimento {
     ///////////////////////////////////////
     // attributes

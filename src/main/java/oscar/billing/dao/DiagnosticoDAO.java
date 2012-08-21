@@ -12,7 +12,7 @@ import oscar.billing.model.Diagnostico;
 import oscar.oscarDB.DBHandler;
 import oscar.util.DAO;
 
-
+@Deprecated
 public class DiagnosticoDAO extends DAO {
 
     public List<Diagnostico> list(String id) throws SQLException {

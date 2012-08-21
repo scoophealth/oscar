@@ -36,6 +36,7 @@ import oscar.billing.cad.model.CadAtividadesSaude;
  *
  * </p>
  */
+@Deprecated
 public class Provider {
     /**
      * <p>

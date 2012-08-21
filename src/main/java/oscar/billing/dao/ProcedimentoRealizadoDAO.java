@@ -13,7 +13,7 @@ import oscar.oscarDB.DBHandler;
 import oscar.util.DAO;
 import oscar.util.DateUtils;
 
-
+@Deprecated
 public class ProcedimentoRealizadoDAO extends DAO {
 
 	/**

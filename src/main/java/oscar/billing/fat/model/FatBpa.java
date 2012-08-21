@@ -18,6 +18,7 @@ import oscar.billing.cad.model.CadTiposAtendimento;
  * 
  * </p>
  */
+@Deprecated
 public class FatBpa {
 
   ///////////////////////////////////////

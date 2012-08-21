@@ -15,7 +15,7 @@ import oscar.billing.cad.model.CadProcedimentos;
 import oscar.billing.fat.model.FatFormularios;
 import oscar.billing.model.Appointment;
 
-
+@Deprecated
 public class ProcedimentoRealizadoForm extends ActionForm {
     private String dispatch;
     private int strutsAction;

@@ -15,7 +15,7 @@ import oscar.billing.dao.ProviderDAO;
 import oscar.billing.model.Provider;
 import oscar.util.OscarAction;
 
-
+@Deprecated
 public class ConsultaFaturamentoMedicoAction extends OscarAction {
     private static Logger logger = MiscUtils.getLogger();
 

@@ -13,6 +13,7 @@ import oscar.billing.cad.model.CadCid;
  *
  * </p>
  */
+@Deprecated
 public class Diagnostico {
     ///////////////////////////////////////
     // attributes

@@ -12,6 +12,7 @@ import oscar.billing.fat.model.FatEas;
  * 
  * </p>
  */
+@Deprecated
 public class CadNaturezaEas {
 
   ///////////////////////////////////////
