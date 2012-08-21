@@ -335,12 +335,9 @@ formatDate = UtilDateUtilities.DateToString(inform.parse(strDate), "EEE, yyyy-MM
 String strYear=""+year;
 String strMonth=month>9?(""+month):("0"+month);
 String strDay=day>9?(""+day):("0"+day);
-
-UserPropertyDAO userPropertyDao = null;
+   
+UserPropertyDAO userPropertyDao = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
 DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
-if(view == 1) {
-    userPropertyDao = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
-}
 
 Calendar apptDate = Calendar.getInstance();
 apptDate.set(year, month-1 , day);
@@ -865,6 +862,20 @@ if(mygroupno != null && providerBean.get(mygroupno) != null) { //single appointe
          if(numAvailProvider == 2) {lenLimitedL = 20; lenLimitedS = 10; len = 20;}
          if(numAvailProvider == 1) {lenLimitedL = 30; lenLimitedS = 30; len = 30; }
        }
+      UserProperty uppatientNameLength = userPropertyDao.getProp(curUser_no, UserProperty.PATIENT_NAME_LENGTH);
+      int NameLength=0;
+      
+      if ( uppatientNameLength != null && uppatientNameLength.getValue() != null) {
+          try {
+             NameLength=Integer.parseInt(uppatientNameLength.getValue());
+          } catch (NumberFormatException e) {
+             NameLength=0;
+          }
+      
+          if(NameLength>0) {
+             len=lenLimitedS= lenLimitedL = NameLength;
+          }
+                   }
      curProvider_no = new String [numProvider];
      curProviderName = new String [numProvider];
 
