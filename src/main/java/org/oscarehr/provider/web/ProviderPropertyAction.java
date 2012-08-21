@@ -24,12 +24,12 @@
 
 package org.oscarehr.provider.web;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
+import java.sql.ResultSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,6 +43,7 @@ import org.apache.struts.util.LabelValueBean;
 import org.oscarehr.common.dao.CtlBillingServiceDao;
 import org.oscarehr.common.dao.QueueDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
+import org.oscarehr.common.dao.CtlBillingServiceDao;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.util.LoggedInInfo;
@@ -50,8 +51,8 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.eform.EFormUtil;
-import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil;
+import oscar.oscarDB.DBHandler;
 
 /**
  *
@@ -1177,16 +1178,9 @@ public class ProviderPropertyAction extends DispatchAction {
          this.userPropertyDAO.saveProp(prop);
 
          ArrayList<LabelValueBean> serviceList = new ArrayList<LabelValueBean>();
-         try{
-             ResultSet rs = DBHandler.GetSQL("select distinct servicetype, servicetype_name from ctl_billingservice where status='A'");
-             while (rs.next()){
-                 String servicetype     = rs.getString("servicetype");
-                 String servicetypename = rs.getString("servicetype_name");
-                 serviceList.add(new LabelValueBean(servicetypename,servicetype));
-             }
-         }catch(Exception e){
-             MiscUtils.getLogger().error("Error", e);
-         }
+         CtlBillingServiceDao dao = SpringUtils.getBean(CtlBillingServiceDao.class);
+         for(Object[] service : dao.getUniqueServiceTypes())
+        	 serviceList.add(new LabelValueBean(String.valueOf(service[0]), String.valueOf(service[1])));
 
          request.setAttribute("dropOpts",serviceList);
 
