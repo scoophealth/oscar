@@ -30,6 +30,7 @@ import java.util.Properties;
 
 import org.oscarehr.util.MiscUtils;
 
+@Deprecated
 public class ScheduledClient {
 	Properties param = new Properties();
 

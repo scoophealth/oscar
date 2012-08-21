@@ -34,6 +34,7 @@ import org.w3c.dom.Element;
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilXML;
 
+@Deprecated
 public class SendMessageClient {
     public boolean sendMessage(String databaseURL, String databaseName, String messageXML)
             throws OscarCommClientException {

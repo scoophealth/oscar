@@ -36,6 +36,7 @@ import oscar.oscarDB.DBHandler;
 import oscar.util.UtilMisc;
 import oscar.util.UtilXML;
 
+@Deprecated
 class Messages {
 
     public void addMessageList(Element messageList) throws SQLException {

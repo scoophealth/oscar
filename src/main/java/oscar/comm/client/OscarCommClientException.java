@@ -25,6 +25,7 @@
 
 package oscar.comm.client;
 
+@Deprecated
 public class OscarCommClientException extends java.lang.Exception
 {
     OscarCommClientException(String message, Throwable cause) {

@@ -53,6 +53,7 @@ import org.w3c.dom.Element;
 
 import oscar.util.UtilXML;
 
+@Deprecated
 class WebServiceClient {
     private String url;
 
