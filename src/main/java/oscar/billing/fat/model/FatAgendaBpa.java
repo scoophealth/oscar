@@ -12,6 +12,7 @@ import java.util.Date;
  * 
  * </p>
  */
+@Deprecated
 public class FatAgendaBpa {
 
   ///////////////////////////////////////

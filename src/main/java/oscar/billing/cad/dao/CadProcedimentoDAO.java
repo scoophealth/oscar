@@ -28,6 +28,7 @@ import oscar.util.StringUtils;
  *
  * @author  lilian
  */
+@Deprecated
 public class CadProcedimentoDAO extends DAO {
 
     public List<CadProcedimentos> list(String codigo, String desc) throws SQLException {

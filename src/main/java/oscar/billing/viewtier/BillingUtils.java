@@ -23,6 +23,7 @@
 
 package oscar.billing.viewtier;
 
+@Deprecated
 public class BillingUtils {
 
 }

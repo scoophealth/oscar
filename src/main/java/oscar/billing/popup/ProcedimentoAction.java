@@ -16,6 +16,7 @@ import oscar.billing.cad.dao.CadProcedimentoDAO;
 import oscar.util.OscarAction;
 import oscar.util.PagerDef;
 
+@Deprecated
 public class ProcedimentoAction extends OscarAction {
     private static Logger logger = MiscUtils.getLogger();
 

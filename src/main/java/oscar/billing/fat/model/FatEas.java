@@ -12,6 +12,7 @@ import oscar.billing.cad.model.CadNaturezaEas;
  * 
  * </p>
  */
+@Deprecated
 public class FatEas {
 
   ///////////////////////////////////////

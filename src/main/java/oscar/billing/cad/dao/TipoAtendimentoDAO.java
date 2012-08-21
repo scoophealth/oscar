@@ -16,6 +16,7 @@ import oscar.util.DAO;
  * (used in brazilian billing).
  * @author tomita - 13 nov 2003
  */
+@Deprecated
 public class TipoAtendimentoDAO extends DAO {
 
 	/**

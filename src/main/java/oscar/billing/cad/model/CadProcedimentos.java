@@ -17,6 +17,7 @@ import oscar.billing.model.ProcedimentoRealizado;
  *
  * </p>
  */
+@Deprecated
 public class CadProcedimentos {
 	public static final String AMBULATORIAL = "A";
 	public static final String ATIVO = "A";

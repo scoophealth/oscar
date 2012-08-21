@@ -12,6 +12,7 @@ import oscar.billing.fat.model.FatBpa;
  * 
  * </p>
  */
+@Deprecated
 public class CadGrupoAtendimento {
 
   ///////////////////////////////////////

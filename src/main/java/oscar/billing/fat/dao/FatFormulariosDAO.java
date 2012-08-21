@@ -13,7 +13,7 @@ import oscar.billing.fat.model.FatFormularios;
 import oscar.oscarDB.DBHandler;
 import oscar.util.DAO;
 
-
+@Deprecated
 public class FatFormulariosDAO extends DAO {
 
 	public FatFormularios retrieve(String id) throws SQLException {

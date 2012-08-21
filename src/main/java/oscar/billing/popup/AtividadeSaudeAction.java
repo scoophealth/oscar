@@ -17,6 +17,7 @@ import oscar.util.OscarAction;
 import oscar.util.PagerDef;
 
 
+@Deprecated
 public class AtividadeSaudeAction extends OscarAction {
     private static Logger logger = MiscUtils.getLogger();
 
