@@ -191,7 +191,9 @@ public class TicklerAction extends DispatchAction {
         String filter_order = (String) request.getSession().getAttribute("filter_order");
         request.getSession().setAttribute("ticklers", ticklers);
         request.setAttribute("providers", providerMgr.getProviders());
-        request.setAttribute("demographics", demographicMgr.getDemographics());
+        if( OscarProperties.getInstance().getBooleanProperty("clientdropbox","on") ) {
+            request.setAttribute("demographics", demographicMgr.getDemographics());
+        }
 
 		request.setAttribute("customFilters", ticklerMgr.getCustomFilters(this.getProviderNo(request)));
         request.setAttribute("from", getFrom(request));
@@ -219,7 +221,9 @@ public class TicklerAction extends DispatchAction {
         List<Tickler> ticklers = ticklerMgr.getTicklers(filter,providerId,programId);
         request.getSession().setAttribute("ticklers", ticklers);
         request.setAttribute("providers", providerMgr.getProviders());
-        request.setAttribute("demographics", demographicMgr.getDemographics());
+        if( OscarProperties.getInstance().getBooleanProperty("clientdropbox","on") ) {
+            request.setAttribute("demographics", demographicMgr.getDemographics());
+        }
 
 		request.setAttribute("programs", programMgr.getProgramDomainInCurrentFacilityForCurrentProvider(true));
 
