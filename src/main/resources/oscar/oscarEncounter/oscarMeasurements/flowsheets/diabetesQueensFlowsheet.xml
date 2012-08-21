@@ -1,4 +1,4 @@
-<flowsheet name="diab3" ds_rules="diab.drl" dxcode_triggers="" display_name="Diabetes Flowsheet">
+<flowsheet name="diab3" ds_rules="diab.drl" is_universal="true" display_name="Indicators">
 	<indicator key="HIGH" colour="#800517" />
   	<indicator key="LOW" colour="#800517" />
 
