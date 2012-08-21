@@ -24,8 +24,10 @@
 package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -155,5 +157,30 @@ public class OscarAppointmentDaoTest extends DaoTestFixtures {
 		assertEquals(appts.size(),1);
 		assertEquals(appts.get(0).getId(),apptId);
 
+	}
+	
+	@Test
+	public void testFindNonCancelledFutureAppointments() throws Exception {
+		Integer demographicId = 999999;
+		
+		Appointment appt = new Appointment();		
+		EntityDataGenerator.generateTestDataForModelClass(appt);
+		appt.setDemographicNo(demographicId);
+		appt.setAppointmentDate(new Date(System.currentTimeMillis() + 1000000000));
+		appt.setStatus("C");
+		dao.persist(appt);
+		
+		List<Appointment> appts = dao.findNonCancelledFutureAppointments(demographicId);
+		assertTrue("Expected to find no appt's for " + demographicId, appts.isEmpty());
+		
+		appt = new Appointment();		
+		EntityDataGenerator.generateTestDataForModelClass(appt);
+		appt.setDemographicNo(demographicId);
+		appt.setAppointmentDate(new Date(System.currentTimeMillis() + 1000000000));
+		appt.setStatus("t");
+		dao.persist(appt);
+		
+		appts = dao.findNonCancelledFutureAppointments(demographicId);
+		assertFalse("Expected to find an appt's for " + demographicId, appts.isEmpty());
 	}
 }
