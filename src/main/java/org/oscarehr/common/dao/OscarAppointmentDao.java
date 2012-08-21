@@ -213,4 +213,11 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 
 		return rs;
 	}
+	
+	public List<Appointment> findNonCancelledFutureAppointments(Integer demographicId) {
+		Query query = entityManager.createQuery("FROM Appointment appt WHERE appt.demographicNo = :demographicNo AND appt.status NOT LIKE '%C%' " +
+				" AND appt.appointmentDate >= CURRENT_DATE ORDER BY appt.appointmentDate");
+		query.setParameter("demographicNo", demographicId);
+		return query.getResultList();
+	}
 }
