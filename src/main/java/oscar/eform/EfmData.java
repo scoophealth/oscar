@@ -22,16 +22,13 @@
  * Ontario, Canada
  */
 
-
 package oscar.eform;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Hashtable;
+import java.util.HashMap;
 
-import org.oscarehr.util.MiscUtils;
-
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.common.dao.EFormDataDao;
+import org.oscarehr.common.model.EFormData;
+import org.oscarehr.util.SpringUtils;
 
 /**
  * 
@@ -52,32 +49,21 @@ import oscar.oscarDB.DBHandler;
 +----------------+--------------+------+-----+---------+----------------+
 
  */
-public class EfmData {
-   
-   public Hashtable getLastEformDate(String formName, String demographicNo){
-      Hashtable ret = null;
-      try {
-                  
-         String sql = "select form_name,subject,form_date,form_time,form_provider from eform_data where demographic_no = '"+demographicNo+"' and form_name like '"+formName+"%' and status = '1' order by form_date,form_time desc";        
 
-         ResultSet rs = DBHandler.GetSQL(sql);                                                
-         if (rs.next()){
-            ret = new Hashtable();
-            ret.put("formName", oscar.Misc.getString(rs, "form_name"));
-            ret.put("subject", oscar.Misc.getString(rs, "subject"));
-            ret.put("date", oscar.Misc.getString(rs, "form_date"));
-            ret.put("time", oscar.Misc.getString(rs, "form_time"));
-            ret.put("provider", oscar.Misc.getString(rs, "form_provider"));                          
-         }            
-      } catch (SQLException e) {
-         MiscUtils.getLogger().error("Error", e);
-      }
-      return ret;
-   }
-   
-   
-   
-   public EfmData() {
-   }
-   
+@Deprecated
+public class EfmData {
+
+	public HashMap<String, String> getLastEformDate(String formName, String demographicNo) {
+		HashMap<String, String> ret = new HashMap<String, String>();
+		EFormDataDao dao = SpringUtils.getBean(EFormDataDao.class);
+		Integer demographicId = Integer.parseInt(demographicNo);		
+		for (EFormData data : dao.findByDemographicIdAndFormName(demographicId, formName)) {
+			ret.put("formName", data.getFormName());
+			ret.put("subject", data.getSubject());
+			ret.put("date", String.valueOf(data.getFormDate()));
+			ret.put("time", String.valueOf(data.getFormTime()));
+			ret.put("provider", data.getProviderNo());
+		}
+		return ret;
+	}
 }
