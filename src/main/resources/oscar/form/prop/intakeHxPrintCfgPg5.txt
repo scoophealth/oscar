@@ -1,0 +1,66 @@
+Conditionsbrokenbones : left, 157, 123, 0, BaseFont.HELVETICA, 8
+ConditionsDescbrokenbones : left, 254, 123, 0, BaseFont.HELVETICA, 8
+Conditionsmigraine : left, 157, 141, 0, BaseFont.HELVETICA, 8
+ConditionsDescmigraine : left, 254, 141, 0, BaseFont.HELVETICA, 8
+Conditionsneurologicdisorder : left, 157, 158, 0, BaseFont.HELVETICA, 8
+ConditionsDescneurologicdisorder : left, 254, 158, 0, BaseFont.HELVETICA, 8
+Conditionsasthma: left, 157, 174, 0, BaseFont.HELVETICA, 8
+ConditionsDescasthma: left, 254, 174, 0, BaseFont.HELVETICA, 8
+Conditionspneumonia: left, 157, 191, 0, BaseFont.HELVETICA, 8
+ConditionsDescpneumonia: left, 254, 191, 0, BaseFont.HELVETICA, 8
+Conditionslungdisease: left, 157, 208, 0, BaseFont.HELVETICA, 8
+ConditionsDesclungdisease: left, 254, 208, 0, BaseFont.HELVETICA, 8
+Conditionsheartdisease: left, 157, 225, 0, BaseFont.HELVETICA, 8
+ConditionsDescheartdisease: left, 254, 225, 0, BaseFont.HELVETICA, 8
+Conditionsulcer: left, 157, 242, 0, BaseFont.HELVETICA, 8
+ConditionsDesculcer: left, 254, 242, 0, BaseFont.HELVETICA, 8
+Conditionsboweldisease: left, 157, 259, 0, BaseFont.HELVETICA, 8
+ConditionsDescboweldisease: left, 254, 259, 0, BaseFont.HELVETICA, 8
+Conditionshepatitis: left, 157, 276, 0, BaseFont.HELVETICA, 8
+ConditionsDeschepatitis: left, 254, 276, 0, BaseFont.HELVETICA, 8
+ConditionsHIV: left, 157, 294, 0, BaseFont.HELVETICA, 8
+ConditionsDescHIV: left, 254, 294, 0, BaseFont.HELVETICA, 8
+Conditionsthyroid: left, 157, 312, 0, BaseFont.HELVETICA, 8
+ConditionsDescthyroid: left, 254, 312, 0, BaseFont.HELVETICA, 8
+Conditionsblooddisorder: left, 157, 328, 0, BaseFont.HELVETICA, 8
+ConditionsDescblooddisorder: left, 254, 328, 0, BaseFont.HELVETICA, 8
+Conditionsdiabetes: left, 157, 345, 0, BaseFont.HELVETICA, 8
+ConditionsDescdiabetes: left, 254, 345, 0, BaseFont.HELVETICA, 8
+Conditionsbloodtransfusion: left, 157, 361, 0, BaseFont.HELVETICA, 8
+ConditionsDescbloodtransfusion: left, 254, 361, 0, BaseFont.HELVETICA, 8
+Conditionscancerorleukemia: left, 157, 378, 0, BaseFont.HELVETICA, 8
+ConditionsDesccancerorleukemia: left, 254, 378, 0, BaseFont.HELVETICA, 8
+Conditionssexualdisease: left, 157, 396, 0, BaseFont.HELVETICA, 8
+ConditionsDescsexualdisease: left, 254, 396, 0, BaseFont.HELVETICA, 8
+ConditionsURI: left, 157, 438, 0, BaseFont.HELVETICA, 8
+ConditionsDescURI: left, 254, 438, 0, BaseFont.HELVETICA, 8
+Conditionsemotional: left, 157, 455, 0, BaseFont.HELVETICA, 8
+ConditionsDescemotional: left, 254, 455, 0, BaseFont.HELVETICA, 8
+Conditionsarthritis: left, 157, 472, 0, BaseFont.HELVETICA, 8
+ConditionsDescarthritis: left, 254, 472, 0, BaseFont.HELVETICA, 8
+Conditionseatingdisorder: left, 157, 489, 0, BaseFont.HELVETICA, 8
+ConditionsDesceatingdisorder: left, 254, 489, 0, BaseFont.HELVETICA, 8
+Conditionsosteoporosis: left, 157, 506, 0, BaseFont.HELVETICA, 8
+ConditionsDescosteoporosis: left, 254, 506, 0, BaseFont.HELVETICA, 8
+Conditionsskin: left, 157, 523, 0, BaseFont.HELVETICA, 8
+ConditionsDescskin: left, 254, 523, 0, BaseFont.HELVETICA, 8
+ConditionsHighbloodpressure: left, 157, 540, 0, BaseFont.HELVETICA, 8
+ConditionsDescHighbloodpressure: left, 254, 540, 0, BaseFont.HELVETICA, 8
+Conditionslearningdisability: left, 157, 558, 0, BaseFont.HELVETICA, 8
+ConditionsDesclearningdisability: left, 254, 558, 0, BaseFont.HELVETICA, 8
+Conditionsschizophrenia: left, 157, 573, 0, BaseFont.HELVETICA, 8
+ConditionsDescschizophrenia: left, 254, 573, 0, BaseFont.HELVETICA, 8
+Conditionsalcohol: left, 157, 591, 0, BaseFont.HELVETICA, 8
+ConditionsDescalcohol: left, 254, 591, 0, BaseFont.HELVETICA, 8
+ConditionsMS: left, 157, 607, 0, BaseFont.HELVETICA, 8
+ConditionsDescMS: left, 254, 607, 0, BaseFont.HELVETICA, 8
+Conditionsstroke: left, 157, 625, 0, BaseFont.HELVETICA, 8
+ConditionsDescstroke: left, 254, 625, 0, BaseFont.HELVETICA, 8
+ConditionsHighcholesterol: left, 157, 643, 0, BaseFont.HELVETICA, 8
+ConditionsDescHighcholesterol: left, 254, 643, 0, BaseFont.HELVETICA, 8
+Conditionsdepression: left, 157, 658, 0, BaseFont.HELVETICA, 8
+ConditionsDescdepression: left, 254, 658, 0, BaseFont.HELVETICA, 8
+ConditionsDrugdependency: left, 157, 676, 0, BaseFont.HELVETICA, 8
+ConditionsDescDrugdependency: left, 254, 676, 0, BaseFont.HELVETICA, 8
+ConditionsOtherdisease: left, 157, 693, 0, BaseFont.HELVETICA, 8
+ConditionsDescOtherdisease: left, 254, 693, 0, BaseFont.HELVETICA, 8

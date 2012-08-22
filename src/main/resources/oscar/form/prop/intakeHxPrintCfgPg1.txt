@@ -1,0 +1,19 @@
+formCreated : left, 146, 108, 0, BaseFont.HELVETICA, 10
+formEdited : left, 146, 128, 0, BaseFont.HELVETICA, 10
+formValidatedBy: left, 146, 148,0,BaseFont.HELVETICA,10
+student_number : left, 156, 279, 0, BaseFont.HELVETICA, 10
+student_firstname : left, 156, 303, 0, BaseFont.HELVETICA, 10
+student_surname : left, 156, 329, 0, BaseFont.HELVETICA, 10
+student_dob  : left, 156, 355, 0, BaseFont.HELVETICA, 10
+student_sex  : left, 156, 380, 0, BaseFont.HELVETICA, 10
+student_ercontact_name : left, 135, 439, 0, BaseFont.HELVETICA, 10
+student_ercontact_phone : left, 135, 464, 0, BaseFont.HELVETICA, 10
+student_ercontact_address : left, 135, 490, 0, BaseFont.HELVETICA, 10
+student_ercontact_address2 : left, 135, 505, 0, BaseFont.HELVETICA, 10
+student_physician_name : left, 126, 548, 0, BaseFont.HELVETICA, 10
+student_physician_phone : left, 126, 572, 0, BaseFont.HELVETICA, 10
+student_physician_address : left, 126, 598, 0, BaseFont.HELVETICA, 10
+student_physician_address2 : left, 126, 613, 0, BaseFont.HELVETICA, 10
+student_faculty_phone : left, 159, 657, 0, BaseFont.HELVETICA, 10
+pt_ft : left, 159, 682, 0, BaseFont.HELVETICA, 10
+academic_year : left, 159, 708, 0, BaseFont.HELVETICA, 10
