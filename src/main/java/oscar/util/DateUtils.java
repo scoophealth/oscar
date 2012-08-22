@@ -85,6 +85,23 @@ public final class DateUtils {
 
 		return(dateFormatter.parse(s));
 	}
+        
+        /**
+	 * @param locale can be null
+	 * @return if String is null will return null.
+	 * @throws ParseException 
+	 */
+	public static Date parseDateTime(String s, Locale locale) throws ParseException
+	{
+		if (s==null) return(null);
+		
+		SimpleDateFormat dateTimeFormatter=null;
+		
+		if (locale==null) dateTimeFormatter=new SimpleDateFormat(dateFormatString + " " + timeFormatString);
+		else dateTimeFormatter=new SimpleDateFormat(dateFormatString+ " " + timeFormatString, locale);
+
+		return(dateTimeFormatter.parse(s));
+	}
 	
 	/**
 	 * @param locale can be null
