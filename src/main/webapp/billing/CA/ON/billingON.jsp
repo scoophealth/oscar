@@ -36,6 +36,9 @@
 <%@page import="org.oscarehr.common.dao.ProfessionalSpecialistDao" %>
 <%@page import="oscar.oscarBilling.ca.bc.decisionSupport.BillingGuidelines" %>
 <%@page import="org.oscarehr.decisionSupport.model.DSConsequence" %>
+<%@page import="org.oscarehr.common.model.Demographic, org.oscarehr.common.dao.DemographicDao"%>
+<%@page import="org.oscarehr.common.model.CtlBillingService, org.oscarehr.common.dao.CtlBillingServiceDao"%>
+<%@page import="org.oscarehr.common.model.MyGroup, org.oscarehr.common.dao.MyGroupDao"%>
 <%
 	ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
 %>
@@ -114,25 +117,59 @@
 			if (curBillForm!=null) {
 			    // user picks a bill form from browser
 			    ctlBillForm = curBillForm;
-			} else {
-			    // check user preference to show a bill form
-			    ProviderPreferenceDao providerPreferenceDao=(ProviderPreferenceDao)SpringUtils.getBean("providerPreferenceDao");
-			    ProviderPreference providerPreference=null;
+			} else {                    
+                            //check if patient's roster status determines which billing form to display (this superceeds provider preference)                    
+                            DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+                            Demographic demo = demographicDao.getDemographic(demo_no); 
+                            String rosterStatus = demo.getRosterStatus();
+                            
+                            CtlBillingServiceDao ctlBillingServiceDao = (CtlBillingServiceDao) SpringUtils.getBean("ctlBillingServiceDao");
+                            List<CtlBillingService> ctlBillSrvList = ctlBillingServiceDao.findByServiceTypeId(rosterStatus);
+                            
+                            if (!ctlBillSrvList.isEmpty()) {
+                                ctlBillForm = rosterStatus;
+                            }
+                            else {                                                        
+                                // check user preference to show a bill form
+                                ProviderPreferenceDao providerPreferenceDao=(ProviderPreferenceDao)SpringUtils.getBean("providerPreferenceDao");
+                                ProviderPreference providerPreference=null;
+                            
+                                //use the appointment provider's preferences first if we can
+                                //otherwise, use the preferences of the logged in user
+                                if( apptProvider_no.equalsIgnoreCase("none") ) {                                   
+                                    providerPreference = providerPreferenceDao.find(user_no);
+                                }
+                                else {                                    
+                                    providerPreference = providerPreferenceDao.find(apptProvider_no);
+                                }
 
-                if( apptProvider_no.equalsIgnoreCase("none") ) {
-                	providerPreference = providerPreferenceDao.find(user_no);
-                }
-                else {
-                	providerPreference = providerPreferenceDao.find(apptProvider_no);
-                }
-
-			    if (providerPreference!=null) {
+                                String defaultServiceType = "";
+                                if (providerPreference!=null) {
+                                    defaultServiceType = providerPreference.getDefaultServiceType();
+                                }
+                                
+                                if (defaultServiceType != null && !defaultServiceType.isEmpty() && !defaultServiceType.equals("no")) {
 					ctlBillForm = providerPreference.getDefaultServiceType();
-			    } else {
-					// check oscar.properties to show a default bill form
-					String dv = OscarProperties.getInstance().getProperty("default_view");
-					if (dv!=null) ctlBillForm = dv;
-			    }
+                                } else { 
+                                        //check if there is a group preference for default billing
+                                        MyGroupDao myGroupDao = (MyGroupDao) SpringUtils.getBean("myGroupDao"); 
+                                        List<MyGroup> myGroups = myGroupDao.getProviderGroups(provider_no);
+                                        String groupBillForm = "";
+                                        for (MyGroup group : myGroups) {
+                                            groupBillForm = group.getDefaultBillingForm();
+                                            if (groupBillForm != null && !groupBillForm.isEmpty()) {
+                                                ctlBillForm = groupBillForm;
+                                                break;
+                                            }
+                                        }
+                                       
+                                        if (ctlBillForm == null || ctlBillForm.isEmpty()) {
+                                            // check oscar.properties to show a default bill form
+                                            String dv = OscarProperties.getInstance().getProperty("default_view");
+                                            if (dv!=null) ctlBillForm = dv;
+                                        }
+                                }
+                            }
 			}
 
 			if( ctlBillForm == null ) {
