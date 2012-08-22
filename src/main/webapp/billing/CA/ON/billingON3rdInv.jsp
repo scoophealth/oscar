@@ -17,6 +17,7 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.oscarehr.common.dao.DemographicDao"%>
@@ -54,6 +55,10 @@ String percent = gstProp.getProperty("gstPercent", "");
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Billing Invoice</title>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
+<script>
+    jQuery.noConflict();
+</script>
 </head>
 <body>
 
@@ -83,13 +88,18 @@ String percent = gstProp.getProperty("gstPercent", "");
 </pre></td>
 	</tr>
 </table>
-
-<table width="100%" border="0">
+<oscar:customInterface section="billingInvoice"/>
+<table border="0">
 	<tr>
-		<td>Patient: <%=ch1Obj.getDemographic_name() %> (<%=ch1Obj.getDemographic_no() %>)
-		<%=ch1Obj.getSex().equals("1")? "Male":"Female" %> DOB: <%=ch1Obj.getDob() %><br>
+            <td id="ptName">Patient: <%=ch1Obj.getDemographic_name() %></td>
+            <td id="ptDemoNo"> (<%=ch1Obj.getDemographic_no() %>)</td>
+            <td id="ptGender"><%=ch1Obj.getSex().equals("1")? "Male":"Female" %></td>
+            <td id="ptDOB"> DOB: <%=ch1Obj.getDob() %></td>
+        </tr>
+        <tr>    
+            <td id="ptHin">
                 Insurance No: <%=demo.getHin()%>
-		</td>
+            </td>
 	</tr>
 </table>
 <hr>
