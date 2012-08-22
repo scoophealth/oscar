@@ -45,7 +45,7 @@
   String preventionText = "";
 
   String eformSearch = (String) request.getAttribute("eformSearch");
-  EfmData efData = new EfmData();
+  // EfmData efData = new EfmData();
   BillingClaimDAO bcDAO = (BillingClaimDAO)SpringUtils.getBean("billingClaimDAO");
 %>
 
