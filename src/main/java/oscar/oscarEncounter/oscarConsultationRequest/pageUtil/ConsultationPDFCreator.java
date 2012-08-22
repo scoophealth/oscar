@@ -329,6 +329,9 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 
 		infoTable.addCell(setInfoCell(cell, getResource("msgWPhone")));
 		infoTable.addCell(setDataCell(cell, reqFrm.patientWPhone));
+                
+                infoTable.addCell(setInfoCell(cell, getResource("msgEmail")));
+		infoTable.addCell(setDataCell(cell, reqFrm.patientEmail));
 
 		infoTable.addCell(setInfoCell(cell, getResource("msgBirth")));
 		infoTable.addCell(setDataCell(cell, reqFrm.patientDOB + " (y/m/d)"));
@@ -414,7 +417,9 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 		pro = proDAO.getProvider(demo.getProviderNo());
 		String famDocBillingNo = pro.getBillingNo();
 		infoTable.addCell(setFooterCell(cell, getResource("msgAssociated2"), reqFrm.getProviderName(reqFrm.providerNo) + ((getlen(billingNo) > 0) ? " (" + billingNo + ")" : "")));
-		infoTable.addCell(setFooterCell(cell, getResource("msgFamilyDoc2"), reqFrm.getFamilyDoctor() + ((getlen(famDocBillingNo) > 0) ? " (" + famDocBillingNo + ")" : "")));
+                if (OscarProperties.getInstance().getBooleanProperty("mrp_model", "yes")) {
+                    infoTable.addCell(setFooterCell(cell, getResource("msgFamilyDoc2"), reqFrm.getFamilyDoctor() + ((getlen(famDocBillingNo) > 0) ? " (" + famDocBillingNo + ")" : "")));
+                }
 		if (getlen(reqFrm.signatureImg) > 0) {
 			addSignature(infoTable);
 		}
