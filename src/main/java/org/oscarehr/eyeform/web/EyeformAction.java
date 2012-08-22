@@ -482,8 +482,8 @@ public class EyeformAction extends DispatchAction {
 
 			PdfCopyFields finalDoc = new PdfCopyFields(os);
 			finalDoc.getWriter().setStrictImageSequence(true);
-			PdfRecordPrinter printer = new PdfRecordPrinter(request, os);
-
+			PdfRecordPrinter printer = new PdfRecordPrinter(os);
+                        printer.start();
 			//loop through each visit..concatenate into 1 PDF
 			for(int x=0;x<ids.length;x++) {
 

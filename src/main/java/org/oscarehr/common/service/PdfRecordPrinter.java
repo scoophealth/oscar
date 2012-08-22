@@ -25,20 +25,14 @@
 
 package org.oscarehr.common.service;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ResourceBundle;
-
-import javax.servlet.http.HttpServletRequest;
-
+import java.util.Locale;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
@@ -50,6 +44,9 @@ import org.oscarehr.common.model.EFormValue;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.printing.FontSettings;
 import org.oscarehr.common.printing.PdfWriterFactory;
+import org.oscarehr.common.dao.BillingONCHeader1Dao;
+import org.oscarehr.common.model.BillingONCHeader1;
+import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.eyeform.MeasurementFormatter;
 import org.oscarehr.eyeform.model.EyeForm;
 import org.oscarehr.eyeform.model.EyeformFollowUp;
@@ -60,9 +57,10 @@ import org.oscarehr.eyeform.model.EyeformTestBook;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.util.DateUtils;
 import oscar.OscarProperties;
 import oscar.eform.util.GraphicalCanvasToImage;
-import oscar.oscarClinic.ClinicData;
+import oscar.eform.APExecute;
 
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
@@ -81,11 +79,30 @@ import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfPageEventHelper;
 import com.lowagie.text.pdf.PdfWriter;
 
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.JRParameter;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JRExporter;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.engine.JREmptyDataSource;
+
+import java.io.OutputStream;
+import java.io.InputStream;
+import java.io.IOException;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
+
 public class PdfRecordPrinter {
 
     private static Logger logger = MiscUtils.getLogger();
 
-    private HttpServletRequest request;
+    private static final String BILLING_INVOICE_TEMPLATE_FILE = "org/oscarehr/common/web/BillingInvoiceTemplate.jrxml";
+    private static final String OSCAR_LOGO_FILE = "org/oscarehr/common/web/images/Oscar.jpg";
+
     private OutputStream os;
 
     private Document document;
@@ -106,12 +123,23 @@ public class PdfRecordPrinter {
     private String signingProvider;
 
     private PdfWriter writer;
-
-    public PdfRecordPrinter(HttpServletRequest request, OutputStream os) throws DocumentException,IOException {
-        this.request = request;
+    
+    private BillingONCHeader1Dao billingONCHeader1Dao = (BillingONCHeader1Dao) SpringUtils.getBean("billingONCHeader1Dao");
+    private ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
+    private ClinicDAO clinicDao = (ClinicDAO) SpringUtils.getBean("clinicDAO");
+    
+    public PdfRecordPrinter(OutputStream os) {
         this.os = os;
         formatter = new SimpleDateFormat("dd-MMM-yyyy");
-
+        
+        document = null;
+        writer = null;
+        bf = null;
+        font = null;
+        boldFont = null;
+    }
+    
+    public void start() throws DocumentException,IOException {
         //Create the font we are going to print to
         bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
         font = new Font(bf, FONTSIZE, Font.NORMAL);
@@ -125,23 +153,9 @@ public class PdfRecordPrinter {
         writer.setStrictImageSequence(true);
 
         document.setPageSize(PageSize.LETTER);
-
-        /*
-        HeaderFooter footer = new HeaderFooter(new Phrase("-",font),new Phrase("-",font));
-        footer.setAlignment(HeaderFooter.ALIGN_CENTER);
-        footer.setBorder(0);
-
-        document.setFooter(footer);
-*/
         document.open();
-
-
     }
-
-    public HttpServletRequest getRequest() {
-    	return request;
-    }
-
+    
     public OutputStream getOutputStream() {
     	return os;
     }
@@ -215,105 +229,163 @@ public class PdfRecordPrinter {
         cb.endText();
         cb.restoreState();
 	}
+        
 	public void printDocHeaderFooter() throws DocumentException {
-		document.resetHeader();
-		document.resetFooter();
-		//document.resetPageCount();
-    	String headerTitle = demographic.getFormattedName() + " " + demographic.getAge() + " " + demographic.getSex() + " DOB:" + demographic.getFormattedDob();
+            document.resetHeader();
+            document.resetFooter();
 
-    	//set up document title and header
-        ResourceBundle propResource = ResourceBundle.getBundle("oscarResources");
-        String title = propResource.getString("oscarEncounter.pdfPrint.title") + " " + (String)request.getAttribute("demoName") + "\n";
-        String gender = propResource.getString("oscarEncounter.pdfPrint.gender") + " " + (String)request.getAttribute("demoSex") + "\n";
-        String dob = propResource.getString("oscarEncounter.pdfPrint.dob") + " " + (String)request.getAttribute("demoDOB") + "\n";
-        String age = propResource.getString("oscarEncounter.pdfPrint.age") + " " + (String)request.getAttribute("demoAge") + "\n";
-        String mrp = propResource.getString("oscarEncounter.pdfPrint.mrp") + " " + (String)request.getAttribute("mrp") + "\n";
-        String[] info = new String[] { title, gender, dob, age, mrp };
+            String headerTitle = demographic.getFormattedName() + " " + demographic.getAge() + " " + demographic.getSex() + " DOB:" + demographic.getFormattedDob();
 
-        ClinicData clinicData = new ClinicData();
-        clinicData.refreshClinicData();
-        String[] clinic = new String[] {clinicData.getClinicName(), clinicData.getClinicAddress(),
-        clinicData.getClinicCity() + ", " + clinicData.getClinicProvince(),
-        clinicData.getClinicPostal(), clinicData.getClinicPhone()};
+            if( newPage ) {
+                document.newPage();
+                newPage=false;
+            }
 
-        if( newPage ) {
-            document.newPage();
-            newPage=false;
-        }
+            //Header will be printed at top of every page beginning with p2
+            Phrase headerPhrase = new Phrase(LEADING, headerTitle, boldFont);
 
-        //Header will be printed at top of every page beginning with p2
+            getDocument().add(headerPhrase);
+            getDocument().add(new Phrase("\n"));
 
-        Phrase headerPhrase = new Phrase(LEADING, headerTitle, boldFont);
-/*
-        HeaderFooter header = new HeaderFooter(headerPhrase,false);
-        header.setAlignment(HeaderFooter.ALIGN_CENTER);
-        document.setHeader(header);
-*/
-        getDocument().add(headerPhrase);
-        getDocument().add(new Phrase("\n"));
+            Paragraph p = new Paragraph("Tel:"+demographic.getPhone(),getFont());
+            p.setAlignment(Paragraph.ALIGN_LEFT);
 
-        Paragraph p = new Paragraph("Tel:"+demographic.getPhone(),getFont());
-        p.setAlignment(Paragraph.ALIGN_LEFT);
-       // getDocument().add(p);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");                   
+            Paragraph p2 = new Paragraph("Date of Visit: " + sdf.format(appointment.getAppointmentDate()),getFont());
+            p2.setAlignment(Paragraph.ALIGN_RIGHT);
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Paragraph p2 = new Paragraph("Date of Visit: " + sdf.format(appointment.getAppointmentDate()),getFont());
-        p2.setAlignment(Paragraph.ALIGN_RIGHT);
-       // getDocument().add(p);
+            PdfPTable table = new PdfPTable(2);
+            table.setWidthPercentage(100f);
+            table.getDefaultCell().setBorder(PdfPCell.NO_BORDER);
+            PdfPCell cell1 = new PdfPCell(p);
+            cell1.setBorder(PdfPCell.NO_BORDER);
+            cell1.setHorizontalAlignment(Element.ALIGN_LEFT);
+            PdfPCell cell2 = new PdfPCell(p2);
+            cell2.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            cell2.setBorder(PdfPCell.NO_BORDER);
+            table.addCell(cell1);
+            table.addCell(cell2);
 
-        PdfPTable table = new PdfPTable(2);
-        table.setWidthPercentage(100f);
-        table.getDefaultCell().setBorder(PdfPCell.NO_BORDER);
-        PdfPCell cell1 = new PdfPCell(p);
-        cell1.setBorder(PdfPCell.NO_BORDER);
-        cell1.setHorizontalAlignment(Element.ALIGN_LEFT);
-        PdfPCell cell2 = new PdfPCell(p2);
-        cell2.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        cell2.setBorder(PdfPCell.NO_BORDER);
-        table.addCell(cell1);
-        table.addCell(cell2);
+            getDocument().add(table);
 
-        getDocument().add(table);
-
-        table = new PdfPTable(3);
-        table.setWidthPercentage(100f);
-        table.getDefaultCell().setBorder(PdfPCell.NO_BORDER);
-        cell1 = new PdfPCell(getParagraph("Signed Provider:" + ((signingProvider!=null)?signingProvider:"")));
-        cell1.setBorder(PdfPCell.BOTTOM);
-        cell1.setHorizontalAlignment(Element.ALIGN_LEFT);
-        cell2 = new PdfPCell(getParagraph("RFR:" + this.appointment.getReason()));
-        cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
-        cell2.setBorder(PdfPCell.BOTTOM);
-        PdfPCell cell3 = new PdfPCell(getParagraph("Ref:" + this.getRefName(this.demographic)));
-        cell3.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        cell3.setBorder(PdfPCell.BOTTOM);
-        table.addCell(cell1);
-        table.addCell(cell2);
-        table.addCell(cell3);
-        getDocument().add(table);
-
-        /*
-        HeaderFooter footer = new HeaderFooter(new Phrase("-",font),new Phrase("-",font));
-        footer.setAlignment(HeaderFooter.ALIGN_CENTER);
-        footer.setBorder(0);
-
-        document.setFooter(footer);
-*/
-
-        //Write title with top and bottom borders on p1
-
-
-       // cb = writer.getDirectContent();
-        /*
-        cb.setColorStroke(new Color(0,0,0));
-        cb.setLineWidth(0.5f);
-        * 
-        cb.moveTo(document.left(), document.top() - (font.getCalculatedLeading(LINESPACING)*5f));
-        cb.lineTo(document.right(), document.top() - (font.getCalculatedLeading(LINESPACING)*5f));
-        cb.stroke();     
-        */
+            table = new PdfPTable(3);
+            table.setWidthPercentage(100f);
+            table.getDefaultCell().setBorder(PdfPCell.NO_BORDER);
+            cell1 = new PdfPCell(getParagraph("Signed Provider:" + ((signingProvider!=null)?signingProvider:"")));
+            cell1.setBorder(PdfPCell.BOTTOM);
+            cell1.setHorizontalAlignment(Element.ALIGN_LEFT);
+            cell2 = new PdfPCell(getParagraph("RFR:" + this.appointment.getReason()));
+            cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell2.setBorder(PdfPCell.BOTTOM);
+            PdfPCell cell3 = new PdfPCell(getParagraph("Ref:" + this.getRefName(this.demographic)));
+            cell3.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            cell3.setBorder(PdfPCell.BOTTOM);
+            table.addCell(cell1);
+            table.addCell(cell2);
+            table.addCell(cell3);
+            getDocument().add(table);
     }
+    
+    public void printBillingInvoice(Integer invoiceNo, Locale locale) {
+        OscarProperties props = OscarProperties.getInstance();      
+        InputStream is = null;
+        InputStream imageIS = null;
+        try {
+            String templateFilepath = props.getProperty("billing_template_file","");
+            //look for custom billing template file, otherwise use default.
+            if (templateFilepath.isEmpty())
+                is = this.getClass().getClassLoader().getResourceAsStream(BILLING_INVOICE_TEMPLATE_FILE);
+            else 
+                is = new FileInputStream(templateFilepath);
+            //get Jasper Report
+            
+            JasperReport jasperReport = JasperCompileManager.compileReport(is);
+            
+            if (jasperReport != null) {
+                                
+                //populate data in Jasper Report
+                Map<String,Object> parameters = new HashMap<String,Object>();
+                JRParameter[] jrParams = jasperReport.getParameters();
+                
+                if (jrParams != null) {
+                    
+                    APExecute apExe = new APExecute();
+                    BillingONCHeader1 billingONCHeader1 = billingONCHeader1Dao.find(invoiceNo);                    
+                    
+                    for (JRParameter jrParam : jrParams) {
+                        if (!jrParam.isSystemDefined()) {
+                            String paramName = jrParam.getName();
+                            
+                            if (paramName.equals("invoice_no")) {
+                                parameters.put(paramName, invoiceNo);
+                            }
+                            else if (paramName.equals("clinic_logo")) {                               
+                                String imagePath = props.getProperty("clinic_logo","");  
+                                if (imagePath.isEmpty()) {
+                                    imageIS = this.getClass().getClassLoader().getResourceAsStream(OSCAR_LOGO_FILE);
+                                }
+                                else {
+                                    imageIS = new FileInputStream(imagePath);
+                                }
+                                parameters.put(paramName,imageIS);
+                            } 
+                            else if (paramName.equals("billing_print_date")) {
+                                parameters.put(paramName,DateUtils.formatDate(new Date(),locale));
+                            }                                
+                            else if (paramName.equals("billing_due_date")){
+                                  
+                                    Date serviceDate = billingONCHeader1.getBillingDate();   
+                                    
+                                    String numDaysTilDue = props.getProperty("invoice_due_date","30");
+                                                                     
+                                    Date dueDate = org.apache.commons.lang.time.DateUtils.addDays(serviceDate, Integer.parseInt(numDaysTilDue));                                    
+                                    parameters.put(paramName, DateUtils.formatDate(dueDate,locale));
 
+                            } else if (paramName.equals("payee")){
+                                String payee = props.getProperty("PAYEE", "");
+                                if(payee.isEmpty()) {
+                                    payee = providerDao.getProviderName(billingONCHeader1.getProviderNo());
+                                }
+                                parameters.put(paramName, payee);
+                            } else if (paramName.equals("remit_to_phone")) {
+                                String remitToPhone = props.getProperty("clinic_billing_phone","");
+                                if (remitToPhone.isEmpty()) {
+                                    remitToPhone = clinicDao.getClinic().getClinicPhone();
+                                }
+                                parameters.put(paramName, remitToPhone);
+                            }
+                            else {
+                                parameters.put(paramName,apExe.execute(paramName,String.valueOf(billingONCHeader1.getDemographicNo()),invoiceNo));
+                            }                            
+                        }
+                    }
+
+                    //print Jasper Report
+                    JasperPrint jasperPrint =  JasperFillManager.fillReport(jasperReport,parameters, new JREmptyDataSource());
+
+                    //Exports Jasper Report as PDF to output stream.
+                    JRExporter exporter = new JRPdfExporter();
+                    exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+                    exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, os);
+
+                    exporter.exportReport();
+                }
+            }
+            
+        }catch (net.sf.jasperreports.engine.JRException e) {
+            MiscUtils.getLogger().error("An unexpected jasper exception occurred:", e);        
+        } catch ( java.io.FileNotFoundException e) {
+            MiscUtils.getLogger().error("Cannot file billing template file:",e);
+        } finally {
+            try {
+                if (is != null) is.close();
+                if (imageIS != null) imageIS.close();
+            }catch (java.io.IOException e) {
+                MiscUtils.getLogger().error("Cannot close InputStream:", e);
+            }
+        }                       
+    }
+    
     public void printRx(String demoNo) throws DocumentException {
         printRx(demoNo,null);
     }

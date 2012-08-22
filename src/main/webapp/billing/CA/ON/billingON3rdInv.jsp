@@ -30,6 +30,12 @@
 <%@page import="org.oscarehr.common.dao.BillingONExtDao,org.oscarehr.common.model.BillingONExt"%>
 <%@page import="org.oscarehr.common.dao.BillingONCHeader1Dao,org.oscarehr.common.model.BillingONCHeader1"%>
 <%@page import="org.oscarehr.common.model.BillingONItem, org.oscarehr.common.service.BillingONService"%> 
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.common.model.Demographic"%>
+<%@page import="org.oscarehr.common.dao.DemographicDao"%>
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
 <%
     String invoiceNoStr = request.getParameter("billingNo");
@@ -86,7 +92,7 @@
         List<BillingONPayment> paymentRecords = billPaymentDao.find3rdPartyPayRecordsByBill(bCh1);
         paidTotal = BillingONPaymentDao.calculatePaymentTotal(paymentRecords);
         refundTotal = BillingONPaymentDao.calculateRefundTotal(paymentRecords);
-        balanceOwing = billingONService.calculateBalanceOwing(bCh1.getId(),paidTotal,refundTotal);
+        balanceOwing = billingONService.calculateBalanceOwing(bCh1.getId());
 
         demo = demoDAO.getDemographic(bCh1.getDemographicNo().toString());
         
@@ -151,37 +157,71 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-    <head>
-        <title>Billing Invoice</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
-	<script>
+<head>
+    <style type="text/css" media="print">
+        .doNotPrint {
+            display: none;
+        }
+    </style>
+    <style type="text/css" media="">
+        .titleBar {
+            background-color: gray;  
+            padding-top: .5em;
+            padding-bottom: .5em;
+            padding-left: .5em;
+        }
+    </style>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
+    <script>
 	    jQuery.noConflict();
-	</script>
-    </head>
-    
-    <body>
-        <% if (clinic != null) {%>
+    </script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript">
+    function submitForm(methodName) {
+        if (methodName=="email"){
+            document.forms[0].method.value="sendEmail";
+        } else if (methodName=="print") {            
+            document.forms[0].method.value="getPrintPDF";
+        }
+        document.forms[0].submit();
+    }
+</script>
+<title>Billing Invoice</title>
+</head>
+<body>
+    <form action="<%=request.getContextPath()%>/BillingInvoice.do"> 
+        <input type="hidden" name="method" value=""/>
+        <input type="hidden" name="invoiceNo" id="invoiceNo" value="<%=invoiceNoStr%>"/>
+        <div class="doNotPrint">
+            <div class="titleBar">
+                <input type="button" name="printInvoice" value="<bean:message key="billing.billing3rdInv.printPDF"/>" onClick="submitForm('print')"/>
+                <input type="button" name="emailInvoice" value="<bean:message key="billing.billing3rdInv.email"/>" onClick="submitForm('email')"/>
+            </div>
+        </div>
+    </form>
         <table width="100%" border="0">
             <tr>
+             <% if (clinic != null) {%>
                 <td><b><%=clinic.getClinicName()%></b><br />
                        <%=clinic.getClinicAddress()%><br />
                        <%=clinic.getClinicCity()%>, <%=clinic.getClinicProvince()%><br />
                        <%=clinic.getClinicPostal()%><br />
                         Tel.: <%=clinic.getClinicPhone()%><br />
                 </td>
-                <td align="right" valign="top">
-                    <font size="+2"><b>Invoice No. - <%=invoiceNoStr%></b></font><br />
-		<bean:message key="oscar.billing.CA.ON.3rdpartyinvoice.printDate"/>:<%=DateUtils.sumDate("yyyy-MM-dd HH:mm","0") %><br/>
-              <% if (props.hasProperty("invoice_due_date")) {%>
-                <b><bean:message key="oscar.billing.CA.ON.3rdpartyinvoice.dueDate"/>:</b><%=dueDateStr%>
-              <% }%>
-                </td>               
+            <%  }%>
+                <td align="right" valign="top"><font size="+2"><b>Invoice - <%=invoiceNoStr%></b></font><br />
+                    <bean:message key="oscar.billing.CA.ON.3rdpartyinvoice.printDate"/>:<%=DateUtils.sumDate("yyyy-MM-dd HH:mm","0") %><br/>
+                 <% if (props.hasProperty("invoice_due_date")) {
+                        Integer numDaysTilDue = Integer.parseInt(props.getProperty("invoice_due_date", "0")); 
+                        Date serviceDate = null;
+                        serviceDate = bCh1.getBillingDate();
+                  %>
+                    <b><bean:message key="oscar.billing.CA.ON.3rdpartyinvoice.dueDate"/>:</b><%=DateUtils.sumDate(serviceDate, numDaysTilDue, request.getLocale())%>
+                 <% }%>
+                </td>
             </tr>
         </table>
-        <%}%>
-
         <hr>
-
         <table width="100%" border="0">
             <tr>
                 <td width="50%" valign="top">Bill To<br />
@@ -292,7 +332,6 @@
                 <td>Refunds:</td>
                 <td><%=refundTotal.toPlainString()%></td>
             </tr>
-
             <tr align="right">
                 <td><b>Balance:</b></td>
                 <td><%=balanceOwing.toPlainString()%></td>

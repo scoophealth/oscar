@@ -554,6 +554,87 @@
         </ap-sql>
         <ap-output>${first_name} ${last_name}\n${address}\n${city} ${province}\n${postal}</ap-output>
     </databaseap>
-
-
+     <databaseap>
+        <ap-name>email</ap-name>
+        <ap-sql>SELECT email FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${email}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>service_date</ap-name>
+        <ap-sql>select billing_date from billing_on_cheader1 where id=${invoiceNo}
+        </ap-sql>
+        <ap-output>${billing_date}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>practitioner</ap-name>
+        <ap-sql>select CONCAT('Dr.',' ',p.first_name,' ', UPPER(p.last_name)) as provider_name from provider p, billing_on_cheader1 b where p.provider_no=b.provider_no and b.id=${invoiceNo}
+        </ap-sql>
+        <ap-output>${provider_name}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>ref_doctor</ap-name>
+        <ap-sql>select ref_num from billing_on_cheader1 where id=${invoiceNo}
+        </ap-sql>
+        <ap-output>${ref_num}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>fee_total</ap-name>
+        <ap-sql>select ifnull((select format(sum(fee),2) from billing_on_item where ch1_id=${invoiceNo} and status !='D'),'0.00') as fees
+        </ap-sql>
+        <ap-output>${fees}</ap-output>
+    </databaseap>
+     <databaseap>
+    	<ap-name>payment_total</ap-name>
+        <ap-sql>select ifnull((select format(sum(value),2) from billing_on_ext where billing_no=${invoiceNo} and status='1' and key_val='payment'),'0.00') as payment       
+        </ap-sql>
+        <ap-output>${payment}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>refund_total</ap-name>
+        <ap-sql>select ifnull((select format(sum(value),2) from billing_on_ext where billing_no=${invoiceNo} and status='1' and key_val='refund'),'0.00') as refund
+        </ap-sql>
+        <ap-output>${refund}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>balance_owing</ap-name>
+        <ap-sql> select format((select ifnull((select format(sum(fee),2) as fees from billing_on_item where ch1_id=${invoiceNo} and status !='D'),'0.00') - (select ifnull((select format(sum(value),2) as payment from billing_on_ext where billing_no=${invoiceNo} and status='1' and key_val='payment'),'0.00')) - (select ifnull((select format(sum(value),2) as refund from billing_on_ext where billing_no=${invoiceNo} and status='1' and key_val='refund'),'0.00'))),2) as balance_owing
+        </ap-sql>
+        <ap-output>${balance_owing}</ap-output>
+    </databaseap>    
+    <databaseap>
+    	<ap-name>bill_item_number</ap-name>
+        <ap-sql>select GROUP_CONCAT(id SEPARATOR '<![CDATA[<br/>]]>') as billing_id from billing_on_item where ch1_id=${invoiceNo} and status != 'D' order by id
+        </ap-sql>
+        <ap-output>${billing_id}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>bill_item_description</ap-name>
+        <ap-sql>select GROUP_CONCAT(description SEPARATOR '<![CDATA[<br/>]]>') as billing_desc from billingservice b, billing_on_item bi where b.service_code=bi.service_code and bi.ch1_id=${invoiceNo} and bi.status !='D' and b.billingservice_no = (select max(b2.billingservice_no) from billingservice b2 where b.service_code = b2.service_code and b2.billingservice_date &lt;= now()) order by bi.id
+        </ap-sql>
+        <ap-output>${billing_desc}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>bill_item_service_code</ap-name>
+        <ap-sql>select GROUP_CONCAT(service_code SEPARATOR '<![CDATA[<br/>]]>') as billing_service_code from billing_on_item where ch1_id=${invoiceNo} and status != 'D' order by id
+        </ap-sql>
+        <ap-output>${billing_service_code}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>bill_item_qty</ap-name>
+        <ap-sql>select GROUP_CONCAT(ser_num SEPARATOR '<![CDATA[<br/>]]>') as billing_qty from billing_on_item where ch1_id=${invoiceNo} and status != 'D' order by id
+        </ap-sql>
+        <ap-output>${billing_qty}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>bill_item_dx</ap-name>
+        <ap-sql>select GROUP_CONCAT(dx SEPARATOR '<![CDATA[<br/>]]>') as billing_dx from billing_on_item where ch1_id=${invoiceNo} and status != 'D' order by id
+        </ap-sql>
+        <ap-output>${billing_dx}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>bill_item_amount</ap-name>
+        <ap-sql>select GROUP_CONCAT(format(fee,2) SEPARATOR '<![CDATA[<br/>]]>') as billing_fee from billing_on_item where ch1_id=${invoiceNo} and status != 'D' order by id
+        </ap-sql>
+        <ap-output>${billing_fee}</ap-output>
+    </databaseap>
 </eformap-config>

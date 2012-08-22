@@ -522,7 +522,7 @@
 			<form-property name="episode" type="org.oscarehr.common.model.Episode"/>
 		</form-bean>
                 <form-bean name="groupPreference" type="org.apache.struts.action.DynaActionForm"/>
-		                
+
                 <form-bean name="billing3rdPartyPayment" type="org.apache.struts.validator.DynaValidatorForm"/>
                 <form-bean name="applyPractitionerPremium" type="org.apache.struts.validator.DynaValidatorForm"> 
                 </form-bean>
@@ -2406,6 +2406,10 @@
 
 		<action path="/casemgmt/NotePermissions" type="org.oscarehr.casemgmt.web.NotePermissionsAction"
 			scope="request" validate="false" parameter="method" />
+                        
+                <action path="/BillingInvoice" scope="request" type="org.oscarehr.common.web.BillingInvoiceAction" parameter="method">
+			<forward name="success" path="/close.html" />		
+		</action>        
 
             <action path="/BillingONReview" scope="request" type="org.oscarehr.common.web.BillingONReviewAction" parameter="method" />
                  

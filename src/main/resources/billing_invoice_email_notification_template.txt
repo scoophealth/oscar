@@ -1,0 +1,20 @@
+${clinic.clinicName}
+${clinic.clinicAddress}
+${clinic.clinicCity}, ${clinic.clinicProvince}
+${clinic.clinicPostal}
+Tel.: ${clinic.clinicPhone}
+
+Hello ${demographic.firstName} ${demographic.lastName},
+
+According to our records, you have a balance owing for services rendered at ${clinic.clinicName}.
+-----
+Invoice No.: ${billingONCHeader1.id}
+Balance Owing: ${balance_owing}
+Due Date: ${date_due}
+-----
+Please pay in full, prior to the due date by visiting the Accounts Office located inside of ${clinic.clinicName} between ${start_hour} and ${end_hour}.
+
+Should you have any questions, please contact ${clinic.clinicName} at the telephone number listed above.
+
+Best Regards,
+${clinic.clinicName} team.

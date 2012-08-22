@@ -163,7 +163,7 @@ BigDecimal adjTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
         <script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>
        
         <script type="text/javascript">
-            
+
             function nav_colour_swap(navid, num) {               
                 for(var i = 0; i < num; i++) {
                     var nav = document.getElementById("A" + i);
@@ -176,6 +176,15 @@ BigDecimal adjTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
                 }
             }  
             
+            function submitForm(methodName) {
+                if (methodName=="email"){
+                    document.invoiceForm.method.value="sendListEmail";
+                } else if (methodName=="print") {            
+                    document.invoiceForm.method.value="getListPrintPDF";
+                }
+                document.invoiceForm.submit();
+            }
+
         function fillEndDate(d){
            document.serviceform.xml_appointment_date.value= d;  
         }
@@ -265,6 +274,13 @@ function handleStateChange() {
 			document.getElementById(ajaxFieldId).innerHTML = xmlHttp.responseText;
 		}
 	}
+}
+
+var isChecked = false;
+function checkAll(group) {
+    for (i = 0; i < group.length; i++) 
+        group[i].checked = !isChecked;
+    isChecked = !isChecked;
 }
 </script>
         <style type="text/css">
@@ -396,9 +412,8 @@ function handleStateChange() {
         </td>
       </tr>
     </table>
-
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="myYellow">
     <form name="serviceform" method="get" action="billingONStatus.jsp">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="myYellow">   
     <tr><td width="30%" class="myIvory">
         <input type="checkbox" name="billType" value="HCP" <%=strBillType.indexOf("HCP")>=0?"checked":""%>><span class="smallFont">Bill OHIP</span></input>
         <input type="checkbox" name="billType" value="RMB" <%=strBillType.indexOf("RMB")>=0?"checked":""%>><span class="smallFont">RMB</span></input>
@@ -533,7 +548,7 @@ function changeSite(sel) {
         </td>                           
       </tr>
     </table>
-    
+
     <div class="statusTypeList">
       <ul>
         <li><input type="radio" name="statusType" value="_" <%=statusType.equals("_")?"checked":""%>>Rejected</input></li>
@@ -548,8 +563,10 @@ function changeSite(sel) {
         <li><input type="radio" name="statusType" value="D" <%=statusType.equals("D")?"checked":""%>>Deleted Bill</input></li>
         <li><input type="radio" name="statusType" value="%" <%=statusType.equals("%")?"checked":""%>>All</input></li>
       </ul>
-    </div>
+    </div>    
     </form>
+    <form name="invoiceForm" action="<%=request.getContextPath()%>/BillingInvoice.do">     
+         <input type="hidden" name="method" value=""/>
 <% //
 if(statusType.equals("_")) { %>
     <!--  div class="rejected list"-->
@@ -651,14 +668,16 @@ if(statusType.equals("_")) { %>
              <th>MESSAGES</th>
 		<% if (bMultisites) {%>
 			 <th>SITE</th>             
-        <% }%>     
+        <% }%>  
+            <th><a href="#" onClick="checkAll(document.invoiceForm.invoiceAction)"><bean:message key="billing.billingStatus.action"/></a></th>
           </tr>
        
           
        <% //
        String invoiceNo = ""; 
        boolean nC = false;
-
+       boolean newInvoice = true;
+       
        for (int i = 0 ; i < bList.size(); i++) { 
     	   BillingClaimHeader1Data ch1Obj = (BillingClaimHeader1Data) bList.get(i);
     	   
@@ -719,6 +738,13 @@ if(statusType.equals("_")) { %>
                adj = adj.subtract(bTemp);
                adjTotal = adjTotal.add(adj);
 	       String color = "";
+               
+               if (invoiceNo.equals(ch1Obj.getId())){
+                   newInvoice = false;
+               }
+               else {
+                   newInvoice = true; 
+               }
 	       if(!invoiceNo.equals(ch1Obj.getId())) {
 	    	   invoiceNo = ch1Obj.getId(); 
 	    	   nC = nC ? false : true;
@@ -730,6 +756,12 @@ if(statusType.equals("_")) { %>
                }
                else {
                    settleDate = settleDate.substring(0, settleDate.indexOf(" "));
+               }
+               
+               String payProgram = ch1Obj.getPay_program();
+               boolean b3rdParty = false;
+               if(payProgram.equals("PAT") || payProgram.equals("OCF") || payProgram.equals("ODS") || payProgram.equals("CPP") || payProgram.equals("STD")) {
+                   b3rdParty = true;
                }
 	      
        %>       
@@ -749,7 +781,7 @@ if(statusType.equals("_")) { %>
              <td align="center"><%=adj.toString()%></td> <!--SETTLE DATE-->
              <td align="center"><%=getHtmlSpace(ch1Obj.getRec_id())%></td><!--DX1-->
              <!--td>&nbsp;</td--><!--DX2-->
-             <td align="center"><%=ch1Obj.getPay_program()%></td><!--DX3-->
+             <td align="center"><%=payProgram%></td>
              <td align="center">
                  <!--  a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(700,700,'../../../billing/CA/BC/billingView.do?billing_no=<%=ch1Obj.getId()%>','BillView<%=ch1Obj.getId()%>')">--><%=ch1Obj.getId()%>
 
@@ -762,7 +794,12 @@ if(statusType.equals("_")) { %>
 				 <td "<%=(ch1Obj.getClinic()== null || ch1Obj.getClinic().equalsIgnoreCase("null") ? "" : "bgcolor='" + siteBgColor.get(ch1Obj.getClinic()) + "'")%>">
 				 	<%=(ch1Obj.getClinic()== null || ch1Obj.getClinic().equalsIgnoreCase("null") ? "" : siteShortName.get(ch1Obj.getClinic()))%>
 				 </td>     <!--SITE-->          
-        	<% }%>     
+        	<% }%>   
+             <td align="center">
+                 <% if (newInvoice && b3rdParty) { %>
+                 <input type="checkbox" name="invoiceAction" id="invoiceAction<%=invoiceNo%>" value="<%=invoiceNo%>"/>
+                 <% }%>
+             </td><!--ACTION-->
           </tr>
        <% } %>  
        
@@ -776,23 +813,26 @@ if(statusType.equals("_")) { %>
              <td align="right"><%=total.toString()%></td><!--BILLED-->
              <td align="right"><%=paidTotal.toString()%></td><!--PAID-->
              <td align="right"><%=adjTotal.toString()%></td><!--ADJUSTMENTS-->
-             <td>&nbsp;</td><!--DX1-->
-             <td>&nbsp;</td><!--DX2-->
-             <td>&nbsp;</td><!--DX3-->
+             <td>&nbsp;</td><!--DX-->
+             <td>&nbsp;</td><!--TYPE-->
              <td>&nbsp;</td><!--ACCOUNT-->
              <td>&nbsp;</td><!--MESSAGES-->
              <% if (bMultisites) {%>
 				 <td>&nbsp;</td><!--SITE-->          
-        	<% }%>    
+        	<% }%>  
+             <td align="center"><a href="#" onClick="submitForm('print')"><bean:message key="billing.billingStatus.print"/></a> 
+                                <a href="#" onClick="submitForm('email')"><bean:message key="billing.billingStatus.email"/></a>
+             </td>
           </tr>
-       <table>
-    </div>
+       </table>
 <% } %>
-    
+    </form>    
+                        
     <script language='javascript'>
        Calendar.setup({inputField:"xml_vdate",ifFormat:"%Y-%m-%d",showsTime:false,button:"hlSDate",singleClick:true,step:1});          
        Calendar.setup({inputField:"xml_appointment_date",ifFormat:"%Y-%m-%d",showsTime:false,button:"hlADate",singleClick:true,step:1});                      
    </script>
+    
     </body>
     <%! String getStdCurr(String s) {
     		if(s != null) {

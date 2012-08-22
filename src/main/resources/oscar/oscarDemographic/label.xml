@@ -1,97 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE jasperReport PUBLIC "-//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
-
-<jasperReport name="label" pageWidth="350" pageHeight="75"
-	columnWidth="200" leftMargin="0" rightMargin="0" topMargin="10"
-	bottomMargin="0">
-	<reportFont name="sansserif" isDefault="false" fontName="sansserif"
-		size="10" isBold="false" isItalic="false" isUnderline="false"
-		isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252"
-		isPdfEmbedded="false" />
-	<parameter name="demo" class="java.lang.String">
-	</parameter>
-	<queryString><![CDATA[select d.last_name, d.chart_no, d.first_name, d.address, d.city , d.province, d.postal, d.phone, d.phone2, d.year_of_birth, d.month_of_birth, d.date_of_birth, d.hin, d.ver, d.sex, CONCAT(p.last_name, ', ' ,p.first_name) as doc_name from demographic d left outer join provider p on d.provider_no = p.provider_no where demographic_no =$P{demo} ]]></queryString>
-	<field name="last_name" class="java.lang.String">
-	</field>
-	<field name="chart_no" class="java.lang.String">
-	</field>
-	<field name="first_name" class="java.lang.String">
-	</field>
-	<field name="address" class="java.lang.String">
-	</field>
-	<field name="city" class="java.lang.String">
-	</field>
-	<field name="province" class="java.lang.String">
-	</field>
-	<field name="postal" class="java.lang.String">
-	</field>
-	<field name="phone" class="java.lang.String">
-	</field>
-	<field name="phone2" class="java.lang.String">
-	</field>
-	<field name="year_of_birth" class="java.lang.String">
-	</field>
-	<field name="month_of_birth" class="java.lang.String">
-	</field>
-	<field name="date_of_birth" class="java.lang.String">
-	</field>
-	<field name="hin" class="java.lang.String">
-	</field>
-	<field name="ver" class="java.lang.String">
-	</field>
-	<field name="sex" class="java.lang.String">
-	</field>
-	<field name="doc_name" class="java.lang.String">
-	</field>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Chartlabel2" pageWidth="350" pageHeight="75" columnWidth="330" leftMargin="0" rightMargin="0" topMargin="10" bottomMargin="0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="demo" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select d.last_name, d.chart_no, d.first_name, d.address, d.city , d.province, d.postal, d.phone, d.phone2, d.year_of_birth,
+                 d.month_of_birth, d.date_of_birth, d.hin, d.ver, d.sex, CONCAT(p.last_name, ', ' ,p.first_name) as doc_name from demographic d
+                 left outer join provider p on d.provider_no = p.provider_no where demographic_no =$P{demo}]]>
+	</queryString>
+	<field name="last_name" class="java.lang.String"/>
+	<field name="chart_no" class="java.lang.String"/>
+	<field name="first_name" class="java.lang.String"/>
+	<field name="address" class="java.lang.String"/>
+	<field name="city" class="java.lang.String"/>
+	<field name="province" class="java.lang.String"/>
+	<field name="postal" class="java.lang.String"/>
+	<field name="phone" class="java.lang.String"/>
+	<field name="phone2" class="java.lang.String"/>
+	<field name="year_of_birth" class="java.lang.String"/>
+	<field name="month_of_birth" class="java.lang.String"/>
+	<field name="date_of_birth" class="java.lang.String"/>
+	<field name="hin" class="java.lang.String"/>
+	<field name="ver" class="java.lang.String"/>
+	<field name="sex" class="java.lang.String"/>
+	<field name="doc_name" class="java.lang.String"/>
 	<title>
-		<band height="60">
+		<band height="60" splitType="Stretch">
 			<textField>
-				<reportElement positionType="Float" mode="Opaque" x="17"
-					y="0" width="330" height="14" />
+				<reportElement x="17" y="0" width="330" height="17"/>
 				<textElement>
-					<font size="12" isBold="true" isUnderline="true" />
+					<font size="10" isBold="true" isUnderline="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{last_name} + "," + $F{first_name} + "   " + "CHART#:" + $F{chart_no}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{last_name} + "," + $F{first_name} + "   " + "CHART#:" + $F{chart_no}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement positionType="Float" mode="Opaque" x="17"
-					y="15" width="330" height="14" />
-				<textElement>
-					<font size="12" />
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["HIN:" + $F{hin} + " " + $F{ver} + "   " + "SEX:" + $F{sex} + "	   " + "DOB:" +$F{date_of_birth} + "/" + $F{month_of_birth} + "/" + $F{year_of_birth}]]></textFieldExpression>
+				<reportElement positionType="Float" mode="Opaque" x="17" y="15" width="330" height="17"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["HIN:" + $F{hin} + " " + $F{ver} + "   " + "SEX:" + $F{sex} + "	   " + "DOB:" +$F{date_of_birth} + "/" + $F{month_of_birth} + "/" + $F{year_of_birth}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement positionType="Float" mode="Opaque" x="17"
-					y="30" width="330" height="14" />
-				<textElement>
-					<font size="12" />
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{address} + " " + $F{city} + "," + $F{province} + " " + $F{postal}]]></textFieldExpression>
+				<reportElement positionType="Float" mode="Opaque" x="17" y="28" width="330" height="17"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{address} + " " + $F{city} + "," + $F{province} + " " + $F{postal}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement positionType="Float" mode="Opaque" x="17"
-					y="45" width="330" height="14">
-					<printWhenExpression>
-						Boolean.valueOf($F{doc_name} != null)
-				</printWhenExpression>
+				<reportElement positionType="Float" mode="Opaque" x="17" y="43" width="330" height="17">
+					<printWhenExpression><![CDATA[Boolean.valueOf($F{doc_name} != null)]]></printWhenExpression>
 				</reportElement>
-				<textElement>
-					<font size="12" />
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["HOME: " + $F{phone} + "   " + "Dr. " + $F{doc_name}]]></textFieldExpression>
+				<textElement/>
+				<textFieldExpression><![CDATA["HOME: " + $F{phone} + "   " + "Dr. " + $F{doc_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement positionType="Float" mode="Opaque" x="17"
-					y="45" width="330" height="14">
-					<printWhenExpression>
-						Boolean.valueOf($F{doc_name} == null)
-				</printWhenExpression>
+				<reportElement positionType="Float" mode="Opaque" x="17" y="43" width="330" height="17">
+					<printWhenExpression><![CDATA[Boolean.valueOf($F{doc_name} == null)]]></printWhenExpression>
 				</reportElement>
-				<textElement>
-					<font size="12" />
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["HOME: " + $F{phone}]]></textFieldExpression>
+				<textElement/>
+				<textFieldExpression><![CDATA["HOME: " + $F{phone}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>

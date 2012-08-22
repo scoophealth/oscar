@@ -33,6 +33,8 @@ import org.oscarehr.common.model.BillingONItem;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.oscarehr.common.model.BillingONPayment;
+import org.oscarehr.common.dao.BillingONPaymentDao;
 
 /**
  *
@@ -43,6 +45,9 @@ public class BillingONService {
     
     @Autowired
     BillingONCHeader1Dao billingONCHeader1Dao;
+    
+    @Autowired
+    BillingONPaymentDao billingONPaymentDao;
     
     public List<BillingONItem> getNonDeletedInvoices(Integer invoiceNo) {
         BillingONCHeader1 billingONCHeader1 = billingONCHeader1Dao.find(invoiceNo);
@@ -58,11 +63,22 @@ public class BillingONService {
         return tempItems;
     }
     
-    public BigDecimal calculateBalanceOwing(Integer invoiceNo, BigDecimal paidTotal, BigDecimal refundTotal) {
+    public BigDecimal calculateBalanceOwing(Integer invoiceNo) {
         BillingONCHeader1 billingONCHeader1 = billingONCHeader1Dao.find(invoiceNo);
-        BigDecimal billTotal = new BigDecimal(billingONCHeader1.getTotal());        
+      
+        if (billingONCHeader1 != null) {
 
-        return billTotal.subtract(paidTotal).add(refundTotal);
+            List<BillingONPayment> paymentRecords = billingONPaymentDao.find3rdPartyPayRecordsByBill(billingONCHeader1);
+            BigDecimal paidTotal = BillingONPaymentDao.calculatePaymentTotal(paymentRecords);
+            BigDecimal refundTotal = BillingONPaymentDao.calculateRefundTotal(paymentRecords);
+
+            BigDecimal billTotal = new BigDecimal(billingONCHeader1.getTotal());
+
+            return billTotal.subtract(paidTotal).add(refundTotal);
+        } else {
+            MiscUtils.getLogger().error("Cannot find BillingONCHeader1 JPA Entity for Invoice No." + invoiceNo);
+            return null;
+        }
     }
     
      public boolean updateTotal(BillingONCHeader1 billingONCHeader1) {                       
