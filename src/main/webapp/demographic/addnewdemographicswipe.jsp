@@ -44,10 +44,10 @@ function Attach(lname, fname, hin, yob,mob,dob, vercode, sex, effyear, effmonth,
         	 self.opener.document.adddemographic.sex.value = sex;
                  self.opener.document.adddemographic.eff_date_year.value = effyear;
                  self.opener.document.adddemographic.eff_date_month.value = effmonth;
-                 self.opener.document.adddemographic.eff_date_date.value = effdate;
-                 self.opener.document.adddemographic.end_date_year.value = endyear;
-                 self.opener.document.adddemographic.end_date_month.value = endmonth;
-                 self.opener.document.adddemographic.end_date_date.value = enddate;
+                 self.opener.document.adddemographic.eff_date_date.value = effdate;                                 
+                 self.opener.document.adddemographic.hc_renew_date_year.value = endyear;
+                 self.opener.document.adddemographic.hc_renew_date_month.value = endmonth;
+                 self.opener.document.adddemographic.hc_renew_date_date.value = enddate;
 }
 -->
 </script>

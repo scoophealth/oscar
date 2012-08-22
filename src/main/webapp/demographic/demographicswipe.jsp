@@ -48,9 +48,9 @@ function Attach(lname, fname, hin, yob,mob,dob, vercode, sex, effyear, effmonth,
 		 self.opener.document.updatedelete.eff_date_year.value = effyear;
 		 self.opener.document.updatedelete.eff_date_month.value = effmonth;
 		 self.opener.document.updatedelete.eff_date_date.value = effdate;
-		 self.opener.document.updatedelete.end_date_year.value = endyear;
-		 self.opener.document.updatedelete.end_date_month.value = endmonth;
-		 self.opener.document.updatedelete.end_date_date.value = enddate;
+		 self.opener.document.updatedelete.hc_renew_date_year.value = endyear;
+		 self.opener.document.updatedelete.hc_renew_date_month.value = endmonth;
+		 self.opener.document.updatedelete.hc_renew_date_date.value = enddate;
         	 }
 }
 -->
@@ -147,7 +147,7 @@ function Attach(lname, fname, hin, yob,mob,dob, vercode, sex, effyear, effmonth,
                         </tr>
                 </table>
                 </td>
-                <td align="right"><b>End Date:</b></td>
+                <td align="right"><b>Renew Date:</b></td>
                 <td align="left">
                 <table border="0" cellpadding="0" cellspacing="0">
                         <tr>
