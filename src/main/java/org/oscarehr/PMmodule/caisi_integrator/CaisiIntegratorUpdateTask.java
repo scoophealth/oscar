@@ -35,6 +35,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -463,11 +464,14 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			
 			List<Integer> demographicIds =  DemographicDao.getDemographicIdsAlteredSinceTime(lastDataUpdated);
 			
-			for (Integer i : demographicIds){   //Verify that the demographic is in the Facility
-				if( !fullFacilitydemographicIds.contains(i)){
-					demographicIds.remove(i);
-				}
-			}
+			
+			Iterator<Integer> demoIterator = demographicIds.iterator();
+	        while(demoIterator.hasNext()){ //Verify that the demographic is in the Facility
+	                Integer i = demoIterator.next();
+	                if( !fullFacilitydemographicIds.contains(i)){
+	                	demoIterator.remove();
+	                }
+	        }
 			
 			if(fullPushProp != null &&  fullPushProp.getValue().equals("1")){
 			   userPropertyDao.saveProp(UserProperty.INTEGRATOR_FULL_PUSH+facility.getId(), "0");
