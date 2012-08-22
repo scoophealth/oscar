@@ -113,8 +113,8 @@ public class EForm extends EFormBase {
 		this.formDate = (String) loaded.get("formDate");
 		this.formFileName = (String) loaded.get("formFileName");
 		this.formCreator = (String) loaded.get("formCreator");
-		this.demographicNo = demographicNo;
-		this.patientIndependent = (Boolean) loaded.get("patientIndependent");
+		this.demographicNo = demographicNo;                
+		this.patientIndependent = Boolean.parseBoolean((String)loaded.get("patientIndependent"));
 		this.roleType = (String) loaded.get("roleType");
 	}
 
