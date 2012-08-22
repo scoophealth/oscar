@@ -226,4 +226,23 @@ public class EFormDataDao extends AbstractDao<EFormData> {
 		
 		return results;	
 	}
+    
+	/**
+	 * Finds form data for the specified demographic record and form name
+	 * 
+	 * @param demographicNo
+	 * 		Demographic number to find the form data for
+	 * @param formName
+	 * 		Form name to find the data for
+	 * @return
+	 * 		Returns all active matching form data, ordered by creation date and time
+	 */
+	@SuppressWarnings("unchecked")
+    public List<EFormData> findByDemographicIdAndFormName(Integer demographicNo, String formName) {
+		String queryString = "FROM EFormData e WHERE e.demographicId = :demographicNo AND e.formName LIKE :formName and status = '1' ORDER BY e.formDate, e.formTime DESC";
+		Query query = entityManager.createQuery(queryString);
+		query.setParameter("demographicNo", demographicNo);
+		query.setParameter("formName", formName);
+		return query.getResultList();
+	}    
 }

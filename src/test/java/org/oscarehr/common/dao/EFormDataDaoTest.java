@@ -24,6 +24,7 @@
 package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.Calendar;
@@ -100,5 +101,17 @@ public class EFormDataDaoTest extends DaoTestFixtures {
 
 		results = eFormDataDao.findByDemographicIdSinceLastDate(1, cal2.getTime());
 		assertEquals(0,results.size());
+	}
+	
+	@Test
+	public void testFindByDemographicAndFormName() throws Exception {
+		EFormData model = new EFormData();
+		EntityDataGenerator.generateTestDataForModelClass(model);
+		model.setDemographicId(8888);
+		model.setFormName("CZEZANAH");
+		eFormDataDao.persist(model);
+
+		List<EFormData> data = eFormDataDao.findByDemographicIdAndFormName(8888, "CZEZANAH"); 
+		assertFalse(data.isEmpty()); 
 	}
 }
