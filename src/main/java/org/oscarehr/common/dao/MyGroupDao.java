@@ -22,22 +22,16 @@
  * Ontario, Canada
  */
 
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.oscarehr.common.dao;
 
-import java.util.List;
+
 
 import javax.persistence.Query;
-
+import java.util.List;
 import org.oscarehr.common.model.MyGroup;
 import org.oscarehr.common.model.MyGroupPrimaryKey;
 import org.springframework.stereotype.Repository;
-
+import org.oscarehr.util.MiscUtils;
 /**
  *
  * @author Toby
@@ -72,11 +66,46 @@ public class MyGroupDao extends AbstractDao<MyGroup> {
 
          return dList;
      }
+     
+     public List<MyGroup> getGroupByGroupNo(String groupNo) {
+         Query query = entityManager.createQuery("SELECT g FROM MyGroup g where g.id.myGroupNo = ?");
+         query.setParameter(1, groupNo);
+         
+         @SuppressWarnings("unchecked")
+         List<MyGroup> dList = query.getResultList();
+
+         return dList;
+     }
 
      public void deleteGroupMember(String myGroupNo, String providerNo){
     	 MyGroupPrimaryKey key = new MyGroupPrimaryKey();
     	 key.setMyGroupNo(myGroupNo);
     	 key.setProviderNo(providerNo);
     	 remove(key);
+     }
+     
+     public List<MyGroup> getProviderGroups(String providerNo) {
+         Query query = entityManager.createQuery("SELECT g FROM MyGroup g WHERE g.id.providerNo = ?");
+         query.setParameter(1, providerNo);
+         
+         @SuppressWarnings("unchecked")
+         List<MyGroup> dList = query.getResultList();
+
+         return dList;
+     }
+     
+     public String getDefaultBillingForm(String myGroupNo) {
+         Query query = entityManager.createQuery("SELECT distinct g.defaultBillingForm FROM MyGroup g WHERE g.id.myGroupNo = ?");
+         query.setParameter(1, myGroupNo);
+         
+         @SuppressWarnings("unchecked")
+         List<String> dList = query.getResultList();         
+
+         if (dList.size() > 1)
+             MiscUtils.getLogger().warn("More than one Default biling form for this group. Should only be one");
+         String billingForm = "";         
+         if (dList != null && !dList.isEmpty())
+             billingForm = dList.get(0);
+         return billingForm;
      }
 }

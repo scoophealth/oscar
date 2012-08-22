@@ -69,7 +69,7 @@ public class CtlBillingService extends AbstractModel<Integer> {
     	this.serviceTypeName = serviceTypeName;
     }
 
-
+        
 	public String getServiceType() {
     	return serviceType;
     }

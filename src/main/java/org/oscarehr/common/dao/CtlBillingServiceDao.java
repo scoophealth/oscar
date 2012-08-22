@@ -66,4 +66,14 @@ public class CtlBillingServiceDao extends AbstractDao<CtlBillingService> {
 	public List<Object[]> getUniqueServiceTypes() {
 		return getUniqueServiceTypes(DEFAULT_STATUS);
 	}
+        
+        public List<CtlBillingService> findByServiceTypeId(String serviceTypeId) {
+            Query query = entityManager.createQuery("select b from CtlBillingService b where b.status='A' and b.serviceType=?");
+            query.setParameter(1, serviceTypeId);
+            
+            @SuppressWarnings("unchecked")
+            List<CtlBillingService> results = query.getResultList();
+            
+            return results;
+        }
 }

@@ -25,10 +25,7 @@
 
 package org.oscarehr.common.model;
 
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name="mygroup")
@@ -43,6 +40,9 @@ public class MyGroup  extends AbstractModel<MyGroupPrimaryKey> {
     private String firstName;
 	@Column(name="vieworder")
     private String viewOrder;
+
+    @Column(name="default_billing_form")
+    private String defaultBillingForm;
 
     public MyGroup() {
     	//empty
@@ -92,6 +92,12 @@ public class MyGroup  extends AbstractModel<MyGroupPrimaryKey> {
     }
 
 
-
+    public String getDefaultBillingForm() {
+        return this.defaultBillingForm;
+    }
+    
+    public void setDefaultBillingForm(String defaultBillingForm) {
+        this.defaultBillingForm = defaultBillingForm;
+    }
 
 }

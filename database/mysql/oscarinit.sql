@@ -6921,6 +6921,7 @@ CREATE TABLE mygroup (
   last_name varchar(30) NOT NULL default '',
   first_name varchar(30) NOT NULL default '',
   vieworder char(2) default NULL,
+  default_billing_form varchar(10),
   PRIMARY KEY  (mygroup_no,provider_no)
 ) ;
 
