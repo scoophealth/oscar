@@ -2492,6 +2492,7 @@
 		<action path="/casemgmt/NotePermissions" type="org.oscarehr.casemgmt.web.NotePermissionsAction"
 			scope="request" validate="false" parameter="method" />
 
+            <action path="/BillingONReview" scope="request" type="org.oscarehr.common.web.BillingONReviewAction" parameter="method" />
 	</action-mappings>
 	<controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" maxFileSize="25M" />
 	<message-resources parameter="oscarResources" null="false" />
