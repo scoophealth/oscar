@@ -72,7 +72,7 @@ public class ConsultationRequestDao extends AbstractDao<ConsultationRequest> {
                sql.append("and cr.status != 4 ");
             }
 
-            if( !team.equals("-1") ) {
+            if( !team.isEmpty()) {
                 sql.append("and cr.sendTo = '" + team + "' ");
             }
 

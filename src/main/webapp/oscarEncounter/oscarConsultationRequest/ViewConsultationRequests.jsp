@@ -245,7 +245,9 @@ function setOrder(val){
                             <%
                                if (team.equals("-1")){
                             %>
-                            <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgViewAll"/>
+                            <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.formTeamNotApplicable"/>
+                            <% } else if (team.isEmpty()) { %>
+                            <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.formViewAll"/>
                             <% } else { %>
                             <%= team %>
                             <% } %>               
@@ -274,11 +276,18 @@ function setOrder(val){
                     <td style="margin: 0; padding: 0;">
                         <html:form action="/oscarEncounter/ViewConsultation"  method="get">
                             <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.formSelectTeam"/>:
-                            <select name="sendTo">
-				<option value="-1"><bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.formViewAll"/></option>
-                                <%
+                            <select name="sendTo">                                
+				<option value=""><bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.formViewAll"/></option>                                
+                                <%                                
+                                   if (team.equals("-1")) { %>
+                                <option value="-1" selected ><bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.formTeamNotApplicable"/></option>
+                                <% }
+                                    else {
+                                 %>
+                                 <option value="-1"><bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.formTeamNotApplicable"/></option>
+                                <%    }
                                    for (int i =0; i < consultUtil.teamVec.size();i++){
-                                     String te = (String) consultUtil.teamVec.elementAt(i);
+                                     String te = (String) consultUtil.teamVec.elementAt(i);                                                                        
                                      if (te.equals(team)){
                                 %>
                                     <option value="<%=te%>" selected><%=te%></option>
