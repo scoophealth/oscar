@@ -35,52 +35,50 @@ import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.ConsultationServices;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.model.Demographic;
 
 import oscar.oscarDB.DBHandler;
-import oscar.util.UtilDateUtilities;
 
 public class EctConsultationFormRequestUtil {
 
 	private ConsultationServiceDao consultationServiceDao = (ConsultationServiceDao)SpringUtils.getBean("consultationServiceDao");
-
+        private DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+        
 	private boolean bMultisites=org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();
 
-    public boolean estPatient(String demo) {
-
-        demoNo = demo;
-        boolean verdict = true;
-
-        try {
-
-            String sql = "select * from demographic where demographic_no = " + demoNo;
-            ResultSet rs = DBHandler.GetSQL(sql);
-
-            if (rs.next()) {
-                patientFirstName = oscar.Misc.getString(rs, "first_name");
-                patientLastName = oscar.Misc.getString(rs, "last_name");
-                patientName = patientLastName + "," +patientFirstName;
-
-                patientAddress = oscar.Misc.getString(rs, "address") + "<br>" + oscar.Misc.getString(rs, "city") +
-                        "," + oscar.Misc.getString(rs, "province") + "," + oscar.Misc.getString(rs, "postal");
-                patientPhone = oscar.Misc.getString(rs, "phone");
-                patientWPhone = oscar.Misc.getString(rs, "phone2");
-                patientDOB = oscar.Misc.getString(rs, "year_of_birth") + "-" +
-                        oscar.Misc.getString(rs, "month_of_birth") + "-" + oscar.Misc.getString(rs, "date_of_birth");
-                patientHealthNum = oscar.Misc.getString(rs, "hin");
-                patientSex = oscar.Misc.getString(rs, "sex");
-                patientHealthCardType = oscar.Misc.getString(rs, "hc_type");
-                patientHealthCardVersionCode = oscar.Misc.getString(rs, "ver");
-                patientChartNo = oscar.Misc.getString(rs, "chart_no");
-                patientAge = UtilDateUtilities.calcAge(UtilDateUtilities.calcDate(rs.getString("year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"),
-                        oscar.Misc.getString(rs, "date_of_birth")));
-                mrp = oscar.Misc.getString(rs, "provider_no");
-            }
-            rs.close();
-        } catch (SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-            verdict = false;
+    public boolean estPatient(String demographicNo) {
+      
+        Demographic demographic = demographicDao.getDemographicById(Integer.parseInt(demographicNo));
+        boolean estPatient = false;
+        
+        if (demographic != null) {
+            demoNo = demographicNo;     
+            patientFirstName = demographic.getFirstName();
+            patientLastName = demographic.getLastName();
+            patientName = demographic.getFormattedName();
+            StringBuilder patientAddressSb = new StringBuilder();
+            patientAddressSb.append(demographic.getAddress()).append("<br>")
+                    .append(demographic.getCity()).append(",")
+                    .append(demographic.getProvince()).append(",")
+                    .append(demographic.getPostal());
+            patientAddress = patientAddressSb.toString();
+            patientPhone = demographic.getPhone();
+            patientWPhone = demographic.getPhone2();
+            patientEmail = demographic.getEmail();
+            patientDOB = demographic.getFormattedDob();
+            patientHealthNum = demographic.getHin();
+            patientSex = demographic.getSex();
+            patientHealthCardType = demographic.getHcType();
+            patientHealthCardVersionCode = demographic.getVer();
+            patientChartNo = demographic.getChartNo();
+            patientAge = demographic.getAge();
+            mrp = demographic.getFamilyDoctor();
+            
+            estPatient = true;
         }
-        return verdict;
+            
+        return estPatient;       
     }
 
     public boolean estActiveTeams() {
@@ -394,6 +392,7 @@ public class EctConsultationFormRequestUtil {
     public String patientAddress;
     public String patientPhone;
     public String patientWPhone;
+    public String patientEmail;
     public String patientDOB;
     public String patientHealthNum;
     public String patientSex;
