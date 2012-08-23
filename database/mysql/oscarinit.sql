@@ -9519,16 +9519,17 @@ CREATE TABLE `criteria_selection_option` (
   PRIMARY KEY (`SELECT_OPTION_ID`)
 );
 
-CREATE TABLE `Vacancy` (
+CREATE TABLE `vacancy` (
   `id` int(11) primary key NOT NULL AUTO_INCREMENT,
   `templateId` int(11) NOT NULL,
   `status` varchar(24) NOT NULL,
   `dateClosed` timestamp NULL,
   `reasonClosed` varchar(255),
-  `WL_PROGRAM_ID` int(11) NOT NULL,
-  `DATE_CREATE` date NOT NULL,
+  `wlProgramId` int(11) NOT NULL,
+  `dateCreated` date NOT NULL,
   `emailNotificationAddressesCsv` varchar(255)
 );
+
 
 create table MyGroupAccessRestriction (
         id int not null auto_increment,
