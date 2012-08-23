@@ -1144,6 +1144,39 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 	                                                    
 	                                                </tr>
 	                                       	<% }
+                                       } else if (handler.getMsgType().equals("IHA")) {
+                                           if(handler.getOBXValueType(j,k) != null &&  handler.getOBXValueType(j,k).equalsIgnoreCase("NAR")) {
+                                               %>                                         
+                                               <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%="NarrativeRes"%>" >
+                                                   <td align="left" colspan="7"style="padding-left:10px;"><%= handler.getOBXResult( j, k) %></td>
+                                               </tr>
+                                           <%}else{%>
+                                               <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
+                                                   <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %><%=remoteFacilityIdQueryString%>')"><%=obxName %></a>
+                                                   &nbsp;
+                                                   	<%if(loincCode != null){ %>
+                                                   	<a href="javascript:popupStart('660','1000','http://apps.nlm.nih.gov/medlineplus/services/mpconnect.cfm?mainSearchCriteria.v.cs=2.16.840.1.113883.6.1&mainSearchCriteria.v.c=<%=loincCode%>&informationRecipient.languageCode.c=en')"> info</a>
+                                                   	<%} %>
+                                                   </td>
+                                                   <td align="right"><%= handler.getOBXResult( j, k) %></td>
+                                                   <td align="center" valign="top"><%= handler.getOBXAbnormalFlag(j, k)%></td>
+                                                   <td align="left" valign="top"><%=handler.getOBXReferenceRange( j, k)%></td>
+                                                   <td align="left" valign="top"><%=handler.getOBXUnits( j, k) %></td>
+                                                   <td align="center" valign="top"><%= handler.getTimeStamp(j, k) %></td>
+                                                   <td align="center" valign="top"><%= handler.getOBXResultStatus( j, k) %></td>
+                                                   <td align="center" valign="top">
+   	                                                <a href="javascript:void(0);" title="Annotation" onclick="window.open('<%=request.getContextPath()%>/annotation/annotation.jsp?display=<%=annotation_display%>&amp;table_id=<%=segmentID%>&amp;demo=<%=demographicID%>&amp;other_id=<%=String.valueOf(j) + "-" + String.valueOf(k) %>','anwin','width=400,height=500');">
+   	                                                	<%if(!isPrevAnnotation){ %><img src="../../../images/notes.gif" alt="rxAnnotation" height="16" width="13" border="0"/><%}else{ %><img src="../../../images/filledNotes.gif" alt="rxAnnotation" height="16" width="13" border="0"/> <%} %>
+   	                                                </a>
+                                                   </td>
+                                               </tr>
+                                           <%}%>
+                                           <%for (l=0; l < handler.getOBXCommentCount(j, k); l++){%>
+                                               <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes" >
+                                                   <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBXComment(j, k, l)%></pre></td>
+                                               </tr>
+                                           <%}
+                                   
                                       } else if (handler.getMsgType().equals("PFHT") || handler.getMsgType().equals("HHSEMR") || handler.getMsgType().equals("CML")) {
                                    	   if (!obxName.equals("")) { %>
 	                                    		<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
