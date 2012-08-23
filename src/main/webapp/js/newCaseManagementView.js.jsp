@@ -369,11 +369,13 @@ var notesCurrentTop = null;
 var notesScrollCheckInterval = null;
 
 function notesIncrementAndLoadMore() {
-	if (notesRetrieveOk && $("encMainDiv").scrollTop == 0) {
-		notesOffset += notesIncrement;
-		notesRetrieveOk = false;
-		notesCurrentTop = $("encMainDiv").children[0].id;
-		notesLoader(notesOffset, notesIncrement, demographicNo);
+	if (notesRetrieveOk && $("encMainDiv").scrollTop == 0) {				
+		if($("encMainDiv").scrollHeight > $("encMainDiv").getHeight()) {	
+			notesOffset += notesIncrement;
+			notesRetrieveOk = false;
+			notesCurrentTop = $("encMainDiv").children[0].id;
+			notesLoader(notesOffset, notesIncrement, demographicNo);
+		}
 	}
 }
 
