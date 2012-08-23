@@ -22,7 +22,6 @@
  * Ontario, Canada
  */
 
-
 package oscar.eform;
 
 import java.io.File;
@@ -34,7 +33,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -55,7 +53,10 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.common.dao.EFormDao;
+import org.oscarehr.common.dao.EFormDao.EFormSortOrder;
 import org.oscarehr.common.dao.EFormDataDao;
+import org.oscarehr.common.dao.EFormGroupDao;
 import org.oscarehr.common.dao.EFormValueDao;
 import org.oscarehr.common.dao.SecRoleDao;
 import org.oscarehr.common.model.EFormData;
@@ -73,8 +74,8 @@ import oscar.eform.data.EFormBase;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarMessenger.data.MsgMessageData;
 import oscar.oscarProvider.data.ProviderData;
+import oscar.util.ConversionUtils;
 import oscar.util.OscarRoleObjectPrivilege;
-import oscar.util.UtilDateUtilities;
 
 public class EFormUtil {
 	private static final Logger logger = MiscUtils.getLogger();
@@ -111,50 +112,65 @@ public class EFormUtil {
 
 	public static String saveEForm(String formName, String formSubject, String fileName, String htmlStr, String creator, boolean patientIndependent, String roleType) {
 		// called by the upload action, puts the uploaded form into DB
-		String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd");
-		String nowTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "HH:mm:ss");
 		htmlStr = "\n" + org.apache.commons.lang.StringEscapeUtils.escapeSql(htmlStr);
 		formName = org.apache.commons.lang.StringEscapeUtils.escapeSql(formName);
 		formSubject = org.apache.commons.lang.StringEscapeUtils.escapeSql(formSubject);
 		fileName = org.apache.commons.lang.StringEscapeUtils.escapeSql(fileName);
 		roleType = org.apache.commons.lang.StringEscapeUtils.escapeSql(roleType);
-		if (creator == null) creator = "NULL";
-		else creator = "'" + creator + "'";
-		if (roleType == null) roleType = "NULL";
-		else roleType = "'" + roleType + "'";
-		String sql = "INSERT INTO eform (form_name, file_name, subject, form_date, form_time, form_creator, status, form_html, patient_independent,roleType) VALUES " + "('" + formName + "', '" + fileName + "', '" + formSubject + "', '" + nowDate + "', '" + nowTime + "', " + creator + ", 1, '" + htmlStr + "', " + patientIndependent + "," + roleType + ")";
-		return (runSQLinsert(sql));
+
+		org.oscarehr.common.model.EForm eform = new org.oscarehr.common.model.EForm();
+		eform.setFormName(formName);
+		eform.setFileName(fileName);
+		eform.setSubject(formSubject);
+		Date now = new Date();
+		eform.setFormDate(now);
+		eform.setFormTime(now);
+		eform.setCreator(creator);
+		eform.setCurrent(true);
+		eform.setFormHtml(htmlStr);
+		eform.setPatientIndependent(patientIndependent);
+		eform.setRoleType(roleType);
+
+		EFormDao dao = SpringUtils.getBean(EFormDao.class);
+		dao.persist(eform);
+
+		return eform.getId().toString();
 	}
 
 	public static ArrayList<HashMap<String, ? extends Object>> listEForms(String sortBy, String deleted) {
 
 		// sends back a list of forms that were uploaded (those that can be added to the patient)
-		String sql = "";
+		EFormDao dao = SpringUtils.getBean(EFormDao.class);
+		List<org.oscarehr.common.model.EForm> eforms = null;
+		Boolean status = null;
 		if (deleted.equals("deleted")) {
-			sql = "SELECT * FROM eform where status=0 ORDER BY " + sortBy;
+			status = false;
 		} else if (deleted.equals("current")) {
-			sql = "SELECT * FROM eform where status=1 ORDER BY " + sortBy;
+			status = true;
 		} else if (deleted.equals("all")) {
-			sql = "SELECT * FROM eform ORDER BY " + sortBy;
+			status = null;
 		}
-		ResultSet rs = getSQL(sql);
+
+		EFormSortOrder sortOrder = null;
+		if (NAME.equals(sortBy)) sortOrder = EFormSortOrder.NAME;
+		else if (SUBJECT.equals(sortBy)) sortOrder = EFormSortOrder.SUBJECT;
+		else if (FILE_NAME.equals(sortBy)) sortOrder = EFormSortOrder.FILE_NAME;
+		else if (DATE.equals(sortBy)) sortOrder = EFormSortOrder.DATE;
+
+		eforms = dao.findByStatus(status, sortOrder);
+
 		ArrayList<HashMap<String, ? extends Object>> results = new ArrayList<HashMap<String, ? extends Object>>();
-		try {
-			while (rs.next()) {
-				HashMap<String, Object> curht = new HashMap<String, Object>();
-				curht.put("fid", rsGetString(rs, "fid"));
-				curht.put("formName", rsGetString(rs, "form_name"));
-				curht.put("formSubject", rsGetString(rs, "subject"));
-				curht.put("formFileName", rsGetString(rs, "file_name"));
-				curht.put("formDate", rsGetString(rs, "form_date"));
-				curht.put("formDateAsDate", rs.getDate("form_date"));
-				curht.put("formTime", rsGetString(rs, "form_time"));
-				curht.put("roleType", rsGetString(rs, "roleType"));
-				results.add(curht);
-			}
-			rs.close();
-		} catch (Exception sqe) {
-			logger.error("Error", sqe);
+		for (org.oscarehr.common.model.EForm eform : eforms) {
+			HashMap<String, Object> curht = new HashMap<String, Object>();
+			curht.put("fid", eform.getId().toString());
+			curht.put("formName", eform.getFormName());
+			curht.put("formSubject", eform.getSubject());
+			curht.put("formFileName", eform.getFileName());
+			curht.put("formDate", ConversionUtils.toDateString(eform.getFormDate()));
+			curht.put("formDateAsDate", eform.getFormDate());
+			curht.put("formTime", ConversionUtils.toTimeString(eform.getFormTime()));
+			curht.put("roleType", eform.getRoleType());
+			results.add(curht);
 		}
 		return (results);
 	}
@@ -182,20 +198,11 @@ public class EFormUtil {
 	}
 
 	public static ArrayList<String> listSecRole() {
-		// sends back a list of forms that were uploaded (those that can be added to the patient)
-		String sql = "";
-		sql = "SELECT role_name FROM secRole";
-
-		ResultSet rs = getSQL(sql);
+		SecRoleDao dao = (SecRoleDao) SpringUtils.getBean(SecRoleDao.class);
 		ArrayList<String> results = new ArrayList<String>();
-		try {
-			while (rs.next()) {
-				results.add(rsGetString(rs, "role_name"));
-			}
-			rs.close();
-		} catch (Exception sqe) {
-			logger.error("Error", sqe);
-		}
+		for (SecRole role : dao.findAll())
+			results.add(role.getName());
+
 		return (results);
 	}
 
@@ -211,7 +218,7 @@ public class EFormUtil {
 		return fileList;
 	}
 
-	public static ArrayList<HashMap<String,? extends Object>> listPatientEForms(String sortBy, String deleted, String demographic_no, String userRoles) {
+	public static ArrayList<HashMap<String, ? extends Object>> listPatientEForms(String sortBy, String deleted, String demographic_no, String userRoles) {
 
 		Boolean current = null;
 		if (deleted.equals("deleted")) current = false;
@@ -255,7 +262,7 @@ public class EFormUtil {
 		return (results);
 	}
 
-	public static ArrayList<HashMap<String,? extends Object>> listPatientIndependentEForms(String sortBy, String deleted) {
+	public static ArrayList<HashMap<String, ? extends Object>> listPatientIndependentEForms(String sortBy, String deleted) {
 
 		Boolean current = null;
 		if (deleted.equals("deleted")) current = false;
@@ -287,19 +294,18 @@ public class EFormUtil {
 		}
 		return (results);
 	}
-	
-	public static ArrayList<HashMap<String,? extends Object>> listPatientEFormsNoData(String demographic_no, String userRoles) {
+
+	public static ArrayList<HashMap<String, ? extends Object>> listPatientEFormsNoData(String demographic_no, String userRoles) {
 
 		Boolean current = true;
-		
-		List<Map<String,Object>> allEformDatas = eFormDataDao.findByDemographicIdCurrentPatientIndependentNoData(Integer.parseInt(demographic_no), current, false);
-		
+
+		List<Map<String, Object>> allEformDatas = eFormDataDao.findByDemographicIdCurrentPatientIndependentNoData(Integer.parseInt(demographic_no), current, false);
 
 		ArrayList<HashMap<String, ? extends Object>> results = new ArrayList<HashMap<String, ? extends Object>>();
 		try {
-			for (Map<String,Object> eFormData : allEformDatas) {
+			for (Map<String, Object> eFormData : allEformDatas) {
 				// filter eform by role type
-				String tempRole = StringUtils.trimToNull((String)eFormData.get("roleType"));
+				String tempRole = StringUtils.trimToNull((String) eFormData.get("roleType"));
 				if (userRoles != null && tempRole != null) {
 					// ojectName: "_admin,_admin.eform"
 					// roleName: "doctor,admin"
@@ -311,11 +317,11 @@ public class EFormUtil {
 				}
 				HashMap<String, Object> curht = new HashMap<String, Object>();
 				curht.put("fdid", String.valueOf(eFormData.get("id")));
-				curht.put("fid",  String.valueOf(eFormData.get("formId")));
+				curht.put("fid", String.valueOf(eFormData.get("formId")));
 				curht.put("formName", eFormData.get("formName"));
 				curht.put("formSubject", eFormData.get("subject"));
-				curht.put("formDate",  String.valueOf(eFormData.get("formDate")));
-				curht.put("formTime",  String.valueOf(eFormData.get("formTime")));
+				curht.put("formDate", String.valueOf(eFormData.get("formDate")));
+				curht.put("formTime", String.valueOf(eFormData.get("formTime")));
 				curht.put("formDateAsDate", eFormData.get("formDate"));
 				curht.put("roleType", eFormData.get("roleType"));
 				curht.put("providerNo", eFormData.get("providerNo"));
@@ -326,14 +332,14 @@ public class EFormUtil {
 		}
 		return (results);
 	}
-	
-	public static ArrayList<HashMap<String,? extends Object>> loadEformsByFdis(List<Integer> ids) {
+
+	public static ArrayList<HashMap<String, ? extends Object>> loadEformsByFdis(List<Integer> ids) {
 
 		List<EFormData> allEformDatas = eFormDataDao.findByFdids(ids);
 
 		ArrayList<HashMap<String, ? extends Object>> results = new ArrayList<HashMap<String, ? extends Object>>();
 		try {
-			for (EFormData eFormData : allEformDatas) {				
+			for (EFormData eFormData : allEformDatas) {
 				HashMap<String, Object> curht = new HashMap<String, Object>();
 				curht.put("fdid", eFormData.getId().toString());
 				curht.put("fid", eFormData.getFormId().toString());
@@ -352,30 +358,30 @@ public class EFormUtil {
 		return (results);
 	}
 
-	public static Hashtable<String,Object> loadEForm(String fid) {
-		// opens an eform that was uploaded (used to fill out patient data)
-		String sql = "SELECT * FROM eform where fid=" + fid + " LIMIT 1";
-		ResultSet rs = getSQL(sql);
-		Hashtable<String,Object> curht = new Hashtable<String,Object>();
-		try {
-			rs.next();
-			// must have FID and form_name otherwise throws null pointer on the hashtable
-			curht.put("fid", rsGetString(rs, "fid"));
-			curht.put("formName", rsGetString(rs, "form_name"));
-			curht.put("formSubject", rsGetString(rs, "subject"));
-			curht.put("formFileName", rsGetString(rs, "file_name"));
-			curht.put("formDate", rsGetString(rs, "form_date"));
-			curht.put("formTime", rsGetString(rs, "form_time"));
-			curht.put("formCreator", rsGetString(rs, "form_creator"));
-			curht.put("formHtml", rsGetString(rs, "form_html"));
-			curht.put("patientIndependent", rs.getBoolean("patient_independent"));
-			curht.put("roleType", rsGetString(rs, "roleType"));
-			rs.close();
-		} catch (SQLException sqe) {
+	public static HashMap<String, Object> loadEForm(String fid) {
+		EFormDao dao = SpringUtils.getBean(EFormDao.class);
+		Integer id = Integer.getInteger(fid);
+		org.oscarehr.common.model.EForm eform = dao.find(id);
+		HashMap<String, Object> curht = new HashMap<String, Object>();
+		if (eform == null) {
+			logger.error("Unable to find EForm with ID = " + fid);
 			curht.put("formName", "");
 			curht.put("formHtml", "No Such Form in Database");
-			logger.error("Error", sqe);
+			return curht;
 		}
+
+		// must have FID and form_name otherwise throws null pointer on the hashtable
+		curht.put("fid", eform.getId());
+		curht.put("formName", eform.getFileName());
+		curht.put("formSubject", eform.getSubject());
+		curht.put("formFileName", eform.getFileName());
+		curht.put("formDate", eform.getFormDate().toString());
+		curht.put("formTime", eform.getFormDate().toString());
+		curht.put("formCreator", eform.getCreator());
+		curht.put("formHtml", eform.getFormHtml());
+		curht.put("patientIndependent", String.valueOf(eform.isPatientIndependent()));
+		curht.put("roleType", eform.getRoleType());
+
 		return (curht);
 	}
 
@@ -387,8 +393,23 @@ public class EFormUtil {
 		String fileName = org.apache.commons.lang.StringEscapeUtils.escapeSql(updatedForm.getFormFileName());
 		String roleType = org.apache.commons.lang.StringEscapeUtils.escapeSql(updatedForm.getRoleType());
 
-		String sql = "UPDATE eform SET " + "form_name='" + formName + "', " + "file_name='" + fileName + "', " + "subject='" + formSubject + "', " + "form_date='" + updatedForm.getFormDate() + "', " + "form_time='" + updatedForm.getFormTime() + "', " + "form_html='" + formHtml + "', " + "patient_independent=" + updatedForm.getPatientIndependent() + ", " + "roleType='" + roleType + "' " + "WHERE fid=" + updatedForm.getFid() + ";";
-		runSQL(sql);
+		EFormDao dao = SpringUtils.getBean(EFormDao.class);
+		org.oscarehr.common.model.EForm eform = dao.find(Integer.parseInt(updatedForm.getFid()));
+		if (eform == null) {
+			logger.error("Unable to find eform for update: " + updatedForm);
+			return;
+		}
+		
+		eform.setFormName(formName);
+		eform.setFileName(fileName);
+		eform.setSubject(formSubject);
+		eform.setFormDate(ConversionUtils.fromDateString(updatedForm.getFormDate()));
+		eform.setFormTime(ConversionUtils.fromTimeString(updatedForm.getFormTime()));
+		eform.setFormHtml(formHtml);
+		eform.setPatientIndependent(updatedForm.getPatientIndependent());
+		eform.setRoleType(roleType);
+		
+		dao.merge(eform);
 	}
 
 	/*
@@ -397,54 +418,64 @@ public class EFormUtil {
 	 * NULL | | | status | tinyint(1) | | | 1 | | | form_html | text | YES | | NULL | | +--------------+--------------+------+-----+---------+----------------+
 	 */
 
-	public static String getEFormParameter(String fid, String Column) {
-		String dbColumn = "";
-		if (Column.equalsIgnoreCase("formName")) dbColumn = "form_name";
-		else if (Column.equalsIgnoreCase("formSubject")) dbColumn = "subject";
-		else if (Column.equalsIgnoreCase("formFileName")) dbColumn = "file_name";
-		else if (Column.equalsIgnoreCase("formDate")) dbColumn = "form_date";
-		else if (Column.equalsIgnoreCase("formTime")) dbColumn = "form_time";
-		else if (Column.equalsIgnoreCase("formStatus")) dbColumn = "status";
-		else if (Column.equalsIgnoreCase("formHtml")) dbColumn = "form_html";
-		else if (Column.equalsIgnoreCase("patientIndependent")) dbColumn = "patient_independent";
-		else if (Column.equalsIgnoreCase("roleType")) dbColumn = "roleType";
-		String sql = "SELECT " + dbColumn + " FROM eform WHERE fid=" + fid;
-		ResultSet rs = getSQL(sql);
-		try {
-			while (rs.next()) {
-				return rsGetString(rs, dbColumn);
-			}
-		} catch (SQLException sqe) {
-			logger.error("Error", sqe);
+	public static String getEFormParameter(String fid, String fieldName) {
+		EFormDao dao = SpringUtils.getBean(EFormDao.class); 
+		org.oscarehr.common.model.EForm eform = dao.find(ConversionUtils.fromIntString(fid));
+		if (eform == null) {
+			logger.error("Unable to find EForm for ID = " + fid);
+			return "";
 		}
+		
+		if (fieldName.equalsIgnoreCase("formName"))
+			return eform.getFormName();
+		else if (fieldName.equalsIgnoreCase("formSubject"))
+			return eform.getSubject();
+		else if (fieldName.equalsIgnoreCase("formFileName"))
+			return eform.getFileName();
+		else if (fieldName.equalsIgnoreCase("formDate"))
+			return ConversionUtils.toDateString(eform.getFormDate());
+		else if (fieldName.equalsIgnoreCase("formTime"))
+			return ConversionUtils.toTimeString(eform.getFormTime());
+		else if (fieldName.equalsIgnoreCase("formStatus"))
+			return ConversionUtils.toBoolString(eform.isCurrent());
+		else if (fieldName.equalsIgnoreCase("formHtml"))
+			return eform.getFormHtml();
+		else if (fieldName.equalsIgnoreCase("patientIndependent")) 
+			return ConversionUtils.toBoolString(eform.isPatientIndependent());
+		else if (fieldName.equalsIgnoreCase("roleType"))
+			return eform.getRoleType();
+		
+		logger.warn("Invalid field name: " + fieldName + ". Please use one of formName, formSubject, formFileName, formDate, formTime, formStatus, formHtml, patientIndependent or roleType.");
+		
 		return null;
 	}
 
 	public static String getEFormIdByName(String name) {
-		// opens an eform that was uploaded (used to fill out patient data)
-		String sql = "SELECT MAX(fid) FROM eform WHERE form_name='" + name + "' AND status=1";
-		ResultSet rs = getSQL(sql);
-		try {
-			if (rs.next()) {
-				return rsGetString(rs, "MAX(fid)");
-			}
-		} catch (SQLException sqe) {
-			logger.error("Error", sqe);
-		}
-		return null;
+		EFormDao dao = SpringUtils.getBean(EFormDao.class);
+		Integer maxId = dao.findMaxIdForActiveForm(name);
+		return maxId.toString();
 	}
 
+	private static void setFormStatus(String fid, boolean status) {
+		EFormDao dao = SpringUtils.getBean(EFormDao.class);
+		org.oscarehr.common.model.EForm eform = dao.find(ConversionUtils.fromIntString(fid));
+		if (eform == null) {
+			logger.error("Unable to find EForm for " + fid);
+			return;
+		}
+		eform.setCurrent(status);
+		dao.merge(eform);
+	}
+	
 	public static void delEForm(String fid) {
-		// deletes the form so no one can add it to the patient (sets status to deleted)
-		String sql = "UPDATE eform SET status=0 WHERE fid=" + fid;
-		runSQL(sql);
+		setFormStatus(fid, false);
 	}
 
 	public static void restoreEForm(String fid) {
-		String sql = "UPDATE eform SET status=1 WHERE fid=" + fid;
-		runSQL(sql);
+		setFormStatus(fid, true);
 	}
 
+	@Deprecated
 	public static ArrayList<String> getValues(ArrayList<String> names, String sql) {
 		// gets the values for each column name in the sql (used by DatabaseAP)
 		ResultSet rs = getSQL(sql);
@@ -510,47 +541,28 @@ public class EFormUtil {
 	}
 
 	public static boolean formExistsInDB(String eFormName) {
-		String sql = "SELECT * FROM eform WHERE status=1 AND form_name='" + eFormName + "'";
-		try {
-			ResultSet rs = getSQL(sql);
-			if (rs.next()) {
-				rs.close();
-				return true;
-			} else {
-				rs.close();
-				return false;
-			}
-		} catch (SQLException sqe) {
-			logger.error("Error", sqe);
-		}
-		return false;
+		EFormDao dao = SpringUtils.getBean(EFormDao.class);
+		org.oscarehr.common.model.EForm eform = dao.findByName(eFormName);
+		return eform != null;
 	}
 
 	public static int formExistsInDBn(String formName, String fid) {
-		// returns # of forms in the DB with that name other than itself
-		String sql = "SELECT count(*) AS count FROM eform WHERE status=1 AND form_name='" + formName + "' AND fid!=" + fid;
-		try {
-			ResultSet rs = getSQL(sql);
-			while (rs.next()) {
-				int numberRecords = rs.getInt("count");
-				rs.close();
-				return numberRecords;
-			}
-		} catch (SQLException sqe) {
-			logger.error("Error", sqe);
-		}
-		return 0;
+		EFormDao dao = SpringUtils.getBean(EFormDao.class);
+		Long result = dao.countFormsOtherThanSpecified(formName, ConversionUtils.fromIntString(fid));
+		return result.intValue();
 	}
 
 	// --------------eform groups---------
-	public static ArrayList<Hashtable<String,String>> getEFormGroups() {
+	public static ArrayList<HashMap<String, String>> getEFormGroups() {
 		String sql;
-		sql = "SELECT DISTINCT eform_groups.group_name, count(*)-1 AS 'count' FROM eform_groups " + "LEFT JOIN eform ON eform.fid=eform_groups.fid WHERE eform.status=1 OR eform_groups.fid=0 " + "GROUP BY eform_groups.group_name;";
-		ArrayList<Hashtable<String,String>> al = new ArrayList<Hashtable<String,String>>();
+		sql = "SELECT DISTINCT eform_groups.group_name, count(*)-1 AS 'count' FROM eform_groups " 
+				+ "LEFT JOIN eform ON eform.fid=eform_groups.fid WHERE eform.status=1 OR eform_groups.fid=0 " 
+				+ "GROUP BY eform_groups.group_name;";
+		ArrayList<HashMap<String, String>> al = new ArrayList<HashMap<String, String>>();
 		try {
 			ResultSet rs = getSQL(sql);
 			while (rs.next()) {
-				Hashtable<String,String> curhash = new Hashtable<String,String>();
+				HashMap<String, String> curhash = new HashMap<String, String>();
 				curhash.put("groupName", oscar.Misc.getString(rs, "group_name"));
 				curhash.put("count", oscar.Misc.getString(rs, "count"));
 				al.add(curhash);
@@ -561,14 +573,17 @@ public class EFormUtil {
 		return al;
 	}
 
-	public static ArrayList<Hashtable<String,String>> getEFormGroups(String demographic_no) {
+	public static ArrayList<HashMap<String, String>> getEFormGroups(String demographic_no) {
 		String sql;
-		sql = "SELECT eform_groups.group_name, count(*)-1 AS 'count' FROM eform_groups " + "LEFT JOIN eform_data ON eform_data.fid=eform_groups.fid " + "WHERE (eform_data.status=1 AND eform_data.demographic_no=" + demographic_no + ") OR eform_groups.fid=0 " + "GROUP BY eform_groups.group_name";
-		ArrayList<Hashtable<String,String>> al = new ArrayList<Hashtable<String,String>>();
+		sql = "SELECT eform_groups.group_name, count(*)-1 AS 'count' FROM eform_groups " 
+				+ "LEFT JOIN eform_data ON eform_data.fid=eform_groups.fid " 
+				+ "WHERE (eform_data.status=1 AND eform_data.demographic_no=" + demographic_no 
+				+ ") OR eform_groups.fid=0 " + "GROUP BY eform_groups.group_name";
+		ArrayList<HashMap<String, String>> al = new ArrayList<HashMap<String, String>>();
 		try {
 			ResultSet rs = getSQL(sql);
 			while (rs.next()) {
-				Hashtable<String,String> curhash = new Hashtable<String,String>();
+				HashMap<String, String> curhash = new HashMap<String, String>();
 				curhash.put("groupName", oscar.Misc.getString(rs, "group_name"));
 				curhash.put("count", oscar.Misc.getString(rs, "count"));
 				al.add(curhash);
@@ -580,14 +595,15 @@ public class EFormUtil {
 	}
 
 	public static void delEFormGroup(String name) {
-		String sql = "DELETE FROM eform_groups WHERE group_name='" + name + "'";
-		runSQL(sql);
+		EFormGroupDao dao = SpringUtils.getBean(EFormGroupDao.class);
+		dao.deleteByName(name);
 	}
 
 	public static void addEFormToGroup(String groupName, String fid) {
 		try {
 
-			String sql1 = "SELECT eform_groups.fid FROM eform_groups, eform WHERE eform_groups.fid=" + fid + " AND eform_groups.fid=eform.fid AND eform.status=1 AND eform_groups.group_name='" + groupName + "'";
+			String sql1 = "SELECT eform_groups.fid FROM eform_groups, eform WHERE eform_groups.fid=" + fid 
+					+ " AND eform_groups.fid=eform.fid AND eform.status=1 AND eform_groups.group_name='" + groupName + "'";
 			ResultSet rs = DBHandler.GetSQL(sql1);
 			if (!rs.next()) {
 				String sql = "INSERT INTO eform_groups (fid, group_name) " + "VALUES (" + fid + ", '" + groupName + "')";
@@ -599,11 +615,11 @@ public class EFormUtil {
 	}
 
 	public static void remEFormFromGroup(String groupName, String fid) {
-		String sql = "DELETE FROM eform_groups WHERE group_name='" + groupName + "' and fid=" + fid + ";";
-		runSQL(sql);
+		EFormGroupDao dao = SpringUtils.getBean(EFormGroupDao.class);
+		dao.deleteByNameAndFormId(groupName, ConversionUtils.fromIntString(fid));
 	}
 
-	public static ArrayList<HashMap<String,? extends Object>> listEForms(String sortBy, String deleted, String group, String userRoles) {
+	public static ArrayList<HashMap<String, ? extends Object>> listEForms(String sortBy, String deleted, String group, String userRoles) {
 		// sends back a list of forms that were uploaded (those that can be added to the patient)
 		String sql = "";
 		if (deleted.equals("deleted")) {
@@ -617,7 +633,7 @@ public class EFormUtil {
 		ArrayList<HashMap<String, ? extends Object>> results = new ArrayList<HashMap<String, ? extends Object>>();
 		try {
 			while (rs.next()) {
-				HashMap<String,String> curht = new HashMap<String,String>();
+				HashMap<String, String> curht = new HashMap<String, String>();
 				curht.put("fid", rsGetString(rs, "fid"));
 				curht.put("formName", rsGetString(rs, "form_name"));
 				curht.put("formSubject", rsGetString(rs, "subject"));
@@ -634,7 +650,7 @@ public class EFormUtil {
 		return (results);
 	}
 
-	public static ArrayList<HashMap<String,? extends Object>> listPatientEForms(String sortBy, String deleted, String demographic_no, String groupName, String userRoles) {
+	public static ArrayList<HashMap<String, ? extends Object>> listPatientEForms(String sortBy, String deleted, String demographic_no, String groupName, String userRoles) {
 		// sends back a list of forms added to the patient
 		String sql = "";
 		if (deleted.equals("deleted")) {
@@ -645,7 +661,7 @@ public class EFormUtil {
 			sql = "SELECT * FROM eform_data, eform_groups WHERE eform_data.patient_independent=0 AND eform_data.demographic_no=" + demographic_no + " AND eform_data.fid=eform_groups.fid AND eform_groups.group_name='" + groupName + "' ORDER BY " + sortBy;
 		}
 		ResultSet rs = getSQL(sql);
-		ArrayList<HashMap<String,? extends Object>> results = new ArrayList<HashMap<String,? extends Object>>();
+		ArrayList<HashMap<String, ? extends Object>> results = new ArrayList<HashMap<String, ? extends Object>>();
 		try {
 			while (rs.next()) {
 				// filter eform by role type
@@ -658,7 +674,7 @@ public class EFormUtil {
 						continue;
 					}
 				}
-				HashMap<String,String> curht = new HashMap<String,String>();
+				HashMap<String, String> curht = new HashMap<String, String>();
 				curht.put("fdid", oscar.Misc.getString(rs, "fdid"));
 				curht.put("fid", rsGetString(rs, "fid"));
 				curht.put("formName", rsGetString(rs, "form_name"));
@@ -709,12 +725,12 @@ public class EFormUtil {
 			String docText = getContent(template);
 			docText = putTemplateEformHtml(eForm.getFormHtml(), docText);
 
-                        if (NumberUtils.isDigits(docOwner)) {
-                            EDoc edoc = new EDoc(docDesc,"forms","html",docText,docOwner,eForm.getProviderNo(),"",'H',eForm.getFormDate().toString(),"",null,belong,docOwner);
-                            edoc.setContentType("text/html");
-                            edoc.setDocPublic("0");
-                            EDocUtil.addDocumentSQL(edoc);
-                        }
+			if (NumberUtils.isDigits(docOwner)) {
+				EDoc edoc = new EDoc(docDesc, "forms", "html", docText, docOwner, eForm.getProviderNo(), "", 'H', eForm.getFormDate().toString(), "", null, belong, docOwner);
+				edoc.setContentType("text/html");
+				edoc.setDocPublic("0");
+				EDocUtil.addDocumentSQL(edoc);
+			}
 		}
 
 		// write to message
@@ -749,10 +765,10 @@ public class EFormUtil {
 		s = s.trim();
 		if (blank(s)) return s;
 
-                if (s.charAt(0)=='"' && s.charAt(s.length()-1)=='"') s = s.substring(1, s.length()-1);
+		if (s.charAt(0) == '"' && s.charAt(s.length() - 1) == '"') s = s.substring(1, s.length() - 1);
 		if (blank(s)) return s;
 
-                if (s.charAt(0)=='\'' && s.charAt(s.length()-1)=='\'') s = s.substring(1, s.length()-1);
+		if (s.charAt(0) == '\'' && s.charAt(s.length() - 1) == '\'') s = s.substring(1, s.length() - 1);
 		return s.trim();
 	}
 
@@ -813,6 +829,7 @@ public class EFormUtil {
 		return "";
 	}
 
+	@Deprecated
 	private static ResultSet getSQL(String sql) {
 		ResultSet rs = null;
 		try {
@@ -865,7 +882,7 @@ public class EFormUtil {
 			pointer = fieldEnd + 1;
 			String field = template.substring(fieldBegin + tag.length(), fieldEnd);
 			if (paramNames.contains(field)) {
-				nwTemplate +=  paramValues.get(paramNames.indexOf(field));
+				nwTemplate += paramValues.get(paramNames.indexOf(field));
 			} else {
 				nwTemplate += "{" + field + "}";
 				logger.error("EForm Template Error! Cannot find input name {" + field + "} in eform");
@@ -969,11 +986,11 @@ public class EFormUtil {
 		cmNote.setSigning_provider_no(providerNo);
 		cmNote.setSigned(true);
 		cmNote.setHistory("");
-		
+
 		SecRoleDao secRoleDao = (SecRoleDao) SpringUtils.getBean("secRoleDao");
-		SecRole doctorRole = secRoleDao.findByName("doctor");		
-		cmNote.setReporter_caisi_role(doctorRole.getId().toString());		
-		
+		SecRole doctorRole = secRoleDao.findByName("doctor");
+		cmNote.setReporter_caisi_role(doctorRole.getId().toString());
+
 		cmNote.setReporter_program_team("0");
 		cmNote.setProgram_no(programNo);
 		cmNote.setUuid(UUID.randomUUID().toString());
@@ -1094,7 +1111,7 @@ public class EFormUtil {
 	}
 
 	private static String getProviderName(String providerNo) {
-                if (blank(providerNo)) return null;
+		if (blank(providerNo)) return null;
 
 		ProviderData pd = new ProviderData(providerNo);
 		String firstname = pd.getFirst_name();
@@ -1126,17 +1143,15 @@ public class EFormUtil {
 		}
 		return sentWho;
 	}
-	
+
 	public static ArrayList<String> listRichTextLetterTemplates() {
 		String imagePath = OscarProperties.getInstance().getProperty("eform_image");
 		MiscUtils.getLogger().debug("Img Path: " + imagePath);
 		File dir = new File(imagePath);
 		String[] files = DisplayImageAction.getRichTextLetterTemplates(dir);
 		ArrayList<String> fileList;
-		if( files != null )
-			fileList = new ArrayList<String>(Arrays.asList(files));
-		else
-			fileList = new ArrayList<String>();
+		if (files != null) fileList = new ArrayList<String>(Arrays.asList(files));
+		else fileList = new ArrayList<String>();
 
 		return fileList;
 	}

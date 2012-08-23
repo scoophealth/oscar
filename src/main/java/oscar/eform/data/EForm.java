@@ -105,7 +105,7 @@ public class EForm extends EFormBase {
 	}
 
 	public void loadEForm(String fid, String demographicNo) {
-		Hashtable loaded = EFormUtil.loadEForm(fid);
+		HashMap loaded = EFormUtil.loadEForm(fid);
 		this.fid = fid;
 		this.formName = (String) loaded.get("formName");
 		this.formHtml = (String) loaded.get("formHtml");
