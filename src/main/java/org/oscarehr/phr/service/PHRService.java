@@ -56,10 +56,10 @@ import org.indivo.xml.talk.ReadDocumentResultType;
 import org.indivo.xml.talk.ReadResultType;
 import org.indivo.xml.talk.SendMessageResultType;
 import org.oscarehr.common.service.myoscar.MyOscarMedicalDataManagerUtils;
+import org.oscarehr.myoscar.managers.MyOscarAccountManager;
 import org.oscarehr.myoscar_server.ws.AccountWs;
 import org.oscarehr.myoscar_server.ws.LoginResultTransfer;
 import org.oscarehr.myoscar_server.ws.MedicalDataTransfer3;
-import org.oscarehr.myoscar.managers.MyOscarAccountManager;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
 import org.oscarehr.myoscar_server.ws.MedicalDataWs;
 import org.oscarehr.myoscar_server.ws.MessageWs;
@@ -141,7 +141,7 @@ public class PHRService {
 
 	private static PHRAuthentication authenticateIndivoId(String indivoId, String password) {
         try {
-			LoginResultTransfer loginResultTransfer=MyOscarAccountManager.login(indivoId, indivoId);
+			LoginResultTransfer loginResultTransfer=MyOscarAccountManager.login(indivoId, password);
 			
 			PHRAuthentication phrAuth = new PHRAuthentication();
 			phrAuth.setMyOscarUserName(indivoId);
