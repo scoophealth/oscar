@@ -84,6 +84,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 	private static final String EDIT = "edit";
 	private static final String PRINT = "print";
 	private static final String CLIENT_EDIT = "clientEdit";
+	private static final String EFORM_ADD = "eformAdd";
 	private static final String APPT = "appointment";
 	
 	private ClientImageDAO clientImageDAO = null;
@@ -688,13 +689,36 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
 	public ActionForward clientEdit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
-
+		String forward = null;
 		Integer clientEditId = formBean.getClient().getDemographicNo();
 
 		StringBuilder parameters = new StringBuilder(PARAM_START);
 		parameters.append(CLIENT_EDIT_ID).append(PARAM_EQUALS).append(clientEditId);
 
-		return createRedirectForward(mapping, CLIENT_EDIT, parameters);
+		Set<Integer> serviceProgramIds = formBean.getSelectedServiceProgramIds();
+		if (!serviceProgramIds.isEmpty()) {
+			Integer serviceProgramId = serviceProgramIds.iterator().next(); //assumption: there is only one item in this set at a time. Take the 1st one.
+			if (serviceProgramId == Integer.parseInt(OscarProperties.getIntakeProgramAccessServiceId())) {
+				parameters.append(FORM_ID).append(PARAM_EQUALS).append(OscarProperties.getIntakeProgramAccessFId());
+				forward = EFORM_ADD;
+			} else if (serviceProgramId == Integer.parseInt(OscarProperties.getIntakeProgramCashServiceId())) {
+				parameters.append(FORM_ID).append(PARAM_EQUALS).append(OscarProperties.getIntakeProgramCashFId());
+				forward = EFORM_ADD;
+			}
+		}
+		if (EFORM_ADD.equals(forward)) {
+			parameters.append(PARAM_AND);
+			parameters.append(DEMOGRAPHIC_NO).append(PARAM_EQUALS).append(clientEditId);
+			parameters.append(PARAM_AND);
+			parameters.append(APPOINTMENT).append(PARAM_EQUALS).append(0); // appointment code is always 0
+		} else {
+			parameters.append(CLIENT_EDIT_ID).append(PARAM_EQUALS).append(clientEditId);
+			forward = CLIENT_EDIT;
+		}
+
+		return createRedirectForward(mapping, forward, parameters);
+
+		//return createRedirectForward(mapping, CLIENT_EDIT, parameters);
 	}
 
 	// Adapt

@@ -30,6 +30,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -37,6 +38,7 @@ import org.apache.commons.lang.StringUtils;
 import org.oscarehr.common.model.AbstractModel;
 
 @Entity
+@Table(name = "vacancy")
 public class Vacancy extends AbstractModel<Integer> implements java.io.Serializable {
 
 	@Id
@@ -46,15 +48,16 @@ public class Vacancy extends AbstractModel<Integer> implements java.io.Serializa
 	private Integer templateId;
 	@Column(nullable = false, length = 24)
 	private String status;
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateClosed;
+		
 	private String reasonClosed;
-    private String emailNotificationAddressesCsv=null;
-    
-    @Column(name = "WL_PROGRAM_ID", nullable = false)
-	private Integer	wlProgramId;
 	
-	@Column(name = "DATE_CREATE", length = 19)
+    private String emailNotificationAddressesCsv=null;
+        
+	private Integer	wlProgramId;
+		
 	private Date dateCreated;
 	
 	/**

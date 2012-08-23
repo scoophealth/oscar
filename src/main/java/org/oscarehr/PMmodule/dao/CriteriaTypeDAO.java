@@ -52,5 +52,10 @@ public class CriteriaTypeDAO extends AbstractDao<CriteriaType> {
 		return query.getResultList();		
 	}
 	
-	
+	public List<CriteriaType> getAllCriteriaTypesByWlProgramId(Integer wlProgramId) {
+		String sqlCommand = "select x from CriteriaType x where wlProgramId=? order by fieldType DESC"; 		
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, wlProgramId);
+		return query.getResultList();		
+	}
 }
