@@ -304,9 +304,9 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
                                                         %>v<%= i+1 %>&#160;<%
                                                     }else{
                                                         if ( searchProviderNo != null ) { // null if we were called from e-chart
-                                                            %><a href="labDisplay.jsp?segmentID=<%=multiID[i]%>&multiID=<%=multiLabId%>&providerNo=<%= providerNo %>&searchProviderNo=<%= searchProviderNo %>">v<%= i+1 %></a>&#160;<%
+                                                        	%><a href="javascript:void(0);"   onclick="popup(850, 950, '../lab/CA/ALL/labDisplay.jsp?segmentID=<%=multiID[i]%>&multiID=<%=multiLabId%>&providerNo=<%= providerNo %>&searchProviderNo=<%= searchProviderNo %>', 'labVersion');">v<%= i+1 %></a>&#160;<%
                                                         }else{
-                                                            %><a href="labDisplay.jsp?segmentID=<%=multiID[i]%>&multiID=<%=multiLabId%>&providerNo=<%= providerNo %>">v<%= i+1 %></a>&#160;<%
+                                                            %><a href="javascript:void(0);"  onclick="popup(850, 950, '../lab/CA/ALL/labDisplay.jsp?segmentID=<%=multiID[i]%>&multiID=<%=multiLabId%>&providerNo=<%= providerNo %>', 'labVersion');"  >v<%= i+1 %></a>&#160;<%
                                                         }
                                                     }
                                                 }
