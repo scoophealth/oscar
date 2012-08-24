@@ -3,7 +3,7 @@ INSERT INTO encounterForm VALUES ('Student Intake Hx','../form/formIntakeHx.jsp?
 --
 -- Table structure for table `formIntakeHx`
 --
-CREATE TABLE formIntakehHx (
+CREATE TABLE formIntakeHx (
   `ID` int(10) NOT NULL AUTO_INCREMENT,
   `demographic_no` int(10) NOT NULL,
   `provider_no` int(10),
