@@ -162,5 +162,22 @@ public class BillingmasterDAO {
         }
     }
 
+	/**
+	 * Sets the specified billing unit for the billing master with the specified number.
+	 * 
+	 * @param billingUnit
+	 * 		Billing unit to be set on the billing master
+	 * @param billingNo
+	 * 		Number of the billing master to be updated
+	 * @return
+	 * 		Returns the total number of rows affected by the operation 
+	 */
+	public int updateBillingUnitForBillingNumber(String billingUnit, Integer billingNo) {
+	    // TODO test me
+		Query query = entityManager.createQuery("UPDATE " + Billingmaster.class.getSimpleName() + " b SET b.billingUnit = :billingUnit WHERE b.billingNo = :billingNo");
+		query.setParameter("billingUnit", billingUnit);
+		query.setParameter("billingNo", billingNo);
+		return query.executeUpdate();
+    }
 
 }
