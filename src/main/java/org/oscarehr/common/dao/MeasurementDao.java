@@ -108,4 +108,93 @@ public class MeasurementDao extends AbstractDao<Measurement> {
                 return (results);
         }
 	
+    	/**
+    	 * Finds be
+    	 * 
+    	 * @param criteria
+    	 * @return
+    	 */
+    	@SuppressWarnings("unchecked")
+        public List<Measurement> find(SearchCriteria criteria){
+    		Query query = entityManager.createQuery(
+    				"FROM Measurements m WHERE m.demographicNo = :demographicNo " +
+    				"AND m.type= :type " +
+    				"AND m.dataField = :dataField " +
+    				"AND m.measuringInstruction = :measuringInstrc " +
+    				"AND m.comments = :comments " +
+    				"AND m.dateObserved = :dateObserved");
+			query.setParameter("demographicNo", criteria.getDemographicNo());
+    		query.setParameter("type", criteria.getType());
+			query.setParameter("dataField", criteria.getDataField());
+			query.setParameter("measuringInstrc", criteria.getMeasuringInstrc());
+			query.setParameter("comments", criteria.getComments());
+			query.setParameter("dateObserved",  criteria.getDateObserved());
+    		return query.getResultList();
+    	}
+    	
+		/**
+		 * Criteria for measurement search.
+		 */
+		public static class SearchCriteria {
+	
+			private Integer demographicNo;
+			private String type;
+			private String dataField;
+			private String measuringInstrc;
+			private String comments;
+			private Date dateObserved;
+	
+			public Integer getDemographicNo() {
+				return demographicNo;
+			}
+	
+			public void setDemographicNo(String demographicNo) {
+				setDemographicNo(Integer.parseInt(demographicNo));
+			}
+			
+			public void setDemographicNo(Integer demographicNo) {
+				this.demographicNo = demographicNo;
+			}
+	
+			public String getType() {
+				return type;
+			}
+	
+			public void setType(String type) {
+				this.type = type;
+			}
+	
+			public String getDataField() {
+				return dataField;
+			}
+	
+			public void setDataField(String dataField) {
+				this.dataField = dataField;
+			}
+	
+			public String getMeasuringInstrc() {
+				return measuringInstrc;
+			}
+	
+			public void setMeasuringInstrc(String measuringInstrc) {
+				this.measuringInstrc = measuringInstrc;
+			}
+	
+			public String getComments() {
+				return comments;
+			}
+	
+			public void setComments(String comments) {
+				this.comments = comments;
+			}
+	
+			public Date getDateObserved() {
+				return dateObserved;
+			}
+	
+			public void setDateObserved(Date dateObserved) {
+				this.dateObserved = dateObserved;
+			}
+		}
+
 }
