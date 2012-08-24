@@ -48,13 +48,13 @@ public class PID3 implements Parameter {
 	@Override
 	public String toOlisString() {
 		return getQueryCode() + ".1^" + idNumber + "~" + 
-			getQueryCode() + ".4.2^" + (universalId != null ? universalId : "") + "~" +
-			getQueryCode() + ".4.3^" + (universalIdType != null ? universalIdType : "") + "~" +
-			getQueryCode() + ".5^" + (idTypeCode != null ? idTypeCode : "") + "~" +
-			getQueryCode() + ".9.1^" + (assigningJurisdiction != null ? assigningJurisdiction : "") + "~" +
-			getQueryCode() + ".9.3^" + (assigningJurisdictionCodingSystem != null ? assigningJurisdictionCodingSystem : "") + "~" +
-			"@PID.8^" + (sex != null ? sex : "") + "~" +
-			"@PID.7^" + (dateOfBirth != null ? dateOfBirth : "");
+			getQueryCode() + ".4.2" + (universalId != null ? "^"+universalId : "") + "~" +
+			getQueryCode() + ".4.3" + (universalIdType != null ? "^"+universalIdType : "") + "~" +
+			getQueryCode() + ".5" + (idTypeCode != null ? "^"+idTypeCode : "") + "~" +
+			getQueryCode() + ".9.1" + (assigningJurisdiction != null ? "^"+assigningJurisdiction : "") + "~" +
+			getQueryCode() + ".9.3" + (assigningJurisdictionCodingSystem != null ? "^"+assigningJurisdictionCodingSystem : "") + "~" +
+			"@PID.8" + (sex != null ? "^"+sex : "") + "~" +
+			"@PID.7" + (dateOfBirth != null ? "^"+dateOfBirth+"~" : "");
 	}
 
 	@Override
