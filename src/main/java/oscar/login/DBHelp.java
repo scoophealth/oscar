@@ -43,6 +43,7 @@ import oscar.util.SqlUtils;
 /**
  * deprecated Use JPA instead, no new code should be written against this class.
  */
+@Deprecated
 public final class DBHelp {
     private static final Logger logger = MiscUtils.getLogger();
 
