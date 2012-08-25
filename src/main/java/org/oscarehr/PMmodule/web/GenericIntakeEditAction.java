@@ -693,7 +693,6 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		Integer clientEditId = formBean.getClient().getDemographicNo();
 
 		StringBuilder parameters = new StringBuilder(PARAM_START);
-		parameters.append(CLIENT_EDIT_ID).append(PARAM_EQUALS).append(clientEditId);
 
 		Set<Integer> serviceProgramIds = formBean.getSelectedServiceProgramIds();
 		if (!serviceProgramIds.isEmpty()) {
@@ -717,8 +716,6 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		}
 
 		return createRedirectForward(mapping, forward, parameters);
-
-		//return createRedirectForward(mapping, CLIENT_EDIT, parameters);
 	}
 
 	// Adapt
