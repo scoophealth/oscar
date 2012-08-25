@@ -25,6 +25,7 @@
 package oscar.oscarBilling.ca.bc.administration;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -34,12 +35,15 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.BillingServiceDao;
+import org.oscarehr.common.model.BillingService;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.AppointmentMainBean;
 import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 import oscar.oscarBilling.ca.bc.data.BillingHistoryDAO;
-import oscar.oscarDB.DBHandler;
+import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
 import oscar.oscarProvider.data.ProviderData;
 import oscar.util.StringUtils;
 
@@ -56,10 +60,11 @@ import oscar.util.StringUtils;
 public class TeleplanCorrectionActionWCB
         extends org.apache.struts.action.Action {
 
-    static Logger log=MiscUtils.getLogger();
-    private static final String sql_biling = "update_wcb_billing", //set it to be billed again in billing
-             sql_wcb = "update_wcb_wcb", //updates wcb form
-             provider_wcb = "update_provider_wcb",  CLOSE_RECONCILIATION = "close_reconciliation"; //closes c12 record
+    private static final String sql_biling = "update_wcb_billing"; //set it to be billed again in billing
+	private static final String sql_wcb = "update_wcb_wcb"; //updates wcb form
+	private static final String provider_wcb = "update_provider_wcb";
+	
+	static Logger log=MiscUtils.getLogger();
 
     public ActionForward execute(ActionMapping mapping, ActionForm form,
             HttpServletRequest request,
@@ -137,28 +142,15 @@ public class TeleplanCorrectionActionWCB
         return actionForward;
     }
     private void updateUnitValue(String i, String billingno) {
-        try {
-
-        	DBHandler.RunSQL("update billingmaster set billing_unit = '" + i + "' WHERE billing_no ='" + billingno + "'");
-        } catch (java.sql.SQLException e) {
-            log.error("", e);
-        }
+    	BillingmasterDAO dao = (BillingmasterDAO) SpringUtils.getBean("BillingmasterDAO");
+    	dao.updateBillingUnitForBillingNumber(i, Integer.parseInt(billingno));
     }
 
     private String GetFeeItemAmount(String fee1, String fee2) {
-        String billamt = "0.00";
-
-        try {
-
-            java.sql.ResultSet rs;
-            rs = DBHandler.GetSQL("SELECT value FROM billingservice WHERE service_code='" +
-                    fee1 + "'");
-            if (rs.next()) {
-                billamt = rs.getString("value");
-            }
-        } catch (java.sql.SQLException e) {
-            log.error("", e);
-        }
-        return billamt;
+        BillingServiceDao dao = SpringUtils.getBean(BillingServiceDao.class);
+        List<BillingService> services = dao.findByServiceCode(fee1);
+        for(BillingService service : services)
+        	return service.getValue(); 
+        return "0.00";
     }
 }
