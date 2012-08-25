@@ -778,6 +778,7 @@ public class IHAHandler implements MessageHandler {
         	across all columns
         	*/
         	String repType = getSendingApplication();
+        	if((index=repType.indexOf("TX"))!=-1) return "NAR";
         	if((index=repType.indexOf("OE"))!=-1) return "NAR";
         	if((index=repType.indexOf("RAD"))!=-1) return "NAR";
         	if((index=repType.indexOf("LAB"))!=-1) {
@@ -806,6 +807,9 @@ public class IHAHandler implements MessageHandler {
     
     @Override
     public String getOBXName(int i, int j){
+    	int index;
+    	String repType = getSendingApplication();
+    	if((index=repType.indexOf("OE"))!=-1) return "Narrative Report";
         return(getOBXField(i, j, 3, 0, 2));
     }
     
