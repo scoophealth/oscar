@@ -122,7 +122,7 @@ public class BillingSaveBillingAction extends Action {
         char billingAccountStatus = getBillingAccountStatus( bean);
 
         //String billingSQL = insertIntoBilling(bean, curDate, billingAccountStatus);
-        Billing billing = getBillingObj(bean, curDate, billingAccountStatus);
+        //* moved Billing billing = getBillingObj(bean, curDate, billingAccountStatus);
 
         ArrayList<oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem> billItem = bean.getBillItem();
 
@@ -133,6 +133,7 @@ public class BillingSaveBillingAction extends Action {
 ////        if (bean.getBillingType().equals("MSP") || bean.getBillingType().equals("ICBC") || bean.getBillingType().equals("Pri") || bean.getBillingType().equals("WCB")) {
         for (oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem bItem: billItem){
 
+            Billing billing = getBillingObj(bean, curDate, billingAccountStatus);
             if(request.getParameter("dispPrice+"+bItem.getServiceCode())!= null){
                 String updatedPrice = request.getParameter("dispPrice+"+bItem.getServiceCode());
                 log.debug(bItem.getServiceCode()+"Original "+bItem.price+ " updated price "+Double.parseDouble(updatedPrice));
@@ -140,7 +141,6 @@ public class BillingSaveBillingAction extends Action {
                 bItem.getLineTotal();
             }
 
-            billing.setId(0);
             billingmasterDAO.save(billing);
             billingid = ""+billing.getId(); //getInsertIdFromBilling(billingSQL);
             //log.debug("billing id " + billingid + "   sql " + billingSQL);
