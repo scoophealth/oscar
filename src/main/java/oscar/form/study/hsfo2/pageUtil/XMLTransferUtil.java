@@ -196,7 +196,7 @@ public class XMLTransferUtil
   {
 	  DataVaultStatusStrResult, StatusMessage, responseStatusCode, DataVaultResult, GetDataDateRangeResult, DataBeginDate, DataEndDate,
 
-  }  
+  }
 
   public static SimpleDateFormat dformat1     = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
   public static SimpleDateFormat dformat2     = new SimpleDateFormat( "yyyy-MM-dd" );
@@ -222,7 +222,7 @@ public class XMLTransferUtil
 //      namespace = "https://www.clinforma.net/P-Prompt/DataReceiveTestWS/";    //same as production
     }
   }
-  
+
   public Integer getSiteID()
   {
     OscarProperties props = OscarProperties.getInstance();
@@ -242,7 +242,7 @@ public class XMLTransferUtil
     OscarProperties props = OscarProperties.getInstance();
     return props.getProperty( "hsfo2.loginPassword", "" );
   }
-  
+
   public String getVersionDate()
   {
     OscarProperties props = OscarProperties.getInstance();
@@ -319,7 +319,7 @@ public class XMLTransferUtil
 
   /**
    * this method in fact generate all xml for one patient. it all patient data and all visit datas to xml
-   * 
+   *
    * @param site
    * @param pd
    * @param baseLineVd
@@ -330,19 +330,19 @@ public class XMLTransferUtil
   {
     if ( baseLineVd == null )
       baseLineVd = ( new HSFODAO() ).getPatientBaseLineVisitData( pd );
-    
+
     //If the baseline form not completed
-    if(baseLineVd == null) 
+    if(baseLineVd == null)
     	return;
-    
-    
+
+
     String startDateStr = String.valueOf(startDate.get(Calendar.YEAR)) + "-" + String.valueOf(startDate.get(Calendar.MONTH)+1)+ "-" + String.valueOf(startDate.get(Calendar.DATE)) ;
     String endDateStr = String.valueOf(endDate.get(Calendar.YEAR)) + "-" + String.valueOf(endDate.get(Calendar.MONTH)+1)+ "-" + String.valueOf(endDate.get(Calendar.DATE)) ;
 
     String dateString2 = dformat2.format( pd.getConsentDate() );  //e.g. "2012-03-13"
     Date signedDate = getSignedDate( pd.getPatient_Id(), startDateStr, endDateStr );
     if(signedDate == null) return;
-    
+
     String dateString1 = dformat1.format( signedDate ); //e.g. "2012-03-13T08:48:50"
 
     final XmlCalendar when = new XmlCalendar( dateString1 );
@@ -351,7 +351,7 @@ public class XMLTransferUtil
     XmlCalendar dob = new XmlCalendar( dformat2.format( pd.getBirthDate() ) );
     //final Calendar visitDate = ConvertUtil.dateToCalendar( baseLineVd.getVisitDate_Id() );
     final XmlCalendar visitDate = new XmlCalendar( dformat2.format( baseLineVd.getVisitDate_Id() ));
-    
+
     // add patient
     SitePatient patient = site.addNewSitePatient();
     patient.setEmrPatientKey( pd.getPatient_Id() );
@@ -385,7 +385,7 @@ public class XMLTransferUtil
     // tehid.setSignedWho(who);
 
     // ---- Initial section (unnamed): 8 fields are obtained independently of HSF HMP forms.
-    //8 fields for patient demographics and EmrHcpID (each minOccurs=”1” and maxOccurs=”1”):
+    //8 fields for patient demographics and EmrHcpID (each minOccurs="1" and maxOccurs="1"):
     //These data are obtained independently of HFS HMP forms
 
     // Surname
@@ -424,7 +424,7 @@ public class XMLTransferUtil
       hcpID.setSignedWhen( when );
       hcpID.setSignedWho( who );
     }
-    
+
     //Txt_PostalCode
     {
       TxtPostalCode tpcfsa = patient.addNewTxtPostalCode();
@@ -446,11 +446,11 @@ public class XMLTransferUtil
     }
 
     // dat_HsfHmpStatusDate
-    {    	
+    {
       DatHsfHmpStatusDate hsfHmpStatusDate = patient.addNewDatHsfHmpStatusDate();
       //hsfHmpStatusDate.setValue( ConvertUtil.dateToCalendar( pd.getDateOfHmpStatus() ) );
       hsfHmpStatusDate.setValue( new XmlCalendar( dformat2.format(pd.getDateOfHmpStatus())));
-      hsfHmpStatusDate.setSignedWhen( when );      
+      hsfHmpStatusDate.setSignedWhen( when );
       hsfHmpStatusDate.setSignedWho( who );
     }
 
@@ -463,20 +463,20 @@ public class XMLTransferUtil
     if(visitDateValue.after(startDate) && visitDateValue.before(endDate)) {
     	addBaseLineData( patient, pd, baseLineVd, when, who );
     }
-        
+
     // ------form_HsfHmpFlowsheet section ------
     // Fields from both HSF HMP Baseline and Follow-up:
     //These data are obtained repeatedly on HSF HMP forms, always on the baseline form
     //first and then again serially on any number of successive follow-up forms.
-    //The effective date of these data is captured in the section’s “VisitDate_key” attribute.
+    //The effective date of these data is captured in the section’s “VisitDate_key" attribute.
 
     addAllPatientVisit( patient, pd.getPatient_Id(), startDateStr, endDateStr );
 
-    // ----- Final section: Fields for patient medical diagnoses, family history, physical exam results and lab test ----- 
+    // ----- Final section: Fields for patient medical diagnoses, family history, physical exam results and lab test -----
     //These data are obtained either directly on HSF HMP’s Baseline and Follow-up forms or
     //independently of HSF HMP forms at any number of other times during patient care.
-    //Each of these data have a “valueDate” attribute that captures the effective date of the
-    //“value” attribute, for example, the date when the lab test result was measured or the
+    //Each of these data have a “valueDate" attribute that captures the effective date of the
+    //“value" attribute, for example, the date when the lab test result was measured or the
     //the patient provided the answer, or the measurement on physical exam was taken.
 
     addAllPatientVisitFinalSection( patient, pd.getPatient_Id(), startDateStr, endDateStr, startDate, endDate, visitDateValue, visitDate, when, who );
@@ -505,10 +505,10 @@ public class XMLTransferUtil
       element.setValueDate( visitDate );
       element.setSignedWhen( when );
       element.setSignedWho( who );
-      
+
     }
-    
-      
+
+
     {
       // b_Hx_Dyslipidemia
       BHxDyslipidemia element = patient.addNewBHxDyslipidemia();
@@ -634,7 +634,7 @@ public class XMLTransferUtil
       element.setSignedWhen( when );
       element.setSignedWho( who );
     }
-    
+
     if(baseLineVd.getSBP() > 0)
     {
       // cmp_BP
@@ -646,8 +646,8 @@ public class XMLTransferUtil
       element.setSignedWhen( when );
       element.setSignedWho( who );
     }
-    
-    
+
+
     if( baseLineVd.getHeight() > 0 )
     {
       // dbl_Height_cm
@@ -702,12 +702,12 @@ public class XMLTransferUtil
       element.setValueDate( visitDate);
     }
 	}
-	
-    
-    if(baseLineVd.getTC_HDL_LabresultsDate() != null) {    	
+
+
+    if(baseLineVd.getTC_HDL_LabresultsDate() != null) {
     	final XmlCalendar labWorkSection1Date = new XmlCalendar( dformat2.format( baseLineVd.getTC_HDL_LabresultsDate() ));
-    
-    
+
+
     Calendar labDate1 = Calendar.getInstance();
     labDate1.setTime( baseLineVd.getTC_HDL_LabresultsDate() );
     if(labDate1.after(startDate) && labDate1.before(endDate)) {
@@ -730,7 +730,7 @@ public class XMLTransferUtil
       element.setSignedWhen( when );
       element.setSignedWho( who );
     }
-    
+
     if( baseLineVd.getHDL() > 0 )
     {
       // dbl_HDL_mM
@@ -740,7 +740,7 @@ public class XMLTransferUtil
       element.setSignedWhen( when );
       element.setSignedWho( who );
     }
-    
+
     if( baseLineVd.getTriglycerides() > 0 )
     {
       // dbl_Triglycerides_mM
@@ -750,16 +750,16 @@ public class XMLTransferUtil
       element.setSignedWhen( when );
       element.setSignedWho( who );
     }
-   } 
+   }
   }
     if(baseLineVd.getA1C_LabresultsDate()!=null) {
 	    final XmlCalendar labWorkSection2Date  = new XmlCalendar( dformat2.format( baseLineVd.getA1C_LabresultsDate() ));
-	      
+
 	    Calendar labDate2 = Calendar.getInstance();
 	    labDate2.setTime( baseLineVd.getA1C_LabresultsDate() );
-	    
+
 	    if(labDate2.after(startDate) && labDate2.before(endDate)) {
-	
+
 		    if( baseLineVd.getA1C() > 0 )
 		    {
 		      // dbl_A1C_fraction
@@ -769,7 +769,7 @@ public class XMLTransferUtil
 		      element.setSignedWhen( when );
 		      element.setSignedWho( who );
 		    }
-		    
+
 		    if( baseLineVd.getFBS() > 0 )
 		    {
 		      // dbl_FBS_mM
@@ -781,10 +781,10 @@ public class XMLTransferUtil
 		    }
 	   }
     }
-    
-    if(baseLineVd.getEgfrDate() != null)  {  	
+
+    if(baseLineVd.getEgfrDate() != null)  {
     	final XmlCalendar labWorkSection3Date = new XmlCalendar( dformat2.format( baseLineVd.getEgfrDate() ));
-      
+
     //final Calendar labWorkSection3Date = ConvertUtil.dateToCalendar( baseLineVd.getEgfrDate() );   //the UI use EGFR date
 
     Calendar labDate3 = Calendar.getInstance();
@@ -800,7 +800,7 @@ public class XMLTransferUtil
       element.setSignedWhen( when );
       element.setSignedWho( who );
     }
-    
+
     if( baseLineVd.getAcr() > 0 )
     {
       // dbl_ACR_mgPermmol
@@ -810,7 +810,7 @@ public class XMLTransferUtil
       element.setSignedWhen( when );
       element.setSignedWho( who );
     }
-	
+
     // HsfSiteCode_key
     }
     }
@@ -842,11 +842,11 @@ public class XMLTransferUtil
     }
 
     String visitDateStr = String.valueOf(visitDateValue.get(Calendar.YEAR)) + "-" + String.valueOf(visitDateValue.get(Calendar.MONTH)+1)+ "-" + String.valueOf(visitDateValue.get(Calendar.DATE)) ;
-    
+
     List pList2 = hdao.getLabWorkInDateRange( patientId, startDateStr, endDateStr, visitDateStr);
     if ( pList2 == null || pList2.size() == 0 )
       return;
-    
+
     //Only get the latest one
     Hsfo2Visit vsd = (Hsfo2Visit) pList2.get(0);
     addFinalSection( vsd, patient, patientId, startDate, endDate, visitDateValue, visitDate, when, who  );
@@ -858,16 +858,16 @@ public class XMLTransferUtil
     // ///////////////////////////////////////////////
     // FormHsfHmpFlowsheetBaseline min=0, max=1
     // ///////////////////////////////////////////////
-    FormHsfHmpFlowsheetBaseline baseLine = patient.addNewFormHsfHmpFlowsheetBaseline();   
-    
+    FormHsfHmpFlowsheetBaseline baseLine = patient.addNewFormHsfHmpFlowsheetBaseline();
+
     final XmlCalendar visitDateCalendar;
     if(baseLineVd.getVisitDate_Id() != null)
     	//labWorkSection1Date = ConvertUtil.dateToCalendar( baseLineVd.getTC_HDL_LabresultsDate() );   //the UI use TC_HDL date
     	visitDateCalendar = new XmlCalendar( dformat2.format( baseLineVd.getVisitDate_Id() ));
     else
     	visitDateCalendar = null;
-    
-    
+
+
     // dat_HmpBslVisitDate
     {
       DatHmpBslVisitDate visitDate = baseLine.addNewDatHmpBslVisitDate();
@@ -984,56 +984,56 @@ public class XMLTransferUtil
       brcab.setSignedWhen( when );
       brcab.setSignedWho( who );
     }
-    
+
     {
       BRxAtHmpBslBb brcbb = baseLine.addNewBRxAtHmpBslBb();
       brcbb.setValue( baseLineVd.isBeta_rx() );
       brcbb.setSignedWhen( when );
       brcbb.setSignedWho( who );
     }
-    
+
     {
       BRxAtHmpBslCcb brcc = baseLine.addNewBRxAtHmpBslCcb();
       brcc.setValue( baseLineVd.isCalc_rx() );
       brcc.setSignedWhen( when );
       brcc.setSignedWho( who );
     }
-    
+
     {
       BRxAtHmpBslOthhtn brcon = baseLine.addNewBRxAtHmpBslOthhtn();
       brcon.setValue( baseLineVd.isAnti_rx() );
       brcon.setSignedWhen( when );
       brcon.setSignedWho( who );
     }
-    
+
     {
       BRxAtHmpBslSta brcs = baseLine.addNewBRxAtHmpBslSta();
       brcs.setValue( baseLineVd.isStatin_rx() );
       brcs.setSignedWhen( when );
       brcs.setSignedWho( who );
     }
-    
+
     {
       BRxAtHmpBslOthlip brcop = baseLine.addNewBRxAtHmpBslOthlip();
       brcop.setValue( baseLineVd.isLipid_rx() );
       brcop.setSignedWhen( when );
       brcop.setSignedWho( who );
     }
-    
+
     {
       BRxAtHmpBslOha brcoa = baseLine.addNewBRxAtHmpBslOha();
       brcoa.setValue( baseLineVd.isHypo_rx() );
       brcoa.setSignedWhen( when );
       brcoa.setSignedWho( who );
     }
-    
+
     {
       BRxAtHmpBslIns brci = baseLine.addNewBRxAtHmpBslIns();
       brci.setValue( baseLineVd.isInsul_rx() );
       brci.setSignedWhen( when );
       brci.setSignedWho( who );
     }
-    
+
     // b_RxAtHmpBsl_asa
     {
       BRxAtHmpBslAsa asa = baseLine.addNewBRxAtHmpBslAsa();
@@ -1045,9 +1045,9 @@ public class XMLTransferUtil
 
   public static StringYesNo.Enum toYesNo( Boolean condition )
   {
-	  if(condition == null) 
+	  if(condition == null)
 		  return StringYesNo.NO;
-	  else 
+	  else
 		  return condition ? StringYesNo.YES : StringYesNo.NO;
   }
 
@@ -1083,14 +1083,14 @@ public class XMLTransferUtil
       // if ("null".equalsIgnoreCase(value))
       return StringRxToday.X;
   }
-  
+
   protected static boolean isVisitDataComplete( Hsfo2Visit vsd )
   {
 //    if( vsd.getChange_importance() == 0 )
 //      return false;
 //    if( vsd.getChange_confidence() == 0 )
 //      return false;
-    
+
     return true;
   }
 
@@ -1568,137 +1568,137 @@ public class XMLTransferUtil
   /***********************
    * public void oldCode1( VisitData vsd ) { String co = vsd.getDrugcoverage(); if (co != null) {
    * SelAdequateDrugCoverage sadc = spvs.addNewSelAdequateDrugCoverage();
-   * 
+   *
    * if ("yes".equalsIgnoreCase(co)) sadc.setValue(StringYesNo.YES); else if ("no".equalsIgnoreCase(co))
    * sadc.setValue(StringYesNo.NO); else if ("null".equalsIgnoreCase(co)) sadc.setValue(StringYesNo.X);
    * sadc.setSignedWhen(when); sadc.setSignedWho(who); }
-   * 
+   *
    * String hdt = vsd.getHtnDxType(); if (hdt != null) { SelHtnDxType shdt = spvs.addNewSelHtnDxType();
-   * 
+   *
    * if ("PrimaryHtn".equalsIgnoreCase(hdt)) shdt.setValue(StringHtnDxType.PRIMARY_HTN); else if
    * ("ElevatedBpReadings".equalsIgnoreCase(hdt)) shdt.setValue(StringHtnDxType.ELEVATED_BP_READINGS); else if
    * ("null".equalsIgnoreCase(hdt)) shdt.setValue(StringHtnDxType.X); shdt.setSignedWhen(when); shdt.setSignedWho(who);
    * } BHxDyslipidemia bhd = spvs.addNewBHxDyslipidemia(); bhd.setValue(vsd.isDyslipid()); bhd.setSignedWhen(when);
    * bhd.setSignedWho(who);
-   * 
+   *
    * BHxDM bhdm = spvs.addNewBHxDM(); bhdm.setValue(vsd.isDiabetes()); bhdm.setSignedWhen(when); bhdm.setSignedWho(who);
-   * 
+   *
    * BHxKidney bhk = spvs.addNewBHxKidney(); bhk.setValue(vsd.isKidneyDis()); bhk.setSignedWhen(when);
    * bhk.setSignedWho(who);
-   * 
+   *
    * BHxObesity bho = spvs.addNewBHxObesity(); bho.setValue(vsd.isObesity()); bho.setSignedWhen(when);
    * bho.setSignedWho(who);
-   * 
+   *
    * BHxCHD bhchd = spvs.addNewBHxCHD(); bhchd.setValue(vsd.isCHD()); bhchd.setSignedWhen(when);
    * bhchd.setSignedWho(who);
-   * 
+   *
    * BHxStrokeTIA bhst = spvs.addNewBHxStrokeTIA(); bhst.setValue(vsd.isStroke_TIA()); bhst.setSignedWhen(when);
    * bhst.setSignedWho(who);
-   * 
+   *
    * BFamHxHtn bfhh = spvs.addNewBFamHxHtn(); bfhh.setValue(vsd.isFamHx_Htn()); bfhh.setSignedWhen(when);
    * bfhh.setSignedWho(who);
-   * 
+   *
    * BFamHxDyslipidemia bfhdp = spvs.addNewBFamHxDyslipidemia(); bfhdp.setValue(vsd.isFamHx_Dyslipid());
    * bfhdp.setSignedWhen(when); bfhdp.setSignedWho(who);
-   * 
+   *
    * BFamHxDM bfhdm = spvs.addNewBFamHxDM(); bfhdm.setValue(vsd.isFamHx_Diabetes()); bfhdm.setSignedWhen(when);
    * bfhdm.setSignedWho(who);
-   * 
+   *
    * BFamHxKidney bfhk = spvs.addNewBFamHxKidney(); bfhk.setValue(vsd.isFamHx_KidneyDis()); bfhk.setSignedWhen(when);
    * bfhk.setSignedWho(who);
-   * 
+   *
    * BFamHxObesity bfho = spvs.addNewBFamHxObesity(); bfho.setValue(vsd.isFamHx_Obesity()); bfho.setSignedWhen(when);
    * bfho.setSignedWho(who);
-   * 
+   *
    * BFamHxCHD bfhchd = spvs.addNewBFamHxCHD(); bfhchd.setValue(vsd.isFamHx_CHD()); bfhchd.setSignedWhen(when);
    * bfhchd.setSignedWho(who);
-   * 
+   *
    * BFamHxStrokeTIA bfhstia = spvs.addNewBFamHxStrokeTIA(); bfhstia.setValue(vsd.isFamHx_Stroke_TIA());
    * bfhstia.setSignedWhen(when); bfhstia.setSignedWho(who);
-   * 
+   *
    * int tempi = vsd.getSBP(); if (tempi != Integer.MIN_VALUE) { IntSBPMmHg isbgmh = spvs.addNewIntSBPMmHg(); if (tempi
    * != 0) isbgmh.setValue(tempi); isbgmh.setSignedWhen(when); isbgmh.setSignedWho(who); }
-   * 
+   *
    * tempi = vsd.getDBP(); if (tempi != Integer.MIN_VALUE) { IntDBPMmHg idbgmh = spvs.addNewIntDBPMmHg();
    * idbgmh.setValue(vsd.getDBP()); idbgmh.setSignedWhen(when); idbgmh.setSignedWho(who); }
-   * 
+   *
    * String used = vsd.getBptru_used(); if (used != null) { SelBpTru sbt = spvs.addNewSelBpTru();
-   * 
+   *
    * if ("yes".equalsIgnoreCase(used)) sbt.setValue(StringYesNo.YES); else if ("no".equalsIgnoreCase(used))
    * sbt.setValue(StringYesNo.NO); else if ("null".equalsIgnoreCase(used)) sbt.setValue(StringYesNo.X);
    * sbt.setSignedWhen(when); sbt.setSignedWho(who); }
-   * 
+   *
    * tempi = vsd.getSBP_goal(); if (tempi != Integer.MIN_VALUE) { IntSbpGoalMmHg isgmh = spvs.addNewIntSbpGoalMmHg();
-   * 
+   *
    * if (tempi != 0) isgmh.setValue(tempi); isgmh.setSignedWhen(when); isgmh.setSignedWho(who); }
-   * 
+   *
    * tempi = vsd.getDBP_goal(); if (tempi != Integer.MIN_VALUE) { IntDbpGoalMmHg idgmh = spvs.addNewIntDbpGoalMmHg();
    * idgmh.setValue(vsd.getDBP_goal()); idgmh.setSignedWhen(when); idgmh.setSignedWho(who); }
-   * 
+   *
    * double tempd = vsd.getWeight(); if (tempd != Double.MIN_VALUE) { DblWeight dw = spvs.addNewDblWeight(); if
    * (vsd.getWeight() != 0) dw.setValue(vsd.getWeight()); dw.setSignedWhen(when); dw.setSignedWho(who);
-   * 
+   *
    * String wunit = vsd.getWeight_unit(); if (wunit != null) { SelWeightUnit swu = spvs.addNewSelWeightUnit();
-   * 
+   *
    * if ("kg".equalsIgnoreCase(wunit)) swu.setValue(StringMassUnit.KG); else if ("lb".equalsIgnoreCase(wunit))
    * swu.setValue(StringMassUnit.LBS); else if ("null".equalsIgnoreCase(wunit)) swu.setValue(StringMassUnit.X);
    * swu.setSignedWhen(when); swu.setSignedWho(who); } }
-   * 
+   *
    * tempd = vsd.getWaist(); if (tempd != Double.MIN_VALUE) { DblWaistCircumf dwc = spvs.addNewDblWaistCircumf(); if
    * (vsd.getWaist() != 0) dwc.setValue(vsd.getWaist()); dwc.setSignedWhen(when); dwc.setSignedWho(who);
-   * 
+   *
    * String waistu = vsd.getWaist_unit(); if (waistu != null) { SelWaistCircumfUnit swcu =
    * spvs.addNewSelWaistCircumfUnit();
-   * 
+   *
    * if ("cm".equalsIgnoreCase(waistu)) swcu.setValue(StringLengthUnit.CM); else if ("inch".equalsIgnoreCase(waistu))
    * swcu.setValue(StringLengthUnit.INCHES); else if ("null".equalsIgnoreCase(waistu))
    * swcu.setValue(StringLengthUnit.X); swcu.setSignedWhen(when); swcu.setSignedWho(who); } }
-   * 
+   *
    * tempd = vsd.getTC_HDL(); if (tempd != Double.MIN_VALUE) { DblTCtoHDL dtchdl = spvs.addNewDblTCtoHDL(); if
    * (vsd.getTC_HDL() != 0) dtchdl.setValue(vsd.getTC_HDL()); dtchdl.setSignedWhen(when); dtchdl.setSignedWho(who); Date
    * hdldate = vsd.getTC_HDL_LabresultsDate(); if (hdldate == null) dtchdl.setValueDate(when2); else
    * dtchdl.setValueDate(new XmlCalendar(dformat2.format(hdldate))); }
-   * 
+   *
    * tempd = vsd.getLDL(); if (tempd != Double.MIN_VALUE) { DblLDLMM dldlmm = spvs.addNewDblLDLMM(); if (vsd.getLDL() !=
    * 0) dldlmm.setValue(vsd.getLDL()); dldlmm.setSignedWhen(when); dldlmm.setSignedWho(who); Date ldldate =
    * vsd.getLDL_LabresultsDate(); if (ldldate == null) dldlmm.setValueDate(when2); else dldlmm.setValueDate(new
    * XmlCalendar(dformat2.format(ldldate))); }
-   * 
+   *
    * tempd = vsd.getHDL(); if (tempd != Double.MIN_VALUE) { DblHDLMM dhdlmm = spvs.addNewDblHDLMM(); if (vsd.getHDL() !=
    * 0) dhdlmm.setValue(vsd.getHDL()); dhdlmm.setSignedWhen(when); dhdlmm.setSignedWho(who); Date ldldate =
    * vsd.getHDL_LabresultsDate(); if (ldldate == null) dhdlmm.setValueDate(when2); else dhdlmm.setValueDate(new
    * XmlCalendar(dformat2.format(ldldate))); }
-   * 
+   *
    * tempd = vsd.getA1C(); if (tempd != Double.MIN_VALUE) { DblA1CPercent dacp = spvs.addNewDblA1CPercent(); if
    * (vsd.getA1C() != 0) dacp.setValue(vsd.getA1C()); dacp.setSignedWhen(when); dacp.setSignedWho(who); Date ldldate =
    * vsd.getA1C_LabresultsDate(); if (ldldate == null) dacp.setValueDate(when2); else dacp.setValueDate(new
    * XmlCalendar(dformat2.format(ldldate))); }
-   * 
+   *
    * String life = vsd.getLifeGoal(); boolean pa = false, dietdash = false, dietsalt = false, smoking = false, alcohol =
    * false, stress = false; if ("Goal_activity".equalsIgnoreCase(life)) pa = true; else if
    * ("Goal_dietDash".equalsIgnoreCase(life)) dietdash = true; else if ("Goal_dietSalt".equalsIgnoreCase(life)) dietsalt
    * = true; else if ("Goal_smoking".equalsIgnoreCase(life)) smoking = true; else if
    * ("Goal_alcohol".equalsIgnoreCase(life)) alcohol = true; else if ("Goal_stress".equals(life)) stress = true;
-   * 
+   *
    * BGoalPhysActivity bgpa = spvs.addNewBGoalPhysActivity(); bgpa.setValue(pa); bgpa.setSignedWhen(when);
    * bgpa.setSignedWho(who);
-   * 
+   *
    * BGoalDASHDiet bgdash = spvs.addNewBGoalDASHDiet(); bgdash.setValue(dietdash); bgdash.setSignedWhen(when);
    * bgdash.setSignedWho(who);
-   * 
+   *
    * BGoalSalt bgs = spvs.addNewBGoalSalt(); bgs.setValue(dietsalt); bgs.setSignedWhen(when); bgs.setSignedWho(who);
-   * 
+   *
    * BGoalSmoking bgsm = spvs.addNewBGoalSmoking(); bgsm.setValue(smoking); bgsm.setSignedWhen(when);
    * bgsm.setSignedWho(who);
-   * 
+   *
    * BGoalAlcohol bga = spvs.addNewBGoalAlcohol(); bga.setValue(alcohol); bga.setSignedWhen(when);
    * bga.setSignedWho(who);
-   * 
+   *
    * BGoalStress bgst = spvs.addNewBGoalStress(); bgst.setValue(stress); bgst.setSignedWhen(when);
    * bgst.setSignedWho(who);
-   * 
+   *
    * String pView = vsd.getPtView(); if (pView != null) { SelPatientView spv = spvs.addNewSelPatientView();
-   * 
+   *
    * if ("Uninterested".equalsIgnoreCase(pView)) spv.setValue(StringPtChangeState.UNINTERESTED); else if
    * ("Thinking".equalsIgnoreCase(pView)) spv.setValue(StringPtChangeState.THINKING); else if
    * ("Deciding".equalsIgnoreCase(pView)) spv.setValue(StringPtChangeState.DECIDING); else if
@@ -1707,114 +1707,114 @@ public class XMLTransferUtil
    * ("Relapsing".equalsIgnoreCase(pView)) spv.setValue(StringPtChangeState.RELAPSING); else if
    * ("null".equalsIgnoreCase(pView)) spv.setValue(StringPtChangeState.X); spv.setSignedWhen(when);
    * spv.setSignedWho(who); }
-   * 
+   *
    * tempi = vsd.getChange_importance(); if (tempi != Integer.MIN_VALUE) { IntGoalImportance igi =
    * spvs.addNewIntGoalImportance(); if (vsd.getChange_importance() != 0) igi.setValue(vsd.getChange_importance());
    * igi.setSignedWhen(when); igi.setSignedWho(who); }
-   * 
+   *
    * tempi = vsd.getChange_confidence(); if (tempi != Integer.MIN_VALUE) { IntGoalConfidence igc =
    * spvs.addNewIntGoalConfidence(); if (vsd.getChange_confidence() != 0) igc.setValue(vsd.getChange_confidence());
    * igc.setSignedWhen(when); igc.setSignedWho(who); }
-   * 
+   *
    * tempi = vsd.getExercise_minPerWk(); if (tempi != Integer.MIN_VALUE) { IntExerciseMinPerWk ieampw =
    * spvs.addNewIntExerciseMinPerWk(); ieampw.setValue(vsd.getExercise_minPerWk()); ieampw.setSignedWhen(when);
    * ieampw.setSignedWho(who); }
-   * 
+   *
    * tempi = vsd.getSmoking_cigsPerDay(); if (tempi != Integer.MIN_VALUE) { IntSmokingCigsPerDay iscpd =
    * spvs.addNewIntSmokingCigsPerDay(); iscpd.setValue(vsd.getSmoking_cigsPerDay()); iscpd.setSignedWhen(when);
    * iscpd.setSignedWho(who); }
-   * 
+   *
    * tempi = vsd.getAlcohol_drinksPerWk(); if (tempi != Integer.MIN_VALUE) { IntAlcoholDrinksPerWk iadpwk =
    * spvs.addNewIntAlcoholDrinksPerWk(); iadpwk.setValue(vsd.getAlcohol_drinksPerWk()); iadpwk.setSignedWhen(when);
    * iadpwk.setSignedWho(who); }
-   * 
+   *
    * String ddiet = vsd.getSel_DashDiet(); if (ddiet != null) { SelDASHdiet sdash = spvs.addNewSelDASHdiet();
-   * 
+   *
    * if ("Always".equalsIgnoreCase(ddiet)) sdash.setValue(StringFrequency.ALWAYS); else if
    * ("Often".equalsIgnoreCase(ddiet)) sdash.setValue(StringFrequency.OFTEN); else if
    * ("Sometimes".equalsIgnoreCase(ddiet)) sdash.setValue(StringFrequency.SOMETIMES); else if
    * ("Never".equalsIgnoreCase(ddiet)) sdash.setValue(StringFrequency.NEVER); else sdash.setValue(StringFrequency.X);
    * sdash.setSignedWhen(when); sdash.setSignedWho(who); }
-   * 
+   *
    * String ssalt = vsd.getSel_HighSaltFood(); if (ssalt != null) { SelHighSalt shs = spvs.addNewSelHighSalt();
-   * 
+   *
    * if ("Always".equalsIgnoreCase(ssalt)) shs.setValue(StringFrequency.ALWAYS); else if
    * ("Often".equalsIgnoreCase(ssalt)) shs.setValue(StringFrequency.OFTEN); else if
    * ("Sometimes".equalsIgnoreCase(ssalt)) shs.setValue(StringFrequency.SOMETIMES); else if
    * ("Never".equalsIgnoreCase(ssalt)) shs.setValue(StringFrequency.NEVER); else shs.setValue(StringFrequency.X);
    * shs.setSignedWhen(when); shs.setSignedWho(who); }
-   * 
+   *
    * String sstress = vsd.getSel_Stressed(); if (sstress != null) { SelStressed ss = spvs.addNewSelStressed();
-   * 
+   *
    * if ("Always".equalsIgnoreCase(sstress)) ss.setValue(StringFrequency.ALWAYS); else if
    * ("Often".equalsIgnoreCase(sstress)) ss.setValue(StringFrequency.OFTEN); else if
    * ("Sometimes".equalsIgnoreCase(sstress)) ss.setValue(StringFrequency.SOMETIMES); else if
    * ("Never".equalsIgnoreCase(sstress)) ss.setValue(StringFrequency.NEVER); else ss.setValue(StringFrequency.X);
    * ss.setSignedWhen(when); ss.setSignedWho(who); }
-   * 
+   *
    * BRxCurrentDiu brcd = spvs.addNewBRxCurrentDiu(); brcd.setValue(vsd.isDiuret_rx()); brcd.setSignedWhen(when);
    * brcd.setSignedWho(who);
-   * 
+   *
    * BRxCurrentAce brca = spvs.addNewBRxCurrentAce(); brca.setValue(vsd.isAce_rx()); brca.setSignedWhen(when);
    * brca.setSignedWho(who);
-   * 
+   *
    * BRxCurrentArb brcab = spvs.addNewBRxCurrentArb(); brcab.setValue(vsd.isArecept_rx()); brcab.setSignedWhen(when);
    * brcab.setSignedWho(who);
-   * 
+   *
    * BRxCurrentBb brcbb = spvs.addNewBRxCurrentBb(); brcbb.setValue(vsd.isBeta_rx()); brcbb.setSignedWhen(when);
    * brcbb.setSignedWho(who);
-   * 
+   *
    * BRxCurrentCcb brcc = spvs.addNewBRxCurrentCcb(); brcc.setValue(vsd.isCalc_rx()); brcc.setSignedWhen(when);
    * brcc.setSignedWho(who);
-   * 
+   *
    * BRxCurrentOthhtn brcon = spvs.addNewBRxCurrentOthhtn(); brcon.setValue(vsd.isAnti_rx()); brcon.setSignedWhen(when);
    * brcon.setSignedWho(who);
-   * 
+   *
    * BRxCurrentSta brcs = spvs.addNewBRxCurrentSta(); brcs.setValue(vsd.isStatin_rx()); brcs.setSignedWhen(when);
    * brcs.setSignedWho(who);
-   * 
+   *
    * BRxCurrentOthlip brcop = spvs.addNewBRxCurrentOthlip(); brcop.setValue(vsd.isLipid_rx());
    * brcop.setSignedWhen(when); brcop.setSignedWho(who);
-   * 
+   *
    * BRxCurrentOha brcoa = spvs.addNewBRxCurrentOha(); brcoa.setValue(vsd.isHypo_rx()); brcoa.setSignedWhen(when);
    * brcoa.setSignedWho(who);
-   * 
+   *
    * BRxCurrentIns brci = spvs.addNewBRxCurrentIns(); brci.setValue(vsd.isInsul_rx()); brci.setSignedWhen(when);
    * brci.setSignedWho(who);
-   * 
+   *
    * BRxSideEffectsDiu brsed = spvs.addNewBRxSideEffectsDiu(); brsed.setValue(vsd.isDiuret_SideEffects());
    * brsed.setSignedWhen(when); brsed.setSignedWho(who);
-   * 
+   *
    * BRxSideEffectsAce brsea = spvs.addNewBRxSideEffectsAce(); brsea.setValue(vsd.isAce_SideEffects());
    * brsea.setSignedWhen(when); brsea.setSignedWho(who);
-   * 
+   *
    * BRxSideEffectsArb brseab = spvs.addNewBRxSideEffectsArb(); brseab.setValue(vsd.isArecept_SideEffects());
    * brseab.setSignedWhen(when); brseab.setSignedWho(who);
-   * 
+   *
    * BRxSideEffectsBb brseb = spvs.addNewBRxSideEffectsBb(); brseb.setValue(vsd.isBeta_SideEffects());
    * brseb.setSignedWhen(when); brseb.setSignedWho(who);
-   * 
+   *
    * BRxSideEffectsCcb brsec = spvs.addNewBRxSideEffectsCcb(); brsec.setValue(vsd.isCalc_SideEffects());
    * brsec.setSignedWhen(when); brsec.setSignedWho(who);
-   * 
+   *
    * BRxSideEffectsOthhtn brseon = spvs.addNewBRxSideEffectsOthhtn(); brseon.setValue(vsd.isAnti_SideEffects());
    * brseon.setSignedWhen(when); brseon.setSignedWho(who);
-   * 
+   *
    * BRxSideEffectsSta brses = spvs.addNewBRxSideEffectsSta(); brses.setValue(vsd.isStatin_SideEffects());
    * brses.setSignedWhen(when); brses.setSignedWho(who);
-   * 
+   *
    * BRxSideEffectsOthlip brseop = spvs.addNewBRxSideEffectsOthlip(); brseop.setValue(vsd.isLipid_SideEffects());
    * brseop.setSignedWhen(when); brseop.setSignedWho(who);
-   * 
+   *
    * BRxSideEffectsOha brseoa = spvs.addNewBRxSideEffectsOha(); brseoa.setValue(vsd.isHypo_SideEffects());
    * brseoa.setSignedWhen(when); brseoa.setSignedWho(who);
-   * 
+   *
    * BRxSideEffectsIns brsei = spvs.addNewBRxSideEffectsIns(); brsei.setValue(vsd.isInsul_SideEffects());
    * brsei.setSignedWhen(when); brsei.setSignedWho(who);
-   * 
+   *
    * String result = null; result = vsd.getDiuret_RxDecToday(); if (result != null) { SelRxTodayDiu srtd =
    * spvs.addNewSelRxTodayDiu();
-   * 
+   *
    * if ("Same".equalsIgnoreCase(result)) srtd.setValue(StringRxToday.SAME); else if
    * ("Increase".equalsIgnoreCase(result)) srtd.setValue(StringRxToday.INCREASE); else if
    * ("Decrease".equalsIgnoreCase(result)) srtd.setValue(StringRxToday.DECREASE); else if
@@ -1822,9 +1822,9 @@ public class XMLTransferUtil
    * srtd.setValue(StringRxToday.START); else if ("InClassSwitch".equalsIgnoreCase(result))
    * srtd.setValue(StringRxToday.IN_CLASS_SWITCH); else if ("null".equalsIgnoreCase(result))
    * srtd.setValue(StringRxToday.X); srtd.setSignedWhen(when); srtd.setSignedWho(who); }
-   * 
+   *
    * result = vsd.getAce_RxDecToday(); if (result != null) { SelRxTodayAce srta = spvs.addNewSelRxTodayAce();
-   * 
+   *
    * if ("Same".equalsIgnoreCase(result)) srta.setValue(StringRxToday.SAME); else if
    * ("Increase".equalsIgnoreCase(result)) srta.setValue(StringRxToday.INCREASE); else if
    * ("Decrease".equalsIgnoreCase(result)) srta.setValue(StringRxToday.DECREASE); else if
@@ -1832,9 +1832,9 @@ public class XMLTransferUtil
    * srta.setValue(StringRxToday.START); else if ("InClassSwitch".equalsIgnoreCase(result))
    * srta.setValue(StringRxToday.IN_CLASS_SWITCH); else if ("null".equalsIgnoreCase(result))
    * srta.setValue(StringRxToday.X); srta.setSignedWhen(when); srta.setSignedWho(who); }
-   * 
+   *
    * result = vsd.getArecept_RxDecToday(); if (result != null) { SelRxTodayArb srtb = spvs.addNewSelRxTodayArb();
-   * 
+   *
    * if ("Same".equalsIgnoreCase(result)) srtb.setValue(StringRxToday.SAME); else if
    * ("Increase".equalsIgnoreCase(result)) srtb.setValue(StringRxToday.INCREASE); else if
    * ("Decrease".equalsIgnoreCase(result)) srtb.setValue(StringRxToday.DECREASE); else if
@@ -1842,9 +1842,9 @@ public class XMLTransferUtil
    * srtb.setValue(StringRxToday.START); else if ("InClassSwitch".equalsIgnoreCase(result))
    * srtb.setValue(StringRxToday.IN_CLASS_SWITCH); else if ("null".equalsIgnoreCase(result))
    * srtb.setValue(StringRxToday.X); srtb.setSignedWhen(when); srtb.setSignedWho(who); }
-   * 
+   *
    * result = vsd.getBeta_RxDecToday(); if (result != null) { SelRxTodayBb srtbb = spvs.addNewSelRxTodayBb();
-   * 
+   *
    * if ("Same".equalsIgnoreCase(result)) srtbb.setValue(StringRxToday.SAME); else if
    * ("Increase".equalsIgnoreCase(result)) srtbb.setValue(StringRxToday.INCREASE); else if
    * ("Decrease".equalsIgnoreCase(result)) srtbb.setValue(StringRxToday.DECREASE); else if
@@ -1852,9 +1852,9 @@ public class XMLTransferUtil
    * srtbb.setValue(StringRxToday.START); else if ("InClassSwitch".equalsIgnoreCase(result))
    * srtbb.setValue(StringRxToday.IN_CLASS_SWITCH); else if ("null".equalsIgnoreCase(result))
    * srtbb.setValue(StringRxToday.X); srtbb.setSignedWhen(when); srtbb.setSignedWho(who); }
-   * 
+   *
    * result = vsd.getCalc_RxDecToday(); if (result != null) { SelRxTodayCcb srtc = spvs.addNewSelRxTodayCcb();
-   * 
+   *
    * if ("Same".equalsIgnoreCase(result)) srtc.setValue(StringRxToday.SAME); else if
    * ("Increase".equalsIgnoreCase(result)) srtc.setValue(StringRxToday.INCREASE); else if
    * ("Decrease".equalsIgnoreCase(result)) srtc.setValue(StringRxToday.DECREASE); else if
@@ -1862,9 +1862,9 @@ public class XMLTransferUtil
    * srtc.setValue(StringRxToday.START); else if ("InClassSwitch".equalsIgnoreCase(result))
    * srtc.setValue(StringRxToday.IN_CLASS_SWITCH); else if ("null".equalsIgnoreCase(result))
    * srtc.setValue(StringRxToday.X); srtc.setSignedWhen(when); srtc.setSignedWho(who); }
-   * 
+   *
    * result = vsd.getAnti_RxDecToday(); if (result != null) { SelRxTodayOthhtn srton = spvs.addNewSelRxTodayOthhtn();
-   * 
+   *
    * if ("Same".equalsIgnoreCase(result)) srton.setValue(StringRxToday.SAME); else if
    * ("Increase".equalsIgnoreCase(result)) srton.setValue(StringRxToday.INCREASE); else if
    * ("Decrease".equalsIgnoreCase(result)) srton.setValue(StringRxToday.DECREASE); else if
@@ -1872,9 +1872,9 @@ public class XMLTransferUtil
    * srton.setValue(StringRxToday.START); else if ("InClassSwitch".equalsIgnoreCase(result))
    * srton.setValue(StringRxToday.IN_CLASS_SWITCH); else if ("null".equalsIgnoreCase(result))
    * srton.setValue(StringRxToday.X); srton.setSignedWhen(when); srton.setSignedWho(who); }
-   * 
+   *
    * result = vsd.getStatin_RxDecToday(); if (result != null) { SelRxTodaySta srts = spvs.addNewSelRxTodaySta();
-   * 
+   *
    * if ("Same".equalsIgnoreCase(result)) srts.setValue(StringRxToday.SAME); else if
    * ("Increase".equalsIgnoreCase(result)) srts.setValue(StringRxToday.INCREASE); else if
    * ("Decrease".equalsIgnoreCase(result)) srts.setValue(StringRxToday.DECREASE); else if
@@ -1882,7 +1882,7 @@ public class XMLTransferUtil
    * srts.setValue(StringRxToday.START); else if ("InClassSwitch".equalsIgnoreCase(result))
    * srts.setValue(StringRxToday.IN_CLASS_SWITCH); else if ("null".equalsIgnoreCase(result))
    * srts.setValue(StringRxToday.X); srts.setSignedWhen(when); srts.setSignedWho(who); }
-   * 
+   *
    * result = vsd.getLipid_RxDecToday(); if (result != null) { SelRxTodayOthlip srtop = spvs.addNewSelRxTodayOthlip();
    * if ("Same".equalsIgnoreCase(result)) srtop.setValue(StringRxToday.SAME); else if
    * ("Increase".equalsIgnoreCase(result)) srtop.setValue(StringRxToday.INCREASE); else if
@@ -1891,9 +1891,9 @@ public class XMLTransferUtil
    * srtop.setValue(StringRxToday.START); else if ("InClassSwitch".equalsIgnoreCase(result))
    * srtop.setValue(StringRxToday.IN_CLASS_SWITCH); else if ("null".equalsIgnoreCase(result))
    * srtop.setValue(StringRxToday.X); srtop.setSignedWhen(when); srtop.setSignedWho(who); }
-   * 
+   *
    * result = vsd.getHypo_RxDecToday(); if (result != null) { SelRxTodayOha srtoa = spvs.addNewSelRxTodayOha();
-   * 
+   *
    * if ("Same".equalsIgnoreCase(result)) srtoa.setValue(StringRxToday.SAME); else if
    * ("Increase".equalsIgnoreCase(result)) srtoa.setValue(StringRxToday.INCREASE); else if
    * ("Decrease".equalsIgnoreCase(result)) srtoa.setValue(StringRxToday.DECREASE); else if
@@ -1901,9 +1901,9 @@ public class XMLTransferUtil
    * srtoa.setValue(StringRxToday.START); else if ("InClassSwitch".equalsIgnoreCase(result))
    * srtoa.setValue(StringRxToday.IN_CLASS_SWITCH); else if ("null".equalsIgnoreCase(result))
    * srtoa.setValue(StringRxToday.X); srtoa.setSignedWhen(when); srtoa.setSignedWho(who); }
-   * 
+   *
    * result = vsd.getInsul_RxDecToday(); if (result != null) { SelRxTodayIns srti = spvs.addNewSelRxTodayIns();
-   * 
+   *
    * if ("Same".equalsIgnoreCase(result)) srti.setValue(StringRxToday.SAME); else if
    * ("Increase".equalsIgnoreCase(result)) srti.setValue(StringRxToday.INCREASE); else if
    * ("Decrease".equalsIgnoreCase(result)) srti.setValue(StringRxToday.DECREASE); else if
@@ -1911,46 +1911,46 @@ public class XMLTransferUtil
    * srti.setValue(StringRxToday.START); else if ("InClassSwitch".equalsIgnoreCase(result))
    * srti.setValue(StringRxToday.IN_CLASS_SWITCH); else if ("null".equalsIgnoreCase(result))
    * srti.setValue(StringRxToday.X); srti.setSignedWhen(when); srti.setSignedWho(who); }
-   * 
+   *
    * tempi = vsd.getOften_miss(); if (tempi != Integer.MIN_VALUE) { IntMissedMedsPerWk immp =
    * spvs.addNewIntMissedMedsPerWk(); immp.setValue(vsd.getOften_miss()); immp.setSignedWhen(when);
    * immp.setSignedWho(who); }
-   * 
+   *
    * result = vsd.getHerbal(); if (result != null) { SelHerbalMeds shmd = spvs.addNewSelHerbalMeds();
-   * 
+   *
    * if ("yes".equalsIgnoreCase(result)) shmd.setValue(StringYesNo.YES); else if ("no".equalsIgnoreCase(result))
    * shmd.setValue(StringYesNo.NO); else if ("null".equalsIgnoreCase(result)) shmd.setValue(StringYesNo.X);
    * shmd.setSignedWhen(when); shmd.setSignedWho(who); }
-   * 
+   *
    * result = vsd.getNextvisit(); if (result != null) { SelFollowUp sfu = spvs.addNewSelFollowUp();
-   * 
+   *
    * if ("Under1Mo".equalsIgnoreCase(result)) sfu.setValue(StringFollowUpInterval.UNDER_1_MO); else if
    * ("1to2Mo".equalsIgnoreCase(result)) sfu.setValue(StringFollowUpInterval.X_1_TO_2_MO); else if
    * ("3to6Mo".equalsIgnoreCase(result)) sfu.setValue(StringFollowUpInterval.X_3_TO_6_MO); else if
    * ("Over6Mo".equalsIgnoreCase(result)) sfu.setValue(StringFollowUpInterval.OVER_6_MO); else if
    * ("null".equalsIgnoreCase(result)) sfu.setValue(StringFollowUpInterval.X); sfu.setSignedWhen(when);
    * sfu.setSignedWho(who); }
-   * 
+   *
    * BBPAP bbpap = spvs.addNewBBPAP(); bbpap.setValue(vsd.isBpactionplan()); bbpap.setSignedWhen(when);
    * bbpap.setSignedWho(who);
-   * 
+   *
    * BTPOff btpoff = spvs.addNewBTPOff(); btpoff.setValue(vsd.isPressureOff()); btpoff.setSignedWhen(when);
    * btpoff.setSignedWho(who);
-   * 
+   *
    * BPPAgreement bppa = spvs.addNewBPPAgreement(); bppa.setValue(vsd.isPatientProvider()); bppa.setSignedWhen(when);
    * bppa.setSignedWho(who);
-   * 
+   *
    * BABPM babpm = spvs.addNewBABPM(); babpm.setValue(vsd.isABPM()); babpm.setSignedWhen(when); babpm.setSignedWho(who);
-   * 
+   *
    * BHomeMon bhmn = spvs.addNewBHomeMon(); bhmn.setValue(vsd.isHome()); bhmn.setSignedWhen(when);
    * bhmn.setSignedWho(who);
-   * 
+   *
    * BCommunRes bcr = spvs.addNewBCommunRes(); bcr.setValue(vsd.isCommunityRes()); bcr.setSignedWhen(when);
    * bcr.setSignedWho(who);
-   * 
+   *
    * BReferHCP brhcp = spvs.addNewBReferHCP(); brhcp.setValue(vsd.isProRefer()); brhcp.setSignedWhen(when);
    * brhcp.setSignedWho(who);
-   * 
+   *
    * } /
    *******************/
 
@@ -1982,7 +1982,7 @@ public class XMLTransferUtil
     site.setHsfSiteCodeKey( getSiteID().intValue() );
     dataBeginDate.add(Calendar.DATE, -1);
 	dataEndDate.add(Calendar.DATE, 1);
-	
+
     if ( demographicNo.intValue() == 0 )
     {
       // add all patients data
@@ -1992,13 +1992,13 @@ public class XMLTransferUtil
         {
           String pid = (String) patientIdList.get( i );
           Hsfo2Patient pdata = getDemographic( pid );
-          if ( pdata != null && pdata.getPatient_Id() != null ) {   
+          if ( pdata != null && pdata.getPatient_Id() != null ) {
         	  Calendar dateOfHmpStatus = Calendar.getInstance();
         	  dateOfHmpStatus.setTime(pdata.getDateOfHmpStatus());
-        	  
+
         	  if(dateOfHmpStatus.after(dataBeginDate) && dateOfHmpStatus.before(dataEndDate) ) { //must be in date range
         		  addPatientToSite( site, pdata, null, dataBeginDate, dataEndDate); // FIXME: add parameter for first visit data
-        	  }            
+        	  }
           }
         }
       if ( patientIdList == null || patientIdList.size() == 0 )
@@ -2027,39 +2027,39 @@ public class XMLTransferUtil
     Iterator iter = validationErrors.iterator();
     while ( iter.hasNext() )
     {
-      sb.append( ">> " + iter.next() + "\n" );   
-    	  	
+      sb.append( ">> " + iter.next() + "\n" );
+
     }
     return sb.toString();
   }
 
   public ArrayList validateDoc( HsfHmpDataDocument doc ) throws IOException, XmlException
-  {    
+  {
       logger.info( "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + "\n" + PrettyPrinter.indent( doc.xmlText() ) );
 
     ArrayList<StringBuilder> messageArray = new ArrayList<StringBuilder>();
-    XmlOptions option = new XmlOptions();   
+    XmlOptions option = new XmlOptions();
     ArrayList<XmlError> validationErrors = new ArrayList<XmlError>();
     option.setErrorListener( validationErrors );
     StringBuilder sb = new StringBuilder();
-    
+
     if ( doc.validate( option ) == false )
-    {    	
+    {
     	Iterator iter = validationErrors.iterator();
         while ( iter.hasNext() ) {
-        	XmlError error = (XmlError)iter.next();        	
+        	XmlError error = (XmlError)iter.next();
         	String errorMessage = error.getMessage();
         	XmlCursor cursor = error.getCursorLocation();
         	cursor.toParent();
-        	String loc = cursor.xmlText();       	
-        	
+        	String loc = cursor.xmlText();
+
         	String name = getPatientName(doc.xmlText(), loc);
         	sb.append("\n Patient Name: "+name + " \n  ** Error Message: " + errorMessage + "  ");
         	sb.append( loc.substring(loc.indexOf("signedWhen"), loc.indexOf("/")) + " --- ");
         	messageArray.add( sb );
         }
       //String sb = printErrors( validationErrors );
-        
+
       messageArray.add( sb );
       return messageArray;
     }
@@ -2068,17 +2068,17 @@ public class XMLTransferUtil
   }
 
   private String getPatientName(String xmlText, String location) {
-	  
-	  StringBuilder body = new StringBuilder(xmlText);	  	  
-	  String a1 = body.substring(0,body.indexOf(location));	  
+
+	  StringBuilder body = new StringBuilder(xmlText);
+	  String a1 = body.substring(0,body.indexOf(location));
 	  String a2 = a1.substring(a1.lastIndexOf("txt_Surname value"));
 	  String surname= a2.substring(19, a2.indexOf("signedWhen")-2);
 	  String a3 = a2.substring(a2.indexOf("txt_GivenNames value"));
 	  String givenname = a3.substring(22, a3.indexOf("signedWhen")-2);
-	  
+
 	  return givenname+ " " + surname;
   }
-  
+
   public String base64Encoding( byte[] input )
   {
     return ( new String( Base64.encodeBase64( input ) ) );
@@ -2129,7 +2129,7 @@ public class XMLTransferUtil
   }
 
   /**
-   * 
+   *
    * @param siteCode
    * @param userId
    * @param passwd
@@ -2150,7 +2150,7 @@ public class XMLTransferUtil
 //                     + "<soap-env:Body>"
 //                     + "<GetDataDateRange xmlns=\"" + namespace + "\">"
 //                     + "<Site>" + siteCode + "</Site>" + "<UserID>" + userId + "</UserID>" + "<Password>" + passwd + "</Password>"
-//                     + "<FileType>" + fileType + "</FileType>" 
+//                     + "<FileType>" + fileType + "</FileType>"
 //                     + "</GetDataDateRange>" + "</soap:Body>"
 //                     + "</soap:Envelope>";
 
@@ -2178,7 +2178,7 @@ public class XMLTransferUtil
       Map< SoapElementKey, Object > output = new HashMap< SoapElementKey, Object >();
       int result = httpclient.executeMethod( post );
       // Display status code
-    
+
       output.put( SoapElementKey.responseStatusCode, result );
       String rsXml = post.getResponseBodyAsString();
       logger.info( "response xml of GetDataDateRange: \n" + rsXml );
@@ -2210,7 +2210,7 @@ public class XMLTransferUtil
     return xml.substring( begin + ( "<" + element + ">" ).length(), end );
   }
 
-  
+
   /**
    * DataVault soap
    * @param siteCode
@@ -2225,7 +2225,7 @@ public class XMLTransferUtil
   {
     final int fileType = 18;
     final String fileName = "hsfoData.xml";
-    
+
     userId = userId.replaceAll( "&", "&amp;" );
     passwd = passwd.replaceAll( "&", "&amp;" );
 
@@ -2256,18 +2256,18 @@ public class XMLTransferUtil
         xml = xml.replaceFirst( key+sValue, key+sValueNew );
       }
     }
-    
+
 //    String soapMsg = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-//                     + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" " 
+//                     + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
 //                     + "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
-//                     + "<soap-env:Body>" 
+//                     + "<soap-env:Body>"
 //                     + "<DataVault xmlns=\"" + namespace + "\">"
 //                     + "<Site>" + siteCode + "</Site>" + "<UserID>" + userId + "</UserID>" + "<Password>" + passwd
 //                     + "</Password>" + "<FileType>" + fileType + "</FileType>" + "<FileName>" + "HsfoData.xml"
 //                     + "</FileName>" + "<FileAsBinary>"
 //                     + base64Encoding( zipCompress( "HsfoData.xml", xml.getBytes( "UTF-8" ) ) ) + "</FileAsBinary>"
 //                     + "</DataVault>" + "</soap:Body>" + "</soap:Envelope>";
-    
+
     /*****/
     String soapMsg =
       "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:dat=\"https://www.clinforma.net/P-Prompt/DataReceiveWS/\">"
@@ -2286,7 +2286,7 @@ public class XMLTransferUtil
     + "</soapenv:Body>"
     + "</soapenv:Envelope>";
     /*****/
-    
+
     /******
     String soapMsgPart1 =
       "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:dat=\"https://www.clinforma.net/P-Prompt/DataReceiveWS/\">"
@@ -2299,14 +2299,14 @@ public class XMLTransferUtil
     + "  <dat:FileType>" + fileType + "</dat:FileType>"
     + "  <dat:FileName>" + fileName + "</dat:FileName>"
     + "  <dat:FileAsBinary>";
-    
-    String soapMsgPart2 = 
+
+    String soapMsgPart2 =
       "</dat:FileAsBinary>"
     + "  <dat:FileAsBinary>" + xml + "</dat:FileAsBinary>"
     + "</dat:DataVaultStatusStr>"  //"</dat:DataVault>"
     + "</soapenv:Body>"
     + "</soapenv:Envelope>";
-    
+
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     outputStream.write( soapMsgPart1.getBytes("UTF-8") );
 //    outputStream.write( zipCompress( "HsfoData.xml", xml.getBytes( "UTF-8" ) ) );
@@ -2315,7 +2315,7 @@ public class XMLTransferUtil
     outputStream.write( soapMsgPart2.getBytes("UTF-8") );
     outputStream.flush();
     /******/
-    
+
     boolean saveXml = false;
     if( saveXml )
     {
@@ -2327,7 +2327,7 @@ public class XMLTransferUtil
         os.flush();
         os.close();
       }
-      
+
       {
         File file = new File( "c:\\tmp\\HsfoData.xml.zip" );
         byte[] zipBytes = zipCompress( "HsfoData.xml", xml.getBytes( "UTF-8" ) );
@@ -2336,7 +2336,7 @@ public class XMLTransferUtil
         os.flush();
         os.close();
       }
-      
+
       {
         File file = new File( "c:\\tmp\\HsfoData.xml.zip.base64" );
         String base64 = base64Encoding( zipCompress( "HsfoData.xml", xml.getBytes( "UTF-8" ) ) );
@@ -2346,7 +2346,7 @@ public class XMLTransferUtil
         os.close();
       }
     }
-    
+
 //    ByteArrayInputStream bis = new ByteArrayInputStream( outputStream.toByteArray() );
 //    RequestEntity re = new InputStreamRequestEntity( bis, "text/xml");
     RequestEntity re = new StringRequestEntity( soapMsg, "text/xml", "utf-8" );
@@ -2361,7 +2361,7 @@ public class XMLTransferUtil
 
       int result = httpclient.executeMethod( post );
       // Display status code
-      
+
       output.put( SoapElementKey.responseStatusCode, result );
       String rsXml = post.getResponseBodyAsString();
       logger.info( "url: " + webUrl );

@@ -208,6 +208,7 @@
 		<form-bean name="eFormHtmlUpload" type="oscar.eform.upload.HtmlUploadForm" />
 		<form-bean name="eFormEdit" type="oscar.eform.data.HtmlEditForm" />
 		<form-bean name="eFormImageUpload" type="oscar.eform.upload.ImageUploadForm" />
+		<form-bean name="eFormAttachmentForm" type="oscar.eform.upload.EFormAttachmentForm" />
 		<form-bean name="addGroup" type="oscar.eform.data.AddGroupForm" />
 		<form-bean name="addToGroup" type="oscar.eform.data.AddToGroupForm" />
 		<form-bean name="billingReceivePaymentActionForm" type="oscar.oscarBilling.ca.bc.pageUtil.BillingReceivePaymentActionForm" />
@@ -1696,6 +1697,9 @@
 			<forward name="success" path="/eform/efmpatientformlistdeleted.jsp" />
 			<forward name="independent" path="/eform/efmmanageindependentdeleted.jsp" />
 		</action>
+		<action input="/eform/eformupload.jsp" name="eFormAttachmentForm" path="/eform/eFormAttachmentForm" scope="request" type="oscar.eform.upload.UploadEFormAttachmentAction">
+			<forward name="success" path="/eform/eformupload.jsp" />
+		</action>
 		<action input="/eform/efmimagemanager.jsp" name="deleteEFormImage" path="/eform/deleteImage" scope="request" type="oscar.eform.actions.DelImageAction">
 			<forward name="success" path="/eform/efmimagemanager.jsp" />
 		</action>
@@ -1840,7 +1844,7 @@
 		<action input="/report/GenerateLetters.jsp" name="FrmForm" path="/report/DeleteLetter" scope="request" type="oscar.oscarReport.pageUtil.DeletePatientLettersAction">
 			<forward name="success" path="/report/ManageLetters.jsp" />
 		</action>
-		<action input="/oscarPrevention/PreventionReporting.jsp" name="FrmForm" path="/oscarMeasurement/AddShortMeasurement" scope="request" parameter="method" type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctAddShortMeasurementAction">
+		<action input="/oscarPrevention/PreventionReporting.jsp" name="FrmForm" path="/oscarMeasurement/AddShortMeasurement" scope="request" type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctAddShortMeasurementAction">
 			<forward name="success" path="/oscarPrevention/PreventionReporting.jsp" />
 		</action>
 		<action path="/form/RHPrevention" scope="request" name="FrmForm" type="oscar.form.pageUtil.FrmFormRHPreventionAction">
