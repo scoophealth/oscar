@@ -32,11 +32,11 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%
-   Hashtable curform = new Hashtable();
-   Hashtable errors = new Hashtable();
+HashMap<String, Object> curform = new HashMap<String, Object>();
+HashMap<String, Object> errors = new HashMap<String, Object>();
 if (request.getAttribute("submitted") != null) {
-    curform = (Hashtable) request.getAttribute("submitted");
-    errors = (Hashtable) request.getAttribute("errors");
+    curform = (HashMap<String, Object>) request.getAttribute("submitted");
+    errors = (HashMap<String, Object>) request.getAttribute("errors");
 } else if (request.getParameter("fid") != null) {
     String curfid = request.getParameter("fid");
     curform = EFormUtil.loadEForm(curfid);

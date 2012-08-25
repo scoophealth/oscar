@@ -22,7 +22,6 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.common.dao;
 
 import java.util.List;
@@ -33,30 +32,58 @@ import org.oscarehr.common.model.EFormGroup;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class EFormGroupDao extends AbstractDao<EFormGroup>{
-	
+public class EFormGroupDao extends AbstractDao<EFormGroup> {
+
 	public EFormGroupDao() {
 		super(EFormGroup.class);
 	}
+
+	/**
+	 * Deletes groups with the specified name and, optionally, form ID.
+	 * 
+	 * @param groupName
+	 * 		Name of the group to delete
+	 * @param formId
+	 * 		ID of the form for the group to be deleted. In case this value is set to null, only the group name is used for 
+	 * 		deletion selection
+	 * @return
+	 * 		Returns the number of the deleted groups
+	 */
+	public int deleteByNameAndFormId(String groupName, Integer formId) {
+		StringBuilder buf = new StringBuilder("DELETE FROM " + modelClass.getSimpleName() + " g WHERE g.groupName = :groupName");
+		if (formId != null)
+			buf.append(" AND g.formId = :formId");
+		
+		Query query = entityManager.createQuery(buf.toString());
+		query.setParameter("groupName", groupName);
+		if (formId != null)
+			query.setParameter("formId", formId);
+		
+		return query.executeUpdate();
+	}
 	
+	public int deleteByName(String groupName) {
+		return deleteByNameAndFormId(groupName, null);
+	}
+
 	public List<EFormGroup> getByGroupName(String groupName) {
 		String sql = "select eg from EFormGroup eg where eg.groupName=?";
 		Query query = entityManager.createQuery(sql);
-		query.setParameter(1,groupName);
-		
+		query.setParameter(1, groupName);
+
 		@SuppressWarnings("unchecked")
 		List<EFormGroup> results = query.getResultList();
-		
+
 		return results;
 	}
-	
+
 	public List<String> getGroupNames() {
 		String sql = "select distinct eg.groupName from EFormGroup eg";
 		Query query = entityManager.createQuery(sql);
-		
+
 		@SuppressWarnings("unchecked")
 		List<String> results = query.getResultList();
-		
+
 		return results;
 	}
 
