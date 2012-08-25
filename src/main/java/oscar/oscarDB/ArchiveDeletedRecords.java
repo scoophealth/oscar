@@ -26,12 +26,13 @@
 package oscar.oscarDB;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.jdom.Document;
 import org.jdom.output.XMLOutputter;
+import org.oscarehr.common.dao.TableModificationDao;
+import org.oscarehr.common.model.TableModification;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 /**
  * This class is used to archive deleted or updated rows that won't be used again.
@@ -73,7 +74,10 @@ public class ArchiveDeletedRecords {
        return xmlStr;     
     }
     
-    
+    /**
+     * @deprecated Use JPA for any new persistence operations
+     */
+    @Deprecated
     public int recordRowsToBeDeleted(String sql,String provNo,String table){
         try {
                
@@ -91,23 +95,18 @@ public class ArchiveDeletedRecords {
     }
     
     private void addRowsToModifiedTable(String demoNo,String provNo,String modType,String table,String rowId,String resultSet){
-        try {
-               
-            String insertSql = "insert into table_modification (demographic_no,provider_no,modification_type,table_name,row_id,resultSet,modification_date) " +
-                               " values ('"+StringEscapeUtils.escapeSql(demoNo)+"', " +
-                               " '"+StringEscapeUtils.escapeSql(provNo)+"', " +
-                               " '"+StringEscapeUtils.escapeSql(modType)+"', " +
-                               " '"+StringEscapeUtils.escapeSql(table)+"', " +
-                               " '"+StringEscapeUtils.escapeSql(rowId)+"', " +
-                               " '"+StringEscapeUtils.escapeSql(resultSet)+"', " +                               
-                               "  now()" +
-                               ")";            
-            MiscUtils.getLogger().debug(insertSql);
-            DBHandler.RunSQL(insertSql);
-        }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-        }        
+    	TableModification tm = new TableModification();
+    	tm.setDemographicNo(Integer.parseInt(demoNo));
+    	tm.setProviderNo(provNo);
+    	tm.setModificationType(modType);
+    	tm.setTableName(table);
+    	tm.setRowId(rowId);
+    	tm.setResultSet(resultSet);
+    	
+    	TableModificationDao dao = SpringUtils.getBean(TableModificationDao.class);
+    	dao.persist(tm);
+    	
+    	MiscUtils.getLogger().debug("Added rows to modified table: " + tm);
     }
     
 }
