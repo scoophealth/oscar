@@ -26,6 +26,7 @@ package org.oscarehr.provider.web;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
@@ -1354,11 +1355,11 @@ public class ProviderPropertyAction extends DispatchAction {
         }
 
         frm.set("dateProperty", prop);
-        ArrayList<Hashtable<String,String>> groups = EFormUtil.getEFormGroups();
+        ArrayList<HashMap<String,String>> groups = EFormUtil.getEFormGroups();
         ArrayList<LabelValueBean> groupList = new ArrayList<LabelValueBean>();
         String name;
         groupList.add(new LabelValueBean("None",""));
-         for (Hashtable<String,String> h: groups ){
+         for (HashMap<String,String> h: groups ){
              name = h.get("groupName");
              groupList.add(new LabelValueBean(name,name));
          }
