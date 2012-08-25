@@ -26,8 +26,9 @@ package oscar.form.pageUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 
@@ -47,7 +48,10 @@ import org.apache.struts.action.ActionMessages;
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcException;
 import org.oscarehr.common.dao.EncounterFormDao;
+import org.oscarehr.common.dao.MeasurementDao;
+import org.oscarehr.common.dao.MeasurementDao.SearchCriteria;
 import org.oscarehr.common.model.EncounterForm;
+import org.oscarehr.common.model.Measurement;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -55,7 +59,6 @@ import oscar.OscarProperties;
 import oscar.form.FrmRecordHelp;
 import oscar.form.data.FrmData;
 import oscar.form.util.FrmToXMLUtil;
-import oscar.oscarDB.DBHandler;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBean;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctValidationsBean;
@@ -81,9 +84,7 @@ public class FrmFormAction extends Action {
      * Add the form description to encounterForm table of the database
      **/
 
-
     private String _dateFormat = "yyyy/MM/dd";
-
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException{
@@ -101,16 +102,15 @@ public class FrmFormAction extends Action {
 
         String formName = (String) frm.getValue("formName");
         logger.debug("formNme Top "+formName);
-        String formId = (String) frm.getValue("formId");
+        
         String dateEntered = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat);
-        String timeStamp = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyy-MM-dd hh:mm:ss");
         //String visitCod = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyyMMdd");
         String today = UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyy-MM-dd");
 
         logger.debug("current mem 2 "+currentMem());
 
         Properties props = new Properties();
-        EctFormProp formProp = EctFormProp.getInstance();
+        
         Vector measurementTypes = EctFormProp.getMeasurementTypes();
         logger.debug("num measurements "+measurementTypes.size());
         String demographicNo = null;
@@ -279,7 +279,6 @@ public class FrmFormAction extends Action {
 
         logger.debug("submit value: " + submit);
         if(submit.equalsIgnoreCase("exit")){
-            String toEChart = "[" + timeStamp + ".: Vascular Tracker] \n\n" ;
             request.setAttribute("diagnosisVT", "See Vascular Tracker Template");
             return (new ActionForward("/form/formSaveAndExit.jsp"));
         }
@@ -367,34 +366,39 @@ public class FrmFormAction extends Action {
 
     private boolean write2MeasurementTable(String demographicNo, String providerNo,
                                         EctMeasurementTypesBean mt, String inputValue,
-                                        String dateObserved, String comments){
+                                        String dateObservedString, String comments){
         boolean newDataAdded = false;
+		if (!GenericValidator.isBlankOrNull(inputValue)) {
+			SearchCriteria criteria = new SearchCriteria();
+			criteria.setDemographicNo(demographicNo);
+			criteria.setType(mt.getType());
+			criteria.setDataField(inputValue);
+			criteria.setMeasuringInstrc(mt.getMeasuringInstrc());
+			criteria.setComments(comments);
+			
+			Date dateObserved = UtilDateUtilities.StringToDate(dateObservedString,"yyyy-MM-dd");
+			criteria.setDateObserved(dateObserved);
 
-        try{
+			//Find if the same data has already been entered into the system
+			MeasurementDao dao = SpringUtils.getBean(MeasurementDao.class);
+			List<Measurement> measurements = dao.find(criteria);
 
-            org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
-            if(!GenericValidator.isBlankOrNull(inputValue)){
-                //Find if the same data has already been entered into the system
-                String sql = "SELECT * FROM measurements WHERE demographicNo='"+demographicNo
-                            + "' AND type='" + mt.getType() + "' AND dataField='"+inputValue
-                            + "' AND measuringInstruction='" + mt.getMeasuringInstrc() + "' AND comments='" + comments
-                            + "' AND dateObserved='" + dateObserved + "'";
-                ResultSet rs = DBHandler.GetSQL(sql);
-                if(!rs.next()){
-                    newDataAdded = true;
-                    //Write to the Dababase if all input values are valid
-                    sql = "INSERT INTO measurements"
-                            +"(type, demographicNo, providerNo, dataField, measuringInstruction, comments, dateObserved, dateEntered)"
-                            +" VALUES ('"+mt.getType()+"','"+demographicNo+"','"+providerNo+"','"+inputValue+"','"
-                            + mt.getMeasuringInstrc() +"','"+comments+"','"+dateObserved+"', now())";
-                    DBHandler.RunSQL(sql);
-                }
-                rs.close();
-            }
-        }
-        catch(SQLException e){
-            logger.error("Error", e);
-        }
+			if (measurements.isEmpty()) {
+				newDataAdded = true;
+
+				Measurement measurement = new Measurement();
+				measurement.setType(mt.getType());
+				measurement.setDemographicId(Integer.parseInt(demographicNo));
+				measurement.setProviderNo(providerNo);
+				measurement.setDataField(inputValue);
+				measurement.setMeasuringInstruction(mt.getMeasuringInstrc());
+				measurement.setComments(comments);
+				measurement.setDateObserved(dateObserved);
+
+				dao.persist(measurement);
+			}
+		}
+        
         return newDataAdded;
     }
 
