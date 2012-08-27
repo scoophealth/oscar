@@ -540,7 +540,7 @@
 			<form-property name="episode" type="org.oscarehr.common.model.Episode"/>
 		</form-bean>
                 <form-bean name="groupPreference" type="org.apache.struts.action.DynaActionForm"/>
-		</form-bean>                
+		                
                 <form-bean name="billing3rdPartyPayment" type="org.apache.struts.validator.DynaValidatorForm"/>
                 <form-bean name="applyPractitionerPremium" type="org.apache.struts.validator.DynaValidatorForm"> 
                 </form-bean>
