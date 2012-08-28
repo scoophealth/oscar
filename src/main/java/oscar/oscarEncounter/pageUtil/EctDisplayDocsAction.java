@@ -159,7 +159,7 @@ public class EctDisplayDocsAction extends EctDisplayAction {
     				url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/mod/docmgmtComp/FillARForm.do?method=showInboxDocDetails&path=" + path + "&demoNo=" + bean.demographicNo + "&name=" + StringEscapeUtils.escapeJavaScript(dispFilename) + "'); return false;";
     				isURLjavaScript = true;
     			}
-    			else if( curDoc.isPDF() ) {
+    			else if( curDoc.getRemoteFacilityId()==null && curDoc.isPDF() ) {
     				url = request.getContextPath() + "/dms/MultiPageDocDisplay.jsp?segmentID=" + dispDocNo + "&providerNo=" + user + "&searchProviderNo=" + user + "&status=A&demoName=" + StringEscapeUtils.escapeJavaScript(bean.getPatientLastName()) + ", " + StringEscapeUtils.escapeJavaScript(bean.getPatientFirstName());
     			}
     			else {
