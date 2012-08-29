@@ -76,4 +76,46 @@ public class CtlBillingServiceDao extends AbstractDao<CtlBillingService> {
             
             return results;
         }
+
+		/**
+		 * Gets all service type names and service types from the {@link CtlBillingService} instances.
+		 */
+		@SuppressWarnings("unchecked")
+        public List<Object[]> getAllServiceTypes() {
+			Query query = entityManager.createQuery("SELECT bs.serviceTypeName, bs.serviceType FROM " + modelClass.getSimpleName() + " bs GROUP BY bs.serviceType, bs.serviceTypeName"); 
+	        return query.getResultList();
+        }
+
+		/**
+		 * Gets all {@link CtlBillingService} instance with the specified service group
+		 * 
+		 * @param serviceGroup
+		 * 		Service group to ge services for
+		 * @return
+		 * 		Returns all persistent services found
+		 */		
+        public List<CtlBillingService> findByServiceGroup(String serviceGroup) {
+			return findByServiceGroupAndServiceType(serviceGroup, null);
+		}
+		
+		/**
+		 * Gets all {@link CtlBillingService} instance with the specified service group
+		 * 
+		 * @param serviceGroup
+		 * 		Service group to ge services for
+		 * @return
+		 * 		Returns all persistent services found
+		 */
+		@SuppressWarnings("unchecked")
+        public List<CtlBillingService> findByServiceGroupAndServiceType(String serviceGroup, String serviceType) {
+			StringBuilder buf = new StringBuilder("FROM " + modelClass.getSimpleName() + " bs WHERE bs.serviceGroup = :serviceGroup");
+			boolean isServiceTypeSpecified = serviceType != null; 
+			if (isServiceTypeSpecified)
+				buf.append(" AND bs.serviceType = :serviceType");
+			Query query = entityManager.createQuery(buf.toString());
+			query.setParameter("serviceGroup", serviceGroup);
+			if (isServiceTypeSpecified)
+				query.setParameter("serviceType", serviceType);
+	        return query.getResultList();
+        }
 }

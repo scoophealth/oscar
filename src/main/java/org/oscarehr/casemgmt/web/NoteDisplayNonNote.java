@@ -89,7 +89,7 @@ public class NoteDisplayNonNote implements NoteDisplay {
 		Calendar cal2 = Calendar.getInstance();
 		date = null;
 		Date billDate = null;
-                
+
                     billDate = h1.getBillingDate();   
                     if(  billDate != null ) {
 			cal1.setTime(h1.getBillingDate());
@@ -104,7 +104,6 @@ public class NoteDisplayNonNote implements NoteDisplay {
 			date = cal1.getTime();
                     }                    
                 
-		
 		StringBuilder tmpNote = new StringBuilder();
                 BillingONService billingONService = (BillingONService) SpringUtils.getBean("billingONService");
 		List<BillingONItem>items = billingONService.getNonDeletedInvoices(h1.getId());

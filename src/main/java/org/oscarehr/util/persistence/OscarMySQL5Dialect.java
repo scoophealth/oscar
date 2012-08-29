@@ -21,38 +21,23 @@
  * Hamilton
  * Ontario, Canada
  */
+package org.oscarehr.util.persistence;
 
-package oscar.oscarBilling.ca.bc.data;
+import java.sql.Types;
 
-public class InjuryLocation {
-	private String sidetype;
-	private String sidedesc;
+import org.hibernate.Hibernate;
+import org.hibernate.dialect.MySQL5Dialect;
 
-	public InjuryLocation(Object[] o) {
-		this(String.valueOf(o[0]), String.valueOf(o[1]));
+/**
+ * Customized dialect that adds a mapping for {@link Types#LONGVARBINARY} in order to prevent {@link org.hibernate.MappingException}. 
+ *
+ */
+public class OscarMySQL5Dialect extends MySQL5Dialect {
+
+	public OscarMySQL5Dialect() {
+		super();
+		registerHibernateType(Types.LONGVARBINARY, Hibernate.BINARY.getName());
+		registerHibernateType(Types.LONGVARCHAR, Hibernate.CHARACTER.getName());
 	}
 
-	public InjuryLocation(String type, String description) {
-		this.sidetype = type;
-		this.sidedesc = description;
-	}
-
-	public InjuryLocation() {
-	}
-
-	public void setSidetype(String sidetype) {
-		this.sidetype = sidetype;
-	}
-
-	public void setSidedesc(String sidedesc) {
-		this.sidedesc = sidedesc;
-	}
-
-	public String getSidetype() {
-		return sidetype;
-	}
-
-	public String getSidedesc() {
-		return sidedesc;
-	}
 }
