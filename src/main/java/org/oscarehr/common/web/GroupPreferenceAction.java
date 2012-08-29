@@ -24,23 +24,24 @@
 
 package org.oscarehr.common.web;
 
-import java.io.IOException;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
-import org.oscarehr.util.SpringUtils;
-import org.oscarehr.common.model.MyGroup;
 import org.oscarehr.common.dao.MyGroupDao;
+import org.oscarehr.common.model.MyGroup;
+import org.oscarehr.util.SpringUtils;
 /**
  *
  * @author mweston4
  */
 public class GroupPreferenceAction extends DispatchAction {
-    public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         
         MyGroupDao myGroupDao = (MyGroupDao) SpringUtils.getBean("myGroupDao");
         
@@ -67,7 +68,7 @@ public class GroupPreferenceAction extends DispatchAction {
         return  mapping.findForward("saved");
     }
     
-    public ActionForward setDefaultBillingForm(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public ActionForward setDefaultBillingForm(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
         
         return mapping.findForward("changedForm");
     }
