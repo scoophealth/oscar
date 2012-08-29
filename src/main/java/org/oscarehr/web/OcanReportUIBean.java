@@ -427,7 +427,14 @@ public class OcanReportUIBean implements CallbackHandler {
 		for(OCANv2SubmissionRecord submissionRecord:submissionRecords) {
 
 			String assessmentId = submissionRecord.getAssessmentID();
-			OcanStaffForm staffForm = ocanStaffFormDao.findLatestByAssessmentId(LoggedInInfo.loggedInInfo.get().currentFacility.getId(),Integer.parseInt(assessmentId));
+
+			String assessmentId_noPrefix = assessmentId;
+			String idPrefix = OscarProperties.getInstance().getProperty("ocan.iar.idPrefix");
+			if(!StringUtils.isBlank(idPrefix)) {
+				assessmentId_noPrefix = assessmentId.replace(idPrefix,"");
+			}
+			
+			OcanStaffForm staffForm = ocanStaffFormDao.findLatestByAssessmentId(LoggedInInfo.loggedInInfo.get().currentFacility.getId(),Integer.parseInt(assessmentId_noPrefix));
 
 			ConsentDirective cd = cs.addNewConsentDirective();
 			cd.setId(assessmentId);
@@ -538,7 +545,13 @@ public class OcanReportUIBean implements CallbackHandler {
 				String id = subRec.getAssessmentID();
 				//OcanStaffForm staffForm = ocanStaffFormDao.find(Integer.parseInt(id));
 				// assessment ID is not form ID.
-				OcanStaffForm staffForm = ocanStaffFormDao.findLatestByAssessmentId(LoggedInInfo.loggedInInfo.get().currentFacility.getId(), Integer.valueOf(id));
+				String assessmentId_noPrefix = id;
+				String idPrefix = OscarProperties.getInstance().getProperty("ocan.iar.idPrefix");
+				if(!StringUtils.isBlank(idPrefix)) {
+					assessmentId_noPrefix = id.replace(idPrefix,"");
+				}
+				
+				OcanStaffForm staffForm = ocanStaffFormDao.findLatestByAssessmentId(LoggedInInfo.loggedInInfo.get().currentFacility.getId(), Integer.valueOf(assessmentId_noPrefix));
 
 				staffForm.setSubmissionId(log.getId());
 				ocanStaffFormDao.merge(staffForm);
@@ -670,7 +683,12 @@ public class OcanReportUIBean implements CallbackHandler {
 				String id = subRec.getAssessmentID();
 				//OcanStaffForm staffForm = ocanStaffFormDao.find(Integer.parseInt(id));
 				// attention: assessment ID is not form ID.
-				OcanStaffForm staffForm = ocanStaffFormDao.findLatestByAssessmentId(LoggedInInfo.loggedInInfo.get().currentFacility.getId(), Integer.valueOf(id));
+				String assessmentId_noPrefix = id;
+				String idPrefix = OscarProperties.getInstance().getProperty("ocan.iar.idPrefix");
+				if(!StringUtils.isBlank(idPrefix)) {
+					assessmentId_noPrefix = id.replace(idPrefix,"");
+				}
+				OcanStaffForm staffForm = ocanStaffFormDao.findLatestByAssessmentId(LoggedInInfo.loggedInInfo.get().currentFacility.getId(), Integer.valueOf(assessmentId_noPrefix));
 
 				staffForm.setSubmissionId(log.getId());
 				ocanStaffFormDao.merge(staffForm);
@@ -806,7 +824,21 @@ public class OcanReportUIBean implements CallbackHandler {
 		OCANv2SubmissionRecord ocanSubmissionRecord = OCANv2SubmissionRecord.Factory.newInstance();
 
 		ocanSubmissionRecord.setOCANType(OCANv2SubmissionRecord.OCANType.Enum.forString(ocanStaffForm.getOcanType()));
-		ocanSubmissionRecord.setAssessmentID(String.valueOf(ocanStaffForm.getAssessmentId()));
+
+		//ocanSubmissionRecord.setAssessmentID(String.valueOf(ocanStaffForm.getAssessmentId()));
+		//If the IAR submission is being done by two organizations to CCIM under the organization ID of one of the organizations. 
+		//They don't want clients to accidentally have the same ID from the two organizations. 
+		//So they want to add the prefix "TWC" to the ID's of one of The Working Centre submission.
+		//The prefix should be stored in the oscar property file so that in the future other organizations can change that property and do a similar thing if needed,
+		String idPrefix = OscarProperties.getInstance().getProperty("ocan.iar.idPrefix");
+		if(StringUtils.isBlank(idPrefix)) {
+			ocanSubmissionRecord.setAssessmentID(String.valueOf(ocanStaffForm.getAssessmentId()));
+		}
+		else {
+			idPrefix = idPrefix.concat(String.valueOf(ocanStaffForm.getAssessmentId()));
+			ocanSubmissionRecord.setAssessmentID(idPrefix);
+		}
+			
 		ocanSubmissionRecord.setAssessmentRevision("1");
 
 		ocanSubmissionRecord.setStartDate(convertToOcanXmlDate(OcanForm.getAssessmentStartDate(ocanStaffForm.getStartDate(),ocanStaffForm.getClientStartDate())));
@@ -1761,7 +1793,14 @@ public class OcanReportUIBean implements CallbackHandler {
 
 	public static ClientID convertClientID(OcanStaffForm ocanStaffForm, List<OcanStaffFormData> ocanStaffFormData) {
 		ClientID clientId = ClientID.Factory.newInstance();
-		clientId.setOrgClientID(String.valueOf(ocanStaffForm.getClientId()));
+		String idPrefix = OscarProperties.getInstance().getProperty("ocan.iar.idPrefix");
+		if(StringUtils.isBlank(idPrefix)) {
+			clientId.setOrgClientID(String.valueOf(ocanStaffForm.getClientId()));
+		}
+		else {
+			idPrefix = idPrefix.concat(String.valueOf(ocanStaffForm.getClientId()));
+			clientId.setOrgClientID(idPrefix);
+		}
 		return clientId;
 	}
 
