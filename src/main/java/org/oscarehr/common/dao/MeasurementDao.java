@@ -39,7 +39,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 	}
 
 	public List<Measurement> findByDemographicIdUpdatedAfterDate(Integer demographicId, Date updatedAfterThisDate) {
-		
+
 		// using create date since this object is not updateable
 		String sqlCommand = "select x from Measurement x where x.demographicId=?1 and x.createDate>?2";
 
@@ -52,11 +52,11 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 
 		return (results);
 	}
-	
+
 	public List<Measurement> findMatching(Measurement measurement) {
-		
+
 		String sqlCommand = "select x from Measurement x where x.demographicId=?1 and x.dataField=?2 and x.measuringInstruction=?3 and x.comments=?4 and x.dateObserved=?5 and x.type=?6";
-		
+
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, measurement.getDemographicId());
 		query.setParameter(2, measurement.getDataField());
@@ -64,137 +64,152 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		query.setParameter(4, measurement.getComments());
 		query.setParameter(5, measurement.getDateObserved());
 		query.setParameter(6, measurement.getType());
-		
+
 		@SuppressWarnings("unchecked")
 		List<Measurement> results = query.getResultList();
-		
+
 		return results;
 	}
-	
+
 	public List<Measurement> findByType(Integer demographicId, String type) {
 		String sqlCommand = "select x from Measurement x where x.demographicId = ?1 and x.type = ?2 order by x.dateObserved desc";
-		
+
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, demographicId);
 		query.setParameter(2, type);
-		
+
 		@SuppressWarnings("unchecked")
 		List<Measurement> results = query.getResultList();
-		
+
 		return results;
 	}
-	
-	 public List<Measurement> findByDemographicIdObservedDate( Integer demographicId, Date startDate, Date endDate) {
-                String sqlCommand =  "select x from Measurement x where x.demographicId=? and x.type!='' and x.dateObserved >? and x.dateObserved <? order by x.dateObserved desc";
-                Query query = entityManager.createQuery(sqlCommand);
-                query.setParameter(1, demographicId);
-                query.setParameter(2, startDate);
-                query.setParameter(3, endDate);
 
-                @SuppressWarnings("unchecked")
-                List<Measurement> results = query.getResultList();
+	public List<Measurement> findByDemographicIdObservedDate(Integer demographicId, Date startDate, Date endDate) {
+		String sqlCommand = "select x from Measurement x where x.demographicId=? and x.type!='' and x.dateObserved >? and x.dateObserved <? order by x.dateObserved desc";
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, demographicId);
+		query.setParameter(2, startDate);
+		query.setParameter(3, endDate);
 
-                return (results);
-        }
+		@SuppressWarnings("unchecked")
+		List<Measurement> results = query.getResultList();
 
-        public List<Measurement> findByDemographicId( Integer demographicId) {
-                String sqlCommand =  "select x from Measurement x where x.demographicId=? and x.type!='' order by x.dateObserved desc";
-                Query query = entityManager.createQuery(sqlCommand);
-                query.setParameter(1, demographicId);
+		return (results);
+	}
 
-                @SuppressWarnings("unchecked")
-                List<Measurement> results = query.getResultList();
+	public List<Measurement> findByDemographicId(Integer demographicId) {
+		String sqlCommand = "select x from Measurement x where x.demographicId=? and x.type!='' order by x.dateObserved desc";
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, demographicId);
 
-                return (results);
-        }
-	
-    	/**
-    	 * Finds be
-    	 * 
-    	 * @param criteria
-    	 * @return
-    	 */
-    	@SuppressWarnings("unchecked")
-        public List<Measurement> find(SearchCriteria criteria){
-    		Query query = entityManager.createQuery(
-    				"FROM Measurements m WHERE m.demographicNo = :demographicNo " +
-    				"AND m.type= :type " +
-    				"AND m.dataField = :dataField " +
-    				"AND m.measuringInstruction = :measuringInstrc " +
-    				"AND m.comments = :comments " +
-    				"AND m.dateObserved = :dateObserved");
-			query.setParameter("demographicNo", criteria.getDemographicNo());
-    		query.setParameter("type", criteria.getType());
-			query.setParameter("dataField", criteria.getDataField());
-			query.setParameter("measuringInstrc", criteria.getMeasuringInstrc());
-			query.setParameter("comments", criteria.getComments());
-			query.setParameter("dateObserved",  criteria.getDateObserved());
-    		return query.getResultList();
-    	}
-    	
-		/**
-		 * Criteria for measurement search.
-		 */
-		public static class SearchCriteria {
-	
-			private Integer demographicNo;
-			private String type;
-			private String dataField;
-			private String measuringInstrc;
-			private String comments;
-			private Date dateObserved;
-	
-			public Integer getDemographicNo() {
-				return demographicNo;
-			}
-	
-			public void setDemographicNo(String demographicNo) {
-				setDemographicNo(Integer.parseInt(demographicNo));
-			}
-			
-			public void setDemographicNo(Integer demographicNo) {
-				this.demographicNo = demographicNo;
-			}
-	
-			public String getType() {
-				return type;
-			}
-	
-			public void setType(String type) {
-				this.type = type;
-			}
-	
-			public String getDataField() {
-				return dataField;
-			}
-	
-			public void setDataField(String dataField) {
-				this.dataField = dataField;
-			}
-	
-			public String getMeasuringInstrc() {
-				return measuringInstrc;
-			}
-	
-			public void setMeasuringInstrc(String measuringInstrc) {
-				this.measuringInstrc = measuringInstrc;
-			}
-	
-			public String getComments() {
-				return comments;
-			}
-	
-			public void setComments(String comments) {
-				this.comments = comments;
-			}
-	
-			public Date getDateObserved() {
-				return dateObserved;
-			}
-	
-			public void setDateObserved(Date dateObserved) {
-				this.dateObserved = dateObserved;
-			}
+		@SuppressWarnings("unchecked")
+		List<Measurement> results = query.getResultList();
+
+		return (results);
+	}
+
+	/**
+	 * Finds be
+	 * 
+	 * @param criteria
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Measurement> find(SearchCriteria criteria) {
+		Query query = entityManager.createQuery("FROM Measurements m WHERE m.demographicNo = :demographicNo " + "AND m.type= :type " + "AND m.dataField = :dataField " + "AND m.measuringInstruction = :measuringInstrc " + "AND m.comments = :comments " + "AND m.dateObserved = :dateObserved");
+		query.setParameter("demographicNo", criteria.getDemographicNo());
+		query.setParameter("type", criteria.getType());
+		query.setParameter("dataField", criteria.getDataField());
+		query.setParameter("measuringInstrc", criteria.getMeasuringInstrc());
+		query.setParameter("comments", criteria.getComments());
+		query.setParameter("dateObserved", criteria.getDateObserved());
+		return query.getResultList();
+	}
+
+	/**
+	 * Criteria for measurement search.
+	 */
+	public static class SearchCriteria {
+
+		private Integer demographicNo;
+		private String type;
+		private String dataField;
+		private String measuringInstrc;
+		private String comments;
+		private Date dateObserved;
+
+		public Integer getDemographicNo() {
+			return demographicNo;
 		}
 
+		public void setDemographicNo(String demographicNo) {
+			setDemographicNo(Integer.parseInt(demographicNo));
+		}
+
+		public void setDemographicNo(Integer demographicNo) {
+			this.demographicNo = demographicNo;
+		}
+
+		public String getType() {
+			return type;
+		}
+
+		public void setType(String type) {
+			this.type = type;
+		}
+
+		public String getDataField() {
+			return dataField;
+		}
+
+		public void setDataField(String dataField) {
+			this.dataField = dataField;
+		}
+
+		public String getMeasuringInstrc() {
+			return measuringInstrc;
+		}
+
+		public void setMeasuringInstrc(String measuringInstrc) {
+			this.measuringInstrc = measuringInstrc;
+		}
+
+		public String getComments() {
+			return comments;
+		}
+
+		public void setComments(String comments) {
+			this.comments = comments;
+		}
+
+		public Date getDateObserved() {
+			return dateObserved;
+		}
+
+		public void setDateObserved(Date dateObserved) {
+			this.dateObserved = dateObserved;
+		}
+	}
+
+	/**
+	 * Looks up measurement information based on the demographic id, type and instructions.
+	 * 
+	 * @param demographicId
+	 * 		ID of the demographic record
+	 * @param type
+	 * 		Type of the measurement
+	 * @param instructions
+	 * 		Measurement instructions
+	 * @return
+	 * 		Returns the measurements found
+	 */
+	@SuppressWarnings("unchecked")
+    public List<Measurement> findByIdTypeAndInstruction(Integer demographicId, String type, String instructions) {
+		Query query = entityManager.createQuery("FROM " + modelClass.getSimpleName() + " m WHERE m.demographicId = :demographicNo " + "AND m.type = :type " + "AND m.measuringInstruction = :measuringInstruction ORDER BY m.createDate DESC");
+		query.setParameter("demographicNo", demographicId);
+		query.setParameter("type", type);
+		query.setParameter("measuringInstruction", instructions);
+		query.setMaxResults(1);
+		return query.getResultList();
+	}
 }
