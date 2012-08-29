@@ -87,6 +87,7 @@ public abstract class AbstractDao<T extends AbstractModel<?>> {
 		List<T> results = query.getResultList();
 		if (results.size() == 1) return (results.get(0));
 		else if (results.size() == 0) return (null);
+		// this should never happen if we set max results to 1 :)
 		else throw (new NonUniqueResultException("SingleResult requested but result was not unique : " + results.size()));
 	}
 

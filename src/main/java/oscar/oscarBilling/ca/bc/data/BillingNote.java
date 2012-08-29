@@ -22,7 +22,6 @@
  * Ontario, Canada
  */
 
-
 /*
  * BillingNote.java
  *
@@ -31,14 +30,15 @@
 
 package oscar.oscarBilling.ca.bc.data;
 
+import java.util.Date;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.billing.CA.BC.dao.BillingNoteDao;
+import org.oscarehr.billing.CA.BC.model.BillingNotes;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.Misc;
-import oscar.oscarDB.DBHandler;
+import oscar.entities.Billingmaster;
+import oscar.util.ConversionUtils;
 import oscar.util.UtilMisc;
 
 /**
@@ -56,211 +56,169 @@ import oscar.util.UtilMisc;
  */
 public class BillingNote {
 
-   /** Creates a new instance of BillingNote */
-   public BillingNote() {
-   }
+	/** Creates a new instance of BillingNote */
+	public BillingNote() {
+	}
 
-   //
-   public boolean hasNote(String billingmaster_no){
-      boolean hasNote = false;
-      String notesql = "select * from billingnote where billingmaster_no = '"+billingmaster_no+"' and note_type = '2'";
-      try{
+	//
+	public boolean hasNote(String billingmaster_no) {
+		BillingNoteDao dao = SpringUtils.getBean(BillingNoteDao.class);
+		return !dao.findNotes(ConversionUtils.fromIntString(billingmaster_no), 2).isEmpty();
+	}
 
-         ResultSet rs = DBHandler.GetSQL(notesql);
-         if(rs.next()){
-            hasNote = true;
-         }
-         rs.close();
-      }catch (Exception e){
-         MiscUtils.getLogger().error("Error", e);
-      }
-      return hasNote;
-   }
+	public void addNote(String billingmaster_no, String provider_no, String note) {
+		note = oscar.Misc.removeNewLine(note);
 
+		BillingNotes n = new BillingNotes();
+		n.setBillingmasterNo(ConversionUtils.fromIntString(billingmaster_no));
+		n.setProviderNo(provider_no);
+		n.setCreatedate(new Date());
+		n.setNote(UtilMisc.mysqlEscape(note));
+		n.setNoteType(BillingNotes.DEFAULT_NOTE_TYPE);
 
+		BillingNoteDao dao = SpringUtils.getBean(BillingNoteDao.class);
+		dao.persist(n);
+	}
 
-public void addNote(String billingmaster_no,String provider_no,String note) throws SQLException{
+	public void addNoteFromBillingNo(String billingNo, String provider, String note) {
+		BillingmasterDAO dao = SpringUtils.getBean(BillingmasterDAO.class);
+		Billingmaster bm = dao.getBillingmaster(billingNo);
+		if (bm != null) addNote(String.valueOf(bm.getBillingmasterNo()), provider, oscar.Misc.removeNewLine(note));
+	}
 
-      note = oscar.Misc.removeNewLine(note);
-      String  notesql = "insert into billingnote (billingmaster_no,provider_no,createdate,note,note_type) values ( " +
-                        "'"+billingmaster_no+"'," +
-                        "'"+provider_no+"'," +
-                        "now()," +
-                        "'"+UtilMisc.mysqlEscape(note)+"'," +
-                        "'2')";
+	/**
+	 *
+	 * @param billingmaster_no billingmaster_no from billingmaster table to get the full note class
+	 * @return Returns a Note Class
+	 */
+	public Note getFullNote(String billingmaster_no) {
+		BillingNoteDao dao = SpringUtils.getBean(BillingNoteDao.class);
+		BillingNotes notes = dao.findSingleNote(ConversionUtils.fromIntString(billingmaster_no), BillingNotes.DEFAULT_NOTE_TYPE);
+		Note result = (notes != null) ? new Note(notes) : new Note();
+		return result;
+	}
 
+	public String getNote(String billingmaster_no) {
+		BillingNoteDao dao = SpringUtils.getBean(BillingNoteDao.class);
+		BillingNotes notes = dao.findSingleNote(ConversionUtils.fromIntString(billingmaster_no), BillingNotes.DEFAULT_NOTE_TYPE);
+		if (notes == null) return "";
+		return notes.getNote();
+	}
 
-      DBHandler.RunSQL(notesql);
-   }
+	/*
+	First - REC-CODE-IN (3) must be 'N01'
+	Second - DATA-CENTRE-NUM (5)
+	Third - DATA-CENTRE-SEQNUM (7)
+	Fourth - PAYEE-NUM (5)
+	Fifth - PRACTITIONER-NUM (5)
+	Sixth - NOTE-DATA-TYPE (1)
+	Seventh - NOTE-DATA-LINE (400)
+	*/
+	public static String getN01(String dataCenterNum, String dataCenterSeqNum, String payeeNum, String practitionerNum, String noteType, String note) {
+		String s = "N01" + Misc.forwardZero(dataCenterNum, 5) + Misc.forwardZero(dataCenterSeqNum, 7) + Misc.forwardZero(payeeNum, 5) + Misc.forwardZero(practitionerNum, 5) + Misc.forwardSpace(noteType, 1) + Misc.forwardSpace(note, 400);
+		return s;
+	}
 
-public void addNoteFromBillingNo(String billingNo, String provider,String note){
-   note = oscar.Misc.removeNewLine(note);
-   String sql = "select billingmaster_no from billingmaster where billing_no = '"+billingNo+"' ";
-      try{
+	class Note {
 
-         ResultSet rs = DBHandler.GetSQL(sql);
-         while(rs.next()){
-            String billingMasterNo =  rs.getString("billingmaster_no");
-            addNote(billingMasterNo,provider,note);
-         }
-         rs.close();
-      }catch (Exception e){
-         MiscUtils.getLogger().error("Error", e);
-      }
+		String billingnote_no = null;
+		String billingmaster_no = null;
+		String createdate = null;
+		String provider_no = null;
+		String note = null;
 
-}
+		public Note() {
 
-   /**
-    *
-    * @param billingmaster_no billingmaster_no from billingmaster table to get the full note class
-    * @return Returns a Note Class
-    */
-   public Note getFullNote(String billingmaster_no){
-      Note n = new Note();
-      String notesql = "select * from billingnote where billingmaster_no = '"+billingmaster_no+"' and note_type = '2' order by createdate desc limit 1";
-      try{
+		}
 
-      ResultSet rs = DBHandler.GetSQL(notesql);
-      if(rs.next()){
-         n.setBillingnote_no(rs.getString("billingnote_no"));
-         n.setBillingmaster_no(rs.getString("billingmaster_no"));
-         n.setCreatedate(rs.getString("createdate"));
-         n.setProviderNo(rs.getString("provider_no"));
-         n.setNote(rs.getString("note"));
-      }
-      rs.close();
-      }catch (Exception e){
-         MiscUtils.getLogger().error("Error", e);
-      }
-      return n;
-   }
+		public Note(BillingNotes notes) {
+			setBillingnote_no(notes.getId().toString());
+			setBillingmaster_no(String.valueOf(notes.getBillingmasterNo()));
+			setCreatedate(ConversionUtils.toDateString(notes.getCreatedate()));
+			setProviderNo(notes.getProviderNo());
+			setNote(notes.getNote());
+		}
 
-   //TODO make sure this is the latest note
-   public String getNote(String billingmaster_no){
-      String retStr = "";
-      String notesql = "select note from billingnote where billingmaster_no = '"+billingmaster_no+"' and note_type = '2' order by createdate desc limit 1 ";
-      try{
+		/**
+		 * Getter for property billingnote_no.
+		 * @return Value of property billingnote_no.
+		 */
+		public java.lang.String getBillingnote_no() {
+			return billingnote_no;
+		}
 
-         ResultSet rs = DBHandler.GetSQL(notesql);
-         if(rs.next()){
-            retStr = rs.getString("note");
-         }
-         rs.close();
-         }catch (Exception e){
-            MiscUtils.getLogger().error("Error", e);
-         }
-      return retStr;
-   }
+		/**
+		 * Setter for property billingnote_no.
+		 * @param billingnote_no New value of property billingnote_no.
+		 */
+		public void setBillingnote_no(java.lang.String billingnote_no) {
+			this.billingnote_no = billingnote_no;
+		}
 
+		/**
+		 * Getter for property billingmaster_no.
+		 * @return Value of property billingmaster_no.
+		 */
+		public java.lang.String getBillingmaster_no() {
+			return billingmaster_no;
+		}
 
+		/**
+		 * Setter for property billingmaster_no.
+		 * @param billingmaster_no New value of property billingmaster_no.
+		 */
+		public void setBillingmaster_no(java.lang.String billingmaster_no) {
+			this.billingmaster_no = billingmaster_no;
+		}
 
-   /*
-   First - REC-CODE-IN (3) must be 'N01'
-   Second - DATA-CENTRE-NUM (5)
-   Third - DATA-CENTRE-SEQNUM (7)
-   Fourth - PAYEE-NUM (5)
-   Fifth - PRACTITIONER-NUM (5)
-   Sixth - NOTE-DATA-TYPE (1)
-   Seventh - NOTE-DATA-LINE (400)
-   */
-   public static String getN01(String dataCenterNum,String dataCenterSeqNum,String payeeNum,String practitionerNum,String noteType,String note){
-      String s = "N01" + Misc.forwardZero(dataCenterNum,5)
-                       + Misc.forwardZero(dataCenterSeqNum, 7)
-                       + Misc.forwardZero(payeeNum, 5)
-                       + Misc.forwardZero(practitionerNum, 5)
-                       + Misc.forwardSpace(noteType,1)
-                       + Misc.forwardSpace(note,400);
-      return s;
-   }
+		/**
+		 * Getter for property createdate.
+		 * @return Value of property createdate.
+		 */
+		public java.lang.String getCreatedate() {
+			return createdate;
+		}
 
-   class Note{
-      String billingnote_no = null;
-      String billingmaster_no = null;
-      String createdate  = null;
-      String provider_no = null;
-      String note = null ;
+		/**
+		 * Setter for property createdate.
+		 * @param createdate New value of property createdate.
+		 */
+		public void setCreatedate(java.lang.String createdate) {
+			this.createdate = createdate;
+		}
 
-    /**
-     * Getter for property billingnote_no.
-     * @return Value of property billingnote_no.
-     */
-    public java.lang.String getBillingnote_no() {
-       return billingnote_no;
-    }
+		/**
+		 * Getter for property provider_no.
+		 * @return Value of property provider_no.
+		 */
+		public java.lang.String getProviderNo() {
+			return provider_no;
+		}
 
-    /**
-     * Setter for property billingnote_no.
-     * @param billingnote_no New value of property billingnote_no.
-     */
-    public void setBillingnote_no(java.lang.String billingnote_no) {
-       this.billingnote_no = billingnote_no;
-    }
+		/**
+		 * Setter for property provider_no.
+		 * @param provider_no New value of property provider_no.
+		 */
+		public void setProviderNo(java.lang.String provider_no) {
+			this.provider_no = provider_no;
+		}
 
-    /**
-     * Getter for property billingmaster_no.
-     * @return Value of property billingmaster_no.
-     */
-    public java.lang.String getBillingmaster_no() {
-       return billingmaster_no;
-    }
+		/**
+		 * Getter for property note.
+		 * @return Value of property note.
+		 */
+		public java.lang.String getNote() {
+			return note;
+		}
 
-    /**
-     * Setter for property billingmaster_no.
-     * @param billingmaster_no New value of property billingmaster_no.
-     */
-    public void setBillingmaster_no(java.lang.String billingmaster_no) {
-       this.billingmaster_no = billingmaster_no;
-    }
+		/**
+		 * Setter for property note.
+		 * @param note New value of property note.
+		 */
+		public void setNote(java.lang.String note) {
+			this.note = note;
+		}
 
-    /**
-     * Getter for property createdate.
-     * @return Value of property createdate.
-     */
-    public java.lang.String getCreatedate() {
-       return createdate;
-    }
-
-    /**
-     * Setter for property createdate.
-     * @param createdate New value of property createdate.
-     */
-    public void setCreatedate(java.lang.String createdate) {
-       this.createdate = createdate;
-    }
-
-    /**
-     * Getter for property provider_no.
-     * @return Value of property provider_no.
-     */
-    public java.lang.String getProviderNo() {
-       return provider_no;
-    }
-
-    /**
-     * Setter for property provider_no.
-     * @param provider_no New value of property provider_no.
-     */
-    public void setProviderNo(java.lang.String provider_no) {
-       this.provider_no = provider_no;
-    }
-
-    /**
-     * Getter for property note.
-     * @return Value of property note.
-     */
-    public java.lang.String getNote() {
-       return note;
-    }
-
-    /**
-     * Setter for property note.
-     * @param note New value of property note.
-     */
-    public void setNote(java.lang.String note) {
-       this.note = note;
-    }
-
-   }
-
+	}
 
 }
