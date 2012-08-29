@@ -24,6 +24,7 @@
 package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.util.Date;
 import java.util.List;
@@ -46,6 +47,21 @@ public class MeasurementDaoTest extends DaoTestFixtures {
 
 	@Test
 	public void testFind() {
+		Measurement m = populate();
+
+		SearchCriteria c = new SearchCriteria();
+		c.setComments(m.getComments());
+		c.setDataField(m.getDataField());
+		c.setDateObserved(m.getDateObserved());
+		c.setDemographicNo(m.getDemographicId());
+		c.setMeasuringInstrc(m.getMeasuringInstruction());
+		c.setType(m.getType());
+
+		List<Measurement> ms = dao.find(c);
+		assertEquals(1, ms.size());
+	}
+
+	private Measurement populate() {
 		Measurement m = new Measurement();
 		m.setDemographicId(999);
 		m.setAppointmentNo(100);
@@ -56,16 +72,15 @@ public class MeasurementDaoTest extends DaoTestFixtures {
 		m.setProviderNo("PRVDRE");
 		m.setType("TIPPITIP");
 		dao.persist(m);
-		
-		SearchCriteria c = new SearchCriteria();
-		c.setComments(m.getComments());
-		c.setDataField(m.getDataField());
-		c.setDateObserved(m.getDateObserved());
-		c.setDemographicNo(m.getDemographicId());
-		c.setMeasuringInstrc(m.getMeasuringInstruction());
-		c.setType(m.getType());
-		
-		List<Measurement> ms = dao.find(c);
-		assertEquals(1, ms.size());
+		return m;
+	}
+
+	@Test
+	public void testFindById() {
+		populate();
+		populate();
+
+		List<Measurement> m = dao.findByIdTypeAndInstruction(999, "TIPPITIP", "MSRNIGINSRCTIONS");
+		assertFalse(m.isEmpty());
 	}
 }
