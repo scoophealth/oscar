@@ -75,6 +75,18 @@ public abstract class AbstractDao<T extends AbstractModel<?>> {
 		return (entityManager.find(modelClass, id));
 	}
 
+	/**
+	 * Fetches all instances of the persistent class handled by this DAO. 
+	 * 
+	 * @return
+	 * 		Returns all instances available in the backend  
+	 */
+	@SuppressWarnings("unchecked")
+	public List<T> findAll() {
+		Query query = entityManager.createQuery("FROM " + modelClass.getSimpleName());
+		return query.getResultList();
+	}
+
 	public void remove(Object id) {
 		T abstractModel = find(id);
 		if (abstractModel != null) remove(abstractModel);

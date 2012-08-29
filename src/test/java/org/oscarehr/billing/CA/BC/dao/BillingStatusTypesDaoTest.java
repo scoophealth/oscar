@@ -21,38 +21,40 @@
  * Hamilton
  * Ontario, Canada
  */
+package org.oscarehr.billing.CA.BC.dao;
 
-package oscar.oscarBilling.ca.bc.data;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
-public class InjuryLocation {
-	private String sidetype;
-	private String sidedesc;
+import java.util.Arrays;
+import java.util.List;
 
-	public InjuryLocation(Object[] o) {
-		this(String.valueOf(o[0]), String.valueOf(o[1]));
+import org.junit.Before;
+import org.junit.Test;
+import org.oscarehr.billing.CA.BC.model.BillingStatusTypes;
+import org.oscarehr.common.dao.DaoTestFixtures;
+import org.oscarehr.common.dao.utils.SchemaUtils;
+import org.oscarehr.util.SpringUtils;
+
+public class BillingStatusTypesDaoTest extends DaoTestFixtures {
+
+	private BillingStatusTypesDao dao = SpringUtils.getBean(BillingStatusTypesDao.class);
+
+	@Before
+	public void before() throws Exception {
+		SchemaUtils.restoreTable("billingstatus_types");
 	}
 
-	public InjuryLocation(String type, String description) {
-		this.sidetype = type;
-		this.sidedesc = description;
+	@Test
+	public void testFindAll() {
+		List<BillingStatusTypes> billingTypes = dao.findAll();
+		assertNotNull(billingTypes);
+		assertFalse(billingTypes.isEmpty());
 	}
-
-	public InjuryLocation() {
-	}
-
-	public void setSidetype(String sidetype) {
-		this.sidetype = sidetype;
-	}
-
-	public void setSidedesc(String sidedesc) {
-		this.sidedesc = sidedesc;
-	}
-
-	public String getSidetype() {
-		return sidetype;
-	}
-
-	public String getSidedesc() {
-		return sidedesc;
+	
+	@Test
+	public void testFindByCodes() {
+		List<BillingStatusTypes> billingTypes = dao.findByCodes(Arrays.asList(new String[] {"N", "A", "H", "Z", "T"}));
+		assertFalse(billingTypes.isEmpty());
 	}
 }

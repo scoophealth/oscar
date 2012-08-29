@@ -21,38 +21,31 @@
  * Hamilton
  * Ontario, Canada
  */
+package org.oscarehr.common.dao;
 
-package oscar.oscarBilling.ca.bc.data;
+import static org.junit.Assert.assertNotNull;
 
-public class InjuryLocation {
-	private String sidetype;
-	private String sidedesc;
+import java.util.List;
 
-	public InjuryLocation(Object[] o) {
-		this(String.valueOf(o[0]), String.valueOf(o[1]));
+import org.junit.Before;
+import org.junit.Test;
+import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.common.dao.utils.SchemaUtils;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.SpringUtils;
+
+public class ProviderDaoTest extends DaoTestFixtures {
+
+	private ProviderDao dao = SpringUtils.getBean(ProviderDao.class);
+
+	@Before
+	public void before() throws Exception {
+		SchemaUtils.restoreTable("provider");
 	}
 
-	public InjuryLocation(String type, String description) {
-		this.sidetype = type;
-		this.sidedesc = description;
-	}
-
-	public InjuryLocation() {
-	}
-
-	public void setSidetype(String sidetype) {
-		this.sidetype = sidetype;
-	}
-
-	public void setSidedesc(String sidedesc) {
-		this.sidedesc = sidedesc;
-	}
-
-	public String getSidetype() {
-		return sidetype;
-	}
-
-	public String getSidedesc() {
-		return sidedesc;
+	@Test
+	public void testFindOhip() {
+		List<Provider> providers = dao.getProvidersWithNonEmptyOhip();
+		assertNotNull(providers);
 	}
 }

@@ -473,7 +473,6 @@
                                 String demographicName = "";                                
                                                                 
                                 List<BillingONPayment> bPayList = bPaymentDao.find3rdPartyPayRecordsByBill(bCh1, startDate, endDate);
-                                                                          
                                 billingDateStr = DateUtils.formatDate(bCh1.getBillingDate(), locale);
 
                                 Integer demoNo = bCh1.getDemographicNo();     
