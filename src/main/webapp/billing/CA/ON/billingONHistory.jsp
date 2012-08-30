@@ -35,6 +35,7 @@
 	errorPage="errorpage.jsp"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <jsp:useBean id="providerBean" class="java.util.Properties"
 	scope="session" />
 <html>
@@ -43,9 +44,12 @@
 <title>BILLING HISTORY</title>
 <link rel="stylesheet" href="billingON.css">
 <script language="JavaScript">
-<!--
+function onUnbilled(url) {
+  if(confirm("<bean:message key="provider.appointmentProviderAdminDay.onUnbilled"/>")) {
+    popupPage(700,720, url);
+  }
+}
 
-//-->
 </SCRIPT>
 </head>
 <body topmargin="0">
@@ -111,10 +115,15 @@ for(int i=0; i<aL.size(); i=i+2) {
 
 		<% if (obj.getStatus().compareTo("B")==0 || obj.getStatus().compareTo("S")==0) { %>
 		<td align="center">&nbsp;</td>
-		<% } else { %>
+		<% } else if (OscarProperties.getInstance().getBooleanProperty("warnOnDeleteBill","true")){ %>
 		<td align="center"><a
-			href="billingDeleteNoAppt.jsp?billing_no=<%=obj.getId()%>&billCode=<%=obj.getStatus()%>&dboperation=delete_bill&hotclick=0">Unbill</a></td>
-		<% } %>
+			href="#" onClick="onUnbilled('billingDeleteNoAppt.jsp?billing_no=<%=obj.getId()%>&billCode=<%=obj.getStatus()%>&dboperation=delete_bill&hotclick=0');return false;">Unbill</a>
+                </td>
+		<% } else { %>
+                <td align="center">
+                        <a href="billingDeleteNoAppt.jsp?billing_no=<%=obj.getId()%>&billCode=<%=obj.getStatus()%>&dboperation=delete_bill&hotclick=0">Unbill</a>
+                </td>
+                <% }%>
 	</tr>
 	<% 
 }
