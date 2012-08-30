@@ -78,6 +78,7 @@ public abstract class AbstractModel<T> implements java.io.Serializable
 	 * This method checks to see if there is an entry in the list with the corresponding primary key, it does not check to see that the other values are the
 	 * same or not.
 	 */
+	// TODO Move this to the base DAO instead ??? 
 	public static <X extends AbstractModel<?>> boolean existsId(List<X> list, X searchModel)
 	{
 		Object searchPk = searchModel.getId();
@@ -88,6 +89,16 @@ public abstract class AbstractModel<T> implements java.io.Serializable
 		}
 
 		return(false);
+	}
+	
+	/**
+	 * Checks if the persistent id has been assigned to this instance.
+	 * 
+	 * @return
+	 * 		Returns true if the ID is not null and false otherwise.
+	 */
+	public boolean isPersistent() {
+		return getId() != null;
 	}
 
 }
