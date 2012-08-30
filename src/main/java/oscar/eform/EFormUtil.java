@@ -360,7 +360,7 @@ public class EFormUtil {
 
 	public static HashMap<String, Object> loadEForm(String fid) {
 		EFormDao dao = SpringUtils.getBean(EFormDao.class);
-		Integer id = Integer.getInteger(fid);
+		Integer id = Integer.valueOf(fid);
 		org.oscarehr.common.model.EForm eform = dao.find(id);
 		HashMap<String, Object> curht = new HashMap<String, Object>();
 		if (eform == null) {
