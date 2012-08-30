@@ -688,12 +688,16 @@ div.logoutBox {
 			<li><html:link page="/admin/../eform/efmformrtl_config.jsp"><bean:message key="admin.admin.richTextLetter"/></html:link></li>
 			<% } %>
 
-			<li><html:link page="/admin/../eform/efmmanageformgroups.jsp">
-				<bean:message key="admin.admin.frmGroups"/>
-			</html:link></li>
 			<li><html:link page="/admin/../eform/efmmanageindependent.jsp">
 				<bean:message key="admin.admin.frmIndependent"/>
 			</html:link></li>
+
+			<security:oscarSec roleName="<%=roleName$%>" objectName="_admin.fieldnote" rights="r" reverse="<%=false%>">
+			<li><a href="#" 
+				onclick='popupPage(600,900,&quot;<html:rewrite page="/admin/../eform/fieldNoteReport/fieldnotereport.jsp"/>&quot;);return false;'>
+				<bean:message key="admin.admin.fieldNoteReport" /></a>
+			</li>
+			</security:oscarSec>
 		</ul>
 		</div>
 	</security:oscarSec>

@@ -28,6 +28,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 
 import javax.persistence.Query;
 
@@ -245,4 +246,19 @@ public class EFormDataDao extends AbstractDao<EFormData> {
 		query.setParameter("formName", formName);
 		return query.getResultList();
 	}    
+
+    public List<Integer> findFdidsByFidsAndDates(TreeSet<Integer> fids, Date dateStart, Date dateEnd)
+    {
+    	if (fids==null || fids.isEmpty()) return new ArrayList<Integer>();
+    	
+    	Query query = entityManager.createQuery("select x.id from " + modelClass.getSimpleName() + " x where x.current=1 and x.formId in (?1) and x.formDate>=?2 and x.formDate<?3");
+    	query.setParameter(1, fids);
+    	query.setParameter(2, dateStart);
+    	query.setParameter(3, dateEnd);
+    	
+    	@SuppressWarnings("unchecked")
+    	List<Integer> results=query.getResultList();
+    	
+    	return(results);
+    }
 }
