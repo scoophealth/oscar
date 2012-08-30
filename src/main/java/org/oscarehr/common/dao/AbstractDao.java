@@ -40,7 +40,7 @@ public abstract class AbstractDao<T extends AbstractModel<?>> {
 	protected EntityManager entityManager = null;
 
 	protected AbstractDao(Class<T> modelClass) {
-		this.modelClass = modelClass;
+		setModelClass(modelClass);
 	}
 
 	/**
@@ -82,7 +82,7 @@ public abstract class AbstractDao<T extends AbstractModel<?>> {
 
 	protected T getSingleResultOrNull(Query query) {
 		query.setMaxResults(1);
-		
+
 		@SuppressWarnings("unchecked")
 		List<T> results = query.getResultList();
 		if (results.size() == 1) return (results.get(0));
@@ -98,8 +98,8 @@ public abstract class AbstractDao<T extends AbstractModel<?>> {
 		// return((Integer)query.getSingleResult());
 
 		String tableName = modelClass.getSimpleName();
-		javax.persistence.Table t= modelClass.getAnnotation(javax.persistence.Table.class);
-		if(t != null && t.name() != null && t.name().length()>0) {
+		javax.persistence.Table t = modelClass.getAnnotation(javax.persistence.Table.class);
+		if (t != null && t.name() != null && t.name().length() > 0) {
 			tableName = t.name();
 		}
 
@@ -107,5 +107,87 @@ public abstract class AbstractDao<T extends AbstractModel<?>> {
 		String sqlCommand = "select count(*) from " + tableName;
 		Query query = entityManager.createNativeQuery(sqlCommand);
 		return (((Number) query.getSingleResult()).intValue());
+	}
+
+	/**
+	 * Gets base JPQL query for the model class.
+	 * 
+	 * @return
+	 * 		Returns the JPQL clause in the form of <code>"FROM {@link #getModelClassName()} AS e "</code>. <code>e</code> stands for "entity"
+	 */
+	protected String getBaseQuery() {
+		return getBaseQueryBuf(null).toString();
+	}
+
+	protected String getBaseQuery(String alias) {
+		return getBaseQuery(alias).toString();
+	}
+
+	protected StringBuilder getBaseQueryBuf(String alias) {
+		StringBuilder buf = new StringBuilder("FROM ");
+		buf.append(getModelClassName());
+		if (alias != null) buf.append(" AS ").append(alias).append(" ");
+		return buf;
+	}
+
+	public Class<T> getModelClass() {
+		return modelClass;
+	}
+
+	/**
+	 * Creates a query with the specified entity alias and where clause
+	 * <p/>
+	 * For example, invoking
+	 * 
+	 * <pre>
+	 * 		createQuery("entity", "entity.propertyName like :propertyValue");
+	 * </pre>
+	 * 
+	 * would create query:
+	 * 
+	 * <pre>
+	 * 		FROM ModelClass AS entity WHERE entity.propertyName like :propertyValue
+	 * </pre>
+	 * 
+	 * @param alias
+	 * 		Alias to be included in the query
+	 * @param whereClause
+	 * 		Where clause to be included in the query
+	 * @return
+	 * 		Returns the query
+	 */
+	protected Query createQuery(String alias, String whereClause) {
+		StringBuilder buf = getBaseQueryBuf(alias);
+		buf.append("WHERE ");
+		buf.append(whereClause);
+		return entityManager.createQuery(buf.toString());
+	}
+
+	/**
+	 * Gets name of the model class.
+	 * 
+	 * @return
+	 * 		Returns the class name without package prefix
+	 */
+	protected String getModelClassName() {
+		return getModelClass().getSimpleName();
+	}
+
+	private void setModelClass(Class<T> modelClass) {
+		this.modelClass = modelClass;
+	}
+
+	/**
+	 * Saves or updates the entity based on depending if it's persistent, as determined by {@link AbstractModel#isPersistent()} 
+	 * 
+	 * @param entity
+	 * 		Entity to be saved or updated
+	 * @return
+	 * 		Returns the entity
+	 */
+	public T saveEntity(T entity) {
+		if (entity.isPersistent()) merge(entity);
+		else persist(entity);
+		return entity;
 	}
 }
