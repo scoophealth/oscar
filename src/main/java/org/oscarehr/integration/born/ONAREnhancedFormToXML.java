@@ -631,7 +631,7 @@ public class ONAREnhancedFormToXML {
 				visit.setDate(null);
 			}
 			visit.setGa(props.getProperty("pg2_gest"+y, ""));
-			visit.setWeight(props.getProperty("pg2_wt"+y, "").length()>0?Integer.parseInt(props.getProperty("pg2_wt"+y, "")):0);
+			visit.setWeight(props.getProperty("pg2_wt"+y, "").length()>0?Float.parseFloat(props.getProperty("pg2_wt"+y, "")):0);
 			visit.setBp(props.getProperty("pg2_BP"+y, ""));
 			visit.setUrinePR(props.getProperty("pg2_urinePr"+y, ""));
 			/*visit.setUrineGI(props.getProperty("pg2_urineGl"+y, ""));*/
