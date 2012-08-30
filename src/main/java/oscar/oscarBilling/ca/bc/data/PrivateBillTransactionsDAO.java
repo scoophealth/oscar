@@ -24,51 +24,59 @@
 
 package oscar.oscarBilling.ca.bc.data;
 
-import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import org.oscarehr.util.MiscUtils;
+import javax.persistence.Query;
 
-import oscar.oscarDB.DBHandler;
-import oscar.util.SqlUtils;
+import org.oscarehr.billing.CA.BC.model.BillingPrivateTransactions;
+import org.oscarehr.common.dao.AbstractDao;
+import org.springframework.stereotype.Repository;
+
+import oscar.entities.PrivateBillTransaction;
+import oscar.util.ConversionUtils;
 
 /**
- * <p>Title:PrivateBillTransactionsDAO </p>
- *
- * <p>Description:This class is responsible for providing CRUD operations </p>
- * <p>on PrivateBillTransaction objects
- *
+ * Provides CRUD operations for BillingPrivateTransactions and legacy
+ * {@link PrivateBillTransaction} classes.
+ * 
  * @author Joel Legris
- * @version 1.0
  */
-public class PrivateBillTransactionsDAO {
-  
+@Repository
+public class PrivateBillTransactionsDAO extends AbstractDao<BillingPrivateTransactions> {
 
-  public PrivateBillTransactionsDAO() {
-  }
+	public PrivateBillTransactionsDAO() {
+		super(BillingPrivateTransactions.class);
+	}
 
-  public List getPrivateBillTransactions(String billingmaster_no) {
-    String qry = "select bp.id,billingmaster_no,amount_received,creation_date,payment_type_id,bt.payment_type as 'payment_type_desc'" +
-        " from billing_private_transactions bp,billing_payment_type bt" +
-        " where bp.billingmaster_no = " + billingmaster_no +
-        " and bp.payment_type_id = bt.id";
-   return SqlUtils.getBeanList(qry,oscar.entities.PrivateBillTransaction.class);
- }
+	@SuppressWarnings("unchecked")
+	// TODO Annotate with @NativeSql({"billing_private_transactions", "billing_payment_type"}) query when the commit is merged into the main codebase 
+	public List<PrivateBillTransaction> getPrivateBillTransactions(String billingmaster_no) {
+		Query query = entityManager.createNativeQuery("select bp.id, billingmaster_no, amount_received, creation_date, payment_type_id, bt.payment_type as 'payment_type_desc'" + " from billing_private_transactions bp,billing_payment_type bt where bp.billingmaster_no = :billingmasterNo and bp.payment_type_id = bt.id");
+		query.setParameter("billingmasterNo", ConversionUtils.fromIntString(billingmaster_no));
+		List<Object[]> resultList = query.getResultList();
+		List<PrivateBillTransaction> result = new ArrayList<PrivateBillTransaction>();
+		for(Object[] res : resultList) {
+			PrivateBillTransaction tx = new PrivateBillTransaction();
+			tx.setId((Integer) res[0]);
+			tx.setBillingmaster_no((Integer)res[1]);
+			tx.setAmount_received((Double) res[2]);
+			tx.setCreation_date((Date) res[3]);
+			tx.setPayment_type((Integer) res[4]);
+			tx.setPayment_type_desc(String.valueOf(res[5]));
+			result.add(tx);
+		}
+		return result;
+	}
 
-  /**
-   * savePrivateBillTransaction
-   *
-   * @param billingMasterNo String
-   * @param amount Double
-   */
-  public void savePrivateBillTransaction(int billingmaster_no, double amount, int paymentType) {
-    String qry = "insert into billing_private_transactions(billingmaster_no,amount_received,creation_date,payment_type_id) values("+ String.valueOf(billingmaster_no) + "," + String.valueOf(amount) +",now()," +  paymentType + ")";
-    try {
-      
-    	DBHandler.RunSQL(qry);
-    }
-    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
-    }
-  }
+	public BillingPrivateTransactions savePrivateBillTransaction(int billingmaster_no, double amount, int paymentType) {
+		BillingPrivateTransactions tx = new BillingPrivateTransactions();
+		tx.setBillingmasterNo(billingmaster_no);
+		tx.setAmountReceived(amount);
+		tx.setCreationDate(new Date());
+		tx.setPaymentTypeId(paymentType);
+		return saveEntity(tx);
+	}
 
 }
