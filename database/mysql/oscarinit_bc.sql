@@ -3110,7 +3110,7 @@ CREATE TABLE `formBCNewBorn2008` (
   `c_phyMid` varchar(80) DEFAULT NULL,
   `pg1_formDate` varchar(12) DEFAULT NULL,
   PRIMARY KEY (`ID`)
-);
+) ENGINE=MyISAM CHARSET=latin1;
 
 
 --
