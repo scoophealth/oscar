@@ -89,7 +89,7 @@ public class ONAREnhancedBornConnector {
 		
 		Connection conn = org.oscarehr.util.DbConnectionFilter.getThreadLocalDbConnection();
 		Statement st = conn.createStatement();
-		ResultSet rs = st.executeQuery("select demographic_no,id,formEdited,c_finalEDB,sent_to_born,pg1_signature,pg2_signature,episodeId from (select demographic_no,id,formEdited,c_finalEDB,sent_to_born,pg1_signature,pg2_signature,episodeId from formONAREnhanced where c_finalEDB!='' AND c_finalEDB IS NOT NULL ORDER BY formEdited DESC) AS x  GROUP BY demographic_no");
+		ResultSet rs = st.executeQuery("select demographic_no,id,formEdited,c_finalEDB,sent_to_born,pg1_signature,pg2_signature,episodeId,c_postal from (select demographic_no,id,formEdited,c_finalEDB,sent_to_born,pg1_signature,pg2_signature,episodeId,c_postal from formONAREnhanced where c_finalEDB!='' AND c_finalEDB IS NOT NULL ORDER BY formEdited DESC) AS x  GROUP BY demographic_no");
 		
 		ONAREnhancedFormToXML xml = new ONAREnhancedFormToXML();
 		HashMap<String,String> suggestedPrefixes = new HashMap<String,String>();
