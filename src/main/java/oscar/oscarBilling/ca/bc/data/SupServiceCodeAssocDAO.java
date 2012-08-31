@@ -24,177 +24,152 @@
 
 package oscar.oscarBilling.ca.bc.data;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.oscarehr.util.DbConnectionFilter;
-import org.oscarehr.util.MiscUtils;
+import javax.persistence.Query;
 
-import oscar.oscarDB.DBHandler;
-import oscar.util.SqlUtils;
+import org.oscarehr.billing.CA.BC.model.BillingTrayFee;
+import org.oscarehr.common.dao.AbstractDao;
+import org.oscarehr.common.model.BillingService;
+import org.springframework.stereotype.Repository;
+
+import oscar.util.ConversionUtils;
 
 /**
- * <p>Description: </p>
- * Some Procedures are automatically associated with certain tray fees
- * SupServiceCodeAssocDAO is responsible for performing CRUD operations on
- * Billing Procedure/Tray Fee Associations.
- * @author not attributable
- * @version 1.0
+ * Performing CRUD operations on Billing Procedure/Tray Fee Associations. Some Procedures are automatically associated with certain tray fees
  */
-public class SupServiceCodeAssocDAO {
-  public static final int VALUE_BY_CODE = 1;
-  public static final int VALUE_BY_ID = 2;
-  public SupServiceCodeAssocDAO() {
-  }
+@Repository
+public class SupServiceCodeAssocDAO extends AbstractDao<BillingTrayFee> {
 
-  /**
-   * Returns a List of available procedure code/tray fee code associations in the form of a HashMap
-   * @return List
-   */
-  public List getServiceCodeAssociactions() {
-    //select billingServiceNo,billingServiceTrayNo,billingServiceNo as associationStatus from billing_trayfees");
-    List list = SqlUtils.getQueryResultsList(
-        "select id,billingServiceNo,billingServiceTrayNo from billing_trayfees");
-    List ret = new ArrayList();
+	public static final String KEY_ASSOCIATION_STATUS = "associationStatus";
+	public static final String KEY_BILLING_SERVICE_TRAY_NO = "billingServiceTrayNo";
+	public static final String KEY_BILLING_SERVICE_NO = "billingServiceNo";
+	public static final String KEY_ID = "id";
 
-    if (list != null) {
-      for (Iterator iter = list.iterator(); iter.hasNext(); ) {
-        String[] item = (String[]) iter.next();
-        if (item != null && item.length > 0) {
-          HashMap map = new HashMap();
-          map.put("id", item[0]);
-          map.put("billingServiceNo",
-                  this.getBillingServiceValue(item[1], SupServiceCodeAssocDAO.VALUE_BY_ID));
-          map.put("billingServiceTrayNo",
-                  this.getBillingServiceValue(item[2], SupServiceCodeAssocDAO.VALUE_BY_ID));
-          map.put("associationStatus", "");
-          ret.add(map);
-        }
-      }
-    }
-    return ret;
-  }
+	public static final int VALUE_BY_CODE = 1;
+	public static final int VALUE_BY_ID = 2;
 
-  /**
-   * Returns a Map of ServiceCode associations
-   * Key = Service Code
-   * Value = Tray Fee
-   * @return Map
-   */
-  public Map getAssociationKeyValues() {
-    //
-    List list = SqlUtils.getQueryResultsList(
-        "select billingServiceNo,billingServiceTrayNo from billing_trayfees");
-    HashMap ret = new HashMap();
-    if (list != null) {
-      for (Iterator iter = list.iterator(); iter.hasNext(); ) {
-        String[] item = (String[]) iter.next();
-        if (item != null && item.length > 0) {
-          ret.put(this.getBillingServiceValue(item[0], SupServiceCodeAssocDAO.VALUE_BY_ID),this.getBillingServiceValue(item[1], SupServiceCodeAssocDAO.VALUE_BY_ID));
-        }
-      }
-    }
-    return ret;
-  }
+	public SupServiceCodeAssocDAO() {
+		super(BillingTrayFee.class);
+	}
 
-  /**
-   * Saves or updates(if exists) a procedure/tray fee association
-   * @param primaryCode String
-   * @param secondaryCode String
-   */
-  public void saveOrUpdateServiceCodeAssociation(String primaryCode,
-                                                 String secondaryCode) {
-    
-    ResultSet rs = null;
-    String primaryCodeId = this.getBillingServiceValue(primaryCode,
-        SupServiceCodeAssocDAO.VALUE_BY_CODE);
-    String secondaryCodeId = this.getBillingServiceValue(secondaryCode,
-        SupServiceCodeAssocDAO.VALUE_BY_CODE);
+	/**
+	 * Returns available procedure code/tray fee code associations. Map uses KEY_* contains available in this DAO for storing the values.
+	 * 
+	 * @return List
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Map<String, String>> getServiceCodeAssociactions() {
+		// TODO test me
+		List<Map<String, String>> ret = new ArrayList<Map<String, String>>();
+		// TODO replace with #findAll
+		List<BillingTrayFee> btfs = entityManager.createQuery(getBaseQuery()).getResultList();
+		for (BillingTrayFee btf : btfs) {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put(KEY_ID, btf.getId().toString());
+			map.put(KEY_BILLING_SERVICE_NO, this.getBillingServiceValue(btf.getBillingServiceNo(), SupServiceCodeAssocDAO.VALUE_BY_ID));
+			map.put(KEY_BILLING_SERVICE_TRAY_NO, this.getBillingServiceValue(btf.getBillingServiceTrayNo(), SupServiceCodeAssocDAO.VALUE_BY_ID));
+			map.put(KEY_ASSOCIATION_STATUS, "");
+			ret.add(map);
+		}
+		return ret;
+	}
 
-    try {
-      
-      rs = DBHandler.GetSQL(
-          "select billingServiceNo,billingServiceTrayNo from billing_trayfees where billingServiceNo = " +
-          primaryCodeId);
+	/**
+	 * Returns a Map of ServiceCode associations
+	 * Key = Service Code
+	 * Value = Tray Fee
+	 * 
+	 * @return Map
+	 */
+	@SuppressWarnings("unchecked")
+	public Map<String, String> getAssociationKeyValues() {
+		// TODO test me
+		// TODO replace with find all
+		List<BillingTrayFee> btfs = entityManager.createQuery(getBaseQuery()).getResultList();
+		Map<String, String> ret = new HashMap<String, String>();
+		for (BillingTrayFee btf : btfs) {
+			String key = this.getBillingServiceValue(btf.getBillingServiceNo(), SupServiceCodeAssocDAO.VALUE_BY_ID);
+			String value = this.getBillingServiceValue(btf.getBillingServiceTrayNo(), SupServiceCodeAssocDAO.VALUE_BY_ID);
+			ret.put(key, value);
+		}
+		return ret;
+	}
 
-      PreparedStatement stmt = null;
-      //Record exists so perform an update
-      if (rs.next()) {
-        stmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(
-            "update billing_trayfees set billingServiceTrayNo = ? where billingServiceNo=?");
-        stmt.setString(1, secondaryCodeId);
-        stmt.setString(2, primaryCodeId);
-      }
-      else {
-        //create a new record
-        stmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(
-            "insert into billing_trayfees(billingServiceNo,billingServiceTrayNo) " +
-            "values(?,?)");
-        stmt.setString(1, primaryCodeId);
-        stmt.setString(2, secondaryCodeId);
-      }
-      stmt.execute();
-    }
-    catch (Exception e) {
-      MiscUtils.getLogger().error("Error", e);
-    }
-    finally {
-      try {
-        if (rs != null) {
-          rs.close();
-        }
-      }
-      catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
-      }
-    }
-  }
+	/**
+	 * Saves or updates(if exists) a procedure/tray fee association
+	 * @param primaryCode String
+	 * @param secondaryCode String
+	 */
+	@SuppressWarnings("unchecked")
+	public void saveOrUpdateServiceCodeAssociation(String primaryCode, String secondaryCode) {
+		String primaryCodeId = getBillingServiceValue(primaryCode, SupServiceCodeAssocDAO.VALUE_BY_CODE);
+		String secondaryCodeId = getBillingServiceValue(secondaryCode, SupServiceCodeAssocDAO.VALUE_BY_CODE);
 
-  /**
-   * Returns the monetary value of the specified service code
-   *
-   * @param primaryCode String - The Service Code
-   * @param type int - The type of query to perform using either the billingservice_no or service_code fields
-   * as criterion for searching the code value
-   * @return String
-   */
-  private String getBillingServiceValue(String code, int type) {
-    String ret = "";
-    String criteria = type == SupServiceCodeAssocDAO.VALUE_BY_CODE ? "service_code" :
-        "billingservice_no";
-    String select = type == SupServiceCodeAssocDAO.VALUE_BY_CODE ? "billingservice_no" :
-        "service_code";
-    List results = SqlUtils.getQueryResultsList(
-        "select " + select + " from billingservice where " + criteria + "= '" +
-        code + "'");
-    if (results != null && !results.isEmpty()) {
-      String[] strArr = (String[]) results.get(0);
-      if (strArr.length > 0) {
-        ret = strArr[0];
-      }
-    }
-    return ret;
-  }
+		Query query = createQuery("btf", "btf.billingServiceNo = :billingServiceNo");
+		query.setParameter("billingServiceNo", primaryCodeId);
 
-  /**
-   * Removes a service code association
-   * @param id String - The id of the service code
-   */
-  public void deleteServiceCodeAssociation(String id) {
-    String qry = "delete from billing_trayfees where id = " +
-        id;
-    
-    try {
-      
-    	DBHandler.RunSQL(qry);
-    }
-    catch (Exception e) {
-      MiscUtils.getLogger().error("Error", e);
-    }
-  }
+		BillingTrayFee btf = null;
+		for (BillingTrayFee b : (List<BillingTrayFee>) query.getResultList()) {
+			btf = b;
+			break;
+		}
+
+		if (btf == null) {
+			btf = new BillingTrayFee();
+			btf.setBillingServiceNo(primaryCodeId);
+		}
+		btf.setBillingServiceTrayNo(secondaryCodeId);
+		saveEntity(btf);
+	}
+
+	/**
+	 * Returns the monetary value of the specified service code
+	 *
+	 * @param primaryCode String - The Service Code
+	 * @param type int - The type of query to perform using either the billingservice_no or service_code fields
+	 * as criterion for searching the code value
+	 * @return String
+	 */
+	@SuppressWarnings("unchecked")
+    private String getBillingServiceValue(String code, int type) {
+		String queryString = "";
+		Object queryParam = null;
+
+		if (type == SupServiceCodeAssocDAO.VALUE_BY_CODE) {
+			queryString = "FROM BillingService bs WHERE bs.serviceCode = :param";
+			queryParam = code;
+		} else if (type == SupServiceCodeAssocDAO.VALUE_BY_ID) {
+			queryString = "FROM BillingService bs WHERE bs.billingserviceNo = :param";
+			queryParam = ConversionUtils.fromIntString(code);
+		} else {
+			throw new IllegalArgumentException("Unsupported type" + type);
+		}
+
+		Query query = entityManager.createQuery(queryString);
+		query.setParameter("param", queryParam);
+
+		List<BillingService> billingServices = query.getResultList();
+		if (billingServices.isEmpty()) return "";
+
+		BillingService firstAvailableBillingService = billingServices.get(0);
+		if (type == SupServiceCodeAssocDAO.VALUE_BY_CODE) {
+			return String.valueOf(firstAvailableBillingService.getBillingserviceNo());
+		} else {
+			return firstAvailableBillingService.getServiceCode();
+		}
+	}
+
+	/**
+	 * Removes a service code association
+	 * 
+	 * @param id String - The id of the service code
+	 */
+	public void deleteServiceCodeAssociation(String id) {
+		BillingTrayFee deletionCandidate = find(ConversionUtils.fromIntString(id));
+		if (deletionCandidate != null) entityManager.remove(deletionCandidate);
+	}
 }
