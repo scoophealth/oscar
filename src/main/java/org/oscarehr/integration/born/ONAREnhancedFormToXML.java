@@ -143,7 +143,6 @@ public class ONAREnhancedFormToXML {
 			for(Object o:validationErrors) {
 				MiscUtils.getLogger().warn(o);
 			}
-			//arRecordDoc.save(os,opts);			
 		}
 		return false;
 	}
@@ -204,6 +203,7 @@ public class ONAREnhancedFormToXML {
 			}
 		}catch(ParseException e) {
 			MiscUtils.getLogger().warn("error",e);
+			initialLaboratoryInvestigations.setLastPapDate(null);
 		}
 		initialLaboratoryInvestigations.setAntibodyResult(props.getProperty("pg1_labAntiScr", ""));
 		initialLaboratoryInvestigations.setGcResultGonorrhea(InitialLaboratoryInvestigations.GcResultGonorrhea.Enum.forString(props.getProperty("pg1_labGC", "")));
@@ -425,7 +425,7 @@ public class ONAREnhancedFormToXML {
 			else if(props.getProperty("pg1_ass"+n,"").length()>0)
 				item1.setTypeOfDelivery(ObstetricalHistoryItemList.TypeOfDelivery.AVAG);
 			else 
-				item1.setTypeOfDelivery(null);
+				item1.setTypeOfDelivery(ObstetricalHistoryItemList.TypeOfDelivery.UN);
 			
 			item1.setComments(props.getProperty("pg1_oh_comments"+n,""));
 		}
@@ -478,15 +478,25 @@ public class ONAREnhancedFormToXML {
 		datingMethods.setT2US(props.getProperty("pg1_edbByT2", "").length()>0?true:false);
 		datingMethods.setArt(props.getProperty("pg1_edbByART", "").length()>0?true:false);
 		if(props.getProperty("c_gravida", "").length()>0)
-			pregnancyHistory.setGravida(Integer.parseInt(props.getProperty("c_gravida", "")));		
+			pregnancyHistory.setGravida(Integer.parseInt(props.getProperty("c_gravida", "")));	
+		else
+			pregnancyHistory.xsetGravida(null);
 		if(props.getProperty("c_term", "").length()>0)
 			pregnancyHistory.setTerm(Integer.parseInt(props.getProperty("c_term", "")));
+		else
+			pregnancyHistory.xsetTerm(null);
 		if(props.getProperty("c_prem", "").length()>0)
-		pregnancyHistory.setPremature(Integer.parseInt(props.getProperty("c_prem", "")));
+			pregnancyHistory.setPremature(Integer.parseInt(props.getProperty("c_prem", "")));
+		else
+			pregnancyHistory.xsetPremature(null);
 		if(props.getProperty("c_abort", "").length()>0)
 			pregnancyHistory.setAbortuses(Integer.parseInt(props.getProperty("c_abort", "")));
+		else 
+			pregnancyHistory.xsetAbortuses(null);
 		if(props.getProperty("c_living", "").length()>0)
-		pregnancyHistory.setLiving(Integer.parseInt(props.getProperty("c_living", "")));
+			pregnancyHistory.setLiving(Integer.parseInt(props.getProperty("c_living", "")));
+		else 
+			pregnancyHistory.xsetLiving(null);
 	}
 
 
@@ -631,7 +641,7 @@ public class ONAREnhancedFormToXML {
 				visit.setDate(null);
 			}
 			visit.setGa(props.getProperty("pg2_gest"+y, ""));
-			visit.setWeight(props.getProperty("pg2_wt"+y, "").length()>0?Integer.parseInt(props.getProperty("pg2_wt"+y, "")):0);
+			visit.setWeight(props.getProperty("pg2_wt"+y, "").length()>0?Float.parseFloat(props.getProperty("pg2_wt"+y, "")):0);
 			visit.setBp(props.getProperty("pg2_BP"+y, ""));
 			visit.setUrinePR(props.getProperty("pg2_urinePr"+y, ""));
 			/*visit.setUrineGI(props.getProperty("pg2_urineGl"+y, ""));*/
@@ -689,6 +699,9 @@ public class ONAREnhancedFormToXML {
 	void populateAdditionalLabInvestigations(AdditionalLabInvestigationsType additionalLabInvestigations) {
 		additionalLabInvestigations.setHb(props.getProperty("ar2_hb", ""));
 		additionalLabInvestigations.setBloodGroup(AdditionalLabInvestigationsType.BloodGroup.Enum.forString(props.getProperty("ar2_bloodGroup")));
+		if(props.getProperty("ar2_bloodGroup").equals("NDONE")) {
+			additionalLabInvestigations.setBloodGroup(AdditionalLabInvestigationsType.BloodGroup.ND);			
+		}
 		additionalLabInvestigations.setRh(AdditionalLabInvestigationsType.Rh.Enum.forString(props.getProperty("ar2_rh")));		
 		additionalLabInvestigations.setRepeatABS(props.getProperty("ar2_labABS", ""));
 		additionalLabInvestigations.setGCT(props.getProperty("ar2_lab1GCT", ""));
@@ -715,7 +728,7 @@ public class ONAREnhancedFormToXML {
 				signatures.setDate(createDate(dateFormatter.parse((props.getProperty("pg1_formDate")))));
 			}catch(ParseException e) {}
 		} else {
-			signatures.setDate(null);
+			//signatures.setDate(null);
 		}
 		
 		if(props.getProperty("pg1_signature2", "").length()>0){ 
@@ -725,7 +738,7 @@ public class ONAREnhancedFormToXML {
 					signatures.setDate2(createDate(dateFormatter.parse((props.getProperty("pg1_formDate2")))));
 				}catch(ParseException e) {}
 			} else {
-				signatures.setDate2(null);
+				//signatures.setDate2(null);
 			}
 		}
 	}
@@ -737,7 +750,7 @@ public class ONAREnhancedFormToXML {
 				signatures.setDate(createDate(dateFormatter.parse((props.getProperty("pg2_formDate")))));
 			}catch(ParseException e) {}
 		} else {
-			signatures.setDate(null);
+			//signatures.setDate(null);
 		}
 		
 		if(props.getProperty("pg2_signature2", "").length()>0) {
@@ -747,7 +760,7 @@ public class ONAREnhancedFormToXML {
 					signatures.setDate2(createDate(dateFormatter.parse((props.getProperty("pg2_formDate2")))));
 				}catch(ParseException e) {}
 			} else {
-				signatures.setDate2(null);
+				//signatures.setDate2(null);
 			}
 		}
 

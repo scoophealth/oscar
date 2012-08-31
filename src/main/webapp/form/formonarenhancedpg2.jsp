@@ -1433,9 +1433,8 @@ $(document).ready(function(){
 				var usNum = $("#us_num").val();					
 				
 				
-				var obxNum = '<%=props.getProperty("obxhx_num", "0")%>';				
-				var extraComments = '<%=props.getProperty("pg1_comments2AR1", "")%>';
-				var hasExtraComments = (extraComments.length>0);
+				var obxNum = '<%=props.getProperty("obxhx_num", "0")%>';								
+				var hasExtraComments = <%=(props.getProperty("pg1_comments2AR1", "").length() > 0)%>;
 								
 				if ((typeof printAr1 == "undefined") && (typeof printAr2 == "undefined")) {
 					return;
