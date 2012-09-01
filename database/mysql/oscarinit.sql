@@ -10739,7 +10739,7 @@ CREATE TABLE formONAREnhanced(
   pg2_signature2 varchar(50) default NULL,
   pg2_formDate2 date default NULL,
   PRIMARY KEY (ID)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM CHARSET=latin1;
 
 CREATE TABLE form_hsfo2_visit (
  	ID int(10) NOT NULL auto_increment,
