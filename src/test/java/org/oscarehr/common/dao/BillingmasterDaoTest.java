@@ -25,6 +25,8 @@ package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
@@ -52,5 +54,27 @@ public class BillingmasterDaoTest extends DaoTestFixtures {
 
 		int count = dao.updateBillingUnitForBillingNumber("NIHRENASEIBE", 99999);
 		assertTrue(count == 1);
+	}
+	
+	@Test
+	public void testUpdateBillingUnitForBillingNumber() {
+		Billingmaster b = new Billingmaster();
+		b.setBillingUnit("AS");
+		b.setBillingNo(999);
+		dao.save(b);
+		
+		int i = dao.updateBillingUnitForBillingNumber("BU", 999);
+		assertTrue(i == 1);
+	}
+	
+	@Test
+	public void testMarkListAsBilled() {
+		Billingmaster b = new Billingmaster();
+		b.setBillingUnit("AS");
+		b.setBillingNo(999);
+		dao.save(b);
+		
+		int i = dao.markListAsBilled(Arrays.asList(new String[] {String.valueOf(b.getBillingmasterNo())}));
+		assertTrue(i == 1);
 	}
 }

@@ -22,10 +22,8 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarBilling.ca.bc.data;
 
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
@@ -42,125 +40,116 @@ import org.springframework.transaction.annotation.Transactional;
 
 import oscar.entities.Billingmaster;
 import oscar.entities.WCB;
-import oscar.oscarDB.DBHandler;
-import oscar.util.StringUtils;
+import oscar.util.ConversionUtils;
 
 /**
  *
  * @author jay
  */
 @Repository
-@Transactional(propagation=Propagation.REQUIRES_NEW)
+@Transactional(propagation = Propagation.REQUIRES_NEW)
 public class BillingmasterDAO {
-    private static Logger log = MiscUtils.getLogger();
+	private static Logger log = MiscUtils.getLogger();
 
-    @PersistenceContext
-    protected EntityManager entityManager = null;
-    /** Creates a new instance of BillingmasterDAO */
-    public BillingmasterDAO() {
-    }
+	@PersistenceContext
+	protected EntityManager entityManager = null;
 
-    public List<Billingmaster> getBillingMasterWithStatus(String billingmasterNo,String status){
-        log.debug("WHAT IS NULL ? "+billingmasterNo+"  status "+status+"   "+entityManager);
-        Query query = entityManager.createQuery("select b from Billingmaster b where b.billingNo = (:billingNo) and billingstatus = (:status)");
-        query.setParameter("billingNo",Integer.parseInt(billingmasterNo));
-        query.setParameter("status", status);
-        List<Billingmaster> list= query.getResultList();
-        return list;
-    }
+	/** Creates a new instance of BillingmasterDAO */
+	public BillingmasterDAO() {
+	}
 
-    public List getBillingMasterByBillingNo(String billingNo){
-        return getBillingmasterByBillingNo(Integer.parseInt(billingNo));
-    }
-    public List<Billingmaster> getBillingmasterByBillingNo(int billingNo){
-        Query query = entityManager.createQuery("select b from Billingmaster b where b.billingNo = (:billingNo)");
-        query.setParameter("billingNo",billingNo);
-        List<Billingmaster> list= query.getResultList();
-        return list;
-    }
+	public List<Billingmaster> getBillingMasterWithStatus(String billingmasterNo, String status) {
+		log.debug("WHAT IS NULL ? " + billingmasterNo + "  status " + status + "   " + entityManager);
+		Query query = entityManager.createQuery("select b from Billingmaster b where b.billingNo = (:billingNo) and billingstatus = (:status)");
+		query.setParameter("billingNo", Integer.parseInt(billingmasterNo));
+		query.setParameter("status", status);
+		List<Billingmaster> list = query.getResultList();
+		return list;
+	}
 
-    public List<Billing> getPrivateBillings(String demographicNo){
-        Query query = entityManager.createQuery("select b from Billing b where b.billingtype = 'Pri' and b.demographicNo = (:demographicNo)");
-        query.setParameter("demographicNo",Integer.parseInt(demographicNo));
-        return query.getResultList();
-    }
+	public List getBillingMasterByBillingNo(String billingNo) {
+		return getBillingmasterByBillingNo(Integer.parseInt(billingNo));
+	}
 
-    public Billingmaster getBillingmaster(String billingNo){
-        return getBillingmaster(Integer.parseInt(billingNo));
-    }
+	public List<Billingmaster> getBillingmasterByBillingNo(int billingNo) {
+		Query query = entityManager.createQuery("select b from Billingmaster b where b.billingNo = (:billingNo)");
+		query.setParameter("billingNo", billingNo);
+		List<Billingmaster> list = query.getResultList();
+		return list;
+	}
 
-    public Billingmaster getBillingmaster(int billingmasterNo){
-        Query query = entityManager.createQuery("select b from Billingmaster b where b.billingmasterNo = (:billingmasterNo)");
-        query.setParameter("billingmasterNo",billingmasterNo);
-        List<Billingmaster> list= query.getResultList();
-        return list.get(0);
-    }
+	public List<Billing> getPrivateBillings(String demographicNo) {
+		Query query = entityManager.createQuery("select b from Billing b where b.billingtype = 'Pri' and b.demographicNo = (:demographicNo)");
+		query.setParameter("demographicNo", Integer.parseInt(demographicNo));
+		return query.getResultList();
+	}
 
-    public void save(Billingmaster bm){
-        entityManager.persist(bm);
-    }
+	public Billingmaster getBillingmaster(String billingNo) {
+		return getBillingmaster(Integer.parseInt(billingNo));
+	}
 
-    public void save(WCB wcb){
-        if (wcb.getW_doi() == null){
-            wcb.setW_doi(new Date());  //Fixes SF ID : 2962864
-        }
-        entityManager.persist(wcb);
-    }
+	public Billingmaster getBillingmaster(int billingmasterNo) {
+		Query query = entityManager.createQuery("select b from Billingmaster b where b.billingmasterNo = (:billingmasterNo)");
+		query.setParameter("billingmasterNo", billingmasterNo);
+		List<Billingmaster> list = query.getResultList();
+		return list.get(0);
+	}
 
-    public void save(Billing billing){
-        entityManager.persist(billing);
-    }
+	public void save(Billingmaster bm) {
+		entityManager.persist(bm);
+	}
 
+	public void save(WCB wcb) {
+		if (wcb.getW_doi() == null) {
+			wcb.setW_doi(new Date()); //Fixes SF ID : 2962864
+		}
+		entityManager.persist(wcb);
+	}
 
+	public void save(Billing billing) {
+		entityManager.persist(billing);
+	}
 
-    public void update(Billingmaster bm){
-        entityManager.merge(bm);
-    }
+	public void update(Billingmaster bm) {
+		entityManager.merge(bm);
+	}
 
-    public void update(Billing billing){
-        entityManager.merge(billing);
-    }
+	public void update(Billing billing) {
+		entityManager.merge(billing);
+	}
 
+	public Billing getBilling(int billingNo) {
+		return entityManager.find(Billing.class, billingNo);
+	}
 
+	public List<WCB> getWCBForms(int demographic) {
+		Query query = entityManager.createQuery("select wcb from WCB wcb where wcb.demographic_no = (:demographicNo) order by wcb.id desc");
+		query.setParameter("demographicNo", demographic);
+		List<WCB> list = query.getResultList();
+		return list;
+	}
 
-    public Billing getBilling(int billingNo){
-        return entityManager.find(Billing.class, billingNo);
-    }
+	public List<WCB> getWCBForms(String demographic) {
+		return getWCBForms(Integer.parseInt(demographic));
+	}
 
+	public WCB getWCBForm(String formID) {
+		if (formID == null) {
+			return null;
+		}
+		MiscUtils.getLogger().debug("\nFORM ID " + formID);
+		return entityManager.find(WCB.class, Integer.parseInt(formID));
+	}
 
-    public List<WCB> getWCBForms(int demographic){
-        Query query = entityManager.createQuery("select wcb from WCB wcb where wcb.demographic_no = (:demographicNo) order by wcb.id desc");
-        query.setParameter("demographicNo", demographic);
-        List<WCB> list  = query.getResultList();
-        return list;
-    }
+	public Billingmaster getBillingMasterByBillingMasterNo(String billingNo) {
+		return getBillingmaster(billingNo);
+	}
 
-    public List<WCB> getWCBForms(String demographic){
-        return getWCBForms(Integer.parseInt(demographic));
-    }
-
-    public WCB getWCBForm(String formID){
-        if (formID == null){
-            return null;
-        }
-        MiscUtils.getLogger().debug("\nFORM ID "+formID);
-        return entityManager.find(WCB.class,Integer.parseInt(formID));
-    }
-
-
-    public Billingmaster getBillingMasterByBillingMasterNo(String billingNo){
-        return getBillingmaster(billingNo);
-    }
-
-    public void markListAsBilled(List list){                    //TODO: Should be set form CONST var
-        String query = "update billingmaster set billingstatus = 'B' where billingmaster_no in ("+ StringUtils.getCSV(list) +")";
-        try {
-
-        	DBHandler.RunSQL(query);
-        }catch (SQLException sqlexception) {
-           MiscUtils.getLogger().debug(sqlexception.getMessage());
-        }
-    }
+	public int markListAsBilled(List<String> list) { //TODO: Should be set form CONST var
+		Query query = entityManager.createQuery("UPDATE Billingmaster b set b.billingstatus = 'B' where b.billingmasterNo in (:billingNumbers)");
+		query.setParameter("billingNumbers", ConversionUtils.toIntList(list));
+		return query.executeUpdate();
+	}
 
 	/**
 	 * Sets the specified billing unit for the billing master with the specified number.
@@ -173,11 +162,10 @@ public class BillingmasterDAO {
 	 * 		Returns the total number of rows affected by the operation 
 	 */
 	public int updateBillingUnitForBillingNumber(String billingUnit, Integer billingNo) {
-	    // TODO test me
 		Query query = entityManager.createQuery("UPDATE " + Billingmaster.class.getSimpleName() + " b SET b.billingUnit = :billingUnit WHERE b.billingNo = :billingNo");
 		query.setParameter("billingUnit", billingUnit);
 		query.setParameter("billingNo", billingNo);
 		return query.executeUpdate();
-    }
+	}
 
 }
