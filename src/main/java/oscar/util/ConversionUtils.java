@@ -25,7 +25,9 @@ package oscar.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Yet another conversion utility class for bridging JPA entity to legacy schema mismatch. 
@@ -39,6 +41,13 @@ public class ConversionUtils {
 	private ConversionUtils() {
 	}
 
+	public static List<Integer> toIntList(List<String> list) {
+		List<Integer> result = new ArrayList<Integer>();
+		for(String str : list)
+			result.add(fromIntString(str));
+		return result;
+	}
+	
 	public static Date fromTimeString(String timeString) {
 		return fromDateString(timeString, DEFAULT_TIME_PATTERN);
 	}
