@@ -111,7 +111,7 @@
                         <TR>
                             <TD align="left">To:</TD>
                             <TD align="left">
-                                    <INPUT name="t_name" style="border: none; font-size: 13px; text-decoration: underline; width: 80%; " type="text" value="<%=props.getProperty("t_name", "")%>" >&nbsp;</INPUT><span id="searching"><a href="javascript:search('billingreferral_no', 't_name', 't_address', 't_phone', 't_fax')"><small>Search #</small></a></span>
+                                    <INPUT name="t_name" style="border: none; font-size: 13px; text-decoration: underline; width: 80%; " type="text" value="<%=props.getProperty("t_name", "")%>" >&nbsp;</INPUT><span id="searching"><a href="javascript:search('billingreferral_no', 't_name', 't_address1', 't_phone', 't_fax')"><small>Search #</small></a></span>
 
                             </TD>
                         </TR>
@@ -119,7 +119,7 @@
                                 <TD align="left">Address:</TD>
                                 <TD align="left">
 
-                                    <textarea id="t_address" name = "t_address" style="font-size: 13px; text-decoration: underline; width: 90%;"><%=props.getProperty("t_address", "")%></textarea>
+                                    <textarea id="t_address1" name = "t_address1" style="font-size: 13px; text-decoration: underline; width: 90%;"><%=props.getProperty("t_address1", "")%></textarea>
 
                                 </TD>
                             </TR>
@@ -358,7 +358,7 @@ function search(billno, toname, toaddress, tophone, tofax) {
      t5 = escape("document.forms[0].elements[\'"+tophone+"\'].value");
      t6 = escape("document.forms[0].elements[\'"+tofax+"\'].value");
      //rs('att',('../billing/CA/ON/searchRefDoc.jsp?param='+t0+'&toname='+t2),600,600,1);
-     rs('att',('../billing/CA/ON/searchRefDoc.jsp?param='+t0+'&toname='+t2+'&toaddress='+t3+'&tophone='+t5+'&tofax='+t6+'&submit=Search&keyword='+document.forms[0].elements[toname].value),600,600,1);
+     rs('att',('../billing/CA/ON/searchRefDoc.jsp?param='+t0+'&toname='+t2+'&toaddress1='+t3+'&tophone='+t5+'&tofax='+t6+'&submit=Search&keyword='+document.forms[0].elements[toname].value),600,600,1);
 }
 
 function start(){
