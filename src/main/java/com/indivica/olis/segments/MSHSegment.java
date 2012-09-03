@@ -30,7 +30,7 @@ public class MSHSegment implements Segment {
 	
 	@Override
 	public String getSegmentHL7String() {
-		return "MSH|^~\\&|^CN=EMR.MCMUN2.CST,OU=Applications,OU=eHealthUsers,OU=Subscribers,DC=subscribers,DC=ssh^X500|BSD 4001|" +
+		return "MSH|^~\\&|^CN=EMR.MCMUN2.CST,OU=Applications,OU=eHealthUsers,OU=Subscribers,DC=subscribers,DC=ssh^X500|MCMUN2|" +
 			"^OLIS^X500||" + dateFormatter.format(new Date()) + "||SPQ^" + queryType.toString() + "^SPQ_Q08|" + uuidString + "|T|2.3.1||||||8859/1";
 	}
 
