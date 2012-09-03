@@ -54,7 +54,7 @@ public class PID3 implements Parameter {
 			getQueryCode() + ".9.1" + (assigningJurisdiction != null ? "^"+assigningJurisdiction : "") + "~" +
 			getQueryCode() + ".9.3" + (assigningJurisdictionCodingSystem != null ? "^"+assigningJurisdictionCodingSystem : "") + "~" +
 			"@PID.8" + (sex != null ? "^"+sex : "") + "~" +
-			"@PID.7" + (dateOfBirth != null ? "^"+dateOfBirth+"~" : "");
+			"@PID.7" + (dateOfBirth != null ? "^"+dateOfBirth : "");
 	}
 
 	@Override
