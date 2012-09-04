@@ -25,9 +25,8 @@
 
 package oscar.oscarDemographic.pageUtil;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -69,9 +68,9 @@ public class DeleteDemographicRelationshipAction extends Action {
     String getRelationID(String id) {
 	String relationID = "";
 	DemographicRelationship demo = new DemographicRelationship();
-	ArrayList<Hashtable<String,String>> dr = demo.getDemographicRelationshipsByID(id);
+	List<Map<String,String>> dr = demo.getDemographicRelationshipsByID(id);
 	for (int i=0; i<dr.size(); i++) {
-	    Hashtable<String,String> h = dr.get(i);
+	    Map<String,String> h = dr.get(i);
 	    String demo_no =  h.get("demographic_no");
 	    String demo_r  =  h.get("relation_demographic_no");
 	    String rel     =  h.get("relation");
@@ -85,9 +84,9 @@ public class DeleteDemographicRelationshipAction extends Action {
     String getRelationshipID(String demo_no, String demo_r, String[] rel_of) {
 	String relationshipID = "";
 	DemographicRelationship demo = new DemographicRelationship();
-	ArrayList<HashMap<String,String>> dr = demo.getDemographicRelationships(demo_no);
+	List<Map<String,String>> dr = demo.getDemographicRelationships(demo_no);
 	for (int i=0; i<dr.size(); i++) {
-		HashMap<String,String> h =  dr.get(i);
+		Map<String,String> h =  dr.get(i);
 	    String demoRel = h.get("demographic_no");
 	    if (demo_r.trim().equalsIgnoreCase(demoRel.trim())) {
 		String rel = h.get("relation");

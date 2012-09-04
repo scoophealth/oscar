@@ -1425,9 +1425,9 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
 						<bean:message key="demographic.demographiceditdemographic.msgAddRelation"/><!--i18n--></a></b></h3>
 						<ul>
 							<%DemographicRelationship demoRelation = new DemographicRelationship();
-                                          ArrayList relList = demoRelation.getDemographicRelationshipsWithNamePhone(demographic.getDemographicNo().toString());
+                                          List relList = demoRelation.getDemographicRelationshipsWithNamePhone(demographic.getDemographicNo().toString());
                                           for (int reCounter = 0; reCounter < relList.size(); reCounter++){
-                                             Hashtable relHash = (Hashtable) relList.get(reCounter);
+                                             HashMap relHash = (HashMap) relList.get(reCounter);
                                              String sdb = relHash.get("subDecisionMaker") == null?"":((Boolean) relHash.get("subDecisionMaker")).booleanValue()?"<span title=\"SDM\" >/SDM</span>":"";
                                              String ec = relHash.get("emergencyContact") == null?"":((Boolean) relHash.get("emergencyContact")).booleanValue()?"<span title=\"Emergency Contact\">/EC</span>":"";
 
