@@ -172,13 +172,8 @@ public class BillingSaveBillingAction extends Action {
                 }
             }
             if (bean.getMessageNotes() != null || !bean.getMessageNotes().trim().equals("")) {
-                try {
-                    BillingNote n = new BillingNote();
-                    n.addNote(billingMasterId, bean.getCreator(), bean.getMessageNotes());
-                } catch (SQLException e) {
-                    log.error(e.getMessage(), e);
-                }
-
+                BillingNote n = new BillingNote();
+                n.addNote(billingMasterId, bean.getCreator(), bean.getMessageNotes());
             }
         }
 
