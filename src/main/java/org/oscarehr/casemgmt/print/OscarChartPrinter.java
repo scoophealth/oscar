@@ -32,9 +32,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
@@ -404,10 +404,10 @@ public class OscarChartPrinter {
         phrase = new Phrase(LEADING, "", font);
 
         DemographicRelationship demoRel = new DemographicRelationship();
-        @SuppressWarnings("unchecked")
-		ArrayList<HashMap<String,String>> demoR = demoRel.getDemographicRelationships(String.valueOf(demographic.getDemographicNo()));
+        
+		List<Map<String,String>> demoR = demoRel.getDemographicRelationships(String.valueOf(demographic.getDemographicNo()));
 		for (int j=0; j<demoR.size(); j++) {
-		    HashMap<String,String> r = demoR.get(j);
+		    Map<String,String> r = demoR.get(j);
 		    String relationDemographicNo = r.get("demographic_no");
 		    Demographic relationDemographic = demographicDao.getClientByDemographicNo(Integer.parseInt(relationDemographicNo));
 		    String relation = r.get("relation");

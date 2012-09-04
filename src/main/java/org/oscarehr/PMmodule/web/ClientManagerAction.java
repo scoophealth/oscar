@@ -31,7 +31,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -1697,7 +1696,7 @@ public class ClientManagerAction extends BaseAction {
 
 		/* Relations */
 		DemographicRelationship demoRelation = new DemographicRelationship();
-		ArrayList<Hashtable<String,Object>> relList = demoRelation.getDemographicRelationshipsWithNamePhone(demographicNo, facilityId);
+		List<Map<String,Object>> relList = demoRelation.getDemographicRelationshipsWithNamePhone(demographicNo, facilityId);
 		List<JointAdmission> list = clientManager.getDependents(new Long(demographicNo));
 		JointAdmission clientsJadm = clientManager.getJointAdmission(new Long(demographicNo));
 		int familySize = list.size() + 1;
@@ -1713,7 +1712,7 @@ public class ClientManagerAction extends BaseAction {
 		}
 
 		if (relList != null && relList.size() > 0) {
-			for (Hashtable h : relList) {
+			for (Map<String, Object> h : relList) {
 				String demographic = (String) h.get("demographicNo");
 				Long demoLong = new Long(demographic);
 				JointAdmission demoJadm = clientManager.getJointAdmission(demoLong);

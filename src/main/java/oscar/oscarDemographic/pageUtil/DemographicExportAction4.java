@@ -2265,8 +2265,8 @@ public class DemographicExportAction4 extends Action {
 
 	private void addDemographicRelationships(String demoNo, Demographics demo) {
 		DemographicRelationship demographicRelationship = new DemographicRelationship();
-		ArrayList<HashMap<String,String>> demographicRelationships = demographicRelationship.getDemographicRelationships(demoNo);
-		HashMap<String,String> demoRel;
+		List<Map<String,String>> demographicRelationships = demographicRelationship.getDemographicRelationships(demoNo);
+		Map<String,String> demoRel;
 
 		//create a list of contactIds
 		String[] contactId = new String[demographicRelationships.size()];
