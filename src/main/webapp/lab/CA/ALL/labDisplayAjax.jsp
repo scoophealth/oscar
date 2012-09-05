@@ -35,7 +35,8 @@
 		 oscar.oscarMDS.data.ReportStatus,oscar.log.*,
          oscar.oscarDB.DBHandler,
          oscar.OscarProperties,
-		 org.apache.commons.codec.binary.Base64,org.oscarehr.common.dao.Hl7TextInfoDao,org.oscarehr.common.model.Hl7TextInfo" %>
+		 org.apache.commons.codec.binary.Base64,org.oscarehr.common.dao.Hl7TextInfoDao,org.oscarehr.common.model.Hl7TextInfo,
+		 org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.model.UserProperty" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -49,6 +50,21 @@ String providerNo = request.getParameter("providerNo");
 String searchProviderNo = request.getParameter("searchProviderNo");
 String patientMatched = request.getParameter("patientMatched");
 String sql = "SELECT demographic_no FROM patientLabRouting WHERE lab_type='HL7' and lab_no='"+segmentID+"';";
+
+UserPropertyDAO userPropertyDAO = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
+UserProperty uProp = userPropertyDAO.getProp(providerNo, UserProperty.LAB_ACK_COMMENT);
+boolean skipComment = false;
+if( uProp != null && uProp.getValue().equalsIgnoreCase("yes")) {
+	skipComment = true;
+}
+
+String ackLabFunc;
+if( skipComment ) {
+	ackLabFunc = "handleLab('acknowledgeForm_" + segmentID + "','" + segmentID + "','ackLab');";
+}
+else {
+	ackLabFunc = "getComment('" + segmentID + "','ackLab');";
+}
 
 Long reqIDL = LabRequestReportLink.getIdByReport("hl7TextMessage",Long.valueOf(segmentID.trim()));
 String reqID = reqIDL==null ? "" : reqIDL.toString();
@@ -73,12 +89,16 @@ if(demographicID != null && !demographicID.equals("")&& !demographicID.equals("0
 
 boolean ackFlag = false;
 ArrayList ackList = AcknowledgementData.getAcknowledgements(segmentID);
+String labStatus = "";
 if (ackList != null){
     for (int i=0; i < ackList.size(); i++){
         ReportStatus reportStatus = (ReportStatus) ackList.get(i);
-        if ( reportStatus.getProviderNo().equals(providerNo) && reportStatus.getStatus().equals("A") ){
-            ackFlag = true;
-            break;
+        if ( reportStatus.getProviderNo().equals(providerNo) ) {
+            labStatus = reportStatus.getStatus();
+            if(labStatus.equals("A") ){
+            	ackFlag = true;
+            	break;
+            }
         }
     }
 }
@@ -107,19 +127,50 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
             windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
             var popup=window.open(varpage, windowname, windowprops);
         }
-         getComment=function(labid) {
-            var ret = true;
-            var commentVal = prompt('<bean:message key="oscarMDS.segmentDisplay.msgComment"/>', '');
-
-            if( commentVal == null ||commentVal.length==0)
+         
+         
+     	<%
+     		int version = 0;
+     		if( multiLabId != null ) {
+     		String[] multiID = multiLabId.split(",");
+     		    if( multiID.length > 1 ) {
+     		    	for( int k = 0; k < multiID.length; ++k ) {
+     					if( multiID[k].equals(segmentID)) {     	
+     						version = k;     	
+     					}
+     				}
+     			}
+     		}
+     	%>
+     	
+         getComment=function(labid, action) {
+            var ret = true;            
+            var text = "V" + <%=version%> + "commentText" + labid + $("providerNo").value;
+            
+            var commentVal = "";
+            
+            if( $(text) != null ) {
+            	commentVal = $(text).innerHTML;
+            	if( commentVal == null ) {
+            		commentVal = "";
+            	}
+            }
+            var commentID = "comment_" + labid;
+            
+            var comment = prompt('<bean:message key="oscarMDS.segmentDisplay.msgComment"/>', commentVal);
+			
+            if( comment == null )
                 ret = false;
-            else{
-                document.forms['acknowledgeForm_'+labid].comment.value = commentVal;
+            else if ( comment != null && comment.length > 0 ){
+                $(commentID).value = comment;
+            }
+            else {
+            	$(commentID).value = commentVal;
             }
             if(ret)
-                handleLab('acknowledgeForm_'+labid,labid,'ackLab');
+                handleLab('acknowledgeForm_'+labid,labid,action);
 
-            return ret;
+            return false;
         }
 
          printPDF=function(doclabid){
@@ -150,7 +201,8 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
                                                                         //check if lab is linked to a provider
                                                                         if(success){
                                                                             if(action=='ackLab'){
-                                                                                if(confirmAck()){
+                                                                                if(confirmAck()){ 
+                                                                                	$("status_"+labid).value = "A";
                                                                                     updateStatus(formid);
                                                                                 }
                                                                             }else if(action=='msgLab'){
@@ -162,11 +214,16 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
                                                                                 if(demoid!=null && demoid.length>0)
                                                                                     window.popup(450,600,'../tickler/ForwardDemographicTickler.do?docType=HL7&docId='+labid+'&demographic_no='+demoid,'tickler')
                                                                             }
+                                                                            else if(action == 'addComment') {
+                                                                            	addComment(formid,labid);
+                                                                            }
 
                                                                         }else{
                                                                             if(action=='ackLab'){
-                                                                                if(confirmAckUnmatched())
+                                                                                if(confirmAckUnmatched()) {
+                                                                                	$("status_"+labid).value = "A";
                                                                                     updateStatus(formid);
+                                                                                }
                                                                                 else{
                                                                                     var pn=$("demoName"+labid).value;
                                                                                     if(pn) popupStart(360, 680, '../oscarMDS/SearchPatient.do?labType=HL7&segmentID='+labid+'&name='+pn, 'searchPatientWindow');
@@ -181,6 +238,33 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
                                                                     }
                                                             }});
         }
+        
+        function addComment(formid,labid) {
+        	var url='<%=request.getContextPath()%>'+"/oscarMDS/UpdateStatus.do?method=addComment";
+        	var status = "status_" + labid;
+        	
+			if( $F(status) == "" ) {
+				$(status).value = "N";
+			}
+        	var data=$(formid).serialize(true);
+        	
+        	var label = "V" + <%=version%> + "commentLabel" + labid + $F("providerNo");
+        	var text = "V" + <%=version%> + "commentText" + labid + $("providerNo").value;
+			var commentID = "comment_" + labid;
+			var newComment;
+			
+            new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){            	
+            	if( $(label) != null && $(text) != null ) {            		
+            		newComment = $(commentID).value;
+            		$(label).update("comment: ");            		            		
+            		$(text).update(newComment);            		
+            	}
+            	else {
+            		alert("Comment '" + $(commentID).value + "' added!\nThis lab has been forwarded to you.");
+            	}
+        }});
+        }
+        
        function confirmAck(){
 		<% if (props.getProperty("confirmAck", "").equals("yes")) { %>
             		return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledge"/>');
@@ -233,7 +317,7 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
             <input type="hidden" name="selectedProviders" value="" />
             <input type="hidden" name="labType" value="HL7" />
             <input type="hidden" name="labType<%= segmentID %>HL7" value="imNotNull" />
-            <input type="hidden" name="providerNo" value="<%= providerNo %>" />
+            <input type="hidden" name="providerNo" id="providerNo" value="<%= providerNo %>" />
             <input type="hidden" name="ajax" value="yes" />
         </form>
         <form name="TDISLabelForm" id="TDISLabelForm<%=segmentID%>" method='POST' onsubmit="createTdisLabel('TDISLabelForm<%=segmentID%>');" action="javascript:void(0);">
@@ -251,14 +335,14 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
                                     <input type="hidden" name="segmentID" value="<%= segmentID %>"/>
                                     <input type="hidden" name="multiID" value="<%= multiLabId %>" />
                                     <input type="hidden" name="providerNo" value="<%= providerNo %>"/>
-                                    <input type="hidden" name="status" value="A"/>
-                                    <input type="hidden" name="comment" value=""/>
+                                    <input type="hidden" name="status" value="<%=labStatus%>"/ id="status_<%=segmentID%>">
+                                    <input type="hidden" name="comment" value=""/ id="comment_<%=segmentID%>">
                                     <input type="hidden" name="labType" value="HL7"/>
                                     <input type="hidden" name="ajaxcall" value="yes"/>
                                     <input type="hidden" id="demoName<%=segmentID%>" value="<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>"/>
                                     <% if ( !ackFlag ) { %>
-                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="handleLab('acknowledgeForm_<%=segmentID%>','<%=segmentID%>','ackLab');">
-                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="return getComment('<%=segmentID%>');">
+                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="<%=ackLabFunc%>">
+                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="return getComment('<%=segmentID%>','addComment');">
                                     <% } %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, '../oscarMDS/SelectProviderAltView.jsp?doc_no=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>', 'providerselect')">
                                     <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="printPDF('<%=segmentID%>')">
@@ -598,10 +682,18 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
                                                                             }
                                                                         %>
                                                                         <font color="red"><%= ackStatus %></font>
-                                                                        <% if ( ackStatus.equals("Acknowledged") ) { %>
+                                                                        
                                                                             <%= report.getTimestamp() %>,
-                                                                            <%= ( report.getComment().equals("") ? "no comment" : "comment : "+report.getComment() ) %>
-                                                                        <% } %>
+                                                                            <% String commentTitle = null;
+                                                                               if(report.getComment().equals("")) {
+                                                                        	   	commentTitle = "no comment";
+                                                                               }
+                                                                               else {
+                                                                        	   	commentTitle = "comment: ";
+                                                                               }
+                                                                            %>
+                                                                            <span id="<%="V" + j + "commentLabel" + segmentID + report.getProviderNo()%>"><%=commentTitle%></span><span id="<%="V" + j + "commentText" + segmentID + report.getProviderNo()%>"> <%=report.getComment()%></span>
+                                                                        
                                                                         <br>
                                                                     <% }
                                                                     if (ackList.size() == 0){
@@ -856,8 +948,8 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
                             <tr>
                                 <td align="left" width="50%">
                                     <% if ( !ackFlag ) { %>
-                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="handleLab('acknowledgeForm_<%=segmentID%>','<%=segmentID%>','ackLab');">
-                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="getComment('<%=segmentID%>')">
+                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="<%=ackLabFunc%>">
+                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="getComment('<%=segmentID%>','addComment')">
                                     <% } %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, '../oscarMDS/SelectProviderAltView.jsp?doc_no=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>', 'providerselect')">
 
