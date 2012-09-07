@@ -34,6 +34,8 @@ import org.oscarehr.common.model.Drug;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
+import oscar.util.ConversionUtils;
+
 @Repository
 public class DrugDao extends AbstractDao<Drug> {
 
@@ -64,6 +66,10 @@ public class DrugDao extends AbstractDao<Drug> {
 		return (results);
 	}
 
+	public List<Drug> findByDemographicId(Integer demographicId) {
+		return findByDemographicId(demographicId, null);
+	}
+	
 	public List<Drug> findByDemographicId(Integer demographicId, Boolean archived) {
 
 		String sqlCommand = "select x from Drug x where x.demographicId=?1 " + (archived == null ? "" : "and x.archived=?2");
@@ -101,7 +107,9 @@ public class DrugDao extends AbstractDao<Drug> {
 	}
 
 	/**
-	 * @deprecated ordering should be done after in java not on the db when all items are returns, use the findByDemographicId() instead.
+	 * @ deprecated ordering should be done after in java not on the db when all items are returns, use the findByDemographicId() instead.
+	 * 
+	 * @ undeprecated Sorting on multiple fields in the java adds complexity unless special tools are used for sorting 
 	 */
 	public List<Drug> findByDemographicIdOrderByPosition(Integer demographicId, Boolean archived) {
 		// build sql string
@@ -241,4 +249,111 @@ public class DrugDao extends AbstractDao<Drug> {
 		return (results);
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<Drug> findByDemographicIdAndAtc(int demographicNo, String atc) {
+		Query query = entityManager.createQuery("FROM " + modelClass.getSimpleName() + " d WHERE d.demographicId = :demoId AND d.atc = :atc ORDER BY d.position, d.rxDate DESC, d.id DESC");
+		query.setParameter("demoId", demographicNo);
+		query.setParameter("atc", atc);
+		return query.getResultList();
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Drug> findByDemographicIdAndRegion(int demographicNo, String regionalIdentifier) {
+		Query query = entityManager.createQuery("FROM " + modelClass.getSimpleName() + " d WHERE d.demographicId = :demoId AND d.regionalIdentifier = :regionalIdentifier ORDER BY d.position, d.rxDate DESC, d.id DESC");
+		query.setParameter("demoId", demographicNo);
+		query.setParameter("regionalIdentifier", regionalIdentifier);
+		return query.getResultList();
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Drug> findByDemographicIdAndDrugId(int demographicNo, String drugId) {
+		Query query = entityManager.createQuery("FROM " + modelClass.getSimpleName() + " d WHERE d.demographicId = :demoId AND d.id = :drugId ORDER BY d.position, d.rxDate DESC, d.id DESC");
+		query.setParameter("demoId", demographicNo);
+		query.setParameter("drugId", ConversionUtils.fromIntString(drugId));
+		return query.getResultList();
+	}
+
+	/**
+	 * Finds all drugs and prescriptions for the specified demographic number
+	 * 
+	 * @param demographicNo
+	 * 		Demographic number to search entities for
+	 * @return
+	 * 		Returns the list of arrays, where first element is of type {@link Drug} and the second is of type {@link Prescription}.
+	 */
+	@SuppressWarnings("unchecked")
+    public List<Object[]> findDrugsAndPrescriptions(int demographicNo) {
+		Query query = entityManager.createQuery("SELECT d, p FROM Drug d, Prescription p WHERE d.demographicId = :demoId AND d.scriptNo = p.id ORDER BY d.position DESC, d.rxDate DESC, d.id ASC");
+		query.setParameter("demoId", demographicNo);
+		return query.getResultList();
+	}
+
+
+	/**
+	 * Finds all drugs and prescriptions for the specified id
+	 * 
+	 * @param scriptNumber
+	 * 		Script number of a prescription to be found
+	 * @return
+	 * 		Returns the list of arrays, where first element is of type {@link Drug} and the second is of type {@link Prescription}.
+	 */
+	@SuppressWarnings("unchecked")
+    public List<Object[]> findDrugsAndPrescriptionsByScriptNumber(int scriptNumber) {
+		Query query = entityManager.createQuery("SELECT d, p FROM Drug d, Prescription p WHERE d.scriptNo = p.id AND d.scriptNo = :scriptNo ORDER BY d.position DESC, d.rxDate DESC, d.id ASC");
+		query.setParameter("scriptNo", scriptNumber);
+		return query.getResultList();
+	}
+
+	public int getMaxPosition(int demographicNo) {
+		Query query = entityManager.createQuery("SELECT MAX(d.position) FROM " + modelClass.getSimpleName() + " d WHERE d.demographicId = :id");
+		query.setParameter("id", demographicNo);
+		Long result = (Long) query.getSingleResult();
+		if (result == null)
+			return 0;
+		return result.intValue();
+    }
+
+	public Drug findByEverything(String providerNo, int demographicNo, Date rxDate, Date endDate, Date writtenDate, String brandName, int gcn_SEQNO, String customName, float takeMin, float takeMax, String frequencyCode, String duration, String durationUnit, String quantity, String unitName, int repeat, Date lastRefillDate, boolean nosubs, boolean prn, String escapedSpecial, String outsideProviderName, String outsideProviderOhip, boolean customInstr, boolean longTerm, boolean customNote, boolean pastMed,
+            Boolean patientCompliance, String specialInstruction, String comment, boolean startDateUnknown) {
+
+		Query query = entityManager.createQuery("FROM " + modelClass.getSimpleName() + " d WHERE (d.archived = 0 OR d.archived IS NULL) AND "
+				+ "d.providerNo = :providerNo AND d.demographicId = :demographicNo AND d.rxDate = :rxDate AND d.endDate = :endDate AND d.writtenDate = :writtenDate AND d.brandName = :brandName AND "
+				+ "d.gcnSeqNo = :gcnSeqNo AND d.customName = :customName AND d.takeMin = :takemin AND d.takeMax = :takemax AND d.freqCode = :freqCode AND d.duration = :duration AND d.durUnit = :durunit AND d.quantity = :quantity AND d.unitName = :unitName AND d.repeat = :repeat AND "
+		        + "d.lastRefillDate = :lastRefillDate AND d.noSubs = :nosubs AND d.prn = :prn AND d.special = :special AND d.outsideProviderName = :outsideProviderName AND d.outsideProviderOhip = :outsideProviderOhip AND d.customInstructions = :customInstructions AND d.longTerm = :longTerm AND "
+		        + "d.customNote = :customNote AND d.pastMed = :pastMed AND d.patientCompliance = :patientCompliance AND d.special_instruction = :specialInstruction AND d.comment = :comment AND d.startDateUnknown = :startDateUnknown");
+		
+		query.setParameter("providerNo", providerNo);
+		query.setParameter("demographicNo", demographicNo);
+		query.setParameter("rxDate", rxDate);
+		query.setParameter("endDate", endDate);
+		query.setParameter("writtenDate", writtenDate);
+		query.setParameter("brandName", brandName);
+		query.setParameter("gcnSeqNo", gcn_SEQNO);
+		query.setParameter("customName", customName);
+		query.setParameter("takemin", takeMin);
+		query.setParameter("takemax", takeMax);
+		query.setParameter("freqCode", frequencyCode);
+		query.setParameter("duration", duration);
+		query.setParameter("durunit", durationUnit);
+		query.setParameter("quantity", quantity);
+		query.setParameter("unitName", unitName);
+		query.setParameter("repeat", repeat);
+		query.setParameter("lastRefillDate", lastRefillDate);
+		query.setParameter("nosubs", nosubs);
+		query.setParameter("prn", prn);
+		query.setParameter("special", specialInstruction);
+		query.setParameter("outsideProviderName", outsideProviderName);
+		query.setParameter("outsideProviderOhip", outsideProviderOhip);
+		query.setParameter("customInstructions", customInstr);
+		query.setParameter("longTerm", longTerm);
+		query.setParameter("customNote", customNote);
+		query.setParameter("pastMed", pastMed);
+		query.setParameter("patientCompliance", patientCompliance);
+		query.setParameter("specialInstruction", specialInstruction);
+		query.setParameter("comment", comment);
+		query.setParameter("startDateUnknown", startDateUnknown);
+		
+		query.setMaxResults(1);
+		return getSingleResultOrNull(query);
+    }
 }

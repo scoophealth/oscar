@@ -23,38 +23,50 @@
  */
 package org.oscarehr.common.dao;
 
-import static org.junit.Assert.assertNotNull;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
-import org.oscarehr.common.model.Favorite;
+import org.oscarehr.common.model.Drug;
 import org.oscarehr.util.SpringUtils;
 
-public class FavoriteDaoTest extends DaoTestFixtures {
+public class DrugDaoTest extends DaoTestFixtures {
 
-	private FavoriteDao dao = SpringUtils.getBean(FavoriteDao.class);
+	private DrugDao dao = SpringUtils.getBean(DrugDao.class);
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("favorites");
+		SchemaUtils.restoreTable("drugs", "prescription");
 	}
 
 	@Test
-	public void testCreate() throws Exception {
-		Favorite entity = new Favorite();
-		EntityDataGenerator.generateTestDataForModelClass(entity);
-		dao.persist(entity);
+	public void testFindDrugsAndPrescriptions() throws Exception {
+		// EntityDataGenerator.generateTestDataForModelClass(entity);
 
-		assertNotNull(entity.getId());
+		List<Object[]> results = dao.findDrugsAndPrescriptions(99);
+		assertNotNull(results);
+		assertTrue(true);
+		assertFalse(false);
 	}
-	
+
 	@Test
-	public void testAll() throws Exception {
-		dao.findByProviderNo("999");
-		dao.findByEverything(null, null, null, 0, null, 0, 0, null, null, null, null, 0, false, false, null, null, null, false);
+	public void testAll() {
+		List<Drug> drugs = null;
+		drugs = dao.findByDemographicIdAndAtc(999, "");
+		assertNotNull(drugs);
+
+		drugs = dao.findByDemographicIdAndRegion(999, "");
+		assertNotNull(drugs);
+
+		drugs = dao.findByDemographicIdAndDrugId(999, "");
+		assertNotNull(drugs);
+
+		dao.findByEverything(null, 0, null, null, null, null, 0, null, 0, 0, null, null, null, null, null, 0, null, false, false, null, null, null, false, false, false, false, null, null, null, false);
+		dao.getMaxPosition(999);
 	}
-	
-	
 }

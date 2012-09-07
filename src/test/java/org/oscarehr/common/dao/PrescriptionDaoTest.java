@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,27 +21,29 @@
  * Hamilton
  * Ontario, Canada
  */
-
-
 package org.oscarehr.common.dao;
 
-import javax.persistence.Query;
+import java.util.Date;
 
-import org.oscarehr.common.model.IndivoDocs;
-import org.springframework.stereotype.Repository;
+import org.junit.Before;
+import org.junit.Test;
+import org.oscarehr.common.dao.utils.SchemaUtils;
+import org.oscarehr.util.SpringUtils;
 
-@Repository
-public class IndivoDocsDao extends AbstractDao<IndivoDocs>{
+public class PrescriptionDaoTest extends DaoTestFixtures {
 
-	public IndivoDocsDao() {
-		super(IndivoDocs.class);
+	private PrescriptionDao dao = SpringUtils.getBean(PrescriptionDao.class);
+
+	@Before
+	public void before() throws Exception {
+		SchemaUtils.restoreTable("prescription");
 	}
-
-	public IndivoDocs findByOscarDocNo(Integer id) {
-		// TODO replace with get base query
-		Query query = entityManager.createQuery("FROM " + modelClass.getSimpleName() + " i WHERE i.oscarDocNo = :docNo AND i.docType = 'Rx'");
-		query.setMaxResults(1);
-		query.setParameter("docNo", id);
-	    return getSingleResultOrNull(query);
-    }
+	
+	@Test
+	public void testAll() throws Exception {
+		dao.findByDemographicIdUpdatedAfterDate(999, new Date());
+		dao.updatePrescriptionsByScriptNo("100", "comment");
+	}
+	
+	
 }

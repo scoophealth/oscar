@@ -87,9 +87,20 @@ public abstract class AbstractDao<T extends AbstractModel<?>> {
 		return query.getResultList();
 	}
 
-	public void remove(Object id) {
+	/** Removes an entity based on the ID
+	 * 
+	 * @param id
+	 * 		ID of the entity to be removed
+	 * @return
+	 * 		Returns true if entity has been removed and false otherwise
+	 */
+	public boolean remove(Object id) {
 		T abstractModel = find(id);
-		if (abstractModel != null) remove(abstractModel);
+		if (abstractModel == null)
+			return false;
+		
+		remove(abstractModel);
+		return true;
 	}
 
 	protected T getSingleResultOrNull(Query query) {

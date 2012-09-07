@@ -492,6 +492,7 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:ArrayList lst = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPrescriptionData.java:ArrayList lst = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPrescriptionData.java:Vector vec = new Vector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPrescriptionData.java:return new Vector(result);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxChoosePatientAction.java:HashMap hm = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxDeleteRxAction.java:HashMap hm = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxDeleteRxAction.java:Hashtable d = new Hashtable();</ViolationValue>
@@ -1861,6 +1862,7 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL("SELECT demographic_no, last_name, first_name, sex, year_of_birth, " + "month_of_birth, date_of_birth, address, city, province, postal, phone " + "FROM demographic WHERE last_name LIKE '" + surname + "%' AND first_name LIKE '" + firstName + "%'");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPatientData.java:rs = DBHandler.GetSQL("SELECT demographic_no, last_name, first_name, sex, year_of_birth, " + "month_of_birth, date_of_birth, address, city, province, postal, phone,hin " + "FROM demographic WHERE demographic_no = " + demographicNo);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPrescriptionData.java:DBHandler.RunSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPrescriptionData.java:return new Vector(result);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPrescriptionData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPrescriptionData.java:rs = DBHandler.GetSQL("SELECT * FROM favorites WHERE favoriteid = " + favoriteId);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPrescriptionData.java:rs = DBHandler.GetSQL("SELECT * FROM favorites WHERE provider_no = '" + providerNo + "' ORDER BY favoritename");</ViolationValue>
@@ -3336,6 +3338,7 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxInteractionWorker.java:public RxInteractionWorker(RxInteractionData rxInt, Vector v) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPrescriptionData.java:Vector vec = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPrescriptionData.java:import java.util.Vector;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPrescriptionData.java:return new Vector(result);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPrescriptionData.java:public Vector getCurrentATCCodesByPatient(int demographicNo) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxDeleteRxAction.java:Hashtable d = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxDeleteRxAction.java:import java.util.Hashtable;</ViolationValue>

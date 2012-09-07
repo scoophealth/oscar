@@ -70,7 +70,7 @@ public final class RxRePrescribeAction extends DispatchAction {
 		String ip = request.getRemoteAddr();
 
 		RxPrescriptionData rxData = new RxPrescriptionData();
-		ArrayList<RxPrescriptionData.Prescription> list = rxData.getPrescriptionsByScriptNo(Integer.parseInt(script_no), sessionBeanRX.getDemographicNo());
+		List<Prescription> list = rxData.getPrescriptionsByScriptNo(Integer.parseInt(script_no), sessionBeanRX.getDemographicNo());
 		RxPrescriptionData.Prescription p = null;
 		StringBuilder auditStr = new StringBuilder();
 		for (int idx = 0; idx < list.size(); ++idx) {
@@ -111,7 +111,7 @@ public final class RxRePrescribeAction extends DispatchAction {
 		String script_no = request.getParameter("scriptNo");
 		String ip = request.getRemoteAddr();
 		RxPrescriptionData rxData = new RxPrescriptionData();
-		ArrayList<RxPrescriptionData.Prescription> list = rxData.getPrescriptionsByScriptNo(Integer.parseInt(script_no), sessionBeanRX.getDemographicNo());
+		List<Prescription> list = rxData.getPrescriptionsByScriptNo(Integer.parseInt(script_no), sessionBeanRX.getDemographicNo());
 		RxPrescriptionData.Prescription p = null;
 		StringBuilder auditStr = new StringBuilder();
 		for (int idx = 0; idx < list.size(); ++idx) {

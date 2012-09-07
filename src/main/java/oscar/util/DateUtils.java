@@ -159,6 +159,10 @@ public final class DateUtils {
 		cal.getTimeInMillis();
 	}
 	
+	public static String format(String format, Date date) {
+		return format(format, date, null);
+	}
+	
 	/**
 	 * @param locale can be null
 	 * @return if date is null will return a blank string.
