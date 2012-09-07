@@ -22,7 +22,6 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.common.model;
 
 import java.io.Serializable;
@@ -43,7 +42,7 @@ import javax.persistence.TemporalType;
 import org.apache.commons.lang.StringUtils;
 
 @Entity
-@Table(name="prescription")
+@Table(name = "prescription")
 public class Prescription extends AbstractModel<Integer> implements Serializable {
 
 	@Id
@@ -75,7 +74,7 @@ public class Prescription extends AbstractModel<Integer> implements Serializable
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastUpdateDate;
-	
+
 	@PreRemove
 	protected void jpaPreventDelete() {
 		throw (new UnsupportedOperationException("Remove is not allowed for this type of item."));
@@ -83,9 +82,8 @@ public class Prescription extends AbstractModel<Integer> implements Serializable
 
 	@PreUpdate
 	@PrePersist
-	protected void autoSetUpdateTime()
-	{
-		lastUpdateDate=new Date();
+	protected void autoSetUpdateTime() {
+		lastUpdateDate = new Date();
 	}
 
 	@Override
@@ -125,6 +123,12 @@ public class Prescription extends AbstractModel<Integer> implements Serializable
 		this.datePrinted = datePrinted;
 	}
 
+	/**
+	 * Gets a comma-separated string containing dates this prescription has been reprinted.
+	 * 
+	 * @return
+	 * 		Returns the dates reprinted.
+	 */
 	public String getDatesReprinted() {
 		return (datesReprinted);
 	}
@@ -150,7 +154,27 @@ public class Prescription extends AbstractModel<Integer> implements Serializable
 	}
 
 	public Date getLastUpdateDate() {
-    	return (lastUpdateDate);
-    }
+		return (lastUpdateDate);
+	}
 
+	/**
+	 * Checks if this prescription has been reprinted
+	 * 
+	 * @return
+	 * 		Returns true if there is a reprint date available
+	 */
+	public boolean isReprinted() {
+		return getDatesReprinted() != null && !getDatesReprinted().isEmpty();
+	}
+
+	/**
+	 * Gets the number of times the prescription has been reprinted
+	 * 
+	 * @return
+	 * 		Returns 0, if it hasn't been reprinted, or a number corresponding to the number of reprint dates
+	 */
+	public int getReprintCount() {
+		if (!isReprinted()) return 0;
+		return getDatesReprinted().split(",").length;
+	}
 }

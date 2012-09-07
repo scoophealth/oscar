@@ -31,6 +31,8 @@ import javax.persistence.Query;
 import org.oscarehr.common.model.Prescription;
 import org.springframework.stereotype.Repository;
 
+import oscar.util.ConversionUtils;
+
 @Repository
 public class PrescriptionDao extends AbstractDao<Prescription> {
 
@@ -40,26 +42,32 @@ public class PrescriptionDao extends AbstractDao<Prescription> {
 
 	public List<Prescription> findByDemographicId(Integer demographicId) {
 
-		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.demographicId=?1";
+		String sqlCommand = "select x from " + modelClass.getSimpleName() + " x where x.demographicId=?1";
 
-        Query query = entityManager.createQuery(sqlCommand);
-        query.setParameter(1, demographicId);
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, demographicId);
 
-        @SuppressWarnings("unchecked")
-        List<Prescription> results = query.getResultList();
-        return (results);
-    }
+		@SuppressWarnings("unchecked")
+		List<Prescription> results = query.getResultList();
+		return (results);
+	}
 
 	public List<Prescription> findByDemographicIdUpdatedAfterDate(Integer demographicId, Date afterThisDate) {
+		String sqlCommand = "select x from " + modelClass.getSimpleName() + " x where x.demographicId=?1 and x.lastUpdateDate>=?2";
 
-		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.demographicId=?1 and x.lastUpdateDate>=?2";
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, demographicId);
+		query.setParameter(2, afterThisDate);
 
-        Query query = entityManager.createQuery(sqlCommand);
-        query.setParameter(1, demographicId);
-        query.setParameter(2, afterThisDate);
+		@SuppressWarnings("unchecked")
+		List<Prescription> results = query.getResultList();
+		return (results);
+	}
 
-        @SuppressWarnings("unchecked")
-        List<Prescription> results = query.getResultList();
-        return (results);
-    }
+	public int updatePrescriptionsByScriptNo(String scriptNo, String comment) {
+		Query query = entityManager.createQuery("UPDATE Prescription p SET p.comments = :comments WHERE p.id = :id");
+		query.setParameter("comments", comment);
+		query.setParameter("id", ConversionUtils.fromIntString(scriptNo));
+		return query.executeUpdate();
+	}
 }
