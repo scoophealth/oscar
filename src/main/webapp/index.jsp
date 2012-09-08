@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.common.service.AcceptableUseAgreementManager"%>
 <%@page import="oscar.OscarProperties, javax.servlet.http.Cookie, oscar.oscarSecurity.CookieSecurity, oscar.login.UAgentInfo" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -84,6 +85,13 @@ Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
         <!--LINK REL="StyleSheet" HREF="web.css" TYPE="text/css"-->
 
         <script language="JavaScript">
+        function showHideItem(id){
+            if(document.getElementById(id).style.display == 'none')
+                document.getElementById(id).style.display = 'block';
+            else
+                document.getElementById(id).style.display = 'none';
+        }
+        
   <!-- hide
   function setfocus() {
     document.loginForm.username.focus();
@@ -186,6 +194,12 @@ Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
                         </span>
                         <input type=hidden name='propname' value='<bean:message key="loginApplication.propertyFile"/>' />
                         </html:form>
+                        
+                        <%if (AcceptableUseAgreementManager.hasAUA()){ %>
+                        <span class="extrasmall">
+                        	<bean:message key="global.aua" /> &nbsp; <a href="javascript:void(0);" onclick="showHideItem('auaText');"><bean:message key="global.showhide"/></a>
+                        </span>
+                        <%} %>
                         <hr width="100%" color="navy">
                         
                         <span class="extrasmall">
@@ -206,6 +220,12 @@ Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
                     <!-- left side end-->
                 </td>
                 <td id="logoImg" align="center" valign="top">
+                	<%if (AcceptableUseAgreementManager.hasAUA()){ %>
+                	<div style="float:right;text-align:center;z-index:3;display:none;" id="auaText">
+            				<h3><bean:message key="provider.login.title.confidentiality"/></h3>
+        					<div style="margin-left:auto; margin-right:auto; text-align:left; width:70%; padding:5px; border:2px groove black;"><%=AcceptableUseAgreementManager.getAUAText()%></div>
+        			</div>
+                	<%}%>
                     <div style="margin-top:25px;"><% if (props.getProperty("loginlogo", "").equals("")) { %>
                             <html:img srcKey="loginApplication.image.logo" width="450" height="274"/>
                             <% } else { %>
