@@ -85,7 +85,7 @@ public class ONAREnhancedBornConnector {
 	public String updateBorn() throws Exception {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		String dt = sdf.format(new Date());				
-		String filename =  "/BORN_"+OscarProperties.getInstance().getProperty("born_orgid", "")+"_AR_T_"+dt+"_"+getFileSuffix()+".xml";
+		String filename =  "/BORN_"+OscarProperties.getInstance().getProperty("born_orgid", "")+"_AR_" + OscarProperties.getInstance().getProperty("born_env", "T") + "_"+dt+"_"+getFileSuffix()+".xml";
 		
 		Connection conn = org.oscarehr.util.DbConnectionFilter.getThreadLocalDbConnection();
 		Statement st = conn.createStatement();
