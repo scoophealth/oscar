@@ -134,6 +134,8 @@ public class OscarChartPrinter {
 		this.os = os;
 
 		document = new Document();
+		// writer = PdfWriterFactory.newInstance(document, os, FontSettings.HELVETICA_10PT);
+		
 	    writer = PdfWriter.getInstance(document,os);
 		writer.setPageEvent(new EndPage());
 		document.setPageSize(PageSize.LETTER);

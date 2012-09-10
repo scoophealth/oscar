@@ -379,7 +379,7 @@ public class EFormUtil {
 		curht.put("formTime", eform.getFormDate().toString());
 		curht.put("formCreator", eform.getCreator());
 		curht.put("formHtml", eform.getFormHtml());
-		curht.put("patientIndependent", String.valueOf(eform.isPatientIndependent()));
+		curht.put("patientIndependent", eform.isPatientIndependent());
 		curht.put("roleType", eform.getRoleType());
 
 		return (curht);
