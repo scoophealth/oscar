@@ -24,6 +24,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.EFormDataDao;
 import org.oscarehr.common.model.EFormData;
+import org.oscarehr.common.printing.HtmlToPdfServlet;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WKHtmlToPdfUtils;
@@ -116,13 +117,24 @@ public class PrintAction extends Action {
 				bos.write(buffer,0, read);
 			}
 			
+			bos.flush();
+			// byte[] pdf = HtmlToPdfServlet.appendFooter(bos.getBytes());
+			byte[] pdf;
+            try {
+	            pdf = HtmlToPdfServlet.stamp(bos.getBytes());
+            } catch (Exception e) {
+            	throw new RuntimeException(e);
+            }
+			
 			//while (fos.read() != -1)
 			response.setContentType("application/pdf");  //octet-stream
             response.setHeader("Content-Disposition", "attachment; filename=\"EForm-"
             				+ formId + "-"
 							+ UtilDateUtilities.getToday("yyyy-mm-dd.hh.mm.ss")
 							+ ".pdf\"");
-			response.getOutputStream().write(bos.getBytes(), 0, bos.getCount());
+			// response.getOutputStream().write(bos.getBytes(), 0, bos.getCount());
+            HtmlToPdfServlet.stream(response, pdf, false);
+            // response.getOutputStream().write(pdf);
 			
 			// Removing the consulation pdf.
 			tempFile.delete();	

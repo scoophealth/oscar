@@ -157,12 +157,18 @@ public final class ProblemCheckFilter implements Filter
 		
 		public HttpSession getSession()
 		{
-			return(new SessionChecker(super.getSession()));
+			HttpSession parentSession = super.getSession();
+			if (parentSession == null)
+				return null;
+			return new SessionChecker(super.getSession());
 		}
 		
 		public HttpSession getSession(boolean create)
 		{
-			return(new SessionChecker(super.getSession(create)));
+			HttpSession parentSession = super.getSession(create);
+			if (parentSession == null)
+				return null;
+			return new SessionChecker(super.getSession(create));
 		}
 	}
 	

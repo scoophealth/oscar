@@ -44,6 +44,9 @@ import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.oscarehr.common.printing.FontSettings;
+import org.oscarehr.common.printing.PdfWriterFactory;
+
 import oscar.OscarProperties;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
@@ -118,7 +121,8 @@ public class EctConsultationFormRequestPrintPdf {
 
         //Create the document we are going to write to
         document = new Document();
-        writer = PdfWriter.getInstance(document,out);
+        // writer = PdfWriter.getInstance(document,out);
+        writer = PdfWriterFactory.newInstance(document, out, FontSettings.HELVETICA_6PT);
 
         //Use the template located at '/oscar/oscarEncounter/oscarConsultationRequest/props'
         reader = new PdfReader("/oscar/oscarEncounter/oscarConsultationRequest/props/consultationFormRequest.pdf");
@@ -259,19 +263,19 @@ public class EctConsultationFormRequestPrintPdf {
     }
 
     private void addFooter() throws DocumentException, IOException{
-        cb.beginText();
-        cb.setFontAndSize(bf, FONTSIZE);
-        cb.showTextAligned(PdfContentByte.ALIGN_CENTER, "-"+PAGENUM+"-", width/2, 30, 0);
-        cb.endText();
-
-
-        // add promotext if it is enabled
-        if ( OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT") != null){
-            cb.beginText();
-            cb.setFontAndSize(BaseFont.createFont(BaseFont.HELVETICA,BaseFont.CP1252,BaseFont.NOT_EMBEDDED), 6);
-            cb.showTextAligned(PdfContentByte.ALIGN_CENTER, OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT"), width/2, 19, 0);
-            cb.endText();
-        }
+//        cb.beginText();
+//        cb.setFontAndSize(bf, FONTSIZE);
+//        cb.showTextAligned(PdfContentByte.ALIGN_CENTER, "-"+PAGENUM+"-", width/2, 30, 0);
+//        cb.endText();
+//
+//
+//        // add promotext if it is enabled
+//        if ( OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT") != null){
+//            cb.beginText();
+//            cb.setFontAndSize(BaseFont.createFont(BaseFont.HELVETICA,BaseFont.CP1252,BaseFont.NOT_EMBEDDED), 6);
+//            cb.showTextAligned(PdfContentByte.ALIGN_CENTER, OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT"), width/2, 19, 0);
+//            cb.endText();
+//        }
     }
 
     private void combinePDFs(String currentFileName) throws IOException{

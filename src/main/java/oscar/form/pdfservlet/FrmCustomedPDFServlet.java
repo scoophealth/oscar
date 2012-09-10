@@ -36,6 +36,7 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
@@ -49,6 +50,8 @@ import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.printing.FontSettings;
+import org.oscarehr.common.printing.PdfWriterFactory;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.web.PrescriptionQrCodeUIBean;
 
@@ -69,7 +72,6 @@ import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfPageEventHelper;
 import com.lowagie.text.pdf.PdfWriter;
-import java.util.Locale;
 
 public class FrmCustomedPDFServlet extends HttpServlet {
 
@@ -555,7 +557,8 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 			// 285=left margin+width of box, 5f is space for looking nice
 			document.setMargins(15, pageSize.getWidth() - 285f + 5f, 170, 60);// left, right, top , bottom
 
-			writer = PdfWriter.getInstance(document, baosPDF);
+			// writer = PdfWriter.getInstance(document, baosPDF);
+			writer = PdfWriterFactory.newInstance(document, baosPDF, FontSettings.HELVETICA_10PT);
 			writer.setPageEvent(new EndPage(clinicName, clinicTel, clinicFax, patientPhone, patientCityPostal, patientAddress, patientName,patientDOB, sigDoctorName, rxDate, origPrintDate, numPrint, imgFile, patientHIN, patientChartNo, pracNo, locale));
 			document.addTitle(title);
 			document.addSubject("");

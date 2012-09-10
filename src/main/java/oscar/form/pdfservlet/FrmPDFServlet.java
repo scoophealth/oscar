@@ -33,6 +33,8 @@ import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.printing.FontSettings;
+import org.oscarehr.common.printing.PdfWriterFactory;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
@@ -217,7 +219,7 @@ public class FrmPDFServlet extends HttpServlet {
         PdfWriter writer = null;
 
         try {
-            writer = PdfWriter.getInstance(document, baosPDF);
+            writer = PdfWriterFactory.newInstance(document, baosPDF, FontSettings.HELVETICA_6PT); 
 
             String title = req.getParameter("__title"+suffix) != null ? req.getParameter("__title"+suffix) : "Unknown";
             
@@ -246,9 +248,6 @@ public class FrmPDFServlet extends HttpServlet {
                 }
             }
             
-            
-            
-
             //specify the page of the picture using __graphicPage, it may be used multiple times to specify multiple pages
             //ie. __graphicPage=2&__graphicPage=3
             //__cfgGraphicFile will be mapped to page 1, __cfgGraphicFile0 will be mapped to page 2 etc.
@@ -291,8 +290,12 @@ public class FrmPDFServlet extends HttpServlet {
             String tempValue = null;
 
             //load from DB
-            int demoNo = Integer.parseInt(req.getParameter("demographic_no"));
-            int formId = Integer.parseInt(req.getParameter("formId"));
+            String demoNoString = req.getParameter("demographic_no");
+            int demoNo = Integer.parseInt(demoNoString);
+            String formIdString = req.getParameter("formId");
+            if (formIdString == null)
+            	formIdString = "0";
+            int formId = Integer.parseInt(formIdString);
             String formClass=req.getParameter("form_class");
             FrmRecord record = (new FrmRecordFactory()).factory(formClass);
             java.util.Properties props = new Properties();
@@ -503,8 +506,7 @@ public class FrmPDFServlet extends HttpServlet {
 	                        fontType[0] = BaseFont.COURIER;
 	                        encoding = BaseFont.CP1252;
 	                    }
-	
-	
+
 	                    bf = BaseFont.createFont(fontType[0],encoding,BaseFont.NOT_EMBEDDED);
 	                    propValue = props.getProperty(tempName.toString());
 	                    //if not in regular config then check measurements
@@ -566,18 +568,19 @@ public class FrmPDFServlet extends HttpServlet {
 	                                .parseInt(cfgVal[1].trim()), (height - Integer.parseInt(cfgVal[2].trim())), 0);	
 	                        cb.endText();
 	                    } else if (tempName.toString().equals("forms_promotext")){
-	                        if ( OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT") != null ){
-	                            log.info("adding user placed forms_promotext");
-	                            cb.beginText();
-	                            cb.setFontAndSize(bf, Integer.parseInt(cfgVal[5].trim()));
-	                            cb.showTextAligned((cfgVal[0].trim().equals("left") ? PdfContentByte.ALIGN_LEFT : (cfgVal[0].trim().equals("right") ? PdfContentByte.ALIGN_RIGHT : PdfContentByte.ALIGN_CENTER)),
-	                                    OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT"),
-	                                    Integer.parseInt(cfgVal[1].trim()),
-	                                    (height - Integer.parseInt(cfgVal[2].trim())),
-	                                    0);	
-	                            cb.endText();
-	                        }
-	                    } else { // write prop text	
+//	                        if ( OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT") != null ){
+//	                            log.info("adding user placed forms_promotext");
+//	                            cb.beginText();
+//	                            cb.setFontAndSize(bf, Integer.parseInt(cfgVal[5].trim()));
+//	                            cb.showTextAligned((cfgVal[0].trim().equals("left") ? PdfContentByte.ALIGN_LEFT : (cfgVal[0].trim().equals("right") ? PdfContentByte.ALIGN_RIGHT : PdfContentByte.ALIGN_CENTER)),
+//	                                    OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT"),
+//	                                    Integer.parseInt(cfgVal[1].trim()),
+//	                                    (height - Integer.parseInt(cfgVal[2].trim())),
+//	                                    0);
+//	
+//	                            cb.endText();
+//	                        }
+	                    } else { // write prop text
 	                        cb.beginText();
 	                        cb.setFontAndSize(bf, Integer.parseInt(cfgVal[5].trim()));
 	                        cb.showTextAligned((cfgVal[0].trim().equals("left") ? PdfContentByte.ALIGN_LEFT
@@ -593,17 +596,17 @@ public class FrmPDFServlet extends HttpServlet {
 	
 	                //----------
 	                if ( OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT") != null && printCfg[i-1].getProperty("forms_promotext") == null){
-	                    log.info("adding forms_promotext");
-	
-	                    // remove elements of the PDF file
-	                    Rectangle rec = new Rectangle(160, 12, 465, 21);
-	                    rec.setBackgroundColor(java.awt.Color.WHITE);
-	                    cb.rectangle(rec);
-	
-	                    cb.beginText();
-	                    cb.setFontAndSize(BaseFont.createFont(BaseFont.HELVETICA,BaseFont.CP1252,BaseFont.NOT_EMBEDDED), 6);
-	                    cb.showTextAligned(PdfContentByte.ALIGN_CENTER, OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT"), width/2, 16, 0);
-	                    cb.endText();
+//	                    log.info("adding forms_promotext");
+//	
+//	                    // remove elements of the PDF file
+//	                    Rectangle rec = new Rectangle(160, 12, 465, 21);
+//	                    rec.setBackgroundColor(java.awt.Color.WHITE);
+//	                    cb.rectangle(rec);
+//	
+//	                    cb.beginText();
+//	                    cb.setFontAndSize(BaseFont.createFont(BaseFont.HELVETICA,BaseFont.CP1252,BaseFont.NOT_EMBEDDED), 6);
+//	                    cb.showTextAligned(PdfContentByte.ALIGN_CENTER, OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT"), width/2, 16, 0);
+//	                    cb.endText();
 	                }
 	                
 	                

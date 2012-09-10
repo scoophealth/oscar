@@ -42,6 +42,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.oscarehr.common.dao.Hl7TextMessageDao;
 import org.oscarehr.common.model.Hl7TextMessage;
+import org.oscarehr.common.printing.FontSettings;
+import org.oscarehr.common.printing.PdfWriterFactory;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
@@ -139,7 +141,8 @@ public class LabPDFCreator extends PdfPageEventHelper{
         //Create the document we are going to write to
         document = new Document();
         //PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
-        PdfWriter writer = PdfWriter.getInstance(document, os);
+        // PdfWriter writer = PdfWriter.getInstance(document, os);
+        PdfWriter writer = PdfWriterFactory.newInstance(document, os, FontSettings.HELVETICA_10PT);
 
         //Set page event, function onEndPage will execute each time a page is finished being created
         writer.setPageEvent(this);

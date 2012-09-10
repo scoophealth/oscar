@@ -47,6 +47,8 @@ import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.EFormValue;
+import org.oscarehr.common.printing.FontSettings;
+import org.oscarehr.common.printing.PdfWriterFactory;
 import org.oscarehr.eyeform.MeasurementFormatter;
 import org.oscarehr.eyeform.model.EyeForm;
 import org.oscarehr.eyeform.model.EyeformFollowUp;
@@ -117,8 +119,9 @@ public class PdfRecordPrinter {
 
         //Create the document we are going to write to
         document = new Document();
-        writer = PdfWriter.getInstance(document,os);
-        writer.setPageEvent(new EndPage());
+        writer = PdfWriterFactory.newInstance(document, os, FontSettings.HELVETICA_10PT);
+        // writer = PdfWriter.getInstance(document,os);
+        // writer.setPageEvent(new EndPage());
         writer.setStrictImageSequence(true);
 
         document.setPageSize(PageSize.LETTER);

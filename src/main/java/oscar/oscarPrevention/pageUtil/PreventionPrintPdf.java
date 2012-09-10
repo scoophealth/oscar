@@ -31,7 +31,6 @@
 
 package oscar.oscarPrevention.pageUtil;
 
-import com.lowagie.text.*;
 import java.awt.Color;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -40,13 +39,26 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.printing.FontSettings;
+import org.oscarehr.common.printing.PdfWriterFactory;
+import org.oscarehr.util.SpringUtils;
+
 import oscar.OscarProperties;
 import oscar.oscarClinic.ClinicData;
 
-import org.oscarehr.common.dao.DemographicDao;
-import org.oscarehr.common.model.Demographic;
-import org.oscarehr.util.SpringUtils;
-
+import com.lowagie.text.Chunk;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Element;
+import com.lowagie.text.Font;
+import com.lowagie.text.FontFactory;
+import com.lowagie.text.HeaderFooter;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.ColumnText;
 import com.lowagie.text.pdf.PdfContentByte;
@@ -91,7 +103,8 @@ public class PreventionPrintPdf {
         
         //Create the document we are going to write to
         document = new Document();
-        PdfWriter writer = PdfWriter.getInstance(document, outputStream);
+        // PdfWriter writer = PdfWriter.getInstance(document, outputStream);
+        PdfWriter writer = PdfWriterFactory.newInstance(document, outputStream, FontSettings.HELVETICA_10PT);
         document.setPageSize(PageSize.LETTER);
                 
         //Create the font we are going to print to       

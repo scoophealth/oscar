@@ -22,6 +22,8 @@ import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DigitalSignatureDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DigitalSignature;
+import org.oscarehr.common.printing.FontSettings;
+import org.oscarehr.common.printing.PdfWriterFactory;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -41,7 +43,6 @@ import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfPageEventHelper;
-import com.lowagie.text.pdf.PdfWriter;
 
 public class ConsultationPDFCreator extends PdfPageEventHelper {
 
@@ -84,7 +85,8 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 
 		// Create the document we are going to write to
 		document = new Document();
-		PdfWriter.getInstance(document, os);
+		// PdfWriter.getInstance(document, os);
+		PdfWriterFactory.newInstance(document, os, FontSettings.HELVETICA_10PT);
 
 		document.setPageSize(PageSize.LETTER);
 		document.addTitle(getResource("msgConsReq"));
@@ -112,7 +114,7 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 
 		float[] tableWidths = { 1f, 1f };
 		PdfPTable table = new PdfPTable(1);
-		PdfPCell cell;
+//		PdfPCell cell;
 		PdfPTable border, border2;
 		table.setWidthPercentage(95);
 
@@ -139,16 +141,16 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 		// Creating a table with details for the consultation request.
 		infoTable = createConsultDetailTable();
 
-		// Adding promotional information if appropriate.
-		if (props.getProperty("FORMS_PROMOTEXT") != null){
-			cell = new PdfPCell(new Phrase(props.getProperty(""), font));
-			cell.setBorder(0);
-			infoTable.addCell(cell);
-			cell.setPhrase(new Phrase(props.getProperty("FORMS_PROMOTEXT"), font));
-			cell.setVerticalAlignment(Element.ALIGN_BOTTOM);
-			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			infoTable.addCell(cell);
-		}
+//		// Adding promotional information if appropriate.
+//		if (props.getProperty("FORMS_PROMOTEXT") != null){
+//			cell = new PdfPCell(new Phrase(props.getProperty(""), font));
+//			cell.setBorder(0);
+//			infoTable.addCell(cell);
+//			cell.setPhrase(new Phrase(props.getProperty("FORMS_PROMOTEXT"), font));
+//			cell.setVerticalAlignment(Element.ALIGN_BOTTOM);
+//			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+//			infoTable.addCell(cell);
+//		}
 
 		// Adding details and promotional information.
 		addTable(border, infoTable);

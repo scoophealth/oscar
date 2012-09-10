@@ -270,6 +270,7 @@ function setup() {
 
 </script>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/print.css"  />
 </head>
 
 <body onload="setup();" bgcolor="#FFFFFF" text="#000000" leftmargin="0"
@@ -516,9 +517,14 @@ if (nItems == 0) {
 			</tr>
 		</table>
 		</td>
-	</tr>
+	</tr>	
 	</form>
 </table>
+
+<p class="yesprint">
+	<%=OscarProperties.getConfidentialityStatement()%>
+</p>
+
 <p><font face="Arial, Helvetica, sans-serif" size="2"> </font></p>
 <p>&nbsp;</p>
 <%@ include file="../demographic/zfooterbackclose.jsp"%>

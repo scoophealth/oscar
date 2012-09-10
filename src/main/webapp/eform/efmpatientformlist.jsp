@@ -63,6 +63,26 @@
 	href="../share/css/OscarStandardLayout.css">
 <link rel="stylesheet" type="text/css"
 	href="../share/css/eformStyle.css">
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.fileDownload.js"></script>
+<script src="<%=request.getContextPath()%>/js/jquery-ui-1.8.18.custom.min.js"></script>
+<script type="text/javascript" language="javascript">
+	function showHtml() {
+		
+		//		preparingMessageHtml: "Generating PDF, please wait...",
+        //		failMessageHtml: "There was a problem generating PDF, please try again.",
+        var content = document.body.innerHTML;
+		$.fileDownload(
+			"<%=request.getContextPath()%>/html2pdf",
+			{
+        		httpMethod: "POST",
+        		data: {"content":  content}
+		    }
+		);
+		return false;
+     }	  
+</script>
+	
 <script type="text/javascript" language="javascript">
 function popupPage(varpage, windowname) {
     var page = "" + varpage;
@@ -98,6 +118,9 @@ function updateAjax() {
 </head>
 
 <body onunload="updateAjax()" class="BodyStyle" vlink="#0000FF">
+
+<button onclick="showHtml();">Show me the money!</button>
+
 <!--  -->
 <table class="MainTable" id="scrollNumber1" name="encounterTable">
 	<tr class="MainTableTopRow">
