@@ -1,0 +1,37 @@
+__$lineEPDS1    :   30, 703, 40, 703, 1
+ar2_EPDS1   : left, 32, 87, 0, BaseFont.HELVETICA, 9
+__$lineEPDS2    :   30, 643, 40, 643, 1
+ar2_EPDS2   : left, 32, 147, 0, BaseFont.HELVETICA, 9
+__$lineEPDS3    :   30, 583, 40, 583, 1
+ar2_EPDS3   : left, 32, 207, 0, BaseFont.HELVETICA, 9
+__$lineEPDS4    :   30, 523, 40, 523, 1
+ar2_EPDS4   : left, 32, 267, 0, BaseFont.HELVETICA, 9
+__$lineEPDS5    :   30, 463, 40, 463, 1
+ar2_EPDS5   : left, 32, 327, 0, BaseFont.HELVETICA, 9
+__$lineEPDS6    :   30, 403, 40, 403, 1
+ar2_EPDS6   : left, 32, 387, 0, BaseFont.HELVETICA, 9
+__$lineEPDS7    :   30, 343, 40, 343, 1
+ar2_EPDS7   : left, 32, 447, 0, BaseFont.HELVETICA, 9
+__$lineEPDS8    :   30, 283, 40, 283, 1
+ar2_EPDS8   : left, 32, 507, 0, BaseFont.HELVETICA, 9
+__$lineEPDS9    :   30, 223, 40, 223, 1
+ar2_EPDS9   : left, 32, 567, 0, BaseFont.HELVETICA, 9
+__$lineEPDS10    :   30, 163, 40, 163, 1
+ar2_EPDS10   : left, 32, 627, 0, BaseFont.HELVETICA, 9
+
+__$lineTweakT   : 484, 669, 494, 669, 1
+ar2_tweakT  : left, 486, 121, 0, BaseFont.HELVETICA, 9
+__$lineTweakW   : 484, 607, 504, 607, 1
+ar2_tweakW  : left, 486, 183, 0, BaseFont.HELVETICA, 9
+__$lineTweakE   : 484, 545, 504, 545, 1
+ar2_tweakE  : left, 486, 245, 0, BaseFont.HELVETICA, 9
+__$lineTweakA   : 484, 461, 504, 461, 1
+ar2_tweakA  : left, 486, 329, 0, BaseFont.HELVETICA, 9
+__$lineTweakK   : 484, 414, 504, 414, 1
+ar2_tweakK  : left, 486, 376, 0, BaseFont.HELVETICA, 9
+
+__Scores    : left, 323, 550, 0, BaseFont.HELVETICA_OBLIQUE, 11, SCORES:
+__EPDSscore : left, 330, 562, 0, BaseFont.HELVETICA, 9, EPDS = 
+__TWEAKscore    : left, 330, 574, 0, BaseFont.HELVETICA, 9, TWEAK = 
+ar2_EPDSscore   : left, 365, 562, 0, BaseFont.HELVETICA, 9
+pg1_tweakScore  : left, 372, 574, 0, BaseFont.HELVETICA, 9
