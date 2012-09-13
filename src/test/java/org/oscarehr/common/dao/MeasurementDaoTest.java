@@ -45,7 +45,7 @@ public class MeasurementDaoTest extends DaoTestFixtures {
 	}
 
 	@Test
-	public void testFind() throws Exception {
+	public void testFind() {
 		Measurement m = new Measurement();
 		m.setDemographicId(999);
 		m.setAppointmentNo(100);

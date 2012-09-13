@@ -38,7 +38,7 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.myoscar_server.ws.AccountWs;
 import org.oscarehr.myoscar_server.ws.NoSuchItemException_Exception;
 import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
-import org.oscarehr.myoscar_server.ws.PersonTransfer;
+import org.oscarehr.myoscar_server.ws.PersonTransfer2;
 import org.oscarehr.myoscar_server.ws.SurveyResultTransfer;
 import org.oscarehr.myoscar_server.ws.SurveyTemplateTransfer;
 import org.oscarehr.myoscar_server.ws.SurveyWs;
@@ -148,7 +148,7 @@ public class SymptomChecklistReportUIBean {
 
 				Long myOscarPersonId = mumpsSurveyResultsDisplayObject.getSurveyResultTransfer().getOwningPersonId();
 				AccountWs accountWs = MyOscarServerWebServicesManager.getAccountWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
-				PersonTransfer personTransfer = accountWs.getPerson(myOscarPersonId);
+				PersonTransfer2 personTransfer = accountWs.getPerson2(myOscarPersonId);
 				symptomChecklistCompareDisplayObject.setPatientName(personTransfer.getFirstName() + " " + personTransfer.getLastName());
 			}
 		}
