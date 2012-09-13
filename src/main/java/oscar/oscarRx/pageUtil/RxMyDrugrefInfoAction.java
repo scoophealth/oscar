@@ -46,6 +46,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.util.MessageResources;
 import org.apache.xmlrpc.XmlRpcClientLite;
+import org.apache.xmlrpc.XmlRpcClient;
 import org.oscarehr.PMmodule.caisi_integrator.RemoteDrugAllergyHelper;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DemographicExtDao;
@@ -469,8 +470,14 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         TimingOutCallback callback = new TimingOutCallback(10 * 1000);
         try{
             log2.debug("server_url :"+server_url);
-            XmlRpcClientLite server = new XmlRpcClientLite(server_url);
-            server.executeAsync(procedureName, params, callback);
+            if (!System.getProperty("http.proxyHost","").isEmpty()) {
+                //The Lite client won't recgonize JAVA_OPTS as it uses a customized http
+                XmlRpcClient server = new XmlRpcClient(server_url);
+                server.executeAsync(procedureName, params, callback);
+            } else {
+                XmlRpcClientLite server = new XmlRpcClientLite(server_url);
+                server.executeAsync(procedureName, params, callback);
+            }
             object = callback.waitForResponse();
         } catch (TimeoutException e) {
             log2.debug("No response from server."+server_url);
