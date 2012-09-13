@@ -30,7 +30,6 @@
 <%@page import="org.oscarehr.util.SpringUtils,org.oscarehr.util.LocaleUtils,org.oscarehr.util.MiscUtils, oscar.util.DateUtils"%>
 <%@page import="org.oscarehr.common.model.Demographic, org.oscarehr.common.model.BillingONItem, org.oscarehr.common.model.RaDetail"%>
 <%@page import="java.util.Locale, java.math.BigDecimal, java.util.Calendar,java.util.List,java.util.ArrayList, java.util.HashMap, java.util.Map, java.util.Date"%>
-<%@page import="java.text.ParseException"%>
 <%@page import="org.oscarehr.common.model.BillingONPayment,org.oscarehr.common.dao.BillingONPaymentDao"%>
 <%@page import="org.oscarehr.common.model.BillingONCHeader1,org.oscarehr.common.dao.BillingONCHeader1Dao"%>
 <%@page import="org.oscarehr.common.model.BillingONExt,org.oscarehr.common.dao.BillingONExtDao"%>
@@ -86,16 +85,13 @@
     }
     Date startDate =null;
     Date endDate = null;
-    try {         
-       startDate = DateUtils.parseDate(startDateStr, locale);
-       endDate = DateUtils.parseDate(endDateStr, locale);
-       if (DateUtils.calculateDayDifference(startDate, endDate) < 0) {
-            errorMsg = LocaleUtils.getMessage(locale, "oscar.billing.paymentReceived.errorEndDateGreater");
-        }
-    }
-    catch (java.text.ParseException e) {
-        errorMsg = LocaleUtils.getMessage(locale, "oscar.billing.paymentReceived.errorOnDate");
-    }
+    
+    startDate = DateUtils.parseDate(startDateStr, locale);
+    endDate = DateUtils.parseDate(endDateStr, locale);
+    if (DateUtils.calculateDayDifference(startDate, endDate) < 0) {
+         errorMsg = LocaleUtils.getMessage(locale, "oscar.billing.paymentReceived.errorEndDateGreater");
+     }
+ 
     
     
     
@@ -478,9 +474,7 @@
                                                                 
                                 List<BillingONPayment> bPayList = bPaymentDao.find3rdPartyPayRecordsByBill(bCh1, startDate, endDate);
                                                                           
-                                try {
-                                    billingDateStr = DateUtils.formatDate(bCh1.getBillingDate(), locale);
-                                } catch (java.text.ParseException e) {}
+                                billingDateStr = DateUtils.formatDate(bCh1.getBillingDate(), locale);
 
                                 Integer demoNo = bCh1.getDemographicNo();     
                                 Demographic d = demographicDao.getDemographicById(demoNo);

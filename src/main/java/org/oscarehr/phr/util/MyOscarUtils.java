@@ -40,7 +40,7 @@ import org.oscarehr.common.model.ProviderPreference;
 import org.oscarehr.myoscar_server.ws.AccountWs;
 import org.oscarehr.myoscar_server.ws.NoSuchItemException_Exception;
 import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
-import org.oscarehr.myoscar_server.ws.PersonTransfer;
+import org.oscarehr.myoscar_server.ws.PersonTransfer2;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.service.PHRService;
 import org.oscarehr.util.EncryptionUtils;
@@ -61,7 +61,7 @@ public final class MyOscarUtils {
 	private static ExecutorService asyncAutoLoginThreadPool=Executors.newFixedThreadPool(2);
 	
 	/**
-	 * Note this method must only return the ID, it must never return the PersonTransfer itself since it reads from a cache.
+	 * Note this method must only return the ID, it must never return the PersonTransfer2 itself since it reads from a cache.
 	 * @throws NotAuthorisedException_Exception 
 	 */
 	public static Long getMyOscarUserId(PHRAuthentication auth, String myOscarUserName) {
@@ -72,9 +72,9 @@ public final class MyOscarUtils {
 
 		if (myOscarUserId == null) {
 			AccountWs accountWs = MyOscarServerWebServicesManager.getAccountWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
-			PersonTransfer person = null;
+			PersonTransfer2 person = null;
 			try {
-				person = accountWs.getPersonByUserName(myOscarUserName, null);
+				person = accountWs.getPersonByUserName2(myOscarUserName, null);
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Myoscar user " + myOscarUserName + " not found ", e);
 			}
@@ -93,7 +93,7 @@ public final class MyOscarUtils {
 	}
 
 	/**
-	 * Note this method must only return the userName, it must never return the PersonTransfer itself since it reads from a cache.
+	 * Note this method must only return the userName, it must never return the PersonTransfer2 itself since it reads from a cache.
 	 * @throws NotAuthorisedException_Exception 
 	 * @throws NoSuchItemException_Exception 
 	 */
@@ -102,7 +102,7 @@ public final class MyOscarUtils {
 
 		if (myOscarUserName == null) {
 			AccountWs accountWs = MyOscarServerWebServicesManager.getAccountWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
-			PersonTransfer person = accountWs.getPerson(myOscarUserId);
+			PersonTransfer2 person = accountWs.getPerson2(myOscarUserId);
 			if (person != null) {
 				myOscarUserName = person.getUserName();
 				userIdToNameCache.put(myOscarUserId, myOscarUserName);

@@ -55,7 +55,7 @@ import org.oscarehr.myoscar_server.ws.AccountWs;
 import org.oscarehr.myoscar_server.ws.InvalidRelationshipException_Exception;
 import org.oscarehr.myoscar_server.ws.InvalidRequestException_Exception;
 import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
-import org.oscarehr.myoscar_server.ws.PersonTransfer;
+import org.oscarehr.myoscar_server.ws.PersonTransfer2;
 import org.oscarehr.myoscar_server.ws.Relation;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.RegistrationHelper;
@@ -421,7 +421,7 @@ public class PHRUserManagementAction extends DispatchAction {
         }
         ht.put("registeringProviderNo", request.getSession().getAttribute("user"));
         try {
-            PersonTransfer newAccount=phrService.sendUserRegistration(phrAuth, ht);
+            PersonTransfer2 newAccount=phrService.sendUserRegistration(phrAuth, ht);
             //if all is well, add the "pin" in the demographic screen
             String demographicNo = request.getParameter("demographicNo");
 
@@ -486,7 +486,7 @@ public class PHRUserManagementAction extends DispatchAction {
         return ar;
     }
 
-    private void addRelationships(HttpServletRequest request, PersonTransfer newAccount) throws NotAuthorisedException_Exception, InvalidRequestException_Exception, InvalidRelationshipException_Exception {
+    private void addRelationships(HttpServletRequest request, PersonTransfer2 newAccount) throws NotAuthorisedException_Exception, InvalidRequestException_Exception, InvalidRelationshipException_Exception {
 
     	if (log.isDebugEnabled())
     	{
@@ -508,7 +508,10 @@ public class PHRUserManagementAction extends DispatchAction {
 		RegistrationHelper.storeSelectionDefaults(request);
     }
 
-	private void handleReverseRelation(AccountWs accountWs, HttpServletRequest request, PersonTransfer newAccount, String key) throws NotAuthorisedException_Exception, InvalidRequestException_Exception, InvalidRelationshipException_Exception {
+ 	/**
+ 	 * @deprecated 2012-09-12, the entire relationship infrastructure has changed, need to update this asap, compatability will only be retained for a short while. 
+ 	 */
+	private void handleReverseRelation(AccountWs accountWs, HttpServletRequest request, PersonTransfer2 newAccount, String key) throws NotAuthorisedException_Exception, InvalidRequestException_Exception, InvalidRelationshipException_Exception {
 		if (!WebUtils.isChecked(request, key)) return;
 
 		Long otherMyOscarUserId=new Long(key.substring("enable_reverse_relation_".length()));
@@ -516,7 +519,10 @@ public class PHRUserManagementAction extends DispatchAction {
 		accountWs.createRelationship(otherMyOscarUserId, newAccount.getId(), relation);
     }
 
-	private void handlePrimaryRelation(AccountWs accountWs, HttpServletRequest request, PersonTransfer newAccount, String key) throws NotAuthorisedException_Exception, InvalidRequestException_Exception, InvalidRelationshipException_Exception {
+	/**
+	 * @deprecated 2012-09-12, the entire relationship infrastructure has changed, need to update this asap, compatability will only be retained for a short while. 
+	 */
+	private void handlePrimaryRelation(AccountWs accountWs, HttpServletRequest request, PersonTransfer2 newAccount, String key) throws NotAuthorisedException_Exception, InvalidRequestException_Exception, InvalidRelationshipException_Exception {
 		if (!WebUtils.isChecked(request, key)) return;
 
 		Long otherMyOscarUserId=new Long(key.substring("enable_primary_relation_".length()));

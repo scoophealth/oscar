@@ -42,7 +42,7 @@ public class EFormGroupDaoTest extends DaoTestFixtures {
 	}
 
 	@Test
-	public void testDeleteByNameAndFormId() throws Exception {
+	public void testDeleteByNameAndFormId() {
 		EFormGroup negativeCheck = new EFormGroup();
 		negativeCheck.setGroupName("WOTTERASS");
 		negativeCheck.setFormId(99999);

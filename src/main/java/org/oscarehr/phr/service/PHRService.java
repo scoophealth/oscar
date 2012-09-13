@@ -64,7 +64,7 @@ import org.oscarehr.myoscar_server.ws.MedicalDataType;
 import org.oscarehr.myoscar_server.ws.MedicalDataWs;
 import org.oscarehr.myoscar_server.ws.MessageWs;
 import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
-import org.oscarehr.myoscar_server.ws.PersonTransfer;
+import org.oscarehr.myoscar_server.ws.PersonTransfer2;
 import org.oscarehr.myoscar_server.ws.Relation;
 import org.oscarehr.myoscar_server.ws.Role;
 import org.oscarehr.myoscar_server.ws.UnsupportedEncodingException_Exception;
@@ -604,6 +604,9 @@ public class PHRService {
 		}
 	}
 
+	/**
+	 * @deprecated 2012-09-12, createRelationship2 should be used instead now, need to update this as soon as possible.
+	 */
 	private void sendRelationship(PHRAuthentication auth, PHRAction action) {
 		try {
 	        AccountWs accountWs = MyOscarServerWebServicesManager.getAccountWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
@@ -613,7 +616,8 @@ public class PHRService {
 	        String relationString=StringUtils.trimToNull(temp[1]);
 	        Relation relation=Relation.valueOf(relationString);
 	        
-	        accountWs.createRelationshipByUserName(auth.getMyOscarUserName(), relatedPerson, relation);
+	        Long relatedPersonId=MyOscarUtils.getMyOscarUserId(auth, relatedPerson);	        
+	        accountWs.createRelationship(auth.getMyOscarUserId(), relatedPersonId, relation);
         } catch (Exception e) {
 	       logger.error("Error with action entry, actionId="+action.getId(), e);
         }	    
@@ -752,12 +756,12 @@ public class PHRService {
 	 * @return the myOscarUserId of the created user.
 	 * @throws Exception
 	 */
-	public PersonTransfer sendUserRegistration(PHRAuthentication auth, HashMap<String, Object> phrRegistrationForm) throws Exception {
+	public PersonTransfer2 sendUserRegistration(PHRAuthentication auth, HashMap<String, Object> phrRegistrationForm) throws Exception {
 
 		AccountWs accountWs = MyOscarServerWebServicesManager.getAccountWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
-		PersonTransfer newAccount = new PersonTransfer();
+		PersonTransfer2 newAccount = new PersonTransfer2();
 		newAccount.setUserName((String) phrRegistrationForm.get("username"));
-		newAccount.setRole(Role.PATIENT);
+		newAccount.setRole(Role.PATIENT.name());
 		newAccount.setFirstName((String) phrRegistrationForm.get("firstName"));
 		newAccount.setLastName((String) phrRegistrationForm.get("lastName"));
 		newAccount.setStreetAddress1((String) phrRegistrationForm.get("address"));
@@ -782,7 +786,7 @@ public class PHRService {
 		// if no password is set, we'll make one up, the nano time is to ensure it's not guessable.
 		if (newAccountPassword == null || newAccountPassword.length() == 0) newAccountPassword = newAccount.getUserName() + System.nanoTime();
 
-		newAccount = accountWs.addPerson(newAccount, newAccountPassword);
+		newAccount = accountWs.addPerson2(newAccount, newAccountPassword);
 
 		if (newAccount == null) throw (new Exception("Error creating new Myoscar Account."));
 
