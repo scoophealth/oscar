@@ -45,6 +45,7 @@ import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.oscarLab.ca.all.upload.MessageUploader;
+import oscar.oscarLab.ca.all.upload.RouteReportResults;
 import oscar.oscarLab.ca.all.util.Utilities;
 
 public class CMLHandler implements MessageHandler {
@@ -55,6 +56,7 @@ public class CMLHandler implements MessageHandler {
 	public String parse(String serviceName, String fileName, int fileId) {
 
 		int i = 0;
+		RouteReportResults routeResults;
 		try {
 			ArrayList<String> messages = Utilities.separateMessages(fileName);
 			for (i = 0; i < messages.size(); i++) {
@@ -62,7 +64,16 @@ public class CMLHandler implements MessageHandler {
 				if(isDuplicate(msg)) {
 					return ("success");
 				}
-				MessageUploader.routeReport(serviceName, "CML", msg, fileId);
+				
+				routeResults = new RouteReportResults();
+				MessageUploader.routeReport(serviceName, "CML", msg, fileId, routeResults);
+				
+				oscar.oscarLab.ca.all.parsers.MessageHandler msgHandler = Factory.getHandler(String.valueOf(routeResults.segmentId));
+				if( msgHandler == null ) {
+					MessageUploader.clean(fileId);
+					logger.error("Saved lab but could not parse base64 value");
+					return null;
+				}
 
 			}
 		} catch (Exception e) {
