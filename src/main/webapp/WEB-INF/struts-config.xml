@@ -554,6 +554,12 @@
 	</global-forwards>
 
 	<action-mappings>
+	
+	<action path="/study/ManageStudy" scope="request" parameter="method" type="org.oscarehr.study.ManageStudyAction">
+		<forward name="AddedToStudy" path="/admin/addStudy.jsp"></forward>
+		<forward name="closeWindow" path="/study/closeWindow.html"></forward>
+	</action>
+	
 	<action input="/dms/addNewDocumentCategories.jsp" name="addDocumentType"
 			path="/dms/addDocumentType" type="oscar.dms.actions.AddDocumentTypeAction"
 			parameter="method" scope="request" validate="false">
@@ -1339,6 +1345,7 @@
 		<action input="/oscarReport/ReportDemographicReport.jsp" name="RptDemographicReportForm" path="/report/DemographicReport" scope="request" type="oscar.oscarReport.pageUtil.RptDemographicReportAction">
 			<forward name="success" path="/oscarReport/ReportDemographicReport.jsp" />
 			<forward name="failure" path="/oscar_sfhc/JAYREPORTS/DemographicReport.jsp" />
+			<forward name="addToStudy" path="/study/ManageStudy.do?method=AddToStudy" />			
 		</action>
 		<action input="/oscarReport/ReportDemographicReport.jsp" name="FrmForm" path="/report/CreateDemographicSet" scope="request" type="oscar.oscarReport.pageUtil.RptCreateDemographicSetAction">
 			<forward name="success" path="/oscarReport/ReportDemographicReport.jsp" />

@@ -56,6 +56,7 @@ public final class RptDemographicReportForm extends ActionForm {
         public String resultNum        = null;
         public String ageStyle         = null;
         public String asofDate         = null;
+        public String studyId		   = null;
         
 
         ////////////////////////////////////////////////////////////////////////
@@ -71,6 +72,7 @@ public final class RptDemographicReportForm extends ActionForm {
             this.providerNo     = drf.providerNo;
             this.patientStatus  = drf.patientStatus;
             this.asofDate       = drf.asofDate;
+            this.studyId	   	= drf.studyId;
 
 ///            this.queryName      = ;
 //            this.savedQuery     = ;
@@ -339,5 +341,12 @@ public final class RptDemographicReportForm extends ActionForm {
   public void setAsofDate(java.lang.String asofDate) {
      this.asofDate = asofDate;
   }
+  
+public String getStudyId() {
+	return studyId;
+}
+public void setStudyId(String studyId) {
+	this.studyId = studyId;
+}
   
 }

@@ -32,6 +32,7 @@ package org.oscarehr.decisionSupport.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +42,14 @@ import org.oscarehr.common.dao.BillingONCHeader1Dao;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.common.dao.FlowSheetCustomizationDao;
+import org.oscarehr.common.dao.ProviderStudyDao;
+import org.oscarehr.common.dao.StudyDao;
+import org.oscarehr.common.dao.StudyDataDao;
 import org.oscarehr.common.model.FlowSheetCustomization;
+import org.oscarehr.common.model.ProviderStudy;
+import org.oscarehr.common.model.ProviderStudyPK;
+import org.oscarehr.common.model.Study;
+import org.oscarehr.common.model.StudyData;
 import org.oscarehr.decisionSupport.model.conditionValue.DSValue;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -75,7 +83,14 @@ public class DSDemographicAccess {
         notes("noteContains"),
         billedFor("billedFor"),
         paid("paid"),
-        flowsheet("flowsheetUptoDate");
+        flowsheet("flowsheetUptoDate"),
+        providerInStudy("providerInStudy"),
+        studyActive("studyActive"),
+        hasATCcode("hasATCcode"),
+        demoHasData("demoHasData"),
+        hasRxClass("hasRxClass");
+        
+        
         //define more here....
 
         private final String accessMethod;
@@ -88,6 +103,7 @@ public class DSDemographicAccess {
 
     private String demographicNo;
     private String providerNo = null;
+    private List<Object> dynamicArgs = null;
     private boolean passedGuideline = false;
     private org.oscarehr.common.model.Demographic demographicData;
     private List<Prescription> prescriptionData;
@@ -100,7 +116,151 @@ public class DSDemographicAccess {
         this.demographicNo = demographicNo;
         this.providerNo = providerNo;
     }
+    
+    public DSDemographicAccess(String demographicNo, String providerNo, List<Object> dynamicArgs) {
+        this.demographicNo = demographicNo;
+        this.providerNo = providerNo;
+        this.dynamicArgs = dynamicArgs;
+        logger.debug("dynamic args size " + this.dynamicArgs.size());
+    }
+    
+    public boolean hasRxClassNotany(String atcCodes) {
+    	List<Prescription>undeletedPrescriptions = this.getPrescriptionData();
+    	List<Prescription>prescriptions = new ArrayList<Prescription>();
+    	
+    	Date now = new Date();
+    	Date end_date;
+    	for( Prescription prescription : undeletedPrescriptions ) {
+    		end_date = prescription.getEndDate();
+    		if( end_date != null ) {
+    			if( end_date.after(now) ) {
+    				prescriptions.add(prescription);
+    			}
+    		}
+    	}
+    	
+    	boolean notInClass = true;
+    	String atcCode;
+    	for( Object atcCodeObj : this.dynamicArgs ) {
+    		atcCode = (String)atcCodeObj;
+    		for( Prescription prescription : prescriptions ) {
+    			logger.debug("Comparing " + prescription.getAtcCode() + " to " + atcCode);
+    			if( prescription.getAtcCode() != null && prescription.getAtcCode().equals(atcCode)) {
+    				notInClass = false;
+    				break;
+    			}
+    		}
+    		
+    		if( !notInClass ) {
+    			break;
+    		}
+    	}
+    	
+    	return notInClass;
+    }
+    
+    public boolean hasRxClassAny(String atcCode) { return !hasRxClassNotany(atcCode); }
+    public boolean hasRxClassNotall(String atcCode) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED"); }
+    public boolean hasRxClassNot(String atcCode)  { return hasRxClassNotany(atcCode); }
+    public boolean hasRxClassAll(String atcCode) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED"); }
+    
+    public boolean demoHasDataNot(String studyId) {
+    	logger.debug("demoHasData called");
+    	StudyDao studyDao = (StudyDao)SpringUtils.getBean(StudyDao.class);
+    	
+    	studyId = studyId.replaceAll("'", "");
+    	Study study = studyDao.findByName(studyId);
+    	StudyDataDao studyDataDao = (StudyDataDao)SpringUtils.getBean(StudyDataDao.class);
+    	List<StudyData> studyDataList = studyDataDao.findByDemoAndStudy(Integer.parseInt(demographicNo), study.getId());
+    	
+    	boolean isEmpty = true;
+    	for( StudyData studyData : studyDataList ) {
+    		if( !studyData.getContent().equalsIgnoreCase("Eligible - ask later") ) {
+    			isEmpty = false;
+    		}
+    	}
+    	
+    	return isEmpty;
+    }
 
+    public boolean demoHasDataAny(String atcCode) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED"); }
+    public boolean demoHasDataNotall(String atcCode) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED"); }
+    public boolean demoHasDataNotany(String atcCode) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED"); }
+    public boolean demoHasDataAll(String atcCode) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED"); }
+
+    
+    public boolean hasATCcode(DSValue rxCode) {
+    	logger.debug("hasATCcode dynamicArgs size " + this.dynamicArgs.size());
+    	boolean found = false;
+    	String atcCode = "";
+    	
+    	for( Object obj : this.dynamicArgs ) {
+    		atcCode = (String)obj;
+    		logger.debug("comparing " + rxCode.getValue() + " with " + atcCode);
+    		if( atcCode.startsWith(rxCode.getValue())) {
+    			found = true;
+    			break;
+    		}
+    	}
+    	
+    	
+    	return found;
+    }
+    
+    public boolean hasATCcodeAny(String atcCodes) {
+    	logger.debug("HASATCCODEANY CALLED");
+    	boolean found = false;
+    	List<DSValue> testATCcodes = DSValue.createDSValues(atcCodes);
+    	for( DSValue testATCcode : testATCcodes ) {
+    		if( this.hasATCcode(testATCcode) ) {
+    			found = true;
+    			break;
+    		}
+    	}
+    	
+    	return found;
+    }
+    
+    public boolean hasATCcodeNot(String atcCode) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED"); }
+    public boolean hasATCcodeNotall(String atcCode) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED"); }
+    public boolean hasATCcodeNotany(String atcCode) { return !this.hasATCcodeAny(atcCode); }
+    public boolean hasATCcodeAll(String atcCode) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED"); }
+    
+    public boolean studyActiveAll(String strStudyId) {
+    	StudyDao studyDao = (StudyDao)SpringUtils.getBean(StudyDao.class);
+    	strStudyId = strStudyId.replaceAll("'", "");
+    	Study study = studyDao.findByName(strStudyId);
+    	
+    	return (study.getCurrent1() == 1 );
+    }
+    
+    public boolean StudyActiveNot(String strStudyId) { return !studyActiveAll(strStudyId); }
+    public boolean StudyActiveNotall(String strStudyId) { return !studyActiveAll(strStudyId); }
+    public boolean StudyActiveNotany(String strStudyId) { return !studyActiveAll(strStudyId); }
+    public boolean StudyActiveAny(String strStudyId) { return studyActiveAll(strStudyId); }
+
+    
+    public boolean providerInStudyAll(String strStudyId ) {
+    	StudyDao studyDao = (StudyDao)SpringUtils.getBean(StudyDao.class);    	
+    	ProviderStudyDao providerStudyDao = (ProviderStudyDao)SpringUtils.getBean(ProviderStudyDao.class);
+    	strStudyId = strStudyId.replaceAll("'", "");
+    	logger.info("Looking up " + strStudyId);
+    	Study study = studyDao.findByName(strStudyId);
+    	logger.info("STUDY found " + String.valueOf(study != null));
+    	ProviderStudyPK providerStudyPK = new ProviderStudyPK();
+    	providerStudyPK.setProviderNo(this.providerNo);
+    	providerStudyPK.setStudyNo(study.getId());
+    	
+    	ProviderStudy providerStudy = providerStudyDao.find(providerStudyPK);
+    	
+    	return (providerStudy != null );
+    }
+    
+    public boolean providerInStudyNot(String strStudyId) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED"); }
+    public boolean providerInStudyNotall(String strStudyId) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED"); }
+    public boolean providerInStudyNotany(String strStudyId) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED"); }
+    public boolean providerInStudyAny(String strStudyId) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED"); }
+    
     public List<dxResearchBean> getDxCodes() {
         dxResearchBeanHandler handler = new dxResearchBeanHandler(demographicNo);
         List<dxResearchBean> dxCodes = handler.getDxResearchBeanVector();

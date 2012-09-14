@@ -64,6 +64,7 @@ if(listRxDrugs!=null){
          String outsideProvOhip = rx.getOutsideProviderOhip();
          String brandName       = rx.getBrandName();
          String ATC             = rx.getAtcCode();
+         String ATCcode			= rx.getAtcCode();
          String genericName     = rx.getGenericName();
          String dosage = rx.getDosage();
  
@@ -74,6 +75,10 @@ if(listRxDrugs!=null){
          String drugForm		= rx.getDrugForm();
          //remove from the rerx list
          int DrugReferenceId = rx.getDrugReferenceId();
+         
+         if( ATCcode == null || ATCcode.trim().length() == 0 ) {
+             ATCcode = "";
+         }
          
          if(ATC != null && ATC.trim().length()>0)
              ATC="ATC: "+ATC;
@@ -155,6 +160,7 @@ if(listRxDrugs!=null){
     <a tabindex="-1" href="javascript:void(0);" style="float:right;margin-top:0px;padding-top:0px;" onclick="$('rx_more_<%=rand%>').toggle();">  <span id="moreLessWord_<%=rand%>" onclick="updateMoreLess(id)" >more</span> </a>
 
     <label style="float:left;width:80px;" title="<%=ATC%>" >Name:</label>
+    <input type="hidden" name="atcCode" value="<%=ATCcode%>" />
     <input tabindex="-1" type="text" id="drugName_<%=rand%>"  name="drugName_<%=rand%>"  size="60" <%if(gcn==0){%> onkeyup="saveCustomName(this);" value="<%=drugName%>"<%} else{%> value='<%=drugName%>'  onchange="changeDrugName('<%=rand%>','<%=drugName%>');" <%}%>/><span id="alleg_<%=rand%>" style="color:red;"></span>&nbsp;&nbsp;<span id="inactive_<%=rand%>" style="color:red;"></span><br>
     <a tabindex="-1" href="javascript:void(0);" onclick="showHideSpecInst('siAutoComplete_<%=rand%>')" style="float:left;width:80px;">Instructions:</a>
     <input type="text" id="instructions_<%=rand%>" name="instructions_<%=rand%>" onkeypress="handleEnter(this,event);" value="<%=instructions%>" size="60" onchange="parseIntr(this);" /><a href="javascript:void(0);" tabindex="-1" onclick="displayMedHistory('<%=rand%>');" style="color:red;font-size:13pt;vertical-align:super;text-decoration:none" ><b>*</b></a> 
@@ -284,6 +290,7 @@ if(listRxDrugs!=null){
     <a tabindex="-1" href="javascript:void(0);" style="float:right;margin-top:0px;padding-top:0px;" onclick="$('rx_more_<%=rand%>').toggle();">  <span id="moreLessWord_<%=rand%>" onclick="updateMoreLess(id)" >more</span> </a>
 
     <label style="float:left;width:80px;" title="<%=ATC%>" >Name:</label>
+    <input type="hidden" name="atcCode" value="<%=ATCcode%>" />
     <input tabindex="-1" type="text" id="drugName_<%=rand%>"  name="drugName_<%=rand%>"  size="30" <%if(gcn==0){%> onkeyup="saveCustomName(this);" value="<%=drugName%>"<%} else{%> value='<%=drugName%>'  onchange="changeDrugName('<%=rand%>','<%=drugName%>');" <%}%> TITLE="<%=drugName%>"/>&nbsp;<span id="inactive_<%=rand%>" style="color:red;"></span><br>
 
 	<!-- Allergy Alert Table-->
