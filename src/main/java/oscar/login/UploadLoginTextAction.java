@@ -37,24 +37,68 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
+import org.oscarehr.common.dao.PropertyDao;
+import org.oscarehr.common.model.Property;
+import org.oscarehr.common.service.AcceptableUseAgreementManager;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarLab.ca.bc.PathNet.pageUtil.LabUploadForm;
-
 
 /**
  *
  * @author rjonasz
  */
 public class UploadLoginTextAction extends Action {
-    Logger _logger = Logger.getLogger(this.getClass());
+    private static Logger _logger = MiscUtils.getLogger();
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
        InputStream fis = null;
        FileOutputStream fos = null;
        LabUploadForm frm = (LabUploadForm) form;
        FormFile importFile = frm.getImportFile();
-       boolean error = true;
+       boolean error = false;
+       
+       String validDurationNumber = request.getParameter("validDurationNumber");// verify it's a number
+	   String validDurationPeriod = request.getParameter("validDurationPeriod");//verify it's one of these year month weeks days
+	   String validForever = request.getParameter("validForever");
+	   String foreverFrom = request.getParameter("foreverFrom");
+       
+	   _logger.debug("validDurationNumber "+validDurationNumber+" validDurationPeriod "+" validForever "+validForever+" foreverFrom "+foreverFrom );
+	   
+	   PropertyDao propertyDao = SpringUtils.getBean(PropertyDao.class);
+	   Property prop = null;
+	   
+	   if(validForever != null && validForever.equals("forever")){
+		   prop = new Property();
+		   prop.setName("aua_valid_from");
+		   prop.setValue(foreverFrom);		   
+	   }else{ //time period was selected
+		   try{
+			   Integer.parseInt(validDurationNumber);
+		   }catch(Exception e){
+			   _logger.error("Not an Int:"+validDurationNumber,e);
+		   }
+		   
+		   if(validDurationPeriod != null && ("year".equals(validDurationPeriod) || "month".equals(validDurationPeriod) ||  "weeks".equals(validDurationPeriod) || "days".equals(validDurationPeriod)   )){
+			    prop = new Property();
+			    prop.setName("aua_valid_duration");
+			    prop.setValue(validDurationNumber +" "+validDurationPeriod);
+		   }else{
+			   _logger.error("Not a valid Period :"+validDurationPeriod);
+		   }
+	   }
+	   
+	   if(prop != null){
+		   //Check to see if prop is still the same as last time.
+		   Property latestProperty = AcceptableUseAgreementManager.findLatestProperty();
+		   if(latestProperty == null || !prop.getValue().equals(latestProperty.getValue())){
+			   propertyDao.persist(prop);
+		   }else{
+			   _logger.debug("No need to update. Same AcceptableUse Property as it was before");
+		   }
+	   }
+	   
 
        try {
             if( importFile.getFileName().length() > 0 ) {
@@ -69,7 +113,8 @@ public class UploadLoginTextAction extends Action {
                 error = false;
             }
        } catch( Exception e) {
-           MiscUtils.getLogger().error("Error", e);           
+           MiscUtils.getLogger().error("Error", e);  
+           error = true;
        }
 
        request.setAttribute("error", error);
