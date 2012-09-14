@@ -7078,7 +7078,7 @@ CREATE TABLE provider (
   `title` varchar(20) default NULL,
   `lastUpdateUser` varchar(6) default NULL,
   `lastUpdateDate` date default NULL,
-  `signed_confidentiality` date,
+  `signed_confidentiality` datetime,
   PRIMARY KEY  (provider_no)
 );
 
