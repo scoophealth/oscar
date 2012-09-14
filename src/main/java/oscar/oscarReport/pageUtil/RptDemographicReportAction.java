@@ -51,6 +51,7 @@ public  class RptDemographicReportAction extends Action {
         MiscUtils.getLogger().debug("RptDemographicReportAction Jackson");
         RptDemographicReportForm frm = (RptDemographicReportForm) form;
         String[] select = frm.getSelect();
+        String studyId = frm.getStudyId();
 
 //        String yearStyle        = frm.getAge();
 //        String startYear        = frm.getStartYear();
@@ -74,6 +75,7 @@ public  class RptDemographicReportAction extends Action {
             MiscUtils.getLogger().debug("searchArray size "+searchedArray.size());
             request.setAttribute("searchedArray",searchedArray);
             request.setAttribute("selectArray",select);
+            request.setAttribute("studyId", studyId);
         }else if( query.equals("Save Query")){
             RptDemographicQuerySaver demoS = new RptDemographicQuerySaver();
             demoS.saveQuery(frm);
@@ -81,6 +83,15 @@ public  class RptDemographicReportAction extends Action {
             RptDemographicQueryLoader demoL = new RptDemographicQueryLoader();
             RptDemographicReportForm dRF = demoL.queryLoader(frm);
             request.setAttribute("formBean",dRF);
+        }else if( query.equals("Add to Study")) {
+        	RptDemographicQueryBuilder demoQ = new RptDemographicQueryBuilder();
+            java.util.ArrayList searchedArray = demoQ.buildQuery(frm);
+            request.setAttribute("searchedArray",searchedArray);
+            MiscUtils.getLogger().info("SELECT ARRAY IS NULL " + String.valueOf(select == null));
+            MiscUtils.getLogger().info("STUDY ID IS " + studyId);
+            request.setAttribute("selectArray",select);
+            request.setAttribute("studyId", studyId);
+            return (mapping.findForward("addToStudy"));
         }
 
         return (mapping.findForward("success"));

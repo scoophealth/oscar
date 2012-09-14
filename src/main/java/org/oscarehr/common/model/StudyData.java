@@ -60,6 +60,8 @@ public class StudyData extends AbstractModel<Integer> {
 	private String status;
 
 	private String content;
+	
+	private String keyname;
 
 	public Integer getId() {
     	return id;
@@ -115,6 +117,14 @@ public class StudyData extends AbstractModel<Integer> {
 
 	public void setContent(String content) {
     	this.content = content;
+    }
+
+	public String getKey() {
+    	return keyname;
+    }
+
+	public void setKey(String key) {
+    	this.keyname = key;
     }
 
 
