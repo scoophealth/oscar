@@ -1,0 +1,415 @@
+#!/bin/sh
+#==============================================================
+# Copyright Peter Hutten-Czapski 2012 released under the GPL v2
+#==============================================================
+set -e
+
+# Source debconf library.
+. /usr/share/debconf/confmodule
+
+# Script Constants
+PROGRAM=Oscar12_1
+VERSION=12.1
+PREVIOUS=12
+REVISION=0.2
+C_HOME=/usr/share/tomcat6/
+C_BASE=/var/lib/tomcat6/
+SRC=/usr/share/OscarMcmaster/
+triumvirate=false
+TOMCAT=tomcat9
+COUNTRY=Unknown
+DEMO=false
+UPGRADE=false
+TMPTY=false
+skip12=false
+LOG_FILE=${SRC}Oscar${VERSION}install.log
+LOG_ERR=${SRC}Oscar.err
+
+# Property file default settings
+db_name=oscar_12_1
+priorschema=none
+db_password=liyi
+DOCS=OscarDocument
+billregion=ON
+signature_tablet=no
+ENABLE_EDIT_APPT_STATUS=yes
+appt_intake_form=off
+new_flowsheet_enabled=true
+NEW_CONTACTS_UI=false
+indivica_rx_enhance=false
+enableFax=false
+buildDateTime="Jan 1, 2012"
+logintext="<table border='1'><tr><td>YOUR USERNAME IS oscardoc<br>PASSWORD mac2002<br>2nd PASSWORD 1117<br>These credentials will <b>expire</b> a month from installation!</td></tr></table>"
+faxEnable=false
+rx_fax_enabled=false
+consultation_fax_enabled=false
+eform_fax_enabled=false
+eform_generator_indivica_fax_enabled=false
+consultation_dynamic_labelling_enabled=false
+rx_enhance=true
+rx_signature_enabled=true
+consultation_signature_enabled=true
+consultation_indivica_attachment_enabled=true
+moh_file_management_enabled=true
+ONEDT_INBOX=${C_BASE}webapps/OscarDocument/oscar_mcmaster/onEDTDocs/inbox/
+ONEDT_OUTBOX=${C_BASE}webapps/OscarDocument/oscar_mcmaster/onEDTDocs/outbox/
+ONEDT_SENT=${C_BASE}webapps/OscarDocument/oscar_mcmaster/onEDTDocs/sent/
+ONEDT_ARCHIVE=${C_BASE}webapps/OscarDocument/oscar_mcmaster/onEDTDocs/archive/
+workflow_enhance=true
+indivica_hc_read_enabled=true
+eform_signature_enabled=true
+eform_generator_indivica_signature_enabled=true
+eform_generator_indivica_print_enabled=true
+indivica_rich_text_letter_enabled=true
+DOCUMENT_DIR=${C_BASE}webapps/OscarDocument/oscar_mcmaster/document/
+HL7_COMPLETED_DIR=${C_BASE}webapps/OscarDocument/oscar_mcmaster/document/
+tomcat_path=/usr/share/tomcat6/
+tickler_warn_period=1
+seconds_till_considered_stale=-1
+enable_wait_list_email_notifications=false
+wait_list_email_notification_period=86400000
+wait_list_email_notification_program_ids=10016
+tickler_edit_enabled=false
+tickler_email_enabled=false
+tickler_email_from_address=test@clinic.com
+tickler_email_subject=TicklerTest
+drugref_url=http://localhost:8080/drugref/DrugrefService
+
+# --- log the running of the script appending as necessary
+echo "#########" `date` "#########" 1>> $LOG_FILE
+echo Configuration of VERSION=${VERSION}-${REVISION}>>$LOG_FILE
+echo "#########" `date` "#########" 1>> $LOG_ERR
+echo Configuration of VERSION=${VERSION}-${REVISION}>>$LOG_ERR
+
+
+if [ -f oscar.cfg ]; then
+	#read and obey
+	echo oscar.cfg found 1>> $LOG_FILE
+ 	while read line; do
+		eval $line
+	done < oscar.cfg
+	db_set oscar-mcmaster/password ${db_password}
+else
+	#If not config file then, and if upgrade possible, ask about upgrade
+	if [ -f ${C_HOME}Oscar${PREVIOUS}.properties ]||[ -f ${C_HOME}Oscar10_12.properties ] ||[ -f ${C_HOME}Oscar11.properties ]||[ -f ${C_HOME}${PROGRAM}.properties ] ; then
+		echo "Previous Oscar Installation Detected" 1>> $LOG_FILE
+	    	db_input high oscar-mcmaster/upgrade || true
+		db_go ||true
+		db_get oscar-mcmaster/upgrade
+		UPGRADE=$RET
+		echo "UPGRADE=${UPGRADE}" 1>> $LOG_FILE
+
+	fi
+
+	# For a new install from console so ask questions
+	if [ "${UPGRADE}" = "false" ] ; then
+		db_set oscar-mcmaster/upgrade false
+
+		db_reset oscar-mcmaster/password || true
+		db_input high oscar-mcmaster/password || true
+		db_go || true
+		db_get oscar-mcmaster/password
+		db_password=$RET
+
+		db_reset oscar-mcmaster/billregion || true
+		db_input high oscar-mcmaster/billregion || true
+
+		db_reset oscar-mcmaster/phoneprefix || true
+		db_input high oscar-mcmaster/phoneprefix || true
+
+		db_go || true
+		db_get oscar-mcmaster/phoneprefix
+		phoneprefix=$RET
+		echo "phoneprefix=${phoneprefix}" 1>> $LOG_FILE
+		
+		db_get oscar-mcmaster/billregion
+		billregion=$RET
+		echo "billregion=${billregion}" 1>> $LOG_FILE
+
+		db_reset oscar-mcmaster/triumvirate || true
+		db_input high oscar-mcmaster/triumvirate || true
+		
+		db_reset oscar-mcmaster/demo || true
+		db_input high oscar-mcmaster/demo || true
+
+		db_reset oscar-mcmaster/eyeform || true
+		db_input high oscar-mcmaster/eyeform || true
+
+		db_go || true
+
+		db_get oscar-mcmaster/eyeform
+		eyeform=$RET
+		echo "eyeform=${eyeform}" 1>> $LOG_FILE
+
+
+		if [ "${eyeform}" = "false" ] ; then
+			db_input high oscar-mcmaster/appt_intake_form || true
+			db_go ||true
+			db_get oscar-mcmaster/appt_intake_form
+			appt_intake_form=$RET
+			if [ "${appt_intake_form}" = "true" ] ; then
+				appt_intake_form="on"
+			fi
+			echo "appt_intake_form=${appt_intake_form}" 1>> $LOG_FILE
+			db_input high oscar-mcmaster/NEW_CONTACTS_UI || true
+			db_go ||true
+			db_get oscar-mcmaster/NEW_CONTACTS_UI
+			NEW_CONTACTS_UI=$RET
+			echo "NEW_CONTACTS_UI=${NEW_CONTACTS_UI}" 1>> $LOG_FILE
+		fi
+
+		db_go || true
+	fi
+
+fi
+	if [ ! -f ${C_HOME}${PROGRAM}.properties ] ; then
+
+		# New features for 12_1 are not going to be present in older installs being upgraded so ask
+		# Remember to move these questions up for the next version
+
+		db_get oscar-mcmaster/triumvirate
+		triumvirate=$RET
+		echo "triumvirate=${triumvirate}" 1>> $LOG_FILE
+		db_go || true
+	fi
+
+if [ "${triumvirate}" = "true" ] ; then
+	# set properties for signatures, fax and pdf printing
+	indivica_rx_enhance=true
+	rx_enhance=true
+	workflow_enhance=true
+
+	# Consult: fax and signature capability for consultation requests requires flags:
+	# faxEnable=yes,consultation_fax_enabled=true,consultation_signature_enabled=true
+	enableFax=true
+	faxEnable=yes
+	consultation_fax_enabled=true
+	consultation_signature_enabled=true
+	consultation_dynamic_labelling_enabled=true
+	consultation_indivica_attachment_enabled=true
+
+	# Rx: fax functionality For rx requires flags: 
+	#rx_signature_enabled=true,rx_fax_enabled=true
+	rx_signature_enabled=true
+	rx_fax_enabled=true
+
+	# eForm: 
+	eform_signature_enabled=true
+	indivica_rich_text_letter_enabled=true
+	eform_fax_enabled=true
+	eform_generator_indivica_signature_enabled=true
+	eform_generator_indivica_print_enabled=true
+	eform_generator_indivica_fax_enabled=true
+
+fi
+
+if [ "${UPGRADE}" = "true" ] ; then
+	db_set oscar-mcmaster/upgrade true  || true
+
+	#check to see if minor upgrade of war is all that is necessary
+	if [ -f ${C_HOME}${PROGRAM}.properties ] ; then
+		echo "${PROGRAM}.war file updated so exiting config normally" 1>> $LOG_FILE
+		exit 0
+	fi
+
+	# save a copy of the previous properties file
+	if [ -f ${C_HOME}Oscar${PREVIOUS}.properties ] ; then
+		echo Oscar${PREVIOUS}.properties found 1>> $LOG_FILE
+		sed -e 's/^db_name =/priorschema=/' ${C_HOME}Oscar${PREVIOUS}.properties > ~/${PROGRAM}.tmp 2>>$LOG_ERR
+		skip12=true
+	else
+		if [ -f ${C_HOME}Oscar11.properties ] ; then
+			sed -e 's/^db_name =/priorschema=/' ${C_HOME}Oscar11.properties > ~/${PROGRAM}.tmp 2>>$LOG_ERR
+			PREVIOUS=11
+		else
+			if [ -f ${C_HOME}Oscar10_12.properties ] ; then
+				sed -e 's/^db_name =/priorschema=/' ${C_HOME}Oscar10_12.properties > ~/${PROGRAM}.tmp 2>>$LOG_ERR
+				PREVIOUS=10
+			else
+				echo "no previous properties file found to upgrade"  1>>$LOG_ERR
+				exit 1
+			fi
+		fi
+	fi
+	# drop lines that start with a comment, then grep the property, just take the last instance of that, cut on the = delimiter, and trim whitespace
+	echo "grep the password from the properties file" 1>> $LOG_FILE
+	db_password=$(sed '/^\#/d' ~/${PROGRAM}.tmp | grep 'db_password'  | tail -n 1 | cut -d "=" -f2- | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_ERR
+	db_set oscar-mcmaster/password ${db_password}
+	echo "grep the province from the properties file" 1>> $LOG_FILE
+	billregion=$(sed '/^\#/d' ~/${PROGRAM}.tmp | grep 'billregion'  | tail -n 1 | cut -d "=" -f2- | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_ERR
+	echo "billregion=${billregion}" 1>> $LOG_FILE
+	echo "grep the phone prefix from the properties file" 1>> $LOG_FILE
+	phoneprefix=$(sed '/^\#/d' ~/${PROGRAM}.tmp | grep 'phoneprefix'  | tail -n 1 | cut -d "=" -f2- | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_ERR
+	echo "phoneprefix=${phoneprefix}" 1>> $LOG_FILE
+	db_set oscar-mcmaster/phoneprefix ${phoneprefix}
+	echo "grep the previous name from the properties file" 1>> $LOG_FILE
+	priorschema=$(sed '/^\#/d' ~/${PROGRAM}.tmp | grep 'priorschema'  | tail -n 1 | cut -d "=" -f2- | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_ERR
+	echo "priorschema=${priorschema}" 1>> $LOG_FILE
+	db_set oscar-mcmaster/priorschema ${priorschema} 
+else
+	db_set oscar-mcmaster/upgrade false
+	# use the supplied default properties file
+	# adjust the paths from a dev build to a deb build
+	# and comment out all of the properties that will be set below
+	sed \
+	-e 's/\/usr\/local\/tomcat/\/var\/lib\/tomcat6/' \
+	-e 's/\(^project_home\)/#\1/' \
+	-e 's/\(^tomcat_path\)/#\1/' \
+	-e 's/\(^buildDateTime\)/#\1/' \
+	-e 's/\(^buildtag\)/#\1/' \
+	-e 's/\(^drugref_url\)/#\1/' \
+	-e 's/\(^db_name =\)/#\1/' \
+	-e 's/\(^db_password =\)/#\1/' \
+	-e 's/\(^billregion=\)/#\1/' \
+	-e 's/\(^phoneprefix =\)/#\1/' \
+	-e 's/\(^signature_tablet\)/#\1/' \
+	-e 's/\(^appt_intake_form\)/#\1/' \
+	-e 's/\(^new_flowsheet_enabled\)/#\1/' \
+	-e 's/\(^indivica_rx_enhance\)/#\1/' \
+	-e 's/\(^enableFax\)/#\1/' \
+	-e 's/\(^DOCUMENT_DIR\)/#\1/' \
+	-e 's/\(^HL7_COMPLETED_DIR\)/#\1/' \
+	-e 's/\(^ENABLE_EDIT_APPT_STATUS\)/#\1/' \
+	-e 's/\(^rx_enhance\)/#\1/' \
+	-e 's/\(^rx_signature_enabled\)/#\1/' \
+	-e 's/\(^consultation_signature_enabled\)/#\1/' \
+	-e 's/\(^moh_file_management_enabled\)/#\1/' \
+	-e 's/\(^ONEDT_INBOX\)/#\1/' \
+	-e 's/\(^ONEDT_OUTBOX\)/#\1/' \
+	-e 's/\(^ONEDT_SENT\)/#\1/' \
+	-e 's/\(^ONEDT_ARCHIVE\)/#\1/' \
+	-e 's/\(^workflow_enhance\)/#\1/' \
+	-e 's/\(^indivica_hc_read_enable\)/#\1/' \
+	-e 's/\(^eform_fax_enabled\)/#\1/' \
+	-e 's/\(^eform_signature_enabled\)/#\1/' \
+	-e 's/\(^eform_generator_indivica_fax_enabled\)/#\1/' \
+	-e 's/\(^eform_generator_indivica_signature_enabled\)/#\1/' \
+	-e 's/\(^eform_generator_indivica_print_enabled\)/#\1/' \
+	-e 's/\(^indivica_rich_text_letter_enabled\)/#\1/' \
+	-e 's/\(^tickler_warn_period\)/#\1/' \
+	-e 's/\(^seconds_till_considered_stale\)/#\1/' \
+	-e 's/\(^enable_wait_list_email_notifications\)/#\1/' \
+	-e 's/\(^wait_list_email_notification_period\)/#\1/' \
+	-e 's/\(^wait_list_email_notification_program_ids\)/#\1/' \
+	-e 's/\(^tickler_edit_enabled\)/#\1/' \
+	-e 's/\(^tickler_email_enabled\)/#\1/' \
+	-e 's/\(^tickler_email_from_address\)/#\1/' \
+	-e 's/\(^tickler_email_subject\)/#\1/' \
+	-e 's/\(^faxEnable\)/#\1/' \
+	-e 's/\(^rx_fax_enabled\)/#\1/' \
+	-e 's/\(^consultation_fax_enabled\)/#\1/' \
+	-e 's/\(^consultation_indivica_attachment_enabled\)/#\1/' \
+	-e 's/\(^consultation_dynamic_labelling_enabled\)/#\1/' \
+	-e 's/\(^WKHTMLTOPDF_COMMAND\)/#\1/' \
+	-e 's/\(^logintitle\)/#\1/' \
+	-e 's/\(^logintext\)/#\1/' \
+	${SRC}oscar_mcmaster.properties > ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo "">> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo "## ------------------------------------------------------------------------------- ##">> ~/${PROGRAM}.tmp 2>>$LOG_ERR	
+	echo "## | The following values generated by ${PROGRAM}.deb will override any set above | ##">> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo "## ------------------------------------------------------------------------------- ##">> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo "">> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo logintext=${logintext}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo drugref_url=${drugref_url}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo project_home=${PROGRAM}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo tomcat_path=${tomcat_path}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo "eform_image=${C_BASE}webapps/OscarDocument/oscar_mcmaster/eform/images/">> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo "TMP_DIR: ${C_BASE}webapps/OscarDocument/oscar_mcmaster/export/">> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	chown -R ${TOMCAT}:${TOMCAT} ${C_BASE}webapps/OscarDocument
+
+fi
+
+# add the required changes to the property file
+echo "# Creating  Custom ${PROGRAM} Property file" 1>> $LOG_FILE
+
+echo buildDateTime=$buildDateTime>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo buildtag=${PROGRAM}-${REVISION}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	
+echo logintitle=${PROGRAM}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo WKHTMLTOPDF_COMMAND=${C_BASE}webapps/OscarDocument/wkhtmltopdf-i386>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo priorschema=${priorschema}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo db_name=${db_name}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo db_password=${db_password}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo billregion=${billregion}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo phoneprefix=${phoneprefix}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+
+
+if [ "${skip12}" = "false" ] ; then
+	# properties introduced for 12 
+	# skip if upgrading from 12 
+	# as you have already copied them to ${PROGRAM}.tmp
+	echo "">> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo "## The following are new for Oscar 12">> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo signature_tablet=${signature_tablet}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo appt_intake_form=${appt_intake_form}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo new_flowsheet_enabled=${new_flowsheet_enabled}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo indivica_rx_enhance=${indivica_rx_enhance}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo enableFax=${enableFax}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo DOCUMENT_DIR=${DOCUMENT_DIR}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo HL7_COMPLETED_DIR=${HL7_COMPLETED_DIR}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo ENABLE_EDIT_APPT_STATUS=${ENABLE_EDIT_APPT_STATUS}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+fi
+
+
+# properties introduced for 12.1
+echo "">> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo "## The following are new for Oscar 12.1">> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo rx_enhance=${rx_enhance}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo rx_signature_enabled=${rx_signature_enabled}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+
+
+echo moh_file_management_enabled=${moh_file_management_enabled}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo ONEDT_INBOX=${ONEDT_INBOX}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo ONEDT_OUTBOX=${ONEDT_OUTBOX}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo ONEDT_SENT=${ONEDT_SENT}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo ONEDT_ARCHIVE=${ONEDT_ARCHIVE}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo workflow_enhance=${workflow_enhance}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo indivica_hc_read_enabled=${indivica_hc_read_enabled}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo eform_signature_enabled=${eform_signature_enabled}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo eform_generator_indivica_signature_enabled=${eform_generator_indivica_signature_enabled}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo eform_generator_indivica_print_enabled=${eform_generator_indivica_print_enabled}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo indivica_rich_text_letter_enabled=${indivica_rich_text_letter_enabled}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo tickler_warn_period=${tickler_warn_period}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo seconds_till_considered_stale=$seconds_till_considered_stale>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo enable_wait_list_email_notifications=${enable_wait_list_email_notifications}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo wait_list_email_notification_period=${wait_list_email_notification_period}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo wait_list_email_notification_program_ids=${wait_list_email_notification_program_ids}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo tickler_edit_enabled=${tickler_edit_enabled}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo tickler_email_enabled=${tickler_email_enabled}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo tickler_email_from_address=${tickler_email_from_address}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo tickler_email_subject=${tickler_email_subject}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo "# Fax related">> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo enableFax=${enableFax}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo faxEnable=${faxEnable}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo rx_fax_enabled=${rx_fax_enabled}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo consultation_fax_enabled=${consultation_fax_enabled}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo consultation_signature_enabled=${consultation_signature_enabled}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo consultation_indivica_attachment_enabled=${consultation_indivica_attachment_enabled}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo eform_fax_enabled=${eform_fax_enabled}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo eform_generator_indivica_fax_enabled=${eform_generator_indivica_fax_enabled}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+echo consultation_dynamic_labelling_enabled=${consultation_dynamic_labelling_enabled}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+
+if [ "${eyeform}" = "true" ] ; then
+	echo cme_js=eyeform>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo encounter.hide_cpp_notes=true>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo encounter.hide_document_notes=true>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo encounter.hide_eform_notes=true>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo encounter.hide_metadata_editor=true>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo encounter.hide_metadata_issues=true>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo encounter.hide_metadata_date=true>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo encounter.hide_metadata_revision=true>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo encounter.hide_metadata_enctype=true>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo encounter.empty_new_note=true>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo encounter.hide_notes_with_issue=Misc,PatientLog>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo encounter.custom_cpp_issues=Misc,PatientLog>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	echo NEW_CONTACTS_UI=true>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+	# indivica 
+	echo new_eyeform_enabled=true>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+else
+	echo NEW_CONTACTS_UI=${NEW_CONTACTS_UI}>> ~/${PROGRAM}.tmp 2>>$LOG_ERR
+fi
+
+# then install the properties file
+mv ~/${PROGRAM}.tmp ${C_HOME}${PROGRAM}.properties 2>>$LOG_ERR
+rm -f ~/${PROGRAM}.tmp
+echo  ${C_HOME}${PROGRAM}.properties created >>$LOG_FILE

@@ -1,0 +1,6 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Sample debian/rules that uses debhelper.
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
