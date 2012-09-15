@@ -1,0 +1,74 @@
+Template: oscar-mcmaster/gui_loader
+Type: boolean
+Default: true
+Description: Do you want to lauch the GUI interface to install?
+ The OSCAR deb has a graphical interface installer for intalls from
+ the desktop.  Say false to continue in console mode.
+
+Template: oscar-mcmaster/upgrade
+Type: boolean
+Default: true
+Description: Do you want to upgrade from the previous OSCAR version?
+ OLD OSCAR INSTALL DETECTED. This option will remove your existing OSCAR program.
+ It will not remove your existing data.
+ .
+ ***Do not run this option without a backup.***
+
+Template: oscar-mcmaster/priorschema
+Type: string
+Default:
+Description: What is the old schema name?
+
+Template: oscar-mcmaster/billregion
+Type: select
+Choices: ON, BC, Other
+Default: ON
+Description: Which jurisdiction do you want configured?
+ Select the jurisdiction that you want configureg.  Select BC if you live in British Columbia.
+
+Template: oscar-mcmaster/phoneprefix
+Type: string
+Default:
+Description: What is the telephone prefix for your local area ? (eg 905-, +49 89)
+
+Template: oscar-mcmaster/triumvirate
+Type: boolean
+Default: false
+Description: Have you installed or are you planning to install fax support from OSCAR?
+ The OSCAR deb can set up the GUI to print signed output directly to Hylafax, if that is installed on your server.
+
+Template: oscar-mcmaster/demo
+Type: boolean
+Default: true
+Description: Do you want to install demo data?
+ Demo data are offered for demonstration that can later be removed.
+
+Template: oscar-mcmaster/password
+Type: password
+Default: 
+Description: MySQL password:
+ Please enter your MySQL password.
+
+Template: oscar-mcmaster/eyeform
+Type: boolean
+Default: false
+Description: Do you want to install the eyeform version?
+ An optional version of Oscar is designed for Opthalmology.
+
+Template: oscar-mcmaster/appt_intake_form
+Type: boolean
+Default: true
+Description: Do you want to use the intake form?
+ The intake form allows for users to add common vitals and other measurements from the schedule.
+
+Template: oscar-mcmaster/NEW_CONTACTS_UI 
+Type: boolean
+Default: false
+Description: Do you want to use the new contacts interface?
+  The new contacts interface allows for an expanded number of relations and other contacts related to the patient.
+
+Template: oscar-mcmaster/readme
+Type: boolean
+Default: true
+Description: Do you want to read the README?
+ The Readme file will give final installation and configuration instructions.  Type q to quit the Readme.
