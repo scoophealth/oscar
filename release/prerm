@@ -1,0 +1,91 @@
+#!/bin/sh
+# prerm
+# a script file for OSCAR that uninstalls and tweaks the necessary files
+#==============================================================
+# Copyright Peter Hutten-Czapski 2012 released under the GPL v2
+#==============================================================
+
+set -e
+
+# Source debconf library.
+. /usr/share/debconf/confmodule
+
+# PROGRAM matches the war and properties name
+PROGRAM=Oscar12_1
+db_name=oscar_12_1
+VERSION=12_1
+PREVIOUS=12
+REVISION=0.2
+C_HOME=/usr/share/tomcat6/
+C_BASE=/var/lib/tomcat6/
+SRC=/usr/share/OscarMcmaster/
+db_password=liyi
+DOCS=OscarDocument
+
+LOG_FILE=${SRC}Oscar${VERSION}install.log
+LOG_ERR=${SRC}Oscar.err
+
+# --- log the running of the script appending as necessary
+echo "#########" `date` "#########" 1>> $LOG_FILE
+echo Removal script triggered with $1>>$LOG_FILE
+echo VERSION=${VERSION}-${REVISION}>>$LOG_FILE
+echo "#########" `date` "#########" 1>> $LOG_ERR
+echo Remove script triggered with $1>>$LOG_ERR
+echo VERSION=${VERSION}-${REVISION}>>$LOG_ERR
+
+# clear temporary storage of configuration variables
+db_clear
+
+case "$1" in
+    remove)
+	# get the MySQL pwd
+	if [ -f "${C_HOME}${PROGRAM}.properties" ]; then
+		#first grep the password
+		echo "grep the password from the properties file" 1>> $LOG_FILE
+		db_password=$(sed '/^\#/d' ${C_HOME}${PROGRAM}.properties | grep 'db_password'  | tail -n 1 | cut -d "=" -f2- | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_ERR
+	else
+		echo "Oops can't find ${C_HOME}${PROGRAM}.properties" >> ${LOG_ERR} ; exit 1 ;
+	fi
+	if [ -f "${C_HOME}drugref.properties" ]; then
+		echo "Removing ${C_HOME}drugref.properties" 
+		rm -f ${C_HOME}drugref.properties 2>>$LOG_ERR
+		echo "Removed ${C_HOME}drugref.properties" >> ${LOG_FILE}
+
+	fi
+        
+        # Remove OscarMcmaster webapp if not modified
+        OSCAR=${C_BASE}webapps/${PROGRAM}.war
+	if [ -f "${OSCAR}" ]; then
+		echo "Removing ${PROGRAM}.war" >> ${LOG_FILE}
+        #if [ "`(cat ${OSCAR} | md5sum -) 2>/dev/null | cut -d ' ' -f 1`" \
+        #                    = "d41d8cd98f00b204e9800998ecf8427e" ] ; then
+		echo "Removing unaltered Oscar.war" 
+		rm ${OSCAR} 2>>$LOG_ERR
+		echo Removed ${OSCAR} >> ${LOG_FILE}
+	fi
+        # Remove drugref webapp
+	# its an appliance so we remove it without checking its build
+	if [ -f "${C_BASE}webapps/drugref.war" ]; then
+		echo "Removing drugref.war"
+		rm -f ${C_BASE}webapps/drugref.war 2>>$LOG_ERR
+		echo "Removed drugref.war" >> ${LOG_FILE}
+		#and its database
+		echo "Dropping drugref database"
+		mysql -u root -p${db_password} --execute="drop database if exists drugref;" 2>>$LOG_ERR
+		echo "Removed drugref database" >> ${LOG_FILE}
+	fi
+        
+    ;;
+
+
+    purge|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+        # Nothing to do here
+    ;;
+
+    *)
+        echo "$0 called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+exit 0

@@ -1,0 +1,81 @@
+#!/bin/sh
+# postrm
+# a script file for OSCAR that uninstalls and tweaks the necessary files
+#==============================================================
+# Copyright Peter Hutten-Czapski 2012 released under the GPL v2
+#==============================================================
+
+# Source debconf library.
+. /usr/share/debconf/confmodule
+
+# PROGRAM matches the war and properties name
+PROGRAM=Oscar12_1
+VERSION=12_1
+REVISION=0.2
+C_HOME=/usr/share/tomcat6/
+C_BASE=/var/lib/tomcat6/
+SRC=/usr/share/OscarMcmaster/
+db_name=oscar_12_1
+db_password=liyi
+DOCS=OscarDocument
+
+LOG_FILE=${SRC}Oscar${VERSION}install.log
+LOG_ERR=${SRC}Oscar.err
+
+# --- log the running of the script appending as necessary
+echo "#########" `date` "#########" 1>> $LOG_FILE
+echo PostRemoval script triggered with $1>>$LOG_FILE
+echo VERSION=${VERSION}-${REVISION}>>$LOG_FILE
+echo "#########" `date` "#########" 1>> $LOG_ERR
+echo PostRemoval script triggered with $1>>$LOG_ERR
+echo VERSION=${VERSION}-${REVISION}>>$LOG_ERR
+
+case "$1" in
+    purge)
+        # ignore errors and remove patient data in doing purge
+        set +e
+	# remove property files but extract the password first
+	if [ -f "${C_HOME}${PROGRAM}.properties" ]; then
+		#first grep the password
+		echo "grep the password from the properties file" 1>> $LOG_FILE
+		db_password=$(sed '/^\#/d' ${C_HOME}${PROGRAM}.properties | grep 'db_password'  | tail -n 1 | cut -d "=" -f2- | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 1>>$LOG_FILE
+		echo "Purging ${PROGRAM}.properties"
+		rm -f ${C_HOME}${PROGRAM}.properties
+	fi
+
+	# remove oscar web app regardless
+	if [ -f "${C_BASE}webapps/${PROGRAM}.war" ]; then
+		rm -f ${C_BASE}webapps/${PROGRAM}.war
+	fi
+	#...and its database WHICH CONTAINS PATIENT DATA
+	echo "Dropping ${db_name}"
+	mysql -u root -p${db_password} --execute="drop database if exists ${db_name};"  2>>$LOG_ERR
+      
+	# remove OscarDocument.war as that will have Tomcat delete its directory WHICH CONTAINS PATIENT DATA
+	if [ -f "${C_BASE}webapps/OscarDocument.war" ]; then
+		echo "Purging OscarDocument.war"
+		rm -f ${C_BASE}webapps/OscarDocument.war
+	else
+		# if no OscarDocument war there still may be a directory WHICH CONTAINS PATIENT DATA
+		if [ -d "${C_BASE}webapps/OscarDocument/" ]; then
+			echo "Purging OscarDocument directory"
+			rm -f -R ${C_BASE}webapps/OscarDocument/
+		fi
+	fi
+	
+	#remove the shared directory and its contents
+	rm -f -R ${SRC}
+
+    ;;
+
+    remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+        # Nothing to do here
+    ;;
+
+    *)
+        echo "$0 called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+exit 0

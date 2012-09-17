@@ -1,0 +1,26 @@
+Source: oscar-mcmaster
+Package: oscar-mcmaster
+Version: 8-x.x
+Section: base
+Installed-Size: 348160
+Priority: optional
+Architecture: all
+Pre-depends:  curl, sun-java6-jre | sun-java-jdk | openjdk-6-jdk | openjdk-6-jre | openjdk-7-jdk | openjdk-7-jre
+Depends: tomcat6, mysql-server (>= 5.0), libmysql-java (>= 5.0)
+Recommends: firefox | chromium-browser
+Maintainer: Peter Hutten-Czapski <phc@srpc.ca>
+Homepage: http://oscarmanual.org
+Description: Oscar (Web) A medical web application for electronic medical records
+     OSCAR supports all the necessary functions to run a clinic large and small:
+    * Patient registration 
+    * Scheduling with highly customizable view of provider groups and individualized booking preference
+    * Prescriptions with drug-drug interaction and renal dosage adjustment
+    * Chronic disease management 
+    * A sophisticated antenatal care record with antenatal care planner
+    * Disease Registry is provided to support population health analyses
+    * All laboratory results from private laboratories will be imported directly into the EMR
+    * Diagnostic imaging results and consultation notes can be scanned into the EMR where required
+    * Billing also features super-code for smart and simplified billing and third party billing
+    * Complete electronic charting of all encounters with an up to date Cumulative Patient Profile 
+    * Ability to link to Oscar Kiosk for self sign in
+    * Integration with MyOscar for Personal Health record and self service appointment scheduling

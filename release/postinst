@@ -1,0 +1,352 @@
+#!/bin/bash
+# postinst
+# a script file for OSCAR that installs and tweaks the necessary files
+#==============================================================
+# Copyright Peter Hutten-Czapski 2012 released under the GPL v2
+#==============================================================
+
+#set -e
+
+# Source debconf library.
+. /usr/share/debconf/confmodule
+
+# PROGRAM matches the war and properties
+PROGRAM=Oscar12_1
+db_name=oscar_12_1
+VERSION=12.1
+PREVIOUS=12
+REVISION=0.2
+C_HOME=/usr/share/tomcat6/
+C_BASE=/var/lib/tomcat6/
+SRC=/usr/share/OscarMcmaster/
+priorschema=oscar_12
+db_password=liyi
+DOCS=OscarDocument
+billregion=ON
+COUNTRY=Unknown
+DEMO=false
+UPGRADE=false
+signature_tablet=no
+ENABLE_EDIT_APPT_STATUS=yes
+appt_intake_form=off
+NEW_CONTACTS_UI=false
+indivica_rx_enhance=false
+enableFax=false
+DOCUMENT_DIR=${C_BASE}webapps/OscarDocument/oscar_mcmaster/document/
+HL7_COMPLETED_DIR=${C_BASE}webapps/OscarDocument/oscar_mcmaster/document/
+
+#for debug
+#SRC=~/Documents/oscar12-1.6/usr/share/OscarMcmaster/
+
+LOG_FILE=${SRC}Oscar${VERSION}install.log
+LOG_ERR=${SRC}Oscar.err
+
+##### COMMON FUNCTIONS ######
+sp="/-\|"
+
+# console echo with logging
+cecho() {
+	echo -e "$1"
+	echo -e "$1" >>"$LOG_FILE"
+	tput sgr0;
+}
+
+# fail with console report
+fail() {
+	cecho "*****failed*****"
+	echo ""
+	echo ""
+	echo -e " [i] Showing the last 8 lines from the logfile ($LOG_FILE)...";
+	tail -n8 "$LOG_FILE"
+	exit 1;
+}
+
+# console echo without new line with logging
+ncecho() {
+	echo -ne "$1"
+	echo -ne "$1" >>"$LOG_FILE"
+	tput sgr0
+}
+
+spinny() {
+	echo -ne "\b${sp:i++%${#sp}:1}"
+}
+
+progress() {
+	ncecho " ";
+	while [ /bin/true ]; do
+		kill -0 $pid 2>/dev/null;
+        	if [[ $? = "0" ]]; then
+			spinny
+			sleep 0.25
+        	else
+			ncecho "\b " 
+			wait $pid 1>> $LOG_FILE
+			retcode=$?
+			echo "$pid's retcode: $retcode" >> "$LOG_FILE"
+            		if [[ $retcode = "0" ]] || [[ $retcode = "255" ]]; then
+				cecho success
+	            	else
+				fail
+        	    	fi
+	    	break 1; #2
+        	fi
+    	done
+}
+
+### END COMMON FUNCTIONS ####
+
+# --- log the running of the script appending as necessary
+echo "#########" `date` "#########" 1>> $LOG_FILE
+echo VERSION=${VERSION}-${REVISION}>>$LOG_FILE
+echo "#########" `date` "#########" 1>> $LOG_ERR
+echo VERSION=${VERSION}-${REVISION}>>$LOG_ERR
+
+case "$1" in
+    configure)
+
+echo "grep the build from the properties file" 1>> $LOG_FILE
+# drop lines that start with a comment, then grep the property, just take the last instance of that, cut on the = delimiter, and trim whitespace
+lastbuild=$(sed '/^\#/d' ${C_HOME}${PROGRAM}.properties | grep 'buildtag'  | tail -n 1 | cut -d "=" -f2- | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_ERR
+
+if [ $lastbuild != ${PROGRAM}-${REVISION} ] ; then
+	exit 0 ;
+fi
+
+db_get oscar-mcmaster/upgrade
+UPGRADE=$RET
+echo upgrade = ${UPGRADE} 1>> $LOG_FILE
+
+db_get oscar-mcmaster/password
+db_password=$RET
+#echo password = ${db_password} 1>> $LOG_FILE
+
+db_get oscar-mcmaster/demo
+DEMO=$RET
+echo DEMO=${DEMO} 1>> $LOG_FILE
+
+db_get oscar-mcmaster/billregion 
+billregion=$RET
+echo billregion=${billregion} 1>> $LOG_FILE
+
+db_get oscar-mcmaster/priorschema 
+priorschema=$RET
+echo priorschema=${priorschema} 1>> $LOG_FILE
+
+db_get oscar-mcmaster/triumvirate
+triumvirate=$RET
+
+#FOR DEBUG to clear the data
+db_purge
+
+### AUTOMATED DETECTION SECTION STARTS HERE ###
+
+# Hack to support inclusion of liscened material when appropriate
+# use curl to get the IP,CA,Canada,ON,Ontario,Town,zip,Lat,Long
+# if we want to host the server for this use https://github.com/fiorix/freegeoip
+# -f to allow it to fail quietly
+# pipe to awk using the delimiter "," and get the second word
+
+ncecho " [x] determining locale "
+COUNTRY=$(curl --silent -f http://freegeoip.net/csv/ | awk -F "," '{print $2;}') 
+sleep 2 &
+pid=$!;progress $pid
+
+### OVERRIDE FROM oscar.cfg SECTION HERE ###
+
+if [ -f oscar.cfg ]; then
+ncecho "  [x] loading from oscar.cfg "
+	while read line; do
+		eval $line &
+	done < oscar.cfg
+	cecho success
+fi
+
+
+echo Province=${billregion}>>$LOG_FILE
+#echo Demo=${DEMO}
+echo Demo=${DEMO}>>$LOG_FILE
+#echo Upgrade=${UPGRADE}
+echo Upgrade=${UPGRADE}>>$LOG_FILE
+#echo oscarpwd=${db_password}
+
+# test the obtained password before proceeding!!
+ncecho " [x] Checking the MySQL password "
+(mysql -uroot -p${db_password} -e "SHOW DATABASES;" 1>/dev/null || { echo "'${db_password}' apparently is not the password... exiting! " ; exit 1 ; } )>> "$LOG_FILE" 2>&1 &
+pid=$!;progress $pid
+
+# for debug
+# echo oscarpwd=${db_password}>>$LOG_FILE
+
+# see if the database exists before proceeding!!
+result=$(mysql -uroot -p${db_password} -e "SHOW DATABASES LIKE '${db_name}';")
+if [ -z "$result" ]; then 
+	ncecho " [x] Creating the new Oscar database "
+	mysql -uroot -p${db_password} -e "CREATE DATABASE IF NOT EXISTS ${db_name}" 2>>$LOG_ERR &
+	pid=$!;progress $pid
+else
+	cecho  "The Oscar database ${db_name} already exits no further setup needed"
+	exit 0 ;
+fi
+
+echo  Created the Oscar database ${db_name} >>$LOG_FILE
+
+if [ "${UPGRADE}" = "true" ] ; then
+
+	#echo "20" ; sleep 1
+	ncecho " [x] dumping the current structure ${priorschema} "
+	mysqldump -uroot -p${db_password} ${priorschema} > ${priorschema}.sql  2>>$LOG_ERR &
+	pid=$!;progress $pid
+	ncecho " [x] copying the old schema into the new "
+	mysql -uroot -p${db_password} ${db_name} <  ${priorschema}.sql  2>>$LOG_ERR &
+	pid=$!;progress $pid
+	ncecho " [x] adding OLIS "
+	mysql -uroot -p${db_password} ${db_name} < ${SRC}OLIS.sql 2>>$LOG_ERR &
+	pid=$!;progress $pid
+	ncecho " [x] updating the old schema into the new "
+	if [ -f ${SRC}${priorschema}_to_${db_name}.sql ] ; then
+		mysql -uroot -p${db_password} ${db_name} < ${SRC}${priorschema}_to_${db_name}.sql 2>>$LOG_ERR
+	else
+		mysql -uroot -p${db_password} ${db_name} < ${SRC}oscar10_12_to_Oscar11.sql 2>>$LOG_ERR
+		mysql -uroot -p${db_password} ${db_name} < ${SRC}Oscar11_to_oscar_12.sql 2>>$LOG_ERR
+	fi
+	pid=$!;progress $pid
+	echo Upgraded ${priorschema} to ${db_name}>>$LOG_FILE
+
+else
+
+	#echo "20" ; sleep 1
+
+	if [ "${billregion}" = "BC" ] ; then
+		ncecho " [x] Populating Database with BC data " 
+		mysql -uroot -p${db_password} ${db_name} < ${SRC}OscarBC${VERSION}.sql 2>>$LOG_ERR &
+		pid=$!;progress $pid
+		echo  populated the Oscar database with ${billregion} data >>$LOG_FILE
+	else
+		ncecho " [x] Populating Database with ON data "
+		mysql -uroot -p${db_password} ${db_name} < ${SRC}OscarON${VERSION}.sql 2>>$LOG_ERR &
+		pid=$!;progress $pid
+		echo  populated the Oscar database with ${PROVINCE} data >>$LOG_FILE
+		ncecho " [x] Populating Database with OLIS data "
+		mysql -uroot -p${db_password} ${db_name} < ${SRC}OLIS.sql 2>>$LOG_ERR &
+		pid=$!;progress $pid
+		echo  Populated database ${db_name} with OLIS data >>$LOG_FILE
+		ncecho " [x] Populating Database with Office Codes "
+		mysql -uroot -p${db_password} ${db_name} < ${SRC}OfficeCodes.sql 2>>$LOG_ERR &
+		pid=$!;progress $pid
+		echo  Populated database ${db_name} with Office Codes >>$LOG_FILE
+		ncecho " [x] Populating Database with Special Codes "
+		mysql -uroot -p${db_password} ${db_name} < ${SRC}special.sql 2>>$LOG_ERR &
+		pid=$!;progress $pid
+		echo  Populated database ${db_name} with special codes >>$LOG_FILE
+	fi
+
+	mysql -uroot -p${db_password} ${db_name} -e "insert into issue (code,description,role,update_date,sortOrderId) select icd9.icd9, icd9.description, 'doctor', now(), '0' from icd9;"
+	echo  Populated the issues table in ${db_name} with ICD9 codes >>$LOG_FILE
+
+	# HACK.. sorry but null not tolerated
+	mysql -uroot -p${db_password} ${db_name} -e "UPDATE program SET defaultServiceRestrictionDays =30 WHERE defaultServiceRestrictionDays IS NULL;"
+
+	#SNOMED requires a liscence from the NIH https://uts.nlm.nih.gov/ and the data that the liscence provides in the table SnomedCore
+	#mysql -uroot -p${db_password} ${db_name} -e "INSERT INTO issue (code, description, role, update_date, type) SELECT SnomedCore.SnomedCore, SnomedCore.description, 'doctor', now(), 'SnomedCore' FROM SnomedCore;"
+	#echo  Populated the issues table in ${db_name} with SNOMED codes >>$LOG_FILE
+
+	if [ "${triumvirate}" = "true" ] ; then
+		echo  adding in triumvirate features >>$LOG_FILE
+		# note that activating the RTL will need to 
+		# 1) update the status of the eform to 1 
+		mysql -uroot -p${db_password} ${db_name} -e "UPDATE eform SET status='1' WHERE (eform.form_name='Rich Text Letter' AND eform.subject='Rich Text Letter Generator') LIMIT 1;"
+		# 2) update the status of the old eform to 0 
+		mysql -uroot -p${db_password} ${db_name} -e "UPDATE eform SET status='0' WHERE (eform.form_name='letter' AND eform.subject='letter generator') LIMIT 1;"
+		# 3) update the facilities 
+		mysql -uroot -p${db_password} ${db_name} -e "UPDATE Facility SET enableDigitalSignatures =1;"
+		# 4) update .html templates to .rtl templates
+		for filename in ${C_BASE}webapps/OscarDocument/oscar_mcmaster/eform/images/*.html
+		do
+			w_o_ext=`basename $filename .html`;
+			if [ "$w_o_ext" != "editor_help" ] ; then
+				cp -p $filename ${C_BASE}webapps/OscarDocument/oscar_mcmaster/eform/images/${w_o_ext}.rtl;
+			fi 
+		done
+	fi
+
+	if [ "${DEMO}" = "true" ] ; then
+		ncecho " [x] Populating Database with Demo data "
+		mysql -uroot -p${db_password} ${db_name} < ${SRC}demo.sql 2>>$LOG_ERR &
+		pid=$!;progress $pid
+		echo  Populated ${db_name} with demo data>>$LOG_FILE
+	fi
+
+	#echo "40" ; sleep 1
+	ncecho " [x] Creating Drugref Property Files "
+	echo "db_user=root" >> ~/drugref.tmp 2>>$LOG_ERR
+	echo db_password=${db_password} >> ~/drugref.tmp 2>>$LOG_ERR
+	echo "db_url=jdbc:mysql://127.0.0.1:3306/drugref" >> ~/drugref.tmp 2>>$LOG_ERR
+	echo "db_driver=com.mysql.jdbc.Driver" >> ~/drugref.tmp 2>>$LOG_ERR
+	mv ~/drugref.tmp ${C_HOME}drugref.properties 2>>$LOG_ERR &
+	pid=$!;progress $pid
+	echo ${C_HOME}drugref.properties created >>$LOG_FILE
+
+	#echo "60" ; sleep 1
+	ncecho " [x] Creating drugref database " 
+	echo  creating the Oscar Drug database if not exists >>$LOG_FILE
+	mysql -uroot -p${db_password} -e "CREATE DATABASE IF NOT EXISTS drugref" 2>>$LOG_ERR
+	# note that this requires a drugref.sql with DROP TABLE syntax
+	mysql -uroot -p${db_password} drugref <  ${SRC}drugref.sql 2>>$LOG_ERR &
+	pid=$!;progress $pid
+	echo  drugref populated >>$LOG_FILE
+	
+	#echo "70" ; sleep 1
+	ncecho " [x] Configuring Tomcat "
+
+	#establish 60% of the systems memory for -Xmx<size> maximum Java heap size
+	MEMORY="`cat /proc/meminfo | grep MemTotal | awk '{ print int(($2/1024)*0.6) }'`m"
+	echo Tomcat java heap memory set at ${MEMORY} >>$LOG_FILE
+	sed -e s/-Xmx128m/-Xmx${MEMORY}/  /etc/default/tomcat6 > ~/tomcat6.tmp &
+	pid=$!;progress $pid
+
+	#sed -e 's/-Xmx128m/-Xmx1024m -Xms1024m -XX:+CMSClassUnloadingEnabled -XX:+CMSPermGenSweepingEnabled -XX:+UseConcMarkSweepGC -XX:PermSize=128m -XX:MaxPermSize=512m -server/'  /etc/default/tomcat6 > ~/tomcat6.tmp
+	mv /etc/default/tomcat6 /etc/default/tomcat6.old
+	mv ~/tomcat6.tmp /etc/default/tomcat6
+fi
+
+#echo "80" ; sleep 1
+
+if [ "${COUNTRY}" = "CA" ] ; then
+	echo  Rourke2009 will be activated under liscence >>$LOG_FILE
+	mysql -uroot -p${db_password} ${db_name} -e "INSERT INTO encounterForm (form_name,form_value,form_table) Values('Rourke2009','../form/formrourke2009complete.jsp?demographic_no=','formRourke2009');" || { echo Activation sql error perhaps Rourke 2009 already activated >>$LOG_ERR ; }
+else
+	echo Country=${COUNTRY} >>$LOG_FILE	
+fi
+
+
+
+#echo "90" ; sleep 1
+ncecho " [x] Restarting Tomcat "
+/etc/init.d/tomcat6 restart >> "$LOG_ERR" 2>&1 &
+pid=$!;progress $pid
+
+#echo "100" ; sleep 1
+
+#echo remember to less ${SRC}README.txt
+
+# TO DO need to fix this so that errors will cause this to trip
+if [ "$?" = -1 ] ; then
+	echo "Install Aborted." 1>> $LOG_FILE
+else
+	cecho "Succesful installation of ${PROGRAM} deb revision ${REVISION}"
+fi
+
+db_stop
+	;;
+
+	abort-upgrade|abort-remove|abort-deconfigure)
+		echo "postinst called with argument \`$1'" >&2
+		exit 1
+	;;
+
+	*)
+		echo "postinst called with unknown argument \`$1'" >&2
+		exit 1
+	;;
+esac
