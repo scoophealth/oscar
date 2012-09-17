@@ -21,38 +21,27 @@
  * Hamilton
  * Ontario, Canada
  */
+package org.oscarehr.common;
 
-package oscar.oscarBilling.ca.bc.data;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class InjuryLocation {
-	private String sidetype;
-	private String sidedesc;
-
-	public InjuryLocation(Object[] o) {
-		this(String.valueOf(o[0]), String.valueOf(o[1]));
-	}
-
-	public InjuryLocation(String type, String description) {
-		this.sidetype = type;
-		this.sidedesc = description;
-	}
-
-	public InjuryLocation() {
-	}
-
-	public void setSidetype(String sidetype) {
-		this.sidetype = sidetype;
-	}
-
-	public void setSidedesc(String sidedesc) {
-		this.sidedesc = sidedesc;
-	}
-
-	public String getSidetype() {
-		return sidetype;
-	}
-
-	public String getSidedesc() {
-		return sidedesc;
-	}
+/**
+ * Indicates that a method uses a native SQL query that may need to be translated or re-factored.  
+ */
+@Documented
+@Retention(RetentionPolicy.SOURCE)
+@Target(ElementType.METHOD)
+public @interface NativeSql {
+	
+	/**
+	 * Defines list of tables used in this statement
+	 * 
+	 * @return
+	 * 		Returns the list of all tables names used in this native SQL
+	 */
+	String[] value() default "";
 }

@@ -380,4 +380,15 @@ public class ProviderDao extends HibernateDaoSupport {
             else		
                 return providers;
         }
+        
+        /**
+         * Gets all providers with non-empty OHIP number ordered by last,then first name
+         * 
+         * @return
+         * 		Returns the all found providers 
+         */
+        @SuppressWarnings("unchecked")
+        public List<Provider> getProvidersWithNonEmptyOhip() {
+        	return getHibernateTemplate().find("FROM Provider WHERE ohip_no != '' order by last_name, first_name");
+        }
 }
