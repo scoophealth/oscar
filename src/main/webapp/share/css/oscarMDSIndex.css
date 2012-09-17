@@ -48,19 +48,19 @@
 .notAssignedDoc { font-weight: bold; font-size: 8pt; color: black; font-family:
                Verdana, Arial, Helvetica; height: 25px }               
 .AbnormalRes { font-weight: bold; font-size: 8pt; color: red; font-family:
-               Verdana, Arial, Helvetica; height: 25px }
+               Verdana, Arial, Helvetica; height: 15px }
 .AbnormalRes a:link { color: red }
 .AbnormalRes a:hover { color: red }
 .AbnormalRes a:visited { color: red }
 .AbnormalRes a:active { color: red }
 .NormalRes   { font-weight: bold; font-size: 8pt; color: black; font-family:
-               Verdana, Arial, Helvetica; height: 25px }
+               Verdana, Arial, Helvetica; height: 15px }
 .NormalRes a:link { color: black }
 .NormalRes a:hover { color: black }
 .NormalRes a:visited { color: black }
 .NormalRes a:active { color: black }
 .HiLoRes     { font-weight: bold; font-size: 8pt; color: blue; font-family:
-               Verdana, Arial, Helvetica; height: 25px }
+               Verdana, Arial, Helvetica; height: 15px }
 .HiLoRes a:link { color: blue }
 .HiLoRes a:hover { color: blue }
 .HiLoRes a:visited { color: blue }
@@ -102,7 +102,7 @@ div.Title2 a:active { color: black }
                border-right: thin solid #6666CC;
                border-top: thin solid #CCCCFF;
                border-bottom: thin solid #6666CC;
-               height: 40px;
+               height: 20px;
                font-weight: bold;
                font-size: 8pt;
                color: #ffffff;
