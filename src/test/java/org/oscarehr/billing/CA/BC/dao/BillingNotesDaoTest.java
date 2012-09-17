@@ -39,12 +39,12 @@ public class BillingNotesDaoTest extends DaoTestFixtures {
 	}
 	
 	@Test
-	public void testFindNotes() throws Exception {
+	public void testFindNotes() {
 		dao.findNotes(999, 999);
 	}
 	
 	@Test
-	public void testFindSingleNote() throws Exception {
+	public void testFindSingleNote() {
 		dao.findSingleNote(999, 999);
 	}
 }

@@ -23,22 +23,24 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
 import java.util.List;
-import javax.persistence.Id;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.GenerationType;
 import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.PostPersist;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.OneToMany;
-import javax.persistence.JoinColumn;
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
-import javax.persistence.PostPersist;
+
 import org.oscarehr.PMmodule.utility.Utility;
+
 import oscar.util.DateUtils;
 
 @Entity
@@ -338,7 +340,7 @@ public class BillingONCHeader1 extends AbstractModel<Integer> implements Seriali
 		this.province = province;
 	}
 
-	public Date getBillingDate() throws ParseException {
+	public Date getBillingDate() {
 		return this.billingDate;
 	}
 
@@ -346,7 +348,7 @@ public class BillingONCHeader1 extends AbstractModel<Integer> implements Seriali
 		this.billingDate = billingDate;
 	}
 
-	public Date getBillingTime() throws ParseException {
+	public Date getBillingTime() {
 		return this.billingTime;
 	}
 
