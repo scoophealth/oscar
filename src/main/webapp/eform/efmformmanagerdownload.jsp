@@ -137,8 +137,14 @@
         //String server_url = "http://192.168.1.117:3000/backend/api";
         String server_url = "http://mydrugref.org/backend/api";
         try{
-            XmlRpcClientLite server = new XmlRpcClientLite(server_url);
-            object = (Object) server.execute(procedureName, params);
+            if (!System.getProperty("http.proxyHost","").isEmpty()) {
+                //The Lite client won't recgonize JAVA_OPTS as it uses a customized http
+                XmlRpcClient server = new XmlRpcClient(server_url);
+                object = (Object) server.execute(procedureName, params);
+            } else {
+                XmlRpcClientLite server = new XmlRpcClientLite(server_url);
+                object = (Object) server.execute(procedureName, params);
+            }
         }catch (XmlRpcException exception) {
 
             MiscUtils.getLogger().error("JavaClient: XML-RPC Fault #" +exception.code, exception);

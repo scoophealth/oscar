@@ -48,6 +48,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.apache.xmlrpc.XmlRpcClientLite;
+import org.apache.xmlrpc.XmlRpcClient;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.util.DbConnectionFilter;
@@ -1730,8 +1731,14 @@ public class RxUtil {
         TimingOutCallback callback = new TimingOutCallback(30 * 1000);
         try{
             log2.debug("server_url :"+server_url);
-            XmlRpcClientLite server = new XmlRpcClientLite(server_url);
-            server.executeAsync(procedureName, params, callback);
+             if (!System.getProperty("http.proxyHost","").isEmpty()) {
+                //The Lite client won't recgonize JAVA_OPTS as it uses a customized http
+                XmlRpcClient server = new XmlRpcClient(server_url);
+                server.executeAsync(procedureName, params, callback);
+            } else {
+                XmlRpcClientLite server = new XmlRpcClientLite(server_url);
+                server.executeAsync(procedureName, params, callback);
+             }
             object = callback.waitForResponse();
         } catch (TimeoutException e) {
             log2.debug("No response from server."+server_url);
