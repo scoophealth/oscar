@@ -101,6 +101,10 @@
 		<priority value="FATAL" />
 	</category>
 
+	<!-- this is so cxf doesn't complain about stubs not matching wsdl's when revisions aren't in sync. -->
+	<category name="org.apache.cxf.service.factory.ReflectionServiceFactoryBean">
+		<priority value="ERROR" />
+	</category>
 	
 	<!-- ############################# -->
 

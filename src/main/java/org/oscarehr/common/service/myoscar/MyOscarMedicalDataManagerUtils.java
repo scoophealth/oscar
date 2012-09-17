@@ -43,6 +43,7 @@ import org.oscarehr.common.model.PHRVerification;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.RemoteDataLog;
 import org.oscarehr.common.model.SentToPHRTracking;
+import org.oscarehr.myoscar_server.ws.InvalidRequestException_Exception;
 import org.oscarehr.myoscar_server.ws.ItemAlreadyExistsException_Exception;
 import org.oscarehr.myoscar_server.ws.ItemCompletedException_Exception;
 import org.oscarehr.myoscar_server.ws.MedicalDataTransfer3;
@@ -111,7 +112,7 @@ public final class MyOscarMedicalDataManagerUtils {
 		return(resultId);
 	}
 	
-	public static Long updateMedicalData(PHRAuthentication auth, MedicalDataTransfer3 medicalDataTransfer, String oscarDataType, Object localOscarObjectId) throws NotAuthorisedException_Exception, NoSuchItemException_Exception, ItemCompletedException_Exception, UnsupportedEncodingException_Exception {
+	public static Long updateMedicalData(PHRAuthentication auth, MedicalDataTransfer3 medicalDataTransfer, String oscarDataType, Object localOscarObjectId) throws NotAuthorisedException_Exception, NoSuchItemException_Exception, ItemCompletedException_Exception, UnsupportedEncodingException_Exception, InvalidRequestException_Exception {
 		MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
 
 		Long resultId=medicalDataWs.updateMedicalData4(medicalDataTransfer);

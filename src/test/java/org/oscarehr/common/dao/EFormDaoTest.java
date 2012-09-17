@@ -55,7 +55,7 @@ public class EFormDaoTest extends DaoTestFixtures {
 	}
 
 	@Test
-	public void testFindByStatus() throws Exception {
+	public void testFindByStatus() {
 		List<EForm> eforms = dao.findByStatus(true, EFormSortOrder.DATE);
 		assertFalse(eforms.isEmpty());
 		
@@ -73,14 +73,14 @@ public class EFormDaoTest extends DaoTestFixtures {
 	}
 	
 	@Test
-	public void testFindMaxIdForActiveForm() throws Exception {
+	public void testFindMaxIdForActiveForm() {
 		Integer id = dao.findMaxIdForActiveForm("NUVASHENAH");
 		assertNotNull(id);
 		assertTrue(id > 0);
 	}
 	
 	@Test
-	public void testCountFormsOtherThanSpecified() throws Exception {
+	public void testCountFormsOtherThanSpecified() {
 		Long count = dao.countFormsOtherThanSpecified("NUVASHENAH", populatedFormId);
 		assertNotNull(count);
 		assertTrue(count >= 0);		
