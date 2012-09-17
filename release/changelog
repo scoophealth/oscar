@@ -1,0 +1,25 @@
+oscar-mcmaster (yyy-x,x) RELEASED; urgency=low
+
+  * Release of oscarprogram  
+  * build xxx
+  *
+  * oscar-mcmaster recent changes
+  *   see https://demo.oscarmcmaster.org:11042/job/oscarMaster/changes
+  * 
+  * outstanding issues with war (known) 
+  *   translations for French and Spanish incomplete
+  *   not fully tested with java 7
+  *   EDB link out dated
+  *   Admin Oscar restart buttons are not hooked up
+  *   All the intake form links are broken
+  *   All the links in the Indicators flowsheet are broken
+  *   
+  * installer changes since previous deb:
+  *   installs OscarDocuments in non destructive way 
+  *   status dialog during installation
+  *
+  * outstanding issues with installer (known)
+  *   Ontario Billing database October 4, 2011
+  *   drugref database of July 28th 2012
+
+ -- Peter Hutten-Czapski <phc@srpc.ca>  releasedate
