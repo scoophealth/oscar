@@ -836,7 +836,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                             </td>
                                             <td>
                                                 <div class="FieldData" nowrap="nowrap">
-                                                    <%= ( handler.getOrderStatus().equals("F") ? "Final" : handler.getOrderStatus().equals("C") ? "Corrected" : "Partial") %>
+                                                    <%= ( handler.getOrderStatus().equals("F") ? "Final" : handler.getOrderStatus().equals("C") ? "Corrected" : handler.getOrderStatus().equals("X") ? "DELETED": handler.getOrderStatus()) %>
                                                 </div>
                                             </td>
                                         </tr>
