@@ -23,6 +23,7 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -73,12 +74,17 @@ public class EFormValueDao extends AbstractDao<EFormValue> {
     	Query query = entityManager.createQuery("select x from " + modelClass.getSimpleName() + " x where x.formDataId=?1 and x.varName=?2");
 		query.setParameter(1, fdid);
 		query.setParameter(2, varName);
-		EFormValue result=(EFormValue)query.getSingleResult();
+		
+		@SuppressWarnings("unchecked")
+		List<EFormValue> results = query.getResultList();
 
-		return(result);
+		if (results.isEmpty()) return null;
+		return(results.get(0));
     }
 
     public List<EFormValue> findByFormDataIdList(List<Integer> fdids) {
+    	if (fdids==null || fdids.isEmpty()) return new ArrayList<EFormValue>();
+    	
     	Query query = entityManager.createQuery("select x from " + modelClass.getSimpleName() + " x where x.formDataId in (?1)");
 		query.setParameter(1, fdids);
 

@@ -27,6 +27,7 @@ package org.oscarehr.common.dao;
 
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.Property;
@@ -61,7 +62,11 @@ public class PropertyDao extends AbstractDao<Property> {
 		String sql = " select x from " + this.modelClass.getName() + " x where x.name='"+name+"'";
 		Query query = entityManager.createQuery(sql);		
 
-		return (Property)query.getSingleResult();
+		try {
+			return (Property)query.getSingleResult();
+		} catch (NoResultException ex) {
+			return null;
+		}
 		
 	}
 }
