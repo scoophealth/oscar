@@ -411,7 +411,7 @@ public class FrmPDFServlet extends HttpServlet {
             document.addKeywords("pdf, itext");
             document.addCreator("OSCAR");
             document.addAuthor("");
-            document.addHeader("Expires", "0");
+            //document.addHeader("Expires", "0");
 
             // A0-A10, LEGAL, LETTER, HALFLETTER, _11x17, LEDGER, NOTE, B0-B5, ARCH_A-ARCH_E, FLSA
             // and FLSE
@@ -535,27 +535,35 @@ public class FrmPDFServlet extends HttpServlet {
 	                        ct.go();
 	                        continue;
 	                    }
-	
-	                    // draw line directly
-	                    if (tempName.toString().startsWith("__$line")) {
+	                    
+	                    //adapted by DENNIS WARREN June 2012 to allow a colour rectangle
+	                    // handy for covering up parts of a document
+	                    if(tempName.toString().startsWith("__$rectangle")) {
+	                    	
+	                    	float llx = Float.parseFloat(cfgVal[0].trim());
+		                	float lly = Float.parseFloat(cfgVal[1].trim());
+		                	float urx = Float.parseFloat(cfgVal[2].trim());
+		                	float ury = Float.parseFloat(cfgVal[3].trim());
+		                	
+		                    Rectangle rec = new Rectangle(llx, lly, urx, ury);
+		                    rec.setBackgroundColor(java.awt.Color.WHITE);
+		                    cb.rectangle(rec);
+	                    	
+	                    } else if (tempName.toString().startsWith("__$line")) {
 	                        cb.setRGBColorStrokeF(0f, 0f, 0f);
 	                        cb.setLineWidth(Float.parseFloat(cfgVal[4].trim()));
 	                        cb.moveTo(Float.parseFloat(cfgVal[0].trim()), Float.parseFloat(cfgVal[1].trim()));
 	                        cb.lineTo(Float.parseFloat(cfgVal[2].trim()), Float.parseFloat(cfgVal[3].trim()));
-	                        // stroke the lines
 	                        cb.stroke();
-	                        // write text directly
 	
 	                    } else if (tempName.toString().startsWith("__")) {
 	                        cb.beginText();
 	                        cb.setFontAndSize(bf, Integer.parseInt(cfgVal[5].trim()));
-	                        cb
-	                                .showTextAligned((cfgVal[0].trim().equals("left") ? PdfContentByte.ALIGN_LEFT
+	                        cb.showTextAligned((cfgVal[0].trim().equals("left") ? PdfContentByte.ALIGN_LEFT
 	                                : (cfgVal[0].trim().equals("right") ? PdfContentByte.ALIGN_RIGHT
 	                                : PdfContentByte.ALIGN_CENTER)), (cfgVal.length >= 7 ? (cfgVal[6]
 	                                .trim()) : propValue), Integer
-	                                .parseInt(cfgVal[1].trim()), (height - Integer.parseInt(cfgVal[2].trim())), 0);
-	
+	                                .parseInt(cfgVal[1].trim()), (height - Integer.parseInt(cfgVal[2].trim())), 0);	
 	                        cb.endText();
 	                    } else if (tempName.toString().equals("forms_promotext")){
 	                        if ( OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT") != null ){
@@ -566,16 +574,13 @@ public class FrmPDFServlet extends HttpServlet {
 	                                    OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT"),
 	                                    Integer.parseInt(cfgVal[1].trim()),
 	                                    (height - Integer.parseInt(cfgVal[2].trim())),
-	                                    0);
-	
+	                                    0);	
 	                            cb.endText();
 	                        }
-	                    } else { // write prop text
-	
+	                    } else { // write prop text	
 	                        cb.beginText();
 	                        cb.setFontAndSize(bf, Integer.parseInt(cfgVal[5].trim()));
-	                        cb
-	                                .showTextAligned((cfgVal[0].trim().equals("left") ? PdfContentByte.ALIGN_LEFT
+	                        cb.showTextAligned((cfgVal[0].trim().equals("left") ? PdfContentByte.ALIGN_LEFT
 	                                : (cfgVal[0].trim().equals("right") ? PdfContentByte.ALIGN_RIGHT
 	                                : PdfContentByte.ALIGN_CENTER)), (cfgVal.length >= 7 ? ((propValue.equals("") ? "" : cfgVal[6].trim()))
 	                                : propValue), Integer.parseInt(cfgVal[1]

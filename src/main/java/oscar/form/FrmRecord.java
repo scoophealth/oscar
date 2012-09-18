@@ -25,9 +25,31 @@
 package oscar.form;
 
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.Properties;
 
+import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.DemographicExtDao;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.DemographicExt;
+import org.oscarehr.util.SpringUtils;
+
+/**
+ * 
+ * @author Dennis Warren
+ * @company OSCARprn
+ * 
+ * Rewritten June 2012
+ *
+ */
 public abstract class FrmRecord {
+
+	protected Demographic demographic;
+	protected DemographicExt demographicExt;
+	protected Map<String, String> demographicExtMap;
+	private DemographicDao demographicDao;
+	private DemographicExtDao demographicExtDao;
+
 	public abstract Properties getFormRecord(int demographicNo, int existingID) throws SQLException;
 
 	public abstract int saveFormRecord(Properties props) throws SQLException;
@@ -52,4 +74,34 @@ public abstract class FrmRecord {
 
 	public void setGraphType(String graphType) { /*Rourke needs to know whether plotting head circ or height*/
 	}
+
+	
+	
+	public FrmRecord() {
+		// this DAO is used in every transaction - it should be ready to go.
+		this.demographicDao = SpringUtils.getBean(DemographicDao.class);
+		this.demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
+	} 
+	
+	public FrmRecord(int demographicNo) {
+		// this DAO is used in every transaction - it should be ready to go.
+		this.demographicDao = SpringUtils.getBean(DemographicDao.class);
+		this.demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
+		setDemographic(demographicNo);
+		setDemographicExt(demographicNo);		
+	} 
+
+       protected void setDemographic(int demographicNo) {
+	if(this.demographicDao != null) {
+		this.demographic = demographicDao.getClientByDemographicNo(demographicNo);
+		this.setDemographicExt(demographicNo);
+	}
+      }
+
+	protected void setDemographicExt(int demographicNo) {
+		if(this.demographicExtDao != null) {
+			this.demographicExt = demographicExtDao.getDemographicExt(demographicNo);
+			this.demographicExtMap = demographicExtDao.getAllValuesForDemo(""+demographicNo);
+		}
+	} 
 }

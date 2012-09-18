@@ -1,0 +1,101 @@
+ar2_riskAlcoDrugCur : left, 209, 109, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskGesDiabete : left, 209, 244, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskRhImmuY : left, 29, 235, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskAlcoDrug : left, 393, 355, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskDepre : left, 393, 383, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskDiagSmall : left, 209, 230, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskFetalMov : left, 209, 189, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskAnemia : left, 209, 123, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskHypDisorder : left, 29, 115, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskRetDoc : left, 393, 117, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskStillbirth : left, 29, 273, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskPreg42W : left, 209, 350, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskSymt : left, 393, 161, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskH152 : left, 393, 396, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskBleeding : left, 209, 137, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskPriPretBirth20 : left, 29, 221, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskNeonDeath : left, 29, 180, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskOtherMedical : left, 394, 438, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskBloodAnti : left, 209, 151, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskMemRupt37 : left, 209, 285, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskUnderweight : left, 394, 369, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskPolyhyd : left, 209, 312, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskHabitAbort : left, 29, 101, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskUnder18 : left, 394, 328, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskOver35 : left, 394, 342, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskPPHemo : left, 29, 207, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskAdmPreterm : left, 209, 364, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskMalpres : left, 209, 272, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskWtLoss : left, 209, 327, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskPriCesBirth : left, 29, 87, 0, BaseFont.HELVETICA, 8,X
+
+ar2_risk14090 : left, 394, 191, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskPregIndHypert : left, 209, 258, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskAbortion : left, 29, 73, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskPriIUGR : left, 29, 128, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskPriMacr : left, 29, 142, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskMulPreg : left, 209, 298, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskInsDepend : left, 393, 104, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskProte1 : left, 209, 378, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskChroRenalDisease : left, 394, 219, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskConDiet : left, 393, 90, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskAbnSerum : left, 209, 85, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskDepreCur : left, 209, 203, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskSmokingCur : left, 209, 392, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskSmoking : left, 394, 424, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskAsymt : left, 393, 147, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskDiagLarge : left, 209, 216, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskRhImmuN : left, 29, 248, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskHyperDrug : left, 394, 206, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskPlacAbruption : left, 29, 193, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskMajCongAnom : left, 29, 156, 0, BaseFont.HELVETICA, 8,X
+
+ar2_riskObesity	: left, 394, 249, 0, BaseFont.HELVETICA, 8  , X
