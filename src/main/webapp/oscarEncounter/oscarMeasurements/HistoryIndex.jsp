@@ -69,14 +69,14 @@
 <%=WebUtils.popErrorAndInfoMessagesAsHtml(session)%>
 
 <div style="display:inline-block; text-align:center">
-	Old Measurements Index
+	<bean:message key="oscarEncounter.oscarMeasurements.oldmesurementindex"/>
 	
 	<table>
 		<tr>
 			<th align="left" class="Header" width="20"><bean:message
 				key="oscarEncounter.oscarMeasurements.displayHistory.headingType" />
 			</th>
-			<th align="left" class="Header" width="200">Type Description</th>
+			<th align="left" class="Header" width="200"><bean:message key="oscarEncounter.oscarMeasurements.typedescription"/></th>
 			<th align="left" class="Header" width="50"></th>
 		</tr>
 		<logic:present name="measurementsData">

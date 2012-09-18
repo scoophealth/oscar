@@ -212,13 +212,14 @@ function updateAjax() {
 					%>
 					<tr>
 						<td align='center' colspan='5'><bean:message
-							key="eform.showmyform.msgNoData" /></td>
+                            key="eform.showmyform.msgNoData" /></td>
 					</tr>
 					<%
 						}
 					%>
 				</table>
-				<input type="submit" value="Send To PHR" />
+				<input type="submit" value="<bean:message key="eform.showmyform.btnsendtophr" />">
+			
 			</form>
 		
 		</td>

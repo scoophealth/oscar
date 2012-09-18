@@ -280,32 +280,29 @@ function onSub() {
 
 <table border=0 cellspacing=0 cellpadding=0 width="100%">
 	<tr bgcolor="<%=deepcolor%>">
-		<th><font face="Helvetica">Repeat Booking</font></th>
+		<th><font face="Helvetica"><bean:message key="appointment.appointmenteditrepeatbooking.title"/></font></th>
 	</tr>
 </table>
 
 <table border="0" cellspacing="1" cellpadding="2" width="100%">
 	<tr>
 		<td width="20%"></td>
-		<td nowrap>How often?</td>
+		<td nowrap><bean:message key="appointment.appointmenteditrepeatbooking.howoften"/></td>
 	</tr>
 	<tr>
 		<td></td>
-		<td nowrap>&nbsp;&nbsp;&nbsp; <input type="radio" name="dateUnit"
-			value="day" <%="checked"%> onclick='onCheck(this, "day")'>
-		Day &nbsp;&nbsp; <input type="radio" name="dateUnit" value="week"
-			<%=""%> onclick='onCheck(this, "week")'> Week &nbsp;&nbsp; <input
-			type="radio" name="dateUnit" value="month" <%=""%>
-			onclick='onCheck(this, "month")'> Month &nbsp;&nbsp; <input
-			type="radio" name="dateUnit" value="year" <%=""%>
-			onclick='onCheck(this, "year")'> Year</td>
+		<td nowrap>&nbsp;&nbsp;&nbsp; 
+		<input type="radio" name="dateUnit" value="day" <%="checked"%> onclick='onCheck(this, "<bean:message key="day"/>")'> <bean:message key="day"/> &nbsp;&nbsp; 
+		<input type="radio" name="dateUnit" value="week" <%=""%> onclick='onCheck(this, "<bean:message key="week"/>")'> <bean:message key="week"/> &nbsp;&nbsp; 
+		<input type="radio" name="dateUnit" value="month" <%=""%> onclick='onCheck(this, "<bean:message key="month"/>")'> <bean:message key="month"/> &nbsp;&nbsp; 
+		<input type="radio" name="dateUnit" value="year" <%=""%> onclick='onCheck(this, "<bean:message key="year"/>")'> <bean:message key="year"/></td>
 	</tr>
 </table>
 
 <table border="0" cellspacing="1" cellpadding="2" width="100%">
 	<tr>
 		<td width="20%"></td>
-		<td width="16%" nowrap>Every</td>
+		<td width="16%" nowrap><bean:message key="appointment.appointmenteditrepeatbooking.every"/></td>
 		<td nowrap><select name="everyNum">
 			<%
 for (int i = 1; i < 12; i++) {
@@ -319,10 +316,10 @@ for (int i = 1; i < 12; i++) {
 	</tr>
 	<tr>
 		<td></td>
-		<td>End on &nbsp;&nbsp;
+		<td><bean:message key="appointment.appointmenteditrepeatbooking.endon"/> &nbsp;&nbsp;
 		<button type="button" id="f_trigger_b">...</button>
 		<br>
-		<font size="-1">(dd/mm/yyyy)</font></td>
+		<font size="-1"><bean:message key="ddmmyyyy"/></font></td>
 		<td nowrap valign="top"><input type="text" id="endDate"
 			name="endDate" size="10"
 			value="<%=UtilDateUtilities.DateToString(UtilDateUtilities.now(),"dd/MM/yyyy")%>"

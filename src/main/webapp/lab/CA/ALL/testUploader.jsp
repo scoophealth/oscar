@@ -52,7 +52,7 @@ if(outcome != null){
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>Lab Upload Utility</title>
+<title><bean:message key="lab.ca.all.testUploader.labUploadUtility" /></title>
 <link rel="stylesheet" type="text/css" href="../../../share/css/OscarStandardLayout.css">
 <script type="text/javascript" src="../../../share/javascript/Oscar.js"></script>
 <script type="text/javascript">
@@ -105,16 +105,16 @@ if(outcome != null){
 		</td>
 	</tr>
 	<tr>
-		<td><input type="submit" value="Upload the lab"
+		<td><input type="submit" value="<bean:message key="lab.ca.all.testUploader.uploadTheLab" />"
 			onclick="return checkInput()"></td>
 		<td>
 		<table>
 			<tr>
-				<td>Please select the lab file:</td>
+				<td><bean:message key="lab.ca.all.testUploader.pleaseSelectTheLabfile" /></td>
 				<td><input type="file" name="importFile"></td>
 			</tr>
 			<tr>
-				<td>Lab type:</td>
+				<td><bean:message key="lab.ca.all.testUploader.labType" /></td>
 				<td><select name="type" onClick="selectOther()">
 					<option value="ALPHA">ALPHA</option>
 					<option value="CML">CML</option>
@@ -135,11 +135,13 @@ if(outcome != null){
 					<option value="SIOUX">SIOUX</option>
 					<option value="TDIS">TDIS</option>
 					<option value="Spire">Spire</option>
+					<option value="OUL_R21">OUL_R21</option>
+					<option value="ORU_R01">ORU_R01</option>
 					<option value="OTHER">Other</option>
 				</select></td>
 			</tr>
 			<tr id="OTHER" style="visibility: hidden;">
-				<td>Please specify the other lab type:</td>
+				<td><bean:message key="lab.ca.all.testUploader.pleaseSpecifyTheOtherLabType" /></td>
 				<td><input type="text" name="otherType"></td>
 			</tr>
 		</table>

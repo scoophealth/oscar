@@ -35,7 +35,7 @@
 <table width="100%" border="0" cellpadding="0" cellspacing="1"
 	bgcolor="#C0C0C0">
 	<tr class="title">
-		<td>Ongoing Concerns</td>
+		<td><bean:message key="casemgmt.ongoingconcerns" /></td>
 	</tr>
 	<tr>
 		<td bgcolor="white"><html:textarea property="cpp.ongoingConcerns"

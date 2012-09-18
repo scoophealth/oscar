@@ -112,7 +112,7 @@ function checkSelected() {
     if (aBoxIsChecked) {
         popupStart(300, 400, 'SelectProvider.jsp', 'providerselect');
     } else {
-        alert('<bean:message key="oscarMDS.index.msgSelectOneLab"/>');
+        alert("<bean:message key="oscarMDS.index.msgSelectOneLab"/>");
     }
 }
 
@@ -296,7 +296,7 @@ function checkAll(formId){
 		<td nowrap>
 		<% if (result.isHL7TEXT()) {%> <a>
 			<!--href="javascript:reportWindow('../lab/CA/ALL/labDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"--><%=(String) result.getDiscipline()%></a>
-		<% } else {%> <a
+		<% } else {%> <a>
 			<!--href="javascript:reportWindow('../lab/CA/BC/labDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"--><%=(String) result.getDiscipline()%></a>
 		<% }%>
 		</td>
