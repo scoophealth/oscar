@@ -23,9 +23,29 @@
     Ontario, Canada
 
 --%>
-
+<%@page import="org.oscarehr.util.WebUtils,org.oscarehr.common.service.AcceptableUseAgreementManager,org.oscarehr.common.model.Property" %>
 <%
 if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp");
+    		
+Property latestProperty = AcceptableUseAgreementManager.findLatestProperty();
+String checked = "";
+String fromDate = "";
+String period = "year";
+String duration = "1";
+
+    		if(latestProperty != null && "aua_valid_from".equals(latestProperty.getName())){
+    			checked= "checked";
+    			fromDate = latestProperty.getValue();
+             }else if(latestProperty != null){
+             	String val = latestProperty.getValue();
+             	if(val != null){
+             		String[] splitVal = val.split(" ");
+             		if(splitVal != null && splitVal.length == 2){
+             			duration = splitVal[0];
+             			period = splitVal[1];
+             		}
+             	}
+             }
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -36,6 +56,16 @@ if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp
     <head>
         <title><bean:message key="admin.admin.uploadEntryTxt"/></title>
         <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
+        <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+		<!-- main calendar program -->
+		<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+
+		<!-- language for the calendar -->
+		<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+
+		<!-- the following script defines the Calendar.setup helper function, which makes adding a calendar a matter of 1 or 2 lines of code. -->
+		<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
     </head>
     <body>
         <table class="MainTable">
@@ -58,8 +88,48 @@ if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp
             <tr>
                 <td class="MainTableLeftColumn" valign="top">&nbsp;</td>
                 <td class="MainTableRightColumn">
-                    <html:form action="/admin/uploadEntryText" method="POST" enctype="multipart/form-data">
-                        <input type="file" name="importFile"><br>
+                	<html:form action="/admin/uploadEntryText" method="POST" enctype="multipart/form-data">
+                    
+                	How long is agreement valid?<br>
+                	
+                	<select name="validDurationNumber">
+                		<option value="1" <%=WebUtils.getSelectedString("1".equals(duration))%> >1</option>
+                		<option value="2" <%=WebUtils.getSelectedString("2".equals(duration))%>>2</option>
+                		<option value="3" <%=WebUtils.getSelectedString("3".equals(duration))%>>3</option>
+                		<option value="4" <%=WebUtils.getSelectedString("4".equals(duration))%>>4</option>
+                		<option value="5" <%=WebUtils.getSelectedString("5".equals(duration))%>>5</option>
+                		<option value="6" <%=WebUtils.getSelectedString("6".equals(duration))%>>6</option>
+                		<option value="7" <%=WebUtils.getSelectedString("7".equals(duration))%>>7</option>
+                		<option value="8" <%=WebUtils.getSelectedString("8".equals(duration))%>>8</option>
+                		<option value="9" <%=WebUtils.getSelectedString("9".equals(duration))%>>9</option>
+                		<option value="10" <%=WebUtils.getSelectedString("10".equals(duration))%>>10</option>
+                		<option value="11" <%=WebUtils.getSelectedString("11".equals(duration))%>>11</option>
+                		<option value="12" <%=WebUtils.getSelectedString("12".equals(duration))%>>12</option>
+                		<option value="13" <%=WebUtils.getSelectedString("13".equals(duration))%>>13</option>
+                		<option value="14" <%=WebUtils.getSelectedString("14".equals(duration))%>>14</option>
+                		<option value="15" <%=WebUtils.getSelectedString("15".equals(duration))%>>15</option>
+                		<option value="16" <%=WebUtils.getSelectedString("16".equals(duration))%>>16</option>
+                		<option value="17" <%=WebUtils.getSelectedString("17".equals(duration))%>>17</option>
+                		<option value="18" <%=WebUtils.getSelectedString("18".equals(duration))%>>18</option>
+                	</select>
+                	
+                	<select name="validDurationPeriod">
+	                	<option value="year" <%=WebUtils.getSelectedString("year".equals(period))%>>Year</option>
+	                	<option value="month" <%=WebUtils.getSelectedString("month".equals(period))%>>Month</option>
+	                	<option value="weeks" <%=WebUtils.getSelectedString("weeks".equals(period))%>>Weeks</option>
+	                	<option value="days" <%=WebUtils.getSelectedString("days".equals(period))%>>Days</option>
+                	</select>
+                	
+                	<br>OR<br>
+                	<input type="checkbox" name="validForever" value="forever" <%=checked%>> Forever with an agreement past 
+                	<input name="foreverFrom" type="text" id="foreverFrom" value="<%=fromDate%>"/>
+                	<img src="../images/cal.gif" id="foreverFrom_cal">
+                	
+                	
+                	
+                	<br>
+                	<br>
+                        Agreement file (txt file)<input type="file" name="importFile"><br>
                         <input type="submit" value="<bean:message key="admin.admin.uploadEntryTxt"/>">
                     </html:form>
                 </td>
@@ -73,16 +143,36 @@ if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp
                 <td class="MainTableRightColumn">
                     <% if( error == true ) { %>
                     <span style="color:red;"><bean:message key="admin.admin.ErrorUploadEntryTxt"/></span>
-                    <%}else {%>
-                     <span style="color:green;"><bean:message key="admin.admin.SuccessUploadEntryTxt"/></span>
                     <%}%>
+                     <!--   span style="color:green;"><bean:message key="admin.admin.SuccessUploadEntryTxt"/></span -->
+                    
                 </td>
+                
             </tr>
             <%}%>
             <tr>
                 <td class="MainTableBottomRowLeftColumn">&nbsp;</td>
-                <td class="MainTableBottomRowRightColumn" valign="top">&nbsp;</td>
+                <td class="MainTableBottomRowRightColumn" valign="top">
+                <hr>
+                <%if (AcceptableUseAgreementManager.hasAUA()){ %>
+                	<div style="float:right;text-align:center;" id="auaText">
+        					<div style="margin-left:auto; margin-right:auto; text-align:left; width:70%; padding:5px; border:2px groove black;"><%=AcceptableUseAgreementManager.getAUAText()%></div>
+        			</div>
+                <%}else{%>
+                	No text
+                <%} %>
+                </td>
             </tr>
         </table>
+        
+        
+        <script type="text/javascript">
+		Calendar.setup({ inputField : "foreverFrom", ifFormat : "%Y-%m-%d %H:%M:%S", showsTime :true, button : "foreverFrom_cal", singleClick : true, step : 1 });
+        </script>
     </body>
 </html>
+<%!
+
+	
+
+%>
