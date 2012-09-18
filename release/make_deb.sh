@@ -8,17 +8,20 @@
 #==============================================================
 
 
+# TODO Check the dir from which you are being called
 # TODO Grep and cat up the updates from 12 and newer
 
 SRC=~/git/oscar
 
-if [ ! -f $SRC/target/oscar-SNAPSHOT.war ]
-	echo "This script needs a maven build of OSCAR in ${SRC}/target/"
-	echo "please cd ${SRC} and mvn -Dmaven.test.skip=true verify"
+if [ ! -f $SRC/target/oscar-SNAPSHOT.war ] ; then
+	echo "This script needs a oscar-SNAPSHOT.war build of OSCAR in ${SRC}/target/"
+	echo "please"
+	echo "cd ${SRC}"
+	echo "and then do a maven build"
+	echo "mvn"
 	echo "Then change back to this directory and run again"	
+	exit 1
 fi
-
-cd ${SRC}
 
 # name of properties file and war
 PROGRAM=oscar-SNAPSHOT
@@ -123,6 +126,7 @@ cp -R OLIS.sql ./${DEBNAME}/usr/share/OscarMcmaster/
 cp -R Oscar11_to_oscar_12.sql ./${DEBNAME}/usr/share/OscarMcmaster/
 cp -R oscar10_12_to_Oscar11.sql ./${DEBNAME}/usr/share/OscarMcmaster/
 cp -R oscar_12_to_oscar_12_1.sql ./${DEBNAME}/usr/share/OscarMcmaster/
+cp -R RNGPA.sql ./${DEBNAME}/usr/share/OscarMcmaster/
 cp -R special.sql ./${DEBNAME}/usr/share/OscarMcmaster/
 cp -R unDemo.sql ./${DEBNAME}/usr/share/OscarMcmaster/
 

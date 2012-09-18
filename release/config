@@ -11,12 +11,12 @@ set -e
 PROGRAM=Oscar12_1
 VERSION=12.1
 PREVIOUS=12
-REVISION=0.2
+REVISION=0.5RC20
 C_HOME=/usr/share/tomcat6/
 C_BASE=/var/lib/tomcat6/
 SRC=/usr/share/OscarMcmaster/
 triumvirate=false
-TOMCAT=tomcat9
+TOMCAT="tomcat6"
 COUNTRY=Unknown
 DEMO=false
 UPGRADE=false
@@ -38,7 +38,7 @@ new_flowsheet_enabled=true
 NEW_CONTACTS_UI=false
 indivica_rx_enhance=false
 enableFax=false
-buildDateTime="Jan 1, 2012"
+buildDateTime="Sep 12, 2012 3:10:33 PM"
 logintext="<table border='1'><tr><td>YOUR USERNAME IS oscardoc<br>PASSWORD mac2002<br>2nd PASSWORD 1117<br>These credentials will <b>expire</b> a month from installation!</td></tr></table>"
 faxEnable=false
 rx_fax_enabled=false
@@ -215,16 +215,13 @@ if [ "${UPGRADE}" = "true" ] ; then
 	# save a copy of the previous properties file
 	if [ -f ${C_HOME}Oscar${PREVIOUS}.properties ] ; then
 		echo Oscar${PREVIOUS}.properties found 1>> $LOG_FILE
-		sed -e 's/^db_name =/priorschema=/' ${C_HOME}Oscar${PREVIOUS}.properties > ~/${PROGRAM}.tmp 2>>$LOG_ERR
 		skip12=true
 	else
 		if [ -f ${C_HOME}Oscar11.properties ] ; then
-			sed -e 's/^db_name =/priorschema=/' ${C_HOME}Oscar11.properties > ~/${PROGRAM}.tmp 2>>$LOG_ERR
 			PREVIOUS=11
 		else
 			if [ -f ${C_HOME}Oscar10_12.properties ] ; then
-				sed -e 's/^db_name =/priorschema=/' ${C_HOME}Oscar10_12.properties > ~/${PROGRAM}.tmp 2>>$LOG_ERR
-				PREVIOUS=10
+				PREVIOUS=10_12
 			else
 				echo "no previous properties file found to upgrade"  1>>$LOG_ERR
 				exit 1
@@ -242,8 +239,8 @@ if [ "${UPGRADE}" = "true" ] ; then
 	phoneprefix=$(sed '/^\#/d' ~/${PROGRAM}.tmp | grep 'phoneprefix'  | tail -n 1 | cut -d "=" -f2- | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_ERR
 	echo "phoneprefix=${phoneprefix}" 1>> $LOG_FILE
 	db_set oscar-mcmaster/phoneprefix ${phoneprefix}
-	echo "grep the previous name from the properties file" 1>> $LOG_FILE
-	priorschema=$(sed '/^\#/d' ~/${PROGRAM}.tmp | grep 'priorschema'  | tail -n 1 | cut -d "=" -f2- | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_ERR
+	echo "grep the previous db_name from the properties file" 1>> $LOG_FILE
+	priorschema=$(sed '/^\#/d' ~/${PROGRAM}.tmp | grep 'db_name'  | tail -n 1 | cut -d "=" -f2- | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_ERR
 	echo "priorschema=${priorschema}" 1>> $LOG_FILE
 	db_set oscar-mcmaster/priorschema ${priorschema} 
 else
