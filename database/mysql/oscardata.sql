@@ -1415,7 +1415,7 @@ insert into `secRole` (role_name, description) values('Recreation Therapist', 'R
 insert into `secRole` (role_name, description) values('property staff','property staff');
 insert into `secRole` (role_name, description) values('Support Counsellor','Support Counsellor');
 insert into `secRole` (role_name, description) values('Counselling Intern', 'Counselling Intern');
-
+insert into `secRole` (role_name, description) values('Field Note Admin', 'Field Note Admin');
 
 
 insert into `secUserRole` (`provider_no`,`role_name`,`orgcd`,`activeyn`) values('999998', 'doctor', 'R0000001',1);
@@ -1593,7 +1593,7 @@ insert into `secObjPrivilege` values('doctor','_pref','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_edoc','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_tickler','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_pmm_client.BedRoomReservation','x',0,'999998');
-insert into secObjPrivilege values ('doctor','_pregnancy','o',0,'999998');
+insert into `secObjPrivilege` values('doctor','_pregnancy','o',0,'999998');
 
 
 insert into `secObjPrivilege` values('admin', '_admin', 'x', 0, '999998');
@@ -1951,6 +1951,7 @@ insert into `secObjPrivilege` values('Counselling Intern','_pmm.mergeRecords','x
 insert into `secObjPrivilege` values('Counselling Intern','_pmm.newClient','x',0,'999998');
 insert into `secObjPrivilege` values('Counselling Intern','_tasks','x',0,'999998');
 
+insert into `secObjPrivilege` values('Field Note Admin','_admin.fieldnote','x',0,'999998');
 
 insert into lst_orgcd (code, description, activeyn, orderbyindex,codetree) values('R0000001','Shelter Management Information System',1,10,'R000001');
 

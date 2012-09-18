@@ -206,16 +206,33 @@ public class StringUtils {
      */
     public static boolean isNumeric(String str) {
         boolean ret = false;
-        if (str != null && !str.equals("")) {
+        if (filled(str)) {
             try {
                 new Double(str);
                 ret = true;
             } catch (NumberFormatException e) {
                 ret = false;
             }
+            return ret;
+        }
+        return ret;
+    }
 
-                return ret;
-
+    /**
+     * Returns true if the provided string is an integer
+     * @param str String
+     * @return boolean
+     */
+    public static boolean isInteger(String str) {
+        boolean ret = false;
+        if (filled(str)) {
+            try {
+                new Integer(str);
+                ret = true;
+            } catch (NumberFormatException e) {
+                ret = false;
+            }
+            return ret;
         }
         return ret;
     }
