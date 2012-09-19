@@ -7858,7 +7858,8 @@ create table hl7TextInfo(
 	filler_order_num varchar(50),
 	sending_facility varchar(50),
 	label varchar(255),
-	KEY `labno_index`(`lab_no`)
+	KEY `labno_index`(`lab_no`),
+	KEY `accession_index`(`accessionNum`)
 );
 
 create table hl7TextMessage(
