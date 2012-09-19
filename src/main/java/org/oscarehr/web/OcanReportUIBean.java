@@ -1387,7 +1387,7 @@ public class OcanReportUIBean implements CallbackHandler {
 		StaffWorker staffWorker = StaffWorker.Factory.newInstance();
 		staffWorker.setName(getStaffAnswer("serviceUseRecord_staffWorker"+index,ocanStaffFormData));
 		staffWorker.setPhoneNumber(getStaffAnswer("serviceUseRecord_phoneNumber"+index,ocanStaffFormData));
-		staffWorker.setExtension(getStaffAnswer("serviceUseRecord_phoneNumber"+index,ocanStaffFormData));
+		staffWorker.setExtension(getStaffAnswer("serviceUseRecord_ext"+index,ocanStaffFormData));
 		return staffWorker;
 	}
 	/*
