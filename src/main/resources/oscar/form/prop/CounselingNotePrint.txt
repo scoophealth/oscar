@@ -1,0 +1,13 @@
+cl_name : left, 240, 45, 0, BaseFont.COURIER, 12, _, 700, 700, 12
+cl_address1 : left, 65, 78, 0, BaseFont.COURIER, 9, _, 700, 700, 9
+cl_address2 : left, 65, 90, 0, BaseFont.COURIER, 9, _, 700, 700, 9
+cl_phone : left, 95, 103, 0, BaseFont.COURIER, 9, _, 500, 500, 9
+cl_fax : left, 95, 115, 0, BaseFont.COURIER, 9, _, 500, 500, 9
+p_name : left, 355, 78, 0, BaseFont.COURIER, 9, _, 700, 700, 9
+p_address1 : left, 355, 90, 0, BaseFont.COURIER, 9, _, 700, 700, 9
+p_address2 : left, 355, 103, 0, BaseFont.COURIER, 9, _, 700, 700, 9
+p_phone : left, 355, 115, 0, BaseFont.COURIER, 9, _, 500, 500, 9
+p_birthdate : left, 355, 128, 0, BaseFont.COURIER, 9, _, 500, 500, 9
+p_healthcard : left, 355, 139, 0, BaseFont.COURIER, 9, _, 500, 500, 9
+formCreated : left, 65, 139, 0, BaseFont.COURIER, 9, _, 500, 500, 9
+comments : left, 40, 180, 0, BaseFont.COURIER, 9,  _, 568, 800, 9
