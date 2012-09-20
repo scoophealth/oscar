@@ -1844,7 +1844,7 @@
 		<action input="/report/GenerateLetters.jsp" name="FrmForm" path="/report/DeleteLetter" scope="request" type="oscar.oscarReport.pageUtil.DeletePatientLettersAction">
 			<forward name="success" path="/report/ManageLetters.jsp" />
 		</action>
-		<action input="/oscarPrevention/PreventionReporting.jsp" name="FrmForm" path="/oscarMeasurement/AddShortMeasurement" scope="request" type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctAddShortMeasurementAction">
+		<action input="/oscarPrevention/PreventionReporting.jsp" name="FrmForm" path="/oscarMeasurement/AddShortMeasurement" scope="request" parameter="method" type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctAddShortMeasurementAction">
 			<forward name="success" path="/oscarPrevention/PreventionReporting.jsp" />
 		</action>
 		<action path="/form/RHPrevention" scope="request" name="FrmForm" type="oscar.form.pageUtil.FrmFormRHPreventionAction">

@@ -47,6 +47,7 @@ import org.oscarehr.util.SpringUtils;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.oscarLab.ca.all.upload.MessageUploader;
+import oscar.oscarLab.ca.all.upload.RouteReportResults;
 import oscar.oscarLab.ca.all.util.Utilities;
 
 public class GDMLHandler implements MessageHandler {
@@ -58,6 +59,7 @@ public class GDMLHandler implements MessageHandler {
 	public String parse(String serviceName, String fileName, int fileId) {
 
 		int i = 0;
+		RouteReportResults routeResults;
 		try {
 			ArrayList<String> messages = Utilities.separateMessages(fileName);
 			for (i = 0; i < messages.size(); i++) {
@@ -66,8 +68,17 @@ public class GDMLHandler implements MessageHandler {
 				if(isDuplicate(msg)) {
 					return ("success");
 				}
-				MessageUploader.routeReport(serviceName, "GDML", msg, fileId);
-
+				
+				routeResults = new RouteReportResults();
+				MessageUploader.routeReport(serviceName, "GDML", msg, fileId, routeResults);
+				
+				oscar.oscarLab.ca.all.parsers.MessageHandler msgHandler = Factory.getHandler(String.valueOf(routeResults.segmentId));
+				if( msgHandler == null ) {
+					MessageUploader.clean(fileId);
+					logger.error("Saved lab but could not parse base64 value");
+					return null;
+				}
+								
 			}
 
 			// Since the gdml labs show more than one lab on the same page when grouped

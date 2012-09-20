@@ -44,6 +44,7 @@ import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.oscarLab.ca.all.upload.MessageUploader;
+import oscar.oscarLab.ca.all.upload.RouteReportResults;
 import oscar.oscarLab.ca.all.util.Utilities;
 
 public class MDSHandler implements MessageHandler {
@@ -55,6 +56,7 @@ public class MDSHandler implements MessageHandler {
 	public String parse(String serviceName, String fileName, int fileId) {
 
 		int i = 0;
+		RouteReportResults routeResults;
 		try {
 
 			StringBuilder audit = new StringBuilder();
@@ -64,7 +66,16 @@ public class MDSHandler implements MessageHandler {
 				if(isDuplicate(msg)) {
 					continue;
 				}
-				String auditLine = MessageUploader.routeReport(serviceName, "MDS", msg, fileId) + "\n";
+				routeResults = new RouteReportResults();
+				String auditLine = MessageUploader.routeReport(serviceName, "MDS", msg, fileId, routeResults) + "\n";
+				
+				oscar.oscarLab.ca.all.parsers.MessageHandler msgHandler = Factory.getHandler(String.valueOf(routeResults.segmentId));
+				if( msgHandler == null ) {
+					MessageUploader.clean(fileId);
+					logger.error("Saved lab but could not parse base64 value");
+					return null;
+				}
+				
 				audit.append(auditLine);
 
 			}
