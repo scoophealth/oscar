@@ -41,10 +41,15 @@ public class Program implements Serializable {
     
 	public static final String PROGRAM_STATUS_ACTIVE = "active";
 	public static final String PROGRAM_STATUS_INACTIVE = "inactive";
+	
+	private final Integer DEFAULT_SERVICE_RESTRICTION_DAYS = 30;
+	private final Integer MIN_AGE = 1;
+	private final Integer MAX_AGE = 200;
 
     private int hashCode = Integer.MIN_VALUE;// primary key
 
     private Integer id;
+
     private boolean userDefined = true;
     private Integer numOfMembers;
     private Integer numOfIntakes;
@@ -79,10 +84,10 @@ public class Program implements Serializable {
     private boolean mentalHealth;
     private boolean housing;
     private String exclusiveView="no";
-    private int ageMin=1;
-    private int ageMax=200;
+    private Integer ageMin;
+    private Integer ageMax;
     private Integer maximumServiceRestrictionDays;
-    private int defaultServiceRestrictionDays=30;
+    private Integer defaultServiceRestrictionDays;
 	private Integer shelterId;
     private int facilityId;
 
@@ -101,6 +106,30 @@ public class Program implements Serializable {
     private String emailNotificationAddressesCsv=null;
     private Date lastReferralNotification=null;
 
+   
+    /**
+     * Constructor for required fields
+     */
+    public Program(Integer id, boolean isUserDefined, Integer maxAllowed, String address, String phone, String fax, String url, String email,
+            String emergencyNumber, String name, boolean holdingTank, String programStatus) {
+
+        setId(id);
+        setUserDefined(isUserDefined);
+        setMaxAllowed(maxAllowed);
+        setAddress(address);
+        setPhone(phone);
+        setFax(fax);
+        setUrl(url);
+        setEmail(email);
+        setEmergencyNumber(emergencyNumber);
+        setName(name);
+        setHoldingTank(holdingTank);
+        setProgramStatus(programStatus);
+        
+    }
+    
+    
+     
     public String getSiteSpecificField() {
 		return siteSpecificField;
 	}
@@ -191,26 +220,6 @@ public class Program implements Serializable {
      */
     public Program(Integer id) {
         this.setId(id);
-    }
-
-    /**
-     * Constructor for required fields
-     */
-    public Program(Integer id, boolean isUserDefined, Integer maxAllowed, String address, String phone, String fax, String url, String email,
-            String emergencyNumber, String name, boolean holdingTank, String programStatus) {
-
-        setId(id);
-        setUserDefined(isUserDefined);
-        setMaxAllowed(maxAllowed);
-        setAddress(address);
-        setPhone(phone);
-        setFax(fax);
-        setUrl(url);
-        setEmail(email);
-        setEmergencyNumber(emergencyNumber);
-        setName(name);
-        setHoldingTank(holdingTank);
-        setProgramStatus(programStatus);
     }
 
     public boolean isUserDefined() {
@@ -615,19 +624,26 @@ public class Program implements Serializable {
     }
 
 
-    public int getAgeMin() {
-        return ageMin;
+    public Integer getAgeMin() {
+        if(this.ageMin != null) {
+        	return ageMin;
+        }
+        
+        return this.MIN_AGE;
     }
 
-    public void setAgeMin(int ageMin) {
-        this.ageMin = ageMin;
+    public void setAgeMin(Integer ageMin) {
+        	this.ageMin = ageMin;
     }
 
-    public int getAgeMax() {
-        return ageMax;
+    public Integer getAgeMax() {
+        if(this.ageMax != null) {
+        	return ageMax;
+        }
+        return this.MAX_AGE;
     }
 
-    public void setAgeMax(int ageMax) {
+    public void setAgeMax(Integer ageMax) {
         this.ageMax = ageMax;
     }
 
@@ -639,11 +655,15 @@ public class Program implements Serializable {
         this.maximumServiceRestrictionDays = maximumServiceRestrictionDays;
     }
 
-    public int getDefaultServiceRestrictionDays() {
-        return defaultServiceRestrictionDays;
+    public Integer getDefaultServiceRestrictionDays() {
+        if((this.defaultServiceRestrictionDays != null) && (this.defaultServiceRestrictionDays > 0)) {
+    		return defaultServiceRestrictionDays;
+        } 
+        
+        return this.DEFAULT_SERVICE_RESTRICTION_DAYS; 
     }
 
-    public void setDefaultServiceRestrictionDays(int defaultServiceRestrictionDays) {
+    public void setDefaultServiceRestrictionDays(Integer defaultServiceRestrictionDays) {
         this.defaultServiceRestrictionDays = defaultServiceRestrictionDays;
     }
 
