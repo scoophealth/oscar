@@ -517,7 +517,8 @@ try
 	    	</span>
     	</div>
     	<div style="padding-top: 3px;">
-    		<button type="button" onclick="return showIssues(event);"><bean:message key="oscarEncounter.Index.btnDisplayIssues"/></button> &nbsp;
+    		<button type="button" onclick="return showHideIssues(event, 'noteIssues-resolved');"><bean:message key="oscarEncounter.Index.btnDisplayResolvedIssues"/></button> &nbsp;
+    		<button type="button" onclick="return showHideIssues(event, 'noteIssues-unresolved');"><bean:message key="oscarEncounter.Index.btnDisplayUnresolvedIssues"/></button> &nbsp;
     		<button type="button" onclick="javascript:spellCheck();">Spell Check</button> &nbsp;
     		<button type="button" onclick="javascript:toggleFullViewForAll(this.form);"><bean:message key="eFormGenerator.expandAll"/> <bean:message key="Appointment.formNotes"/></button>
     	</div>

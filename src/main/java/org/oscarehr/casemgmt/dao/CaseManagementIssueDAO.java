@@ -51,7 +51,7 @@ public class CaseManagementIssueDAO extends HibernateDaoSupport {
     
     @SuppressWarnings("unchecked")
     public Issue getIssueByCmnId(Integer cmnIssueId) {
-        List<Issue> result = getHibernateTemplate().find("select issue from CaseManagementIssue cmi where cmi.id = ?", new Object[] {cmnIssueId});
+        List<Issue> result = getHibernateTemplate().find("select issue from CaseManagementIssue cmi where cmi.id = ?", new Object[] {Long.valueOf(cmnIssueId)});
         if(result.size()>0)
         	return result.get(0);
         return null;
