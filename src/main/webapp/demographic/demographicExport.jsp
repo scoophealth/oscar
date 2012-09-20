@@ -248,7 +248,7 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 		       </td></tr></table>
 		   </td></tr></table>
                        <html:hidden property="pgpReady" value="<%=pgp_ready%>" />
-
+			<html:checkbox property="exTemplateFeature"><bean:message key="demographic.demographicexport.templatefeature" /></html:checkbox><br>
 		    <p>&nbsp;</p>
 <%  boolean pgpReady = pgp_ready.equals("Yes") ? true : false;
     pgpReady = true; //To be removed after CMS4

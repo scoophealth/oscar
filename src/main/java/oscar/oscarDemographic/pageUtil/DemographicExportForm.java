@@ -52,6 +52,7 @@ public class DemographicExportForm extends ActionForm {
     boolean exCareElements;
     boolean exAlertsAndSpecialNeeds;
 
+    boolean exTemplateFeature;
     
     public DemographicExportForm() {
     }
@@ -111,7 +112,10 @@ public class DemographicExportForm extends ActionForm {
     public boolean getExCareElements() {
         return exCareElements;
     }
-
+    public boolean getExTemplateFeature() {
+        return exTemplateFeature;
+    }
+    
     /**
     * Setter for properties
     * @param patientSet New value of properties.
@@ -166,5 +170,8 @@ public class DemographicExportForm extends ActionForm {
     }
     public void setExCareElements(boolean rhs) {
         this.exCareElements = rhs;
+    }
+    public void setExTemplateFeature(boolean rhs) {
+        this.exTemplateFeature = rhs;
     }
 }
