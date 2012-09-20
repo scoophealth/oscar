@@ -234,19 +234,22 @@ if(currentFacility.isEnableEncounterTransportationTime() || (currentProgram != n
 	<div style="margin: 0px;"><br style="clear: both;">
 	</div>
 </nested:equal>
-</div>
 
-<div id="noteIssues"
-	style="margin: 0px; background-color: #CCCCFF; font-size: 11px; display: none;">
-<b><bean:message key="oscarEncounter.referenceIssues.title"/></b>
+
+<div id="noteIssues">
+<div id="noteIssues-resolved" style="margin: 0px; background-color: #CCCCFF; font-size: 11px; display: none;">
+<b><bean:message key="oscarEncounter.referenceResolvedIssues.title"/></b>
+<% int countResolvedIssue = -1; %>
 <table id="setIssueList" style="font-size: 11px;">
 	<nested:iterate indexId="ind" id="issueCheckList" property="issueCheckList" name="caseManagementEntryForm" type="org.oscarehr.casemgmt.web.CheckBoxBean">
+		<nested:equal name="issueCheckList" property="issue.resolved" value="true">
 		<%
 			String winame = "window" + issueCheckList.getIssueDisplay().getDescription();
 				winame = winame.replaceAll("\\s|\\/|\\*", "_");
 				winame = winame.replaceAll("'", "");
 				winame = StringEscapeUtils.escapeJavaScript(winame);
-				if (ind % 2 == 0)
+				countResolvedIssue ++ ;
+				if (countResolvedIssue % 2 == 0)
 				{
 		%>
 		<tr>
@@ -282,7 +285,7 @@ if(currentFacility.isEnableEncounterTransportationTime() || (currentProgram != n
                 
                 <!--  change diagnosis button --> 
                 <%
- 					String submitChange = "return changeDiagnosis('" + ind.intValue() + "');";
+ 					String submitChange = "return changeDiagnosisResolved('" + ind.intValue() + "');";
  				%>
  				&nbsp;
  				<a href="#"	onclick="<%=submitChange%>">Change</a>
@@ -305,17 +308,98 @@ if(currentFacility.isEnableEncounterTransportationTime() || (currentProgram != n
 			</td>
 			
 			<%
-				if (ind % 2 != 0)
+				if (countResolvedIssue % 2 != 0)
 					{
 			%>
 		</tr>
 		<%
 			}
 		%>
-
+		</nested:equal>
 	</nested:iterate>
 </table>
 </div>
+
+<% int countUnresolvedIssue = -1; %>
+<div id="noteIssues-unresolved" style="margin: 0px; background-color: #CCCCFF; font-size: 11px; display: none;">
+<b><bean:message key="oscarEncounter.referenceUnresolvedIssues.title"/></b>
+	
+<table id="setIssueList" style="font-size: 11px;">
+	<nested:iterate indexId="ind" id="issueCheckList" property="issueCheckList" name="caseManagementEntryForm" type="org.oscarehr.casemgmt.web.CheckBoxBean">
+
+	<nested:equal name="issueCheckList" property="issue.resolved" value="false">
+	
+		
+	<%
+	String winame = "window" + issueCheckList.getIssueDisplay().getDescription();
+	winame = winame.replaceAll("\\s|\\/|\\*", "_");
+	winame = winame.replaceAll("'", "");
+	winame = StringEscapeUtils.escapeJavaScript(winame);
+	countUnresolvedIssue ++;
+	if (countUnresolvedIssue % 2 == 0)
+	{
+	%>
+	<tr>
+	<%
+	}
+	%>
+	<td style="width: 50%; font-size: 11px; background-color: #CCCCFF;">
+		<%
+		String submitString = "this.form.method.value='issueChange';";
+		submitString = submitString + "this.form.lineId.value=" + "'" + ind.intValue() + "'; return ajaxUpdateIssues('issueChange', $('noteIssues').up().id);";
+		String id = "noteIssue" + ind;
+		org.oscarehr.casemgmt.web.CheckBoxBean cbb = (org.oscarehr.casemgmt.web.CheckBoxBean)pageContext.getAttribute("issueCheckList");
+		boolean writeAccess = cbb.getIssueDisplay().isWriteAccess();
+		boolean disabled = !writeAccess;
+		%>
+		<nested:checkbox styleId="<%=id%>" indexed="true" name="issueCheckList" property="checked" disabled="<%=disabled%>">
+		</nested:checkbox>
+		<a href="#" onclick="return displayIssue('<%=winame%>');">
+			<nested:write name="issueCheckList"     property="issueDisplay.description" />
+		</a>
+		<nested:equal name="issueCheckList" property="used" value="false">
+		<%
+		String submitDelete = "removeIssue('" + winame + "');document.forms['caseManagementEntryForm'].deleteId.value=" + "'" + ind.intValue() + "';return ajaxUpdateIssues('issueDelete', $('noteIssues').up().id);";
+		%>
+		 &nbsp;
+		<a href="#" onclick="<%=submitDelete%>">Delete</a>
+		&nbsp;
+		</nested:equal>
+		<!--  change diagnosis button -->
+		<%
+		String submitChange = "return changeDiagnosisUnresolved('" +ind.intValue() + "');";
+		%>
+	 	&nbsp;
+ 		<a href="#"     onclick="<%=submitChange%>">Change</a>
+		<div id="<%=winame%>" style="margin-left: 20px; display: none;">
+		<div>
+		<div style="width: 50%; float: left; display: inline;"><nested:radio indexed="true" name="issueCheckList" property="issue.acute" value="true" onchange="<%=submitString%>">acute</nested:radio></div>
+		<div style="width: 50%; float: left; display: inline; clear: right;"><nested:radio indexed="true" name="issueCheckList" property="issue.acute" value="false" onchange="<%=submitString%>">chronic</nested:radio></div>
+		<div style="width: 50%; float: left; display: inline;"><nested:radio indexed="true" name="issueCheckList" property="issue.certain" disabled="<%=disabled%>" value="true" onchange="<%=submitString%>">certain</nested:radio></div>
+		<div style="width: 50%; float: left; display: inline; clear: right;"><nested:radio indexed="true" name="issueCheckList" property="issue.certain" disabled="<%=disabled%>" value="false" onchange="<%=submitString%>">uncertain</nested:radio></div>
+		<div style="width: 50%; float: left; display: inline;"><nested:radio indexed="true" name="issueCheckList" property="issue.major" disabled="<%=disabled%>" value="true" onchange="<%=submitString%>">major</nested:radio></div>
+		<div style="width: 50%; float: left; display: inline; clear: right;"><nested:radio indexed="true" name="issueCheckList" property="issue.major" disabled="<%=disabled%>" value="false" onchange="<%=submitString%>">not major</nested:radio></div>
+		<div style="width: 50%; float: left; display: inline;"><nested:radio indexed="true" name="issueCheckList" property="issue.resolved" value="true" onchange="<%=submitString%>">resolved</nested:radio></div>
+		<div style="width: 50%; float: left; display: inline; clear: right;"><nested:radio indexed="true" name="issueCheckList" property="issue.resolved" value="false" onchange="<%=submitString%>">unresolved</nested:radio></div>
+		 <div style="text-align: center;"><nested:text indexed="true" name="issueCheckList" property="issueDisplay.role" size="10" disabled="<%=disabled%>" /></div>
+		</div>
+		</div>
+	</td>
+ 	<%
+	if (countUnresolvedIssue % 2 != 0)
+ 	{
+	%>
+	</tr>
+	<%
+ 	}
+	 %>
+	</nested:equal>
+	</nested:iterate>
+</table>
+</div>
+</div>
+	
+			
 <div id='autosaveTime' class='sig' style='text-align:center; margin:0px;'></div>
 <script type="text/javascript">   
     
@@ -367,7 +451,8 @@ if(currentFacility.isEnableEncounterTransportationTime() || (currentProgram != n
         $("toggleIssue").disabled = false;
     
    if( showIssue ) {
-        $("noteIssues").show();
+        $("noteIssues-resolved").show();
+        $("noteIssues-unresolved").show();
         for( var idx = 0; idx < expandedIssues.length; ++idx )            
             displayIssue(expandedIssues[idx]);                   
    }           
