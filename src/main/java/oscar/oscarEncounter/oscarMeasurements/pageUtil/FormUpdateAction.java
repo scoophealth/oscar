@@ -57,7 +57,7 @@ public class FormUpdateAction extends Action {
         String dateEntered = request.getParameter("date");
 
 		String testOutput = "";
-		String textOnEncounter = "********Diabetes Flowsheet Update******** \\n";
+		String textOnEncounter = ""; // ********CDM Indicators Update******** \\n";
 		boolean valid = true;
 		boolean errorPage = false;
 
