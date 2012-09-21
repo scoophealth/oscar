@@ -285,7 +285,7 @@
 		<dependency>
 			<groupId>org.oscarehr.caisi_integrator</groupId>
 			<artifactId>caisi_integrator_client_stubs</artifactId>
-			<version>SNAPSHOT</version>
+			<version>0.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- macplus -->
@@ -348,7 +348,7 @@
 		<dependency>
 			<groupId>org.oscarehr.myoscar_server</groupId>
 			<artifactId>myoscar_server_client_stubs</artifactId>
-			<version>SNAPSHOT</version>
+			<version>0.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- jcharts -->
@@ -762,7 +762,7 @@
 		<dependency>
 			<groupId>org.oscarehr</groupId>
 			<artifactId>utils</artifactId>
-			<version>SNAPSHOT</version>
+			<version>0.0-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
@@ -1050,7 +1050,7 @@
 					<dependency>
 						<groupId>org.oscarehr</groupId>
 						<artifactId>utils</artifactId>
-						<version>SNAPSHOT</version>
+						<version>0.0-SNAPSHOT</version>
 					</dependency>
 				</dependencies>
 			</plugin>
@@ -1084,7 +1084,7 @@
 		        <artifactId>maven-surefire-plugin</artifactId>
 		        <configuration>
 		          <skipTests>false</skipTests>
-		          <argLine>-Xms256M -Xmx256m -Xss128k -XX:MaxNewSize=64m -XX:MaxPermSize=192m</argLine>
+		          <argLine>-Xms256M -Xmx256m -Xss256k -XX:MaxNewSize=64m -XX:MaxPermSize=192m</argLine>
 			  <excludes>
 		            <exclude>**/AR2005*.java</exclude>
 		            <exclude>**/OntarioMDSpec4DataTest.java</exclude>

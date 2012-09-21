@@ -2,10 +2,10 @@
 <metadata>
   <groupId>org.oscarehr</groupId>
   <artifactId>utils</artifactId>
-  <version>SNAPSHOT</version>
+  <version>0.0-SNAPSHOT</version>
   <versioning>
     <versions>
-      <version>SNAPSHOT</version>
+      <version>0.0-SNAPSHOT</version>
     </versions>
     <lastUpdated>20120731052024</lastUpdated>
   </versioning>

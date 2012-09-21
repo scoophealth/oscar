@@ -4,7 +4,7 @@
   <artifactId>caisi_integrator_client_stubs</artifactId>
   <versioning>
     <versions>
-      <version>SNAPSHOT</version>
+      <version>0.0-SNAPSHOT</version>
     </versions>
     <lastUpdated>20120612175425</lastUpdated>
   </versioning>
