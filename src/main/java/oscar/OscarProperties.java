@@ -327,6 +327,17 @@ public class OscarProperties extends Properties {
 		return oscarProperties.getProperty("form_intake_program_access_fid");
 	}
 	
+	public static String getConfidentialityStatement() {
+		String result = null;
+		int count = 1;
+		String statement = null;
+		while ((statement = oscarProperties.getProperty("confidentiality_statement.v" + count)) != null) {
+			count++;
+			result = statement;
+		}
+		return result;
+	}
+	
 	public static String getIntakeProgramCashFId() {
 		return oscarProperties.getProperty("form_intake_program_cash_fid");
 	}

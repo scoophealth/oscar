@@ -36,6 +36,8 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 
 import org.oscarehr.casemgmt.model.CaseManagementNote;
+import org.oscarehr.common.printing.FontSettings;
+import org.oscarehr.common.printing.PdfWriterFactory;
 
 import oscar.OscarProperties;
 import oscar.oscarClinic.ClinicData;
@@ -118,8 +120,9 @@ public class CaseManagementPrintPdf {
     public void printDocHeaderFooter() throws IOException, DocumentException {
         //Create the document we are going to write to
         document = new Document();
-        PdfWriter writer = PdfWriter.getInstance(document,os);
-        writer.setPageEvent(new EndPage());
+        PdfWriter writer = PdfWriterFactory.newInstance(document, os, FontSettings.HELVETICA_12PT);
+        
+        // writer.setPageEvent(new EndPage());
         document.setPageSize(PageSize.LETTER);
         document.open();
 

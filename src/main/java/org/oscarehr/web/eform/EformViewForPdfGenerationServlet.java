@@ -52,6 +52,7 @@ public final class EformViewForPdfGenerationServlet extends HttpServlet {
 		{
 			logger.warn("Unauthorised request made to EformPdfServlet from address : "+remoteAddress);
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return;
 		}
 		
 		// https://127.0.0.1:8443/oscar/eform/efmshowform_data.jsp?fdid=2&parentAjaxId=eforms

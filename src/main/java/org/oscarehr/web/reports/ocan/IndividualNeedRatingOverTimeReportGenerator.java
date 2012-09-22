@@ -31,6 +31,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.printing.FontSettings;
+import org.oscarehr.common.printing.PdfWriterFactory;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.web.reports.ocan.beans.OcanIndividualNeedsOverTimeBean;
 
@@ -70,7 +72,8 @@ public class IndividualNeedRatingOverTimeReportGenerator {
 	public void generateReport(OutputStream os) throws Exception  {
 		Document d = new Document (PageSize.A4.rotate());
 		d.setMargins(20, 20, 20, 20);
-		PdfWriter writer = PdfWriter.getInstance (d, os);
+		PdfWriter writer = PdfWriterFactory.newInstance(d, os, FontSettings.HELVETICA_10PT);
+		// PdfWriter writer = PdfWriter.getInstance (d, os);
 		writer.setStrictImageSequence(true);
 		d.open ();
 
@@ -175,10 +178,11 @@ public class IndividualNeedRatingOverTimeReportGenerator {
 
 		IndividualNeedRatingOverTimeReportGenerator report = new IndividualNeedRatingOverTimeReportGenerator();
 
+		report.setReportBean(new OcanIndividualNeedsOverTimeBean());
 		report.setConsumerName("John Doe");
 		report.setStaffName("Marc Dumontier");
 		report.setReportDate(new Date());
 
-		report.generateReport(new FileOutputStream ("/home/marc/sample.pdf"));
+		report.generateReport(new FileOutputStream ("/home/nick/sample.pdf"));
 	}
 }

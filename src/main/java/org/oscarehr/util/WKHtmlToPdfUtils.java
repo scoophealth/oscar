@@ -39,10 +39,15 @@ public class WKHtmlToPdfUtils {
 	private static final int PROCESS_COMPLETION_CYCLE_CHECK_PERIOD = 250;
 	private static final int MAX_NO_CHANGE_COUNT = 40000 / PROCESS_COMPLETION_CYCLE_CHECK_PERIOD;
 	private static final String CONVERT_COMMAND;
+	private static final String CONVERT_ARGS;
 	static {
 		String convertCommand = OscarProperties.getInstance().getProperty("WKHTMLTOPDF_COMMAND");
 		if (convertCommand != null) CONVERT_COMMAND = convertCommand;
 		else throw (new RuntimeException("Properties file is missing property : WKHTMLTOPDF_COMMAND"));
+		
+		String convertParameters = OscarProperties.getInstance().getProperty("WKHTMLTOPDF_ARGS");
+		if (convertParameters != null) CONVERT_ARGS = convertParameters;
+		else CONVERT_ARGS = null;
 	}
 
 	private WKHtmlToPdfUtils() {
@@ -85,6 +90,10 @@ public class WKHtmlToPdfUtils {
 		// example command : wkhtmltopdf-i386 "https://127.0.0.1:8443/oscar/eformViewForPdfGenerationServlet?fdid=2&parentAjaxId=eforms" /tmp/out.pdf
 		ArrayList<String> command = new ArrayList<String>();
 		command.add(CONVERT_COMMAND);
+		if (CONVERT_ARGS != null) {
+			for(String arg : CONVERT_ARGS.split("\\s"))
+				command.add(arg);
+		}
 		command.add(sourceUrl);
 		command.add(outputFilename);
 
