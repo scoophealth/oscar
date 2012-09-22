@@ -138,6 +138,9 @@ GregorianCalendar now=new GregorianCalendar();
 <%@page import="oscar.oscarDB.DBHandler"%><html:html locale="true">
 <head>
 <title><bean:message key="tickler.ticklerMain.title"/></title>
+
+<link rel="stylesheet" type="text/css" media="all" href="<c:out value="${ctx}"/>/css/print.css" />
+
 <!--Table Sorting Code -->
 <script type='text/javascript' src='<c:out value="${ctx}"/>/commons/scripts/sort_table/common.js'></script>
 <script type='text/javascript' src='<c:out value="${ctx}"/>/commons/scripts/sort_table/css.js'></script>
@@ -771,6 +774,10 @@ function changeSite(sel) {
 <p><font face="Arial, Helvetica, sans-serif" size="2"> </font></p>
   <p>&nbsp; </p>
 <%@ include file="../demographic/zfooterbackclose.jsp" %>
+
+<p class="yesprint">
+	<%=OscarProperties.getConfidentialityStatement()%>
+</p>
 
 </body>
 </html:html>

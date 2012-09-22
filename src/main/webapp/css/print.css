@@ -14,3 +14,16 @@ a {
 #noprint {
 	display: none;
 }
+
+
+.yesprint {
+	display: none;	
+}
+
+@media print {
+	.yesprint {
+	    display:block;
+	}
+}
+
+

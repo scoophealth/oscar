@@ -48,6 +48,8 @@ import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.PropertyDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Property;
+import org.oscarehr.common.printing.FontSettings;
+import org.oscarehr.common.printing.PdfWriterFactory;
 import org.oscarehr.document.dao.DocumentDAO;
 import org.oscarehr.document.model.CtlDocument;
 import org.oscarehr.document.model.CtlDocumentPK;
@@ -177,7 +179,8 @@ public class PHRUserManagementAction extends DispatchAction {
         PdfWriter writer = null;
 
         try {
-            writer = PdfWriter.getInstance(document, baosPDF);
+        	writer = PdfWriterFactory.newInstance(document, baosPDF, FontSettings.HELVETICA_10PT);
+            // writer = PdfWriter.getInstance(document, baosPDF);
 
             String title = "TITLE";
             String template = "MyOscarLetterHead.pdf";

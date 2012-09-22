@@ -45,13 +45,14 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
+import org.oscarehr.common.printing.FontSettings;
+import org.oscarehr.common.printing.PdfWriterFactory;
 import org.oscarehr.util.MiscUtils;
 import org.w3c.tidy.Tidy;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.html.SAXmyHtmlHandler;
-import com.lowagie.text.pdf.PdfWriter;
 
 /**
  *
@@ -255,7 +256,8 @@ public class Doc2PDF {
 
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            PdfWriter.getInstance(document, baos);
+            // PdfWriter.getInstance(document, baos);
+            PdfWriterFactory.newInstance(document, baos, FontSettings.HELVETICA_10PT);
 
             // step 3: we create a parser and set the document handler
             SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
@@ -337,7 +339,8 @@ public class Doc2PDF {
 
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            PdfWriter.getInstance(document, baos);
+            // PdfWriter.getInstance(document, baos);
+            PdfWriterFactory.newInstance(document, baos, FontSettings.HELVETICA_10PT);
 
             // step 3: we create a parser and set the document handler
             SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
