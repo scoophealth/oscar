@@ -119,8 +119,6 @@ function updateAjax() {
 
 <body onunload="updateAjax()" class="BodyStyle" vlink="#0000FF">
 
-<button onclick="showHtml();">Show me the money!</button>
-
 <!--  -->
 <table class="MainTable" id="scrollNumber1" name="encounterTable">
 	<tr class="MainTableTopRow">
@@ -241,7 +239,8 @@ function updateAjax() {
 						}
 					%>
 				</table>
-				<input type="submit" value="<bean:message key="eform.showmyform.btnsendtophr" />">
+				<input type="submit" value="<bean:message key="eform.showmyform.btnsendtophr" />"> | 
+				<button onclick="showHtml(); return false;">Save as PDF</button>
 			
 			</form>
 		
