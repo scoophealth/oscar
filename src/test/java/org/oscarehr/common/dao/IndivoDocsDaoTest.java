@@ -38,7 +38,7 @@ public class IndivoDocsDaoTest extends DaoTestFixtures {
 	}
 	
 	@Test
-	public void testAll() throws Exception {
+	public void testAll() {
 		dao.findByOscarDocNo(9999);
 	}
 	
