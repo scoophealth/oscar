@@ -40,7 +40,7 @@ public class PrescriptionDaoTest extends DaoTestFixtures {
 	}
 	
 	@Test
-	public void testAll() throws Exception {
+	public void testAll() {
 		dao.findByDemographicIdUpdatedAfterDate(999, new Date());
 		dao.updatePrescriptionsByScriptNo("100", "comment");
 	}

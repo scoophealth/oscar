@@ -47,7 +47,7 @@ public class PrivateBillTransactionsDaoTest extends DaoTestFixtures {;
 	}
 
 	@Test
-	public void testAllAtOnce() throws Exception {
+	public void testAllAtOnce() {
 		BillingPrivateTransactions tx = dao.savePrivateBillTransaction(99999, 100.00, 5);
 		assertTrue(tx.isPersistent());
 		

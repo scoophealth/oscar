@@ -51,7 +51,7 @@ public class FavoriteDaoTest extends DaoTestFixtures {
 	}
 	
 	@Test
-	public void testAll() throws Exception {
+	public void testAll() {
 		dao.findByProviderNo("999");
 		dao.findByEverything(null, null, null, 0, null, 0, 0, null, null, null, null, 0, false, false, null, null, null, false);
 	}

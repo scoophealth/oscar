@@ -145,7 +145,7 @@ public class EctConsultationFormRequestPrintPdf {
         // start writing the pdf document
         PdfImportedPage page1 = writer.getImportedPage(reader, 1);
         cb.addTemplate(page1, 1, 0, 0, 1, 0, 0);
-        addFooter();
+        // addFooter();
         setAppointmentInfo(reqForm);
 
         // add the dynamically positioned text elements
@@ -168,7 +168,7 @@ public class EctConsultationFormRequestPrintPdf {
 
 
 
-    private float addDynamicPositionedText(String name, String text, float dynamicHeight, EctConsultationFormRequestUtil reqForm) throws DocumentException, IOException{
+    private float addDynamicPositionedText(String name, String text, float dynamicHeight, EctConsultationFormRequestUtil reqForm) throws DocumentException {
         if (text != null && text.length() > 0){
             Font boldFont = new Font(bf, FONTSIZE, Font.BOLD);
             Font font = new Font(bf, FONTSIZE, Font.NORMAL);
@@ -229,7 +229,7 @@ public class EctConsultationFormRequestPrintPdf {
         cb.endText();
     }
 
-    private void nextPage(EctConsultationFormRequestUtil reqForm) throws DocumentException, IOException{
+    private void nextPage(EctConsultationFormRequestUtil reqForm) {
         PdfImportedPage page2 = writer.getImportedPage(reader, 2);
         document.newPage();
         cb.addTemplate(page2, 1, 0, 0, 1, 0, 0);
@@ -241,7 +241,7 @@ public class EctConsultationFormRequestPrintPdf {
         cb.endText();
 
         PAGENUM++;
-        addFooter();
+        // addFooter();
 
     }
 
@@ -262,7 +262,7 @@ public class EctConsultationFormRequestPrintPdf {
         cb.endText();
     }
 
-    private void addFooter() throws DocumentException, IOException{
+//    private void addFooter() throws DocumentException, IOException{
 //        cb.beginText();
 //        cb.setFontAndSize(bf, FONTSIZE);
 //        cb.showTextAligned(PdfContentByte.ALIGN_CENTER, "-"+PAGENUM+"-", width/2, 30, 0);
@@ -276,7 +276,7 @@ public class EctConsultationFormRequestPrintPdf {
 //            cb.showTextAligned(PdfContentByte.ALIGN_CENTER, OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT"), width/2, 19, 0);
 //            cb.endText();
 //        }
-    }
+//    }
 
     private void combinePDFs(String currentFileName) throws IOException{
 

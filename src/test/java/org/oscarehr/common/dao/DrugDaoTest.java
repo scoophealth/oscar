@@ -45,7 +45,7 @@ public class DrugDaoTest extends DaoTestFixtures {
 	}
 
 	@Test
-	public void testFindDrugsAndPrescriptions() throws Exception {
+	public void testFindDrugsAndPrescriptions() {
 		// EntityDataGenerator.generateTestDataForModelClass(entity);
 
 		List<Object[]> results = dao.findDrugsAndPrescriptions(99);
