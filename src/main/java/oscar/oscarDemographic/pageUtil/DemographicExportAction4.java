@@ -2010,6 +2010,34 @@ public class DemographicExportAction4 extends Action {
 		case E2E:
 			if (!Util.checkDir(tmpDir)) {
 				logger.debug("Error! Cannot write to TMP_DIR - Check oscar.properties or dir permissions.");
+			} else {
+				XmlOptions options = new XmlOptions();
+				options.put( XmlOptions.SAVE_PRETTY_PRINT );
+				options.put( XmlOptions.SAVE_PRETTY_PRINT_INDENT, 3 );
+				options.put( XmlOptions.SAVE_AGGRESSIVE_NAMESPACES );
+		
+				HashMap<String,String> suggestedPrefix = new HashMap<String,String>();
+				suggestedPrefix.put("cds_dt","cdsd");
+				options.setSaveSuggestedPrefixes(suggestedPrefix);
+				options.setSaveOuter();
+		
+				ArrayList<File> files = new ArrayList<File>();
+				exportError = new ArrayList<String>();
+				for (String demoNo : list) {
+					if (StringUtils.empty(demoNo)) {
+						exportError.add("Error! No Demographic Number");
+						continue;
+					}
+					
+					// Create Patient
+					// Create Template View
+					// Set values by getting from Patient
+					// Call Template Export & add to ArrayList
+					
+				}
+				
+				// Gather & Write to file
+			
 			}
 			break;
 		default:
