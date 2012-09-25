@@ -146,6 +146,8 @@ public class DemographicExportAction4 extends Action {
 	private static final String REPORTBINARY = "Binary";
 	private static final String REPORTTEXT = "Text";
 	private static final String RISKFACTOR = "Risk";
+	private static final int CMS4 = 0;
+	private static final int E2E = 1;
 
 	Integer exportNo = 0;
 	ArrayList<String> exportError = null;
@@ -174,6 +176,7 @@ public class DemographicExportAction4 extends Action {
 		boolean exReportsReceived = WebUtils.isChecked(request, "exReportsReceived");
 		boolean exAlertsAndSpecialNeeds = WebUtils.isChecked(request, "exAlertsAndSpecialNeeds");
 		boolean exCareElements = WebUtils.isChecked(request, "exCareElements");
+		boolean exTemplateFeature = WebUtils.isChecked(request, "exTemplateFeature");
 
 		List<String> list = new ArrayList<String>();
 		if (demographicNo==null) {
@@ -198,6 +201,18 @@ public class DemographicExportAction4 extends Action {
 
 	String ffwd = "fail";
 	String tmpDir = oscarProperties.getProperty("TMP_DIR");
+
+	// @todo This If/then statement is just to get an E2E template going - proper implementation won't have this
+	int template = CMS4;
+	if(exTemplateFeature) {
+		template = E2E;
+	}
+	else if(!exTemplateFeature) {
+		template = CMS4;
+	}
+	
+	switch(template) {
+		case CMS4:
 	if (!Util.checkDir(tmpDir)) {
 		logger.debug("Error! Cannot write to TMP_DIR - Check oscar.properties or dir permissions.");
 	} else {
@@ -1388,7 +1403,10 @@ public class DemographicExportAction4 extends Action {
 					}
 
 					//lab requisition datetime
-					
+					/*
+					HashMap<String,Object> link = LabRequestReportLink.getLinkByReport("hl7TextMessage", Long.valueOf(lab_no));
+					Date reqDate = (Date) link.get("request_date");
+					*/
 					String reqDate = labMea.getExtVal("request_datetime");
 					if (StringUtils.filled(reqDate)) labResults.addNewLabRequisitionDateTime().setFullDateTime(Util.calDate(reqDate));
 
@@ -1988,6 +2006,15 @@ public class DemographicExportAction4 extends Action {
 		Util.cleanFile(zipName, tmpDir);
 		Util.cleanFiles(files);
 	}
+			break;
+		case E2E:
+			if (!Util.checkDir(tmpDir)) {
+				logger.debug("Error! Cannot write to TMP_DIR - Check oscar.properties or dir permissions.");
+			}
+			break;
+		default:
+			break;
+	}
 
 	return mapping.findForward(ffwd);
 }
@@ -2408,3 +2435,4 @@ public class DemographicExportAction4 extends Action {
 		return dosageMultiple[0].trim();
 	}
 }
+
