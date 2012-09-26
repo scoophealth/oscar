@@ -538,16 +538,31 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:return new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:return new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:HashMap elementCount=new HashMap();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:HashMap hm = new HashMap();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:HashMap hm=new HashMap();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:HashMap rethm=new HashMap();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:HashMap&lt;String,String&gt; h=new HashMap();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:List&lt;HashMap&lt;String,String&gt;&gt; retList=new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector allInteractions = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector params = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector uniqueDrugNameList=new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector vec = new Vector();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector&lt;String&gt; acd = new Vector&lt;String&gt;();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector v = getMyDrugrefInfo(command, acd, myDrugrefId);</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:HashMap rethm = new HashMap();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector uniqueDrugNameList = new Vector();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector uniqueDrugNameList = new Vector();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Hashtable hb = (Hashtable) allInteractions.get(i);</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:private static Vector getMyDrugrefInfo(String command, Vector drugs, String myDrugrefId) {</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:if (obj instanceof Vector) {</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:} else if (obj instanceof Hashtable) {</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:if (holbrook instanceof Vector) {</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:log2.debug(s + " " + ((Hashtable) obj).get(s) + " " + ((Hashtable) obj).get(s).getClass().getName());</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:public static Object callWebserviceLite(String procedureName, Vector params) {</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:import java.util.Hashtable;</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:import java.util.Vector;</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector allInteractions = new Vector();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector allInteractions = new Vector();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:RxMyDrugrefInfoAction.removeNullFromVector(drugs);</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector params = new Vector();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector params = new Vector();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector vec = new Vector();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector vec = new Vector();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:vec = (Vector) obj;</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Object holbrook = ((Hashtable) obj).get("Holbrook Drug Interactions");</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:vec = (Vector) holbrook;</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Enumeration e = ((Hashtable) obj).keys();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarSecurity/CRHelper.java:HashSet list = new HashSet();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarSecurity/CRHelper.java:static HashMap userNameToProviderNO=new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarSurveillance/SurveillanceMaster.java:surveyTable = new Hashtable();</ViolationValue>
@@ -1869,9 +1884,31 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPrescriptionData.java:rs = DBHandler.GetSQL("SELECT LAST_INSERT_ID() ");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPrescriptionData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxPrescriptionData.java:rs2 = DBHandler.GetSQL(tmp);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:rs = DBHandler.GetSQL(sql2);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:rs = DBHandler.GetSQL(sql3);</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector&lt;String&gt; acd = new Vector&lt;String&gt;();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector v = getMyDrugrefInfo(command, acd, myDrugrefId);</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:HashMap rethm = new HashMap();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector uniqueDrugNameList = new Vector();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector uniqueDrugNameList = new Vector();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Hashtable hb = (Hashtable) allInteractions.get(i);</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:private static Vector getMyDrugrefInfo(String command, Vector drugs, String myDrugrefId) {</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:if (obj instanceof Vector) {</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:} else if (obj instanceof Hashtable) {</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:if (holbrook instanceof Vector) {</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:log2.debug(s + " " + ((Hashtable) obj).get(s) + " " + ((Hashtable) obj).get(s).getClass().getName());</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:public static Object callWebserviceLite(String procedureName, Vector params) {</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:import java.util.Hashtable;</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:import java.util.Vector;</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector allInteractions = new Vector();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector allInteractions = new Vector();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:RxMyDrugrefInfoAction.removeNullFromVector(drugs);</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector params = new Vector();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector params = new Vector();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector vec = new Vector();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector vec = new Vector();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:vec = (Vector) obj;</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Object holbrook = ((Hashtable) obj).get("Holbrook Drug Interactions");</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:vec = (Vector) holbrook;</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Enumeration e = ((Hashtable) obj).keys();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarSurveillance/ProcessSurveyFile.java:DBHandler.RunSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarSurveillance/ProcessSurveyFile.java:ResultSet rs = DBHandler.GetSQL(processCount);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarSurveillance/ProcessSurveyFile.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -3531,26 +3568,31 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:vec = (Vector) holbrook;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:vec = (Vector) obj;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:}else if(obj instanceof Hashtable){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Enumeration e = ((Hashtable) obj).keys();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Hashtable hb=(Hashtable)allInteractions.get(i);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Object holbrook = ((Hashtable) obj).get("Holbrook Drug Interactions");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:RxMyDrugrefInfoAction.removeNullFromVector(drugs);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector allInteractions = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector params = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector uniqueDrugNameList=new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector v = getMyDrugrefInfo(command,  acd,myDrugrefId) ;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector vec = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector&lt;String&gt; acd=new Vector&lt;String&gt;();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:if (holbrook instanceof Vector){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:if (obj instanceof Vector){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:log2.debug(s+" "+((Hashtable) obj).get(s)+" "+((Hashtable) obj).get(s).getClass().getName());</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:private static Vector getMyDrugrefInfo(String command, Vector drugs,String myDrugrefId) {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:public static Object callWebserviceLite(String procedureName, Vector params){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:vec = (Vector) holbrook;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:vec = (Vector) obj;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:}else if(obj instanceof Hashtable){</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector&lt;String&gt; acd = new Vector&lt;String&gt;();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector v = getMyDrugrefInfo(command, acd, myDrugrefId);</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:HashMap rethm = new HashMap();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector uniqueDrugNameList = new Vector();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector uniqueDrugNameList = new Vector();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Hashtable hb = (Hashtable) allInteractions.get(i);</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:private static Vector getMyDrugrefInfo(String command, Vector drugs, String myDrugrefId) {</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:if (obj instanceof Vector) {</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:} else if (obj instanceof Hashtable) {</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:if (holbrook instanceof Vector) {</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:log2.debug(s + " " + ((Hashtable) obj).get(s) + " " + ((Hashtable) obj).get(s).getClass().getName());</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:public static Object callWebserviceLite(String procedureName, Vector params) {</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:import java.util.Hashtable;</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:import java.util.Vector;</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector allInteractions = new Vector();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector allInteractions = new Vector();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:RxMyDrugrefInfoAction.removeNullFromVector(drugs);</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector params = new Vector();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector params = new Vector();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector vec = new Vector();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Vector vec = new Vector();</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:vec = (Vector) obj;</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Object holbrook = ((Hashtable) obj).get("Holbrook Drug Interactions");</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:vec = (Vector) holbrook;</ViolationValue>
+		<ViolationValue>/src/main/java/oscar/oscarRx/util/RxUtil.java:Enumeration e = ((Hashtable) obj).keys();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/TimingOutCallback.java:*   client.executeAsync(methodName, aVector, callback);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarSurveillance/SurveillanceMaster.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarSurveillance/SurveillanceMaster.java:static Hashtable surveyTable = null;</ViolationValue>

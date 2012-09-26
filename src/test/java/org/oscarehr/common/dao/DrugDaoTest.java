@@ -69,4 +69,43 @@ public class DrugDaoTest extends DaoTestFixtures {
 		dao.findByEverything(null, 0, null, null, null, null, 0, null, 0, 0, null, null, null, null, null, 0, null, false, false, null, null, null, false, false, false, false, null, null, null, false);
 		dao.getMaxPosition(999);
 	}
+
+	@Test
+	public void testFindByParameter() {
+		List<Object[]> drugs = dao.findByParameter("demographic_no", "1");
+		assertNotNull(drugs);
+	}
+
+	@Test
+	public void testFindByRegionBrandDemographicAndProvider() {
+		List<Drug> drugs = dao.findByRegionBrandDemographicAndProvider("RI", "BN", 1, "1");
+		assertNotNull(drugs);
+	}
+
+	@Test
+	public void testFindByBrandNameDemographicAndProvider() {
+		dao.findByBrandNameDemographicAndProvider("BN", 1, "1");
+	}
+
+	@Test
+	public void testFindByCustomNameDemographicIdAndProviderNo() {
+		dao.findByCustomNameDemographicIdAndProviderNo("BN", 1, "1");
+	}
+
+	@Test
+	public void testFindId() {
+		dao.findLastNotArchivedId("BN", "GN", 1);
+	}
+
+	@Test
+	public void testFindByDemographicIdRegionalIdentifierAndAtcCode() {
+		dao.findByDemographicIdRegionalIdentifierAndAtcCode("ATC", "RI", 1);
+	}
+	
+	@Test
+	public void testFindSpecialInstructions() {
+		List<String> sis = dao.findSpecialInstructions();
+		assertNotNull(sis);
+	}
+	
 }
