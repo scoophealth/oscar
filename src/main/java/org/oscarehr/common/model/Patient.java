@@ -47,13 +47,17 @@ public class Patient {
 		this.demographic = demographicDao.getDemographic(demoNo);
 	}
 	
-	public Integer getDemographicNo() {
-		return demographicNo;
+	/*
+	 * Directly mappable functions
+	 */
+	
+	public String getDemographicNo() {
+		return demographicNo.toString();
 	}
 	
-	public void setDemographicNo(Integer demoNo) {
-		demographicNo = demoNo;
-		demographic.setDemographicNo(demoNo);
+	public void setDemographicNo(String demoNo) {
+		demographicNo = Integer.parseInt(demoNo);
+		demographic.setDemographicNo(demographicNo);
 	}
 	
 	public String getFirstName() {
@@ -111,4 +115,17 @@ public class Patient {
 	public void setHin(String hin) {
 		demographic.setHin(hin);
 	}
+	
+	/*
+	 * Output get convenience functions
+	 */
+	
+	public String getBirthDate() {
+		return demographic.getYearOfBirth() + demographic.getMonthOfBirth() + demographic.getDateOfBirth();
+	}
+	
+	public String getGenderDesc() {
+		if(demographic.getSex().equals("M")) return "Male";
+		else return "Female";
+	}	
 }
