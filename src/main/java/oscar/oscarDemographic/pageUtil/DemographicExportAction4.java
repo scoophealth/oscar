@@ -65,6 +65,7 @@ import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.DemographicArchive;
 import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.PartialDate;
+import org.oscarehr.common.model.Patient;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentCommentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
@@ -83,6 +84,7 @@ import oscar.dms.EDocUtil;
 import oscar.oscarClinic.ClinicData;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarDemographic.data.DemographicRelationship;
+import oscar.oscarDemographic.data.PatientData;
 import oscar.oscarEncounter.oscarMeasurements.data.ImportExportMeasurements;
 import oscar.oscarEncounter.oscarMeasurements.data.LabMeasurements;
 import oscar.oscarEncounter.oscarMeasurements.data.Measurements;
@@ -2011,16 +2013,6 @@ public class DemographicExportAction4 extends Action {
 			if (!Util.checkDir(tmpDir)) {
 				logger.debug("Error! Cannot write to TMP_DIR - Check oscar.properties or dir permissions.");
 			} else {
-				XmlOptions options = new XmlOptions();
-				options.put( XmlOptions.SAVE_PRETTY_PRINT );
-				options.put( XmlOptions.SAVE_PRETTY_PRINT_INDENT, 3 );
-				options.put( XmlOptions.SAVE_AGGRESSIVE_NAMESPACES );
-		
-				HashMap<String,String> suggestedPrefix = new HashMap<String,String>();
-				suggestedPrefix.put("cds_dt","cdsd");
-				options.setSaveSuggestedPrefixes(suggestedPrefix);
-				options.setSaveOuter();
-		
 				ArrayList<File> files = new ArrayList<File>();
 				exportError = new ArrayList<String>();
 				for (String demoNo : list) {
@@ -2030,14 +2022,73 @@ public class DemographicExportAction4 extends Action {
 					}
 					
 					// Create Patient
+					PatientData pd = new PatientData();
+					Patient patient = pd.getPatient(demoNo);
+					
 					// Create Template View
+					E2EVelocityTemplate t = new E2EVelocityTemplate();
+					
 					// Set values by getting from Patient
 					// Call Template Export & add to ArrayList
+					String output = t.export(patient);
 					
+					
+					//export file to temp directory
+					try{
+						File directory = new File(tmpDir);
+						if(!directory.exists()){
+							throw new Exception("Temporary Export Directory does not exist!");
+						}
+		
+						//Standard format for xml exported file : PatientFN_PatientLN_PatientUniqueID_DOB (DOB: ddmmyyyy)
+						String expFile = patient.getFirstName()+"_"+patient.getLastName();
+						expFile += "_"+demoNo;
+						expFile += "_"+patient.getDateOfBirth()+patient.getMonthOfBirth()+patient.getYearOfBirth();
+						files.add(new File(directory, expFile+".xml"));
+					}catch(Exception e){
+						logger.error("Error", e);
+					}
+					try {
+						BufferedWriter out = new BufferedWriter(new FileWriter(files.get(files.size()-1)));
+						out.write(output);
+						out.close();
+					} catch (IOException ex) {logger.error("Error", ex);
+						throw new Exception("Cannot write .xml file(s) to export directory.\n Please check directory permissions.");
+					}
 				}
-				
-				// Gather & Write to file
-			
+		
+				//create ReadMe.txt & ExportEvent.log
+				files.add(makeReadMe(files));
+				files.add(makeExportLog(files.get(0).getParentFile()));
+		
+				//zip all export files
+				String zipName = files.get(0).getName().replace(".xml", ".zip");
+				if (setName!=null) zipName = "export_"+setName.replace(" ","")+"_"+UtilDateUtilities.getToday("yyyyMMddHHmmss")+".zip";
+				//	if (setName!=null) zipName = "export_"+setName.replace(" ","")+"_"+UtilDateUtilities.getToday("yyyyMMddHHmmss")+".pgp";
+				if (!Util.zipFiles(files, zipName, tmpDir)) {
+					logger.debug("Error! Failed to zip export files");
+				}
+		
+				if (pgpReady.equals("Yes")) {
+					//PGP encrypt zip file
+					PGPEncrypt pgp = new PGPEncrypt();
+					if (pgp.encrypt(zipName, tmpDir)) {
+						Util.downloadFile(zipName+".pgp", tmpDir, response);
+						Util.cleanFile(zipName+".pgp", tmpDir);
+						ffwd = "success";
+					} else {
+						request.getSession().setAttribute("pgp_ready", "No");
+					}
+				} else {
+					logger.info("Warning: PGP Encryption NOT available - unencrypted file exported!");
+					Util.downloadFile(zipName, tmpDir, response);
+					ffwd = "success";
+				}
+		
+		
+				//Remove zip & export files from temp dir
+				Util.cleanFile(zipName, tmpDir);
+				Util.cleanFiles(files);
 			}
 			break;
 		default:
