@@ -63,6 +63,11 @@ public class E2EVelocityTemplate {
 		
 		context.put("patient", record);
 		context.put("currentDate", currentDate);
+		// Temporary Author/Custodian Hardcode
+		context.put("authorId", "hhippocrates");
+		context.put("authorIdRoot", "DCCD2C68-389B-44c4-AD99-B8FB2DAD1493");
+		context.put("custodianId", "123");
+		context.put("custodianIdRoot", "7EEF0BCC-F03E-4742-A736-8BAC57180C5F");
 	}
 	
 	// Assembles the data model & predefined velocity template to yield an E2E document
