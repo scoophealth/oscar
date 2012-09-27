@@ -31,6 +31,29 @@ CDA Header
 			</patient>
 		</patientRole>
 	</recordTarget>
+	<!-- 
+	********************************************************
+	Author
+	********************************************************
+	-->
+	<author typeCode="AUT" contextControlCode="OP">
+		<time value="$currentDate"/>
+		<assignedAuthor>
+			<id extension="$authorId" root="$authorIdRoot"/>
+		</assignedAuthor>
+	</author>
+	
+	<!-- 
+	********************************************************
+	Custodian
+	******************************************************** -->
+	<custodian typeCode="CST">
+		<assignedCustodian classCode="ASSIGNED">
+			<representedCustodianOrganization classCode="ORG" determinerCode="INSTANCE">
+				<id extension="$custodianId" root="$custodianIdRoot"/>
+			</representedCustodianOrganization>
+		</assignedCustodian>
+	</custodian>
 </ClinicalDocument>
 
 
