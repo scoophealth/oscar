@@ -103,4 +103,12 @@ public class Patient {
 	public void setYearOfBirth(String yearOfBirth) {
 		demographic.setYearOfBirth(yearOfBirth);
 	}
+	
+	public String getHin() {
+		return demographic.getHin();
+	}
+	
+	public void setHin(String hin) {
+		demographic.setHin(hin);
+	}
 }
