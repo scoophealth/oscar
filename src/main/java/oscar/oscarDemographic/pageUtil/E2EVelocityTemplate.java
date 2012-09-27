@@ -47,32 +47,22 @@ public class E2EVelocityTemplate {
 	public E2EVelocityTemplate() {
 	}
 	
+	// Utility function for finding the current date
 	private String dateString() {
 		Date now = new Date();
-		SimpleDateFormat dateformatYYYYMMDD = new SimpleDateFormat("yyyyMMdd");
-		StringBuilder result = new StringBuilder(dateformatYYYYMMDD.format(now));
+		SimpleDateFormat dateformat = new SimpleDateFormat("yyyyMMddhhmm");
+		StringBuilder result = new StringBuilder(dateformat.format(now));
 		return result.toString();
 	}
 	
+	// Creates the velocity context
 	private void loadPatient(Patient record) {
-		String docId = record.getDemographicNo().toString();
-		String hin = record.getHin();
-		String gender = record.getGender();
-		String birthDate = record.getYearOfBirth() + record.getMonthOfBirth() + record.getDateOfBirth();
 		String currentDate = dateString();
-		
-		String genderDesc;
-		if(gender.equals("M")) genderDesc = "Male";
-		else genderDesc = "Female";
 		
 		context = new VelocityContext();
 		
-		context.put("docId", docId);
-		context.put("hin", hin);
-		context.put("gender", gender);
-		context.put("birthDate", birthDate);
+		context.put("patient", record);
 		context.put("currentDate", currentDate);
-		context.put("genderDesc", genderDesc);
 	}
 	
 	// Assembles the data model & predefined velocity template to yield an E2E document
@@ -82,24 +72,14 @@ public class E2EVelocityTemplate {
 		ve.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS, "org.apache.velocity.runtime.log.Log4JLogChute");
 		ve.setProperty("runtime.log.logsystem.log4j.logger", logger.getName());
 		
-		//ve.setApplicationAttribute("javax.servlet.ServletContext", servletContext);
-		/*ve.setProperty("resource.loader", "webapp");
-		ve.setProperty("webapp.resource.loader.class","org.apache.velocity.tools.view.servlet.WebappLoader");
-		ve.setProperty("webapp.resource.loader.path","/WEB-INF/templates/");*/
+		// Define where template file is
 		ve.setProperty("resource.loader","file");
 		ve.setProperty("file.resource.loader.class","org.apache.velocity.runtime.resource.loader.FileResourceLoader");
 		ve.setProperty("file.resource.loader.path","/var/lib/tomcat6/webapps/oscar12/WEB-INF/velocitytemplates");
 		ve.setProperty("file.resource.loader.cache","true");
-		//ve.init();
 		
 		// Create Data Model
 		loadPatient(record);
-		
-		/*
-		BufferedWriter out = new BufferedWriter(new FileWriter("${WORKING_ROOT}/whereisthisfile.txt"));
-	    out.write("aString");
-	    out.close();
-		*/
 		
 		// Import Template
 		Template t = ve.getTemplate("e2etemplate.vm");

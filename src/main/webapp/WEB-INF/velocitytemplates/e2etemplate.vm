@@ -12,7 +12,7 @@ CDA Header
 -->
 	<realmCode code="CA" />
 	<typeId root="2.16.840.1.113883.1.3" extension="POCD_HD000040"/>
-	<id extension="$docId" root="2.16.840.1.113883.3.933"/>
+	<id extension="$patient.demographicNo" root="2.16.840.1.113883.3.933"/>
 	<code code="34140-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Referral"/>
 	<title>PITO EMR-2-EMR Complete Instance Example</title>
 	<effectiveTime value="$currentDate"/>
@@ -24,10 +24,10 @@ CDA Header
 	-->
 	<recordTarget typeCode="RCT" contextControlCode="OP">
 		<patientRole classCode="PAT">
-			<id extension="$hin" root="2BFBA1E9-79C2-4bbb-B589-41B949BD6A3B" assigningAuthorityName="BC-PHN"/>
+			<id extension="$patient.hin" root="2BFBA1E9-79C2-4bbb-B589-41B949BD6A3B" assigningAuthorityName="BC-PHN"/>
 			<patient>
-				<administrativeGenderCode code="$gender" codeSystem="2.16.840.1.113883.5.1" codeSystemName="HL7 - Administrative Gender" displayName="$genderDesc"/>
-				<birthTime value="$birthDate"/>
+				<administrativeGenderCode code="$patient.gender" codeSystem="2.16.840.1.113883.5.1" codeSystemName="HL7 - Administrative Gender" displayName="$patient.genderDesc"/>
+				<birthTime value="$patient.birthDate"/>
 			</patient>
 		</patientRole>
 	</recordTarget>
