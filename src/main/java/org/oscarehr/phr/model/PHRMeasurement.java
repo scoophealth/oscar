@@ -37,7 +37,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.datatype.DatatypeConfigurationException;
 
 import org.indivo.IndivoException;
-import org.indivo.client.ActionNotPerformedException;
 import org.indivo.xml.JAXBUtils;
 import org.indivo.xml.phr.DocumentGenerator;
 import org.indivo.xml.phr.contact.ConciseContactInformationType;
@@ -75,7 +74,7 @@ public class PHRMeasurement extends PHRDocument{
     }
 
     //sending new meds to PHR
-    public PHRMeasurement(EctProviderData.Provider provider, String demographicNo, Long myOscarUserId, String dataType, EctMeasurementsDataBean measurement) throws JAXBException, ActionNotPerformedException, IndivoException  {
+    public PHRMeasurement(EctProviderData.Provider provider, String demographicNo, Long myOscarUserId, String dataType, EctMeasurementsDataBean measurement) throws JAXBException, IndivoException  {
         //super();
         IndivoDocumentType document = getPhrMeasurementDocument(provider, measurement);
         JAXBContext docContext = JAXBContext.newInstance(IndivoDocumentType.class.getPackage().getName());

@@ -284,8 +284,9 @@ function load() {
 					<oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
 						<indivo:indivoRegistered demographic="<%=String.valueOf(bean.getDemographicNo())%>" provider="<%=bean.getProviderNo()%>">
 							<tr>
-								<td colspan="3"><!--<a href="javascript:popupWindow(720,700,'AddDrugProfileToPHR.jsp?demoId=<%=Integer.toString(bean.getDemographicNo())%>','PresPHR')">Send To Personal Health Record via JSP</a>   <br/>--> <a
-									href="javascript: phrActionPopup('../oscarRx/SendToPhr.do?demoId=<%=Integer.toString(bean.getDemographicNo())%>', 'sendRxToPhr');">Send To PHR</a></td>
+								<td colspan="3">
+									<a href="javascript: phrActionPopup('../oscarRx/SendToPhr.do?demoId=<%=Integer.toString(bean.getDemographicNo())%>', 'sendRxToPhr');">Send To PHR</a>
+								</td>
 							</tr>
 						</indivo:indivoRegistered>
 					</oscar:oscarPropertiesCheck>
