@@ -31,33 +31,20 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 import javax.xml.bind.JAXBContext;
 
 import org.indivo.IndivoException;
-import org.indivo.client.ActionNotPerformedException;
-import org.indivo.client.TalkClient;
-import org.indivo.client.TalkClientImpl;
 import org.indivo.xml.JAXBUtils;
 import org.indivo.xml.phr.DocumentGenerator;
 import org.indivo.xml.phr.binarydata.BinaryData;
 import org.indivo.xml.phr.binarydata.BinaryDataType;
-import org.indivo.xml.phr.contact.ConciseContactInformationType;
-import org.indivo.xml.phr.contact.NameType;
 import org.indivo.xml.phr.document.ContentDescriptionType;
 import org.indivo.xml.phr.document.DocumentHeaderType;
-import org.indivo.xml.phr.document.DocumentVersionType;
 import org.indivo.xml.phr.document.IndivoDocumentType;
-import org.indivo.xml.phr.document.VersionBodyType;
-import org.indivo.xml.phr.medication.Medication;
-import org.indivo.xml.phr.medication.MedicationType;
 import org.indivo.xml.phr.urns.ContentTypeQNames;
 import org.indivo.xml.phr.urns.DocumentClassificationUrns;
-import org.indivo.xml.talk.AuthenticateResultType;
-import org.indivo.xml.talk.ReadDocumentResultType;
 import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Element;
 
@@ -77,57 +64,10 @@ public class Send2Indivo {
     private String sessionTicket;
     private String errorMsg;
     private Map connParams;
-    private TalkClient client;
-    
-    /** Creates a new instance of Send2Indivo */
-    public Send2Indivo(String id, String passwd, String fullName, String role) {
-        indivoId = id;
-        indivoPasswd = passwd;
-        indivoFullName = fullName;
-        indivoRole = role;
-        errorMsg = null;
-        
-        connParams = new HashMap();
-        connParams.put(TalkClient.CERT_TRUST_KEY, TalkClient.ALL_CERTS_ACCEPTED);
-    }
     
     public String getDocumentIndex() {
         return indivoDocId;
-    }
-    
-    public void setServer(String addr) {        
-        connParams.put(TalkClient.SERVER_LOCATION, addr);
-    }
-    
-    public boolean authenticate() {
-        try {
-            
-            client = new TalkClientImpl(connParams);
-            AuthenticateResultType authResult = client.authenticate(indivoId, indivoPasswd);
-            sessionTicket = authResult.getActorTicket();
-            
-        }
-        catch(ActionNotPerformedException e ) {
-            errorMsg = e.getMessage();
-            MiscUtils.getLogger().debug("INDIVO Error Authenticating: " + errorMsg);
-            MiscUtils.getLogger().error("Error", e);
-            return false;
-        }
-        catch(IndivoException e ) {
-            errorMsg = e.getMessage();
-            MiscUtils.getLogger().debug("INDIVO Authenticating Network Error: " + errorMsg);
-            MiscUtils.getLogger().error("Error", e);
-            return false;
-        }
-        catch( Exception e ) {
-            errorMsg = e.getMessage();
-            MiscUtils.getLogger().debug("An exception occurred while authenticating " + errorMsg);
-            MiscUtils.getLogger().error("Error", e);
-            return false;
-        }
-        
-        return true;
-    }
+    }    
     
     private byte[] getFile(String fpath) {
         byte[] fdata = null;
@@ -225,77 +165,7 @@ public class Send2Indivo {
 //
          return true;
      }
-     
-     /**Update prescription already sent to indivo */
-      public boolean updateMedication(Prescription drug, String docIndex, String providerFname, String providerLname, String recipientId) {
-        NameType name = new NameType();
-        name.setFirstName(providerFname);
-        name.setLastName(providerLname);
-
-        ConciseContactInformationType contactInfo = new ConciseContactInformationType();
-        contactInfo.getPersonName().add(name);
-
-        MedicationType medType = new MedicationType();
-        medType.setPrescription(true);
-        
-        if( drug.getCustomInstr() == false ) {           
-            medType.setDose(drug.getDosageDisplay() + " " + drug.getUnit());            
-            medType.setDuration(drug.getDuration());
-            medType.setRefills(String.valueOf(drug.getRepeat()));
-            medType.setSubstitutionPermitted(drug.getNosubs());
-        }
-        else
-            medType.setDose(ResourceBundle.getBundle("oscarResources").getString("Send2Indivo.prescription.Instruction"));        
-                
-        medType.setName(drug.getDrugName());        
-        medType.setProvider(contactInfo);    
-        /*medType.setRoute();
-        CodedValueType cvt = new CodedValueType();
-        cvt.
-        CodingSystemReferenceType csrt = new CodingSystemReferenceType();
-        csrt.*/
-        medType.setInstructions("<pre>" + drug.getSpecial() + "</pre>");         
-
-        try {
-            //Retrieve current file record from indivo
-            ReadDocumentResultType readResult = client.readDocument(sessionTicket, recipientId, docIndex);
-            IndivoDocumentType doc = readResult.getIndivoDocument();
-            DocumentVersionType version = doc.getDocumentVersion().get(doc.getDocumentVersion().size() - 1);
-            
-            //Update current prescription with new med info
-            org.indivo.xml.JAXBUtils jaxbUtils = new org.indivo.xml.JAXBUtils();
-            org.indivo.xml.phr.medication.ObjectFactory medFactory = new org.indivo.xml.phr.medication.ObjectFactory();
-            
-            Medication med = medFactory.createMedication(medType);            
-            Element element = JAXBUtils.marshalToElement(med, JAXBContext.newInstance("org.indivo.xml.phr.medication"));
-            
-            VersionBodyType body = version.getVersionBody();
-            body.setAny(element);
-            version.setVersionBody(body);
-            client.updateDocument(sessionTicket, recipientId, docIndex, version);            
-        }
-        catch(javax.xml.bind.JAXBException e ) {
-            errorMsg = e.getMessage();
-            MiscUtils.getLogger().debug("JAXB Error " + errorMsg);
-            MiscUtils.getLogger().error("Error", e);
-            return false;
-        }
-        catch(ActionNotPerformedException e) {
-            errorMsg = e.getMessage();
-            MiscUtils.getLogger().debug("Indivo Unaccepted Medication " + drug.getDrugName() + " " + errorMsg);
-            MiscUtils.getLogger().error("Error", e);
-            return false;
-        }
-        catch(IndivoException e ) {
-            errorMsg = e.getMessage();
-            MiscUtils.getLogger().debug("Indivo Network Error " + errorMsg);
-            MiscUtils.getLogger().error("Error", e);
-            return false;
-        } 
-
-         return true;
-     }
-    
+         
     /**Send file to indivo as a raw sequence of bytes */
     public boolean sendBinaryFile(String file, String type, String description, Long recipientId ) {        
         byte[] bfile = getFile(file);
@@ -332,12 +202,6 @@ public class Send2Indivo {
         catch(javax.xml.bind.JAXBException e ) {
             errorMsg = e.getMessage();
             MiscUtils.getLogger().debug("JAXB Error " + errorMsg);
-            MiscUtils.getLogger().error("Error", e);
-            return false;
-        }
-        catch(ActionNotPerformedException e) {
-            errorMsg = e.getMessage();
-            MiscUtils.getLogger().debug("Indivo Unaccepted File " + file + " " + errorMsg);
             MiscUtils.getLogger().error("Error", e);
             return false;
         }
