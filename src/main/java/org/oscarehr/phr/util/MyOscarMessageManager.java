@@ -76,7 +76,7 @@ public class MyOscarMessageManager {
 		return(messageTransfers);
 	}
 
-	public static MessageTransfer getMessage(Long myOscarUserId, String myOscarPassword, Long messageId) throws NotAuthorisedException_Exception, NoSuchItemException_Exception
+	public static MessageTransfer getMessage(Long myOscarUserId, String myOscarPassword, Long messageId) throws NotAuthorisedException_Exception, NoSuchItemException_Exception, UnsupportedEncodingException_Exception
 	{
 		MessageWs messageWs=MyOscarServerWebServicesManager.getMessageWs(myOscarUserId, myOscarPassword);
 		MessageTransfer messageTransfer=messageWs.getMessage(messageId);
@@ -126,7 +126,7 @@ public class MyOscarMessageManager {
 		remoteDataLogDao.persist(remoteDataLog);
 	}
 
-	public static void flipActive(Long myOscarUserId, String myOscarPassword, Long messageId) throws NotAuthorisedException_Exception, NoSuchItemException_Exception {
+	public static void flipActive(Long myOscarUserId, String myOscarPassword, Long messageId) throws NotAuthorisedException_Exception, NoSuchItemException_Exception, UnsupportedEncodingException_Exception {
 		MessageWs messageWs=MyOscarServerWebServicesManager.getMessageWs(myOscarUserId, myOscarPassword);
 		MessageTransfer messageTransfer=messageWs.getMessage(messageId);
 		messageWs.setMessageActive(messageId, !messageTransfer.isActive());

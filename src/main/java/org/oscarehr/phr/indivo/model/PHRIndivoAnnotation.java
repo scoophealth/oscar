@@ -38,7 +38,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.datatype.DatatypeConfigurationException;
 
 import org.indivo.IndivoException;
-import org.indivo.client.ActionNotPerformedException;
 import org.indivo.xml.JAXBUtils;
 import org.indivo.xml.phr.DocumentGenerator;
 import org.indivo.xml.phr.annotation.Annotation;
@@ -63,7 +62,7 @@ public class PHRIndivoAnnotation extends PHRIndivoDocument {
     //sending new meds to PHR
     //when sending it updates the document reference index to phr one - see mountDocumentReference
     public PHRIndivoAnnotation(ProviderData provider, String demographicNo, Long demographicPhrId, String documentReferenceIndex, String message) 
-            throws JAXBException, ActionNotPerformedException, IndivoException, DatatypeConfigurationException  {
+            throws JAXBException, IndivoException, DatatypeConfigurationException  {
         super(provider, demographicNo, demographicPhrId);
         IndivoDocumentType document = getPhrAnnotationDocument(provider, documentReferenceIndex, message);
         this.setDocContent(document);
