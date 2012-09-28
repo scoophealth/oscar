@@ -53,7 +53,7 @@ public class ConversionUtils {
 	}
 
 	public static Date fromDateString(String dateString) {
-		return fromDateString(dateString, DEFAULT_TIME_PATTERN);
+		return fromDateString(dateString, DEFAULT_DATE_PATTERN);
 	}
 
 	private static Date fromDateString(String dateString, String formatPattern) {

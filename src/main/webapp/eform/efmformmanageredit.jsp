@@ -33,10 +33,10 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%
 HashMap<String, Object> curform = new HashMap<String, Object>();
-HashMap<String, Object> errors = new HashMap<String, Object>();
+HashMap<String, String> errors = new HashMap<String, String>();
 if (request.getAttribute("submitted") != null) {
     curform = (HashMap<String, Object>) request.getAttribute("submitted");
-    errors = (HashMap<String, Object>) request.getAttribute("errors");
+    errors = (HashMap<String, String>) request.getAttribute("errors");
 } else if (request.getParameter("fid") != null) {
     String curfid = request.getParameter("fid");
     curform = EFormUtil.loadEForm(curfid);
@@ -153,7 +153,7 @@ function disablenupload() {
 		</tr>
 		<tr>
 			<th style="text-align: right;"><bean:message key="eform.edithtml.msgLastModified" />:</th>
-			<td colspan="2"><%= curform.get("formDate")%> <%= curform.get("formTime") %></td>
+			<td colspan="2"><%= curform.get("formDate")%>&nbsp;<%= curform.get("formTime") %></td>
 		</tr>
 		<tr>
 			<th style="text-align: right;"><bean:message key="eform.edithtml.frmUploadFile" /> <sup>optional</sup>:</th>
@@ -178,7 +178,7 @@ function disablenupload() {
 			<th style="text-align: right;"><bean:message key="eform.edithtml.frmSubmit" />:</th>
 			<td colspan="2"><input type="button"
 				value="<bean:message key="eform.edithtml.msgPreviewLast"/>"
-				<% if (((String) curform.get("fid")).length() == 0) {%> disabled
+				<% if (curform.get("fid") == null) {%> disabled
 				<%}%> name="previewlast" onclick="openLastSaved()"> <input
 				type="submit" value="<bean:message key="eform.edithtml.msgSave"/>"
 				name="savebtn" onclick="disablensubmit()"> <input
