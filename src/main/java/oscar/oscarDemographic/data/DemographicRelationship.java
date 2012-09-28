@@ -147,7 +147,7 @@ public class DemographicRelationship {
 			h.put("demographicNo", demo);
 			h.put("relation", r.getRelation());
 
-			h.put("subDecisionMaker", r.getSubDecisionMaker());
+			h.put("subDecisionMaker", ConversionUtils.fromBoolString(r.getSubDecisionMaker()));
 			h.put("emergencyContact", ConversionUtils.fromBoolString(r.getEmergencyContact()));
 			h.put("notes", r.getNotes());
 			h.put("age", demographic.getAge());
