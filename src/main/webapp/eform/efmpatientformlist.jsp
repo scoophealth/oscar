@@ -240,9 +240,8 @@ function updateAjax() {
 					%>
 				</table>
 				<input type="submit" value="<bean:message key="eform.showmyform.btnsendtophr" />"> | 
-				<button onclick="showHtml(); return false;">
-					<bean:message key="global.btnSaveAsPDF" />
-				</button>
+				<button onclick="showHtml(); return false;">Save as PDF</button>
+			
 			</form>
 		
 		</td>
