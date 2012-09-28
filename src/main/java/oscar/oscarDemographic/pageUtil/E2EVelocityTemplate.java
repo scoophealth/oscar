@@ -24,15 +24,13 @@
 package oscar.oscarDemographic.pageUtil;
 
 import java.io.StringWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
-import org.oscarehr.common.model.Patient;
+import org.apache.velocity.tools.generic.DateTool;
 import org.oscarehr.util.MiscUtils;
 
 /**
@@ -47,25 +45,16 @@ public class E2EVelocityTemplate {
 	public E2EVelocityTemplate() {
 	}
 	
-	// Utility function for finding the current date
-	private String dateString() {
-		Date now = new Date();
-		SimpleDateFormat dateformat = new SimpleDateFormat("yyyyMMddhhmm");
-		StringBuilder result = new StringBuilder(dateformat.format(now));
-		return result.toString();
-	}
-	
 	// Creates the velocity context
 	private void loadPatient(Patient record) {
-		String currentDate = dateString();
-		
 		context = new VelocityContext();
 		
 		context.put("patient", record);
-		context.put("currentDate", currentDate);
+		context.put("date", new DateTool());
+		
 		// Temporary Author/Custodian Hardcode
 		context.put("authorId", "hhippocrates");
-		context.put("authorIdRoot", "DCCD2C68-389B-44c4-AD99-B8FB2DAD1493");
+		context.put("authorIdRoot", "DCCD2C68-389B-44C4-AD99-B8FB2DAD1493");
 		context.put("custodianId", "123");
 		context.put("custodianIdRoot", "7EEF0BCC-F03E-4742-A736-8BAC57180C5F");
 	}

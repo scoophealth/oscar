@@ -21,12 +21,14 @@
  * Toronto, Ontario, Canada
  */
 
-package org.oscarehr.common.model;
+package oscar.oscarDemographic.pageUtil;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarRx.data.RxPrescriptionData;
@@ -39,7 +41,7 @@ public class Patient {
 	private Integer demographicNo;
 	private Demographic demographic;
 	private DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
-	private RxPrescriptionData.Prescription[] medications;
+	private ArrayList<Medication> medications = new ArrayList<Medication>();
 	
 	public Patient() {
 	}
@@ -52,30 +54,29 @@ public class Patient {
 	private void initialize(String demoNo) {
 		this.demographic = demographicDao.getDemographic(demoNo);
 		
-		RxPrescriptionData rxData = new RxPrescriptionData();
-		this.medications = rxData.getPrescriptionsByPatient(Integer.parseInt(demoNo));
+		RxPrescriptionData.Prescription[] drugs = new RxPrescriptionData().getPrescriptionsByPatient(Integer.parseInt(demoNo));
+		for(RxPrescriptionData.Prescription d : drugs) {
+			medications.add(parseDrugs(d));
+		}
 	}
 	
-	/*
-	 * Medications
-	 * Directly mappable functions
-	 */
-	
-	public ArrayList<RxPrescriptionData.Prescription> getMedications() {
-		ArrayList<RxPrescriptionData.Prescription> result = new ArrayList<RxPrescriptionData.Prescription>();
-		Collections.addAll(result, this.medications);
-		return result;
-	}
-	
-	public boolean hasMedications() {
-		return!(medications==null || medications.length==0);
+	private Medication parseDrugs(RxPrescriptionData.Prescription drug) {
+		Medication medication = new Medication();
+		
+		medication.setDrugId(Integer.toString(drug.getDrugId()));
+		medication.setStartDate(drug.getRxDate());
+		medication.setEndDate(drug.getEndDate());
+		medication.setDin(drug.getRegionalIdentifier());
+		medication.setDrugName(drug.getBrandName());
+		
+		return medication;
 	}
 	
 	/*
 	 * Demographics
-	 * Directly mappable functions
 	 */
 	
+	// Directly mappable functions
 	public String getDemographicNo() {
 		return demographicNo.toString();
 	}
@@ -89,63 +90,59 @@ public class Patient {
 		return demographic.getFirstName();
 	}
 
-	public void setFirstName(String firstName) {
-		demographic.setFirstName(firstName);
+	public void setFirstName(String rhs) {
+		demographic.setFirstName(rhs);
 	}
 	
 	public String getLastName() {
 		return demographic.getLastName();
 	}
 
-	public void setLastName(String lastName) {
-		demographic.setLastName(lastName);
+	public void setLastName(String rhs) {
+		demographic.setLastName(rhs);
 	}
 	
 	public String getGender() {
 		return demographic.getSex();
 	}
 
-	public void setGender(String sex) {
-		demographic.setSex(sex);
+	public void setGender(String rhs) {
+		demographic.setSex(rhs);
 	}
 	
 	public String getDateOfBirth() {
 		return demographic.getDateOfBirth();
 	}
 
-	public void setDateOfBirth(String dateOfBirth) {
-		demographic.setDateOfBirth(dateOfBirth);
+	public void setDateOfBirth(String rhs) {
+		demographic.setDateOfBirth(rhs);
 	}
 	
 	public String getMonthOfBirth() {
 		return demographic.getMonthOfBirth();
 	}
 
-	public void setMonthOfBirth(String monthOfBirth) {
-		demographic.setMonthOfBirth(monthOfBirth);
+	public void setMonthOfBirth(String rhs) {
+		demographic.setMonthOfBirth(rhs);
 	}
 	
 	public String getYearOfBirth() {
 		return demographic.getYearOfBirth();
 	}
 
-	public void setYearOfBirth(String yearOfBirth) {
-		demographic.setYearOfBirth(yearOfBirth);
+	public void setYearOfBirth(String rhs) {
+		demographic.setYearOfBirth(rhs);
 	}
 	
 	public String getHin() {
 		return demographic.getHin();
 	}
 	
-	public void setHin(String hin) {
-		demographic.setHin(hin);
+	public void setHin(String rhs) {
+		demographic.setHin(rhs);
 	}
 	
-	/*
-	 * Demographics
-	 * Output get convenience functions
-	 */
-	
+	// Output get convenience functions
 	public String getBirthDate() {
 		return demographic.getYearOfBirth() + demographic.getMonthOfBirth() + demographic.getDateOfBirth();
 	}
@@ -153,5 +150,78 @@ public class Patient {
 	public String getGenderDesc() {
 		if(demographic.getSex().equals("M")) return "Male";
 		else return "Female";
-	}	
+	}
+
+	/*
+	 * Medications
+	 */
+	public List<Medication> getMedications() {
+		return medications;
+	}
+	
+	public boolean hasMedications() {
+		return!(medications==null || medications.isEmpty());
+	}
+
+	/*
+	 * Medication Sub-object
+	 */
+	public static class Medication {
+		private String drugId;
+		private Date startDate;
+		private Date endDate;
+		private String din;
+		private String drugName;
+		
+		public Medication() {
+		}
+		
+		// Directly mappable functions
+		public String getDrugId() {
+			return this.drugId;
+		}
+		
+		public void setDrugId(String rhs) {
+			this.drugId = rhs;
+		}
+		
+		public Date getStartDate() {
+			return this.startDate;
+		}
+		
+		public void setStartDate(Date rhs) {
+			this.startDate = rhs;
+		}
+		
+		public Date getEndDate() {
+			return this.endDate;
+		}
+		
+		public void setEndDate(Date rhs) {
+			this.endDate = rhs;
+		}
+		
+		public String getDin() {
+			return this.din;
+		}
+		
+		public void setDin(String rhs) {
+			this.din = rhs;
+		}
+		
+		public String getDrugName() {
+			return this.drugName;
+		}
+		
+		public void setDrugName(String rhs) {
+			this.drugName = rhs;
+		}
+		
+		// Output utility functions
+		public boolean isActive() {
+			Date currentDate = new Date();
+			if(currentDate.after(endDate)) return false;
+			else return true;
+		}
+	}
 }

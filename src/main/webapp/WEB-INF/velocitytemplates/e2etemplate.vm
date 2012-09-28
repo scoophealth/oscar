@@ -15,7 +15,7 @@ CDA Header
 	<id extension="$patient.demographicNo" root="2.16.840.1.113883.3.933"/>
 	<code code="34140-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Referral"/>
 	<title>PITO EMR-2-EMR Complete Instance Example</title>
-	<effectiveTime value="$currentDate"/>
+	<effectiveTime value="$date.get('yyyyMMddhhmm')"/>
 	<confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25"/>
 	<!-- 
 	********************************************************
@@ -72,25 +72,28 @@ Medications & Prescriptions - Medication List
 					<templateId root="2.16.840.1.113883.3.1818.10.2.19.1"/>
 					<code code="10160-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Medication Use"/>
 					<title>Medications and Prescriptions - Medication List [with entries]</title>
-					
 	#foreach( $med in $patient.getMedications() )
 					<entry typeCode="COMP" contextConductionInd="true">
 						<templateId root="2.16.840.1.113883.3.1818.10.3.18" />
 						<substanceAdministration classCode="SBADM" moodCode="EVN">
 							<id extension="$med.drugId" root="OSCAR.local" />
 							<code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
+		#if ( $med.isActive() )
 							<statusCode code="active"/>
+		#else
+							<statusCode code="completed"/>
+		#end
 							<effectiveTime xsi:type="IVL_TS" operator="I">
-								<low value="$med.rxDate"/>
-								<high value="$med.endDate" />
+								<low value="$date.format('yyyyMMdd', $med.getStartDate())"/>
+								<high value="$date.format('yyyyMMdd', $med.getEndDate())" />
 							</effectiveTime>
 							<!--Medication Identification-->
 							<consumable typeCode="CSM">
 								<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
 								<manufacturedProduct classCode="MANU">
 									<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
-										<code code="$med.regionalIdentifier" codeSystem="2.16.840.1.113883.5.1105" displayName="HC-DIN"/>
-										<name>$med.getBN()</name>
+										<code code="$med.din" codeSystem="2.16.840.1.113883.5.1105" displayName="HC-DIN"/>
+										<name>$med.drugName</name>
 									</manufacturedMaterial>
 								</manufacturedProduct>
 							</consumable>    
@@ -113,4 +116,3 @@ Medications & Prescriptions - Medication List
 		</structuredBody>
 	</component>
 </ClinicalDocument>
-

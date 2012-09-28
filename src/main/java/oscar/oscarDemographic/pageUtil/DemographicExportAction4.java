@@ -65,7 +65,6 @@ import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.DemographicArchive;
 import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.PartialDate;
-import org.oscarehr.common.model.Patient;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentCommentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
@@ -84,7 +83,6 @@ import oscar.dms.EDocUtil;
 import oscar.oscarClinic.ClinicData;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarDemographic.data.DemographicRelationship;
-import oscar.oscarDemographic.data.PatientData;
 import oscar.oscarEncounter.oscarMeasurements.data.ImportExportMeasurements;
 import oscar.oscarEncounter.oscarMeasurements.data.LabMeasurements;
 import oscar.oscarEncounter.oscarMeasurements.data.Measurements;
@@ -2022,16 +2020,13 @@ public class DemographicExportAction4 extends Action {
 					}
 					
 					// Create Patient
-					PatientData pd = new PatientData();
-					Patient patient = pd.getPatient(demoNo);
+					Patient patient = new Patient(demoNo);
 					
 					// Create Template View
 					E2EVelocityTemplate t = new E2EVelocityTemplate();
 					
-					// Set values by getting from Patient
 					// Call Template Export & add to ArrayList
 					String output = t.export(patient);
-					
 					
 					//export file to temp directory
 					try{
@@ -2058,8 +2053,8 @@ public class DemographicExportAction4 extends Action {
 				}
 		
 				//create ReadMe.txt & ExportEvent.log
-				files.add(makeReadMe(files));
-				files.add(makeExportLog(files.get(0).getParentFile()));
+				//files.add(makeReadMe(files));
+				//files.add(makeExportLog(files.get(0).getParentFile()));
 		
 				//zip all export files
 				String zipName = files.get(0).getName().replace(".xml", ".zip");
