@@ -1171,8 +1171,8 @@ public class RxUtil {
 		if (l.size() > 0 || rx != null) {
 			try {
 				for (HashMap<String, String> hm : l) {
-					String ins = (String) hm.get("instruction");
-					String specIns = (String) hm.get("special_instruction");
+					String ins = hm.get("instruction");
+					String specIns = hm.get("special_instruction");
 					if (ins != null && ins.length() > 0) {
 						if (customName != null && !customName.equalsIgnoreCase("null")) ins = ins.replace(customName, "");
 						if (bn != null && !bn.equalsIgnoreCase("null")) ins = ins.replace(bn, "");
@@ -1203,7 +1203,7 @@ public class RxUtil {
 			List<HashMap<String, String>> retList = new ArrayList<HashMap<String, String>>();
 			for (HashMap<String, String> hm : l) {
 				if (!elementCount.containsKey(hm)) elementCount.put(hm, 1);
-				else elementCount.put(hm, (Integer) elementCount.get(hm) + 1);
+				else elementCount.put(hm, elementCount.get(hm) + 1);
 			}
 			List<Integer> count = new ArrayList(elementCount.values());
 			Collections.sort(count);//ascending order
@@ -1213,7 +1213,7 @@ public class RxUtil {
 					Iterator iter = set.iterator();
 					while (iter.hasNext()) {
 						HashMap key = (HashMap) iter.next();
-						Integer value = (Integer) elementCount.get(key);
+						Integer value = elementCount.get(key);
 						if (value == count.get(i)) {
 							retList.add(key);
 							elementCount.remove(key);

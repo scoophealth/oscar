@@ -45,7 +45,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
 import org.indivo.IndivoException;
-import org.indivo.client.ActionNotPerformedException;
 import org.indivo.xml.JAXBUtils;
 import org.indivo.xml.phr.DocumentGenerator;
 import org.indivo.xml.phr.contact.ConciseContactInformationType;
@@ -170,7 +169,7 @@ public class PHRMedication extends PHRDocument {
 	}
 
 	// sending new meds to PHR
-	public PHRMedication(EctProviderData.Provider prov, String demographicNo, Long receiverMyOscarUserId, RxPrescriptionData.Prescription drug) throws JAXBException, ActionNotPerformedException, IndivoException {
+	public PHRMedication(EctProviderData.Provider prov, String demographicNo, Long receiverMyOscarUserId, RxPrescriptionData.Prescription drug) throws JAXBException, IndivoException {
 		// super();
 		IndivoDocumentType document = getPhrMedicationDocument(prov, drug);
 		JAXBContext docContext = JAXBContext.newInstance(IndivoDocumentType.class.getPackage().getName());
