@@ -122,9 +122,6 @@ public class EFormUtil {
 		eform.setFormName(formName);
 		eform.setFileName(fileName);
 		eform.setSubject(formSubject);
-		Date now = new Date();
-		eform.setFormDate(now);
-		eform.setFormTime(now);
 		eform.setCreator(creator);
 		eform.setCurrent(true);
 		eform.setFormHtml(htmlStr);
@@ -372,11 +369,11 @@ public class EFormUtil {
 
 		// must have FID and form_name otherwise throws null pointer on the hashtable
 		curht.put("fid", eform.getId());
-		curht.put("formName", eform.getFileName());
+		curht.put("formName", eform.getFormName());
 		curht.put("formSubject", eform.getSubject());
 		curht.put("formFileName", eform.getFileName());
 		curht.put("formDate", eform.getFormDate().toString());
-		curht.put("formTime", eform.getFormDate().toString());
+		curht.put("formTime", eform.getFormTime().toString());
 		curht.put("formCreator", eform.getCreator());
 		curht.put("formHtml", eform.getFormHtml());
 		curht.put("patientIndependent", eform.isPatientIndependent());
@@ -413,9 +410,19 @@ public class EFormUtil {
 	}
 
 	/*
-	 * +--------------+--------------+------+-----+---------+----------------+ | Field | Type | Null | Key | Default | Extra | +--------------+--------------+------+-----+---------+----------------+ | fid | int(8) | | PRI | NULL | auto_increment | |
-	 * form_name | varchar(255) | YES | | NULL | | | file_name | varchar(255) | YES | | NULL | | | subject | varchar(255) | YES | | NULL | | | form_date | date | YES | | NULL | | | form_time | time | YES | | NULL | | | form_creator | varchar(255) | YES | |
-	 * NULL | | | status | tinyint(1) | | | 1 | | | form_html | text | YES | | NULL | | +--------------+--------------+------+-----+---------+----------------+
+	 * +--------------+--------------+------+-----+---------+----------------+ 
+	 * | Field        | Type         | Null | Key | Default | Extra          | 
+	 * +--------------+--------------+------+-----+---------+----------------+ 
+	 * | fid          | int(8)       |      | PRI | NULL    | auto_increment | 
+	 * | form_name    | varchar(255) | YES  |     | NULL    |                | 
+	 * | file_name    | varchar(255) | YES  |     | NULL    |                | 
+	 * | subject      | varchar(255) | YES  |     | NULL    |                | 
+	 * | form_date    | date         | YES  |     | NULL    |                | 
+	 * | form_time    | time         | YES  |     | NULL    |                | 
+	 * | form_creator | varchar(255) | YES  |     | NULL    |                | 
+	 * | status       | tinyint(1)   |      |     | 1       |                | 
+	 * | form_html    | text         | YE S |     | NULL    |                | 
+	 * +--------------+--------------+------+-----+---------+----------------+
 	 */
 
 	public static String getEFormParameter(String fid, String fieldName) {

@@ -25,7 +25,7 @@
 
 package oscar.eform.actions;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -57,7 +57,7 @@ public class HtmlEditAction extends Action {
             boolean patientIndependent = WebUtils.isChecked(request, "patientIndependent");
             String roleType = fm.getRoleType();
             
-            Hashtable errors = new Hashtable();
+            HashMap<String, String> errors = new HashMap<String, String>();
             if (request.getParameter("uploadMarker").equals("true")) {
                 //if uploading file
                 String readstream = StringUtils.readFileStream(uploadFile);
@@ -67,12 +67,11 @@ public class HtmlEditAction extends Action {
                     formHtml = org.apache.commons.lang.StringEscapeUtils.escapeJava(readstream);
                     formFileName = uploadFile.getFileName();
                 }
-                Hashtable curht = createHashtable(fid, formName, formSubject, formFileName, formHtml, patientIndependent, roleType);
+                HashMap<String, Object> curht = createHashMap(fid, formName, formSubject, formFileName, formHtml, patientIndependent, roleType);
                 request.setAttribute("submitted", curht);
                 request.setAttribute("errors", errors);
                 return(mapping.findForward("success"));
             }
-            formHtml = org.apache.commons.lang.StringEscapeUtils.escapeJava(formHtml);
             EFormBase updatedform = new EFormBase(fid, formName, formSubject, formFileName, formHtml, patientIndependent, roleType); //property container (bean)
             //validation...
             if ((formName == null) || (formName.length() == 0)) {
@@ -89,7 +88,7 @@ public class HtmlEditAction extends Action {
                 request.setAttribute("success", "true");
             }
             
-            Hashtable curht = createHashtable(fid, formName, formSubject, formFileName, formHtml, patientIndependent, roleType);
+            HashMap<String, Object> curht = createHashMap(fid, formName, formSubject, formFileName, formHtml, patientIndependent, roleType);
             request.setAttribute("submitted", curht);
             
             request.setAttribute("errors", errors);
@@ -99,8 +98,8 @@ public class HtmlEditAction extends Action {
         return(mapping.findForward("success"));
     }
     
-    private Hashtable createHashtable(String fid, String formName, String formSubject, String formFileName, String formHtml, boolean patientIndependent, String roleType) {
-        Hashtable curht = new Hashtable();
+    private HashMap<String, Object> createHashMap(String fid, String formName, String formSubject, String formFileName, String formHtml, boolean patientIndependent, String roleType) {
+    	HashMap<String, Object> curht = new HashMap<String, Object>();
         curht.put("fid", fid);  
         curht.put("formName", formName);
         curht.put("formSubject", formSubject);
