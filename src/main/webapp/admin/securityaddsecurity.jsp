@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="com.quatro.web.admin.SecurityAddSecurityHelper"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
@@ -60,49 +61,11 @@
 	</tr>
 </table>
 <%
-    StringBuffer sbTemp = new StringBuffer();
-    MessageDigest md = MessageDigest.getInstance("SHA");
-    byte[] btNewPasswd= md.digest(request.getParameter("password").getBytes());
-    for(int i=0; i<btNewPasswd.length; i++) sbTemp = sbTemp.append(btNewPasswd[i]);
-
-    boolean duplicateError=false;
-    int rowsAffected=0;
-
-    if(securityDao.findByUserName(request.getParameter("user_name")).size() == 0) {
-	    Security s = new Security();
-	    s.setUserName(request.getParameter("user_name"));
-	    s.setPassword(sbTemp.toString());
-	    s.setProviderNo(request.getParameter("provider_no"));
-	    s.setPin(request.getParameter("pin"));
-	    s.setBExpireset(request.getParameter("b_ExpireSet")==null?0:Integer.parseInt(request.getParameter("b_ExpireSet")));
-	    s.setDateExpiredate(MyDateFormat.getSysDate(request.getParameter("date_ExpireDate")));
-	    s.setBLocallockset(request.getParameter("b_LocalLockSet")==null?0:Integer.parseInt(request.getParameter("b_LocalLockSet")));
-	    s.setBRemotelockset(request.getParameter("b_RemoteLockSet")==null?0:Integer.parseInt(request.getParameter("b_RemoteLockSet")));
-		securityDao.save(s);
-
-		LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_SECURITY,
-	        		request.getParameter("user_name"), request.getRemoteAddr());
-		rowsAffected=1;
-	} else {
-		duplicateError=true;
-	}
-
-
-
-  if (rowsAffected ==1) {
+    SecurityAddSecurityHelper helper = new SecurityAddSecurityHelper();
+	helper.addProvider(pageContext);
 %>
-<h1><bean:message key="admin.securityaddsecurity.msgAdditionSuccess" /></h1>
-<%
-  } else if (duplicateError) {
-%>
-<h1><bean:message key="admin.securityaddsecurity.msgAdditionFailureDuplicate" /></h1>
-<%
-  } else {
-%>
-<h1><bean:message key="admin.securityaddsecurity.msgAdditionFailure" /></h1>
-<%
-  }
-%>
+<h1><bean:message key="${message}" /></h1>
+
 <%@ include file="footer2htm.jsp"%></center>
 </body>
 </html:html>
