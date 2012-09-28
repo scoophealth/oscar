@@ -60,7 +60,19 @@
 
 <html:html locale="true">
 <head>
+<style type="text/css">
+	/* Style for providers with security records */
+	.providerSecurity1 {
+		color: gray;
+	}
+	
+	/* Style for providers without security records */
+	.providerSecurity0 {
+		color: black;
+	}
+</style>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/checkPassword.js.jsp"></script>
 <title><bean:message key="admin.securityaddarecord.title" /></title>
 <!-- calendar stylesheet -->
@@ -86,6 +98,15 @@
 		document.searchprovider.elements[el].select();
 	}
 	function onsub() {
+		var selectedOption = jQuery('#provider_no option:selected');
+		if (selectedOption) {
+			var optionClass = selectedOption.attr("class");
+			if (optionClass == "providerSecurity1") {
+				alert('<bean:message key="admin.securityrecord.msgProviderAlreadyHasSecurityRec" />');
+				return false;
+			}
+		}
+		
 		if (document.searchprovider.user_name.value=="") {
 			alert('<bean:message key="admin.securityrecord.formUserName" /> <bean:message key="admin.securityrecord.msgIsRequired"/>');
 			setfocus('user_name');
@@ -189,7 +210,7 @@
 		<td width="50%" align="right"><bean:message
 			key="admin.securityrecord.formProviderNo" />:
 		</td>
-		<td><select name="provider_no">
+		<td><select name="provider_no" id="provider_no">
 			<option value="">-- select one --</option>
 <%
 	List<Map<String,Object>> resultList ;
@@ -199,11 +220,11 @@
     	resultList = oscarSuperManager.find("adminDao", "site_provider_search_providerno", param);
     }
     else {
-    	resultList = oscarSuperManager.find("adminDao", "provider_search_providerno", new Object[] {});
+    	resultList = oscarSuperManager.find("adminDao", "provider_security_search_providerno", new Object[] {});
     }
 	for (Map provider : resultList) {
 %>
-			<option value="<%=provider.get("provider_no")%>"><%=provider.get("last_name")+", "+provider.get("first_name")%></option>
+			<option value="<%=provider.get("provider_no")%>" class="providerSecurity<%=provider.get("security_exists")%>"><%=provider.get("last_name")+", "+provider.get("first_name")%></option>
 <%
 	}
 %>
