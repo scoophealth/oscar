@@ -45,6 +45,7 @@
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
 <%@page import="org.oscarehr.util.LoggedInInfo,org.oscarehr.common.dao.DrugReasonDao,org.oscarehr.common.model.DrugReason"%>
 <%@page import="java.util.ArrayList,oscar.util.*,java.util.*,org.oscarehr.common.model.Drug,org.oscarehr.common.dao.*"%>
+<%@page import="org.oscarehr.util.MiscUtils" %>
 <bean:define id="patient" type="oscar.oscarRx.data.RxPatientData.Patient" name="Patient" />
 <logic:notPresent name="RxSessionBean" scope="session">
     <logic:redirect href="error.html" />
@@ -161,7 +162,7 @@ if (heading != null){
 //add all long term med drugIds to an array.
                 styleColor = getClassColour( prescriptDrug, now, month);
                 String specialText=prescriptDrug.getSpecial();
-                specialText=specialText.replace("\n"," ");
+                specialText=specialText == null ? "" : specialText.replace("\n"," ");
                 Integer prescriptIdInt=prescriptDrug.getId();
                 String bn=prescriptDrug.getBrandName();
                 
@@ -253,7 +254,9 @@ if (heading != null){
 	         }
 			%>
             <td width="20px" align="center" valign="top">
-                <%if(!prescriptDrug.isDiscontinued())
+                <%
+                
+                if(!prescriptDrug.isDiscontinued())
                 {
                	 if (prescriptDrug.getRemoteFacilityId()==null)
                	 {
