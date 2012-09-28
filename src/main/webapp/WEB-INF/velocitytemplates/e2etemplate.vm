@@ -54,6 +54,63 @@ CDA Header
 			</representedCustodianOrganization>
 		</assignedCustodian>
 	</custodian>
+	<!-- 
+********************************************************
+e-MS CDA Structured Body
+********************************************************
+-->
+	<component>
+		<structuredBody>
+<!--
+********************************************************
+Medications & Prescriptions - Medication List
+********************************************************
+-->
+#if ( $patient.hasMedications() )
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.19.1"/>
+					<code code="10160-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Medication Use"/>
+					<title>Medications and Prescriptions - Medication List [with entries]</title>
+					
+	#foreach( $med in $patient.getMedications() )
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.3.1818.10.3.18" />
+						<substanceAdministration classCode="SBADM" moodCode="EVN">
+							<id extension="$med.drugId" root="OSCAR.local" />
+							<code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
+							<statusCode code="active"/>
+							<effectiveTime xsi:type="IVL_TS" operator="I">
+								<low value="$med.rxDate"/>
+								<high value="$med.endDate" />
+							</effectiveTime>
+							<!--Medication Identification-->
+							<consumable typeCode="CSM">
+								<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
+								<manufacturedProduct classCode="MANU">
+									<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
+										<code code="$med.regionalIdentifier" codeSystem="2.16.840.1.113883.5.1105" displayName="HC-DIN"/>
+										<name>$med.getBN()</name>
+									</manufacturedMaterial>
+								</manufacturedProduct>
+							</consumable>    
+							<!--end Medication Identification-->
+						</substanceAdministration>
+					</entry>
+				</section>
+			</component>
+	#end
+#else
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.19.1"/>
+					<code code="10160-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Medication Use"/>
+					<title>Medications and Prescriptions - Medication List [without entries]</title>
+					<text>Sorry, no medications</text>
+				</section>
+			</component>
+#end
+		</structuredBody>
+	</component>
 </ClinicalDocument>
-
 

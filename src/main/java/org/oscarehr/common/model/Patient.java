@@ -23,8 +23,13 @@
 
 package org.oscarehr.common.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.util.SpringUtils;
+
+import oscar.oscarRx.data.RxPrescriptionData;
 
 /**
  * @author Jeremy Ho
@@ -34,6 +39,7 @@ public class Patient {
 	private Integer demographicNo;
 	private Demographic demographic;
 	private DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+	private RxPrescriptionData.Prescription[] medications;
 	
 	public Patient() {
 	}
@@ -45,9 +51,28 @@ public class Patient {
 
 	private void initialize(String demoNo) {
 		this.demographic = demographicDao.getDemographic(demoNo);
+		
+		RxPrescriptionData rxData = new RxPrescriptionData();
+		this.medications = rxData.getPrescriptionsByPatient(Integer.parseInt(demoNo));
 	}
 	
 	/*
+	 * Medications
+	 * Directly mappable functions
+	 */
+	
+	public ArrayList<RxPrescriptionData.Prescription> getMedications() {
+		ArrayList<RxPrescriptionData.Prescription> result = new ArrayList<RxPrescriptionData.Prescription>();
+		Collections.addAll(result, this.medications);
+		return result;
+	}
+	
+	public boolean hasMedications() {
+		return!(medications==null || medications.length==0);
+	}
+	
+	/*
+	 * Demographics
 	 * Directly mappable functions
 	 */
 	
@@ -117,6 +142,7 @@ public class Patient {
 	}
 	
 	/*
+	 * Demographics
 	 * Output get convenience functions
 	 */
 	
