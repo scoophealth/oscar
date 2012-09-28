@@ -30,6 +30,7 @@ import java.util.List;
 import javax.persistence.Query;
 
 import org.apache.commons.lang.StringUtils;
+import org.oscarehr.common.NativeSql;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
@@ -69,7 +70,7 @@ public class DrugDao extends AbstractDao<Drug> {
 	public List<Drug> findByDemographicId(Integer demographicId) {
 		return findByDemographicId(demographicId, null);
 	}
-	
+
 	public List<Drug> findByDemographicId(Integer demographicId, Boolean archived) {
 
 		String sqlCommand = "select x from Drug x where x.demographicId=?1 " + (archived == null ? "" : "and x.archived=?2");
@@ -251,7 +252,7 @@ public class DrugDao extends AbstractDao<Drug> {
 
 	@SuppressWarnings("unchecked")
 	public List<Drug> findByDemographicIdAndAtc(int demographicNo, String atc) {
-		Query query = entityManager.createQuery("FROM " + modelClass.getSimpleName() + " d WHERE d.demographicId = :demoId AND d.atc = :atc ORDER BY d.position, d.rxDate DESC, d.id DESC");
+		Query query = createQuery("d", "d.demographicId = :demoId AND d.atc = :atc ORDER BY d.position, d.rxDate DESC, d.id DESC");
 		query.setParameter("demoId", demographicNo);
 		query.setParameter("atc", atc);
 		return query.getResultList();
@@ -259,7 +260,7 @@ public class DrugDao extends AbstractDao<Drug> {
 
 	@SuppressWarnings("unchecked")
 	public List<Drug> findByDemographicIdAndRegion(int demographicNo, String regionalIdentifier) {
-		Query query = entityManager.createQuery("FROM " + modelClass.getSimpleName() + " d WHERE d.demographicId = :demoId AND d.regionalIdentifier = :regionalIdentifier ORDER BY d.position, d.rxDate DESC, d.id DESC");
+		Query query = createQuery("d", "d.demographicId = :demoId AND d.regionalIdentifier = :regionalIdentifier ORDER BY d.position, d.rxDate DESC, d.id DESC");
 		query.setParameter("demoId", demographicNo);
 		query.setParameter("regionalIdentifier", regionalIdentifier);
 		return query.getResultList();
@@ -267,7 +268,7 @@ public class DrugDao extends AbstractDao<Drug> {
 
 	@SuppressWarnings("unchecked")
 	public List<Drug> findByDemographicIdAndDrugId(int demographicNo, String drugId) {
-		Query query = entityManager.createQuery("FROM " + modelClass.getSimpleName() + " d WHERE d.demographicId = :demoId AND d.id = :drugId ORDER BY d.position, d.rxDate DESC, d.id DESC");
+		Query query = createQuery("d", "d.demographicId = :demoId AND d.id = :drugId ORDER BY d.position, d.rxDate DESC, d.id DESC");
 		query.setParameter("demoId", demographicNo);
 		query.setParameter("drugId", ConversionUtils.fromIntString(drugId));
 		return query.getResultList();
@@ -282,12 +283,11 @@ public class DrugDao extends AbstractDao<Drug> {
 	 * 		Returns the list of arrays, where first element is of type {@link Drug} and the second is of type {@link Prescription}.
 	 */
 	@SuppressWarnings("unchecked")
-    public List<Object[]> findDrugsAndPrescriptions(int demographicNo) {
+	public List<Object[]> findDrugsAndPrescriptions(int demographicNo) {
 		Query query = entityManager.createQuery("SELECT d, p FROM Drug d, Prescription p WHERE d.demographicId = :demoId AND d.scriptNo = p.id ORDER BY d.position DESC, d.rxDate DESC, d.id ASC");
 		query.setParameter("demoId", demographicNo);
 		return query.getResultList();
 	}
-
 
 	/**
 	 * Finds all drugs and prescriptions for the specified id
@@ -298,7 +298,7 @@ public class DrugDao extends AbstractDao<Drug> {
 	 * 		Returns the list of arrays, where first element is of type {@link Drug} and the second is of type {@link Prescription}.
 	 */
 	@SuppressWarnings("unchecked")
-    public List<Object[]> findDrugsAndPrescriptionsByScriptNumber(int scriptNumber) {
+	public List<Object[]> findDrugsAndPrescriptionsByScriptNumber(int scriptNumber) {
 		Query query = entityManager.createQuery("SELECT d, p FROM Drug d, Prescription p WHERE d.scriptNo = p.id AND d.scriptNo = :scriptNo ORDER BY d.position DESC, d.rxDate DESC, d.id ASC");
 		query.setParameter("scriptNo", scriptNumber);
 		return query.getResultList();
@@ -308,20 +308,18 @@ public class DrugDao extends AbstractDao<Drug> {
 		Query query = entityManager.createQuery("SELECT MAX(d.position) FROM " + modelClass.getSimpleName() + " d WHERE d.demographicId = :id");
 		query.setParameter("id", demographicNo);
 		Long result = (Long) query.getSingleResult();
-		if (result == null)
-			return 0;
+		if (result == null) return 0;
 		return result.intValue();
-    }
+	}
 
 	public Drug findByEverything(String providerNo, int demographicNo, Date rxDate, Date endDate, Date writtenDate, String brandName, int gcn_SEQNO, String customName, float takeMin, float takeMax, String frequencyCode, String duration, String durationUnit, String quantity, String unitName, int repeat, Date lastRefillDate, boolean nosubs, boolean prn, String escapedSpecial, String outsideProviderName, String outsideProviderOhip, boolean customInstr, boolean longTerm, boolean customNote, boolean pastMed,
-            Boolean patientCompliance, String specialInstruction, String comment, boolean startDateUnknown) {
+	        Boolean patientCompliance, String specialInstruction, String comment, boolean startDateUnknown) {
 
-		Query query = entityManager.createQuery("FROM " + modelClass.getSimpleName() + " d WHERE (d.archived = 0 OR d.archived IS NULL) AND "
-				+ "d.providerNo = :providerNo AND d.demographicId = :demographicNo AND d.rxDate = :rxDate AND d.endDate = :endDate AND d.writtenDate = :writtenDate AND d.brandName = :brandName AND "
-				+ "d.gcnSeqNo = :gcnSeqNo AND d.customName = :customName AND d.takeMin = :takemin AND d.takeMax = :takemax AND d.freqCode = :freqCode AND d.duration = :duration AND d.durUnit = :durunit AND d.quantity = :quantity AND d.unitName = :unitName AND d.repeat = :repeat AND "
+		Query query = entityManager.createQuery("FROM " + modelClass.getSimpleName() + " d WHERE (d.archived = 0 OR d.archived IS NULL) AND " + "d.providerNo = :providerNo AND d.demographicId = :demographicNo AND d.rxDate = :rxDate AND d.endDate = :endDate AND d.writtenDate = :writtenDate AND d.brandName = :brandName AND "
+		        + "d.gcnSeqNo = :gcnSeqNo AND d.customName = :customName AND d.takeMin = :takemin AND d.takeMax = :takemax AND d.freqCode = :freqCode AND d.duration = :duration AND d.durUnit = :durunit AND d.quantity = :quantity AND d.unitName = :unitName AND d.repeat = :repeat AND "
 		        + "d.lastRefillDate = :lastRefillDate AND d.noSubs = :nosubs AND d.prn = :prn AND d.special = :special AND d.outsideProviderName = :outsideProviderName AND d.outsideProviderOhip = :outsideProviderOhip AND d.customInstructions = :customInstructions AND d.longTerm = :longTerm AND "
 		        + "d.customNote = :customNote AND d.pastMed = :pastMed AND d.patientCompliance = :patientCompliance AND d.special_instruction = :specialInstruction AND d.comment = :comment AND d.startDateUnknown = :startDateUnknown");
-		
+
 		query.setParameter("providerNo", providerNo);
 		query.setParameter("demographicNo", demographicNo);
 		query.setParameter("rxDate", rxDate);
@@ -341,7 +339,7 @@ public class DrugDao extends AbstractDao<Drug> {
 		query.setParameter("lastRefillDate", lastRefillDate);
 		query.setParameter("nosubs", nosubs);
 		query.setParameter("prn", prn);
-		query.setParameter("special", specialInstruction);
+		query.setParameter("special", escapedSpecial);
 		query.setParameter("outsideProviderName", outsideProviderName);
 		query.setParameter("outsideProviderOhip", outsideProviderOhip);
 		query.setParameter("customInstructions", customInstr);
@@ -352,8 +350,106 @@ public class DrugDao extends AbstractDao<Drug> {
 		query.setParameter("specialInstruction", specialInstruction);
 		query.setParameter("comment", comment);
 		query.setParameter("startDateUnknown", startDateUnknown);
-		
+
 		query.setMaxResults(1);
 		return getSingleResultOrNull(query);
+	}
+
+	/**
+	 * Selects special and special_instruction fields from drugs table ordered by grugid.
+	 * 
+	 * @param parameter
+	 * 		Name of the column to be queried
+	 * @param value
+	 * 		Value of the column to be queried
+	 * @return
+	 * 		Returns the drugs found
+	 */
+	@NativeSql("drugs")
+	@SuppressWarnings("unchecked")
+	public List<Object[]> findByParameter(String parameter, String value) {
+		String sql = "select special ,special_instruction from drugs where " + parameter + " = '" + value + "' order by drugid desc";
+		Query query = entityManager.createNativeQuery(sql);
+		return query.getResultList();
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Drug> findByRegionBrandDemographicAndProvider(String regionalIdentifier, String brandName, int demographicNo, String providerNo) {
+		Query query = createQuery("d", "d.regionalIdentifier = :ri and d.brandName = :bn and d.demographicId = :dn and d.providerNo = :pn order by drugid desc");
+		query.setParameter("ri", regionalIdentifier);
+		query.setParameter("bn", brandName);
+		query.setParameter("dn", demographicNo);
+		query.setParameter("pn", providerNo);
+		return query.getResultList();
+	}
+
+	/**
+	 * Finds drug by the specified brand name, demographic id and provider number.
+	 * 
+	 * @param brandName
+	 * 		Brand name to look for
+	 * @param demographicNo
+	 * 		Demographic ID to look for
+	 * @param providerNo
+	 * 		Provider number to look for
+	 * @return
+	 * 		Returns the drug or null if it's not found.
+	 */
+	public Drug findByBrandNameDemographicAndProvider(String brandName, int demographicNo, String providerNo) {
+		Query query = createQuery("d", "d.brandName = :bn AND d.demographicId = :dn AND d.providerNo = :pn order by d.id desc"); //most recent is the first.);
+		query.setParameter("bn", brandName);
+		query.setParameter("dn", demographicNo);
+		query.setParameter("pn", providerNo);
+		query.setMaxResults(1);
+		return getSingleResultOrNull(query);
+	}
+
+	/**
+	 * Finds drug by the specified custom drug name, demographic id and provider number.
+	 * 
+	 * @param customName
+	 * 		Custom drug name to look for
+	 * @param demographicNo
+	 * 		Demographic ID to look for
+	 * @param providerNo
+	 * 		Provider number to look for
+	 * @return
+	 * 		Returns the drug or null if it's not found.
+	 */
+	public Drug findByCustomNameDemographicIdAndProviderNo(String customName, int demographicNo, String providerNo) {
+		Query query = createQuery("d", "d.customName = :cn AND d.demographicId = :dn AND d.providerNo = :pn order by d.id desc"); //most recent is the first.
+		query.setParameter("cn", customName);
+		query.setParameter("dn", demographicNo);
+		query.setParameter("pn", providerNo);
+		query.setMaxResults(1);
+	    return getSingleResultOrNull(query);
+    }
+
+	@SuppressWarnings("unchecked")
+    public Integer findLastNotArchivedId(String brandName, String genericName, int demographicNo) {
+		Query query = createQuery("SELECT max(d.id)", "d", "d.archived = 0 AND d.archivedReason='' AND d.brandName = :bn AND d.genericName = :gn  AND d.demographicId = :dn");
+		query.setParameter("bn", brandName);
+		query.setParameter("gn", genericName);
+		query.setParameter("dn", demographicNo);
+		List<Integer> result = query.getResultList();
+		if (result.isEmpty())
+			return 0;
+		return
+			result.get(0);
+    }
+
+	public Drug findByDemographicIdRegionalIdentifierAndAtcCode(String atcCode, String regionalIdentifier, int demographicNo) {
+		Query query = createQuery("d", "d.archived = 1 AND d.archivedReason != '' AND d.regionalIdentifier = :rid AND d.demographicId = :dn AND d.atc = :atc ORDER BY d.id DESC");
+		query.setParameter("dn", demographicNo);
+		query.setParameter("atc", atcCode);
+		query.setParameter("rid", regionalIdentifier);
+		query.setMaxResults(1);
+		return getSingleResultOrNull(query);
+    }
+
+	@SuppressWarnings("unchecked")
+    public List<String> findSpecialInstructions() {
+		Query query = createQuery("SELECT DISTINCT d.special_instruction", "d", "d.special_instruction IS NOT NULL");
+	    return query.getResultList();
     }
 }

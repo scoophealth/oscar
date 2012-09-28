@@ -96,9 +96,8 @@ public abstract class AbstractDao<T extends AbstractModel<?>> {
 	 */
 	public boolean remove(Object id) {
 		T abstractModel = find(id);
-		if (abstractModel == null)
-			return false;
-		
+		if (abstractModel == null) return false;
+
 		remove(abstractModel);
 		return true;
 	}
@@ -139,15 +138,30 @@ public abstract class AbstractDao<T extends AbstractModel<?>> {
 	 * 		Returns the JPQL clause in the form of <code>"FROM {@link #getModelClassName()} AS e "</code>. <code>e</code> stands for "entity"
 	 */
 	protected String getBaseQuery() {
-		return getBaseQueryBuf(null).toString();
+		return getBaseQueryBuf(null, null).toString();
 	}
 
 	protected String getBaseQuery(String alias) {
 		return getBaseQuery(alias).toString();
 	}
 
-	protected StringBuilder getBaseQueryBuf(String alias) {
-		StringBuilder buf = new StringBuilder("FROM ");
+	/**
+	 * Creates new string builder containing the base query with the specified select and alias strings
+	 * 
+	 * @param select
+	 * 		Select clause to be appended to the query. May be null
+	 * @param alias
+	 * 		Alias to be used for referencing the base entity class
+	 * @return
+	 * 		Returns the string buffer containing the base query 
+	 */
+	protected StringBuilder getBaseQueryBuf(String select, String alias) {
+		StringBuilder buf = new StringBuilder();
+		if (select != null) {
+			buf.append(select);
+			buf.append(" ");
+		}
+		buf.append("FROM ");
 		buf.append(getModelClassName());
 		if (alias != null) buf.append(" AS ").append(alias).append(" ");
 		return buf;
@@ -157,21 +171,29 @@ public abstract class AbstractDao<T extends AbstractModel<?>> {
 		return modelClass;
 	}
 
+	protected Query createQuery(String alias, String whereClause) {
+		return createQuery(null, alias, whereClause);
+	}
+		
 	/**
 	 * Creates a query with the specified entity alias and where clause
+	 * 
 	 * <p/>
+	 * 
 	 * For example, invoking
 	 * 
 	 * <pre>
-	 * 		createQuery("entity", "entity.propertyName like :propertyValue");
+	 * 		createQuery("select entity.id" "entity", "entity.propertyName like :propertyValue");
 	 * </pre>
 	 * 
 	 * would create query:
 	 * 
 	 * <pre>
-	 * 		FROM ModelClass AS entity WHERE entity.propertyName like :propertyValue
+	 * 		SELECT entity.id FROM ModelClass AS entity WHERE entity.propertyName like :propertyValue
 	 * </pre>
 	 * 
+	 * @param select
+	 * 		Select clause to be included in the query 
 	 * @param alias
 	 * 		Alias to be included in the query
 	 * @param whereClause
@@ -179,11 +201,34 @@ public abstract class AbstractDao<T extends AbstractModel<?>> {
 	 * @return
 	 * 		Returns the query
 	 */
-	protected Query createQuery(String alias, String whereClause) {
-		StringBuilder buf = getBaseQueryBuf(alias);
+	protected Query createQuery(String select, String alias, String whereClause) {
+		StringBuilder buf = createQueryString(alias, whereClause);
+		return entityManager.createQuery(buf.toString());
+	}
+
+	/**
+	 * Creates query string for the specified alias and where clause 
+	 * 
+	 * @param select
+	 * 		Select clause
+	 * @param alias
+	 * 		Alias to be included in the query
+	 * @param whereClause
+	 * 		Where clause to be included in the query
+	 * @return
+	 * 		Returns the query string
+	 * 
+	 * @see #createQuery(String, String)
+	 */
+	protected StringBuilder createQueryString(String select, String alias, String whereClause) {
+		StringBuilder buf = getBaseQueryBuf(select, alias);
 		buf.append("WHERE ");
 		buf.append(whereClause);
-		return entityManager.createQuery(buf.toString());
+		return buf;
+	}
+
+	protected StringBuilder createQueryString(String alias, String whereClause) {
+		return createQueryString(null, alias, whereClause);
 	}
 
 	/**
