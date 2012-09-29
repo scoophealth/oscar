@@ -54,7 +54,7 @@ CDA Header
 			</representedCustodianOrganization>
 		</assignedCustodian>
 	</custodian>
-	<!-- 
+<!-- 
 ********************************************************
 e-MS CDA Structured Body
 ********************************************************
@@ -72,17 +72,17 @@ Medications & Prescriptions - Medication List
 					<templateId root="2.16.840.1.113883.3.1818.10.2.19.1"/>
 					<code code="10160-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Medication Use"/>
 					<title>Medications and Prescriptions - Medication List [with entries]</title>
-	#foreach( $med in $patient.getMedications() )
+    #foreach( $med in $patient.getMedications() )
 					<entry typeCode="COMP" contextConductionInd="true">
 						<templateId root="2.16.840.1.113883.3.1818.10.3.18" />
 						<substanceAdministration classCode="SBADM" moodCode="EVN">
 							<id extension="$med.drugId" root="OSCAR.local" />
 							<code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
-		#if ( $med.isActive() )
+        #if ( $med.isActive() )
 							<statusCode code="active"/>
-		#else
+        #else
 							<statusCode code="completed"/>
-		#end
+        #end
 							<effectiveTime xsi:type="IVL_TS" operator="I">
 								<low value="$date.format('yyyyMMdd', $med.getStartDate())"/>
 								<high value="$date.format('yyyyMMdd', $med.getEndDate())" />
@@ -100,9 +100,9 @@ Medications & Prescriptions - Medication List
 							<!--end Medication Identification-->
 						</substanceAdministration>
 					</entry>
+    #end
 				</section>
 			</component>
-	#end
 #else
 			<component typeCode="COMP" contextConductionInd="true">
 				<section classCode="DOCSECT" moodCode="EVN">
