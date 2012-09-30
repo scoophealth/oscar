@@ -39,7 +39,10 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.oscarehr.common.dao.QuickListDao;
+import org.oscarehr.common.model.QuickList;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -91,10 +94,14 @@ public class dxResearchUpdateQuickListAction extends Action {
                         else{
                             sql = "select * from quickList where quickListName = '" + quickListName + "' AND dxResearchCode='"+xml_research[i]+"' AND codingSystem='"+codingSystem+"'";
                             ResultSet rs = DBHandler.GetSQL(sql);                            
-                            if(!rs.next()){                                                            
-                                sql = "insert into quickList (quickListName, dxResearchCode, createdByProvider, codingSystem) values('"
-                                        + quickListName +"','" + xml_research[i] + "','" + curUser +"', '"+codingSystem+"')";
-                                DBHandler.RunSQL(sql);
+                            if(!rs.next()){      
+                            	QuickList ql = new QuickList();
+                            	ql.setQuickListName(quickListName);
+                            	ql.setDxResearchCode( xml_research[i]);
+                            	ql.setCreatedByProvider(curUser);
+                            	ql.setCodingSystem(codingSystem);
+                            	QuickListDao dao = SpringUtils.getBean(QuickListDao.class);
+                            	dao.persist(ql);                               
                             }
                         }
                         

@@ -27,9 +27,15 @@ package oscar.oscarTickler;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.caisi.dao.TicklerDAO;
+import org.caisi.model.Tickler;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -65,25 +71,23 @@ public class TicklerData {
          date = "'"+StringEscapeUtils.escapeSql(service_date)+"'";
       }
       
-      String sql = "insert into tickler (demographic_no, message, status, update_date, service_date, creator, priority, task_assigned_to) "
-                  +" values "
-                  +"('"+StringEscapeUtils.escapeSql(demographic_no)+"', "
-                  +" '"+StringEscapeUtils.escapeSql(message)+"', "
-                  +" '"+StringEscapeUtils.escapeSql(status)+"', "
-                  //+" '"+StringEscapeUtils.escapeSql(demographic_no)+"', "
-                  +" now(), "                    
-                  +" "+date+", "
-                  +" '"+StringEscapeUtils.escapeSql(creator)+"', "
-                  +" '"+StringEscapeUtils.escapeSql(priority)+"', "
-                  +" '"+StringEscapeUtils.escapeSql(task_assigned_to)+"')";  
-
-      try {         
-         
-            DBHandler.RunSQL(sql);         
-      } catch (SQLException e) {         
-         MiscUtils.getLogger().error("Error", e);
-         MiscUtils.getLogger().error("Error", e);
-      }      
+      SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+      	Tickler t = new Tickler();
+		t.setDemographic_no(demographic_no);
+		t.setMessage(message);
+		t.setStatus(status.toCharArray()[0]);
+		t.setUpdate_date(new Date());
+		try {
+			t.setService_date(formatter.parse(service_date));
+		}catch(ParseException e) {
+			MiscUtils.getLogger().error("Error",e);
+			t.setService_date(new Date());
+		}
+		t.setCreator(creator);
+		t.setPriority(priority);
+		t.setTask_assigned_to(task_assigned_to);
+		TicklerDAO dao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
+		dao.saveTickler(t);
    }
    
    public boolean hasTickler(String demographic,String task_assigned_to,String message){

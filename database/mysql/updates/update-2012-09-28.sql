@@ -10,3 +10,6 @@ CREATE TABLE `formNoShowPolicy` (
   `formVersion` varchar(10),
   PRIMARY KEY (`ID`)
 );
+
+alter table quickList modify createdByProvider varchar(20);
+

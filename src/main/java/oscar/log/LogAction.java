@@ -25,7 +25,6 @@
 
 package oscar.log;
 
-import java.sql.SQLException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -37,8 +36,6 @@ import org.oscarehr.util.DeamonThreadFactory;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-
-import oscar.oscarDB.DBPreparedHandler;
 
 public class LogAction {
 	private static Logger logger = MiscUtils.getLogger();
@@ -128,18 +125,4 @@ public class LogAction {
 		}
 	}
 
-	public static boolean logAccess(String provider_no, String className, String method, String programId, String shelterId, String clientId, String queryStr, String sessionId, long timeSpan, String ex, int result) {
-		boolean ret = false;
-		DBPreparedHandler db = new DBPreparedHandler();
-		String sql = "insert into access_log (Id,provider_no,ACTIONCLASS,METHOD,QUERYSTRING,PROGRAMID,SHELTERID,CLIENTID,TIMESPAN,EXCEPTION,RESULT, SESSIONID)";
-		sql += " values(seq_log_id.nextval,'" + provider_no + "', '" + className + "','" + method + "',";
-		sql += "'" + queryStr + "'," + programId + "," + shelterId + "," + clientId + "," + String.valueOf(timeSpan) + ",'" + ex + "'," + result + ",'" + sessionId + "')";
-		try {
-			db.queryExecuteUpdate(sql);
-			ret = true;
-		} catch (SQLException e) {
-			logger.error("Error", e);
-		}
-		return ret;
-	}
 }
