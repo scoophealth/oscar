@@ -27,6 +27,7 @@ package oscar.oscarResearch.oscarDxResearch.pageUtil;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -38,7 +39,10 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.oscarehr.common.dao.DxresearchDAO;
+import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.util.ParameterActionForward;
@@ -128,10 +132,17 @@ public class dxResearchAction extends Action {
                                     saveErrors(request, errors);   
                                 }
                                 else{
-                                    sql = "insert into dxresearch (demographic_no, start_date, update_date, status, dxresearch_code, coding_system) values('"
-                                            + demographicNo +"','" + nowDate + "','" + nowDate + "', 'A','" + xml_research[i]+ "','"+codingSystem+"')";
-
-                                    DBHandler.RunSQL(sql);                                                                     
+                                	Dxresearch dr = new Dxresearch();
+                                	dr.setDemographicNo(Integer.valueOf(demographicNo));
+                                	dr.setStartDate(new Date());
+                                	dr.setUpdateDate(new Date());
+                                	dr.setStatus('A');
+                                	dr.setDxresearchCode(xml_research[i]);
+                                	dr.setCodingSystem(codingSystem);
+                                	
+                                	DxresearchDAO dao = (DxresearchDAO) SpringUtils.getBean("DxresearchDAO");
+                                	dao.persist(dr);
+                                	                                                                                                
                                 }
                         }	    
                 }

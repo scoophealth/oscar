@@ -26,10 +26,13 @@ package oscar.oscarTickler;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
+import org.caisi.dao.TicklerDAO;
+import org.caisi.model.Tickler;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -46,18 +49,19 @@ public class TicklerCreator {
    */
   public void createTickler(String demoNo, String provNo, String message) {
     if (!ticklerExists(demoNo, message)) {
-      SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
-      String nowDate = fmt.format(new java.util.Date());
-      String sql = "insert into tickler (demographic_no, message, status, update_date, service_date, creator, priority, task_assigned_to) " +
-          " values(" + demoNo + " ,'" + message + "','A',now(),'" + nowDate +
-          "','" + provNo + "','4','" + provNo + "')";
-      
-      try {
-        
-        DBHandler.RunSQL(sql);
-      }
-      catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
-      }
+    	Tickler t = new Tickler();
+    	t.setDemographic_no(demoNo);
+    	t.setMessage(message);
+    	t.setStatus('A');
+    	t.setUpdate_date(new Date());
+    	t.setService_date(new Date());
+    	t.setCreator(provNo);
+    	t.setPriority("4");
+    	t.setTask_assigned_to(provNo);
+    	TicklerDAO dao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
+    	dao.saveTickler(t);
+    	
+
     }
   }
 
@@ -91,20 +95,6 @@ public class TicklerCreator {
     }
     return false;
 
-  }
-
-  public void resolveTickler(String demoNo, String remString) {
-    String sql = "delete from tickler where demographic_no = '" +
-        demoNo + "'" +
-        " and message like '%" + remString + "%'" +
-        " and status = 'A'";
-    
-    try {
-      
-      DBHandler.RunSQL(sql);
-    }
-    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
-    }
   }
 
   /**
