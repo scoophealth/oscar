@@ -7114,7 +7114,7 @@ CREATE TABLE providerLabRouting (
 CREATE TABLE quickList(
   `id` int(10) not null auto_increment primary key,
   quickListName varchar(255) NOT NULL,
-  createdByProvider int(10),
+  createdByProvider varchar(20),
   dxResearchCode varchar(10),
   codingSystem varchar(20)
 ) ;
