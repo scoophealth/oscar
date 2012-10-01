@@ -337,8 +337,7 @@ public abstract class BaseAction extends DispatchAction {
             	clientId = (String) actionParam.get("clientId"); 
             }
         }
-        oscar.log.LogAction.logAccess(providerNo, className, method, programId.toString(), shelterId.toString(), clientId, queryString, sessionId, timeSpan, ExName, result);
-		
+       
 	}
 	protected String getClientId(HttpServletRequest request){
 		String clientId=request.getParameter("demoNo");
