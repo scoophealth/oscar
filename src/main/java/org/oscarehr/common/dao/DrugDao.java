@@ -309,7 +309,7 @@ public class DrugDao extends AbstractDao<Drug> {
 		query.setParameter("id", demographicNo);
 		Integer result = (Integer) query.getSingleResult();
 		if (result == null) return 0;
-		return result.intValue();
+		return result;
 	}
 
 	public Drug findByEverything(String providerNo, int demographicNo, Date rxDate, Date endDate, Date writtenDate, String brandName, int gcn_SEQNO, String customName, float takeMin, float takeMax, String frequencyCode, String duration, String durationUnit, String quantity, String unitName, int repeat, Date lastRefillDate, boolean nosubs, boolean prn, String escapedSpecial, String outsideProviderName, String outsideProviderOhip, boolean customInstr, boolean longTerm, boolean customNote, boolean pastMed,
@@ -427,7 +427,7 @@ public class DrugDao extends AbstractDao<Drug> {
 
 	@SuppressWarnings("unchecked")
     public Integer findLastNotArchivedId(String brandName, String genericName, int demographicNo) {
-		Query query = createQuery("SELECT max(d.id)", "d", "d.archived = 0 AND d.archivedReason='' AND d.brandName = :bn AND d.genericName = :gn  AND d.demographicId = :dn");
+		Query query = entityManager.createQuery("SELECT max(d.id) from Drug d where d.archived = 0 AND d.archivedReason='' AND d.brandName = :bn AND d.genericName = :gn  AND d.demographicId = :dn");
 		query.setParameter("bn", brandName);
 		query.setParameter("gn", genericName);
 		query.setParameter("dn", demographicNo);
@@ -449,7 +449,7 @@ public class DrugDao extends AbstractDao<Drug> {
 
 	@SuppressWarnings("unchecked")
     public List<String> findSpecialInstructions() {
-		Query query = createQuery("SELECT DISTINCT d.special_instruction", "d", "d.special_instruction IS NOT NULL");
+		Query query = entityManager.createQuery("SELECT DISTINCT d.special_instruction from Drug d where d.special_instruction IS NOT NULL");
 	    return query.getResultList();
     }
 }
