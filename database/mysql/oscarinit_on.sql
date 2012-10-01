@@ -1508,7 +1508,7 @@ CREATE TABLE billing_on_eareport (
   billing_no int(6),
   ref_no varchar(6),
   facility varchar(4),
-  admitted_date varchar(8),
+  admitted_date date,
   claim_error varchar(20),
   code varchar(5),
   fee varchar(10), 
@@ -1537,7 +1537,8 @@ CREATE TABLE billing_on_ext (
   status char(1) default '1',
   PRIMARY KEY  (id),
   key (key_val),
-  key (billing_no)
+  key (billing_no),
+  payment_id int(10) NOT NULL
 ) ;
 
 CREATE TABLE ctl_billingtype (
