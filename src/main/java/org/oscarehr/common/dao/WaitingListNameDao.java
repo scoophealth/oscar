@@ -24,8 +24,12 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Query;
 
+import org.oscarehr.common.model.MyGroup;
 import org.oscarehr.common.model.WaitingListName;
 import org.springframework.stereotype.Repository;
 
@@ -47,4 +51,22 @@ public class WaitingListNameDao extends AbstractDao<WaitingListName> {
 		query.setMaxResults(1);
 		return (Long) query.getSingleResult();
 	}
+	
+
+    public List<WaitingListName> findByMyGroups(List<MyGroup> myGroups) {
+    	List<String> groupIds = new ArrayList<String>();
+    	for(MyGroup mg:myGroups) {
+    		groupIds.add(mg.getId().getMyGroupNo());
+    	}
+    	groupIds.add(".default");
+    	
+    	String sql = "select x from WaitingListName x where x.groupNo IN (:groupNo) and x.isHistory='N' order by x.name ASC";
+    	Query query = entityManager.createQuery(sql);
+    	query.setParameter("groupNo",groupIds);
+
+        @SuppressWarnings("unchecked")
+        List<WaitingListName> results = query.getResultList();
+        return results;
+    }
+    
 }
