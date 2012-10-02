@@ -33,11 +33,9 @@ import org.apache.commons.lang.StringUtils;
 import org.oscarehr.common.NativeSql;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.util.MiscUtils;
-import org.springframework.stereotype.Repository;
 
 import oscar.util.ConversionUtils;
 
-@Repository
 public class DrugDao extends AbstractDao<Drug> {
 
 	public DrugDao() {
