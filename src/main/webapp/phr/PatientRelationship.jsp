@@ -22,7 +22,9 @@
     Hamilton
     Ontario, Canada
 
---%><%-- TODO:Only works for local patients right now. Not sure if that's a big deal. Probably should be a warning that this isn't a local patient --%>
+--%>
+
+<%-- TODO:Only works for local patients right now. Not sure if that's a big deal. Probably should be a warning that this isn't a local patient --%>
 <%@page import="org.apache.http.HttpRequest"%>
 <%@page import="org.oscarehr.util.MiscUtils" %>
 <%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
@@ -37,11 +39,12 @@
 PHRAuthentication phrAuthentication=MyOscarUtils.getPHRAuthentication(session);
 String myOscarUserName = getWebMember(request,"myOscarUserName");
 String demographic = getWebMember(request,"demoNo");
+Long myOscarUserId=MyOscarUtils.getMyOscarUserId(session, myOscarUserName);
 
 
 
 if(phrAuthentication !=null && myOscarUserName != null && demographic != null){ 
-	if(!MyOscarServerRelationManager.hasPatientRelationship(phrAuthentication,myOscarUserName)){ %>
+	if(!MyOscarServerRelationManager.hasPatientRelationship(phrAuthentication,myOscarUserId)){ %>
     	<span id="relationshipMessage" style="color:red; font-size:x-small;padding-left:3px;"><bean:message key="phr.verification.patient.not.respond" />
       		<a id="relationshipAdder" href="javascript:void();"><bean:message key="phr.verification.addPatientRelationship"/></a>
       	</span>
