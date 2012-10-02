@@ -25,6 +25,10 @@
 /************init global data methods*****************/
 var oldestLab = null;
 
+function saveNext(docid) {
+	updateDocumentAndNext('forms_'+docid);
+}
+
 function initPatientIds(s){
 	var r= new Array();
 	var t=s.split(',');
@@ -1358,6 +1362,7 @@ function focusFirstDocLab(){
 /***methos for showDocument.jsp***/
 function updateGlobalDataAndSideNav(doclabid,patientId){
 	doclabid=doclabid.replace(/\s/g,'');
+	
 	if(doclabid.length>0){
 		//delete doclabid from not assigned list
 		var na=patientDocs['-1'];
@@ -1502,6 +1507,48 @@ function  popupStart(vheight,vwidth,varpage,windowname) {
 	//oscarLog(windowprops);
 	var popup=window.open(varpage, windowname, windowprops);
 }
+
+function updateDocumentAndNext(eleId){//save doc info
+	var url="../dms/ManageDocument.do",data=$(eleId).serialize(true);
+	new Ajax.Request(url,
+			{
+				method:'post',
+				parameters:data,
+				onSuccess:function(transport){
+					var json=transport.responseText.evalJSON();
+					var patientId;
+					//oscarLog(json);
+					if(json!=null ){
+						patientId=json.patientId;
+						
+						var ar=eleId.split("_");
+						var num=ar[1];
+						num=num.replace(/\s/g,'');
+						$("saveSucessMsg_"+num).show();
+						$('saved'+num).value='true';
+						$("msgBtn_"+num).onclick = function() { popup(700,960,'/oscar/oscarMessenger/SendDemoMessage.do?demographic_no='+patientId,'msg'); };
+						//Hide document						
+						Effect.BlindUp('labdoc_'+num);
+
+						var success= updateGlobalDataAndSideNav(num,patientId);
+						if(success){
+						
+							success=updatePatientDocLabNav(num,patientId);
+							if(success){
+								//disable demo input
+								$('autocompletedemo'+num).disabled=true;
+								
+								//console.log('updated by save');
+								//console.log(patientDocs);
+							}
+						}
+					}
+				}
+			}
+	);
+	return false;
+}
+
 function updateDocument(eleId){//save doc info
 	var url="../dms/ManageDocument.do",data=$(eleId).serialize(true);
 	new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
