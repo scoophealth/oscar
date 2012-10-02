@@ -22,11 +22,9 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.document.model;
 
 import java.io.Serializable;
-
 
 /**
  * This is an object that contains data related to the document table.
@@ -37,7 +35,7 @@ import java.io.Serializable;
  *  table="document"
  */
 
-public  class Document  implements Serializable {
+public class Document implements Serializable {
 
 	public static String REF = "Document";
 	public static String PROP_STATUS = "status";
@@ -53,45 +51,6 @@ public  class Document  implements Serializable {
 	public static String PROP_DOCTYPE = "doctype";
 	public static String PROP_NUMBEROFPAGES = "numberOfPages";
 
-	// constructors
-	public Document () {
-		initialize();
-	}
-
-	/**
-	 * Constructor for primary key
-	 */
-	public Document (java.lang.Long id) {
-		this.setId(id);
-		initialize();
-	}
-
-	/**
-	 * Constructor for required fields
-	 */
-	public Document (
-		java.lang.Long id,
-		java.lang.String docdesc,
-		java.lang.String docfilename,
-		java.lang.String doccreator,
-		java.lang.String status,
-		java.lang.String contenttype,
-		java.lang.Byte m_public) {
-
-		this.setId(id);
-		this.setDocdesc(docdesc);
-		this.setDocfilename(docfilename);
-		this.setDoccreator(doccreator);
-		this.setStatus(status);
-		this.setContenttype(contenttype);
-		this.setPublic(m_public);
-		initialize();
-	}
-
-	protected void initialize () {}
-
-
-
 	private int hashCode = Integer.MIN_VALUE;
 
 	// primary key
@@ -106,19 +65,130 @@ public  class Document  implements Serializable {
 	private java.util.Date updatedatetime;
 	private java.lang.String status;
 	private java.lang.String contenttype;
-	private java.lang.Byte m_public;
+	private java.lang.Byte m_public; //
 	private java.util.Date observationdate;
-	private Integer numberOfPages;
+	private Integer numberOfPages; //
+	private String source;
+	private java.util.Date reviewdatetime;
+	private int appointmentNo;
+	private String docClass;
+	private String docSubClass;
+	private String responsible;
+	private String sourceFacility;
+	private int programId;
+	private String reviewer;
 
+	// constructors
+	public Document() {
+	}
 
+	/**
+	 * Constructor for primary key
+	 */
+	public Document(java.lang.Long id) {
+		this.setId(id);
+	}
+
+	/**
+	 * Constructor for required fields
+	 */
+	public Document(java.lang.Long id, java.lang.String docdesc, java.lang.String docfilename, java.lang.String doccreator, java.lang.String status, java.lang.String contenttype, java.lang.Byte m_public) {
+		this.setId(id);
+		this.setDocdesc(docdesc);
+		this.setDocfilename(docfilename);
+		this.setDoccreator(doccreator);
+		this.setStatus(status);
+		this.setContenttype(contenttype);
+		this.setPublic(m_public);
+	}
+
+	public java.lang.Byte getM_public() {
+		return m_public;
+	}
+
+	public void setM_public(java.lang.Byte m_public) {
+		this.m_public = m_public;
+	}
+
+	public String getDocClass() {
+		return docClass;
+	}
+
+	public void setDocClass(String docClass) {
+		this.docClass = docClass;
+	}
+
+	public String getDocSubClass() {
+		return docSubClass;
+	}
+
+	public void setDocSubClass(String docSubClass) {
+		this.docSubClass = docSubClass;
+	}
+
+	public String getResponsible() {
+		return responsible;
+	}
+
+	public void setResponsible(String responsible) {
+		this.responsible = responsible;
+	}
+
+	public String getSourceFacility() {
+		return sourceFacility;
+	}
+
+	public void setSourceFacility(String sourceFacility) {
+		this.sourceFacility = sourceFacility;
+	}
+
+	public int getProgramId() {
+		return programId;
+	}
+
+	public void setProgramId(int programId) {
+		this.programId = programId;
+	}
+
+	public String getReviewer() {
+		return reviewer;
+	}
+
+	public void setReviewer(String reviewer) {
+		this.reviewer = reviewer;
+	}
+
+	public java.util.Date getReviewdatetime() {
+		return reviewdatetime;
+	}
+
+	public void setReviewdatetime(java.util.Date reviewdatetime) {
+		this.reviewdatetime = reviewdatetime;
+	}
+
+	public int getAppointmentNo() {
+		return appointmentNo;
+	}
+
+	public void setAppointmentNo(int appointmentNo) {
+		this.appointmentNo = appointmentNo;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
 
 	/**
 	 * Return the unique identifier of this class
-     * @hibernate.id
-     *  generator-class="native"
-     *  column="document_no"
-     */
-	public java.lang.Long getId () {
+	 * @hibernate.id
+	 *  generator-class="native"
+	 *  column="document_no"
+	 */
+	public java.lang.Long getId() {
 		return id;
 	}
 
@@ -126,18 +196,15 @@ public  class Document  implements Serializable {
 	 * Set the unique identifier of this class
 	 * @param id the new ID
 	 */
-	public void setId (java.lang.Long id) {
+	public void setId(java.lang.Long id) {
 		this.id = id;
 		this.hashCode = Integer.MIN_VALUE;
 	}
 
-
-
-
 	/**
 	 * Return the value associated with the column: doctype
 	 */
-	public java.lang.String getDoctype () {
+	public java.lang.String getDoctype() {
 		return doctype;
 	}
 
@@ -145,16 +212,14 @@ public  class Document  implements Serializable {
 	 * Set the value related to the column: doctype
 	 * @param doctype the doctype value
 	 */
-	public void setDoctype (java.lang.String doctype) {
+	public void setDoctype(java.lang.String doctype) {
 		this.doctype = doctype;
 	}
-
-
 
 	/**
 	 * Return the value associated with the column: docdesc
 	 */
-	public java.lang.String getDocdesc () {
+	public java.lang.String getDocdesc() {
 		return docdesc;
 	}
 
@@ -162,16 +227,14 @@ public  class Document  implements Serializable {
 	 * Set the value related to the column: docdesc
 	 * @param docdesc the docdesc value
 	 */
-	public void setDocdesc (java.lang.String docdesc) {
+	public void setDocdesc(java.lang.String docdesc) {
 		this.docdesc = docdesc;
 	}
-
-
 
 	/**
 	 * Return the value associated with the column: docxml
 	 */
-	public java.lang.String getDocxml () {
+	public java.lang.String getDocxml() {
 		return docxml;
 	}
 
@@ -179,16 +242,14 @@ public  class Document  implements Serializable {
 	 * Set the value related to the column: docxml
 	 * @param docxml the docxml value
 	 */
-	public void setDocxml (java.lang.String docxml) {
+	public void setDocxml(java.lang.String docxml) {
 		this.docxml = docxml;
 	}
-
-
 
 	/**
 	 * Return the value associated with the column: docfilename
 	 */
-	public java.lang.String getDocfilename () {
+	public java.lang.String getDocfilename() {
 		return docfilename;
 	}
 
@@ -196,16 +257,14 @@ public  class Document  implements Serializable {
 	 * Set the value related to the column: docfilename
 	 * @param docfilename the docfilename value
 	 */
-	public void setDocfilename (java.lang.String docfilename) {
+	public void setDocfilename(java.lang.String docfilename) {
 		this.docfilename = docfilename;
 	}
-
-
 
 	/**
 	 * Return the value associated with the column: doccreator
 	 */
-	public java.lang.String getDoccreator () {
+	public java.lang.String getDoccreator() {
 		return doccreator;
 	}
 
@@ -213,16 +272,14 @@ public  class Document  implements Serializable {
 	 * Set the value related to the column: doccreator
 	 * @param doccreator the doccreator value
 	 */
-	public void setDoccreator (java.lang.String doccreator) {
+	public void setDoccreator(java.lang.String doccreator) {
 		this.doccreator = doccreator;
 	}
-
-
 
 	/**
 	 * Return the value associated with the column: updatedatetime
 	 */
-	public java.util.Date getUpdatedatetime () {
+	public java.util.Date getUpdatedatetime() {
 		return updatedatetime;
 	}
 
@@ -230,16 +287,14 @@ public  class Document  implements Serializable {
 	 * Set the value related to the column: updatedatetime
 	 * @param updatedatetime the updatedatetime value
 	 */
-	public void setUpdatedatetime (java.util.Date updatedatetime) {
+	public void setUpdatedatetime(java.util.Date updatedatetime) {
 		this.updatedatetime = updatedatetime;
 	}
-
-
 
 	/**
 	 * Return the value associated with the column: status
 	 */
-	public java.lang.String getStatus () {
+	public java.lang.String getStatus() {
 		return status;
 	}
 
@@ -247,16 +302,14 @@ public  class Document  implements Serializable {
 	 * Set the value related to the column: status
 	 * @param status the status value
 	 */
-	public void setStatus (java.lang.String status) {
+	public void setStatus(java.lang.String status) {
 		this.status = status;
 	}
-
-
 
 	/**
 	 * Return the value associated with the column: contenttype
 	 */
-	public java.lang.String getContenttype () {
+	public java.lang.String getContenttype() {
 		return contenttype;
 	}
 
@@ -264,16 +317,14 @@ public  class Document  implements Serializable {
 	 * Set the value related to the column: contenttype
 	 * @param contenttype the contenttype value
 	 */
-	public void setContenttype (java.lang.String contenttype) {
+	public void setContenttype(java.lang.String contenttype) {
 		this.contenttype = contenttype;
 	}
-
-
 
 	/**
 	 * Return the value associated with the column: public
 	 */
-	public java.lang.Byte getPublic () {
+	public java.lang.Byte getPublic() {
 		return m_public;
 	}
 
@@ -281,16 +332,14 @@ public  class Document  implements Serializable {
 	 * Set the value related to the column: public
 	 * @param m_public the public value
 	 */
-	public void setPublic (java.lang.Byte m_public) {
+	public void setPublic(java.lang.Byte m_public) {
 		this.m_public = m_public;
 	}
-
-
 
 	/**
 	 * Return the value associated with the column: observationdate
 	 */
-	public java.util.Date getObservationdate () {
+	public java.util.Date getObservationdate() {
 		return observationdate;
 	}
 
@@ -298,10 +347,10 @@ public  class Document  implements Serializable {
 	 * Set the value related to the column: observationdate
 	 * @param observationdate the observationdate value
 	 */
-	public void setObservationdate (java.util.Date observationdate) {
+	public void setObservationdate(java.util.Date observationdate) {
 		this.observationdate = observationdate;
 	}
-	
+
 	/**
 	 * Return the value associated with the column: number_of_pages
 	 */
@@ -317,20 +366,11 @@ public  class Document  implements Serializable {
 		this.numberOfPages = numberOfPages;
 	}
 
-        public String toString(){
-           return "doctype "+ doctype
-                 +" docdesc "+docdesc
-                 +" docxml "+docxml
-                 +" docfilename "+docfilename
-                 +" doccreator "+doccreator
-                 +" updatedatetime "+updatedatetime
-                 +" status "+status
-                 +" contenttype "+contenttype
-                 +" m_public "+m_public
-                 +" observationdate "+observationdate;
-        }
+	public String toString() {
+		return "doctype " + doctype + " docdesc " + docdesc + " docxml " + docxml + " docfilename " + docfilename + " doccreator " + doccreator + " updatedatetime " + updatedatetime + " status " + status + " contenttype " + contenttype + " m_public " + m_public + " observationdate " + observationdate + " source " + source;
+	}
 
-	public boolean equals (Object obj) {
+	public boolean equals(Object obj) {
 		if (null == obj) return false;
 		if (!(obj instanceof Document)) return false;
 		else {
@@ -340,7 +380,7 @@ public  class Document  implements Serializable {
 		}
 	}
 
-	public int hashCode () {
+	public int hashCode() {
 		if (Integer.MIN_VALUE == this.hashCode) {
 			if (null == this.getId()) return super.hashCode();
 			else {
@@ -350,11 +390,4 @@ public  class Document  implements Serializable {
 		}
 		return this.hashCode;
 	}
-
-
-	//public String toString () {
-	//	return super.toString();
-	//}
-
-
 }

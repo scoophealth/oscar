@@ -37,6 +37,7 @@ import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicLabResult;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DocumentResultsDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
@@ -57,6 +58,7 @@ import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
 import oscar.oscarLab.ca.bc.PathNet.PathnetResultsData;
 import oscar.oscarMDS.data.MDSResultsData;
 import oscar.oscarMDS.data.ReportStatus;
+import oscar.util.ConversionUtils;
 
 public class CommonLabResultData {
 
@@ -245,7 +247,23 @@ public class CommonLabResultData {
 	}
 
 	public ArrayList<LabResultData> populateLabsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status, String scannedDocStatus) {
-		ArrayList<LabResultData> labs = new ArrayList<LabResultData>();
+		ArrayList<LabResultData> result = new ArrayList<LabResultData>();
+		List<Integer> ids = new ArrayList<Integer>();
+		Integer parentId = ConversionUtils.fromIntString(demographicNo); 
+		ids.add(parentId);
+		
+		DemographicDao dao = SpringUtils.getBean(DemographicDao.class);
+		ids.addAll(dao.getMergedDemographics(parentId));
+		
+		for(Integer id : ids) { 
+			result.addAll(pleaseRefactorMe(providerNo, id.toString(), patientFirstName, patientLastName, patientHealthNumber, status, scannedDocStatus));
+		}
+		
+		return result;
+	}
+
+	private ArrayList<LabResultData> pleaseRefactorMe(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status, String scannedDocStatus) {
+	    ArrayList<LabResultData> labs = new ArrayList<LabResultData>();
 		oscar.oscarMDS.data.MDSResultsData mDSData = new oscar.oscarMDS.data.MDSResultsData();
 
 		OscarProperties op = OscarProperties.getInstance();
@@ -290,7 +308,7 @@ public class CommonLabResultData {
 			}
 		}
 		return labs;
-	}
+    }
 
 	public ArrayList<LabResultData> populateLabResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status, String scannedDocStatus) {
 		ArrayList<LabResultData> labs = new ArrayList<LabResultData>();

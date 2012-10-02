@@ -28,9 +28,7 @@ import java.util.List;
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.Prevention;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public class PreventionDao extends AbstractDao<Prevention> {
 
 	public PreventionDao() {

@@ -22,11 +22,9 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.document.model;
 
 import java.io.Serializable;
-
 
 /**
  * This is an object that contains data related to the ctl_document table.
@@ -37,23 +35,29 @@ import java.io.Serializable;
  *  table="ctl_document"
  */
 
-public  class CtlDocument  implements Serializable {
+public class CtlDocument implements Serializable {
 
 	public static String REF = "CtlDocument";
 	public static String PROP_STATUS = "status";
 	public static String PROP_MODULE_ID = "moduleId";
 	public static String PROP_ID = "id";
 
+	private int hashCode = Integer.MIN_VALUE;
+	// primary key
+	private CtlDocumentPK id;
+	// fields
+	private java.lang.Integer moduleId;
+	private java.lang.String status;
 
 	// constructors
-	public CtlDocument () {
+	public CtlDocument() {
 		initialize();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public CtlDocument (CtlDocumentPK id) {
+	public CtlDocument(CtlDocumentPK id) {
 		this.setId(id);
 		initialize();
 	}
@@ -61,35 +65,21 @@ public  class CtlDocument  implements Serializable {
 	/**
 	 * Constructor for required fields
 	 */
-	public CtlDocument (
-		CtlDocumentPK id,
-		java.lang.Integer moduleId) {
+	public CtlDocument(CtlDocumentPK id, java.lang.Integer moduleId) {
 
 		this.setId(id);
 		this.setModuleId(moduleId);
 		initialize();
 	}
 
-	protected void initialize () {}
-
-
-
-	private int hashCode = Integer.MIN_VALUE;
-
-	// primary key
-	private CtlDocumentPK id;
-
-	// fields
-	private java.lang.Integer moduleId;
-	private java.lang.String status;
-
-
+	protected void initialize() {
+	}
 
 	/**
 	 * Return the unique identifier of this class
-     * @hibernate.id
-     */
-	public CtlDocumentPK getId () {
+	 * @hibernate.id
+	 */
+	public CtlDocumentPK getId() {
 		return id;
 	}
 
@@ -97,18 +87,15 @@ public  class CtlDocument  implements Serializable {
 	 * Set the unique identifier of this class
 	 * @param id the new ID
 	 */
-	public void setId (CtlDocumentPK id) {
+	public void setId(CtlDocumentPK id) {
 		this.id = id;
 		this.hashCode = Integer.MIN_VALUE;
 	}
 
-
-
-
 	/**
 	 * Return the value associated with the column: module_id
 	 */
-	public java.lang.Integer getModuleId () {
+	public java.lang.Integer getModuleId() {
 		return moduleId;
 	}
 
@@ -116,16 +103,14 @@ public  class CtlDocument  implements Serializable {
 	 * Set the value related to the column: module_id
 	 * @param moduleId the module_id value
 	 */
-	public void setModuleId (java.lang.Integer moduleId) {
+	public void setModuleId(java.lang.Integer moduleId) {
 		this.moduleId = moduleId;
 	}
-
-
 
 	/**
 	 * Return the value associated with the column: status
 	 */
-	public java.lang.String getStatus () {
+	public java.lang.String getStatus() {
 		return status;
 	}
 
@@ -133,20 +118,18 @@ public  class CtlDocument  implements Serializable {
 	 * Set the value related to the column: status
 	 * @param status the status value
 	 */
-	public void setStatus (java.lang.String status) {
+	public void setStatus(java.lang.String status) {
 		this.status = status;
 	}
 
-        
-        public boolean isDemographicDocument(){
-            if(id.getModule() != null && id.getModule().equals("demographic")){
-                return true;
-            }
-            return false;
-        }
+	public boolean isDemographicDocument() {
+		if (id.getModule() != null && id.getModule().equals("demographic")) {
+			return true;
+		}
+		return false;
+	}
 
-
-	public boolean equals (Object obj) {
+	public boolean equals(Object obj) {
 		if (null == obj) return false;
 		if (!(obj instanceof CtlDocument)) return false;
 		else {
@@ -156,7 +139,7 @@ public  class CtlDocument  implements Serializable {
 		}
 	}
 
-	public int hashCode () {
+	public int hashCode() {
 		if (Integer.MIN_VALUE == this.hashCode) {
 			if (null == this.getId()) return super.hashCode();
 			else {
@@ -167,16 +150,14 @@ public  class CtlDocument  implements Serializable {
 		return this.hashCode;
 	}
 
+	public String toString() {
+		String ret = "";
+		if (id != null) {
+			ret = "doc No: " + id.getDocumentNo() + " module : " + id.getModule();
 
-	public String toString () {
-                String ret = "";
-                if (id != null){
-                    ret = "doc No: "+id.getDocumentNo()+" module : "+id.getModule();
-                    
-                }
-		ret += "module Id: "+ moduleId+ " status : "+status;
-                return ret;
+		}
+		ret += "module Id: " + moduleId + " status : " + status;
+		return ret;
 	}
-
 
 }

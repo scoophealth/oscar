@@ -137,7 +137,7 @@ public final class ProblemCheckFilter implements Filter
 
 		public void setAttribute(String arg0, Object arg1)
 		{
-			if (!(arg1 instanceof Serializable)) logger.warn("Some one putting non serialisable item into session. key="+arg0, new Exception("Non serialisable item in session"));
+			if (!(arg1 instanceof Serializable)) logger.warn("Some one putting non serialisable item into session. key="+arg0);
 
 			session.setAttribute(arg0, arg1);
 		}

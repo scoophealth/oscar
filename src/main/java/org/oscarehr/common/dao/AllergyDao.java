@@ -30,9 +30,7 @@ import java.util.List;
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.Allergy;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public class AllergyDao extends AbstractDao<Allergy> {
 
 	public AllergyDao() {
