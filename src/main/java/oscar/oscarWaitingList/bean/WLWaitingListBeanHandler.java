@@ -73,13 +73,15 @@ public class WLWaitingListBeanHandler {
                 waitingListArrayList.add(wLBean);
             }                            
             
-            sql = "SELECT * FROM waitingListName where ID="+waitingListID + " AND is_history = 'N' ";
-            log.debug(sql);
-            rs = DBHandler.GetSQL(sql);
-            if(rs.next()){
-                waitingListName = oscar.Misc.getString(rs, "name");
+            if(waitingListID != null && waitingListID.length()>0) {
+	            sql = "SELECT * FROM waitingListName where ID="+waitingListID + " AND is_history = 'N' ";
+	            log.debug(sql);
+	            rs = DBHandler.GetSQL(sql);
+	            if(rs.next()){
+	                waitingListName = oscar.Misc.getString(rs, "name");
+	            }
+	            rs.close();
             }
-            rs.close();
         }
         catch(SQLException e) {
             MiscUtils.getLogger().error("Error", e);
