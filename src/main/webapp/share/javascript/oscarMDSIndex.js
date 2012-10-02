@@ -1759,3 +1759,91 @@ function refreshView() {
 		location.search = search;
 	}
 }
+
+function showPageImg(docid,pn,cp){
+    if(docid&&pn&&cp){
+        var e=$('docImg_'+docid);
+        var url=cp+'/dms/ManageDocument.do?method=viewDocPage&doc_no='+docid+'&curPage='+pn;
+        e.setAttribute('src',url);
+    }
+}
+
+function nextPage(docid,cp){
+	var curPage=$('curPage_'+docid).value;
+	var totalPage=$('totalPage_'+docid).value;
+	curPage++;
+	if(curPage>totalPage){
+		curPage=totalPage;
+		hideNext(docid);
+		showPrev(docid);
+	}
+	$('curPage_'+docid).value=curPage;
+	$('viewedPage_'+docid).innerHTML = curPage;
+  
+        showPageImg(docid,curPage,cp);
+        if(curPage+1>totalPage){
+            hideNext(docid);
+            showPrev(docid);
+        } else{
+            showNext(docid);
+            showPrev(docid);
+        }
+}
+function prevPage(docid,cp){
+     var curPage=$('curPage_'+docid).value;
+    curPage--;
+    if(curPage<1){
+        curPage=1;
+        hidePrev(docid);
+        showNext(docid);
+    }
+    $('curPage_'+docid).value=curPage;
+    $('viewedPage_'+docid).innerHTML = curPage;
+    
+        showPageImg(docid,curPage,cp);
+       if(curPage==1){
+           hidePrev(docid);
+           showNext(docid);
+        }else{
+            showPrev(docid);
+            showNext(docid);
+        }
+
+}
+function firstPage(docid,cp){
+   $('curPage_'+docid).value=1;
+   $('viewedPage_'+docid).innerHTML = 1;
+    showPageImg(docid,1,cp);
+    hidePrev(docid);
+    showNext(docid);
+}
+function lastPage(docid,cp){
+    var totalPage=$('totalPage_'+docid).value;
+
+    $('curPage_'+docid).value=totalPage;
+    $('viewedPage_'+docid).innerHTML = totalPage;
+    showPageImg(docid,totalPage,cp);
+    hideNext(docid);
+    showPrev(docid);
+}
+function hidePrev(docid){
+    //disable previous link
+    $("prevP_"+docid).setStyle({display:'none'});
+    $("firstP_"+docid).setStyle({display:'none'});
+}
+function hideNext(docid){
+    //disable next link
+    $("nextP_"+docid).setStyle({display:'none'});
+    $("lastP_"+docid).setStyle({display:'none'});
+}
+function showPrev(docid){
+    //disable previous link
+    $("prevP_"+docid).setStyle({display:'inline'});
+    $("firstP_"+docid).setStyle({display:'inline'});
+}
+function showNext(docid){
+
+    //disable next link
+    $("nextP_"+docid).setStyle({display:'inline'});
+    $("lastP_"+docid).setStyle({display:'inline'});
+}
