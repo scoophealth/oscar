@@ -307,7 +307,7 @@ public class DrugDao extends AbstractDao<Drug> {
 	public int getMaxPosition(int demographicNo) {
 		Query query = entityManager.createQuery("SELECT MAX(d.position) FROM " + modelClass.getSimpleName() + " d WHERE d.demographicId = :id");
 		query.setParameter("id", demographicNo);
-		Long result = (Long) query.getSingleResult();
+		Integer result = (Integer) query.getSingleResult();
 		if (result == null) return 0;
 		return result.intValue();
 	}
