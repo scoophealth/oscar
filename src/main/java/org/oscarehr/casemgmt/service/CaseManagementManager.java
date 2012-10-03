@@ -69,7 +69,6 @@ import org.oscarehr.casemgmt.dao.EchartDAO;
 import org.oscarehr.casemgmt.dao.EncounterWindowDAO;
 import org.oscarehr.casemgmt.dao.HashAuditDAO;
 import org.oscarehr.casemgmt.dao.IssueDAO;
-import org.oscarehr.casemgmt.dao.MessagetblDAO;
 import org.oscarehr.casemgmt.dao.ProviderSignitureDao;
 import org.oscarehr.casemgmt.dao.RoleProgramAccessDAO;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
@@ -82,17 +81,20 @@ import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
 import org.oscarehr.casemgmt.model.EncounterWindow;
 import org.oscarehr.casemgmt.model.HashAuditImpl;
 import org.oscarehr.casemgmt.model.Issue;
-import org.oscarehr.casemgmt.model.Messagetbl;
 import org.oscarehr.casemgmt.model.base.BaseHashAudit;
 import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.DxresearchDAO;
+import org.oscarehr.common.dao.MessageTblDao;
+import org.oscarehr.common.dao.MsgDemoMapDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Dxresearch;
+import org.oscarehr.common.model.MessageTbl;
+import org.oscarehr.common.model.MsgDemoMap;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.util.LoggedInInfo;
@@ -122,7 +124,6 @@ public class CaseManagementManager {
 	private CaseManagementIssueDAO caseManagementIssueDAO;
 	private IssueDAO issueDAO;
 	private CaseManagementCPPDAO caseManagementCPPDAO;
-	private MessagetblDAO messagetblDAO;
 	private EchartDAO echartDAO;
 	private ProviderDao providerDAO;
 	private DemographicDao demographicDao;
@@ -576,13 +577,19 @@ public class CaseManagementManager {
 	}
 
 	public List<LabelValueBean> getMsgBeans(Integer demographicNo) {
-		Iterator<Messagetbl> iter = messagetblDAO.getMsgByDemoNo(demographicNo).iterator();
+		MsgDemoMapDao mdmd = SpringUtils.getBean(MsgDemoMapDao.class);
+		List<MsgDemoMap> mdms = mdmd.findByDemographicNo(demographicNo);
+		
+		MessageTblDao mtd = SpringUtils.getBean(MessageTblDao.class);
+		List<MessageTbl> items = mtd.findByMaps(mdms);
+		
+		Iterator<MessageTbl> iter = items.iterator();
 		ArrayList<LabelValueBean> al = new ArrayList<LabelValueBean>();
 		int i = 0;
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy.mm.dd");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		while (iter.hasNext()) {
-			Messagetbl mtbl = iter.next();
-			al.add(new LabelValueBean(new Integer(i).toString(), mtbl.getThesubject() + "-" + sdf.format(mtbl.getThedate())));
+			MessageTbl mtbl = iter.next();
+			al.add(new LabelValueBean(new Integer(i).toString(), mtbl.getSubject() + "-" + sdf.format(mtbl.getDate())));
 			i++;
 		}
 		return al;
@@ -1557,10 +1564,6 @@ public class CaseManagementManager {
 
 	public void setEchartDAO(EchartDAO echartDAO) {
 		this.echartDAO = echartDAO;
-	}
-
-	public void setMessagetblDAO(MessagetblDAO dao) {
-		this.messagetblDAO = dao;
 	}
 
 	public void setCaseManagementNoteDAO(CaseManagementNoteDAO dao) {
