@@ -1404,6 +1404,13 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
                                                <li><span class="label"><bean:message key="demographic.demographiceditdemographic.msgSpokenLang"/>:</span>
                                                    <span class="info"><%=sp_lang%></span>
 							</li>
+						<% } %>
+						
+						<% String aboriginal = apptMainBean.getString(demoExt.get("aboriginal"));
+						   if (aboriginal!=null && aboriginal.length()>0) { %>
+                                               <li><span class="label"><bean:message key="demographic.demographiceditdemographic.aboriginal"/>:</span>
+                                                   <span class="info"><%=aboriginal%></span>
+							</li>
 						<% }
 						  if (oscarProps.getProperty("EXTRA_DEMO_FIELDS") !=null){
                                               String fieldJSP = oscarProps.getProperty("EXTRA_DEMO_FIELDS");
@@ -2212,6 +2219,26 @@ if ( PatStat.equals(Dead) ) {%>
 										<% if (oscar.util.StringUtils.noNull(demographic.getCountryOfOrigin()).equals(cc.getCountryId())){out.print("SELECTED") ;}%>><%=cc.getCountryName() %></option>
 									<%}%>
 								</select></td>
+							</tr>
+							<tr valign="top">
+								<td align="right"><b><bean:message
+									key="demographic.demographiceditdemographic.aboriginal" />: </b></td>
+								<td align="left">
+								
+								<select name="aboriginal" <%=getDisabled("aboriginal")%>>
+									<option value="" <%if(aboriginal.equals("")){%>
+										selected <%}%>>Unknown</option>
+									<option value="No" <%if(aboriginal.equals("No")){%> selected
+										<%}%>>No</option>
+									<option value="Yes" <%if(aboriginal.equals("Yes")){%>
+										selected <%}%>>Yes</option>
+						
+								</select>
+								<input type="hidden" name="demo_aboriginalOrig"
+									value="<%=apptMainBean.getString(demoExt.get("aboriginal"))%>" />
+								</td>
+								<td align="right"><b>&nbsp;</b></td>
+								<td align="left">&nbsp;</td>
 							</tr>
 							<tr valign="top">
 								<td align="right"><b><bean:message

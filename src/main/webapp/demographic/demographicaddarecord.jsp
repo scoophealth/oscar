@@ -275,6 +275,8 @@
        demographicExtDao.addKey(proNo, dem, "hPhoneExt", request.getParameter("hPhoneExt"), "");
        demographicExtDao.addKey(proNo, dem, "wPhoneExt", request.getParameter("wPhoneExt"), "");
        demographicExtDao.addKey(proNo, dem, "demo_cell", request.getParameter("cellphone"), "");
+       demographicExtDao.addKey(proNo, dem, "aboriginal", request.getParameter("aboriginal"), "");
+       
        demographicExtDao.addKey(proNo, dem, "cytolNum",  request.getParameter("cytolNum"),  "");
 
        demographicExtDao.addKey(proNo, dem, "ethnicity",     request.getParameter("ethnicity"),     "");

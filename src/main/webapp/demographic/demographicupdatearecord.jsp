@@ -206,6 +206,7 @@
      String proNo = (String) session.getValue("user");
 	 String demoNo = request.getParameter("demographic_no");
 	 demographicExtDao.addKey(proNo, demoNo, "demo_cell", request.getParameter("demo_cell"), request.getParameter("demo_cellOrig"));
+	 demographicExtDao.addKey(proNo, demoNo, "aboriginal", request.getParameter("aboriginal"), request.getParameter("aboriginalOrig"));
      demographicExtDao.addKey(proNo, demoNo, "hPhoneExt", request.getParameter("hPhoneExt"), request.getParameter("hPhoneExtOrig"));
      demographicExtDao.addKey(proNo, demoNo, "wPhoneExt", request.getParameter("wPhoneExt"), request.getParameter("wPhoneExtOrig"));
      demographicExtDao.addKey(proNo, demoNo, "cytolNum",  request.getParameter("cytolNum"),  request.getParameter("cytolNumOrig"));
