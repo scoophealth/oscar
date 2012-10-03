@@ -1,6 +1,5 @@
 /**
- *
- * Copyright (c) 2005-2012. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved.
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,24 +15,32 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * This software was written for
- * Centre for Research on Inner City Health, St. Michael's Hospital,
- * Toronto, Ontario, Canada
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
+package org.oscarehr.common.model;
 
-package org.oscarehr.casemgmt.dao;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
-import java.util.List;
+@Entity
+@Table(name="msgDemoMap")
+public class MsgDemoMap extends AbstractModel<MsgDemoMapPK> {
 
-import org.oscarehr.casemgmt.model.Messagetbl;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+	@EmbeddedId     
+	private MsgDemoMapPK id;
 
-public class MessagetblDAO extends HibernateDaoSupport {
+	public MsgDemoMapPK getId() {
+		return id;
+	}
 
-    @SuppressWarnings("unchecked")
-    public List<Messagetbl> getMsgByDemoNo(Integer demographicNo) {
-        String sql = "select mtbl from Messagetbl mtbl, Msgdemomap mdmap where mtbl.messageid=mdmap.messageID and mdmap.demographicNo=?";
-        return getHibernateTemplate().find(sql, demographicNo);
-    }
-
+	public void setId(MsgDemoMapPK id) {
+		this.id = id;
+	}
+	
+	
 }
