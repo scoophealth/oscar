@@ -26,6 +26,10 @@ CDA Header
 		<patientRole classCode="PAT">
 			<id extension="$patient.hin" root="2BFBA1E9-79C2-4bbb-B589-41B949BD6A3B" assigningAuthorityName="BC-PHN"/>
 			<patient>
+				<name>
+					<given>$patient.firstName</given>
+					<family>$patient.lastName</family>
+				</name>
 				<administrativeGenderCode code="$patient.gender" codeSystem="2.16.840.1.113883.5.1" codeSystemName="HL7 - Administrative Gender" displayName="$patient.genderDesc"/>
 				<birthTime value="$patient.birthDate"/>
 			</patient>
