@@ -43,6 +43,11 @@
     patientArray  = searchData.getPatientTypes();
     providerArray = searchData.getProvidersWithDemographics();
     queryArray    = searchData.getQueryTypes();
+    
+    String studyId = request.getParameter("studyId");
+    if( studyId == null ) {
+		studyId = (String)request.getAttribute("studyId");
+    }
 %>
 
 <html:html>
@@ -128,6 +133,7 @@ function checkQuery() {
             </td>
             <td class="MainTableTopRowRightColumn">
             <html:form action="/report/DemographicReport" onsubmit="return checkQuery();">
+            <html:hidden property="studyId" value='<%=studyId == null ? "" : studyId%>'/>
                 <table class="TopStatusBar">
                     <tr>
                         <td >
@@ -423,8 +429,10 @@ if ( thisForm != null || thisForm.getAgeStyle() == null || thisForm.getAgeStyle(
     </table>
 <html:text property="queryName"/><br>
 <input type="submit" value="Save Query" name="query"/>
-<input type="submit" value="Run Query"  name="query"/>
-
+<input type="submit" value="Run Query"  name="query"/><br/>
+<%if( studyId != null && !studyId.equals("") && !studyId.equalsIgnoreCase("null")) {%>
+<input type="submit" value="Add to Study" name="query"/>
+<%} %>
     </td>
     <td valign=top>
 

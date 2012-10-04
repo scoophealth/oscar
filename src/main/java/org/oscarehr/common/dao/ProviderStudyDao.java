@@ -25,29 +25,32 @@
 
 package org.oscarehr.common.dao;
 
-import java.util.List;
 
 import javax.persistence.Query;
 
-import org.oscarehr.common.model.StudyData;
+import org.oscarehr.common.model.ProviderStudy;
+import org.oscarehr.common.model.ProviderStudyPK;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class StudyDataDao extends AbstractDao<StudyData>{
+public class ProviderStudyDao extends AbstractDao<ProviderStudy>{
 
-	public StudyDataDao() {
-		super(StudyData.class);
+	public ProviderStudyDao() {
+		super(ProviderStudy.class);
 	}
 
-	public List<StudyData> findByDemoAndStudy(Integer demographicNo, Integer studyId ) {
-		Query query = entityManager.createQuery("select s from StudyData s where s.demographicNo = :demoNo and s.studyNo = :studyId");
-		
-		query.setParameter("demoNo", demographicNo);
-		query.setParameter("studyId", studyId);
-		
-		@SuppressWarnings("unchecked")
-        List<StudyData> studyDataList = query.getResultList();
-		
-		return studyDataList;
+	public int removeByDemographicNo(Integer providerNo) {
+		Query query = entityManager.createQuery("delete x from ProviderStudy x where x.providerNo=?");
+		query.setParameter(1, providerNo);
+		return query.executeUpdate();
 	}
+
+	public ProviderStudy findByProviderNoAndStudyNo(String providerNo, int studyNo) {
+		ProviderStudyPK pk = new ProviderStudyPK();
+		pk.setProviderNo(providerNo);
+		pk.setStudyNo(studyNo);
+
+		return find(pk);
+	}
+
 }

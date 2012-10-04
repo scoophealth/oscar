@@ -23,31 +23,54 @@
  */
 
 
-package org.oscarehr.common.dao;
+package org.oscarehr.common.model;
 
-import java.util.List;
+import java.util.Date;
 
-import javax.persistence.Query;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
-import org.oscarehr.common.model.StudyData;
-import org.springframework.stereotype.Repository;
+@Entity
+@Table(name="providerstudy")
+public class ProviderStudy extends AbstractModel<ProviderStudyPK>{
 
-@Repository
-public class StudyDataDao extends AbstractDao<StudyData>{
+	@EmbeddedId
+	private ProviderStudyPK id;	
+	
+	@Column(name="creator")
+	private String creator;
 
-	public StudyDataDao() {
-		super(StudyData.class);
-	}
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date timestamp;
 
-	public List<StudyData> findByDemoAndStudy(Integer demographicNo, Integer studyId ) {
-		Query query = entityManager.createQuery("select s from StudyData s where s.demographicNo = :demoNo and s.studyNo = :studyId");
-		
-		query.setParameter("demoNo", demographicNo);
-		query.setParameter("studyId", studyId);
-		
-		@SuppressWarnings("unchecked")
-        List<StudyData> studyDataList = query.getResultList();
-		
-		return studyDataList;
-	}
+	public ProviderStudyPK getId() {
+    	return id;
+    }
+
+	public void setId(ProviderStudyPK id) {
+    	this.id = id;
+    }
+
+	public Date getTimestamp() {
+    	return timestamp;
+    }
+
+	public void setTimestamp(Date timestamp) {
+    	this.timestamp = timestamp;
+    }
+
+	public String getCreator() {
+    	return creator;
+    }
+
+	public void setCreator(String creator) {
+    	this.creator = creator;
+    }
+
+
+
 }

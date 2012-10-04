@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,33 +21,31 @@
  * Hamilton
  * Ontario, Canada
  */
-
-
-package org.oscarehr.common.dao;
+package org.oscarehr.study;
 
 import java.util.List;
 
-import javax.persistence.Query;
+import org.oscarehr.study.types.MyMedsStudy;
 
-import org.oscarehr.common.model.StudyData;
-import org.springframework.stereotype.Repository;
+public class StudyFactory {
 
-@Repository
-public class StudyDataDao extends AbstractDao<StudyData>{
-
-	public StudyDataDao() {
-		super(StudyData.class);
+	private static StudyFactory studyFactory = null; 
+	
+	public static StudyFactory getFactoryInstance() {
+		if( studyFactory == null ) {
+			studyFactory = new StudyFactory();
+		}
+		
+		return studyFactory;
 	}
-
-	public List<StudyData> findByDemoAndStudy(Integer demographicNo, Integer studyId ) {
-		Query query = entityManager.createQuery("select s from StudyData s where s.demographicNo = :demoNo and s.studyNo = :studyId");
+	
+	public Study makeStudy(String studyName, List<Object>args) {
 		
-		query.setParameter("demoNo", demographicNo);
-		query.setParameter("studyId", studyId);
-		
-		@SuppressWarnings("unchecked")
-        List<StudyData> studyDataList = query.getResultList();
-		
-		return studyDataList;
+		 Study study = null;
+		 if( studyName.equals(Study.MYMEDS) ) {			
+			study = new MyMedsStudy(args);			
+		 }
+		 
+		 return study;
 	}
 }

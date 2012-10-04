@@ -764,7 +764,7 @@ div.logoutBox {
 							{
 			%>
 			<li><a href="#"
-				onclick='popupPage(550,810,&quot;<html:rewrite page="/admin/demographicstudysearchresults.jsp"/>&quot;);return false;'><bean:message
+				onclick='popupPage(550,810,&quot;<html:rewrite page="/admin/demographicstudy.jsp"/>&quot;);return false;'><bean:message
 				key="admin.admin.btnStudy" /></a></li>
 			<%
 				if (oscarVariables.getProperty("billregion", "").equals("ON"))

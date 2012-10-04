@@ -316,7 +316,7 @@ if(prop!=null && prop.getValue().equalsIgnoreCase("yes")){
                                                             <%= provider.getClinicAddress() %><br>
                                                             <%= provider.getClinicCity() %>&nbsp;&nbsp;<%=provider.getClinicProvince()%>&nbsp;&nbsp;
                                                 <%= provider.getClinicPostal() %>
-                                                <% if(!provider.getPractitionerNo().equals("")){ %><br>CPSO:<%= provider.getPractitionerNo() %><% } %>
+                                                <% if(provider.getPractitionerNo() != null && !provider.getPractitionerNo().equals("")){ %><br>CPSO:<%= provider.getPractitionerNo() %><% } %>
                                                 <br>
                                                <%
                                                 	UserProperty phoneProp = userPropertyDAO.getProp(provider.getProviderNo(),"rxPhone");

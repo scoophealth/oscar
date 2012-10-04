@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,33 +21,16 @@
  * Hamilton
  * Ontario, Canada
  */
+package org.oscarehr.study;
 
-
-package org.oscarehr.common.dao;
-
-import java.util.List;
-
-import javax.persistence.Query;
-
-import org.oscarehr.common.model.StudyData;
-import org.springframework.stereotype.Repository;
-
-@Repository
-public class StudyDataDao extends AbstractDao<StudyData>{
-
-	public StudyDataDao() {
-		super(StudyData.class);
-	}
-
-	public List<StudyData> findByDemoAndStudy(Integer demographicNo, Integer studyId ) {
-		Query query = entityManager.createQuery("select s from StudyData s where s.demographicNo = :demoNo and s.studyNo = :studyId");
-		
-		query.setParameter("demoNo", demographicNo);
-		query.setParameter("studyId", studyId);
-		
-		@SuppressWarnings("unchecked")
-        List<StudyData> studyDataList = query.getResultList();
-		
-		return studyDataList;
-	}
+public interface Study {
+	
+	//Name definition of studies used by study factory to instantiate correct Study class 
+	public static final String MYMEDS = "myMeds";
+	
+	//used to create html/javascript for insertion into OSCAR jsp
+	public abstract String printInitcode();
+	
+	//logic of retrieving and storing study data
+	public abstract boolean run();
 }

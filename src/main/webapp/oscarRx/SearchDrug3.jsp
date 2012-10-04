@@ -23,6 +23,8 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.common.dao.DrugDao"%>
+<%@page import="org.oscarehr.common.model.Drug"%>
 <%@page import="org.oscarehr.util.WebUtils"%>
 <%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
 <%@page import="org.oscarehr.phr.PHRAuthentication"%>
@@ -48,6 +50,7 @@
 <%@page import="java.util.ArrayList,oscar.oscarRx.data.RxPrescriptionData"%>
 <%@page import="org.oscarehr.common.model.ProviderPreference"%>
 <%@page import="org.oscarehr.web.admin.ProviderPreferencesUIBean"%>
+<%@page import="org.oscarehr.study.StudyFactory, org.oscarehr.study.Study, org.oscarehr.study.types.MyMedsStudy" %>
 <bean:define id="patient" type="oscar.oscarRx.data.RxPatientData.Patient" name="Patient" />
 
 <%
@@ -2146,14 +2149,26 @@ function updateQty(element){
         return x;
     }
 
+    
+    
+	<%
+		ArrayList<Object> args = new ArrayList<Object>();
+		args.add(String.valueOf(bean.getDemographicNo()));
+		args.add(bean.getProviderNo());
+				
+		Study myMeds = StudyFactory.getFactoryInstance().makeStudy(Study.MYMEDS, args);
+		out.write(myMeds.printInitcode());			
+	%>
 
-    function updateSaveAllDrugsPrint(){
+
+    function updateSaveAllDrugsPrintContinue(){
     	if(!validateWrittenDate()) {
     		return false;
     	}
 		if(!validateRxDate()) {
     		return false;
     	}
+		
         var data=Form.serialize($('drugForm'));
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateSaveAllDrugs&rand="+ Math.floor(Math.random()*10001);
         new Ajax.Request(url,
@@ -2165,13 +2180,16 @@ function updateQty(element){
             }});
         return false;
     }
-    function updateSaveAllDrugs(){
+    
+    function updateSaveAllDrugsContinue(){
     	if(!validateWrittenDate()) {
     		return false;
     	}
 		if(!validateRxDate()) {
     		return false;
     	}
+		
+		
         var data=Form.serialize($('drugForm'));
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateSaveAllDrugs&rand="+ Math.floor(Math.random()*10001);
         new Ajax.Request(url,
