@@ -188,6 +188,7 @@
                                                	   	}
                                                    //enable Save button whenever a selection is made
                                                    $('save<%=docId%>').enable();
+                                                   $('saveNext<%=docId%>').enable();
 
                                                    $('nextAppointment_<%=docId%>').innerHTML = args[2][5];
 
@@ -239,6 +240,7 @@
                //enable Save button whenever a selection is made
                 addDocToList(oData[0], oData[2] + " " +oData[1], "<%=docId%>");
                 $('save<%=docId%>').enable();
+                $('saveNext<%=docId%>').enable();
 
                 myAC.getInputEl().value = '';//;oData.fname + " " + oData.lname ;
 
@@ -449,6 +451,9 @@
                                 <input type="hidden" name="providerNo" value="<%= providerNo%>" />
                                 <input type="hidden" name="ajax" value="yes" />
                             </form>
+                         </fieldset>
+                         <fieldset>
+                         	<legend><bean:message key="inboxmanager.document.Comment"/></legend>
                                 <form name="acknowledgeForm_<%=docId%>" id="acknowledgeForm_<%=docId%>" onsubmit="updateStatus('acknowledgeForm_<%=docId%>',<%=inQueueB%>);" method="post" action="javascript:void(0);">
 
                                 <table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
