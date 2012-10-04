@@ -29,25 +29,22 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import org.oscarehr.common.model.StudyData;
+import org.oscarehr.common.model.StudyDetails;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class StudyDataDao extends AbstractDao<StudyData>{
+public class StudyDetailsDao extends AbstractDao<StudyDetails>{
 
-	public StudyDataDao() {
-		super(StudyData.class);
+	public StudyDetailsDao() {
+		super(StudyDetails.class);
 	}
-
-	public List<StudyData> findByDemoAndStudy(Integer demographicNo, Integer studyId ) {
-		Query query = entityManager.createQuery("select s from StudyData s where s.demographicNo = :demoNo and s.studyNo = :studyId");
-		
-		query.setParameter("demoNo", demographicNo);
-		query.setParameter("studyId", studyId);
-		
+	
+	public List<StudyDetails> findAll() {		
+		Query query = entityManager.createQuery("select study from StudyDetails study");
 		@SuppressWarnings("unchecked")
-        List<StudyData> studyDataList = query.getResultList();
+        List<StudyDetails> returnList = query.getResultList();
 		
-		return studyDataList;
+		return returnList;
+		
 	}
 }

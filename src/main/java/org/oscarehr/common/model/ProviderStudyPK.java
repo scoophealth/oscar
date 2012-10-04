@@ -23,31 +23,57 @@
  */
 
 
-package org.oscarehr.common.dao;
+package org.oscarehr.common.model;
 
-import java.util.List;
+import java.io.Serializable;
 
-import javax.persistence.Query;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 
-import org.oscarehr.common.model.StudyData;
-import org.springframework.stereotype.Repository;
+@Embeddable
+public class ProviderStudyPK implements Serializable {
 
-@Repository
-public class StudyDataDao extends AbstractDao<StudyData>{
+	@Column(name="provider_no")
+	private String providerNo;
+	@Column(name="study_no")
+	private Integer studyNo;
 
-	public StudyDataDao() {
-		super(StudyData.class);
+
+
+	public String getProviderNo() {
+    	return providerNo;
+    }
+
+	public void setProviderNo(String providerNo) {
+    	this.providerNo = providerNo;
+    }
+
+	public Integer getStudyNo() {
+    	return studyNo;
+    }
+
+	public void setStudyNo(Integer studyNo) {
+    	this.studyNo = studyNo;
+    }
+
+	@Override
+	public String toString() {
+		return ("providerNo=" + providerNo + ", studyNo=" + studyNo);
 	}
 
-	public List<StudyData> findByDemoAndStudy(Integer demographicNo, Integer studyId ) {
-		Query query = entityManager.createQuery("select s from StudyData s where s.demographicNo = :demoNo and s.studyNo = :studyId");
-		
-		query.setParameter("demoNo", demographicNo);
-		query.setParameter("studyId", studyId);
-		
-		@SuppressWarnings("unchecked")
-        List<StudyData> studyDataList = query.getResultList();
-		
-		return studyDataList;
+	@Override
+	public int hashCode() {
+		return (Integer.parseInt(providerNo));
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		try {
+			ProviderStudyPK o1 = (ProviderStudyPK) o;
+			return ((providerNo.equals(o1.providerNo)) && (studyNo == o1.studyNo));
+		} catch (RuntimeException e) {
+			return (false);
+		}
+	}
+
 }
