@@ -38,6 +38,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.service.AcceptableUseAgreementManager;
 
 import oscar.log.LogAction;
 import oscar.log.LogConst;
@@ -65,8 +66,10 @@ public class LoginAgreementAction extends DispatchAction {
         String user = (String)request.getSession().getAttribute("user");
         if( userAgreement.equalsIgnoreCase("refuse") ) {
             _logger.info(user + " refused agreement");
-        }
-        else if( userAgreement.equalsIgnoreCase("accept") ) {
+            LogAction.addLog(user, LogConst.REFUSED, LogConst.CON_LOGIN_AGREEMENT, userAgreement, request.getRemoteAddr(),null,AcceptableUseAgreementManager.getAUAText());
+            return mapping.findForward("Logout");
+            
+        }else if( userAgreement.equalsIgnoreCase("accept") ) {
             _logger.info(user + " accepted agreement");
             Provider provider = providerDao.getProvider(user);
             Date now = new Date();
@@ -74,7 +77,7 @@ public class LoginAgreementAction extends DispatchAction {
             providerDao.updateProvider(provider);
         }
 
-        LogAction.addLog(user, LogConst.ACK, LogConst.CON_LOGIN_AGREEMENT, userAgreement, request.getRemoteAddr());
+        LogAction.addLog(user, LogConst.ACK, LogConst.CON_LOGIN_AGREEMENT, userAgreement, request.getRemoteAddr(),null,AcceptableUseAgreementManager.getAUAText());
 
         String proceedURL = (String)request.getSession().getAttribute("proceedURL");
         request.getSession().setAttribute("proceedURL", null);
