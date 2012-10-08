@@ -104,7 +104,7 @@ public class MeasurementDataAction extends DispatchAction {
 		for(String key:measurementMap.keySet()) {
 			Measurements value = measurementMap.get(key);
 			if((freshMap.get(key)==null) ||(freshMap.get(key) != null && value.getAppointmentNo() == Integer.parseInt(appointmentNo))) {
-				script.append("jQuery(\"[measurement='"+key+"']\")val(\""+value.getDataField().replace("\n", "\\n")+"\").attr({itemtime: \"" + value.getDateEntered().getTime() + "\", appointment_no: \"" + value.getAppointmentNo() + "\"});\n");
+				script.append("jQuery(\"[measurement='"+key+"']\").val(\""+value.getDataField().replace("\n", "\\n")+"\").attr({itemtime: \"" + value.getDateEntered().getTime() + "\", appointment_no: \"" + value.getAppointmentNo() + "\"});\n");
 				if(apptNo>0 && apptNo == value.getAppointmentNo()) {
 					script.append("jQuery(\"[measurement='"+key+"']\").addClass('examfieldwhite');\n");
 				}
