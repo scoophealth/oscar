@@ -26,6 +26,7 @@
 	import="java.util.*,java.sql.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="org.oscarehr.util.MiscUtils"%>
 <%//
 			//int serviceCodeLen = 5;
 			String msg = "Type in a service code and search first to see if it is available.";
@@ -38,6 +39,8 @@
 				if (request.getParameter("action").startsWith("edit")) {
 					// update the service code
 					String serviceCode = request.getParameter("service_code");
+					if (serviceCode == null)
+						serviceCode = "";
 					serviceCode = "_" + serviceCode;
 					if (serviceCode.equals(request.getParameter("action").substring("edit".length()))) {
 						if (dbObj.updateCodeByName(serviceCode, request.getParameter("description"), valuePara, "0.00",
@@ -51,7 +54,10 @@
 									+ " is <font color='red'>NOT</font> updated. Action failed! Try edit it again.";
 							action = "edit" + serviceCode;
 							prop.setProperty("service_code", serviceCode);
-							prop.setProperty("description", request.getParameter("description"));
+							String description = request.getParameter("description");
+							if (description == null)
+								description = "";
+							prop.setProperty("description", description);
 							prop.setProperty("value", request.getParameter("value"));
 							prop.setProperty("billingservice_date", request.getParameter("billingservice_date"));
                                                         prop.setProperty("gstFlag", request.getParameter("gstFlag"));
@@ -64,6 +70,8 @@
 					}
 				} else if (request.getParameter("action").startsWith("add")) {
 					String serviceCode = request.getParameter("service_code");
+					if (serviceCode == null)
+						serviceCode = "";
 					serviceCode = "_" + serviceCode;
 					if (serviceCode.equals(request.getParameter("action").substring("add".length()))) {
 						if (dbObj.addCodeByStr(serviceCode, request.getParameter("description"), valuePara, "0.00",
@@ -77,7 +85,10 @@
 									+ " is <font color='red'>NOT</font> added. Action failed! Try edit it again.";
 							action = "add" + serviceCode;
 							prop.setProperty("service_code", serviceCode);
-							prop.setProperty("description", request.getParameter("description"));
+							String description = request.getParameter("description");
+							if (description == null)
+								description = "";
+							prop.setProperty("description", description);
 							prop.setProperty("value", request.getParameter("value"));
 							prop.setProperty("billingservice_date", request.getParameter("billingservice_date"));
                                                         prop.setProperty("gstFlag", request.getParameter("gstFlag"));
@@ -97,11 +108,16 @@
 					msg = "Please type in a right service code.";
 				} else {
 					String serviceCode = request.getParameter("service_code");
+					if (serviceCode == null)
+						serviceCode = "";
 					serviceCode = "_" + serviceCode;
 					List ls = dbObj.getBillingCodeAttr(serviceCode);
 					if (ls.size() > 0) {
 						prop.setProperty("service_code", serviceCode);
-						prop.setProperty("description", "" + ls.get(1));
+						String description = (String) ls.get(1);
+						if (description == null)
+							description = "";
+						prop.setProperty("description", description);
 						prop.setProperty("value", "" + ls.get(2));
 						prop.setProperty("percentage", "" + ls.get(3));
 						prop.setProperty("billingservice_date", "" + ls.get(4));
@@ -119,6 +135,8 @@
 					msg = "Please type in a right service code.";
 				} else {
 					String serviceCode = request.getParameter("service_code");
+					if (serviceCode == null)
+						serviceCode = "";
 					serviceCode = "_" + serviceCode;
 					if (dbObj.deletePrivateCode(serviceCode)) {
 						msg = serviceCode + " is deleted.<br>"
@@ -266,11 +284,25 @@
 			<option selected="selected" value="">- choose one -</option>
 			<%//
 				List sL = dbObj.getPrivateBillingCodeDesc();
+				String strCode = "";
+				String strDesc = "";
 				for (int i = 0; i < sL.size(); i = i + 2) {
-					String strDesc = (String) sL.get(i+1);
-					strDesc = strDesc.length() > 30 ? strDesc.substring(0,30): strDesc;
-					%>
-			<option value="<%=((String) sL.get(i)).substring(1)%>"><%=((String) sL.get(i)).substring(1) + "| " + strDesc%></option>
+					try {
+						strCode = ((String) sL.get(i)).substring(1);
+					} catch (NullPointerException e) {
+						strCode = "";
+						MiscUtils.getLogger().warn("NULL value set for a private billing code");
+					}
+					
+					try {
+						strDesc = (String) sL.get(i+1);
+						strDesc = strDesc.length() > 30 ? strDesc.substring(0,30): strDesc;
+					} catch (NullPointerException e) {
+						strDesc = "";
+						MiscUtils.getLogger().warn("NULL value set for a private billing code description (code is '"+strCode+"')");
+					}
+				%>
+			<option value="<%=strCode%>"><%=(strCode + "| " + strDesc)%></option>
 			<%}
 
 				%>
