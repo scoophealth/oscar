@@ -36,7 +36,10 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.GroupsDao;
+import org.oscarehr.common.model.Groups;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarMessenger.data.MsgAddressBookMaker;
@@ -61,10 +64,12 @@ public class MsgMessengerCreateGroupAction extends Action {
               try{
                  
                  java.sql.ResultSet rs;
-                 String sql = "insert into groups_tbl (parentID,groupDesc) values ('"+parentID+"','"+grpName+"')";
-                 DBHandler.RunSQL(sql);
-
-                 
+                 GroupsDao gd = SpringUtils.getBean(GroupsDao.class);
+                 Groups g = new Groups();
+                 g.setParentId(Integer.parseInt(parentID));
+                 g.setGroupDesc(grpName);
+                 gd.persist(g);
+               
                  MsgAddressBookMaker addMake = new MsgAddressBookMaker();
                  addMake.updateAddressBook();
 

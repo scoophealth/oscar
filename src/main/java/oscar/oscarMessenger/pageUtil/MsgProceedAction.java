@@ -27,6 +27,7 @@ package oscar.oscarMessenger.pageUtil;
 
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +37,10 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.RemoteAttachmentsDao;
+import org.oscarehr.common.model.RemoteAttachments;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -75,9 +79,17 @@ public class MsgProceedAction extends Action {
             request.setAttribute("confMessage","1");
         }else{
             rs.close();
-            String sql = "insert into remoteAttachments (demographic_no,messageid, savedBy,date,time) values "
-            +"('"+demoId+"','"+id+"','"+bean.getUserName()+"','today', 'now')";
-            DBHandler.RunSQL(sql);
+            RemoteAttachments ra = new RemoteAttachments();
+            ra.setDemographicNo(Integer.parseInt(demoId));
+            ra.setMessageId(Integer.parseInt(id));
+            ra.setSavedBy(bean.getUserName());
+            ra.setDate(new Date());
+            ra.setTime(new Date());
+            
+            RemoteAttachmentsDao dao = SpringUtils.getBean(RemoteAttachmentsDao.class);
+            dao.persist(ra);
+            
+       
             request.setAttribute("confMessage","2");
 
         }
