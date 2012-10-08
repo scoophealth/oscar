@@ -65,7 +65,6 @@
 	<bean id="allergyDao" class="org.oscarehr.common.dao.AllergyMergedDemographicDao" autowire="byName" />
 	
 	<bean id="IssueDAO" class="org.oscarehr.casemgmt.dao.IssueDAO" autowire="byName" />
-	<bean id="EchartDAO" class="org.oscarehr.casemgmt.dao.EchartDAO" autowire="byName" />
 	<bean id="secroleDao" class="com.quatro.dao.security.SecroleDao" autowire="byName"/>
 	<bean id="ProviderSignitureDao" class="org.oscarehr.casemgmt.dao.ProviderSignitureDao" autowire="byName" />
 	<bean id="RoleProgramAccessDAO" class="org.oscarehr.casemgmt.dao.RoleProgramAccessDAO" autowire="byName" />
@@ -84,7 +83,6 @@
 	<bean id="demographicDao" class="org.oscarehr.common.dao.DemographicDao" autowire="byName" />
 	<bean id="secUserRoleDao" class="org.oscarehr.PMmodule.dao.SecUserRoleDao" autowire="byName" />
 	<bean id="programSignatureDao" class="org.oscarehr.PMmodule.dao.ProgramSignatureDao" autowire="byName" />
-	<bean id="chartDAOT" class="org.caisi.dao.EChartDAO" autowire="byName" />
 	<bean id="ticklerDAOT" class="org.caisi.dao.TicklerDAO" autowire="byName" />
 	<bean id="customFilterDAOT" class="org.caisi.dao.CustomFilterDAO" autowire="byName" />
 	<bean id="HashAuditDAO" class="org.oscarehr.casemgmt.dao.HashAuditDAO" autowire="byName" />
@@ -218,7 +216,6 @@
 		<property name="caseManagementIssueDAO" ref="CaseManagementIssueDAO" />
 		<property name="caseManagementCPPDAO" ref="CaseManagementCPPDAO" />
 		<property name="issueDAO" ref="IssueDAO" />
-		<property name="echartDAO" ref="EchartDAO" />
 		<property name="providerSignitureDao" ref="ProviderSignitureDao" />
 		<property name="providerDAO" ref="providerDao" />
 		<property name="demographicDao" ref="demographicDao" />
@@ -277,9 +274,6 @@
 		<property name="demographicDao" ref="demographicDao" />
 	</bean>
 	<bean id="preparedTicklerManagerT" class="org.caisi.tickler.prepared.PreparedTicklerManager" scope="singleton" />
-	<bean id="chartManagerT" class="org.caisi.service.EChartManager">
-		<property name="chartDAO" ref="chartDAOT" />
-	</bean>
 	<bean id="providerManager" class="org.oscarehr.PMmodule.service.ProviderManager" autowire="byName" />
 	<bean id="clientRestrictionManager" class="org.oscarehr.PMmodule.service.ClientRestrictionManager" autowire="byName" />
 	<bean id="AppointmentStatusMgr" class="oscar.appt.status.service.impl.AppointmentStatusMgrImpl">
