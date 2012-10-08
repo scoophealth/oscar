@@ -1661,10 +1661,10 @@
 		<action input="/oscarReport/demographicSetEdit.jsp" name="FrmForm" path="/report/SetEligibility" scope="request" type="oscar.oscarReport.pageUtil.DemographicSetEligibilityAction">
 			<forward name="success" path="/oscarReport/demographicSetEdit.jsp" />
 		</action>
-		<action input="/oscarEncounter/encounterCPP.jsp" name="FrmForm" path="/tickler/ForwardDemographicTickler" scope="request" type="oscar.oscarTickler.pageUtil.ForwardDemographicTicklerAction">
+		<action name="FrmForm" path="/tickler/ForwardDemographicTickler" scope="request" type="oscar.oscarTickler.pageUtil.ForwardDemographicTicklerAction">
 			<forward name="success" path="/tickler/ticklerAdd.jsp" />
 		</action>
-		<action input="/oscarEncounter/encounterCPP.jsp" name="FrmForm" path="/tickler/AddTickler" scope="request" type="oscar.oscarTickler.pageUtil.AddTicklerAction">
+		<action name="FrmForm" path="/tickler/AddTickler" scope="request" type="oscar.oscarTickler.pageUtil.AddTicklerAction">
 			<forward name="close" path="/close.html" />
 		</action>
 		<action input="/eform/efmformmanager.jsp" name="eFormHtmlUpload" path="/eform/uploadHtml" scope="request" type="oscar.eform.upload.HtmlUploadAction" validate="true">

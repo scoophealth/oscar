@@ -81,7 +81,7 @@ public class MyGroupPrimaryKey  implements java.io.Serializable {
 	public boolean equals(Object o) {
 		try {
 			MyGroupPrimaryKey o1 = (MyGroupPrimaryKey) o;
-			return ((myGroupNo == o1.myGroupNo) && (providerNo == o1.providerNo));
+			return ((myGroupNo .equals(o1.myGroupNo)) && (providerNo.equals(o1.providerNo)));
 		} catch (RuntimeException e) {
 			return (false);
 		}

@@ -47,7 +47,7 @@
 <%@ page import="org.oscarehr.casemgmt.model.CaseManagementNote"%>
 <%@ page import="org.oscarehr.util.SpringUtils"%>
 <%@ page import="org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.model.UserProperty" %>
-<%@ page import="oscar.oscarEncounter.oscarMeasurements.dao.*,oscar.oscarEncounter.oscarMeasurements.model.Measurementmap" %>
+<%@ page import="oscar.oscarEncounter.oscarMeasurements.dao.*,org.oscarehr.common.model.MeasurementMap, org.oscarehr.common.dao.MeasurementMapDao" %>
 <%@ page import="org.oscarehr.casemgmt.service.CaseManagementManager, org.oscarehr.common.dao.Hl7TextMessageDao, org.oscarehr.common.model.Hl7TextMessage,org.oscarehr.common.dao.Hl7TextInfoDao,org.oscarehr.common.model.Hl7TextInfo"%>
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -1121,9 +1121,9 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 
                                        String loincCode = null;
                                        try{
-                                       	List<Measurementmap> mmapList =  measurementMapDao.getMapsByIdent(handler.getOBXIdentifier(j, k));
+                                       	List<MeasurementMap> mmapList =  measurementMapDao.getMapsByIdent(handler.getOBXIdentifier(j, k));
                                        	if (mmapList.size()>0) {
-	                                    	Measurementmap mmap =mmapList.get(0);
+	                                    	MeasurementMap mmap =mmapList.get(0);
 	                                       	loincCode = mmap.getLoincCode();
                                        	}
                                        }catch(Exception e){
