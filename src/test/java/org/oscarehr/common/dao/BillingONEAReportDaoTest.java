@@ -24,13 +24,18 @@
 package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
@@ -52,31 +57,59 @@ public class BillingONEAReportDaoTest extends DaoTestFixtures {
 	 *  Ensures GetBillingErrorsList method returns all errors in the list.
 	 */
 	public void testGetBillingErrorsListData() throws Exception {
+		boolean dataIsAccurate = false;
 		BillingONEAReport eaRpt = createReport(1);
-		eaRpt.setClaimError("11111111111111111111");
-		eaRpt.setCodeError("22222222222222222222");
+		eaRpt.setClaimError("error01");
+		eaRpt.setCodeError("error02");
 		dao.persist(eaRpt);
 		
 		List<String> eaReportErrors = dao.getBillingErrorList(eaRpt.getBillingNo());
-		assertEquals("11111111111111111111", eaReportErrors.get(0));
-		assertEquals("22222222222222222222", eaReportErrors.get(1));
+		if (eaReportErrors.get(0).equals("error01") 
+				&& eaReportErrors.get(1).equals("error02"))
+		{
+			dataIsAccurate = true;
+		}
+		
+		assertTrue(dataIsAccurate);
 	}
+	
+	
+	@Ignore @Test (expected = IllegalArgumentException.class)
+	/**
+	 *  Ensure invalid billing numbers are not acceptable.
+	 *  To be implemented as validation is implemented on dao method parameters.
+	 */
+	public void testGetBillingErrorsListInvalidBillNo() throws Exception {
+		// Create billing report using a negative billing number.
+		BillingONEAReport eaRpt = createReport(-1);
+		eaRpt.setClaimError("error01");
+		eaRpt.setCodeError("error02");
+		dao.persist(eaRpt);
+		
+		List<String> eaReportErrors = dao.getBillingErrorList(eaRpt.getBillingNo());
+	}
+	
 	
 	
 	@Test
 	/**
-	 *  Tests limit of billing number ( currently set to int(6) )
+	 *  Ensure that all errors are trimmed before 
+	 *  they are added to the errors list.
 	 */
-	public void testGetBillingErrorsListBillingNumberHigh() throws Exception {
-		BillingONEAReport eaRpt = createReport(1000000);
-		eaRpt.setClaimError("11111111111111111111");
-		eaRpt.setCodeError("22222222222222222222");
+	public void testGetBillingErrorsListTrim() throws Exception {
+		BillingONEAReport eaRpt = createReport(1);
+		eaRpt.setClaimError("   ");
+		eaRpt.setCodeError("   error02    ");
 		dao.persist(eaRpt);
 		
 		List<String> eaReportErrors = dao.getBillingErrorList(eaRpt.getBillingNo());
-		assertEquals("11111111111111111111", eaReportErrors.get(0));
-		assertEquals("22222222222222222222", eaReportErrors.get(1));
+		List<String> expectedList = new ArrayList<String>(Arrays.asList("error02"));
+		
+		// This one comparison validates that errors are trimmed,
+		// and that blank errors are not added to the list of errors.
+		assertEquals(eaReportErrors, expectedList);
 	}
+	
 	
 	@Test
 	/**
@@ -86,39 +119,54 @@ public class BillingONEAReportDaoTest extends DaoTestFixtures {
 	public void testGetBillingErrorsListOrder() throws Exception {
 		DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
 		
-		// Build 3 new reports with different process dates.
+		// Build 3 new error reports with different process dates.
 		// Add a claims error and code error to each.
+		
+		// oldest report; errors should be at the bottom of the list
 		BillingONEAReport eaRpt1 = createReport(1);
 		Date Date1 = new Date(dfm.parse("20090101").getTime());
 		eaRpt1.setProcessDate(Date1);
-		eaRpt1.setClaimError("11111111111111111111");
-		eaRpt1.setCodeError("11111111111111111111");
+		eaRpt1.setClaimError("error01");
+		eaRpt1.setCodeError("error01");
 		
+		// central report; errors should be in the middle of the list
 		BillingONEAReport eaRpt2 = createReport(1);
 		Date Date2 = new Date(dfm.parse("20100101").getTime());
 		eaRpt2.setProcessDate(Date2);
-		eaRpt2.setClaimError("22222222222222222222");
-		eaRpt2.setCodeError("22222222222222222222");
+		eaRpt2.setClaimError("error02");
+		eaRpt2.setCodeError("error02");
 		
+		// newest report; errors, should be at top of list
 		BillingONEAReport eaRpt3 = createReport(1);
 		Date Date3 = new Date(dfm.parse("20110101").getTime());
 		eaRpt3.setProcessDate(Date3);
-		eaRpt3.setClaimError("33333333333333333333");
-		eaRpt3.setCodeError("33333333333333333333");
+		eaRpt3.setClaimError("error03");
+		eaRpt3.setCodeError("error03");
 		
 		dao.persist(eaRpt1);
 		dao.persist(eaRpt2);
 		dao.persist(eaRpt3);
 		
 		List<String> eaReportErrors = dao.getBillingErrorList(eaRpt1.getBillingNo());
+		List<String> expectedResult = new ArrayList<String>(Arrays.asList(
+				"error03",
+				"error03",
+				"error02",
+				"error02",
+				"error01",
+				"error01"));
 		
-		// Expected results are reverse because query performs "ORDER BY processDate desc"
-		assertEquals("33333333333333333333", eaReportErrors.get(0));
-		assertEquals("33333333333333333333", eaReportErrors.get(1));
-		assertEquals("22222222222222222222", eaReportErrors.get(2));
-		assertEquals("22222222222222222222", eaReportErrors.get(3));
-		assertEquals("11111111111111111111", eaReportErrors.get(4));
-		assertEquals("11111111111111111111", eaReportErrors.get(5));
+		if (eaReportErrors.size() != expectedResult.size()) {
+			fail("Array sizes do not match.");
+		}
+
+		for (int i =0; i < eaReportErrors.size(); i++) {
+			if (!eaReportErrors.get(i).equals(expectedResult.get(i))) {
+				fail("Items not ordered by process date descending.");
+			}
+		}
+		
+		assertTrue(true);
 	}
 	
 	/**
