@@ -40,10 +40,8 @@ import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
 import org.caisi.model.CustomFilter;
-import org.caisi.model.EChart;
 import org.caisi.model.Tickler;
 import org.caisi.service.DemographicManagerTickler;
-import org.caisi.service.EChartManager;
 import org.caisi.service.TicklerManager;
 import org.caisi.tickler.prepared.PreparedTickler;
 import org.caisi.tickler.prepared.PreparedTicklerManager;
@@ -51,6 +49,8 @@ import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.common.dao.ConsultationRequestDao;
+import org.oscarehr.common.dao.EChartDao;
+import org.oscarehr.common.model.EChart;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
@@ -68,9 +68,10 @@ public class TicklerAction extends DispatchAction {
     private ProviderManager providerMgr = null;
     private PreparedTicklerManager preparedTicklerMgr = null;
     private DemographicManagerTickler demographicMgr = null;
-    private EChartManager chartMgr = null;
+    private EChartDao echartDao = null;
     private ProgramManager programMgr = null;
     private ConsultationRequestDao consultationRequestDao = (ConsultationRequestDao)SpringUtils.getBean("consultationRequestDao");
+    private EChartDao eChartDao = SpringUtils.getBean(EChartDao.class);
 
     public void setTicklerManager(TicklerManager ticklerManager) {
         this.ticklerMgr = ticklerManager;
@@ -86,10 +87,6 @@ public class TicklerAction extends DispatchAction {
 
     public void setPreparedTicklerManager(PreparedTicklerManager preparedTicklerMgr) {
         this.preparedTicklerMgr = preparedTicklerMgr;
-    }
-
-    public void setChartManager(EChartManager eChartManager) {
-        this.chartMgr = eChartManager;
     }
 
     public void setProgramManager(ProgramManager programMgr) {
@@ -343,10 +340,10 @@ public class TicklerAction extends DispatchAction {
             SimpleDateFormat formatter2 = new SimpleDateFormat("MM/dd/yy : hh:mm a");
 
             /* get current chart */
-            EChart tempChart = chartMgr.getLatestChart(tickler.getDemographic_no());
+            EChart tempChart = echartDao.getLatestChart(Integer.parseInt(tickler.getDemographic_no()));
             String postedDate = "";
             if (tempChart != null) {
-                postedDate = formatter.format(tempChart.getTimeStamp());
+                postedDate = formatter.format(tempChart.getTimestamp());
             }
 
             /* create new object */
@@ -378,7 +375,7 @@ public class TicklerAction extends DispatchAction {
             buf.append("'" + tickler.getMessage() + "'");
             chart.setEncounter(buf.toString());
             chart.setId(null);
-            chartMgr.saveEncounter(chart);
+            echartDao.persist(chart);
         }
 
         ActionMessages messages = new ActionMessages();

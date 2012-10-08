@@ -1,6 +1,5 @@
 /**
- *
- * Copyright (c) 2005-2012. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved.
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,54 +15,54 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * This software was written for
- * Centre for Research on Inner City Health, St. Michael's Hospital,
- * Toronto, Ontario, Canada
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
-
-package org.oscarehr.casemgmt.dao;
+package org.oscarehr.common.dao;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import org.caisi.model.EChart;
+import javax.persistence.Query;
+
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.oscarehr.common.model.EChart;
+import org.springframework.stereotype.Repository;
 
-public class EchartDAO extends HibernateDaoSupport {
+@Repository
+public class EChartDao extends AbstractDao<EChart>{
 
-    public void saveCPPIntoEchart(CaseManagementCPP cpp, String providerNo) {
-        String demoNo = cpp.getDemographic_no();
-        String sql = "from EChart e where e.demographicNo=? order by e.id";
-        List list = getHibernateTemplate().find(sql, new Integer(demoNo));
-        EChart ec;
-        if (list.size() != 0) ec = (EChart)list.get(list.size() - 1);
-        else {
-            ec = new EChart();
-            ec.setDemographicNo(new Integer(demoNo).intValue());
-            ec.setProviderNo(providerNo);
-            ec.setEncounter("");
+	
+	public EChartDao() {
+		super(EChart.class);
+	}
+	
+    public EChart getLatestChart(int demographicNo) {
+        
+    	Query q = entityManager.createQuery("from EChart c where c.demographicNo = ? order by c.timestamp desc");
+    	q.setParameter(1, demographicNo);
+    	@SuppressWarnings("unchecked")
+    	List<EChart> results = 	q.getResultList();
+        if(results.size()>0) {
+                return results.get(0);
         }
-
-        ec.setFamilyHistory(cpp.getFamilyHistory());
-        ec.setMedicalHistory(cpp.getMedicalHistory());
-        ec.setOngoingConcerns(cpp.getOngoingConcerns());
-        ec.setReminders(cpp.getReminders());
-        ec.setSocialHistory(cpp.getSocialHistory());
-
-        Date now = new Date();
-        ec.setTimeStamp(now);
-        getHibernateTemplate().save(ec);
+        return null;
     }
 
     public String saveEchart(CaseManagementNote note, CaseManagementCPP cpp, String userName, String lastStr) {
         String demoNo = note.getDemographic_no();
-        String sql = "from EChart e where e.demographicNo=? order by e.id";
-        List list = getHibernateTemplate().find(sql, new Integer(demoNo));
+        String sql = "select e from EChart e where e.demographicNo=? order by e.id";
+        Query q = entityManager.createQuery(sql);
+        q.setParameter(1, new Integer(demoNo));
+        @SuppressWarnings("unchecked")
+        List<EChart> list =q.getResultList();
         EChart oldec;
-        if (list.size() != 0) oldec = (EChart)list.get(list.size() - 1);
+        if (list.size() != 0) oldec =list.get(list.size() - 1);
         else {
             oldec = new EChart();
             oldec.setEncounter("");
@@ -73,7 +72,7 @@ public class EchartDAO extends HibernateDaoSupport {
         ec.setDemographicNo(new Integer(demoNo).intValue());
         ec.setProviderNo(note.getProviderNo());
         ec.setSubject("");
-        
+
         if( cpp != null ) {
             ec.setFamilyHistory(cpp.getFamilyHistory());
             ec.setMedicalHistory(cpp.getMedicalHistory());
@@ -83,7 +82,7 @@ public class EchartDAO extends HibernateDaoSupport {
         }
         
         Date now = new Date();
-        ec.setTimeStamp(now);
+        ec.setTimestamp(now);
         String etext = oldec.getEncounter();
 
         SimpleDateFormat dt = new SimpleDateFormat("yyyy.MM.dd");
@@ -94,7 +93,9 @@ public class EchartDAO extends HibernateDaoSupport {
         if (dupliString.lastIndexOf("[[") >= 0) {
             dupliString = dupliString.substring(0, dupliString.lastIndexOf("[["));
         }
-        if (etext!=null && etext.lastIndexOf(dupliString) >= 0) return rtStr;
+        if (etext!=null && etext.lastIndexOf(dupliString) >= 0) 
+        	return rtStr;
+        
         //if old ecounter text>6000, auto split
         if (etext!=null && etext.length() > 6000) {
             etext = etext.substring(etext.length() - 5120) + "\n------------------------------------\n$$CAISI AUTO SPLIT CHART$$\n";
@@ -118,22 +119,56 @@ public class EchartDAO extends HibernateDaoSupport {
 
         ec.setEncounter(etext);
 
-        getHibernateTemplate().save(ec);
+        persist(ec);
         return rtStr;
-
     }
-
+    
     public void updateEchartOngoing(CaseManagementCPP cpp) {
         String demoNo = cpp.getDemographic_no();
-        String sql = "from EChart e where e.demographicNo=? order by e.id";
-        List list = getHibernateTemplate().find(sql, new Integer(demoNo));
+        String sql = "select e from EChart e where e.demographicNo=? order by e.id";
+        Query q = entityManager.createQuery(sql);
+        q.setParameter(1,  new Integer(demoNo));
+        List<EChart> list = q.getResultList();
         EChart oldec;
-        if (list.size() != 0) oldec = (EChart)list.get(list.size() - 1);
+        if (list.size() != 0) oldec = list.get(list.size() - 1);
         else {
             return;
         }
         oldec.setOngoingConcerns(cpp.getOngoingConcerns());
-        getHibernateTemplate().save(oldec);
-    }
+       persist(oldec);
 
+    }
+    
+    public void saveCPPIntoEchart(CaseManagementCPP cpp, String providerNo) {
+    	
+        String demoNo = cpp.getDemographic_no();
+        String sql = "select e from EChart e where e.demographicNo=? order by e.id";
+        Query q= entityManager.createQuery(sql);
+        q.setParameter(1, Integer.parseInt(demoNo));
+        @SuppressWarnings("unchecked")
+        List<EChart> list = q.getResultList();
+        
+        EChart ec;
+        if (list.size() != 0)
+        	ec = list.get(list.size() - 1);
+        else {
+            ec = new EChart();
+            ec.setDemographicNo(new Integer(demoNo).intValue());
+            ec.setProviderNo(providerNo);
+            ec.setEncounter("");
+        }
+
+        ec.setFamilyHistory(cpp.getFamilyHistory());
+        ec.setMedicalHistory(cpp.getMedicalHistory());
+        ec.setOngoingConcerns(cpp.getOngoingConcerns());
+        ec.setReminders(cpp.getReminders());
+        ec.setSocialHistory(cpp.getSocialHistory());
+
+        Date now = new Date();
+        ec.setTimestamp(now);
+        persist(ec);
+
+        
+    }
+	
 }

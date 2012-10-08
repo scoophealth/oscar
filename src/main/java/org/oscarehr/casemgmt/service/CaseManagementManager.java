@@ -65,7 +65,6 @@ import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteExtDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementTmpSaveDAO;
-import org.oscarehr.casemgmt.dao.EchartDAO;
 import org.oscarehr.casemgmt.dao.EncounterWindowDAO;
 import org.oscarehr.casemgmt.dao.HashAuditDAO;
 import org.oscarehr.casemgmt.dao.IssueDAO;
@@ -86,6 +85,7 @@ import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.DxresearchDAO;
+import org.oscarehr.common.dao.EChartDao;
 import org.oscarehr.common.dao.MessageTblDao;
 import org.oscarehr.common.dao.MsgDemoMapDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
@@ -124,7 +124,6 @@ public class CaseManagementManager {
 	private CaseManagementIssueDAO caseManagementIssueDAO;
 	private IssueDAO issueDAO;
 	private CaseManagementCPPDAO caseManagementCPPDAO;
-	private EchartDAO echartDAO;
 	private ProviderDao providerDAO;
 	private DemographicDao demographicDao;
 	private ProviderSignitureDao providerSignitureDao;
@@ -143,6 +142,8 @@ public class CaseManagementManager {
 
 	private static final Logger logger = MiscUtils.getLogger();
 
+	//private EChartDao eChartDao = SpringUtils.getBean(EChartDao.class);
+	private EChartDao eChartDao = null;
 
 	public CaseManagementIssue getIssueByIssueCode(String demo, String issue_code) {
 		return this.caseManagementIssueDAO.getIssuebyIssueCode(demo, issue_code);
@@ -244,7 +245,7 @@ public class CaseManagementManager {
 
 		OscarProperties properties = OscarProperties.getInstance();
 		if (!Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
-			return echartDAO.saveEchart(note, cpp, userName, lastStr);
+			return eChartDao.saveEchart(note, cpp, userName, lastStr);
 		}
 
 		return "";
@@ -624,7 +625,7 @@ public class CaseManagementManager {
 
 		OscarProperties properties = OscarProperties.getInstance();
 		if (!Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
-			echartDAO.saveCPPIntoEchart(cpp, providerNo);
+			eChartDao.saveCPPIntoEchart(cpp, providerNo);
 		}
 	}
 
@@ -682,7 +683,7 @@ public class CaseManagementManager {
 
 		OscarProperties properties = OscarProperties.getInstance();
 		if (!Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
-			echartDAO.updateEchartOngoing(cpp);
+			eChartDao.updateEchartOngoing(cpp);
 		}
 
 	}
@@ -713,7 +714,7 @@ public class CaseManagementManager {
 
 			OscarProperties properties = OscarProperties.getInstance();
 			if (!Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
-				echartDAO.updateEchartOngoing(cpp);
+				eChartDao.updateEchartOngoing(cpp);
 			}
 		}
 	}
@@ -740,7 +741,7 @@ public class CaseManagementManager {
 
 			OscarProperties properties = OscarProperties.getInstance();
 			if (!Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
-				echartDAO.updateEchartOngoing(cpp);
+				eChartDao.updateEchartOngoing(cpp);
 			}
 		}
 
@@ -764,7 +765,7 @@ public class CaseManagementManager {
 
 		OscarProperties properties = OscarProperties.getInstance();
 		if (!Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
-			echartDAO.updateEchartOngoing(cpp);
+			eChartDao.updateEchartOngoing(cpp);
 		}
 	}
 
@@ -1560,10 +1561,6 @@ public class CaseManagementManager {
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
-	}
-
-	public void setEchartDAO(EchartDAO echartDAO) {
-		this.echartDAO = echartDAO;
 	}
 
 	public void setCaseManagementNoteDAO(CaseManagementNoteDAO dao) {
