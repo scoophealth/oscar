@@ -1177,7 +1177,7 @@ public class EyeformAction extends DispatchAction {
 			String sateliteFlag = "false";
 
 			if (IsPropertiesOn.isMultisitesEnable()) {
-				Integer appt_no= (Integer) crForm.get("apptNo");
+				Integer appt_no= cp.getAppointmentNo();	
 				String location = null;
 				if (appt_no != null) {
 					Appointment appt = appointmentDao.find(appt_no);
