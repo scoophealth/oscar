@@ -247,7 +247,7 @@ DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographi
 														<div id="relationshipMessage"></div>    
 														<script type="text/javascript">
 														$.ajax({
-														    url: '../PatientRelationship.jspf?demoNo=<%=demographic.getDemographicNo()%>&myOscarUserName=<%=myOscarUserName%>',
+														    url: '../PatientRelationship.jsp?demoNo=<%=demographic.getDemographicNo()%>&myOscarUserName=<%=myOscarUserName%>',
 														    dataType: 'html',
 														    timeout: 7000,
 														    cache: false,

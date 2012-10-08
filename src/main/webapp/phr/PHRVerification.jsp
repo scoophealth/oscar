@@ -184,7 +184,7 @@ br {
 					<div id="relationshipMessage"></div>    
 					<script type="text/javascript">
 					$.ajax({
-					    url: '<c:out value="${ctx}"/>/phr/PatientRelationship.jspf?demoNo=<%=demographicNo%>&myOscarUserName=<%=myOscarUserName%>',
+					    url: '<c:out value="${ctx}"/>/phr/PatientRelationship.jsp?demoNo=<%=demographicNo%>&myOscarUserName=<%=myOscarUserName%>',
 					    dataType: 'html',
 					    timeout: 5000,
 					    cache: false,
