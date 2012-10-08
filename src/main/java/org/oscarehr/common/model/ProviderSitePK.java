@@ -74,7 +74,7 @@ public class ProviderSitePK implements java.io.Serializable  {
 	public boolean equals(Object o) {
 		try {
 			ProviderSitePK o1 = (ProviderSitePK) o;
-			return ((providerNo == o1.providerNo) && (siteId == o1.siteId));
+			return ((providerNo.equals(o1.providerNo)) && (siteId == o1.siteId));
 		} catch (RuntimeException e) {
 			return (false);
 		}

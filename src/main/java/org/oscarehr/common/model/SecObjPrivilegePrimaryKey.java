@@ -75,7 +75,7 @@ public class SecObjPrivilegePrimaryKey implements Serializable {
 	public boolean equals(Object o) {
 		try {
 			SecObjPrivilegePrimaryKey o1 = (SecObjPrivilegePrimaryKey) o;
-			return ((roleUserGroup == o1.roleUserGroup) && (roleUserGroup == o1.roleUserGroup));
+			return ((roleUserGroup.equals(o1.roleUserGroup)) && (roleUserGroup.equals(o1.roleUserGroup)));
 		} catch (RuntimeException e) {
 			return (false);
 		}

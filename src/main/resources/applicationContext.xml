@@ -36,7 +36,6 @@
         <bean id="gstControlDao" class="org.oscarehr.billing.CA.dao.GstControlDao" autowire="byName" />
 	<bean id="measurementsDao" class="oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsDao" autowire="byName"/>
 	<bean id="measurementsExtDao" class="oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsExtDao" autowire="byName"/>
-	<bean id="measurementMapDao" class="oscar.oscarEncounter.oscarMeasurements.dao.MeasurementMapDao" autowire="byName"/>
 	<bean id="programDao" class="org.oscarehr.PMmodule.dao.ProgramDao" autowire="byName" />
 	<bean id="programQueueDao" class="org.oscarehr.PMmodule.dao.ProgramQueueDao" autowire="byName" />
 	<bean id="clientReferralDAO" class="org.oscarehr.PMmodule.dao.ClientReferralDAO" autowire="byName" />
@@ -87,7 +86,6 @@
 	<bean id="customFilterDAOT" class="org.caisi.dao.CustomFilterDAO" autowire="byName" />
 	<bean id="HashAuditDAO" class="org.oscarehr.casemgmt.dao.HashAuditDAO" autowire="byName" />
 	<bean id="programClientRestrictionDAO" class="org.oscarehr.PMmodule.dao.ProgramClientRestrictionDAO" autowire="byName" />
-	<bean id="EncounterWindowDAO" class="org.oscarehr.casemgmt.dao.EncounterWindowDAO" autowire="byName" />
 	<bean id="UserPropertyDAO" class="org.oscarehr.common.dao.UserPropertyDAO" autowire="byName" />
 	<bean id="clinicDAO" class="org.oscarehr.common.dao.ClinicDAO" autowire="byName" />
 	<bean id="dataExportDAO" class="org.oscarehr.common.dao.DataExportDao" autowire="byName" />
@@ -131,6 +129,10 @@
 	<bean id="receptionistSuperDao" class="oscar.dao.ReceptionistDao" autowire="byName" />
 	<bean id="providerSuperDao" class="oscar.dao.ProviderDao" autowire="byName" />
 	<bean id="adminSuperDao" class="oscar.dao.AdminDao" autowire="byName" />
+
+
+	<bean id="eChartDao" class="org.oscarehr.common.dao.EChartDao" autowire="byName" />
+	<bean id="encounterWindowDao" class="org.oscarehr.common.dao.EncounterWindowDao" autowire="byName" />
 
 	<!-- OSCAR Desicion Support -->
 	<bean id="dsService" class="org.oscarehr.decisionSupport.service.DSServiceMyDrugref">
@@ -209,7 +211,7 @@
 	<bean id="roomDemographicManager" class="org.oscarehr.PMmodule.service.impl.RoomDemographicManagerImpl" autowire="byName" />
 	<bean id="roomManager" class="org.oscarehr.PMmodule.service.RoomManager" autowire="byName" />
 	<bean id="bedManager" class="org.oscarehr.PMmodule.service.BedManager" autowire="byName" />
-	<bean id="caseManagementManager" class="org.oscarehr.casemgmt.service.CaseManagementManager">
+	<bean id="caseManagementManager" class="org.oscarehr.casemgmt.service.CaseManagementManager" autowire="byName">
 		<property name="caseManagementNoteDAO" ref="CaseManagementNoteDAO" />
 		<property name="caseManagementNoteExtDAO" ref="CaseManagementNoteExtDAO" />
 		<property name="caseManagementNoteLinkDAO" ref="CaseManagementNoteLinkDAO" />
@@ -221,7 +223,6 @@
 		<property name="demographicDao" ref="demographicDao" />
 		<property name="roleProgramAccessDAO" ref="RoleProgramAccessDAO" />
 		<property name="hashAuditDAO" ref="HashAuditDAO" />
-		<property name="ectWindowDAO" ref="EncounterWindowDAO" />
 		<property name="userPropertyDAO" ref="UserPropertyDAO" />
 		<property name="rolesManager" ref="rolesManager" />
 		<property name="caseManagementTmpSaveDAO" ref="CaseManagementTmpSaveDAO" />
@@ -231,6 +232,8 @@
 		<property name="dxresearchDAO" ref="dxresearchDAO" />
 		<property name="programProviderDao" ref="programProviderDAO" />
 		<property name="programAccessDAO" ref="programAccessDAO" />
+		<property name="eChartDao" ref="eChartDao"/>
+		<property name="encounterWindowDao" ref="encounterWindowDao"/>
 	</bean>
 	<!--
 	<bean id="roleManager" class="org.oscarehr.PMmodule.service.impl.RoleManagerImpl">

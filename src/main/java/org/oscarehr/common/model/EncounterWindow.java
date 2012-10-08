@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,34 +21,28 @@
  * Hamilton
  * Ontario, Canada
  */
-
-
 package org.oscarehr.common.model;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-public class ScheduleTemplatePrimaryKey implements Serializable {
+@Entity
+@Table(name="encounterWindow")
+public class EncounterWindow extends AbstractModel<String>{
 
-	/**
-	 * Don't blame me, I wasn't the one to start doing this, I'm just making the constant for something already in use. Someday we should refactor it to null.
-	 */
-	public static final String DODGY_FAKE_PROVIDER_NO_USED_TO_HOLD_PUBLIC_TEMPLATES="Public";
-	
+	@Id
 	@Column(name="provider_no")
-    private String providerNo;
-	private String name;
-
-   public ScheduleTemplatePrimaryKey() {
-   	//required by JPA
-   }
-
-   public ScheduleTemplatePrimaryKey(String providerNo, String name) {
-	  this.providerNo = providerNo;
-      this.name = name;      
-   }
-  
+	private String providerNo;
+	
+	private int rowOneSize;
+	
+	private int rowTwoSize;
+	
+	private int presBoxSize;
+	
+	private int rowThreeSize;
 
 	public String getProviderNo() {
 		return providerNo;
@@ -58,31 +52,44 @@ public class ScheduleTemplatePrimaryKey implements Serializable {
 		this.providerNo = providerNo;
 	}
 
-	public String getName() {
-		return name;
+	public int getRowOneSize() {
+		return rowOneSize;
+	}
+
+	public void setRowOneSize(int rowOneSize) {
+		this.rowOneSize = rowOneSize;
+	}
+
+	public int getRowTwoSize() {
+		return rowTwoSize;
+	}
+
+	public void setRowTwoSize(int rowTwoSize) {
+		this.rowTwoSize = rowTwoSize;
+	}
+
+	public int getPresBoxSize() {
+		return presBoxSize;
+	}
+
+	public void setPresBoxSize(int presBoxSize) {
+		this.presBoxSize = presBoxSize;
+	}
+
+	public int getRowThreeSize() {
+		return rowThreeSize;
+	}
+
+	public void setRowThreeSize(int rowThreeSize) {
+		this.rowThreeSize = rowThreeSize;
 	}
 	
-	public void setName(String name) {
-		this.name = name;
+	public String getId() {
+		return getProviderNo();
 	}
-
-	@Override
-	public String toString() {
-		return ("name=" + name + ", providerNo=" + providerNo);
+	
+	public void setId(String id) {
+		setProviderNo(id);
 	}
-
-	@Override
-	public int hashCode() {
-		return (toString().hashCode());
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		try {
-			ScheduleTemplatePrimaryKey o1 = (ScheduleTemplatePrimaryKey) o;
-			return ((name.equals(o1.name)) && (providerNo.equals(o1.providerNo)));
-		} catch (RuntimeException e) {
-			return (false);
-		}
-	}
+	
 }
