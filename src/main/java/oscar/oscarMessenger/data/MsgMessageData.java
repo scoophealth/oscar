@@ -26,8 +26,14 @@
 package oscar.oscarMessenger.data;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 
+import org.oscarehr.common.dao.MessageListDao;
+import org.oscarehr.common.dao.MessageTblDao;
+import org.oscarehr.common.model.MessageList;
+import org.oscarehr.common.model.MessageTbl;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -46,6 +52,10 @@ public class MsgMessageData {
     private String messageSubject;
     private String messageDate;
     private String messageTime;
+    
+    MessageTblDao messageTblDao = SpringUtils.getBean(MessageTblDao.class);
+    MessageListDao messageListDao = SpringUtils.getBean(MessageListDao.class);
+     
 
     public MsgMessageData(){
     }
@@ -217,92 +227,84 @@ public class MsgMessageData {
     //=-------------------------------------------------------------------------
 
     ////////////////////////////////////////////////////////////////////////////
-    //insert message into the messagetbl, get the message id back and insert it
-    //into the messagelisttbl
-    //insert all the provider ids that will get the message along with the
-    //message id plus a status of new
+   
     public String sendMessage(String message, String subject,String userName,String sentToWho,String userNo,String[] providers ){
        String messageid=null;
        oscar.oscarMessenger.util.MsgStringQuote str = new oscar.oscarMessenger.util.MsgStringQuote();
-       try{
-
-          DBPreparedHandler db = new DBPreparedHandler();
-          //java.sql.ResultSet rs;
-
-          int msgid = db.queryExecuteInsertReturnId("insert into messagetbl (thedate,theime,themessage,thesubject,sentby,sentto,sentbyNo)"
-                        +" values (now(),now(),'"
-                        +str.q(message)+"','"
-                        +str.q(subject)+"','"
-                        +userName+"','"
-                        +sentToWho+"','"
-                        +userNo+"') ");
-
-	  /* Choose the right command to recover the messageid inserted above */
-      /*
-          OscarProperties prop = OscarProperties.getInstance();
-	  String db_type = prop.getProperty("db_type", "mysql").trim();
-	  if (db_type.equalsIgnoreCase("mysql")) {
-          	rs = db.queryResults("SELECT LAST_INSERT_ID() ");
-	  } else if (db_type.equalsIgnoreCase("postgresql")) {
-		  rs = db.queryResults("SELECT CURRVAL('messagetbl_int_seq')");
-	  } else
-		  throw new java.sql.SQLException("ERROR: Database " + db_type + " unrecognized");
-          if(rs.next()){
-             messageid = Integer.toString( rs.getInt(1) );
-          }
-       */
+      
+        
+          MessageTbl mt = new MessageTbl();
+          mt.setDate(new Date());
+          mt.setTime(new Date());
+          mt.setMessage(messageid);
+          mt.setSubject(subject);
+          mt.setSentBy(userName);
+          mt.setSentTo(sentToWho);
+          mt.setSentByNo(userNo);
+          
+          messageTblDao.persist(mt);
+          int msgid = mt.getId();
+         
+          
           messageid = String.valueOf(msgid);
           for (int i =0 ; i < providers.length ; i++){
-             db.queryExecuteUpdate("insert into messagelisttbl (message,provider_no,status) values ('"+messageid+"','"+providers[i]+"','new')");
+        	  MessageList ml = new MessageList();
+        	  ml.setMessage(Integer.parseInt(messageid));
+        	  ml.setProviderNo(providers[i]);
+        	  ml.setStatus("new");
+        	  messageListDao.persist(ml);
+        
           }
 
-       }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
+      
       return messageid;
     }//=------------------------------------------------------------------------
 
     ////////////////////////////////////////////////////////////////////////////
-    //insert message into the messagetbl, get the message id back and insert it
-    //into the messagelisttbl
-    //insert all the provider ids that will get the message along with the
-    //message id plus a status of new
-    //messageId = messageData.sendMessage(message,       subject,       userName,       sentToWho,       userNo,              providerListing );
     public String sendMessage2(String message, String subject,String userName,String sentToWho,String userNo,ArrayList<MsgProviderData> providers,String attach, String pdfAttach ){
 
       oscar.oscarMessenger.util.MsgStringQuote str = new oscar.oscarMessenger.util.MsgStringQuote();
       String messageid=null;
-      try{
-         DBPreparedHandler db = new DBPreparedHandler();
-         //java.sql.ResultSet rs;
+     
+        if (attach != null){
+            attach = str.q(attach);
+        }
 
-            if (attach != null){
-                attach = str.q(attach);
-            }
+        if (pdfAttach != null){
+            pdfAttach = str.q(pdfAttach);
+        }
 
-            if (pdfAttach != null){
-                pdfAttach = str.q(pdfAttach);
-            }
+     sentToWho = org.apache.commons.lang.StringEscapeUtils.escapeSql(sentToWho);
+     userName = org.apache.commons.lang.StringEscapeUtils.escapeSql(userName);
+     
+     MessageTbl mt = new MessageTbl();
+     mt.setDate(new Date());
+     mt.setTime(new Date());
+     mt.setMessage(messageid);
+     mt.setSubject(subject);
+     mt.setSentBy(userName);
+     mt.setSentTo(sentToWho);
+     mt.setSentByNo(userNo);
+     mt.setSentByLocation(Integer.parseInt(getCurrentLocationId()));
+     mt.setAttachment(attach);
+     mt.setPdfAttachment(pdfAttach.getBytes());
+     messageTblDao.persist(mt);
+     
+     
+     messageid = String.valueOf(mt.getId());
 
-         sentToWho = org.apache.commons.lang.StringEscapeUtils.escapeSql(sentToWho);
-         userName = org.apache.commons.lang.StringEscapeUtils.escapeSql(userName);
-         String sql = new String("insert into messagetbl (thedate,theime,themessage,thesubject,sentby,sentto,sentbyNo,sentByLocation,attachment, pdfattachment)"
-                       +" values (now(),now(),'"
-                       +str.q(message)+"','"
-                       +str.q(subject)+"','"
-                       +userName+"','"
-                       +sentToWho+"','"
-                       +userNo+"','"
-                       +getCurrentLocationId()+"','"
-                       +attach+"','"
-                       +pdfAttach+"')");
+   
 
-         messageid = String.valueOf(db.queryExecuteInsertReturnId(sql));
+     for (MsgProviderData providerData : providers){
+    	 MessageList ml = new MessageList();
+    	 ml.setMessage(Integer.parseInt(messageid));
+    	 ml.setProviderNo(providerData.providerNo);
+    	 ml.setStatus("new");
+    	 ml.setRemoteLocation(Integer.parseInt(providerData.locationId));
+    	 messageListDao.persist(ml);
+     }
 
-
-         for (MsgProviderData providerData : providers){
-            db.queryExecuteUpdate("insert into messagelisttbl (message,provider_no,status,remoteLocation) values ('"+messageid+"','"+providerData.providerNo+"','new','"+providerData.locationId+"')");
-         }
-
-      }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
+      
       return messageid;
     }
 
