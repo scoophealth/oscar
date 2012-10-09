@@ -28,11 +28,14 @@ import org.apache.log4j.Logger;
 
 public class JdbcBillingCorrection {
 	private static final Logger _logger = Logger.getLogger(JdbcBillingCorrection.class);
+	
 	BillingONDataHelp dbObj = new BillingONDataHelp();
 	JdbcBillingLog dbLog = new JdbcBillingLog();
+	
 
 	public boolean updateBillingClaimHeader(BillingClaimHeader1Data ch1Obj) {
 		boolean retval = false;
+		
 		String sql = "update billing_on_cheader1 set transc_id='" + ch1Obj.getTransc_id() + "'," + " rec_id='"
 				+ ch1Obj.getRec_id() + "'," + " hin='" + ch1Obj.getHin() + "'," + " ver='" + ch1Obj.getVer() + "',"
 				+ " dob='" + ch1Obj.getDob() + "'," + " pay_program='" + ch1Obj.getPay_program() + "'," + " payee='"

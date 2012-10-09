@@ -27,12 +27,16 @@ package oscar.oscarBilling.ca.on.data;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.oscarehr.common.dao.BillingServiceDao;
+import org.oscarehr.common.model.BillingService;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -41,6 +45,9 @@ import oscar.oscarDB.DBHandler;
  * @author Jay Gallagher
  */
 public class BillingCodeData {
+	
+	private BillingServiceDao billingServiceDao = SpringUtils.getBean(BillingServiceDao.class);
+	
 
    public List<Hashtable<String,String>> search(String str){
       ArrayList<Hashtable<String,String>> list = new ArrayList<Hashtable<String,String>>();
@@ -188,27 +195,22 @@ public class BillingCodeData {
       return retval;
    }
 
-   public boolean insertBillingCode(String value, String code, String date, String description, String termDate) {
-      boolean retval = true;
-      try{
-
-
-         String str = "insert into billingservice (service_compositecode,service_code,description,value,percentage,billingservice_date,specialty,region,anaesthesia,termination_date) Values("+
-                      "''," +
-                      "'"+StringEscapeUtils.escapeSql(code)+"'," +
-                      "'"+StringEscapeUtils.escapeSql(description) + "'," +
-                      "'"+StringEscapeUtils.escapeSql(value)  +"',"+
-                      "''," +
-                      "'"+StringEscapeUtils.escapeSql(date) + "'," +
-                      "''," +
-                      "'ON'," +
-                      "'00'," +
-                      "'" + StringEscapeUtils.escapeSql(termDate) + "')";
-         MiscUtils.getLogger().debug(str);
-         DBHandler.RunSQL(str);
-         MiscUtils.getLogger().debug("NOW updated");
-      }catch(Exception e1){MiscUtils.getLogger().error("Error", e1);
-      }
-      return retval;
+   public boolean insertBillingCode(String value, String code, String date, String description, String termDate) throws Exception  {
+	   SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+	   BillingService bs = new BillingService();
+	   bs.setServiceCompositecode("");
+	   bs.setServiceCode(code);
+	   bs.setDescription(description);
+	   bs.setValue(value);
+	   bs.setPercentage("");
+	   bs.setBillingserviceDate(formatter.parse(date));
+	   bs.setSpecialty("");
+	   bs.setRegion("ON");
+	   bs.setAnaesthesia("00");
+	   bs.setTerminationDate(formatter.parse(termDate));
+	   
+	   billingServiceDao.persist(bs);
+	   
+	   return true;
    }
 }
