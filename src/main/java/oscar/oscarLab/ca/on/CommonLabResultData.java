@@ -39,6 +39,10 @@ import org.oscarehr.caisi_integrator.ws.CachedDemographicLabResult;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DocumentResultsDao;
+import org.oscarehr.common.dao.PatientLabRoutingDao;
+import org.oscarehr.common.dao.ProviderLabRoutingDao;
+import org.oscarehr.common.model.PatientLabRouting;
+import org.oscarehr.common.model.ProviderLabRoutingModel;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 import org.oscarehr.util.DbConnectionFilter;
@@ -68,7 +72,11 @@ public class CommonLabResultData {
 	public static final boolean UNATTACHED = false;
 
 	public static final String NOT_ASSIGNED_PROVIDER_NO = "0";
-
+	
+	private static PatientLabRoutingDao patientLabRoutingDao = SpringUtils.getBean(PatientLabRoutingDao.class);
+	private static ProviderLabRoutingDao providerLabRoutingDao = SpringUtils.getBean(ProviderLabRoutingDao.class);
+	
+	
 	public CommonLabResultData() {
 
 	}
@@ -338,9 +346,13 @@ public class CommonLabResultData {
 				}
 			} 
 			if (empty) {
-
-				sql = "insert ignore into providerLabRouting (provider_no, lab_no, status, comment,lab_type) values ('" + providerNo + "', '" + labNo + "', '" + status + "', ?,'" + labType + "')";
-				db.queryExecute(sql, new String[] { comment });
+				ProviderLabRoutingModel p = new ProviderLabRoutingModel();
+				p.setProviderNo(providerNo);
+				p.setLabNo(labNo);
+				p.setStatus(String.valueOf(status));
+				p.setComment(comment);
+				p.setLabType(labType);
+				providerLabRoutingDao.persist(p);
 			}
 
 			if (!"0".equals(providerNo)) {
@@ -424,8 +436,12 @@ public class CommonLabResultData {
 				result = DBHandler.RunSQL(sql);
 
 				// add new entries
-				sql = "insert into patientLabRouting (lab_no, demographic_no,lab_type) values ('" + labArray[i] + "', '" + demographicNo + "','" + labType + "')";
-				result = DBHandler.RunSQL(sql);
+				PatientLabRouting plr = new PatientLabRouting();
+				plr.setLabNo(Integer.parseInt(labArray[i]));
+				plr.setDemographicNo(Integer.parseInt(demographicNo));
+				plr.setLabType(labType);
+				patientLabRoutingDao.persist(plr);
+				
 
 				// add labs to measurements table
 				populateMeasurementsTable(labArray[i], demographicNo, labType);
@@ -463,9 +479,6 @@ public class CommonLabResultData {
 				for (int k = 0; k < labIds.length; k++) {
 
 					for (int j = 0; j < providersArray.length; j++) {
-						/*
-						 * if (!insertString.equals("")) { insertString = insertString + ", "; } insertString = insertString + "('" + providersArray[j] + "','" + labIds[k]+ "','N','"+labType+"')";
-						 */
 						plr.route(labIds[k], providersArray[j], DbConnectionFilter.getThreadLocalDbConnection(), labType);
 					}
 

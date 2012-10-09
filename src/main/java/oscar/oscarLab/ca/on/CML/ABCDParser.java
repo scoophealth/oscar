@@ -34,7 +34,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
+import org.oscarehr.common.dao.LabPatientPhysicianInfoDao;
+import org.oscarehr.common.dao.LabReportInformationDao;
+import org.oscarehr.common.dao.LabTestResultsDao;
+import org.oscarehr.common.dao.PatientLabRoutingDao;
+import org.oscarehr.common.model.LabPatientPhysicianInfo;
+import org.oscarehr.common.model.LabReportInformation;
+import org.oscarehr.common.model.LabTestResults;
+import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
@@ -48,6 +57,12 @@ public class ABCDParser {
 
    Atype reportFile = null;
    ArrayList<Atype> atypes = new ArrayList<Atype>();
+   
+   private PatientLabRoutingDao patientLabRoutingDao = SpringUtils.getBean(PatientLabRoutingDao.class);
+   private LabReportInformationDao labReportInformationDao = SpringUtils.getBean(LabReportInformation.class);
+   private LabPatientPhysicianInfoDao labPatientPhysicianInfoDao = SpringUtils.getBean(LabPatientPhysicianInfoDao.class);
+   private LabTestResultsDao labTestResultsDao = SpringUtils.getBean(LabTestResultsDao.class);
+   
    /** Creates a new instance of ABCDParse */
    public ABCDParser() {
    }
@@ -162,19 +177,18 @@ public class ABCDParser {
         	 MiscUtils.getLogger().error("Error", sqlE);
          }
 
-         try{
-            if (count != 1){
-               demo = "0";
-               logger.info("Could not find patient for lab: "+labId+ "# of possible matches :"+count);
-            }
-            sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type) values ('"+demo+"', '"+labId+"','CML')";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.executeUpdate();
-            pstmt.close();
-         }catch (SQLException sqlE){
-            MiscUtils.getLogger().debug("NO MATCHING PATIENT FOR LAB id ="+labId);
-            MiscUtils.getLogger().error("Error", sqlE);
-         }
+        
+        if (count != 1){
+           demo = "0";
+           logger.info("Could not find patient for lab: "+labId+ "# of possible matches :"+count);
+        }
+        
+        PatientLabRouting p = new PatientLabRouting();
+        p.setDemographicNo(Integer.parseInt(demo));
+        p.setLabNo(Integer.parseInt(labId));
+        p.setLabType("CML");
+        patientLabRoutingDao.persist(p);
+         
     }
    /////
 
@@ -263,27 +277,17 @@ public class ABCDParser {
 
       }
 
-      public String save(Connection conn, String locationId,String printDate,String printTime,String totalB,String totalC,String totalD) throws SQLException{
-         String insertID = null;
-         // Prepare a statement to insert a record
-        String sql = "insert into labReportInformation (location_id,print_date,print_time,total_BType,total_CType,total_DType) values (?,?,?,?,?,?)";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1,locationId ); // location_id
-            pstmt.setString(2,printDate );  // printDate
-            pstmt.setString(3,printTime );  // printTime
-            pstmt.setString(4,totalB);      // total_BType
-            pstmt.setString(5,totalC);      // total_CType
-            pstmt.setString(6,totalD);      // total_DType
-
-            pstmt.executeUpdate();
-
-            ResultSet rs = pstmt.getGeneratedKeys();
-
-            if(rs.next()){
-               insertID = oscar.Misc.getString(rs,1);
-            }
-            pstmt.close();
-         return insertID;
+      public String save(Connection conn, String locationId,String printDate,String printTime,String totalB,String totalC,String totalD) {
+    	  LabReportInformation l = new LabReportInformation();
+    	  l.setLocationId(locationId);
+    	  l.setPrintDate(printDate);
+    	  l.setPrintTime(printTime);
+    	  l.setTotalBType(totalB);
+    	  l.setTotalCType(totalC);
+    	  l.setTotalDType(totalD);
+    	  labReportInformationDao.persist(l);
+        
+    	  return String.valueOf(l.getId());
       }
 
       public Atype(){
@@ -336,47 +340,36 @@ public class ABCDParser {
          }
       }
 
-      public String save(Connection conn, String id) throws SQLException{
-         String insertID = null;
-         // Prepare a statement to insert a record
-
-        String sql = "insert into labPatientPhysicianInfo (labReportInfo_id,accession_num,physician_account_num,service_date,patient_first_name,patient_last_name,"
-        + " patient_sex,patient_health_num,patient_dob,lab_status,doc_num,doc_name,doc_addr1,doc_addr2,doc_addr3,doc_postal,doc_route,comment1,comment2,patient_phone,"
-        + "doc_phone,collection_date) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1,id); // location_id
-            pstmt.setString(2,this.accessionNum);
-            pstmt.setString(3,this.physicianAccountNum);
-            pstmt.setString(4,this.serviceDate);
-            pstmt.setString(5,this.pFirstName);
-            pstmt.setString(6,this.pLastName);
-            pstmt.setString(7,this.pSex);
-            pstmt.setString(8,this.pHealthNum);
-            pstmt.setString(9,this.pDOB);
-            pstmt.setString(10,this.status);
-            pstmt.setString(11,this.docNum);
-            pstmt.setString(12,this.docName);
-            pstmt.setString(13,this.docAddr1);
-            pstmt.setString(14,this.docAddr2);
-            pstmt.setString(15,this.docAddr3);
-            pstmt.setString(16,this.docPostal);
-            pstmt.setString(17,this.docRoute);
-            pstmt.setString(18,this.comment1);
-            pstmt.setString(19,this.comment2);
-            pstmt.setString(20,this.pPhone);
-            pstmt.setString(21,this.docPhone);
-            pstmt.setString(22,this.collectionDate);
-
-            pstmt.executeUpdate();
-
-            ResultSet rs = pstmt.getGeneratedKeys();
-
-            if(rs.next()){
-               insertID = oscar.Misc.getString(rs,1);
-            }
-
-         return insertID;
+      public String save(Connection conn, String id) {
+       
+         LabPatientPhysicianInfo l = new LabPatientPhysicianInfo();
+         l.setLabReportInfoId(Integer.parseInt(id));
+         l.setAccessionNum(this.accessionNum);
+         l.setPhysicianAccountNum(this.physicianAccountNum);
+         l.setServiceDate(this.serviceDate);
+         l.setPatientFirstName(this.pFirstName);
+         l.setPatientLastName(this.pLastName);
+         l.setPatientSex(this.pSex);
+         l.setPatientHin(this.pHealthNum);
+         l.setPatientDob(this.pDOB);
+         l.setLabStatus(this.status);
+         l.setDocNum(this.docNum);
+         l.setDocName(this.docName);
+         l.setDocAddress1(this.docAddr1);
+         l.setDocAddress2(this.docAddr2);
+         l.setDocAddress3(this.docAddr3);
+         l.setDocPostal(this.docPostal);
+         l.setDocRoute(this.docRoute);
+         l.setComment1(this.comment1);
+         l.setComment2(this.comment2);
+         l.setPatientPhone(this.pPhone);
+         l.setDocPhone(this.docPhone);
+         l.setCollectionDate(this.collectionDate);
+         
+         labPatientPhysicianInfoDao.persist(l);
+         
+         return String.valueOf(l.getId());
+ 
       }
 
 
@@ -439,35 +432,24 @@ public class ABCDParser {
          }
       }
 
-      public String save(Connection conn, String id) throws SQLException{
-         String insertID = null;
-         // Prepare a statement to insert a record
-        String sql = "insert into labTestResults (labPatientPhysicianInfo_id,title,notUsed1,notUsed2,test_name,abn,minimum,maximum,units,result,location_id,last,line_type) "
-         + " values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1,id ); // location_id
-            pstmt.setString(2,this.title);  // printDate
-            pstmt.setString(3,this.notUsed1 );  // printTime
-            pstmt.setString(4,this.notUsed2);      // total_BType
-            pstmt.setString(5,this.testName);      // total_CType
-            pstmt.setString(6,this.abn);
-            pstmt.setString(7,this.minimum);
-            pstmt.setString(8,this.maximum);
-            pstmt.setString(9,this.units);
-            pstmt.setString(10,this.result);
-            pstmt.setString(11,this.locationId);
-            pstmt.setString(12,this.last);
-            pstmt.setString(13,"C");
-
-            pstmt.executeUpdate();
-
-            ResultSet rs = pstmt.getGeneratedKeys();
-
-            if(rs.next()){
-               insertID = oscar.Misc.getString(rs,1);
-            }
-
-         return insertID;
+      public String save(Connection conn, String id) {
+    	  LabTestResults l = new LabTestResults();
+    	  l.setLabPatientPhysicianInfoId(Integer.parseInt(id));
+    	  l.setTitle(this.title);
+    	  l.setNotUsed1(this.notUsed1);
+    	  l.setNotUsed2(this.notUsed2);
+    	  l.setTestName(this.testName);
+    	  l.setAbn(this.abn);
+    	  l.setMinimum(this.minimum);
+    	  l.setMaximum(this.maximum);
+    	  l.setUnits(this.units);
+    	  l.setResult(this.result);
+    	  l.setLocationId(this.locationId);
+    	  l.setLast(this.last);
+    	  l.setLineType("C");
+    	  labTestResultsDao.persist(l);
+         
+    	return String.valueOf(l.getId());
       }
 
 
@@ -502,29 +484,20 @@ public class ABCDParser {
 
 
 
-      public String save(Connection conn, String id) throws SQLException{
-         String insertID = null;
-         // Prepare a statement to insert a record //labComments
-        String sql = "insert into labTestResults (labPatientPhysicianInfo_id,title,notUsed1,description,location_id,last,line_type) "
-         + " values (?,?,?,?,?,?,?)";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1,id );
-            pstmt.setString(2,this.title);
-            pstmt.setString(3,this.notUsed1);
-            pstmt.setString(4,this.description);
-            pstmt.setString(5,this.locationId);
-            pstmt.setString(6,this.last);
-            pstmt.setString(7,"D");
-
-            pstmt.executeUpdate();
-
-            ResultSet rs = pstmt.getGeneratedKeys();
-
-            if(rs.next()){
-               insertID = oscar.Misc.getString(rs,1);
-            }
-         pstmt.close();
-         return insertID;
+      public String save(Connection conn, String id) {
+    	  LabTestResults l = new LabTestResults();
+    	  l.setLabPatientPhysicianInfoId(Integer.parseInt(id));
+    	  l.setTitle(this.title);
+    	  l.setNotUsed1(this.notUsed1);
+    	  l.setDescription(this.description);
+    	  l.setLocationId(this.locationId);
+    	  l.setLast(this.last);
+    	  l.setLineType("D");
+    	
+    	  labTestResultsDao.persist(l);
+    	  
+    	  return l.getId().toString();
+        
       }
 
       String title = null;       // 2. Title
