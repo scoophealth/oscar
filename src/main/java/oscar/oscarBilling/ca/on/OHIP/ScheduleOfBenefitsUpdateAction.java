@@ -85,11 +85,16 @@ public class ScheduleOfBenefitsUpdateAction extends Action {
 						termDate += ((String)code.get("terminactionDate")).substring(6, 8);
 					}
 				}
-				bc.insertBillingCode(code.get("newprice").toString(), (String)code.get("feeCode"), effDate, (String)code.get("description"), termDate);
-				Hashtable h = new Hashtable();
-				h.put("code", code.get("feeCode"));
-				h.put("value", code.get("newprice").toString());
-				list.add(h);
+				try{
+					bc.insertBillingCode(code.get("newprice").toString(), (String)code.get("feeCode"), effDate, (String)code.get("description"), termDate);
+					Hashtable h = new Hashtable();
+					h.put("code", code.get("feeCode"));
+					h.put("value", code.get("newprice").toString());
+					list.add(h);
+				}catch(Exception e) {
+					MiscUtils.getLogger().error("Error",e);
+				}
+				
 				
 			}
 			request.setAttribute("changes", list);
@@ -137,16 +142,16 @@ public class ScheduleOfBenefitsUpdateAction extends Action {
 								termDate += change[3].substring(6,8);
 							}
 						}
+						try {
+							bc.insertBillingCode(change[1], change[0], effDate, change[4], termDate);
+							Hashtable h = new Hashtable();
+							h.put("code",change[0]);
+							h.put("value",change[1]);
+							list.add(h);
+						}catch(Exception e) {
+							MiscUtils.getLogger().error("Error",e);
+						}
 	
-						bc.insertBillingCode(change[1], change[0], effDate, change[4], termDate);
-						Hashtable h = new Hashtable();
-						h.put("code",change[0]);
-						h.put("value",change[1]);
-						list.add(h);
-	
-						//for ( int j = 0; j < change.length; j++){
-	
-						//}
 						request.setAttribute("changes",list);
 					}else{
 						MiscUtils.getLogger().debug("test was null");
