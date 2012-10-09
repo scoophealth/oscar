@@ -61,8 +61,9 @@
 	<bean id="CaseManagementCPPDAO" class="org.oscarehr.casemgmt.dao.CaseManagementCPPDAO" autowire="byName" />
 	<bean id="OnCallDAO" class="org.oscarehr.casemgmt.dao.OnCallDAO" autowire="byName" />
 
-
-	<bean id="AllergyDao" class="org.oscarehr.common.dao.AllergyDao" autowire="byName" />
+	<bean id="AllergyDao" class="org.oscarehr.common.dao.AllergyMergedDemographicDao" autowire="byName" />
+	<bean id="allergyDao" class="org.oscarehr.common.dao.AllergyMergedDemographicDao" autowire="byName" />
+	
 	<bean id="IssueDAO" class="org.oscarehr.casemgmt.dao.IssueDAO" autowire="byName" />
 	<bean id="EchartDAO" class="org.oscarehr.casemgmt.dao.EchartDAO" autowire="byName" />
 	<bean id="secroleDao" class="com.quatro.dao.security.SecroleDao" autowire="byName"/>
@@ -115,7 +116,8 @@
 
     <bean id="logDAO" class="org.oscarehr.PMmodule.dao.LogDAO" autowire="byName" />
 	<bean id="lookupDao" class="com.quatro.dao.LookupDao" autowire="byName" />
-	<bean id="documentDAO" class="org.oscarehr.document.dao.DocumentDAO" autowire="byName" />
+	<!-- bean id="documentDAO" class="org.oscarehr.document.dao.DocumentDAO" autowire="byName" / -->
+	<bean id="documentDAO" class="org.oscarehr.document.dao.DocumentMergeDemographicDAO" autowire="byName" />
 	<bean id="userAccessDao" class="com.quatro.dao.security.UserAccessDao" autowire="byName" />
 	<bean id="appointStatusDao" class="oscar.appt.status.dao.hibernate.AppointmentStatusDAOHibernate" autowire="byName" />
 	<bean id="rxCloneDao" class="oscar.oscarRx.dao.hibernate.RxCloneFavoritesDAOHibernate" autowire="byName" />

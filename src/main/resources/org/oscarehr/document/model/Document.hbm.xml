@@ -19,6 +19,8 @@
 			not-null="false" />
 		<property name="docfilename" column="docfilename" type="string"
 			not-null="true" length="255" />
+		<property name="source" column="source" type="string"
+			not-null="false" length="255" />
 		<property name="doccreator" column="doccreator" type="string"
 			not-null="true" length="30" />
 		<property name="updatedatetime" column="updatedatetime" type="timestamp"
@@ -27,12 +29,27 @@
 			not-null="true" length="1" />
 		<property name="contenttype" column="contenttype" type="string"
 			not-null="true" length="60" />
-		<property name="public" column="public1" type="java.lang.Byte"
+		<property name="m_public" column="public1" type="java.lang.Byte"
 			not-null="true" length="1" />
 		<property name="observationdate" column="observationdate"
 			type="date" not-null="false" length="10" />
-		
-
-
+		<property name="numberOfPages" column="number_of_pages" type="int"
+			not-null="true" length="6" />
+		<property name="reviewdatetime" column="reviewdatetime" type="timestamp"
+			not-null="false" />
+		<property name="appointmentNo" column="appointment_no" type="int"
+			not-null="false" length="11" />
+		<property name="docClass" column="docClass" type="string"
+			not-null="false" length="60" />
+		<property name="docSubClass" column="docSubClass" type="string"
+			not-null="false" length="60" />
+		<property name="responsible" column="responsible" type="string"
+			not-null="true" length="30" />
+		<property name="sourceFacility" column="sourceFacility" type="string"
+			not-null="false" length="120" />
+		<property name="programId" column="program_id" type="int"
+			not-null="false" />
+		<property name="reviewer" column="reviewer" type="string"
+			not-null="false" length="30" />
 	</class>
 </hibernate-mapping>
