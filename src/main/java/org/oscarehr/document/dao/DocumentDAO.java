@@ -22,28 +22,26 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.document.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
-import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.Restrictions;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.document.model.CtlDocument;
 import org.oscarehr.document.model.Document;
-import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-
+import oscar.util.ConversionUtils;
 
 /**
  *
@@ -51,86 +49,149 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  */
 public class DocumentDAO extends HibernateDaoSupport {
 
-	private static Logger log = MiscUtils.getLogger();
+	public Document getDocument(String documentNo) {
+		Document document = getHibernateTemplate().get(Document.class, Long.parseLong(documentNo));
+		return document;
+	}
 
-    public Document getDocument(String documentNo) {
-        Document document = getHibernateTemplate().get(Document.class, Long.parseLong(documentNo));
-        return document;
-    }
+	public void save(Document document) {
+		getHibernateTemplate().saveOrUpdate(document);
+	}
 
-    public void save(Document document){
-        getHibernateTemplate().saveOrUpdate(document);
-    }
+	@SuppressWarnings("unchecked")
+	public Demographic getDemoFromDocNo(String docNo) {//return null if no demographic linked to this document
+		Demographic d = null;
+		Integer i = Integer.parseInt(docNo);
+		String q = "select d from Demographic d, CtlDocument c where c.id.module='demographic'" + " and c.moduleId!='-1' and c.moduleId=d.DemographicNo and c.id.documentNo=? ";
+		List<Demographic> rs = getHibernateTemplate().find(q, i);
+		if (rs.size() > 0) d = rs.get(0);
+		return d;
+	}
 
-    public Demographic getDemoFromDocNo(String docNo){//return null if no demographic linked to this document
-        Demographic d=null;
-        Integer i=Integer.parseInt(docNo);
-        String q="select d from Demographic d, CtlDocument c where c.id.module='demographic'"
-                         + " and c.moduleId!='-1' and c.moduleId=d.DemographicNo and c.id.documentNo=? ";
-        List rs=getHibernateTemplate().find(q,i);
-        if(rs.size()>0){
-            d=(Demographic)rs.get(0);
-        }
-        return d;
-    }
-
-    public CtlDocument getCtrlDocument(Integer docId) {
-        List cList = null;
-        Session session = null;
-        try{
-            session = getSession();
-	    Criteria c = session.createCriteria(CtlDocument.class);
-	    c=c.add(Expression.eq("id.documentNo", docId));
-	    cList=c.list();
-        }catch(Exception e){
-            MiscUtils.getLogger().error("Error", e);
-        }finally{
-            if (session != null){
-               releaseSession(session);
-            }
-        }
-
-        if (cList != null && cList.size()>0){
-            return (CtlDocument)cList.get(0);
-        }else{
-            return null;
-        }
-    }
-
-
-    public void saveCtlDocument(CtlDocument ctlDocument){
-
-        getHibernateTemplate().saveOrUpdate(ctlDocument);
-
-    }
-
-    public int getNumberOfDocumentsAttachedToAProviderDemographics(String providerNo,Date startDate,Date endDate){
-       	String sql = "select count(*) from ctl_document c, demographic d,document doc where c.module_id = d.demographic_no and c.document_no = doc.document_no   and d.provider_no = ? and doc.observationdate >= ? and doc.observationdate <= ? ";
-       	int ret = 0;
-		Connection c = null;
+	@SuppressWarnings("unchecked")
+	public CtlDocument getCtrlDocument(Integer docId) {
+		List<CtlDocument> cList = null;
+		Session session = null;
 		try {
-			c = DbConnectionFilter.getThreadLocalDbConnection();
-			PreparedStatement ps = c.prepareStatement(sql);
-			ps.setString(1, providerNo);
-			ps.setTimestamp(2, new Timestamp(startDate.getTime()));
-			ps.setTimestamp(3, new Timestamp(endDate.getTime()));
-
-			ResultSet rs = ps.executeQuery();
-			if(rs.next()){
-			   ret=rs.getInt(1);
+			session = getSession();
+			Criteria c = session.createCriteria(CtlDocument.class);
+			c = c.add(Restrictions.eq("id.documentNo", docId));
+			cList = c.list();
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("Error", e);
+		} finally {
+			if (session != null) {
+				releaseSession(session);
 			}
-		}catch(Exception e){
-			log.error("Error counting documents for provider :"+providerNo,e);
 		}
-		return ret;
 
+		if (cList != null && cList.size() > 0) {
+			return cList.get(0);
+		} else {
+			return null;
+		}
+	}
 
-    }
+	public void saveCtlDocument(CtlDocument ctlDocument) {
+		getHibernateTemplate().saveOrUpdate(ctlDocument);
+	}
 
-    public void subtractPages(String documentNo, Integer i) {
-    	Document doc = getDocument(documentNo);
-    	doc.setNumberOfPages(doc.getNumberOfPages()-i);
-    	save(doc);
-    }
+	@SuppressWarnings("unchecked")
+	public int getNumberOfDocumentsAttachedToAProviderDemographics(String providerNo, Date startDate, Date endDate) {
+		Query query = getSession().createSQLQuery("select count(*) from ctl_document c, demographic d,document doc where c.module_id = d.demographic_no and c.document_no = doc.document_no   and d.provider_no = ? and doc.observationdate >= ? and doc.observationdate <= ? ");
+		query.setParameter(1, providerNo);
+		query.setParameter(2, new Timestamp(startDate.getTime()));
+		query.setParameter(3, new Timestamp(endDate.getTime()));
+		List<Integer> result = query.list();
+		if (result.isEmpty()) return 0;
+		return result.get(0);
+	}
+
+	public void subtractPages(String documentNo, Integer i) {
+		Document doc = getDocument(documentNo);
+		doc.setNumberOfPages(doc.getNumberOfPages() - i);
+		save(doc);
+	}
+
+	/**
+	 * Finds all documents for the specified demographic id
+	 * 
+	 * @param demoNo
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<org.oscarehr.document.model.Document> findByDemographicId(String demoNo) {
+		List<Document> result = getHibernateTemplate().find("SELECT DISTINCT d FROM Document d, CtlDocument c WHERE d.status = c.status AND d.status != 'D' AND c.document_no=d.document_no AND " + "c.module='demographic' AND c.module_id = ?", demoNo);
+		return result;
+	}
+
+	/**
+	 * Chop-chop. Please don't ask what this spagehtti does, better don't use it. 
+	 * 
+	 * @param module
+	 * @param moduleid
+	 * @param docType
+	 * @param includePublic
+	 * @param includeDeleted
+	 * @param includeActive
+	 * @return
+	 * 		Returns a list containing array with CtlDocument and Document pairs in the corresponding order. 
+	 */
+	@SuppressWarnings("unchecked")
+    public List<Object[]> findDocuments(String module, String moduleid, String docType, boolean includePublic, boolean includeDeleted, boolean includeActive, String sort) {
+		Map<String, Object> params = new HashMap<String, Object>();
+
+		// SELECT DISTINCT d.*d.docdesc, d.observationdate, d.status, d.docfilename, d.contenttype, d.reviewer, d.reviewdatetime, d.appointment_no FROM document d, ctl_document c WHERE d.status=c.status AND d.status != 'D' AND c.document_no=d.document_no AND c.module='demographic' AND c.module_id = 5
+		
+		StringBuilder buf = new StringBuilder("SELECT DISTINCT c, d " +
+				"FROM org.oscarehr.document.model.Document d, org.oscarehr.document.model.CtlDocument c " +
+				"WHERE c.id.documentNo = d.id AND c.id.module = :module");
+		params.put("module", module);
+		
+		boolean isShowingAllDocuments = docType == null || docType.equals("all") || docType.length() == 0; 
+		
+		if (includePublic) {
+			if (isShowingAllDocuments) {
+				buf.append(" AND d.m_public1 = 1");
+			} else {
+				buf.append(" AND d.m_public = 1 AND d.doctype = :doctype");
+				params.put("doctype", docType);
+			}
+		} else {
+			if (isShowingAllDocuments) { 
+				buf.append(" AND c.moduleId = :moduleId AND d.m_public = 0");
+				params.put("moduleId", ConversionUtils.fromIntString(moduleid));
+			} else {
+				buf.append(" AND c.module_id = :moduleId AND d.m_public = 0 AND d.doctype = :doctype");
+				params.put("doctype", docType);
+				params.put("moduleId", ConversionUtils.fromIntString(moduleid));
+			}
+		}
+
+		if (includeDeleted) {
+			buf.append(" AND d.status = 'D'");
+		} else if (includeActive) {
+			buf.append(" AND d.status != 'D'");
+		}
+		buf.append(" ORDER BY ").append(sort);
+
+		// TODO Refactor TX handling here to use Spring infrastructure. At the moment this is impossible as DAOs are non-interface based 
+		Session session = null;
+		try {
+			session = getHibernateTemplate().getSessionFactory().openSession();
+			
+			Query query = getSession().createQuery(buf.toString());
+			for (Entry<String, Object> entry : params.entrySet())
+				query.setParameter(entry.getKey(), entry.getValue());
+			
+			List<Object[]> result = query.list();
+			return result;
+		} catch (Exception e) {
+			throw new RuntimeException("Unable to find documents", e);
+		} finally {
+			if (session != null)
+				session.close();
+		}
+	}
 
 }

@@ -38,12 +38,10 @@ import org.oscarehr.common.model.ProviderInboxItem;
 import org.oscarehr.document.dao.DocumentDAO;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-import org.springframework.stereotype.Repository;
 
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
 
-@Repository
 public class DocumentResultsDao extends AbstractDao<Document>{
 
     Logger logger = Logger.getLogger(DocumentResultsDao.class);

@@ -328,7 +328,7 @@ public class RxPrescriptionData {
 		for (Object[] pair : dao.findDrugsAndPrescriptions(demographicNo)) {
 			Drug drug = (Drug) pair[0];
 			org.oscarehr.common.model.Prescription rx = (org.oscarehr.common.model.Prescription) pair[1];
-
+			MiscUtils.getLogger().info("Looking at drug " + drug + " and rx " + rx);
 			lst.add(toPrescription(demographicNo, drug, rx));
 		}
 		return lst.toArray(new Prescription[lst.size()]);

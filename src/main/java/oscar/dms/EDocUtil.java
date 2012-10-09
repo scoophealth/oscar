@@ -57,6 +57,7 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Document;
 import org.oscarehr.common.model.IndivoDocs;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.document.dao.DocumentDAO;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -64,6 +65,7 @@ import org.oscarehr.util.SpringUtils;
 import oscar.MyDateFormat;
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
+import oscar.util.ConversionUtils;
 import oscar.util.DateUtils;
 import oscar.util.SqlUtilBaseS;
 import oscar.util.UtilDateUtilities;
@@ -405,69 +407,47 @@ public final class EDocUtil extends SqlUtilBaseS {
 	}
 
 	public static ArrayList<EDoc> listDocs(String module, String moduleid, String docType, String publicDoc, String sort, String viewstatus) {
-		// sort must be not null
-		// docType = null or = "all" to show all doctypes
-		// select publicDoc and sorting from static variables for this class i.e. sort=EDocUtil.SORT_OBSERVATIONDATE
-		// sql base (prefix) to avoid repetition in the if-statements
-		String sql = "SELECT DISTINCT c.module, c.module_id, d.doccreator, d.source, d.sourceFacility, d.docClass, d.docSubClass,d.responsible, d.program_id, d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime, d.contenttype, d.observationdate, d.reviewer, d.reviewdatetime, d.appointment_no " + "FROM document d, ctl_document c WHERE c.document_no=d.document_no AND c.module='" + module + "'";
-		// if-statements to select the where condition (suffix)
-		if (publicDoc.equals(PUBLIC)) {
-			if (docType == null || docType.equals("all") || docType.length() == 0) sql = sql + " AND d.public1=1";
-			else sql = sql + " AND d.public1=1 AND d.doctype='" + docType + "'";
-		} else {
-			if (docType == null || docType.equals("all") || docType.length() == 0) sql = sql + " AND c.module_id='" + moduleid + "' AND d.public1=0";
-			else sql = sql + " AND c.module_id='" + moduleid + "' AND d.public1=0 AND d.doctype='" + docType + "'";
-		}
+		DocumentDAO dao = SpringUtils.getBean(DocumentDAO.class);
+		
+		boolean includePublic = publicDoc.equals(PUBLIC);
+		boolean includeDeleted = viewstatus.equals("deleted");
+		boolean includeActive = viewstatus.equals("active");
+		List<Object[]> documents = dao.findDocuments(module, moduleid, docType, includePublic, includeDeleted, includeActive, sort);
 
-		if (viewstatus.equals("deleted")) {
-			sql += " AND d.status = 'D'";
-		} else if (viewstatus.equals("active")) {
-			sql += " AND d.status != 'D'";
-		}
-
-		sql = sql + " ORDER BY " + sort;
-		ResultSet rs = getSQL(sql);
 		ArrayList<EDoc> resultDocs = new ArrayList<EDoc>();
-		try {
-			while (rs.next()) {
-				EDoc currentdoc = new EDoc();
-				currentdoc.setModule(rsGetString(rs, "module"));
-				currentdoc.setModuleId(rsGetString(rs, "module_id"));
-				currentdoc.setDocId(rsGetString(rs, "document_no"));
-				currentdoc.setDescription(rsGetString(rs, "docdesc"));
-				currentdoc.setType(rsGetString(rs, "doctype"));
-				currentdoc.setCreatorId(rsGetString(rs, "doccreator"));
-				currentdoc.setSource(rsGetString(rs, "source"));
-				currentdoc.setSourceFacility(rsGetString(rs, "sourceFacility"));
-				currentdoc.setResponsibleId(rsGetString(rs, "responsible"));
-                                currentdoc.setDocClass(rsGetString(rs, "docClass"));
-				currentdoc.setDocSubClass(rsGetString(rs, "docSubClass"));
-				String temp = rsGetString(rs, "program_id");
-				if (temp != null && temp.length() > 0) currentdoc.setProgramId(Integer.valueOf(temp));
-				temp = rsGetString(rs, "appointment_no");
-				if (temp != null && temp.length() > 0) currentdoc.setAppointmentNo(Integer.valueOf(temp));
-				currentdoc.setDateTimeStampAsDate(rs.getTimestamp("updatedatetime"));
-				currentdoc.setDateTimeStamp(rsGetString(rs, "updatedatetime"));
-				currentdoc.setFileName(rsGetString(rs, "docfilename"));
-				currentdoc.setStatus(rsGetString(rs, "status").charAt(0));
-				currentdoc.setContentType(rsGetString(rs, "contenttype"));
-				currentdoc.setObservationDate(rsGetString(rs, "observationdate"));
-				currentdoc.setReviewerId(rsGetString(rs, "reviewer"));
-				currentdoc.setReviewDateTime(rsGetString(rs, "reviewdatetime"));
-				currentdoc.setReviewDateTimeDate(rs.getTimestamp("reviewdatetime"));
-				resultDocs.add(currentdoc);
-			}
-			rs.close();
-		} catch (SQLException sqe) {
-			logger.error("Error", sqe);
+		for(Object[] o : documents) {
+			org.oscarehr.document.model.Document d = (org.oscarehr.document.model.Document) o[1];
+			EDoc currentdoc = toEDoc(d);
+			resultDocs.add(currentdoc);
 		}
-
+		
 		if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
 			resultDocs = documentFacilityFiltering(resultDocs);
 		}
 
 		return resultDocs;
 	}
+
+	private static EDoc toEDoc(org.oscarehr.document.model.Document d) {
+		EDoc currentdoc = new EDoc();
+		currentdoc.setDocId(d.getId().toString());
+		currentdoc.setDescription(d.getDocdesc());
+		currentdoc.setFileName(d.getDocfilename());
+		currentdoc.setContentType(d.getContenttype());
+		currentdoc.setCreatorId(d.getDoccreator());
+		currentdoc.setSource(d.getSource());
+		currentdoc.setSourceFacility(d.getSourceFacility());
+		currentdoc.setResponsibleId(d.getResponsible()); 
+		currentdoc.setProgramId(d.getProgramId());
+		currentdoc.setAppointmentNo(d.getAppointmentNo());
+		currentdoc.setType(d.getDoctype());
+		currentdoc.setStatus(d.getStatus().charAt(0));
+		currentdoc.setObservationDate(ConversionUtils.toDateString(d.getObservationdate()));
+		currentdoc.setReviewerId(d.getReviewer());
+		currentdoc.setReviewDateTime(ConversionUtils.toDateString(d.getReviewdatetime()));
+		currentdoc.setReviewDateTimeDate(d.getReviewdatetime());
+	    return currentdoc;
+    }
 
 	public ArrayList<EDoc> getUnmatchedDocuments(String creator, String responsible, Date startDate, Date endDate, boolean unmatchedDemographics) {
 		ArrayList<EDoc> list = new ArrayList<EDoc>();

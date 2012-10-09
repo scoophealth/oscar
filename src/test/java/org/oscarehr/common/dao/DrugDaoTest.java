@@ -41,7 +41,7 @@ public class DrugDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("drugs", "prescription");
+		SchemaUtils.restoreTable("drugs", "prescription", "demographic_merged");
 	}
 
 	@Test

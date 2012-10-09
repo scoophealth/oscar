@@ -177,7 +177,6 @@ public class EctViewConsultationRequestsUtil {
 
           ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
           DemographicDao demoDao = (DemographicDao) SpringUtils.getBean("demographicDao");
-          ProfessionalSpecialistDao specialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
           ConsultationServiceDao serviceDao = (ConsultationServiceDao) SpringUtils.getBean("consultationServiceDao");
           ConsultationRequest consult;
           Provider prov;

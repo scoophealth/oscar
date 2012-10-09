@@ -35,7 +35,6 @@ public  class CtlDocumentPK implements Serializable {
 	private java.lang.Integer documentNo;
 	private java.lang.String module;
 
-
 	public CtlDocumentPK () {}
 	
 	public CtlDocumentPK (
