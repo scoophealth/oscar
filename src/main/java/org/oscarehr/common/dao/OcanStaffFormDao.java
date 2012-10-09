@@ -40,7 +40,7 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
 	
 	public OcanStaffForm findLatestCompletedInitialOcan(Integer facilityId, Integer clientId) {
 
-		String sqlCommand = "select * from OcanStaffForm where facilityId=?1 and clientId=?2 and assessmentStatus=?3 and reasonForAssessment=?4 order by created desc limit 1";
+		String sqlCommand = "select * from OcanStaffForm where facilityId=?1 and clientId=?2 and assessmentStatus=?3 and reasonForAssessment=?4 order by created desc";
 
 		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
 		query.setParameter(1, facilityId);
@@ -55,7 +55,7 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
 	
 	public OcanStaffForm findLatestCompletedReassessment(Integer facilityId, Integer clientId) {
 
-		String sqlCommand = "select * from OcanStaffForm where facilityId=?1 and clientId=?2 and assessmentStatus=?3 and reasonForAssessment=?4 order by created desc limit 1";
+		String sqlCommand = "select * from OcanStaffForm where facilityId=?1 and clientId=?2 and assessmentStatus=?3 and reasonForAssessment=?4 order by created desc";
 
 		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
 		query.setParameter(1, facilityId);
@@ -68,7 +68,7 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
 	
 	public OcanStaffForm findLatestCompletedDischargedAssessment(Integer facilityId, Integer clientId) {
 
-		String sqlCommand = "select * from OcanStaffForm where facilityId=?1 and clientId=?2 and assessmentStatus=?3 and reasonForAssessment=?4 order by created desc limit 1";
+		String sqlCommand = "select * from OcanStaffForm where facilityId=?1 and clientId=?2 and assessmentStatus=?3 and reasonForAssessment=?4 order by created desc";
 
 		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
 		query.setParameter(1, facilityId);
@@ -81,7 +81,7 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
 	
 	public OcanStaffForm findLatestByFacilityClient(Integer facilityId, Integer clientId, String ocanType) {
 
-		String sqlCommand = "select * from OcanStaffForm where facilityId=?1 and clientId=?2 and ocanType=?4 order by id desc limit 1";
+		String sqlCommand = "select * from OcanStaffForm where facilityId=?1 and clientId=?2 and ocanType=?4 order by id desc";
 
 		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
 		query.setParameter(1, facilityId);
@@ -94,7 +94,7 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
 
 	public OcanStaffForm getLastCompletedOcanForm(Integer facilityId, Integer clientId) {
 
-		String sqlCommand = "select * from OcanStaffForm where facilityId=?1 and clientId=?2 and assessmentStatus=?3 order by created desc , id desc limit 1";
+		String sqlCommand = "select * from OcanStaffForm where facilityId=?1 and clientId=?2 and assessmentStatus=?3 order by created desc , id desc";
 
 		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
 		query.setParameter(1, facilityId);
@@ -107,7 +107,7 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
 
 	  public OcanStaffForm getLastCompletedOcanFormByOcanType(Integer facilityId, Integer clientId, String ocanType) {
 
-          String sqlCommand = "select * from OcanStaffForm where facilityId=?1 and clientId=?2 and assessmentStatus=?3 and ocanType=?4 order by created desc , id desc limit 1";
+          String sqlCommand = "select * from OcanStaffForm where facilityId=?1 and clientId=?2 and assessmentStatus=?3 and ocanType=?4 order by created desc , id desc";
 
           Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
           query.setParameter(1, facilityId);
@@ -310,7 +310,7 @@ public List<OcanStaffForm> findUnsubmittedOcanFormsByOcanType(Integer facilityId
     }
     
     public OcanStaffForm findLatestByAssessmentId(Integer facilityId,Integer assessmentId) {
-    	String sqlCommand = "select * from OcanStaffForm x where x.facilityId=?1 and x.assessmentId=?2 order by x.created DESC, x.id DESC limit 1";
+    	String sqlCommand = "select * from OcanStaffForm x where x.facilityId=?1 and x.assessmentId=?2 order by x.created DESC, x.id DESC";
 
     	Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
 

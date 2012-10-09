@@ -118,7 +118,7 @@ public class Hsfo2VisitDao extends AbstractDao<Hsfo2Visit>
    */
   public Hsfo2Visit getFirstVisitRecordForThePatient( String patientId)
   {
-	  String sqlCommand = "select * FROM form_hsfo2_visit x WHERE x.Patient_Id=? order by x.id ASC limit 1";
+	  String sqlCommand = "select * FROM form_hsfo2_visit x WHERE x.Patient_Id=? order by x.id ASC";
 	  Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
 	  query.setParameter(1, patientId);	  
 	  return getSingleResultOrNull(query);
