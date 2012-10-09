@@ -32,8 +32,13 @@ import java.util.Date;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.PatientLabRoutingDao;
+import org.oscarehr.common.dao.ProviderLabRoutingDao;
+import org.oscarehr.common.model.PatientLabRouting;
+import org.oscarehr.common.model.ProviderLabRoutingModel;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
@@ -55,6 +60,11 @@ public class Message {
    private PID pid = null;
    private MSH msh = null;
    private Node current;
+   
+   private PatientLabRoutingDao patientLabRoutingDao = SpringUtils.getBean(PatientLabRoutingDao.class);
+   private ProviderLabRoutingDao providerLabRoutingDao = SpringUtils.getBean(ProviderLabRoutingDao.class);
+   
+   
    public Message(String now) {
       MiscUtils.getLogger().debug("Should be a new LOG MESSAGE FILE NOW"+now);
       _logger.debug("Message object Instantiated now = "+now);
@@ -106,8 +116,7 @@ public class Message {
    }
 
 
-   //Method runs insert into hl7_message table and retrieves the insert id.
-   //The calls the MSH.toDatabase method passing in the insert id from hl7_message
+  
    public void ToDatabase() throws SQLException {
       MiscUtils.getLogger().debug("sql "+this.getSql());
       DBHandler.RunSQL(this.getSql());
@@ -174,18 +183,20 @@ public class Message {
                     if (listOfProviderNo.size() > 0) {  // provider found in database
                        for(int p = 0; p < listOfProviderNo.size(); p++){
                           String prov = listOfProviderNo.get(p);
-                          //sql ="insert ignore into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('"+prov+"', '"+parent+"', 'N','BCP')";
-
-                          //DBHandler.RunSQL(sql);
+                    
                           routing.route(parent, prov, DbConnectionFilter.getThreadLocalDbConnection(), "BCP");
                        }
                        addedToProviderLabRouting =true;
                     }   // provider not found
 
                     if(!addedToProviderLabRouting){
-                       sql ="insert into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('0', '"+parent+"', 'N','BCP')";
-                       MiscUtils.getLogger().debug(sql);
-                       DBHandler.RunSQL(sql);
+                    	ProviderLabRoutingModel l = new ProviderLabRoutingModel();
+                    	l.setProviderNo("0");
+                    	l.setLabNo(parent);
+                    	l.setStatus("N");
+                    	l.setLabType("BCP");
+                    	providerLabRoutingDao.persist(l);
+                       
                     }
 
                 } else { // major error
@@ -196,9 +207,13 @@ public class Message {
             } catch (Exception e) {
                 MiscUtils.getLogger().debug("Error in providerRouteReport:"+e);
 
-                sql ="insert into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('0', '"+parent+"', 'N','BCP')";
-                MiscUtils.getLogger().debug(sql);
-                DBHandler.RunSQL(sql);
+                ProviderLabRoutingModel l = new ProviderLabRoutingModel();
+            	l.setProviderNo("0");
+            	l.setLabNo(parent);
+            	l.setStatus("N");
+            	l.setLabType("BCP");
+            	providerLabRoutingDao.persist(l);
+          
             }
         } catch (Exception e) {
             MiscUtils.getLogger().debug("Database error in providerRouteReport:"+e);
@@ -269,13 +284,18 @@ public class Message {
                         "month_of_birth='"+dobMonth+"' and date_of_birth='"+dobDay+"' and sex like '"+oscar.Misc.getString(rs, "sex").toUpperCase()+"%' and " +
                         "patient_status='AC'";
                   ResultSet rs2 = DBHandler.GetSQL(sql);
+                  PatientLabRouting l = new PatientLabRouting();
+                  l.setLabNo(segmentID);
+                  l.setLabType("BCP");
+                
                   if ( rs2.next() ) {
                      demoNo = rs2.getString("demographic_no");
-                     sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type) values ('"+rs2.getString("demographic_no")+"', '"+segmentID+"','BCP')";
-                  } else {
-                     sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type) values ('0', '"+segmentID+"','BCP')";
+                     l.setDemographicNo(Integer.parseInt(demoNo));
+                  } else {             	  
+                	  l.setDemographicNo(0);
                   }
-                  DBHandler.RunSQL(sql);
+                 patientLabRoutingDao.persist(l);
+                 
                } else {
                   // patient's health number is unknown - search by name, DOB, sex
                   sql = "select demographic_no from demographic where last_name='"+StringEscapeUtils.escapeSql(lastName)+"' and " +
@@ -284,13 +304,17 @@ public class Message {
                         "patient_status='AC'";
                   MiscUtils.getLogger().debug(sql);
                   ResultSet rs3 = DBHandler.GetSQL(sql);
+                  PatientLabRouting l = new PatientLabRouting();
+                  l.setLabNo(segmentID);
+                  l.setLabType("BCP");
+                  
                   if ( rs3.next() ) {
                      demoNo = rs3.getString("demographic_no");
-                     sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type) values ('"+rs3.getString("demographic_no")+"', '"+segmentID+"','BCP')";
+                     l.setDemographicNo(Integer.parseInt(demoNo));
                   } else {
-                     sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type) values ('0', '"+segmentID+"','BCP')";
+                	  l.setDemographicNo(0);
                   }
-                  DBHandler.RunSQL(sql);
+                  patientLabRoutingDao.persist(l);
                }
 
                //NOT ALL DOCS WANT ALL LABS ECHO'D INTO THERE INBOX
@@ -304,8 +328,12 @@ public class Message {
          } catch (Exception e) {
             MiscUtils.getLogger().debug("Error in patientRouteReport:"+e);
             MiscUtils.getLogger().error("Error", e);
-            sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type) values ('0', '"+segmentID+"','BCP')";
-            DBHandler.RunSQL(sql);
+            
+            PatientLabRouting l = new PatientLabRouting();
+            l.setDemographicNo(0);
+            l.setLabNo(segmentID);
+            l.setLabType("BCP");
+            patientLabRoutingDao.persist(l);
          }
       } catch (Exception e) {
          MiscUtils.getLogger().debug("Database error in patientRouteReport:"+e);
@@ -327,9 +355,6 @@ public class Message {
                 MiscUtils.getLogger().debug(sql);
                 ResultSet rs2 = DBHandler.GetSQL(sql);
                 if ( !rs2.next() ) {
-                   //sql = "insert into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('"+prov_no+"', '"+lab_no+"', 'N','BCP')";
-
-                   //DBHandler.RunSQL(sql);
                    ProviderLabRouting router = new ProviderLabRouting();
                    router.route(lab_no, prov_no, DbConnectionFilter.getThreadLocalDbConnection(), "BCP");
                 } else {
@@ -343,35 +368,4 @@ public class Message {
           MiscUtils.getLogger().debug("Database error in patientProviderRoute:"+e);
        }
     }
-
-
-   /*UNUSED CODE FROM ABOVE
-    // route lab first to admitting doctor
-                    subStrings = oscar.Misc.getString(rs,"ordering_provider").split("\\^");
-                    providerMinistryNo = StringUtils.returnStringToFirst(subStrings[0].substring(1, subStrings[0].length())," ");
-                    // check that this is a legal provider
-                    providerNo = getProviderNoFromOhipNo(providerMinistryNo);
-                    if ( providerNo != null) {  // provider found in database
-                        sql ="insert into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('"+providerNo+"', '"+parent+"', 'N','BCP')";
-                        DBHandler.RunSQL(sql);
-                        addedToProviderLabRouting =true;
-                    }  // provider not found
-
-                    // next route to consulting doctor(s)
-                    if ( ! oscar.Misc.getString(rs,"result_copies_to").equals("") ) {
-                        conDoctors = oscar.Misc.getString(rs,"result_copies_to").split("~");
-                        for (int i = 1; i <= conDoctors.length; i++) {
-                            subStrings = conDoctors[i-1].split("\\^");
-                            providerMinistryNo = StringUtils.returnStringToFirst(subStrings[0].substring(1, subStrings[0].length())," ");
-                            // check that this is a legal provider
-                            providerNo = getProviderNoFromOhipNo(providerMinistryNo);
-                            if ( providerNo != null) {  // provider found in database
-                                // ignore duplicates in case admitting doctor == consulting doctor
-                                sql ="insert ignore into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('"+providerNo+"', '"+parent+"', 'N','BCP')";
-                                DBHandler.RunSQL(sql);
-                                addedToProviderLabRouting =true;
-                            }   // provider not found
-                        }
-                    }
-    */
 }
