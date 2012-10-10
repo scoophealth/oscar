@@ -25,6 +25,7 @@
 
 package oscar.oscarMessenger.pageUtil;
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -35,9 +36,13 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessages;
+import org.oscarehr.common.dao.MessageListDao;
+import org.oscarehr.common.dao.MessageTblDao;
+import org.oscarehr.common.model.MessageList;
+import org.oscarehr.common.model.MessageTbl;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
 
 public class MsgSendMessageAction extends Action {
@@ -142,44 +147,31 @@ public class MsgSendMessageAction extends Action {
       //insert message into the messagetbl, get the message id back and insert it into the messagelisttbl
       //insert all the provider ids that will get the message along with the message id plus a status of new
 
-      try
-            {
-              
-              java.sql.ResultSet rs;
-              //String sql = "insert into messagetbl (thedate,thetime,themessage,thesubject,sentby,sentto) values ('today','now','"+message+"','"+subject+"','jay','"+sentToWho+"' ";
-              DBHandler.RunSQL("insert into messagetbl (thedate,theime,themessage,thesubject,sentby,sentto) values ('today','now','"+message+"','"+subject+"','jay','"+sentToWho+"') ");
+     
+    	  MessageTbl mt =new MessageTbl();
+    	  mt.setDate(new Date());
+    	  mt.setTime(new Date());
+    	  mt.setMessage(message);
+    	  mt.setSubject(subject);
+    	  mt.setSentBy("jay");
+    	  mt.setSentTo(sentToWho.toString());
+    	  
+    	  MessageTblDao dao = SpringUtils.getBean(MessageTblDao.class);
+    	  dao.persist(mt);
+    	  
+    	  MessageListDao mld = SpringUtils.getBean(MessageListDao.class);
+    	  
+          for (int i =0 ; i < providers.length ; i++)
+          {
 
-	      /* Choose the right command to recover the messageid inserted above */
-	      OscarProperties prop = OscarProperties.getInstance();
-	      String db_type = prop.getProperty("db_type").trim();
-	      if (db_type.equalsIgnoreCase("mysql")) {
-		rs = DBHandler.GetSQL("SELECT LAST_INSERT_ID() ");
-	      } else if (db_type.equalsIgnoreCase("postgresql")) {
-		rs = DBHandler.GetSQL("SELECT CURRVAL('messagetbl_int_seq')");
-	      } else
-	      throw new java.sql.SQLException("ERROR: Database " + db_type + " unrecognized");
+        	  MessageList ml = new MessageList();
+        	  ml.setMessage(mt.getId());
+        	  ml.setProviderNo(providers[i]);
+        	  ml.setStatus("new");
+        	  mld.persist(ml);
+          }
+       
 
-              String messageid = oscar.Misc.getString(rs, 1);
-
-              for (int i =0 ; i < providers.length ; i++)
-              {
-
-                DBHandler.RunSQL("insert into messagelisttbl (message,provider_no,status) values ('"+messageid+"','"+providers[i]+"','new')");
-              }
-        rs.close();
-
-      }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
-
-            // for (int i =0 ; i < providers.length ; i++)
-            // {
-
-            // }
-
-            //servlet.getServletContext().setAttribute("SendMessageFormId", sentToWho);
-            //((SearchPatientForm)form).getSurname();
-            //((SentMessageForm)form).setSample(sentToWho.toString());
-            //request.setAttribute(sentToWho.toString(),demoAgain.SentMessageForm);
-            //servlet.getServletContext().setAttribute("SentMessageProvs",sentToWho.toString());
             request.setAttribute("SentMessageProvs",sentToWho.toString());
 
             return (mapping.findForward("success"));
