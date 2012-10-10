@@ -25,9 +25,14 @@ package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.SchemaUtils;
+import org.oscarehr.common.model.MyGroup;
+import org.oscarehr.common.model.MyGroupPrimaryKey;
 import org.oscarehr.util.SpringUtils;
 
 public class WaitingListNameDaoTest extends DaoTestFixtures {
@@ -43,5 +48,12 @@ public class WaitingListNameDaoTest extends DaoTestFixtures {
 	public void testCountActiveWatingListNames() {
 		long count = dao.countActiveWatingListNames();
 		assertTrue(count >= 0);
+	}
+	
+	@Test
+	public void testFindByMyGroups() {
+		List<MyGroup> t = new ArrayList<MyGroup>();
+		t.add(new MyGroup(new MyGroupPrimaryKey("a","999998"),"last name","first name"));
+		dao.findByMyGroups(t);
 	}
 }

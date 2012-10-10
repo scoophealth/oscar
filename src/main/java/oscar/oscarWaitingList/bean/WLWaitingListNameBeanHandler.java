@@ -25,19 +25,23 @@
 
 package oscar.oscarWaitingList.bean;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.oscarehr.util.MiscUtils;
-
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.common.dao.MyGroupDao;
+import org.oscarehr.common.dao.WaitingListNameDao;
+import org.oscarehr.common.model.WaitingListName;
+import org.oscarehr.util.SpringUtils;
 
 public class WLWaitingListNameBeanHandler {
     
-    List waitingListNameList = new ArrayList();
-    List waitingListNames = new ArrayList();
+    List<WLWaitingListNameBean> waitingListNameList = new ArrayList<WLWaitingListNameBean>();
+    List<String> waitingListNames = new ArrayList<String>();
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    
+    private MyGroupDao myGroupDao = SpringUtils.getBean(MyGroupDao.class);
+    private WaitingListNameDao waitingListNameDao = SpringUtils.getBean(WaitingListNameDao.class);
     
     public WLWaitingListNameBeanHandler(String groupNo, String providerNo) {
         init(groupNo, providerNo);
@@ -45,38 +49,25 @@ public class WLWaitingListNameBeanHandler {
 
     public boolean init(String groupNo, String providerNo) {
         
-        boolean verdict = true;
-        try {
-            
-            
-            String sql = " SELECT * FROM waitingListName WHERE group_no='" + groupNo + "' " +
-                         " AND is_history='N' order by `name` asc";
-            ResultSet rs;
-            
-            for(rs = DBHandler.GetSQL(sql); rs.next(); )
-            {                
-                WLWaitingListNameBean wLBean = new WLWaitingListNameBean(   oscar.Misc.getString(rs, "ID"),
-                                                                            oscar.Misc.getString(rs, "name"),
-                                                                            oscar.Misc.getString(rs, "group_no"),
-                                                                            oscar.Misc.getString(rs, "provider_no"),
-                                                                            oscar.Misc.getString(rs, "create_date"));                   
-                waitingListNameList.add(wLBean);
-                waitingListNames.add(oscar.Misc.getString(rs, "name"));
-            }                            
-            rs.close();
-        }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-            verdict = false;
-        }
-        return verdict;
+          
+    	List<WaitingListName> wlNames = waitingListNameDao.findByMyGroups(myGroupDao.getProviderGroups(providerNo));
+    	for(WaitingListName tmp:wlNames) {
+    		WLWaitingListNameBean wLBean =
+    				new WLWaitingListNameBean(String.valueOf(tmp.getId()), tmp.getName(), tmp.getGroupNo(), tmp.getProviderNo(), formatter.format(tmp.getCreateDate()));                   
+    			
+    		waitingListNameList.add(wLBean);
+    		waitingListNames.add(tmp.getName());
+    	}
+        
+      
+    	return true;
     }
         
-    public List getWaitingListNameList(){
+    public List<WLWaitingListNameBean> getWaitingListNameList(){
         return waitingListNameList;
     }    
         
-    public List getWaitingListNames(){
+    public List<String> getWaitingListNames(){
         return waitingListNames;
     }    
 

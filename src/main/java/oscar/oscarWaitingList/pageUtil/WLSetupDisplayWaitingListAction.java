@@ -37,7 +37,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.LazyValidatorForm;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.ProviderPreference;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SessionConstants;
 
 import oscar.oscarProvider.bean.ProviderNameBean;
@@ -166,6 +168,11 @@ public final class WLSetupDisplayWaitingListAction extends Action {
         if(groupNo != null){
         	phd.setThisGroupProviderVector(groupNo);
         	allProviders = phd.getThisGroupProviderVector();
+        	if(allProviders.size()==0 && groupNo.equals(".default")) {
+        		Provider p = LoggedInInfo.loggedInInfo.get().loggedInProvider;
+        		ProviderNameBean pNameBean = new ProviderNameBean(p.getFormattedName(),p.getProviderNo());
+        		allProviders.add(pNameBean);
+        	}
         	log.debug("WLSetupDisplayWaitingListAction/execute(): allProviders.size() = "+ allProviders.size());
                 if (allProviders.size()<=0){
                     ProviderData proData = new ProviderData();
