@@ -53,6 +53,10 @@ function searchAll() {
     if (checkTypeIn()) document.titlesearch.submit();
 }
 
+function checkTypeIn() {
+	return true;
+}
+
 
 function write2Parent(keyword, demographic_no){
     
