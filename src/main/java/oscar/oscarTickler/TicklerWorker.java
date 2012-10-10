@@ -22,18 +22,18 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarTickler;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
-import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.common.dao.ConsultationRequestDao;
+import org.oscarehr.common.model.ConsultationRequest;
 import org.oscarehr.util.LoggedInInfo;
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarDemographic.data.DemographicNameAgeString;
+import oscar.util.ConversionUtils;
 import oscar.util.UtilDateUtilities;
 
 /**
@@ -42,46 +42,32 @@ import oscar.util.UtilDateUtilities;
  */
 public class TicklerWorker extends Thread {
 
-    public String provider = null;
-    public String ticklerMessage = null;
-    public String status = TicklerData.ACTIVE;
-    public String priority = TicklerData.NORMAL;
+	private static final int OLD_REFERRAL_CUTOFF_IN_DAYS = 14;
 
-    public TicklerWorker() {
+	public String provider = null;
+	public String ticklerMessage = null;
+	public String status = TicklerData.ACTIVE;
+	public String priority = TicklerData.NORMAL;
 
-    }
-
-    public void run() {
-
+	public void run() {
 		LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
 
-        try {
-            TicklerData td = new TicklerData();
-            
-            String sql = "select * from consultationRequests where to_days(now()) - to_days(referalDate) > 14 and status = '1' and providerNo = '" + provider + "' ";
+		Calendar calendar = GregorianCalendar.getInstance();
+		calendar.add(Calendar.DAY_OF_YEAR, -OLD_REFERRAL_CUTOFF_IN_DAYS);
 
-            ResultSet rs = DBHandler.GetSQL(sql);
-            while (rs.next()) {
-                String demo = oscar.Misc.getString(rs, "demographicNo");
-                String date = oscar.Misc.getString(rs, "referalDate");
+		ConsultationRequestDao dao = SpringUtils.getBean(ConsultationRequestDao.class);
+		TicklerData td = new TicklerData();
+		for (ConsultationRequest cr : dao.getReferrals(provider, calendar.getTime())) {
+			String demo = cr.getDemographicId().toString();
+			String date = ConversionUtils.toDateString(cr.getReferralDate());
 
-                ticklerMessage = DemographicNameAgeString.getInstance().getNameAgeString(demo) + " has an Consultation Request with a status of 'Nothing Done'. Referral Date was " + date;
-                if (!td.hasTickler(demo, provider, ticklerMessage)) {
-                    td.addTickler(demo, ticklerMessage, status, UtilDateUtilities.getToday("yyyy-MM-dd"), "0", priority, provider);
-                }
-            }
-            rs.close();
-        }
-        catch (SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-        }
-        finally {
-    		LoggedInInfo.loggedInInfo.remove();
-            DbConnectionFilter.releaseAllThreadDbResources();
-        }
-        /// check to see if tickler is needed
-        //if so, check to see if one is already added
-        //if so add it
-
-    }
+			ticklerMessage = DemographicNameAgeString.getInstance().getNameAgeString(demo) + " has an Consultation Request with a status of 'Nothing Done'. Referral Date was " + date;
+			if (!td.hasTickler(demo, provider, ticklerMessage)) {
+				td.addTickler(demo, ticklerMessage, status, UtilDateUtilities.getToday("yyyy-MM-dd"), "0", priority, provider);
+			}
+		}
+		/// check to see if tickler is needed
+		//if so, check to see if one is already added
+		//if so add it
+	}
 }

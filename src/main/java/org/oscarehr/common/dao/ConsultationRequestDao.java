@@ -63,7 +63,8 @@ public class ConsultationRequestDao extends AbstractDao<ConsultationRequest> {
             return results;
         }
 
-        public List getConsults(String team, boolean showCompleted, Date startDate, Date endDate, String orderby, String desc, String searchDate) {
+        @SuppressWarnings("unchecked")
+        public List<ConsultationRequest> getConsults(String team, boolean showCompleted, Date startDate, Date endDate, String orderby, String desc, String searchDate) {
             StringBuilder sql = new StringBuilder("select cr from ConsultationRequest cr left outer join cr.professionalSpecialist specialist, ConsultationServices service, Demographic d left outer join d.provider p where d.DemographicNo = cr.demographicId and service.id = cr.serviceId ");
 
             if( !showCompleted ) {
@@ -133,5 +134,13 @@ public class ConsultationRequestDao extends AbstractDao<ConsultationRequest> {
 
         public ConsultationRequest getConsultation(Integer requestId) {
             return this.find(requestId);
+        }
+
+		@SuppressWarnings("unchecked")
+        public List<ConsultationRequest> getReferrals(String providerId, Date cutoffDate) {
+			Query query = createQuery("cr", "cr.referralDate <= :cutoff AND cr.status = '1' and cr.providerNo = :providerNo");
+			query.setParameter("cutoff", cutoffDate);
+			query.setParameter("providerNo", providerId);
+			return query.getResultList();
         }
 }
