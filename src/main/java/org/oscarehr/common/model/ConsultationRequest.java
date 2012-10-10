@@ -47,6 +47,8 @@ import org.apache.commons.lang.StringUtils;
 @Table(name = "consultationRequests")
 public class ConsultationRequest extends AbstractModel<Integer> implements Serializable {
 
+	private static final String ACTIVE_MARKER = "1";
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "requestId")
@@ -78,7 +80,7 @@ public class ConsultationRequest extends AbstractModel<Integer> implements Seria
 	@Column(name = "demographicNo")
 	private Integer demographicId;
 
-	private String status;
+	private String status = ACTIVE_MARKER;
 	private String statusText;
 	private String sendTo;
 	private String concurrentProblems;
