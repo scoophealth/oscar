@@ -37,7 +37,10 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.GroupMembersDao;
+import org.oscarehr.common.model.GroupMembers;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarMessenger.data.MsgAddressBookMaker;
@@ -66,9 +69,14 @@ public class MsgMessengerAdminAction extends Action {
               java.sql.ResultSet rs;
               String sql = new String("delete from groupMembers_tbl where groupID = '"+grpNo+"'");
               DBHandler.RunSQL(sql);
+              
+              GroupMembersDao groupMembersDao = SpringUtils.getBean(GroupMembersDao.class);
               for (int i = 0; i < providers.length ; i++){
-                  sql = new String("insert into groupMembers_tbl (groupID,provider_No) values ('"+grpNo+"','"+providers[i]+"')");
-                  DBHandler.RunSQL(sql);
+            	  GroupMembers gm = new GroupMembers();
+            	  gm.setGroupId(Integer.parseInt(grpNo));
+            	  gm.setProviderNo(providers[i]);
+            	  groupMembersDao.persist(gm);
+            	  
               }
               
               MsgAddressBookMaker addMake = new MsgAddressBookMaker();
