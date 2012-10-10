@@ -65,8 +65,6 @@ import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteExtDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementTmpSaveDAO;
-import org.oscarehr.casemgmt.dao.EchartDAO;
-import org.oscarehr.casemgmt.dao.EncounterWindowDAO;
 import org.oscarehr.casemgmt.dao.HashAuditDAO;
 import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.dao.ProviderSignitureDao;
@@ -78,7 +76,6 @@ import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.model.CaseManagementSearchBean;
 import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
-import org.oscarehr.casemgmt.model.EncounterWindow;
 import org.oscarehr.casemgmt.model.HashAuditImpl;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.model.base.BaseHashAudit;
@@ -86,6 +83,8 @@ import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.DxresearchDAO;
+import org.oscarehr.common.dao.EChartDao;
+import org.oscarehr.common.dao.EncounterWindowDao;
 import org.oscarehr.common.dao.MessageTblDao;
 import org.oscarehr.common.dao.MsgDemoMapDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
@@ -93,6 +92,7 @@ import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Dxresearch;
+import org.oscarehr.common.model.EncounterWindow;
 import org.oscarehr.common.model.MessageTbl;
 import org.oscarehr.common.model.MsgDemoMap;
 import org.oscarehr.common.model.Provider;
@@ -124,7 +124,6 @@ public class CaseManagementManager {
 	private CaseManagementIssueDAO caseManagementIssueDAO;
 	private IssueDAO issueDAO;
 	private CaseManagementCPPDAO caseManagementCPPDAO;
-	private EchartDAO echartDAO;
 	private ProviderDao providerDAO;
 	private DemographicDao demographicDao;
 	private ProviderSignitureDao providerSignitureDao;
@@ -133,7 +132,6 @@ public class CaseManagementManager {
 	private CaseManagementTmpSaveDAO caseManagementTmpSaveDAO;
 	private AdmissionManager admissionManager;
 	private HashAuditDAO hashAuditDAO;
-	private EncounterWindowDAO ectWindowDAO;
 	private UserPropertyDAO userPropertyDAO;
 	private DxresearchDAO dxresearchDAO;
 	private ProgramProviderDAO programProviderDao;
@@ -143,7 +141,9 @@ public class CaseManagementManager {
 
 	private static final Logger logger = MiscUtils.getLogger();
 
-
+	private EChartDao eChartDao = null;
+	private EncounterWindowDao encounterWindowDao;
+	
 	public CaseManagementIssue getIssueByIssueCode(String demo, String issue_code) {
 		return this.caseManagementIssueDAO.getIssuebyIssueCode(demo, issue_code);
 	}
@@ -194,11 +194,14 @@ public class CaseManagementManager {
 	}
 
 	public void saveEctWin(EncounterWindow ectWin) {
-		ectWindowDAO.saveWindowDimensions(ectWin);
+		if(ectWin.getId() == null)
+			encounterWindowDao.persist(ectWin);
+		else
+			encounterWindowDao.merge(ectWin);
 	}
 
 	public EncounterWindow getEctWin(String provider) {
-		return this.ectWindowDAO.getWindow(provider);
+		return this.encounterWindowDao.find(provider);
 	}
 
 	public void saveNoteExt(CaseManagementNoteExt cExt) {
@@ -244,7 +247,7 @@ public class CaseManagementManager {
 
 		OscarProperties properties = OscarProperties.getInstance();
 		if (!Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
-			return echartDAO.saveEchart(note, cpp, userName, lastStr);
+			return eChartDao.saveEchart(note, cpp, userName, lastStr);
 		}
 
 		return "";
@@ -624,7 +627,7 @@ public class CaseManagementManager {
 
 		OscarProperties properties = OscarProperties.getInstance();
 		if (!Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
-			echartDAO.saveCPPIntoEchart(cpp, providerNo);
+			eChartDao.saveCPPIntoEchart(cpp, providerNo);
 		}
 	}
 
@@ -682,7 +685,7 @@ public class CaseManagementManager {
 
 		OscarProperties properties = OscarProperties.getInstance();
 		if (!Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
-			echartDAO.updateEchartOngoing(cpp);
+			eChartDao.updateEchartOngoing(cpp);
 		}
 
 	}
@@ -713,7 +716,7 @@ public class CaseManagementManager {
 
 			OscarProperties properties = OscarProperties.getInstance();
 			if (!Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
-				echartDAO.updateEchartOngoing(cpp);
+				eChartDao.updateEchartOngoing(cpp);
 			}
 		}
 	}
@@ -740,7 +743,7 @@ public class CaseManagementManager {
 
 			OscarProperties properties = OscarProperties.getInstance();
 			if (!Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
-				echartDAO.updateEchartOngoing(cpp);
+				eChartDao.updateEchartOngoing(cpp);
 			}
 		}
 
@@ -764,7 +767,7 @@ public class CaseManagementManager {
 
 		OscarProperties properties = OscarProperties.getInstance();
 		if (!Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
-			echartDAO.updateEchartOngoing(cpp);
+			eChartDao.updateEchartOngoing(cpp);
 		}
 	}
 
@@ -1562,10 +1565,6 @@ public class CaseManagementManager {
 		this.enabled = enabled;
 	}
 
-	public void setEchartDAO(EchartDAO echartDAO) {
-		this.echartDAO = echartDAO;
-	}
-
 	public void setCaseManagementNoteDAO(CaseManagementNoteDAO dao) {
 		this.caseManagementNoteDAO = dao;
 	}
@@ -1636,10 +1635,6 @@ public class CaseManagementManager {
 
 	public void setHashAuditDAO(HashAuditDAO dao) {
 		this.hashAuditDAO = dao;
-	}
-
-	public void setEctWindowDAO(EncounterWindowDAO dao) {
-		this.ectWindowDAO = dao;
 	}
 
 	public void setUserPropertyDAO(UserPropertyDAO dao) {
@@ -1760,4 +1755,14 @@ public class CaseManagementManager {
 	private boolean filled(String s) {
 		return (s != null && s.trim().length() > 0);
 	}
+
+	public void seteChartDao(EChartDao eChartDao) {
+		this.eChartDao = eChartDao;
+	}
+
+	public void setEncounterWindowDao(EncounterWindowDao encounterWindowDao) {
+		this.encounterWindowDao = encounterWindowDao;
+	}
+	
+	
 }

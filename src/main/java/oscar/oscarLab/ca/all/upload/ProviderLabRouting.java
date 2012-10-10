@@ -46,6 +46,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.ProviderLabRoutingDao;
 import org.oscarehr.common.model.ProviderLabRoutingModel;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
@@ -58,8 +59,8 @@ import oscar.oscarLab.ForwardingRules;
 public class ProviderLabRouting {
 
     Logger logger = Logger.getLogger(ProviderLabRouting.class);
+    private ProviderLabRoutingDao providerLabRoutingDao = SpringUtils.getBean(ProviderLabRoutingDao.class);
 
-    /** Creates a new instance of ProviderLabRouting */
     public ProviderLabRouting() {
     }
 
@@ -67,9 +68,9 @@ public class ProviderLabRouting {
         route(Integer.parseInt(labId), provider_no, conn, labType);
     }
 
-	    public void route(int labId, String provider_no,String labType) throws SQLException{
-	        route(Integer.toString(labId), provider_no,labType);
-	    }
+    public void route(int labId, String provider_no,String labType) throws SQLException{
+        route(Integer.toString(labId), provider_no,labType);
+    }
 
     public void route(int labId, String provider_no, Connection conn, String labType) throws SQLException{
         PreparedStatement pstmt;
@@ -85,10 +86,13 @@ public class ProviderLabRouting {
 
             String status = fr.getStatus(provider_no);
             ArrayList<ArrayList<String>> forwardProviders = fr.getProviders(provider_no);
-            sql = "insert into providerLabRouting (provider_no, lab_no, status, lab_type) values('"+provider_no+"', '"+labId+"', '"+status+"', '"+labType+"')";
-
-            pstmt = conn.prepareStatement(sql);
-            pstmt.executeUpdate();
+            ProviderLabRoutingModel p = new ProviderLabRoutingModel();
+            p.setProviderNo(provider_no);
+            p.setLabNo(labId);
+            p.setStatus(status);
+            p.setLabType(labType);
+            providerLabRoutingDao.persist(p);
+           
 
             //forward lab to specified providers
             for (int j=0; j < forwardProviders.size(); j++){

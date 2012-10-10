@@ -36,12 +36,18 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.ServiceSpecialistsDao;
+import org.oscarehr.common.model.ServiceSpecialists;
+import org.oscarehr.common.model.ServiceSpecialistsPK;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 
 public class EctConDisplayServiceAction extends Action {
    
+	private ServiceSpecialistsDao dao = SpringUtils.getBean(ServiceSpecialistsDao.class);
+	
    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
    throws ServletException, IOException {
       EctConDisplayServiceForm displayServiceForm = (EctConDisplayServiceForm)form;
@@ -54,8 +60,9 @@ public class EctConDisplayServiceAction extends Action {
          String sql = String.valueOf(String.valueOf((new StringBuilder("delete from serviceSpecialists where serviceId = '")).append(serviceId).append("'")));
          DBHandler.RunSQL(sql);
          for(int i = 0; i < specialists.length; i++) {
-            sql = String.valueOf(String.valueOf((new StringBuilder("insert into serviceSpecialists (serviceId,specId) values ('")).append(serviceId).append("','").append(specialists[i]).append("')")));
-            DBHandler.RunSQL(sql);
+        	 ServiceSpecialists ss = new ServiceSpecialists();
+        	 ss.setId(new ServiceSpecialistsPK(Integer.parseInt(serviceId),Integer.parseInt(specialists[i])));
+        	 dao.persist(ss);
          }
       }
       catch(SQLException e) {

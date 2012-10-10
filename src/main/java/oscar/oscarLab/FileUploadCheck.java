@@ -27,15 +27,16 @@ package oscar.oscarLab;
 
 import java.io.InputStream;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Hashtable;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.oscarehr.common.dao.FileUploadCheckDao;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -44,6 +45,8 @@ import oscar.oscarDB.DBHandler;
  */
 public final class FileUploadCheck {
 
+	static FileUploadCheckDao fileUploadCheckDao = SpringUtils.getBean(FileUploadCheckDao.class);
+	
 	private FileUploadCheck() {
 		// no instantiation allowed
 	}
@@ -105,23 +108,21 @@ public final class FileUploadCheck {
 	/**
 	 *Used to add a new file to the database, checks to see if it already has been added
 	 */
-	public static synchronized int addFile(String name, InputStream is, String provider) throws Exception {
+	public static synchronized int addFile(String name, InputStream is, String provider)  {
 		int fileUploaded = UNSUCCESSFUL_SAVE;
 		try {
 			String md5sum = DigestUtils.md5Hex(IOUtils.toByteArray(is));
 			if (!hasFileBeenUploaded(md5sum)) {
 
-				String sql = "insert into fileUploadCheck (provider_no,filename,md5sum,date_time) values ('" + provider + "','" + StringEscapeUtils.escapeSql(name) + "','" + md5sum + "',now())";
-				MiscUtils.getLogger().debug(sql);
-				DBHandler.RunSQL(sql);
-				ResultSet rs = DBHandler.GetSQL("SELECT LAST_INSERT_ID() ");
-				if (rs.next()) {
-					fileUploaded = rs.getInt(1);
-				}
+				org.oscarehr.common.model.FileUploadCheck f = new org.oscarehr.common.model.FileUploadCheck();
+				f.setProviderNo(provider);
+				f.setFilename(name);
+				f.setMd5sum(md5sum);
+				f.setDateTime(new Date());
+				
+				fileUploadCheckDao.persist(f);
+				fileUploaded = f.getId();
 			}
-		} catch (SQLException conE) {
-			MiscUtils.getLogger().error("Error", conE);
-			throw new Exception("Database Is not Running");
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Error", e);
 		}

@@ -26,7 +26,6 @@
 package oscar.oscarEncounter.pageUtil;
 
 import java.io.IOException;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -42,9 +41,12 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.AppointmentArchiveDao;
+import org.oscarehr.common.dao.EChartDao;
+import org.oscarehr.common.dao.EncounterWindowDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.model.Appointment;
-import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.common.model.EChart;
+import org.oscarehr.common.model.EncounterWindow;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -218,22 +220,22 @@ public class EctSaveEncounterAction extends Action {
               return actionmapping.findForward("concurrencyError");
           }
 
-          try {
-            String s = "insert into eChart (timeStamp, demographicNo,providerNo,subject,socialHistory,familyHistory,medicalHistory,ongoingConcerns,reminders,encounter) values (?,?,?,?,?,?,?,?,?,?)" ;
-            PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(s);
-                pstmt.setTimestamp(1,new java.sql.Timestamp(date.getTime()));
-                pstmt.setString(2,sessionbean.demographicNo);
-                pstmt.setString(3,sessionbean.providerNo);
-                pstmt.setString(4,sessionbean.subject);
-                pstmt.setString(5,sessionbean.socialHistory);
-                pstmt.setString(6,sessionbean.familyHistory);
-                pstmt.setString(7,sessionbean.medicalHistory);
-                pstmt.setString(8,sessionbean.ongoingConcerns);
-                pstmt.setString(9,sessionbean.reminders);
-                pstmt.setString(10,sessionbean.encounter);
-                pstmt.executeUpdate();
-                pstmt.close();
-            sessionbean.eChartId = getLatestID(sessionbean.demographicNo);
+          
+        	  EChart e = new EChart();
+        	  e.setTimestamp(date);
+        	  e.setDemographicNo(Integer.parseInt(sessionbean.demographicNo));
+        	  e.setProviderNo(sessionbean.providerNo);
+        	  e.setSubject(sessionbean.subject);
+        	  e.setSocialHistory(sessionbean.socialHistory);
+        	  e.setFamilyHistory(sessionbean.familyHistory);
+        	  e.setMedicalHistory(sessionbean.medicalHistory);
+        	  e.setOngoingConcerns(sessionbean.ongoingConcerns);
+        	  e.setReminders(sessionbean.reminders);
+        	  e.setEncounter(sessionbean.encounter);
+        	  
+        	  EChartDao dao = SpringUtils.getBean(EChartDao.class);
+        	  dao.persist(e);
+            sessionbean.eChartId =String.valueOf(e.getId());
             httpservletrequest.getSession().setAttribute("eChartID",sessionbean.eChartId);
 
             // add log here
@@ -262,29 +264,22 @@ public class EctSaveEncounterAction extends Action {
               }
             }
           }
-          catch (SQLException sqlexception) {
-            MiscUtils.getLogger().debug(sqlexception.getMessage());
-          }
+          
       }  //end of the synchronization block
-    }
+    
 
-    try { // save enc. window sizes
-
-      String s = "delete from encounterWindow where provider_no='" +
-          sessionbean.providerNo + "'";
-      DBHandler.RunSQL(s);
-      s = "insert into encounterWindow (provider_no, rowOneSize, rowTwoSize, presBoxSize, rowThreeSize) values ('" +
-          sessionbean.providerNo + "', '" +
-          httpservletrequest.getParameter("rowOneSize") + "', '" +
-          httpservletrequest.getParameter("rowTwoSize") + "', '" +
-          httpservletrequest.getParameter("presBoxSize") + "', '" +
-          httpservletrequest.getParameter("rowThreeSize") + "')";
-      DBHandler.RunSQL(s);
-    }
-    catch (Exception e) {
-     MiscUtils.getLogger().error("Error", e);
-    }
-
+    EncounterWindowDao encounterWindowDao  = SpringUtils.getBean(EncounterWindowDao.class);
+    encounterWindowDao.remove(sessionbean.providerNo);
+     
+      
+      EncounterWindow ew = new EncounterWindow();
+      ew.setProviderNo(sessionbean.providerNo);
+      ew.setRowOneSize(Integer.parseInt(httpservletrequest.getParameter("rowOneSize")));
+      ew.setRowTwoSize(Integer.parseInt(httpservletrequest.getParameter("rowTwoSize")));
+      ew.setRowThreeSize(Integer.parseInt(httpservletrequest.getParameter("rowThreeSize")));
+      ew.setPresBoxSize(Integer.parseInt(httpservletrequest.getParameter("presBoxSize")));
+      encounterWindowDao.persist(ew);
+   
     String forward = null;
 
     //billRegion=BC&billForm=GP&hotclick=&appointment_no=0&demographic_name=TEST%2CBILLING&demographic_no=10419&providerview=1&user_no=999998&apptProvider_no=none&appointment_date=2006-3-30&start_time=0:00&bNewForm=1&status=t')

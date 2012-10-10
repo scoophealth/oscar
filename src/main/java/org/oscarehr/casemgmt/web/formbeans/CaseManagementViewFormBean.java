@@ -26,7 +26,7 @@ package org.oscarehr.casemgmt.web.formbeans;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.upload.FormFile;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
-import org.oscarehr.casemgmt.model.EncounterWindow;
+import org.oscarehr.common.model.EncounterWindow;
 
 public class CaseManagementViewFormBean extends ActionForm {
 	private String demographicNo;

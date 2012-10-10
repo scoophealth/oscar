@@ -43,7 +43,7 @@ public class AllergyDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable(new String[]{"allergies"});
+		SchemaUtils.restoreTable(new String[]{"allergies","demographic_merged"});
 	}
 
 	@Test

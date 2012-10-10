@@ -48,10 +48,12 @@ import org.oscarehr.common.OtherIdManager;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.dao.Hl7TextMessageDao;
+import org.oscarehr.common.dao.PatientLabRoutingDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.Hl7TextMessage;
 import org.oscarehr.common.model.OtherId;
+import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.olis.dao.OLISSystemPreferencesDao;
 import org.oscarehr.olis.model.OLISSystemPreferences;
@@ -70,6 +72,8 @@ import oscar.util.UtilDateUtilities;
 public final class MessageUploader {
 
 	private static final Logger logger = MiscUtils.getLogger();
+	private static PatientLabRoutingDao patientLabRoutingDao = SpringUtils.getBean(PatientLabRoutingDao.class);
+
 
 	private MessageUploader() {
 		// there's no reason to instantiate a class with no fields.
@@ -436,24 +440,22 @@ public final class MessageUploader {
 			throw sqlE;
 		}
 
-		try {
-			if (count != 1) {
-				demo = "0";
-				logger.info("Could not find patient for lab: " + labId + " # of possible matches :" + count);
-			} else {
-				Hl7textResultsData.populateMeasurementsTable("" + labId, demo);
-			}
-
-			sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type) values ('" + demo + "', '" + labId + "','HL7')";
-			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.executeUpdate();
-
-			pstmt.close();
-		} catch (SQLException sqlE) {
-			logger.info("NO MATCHING PATIENT FOR LAB id =" + labId);
-			throw sqlE;
+		
+		if (count != 1) {
+			demo = "0";
+			logger.info("Could not find patient for lab: " + labId + " # of possible matches :" + count);
+		} else {
+			Hl7textResultsData.populateMeasurementsTable("" + labId, demo);
 		}
 
+		PatientLabRouting p = new PatientLabRouting();
+		p.setDemographicNo(Integer.parseInt(demo));
+		p.setLabNo(labId);
+		p.setLabType("HL7");
+		patientLabRoutingDao.persist(p);
+			
+			
+		
 		return provider_no;
 	}
 
