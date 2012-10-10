@@ -25,19 +25,16 @@
 
 package oscar.oscarTickler;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.caisi.dao.TicklerDAO;
 import org.caisi.model.Tickler;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-
-import oscar.oscarDB.DBHandler;
 
 /**
  *
@@ -56,12 +53,9 @@ public class TicklerData {
    public TicklerData() {
    }
    
-   public ResultSet listTickler(String demographic_no, String status, String beginDate, String endDate) throws SQLException {
-       String sql = "select t.tickler_no,t.message,t.service_date, t.update_date from tickler t where t.status='A' and TO_DAYS(t.service_date) >=TO_DAYS('" + beginDate + "') and TO_DAYS(t.service_date)<=TO_DAYS('" + endDate + "') and t.demographic_no = " + demographic_no + " order by t.service_date desc";
-       
-       ResultSet rs = DBHandler.GetSQL(sql);
-       
-       return rs;
+   public List<Tickler> listTickler(String demographic_no, String beginDate, String endDate) {
+	   TicklerDAO dao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
+	   return dao.listTicklers(demographic_no, beginDate, endDate);
    }
    
    public void addTickler(String demographic_no,String message,String status,String service_date,String creator,String priority,String task_assigned_to){
@@ -86,28 +80,15 @@ public class TicklerData {
 		t.setCreator(creator);
 		t.setPriority(priority);
 		t.setTask_assigned_to(task_assigned_to);
+		
 		TicklerDAO dao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
 		dao.saveTickler(t);
    }
    
    public boolean hasTickler(String demographic,String task_assigned_to,String message){
-      boolean hastickler = false;
-      try {         
-         
-         String sql = "select * from tickler  where demographic_no = '"+StringEscapeUtils.escapeSql(demographic)+"' "
-                     +" and task_assigned_to = '"+StringEscapeUtils.escapeSql(task_assigned_to)+"' "
-                     +" and message = '"+StringEscapeUtils.escapeSql(message)+"'";
-
-         ResultSet rs = DBHandler.GetSQL(sql);
-         if (rs.next()){
-            hastickler = true;
-         }
-         rs.close();         
-      } catch (SQLException e) {
-         MiscUtils.getLogger().error("Error", e);
-         MiscUtils.getLogger().error("Error", e);
-      }      
-      return hastickler;
+      TicklerDAO dao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
+      List<Tickler> ticklers = dao.findByDemographicIdTaskAssignedToAndMessage(demographic, task_assigned_to, message);
+      return !ticklers.isEmpty();
    }
    
 }

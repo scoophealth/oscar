@@ -25,6 +25,10 @@ package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import org.caisi.dao.TicklerDAO;
 import org.caisi.model.Tickler;
 import org.junit.Before;
@@ -33,27 +37,52 @@ import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.util.ConversionUtils;
+
 public class TicklerDaoTest extends DaoTestFixtures {
 
-	private TicklerDAO dao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
+	private TicklerDAO dao = (TicklerDAO) SpringUtils.getBean("ticklerDAOT");
 
 	public TicklerDaoTest() {
 	}
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable(new String[]{"tickler"});
+		SchemaUtils.restoreTable(new String[] { "tickler" });
 	}
 
 	@Test
 	public void testCreate() throws Exception {
-		 Tickler t = new Tickler();
-		 EntityDataGenerator.generateTestDataForModelClass(t);
-		 t.setTickler_no(null);
-		 dao.saveTickler(t);
-		 assertNotNull(t.getTickler_no());
+		Tickler t = new Tickler();
+		EntityDataGenerator.generateTestDataForModelClass(t);
+		t.setTickler_no(null);
+		dao.saveTickler(t);
+		assertNotNull(t.getTickler_no());
 	}
 
+	@Test
+	public void testFindByDemographicNoAndMessage() {
+		dao.findByDemographicNoAndMessage("1", "ZAYIEBALILYNAH");
+	}
+
+	@Test
+	public void testDeleteTicklers() {
+		List<String> ids = new ArrayList<String>();
+		dao.deleteTicklers(ids, "NUYIBLYA");
+		ids.add("10");
+		dao.deleteTicklers(ids, "NIHUYIASEYE");
+	}
+	
+	@Test
+	public void testListTicklers() {
+		List<Tickler> ts = dao.listTicklers("1", ConversionUtils.toDateString(new Date(System.currentTimeMillis() - 10000000)), ConversionUtils.toDateString(new Date(System.currentTimeMillis() + 10000000)));
+		assertNotNull(ts);
+    }
+
+	@Test
+	public void testFindByDemographicIdTaskAssignedToAndMessage() {
+		List<Tickler> ts = dao.findByDemographicIdTaskAssignedToAndMessage("1", "EBYATNYUA", "CHEZANAYH");
+		assertNotNull(ts);
+	}
 
 }
-
