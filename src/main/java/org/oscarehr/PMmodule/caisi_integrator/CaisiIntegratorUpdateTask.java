@@ -112,6 +112,7 @@ import org.oscarehr.common.dao.GroupNoteDao;
 import org.oscarehr.common.dao.IntegratorConsentDao;
 import org.oscarehr.common.dao.IntegratorControlDao;
 import org.oscarehr.common.dao.MeasurementDao;
+import org.oscarehr.common.dao.MeasurementMapDao;
 import org.oscarehr.common.dao.MeasurementTypeDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.PreventionDao;
@@ -130,6 +131,7 @@ import org.oscarehr.common.model.GroupNoteLink;
 import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.common.model.IntegratorConsent.ConsentStatus;
 import org.oscarehr.common.model.Measurement;
+import org.oscarehr.common.model.MeasurementMap;
 import org.oscarehr.common.model.MeasurementType;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.Provider;
@@ -153,9 +155,7 @@ import oscar.log.LogAction;
 import oscar.oscarBilling.ca.on.dao.BillingOnItemDao;
 import oscar.oscarBilling.ca.on.model.BillingOnCHeader1;
 import oscar.oscarBilling.ca.on.model.BillingOnItem;
-import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementMapDao;
 import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsExtDao;
-import oscar.oscarEncounter.oscarMeasurements.model.Measurementmap;
 import oscar.oscarEncounter.oscarMeasurements.model.MeasurementsExt;
 import oscar.oscarLab.ca.all.web.LabDisplayHelper;
 import oscar.oscarLab.ca.on.CommonLabResultData;
@@ -1349,8 +1349,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				demographicService.setCachedMeasurementTypes(cachedMeasurementTypes);
 			}
 
-			List<Measurementmap> measurementMaps = measurementMapDao.getMapsByIdent(measurement.getType());
-			for (Measurementmap measurementMap : measurementMaps) {
+			List<MeasurementMap> measurementMaps = measurementMapDao.getMapsByIdent(measurement.getType());
+			for (MeasurementMap measurementMap : measurementMaps) {
 
 				CachedMeasurementMap cachedMeasurementMap = new CachedMeasurementMap();
 				FacilityIdIntegerCompositePk fidIntegerCompositePk = new FacilityIdIntegerCompositePk();

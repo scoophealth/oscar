@@ -47,7 +47,7 @@ public class LabTestResults extends AbstractModel<Integer> {
 	@Column(name="line_type")
 	private String lineType;
 
-	private String type;
+	private String title;
 
 	private String notUsed1;
 
@@ -97,13 +97,14 @@ public class LabTestResults extends AbstractModel<Integer> {
     	this.lineType = lineType;
     }
 
-	public String getType() {
-    	return type;
-    }
+	
+	public String getTitle() {
+		return title;
+	}
 
-	public void setType(String type) {
-    	this.type = type;
-    }
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
 	public String getNotUsed1() {
     	return notUsed1;

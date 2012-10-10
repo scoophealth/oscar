@@ -75,7 +75,7 @@ public class MsgDemoMapPK implements Serializable {
 	public boolean equals(Object o) {
 		try {
 			MsgDemoMapPK o1 = (MsgDemoMapPK) o;
-			return ((messageId == o1.messageId) && (demographicNo == o1.demographicNo));
+			return ((messageId.equals(o1.messageId)) && (demographicNo.equals(o1.demographicNo)));
 		} catch (RuntimeException e) {
 			return (false);
 		}

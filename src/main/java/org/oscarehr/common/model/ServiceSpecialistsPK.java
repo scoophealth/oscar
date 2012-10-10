@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,59 +21,42 @@
  * Hamilton
  * Ontario, Canada
  */
-
-
 package org.oscarehr.common.model;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
+public class ServiceSpecialistsPK implements Serializable {
 
-@Embeddable
-public class DemographicStudyPK implements Serializable {
+	private Integer serviceId;
+	private Integer specId;
 
-	@Column(name="demographic_no")
-	private Integer demographicNo;
-	@Column(name="study_no")
-	private Integer studyNo;
+   public ServiceSpecialistsPK() {
+   	//required by JPA
+   }
 
-
-
-	public Integer getDemographicNo() {
-    	return demographicNo;
-    }
-
-	public void setDemographicNo(Integer demographicNo) {
-    	this.demographicNo = demographicNo;
-    }
-
-	public Integer getStudyNo() {
-    	return studyNo;
-    }
-
-	public void setStudyNo(Integer studyNo) {
-    	this.studyNo = studyNo;
-    }
-
+   public ServiceSpecialistsPK(int serviceId, int specId) {
+      this.serviceId = serviceId;
+      this.specId = specId;
+   }
+  
+ 
 	@Override
 	public String toString() {
-		return ("demographicNo=" + demographicNo + ", studyNo=" + studyNo);
+		return ("ServiceSpecialistsPK:" + serviceId + "," + specId);
 	}
 
 	@Override
 	public int hashCode() {
-		return (demographicNo);
+		return (toString().hashCode());
 	}
 
 	@Override
 	public boolean equals(Object o) {
 		try {
-			DemographicStudyPK o1 = (DemographicStudyPK) o;
-			return ((demographicNo.equals( o1.demographicNo)) && (studyNo.equals(o1.studyNo)));
+			ServiceSpecialistsPK o1 = (ServiceSpecialistsPK) o;
+			return ((serviceId.equals(o1.serviceId)) && (specId.equals(o1.specId)));
 		} catch (RuntimeException e) {
 			return (false);
 		}
 	}
-
 }

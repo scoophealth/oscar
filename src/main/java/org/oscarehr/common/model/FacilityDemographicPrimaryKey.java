@@ -87,7 +87,7 @@ public class FacilityDemographicPrimaryKey implements Serializable {
 	public boolean equals(Object o) {
 		try {
 			FacilityDemographicPrimaryKey o1 = (FacilityDemographicPrimaryKey) o;
-			return ((facilityId == o1.facilityId) && (demographicId == o1.demographicId));
+			return ((facilityId.equals(o1.facilityId)) && (demographicId .equals(o1.demographicId)));
 		} catch (RuntimeException e) {
 			return (false);
 		}

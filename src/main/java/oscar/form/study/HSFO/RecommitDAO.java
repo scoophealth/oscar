@@ -34,9 +34,12 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.oscarehr.common.dao.HsfoRecommitScheduleDao;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.HsfoRecommitSchedule;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDemographic.data.DemographicData;
 /**
@@ -44,6 +47,9 @@ import oscar.oscarDemographic.data.DemographicData;
  *
  */
 public class RecommitDAO {
+	
+	private HsfoRecommitScheduleDao dao = SpringUtils.getBean(HsfoRecommitScheduleDao.class);
+	
 	 public RecommitDAO() {
 	 }
 
@@ -131,38 +137,16 @@ public class RecommitDAO {
 	 }
 
 	 public void insertchedule(RecommitSchedule rd) {
-		 PreparedStatement st = null;
-	     String sqlstatement ="insert into hsfo_recommit_schedule set status=?, "+
-	     		"memo=?, schedule_time=?,user_no=?,check_flag=?";
-	     SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	     HsfoRecommitSchedule t = new HsfoRecommitSchedule();
+	     t.setStatus(rd.getStatus());
+	     t.setMemo(rd.getMemo());
+	     t.setScheduleTime(rd.getSchedule_time());
+	     t.setUserNo(rd.getUser_no());
+	     t.setCheckFlag(rd.isCheck_flag());
+	     
+	     dao.persist(t);
 
-
-	     try {
-
-	         Connection connect = DbConnectionFilter.getThreadLocalDbConnection();
-	         st = connect.prepareStatement(sqlstatement);
-
-	         st.setString(1,rd.getStatus());
-	         st.setString(2,rd.getMemo());
-	         st.setString(3,sf.format(rd.getSchedule_time()));
-	         st.setString(4, rd.getUser_no());
-	         st.setBoolean(5,rd.isCheck_flag());
-
-	         st.executeUpdate();
-	     }catch (SQLException se) {
-	         MiscUtils.getLogger().debug("SQL Error while insert a new record to the hsfo_xml_recommit table : "+ se.toString());
-	     }catch (Exception ne) {
-	         MiscUtils.getLogger().debug("Other Error while insert a new record to the hsfo_xml_recommit table : "+ ne.toString());
-	     }finally {
-
-	    	 if (st != null)
-				try {
-						st.close();
-					} catch (SQLException e) {
-                                            MiscUtils.getLogger().error("Error", e);
-					}
-			}
-
+	   
 	 }
 
 	 public boolean isLastActivExpire() {

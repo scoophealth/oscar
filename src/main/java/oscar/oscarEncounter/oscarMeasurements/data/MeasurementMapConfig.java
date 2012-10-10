@@ -38,16 +38,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.MeasurementMapDao;
+import org.oscarehr.common.dao.RecycleBinDao;
+import org.oscarehr.common.model.MeasurementMap;
+import org.oscarehr.common.model.RecycleBin;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
-import oscar.util.UtilDateUtilities;
 
 /**
  *
@@ -303,17 +308,16 @@ public class MeasurementMapConfig {
         return ret;
     }
 
-    public void mapMeasurement(String identifier, String loinc, String name, String type) throws SQLException {
+    public void mapMeasurement(String identifier, String loinc, String name, String type)  {
 
-        String sql = "INSERT INTO measurementMap (loinc_code, ident_code, name, lab_type) VALUES ('" + loinc + "', '" + identifier + "', '" + name + "', '" + type + "')";
-
-
-        Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        logger.info(sql);
-
-        pstmt.executeUpdate();
-        pstmt.close();
+    	MeasurementMapDao dao = SpringUtils.getBean(MeasurementMapDao.class);
+    	MeasurementMap mm = new MeasurementMap();
+    	mm.setLoincCode(loinc);
+    	mm.setIdentCode(identifier);
+    	mm.setName(name);
+    	mm.setLabType(type);
+    	dao.persist(mm);
+       
 
     }
 
@@ -342,15 +346,17 @@ public class MeasurementMapConfig {
         if (!pstmt.execute()) {
             logger.info("we should be writing to the recycle bin");
             pstmt.close();
-            sql = "insert into recyclebin (provider_no,updatedatetime,table_name,keyword,table_content) values(";
-            sql += "'" + provider_no + "',";
-            sql += "'" + UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "',";
-            sql += "'" + "measurementMap" + "',";
-            sql += "'" + id + "',";
-            sql += "'" + "<id>" + id + "</id><ident_code>" + ident_code + "</ident_code><loinc_code>" + loinc_code + "</loinc_code><name>" + name + "</name><lab_type>" + lab_type + "</lab_type>')";
+            
+            RecycleBin rb = new RecycleBin();
+            rb.setProviderNo(provider_no);
+            rb.setUpdateDateTime(new Date());
+            rb.setTableName("measurementMap");
+            rb.setKeyword(id);
+            rb.setTableContent("<id>" + id + "</id><ident_code>" + ident_code + "</ident_code><loinc_code>" + loinc_code + "</loinc_code><name>" + name + "</name><lab_type>" + lab_type + "</lab_type>");
 
-            pstmt = conn.prepareStatement(sql);
-            pstmt.executeUpdate();
+            RecycleBinDao recycleBinDao = SpringUtils.getBean(RecycleBinDao.class);
+            recycleBinDao.persist(rb);
+            
         }
 
         pstmt.close();
