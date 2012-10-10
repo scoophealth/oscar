@@ -22,19 +22,17 @@
  * Ontario, Canada
  */
 
-
 package oscar.scratch;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Hashtable;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.oscarehr.util.DbConnectionFilter;
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.common.dao.ScratchPadDao;
+import org.oscarehr.common.model.ScratchPad;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
+import oscar.util.ConversionUtils;
 
 /**
  create table scratch_pad (
@@ -46,76 +44,36 @@ import oscar.oscarDB.DBHandler;
  * @author jay
  */
 public class ScratchData {
-    
-    /** Creates a new instance of ScratchData */
-    public ScratchData() {
-    }
-    
-    public Hashtable getLatest(String providerNo){
-        Hashtable retval = null;
-        try {
-            //Get Provider from database
-            
-            ResultSet rs;
-            String sql = "SELECT * FROM scratch_pad WHERE provider_no = " + providerNo + " order by id  desc limit 1";
-            rs = DBHandler.GetSQL(sql);
-   
-            if (rs.next()){
-                retval = new Hashtable();
-                retval.put("id",oscar.Misc.getString(rs, "id"));
-                retval.put("text",oscar.Misc.getString(rs, "scratch_text"));
-                retval.put("date",oscar.Misc.getString(rs, "date_time"));
-            }
-            rs.close();
-        } catch (SQLException e) {
-           MiscUtils.getLogger().error("Error", e);
-        }
-        return retval;
-    }
-    
-    public String insert2(String providerNo,String text){
-        String scratch_id = null;
-        try {
-            //Get Provider from database
-            
-            ResultSet rs;
-            String sql = "INSERT into scratch_pad (provider_no, scratch_text,date_time ) values ('" + providerNo + "','"+text+"',now())";
-            DBHandler.RunSQL(sql);
-            rs = DBHandler.GetSQL("SELECT LAST_INSERT_ID() ");
-   
-            if(rs.next()){
-               scratch_id = Integer.toString( rs.getInt(1) );
-            }
-            rs.close();
-        } catch (SQLException e) {
-           MiscUtils.getLogger().error("Error", e);
-        }
-        return scratch_id;
-    }
-    
-    
-    public String insert(String providerNo,String text){
-        String scratch_id = null;
-        try {
-            //Get Provider from database
-            // //unused variable db
-             String sql = "INSERT into scratch_pad (provider_no, scratch_text,date_time ) values (?,?,now())";
-             Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
-             PreparedStatement pstat = conn.prepareStatement(sql);
-              pstat.setString(1,providerNo);
-              pstat.setString(2,text);
-              pstat.executeUpdate();
-            
-              ResultSet rs = pstat.getGeneratedKeys();
-               if(rs.next()){
-                  scratch_id = ""+rs.getInt(1);
-               }
-              rs.close();
-             pstat.close();
-        } catch (SQLException e) {
-           MiscUtils.getLogger().error("Error", e);
-        }
-        return scratch_id;
-    }
-    
+
+	/** Creates a new instance of ScratchData */
+	public ScratchData() {
+	}
+
+	public Map<String, String> getLatest(String providerNo) {
+		ScratchPadDao dao = SpringUtils.getBean(ScratchPadDao.class);
+		ScratchPad scratchPad = dao.findByProviderNo(providerNo);
+		if (scratchPad == null) return null;
+
+		Map<String, String> retval = new HashMap<String, String>();
+		retval.put("id", scratchPad.getId().toString());
+		retval.put("text", scratchPad.getText());
+		retval.put("date", ConversionUtils.toDateString(scratchPad.getDateTime()));
+		return retval;
+	}
+
+	public String insert2(String providerNo, String text) {
+		ScratchPad scratchPad = new ScratchPad();
+		scratchPad.setProviderNo(providerNo);
+		scratchPad.setText(text);
+		scratchPad.setDateTime(new Date());
+
+		ScratchPadDao dao = SpringUtils.getBean(ScratchPadDao.class);
+		dao.persist(scratchPad);
+		return scratchPad.getId().toString();
+	}
+
+	public String insert(String providerNo, String text) {
+		return insert2(providerNo, text);
+	}
+
 }
