@@ -26,7 +26,7 @@
 package oscar.scratch;
 
 import java.net.URLEncoder;
-import java.util.Hashtable;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -59,7 +59,7 @@ public class ScratchAction extends Action {
         String returnText = scratchPad;
         MiscUtils.getLogger().debug("pro "+providerNo+" id "+id+" dirty "+dirty+" scatchPad "+scratchPad);
         ScratchData scratch = new ScratchData();
-        Hashtable h = scratch.getLatest(providerNo);
+        Map<String, String> h = scratch.getLatest(providerNo);
         
         
         if (h == null){  //FIRST TIME USE
@@ -68,9 +68,9 @@ public class ScratchAction extends Action {
                returnText = scratchPad;
            }               
         }else{
-           returnText = (String) h.get("text");  
+           returnText = h.get("text");  
         //Get current Id in scratch table
-           int databaseId = Integer.parseInt( (String) h.get("id"));
+           int databaseId = Integer.parseInt(h.get("id"));
            returnId = ""+databaseId;
            MiscUtils.getLogger().debug( "database Id = "+databaseId+" request id "+id);
            if (databaseId > Integer.parseInt(id)){           //check to see if the id in database is higher than in the request
