@@ -35,7 +35,10 @@ import java.sql.ResultSet;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import org.oscarehr.common.dao.MsgDemoMapDao;
+import org.oscarehr.common.model.MsgDemoMapPK;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 /**
@@ -44,33 +47,19 @@ import oscar.oscarDB.DBHandler;
  */
 public class MsgDemoMap {
     
-    /** Creates a new instance of MsgDemoMap */
+	private MsgDemoMapDao dao = SpringUtils.getBean(MsgDemoMapDao.class);
+	
     public MsgDemoMap() {
     }
     
-    
-    /*  Structure of the msgDemoMap table
-     *  +----------------+--------------+------+-----+---------+-------+
-     *  | Field          | Type         | Null | Key | Default | Extra |
-     *  +----------------+--------------+------+-----+---------+-------+
-     *  | messageID      | mediumint(9) |      | PRI | 0       |       |
-     *  | demographic_no | int(10)      |      | PRI | 0       |       |
-     *  +----------------+--------------+------+-----+---------+-------+
-     */
     public void linkMsg2Demo(String msgId, String demographic_no){
 
-        //both msgId + demographic_no is the the primary key
-        //if the combination of both msgId and demographic_no value exsit in the table, new data will not be added
-        try{            
-            
-            String sql = "";                   
-            sql = "insert into msgDemoMap values ('"+msgId+"','"+demographic_no+"')";
-            MiscUtils.getLogger().debug(sql);
-            DBHandler.RunSQL(sql);
-        }
-        catch (java.sql.SQLException e){ 
-           MiscUtils.getLogger().error("Error", e); 
-        }
+    	org.oscarehr.common.model.MsgDemoMap mdm = new org.oscarehr.common.model.MsgDemoMap();
+    	mdm.setId(new MsgDemoMapPK(Integer.parseInt(msgId),Integer.parseInt(demographic_no)));
+    	
+    	if(dao.find(new MsgDemoMapPK(Integer.parseInt(msgId),Integer.parseInt(demographic_no))) == null)
+    		dao.persist(mdm);
+    	
     }
     
     public Hashtable getDemoMap (String msgId){
@@ -113,20 +102,12 @@ public class MsgDemoMap {
         return msgVector;
     }
     
-    public void unlinkMsg (String demographic_no, String messageID){
-        Vector msgVector= new Vector();
-        try{          
-            MiscUtils.getLogger().debug("input msgId: " + messageID + "  input demographic_no: " + demographic_no);
-            
-            String sql = "";                               
-            //sql = "select tbl.thedate, tbl.thesubject from msgDemoMap map, messagetbl tbl where demographic_no ='"+ demographic_no 
-            //        + "' and tbl.messageid = map.messageID order by tbl.thedate";
-            sql = "delete from msgDemoMap where demographic_no='"+demographic_no+"' and messageID='"+messageID+"'";
-            
-            DBHandler.RunSQL(sql);
-        }
-        catch (java.sql.SQLException e){ 
-            msgVector = null;
-        }
+    public void unlinkMsg (String demographic_no, String messageID){        
+        MiscUtils.getLogger().debug("input msgId: " + messageID + "  input demographic_no: " + demographic_no);
+        
+        org.oscarehr.common.model.MsgDemoMap mdm = new org.oscarehr.common.model.MsgDemoMap();
+    	mdm.setId(new MsgDemoMapPK(Integer.parseInt(messageID),Integer.parseInt(demographic_no)));
+    	dao.remove(mdm);
+       
     }
 }
