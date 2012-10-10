@@ -36,6 +36,12 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%
+	String wlid = (String)request.getAttribute("WLId");
+	if(wlid == null) {
+		request.setAttribute("WLId","0");
+	}
+%>
 <link rel="stylesheet" type="text/css"
 	href="../oscarEncounter/encounterStyles.css">
 <html:html locale="true">
