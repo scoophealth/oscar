@@ -15,7 +15,7 @@ CDA Header
 	<id extension="$patient.demographicNo" root="2.16.840.1.113883.3.933"/>
 	<code code="34140-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Referral"/>
 	<title>PITO EMR-2-EMR Complete Instance Example</title>
-	<effectiveTime value="$date.get('yyyyMMddhhmm')"/>
+	<effectiveTime value="$dateTool.get('yyyyMMddhhmm')"/>
 	<confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25"/>
 	<!-- 
 	********************************************************
@@ -41,7 +41,7 @@ CDA Header
 	********************************************************
 	-->
 	<author typeCode="AUT" contextControlCode="OP">
-		<time value="$currentDate"/>
+		<time value="$dateTool.get('yyyyMMdd')"/>
 		<assignedAuthor>
 			<id extension="$authorId" root="$authorIdRoot"/>
 		</assignedAuthor>
@@ -88,8 +88,8 @@ Medications & Prescriptions - Medication List
 							<statusCode code="completed"/>
         #end
 							<effectiveTime xsi:type="IVL_TS" operator="I">
-								<low value="$date.format('yyyyMMdd', $med.getStartDate())"/>
-								<high value="$date.format('yyyyMMdd', $med.getEndDate())" />
+								<low value="$dateTool.format('yyyyMMdd', $med.getStartDate())"/>
+								<high value="$dateTool.format('yyyyMMdd', $med.getEndDate())" />
 							</effectiveTime>
 							<!--Medication Identification-->
 							<consumable typeCode="CSM">

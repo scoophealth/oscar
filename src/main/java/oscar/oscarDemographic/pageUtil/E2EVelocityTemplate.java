@@ -23,15 +23,13 @@
 
 package oscar.oscarDemographic.pageUtil;
 
-import java.io.StringWriter;
+import java.io.InputStream;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
-import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.runtime.RuntimeConstants;
-import org.apache.velocity.tools.generic.DateTool;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.VelocityUtils;
 
 /**
  * @author Jeremy Ho
@@ -40,6 +38,9 @@ import org.oscarehr.util.MiscUtils;
 
 public class E2EVelocityTemplate {
 	private static final Logger logger = MiscUtils.getLogger();
+	
+	private static final String E2E_VELOCITY_TEMPLATE_FILE = "/e2etemplate.vm";
+	
 	private VelocityContext context;
 	
 	public E2EVelocityTemplate() {
@@ -47,10 +48,10 @@ public class E2EVelocityTemplate {
 	
 	// Creates the velocity context
 	private void loadPatient(Patient record) {
-		context = new VelocityContext();
+		context = VelocityUtils.createVelocityContextWithTools();
 		
 		context.put("patient", record);
-		context.put("date", new DateTool());
+		//context.put("date", new DateTool());
 		
 		// Temporary Author/Custodian Hardcode
 		context.put("authorId", "hhippocrates");
@@ -61,27 +62,20 @@ public class E2EVelocityTemplate {
 	
 	// Assembles the data model & predefined velocity template to yield an E2E document
 	public String export(Patient record) throws Exception {
-		// Initialize Velocity engine
-		VelocityEngine ve = new VelocityEngine();
-		ve.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS, "org.apache.velocity.runtime.log.Log4JLogChute");
-		ve.setProperty("runtime.log.logsystem.log4j.logger", logger.getName());
-		
-		// Define where template file is
-		ve.setProperty("resource.loader","file");
-		ve.setProperty("file.resource.loader.class","org.apache.velocity.runtime.resource.loader.FileResourceLoader");
-		ve.setProperty("file.resource.loader.path","/var/lib/tomcat6/webapps/oscar12/WEB-INF/velocitytemplates");
-		ve.setProperty("file.resource.loader.cache","true");
-		
 		// Create Data Model
 		loadPatient(record);
 		
 		// Import Template
-		Template t = ve.getTemplate("e2etemplate.vm");
+		InputStream is = null;
+		String template = null;
+		try {
+			is = E2EVelocityTemplate.class.getResourceAsStream(E2E_VELOCITY_TEMPLATE_FILE);
+			template = IOUtils.toString(is);
+		} finally {
+			if (is != null) is.close();
+		}
 		
 		// Merge Template & Data Model
-		StringWriter writer = new StringWriter();
-		t.merge(context, writer);
-		
-		return writer.toString();
+		return VelocityUtils.velocityEvaluate(context, template);
 	}
 }
