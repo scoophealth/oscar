@@ -184,7 +184,7 @@ public final class WLSetupDisplayWaitingListAction extends Action {
                 }
                     
         	if(hd != null){
-        		nbPatients = Integer.toString(hd.getWaitingListArrayList().size());
+        		nbPatients = Integer.toString(hd.getWaitingList().size());
         	}else{
         		nbPatients = "0";
         	}

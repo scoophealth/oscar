@@ -520,6 +520,16 @@ public class Demographic implements Serializable {
 	}
 
 	/**
+	 * Gets demographic's full name.
+	 * 
+	 * @return
+	 * 		Returns the last name, first name pair.
+	 */
+	public String getFullName() {
+		return getLastName() + ", " + getFirstName();
+	}
+	
+	/**
 	 * Set the value related to the column: first_name
 	 *
 	 * @param firstName the first_name value
