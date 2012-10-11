@@ -188,7 +188,8 @@ detect those and search the source.
 				<a href="javascript: showDiv('threadStacktrace<%=i%>');">Show FULL Stacktrace</a><br/>
 				<div id="threadStacktrace<%=i%>" style="border: 1px solid grey; height: 70px; overflow: hidden;">
 				<%
-					String key=StringEscapeUtils.escapeHtml(entry.getKey().hashCode()+":"+entry.getKey().toString());
+					Thread t=entry.getKey();
+					String key=StringEscapeUtils.escapeHtml(t.hashCode()+":"+t.toString()+":"+t.isDaemon()+":"+t.getName());
 					String value=StringEscapeUtils.escapeHtml(Arrays.toString(entry.getValue())).replace(",", "<br />");
 				%>
 				<%=key%> : <%=value%>

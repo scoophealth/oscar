@@ -43,6 +43,7 @@ import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 import org.oscarehr.myoscar_server.ws.PersonTransfer2;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.service.PHRService;
+import org.oscarehr.util.DeamonThreadFactory;
 import org.oscarehr.util.EncryptionUtils;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -58,7 +59,7 @@ public final class MyOscarUtils {
 	private static QueueCache<String, Long> userNameToIdCache = new QueueCache<String, Long>(4, 100, DateUtils.MILLIS_PER_HOUR);
 	private static QueueCache<Long, String> userIdToNameCache = new QueueCache<Long, String>(4, 100, DateUtils.MILLIS_PER_HOUR);
 	private static final DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
-	private static ExecutorService asyncAutoLoginThreadPool=Executors.newFixedThreadPool(2);
+	private static ExecutorService asyncAutoLoginThreadPool=Executors.newFixedThreadPool(4, new DeamonThreadFactory("asyncAutoLoginThreadPool", Thread.MIN_PRIORITY));
 	
 	/**
 	 * Note this method must only return the ID, it must never return the PersonTransfer2 itself since it reads from a cache.
