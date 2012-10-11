@@ -1356,6 +1356,12 @@ function changeToView(id) {
     if( $("noteIssues") != null )
         Element.remove("noteIssues");
 
+	if( $("noteIssues-resolved") != null )
+		Element.remove("noteIssues-resolved");
+		
+	if( $("noteIssues-unresolved") != null )
+		Element.remove("noteIssues-unresolved");
+		
     var selectEnc = "encTypeSelect" + nId;
 
     if( $(selectEnc) != null ) {
@@ -1962,6 +1968,35 @@ function showIssues(e) {
 
 }
 
+function showHideIssues(e, issueType) {
+				
+	Event.stop(e);
+	//Element.toggle('noteIssues');
+	if(issueType=="hide" || issueType=="")
+		showIssue = false;
+	else
+		showIssue = true;
+				
+	if( showIssue ) {
+		if(issueType == "noteIssues-unresolved") {
+			Element.toggle('noteIssues-unresolved');
+			$("noteIssues-unresolved").scrollIntoView(false);			
+		} else if(issueType == "noteIssues-resolved") {
+			Element.toggle('noteIssues-resolved');
+			$("noteIssues-resolved").scrollIntoView(false);			
+		} else if(issueType == "noteIssues") {
+			Element.toggle('noteIssues');
+			$("noteIssues").scrollIntoView(false);
+		}
+				
+		$("issueAutocomplete").focus();
+	} else {
+		$(caseNote).focus();
+	}
+				
+	return false;
+}
+			
 function scrollEncDown() {
 	//$("encMainDiv").scrollTop= $("encMainDiv").scrollHeight;
 	$("noteIssues").scrollIntoView(false);
@@ -2416,6 +2451,36 @@ function savePage(method, chain) {
         return false;
     }
 
+function changeDiagnosisResolved(issueId) {
+	var methodArg = "ajaxChangeDiagnosis";
+	var divIdArg = $("noteIssues-resolved").up().id;
+	var thisObj = {};
+	changeIssueFunc = updateIssues.bindAsEventListener(thisObj, methodArg, divIdArg);
+			
+	document.forms['caseManagementEntryForm'].change_diagnosis_id.value=issueId;
+	$("asgnIssues").value= changeIssueMsg;
+		
+	Element.stopObserving('asgnIssues', 'click', addIssueFunc);
+	Element.observe('asgnIssues', 'click', changeIssueFunc);
+	$("issueAutocomplete").focus();
+	return false;
+}
+
+function changeDiagnosisUnresolved(issueId) {
+	var methodArg = "ajaxChangeDiagnosis";
+	var divIdArg = $("noteIssues-unresolved").up().id;
+	var thisObj = {};
+	changeIssueFunc = updateIssues.bindAsEventListener(thisObj, methodArg, divIdArg);
+			
+	document.forms['caseManagementEntryForm'].change_diagnosis_id.value=issueId;
+	$("asgnIssues").value= changeIssueMsg;
+				
+	Element.stopObserving('asgnIssues', 'click', addIssueFunc);
+	Element.observe('asgnIssues', 'click', changeIssueFunc);
+	$("issueAutocomplete").focus();
+	return false;
+}
+			
     function toggleNotePasswd() {
         if( passwordEnabled ) {
             Element.toggle('notePasswd');

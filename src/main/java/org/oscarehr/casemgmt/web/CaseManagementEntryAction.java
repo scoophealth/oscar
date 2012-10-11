@@ -1502,6 +1502,20 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 					// reload to materliase generated fields.
 					caseManagementIssue = caseManagementIssueDao.getIssuebyId(demo, String.valueOf(issue.getId()));
 				}
+			} else if( caseManagementIssue != null && isChecked) {
+				caseManagementIssue.setAcute("acute".equals(issueDisplay.acute));
+				caseManagementIssue.setCertain("certain".equals(issueDisplay.certain));
+				caseManagementIssue.setMajor("major".equals(issueDisplay.major));
+				caseManagementIssue.setResolved("resolved".equals(issueDisplay.resolved));
+				Issue issue = issueDao.findIssueByCode(issueDisplay.code);
+				if (issue != null) {
+					caseManagementIssue.setUpdate_date(new Date());
+					// Should not save duplicated issue for one demographic
+					// But should be able to update existing issues.
+					caseManagementIssueDao.saveIssue(caseManagementIssue);
+					// reload to materliase generated fields.
+					caseManagementIssue = caseManagementIssueDao.getIssuebyId(demo, String.valueOf(issue.getId()));
+				}
 			}
 
 			if (caseManagementIssue == null) continue;
@@ -2072,8 +2086,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		List searchResults;
 		searchResults = caseManagementMgr.searchIssues(providerNo, programId, search);
 
-		// remove issues which we already have - we don't want duplicates unless asked for
-		List existingIssues = caseManagementMgr.filterIssues(caseManagementMgr.getIssues(Integer.parseInt(demono)), programId);
+		// Don't remove issues which we already have. But don't insert duplicate issues when save the issues.
+		List existingIssues = new ArrayList<Issue>();
 		List<Issue> filteredSearchResults;
 
 		if (request.getParameter("amp;all") != null) {
@@ -2183,8 +2197,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		}
 
 		// if issue hasn't been added, add it
-		// if it has do nothing;
-		if (!issueExists) {
+		// if it has do nothing;-> change to if it's already added, still keep it but won't
+		//insert into casemgmt_issue, just add a new record to casemgmt_issue_notes.
+		//if (!issueExists) {
 			CheckIssueBoxBean[] caseIssueList = new CheckIssueBoxBean[1];
 
 			caseIssueList[0] = new CheckIssueBoxBean();
@@ -2194,7 +2209,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			sessionFrm.setNewIssueCheckList(caseIssueList);
 
 			return issueAdd(mapping, cform, request, response);
-		} else return null;
+		//} else return null;
 	}
 
 	public ActionForward issueAdd(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -2266,8 +2281,23 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			for (int i = 0; i < issueList.length; i++) {
 				if (issueList[i].isChecked()) {
 					if (caseManagementIssueDao.getIssuebyId(demono, String.valueOf(issueList[i].getIssue().getId())) != null) {
-						continue;
-					}
+						//continue;
+						//issue already added
+						for(int j=0; j<oldList.length; j++) {
+							if(oldList[j].getIssue().getIssue_id() == issueList[i].getIssue().getId().longValue() ) { //find old issue and check it
+								caseIssueList[j].setChecked("on");
+								caseIssueList[j].getIssue().setAcute(false);
+								caseIssueList[j].getIssue().setCertain(false);
+								caseIssueList[j].getIssue().setMajor(false);
+								caseIssueList[j].getIssue().setResolved(false);
+								
+								caseIssueList[j].getIssueDisplay().setAcute("chronic");
+								caseIssueList[j].getIssueDisplay().setCertain("uncertain");
+								caseIssueList[j].getIssueDisplay().setMajor("not major");
+								caseIssueList[j].getIssueDisplay().setResolved("unresolved");
+							}
+						}
+					} else {
 					caseIssueList[oldList.length + k] = new CheckBoxBean();
 					CaseManagementIssue cmi = newIssueToCIssue(sessionFrm, issueList[i].getIssue(), programId);
 					caseIssueList[oldList.length + k].setIssue(cmi);
@@ -2286,7 +2316,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 					}
 
 					k++;
-
+					}
 				}
 			}
 		}
