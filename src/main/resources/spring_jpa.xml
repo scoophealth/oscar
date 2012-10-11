@@ -18,9 +18,9 @@
 		<property name="username" value="${db_username}" />
 		<property name="password" value="${db_password}" />
 
-		<property name="maxActive" value="30" />
-		<property name="maxIdle" value="2" />
-		<property name="maxWait" value="10000" />
+		<property name="maxActive" value="32" />
+		<property name="maxIdle" value="8" />
+		<property name="maxWait" value="300000" />
 
 		<property name="testOnBorrow" value="true" />
 		<property name="validationQuery" value="${db_validationQuery}" />
