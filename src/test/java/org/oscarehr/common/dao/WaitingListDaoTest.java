@@ -24,25 +24,28 @@
 package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Date;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.WaitingList;
+import org.oscarehr.common.model.WaitingListName;
 import org.oscarehr.util.SpringUtils;
+
+import oscar.util.ConversionUtils;
 
 public class WaitingListDaoTest extends DaoTestFixtures {
 
 	private WaitingListDao dao = SpringUtils.getBean(WaitingListDao.class);
 
-	public WaitingListDaoTest() {
-	}
-
-
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("waitingList");
+		SchemaUtils.restoreTable("waitingList", "waitingListName");
 	}
 
 	@Test
@@ -52,5 +55,29 @@ public class WaitingListDaoTest extends DaoTestFixtures {
 		dao.persist(entity);
 
 		assertNotNull(entity.getId());
+	}
+
+	@Test
+	public void testFindByDemographic() {
+		// WaitingListNameDao wlnDao = SpringUtils.getBean(WaitingListNameDao.class);
+		WaitingListName wn = new WaitingListName();
+		wn.setCreateDate(new Date());
+		wn.setName("NAHBLIAYH");
+		wn.setGroupNo("1");
+		wn.setIsHistory("N");
+		wn.setProviderNo("1");
+		dao.persist(wn);
+		
+		WaitingList w = new WaitingList();
+		w.setDemographicNo(10);
+		w.setListId(wn.getId());
+		w.setOnListSince(new Date());
+		w.setPosition(1);
+		w.setIsHistory("N");
+		dao.persist(w);
+		
+		List<Object[]> lists = dao.findByDemographic(ConversionUtils.fromIntString("10"));
+		assertNotNull(lists);
+		assertTrue(lists.size() == 1);
 	}
 }
