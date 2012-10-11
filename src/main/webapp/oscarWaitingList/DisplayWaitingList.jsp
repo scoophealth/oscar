@@ -240,7 +240,7 @@ function removePatient(demographicNo, waitingList){
 							<td align="left" class="Header" width="50"></td>
 						</tr>
 						<logic:iterate id="waitingListBean" name="waitingList"
-							property="waitingListArrayList" indexId="ctr">
+							property="waitingList" indexId="ctr">
 							<html:hidden name="waitingListBean" property="demographicNo"
 								indexed="true" />
 							<%
