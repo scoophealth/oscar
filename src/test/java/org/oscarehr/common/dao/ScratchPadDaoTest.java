@@ -39,7 +39,6 @@ public class ScratchPadDaoTest extends DaoTestFixtures {
 	public ScratchPadDaoTest() {
 	}
 
-
 	@Before
 	public void before() throws Exception {
 		SchemaUtils.restoreTable("scratch_pad");
@@ -52,5 +51,10 @@ public class ScratchPadDaoTest extends DaoTestFixtures {
 		dao.persist(entity);
 
 		assertNotNull(entity.getId());
+	}
+
+	@Test
+	public void testFindByProviderNo() {
+		dao.findByProviderNo("1");
 	}
 }

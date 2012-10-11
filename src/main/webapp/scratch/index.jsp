@@ -43,7 +43,7 @@
   String user_no = (String) request.getSession().getAttribute("user");
   
   ScratchData scratchData = new ScratchData();
-  Hashtable hashtable = scratchData.getLatest(user_no);
+  Map<String, String> hashtable = scratchData.getLatest(user_no);
   
   
   String uuid = String.valueOf(System.nanoTime());
@@ -51,8 +51,8 @@
   String id = "";
   
   if (hashtable != null){
-      text = (String) hashtable.get("text");
-      id   = (String) hashtable.get("id");
+      text = hashtable.get("text");
+      id   = hashtable.get("id");
   }
   
 
