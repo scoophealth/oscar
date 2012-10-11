@@ -22,16 +22,34 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.common.dao;
+
+import java.util.List;
+
+import javax.persistence.Query;
 
 import org.oscarehr.common.model.WaitingList;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class WaitingListDao extends AbstractDao<WaitingList>{
+public class WaitingListDao extends AbstractDao<WaitingList> {
 
 	public WaitingListDao() {
 		super(WaitingList.class);
+	}
+
+	/**
+	 * Finds all waiting lists for the specified demographic 
+	 * 
+	 * @param demographicNo
+	 * 		Demographic to find the lists for
+	 * @return
+	 * 		Returns a list of all matching {@link org.oscarehr.common.model.WaitingListName}, {@link org.oscarehr.common.model.WaitingList} pairs.
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Object[]> findByDemographic(Integer demographicNo) {
+		Query query = entityManager.createQuery("FROM WaitingListName wn, WaitingList w WHERE wn.id = w.listId AND w.demographicNo = :demoNo AND w.isHistory != 'Y'");
+		query.setParameter("demoNo", demographicNo);
+		return query.getResultList();
 	}
 }

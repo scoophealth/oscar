@@ -46,28 +46,28 @@ public abstract class AbstractDao<T extends AbstractModel<?>> {
 	/**
 	 * aka update
 	 */
-	public void merge(T o) {
+	public void merge(AbstractModel<?> o) {
 		entityManager.merge(o);
 	}
 
 	/**
 	 * aka create
 	 */
-	public void persist(T o) {
+	public void persist(AbstractModel<?> o) {
 		entityManager.persist(o);
 	}
 
 	/**
 	 * You can only remove attached instances.
 	 */
-	public void remove(T o) {
+	public void remove(AbstractModel<?> o) {
 		entityManager.remove(o);
 	}
 
 	/**
 	 * You can only refresh attached instances.
 	 */
-	public void refresh(T o) {
+	public void refresh(AbstractModel<?> o) {
 		entityManager.refresh(o);
 	}
 
@@ -202,7 +202,7 @@ public abstract class AbstractDao<T extends AbstractModel<?>> {
 	 * 		Returns the query
 	 */
 	protected Query createQuery(String select, String alias, String whereClause) {
-		StringBuilder buf = createQueryString(alias, whereClause);
+		StringBuilder buf = createQueryString(select, alias, whereClause);
 		return entityManager.createQuery(buf.toString());
 	}
 
