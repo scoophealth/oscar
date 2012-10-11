@@ -250,7 +250,25 @@ detect those and search the source.
                 <div id="sessionStacktrace<%=i%>" style="border: 1px solid grey; height: 70px; overflow: hidden;">
                 	<%
                 		org.hibernate.classic.Session hs=entry.getKey();
-                		String key=StringEscapeUtils.escapeHtml(hs.hashCode()+"("+hs.isOpen()+","+hs.isConnected()+","+hs.isDirty()+")");
+                	
+                		Integer hashCode=null;
+                		Boolean isOpen=null;
+                		Boolean isConnected=null;
+                		Boolean isDirty=null;
+                		
+                		try
+                		{
+                			hashCode=hs.hashCode();
+                			isOpen=hs.isOpen();
+                			isConnected=hs.isConnected();
+                			isDirty=hs.isDirty();
+                		}
+                		catch (Exception e)
+                		{
+                			// it's okay during debugging, the session state is unstable
+                		}
+                		
+                		String key=StringEscapeUtils.escapeHtml(hashCode+"("+isOpen+","+isConnected+","+isDirty+")");
                 		String value=StringEscapeUtils.escapeHtml(Arrays.toString(entry.getValue())).replace(",", "<br />");
                 	%>
                     <%=key%> : <%=value%>
