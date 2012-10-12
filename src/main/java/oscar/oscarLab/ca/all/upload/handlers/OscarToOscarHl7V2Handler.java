@@ -40,7 +40,7 @@ import ca.uhn.hl7v2.model.v26.message.ADT_A09;
 public class OscarToOscarHl7V2Handler implements MessageHandler {
 	private Logger logger = MiscUtils.getLogger();
 
-	public String parse(String serviceName, String fileName, int fileId) {
+	public String parse(String serviceName, String fileName, int fileId, String ipAddr) {
 		
 		try {
 	        byte[] dataBytes=FileUtils.readFileToByteArray(new File(fileName));

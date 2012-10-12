@@ -197,6 +197,7 @@ if (message != null){
 					<option value="SIOUX">SIOUX</option>
 					<option value="TDIS">TDIS</option>
 					<option value="Spire">Spire</option>
+                                        <option value="PDFDOC">PDFDOC</option>
 					<option value="OTHER">Other</option>
 				</select></td>
 			</tr>

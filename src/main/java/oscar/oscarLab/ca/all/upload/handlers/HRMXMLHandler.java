@@ -54,7 +54,7 @@ public class HRMXMLHandler implements MessageHandler {
 		logger.info("NEW HRM XML UPLOAD HANDLER instance just instantiated. ");
 	}
 
-	public String parse(String serviceName,String fileName, int fileId) {
+	public String parse(String serviceName,String fileName, int fileId, String ipAddr) {
 		logger.info("ABOUT TO PARSE HRM XML " + fileName);
 
 		int i = 0;

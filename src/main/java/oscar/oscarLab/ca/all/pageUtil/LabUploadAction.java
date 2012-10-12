@@ -99,14 +99,19 @@ public class LabUploadAction extends Action {
 
 			InputStream is = decryptMessage(importFile.getInputStream(), key, clientKey);
 			String fileName = importFile.getFileName();
-			String filePath = Utilities.saveFile(is, fileName);
+                        String filePath = null;
+                        if (type.equals("PDFDOC")) {
+                            filePath = Utilities.savePdfFile(is,fileName);
+                        } else {
+                            filePath = Utilities.saveFile(is, fileName);
+                        }
 			importFile.getInputStream().close();
 			File file = new File(filePath);
 
 			if (validateSignature(clientKey, signature, file)) {
 				logger.debug("Validated Successfully");
 				MessageHandler msgHandler = HandlerClassFactory.getHandler(type);
-
+                                
 				if(type.equals("HHSEMR") && OscarProperties.getInstance().getProperty("lab.hhsemr.filter_ordering_provider", "false").equals("true")) {
                 	logger.info("Applying filter to HHS EMR lab");
                 	String hl7Data = FileUtils.readFileToString(file, "UTF-8");
@@ -126,7 +131,7 @@ public class LabUploadAction extends Action {
 				try {
 					int check = FileUploadCheck.addFile(file.getName(), is, "0");
 					if (check != FileUploadCheck.UNSUCCESSFUL_SAVE) {
-						if ((audit = msgHandler.parse(service, filePath, check)) != null) {
+						if ((audit = msgHandler.parse(service, filePath, check, request.getRemoteAddr())) != null) {
 							outcome = "uploaded";
 							httpCode = HttpServletResponse.SC_OK;
 						} else {

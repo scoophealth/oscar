@@ -30,7 +30,7 @@ public class MEDVUEHandler implements MessageHandler {
 		logger.info("NEW MEDVUEHandler UPLOAD HANDLER instance just instantiated. ");
 	}
 
-	public String parse(String serviceName, String fileName, int fileId) {
+	public String parse(String serviceName, String fileName, int fileId, String ipAddr) {
 		logger.info("ABOUT TO PARSE!");
 
 		MEDVUEUtilities u = new MEDVUEUtilities();
