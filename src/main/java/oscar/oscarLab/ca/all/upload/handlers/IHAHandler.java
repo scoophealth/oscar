@@ -111,7 +111,7 @@ public class IHAHandler extends DefaultGenericHandler implements MessageHandler 
     }
 
     @Override
-	public String parse(String serviceName, String fileName, int fileId) {
+	public String parse(String serviceName, String fileName, int fileId, String ipAddr) {
         Document xmlDoc = getXML(fileName);
         Node          node;
         Element       element;

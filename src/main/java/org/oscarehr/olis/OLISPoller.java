@@ -230,7 +230,7 @@ public class OLISPoller {
 				InputStream is = new FileInputStream(fileLocation);
 				int check = FileUploadCheck.addFile(file.getName(), is, "0");
 				if (check != FileUploadCheck.UNSUCCESSFUL_SAVE) {
-					if (msgHandler.parse("OLIS_HL7",fileLocation, check) != null) {
+					if (msgHandler.parse("OLIS_HL7",fileLocation, check,null) != null) {
 						logger.info("Lab successfully added.");
 					} else {
 						logger.info("Error adding lab.");

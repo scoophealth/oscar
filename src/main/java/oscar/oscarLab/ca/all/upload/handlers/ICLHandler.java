@@ -34,7 +34,7 @@ public class ICLHandler implements MessageHandler  {
     
     Logger logger = Logger.getLogger(ICLHandler.class);
     
-    public String parse(String serviceName, String fileName,int fileId){
+    public String parse(String serviceName, String fileName,int fileId, String ipAddr){
         
         ICLUtilities u = new ICLUtilities();
         int i = 0;

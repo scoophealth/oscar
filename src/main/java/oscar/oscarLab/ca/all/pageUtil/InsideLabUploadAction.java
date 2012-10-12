@@ -87,7 +87,7 @@ public class InsideLabUploadAction extends Action {
                 if(msgHandler != null){
                    logger.info("MESSAGE HANDLER "+msgHandler.getClass().getName());
                 }
-                if((msgHandler.parse(getClass().getSimpleName(), filePath,checkFileUploadedSuccessfully)) != null)
+                if((msgHandler.parse(getClass().getSimpleName(), filePath,checkFileUploadedSuccessfully, request.getRemoteAddr())) != null)
                     outcome = "success";
                 
             }else{

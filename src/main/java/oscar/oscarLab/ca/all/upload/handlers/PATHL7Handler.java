@@ -53,7 +53,7 @@ public class PATHL7Handler implements MessageHandler {
 
 	Logger logger = Logger.getLogger(PATHL7Handler.class);
 
-	public String parse(String serviceName, String fileName, int fileId) {
+	public String parse(String serviceName, String fileName, int fileId, String ipAddr) {
 		Document doc = null;
 		try {
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
