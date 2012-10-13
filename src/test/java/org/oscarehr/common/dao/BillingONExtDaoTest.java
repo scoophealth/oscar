@@ -28,16 +28,13 @@ import static org.junit.Assert.assertNull;
 
 import java.math.BigDecimal;
 
-import org.apache.log4j.Logger;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.BillingONCHeader1;
 import org.oscarehr.common.model.BillingONExt;
 import org.oscarehr.common.model.BillingONPayment;
-import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class BillingONExtDaoTest extends DaoTestFixtures {
@@ -71,40 +68,42 @@ private BillingONExtDao dao = (BillingONExtDao)SpringUtils.getBean(BillingONExtD
 		assertEquals(new BigDecimal("10"), payment);
 	}
 	
-	@Test @Ignore
-	/**
-	 * Tests if getPayment() method catches multiple extra-billing records with the same
-	 * payment id, billing number, and payment amount.
-	 * @throws Exception
-	 */
-	public void testGetPaymentDuplicates() {
-		BillingONPaymentDao paymentDao = (BillingONPaymentDao)SpringUtils.getBean(BillingONPaymentDao.class);
-		BillingONPayment paymentRecord = new BillingONPayment();
-		paymentRecord.setBillingNo(1);
-		
-		// Create 2 identical BillingOnExt objects
-		BillingONExt extraBillingPayment = new BillingONExt();
-		extraBillingPayment.setBillingNo(1);
-		extraBillingPayment.setKeyVal("payment");
-		extraBillingPayment.setValue("10000");
-		extraBillingPayment.setPaymentId(1);
-		
-		BillingONExt extraBillingPayment2 = new BillingONExt();
-		extraBillingPayment2.setBillingNo(1);
-		extraBillingPayment2.setKeyVal("payment");
-		extraBillingPayment2.setValue("10000");
-		extraBillingPayment2.setPaymentId(1);
-		
-		paymentDao.persist(paymentRecord);
-		dao.persist(extraBillingPayment);
-		dao.persist(extraBillingPayment2);
-		
-		BigDecimal payment = dao.getPayment(paymentRecord);
-		Logger logger = MiscUtils.getLogger();
-		
-		// Working on a way to test if "Multiple payments found for Payment Id:"
-		// appears in the logger.
-	}
+//	@Test @Ignore
+//	/**
+//	 * Tests if getPayment() method catches multiple extra-billing records with the same
+//	 * payment id, billing number, and payment amount.
+//	 * 
+//	 * Working on a way to test if "Multiple payments found for Payment Id:"
+//	 * appears in the logger.
+//	 * @throws Exception
+//	 */
+//	public void testGetPaymentDuplicates() {
+//		BillingONPaymentDao paymentDao = (BillingONPaymentDao)SpringUtils.getBean(BillingONPaymentDao.class);
+//		BillingONPayment paymentRecord = new BillingONPayment();
+//		paymentRecord.setBillingNo(1);
+//		
+//		// Create 2 identical BillingOnExt objects
+//		BillingONExt extraBillingPayment = new BillingONExt();
+//		extraBillingPayment.setBillingNo(1);
+//		extraBillingPayment.setKeyVal("payment");
+//		extraBillingPayment.setValue("10000");
+//		extraBillingPayment.setPaymentId(1);
+//		
+//		BillingONExt extraBillingPayment2 = new BillingONExt();
+//		extraBillingPayment2.setBillingNo(1);
+//		extraBillingPayment2.setKeyVal("payment");
+//		extraBillingPayment2.setValue("10000");
+//		extraBillingPayment2.setPaymentId(1);
+//		
+//		paymentDao.persist(paymentRecord);
+//		dao.persist(extraBillingPayment);
+//		dao.persist(extraBillingPayment2);
+//		
+//		BigDecimal payment = dao.getPayment(paymentRecord);
+//		Logger logger = MiscUtils.getLogger();
+//		
+//		// test incomplete
+//	}
 	
 	
 	@Test
@@ -131,7 +130,6 @@ private BillingONExtDao dao = (BillingONExtDao)SpringUtils.getBean(BillingONExtD
 		BigDecimal payment = dao.getPayment(paymentRecord);
 		assertEquals(new BigDecimal("0.00"), payment);
 	}
-	
 	
 	
 	@Test //(expected = NumberFormatException.class)
@@ -179,41 +177,41 @@ private BillingONExtDao dao = (BillingONExtDao)SpringUtils.getBean(BillingONExtD
 	}
 	
 	
-	
-	@Test @Ignore
-	/**
-	 * Tests if getRefund() method catches multiple extra-billing records with the same
-	 * payment id, billing number, and payment amount.
-	 * @throws Exception
-	 */
-	public void testGetRefundDuplicates() {
-		BillingONPaymentDao paymentDao = (BillingONPaymentDao)SpringUtils.getBean(BillingONPaymentDao.class);
-		BillingONPayment paymentRecord = new BillingONPayment();
-		paymentRecord.setBillingNo(1);
-		
-		// Create 2 identical BillingOnExt objects
-		BillingONExt extraBillingPayment = new BillingONExt();
-		extraBillingPayment.setBillingNo(1);
-		extraBillingPayment.setKeyVal("refund");
-		extraBillingPayment.setValue("10000");
-		extraBillingPayment.setPaymentId(1);
-		
-		BillingONExt extraBillingPayment2 = new BillingONExt();
-		extraBillingPayment2.setBillingNo(1);
-		extraBillingPayment2.setKeyVal("refund");
-		extraBillingPayment2.setValue("10000");
-		extraBillingPayment2.setPaymentId(1);
-		
-		paymentDao.persist(paymentRecord);
-		dao.persist(extraBillingPayment);
-		dao.persist(extraBillingPayment2);
-		
-		BigDecimal refund = dao.getRefund(paymentRecord);
-		Logger logger = MiscUtils.getLogger();
-		
-		// Working on a way to test if "Multiple payments found for Payment Id:"
-		// appears in the logger.
-	}
+//	@Test @Ignore
+//	/**
+//	 * Tests if getRefund() method catches multiple extra-billing records with the same
+//	 * payment id, billing number, and payment amount.
+//	 * 
+//	 * Working on a way to test if expected message appears in the logger.
+//	 * @throws Exception
+//	 */
+//	public void testGetRefundDuplicates() {
+//		BillingONPaymentDao paymentDao = (BillingONPaymentDao)SpringUtils.getBean(BillingONPaymentDao.class);
+//		BillingONPayment paymentRecord = new BillingONPayment();
+//		paymentRecord.setBillingNo(1);
+//		
+//		// Create 2 identical BillingOnExt objects
+//		BillingONExt extraBillingPayment = new BillingONExt();
+//		extraBillingPayment.setBillingNo(1);
+//		extraBillingPayment.setKeyVal("refund");
+//		extraBillingPayment.setValue("10000");
+//		extraBillingPayment.setPaymentId(1);
+//		
+//		BillingONExt extraBillingPayment2 = new BillingONExt();
+//		extraBillingPayment2.setBillingNo(1);
+//		extraBillingPayment2.setKeyVal("refund");
+//		extraBillingPayment2.setValue("10000");
+//		extraBillingPayment2.setPaymentId(1);
+//		
+//		paymentDao.persist(paymentRecord);
+//		dao.persist(extraBillingPayment);
+//		dao.persist(extraBillingPayment2);
+//		
+//		BigDecimal refund = dao.getRefund(paymentRecord);
+//		Logger logger = MiscUtils.getLogger();
+//		
+//		// test incomplete
+//	}
 	
 	
 	@Test
@@ -243,7 +241,6 @@ private BillingONExtDao dao = (BillingONExtDao)SpringUtils.getBean(BillingONExtD
 	}
 	
 	
-	
 	@Test //(expected = NumberFormatException.class)
 	/**
 	 * Ensures that only valid integers are acceptable 
@@ -265,7 +262,6 @@ private BillingONExtDao dao = (BillingONExtDao)SpringUtils.getBean(BillingONExtD
 		BigDecimal refund = dao.getRefund(paymentRecord);
 		assertEquals(new BigDecimal("0.00"), refund);
 	}
-	
 	
 	
 	@Test
@@ -291,7 +287,6 @@ private BillingONExtDao dao = (BillingONExtDao)SpringUtils.getBean(BillingONExtD
 	}
 	
 	
-		
 	@Test
 	/**
 	 * Ensures that the getRemitTo() method returns
@@ -319,38 +314,38 @@ private BillingONExtDao dao = (BillingONExtDao)SpringUtils.getBean(BillingONExtD
 	}
 	
 	
-	@Test @Ignore
-	/**
-	 * Tests if getRemitTo() method catches multiple extra-billing records with the same
-	 * billing number, status, and keyVal values.
-	 * @throws Exception
-	 */
-	public void testGetRemitToDuplicates() {
-		BillingONCHeader1Dao cHeader1Dao = (BillingONCHeader1Dao)SpringUtils.getBean(BillingONCHeader1Dao.class);
-		BillingONCHeader1 cHeader1 = new BillingONCHeader1();
-		
-		// Create 2 identical BillingOnExt objects
-		BillingONExt extraBillingPayment = new BillingONExt();
-		extraBillingPayment.setBillingNo(1);
-		extraBillingPayment.setStatus('1');
-		extraBillingPayment.setKeyVal("remitTo");
-		
-		BillingONExt extraBillingPayment2 = new BillingONExt();
-		extraBillingPayment.setBillingNo(1);
-		extraBillingPayment.setStatus('1');
-		extraBillingPayment.setKeyVal("remitTo");
-		
-		cHeader1Dao.persist(cHeader1);
-		dao.persist(extraBillingPayment);
-		dao.persist(extraBillingPayment2);
-		
-		BillingONExt billingRecord = dao.getRemitTo(cHeader1);
-		Logger logger = MiscUtils.getLogger();
-		
-		// Working on a way to test if "More than one active remit to result for invoice number: ""
-		// appears in the logger.
-	}
-	
+//	@Test @Ignore
+//	/**
+//	 * Tests if getRemitTo() method catches multiple extra-billing records with the same
+//	 * billing number, status, and keyVal values.
+//	 * 
+//	 * Working on a way to test if expected message appears in the logger.
+//	 * @throws Exception
+//	 */
+//	public void testGetRemitToDuplicates() {
+//		BillingONCHeader1Dao cHeader1Dao = (BillingONCHeader1Dao)SpringUtils.getBean(BillingONCHeader1Dao.class);
+//		BillingONCHeader1 cHeader1 = new BillingONCHeader1();
+//		
+//		// Create 2 identical BillingOnExt objects
+//		BillingONExt extraBillingPayment = new BillingONExt();
+//		extraBillingPayment.setBillingNo(1);
+//		extraBillingPayment.setStatus('1');
+//		extraBillingPayment.setKeyVal("remitTo");
+//		
+//		BillingONExt extraBillingPayment2 = new BillingONExt();
+//		extraBillingPayment.setBillingNo(1);
+//		extraBillingPayment.setStatus('1');
+//		extraBillingPayment.setKeyVal("remitTo");
+//		
+//		cHeader1Dao.persist(cHeader1);
+//		dao.persist(extraBillingPayment);
+//		dao.persist(extraBillingPayment2);
+//		
+//		BillingONExt billingRecord = dao.getRemitTo(cHeader1);
+//		Logger logger = MiscUtils.getLogger();
+//		
+//		// test incomplete
+//	}
 	
 	
 	@Test
@@ -374,7 +369,6 @@ private BillingONExtDao dao = (BillingONExtDao)SpringUtils.getBean(BillingONExtD
 		BillingONExt billingRecord = dao.getBillTo(cHeader1);
 		assertEquals(extraBillingPayment, billingRecord);
 	}
-	
 	
 	
 	@Test
@@ -404,40 +398,38 @@ private BillingONExtDao dao = (BillingONExtDao)SpringUtils.getBean(BillingONExtD
 	}
 	
 	
-	
-	@Test @Ignore
-	/**
-	 * Tests if the gitBillTo() method catches multiple extra-billing records with the same
-	 * billing number, status, and keyVal values.
-	 * @throws Exception
-	 */
-	public void testGetBillToDuplicates() {
-		BillingONCHeader1Dao cHeader1Dao = (BillingONCHeader1Dao)SpringUtils.getBean(BillingONCHeader1Dao.class);
-		BillingONCHeader1 cHeader1 = new BillingONCHeader1();
-		
-		// Create 2 identical BillingOnExt objects
-		BillingONExt extraBillingPayment = new BillingONExt();
-		extraBillingPayment.setBillingNo(1);
-		extraBillingPayment.setStatus('1');
-		extraBillingPayment.setKeyVal("billTo");
-		
-		BillingONExt extraBillingPayment2 = new BillingONExt();
-		extraBillingPayment.setBillingNo(1);
-		extraBillingPayment.setStatus('1');
-		extraBillingPayment.setKeyVal("billTo");
-		
-		cHeader1Dao.persist(cHeader1);
-		dao.persist(extraBillingPayment);
-		dao.persist(extraBillingPayment2);
-		
-		BillingONExt billingRecord = dao.getBillTo(cHeader1);
-		Logger logger = MiscUtils.getLogger();
-		
-		// Working on a way to test if "More than one active bill to result for invoice number: ""
-		// appears in the logger.
-	}
-	
-	
+//	@Test @Ignore
+//	/**
+//	 * Tests if the gitBillTo() method catches multiple extra-billing records with the same
+//	 * billing number, status, and keyVal values.
+//	 * 
+//	 * Working on a way to test if expected message appears in the logger.
+//	 * @throws Exception
+//	 */
+//	public void testGetBillToDuplicates() {
+//		BillingONCHeader1Dao cHeader1Dao = (BillingONCHeader1Dao)SpringUtils.getBean(BillingONCHeader1Dao.class);
+//		BillingONCHeader1 cHeader1 = new BillingONCHeader1();
+//		
+//		// Create 2 identical BillingOnExt objects
+//		BillingONExt extraBillingPayment = new BillingONExt();
+//		extraBillingPayment.setBillingNo(1);
+//		extraBillingPayment.setStatus('1');
+//		extraBillingPayment.setKeyVal("billTo");
+//		
+//		BillingONExt extraBillingPayment2 = new BillingONExt();
+//		extraBillingPayment.setBillingNo(1);
+//		extraBillingPayment.setStatus('1');
+//		extraBillingPayment.setKeyVal("billTo");
+//		
+//		cHeader1Dao.persist(cHeader1);
+//		dao.persist(extraBillingPayment);
+//		dao.persist(extraBillingPayment2);
+//		
+//		BillingONExt billingRecord = dao.getBillTo(cHeader1);
+//		Logger logger = MiscUtils.getLogger();
+//		
+//		// test incomplete
+//	}
 	
 	
 	@Test
@@ -461,7 +453,6 @@ private BillingONExtDao dao = (BillingONExtDao)SpringUtils.getBean(BillingONExtD
 		BillingONExt billingRecord = dao.getBillToInactive(cHeader1);
 		assertEquals(extraBillingPayment, billingRecord);
 	}
-	
 	
 	
 	@Test
@@ -490,37 +481,36 @@ private BillingONExtDao dao = (BillingONExtDao)SpringUtils.getBean(BillingONExtD
 		assertNull(billingRecord);
 	}
 	
-	
-	
-	@Test @Ignore
-	/**
-	 * Tests if the getBillToInactive() method catches multiple extra-billing
-	 * records with the same billing number, status, and keyVal values.
-	 * @throws Exception
-	 */
-	public void testGetBillToInactiveDuplicates() {
-		BillingONCHeader1Dao cHeader1Dao = (BillingONCHeader1Dao)SpringUtils.getBean(BillingONCHeader1Dao.class);
-		BillingONCHeader1 cHeader1 = new BillingONCHeader1();
-		
-		// Create 2 identical BillingOnExt objects
-		BillingONExt extraBillingPayment = new BillingONExt();
-		extraBillingPayment.setBillingNo(1);
-		extraBillingPayment.setStatus('0');
-		extraBillingPayment.setKeyVal("billTo");
-		
-		BillingONExt extraBillingPayment2 = new BillingONExt();
-		extraBillingPayment.setBillingNo(1);
-		extraBillingPayment.setStatus('0');
-		extraBillingPayment.setKeyVal("billTo");
-		
-		cHeader1Dao.persist(cHeader1);
-		dao.persist(extraBillingPayment);
-		dao.persist(extraBillingPayment2);
-		
-		BillingONExt billingRecord = dao.getBillToInactive(cHeader1);
-		Logger logger = MiscUtils.getLogger();
-		
-		// Working on a way to test if "More than one inactive bill to result for invoice number: ""
-		// appears in the logger.
-	}
+//	@Test @Ignore
+//	/**
+//	 * Tests if the getBillToInactive() method catches multiple extra-billing
+//	 * records with the same billing number, status, and keyVal values.
+//	 * 
+//	 * Working on a way to test if expected message appears in the logger.
+//	 * @throws Exception
+//	 */
+//	public void testGetBillToInactiveDuplicates() {
+//		BillingONCHeader1Dao cHeader1Dao = (BillingONCHeader1Dao)SpringUtils.getBean(BillingONCHeader1Dao.class);
+//		BillingONCHeader1 cHeader1 = new BillingONCHeader1();
+//		
+//		// Create 2 identical BillingOnExt objects
+//		BillingONExt extraBillingPayment = new BillingONExt();
+//		extraBillingPayment.setBillingNo(1);
+//		extraBillingPayment.setStatus('0');
+//		extraBillingPayment.setKeyVal("billTo");
+//		
+//		BillingONExt extraBillingPayment2 = new BillingONExt();
+//		extraBillingPayment.setBillingNo(1);
+//		extraBillingPayment.setStatus('0');
+//		extraBillingPayment.setKeyVal("billTo");
+//		
+//		cHeader1Dao.persist(cHeader1);
+//		dao.persist(extraBillingPayment);
+//		dao.persist(extraBillingPayment2);
+//		
+//		BillingONExt billingRecord = dao.getBillToInactive(cHeader1);
+//		Logger logger = MiscUtils.getLogger();
+//		
+//		// test incomplete
+//	}
 }
