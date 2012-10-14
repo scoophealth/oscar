@@ -25,7 +25,9 @@ package org.oscarehr.common.dao;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.persistence.Query;
+
 import org.oscarehr.common.model.BillingONEAReport;
 import org.springframework.stereotype.Repository;
 
@@ -38,6 +40,17 @@ public class BillingONEAReportDao extends AbstractDao<BillingONEAReport> {
     
     public BillingONEAReportDao() {
         super(BillingONEAReport.class);	
+    }
+    
+    public List<BillingONEAReport> findByBillingNo(Integer billingNo) {
+    	String sql = "select b from BillingONEAReport b where b.billingNo=:billingNo order by b.processDate DESC";
+    	Query query = entityManager.createQuery(sql);
+        query.setParameter("billingNo", billingNo);
+
+        @SuppressWarnings("unchecked")
+        List<BillingONEAReport> results = query.getResultList();
+        
+        return results;
     }
     
     public List<String> getBillingErrorList(Integer billingNo) {

@@ -55,6 +55,15 @@ public class BillingOnItemDao extends HibernateDaoSupport {
 
             return rs;
         }
+        
+        public List<BillingOnItem> getActiveBillingItemByCh1Id(Integer ch1_id) {
+            String queryStr = "FROM BillingOnItem b WHERE b.ch1_id = "+ch1_id+" AND b.status != ? ORDER BY b.id";
+
+            @SuppressWarnings("unchecked")
+            List<BillingOnItem> rs = getHibernateTemplate().find(queryStr,"D");
+
+            return rs;
+        }
 
         public List<BillingOnCHeader1> getCh1ByDemographicNo(Integer demographic_no) {
             String queryStr = "FROM BillingOnCHeader1 b WHERE b.demographic_no = "+demographic_no+" ORDER BY b.id";
