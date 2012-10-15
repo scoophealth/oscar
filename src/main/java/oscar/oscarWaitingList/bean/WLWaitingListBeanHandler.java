@@ -22,132 +22,100 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarWaitingList.bean;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.common.dao.WaitingListDao;
+import org.oscarehr.common.dao.WaitingListNameDao;
+import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.WaitingList;
+import org.oscarehr.common.model.WaitingListName;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarWaitingList.util.WLWaitingListUtil;
+import oscar.util.ConversionUtils;
 
 public class WLWaitingListBeanHandler {
-    
-    List waitingListArrayList = new ArrayList();
-    String waitingListName ="";
-    private static Logger log = Logger.getLogger(WLWaitingListBeanHandler.class);
-    
-    public WLWaitingListBeanHandler(String waitingListID) {
-        init(waitingListID);
-    }
 
-    public boolean init(String waitingListID) {
-        
-        boolean verdict = true;
-        try {
-            
-            
-            String sql = " SELECT CONCAT(d.last_name, ', ', d.first_name) AS patientName, d.demographic_no, " + 
-            			 " d.phone, w.listID, w.position, w.note, w.onListSince FROM waitingList w, demographic d " + 
-            			 " WHERE w.demographic_no = d.demographic_no AND w.listID='"+ waitingListID + "' " + 
-            			 " AND w.is_history = 'N' " + " ORDER BY w.position ";
-            log.debug(sql);
-            ResultSet rs;      
-            String onListSinceDateOnly = "";
-            for(rs = DBHandler.GetSQL(sql); rs.next(); )
-            {                
-            	onListSinceDateOnly = oscar.Misc.getString(rs, "onListSince").substring(0, 10);//2007-01-01
-            	
-                WLPatientWaitingListBean wLBean = new WLPatientWaitingListBean( oscar.Misc.getString(rs, "demographic_no"),
-                                                                                oscar.Misc.getString(rs, "listID"),
-                                                                                oscar.Misc.getString(rs, "position"),
-                                                                                oscar.Misc.getString(rs, "patientName"), 
-                                                                                oscar.Misc.getString(rs, "phone"),
-                                                                                oscar.Misc.getString(rs, "note"),
-                                                                                onListSinceDateOnly);   
-                waitingListArrayList.add(wLBean);
-            }                            
-            
-            if(waitingListID != null && waitingListID.length()>0) {
-	            sql = "SELECT * FROM waitingListName where ID="+waitingListID + " AND is_history = 'N' ";
-	            log.debug(sql);
-	            rs = DBHandler.GetSQL(sql);
-	            if(rs.next()){
-	                waitingListName = oscar.Misc.getString(rs, "name");
-	            }
-	            rs.close();
-            }
-        }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-            verdict = false;
-        }
-        return verdict;
-    }
-    
-    static public void updateWaitingList(String waitingListID) {
-                
-        try {
-            
-            String sql = " SELECT demographic_no FROM waitingList WHERE listID=" + waitingListID + 
-                         " AND is_history = 'N' ";
-            log.debug(sql);
-            ResultSet rs;
-            boolean needUpdate = false;
-            //go thru all the patient on the list
-            for(rs = DBHandler.GetSQL(sql); rs.next();){
-                
-                //check if the patient has an appointment already
-                sql = "select a.demographic_no, a.appointment_date, wl.onListSince from appointment a, waitingList wl where a.appointment_date >= wl.onListSince AND a.demographic_no=wl.demographic_no AND a.demographic_no="
-                      + oscar.Misc.getString(rs, "demographic_no") + "";
-                log.debug(sql);
-                ResultSet rsCheck = DBHandler.GetSQL(sql);        
-                
-                if(rsCheck.next())
-                {                
-                    //delete patient from the waitingList
+	List<WLPatientWaitingListBean> waitingListArrayList = new ArrayList<WLPatientWaitingListBean>();
+	String waitingListName = "";
 
-                	WLWaitingListUtil.removeFromWaitingList(waitingListID, oscar.Misc.getString(rs, "demographic_no"));
-                    needUpdate = true;
-                }
-                rsCheck.close();
-            }
-            rs.close();
-            //update the list
-            if(needUpdate){
-                sql = " SELECT * FROM waitingList WHERE listID=" + waitingListID + "  AND is_history = 'N' ORDER BY onListSince";
-                log.debug(sql);
-                int i=1;            
-                for(rs = DBHandler.GetSQL(sql); rs.next();){                    
-                    sql =   " UPDATE waitingList SET position="+ i + 
-                    		" WHERE listID=" + waitingListID + 
-                            " AND demographic_no=" + oscar.Misc.getString(rs, "demographic_no") +
-                            " AND is_history = 'N' ";
+	public WLWaitingListBeanHandler(String waitingListID) {
+		init(waitingListID);
+	}
 
-                    log.debug(sql);
-                    DBHandler.RunSQL(sql);
-                    i++;
-                }                            
-                rs.close();
-            }
-        }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);         
-        }        
-    } 
-        
-    
-    
-    public List getWaitingListArrayList(){
-        return waitingListArrayList;
-    }    
-    
-    public String getWaitingListName(){
-        return waitingListName;
-    }
+	public boolean init(String waitingListID) {
+		WaitingListDao dao = SpringUtils.getBean(WaitingListDao.class);
+		List<Object[]> waitingListsAndDemographics = dao.findWaitingListsAndDemographics(ConversionUtils.fromIntString(waitingListID));
+
+		String onListSinceDateOnly = "";
+		for (Object[] i : waitingListsAndDemographics) {
+			WaitingList waitingList = (WaitingList) i[0];
+			Demographic demographic = (Demographic) i[1];
+
+			onListSinceDateOnly = ConversionUtils.toDateString(waitingList.getOnListSince());
+
+			WLPatientWaitingListBean wLBean = new WLPatientWaitingListBean(String.valueOf(waitingList.getDemographicNo()), // oscar.Misc.getString(rs, "demographic_no"),
+			        String.valueOf(waitingList.getListId()), // oscar.Misc.getString(rs, "listID"),
+			        String.valueOf(waitingList.getPosition()), // oscar.Misc.getString(rs, "position"),
+			        demographic.getFullName(),//  oscar.Misc.getString(rs, "patientName"), 
+			        demographic.getPhone(), //  oscar.Misc.getString(rs, "phone"),
+			        waitingList.getNote(), // o oscar.Misc.getString(rs, "note"),
+			        onListSinceDateOnly);
+			waitingListArrayList.add(wLBean);
+		}
+
+		if (waitingListID != null && waitingListID.length() > 0) {
+			WaitingListNameDao nameDao = SpringUtils.getBean(WaitingListNameDao.class);
+			WaitingListName name = nameDao.find(waitingListID);
+			if (name != null) {
+				waitingListName = name.getName();
+			}
+		}
+		return true;
+	}
+
+	static public void updateWaitingList(String waitingListID) {
+		WaitingListDao dao = SpringUtils.getBean(WaitingListDao.class);
+
+		Integer waitingListId = ConversionUtils.fromIntString(waitingListID);
+		List<WaitingList> waitingList = dao.findByWaitingListId(waitingListId);
+
+		boolean needUpdate = false;
+		// go thru all the patient on the list
+		for (WaitingList i : waitingList) {
+			int demographicNo = i.getDemographicNo();
+
+			// check if the patient has an appointment already
+			List<Appointment> appointments = dao.findAppointmentFor(i);
+			if (!appointments.isEmpty()) {
+				//delete patient from the waitingList
+
+				WLWaitingListUtil.removeFromWaitingList(waitingListID, String.valueOf(demographicNo));
+				needUpdate = true;
+			}
+		}
+
+		if (!needUpdate) {
+			return;
+		}
+
+		//update the list
+		for (int i = 1; i < waitingList.size(); i++) {
+			WaitingList waitingListEntry = waitingList.get(i);
+			waitingListEntry.setPosition(i);
+			dao.saveEntity(waitingListEntry);
+		}
+	}
+
+	public List<WLPatientWaitingListBean> getWaitingList() {
+		return waitingListArrayList;
+	}
+
+	public String getWaitingListName() {
+		return waitingListName;
+	}
 }

@@ -39,6 +39,9 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name="waitingList")
 public class WaitingList extends AbstractModel<Integer> {
+	
+	public static final String IS_HISTORY_YES = "Y";
+	public static final String IS_HISTORY_NO = "N";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -115,6 +118,9 @@ public class WaitingList extends AbstractModel<Integer> {
 	public void setIsHistory(String isHistory) {
     	this.isHistory = isHistory;
     }
-
+	
+	public void setHistory(boolean isHistory) {
+		setIsHistory(isHistory ? IS_HISTORY_YES : IS_HISTORY_NO);
+	}
 
 }
