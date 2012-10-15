@@ -22,10 +22,10 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarResearch.oscarDxResearch.pageUtil;
+
 import java.io.IOException;
-import java.sql.SQLException;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -35,59 +35,48 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.DxresearchDAO;
 import org.oscarehr.common.dao.PartialDateDao;
+import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.common.model.PartialDate;
-import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
+import oscar.util.ConversionUtils;
 import oscar.util.ParameterActionForward;
-import oscar.util.UtilDateUtilities;
-
 
 public class dxResearchUpdateAction extends Action {
 	private static final PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
 
-    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException
-    {
-        String status = request.getParameter("status");
-        String did = request.getParameter("did");
-        String demographicNo = request.getParameter("demographicNo");        
-        String providerNo = request.getParameter("providerNo");
-        String startDate = request.getParameter("startdate");
-        String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"); 
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String status = request.getParameter("status");
+		String did = request.getParameter("did");
+		String demographicNo = request.getParameter("demographicNo");
+		String providerNo = request.getParameter("providerNo");
+		String startDate = request.getParameter("startdate");
 
-        partialDateDao.setPartialDate(startDate, PartialDate.DXRESEARCH, Integer.valueOf(did), PartialDate.DXRESEARCH_STARTDATE);
-        startDate = partialDateDao.getFullDate(startDate);
-        
-        try{
-                        
-            String sql = "";
-            if (status.equals("C")){
-                sql = "update dxresearch set update_date='"+nowDate + "', status='C' where dxresearch_no='"+did+"'";
-                DBHandler.RunSQL(sql);
-            }
-            else if (status.equals("D")){
-                sql = "update dxresearch set update_date='"+nowDate + "', status='D' where dxresearch_no='"+did+"'";
-                DBHandler.RunSQL(sql);
-            }
-            else if (status.equals("A") && startDate!=null){
-                sql = "update dxresearch set update_datpartialDatee='"+nowDate+"', start_date='"+startDate+"' where dxresearch_no='"+did+"'";
-                DBHandler.RunSQL(sql);
-            }
-        }
+		partialDateDao.setPartialDate(startDate, PartialDate.DXRESEARCH, Integer.valueOf(did), PartialDate.DXRESEARCH_STARTDATE);
+		startDate = partialDateDao.getFullDate(startDate);
 
-        catch(SQLException e){
-            MiscUtils.getLogger().error("Error", e);
-        }                                    
-        
-        ParameterActionForward forward = new ParameterActionForward(mapping.findForward("success"));
-        forward.addParameter("demographicNo", demographicNo);
-        forward.addParameter("providerNo", providerNo);
-        forward.addParameter("quickList", "");        
-        
-        return forward;
-    }
-     
+		DxresearchDAO dao = SpringUtils.getBean(DxresearchDAO.class);
+		Dxresearch research = dao.find(ConversionUtils.fromIntString(did));
+		if (research != null) {
+			if (status.equals("C") || status.equals("D")) {
+				research.setUpdateDate(new Date());
+				research.setStatus(status.charAt(0));
+			} else if (status.equals("A") && startDate != null) {
+				research.setUpdateDate(new Date());
+				research.setStartDate(new Date());
+			}
+			
+			dao.merge(research);
+		}
+
+		ParameterActionForward forward = new ParameterActionForward(mapping.findForward("success"));
+		forward.addParameter("demographicNo", demographicNo);
+		forward.addParameter("providerNo", providerNo);
+		forward.addParameter("quickList", "");
+
+		return forward;
+	}
+
 }

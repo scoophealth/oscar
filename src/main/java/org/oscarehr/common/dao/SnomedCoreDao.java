@@ -27,6 +27,7 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import org.oscarehr.common.model.AbstractCodeSystemModel;
 import org.oscarehr.common.model.SnomedCore;
 import org.springframework.stereotype.Repository;
 
@@ -69,5 +70,13 @@ public class SnomedCoreDao extends AbstractCodeSystemDao<SnomedCore> {
     	if(results.isEmpty())
     		return null;
     	return results.get(0);
+    }
+
+	@Override
+    public AbstractCodeSystemModel<?> findByCodingSystem(String codingSystem) {
+		Query query = entityManager.createQuery("FROM SnomedCore s WHERE s.snomedCore like :cs");
+		query.setParameter("cs", codingSystem);
+		query.setMaxResults(1);
+		return getSingleResultOrNull(query);
     }
 }
