@@ -39,7 +39,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
@@ -553,53 +552,63 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 		assertNull(result);
 	}
 
-	@Test @Ignore
-	public void testSearchPrivateBillingCode() throws Exception {
-		String searchString = "private01";
-		Date date = new Date(dfm.parse("20091231").getTime());
+//	@Test @Ignore
+//	/**
+//	 * Test ignored because expected result is not actual result.
+//	 * Test will fail as is.
+//	 * @throws Exception
+//	 */
+//	public void testSearchPrivateBillingCode() throws Exception {
+//		String searchString = "private01";
+//		Date date = new Date(dfm.parse("20091231").getTime());
+//
+//		// Valid input.
+//		BillingService billingService1 = createBillingService("\\_" + searchString, "20070101");
+//		billingService1.setRegion(null);
+//		// Valid input.
+//		BillingService billingService2 = createBillingService("\\"+ searchString + "test", "20080101");
+//		billingService2.setRegion(null);
+//		// Region not null.
+//		BillingService billingService3 = createBillingServiceWithRegion(searchString, "ON", "20090101");
+//
+//		dao.persist(billingService1);
+//		dao.persist(billingService2);
+//		dao.persist(billingService3);
+//
+//		BillingService result = dao.searchPrivateBillingCode(searchString, date);
+//		BillingService expectedResult = billingService2;
+//
+//		assertEquals(expectedResult, result);
+//	}
 
-		// Valid input.
-		BillingService billingService1 = createBillingService("\\_" + searchString, "20070101");
-		billingService1.setRegion(null);
-		// Valid input.
-		BillingService billingService2 = createBillingService("\\"+ searchString + "test", "20080101");
-		billingService2.setRegion(null);
-		// Region not null.
-		BillingService billingService3 = createBillingServiceWithRegion(searchString, "ON", "20090101");
-
-		dao.persist(billingService1);
-		dao.persist(billingService2);
-		dao.persist(billingService3);
-
-		BillingService result = dao.searchPrivateBillingCode(searchString, date);
-		BillingService expectedResult = billingService2;
-
-		assertEquals(expectedResult, result);
-	}
-
-	@Test @Ignore
-	public void testSearchPrivateBillingCode_WithUnderscore() throws Exception {
-		String searchString = "_private01";
-		Date date = new Date(dfm.parse("20091231").getTime());
-
-		// Valid input.
-		BillingService billingService1 = createBillingService("\\_" + searchString, "20070101");
-		billingService1.setRegion(null);
-		// Valid input.
-		BillingService billingService2 = createBillingService("\\"+ searchString + "test", "20080101");
-		billingService2.setRegion(null);
-		// Region not null.
-		BillingService billingService3 = createBillingServiceWithRegion(searchString, "ON", "20090101");
-
-		dao.persist(billingService1);
-		dao.persist(billingService2);
-		dao.persist(billingService3);
-
-		BillingService result = dao.searchPrivateBillingCode(searchString, date);
-		BillingService expectedResult = billingService2;
-
-		assertEquals(expectedResult, result);
-	}
+//	@Test @Ignore
+//	/**
+//	 * Test ignored because expected result is not actual result.
+//	 * Test will fail as is.
+//	 * @throws Exception
+//	 */
+//	public void testSearchPrivateBillingCode_WithUnderscore() throws Exception {
+//		String searchString = "_private01";
+//		Date date = new Date(dfm.parse("20091231").getTime());
+//
+//		// Valid input.
+//		BillingService billingService1 = createBillingService("\\_" + searchString, "20070101");
+//		billingService1.setRegion(null);
+//		// Valid input.
+//		BillingService billingService2 = createBillingService("\\"+ searchString + "test", "20080101");
+//		billingService2.setRegion(null);
+//		// Region not null.
+//		BillingService billingService3 = createBillingServiceWithRegion(searchString, "ON", "20090101");
+//
+//		dao.persist(billingService1);
+//		dao.persist(billingService2);
+//		dao.persist(billingService3);
+//
+//		BillingService result = dao.searchPrivateBillingCode(searchString, date);
+//		BillingService expectedResult = billingService2;
+//
+//		assertEquals(expectedResult, result);
+//	}
 
 	@Test
 	public void testSearchPrivateBillingCode_EmptySet() throws Exception {
@@ -638,25 +647,31 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 		assertEquals(value, billingService1.getValue());
 	}
 
-	@Test @Ignore
-	public void testInsertBillingCode() throws Exception {
-		String code = "service001";
-		String date = "20090101";
-		String description = "New description";
-		String termDate = "20091231";
-		String region = "ON";
-		boolean pass = dao.insertBillingCode(code, date, description, termDate, region);
-		assertTrue(pass);
-		BillingService billingService1 = dao.find(1);
-		if (!billingService1.getServiceCode().equals(code) &&
-				billingService1.getDescription().equals(description) &&
-				billingService1.getTerminationDate() == new Date(dfm.parse(termDate).getTime()) &&
-				billingService1.getBillingserviceDate() == new Date(dfm.parse(date).getTime()) &&
-				billingService1.getRegion().equals(region)) {
-			fail("Insert Billing Code did not properly persist data.");
-		}
-		assertTrue(true);
-	}
+//	@Test @Ignore
+//	/**
+//	 * Ignored because the InsertBillingCode() method does not
+//	 * populate all columns in the BillingService table with data.
+//	 * Some columns cannot be null.
+//	 * @throws Exception
+//	 */
+//	public void testInsertBillingCode() throws Exception {
+//		String code = "service001";
+//		String date = "20090101";
+//		String description = "New description";
+//		String termDate = "20091231";
+//		String region = "ON";
+//		boolean pass = dao.insertBillingCode(code, date, description, termDate, region);
+//		assertTrue(pass);
+//		BillingService billingService1 = dao.find(1);
+//		if (!billingService1.getServiceCode().equals(code) &&
+//				billingService1.getDescription().equals(description) &&
+//				billingService1.getTerminationDate() == new Date(dfm.parse(termDate).getTime()) &&
+//				billingService1.getBillingserviceDate() == new Date(dfm.parse(date).getTime()) &&
+//				billingService1.getRegion().equals(region)) {
+//			fail("Insert Billing Code did not properly persist data.");
+//		}
+//		assertTrue(true);
+//	}
 
 	@Test
 	public void testGetLatestServiceDate() throws Exception {
@@ -720,13 +735,16 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 		assertTrue(true);
 	}
 
-	@Test @Ignore
-	public void testGetUnitPrice_ParseException() {
-		String serviceCode = "service001";
-		String referralDate = "notadate";
-		Object[] result = dao.getUnitPrice(serviceCode, referralDate);
-		// working on a way to parse log file for exception
-	}
+//	@Test @Ignore
+//	/**
+//	 * working on a way to parse log file for exception
+//	 */
+//	public void testGetUnitPrice_ParseException() {
+//		String serviceCode = "service001";
+//		String referralDate = "notadate";
+//		Object[] result = dao.getUnitPrice(serviceCode, referralDate);
+//		// test incomplete
+//	}
 
 	@Test
 	public void testGetUnitPrice_EmptySet() {
@@ -754,13 +772,16 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 		assertEquals(expectedResult,result);
 	}
 
-	@Test @Ignore
-	public void testGetUnitPercentage_ParseException() {
-		String serviceCode = "service001";
-		String referralDate = "notadate";
-		Object[] result = dao.getUnitPrice(serviceCode, referralDate);
-		// working on a way to parse log file for exception
-	}
+//	@Test @Ignore
+//	/**
+//	 * working on a way to parse log file for exception
+//	 */
+//	public void testGetUnitPercentage_ParseException() {
+//		String serviceCode = "service001";
+//		String referralDate = "notadate";
+//		Object[] result = dao.getUnitPrice(serviceCode, referralDate);
+//		// test incomplete
+//	}
 
 	@Test
 	public void testGetUnitPercentage_EmptySet() {

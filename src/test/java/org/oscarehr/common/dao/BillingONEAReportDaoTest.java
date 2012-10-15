@@ -35,7 +35,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
@@ -74,20 +73,20 @@ public class BillingONEAReportDaoTest extends DaoTestFixtures {
 	}
 	
 	
-	@Ignore @Test (expected = IllegalArgumentException.class)
-	/**
-	 *  Ensure invalid billing numbers are not acceptable.
-	 *  To be implemented as validation is implemented on dao method parameters.
-	 */
-	public void testGetBillingErrorsListInvalidBillNo() throws Exception {
-		// Create billing report using a negative billing number.
-		BillingONEAReport eaRpt = createReport(-1);
-		eaRpt.setClaimError("error01");
-		eaRpt.setCodeError("error02");
-		dao.persist(eaRpt);
-		
-		List<String> eaReportErrors = dao.getBillingErrorList(eaRpt.getBillingNo());
-	}
+//	@Ignore @Test (expected = IllegalArgumentException.class)
+//	/**
+//	 *  Ensure invalid billing numbers are not acceptable.
+//	 *  To be implemented as validation is implemented on dao method parameters.
+//	 */
+//	public void testGetBillingErrorsListInvalidBillNo() throws Exception {
+//		// Create billing report using a negative billing number.
+//		BillingONEAReport eaRpt = createReport(-1);
+//		eaRpt.setClaimError("error01");
+//		eaRpt.setCodeError("error02");
+//		dao.persist(eaRpt);
+//		
+//		List<String> eaReportErrors = dao.getBillingErrorList(eaRpt.getBillingNo());
+//	}
 	
 	
 	
