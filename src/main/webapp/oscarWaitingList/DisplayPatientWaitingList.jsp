@@ -88,7 +88,7 @@ function removePatient(demographicNo, waitingList){
 						<td align="left" class="Header" width="100"></td>
 					</tr>
 					<logic:iterate id="waitingListBean" name="patientWaitingList"
-						property="patientWaitingListVector">
+						property="patientWaitingList">
 						<tr class="data">
 							<td width="100"><bean:write name="waitingListBean"
 								property="waitingList" /></td>

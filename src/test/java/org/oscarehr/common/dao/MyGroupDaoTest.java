@@ -25,6 +25,8 @@ package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
@@ -56,5 +58,11 @@ public class MyGroupDaoTest extends DaoTestFixtures {
 		dao.persist(entity);
 
 		assertNotNull(entity.getId());
+	}
+	
+	@Test
+	public void testGetProviderGroups() {
+		List<MyGroup> groups = dao.getProviderGroups("1");
+		assertNotNull(groups);
 	}
 }
