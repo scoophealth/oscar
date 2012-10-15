@@ -39,7 +39,7 @@ public class OcanClientFormDao extends AbstractDao<OcanClientForm> {
 
 	public OcanClientForm findLatestByFacilityClient(Integer facilityId, Integer clientId) {
 
-		String sqlCommand = "select * from OcanClientForm where facilityId=?1 and clientId=?2 order by created desc limit 1";
+		String sqlCommand = "select * from OcanClientForm where facilityId=?1 and clientId=?2 order by created desc";
 
 		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
 		query.setParameter(1, facilityId);
