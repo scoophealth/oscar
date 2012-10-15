@@ -23,43 +23,22 @@
  */
 package org.oscarehr.common.dao;
 
-import static org.junit.Assert.assertNotNull;
-
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
-import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
-import org.oscarehr.common.model.QuickList;
 import org.oscarehr.util.SpringUtils;
 
-public class QuickListDaoTest extends DaoTestFixtures {
+public class IchppccodeDaoTest extends DaoTestFixtures {
 
-	private QuickListDao dao = SpringUtils.getBean(QuickListDao.class);
-
-	public QuickListDaoTest() {
-	}
+	private IchppccodeDao dao = SpringUtils.getBean(IchppccodeDao.class);
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable(new String[]{"quickList"});
-	}
-
-	@Test
-	public void testCreate() throws Exception {
-		 QuickList ql = new QuickList();
-		 EntityDataGenerator.generateTestDataForModelClass(ql);
-		 dao.persist(ql);
-		 assertNotNull(ql.getId());
+		SchemaUtils.restoreTable("ichppccode");
 	}
 	
 	@Test
-	public void testFindByNameResearchCodeAndCodingSystem() {
-		List<QuickList> qls = dao.findByNameResearchCodeAndCodingSystem("QLNAME", "RSRCHCDE", "CDNGSTM");
-		assertNotNull(qls);
+	public void testFindByCodingSystem() {
+		dao.findByCodingSystem("CS");
 	}
-
-
 }
-

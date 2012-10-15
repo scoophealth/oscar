@@ -29,6 +29,24 @@ import org.oscarehr.common.model.AbstractCodeSystemModel;
 
 public abstract class AbstractCodeSystemDao<T extends AbstractCodeSystemModel<?>> extends AbstractDao<T> {
 
+	/**
+	 * Gets the name of the DAO for the specified code system
+	 * 
+	 * @param codeSystem
+	 * 		Code system to get DAO name for.
+	 * @return
+	 * 		Return the name of the DAO bean.
+	 */
+	public static String getDaoName(String codeSystem) {
+		if (codeSystem.equalsIgnoreCase("icd9")) return "icd9Dao";
+
+		if (codeSystem.equalsIgnoreCase("ichppccode")) return "ichppccodeDao";
+
+		if (codeSystem.equalsIgnoreCase("snomedcore")) return "snomedCoreDao";
+
+		throw new IllegalArgumentException("Unsupported code system: " + codeSystem + ". Please use one of icd9, ichppccode, snomedcore");
+	}
+
 	protected AbstractCodeSystemDao(Class<T> modelClass) {
 		super(modelClass);
 	}
@@ -36,5 +54,14 @@ public abstract class AbstractCodeSystemDao<T extends AbstractCodeSystemModel<?>
 	public abstract List<T> searchCode(String term);
 
 	public abstract T findByCode(String code);
+
+	/**
+	 * Finds the appropriate coding system by the specified coding system name. 
+	 * 
+	 * @param codingSystem Name of t he coding system to get the name for
+	 * @return
+	 * 		Returns the matching coding system or null if it's not found.
+	 */
+	public abstract AbstractCodeSystemModel<?> findByCodingSystem(String codingSystem);
 
 }

@@ -53,4 +53,9 @@ public class Icd9DaoTest extends DaoTestFixtures {
 
 		assertNotNull(entity.getId());
 	}
+	
+	@Test
+	public void testFindByCodingSystem() {
+		dao.findByCodingSystem("CS");
+	}
 }

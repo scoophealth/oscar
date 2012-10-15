@@ -290,4 +290,13 @@ public class DxresearchDAO extends AbstractDao<Dxresearch>{
 
 		query.executeUpdate();
 	}
+
+	@SuppressWarnings("unchecked")
+    public List<Dxresearch> findByDemographicNoResearchCodeAndCodingSystem(Integer demographicNo, String dxresearchCode, String codingSystem) {
+		Query query = entityManager.createQuery("FROM Dxresearch d WHERE d.demographicNo = :dn AND d.dxresearchCode = :dxrc and (d.status = 'A' or d.status = 'C') and d.codingSystem = :cs");
+		query.setParameter("dn", demographicNo);
+		query.setParameter("dxrc", dxresearchCode);
+		query.setParameter("cs", codingSystem);
+	    return query.getResultList();
+    }
 }
