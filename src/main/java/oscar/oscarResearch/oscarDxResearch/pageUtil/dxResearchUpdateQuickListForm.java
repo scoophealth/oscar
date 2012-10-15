@@ -52,6 +52,10 @@ public final class dxResearchUpdateQuickListForm extends ActionForm {
     private String xml_research5;
     private String selectedCodingSystem;
     
+    public String[] getXmlResearch() {
+    	return new String[] {xml_research1, xml_research2, xml_research3, xml_research4, xml_research5};
+    }
+    
     public String getSelectedCodingSystem() {
         return selectedCodingSystem;
     }

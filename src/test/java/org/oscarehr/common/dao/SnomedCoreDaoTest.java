@@ -23,43 +23,21 @@
  */
 package org.oscarehr.common.dao;
 
-import static org.junit.Assert.assertNotNull;
-
-import java.util.List;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.oscarehr.common.dao.utils.EntityDataGenerator;
-import org.oscarehr.common.dao.utils.SchemaUtils;
-import org.oscarehr.common.model.QuickList;
 import org.oscarehr.util.SpringUtils;
 
-public class QuickListDaoTest extends DaoTestFixtures {
+public class SnomedCoreDaoTest extends DaoTestFixtures {
 
-	private QuickListDao dao = SpringUtils.getBean(QuickListDao.class);
+	private SnomedCoreDao dao = SpringUtils.getBean(SnomedCoreDao.class);
 
-	public QuickListDaoTest() {
-	}
-
-	@Before
-	public void before() throws Exception {
-		SchemaUtils.restoreTable(new String[]{"quickList"});
-	}
-
-	@Test
-	public void testCreate() throws Exception {
-		 QuickList ql = new QuickList();
-		 EntityDataGenerator.generateTestDataForModelClass(ql);
-		 dao.persist(ql);
-		 assertNotNull(ql.getId());
-	}
+	// FIXME snomed is not in the schema for some reason...
 	
-	@Test
-	public void testFindByNameResearchCodeAndCodingSystem() {
-		List<QuickList> qls = dao.findByNameResearchCodeAndCodingSystem("QLNAME", "RSRCHCDE", "CDNGSTM");
-		assertNotNull(qls);
-	}
+//	@Before
+//	public void before() throws Exception {
+//		SchemaUtils.restoreTable("SnomedCore");
+//	}
 
-
+//	@Test
+//	public void testFindByCodingSystem() {
+//		dao.findByCodingSystem("CS");
+//	}
 }
-

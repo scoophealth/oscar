@@ -27,6 +27,7 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import org.oscarehr.common.model.AbstractCodeSystemModel;
 import org.oscarehr.common.model.Icd9;
 import org.springframework.stereotype.Repository;
 
@@ -74,6 +75,15 @@ public class Icd9Dao extends AbstractCodeSystemDao<Icd9>{
 	    if(results.isEmpty())
 	    	return null;
 	    return results.get(0);
+    }
+
+	@Override
+    public AbstractCodeSystemModel<?> findByCodingSystem(String codingSystem) {
+		Query query = entityManager.createQuery("FROM Icd9 i WHERE i.icd9 like :cs");
+		query.setParameter("cs", codingSystem);
+		query.setMaxResults(1);
+		
+		return getSingleResultOrNull(query);
     }
 
 }

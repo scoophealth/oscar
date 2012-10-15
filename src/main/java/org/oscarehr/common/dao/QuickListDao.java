@@ -25,6 +25,10 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.QuickList;
 import org.springframework.stereotype.Repository;
 
@@ -34,4 +38,13 @@ public class QuickListDao extends AbstractDao<QuickList>{
 	public QuickListDao() {
 		super(QuickList.class);
 	}
+
+	@SuppressWarnings("unchecked")
+    public List<QuickList> findByNameResearchCodeAndCodingSystem(String quickListName, String researchCode, String codingSystem) {
+	    Query query = entityManager.createQuery("from QuickList q where q.quickListName = :qlName AND q.dxResearchCode = :rc AND q.codingSystem = :cs");
+	    query.setParameter("qlName", quickListName);
+	    query.setParameter("rc", researchCode);
+	    query.setParameter("cs", codingSystem);
+	    return query.getResultList();
+    }
 }

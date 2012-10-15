@@ -25,9 +25,8 @@
 
 package oscar.oscarResearch.oscarDxResearch.pageUtil;
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -39,12 +38,13 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.oscarehr.common.dao.AbstractCodeSystemDao;
 import org.oscarehr.common.dao.DxresearchDAO;
+import org.oscarehr.common.model.AbstractCodeSystemModel;
 import org.oscarehr.common.model.Dxresearch;
-import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
+import oscar.util.ConversionUtils;
 import oscar.util.ParameterActionForward;
 import oscar.util.UtilDateUtilities;
 
@@ -93,68 +93,52 @@ public class dxResearchAction extends Action {
         }
         boolean valid = true;
         ActionMessages errors = new ActionMessages();  
+        DxresearchDAO dao = (DxresearchDAO) SpringUtils.getBean("DxresearchDAO");
         
-        try{
+		String sql = null;
+		for (int i = 0; i < xml_research.length; i++) {
+			int count = 0;
+			if (multipleCodes) codingSystem = codingSystems[i];
+
+			if (xml_research[i].compareTo("") != 0) {
+				List<Dxresearch> research = dao.findByDemographicNoResearchCodeAndCodingSystem(ConversionUtils.fromIntString(demographicNo), xml_research[i], codingSystem);
+
+				for (Dxresearch r : research) {
+					count = count + 1;
+
+					r.setUpdateDate(ConversionUtils.fromDateString(nowDate));
+					r.setStatus('A');
+
+					dao.save(r);
+				}
+
+				if (count == 0) {
+					String daoName = AbstractCodeSystemDao.getDaoName(codingSystem);
+					@SuppressWarnings("unchecked")
+					AbstractCodeSystemDao<AbstractCodeSystemModel<?>> csDao = (AbstractCodeSystemDao<AbstractCodeSystemModel<?>>) SpringUtils.getBean(daoName);
+
+					AbstractCodeSystemModel<?> codingSystemEntity = csDao.findByCodingSystem(codingSystem);
+					boolean isCodingSystemAvailable = codingSystemEntity == null;
+
+					if (!isCodingSystemAvailable) {
+						valid = false;
+						errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.codeNotFound", xml_research[i], codingSystem));
+						saveErrors(request, errors);
+					} else {
+						Dxresearch dr = new Dxresearch();
+						dr.setDemographicNo(Integer.valueOf(demographicNo));
+						dr.setStartDate(new Date());
+						dr.setUpdateDate(new Date());
+						dr.setStatus('A');
+						dr.setDxresearchCode(xml_research[i]);
+						dr.setCodingSystem(codingSystem);
+						dao.persist(dr);
+					}
+				}
+			}
+
+		}
             
-            String sql = null;
-            for(int i=0; i<xml_research.length; i++){ 
-                int Count = 0;
-                if( multipleCodes )
-                    codingSystem = codingSystems[i];
-                
-                if (xml_research[i].compareTo("")!=0){
-                        ResultSet rsdemo2 = null;
-
-                        sql = "select dxresearch_no from dxresearch where demographic_no='" + demographicNo +
-                              "' and dxresearch_code='" + xml_research[i] + "' and (status='A' or status='C') and coding_system='"+
-                              codingSystem +"'";
-
-                        rsdemo2 = DBHandler.GetSQL(sql);
-                        if(rsdemo2!=null){
-                            while(rsdemo2.next()){
-                                    Count = Count +1;
-                                    sql = "update dxresearch set update_date='"+nowDate+"', status='A' where dxresearch_no='"+rsdemo2.getString("dxresearch_no")+"'";
-                                    DBHandler.RunSQL(sql);                                        
-
-                            } 
-                        }
-
-                        if (Count == 0){
-                                //need to validate the dxresearch code before write to the database
-                                sql = "select * from "+ codingSystem +" where "+ codingSystem + " like '" + xml_research[i] +"'";
-                                
-                                ResultSet rsCode = DBHandler.GetSQL(sql);
-                          
-                                if(!rsCode.next() || rsCode==null){
-                                    valid = false;
-                                    errors.add(ActionMessages.GLOBAL_MESSAGE,
-                                    new ActionMessage("errors.codeNotFound", xml_research[i], codingSystem));
-                                    saveErrors(request, errors);   
-                                }
-                                else{
-                                	Dxresearch dr = new Dxresearch();
-                                	dr.setDemographicNo(Integer.valueOf(demographicNo));
-                                	dr.setStartDate(new Date());
-                                	dr.setUpdateDate(new Date());
-                                	dr.setStatus('A');
-                                	dr.setDxresearchCode(xml_research[i]);
-                                	dr.setCodingSystem(codingSystem);
-                                	
-                                	DxresearchDAO dao = (DxresearchDAO) SpringUtils.getBean("DxresearchDAO");
-                                	dao.persist(dr);
-                                	                                                                                                
-                                }
-                        }	    
-                }
-                
-            }
-        }
-
-        catch(SQLException e)
-        {
-            MiscUtils.getLogger().error("Error", e);
-        }                                    
-        
         if(!valid)
             return (new ActionForward(mapping.getInput()));
         

@@ -25,6 +25,8 @@ package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
@@ -52,6 +54,11 @@ public class DxResearchDaoTest extends DaoTestFixtures {
 		 assertNotNull(dr.getId());
 	}
 
+	@Test
+	public void findByDemographicNoResearchCodeAndCodingSystem() {
+		List<Dxresearch> list = dao.findByDemographicNoResearchCodeAndCodingSystem(1, "CODE", "SYS");
+		assertNotNull(list);
+	}
 
 }
 
