@@ -36,6 +36,7 @@ public class DemographicExportForm extends ActionForm {
     String demographicNo;
     String patientSet;
     String pgpReady;
+    String template;
     
     boolean exPersonalHistory;
     boolean exFamilyHistory;
@@ -51,8 +52,7 @@ public class DemographicExportForm extends ActionForm {
     boolean exReportsReceived;
     boolean exCareElements;
     boolean exAlertsAndSpecialNeeds;
-
-    boolean exTemplateFeature;
+    //boolean exTemplateFeature;
     
     public DemographicExportForm() {
     }
@@ -69,6 +69,9 @@ public class DemographicExportForm extends ActionForm {
     }
     public String getPgpReady() {
         return pgpReady;
+    }
+    public String getTemplate() {
+        return template;
     }
     public boolean getExPersonalHistory() {
         return exPersonalHistory;
@@ -112,9 +115,9 @@ public class DemographicExportForm extends ActionForm {
     public boolean getExCareElements() {
         return exCareElements;
     }
-    public boolean getExTemplateFeature() {
+    /*public boolean getExTemplateFeature() {
         return exTemplateFeature;
-    }
+    }*/
     
     /**
     * Setter for properties
@@ -128,6 +131,9 @@ public class DemographicExportForm extends ActionForm {
     }
     public void setPgpReady(String pgpReady) {
         this.pgpReady = pgpReady;
+    }
+    public void setTemplate(String template) {
+        this.template = template;
     }
     public void setExPersonalHistory(boolean rhs) {
         this.exPersonalHistory = rhs;
@@ -171,7 +177,7 @@ public class DemographicExportForm extends ActionForm {
     public void setExCareElements(boolean rhs) {
         this.exCareElements = rhs;
     }
-    public void setExTemplateFeature(boolean rhs) {
+    /*public void setExTemplateFeature(boolean rhs) {
         this.exTemplateFeature = rhs;
-    }
+    }*/
 }
