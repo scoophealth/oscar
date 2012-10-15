@@ -29,6 +29,7 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import org.oscarehr.common.model.AbstractCodeSystemModel;
 import org.oscarehr.common.model.Ichppccode;
 import org.springframework.stereotype.Repository;
 
@@ -72,5 +73,14 @@ public class IchppccodeDao extends AbstractCodeSystemDao<Ichppccode>{
 		if(results.isEmpty())
 			return null;
 		return results.get(0);
+	}
+	
+	@Override
+	public AbstractCodeSystemModel<?> findByCodingSystem(String codingSystem) {
+		Query query = entityManager.createQuery("FROM Ichppccode i WHERE i.id like :cs");
+		query.setParameter("cs", codingSystem);
+		query.setMaxResults(1);
+
+		return find(codingSystem);
 	}
 }
