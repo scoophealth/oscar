@@ -162,6 +162,7 @@ public class DemographicExportAction4 extends Action {
 		String demographicNo = defrm.getDemographicNo();
 		String setName = defrm.getPatientSet();
 		String pgpReady = defrm.getPgpReady();
+		String templateOption = defrm.getTemplate();
 		boolean exPersonalHistory = WebUtils.isChecked(request, "exPersonalHistory");
 		boolean exFamilyHistory = WebUtils.isChecked(request, "exFamilyHistory");
 		boolean exPastHealth = WebUtils.isChecked(request, "exPastHealth");
@@ -176,8 +177,8 @@ public class DemographicExportAction4 extends Action {
 		boolean exReportsReceived = WebUtils.isChecked(request, "exReportsReceived");
 		boolean exAlertsAndSpecialNeeds = WebUtils.isChecked(request, "exAlertsAndSpecialNeeds");
 		boolean exCareElements = WebUtils.isChecked(request, "exCareElements");
-		boolean exTemplateFeature = WebUtils.isChecked(request, "exTemplateFeature");
-
+		//boolean exTemplateFeature = WebUtils.isChecked(request, "exTemplateFeature");
+		
 		List<String> list = new ArrayList<String>();
 		if (demographicNo==null) {
 			list = new DemographicSets().getDemographicSet(setName);
@@ -201,13 +202,12 @@ public class DemographicExportAction4 extends Action {
 
 	String ffwd = "fail";
 	String tmpDir = oscarProperties.getProperty("TMP_DIR");
-
-	// @todo This If/then statement is just to get an E2E template going - proper implementation won't have this
-	int template = CMS4;
-	if(exTemplateFeature) {
+	
+	int template;
+	if(templateOption.equals("E2E")) {
 		template = E2E;
 	}
-	else if(!exTemplateFeature) {
+	else {
 		template = CMS4;
 	}
 	
@@ -2020,7 +2020,7 @@ public class DemographicExportAction4 extends Action {
 					}
 					
 					// Create Patient
-					Patient patient = new Patient(demoNo);
+					PatientExport patient = new PatientExport(demoNo);
 					
 					// Create Template View
 					E2EVelocityTemplate t = new E2EVelocityTemplate();

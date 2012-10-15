@@ -225,6 +225,10 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 			    <%}%>
 			    </html:select>
 		    <%}%>
+		    	Export Template:<html:select property="template">
+		    		<html:option value="CMS4">CMS Spec 4.0</html:option>
+		    		<html:option value="E2E">E2E</html:option>
+		    	</html:select>
 		    </div>
                     <p><table border="1"><tr><td>
 		       Export Categories:
@@ -250,14 +254,13 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 		       </td></tr></table>
 		   </td></tr></table>
                        <html:hidden property="pgpReady" value="<%=pgp_ready%>" />
-
 		    <p>&nbsp;</p>
 <%  boolean pgpReady = pgp_ready.equals("Yes") ? true : false;
     pgpReady = true; //To be removed after CMS4
     if (!pgpReady) { %>
                     WARNING: PGP Encryption NOT available - cannot export!<br>
 <%  } %>
-                    <input type="submit" value="Export (CMS spec 4.0)" <%=pgpReady?"":"disabled"%> />
+                    <input type="submit" value="<bean:message key="export" />"<%=pgpReady?"":"disabled"%> />
 		</html:form></td>
 	</tr>
 	<tr>

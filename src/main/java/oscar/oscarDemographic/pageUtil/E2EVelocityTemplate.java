@@ -47,7 +47,7 @@ public class E2EVelocityTemplate {
 	}
 	
 	// Creates the velocity context
-	private void loadPatient(Patient record) {
+	private void loadPatient(PatientExport record) {
 		context = VelocityUtils.createVelocityContextWithTools();
 		
 		context.put("patient", record);
@@ -61,7 +61,7 @@ public class E2EVelocityTemplate {
 	}
 	
 	// Assembles the data model & predefined velocity template to yield an E2E document
-	public String export(Patient record) throws Exception {
+	public String export(PatientExport record) throws Exception {
 		// Create Data Model
 		loadPatient(record);
 		

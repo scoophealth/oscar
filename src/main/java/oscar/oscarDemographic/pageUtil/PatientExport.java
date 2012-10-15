@@ -37,16 +37,16 @@ import oscar.oscarRx.data.RxPrescriptionData;
  * @author Jeremy Ho
  * This class is meant to be a model for a "patient" which contains all data required to define a "patient"
  */
-public class Patient {
+public class PatientExport {
 	private Integer demographicNo;
 	private Demographic demographic;
 	private DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 	private ArrayList<Medication> medications = new ArrayList<Medication>();
 	
-	public Patient() {
+	public PatientExport() {
 	}
 	
-	public Patient(String demoNo) {
+	public PatientExport(String demoNo) {
 		this.demographicNo = new Integer(demoNo);
 		initialize(demoNo);
 	}
