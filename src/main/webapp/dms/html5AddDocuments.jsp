@@ -47,7 +47,7 @@
         <%
             QueueDao queueDao = (QueueDao) SpringUtils.getBean("queueDao");
             List<Hashtable> queues=queueDao.getQueues();
-            ArrayList providers = ProviderData.getProviderList();
+            List providers = ProviderData.getProviderList();
             String queueIdStr = (String) request.getSession().getAttribute("preferredQueue");
             int queueId = 1;
             if (queueIdStr != null) {
@@ -319,7 +319,7 @@
                 <select onchange="javascript:addProviderToPost(this);" id="providerDrop" name="providerDrop">
                     <option value="-2" <%=("-2".equals(provider) ? " selected" : "")%> >None</option>
                     <%for (int i = 0; i < providers.size(); i++) {
-                                    Hashtable h = (Hashtable) providers.get(i);%>
+                                    Map h = (Map) providers.get(i);%>
                     <option value="<%= h.get("providerNo")%>" <%= (h.get("providerNo").equals(provider) ? " selected" : "")%>><%= h.get("lastName")%> <%= h.get("firstName")%></option>
                     <%}%>
                 </select>

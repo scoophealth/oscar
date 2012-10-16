@@ -63,7 +63,7 @@
             DemographicSets demoSets = new DemographicSets();
             List<String> demoSetList = demoSets.getDemographicSets();
 
-            ArrayList<Hashtable<String,String>> providers = ProviderData.getProviderList();
+            List<Map<String,String>> providers = ProviderData.getProviderList();
 
             String[] headings = (String[]) request.getAttribute("showfields");
 %>
@@ -309,7 +309,7 @@
                                 </select>
 
                                 <select  id="denominator_provider_no" name="denominator_provider_no">
-                                    <%for (Hashtable<String,String> h : providers) {%>
+                                    <%for (Map<String,String> h : providers) {%>
                                     <option value="<%= h.get("providerNo")%>" <%= (h.get("providerNo").equals(provider) ? " selected" : "")%>><%= h.get("lastName")%> <%= h.get("firstName")%></option>
                                     <%}%>
                                 </select>
