@@ -45,7 +45,7 @@
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="oscar.oscarProvider.data.*"%>
 <%
-            ArrayList providers = ProviderData.getProviderList();
+            List providers = ProviderData.getProviderList();
             String provider = "";
 
 //if delete request is made
@@ -443,7 +443,7 @@
 			name="provider">
 			<option value="-1" <%= ("-1".equals(provider) ? " selected" : "")%>>None</option>
 			<%for (int i = 0; i < providers.size(); i++) {
-                Hashtable h = (Hashtable) providers.get(i);%>
+                Map h = (Map) providers.get(i);%>
 			<option value="<%= h.get("providerNo")%>"
 				<%= (h.get("providerNo").equals(provider) ? " selected" : "")%>><%= h.get("lastName")%>
 			<%= h.get("firstName")%></option>

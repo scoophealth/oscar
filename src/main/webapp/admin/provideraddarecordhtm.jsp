@@ -47,9 +47,9 @@
 
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
 
-  ArrayList<Hashtable<String,String>> list = ProviderData.getProviderListOfAllTypes(true);
-  ArrayList<Integer> providerList = new ArrayList<Integer>();
-  for (Hashtable<String,String> h : list) {
+  List<Map<String,String>> list = ProviderData.getProviderListOfAllTypes(true);
+  List<Integer> providerList = new ArrayList<Integer>();
+  for (Map<String,String> h : list) {
 	  try{
       String pn = h.get("providerNo");
       providerList.add(Integer.valueOf(pn));

@@ -59,7 +59,7 @@
     boolean bView = false;
     if (request.getParameter("view") != null && request.getParameter("view").equals("1")) bView = true;
     
-    ArrayList providers = ProviderData.getProviderList();
+    List providers = ProviderData.getProviderList();
     String prevDate = UtilDateUtilities.getToday("yyyy-MM-dd");
     String providerName = "";
     String provider = (String) session.getAttribute("user");
@@ -226,7 +226,7 @@
 		onchange="javascript:hideExtraName(this);" id="providerDrop"
 		name="provider">
 		<%for (int i=0; i < providers.size(); i++) {
-                                           Hashtable h = (Hashtable) providers.get(i);%>
+                                           Map h = (Map) providers.get(i);%>
 		<option value="<%= h.get("providerNo")%>"
 			<%= ( h.get("providerNo").equals(provider) ? " selected" : "" ) %>><%= h.get("lastName") %>
 		<%= h.get("firstName") %></option>

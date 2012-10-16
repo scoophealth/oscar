@@ -23,31 +23,36 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.ProviderData;
 import org.springframework.stereotype.Repository;
 
+import oscar.util.ConversionUtils;
+
 @Repository
 public class ProviderDataDao extends AbstractDao<ProviderData> {
+
+	private static final String ACTIVE_WHERE_CLAUSE = " p.status = '1'";
 
 	public ProviderDataDao() {
 		super(ProviderData.class);
 	}
-	
-	
 
 	@SuppressWarnings("unchecked")
 	public ProviderData findByOhipNumber(String ohipNumber) {
 		Query query;
 		List<ProviderData> results;
 		String sqlCommand = "SELECT x FROM ProviderData x WHERE x.ohipNo=?";
-		
+
 		query = this.entityManager.createQuery(sqlCommand);
 		query.setParameter(1, ohipNumber);
-		
+
 		results = query.getResultList();
 		if (results.size() > 0) {
 			return results.get(0);
@@ -55,30 +60,120 @@ public class ProviderDataDao extends AbstractDao<ProviderData> {
 		// If we get here, there were no results
 		return null;
 	}
-	
-    public ProviderData findByProviderNo(String providerNo) {
 
-    	String sqlCommand = "select x from ProviderData x where x.id=?1";
+	public ProviderData findByProviderNo(String providerNo) {
 
-        Query query = entityManager.createQuery(sqlCommand);
-        query.setParameter(1, providerNo);
+		String sqlCommand = "select x from ProviderData x where x.id=?1";
 
-        @SuppressWarnings("unchecked")
-        List<ProviderData> results = query.getResultList();
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, providerNo);
 
-        if (results.size()>0) return results.get(0);
-        return null;
-    }
+		@SuppressWarnings("unchecked")
+		List<ProviderData> results = query.getResultList();
 
-    public List<ProviderData> findAllOrderByLastName() {
+		if (results.size() > 0) return results.get(0);
+		return null;
+	}
 
-    	String sqlCommand = "select x from ProviderData x order by x.lastName";
+	public List<ProviderData> findAllOrderByLastName() {
 
-        Query query = entityManager.createQuery(sqlCommand);
+		String sqlCommand = "select x from ProviderData x order by x.lastName";
 
-        @SuppressWarnings("unchecked")
-        List<ProviderData> results = query.getResultList();
+		Query query = entityManager.createQuery(sqlCommand);
 
-        return results;
-    }
+		@SuppressWarnings("unchecked")
+		List<ProviderData> results = query.getResultList();
+
+		return results;
+	}
+
+	/**
+	 * Finds all providers for the specified type and insurance no, ordered by last name.
+	 * 
+	 * @param providerType
+	 * 		Provider type (doctor, nurse, etc.)
+	 * @param insuranceNo
+	 * 		Provider's insurance number 
+	 * @return
+	 * 		Returns all matching providers
+	 */
+	@SuppressWarnings("unchecked")
+	public List<ProviderData> findByTypeAndOhip(String providerType, String insuranceNo) {
+		Query query = createQuery("p", "p.providerType = :pt and p.ohipNo like :in order by p.lastName");
+		query.setParameter("pt", providerType);
+		query.setParameter("in", insuranceNo);
+		return query.getResultList();
+	}
+
+	/**
+	 * Finds all providers with the specified provider type 
+	 * 
+	 * @param providerType
+	 * 		Provider type to be found
+	 * @return
+	 * 		Returns all the active matching providers.
+	 */
+	@SuppressWarnings("unchecked")
+	public List<ProviderData> findByType(String providerType) {
+		Query query = createQuery("p", "p.providerType = :pt and p.status = '1' order by p.lastName, p.firstName");
+		query.setParameter("pt", providerType);
+		return query.getResultList();
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ProviderData> findByName(String firstName, String lastName, boolean onlyActive) {
+		StringBuilder buf = createQueryString("p", "");
+		boolean isAppended = false;
+		Map<String, Object> params = new HashMap<String, Object>();
+		if (firstName != null && !firstName.trim().equals("")) {
+			buf.append("WHERE p.firstName like :fn");
+			params.put("fn", firstName + "%");
+			isAppended = true;
+		}
+
+		if (lastName != null && !lastName.trim().equals("")) {
+			if (isAppended) {
+				buf.append(" AND");
+			} else {
+				buf.append(" WHERE ");
+			}
+			buf.append(" p.lastName like :ln");
+			params.put("ln", lastName + "%");
+			isAppended = true;
+		}
+
+		if (onlyActive) {
+			if (isAppended) {
+				buf.append(" AND");
+			} else {
+				buf.append(" WHERE ");
+			}
+			buf.append(ACTIVE_WHERE_CLAUSE);
+		}
+
+		buf.append(" ORDER BY p.lastName, p.firstName");
+
+		Query query = entityManager.createQuery(buf.toString());
+		for (Entry<String, Object> param : params.entrySet()) {
+			query.setParameter(param.getKey(), param.getValue());
+		}
+
+		return query.getResultList();
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ProviderData> findAll(boolean inactive) {
+		if (inactive) return findAll();
+		Query query = createQuery("p", ACTIVE_WHERE_CLAUSE);
+		return query.getResultList();
+	}
+
+	public Integer getLastId() {
+		Query query = entityManager.createQuery("SELECT p.id FROM ProviderData p ORDER BY CAST(p.id AS integer) ASC");
+		query.setMaxResults(1);
+		String result = (String ) query.getSingleResult();
+		if (result == null)
+			return 0;
+		return ConversionUtils.fromIntString(result);
+	}
 }

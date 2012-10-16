@@ -47,7 +47,7 @@ if(props.getProperty("isNewONbilling", "").equals("true")) {
 <% } %>
 <%
 ProviderData pd = new ProviderData();
-ArrayList pList = pd.getProviderList();
+List pList = pd.getProviderList();
 
 BillingData billingData = new BillingData();
 RAData raData = new RAData();
@@ -130,7 +130,7 @@ BigDecimal paidTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
 	name="providerview">
 	<option value="all">All Providers</option>
 	<% for (int i = 0 ; i < pList.size(); i++) { 
-       Hashtable h = (Hashtable) pList.get(i);%>
+       Map h = (Map) pList.get(i);%>
 	<option value="<%=h.get("providerNo")%>"
 		<%=providerNo.equals(h.get("providerNo"))?"selected":""%>><%=h.get("firstName")%>,
 	<%=h.get("lastName")%></option>
