@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,29 +21,30 @@
  * Hamilton
  * Ontario, Canada
  */
-
-
 package org.oscarehr.common.dao;
+
+import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
-import javax.persistence.Query;
-
+import org.junit.Before;
+import org.junit.Test;
+import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.MessageList;
-import org.springframework.stereotype.Repository;
+import org.oscarehr.util.SpringUtils;
 
-@Repository
-public class MessageListDao extends AbstractDao<MessageList>{
+public class MessageListDaoTest extends DaoTestFixtures {
 
-	public MessageListDao() {
-		super(MessageList.class);
+	private MessageListDao dao = SpringUtils.getBean(MessageListDao.class);
+
+	@Before
+	public void before() throws Exception {
+		SchemaUtils.restoreTable("messagelisttbl");
 	}
 
-	@SuppressWarnings("unchecked")
-    public List<MessageList> findByProviderNoAndMessageNo(String providerNo, Long messageNo) {
-	    Query query = createQuery("msg", "msg.providerNo = :pno AND msg.message = :msg");
-	    query.setParameter("pno", providerNo);
-	    query.setParameter("msg", messageNo);
-	    return query.getResultList();
-    }
+	@Test
+	public void testFindByProviderNoAndMessageNo() {
+		List<MessageList> msgs = dao.findByProviderNoAndMessageNo("10", 1l);
+		assertNotNull(msgs);
+	}
 }
