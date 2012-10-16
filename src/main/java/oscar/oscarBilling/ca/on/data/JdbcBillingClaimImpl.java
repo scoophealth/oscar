@@ -163,7 +163,7 @@ public class JdbcBillingClaimImpl {
                 mVal.put("payDate", dateTime);
 		for (int i = 0; i < temp.length; i++) {
 			String sql = "insert into billing_on_ext values(\\N, " + id + "," + demoNo + ", '" + temp[i] + "', '"
-					+ mVal.get(temp[i]) + "', '" + dateTime + "', '1' )";
+					+ mVal.get(temp[i]) + "', '" + dateTime + "', '1', null )";
 			retval = dbObj.updateDBRecord(sql);
 			if (!retval) {
 				_logger.error("add3rdBillExt(sql = " + sql + ")");
