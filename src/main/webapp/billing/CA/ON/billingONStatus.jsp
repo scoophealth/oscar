@@ -17,6 +17,7 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@page import="org.oscarehr.util.MiscUtils"%>
 <%! boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable(); %>
 <%@ page import="java.math.*,java.util.*, java.sql.*, oscar.*, java.net.*,oscar.util.*,oscar.oscarBilling.ca.on.pageUtil.*,oscar.oscarBilling.ca.on.data.*,org.apache.struts.util.LabelValueBean" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -702,7 +703,17 @@ if(statusType.equals("_")) { %>
 	    	   amountPaid = ch1Obj.getPaid();
 	    	   amountPaid = (amountPaid==null||amountPaid.equals(""))? "0.00" : amountPaid;
 	       }
-	       BigDecimal bTemp = (new BigDecimal(amountPaid.trim())).setScale(2,BigDecimal.ROUND_HALF_UP);
+	       
+	       BigDecimal bTemp;
+	       try {
+		   		bTemp = (new BigDecimal(amountPaid.trim())).setScale(2,BigDecimal.ROUND_HALF_UP);
+		   
+	       }
+	       catch(NumberFormatException e ) {		   		
+		   		MiscUtils.getLogger().error("Could not parse amount paid for invoice " + ch1Obj.getId(), e);
+		   		throw e;
+	       }
+	       
 	       paidTotal = paidTotal.add(bTemp);
 	       BigDecimal adj = (new BigDecimal(ch1Obj.getTotal())).setScale(2,BigDecimal.ROUND_HALF_UP);               
                adj = adj.subtract(bTemp);
