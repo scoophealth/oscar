@@ -72,7 +72,7 @@ if (patientGroups.equals("1")) {
 	<li><a href="#" onclick="document.forms['groupselect'].submit()"><b><bean:message key="eform.showmyform.msgShowAll"/></b></a></li>
 	<%for (int i=0; i<groups.size(); i++) {        
                 String selected = "";
-                Hashtable curhash = (Hashtable) groups.get(i);
+                HashMap curhash = (HashMap) groups.get(i);
                 String group = (String) curhash.get("groupName");
                 String size = (String) curhash.get("count");
                 if (group.equals(groupView)) selected = "selected";%>

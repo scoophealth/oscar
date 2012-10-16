@@ -705,7 +705,7 @@ function changeSite(sel) {
                                     <td width="3%" ROWSPAN="1" class="<%=cellColour%>"><a href=#  onClick="popupPage(600,800, '../tickler/ticklerEdit.jsp?tickler_no=<%=t.getTickler_no()%>')"><bean:message key="tickler.ticklerMain.editTickler"/></a></td>
                                     <%}%>                                    
                                     <TD width="12%" ROWSPAN="1" class="<%=cellColour%>"><a href=# onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=demo.getDemographicNo()%>&displaymode=edit&dboperation=search_detail')"><%=demo.getLastName()%>,<%=demo.getFirstName()%></a></TD>                                                                       
-                                    <TD ROWSPAN="1" class="<%=cellColour%>"><%=t.getProvider().getLastName()%>,<%=t.getProvider().getFirstName()%></TD>
+                                    <TD ROWSPAN="1" class="<%=cellColour%>"><%=t.getProvider() == null ? "N/A" : t.getProvider().getFormattedName()%></TD>
                                     <TD ROWSPAN="1" class="<%=cellColour%>"><%=t.getServiceDate()%></TD>
                                     <TD ROWSPAN="1" class="<%=cellColour%>"><%=t.getUpdateDate()%></TD>
                                     <TD ROWSPAN="1" class="<%=cellColour%>"><%=t.getPriority()%></TD>
