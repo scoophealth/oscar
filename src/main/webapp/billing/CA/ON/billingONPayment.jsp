@@ -280,9 +280,9 @@
                                 
                                 boolean isSameBill = true;
                                 
-                                String dxCode = b.getDx();
+                                String dxCode = b != null ? b.getDx() : "";
                                 String bItemFee = "D";
-                                if (!b.getStatus().equals(BillingONItem.DELETED)) {
+                                if (b != null && !b.getStatus().equals(BillingONItem.DELETED)) {
                                     bItemFee = b.getFee();
                                 }
                                 
@@ -316,8 +316,15 @@
                                    feeAmt = new BigDecimal(bItemFee);
                                 }
                                 
-                                BigDecimal claimAmt = new BigDecimal(claimAmtStr);                               
-                                BigDecimal paidAmt = new BigDecimal(rad.getAmountPay());    
+                                BigDecimal claimAmt = new BigDecimal(claimAmtStr);
+                                BigDecimal paidAmt;
+                                try {
+                                	paidAmt = new BigDecimal(rad.getAmountPay().trim());
+                                }
+                                catch( NumberFormatException e ) {
+                                    MiscUtils.getLogger().error(rad.getId() + " " + rad.getAmountPay() + " could not parse",e);
+                                    throw e;
+                                }
                                 BigDecimal adjAmt = claimAmt.subtract(paidAmt);              
 
                                 feeTotal = feeTotal.add(feeAmt);
@@ -505,7 +512,8 @@
                                     try {
                                         totalBilled = totalBilled.add(new BigDecimal(amtBilled));
                                     } catch (NumberFormatException e) {
-                                       MiscUtils.getLogger().warn("BillItem fee is not a valid amount:" + amtBilled); 
+                                       MiscUtils.getLogger().error("BillItem fee is not a valid amount:" + amtBilled + " for " + bItem.getId());
+				       					throw e; 
                                     }
                                     numBillItems++;
                                     
