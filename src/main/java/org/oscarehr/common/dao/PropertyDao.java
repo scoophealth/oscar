@@ -57,6 +57,14 @@ public class PropertyDao extends AbstractDao<Property> {
 		return(results);
 	}
     
+    @SuppressWarnings("unchecked")
+    public List<Property> findByNameAndProvider(String propertyName, String providerNo) {
+       	Query query = createQuery("p", "p.name = :name AND p.providerNo = :pno");
+   		query.setParameter("name", propertyName);
+   		query.setParameter("pno", providerNo);
+   		return query.getResultList();
+   	}
+    
     public Property checkByName(String name) {
     	
 		String sql = " select x from " + this.modelClass.getName() + " x where x.name='"+name+"'";
