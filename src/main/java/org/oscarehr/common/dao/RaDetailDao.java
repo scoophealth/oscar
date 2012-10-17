@@ -25,6 +25,7 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -55,6 +56,37 @@ public class RaDetailDao extends AbstractDao<RaDetail>{
          return results;
 
 	 }
+	 
+	 public List<RaDetail> findByRaHeaderNo(Integer raHeaderNo) {
+		 Query query = entityManager.createQuery("SELECT rad from RaDetail rad WHERE rad.raHeaderNo = :raHeaderNo");
+        
+		 query.setParameter("raHeaderNo", raHeaderNo);
+
+         @SuppressWarnings("unchecked")
+         List<RaDetail> results = query.getResultList();
+
+         return results;
+
+	 }
+
+	 public List<Integer> findUniqueBillingNoByRaHeaderNoAndProviderAndNotErrorCode(Integer raHeaderNo,String providerOhipNo, String codes) {
+		 Query query = entityManager.createQuery("SELECT distinct(rad.billingNo) from RaDetail rad WHERE rad.raHeaderNo = :raHeaderNo and rad.providerOhipNo = :providerOhipNo and rad.errorCode not in (:codes)");
+        
+		 String[] cList = codes.split(",");
+		 List<String> tmp = new ArrayList<String>();
+		 for(int x=0;x<cList.length;x++) {
+			 tmp.add(cList[x]);
+		 }
+		 query.setParameter("raHeaderNo", raHeaderNo);
+		 query.setParameter("providerOhipNo", providerOhipNo);
+		 query.setParameter("codes", tmp);
+         @SuppressWarnings("unchecked")
+         List<Integer> results = query.getResultList();
+
+         return results;
+
+	 }
+
 	
         
         public List<RaDetail> getRaDetailByDate(Date startDate, Date endDate, Locale locale) {

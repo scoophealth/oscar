@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-. OSCARservice, OpenSoft System. All Rights Reserved.
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,29 +14,42 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
+package org.oscarehr.billing.CA.ON.dao;
 
-package oscar.oscarBilling.ca.on.data;
+import static org.junit.Assert.assertNotNull;
 
-import java.util.Date;
-
-import org.oscarehr.billing.CA.ON.dao.BillingONProcDao;
+import org.junit.Before;
+import org.junit.Test;
 import org.oscarehr.billing.CA.ON.model.BillingONProc;
+import org.oscarehr.common.dao.DaoTestFixtures;
+import org.oscarehr.common.dao.utils.EntityDataGenerator;
+import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.util.SpringUtils;
 
-public class JdbcBillingLog {
-	
+public class BillingONProcDaoTest extends DaoTestFixtures {
+
 	private BillingONProcDao dao = SpringUtils.getBean(BillingONProcDao.class);
 
-	public boolean addBillingLog(String providerNo, String action, String comment, String object) {
-		BillingONProc b = new BillingONProc();
-		b.setCreator(providerNo);
-		b.setAction(action);
-		b.setComment(comment);
-		b.setObject(object);
-		b.setCreateDateTime(new Date());
-		dao.persist(b);
-		return true;
+	public BillingONProcDaoTest() {
 	}
 
+	@Before
+	public void before() throws Exception {
+		SchemaUtils.restoreTable("billing_on_proc");
+	}
+
+	@Test
+	public void testCreate() throws Exception {
+		BillingONProc entity = new BillingONProc();
+		EntityDataGenerator.generateTestDataForModelClass(entity);
+		dao.persist(entity);
+		assertNotNull(entity.getId());
+	}
 }
