@@ -391,4 +391,15 @@ public class ProviderDao extends HibernateDaoSupport {
         public List<Provider> getProvidersWithNonEmptyOhip() {
         	return getHibernateTemplate().find("FROM Provider WHERE ohip_no != '' order by last_name, first_name");
         }
+        
+        public List<Provider> getCurrentTeamProviders(String providerNo) {
+        	String hql = "SELECT p FROM Provider p "
+    				+ "WHERE p.Status='1' and p.OhipNo != '' " 
+        			+  "AND (p.ProviderNo='"+providerNo+"' or team=(SELECT p2.Team FROM Provider p2 where p2.ProviderNo='"+providerNo+"')) "
+        			+ "ORDER BY p.LastName, p.FirstName";
+    		
+        	return this.getHibernateTemplate().find(hql);
+        }
+        
+    
 }

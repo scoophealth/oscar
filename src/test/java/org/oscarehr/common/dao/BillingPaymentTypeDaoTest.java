@@ -25,32 +25,28 @@ package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
-import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
-import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.BillingPaymentType;
 import org.oscarehr.util.SpringUtils;
 
-public class ProviderDaoTest extends DaoTestFixtures {
+public class BillingPaymentTypeDaoTest extends DaoTestFixtures {
 
-	private ProviderDao dao = SpringUtils.getBean(ProviderDao.class);
+	private BillingPaymentTypeDao dao = SpringUtils.getBean(BillingPaymentTypeDao.class);
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("provider");
+		SchemaUtils.restoreTable("billing_payment_type");
 	}
 
 	@Test
-	public void testFindOhip() {
-		List<Provider> providers = dao.getProvidersWithNonEmptyOhip();
-		assertNotNull(providers);
+	public void testCreate() throws Exception {
+		BillingPaymentType entity = new BillingPaymentType();
+		EntityDataGenerator.generateTestDataForModelClass(entity);
+		dao.persist(entity);
+		assertNotNull(entity.getId());
 	}
 	
-	@Test
-	public void testGetCurrentTeamProviders() {
-		dao.getCurrentTeamProviders("999998");
-	}
 }
