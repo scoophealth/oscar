@@ -25,6 +25,8 @@
 
 package org.oscarehr.billing.CA.ON.model;
 
+import java.util.Comparator;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -130,4 +132,10 @@ public class Billing3rdPartyAddress extends AbstractModel<Integer>{
     }
 
 
+	public static final Comparator<Billing3rdPartyAddress> COMPANY_NAME_COMPARATOR = new Comparator<Billing3rdPartyAddress>() {
+		public int compare(Billing3rdPartyAddress p1, Billing3rdPartyAddress p2) {
+			return (p1.getCompanyName().compareTo(p2.getCompanyName()));
+		}
+	};   
+	
 }
