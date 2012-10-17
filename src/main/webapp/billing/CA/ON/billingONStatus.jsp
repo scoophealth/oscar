@@ -162,6 +162,19 @@ BigDecimal adjTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
         <script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>
        
         <script type="text/javascript">
+            
+            function nav_colour_swap(navid, num) {               
+                for(var i = 0; i < num; i++) {
+                    var nav = document.getElementById("A" + i);
+                    if(navid == nav.id) { //selected td
+                        nav.style.color = "red";
+                    }
+                    else { //other td
+                        nav.style.color = "#645FCD";
+                    }
+                }
+            }  
+            
         function fillEndDate(d){
            document.serviceform.xml_appointment_date.value= d;  
         }
@@ -364,6 +377,7 @@ function handleStateChange() {
               margin: 0px;
               padding: 0px;
             }
+            td.highlightBox a:visited {color: red;}
         </style>
     </head>
     <body>
@@ -729,8 +743,8 @@ if(statusType.equals("_")) { %>
                  <!--  a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(700,700,'../../../billing/CA/BC/billingView.do?billing_no=<%=ch1Obj.getId()%>','BillView<%=ch1Obj.getId()%>')">--><%=ch1Obj.getId()%>
 
              </td><!--ACCOUNT-->
-             <td>
-                 <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(700,700,'billingONCorrection.jsp?billing_no=<%=ch1Obj.getId()%>','BillCorrection<%=ch1Obj.getId()%>');return false;">Edit</a>
+             <td class="highlightBox">                 
+                 <a id="A<%=i%>" href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(700,700,'billingONCorrection.jsp?billing_no=<%=ch1Obj.getId()%>','BillCorrection<%=ch1Obj.getId()%>');nav_colour_swap(this.id, <%=bList.size()%>);return false;">Edit</a>
                  <%=errorCode%>
              </td><!--MESSAGES-->
              <% if (bMultisites) {%>
