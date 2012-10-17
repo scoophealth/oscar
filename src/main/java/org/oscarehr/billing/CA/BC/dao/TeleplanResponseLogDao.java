@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,33 +21,18 @@
  * Hamilton
  * Ontario, Canada
  */
+package org.oscarehr.billing.CA.BC.dao;
 
 
-package oscar.oscarBilling.ca.bc.Teleplan;
-
-import org.oscarehr.billing.CA.BC.dao.TeleplanResponseLogDao;
 import org.oscarehr.billing.CA.BC.model.TeleplanResponseLog;
-import org.oscarehr.util.SpringUtils;
+import org.oscarehr.common.dao.AbstractDao;
+import org.springframework.stereotype.Repository;
 
-/**  
- *
- * @author jay
- */
-public class TeleplanResponseDAO {
-    
-	private TeleplanResponseLogDao dao = SpringUtils.getBean(TeleplanResponseLogDao.class);
+@Repository
+public class TeleplanResponseLogDao extends AbstractDao<TeleplanResponseLog>{
+
+	public TeleplanResponseLogDao() {
+		super(TeleplanResponseLog.class);
+	}
 	
-    public TeleplanResponseDAO() {
-    }
-    
-    public void save(TeleplanResponse tr){
-    	TeleplanResponseLog t = new TeleplanResponseLog();
-    	t.setTransactionNo(tr.getTransactionNo());
-    	t.setResult(tr.getResult());
-    	t.setFilename(tr.getFilename());
-    	t.setMsgs(tr.getMsgs());
-    	t.setRealFilename(tr.getRealFilename());
-    	dao.persist(t);
-    	
-    }
 }

@@ -25,12 +25,13 @@
 
 package oscar.oscarBilling.ca.bc.Teleplan;
 
-import java.sql.ResultSet;
+import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.PropertyDao;
+import org.oscarehr.common.model.Property;
 import org.oscarehr.util.MiscUtils;
-
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.util.SpringUtils;
 
 /**
  *  Deals with storing the teleplan sequence #
@@ -38,43 +39,33 @@ import oscar.oscarDB.DBHandler;
  */
 public class TeleplanSequenceDAO {
     static Logger log=MiscUtils.getLogger();
+    private PropertyDao propertyDao = SpringUtils.getBean(PropertyDao.class);
+    
     
     /** Creates a new instance of TeleplanSequenceDAO */
     public TeleplanSequenceDAO() {
     }
     
     private void setSequence(int sequenceNum){
-        try{
-            
-            String query = "insert into property (name,value) values ('teleplan_sequence','"+sequenceNum+"') " ;
-            DBHandler.RunSQL(query);           
-        }catch(Exception e){
-            MiscUtils.getLogger().error("Error", e);
-        }
+    	Property p = new Property();
+    	p.setName("teleplan_sequence");
+    	p.setValue(String.valueOf(sequenceNum));
+    	propertyDao.persist(p);
     }
     
     private void updateSequence(int sequenceNum){
-        try{
-            
-            String query = "update property set value = '"+sequenceNum+"' where name = 'teleplan_sequence' " ;
-            DBHandler.RunSQL(query);            
-        }catch(Exception e){
-            MiscUtils.getLogger().error("Error", e);
-        }
+    	List<Property> ps = propertyDao.findByName("teleplan_sequence");
+    	for(Property p:ps) {
+    		p.setValue(String.valueOf(sequenceNum));
+    		propertyDao.merge(p);
+    	}
     }
     
     private boolean hasSequence(){
         boolean hasSequence = false;
-        try{
-            
-            String query = "select value from property where name = 'teleplan_sequence' " ;
-            ResultSet rs = DBHandler.GetSQL(query); 
-            if(rs.next()){
-                hasSequence = true;
-            }
-        }catch(Exception e){
-            MiscUtils.getLogger().error("Error", e);
-        }
+        List<Property> ps = propertyDao.findByName("teleplan_sequence");
+        if(!ps.isEmpty())
+        	hasSequence=true;
         return hasSequence;
     }
     
@@ -87,23 +78,12 @@ public class TeleplanSequenceDAO {
     }
     
      public int getLastSequenceNumber(){
-        //insert into property (name,value) values ('teleplan_sequence','3430') 
         int sequenceNum = 0; 
-        try{
-            
-            String query = "select value from property where name='teleplan_sequence'  " ;
-            log.debug("1st billing query "+query);
-            ResultSet rs = DBHandler.GetSQL(query);
-        while (rs.next()){
-            String value = rs.getString("value");
-            sequenceNum = Integer.parseInt(value);
-        }     
-        }catch(Exception e){
-            MiscUtils.getLogger().error("Error", e);
+        List<Property> ps = propertyDao.findByName("teleplan_sequence");
+        for(Property p:ps) {
+        	sequenceNum = Integer.parseInt(p.getValue());
         }
         return sequenceNum;   
     }
-     
-  
-    
+
 }
