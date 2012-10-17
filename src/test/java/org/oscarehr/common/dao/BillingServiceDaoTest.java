@@ -56,6 +56,12 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 	public void setUp() throws Exception {
 		SchemaUtils.restoreTable("billingservice", "billingperclimit");
 	}
+	
+	@Test
+	public void getBillingCodeAttrTest() /*throws Exception*/ {
+		
+		dao.getBillingCodeAttr("A001A");
+	}
 
 	@Test
 	/**

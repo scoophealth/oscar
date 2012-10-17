@@ -33,18 +33,20 @@ import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.ClinicLocation;
 import org.oscarehr.common.model.ProfessionalSpecialist;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.SxmlMisc;
 import oscar.service.OscarSuperManager;
 
 public class JdbcBillingPageUtil {
-	private static final Logger _logger = Logger.getLogger(JdbcBillingPageUtil.class);
-	BillingONDataHelp dbObj = new BillingONDataHelp();
-	AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
-    OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
-    ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
-    ClinicLocationDao clinicLocationDao = (ClinicLocationDao) SpringUtils.getBean("clinicLocationDao");
+	
+	private static final Logger _logger = MiscUtils.getLogger();
+	private BillingONDataHelp dbObj = new BillingONDataHelp();
+	private AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
+	private OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
+	private ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
+	private ClinicLocationDao clinicLocationDao = (ClinicLocationDao) SpringUtils.getBean("clinicLocationDao");
 
 	public List getCurTeamProviderStr(String provider_no) {
 		List retval = new Vector();
