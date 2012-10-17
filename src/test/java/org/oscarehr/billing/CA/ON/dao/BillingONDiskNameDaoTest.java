@@ -23,29 +23,33 @@
  */
 package org.oscarehr.billing.CA.ON.dao;
 
-import java.util.List;
+import static org.junit.Assert.assertNotNull;
 
-import javax.persistence.Query;
+import org.junit.Before;
+import org.junit.Test;
+import org.oscarehr.billing.CA.ON.model.BillingONDiskName;
+import org.oscarehr.common.dao.DaoTestFixtures;
+import org.oscarehr.common.dao.utils.EntityDataGenerator;
+import org.oscarehr.common.dao.utils.SchemaUtils;
+import org.oscarehr.util.SpringUtils;
 
-import org.oscarehr.billing.CA.ON.model.BillingONHeader;
-import org.oscarehr.common.dao.AbstractDao;
-import org.springframework.stereotype.Repository;
+public class BillingONDiskNameDaoTest extends DaoTestFixtures{
 
-@Repository
-public class BillingONHeaderDao extends AbstractDao<BillingONHeader>{
+	private BillingONDiskNameDao dao = SpringUtils.getBean(BillingONDiskNameDao.class);
 
-	public BillingONHeaderDao() {
-		super(BillingONHeader.class);
+	public BillingONDiskNameDaoTest() {
 	}
-	
-	public List<BillingONHeader> findByDiskIdAndProviderRegNum(Integer diskId, String providerRegNum) {
-		Query query = entityManager.createQuery("SELECT b FROM BillingONHeader b where b.diskId = ? AND b.providerRegNum=?");
-		query.setParameter(1, diskId);
-		query.setParameter(2, providerRegNum);
-		
-		@SuppressWarnings("unchecked")
-		List<BillingONHeader> results = query.getResultList();
-		
-		return results;
+
+	@Before
+	public void before() throws Exception {
+		SchemaUtils.restoreTable("billing_on_diskname");
+	}
+
+	@Test
+	public void testCreate() throws Exception {
+		BillingONDiskName entity = new BillingONDiskName();
+		EntityDataGenerator.generateTestDataForModelClass(entity);
+		dao.persist(entity);
+		assertNotNull(entity.getId());
 	}
 }
