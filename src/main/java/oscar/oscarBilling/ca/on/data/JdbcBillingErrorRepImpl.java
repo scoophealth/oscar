@@ -24,9 +24,18 @@ import java.util.List;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.BillingONEAReportDao;
+import org.oscarehr.common.model.BillingONEAReport;
+import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
+
+import oscar.util.ConversionUtils;
 
 public class JdbcBillingErrorRepImpl {
-	private static final Logger _logger = Logger.getLogger(JdbcBillingErrorRepImpl.class);
+	private static final Logger _logger = MiscUtils.getLogger();
+	private BillingONEAReportDao billingONEARReportDao = (BillingONEAReportDao)SpringUtils.getBean(BillingONEAReportDao.class);
+	
+	
 	BillingONDataHelp dbObj = new BillingONDataHelp();
 	JdbcBillingLog dbLog = new JdbcBillingLog();
 
@@ -76,22 +85,29 @@ public class JdbcBillingErrorRepImpl {
 		return retval;
 	}
 
-        public List getErrorRecords(List<BillingProviderData> list, String fromDate, String toDate, String filename) {
+        
+	public List getErrorRecords(List<BillingProviderData> list, String fromDate, String toDate, String filename) {
 		List retval = new Vector();
-		BillingErrorRepData obj = null;
-		String sqlFilename = "".equals(filename) ? "" : (" and report_name='" + filename + "' ");
 		if(list == null) return retval;
+		
+
+		BillingErrorRepData obj = null;
+		
 		String sql = "select * from billing_on_eareport";
 		for(int i = 0; i < list.size() ; i++) {
 			BillingProviderData val = list.get(i);
-			if(i == 0) sql += " where ((providerohip_no='" + val.getOhipNo() + "' and group_no='"
-				+ val.getBillingGroupNo() + "' and specialty='" + val.getSpecialtyCode() + "')";
-			else sql+= " or (providerohip_no='" + val.getOhipNo() + "' and group_no='"
-				+ val.getBillingGroupNo() + "' and specialty='" + val.getSpecialtyCode() + "')";
+			
+			if(i == 0) 
+				sql += " where ((providerohip_no='" + val.getOhipNo() + "' and group_no='" + val.getBillingGroupNo() + "' and specialty='" + val.getSpecialtyCode() + "')";
+			else 
+				sql+= " or (providerohip_no='" + val.getOhipNo() + "' and group_no='" + val.getBillingGroupNo() + "' and specialty='" + val.getSpecialtyCode() + "')";
 		}
-		sql += ") and code_date>='" + fromDate + "' and code_date<='" + toDate + "'" + sqlFilename + " order by code_date";
+		
+		String sqlFilename = "".equals(filename) ? "" : (" and report_name='" + filename + "' ");
+		sql += ")";
+		sql += "and code_date>='" + fromDate + "' and code_date<='" + toDate + "'" + sqlFilename + " order by code_date";
 
-		// _logger.info("getErrorRecords(sql = " + sql + ")");
+		
 		ResultSet rs = dbObj.searchDBRecord(sql);
 
 		try {
@@ -130,61 +146,51 @@ public class JdbcBillingErrorRepImpl {
 	}
 
 	public boolean deleteErrorReport(BillingErrorRepData val) {
-		boolean retval = false;
-		String sql = "delete from billing_on_eareport where providerohip_no='" + val.getProviderohip_no()
-				+ "' and group_no='" + val.getGroup_no() + "' and specialty='" + val.getSpecialty()
-				+ "' and process_date='" + val.getProcess_date() + "'";
-		_logger.info("deleteErrorReport(sql = " + sql + ")");
-		retval = dbObj.updateDBRecord(sql);
-
-		if (!retval) {
-			_logger.error("deleteErrorReport(sql = " + sql + ")");
+		List<BillingONEAReport>  bs = billingONEARReportDao.findByProviderOhipNoAndGroupNoAndSpecialtyAndProcessDate(val.getProviderohip_no(),val.getGroup_no(),val.getSpecialty(),ConversionUtils.fromDateString(val.getProcess_date()));
+		for(BillingONEAReport b:bs) {
+			billingONEARReportDao.remove(b.getId());
 		}
-		return retval;
+		return true;
 	}
 
 	public int addErrorReportRecord(BillingErrorRepData val) {
-		int retval = 0;
-		String sql = "insert into billing_on_eareport values(\\N, " + "'" + val.providerohip_no + "','" + val.group_no
-				+ "','" + val.specialty + "','" + val.process_date + "','" + val.hin + "','" + val.ver + "','"
-				+ val.dob + "', " + val.billing_no + " ,'" + val.ref_no + "','" + val.facility + "','"
-				+ val.admitted_date + "','" + val.claim_error + "','" + val.code + "','" + val.fee + "','" + val.unit
-				+ "','" + val.code_date + "','" + val.dx + "','" + val.exp 
-				+ "','" + val.code_error + "','" + val.report_name + "','" + val.status 
-				+ "','" + val.comment + "')";
-		_logger.info("addErrorReportRecord(sql = " + sql + ")");
-		retval = dbObj.saveBillingRecord(sql);
-
-		if (retval > 0) {
-		} else {
-			_logger.error("addErrorReportRecord(sql = " + sql + ")");
-			retval = 0;
-		}
-		return retval;
+		BillingONEAReport b = new BillingONEAReport();
+		b.setProviderOHIPNo(val.providerohip_no);
+		b.setGroupNo(val.group_no);
+		b.setSpecialty(val.specialty);
+		b.setProcessDate(ConversionUtils.fromDateString(val.process_date));
+		b.setHin(val.hin);
+		b.setVersion(val.ver);
+		b.setDob(ConversionUtils.fromDateString(val.dob));
+		b.setBillingNo(Integer.parseInt(val.billing_no));
+		b.setRefNo(val.ref_no);
+		b.setFacility(val.facility);
+		b.setAdmittedDate(ConversionUtils.fromDateString(val.admitted_date));
+		b.setClaimError(val.claim_error);
+		b.setCode(val.code);
+		b.setFee(val.fee);
+		b.setUnit(val.unit);
+		b.setCodeDate(ConversionUtils.fromDateString(val.code_date));
+		b.setDx(val.dx);
+		b.setExp(val.exp);
+		b.setCodeError(val.code_error);
+		b.setReportName(val.report_name);
+		b.setStatus(val.status.toCharArray()[0]);
+		b.setComment(val.comment);
+	
+		billingONEARReportDao.persist(b);
+		
+		return b.getId();
+		
 	}
 	
 	public boolean updateErrorReportStatus(String id, String val) {
-		boolean retval = false;
-		String sql = "update billing_on_eareport set status='" + val + "' where id=" + id;
-		_logger.info("updateErrorReportStatus(sql = " + sql + ")");
-		retval = dbObj.updateDBRecord(sql);
-
-		if (!retval) {
-			_logger.error("updateErrorReportStatus(sql = " + sql + ")");
+		BillingONEAReport b = billingONEARReportDao.find(Integer.valueOf(id));
+		if(b != null) {
+			b.setStatus(val.toCharArray()[0]);
+			billingONEARReportDao.merge(b);
 		}
-		return retval;
-	}
-	
-	public boolean deleteOneErrorReport(String id) {
-		boolean retval = false;
-		String sql = "delete from billing_on_eareport where id=" + id;
-		_logger.info("deleteOneErrorReport(sql = " + sql + ")");
-		retval = dbObj.updateDBRecord(sql);
-
-		if (!retval) {
-			_logger.error("deleteOneErrorReport(sql = " + sql + ")");
-		}
-		return retval;
+		return true;
 	}
 
 
