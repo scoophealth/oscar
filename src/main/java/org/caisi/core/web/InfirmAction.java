@@ -36,7 +36,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.LabelValueBean;
 import org.caisi.service.InfirmBedProgramManager;
-import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SessionConstants;

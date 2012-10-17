@@ -23,7 +23,7 @@
 
 --%>
 <%@page import="org.oscarehr.common.model.CdsClientForm"%>
-<%@page import="org.oscarehr.PMmodule.model.Admission"%>
+<%@page import="org.oscarehr.common.model.Admission"%>
 <%@page import="org.oscarehr.PMmodule.web.CdsForm4"%>
 
 <%

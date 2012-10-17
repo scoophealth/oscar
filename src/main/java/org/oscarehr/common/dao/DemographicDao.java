@@ -54,11 +54,11 @@ import org.hibernate.criterion.LogicalExpression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
-import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.web.formbean.ClientListsReportFormBean;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.common.NativeSql;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.integration.hl7.generators.HL7A04Generator;
@@ -167,8 +167,10 @@ public class DemographicDao extends HibernateDaoSupport {
 		// return rs;
 		return clients;
 	}
+	
 
-	public List<Demographic> getActiveDemosByHealthCardNo(String hcn, String hcnType) {
+    public List<Demographic> getActiveDemosByHealthCardNo(String hcn, String hcnType) {
+
 		Session s = getSession();
 		try {
 			List rs = s.createCriteria(Demographic.class).add(Expression.eq("Hin", hcn)).add(Expression.eq("HcType", hcnType)).add(Expression.eq("PatientStatus", "AC")).list();
@@ -205,6 +207,7 @@ public class DemographicDao extends HibernateDaoSupport {
 		}
 
 		return archivedClients;
+
 	}
 
 	public List getProgramIdByDemoNo(String demoNo) {
@@ -394,6 +397,7 @@ public class DemographicDao extends HibernateDaoSupport {
 
 		return exists;
 	}
+
 
 	public Demographic getClientByDemographicNo(Integer demographicNo) {
 

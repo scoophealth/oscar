@@ -51,7 +51,7 @@ import org.oscarehr.PMmodule.dao.CriteriaSelectionOptionDAO;
 import org.oscarehr.PMmodule.dao.CriteriaTypeDAO;
 import org.oscarehr.PMmodule.dao.CriteriaTypeOptionDAO;
 import org.oscarehr.PMmodule.dao.VacancyTemplateDAO;
-import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.PMmodule.model.BedCheckTime;
 import org.oscarehr.PMmodule.model.Criteria;
 import org.oscarehr.PMmodule.model.CriteriaSelectionOption;

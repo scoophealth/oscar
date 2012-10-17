@@ -36,8 +36,8 @@
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
 <%@page import="org.oscarehr.util.WebUtils"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
-<%@ page import="org.oscarehr.PMmodule.model.Admission" %>
-<%@ page import="org.oscarehr.PMmodule.dao.AdmissionDao" %>
+<%@ page import="org.oscarehr.common.model.Admission" %>
+<%@ page import="org.oscarehr.common.dao.AdmissionDao" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%
 	AdmissionDao admissionDao = (AdmissionDao)SpringUtils.getBean("admissionDao");

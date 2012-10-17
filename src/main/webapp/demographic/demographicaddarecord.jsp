@@ -30,8 +30,8 @@
 <%@ page import="org.oscarehr.common.model.DemographicExt" %>
 <%@ page import="org.oscarehr.common.dao.DemographicExtDao" %>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
-<%@ page import="org.oscarehr.PMmodule.model.Admission" %>
-<%@ page import="org.oscarehr.PMmodule.dao.AdmissionDao" %>
+<%@ page import="org.oscarehr.common.model.Admission" %>
+<%@ page import="org.oscarehr.common.dao.AdmissionDao" %>
 <%@ page import="org.oscarehr.common.dao.WaitingListDao" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <% java.util.Properties oscarVariables = oscar.OscarProperties.getInstance(); %>
@@ -246,13 +246,13 @@
     		admission.setProviderNo(request.getParameter("staff"));
     		admission.setAdmissionDate(MyDateFormat.getSysDate(admissionDate));
     		admission.setAdmissionStatus("current");
-    		admission.setTeamId(0);
+    		
     		admission.setTemporaryAdmission(false);
     		admission.setAdmissionFromTransfer(false);
     		admission.setDischargeFromTransfer(false);
     		admission.setRadioDischargeReason("0");
-    		admission.setClientStatusId(0);
-            admissionDao.saveAdmission(admission);
+    		
+            admissionDao.persist(admission);
         
 
         //add democust record for alert

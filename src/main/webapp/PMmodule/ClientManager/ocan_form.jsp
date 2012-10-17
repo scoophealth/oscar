@@ -24,13 +24,13 @@
 --%>
 <%@page import="org.oscarehr.common.model.OcanStaffFormData"%>
 <%@page import="org.oscarehr.common.model.OcanStaffForm"%>
-<%@page import="org.oscarehr.PMmodule.model.Admission"%>
+<%@page import="org.oscarehr.common.model.Admission"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.oscarehr.PMmodule.web.OcanForm"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="java.util.List"%>
 <%@page import="org.oscarehr.common.dao.DemographicDao"%>
-<%@page import="org.oscarehr.PMmodule.dao.AdmissionDao"%>
+<%@page import="org.oscarehr.common.dao.AdmissionDao"%>
 
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.apache.commons.lang.time.DateFormatUtils" %>

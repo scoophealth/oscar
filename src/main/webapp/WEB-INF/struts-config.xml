@@ -309,7 +309,7 @@
 		<form-bean name="programManagerForm" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="view" type="org.oscarehr.PMmodule.web.formbean.ProgramManagerViewFormBean" />
 			<form-property name="access" type="org.oscarehr.PMmodule.model.ProgramAccess" />
-			<form-property name="admission" type="org.oscarehr.PMmodule.model.Admission" />
+			<form-property name="admission" type="org.oscarehr.common.model.Admission" />
 			<form-property name="bedCheckTimes" type="org.oscarehr.PMmodule.model.BedCheckTime[]" />
 			<form-property name="addTime" type="java.lang.String" />
 			<form-property name="removeId" type="java.lang.String" />
@@ -344,7 +344,7 @@
 		</form-bean>
 		<form-bean name="clientManagerForm" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="view" type="org.oscarehr.PMmodule.web.formbean.ClientManagerFormBean" />
-			<form-property name="admission" type="org.oscarehr.PMmodule.model.Admission" />
+			<form-property name="admission" type="org.oscarehr.common.model.Admission" />
 			<form-property name="bedDemographic" type="org.oscarehr.PMmodule.model.BedDemographic" />
 			<form-property name="client" type="org.oscarehr.common.model.Demographic" />
 			<form-property name="erconsent" type="org.oscarehr.PMmodule.web.formbean.ErConsentFormBean" />
