@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,33 +21,35 @@
  * Hamilton
  * Ontario, Canada
  */
+package org.oscarehr.billing.CA.BC.dao;
 
+import static org.junit.Assert.assertNotNull;
 
-package oscar.oscarBilling.ca.bc.Teleplan;
-
-import org.oscarehr.billing.CA.BC.dao.TeleplanResponseLogDao;
+import org.junit.Before;
+import org.junit.Test;
 import org.oscarehr.billing.CA.BC.model.TeleplanResponseLog;
+import org.oscarehr.common.dao.DaoTestFixtures;
+import org.oscarehr.common.dao.utils.EntityDataGenerator;
+import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.util.SpringUtils;
 
-/**  
- *
- * @author jay
- */
-public class TeleplanResponseDAO {
-    
+public class TeleplanResponseLogDaoTest extends DaoTestFixtures {
+
 	private TeleplanResponseLogDao dao = SpringUtils.getBean(TeleplanResponseLogDao.class);
-	
-    public TeleplanResponseDAO() {
-    }
-    
-    public void save(TeleplanResponse tr){
-    	TeleplanResponseLog t = new TeleplanResponseLog();
-    	t.setTransactionNo(tr.getTransactionNo());
-    	t.setResult(tr.getResult());
-    	t.setFilename(tr.getFilename());
-    	t.setMsgs(tr.getMsgs());
-    	t.setRealFilename(tr.getRealFilename());
-    	dao.persist(t);
-    	
-    }
+
+	public TeleplanResponseLogDaoTest() {
+	}
+
+	@Before
+	public void before() throws Exception {
+		SchemaUtils.restoreTable("teleplan_response_log");
+	}
+
+	@Test
+	public void testCreate() throws Exception {
+		TeleplanResponseLog entity = new TeleplanResponseLog();
+		EntityDataGenerator.generateTestDataForModelClass(entity);
+		dao.persist(entity);
+		assertNotNull(entity.getId());
+	}
 }

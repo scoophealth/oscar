@@ -25,12 +25,13 @@
 
 package oscar.oscarBilling.ca.bc.Teleplan;
 
-import java.sql.ResultSet;
+import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.PropertyDao;
+import org.oscarehr.common.model.Property;
 import org.oscarehr.util.MiscUtils;
-
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.util.SpringUtils;
 
 /**
  *  Deals with storing the teleplan sequence #
@@ -38,50 +39,41 @@ import oscar.oscarDB.DBHandler;
  */
 public class TeleplanUserPassDAO {
     static Logger log=MiscUtils.getLogger();
+    private PropertyDao propertyDao = SpringUtils.getBean(PropertyDao.class);
     
-    /** Creates a new instance of TeleplanSequenceDAO */
+    
     public TeleplanUserPassDAO() {
     }
     
     private void setUsername(String username){
-        try{
-            
-            String query = "insert into property (name,value) values ('teleplan_username','"+username+"') " ;
-            DBHandler.RunSQL(query);           
-        }catch(Exception e){
-            MiscUtils.getLogger().error("Error", e);
-        }
+    	Property p = new Property();
+    	p.setName("teleplan_username");
+    	p.setValue(username);
+    	propertyDao.persist(p);
     }
     
     private void setPassword(String password){
-        try{
-            
-            String query = "insert into property (name,value) values ('teleplan_password','"+password+"') " ;
-            DBHandler.RunSQL(query);           
-        }catch(Exception e){
-            MiscUtils.getLogger().error("Error", e);
-        }
+    	Property p = new Property();
+    	p.setName("teleplan_password");
+    	p.setValue(password);
+    	propertyDao.persist(p);
     }
     
     
     private void updateUsername(String username){
-        try{
-            
-            String query = "update property set value = '"+username+"' where name = 'teleplan_username' " ;
-            DBHandler.RunSQL(query);            
-        }catch(Exception e){
-            MiscUtils.getLogger().error("Error", e);
-        }
+    	List<Property> ps = propertyDao.findByName("teleplan_username");
+    	for(Property p:ps) {
+    		p.setValue(username);
+    		propertyDao.merge(p);
+    	}
     }
     
     private void updatePassword(String password){
-        try{
-            
-            String query = "update property set value = '"+password+"' where name = 'teleplan_password' " ;
-            DBHandler.RunSQL(query);            
-        }catch(Exception e){
-            MiscUtils.getLogger().error("Error", e);
-        }
+    	List<Property> ps = propertyDao.findByName("teleplan_password");
+    	for(Property p:ps) {
+    		p.setValue(password);
+    		propertyDao.merge(p);
+    	}
     }
     
     public boolean hasUsernamePassword(){
@@ -89,34 +81,18 @@ public class TeleplanUserPassDAO {
     }
     
     private boolean hasUsername(){
-        boolean hasSequence = false;
-        try{
-            
-            String query = "select value from property where name = 'teleplan_username' " ;
-            ResultSet rs = DBHandler.GetSQL(query); 
-            if(rs.next()){
-                log.debug("has user Sequence"+rs.getString("value"));
-                hasSequence = true;
-            }
-        }catch(Exception e){
-            MiscUtils.getLogger().error("Error", e);
-        }
+    	boolean hasSequence = false;
+        List<Property> ps = propertyDao.findByName("teleplan_username");
+        if(!ps.isEmpty())
+        	hasSequence=true;
         return hasSequence;
     }
     
     private boolean hasPassword(){
-        boolean hasSequence = false;
-        try{
-            
-            String query = "select value from property where name = 'teleplan_password' " ;
-            ResultSet rs = DBHandler.GetSQL(query); 
-            if(rs.next()){
-                log.debug("has pass Sequence"+rs.getString("value"));
-                hasSequence = true;
-            }
-        }catch(Exception e){
-            MiscUtils.getLogger().error("Error", e);
-        }
+    	boolean hasSequence = false;
+        List<Property> ps = propertyDao.findByName("teleplan_password");
+        if(!ps.isEmpty())
+        	hasSequence=true;
         return hasSequence;
     }
     
@@ -142,22 +118,13 @@ public class TeleplanUserPassDAO {
     
     public String[] getUsernamePassword(){
         String[] str = new String[2];
-        try{
-            
-            String query = "select value from property where name = 'teleplan_username' " ;
-            ResultSet rs = DBHandler.GetSQL(query); 
-            if(rs.next()){
-                str[0] = rs.getString("value");
-            }
-            rs.close();
-            query = "select value from property where name = 'teleplan_password' " ;
-            rs = DBHandler.GetSQL(query); 
-            if(rs.next()){
-                str[1] = rs.getString("value");
-            }
-            rs.close();
-        }catch(Exception e){
-            MiscUtils.getLogger().error("Error", e);
+        List<Property> ps = propertyDao.findByName("teleplan_username");
+        for(Property p:ps) {
+        	str[0] = p.getValue();
+        }
+        ps = propertyDao.findByName("teleplan_password");
+        for(Property p:ps) {
+        	str[1] = p.getValue();
         }
         return str;
     }
