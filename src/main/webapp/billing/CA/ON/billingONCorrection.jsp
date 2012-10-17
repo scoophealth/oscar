@@ -187,8 +187,8 @@ function rs(n,u,w,h,x) {
 
 var awnd=null;
 function ScriptAttach() {
-	f0 = escape(document.serviceform.xml_diagnostic_detail.value);
-	f1 = document.serviceform.xml_dig_search1.value;
+	f0 = escape(document.forms[1].xml_diagnostic_detail.value);
+	f1 = document.forms[1].xml_dig_search1.value;
 	// f2 = escape(document.serviceform.elements["File2Data"].value);
 	// fname = escape(document.Compose.elements["FName"].value);
 	awnd=rs('att','billingDigSearch.jsp?name='+f0 + '&search=' + f1,600,600,1);
