@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-. OSCARservice, OpenSoft System. All Rights Reserved.
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,29 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
+package org.oscarehr.billing.CA.ON.dao;
 
-package oscar.oscarBilling.ca.on.data;
-
-import java.util.Date;
-
-import org.oscarehr.billing.CA.ON.dao.BillingONProcDao;
 import org.oscarehr.billing.CA.ON.model.BillingONProc;
-import org.oscarehr.util.SpringUtils;
+import org.oscarehr.common.dao.AbstractDao;
+import org.springframework.stereotype.Repository;
 
-public class JdbcBillingLog {
-	
-	private BillingONProcDao dao = SpringUtils.getBean(BillingONProcDao.class);
+@Repository
+public class BillingONProcDao extends AbstractDao<BillingONProc> {
 
-	public boolean addBillingLog(String providerNo, String action, String comment, String object) {
-		BillingONProc b = new BillingONProc();
-		b.setCreator(providerNo);
-		b.setAction(action);
-		b.setComment(comment);
-		b.setObject(object);
-		b.setCreateDateTime(new Date());
-		dao.persist(b);
-		return true;
+	public BillingONProcDao() {
+		super(BillingONProc.class);
 	}
-
 }
