@@ -24,6 +24,7 @@
 package org.oscarehr.common.dao;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -41,6 +42,21 @@ public class BillingONEAReportDao extends AbstractDao<BillingONEAReport> {
     public BillingONEAReportDao() {
         super(BillingONEAReport.class);	
     }
+    
+    public List<BillingONEAReport> findByProviderOhipNoAndGroupNoAndSpecialtyAndProcessDate(String providerOhipNo, String groupNo, String specialty, Date processDate) {
+    	String sql = "select b from BillingONEAReport b where b.providerOHIPNo=:providerOHIPNo and b.groupNo=:groupNo and b.specialty=:specialty and b.processDate = :processDate";
+    	Query query = entityManager.createQuery(sql);
+        query.setParameter("providerOHIPNo", providerOhipNo);
+        query.setParameter("groupNo", groupNo);
+        query.setParameter("specialty", specialty);
+        query.setParameter("processDate", processDate);
+
+        @SuppressWarnings("unchecked")
+        List<BillingONEAReport> results = query.getResultList();
+        
+        return results;
+    }
+    
     
     public List<BillingONEAReport> findByBillingNo(Integer billingNo) {
     	String sql = "select b from BillingONEAReport b where b.billingNo=:billingNo order by b.processDate DESC";
