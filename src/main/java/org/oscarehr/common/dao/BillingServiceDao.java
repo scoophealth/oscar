@@ -44,6 +44,21 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 	public BillingServiceDao() {
 		super(BillingService.class);
 	}
+	
+	public List<BillingService> getBillingCodeAttr(String serviceCode) {
+
+		String sql = "SELECT b FROM BillingService b where b.serviceCode=:serviceCode" +
+				" AND b.billingserviceNo = (SELECT MAX(b2.billingserviceNo) from BillingService b2" +
+						" where b.serviceCode = b2.serviceCode and b2.billingserviceDate <= :now)";
+		Query q = entityManager.createQuery(sql);
+		q.setParameter("serviceCode", serviceCode);
+		q.setParameter("now", new Date());
+		
+		@SuppressWarnings("unchecked")
+		List<BillingService> results = q.getResultList();
+		
+		return results;
+	}
 
 	public boolean codeRequiresSLI(String code) {
 		Query query = entityManager.createQuery("select bs  from BillingService bs where bs.serviceCode like (:code) and sliFlag = TRUE");
@@ -72,6 +87,27 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		List<BillingService> list = query.getResultList();
 		return list;
 	}
+	
+	
+	public List<BillingService> findByServiceCodes(List<String> codes) {
+		Query query = entityManager.createQuery("select bs  from BillingService bs where bs.serviceCode IN (:codes)");
+		query.setParameter("codes", codes);
+
+		@SuppressWarnings("unchecked")
+		List<BillingService> list = query.getResultList();
+		return list;
+	}
+	
+	public List<BillingService> finAllPrivateCodes() {
+		Query query = entityManager.createQuery("select bs from BillingService bs where bs.serviceCode LIKE :serviceCode");
+		query.setParameter("serviceCode", "\\_%");
+
+		@SuppressWarnings("unchecked")
+		List<BillingService> list = query.getResultList();
+		return list;
+	}
+	
+	
 	public List<BillingService> findBillingCodesByCode(String code, String region, int order) {
 		return findBillingCodesByCode(code, region, new Date(), order);
 	}

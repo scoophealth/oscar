@@ -18,114 +18,97 @@
 
 package oscar.oscarBilling.ca.on.data;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.BillingServiceDao;
+import org.oscarehr.common.model.BillingService;
+import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
+
+import oscar.util.ConversionUtils;
 
 public class JdbcBillingCodeImpl {
-	private static final Logger _logger = Logger.getLogger(JdbcBillingCodeImpl.class);
+	private static final Logger _logger = MiscUtils.getLogger();
+	private BillingServiceDao dao = (BillingServiceDao)SpringUtils.getBean(BillingServiceDao.class);
+	
+	
 	BillingONDataHelp dbObj = new BillingONDataHelp();
 
 	public List getBillingCodeAttr(String serviceCode) {
 		List ret = new Vector();
-		String sql = "select * from billingservice b where b.service_code='" + serviceCode + "' and b.billingservice_no = (select max(b2.billingservice_no) from billingservice b2 where b.service_code = b2.service_code and b2.billingservice_date <= now())";
-		ResultSet rs = dbObj.searchDBRecord(sql);
-		try {
-			while (rs.next()) {
-				ret.add(serviceCode);
-				ret.add(rs.getString("description"));
-				ret.add(rs.getString("value"));
-				ret.add(rs.getString("percentage"));
-				ret.add(rs.getString("billingservice_date"));
-                                ret.add(rs.getString("gstFlag"));
-			}
-		} catch (SQLException e) {
-			_logger.error("getBillingCodeAttr(sql = " + sql + ")");
-		}
+		List<BillingService> bs = dao.getBillingCodeAttr(serviceCode);
+		for(BillingService b:bs) {
+			ret.add(serviceCode);
+			ret.add(b.getDescription());
+			ret.add(b.getValue());
+			ret.add(b.getPercentage());
+			ret.add(ConversionUtils.toDateString(b.getBillingserviceDate()));
+           ret.add(b.getGstFlag());
+        }
+		
 		return ret;
 	}
 
 	public Properties getCodeDescByNames(List serviceCodeNames) {
 		Properties ret = new Properties();
-		String xTemp = "";
-		for (int i = 0; i < serviceCodeNames.size(); i++) {
-			xTemp += "'" + serviceCodeNames.get(i) + "',";
+		
+		List<String> serviceCodeList = new ArrayList<String>();
+		serviceCodeList.addAll(serviceCodeNames);
+		List<BillingService> bs = dao.findByServiceCodes(serviceCodeList);
+		for(BillingService b:bs) {
+			ret.setProperty(b.getServiceCode(), b.getDescription());
 		}
-		xTemp = xTemp.substring(0, xTemp.length() - 1);
-		String sql = "select * from billingservice b where b.service_code in (" + xTemp + ")";
-		ResultSet rs = dbObj.searchDBRecord(sql);
-		try {
-			while (rs.next()) {
-				ret.setProperty(rs.getString("service_code"), rs.getString("description"));
-			}
-		} catch (SQLException e) {
-			_logger.error("getCodeDescByNames(sql = " + sql + ")");
-		}
+		
 		return ret;
 	}
 
-	public boolean updateCodeByName(String serviceCode, String description, String value, String percentage,
-			String billingservice_date, String gstFlag) {
-		boolean ret = false;
-		String sql = "update billingservice set description='" + StringEscapeUtils.escapeSql(description) + "', ";
-		sql += " value='" + value + "', ";
-		sql += " percentage='" + percentage + "', ";
-                sql += " gstFlag='" + gstFlag + "', ";
-		sql += " billingservice_date='" + billingservice_date + "' ";
-		sql += "where service_code='" + serviceCode + "'";
-		_logger.info("updateCodeByName(sql = " + sql + ")");
-		ret = dbObj.updateDBRecord(sql);
-		if (!ret) {
-			_logger.error("updateCodeByName(sql = " + sql + ")");
+	public boolean updateCodeByName(String serviceCode, String description, String value, String percentage, String billingservice_date, String gstFlag) {
+		
+		List<BillingService> bs = dao.findByServiceCode(serviceCode);
+		for(BillingService b:bs) {
+			b.setDescription(description);
+			b.setValue(value);
+			b.setPercentage(percentage);
+			b.setGstFlag(Boolean.valueOf(gstFlag));
+			b.setBillingserviceDate(ConversionUtils.fromDateString(billingservice_date));
+			dao.merge(b);
+			
 		}
-		return ret;
+		return true;
 	}
 
-	public int addCodeByStr(String serviceCode, String description, String value, String percentage,
-			String billingservice_date, String gstFlag) {
-		int ret = 0;
-		String sql = "insert into billingservice (service_compositecode, service_code, description, value, percentage, gstFlag, billingservice_date) values ('', '";
-		sql += serviceCode + "', '";
-		sql += StringEscapeUtils.escapeSql(description) + "', '";
-		sql += value + "', '";
-		sql += percentage + "', '";
-                sql += gstFlag + "', '";
-		sql += billingservice_date + "' )";
-		_logger.info("addCodeByStr(sql = " + sql + ")");
-		ret = dbObj.saveBillingRecord(sql);
-		if (ret == 0) {
-			_logger.error("addCodeByStr(sql = " + sql + ")");
-		}
-		return ret;
+	public int addCodeByStr(String serviceCode, String description, String value, String percentage, String billingservice_date, String gstFlag) {
+		BillingService b = new BillingService();
+		b.setServiceCompositecode("");
+		b.setServiceCode(serviceCode);
+		b.setDescription(description);
+		b.setValue(value);
+		b.setPercentage(percentage);
+		b.setGstFlag(Boolean.valueOf(gstFlag));
+		b.setBillingserviceDate(ConversionUtils.fromDateString(billingservice_date));
+		dao.persist(b);
+		return b.getId();
 	}
 
 	public boolean deletePrivateCode(String serviceCode) {
-		boolean ret = false;
-		String sql = "delete from billingservice where service_code='" + serviceCode + "'";
-		_logger.info("deletePrivateCode(sql = " + sql + ")");
-		ret = dbObj.updateDBRecord(sql);
-		if (!ret) {
-			_logger.error("deletePrivateCode(sql = " + sql + ")");
+		List<BillingService> bs = dao.findByServiceCode(serviceCode);
+		for(BillingService b:bs) {
+			dao.remove(b.getId());
 		}
-		return ret;
+		return true;
 	}
 
-	public List getPrivateBillingCodeDesc() {
-		List ret = new Vector();
-		String sql = "select * from billingservice where service_code like '\\_%' order by service_code";
-		ResultSet rs = dbObj.searchDBRecord(sql);
-		try {
-			while (rs.next()) {
-				ret.add(rs.getString("service_code"));
-				ret.add(rs.getString("description"));
-			}
-		} catch (SQLException e) {
-			_logger.error("getPrivateBillingCodeDesc(sql = " + sql + ")");
+	public List<String> getPrivateBillingCodeDesc() {
+		List<String> ret = new ArrayList<String>();
+		
+		List<BillingService> bs = dao.finAllPrivateCodes();
+		for(BillingService b:bs) {
+			ret.add(b.getServiceCode());
+			ret.add(b.getDescription());
 		}
 		return ret;
 	}
