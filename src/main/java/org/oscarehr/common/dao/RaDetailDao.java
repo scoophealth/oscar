@@ -25,13 +25,16 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
 import javax.persistence.Query;
+
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.RaDetail;
 import org.springframework.stereotype.Repository;
-import java.util.Date;
-import java.util.Locale;
+
 import oscar.util.DateUtils;
 
 @Repository
@@ -40,6 +43,19 @@ public class RaDetailDao extends AbstractDao<RaDetail>{
 	public RaDetailDao() {
 		super(RaDetail.class);
 	}
+	
+	 public List<RaDetail> findByBillingNo(Integer billingNo) {
+		 Query query = entityManager.createQuery("SELECT rad from RaDetail rad WHERE rad.billingNo = :billingNo order by rad.raHeaderNo desc, rad.id ");
+        
+		 query.setParameter("billingNo", billingNo);
+
+         @SuppressWarnings("unchecked")
+         List<RaDetail> results = query.getResultList();
+
+         return results;
+
+	 }
+	
         
         public List<RaDetail> getRaDetailByDate(Date startDate, Date endDate, Locale locale) {
             Query query = entityManager.createQuery("SELECT rad from RaHeader rah, RaDetail rad WHERE rah.paymentDate >= ? and rah.paymentDate < ? and rah.id = rad.raHeaderNo order by rad.raHeaderNo, rad.billingNo, rad.serviceCode");

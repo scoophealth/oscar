@@ -25,16 +25,18 @@
 package org.oscarehr.common.dao;
 
 
+import java.math.BigDecimal;
 import java.util.List;
+
 import javax.persistence.Query;
+
 import org.oscarehr.common.model.BillingONCHeader1;
 import org.oscarehr.common.model.BillingONExt;
-import org.oscarehr.common.model.BillingPaymentType;
 import org.oscarehr.common.model.BillingONPayment;
+import org.oscarehr.common.model.BillingPaymentType;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.stereotype.Repository;
-import java.math.BigDecimal;
 /**
  *
  * @author mweston4
@@ -44,6 +46,18 @@ public class BillingONExtDao extends AbstractDao<BillingONExt>{
     
     public BillingONExtDao() {
         super(BillingONExt.class);
+    }
+    
+    public List<BillingONExt> findByBillingNoAndKey(Integer billingNo, String key) {
+    	String sql = "select bExt from BillingONExt bExt where bExt.billingNo=? and bExt.keyVal=?";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter(1, billingNo);
+        query.setParameter(2, key);       
+         
+        @SuppressWarnings("unchecked")
+        List<BillingONExt> results = query.getResultList();
+        
+        return results;
     }
             
     public String getPayMethodDesc(BillingONExt bExt) {

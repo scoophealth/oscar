@@ -25,22 +25,32 @@ package org.oscarehr.common.dao;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.persistence.Query;
+
 import org.apache.commons.lang.StringUtils;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.utility.DateUtils;
 import org.oscarehr.billing.CA.ON.model.BillingPercLimit;
 import org.oscarehr.billing.CA.dao.GstControlDao;
 import org.oscarehr.billing.CA.model.GstControl;
-import org.oscarehr.common.model.*;
+import org.oscarehr.common.model.BillingONCHeader1;
+import org.oscarehr.common.model.BillingONItem;
+import org.oscarehr.common.model.BillingService;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
 import oscar.OscarProperties;
 import oscar.oscarBilling.ca.on.data.BillingDataHlp;
-import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
 /**
 *
 * @author Eugene Katyukhin
@@ -422,5 +432,15 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
             result = results.get(0);            
         }
         return result;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<BillingONCHeader1> findByAppointmentNo(Integer appointmentNo) {
+    	String sql = "select h1 from BillingONCHeader1 h1 where h1.appointmentNo=?";
+        Query q = entityManager.createQuery(sql);
+        
+        q.setParameter(1,appointmentNo);
+        
+        return q.getResultList();
     }
 }
