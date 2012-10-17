@@ -62,6 +62,17 @@ public class BillingONFilenameDao extends AbstractDao<BillingONFilename>{
 		return results;
 	}
 	
+	public List<BillingONFilename> findByDiskId(Integer diskId) {
+		String q = "SELECT b FROM BillingONFilename b WHERE b.diskId = ?";
+		Query query = entityManager.createQuery(q);
+		query.setParameter(1, diskId);
+		
+		@SuppressWarnings("unchecked")
+		List<BillingONFilename> results = query.getResultList();
+		
+		return results;
+	}
+	
 	public List<BillingONFilename> findCurrentByDiskId(Integer diskId) {
 		String q = "SELECT b FROM BillingONFilename b WHERE b.diskId = ?  AND b.status != ? ORDER BY b.id DESC";
 		Query query = entityManager.createQuery(q);

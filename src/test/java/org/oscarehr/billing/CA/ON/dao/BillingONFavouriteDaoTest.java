@@ -21,36 +21,36 @@
  * Hamilton
  * Ontario, Canada
  */
-package org.oscarehr.common.dao;
+package org.oscarehr.billing.CA.ON.dao;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
-import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.billing.CA.ON.model.BillingONFavourite;
+import org.oscarehr.common.dao.DaoTestFixtures;
+import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
-import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.SpringUtils;
 
-public class ProviderDaoTest extends DaoTestFixtures {
+public class BillingONFavouriteDaoTest extends DaoTestFixtures {
 
-	private ProviderDao dao = SpringUtils.getBean(ProviderDao.class);
+	private BillingONFavouriteDao dao = SpringUtils.getBean(BillingONFavouriteDao.class);
+
+	public BillingONFavouriteDaoTest() {
+	}
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("provider");
+		SchemaUtils.restoreTable("billing_on_favourite");
 	}
 
 	@Test
-	public void testFindOhip() {
-		List<Provider> providers = dao.getProvidersWithNonEmptyOhip();
-		assertNotNull(providers);
+	public void testCreate() throws Exception {
+		BillingONFavourite entity = new BillingONFavourite();
+		EntityDataGenerator.generateTestDataForModelClass(entity);
+		dao.persist(entity);
+		assertNotNull(entity.getId());
 	}
 	
-	@Test
-	public void testGetCurrentTeamProviders() {
-		dao.getCurrentTeamProviders("999998");
-	}
 }

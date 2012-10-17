@@ -21,23 +21,36 @@ package oscar.oscarBilling.ca.on.data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.billing.CA.ON.dao.BillingONFavouriteDao;
+import org.oscarehr.billing.CA.ON.dao.BillingONFilenameDao;
+import org.oscarehr.billing.CA.ON.model.BillingONFavourite;
+import org.oscarehr.billing.CA.ON.model.BillingONFilename;
 import org.oscarehr.common.dao.AppointmentArchiveDao;
+import org.oscarehr.common.dao.BillingPaymentTypeDao;
 import org.oscarehr.common.dao.ClinicLocationDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
+import org.oscarehr.common.dao.ProviderSiteDao;
 import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.BillingPaymentType;
 import org.oscarehr.common.model.ClinicLocation;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.ProfessionalSpecialist;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.ProviderSite;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.SxmlMisc;
-import oscar.service.OscarSuperManager;
 
 public class JdbcBillingPageUtil {
 	
@@ -47,32 +60,33 @@ public class JdbcBillingPageUtil {
 	private OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
 	private ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
 	private ClinicLocationDao clinicLocationDao = (ClinicLocationDao) SpringUtils.getBean("clinicLocationDao");
+	private ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	private BillingPaymentTypeDao billingPaymentTypeDao = SpringUtils.getBean(BillingPaymentTypeDao.class);
+	private BillingONFavouriteDao billingONFavouriteDao = SpringUtils.getBean(BillingONFavouriteDao.class);
+	private DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+	private BillingONFilenameDao billingONFilenameDao = SpringUtils.getBean(BillingONFilenameDao.class);
+	private ProviderSiteDao providerSiteDao = SpringUtils.getBean(ProviderSiteDao.class);
 
+	
+	
 	public List getCurTeamProviderStr(String provider_no) {
 		List retval = new Vector();
-		String sql = "select provider_no,last_name,first_name,ohip_no,comments from provider "
-				+ "where status='1' and ohip_no!='' and (provider_no='"+provider_no+"' or team=(select team from provider where provider_no='"+provider_no+"')) order by last_name, first_name";
 		String proid = "";
 		String proFirst = "";
 		String proLast = "";
 		String proOHIP = "";
 		String specialty_code;
 		String billinggroup_no;
-		ResultSet rslocal = dbObj.searchDBRecord(sql);
-		try {
-			while (rslocal.next()) {
-				proid = rslocal.getString("provider_no");
-				proLast = rslocal.getString("last_name");
-				proFirst = rslocal.getString("first_name");
-				proOHIP = rslocal.getString("ohip_no");
-				billinggroup_no = getXMLStringWithDefault(rslocal.getString("comments"), "xml_p_billinggroup_no",
-						"0000");
-				specialty_code = getXMLStringWithDefault(rslocal.getString("comments"), "xml_p_specialty_code", "00");
-				retval.add(proid + "|" + proLast + "|" + proFirst + "|" + proOHIP + "|" + billinggroup_no + "|"
-						+ specialty_code);
-			}
-		} catch (SQLException e) {
-			_logger.error("getCurProviderStr(sql = " + sql + ")");
+		
+		List<Provider> ps = providerDao.getCurrentTeamProviders(provider_no);
+		for(Provider p:ps) {
+			proid = p.getProviderNo();
+			proLast = p.getLastName();
+			proFirst = p.getFirstName();
+			proOHIP = p.getOhipNo();
+			billinggroup_no = getXMLStringWithDefault(p.getComments(), "xml_p_billinggroup_no", "0000");
+			specialty_code = getXMLStringWithDefault(p.getComments(), "xml_p_specialty_code", "00");
+			retval.add(proid + "|" + proLast + "|" + proFirst + "|" + proOHIP + "|" + billinggroup_no + "|" + specialty_code);
 		}
 
 		return retval;
@@ -80,6 +94,13 @@ public class JdbcBillingPageUtil {
 
 	public List getCurSiteProviderStr(String provider_no) {
 		List retval = new Vector();
+		
+		List<ProviderSite> sites = providerSiteDao.findByProviderNo(provider_no);
+		List<Integer> siteIds =  new ArrayList<Integer>();
+		for(ProviderSite site:sites) {
+			siteIds.add(site.getId().getSiteId());
+		}
+		
 		String sql = "select provider_no,last_name,first_name,ohip_no,comments from provider p "
 				+ "where status='1' and ohip_no!='' " +
 						"and exists(select * from providersite s where p.provider_no = s.provider_no and s.site_id IN (SELECT site_id from providersite where provider_no="+provider_no+"))" +
@@ -112,31 +133,25 @@ public class JdbcBillingPageUtil {
 
 	public List getCurProviderStr() {
 		List retval = new Vector();
-		String sql = "select provider_no,last_name,first_name,ohip_no,comments from provider "
-				+ "where status='1' and ohip_no!='' order by last_name, first_name";
+		
+		List<Provider> ps = providerDao.getBillableProviders();
 		String proid = "";
 		String proFirst = "";
 		String proLast = "";
 		String proOHIP = "";
 		String specialty_code;
 		String billinggroup_no;
-		ResultSet rslocal = dbObj.searchDBRecord(sql);
-		try {
-			while (rslocal.next()) {
-				proid = rslocal.getString("provider_no");
-				proLast = rslocal.getString("last_name");
-				proFirst = rslocal.getString("first_name");
-				proOHIP = rslocal.getString("ohip_no");
-				billinggroup_no = getXMLStringWithDefault(rslocal.getString("comments"), "xml_p_billinggroup_no",
-						"0000");
-				specialty_code = getXMLStringWithDefault(rslocal.getString("comments"), "xml_p_specialty_code", "00");
-				retval.add(proid + "|" + proLast + "|" + proFirst + "|" + proOHIP + "|" + billinggroup_no + "|"
-						+ specialty_code);
-			}
-		} catch (SQLException e) {
-			_logger.error("getCurProviderStr(sql = " + sql + ")");
+		
+		for(Provider p:ps) {
+			proid = p.getProviderNo();
+			proLast = p.getLastName();
+			proFirst = p.getFirstName();
+			proOHIP = p.getOhipNo();
+			billinggroup_no = getXMLStringWithDefault(p.getComments(), "xml_p_billinggroup_no", "0000");
+			specialty_code = getXMLStringWithDefault(p.getComments(), "xml_p_specialty_code", "00");
+			retval.add(proid + "|" + proLast + "|" + proFirst + "|" + proOHIP + "|" + billinggroup_no + "|" + specialty_code);
 		}
-
+		
 		return retval;
 	}
 
@@ -148,245 +163,210 @@ public class JdbcBillingPageUtil {
 
 	public Properties getPropProviderOHIP() {
 		Properties retval = new Properties();
-		String sql = "select provider_no,ohip_no from provider "
-				+ "where status='1' and ohip_no!='' order by last_name, first_name";
+		List<Provider> ps = providerDao.getBillableProviders();
+		
 		String proid = "";
 		String proOHIP = "";
-		ResultSet rslocal = dbObj.searchDBRecord(sql);
-		try {
-			while (rslocal.next()) {
-				proid = rslocal.getString("provider_no");
-				proOHIP = rslocal.getString("ohip_no");
-				retval.setProperty(proid, proOHIP);
-			}
-		} catch (SQLException e) {
-			_logger.error("getPropProviderOHIP(sql = " + sql + ")");
+		
+		for(Provider p:ps) {
+			proid = p.getProviderNo();
+			proOHIP = p.getOhipNo();
+			retval.setProperty(proid, proOHIP);
 		}
+		
 		return retval;
 	}
 
 	public Properties getPropProviderName() {
 		Properties retval = new Properties();
-		String sql = "select provider_no,last_name,first_name from provider "
-				+ "where status='1' and ohip_no!='' order by last_name, first_name";
+		
+		List<Provider> ps = providerDao.getBillableProviders();
 		String proid = "";
 		String proName = "";
-		ResultSet rslocal = dbObj.searchDBRecord(sql);
-		try {
-			while (rslocal.next()) {
-				proid = rslocal.getString("provider_no");
-				proName = rslocal.getString("last_name") + "," + rslocal.getString("first_name");
-				retval.setProperty(proid, proName);
-			}
-		} catch (SQLException e) {
-			_logger.error("getPropProviderName(sql = " + sql + ")");
+		for(Provider p:ps) {
+			proid = p.getProviderNo();
+			proName = p.getLastName() + "," + p.getFirstName();
+			retval.setProperty(proid, proName);
 		}
+		
 		return retval;
 	}
 
 	public BillingProviderData getProviderObj(String providerNo) {
 		BillingProviderData pObj = null;
-		String sql = "select provider_no,last_name,first_name,ohip_no,rma_no,comments from provider ";
-                sql += "where status='1'";
-                if(!providerNo.equals("all")) sql += " and provider_no='" + providerNo + "'";
-		_logger.info("getProviderObj(sql = " + sql + ")");
-		ResultSet rslocal = dbObj.searchDBRecord(sql);
+		
+		List<Provider> ps = new ArrayList<Provider>();
+		if(providerNo.equals("all")) {
+			ps=providerDao.getActiveProviders();
+		} else {
+			Provider p = providerDao.getProvider(providerNo);
+			if(p.getStatus().equals("1"))
+				ps.add(p);
+		}
 		String specialty_code;
 		String billinggroup_no;
-		try {
-			while (rslocal.next()) {
-				pObj = new BillingProviderData();
-				billinggroup_no = getXMLStringWithDefault(rslocal.getString("comments"), "xml_p_billinggroup_no",
-						"0000");
-				specialty_code = getXMLStringWithDefault(rslocal.getString("comments"), "xml_p_specialty_code", "00");
-				pObj.setProviderNo(rslocal.getString("provider_no"));
-				pObj.setLastName(rslocal.getString("last_name"));
-				pObj.setFirstName(rslocal.getString("first_name"));
-				pObj.setOhipNo(rslocal.getString("ohip_no"));
-				pObj.setRmaNo(rslocal.getString("rma_no"));
-				pObj.setSpecialtyCode(specialty_code);
-				pObj.setBillingGroupNo(billinggroup_no);
-			}
-		} catch (SQLException e) {
-			_logger.error("getProviderObj(sql = " + sql + ")");
+		
+		for(Provider p:ps) {
+			pObj = new BillingProviderData();
+			billinggroup_no = getXMLStringWithDefault(p.getComments(), "xml_p_billinggroup_no", "0000");
+			specialty_code = getXMLStringWithDefault(p.getComments(), "xml_p_specialty_code", "00");
+			pObj.setProviderNo(p.getProviderNo());
+			pObj.setLastName(p.getLastName());
+			pObj.setFirstName(p.getFirstName());
+			pObj.setOhipNo(p.getOhipNo());
+			pObj.setRmaNo(p.getRmaNo());
+			pObj.setSpecialtyCode(specialty_code);
+			pObj.setBillingGroupNo(billinggroup_no);
 		}
+		
 		return pObj;
 	}
 
         public List<BillingProviderData> getProviderObjList(String providerNo) {
 		BillingProviderData pObj = null;
 		List<BillingProviderData> res = new ArrayList<BillingProviderData>();
-		String sql = "select provider_no,last_name,first_name,ohip_no,rma_no,comments from provider ";
-		sql += "where status='1'";
-		if(!providerNo.equals("all")) sql += " and provider_no='" + providerNo + "'";
-		_logger.info("getProviderObj(sql = " + sql + ")");
-		ResultSet rslocal = dbObj.searchDBRecord(sql);
+		
+		List<Provider> ps = new ArrayList<Provider>();
+		if(providerNo.equals("all")) {
+			ps=providerDao.getActiveProviders();
+		} else {
+			Provider p = providerDao.getProvider(providerNo);
+			if(p.getStatus().equals("1"))
+				ps.add(p);
+		}
 		String specialty_code;
 		String billinggroup_no;
-		try {
-			while (rslocal.next()) {
-				pObj = new BillingProviderData();
-				billinggroup_no = getXMLStringWithDefault(rslocal.getString("comments"), "xml_p_billinggroup_no",
-						"0000");
-				specialty_code = getXMLStringWithDefault(rslocal.getString("comments"), "xml_p_specialty_code", "00");
-				pObj.setProviderNo(rslocal.getString("provider_no"));
-				pObj.setLastName(rslocal.getString("last_name"));
-				pObj.setFirstName(rslocal.getString("first_name"));
-				pObj.setOhipNo(rslocal.getString("ohip_no"));
-				pObj.setRmaNo(rslocal.getString("rma_no"));
-				pObj.setSpecialtyCode(specialty_code);
-				pObj.setBillingGroupNo(billinggroup_no);
-				res.add(pObj);
-			}
-		} catch (SQLException e) {
-			_logger.error("getProviderObj(sql = " + sql + ")");
+		for(Provider p:ps) {
+			pObj = new BillingProviderData();
+			billinggroup_no = getXMLStringWithDefault(p.getComments(), "xml_p_billinggroup_no","0000");
+			specialty_code = getXMLStringWithDefault(p.getComments(), "xml_p_specialty_code", "00");
+			pObj.setProviderNo(p.getProviderNo());
+			pObj.setLastName(p.getLastName());
+			pObj.setFirstName(p.getFirstName());
+			pObj.setOhipNo(p.getOhipNo());
+			pObj.setRmaNo(p.getRmaNo());
+			pObj.setSpecialtyCode(specialty_code);
+			pObj.setBillingGroupNo(billinggroup_no);
+			res.add(pObj);
 		}
+		
 		return res;
 	}
 
 	public List getProvider(String diskId) {
 		List retval = new Vector();
 		String providerNo = null;
-		String sql = "select providerno from billing_on_filename where disk_id=" + diskId;
-		_logger.info("getProvider(sql = " + sql + ")");
-		ResultSet rs = dbObj.searchDBRecord(sql);
-		try {
-			while (rs.next()) {
-				providerNo = rs.getString("providerno");
+		
+		List<BillingONFilename> fs = billingONFilenameDao.findByDiskId(Integer.parseInt(diskId));
+		for(BillingONFilename f:fs) {
+			providerNo = f.getProviderNo();
 
-				sql = "select provider_no,last_name,first_name,ohip_no,comments from provider " + "where provider_no='"
-						+ providerNo + "' and status='1' and ohip_no!='' order by last_name, first_name";
+			Provider p = providerDao.getProvider(providerNo);
+			if(p != null && p.getStatus().equals("1") && p.getOhipNo().length()>0) {
 				String specialty_code;
 				String billinggroup_no;
-				ResultSet rslocal = dbObj.searchDBRecord(sql);
-				while (rslocal.next()) {
-					billinggroup_no = getXMLStringWithDefault(rslocal.getString("comments"), "xml_p_billinggroup_no",
-							"0000");
-					specialty_code = getXMLStringWithDefault(rslocal.getString("comments"), "xml_p_specialty_code",
-							"00");
+				billinggroup_no = getXMLStringWithDefault(p.getComments(), "xml_p_billinggroup_no","0000");
+				specialty_code = getXMLStringWithDefault(p.getComments(), "xml_p_specialty_code","00");
 
-					BillingProviderData pObj = new BillingProviderData();
-					pObj.setProviderNo(rslocal.getString("provider_no"));
-					pObj.setLastName(rslocal.getString("last_name"));
-					pObj.setFirstName(rslocal.getString("first_name"));
-					pObj.setOhipNo(rslocal.getString("ohip_no"));
-					pObj.setSpecialtyCode(specialty_code);
-					pObj.setBillingGroupNo(billinggroup_no);
-					retval.add(pObj);
-				}
+				BillingProviderData pObj = new BillingProviderData();
+				pObj.setProviderNo(p.getProviderNo());
+				pObj.setLastName(p.getLastName());
+				pObj.setFirstName(p.getFirstName());
+				pObj.setOhipNo(p.getOhipNo());
+				pObj.setSpecialtyCode(specialty_code);
+				pObj.setBillingGroupNo(billinggroup_no);
+				retval.add(pObj);
 			}
-		} catch (SQLException e) {
-			_logger.error("getProvider(sql = " + sql + ")");
 		}
 		return retval;
 	}
 
 	public List getCurSoloProvider() {
 		List retval = new Vector();
-		String sql = "select provider_no,last_name,first_name,ohip_no,comments from provider "
-				+ "where status='1' and ohip_no!='' order by last_name, first_name";
 		String specialty_code;
 		String billinggroup_no;
-		ResultSet rslocal = dbObj.searchDBRecord(sql);
-		try {
-			while (rslocal.next()) {
-				billinggroup_no = getXMLStringWithDefault(rslocal.getString("comments"), "xml_p_billinggroup_no",
-						"0000");
-				specialty_code = getXMLStringWithDefault(rslocal.getString("comments"), "xml_p_specialty_code", "00");
-				if (!"0000".equals(billinggroup_no))
-					continue;
-				BillingProviderData pObj = new BillingProviderData();
-				pObj.setProviderNo(rslocal.getString("provider_no"));
-				pObj.setLastName(rslocal.getString("last_name"));
-				pObj.setFirstName(rslocal.getString("first_name"));
-				pObj.setOhipNo(rslocal.getString("ohip_no"));
-				pObj.setSpecialtyCode(specialty_code);
-				pObj.setBillingGroupNo(billinggroup_no);
-				retval.add(pObj);
-			}
-		} catch (SQLException e) {
-			_logger.error("getCurSoloProvider(sql = " + sql + ")");
+		
+		List<Provider> ps = providerDao.getBillableProviders();
+		for(Provider p:ps) {
+			billinggroup_no = getXMLStringWithDefault(p.getComments(), "xml_p_billinggroup_no", "0000");
+			specialty_code = getXMLStringWithDefault(p.getComments(), "xml_p_specialty_code", "00");
+			if (!"0000".equals(billinggroup_no))
+				continue;
+			BillingProviderData pObj = new BillingProviderData();
+			pObj.setProviderNo(p.getProviderNo());
+			pObj.setLastName(p.getLastName());
+			pObj.setFirstName(p.getFirstName());
+			pObj.setOhipNo(p.getOhipNo());
+			pObj.setSpecialtyCode(specialty_code);
+			pObj.setBillingGroupNo(billinggroup_no);
+			retval.add(pObj);
 		}
-
+		
 		return retval;
 	}
 
 	public List getCurGrpProvider() {
 		List retval = new Vector();
-		String sql = "select provider_no,last_name,first_name,ohip_no,comments from provider "
-				+ "where status='1' and ohip_no!='' order by last_name, first_name";
 		String specialty_code;
 		String billinggroup_no;
-		ResultSet rslocal = dbObj.searchDBRecord(sql);
-		try {
-			while (rslocal.next()) {
-				billinggroup_no = getXMLStringWithDefault(rslocal.getString("comments"), "xml_p_billinggroup_no",
-						"0000");
-				specialty_code = getXMLStringWithDefault(rslocal.getString("comments"), "xml_p_specialty_code", "00");
-				if ("0000".equals(billinggroup_no))
-					continue;
-				BillingProviderData pObj = new BillingProviderData();
-				pObj.setProviderNo(rslocal.getString("provider_no"));
-				pObj.setLastName(rslocal.getString("last_name"));
-				pObj.setFirstName(rslocal.getString("first_name"));
-				pObj.setOhipNo(rslocal.getString("ohip_no"));
-				pObj.setSpecialtyCode(specialty_code);
-				pObj.setBillingGroupNo(billinggroup_no);
-				retval.add(pObj);
-			}
-		} catch (SQLException e) {
-			_logger.error("getCurGrpProvider(sql = " + sql + ")");
+		
+		List<Provider> ps = providerDao.getBillableProviders();
+		for(Provider p:ps) {
+			billinggroup_no = getXMLStringWithDefault(p.getComments(), "xml_p_billinggroup_no","0000");
+			specialty_code = getXMLStringWithDefault(p.getComments(), "xml_p_specialty_code", "00");
+			if ("0000".equals(billinggroup_no))
+				continue;
+			BillingProviderData pObj = new BillingProviderData();
+			pObj.setProviderNo(p.getProviderNo());
+			pObj.setLastName(p.getLastName());
+			pObj.setFirstName(p.getFirstName());
+			pObj.setOhipNo(p.getOhipNo());
+			pObj.setSpecialtyCode(specialty_code);
+			pObj.setBillingGroupNo(billinggroup_no);
+			retval.add(pObj);
 		}
 
 		return retval;
 	}
 
 	public boolean updateApptStatus(String apptNo, String status, String userNo) {
-                OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");
-                Appointment appt = appointmentDao.find(Integer.parseInt(apptNo));
-                appointmentArchiveDao.archiveAppointment(appt);
-                int rowsAffected = oscarSuperManager.update("appointmentDao", "updatestatusc", new Object[]{status,userNo,apptNo});
-                return (rowsAffected==1);
+		Appointment appt = appointmentDao.find(Integer.valueOf(apptNo));
+		if(appt != null) {
+			appt.setStatus(status);
+			appt.setLastUpdateUser(userNo);
+			appt.setUpdateDateTime(new Date());
+			appointmentDao.merge(appt);
+			return true;
+		}
+		return false;
 	}
 
 	public String getApptStatus(String apptNo) {
 		String retval = "T";
-		String sql = "select status from appointment where appointment_no=" + apptNo + " ";
-		ResultSet rslocal = dbObj.searchDBRecord(sql);
-		try {
-			while (rslocal.next()) {
-				retval = rslocal.getString("status");
-			}
-		} catch (SQLException e) {
-			_logger.error("getApptStatus(sql = " + sql + ")");
+		
+		Appointment appt = appointmentDao.find(Integer.valueOf(apptNo));
+		if(appt != null) {
+			retval = appt.getStatus();
 		}
+		
 		return retval;
 	}
 
-	// last_name,first_name,dob,hin,ver,hc_type,sex,family_doctor,provider_no,roster_status
 	public List getPatientCurBillingDemographic(String demoNo) {
 		List retval = null;
-//		String sql = "select last_name,first_name,concat(year_of_birth,month_of_birth,date_of_birth) as dob,hin,ver,hc_type,sex, "
-//				+ "family_doctor,provider_no,roster_status from demographic where demographic_no=" + demoNo + " ";
-		String sql = "select last_name,first_name,concat(concat(year_of_birth,month_of_birth),date_of_birth) as dob,hin,ver,hc_type,sex, "
-			+ "family_doctor,provider_no,roster_status from demographic where demographic_no=" + demoNo + " ";
-		ResultSet rslocal = dbObj.searchDBRecord(sql);
-		try {
-			while (rslocal.next()) {
-				retval = new Vector();
-				retval.add(rslocal.getString("last_name"));
-				retval.add(rslocal.getString("first_name"));
-				retval.add(rslocal.getString("dob"));
-				retval.add(rslocal.getString("hin") == null ? "" : rslocal.getString("hin"));
-				retval.add(rslocal.getString("ver") == null ? "" : rslocal.getString("ver"));
-				retval.add(rslocal.getString("hc_type") == null ? "" : rslocal.getString("hc_type"));
-				retval.add(rslocal.getString("sex").startsWith("F") ? "2" : "1");
-				retval.add(rslocal.getString("family_doctor") == null ? "" : rslocal.getString("family_doctor"));
-				retval.add(rslocal.getString("provider_no") == null ? "" : rslocal.getString("provider_no"));
-				retval.add(rslocal.getString("roster_status") == null ? "" : rslocal.getString("roster_status"));
-			}
-		} catch (SQLException e) {
-			_logger.error("getPatientCurBillingDemographic(sql = " + sql + ")");
+		Demographic d = demographicDao.getDemographic(demoNo);
+		if(d != null) {
+			retval = new Vector();
+			retval.add(d.getLastName());
+			retval.add(d.getFirstName());
+			retval.add(d.getYearOfBirth()+d.getMonthOfBirth()+d.getDateOfBirth());
+			retval.add(d.getHin() == null ? "" : d.getHin());
+			retval.add(d.getVer() == null ? "" : d.getVer());
+			retval.add(d.getHcType() == null ? "" :d.getHcType());
+			retval.add(d.getSex().startsWith("F") ? "2" : "1");
+			retval.add(d.getFamilyDoctor() == null ? "" : d.getFamilyDoctor());
+			retval.add(d.getProviderNo() == null ? "" : d.getProviderNo());
+			retval.add(d.getRosterStatus() == null ? "" : d.getRosterStatus());
 		}
 		return retval;
 	}
@@ -401,27 +381,20 @@ public class JdbcBillingPageUtil {
 		return retval;
 	}
 
-	// last_name,first_name,dob,hin,ver,hc_type,sex,family_doctor,provider_no
 	public List getPatientCurBillingDemo(String demoNo) {
 		List retval = null;
-		String sql = "select last_name,first_name,concat(year_of_birth,month_of_birth,date_of_birth) as dob,hin,ver,hc_type,sex, "
-				+ "family_doctor,provider_no from demographic where demographic_no=" + demoNo + " ";
-		ResultSet rslocal = dbObj.searchDBRecord(sql);
-		try {
-			while (rslocal.next()) {
-				retval = new Vector();
-				retval.add(rslocal.getString("last_name"));
-				retval.add(rslocal.getString("first_name"));
-				retval.add(rslocal.getString("dob"));
-				retval.add(rslocal.getString("hin") == null ? "" : rslocal.getString("hin"));
-				retval.add(rslocal.getString("ver") == null ? "" : rslocal.getString("ver"));
-				retval.add(rslocal.getString("hc_type") == null ? "" : rslocal.getString("hc_type"));
-				retval.add(rslocal.getString("sex").startsWith("F") ? "2" : "1");
-				retval.add(rslocal.getString("family_doctor") == null ? "" : rslocal.getString("family_doctor"));
-				retval.add(rslocal.getString("provider_no") == null ? "" : rslocal.getString("provider_no"));
-			}
-		} catch (SQLException e) {
-			_logger.error("getPatientCurBillingDemo(sql = " + sql + ")");
+		Demographic d = demographicDao.getDemographic(demoNo);
+		if(d != null) {
+			retval = new Vector();
+			retval.add(d.getLastName());
+			retval.add(d.getFirstName());
+			retval.add(d.getYearOfBirth()+d.getMonthOfBirth()+d.getDateOfBirth());
+			retval.add(d.getHin());
+			retval.add(d.getVer());
+			retval.add(d.getHcType());
+			retval.add(d.getSex().startsWith("F") ? "2" : "1");
+			retval.add(d.getFamilyDoctor() == null ? "" : d.getFamilyDoctor());
+			retval.add(d.getProviderNo() == null ? "" : d.getProviderNo());
 		}
 		return retval;
 	}
@@ -429,80 +402,68 @@ public class JdbcBillingPageUtil {
 	// name : code|dx|
 	public List getBillingFavouriteList() {
 		List retval = new Vector();
-		String sql = "select * from billing_on_favourite where deleted=false order by name ";
-		ResultSet rslocal = dbObj.searchDBRecord(sql);
-		try {
-			while (rslocal.next()) {
-				retval.add(rslocal.getString("name"));
-				retval.add(rslocal.getString("service_dx"));
-			}
-		} catch (SQLException e) {
-			_logger.error("getBillingFavouriteList(sql = " + sql + ")");
+		List<BillingONFavourite> bs = billingONFavouriteDao.findCurrent();
+		Collections.sort(bs, BillingONFavourite.NAME_COMPARATOR);
+		for(BillingONFavourite b:bs) {
+			retval.add(b.getName());
+			retval.add(b.getServiceDx());
 		}
 		return retval;
 	}
 
 	public List getBillingFavouriteOne(String name) {
 		List retval = new Vector();
-		String sql = "select * from billing_on_favourite where name='" + name + "' and deleted=false";
-		ResultSet rslocal = dbObj.searchDBRecord(sql);
-		try {
-			while (rslocal.next()) {
-				retval.add(rslocal.getString("name"));
-				retval.add(rslocal.getString("service_dx"));
-			}
-		} catch (SQLException e) {
-			_logger.error("getBillingFavouriteOne(sql = " + sql + ")");
+		List<BillingONFavourite> bs = billingONFavouriteDao.findByName(name);
+		for(BillingONFavourite b:bs) {
+			if(b.getDeleted() == 1)
+				continue;
+			retval.add(b.getName());
+			retval.add(b.getServiceDx());
 		}
 		return retval;
 	}
 
 	public int addBillingFavouriteList(String name, String list, String providerNo) {
-		int retval = 0;
-		String sql = "insert into billing_on_favourite values(\\N, '" + name + "', '" + list + "', '" + providerNo
-				+ "', \\N, 0)";
-		retval = dbObj.saveBillingRecord(sql);
-		if (retval == 0) {
-			_logger.error("addBillingFavouriteList(sql = " + sql + ")");
-		}
-		return retval;
+		BillingONFavourite b = new BillingONFavourite();
+		b.setName(name);
+		b.setServiceDx(list);
+		b.setProviderNo(providerNo);
+		b.setTimestamp(new Date());
+		b.setDeleted(0);
+		billingONFavouriteDao.persist(b);
+		
+		return b.getId();
 	}
 
 //	 @ OSCARSERVICE
 	public boolean delBillingFavouriteList(String name, String providerNo) {
-		boolean retval = true;
-		String sql = "update billing_on_favourite set deleted=true where name='" + name + "' and provider_no='" + providerNo + "'";
-		retval = dbObj.updateDBRecord(sql);
-		if (!retval) {
-			_logger.error("delBillingFavouriteList(sql = " + sql + ")");
+		List<BillingONFavourite> bs = billingONFavouriteDao.findByNameAndProviderNo(name,providerNo);
+		for(BillingONFavourite b:bs) {
+			b.setDeleted(1);
+			billingONFavouriteDao.merge(b);
 		}
-		return retval;
+		return true;
 	}
 	// @ OSCARSERVICE
 
 	public boolean updateBillingFavouriteList(String name, String list, String providerNo) {
-		boolean retval = false;
-		String sql = "update billing_on_favourite set service_dx='" + list + "', provider_no='" + providerNo
-				+ "' where name='" + name + "'";
-		retval = dbObj.updateDBRecord(sql);
-		if (!retval) {
-			_logger.error("updateBillingFavouriteList(sql = " + sql + ")");
+		List<BillingONFavourite> bs = billingONFavouriteDao.findByName(name);
+		for(BillingONFavourite b:bs) {
+			b.setServiceDx(list);
+			b.setProviderNo(providerNo);
+			billingONFavouriteDao.merge(b);
 		}
-		return retval;
+		return true;
 	}
 
 	public List getPaymentType() {
 		List retval = new Vector();
-		String sql = "select * from billing_payment_type order by id ";
-		ResultSet rslocal = dbObj.searchDBRecord(sql);
-		try {
-			while (rslocal.next()) {
-				retval.add("" + rslocal.getInt("id"));
-				retval.add(rslocal.getString("payment_type"));
-			}
-		} catch (SQLException e) {
-			_logger.error("getPaymentType(sql = " + sql + ")");
+		List<BillingPaymentType> bs = billingPaymentTypeDao.findAll();
+		for(BillingPaymentType b:bs) {
+			retval.add("" + b.getId());
+			retval.add(b.getPaymentType());
 		}
+		
 		return retval;
 	}
 

@@ -25,6 +25,8 @@
 
 package org.oscarehr.billing.CA.ON.model;
 
+import java.io.Serializable;
+import java.util.Comparator;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -36,9 +38,11 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.oscarehr.common.model.AbstractModel;
+
 @Entity
 @Table(name="billing_on_favourite")
-public class BillingONFavourite {
+public class BillingONFavourite extends AbstractModel<Integer> implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -105,5 +109,10 @@ public class BillingONFavourite {
     	this.deleted = deleted;
     }
 
+    public static final Comparator<BillingONFavourite> NAME_COMPARATOR = new Comparator<BillingONFavourite>() {
+        public int compare(BillingONFavourite p1, BillingONFavourite p2) {
+                return (p1.getName().compareTo(p2.getName()));
+        }
+};  
 
 }
