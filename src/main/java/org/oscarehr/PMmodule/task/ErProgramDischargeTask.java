@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
-import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.SecUserRole;
 import org.oscarehr.PMmodule.service.AdmissionManager;

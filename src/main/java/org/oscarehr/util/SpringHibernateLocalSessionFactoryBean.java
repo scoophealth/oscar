@@ -45,7 +45,7 @@ import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.metadata.CollectionMetadata;
 import org.hibernate.stat.Statistics;
 
-public class SpringHibernateLocalSessionFactoryBean extends org.springframework.orm.hibernate3.LocalSessionFactoryBean {
+public class SpringHibernateLocalSessionFactoryBean extends org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean {
 
 	private static final Logger logger=MiscUtils.getLogger();
 	

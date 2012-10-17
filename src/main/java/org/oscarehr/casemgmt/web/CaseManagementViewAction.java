@@ -63,7 +63,7 @@ import org.caisi.model.CustomFilter;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.PMmodule.dao.SecUserRoleDao;
-import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramTeam;
 import org.oscarehr.PMmodule.model.SecUserRole;

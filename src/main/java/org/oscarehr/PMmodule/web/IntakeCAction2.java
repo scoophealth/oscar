@@ -39,7 +39,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
-import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.PMmodule.model.Formintakec;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;

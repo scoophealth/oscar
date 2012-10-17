@@ -28,7 +28,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.web.CreateAnonymousClientAction;

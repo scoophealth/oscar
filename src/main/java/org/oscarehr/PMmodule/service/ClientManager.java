@@ -32,7 +32,7 @@ import org.oscarehr.PMmodule.dao.JointAdmissionDAO;
 import org.oscarehr.PMmodule.exception.AlreadyAdmittedException;
 import org.oscarehr.PMmodule.exception.AlreadyQueuedException;
 import org.oscarehr.PMmodule.exception.ServiceRestrictionException;
-import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.PMmodule.model.ClientReferral;
 import org.oscarehr.PMmodule.model.JointAdmission;
 import org.oscarehr.PMmodule.model.ProgramClientRestriction;

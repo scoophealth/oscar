@@ -34,10 +34,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.util.MessageResources;
-import org.oscarehr.PMmodule.dao.AdmissionDao;
-import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.common.dao.AdmissionDao;
 import org.oscarehr.common.dao.FlowsheetDao;
 import org.oscarehr.common.dao.MeasurementGroupStyleDao;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Flowsheet;
 import org.oscarehr.common.model.MeasurementGroupStyle;
 import org.oscarehr.util.LoggedInInfo;

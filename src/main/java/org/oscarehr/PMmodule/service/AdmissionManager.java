@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.oscarehr.PMmodule.dao.AdmissionDao;
 import org.oscarehr.PMmodule.dao.ClientReferralDAO;
 import org.oscarehr.PMmodule.dao.ProgramClientStatusDAO;
 import org.oscarehr.PMmodule.dao.ProgramDao;
@@ -36,7 +35,6 @@ import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.AlreadyAdmittedException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
 import org.oscarehr.PMmodule.exception.ServiceRestrictionException;
-import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.AdmissionSearchBean;
 import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.ClientReferral;
@@ -45,6 +43,8 @@ import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramClientRestriction;
 import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.model.RoomDemographic;
+import org.oscarehr.common.dao.AdmissionDao;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.transaction.annotation.Transactional;
@@ -115,7 +115,11 @@ public class AdmissionManager {
 		return dao.getCurrentAdmissionsByProgramId(Integer.valueOf(programId));
 	}
 
-    public Admission getAdmission(Long id) {
+    public Admission getAdmission(Long id) {    	
+		return dao.getAdmission(id);
+	}
+    
+    public Admission getAdmission(Integer id) {    	
 		return dao.getAdmission(id);
 	}
 

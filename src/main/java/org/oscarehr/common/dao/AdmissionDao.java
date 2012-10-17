@@ -1,6 +1,5 @@
 /**
- *
- * Copyright (c) 2005-2012. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved.
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,12 +15,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * This software was written for
- * Centre for Research on Inner City Health, St. Michael's Hospital,
- * Toronto, Ontario, Canada
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
-
-package org.oscarehr.PMmodule.dao;
+package org.oscarehr.common.dao;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,17 +29,23 @@ import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
 
+import javax.persistence.Query;
+
 import org.apache.log4j.Logger;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
-import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.model.AdmissionSearchBean;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.util.MiscUtils;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.stereotype.Repository;
 
-public class AdmissionDao extends HibernateDaoSupport {
+@Repository
+public class AdmissionDao extends AbstractDao<Admission> {
 
-    private Logger log=MiscUtils.getLogger();
+	public AdmissionDao() {
+		super(Admission.class);
+	}
+	
+private Logger log=MiscUtils.getLogger();
     
     public List<Admission> getAdmissions_archiveView(Integer programId, Integer demographicNo) {
         Admission admission = null;
@@ -52,9 +58,12 @@ public class AdmissionDao extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        String queryStr = "FROM Admission a WHERE admission_status='discharged' and a.ProgramId=? AND a.ClientId=? order by am_id DESC";
+        String queryStr = "select a FROM Admission a WHERE a.admissionStatus='discharged' and a.programId=? AND a.clientId=? order by a.id DESC";
+        Query query = entityManager.createQuery(queryStr);
+        query.setParameter(1, programId);
+        query.setParameter(2, demographicNo);
         @SuppressWarnings("unchecked")
-        List<Admission> rs = getHibernateTemplate().find(queryStr, new Object[] { programId, demographicNo });
+        List<Admission> rs = query.getResultList();
         /*
         if (!rs.isEmpty()) {
             admission = ((Admission) rs.get(0));
@@ -77,9 +86,12 @@ public class AdmissionDao extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        String queryStr = "FROM Admission a WHERE a.ProgramId=? AND a.ClientId=?";
+        String queryStr = "select a FROM Admission a WHERE a.programId=? AND a.clientId=?";
+        Query query = entityManager.createQuery(queryStr);
+        query.setParameter(1, programId);
+        query.setParameter(2, demographicNo);
         @SuppressWarnings("unchecked")
-        List<Admission> rs = getHibernateTemplate().find(queryStr, new Object[] { programId, demographicNo });
+        List<Admission> rs = query.getResultList();
 
         if (!rs.isEmpty()) {
             admission = rs.get(0);
@@ -103,9 +115,15 @@ public class AdmissionDao extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        String queryStr = "FROM Admission a WHERE a.ProgramId=? AND a.ClientId=? AND a.AdmissionStatus='current' ORDER BY a.AdmissionDate DESC";
+        String queryStr = "select a FROM Admission a WHERE a.programId=? AND a.clientId=? AND a.admissionStatus='current' ORDER BY a.admissionDate DESC";
+        
+        Query query = entityManager.createQuery(queryStr);
+        query.setParameter(1, programId);
+        query.setParameter(2, demographicNo);
+        
         @SuppressWarnings("unchecked")
-        List<Admission> rs = getHibernateTemplate().find(queryStr, new Object[] { programId, demographicNo });
+        List<Admission> rs = query.getResultList();
+        
 
         if (!rs.isEmpty()) {
             admission =  rs.get(0);
@@ -119,10 +137,13 @@ public class AdmissionDao extends HibernateDaoSupport {
     }
 
     public List<Admission> getAdmissions() {
-        String queryStr = "FROM Admission a ORDER BY a.AdmissionDate DESC";
+        String queryStr = "select a FROM Admission a ORDER BY a.admissionDate DESC";
+        
+        Query query = entityManager.createQuery(queryStr);
+        
         @SuppressWarnings("unchecked")
-        List<Admission> rs = getHibernateTemplate().find(queryStr);
-
+        List<Admission> rs = query.getResultList();
+        
         if (log.isDebugEnabled()) {
             log.debug("getAdmissions # of admissions: " + rs.size());
         }
@@ -135,9 +156,12 @@ public class AdmissionDao extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        String queryStr = "FROM Admission a WHERE a.ClientId=? ORDER BY a.AdmissionDate DESC";
+        String queryStr = "select a FROM Admission a WHERE a.clientId=? ORDER BY a.admissionDate DESC";
+        Query query = entityManager.createQuery(queryStr);
+        query.setParameter(1, demographicNo);
+        
         @SuppressWarnings("unchecked")
-        List<Admission> rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
+        List<Admission> rs = query.getResultList();
 
         if (log.isDebugEnabled()) {
             log.debug("getAdmissions for clientId " + demographicNo + ", # of admissions: " + rs.size());
@@ -151,9 +175,12 @@ public class AdmissionDao extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        String queryStr = "FROM Admission a WHERE a.ClientId=? ORDER BY a.AdmissionDate ASC";
+        String queryStr = "select a FROM Admission a WHERE a.clientId=? ORDER BY a.admissionDate ASC";
+        Query query = entityManager.createQuery(queryStr);
+        query.setParameter(1, demographicNo);
+        
         @SuppressWarnings("unchecked")
-        List<Admission> rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
+        List<Admission> rs = query.getResultList();
 
         if (log.isDebugEnabled()) {
             log.debug("getAdmissions for clientId " + demographicNo + ", # of admissions: " + rs.size());
@@ -171,10 +198,14 @@ public class AdmissionDao extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        String queryStr = "FROM Admission a WHERE a.ClientId=? and a.ProgramId in " +
-           "(select s.id from Program s where s.facilityId=? or s.facilityId is null) ORDER BY a.AdmissionDate DESC";
+        String queryStr = "select a FROM Admission a WHERE a.clientId=? and a.programId in " +
+           "(select s.id from Program s where s.facilityId=? or s.facilityId is null) ORDER BY a.admissionDate DESC";
+        Query query = entityManager.createQuery(queryStr);
+        query.setParameter(1, demographicNo);
+        query.setParameter(2, facilityId);
+        
         @SuppressWarnings("unchecked")
-        List<Admission> rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo, facilityId });
+        List<Admission> rs = query.getResultList();
 
         if (log.isDebugEnabled()) {
             log.debug("getAdmissionsByFacility for clientId " + demographicNo + ", # of admissions: " + rs.size());
@@ -198,10 +229,15 @@ public class AdmissionDao extends HibernateDaoSupport {
         
         Date sevenDaysAgo = calendar.getTime();
         
-        String queryStr = "FROM Admission a WHERE a.ProgramId=? and a.AutomaticDischarge=? and a.DischargeDate>= ? ORDER BY a.DischargeDate DESC";
+        String queryStr = "select a FROM Admission a WHERE a.programId=? and a.automaticDischarge=? and a.dischargeDate>= ? ORDER BY a.dischargeDate DESC";
 
+        Query query = entityManager.createQuery(queryStr);
+        query.setParameter(1, programId);
+        query.setParameter(2, automaticDischarge);
+        query.setParameter(3, sevenDaysAgo);
+        
         @SuppressWarnings("unchecked")
-        List<Admission> rs = getHibernateTemplate().find(queryStr, new Object[] { programId, automaticDischarge, sevenDaysAgo });
+        List<Admission> rs = query.getResultList();
 
         if (log.isDebugEnabled()) {
             log.debug("getAdmissions for programId " + programId + ", # of admissions: " + rs.size());
@@ -215,9 +251,12 @@ public class AdmissionDao extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        String queryStr = "FROM Admission a WHERE a.ClientId=? AND a.AdmissionStatus='current' ORDER BY a.AdmissionDate DESC";
+        String queryStr = "select a FROM Admission a WHERE a.clientId=? AND a.admissionStatus='current' ORDER BY a.admissionDate DESC";
+        Query query = entityManager.createQuery(queryStr);
+        query.setParameter(1, demographicNo);
+        
         @SuppressWarnings("unchecked")
-        List<Admission> rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
+        List<Admission> rs = query.getResultList();
 
         if (log.isDebugEnabled()) {
             log.debug("getCurrentAdmissions for clientId " + demographicNo + ", # of admissions: " + rs.size());
@@ -232,9 +271,12 @@ public class AdmissionDao extends HibernateDaoSupport {
 			throw new IllegalArgumentException();
 		}
 
-		String queryStr = "FROM Admission a WHERE a.ClientId=? AND a.AdmissionStatus='discharged' ORDER BY a.AdmissionDate DESC";
-		@SuppressWarnings("unchecked")
-		List<Admission> dischargedAdmissions = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
+		String queryStr = "select a FROM Admission a WHERE a.clientId=? AND a.admissionStatus='discharged' ORDER BY a.admissionDate DESC";
+        Query query = entityManager.createQuery(queryStr);
+        query.setParameter(1, demographicNo);
+        
+        @SuppressWarnings("unchecked")
+        List<Admission> dischargedAdmissions = query.getResultList();
 
 		if (log.isDebugEnabled()) {
 			log.debug("getDischargedAdmissions for clientId " + demographicNo + ", # of admissions: " + dischargedAdmissions.size());
@@ -270,11 +312,14 @@ public class AdmissionDao extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        String queryStr = "FROM Admission a WHERE a.ClientId=? and a.ProgramId in " +
-           "(select s.id from Program s where s.facilityId=? or s.facilityId is null) AND a.AdmissionStatus='current' ORDER BY a.AdmissionDate DESC";
+        String queryStr = "select a FROM Admission a WHERE a.clientId=? and a.programId in " +
+           "(select s.id from Program s where s.facilityId=? or s.facilityId is null) AND a.admissionStatus='current' ORDER BY a.admissionDate DESC";
 
+        Query query = entityManager.createQuery(queryStr);
+        query.setParameter(1, demographicNo);
+        query.setParameter(2, facilityId);
         @SuppressWarnings("unchecked")
-        List<Admission> rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo, facilityId });
+        List<Admission> rs = query.getResultList();
 
         if (log.isDebugEnabled()) {
             log.debug("getCurrentAdmissionsByFacility for clientId " + demographicNo + ", # of admissions: " + rs.size());
@@ -294,25 +339,23 @@ public class AdmissionDao extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        String queryStr = "FROM Admission a WHERE a.ClientId=? AND a.AdmissionStatus='current' ORDER BY a.AdmissionDate DESC";
+        String queryStr = "select a FROM Admission a WHERE a.clientId=? AND a.admissionStatus='current' ORDER BY a.admissionDate DESC";
 
+        Query query = entityManager.createQuery(queryStr);
+        query.setParameter(1, demographicNo);
+        
         Admission admission = null;
-        List<Admission> rs = new ArrayList<Admission>();
-        try{
-          rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
-        }catch(org.springframework.orm.hibernate3.HibernateObjectRetrievalFailureException ex)
-        {
-        	;
-        }
+        List<Admission> rs = query.getResultList();
+        
 
         if (rs.isEmpty()) {
             return null;
         }
 
-        ListIterator listIterator = rs.listIterator();
+        ListIterator<Admission> listIterator = rs.listIterator();
         while (listIterator.hasNext()) {
             try {
-                admission = (Admission) listIterator.next();
+                admission = listIterator.next();
                 if (programDAO.isExternalProgram(admission.getProgramId())) {
                     return admission;
                 }
@@ -335,24 +378,21 @@ public class AdmissionDao extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        String queryStr = "FROM Admission a WHERE a.ClientId=? AND a.AdmissionStatus='current' ORDER BY a.AdmissionDate DESC";
-
+        String queryStr = "select a FROM Admission a WHERE a.clientId=? AND a.admissionStatus='current' ORDER BY a.admissionDate DESC";
+        Query query = entityManager.createQuery(queryStr);
+        query.setParameter(1, demographicNo);
         Admission admission = null;
-        List<Admission> rs = new ArrayList<Admission>();
-        try{
-          rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
-        }catch(org.springframework.orm.hibernate3.HibernateObjectRetrievalFailureException ex){
-        	;
-        }
+        List<Admission> rs = query.getResultList();
+        
         
         if (rs.isEmpty()) {
             return null;
         }
 
-        ListIterator listIterator = rs.listIterator();
+        ListIterator<Admission> listIterator = rs.listIterator();
         while (listIterator.hasNext()) {
             try {
-                admission = (Admission) listIterator.next();
+                admission =  listIterator.next();
                 if (programDAO.isBedProgram(admission.getProgramId())) {
                     return admission;
                 }
@@ -374,24 +414,21 @@ public class AdmissionDao extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        String queryStr = "FROM Admission a WHERE a.ClientId=? AND a.AdmissionStatus='current' ORDER BY a.AdmissionDate DESC";
-
+        String queryStr = "select a FROM Admission a WHERE a.clientId=? AND a.admissionStatus='current' ORDER BY a.admissionDate DESC";
+        Query query = entityManager.createQuery(queryStr);
+        query.setParameter(1, demographicNo);
+        
         Admission admission = null;
         List<Admission> admissions = new ArrayList<Admission>();
-        List<Admission> rs = new ArrayList<Admission>();
-        try{
-          rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
-        }catch(org.springframework.orm.hibernate3.HibernateObjectRetrievalFailureException ex){
-        	;
-        }
+        List<Admission> rs = query.getResultList();        
 
         if (rs.isEmpty()) {
             return null;
         }
-        ListIterator listIterator = rs.listIterator();
+        ListIterator<Admission> listIterator = rs.listIterator();
         while (listIterator.hasNext()) {
             try {
-                admission = (Admission) listIterator.next();
+                admission = listIterator.next();
                 if (programDAO.isServiceProgram(admission.getProgramId())) {
                     admissions.add(admission);
                 }
@@ -412,25 +449,21 @@ public class AdmissionDao extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        String queryStr = "FROM Admission a WHERE a.ClientId=? AND a.AdmissionStatus='current' ORDER BY a.AdmissionDate DESC";
-
+        String queryStr = "select a FROM Admission a WHERE a.clientId=? AND a.admissionStatus='current' ORDER BY a.admissionDate DESC";
+        Query query = entityManager.createQuery(queryStr);
+        query.setParameter(1, demographicNo);
+        
         Admission admission = null;
-        List<Admission> rs = new ArrayList<Admission>();
-        try{
-           rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
-        }catch(org.springframework.orm.hibernate3.HibernateObjectRetrievalFailureException ex)
-        {
-          ;
-        }
+        List<Admission> rs = query.getResultList();        
 
         if (rs.isEmpty()) {
             return null;
         }
 
-        ListIterator listIterator = rs.listIterator();
+        ListIterator<Admission> listIterator = rs.listIterator();
         while (listIterator.hasNext()) {
             try {
-                admission = (Admission) listIterator.next();
+                admission = listIterator.next();
                 if (programDAO.isCommunityProgram(admission.getProgramId())) {
                     return admission;
                 }
@@ -446,8 +479,10 @@ public class AdmissionDao extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
+        Query query = entityManager.createQuery("select a from Admission a where a.programId = ? and a.admissionStatus='current'");
+        query.setParameter(1, programId);
         @SuppressWarnings("unchecked")
-        List<Admission> results = this.getHibernateTemplate().find("from Admission a where a.ProgramId = ? and a.AdmissionStatus='current'", programId);
+        List<Admission> results = query.getResultList();
 
         if (log.isDebugEnabled()) {
             log.debug("getCurrentAdmissionsByProgramId for programId " + programId + ", # of admissions: " + results.size());
@@ -465,7 +500,7 @@ public class AdmissionDao extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        Admission admission = this.getHibernateTemplate().get(Admission.class, id);
+        Admission admission= entityManager.find(Admission.class, id);        
 
         if (log.isDebugEnabled()) {
             log.debug("getAdmission: id= " + id + ", found: " + (admission != null));
@@ -479,9 +514,8 @@ public class AdmissionDao extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        getHibernateTemplate().saveOrUpdate(admission);
-        getHibernateTemplate().flush();
-
+        this.saveEntity(admission);
+        
         if (log.isDebugEnabled()) {
             log.debug("saveAdmission: id= " + admission.getId());
         }
@@ -496,8 +530,11 @@ public class AdmissionDao extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
+        Query query = entityManager.createQuery("select a from Admission a where a.programId = ? and a.teamId = ? and a.admissionStatus='current'");
+        query.setParameter(1, programId);
+        query.setParameter(2, teamId);
         @SuppressWarnings("unchecked")
-        List<Admission> results = this.getHibernateTemplate().find("from Admission a where a.ProgramId = ? and a.TeamId = ? and a.AdmissionStatus='current'", new Object[] { programId, teamId });
+        List<Admission> results = query.getResultList();
 
         if (log.isDebugEnabled()) {
             log.debug("getAdmissionsInTeam: programId= " + programId + ",teamId=" + teamId + ",# results=" + results.size());
@@ -512,8 +549,10 @@ public class AdmissionDao extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
+        Query query = entityManager.createQuery("select a from Admission a where a.temporaryAdmission = true and a.admissionStatus='current' and a.clientId = ?");
+        query.setParameter(1, demographicNo);
         @SuppressWarnings("unchecked")
-        List<Admission> results = this.getHibernateTemplate().find("from Admission a where a.TemporaryAdmission = true and a.AdmissionStatus='current' and a.ClientId = ?", demographicNo);
+        List<Admission> results = query.getResultList();
 
         if (!results.isEmpty()) {
             result = results.get(0);
@@ -532,28 +571,41 @@ public class AdmissionDao extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        Criteria criteria = getSession().createCriteria(Admission.class);
+        List<Object>params = new ArrayList<Object>();
+        StringBuilder queryStr = new StringBuilder();
+        queryStr.append("select a from Admission a ");        
 
         if (searchBean.getProviderNo() != null && searchBean.getProviderNo().length()>0) {
-            criteria.add(Restrictions.eq("ProviderNo", searchBean.getProviderNo()));
+        	queryStr.append("where a.providerNo = ? ");
+        	params.add(searchBean.getProviderNo());
         }
 
         if (searchBean.getAdmissionStatus() != null && searchBean.getAdmissionStatus().length() > 0) {
-            criteria.add(Restrictions.eq("AdmissionStatus", searchBean.getAdmissionStatus()));
+        	queryStr.append(" and a.admissionStatus = ? ");
+        	params.add(searchBean.getAdmissionStatus());            
         }
 
         if (searchBean.getClientId() != null && searchBean.getClientId() > 0) {
-            criteria.add(Restrictions.eq("ClientId", searchBean.getClientId()));
+        	queryStr.append(" and a.clientId = ? ");
+        	params.add(searchBean.getClientId());            
         }
 
         if (searchBean.getProgramId() != null && searchBean.getProgramId() > 0) {
-            criteria.add(Restrictions.eq("ProgramId", searchBean.getProgramId()));
+        	queryStr.append(" and a.programId = ? ");
+        	params.add(searchBean.getProgramId());            
         }
 
         if (searchBean.getStartDate() != null && searchBean.getEndDate() != null) {
-            criteria.add(Restrictions.between("AdmissionDate", searchBean.getStartDate(), searchBean.getEndDate()));
+        	queryStr.append(" and a.admissionDate >= ? and a.admissionDate <= ?");
+        	params.add(searchBean.getStartDate());
+        	params.add(searchBean.getEndDate());            
         }
-        List results = criteria.list();
+        
+        Query query = entityManager.createQuery(queryStr.toString());
+        for( int idx = 1; idx <= params.size(); ++idx ) {
+        	query.setParameter(idx, params.get(idx-1));
+        }
+        List<Admission> results = query.getResultList();
 
         if (log.isDebugEnabled()) {
             log.debug("search: # of results: " + results.size());
@@ -563,9 +615,13 @@ public class AdmissionDao extends HibernateDaoSupport {
     }
 
     public List<Admission> getClientIdByProgramDate(int programId, Date dt) {
-        String q = "FROM Admission a WHERE a.programId=? and a.admissionDate<=? and (a.dischargeDate>=? or (a.dischargeDate is null))";
+        String q = "select a FROM Admission a WHERE a.programId=? and a.admissionDate<=? and (a.dischargeDate>=? or (a.dischargeDate is null))";
+        Query query = entityManager.createQuery(q);
+        query.setParameter(1, programId);
+        query.setParameter(2, dt);
+        query.setParameter(3, dt);
         @SuppressWarnings("unchecked")
-        List<Admission> rs = this.getHibernateTemplate().find(q, new Object[] { new Integer(programId), dt, dt });
+        List<Admission> rs = query.getResultList();
         return rs;
     }
     
@@ -577,9 +633,13 @@ public class AdmissionDao extends HibernateDaoSupport {
         if (demographicId == null || demographicId <= 0) {
             throw new IllegalArgumentException();
         }
-
+        
+        Query query = entityManager.createQuery("select a from Admission a where a.programId = ? and a.clientId = ? and a.admissionStatus='discharged' order by a.id DESC");
+        query.setParameter(1, programId);
+        query.setParameter(2, demographicId);
+        
         @SuppressWarnings("unchecked")
-        List<Admission> results = this.getHibernateTemplate().find("from Admission a where a.ProgramId = ? and a.ClientId = ? and a.AdmissionStatus='discharged' order by a.Id DESC", new Object[] { programId, demographicId });
+        List<Admission> results = query.getResultList();
         if(results.isEmpty())
             return 0;
         
@@ -610,10 +670,14 @@ public class AdmissionDao extends HibernateDaoSupport {
      * The startDate is inclusive and end date is exclusive.
      */
     public List<Admission> getAdmissionsByProgramAndAdmittedDate(int programId, Date startDate, Date endDate) {
-		String q = "FROM Admission a WHERE a.ProgramId=? and a.AdmissionDate>=? and a.AdmissionDate<?";
-
+		String q = "select a FROM Admission a WHERE a.programId=? and a.admissionDate>=? and a.admissionDate<?";
+		Query query = entityManager.createQuery(q);
+		query.setParameter(1, programId);
+		query.setParameter(2, startDate);
+		query.setParameter(3, endDate);
+		
 		@SuppressWarnings("unchecked")
-        List<Admission> rs = this.getHibernateTemplate().find(q, new Object[] { new Integer(programId), startDate, endDate });
+        List<Admission> rs = query.getResultList();
         
 		return rs;    	
     }
@@ -637,10 +701,14 @@ public class AdmissionDao extends HibernateDaoSupport {
 		//	y-         S------>E
 		//	y-   S------------>E
 
-		String q = "FROM Admission a WHERE a.ProgramId=? and a.AdmissionDate<=? and (a.DischargeDate>=? or a.DischargeDate is null)";
-
+		String q = "select a FROM Admission a WHERE a.programId=? and a.admissionDate<=? and (a.dischargeDate>=? or a.dischargeDate is null)";
+		Query query = entityManager.createQuery(q);
+		query.setParameter(1, programId);
+		query.setParameter(2, endDate);
+		query.setParameter(3, startDate);
+		
 		@SuppressWarnings("unchecked")
-        List<Admission> rs = this.getHibernateTemplate().find(q, new Object[] { new Integer(programId), endDate, startDate });
+        List<Admission> rs = query.getResultList();
         
 		return rs;
     }
@@ -658,13 +726,16 @@ public class AdmissionDao extends HibernateDaoSupport {
      * get demographics according to their program, admit time, discharge time, ordered by lastname and first name
      */
     public List getActiveAnonymousAdmissions() {
+    	String status = "AC"; // only show active clients
         // get duplicated clients from this sql
-        String q = "Select a From Demographic d, Admission a " + "Where d.anonymous = ? and (d.PatientStatus=? or d.PatientStatus='' or d.PatientStatus=null) and d.DemographicNo=a.ClientId and a.AdmissionStatus='current' and a.programType != 'community'";                 
-
-        String status = "AC"; // only show active clients
-        List rs = getHibernateTemplate().find(q, new Object[] { "one-time-anonymous",status});
+        String q = "Select a From Demographic d, Admission a " + "Where d.anonymous = ? and (d.PatientStatus=? or d.PatientStatus='' or d.PatientStatus=null) and d.DemographicNo=a.clientId and a.admissionStatus='current' and a.program.type != 'community'";                 
+        Query query = entityManager.createQuery(q);
+        query.setParameter(1, "one-time-anonymous");
+        query.setParameter(2, status);
+        
+        List rs = query.getResultList();
 
         return rs;
     }
-   
+
 }

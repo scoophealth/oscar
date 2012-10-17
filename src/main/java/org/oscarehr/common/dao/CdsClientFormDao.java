@@ -45,6 +45,7 @@ public class CdsClientFormDao extends AbstractDao<CdsClientForm> {
 		query.setMaxResults(1);
 		query.setParameter(1, facilityId);
 		query.setParameter(2, clientId);
+		query.setMaxResults(1);
 		
 		return getSingleResultOrNull(query);
 	}

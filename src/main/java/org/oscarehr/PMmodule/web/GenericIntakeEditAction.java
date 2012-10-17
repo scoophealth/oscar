@@ -52,7 +52,6 @@ import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
 import org.oscarehr.PMmodule.exception.ServiceRestrictionException;
-import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeNode;
@@ -70,6 +69,7 @@ import org.oscarehr.caisi_integrator.ws.Referral;
 import org.oscarehr.caisi_integrator.ws.ReferralWs;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
 import org.oscarehr.casemgmt.model.ClientImage;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -110,7 +110,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		String providerNo = getProviderNo(request);
 
 		Intake intake = null;
-
+		MiscUtils.getLogger().debug("INTAKE TYPE " + intakeType);
 		if (Intake.QUICK.equalsIgnoreCase(intakeType)) {
 			intake = genericIntakeManager.createQuickIntake(providerNo);
 		}
@@ -121,6 +121,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 			intake = genericIntakeManager.createProgramIntake(getProgramId(request), providerNo);
 		}
 
+		MiscUtils.getLogger().debug("INTAKE IS NULL " + String.valueOf(intake == null));
 		List<IntakeNodeJavascript> jsLocation = genericIntakeManager.getIntakeNodeJavascriptLocation(intake.getNode().getQuestionId());
 		
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();

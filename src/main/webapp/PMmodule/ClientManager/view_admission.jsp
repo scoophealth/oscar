@@ -1,5 +1,5 @@
 <%@ page import="org.apache.struts.validator.DynaValidatorForm"%>
-<%@ page import="org.oscarehr.PMmodule.model.Admission"%>
+<%@ page import="org.oscarehr.common.model.Admission"%>
 <%@ page import="org.oscarehr.PMmodule.model.DischargeReason"%>
 
 <%--

@@ -55,19 +55,19 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
 import org.caisi.dao.TicklerDAO;
 import org.caisi.model.Tickler;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.oscarehr.PMmodule.dao.AdmissionDao;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.dao.SecUserRoleDao;
-import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.SecUserRole;
@@ -82,6 +82,7 @@ import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.common.dao.utils.SchemaUtils;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.BillingONCHeader1;
@@ -107,8 +108,9 @@ import com.quatro.dao.security.SecurityDao;
 import com.quatro.model.security.Security;
 
 public class OntarioMDSpec4DataTest extends DaoTestFixtures {
-
-
+	private AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
+	private Integer oscarProgramID;
+	
 	@Before
 	public void before() throws Exception {
 		SchemaUtils.restoreAllTables();
@@ -127,6 +129,9 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		document.setStatus(status);
 		document.setContenttype(contenttype);
 		document.setPublic(public1.byteValue());
+		document.setNumberOfPages(number_of_pages);
+		document.setResponsible(responsible);
+		document.setProgramId(program_id);
 		return document;
  }
 
@@ -168,6 +173,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		admission.setProviderNo(demographic.getProviderNo());
 		admission.setAdmissionDate(admDate);
 		admission.setAdmissionStatus("current");
+		admission.setTeamId(null);
 		return admission;
 	}
 
@@ -576,7 +582,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 	    	return measurement;
 		}
 
-		DemographicContact getDemographicContact(Integer demographicNo, String contactId,Date created,Integer type,String category,String role,String sdm,String ec){
+		DemographicContact getDemographicContact(Integer demographicNo, String creator, String contactId,Date created,Integer type,String category,String role,String sdm,String ec){
 			DemographicContact demographicContact = new DemographicContact();
 	    	demographicContact.setDemographicNo(demographicNo);
 	    	demographicContact.setContactId(contactId);
@@ -585,7 +591,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 	    	demographicContact.setType(type);
 	    	demographicContact.setCategory(category);
 	    	demographicContact.setRole(role);
-
+	    	demographicContact.setCreator(creator);
 	    	demographicContact.setSdm(sdm);
 	    	demographicContact.setEc(ec);
 	    	return demographicContact;
@@ -648,14 +654,22 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 	@Test
 	public void test() {
 		setupOntarioMDSpec4Data();
+		
+		Calendar cal = Calendar.getInstance();
+		Date today = cal.getTime();
+		cal.set(Calendar.YEAR, -20);
+		Date referenceDate = cal.getTime();
+		
+		List<Admission>admissions = admissionDao.getAdmissionsByProgramAndAdmittedDate(oscarProgramID, referenceDate, today);
+		Assert.assertTrue("Admissions should not be empty", !admissions.isEmpty());
+		
 	}
 
 	public void setupOntarioMDSpec4Data(){
 		OscarAppointmentDao appointmentDao=(OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
 		ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 		DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
-		DxresearchDAO dxResearchDAO = (DxresearchDAO) SpringUtils.getBean("dxresearchDAO");
-		AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
+		DxresearchDAO dxResearchDAO = (DxresearchDAO) SpringUtils.getBean("dxresearchDAO");		
 		ProgramProviderDAO programProviderDAO = (ProgramProviderDAO) SpringUtils.getBean("programProviderDAO");
 		CaseManagementNoteDAO  caseManagementNoteDAO = (CaseManagementNoteDAO) SpringUtils.getBean("caseManagementNoteDAO");
 		IssueDAO issueDao = (IssueDAO) SpringUtils.getBean("IssueDAO");
@@ -675,7 +689,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		AllergyDao allergyDao = (AllergyDao) SpringUtils.getBean("allergyDao");
 		DocumentDAO documentDao = (DocumentDAO) SpringUtils.getBean("documentDAO");
 
-		Integer oscarProgramID = programDao.getProgramIdByProgramName("OSCAR");
+		oscarProgramID = programDao.getProgramIdByProgramName("OSCAR");
 
 		if(oscarProgramID == null){
 			Program program = new Program();
@@ -800,6 +814,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 
 
 		providerDao.saveProvider(drw);
+		MiscUtils.getLogger().info("WELBY PROVIDER NO " + drw.getProviderNo());
 		providerDao.saveProvider(drl);
 		providerDao.saveProvider(drk);
 		providerDao.saveProvider(drt);
@@ -1003,6 +1018,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		/*Patient1: Mr. Eric Idle, OHN:1123581314, Version Code: AB;DOB: 31/May/1958; Sex M: No activity for 10 years.Diagnosed with Type2 Diabetes.Adverse Reaction: Penicillin*/
 		Demographic ericIdle = getDemographic("Mr","Idle", "Eric",  "1123581314", "AB", "1958", "05", "31", "M", address, city, province, postal, phone, "AC", "RO", drw.getProviderNo());
 		demographicDao.save(ericIdle);
+		MiscUtils.getLogger().info("Saving to admission");
 		admissionDao.saveAdmission(getAdmission(ericIdle,referenceDate, oscarProgramID));
 
 		MiscUtils.getLogger().info("Adding Eric Idle");
@@ -1216,14 +1232,14 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
         	MiscUtils.getLogger().error("Error",juneElderLabReq);
         }
 
-        Document document = getDocument("lab","Example text document","","exampleDoc.txt",drw.getProviderNo(),null,null,-1,tenYearsAgo,"A","text/plain",0,tenYearsAgo,null,null,0,0);
+        Document document = getDocument("lab","Example text document","","exampleDoc.txt",drw.getProviderNo(),drw.getProviderNo(),null,-1,tenYearsAgo,"A","text/plain",0,tenYearsAgo,null,null,0,0);
         documentDao.save(document);
 
         CtlDocument cltDocument =  getCtlDocument("demographic",juneElder.getDemographicNo(),Integer.parseInt(""+document.getId()),"A");
         MiscUtils.getLogger().info(" ctldoc "+cltDocument.toString());
         documentDao.saveCtlDocument(cltDocument);
 
-        document = getDocument("lab","Example text JPG","","exampleJPG.jpg",drw.getProviderNo(),null,null,-1,tenYearsAgo,"A","image/jpeg",0,tenYearsAgo,null,null,0,0);
+        document = getDocument("lab","Example text JPG","","exampleJPG.jpg",drw.getProviderNo(),drw.getProviderNo(),null,-1,tenYearsAgo,"A","image/jpeg",0,tenYearsAgo,null,null,0,0);
         documentDao.save(document);
 
         cltDocument =  getCtlDocument("demographic",juneElder.getDemographicNo(),Integer.parseInt(""+document.getId()),"A");
@@ -1233,7 +1249,8 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
         //Aug 12, 2005 Aug 12, 2005 Aug 12, 2005     Glyburide 1 2.5 mg qd 10 10 tab oral DRW
         Date aug122005 = getDate("2005-08-12");
         Appointment app = getAppointment(aug122005, 10, 15,15,tenYearsAgo,drw.getProviderNo(),juneElder,drw.getProviderNo(),"t");
-    	appointmentDao.persist(app);
+        appointmentDao.persist(app);
+        
     	CaseManagementNote juneElderAugNote =getCaseManagementNote(aug122005,juneElder,drw.getProviderNo(),"Rx Glyburide",oscarProgramID, null);
     	juneElderAugNote.setAppointmentNo(app.getId());
 		caseManagementNoteDAO.saveNote(juneElderAugNote);
@@ -2464,7 +2481,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	demographicDao.save(conanCopper);
     	admissionDao.saveAdmission(getAdmission(conanCopper,referenceDate, oscarProgramID));
 
-    	DemographicContact demographicContact = getDemographicContact(coleenCopper.getDemographicNo(), ""+conanCopper.getDemographicNo(),referenceDate,1,"personal","Husband","true","true");
+    	DemographicContact demographicContact = getDemographicContact(coleenCopper.getDemographicNo(), drw.getProviderNo(), ""+conanCopper.getDemographicNo(),referenceDate,1,"personal","Husband","true","true");
     	demographicContactDao.persist(demographicContact);
 
     	Demographic leanneLennon = getDemographic(null,"Lennon", "Leanne",hin, ver, "1900", "01", "01", "M", address, city, province, postal, "647.112.2334", "NA", "NR", drs.getProviderNo());
@@ -2473,7 +2490,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	admissionDao.saveAdmission(getAdmission(leanneLennon,referenceDate, oscarProgramID));
 
 
-    	demographicContact = getDemographicContact(coleenCopper.getDemographicNo(), ""+leanneLennon.getDemographicNo(),referenceDate,1,"personal","Sister","false","false");
+    	demographicContact = getDemographicContact(coleenCopper.getDemographicNo(),drw.getProviderNo(), ""+leanneLennon.getDemographicNo(),referenceDate,1,"personal","Sister","false","false");
     	demographicContactDao.persist(demographicContact);
 
     	Demographic claireCopper = getDemographic("Mr","Copper", "Claire",hin, ver, "1900", "01", "01", "M", address, city, province, postal, "416.112.2334", "NA", "NR", drs.getProviderNo());
@@ -2483,7 +2500,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	admissionDao.saveAdmission(getAdmission(claireCopper,referenceDate, oscarProgramID));
 
 
-    	demographicContact = getDemographicContact(coleenCopper.getDemographicNo(), ""+claireCopper.getDemographicNo(),referenceDate,1,"personal","Daughter","false","false");
+    	demographicContact = getDemographicContact(coleenCopper.getDemographicNo(), drw.getProviderNo(), ""+claireCopper.getDemographicNo(),referenceDate,1,"personal","Daughter","false","false");
     	demographicContactDao.persist(demographicContact);
 
     	//fam med hx

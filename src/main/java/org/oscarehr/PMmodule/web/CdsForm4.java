@@ -31,14 +31,14 @@ import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
-import org.oscarehr.PMmodule.dao.AdmissionDao;
-import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.common.Gender;
+import org.oscarehr.common.dao.AdmissionDao;
 import org.oscarehr.common.dao.CdsClientFormDao;
 import org.oscarehr.common.dao.CdsClientFormDataDao;
 import org.oscarehr.common.dao.CdsFormOptionDao;
 import org.oscarehr.common.dao.CdsHospitalisationDaysDao;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.CdsClientForm;
 import org.oscarehr.common.model.CdsClientFormData;
 import org.oscarehr.common.model.CdsFormOption;

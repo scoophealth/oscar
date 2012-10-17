@@ -39,11 +39,11 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
-import org.oscarehr.PMmodule.dao.AdmissionDao;
+import org.oscarehr.common.dao.AdmissionDao;
 import org.oscarehr.PMmodule.dao.GenericIntakeDAO;
 import org.oscarehr.PMmodule.dao.GenericIntakeNodeDAO;
 import org.oscarehr.PMmodule.dao.ProgramDao;
-import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeAnswer;

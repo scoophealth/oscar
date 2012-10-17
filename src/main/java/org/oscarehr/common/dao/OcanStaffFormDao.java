@@ -45,6 +45,7 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
 		query.setParameter(2, clientId);
 		query.setParameter(3, "Completed");
 		query.setParameter(4, "IA");
+		query.setMaxResults(1);
 				
 		return getSingleResultOrNull(query);
 	}
@@ -60,6 +61,7 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
 		query.setParameter(2, clientId);
 		query.setParameter(3, "Completed");
 		query.setParameter(4, "RA");
+		query.setMaxResults(1);
 				
 		return getSingleResultOrNull(query);
 	}
@@ -73,6 +75,7 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
 		query.setParameter(2, clientId);
 		query.setParameter(3, "Completed");
 		query.setParameter(4, "DIS");
+		query.setMaxResults(1);
 				
 		return getSingleResultOrNull(query);
 	}
@@ -86,6 +89,7 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
 		query.setParameter(2, clientId);
 		//query.setParameter(3, "In Progress");
 		query.setParameter(4, ocanType);
+		query.setMaxResults(1);
 		
 		return getSingleResultOrNull(query);
 	}
@@ -98,6 +102,7 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
 		query.setParameter(1, facilityId);
 		query.setParameter(2, clientId);
 		query.setParameter(3, "Completed");
+		query.setMaxResults(1);
 		//query.setParameter(4, ocanType);
 		
 		return getSingleResultOrNull(query);
@@ -112,6 +117,7 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
           query.setParameter(2, clientId);
           query.setParameter(3, "Completed");
           query.setParameter(4, ocanType);
+          query.setMaxResults(1);
 
           return getSingleResultOrNull(query);
   }
@@ -314,6 +320,7 @@ public List<OcanStaffForm> findUnsubmittedOcanFormsByOcanType(Integer facilityId
 
 		query.setParameter(1, facilityId);
 		query.setParameter(2, assessmentId);
+		query.setMaxResults(1);
 
 		return getSingleResultOrNull(query);
 

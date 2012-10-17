@@ -32,8 +32,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
-import org.oscarehr.PMmodule.dao.AdmissionDao;
-import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.common.dao.AdmissionDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.OcanClientFormDao;
 import org.oscarehr.common.dao.OcanClientFormDataDao;
@@ -41,6 +40,7 @@ import org.oscarehr.common.dao.OcanConnexOptionDao;
 import org.oscarehr.common.dao.OcanFormOptionDao;
 import org.oscarehr.common.dao.OcanStaffFormDao;
 import org.oscarehr.common.dao.OcanStaffFormDataDao;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.OcanClientForm;
 import org.oscarehr.common.model.OcanConnexOption;

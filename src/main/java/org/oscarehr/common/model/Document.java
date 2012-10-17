@@ -129,7 +129,7 @@ public class Document extends AbstractModel<Integer> implements Serializable {
     private Date reviewdatetime;
     @Basic(optional = false)
     @Column(name = "number_of_pages")
-    private int numberofpages;
+    private Integer numberofpages;
     @Column(name="appointment_no")
     private Integer appointmentNo;
 
@@ -285,7 +285,7 @@ public class Document extends AbstractModel<Integer> implements Serializable {
         this.reviewdatetime = reviewdatetime;
     }
 
-    public int getNumberofpages() {
+    public Integer getNumberofpages() {
         return numberofpages;
     }
 
