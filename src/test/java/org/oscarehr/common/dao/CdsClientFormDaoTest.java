@@ -23,6 +23,7 @@
  */
 package org.oscarehr.common.dao;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -54,42 +55,34 @@ public class CdsClientFormDaoTest extends DaoTestFixtures {
 		SchemaUtils.restoreTable("CdsClientForm");
 	}
 
+
 	@Test
-	public void testFindLatestByFacilityClient() {
-		CdsClientForm f = dao.findLatestByFacilityClient(1, 1);
-		System.out.println("Found facility " + f);
+	/**
+	 * Ensures that the latest client form is returned.
+	 * @throws Exception
+	 */
+	public void testFindLatestByFacilityClient() throws Exception {
+		int facilityId = 101;
+		int clientId = 109;
+
+		CdsClientForm clientForm1 = new CdsClientForm();
+		EntityDataGenerator.generateTestDataForModelClass(clientForm1);
+		clientForm1.setClientId(clientId);
+		clientForm1.setFacilityId(facilityId);
+
+		CdsClientForm clientForm2 = new CdsClientForm();
+		EntityDataGenerator.generateTestDataForModelClass(clientForm2);
+		clientForm2.setClientId(clientId);
+		clientForm2.setFacilityId(facilityId);
+
+		dao.persist(clientForm1);
+		dao.persist(clientForm2);
+
+		CdsClientForm result = dao.findLatestByFacilityClient(facilityId, clientId);
+		CdsClientForm expectedResult = clientForm1;
+		
+		assertEquals(expectedResult, result);
 	}
-
-
-
-//	@Test
-//	/**
-//	 * Ensures that the latest client form is returned.
-//	 * WARNING: Test fails on mysql versions greater than 5.1
-//	 * @throws Exception
-//	 */
-//	public void testFindLatestByFacilityClient() throws Exception {
-//		int facilityId = 101;
-//		int clientId = 109;
-//
-//		CdsClientForm clientForm1 = new CdsClientForm();
-//		EntityDataGenerator.generateTestDataForModelClass(clientForm1);
-//		clientForm1.setClientId(clientId);
-//		clientForm1.setFacilityId(facilityId);
-//
-//		CdsClientForm clientForm2 = new CdsClientForm();
-//		EntityDataGenerator.generateTestDataForModelClass(clientForm2);
-//		clientForm2.setClientId(clientId);
-//		clientForm2.setFacilityId(facilityId);
-//
-//		dao.persist(clientForm1);
-//		dao.persist(clientForm2);
-//
-//		CdsClientForm result = dao.findLatestByFacilityClient(facilityId, clientId);
-//		CdsClientForm expectedResult = clientForm2;
-//		
-//		assertEquals(expectedResult, result);
-//	}
 
 	
 	@Test
