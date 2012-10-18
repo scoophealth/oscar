@@ -32,13 +32,15 @@
 package oscar.oscarBilling.ca.bc.MSP;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.Date;
 
+import org.oscarehr.billing.CA.BC.dao.BillingNoteDao;
+import org.oscarehr.billing.CA.BC.model.BillingNotes;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.Misc;
 import oscar.oscarDB.DBHandler;
-import oscar.util.UtilMisc;
 
 /**
  *
@@ -46,37 +48,27 @@ import oscar.util.UtilMisc;
  *
  * This class is used to deal with MSP N01 correspondence notes.
  *
-  CREATE TABLE billingnote (
-    billingnote_no int(10) NOT NULL auto_increment,
-    billingmaster_no int(10) NOT NULL default '0',
-    createdate datetime default NULL,
-    provider_no varchar(6) NOT NULL default '',
-    note text default '',    
-    PRIMARY KEY  (`billingnote_no`),
-    KEY billingmaster_no (billingmaster_no),
-    KEY provider_no  (provider_no),
-    KEY createdate (createdate)
-) TYPE=MyISAM
  */
 public class MSPBillingNote {
+	
+	private BillingNoteDao billingNoteDao = SpringUtils.getBean(BillingNoteDao.class);
+
    
    /** Creates a new instance of MSPBillingNote */
    public MSPBillingNote() {
    }
    
    
-   public void addNote(String billingmaster_no,String provider_no,String note ) throws SQLException{
-      
+   public void addNote(String billingmaster_no,String provider_no,String note ) {
       note = oscar.Misc.removeNewLine(note);
-      String  notesql = "insert into billingnote (billingmaster_no,provider_no,createdate,note,note_type) values ( " +
-                        "'"+billingmaster_no+"'," +
-                        "'"+provider_no+"'," +
-                        "now()," +
-                        "'"+UtilMisc.mysqlEscape(note)+"'," +
-                        "'1')";
       
-      
-      DBHandler.RunSQL(notesql);                    
+      BillingNotes b = new BillingNotes();
+      b.setBillingmasterNo(Integer.parseInt(billingmaster_no));
+      b.setProviderNo(provider_no);
+      b.setCreatedate(new Date());
+      b.setNote(note);
+      b.setNoteType(1);
+      billingNoteDao.persist(b);
    }
    
    /**
