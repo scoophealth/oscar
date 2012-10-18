@@ -58,6 +58,8 @@ import org.oscarehr.common.model.Document;
 import org.oscarehr.common.model.IndivoDocs;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.document.dao.DocumentDAO;
+import org.oscarehr.document.model.CtlDocument;
+import org.oscarehr.document.model.CtlDocumentPK;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -100,6 +102,7 @@ public final class EDocUtil extends SqlUtilBaseS {
 	private static ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 	private static CtlDocTypeDao ctldoctypedao = (CtlDocTypeDao) SpringUtils.getBean("ctlDocTypeDao");
 	private static DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+	private static DocumentDAO documentDAO = (DocumentDAO)SpringUtils.getBean("documentDAO");
 
 	public static String getProviderName(String providerNo) {
 		if(providerNo == null || providerNo.length() == 0) {
@@ -181,10 +184,16 @@ public final class EDocUtil extends SqlUtilBaseS {
 
 
 		Integer document_no = doc.getId();
-		String ctlDocumentSql = "INSERT INTO ctl_document (module,module_id,document_no,status) VALUES ('" + newDocument.getModule() + "', " + newDocument.getModuleId() + ", " + document_no + ", '" + newDocument.getStatus() + "'  )";
 
-		logger.debug("in addDocumentSQL ,add ctl_document: " + ctlDocumentSql);
-		runSQL(ctlDocumentSql);
+		CtlDocumentPK cdpk = new CtlDocumentPK();
+		CtlDocument cd = new CtlDocument();
+		cd.setId(cdpk);
+		cdpk.setModule(newDocument.getModule());
+		cdpk.setDocumentNo(document_no);
+		cd.setModuleId(Integer.parseInt(newDocument.getModuleId()));
+		cd.setStatus(String.valueOf(newDocument.getStatus()));
+		documentDAO.saveCtlDocument(cd);
+		
 		return document_no.toString();
 	}
 
@@ -675,19 +684,19 @@ public final class EDocUtil extends SqlUtilBaseS {
 		return UtilDateUtilities.now();
 	}
 
-	public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String docClass, String docSubClass, String contentType, String observationDate, String updateDateTime, String docCreator, String responsible) throws SQLException {
+	public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String docClass, String docSubClass, String contentType, String observationDate, String updateDateTime, String docCreator, String responsible)  {
 		return addDocument(demoNo, docFileName, docDesc, docType, docClass, docSubClass, contentType, observationDate, updateDateTime, docCreator, responsible, null, null, null);
 	}
 
-	public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String docClass, String docSubClass, String contentType, String observationDate, String updateDateTime, String docCreator, String responsible, String reviewer, String reviewDateTime) throws SQLException {
+	public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String docClass, String docSubClass, String contentType, String observationDate, String updateDateTime, String docCreator, String responsible, String reviewer, String reviewDateTime)  {
 		return addDocument(demoNo, docFileName, docDesc, docType, docClass, docSubClass, contentType, observationDate, updateDateTime, docCreator, responsible, reviewer, reviewDateTime, null, null);
 	}
 
-	public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String docClass, String docSubClass, String contentType, String observationDate, String updateDateTime, String docCreator, String responsible, String reviewer, String reviewDateTime, String source) throws SQLException {
+	public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String docClass, String docSubClass, String contentType, String observationDate, String updateDateTime, String docCreator, String responsible, String reviewer, String reviewDateTime, String source)  {
 		return addDocument(demoNo, docFileName, docDesc, docType, docClass, docSubClass, contentType, observationDate, updateDateTime, docCreator, responsible, reviewer, reviewDateTime, source, null);
 	}
 
-	public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String docClass, String docSubClass, String contentType, String observationDate, String updateDateTime, String docCreator, String responsible, String reviewer, String reviewDateTime, String source, String sourceFacility) throws SQLException {
+	public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String docClass, String docSubClass, String contentType, String observationDate, String updateDateTime, String docCreator, String responsible, String reviewer, String reviewDateTime, String source, String sourceFacility) {
 
 		Document doc = new Document();
 		doc.setDoctype(docType);
@@ -711,18 +720,15 @@ public final class EDocUtil extends SqlUtilBaseS {
 
 		int key=0;
 		if (doc.getDocumentNo() > 0) {
-			String add_record_string2 = "insert into ctl_document values ('demographic',?,?,'A')";
-			Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
-			PreparedStatement add_record = conn.prepareStatement(add_record_string2);
-
-			add_record.setString(1, demoNo);
-			add_record.setString(2, doc.getDocumentNo().toString());
-
-			add_record.executeUpdate();
-			ResultSet rs = add_record.getGeneratedKeys();
-			if (rs.next()) key = rs.getInt(1);
-			add_record.close();
-			rs.close();
+			CtlDocumentPK cdpk = new CtlDocumentPK();
+			CtlDocument cd = new CtlDocument();
+			cd.setId(cdpk);
+			cdpk.setModule("demographic");
+			cdpk.setDocumentNo(doc.getDocumentNo());
+			cd.setModuleId(Integer.parseInt(demoNo));
+			cd.setStatus(String.valueOf('A'));
+			documentDAO.saveCtlDocument(cd);
+			key=1;
 		}
 		return key;
 	}

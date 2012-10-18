@@ -29,12 +29,13 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.PatientLabRoutingDao;
+import org.oscarehr.common.dao.ProviderLabRoutingDao;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
-import oscar.oscarDB.DBPreparedHandler;
 import oscar.oscarLab.ca.on.LabResultData;
 import oscar.util.UtilDateUtilities;
 
@@ -42,7 +43,10 @@ import oscar.util.UtilDateUtilities;
 public class MDSResultsData {
 
     Logger logger = Logger.getLogger(MDSResultsData.class);
+    private PatientLabRoutingDao patientLabRoutingDao = SpringUtils.getBean(PatientLabRoutingDao.class);
+    private ProviderLabRoutingDao providerLabRoutingDao = SpringUtils.getBean(ProviderLabRoutingDao.class);
 
+    
     public ArrayList<String> segmentID;
     public ArrayList<String> acknowledgedStatus;
 
@@ -720,102 +724,5 @@ public class MDSResultsData {
         }
     }
 
-
-    public static boolean updateReportStatus(Properties props, int labNo, int providerNo, char status, String comment) {
-
-        try {
-            DBPreparedHandler db = new DBPreparedHandler();
-            // handles the case where this provider/lab combination is not already in providerLabRouting table
-            String sql = "insert ignore into providerLabRouting (provider_no, lab_no, status, comment) values ('"+providerNo+"', '"+labNo+"', '"+status+"', ?)";
-            if ( db.queryExecuteUpdate(sql, new String[] { comment }) == 0 ) {
-                // handles the case where it is
-                sql = "update providerLabRouting set status='"+status+"', comment=? where provider_no='"+providerNo+"' and lab_no='"+labNo+"'";
-                db.queryExecute(sql, new String[] { comment });
-            } else {
-                sql = "delete from providerLabRouting where provider_no='0' and lab_no=?";
-                db.queryExecute(sql, new String[] { Integer.toString(labNo) });
-            }
-            return true;
-        }catch(Exception e){
-            Logger l = Logger.getLogger(MDSResultsData.class);
-            l.error("exception in MDSResultsData.updateReportStatus()", e);
-
-            return false;
-        }
-    }
-
-    public static boolean updateLabRouting(String[] flaggedLabs, String selectedProviders) {
-        boolean result;
-
-        try {
-
-
-            String[] providersArray = selectedProviders.split(",");
-            String insertString = "";
-            String deleteString = "";
-            for (int i=0; i < flaggedLabs.length; i++) {
-                if (i != 0) {
-                    insertString = insertString + ", ";
-                    deleteString = deleteString + ", ";
-                }
-                for (int j=0; j < providersArray.length; j++) {
-                    if (j != 0) {
-                        insertString = insertString + ", ";
-                    }
-                    insertString = insertString + "('" + providersArray[j] + "','" + flaggedLabs[i] + "','N')";
-                }
-                deleteString = deleteString+"'"+flaggedLabs[i]+"'";
-            }
-
-            // delete old entries
-            String sql = "delete from providerLabRouting where provider_no='0' and lab_no in ("+deleteString+")";
-            result = DBHandler.RunSQL(sql);
-
-            // add new entries
-            sql = "insert ignore into providerLabRouting (provider_no, lab_no, status) values "+insertString;
-            result = DBHandler.RunSQL(sql);
-            return result;
-        }catch(Exception e){
-            Logger l = Logger.getLogger(MDSResultsData.class);
-            l.error("exception in MDSResultsData.updateLabRouting()", e);
-            return false;
-        }
-    }
-
-    public static String searchPatient(String labNo) {
-        try {
-
-
-            String sql = "select demographic_no from patientLabRouting where lab_no='"+labNo+"'";
-            ResultSet rs = DBHandler.GetSQL(sql);
-            rs.next();
-            return oscar.Misc.getString(rs, "demographic_no");
-        }catch(Exception e){
-            Logger l = Logger.getLogger(MDSResultsData.class);
-            l.error("exception in MDSResultsData.searchPatient()", e);
-            return "0";
-        }
-    }
-
-    public static boolean updatePatientLabRouting(String labNo, String demographicNo) {
-        boolean result;
-
-        try {
-
-
-            // delete old entries
-            String sql = "delete from patientLabRouting where lab_no='"+labNo+"'";
-            result = DBHandler.RunSQL(sql);
-
-            // add new entries
-            sql = "insert into patientLabRouting (lab_no, demographic_no) values ('"+labNo+"', '"+demographicNo+"')";
-            result = DBHandler.RunSQL(sql);
-            return result;
-        }catch(Exception e){
-            Logger l = Logger.getLogger(MDSResultsData.class);
-            l.error("exception in MDSResultsData.updateLabRouting()", e);
-            return false;
-        }
-    }
 
 }
