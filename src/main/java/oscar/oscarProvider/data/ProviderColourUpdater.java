@@ -25,12 +25,11 @@
 
 package oscar.oscarProvider.data;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.List;
 
-import org.oscarehr.util.MiscUtils;
-
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.common.dao.PropertyDao;
+import org.oscarehr.common.model.Property;
+import org.oscarehr.util.SpringUtils;
 
 /**
  * Manages Fax number for provider 
@@ -43,8 +42,7 @@ public class ProviderColourUpdater {
     
     /** Creates a new instance of ProviderColourUpdater */
    public ProviderColourUpdater(String p) {
-       
-       strColName = new String("ProviderColour");
+       strColName = "ProviderColour";
        provider = p;       
     }
    
@@ -52,67 +50,35 @@ public class ProviderColourUpdater {
     *Retrieve colour for current provider first by querying property table 
     */
    public String getColour() {
-       String sql;
-       String colour = "";
-       ResultSet rs;
-       DBHandler db;
-       
-       try {
-        
-       
-        sql = "SELECT value FROM property WHERE name = '" + strColName + "' AND provider_no = '" + provider + "'";
-        rs = DBHandler.GetSQL(sql);
-            
-        if( rs.next() ) {
-            colour = oscar.Misc.getString(rs, "value");
-        }
-                
-        
+       PropertyDao dao = SpringUtils.getBean(PropertyDao.class);
+	   List<Property> props = dao.findByNameAndProvider(strColName, provider);
+       for(Property prop : props) {
+            return prop.getValue();
        }
-       catch( SQLException ex ) {
-           MiscUtils.getLogger().error("Error", ex);           
-       }
-       
-       return colour;
+       return "";
    }
       /**
        *set colour in property table
        */
    public boolean setColour(String c) {
-       DBHandler db;
-       String sql;
-       ResultSet rs;
-       boolean ret = true;
-       
-       try {
-                  
-        if( haveColour() )
-           sql = "UPDATE property SET value = '" + c + "' WHERE name = '" + strColName + "' AND provider_no = '" + provider + "'";
-        else
-           sql = "INSERT INTO property (name,value,provider_no) VALUES('" + strColName + "', '" + c + "', '" + provider + "')";
-        
-        
-        DBHandler.RunSQL(sql);
-       
-       }catch( SQLException ex ) {
-           MiscUtils.getLogger().debug("Error adding provider colour: " + ex.getMessage());
-           ret = false;
-       }
-       
-       return ret;
-   }
- 
-   private boolean haveColour() throws SQLException {
-       DBHandler db;
-       String sql;
-       ResultSet rs;       
-              
-       
-       sql = "SELECT value FROM property WHERE name = '" + strColName + "' AND provider_no = '" + provider + "'";
-       
-       rs = DBHandler.GetSQL(sql);
-       
-       return rs.next();              
-       
+	   PropertyDao dao = SpringUtils.getBean(PropertyDao.class);
+	   List<Property> props = dao.findByNameAndProvider(strColName, provider);
+	   Property property = null;
+	   for(Property p : props) {
+           property = p;
+           break;
+      }
+	   
+	  if (property == null) {
+		  property = new Property();
+	  }
+	   
+	  property.setValue(c);
+	  property.setName(strColName);
+	  property.setProviderNo(provider);
+	  
+	  dao.saveEntity(property);
+	   
+	  return true;
    }
 }
