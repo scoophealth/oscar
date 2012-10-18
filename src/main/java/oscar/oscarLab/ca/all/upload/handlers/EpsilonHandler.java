@@ -60,7 +60,7 @@ public class EpsilonHandler implements MessageHandler {
 	}
 	*/
 	@Override
-    public String parse(String serviceName, String fileName, int fileId) {
+    public String parse(String serviceName, String fileName, int fileId, String ipAddr) {
 		int i = 0;
 		try {
 

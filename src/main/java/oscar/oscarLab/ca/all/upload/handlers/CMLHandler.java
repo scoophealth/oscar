@@ -53,7 +53,7 @@ public class CMLHandler implements MessageHandler {
 	Logger logger = Logger.getLogger(CMLHandler.class);
 	Hl7TextInfoDao hl7TextInfoDao = (Hl7TextInfoDao)SpringUtils.getBean("hl7TextInfoDao");
 	
-	public String parse(String serviceName, String fileName, int fileId) {
+	public String parse(String serviceName, String fileName, int fileId, String ipAddr) {
 
 		int i = 0;
 		RouteReportResults routeResults;

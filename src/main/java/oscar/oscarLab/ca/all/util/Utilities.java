@@ -183,6 +183,53 @@ public class Utilities {
     		return retVal;
     	}    
     
+    public static String savePdfFile(InputStream stream,String filename ){
+        String retVal = null;                
+        try {
+            OscarProperties props = OscarProperties.getInstance();
+            //properties must exist
+            String place= props.getProperty("DOCUMENT_DIR");
+            
+            if(!place.endsWith("/")) {               
+                place = new StringBuilder(place).insert(place.length(),"/").toString();
+            }
+            
+            filename = filename.replaceAll(".enc", "");
+            int fileExtIdx = -1;
+            if (filename.endsWith(".pdf")) {
+                fileExtIdx = filename.lastIndexOf(".pdf");
+            } else if (filename.endsWith(".PDF")) {
+                fileExtIdx = filename.lastIndexOf(".PDF");
+            }
+            
+            if (fileExtIdx >= 0) {
+                filename = filename.substring(0, fileExtIdx);
+            }
+            
+            retVal = place+"DocUpload."+filename+"."+(new Date()).getTime()+".pdf";
+            
+            //write the  file to the file specified
+            OutputStream os = new FileOutputStream(retVal);
+            
+            int bytesRead = 0;
+            while ((bytesRead = stream.read()) != -1){
+                os.write(bytesRead);
+            }
+            os.close();
+            
+            //close the stream
+            stream.close();
+        }catch (FileNotFoundException fnfe) {
+        	logger.error("Error", fnfe);
+            return retVal;
+            
+        }catch (IOException ioe) {
+        	logger.error("Error", ioe);
+            return retVal;
+        }
+        return retVal;
+    }  
+    
     
     /*
      *  Return a string corresponding to the data in a given InputStream

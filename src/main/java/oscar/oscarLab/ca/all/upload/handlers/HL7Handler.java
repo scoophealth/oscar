@@ -54,7 +54,7 @@ public class HL7Handler implements MessageHandler {
 		logger.info("NEW HL7Handler UPLOAD HANDLER instance just instantiated. ");
 	}
 
-	public String parse(String serviceName,String fileName, int fileId) {
+	public String parse(String serviceName,String fileName, int fileId, String ipAddr) {
 		logger.info("ABOUT TO PARSE!");
 
 		int i = 0;

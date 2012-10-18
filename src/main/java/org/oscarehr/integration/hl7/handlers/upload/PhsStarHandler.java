@@ -39,7 +39,7 @@ public class PhsStarHandler implements MessageHandler {
 	Logger logger = MiscUtils.getLogger();
 	
 	@Override
-	public String parse(String serviceName, String fileName, int fileId) {
+	public String parse(String serviceName, String fileName, int fileId, String ipAddr) {
 		logger.info("received PHS/STAR message");
 
 		org.oscarehr.integration.hl7.handlers.PhsStarHandler handler = new org.oscarehr.integration.hl7.handlers.PhsStarHandler();

@@ -45,7 +45,7 @@ public class OLISHL7Handler implements MessageHandler {
 		logger.info("NEW OLISHL7Handler UPLOAD HANDLER instance just instantiated. ");
 	}
 
-	public String parse(String serviceName, String fileName, int fileId) {
+	public String parse(String serviceName, String fileName, int fileId, String ipAddr) {
 		return parse(serviceName,fileName,fileId, false);
 	}
 	public String parse(String serviceName, String fileName, int fileId, boolean routeToCurrentProvider) {		

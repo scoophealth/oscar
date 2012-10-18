@@ -56,7 +56,7 @@ public class DefaultHandler implements MessageHandler {
         return hl7Type;
     }
     
-    public String parse(String serviceName, String fileName,int fileId){
+    public String parse(String serviceName, String fileName,int fileId, String ipAddr){
         Document xmlDoc = getXML(fileName);
         
         /*
