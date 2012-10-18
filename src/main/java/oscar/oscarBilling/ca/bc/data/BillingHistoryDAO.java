@@ -27,9 +27,13 @@ package oscar.oscarBilling.ca.bc.data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.oscarehr.billing.CA.BC.dao.BillingHistoryDao;
+import org.oscarehr.billing.CA.BC.model.BillingHistory;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.entities.BillHistory;
 import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
@@ -44,6 +48,8 @@ import oscar.util.SqlUtils;
  */
 public class BillingHistoryDAO {
 
+	private BillingHistoryDao dao = SpringUtils.getBean(BillingHistoryDao.class);
+	
   public BillingHistoryDAO() {
   }
 
@@ -120,22 +126,18 @@ public class BillingHistoryDAO {
    */
   public void createBillingHistoryArchive(BillHistory history) {
 
-
-    String qry = "insert into billing_history(billingmaster_no,billingstatus,creation_date,practitioner_no,billingtype,seqNum,amount,amount_received,payment_type_id) values(" +
-        history.getBillingMasterNo() + ",'" + history.getBillingStatus() +
-        "',now(),'" + history.getPractitioner_no() + "','" +
-        history.getBillingtype() +
-        "','" + history.getSeqNum() + "','" + history.getAmount() + "','" +
-        history.getAmountReceived() + "'," + history.getPaymentTypeId() + ")";
-    try {
-
-    	DBHandler.RunSQL(qry);
-      if(null == history.getPaymentTypeId()){
-        throw new RuntimeException("Bill History: " + history.getBillingMasterNo() + " Payment type is '0'");
-      }
-    }
-    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
-    }
+	  BillingHistory b = new BillingHistory();
+	  b.setBillingMasterNo(history.getBillingMasterNo());
+	  b.setStatus(history.getBillingStatus());
+	  b.setCreationDate(new Date());
+	  b.setPractitionerNo(history.getPractitioner_no());
+	  b.setBillingType(history.getBillingtype());
+	  b.setSeqNum(history.getSeqNum());
+	  b.setAmount(String.valueOf(history.getAmount()));
+	  b.setAmountReceived(String.valueOf(history.getAmountReceived()));
+	  b.setPaymentTypeId(Integer.parseInt(history.getPaymentTypeId()));
+	  
+	  dao.persist(b);
   }
 
   /**

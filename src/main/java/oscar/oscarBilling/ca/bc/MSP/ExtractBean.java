@@ -33,7 +33,10 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.billing.CA.BC.dao.LogTeleplanTxDao;
+import org.oscarehr.billing.CA.BC.model.LogTeleplanTx;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.Misc;
 import oscar.OscarProperties;
@@ -45,6 +48,8 @@ import oscar.util.UtilMisc;
 
 public class ExtractBean extends Object implements Serializable {
     private static Logger logger=MiscUtils.getLogger();
+    private LogTeleplanTxDao logTeleplanTxDao = SpringUtils.getBean(LogTeleplanTxDao.class);
+
 
     private String ohipRecord;
     private String ohipClaim;
@@ -320,19 +325,11 @@ public class ExtractBean extends Object implements Serializable {
     public String getSequence(){
       String n="1";
       if (eFlag.equals("1")){
-         String nsql ="";
-         nsql =  "insert into log_teleplantx (log_no, claim) values ('\\N','" + "New Log" + "')";
-         try {
-
-        	 DBHandler.RunSQL(nsql);
-            ResultSet  rs = DBHandler.GetSQL("SELECT LAST_INSERT_ID()");
-            if (rs.next()){
-               n = rs.getString(1);
-            }
-            rs.close();
-         }catch (SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-         }
+         LogTeleplanTx l = new LogTeleplanTx();
+         l.setClaim("New Log".getBytes());
+         logTeleplanTxDao.persist(l);
+         return l.getId().toString();
+         
       }
       return n;
     }
