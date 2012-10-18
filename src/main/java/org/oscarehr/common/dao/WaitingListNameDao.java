@@ -36,6 +36,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class WaitingListNameDao extends AbstractDao<WaitingListName> {
 
+	
 	public WaitingListNameDao() {
 		super(WaitingListName.class);
 	}
@@ -52,6 +53,18 @@ public class WaitingListNameDao extends AbstractDao<WaitingListName> {
 		return (Long) query.getSingleResult();
 	}
 	
+	
+	 public List<WaitingListName> findCurrentByNameAndGroup(String name, String group) {
+	    	
+	    	String sql = "select x from WaitingListName x where x.name = ? AND x.groupNo = ? and x.isHistory='N'";
+	    	Query query = entityManager.createQuery(sql);
+	    	query.setParameter(1,name);
+	    	query.setParameter(2,group);
+
+	        @SuppressWarnings("unchecked")
+	        List<WaitingListName> results = query.getResultList();
+	        return results;
+	    }
 
     public List<WaitingListName> findByMyGroups(List<MyGroup> myGroups) {
     	List<String> groupIds = new ArrayList<String>();

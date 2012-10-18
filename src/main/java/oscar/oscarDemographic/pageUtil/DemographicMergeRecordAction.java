@@ -34,7 +34,6 @@
 
 package oscar.oscarDemographic.pageUtil;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -76,24 +75,16 @@ public class DemographicMergeRecordAction  extends Action {
 
             for (int i=0; i < records.size(); i++){
                 if (!( records.get(i)).equals(head))
-                    try{
-                        dmDAO.Merge( records.get(i), head);
-                    }catch(SQLException e){
-                        logger.error("Could not merged records: "+records.get(i)+","+head, e);
-                        outcome = "failure";
-                    }
+                     dmDAO.Merge( records.get(i), head);
+                    
             }
 
         }else if(action.equals("unmerge") && records.size() > 0){
             outcome = "successUnMerge";
             for (int i=0; i < records.size(); i++){
                 String demographic_no = records.get(i);
-                try{
-                    dmDAO.UnMerge(demographic_no, provider_no);
-                }catch(SQLException e){
-                    logger.error("Could not unmerge the record: "+records.get(i), e);
-                    outcome = "failureUnMerge";
-                }
+                dmDAO.UnMerge(demographic_no, provider_no);
+               
             }
 
         }else{
