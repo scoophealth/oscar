@@ -2026,6 +2026,7 @@ public class DemographicExportAction4 extends Action {
 					E2EVelocityTemplate t = new E2EVelocityTemplate();
 					
 					// Call Template Export & add to ArrayList
+					patient.setExMedications(exMedicationsAndTreatments);
 					String output = t.export(patient);
 					
 					//export file to temp directory

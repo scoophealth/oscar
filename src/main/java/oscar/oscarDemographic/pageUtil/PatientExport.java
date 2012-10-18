@@ -43,6 +43,8 @@ public class PatientExport {
 	private DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 	private ArrayList<Medication> medications = new ArrayList<Medication>();
 	
+	private boolean exMedicationsAndTreatments = false;
+	
 	public PatientExport() {
 	}
 	
@@ -70,6 +72,14 @@ public class PatientExport {
 		medication.setDrugName(drug.getBrandName());
 		
 		return medication;
+	}
+	
+	/*
+	 * Section Booleans
+	 */
+	
+	public void setExMedications(boolean rhs) {
+		this.exMedicationsAndTreatments = rhs;
 	}
 	
 	/*
@@ -160,7 +170,7 @@ public class PatientExport {
 	}
 	
 	public boolean hasMedications() {
-		return!(medications==null || medications.isEmpty());
+		return!(!exMedicationsAndTreatments || medications==null || medications.isEmpty());
 	}
 
 	/*
