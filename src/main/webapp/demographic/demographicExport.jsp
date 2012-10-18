@@ -225,7 +225,7 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 			    <%}%>
 			    </html:select>
 		    <%}%>
-		    	Export Template:<html:select property="template">
+		    	<bean:message key="demographic.demographicexport.exporttemplate" /><html:select property="template">
 		    		<html:option value="CMS4">CMS Spec 4.0</html:option>
 		    		<html:option value="E2E">E2E</html:option>
 		    	</html:select>
