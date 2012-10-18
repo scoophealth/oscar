@@ -27,7 +27,7 @@ public class PFHTHandler implements MessageHandler {
 
 	 Logger logger = Logger.getLogger(PFHTHandler.class);
 
-	    public String parse(String serviceName, String fileName,int fileId){
+	    public String parse(String serviceName, String fileName,int fileId, String ipAddr){
 
 	        PFHTUtilities u = new PFHTUtilities();
 

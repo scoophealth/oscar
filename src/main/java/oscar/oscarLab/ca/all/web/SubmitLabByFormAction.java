@@ -75,6 +75,7 @@ public class SubmitLabByFormAction extends DispatchAction {
 		String pFirstName = request.getParameter("pFirstname");
 		String cc = request.getParameter("cc");
 
+                String ipAddr = request.getRemoteAddr();
 		SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -161,7 +162,7 @@ public class SubmitLabByFormAction extends DispatchAction {
             if(msgHandler != null){
                logger.info("MESSAGE HANDLER "+msgHandler.getClass().getName());
             }
-            if((msgHandler.parse(getClass().getSimpleName(), filePath,checkFileUploadedSuccessfully)) != null)
+            if((msgHandler.parse(getClass().getSimpleName(), filePath,checkFileUploadedSuccessfully,ipAddr)) != null)
                 outcome = "success";
 
         }else{
