@@ -37,16 +37,14 @@ public class EncounterTemplateDao extends AbstractDao<EncounterTemplate> {
 		super(EncounterTemplate.class);
 	}
 
-	/**
-	 * @return all encounterTemplates ordered by id/name
-	 */
-    public List<EncounterTemplate> findAll()
-	{
-		Query query = entityManager.createQuery("select x from "+modelClass.getSimpleName()+" x order by x.id");
-		
-		@SuppressWarnings("unchecked")
-		List<EncounterTemplate> results=query.getResultList();
-		
-		return(results);
-	}
+	   public List<EncounterTemplate> findByName(String name)
+		{
+			Query query = entityManager.createQuery("select x from EncounterTemplate x where x.encounterTemplateName = ?");
+			query.setParameter(1, name);
+			
+			@SuppressWarnings("unchecked")
+			List<EncounterTemplate> results=query.getResultList();
+			
+			return(results);
+		}
 }

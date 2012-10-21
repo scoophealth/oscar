@@ -55,35 +55,23 @@ public class ProviderDao extends OscarSuperDao {
 			{"searchmygroupno", "select mygroup_no from mygroup group by mygroup_no order by mygroup_no"},
             {"updateapptstatus", "update appointment set status=?, lastupdateuser=?, updatedatetime=now() where appointment_no=? "},
             {"updatepreference", "update preference set start_hour=?, end_hour=?, every_min=?, mygroup_no=?, default_servicetype=?, color_template=? where provider_no=? "},
-            {"add_preference", "insert into preference (provider_no, start_hour, end_hour, every_min, mygroup_no, default_servicetype, color_template) values (?, ?, ?, ?, ?, ?, ?)"},
-            {"updatepreference_newtickler", "update preference set start_hour=?, end_hour=?, every_min=?, mygroup_no=?, default_servicetype=?, color_template=?, new_tickler_warning_window=? , default_caisi_pmm=? , defaultDoNotDeleteBilling=? where provider_no=? "},
-            {"add_preference_newtickler", "insert into preference (provider_no, start_hour, end_hour, every_min, mygroup_no, default_servicetype, color_template, new_tickler_warning_window, default_caisi_pmm, defaultDoNotDeleteBilling) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"},
-
+            
             {"search_demograph", "select *  from demographic where demographic_no=?"},
             {"search_encounter", "select * from encounter where demographic_no = ? order by encounter_date desc, encounter_time desc"},
             {"search_encounter_no", "select * from encounter where demographic_no = ? and encounter_date=? and encounter_time=? and provider_no=? order by encounter_no desc limit 1"},
             {"search_encountersingle", "select * from encounter where encounter_no = ?"},
             {"search_previousenc", "select * from encounter where demographic_no = ? and provider_no=? order by encounter_date desc, encounter_time desc limit 1"},
 
-			{"delete_encounter1", "insert into recyclebin (provider_no,updatedatetime,table_name,keyword,table_content) values(?,?,'encounter',?,?)"},
-			{"delete_encounter2", "delete from encounter where encounter_no = ?"},
 			{"search_encounterform", "select * from encounterform where form_name like ? order by form_name"},
 			{"search_form", "select * from form where form_no=? "}, //new?delete
 			{"search_form_no", "select form_no, content from form where demographic_no=? and form_name like ? order by form_date desc, form_time desc,form_no desc limit 1"}, //new?delete
 			{"compare_form", "select form_no, form_name, content from form where demographic_no=? and form_name like ? order by form_date desc, form_time desc,form_no desc limit 1"},
-			{"save_form", "insert into form (demographic_no, provider_no, form_date, form_time, form_name, content) values(?,?,?,?,?,?)"},
 			{"search_template", "select * from encountertemplate where encountertemplate_name like ? order by encountertemplate_name"},
 
-			{"add_encounter", "insert into encounter (demographic_no, encounter_date, encounter_time, provider_no, subject, content, encounterattachment) values(?,?,?,?,?,?,?)"},
-			{"save_prescribe", "insert into prescribe (demographic_no, provider_no, prescribe_date, prescribe_time, content) values(?,?,?,?,?)"},
 			{"search_prescribe", "select * from prescribe where prescribe_no= ?"},
 			{"search_prescribe_no", "select prescribe_no from prescribe where demographic_no=?  order by prescribe_date desc, prescribe_time desc limit 1"},
 
-			{"add_template", "insert into encountertemplate values(?,?,?,?)"},
-			{"delete_template", "delete from encountertemplate where encountertemplate_name = ?"},
 			{"search_templatename", "select encountertemplate_name from encountertemplate order by encountertemplate_name"},
-			{"add_encounterform", "insert into encounterform values(?,?,?,?)"},
-			{"delete_encounterform", "delete from encounterform where form_name = ?"},
 			{"search_encounterformname", "select form_name from encounterform order by form_name"},
 			{"search_provider_slp", "select comments from provider where provider_no=?"},
 
@@ -106,9 +94,7 @@ public class ProviderDao extends OscarSuperDao {
 			{"search_pref_defaultbill", "select default_servicetype,defaultDoNotDeleteBilling from preference where provider_no = ?"},
 			{"list_bills_servicetype", "select distinct servicetype, servicetype_name from ctl_billingservice where status='A'"},
 
-			{"searchpassword", "select password from security where provider_no = ?" },
-			{"updatepassword", "update security set password = ? where  provider_no= ?" },
-
+			
 		    {"search_provider", "select provider_no, last_name, first_name from provider where last_name like ? and first_name like ? order by last_name"},
 		    {"search_providersgroup", "select mygroup_no, last_name, first_name from mygroup where last_name like ? and first_name like ? order by last_name, first_name, mygroup_no"},
 		    {"search_mygroup", "select mygroup_no from mygroup where mygroup_no like ? group by mygroup_no order by mygroup_no"},
@@ -124,7 +110,6 @@ public class ProviderDao extends OscarSuperDao {
 			{"intake_demographic","select last_name, first_name, year_of_birth, month_of_birth, date_of_birth from demographic where demographic_no=?"},
 			{"intake_get_measurement","select * from measurements where type=? and demographicNo=? order by dateObserved desc, dateEntered desc limit 1"},
 			{"intake_get_measurement_ex","select * from measurements where type=? and demographicNo=? and measuringInstruction=? order by dateObserved desc, dateEntered desc limit 1"},
-			{"intake_set_measurement","insert into measurements (type, demographicNo, providerNo, dataField, measuringInstruction, comments, dateObserved, dateEntered) values (?,?,?,?,?,?,CURDATE(),NOW())"},
 			{"intake_reminders","select distinct casemgmt_note.* from casemgmt_note, (select max(cmn2.note_id) as note_id from casemgmt_issue_notes as cmin2 left join casemgmt_note cmn2 USE INDEX (demographic_no) using (note_id) left join casemgmt_issue as cmi2 using (id) where cmn2.note_id = cmin2.note_id and cmin2.id = cmi2.id and cmi2.issue_id in (38) and cmn2.demographic_no = ? group by cmn2.uuid) as rem_notes where casemgmt_note.note_id=rem_notes.note_id and casemgmt_note.archived=0"},
 			{"intake_preventions","select * from preventions where demographic_no = ? and deleted != 1 order by prevention_type,prevention_date"},
 			{"intake_patient_dxcode","select * from dxresearch where demographic_no=? and status='A' and dxresearch_code=?"},

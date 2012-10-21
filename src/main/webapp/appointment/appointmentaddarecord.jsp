@@ -27,6 +27,9 @@
 	import="java.sql.*, java.util.*, oscar.MyDateFormat, oscar.oscarWaitingList.bean.*, oscar.oscarWaitingList.WaitingList, oscar.oscarDemographic.data.*, org.oscarehr.common.OtherIdManager, java.text.SimpleDateFormat, org.caisi.model.Tickler, org.caisi.service.TicklerManager,org.oscarehr.util.SpringUtils"
 	errorPage="errorpage.jsp"%>
 <%@ page import="org.oscarehr.common.dao.DemographicDao, org.oscarehr.common.model.Demographic,oscar.appt.AppointmentMailer, org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
+<%@page import="org.oscarehr.common.model.Appointment" %>
+<%@page import="oscar.util.ConversionUtils" %>
 <%@ page import="org.oscarehr.event.EventService"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -44,41 +47,81 @@
 	</tr>
 </table>
 <%
-	String[] param = new String[19];
-	param[0]=request.getParameter("provider_no");
-	param[1]=request.getParameter("appointment_date");
-	param[2]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
-	param[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"));
 
-	//the keyword(name) must match the demographic_no if it has been changed
-        org.oscarehr.common.model.Demographic demo = null;
-    if (request.getParameter("demographic_no") != null && !(request.getParameter("demographic_no").equals(""))) {
-        DemographicMerged dmDAO = new DemographicMerged();
-        param[16] = dmDAO.getHead(request.getParameter("demographic_no"));
+OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
 
-		DemographicData demData = new DemographicData();
-		demo = demData.getDemographic(param[16]);
-		param[4] = demo.getLastName()+","+demo.getFirstName();
+String[] param = new String[19];
+param[0]=request.getParameter("provider_no");
+param[1]=request.getParameter("appointment_date");
+param[2]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
+param[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"));
+ 
+//the keyword(name) must match the demographic_no if it has been changed
+ org.oscarehr.common.model.Demographic demo = null;
+   if (request.getParameter("demographic_no") != null && !(request.getParameter("demographic_no").equals(""))) {
+ DemographicMerged dmDAO = new DemographicMerged();
+ param[16] = dmDAO.getHead(request.getParameter("demographic_no"));
+ 
+        DemographicData demData = new DemographicData();
+        demo = demData.getDemographic(param[16]);
+        param[4] = demo.getLastName()+","+demo.getFirstName();
     } else {
-        param[16] = "0";
-		param[4] = request.getParameter("keyword");
+ param[16] = "0";
+        param[4] = request.getParameter("keyword");
     }
 
-	param[5]=request.getParameter("notes");
-	param[6]=request.getParameter("reason");
-	param[7]=request.getParameter("location");
-	param[8]=request.getParameter("resources");
-	param[9]=request.getParameter("type");
-	param[10]=request.getParameter("style");
-	param[11]=request.getParameter("billing");
-	param[12]=request.getParameter("status");
-	param[13]=request.getParameter("createdatetime");
-	param[14]=request.getParameter("creator");
-	param[15]=request.getParameter("remarks");
-	param[17]=(String)request.getSession().getAttribute("programId_oscarView");
-	param[18]=(request.getParameter("urgency")!=null)?request.getParameter("urgency"):"";
-	int rowsAffected = oscarSuperManager.update("appointmentDao", request.getParameter("dboperation"), param);
+param[5]=request.getParameter("notes");
+param[6]=request.getParameter("reason");
+param[7]=request.getParameter("location");
+param[8]=request.getParameter("resources");
+param[9]=request.getParameter("type");
+param[10]=request.getParameter("style");
+param[11]=request.getParameter("billing");
+param[12]=request.getParameter("status");
+param[13]=request.getParameter("createdatetime");
+param[14]=request.getParameter("creator");
+param[15]=request.getParameter("remarks");
+param[17]=(String)request.getSession().getAttribute("programId_oscarView");
+param[18]=(request.getParameter("urgency")!=null)?request.getParameter("urgency"):"";
 
+
+	Appointment a = new Appointment();
+	a.setProviderNo(request.getParameter("provider_no"));
+	a.setAppointmentDate(ConversionUtils.fromDateString(request.getParameter("appointment_date")));
+	a.setStartTime(ConversionUtils.fromTimeStringNoSeconds(request.getParameter("start_time")));
+	a.setEndTime(ConversionUtils.fromTimeStringNoSeconds(request.getParameter("end_time")));
+	a.setName(request.getParameter("keyword"));
+	a.setNotes(request.getParameter("notes"));
+	a.setReason(request.getParameter("reason"));
+	a.setLocation(request.getParameter("location"));
+	a.setResources(request.getParameter("resources"));
+	a.setType(request.getParameter("type"));
+	a.setStyle(request.getParameter("style"));
+	a.setBilling(request.getParameter("billing"));
+	a.setStatus(request.getParameter("status"));
+	a.setCreateDateTime(new java.util.Date());
+	a.setCreator(request.getParameter("creator"));
+	a.setRemarks(request.getParameter("remarks"));
+	//the keyword(name) must match the demographic_no if it has been changed
+    demo = null;
+if (request.getParameter("demographic_no") != null && !(request.getParameter("demographic_no").equals(""))) {
+    DemographicMerged dmDAO = new DemographicMerged();
+    a.setDemographicNo(Integer.parseInt(dmDAO.getHead(request.getParameter("demographic_no"))));
+
+	DemographicData demData = new DemographicData();
+	demo = demData.getDemographic(String.valueOf(a.getDemographicNo()));
+	a.setName(demo.getLastName()+","+demo.getFirstName());
+} else {
+    a.setDemographicNo(0);
+	a.setName(request.getParameter("keyword"));
+}
+	
+	a.setProgramId(Integer.parseInt((String)request.getSession().getAttribute("programId_oscarView")));
+	a.setUrgency((request.getParameter("urgency")!=null)?request.getParameter("urgency"):"");
+	
+	appointmentDao.persist(a);
+	int rowsAffected=1;
+	
 	if (rowsAffected == 1) {
 
              //email patient appointment record

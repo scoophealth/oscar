@@ -37,6 +37,7 @@
 <%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
 <%@page import="org.oscarehr.common.model.Appointment" %>
 <%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="oscar.util.ConversionUtils" %>
 <%
 	AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
 	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
@@ -60,45 +61,40 @@
 		GregorianCalendar gEndDate = (GregorianCalendar) gCalDate.clone();
 		gEndDate.setTime(UtilDateUtilities.StringToDate(endDate, "dd/MM/yyyy"));
 
-        //StringBuffer strbuf = new StringBuffer();
-        //for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
-	        //strbuf=new StringBuffer(e.nextElement().toString());
-            //if (strbuf.toString().indexOf("one")==-1 && strbuf.toString().indexOf("two")==-1) continue;
-		    //datano=Integer.parseInt(request.getParameter(strbuf.toString()) );
-
-		    String[] param=new String[19];
-     	    param[0]=request.getParameter("provider_no");
-	        param[1]=request.getParameter("appointment_date");
-    	    param[2]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
-	        param[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"));
-            param[4]=request.getParameter("keyword");
-	        param[5]=request.getParameter("notes");
-	        param[6]=request.getParameter("reason");
-    	    param[7]=request.getParameter("location");
-	        param[8]=request.getParameter("resources");
-	        param[9]=request.getParameter("type");
-    	    param[10]=request.getParameter("style");
-	        param[11]=request.getParameter("billing");
-	        param[12]=request.getParameter("status");
-     	    param[13]=createdDateTime;   //request.getParameter("createdatetime");
-	        param[14]=userName;  //request.getParameter("creator");
-    	    param[15]=request.getParameter("remarks");
-
-	  	    if (request.getParameter("demographic_no")!=null && !(request.getParameter("demographic_no").equals(""))) {
-				param[16]=request.getParameter("demographic_no");
-		    } else param[16]="0";
-
-	  	  	param[17]=(String)request.getSession().getAttribute("programId_oscarView");
-	  	 	param[18]=null;
-        //}
-
+  	 	Date iDate = ConversionUtils.fromDateString(request.getParameter("appointment_date"));
         // repeat adding
 		while (true) {
-			rowsAffected = oscarSuperManager.update("appointmentDao", "add_apptrecord", param);
-            if (rowsAffected != 1) break;
+			Appointment a = new Appointment();
+			a.setProviderNo(request.getParameter("provider_no"));
+			a.setAppointmentDate(iDate);
+			a.setStartTime(ConversionUtils.fromTimeStringNoSeconds(request.getParameter("start_time")));
+			a.setEndTime(ConversionUtils.fromTimeStringNoSeconds(request.getParameter("end_time")));
+			a.setName(request.getParameter("keyword"));
+			a.setNotes(request.getParameter("notes"));
+			a.setReason(request.getParameter("reason"));
+			a.setLocation(request.getParameter("location"));
+			a.setResources(request.getParameter("resources"));
+			a.setType(request.getParameter("type"));
+			a.setStyle(request.getParameter("style"));
+			a.setBilling(request.getParameter("billing"));
+			a.setStatus(request.getParameter("status"));
+			a.setCreateDateTime(new java.util.Date());
+			a.setCreator(userName);
+			a.setRemarks(request.getParameter("remarks"));
+			if (request.getParameter("demographic_no")!=null && !(request.getParameter("demographic_no").equals(""))) {
+				a.setDemographicNo(Integer.parseInt(request.getParameter("demographic_no")));
+		    } else {
+		    	a.setDemographicNo(0);
+		    }
+			
+			a.setProgramId(Integer.parseInt((String)request.getSession().getAttribute("programId_oscarView")));
+			a.setUrgency(null);
+			
+			appointmentDao.persist(a);
+			
 
-            gCalDate.setTime(UtilDateUtilities.StringToDate(param[1], "yyyy-MM-dd"));
-			if (everyUnit.equalsIgnoreCase("day")) {
+            gCalDate.setTime(a.getAppointmentDate());
+			if (everyUnit.equals("day")) {
 				gCalDate.add(Calendar.DATE, delta);
 			} else if (everyUnit.equalsIgnoreCase("month")) {
 				gCalDate.add(Calendar.MONTH, delta);
@@ -108,10 +104,13 @@
 				break;
 			}
 
-			if (gCalDate.after(gEndDate)) break;
-			else param[1] = UtilDateUtilities.DateToString(gCalDate.getTime(), "yyyy-MM-dd");
+			if (gCalDate.after(gEndDate)) 
+				break;
+			else 
+				iDate = gCalDate.getTime();
 		}
-        if (rowsAffected == 1) bSucc = true;
+        
+        bSucc = true;
 	}
 
 
@@ -150,29 +149,35 @@
             	rowsAffected = oscarSuperManager.update("appointmentDao", "delete",
             			new Object [] {request.getParameter("appointment_no" + datano)});
 
-                String[] paramu = new String[17];
-                        paramu[0]=request.getParameter("provider_no"+datano);
-                        paramu[1]=request.getParameter("appointment_date");
-                        paramu[2]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
-                        paramu[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"));
-                        paramu[4]=request.getParameter("keyword");
-                        paramu[5]=request.getParameter("notes");
-                        paramu[6]=request.getParameter("reason");
-                        paramu[7]=request.getParameter("location");
-                        paramu[8]=request.getParameter("resources");
-                        paramu[9]=request.getParameter("type");
-                        paramu[10]=request.getParameter("style");
-                        paramu[11]=request.getParameter("billing");
-                        paramu[12]=request.getParameter("status");
-                        paramu[13]=createdDateTime;   //request.getParameter("createdatetime");
-                        paramu[14]=userName;  //request.getParameter("creator");
-                        paramu[15]=request.getParameter("remarks");
-		        if (!(request.getParameter("demographic_no").equals("")) && strbuf.toString().indexOf("one") != -1) {
-					paramu[16]=request.getParameter("demographic_no");
-	     	    } else {
-	     	    	paramu[16]="0";
-	     	    }
-		    	rowsAffected = oscarSuperManager.update("appointmentDao", "add_apptrecord", paramu);
+		    	
+		    	Appointment a = new Appointment();
+				a.setProviderNo(request.getParameter("provider_no")+datano);
+				a.setAppointmentDate( ConversionUtils.fromDateString(request.getParameter("appointment_date")));
+				a.setStartTime(ConversionUtils.fromTimeStringNoSeconds(request.getParameter("start_time")));
+				a.setEndTime(ConversionUtils.fromTimeStringNoSeconds(request.getParameter("end_time")));
+				a.setName(request.getParameter("keyword"));
+				a.setNotes(request.getParameter("notes"));
+				a.setReason(request.getParameter("reason"));
+				a.setLocation(request.getParameter("location"));
+				a.setResources(request.getParameter("resources"));
+				a.setType(request.getParameter("type"));
+				a.setStyle(request.getParameter("style"));
+				a.setBilling(request.getParameter("billing"));
+				a.setStatus(request.getParameter("status"));
+				a.setCreateDateTime(new java.util.Date());
+				a.setCreator(userName);
+				a.setRemarks(request.getParameter("remarks"));
+				if (!(request.getParameter("demographic_no").equals("")) && strbuf.toString().indexOf("one") != -1) {
+					a.setDemographicNo(Integer.parseInt(request.getParameter("demographic_no")));
+			    } else {
+			    	a.setDemographicNo(0);
+			    }
+				
+				a.setProgramId(Integer.parseInt((String)request.getSession().getAttribute("programId_oscarView")));
+				a.setUrgency(request.getParameter("urgency"));
+				
+				appointmentDao.persist(a);
+				
 
 			}
 	    	if (rowsAffected != 1) break;

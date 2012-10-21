@@ -126,7 +126,7 @@ function newWindow(file,window) {
 			name="location" tabindex="4" value="" /> <input type="hidden"
 			name="resources" tabindex="5" value="" /> <input type="hidden"
 			name="user_id" value="oscardoc, doctor" /> <input type="hidden"
-			name="dboperation" value="add_apptrecord" /> <input type="hidden"
+			name="dboperation" value="search_demorecord" /> <input type="hidden"
 			name="createdatetime" value="2002-10-1 17:53:50" /> <input
 			type="hidden" name="provider_no" value="115" /> <input type="hidden"
 			name="creator" value="oscardoc, doctor" /> <input type="hidden"
