@@ -2198,7 +2198,6 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		// if issue hasn't been added, add it
 		// if it has do nothing;-> change to if it's already added, still keep it but won't
-		//insert into casemgmt_issue, just add a new record to casemgmt_issue_notes.
 		//if (!issueExists) {
 			CheckIssueBoxBean[] caseIssueList = new CheckIssueBoxBean[1];
 

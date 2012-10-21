@@ -40,8 +40,12 @@
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.dao.DemographicAccessoryDao" %>
 <%@page import="org.oscarehr.common.model.DemographicAccessory" %>
+<%@page import="org.oscarehr.common.model.Form" %>
+<%@page import="org.oscarehr.common.dao.FormDao" %>
+
 <%
-	DemographicAccessoryDao demographicAccessoryDao = (DemographicAccessoryDao)SpringUtils.getBean("demographicAccessoryDao");
+FormDao formDao = SpringUtils.getBean(FormDao.class);
+DemographicAccessoryDao demographicAccessoryDao = (DemographicAccessoryDao)SpringUtils.getBean("demographicAccessoryDao");
 %>
 
 <html>
@@ -72,15 +76,16 @@
   content=SxmlMisc.createXmlDataString(request, "xml_");
 
   //save form
-  String[] param =new String[6];
-  param[0]=request.getParameter("demographic_no");
-  param[1]=request.getParameter("user_no");
-  param[2]=form_date;
-  param[3]=form_time; //MyDateFormat.getTimeXX_XX_XX(request.getParameter("form_time"));
-  param[4]=request.getParameter("form_name");
-  param[5]=content;
-  int rowsAffected = oscarSuperManager.update("providerDao", request.getParameter("dboperation"), param);
-
+  Form f = new Form();
+  f.setDemographicNo(Integer.parseInt(request.getParameter("demographic_no")));
+  f.setProviderNo(request.getParameter("user_no"));
+  f.setFormDate(new java.util.Date());
+  f.setFormTime(new java.util.Date());
+  f.setFormName(request.getParameter("form_name"));
+  f.setContent(content);
+  formDao.persist(f);
+  int rowsAffected=1;
+  
   if (rowsAffected == 1) { //if success
     String[] param2 = new String[2];
     param2[0]=request.getParameter("demographic_no");

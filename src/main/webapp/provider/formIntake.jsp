@@ -10,9 +10,14 @@
 --%>
 
 <%@ page import="java.util.*, java.sql.*, oscar.*, oscar.oscarRx.util.*, oscar.util.*" errorPage="errorpage.jsp"%>
+<%@ page import="org.oscarehr.common.dao.MeasurementDao" %>
+<%@ page import="org.oscarehr.common.model.Measurement" %>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
-
+<%
+	MeasurementDao dao = SpringUtils.getBean(MeasurementDao.class);
+%>
 
 <%@page import="oscar.OscarProperties" %>
 
@@ -36,230 +41,372 @@ boolean selfSubmit = (request.getParameter("selfsubmit") != null) ? request.getP
 
 // on submit
 if (selfSubmit) {
-	String measurementSetQuery = "intake_set_measurement";
-	String[] measurementSetParam = new String[6];
-	measurementSetParam[1] = demographic_no;
-	measurementSetParam[2] = curUser_no;
+	
+	
 	List<Map<String, Object>> measurementSetResult;
 
-	measurementSetParam[0] = "HT";
 	if (request.getParameter("ht_value")!=null && isNumeric(request.getParameter("ht_value"))) {
-		measurementSetParam[3] = request.getParameter("ht_value");
-		measurementSetParam[4] = "cm";
-		measurementSetParam[5] = (request.getParameter("ht_comment") != null) ? request.getParameter("ht_comment") : "";
-		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("ht_value"));
+		m.setMeasuringInstruction("cm");
+		m.setComments((request.getParameter("ht_comment") != null) ? request.getParameter("ht_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("HT");
+		dao.persist(m);
 	}
 	
-	measurementSetParam[0] = "WT";
 	if (request.getParameter("wt_value")!=null && isNumeric(request.getParameter("wt_value"))) {
-		measurementSetParam[3] = request.getParameter("wt_value");
-		measurementSetParam[4] = "kg";
-		measurementSetParam[5] = (request.getParameter("wt_comment") != null) ? request.getParameter("wt_comment") : "";
-		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("wt_value"));
+		m.setMeasuringInstruction("kg");
+		m.setComments((request.getParameter("wt_comment") != null) ? request.getParameter("wt_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("WT");
+		dao.persist(m);
 	}
 
-	measurementSetParam[0] = "BMI";
 	if (request.getParameter("bmi_value")!=null && isNumeric(request.getParameter("bmi_value"))) {
-		measurementSetParam[3] = request.getParameter("bmi_value");
-		measurementSetParam[4] = "";
-		measurementSetParam[5] = (request.getParameter("bmi_comment") != null) ? request.getParameter("bmi_comment") : "";
-		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("bmi_value"));
+		m.setMeasuringInstruction("");
+		m.setComments((request.getParameter("bmi_comment") != null) ? request.getParameter("bmi_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("BMI");
+		dao.persist(m);
 	}
 
-	measurementSetParam[0] = "HEAD";
 	if (request.getParameter("head_value")!=null && isNumeric(request.getParameter("head_value"))) {
-		measurementSetParam[3] = request.getParameter("head_value");
-		measurementSetParam[4] = "cm";
-		measurementSetParam[5] = (request.getParameter("head_comment") != null) ? request.getParameter("head_comment") : "";
-		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("head_value"));
+		m.setMeasuringInstruction("cm");
+		m.setComments((request.getParameter("head_comment") != null) ? request.getParameter("head_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("HEAD");
+		dao.persist(m);
 	}
 
-	measurementSetParam[0] = "WAIS";
 	if (request.getParameter("waist_value")!=null && isNumeric(request.getParameter("waist_value"))) {
-		measurementSetParam[3] = request.getParameter("waist_value");
-		measurementSetParam[4] = "cm";
-		measurementSetParam[5] = (request.getParameter("waist_comment") != null) ? request.getParameter("waist_comment") : "";
-		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("waist_value"));
+		m.setMeasuringInstruction("cm");
+		m.setComments((request.getParameter("waist_comment") != null) ? request.getParameter("waist_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("WAIS");
+		dao.persist(m);
 	}
 
-	measurementSetParam[0] = "HIP";
 	if (request.getParameter("hip_value")!=null && isNumeric(request.getParameter("hip_value"))) {
-		measurementSetParam[3] = request.getParameter("hip_value");
-		measurementSetParam[4] = "cm";
-		measurementSetParam[5] = (request.getParameter("hip_comment") != null) ? request.getParameter("hip_comment") : "";
-		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("hip_value"));
+		m.setMeasuringInstruction("cm");
+		m.setComments((request.getParameter("hip_comment") != null) ? request.getParameter("hip_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("HIP");
+		dao.persist(m);
 	}
 
-	measurementSetParam[0] = "WHR";
 	if (request.getParameter("whr_value")!=null && isNumeric(request.getParameter("whr_value"))) {
-		measurementSetParam[3] = request.getParameter("whr_value");
-		measurementSetParam[4] = "";
-		measurementSetParam[5] = (request.getParameter("whr_comment") != null) ? request.getParameter("whr_comment") : "";
-		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("whr_value"));
+		m.setMeasuringInstruction("");
+		m.setComments((request.getParameter("whr_comment") != null) ? request.getParameter("whr_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("WHR");
+		dao.persist(m);
 	}
 
-	measurementSetParam[0] = "BP";
 	if (request.getParameter("bp_value_s")!=null && isNumeric(request.getParameter("bp_value_s")) && request.getParameter("bp_value_d")!=null && isNumeric(request.getParameter("bp_value_d"))) {
-		measurementSetParam[3] = request.getParameter("bp_value_s") + "/" + request.getParameter("bp_value_d");
-		measurementSetParam[4] = request.getParameter("bp_instruction");
-		measurementSetParam[5] = (request.getParameter("bp_comment") != null) ? request.getParameter("bp_comment") : "";
-		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("bp_value_s") + "/" + request.getParameter("bp_value_d"));
+		m.setMeasuringInstruction(request.getParameter("bp_instruction"));
+		m.setComments((request.getParameter("bp_comment") != null) ? request.getParameter("bp_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("BP");
+		dao.persist(m);
 	}
 
-	measurementSetParam[0] = "PULS";
 	if (request.getParameter("pulse_value")!=null && isNumeric(request.getParameter("pulse_value"))) {
-		measurementSetParam[3] = request.getParameter("pulse_value");
-		measurementSetParam[4] = "";
-		measurementSetParam[5] = (request.getParameter("pulse_comment") != null) ? request.getParameter("pulse_comment") : "";
-		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("pulse_value"));
+		m.setMeasuringInstruction("");
+		m.setComments((request.getParameter("pulse_comment") != null) ? request.getParameter("pulse_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("PULS");
+		dao.persist(m);
 	}
 
-	measurementSetParam[0] = "RESP";
 	if (request.getParameter("resp_value")!=null && isNumeric(request.getParameter("resp_value"))) {
-		measurementSetParam[3] = request.getParameter("resp_value");
-		measurementSetParam[4] = "";
-		measurementSetParam[5] = (request.getParameter("resp_comment") != null) ? request.getParameter("resp_comment") : "";
-		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("resp_value"));
+		m.setMeasuringInstruction("");
+		m.setComments((request.getParameter("resp_comment") != null) ? request.getParameter("resp_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("RESP");
+		dao.persist(m);
 	}
 
-	measurementSetParam[0] = "TEMP";
 	if (request.getParameter("temp_value")!=null && isNumeric(request.getParameter("temp_value"))) {
-		measurementSetParam[3] = request.getParameter("temp_value");
-		measurementSetParam[4] = "";
-		measurementSetParam[5] = (request.getParameter("temp_comment") != null) ? request.getParameter("temp_comment") : "";
-		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("temp_value"));
+		m.setMeasuringInstruction("");
+		m.setComments((request.getParameter("temp_comment") != null) ? request.getParameter("temp_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("TEMP");
+		dao.persist(m);
 	}
 
-	measurementSetParam[0] = "O2";
 	if (request.getParameter("o2_value")!=null && isNumeric(request.getParameter("o2_value"))) {
-		measurementSetParam[3] = request.getParameter("o2_value");
-		measurementSetParam[4] = "";
-		measurementSetParam[5] = (request.getParameter("o2_comment") != null) ? request.getParameter("o2_comment") : "";
-		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("o2_value"));
+		m.setMeasuringInstruction("");
+		m.setComments((request.getParameter("o2_comment") != null) ? request.getParameter("o2_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("O2");
+		dao.persist(m);
 	}
 
-	measurementSetParam[0] = "FEET";
 	if (request.getParameter("feet_sensation_value")!=null) {
-		measurementSetParam[3] = request.getParameter("feet_sensation_value");
-		measurementSetParam[4] = "Sensation";
-		measurementSetParam[5] = (request.getParameter("feet_sensation_comment") != null) ? request.getParameter("feet_sensation_comment") : "";
-		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("feet_sensation_value"));
+		m.setMeasuringInstruction("Sensation");
+		m.setComments((request.getParameter("feet_sensation_comment") != null) ? request.getParameter("feet_sensation_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("FEET");
+		dao.persist(m);
 	}
 
 	if (request.getParameter("feet_vibration_value")!=null) {
-		measurementSetParam[3] = request.getParameter("feet_vibration_value");
-		measurementSetParam[4] = "Vibration";
-		measurementSetParam[5] = (request.getParameter("feet_vibration_comment") != null) ? request.getParameter("feet_vibration_comment") : "";
-		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("feet_vibration_value"));
+		m.setMeasuringInstruction("Vibration");
+		m.setComments((request.getParameter("feet_vibration_comment") != null) ? request.getParameter("feet_vibration_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("FEET");
+		dao.persist(m);
 	}
 
 	if (request.getParameter("feet_reflexes_value")!=null) {
-		measurementSetParam[3] = request.getParameter("feet_reflexes_value");
-		measurementSetParam[4] = "Reflexes";
-		measurementSetParam[5] = (request.getParameter("feet_reflexes_comment") != null) ? request.getParameter("feet_reflexes_comment") : "";
-		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("feet_reflexes_value"));
+		m.setMeasuringInstruction("Reflexes");
+		m.setComments((request.getParameter("feet_reflexes_comment") != null) ? request.getParameter("feet_reflexes_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("FEET");
+		dao.persist(m);
 	}
 
 	if (request.getParameter("feet_pulses_value")!=null) {
-		measurementSetParam[3] = request.getParameter("feet_pulses_value");
-		measurementSetParam[4] = "Pulses";
-		measurementSetParam[5] = (request.getParameter("feet_pulses_comment") != null) ? request.getParameter("feet_pulses_comment") : "";
-		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("feet_pulses_value"));
+		m.setMeasuringInstruction("Pulses");
+		m.setComments((request.getParameter("feet_pulses_comment") != null) ? request.getParameter("feet_pulses_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("FEET");
+		dao.persist(m);
 	}
 
 	if (request.getParameter("feet_infection_value")!=null) {
-		measurementSetParam[3] = request.getParameter("feet_infection_value");
-		measurementSetParam[4] = "Infection";
-		measurementSetParam[5] = (request.getParameter("feet_infection_comment") != null) ? request.getParameter("feet_infection_comment") : "";
-		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("feet_infection_value"));
+		m.setMeasuringInstruction("Infection");
+		m.setComments((request.getParameter("feet_infection_comment") != null) ? request.getParameter("feet_infection_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("FEET");
+		dao.persist(m);
 	}
 
-	measurementSetParam[0] = "Exer";
 	if (request.getParameter("exercise_value")!=null && isNumeric(request.getParameter("exercise_value"))) {
-		measurementSetParam[3] = request.getParameter("exercise_value");
-		measurementSetParam[4] = "";
-		measurementSetParam[5] = (request.getParameter("exercise_comment") != null) ? request.getParameter("exercise_comment") : "";
-		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("exercise_value"));
+		m.setMeasuringInstruction("");
+		m.setComments((request.getParameter("exercise_comment") != null) ? request.getParameter("exercise_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("Exer");
+		dao.persist(m);
 	}
 
-	measurementSetParam[0] = "DRPW";
 	if (request.getParameter("drinks_value")!=null && isNumeric(request.getParameter("drinks_value"))) {
-		measurementSetParam[3] = request.getParameter("drinks_value");
-		measurementSetParam[4] = "";
-		measurementSetParam[5] = (request.getParameter("drinks_comment") != null) ? request.getParameter("drinks_comment") : "";
-		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("drinks_value"));
+		m.setMeasuringInstruction("");
+		m.setComments((request.getParameter("drinks_comment") != null) ? request.getParameter("drinks_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("DRPW");
+		dao.persist(m);
 	}
 
-	measurementSetParam[0] = "SMK";
 	if (request.getParameter("smoking_value")!=null) {
-		measurementSetParam[3] = request.getParameter("smoking_value");
-		measurementSetParam[4] = "";
-		measurementSetParam[5] = (request.getParameter("smoking_comment") != null) ? request.getParameter("smoking_comment") : "";
-		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("smoking_value"));
+		m.setMeasuringInstruction("");
+		m.setComments((request.getParameter("smoking_comment") != null) ? request.getParameter("smoking_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("SMK");
+		dao.persist(m);
 	}
 
-	measurementSetParam[0] = "SmkR";
 	if (request.getParameter("smokingrecent_value")!=null) {
-		measurementSetParam[3] = request.getParameter("smokingrecent_value");
-		measurementSetParam[4] = "";
-		measurementSetParam[5] = (request.getParameter("smokingrecent_comment") != null) ? request.getParameter("smokingrecent_comment") : "";
-		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("smokingrecent_value"));
+		m.setMeasuringInstruction("");
+		m.setComments((request.getParameter("smokingrecent_comment") != null) ? request.getParameter("smokingrecent_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("SmkR");
+		dao.persist(m);
 	}
 
-	measurementSetParam[0] = "SmkS";
 	if (request.getParameter("smokingstartyear_value")!=null && isNumeric(request.getParameter("smokingstartyear_value"))) {
-		measurementSetParam[3] = String.format("%04d", Integer.parseInt(request.getParameter("smokingstartyear_value")));
-		measurementSetParam[4] = "";
-		measurementSetParam[5] = (request.getParameter("smokingstart_comment") != null) ? request.getParameter("smokingstart_comment") : "";
-		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(String.format("%04d", Integer.parseInt(request.getParameter("smokingstartyear_value"))));
+		m.setMeasuringInstruction("");
+		m.setComments((request.getParameter("smokingstart_comment") != null) ? request.getParameter("smokingstart_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("SmkS");
+		dao.persist(m);
 	}
 
-	measurementSetParam[0] = "SmkC";
 	if (request.getParameter("smokingcessyear_value")!=null && isNumeric(request.getParameter("smokingcessyear_value"))) {
-		measurementSetParam[3] = String.format("%04d", Integer.parseInt(request.getParameter("smokingcessyear_value")));
-		measurementSetParam[4] = "";
-		measurementSetParam[5] = (request.getParameter("smokingcess_comment") != null) ? request.getParameter("smokingcess_comment") : "";
-		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(String.format("%04d", Integer.parseInt(request.getParameter("smokingcessyear_value"))));
+		m.setMeasuringInstruction("");
+		m.setComments((request.getParameter("smokingcess_comment") != null) ? request.getParameter("smokingcess_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("SmkC");
+		dao.persist(m);
 	}
 
-	measurementSetParam[0] = "SmkD";
 	if (request.getParameter("smokingpks_value")!=null) {
-		measurementSetParam[3] = request.getParameter("smokingpks_value");
-		measurementSetParam[4] = "";
-		measurementSetParam[5] = (request.getParameter("smokingpks_comment") != null) ? request.getParameter("smokingpks_comment") : "";
-		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("smokingpks_value"));
+		m.setMeasuringInstruction("");
+		m.setComments((request.getParameter("smokingpks_comment") != null) ? request.getParameter("smokingpks_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("SmkD");
+		dao.persist(m);
 	}
 
-	measurementSetParam[0] = "SmkPY";
 	if (request.getParameter("smokingpyhx_value")!=null && isNumeric(request.getParameter("smokingpyhx_value"))) {
-		measurementSetParam[3] = request.getParameter("smokingpyhx_value");
-		measurementSetParam[4] = "";
-		measurementSetParam[5] = (request.getParameter("smokingpyhx_comment") != null) ? request.getParameter("smokingpyhx_comment") : "";
-		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("smokingpyhx_value"));
+		m.setMeasuringInstruction("");
+		m.setComments((request.getParameter("smokingpyhx_comment") != null) ? request.getParameter("smokingpyhx_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("SmkPY");
+		dao.persist(m);
 	}
 
-	measurementSetParam[0] = "SmkA";
 	if (request.getParameter("smokingadvised_value")!=null) {
-		measurementSetParam[3] = request.getParameter("smokingadvised_value");
-		measurementSetParam[4] = "";
-		measurementSetParam[5] = (request.getParameter("smokingadvised_comment") != null) ? request.getParameter("smokingadvised_comment") : "";
-		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("smokingadvised_value"));
+		m.setMeasuringInstruction("");
+		m.setComments((request.getParameter("smokingadvised_comment") != null) ? request.getParameter("smokingadvised_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("SmkA");
+		dao.persist(m);
 	}
 
-	measurementSetParam[0] = "SmkQ";
 	if (request.getParameter("smokingquit_value")!=null) {
-		measurementSetParam[3] = request.getParameter("smokingquit_value");
-		measurementSetParam[4] = "";
-		measurementSetParam[5] = (request.getParameter("smokingquit_comment") != null) ? request.getParameter("smokingquit_comment") : "";
-		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("smokingquit_value"));
+		m.setMeasuringInstruction("");
+		m.setComments((request.getParameter("smokingquit_comment") != null) ? request.getParameter("smokingquit_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("SmkQ");
+		dao.persist(m);
 	}
 
-	measurementSetParam[0] = "SmkF";
 	if (request.getParameter("smokingfollowup_value")!=null) {
-		measurementSetParam[3] = request.getParameter("smokingfollowup_value");
-		measurementSetParam[4] = "";
-		measurementSetParam[5] = (request.getParameter("smokingfollowup_comment") != null) ? request.getParameter("smokingfollowup_comment") : "";
-		oscarSuperManager.update("providerDao", measurementSetQuery, measurementSetParam);
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("smokingfollowup_value"));
+		m.setMeasuringInstruction("");
+		m.setComments((request.getParameter("smokingfollowup_comment") != null) ? request.getParameter("smokingfollowup_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("SmkF");
+		dao.persist(m);
 	}
 }
 

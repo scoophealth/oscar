@@ -152,7 +152,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 		
 		if (includePublic) {
 			if (isShowingAllDocuments) {
-				buf.append(" AND d.m_public1 = 1");
+				buf.append(" AND d.m_public = 1");
 			} else {
 				buf.append(" AND d.m_public = 1 AND d.doctype = :doctype");
 				params.put("doctype", docType);

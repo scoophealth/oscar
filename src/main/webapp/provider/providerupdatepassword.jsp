@@ -32,39 +32,43 @@
 %>
 
 <%@ page
-	import="java.lang.*, java.util.*, java.text.*,java.sql.*,java.security.*, oscar.*"
+	import="java.lang.*, java.util.*, java.text.*,java.security.*, oscar.*"
 	errorPage="errorpage.jsp"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="com.quatro.model.security.Security" %>
+<%@ page import="com.quatro.dao.security.SecurityDao" %>
+
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <%
-	List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "searchpassword", new Object[] {curUser_no});
-	for (Map pwd : resultList) {
-     StringBuffer sbTemp = new StringBuffer();
-     byte[] btOldPasswd= md.digest(request.getParameter("oldpassword").getBytes());
-     for(int i=0; i<btOldPasswd.length; i++) sbTemp = sbTemp.append(btOldPasswd[i]);
+	SecurityDao dao = SpringUtils.getBean(SecurityDao.class);
+	List<Security> ss = dao.findByProviderNo(curUser_no);
+	for(Security s:ss) {
+		StringBuffer sbTemp = new StringBuffer();
+	     byte[] btOldPasswd= md.digest(request.getParameter("oldpassword").getBytes());
+	     for(int i=0; i<btOldPasswd.length; i++) sbTemp = sbTemp.append(btOldPasswd[i]);
 
-     String stroldpasswd = sbTemp.toString();
+	     String stroldpasswd = sbTemp.toString();
 
-     String strDBpasswd = (String) pwd.get("password");
-     if (strDBpasswd.length()<20) {
-         sbTemp = new StringBuffer();
-         byte[] btDBPasswd= md.digest(strDBpasswd.getBytes());
-         for(int i=0; i<btDBPasswd.length; i++) sbTemp = sbTemp.append(btDBPasswd[i]);
-         strDBpasswd = sbTemp.toString();
-     }
-     
-     if( stroldpasswd.equals(strDBpasswd ) && request.getParameter("mypassword").equals(request.getParameter("confirmpassword")) ) {
-       sbTemp = new StringBuffer();
-       byte[] btNewPasswd= md.digest(request.getParameter("mypassword").getBytes());
-       for(int i=0; i<btNewPasswd.length; i++) sbTemp = sbTemp.append(btNewPasswd[i]);
+	     String strDBpasswd = s.getPassword();
+	     if (strDBpasswd.length()<20) {
+	         sbTemp = new StringBuffer();
+	         byte[] btDBPasswd= md.digest(strDBpasswd.getBytes());
+	         for(int i=0; i<btDBPasswd.length; i++) sbTemp = sbTemp.append(btDBPasswd[i]);
+	         strDBpasswd = sbTemp.toString();
+	     }
+	     
+	     if( stroldpasswd.equals(strDBpasswd ) && request.getParameter("mypassword").equals(request.getParameter("confirmpassword")) ) {
+	       sbTemp = new StringBuffer();
+	       byte[] btNewPasswd= md.digest(request.getParameter("mypassword").getBytes());
+	       for(int i=0; i<btNewPasswd.length; i++) sbTemp = sbTemp.append(btNewPasswd[i]);
 
-       String[] param = new String[2];
-       param[0]=sbTemp.toString();
-       param[1]=curUser_no;
-       int rowsAffected = oscarSuperManager.update("providerDao", "updatepassword", param);
-       if(rowsAffected==1) out.println("<script language='javascript'>self.close();</script>");
-     } else {
-       response.sendRedirect("providerchangepassword.jsp");
-     }
-   }
+	       s.setPassword(sbTemp.toString());
+	       dao.saveOrUpdate(s);
+	      
+	       out.println("<script language='javascript'>self.close();</script>");
+	     } else {
+	       response.sendRedirect("providerchangepassword.jsp");
+	     }
+	}
 %>

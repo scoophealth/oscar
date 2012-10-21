@@ -278,7 +278,7 @@ var newD = newYear + "-" + newMonth + "-" + newDay;
          <input type="hidden" name="location"  tabindex="4" value="" width="25" height="20" border="0" hspace="2">
               <input type="hidden" name="resources"  tabindex="5" value="" width="25" height="20" border="0" hspace="2">
               <INPUT TYPE="hidden" NAME="user_id" readonly VALUE='oscardoc, doctor' WIDTH="25" HEIGHT="20" border="0" hspace="2">
-     	        <INPUT TYPE="hidden" NAME="dboperation" VALUE="add_apptrecord">
+     	        <INPUT TYPE="hidden" NAME="dboperation" VALUE="search_demorecord">
               <INPUT TYPE="hidden" NAME="createdatetime" readonly VALUE="2002-10-1 17:53:50" WIDTH="25" HEIGHT="20" border="0" hspace="2">
               <INPUT TYPE="hidden" NAME="provider_no" VALUE="115">
               <INPUT TYPE="hidden" NAME="creator" VALUE="oscardoc, doctor">
