@@ -554,6 +554,30 @@
               prev.addWarning("Flu", "Needs Flu Shot ");
         </java:consequence>
     </rule>
+    
+    <rule name="Flu 2">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>       
+        <java:condition>prev.getAgeInYears() &gt;=65</java:condition> 
+        <java:condition>prev.getHowManyMonthsSinceLast("Flu") &gt;= 12</java:condition> 
+        <java:consequence>              
+              prev.log("Flu 2");
+              prev.addWarning("Flu", "Needs Flu Shot ");
+        </java:consequence>
+    </rule>
+    
+    <rule name="Flu 3">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>       
+        <java:condition>prev.getAgeInYears() &gt;=65</java:condition> 
+        <java:condition>prev.getHowManyMonthsSinceLast("Flu") == -1</java:condition> 
+        <java:consequence>              
+              prev.log("Flu 3");
+              prev.addWarning("Flu", "Needs Flu Shot ");
+        </java:consequence>
+    </rule>
 
     <rule name="Flu Set Date">
         <parameter identifier="prev">
@@ -574,8 +598,8 @@
         <java:condition>prev.getAgeInYears() &gt;= 18</java:condition>
         <java:condition>prev.getAgeInYears() &lt; 70</java:condition>
         <java:condition>prev.isFemale()</java:condition>
-        <java:condition>prev.getHowManyMonthsSinceLast("PAP") &gt;= 22</java:condition>        
-        <java:condition>prev.getHowManyMonthsSinceLast("PAP") &lt;= 24</java:condition>        
+        <java:condition>prev.getHowManyMonthsSinceLast("PAP") &gt;= 34</java:condition>        
+        <java:condition>prev.getHowManyMonthsSinceLast("PAP") &lt;= 36</java:condition>        
         <java:condition>!prev.isPreventionNever("PAP")</java:condition>
         <java:condition>!prev.isNextDateSet("PAP")</java:condition>
         <java:condition>!prev.isInelligible("PAP")</java:condition>
@@ -592,7 +616,7 @@
         <java:condition>prev.getAgeInYears() &gt;= 18</java:condition>
         <java:condition>prev.getAgeInYears() &lt; 70</java:condition>
         <java:condition>prev.isFemale()</java:condition>
-        <java:condition>prev.getHowManyMonthsSinceLast("PAP") &gt; 24</java:condition>        
+        <java:condition>prev.getHowManyMonthsSinceLast("PAP") &gt; 36</java:condition>        
         <java:condition>!prev.isPreventionNever("PAP")</java:condition>
         <java:condition>!prev.isNextDateSet("PAP")</java:condition>
         <java:condition>!prev.isInelligible("PAP")</java:condition>
