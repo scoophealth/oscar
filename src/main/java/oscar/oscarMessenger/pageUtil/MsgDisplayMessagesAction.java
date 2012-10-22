@@ -22,7 +22,9 @@
  * Ontario, Canada
  */
 package oscar.oscarMessenger.pageUtil;
+
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -32,75 +34,66 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.MessageListDao;
+import org.oscarehr.common.model.MessageList;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
+import oscar.util.ConversionUtils;
 
 public class MsgDisplayMessagesAction extends Action {
 
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-    public ActionForward execute(ActionMapping mapping,
-				 ActionForm form,
-				 HttpServletRequest request,
-				 HttpServletResponse response)
-	throws IOException, ServletException {
+		// Setup variables            
+		oscar.oscarMessenger.pageUtil.MsgSessionBean bean = null;
+		String[] messageNo = ((MsgDisplayMessagesForm) form).getMessageNo();
+		String providerNo;
 
-            // Setup variables            
-            oscar.oscarMessenger.pageUtil.MsgSessionBean bean = null;
-            String[] messageNo = ((MsgDisplayMessagesForm)form).getMessageNo();
-            String providerNo;
-            
-            //Initialize forward location
-            String findForward = "success";
+		//Initialize forward location
+		String findForward = "success";
 
-            if(request.getParameter("providerNo")!=null & request.getParameter("userName")!=null)
-            {
+		if (request.getParameter("providerNo") != null & request.getParameter("userName") != null) {
 
-                bean = new oscar.oscarMessenger.pageUtil.MsgSessionBean();
-                bean.setProviderNo(request.getParameter("providerNo"));
-                bean.setUserName(request.getParameter("userName"));
-                request.getSession().setAttribute("msgSessionBean", bean);
-                                
-            }//if
-            else
-            {
-                bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean)request.getSession().getAttribute("msgSessionBean");
-            }//else
-            
-            
-            /*
-             *edit 2006-0811-01 by wreby
-             *  Adding a search and clear search action to the DisplayMessages JSP
-             */
-            if (request.getParameter("btnSearch") != null) {
-                oscar.oscarMessenger.pageUtil.MsgDisplayMessagesBean displayMsgBean 
-                        = (oscar.oscarMessenger.pageUtil.MsgDisplayMessagesBean)request.getSession().getAttribute("DisplayMessagesBeanId");
-                
-                displayMsgBean.setFilter(request.getParameter("searchString"));
-            }
-            else if (request.getParameter("btnClearSearch") != null) {
-                oscar.oscarMessenger.pageUtil.MsgDisplayMessagesBean displayMsgBean 
-                        = (oscar.oscarMessenger.pageUtil.MsgDisplayMessagesBean)request.getSession().getAttribute("DisplayMessagesBeanId");
-                displayMsgBean.clearFilter();
-            }
-            else if (request.getParameter("btnDelete")!=null) {
-                //This will go through the array of message Numbers and set them
-                //to del.which stands for deleted. but you prolly could have figured that out
+			bean = new oscar.oscarMessenger.pageUtil.MsgSessionBean();
+			bean.setProviderNo(request.getParameter("providerNo"));
+			bean.setUserName(request.getParameter("userName"));
+			request.getSession().setAttribute("msgSessionBean", bean);
 
-                providerNo= bean.getProviderNo();
-                for (int i =0 ; i < messageNo.length ; i++){
-                  try{
-                    
-                    String sql = new String("update messagelisttbl set status = \'del\' where provider_no = \'"+providerNo+"\' and message = \'"+messageNo[i]+"\'");
-                    DBHandler.RunSQL(sql);
-                  }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
-                }//for
-            }
-            else {
-                MiscUtils.getLogger().debug("Unexpected action in MsgDisplayMessagesBean.java");
-            }
+		}//if
+		else {
+			bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean) request.getSession().getAttribute("msgSessionBean");
+		}//else
 
-    return (mapping.findForward(findForward));
-    }
+		/*
+		 *edit 2006-0811-01 by wreby
+		 *  Adding a search and clear search action to the DisplayMessages JSP
+		 */
+		if (request.getParameter("btnSearch") != null) {
+			oscar.oscarMessenger.pageUtil.MsgDisplayMessagesBean displayMsgBean = (oscar.oscarMessenger.pageUtil.MsgDisplayMessagesBean) request.getSession().getAttribute("DisplayMessagesBeanId");
+
+			displayMsgBean.setFilter(request.getParameter("searchString"));
+		} else if (request.getParameter("btnClearSearch") != null) {
+			oscar.oscarMessenger.pageUtil.MsgDisplayMessagesBean displayMsgBean = (oscar.oscarMessenger.pageUtil.MsgDisplayMessagesBean) request.getSession().getAttribute("DisplayMessagesBeanId");
+			displayMsgBean.clearFilter();
+		} else if (request.getParameter("btnDelete") != null) {
+			//This will go through the array of message Numbers and set them
+			//to del.which stands for deleted. but you prolly could have figured that out
+
+			providerNo = bean.getProviderNo();
+			MessageListDao dao = SpringUtils.getBean(MessageListDao.class);
+			for (int i = 0; i < messageNo.length; i++) {
+				List<MessageList> msgs = dao.findByProviderNoAndMessageNo(providerNo, ConversionUtils.fromLongString(messageNo[i]));
+				for (MessageList msg : msgs) {
+					msg.setDeleted(true);
+					dao.merge(msg);
+				}
+			}//for
+		} else {
+			MiscUtils.getLogger().debug("Unexpected action in MsgDisplayMessagesBean.java");
+		}
+
+		return (mapping.findForward(findForward));
+	}
 
 }
