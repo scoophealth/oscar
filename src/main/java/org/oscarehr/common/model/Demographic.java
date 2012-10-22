@@ -713,6 +713,8 @@ public class Demographic implements Serializable {
 	}
 
 	public void setFormattedEffDate(String formattedDate) {
+		if(StringUtils.isBlank(formattedDate))
+			return;
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Date d = sdf.parse(formattedDate);
@@ -730,6 +732,8 @@ public class Demographic implements Serializable {
 	}
 
 	public void setFormattedRenewDate(String formattedDate) {
+		if(StringUtils.isBlank(formattedDate))
+			return;
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Date d = sdf.parse(formattedDate);
