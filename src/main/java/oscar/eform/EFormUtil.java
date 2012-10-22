@@ -648,6 +648,17 @@ public class EFormUtil {
 				curht.put("formDate", rsGetString(rs, "form_date"));
 				curht.put("formTime", rsGetString(rs, "form_time"));
 				curht.put("roleType", rsGetString(rs, "roleType"));
+                                
+                                // filter eform by role type
+				if (curht.get("roleType") != null && !curht.get("roleType").equals("")) {
+					// ojectName: "_admin,_admin.eform"
+					// roleName: "doctor,admin"
+					String objectName = "_eform." + curht.get("roleType");
+					Vector v = OscarRoleObjectPrivilege.getPrivilegeProp(objectName);
+					if (!OscarRoleObjectPrivilege.checkPrivilege(userRoles, (Properties) v.get(0), (Vector) v.get(1))) {
+						continue;
+					}
+				}
 				results.add(curht);
 			}
 			rs.close();

@@ -31,6 +31,11 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%
+
+  String user = (String) session.getAttribute("user");
+  if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName = (String)session.getAttribute("userrole") + "," + user;
+    
   ArrayList groups = EFormUtil.getEFormGroups();
   ArrayList<HashMap<String, ? extends Object>> forms = EFormUtil.listEForms(EFormUtil.NAME, EFormUtil.CURRENT);
   String groupView = request.getParameter("group_view");
@@ -39,7 +44,7 @@
   }
   if (groupView == null) {
       if( groups.size() > 0 ) {
-        Hashtable tmphash = (Hashtable) groups.get(0);
+        HashMap tmphash = (HashMap) groups.get(0);
         groupView = (String) tmphash.get("groupName");
       }
       else {
@@ -125,7 +130,7 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
 				<td nowrap><select name="group_view"
 					onchange="this.form.submit()">
 					<%                              for (int i=0; i<groups.size(); i++) { 
-                                   Hashtable curhash = (Hashtable) groups.get(i);
+                                   HashMap curhash = (HashMap) groups.get(i);
                                    String selected = "";
                                       if (((String) curhash.get("groupName")).equals(groupView)) {
                                           selected = " selected";
@@ -220,7 +225,7 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
 	</tr>
 	<%
   if (!groupView.equals("")) {
-      ArrayList<HashMap<String, ? extends Object>> eForms = EFormUtil.listEForms(orderBy, EFormUtil.CURRENT, groupView);
+      ArrayList<HashMap<String, ? extends Object>> eForms = EFormUtil.listEForms(orderBy, EFormUtil.CURRENT, groupView, roleName);
       if (eForms.size() > 0) {
         for (int i=0; i<eForms.size(); i++) {
         	HashMap<String, ? extends Object> curForm = eForms.get(i);
