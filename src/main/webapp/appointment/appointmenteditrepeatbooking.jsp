@@ -335,10 +335,10 @@ function onSub() {
 		<td></td>
 		<td nowrap>&nbsp;&nbsp;&nbsp; 
 		
-		<input type="radio" name="dateUnit" value="<bean:message key="day"/>"   <%="checked"%> onclick='onCheck(this, "<bean:message key="day"/>")'><bean:message key="day"/> &nbsp;&nbsp; 
-		<input type="radio" name="dateUnit" value="<bean:message key="week"/>"  <%=""%>        onclick='onCheck(this, "<bean:message key="week"/>")'><bean:message key="week"/> &nbsp;&nbsp; 
-		<input type="radio" name="dateUnit" value="<bean:message key="month"/>" <%=""%>        onclick='onCheck(this, "<bean:message key="month"/>")'><bean:message key="month"/> &nbsp;&nbsp; 
-		<input type="radio" name="dateUnit" value="<bean:message key="year"/>"  <%=""%>        onclick='onCheck(this, "<bean:message key="year"/>")'><bean:message key="year"/></td>
+		<input type="radio" name="dateUnit" value="<bean:message key="day"/>"   <%="checked"%> onclick='onCheck(this, "day")'><bean:message key="day"/> &nbsp;&nbsp; 
+		<input type="radio" name="dateUnit" value="<bean:message key="week"/>"  <%=""%>        onclick='onCheck(this, "week")'><bean:message key="week"/> &nbsp;&nbsp; 
+		<input type="radio" name="dateUnit" value="<bean:message key="month"/>" <%=""%>        onclick='onCheck(this, "month")'><bean:message key="month"/> &nbsp;&nbsp; 
+		<input type="radio" name="dateUnit" value="<bean:message key="year"/>"  <%=""%>        onclick='onCheck(this, "year")'><bean:message key="year"/></td>
 	</tr>
 </table>
 

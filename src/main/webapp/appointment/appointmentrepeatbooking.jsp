@@ -98,12 +98,14 @@
             if (rowsAffected != 1) break;
 
             gCalDate.setTime(UtilDateUtilities.StringToDate(param[1], "yyyy-MM-dd"));
-			if (everyUnit.equals("day")) {
+			if (everyUnit.equalsIgnoreCase("day")) {
 				gCalDate.add(Calendar.DATE, delta);
-			} else if (everyUnit.equals("month")) {
+			} else if (everyUnit.equalsIgnoreCase("month")) {
 				gCalDate.add(Calendar.MONTH, delta);
-			} else if (everyUnit.equals("year")) {
+			} else if (everyUnit.equalsIgnoreCase("year")) {
 				gCalDate.add(Calendar.YEAR, delta);
+			}else{
+				break;
 			}
 
 			if (gCalDate.after(gEndDate)) break;
@@ -292,10 +294,10 @@ function onSub() {
 	<tr>
 		<td></td>
 		<td nowrap>&nbsp;&nbsp;&nbsp; 
-		<input type="radio" name="dateUnit" value="day" <%="checked"%> onclick='onCheck(this, "<bean:message key="day"/>")'> <bean:message key="day"/> &nbsp;&nbsp; 
-		<input type="radio" name="dateUnit" value="week" <%=""%> onclick='onCheck(this, "<bean:message key="week"/>")'> <bean:message key="week"/> &nbsp;&nbsp; 
-		<input type="radio" name="dateUnit" value="month" <%=""%> onclick='onCheck(this, "<bean:message key="month"/>")'> <bean:message key="month"/> &nbsp;&nbsp; 
-		<input type="radio" name="dateUnit" value="year" <%=""%> onclick='onCheck(this, "<bean:message key="year"/>")'> <bean:message key="year"/></td>
+		<input type="radio" name="dateUnit" value="day" <%="checked"%> onclick='onCheck(this, "day")'> <bean:message key="day"/> &nbsp;&nbsp; 
+		<input type="radio" name="dateUnit" value="week" <%=""%> onclick='onCheck(this, "week")'> <bean:message key="week"/> &nbsp;&nbsp; 
+		<input type="radio" name="dateUnit" value="month" <%=""%> onclick='onCheck(this, "month")'> <bean:message key="month"/> &nbsp;&nbsp; 
+		<input type="radio" name="dateUnit" value="year" <%=""%> onclick='onCheck(this, "year")'> <bean:message key="year"/></td>
 	</tr>
 </table>
 
