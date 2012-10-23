@@ -89,7 +89,6 @@ public final class LoginCheckLogin {
 		// judge the local network
 		if (ip.startsWith(p.getProperty("login_local_ip"))) bWAN = false;
 
-		new GregorianCalendar();
 		while (llist == null) {
 			llist = LoginList.getLoginListInstance();
 		}

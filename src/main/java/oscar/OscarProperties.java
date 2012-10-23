@@ -341,4 +341,8 @@ public class OscarProperties extends Properties {
 	public static String getIntakeProgramCashFId() {
 		return oscarProperties.getProperty("form_intake_program_cash_fid");
 	}
+	
+	public static boolean isLdapAuthenticationEnabled() {
+		return Boolean.parseBoolean(oscarProperties.getProperty("ldap.enabled"));
+	}
 }
