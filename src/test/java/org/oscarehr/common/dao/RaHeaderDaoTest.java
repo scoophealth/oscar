@@ -23,63 +23,33 @@
  */
 package org.oscarehr.common.dao;
 
-
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
-import org.oscarehr.common.model.RaDetail;
+import org.oscarehr.common.model.RaHeader;
 import org.oscarehr.util.SpringUtils;
 
-public class RaDetailDaoTest extends DaoTestFixtures {
+public class RaHeaderDaoTest extends DaoTestFixtures {
 
-	private RaDetailDao dao = SpringUtils.getBean(RaDetailDao.class);
+	private RaHeaderDao dao = SpringUtils.getBean(RaHeaderDao.class);
 
-	public RaDetailDaoTest() {
+	public RaHeaderDaoTest() {
 	}
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("radetail");
+		SchemaUtils.restoreTable("raheader");
 	}
 
 	@Test
 	public void testCreate() throws Exception {
-		RaDetail d = new RaDetail();
-		 EntityDataGenerator.generateTestDataForModelClass(d);
-		 dao.persist(d);
-		 assertNotNull(d);
+		RaHeader ql = new RaHeader();
+		 EntityDataGenerator.generateTestDataForModelClass(ql);
+		 dao.persist(ql);
+		 assertNotNull(ql.getId());
 	}
 	
-	@Test
-	public void testFindUniqueBillingNoByRaHeaderNoAndProvider() throws Exception {
-		RaDetail d = new RaDetail();
-		 EntityDataGenerator.generateTestDataForModelClass(d);
-		 d.setBillingNo(1);
-		 d.setRaHeaderNo(1);
-		 d.setProviderOhipNo("123456");
-		 dao.persist(d);
-		 
-		 List<Integer> results = dao.findUniqueBillingNoByRaHeaderNoAndProviderAndNotErrorCode(d.getRaHeaderNo(), d.getProviderOhipNo(),"a,b");
-		 assertEquals(results.size(),1);
-		 
-		 d = new RaDetail();
-		 EntityDataGenerator.generateTestDataForModelClass(d);
-		 d.setBillingNo(1);
-		 d.setRaHeaderNo(1);
-		 d.setProviderOhipNo("123456");
-		 dao.persist(d);
-		 
-		 results = dao.findUniqueBillingNoByRaHeaderNoAndProviderAndNotErrorCode(d.getRaHeaderNo(), d.getProviderOhipNo(),"a,b");
-		 assertEquals(results.size(),1);
-		 
-	}
-
-
 }
-

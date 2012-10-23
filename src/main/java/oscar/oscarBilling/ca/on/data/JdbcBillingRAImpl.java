@@ -23,51 +23,61 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.BillingONCHeader1Dao;
+import org.oscarehr.common.dao.RaDetailDao;
+import org.oscarehr.common.dao.RaHeaderDao;
+import org.oscarehr.common.model.BillingONCHeader1;
+import org.oscarehr.common.model.RaDetail;
+import org.oscarehr.common.model.RaHeader;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.util.UtilDateUtilities;
 
 public class JdbcBillingRAImpl {
 	private static final Logger _logger = Logger.getLogger(JdbcBillingRAImpl.class);
+	
+	private RaDetailDao raDetailDao = SpringUtils.getBean(RaDetailDao.class);
+	private RaHeaderDao raHeaderDao = SpringUtils.getBean(RaHeaderDao.class);
+	private BillingONCHeader1Dao cheader1Dao = SpringUtils.getBean(BillingONCHeader1Dao.class);
+
+	
 	BillingONDataHelp dbObj = new BillingONDataHelp();
 
 	public int addOneRADtRecord(BillingRAData val) {
-		int retval = 0;
-		String sql = "insert into radetail values(\\N, " + " " + val.raheader_no + " ," + "'" + val.providerohip_no
-				+ "'," + "'" + val.billing_no + "'," + "'" + val.service_code + "'," + "'" + val.service_count + "',"
-				+ "'" + val.hin + "'," + "'" + val.amountclaim + "'," + "'" + val.amountpay + "'," + "'"
-				+ val.service_date + "'," + "'" + val.error_code + "'," + "'" + val.billtype + "','" + val.claim_no + "')";
-		_logger.info("addOneRADtRecord(sql = " + sql + ")");
-		retval = dbObj.saveBillingRecord(sql);
-
-		if (retval == 0) {
-			_logger.error("addOneRADtRecord(sql = " + sql + ")");
-		}
-		return retval;
+		RaDetail r = new RaDetail();
+		r.setRaHeaderNo(Integer.parseInt(val.raheader_no));
+		r.setProviderOhipNo(val.providerohip_no);
+		r.setBillingNo(Integer.parseInt(val.billing_no));
+		r.setServiceCode(val.service_code);
+		r.setServiceCount(val.service_count);
+		r.setHin(val.hin);
+		r.setAmountClaim(val.amountclaim);
+		r.setAmountPay(val.amountpay);
+		r.setServiceDate(val.service_date);
+		r.setErrorCode(val.error_code);
+		r.setBillType(val.billtype);
+		r.setClaimNo(val.claim_no);
+		
+		raDetailDao.persist(r);
+		
+		return r.getId();
 	}
 
-	// property: billingNo - raHeaderNo
+
 	public Properties getPropBillNoRAHeaderNo(String raheader_no) {
 		Properties retval = new Properties();
-		String sql = "select billing_no from radetail where raheader_no=" + raheader_no;
-		// _logger.info("getPropBillNoRAHeaderNo(sql = " + sql + ")");
-		ResultSet rs = dbObj.searchDBRecord(sql);
-
-		try {
-			if (rs.next()) {
-				retval.setProperty(rs.getString("billing_no"), raheader_no);
-			}
-			rs.close();
-		} catch (SQLException e) {
-			_logger.error("getPropBillNoRAHeaderNo(sql = " + sql + ")");
-			retval = null;
+		
+		List<RaDetail> rr = raDetailDao.findByRaHeaderNo(Integer.parseInt(raheader_no));
+		for(RaDetail r:rr) {
+			retval.setProperty(String.valueOf(r.getBillingNo()),raheader_no);
 		}
-
+		
 		return retval;
 	}
 
@@ -90,10 +100,8 @@ public class JdbcBillingRAImpl {
 		} else if (filePathName.indexOf("\\") >= 0) {
 			filename = filePathName.substring(filePathName.lastIndexOf("\\") + 1);
 		}
-		// String url=request.getRequestURI();
-		// url = url.substring(1);
-		// url = url.substring(0,url.indexOf("/"));
-		// filepath = "/usr/local/OscarDocument/" + url +"/document/";
+		
+		
 		FileInputStream file = new FileInputStream(filePathName);
 		InputStreamReader reader = new InputStreamReader(file);
 		BufferedReader input = new BufferedReader(reader);
@@ -118,33 +126,17 @@ public class JdbcBillingRAImpl {
 					total = getPointNum(total);
 					total += totalStatus;
 
-					// String[] param2 = new String[2];
-					// param2[0] = filename;
-					// param2[1] = paymentdate;
-
-					sql = "select raheader_no from raheader where filename='" + filename + "' and paymentdate='"
-							+ paymentdate + "' and status <> 'D' order by paymentdate";
-					ResultSet rsdemo = dbObj.searchDBRecord(sql);
-					// ResultSet rsdemo = apptMainBean.queryResults(param2,
-					// "search_rahd");
-					while (rsdemo.next()) {
-						raNo = "" + rsdemo.getInt("raheader_no");
+					List<RaHeader> headers = raHeaderDao.findCurrentByFilenamePaymentDate(filename, paymentdate);
+					for(RaHeader h:headers) {
+						raNo = "" + h.getId();
 					}
-					rsdemo.close();
 					
 					// judge if it is empty in table radt
 					int radtNum = 0;
 					if (raNo != null && raNo.length() > 0) {
 						// can't make sure the record has only one result here
-						sql = "select count(raheader_no) from radetail where raheader_no= " + raNo;
-						rsdemo = dbObj.searchDBRecord(sql);
-						// rsdemo = apptMainBean.queryResults(new String[] {
-						// raNo }, "search_radt");
-						while (rsdemo.next()) {
-							radtNum = rsdemo.getInt("count(raheader_no)");
-						}
-						rsdemo.close();
-
+						radtNum = raDetailDao.findByRaHeaderNo(Integer.parseInt(raNo)).size();
+						
 						// if there is no radt record for the rahd, update the
 						// rahd status to "D"
 						// if (radtNum == 0) update rahd
@@ -153,21 +145,20 @@ public class JdbcBillingRAImpl {
 					if (raNo.compareTo("") == 0 || raNo == null || radtNum == 0) {
 						recFlag = 1;
 
-						// String[] param = new String[9];
-						// param[0] = filename;
-						// param[1] = paymentdate;
-						// param[2] = payable;
-						// param[3] = total;
-						// param[4] = "0";
-						// param[5] = "0";
-						// param[6] = "N";
-						// param[7] = nowDate;
-						// param[8] = "<xml_cheque>" + total + "</xml_cheque>";
-						sql = "insert into raheader values('\\N','" + filename + "','" + paymentdate + "','"
-								+ StringEscapeUtils.escapeSql(payable) + "','" + total + "','0','0','N', '"
-								+ UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd") + "','"
-								+ "<xml_cheque>" + total + "</xml_cheque>" + "')";
-						raNo = "" + dbObj.saveBillingRecord(sql);
+						RaHeader h = new RaHeader();
+						h.setFilename(filename);
+						h.setPaymentDate(paymentdate);
+						h.setPayable(payable);
+						h.setTotalAmount(total);
+						h.setRecords("0");
+						h.setClaims("0");
+						h.setStatus("N");
+						h.setReadDate(UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"));
+						h.setContent("<xml_cheque>" + total + "</xml_cheque>");
+						
+						raHeaderDao.persist(h);
+						
+						raNo = h.getId().toString();
 					}
 				} // ends with "1"
 
@@ -254,23 +245,21 @@ public class JdbcBillingRAImpl {
 
 					// if it needs to write a radt record for the rahd record
 					if (recFlag > 0) {
-						// String[] param4 = new String[11];
-						// param4[0] = raNo;
-						// param4[1] = providerno;
-						// param4[2] = account;
-						// param4[3] = servicecode;
-						// param4[4] = serviceno;
-						// param4[5] = newhin;
-						// param4[6] = amountsubmit;
-						// param4[7] = amountpaysign + amountpay;
-						// param4[8] = servicedate;
-						// param4[9] = explain;
-						// param4[10] = billtype;
-						sql = "insert into radetail values('\\N'," + raNo + ",'" + providerno + "'," + account + ",'"
-								+ servicecode + "','" + serviceno + "','" + newhin + "','" + amountsubmit + "','"
-								+ amountpaysign + amountpay + "','" + servicedate + "','" + explain + "','" + billtype + "','" + claimno
-								+ "')";
-						int rowsAffected3 = dbObj.saveBillingRecord(sql);
+						RaDetail r = new RaDetail();
+						r.setRaHeaderNo(Integer.parseInt(raNo));
+						r.setProviderOhipNo(providerno);
+						r.setBillingNo(Integer.parseInt(account));
+						r.setServiceCode(servicecode);
+						r.setServiceCount(serviceno);
+						r.setHin(newhin);
+						r.setAmountClaim(amountsubmit);
+						r.setAmountPay(amountpaysign);
+						r.setServiceDate(servicedate);
+						r.setErrorCode(explain);
+						r.setBillType(billtype);
+						r.setClaimNo(claimno);
+						
+						raDetailDao.persist(r);
 					}
 				}
 
@@ -346,48 +335,36 @@ public class JdbcBillingRAImpl {
 
 		xml_ra = transaction + balancefwd + "<xml_cheque>" + total + "</xml_cheque>";
 
-		// String[] param3 = new String[6];
-		// param3[0] = total;
-		// param3[1] = String.valueOf(count);
-		// param3[2] = String.valueOf(tCount);
-		// param3[3] = xml_ra;
-		// param3[4] = paymentdate;
-		// param3[5] = filename;
-		// only one? for paymentdate, filename
-		sql = "update raheader set totalamount='" + total + "', records='" + count + "',claims='" + tCount
-				+ "', content='" + StringEscapeUtils.escapeSql(xml_ra) + "' where paymentdate='" + paymentdate
-				+ "' and filename='" + filename + "'";
-		boolean bd3 = dbObj.updateDBRecord(sql);
-		// {"update_rahd", "update raheader set totalamount=?,
-		// records=?,claims=?, content=? where paymentdate=? and filename=?"},
-		// int rowsAffected1 = apptMainBean.queryExecuteUpdate(param3,
-		// "update_rahd");
-
-		return bd3;
+		
+		List<RaHeader> headers = raHeaderDao.findByFilenamePaymentDate(filename, paymentdate);
+		for(RaHeader h:headers) {
+			h.setTotalAmount(total);
+			h.setRecords(String.valueOf(count));
+			h.setClaims(String.valueOf(tCount));
+			h.setContent(xml_ra);
+			raHeaderDao.merge(h);
+		}
+		
+		return true;
 	}
 
 	public List getAllRahd(String status) {
 		List ret = new Vector();
-		String sql = "select raheader_no, totalamount, status, paymentdate, payable, records, claims, readdate "
-				+ "from raheader where status <> '" + status + "' order by paymentdate desc, readdate desc";
-		ResultSet rsdemo = dbObj.searchDBRecord(sql);
-		try {
-			while (rsdemo.next()) {
-				Properties prop = new Properties();
-				prop.setProperty("raheader_no", rsdemo.getString("raheader_no"));
-				prop.setProperty("readdate", rsdemo.getString("readdate"));
-				prop.setProperty("paymentdate", rsdemo.getString("paymentdate"));
-				prop.setProperty("payable", rsdemo.getString("payable"));
-				prop.setProperty("claims", rsdemo.getString("claims"));
-				prop.setProperty("records", rsdemo.getString("records"));
-				prop.setProperty("totalamount", rsdemo.getString("totalamount"));
-				prop.setProperty("status", rsdemo.getString("status"));
-				ret.add(prop);
-			}
-			rsdemo.close();
-		} catch (SQLException e) {
-			_logger.error("getAllRahd(sql = " + sql + ")");
+		
+		List<RaHeader> headers = raHeaderDao.findAllExcludeStatus(status);
+		for(RaHeader h:headers) {
+			Properties prop = new Properties();
+			prop.setProperty("raheader_no", h.getId().toString());
+			prop.setProperty("readdate", h.getReadDate());
+			prop.setProperty("paymentdate", h.getPaymentDate());
+			prop.setProperty("payable", h.getPayable());
+			prop.setProperty("claims", h.getClaims());
+			prop.setProperty("records", h.getRecords());
+			prop.setProperty("totalamount", h.getTotalAmount());
+			prop.setProperty("status", h.getStatus());
+			ret.add(prop);
 		}
+		
 		return ret;
 	}
 
@@ -530,23 +507,6 @@ public class JdbcBillingRAImpl {
 		return ret;
 	}
         
-        public String getRABilllingNo4ClaimNo(String claimno) {
-            String billing_no = "";
-            String sql = "select distinct billing_no from radetail where claim_no = '" + claimno + "'";
-            
-            ResultSet rs = dbObj.searchDBRecord(sql);
-            try {
-                if( rs.next() ) {
-                    billing_no = rs.getString("billing_no");
-                }
-                
-            }
-            catch (SQLException e) {
-                _logger.error("getRABillingNo4ClaimNo(sql = " + sql + ")");
-            }
-            
-            return billing_no;
-        }
 
 	public List getRABillingNo4Code(String id, String codes) {
 		List ret = new Vector();
@@ -560,42 +520,6 @@ public class JdbcBillingRAImpl {
 			rsdemo.close();
 		} catch (SQLException e) {
 			_logger.error("getRABillingNo4Code(sql = " + sql + ")");
-		}
-		return ret;
-	}
-
-	public List getRABillingNo4OB(String id) {
-		List ret = new Vector();
-		String sql = "select distinct billing_no from radetail where raheader_no=" + id + " and (service_code='P006A' "
-				+ "or service_code='P020A' or service_code='P022A' or service_code='P028A' or service_code='P023A' "
-				+ "or service_code='P007A' or service_code='P009A' or service_code='P011A' or service_code='P008B' "
-				+ "or service_code='P018B' or service_code='E502A' or service_code='C989A' or service_code='E409A' "
-				+ "or service_code='E410A' or service_code='E411A' or service_code='H001A')";
-		ResultSet rsdemo = dbObj.searchDBRecord(sql);
-		try {
-			while (rsdemo.next()) {
-				ret.add(rsdemo.getString("billing_no"));
-			}
-			rsdemo.close();
-		} catch (SQLException e) {
-			_logger.error("getRABillingNo4OB(sql = " + sql + ")");
-		}
-		return ret;
-	}
-
-	public List getRABillingNo4Colposcopy(String id) {
-		List ret = new Vector();
-		String sql = "select distinct billing_no from radetail where raheader_no=" + id + " and (service_code='A004A' "
-				+ "or service_code='A005A' or service_code='Z731A' or service_code='Z666A' or service_code='Z730A' "
-				+ "or service_code='Z720A')";
-		ResultSet rsdemo = dbObj.searchDBRecord(sql);
-		try {
-			while (rsdemo.next()) {
-				ret.add(rsdemo.getString("billing_no"));
-			}
-			rsdemo.close();
-		} catch (SQLException e) {
-			_logger.error("getRABillingNo4Colposcopy(sql = " + sql + ")");
 		}
 		return ret;
 	}
@@ -675,46 +599,26 @@ public class JdbcBillingRAImpl {
 		return ret;
 	}
 
-	public List getRAError35(String id, String providerOhipNo, String codes) {
-		List ret = new Vector();
-		String sql = "select distinct billing_no from radetail where raheader_no=" + id + " and providerohip_no='"
-				+ providerOhipNo + "' and error_code not in (" + codes + ")";
-		ResultSet rsdemo = dbObj.searchDBRecord(sql);
-		try {
-			while (rsdemo.next()) {
-				ret.add(rsdemo.getString("billing_no"));
-			}
-			rsdemo.close();
-		} catch (SQLException e) {
-			_logger.error("getRAError35(sql = " + sql + ")");
+	public List<String> getRAError35(String id, String providerOhipNo, String codes) {
+		List<String> ret = new ArrayList<String>();
+		List<Integer> tmp = raDetailDao.findUniqueBillingNoByRaHeaderNoAndProviderAndNotErrorCode(Integer.parseInt(id), providerOhipNo,codes);
+		for(Integer t:tmp) {
+			ret.add(t.toString());
 		}
 		return ret;
 	}
 
-	public List getRANoError35(String id, String providerOhipNo, String codes) {
-		List ret = new Vector();
-		String sql = "select distinct billing_no from radetail where raheader_no=" + id + " and providerohip_no='"
-				+ providerOhipNo + "' and error_code in (" + codes + ")";
-		ResultSet rsdemo = dbObj.searchDBRecord(sql);
-		try {
-			while (rsdemo.next()) {
-				ret.add(rsdemo.getString("billing_no"));
-			}
-			rsdemo.close();
-		} catch (SQLException e) {
-			_logger.error("getRANoError35(sql = " + sql + ")");
-		}
-		return ret;
-	}
 
 	public boolean updateBillingStatus(String id, String status) {
-		String sql = "update billing_on_cheader1 set status='" + status + "' where id=" + id + " and status<>'D'";
-		boolean retval = dbObj.updateDBRecord(sql);
-
-		if (!retval) {
-			_logger.error("updateBillingStatus(sql = " + sql + ")");
+		BillingONCHeader1 h = cheader1Dao.find(Integer.parseInt(id));
+		if(h != null) {
+			if(!h.getStatus().equals("D")) {
+				h.setStatus(status);
+				cheader1Dao.merge(h);
+			}
 		}
-		return retval;
+	
+		return true;
 	}
 
 }
