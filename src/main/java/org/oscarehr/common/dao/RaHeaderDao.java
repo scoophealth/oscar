@@ -25,6 +25,10 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.RaHeader;
 import org.springframework.stereotype.Repository;
 
@@ -34,5 +38,44 @@ public class RaHeaderDao extends AbstractDao<RaHeader>{
 
 	public RaHeaderDao() {
 		super(RaHeader.class);
-	}                
+	}     
+	
+	 public List<RaHeader> findCurrentByFilenamePaymentDate(String filename, String paymentDate) {
+		 Query query = entityManager.createQuery("SELECT r from RaHeader r WHERE r.filename = :filename and r.paymentDate = :pd and status != :status ORDER BY r.paymentDate");
+        
+		 query.setParameter("filename", filename);
+		 query.setParameter("pd",paymentDate);
+		 query.setParameter("status","D");
+
+         @SuppressWarnings("unchecked")
+         List<RaHeader> results = query.getResultList();
+
+         return results;
+
+	 }
+	 
+	 public List<RaHeader> findByFilenamePaymentDate(String filename, String paymentDate) {
+		 Query query = entityManager.createQuery("SELECT r from RaHeader r WHERE r.filename = :filename and r.paymentDate = :pd  ORDER BY r.paymentDate");
+        
+		 query.setParameter("filename", filename);
+		 query.setParameter("pd",paymentDate);
+		
+         @SuppressWarnings("unchecked")
+         List<RaHeader> results = query.getResultList();
+
+         return results;
+
+	 }
+	 
+	 public List<RaHeader> findAllExcludeStatus(String status) {
+		 Query query = entityManager.createQuery("SELECT r FROM RaHeader r WHERE r.status != :status ORDER BY r.paymentDate DESC, r.readDate DESC");
+        
+		 query.setParameter("status", status);
+		
+         @SuppressWarnings("unchecked")
+         List<RaHeader> results = query.getResultList();
+
+         return results;
+
+	 }
 }
