@@ -111,12 +111,7 @@ public class EFormUtil {
 	}
 
 	public static String saveEForm(String formName, String formSubject, String fileName, String htmlStr, String creator, boolean patientIndependent, String roleType) {
-		// called by the upload action, puts the uploaded form into DB
-		htmlStr = "\n" + org.apache.commons.lang.StringEscapeUtils.escapeSql(htmlStr);
-		formName = org.apache.commons.lang.StringEscapeUtils.escapeSql(formName);
-		formSubject = org.apache.commons.lang.StringEscapeUtils.escapeSql(formSubject);
-		fileName = org.apache.commons.lang.StringEscapeUtils.escapeSql(fileName);
-		roleType = org.apache.commons.lang.StringEscapeUtils.escapeSql(roleType);
+		// called by the upload action, puts the uploaded form into DB		
 
 		org.oscarehr.common.model.EForm eform = new org.oscarehr.common.model.EForm();
 		eform.setFormName(formName);
@@ -384,12 +379,7 @@ public class EFormUtil {
 
 	public static void updateEForm(EFormBase updatedForm) {
 		// Updates the form - used by editForm
-		String formHtml = "\n" + org.apache.commons.lang.StringEscapeUtils.escapeSql(updatedForm.getFormHtml());
-		String formName = org.apache.commons.lang.StringEscapeUtils.escapeSql(updatedForm.getFormName());
-		String formSubject = org.apache.commons.lang.StringEscapeUtils.escapeSql(updatedForm.getFormSubject());
-		String fileName = org.apache.commons.lang.StringEscapeUtils.escapeSql(updatedForm.getFormFileName());
-		String roleType = org.apache.commons.lang.StringEscapeUtils.escapeSql(updatedForm.getRoleType());
-
+	
 		EFormDao dao = SpringUtils.getBean(EFormDao.class);
 		org.oscarehr.common.model.EForm eform = dao.find(Integer.parseInt(updatedForm.getFid()));
 		if (eform == null) {
@@ -397,14 +387,14 @@ public class EFormUtil {
 			return;
 		}
 		
-		eform.setFormName(formName);
-		eform.setFileName(fileName);
-		eform.setSubject(formSubject);
+		eform.setFormName(updatedForm.getFormName());
+		eform.setFileName(updatedForm.getFormFileName());
+		eform.setSubject(updatedForm.getFormSubject());
 		eform.setFormDate(ConversionUtils.fromDateString(updatedForm.getFormDate()));
 		eform.setFormTime(ConversionUtils.fromTimeString(updatedForm.getFormTime()));
-		eform.setFormHtml(formHtml);
+		eform.setFormHtml(updatedForm.getFormHtml());
 		eform.setPatientIndependent(updatedForm.getPatientIndependent());
-		eform.setRoleType(roleType);
+		eform.setRoleType(updatedForm.getRoleType());
 		
 		dao.merge(eform);
 	}
