@@ -29,13 +29,13 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -45,8 +45,12 @@ import java.util.Properties;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
-import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.billing.CA.BC.dao.BillRecipientsDao;
+import org.oscarehr.billing.CA.BC.dao.BillingHistoryDao;
+import org.oscarehr.billing.CA.BC.model.BillRecipients;
+import org.oscarehr.billing.CA.BC.model.BillingHistory;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.entities.MSPBill;
 import oscar.entities.Provider;
@@ -60,7 +64,8 @@ import oscar.util.UtilMisc;
 
 public class MSPReconcile {
   private static Logger log = MiscUtils.getLogger();
-
+  private BillRecipientsDao billRecipientDao = SpringUtils.getBean(BillRecipientsDao.class);
+  private BillingHistoryDao billingHistoryDao = SpringUtils.getBean(BillingHistoryDao.class);
 
   //Accounting Report Types
   public static final String REP_INVOICE = "REP_INVOICE";
@@ -1070,58 +1075,34 @@ public class MSPReconcile {
    * @param recip BillReceipient - The BillRecipient instance to be persisted
    */
   public void saveOrUpdateBillRecipient(BillRecipient recip) {
-    ResultSet rs = null;
-    try {
-      rs = DBHandler.GetSQL("select count(*) as cou from bill_recipients where billingNo = " +recip.getBillingNo());
-      boolean existingBill = false;
-
-      if(rs.next()){
-         int i = rs.getInt("cou");
-         log.debug("rs has next :"+i);
-         if (i > 0){
-             existingBill = true;
-             log.debug("i is greater than 0 :"+existingBill);
-         }
-      }
-      PreparedStatement stmt = null;
-      //Record exists so perform an update
-      if (existingBill) {
-          log.debug("updating bill_recip"+recip.getBillingNo());
-        stmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement("update bill_recipients set name=?,address=?,city=?,province=?,postal=?,updateTime=now() where billingNo=?");
-        stmt.setString(1, recip.getName());
-        stmt.setString(2, recip.getAddress());
-        stmt.setString(3, recip.getCity());
-        stmt.setString(4, recip.getProvince());
-        stmt.setString(5, recip.getPostal());
-        stmt.setString(6, recip.getBillingNo());
-      }
-      else {
-          log.debug("inserting bill_recip"+recip.getBillingNo());
-        //create a new record
-        stmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement("insert into bill_recipients(name,address,city,province,postal,creationTime,updateTime,billingNo) " +
-            "values(?,?,?,?,?,now(),now(),?)");
-        stmt.setString(1, recip.getName());
-        stmt.setString(2, recip.getAddress());
-        stmt.setString(3, recip.getCity());
-        stmt.setString(4, recip.getProvince());
-        stmt.setString(5, recip.getPostal());
-        stmt.setString(6, recip.getBillingNo());
-
-      }
-      stmt.execute();
-    }
-    catch (Exception e) {
-      MiscUtils.getLogger().error("Error", e);
-    }
-    finally {
-      try {
-        if (rs != null) {
-          rs.close();
-        }
-      }
-      catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
-      }
-    }
+	 List<BillRecipients> bs =  billRecipientDao.findByBillingNo(Integer.parseInt(recip.getBillingNo()));
+	 boolean existingBill = false;
+	 if(bs.size()>0)
+		 existingBill=true;
+	 
+	 if(existingBill) {
+		 for(BillRecipients b:bs) {
+			 b.setName(recip.getName());
+			 b.setAddress(recip.getAddress());
+			 b.setCity(recip.getCity());
+			 b.setProvince(recip.getProvince());
+			 b.setPostal(recip.getPostal());
+			 b.setUpdateTime(new Date());
+			 billRecipientDao.merge(b);
+		 }
+	 } else {
+		 BillRecipients b = new BillRecipients();
+		 b.setName(recip.getName());
+		 b.setAddress(recip.getAddress());
+		 b.setCity(recip.getCity());
+		 b.setProvince(recip.getProvince());
+		 b.setPostal(recip.getPostal());
+		 b.setCreationTime(new Date());
+		 b.setUpdateTime(new Date());
+		 b.setBillingNo(Integer.parseInt(recip.getBillingNo()));
+		 billRecipientDao.persist(b);
+	 }
+	 
   }
 
   //Updates the status of a bill but doesn't change it's type.  Created because a WCB bill can not be
@@ -1268,10 +1249,12 @@ public class MSPReconcile {
           ResultSet rs = DBHandler.GetSQL(recExists);
           //if the audit entry doesn't exist, create it.
           if (!rs.next()) {
-            String insert = "insert into billing_history(billingmaster_no,amount_received,creation_date,payment_type_id) " +
-                " values(" + item[0] + "," + item[1] + ",'" + item[2] + "'," +
-                item[3] + ")";
-            DBHandler.RunSQL(insert);
+        	  BillingHistory b = new BillingHistory();
+        	  b.setBillingMasterNo(Integer.parseInt(item[0]));
+        	  b.setAmountReceived(item[1]);
+        	  b.setCreationDate(new Date());
+        	  b.setPaymentTypeId(Integer.parseInt(item[3]));
+        	  billingHistoryDao.persist(b);
           }
         }
       }
