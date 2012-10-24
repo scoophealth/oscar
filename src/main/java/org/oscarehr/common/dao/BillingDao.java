@@ -18,14 +18,54 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.Billing;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class BillingDao extends AbstractDao<Billing>{
+public class BillingDao extends AbstractDao<Billing> {
 
 	public BillingDao() {
 		super(Billing.class);
+	}
+
+	@SuppressWarnings("unchecked")
+    public List<Object[]> findBillings(Integer demoNo, List<String> serviceCodes) {    	
+		Map<String, Object> params = new HashMap<String, Object>();
+		StringBuilder serviceCodeValues = new StringBuilder();
+		for (int i = 0; i < serviceCodes.size(); i++) {
+			if (serviceCodeValues.length() != 0) {
+				serviceCodeValues.append(" OR ");
+			}
+
+			String param = "serviceCode" + (i + 1);
+			serviceCodeValues.append("bd.serviceCode = :").append(param);
+			params.put(param, serviceCodes.get(i));
+		}
+
+		StringBuilder buf = new StringBuilder("FROM Billing b, BillingDetail bd where b.demographicNo = :demoNo and bd.billingNo = b.id");
+		params.put("demoNo", demoNo);
+
+		if (serviceCodeValues.length() != 0) {
+			buf.append(" AND ( ").append(serviceCodeValues).append(" ) ");
+		}
+
+		buf.append(" AND bd.status != :deletedFlag and b.status != :deletedFlag order by b.billingDate desc");
+		params.put("deletedFlag", "D");
+		
+		Query query = entityManager.createQuery(buf.toString());
+		query.setMaxResults(1);
+
+		for (Entry<String, Object> e : params.entrySet()) {
+			query.setParameter(e.getKey(), e.getValue());
+		}		
+		return query.getResultList();
 	}
 
 }
