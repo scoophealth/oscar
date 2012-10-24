@@ -50,7 +50,6 @@ public class ProviderDao extends OscarSuperDao {
 			{"searchappointmentday", "select * from appointment where provider_no=? and appointment_date=? and program_id=? order by start_time, status desc "},
 			{"searchmygroupcount", "select count(provider_no) from mygroup where mygroup_no=? "},
 			{"searchmygroupprovider", "select provider_no, last_name, first_name from mygroup where mygroup_no=? "},
-			{"searchmygroupall", "select * from mygroup order by mygroup_no"},
 
 			{"searchmygroupno", "select mygroup_no from mygroup group by mygroup_no order by mygroup_no"},
             {"updateapptstatus", "update appointment set status=?, lastupdateuser=?, updatedatetime=now() where appointment_no=? "},

@@ -34,18 +34,21 @@
 	errorPage="../appointment/errorpage.jsp"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%@ page import="org.oscarehr.util.SpringUtils"%>
+<%@ page import="org.oscarehr.common.model.MyGroup"%>
+<%@ page import="org.oscarehr.common.dao.MyGroupDao"%>
 
-<jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean"
-	scope="page" />
+<%
+	MyGroupDao dao = SpringUtils.getBean(MyGroupDao.class);
+%>
+<jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean" scope="page" />
 <jsp:useBean id="myGroupBean" class="java.util.Properties" scope="page" />
-<jsp:useBean id="providerBean" class="java.util.Properties"
-	scope="session" />
+<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 
 <% 
   String [][] dbQueries=new String[][] { 
 {"search_apptsheetall", "select a.appointment_no, a.appointment_date,a.name, a.provider_no, a.start_time, a.end_time, p.last_name, p.first_name from appointment a, provider p where (a.start_time='00:00:00' or a.start_time>='23:59:59' or a.end_time='00:00:00' or a.end_time>='23:59:59' or a.start_time > a.end_time) and a.appointment_date>=? and a.provider_no=p.provider_no and a.status != 'C' order by p.last_name, p.first_name, "+orderby }, 
 {"search_apptsheetsingleall", "select a.appointment_no, a.appointment_date, a.name, a.provider_no,a.start_time,a.end_time,p.last_name,p.first_name from appointment a,provider p where (a.start_time='00:00:00' or a.start_time>='23:59:59' or a.end_time='00:00:00' or a.end_time>='23:59:59' or a.start_time > a.end_time) and a.appointment_date>=? and a.provider_no=? and a.status != 'C' and a.provider_no=p.provider_no order by "+orderby }, 
-{"searchmygroupall", "select * from mygroup where mygroup_no= ?"}, 
   };
   String[][] responseTargets=new String[][] {  };
   daySheetBean.doConfigure(dbQueries,responseTargets);
@@ -121,10 +124,10 @@ function setfocus() {
   
   //initial myGroupBean if neccessary
   if(provider_no.startsWith("_grp_")) {
-	rsdemo = daySheetBean.queryResults(provider_no.substring(5), "searchmygroupall");
-    while (rsdemo.next()) { 
-	  myGroupBean.setProperty(rsdemo.getString("provider_no"),"true");
-    }
+	  List<MyGroup> myGroups = dao.getGroupByGroupNo(provider_no.substring(5));
+      for(MyGroup myGroup:myGroups) {
+      	myGroupBean.setProperty(myGroup.getId().getProviderNo(),"true");
+      }
   }
 %>
 <body bgproperties="fixed" onLoad="setfocus()" topmargin="0"

@@ -25,11 +25,17 @@
 
 package org.oscarehr.common.model;
 
-import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Comparator;
+
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
 @Table(name="mygroup")
-public class MyGroup  extends AbstractModel<MyGroupPrimaryKey> {
+public class MyGroup  extends AbstractModel<MyGroupPrimaryKey> implements Serializable {
 
 	@EmbeddedId     
 	private MyGroupPrimaryKey id;
@@ -99,5 +105,21 @@ public class MyGroup  extends AbstractModel<MyGroupPrimaryKey> {
     public void setDefaultBillingForm(String defaultBillingForm) {
         this.defaultBillingForm = defaultBillingForm;
     }
+    
+    
+    public static final Comparator<MyGroup> MyGroupNoComparator = new Comparator<MyGroup>() {
+        public int compare(MyGroup o1, MyGroup o2) {
+        	if(o1.getId()!=null && o2.getId() != null) {
+        		return o1.getId().getMyGroupNo().compareTo(o2.getId().getMyGroupNo());
+        	}
+        	return 0;
+        }
+    };
+
+    public static final Comparator<MyGroup> LastNameComparator = new Comparator<MyGroup>() {
+        public int compare(MyGroup o1, MyGroup o2) {
+        	return o1.getLastName().compareTo(o2.getLastName());
+        }
+    }; 
 
 }

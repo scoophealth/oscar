@@ -87,6 +87,7 @@ public abstract class AbstractDao<T extends AbstractModel<?>> {
 		return query.getResultList();
 	}
 
+
 	/** Removes an entity based on the ID
 	 * 
 	 * @param id
