@@ -33,6 +33,13 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
+<%@ page import="org.oscarehr.util.SpringUtils"%>
+<%@ page import="org.oscarehr.common.model.MyGroup"%>
+<%@ page import="org.oscarehr.common.dao.MyGroupDao"%>
+
+<%
+	MyGroupDao dao = SpringUtils.getBean(MyGroupDao.class);
+%>
 
 <%
   String oldGroup_no = request.getParameter("mygroup_no")==null?".":request.getParameter("mygroup_no");
@@ -67,14 +74,15 @@
 			key="recepcionist.recepcionistchangemygroup.formChange" />:</TD>
 		<TD align="right"><select name="mygroup_no">
 <%
-	List<Map<String,Object>> resultList = oscarSuperManager.find("receptionistDao", "searchmygroupno", new Object[] {});
-	for (Map group : resultList) {
-		String groupNo = String.valueOf(group.get("mygroup_no"));
-%>
-			<option value="<%=groupNo%>"
-				<%=oldGroup_no.equals(groupNo)?"selected":""%>><%=groupNo%></option>
-<%
+	List<MyGroup> myGroups = dao.findAll();
+	Collections.sort(myGroups,MyGroup.MyGroupNoComparator);
+	for(MyGroup myGroup:myGroups) {
+		String groupNo = myGroup.getId().getMyGroupNo();
+	%>
+		<option value="<%=groupNo%>" <%=oldGroup_no.equals(groupNo)?"selected":""%>><%=groupNo%></option>
+	<%
 	}
+	
 %>
 		</select> &nbsp;<INPUT TYPE="submit"
 			VALUE="<bean:message key="recepcionist.recepcionistchangemygroup.btnChange"/>">
@@ -98,16 +106,15 @@
 <%
 	boolean bNewNo = false;
 	String oldNo = "";
-	resultList = oscarSuperManager.find("receptionistDao", "searchmygroupall", new Object[] {});
-	for (Map group : resultList) {
-		String groupNo = String.valueOf(group.get("mygroup_no"));
+	for(MyGroup myGroup:myGroups) {
+		String groupNo = myGroup.getId().getMyGroupNo();
 		if (!groupNo.equals(oldNo)) {
 			bNewNo = bNewNo?false:true; oldNo = groupNo;
 		}
 %>
 			<tr BGCOLOR="<%=bNewNo?"white":"ivory"%>">
 				<td ALIGN="center"><font face="arial"><%=groupNo%></font></td>
-				<td><font face="arial"> &nbsp;<%=group.get("last_name") + ", " + group.get("first_name")%></font></td>
+				<td><font face="arial"> &nbsp;<%=myGroup.getLastName() + ", " + myGroup.getFirstName()%></font></td>
 			</tr>
 <%
 	}

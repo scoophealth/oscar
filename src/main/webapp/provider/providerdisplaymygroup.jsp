@@ -30,7 +30,13 @@
 <%@ page import="java.util.*,java.sql.*"
 	errorPage="../provider/errorpage.jsp"%>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
+<%@ page import="org.oscarehr.util.SpringUtils"%>
+<%@ page import="org.oscarehr.common.model.MyGroup"%>
+<%@ page import="org.oscarehr.common.dao.MyGroupDao"%>
 
+<%
+	MyGroupDao dao = SpringUtils.getBean(MyGroupDao.class);
+%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
@@ -78,19 +84,21 @@
 <%
    boolean bNewNo=false;
    String oldNo="";
-   List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "searchmygroupall", new Object[] {});
-   for (Map group : resultList) {
-	 String groupNo = String.valueOf(group.get("mygroup_no"));
+   List<MyGroup> myGroups = dao.findAll();
+   Collections.sort(myGroups, MyGroup.MyGroupNoComparator);
+   for(MyGroup myGroup:myGroups) {
+   
+	 String groupNo = myGroup.getId().getMyGroupNo();
      if(!(groupNo.equals(oldNo)) ) {
        bNewNo=bNewNo?false:true; oldNo=groupNo;
      }
 %>
 			<tr BGCOLOR="<%=bNewNo?"white":"ivory"%>">
 				<td width="10%" align="center"><input type="checkbox"
-					name="<%=groupNo+group.get("provider_no")%>"
+					name="<%=groupNo+myGroup.getId().getProviderNo()%>"
 					value="<%=groupNo%>"></td>
 				<td ALIGN="center"><font face="arial"> <%=groupNo%></font></td>
-				<td ALIGN="center"><font face="arial"> <%=group.get("last_name")+", "+group.get("first_name")%></font>
+				<td ALIGN="center"><font face="arial"> <%=myGroup.getLastName()+", "+myGroup.getFirstName()%></font>
 				</td>
 			</tr>
 			<%

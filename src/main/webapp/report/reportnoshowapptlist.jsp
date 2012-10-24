@@ -34,17 +34,21 @@
 	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"
 	errorPage="../appointment/errorpage.jsp"%>
 <%@ page import="oscar.login.DBHelp"%>
-<jsp:useBean id="patientBean" class="oscar.AppointmentMainBean"
-	scope="page" />
+<jsp:useBean id="patientBean" class="oscar.AppointmentMainBean" scope="page" />
 <jsp:useBean id="myGroupBean" class="java.util.Vector" scope="page" />
-<jsp:useBean id="providerBean" class="java.util.Properties"
-	scope="session" />
+<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
+
+<%@ page import="org.oscarehr.util.SpringUtils"%>
+<%@ page import="org.oscarehr.common.model.MyGroup"%>
+<%@ page import="org.oscarehr.common.dao.MyGroupDao"%>
+
+<%
+	MyGroupDao dao = SpringUtils.getBean(MyGroupDao.class);
+%>
 
 <% 
   String [][] dbQueries=new String[][] { 
-//{"search_noshowappt", "select provider_no, last_name, first_name, chart_no from appointment where provider_no = ? order by "+orderby }, 
 {"search_noshowappt", "select a.appointment_no, a.appointment_date,a.name, a.provider_no, a.start_time, a.end_time, d.last_name, d.first_name from appointment a, demographic d where (a.status = 'N' or a.status = 'NS') and a.provider_no = ? and a.appointment_date >= ? and a.appointment_date<= ? and a.demographic_no=d.demographic_no  order by "+orderby }, 
-{"searchmygroupall", "select * from mygroup where mygroup_no= ? order by last_name"}, 
   };
   String[][] responseTargets=new String[][] {  };
   patientBean.doConfigure(dbQueries,responseTargets);
@@ -124,9 +128,10 @@ function setfocus() {
   //initial myGroupBean if neccessary
   if(provider_no.startsWith("_grp_")) {
     bGroup = true;
-	  rsdemo = patientBean.queryResults(provider_no.substring(5), "searchmygroupall");
-    while (rsdemo.next()) { 
-	    myGroupBean.add(rsdemo.getString("provider_no"));
+    List<MyGroup> myGroups = dao.getGroupByGroupNo(provider_no.substring(5));
+    Collections.sort(myGroups, MyGroup.LastNameComparator);
+    for(MyGroup myGroup:myGroups) {
+    	myGroupBean.add(myGroup.getId().getProviderNo());
     }
   }
 %>

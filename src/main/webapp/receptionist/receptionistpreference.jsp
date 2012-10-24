@@ -143,7 +143,7 @@ function checkTypeInAll() {
 					maxlength="3" onBlur="checkTypeIn(this)"></td>
 				<td BGCOLOR="#C4D9E7" ALIGN="LEFT">
 				<div align="right"><font face="arial"> <a href=#
-					onClick="popupPage(360,600,'receptionistcontrol.jsp?displaymode=displaymygroup&dboperation=searchmygroupall' )"><font
+					onClick="popupPage(360,600,'receptionistdisplaymygroup.jsp' )"><font
 					size="-3"><bean:message
 					key="receptionist.receptionistpreference.viewEdit" /></font><bean:message
 					key="receptionist.receptionistpreference.btnGroupNo" /></a>:</font></div>

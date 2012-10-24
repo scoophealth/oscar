@@ -34,12 +34,17 @@
 	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"
 	errorPage="../appointment/errorpage.jsp"%>
 <%@ page import="oscar.login.DBHelp"%>
+<%@ page import="org.oscarehr.util.SpringUtils"%>
+<%@ page import="org.oscarehr.common.model.MyGroup"%>
+<%@ page import="org.oscarehr.common.dao.MyGroupDao"%>
 
-<jsp:useBean id="patientBean" class="oscar.AppointmentMainBean"
-	scope="page" />
+<%
+	MyGroupDao dao = SpringUtils.getBean(MyGroupDao.class);
+%>
+
+<jsp:useBean id="patientBean" class="oscar.AppointmentMainBean"	scope="page" />
 <jsp:useBean id="myGroupBean" class="java.util.Vector" scope="page" />
-<jsp:useBean id="providerBean" class="java.util.Properties"
-	scope="session" />
+<jsp:useBean id="providerBean" class="java.util.Properties"	scope="session" />
 <% 
   String [][] dbQueries;
 
@@ -50,11 +55,9 @@
       dbQueries = new String[][] { 
       //{"search_patient", "select provider_no, last_name, first_name, chart_no from demographic where provider_no = ? order by "+orderby }, 
       {"search_patient", "select distinct(d.demographic_no), d.last_name, d.first_name, d.sex, d.chart_no, d.patient_status, a.appointment_date, d.address, d.city, d.province, d.postal, DATE_FORMAT(CONCAT((year_of_birth), '-', (month_of_birth),'-',(date_of_birth)),'%Y-%m-%d') as dob from demographic d, appointment a where d.provider_no = ? and d.demographic_no=a.demographic_no and (d.patient_status like 'AC' or d.patient_status like 'UHIP') and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((year_of_birth), '-', (month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'))) -(RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((year_of_birth), '-', (month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'),5)) >? order by d.last_name, d.first_name, a.appointment_date desc" }, 
-      {"searchmygroupall", "select * from mygroup where mygroup_no= ? order by last_name"}
       };
     } else if (db_type.equalsIgnoreCase("postgresql")) {
        dbQueries = new String[][] {
-       {"searchmygroupall", "select * from mygroup where mygroup_no= ? order by last_name"},
        {"search_patient", "select distinct(d.demographic_no), d.last_name, d.first_name, d.sex, d.chart_no, d.patient_status, a.appointment_date, d.address, d.city, d.province, d.postal, to_date(CONCAT(year_of_birth,month_of_birth::varchar,date_of_birth::varchar),'YYYYMMDD') as dob from demographic d, appointment a where d.provider_no = ? and d.demographic_no=a.demographic_no and (d.patient_status like 'AC' or d.patient_status like 'UHIP') and to_date(CONCAT(year_of_birth,month_of_birth::varchar,date_of_birth::varchar),'YYYYMMDD') <= date 'today' - interval ?"}
        };
        } else {
@@ -133,9 +136,10 @@ function setfocus() {
   //initial myGroupBean if neccessary
   if(provider_no.startsWith("_grp_")) {
     bGroup = true;
-	  rsdemo = patientBean.queryResults(provider_no.substring(5), "searchmygroupall");
-    while (rsdemo.next()) { 
-	    myGroupBean.add(rsdemo.getString("provider_no"));
+    List<MyGroup> myGroups = dao.findAll();
+    Collections.sort(myGroups, MyGroup.MyGroupNoComparator);
+    for(MyGroup myGroup:myGroups) {
+    	myGroupBean.add(myGroup.getId().getProviderNo());
     }
   }
 %>

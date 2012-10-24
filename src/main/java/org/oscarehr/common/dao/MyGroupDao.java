@@ -26,12 +26,14 @@ package org.oscarehr.common.dao;
 
 
 
-import javax.persistence.Query;
 import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.MyGroup;
 import org.oscarehr.common.model.MyGroupPrimaryKey;
-import org.springframework.stereotype.Repository;
 import org.oscarehr.util.MiscUtils;
+import org.springframework.stereotype.Repository;
 /**
  *
  * @author Toby
