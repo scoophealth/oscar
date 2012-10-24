@@ -1668,6 +1668,7 @@ CREATE TABLE `formLabReq07` (
 	`v_immune_HepatitisC` tinyint(1) default NULL,
 	`v_immune_HepatitisB` tinyint(1) default NULL,
 	`v_immune_HepatitisA` tinyint(1) default NULL,
+        `patientChartNo` varchar(20),
 	PRIMARY KEY  (`ID`)
 ) ;
 
@@ -3039,6 +3040,7 @@ CREATE TABLE `formLabReq10` (
   `hcType` varchar(4),
   `male` tinyint(1),
   `female` tinyint(1),
+  `patientChartNo` varchar(20),
   PRIMARY KEY (`ID`)
 );
 

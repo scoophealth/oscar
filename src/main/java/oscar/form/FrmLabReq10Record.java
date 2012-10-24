@@ -46,7 +46,8 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-
+import org.oscarehr.util.LocaleUtils;
+import java.util.Locale;
 import oscar.OscarProperties;
 import oscar.util.UtilDateUtilities;
 
@@ -89,6 +90,7 @@ public class FrmLabReq10Record extends FrmRecord {
                 }
                 props.setProperty("sex",sex);
                 props.setProperty("demoProvider", StringUtils.trimToEmpty(demographic.getProviderNo()));
+                props.setProperty("patientChartNo", StringUtils.trimToEmpty(demographic.getChartNo()));
             }
 
             //get local clinic information
@@ -106,6 +108,13 @@ public class FrmLabReq10Record extends FrmRecord {
             String sql = "SELECT * FROM formLabReq10 WHERE demographic_no = " + demographicNo + " AND ID = "
                     + existingID;
             props = (new FrmRecordHelp()).getFormRecord(sql);
+            String chartNo = props.getProperty("patientChartNo");
+            String chartNoLbl = LocaleUtils.getMessage(Locale.getDefault(),"oscarEncounter.form.labreq.patientChartNo")+":";
+            int beginIdx = chartNo.lastIndexOf(chartNoLbl);
+            if (beginIdx >= 0) {
+                chartNo = chartNo.substring(beginIdx + chartNoLbl.length());
+                props.setProperty("patientChartNo", chartNo);
+            }
         }
 
         return props;
