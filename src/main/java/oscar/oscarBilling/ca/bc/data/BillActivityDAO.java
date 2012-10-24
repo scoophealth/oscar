@@ -25,34 +25,29 @@
 
 package oscar.oscarBilling.ca.bc.data;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import org.oscarehr.util.DbConnectionFilter;
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.billing.CA.dao.BillActivityDao;
+import org.oscarehr.billing.CA.model.BillActivity;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.entities.Billactivity;
-import oscar.util.SqlUtils;
+import oscar.util.ConversionUtils;
 
 /**
  *
- alter table billactivity add column id int(10) NOT NULL auto_increment
-primary key;
- 
- alter table billactivity add column sentdate datetime default NULL;
- 
- 
  *
  * @author jay
  */
 public class BillActivityDAO {
+	
+	private BillActivityDao dao = SpringUtils.getBean(BillActivityDao.class);
+
     
-    /** Creates a new instance of BillActivityDAO */
     public BillActivityDAO() {     
     }
     
@@ -94,116 +89,102 @@ public class BillActivityDAO {
          beginningOfYear.set(Calendar.YEAR,curYear);
          //beginningOfYear.set(Calendar.MONTH,0);
          beginningOfYear.set(Calendar.DAY_OF_YEAR,1);
-         /////
-         try {             
-            String s = "select * from billactivity where monthCode=? and groupno=? and updatedatetime > ? and status <> 'D' order by batchcount";
-            PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(s);
-                pstmt.setString(1,getMonthCode(d));
-                pstmt.setString(2,billinggroup_no);
-                pstmt.setDate(3,new java.sql.Date(beginningOfYear.getTime().getTime())); 
-              
-                
-                ResultSet rs = pstmt.executeQuery(); 
-                while(rs.next()){
-                  batchCount = rs.getString("batchcount");
-                }
-                int fileCount = Integer.parseInt(batchCount) + 1;
-                batchCount = String.valueOf(fileCount);    
-            pstmt.close();
-         }catch (SQLException sqlexception) {
-            MiscUtils.getLogger().debug(sqlexception.getMessage());
+         
+        List<BillActivity> bs =  dao.findCurrentByMonthCodeAndGroupNo(getMonthCode(d),billinggroup_no,beginningOfYear.getTime());
+         for(BillActivity b:bs) {
+        	 batchCount = String.valueOf(b.getBatchCount());
          }
+         int fileCount = Integer.parseInt(batchCount) + 1;
+         batchCount = String.valueOf(fileCount);    
+         
         return batchCount;
     }
     
-    /*
-    +----------------+-------------+------+-----+---------+-------+
-    | Field          | Type        | Null | Key | Default | Extra |
-    +----------------+-------------+------+-----+---------+-------+
-    | monthCode      | char(1)     | YES  |     | NULL    |       |
-    | batchcount     | int(3)      | YES  |     | NULL    |       |
-    | htmlfilename   | varchar(50) | YES  |     | NULL    |       |
-    | ohipfilename   | varchar(50) | YES  |     | NULL    |       |
-    | providerohipno | varchar(6)  | YES  |     | NULL    |       |
-    | groupno        | varchar(6)  | YES  |     | NULL    |       |
-    | creator        | varchar(6)  | YES  |     | NULL    |       |
-    | htmlcontext    | mediumtext  | YES  |     | NULL    |       |
-    | ohipcontext    | mediumtext  | YES  |     | NULL    |       |
-    | claimrecord    | varchar(10) | YES  |     | NULL    |       |
-    | updatedatetime | datetime    | YES  |     | NULL    |       |
-    | status         | char(1)     | YES  |     | NULL    |       |
-    | total          | varchar(20) | YES  |     | NULL    |       |
-    +----------------+-------------+------+-----+---------+-------+
-    */
+
     public int saveBillactivity(String monthCode,String batchCount,String htmlFilename, String mspFilename, String providerNo, String htmlFile,String mspFile, Date date,int records, String fileTotal ){
-        int id = 0;
-        try {             
-                                                         //1 2 3 4 5 6 7 8 9 0 1 2 3     
-           String query = "insert into billactivity (monthCode,batchcount,htmlfilename,ohipfilename,providerohipno,groupno,creator,htmlcontext,ohipcontext,claimrecord,updatedatetime,status,total ) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        
-           PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(query);
-        
-            pstmt.setString(1,monthCode);
-            pstmt.setString(2,batchCount);
-            pstmt.setString(3,htmlFilename);//"H" + monthCode + proOHIP + "_" + Misc.forwardZero(batchCount,3) + ".htm");
-            pstmt.setString(4,mspFilename);// "H" + monthCode + billinggroup_no + "." + Misc.forwardZero(batchCount,3));
-            pstmt.setString(5,"");//proOHIP);
-            pstmt.setString(6,"");//billinggroup_no);
-            pstmt.setString(7, providerNo);
-            pstmt.setString(8, htmlFile );
-            pstmt.setString(9, mspFile);
-            pstmt.setString(10, ""+records);
-            pstmt.setDate(11, new java.sql.Date(date.getTime()));
-            pstmt.setString(12,"A");
-            pstmt.setString(13, fileTotal);
-            pstmt.executeUpdate();
-            
-            java.sql.ResultSet rs = pstmt.getGeneratedKeys();
-            if (rs.next()) {
-               id = rs.getInt(1);
-            }
-            
-            pstmt.close();
-        }catch (SQLException sqlexception) {
-           MiscUtils.getLogger().debug(sqlexception.getMessage());
-        }
-        ////
-        return id;
+    	BillActivity b = new BillActivity();
+    	b.setMonthCode(monthCode);
+    	b.setBatchCount(Integer.valueOf(batchCount));
+    	b.setHtmlFilename(htmlFilename);
+    	b.setOhipFilename(mspFilename);
+    	b.setProviderOhipNo("");
+    	b.setGroupNo("");
+    	b.setCreator(providerNo);
+    	b.setHtmlContext(htmlFile);
+    	b.setOhipContext(mspFile);
+    	b.setClaimRecord(""+records);
+    	b.setUpdateDateTime(new Date());
+    	b.setStatus("A");
+    	b.setTotal(fileTotal);
+    	
+    	dao.persist(b);
+    	
+    	return b.getId();
     }
     
     public void setStatusToSent(Billactivity b){
-        try {             
-                                                         //1 2 3 4 5 6 7 8 9 0 1 2 3     
-           String query = "update billactivity set status = ?, sentdate = ? where id = ? ";
-        
-           PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(query);
-        
-            pstmt.setString(1,Billactivity.SENT);
-            pstmt.setDate(2,new java.sql.Date(new Date().getTime()));
-            pstmt.setString(3,""+b.getId());
-            pstmt.executeUpdate();
-
-            pstmt.close();
-        }catch (SQLException sqlexception) {
-           MiscUtils.getLogger().debug(sqlexception.getMessage());
-        }
+    	BillActivity ba = dao.find(b.getId());
+    	if(ba != null) {
+    		ba.setStatus(Billactivity.SENT);
+    		ba.setSentDate(new Date());
+    		dao.merge(ba);
+    	}
     }
     
     public List getBillactivityByYear(int year){
        String startDate = year+"-01-01";
-       String endDate = year+"/12/31 23:59:59"; 
-       String query = "select * from billactivity where updatedatetime >= '"+startDate+"' and updatedatetime <= '"+endDate+"' and status <> 'D' order by id desc";
-       return getBillactivity(query);
+       String endDate = year+"-12-31 23:59:59"; 
+       
+       List<BillActivity> bs = dao.findCurrentByDateRange(ConversionUtils.fromTimestampString(startDate), ConversionUtils.fromTimestampString(endDate));
+       List<Billactivity> results = new ArrayList<Billactivity>();
+       for(BillActivity b:bs) {
+    	   Billactivity r = new Billactivity();
+    	   r.setId(b.getId());
+    	   r.setMonthCode(b.getMonthCode());
+    	   r.setBatchcount(b.getBatchCount());
+    	   r.setHtmlfilename(b.getHtmlFilename());
+    	   r.setOhipfilename(b.getOhipFilename());
+    	   r.setProviderohipno(b.getProviderOhipNo());
+    	   r.setGroupno(b.getGroupNo());
+    	   r.setCreator(b.getCreator());
+    	   r.setHtmlcontext(b.getHtmlContext());
+    	   r.setOhipcontext(b.getOhipContext());
+    	   r.setClaimrecord(b.getClaimRecord());
+    	   r.setUpdatedatetime(b.getUpdateDateTime());
+    	   r.setStatus(b.getStatus());
+    	   r.setTotal(b.getTotal());
+    	   
+    	   results.add(r);
+       }
+       
+       return results;
     }
 
     public List getBillactivityByID(String id){
-       String query = "select * from billactivity where id='"+ id +"'"; 
-       return getBillactivity(query);
-    }
-    
-    private List getBillactivity(String qry) {
-       List res = SqlUtils.getBeanList(qry, Billactivity.class);
-       return res;
+    	List<Billactivity> results = new ArrayList<Billactivity>();
+    	
+    	BillActivity b = dao.find(Integer.parseInt(id));
+    	if(b != null) {
+    	   	   Billactivity r = new Billactivity();
+        	   r.setId(b.getId());
+        	   r.setMonthCode(b.getMonthCode());
+        	   r.setBatchcount(b.getBatchCount());
+        	   r.setHtmlfilename(b.getHtmlFilename());
+        	   r.setOhipfilename(b.getOhipFilename());
+        	   r.setProviderohipno(b.getProviderOhipNo());
+        	   r.setGroupno(b.getGroupNo());
+        	   r.setCreator(b.getCreator());
+        	   r.setHtmlcontext(b.getHtmlContext());
+        	   r.setOhipcontext(b.getOhipContext());
+        	   r.setClaimrecord(b.getClaimRecord());
+        	   r.setUpdatedatetime(b.getUpdateDateTime());
+        	   r.setStatus(b.getStatus());
+        	   r.setTotal(b.getTotal());
+        	   
+        	   results.add(r);   		
+    	}
+    	
+    	return results;
     }
     
 }

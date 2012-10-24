@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,45 +21,29 @@
  * Hamilton
  * Ontario, Canada
  */
+package org.oscarehr.billing.CA.BC.dao;
 
-
-package org.oscarehr.billing.CA.dao;
-
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
 
-import org.oscarehr.billing.CA.model.BillActivity;
+import org.oscarehr.billing.CA.BC.model.CtlServiceCodesDxCodes;
 import org.oscarehr.common.dao.AbstractDao;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class BillActivityDao extends AbstractDao<BillActivity>{
+public class CtlServiceCodesDxCodesDao extends AbstractDao<CtlServiceCodesDxCodes>{
 
-	public BillActivityDao() {
-		super(BillActivity.class);
+	public CtlServiceCodesDxCodesDao() {
+		super(CtlServiceCodesDxCodes.class);
 	}
 	
-	public List<BillActivity> findCurrentByMonthCodeAndGroupNo(String monthCode, String groupNo, Date updateDateTime) {
-		Query q = entityManager.createQuery("SELECT b FROM BillActivity WHERE b.monthCode=? AND b.groupNo=? AND b.updateDateTime > ? AND b.status != 'D' ORDER BY b.batchCount");
-		q.setParameter(1, monthCode);
-		q.setParameter(2, groupNo);
-		q.setParameter(3, updateDateTime);
+	public List<CtlServiceCodesDxCodes> findByServiceCode(String serviceCode) {
+		Query q = entityManager.createQuery("select c from CtlServiceCodesDxCodes where c.serviceCode=:serviceCode");
+		q.setParameter("serviceCode", serviceCode);
 		
 		@SuppressWarnings("unchecked")
-		List<BillActivity> results = q.getResultList();
-		
-		return results;
-	}
-	
-	public List<BillActivity> findCurrentByDateRange(Date startDate, Date endDate) {
-		Query q = entityManager.createQuery("SELECT b FROM BillActivity WHERE b.updateDateTime >= ? AND  b.updateDateTime <= ? AND b.status != 'D' ORDER BY b.id DESC");
-		q.setParameter(1, startDate);
-		q.setParameter(2, endDate);
-	
-		@SuppressWarnings("unchecked")
-		List<BillActivity> results = q.getResultList();
+		List<CtlServiceCodesDxCodes> results = q.getResultList();
 		
 		return results;
 	}

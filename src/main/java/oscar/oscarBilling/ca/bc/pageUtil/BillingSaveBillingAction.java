@@ -26,7 +26,6 @@
 package oscar.oscarBilling.ca.bc.pageUtil;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -164,12 +163,10 @@ public class BillingSaveBillingAction extends Action {
 
             //Changed March 8th to be included side this loop,  before only one billing would get this information.
             if (bean.getCorrespondenceCode().equals("N") || bean.getCorrespondenceCode().equals("B")) {
-                try {
-                    MSPBillingNote n = new MSPBillingNote();
-                    n.addNote(billingMasterId, bean.getCreator(), bean.getNotes());
-                } catch (SQLException e) {
-                    log.error(e.getMessage(), e);
-                }
+               
+                MSPBillingNote n = new MSPBillingNote();
+                n.addNote(billingMasterId, bean.getCreator(), bean.getNotes());
+                
             }
             if (bean.getMessageNotes() != null || !bean.getMessageNotes().trim().equals("")) {
                 BillingNote n = new BillingNote();

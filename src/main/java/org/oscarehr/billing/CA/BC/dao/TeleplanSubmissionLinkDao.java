@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,33 +21,16 @@
  * Hamilton
  * Ontario, Canada
  */
+package org.oscarehr.billing.CA.BC.dao;
 
-
-package oscar.oscarBilling.ca.bc.MSP;
-
-import java.util.List;
-
-import org.oscarehr.billing.CA.BC.dao.TeleplanSubmissionLinkDao;
 import org.oscarehr.billing.CA.BC.model.TeleplanSubmissionLink;
-import org.oscarehr.util.SpringUtils;
+import org.oscarehr.common.dao.AbstractDao;
+import org.springframework.stereotype.Repository;
 
-public class TeleplanSubmissionLinkDAO {
-    
-	private TeleplanSubmissionLinkDao dao = SpringUtils.getBean(TeleplanSubmissionLinkDao.class);
-	
-   
-	public TeleplanSubmissionLinkDAO() {
-    }
-    
-    public void save(int billActId,List billingMasterList ){
-    	for (int i =0; i < billingMasterList.size(); i++){
-    		String bi = (String) billingMasterList.get(i);
-            int b = Integer.parseInt(bi);
-    		TeleplanSubmissionLink t = new TeleplanSubmissionLink();
-        	t.setBillActivityId(billActId);
-        	t.setBillingMasterNo(b);
-        	dao.persist(t);
-    	}
-    }
-    
+@Repository
+public class TeleplanSubmissionLinkDao extends AbstractDao<TeleplanSubmissionLink>{
+
+	public TeleplanSubmissionLinkDao() {
+		super(TeleplanSubmissionLink.class);
+	}
 }

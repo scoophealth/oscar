@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,45 +21,35 @@
  * Hamilton
  * Ontario, Canada
  */
+package org.oscarehr.billing.CA.BC.dao;
 
+import static org.junit.Assert.assertNotNull;
 
-package oscar.oscarBilling.ca.bc.MSP;
-
-import java.util.List;
-
-import org.oscarehr.billing.CA.BC.dao.LogTeleplanTxDao;
+import org.junit.Before;
+import org.junit.Test;
 import org.oscarehr.billing.CA.BC.model.LogTeleplanTx;
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.common.dao.DaoTestFixtures;
+import org.oscarehr.common.dao.utils.EntityDataGenerator;
+import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.util.SpringUtils;
 
-/**
- * @author jay
- */
-
-public class TeleplanLogDAO {
+public class LogTeleplanTxDaoTest extends DaoTestFixtures {
 
 	private LogTeleplanTxDao dao = SpringUtils.getBean(LogTeleplanTxDao.class);
 
-    public TeleplanLogDAO() {
-    }
-    
-    public void save(TeleplanLog tl){
-    	LogTeleplanTx l = new LogTeleplanTx();
-    	l.setSequenceNo(tl.getSequenceNo());
-    	l.setClaim(tl.getClaim().getBytes());
-    	l.setBillingMasterNo(tl.getBillingmasterNo());
-    	dao.persist(l);
-    }
-    
-    public void save(List list){
-        MiscUtils.getLogger().debug("LOG LIST SIZE"+list.size());
-        for (int i = 0; i < list.size(); i++){
-            TeleplanLog tl = (TeleplanLog) list.get(i);
-            LogTeleplanTx l = new LogTeleplanTx();
-        	l.setSequenceNo(tl.getSequenceNo());
-        	l.setClaim(tl.getClaim().getBytes());
-        	l.setBillingMasterNo(tl.getBillingmasterNo());
-        	dao.persist(l);
-        } 
-    }
+	public LogTeleplanTxDaoTest() {
+	}
+
+	@Before
+	public void before() throws Exception {
+		SchemaUtils.restoreTable("log_teleplantx");
+	}
+
+	@Test
+	public void testCreate() throws Exception {
+		LogTeleplanTx entity = new LogTeleplanTx();
+		EntityDataGenerator.generateTestDataForModelClass(entity);
+		dao.persist(entity);
+		assertNotNull(entity.getId());
+	}
 }

@@ -36,6 +36,7 @@ public class ConversionUtils {
 
 	public static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd";
 	public static final String DEFAULT_TIME_PATTERN = "HH:mm:ss";
+	public static final String DEFAULT_TS_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
 	private static final Long ZERO_LONG = new Long(0);
 	private static final Integer ZERO_INT = new Integer(0);
@@ -73,6 +74,10 @@ public class ConversionUtils {
 	 */
 	public static Date fromDateString(String dateString) {
 		return fromDateString(dateString, DEFAULT_DATE_PATTERN);
+	}
+	
+	public static Date fromTimestampString(String dateString) {
+		return fromDateString(dateString, DEFAULT_TS_PATTERN);
 	}
 
 	private static Date fromDateString(String dateString, String formatPattern) {
