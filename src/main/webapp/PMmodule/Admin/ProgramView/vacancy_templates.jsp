@@ -25,20 +25,46 @@
 --%>
 
 
+<%@page import="org.oscarehr.PMmodule.model.VacancyTemplate"%>
+<%@page import="org.oscarehr.PMmodule.service.VacancyTemplateManager"%>
+<%@page import="java.util.List"%>
+
 <%@ include file="/taglibs.jsp"%>
+
+<%	
+	String currentProgramId = (String) request.getAttribute("id");
+	List<VacancyTemplate> templates = VacancyTemplateManager.getVacancyTemplateByWlProgramId(Integer.valueOf(currentProgramId));
+		
+%>
+
+				
 <div class="tabs" id="tabs">
-<table cellpadding="3" cellspacing="0" border="0">
-	<tr>
-		<th title="Programs" class="nofocus">
-			<a onclick="javascript:clickTab2('General','General');return false;" href="javascript:void(0)">General Information</a>
-		</th>
-		<th title="Templates">Vacancy Templates</th>
-	</tr>
-</table>
+<input type="hidden" name="id" id="id" value="<%= currentProgramId%>" />	
+<input type="hidden" name="programId" id="programId" value="<%=request.getAttribute("id")%>" />
+	<table cellpadding="3" cellspacing="0" border="0">
+		<tr>
+			<th title="Programs" class="nofocus"><a
+				onclick="javascript:clickTab2('General', 'General');return false;"
+				href="javascript:void(0)">General Information</a></th>
+			<th title="Templates">Vacancy Templates</th>
+		</tr>
+	</table>
 </div>
+
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr class="b">
-		<td width="20%">Name:</td>
-		<td><c:out value="${program.name}" /></td>
+		<td width="50%" class="beright">Template Name</td>
+		<td width="50%">Active</td>
 	</tr>
+<%	for(VacancyTemplate vt : templates) { %>
+	<tr class="b">
+		<td class="beright">
+		<a onclick="javascript:clickLink('General','Vacancy Template Add', '<%=vt.getId() %>');return false;" href="javascript:void(0)"><%=vt.getName() %></a>
+		<td><%=vt.getActive()==true?"Yes":"No" %></td>
+	</tr>
+<% 	} %>
+	
 </table>
+
+
+</form>

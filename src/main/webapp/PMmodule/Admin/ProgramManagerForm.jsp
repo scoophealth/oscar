@@ -34,7 +34,7 @@
 
 	<html:hidden property="view.tab" />
 	<html:hidden property="view.subtab" />
-	<html:hidden property="vacancyOrTemplateId" />
+	<html:hidden property="vacancyOrTemplateId" />		
 	<input type="hidden" name="id"
 		value="<c:out value="${requestScope.id}"/>" />
 	<input type="hidden" name="method" value="edit" />
@@ -75,6 +75,7 @@
 						selectedTab = (String) request.getAttribute("view.tab");
 					}
 					String selectedSubtab = request.getParameter("view.subtab");
+					
 					/*
 					if (selectedTab == null || selectedTab.trim().equals("")) {
 						selectedTab = ProgramManagerViewFormBean.tabs[0];
@@ -175,7 +176,7 @@
 					<%} else if(ProgramManagerViewFormBean.tabs[i].equalsIgnoreCase("Vacancies")) {
 								%>
 					<security:oscarSec roleName="<%=roleName$%>"
-						objectName="_pmm_editProgram.serviceRestrictions" rights="r">
+						objectName="_pmm_editProgram.vacancies" rights="r">
 						<td><a href="javascript:void(0)"
 							onclick="javascript:clickTab('<%=ProgramManagerViewFormBean.tabs[i] %>');return false;"><%=ProgramManagerViewFormBean.tabs[i]%></a></td>
 					</security:oscarSec>
