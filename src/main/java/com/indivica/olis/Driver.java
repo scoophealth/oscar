@@ -19,6 +19,7 @@ import java.security.PrivateKey;
 import java.security.Security;
 import java.security.cert.CertStore;
 import java.security.cert.Certificate;
+import java.security.cert.CertificateFactory;
 import java.security.cert.CollectionCertStoreParameters;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
@@ -86,7 +87,8 @@ public class Driver {
 
 			OLISRequest olisRequest = new OLISRequest();
 			olisRequest.setHIALRequest(new HIALRequest());
-			OLISStub olis = new OLISStub();
+			String olisRequestURL = OscarProperties.getInstance().getProperty("olis_request_url","https://olis.ssha.ca/ssha.olis.webservices.ER7/OLIS.asmx"); 
+			OLISStub olis = new OLISStub(olisRequestURL);
 
 			olisRequest.getHIALRequest().setClientTransactionID(message.getTransactionId());
 			olisRequest.getHIALRequest().setSignedRequest(new HIALRequestSignedRequest());
@@ -96,7 +98,15 @@ public class Driver {
 			.format("<Request xmlns=\"http://www.ssha.ca/2005/HIAL\"><Content><![CDATA[%s]]></Content></Request>",
 					olisHL7String);
 
-			String signedRequest = Driver.signData(msgInXML);
+			String signedRequest = null;
+			
+			if(OscarProperties.getInstance().getProperty("olis_returned_cert") != null){
+				signedRequest = Driver.signData2(msgInXML);
+			}else{
+				signedRequest = Driver.signData(msgInXML);
+			}
+			
+			
 			olisRequest.getHIALRequest().getSignedRequest().setSignedData(signedRequest);
 
 
@@ -180,6 +190,7 @@ public class Driver {
 				for (ca.ssha._2005.hial.Error error : errorList) {
 					String errorString = "";
 					errorString += "ERROR " + error.getNumber() + " (" + error.getSeverity() + ") : " + error.getMessage();
+					MiscUtils.getLogger().debug(errorString);
 					
 					ArrayOfString details = error.getDetails();
 					List<String> detailList = details.getString();
@@ -233,6 +244,69 @@ public class Driver {
 		}
 		return null;
 
+	}
+	
+	//Method uses a jks and a returned cert separately instead of needing to 
+	//import the cert into PKCS12 file.
+	public static String signData2(String data) {
+		X509Certificate cert = null;
+		PrivateKey priv = null;
+		KeyStore keystore = null;
+		String pwd = "changeit";
+		String result = null;
+		try {
+			Security.addProvider(new BouncyCastleProvider());
+
+			keystore = KeyStore.getInstance("JKS");
+			// Load the keystore
+			keystore.load(new FileInputStream(OscarProperties.getInstance().getProperty("olis_keystore")), pwd.toCharArray());
+
+			//Enumeration e = keystore.aliases();
+			String name = "olis";
+
+			// Get the private key and the certificate
+			priv = (PrivateKey) keystore.getKey(name, pwd.toCharArray());
+			
+			FileInputStream is = new FileInputStream(OscarProperties.getInstance().getProperty("olis_returned_cert"));
+	        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+	        cert = (X509Certificate) cf.generateCertificate(is);
+			
+
+			// I'm not sure if this is necessary
+			
+			Certificate[] certChain = keystore.getCertificateChain(name);
+			ArrayList<Certificate> certList = new ArrayList<Certificate>();
+			certList.add(cert);
+			CertStore certs = null;
+
+			
+			certs = CertStore.getInstance("Collection", new CollectionCertStoreParameters(certList), "BC");
+
+			// Encrypt data
+			CMSSignedDataGenerator sgen = new CMSSignedDataGenerator();
+			
+
+			// What digest algorithm i must use? SHA1? MD5? RSA?...
+			DefaultSignedAttributeTableGenerator attributeGenerator = new DefaultSignedAttributeTableGenerator();			
+			sgen.addSigner(priv, cert, CMSSignedDataGenerator.DIGEST_SHA1,attributeGenerator,null);
+
+			// I'm not sure this is necessary
+			sgen.addCertificatesAndCRLs(certs);
+
+			// I think that the 2nd parameter need to be false (detached form)
+			CMSSignedData csd = sgen.generate(new CMSProcessableByteArray(data.getBytes()), true, "BC");
+			
+			byte[] signedData = csd.getEncoded();
+			byte[] signedDataB64 = Base64.encode(signedData);
+
+			result = new String(signedDataB64);
+
+
+
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("Can't sign HL7 message for OLIS", e);
+		}
+		return result;
 	}
 
 	public static String signData(String data) {
