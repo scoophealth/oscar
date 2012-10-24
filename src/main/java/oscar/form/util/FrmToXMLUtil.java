@@ -24,11 +24,11 @@
 package oscar.form.util;
 
 import java.lang.reflect.Method;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.DateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 
@@ -37,13 +37,16 @@ import noNamespace.SitePatientVisitRecordsDocument;
 import org.apache.commons.validator.GenericValidator;
 import org.apache.xmlbeans.XmlCalendar;
 import org.apache.xmlbeans.XmlOptions;
+import org.oscarehr.common.dao.BillingDao;
+import org.oscarehr.common.model.Billing;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBean;
 import oscar.oscarProvider.data.ProviderData;
 import oscar.oscarRx.data.RxPatientData;
 import oscar.oscarRx.data.RxPrescriptionData;
+import oscar.util.ConversionUtils;
 import oscar.util.UtilDateUtilities;
 
 /*
@@ -370,22 +373,15 @@ public class FrmToXMLUtil{
             
     }
    
-   private static String getFluShotBillingDate(String demoNo) {
-        String s = null;
-        try {
-                String s1 = "select b.billing_no, b.billing_date from billing b, billingdetail bd where b.demographic_no='"
-                                + demoNo
-                                + "' and bd.billing_no=b.billing_no and (bd.service_code='G590A' or bd.service_code='G591A') "
-                                + " and bd.status<>'D' and b.status<>'D' order by b.billing_date desc limit 0,1";
-                ResultSet rs = DBHandler.GetSQL(s1);
-
-                if (rs.next())
-                        s = oscar.Misc.getString(rs, "billing_date");
-                rs.close();
-            } catch (SQLException sqlexception) {
-                MiscUtils.getLogger().debug(sqlexception.getMessage());
-        }
-        return s;
+   public static String getFluShotBillingDate(String demoNo) {
+		BillingDao dao = SpringUtils.getBean(BillingDao.class);
+		List<Object[]> billings = dao.findBillings(ConversionUtils.fromIntString(demoNo), Arrays.asList(new String[] {"G590A", "G591A"}));
+		if (billings.isEmpty())
+			return null;
+		
+		Object[] container = billings.get(0);
+		Billing billing = (Billing) container[0];
+		return ConversionUtils.toDateString(billing.getBillingDate());
     }
           
 }
