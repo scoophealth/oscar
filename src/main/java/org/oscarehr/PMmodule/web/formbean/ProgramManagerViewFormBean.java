@@ -38,7 +38,8 @@ public class ProgramManagerViewFormBean extends ActionForm {
 	private Bed[] reservedBeds;
 	private String switchBed1;
 	private String switchBed2;
-
+	private String vacancyOrTemplateId;
+	
 	private String radioRejectionReason;
     private ProgramClientRestriction serviceRestriction;
 
@@ -132,4 +133,13 @@ public class ProgramManagerViewFormBean extends ActionForm {
 	public void setSwitchBed2(String switchBed2) {
 		this.switchBed2 = switchBed2;
 	}
+
+	public String getVacancyOrTemplateId() {
+    	return vacancyOrTemplateId;
+    }
+
+	public void setVacancyOrTemplateId(String vacancyOrTemplateId) {
+    	this.vacancyOrTemplateId = vacancyOrTemplateId;
+    }
+	
 }

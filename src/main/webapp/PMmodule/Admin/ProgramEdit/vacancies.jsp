@@ -39,7 +39,7 @@
 %>
 
 <div class="tabs" id="tabs">
-
+<input type="hidden" name="id" id="id" value="<%= currentProgramId%>" />
 <input type="hidden" name="programId" id="programId" value="<%=request.getAttribute("id")%>" />
 	<table cellpadding="3" cellspacing="0" border="0">
 		<tr>			

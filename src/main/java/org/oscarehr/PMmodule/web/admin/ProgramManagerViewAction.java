@@ -110,6 +110,11 @@ public class ProgramManagerViewAction extends BaseAction {
         // find the program id
         String programId = request.getParameter("id");
 
+        if(request.getParameter("newVacancy")!=null && "true".equals(request.getParameter("newVacancy")))
+			request.setAttribute("vacancyOrTemplateId", "");
+		else
+			request.setAttribute("vacancyOrTemplateId", formBean.getVacancyOrTemplateId());
+		
         if (programId == null) {
             programId = (String) request.getAttribute("id");
         }

@@ -25,39 +25,47 @@
 --%>
 
 
+<%@page import="org.oscarehr.PMmodule.model.VacancyTemplate"%>
+<%@page import="org.oscarehr.PMmodule.model.Vacancy"%>
+<%@page import="org.oscarehr.PMmodule.service.VacancyTemplateManager"%>
+<%@page import="java.util.List"%>
+
 <%@ include file="/taglibs.jsp"%>
+
+<%	
+	String currentProgramId = (String) request.getAttribute("id");
+	List<Vacancy> vacancies = VacancyTemplateManager.getVacanciesByWlProgramId(Integer.valueOf(currentProgramId));
+		
+%>
+
 <div class="tabs" id="tabs">
+<input type="hidden" name="id" id="id" value="<%= currentProgramId%>" />
+<input type="hidden" name="programId" id="programId" value="<%=request.getAttribute("id")%>" />
 	<table cellpadding="3" cellspacing="0" border="0">
-		<tr>
+		<tr>			
 			<th title="Templates">Vacancies</th>
 		</tr>
 	</table>
 </div>
+
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr class="b">
-		<td width="30%" class="beright">Requirement Template:</td>
-		<td><select name="program.associatedProgram">
-				<option selected="selected" value=" ">None Selected</option>
-		</select></td>
+		<td width="50%" class="beright">Vacancy's Template Name</td>
+		<td width="25%">Vacancy Status</td>
+		<td width="25%">Vacancy Create Date</td>
 	</tr>
+<%	for(Vacancy v : vacancies) { 
+		VacancyTemplate vt = VacancyTemplateManager.getVacancyTemplateByTemplateId(v.getTemplateId());
+%>
+	<tr class="b">
+		<td class="beright">
+		<a onclick="javascript:clickLink('Vacancy Add','Vacancy Add', '<%=v.getId() %>');return false;" href="javascript:void(0)"><%=(vt==null?"No Template for This Vacancy":vt.getName()) %></a>
+		<td><%= v.getStatus() %></td>
+		<td><%=v.getDateCreated() %> </td>
+	</tr>
+<% 	} %>
+	
 </table>
-........
-<table width="100%" border="1" cellspacing="2" cellpadding="3">
-	<tr class="b">
-		<td width="30%" class="beright">Match Closed:</td>
-		<td><input type="checkbox" value="on"
-			name="program.matchClosed"></td>
-	</tr>
-	<tr class="b">
-		<td class="beright">Date Closed:</td>
-		<td><select name="program.dateClosed">
-				<option selected="selected" value=" ">04/05/2010</option>
-		</select></td>
-	</tr>
-	<tr class="b">
-		<td class="beright">Reason Closed:</td>
-		<td><select name="program.reasonClosed">
-				<option selected="selected" value=" ">None Selected</option>
-		</select></td>
-	</tr>
-</table>
+
+
+</form>

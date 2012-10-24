@@ -57,16 +57,15 @@
 <script type="text/javascript">
 
 	function save() {
-		document.programManagerForm.elements['view.tab'].value='General';
-		document.programManagerForm.elements['view.subtab'].value='vacancy templates';			
-		document.programManagerForm.method.value='save_vacancy_template';
-		document.programManagerForm.submit();
+		document.programManagerViewForm.tab.value="General";
+		document.programManagerViewForm.subtab.value="vacancy templates";
+		document.programManagerViewForm.method.value='save_vacancy_template';
+		document.programManagerViewForm.submit();
 	}  
-	function cancel2() {
-		document.programManagerForm.elements['view.tab'].value='General';
-		document.programManagerForm.elements['view.subtab'].value='vacancy templates';			
-		document.programManagerForm.method.value='edit';
-		document.programManagerForm.submit();
+	function cancel2() {		
+		document.programManagerViewForm.tab.value="General";
+		document.programManagerViewForm.subtab.value="vacancy templates";
+		document.programManagerViewForm.submit();		
 	}
 </script>
 
