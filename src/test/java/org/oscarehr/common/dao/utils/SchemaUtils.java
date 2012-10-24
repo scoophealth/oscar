@@ -151,6 +151,11 @@ public class SchemaUtils
 
 	public static void restoreTable(String... tableNames) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException
 	{
+		restoreTable(true,tableNames);
+	}
+
+	public static void restoreTable(boolean includeInitData, String... tableNames) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException
+	{
 		long start = System.currentTimeMillis();
 		String schema=ConfigUtils.getProperty("db_schema");
 
@@ -162,7 +167,8 @@ public class SchemaUtils
 			for (int i = 0; i < tableNames.length; i++) {
 				s.executeUpdate("drop table if exists " + tableNames[i]);
 				s.executeUpdate(createTableStatements.get(tableNames[i]));
-				s.executeUpdate("insert into " + tableNames[i] + " select * from " + tableNames[i] + "_maventest");
+				if(includeInitData)
+					s.executeUpdate("insert into " + tableNames[i] + " select * from " + tableNames[i] + "_maventest");
             }
 			s.close();
 
@@ -178,6 +184,7 @@ public class SchemaUtils
 		}
 	}
 
+	
 	public static void restoreAllTables() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException
 	{
 		long start = System.currentTimeMillis();
