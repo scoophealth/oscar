@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
@@ -47,6 +48,7 @@ import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.util.LocaleUtils;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -62,6 +64,7 @@ public class FrmLabReq07Record extends FrmRecord {
 	private ClinicDAO clinicDao = (ClinicDAO)SpringUtils.getBean("clinicDAO");
 
 
+        @Override
 	public Properties getFormRecord(int demographicNo, int existingID) throws SQLException {
         Properties props = new Properties();
 
@@ -89,6 +92,7 @@ public class FrmLabReq07Record extends FrmRecord {
                 props.setProperty("province", StringUtils.trimToEmpty(demographic.getProvince()));
                 props.setProperty("sex", StringUtils.trimToEmpty(demographic.getSex()));
                 props.setProperty("demoProvider", StringUtils.trimToEmpty(demographic.getProviderNo()));
+                props.setProperty("patientChartNo", StringUtils.trimToEmpty(demographic.getChartNo()));
             }
 
             //get local clinic information
@@ -105,6 +109,13 @@ public class FrmLabReq07Record extends FrmRecord {
             String sql = "SELECT * FROM formLabReq07 WHERE demographic_no = " + demographicNo + " AND ID = "
                     + existingID;
             props = (new FrmRecordHelp()).getFormRecord(sql);
+            String chartNo = props.getProperty("patientChartNo");
+            String chartNoLbl = LocaleUtils.getMessage(Locale.getDefault(),"oscarEncounter.form.labreq.patientChartNo")+":";
+            int beginIdx = chartNo.lastIndexOf(chartNoLbl);
+            if (beginIdx >= 0) {
+                chartNo = chartNo.substring(beginIdx + chartNoLbl.length());
+                props.setProperty("patientChartNo", chartNo);
+            }
         }
 
         return props;
