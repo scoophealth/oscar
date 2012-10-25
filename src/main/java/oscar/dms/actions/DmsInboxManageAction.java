@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
 
@@ -109,10 +110,10 @@ public class DmsInboxManageAction extends DispatchAction {
 	}
 
 	private void setProviderDocsInSession(ArrayList<EDoc> privatedocs, HttpServletRequest request) {
-		ArrayList<Hashtable<String,String>> providers = ProviderData.getProviderListOfAllTypes();
+		List<Map<String,String>> providers = ProviderData.getProviderListOfAllTypes();
 		Hashtable<String,List<EDoc>> providerDocs = new Hashtable<String,List<EDoc>>();
 		for (int i = 0; i < providers.size(); i++) {
-			Hashtable<String,String>ht =  providers.get(i);
+			Map<String,String>ht =  providers.get(i);
 			List<EDoc> EDocs = new ArrayList<EDoc>();
 			String providerNo =  ht.get("providerNo");
 			providerDocs.put(providerNo, EDocs);

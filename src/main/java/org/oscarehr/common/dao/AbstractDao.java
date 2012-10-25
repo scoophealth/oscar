@@ -222,8 +222,10 @@ public abstract class AbstractDao<T extends AbstractModel<?>> {
 	 */
 	protected StringBuilder createQueryString(String select, String alias, String whereClause) {
 		StringBuilder buf = getBaseQueryBuf(select, alias);
-		buf.append("WHERE ");
-		buf.append(whereClause);
+		if (whereClause != null && !whereClause.isEmpty()) {
+			buf.append("WHERE ");
+			buf.append(whereClause);
+		}
 		return buf;
 	}
 
