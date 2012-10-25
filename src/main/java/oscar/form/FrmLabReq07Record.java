@@ -74,8 +74,16 @@ public class FrmLabReq07Record extends FrmRecord {
             if (demographic!=null) {
                 props.setProperty("demographic_no", String.valueOf(demographic.getDemographicNo()));
                 props.setProperty("patientName", demographic.getLastName()+", "+ demographic.getFirstName());
-                props.setProperty("healthNumber", StringUtils.trimToEmpty(demographic.getHin()));
-                props.setProperty("version", StringUtils.trimToEmpty(demographic.getVer()));
+
+                String uhipStatus = OscarProperties.getInstance().getProperty("demo_uhip_status", "");
+                if (!uhipStatus.isEmpty() && demographic.getRosterStatus().equals(uhipStatus)) {
+                    props.setProperty("healthNumber", LocaleUtils.getMessage(Locale.getDefault(),"oscarEncounter.form.uhipLbl") + StringUtils.trimToEmpty(demographic.getChartNo()));
+                    props.setProperty("version", "");
+                } else {
+                    props.setProperty("healthNumber", StringUtils.trimToEmpty(demographic.getHin()));
+                    props.setProperty("version", StringUtils.trimToEmpty(demographic.getVer()));
+                }
+
                 props.setProperty("hcType", StringUtils.trimToEmpty(demographic.getHcType()));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
                         "yyyy/MM/dd"));
