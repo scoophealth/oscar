@@ -897,4 +897,9 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 		return billingService;
 	}
 
+	@Test
+	public void testBillingService() {
+		List<BillingService> billingServices = dao.findByRegionGroupAndType("REG", "GRP", "TYP");
+		assertNotNull(billingServices);
+	}
 }
