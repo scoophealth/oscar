@@ -66,7 +66,7 @@
   boolean never = false;
   Hashtable extraData = new Hashtable();
 
-  ArrayList providers = ProviderData.getProviderList();
+  List providers = ProviderData.getProviderList();
 %>
 
 
