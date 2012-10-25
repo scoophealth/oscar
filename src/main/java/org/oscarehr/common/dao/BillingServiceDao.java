@@ -287,14 +287,15 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		return query.getResultList();
 	}
 
-	// /
-	// public int searchNumBillingCode(String str){
-	// String sql =
-	// "select count(*) as coun from billingservice b where b.service_code like '"+str+"%' and b.billingservice_date = (select max(b2.billingservice_date) from billingservice b2 where b2.service_code = b.service_code and b2.billingservice_date <= now())";
-	// Query query = entityManager.createNativeQuery(sql);
-	// List<BillingService> list = query.getResultList();
-	// return list.size();
-	//
-	// }
+	@SuppressWarnings("unchecked")
+    public List<BillingService> findByRegionGroupAndType(String billRegion, String serviceGroup, String serviceType) {
+		Query query = entityManager.createQuery("SELECT b FROM BillingService b, CtlBillingService c" +
+				" WHERE b.serviceCode= c.serviceCode and b.region= :region and c.serviceGroup= :serviceGroup " + 
+				" AND c.serviceType = :serviceType order by c.serviceOrder");
+		query.setParameter("region", billRegion);
+		query.setParameter("serviceGroup", serviceGroup);
+		query.setParameter("serviceType", serviceType);
+		return query.getResultList();
+    }
 
 }

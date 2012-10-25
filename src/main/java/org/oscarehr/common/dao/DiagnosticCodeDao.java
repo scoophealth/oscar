@@ -111,4 +111,14 @@ public class DiagnosticCodeDao extends AbstractDao<DiagnosticCode>{
         List<DiagnosticCode> results = query.getResultList();
         return results;
     }
+
+	@SuppressWarnings("unchecked")
+    public List<DiagnosticCode> findByRegionAndType(String billRegion, String serviceType) {
+		Query query = entityManager.createQuery("FROM DiagnosticCode d, CtlDiagCode c WHERE d.id = c.diagnosticCode and d.region = :billRegion " +
+		 		" AND c.serviceType = :serviceType");
+		query.setParameter("billRegion", billRegion);
+		query.setParameter("serviceType", serviceType);
+		return query.getResultList();
+		 
+    }
 }

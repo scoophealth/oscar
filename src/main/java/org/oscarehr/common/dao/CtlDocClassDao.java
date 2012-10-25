@@ -39,7 +39,7 @@ public class CtlDocClassDao extends AbstractDao<CtlDocClass> {
 
     public List<String> findUniqueReportClasses() {
 
-    	String sqlCommand = "select distinct x.reportClass from CtlDocClass x order by x.reportClass";
+    	String sqlCommand = "select distinct x.reportClass from CtlDocClass x order by lower(x.reportClass)";
 
         Query query = entityManager.createQuery(sqlCommand);
 
