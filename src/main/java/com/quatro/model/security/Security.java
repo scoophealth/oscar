@@ -71,6 +71,23 @@ public class Security implements java.io.Serializable {
 	/** default constructor */
 	public Security() {
 	}
+	
+	public Security(Security security) {
+		setSecurityNo(security.getSecurityNo());
+		setUserName(security.getUserName());
+		setPassword(security.getPassword());
+		setProviderNo(security.getProviderNo());
+		setPin(security.getPin());
+		setBRemotelockset(security.getBRemotelockset());
+		setBLocallockset(security.getBLocallockset());
+		setDateExpiredate(security.getDateExpiredate());
+		setBExpireset(security.getBExpireset());
+		setLastUpdateUser(security.getLastUpdateUser());
+		setLastUpdateDate(security.getLastUpdateDate());
+		setLoginIP(security.getLoginIP());
+		setLoginDate(security.getLoginDate());
+		setLoginStatus(security.getLoginStatus());		
+	}
 
 	/** full constructor */
 	public Security(String userName, String password, String providerNo, String pin, Integer BRemotelockset, Integer BLocallockset, Date dateExpiredate, Integer BExpireset) {
@@ -197,13 +214,17 @@ public class Security implements java.io.Serializable {
 		if (password.equals(sb.toString())) {
 			return (true);
 		} else {
-			try {
-				// sleep to throttle anyone trying to brute force hack passwords
-				Thread.sleep(250);
-			} catch (InterruptedException e) {
-				logger.error("Error", e);
-			}
+			throttleOnFailedLogin();
 			return (false);
 		}
 	}
+
+	protected void throttleOnFailedLogin() {
+	    try {
+	    	// sleep to throttle anyone trying to brute force hack passwords
+	    	Thread.sleep(250);
+	    } catch (InterruptedException e) {
+	    	logger.error("Error", e);
+	    }
+    }
 }

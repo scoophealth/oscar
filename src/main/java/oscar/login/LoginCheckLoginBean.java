@@ -42,6 +42,7 @@ import oscar.log.LogConst;
 import oscar.util.UtilDateUtilities;
 
 import com.quatro.dao.security.SecurityDao;
+import com.quatro.model.security.LdapSecurity;
 import com.quatro.model.security.Security;
 
 public final class LoginCheckLoginBean {
@@ -149,7 +150,11 @@ public final class LoginCheckLoginBean {
 		Security security = null;
 		if (results.size() > 0) security = results.get(0);
 
-		if (security == null) return null;
+		if (security == null) {
+			return null;
+		} else if (OscarProperties.isLdapAuthenticationEnabled()) {
+			security = new LdapSecurity(security);
+		}
 
 		// find the detail of the user
 		ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");

@@ -97,6 +97,33 @@ public class Provider implements Serializable, Comparable<Provider>{
 		this.setSpecialty(specialty);
 		this.setFirstName(firstName);
 	}
+	
+	public Provider(Provider provider) {
+		providerNo = provider.providerNo;
+		comments = provider.comments;
+		phone = provider.phone;
+		billingNo = provider.billingNo;
+		workPhone = provider.workPhone;
+		address = provider.address;
+		team = provider.team;
+		status = provider.status;
+		lastName = provider.lastName;
+		providerType = provider.providerType;
+		sex = provider.sex;
+		ohipNo = provider.ohipNo;
+		specialty = provider.specialty;
+		dob = provider.dob;
+		hsoNo = provider.hsoNo;
+		providerActivity = provider.providerActivity;
+		firstName = provider.firstName;
+		rmaNo = provider.rmaNo;
+		SignedConfidentiality = provider.SignedConfidentiality;
+		practitionerNo = provider.practitionerNo;
+		email = provider.email;
+		title = provider.title;
+		lastUpdateUser = provider.lastUpdateUser;
+		lastUpdateDate = provider.lastUpdateDate;
+	}
 
 	public String getFormattedName() {
 		return getLastName() + ", " + getFirstName();
