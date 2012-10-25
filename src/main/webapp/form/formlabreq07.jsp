@@ -28,6 +28,8 @@
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
 <%@ page
 	import="oscar.form.*, oscar.OscarProperties, java.util.Date, oscar.util.UtilDateUtilities"%>
+<%@page import="org.oscarehr.util.LocaleUtils"%>    
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -492,11 +494,23 @@ var maxYear=3100;
 							<center><%=props.getProperty("patientCity", "")%></center>
 							</td>
 							<td class="borderGrayBottomRight"
-								style="border-right: 0px; width: 130px;"><font
+								style="width: 130px;"><font
 								class="subHeading">Postal Code:</font><br />
 							<input type="hidden" style="width: 90%" name="patientPC"
 								value="<%=props.getProperty("patientPC", "")%>" /> <%=props.getProperty("patientPC", "")%>
 							</td>
+                                                        <%  
+                                                            String demoChartNo = "";
+                                                            if(oscarProps.getProperty("lab_req_include_chartno","false").equals("true")){
+                                                                demoChartNo = LocaleUtils.getMessage(request.getLocale(), "oscarEncounter.form.labreq.patientChartNo") + ":" + props.getProperty("patientChartNo", "");
+                                                            }
+                                                        %>
+                                                        <td class="borderGrayBottomRight"
+								style="border-right: 0px; width: 130px;"><font
+                                                                class="subHeading"><bean:message key="oscarEncounter.form.labreq.patientChartNo"/></font><br />
+							<input type="hidden" style="width: 90%" name="patientChartNo"
+								value="<%=demoChartNo%>" /> <%=props.getProperty("patientChartNo", "")%>
+                                                        </td>
 						</tr>
 					</table>
 					<table width="100%">
