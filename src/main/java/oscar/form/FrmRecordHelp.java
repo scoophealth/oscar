@@ -295,7 +295,9 @@ public class FrmRecordHelp {
             // studyLink; //+
         } else if (action.equalsIgnoreCase("exit")) {
             temp = where;
-        } else {
+        } else if (action.equals("printAll")) {
+            temp = where + "?demographic_no=" + demoId + "&formId=" + formId;
+        }else {
             temp = where;
         }
 
