@@ -35,6 +35,8 @@
 <%@ page import="org.oscarehr.common.dao.ClinicNbrDao"%>
 <%@ page import="org.oscarehr.common.model.ProviderData"%>
 <%@ page import="org.oscarehr.common.dao.ProviderDataDao"%>
+<%@page import="org.oscarehr.common.dao.UserPropertyDAO"%>
+<%@page import="org.oscarehr.common.model.UserProperty"%>
 <%@ page import="oscar.OscarProperties"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
@@ -47,7 +49,7 @@
 <%@page import="org.oscarehr.common.dao.SiteDao"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.oscarehr.common.model.Site"%>
-<%@page import="oscar.login.*"%>
+<%@page import="oscar.login.*,org.apache.commons.lang.StringUtils"%>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -333,6 +335,26 @@ for (int i=0; i<sites.size(); i++) {
 				value="<%= apptMainBean.getString(rs,"practitionerNo") %>"
 				maxlength="10"></td>
 		</tr>
+		<%
+		UserPropertyDAO userPropertyDAO = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
+		%>
+		<tr>
+			<td align="right"><bean:message key="admin.provider.formOfficialFirstName" />:</td>
+			<td><input type="text" name="officialFirstName" value="<%=StringUtils.trimToEmpty(userPropertyDAO.getStringValue(provider_no, UserProperty.OFFICIAL_FIRST_NAME))%>" maxlength="10"></td>
+		</tr>
+		<tr>
+			<td align="right"><bean:message key="admin.provider.formOfficialSecondName" />:</td>
+			<td><input type="text" name="officialSecondName" value="<%=StringUtils.trimToEmpty(userPropertyDAO.getStringValue(provider_no, UserProperty.OFFICIAL_SECOND_NAME))%>" maxlength="10"></td>
+		</tr><tr>
+			<td align="right"><bean:message key="admin.provider.formOfficialLastName" />:</td>
+			<td><input type="text" name="officialLastName" value="<%=StringUtils.trimToEmpty(userPropertyDAO.getStringValue(provider_no, UserProperty.OFFICIAL_LAST_NAME))%>" maxlength="10"></td>
+		</tr>
+		
+		
+		
+		
+		
+		
 		<% if (OscarProperties.getInstance().getBooleanProperty("rma_enabled", "true")) { %>
 			<tr>
 				<td align="right">Default Clinic NBR:</td>
