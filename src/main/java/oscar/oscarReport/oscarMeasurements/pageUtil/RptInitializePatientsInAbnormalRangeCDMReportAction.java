@@ -43,7 +43,6 @@ import org.apache.struts.action.ActionMessages;
 import org.apache.struts.util.MessageResources;
 import org.oscarehr.util.MiscUtils;
 
-import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarMeasurements.pageUtil.EctValidation;
 import oscar.oscarReport.oscarMeasurements.data.RptMeasurementsData;
@@ -65,7 +64,7 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
         
         ArrayList reportMsg = new ArrayList();
         
-        try{
+        
                   
                 if(!validate(frm, request)){
                     MiscUtils.getLogger().debug("the form is invalid");
@@ -86,24 +85,9 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                 request.setAttribute("title", title);
                 request.setAttribute("messages", reportMsg);
                 
-                /* select the correct db specific command */
-                String db_type = OscarProperties.getInstance().getProperty("db_type").trim();
-                String dbSpecificCommand;
-                if (db_type.equalsIgnoreCase("mysql")) {
-                    dbSpecificCommand = "SELECT LAST_INSERT_ID()";
-                } 
-                else if (db_type.equalsIgnoreCase("postgresql")){
-                    dbSpecificCommand = "SELECT CURRVAL('consultationrequests_numeric')";
-                }
-                else
-                    throw new SQLException("ERROR: Database " + db_type + " unrecognized.");
+               
                 
-        }
-        
-        catch(SQLException e)
-        {
-            MiscUtils.getLogger().error("Error", e);
-        }
+       
         return mapping.findForward("success");
     }
 

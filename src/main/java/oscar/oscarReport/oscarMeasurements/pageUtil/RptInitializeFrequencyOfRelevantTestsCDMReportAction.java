@@ -43,7 +43,6 @@ import org.apache.struts.action.ActionMessages;
 import org.apache.struts.util.MessageResources;
 import org.oscarehr.util.MiscUtils;
 
-import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarMeasurements.pageUtil.EctValidation;
 import oscar.oscarReport.oscarMeasurements.data.RptMeasurementsData;
@@ -65,46 +64,29 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
         String startDateA = frm.getStartDateA();
         String endDateA = frm.getEndDateA();
         int nbPatient = 0; 
-        try{
-                  
-                if(!validate(frm, request)){                    
-                    return (new ActionForward(mapping.getInput()));
-                }
-                
-                
-                addHeading(headings, request);
-                if(patientSeenCheckbox!=null){
-                    nbPatient = mData.getNbPatientSeen(startDateA, endDateA);  
-                    String msg = mr.getMessage("oscarReport.CDMReport.msgPatientSeen", Integer.toString(nbPatient), startDateA, endDateA); 
-                    MiscUtils.getLogger().debug(msg);
-                    reportMsg.add(msg);
-                    reportMsg.add("");
-                }
-                getFrequenceOfTestPerformed(frm, reportMsg, request);
-                
-                String title = mr.getMessage("oscarReport.CDMReport.msgFrequencyOfRelevantTestsBeingPerformed");
-                request.setAttribute("title", title);
-                //request.setAttribute("headings", headings);
-                request.setAttribute("messages", reportMsg);
-                
-                /* select the correct db specific command */
-                String db_type = OscarProperties.getInstance().getProperty("db_type").trim();
-                String dbSpecificCommand;
-                if (db_type.equalsIgnoreCase("mysql")) {
-                    dbSpecificCommand = "SELECT LAST_INSERT_ID()";
-                } 
-                else if (db_type.equalsIgnoreCase("postgresql")){
-                    dbSpecificCommand = "SELECT CURRVAL('consultationrequests_numeric')";
-                }
-                else
-                    throw new SQLException("ERROR: Database " + db_type + " unrecognized.");
-                
+           
+        if(!validate(frm, request)){                    
+            return (new ActionForward(mapping.getInput()));
         }
         
-        catch(SQLException e)
-        {
-            MiscUtils.getLogger().error("Error", e);
+        
+        addHeading(headings, request);
+        if(patientSeenCheckbox!=null){
+            nbPatient = mData.getNbPatientSeen(startDateA, endDateA);  
+            String msg = mr.getMessage("oscarReport.CDMReport.msgPatientSeen", Integer.toString(nbPatient), startDateA, endDateA); 
+            MiscUtils.getLogger().debug(msg);
+            reportMsg.add(msg);
+            reportMsg.add("");
         }
+        getFrequenceOfTestPerformed(frm, reportMsg, request);
+        
+        String title = mr.getMessage("oscarReport.CDMReport.msgFrequencyOfRelevantTestsBeingPerformed");
+        request.setAttribute("title", title);
+        //request.setAttribute("headings", headings);
+        request.setAttribute("messages", reportMsg);
+                
+               
+      
         return mapping.findForward("success");
     }
     
