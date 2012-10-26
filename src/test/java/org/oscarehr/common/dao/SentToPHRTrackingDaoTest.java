@@ -24,6 +24,10 @@
 package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertNotNull;
+/**
+ * @author Shazib
+ */
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +39,6 @@ import org.oscarehr.util.SpringUtils;
 public class SentToPHRTrackingDaoTest extends DaoTestFixtures {
 
 	private SentToPHRTrackingDao dao = SpringUtils.getBean(SentToPHRTrackingDao.class);
-
 
 	@Before
 	public void before() throws Exception {
@@ -49,4 +52,36 @@ public class SentToPHRTrackingDaoTest extends DaoTestFixtures {
 		dao.persist(entity);
 		assertNotNull(entity.getId());
 	}
+	
+	@Test
+	public void testFindByDemographicObjectServer() throws Exception {
+		
+		int demoNo1 = 100;
+		String objName1 = "alpha";
+		String server1 = "server1";
+		
+		int demoNo2 = 200;
+		String objName2 = "bravo";
+		String server2 = "server2";
+		
+		SentToPHRTracking PHRTracking1 = new SentToPHRTracking();
+		EntityDataGenerator.generateTestDataForModelClass(PHRTracking1);
+		PHRTracking1.setDemographicNo(demoNo1);
+		PHRTracking1.setObjectName(objName1);
+		PHRTracking1.setSentToServer(server1);
+		dao.persist(PHRTracking1);
+		
+		SentToPHRTracking PHRTracking2 = new SentToPHRTracking();
+		EntityDataGenerator.generateTestDataForModelClass(PHRTracking2);
+		PHRTracking2.setDemographicNo(demoNo2);
+		PHRTracking2.setObjectName(objName2);
+		PHRTracking2.setSentToServer(server2);
+		dao.persist(PHRTracking2);
+		
+		SentToPHRTracking expcetedResult = PHRTracking1;
+		SentToPHRTracking result = dao.findByDemographicObjectServer(demoNo1, objName1, server1);
+		
+		assertEquals(expcetedResult, result);		
+	}
+
 }

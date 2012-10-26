@@ -21,22 +21,16 @@
  * Hamilton
  * Ontario, Canada
  */
-package org.oscarehr.common.dao;
-
-import static org.junit.Assert.assertNotNull;
-
 /**
  * @author Shazib
  */
+package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -44,71 +38,53 @@ import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
-import org.oscarehr.common.model.SystemMessage;
-import org.oscarehr.util.SpringUtils;
+import org.oscarehr.common.model.PublicKey;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-public class SystemMessageDaoTest extends DaoTestFixtures {
-
-	private SystemMessageDao dao = SpringUtils.getBean(SystemMessageDao.class);
-	DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
-
-
+public class PublicKeyDaoTest extends DaoTestFixtures {
+	
+	private PublicKeyDao dao =(PublicKeyDao)SpringUtils.getBean(PublicKeyDao.class);
+	
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("SystemMessage");
+		SchemaUtils.restoreTable("publicKeys");
 	}
-
-	@Test
-	public void testCreate() throws Exception {
-		SystemMessage entity = new SystemMessage();
-		EntityDataGenerator.generateTestDataForModelClass(entity);
-		dao.persist(entity);
-		assertNotNull(entity.getId());
-	}
-
 
 	@Test
 	public void testFindAll() throws Exception {
 		
-		SystemMessage sysMessage1 = new SystemMessage();
-		EntityDataGenerator.generateTestDataForModelClass(sysMessage1);
-		Date date1 = new Date(dfm.parse("20110701").getTime());
-		sysMessage1.setExpiryDate(date1);
-		dao.persist(sysMessage1);
+		PublicKey publicKey1 = new PublicKey();
+		EntityDataGenerator.generateTestDataForModelClass(publicKey1);
+		publicKey1.setService("100");
+		dao.persist(publicKey1);
 		
-		SystemMessage sysMessage2 = new SystemMessage();
-		EntityDataGenerator.generateTestDataForModelClass(sysMessage2);
-		Date date2 = new Date(dfm.parse("20100701").getTime());
-		sysMessage2.setExpiryDate(date2);
-		dao.persist(sysMessage2);
+		PublicKey publicKey2 = new PublicKey();
+		EntityDataGenerator.generateTestDataForModelClass(publicKey2);
+		publicKey2.setService("200");
+		dao.persist(publicKey2);
 		
-		SystemMessage sysMessage3 = new SystemMessage();
-		EntityDataGenerator.generateTestDataForModelClass(sysMessage3);
-		Date date3 = new Date(dfm.parse("20120701").getTime());
-		sysMessage3.setExpiryDate(date3);
-		dao.persist(sysMessage3);
+		PublicKey publicKey3 = new PublicKey();
+		EntityDataGenerator.generateTestDataForModelClass(publicKey3);
+		publicKey3.setService("300");
+		dao.persist(publicKey3);
 		
-		List<SystemMessage> result = dao.findAll();
-		List<SystemMessage> expectedResult = new ArrayList<SystemMessage>(Arrays.asList(sysMessage3,sysMessage1,sysMessage2));
-			
-		Logger logger = MiscUtils.getLogger();
+		List<PublicKey> expectedResult = new ArrayList<PublicKey>(Arrays.asList(publicKey1, publicKey2, publicKey3));
+		List<PublicKey> result = dao.findAll();
 
+		Logger logger = MiscUtils.getLogger();
+		
 		if (result.size() != expectedResult.size()) {
 			logger.warn("Array sizes do not match.");
 			fail("Array sizes do not match.");
 		}
-
 		for (int i = 0; i < expectedResult.size(); i++) {
 			if (!expectedResult.get(i).equals(result.get(i))){
-				logger.warn("Items do not match.");
-				fail("Items do not match.");
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
 			}
 		}
 		assertTrue(true);
-		
-		
 		
 	}
 
