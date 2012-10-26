@@ -40,7 +40,10 @@ import java.util.Hashtable;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.SurveyDataDao;
+import org.oscarehr.common.model.SurveyData;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -50,7 +53,8 @@ import oscar.oscarDB.DBHandler;
  */
 public class Survey {
    private static Logger log = MiscUtils.getLogger();
-   
+   private SurveyDataDao surveyDataDao = SpringUtils.getBean(SurveyDataDao.class);
+
    static long seed = 0;
    
    String surveyTitle;
@@ -235,26 +239,18 @@ public class Survey {
    private String addPatientToPeriod(String demographic_no,String provider_no, String status,String answer){
       //This will beused to set patient to been seen in this period.
       String insertId = "";
-      try{
-         
-         String sql = 
-         "insert into surveyData ( surveyId, demographic_no,provider_no,status,answer,survey_date) values "
-            +"("
-            +"'"+surveyId+"',"
-            +"'"+demographic_no+"',"
-            +"'"+provider_no+"',"
-            +"'"+status+"',"
-            +"'"+answer+"',"
-            +"now())";
-         
-         DBHandler.RunSQL(sql);
-         ResultSet rs = DBHandler.GetSQL("SELECT LAST_INSERT_ID()");
-         if (rs.next()){
-            insertId = oscar.Misc.getString(rs, 1);
-         }         
-      }catch(Exception e){
-         MiscUtils.getLogger().error("Error", e);
-      }
+      
+      SurveyData sd = new SurveyData();
+      sd.setSurveyId(surveyId);
+      sd.setDemographicNo(Integer.parseInt(demographic_no));
+      sd.setProviderNo(provider_no);
+      sd.setStatus(status);
+      sd.setAnswer(answer);
+      sd.setSurveyDate(new java.util.Date());
+      
+      surveyDataDao.persist(sd);
+      insertId = sd.getId().toString();
+      
       return insertId;
    }
    

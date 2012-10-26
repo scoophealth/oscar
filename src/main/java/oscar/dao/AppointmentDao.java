@@ -166,7 +166,6 @@ public class AppointmentDao extends OscarSuperDao {
 
             {"search_group_day_appt", "select count(appointment_no) as numAppts from appointment, mygroup where mygroup.provider_no=appointment.provider_no and appointment.status != 'C' and mygroup.mygroup_no=? and  appointment.demographic_no=? and  appointment.appointment_date=?"},
             {"search_formtbl","select * from encounterForm where form_table= ?"},
-            {"import_appt", "insert into appointment (provider_no,appointment_date,start_time,end_time,name,demographic_no,notes,reason,status,imported_status) values (?,?,?,?,?,?,?,?,?,?)" },
             {"export_appt", "select app.*, prov.first_name, prov.last_name, prov.ohip_no from appointment app, provider prov where app.provider_no = prov.provider_no and app.demographic_no = ?" }
 	};
 
