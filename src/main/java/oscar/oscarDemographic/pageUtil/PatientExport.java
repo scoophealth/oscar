@@ -69,6 +69,7 @@ public class PatientExport {
 		medication.setStartDate(drug.getRxDate());
 		medication.setEndDate(drug.getEndDate());
 		medication.setDin(drug.getRegionalIdentifier());
+		medication.setAtc(drug.getAtcCode());
 		medication.setDrugName(drug.getBrandName());
 		
 		return medication;
@@ -181,6 +182,7 @@ public class PatientExport {
 		private Date startDate;
 		private Date endDate;
 		private String din;
+		private String atc;
 		private String drugName;
 		
 		public Medication() {
@@ -219,6 +221,14 @@ public class PatientExport {
 			this.din = rhs;
 		}
 		
+		public String getAtc() {
+			return this.atc;
+		}
+		
+		public void setAtc(String rhs) {
+			this.atc = rhs;
+		}
+		
 		public String getDrugName() {
 			return this.drugName;
 		}
@@ -232,6 +242,13 @@ public class PatientExport {
 			Date currentDate = new Date();
 			if(currentDate.after(endDate)) return false;
 			else return true;
+		}
+		
+		public boolean isValidAtc() {
+			if (atc != null && !atc.trim().equals("")) {
+				return true;
+			}
+			return false;
 		}
 	}
 }
