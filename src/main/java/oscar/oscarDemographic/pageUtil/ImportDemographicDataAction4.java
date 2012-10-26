@@ -78,9 +78,11 @@ import org.oscarehr.common.dao.DemographicContactDao;
 import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.DrugReasonDao;
+import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.PartialDateDao;
 import org.oscarehr.common.dao.ProviderDataDao;
 import org.oscarehr.common.model.Allergy;
+import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicArchive;
 import org.oscarehr.common.model.DemographicContact;
@@ -115,6 +117,7 @@ import oscar.oscarLab.ca.on.LabResultImport;
 import oscar.oscarPrevention.PreventionData;
 import oscar.oscarProvider.data.ProviderData;
 import oscar.service.OscarSuperManager;
+import oscar.util.ConversionUtils;
 import oscar.util.StringUtils;
 import oscar.util.UtilDateUtilities;
 import cds.AlertsAndSpecialNeedsDocument.AlertsAndSpecialNeeds;
@@ -185,6 +188,7 @@ import cdsDt.PersonNameStandard.OtherNames;
     ProviderDataDao providerDataDao = (ProviderDataDao) SpringUtils.getBean("providerDataDao");
     PartialDateDao partialDateDao = (PartialDateDao) SpringUtils.getBean("partialDateDao");
     DemographicExtDao demographicExtDao = (DemographicExtDao) SpringUtils.getBean("demographicExtDao");
+    OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
 
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception  {
@@ -1950,10 +1954,21 @@ import cdsDt.PersonNameStandard.OtherNames;
                             err_note.add("Appointment has no provider; assigned to \"doctor oscardoc\" ("+(i+1)+")");
                         }
                     }
-                    oscarSuperManager.update("appointmentDao", "import_appt", new Object [] {
-                    		apptProvider, appointmentDate, startTime, endTime,
-                    		patientName, demographicNo, notes, reason, status, apptStatus
-            		});
+                   
+                    Appointment appt = new Appointment();
+                    appt.setProviderNo(apptProvider);
+                    appt.setAppointmentDate(appointmentDate);
+                    appt.setStartTime(ConversionUtils.fromTimeString(startTime));
+                    appt.setEndTime(ConversionUtils.fromTimeString(endTime));
+                    appt.setName(patientName);
+                    appt.setDemographicNo(Integer.parseInt(demographicNo));
+                    appt.setNotes(notes);
+                    appt.setReason(reason);
+                    appt.setStatus(status);
+                    appt.setImportedStatus(apptStatus);
+                    
+                    appointmentDao.persist(appt);
+                    
                     addOneEntry(APPOINTMENT);
                 }
 
