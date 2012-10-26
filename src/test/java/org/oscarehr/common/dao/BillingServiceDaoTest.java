@@ -54,7 +54,7 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void setUp() throws Exception {
-		SchemaUtils.restoreTable("billingservice", "billingperclimit");
+		SchemaUtils.restoreTable("billingservice", "billingperclimit", "ctl_billingservice");
 	}
 	
 	@Test
@@ -899,7 +899,8 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 
 	@Test
 	public void testBillingService() {
-		List<BillingService> billingServices = dao.findByRegionGroupAndType("REG", "GRP", "TYP");
+		List<BillingService> billingServices;
+		billingServices = dao.findByRegionGroupAndType("REG", "GRP", "TYP");
 		assertNotNull(billingServices);
 	}
 }
