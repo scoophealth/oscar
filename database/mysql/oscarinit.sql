@@ -7434,6 +7434,7 @@ CREATE TABLE studydata (
   timestamp timestamp NOT NULL,
   status varchar(30) default NULL,
   content text,
+  keyname varchar(32),
   PRIMARY KEY  (studydata_no)
 ) ;
 
@@ -11128,6 +11129,13 @@ CREATE TABLE `formSelfAssessment` (
   `ReligiousAffiliation` mediumtext,
   `GeneralOther` mediumtext,
   PRIMARY KEY (`ID`)
+);
+
+create table providerstudy (
+        study_no int(10),
+        provider_no varchar(6),
+        creator varchar(6),
+        `timestamp` timestamp
 );
 
 
