@@ -44,7 +44,6 @@ import org.oscarehr.common.model.MeasurementsDeleted;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
 import oscar.util.ParameterActionForward;
 import oscar.util.UtilDateUtilities;
@@ -95,17 +94,7 @@ public class EctDeleteDataAction extends Action {
             }
             
 
-            /*select the correct db specific command */
-            String db_type = OscarProperties.getInstance().getProperty("db_type").trim();
-            String dbSpecificCommand;
-            if (db_type.equalsIgnoreCase("mysql")) {
-                dbSpecificCommand = "SELECT LAST_INSERT_ID()";
-            } 
-            else if (db_type.equalsIgnoreCase("postgresql")){
-                dbSpecificCommand = "SELECT CURRVAL('consultationrequests_numeric')";
-            }
-            else
-                throw new SQLException("ERROR: Database " + db_type + " unrecognized.");
+            
         }
 
         catch(SQLException e)
