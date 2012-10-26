@@ -26,6 +26,7 @@ package org.oscarehr.common.dao.utils;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -90,6 +91,9 @@ public class EntityDataGenerator {
 	        else if(f[i].getType() == boolean.class || f[i].getType() == Boolean.class) {
 	 	        	f[i].set(model,true);
 	        }
+	        else if(f[i].getType() == byte.class || f[i].getType() == Byte.class) {
+ 	        	f[i].set(model,(byte)0xAA);
+	        }
 	        else if(f[i].getType() == char.class || f[i].getType() == Character.class) {
  	        	f[i].set(model,'A');
 	        }
@@ -97,6 +101,9 @@ public class EntityDataGenerator {
 	 	    	//ignore
 	 	    }else if(f[i].getType() == Provider.class || f[i].getType() == DemographicExt[].class) {
 	 	    	//ignore
+	 	    }else if(f[i].getType() == char.class || f[i].getType() == BigDecimal.class) {
+	 	    	BigDecimal bd = new BigDecimal(Math.random()*5000);
+	 	        f[i].set(model,bd);
 	        } else {
 	        	MiscUtils.getLogger().warn("Can't generate test data for class type:" + f[i].getType());
 	        }
