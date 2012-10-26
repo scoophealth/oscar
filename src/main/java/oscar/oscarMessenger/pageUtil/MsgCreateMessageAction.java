@@ -90,13 +90,7 @@ public class MsgCreateMessageAction extends Action {
 
             messageId = messageData.sendMessage2(message,subject,userName,sentToWho,userNo,providerListing,att, pdfAtt);
 
-            if (messageData.isRemotes()){
-                oscar.oscarMessenger.data.MsgRemoteMessageData  remoteMessageData;
-                remoteMessageData = new oscar.oscarMessenger.data.MsgRemoteMessageData(messageId,currLoco);
-
-                remoteMessageData.start();
-
-            }
+            
 
             //link msg and demogrpahic if both messageId and demographic_no are not null
             if (demographic_no != null && (demographic_no.equals("") || demographic_no.equals("null")) ){
