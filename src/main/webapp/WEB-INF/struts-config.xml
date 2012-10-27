@@ -281,12 +281,7 @@
 			<form-property name="providerNo" type="java.lang.String" />
 		</form-bean>
 		<form-bean name="clientSearchForm" type="org.apache.struts.validator.LazyValidatorForm" />
-		<form-bean name="intakeAForm" type="org.apache.struts.validator.DynaValidatorForm">
-			<form-property name="intake" type="org.oscarehr.PMmodule.model.Formintakea" />
-			<form-property name="view2" type="org.oscarehr.PMmodule.web.formbean.IntakeAFormBean" />
-			<form-property name="bean" type="org.oscarehr.PMmodule.web.formbean.IntakeFormBean" />
-		</form-bean>
-		<form-bean name="intakeAReport1Form" type="org.apache.struts.validator.LazyValidatorForm" />
+
 		<form-bean name="intakeCReport1Form" type="org.apache.struts.validator.LazyValidatorForm" />
 		<form-bean name="StreetHealthIntakeReportForm" type="org.apache.struts.validator.LazyValidatorForm" />
 		<form-bean name="intakeCReportForm" type="org.apache.struts.validator.LazyValidatorForm" />
@@ -1856,11 +1851,6 @@
 			<forward name="view" path="/ticklerPlus/viewUnreadTicklers.jsp" />
 			<forward name="login" path="/ticklerPlus/loginUnreadTicklers.jsp" />
 		</action>
-		<action path="/PMmodule/IntakeAReport1Action" type="org.oscarehr.PMmodule.web.IntakeAReport1Action" name="intakeAReport1Form" scope="request" input="/PMmodule/IntakeAReport1.jsp">
-			<forward name="success" path="/PMmodule/IntakeAReport1.jsp" />
-			<forward name="error" path="/PMmodule/IntakeAReport1.jsp" />
-			<forward name="timeout" path="/PMmodule/Timeout.jsp" />
-		</action>
 		<action path="/PMmodule/IntakeCMentalHealthReportAction" type="org.oscarehr.PMmodule.web.IntakeCMentalHealthReportAction" name="intakeCReportForm" scope="request" input="/PMmodule/IntakeCReport.jsp">
 			<forward name="success" path="/PMmodule/IntakeCReport.jsp" />
 			<forward name="error" path="/PMmodule/IntakeCReport.jsp" />
@@ -1932,13 +1922,6 @@
 		<action path="/PMmodule/ProviderInfo" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
 			<forward name="view" path="page.pmm.provider.view" />
 		</action>
-		<action path="/PMmodule/IntakeA" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="intakeAForm" scope="request">
-			<forward name="form" path="/PMmodule/IntakeA.jsp" />
-			<forward name="success" path="/PMmodule/ClientManager.do?method=edit" />
-			<forward name="error" path="/PMmodule/ProviderInfo.do?method=view" />
-			<forward name="cancel-new" path="/PMmodule/ProviderInfo.do?method=view" />
-			<forward name="cancel-update" path="/PMmodule/ClientManager.do?method=edit" />
-		</action>
 		<action path="/PMmodule/IntakeC" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="session" name="intakeCForm" input="/PMmodule/IntakeC.jsp">
 			<forward name="form" path="/PMmodule/IntakeC.jsp" />
 			<forward name="success" path="/PMmodule/ClientManager.do?method=edit" />
@@ -1953,11 +1936,6 @@
 		<action path="/PMmodule/StaffManager" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="staffManagerForm" scope="request">
 			<forward name="list" path="page.pmm.staff.list" />
 			<forward name="edit" path="page.pmm.staff.edit" />
-		</action>
-		<action path="/PMmodule/Intake" type="org.springframework.web.struts.DelegatingActionProxy" parameter="action" name="preIntakeForm" scope="request">
-			<forward name="pre-intake" path="page.intake.form" />
-			<forward name="intakea" path="/PMmodule/IntakeA.do" />
-			<forward name="intakec" path="/PMmodule/IntakeC.do" />
 		</action>
 		<action path="/PMmodule/EditIntake" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
 			<forward name="view" path="/PMmodule/edit_intake.jsp" />
