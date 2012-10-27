@@ -282,18 +282,7 @@
 		</form-bean>
 		<form-bean name="clientSearchForm" type="org.apache.struts.validator.LazyValidatorForm" />
 
-		<form-bean name="intakeCReport1Form" type="org.apache.struts.validator.LazyValidatorForm" />
 		<form-bean name="StreetHealthIntakeReportForm" type="org.apache.struts.validator.LazyValidatorForm" />
-		<form-bean name="intakeCReportForm" type="org.apache.struts.validator.LazyValidatorForm" />
-		<form-bean name="intakeCForm" type="org.apache.struts.validator.DynaValidatorForm">
-			<form-property name="intake" type="org.oscarehr.PMmodule.model.Formintakec" />
-			<form-property name="view2" type="org.oscarehr.PMmodule.web.formbean.IntakeCFormBean" />
-			<form-property name="addresses" type="org.oscarehr.PMmodule.web.formbean.IntakeCAddress[]" size="20" />
-			<form-property name="contact" type="org.oscarehr.PMmodule.web.formbean.IntakeCContact[]" size="20" />
-			<form-property name="identification" type="org.oscarehr.PMmodule.web.formbean.IntakeCIdentification[]" size="20" />
-			<form-property name="hospitalization" type="org.oscarehr.PMmodule.web.formbean.IntakeCHospitalization[]" size="20" />
-			<form-property name="bean" type="org.oscarehr.PMmodule.web.formbean.IntakeFormBean" />
-		</form-bean>
 		<form-bean name="healthSafetyForm" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="healthsafety" type="org.oscarehr.PMmodule.model.HealthSafety" />
 		</form-bean>
@@ -1848,16 +1837,6 @@
 			<forward name="view" path="/ticklerPlus/viewUnreadTicklers.jsp" />
 			<forward name="login" path="/ticklerPlus/loginUnreadTicklers.jsp" />
 		</action>
-		<action path="/PMmodule/IntakeCMentalHealthReportAction" type="org.oscarehr.PMmodule.web.IntakeCMentalHealthReportAction" name="intakeCReportForm" scope="request" input="/PMmodule/IntakeCReport.jsp">
-			<forward name="success" path="/PMmodule/IntakeCReport.jsp" />
-			<forward name="error" path="/PMmodule/IntakeCReport.jsp" />
-			<forward name="timeout" path="/PMmodule/Timeout.jsp" />
-		</action>
-		<action path="/PMmodule/IntakeCReport1Action" type="org.oscarehr.PMmodule.web.IntakeCReport1Action" name="intakeCReport1Form" scope="request" input="/PMmodule/IntakeCReport1.jsp">
-			<forward name="success" path="/PMmodule/IntakeCReport1.jsp" />
-			<forward name="error" path="/PMmodule/IntakeCReport1.jsp" />
-			<forward name="timeout" path="/PMmodule/Timeout.jsp" />
-		</action>
 		<action path="/PMmodule/StreetHealthIntakeReportAction" type="org.oscarehr.PMmodule.streethealth.StreetHealthIntakeReportAction" name="StreetHealthIntakeReportForm" scope="request" input="/PMmodule/StreetHealthIntakeReport.jsp">
 			<forward name="success" path="/PMmodule/StreetHealthIntakeReport.jsp" />
 			<forward name="download" path="/PMmodule/StreetHealthIntakeReportDownload.jsp" />
@@ -1918,13 +1897,6 @@
 		</action>
 		<action path="/PMmodule/ProviderInfo" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
 			<forward name="view" path="page.pmm.provider.view" />
-		</action>
-		<action path="/PMmodule/IntakeC" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="session" name="intakeCForm" input="/PMmodule/IntakeC.jsp">
-			<forward name="form" path="/PMmodule/IntakeC.jsp" />
-			<forward name="success" path="/PMmodule/ClientManager.do?method=edit" />
-			<forward name="error" path="/PMmodule/ProviderInfo.do?method=view" />
-			<forward name="cancel-new" path="/PMmodule/ProviderInfo.do?method=view" />
-			<forward name="cancel-update" path="/PMmodule/ClientManager.do?method=edit" />
 		</action>
 		<action path="/PMmodule/HealthSafety" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" name="healthSafetyForm" validate="false">
 			<forward name="edit" path="/PMmodule/HealthSafety.jsp" />

@@ -34,7 +34,6 @@ import org.oscarehr.PMmodule.service.BedManager;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.FormsManager;
 import org.oscarehr.PMmodule.service.GenericIntakeManager;
-import org.oscarehr.PMmodule.service.IntakeCManager;
 import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProgramQueueManager;
@@ -97,8 +96,6 @@ abstract class BaseGenericIntakeAction extends BaseAction {
     protected ClientManager clientManager;
 
     protected FormsManager formsManager;
-
-    protected IntakeCManager intakeCManager;
 
     protected LogManager logManager;
 
@@ -213,10 +210,6 @@ abstract class BaseGenericIntakeAction extends BaseAction {
 
     public void setFormsManager(FormsManager mgr) {
     	this.formsManager = mgr;
-    }
-
-    public void setIntakeCManager(IntakeCManager mgr) {
-    	this.intakeCManager = mgr;
     }
 
     public void setLogManager(LogManager mgr) {

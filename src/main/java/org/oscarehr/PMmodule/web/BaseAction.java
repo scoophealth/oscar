@@ -40,7 +40,6 @@ import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.BedDemographicManager;
 import org.oscarehr.PMmodule.service.ClientManager;
-import org.oscarehr.PMmodule.service.IntakeCManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProgramQueueManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
@@ -102,10 +101,6 @@ public abstract class BaseAction extends DispatchAction {
 
 	public ClientManager getClientManager() {
 		return (ClientManager) getAppContext().getBean("clientManager");
-	}
-
-	public IntakeCManager getIntakeCManager() {
-		return (IntakeCManager) getAppContext().getBean("intakeCManager");
 	}
 
 	public ProgramManager getProgramManager() {

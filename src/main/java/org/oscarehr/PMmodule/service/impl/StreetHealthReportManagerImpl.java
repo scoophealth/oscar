@@ -69,7 +69,6 @@ public class StreetHealthReportManagerImpl implements StreetHealthReportManager 
 	            Demographic client = clients.get(x);
 	            if (client.getPatientStatus().equals("AC")) {
 	                // get current intake
-	                //Formintakec intake = this.getCurrentForm(client.getDemographicNo());
 	            	
 	            	Intake intake = this.intakeMgr.getMostRecentQuickIntake(client.getDemographicNo(),facilityId);	            	
 

@@ -800,11 +800,6 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
 		<div><a href="javascript:void(0);" onclick="javascript:getIntakeReport('indepth');return false;">Follow-up
 		Intake Report</a></div>
 		  
-		<caisi:isModuleLoad moduleName="intakec.enabled">
-			<div><a href="javascript:void(0);" onclick="javascript:createIntakeCReport1();return false;">Street
-			Health Mental Health Report</a></div>
-		</caisi:isModuleLoad>
-		
 		<div><html:link action="/PMmodule/Reports/ProgramActivityReport.do">Activity Report</html:link>
 		</div>
 		<%--
