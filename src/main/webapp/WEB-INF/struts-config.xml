@@ -361,9 +361,6 @@
 		<form-bean name="preIntakeForm" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="form" type="org.oscarehr.PMmodule.web.formbean.PreIntakeForm" />
 		</form-bean>
-		<form-bean name="followUpForm" type="org.apache.struts.validator.DynaValidatorForm">
-			<form-property name="intake" type="org.oscarehr.PMmodule.model.FormFollowUp" />
-		</form-bean>
 		<form-bean name="activityReportForm" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="form" type="org.oscarehr.PMmodule.web.formbean.ActivityReportFormBean" />
 		</form-bean>
@@ -1940,9 +1937,6 @@
 		<action path="/PMmodule/EditIntake" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
 			<forward name="view" path="/PMmodule/edit_intake.jsp" />
 		</action>
-		<action path="/demographic/FollowUp" type="org.oscarehr.PMmodule.web.FollowUpAction" name="followUpForm" scope="request" input="/demographic/followUp.jsp">
-        	<forward name="success" path="/dms/closeWindow.html" />
-        </action>
 
 		<!-- Generic Intake -->
 		<action path="/PMmodule/GenericIntake/Search" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="genericIntakeSearchForm" scope="request">
@@ -1964,11 +1958,6 @@
 			<forward name="report" path="/PMmodule/GenericIntake/Report.jsp" />
 		</action>
 		<!-- FORMS -->
-		<action path="/PMmodule/Forms/FollowUp" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="followUpForm" scope="request" input="/PMmodule/forms/FollowUp.jsp">
-			<forward name="form" path="/PMmodule/forms/FollowUp.jsp" />
-			<forward name="success" path="/PMmodule/ClientManager.do?method=edit" />
-			<forward name="error" path="/PMmodule/ClientManager.do?method=edit" redirect="true" />
-		</action>
 		<action path="/PMmodule/Forms/SurveyExecute" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="surveyExecuteForm" scope="session">
 			<forward name="view" path="/PMmodule/survey/surveyView.jsp" />
 			<forward name="execute" path="/PMmodule/survey/surveyExecute.jsp" />
