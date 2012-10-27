@@ -35,7 +35,6 @@
 	<bean id="ratePageDao" class="org.oscarehr.PMmodule.dao.RatePageDao" autowire="byName" />
 	<bean id="genericIntakeNodeDAO" class="org.oscarehr.PMmodule.dao.GenericIntakeNodeDAO" autowire="byName" />
 	<bean id="genericIntakeDAO" class="org.oscarehr.PMmodule.dao.GenericIntakeDAO" autowire="byName" />
-	<bean id="intakeCDao" class="org.oscarehr.PMmodule.dao.IntakeCDao" autowire="byName" />
 	<bean id="healthSafetyDao" class="org.oscarehr.PMmodule.dao.HealthSafetyDao" autowire="byName" />
 	<bean id="logDAO" class="org.oscarehr.PMmodule.dao.LogDAO" autowire="byName" />
 	<bean id="formsDAO" class="org.oscarehr.PMmodule.dao.FormsDAO" autowire="byName" />
@@ -52,12 +51,6 @@
 	<bean id="ratePageManager" class="org.oscarehr.PMmodule.service.impl.RatePageManagerImpl" autowire="byName" />
 	<!-- Generic Intake -->
 	<bean id="genericIntakeManager" class="org.oscarehr.PMmodule.service.GenericIntakeManager" autowire="byName" />
-	<bean id="intakeCManager" class="org.oscarehr.PMmodule.service.impl.IntakeCManagerImpl">
-		<property name="intakeCDao" ref="intakeCDao" />
-		<property name="demographicDao" ref="demographicDao" />
-		<property name="enabled" value="${intakec.enabled}" />
-		<property name="newClientForm" value="${intakec.newForm}" />
-	</bean>
 	<bean id="streetHealthReportManager" class="org.oscarehr.PMmodule.service.impl.StreetHealthReportManagerImpl">
 		<property name="demographicDao" ref="demographicDao" />
 		<property name="genericIntakeManager" ref="genericIntakeManager" />
