@@ -45,7 +45,6 @@
     {"month" , "appointmentreceptionistadminmonth.jsp"},
     {"addstatus" , "receptionistaddstatus.jsp"},
     {"updatepreference" , "receptionistupdatepreference.jsp"},
-    {"displaymygroup" , "receptionistdisplaymygroup.jsp"},
     {"newgroup" , "receptionistnewgroup.jsp"},
     {"savemygroup" , "receptionistsavemygroup.jsp"}
   };

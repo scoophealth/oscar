@@ -33,17 +33,21 @@
 	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"
 	errorPage="../appointment/errorpage.jsp"%>
 <%@ page import="oscar.login.DBHelp"%>
+<%@ page import="org.oscarehr.util.SpringUtils"%>
+<%@ page import="org.oscarehr.common.model.MyGroup"%>
+<%@ page import="org.oscarehr.common.dao.MyGroupDao"%>
 
-<jsp:useBean id="patientBean" class="oscar.AppointmentMainBean"
-	scope="page" />
+<%
+	MyGroupDao dao = SpringUtils.getBean(MyGroupDao.class);
+%>
+
+<jsp:useBean id="patientBean" class="oscar.AppointmentMainBean" scope="page" />
 <jsp:useBean id="myGroupBean" class="java.util.Vector" scope="page" />
-<jsp:useBean id="providerBean" class="java.util.Properties"
-	scope="session" />
+<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <% 
   String [][] dbQueries=new String[][] { 
 //{"search_patient", "select provider_no, last_name, first_name, chart_no from demographic where provider_no = ? order by "+orderby }, 
 {"search_patient", "select d.provider_no,c.cust1,c.cust2, d.last_name, d.first_name, d.chart_no from demographic d LEFT JOIN demographiccust c ON d.demographic_no = c.demographic_no where (d.provider_no = ? or c.cust1=? or c.cust2=? ) and (d.patient_status like 'AC' or d.patient_status like 'UHIP') order by "+orderby }, 
-{"searchmygroupall", "select * from mygroup where mygroup_no= ? order by last_name"}, 
   };
   String[][] responseTargets=new String[][] {  };
   patientBean.doConfigure(dbQueries,responseTargets);
@@ -116,9 +120,10 @@ function setfocus() {
   //initial myGroupBean if neccessary
   if(provider_no.startsWith("_grp_")) {
     bGroup = true;
-	  rsdemo = patientBean.queryResults(provider_no.substring(5), "searchmygroupall");
-    while (rsdemo.next()) { 
-	    myGroupBean.add(rsdemo.getString("provider_no"));
+    List<MyGroup> myGroups = dao.getGroupByGroupNo(provider_no.substring(5));
+    Collections.sort(myGroups, MyGroup.LastNameComparator);
+    for(MyGroup myGroup:myGroups) {
+    	myGroupBean.add(myGroup.getId().getProviderNo());
     }
   }
 %>

@@ -30,6 +30,13 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
+<%@ page import="org.oscarehr.util.SpringUtils"%>
+<%@ page import="org.oscarehr.common.model.MyGroup"%>
+<%@ page import="org.oscarehr.common.dao.MyGroupDao"%>
+
+<%
+	MyGroupDao dao = SpringUtils.getBean(MyGroupDao.class);
+%>
 
 <html:html locale="true">
 <head>
@@ -71,22 +78,22 @@
 <%
 	boolean bNewNo = false;
 	String oldNo = "";
-	List<Map<String,Object>> resultList = oscarSuperManager.find("receptionistDao", "searchmygroupall", new Object[] {});
-	for (Map group : resultList) {
-		String groupNo = String.valueOf(group.get("mygroup_no"));
+	List<MyGroup> myGroups = dao.findAll();
+	Collections.sort(myGroups,MyGroup.MyGroupNoComparator);
+	for(MyGroup myGroup:myGroups) {
+		String groupNo = myGroup.getId().getMyGroupNo();
 		bNewNo = bNewNo?false:true;
 %>
 			<tr BGCOLOR="<%=bNewNo?"white":"#EEEEFF"%>">
-				<td width="10%" align="center"><input type="checkbox"
-					name="<%=groupNo + group.get("provider_no")%>"
-					value="<%=groupNo%>"></td>
-				<td ALIGN="center"><%=groupNo%></td>
-				<td>&nbsp; <%=group.get("last_name") + ", " + group.get("first_name")%>
+				<td width="10%" align="center">
+					<input type="checkbox" name="<%=groupNo + myGroup.getId().getProviderNo()%>" value="<%=groupNo%>">
 				</td>
-				<td ALIGN="center"><INPUT TYPE="text"
-					name="__vieworder<%=groupNo + group.get("provider_no")%>"
-					VALUE="<%=group.get("vieworder")==null?"":group.get("vieworder")%>"
-					SIZE="3" maxlength="2"></td>
+				<td ALIGN="center"><%=groupNo%></td>
+				<td>&nbsp; <%=myGroup.getLastName() + ", " + myGroup.getFirstName()%>
+				</td>
+				<td ALIGN="center">
+					<INPUT TYPE="text" name="__vieworder<%=groupNo + myGroup.getId().getProviderNo()%>"	VALUE="<%=myGroup.getViewOrder()==null?"":myGroup.getViewOrder()%>"	SIZE="3" maxlength="2">
+				</td>
 			</tr>
 <%
 	}
