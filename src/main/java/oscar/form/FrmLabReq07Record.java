@@ -124,6 +124,12 @@ public class FrmLabReq07Record extends FrmRecord {
                 chartNo = chartNo.substring(beginIdx + chartNoLbl.length());
                 props.setProperty("patientChartNo", chartNo);
             }
+
+            OscarProperties oscarProps = OscarProperties.getInstance();
+            if (oscarProps.getBooleanProperty("use_lab_clientreference","true")) {
+                String additionalInfo = LocaleUtils.getMessage(Locale.getDefault(), "oscarEncounter.form.labreq.clientreference") + ":" + String.valueOf(existingID);
+                props.setProperty("clientRefNo", additionalInfo);
+            }
         }
 
         return props;
