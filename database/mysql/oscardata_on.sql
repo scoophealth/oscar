@@ -13150,6 +13150,7 @@ insert into encounterForm values('Ovulation', '../form/formovulation.jsp?demogra
 INSERT INTO encounterForm (form_name, form_value, form_table, hidden) VALUES ('Lab Req 2007', '../form/formlabreq07.jsp?demographic_no=', 'formLabReq07', 0);
 INSERT INTO encounterForm (form_name, form_value) VALUES ('Antenatal Lab Req','../form/formlabreq07.jsp?labType=AnteNatal&demographic_no=');
 insert into encounterForm (form_name,form_value,form_table,hidden) Values('Lab Req 2010','../form/formlabreq10.jsp?demographic_no=','formLabReq10',0);
+insert into encounterForm values ('Position Hazard', '../form/formPositionHazard.jsp?demographic_no=', 'formPositionHazard', '0');
 
 INSERT INTO billing_payment_type (payment_type) VALUES ('ALTERNATE');
 
