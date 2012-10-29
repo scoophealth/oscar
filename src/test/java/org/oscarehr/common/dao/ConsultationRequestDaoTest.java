@@ -53,14 +53,12 @@ public class ConsultationRequestDaoTest extends DaoTestFixtures {
 		cr.setProviderNo("0");
 		cr.setReferralDate(past);
 		dao.persist(cr);
-		System.out.println(cr.getReferralDate());
-
+		
 		cr = new ConsultationRequest();
 		cr.setProviderNo("0");
 		cr.setReferralDate(ConversionUtils.fromDateString("1891-05-15"));
 		dao.persist(cr);
-		System.out.println(cr.getReferralDate());
-
+		
 		List<ConsultationRequest> crs = dao.findAll();
 		assertNotNull(crs);
 		assertTrue(crs.size() == 2);

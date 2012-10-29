@@ -28,15 +28,17 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
 import javax.persistence.Query;
+
 import org.oscarehr.common.model.BillingONCHeader1;
 import org.oscarehr.common.model.BillingONExt;
 import org.oscarehr.common.model.BillingONPayment;
-import org.oscarehr.util.LoggedInInfo;
-import org.springframework.stereotype.Repository;
 import org.oscarehr.util.SpringUtils;
+import org.springframework.stereotype.Repository;
+
 import oscar.util.DateUtils;
-import java.util.Locale;
 
 /**
  *
@@ -87,14 +89,14 @@ public class BillingONPaymentDao extends AbstractDao<BillingONPayment>{
         return results;
      }
     
-     public void createPayment(BillingONCHeader1 bCh1,Locale locale, String payType, BigDecimal paidAmt, String payMethod) {
+     public void createPayment(BillingONCHeader1 bCh1,Locale locale, String payType, BigDecimal paidAmt, String payMethod, String providerNo) {
          //add new payment
          BillingONPayment newPayment = new BillingONPayment();
          Date now = new Date();
          
          newPayment.setBillingNo(bCh1.getId());
          newPayment.setPayDate(now);
-         addPaymentItems(newPayment, bCh1, locale, now, payType, paidAmt, payMethod);         
+         addPaymentItems(newPayment, bCh1, locale, now, payType, paidAmt, payMethod, providerNo);         
          this.persist(newPayment);
          
          //update billing claim header's total paid amount to reflect new payment
@@ -111,7 +113,7 @@ public class BillingONPaymentDao extends AbstractDao<BillingONPayment>{
         bCh1Dao.merge(bCh1);                  
      }
      
-     private void addPaymentItems(BillingONPayment billingPayment, BillingONCHeader1 bCh1, Locale locale, Date payDate, String payType, BigDecimal paidAmt, String payMethod) {
+     private void addPaymentItems(BillingONPayment billingPayment, BillingONCHeader1 bCh1, Locale locale, Date payDate, String payType, BigDecimal paidAmt, String payMethod, String providerNo) {
          //add creator's providerNo
         
         BillingONExt bExt = new BillingONExt();
@@ -121,7 +123,7 @@ public class BillingONPaymentDao extends AbstractDao<BillingONPayment>{
         bExt.setDemographicNo(bCh1.getDemographicNo());
         bExt.setStatus('1');            
         bExt.setKeyVal("provider_no");
-        bExt.setValue(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+        bExt.setValue(providerNo);
         
         billingPayment.getBillingONExtItems().add(bExt);
         
