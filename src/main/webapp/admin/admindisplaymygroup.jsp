@@ -28,6 +28,18 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 
+<%@ page import="java.util.*" %>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.MyGroup" %>
+<%@ page import="org.oscarehr.common.model.MyGroupPrimaryKey" %>
+<%@ page import="org.oscarehr.common.dao.MyGroupDao" %>
+
+
+<%
+	MyGroupDao myGroupDao = SpringUtils.getBean(MyGroupDao.class);
+%>
+
+
 <%
   if(session.getValue("user") == null)
     response.sendRedirect("../login.htm");
@@ -92,32 +104,37 @@
 				<td ALIGN="center"><font face="arial"><bean:message
 					key="admin.admindisplaymygroup.formProviderName" /></font></td>
 			</tr>
-			<%
-   ResultSet rsgroup = null;
-   boolean bNewNo=false;
-   String oldNo="";
-   if (isSiteAccessPrivacy)
-   {
-	   rsgroup = apptMainBean.queryResults(curProvider_no,"site_searchmygroupall");
-   }
-   else
-   {
-   		rsgroup = apptMainBean.queryResults("searchmygroupall");
-   }
-   while (rsgroup.next()) { 
-     if(!(rsgroup.getString("mygroup_no").equals(oldNo)) ) {
-       bNewNo=bNewNo?false:true; oldNo=rsgroup.getString("mygroup_no");
-     }
+			
+			
+<%
+
+String oldNumber="";
+boolean toggleLine=false;
+
+List<MyGroup> groupList = myGroupDao.findAll();
+Collections.sort(groupList, MyGroup.MyGroupNoComparator);
+
+if(isSiteAccessPrivacy) {
+	groupList = myGroupDao.getProviderGroups(curProvider_no);
+}
+
+
+for(MyGroup myGroup : groupList) {
+
+	if(!myGroup.getId().getMyGroupNo().equals(oldNumber)) {
+		toggleLine = !toggleLine;
+		oldNumber = myGroup.getId().getMyGroupNo();
+	}
 %>
-			<tr BGCOLOR="<%=bNewNo?"white":"ivory"%>">
+			<tr BGCOLOR="<%=toggleLine?"white":"ivory"%>">
 				<td width="10%" align="center"><input type="checkbox"
-					name="<%=rsgroup.getString("mygroup_no")+rsgroup.getString("provider_no")%>"
-					value="<%=rsgroup.getString("mygroup_no")%>"></td>
-				<td ALIGN="center"><font face="arial"> <%=rsgroup.getString("mygroup_no")%></font></td>
-				<td ALIGN="center"><font face="arial"> <%=rsgroup.getString("last_name")+","+rsgroup.getString("first_name")%></font>
+					name="<%=myGroup.getId().getMyGroupNo() + myGroup.getId().getProviderNo()%>"
+					value="<%=myGroup.getId().getMyGroupNo()%>"></td>
+				<td ALIGN="center"><font face="arial"> <%=myGroup.getId().getMyGroupNo()%></font></td>
+				<td ALIGN="center"><font face="arial"> <%=myGroup.getLastName()+","+ myGroup.getFirstName()%></font>
 				</td>
 			</tr>
-			<%
+<%
    }
 %>
 			<INPUT TYPE="hidden" NAME="displaymode" VALUE='newgroup'>

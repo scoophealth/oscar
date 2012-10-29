@@ -50,7 +50,6 @@ public class ReceptionistDao extends OscarSuperDao {
 			{"searchmygroupsubcount", "select count(provider_no) from mygroup where mygroup_no=? and vieworder like ?"},
 			{"searchmygroupprovider", "select provider_no, last_name, first_name, vieworder from mygroup where mygroup_no=? order by vieworder, first_name"},
 			{"searchmygroupsubprovider", "select provider_no, last_name, first_name from mygroup where mygroup_no=? and vieworder like ? order by vieworder, first_name"},
-			{"searchmygroupall", "select * from mygroup order by mygroup_no"},
 			{"searchmygroupno", "select mygroup_no from mygroup group by mygroup_no order by mygroup_no"},
 			{"upgradegroupmember", "update mygroup set vieworder = ? where mygroup_no=? and provider_no=?"},
 			{"searchprovider", "select provider_no, last_name, first_name from provider where provider_type='doctor' and status='1' order by last_name"},

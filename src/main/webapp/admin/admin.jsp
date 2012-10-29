@@ -230,7 +230,7 @@ div.logoutBox {
 				onclick='popupPage(360,600,&quot;<html:rewrite page="/admin/admincontrol.jsp"/>?displaymode=newgroup&amp;submit=blank &quot;)'><bean:message
 				key="admin.admin.btnAddGroupNoRecord" /></a></li>
 			<li><a href="#"
-				onclick='popupPage(360,600,&quot;<html:rewrite page="/admin/admincontrol.jsp"/>?displaymode=displaymygroup&amp;dboperation=searchmygroupall &quot;)'><bean:message
+				onclick='popupPage(360,600,&quot;<html:rewrite page="/admin/admindisplaymygroup.jsp"/> &quot;)'><bean:message
 				key="admin.admin.btnSearchGroupNoRecords" /></a></li>
 			<li><a href="#"
 				onclick='popupPage(360,600,&quot;<html:rewrite page="/admin/groupnoacl.jsp"/>&quot;)'><bean:message
