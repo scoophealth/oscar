@@ -1,0 +1,45 @@
+staffName : left, 71, 111, 0, BaseFont.COURIER, 8
+staffPosition : left, 76, 135, 0, BaseFont.COURIER, 8 
+staffJobSite : left, 367, 135, 0, BaseFont.COURIER, 8 
+staffFaculty : left, 104, 148, 0, BaseFont.COURIER, 8 
+staffDept : left, 341, 148, 0, BaseFont.COURIER, 8
+staffPhone : left, 67, 160, 0, BaseFont.COURIER, 8 
+staffEmail : left, 315, 160, 0, BaseFont.COURIER, 8 
+NewHire : left, 114, 206, 0, BaseFont.ZAPFDINGBATS, 14, \u2715 
+JobReclassify : left, 222, 206, 0, BaseFont.ZAPFDINGBATS, 14, \u2715 
+ProcedureChange : left, 369, 206, 0, BaseFont.ZAPFDINGBATS, 14, \u2715 
+supervisorName : left, 114, 228, 0, BaseFont.COURIER, 8 
+supervisorCampusAddress : left, 370, 228, 0, BaseFont.COURIER, 8 
+supervisorEmail : left, 104, 240, 0, BaseFont.COURIER, 8 
+supervisorPhone : left, 324, 240, 0, BaseFont.COURIER, 8 
+OtherCode : left, 401, 315, 0, BaseFont.COURIER, 8 
+Acrylonitrile : left, 86, 417, 0, BaseFont.HELVETICA, 10 
+Asbestos : left, 190, 417, 0, BaseFont.HELVETICA, 10 
+EthyleneOxide : left, 336, 417, 0, BaseFont.HELVETICA, 10 
+Lead : left, 428, 417, 0, BaseFont.HELVETICA, 10 
+Silica : left, 513, 417, 0, BaseFont.HELVETICA, 10 
+Arsenic : left, 68, 428, 0, BaseFont.HELVETICA, 10 
+Benzene : left, 185, 428, 0, BaseFont.HELVETICA, 10 
+Isocyanates : left, 322, 428, 0, BaseFont.HELVETICA, 10 
+Mercury : left, 438, 428, 0, BaseFont.HELVETICA, 10 
+VinylChloride : left, 551, 428, 0, BaseFont.HELVETICA, 10
+ProcedureName : left, 116, 472, 0, BaseFont.COURIER, 8
+SubstanceForm : left, 168, 495, 0, BaseFont.COURIER, 8 
+CompressedGases : left, 114, 537, 0, BaseFont.HELVETICA, 10
+MaterialsSeriousEffects : left, 446, 537, 0, BaseFont.HELVETICA, 10
+ReactiveMaterials : left, 114, 549,  0, BaseFont.HELVETICA, 10
+FlammableCombustible : left, 380, 547,  0, BaseFont.HELVETICA, 10
+CorrosiveMaterials : left, 114, 559,  0, BaseFont.HELVETICA, 10
+MaterialsOtherToxicEffects : left, 363, 559,  0, BaseFont.HELVETICA, 10
+OxidizingMaterials : left, 114, 568,  0, BaseFont.HELVETICA, 10
+AgricultureChemicals : left, 313, 569,  0, BaseFont.HELVETICA, 10 
+ChemicalNames : left, 128, 593,  0, BaseFont.COURIER, 8
+ChemicalHowItsUsed : left, 187, 613,  0, BaseFont.COURIER, 8
+ContainmentLevel1 : left, 120, 702,  0, BaseFont.HELVETICA, 10
+ContainmentLevel2 : left, 272, 702,  0, BaseFont.HELVETICA, 10
+ContainmentLevel3 : left, 423, 702,  0, BaseFont.HELVETICA, 10
+AnimalCareFacility : left, 116, 745,  0, BaseFont.HELVETICA, 10
+SheepContainmentUnit : left, 268, 745,  0, BaseFont.HELVETICA, 10
+NonHumanPrimate : left, 410, 745,  0, BaseFont.HELVETICA, 10
+ContainmentLevel3Area : left, 566, 745,  0, BaseFont.HELVETICA, 10
+

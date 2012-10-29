@@ -1,0 +1,53 @@
+PrimaryCulture : left, 101, 67, 0, BaseFont.HELVETICA, 10
+Cadavers : left, 114, 78, 0, BaseFont.HELVETICA, 10
+BloodProducts: left, 134, 89, 0, BaseFont.HELVETICA, 10
+PrimaryPatientCare : left, 120, 101,  0, BaseFont.HELVETICA, 10
+OtherHumanBiohazard : left, 43, 121,  0, BaseFont.COURIER, 8
+Primates : left, 289, 66,  0, BaseFont.HELVETICA, 10
+DogsCats : left, 305, 78,  0, BaseFont.HELVETICA, 10
+Sheep : left, 279, 89,  0, BaseFont.HELVETICA, 10
+WildMammals : left, 312, 99,  0, BaseFont.HELVETICA, 10
+Rodents : left, 287, 111, 0, BaseFont.HELVETICA, 10
+OtherAnimalBiohazard : left, 268, 132, 0, BaseFont.COURIER, 8 
+OtherBiohazard : left, 114, 153, 0, BaseFont.COURIER, 8
+PathogenicParasites : left, 266, 176, 0, BaseFont.COURIER, 8
+UltravioletEmitter : left, 110, 245, 0, BaseFont.HELVETICA, 10
+InfraredEmitter : left, 103, 256, 0, BaseFont.HELVETICA, 10
+Irradiators : left, 81, 266, 0, BaseFont.HELVETICA, 10
+Vibration : left, 73, 290, 0, BaseFont.HELVETICA, 10
+ExtremeHeat : left, 93, 301, 0, BaseFont.HELVETICA, 10
+RadioactiveSubstance : left, 291, 246, 0, BaseFont.HELVETICA, 10
+MicrowaveEmittingDevice : left, 309, 256, 0, BaseFont.HELVETICA, 10
+XrayEmittingDevice : left, 289, 268, 0, BaseFont.HELVETICA, 10
+RadioFrequency : left, 259, 288, 0, BaseFont.HELVETICA, 10
+ExtremeCold : left, 251, 300, 0, BaseFont.HELVETICA, 10
+Ultrasound: left, 416, 245, 0, BaseFont.HELVETICA, 10
+Infrasound : left, 416, 256, 0, BaseFont.HELVETICA, 10
+Gamma : left, 402, 268, 0, BaseFont.HELVETICA, 10
+HighNoiseLevels : left, 482, 289, 0, BaseFont.HELVETICA, 10
+Laser3B : left, 519, 247, 0, BaseFont.HELVETICA, 10
+Laser4 : left, 513, 256, 0, BaseFont.HELVETICA, 10
+MagneticField : left, 541, 268, 0, BaseFont.HELVETICA, 10
+Vibration : left, 74, 288,  0, BaseFont.HELVETICA, 10
+RadioFrequency : left, 258, 289,  0, BaseFont.HELVETICA, 10
+HighNoiseLevels : left, 480, 290,  0, BaseFont.HELVETICA, 10
+ExtremeHeat : left, 94, 300,  0, BaseFont.HELVETICA, 10
+ExtremeCold : left, 250, 300,  0, BaseFont.HELVETICA, 10
+Nanotechnology : left, 37, 371, 0, BaseFont.COURIER, 8
+Driving : left, 67, 451, 0, BaseFont.HELVETICA, 10
+HighVoltage : left, 236, 451, 0, BaseFont.HELVETICA, 10
+ConfinedSpaceEntry : left, 405, 451, 0, BaseFont.HELVETICA, 10
+Heights : left, 493, 451, 0, BaseFont.HELVETICA, 10
+ComputerWork : left, 101, 518, 0, BaseFont.HELVETICA, 10
+RepetitiveWork : left, 277, 519, 0, BaseFont.HELVETICA, 10
+AwkwardPositions : left, 448, 519, 0, BaseFont.HELVETICA, 10
+AdditionalNotes : left, 37, 565,  0, BaseFont.COURIER, 8
+WHIMS : left, 37, 661, 0, BaseFont.ZAPFDINGBATS, 14, \u2715
+BiosafetyTraining : left, 37, 684, 0, BaseFont.ZAPFDINGBATS, 14, \u2715
+RadiationSafety : left, 215, 660, 0, BaseFont.ZAPFDINGBATS, 14, \u2715
+EmployeeSafety : left, 215, 685, 0, BaseFont.ZAPFDINGBATS, 14, \u2715
+XrayTraining : left, 436, 660, 0, BaseFont.ZAPFDINGBATS, 14, \u2715 
+AnimalHandling : left, 436, 686, 0, BaseFont.ZAPFDINGBATS, 14, \u2715
+WasteManagement : left, 37, 711, 0, BaseFont.ZAPFDINGBATS, 14, \u2715
+FormCompletedBy : left, 130, 752, 0, BaseFont.COURIER, 8
+
