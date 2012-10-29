@@ -1243,7 +1243,7 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
 					<tr>
 						<td class="RowTop">
 						<%
-                            DemographicMerged dmDAO = new DemographicMerged();
+						oscar.oscarDemographic.data.DemographicMerged dmDAO = new oscar.oscarDemographic.data.DemographicMerged();
                             String dboperation = "search_detail";
                             String head = dmDAO.getHead(demographic_no);
                             ArrayList records = dmDAO.getTail(head);

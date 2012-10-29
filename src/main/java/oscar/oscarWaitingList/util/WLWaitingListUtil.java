@@ -35,6 +35,8 @@ import org.oscarehr.util.SpringUtils;
 import oscar.util.ConversionUtils;
 
 public class WLWaitingListUtil {
+	
+	
 	// Modified this method in Feb 2007 to ensure that all records cannot be deleted except hidden.
 	static public synchronized void removeFromWaitingList(String waitingListID, String demographicNo) {
 		MiscUtils.getLogger().debug("WLWaitingListUtil.removeFromWaitingList(): removing waiting list: " + waitingListID + " for patient " + demographicNo);
@@ -48,15 +50,13 @@ public class WLWaitingListUtil {
 	}
 
 	static public synchronized void add2WaitingList(String waitingListID, String waitingListNote, String demographicNo, String onListSince) {
-		MiscUtils.getLogger().debug("WLWaitingListUtil.add2WaitingList(): insert into waitingList: " + waitingListID + " for patient " + demographicNo);
+		MiscUtils.getLogger().debug("WLWaitingListUtil.add2WaitingList(): adding to waitingList: " + waitingListID + " for patient " + demographicNo);
 
 		boolean emptyIds = waitingListID.equalsIgnoreCase("0") || demographicNo.equalsIgnoreCase("0");
 		if (emptyIds) {
 			MiscUtils.getLogger().debug("Ids are not proper - exiting");
 			return;
 		}
-
-		String sql = " select max(position) as position from waitingList where listID=" + waitingListID + "  AND is_history = 'N' ";
 
 		WaitingListDao dao = SpringUtils.getBean(WaitingListDao.class);
 		int maxPosition = dao.getMaxPosition(ConversionUtils.fromIntString(waitingListID));

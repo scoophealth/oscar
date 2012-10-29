@@ -34,16 +34,19 @@
 
 package oscar.oscarDemographic.data;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.oscarehr.util.DbConnectionFilter;
-
-import oscar.util.UtilDateUtilities;
+import org.oscarehr.common.dao.DemographicMergedDao;
+import org.oscarehr.common.dao.RecycleBinDao;
+import org.oscarehr.common.dao.SecObjPrivilegeDao;
+import org.oscarehr.common.model.RecycleBin;
+import org.oscarehr.common.model.SecObjPrivilege;
+import org.oscarehr.common.model.SecObjPrivilegePrimaryKey;
+import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 /**
  *
@@ -51,100 +54,80 @@ import oscar.util.UtilDateUtilities;
  */
 public class DemographicMerged {
 
-    Logger logger = Logger.getLogger(DemographicMerged.class);
-
-    /** Creates a new instance of DemographicMergedDAO */
+    Logger logger = MiscUtils.getLogger();
+    private DemographicMergedDao dao = SpringUtils.getBean(DemographicMergedDao.class);
+    private SecObjPrivilegeDao secObjPrivilegeDao = SpringUtils.getBean(SecObjPrivilegeDao.class);
+    private RecycleBinDao recycleBinDao = SpringUtils.getBean(RecycleBinDao.class);
+    
     public DemographicMerged() {
     }
 
-    public void Merge(String demographic_no, String head) throws SQLException{
+    public void Merge(String demographic_no, String head) {
 
-        Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
-
-        String sql = "insert into demographic_merged (demographic_no, merged_to) values (?,?)";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-
-        // always merge the head of records that have already been merged to the new head
+    	org.oscarehr.common.model.DemographicMerged dm = new org.oscarehr.common.model.DemographicMerged();
+    	
+    	 // always merge the head of records that have already been merged to the new head
         String record_head = getHead(demographic_no);
         if (record_head == null)
-            pstmt.setInt(1, Integer.parseInt( demographic_no ));
+            dm.setDemographicNo(Integer.parseInt( demographic_no ));
         else
-            pstmt.setInt(1, Integer.parseInt(record_head));
+            dm.setDemographicNo(Integer.parseInt(record_head));
 
-        pstmt.setInt(2, Integer.parseInt( head ));
-        pstmt.executeUpdate();
-        pstmt.close();
-
-        sql = "insert into secObjPrivilege (roleUserGroup, objectName, privilege, priority, provider_no) values ('_all','_eChart$"+demographic_no+"','|or|','0','0')";
-        pstmt = conn.prepareStatement(sql);
-        pstmt.executeUpdate();
-        pstmt.close();
+        dm.setMergedTo(Integer.parseInt( head ));
+       
+        dao.persist(dm);
+        
+        SecObjPrivilege sop = new SecObjPrivilege();
+        SecObjPrivilegePrimaryKey pk = new SecObjPrivilegePrimaryKey();
+        pk.setRoleUserGroup("_all");
+        pk.setObjectName("_eChart$"+demographic_no);
+        sop.setId(pk);
+        sop.setPrivilege("|or|");
+        sop.setPriority(0);
+        sop.setProviderNo("0");
+        secObjPrivilegeDao.persist(sop);
+  
     }
 
-    public void UnMerge(String demographic_no, String curUser_no) throws SQLException{
+    public void UnMerge(String demographic_no, String curUser_no) {
 
-
-        Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
-
-        String sql = "update demographic_merged set deleted=1 where demographic_no=?";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-
-        pstmt.setInt(1, Integer.parseInt( demographic_no ));
-
-        pstmt.executeUpdate();
-        pstmt.close();
-
-        sql = "select * from secObjPrivilege where roleUserGroup='_all' and objectName='_eChart$"+demographic_no+"'";
-        //rs = dbObj.searchDBRecord(sql);
-        pstmt = conn.prepareStatement(sql);
-        ResultSet rs = pstmt.executeQuery();
-        String privilege = "";
-        String priority = "";
-        String provider_no = "";
-        while (rs.next()) {
-            privilege = oscar.Misc.getString(rs, "privilege");
-            priority = oscar.Misc.getString(rs, "priority");
-            provider_no = oscar.Misc.getString(rs, "provider_no");
-        }
-        pstmt.close();
-
-        sql = "delete from secObjPrivilege where roleUserGroup='_all' and objectName='_eChart$"+demographic_no+"'";
-        pstmt = conn.prepareStatement(sql);
-        if(!pstmt.execute()){
-            logger.info("we should be writing to the recycle bin");
-            pstmt.close();
-            sql = "insert into recyclebin (provider_no,updatedatetime,table_name,keyword,table_content) values(";
-            sql += "'" + curUser_no + "',";
-            sql += "?,";
-            sql += "'" + "secObjPrivilege" + "',";
-            sql += "'_all|_eChart$"+ demographic_no + "',";
-            sql += "'" + "<roleUserGroup>_all</roleUserGroup>" + "<objectName>_eChart$" + demographic_no + "</objectName>";
-            sql += "<privilege>" + privilege + "</privilege>" + "<priority>" + priority + "</priority>";
-            sql += "<provider_no>" + provider_no + "</provider_no>" + "')";
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setDate(1, oscar.MyDateFormat.getSysDate(UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss")));
-            pstmt.executeUpdate();
-        }
-
-        pstmt.close();
+    	List<org.oscarehr.common.model.DemographicMerged> dms = dao.findByDemographicNo(Integer.parseInt(demographic_no));
+    	for(org.oscarehr.common.model.DemographicMerged dm:dms) {
+    		dm.setDeleted(1);
+    		dao.merge(dm);
+    	}
+    	
+    	 String privilege = "";
+         String priority = "";
+         String provider_no = "";
+    	
+    	List<SecObjPrivilege> sops = this.secObjPrivilegeDao.findByRoleUserGroupAndObjectName("_all", "_eChart$"+demographic_no);
+    	for(SecObjPrivilege sop:sops) {
+    		privilege = sop.getPrivilege();
+    		priority = String.valueOf(sop.getPriority());
+    		provider_no = sop.getProviderNo();
+    		secObjPrivilegeDao.remove(sop.getId());
+    	}
+    	
+    	RecycleBin rb = new RecycleBin();
+    	rb.setProviderNo(curUser_no);
+    	rb.setUpdateDateTime(new Date());
+    	rb.setTableName("secObjPrivilege");
+    	rb.setKeyword("_all|_eChart$"+ demographic_no);
+    	rb.setTableContent("<roleUserGroup>_all</roleUserGroup>" + "<objectName>_eChart$" + demographic_no + "</objectName><privilege>" + privilege + "</privilege>" + "<priority>" + priority + "</priority><provider_no>" + provider_no + "</provider_no>");
+    	recycleBinDao.persist(rb);
 
     }
 
-    public String getHead(String demographic_no) throws SQLException{
+    public String getHead(String demographic_no) {
+    	String head = null;
 
-        Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
-        ResultSet rs;
-        String head = null;
-
-        String sql = "select merged_to from demographic_merged where demographic_no = ? and deleted = 0";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-
-        pstmt.setInt(1, Integer.parseInt(demographic_no));
-        rs = pstmt.executeQuery();
-        if(rs.next())
-            head = oscar.Misc.getString(rs, "merged_to");
-
-        pstmt.close();
+    	List<org.oscarehr.common.model.DemographicMerged> dms = dao.findCurrentByDemographicNo(Integer.parseInt(demographic_no));
+    	for(org.oscarehr.common.model.DemographicMerged dm:dms) {
+    		head = (String.valueOf(dm.getMergedTo()));
+    	}
+    	
+        
         if (head != null)
             head = getHead(head);
         else
@@ -154,23 +137,14 @@ public class DemographicMerged {
 
     }
 
-    public ArrayList<String> getTail(String demographic_no) throws SQLException{
+    public ArrayList<String> getTail(String demographic_no) {
+    	ArrayList<String> tailArray = new ArrayList<String>();
 
-
-        Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
-        ResultSet rs;
-        ArrayList<String> tailArray = new ArrayList<String>();
-
-        String sql = "select demographic_no from demographic_merged where merged_to = ? and deleted = 0";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-
-        pstmt.setInt(1, Integer.parseInt(demographic_no));
-        rs = pstmt.executeQuery();
-        while(rs.next()){
-            tailArray.add(oscar.Misc.getString(rs, "demographic_no"));
-        }
-
-        pstmt.close();
+    	List<org.oscarehr.common.model.DemographicMerged> dms = dao.findCurrentByMergedTo(Integer.parseInt(demographic_no));
+    	for(org.oscarehr.common.model.DemographicMerged dm:dms) {
+    		tailArray.add(String.valueOf(dm.getDemographicNo()));
+    	}
+    	
         int size = tailArray.size();
         for (int i=0; i < size; i++){
             tailArray.addAll(getTail(  tailArray.get(i) ));
