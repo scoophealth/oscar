@@ -61,7 +61,7 @@ public class ContactDao extends AbstractDao<Contact> {
 			paramList.add(keyword+"%");
 		}			
 		String sql = "SELECT c from Contact c where " + where.toString() + " order by " + orderBy;
-		MiscUtils.getLogger().info(sql);
+		MiscUtils.getLogger().debug(sql);
 		Query query = entityManager.createQuery(sql);
 		for(int x=0;x<paramList.size();x++) {
 			query.setParameter(x+1,paramList.get(x));

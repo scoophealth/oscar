@@ -24,6 +24,12 @@
 
 package oscar.oscarBilling.ca.on.pageUtil;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -31,32 +37,26 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
-
-import org.oscarehr.common.dao.BillingONCHeader1Dao;
-import org.oscarehr.common.dao.BillingONPaymentDao;
-import org.oscarehr.common.dao.BillingONExtDao;
-import org.oscarehr.common.model.BillingONExt;
-import org.oscarehr.common.model.BillingONCHeader1;
 import org.oscarehr.PMmodule.dao.ProviderDao;
-import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.dao.BillingONCHeader1Dao;
+import org.oscarehr.common.dao.BillingONExtDao;
+import org.oscarehr.common.dao.BillingONPaymentDao;
 import org.oscarehr.common.dao.BillingONRepoDao;
-import org.oscarehr.common.model.BillingONItem;
 import org.oscarehr.common.dao.BillingServiceDao;
+import org.oscarehr.common.model.BillingONCHeader1;
+import org.oscarehr.common.model.BillingONExt;
+import org.oscarehr.common.model.BillingONItem;
+import org.oscarehr.common.model.BillingONPayment;
 import org.oscarehr.common.model.BillingService;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.service.BillingONService;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-import java.util.Locale;
 
-import java.math.BigDecimal;
-import org.oscarehr.common.model.BillingONPayment;
-import oscar.util.DateUtils;
-import java.util.Date;
-import java.util.List;
-import java.util.ArrayList;
-import org.oscarehr.util.LoggedInInfo;
 import oscar.oscarBilling.ca.on.data.BillingDataHlp;
+import oscar.util.DateUtils;
 import oscar.util.StringUtils;
-import org.oscarehr.common.service.BillingONService;
 
 /**
  *
@@ -117,7 +117,7 @@ public class BillingCorrectionAction extends DispatchAction{
             }
             
             //Add new payment amount to third party bill
-            bPaymentDao.createPayment(bCh1, request.getLocale(), payType, paidAmt, payMethod);
+            bPaymentDao.createPayment(bCh1, request.getLocale(), payType, paidAmt, payMethod,LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
                                                            
             return mapping.findForward("success");            
         }
@@ -275,7 +275,7 @@ public class BillingCorrectionAction extends DispatchAction{
             }
 
             if (doReverse > 0) {
-                bPaymentDao.createPayment(bCh1, locale, BillingONPayment.REFUND, reversedFunds, "");                                        
+                bPaymentDao.createPayment(bCh1, locale, BillingONPayment.REFUND, reversedFunds, "",LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());                                        
             }
         } else if (statusChangedToSettled && !mohPayProgram) {
             /*
@@ -297,7 +297,7 @@ public class BillingCorrectionAction extends DispatchAction{
             }
 
             if (doSettlePayment > 0) {
-                bPaymentDao.createPayment(bCh1, locale, BillingONPayment.PAYMENT, amtOutstanding, "");
+                bPaymentDao.createPayment(bCh1, locale, BillingONPayment.PAYMENT, amtOutstanding, "",LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
             }
         }
         
