@@ -76,17 +76,17 @@ Medications & Prescriptions - Medication List
 					<templateId root="2.16.840.1.113883.3.1818.10.2.19.1"/>
 					<code code="10160-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of Medication Use"/>
 					<title>Medications and Prescriptions - Medication List [with entries]</title>
-    #foreach( $med in $patient.getMedications() )
+#**##foreach( $med in $patient.getMedications() )
 					<entry typeCode="COMP" contextConductionInd="true">
 						<templateId root="2.16.840.1.113883.3.1818.10.3.18" />
 						<substanceAdministration classCode="SBADM" moodCode="EVN">
 							<id extension="$med.drugId" root="OSCAR.local" />
 							<code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
-        #if ( $med.isActive() )
+#*    *##if ( $med.isActive() )
 							<statusCode code="active"/>
-        #else
+#*    *##else
 							<statusCode code="completed"/>
-        #end
+#*    *##end
 							<effectiveTime xsi:type="IVL_TS" operator="I">
 								<low value="$dateTool.format('yyyyMMdd', $med.getStartDate())"/>
 								<high value="$dateTool.format('yyyyMMdd', $med.getEndDate())" />
@@ -97,7 +97,9 @@ Medications & Prescriptions - Medication List
 								<manufacturedProduct classCode="MANU">
 									<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
 										<code code="$med.din" codeSystem="2.16.840.1.113883.5.1105" displayName="HC-DIN"/>
-										#if ( $med.isValidAtc() )<code code="$med.atc" codeSystem="2.16.840.1.113883.6.73" displayName="ATC"/>#end
+#*    *##if ( $med.isValidAtc() )
+										<code code="$med.atc" codeSystem="2.16.840.1.113883.6.73" displayName="ATC"/>
+#*    *##end
 										<name>$med.drugName</name>
 									</manufacturedMaterial>
 								</manufacturedProduct>
@@ -105,7 +107,7 @@ Medications & Prescriptions - Medication List
 							<!--end Medication Identification-->
 						</substanceAdministration>
 					</entry>
-    #end
+#**##end
 				</section>
 			</component>
 #else
