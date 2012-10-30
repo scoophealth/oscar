@@ -27,6 +27,9 @@ package oscar.oscarLab.ca.bc.PathNet.HL7.V2_3;
 import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.billing.CA.BC.dao.Hl7MshDao;
+import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.bc.PathNet.HL7.Node;
@@ -37,7 +40,10 @@ import oscar.oscarLab.ca.bc.PathNet.HL7.Node;
  * www.andromedia.ca
  */
 public class MSH extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
-   Logger _logger = Logger.getLogger(this.getClass());
+	
+   private Logger _logger = MiscUtils.getLogger();
+   private Hl7MshDao dao = SpringUtils.getBean(Hl7MshDao.class);
+
    public Node Parse(String line) {
       return super.Parse(line, 1, 1);
    }
