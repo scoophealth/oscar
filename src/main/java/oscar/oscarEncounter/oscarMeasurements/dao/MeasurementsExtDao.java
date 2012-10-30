@@ -26,11 +26,17 @@
 package oscar.oscarEncounter.oscarMeasurements.dao;
 
 import java.util.List;
+
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
 import oscar.oscarEncounter.oscarMeasurements.model.MeasurementsExt;
 
 public class MeasurementsExtDao extends HibernateDaoSupport {
 
+	public void save(MeasurementsExt measurementsExt) {
+		this.getHibernateTemplate().saveOrUpdate(measurementsExt);
+	}
+	
 	public void addMeasurementsExt(MeasurementsExt measurementsExt) {
 		getHibernateTemplate().merge(measurementsExt);
 	}
@@ -52,5 +58,18 @@ public class MeasurementsExtDao extends HibernateDaoSupport {
 		
 		if (rs.size()>0) return rs.get(0).getMeasurementId();
 		return null;
+	}
+	
+	public List<MeasurementsExt> findByKeyValue(String key, String value) {
+		String queryStr = "FROM MeasurementsExt m WHERE m.keyVal='"+key+"' AND m.val='"+value+"'";
+		
+		@SuppressWarnings("unchecked")
+		List<MeasurementsExt> rs = getHibernateTemplate().find(queryStr);
+		
+		return rs;
+	}
+	
+	public void remove(Integer id) {
+		this.getHibernateTemplate().delete(this.getHibernateTemplate().load(MeasurementsExt.class, id));
 	}
 }

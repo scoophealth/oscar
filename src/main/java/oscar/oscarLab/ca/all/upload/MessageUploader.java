@@ -39,6 +39,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
@@ -46,15 +47,23 @@ import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.OtherIdManager;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.FileUploadCheckDao;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.dao.Hl7TextMessageDao;
+import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.dao.PatientLabRoutingDao;
+import org.oscarehr.common.dao.ProviderLabRoutingDao;
+import org.oscarehr.common.dao.RecycleBinDao;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.FileUploadCheck;
 import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.Hl7TextMessage;
+import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.OtherId;
 import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.ProviderLabRoutingModel;
+import org.oscarehr.common.model.RecycleBin;
 import org.oscarehr.olis.dao.OLISSystemPreferencesDao;
 import org.oscarehr.olis.model.OLISSystemPreferences;
 import org.oscarehr.util.DbConnectionFilter;
@@ -62,6 +71,8 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
+import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsExtDao;
+import oscar.oscarEncounter.oscarMeasurements.model.MeasurementsExt;
 import oscar.oscarLab.ca.all.Hl7textResultsData;
 import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.oscarLab.ca.all.parsers.HHSEmrDownloadHandler;
@@ -73,6 +84,14 @@ public final class MessageUploader {
 
 	private static final Logger logger = MiscUtils.getLogger();
 	private static PatientLabRoutingDao patientLabRoutingDao = SpringUtils.getBean(PatientLabRoutingDao.class);
+	private static ProviderLabRoutingDao providerLabRoutingDao = SpringUtils.getBean(ProviderLabRoutingDao.class);
+	private static RecycleBinDao recycleBinDao = SpringUtils.getBean(RecycleBinDao.class);
+	private static Hl7TextInfoDao hl7TextInfoDao = (Hl7TextInfoDao) SpringUtils.getBean("hl7TextInfoDao");
+	private static Hl7TextMessageDao hl7TextMessageDao = (Hl7TextMessageDao) SpringUtils.getBean("hl7TextMessageDao");
+	private static MeasurementsExtDao measurementsExtDao = SpringUtils.getBean(MeasurementsExtDao.class);
+	private static MeasurementDao measurementDao = SpringUtils.getBean(MeasurementDao.class);
+	private static FileUploadCheckDao fileUploadCheckDao = SpringUtils.getBean(FileUploadCheckDao.class);
+
 
 
 	private MessageUploader() {
@@ -88,9 +107,7 @@ public final class MessageUploader {
 	 */
 	public static String routeReport(String serviceName, String type, String hl7Body, int fileId, RouteReportResults results) throws Exception {
 
-		Hl7TextInfoDao hl7TextInfoDao = (Hl7TextInfoDao) SpringUtils.getBean("hl7TextInfoDao");
-		Hl7TextMessageDao hl7TextMessageDao = (Hl7TextMessageDao) SpringUtils.getBean("hl7TextMessageDao");
-
+		
 		String retVal = "";
 		try {
 			MessageHandler h = Factory.getHandler(type, hl7Body);
@@ -463,170 +480,120 @@ public final class MessageUploader {
 	 * Used when errors occur to clean the database of labs that have not been inserted into all of the necessary tables
 	 */
 	public static void clean(int fileId) {
+		
+		List<Hl7TextMessage> results = hl7TextMessageDao.findByFileUploadCheckId(fileId);
+		
 
-		try {
+		for (Hl7TextMessage result:results) {
+			int lab_id = result.getId();
+			
+			Hl7TextInfo hti = hl7TextInfoDao.findLabId(lab_id);
+			if(hti != null) {
+				RecycleBin rb = new RecycleBin();
+				rb.setProviderNo("0");
+				rb.setUpdateDateTime(new Date());
+				rb.setTableName("hl7TextInfo");
+				rb.setKeyword(String.valueOf(lab_id));
+				rb.setTableContent("<id>" + hti.getId() + "</id>" + "<lab_no>" + lab_id + "</lab_no>" + "<sex>" + hti.getSex() + "</sex>" + "<health_no>" +hti.getHealthNumber() + "</health_no>" + "<result_status>"
+				        + hti.getResultStatus() + "</result_status>" + "<final_result_count>" + hti.getFinalResultCount() + "</final_result_count>" + "<obr_date>" + hti.getObrDate() + "</obr_date>" + "<priority>" + hti.getPriority() + "</priority>" + "<requesting_client>" + hti.getRequestingProvider() + "</requesting_client>" + "<discipline>" + hti.getDiscipline() + "</discipline>"
+				        + "<last_name>" + hti.getLastName() + "</last_name>" + "<first_name>" + hti.getFirstName() + "</first_name>" + "<report_status>" + hti.getReportStatus() + "</report_status>" + "<accessionNum>" + hti.getAccessionNumber() + "</accessionNum>'");
+				recycleBinDao.persist(rb);
+				
+				hl7TextInfoDao.remove(hl7TextInfoDao.findLabId(lab_id).getId());
+			}
+				
 
-			Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
-			PreparedStatement pstmt;
+			Hl7TextMessage htm = hl7TextMessageDao.find(lab_id);
+			if(htm != null) {
+				RecycleBin rb = new RecycleBin();
+				rb.setProviderNo("0");
+				rb.setUpdateDateTime(new Date());
+				rb.setTableName("hl7TextMessage");
+				rb.setKeyword(String.valueOf(lab_id));
+				rb.setTableContent("<lab_id>" + htm.getId() + "</lab_id>" + "<message>" + htm.getBase64EncodedeMessage() + "</message>" + "<type>" + htm.getType() + "</type>" + "<fileUploadCheck_id>" + htm.getFileUploadCheckId() + "</fileUploadCheck_id>");
+				recycleBinDao.persist(rb);
+				
+				hl7TextMessageDao.remove(lab_id);
+			}
+			
 
-			ResultSet rs;
-			String sql;
+			ProviderLabRoutingModel plr = providerLabRoutingDao.findByLabNo(lab_id);
+			if(plr != null) {
+				RecycleBin rb = new RecycleBin();
+				rb.setProviderNo("0");
+				rb.setUpdateDateTime(new Date());
+				rb.setTableName("providerLabRouting");
+				rb.setKeyword(String.valueOf(lab_id));
+				rb.setTableContent("<provider_no>" + plr.getProviderNo() + "</provider_no>" + "<lab_no>" + plr.getLabNo() + "</lab_no>" + "<status>" +plr.getStatus() + "</status>" + "<comment>" + plr.getComment()
+				        + "</comment>" + "<timestamp>" + plr.getTimestamp() + "</timestamp>" + "<lab_type>" + plr.getLabType() + "</lab_type>" + "<id>" + plr.getId() + "</id>");
+				recycleBinDao.persist(rb);
+				
+				providerLabRoutingDao.remove(plr.getId());
+			}
+				
+			PatientLabRouting lr = patientLabRoutingDao.findByLabNo(lab_id);
+			if(lr != null) {
+				RecycleBin rb = new RecycleBin();
+				rb.setProviderNo("0");
+				rb.setUpdateDateTime(new Date());
+				rb.setTableName("patientLabRouting");
+				rb.setKeyword(String.valueOf(lab_id));
+				rb.setTableContent("<demographic_no>" + lr.getDemographicNo() + "</demographic_no>" + "<lab_no>" + lr.getLabNo() + "</lab_no>" + "<lab_type>" + lr.getLabType() + "</lab_type>" + "<id>" + lr.getId() + "</id>");
+				recycleBinDao.persist(rb);
 
-			sql = "SELECT lab_id FROM hl7TextMessage WHERE fileUploadCheck_id='" + fileId + "'";
-			pstmt = conn.prepareStatement(sql);
-			ResultSet labId_rs = pstmt.executeQuery();
-
-			while (labId_rs.next()) {
-				int lab_id = labId_rs.getInt("lab_id");
-
-				try {
-					sql = "SELECT * FROM hl7TextInfo WHERE lab_no='" + lab_id + "'";
-					pstmt = conn.prepareStatement(sql);
-					rs = pstmt.executeQuery();
-					if (rs.next()) {
-						sql = "INSERT INTO recyclebin (provider_no, updatedatetime, table_name, keyword, table_content) " + "VALUES ('0', '" + UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "', 'hl7TextInfo', '" + lab_id + "', " + "'<id>" + oscar.Misc.getString(rs, "id") + "</id>" + "<lab_no>" + lab_id + "</lab_no>" + "<sex>" + oscar.Misc.getString(rs, "sex") + "</sex>" + "<health_no>" + oscar.Misc.getString(rs, "health_no") + "</health_no>" + "<result_status>"
-						        + oscar.Misc.getString(rs, "result_status") + "</result_status>" + "<final_result_count>" + oscar.Misc.getString(rs, "final_result_count") + "</final_result_count>" + "<obr_date>" + oscar.Misc.getString(rs, "obr_date") + "</obr_date>" + "<priority>" + oscar.Misc.getString(rs, "priority") + "</priority>" + "<requesting_client>" + oscar.Misc.getString(rs, "requesting_client") + "</requesting_client>" + "<discipline>" + oscar.Misc.getString(rs, "discipline") + "</discipline>"
-						        + "<last_name>" + oscar.Misc.getString(rs, "last_name") + "</last_name>" + "<first_name>" + oscar.Misc.getString(rs, "first_name") + "</first_name>" + "<report_status>" + oscar.Misc.getString(rs, "report_status") + "</report_status>" + "<accessionNum>" + oscar.Misc.getString(rs, "accessionNum") + "</accessionNum>')";
-
-						pstmt = conn.prepareStatement(sql);
-						pstmt.executeUpdate();
-
-						sql = "DELETE FROM hl7TextInfo where lab_no='" + lab_id + "'";
-						pstmt = conn.prepareStatement(sql);
-						pstmt.executeUpdate();
-					}
-				} catch (SQLException e) {
-					logger.error("Error cleaning hl7TextInfo table for lab_no '" + lab_id + "'", e);
-				}
-
-				try {
-					sql = "SELECT * FROM hl7TextMessage WHERE lab_id='" + lab_id + "'";
-					pstmt = conn.prepareStatement(sql);
-					rs = pstmt.executeQuery();
-					if (rs.next()) {
-						sql = "INSERT INTO recyclebin (provider_no, updatedatetime, table_name, keyword, table_content) " + "VALUES ('0', '" + UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "', 'hl7TextMessage', '" + lab_id + "', " + "'<lab_id>" + oscar.Misc.getString(rs, "lab_id") + "</lab_id>" + "<message>" + oscar.Misc.getString(rs, "message") + "</message>" + "<type>" + oscar.Misc.getString(rs, "type") + "</type>" + "<fileUploadCheck_id>" + oscar.Misc.getString(rs, "fileUploadCheck_id")
-						        + "</fileUploadCheck_id>')";
-
-						pstmt = conn.prepareStatement(sql);
-						pstmt.executeUpdate();
-
-						sql = "DELETE FROM hl7TextMessage where lab_id='" + lab_id + "'";
-						pstmt = conn.prepareStatement(sql);
-						pstmt.executeUpdate();
-					}
-				} catch (SQLException e) {
-					logger.error("Error cleaning hl7TextMessage table for lab_id '" + lab_id + "'", e);
-				}
-
-				try {
-					sql = "SELECT * FROM providerLabRouting WHERE lab_no='" + lab_id + "'";
-					pstmt = conn.prepareStatement(sql);
-					rs = pstmt.executeQuery();
-					if (rs.next()) {
-						sql = "INSERT INTO recyclebin (provider_no, updatedatetime, table_name, keyword, table_content) " + "VALUES ('0', '" + UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "', 'providerLabRouting', '" + lab_id + "', " + "'<provider_no>" + oscar.Misc.getString(rs, "provider_no") + "</provider_no>" + "<lab_no>" + oscar.Misc.getString(rs, "lab_no") + "</lab_no>" + "<status>" + oscar.Misc.getString(rs, "status") + "</status>" + "<comment>" + oscar.Misc.getString(rs, "comment")
-						        + "</comment>" + "<timestamp>" + oscar.Misc.getString(rs, "timestamp") + "</timestamp>" + "<lab_type>" + oscar.Misc.getString(rs, "lab_type") + "</lab_type>" + "<id>" + oscar.Misc.getString(rs, "id") + "</id>')";
-
-						pstmt = conn.prepareStatement(sql);
-						pstmt.executeUpdate();
-
-						sql = "DELETE FROM providerLabRouting where lab_no='" + lab_id + "'";
-						pstmt = conn.prepareStatement(sql);
-						pstmt.executeUpdate();
-					}
-				} catch (SQLException e) {
-					logger.error("Error cleaning providerLabRouting table for lab_no '" + lab_id + "'", e);
-				}
-
-				try {
-					sql = "SELECT * FROM patientLabRouting WHERE lab_no='" + lab_id + "'";
-					pstmt = conn.prepareStatement(sql);
-					rs = pstmt.executeQuery();
-					if (rs.next()) {
-						sql = "INSERT INTO recyclebin (provider_no, updatedatetime, table_name, keyword, table_content) " + "VALUES ('0', '" + UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "', 'patientLabRouting', '" + lab_id + "', " + "'<demographic_no>" + oscar.Misc.getString(rs, "demographic_no") + "</demographic_no>" + "<lab_no>" + oscar.Misc.getString(rs, "lab_no") + "</lab_no>" + "<lab_type>" + oscar.Misc.getString(rs, "lab_type") + "</lab_type>" + "<id>" + oscar.Misc.getString(rs, "id")
-						        + "</id>')";
-
-						pstmt = conn.prepareStatement(sql);
-						pstmt.executeUpdate();
-
-						sql = "DELETE FROM patientLabRouting where lab_no='" + lab_id + "'";
-						pstmt = conn.prepareStatement(sql);
-						pstmt.executeUpdate();
-					}
-				} catch (SQLException e) {
-					logger.error("Error cleaning patientLabRouting table for lab_no '" + lab_id + "'", e);
-				}
-
-				try {
-					sql = "SELECT measurement_id FROM measurementsExt WHERE keyval='lab_no' and val='" + lab_id + "'";
-					pstmt = conn.prepareStatement(sql);
-					rs = pstmt.executeQuery();
-
-					while (rs.next()) {
-
-						int meas_id = rs.getInt("measurement_id");
-						sql = "SELECT * FROM measurements WHERE id='" + meas_id + "'";
-						pstmt = conn.prepareStatement(sql);
-						ResultSet rs2 = pstmt.executeQuery();
-
-						if (rs2.next()) {
-							sql = "INSERT INTO recyclebin (provider_no, updatedatetime, table_name, keyword, table_content) " + "VALUES ('0', '" + UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "', 'measurements', '" + meas_id + "', " + "'<id>" + rs2.getString("id") + "</id>" + "<type>" + rs2.getString("type") + "</type>" + "<demographicNo>" + rs2.getString("demographicNo") + "</demographicNo>" + "<providerNo>" + rs2.getString("providerNo") + "</providerNo>" + "<dataField>"
-							        + rs2.getString("dataField") + "</dataField>" + "<measuringInstruction>" + rs2.getString("measuringInstruction") + "</measuringInstruction>" + "<comments>" + rs2.getString("comments") + "</comments>" + "<dateObserved>" + rs2.getString("dateObserved") + "</dateObserved>" + "<dateEntered>" + rs2.getString("dateEntered") + "</dateEntered>')";
-
-							pstmt = conn.prepareStatement(sql);
-							pstmt.executeUpdate();
-
-							sql = "DELETE FROM measurements WHERE id='" + meas_id + "'";
-							pstmt = conn.prepareStatement(sql);
-							pstmt.executeUpdate();
-						}
-
-						sql = "SELECT * FROM measurementsExt WHERE measurement_id='" + meas_id + "'";
-						pstmt = conn.prepareStatement(sql);
-						rs2 = pstmt.executeQuery();
-
-						while (rs2.next()) {
-							sql = "INSERT INTO recyclebin (provider_no, updatedatetime, table_name, keyword, table_content) " + "VALUES ('0', '" + UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "', 'measurementsExt', '" + meas_id + "', " + "'<id>" + rs2.getString("id") + "</id>" + "<measurement_id>" + rs2.getString("measurement_id") + "</measurement_id>" + "<keyval>" + rs2.getString("keyval") + "</keyval>" + "<val>" + rs2.getString("val") + "</val>')";
-
-							pstmt = conn.prepareStatement(sql);
-							pstmt.executeUpdate();
-
-							sql = "DELETE FROM measurementsExt WHERE measurement_id='" + meas_id + "'";
-							pstmt = conn.prepareStatement(sql);
-							pstmt.executeUpdate();
-						}
-					}
-
-				} catch (SQLException e) {
-					logger.error("Error cleaning measuremnts or measurementsExt table for lab_no '" + lab_id + "'", e);
-				}
-
+				patientLabRoutingDao.remove(lr.getId());
 			}
 
-			try {
-				sql = "SELECT * FROM fileUploadCheck WHERE id = '" + fileId + "'";
-				pstmt = conn.prepareStatement(sql);
-				rs = pstmt.executeQuery();
-				if (rs.next()) {
-					sql = "INSERT INTO recyclebin (provider_no, updatedatetime, table_name, keyword, table_content) " + "VALUES ('0', '" + UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "', 'fileUploadCheck', '" + fileId + "', " + "'<id>" + oscar.Misc.getString(rs, "id") + "</id>" + "<provider_no>" + oscar.Misc.getString(rs, "provider_no") + "</provider_no>" + "<filename>" + oscar.Misc.getString(rs, "filename") + "</filename>" + "<md5sum>" + oscar.Misc.getString(rs, "md5sum") + "</md5sum>"
-					        + "<datetime>" + oscar.Misc.getString(rs, "date_time") + "</datetime>')";
-
-					pstmt = conn.prepareStatement(sql);
-					pstmt.executeUpdate();
-
-					sql = "DELETE FROM fileUploadCheck where id = '" + fileId + "'";
-					pstmt = conn.prepareStatement(sql);
-					pstmt.executeUpdate();
-
+			List<MeasurementsExt> measurementExts = measurementsExtDao.findByKeyValue("lab_no", String.valueOf(lab_id));
+			for(MeasurementsExt me:measurementExts) {
+				Measurement m = measurementDao.find(me.getMeasurementId());
+				if(m != null) {
+					RecycleBin rb = new RecycleBin();
+					rb.setProviderNo("0");
+					rb.setUpdateDateTime(new Date());
+					rb.setTableName("measurements");
+					rb.setKeyword(String.valueOf(me.getMeasurementId()));
+					rb.setTableContent("<id>" +m.getId() + "</id>" + "<type>" + m.getType() + "</type>" + "<demographicNo>" +m.getDemographicId() + "</demographicNo>" + "<providerNo>" + m.getProviderNo() + "</providerNo>" + "<dataField>"
+						        + m.getDataField() + "</dataField>" + "<measuringInstruction>" + m.getMeasuringInstruction() + "</measuringInstruction>" + "<comments>" + m.getComments() + "</comments>" + "<dateObserved>" + m.getDateObserved() + "</dateObserved>" + "<dateEntered>" + m.getCreateDate()+ "</dateEntered>");
+					recycleBinDao.persist(rb);
+					
+					measurementDao.remove(m.getId());
 				}
-			} catch (SQLException e) {
-				logger.error("Error cleaning fileUploadCheck table for id '" + fileId + "'", e);
+				
+				List<MeasurementsExt> mes = measurementsExtDao.getMeasurementsExtByMeasurementId(me.getMeasurementId());
+				for(MeasurementsExt me1:mes) {
+					RecycleBin rb = new RecycleBin();
+					rb.setProviderNo("0");
+					rb.setUpdateDateTime(new Date());
+					rb.setTableName("measurementsExt");
+					rb.setKeyword(String.valueOf(me.getMeasurementId()));
+					rb.setTableContent("<id>" + me1.getId() + "</id>" + "<measurement_id>" + me1.getMeasurementId() + "</measurement_id>" + "<keyval>" + me1.getKeyVal() + "</keyval>" + "<val>" + me1.getVal() + "</val>");
+					recycleBinDao.persist(rb);
+					
+					measurementsExtDao.remove(me1.getId());
+				}
+				
 			}
+			
+			
 
-			pstmt.close();
-			logger.info("Successfully cleaned the database");
-
-		} catch (SQLException e) {
-			logger.error("Could not clean database: ", e);
 		}
+		
+		
+		FileUploadCheck fuc = fileUploadCheckDao.find(fileId);
+		if(fuc != null) {
+			RecycleBin rb = new RecycleBin();
+			rb.setProviderNo("0");
+			rb.setUpdateDateTime(new Date());
+			rb.setTableName("fileUploadCheck");
+			rb.setKeyword(String.valueOf(fileId));
+			rb.setTableContent("<id>" + fuc.getId() + "</id>" + "<provider_no>" + fuc.getProviderNo() + "</provider_no>" + "<filename>" + fuc.getFilename() + "</filename>" + "<md5sum>" + fuc.getMd5sum() + "</md5sum>" + "<datetime>" +fuc.getDateTime() + "</datetime>");
+			recycleBinDao.persist(rb);	
+			
+			fileUploadCheckDao.remove(fuc.getId());
+		}
+
+			
+			
 	}
 }
