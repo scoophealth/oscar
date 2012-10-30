@@ -468,7 +468,7 @@ public class RxPrescriptionData {
     public Prescription getLatestPrescriptionScriptByPatientDrugId(int demographicNo, String drugId) {
         Prescription prescription = null;
 
-        String sql = "SELECT d.* FROM drugs d WHERE  " + "d.demographic_no = " + demographicNo + " and d.drugId = '" + drugId + "' " + "ORDER BY position, rx_date DESC, drugId DESC, limit 0,1";
+        String sql = "SELECT d.* FROM drugs d WHERE  d.drugId = " + drugId;
 
         try {
             // Get Prescription from database
