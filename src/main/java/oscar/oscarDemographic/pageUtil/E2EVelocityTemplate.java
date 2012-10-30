@@ -26,9 +26,7 @@ package oscar.oscarDemographic.pageUtil;
 import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
-import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.VelocityUtils;
 
 /**
@@ -37,10 +35,7 @@ import org.oscarehr.util.VelocityUtils;
  */
 
 public class E2EVelocityTemplate {
-	private static final Logger logger = MiscUtils.getLogger();
-	
 	private static final String E2E_VELOCITY_TEMPLATE_FILE = "/e2etemplate.vm";
-	
 	private VelocityContext context;
 	
 	public E2EVelocityTemplate() {
