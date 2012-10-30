@@ -32,6 +32,8 @@ import java.util.Date;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.billing.CA.BC.dao.Hl7MessageDao;
+import org.oscarehr.billing.CA.BC.model.Hl7Message;
 import org.oscarehr.common.dao.PatientLabRoutingDao;
 import org.oscarehr.common.dao.ProviderLabRoutingDao;
 import org.oscarehr.common.model.PatientLabRouting;
@@ -52,11 +54,11 @@ import oscar.oscarLab.ca.bc.PathNet.HL7.V2_3.PID;
  * www.andromedia.ca
  */
 public class Message {
-   Logger _logger = Logger.getLogger(this.getClass());
-   //Logger _logger = Logger.getLogger("oscar.oscarLab.ca.bc");
-   private static final String lineBreak = "\n",
-   insert = "INSERT INTO hl7_message ( date_time ) VALUES ( '@date_time' );";
-   private String now;
+   Logger _logger = MiscUtils.getLogger();
+   private Hl7MessageDao hl7MessageDao = SpringUtils.getBean(Hl7MessageDao.class);
+   
+   private static final String lineBreak = "\n";
+   
    private PID pid = null;
    private MSH msh = null;
    private Node current;
@@ -66,9 +68,6 @@ public class Message {
    
    
    public Message(String now) {
-      MiscUtils.getLogger().debug("Should be a new LOG MESSAGE FILE NOW"+now);
-      _logger.debug("Message object Instantiated now = "+now);
-      this.now = now;
       this.current = null;
    }
 
@@ -108,25 +107,15 @@ public class Message {
    public String toString() {
       return pid.toString();
    }
-   protected String getSql() {
-      return insert.replaceAll("@date_time", this.now);
-   }
-   private String getLastInsertedIdSql() {
-      return "SELECT LAST_INSERT_ID();";
-   }
 
 
   
    public void ToDatabase() throws SQLException {
-      MiscUtils.getLogger().debug("sql "+this.getSql());
-      DBHandler.RunSQL(this.getSql());
-      ResultSet result = DBHandler.GetSQL(this.getLastInsertedIdSql());
-      int parent = 0;
-      if (result.next()) {
-         parent = result.getInt(1);
-      }
-      if (parent == 0)
-         throw new SQLException("Could not get last inserted id");
+	   Hl7Message h = new Hl7Message();
+	   h.setDateTime(new Date());
+	   hl7MessageDao.persist(h);
+	   int parent = h.getId();
+      
       msh.ToDatabase(parent);
       int id = pid.ToDatabase(parent);
       linkToProvider(parent,id);
