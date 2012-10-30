@@ -63,5 +63,11 @@ public class ProviderLabRoutingDao extends AbstractDao<ProviderLabRoutingModel> 
 		query.executeUpdate();
 	}
 
+	public ProviderLabRoutingModel findByLabNo(int labNo) {
+		Query query = entityManager.createQuery("select x from "+modelClass.getName()+" x where x.labNo=?");
+		query.setParameter(1, labNo);
+		
+		return this.getSingleResultOrNull(query);
+	}
 
 }
