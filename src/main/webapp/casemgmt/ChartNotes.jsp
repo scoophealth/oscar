@@ -395,7 +395,7 @@ try
 		String startTime = request.getParameter("start_time");
 		if (startTime == null || startTime.equals(""))
 		{
-			startTime = "0:00";
+			startTime = "00:00:00";
 		}
 
 		String apptProv = request.getParameter("apptProvider");

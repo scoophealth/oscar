@@ -151,7 +151,7 @@ public class BillingCorrectionAction extends DispatchAction{
         if (!bCh1.getBillingItems().isEmpty()) {
             updateBillingItems(bCh1, request);
             BillingONService billingONService = (BillingONService) SpringUtils.getBean("billingONService");
-            if (!billingONService.updateTotal(bCh1.getId()))
+            if (!billingONService.updateTotal(bCh1))
                 return mapping.findForward("failure");
         }
                        
@@ -284,7 +284,7 @@ public class BillingCorrectionAction extends DispatchAction{
              */
             List<BillingONPayment> paymentRecords = bPaymentDao.find3rdPartyPayRecordsByBill(bCh1);
                    
-            BigDecimal totalOwing =  new BigDecimal(bCh1.getTotal()).movePointLeft(2);
+            BigDecimal totalOwing =  new BigDecimal(bCh1.getTotal());
             BigDecimal totalPaid = BillingONPaymentDao.calculatePaymentTotal(paymentRecords);
             BigDecimal totalRefund = BillingONPaymentDao.calculateRefundTotal(paymentRecords);
             BigDecimal amtOutstanding = totalOwing.subtract(totalPaid).add(totalRefund);

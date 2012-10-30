@@ -421,8 +421,7 @@ function checkSettle(status) {
                 DemoDOB = bCh1.getDob();
                 DemoSex = bCh1.getSex().equals("1") ? "M" : "F";
 
-                BigDecimal billTotal = new BigDecimal(bCh1.getTotal());
-                billTotal = billTotal.movePointLeft(2);
+                BigDecimal billTotal = new BigDecimal(bCh1.getTotal());                
 
                 org.oscarehr.common.model.Demographic sdemo = (new DemographicData()).getDemographic(DemoNo);
                 hin = sdemo.getHin()+sdemo.getVer();

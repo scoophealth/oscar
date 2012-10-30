@@ -77,7 +77,6 @@
         invoiceComment = bCh1.getComment(); 
         
         totalOwed = new BigDecimal(bCh1.getTotal());
-        totalOwed = totalOwed.movePointLeft(2);
 
         List<BillingONPayment> paymentRecords = billPaymentDao.find3rdPartyPayRecordsByBill(bCh1);
         paidTotal = BillingONPaymentDao.calculatePaymentTotal(paymentRecords);
