@@ -67,7 +67,6 @@ import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementTmpSaveDAO;
 import org.oscarehr.casemgmt.dao.HashAuditDAO;
 import org.oscarehr.casemgmt.dao.IssueDAO;
-import org.oscarehr.casemgmt.dao.ProviderSignitureDao;
 import org.oscarehr.casemgmt.dao.RoleProgramAccessDAO;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
@@ -78,6 +77,7 @@ import org.oscarehr.casemgmt.model.CaseManagementSearchBean;
 import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
 import org.oscarehr.casemgmt.model.HashAuditImpl;
 import org.oscarehr.casemgmt.model.Issue;
+import org.oscarehr.casemgmt.model.ProviderExt;
 import org.oscarehr.casemgmt.model.base.BaseHashAudit;
 import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.dao.DemographicDao;
@@ -87,6 +87,7 @@ import org.oscarehr.common.dao.EChartDao;
 import org.oscarehr.common.dao.EncounterWindowDao;
 import org.oscarehr.common.dao.MessageTblDao;
 import org.oscarehr.common.dao.MsgDemoMapDao;
+import org.oscarehr.common.dao.ProviderExtDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Demographic;
@@ -126,7 +127,7 @@ public class CaseManagementManager {
 	private CaseManagementCPPDAO caseManagementCPPDAO;
 	private ProviderDao providerDAO;
 	private DemographicDao demographicDao;
-	private ProviderSignitureDao providerSignitureDao;
+	private ProviderExtDao providerExtDao;
 	private RoleProgramAccessDAO roleProgramAccessDAO;
 	private RolesManager roleManager;
 	private CaseManagementTmpSaveDAO caseManagementTmpSaveDAO;
@@ -1601,8 +1602,8 @@ public class CaseManagementManager {
 		this.roleManager = mgr;
 	}
 
-	public void setProviderSignitureDao(ProviderSignitureDao providerSignitureDao) {
-		this.providerSignitureDao = providerSignitureDao;
+	public void setProviderExtDao(ProviderExtDao providerExtDao) {
+		this.providerExtDao = providerExtDao;
 	}
 
 	public void setRoleProgramAccessDAO(RoleProgramAccessDAO roleProgramAccessDAO) {
@@ -1719,7 +1720,9 @@ public class CaseManagementManager {
 		// if have signiture setting, use signiture as username
 		String tempS = null;
 		// if (providerSignitureDao.isOnSig(cproviderNo))
-		tempS = providerSignitureDao.getProviderSig(cproviderNo);
+		ProviderExt pe = providerExtDao.find(cproviderNo);
+		if(pe != null)
+			tempS = pe.getSignature();
 		if (tempS != null && !"".equals(tempS.trim())) userName = tempS;
 
 		ResourceBundle resourceBundle = ResourceBundle.getBundle("oscarResources", locale);
