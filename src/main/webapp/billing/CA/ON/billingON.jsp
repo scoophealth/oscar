@@ -262,7 +262,7 @@
 				propHist = new Properties();
 
 				//propHist.setProperty("billing_no", "" + rs.getInt("id"));
-				propHist.setProperty("visitdate", obj.getAdmission_date()); // admission date
+				propHist.setProperty("visitdate", obj.getAdmission_date() == null ? "" : obj.getAdmission_date()); // admission date
 				//propHist.setProperty("billing_date", rs.getString("billing_date")); // service date
 				//propHist.setProperty("update_date", rs.getString("timestamp")); // create date
 				propHist.setProperty("visitType", obj.getVisittype());

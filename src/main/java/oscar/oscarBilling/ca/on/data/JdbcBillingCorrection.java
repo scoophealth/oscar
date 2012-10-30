@@ -145,8 +145,8 @@ public class JdbcBillingCorrection {
 			else
 				ch1Obj.setBilling_time("");
 			
-			ch1Obj.setTotal(h.getTotal().toString());
-			ch1Obj.setPaid(h.getPaid().toString());
+			ch1Obj.setTotal(h.getTotal());
+			ch1Obj.setPaid(h.getPaid());
 			ch1Obj.setStatus(h.getStatus());
 			ch1Obj.setComment(h.getComment());
 			ch1Obj.setVisittype(h.getVisitType());

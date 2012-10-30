@@ -169,7 +169,7 @@ public class JdbcBillingCreateBillingFile {
 				+ rightJustify("0", 8, ch1Obj.getId()) + ch1Obj.getPay_program() + ch1Obj.getPayee()
 				+ rightJustify(" ", 6, ch1Obj.getRef_num())
 				+ rightJustify(" ", 4, ch1Obj.getFacilty_num().equals("0000") ? "" : ch1Obj.getFacilty_num())
-				+ rightJustify(" ", 8, getCompactDateStr(ch1Obj.getAdmission_date()))
+				+ rightJustify(" ", 8, getCompactDateStr(ch1Obj.getAdmission_date()==null?"":ch1Obj.getAdmission_date()))
 				+ rightJustify(" ", 4, ch1Obj.getRef_lab_num()) + rightJustify(" ", 1, ch1Obj.getMan_review())
 				+ leftJustify(" ", 4, ch1Obj.getLocation().equals("0000") ? "" : ch1Obj.getLocation()) + space(11)
 				+ space(6);

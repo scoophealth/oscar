@@ -356,27 +356,35 @@ public class BillingONCHeader1 extends AbstractModel<Integer> implements Seriali
 		this.billingTime = billingTime;
 	}
 
-	public Long getTotal() {
-		if(this.total != null && this.total.length()>0) return Math.round(Double.parseDouble(this.total)*100);
-		else return 0L;
+	public String getTotal() {
+		if( total != null && this.total.length()>0 ) {
+			return this.total;
+		}
+		else {
+			return "0.00";
+		}
 	}
 
-	public void setTotal(Long total) {            
-		if(total != null) {                    
-                    this.total = Utility.toCurrency(total/100);                          
-                } else {                    
-                    this.total = "0.00";
-                }
+	public void setTotal(String total) {
+		this.total = total;
+		
+		if(this.total == null) {                    
+			this.total = "0.00";
+        }
+		
 	}
 
-	public Long getPaid() {
-		if(this.paid != null && this.paid.length()>0) return Math.round(Double.parseDouble(this.paid)*100);
-		else return 0L;
+	public String getPaid() {
+		if(this.paid != null && this.paid.length()>0) return this.paid;
+		else return "0.00";
 	}
 
-	public void setPaid(Long paid) {
-		if(paid != null) this.paid = Utility.toCurrency(paid*(0.01));
-		else this.paid = "0.00";
+	public void setPaid(String paid) {
+		this.paid = paid;
+		
+		if(this.paid == null) {
+			this.paid = "0.00";
+		}
 	}
 
 	public String getStatus() {

@@ -51,7 +51,7 @@ public class BillingONFilenameDao extends AbstractDao<BillingONFilename>{
 	}
 	
 	public List<BillingONFilename> findByDiskIdAndProvider(Integer diskId, String provider) {
-		String q = "SELECT b FROM BillingONFilename b WHERE b.diskId = ?  AND b.provider = ? ORDER BY b.id DESC";
+		String q = "SELECT b FROM BillingONFilename b WHERE b.diskId = ?  AND b.providerNo = ? ORDER BY b.id DESC";
 		Query query = entityManager.createQuery(q);
 		query.setParameter(1, diskId);
 		query.setParameter(2, provider);
