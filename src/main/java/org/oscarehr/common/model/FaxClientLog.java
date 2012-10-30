@@ -41,6 +41,7 @@ public class FaxClientLog extends AbstractModel<Integer>{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	@Column(name="provider_no")
 	private String providerNo;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date startTime;

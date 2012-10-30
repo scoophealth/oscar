@@ -98,15 +98,9 @@
 	<bean id="DxresearchDAO" class="org.oscarehr.common.dao.DxresearchDAO" autowire="byName" />
 	<bean id="Icd9DAO" class="org.oscarehr.common.dao.Icd9Dao" autowire="byName" />
 
-    <bean id="OcularProcDAO" class="org.oscarehr.eyeform.dao.OcularProcDao" autowire="byName" />
-	<bean id="SpecsHistoryDAO" class="org.oscarehr.eyeform.dao.SpecsHistoryDao" autowire="byName" />
-	<bean id="ProcedureBookDAO" class="org.oscarehr.eyeform.dao.ProcedureBookDao" autowire="byName" />
-	<bean id="TestBookDAO" class="org.oscarehr.eyeform.dao.TestBookRecordDao" autowire="byName" />
-	<bean id="MacroDAO" class="org.oscarehr.eyeform.dao.MacroDao" autowire="byName" />
-	<bean id="FollowUpDAO" class="org.oscarehr.eyeform.dao.FollowUpDao" autowire="byName" />
+    <bean id="MacroDAO" class="org.oscarehr.eyeform.dao.MacroDao" autowire="byName" />
 	<bean id="rourke2009Dao" class="oscar.form.dao.Rourke2009DAO" autowire="byName" />
-	<bean id="EyeFormDao" class="org.oscarehr.eyeform.dao.EyeFormDao" autowire="byName" />
-    <bean id="ocanSubmissionLogDao" class="org.oscarehr.PMmodule.dao.OcanSubmissionLogDao" autowire="byName" />
+	<bean id="ocanSubmissionLogDao" class="org.oscarehr.PMmodule.dao.OcanSubmissionLogDao" autowire="byName" />
 
     <bean id="logDAO" class="org.oscarehr.PMmodule.dao.LogDAO" autowire="byName" />
 	<bean id="lookupDao" class="com.quatro.dao.LookupDao" autowire="byName" />

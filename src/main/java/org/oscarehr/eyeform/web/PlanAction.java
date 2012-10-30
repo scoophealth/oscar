@@ -38,9 +38,9 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.model.Provider;
-import org.oscarehr.eyeform.dao.FollowUpDao;
-import org.oscarehr.eyeform.dao.ProcedureBookDao;
-import org.oscarehr.eyeform.dao.TestBookRecordDao;
+import org.oscarehr.eyeform.dao.EyeformFollowUpDao;
+import org.oscarehr.eyeform.dao.EyeformProcedureBookDao;
+import org.oscarehr.eyeform.dao.EyeformTestBookDao;
 import org.oscarehr.eyeform.model.EyeformFollowUp;
 import org.oscarehr.eyeform.model.EyeformProcedureBook;
 import org.oscarehr.eyeform.model.EyeformTestBook;
@@ -52,9 +52,9 @@ public class PlanAction extends DispatchAction {
 
 	Logger logger = MiscUtils.getLogger();
 
-	protected FollowUpDao followUpDao = (FollowUpDao)SpringUtils.getBean("FollowUpDAO");
-	protected ProcedureBookDao procBookDao = (ProcedureBookDao)SpringUtils.getBean("ProcedureBookDAO");
-	protected TestBookRecordDao testBookDao = (TestBookRecordDao)SpringUtils.getBean("TestBookDAO");
+	protected EyeformFollowUpDao followUpDao = SpringUtils.getBean(EyeformFollowUpDao.class);
+	protected EyeformProcedureBookDao procBookDao = SpringUtils.getBean(EyeformProcedureBookDao.class);
+	protected EyeformTestBookDao testBookDao = SpringUtils.getBean(EyeformTestBookDao.class);
 	static ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 
 	@Override

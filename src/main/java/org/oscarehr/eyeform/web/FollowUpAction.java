@@ -39,13 +39,14 @@ import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.validator.DynaValidatorForm;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.model.Provider;
-import org.oscarehr.eyeform.dao.FollowUpDao;
+import org.oscarehr.eyeform.dao.EyeformFollowUpDao;
 import org.oscarehr.eyeform.model.EyeformFollowUp;
 import org.oscarehr.util.SpringUtils;
 
 public class FollowUpAction extends DispatchAction {
 
 	static Logger logger = Logger.getLogger(FollowUpAction.class);
+	static EyeformFollowUpDao dao = (EyeformFollowUpDao)SpringUtils.getBean(EyeformFollowUpDao.class);
 	
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         return form(mapping, form, request, response);
@@ -60,18 +61,7 @@ public class FollowUpAction extends DispatchAction {
     	request.setAttribute("providers",providerDao.getActiveProviders());
     	
     	
-    	/*
-    	ProcedureBookDao dao = (ProcedureBookDao)SpringUtils.getBean("ProcedureBookDAO");
     	
-    	
-    	DynaValidatorForm f = (DynaValidatorForm)form;
-    	ProcedureBook data = (ProcedureBook)f.get("data");
-    	if(data.getId() != null && data.getId().intValue()>0) {
-    		data = dao.find(data.getId()); 
-    	}
-    	
-    	f.set("data", data);
-    */	        
         return mapping.findForward("form");
     }
     
@@ -81,7 +71,6 @@ public class FollowUpAction extends DispatchAction {
     	if(data.getId()!=null && data.getId()==0) {
     		data.setId(null);
     	}
-    	FollowUpDao dao = (FollowUpDao)SpringUtils.getBean("FollowUpDAO");
     	//data.setProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());	
     	dao.save(data);
     	
@@ -92,7 +81,6 @@ public class FollowUpAction extends DispatchAction {
     public ActionForward getNoteText(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	String appointmentNo = request.getParameter("appointmentNo");
     	
-    	FollowUpDao dao = (FollowUpDao)SpringUtils.getBean("FollowUpDAO");
     	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
     	
     	
@@ -127,7 +115,6 @@ public class FollowUpAction extends DispatchAction {
     }
     
     public static String getTicklerText(int appointmentNo) {
-    	FollowUpDao dao = (FollowUpDao)SpringUtils.getBean("FollowUpDAO");
     	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
     	
     	List<EyeformFollowUp> followUps = dao.getByAppointmentNo(appointmentNo);

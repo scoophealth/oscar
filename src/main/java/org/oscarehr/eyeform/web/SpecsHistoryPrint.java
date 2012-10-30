@@ -36,7 +36,7 @@ import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.casemgmt.service.CaseManagementPrintPdf;
 import org.oscarehr.casemgmt.util.ExtPrint;
-import org.oscarehr.eyeform.dao.SpecsHistoryDao;
+import org.oscarehr.eyeform.dao.EyeformSpecsHistoryDao;
 import org.oscarehr.eyeform.model.EyeformSpecsHistory;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -51,7 +51,6 @@ public class SpecsHistoryPrint implements ExtPrint {
 
 	private static Logger logger = MiscUtils.getLogger();
 	
-	
 	@Override
 	public void printExt(CaseManagementPrintPdf engine, HttpServletRequest request) throws IOException, DocumentException{
 		logger.info("specs history print!!!!");
@@ -64,8 +63,8 @@ public class SpecsHistoryPrint implements ExtPrint {
 		logger.info("demographicNo = "+demographicNo);
 		
 		ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
-		SpecsHistoryDao dao = (SpecsHistoryDao)SpringUtils.getBean("SpecsHistoryDAO");
-    	
+		EyeformSpecsHistoryDao dao = (EyeformSpecsHistoryDao)SpringUtils.getBean(EyeformSpecsHistoryDao.class);
+		
     	
 		List<EyeformSpecsHistory> specs = null;
 		

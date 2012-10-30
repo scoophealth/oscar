@@ -30,29 +30,32 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.AbstractDao;
-import org.oscarehr.eyeform.model.EyeformSpecsHistory;
+import org.oscarehr.eyeform.model.EyeformOcularProcedure;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SpecsHistoryDao extends AbstractDao<EyeformSpecsHistory> {
-
-	public SpecsHistoryDao() {
-		super(EyeformSpecsHistory.class);
+public class EyeformOcularProcedureDao extends AbstractDao<EyeformOcularProcedure> {
+	
+	Logger logger = MiscUtils.getLogger();
+	
+	public EyeformOcularProcedureDao() {
+		super(EyeformOcularProcedure.class);
 	}
-	
-	
-	public List<EyeformSpecsHistory> getByDemographicNo(int demographicNo) {
+		
+	public List<EyeformOcularProcedure> getByDemographicNo(int demographicNo) {
 		String sql="select x from "+modelClass.getSimpleName()+" x where x.demographicNo=?1 order by x.date DESC";
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1, demographicNo);
 	    
 		@SuppressWarnings("unchecked")
-	    List<EyeformSpecsHistory> results=query.getResultList();
+	    List<EyeformOcularProcedure> results=query.getResultList();
 	    return(results);	  
 	}
 	
-	public List<EyeformSpecsHistory> getByDateRange(int demographicNo,Date startDate, Date endDate) {
+	public List<EyeformOcularProcedure> getByDateRange(int demographicNo,Date startDate, Date endDate) {
 		String sql="select x from "+modelClass.getSimpleName()+" x where x.demographicNo=? and x.date >= ? and x.date <=?";
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1, demographicNo);
@@ -60,11 +63,11 @@ public class SpecsHistoryDao extends AbstractDao<EyeformSpecsHistory> {
 		query.setParameter(3, endDate);
 	    
 		@SuppressWarnings("unchecked")
-	    List<EyeformSpecsHistory> results=query.getResultList();
+	    List<EyeformOcularProcedure> results=query.getResultList();
 	    return(results);
 	}
 	
-	public List<EyeformSpecsHistory> getHistory(int demographicNo,Date endDate,String status) {
+	public List<EyeformOcularProcedure> getHistory(int demographicNo,Date endDate,String status) {
 		String sql=null;
 		if(status != null) {
 			sql = "select x from "+modelClass.getSimpleName()+" x where x.demographicNo = ? and x.date <=? and x.status=? order by x.id desc";
@@ -78,30 +81,29 @@ public class SpecsHistoryDao extends AbstractDao<EyeformSpecsHistory> {
 			query.setParameter(3,status);
 		}
 		@SuppressWarnings("unchecked")
-	    List<EyeformSpecsHistory> results=query.getResultList();
+	    List<EyeformOcularProcedure> results=query.getResultList();
 	    return(results);	
 	}
 	
-	public List<EyeformSpecsHistory> getByAppointmentNo(int appointmentNo) {
-		String sql="select x from "+modelClass.getSimpleName()+" x where x.appointmentNo=?1 order by x.date DESC";
+	public List<EyeformOcularProcedure> getByAppointmentNo(int appointmentNo) {
+		String sql="select x from "+modelClass.getSimpleName()+" x where x.appointmentNo=?1";
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1, appointmentNo);
 	    
 		@SuppressWarnings("unchecked")
-	    List<EyeformSpecsHistory> results=query.getResultList();
+	    List<EyeformOcularProcedure> results=query.getResultList();
 	    return(results);		   
 	}
 	
-	public List<EyeformSpecsHistory> getAllPreviousAndCurrent(int demographicNo, int appointmentNo) {
-		String sql="select x from "+modelClass.getSimpleName()+" x where x.demographicNo = ? and x.appointmentNo<=? order by x.date DESC";
+	public List<EyeformOcularProcedure> getAllPreviousAndCurrent(int demographicNo, int appointmentNo) {
+		String sql="select x from "+modelClass.getSimpleName()+" x where x.demographicNo = ? and x.appointmentNo<=?";
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1, demographicNo);	    
 		query.setParameter(2, appointmentNo);
 	    
 		@SuppressWarnings("unchecked")
-	    List<EyeformSpecsHistory> results=query.getResultList();
+	    List<EyeformOcularProcedure> results=query.getResultList();
 	    return(results);		
 	}
-	
 	
 }

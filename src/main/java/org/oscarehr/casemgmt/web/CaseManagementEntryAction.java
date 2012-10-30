@@ -102,9 +102,9 @@ import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.ProviderDefaultProgram;
 import org.oscarehr.eyeform.dao.EyeFormDao;
-import org.oscarehr.eyeform.dao.FollowUpDao;
+import org.oscarehr.eyeform.dao.EyeformFollowUpDao;
+import org.oscarehr.eyeform.dao.EyeformTestBookDao;
 import org.oscarehr.eyeform.dao.MacroDao;
-import org.oscarehr.eyeform.dao.TestBookRecordDao;
 import org.oscarehr.eyeform.model.EyeForm;
 import org.oscarehr.eyeform.model.EyeformFollowUp;
 import org.oscarehr.eyeform.model.EyeformTestBook;
@@ -2906,7 +2906,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		ActionForward fwd = saveAndExit(mapping, form, request, response);
 
 		if (fwd.getName().equals("windowClose")) {
-			EyeFormDao eyeformDao = (EyeFormDao) SpringUtils.getBean("EyeFormDao");
+			EyeFormDao eyeformDao = SpringUtils.getBean(EyeFormDao.class);
 			EyeForm eyeform = eyeformDao.getByAppointmentNo(Integer.parseInt(cform.getAppointmentNo()));
 			// load up the eyeform to set/unset checkboxes
 			if (macro.getDischargeFlag() != null && macro.getDischargeFlag().equals("dischargeFlag")) {
@@ -2921,7 +2921,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			eyeformDao.merge(eyeform);
 
 			// follow ups
-			FollowUpDao followUpDao = (FollowUpDao) SpringUtils.getBean("FollowUpDAO");
+			EyeformFollowUpDao followUpDao = SpringUtils.getBean(EyeformFollowUpDao.class);
 			int followUpNo = macro.getFollowupNo();
 			String followUpUnit = macro.getFollowupUnit();
 			String followUpDr = macro.getFollowupDoctorId();
@@ -2940,7 +2940,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 			}
 
 			// tests
-			TestBookRecordDao testDao = (TestBookRecordDao) SpringUtils.getBean("TestBookDAO");
+			EyeformTestBookDao testDao = SpringUtils.getBean(EyeformTestBookDao.class);
 			String[] tests = macro.getTestRecords().split("\n");
 			for (String test : tests) {
 				String[] parts = test.trim().split("\\|");

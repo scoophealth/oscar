@@ -25,12 +25,14 @@ package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
@@ -39,13 +41,14 @@ import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+
 public class DemographicContactDaoTest extends DaoTestFixtures {
 
-	private DemographicContactDao dao = (DemographicContactDao)SpringUtils.getBean(DemographicContactDao.class);
+	private DemographicContactDao dao = SpringUtils.getBean(DemographicContactDao.class);
 	Logger logger = MiscUtils.getLogger();
 
 	@Before
-	public void setUp() throws Exception {
+	public void before() throws Exception {
 		SchemaUtils.restoreTable("DemographicContact");
 	}
 
@@ -225,4 +228,10 @@ public class DemographicContactDaoTest extends DaoTestFixtures {
 		assertTrue(result.containsAll(expectedResult));
 	}
 
+	public void testCreate() throws Exception {
+		DemographicContact entity = new DemographicContact();
+		EntityDataGenerator.generateTestDataForModelClass(entity);
+		dao.persist(entity);
+		assertNotNull(entity.getId());
+	}
 }

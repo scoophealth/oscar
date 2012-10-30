@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,39 +21,32 @@
  * Hamilton
  * Ontario, Canada
  */
+package org.oscarehr.common.dao;
+
+import static org.junit.Assert.assertNotNull;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.oscarehr.common.dao.utils.EntityDataGenerator;
+import org.oscarehr.common.dao.utils.SchemaUtils;
+import org.oscarehr.common.model.SystemMessage;
+import org.oscarehr.util.SpringUtils;
+
+public class SystemMessageDaoTest extends DaoTestFixtures {
+
+	private SystemMessageDao dao = SpringUtils.getBean(SystemMessageDao.class);
 
 
-package org.oscarehr.eyeform.dao;
-
-import java.util.List;
-
-import javax.persistence.Query;
-
-import org.oscarehr.common.dao.AbstractDao;
-import org.oscarehr.eyeform.model.EyeformTestBook;
-import org.springframework.stereotype.Repository;
-
-@Repository
-public class TestBookRecordDao extends AbstractDao<EyeformTestBook> {
-	
-	public TestBookRecordDao() {
-		super(EyeformTestBook.class);
+	@Before
+	public void before() throws Exception {
+		SchemaUtils.restoreTable("SystemMessage");
 	}
-	
-	public void save(EyeformTestBook obj) {		
-		if(obj.getId()!=null && obj.getId().intValue()>0) {
-			entityManager.merge(obj);
-		} else {
-			entityManager.persist(obj);
-		}
-	}
-	
-	public List<EyeformTestBook> getByAppointmentNo(int appointmentNo) {
-		Query query = entityManager.createQuery("select x from "+modelClass.getSimpleName()+" x where x.appointmentNo=?1");
-		query.setParameter(1, appointmentNo);
-	    
-		@SuppressWarnings("unchecked")
-	    List<EyeformTestBook> results=query.getResultList();
-	    return(results);
+
+	@Test
+	public void testCreate() throws Exception {
+		SystemMessage entity = new SystemMessage();
+		EntityDataGenerator.generateTestDataForModelClass(entity);
+		dao.persist(entity);
+		assertNotNull(entity.getId());
 	}
 }
