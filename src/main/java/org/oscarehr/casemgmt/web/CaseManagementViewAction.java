@@ -87,22 +87,22 @@ import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementViewFormBean;
+import org.oscarehr.common.dao.BillingONCHeader1Dao;
 import org.oscarehr.common.dao.CaseManagementIssueNotesDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.EFormDataDao;
 import org.oscarehr.common.dao.EncounterFormDao;
 import org.oscarehr.common.dao.GroupNoteDao;
-import org.oscarehr.common.dao.BillingONCHeader1Dao;
+import org.oscarehr.common.model.BillingONCHeader1;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.common.model.GroupNoteLink;
 import org.oscarehr.common.model.UserProperty;
-import org.oscarehr.common.model.BillingONCHeader1;
 import org.oscarehr.eyeform.EyeformInit;
-import org.oscarehr.eyeform.dao.FollowUpDao;
+import org.oscarehr.eyeform.dao.EyeformFollowUpDao;
+import org.oscarehr.eyeform.dao.EyeformTestBookDao;
 import org.oscarehr.eyeform.dao.MacroDao;
-import org.oscarehr.eyeform.dao.TestBookRecordDao;
 import org.oscarehr.eyeform.model.EyeformFollowUp;
 import org.oscarehr.eyeform.model.EyeformTestBook;
 import org.oscarehr.eyeform.model.Macro;
@@ -1585,12 +1585,12 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			f.setType("followup");
 			f.setUrgency("routine");
 			f.setFollowupProvider(followUpDr);
-			FollowUpDao dao = (FollowUpDao)SpringUtils.getBean("FollowUpDAO");
+			EyeformFollowUpDao dao = SpringUtils.getBean(EyeformFollowUpDao.class);
 	    	dao.save(f);
 		}
 
 		//tests
-		TestBookRecordDao testDao = (TestBookRecordDao)SpringUtils.getBean("TestBookDAO");
+		EyeformTestBookDao testDao = SpringUtils.getBean(EyeformTestBookDao.class);
 		String[] tests = macro.getTestRecords().split("\n");
 		for(String test:tests) {
 			String[] parts = test.trim().split("\\|");

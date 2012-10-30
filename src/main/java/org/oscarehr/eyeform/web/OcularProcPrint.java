@@ -36,7 +36,7 @@ import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.casemgmt.service.CaseManagementPrintPdf;
 import org.oscarehr.casemgmt.util.ExtPrint;
-import org.oscarehr.eyeform.dao.OcularProcDao;
+import org.oscarehr.eyeform.dao.EyeformOcularProcedureDao;
 import org.oscarehr.eyeform.model.EyeformOcularProcedure;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -63,7 +63,7 @@ public class OcularProcPrint implements ExtPrint {
 		logger.info("endDate = "+endDate);
 		logger.info("demographicNo = "+demographicNo);
 		
-		OcularProcDao dao = (OcularProcDao)SpringUtils.getBean("OcularProcDAO");
+		EyeformOcularProcedureDao dao = SpringUtils.getBean(EyeformOcularProcedureDao.class);
 		ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
     	
     	

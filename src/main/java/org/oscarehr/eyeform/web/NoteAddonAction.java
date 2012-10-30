@@ -42,9 +42,9 @@ import org.caisi.service.TicklerManager;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.eyeform.dao.EyeFormDao;
-import org.oscarehr.eyeform.dao.FollowUpDao;
-import org.oscarehr.eyeform.dao.ProcedureBookDao;
-import org.oscarehr.eyeform.dao.TestBookRecordDao;
+import org.oscarehr.eyeform.dao.EyeformFollowUpDao;
+import org.oscarehr.eyeform.dao.EyeformProcedureBookDao;
+import org.oscarehr.eyeform.dao.EyeformTestBookDao;
 import org.oscarehr.eyeform.model.EyeForm;
 import org.oscarehr.eyeform.model.EyeformFollowUp;
 import org.oscarehr.eyeform.model.EyeformProcedureBook;
@@ -57,6 +57,9 @@ public class NoteAddonAction extends DispatchAction {
 	static Logger logger = Logger.getLogger(NoteAddonAction.class);
 	
 	private static ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
+	protected EyeformProcedureBookDao procedureBookDao = SpringUtils.getBean(EyeformProcedureBookDao.class);
+	protected EyeformTestBookDao testDao = SpringUtils.getBean(EyeformTestBookDao.class);
+	protected EyeFormDao eyeformDao = SpringUtils.getBean(EyeFormDao.class);
 	
 	public ActionForward getCurrentNoteData(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String demographicNo = request.getParameter("demographicNo");
@@ -66,10 +69,9 @@ public class NoteAddonAction extends DispatchAction {
 		request.setAttribute("internalList", providerDao.getActiveProviders());
 
 		//load up tests/procedures and extra info
-		FollowUpDao followUpDao = (FollowUpDao)SpringUtils.getBean("FollowUpDAO");
-		TestBookRecordDao testDao = (TestBookRecordDao)SpringUtils.getBean("TestBookDAO");
-		ProcedureBookDao procedureBookDao = (ProcedureBookDao)SpringUtils.getBean("ProcedureBookDAO");
-		EyeFormDao eyeformDao = (EyeFormDao)SpringUtils.getBean("eyeFormDao");
+		EyeformFollowUpDao followUpDao = SpringUtils.getBean(EyeformFollowUpDao.class);
+		
+		
 		ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 		DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 		
@@ -112,9 +114,8 @@ public class NoteAddonAction extends DispatchAction {
 		String ack3Checked = request.getParameter("ack3_checked");
 		
 		
-		EyeFormDao dao = (EyeFormDao)SpringUtils.getBean("EyeFormDao");
 		
-		EyeForm eyeform = dao.getByAppointmentNo(Integer.parseInt(appointmentNo));
+		EyeForm eyeform = eyeformDao.getByAppointmentNo(Integer.parseInt(appointmentNo));
 	
 		if(eyeform == null) {
 			eyeform = new EyeForm();
@@ -126,7 +127,7 @@ public class NoteAddonAction extends DispatchAction {
 		eyeform.setStat(ack2Checked);
 		eyeform.setOpt(ack3Checked);
 		
-		dao.save(eyeform);
+		eyeformDao.save(eyeform);
 		
 		return null;
 	}
@@ -134,9 +135,8 @@ public class NoteAddonAction extends DispatchAction {
 	public ActionForward getNoteText(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	String appointmentNo = request.getParameter("appointmentNo");
     	
-    	EyeFormDao dao = (EyeFormDao)SpringUtils.getBean("EyeFormDao");
     	
-    	EyeForm eyeform = dao.getByAppointmentNo(Integer.parseInt(appointmentNo));
+    	EyeForm eyeform = eyeformDao.getByAppointmentNo(Integer.parseInt(appointmentNo));
     	StringBuilder sb = new StringBuilder();
     	
     	if(eyeform != null) {

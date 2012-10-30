@@ -38,7 +38,7 @@ import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.ProfessionalSpecialist;
-import org.oscarehr.eyeform.dao.ConsultationReportDao;
+import org.oscarehr.eyeform.dao.EyeformConsultationReportDao;
 import org.oscarehr.eyeform.model.EyeformConsultationReport;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -91,7 +91,7 @@ public class EctDisplayConReportAction extends EctDisplayAction {
     Dao.setRightHeadingID(cmd); //no menu so set div id to unique id for this action
 
     ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
-    ConsultationReportDao crDao = (ConsultationReportDao)SpringUtils.getBean("consultationReportDao");
+    EyeformConsultationReportDao crDao = SpringUtils.getBean(EyeformConsultationReportDao.class);
 
     List<EyeformConsultationReport> crs = crDao.getByDemographic(Integer.parseInt(bean.demographicNo));
     for(EyeformConsultationReport cr:crs) {
