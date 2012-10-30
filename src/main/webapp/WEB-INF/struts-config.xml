@@ -169,9 +169,6 @@
 		<form-bean name="dxResearchUpdateQuickListForm" type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxResearchUpdateQuickListForm" />
 		<form-bean name="dxAssociationsForm" type="oscar.oscarResearch.oscarDxResearch.bean.dxAssociationBean" />
 		<form-bean name="StudentImportForm" type="org.oscarehr.learning.web.StudentImportBean" />
-		<form-bean name="procedimentoRealizadoForm" type="oscar.billing.controler.ProcedimentoRealizadoForm" />
-		<form-bean name="consultaFaturamentoMedicoForm" type="oscar.billing.controler.ConsultaFaturamentoMedicoForm" />
-		<form-bean name="consultaFaturamentoPacienteForm" type="oscar.billing.controler.ConsultaFaturamentoPacienteForm" />
 		<form-bean name="procedimentoForm" type="oscar.billing.popup.ProcedimentoForm" />
 		<form-bean name="atividadeSaudeForm" type="oscar.billing.popup.AtividadeSaudeForm" />
 		<form-bean name="cidForm" type="oscar.billing.popup.CidForm" />
@@ -1472,45 +1469,9 @@
 		<action parameter="method" path="/oscarLearning/StudentImport" name="StudentImportForm" scope="request" type="org.oscarehr.learning.web.StudentImportAction">
 			<forward name="success" path="/oscarLearning/StudentImport.jsp" redirect="true" />
 		</action>
-		<action input="/billing/billingBrazil.jsp" name="procedimentoRealizadoForm" parameter="init" path="/oscar/billing/procedimentoRealizado/init" scope="session" type="oscar.billing.controler.ProcedimentoRealizadoAction">
-			<forward name="success" path="/billing/billingBrazil.jsp" />
-			<forward name="failure" path="/billing/billingBrazil.jsp" />
-		</action>
-		<action input="/billing/billingBrazil.jsp" name="procedimentoRealizadoForm" parameter="add" path="/oscar/billing/procedimentoRealizado/add" scope="session" type="oscar.billing.controler.ProcedimentoRealizadoAction">
-			<forward name="success" path="/billing/billingBrazil.jsp" />
-			<forward name="formulario" path="/billing/billingBrazil.jsp" />
-			<forward name="procedimento" path="/billing/billingBrazil.jsp" />
-			<forward name="diagnostico" path="/billing/billingBrazil.jsp" />
-			<forward name="gravar" path="/billing/billingBrazilSuccess.jsp" />
-			<forward name="failure" path="/billing/billingBrazil.jsp" />
-		</action>
-		<action input="/billing/billingBrazil.jsp" name="procedimentoRealizadoForm" parameter="del_proc" path="/oscar/billing/procedimentoRealizado/deleteProc" scope="session" type="oscar.billing.controler.ProcedimentoRealizadoAction">
-			<forward name="success" path="/billing/billingBrazil.jsp" />
-		</action>
-		<action input="/billing/billingBrazil.jsp" name="procedimentoRealizadoForm" parameter="del_cid" path="/oscar/billing/procedimentoRealizado/deleteDiag" scope="session" type="oscar.billing.controler.ProcedimentoRealizadoAction">
-			<forward name="success" path="/billing/billingBrazil.jsp" />
-		</action>
-		<action input="/billing/billingConsFatMedBrazil.jsp" name="consultaFaturamentoMedicoForm" parameter="init" path="/oscar/billing/consultaFaturamentoMedico/init" scope="session" type="oscar.billing.controler.ConsultaFaturamentoMedicoAction">
-			<forward name="success" path="/billing/billingConsFatMedBrazil.jsp" />
-		</action>
-		<action input="/billing/billingConsFatMedBrazil.jsp" name="consultaFaturamentoMedicoForm" parameter="search" path="/oscar/billing/consultaFaturamentoMedico/search" scope="session" type="oscar.billing.controler.ConsultaFaturamentoMedicoAction">
-			<forward name="success" path="/billing/billingConsFatMedBrazil.jsp" />
-		</action>
-		<action input="/billing/billingConsFatPatBrazil.jsp" name="consultaFaturamentoPacienteForm" parameter="init" path="/oscar/billing/consultaFaturamentoPaciente/init" scope="request" type="oscar.billing.controler.ConsultaFaturamentoPacienteAction">
-			<forward name="success" path="/billing/billingConsFatPatBrazil.jsp" />
-		</action>
-		<action input="/popup/procedimento.jsp" name="procedimentoForm" parameter="INIT" path="/popup/procedimento/init" scope="session" type="oscar.billing.popup.ProcedimentoAction">
-			<forward name="success" path="/popup/procedimento.jsp" />
-		</action>
-		<action input="/popup/procedimento.jsp" name="procedimentoForm" parameter="FIND_PROC" path="/popup/procedimento/findProc" scope="session" type="oscar.billing.popup.ProcedimentoAction">
-			<forward name="success" path="/popup/procedimento.jsp" />
-		</action>
-		<action input="/popup/atividade.jsp" name="atividadeSaudeForm" parameter="INIT" path="/popup/atividade/init" scope="session" type="oscar.billing.popup.AtividadeSaudeAction">
-			<forward name="success" path="/popup/atividade.jsp" />
-		</action>
-		<action input="/popup/atividade.jsp" name="atividadeSaudeForm" parameter="FIND_ATIV" path="/popup/atividade/findAtiv" scope="session" type="oscar.billing.popup.AtividadeSaudeAction">
-			<forward name="success" path="/popup/atividade.jsp" />
-		</action>
+		
+	
+		
 		<action input="/popup/cid.jsp" name="cidForm" parameter="INIT" path="/popup/cid/init" scope="session" type="oscar.billing.popup.CidAction">
 			<forward name="success" path="/popup/cid.jsp" />
 		</action>

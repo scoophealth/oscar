@@ -116,8 +116,9 @@ CREATE TABLE billactivity (
 --
 
 CREATE TABLE billcenter (
-  billcenter_code char(2) NOT NULL default '',
-  billcenter_desc varchar(20) default NULL
+  billcenter_code char(2) NOT NULL,
+  billcenter_desc varchar(20) default NULL,
+  primary key(billcenter_code)
 ) ;
 
 --
