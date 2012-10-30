@@ -70,7 +70,8 @@ public class PatientExport {
 		medication.setEndDate(drug.getEndDate());
 		medication.setDin(drug.getRegionalIdentifier());
 		medication.setAtc(drug.getAtcCode());
-		medication.setDrugName(drug.getBrandName());
+		medication.setGenericName(drug.getGenericName());
+		medication.setBrandName(drug.getBrandName());
 		
 		return medication;
 	}
@@ -183,7 +184,8 @@ public class PatientExport {
 		private Date endDate;
 		private String din;
 		private String atc;
-		private String drugName;
+		private String genericName;
+		private String brandName;
 		
 		public Medication() {
 		}
@@ -229,12 +231,20 @@ public class PatientExport {
 			this.atc = rhs;
 		}
 		
-		public String getDrugName() {
-			return this.drugName;
+		public String getGenericName() {
+			return this.genericName;
 		}
 		
-		public void setDrugName(String rhs) {
-			this.drugName = rhs;
+		public void setGenericName(String rhs) {
+			this.genericName = rhs;
+		}
+		
+		public String getBrandName() {
+			return this.brandName;
+		}
+		
+		public void setBrandName(String rhs) {
+			this.brandName = rhs;
 		}
 		
 		// Output utility functions

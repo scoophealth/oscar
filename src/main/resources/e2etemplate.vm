@@ -96,11 +96,11 @@ Medications & Prescriptions - Medication List
 								<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
 								<manufacturedProduct classCode="MANU">
 									<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
-										<code code="$med.din" codeSystem="2.16.840.1.113883.5.1105" displayName="HC-DIN"/>
+										<code code="$med.din" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN" displayName="$med.genericName"/>
 #*    *##if ( $med.isValidAtc() )
-										<code code="$med.atc" codeSystem="2.16.840.1.113883.6.73" displayName="ATC"/>
+										<code code="$med.atc" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="$med.genericName"/>
 #*    *##end
-										<name>$med.drugName</name>
+										<name>$med.genericName</name>
 									</manufacturedMaterial>
 								</manufacturedProduct>
 							</consumable>    
