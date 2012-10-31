@@ -1477,7 +1477,7 @@ public class RxPrescriptionData {
 		}
 
 		public boolean Save(String scriptId) {
-			boolean b = false;
+
 			this.calcEndDate();
 
 			// clean up fields
@@ -1488,13 +1488,7 @@ public class RxPrescriptionData {
 			//  String parsedSpecial = RxUtil.replace(this.getSpecial(), "'", "");//a bug?
 			String escapedSpecial = StringEscapeUtils.escapeSql(this.getSpecial());
 
-			if (escapedSpecial == null || escapedSpecial.length() < 6) logger.error("drug special after escaping appears to be null or empty : " + escapedSpecial, new IllegalStateException("Drug special is invalid after escaping."));
-
-			// if drugid = 0 this is an add, else update
-			boolean isAddingNewDrug = this.getDrugId() == 0;
-
-			// this might be a bug in the code as no update functionality is present here....
-			if (!isAddingNewDrug) return b;
+			if (escapedSpecial == null || escapedSpecial.length() < 6) logger.error("drug special after escaping appears to be null or empty : " + escapedSpecial, new IllegalStateException("Drug special is invalid after escaping."));			
 
 			// check to see if there is an identitical prescription in
 			// the database. If there is we'll return that drugid instead

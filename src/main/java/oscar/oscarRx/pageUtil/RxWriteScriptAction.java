@@ -1070,7 +1070,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 			RxPrescriptionData rxData = new RxPrescriptionData();
 			RxPrescriptionData.Prescription oldRx = rxData.getPrescription(drugId);
 			oldRx.setLongTerm(true);
-			boolean b = oldRx.Save();
+			boolean b = oldRx.Save(oldRx.getScript_no());
 			HashMap hm = new HashMap();
 			if (b) hm.put("success", true);
 			else hm.put("success", false);
