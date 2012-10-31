@@ -26,12 +26,13 @@ package org.oscarehr.common.service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import org.oscarehr.common.model.BillingONItem;
-import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.oscarehr.common.model.BillingONCHeader1;
+
 import org.oscarehr.common.dao.BillingONCHeader1Dao;
+import org.oscarehr.common.model.BillingONCHeader1;
+import org.oscarehr.common.model.BillingONItem;
 import org.oscarehr.util.MiscUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  *
@@ -59,14 +60,12 @@ public class BillingONService {
     
     public BigDecimal calculateBalanceOwing(Integer invoiceNo, BigDecimal paidTotal, BigDecimal refundTotal) {
         BillingONCHeader1 billingONCHeader1 = billingONCHeader1Dao.find(invoiceNo);
-        BigDecimal billTotal = new BigDecimal(billingONCHeader1.getTotal());
-        billTotal = billTotal.movePointLeft(2);
+        BigDecimal billTotal = new BigDecimal(billingONCHeader1.getTotal());        
 
         return billTotal.subtract(paidTotal).add(refundTotal);
     }
     
-     public boolean updateTotal(Integer invoiceNo) {           
-            BillingONCHeader1 billingONCHeader1 = billingONCHeader1Dao.find(invoiceNo);
+     public boolean updateTotal(BillingONCHeader1 billingONCHeader1) {                       
             boolean isUpdated = true;
             
             // Update bill total to equal the sum of the billing item fees.             
@@ -92,10 +91,9 @@ public class BillingONService {
 
             BigDecimal currentTotal = new BigDecimal("0.00");
             try {    
-                Long total = billingONCHeader1.getTotal();                
+                String total = billingONCHeader1.getTotal();                
                 if (total != null) {
-                    currentTotal = new BigDecimal(total);
-                    currentTotal = currentTotal.movePointLeft(2);
+                    currentTotal = new BigDecimal(total);                    
                 }                
             }
             catch (NumberFormatException e) {
@@ -103,9 +101,9 @@ public class BillingONService {
                 MiscUtils.getLogger().error("Invalid bill total:", e);
             } 
 
-            if (isUpdated && (currentTotal.compareTo(feeTotal) != 0)) {
-                    feeTotal = feeTotal.movePointRight(2);
-                    billingONCHeader1.setTotal(feeTotal.longValue());
+            if (isUpdated && (currentTotal.compareTo(feeTotal) != 0)) {   
+            		MiscUtils.getLogger().info("Updating invoice " + billingONCHeader1.getId() + " total to " + feeTotal.toPlainString());
+                    billingONCHeader1.setTotal(feeTotal.toPlainString());
             } 
             
             return isUpdated;

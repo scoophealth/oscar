@@ -385,7 +385,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 
 
 	  BillingONCHeader1 getBilling(Integer headerId,String hin,String ver,String dob, String payProgram,String payee, String faciltyNum,Date admissionDate,String location,Integer demographicNo,
-			  String providerNo,Integer appointmentNo,String demographicName,String sex,String province,Date billingDate,Date billingTime,Long total,Long paid,String statValue,
+			  String providerNo,Integer appointmentNo,String demographicName,String sex,String province,Date billingDate,Date billingTime,String total,String paid,String statValue,
 			  String comment,String providerOhipNo,String providerRmaNo,String apptProviderNo,String asstProviderNo,String creator){
 		  BillingONCHeader1 billingONHeader1 = new BillingONCHeader1();
 		  billingONHeader1.setHeaderId(headerId);

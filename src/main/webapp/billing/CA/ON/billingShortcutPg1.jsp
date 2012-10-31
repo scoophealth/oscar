@@ -209,7 +209,7 @@
 
 			propHist = new Properties();
 
-			propHist.setProperty("visitdate", obj.getAdmission_date()); // admission date
+			propHist.setProperty("visitdate", obj.getAdmission_date() == null ? "" : obj.getAdmission_date()); // admission date
 			propHist.setProperty("visitType", obj.getVisittype());
 			propHist.setProperty("clinic_ref_code", obj.getFacilty_num());
 			vecHist.add(propHist);

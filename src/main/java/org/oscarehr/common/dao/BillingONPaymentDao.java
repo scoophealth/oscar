@@ -101,13 +101,13 @@ public class BillingONPaymentDao extends AbstractDao<BillingONPayment>{
          
          //update billing claim header's total paid amount to reflect new payment
          BigDecimal amtPaid = new BigDecimal(bCh1.getPaid());
-         amtPaid = amtPaid.movePointLeft(2);
+         
         if (payType.equals("P"))
             amtPaid = amtPaid.add(paidAmt);
         else
            amtPaid = amtPaid.subtract(paidAmt);
 
-        bCh1.setPaid(amtPaid.movePointRight(2).longValueExact());
+        bCh1.setPaid(amtPaid.toPlainString());
         
         BillingONCHeader1Dao bCh1Dao = (BillingONCHeader1Dao) SpringUtils.getBean("billingONCHeader1Dao");
         bCh1Dao.merge(bCh1);                  

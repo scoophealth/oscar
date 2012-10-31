@@ -40,6 +40,7 @@ import org.oscarehr.common.model.BillingONCHeader1;
 import org.oscarehr.common.model.BillingONExt;
 import org.oscarehr.common.model.BillingONItem;
 import org.oscarehr.common.model.BillingONRepo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.util.UtilDateUtilities;
@@ -122,10 +123,10 @@ public class JdbcBillingClaimImpl {
 		if(val.billing_time.length()>0)
 			try {
 				b.setBillingTime(timeFormatter.parse(val.billing_time));
-			}catch(ParseException e){/*empty*/}
+			}catch(ParseException e){MiscUtils.getLogger().error("Invalid time", e);}
 
-		b.setTotal(Long.parseLong(val.total));
-		b.setPaid(Long.parseLong(val.paid));
+		b.setTotal(val.total);
+		b.setPaid(val.paid);
 		b.setStatus(val.status);
 		b.setComment(val.comment);
 		b.setVisitType(val.visittype);
@@ -336,6 +337,7 @@ public class JdbcBillingClaimImpl {
 				retval.add(obj);	
 			}
 		} catch(Exception e) {
+			MiscUtils.getLogger().error("Error",e);
 			retval=null;
 		}
 		return retval;
