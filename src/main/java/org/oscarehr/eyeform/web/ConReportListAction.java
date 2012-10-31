@@ -40,10 +40,10 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.validator.DynaValidatorForm;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Provider;
-import org.oscarehr.eyeform.dao.ConsultationReportDao;
+import org.oscarehr.eyeform.dao.EyeformConsultationReportDao;
 import org.oscarehr.eyeform.model.EyeformConsultationReport;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -54,7 +54,8 @@ public class ConReportListAction extends DispatchAction {
 	
 	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 	DemographicDao demographicDao= (DemographicDao)SpringUtils.getBean("demographicDao");
-	ConsultationReportDao crDao = (ConsultationReportDao)SpringUtils.getBean("consultationReportDao");
+	EyeformConsultationReportDao crDao = SpringUtils.getBean(EyeformConsultationReportDao.class);
+
 	
 	@Override
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {

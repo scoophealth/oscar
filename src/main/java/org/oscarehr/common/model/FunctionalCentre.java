@@ -54,4 +54,14 @@ public class FunctionalCentre extends AbstractModel<String> {
 	public String getDescription() {
 		return description;
 	}
+
+	public void setAccountId(String accountId) {
+		this.accountId = accountId;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	
 }

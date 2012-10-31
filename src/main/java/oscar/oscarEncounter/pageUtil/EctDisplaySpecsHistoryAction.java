@@ -33,8 +33,7 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.util.MessageResources;
-import org.oscarehr.PMmodule.dao.ProviderDao;
-import org.oscarehr.eyeform.dao.SpecsHistoryDao;
+import org.oscarehr.eyeform.dao.EyeformSpecsHistoryDao;
 import org.oscarehr.eyeform.model.EyeformSpecsHistory;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -47,6 +46,8 @@ import oscar.util.StringUtils;
 public class EctDisplaySpecsHistoryAction extends EctDisplayAction {
     private static final String cmd = "specshistory";
 
+    private EyeformSpecsHistoryDao specsHistoryDao = (EyeformSpecsHistoryDao)SpringUtils.getBean(EyeformSpecsHistoryDao.class);
+	
  public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
 
 	 boolean a = true;
@@ -80,11 +81,7 @@ public class EctDisplaySpecsHistoryAction extends EctDisplayAction {
     Dao.setRightURL(url);
     Dao.setRightHeadingID(cmd); //no menu so set div id to unique id for this action
 
-
-    SpecsHistoryDao shDao = (SpecsHistoryDao)SpringUtils.getBean("SpecsHistoryDAO");
-    ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
-
-    List<EyeformSpecsHistory> shs = shDao.getByDemographicNo(Integer.parseInt(bean.demographicNo));
+    List<EyeformSpecsHistory> shs = specsHistoryDao.getByDemographicNo(Integer.parseInt(bean.demographicNo));
 
     for(EyeformSpecsHistory sh:shs) {
     	NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();

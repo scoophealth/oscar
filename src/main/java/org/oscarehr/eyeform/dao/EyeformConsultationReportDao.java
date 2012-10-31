@@ -39,11 +39,11 @@ import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ConsultationReportDao extends AbstractDao<EyeformConsultationReport> {
+public class EyeformConsultationReportDao extends AbstractDao<EyeformConsultationReport> {
 	
 	Logger logger = MiscUtils.getLogger();
 	
-	public ConsultationReportDao() {
+	public EyeformConsultationReportDao() {
 		super(EyeformConsultationReport.class);
 	}
 	
