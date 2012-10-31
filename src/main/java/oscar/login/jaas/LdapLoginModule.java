@@ -37,11 +37,11 @@ import javax.security.auth.login.LoginException;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.dao.SecUserRoleDao;
 import org.oscarehr.PMmodule.model.SecUserRole;
+import org.oscarehr.common.dao.SecurityDao;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.Security;
 import org.oscarehr.util.SpringUtils;
 
-import com.quatro.dao.security.SecurityDao;
-import com.quatro.model.security.Security;
 
 /**
  * Login module for authenticating user against LDAP.

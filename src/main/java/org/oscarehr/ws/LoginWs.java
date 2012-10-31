@@ -30,14 +30,14 @@ import java.util.List;
 import javax.jws.WebService;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.SecurityDao;
+import org.oscarehr.common.model.Security;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.NotAuthorisedException;
 import org.oscarehr.ws.transfer_objects.LoginResultTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.quatro.dao.security.SecurityDao;
-import com.quatro.model.security.Security;
 
 @WebService
 @Component

@@ -28,14 +28,25 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ page import="java.sql.*, java.util.*, oscar.*" buffer="none"
-	errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ page import="java.sql.*, java.util.*, oscar.*" buffer="none" errorPage="errorpage.jsp"%>
+	
+<%@ page import="java.util.*" %>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.Security" %>
+<%@ page import="org.oscarehr.common.dao.SecurityDao" %>
+
+
+<%
+	SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);
+%>
+	
+	
+	
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
 <html:html locale="true">
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
 <title><bean:message key="admin.securitysearchresults.title" /></title>
 <c:set var="ctx" value="${pageContext.request.contextPath}"
 	scope="request" />
@@ -63,14 +74,16 @@
 </head>
 
 <%
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+	if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     
     boolean isSiteAccessPrivacy=false;
 %>
 
 <security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
-	<%isSiteAccessPrivacy=true; %>
+	<%
+		isSiteAccessPrivacy=true;
+	%>
 </security:oscarSec>
 
 <body background="../images/gray_bg.jpg" bgproperties="fixed"
@@ -102,15 +115,18 @@
 		<td valign="middle" rowspan="2" ALIGN="left"><input type="text"
 			NAME="keyword" SIZE="17" MAXLENGTH="100"> <INPUT
 			TYPE="hidden" NAME="orderby" VALUE="user_name"> 
-			<%if (isSiteAccessPrivacy)  {%>	 
+			<%
+ 				if (isSiteAccessPrivacy)  {
+ 			%>	 
 				<INPUT	TYPE="hidden" NAME="dboperation" VALUE="site_security_search_titlename">
-			<%}
-			  else	  {
-			 %>
+			<%
+				}
+					  else	  {
+			%>
 				<INPUT	TYPE="hidden" NAME="dboperation" VALUE="security_search_titlename">
 			 <%
-			  }
-			%>				
+			 	}
+			 %>				
 		<INPUT TYPE="hidden" NAME="limit1" VALUE="0"> <INPUT
 			TYPE="hidden" NAME="limit2" VALUE="10"> <INPUT TYPE="hidden"
 			NAME="displaymode" VALUE="Security_Search"> <INPUT
@@ -130,10 +146,10 @@
 	<tr>
 		<td align="left"><i><bean:message key="admin.search.keywords" /></i>:
 		<%=request.getParameter("keyword")%> &nbsp; <%
-if(apptMainBean.isPINEncrypted()==false){
+ 	if(apptMainBean.isPINEncrypted()==false){
  %> <input type="button" name="encryptPIN" value="Encrypt PIN"
 			onclick="encryptPIN()"> <%
- }
+ 	}
  %>
 		</td>
 	</tr>
@@ -152,60 +168,39 @@ if(apptMainBean.isPINEncrypted()==false){
 			key="admin.securityrecord.formPIN" /></b></TH>
 	</tr>
 
-	<%
-  //if action is good, then give me the result
-  ResultSet rs = null;
-  String dboperation = request.getParameter("dboperation");
-  String keyword=request.getParameter("keyword").trim();
-  //keyword.replace('*', '%').trim();
-  if(request.getParameter("search_mode").equals("search_name")) {
-      keyword=request.getParameter("keyword")+"%";
-      if(keyword.indexOf(",")==-1)  rs = apptMainBean.queryResults(keyword, dboperation) ; //lastname
-      else if(keyword.indexOf(",")==(keyword.length()-1))  rs = apptMainBean.queryResults(keyword.substring(0,(keyword.length()-1)), dboperation);//lastname
-      else { //lastname,firstname
-    		String[] param =new String[2];
-    		int index = keyword.indexOf(",");
-	  		param[0]=keyword.substring(0,index).trim()+"%";//(",");
-	  		param[1]=keyword.substring(index+1).trim()+"%";
-    		rs = apptMainBean.queryResults(param, dboperation);
-   		}
-  } else if(request.getParameter("search_mode").equals("search_dob")) {
-    		String[] param =new String[3];
-	  		param[0]=""+MyDateFormat.getYearFromStandardDate(keyword)+"%";//(",");
-	  		param[1]=""+MyDateFormat.getMonthFromStandardDate(keyword)+"%";
-	  		param[2]=""+MyDateFormat.getDayFromStandardDate(keyword)+"%";  
-    		rs = apptMainBean.queryResults(param, dboperation);
-  } else {
-    keyword=request.getParameter("keyword")+"%";
-    rs = apptMainBean.queryResults(keyword, dboperation);
-  }
-  
-  boolean bodd=false;
-  int nItems=0;
-  if(rs==null) {
-    out.println("failed!!!");
-  } else {
-    while (rs.next()) {
-      bodd=bodd?false:true;
-      nItems++; //to calculate if it is the end of records
-    // the cursor of ResultSet only goes through once from top
+<%
+	List<org.oscarehr.common.model.Security> securityList = securityDao.findAllOrderBy("user_name");
+	
+	//if action is good, then give me the result
+	String dboperation = request.getParameter("dboperation");
+	String searchMode = request.getParameter("search_mode");
+	String keyword=request.getParameter("keyword").trim()+"%";
+	
+	// if search mode is provider_no 
+	if(searchMode.equals("search_providerno"))
+		securityList = securityDao.findByLikeProviderNo(keyword);
+	
+	// if search mode is user_name
+	if(searchMode.equals("search_username"))
+		securityList = securityDao.findByLikeUserName(keyword);
+	
+	boolean toggleLine = false;
+
+	for(Security securityRecord : securityList) {
+		
+		toggleLine = !toggleLine;
 %>
 
-	<tr bgcolor="<%=bodd?"ivory":"white"%>">
+	<tr bgcolor="<%=toggleLine?"ivory":"white"%>">
 
 		<td><a
-			href='admincontrol.jsp?keyword=<%=apptMainBean.getString(rs,"security_no")%>&displaymode=Security_Update&dboperation=Security_search_detail'><%= apptMainBean.getString(rs,"user_name") %></a></td>
+			href='admincontrol.jsp?keyword=<%=securityRecord.getId()%>&displaymode=Security_Update&dboperation=Security_search_detail'><%= securityRecord.getUserName() %></a></td>
 		<td nowrap>*********</td>
-		<!-- 
-         apptMainBean.getString(rs,"password")
-         apptMainBean.getString(rs,"pin")==null?"&nbsp;":apptMainBean.getString(rs,"pin")
-        -->
-		<td align="center"><%= apptMainBean.getString(rs,"provider_no") %></td>
+		<td align="center"><%= securityRecord.getProviderNo() %></td>
 		<td align="center">****</td>
 	</tr>
 	<%
     }
-  }
 %>
 
 </table>
@@ -222,7 +217,7 @@ if(apptMainBean.isPINEncrypted()==false){
 	href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>"><bean:message
 	key="admin.securitysearchresults.btnLastPage" /></a> | <%
   }
-  if(nItems==Integer.parseInt(strLimit2)) {
+  if(true) { //nItems==Integer.parseInt(strLimit2)) {
 %> <a
 	href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"><bean:message
 	key="admin.securitysearchresults.btnNextPage" /></a> <%

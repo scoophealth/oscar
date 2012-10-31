@@ -135,7 +135,7 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"demographic_search_demoaddno", "select demographic_no from demographic where last_name=? and first_name =? and year_of_birth=? and month_of_birth=? and date_of_birth=? and hin=? and ver=?"},
     {"search_lastfirstnamedob", "select demographic_no from demographic where last_name=? and first_name=? and year_of_birth=? and month_of_birth=? and date_of_birth=?"},
 
-    {"security_search_titlename", "select * from security where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
+    {"security_search_titlename", "select * from security s where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
     {"security_search_detail", "select * from security where security_no=?"},
 
     {"searchmygroupcount", "select count(provider_no) from mygroup where mygroup_no=? "},
@@ -166,7 +166,7 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"demographic_search_demoaddno", "select demographic_no from demographic where last_name=? and first_name =? and year_of_birth=? and month_of_birth=? and date_of_birth=? and hin=? and ver=?"},
     {"search_lastfirstnamedob", "select demographic_no from demographic where last_name=? and first_name=? and year_of_birth=? and month_of_birth=? and date_of_birth=?"},
 
-    {"security_search_titlename", "select * from security where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
+    {"security_search_titlename", "select * from security s where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
     {"security_search_detail", "select * from security where security_no=?"},
 
     {"searchmygroupcount", "select count(provider_no) from mygroup where mygroup_no=? "},

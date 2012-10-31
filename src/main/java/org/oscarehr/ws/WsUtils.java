@@ -28,10 +28,10 @@ package org.oscarehr.ws;
 import java.util.Date;
 
 import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.common.model.Security;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
-import com.quatro.model.security.Security;
 
 public final class WsUtils
 {

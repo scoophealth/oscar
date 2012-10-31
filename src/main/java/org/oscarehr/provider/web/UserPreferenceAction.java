@@ -51,9 +51,11 @@ import org.oscarehr.common.dao.EFormDao;
 import org.oscarehr.common.dao.EFormGroupDao;
 import org.oscarehr.common.dao.EncounterFormDao;
 import org.oscarehr.common.dao.MyGroupDao;
+import org.oscarehr.common.dao.SecurityDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.EForm;
 import org.oscarehr.common.model.EncounterForm;
+import org.oscarehr.common.model.Security;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -62,8 +64,6 @@ import org.oscarehr.util.SpringUtils;
 import oscar.OscarProperties;
 import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 
-import com.quatro.dao.security.SecurityDao;
-import com.quatro.model.security.Security;
 
 /**
  * 

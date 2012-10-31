@@ -31,9 +31,9 @@ import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.Security;
 import org.oscarehr.util.LoggedInInfo;
 
-import com.quatro.model.security.Security;
 
 public abstract class AbstractWs
 {

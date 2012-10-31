@@ -29,8 +29,8 @@ import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.Security;
 
-import com.quatro.model.security.Security;
 
 /**
  * The loggedInProvider fields should only be used if this is a user based thread, i.e. a thread handling a user request.

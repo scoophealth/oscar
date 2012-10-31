@@ -30,11 +30,11 @@ import java.util.GregorianCalendar;
 import java.util.Properties;
 import java.util.Vector;
 
+import org.oscarehr.common.model.Security;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 
-import com.quatro.model.security.Security;
 
 public final class LoginCheckLogin {
 	boolean bWAN = true;

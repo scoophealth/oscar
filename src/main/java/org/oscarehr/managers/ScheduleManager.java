@@ -44,6 +44,7 @@ import org.oscarehr.common.model.ScheduleHoliday;
 import org.oscarehr.common.model.ScheduleTemplate;
 import org.oscarehr.common.model.ScheduleTemplateCode;
 import org.oscarehr.common.model.ScheduleTemplatePrimaryKey;
+import org.oscarehr.common.model.Security;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +54,6 @@ import oscar.appt.status.model.AppointmentStatus;
 import oscar.log.LogAction;
 import oscar.util.DateUtils;
 
-import com.quatro.model.security.Security;
 
 @Service
 public class ScheduleManager {

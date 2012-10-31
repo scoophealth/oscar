@@ -32,7 +32,9 @@ import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.dao.SecUserRoleDao;
 import org.oscarehr.PMmodule.model.SecUserRole;
+import org.oscarehr.common.dao.SecurityDao;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.Security;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -41,9 +43,7 @@ import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.util.UtilDateUtilities;
 
-import com.quatro.dao.security.SecurityDao;
 import com.quatro.model.security.LdapSecurity;
-import com.quatro.model.security.Security;
 
 public final class LoginCheckLoginBean {
 	private static final Logger logger = MiscUtils.getLogger();

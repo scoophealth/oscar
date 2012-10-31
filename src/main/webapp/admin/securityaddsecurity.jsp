@@ -27,11 +27,13 @@
 <%@page import="com.quatro.web.admin.SecurityAddSecurityHelper"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+	if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.torontoRfq" rights="r" reverse="<%=true%>">
-	<%response.sendRedirect("../logout.jsp");%>
+	<%
+		response.sendRedirect("../logout.jsp");
+	%>
 </security:oscarSec>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -40,10 +42,10 @@
 <%@ page import="oscar.log.LogAction,oscar.log.LogConst"%>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
-<%@ page import="com.quatro.model.security.Security" %>
-<%@ page import="com.quatro.dao.security.SecurityDao" %>
+<%@ page import="org.oscarehr.common.model.Security" %>
+<%@ page import="org.oscarehr.common.dao.SecurityDao" %>
 <%
-	SecurityDao securityDao = (SecurityDao)SpringUtils.getBean("securityDao");
+	SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);
 %>
 <%@page import="org.oscarehr.util.MiscUtils"%><html:html locale="true">
 <head>

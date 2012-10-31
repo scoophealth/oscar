@@ -25,7 +25,7 @@
 --%>
 
 <%
-  if(session.getValue("user") == null)
+	if(session.getValue("user") == null)
     response.sendRedirect("../logout.jsp");
   String curUser_no = (String) session.getAttribute("user");
   MessageDigest md = MessageDigest.getInstance("SHA");
@@ -35,14 +35,14 @@
 	import="java.lang.*, java.util.*, java.text.*,java.security.*, oscar.*"
 	errorPage="errorpage.jsp"%>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
-<%@ page import="com.quatro.model.security.Security" %>
-<%@ page import="com.quatro.dao.security.SecurityDao" %>
+<%@ page import="org.oscarehr.common.model.Security" %>
+<%@ page import="org.oscarehr.common.dao.SecurityDao" %>
 
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <%
-	SecurityDao dao = SpringUtils.getBean(SecurityDao.class);
-	List<Security> ss = dao.findByProviderNo(curUser_no);
+	SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);
+	List<Security> ss = securityDao.findByProviderNo(curUser_no);
 	for(Security s:ss) {
 		StringBuffer sbTemp = new StringBuffer();
 	     byte[] btOldPasswd= md.digest(request.getParameter("oldpassword").getBytes());
@@ -64,7 +64,7 @@
 	       for(int i=0; i<btNewPasswd.length; i++) sbTemp = sbTemp.append(btNewPasswd[i]);
 
 	       s.setPassword(sbTemp.toString());
-	       dao.saveOrUpdate(s);
+	       securityDao.saveEntity(s);
 	      
 	       out.println("<script language='javascript'>self.close();</script>");
 	     } else {

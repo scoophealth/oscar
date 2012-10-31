@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,58 +15,68 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * Contributors:
- *     <Quatro Group Software Systems inc.>  <OSCAR Team>
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 
-package com.quatro.model.security;
+package org.oscarehr.common.model;
 
-import java.util.Calendar;
 import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.util.EncryptionUtils;
 import org.oscarehr.util.MiscUtils;
 
-public class Security implements java.io.Serializable {
+
+@Entity
+@Table(name = "security")
+public class Security extends AbstractModel<Integer> {
 	private static Logger logger = MiscUtils.getLogger();
 
-	public static final int LOGIN_SUCCESS = 0;
-	public static final int LOGIN_FAILED = 1;
-	public static final int USER_NOT_EXISTS = 2;
-	public static final int PASSWORD_EXPIRED = 3;
-	public static final int ACCOUNT_BLOCKED = 4;
-
-	private Integer securityNo;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "security_no")
+	private Integer id;
+	
+	@Column(name = "user_name")
 	private String userName;
+	
+	@Column(name = "password")
 	private String password;
+	
+	@Column(name = "provider_no")
 	private String providerNo;
+
+	@Column(name = "pin")
 	private String pin;
-	private Integer BRemotelockset;
-	private Integer BLocallockset;
-	private Date dateExpiredate;
+	
+	@Column(name = "b_ExpireSet")
 	private Integer BExpireset;
-	private String lastUpdateUser;
-	private Calendar lastUpdateDate;
-	private String loginIP = "";
-	private Date loginDate;
-	private int loginStatus = 0;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "date_ExpireDate")
+	private Date dateExpiredate;
 
-	public Calendar getLastUpdateDate() {
-		return lastUpdateDate;
-	}
+	@Column(name = "b_LocalLockSet")
+	private Integer BLocallockset;
 
-	public void setLastUpdateDate(Calendar lastUpdateDate) {
-		this.lastUpdateDate = lastUpdateDate;
-	}
+	@Column(name = "b_RemoteLockSet")
+	private Integer BRemotelockset;
 
-	public String getLastUpdateUser() {
-		return lastUpdateUser;
-	}
 
-	public void setLastUpdateUser(String lastUpdateUser) {
-		this.lastUpdateUser = lastUpdateUser;
-	}
+
 
 	/** default constructor */
 	public Security() {
@@ -82,11 +92,11 @@ public class Security implements java.io.Serializable {
 		setBLocallockset(security.getBLocallockset());
 		setDateExpiredate(security.getDateExpiredate());
 		setBExpireset(security.getBExpireset());
-		setLastUpdateUser(security.getLastUpdateUser());
-		setLastUpdateDate(security.getLastUpdateDate());
-		setLoginIP(security.getLoginIP());
-		setLoginDate(security.getLoginDate());
-		setLoginStatus(security.getLoginStatus());		
+//		setLastUpdateUser(security.getLastUpdateUser());
+//		setLastUpdateDate(security.getLastUpdateDate());
+//		setLoginIP(security.getLoginIP());
+//		setLoginDate(security.getLoginDate());
+//		setLoginStatus(security.getLoginStatus());		
 	}
 
 	/** full constructor */
@@ -101,18 +111,22 @@ public class Security implements java.io.Serializable {
 		this.BExpireset = BExpireset;
 	}
 
-	// Property accessors
 
-	public Integer getSecurityNo() {
-		return this.securityNo;
+	@Override
+    public Integer getId() {
+		return id;
 	}
-
+	
+	public Integer getSecurityNo() {
+		return id;
+	}
+	
 	public void setSecurityNo(Integer securityNo) {
-		this.securityNo = securityNo;
+		this.id = securityNo;
 	}
 
 	public String getUserName() {
-		return this.userName;
+		return userName;
 	}
 
 	public void setUserName(String userName) {
@@ -120,7 +134,7 @@ public class Security implements java.io.Serializable {
 	}
 
 	public String getPassword() {
-		return this.password;
+		return password;
 	}
 
 	public void setPassword(String password) {
@@ -128,7 +142,7 @@ public class Security implements java.io.Serializable {
 	}
 
 	public String getProviderNo() {
-		return this.providerNo;
+		return providerNo;
 	}
 
 	public void setProviderNo(String providerNo) {
@@ -136,68 +150,50 @@ public class Security implements java.io.Serializable {
 	}
 
 	public String getPin() {
-		return this.pin;
+		return pin;
 	}
 
 	public void setPin(String pin) {
 		this.pin = pin;
 	}
 
-	public Integer getBRemotelockset() {
-		return this.BRemotelockset;
+	public Integer getBExpireset() {
+		return BExpireset;
 	}
 
-	public void setBRemotelockset(Integer BRemotelockset) {
-		this.BRemotelockset = BRemotelockset;
-	}
-
-	public Integer getBLocallockset() {
-		return this.BLocallockset;
-	}
-
-	public void setBLocallockset(Integer BLocallockset) {
-		this.BLocallockset = BLocallockset;
+	public void setBExpireset(Integer bExpireset) {
+		BExpireset = bExpireset;
 	}
 
 	public Date getDateExpiredate() {
-		return this.dateExpiredate;
+		return dateExpiredate;
 	}
 
 	public void setDateExpiredate(Date dateExpiredate) {
 		this.dateExpiredate = dateExpiredate;
 	}
 
-	public Integer getBExpireset() {
-		return this.BExpireset;
+	public Integer getBLocallockset() {
+		return BLocallockset;
 	}
 
-	public void setBExpireset(Integer BExpireset) {
-		this.BExpireset = BExpireset;
+	public void setBLocallockset(Integer bLocallockset) {
+		BLocallockset = bLocallockset;
 	}
 
-	public String getLoginIP() {
-		return loginIP;
+	public Integer getBRemotelockset() {
+		return BRemotelockset;
 	}
 
-	public void setLoginIP(String loginIP) {
-		this.loginIP = loginIP;
+	public void setBRemotelockset(Integer bRemotelockset) {
+		BRemotelockset = bRemotelockset;
 	}
 
-	public Date getLoginDate() {
-		return loginDate;
+	public void setId(Integer id) {
+		this.id = id;
 	}
-
-	public void setLoginDate(Date loginDate) {
-		this.loginDate = loginDate;
-	}
-
-	public int getLoginStatus() {
-		return loginStatus;
-	}
-
-	public void setLoginStatus(int loginStatus) {
-		this.loginStatus = loginStatus;
-	}
+	
+	
 
 	/**
 	 * @return true if inputed password equals password in the DB, false otherwise.
@@ -227,4 +223,7 @@ public class Security implements java.io.Serializable {
 	    	logger.error("Error", e);
 	    }
     }
+	
+	
+	
 }

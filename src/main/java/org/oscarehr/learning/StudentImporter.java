@@ -38,16 +38,16 @@ import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.SecUserRole;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.common.dao.SecRoleDao;
+import org.oscarehr.common.dao.SecurityDao;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.SecRole;
+import org.oscarehr.common.model.Security;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBPreparedHandler;
 
-import com.quatro.dao.security.SecurityDao;
-import com.quatro.model.security.Security;
 
 public class StudentImporter {
 
@@ -125,7 +125,7 @@ public class StudentImporter {
 				secRecord.setProviderNo(providerNo);
 				secRecord.setUserName(data.getUsername());
 				
-				securityDao.save(secRecord);
+				securityDao.persist(secRecord);
 				
 				//assign student role			
 				SecUserRole userRole = new SecUserRole();
