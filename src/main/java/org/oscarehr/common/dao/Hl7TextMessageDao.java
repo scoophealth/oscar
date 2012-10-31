@@ -25,6 +25,8 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.Hl7TextMessage;
@@ -44,5 +46,15 @@ public class Hl7TextMessageDao extends AbstractDao<Hl7TextMessage> {
 		query.setParameter(3, id);
 		
 		query.executeUpdate();
+	}
+	
+	public List<Hl7TextMessage> findByFileUploadCheckId(int id) {
+		Query query = entityManager.createQuery("select x from Hl7TextMessage x where x.fileUploadCheckId = ?");
+		query.setParameter(1,id);
+		
+		@SuppressWarnings("unchecked")
+		List<Hl7TextMessage> results = query.getResultList();
+		
+		return results;
 	}
 }

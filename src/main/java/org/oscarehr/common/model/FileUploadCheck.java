@@ -42,7 +42,6 @@ public class FileUploadCheck extends AbstractModel<Integer>{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="encounter_no")
 	private Integer id;
 
 	@Column(name="provider_no")

@@ -80,5 +80,16 @@ public class PatientLabRoutingDao extends AbstractDao<PatientLabRouting> {
 
     	return q.getResultList();
     }
+    
+    @SuppressWarnings("unchecked")
+    public PatientLabRouting findByLabNo(int labNo) {
+
+    	String query = "select x from " + modelClass.getName() + " x where x.labNo=?";
+    	Query q = entityManager.createQuery(query);
+
+    	q.setParameter(1, labNo);
+    	
+    	return this.getSingleResultOrNull(q);
+    }
 
 }
