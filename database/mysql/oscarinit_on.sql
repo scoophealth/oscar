@@ -3068,6 +3068,7 @@ create table billing_on_premium (
     creator varchar(6) NOT NULL
 );
 
+
 CREATE TABLE `formPositionHazard` (
   `ID` int(10) NOT NULL AUTO_INCREMENT,
   `demographic_no` int(11),
@@ -3166,5 +3167,12 @@ CREATE TABLE `formPositionHazard` (
   `OtherCode` varchar(500),
   `ProcedureName` text,
   `SubstanceForm` text,
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`ID`));
+
+create table frm_labreq_preset (
+	preset_id int (10) NOT NULL auto_increment primary key,
+	lab_type varchar(255)  NOT NULL,
+	prop_name varchar(255) NOT NULL,
+	prop_value varchar(255) NOT NULL,
+	status int (1) NOT NULL
 );
