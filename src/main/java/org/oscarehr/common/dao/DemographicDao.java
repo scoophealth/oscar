@@ -146,7 +146,7 @@ public class DemographicDao extends HibernateDaoSupport {
 	 */
 	public List getActiveDemographicByProgram(int programId, Date dt, Date defdt) {
 		// get duplicated clients from this sql
-		String q = "Select d From Demographic d, Admission a " + "Where (d.PatientStatus=? or d.PatientStatus='' or d.PatientStatus=null) and d.DemographicNo=a.ClientId and a.ProgramId=? and a.AdmissionDate<=? and " + "(a.DischargeDate>=? or (a.DischargeDate is null) or a.DischargeDate=?)" + " order by d.LastName,d.FirstName";
+		String q = "Select d From Demographic d, Admission a " + "Where (d.PatientStatus=? or d.PatientStatus='' or d.PatientStatus=null) and d.DemographicNo=a.clientId and a.programId=? and a.admissionDate<=? and " + "(a.dischargeDate>=? or (a.dischargeDate is null) or a.dischargeDate=?)" + " order by d.LastName,d.FirstName";
 
 		String status = "AC"; // only show active clients
 		List rs = getHibernateTemplate().find(q, new Object[] { status, new Integer(programId), dt, dt, defdt });
@@ -211,7 +211,7 @@ public class DemographicDao extends HibernateDaoSupport {
 	}
 
 	public List getProgramIdByDemoNo(String demoNo) {
-		String q = "Select a.ProgramId From Admission a " + "Where a.ClientId=? and a.AdmissionDate<=? and " + "(a.DischargeDate>=? or (a.DischargeDate is null) or a.DischargeDate=?)";
+		String q = "Select a.programId From Admission a " + "Where a.clientId=? and a.admissionDate<=? and " + "(a.dischargeDate>=? or (a.dischargeDate is null) or a.dischargeDate=?)";
 
 		/* default time is Oscar default null time 0001-01-01. */
 		Date defdt = new GregorianCalendar(1, 0, 1).getTime();
@@ -232,13 +232,13 @@ public class DemographicDao extends HibernateDaoSupport {
 	}
 
 	public List getDemoProgram(Integer demoNo) {
-		String q = "Select a.ProgramId From Admission a Where a.ClientId=?";
+		String q = "Select a.programId From Admission a Where a.clientId=?";
 		List rs = getHibernateTemplate().find(q, new Object[] { demoNo });
 		return rs;
 	}
 
 	public List getDemoProgramCurrent(Integer demoNo) {
-		String q = "Select a.ProgramId From Admission a Where a.ClientId=? and a.AdmissionStatus='current'";
+		String q = "Select a.programId From Admission a Where a.clientId=? and a.admissionStatus='current'";
 		List rs = getHibernateTemplate().find(q, new Object[] { demoNo });
 		return rs;
 	}
