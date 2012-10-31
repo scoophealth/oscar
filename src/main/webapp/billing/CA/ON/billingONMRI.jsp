@@ -113,7 +113,7 @@ if (isSiteAccessPrivacy || isTeamAccessPrivacy) {
 
 			//			 get the current year's billing disk filenames
 			BillingReviewPrep prep = new BillingReviewPrep();
-			Vector mriList = (Vector) prep.getMRIList(thisyear + "/01/01 00:00:01", thisyear + "/12/31 23:59:59","'U'");
+			List mriList = prep.getMRIList(thisyear + "-01-01 00:00:01", thisyear + "-12-31 23:59:59","U");
 			
 			String xml_vdate=request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
 			String xml_appointment_date = request.getParameter("xml_appointment_date")==null? UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd") : request.getParameter("xml_appointment_date");
@@ -292,8 +292,8 @@ obj.visibility=v; }
 	</form>
 </table>
 <script type="text/javascript">
-Calendar.setup({ inputField : "xml_vdate", ifFormat : "%Y/%m/%d", showsTime :false, button : "xml_vdate_cal", singleClick : true, step : 1 });
-Calendar.setup({ inputField : "xml_appointment_date", ifFormat : "%Y/%m/%d", showsTime :false, button : "xml_appointment_date_cal", singleClick : true, step : 1 });
+Calendar.setup({ inputField : "xml_vdate", ifFormat : "%Y-%m-%d", showsTime :false, button : "xml_vdate_cal", singleClick : true, step : 1 });
+Calendar.setup({ inputField : "xml_appointment_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "xml_appointment_date_cal", singleClick : true, step : 1 });
 </script>
 <table width="100%" border="0" cellspacing="1" cellpadding="1"
 	class="myIvory">

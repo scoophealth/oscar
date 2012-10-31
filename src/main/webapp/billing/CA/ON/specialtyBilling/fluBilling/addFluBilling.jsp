@@ -434,7 +434,7 @@ SPAN.bold {
 					type="text" name="demo_name"
 					value="<%=request.getParameter("demographic_name")%>" size="20">
 				<input type="hidden" name="functionid"
-					value="<%=request.getParameter("functionid")%> " size="20">
+					value="<%=request.getParameter("functionid")%>" size="20">
 				</font></td>
 				<td width="26%"><font
 					face="Verdana, Arial, Helvetica, sans-serif" size="1"

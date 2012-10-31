@@ -173,7 +173,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         header1.setProvince(demo.getHcType());
         header1.setBillingDate(serviceDate);
         header1.setBillingTime(serviceDate);
-        header1.setPaid(new Long(0));
+        header1.setPaid("0.00");
         header1.setStatus("O");
         header1.setComment("");
         header1.setVisitType("00");
@@ -182,9 +182,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         header1.setApptProviderNo("");
         header1.setAsstProviderNo("");
         header1.setCreator(curUser);
-        BigDecimal totalValue = new BigDecimal(total);
-        totalValue = totalValue.movePointRight(2);       
-        header1.setTotal(new Long(totalValue.longValue()));
+        header1.setTotal(total);
 
         return header1;
     }
