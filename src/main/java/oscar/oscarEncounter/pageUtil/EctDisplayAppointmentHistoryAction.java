@@ -37,7 +37,6 @@ import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Provider;
-import org.oscarehr.eyeform.dao.SpecsHistoryDao;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -48,6 +47,7 @@ import oscar.util.StringUtils;
 public class EctDisplayAppointmentHistoryAction extends EctDisplayAction {
     private static final String cmd = "appointmentHistory";
 
+    
  public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
 
  try {
@@ -76,8 +76,7 @@ public class EctDisplayAppointmentHistoryAction extends EctDisplayAction {
     Dao.setRightHeadingID(cmd); //no menu so set div id to unique id for this action
 
 
-    SpecsHistoryDao shDao = (SpecsHistoryDao)SpringUtils.getBean("SpecsHistoryDAO");
-    ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
+   ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
     DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 
 

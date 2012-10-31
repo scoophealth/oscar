@@ -37,7 +37,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.validator.DynaValidatorForm;
-import org.oscarehr.eyeform.dao.TestBookRecordDao;
+import org.oscarehr.eyeform.dao.EyeformTestBookDao;
 import org.oscarehr.eyeform.model.EyeformTestBook;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
@@ -45,6 +45,7 @@ import org.oscarehr.util.SpringUtils;
 public class TestBookAction extends DispatchAction {
 
 	static Logger logger = Logger.getLogger(TestBookAction.class);
+	static EyeformTestBookDao dao = SpringUtils.getBean(EyeformTestBookDao.class);
 	
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         return form(mapping, form, request, response);
@@ -55,7 +56,6 @@ public class TestBookAction extends DispatchAction {
     }
 
     public ActionForward form(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-    	TestBookRecordDao dao = (TestBookRecordDao)SpringUtils.getBean("TestBookDAO");
     	
     	
     	DynaValidatorForm f = (DynaValidatorForm)form;
@@ -75,7 +75,6 @@ public class TestBookAction extends DispatchAction {
     	if(data.getId()!=null && data.getId()==0) {
     		data.setId(null);
     	}
-    	TestBookRecordDao dao = (TestBookRecordDao)SpringUtils.getBean("TestBookDAO");
     	data.setProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());	
     	dao.save(data);
     	
@@ -84,7 +83,6 @@ public class TestBookAction extends DispatchAction {
     
     public ActionForward getNoteText(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	String appointmentNo = request.getParameter("appointmentNo");
-    	TestBookRecordDao dao = (TestBookRecordDao)SpringUtils.getBean("TestBookDAO");
     	
     	List<EyeformTestBook> tests = dao.getByAppointmentNo(Integer.parseInt(appointmentNo));
     	StringBuilder sb = new StringBuilder();
@@ -115,7 +113,6 @@ public class TestBookAction extends DispatchAction {
     }
     
     public static String getTicklerText(int appointmentNo) {
-    	TestBookRecordDao dao = (TestBookRecordDao)SpringUtils.getBean("TestBookDAO");
     	
     	List<EyeformTestBook> tests = dao.getByAppointmentNo(appointmentNo);
     	StringBuilder sb = new StringBuilder();

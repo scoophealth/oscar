@@ -57,6 +57,7 @@ import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.IsPropertiesOn;
 import org.oscarehr.common.dao.AllergyDao;
+import org.oscarehr.common.dao.BillingreferralDao;
 import org.oscarehr.common.dao.CaseManagementIssueNotesDao;
 import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.ConsultationRequestExtDao;
@@ -68,10 +69,10 @@ import org.oscarehr.common.dao.EFormGroupDao;
 import org.oscarehr.common.dao.EFormValueDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
-import org.oscarehr.common.dao.BillingreferralDao;
 import org.oscarehr.common.dao.SiteDao;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.Billingreferral;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicContact;
@@ -80,19 +81,18 @@ import org.oscarehr.common.model.Document;
 import org.oscarehr.common.model.EFormGroup;
 import org.oscarehr.common.model.EFormValue;
 import org.oscarehr.common.model.ProfessionalSpecialist;
-import org.oscarehr.common.model.Billingreferral;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Site;
 import org.oscarehr.common.service.PdfRecordPrinter;
 import org.oscarehr.common.web.ContactAction;
 import org.oscarehr.eyeform.MeasurementFormatter;
-import org.oscarehr.eyeform.dao.ConsultationReportDao;
 import org.oscarehr.eyeform.dao.EyeFormDao;
-import org.oscarehr.eyeform.dao.FollowUpDao;
-import org.oscarehr.eyeform.dao.OcularProcDao;
-import org.oscarehr.eyeform.dao.ProcedureBookDao;
-import org.oscarehr.eyeform.dao.SpecsHistoryDao;
-import org.oscarehr.eyeform.dao.TestBookRecordDao;
+import org.oscarehr.eyeform.dao.EyeformConsultationReportDao;
+import org.oscarehr.eyeform.dao.EyeformFollowUpDao;
+import org.oscarehr.eyeform.dao.EyeformOcularProcedureDao;
+import org.oscarehr.eyeform.dao.EyeformProcedureBookDao;
+import org.oscarehr.eyeform.dao.EyeformSpecsHistoryDao;
+import org.oscarehr.eyeform.dao.EyeformTestBookDao;
 import org.oscarehr.eyeform.model.EyeForm;
 import org.oscarehr.eyeform.model.EyeformConsultationReport;
 import org.oscarehr.eyeform.model.EyeformFollowUp;
@@ -125,13 +125,16 @@ public class EyeformAction extends DispatchAction {
 	DemographicDao demographicDao= (DemographicDao)SpringUtils.getBean("demographicDao");
 	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 	CaseManagementNoteDAO caseManagementNoteDao = (CaseManagementNoteDAO)SpringUtils.getBean("CaseManagementNoteDAO");
-	OcularProcDao ocularProcDao = (OcularProcDao)SpringUtils.getBean("OcularProcDAO");
-	SpecsHistoryDao specsHistoryDao = (SpecsHistoryDao)SpringUtils.getBean("SpecsHistoryDAO");
+	EyeformOcularProcedureDao ocularProcDao = SpringUtils.getBean(EyeformOcularProcedureDao.class);
+	private EyeformSpecsHistoryDao specsHistoryDao = (EyeformSpecsHistoryDao)SpringUtils.getBean(EyeformSpecsHistoryDao.class);
+	
 	AllergyDao allergyDao = (AllergyDao)SpringUtils.getBean("allergyDao");
-	FollowUpDao followUpDao = (FollowUpDao)SpringUtils.getBean("FollowUpDAO");
-	ProcedureBookDao procedureBookDao = (ProcedureBookDao)SpringUtils.getBean("ProcedureBookDAO");
-	TestBookRecordDao testBookDao = (TestBookRecordDao)SpringUtils.getBean("TestBookDAO");
-	EyeFormDao eyeFormDao = (EyeFormDao)SpringUtils.getBean("EyeFormDao");
+	EyeformFollowUpDao followUpDao = SpringUtils.getBean(EyeformFollowUpDao.class);
+	protected EyeformProcedureBookDao procedureBookDao = SpringUtils.getBean(EyeformProcedureBookDao.class);
+	
+	EyeformTestBookDao testBookDao = SpringUtils.getBean(EyeformTestBookDao.class);
+	EyeFormDao eyeFormDao = SpringUtils.getBean(EyeFormDao.class);
+	
 	MeasurementsDao measurementsDao = (MeasurementsDao) SpringUtils.getBean("measurementsDao");
 	ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
 	BillingreferralDao billingreferralDao = (BillingreferralDao) SpringUtils.getBean("billingreferralDao");
@@ -196,9 +199,8 @@ public class EyeformAction extends DispatchAction {
 		   Provider provider = LoggedInInfo.loggedInInfo.get().loggedInProvider;
 		   ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 		   ConsultationRequestExtDao consultationRequestExtDao=(ConsultationRequestExtDao)SpringUtils.getBean("consultationRequestExtDao");
-		   OcularProcDao ocularProcDao = (OcularProcDao)SpringUtils.getBean("OcularProcDAO");
-		   SpecsHistoryDao specsHistoryDao = (SpecsHistoryDao)SpringUtils.getBean("SpecsHistoryDAO");
-
+		 
+		  
 		   int appNo;
 		   int requestId;
 		   if(strAppNo == null || strAppNo.length()==0 || strAppNo.equals("null")) {
@@ -331,7 +333,6 @@ public class EyeformAction extends DispatchAction {
 
 
            //followUp
-           FollowUpDao followUpDao = (FollowUpDao)SpringUtils.getBean("FollowUpDAO");
            List<EyeformFollowUp> followUps = followUpDao.getByAppointmentNo(appNo);
            StringBuilder followup = new StringBuilder();
            for(EyeformFollowUp ef:followUps) {
@@ -355,7 +356,6 @@ public class EyeformAction extends DispatchAction {
 
 
            //test book
-           TestBookRecordDao testBookDao = (TestBookRecordDao)SpringUtils.getBean("TestBookDAO");
            List<EyeformTestBook> testBookRecords = testBookDao.getByAppointmentNo(appNo);
            StringBuilder testbook = new StringBuilder();
            for(EyeformTestBook tt:testBookRecords) {
@@ -370,8 +370,7 @@ public class EyeformAction extends DispatchAction {
 
 
            //procedure book
-           ProcedureBookDao procBookDao = (ProcedureBookDao)SpringUtils.getBean("ProcedureBookDAO");
-           List<EyeformProcedureBook> procBookRecords = procBookDao.getByAppointmentNo(appNo);
+           List<EyeformProcedureBook> procBookRecords = procedureBookDao.getByAppointmentNo(appNo);
            StringBuilder probook = new StringBuilder();
            for(EyeformProcedureBook pp:procBookRecords) {
         	   probook.append(pp.getProcedureName());
@@ -605,14 +604,7 @@ public class EyeformAction extends DispatchAction {
 					printer.printNotes(filteredNotes);
 				}
 
-				//plan - followups/consults, procedures booked, tests booked, checkboxes
-				/*
-				List<FollowUp> followUps = followUpDao.getByAppointmentNo(appointmentNo);
-				List<ProcedureBook> procedureBooks = procedureBookDao.getByAppointmentNo(appointmentNo);
-				List<TestBookRecord> testBooks = testBookDao.getByAppointmentNo(appointmentNo);
-				EyeForm eyeform = eyeFormDao.getByAppointmentNo(appointmentNo);
-		        printer.printEyeformPlan(followUps, procedureBooks, testBooks,eyeform);
-				*/
+				
 
 		        //photos
 		        DocumentResultsDao documentDao = (DocumentResultsDao)SpringUtils.getBean("documentResultsDao");
@@ -826,7 +818,8 @@ public class EyeformAction extends DispatchAction {
 				if ("saved".equalsIgnoreCase((String) request.getAttribute("savedflag"))) {
 					cpId = (String) request.getAttribute("cpId");
 				}
-				ConsultationReportDao crDao = (ConsultationReportDao)SpringUtils.getBean("consultationReportDao");
+				EyeformConsultationReportDao crDao = SpringUtils.getBean(EyeformConsultationReportDao.class);
+
 				cp = crDao.find(new Integer(cpId));
 				request.setAttribute("newFlag", "false");
 				appNo = cp.getAppointmentNo();
@@ -967,7 +960,7 @@ public class EyeformAction extends DispatchAction {
 	           request.setAttribute("impression", StringEscapeUtils.escapeJavaScript(impression));
 
 	           //followUp
-	           FollowUpDao followUpDao = (FollowUpDao)SpringUtils.getBean("FollowUpDAO");
+	           EyeformFollowUpDao followUpDao = SpringUtils.getBean(EyeformFollowUpDao.class);
 	           List<EyeformFollowUp> followUps = followUpDao.getByAppointmentNo(appNo);
 	           StringBuilder followup = new StringBuilder();
 	           for(EyeformFollowUp ef:followUps) {
@@ -991,7 +984,6 @@ public class EyeformAction extends DispatchAction {
 
 
 	           //test book
-	           TestBookRecordDao testBookDao = (TestBookRecordDao)SpringUtils.getBean("TestBookDAO");
 	           List<EyeformTestBook> testBookRecords = testBookDao.getByAppointmentNo(appNo);
 	           StringBuilder testbook = new StringBuilder();
 	           for(EyeformTestBook tt:testBookRecords) {
@@ -1006,8 +998,7 @@ public class EyeformAction extends DispatchAction {
 
 
 	           //procedure book
-	           ProcedureBookDao procBookDao = (ProcedureBookDao)SpringUtils.getBean("ProcedureBookDAO");
-	           List<EyeformProcedureBook> procBookRecords = procBookDao.getByAppointmentNo(appNo);
+	           List<EyeformProcedureBook> procBookRecords = procedureBookDao.getByAppointmentNo(appNo);
 	           StringBuilder probook = new StringBuilder();
 	           for(EyeformProcedureBook pp:procBookRecords) {
 	        	   probook.append(pp.getProcedureName());
@@ -1024,7 +1015,8 @@ public class EyeformAction extends DispatchAction {
 
 		public ActionForward saveConRequest(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 			log.info("saveConRequest");
-                        ConsultationReportDao dao = (ConsultationReportDao)SpringUtils.getBean("consultationReportDao");
+			EyeformConsultationReportDao dao = SpringUtils.getBean(EyeformConsultationReportDao.class);
+
 
                         DynaValidatorForm crForm = (DynaValidatorForm) form;
                         EyeformConsultationReport cp = (EyeformConsultationReport) crForm.get("cp");
@@ -1100,7 +1092,8 @@ public class EyeformAction extends DispatchAction {
 
 		public ActionForward printConRequest(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 			log.debug("printConreport");
-                        ConsultationReportDao dao = (ConsultationReportDao)SpringUtils.getBean("consultationReportDao");
+			EyeformConsultationReportDao dao = SpringUtils.getBean(EyeformConsultationReportDao.class);
+
                         DynaValidatorForm crForm = (DynaValidatorForm) form;
                         EyeformConsultationReport cp = (EyeformConsultationReport) crForm.get("cp");
                         Demographic demographic = demographicDao.getClientByDemographicNo(cp.getDemographicNo());

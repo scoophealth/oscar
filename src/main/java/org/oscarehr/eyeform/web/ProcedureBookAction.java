@@ -37,7 +37,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.validator.DynaValidatorForm;
-import org.oscarehr.eyeform.dao.ProcedureBookDao;
+import org.oscarehr.eyeform.dao.EyeformProcedureBookDao;
 import org.oscarehr.eyeform.model.EyeformProcedureBook;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
@@ -45,6 +45,7 @@ import org.oscarehr.util.SpringUtils;
 public class ProcedureBookAction extends DispatchAction {
 
 	static Logger logger = Logger.getLogger(ProcedureBookAction.class);
+	protected static EyeformProcedureBookDao procedureBookDao = SpringUtils.getBean(EyeformProcedureBookDao.class);
 	
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         return form(mapping, form, request, response);
@@ -55,13 +56,12 @@ public class ProcedureBookAction extends DispatchAction {
     }
 
     public ActionForward form(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-    	ProcedureBookDao dao = (ProcedureBookDao)SpringUtils.getBean("ProcedureBookDAO");
     	
     	
     	DynaValidatorForm f = (DynaValidatorForm)form;
     	EyeformProcedureBook data = (EyeformProcedureBook)f.get("data");
     	if(data.getId() != null && data.getId().intValue()>0) {
-    		data = dao.find(data.getId()); 
+    		data = procedureBookDao.find(data.getId()); 
     	}
     	
     	f.set("data", data);
@@ -75,18 +75,16 @@ public class ProcedureBookAction extends DispatchAction {
     	if(data.getId()!=null && data.getId()==0) {
     		data.setId(null);
     	}
-    	ProcedureBookDao dao = (ProcedureBookDao)SpringUtils.getBean("ProcedureBookDAO");
     	data.setProvider(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());	
-    	dao.save(data);
+    	procedureBookDao.save(data);
     	
     	return mapping.findForward("success");
     }
 
     public ActionForward getNoteText(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	String appointmentNo = request.getParameter("appointmentNo");
-    	ProcedureBookDao dao = (ProcedureBookDao)SpringUtils.getBean("ProcedureBookDAO");
     	
-    	List<EyeformProcedureBook> procedures = dao.getByAppointmentNo(Integer.parseInt(appointmentNo));
+    	List<EyeformProcedureBook> procedures = procedureBookDao.getByAppointmentNo(Integer.parseInt(appointmentNo));
     	StringBuilder sb = new StringBuilder();
     	
     	for(EyeformProcedureBook f:procedures) {    		
@@ -115,9 +113,8 @@ public class ProcedureBookAction extends DispatchAction {
     }
     
     public static String getTicklerText(int appointmentNo) {
-    	ProcedureBookDao dao = (ProcedureBookDao)SpringUtils.getBean("ProcedureBookDAO");
     	
-    	List<EyeformProcedureBook> procedures = dao.getByAppointmentNo(appointmentNo);
+    	List<EyeformProcedureBook> procedures = procedureBookDao.getByAppointmentNo(appointmentNo);
     	StringBuilder sb = new StringBuilder();
     	
     	for(EyeformProcedureBook f:procedures) {
