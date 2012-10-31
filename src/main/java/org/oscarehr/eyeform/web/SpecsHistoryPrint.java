@@ -53,14 +53,14 @@ public class SpecsHistoryPrint implements ExtPrint {
 	
 	@Override
 	public void printExt(CaseManagementPrintPdf engine, HttpServletRequest request) throws IOException, DocumentException{
-		logger.info("specs history print!!!!");
+		logger.debug("specs history print!!!!");
 		String startDate = request.getParameter("pStartDate");
 		String endDate = request.getParameter("pEndDate");
 		String demographicNo = request.getParameter("demographicNo");
 		
-		logger.info("startDate = "+startDate);
-		logger.info("endDate = "+endDate);
-		logger.info("demographicNo = "+demographicNo);
+		logger.debug("startDate = "+startDate);
+		logger.debug("endDate = "+endDate);
+		logger.debug("demographicNo = "+demographicNo);
 		
 		ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 		EyeformSpecsHistoryDao dao = (EyeformSpecsHistoryDao)SpringUtils.getBean(EyeformSpecsHistoryDao.class);
@@ -76,7 +76,10 @@ public class SpecsHistoryPrint implements ExtPrint {
 				Date dStartDate = formatter.parse(startDate);
 				Date dEndDate = formatter.parse(endDate);
 				specs = dao.getByDateRange(Integer.parseInt(demographicNo),dStartDate,dEndDate);
-			}catch(Exception e){logger.error(e);}
+			}catch(Exception e)
+			{
+				logger.error("Error", e);
+				}
 			
 		}
 		
