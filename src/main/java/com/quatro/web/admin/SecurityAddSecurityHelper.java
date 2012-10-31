@@ -29,6 +29,8 @@ import java.security.NoSuchAlgorithmException;
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.PageContext;
 
+import org.oscarehr.common.dao.SecurityDao;
+import org.oscarehr.common.model.Security;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -36,8 +38,6 @@ import oscar.MyDateFormat;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
 
-import com.quatro.dao.security.SecurityDao;
-import com.quatro.model.security.Security;
 
 /**
  * Helper class for securityaddsecurity.jsp page.
@@ -90,7 +90,7 @@ public class SecurityAddSecurityHelper {
 		s.setDateExpiredate(MyDateFormat.getSysDate(request.getParameter("date_ExpireDate")));
 		s.setBLocallockset(request.getParameter("b_LocalLockSet") == null ? 0 : Integer.parseInt(request.getParameter("b_LocalLockSet")));
 		s.setBRemotelockset(request.getParameter("b_RemoteLockSet") == null ? 0 : Integer.parseInt(request.getParameter("b_RemoteLockSet")));
-		securityDao.save(s);
+		securityDao.persist(s);
 
 		LogAction.addLog((String) pageContext.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_SECURITY, request.getParameter("user_name"), request.getRemoteAddr());
 

@@ -30,11 +30,11 @@ import org.apache.ws.security.WSSecurityException;
 import org.apache.ws.security.handler.RequestData;
 import org.apache.ws.security.message.token.UsernameToken;
 import org.apache.ws.security.validate.UsernameTokenValidator;
+import org.oscarehr.common.dao.SecurityDao;
+import org.oscarehr.common.model.Security;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import com.quatro.dao.security.SecurityDao;
-import com.quatro.model.security.Security;
 
 /**
  * Validation on a per-request basis is done against the Security table on the ID and password (not username). This is for efficiency purposes and immutability purposes of the ID. To get the ID some one can always use the LoginWs first which should supply
@@ -52,7 +52,7 @@ public class OscarUsernameTokenValidator extends UsernameTokenValidator {
 
 		try {
 			Integer securityUserId = Integer.parseInt(usernameToken.getName());
-			Security security = securityDao.findById(securityUserId);
+			Security security = securityDao.find(securityUserId);
 			
 			// if it's all good just return
 			if (WsUtils.checkAuthenticationAndSetLoggedInInfo(security, usernameToken.getPassword())) return;

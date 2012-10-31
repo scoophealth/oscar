@@ -279,7 +279,6 @@
 
 	<!-- Admin Start -->
 	<bean id="secobjprivilegeDao" class="com.quatro.dao.security.SecobjprivilegeDao" autowire="byName" />
-	<bean id="securityDao" class="com.quatro.dao.security.SecurityDao" autowire="byName" />
 	<bean id="secProviderDao" class="com.quatro.dao.security.SecProviderDao" autowire="byName" />
 	<bean id="secuserroleDao" class="com.quatro.dao.security.SecuserroleDao" autowire="byName" />
         <bean id="secObjectNameDao" class="com.quatro.dao.security.SecObjectNameDao" autowire="byName"/>

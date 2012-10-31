@@ -35,8 +35,8 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.Security;
 
-import com.quatro.model.security.Security;
 
 public class LoggedInUserFilter implements javax.servlet.Filter {
 	private static final Logger logger = MiscUtils.getLogger();

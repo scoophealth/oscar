@@ -28,6 +28,8 @@ import java.util.Date;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 
+import org.oscarehr.common.model.Security;
+
 import oscar.login.jaas.LoginModuleFactory;
 import oscar.login.jaas.OscarCallbackHandler;
 
@@ -65,7 +67,7 @@ public class LdapSecurity extends Security {
 	 * @return
 	 * 		Returns trues if password validation agains the AD is successful and false otherwise
 	 * 
-	 * @see com.quatro.model.security.Security#checkPassword(java.lang.String)
+	 * @see org.oscarehr.common.model.Security#checkPassword(java.lang.String)
 	 * 
 	 */
 	@Override

@@ -30,15 +30,15 @@
 <%@ page import="oscar.log.LogAction,oscar.log.LogConst"%>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
-<%@ page import="com.quatro.model.security.Security" %>
-<%@ page import="com.quatro.dao.security.SecurityDao" %>
+<%@ page import="org.oscarehr.common.model.Security" %>
+<%@ page import="org.oscarehr.common.dao.SecurityDao" %>
 <%
-	SecurityDao securityDao = (SecurityDao)SpringUtils.getBean("securityDao");
+	SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);
 %>
 
 <html:html locale="true">
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
 <title><bean:message key="admin.securityupdate.title" /></title>
 </head>
 <link rel="stylesheet" href="../web.css" />
@@ -52,7 +52,7 @@
 	</tr>
 </table>
 <%
-    StringBuffer sbTemp = new StringBuffer();
+	StringBuffer sbTemp = new StringBuffer();
     MessageDigest md = MessageDigest.getInstance("SHA");
     byte[] btNewPasswd= md.digest(request.getParameter("password").getBytes());
     for(int i=0; i<btNewPasswd.length; i++) sbTemp = sbTemp.append(btNewPasswd[i]);
@@ -62,7 +62,7 @@
 
     int rowsAffected =0;
 
-    Security s = securityDao.findById(Integer.parseInt(request.getParameter("security_no")));
+    Security s = securityDao.find(Integer.parseInt(request.getParameter("security_no")));
     if(s != null) {
     	s.setUserName(request.getParameter("user_name"));
 	    s.setProviderNo(request.getParameter("provider_no"));
@@ -78,7 +78,7 @@
     	if(request.getParameter("pin")==null || !"****".equals(request.getParameter("pin"))) {
     		s.setPin(sPin);
     	}
-    	securityDao.saveOrUpdate(s);
+    	securityDao.saveEntity(s);
     	rowsAffected=1;
     }
 

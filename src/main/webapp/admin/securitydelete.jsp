@@ -30,14 +30,14 @@
 <%@ page import="oscar.log.LogAction,oscar.log.LogConst"%>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
-<%@ page import="com.quatro.model.security.Security" %>
-<%@ page import="com.quatro.dao.security.SecurityDao" %>
+<%@ page import="org.oscarehr.common.model.Security" %>
+<%@ page import="org.oscarehr.common.dao.SecurityDao" %>
 <%
-	SecurityDao securityDao = (SecurityDao)SpringUtils.getBean("securityDao");
+	SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);
 %>
 <html:html locale="true">
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script></head>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script></head>
 <link rel="stylesheet" href="../web.css" />
 <body background="../images/gray_bg.jpg" bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
 <center>
@@ -49,16 +49,15 @@
 </table>
 <%
 	int rowsAffected=0;
-	Security s = securityDao.findById(Integer.parseInt(request.getParameter("keyword")));
+	Security s = securityDao.find(Integer.parseInt(request.getParameter("keyword")));
 	if(s != null) {
-		securityDao.delete(s);
+		securityDao.remove(s.getId());
 		rowsAffected=1;
 		LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DELETE, LogConst.CON_SECURITY,
         		request.getParameter("keyword"), request.getRemoteAddr());
 	}
 
 	if (rowsAffected ==1) {
-
 %>
 <p>
 <h2><bean:message key="admin.securitydelete.msgDeletionSuccess" />:
