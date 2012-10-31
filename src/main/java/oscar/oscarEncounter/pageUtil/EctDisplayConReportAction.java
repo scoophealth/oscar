@@ -26,14 +26,11 @@
 package oscar.oscarEncounter.pageUtil;
 
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.util.MessageResources;
-import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.model.Demographic;
@@ -43,7 +40,6 @@ import org.oscarehr.eyeform.model.EyeformConsultationReport;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.util.OscarRoleObjectPrivilege;
 import oscar.util.StringUtils;
 
 //import oscar.oscarSecurity.CookieSecurity;
@@ -56,66 +52,56 @@ public class EctDisplayConReportAction extends EctDisplayAction {
 
  public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
 
-	 boolean a = true;
- 	 ArrayList<Object> v = OscarRoleObjectPrivilege.getPrivilegePropAsArrayList("_newCasemgmt.conReport");
-     String roleName = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
-     a = OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (ArrayList) v.get(1));
-     a=true;
- 	if(!a) {
- 		return true; //The link of tickler won't show up on new CME screen.
- 	} else {
 
- try {
-
-	 String appointmentNo = request.getParameter("appointment_no");
-	 String cpp =request.getParameter("cpp");
-	 if(cpp==null) {
-		 cpp=new String();
+	 try {
+	
+		 String appointmentNo = request.getParameter("appointment_no");
+		 String cpp =request.getParameter("cpp");
+		 if(cpp==null) {
+			 cpp=new String();
+		 }
+	
+	    //Set lefthand module heading and link
+	    String winName = "ConReport" + bean.demographicNo;
+	    String pathview, pathedit;
+	    Demographic d= demographicDao.getClientByDemographicNo(Integer.valueOf(bean.demographicNo));
+	    pathview = request.getContextPath() + "/eyeform/ConsultationReportList.do?method=list&cr.demographicNo=" + bean.demographicNo + "&dmname=" + d.getFormattedName();
+	    pathedit = request.getContextPath() + "/eyeform/Eyeform.do?method=prepareConReport&demographicNo="+bean.demographicNo + "&appNo="+appointmentNo + "&flag=new&cpp="+cpp;
+	
+	    String url = "popupPage(500,900,'" + winName + "','" + pathview + "')";
+	    Dao.setLeftHeading(messages.getMessage(request.getLocale(), "global.viewConReport"));
+	    Dao.setLeftURL(url);
+	
+	    //set right hand heading link
+	    winName = "AddConReport" + bean.demographicNo;
+	    url = "popupPage(700,1000,'" + winName + "','" + pathedit + "'); return false;";
+	    Dao.setRightURL(url);
+	    Dao.setRightHeadingID(cmd); //no menu so set div id to unique id for this action
+	
+	    EyeformConsultationReportDao crDao = (EyeformConsultationReportDao)SpringUtils.getBean("consultationReportDao");
+	
+	    List<EyeformConsultationReport> crs = crDao.getByDemographic(Integer.parseInt(bean.demographicNo));
+	    for(EyeformConsultationReport cr:crs) {
+	    	NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
+	    	item.setDate(cr.getDate());
+	
+	    	ProfessionalSpecialist specialist = professionalSpecialistDao.find(cr.getReferralId());
+	    	String title = specialist.getFormattedName() + " - " + cr.getStatus();
+	    	String itemHeader = StringUtils.maxLenString(title, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
+	        item.setLinkTitle(itemHeader);
+	        item.setTitle(itemHeader);
+	        int hash = Math.abs(winName.hashCode());
+	        url = "popupPage(700,1000,'" + hash + "','" + request.getContextPath() + "/eyeform/Eyeform.do?method=prepareConReport&conReportNo="+ cr.getId() +"&demographicNo="+bean.demographicNo+"&cpp="+cpp+"'); return false;";
+	        item.setURL(url);
+	        Dao.addItem(item);
+	    }
+	   // Dao.sortItems(NavBarDisplayDAO.DATESORT);
+	
+	 }catch( Exception e ) {
+	     MiscUtils.getLogger().error("Error", e);
+	     return false;
 	 }
-
-    //Set lefthand module heading and link
-    String winName = "ConReport" + bean.demographicNo;
-    String pathview, pathedit;
-    Demographic d= demographicDao.getClientByDemographicNo(Integer.valueOf(bean.demographicNo));
-    pathview = request.getContextPath() + "/eyeform/ConsultationReportList.do?method=list&cr.demographicNo=" + bean.demographicNo + "&dmname=" + d.getFormattedName();
-    pathedit = request.getContextPath() + "/eyeform/Eyeform.do?method=prepareConReport&demographicNo="+bean.demographicNo + "&appNo="+appointmentNo + "&flag=new&cpp="+cpp;
-
-    String url = "popupPage(500,900,'" + winName + "','" + pathview + "')";
-    Dao.setLeftHeading(messages.getMessage(request.getLocale(), "global.viewConReport"));
-    Dao.setLeftURL(url);
-
-    //set right hand heading link
-    winName = "AddConReport" + bean.demographicNo;
-    url = "popupPage(700,1000,'" + winName + "','" + pathedit + "'); return false;";
-    Dao.setRightURL(url);
-    Dao.setRightHeadingID(cmd); //no menu so set div id to unique id for this action
-
-    ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
-    EyeformConsultationReportDao crDao = SpringUtils.getBean(EyeformConsultationReportDao.class);
-
-    List<EyeformConsultationReport> crs = crDao.getByDemographic(Integer.parseInt(bean.demographicNo));
-    for(EyeformConsultationReport cr:crs) {
-    	NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
-    	item.setDate(cr.getDate());
-
-    	ProfessionalSpecialist specialist = professionalSpecialistDao.find(cr.getReferralId());
-    	String title = specialist.getFormattedName() + " - " + cr.getStatus();
-    	String itemHeader = StringUtils.maxLenString(title, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
-        item.setLinkTitle(itemHeader);
-        item.setTitle(itemHeader);
-        int hash = Math.abs(winName.hashCode());
-        url = "popupPage(700,1000,'" + hash + "','" + request.getContextPath() + "/eyeform/Eyeform.do?method=prepareConReport&conReportNo="+ cr.getId() +"&demographicNo="+bean.demographicNo+"&cpp="+cpp+"'); return false;";
-        item.setURL(url);
-        Dao.addItem(item);
-    }
-   // Dao.sortItems(NavBarDisplayDAO.DATESORT);
-
- }catch( Exception e ) {
-     MiscUtils.getLogger().error("Error", e);
-     return false;
- }
     return true;
- 	}
   }
 
  public String getCmd() {
