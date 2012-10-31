@@ -367,7 +367,7 @@ public class BillingCorrectionAction extends DispatchAction{
                 bItem.setStatus(itemStatus);                                               
                 bItem.setCh1Id(bCh1.getId());
                 bItem.setTranscId(bCh1.getTranscId());
-                bItem.setRecId(bCh1.getRecId());
+                bItem.setRecId(BillingDataHlp.ITEM_REORDIDENTIFICATION);
                 bItemsCurrent.add(bItem);              			
             }
         }
