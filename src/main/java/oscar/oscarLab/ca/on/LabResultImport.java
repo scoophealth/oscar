@@ -25,139 +25,119 @@
 
 package oscar.oscarLab.ca.on;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Date;
 
-import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.common.dao.LabPatientPhysicianInfoDao;
+import org.oscarehr.common.dao.LabReportInformationDao;
+import org.oscarehr.common.dao.LabTestResultsDao;
+import org.oscarehr.common.dao.PatientLabRoutingDao;
+import org.oscarehr.common.dao.ProviderLabRoutingDao;
+import org.oscarehr.common.model.LabPatientPhysicianInfo;
+import org.oscarehr.common.model.LabReportInformation;
+import org.oscarehr.common.model.LabTestResults;
+import org.oscarehr.common.model.PatientLabRouting;
+import org.oscarehr.common.model.ProviderLabRoutingModel;
+import org.oscarehr.util.SpringUtils;
 
+import oscar.util.ConversionUtils;
 import oscar.util.UtilDateUtilities;
 
 public class LabResultImport {
    
-    public static void SaveLabDesc(String description, String ppId) throws SQLException {
-	String sql = "INSERT INTO labTestResults (description,  labPatientPhysicianInfo_id, line_type) VALUES (? , ? , 'D')";
-        
-        Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setString(1,description);
-        ps.setString(2,ppId);
-        ps.executeUpdate();
-	ps.close();
-	conn.close();
+	private static LabTestResultsDao labTestResultsDao = SpringUtils.getBean(LabTestResultsDao.class);
+	private static LabPatientPhysicianInfoDao labPatientPhysicianInfoDao = SpringUtils.getBean(LabPatientPhysicianInfoDao.class);
+	private static LabReportInformationDao labReportInformationDao = SpringUtils.getBean(LabReportInformationDao.class);
+	private static PatientLabRoutingDao patientLabRoutingDao = SpringUtils.getBean(PatientLabRoutingDao.class);
+	private static  ProviderLabRoutingDao providerLabRoutingDao = SpringUtils.getBean(ProviderLabRoutingDao.class);
+
+
+	
+    public static void SaveLabDesc(String description, String ppId)  {
+    	LabTestResults l = new LabTestResults();
+    	l.setDescription(description);
+    	l.setLabPatientPhysicianInfoId(Integer.parseInt(ppId));
+    	l.setLineType("D");
+    	labTestResultsDao.persist(l);
     }
     
-    public static String saveLabPatientPhysicianInfo(String labReportInfo_id, String accession_num, String collDate, String firstname, String lastname, String sex, String hin, String birthdate, String phone) throws SQLException {
-	String id = "";
-	String sql = "INSERT INTO labPatientPhysicianInfo (labReportInfo_id, accession_num, patient_first_name, patient_last_name, patient_sex, patient_health_num, patient_dob, patient_phone, collection_date, service_date, lab_status)" +
-						 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'F')";
-	
-	Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
-	PreparedStatement pstmt = conn.prepareStatement(sql);
-	pstmt.setString(1, labReportInfo_id);
-	pstmt.setString(2, accession_num);
-	pstmt.setString(3, firstname);
-	pstmt.setString(4, lastname);
-	pstmt.setString(5, sex);
-	pstmt.setString(6, hin);
-	pstmt.setString(7, birthdate);
-	pstmt.setString(8, phone);
-	pstmt.setString(9, collDate);
-	pstmt.setString(10, collDate);
-	pstmt.executeUpdate();
-	ResultSet rs = pstmt.getGeneratedKeys();
-	if (rs.next()) id = rs.getString(1);
-	pstmt.close();
-	conn.close();
-	
-	return id;
+    public static String saveLabPatientPhysicianInfo(String labReportInfo_id, String accession_num, String collDate, String firstname, String lastname, String sex, String hin, String birthdate, String phone) {
+    	LabPatientPhysicianInfo l = new LabPatientPhysicianInfo();
+    	l.setLabReportInfoId(Integer.parseInt(labReportInfo_id));
+    	l.setAccessionNum(accession_num);
+    	l.setPatientFirstName(firstname);
+    	l.setPatientLastName(lastname);
+    	l.setPatientSex(sex);
+    	l.setPatientHin(hin);
+    	l.setPatientDob(birthdate);
+    	l.setPatientPhone(phone);
+    	l.setCollectionDate(collDate);
+    	l.setServiceDate(collDate);
+    	l.setLabStatus("F");
+    	labPatientPhysicianInfoDao.persist(l);
+    	
+    	return l.getId().toString();
     }
     
-    public static String saveLabReportInfo(String location_id) throws SQLException {
-	String id = "";
-	String print_date = UtilDateUtilities.DateToString(new Date(),"yyyy-MM-dd");
-	String print_time = UtilDateUtilities.DateToString(new Date(),"HH:mm:ss");
-	String sql = "INSERT INTO labReportInformation (location_id, print_date, print_time) VALUES (?,?,?)";
-	
-	Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
-	PreparedStatement pstmt = conn.prepareStatement(sql);
-	pstmt.setString(1, location_id);
-	pstmt.setString(2, print_date);
-	pstmt.setString(3, print_time);
-	pstmt.executeUpdate();
-	ResultSet rs = pstmt.getGeneratedKeys();
-	if (rs.next()) id = rs.getString(1);
-	pstmt.close();
-	conn.close();
-	
-	return id;
+    public static String saveLabReportInfo(String location_id)  {
+    	LabReportInformation l = new LabReportInformation();
+    	l.setLocationId(location_id);
+    	l.setPrintDate(UtilDateUtilities.DateToString(new Date(),"yyyy-MM-dd"));
+    	l.setPrintTime(UtilDateUtilities.DateToString(new Date(),"HH:mm:ss"));
+    	labReportInformationDao.persist(l);
+		
+    	return l.getId().toString();
     }
     
-    public static String saveLabTestResults(String title, String testName, String abn, String minimum, String maximum, String result, String units, String description, String location, String ppId, String linetype, String last) throws SQLException {
-	String id = "";
-	String sql = "INSERT INTO labTestResults (title, test_name, abn, minimum, maximum, result, units, description, location_id, labPatientPhysicianInfo_id, line_type, last)" +
-					" VALUES (?,?,?, ?,?,?, ?,?,?, ?,?,?)";
-	
-	Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
-	PreparedStatement pstmt = conn.prepareStatement(sql);
-	pstmt.setString(1, title);
-	pstmt.setString(2, testName);
-	pstmt.setString(3, abn);
-	pstmt.setString(4, minimum);
-	pstmt.setString(5, maximum);
-	pstmt.setString(6, result);
-	pstmt.setString(7, units);
-	pstmt.setString(8, description);
-	pstmt.setString(9, location);
-	pstmt.setString(10, ppId);
-	pstmt.setString(11, linetype);
-	pstmt.setString(12, last);
-	pstmt.executeUpdate();
-	ResultSet rs = pstmt.getGeneratedKeys();
-	if (rs.next()) id = rs.getString(1);
-	pstmt.close();
-	conn.close();
-	
-	return id;
+    public static String saveLabTestResults(String title, String testName, String abn, String minimum, String maximum, String result, String units, String description, String location, String ppId, String linetype, String last)  {
+    	LabTestResults l = new LabTestResults();
+    	l.setTitle(title);
+    	l.setTestName(testName);
+    	l.setAbn(abn);
+    	l.setMinimum(minimum);
+    	l.setMaximum(maximum);
+    	l.setResult(result);
+    	l.setUnits(units);
+    	l.setDescription(description);
+    	l.setLocationId(location);
+    	l.setLabPatientPhysicianInfoId(Integer.parseInt(ppId));
+    	l.setLineType(linetype);
+    	l.setLast(last);
+    	
+    	labTestResultsDao.persist(l);
+    	
+    	return l.getId().toString();
     }
     
-    public static Long savePatientLabRouting(String demo_no, String lab_no) throws SQLException {
-	Long id = null;
-	String sql = "INSERT INTO patientLabRouting (demographic_no, lab_no, lab_type) values (?, ?, 'CML')";
-	
-	Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
-	PreparedStatement pstmt = conn.prepareStatement(sql);
-	pstmt.setString(1, demo_no);
-	pstmt.setString(2, lab_no);
-	pstmt.executeUpdate();
-	ResultSet rs = pstmt.getGeneratedKeys();
-	if (rs.next()) id = rs.getLong(1);
-	pstmt.close();
-	conn.close();
-	
-	return id;
+    public static Long savePatientLabRouting(String demo_no, String lab_no) {
+    	PatientLabRouting plr = new PatientLabRouting();
+    	plr.setDemographicNo(Integer.parseInt(demo_no));
+    	plr.setLabNo(Integer.parseInt(lab_no));
+    	plr.setLabType("CML");
+    	patientLabRoutingDao.persist(plr);
+    	
+    	return plr.getId().longValue();
     }
     
-    public static Long saveProviderLabRouting(String provider_no, String lab_no, String status, String comment, String timestamp) throws SQLException {
-	Long id = null;
-	if (timestamp==null || ("").equals(timestamp)) timestamp=null;
-	String sql = "INSERT INTO providerLabRouting (provider_no, lab_no, status, comment, timestamp, lab_type) values (?,?,?,?,?,'CML')";
-	
-	Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
-	PreparedStatement pstmt = conn.prepareStatement(sql);
-	pstmt.setString(1, provider_no);
-	pstmt.setString(2, lab_no);
-	pstmt.setString(3, status);
-	pstmt.setString(4, comment);
-	pstmt.setString(5, timestamp);
-	pstmt.executeUpdate();
-	ResultSet rs = pstmt.getGeneratedKeys();
-	if (rs.next()) id = rs.getLong(1);
-	pstmt.close();
-	conn.close();
-	
-	return id;
+    public static Long saveProviderLabRouting(String provider_no, String lab_no, String status, String comment, String timestamp)  {
+		Long id = null;
+		if (timestamp==null || ("").equals(timestamp)) 
+			timestamp=null;
+		
+		Date ts = null;
+		if(timestamp != null) {
+			ts = ConversionUtils.fromTimestampString(timestamp);
+		}
+		
+		
+		ProviderLabRoutingModel plr = new ProviderLabRoutingModel();
+		plr.setProviderNo(provider_no);
+		plr.setLabNo(Integer.parseInt(lab_no));
+		plr.setStatus(status);
+		plr.setComment(comment);
+		plr.setTimestamp(ts);
+		plr.setLabType("CML");
+		providerLabRoutingDao.persist(plr);
+		
+		return plr.getId().longValue();
     }
 }
