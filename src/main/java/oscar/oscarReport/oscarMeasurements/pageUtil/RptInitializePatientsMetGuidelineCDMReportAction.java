@@ -43,7 +43,6 @@ import org.apache.struts.action.ActionMessages;
 import org.apache.struts.util.MessageResources;
 import org.oscarehr.util.MiscUtils;
 
-import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarMeasurements.pageUtil.EctValidation;
 import oscar.oscarReport.oscarMeasurements.data.RptMeasurementsData;
@@ -65,46 +64,31 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
         
         ArrayList reportMsg = new ArrayList();
         
-        try{
+        
                 
-                if(!validate(frm, request)){
-                    MiscUtils.getLogger().debug("the form is invalid");
-                    return (new ActionForward(mapping.getInput()));
-                }
-                
-                if(patientSeenCheckbox!=null){
-                    int nbPatient = mData.getNbPatientSeen(startDateA, endDateA);  
-                    String msg = mr.getMessage("oscarReport.CDMReport.msgPatientSeen", Integer.toString(nbPatient), startDateA, endDateA); 
-                    MiscUtils.getLogger().debug(msg);
-                    reportMsg.add(msg);
-                    reportMsg.add("");
-                }
-                
-                getMetGuidelinePercentage(frm, reportMsg, request);
-                //getPatientsMetAllSelectedGuideline(db, frm, reportMsg, request);
-               
-                String title = mr.getMessage("oscarReport.CDMReport.msgPercentageOfPatientWhoMetGuideline");
-                request.setAttribute("title", title);
-                request.setAttribute("messages", reportMsg);
-
-                /* select the correct db specific command */
-                String db_type = OscarProperties.getInstance().getProperty("db_type").trim();
-                String dbSpecificCommand;
-                if (db_type.equalsIgnoreCase("mysql")) {
-                    dbSpecificCommand = "SELECT LAST_INSERT_ID()";
-                } 
-                else if (db_type.equalsIgnoreCase("postgresql")){
-                    dbSpecificCommand = "SELECT CURRVAL('consultationrequests_numeric')";
-                }
-                else
-                    throw new SQLException("ERROR: Database " + db_type + " unrecognized.");
-                
+        if(!validate(frm, request)){
+            MiscUtils.getLogger().debug("the form is invalid");
+            return (new ActionForward(mapping.getInput()));
         }
         
-        catch(SQLException e)
-        {
-            MiscUtils.getLogger().error("Error", e);
+        if(patientSeenCheckbox!=null){
+            int nbPatient = mData.getNbPatientSeen(startDateA, endDateA);  
+            String msg = mr.getMessage("oscarReport.CDMReport.msgPatientSeen", Integer.toString(nbPatient), startDateA, endDateA); 
+            MiscUtils.getLogger().debug(msg);
+            reportMsg.add(msg);
+            reportMsg.add("");
         }
+        
+        getMetGuidelinePercentage(frm, reportMsg, request);
+        //getPatientsMetAllSelectedGuideline(db, frm, reportMsg, request);
+       
+        String title = mr.getMessage("oscarReport.CDMReport.msgPercentageOfPatientWhoMetGuideline");
+        request.setAttribute("title", title);
+        request.setAttribute("messages", reportMsg);
+
+               
+                
+        
         
         return mapping.findForward("success");
     }

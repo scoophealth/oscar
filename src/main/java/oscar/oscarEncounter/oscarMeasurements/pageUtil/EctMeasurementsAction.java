@@ -49,7 +49,6 @@ import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarMeasurements.MeasurementFlowSheet;
 import oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig;
@@ -268,17 +267,7 @@ public class EctMeasurementsAction extends Action {
                     request.setAttribute("css", css);
                     return (new ActionForward(mapping.getInput()));
                 }
-                /* select the correct db specific command */
-                String db_type = OscarProperties.getInstance().getProperty("db_type").trim();
-                String dbSpecificCommand;
-                if (db_type.equalsIgnoreCase("mysql")) {
-                    dbSpecificCommand = "SELECT LAST_INSERT_ID()";
-                }
-                else if (db_type.equalsIgnoreCase("postgresql")){
-                    dbSpecificCommand = "SELECT CURRVAL('consultationrequests_numeric')";
-                }
-                else
-                    throw new SQLException("ERROR: Database " + db_type + " unrecognized.");
+               
             }
             catch(SQLException e)
             {
