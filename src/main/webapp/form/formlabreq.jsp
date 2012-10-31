@@ -25,6 +25,8 @@
 --%>
 
 <%@ page import="oscar.form.*, oscar.OscarProperties"%>
+<%@page import="org.oscarehr.common.dao.FrmLabReqPreSetDao, org.oscarehr.util.SpringUtils"%>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -58,8 +60,9 @@
 
    if (request.getParameter("labType") != null){
       if (formId == 0 ){
+         FrmLabReqPreSetDao preSetDao = (FrmLabReqPreSetDao) SpringUtils.getBean("frmLabReqPreSetDao"); 
          String labPreSet = request.getParameter("labType");
-         props = FrmLabReqPreSet.set(labPreSet,props);
+         props = preSetDao.fillPropertiesByLabType(labPreSet,props);
       }
    }
    
