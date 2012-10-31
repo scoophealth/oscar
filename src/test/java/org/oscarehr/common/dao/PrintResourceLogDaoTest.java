@@ -21,20 +21,36 @@
  * Hamilton
  * Ontario, Canada
  */
-package org.oscarehr.common.dao;
 
+
+/**
+ * @author Shazib
+ */
+package org.oscarehr.common.dao;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.junit.Assert.assertNotNull;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.PrintResourceLog;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.util.MiscUtils;
 
 public class PrintResourceLogDaoTest extends DaoTestFixtures {
 
 	private PrintResourceLogDao dao = SpringUtils.getBean(PrintResourceLogDao.class);
+	DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
 
 
 	@Before
@@ -48,5 +64,57 @@ public class PrintResourceLogDaoTest extends DaoTestFixtures {
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		dao.persist(entity);
 		assertNotNull(entity.getId());
+	}
+
+	
+	@Test
+	public void testFindByResource() throws Exception {
+		
+		String resourceId1 = "100";
+		String resourceId2 = "200";
+		
+		String resourceName1 = "alpha";
+		String resourceName2 = "bravo";
+		
+		PrintResourceLog printResourceLog1 = new PrintResourceLog();
+		EntityDataGenerator.generateTestDataForModelClass(printResourceLog1);
+		printResourceLog1.setResourceId(resourceId1);
+		printResourceLog1.setResourceName(resourceName1);
+		Date date1 = new Date(dfm.parse("20010101").getTime());
+		printResourceLog1.setDateTime(date1);
+		dao.persist(printResourceLog1);
+		
+		PrintResourceLog printResourceLog2 = new PrintResourceLog();
+		EntityDataGenerator.generateTestDataForModelClass(printResourceLog2);
+		printResourceLog2.setResourceId(resourceId2);
+		printResourceLog2.setResourceName(resourceName2);
+		Date date2 = new Date(dfm.parse("20100101").getTime());
+		printResourceLog2.setDateTime(date2);
+		dao.persist(printResourceLog2);
+		
+		PrintResourceLog printResourceLog3 = new PrintResourceLog();
+		EntityDataGenerator.generateTestDataForModelClass(printResourceLog3);
+		printResourceLog3.setResourceId(resourceId1);
+		printResourceLog3.setResourceName(resourceName1);
+		Date date3 = new Date(dfm.parse("20080101").getTime());
+		printResourceLog3.setDateTime(date3);
+		dao.persist(printResourceLog3);
+		
+		List<PrintResourceLog> expectedResult = new ArrayList<PrintResourceLog>(Arrays.asList(printResourceLog3, printResourceLog1));
+		List<PrintResourceLog> result = dao.findByResource(resourceName1, resourceId1);
+
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);	
 	}
 }
