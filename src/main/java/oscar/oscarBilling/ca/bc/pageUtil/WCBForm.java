@@ -110,9 +110,6 @@ public final class WCBForm
   /**
    * @todo Database code should be moved out of the model and into an appropriate persistence class
    */
-  private static String sql =
-
-      "INSERT INTO wcb (billing_no, demographic_no, provider_no, formCreated, formEdited, w_reporttype, w_fname, w_lname, w_mname, w_gender, w_dob, w_address, w_city, w_area, w_phone, w_phn, w_empname, w_wcbno, w_opaddress, w_opcity, w_rphysician, w_duration, w_ftreatment, w_problem, w_servicedate, w_diagnosis, w_icd9, w_bp, w_side, w_noi, w_work, w_workdate, w_clinicinfo, w_capability, w_capreason, w_estimate, w_rehab, w_rehabtype, w_estimatedate, w_tofollow, w_payeeno, w_pracno, w_empphone, w_emparea, w_postal, w_wcbadvisor, w_doi, w_feeitem, w_extrafeeitem, bill_amount, w_servicelocation,formNeeded) VALUES (";
   private String demographic;
   private String w_demographic;
   private String w_providerno;

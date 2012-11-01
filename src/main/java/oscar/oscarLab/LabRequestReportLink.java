@@ -25,93 +25,95 @@
 
 package oscar.oscarLab;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import org.oscarehr.common.dao.LabRequestReportLinkDao;
 import org.oscarehr.util.SpringUtils;
-import oscar.oscarDB.DBHandler;
+
 import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsExtDao;
 import oscar.oscarEncounter.oscarMeasurements.model.MeasurementsExt;
+import oscar.util.ConversionUtils;
 import oscar.util.StringUtils;
 import oscar.util.UtilDateUtilities;
 
 public class LabRequestReportLink {
+	private static LabRequestReportLinkDao dao = SpringUtils.getBean(LabRequestReportLinkDao.class);
+	
 	private static MeasurementsExtDao measurementsExtDao = null;
 	
 	static {
 		measurementsExtDao = (MeasurementsExtDao) SpringUtils.getBean("measurementsExtDao");
 	}
     
-	public static HashMap<String,Object> getLinkByReport(String reportTable, Long reportId) throws SQLException {
+	public static HashMap<String,Object> getLinkByReport(String reportTable, Long reportId) {
 		HashMap<String,Object> link = new HashMap<String,Object>();
 
-		String sql = "SELECT * FROM labRequestReportLink WHERE report_table='" + reportTable+"'" +
-					 " AND report_id="  + reportId;
-		ResultSet rs = DBHandler.GetSQL(sql);
-		if (rs.next()) {
-			link.put("id", rs.getLong("id"));
-			link.put("request_table", rs.getString("request_table"));
-			link.put("request_id", rs.getLong("request_id"));
-			link.put("request_date", rs.getTimestamp("request_date"));
+		List<org.oscarehr.common.model.LabRequestReportLink> results = dao.findByReportTableAndReportId(reportTable,reportId.intValue());
+		for(org.oscarehr.common.model.LabRequestReportLink l:results) {
+			link.put("id", l.getId().longValue());
+			link.put("request_table", l.getRequestTable());
+			link.put("request_id", new Long(l.getRequestId()));
+			link.put("request_date", l.getRequestDate());
 			link.put("report_table", reportTable);
 			link.put("report_id", reportId);
 		}
+		
+		
 		return link;
 	}
 
-	public static HashMap<String,Object> getLinkByRequestId(String requestTable, Long reqId) throws SQLException {
+	public static HashMap<String,Object> getLinkByRequestId(String requestTable, Long reqId) {
 		HashMap<String,Object> link = new HashMap<String,Object>();
 
-		String sql = "SELECT * FROM labRequestReportLink WHERE request_table='" + requestTable+"'" +
-					 " AND request_id="  + reqId;
-		ResultSet rs = DBHandler.GetSQL(sql);
-		if (rs.next()) {
-			link.put("id", rs.getLong("id"));
-			link.put("request_table", rs.getString("request_table"));
-			link.put("request_id", rs.getLong("request_id"));
-			link.put("request_date", rs.getTimestamp("request_date"));
-			link.put("report_table", rs.getString("report_table"));
-			link.put("report_id", rs.getLong("report_id"));
+		List<org.oscarehr.common.model.LabRequestReportLink> results = dao.findByRequestTableAndRequestId(requestTable,reqId.intValue());
+		for(org.oscarehr.common.model.LabRequestReportLink l:results) {
+			link.put("id", l.getId().longValue());
+			link.put("request_table", l.getRequestTable());
+			link.put("request_id", new Long(l.getRequestId()));
+			link.put("request_date", l.getRequestDate());
+			link.put("report_table", l.getReportTable());
+			link.put("report_id", new Long(l.getReportId()));
 		}
+	
 		return link;
 	}
 
-	public static String getRequestDate(String id) throws SQLException {
-	
-		String sql = "SELECT request_date FROM labRequestReportLink WHERE id=" + id;
-		ResultSet rs = DBHandler.GetSQL(sql);
+	public static String getRequestDate(String id) {
 		Date requestDate = null;
-		if (rs.next()) {
-			requestDate = rs.getTimestamp(1);
+		org.oscarehr.common.model.LabRequestReportLink l = dao.find(Integer.parseInt(id));
+		if(l != null) {
+			requestDate = l.getRequestDate();
 		}
+		
 		return UtilDateUtilities.DateToString(requestDate,"yyyy-MM-dd HH:mm:ss");
 	}
 
-	public static Long getIdByReport(String reportTable, Long reportId) throws SQLException {
+	public static Long getIdByReport(String reportTable, Long reportId)  {
 		HashMap<String,Object> link = getLinkByReport(reportTable, reportId);
 		return (Long)link.get("id");
 	}
 
-	public static Long getRequestTableIdByReport(String reportTable, Long reportId) throws SQLException {
+	public static Long getRequestTableIdByReport(String reportTable, Long reportId)  {
 		HashMap<String,Object> link = getLinkByReport(reportTable, reportId);
 		Long requestId = (Long)link.get("request_id");
 		if (requestId==null || requestId==0) requestId = null;
 		return requestId;
 	}
 	
-	public static void save(String requestTable, Long requestId, String requestDate, String reportTable, Long reportId) throws SQLException {
+	public static void save(String requestTable, Long requestId, String requestDate, String reportTable, Long reportId) {
 		if (StringUtils.empty(reportTable) || reportId==null) return;
-		
 		if (StringUtils.empty(requestDate)) requestDate=null;
-		String requestDateString="null";
-		if (requestDate!=null) requestDateString="'"+requestDate+"'";
-
-		String sql = "INSERT INTO labRequestReportLink (request_table,request_id,request_date,report_table,report_id) VALUES ('" +
-					 requestTable+"',"+requestId+","+requestDateString+",'"+reportTable+"',"+reportId+")";
-		DBHandler.RunSQL(sql);
+		
+		org.oscarehr.common.model.LabRequestReportLink l = new org.oscarehr.common.model.LabRequestReportLink();
+		l.setRequestTable(requestTable);
+		l.setRequestId(requestId.intValue());
+		l.setRequestDate(ConversionUtils.fromTimestampString(requestDate));
+		l.setReportTable(reportTable);
+		l.setReportId(reportId.intValue());
+		
+		dao.persist(l);
 		
 		Integer measurementId = getMeasurementIdFromExt(reportTable, reportId.toString());
 		MeasurementsExt mExt = getRequestDate_MeasurementsExt(measurementId);
@@ -120,14 +122,17 @@ public class LabRequestReportLink {
 		}
 	}
 
-	public static void update(Long id, String requestTable, Long requestId, String requestDate) throws SQLException {
+	public static void update(Long id, String requestTable, Long requestId, String requestDate) {
 		if (id==null) return;
 		
-		String sql = "UPDATE labRequestReportLink SET request_table='" + requestTable + "'" +
-					 " AND request_id=" + requestId +
-					 " AND request_date='" + requestDate + "'" +
-					 " WHERE id=" + id;
-		DBHandler.RunSQL(sql);
+		org.oscarehr.common.model.LabRequestReportLink l = dao.find(id.intValue());
+		if(l != null) {
+			l.setRequestTable(requestTable);
+			l.setRequestId(requestId.intValue());
+			l.setRequestDate(ConversionUtils.fromTimestampString(requestDate));
+			dao.merge(l);
+		}
+		
 		
 		//update request_datetime in measurementsExt
 		HashMap<String,Object> link = getLinkByRequestId(requestTable, requestId);
@@ -165,14 +170,6 @@ public class LabRequestReportLink {
 			}
 		}
 		return null;
-	}
-	
-	private static String getRequestDate_MeasurementsExt(String reportTable, String reportId) {
-		Integer measurementId = getMeasurementIdFromExt(reportTable, reportId);
-		MeasurementsExt mExt = getRequestDate_MeasurementsExt(measurementId);
-		
-		if (mExt!=null) return mExt.getVal();
-		return null; 
 	}
 	
 	private static Integer getMeasurementIdFromExt(String reportTable, String reportId) {

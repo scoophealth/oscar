@@ -1388,10 +1388,7 @@ public class DemographicExportAction4 extends Action {
 					}
 
 					//lab requisition datetime
-					/*
-					HashMap<String,Object> link = LabRequestReportLink.getLinkByReport("hl7TextMessage", Long.valueOf(lab_no));
-					Date reqDate = (Date) link.get("request_date");
-					*/
+					
 					String reqDate = labMea.getExtVal("request_datetime");
 					if (StringUtils.filled(reqDate)) labResults.addNewLabRequisitionDateTime().setFullDateTime(Util.calDate(reqDate));
 

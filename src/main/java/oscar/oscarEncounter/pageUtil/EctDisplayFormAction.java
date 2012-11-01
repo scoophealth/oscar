@@ -25,7 +25,6 @@
 
 package oscar.oscarEncounter.pageUtil;
 
-import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -131,12 +130,10 @@ public class EctDisplayFormAction extends EctDisplayAction {
 
 							if(table.equals("formLabReq07")) {
 								Long reportId = null;
-								try {
-									HashMap<String,Object> res = LabRequestReportLink.getLinkByRequestId("formLabReq07",Long.valueOf(pfrm.getFormId()));
-									reportId = (Long)res.get("report_id");
-								}catch(SQLException e) {
-									logger.error("error",e);
-								}
+								
+								HashMap<String,Object> res = LabRequestReportLink.getLinkByRequestId("formLabReq07",Long.valueOf(pfrm.getFormId()));
+								reportId = (Long)res.get("report_id");
+								
 								if(reportId == null) {
 									strTitle.insert(0,"*");
 									strTitle.append("*");
