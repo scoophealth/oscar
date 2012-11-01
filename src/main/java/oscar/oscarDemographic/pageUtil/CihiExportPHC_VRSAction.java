@@ -30,7 +30,6 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -365,12 +364,8 @@ public class CihiExportPHC_VRSAction extends DispatchAction {
 			 this.buildOngoingProblems(demo, patientRecord);
 			 this.buildRiskFactors(demo, patientRecord);
 			 this.buildAllergies(demo, patientRecord);
-			 try {
-				 this.buildCareElements(demo, patientRecord);
-			 }
-			 catch(SQLException e) {
-				 MiscUtils.getLogger().error("Build Care Elements DB Failed", e);
-			 }
+			 this.buildCareElements(demo, patientRecord);
+			
 
 			 this.buildProcedure(demo, patientRecord);
 			 this.buildLaboratoryResults(demo, patientRecord);
@@ -845,7 +840,7 @@ public class CihiExportPHC_VRSAction extends DispatchAction {
 
 
 	@SuppressWarnings("unchecked")
-    private void buildCareElements(Demographic demo, PatientRecord patientRecord) throws SQLException {
+    private void buildCareElements(Demographic demo, PatientRecord patientRecord)  {
 		List<Measurements> measList = ImportExportMeasurements.getMeasurements(demo.getDemographicNo().toString());
 		CareElements careElements = patientRecord.addNewCareElements();
 		Calendar cal = Calendar.getInstance();
