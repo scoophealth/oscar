@@ -26,11 +26,14 @@ package oscar.oscarLab.ca.bc.PathNet.HL7.V2_3;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.billing.CA.BC.dao.Hl7ObxDao;
+import org.oscarehr.billing.CA.BC.model.Hl7Obx;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.bc.PathNet.HL7.Node;
 /*
  * @author Jesse Bank
@@ -40,10 +43,9 @@ import oscar.oscarLab.ca.bc.PathNet.HL7.Node;
  */
 public class OBX extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
     private static Logger logger=MiscUtils.getLogger();
-
+    private static Hl7ObxDao dao = SpringUtils.getBean(Hl7ObxDao.class);
     private ArrayList<NTE> note;
-
-   private boolean update = false;
+    private boolean update = false;
 
    public OBX() {
       note = new ArrayList<NTE>();
@@ -63,7 +65,42 @@ public class OBX extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
    }
 
    public int ToDatabase(int parent)throws SQLException {
-      return booleanConvert(DBHandler.RunSQL(this.update? this.getUpdateSql(parent) : this.getInsertSql(parent) ));
+	   List<Hl7Obx> results = new ArrayList<Hl7Obx>();
+	   if(update) {
+		   results = dao.findByObrId(parent);
+	   } else {
+		   results.add(new Hl7Obx());
+	   }
+	   
+	   for(Hl7Obx h:results) {
+		   h.setSetId(get("set_id",""));
+		   h.setValueType(get("value_type",""));
+		   h.setObservationIdentifier(get("observation_identifier",""));
+		   h.setObservationSubId(get("observation_sub_id",""));
+		   h.setObservationResults(get("observation_results",""));
+		   h.setUnits(get("units",""));
+		   h.setReferenceRange(get("reference_range",""));
+		   h.setAbnormalFlags(get("abnormal_flags",""));
+		   h.setProbability(get("probability",""));
+		   h.setNatureOfAbnormalTest(get("nature_of_abnormal_test",""));
+		   h.setObservationResultStatus(get("observation_result_status",""));
+		   h.setDateLastNormalValue(this.convertTSToDate(get("date_last_normal_value","")));
+		   h.setUserDefinedAccessChecks(get("user_defined_access_checks",""));
+		   h.setObservationDateTime(convertTSToDate(get("observation_date_time","")));
+		   h.setProducerId(get("producer_id",""));
+		   h.setResponsibleObserver(get("responsible_observer",""));
+		   h.setObservationMethod(get("observation_method",""));
+		   h.setNote(getNote());
+		   
+		   
+		   if(update) {
+			   dao.merge(h);
+		   } else {
+			   dao.persist(h);
+		   }
+	   }
+	   
+	  return 0;
    }
 
 
@@ -80,28 +117,9 @@ public class OBX extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
       return notes;
    }
 
-   protected String getUpdateSql(int parent) {
-      String sql = "UPDATE hl7_obx SET ";
-      String[] properties = this.getProperties();
-      for(int i = 0; i < properties.length; ++i) {
-         sql += properties[i] + "='" + this.get(properties[i], "") + "', ";
-      }
-      sql += "note='" + getNote() + "' WHERE obr_id='" + parent + "'";
-      return sql;
-   }
+   protected String getUpdateSql(int parent) {return null;}
 
-   protected String getInsertSql(int parent) {
-      String fields = "INSERT INTO hl7_obx ( obr_id";
-      String values = "VALUES ('" + String.valueOf(parent) + "'";
-      String[] properties = this.getProperties();
-      for(int i = 0; i < properties.length; ++i) {
-         fields += ", " + properties[i];
-         values += ", '" + this.get(properties[i], "") + "'";
-      }
-      fields += ", note";
-      values += ", '" + getNote() + "'";
-      return fields + ") " + values + ");";
-   }
+   protected String getInsertSql(int parent) {return null;}
 
    protected String[] getProperties() {
       return new String[] {

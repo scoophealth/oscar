@@ -27,9 +27,11 @@ package oscar.oscarLab.ca.bc.PathNet.HL7.V2_3;
 import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.billing.CA.BC.dao.Hl7OrcDao;
+import org.oscarehr.billing.CA.BC.model.Hl7Orc;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.bc.PathNet.HL7.Node;
 /*
  * @author Jesse Bank
@@ -39,7 +41,8 @@ import oscar.oscarLab.ca.bc.PathNet.HL7.Node;
  */
 public class ORC extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
     private static Logger logger=MiscUtils.getLogger(); 
-
+    private static Hl7OrcDao dao = SpringUtils.getBean(Hl7OrcDao.class);
+    
     public Node Parse(String line) {
       if(line.startsWith("ORC")) {
          return super.Parse(line, 0, 1);
@@ -49,21 +52,39 @@ public class ORC extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
    }
    
    //Inserts record into hl7_orc table
+
+   
+   protected String getInsertSql(int parent) {return null;}
+
    public int ToDatabase(int parent)throws SQLException {
-      MiscUtils.getLogger().debug(this.getInsertSql(parent));
-      return booleanConvert(DBHandler.RunSQL(this.getInsertSql(parent)));
+	   
+	   Hl7Orc h = new Hl7Orc();
+	   h.setOrderControl(get("order_control",""));
+	   h.setPlacerOrderNumber1(get("placer_order_number1",""));
+	   h.setFillerOrderNumber(get("filler_order_number",""));
+	   h.setPlacerOrderNumber2(get("placer_order_number2",""));
+	   h.setOrderStatus(get("order_status",""));
+	   h.setResponseFlag(get("response_flag",""));
+	   h.setQuantityTiming(get("quantity_timing",""));
+	   h.setParent(get("parent",""));
+	   h.setDatetimeOfTransaction(this.convertTSToDate(get("date_time_of_transaction","")));
+	   h.setEnteredBy(get("entered_by",""));
+	   h.setVerifiedBy(get("verified_by",""));
+	   h.setOrderingProvider(get("ordering_provider",""));
+	   h.setEntererLocation(get("enterer_location",""));
+	   h.setCallbackPhoneNumber(get("callback_phone_number",""));
+	   h.setOrderEffectiveDateTime(this.convertTSToDate(get("order_effective_date_time","")));
+	   h.setOrderControlCodeReason(get("order_control_code_reason",""));
+	   h.setEnteringOrganization(get("entering_organization",""));
+	   h.setEnteringDevice(get("entering_device",""));
+	   h.setActionBy(get("action_by",""));
+	   
+	   dao.persist(h);
+	   
+	   return 0;
+	
    }
    
-   protected String getInsertSql(int parent) {
-      String fields = "INSERT INTO hl7_orc ( pid_id";
-      String values = "VALUES ('" + String.valueOf(parent) + "'";
-      String[] properties = this.getProperties();
-      for(int i = 0; i < properties.length; ++i) {
-         fields += ", " + properties[i];
-         values += ", '" + this.get(properties[i], "") + "'";
-      }
-      return fields + ") " + values + ");";
-   }
    
    protected String[] getProperties() {
       return new String[]{

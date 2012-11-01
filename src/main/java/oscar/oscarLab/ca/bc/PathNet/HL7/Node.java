@@ -25,6 +25,9 @@
 package oscar.oscarLab.ca.bc.PathNet.HL7;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Hashtable;
 
 import org.apache.log4j.Logger;
@@ -46,6 +49,20 @@ public abstract class Node {
    throws SQLException;
    public abstract Node Parse(String line);
    protected abstract String getInsertSql(int parent);
+   
+   protected Date convertTSToDate(String input) {
+	   if(input.length()==0) {
+		   return null;
+	   }
+	   SimpleDateFormat f = new SimpleDateFormat("yyyyMMddHHmmss");
+	   try {
+		   return f.parse(input);
+	   }catch(ParseException e) {
+		   //nothing
+	   }
+	   return null;
+   }
+   
    protected int getLastInsertedId() throws SQLException {
       ResultSet result = DBHandler.GetSQL(last_insert_id);
       int parent = 0;
@@ -84,13 +101,7 @@ public abstract class Node {
       return str
       .replaceAll("\\\\", "\\\\\\\\")
       .replaceAll("\\\'", "\\\\\'");
-      //.replaceAll("\\^", " ");
+     
    }
-   protected void getInsertFieldsAndValues(String fields, String values) {
-      String[] properties = this.getProperties();
-      for (int i = 0; i < properties.length; ++i) {
-         fields += ", " + properties[i];
-         values += ", '" + this.get(properties[i], "") + "'";
-      }
-   }
+  
 }
