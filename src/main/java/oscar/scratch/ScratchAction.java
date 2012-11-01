@@ -82,8 +82,7 @@ public class ScratchAction extends Action {
               }
            }else{
                if (dirty.equals("1")){               //if its the same, is the dirty field set
-                  MiscUtils.getLogger().debug("INSERTING NEW TEXT");
-                  returnId = scratch.insert(providerNo,scratchPad);   //save new record and return new id.
+                 returnId = scratch.insert(providerNo,scratchPad);   //save new record and return new id.
                   returnText = scratchPad;
                }
            }    
