@@ -25,6 +25,10 @@
 
 package org.oscarehr.common.model;
 
+import java.io.Serializable;
+import java.util.Comparator;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -33,7 +37,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="validations")
-public class Validations extends AbstractModel<Integer>{
+public class Validations extends AbstractModel<Integer> implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,21 +45,29 @@ public class Validations extends AbstractModel<Integer>{
 
 	private String name;
 
+	@Column(nullable=true)
 	private String regularExp;
+	
+	@Column(nullable=true)
+	private Double minValue;
 
-	private double minValue;
+	@Column(name="maxValue1",nullable=true)
+	private Double maxValue;
 
-	private double maxValue;
+	@Column(nullable=true)
+	private Integer minLength;
 
-	private int minLength;
+	@Column(nullable=true)
+	private Integer maxLength;
 
-	private int maxLength;
+	@Column(nullable=true)
+	private Boolean isNumeric;
 
-	private boolean isNumeric;
+	@Column(nullable=true)
+	private Boolean isTrue;
 
-	private boolean isTrue;
-
-	private boolean isDate;
+	@Column(nullable=true)
+	private Boolean isDate;
 
 	public Integer getId() {
     	return id;
@@ -136,6 +148,12 @@ public class Validations extends AbstractModel<Integer>{
 	public void setDate(boolean isDate) {
     	this.isDate = isDate;
     }
+
+    public static final Comparator<Validations> NameComparator = new Comparator<Validations>() {
+        public int compare(Validations o1, Validations o2) {
+                return o1.getName().compareTo(o2.getName());
+        }
+    }; 
 
 
 }

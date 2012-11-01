@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,31 +21,32 @@
  * Hamilton
  * Ontario, Canada
  */
-
-
 package org.oscarehr.common.dao;
 
-import java.util.List;
+import static org.junit.Assert.assertNotNull;
 
-import javax.persistence.Query;
+import org.junit.Before;
+import org.junit.Test;
+import org.oscarehr.common.dao.utils.EntityDataGenerator;
+import org.oscarehr.common.dao.utils.SchemaUtils;
+import org.oscarehr.common.model.MeasurementGroupStyle;
+import org.oscarehr.util.SpringUtils;
 
-import org.oscarehr.common.model.MeasurementCSSLocation;
-import org.springframework.stereotype.Repository;
+public class MeasurementGroupStyleDaoTest extends DaoTestFixtures {
 
-@Repository
-public class MeasurementCSSLocationDao extends AbstractDao<MeasurementCSSLocation>{
+	private MeasurementGroupStyleDao dao = SpringUtils.getBean(MeasurementGroupStyleDao.class);
 
-	public MeasurementCSSLocationDao() {
-		super(MeasurementCSSLocation.class);
+
+	@Before
+	public void before() throws Exception {
+		SchemaUtils.restoreTable("measurementGroupStyle");
 	}
-	
-	public List<MeasurementCSSLocation> findByLocation(String location) {
-		Query q = entityManager.createQuery("select m from MeasurementCSSLocation m where m.location=?");
-		q.setParameter(1, location);
-		
-		@SuppressWarnings("unchecked")
-		List<MeasurementCSSLocation> results = q.getResultList();
-		
-		return results;
+
+	@Test
+	public void testCreate() throws Exception {
+		MeasurementGroupStyle entity = new MeasurementGroupStyle();
+		EntityDataGenerator.generateTestDataForModelClass(entity);
+		dao.persist(entity);
+		assertNotNull(entity.getId());
 	}
 }

@@ -60,4 +60,41 @@ public class MeasurementTypeDao extends AbstractDao<MeasurementType> {
 		return (results);
 	}
 	
+	public List<MeasurementType> findByMeasuringInstructionAndTypeDisplayName(String measuringInstruction, String typeDisplayName) {
+		String sqlCommand = "select x from " + modelClass.getSimpleName()+" x where x.measuringInstruction=?1 AND x.typeDisplayName=?2";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, measuringInstruction);
+		query.setParameter(2, typeDisplayName);
+
+		@SuppressWarnings("unchecked")
+		List<MeasurementType> results = query.getResultList();
+
+		return (results);
+	}
+	
+	public List<MeasurementType> findByTypeDisplayName(String typeDisplayName) {
+		String sqlCommand = "select x from " + modelClass.getSimpleName()+" x where x.typeDisplayName=?2";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, typeDisplayName);
+
+		@SuppressWarnings("unchecked")
+		List<MeasurementType> results = query.getResultList();
+
+		return (results);
+	}
+	
+	public List<MeasurementType> findByTypeAndMeasuringInstruction(String type, String measuringInstruction) {
+		String sqlCommand = "select x from " + modelClass.getSimpleName()+" x where x.type=?1 AND x.measuringInstruction=?2 ";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, type);
+		query.setParameter(2, measuringInstruction);
+
+		@SuppressWarnings("unchecked")
+		List<MeasurementType> results = query.getResultList();
+
+		return (results);
+	}
 }
