@@ -50,6 +50,18 @@ public class MeasurementsExtDao extends HibernateDaoSupport {
 		return rs;
 	}
 	
+	public MeasurementsExt getMeasurementsExtByMeasurementIdAndKeyVal(Integer measurementId, String keyVal) {
+		String queryStr = "FROM MeasurementsExt m WHERE m.measurementId = "+measurementId+" AND m.keyVal="+keyVal;
+		
+		@SuppressWarnings("unchecked")
+		List<MeasurementsExt> rs = getHibernateTemplate().find(queryStr);
+
+		if(rs.isEmpty()) {
+			return null;
+		}
+		return rs.get(0);
+	}
+	
 	public Integer getMeasurementIdByKeyValue(String key, String value) {
 		String queryStr = "FROM MeasurementsExt m WHERE m.keyVal='"+key+"' AND m.val='"+value+"'";
 		

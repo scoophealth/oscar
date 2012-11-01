@@ -211,7 +211,7 @@ public class FormUpdateAction extends Action {
         try {
 
 	        if (rs.next()){
-	            dMax = rs.getDouble("maxValue");
+	            dMax = rs.getDouble("maxValue1");
 	            dMin = rs.getDouble("minValue");
 	            iMax = rs.getInt("maxLength");
 	            iMin = rs.getInt("minLength");

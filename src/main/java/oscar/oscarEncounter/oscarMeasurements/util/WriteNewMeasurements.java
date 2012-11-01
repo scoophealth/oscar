@@ -29,18 +29,29 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Vector;
 
 import org.apache.commons.validator.GenericValidator;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.oscarehr.common.dao.MeasurementDao;
+import org.oscarehr.common.dao.MeasurementTypeDao;
+import org.oscarehr.common.model.Measurement;
+import org.oscarehr.common.model.MeasurementType;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarMeasurements.pageUtil.EctValidation;
+import oscar.util.ConversionUtils;
 import oscar.util.UtilDateUtilities;
 
 public class WriteNewMeasurements {
+	
+	private static MeasurementTypeDao measurementTypeDao = SpringUtils.getBean(MeasurementTypeDao.class);
+	private static MeasurementDao dao = SpringUtils.getBean(MeasurementDao.class);
+
     public static ActionMessages addMeasurements(ArrayList names, ArrayList values, String demographicNo, String providerNo) {
             //must be called on the same eform object because it retrieves some of its properties
         Vector measures = new Vector();
@@ -93,41 +104,36 @@ public class WriteNewMeasurements {
     }
     static private void preProcess(Vector measures) {
         //fills in required values
-        try {
+       
+        for (int i=0; i<measures.size(); i++) {
+            Hashtable curmeasure = (Hashtable) measures.get(i);
+            String type = (String) curmeasure.get("type");
+            String measuringInst = (String)curmeasure.get("measuringInstruction");
+            String comments = (String)curmeasure.get("comments");
+            String dateObserved = (String)curmeasure.get("dateObserved");
+            java.util.Date now = UtilDateUtilities.now();
+            String dateEntered = UtilDateUtilities.DateToString(now, "yyyy-MM-dd HH:mm:ss");
+            String sql;
+            if (measuringInst == null || measuringInst.equals("")) {
+            	List<MeasurementType> tmp = measurementTypeDao.findByType(type);
+            	if(tmp.size() > 0) {
+            		 measuringInst = tmp.get(0).getMeasuringInstruction();
+                     curmeasure.put("measuringInstruction", measuringInst);
+            	} else {
+            		 i--;
+                     continue;
+            	}
             
-            ResultSet rs = null;
-            for (int i=0; i<measures.size(); i++) {
-                Hashtable curmeasure = (Hashtable) measures.get(i);
-                String type = (String) curmeasure.get("type");
-                String measuringInst = (String)curmeasure.get("measuringInstruction");
-                String comments = (String)curmeasure.get("comments");
-                String dateObserved = (String)curmeasure.get("dateObserved");
-                java.util.Date now = UtilDateUtilities.now();
-                String dateEntered = UtilDateUtilities.DateToString(now, "yyyy-MM-dd HH:mm:ss");
-                String sql;
-                if (measuringInst == null || measuringInst.equals("")) {
-                    sql = "SELECT measuringInstruction FROM measurementType WHERE type='" + type + "'";
-                    rs = DBHandler.GetSQL(sql);
-                    if (rs.next()) {
-                        measuringInst = oscar.Misc.getString(rs, "measuringInstruction");
-                        curmeasure.put("measuringInstruction", measuringInst);
-                        rs.close();
-                    } else {
-                        measures.remove(i);
-                        i--;
-                        rs.close();
-                        continue;
-                    }
-                }
-                if (comments == null) {
-                    curmeasure.put("comments", "");
-                }
-                if (dateObserved == null || dateObserved.equals("")) {
-                    curmeasure.put("dateObserved", dateEntered);
-                }
-                curmeasure.put("dateEntered", dateEntered);
             }
-        } catch (SQLException sqe) { MiscUtils.getLogger().error("Error", sqe); }
+            if (comments == null) {
+                curmeasure.put("comments", "");
+            }
+            if (dateObserved == null || dateObserved.equals("")) {
+                curmeasure.put("dateObserved", dateEntered);
+            }
+            curmeasure.put("dateEntered", dateEntered);
+        }
+       
     }
     
     static private ActionMessages validate(Vector measures, String demographicNo) {
@@ -159,7 +165,7 @@ public class WriteNewMeasurements {
                 rs = ectValidation.getValidationType(inputType, mInstrc);
                 regCharExp = ectValidation.getRegCharacterExp();
                 if (rs.next()){
-                    dMax = rs.getDouble("maxValue");
+                    dMax = rs.getDouble("maxValue1");
                     dMin = rs.getDouble("minValue");
                     iMax = rs.getInt("maxLength");
                     iMin = rs.getInt("minLength");
@@ -227,32 +233,11 @@ public class WriteNewMeasurements {
     }
 
     static public void write(Vector measures, String demographicNo, String providerNo) {
-        try {
+       
             
-            for (int i=0; i<measures.size(); i++) {
-                Hashtable measure = (Hashtable) measures.get(i);
+        for (int i=0; i<measures.size(); i++) {
+            Hashtable measure = (Hashtable) measures.get(i);
 
-                String inputValue = (String) measure.get("value");
-                String inputType = (String) measure.get("type");
-                String mInstrc = (String) measure.get("measuringInstruction");
-                String comments = (String) measure.get("comments");
-                String dateObserved = (String) measure.get("dateObserved");
-                String dateEntered = (String) measure.get("dateEntered");
-                //write....
-                String sql = "INSERT INTO measurements"
-                +"(type, demographicNo, providerNo, dataField, measuringInstruction, comments, dateObserved, dateEntered)"
-                +" VALUES ('"+inputType+"','"+demographicNo+"','"+providerNo+"','"+inputValue+"','"
-                + mInstrc+"','"+comments+"','"+dateObserved+"','"+dateEntered+"')";
-                MiscUtils.getLogger().debug("SQL measure ====" + sql);
-                DBHandler.RunSQL(sql);
-            }
-        }
-        catch(SQLException e) { MiscUtils.getLogger().error("Error", e); }
-    }
-    
-    static public void write(Hashtable measure, String demographicNo, String providerNo) {
-        try {
-            
             String inputValue = (String) measure.get("value");
             String inputType = (String) measure.get("type");
             String mInstrc = (String) measure.get("measuringInstruction");
@@ -260,14 +245,37 @@ public class WriteNewMeasurements {
             String dateObserved = (String) measure.get("dateObserved");
             String dateEntered = (String) measure.get("dateEntered");
             //write....
-            String sql = "INSERT INTO measurements"
-            +"(type, demographicNo, providerNo, dataField, measuringInstruction, comments, dateObserved, dateEntered)"
-            +" VALUES ('"+inputType+"','"+demographicNo+"','"+providerNo+"','"+inputValue+"','"
-            + mInstrc+"','"+comments+"','"+dateObserved+"','"+dateEntered+"')";
-            MiscUtils.getLogger().debug("SQL measure ====" + sql);
-            DBHandler.RunSQL(sql);
+            Measurement m = new Measurement();
+            m.setType(inputType);
+            m.setDemographicId(Integer.parseInt(demographicNo));
+            m.setProviderNo(providerNo);
+            m.setDataField(inputValue);
+            m.setMeasuringInstruction(mInstrc);
+            m.setComments(comments);
+            m.setDateObserved(ConversionUtils.fromTimestampString(dateObserved));
+            dao.persist(m);
+           
         }
-        catch(SQLException e) { MiscUtils.getLogger().error("Error", e); }
+        
+    }
+    
+    static public void write(Hashtable measure, String demographicNo, String providerNo) { 
+        String inputValue = (String) measure.get("value");
+        String inputType = (String) measure.get("type");
+        String mInstrc = (String) measure.get("measuringInstruction");
+        String comments = (String) measure.get("comments");
+        String dateObserved = (String) measure.get("dateObserved");
+        String dateEntered = (String) measure.get("dateEntered");
+        //write....
+        Measurement m = new Measurement();
+        m.setType(inputType);
+        m.setDemographicId(Integer.parseInt(demographicNo));
+        m.setProviderNo(providerNo);
+        m.setDataField(inputValue);
+        m.setMeasuringInstruction(mInstrc);
+        m.setComments(comments);
+        m.setDateObserved(ConversionUtils.fromTimestampString(dateObserved));
+        dao.persist(m);
     }
     
      public void write(final String followUpType, final String followUpValue, final String demographicNo, final String providerNo,final java.util.Date dateObserved,final String comment ) {        

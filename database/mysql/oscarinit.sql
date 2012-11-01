@@ -7495,7 +7495,7 @@ CREATE TABLE validations(
   id int UNSIGNED AUTO_INCREMENT,
   name varchar(100) NOT NULL,
   regularExp varchar(100) ,
-  `maxValue` double,
+  `maxValue1` double,
   minValue double,
   maxLength int(3),
   minLength int(3),
