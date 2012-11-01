@@ -77,4 +77,18 @@ public class PropertyDao extends AbstractDao<Property> {
 		}
 		
 	}
+    
+    public List<Property> findByNameAndValue(String name, String value)
+ 	{
+     	String sqlCommand="select x from "+modelClass.getSimpleName()+" x where x.name=?1 and x.value=?2";
+ 		Query query = entityManager.createQuery(sqlCommand);
+
+ 		query.setParameter(1, name);
+ 		query.setParameter(2, value);
+ 		
+ 		@SuppressWarnings("unchecked")
+ 		List<Property> results = query.getResultList();
+
+ 		return(results);
+ 	}
 }

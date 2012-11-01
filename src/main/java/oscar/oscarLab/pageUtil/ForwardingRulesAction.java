@@ -46,9 +46,11 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.IncomingLabRulesDao;
+import org.oscarehr.common.model.IncomingLabRules;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
-import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ForwardingRules;
 
 /**
@@ -58,8 +60,9 @@ import oscar.oscarLab.ForwardingRules;
 public class ForwardingRulesAction extends Action{
 
     Logger logger = Logger.getLogger(ForwardingRulesAction.class);
+    private IncomingLabRulesDao dao = SpringUtils.getBean(IncomingLabRulesDao.class);
+    
 
-    /** Creates a new instance of ForwardingRulesAction */
     public ForwardingRulesAction() {
     }
 
@@ -82,11 +85,15 @@ public class ForwardingRulesAction extends Action{
 
                 // insert forwarding rules
                 if (providerNums != null){
-                    String sql = "UPDATE incomingLabRules SET archive='1' WHERE provider_no='"+providerNo+"' AND frwdProvider_no='0' AND archive='0'";
-                    DBHandler.RunSQL(sql);
+                	for(IncomingLabRules result:dao.findCurrentByProviderNoAndFrwdProvider(providerNo, "0")) {
+                		result.setArchive("1");
+                		dao.merge(result);
+                	}
                     for (int i=0; i < providerNums.length; i++){
-                        sql = "INSERT INTO incomingLabRules (provider_no, frwdProvider_no) VALUES ('"+providerNo+"', '"+providerNums[i]+"')";
-                        DBHandler.RunSQL(sql);
+                    	IncomingLabRules r =new IncomingLabRules();
+                    	r.setProviderNo(providerNo);
+                    	r.setFrwdProviderNo(providerNums[i]);
+                    	dao.persist(r);
                     }
                 }
 
@@ -97,8 +104,12 @@ public class ForwardingRulesAction extends Action{
                 if (temp == null || temp.size() <= 0){
                     // insert a new rule setting the status to final without forwarding
                     if (status.equals("F")){
-                        String sql = "INSERT INTO incomingLabRules (provider_no, status, frwdProvider_no) VALUES ('"+providerNo+"', '"+status+"', '0')";
-                        DBHandler.RunSQL(sql);
+                    	IncomingLabRules r =new IncomingLabRules();
+                    	r.setProviderNo(providerNo);
+                    	r.setStatus(status);
+                    	r.setFrwdProviderNo("0");
+                    	dao.persist(r);
+                    	
                         // clear the rules if there is no forwarding and the user sets the
                         // status to New... since this is the default
                     }else if(!clearRules(providerNo)){
@@ -106,8 +117,10 @@ public class ForwardingRulesAction extends Action{
                     }
                     // if the rules are set to forward the labs update the status of those rules
                 }else{
-                    String sql = "UPDATE incomingLabRules SET status='"+status+"' WHERE archive='0' AND provider_no='"+providerNo+"'";
-                    DBHandler.RunSQL(sql);
+                	for(IncomingLabRules result:dao.findCurrentByProviderNo(providerNo)) {
+                		result.setStatus(status);
+                		dao.merge(result);
+                	}
                 }
             }catch(Exception e){
                 logger.error("Could not update forwarding rules", e);
@@ -127,14 +140,10 @@ public class ForwardingRulesAction extends Action{
     }
 
     private boolean clearRules(String providerNo){
-        try{
-
-            String sql = "UPDATE incomingLabRules SET archive='1' WHERE provider_no='"+providerNo+"'";
-            DBHandler.RunSQL(sql);
-        }catch(Exception e){
-            logger.error("Could not clear forwarding rules", e);
-            return false;
-        }
+    	for(IncomingLabRules result:dao.findByProviderNo(providerNo)) {
+    		result.setArchive("1");
+    		dao.merge(result);
+    	}
         return true;
     }
 
@@ -148,16 +157,19 @@ public class ForwardingRulesAction extends Action{
 
 
             if ( autoFileLabs != null && autoFileLabs.equalsIgnoreCase("yes") && status.equals("F")){
-                String sql = "UPDATE incomingLabRules SET archive='1' WHERE provider_no='"+providerNo+"' AND frwdProvider_no='"+remProviderNum+"'";
-                logger.info(sql);
-                DBHandler.RunSQL(sql);
-                sql = "INSERT INTO incomingLabRules (provider_no, status) VALUES ('"+providerNo+"', 'F')";
-                logger.info(sql);
-                DBHandler.RunSQL(sql);
+            	for(IncomingLabRules result:dao.findByProviderNoAndFrwdProvider(providerNo, remProviderNum)) {
+            		result.setArchive("1");
+            		dao.merge(result);
+            	}
+            	IncomingLabRules r =new IncomingLabRules();
+            	r.setProviderNo(providerNo);
+            	r.setStatus("F");
+            	dao.persist(r); 
             }else{
-                String sql = "UPDATE incomingLabRules SET archive='1' WHERE provider_no='"+providerNo+"' AND frwdProvider_no='"+remProviderNum+"'";
-                logger.info(sql);
-                DBHandler.RunSQL(sql);
+            	for(IncomingLabRules result:dao.findByProviderNoAndFrwdProvider(providerNo, remProviderNum)) {
+            		result.setArchive("1");
+            		dao.merge(result);
+            	} 
             }
         }catch(Exception e){
             logger.error("Could not remove provider '"+remProviderNum+"' from the forwarding rules", e);
