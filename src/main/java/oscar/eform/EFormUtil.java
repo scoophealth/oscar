@@ -811,32 +811,6 @@ public class EFormUtil {
 		return (s == null || s.trim().equals(""));
 	}
 
-	// ------------------private
-	private static void runSQL(String sql) {
-		try {
-
-			DBHandler.RunSQL(sql);
-		} catch (SQLException sqe) {
-			logger.error("Error", sqe);
-		}
-	}
-
-	private static String runSQLinsert(String sql) {
-		try {
-
-			DBHandler.RunSQL(sql);
-			sql = "SELECT LAST_INSERT_ID()";
-			ResultSet rs = DBHandler.GetSQL(sql);
-			rs.next();
-			String lastID = oscar.Misc.getString(rs, "LAST_INSERT_ID()");
-			rs.close();
-			return (lastID);
-		} catch (SQLException sqe) {
-			logger.error("Error", sqe);
-		}
-		return "";
-	}
-
 	@Deprecated
 	private static ResultSet getSQL(String sql) {
 		ResultSet rs = null;

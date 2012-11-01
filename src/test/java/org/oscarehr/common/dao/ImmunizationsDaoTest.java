@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,32 +21,32 @@
  * Hamilton
  * Ontario, Canada
  */
-
-
 package org.oscarehr.common.dao;
 
-import java.util.List;
+import static org.junit.Assert.assertNotNull;
 
-import javax.persistence.Query;
-
+import org.junit.Before;
+import org.junit.Test;
+import org.oscarehr.common.dao.utils.EntityDataGenerator;
+import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.Immunizations;
-import org.springframework.stereotype.Repository;
+import org.oscarehr.util.SpringUtils;
+
+public class ImmunizationsDaoTest extends DaoTestFixtures {
+
+	private ImmunizationsDao dao = SpringUtils.getBean(ImmunizationsDao.class);
 
 
-@Repository
-public class ImmunizationsDao extends AbstractDao<Immunizations>{
-
-	public ImmunizationsDao() {
-		super(Immunizations.class);
+	@Before
+	public void before() throws Exception {
+		SchemaUtils.restoreTable("immunizations");
 	}
-	
-	public List<Immunizations> findCurrentByDemographicNo(Integer demographicNo) {
-		Query q = entityManager.createQuery("SELECT i FROM Immunizations i WHERE i.demographicNo=?1 AND i.archived=0");
-		q.setParameter(1, demographicNo);
-		
-		@SuppressWarnings("unchecked")
-		List<Immunizations> results = q.getResultList();
-		
-		return results;
+
+	@Test
+	public void testCreate() throws Exception {
+		Immunizations entity = new Immunizations();
+		EntityDataGenerator.generateTestDataForModelClass(entity);
+		dao.persist(entity);
+		assertNotNull(entity.getId());
 	}
 }
