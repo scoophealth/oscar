@@ -115,18 +115,7 @@
 		<td valign="middle" rowspan="2" ALIGN="left"><input type="text"
 			NAME="keyword" SIZE="17" MAXLENGTH="100"> <INPUT
 			TYPE="hidden" NAME="orderby" VALUE="user_name"> 
-			<%
- 				if (isSiteAccessPrivacy)  {
- 			%>	 
-				<INPUT	TYPE="hidden" NAME="dboperation" VALUE="site_security_search_titlename">
-			<%
-				}
-					  else	  {
-			%>
-				<INPUT	TYPE="hidden" NAME="dboperation" VALUE="security_search_titlename">
-			 <%
-			 	}
-			 %>				
+
 		<INPUT TYPE="hidden" NAME="limit1" VALUE="0"> <INPUT
 			TYPE="hidden" NAME="limit2" VALUE="10"> <INPUT TYPE="hidden"
 			NAME="displaymode" VALUE="Security_Search"> <INPUT
