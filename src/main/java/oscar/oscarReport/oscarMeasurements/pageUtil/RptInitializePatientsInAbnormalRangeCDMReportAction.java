@@ -143,7 +143,7 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                         double dMin = 0;
                         try{
                             if (rs.next()){
-                                dMax = rs.getDouble("maxValue");
+                                dMax = rs.getDouble("maxValue1");
                                 dMin = rs.getDouble("minValue");
                                 regExp = rs.getString("regularExp");
                             }

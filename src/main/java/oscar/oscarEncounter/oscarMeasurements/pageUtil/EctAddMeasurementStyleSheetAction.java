@@ -30,9 +30,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -46,13 +45,17 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.upload.FormFile;
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.common.dao.MeasurementCSSLocationDao;
+import org.oscarehr.common.model.MeasurementCSSLocation;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
-import oscar.oscarDB.DBHandler;
 
 
 public class EctAddMeasurementStyleSheetAction extends Action {
+	
+	private static MeasurementCSSLocationDao dao = SpringUtils.getBean(MeasurementCSSLocationDao.class);
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
@@ -92,12 +95,11 @@ public class EctAddMeasurementStyleSheetAction extends Action {
 
         try {
 
+        	List<MeasurementCSSLocation> locs = dao.findByLocation(file.getFileName());
+        	if(locs.size()>0)
+        		return false;
 
-            String sql = "SELECT * FROM measurementCSSLocation WHERE location='" + file.getFileName() + "'";
-            ResultSet rs = DBHandler.GetSQL(sql);
-            if(rs.next()){
-                return false;
-            }
+          
             //retrieve the file data
 
             InputStream stream = file.getInputStream();
@@ -128,9 +130,7 @@ public class EctAddMeasurementStyleSheetAction extends Action {
             MiscUtils.getLogger().error("Error", ioe);
             return isAdded=false;
         }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-        }
+      
         return isAdded;
     }
 
@@ -142,15 +142,9 @@ public class EctAddMeasurementStyleSheetAction extends Action {
     *
     */
     private void write2Database(String fileName){
-         try {
-
-            String sql = "INSERT INTO measurementCSSLocation(location) VALUES('" + fileName + "')";
-            MiscUtils.getLogger().debug("Sql Statement: " + sql);
-            DBHandler.RunSQL(sql);
-        }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-        }
+    	MeasurementCSSLocation m = new MeasurementCSSLocation();
+    	m.setLocation(fileName);
+    	dao.persist(m);
     }
 
 

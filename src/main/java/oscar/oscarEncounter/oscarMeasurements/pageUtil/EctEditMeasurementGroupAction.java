@@ -26,8 +26,6 @@
 package oscar.oscarEncounter.oscarMeasurements.pageUtil;
 
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -37,13 +35,15 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.MeasurementGroupDao;
+import org.oscarehr.common.model.MeasurementGroup;
 import org.oscarehr.util.MiscUtils;
-
-import oscar.OscarProperties;
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.util.SpringUtils;
 
 
 public class EctEditMeasurementGroupAction extends Action {
+
+	private MeasurementGroupDao dao = SpringUtils.getBean(MeasurementGroupDao.class);
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
@@ -56,56 +56,37 @@ public class EctEditMeasurementGroupAction extends Action {
         
                 
         if(frm.getForward()!=null){
-            try{
+          
                                                                                         
                 
-                if (frm.getForward().compareTo("add")==0) {
-                    MiscUtils.getLogger().debug("the add button is pressed");
-                    String[] selectedAddTypes = frm.getSelectedAddTypes();  
-                    if(selectedAddTypes != null){
-                        for(int i=0; i<selectedAddTypes.length; i++){
-                            MiscUtils.getLogger().debug(selectedAddTypes[i]);
-                            String sql = "INSERT INTO measurementGroup (name, typeDisplayName) VALUES('" + groupName + "','" + selectedAddTypes[i] +"')";
-                            MiscUtils.getLogger().debug(" sql statement "+sql);
-                            DBHandler.RunSQL(sql);                                
-                        }
+            if (frm.getForward().compareTo("add")==0) {
+                MiscUtils.getLogger().debug("the add button is pressed");
+                String[] selectedAddTypes = frm.getSelectedAddTypes();  
+                if(selectedAddTypes != null){
+                    for(int i=0; i<selectedAddTypes.length; i++){
+                        MiscUtils.getLogger().debug(selectedAddTypes[i]);
+                        MeasurementGroup mg = new MeasurementGroup();
+                        mg.setName(groupName);
+                        mg.setTypeDisplayName(selectedAddTypes[i]);
+                        dao.persist(mg);  
+                        requestId = mg.getId().toString();
                     }
                 }
-                else if (frm.getForward().compareTo("delete")==0){
-                    MiscUtils.getLogger().debug("the delete button is pressed");
-                    String[] selectedDeleteTypes = frm.getSelectedDeleteTypes();  
-                    if(selectedDeleteTypes != null){
-                        for(int i=0; i<selectedDeleteTypes.length; i++){
-                            MiscUtils.getLogger().debug(selectedDeleteTypes[i]);
-                            String sql = "DELETE  FROM `measurementGroup` WHERE name='"+ groupName +"' AND typeDisplayName='" + selectedDeleteTypes[i] + "'";                                        
-                            MiscUtils.getLogger().debug(" sql statement "+sql);
-                            DBHandler.RunSQL(sql);                                
-                        }
+            }
+            else if (frm.getForward().compareTo("delete")==0){
+                MiscUtils.getLogger().debug("the delete button is pressed");
+                String[] selectedDeleteTypes = frm.getSelectedDeleteTypes();  
+                if(selectedDeleteTypes != null){
+                    for(int i=0; i<selectedDeleteTypes.length; i++){
+                        MiscUtils.getLogger().debug(selectedDeleteTypes[i]);
+                        dao.remove(dao.findByNameAndTypeDisplayName(groupName, selectedDeleteTypes[i]));
+                                                     
                     }
                 }
+            }
+            
                 
-                /*select the correct db specific command */
-                String db_type = OscarProperties.getInstance().getProperty("db_type").trim();
-                String dbSpecificCommand;
-                if (db_type.equalsIgnoreCase("mysql")) {
-                    dbSpecificCommand = "SELECT LAST_INSERT_ID()";
-                } 
-                else if (db_type.equalsIgnoreCase("postgresql")){
-                    dbSpecificCommand = "SELECT CURRVAL('consultationrequests_numeric')";
-                }
-                else
-                    throw new SQLException("ERROR: Database " + db_type + " unrecognized.");
-                    
-                ResultSet rs = DBHandler.GetSQL(dbSpecificCommand);
-                if(rs.next())
-                    requestId = Integer.toString(rs.getInt(1));
-            }
-           
-            catch(SQLException e)
-            {
-                MiscUtils.getLogger().error("Error", e);
-            }
-     
+            
         }                          
         
         return mapping.findForward("success");
