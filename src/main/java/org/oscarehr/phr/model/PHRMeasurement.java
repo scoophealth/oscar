@@ -30,8 +30,6 @@
 
 package org.oscarehr.phr.model;
 
-import java.sql.SQLException;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -169,7 +167,6 @@ public class PHRMeasurement extends PHRDocument{
 
             //try to obtain unit from measurementExt
             ImportExportMeasurements iem = new ImportExportMeasurements();
-            try {
                 MeasurementsExt measurementExt = ImportExportMeasurements.getMeasurementsExtByKeyval(new Long(measurement.getId()), "unit");
                 if (measurementExt != null) {
                     CodedValueType unitCVT = new CodedValueType();
@@ -178,9 +175,6 @@ public class PHRMeasurement extends PHRDocument{
                     unitCVT.setCodingSystem(csrt);
                     result.setUnit(unitCVT);
                 }
-            } catch (SQLException e) {
-                MiscUtils.getLogger().error("Error", e);
-            }
 
         }
         //For all measurements

@@ -26,8 +26,6 @@
 package oscar.oscarEncounter.oscarMeasurements.pageUtil;
 
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -42,14 +40,17 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.util.MessageResources;
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.common.dao.MeasurementTypeDao;
+import org.oscarehr.common.model.MeasurementType;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarMeasurements.data.MeasurementTypes;
 import oscar.oscarMessenger.util.MsgStringQuote;
 
 public class EctAddMeasurementTypeAction extends Action {
 
+	private MeasurementTypeDao dao = SpringUtils.getBean(MeasurementTypeDao.class);
+	
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
     {
@@ -59,42 +60,35 @@ public class EctAddMeasurementTypeAction extends Action {
         request.getSession().setAttribute("EctAddMeasurementTypeForm", frm);
         
         MsgStringQuote str = new MsgStringQuote();     
-        List messages = new LinkedList();
-        
-        try{
-            
+        List<String> messages = new LinkedList<String>();
+         
 
-            String type = frm.getType();
-            String typeUp = type.toUpperCase();
-            String typeDesc = frm.getTypeDesc();
-            String typeDisplayName = frm.getTypeDisplayName();
-            String measuringInstrc = frm.getMeasuringInstrc();
-            String validation = frm.getValidation();
-            if (!allInputIsValid(request, type, typeDesc, typeDisplayName, measuringInstrc)){
-                return (new ActionForward(mapping.getInput()));
-            }
-
-            //Write to database
-            String sql = "INSERT INTO measurementType"
-                +"(type, typeDescription, typeDisplayName, measuringInstruction, validation)"
-                +" VALUES ('"+str.q(typeUp)+"','"+str.q(typeDesc)+"','"+str.q(typeDisplayName)+"','"+str.q(measuringInstrc)+"','"
-                + str.q(validation)+"')";
-            MiscUtils.getLogger().debug(" sql statement "+sql);
-            DBHandler.RunSQL(sql);
-                
+        String type = frm.getType();
+        String typeUp = type.toUpperCase();
+        String typeDesc = frm.getTypeDesc();
+        String typeDisplayName = frm.getTypeDisplayName();
+        String measuringInstrc = frm.getMeasuringInstrc();
+        String validation = frm.getValidation();
+        if (!allInputIsValid(request, type, typeDesc, typeDisplayName, measuringInstrc)){
+            return (new ActionForward(mapping.getInput()));
         }
-        catch(SQLException e)
-        {
-            MiscUtils.getLogger().error("Error", e);
-        }            
+
+        MeasurementType mt = new MeasurementType();
+        mt.setType(typeDisplayName);
+        mt.setTypeDescription(typeDesc);
+        mt.setTypeDisplayName(typeDisplayName);
+        mt.setMeasuringInstruction(measuringInstrc);
+        mt.setValidation(validation);
+        dao.persist(mt);
+        
+                
         
         MessageResources mr = getResources(request);
         String msg = mr.getMessage("oscarEncounter.oscarMeasurements.AddMeasurementType.successful", "!");
-        //String msg = "Measurement Type has been added successfully!";
         messages.add(msg);
         request.setAttribute("messages", messages);
-        MeasurementTypes mt =  MeasurementTypes.getInstance();
-        mt.reInit();
+        MeasurementTypes mts =  MeasurementTypes.getInstance();
+        mts.reInit();
         return mapping.findForward("success");
 
     }
@@ -105,22 +99,13 @@ public class EctAddMeasurementTypeAction extends Action {
         EctValidation validate = new EctValidation();
         String regExp = validate.getRegCharacterExp();
         boolean isValid = true;
-        try{
-            
-            String sql = "SELECT type FROM measurementType WHERE type='" + type +"'";
-            ResultSet rs = DBHandler.GetSQL(sql);
-            rs.next();
-            if(rs.getRow()>0){
-                errors.add(type,
-                new ActionMessage("error.oscarEncounter.Measurements.duplicateTypeName"));
-                saveErrors(request, errors);
-                isValid = false;                
-            }
+        
+        for(MeasurementType mt:dao.findByType(type)) {
+        	errors.add(type, new ActionMessage("error.oscarEncounter.Measurements.duplicateTypeName"));
+            saveErrors(request, errors);
+            isValid = false;     
+                    
         }
-        catch(SQLException e)
-        {
-            MiscUtils.getLogger().error("Error", e);
-        }     
         
         String errorField = "The type " + type;
         if(!validate.matchRegExp(regExp, type)){

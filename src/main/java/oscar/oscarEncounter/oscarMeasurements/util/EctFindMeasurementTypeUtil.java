@@ -24,14 +24,14 @@
 package oscar.oscarEncounter.oscarMeasurements.util;
 
 import java.io.InputStream;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Vector;
 
 import org.apache.commons.digester.Digester;
+import org.oscarehr.common.dao.MeasurementTypeDao;
+import org.oscarehr.common.model.MeasurementType;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBean;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctValidationsBean;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctValidationsBeanHandler;
@@ -46,6 +46,8 @@ import oscar.oscarEncounter.oscarMeasurements.prop.EctFormProp;
 
 public class EctFindMeasurementTypeUtil {
     
+	private static MeasurementTypeDao dao = SpringUtils.getBean(MeasurementTypeDao.class);
+
     public EctFindMeasurementTypeUtil(){}
     
     static public EctFormProp getEctMeasurementsType(InputStream is) {
@@ -67,15 +69,14 @@ public class EctFindMeasurementTypeUtil {
             digester.addBeanPropertySetter("formProp/measurement/validationRule/regularExp", "regularExp");
             digester.addBeanPropertySetter("formProp/measurement/validationRule/minValue", "minValue");
             digester.addBeanPropertySetter("formProp/measurement/validationRule/maxValue", "maxValue");
-	    digester.addBeanPropertySetter("formProp/measurement/validationRule/minLength", "minLength");
-	    digester.addBeanPropertySetter("formProp/measurement/validationRule/maxLength", "maxLength");
+            digester.addBeanPropertySetter("formProp/measurement/validationRule/minLength", "minLength");
+            digester.addBeanPropertySetter("formProp/measurement/validationRule/maxLength", "maxLength");
             digester.addBeanPropertySetter("formProp/measurement/validationRule/isNumeric", "isNumeric");
             digester.addBeanPropertySetter("formProp/measurement/validationRule/isDate", "isDate");
             digester.addSetNext("formProp/measurement/validationRule", "addValidationRule");
             
             digester.addSetNext("formProp/measurement", "addMeasurementType");
                         
-            //File input = new File(xmlPath);
             ret = (EctFormProp) digester.parse(is);
             digester.clear();
         } 
@@ -84,39 +85,8 @@ public class EctFindMeasurementTypeUtil {
         }
         return ret;
     }
-    /*
-    static public Vector getMeasurementsType(String formName, String demo) {
-        
-        boolean verdict = true;
-        Vector measurementTypeVector = new Vector();
-        
-        try {
-            
-            String sql =   "SELECT mf.typeId, mt.type, mt.typeDisplayName, mt.typeDescription, " 
-                            + "mt.measuringInstruction, mt.validation"
-                            + " FROM measurementForm mf, measurementType mt WHERE mf.formName='" + formName 
-                            + "' AND mf.typeId=mt.id";            
-            ResultSet rs = DBHandler.GetSQL(sql);
-            while(rs.next()){                                      
-                EctMeasurementTypesBean measurementTypes = new EctMeasurementTypesBean( rs.getInt("typeId"), 
-                                                                                        oscar.Misc.getString(rs,("type"), 
-                                                                                        oscar.Misc.getString(rs,("typeDisplayName"), 
-                                                                                        oscar.Misc.getString(rs,("typeDescription"), 
-                                                                                        oscar.Misc.getString(rs,("measuringInstruction"), 
-                                                                                        oscar.Misc.getString(rs,("validation")); 
-                measurementTypeVector.add(measurementTypes);                                                       
-                MiscUtils.getLogger().debug("getMeasurementType() type: " + oscar.Misc.getString(rs,("typeId"));
-            }
-            
-            rs.close();            
-        }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-            verdict = false;
-        }
-        return measurementTypeVector;
-    }*/
-    
+ 
+   
     /**
      * Compare the form definition xml file with the measurementtype table in the database. 
      * If a measurment type found in the definition file but not in the database, add a new type to the measurementtype table
@@ -131,8 +101,7 @@ public class EctFindMeasurementTypeUtil {
 
         for(int i=0; i<measurementTypes.size(); i++){
             EctMeasurementTypesBean mt = (EctMeasurementTypesBean) measurementTypes.elementAt(i);
-            EctValidationsBean validation = (EctValidationsBean) mt.getValidationRules().elementAt(0);           
-
+            
             if(!measurementTypeIsFound(mt, formName)){
                 addMeasurementType(mt, formName);
             }
@@ -142,109 +111,44 @@ public class EctFindMeasurementTypeUtil {
     
     static public boolean measurementTypeIsFound(EctMeasurementTypesBean mt, String formName){
         boolean verdict = true;
-        try {
-            
-            String sql = "SELECT * from measurementType where type='"+ mt.getType() + "' AND measuringInstruction='"
-                         + mt.getMeasuringInstrc() + "'";
-            ResultSet rs = DBHandler.GetSQL(sql);
-            if(!rs.next()){   
-                
-                verdict = false;
-            }
-            /*else{
-                if(!measurementFrmIsAdded(formName, oscar.Misc.getString(rs,("id")))
-                    add2MeasurementForm(formName, oscar.Misc.getString(rs,("id"));
-            }*/
-            rs.close();
+        if(dao.findByTypeAndMeasuringInstruction(mt.getType(), mt.getMeasuringInstrc()).size() == 0) {
+        	verdict = false;
         }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-            verdict = false;
-        }
+       
         return verdict;
     }
     
     static public boolean measurementTypeKeyIsFound(EctMeasurementTypesBean mt){
         boolean verdict = true;
-        try {
-            
-            String sql = "SELECT * from measurementType where type='"+ mt.getType() + "' ";
-            ResultSet rs = DBHandler.GetSQL(sql);
-            if(!rs.next()){                   
-                verdict = false;
-            }
-            rs.close();
+        if(dao.findByType(mt.getType()).size() == 0) {
+        	verdict=false;
         }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-            verdict = false;
-        }
+       
         return verdict;
     }
     
-    
-    /*
-    static public boolean measurementFrmIsAdded(String formName, String typeId){
-        boolean verdict = true;
-        try {
-
-            
-            String sql = "SELECT * FROM measurementForm WHERE formName='" + formName + "' AND typeId='"+typeId+"'";
-            ResultSet rs = DBHandler.GetSQL(sql);
-            if(!rs.next()){            
-                verdict = false;
-            }
-            rs.close();
-        }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-            verdict = false;
-        }
-        return verdict;
-    }*/
     
     static public void addMeasurementType(EctMeasurementTypesBean mt, String formName){
-        try{
-            
-            //Find validation if not found add validation
-            Vector validations = mt.getValidationRules();
-            if(validations.size()>0){
-                EctValidationsBean validation = (EctValidationsBean) validations.elementAt(0);  
-                EctValidationsBeanHandler vHd = new EctValidationsBeanHandler();
-                int validationId = vHd.findValidation(validation);
-                if(validationId<0){
-                    validationId = vHd.addValidation(validation);
-                }
-                String sql ="INSERT INTO measurementType(type, typeDisplayName, typeDescription, measuringInstruction, validation)" +
-                            "VALUES('" + mt.getType() + "', '" + mt.getTypeDisplayName() + "', '" + mt.getTypeDesc() + "', '" +
-                            mt.getMeasuringInstrc() + "', '" + validationId + "')";
-                DBHandler.RunSQL(sql);                
-                /*sql = "SELECT * FROM measurementType ORDER BY id DESC LIMIT 1";
-                ResultSet rs = DBHandler.GetSQL(sql);             
-                if(rs.next()){
-                    if(!measurementFrmIsAdded(formName, oscar.Misc.getString(rs,("id")))
-                        add2MeasurementForm(formName, oscar.Misc.getString(rs,("id"));
-                }*/
+        
+        //Find validation if not found add validation
+        Vector validations = mt.getValidationRules();
+        if(validations.size()>0){
+            EctValidationsBean validation = (EctValidationsBean) validations.elementAt(0);  
+            EctValidationsBeanHandler vHd = new EctValidationsBeanHandler();
+            int validationId = vHd.findValidation(validation);
+            if(validationId<0){
+                validationId = vHd.addValidation(validation);
             }
+            MeasurementType m = new MeasurementType();
+            m.setType(mt.getType());
+            m.setTypeDisplayName(mt.getTypeDisplayName());
+            m.setTypeDescription(mt.getTypeDesc());
+            m.setMeasuringInstruction(mt.getMeasuringInstrc());
+            m.setValidation(mt.getValidation());
+            dao.persist(m);            
+            
         }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);         
-        }
+       
     }
-    
-    /*
-    static public void add2MeasurementForm(String formName, String typeId){
-        boolean verdict = true;
-        try {
-
-            
-            String sql = "INSERT INTO measurementForm VALUES('" + formName + "','"+typeId+"')";
-            DBHandler.RunSQL(sql);
-            
-        }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);           
-        }        
-    }*/    
         
 }

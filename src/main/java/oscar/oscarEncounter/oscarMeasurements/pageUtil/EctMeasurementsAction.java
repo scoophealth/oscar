@@ -44,8 +44,11 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.oscarehr.common.dao.FlowSheetCustomizationDao;
+import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.model.FlowSheetCustomization;
+import org.oscarehr.common.model.Measurement;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -54,10 +57,13 @@ import oscar.oscarEncounter.oscarMeasurements.MeasurementFlowSheet;
 import oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import oscar.oscarMessenger.util.MsgStringQuote;
+import oscar.util.ConversionUtils;
 
 
 public class EctMeasurementsAction extends Action {
 
+	private MeasurementDao dao = SpringUtils.getBean(MeasurementDao.class);
+	
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
     {
@@ -167,7 +173,7 @@ public class EctMeasurementsAction extends Action {
                     regCharExp = ectValidation.getRegCharacterExp();
 
                     if (rs.next()){
-                        dMax = rs.getDouble("maxValue");
+                        dMax = rs.getDouble("maxValue1");
                         dMin = rs.getDouble("minValue");
                         iMax = rs.getInt("maxLength");
                         iMin = rs.getInt("minLength");
@@ -240,12 +246,16 @@ public class EctMeasurementsAction extends Action {
                             rs = DBHandler.GetSQL(sql);
                             if(!rs.next()){
                                 //Write to the Dababase if all input values are valid
-                                sql = "INSERT INTO measurements"
-                                        +"(type, demographicNo, providerNo, dataField, measuringInstruction, comments, dateObserved, dateEntered)"
-                                        +" VALUES ('"+str.q(inputType)+"','"+str.q(demographicNo)+"','"+str.q(providerNo)+"','"+str.q(inputValue)+"','"
-                                        + str.q(mInstrc)+"','"+str.q(comments)+"','"+str.q(dateObserved)+"','"+str.q(dateEntered)+"')";
-
-                                DBHandler.RunSQL(sql);
+                            	Measurement m = new Measurement();
+                            	m.setType(inputType);
+                            	m.setDemographicId(Integer.parseInt(demographicNo));
+                            	m.setProviderNo(providerNo);
+                            	m.setDataField(inputValue);
+                            	m.setMeasuringInstruction(mInstrc);
+                            	m.setComments(comments);
+                            	m.setDateObserved(ConversionUtils.fromTimestampString(dateObserved));
+                            	dao.persist(m);
+                                
                                 //prepare input values for writing to the encounter form
                                 if (mFlowsheet == null){
                                     textOnEncounter =  textOnEncounter + inputType + "    " + inputValue + " " + mInstrc + " " + comments + "\\n";
