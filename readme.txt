@@ -12,6 +12,8 @@ These are not necessarily requirements but the version of software used by the a
 - maven 2.2.1
 - ant 1.8.1
 
+Note: also works with maven 3.x , but you will get warnings.
+
 -----------
 Directories
 -----------
