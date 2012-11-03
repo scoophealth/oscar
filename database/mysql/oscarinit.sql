@@ -9271,7 +9271,7 @@ CREATE TABLE formONAREnhanced(
   sv_num varchar(10) default '0',
   us_num varchar(10) default '0',
   demographic_no int(10) NOT NULL default '0',
-  provider_no int(10)  default NULL,
+  provider_no varchar(10)  default NULL,
   formCreated date  default NULL,
   formEdited timestamp,
   c_lastName varchar(80),
