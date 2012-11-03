@@ -30,7 +30,7 @@ CREATE TABLE `admission` (
   `team_id` int(10) default NULL,
   `temporary_admission_flag` tinyint(1) default NULL,
   `radioDischargeReason` varchar(10) default '0',
-  `clientstatus_id` bigint(20) DEFAULT 0,
+  `clientstatus_id` bigint(20) DEFAULT NULL,
   `automatic_discharge` tinyint(1) default 0,
   PRIMARY KEY  (`am_id`),
   KEY `FK1A21809DAA8624B` (`team_id`),
