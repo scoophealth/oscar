@@ -269,7 +269,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             errors.add("Error loading schema file! Cannot obtain DIN list!");
     }
 
-    void setCareElements(PatientRecord patientRecord, String demoNo) throws SQLException {
+    void setCareElements(PatientRecord patientRecord, String demoNo)  {
     	List<Measurements> measList = ImportExportMeasurements.getMeasurements(demoNo);
         for (Measurements meas : measList) {
             Date dateObserved = meas.getDateObserved();

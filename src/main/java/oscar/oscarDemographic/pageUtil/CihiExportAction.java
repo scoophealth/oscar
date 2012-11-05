@@ -28,7 +28,6 @@ package oscar.oscarDemographic.pageUtil;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -326,13 +325,9 @@ public class CihiExportAction extends DispatchAction {
 			 this.buildOngoingProblems(demo, patientRecord);
 			 this.buildRiskFactors(demo, patientRecord);
 			 this.buildAllergies(demo, patientRecord);
-			 try {
-				 this.buildCareElements(demo, patientRecord);
-			 }
-			 catch(SQLException e) {
-				 MiscUtils.getLogger().error("Build Care Elements DB Failed", e);
-			 }
-
+			 
+			 this.buildCareElements(demo, patientRecord);
+			 
 			 this.buildProcedure(demo, patientRecord);
 			 this.buildLaboratoryResults(demo, patientRecord);
 			 this.buildMedications(demo, patientRecord);
@@ -706,7 +701,7 @@ public class CihiExportAction extends DispatchAction {
 	}
 
 	@SuppressWarnings("unchecked")
-    private void buildCareElements(Demographic demo, PatientRecord patientRecord) throws SQLException {
+    private void buildCareElements(Demographic demo, PatientRecord patientRecord) {
 		List<Measurements> measList = ImportExportMeasurements.getMeasurements(demo.getDemographicNo().toString());
 		CareElements careElements = patientRecord.addNewCareElements();
 		Calendar cal = Calendar.getInstance();
@@ -876,7 +871,7 @@ public class CihiExportAction extends DispatchAction {
 		}
 	}
 
-	private void buildLaboratoryResults(Demographic demo, PatientRecord patientRecord) throws SQLException {
+	private void buildLaboratoryResults(Demographic demo, PatientRecord patientRecord) {
 				log.debug("Building lab results for " + demo.getDemographicNo() + " " + demo.getFormattedName());
                 List<LabMeasurements> labMeaList = ImportExportMeasurements.getLabMeasurements(demo.getDemographicNo().toString());
                 for (LabMeasurements labMea : labMeaList) {

@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,32 +21,16 @@
  * Hamilton
  * Ontario, Canada
  */
+package org.oscarehr.billing.CA.BC.dao;
 
-
-package org.oscarehr.common.dao;
-
-import java.util.List;
-
-import javax.persistence.Query;
-
-import org.oscarehr.common.model.Immunizations;
+import org.oscarehr.billing.CA.BC.model.Hl7Orc;
+import org.oscarehr.common.dao.AbstractDao;
 import org.springframework.stereotype.Repository;
 
-
 @Repository
-public class ImmunizationsDao extends AbstractDao<Immunizations>{
+public class Hl7OrcDao extends AbstractDao<Hl7Orc>{
 
-	public ImmunizationsDao() {
-		super(Immunizations.class);
-	}
-	
-	public List<Immunizations> findCurrentByDemographicNo(Integer demographicNo) {
-		Query q = entityManager.createQuery("SELECT i FROM Immunizations i WHERE i.demographicNo=?1 AND i.archived=0");
-		q.setParameter(1, demographicNo);
-		
-		@SuppressWarnings("unchecked")
-		List<Immunizations> results = q.getResultList();
-		
-		return results;
+	public Hl7OrcDao() {
+		super(Hl7Orc.class);
 	}
 }

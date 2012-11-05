@@ -29,6 +29,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.billing.CA.BC.dao.Hl7ObrDao;
+import org.oscarehr.billing.CA.BC.model.Hl7Obr;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.bc.PathNet.HL7.Node;
@@ -40,8 +43,8 @@ import oscar.oscarLab.ca.bc.PathNet.HL7.Node;
  */
 public class OBR extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
    Logger _logger = Logger.getLogger(this.getClass());
-   private static final String select = "SELECT hl7_obr.obr_id FROM hl7_obr WHERE hl7_obr.filler_order_number='@filler_no'";
-
+   private static Hl7ObrDao dao = SpringUtils.getBean(Hl7ObrDao.class);
+ 
    private ArrayList<OBX> obxs;
    private ArrayList<NTE>note;
 
@@ -77,81 +80,8 @@ public class OBR extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
       }
       return notes;
    }
-   //This method is passed in the hl7_pid.pid_id foreign key
-   //The first thing it does is check the result_status of this object, which could be
-   //F = complete
-   //  Looks for a record with the same filler_order_number field.
-   //   If it can find one it updates the old record
-   //   If it can't find one it inserts a new record
-   //  Then for each object in the obxs ArrayList calls OBX.ToDatabase
-   //I  = pending
-   //  Inserts into hl7_obr. gets return id
-   //  Then for each object in the obxs ArrayList calls OBX.ToDatabase
-   //C = corrected
-   //  Updated record with the filler_order_number
-   //  Then for each object in the obxs ArrayList calls OBX.ToDatabase but with the setUpdate(true) method called
-   //X = deleted (currently not in use)
-   //  Nothing is done for this currently
-   public int ToDatabaseOLD(DBHandler db, int parent)throws SQLException {
-      _logger.debug("result_status :"+this.get("result_status","") );
-      if(this.get("result_status", "").equalsIgnoreCase("A") || this.get("result_status", "").equalsIgnoreCase("F")) {
-                                                                           _logger.debug("getting Last Updated filler #:"+this.get("filler_order_number", ""));
-         int index = getLastUpdated(db, this.get("filler_order_number", ""));
-                                                                           _logger.debug("getting index of Updated filler #:"+this.get("filler_order_number", "")+" "+index);
-         if(index != 0) {
-                                                                           _logger.debug("Running Update: "+this.getUpdateSql(this.get("filler_order_number", "")));
-            DBHandler.RunSQL(this.getUpdateSql(this.get("filler_order_number", "")));
-         } else {
-                                                                           _logger.debug("Running Insert: "+this.getInsertSql(parent));
-            DBHandler.RunSQL(this.getInsertSql(parent));
-            index = super.getLastInsertedId();
-                                                                           _logger.debug("Index of insert:"+index);
-         }
-         int size = this.obxs.size();
-                                                                           _logger.debug("OBX size:"+size);
-         for(int i = 0; i < size; ++i) {
-            (obxs.get(i)).ToDatabase(index);
-         }
-      } else if(this.get("result_status", "").equalsIgnoreCase("I")) {
-                                                                           _logger.debug("Running Insert when stat = I:"+this.getInsertSql(parent));
-         DBHandler.RunSQL(this.getInsertSql(parent));
-         int lastInsert = super.getLastInsertedId();
-                                                                           _logger.debug("Index of insert:"+lastInsert);
-         int size = this.obxs.size();
-                                                                           _logger.debug("OBX size:"+size);
-         for(int i = 0; i < size; ++i) {
-            (obxs.get(i)).ToDatabase(lastInsert);
-         }
-      } else if(this.get("result_status", "").equalsIgnoreCase("C")) {
-                                                                           _logger.debug("Running Update when stat = C :"+this.getUpdateSql(this.get("filler_order_number", "")));
-         DBHandler.RunSQL(this.getUpdateSql(this.get("filler_order_number", "")));
-         int lastUpdate = this.getLastUpdated(db, this.get("filler_order_number", ""));
-                                                                           _logger.debug("Update id of lastUpdate:"+lastUpdate);
-         int size = this.obxs.size();
-                                                                           _logger.debug("OBX size:"+size);
-         for(int i = 0; i < size; ++i) {
-            (obxs.get(i)).setUpdate(true);
-            (obxs.get(i)).ToDatabase(lastUpdate);
-         }
-      }
-      return 0;
-   }
+ 
 
-   //////
-   public int ToDatabase(int parent)throws SQLException {
-      _logger.debug("result_status :"+this.get("result_status","") );
-      _logger.debug("Running Insert when "+this.getInsertSql(parent));
-
-      DBHandler.RunSQL(this.getInsertSql(parent));
-      int lastInsert = super.getLastInsertedId();
-      _logger.debug("Index of insert:"+lastInsert);
-      int size = this.obxs.size();
-      _logger.debug("OBX size:"+size);
-      for(int i = 0; i < size; ++i) {
-         (obxs.get(i)).ToDatabase(lastInsert);
-      }
-      return 0;
-   }
    //////
 
 
@@ -164,29 +94,73 @@ public class OBR extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
       return parent;
    }
 
-   protected String getInsertSql(int parent) {
-      String fields = "INSERT INTO hl7_obr ( pid_id";
-      String values = "VALUES ('" + String.valueOf(parent) + "'";
-      String[] properties = this.getProperties();
-      for(int i = 0; i < properties.length; ++i) {
-         fields += ", " + properties[i];
-         values += ", '" + this.get(properties[i], "") + "'";
-      }
-      fields += ", note";
-      values += ", '" + getNote() + "'";
-      return fields + ") " + values + ");";
-   }
+   protected String getInsertSql(int parent) {return null;}
+   
+   protected String getUpdateSql(String id) { return null;}
 
-   protected String getUpdateSql(String id) {
-      String sql = "UPDATE hl7_obr SET" ;
-      String[] properties = this.getProperties();
-      for(int i = 0; i < properties.length; ++i) {
-         sql += " " + properties[i] + "='" + get(properties[i], "") + "',";
+   //////
+   public int ToDatabase(int parent)throws SQLException {
+      _logger.debug("result_status :"+this.get("result_status","") );
+  
+      Hl7Obr h = new Hl7Obr();
+      h.setPidId(parent);
+      h.setSetId(get("set_id","set_id"));
+      h.setPlacerOrderNumber(get("placer_order_number",""));
+      h.setFillerOrderNumber(get("filler_order_number",""));
+      h.setUniversalServiceId(get("universal_service_id",""));
+      h.setPriority(get("priority",""));
+      h.setRequestedDateTime(convertTSToDate(get("requested_date_time","")));
+      h.setOberservationDateTime(convertTSToDate(get("observation_date_time","")));
+      h.setObservationEndDateTime(convertTSToDate(get("observation_end_date_time","")));
+      h.setCollectionVolume(get("collection_volume",""));
+      h.setCollectorIdentifier(get("collector_identifier",""));
+      h.setSpecimenActionCode(get("specimen_action_code",""));
+      h.setDangerCode(get("danger_code",""));
+      h.setRelevantClinicalInfo(get("relevant_clinical_info",""));
+      h.setSpecimenReceivedDateTime(convertTSToDate(get("specimen_received_date_time","")));
+      h.setSpecimenSource(get("specimen_source",""));
+      h.setOrderingProvider(get("ordering_provider",""));
+      h.setOrderCallbackPhoneNumber(get("order_callback_phone_number",""));
+      h.setPlacersField1(get("placers_field1",""));
+      h.setPlacersField2(get("palcers_field2",""));
+      h.setFillerField1(get("filler_field1",""));
+      h.setFillerField2(get("filler_field2",""));
+      h.setResultsReportStatusChange(convertTSToDate(get("results_report_status_change","")));
+      h.setChargeToPractice(get("charge_to_practice",""));
+      h.setDiagnosticServiceSectId(get("diagnostic_service_sect_id",""));
+      h.setResultStatus(get("result_status",""));
+      h.setParentResult(get("parent_result",""));
+      h.setQuantityTiming(get("quantity_timing",""));
+      h.setResultCopiesTo(get("result_copies_to",""));
+      h.setParentNumber(get("parent_number",""));
+      h.setTransporationMode(get("transportation_mode",""));
+      h.setReasonForStudy(get("reason_for_study",""));
+      h.setPrincipalResultInterpreter(get("principal_result_interpreter",""));
+      h.setAssistantResultInterpreter(get("assistant_result_interpreter",""));
+      h.setTechnician(get("technician",""));
+      h.setTranscriptionist(get("transcriptionist",""));
+      h.setScheduledDateTime(convertTSToDate(get("scheduled_date_time","")));
+      h.setNumberOfSampleContainers(get("number_of_sample_containers",""));
+      h.setTransportLogisticsOfCollectedSample(get("transport_logistics_of_collected_sample",""));
+      h.setCollectorComment(get("collector_comment",""));
+      h.setTransportArrangementResponsibility(get("transport_arrangement_responsibility",""));
+      h.setTransportArranged(get("transport_arranged",""));
+      h.setEscortRequired(get("escort_required",""));
+      h.setPlannedPatientTransportComment(get("planned_patient_transport_comment",""));
+      h.setNote(getNote());
+      
+      dao.persist(h);
+      
+      int lastInsert = h.getId();
+      _logger.debug("Index of insert:"+lastInsert);
+      int size = this.obxs.size();
+      _logger.debug("OBX size:"+size);
+      for(int i = 0; i < size; ++i) {
+         (obxs.get(i)).ToDatabase(lastInsert);
       }
-      sql += "note='" + getNote() + "' WHERE filler_order_number='" + id + "'";
-      return sql;
+      return 0;
    }
-
+   
    protected String[] getProperties() {
       return new String[] {
          "set_id",

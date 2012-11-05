@@ -35,13 +35,17 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.dao.MeasurementsDeletedDao;
+import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.MeasurementsDeleted;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
+import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsExtDao;
+import oscar.oscarEncounter.oscarMeasurements.model.MeasurementsExt;
 import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.oscarLab.ca.all.parsers.MessageHandler;
 import oscar.oscarLab.ca.on.LabResultData;
@@ -51,6 +55,8 @@ public class Hl7textResultsData {
 
     private static Logger logger = MiscUtils.getLogger();
     private static MeasurementsDeletedDao measurementsDeletedDao = (MeasurementsDeletedDao) SpringUtils.getBean("measurementsDeletedDao");
+    private static MeasurementDao measurementDao = SpringUtils.getBean(MeasurementDao.class);
+    private static MeasurementsExtDao measurementsExtDao = SpringUtils.getBean(MeasurementsExtDao.class);
 
     private Hl7textResultsData() {
     	// no one should instantiate this
@@ -74,7 +80,7 @@ public class Hl7textResultsData {
 
             //Check for other versions of this lab
             String[] matchingLabs = getMatchingLabs(lab_no).split(",");
-            //if this lab is the latest version delete the measurements from the previous version and insert the new ones
+            //if this lab is the latest version delete the measurements from the previous version and add the new ones
 
             int k = 0;
             while ( k < matchingLabs.length && !matchingLabs[k].equals(lab_no)){
@@ -99,25 +105,22 @@ public class Hl7textResultsData {
                 	measurementsDeleted.setOriginalId(Integer.valueOf(oscar.Misc.getString(rs, "id")));
                 	measurementsDeletedDao.persist(measurementsDeleted);
 
-                    sql = "DELETE FROM measurements WHERE id='"+oscar.Misc.getString(rs, "id")+"'";
-                    DBHandler.RunSQL(sql);
-                    //sql = "DELETE FROM measurementsExt WHERE measurement_id='"+oscar.Misc.getString(rs,"measurement_id")+"'";
-                    //DBHandler.RunSQL(sql);
-
+                	measurementDao.remove(measurementDao.find(Integer.parseInt(oscar.Misc.getString(rs, "id"))));
+                    
                 }
 
             }
-            // loop through the measurements for the lab and insert them
+            // loop through the measurements for the lab and add them
 
             for (int i=0; i < h.getOBRCount(); i++){
                 for (int j=0; j < h.getOBXCount(i); j++){
 
                     String result = h.getOBXResult(i, j);
 
-                    // only insert if there is a result and it is supposed to be viewed
+                    // only add if there is a result and it is supposed to be viewed
                     if (result.equals("") || result.equals("DNR") || h.getOBXName(i, j).equals("") || h.getOBXResultStatus(i, j).equals("DNS"))
                         continue;
-                    logger.debug("obx("+j+") should be inserted");
+                    logger.debug("obx("+j+") should be added");
                     String identifier = h.getOBXIdentifier(i,j);
                     String name = h.getOBXName(i,j);
                     String unit = h.getOBXUnits(i,j);
@@ -153,132 +156,109 @@ public class Hl7textResultsData {
                        logger.debug("CODE:"+identifier+ " needs to be mapped");
                     }
 
+                    Measurement m = new Measurement();
+                    m.setType(measType);
+                    m.setDemographicId(Integer.parseInt(demographic_no));
+                    m.setProviderNo("0");
+                    m.setDataField(result);
+                    m.setMeasuringInstruction(measInst);
+                    m.setDateObserved(UtilDateUtilities.StringToDate(dateEntered, "yyyy-MM-dd hh:mm:ss"));
+                    
+                    measurementDao.persist(m);
 
-                    sql = "INSERT INTO measurements (type, demographicNo, providerNo, dataField, measuringInstruction, dateObserved, dateEntered )VALUES (?, ?, '0', ?, ?, ?, ?)";
-                    logger.debug(sql);
-                    pstmt = conn.prepareStatement(sql);
-                    pstmt.setString(1,measType);
-                    pstmt.setString(2,demographic_no);
-                    pstmt.setString(3,result);
-                    pstmt.setString(4,measInst);
-                    pstmt.setString(5,h.getTimeStamp(i, j));
-                    pstmt.setString(6,dateEntered);
-                    pstmt.executeUpdate();
-                    rs = pstmt.getGeneratedKeys();
-                    String insertID = null;
-                    if(rs.next())
-                        insertID = oscar.Misc.getString(rs, 1);
+                    
+                    int mId = m.getId();
 
-                    String measurementExt = "INSERT INTO measurementsExt (measurement_id, keyval, val) VALUES (?,?,?)";
+                    
+                    MeasurementsExt me = new MeasurementsExt();
+                    me.setMeasurementId(mId);
+                    me.setKeyVal("lab_no");
+                    me.setVal(lab_no);
+                    measurementsExtDao.save(me);
 
-                    pstmt = conn.prepareStatement(measurementExt);
+                    
+                    me = new MeasurementsExt();
+                    me.setMeasurementId(mId);
+                    me.setKeyVal("abnormal");
+                    me.setVal(abnormal);
+                    measurementsExtDao.save(me);
 
-                    logger.debug("Inserting into measurementsExt id "+insertID+ " lab_no "+ lab_no);
-                    pstmt.setString(1, insertID);
-                    pstmt.setString(2, "lab_no");
-                    pstmt.setString(3, lab_no);
-                    pstmt.executeUpdate();
-                    pstmt.clearParameters();
-
-                    logger.debug("Inserting into measurementsExt id "+insertID+ " abnormal "+ abnormal);
-                    pstmt.setString(1, insertID);
-                    pstmt.setString(2, "abnormal");
-                    pstmt.setString(3, abnormal);
-                    pstmt.executeUpdate();
-                    pstmt.clearParameters();
-
-                    logger.debug("Inserting into measurementsExt id "+insertID+ " identifier "+ identifier);
-                    pstmt.setString(1, insertID);
-                    pstmt.setString(2, "identifier");
-                    pstmt.setString(3, identifier);
-                    pstmt.executeUpdate();
-                    pstmt.clearParameters();
-
-                    logger.debug("Inserting into measurementsExt id "+insertID+ " name "+ name);
-                    pstmt.setString(1, insertID);
-                    pstmt.setString(2, "name");
-                    pstmt.setString(3, name);
-                    pstmt.executeUpdate();
-                    pstmt.clearParameters();
-
-                    logger.debug("Inserting into measurementsExt id "+insertID+ " labname "+ labname);
-                    pstmt.setString(1, insertID);
-                    pstmt.setString(2, "labname");
-                    pstmt.setString(3, labname);
-                    pstmt.executeUpdate();
-                    pstmt.clearParameters();
-
-                    logger.debug("Inserting into measurementsExt id "+insertID+ " accession "+ accession);
-                    pstmt.setString(1, insertID);
-                    pstmt.setString(2, "accession");
-                    pstmt.setString(3, accession);
-                    pstmt.executeUpdate();
-                    pstmt.clearParameters();
-
-                    logger.debug("Inserting into measurementsExt id "+insertID+ " request_datetime "+ req_datetime);
-                    pstmt.setString(1, insertID);
-                    pstmt.setString(2, "request_datetime");
-                    pstmt.setString(3, req_datetime);
-                    pstmt.executeUpdate();
-                    pstmt.clearParameters();
-
-                    logger.debug("Inserting into measurementsExt id "+insertID+ " datetime "+ datetime);
-                    pstmt.setString(1, insertID);
-                    pstmt.setString(2, "datetime");
-                    pstmt.setString(3, datetime);
-                    pstmt.executeUpdate();
-                    pstmt.clearParameters();
+                    me = new MeasurementsExt();
+                    me.setMeasurementId(mId);
+                    me.setKeyVal("identifier");
+                    me.setVal(identifier);
+                    measurementsExtDao.save(me);
+                    
+                    me = new MeasurementsExt();
+                    me.setMeasurementId(mId);
+                    me.setKeyVal("name");
+                    me.setVal(name);
+                    measurementsExtDao.save(me);
+                    
+                    me = new MeasurementsExt();
+                    me.setMeasurementId(mId);
+                    me.setKeyVal("labname");
+                    me.setVal(labname);
+                    measurementsExtDao.save(me);
+                    
+                    me = new MeasurementsExt();
+                    me.setMeasurementId(mId);
+                    me.setKeyVal("accession");
+                    me.setVal(accession);
+                    measurementsExtDao.save(me);
+                    
+                    me = new MeasurementsExt();
+                    me.setMeasurementId(mId);
+                    me.setKeyVal("request_datetime");
+                    me.setVal(req_datetime);
+                    measurementsExtDao.save(me);
+                    
+                    
+                    me = new MeasurementsExt();
+                    me.setMeasurementId(mId);
+                    me.setKeyVal("datetime");
+                    me.setVal(datetime);
+                    measurementsExtDao.save(me);
+                   
 
                     if (olis_status!=null && olis_status.length()>0) {
-                        logger.debug("Inserting into measurementsExt id "+insertID+ " olis_status "+ olis_status);
-                        pstmt.setString(1, insertID);
-                        pstmt.setString(2, "olis_status");
-                        pstmt.setString(3, olis_status);
-                        pstmt.executeUpdate();
-                        pstmt.clearParameters();
+                    	 me = new MeasurementsExt();
+                         me.setMeasurementId(mId);
+                         me.setKeyVal("olis_status");
+                         me.setVal(olis_status);
+                         measurementsExtDao.save(me);
                     }
 
-		    if (unit!=null && unit.length()>0) {
-			logger.debug("Inserting into measurementsExt id "+insertID+ " unit "+ unit);
-			pstmt.setString(1, insertID);
-			pstmt.setString(2, "unit");
-			pstmt.setString(3, unit);
-			pstmt.executeUpdate();
-			pstmt.clearParameters();
-		    }
-
-		    if (refRange[0].length()>0) {
-			logger.debug("Inserting into measurementsExt id "+insertID+ " range "+ refRange[0]);
-			pstmt.setString(1, insertID);
-			pstmt.setString(2, "range");
-			pstmt.setString(3, refRange[0]);
-			pstmt.executeUpdate();
-			pstmt.clearParameters();
-		    } else {
-			if (refRange[1].length()>0) {
-			    logger.debug("Inserting into measurementsExt id "+insertID+ " minimum "+ refRange[1]);
-			    pstmt.setString(1, insertID);
-			    pstmt.setString(2, "minimum");
-			    pstmt.setString(3, refRange[1]);
-			    pstmt.executeUpdate();
-			    pstmt.clearParameters();
-			}
-
-			
-			
-
-					// add other_id to measurementsExt so that annotation can be linked up through casemgmt_note_link
-					logger.debug("Inserting into measurementsExt id "+insertID+ " other_id "+ i+"-"+j);
-					pstmt.setString(1, insertID);
-					pstmt.setString(2, "other_id");
-					pstmt.setString(3, i+"-"+j);
-					pstmt.executeUpdate();
-					pstmt.clearParameters();
-
-					pstmt.close();
-
+				    if (unit!=null && unit.length()>0) {
+				    	 me = new MeasurementsExt();
+                         me.setMeasurementId(mId);
+                         me.setKeyVal("unit");
+                         me.setVal(unit);
+                         measurementsExtDao.save(me);
+				    }
+		
+				    if (refRange[0].length()>0) {
+				    	 me = new MeasurementsExt();
+                         me.setMeasurementId(mId);
+                         me.setKeyVal("range");
+                         me.setVal(refRange[0]);
+                         measurementsExtDao.save(me);
+				    } else {
+						if (refRange[1].length()>0) {
+							 me = new MeasurementsExt();
+	                         me.setMeasurementId(mId);
+	                         me.setKeyVal("minimum");
+	                         me.setVal(refRange[1]);
+	                         measurementsExtDao.save(me);
+						}
+						
+						me = new MeasurementsExt();
+                        me.setMeasurementId(mId);
+                        me.setKeyVal("other_id");
+                        me.setVal(i+"-"+j);
+                        measurementsExtDao.save(me);
+				    }
 				}
-			}
             }
 
 		}catch(Exception e){

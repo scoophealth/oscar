@@ -69,11 +69,10 @@ import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
 import oscar.util.ConversionUtils;
 import oscar.util.DateUtils;
-import oscar.util.SqlUtilBaseS;
 import oscar.util.UtilDateUtilities;
 
 // all SQL statements here
-public final class EDocUtil extends SqlUtilBaseS {
+public final class EDocUtil  {
 
 	private static ConsultDocsDao consultDocsDao = (ConsultDocsDao)SpringUtils.getBean("consultDocsDao");
 	private static DocumentDao documentDao = (DocumentDao)SpringUtils.getBean(DocumentDao.class);
@@ -936,5 +935,24 @@ public final class EDocUtil extends SqlUtilBaseS {
 		doc.setNumberofpages(doc.getNumberofpages()-1);
 
 		documentDao.merge(doc);
+	}
+	
+	private static String rsGetString(ResultSet rs, String column) throws SQLException {
+		// protects agianst null values;
+		String thisStr = oscar.Misc.getString(rs, column);
+		if (thisStr == null) return "";
+		return thisStr;
+	}
+	
+	@Deprecated
+	private static ResultSet getSQL(String sql) {
+		ResultSet rs = null;
+		try {
+
+			rs = DBHandler.GetSQL(sql);
+		} catch (SQLException sqe) {
+			logger.error("Error", sqe);
+		}
+		return (rs);
 	}
 }

@@ -60,6 +60,7 @@ import org.oscarehr.common.dao.EFormGroupDao;
 import org.oscarehr.common.dao.EFormValueDao;
 import org.oscarehr.common.dao.SecRoleDao;
 import org.oscarehr.common.model.EFormData;
+import org.oscarehr.common.model.EFormGroup;
 import org.oscarehr.common.model.EFormValue;
 import org.oscarehr.common.model.SecRole;
 import org.oscarehr.util.MiscUtils;
@@ -94,6 +95,7 @@ public class EFormUtil {
 	private static CaseManagementNoteLinkDAO cmDao = (CaseManagementNoteLinkDAO) SpringUtils.getBean("CaseManagementNoteLinkDAO");
 	private static EFormDataDao eFormDataDao = (EFormDataDao) SpringUtils.getBean("EFormDataDao");
 	private static EFormValueDao eFormValueDao = (EFormValueDao) SpringUtils.getBean("EFormValueDao");
+	private static EFormGroupDao eFormGroupDao = (EFormGroupDao) SpringUtils.getBean("EFormGroupDao");
 
 	private EFormUtil() {
 	}
@@ -603,8 +605,10 @@ public class EFormUtil {
 					+ " AND eform_groups.fid=eform.fid AND eform.status=1 AND eform_groups.group_name='" + groupName + "'";
 			ResultSet rs = DBHandler.GetSQL(sql1);
 			if (!rs.next()) {
-				String sql = "INSERT INTO eform_groups (fid, group_name) " + "VALUES (" + fid + ", '" + groupName + "')";
-				DBHandler.RunSQL(sql);
+				EFormGroup eg = new EFormGroup();
+				eg.setFormId(Integer.parseInt(fid));
+				eg.setGroupName(groupName);
+				eFormGroupDao.persist(eg);	
 			}
 		} catch (SQLException sqe) {
 			logger.error("Error", sqe);
@@ -809,32 +813,6 @@ public class EFormUtil {
 
 	public static boolean blank(String s) {
 		return (s == null || s.trim().equals(""));
-	}
-
-	// ------------------private
-	private static void runSQL(String sql) {
-		try {
-
-			DBHandler.RunSQL(sql);
-		} catch (SQLException sqe) {
-			logger.error("Error", sqe);
-		}
-	}
-
-	private static String runSQLinsert(String sql) {
-		try {
-
-			DBHandler.RunSQL(sql);
-			sql = "SELECT LAST_INSERT_ID()";
-			ResultSet rs = DBHandler.GetSQL(sql);
-			rs.next();
-			String lastID = oscar.Misc.getString(rs, "LAST_INSERT_ID()");
-			rs.close();
-			return (lastID);
-		} catch (SQLException sqe) {
-			logger.error("Error", sqe);
-		}
-		return "";
 	}
 
 	@Deprecated
