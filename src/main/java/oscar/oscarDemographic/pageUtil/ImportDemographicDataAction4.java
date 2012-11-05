@@ -2839,7 +2839,7 @@ import cdsDt.PersonNameStandard.OtherNames;
 		}
 	}
 
-	void saveMeasurementsExt(Long measurementId, String key, String val) throws SQLException {
+	void saveMeasurementsExt(Long measurementId, String key, String val) {
 		if (measurementId!=null && StringUtils.filled(key) && StringUtils.filled(val)) {
 			MeasurementsExt mx = new MeasurementsExt(measurementId.intValue());
 			mx.setKeyVal(key);

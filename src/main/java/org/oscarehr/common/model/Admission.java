@@ -68,8 +68,8 @@ public class Admission extends AbstractModel<Integer> implements Serializable {
 	private org.oscarehr.PMmodule.model.ProgramTeam team;
 	
 	
-	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="clientstatus_id", insertable=false, updatable=false)
+	@ManyToOne(fetch=FetchType.EAGER, optional=true)
+	@JoinColumn(name="clientstatus_id", insertable=false, updatable=false, nullable=true)
 	private org.oscarehr.PMmodule.model.ProgramClientStatus clientStatus;
 	
 	

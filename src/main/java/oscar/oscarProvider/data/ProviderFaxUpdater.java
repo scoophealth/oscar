@@ -25,12 +25,13 @@
 
 package oscar.oscarProvider.data;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.List;
 
-import org.oscarehr.util.MiscUtils;
-
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.common.dao.ClinicDAO;
+import org.oscarehr.common.dao.PropertyDao;
+import org.oscarehr.common.model.Clinic;
+import org.oscarehr.common.model.Property;
+import org.oscarehr.util.SpringUtils;
 
 /**
  * Manages Fax number for provider 
@@ -40,8 +41,9 @@ public class ProviderFaxUpdater {
     
     private String faxColName;    
     private String provider;
-    
-    /** Creates a new instance of ProviderFaxUpdater */
+    private PropertyDao dao = SpringUtils.getBean(PropertyDao.class);
+    private ClinicDAO clinicDao = (ClinicDAO)SpringUtils.getBean(ClinicDAO.class);
+
    public ProviderFaxUpdater(String p) {
        
        faxColName = new String("faxnumber");
@@ -52,33 +54,18 @@ public class ProviderFaxUpdater {
     *Retrieve fax number for current provider first by querying property table then clinic table
     */
    public String getFax() {
-       String sql;
        String faxNum = "";
-       ResultSet rs;
-       DBHandler db;
        
-       try {
-        
-       
-        sql = "SELECT value FROM property WHERE name = '" + faxColName + "' AND provider_no = '" + provider + "'";
-        rs = DBHandler.GetSQL(sql);
-            
-        if( rs.next() ) {
-            faxNum = oscar.Misc.getString(rs, "value");
-        }
-        
-        if( faxNum.equals("") ) {
-            sql = "SELECT clinic_fax FROM clinic";
-            rs = DBHandler.GetSQL(sql);
-            
-            if( rs.next() ) {
-                faxNum = oscar.Misc.getString(rs, "clinic_fax");
-            }
-        }
-        
+       List<Property> props =  dao.findByNameAndProvider(faxColName, provider);
+       for(Property p:props) {
+    	   faxNum = p.getValue();
        }
-       catch( SQLException ex ) {
-           MiscUtils.getLogger().error("Error", ex);           
+       
+       if( faxNum.equals("") ) {
+    	   List<Clinic> clinics = clinicDao.findAll();
+    	   for(Clinic c:clinics) {
+    		   faxNum = c.getClinicFax();
+    	   }
        }
        
        return faxNum;
@@ -87,40 +74,21 @@ public class ProviderFaxUpdater {
        *set fax number in property table
        */
    public boolean setFax(String fax) {
-       DBHandler db;
-       String sql;
-       
-       boolean ret = true;
-       
-       try {
-                  
-        if( haveFax() )
-           sql = "UPDATE property SET value = '" + fax + "' WHERE name = '" + faxColName + "' AND provider_no = '" + provider + "'";
-        else
-           sql = "INSERT INTO property (name,value,provider_no) VALUES('" + faxColName + "', '" + fax + "', '" + provider + "')";
-        
-        
-        DBHandler.RunSQL(sql);
-       
-       }catch( SQLException ex ) {
-           MiscUtils.getLogger().debug("Error adding fax number: " + ex.getMessage());
-           ret = false;
-       }
-       
-       return ret;
+	   
+	   Property p = new Property();
+	   List<Property> props = dao.findByNameAndProvider(faxColName, provider);
+	   if(props.size()>0) {
+		   for(Property pp:props) {
+			   pp.setValue(fax);
+			   dao.merge(pp);
+		   }
+	   } else {
+		   p.setName(faxColName);
+		   p.setValue(fax);
+		   p.setProviderNo(provider);
+		   dao.persist(p);
+	   }
+	   return true;
    }
  
-   private boolean haveFax() throws SQLException {
-       DBHandler db;
-       String sql;
-       ResultSet rs;       
-              
-       
-       sql = "SELECT value FROM property WHERE name = '" + faxColName + "' AND provider_no = '" + provider + "'";
-       
-       rs = DBHandler.GetSQL(sql);
-       
-       return rs.next();              
-       
-   }
 }

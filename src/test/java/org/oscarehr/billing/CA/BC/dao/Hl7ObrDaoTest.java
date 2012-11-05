@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,32 +21,33 @@
  * Hamilton
  * Ontario, Canada
  */
+package org.oscarehr.billing.CA.BC.dao;
+
+import static org.junit.Assert.assertNotNull;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.oscarehr.billing.CA.BC.model.Hl7Obr;
+import org.oscarehr.common.dao.DaoTestFixtures;
+import org.oscarehr.common.dao.utils.EntityDataGenerator;
+import org.oscarehr.common.dao.utils.SchemaUtils;
+import org.oscarehr.util.SpringUtils;
+
+public class Hl7ObrDaoTest extends DaoTestFixtures {
+
+	private Hl7ObrDao dao = SpringUtils.getBean(Hl7ObrDao.class);
 
 
-package org.oscarehr.common.dao;
-
-import java.util.List;
-
-import javax.persistence.Query;
-
-import org.oscarehr.common.model.Immunizations;
-import org.springframework.stereotype.Repository;
-
-
-@Repository
-public class ImmunizationsDao extends AbstractDao<Immunizations>{
-
-	public ImmunizationsDao() {
-		super(Immunizations.class);
+	@Before
+	public void before() throws Exception {
+		SchemaUtils.restoreTable("hl7_obr");
 	}
-	
-	public List<Immunizations> findCurrentByDemographicNo(Integer demographicNo) {
-		Query q = entityManager.createQuery("SELECT i FROM Immunizations i WHERE i.demographicNo=?1 AND i.archived=0");
-		q.setParameter(1, demographicNo);
-		
-		@SuppressWarnings("unchecked")
-		List<Immunizations> results = q.getResultList();
-		
-		return results;
+
+	@Test
+	public void testCreate() throws Exception {
+		Hl7Obr entity = new Hl7Obr();
+		EntityDataGenerator.generateTestDataForModelClass(entity);
+		dao.persist(entity);
+		assertNotNull(entity.getId());
 	}
 }

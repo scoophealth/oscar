@@ -28,10 +28,10 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.billing.CA.BC.dao.Hl7MshDao;
+import org.oscarehr.billing.CA.BC.model.Hl7Msh;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.bc.PathNet.HL7.Node;
 
 /* @author Jesse Bank
@@ -51,21 +51,35 @@ public class MSH extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
    
    //This inserts a record into the hl7_msh returns a 0 if it worked and 1 if it failed  
    public int ToDatabase(int parent) throws SQLException {
-      _logger.debug("Inserting into Database :"+this.getInsertSql(parent));
-      return booleanConvert(DBHandler.RunSQL(this.getInsertSql(parent)));      
+	   Hl7Msh h = new Hl7Msh();
+	   h.setMessageId(parent);
+	   h.setSeperator(get("seperator", ""));
+	   h.setEncoding(get("encoding_characters", ""));
+	   h.setSendingApp(get("sending_application", ""));
+	   h.setSendingFacility(get("sending_facility", ""));
+	   h.setReceivingApp(get("receiving_application", ""));
+	   h.setReceivingFacility(get("receiving_facility", ""));
+	   h.setDateTime(convertTSToDate(get("date_time_of_message", "")));
+	   h.setSecurity(get("security", ""));
+	   h.setMessageType(get("message_type", ""));
+	   h.setControlId(get("message_control_id", ""));
+	   h.setProcessingId(get("processing_id", ""));
+	   h.setVersionId(get("version_id", ""));
+	   h.setSequenceNumber(get("sequence_number", ""));
+	   h.setContinuationPointer(get("continuation_pointer", ""));
+	   h.setAcceptAckType(get("accept_acknowledgment_type", ""));
+	   h.setApplicationAckType(get("application_acknowledge_type", ""));
+	   h.setCountryCode(get("country_code", ""));
+	   h.setCharacterSet(get("character_set", ""));
+	   h.setLanguage(get("principal_language_of_message", ""));
+	   dao.persist(h);
+	   
+      return 0;      
    }
    
-   protected String getInsertSql(int parent) {
-      String fields = "INSERT INTO hl7_msh ( message_id";
-      String values = "VALUES ('" + String.valueOf(parent) + "'";
-      String[] properties = this.getProperties();
-      for(int i = 0; i < properties.length; ++i) {
-         fields += ", " + properties[i];
-         values += ", '" + this.get(properties[i], "") + "'";
-      }
-      return fields + ") " + values + ");";
-   }
+   protected String getInsertSql(int parent) {return null;}
    
+
    protected String[] getProperties() {
       return new String[] {
          "seperator",

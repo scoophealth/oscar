@@ -25,8 +25,7 @@
 
 package org.oscarehr.phr.util;
 
-import java.sql.SQLException;
-
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
@@ -37,8 +36,6 @@ import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarProvider.data.ProviderMyOscarIdData;
-
-import javax.servlet.http.HttpServletRequest;
 
 
 public class PHRVerificationTag extends TagSupport {
@@ -68,7 +65,7 @@ public class PHRVerificationTag extends TagSupport {
        try{
     	   HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
     	   conditionMet = false ;
-           try {            
+                     
                if( ProviderMyOscarIdData.idIsSet((String)request.getSession().getAttribute("user")) ) {
                    if( demoNo != null ) {
                       org.oscarehr.common.model.Demographic demo = new DemographicData().getDemographic(demoNo); 
@@ -77,9 +74,7 @@ public class PHRVerificationTag extends TagSupport {
                            conditionMet = true;
                    }                                                    
                }                                        
-           }catch(SQLException e) {
-               MiscUtils.getLogger().error("Error", e);
-           } 
+         
     	 
     	   if(!conditionMet){
     		   return (SKIP_BODY);    

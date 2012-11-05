@@ -28,9 +28,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.billing.CA.BC.dao.Hl7PidDao;
+import org.oscarehr.billing.CA.BC.model.Hl7Pid;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.bc.PathNet.HL7.Node;
 /*
  * @author Jesse Bank
@@ -40,10 +42,9 @@ import oscar.oscarLab.ca.bc.PathNet.HL7.Node;
  */
 public class PID extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
     private static Logger logger=MiscUtils.getLogger();
-
+    private static Hl7PidDao dao = SpringUtils.getBean(Hl7PidDao.class);
     private ArrayList<PIDContainer> containers;
-
-   private ArrayList<Node> note;
+    private ArrayList<Node> note;
 
 
    public PID() {
@@ -95,32 +96,58 @@ public class PID extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
       }
       return notes;
    }
+ 
+
+   protected String getInsertSql(int parent) {return null; }
+
    //This inserts a record into the hl7_pid table with a key to the hl7.message_id field
    //Then gets the last insert Id from the hl7_pid table
    //Then for each PIDContainer in containers ArrayList calls the PIDContainer.ToDatabase
    public int ToDatabase(int parent) throws SQLException {
-      DBHandler.RunSQL(this.getInsertSql(parent));
-      int lastInsert = super.getLastInsertedId();
+	   
+	   Hl7Pid h = new Hl7Pid();
+	   h.setSetId(get("set_id",""));
+	   h.setExternalId(get("external_id",""));
+	   h.setInternalId(get("internal_id",""));
+	   h.setAlternateId(get("alternate_id",""));
+	   h.setPatientName(get("patient_name",""));
+	   h.setMotherMaidenName(get("mother_maiden_name",""));
+	   h.setDateOfBirth(this.convertTSToDate(get("date_of_birth","")));
+	   h.setSex(get("sex",""));
+	   h.setPatientAlias(get("patient_alias",""));
+	   h.setRace(get("race",""));
+	   h.setPatientAddress(get("patient_address",""));
+	   h.setCountryCode(get("country_code",""));
+	   h.setHomeNumber(get("home_number",""));
+	   h.setWorkNumber(get("work_number",""));
+	   h.setLanguage(get("language",""));
+	   h.setMaritalStatus(get("marital_status",""));
+	   h.setReligion(get("religion",""));
+	   h.setPatientAccountNumber(get("patient_account_number",""));
+	   h.setSsnNumber(get("ssn_number",""));
+	   h.setDriverLicense(get("driver_license",""));
+	   h.setMotherIdentifier(get("mother_identifier",""));
+	   h.setEthnicGroup(get("ethnic_group",""));
+	   h.setBirthPlace(get("birth_place",""));
+	   h.setMultipleBirthIndicator(get("multiple_birth_indicator",""));
+	   h.setBirthOrder(get("birth_order",""));
+	   h.setCitizenship(get("citizenship",""));
+	   h.setVeteranMilitaryStatus(get("veteran_military_status",""));
+	   h.setNationality(get("nationality",""));
+	   h.setPatientDeathDateTime(convertTSToDate(get("patient_death_date_time","")));
+	   h.setPatientDeathIndicator(get("patient_death_indicator",""));
+	   h.setNote(getNote());
+	   
+	   dao.persist(h);
+	   
+      int lastInsert = h.getId();
       int size = this.containers.size();
       for(int i = 0; i < size; ++i) {
          (this.containers.get(i)).ToDatabase(lastInsert);
       }
       return lastInsert;
    }
-
-   protected String getInsertSql(int parent) {
-      String fields = "INSERT INTO hl7_pid ( message_id";
-      String values = "VALUES ('" + String.valueOf(parent) + "'";
-      String[] properties = this.getProperties();
-      for(int i = 0; i < properties.length; ++i) {
-         fields += ", " + properties[i];
-         values += ", '" + this.get(properties[i], "") + "'";
-      }
-      fields += ", note";
-      values += ", '" + getNote() + "'";
-      return fields + ") " + values + ");";
-   }
-
+   
    protected String[] getProperties() {
       return new String[]{
          "set_id",
