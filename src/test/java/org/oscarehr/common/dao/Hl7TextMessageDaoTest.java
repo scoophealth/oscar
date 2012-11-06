@@ -26,15 +26,11 @@
  */
 package org.oscarehr.common.dao;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -42,75 +38,55 @@ import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
-import org.oscarehr.common.model.SystemMessage;
+import org.oscarehr.common.model.Hl7TextMessage;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-/**
- * @author Shazib
- */
 
-@SuppressWarnings("unused")
-public class SystemMessageDaoTest extends DaoTestFixtures {
-
-	private SystemMessageDao dao = SpringUtils.getBean(SystemMessageDao.class);
-	DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
-
-
+public class Hl7TextMessageDaoTest extends DaoTestFixtures {
+	
+	private Hl7TextMessageDao dao = (Hl7TextMessageDao)SpringUtils.getBean(Hl7TextMessageDao.class);
+	
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("SystemMessage");
+		SchemaUtils.restoreTable("hl7TextMessage");
 	}
 
 	@Test
-	public void testCreate() throws Exception {
-		SystemMessage entity = new SystemMessage();
-		EntityDataGenerator.generateTestDataForModelClass(entity);
-		dao.persist(entity);
-		assertNotNull(entity.getId());
-	}
+	public void testFindByFileUploadCheckId() throws Exception {
+		
+		int fileUploadCheckId1 = 1111;
+		int fileUploadCheckId2 = 2222;
+		
+		Hl7TextMessage hl7TextMessage1 = new Hl7TextMessage();
+		EntityDataGenerator.generateTestDataForModelClass(hl7TextMessage1);
+		hl7TextMessage1.setFileUploadCheckId(fileUploadCheckId1);
+		dao.persist(hl7TextMessage1);
+		
+		Hl7TextMessage hl7TextMessage2 = new Hl7TextMessage();
+		EntityDataGenerator.generateTestDataForModelClass(hl7TextMessage2);
+		hl7TextMessage2.setFileUploadCheckId(fileUploadCheckId2);
+		dao.persist(hl7TextMessage2);
+		
+		Hl7TextMessage hl7TextMessage3 = new Hl7TextMessage();
+		EntityDataGenerator.generateTestDataForModelClass(hl7TextMessage3);
+		hl7TextMessage3.setFileUploadCheckId(fileUploadCheckId1);
+		dao.persist(hl7TextMessage3);
+		
+		List<Hl7TextMessage> expectedResult = new ArrayList<Hl7TextMessage>(Arrays.asList(hl7TextMessage1, hl7TextMessage3));
+		List<Hl7TextMessage> result = dao.findByFileUploadCheckId(fileUploadCheckId1);
 
-
-	@Test
-	public void testFindAll() throws Exception {
-		
-		SystemMessage sysMessage1 = new SystemMessage();
-		EntityDataGenerator.generateTestDataForModelClass(sysMessage1);
-		Date date1 = new Date(dfm.parse("20110701").getTime());
-		sysMessage1.setExpiryDate(date1);
-		dao.persist(sysMessage1);
-		
-		SystemMessage sysMessage2 = new SystemMessage();
-		EntityDataGenerator.generateTestDataForModelClass(sysMessage2);
-		Date date2 = new Date(dfm.parse("20100701").getTime());
-		sysMessage2.setExpiryDate(date2);
-		dao.persist(sysMessage2);
-		
-		SystemMessage sysMessage3 = new SystemMessage();
-		EntityDataGenerator.generateTestDataForModelClass(sysMessage3);
-		Date date3 = new Date(dfm.parse("20120701").getTime());
-		sysMessage3.setExpiryDate(date3);
-		dao.persist(sysMessage3);
-		
-		List<SystemMessage> result = dao.findAll();
-		List<SystemMessage> expectedResult = new ArrayList<SystemMessage>(Arrays.asList(sysMessage3,sysMessage1,sysMessage2));
-			
 		Logger logger = MiscUtils.getLogger();
-
+		
 		if (result.size() != expectedResult.size()) {
 			logger.warn("Array sizes do not match.");
 			fail("Array sizes do not match.");
 		}
-
 		for (int i = 0; i < expectedResult.size(); i++) {
 			if (!expectedResult.get(i).equals(result.get(i))){
-				logger.warn("Items do not match.");
-				fail("Items do not match.");
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
 			}
 		}
 		assertTrue(true);
-		
-		
-		
 	}
-
 }
