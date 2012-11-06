@@ -109,8 +109,9 @@ You have no rights to access the data!
 <!-- check to see if new case management is request -->
 <%
     ArrayList<String> users = (ArrayList<String>)session.getServletContext().getAttribute("CaseMgmtUsers");
-
-    if( users != null && users.size() > 0 && (users.get(0).equalsIgnoreCase("all") || Collections.binarySearch(users, bean.providerNo)>=0)) {
+	String userNo = (String) request.getSession().getAttribute("user"); 
+	Boolean useNewEchart = (Boolean) request.getSession().getServletContext().getAttribute("useNewEchart");
+	if( userNo != null && (useNewEchart != null && useNewEchart.equals(Boolean.TRUE)) ) {
         session.setAttribute("newCaseManagement", "true");
 %>
 <caisi:isModuleLoad moduleName="caisi" reverse="true">
