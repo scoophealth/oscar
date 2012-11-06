@@ -24,11 +24,6 @@
 package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertNotNull;
-
-/**
- * @author Shazib
- */
-
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -45,7 +40,6 @@ import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.SystemMessage;
-import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 

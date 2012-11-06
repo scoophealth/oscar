@@ -23,6 +23,7 @@
  */
 package org.oscarehr.common.dao;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
@@ -34,6 +35,7 @@ import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.entities.Billingmaster;
+import oscar.entities.WCB;
 import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
 
 public class BillingmasterDaoTest extends DaoTestFixtures {
@@ -42,7 +44,7 @@ public class BillingmasterDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("billingmaster");
+		SchemaUtils.restoreTable("billingmaster", "wcb");
 	}
 
 	@Test
@@ -76,5 +78,15 @@ public class BillingmasterDaoTest extends DaoTestFixtures {
 		
 		int i = dao.markListAsBilled(Arrays.asList(new String[] {String.valueOf(b.getBillingmasterNo())}));
 		assertTrue(i == 1);
+	}
+	
+	@Test
+	public void testGetWcbByBillingNo() throws Exception {
+		WCB wcb = new WCB();
+		EntityDataGenerator.generateTestDataForModelClass(wcb);
+		wcb.setBilling_no(999);
+		dao.save(wcb);
+		
+		assertNotNull(dao.getWcbByBillingNo(999));
 	}
 }
