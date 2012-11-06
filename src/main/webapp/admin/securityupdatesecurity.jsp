@@ -40,6 +40,11 @@
 <%@ page
 	import="java.lang.*, java.util.*, java.text.*,java.sql.*, oscar.*"
 	errorPage="errorpage.jsp"%>
+
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.Security" %>
+<%@ page import="org.oscarehr.common.dao.SecurityDao" %>
+
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <%!
@@ -138,21 +143,24 @@
 	<form method="post" action="admincontrol.jsp" name="updatearecord"
 		onsubmit="return onsub()">
 <%
-	List<Map<String,Object>> resultList = oscarSuperManager.find("adminDao", "security_search_detail", new Object[] {request.getParameter("keyword")});
-	if (resultList.size() == 0) {
+	SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);
+	Integer securityId = Integer.valueOf(request.getParameter("keyword"));
+	Security security = securityDao.find(securityId);
+	
+	if(security == null) {
 %>
 	<tr>
 		<td><bean:message key="admin.securityupdatesecurity.msgFailed" /></td>
 	</tr>
 <%
-	} else {
-		for (Map provider : resultList) {
+	} 
+	else {
 %>
 	<tr>
 		<td width="50%" align="right"><bean:message
 			key="admin.securityrecord.formUserName" />:</td>
 		<td><input type="text" name="user_name" maxlength="30"
-			value="<%=provider.get("user_name")%>"></td>
+			value="<%= security.getUserName() %>"></td>
 	</tr>
 	<tr>
 		<td align="right" nowrap><bean:message
@@ -172,19 +180,19 @@
 		<div align="right"><bean:message
 			key="admin.securityrecord.formProviderNo" />:</div>
 		</td>
-		<td><%=provider.get("provider_no")%>
+		<td><%= security.getProviderNo() %>
 		<input type="hidden" name="provider_no"
-			value="<%=provider.get("provider_no")%>"></td>
+			value="<%= security.getProviderNo() %>"></td>
 	</tr>
 	<!-- new security -->
 	<tr>
 		<td align="right" nowrap><bean:message
 			key="admin.securityrecord.formExpiryDate" />:</td>
 		<td><input type="checkbox" name="b_ExpireSet" value="1"
-			<%= ((Integer)provider.get("b_ExpireSet"))==0?"":"checked" %>> <bean:message
+			<%= security.getBExpireset()==0?"":"checked" %>> <bean:message
 			key="admin.securityrecord.formDate" />: <input
 			type="text" name="date_ExpireDate" id="date_ExpireDate"
-			value="<%= provider.get("date_ExpireDate")==null?"":provider.get("date_ExpireDate") %>"
+			value="<%=  security.getDateExpiredate() ==null?"": security.getDateExpiredate()  %>"
 			size="10" readonly /> <img src="../images/cal.gif"
 			id="date_ExpireDate_cal" /></td>
 	</tr>
@@ -192,10 +200,10 @@
 		<td align="right" nowrap><bean:message
 			key="admin.securityrecord.formRemotePIN" />:</td>
 		<td><input type="checkbox" name="b_RemoteLockSet" value="1"
-			<%= ((Integer)provider.get("b_RemoteLockSet"))==0?"":"checked" %>>
+			<%= security.getBRemotelockset()==0?"":"checked" %>>
 		<bean:message
 			key="admin.securityrecord.formLocalPIN" />: <input type="checkbox" name="b_LocalLockSet"
-			value="1" <%= ((Integer)provider.get("b_LocalLockSet"))==0?"":"checked" %>>
+			value="1" <%= security.getBLocallockset()==0?"":"checked" %>>
 		</td>
 	</tr>
 	<!-- new security -->
@@ -215,15 +223,14 @@
 	</tr>
 	<tr>
 		<td colspan="2" align="center">
-			<input type="hidden" name="security_no" value="<%=provider.get("security_no")%>">
+			<input type="hidden" name="security_no" value="<%= security.getSecurityNo() %>">
 			<input type="hidden" name="displaymode" value="Security_Update_Record">
 			<input type="submit" name="subbutton" value='<bean:message key="admin.securityupdatesecurity.btnSubmit"/>'>
-			<input type="button" value="<bean:message key="admin.securityupdatesecurity.btnDelete"/>" onclick="window.location='admincontrol.jsp?keyword=<%=provider.get("security_no")%>&displaymode=Security_Delete'">
+			<input type="button" value="<bean:message key="admin.securityupdatesecurity.btnDelete"/>" onclick="window.location='admincontrol.jsp?keyword=<%=security.getSecurityNo()%>&displaymode=Security_Delete'">
 		</td>
 	</tr>
 <%
 		}
-	}
 %>
 	</form>
 </table>
