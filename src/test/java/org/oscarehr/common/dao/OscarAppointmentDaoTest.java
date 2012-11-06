@@ -31,6 +31,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.junit.Before;
@@ -182,5 +183,25 @@ public class OscarAppointmentDaoTest extends DaoTestFixtures {
 		
 		appts = dao.findNonCancelledFutureAppointments(demographicId);
 		assertFalse("Expected to find an appt's for " + demographicId, appts.isEmpty());
+	}
+	
+	@Test
+	public void testFindNextAppointment() throws Exception {
+		Integer demographicId = 999999;
+		
+		Appointment appt = new Appointment();		
+		EntityDataGenerator.generateTestDataForModelClass(appt);
+		appt.setDemographicNo(demographicId);
+		
+		appt.setAppointmentDate(new Date());
+		GregorianCalendar cal = new GregorianCalendar();
+		cal.add(Calendar.MINUTE, 5);
+		appt.setStartTime(cal.getTime());
+		appt.setStatus("A");
+		dao.persist(appt);
+		
+		Appointment apptCheck = dao.findNextAppointment(demographicId);
+		assertNotNull(apptCheck);
+		assertEquals(appt, apptCheck);
 	}
 }
