@@ -41,7 +41,7 @@ public class ProviderLabRoutingDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("providerLabRouting");
+		SchemaUtils.restoreTable("provider", "providerLabRouting");
 	}
 
 	@Test
@@ -50,6 +50,11 @@ public class ProviderLabRoutingDaoTest extends DaoTestFixtures {
 		 EntityDataGenerator.generateTestDataForModelClass(ql);
 		 dao.persist(ql);
 		 assertNotNull(ql.getId());
+	}
+	
+	@Test
+	public void testGetProviderLabRoutings() {
+		assertNotNull(dao.getProviderLabRoutings(1, "HL7"));
 	}
 
 }

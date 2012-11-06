@@ -22,7 +22,6 @@
  * Ontario, Canada
  */
 
-
 /*
  * AcknowledgementData.java
  *
@@ -33,18 +32,17 @@
  */
 package oscar.oscarLab.ca.all;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
 
-import org.apache.log4j.Logger;
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.common.dao.ProviderLabRoutingDao;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.ProviderLabRoutingModel;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarMDS.data.ReportStatus;
+import oscar.util.ConversionUtils;
 
 public class AcknowledgementData {
-
-	private static Logger logger = MiscUtils.getLogger();
 
 	/** Creates a new instance of AcknowledgementData */
 	private AcknowledgementData() {
@@ -52,37 +50,19 @@ public class AcknowledgementData {
 	}
 
 	public static ArrayList<ReportStatus> getAcknowledgements(String segmentID) {
-		ArrayList<ReportStatus> acknowledgements = null;
-		try {
-
-			acknowledgements = new ArrayList<ReportStatus>();
-			String sql = "select provider.first_name, provider.last_name, provider.provider_no, providerLabRouting.status, providerLabRouting.comment, providerLabRouting.timestamp from provider, providerLabRouting where provider.provider_no = providerLabRouting.provider_no and providerLabRouting.lab_no='" + segmentID + "' and providerLabRouting.lab_type='HL7'";
-			ResultSet rs = DBHandler.GetSQL(sql);
-			while (rs.next()) {
-				acknowledgements.add(new ReportStatus(oscar.Misc.getString(rs, "first_name") + " " + oscar.Misc.getString(rs, "last_name"), oscar.Misc.getString(rs, "provider_no"), oscar.Misc.getString(rs, "status"), oscar.Misc.getString(rs, "comment"), oscar.Misc.getString(rs, "timestamp"), segmentID));
-			}
-			rs.close();
-		} catch (Exception e) {
-			logger.error("Could not retrieve acknowledgement data", e);
-		}
-		return acknowledgements;
+		return getAcknowledgements(segmentID, "HL7");
 	}
 
 	public static ArrayList<ReportStatus> getAcknowledgements(String docType, String segmentID) {
-		ArrayList<ReportStatus> acknowledgements = null;
-		try {
+		ProviderLabRoutingDao dao = (ProviderLabRoutingDao) SpringUtils.getBean(ProviderLabRoutingDao.class);
 
-			acknowledgements = new ArrayList<ReportStatus>();
-			String sql = "select provider.first_name, provider.last_name, provider.provider_no, providerLabRouting.status, providerLabRouting.comment, providerLabRouting.timestamp from provider, providerLabRouting where provider.provider_no = providerLabRouting.provider_no and providerLabRouting.lab_no='" + segmentID + "' and providerLabRouting.lab_type='" + docType + "'";
-			ResultSet rs = DBHandler.GetSQL(sql);
-			while (rs.next()) {
-				acknowledgements.add(new ReportStatus(oscar.Misc.getString(rs, "first_name") + " " + oscar.Misc.getString(rs, "last_name"), oscar.Misc.getString(rs, "provider_no"), oscar.Misc.getString(rs, "status"), oscar.Misc.getString(rs, "comment"), oscar.Misc.getString(rs, "timestamp"), segmentID));
-			}
-			rs.close();
-		} catch (Exception e) {
-			logger.error("Could not retrieve acknowledgement data", e);
+		ArrayList<ReportStatus> acknowledgements = new ArrayList<ReportStatus>();
+		for (Object[] i : dao.getProviderLabRoutings(ConversionUtils.fromIntString(segmentID), docType)) {
+			Provider provider = (Provider) i[0];
+			ProviderLabRoutingModel routing = (ProviderLabRoutingModel) i[1];
+
+			acknowledgements.add(new ReportStatus(provider.getFullName(), provider.getPractitionerNo(), routing.getStatus(), routing.getComment(), ConversionUtils.toDateString(routing.getTimestamp()), segmentID));
 		}
-
 		return acknowledgements;
 	}
 }

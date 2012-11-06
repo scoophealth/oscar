@@ -15,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.ProviderLabRoutingModel;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +32,7 @@ public class ProviderLabRoutingDao extends AbstractDao<ProviderLabRoutingModel> 
 	}
 
 	@SuppressWarnings("unchecked")
-    private List<ProviderLabRoutingModel> getProviderLabRoutings(String labNo, String labType, String providerNo, String status) {
+	private List<ProviderLabRoutingModel> getProviderLabRoutings(String labNo, String labType, String providerNo, String status) {
 		Query q = entityManager.createQuery("select x from " + modelClass.getName() + " x where x.labNo=? and x.labType=? and x.providerNo=? and x.status=?");
 		q.setParameter(1, labNo != null ? Integer.parseInt(labNo) : "%");
 		q.setParameter(2, labType != null ? labType : "%");
@@ -64,10 +65,27 @@ public class ProviderLabRoutingDao extends AbstractDao<ProviderLabRoutingModel> 
 	}
 
 	public ProviderLabRoutingModel findByLabNo(int labNo) {
-		Query query = entityManager.createQuery("select x from "+modelClass.getName()+" x where x.labNo=?");
+		Query query = entityManager.createQuery("select x from " + modelClass.getName() + " x where x.labNo=?");
 		query.setParameter(1, labNo);
-		
+
 		return this.getSingleResultOrNull(query);
 	}
 
+	/**
+	 * Finds all providers and lab routing models for the specified lab
+	 * 
+	 * @param labNo
+	 * 		Lab number to find data for
+	 * @param labType
+	 * 		Lab type to find data for
+	 * @return
+	 * 		Returns an array of objects containing {@link Provider}, {@link ProviderLabRoutingModel} pairs.
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Object[]> getProviderLabRoutings(Integer labNo, String labType) {
+		Query query = entityManager.createQuery("FROM " + Provider.class.getSimpleName() + " p, ProviderLabRoutingModel r WHERE p.id = r.providerNo AND r.labNo = :labNo AND r.labType = :labType");
+		query.setParameter("labNo", labNo);
+		query.setParameter("labType", labType);
+		return query.getResultList();
+	}
 }
