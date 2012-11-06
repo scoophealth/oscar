@@ -135,8 +135,6 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"demographic_search_demoaddno", "select demographic_no from demographic where last_name=? and first_name =? and year_of_birth=? and month_of_birth=? and date_of_birth=? and hin=? and ver=?"},
     {"search_lastfirstnamedob", "select demographic_no from demographic where last_name=? and first_name=? and year_of_birth=? and month_of_birth=? and date_of_birth=?"},
 
-    {"security_search_detail", "select * from security where security_no=?"},
-
     {"searchmygroupcount", "select count(provider_no) from mygroup where mygroup_no=? "},
     {"searchmygroupprovider", "select provider_no, last_name, first_name from mygroup where mygroup_no=? "},
     {"searchprovider", "select provider_no, last_name, first_name from provider where provider_type='doctor' and status='1' order by last_name"},
@@ -163,8 +161,6 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"demographic_search_detail", "select * from demographic where demographic_no=?"},
     {"demographic_search_demoaddno", "select demographic_no from demographic where last_name=? and first_name =? and year_of_birth=? and month_of_birth=? and date_of_birth=? and hin=? and ver=?"},
     {"search_lastfirstnamedob", "select demographic_no from demographic where last_name=? and first_name=? and year_of_birth=? and month_of_birth=? and date_of_birth=?"},
-
-    {"security_search_detail", "select * from security where security_no=?"},
 
     {"searchmygroupcount", "select count(provider_no) from mygroup where mygroup_no=? "},
     {"searchmygroupprovider", "select provider_no, last_name, first_name from mygroup where mygroup_no=? "},
