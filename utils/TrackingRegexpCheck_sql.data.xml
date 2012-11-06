@@ -45,225 +45,22 @@
         <ViolationValue>/database/mysql/caisi/cookierevolverinit.sql:`question_id` varchar(37) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/cookierevolverinit.sql:`user_id` varchar(64) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/cookierevolverinit.sql:`user_role` varchar(64) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`agency1Name` varchar(70) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`agency2Name` varchar(70) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`agency3Name` varchar(70) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`agency4Name` varchar(70) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`allergicToMedicationName` varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`amtOwing` varchar(16) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`amtReceived` varchar(9) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assessCompleteTime` varchar(36) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assessCompleteTime` varchar(50) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assessDate` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assessStartTime` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assign_end` date  NULL default '0000-00-00',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assign_end` date NULL default '0000-00-00',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assign_start` date  NULL default '0000-00-00',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assign_start` date NULL default '0000-00-00',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assistProvided1` varchar(120) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assistProvided2` varchar(120) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assistProvided3` varchar(120) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assistProvided4` varchar(120) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assistWithOther` varchar(50) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`billing_code` varchar(100) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`birthCertificateNum` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`caisiRoleName` varchar(255) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_CPP` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_EI` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_Employment` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_HealthOffice` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_OAS` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_ODSP` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_OW` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_OtherIncome` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_UI` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_WSIB` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_annexHarm` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistInAddictions` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistInEducation` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistInEmployment` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistInFinance` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistInHealth` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistInHousing` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistInIdentification` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistInImmigration` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistInLegal` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistWithBirthCert` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistWithCitizenCard` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistWithHealthCard` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistWithImmigrant` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistWithNone` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistWithOther` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistWithRefugee` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistWithSINCard` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_birchmountResidence` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_birthCertificate` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_bleeding` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_citzenshipCard` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_dateOfReadmission` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_downsviewDells` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_employment` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_epilepsy` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_fortYork` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_getMoreMedication` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_goToEmergencyRoom` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_goToHealthCenter` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_goToOthers` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_goToWalkInClinic` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_hasDiabetes` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveAnxiety` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveCollege` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveDepression` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveHighSchool` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveManic` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveODB` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveODSP` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveOHIP` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveOther1` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveOther2` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveOther3` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveSchizophrenia` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveUniversity` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_healthCard` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_hearingImpair` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_hostel_fusion_care` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_hostel` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_idFiled` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_idNone` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_immigrant` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_insulin` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_isStatement6Read` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_isStatementRead` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_longTermProgram` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_mobilityImpair` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_needHelpInOther` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_newClient` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_noID` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_noRecord` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_oNeillHouse` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_otherID` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_other` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_pamphletIssued` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_refugee` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_regularCheckup` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_rememberToTakeMedication` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_rotaryClub` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_sharing` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_sinCard` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_speakEnglish` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_speakFrench` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_speakOther` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_speakSpanish` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_storeMedication` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_takePrescribedMedication` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_treatInjury` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_treatMentalHealth` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_treatOtherReasons` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_treatPhysicalHealth` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_visitEmergencyRoom` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_visitHealthCenter` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_visitHealthOffice` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_visitOthers` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_visitWalkInClinic` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_visualImpair` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cert_id` varchar(37) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`citzenshipCardNum` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`clientFirstName` varchar(50) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`clientLastAddressPayRent` varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`clientLastAddress` varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`clientSurname` varchar(50) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`commentsOnAlcohol` varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`commentsOnEducation` varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`commentsOnEmployment` varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`commentsOnFinance` varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`commentsOnHousing` varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`commentsOnID` varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`commentsOnImmigration` varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`commentsOnLegalIssues` varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`commentsOnNeedHelp` varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`commentsOnStreetDrugs` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`comments` varchar(50)  NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`completedBy1` varchar(50) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`completedBy2` varchar(50) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`completedBy` varchar(120) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contact1Name` varchar(50) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contact1Phone` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contact2Name` varchar(50) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contact2Phone` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contact3Name` varchar(50) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contact3Phone` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contact4Name` varchar(50) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contact4Phone` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contactAddress` varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contactName` varchar(70) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contactPhone` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contactRelationship` varchar(120) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateAssessment` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateEnteredSeaton` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateExitedSeaton` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateLastContact1` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateLastContact2` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateLastContact3` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateLastContact4` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateLastDoctor1Contact` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateLastDoctor2Contact` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateLivedThere` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateOfReadmission` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`datesAtSeaton` varchar(70) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`day` char(2) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`demographic_no` varchar(10) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`demographic_no` varchar(20) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`doctor1NameAddr` varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`doctor1Phone` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`doctor2NameAddr` varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`doctor2Phone` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`doctorAddress` varchar(120) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`doctorName2` varchar(50) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`doctorName` varchar(50) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`doctorPhoneExt` varchar(8) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`doctorPhone` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`drinksPerDay` char(3) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`drinksPerMonth` varchar(5) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`drinksPerWeek` varchar(4) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`encounter_type` varchar(100) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`end_date` date NOT NULL default '0000-00-00',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`enterSeatonDate` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`everMadeAppforOtherIncome` varchar(120) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`followupAppmts` varchar(120) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`frequencyOfSeeingDoctor` varchar(8) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`frequencyOfSeeingEmergencyRoomDoctor` varchar(8) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`goToOthers` varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`hasWhatID` varchar(120) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`haveOther` varchar(70) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`healthCardNum` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`healthCardVer` char(2) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`healthIssueDetails` varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`helpObtainMedication` varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`historyOfJail` varchar(50) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`housingInterested` varchar(70) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`howHearAboutSeaton` varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`howLongEmployed` char(3) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`howLongUnemployed` char(3) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`howMuchYouReceive` varchar(12) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`immigrantNum` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`lastIssueDate` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`livedWithWhom` varchar(120) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`machine_id` varchar(37) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`mainSourceOfIncome` varchar(70) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`mentalHealthConcerns` varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`mobilityImpair` varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`month` char(2) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`name` varchar(255) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`namesOfMedication` varchar(120) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`needAssistInLegal` varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`needHelpWithImmigration` varchar(50) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`observation_date` datetime NOT NULL default '0000-00-00 00:00:00',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`office` varchar(50) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`oscar_name` varchar(255) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`otherHealthConerns` varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`otherIdentification` varchar(70) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`otherSpecify` varchar(120) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`pamphletNotIssued` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`policy_id` varchar(37) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`priority` varchar(20) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`programId` varchar(10) default '',</ViolationValue>
@@ -273,102 +70,17 @@
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`provider_no` varchar(20) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`provider_no` varchar(6) NOT NULL default ''</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`provider_no` varchar(6) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`publicTrusteeInfo` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`question_id` varchar(37) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_active` varchar(36) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_allergicToMedication` varchar(36) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_appmtSeeDoctorIn3Mths` varchar(36) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_behaviorProblem` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_caredForAnxiety` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_caredForDepression` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_caredForManic` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_caredForOther` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_caredForSchizophrenia` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_citizen` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_currentlyEmployed` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_didNotReceiveHealthCare` varchar(36) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_doYouDrink` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_drinkThese` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_drinking` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_drugUseFrequency` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_drugUse` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_entitledToOtherIncome` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_everBeenJailed` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_everMadeAppforOtherIncome` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_hasBehaviorProblem` varchar(36) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_hasDoctor` varchar(36) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_hasDrinkingProblem` varchar(36) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_hasDrugProblem` varchar(36) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_hasHealthProblem` varchar(36) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_hasIDInFile` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_hasMentalIllness` varchar(36) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_haveHealthCoverage` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_haveMentalProblem` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_havePublicTrustee` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_healthIssue` varchar(36) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_healthProblem` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_helpObtainMedication` varchar(36) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_howMuchDrink` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_interestBackToSchool` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_interestedInTraining` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_involvedOtherAgencies` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_livedInSubsidized` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_mentalHealthConcerns` varchar(36) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_mentalIllness` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_need60DaysSeatonServices` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_needAssistInLegal` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_needAssistWithMedication` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_needRegularDoctor` varchar(36) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_needSeatonService` varchar(36) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_objectToRegularDoctorIn4Wks` varchar(36) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_onlineCheck` varchar(36) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_otherHealthConcern` varchar(36) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_owedRent` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_pamphletIssued` varchar(36) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_rateOverallHealth` varchar(36) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_requireReferralToESL` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_seatonTour` varchar(36) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_seeDoctor` varchar(36) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_seeSameDoctor` varchar(36) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_seenDoctorRegAlcohol` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_speakToResearcher` varchar(36) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_sponsorshipBreakdown` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_takeMedication` varchar(36) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_useDrugs` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_wantAppmt` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_wantHelpQuitDrug` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_wantHelpQuit` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_yourCanadianStatus` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`reactionToMedication` varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`reasonToSeaton` varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`refugeeNum` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`reporter_caisi_role` varchar(20) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`reporter_program_team` varchar(20) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`seatonNotToured` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`signing_provider_no` varchar(20) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`sinNum` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`speakOther` varchar(36) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`speakOther` varchar(50) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`sponsorName` varchar(50) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`start_date` date NOT NULL default '0000-00-00',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`status` char(1) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`summary` varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`treatOtherReasons` varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`typeOfIncome` varchar(120) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`type` varchar(100) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`updateDate` datetime default '0000-00-00 00:00:00',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`update_date` datetime NOT NULL default '0000-00-00 00:00:00',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`user_id` varchar(64) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`user_role` varchar(64) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`usualOccupation` varchar(70) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`whenMadeAppforOtherIncome` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`whereBeforeSeaton` varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`whereOweRent` varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`whySponsorshipBreakdown` varchar(255) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`workerNum` varchar(36) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`year` varchar(4) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`yearsOfEducation` varchar(4) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`yourCanadianStatus` varchar(50) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisidata.sql:(1, ''),</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisidata.sql:(1, 7, NULL, 0, 'T', ''),</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisidata.sql:(2, 7, NULL, 1, 'F', ''),</ViolationValue>
@@ -1169,559 +881,210 @@
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`acute` tinyint(1) NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`administrate_policies` tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`administrate_questions` tinyint(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`admissionDate` varchar(10) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`admissionNotes` text default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`admission_date` datetime default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`admission_notes` text default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`admission_status` varchar(24) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`admitDate` date default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`agency1Name` varchar(70) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`agency1Name` varchar(70) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`agency2Name` varchar(70) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`agency2Name` varchar(70) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`agency3Name` varchar(70) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`agency3Name` varchar(70) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`agency4Name` varchar(70) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`agency4Name` varchar(70) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`all_roles` tinyint(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`allergicToMedicationName` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`allergicToMedicationName` varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`allergies` text default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`amtOwing` varchar(16) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`amtOwing` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`amtReceived` varchar(9) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`amtReceived` varchar(9) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`anonymous` tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`answer` varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`archived` boolean default false,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`archived` tinyint(1) default '0',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`archiving_provider_no` varchar(6) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assessCompleteTime` varchar(36) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assessCompleteTime` varchar(36) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assessCompleteTime` varchar(50) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assessCompleteTime` varchar(50) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assessDate` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assessDate` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assessStartTime` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assessStartTime` varchar(24) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assign_end` date  NULL default '0000-00-00',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assign_end` date NULL default '0000-00-00',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assign_start` date  NULL default '0000-00-00',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assign_start` date NULL default '0000-00-00',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assigned_bed`  tinyint(1)  NOT NULL default '1',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assistProvided1` varchar(120) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assistProvided1` varchar(120) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assistProvided2` varchar(120) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assistProvided2` varchar(120) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assistProvided3` varchar(120) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assistProvided3` varchar(120) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assistProvided4` varchar(120) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assistProvided4` varchar(120) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assistWithOther` varchar(50) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`assistWithOther` varchar(50) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`automatic_discharge` tinyint(1) default 0,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`baseDescriptionOfHousing` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`baseSocialServiceClientAccesses` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`baseWhyClientDoNotAccessSocialServices` varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`bed_demographic_status_id` int(10) unsigned NOT NULL default '1',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`bed_id` int(10) unsigned NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`bed_type_id` int(10) unsigned NOT NULL default '1',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`billing_code` varchar(100) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`birthCertificateNum` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`birthDate` date default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`briefSummary` text default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`caisiRoleName` varchar(255) NOT NULL default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndAdjustDisorder` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndAnxietyDisorderFromSubstance` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndAnxietyDisorderOCd` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndAnxietyDisorderOther` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndAnxietyDisorderPSd` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndAnxietyDisorder` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndChildhoodDisorder` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndCognitiveDisorder` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndDevelopmentalDisorder` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndDisassociativeDisorder` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndEatingDisorder` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndFactitiousDisorder` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndGenderIdentityDisorder` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndImpulsiveDisorder` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndIncomeDisabilityAssistance` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndIncomeEi` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndIncomeEmployment` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndIncomeFamily` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndIncomeInformalOther` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndIncomeNone` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndIncomeODSp` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndIncomeOther` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndIncomePanhandlingOther` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndIncomePension` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndIncomeSocialAssistance` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndIncomeUnknown` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndMedicalMentalDisorder` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndMoodDisorder` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndPersonalityDisorder` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndSchizophrenia` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndSleepDisorder` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndSomatoformDisorder` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndSubstanceDisorder` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox2ndUnknown` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxAddictionIssue` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBankingIssueOther` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBase2ndIncomeDisabilityAssistance` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBase2ndIncomeEi` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBase2ndIncomeEmployment` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBase2ndIncomeFamily` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBase2ndIncomeInformalOther` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBase2ndIncomeNone` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBase2ndIncomeODSp` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBase2ndIncomeOther` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBase2ndIncomePanhandlingOther` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBase2ndIncomePension` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBase2ndIncomeSocialAssistance` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBase2ndIncomeUnknown` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseAccessHealthCareUnknown` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseDoNotAccessHealthCare` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseHasCertificate` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseHasCommunity` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseHasFriends` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseHasHealthCard` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseHasNativeCard` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseHasNonStatus` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseHasRegularHealthProvider` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseHasRelatives` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseHasSIn` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseHasSomeone` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseHasSupportUnknown` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseHasUnknown` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseIncomeMgmentDoNotNeedTrustee` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseIncomeMgmentHasTrustee` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseIncomeMgmentNeedsTrusteeButDoNotWant` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseIncomeMgmentNeedsTrustee` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseIncomeMgmentUnknown` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseLivingWithChildren` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseLivingWithNonrelatives` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseLivingWithParents` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseLivingWithRelatives` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseLivingWithSelf` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseLivingWithSpousePlus` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseLivingWithSpouse` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseLivingWithUnknown` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseUseHealthBus` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseUseHospitalEmergency` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseUseShelterClinic` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxBaseUseWalkinClinic` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCaseFile` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCompleteWithReferral` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCompleteWithoutReferral` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxConcurrentDisorder` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrAccessHealthCareUnknown` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrDoNotAccessHealthCare` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrHasCertificate` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrHasCommunity` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrHasFriends` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrHasHealthCard` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrHasNativeCard` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrHasNonStatus` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrHasRegularHealthProvider` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrHasRelatives` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrHasSIn` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrHasSomeone` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrHasSupportUnknown` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrHasUnknown` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrIncomeMgmentDoNotNeedTrustee` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrIncomeMgmentHasTrustee` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrIncomeMgmentNeedsTrusteeButDoNotWant` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrIncomeMgmentNeedsTrustee` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrIncomeMgmentUnknown` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrLivingWithChildren` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrLivingWithNonrelatives` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrLivingWithParents` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrLivingWithRelatives` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrLivingWithSelf` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrLivingWithSpousePlus` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrLivingWithSpouse` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrLivingWithUnknown` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrUseHealthBus` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrUseHospitalEmergency` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrUseShelterClinic` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxCurrUseWalkinClinic` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxDailyActivityIssue` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxDateOfBirthUnknown` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxDeathExit` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxDualDisorder` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxEducationalIssue` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxEmploymentIssue` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxFamilyLawIssues1` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxFamilyLawIssues2` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxFinancialIssue` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxHealthCareIssueOther` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxHospitalizationUnknown` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxHousingIssue` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxIdentificationIssueOther` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxImmigrationIssueOther` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxIsolationIssueOther` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxLegalIssue` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxMOHLTCDisorder` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxMentalIssue` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxNAExit` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxNa` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxNoneListedIssue` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxOCd` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxOtherAnxietyDisorder` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxOtherChronicIllness` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxOtherIssue` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxPTSd` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxPhysicalHospitalization` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxPhysicalIssueOther` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxPreAdmission` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxPreferredLanguageUnknown` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxProblemsWithPolice1` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxProblemsWithPolice2` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxPsychiatricHospitalization` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxReferralByCourt` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxReferralByCriminalJusticeSystem` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxReferralByDetentionCenter` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxReferralByFredVictorCentreOther` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxReferralByHospital` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxReferralByMentalHealthWorker` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxReferralByMentalOrg` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxReferralByOtherAgency` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxReferralByOtherInstitution` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxReferralByOtherPeople` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxReferralByPhysician` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxReferralByPolice` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxReferralByProbation` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxReferralByPsychiatricHospital` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxReferralByPsychiatrists` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxReferralByPublic` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxReferralBySafeBeds` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxReferralBySelf` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxReferralByStreetHealthReceptionOther` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxReferralByStreetIDWorkerOther` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxReferralByStreetNurseOther` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxRelationalIssue` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxRelocationExit` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxSexualAbuseIssue` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxSocialServiceIssueOther` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxSubstanceAnxietyDisorder` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxSuicideExit` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxThreatIssue` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cboxWithdrawalExit` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_CPP` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_CPP` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_EI` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_EI` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_Employment` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_Employment` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_HealthOffice` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_HealthOffice` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_OAS` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_OAS` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_ODSP` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_ODSP` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_OW` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_OW` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_OtherIncome` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_OtherIncome` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_UI` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_UI` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_WSIB` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_WSIB` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_annexHarm` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_annexHarm` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistInAddictions` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistInAddictions` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistInEducation` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistInEducation` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistInEmployment` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistInEmployment` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistInFinance` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistInFinance` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistInHealth` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistInHealth` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistInHousing` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistInHousing` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistInIdentification` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistInIdentification` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistInImmigration` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistInImmigration` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistInLegal` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistInLegal` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistWithBirthCert` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistWithBirthCert` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistWithCitizenCard` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistWithCitizenCard` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistWithHealthCard` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistWithHealthCard` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistWithImmigrant` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistWithImmigrant` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistWithNone` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistWithNone` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistWithOther` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistWithOther` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistWithRefugee` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistWithRefugee` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistWithSINCard` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_assistWithSINCard` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_birchmountResidence` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_birchmountResidence` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_birthCertificate` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_birthCertificate` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_bleeding` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_bleeding` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_citzenshipCard` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_citzenshipCard` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_dateOfReadmission` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_dateOfReadmission` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_downsviewDells` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_downsviewDells` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_employment` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_employment` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_epilepsy` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_epilepsy` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_fortYork` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_fortYork` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_getMoreMedication` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_getMoreMedication` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_goToEmergencyRoom` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_goToEmergencyRoom` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_goToHealthCenter` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_goToHealthCenter` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_goToOthers` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_goToOthers` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_goToWalkInClinic` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_goToWalkInClinic` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_hasDiabetes` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_hasDiabetes` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveAnxiety` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveAnxiety` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveCollege` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveCollege` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveDepression` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveDepression` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveHighSchool` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveHighSchool` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveManic` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveManic` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveODB` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveODB` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveODSP` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveODSP` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveOHIP` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveOHIP` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveOther1` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveOther1` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveOther2` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveOther2` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveOther3` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveOther3` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveSchizophrenia` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveSchizophrenia` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveUniversity` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_haveUniversity` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_healthCard` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_healthCard` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_hearingImpair` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_hearingImpair` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_hostel_fusion_care` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_hostel` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_hostel` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_idFiled` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_idFiled` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_idNone` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_idNone` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_immigrant` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_immigrant` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_insulin` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_insulin` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_isStatement6Read` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_isStatementRead` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_longTermProgram` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_longTermProgram` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_mobilityImpair` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_mobilityImpair` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_needHelpInOther` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_needHelpInOther` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_newClient` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_newClient` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_noID` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_noID` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_noRecord` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_noRecord` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_oNeillHouse` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_oNeillHouse` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_otherID` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_otherID` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_other` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_other` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_pamphletIssued` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_pamphletIssued` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_refugee` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_refugee` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_regularCheckup` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_regularCheckup` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_rememberToTakeMedication` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_rememberToTakeMedication` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_rotaryClub` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_rotaryClub` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_sharing` char(1) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_sinCard` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_sinCard` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_speakEnglish` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_speakEnglish` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_speakFrench` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_speakFrench` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_speakOther` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_speakOther` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_speakSpanish` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_speakSpanish` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_storeMedication` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_storeMedication` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_takePrescribedMedication` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_takePrescribedMedication` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_treatInjury` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_treatInjury` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_treatMentalHealth` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_treatMentalHealth` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_treatOtherReasons` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_treatOtherReasons` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_treatPhysicalHealth` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_treatPhysicalHealth` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_visitEmergencyRoom` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_visitEmergencyRoom` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_visitHealthCenter` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_visitHealthCenter` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_visitHealthOffice` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_visitHealthOffice` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_visitOthers` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_visitOthers` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_visitWalkInClinic` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_visitWalkInClinic` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_visualImpair` char(1) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cbox_visualImpair` char(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`cert_id` varchar(37) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`certain` tinyint(1) NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`certs_current` int(11) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`certs_max` int(11) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`changeMedications` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`citzenshipCardNum` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`clientFirstName` varchar(40) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`clientFirstName` varchar(50) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`clientFirstName` varchar(50) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`clientLastAddressPayRent` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`clientLastAddressPayRent` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`clientLastAddress` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`clientLastAddress` varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`clientName` varchar(60) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`clientNum` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`clientSurname` varchar(40) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`clientSurname` varchar(50) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`clientSurname` varchar(50) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`client_id` bigint(11) NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`client_id` bigint(20) NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`client_id` bigint(20) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`clientstatus_id` bigint(20) DEFAULT 0,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`commentsOnAlcohol` varchar(255) default '',</ViolationValue>
+        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`clientstatus_id` bigint(20) DEFAULT NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`commentsOnAlcohol` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`commentsOnEducation` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`commentsOnEducation` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`commentsOnEmployment` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`commentsOnEmployment` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`commentsOnFinance` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`commentsOnFinance` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`commentsOnHousing` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`commentsOnHousing` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`commentsOnID` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`commentsOnID` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`commentsOnImmigration` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`commentsOnImmigration` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`commentsOnLegalIssues` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`commentsOnLegalIssues` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`commentsOnNeedHelp` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`commentsOnNeedHelp` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`commentsOnStreetDrugs` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`commentsOnStreetDrugs` varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`comments` varchar(255) default null,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`comments` varchar(50)  NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`common_list` boolean NOT NULL default false,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`completedBy1` varchar(50) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`completedBy1` varchar(50) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`completedBy2` varchar(50) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`completedBy2` varchar(50) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`completedBy` varchar(120) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`completedBy` varchar(120) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`completion_date` datetime default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`completion_notes` text default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contact1Name` varchar(50) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contact1Name` varchar(50) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contact1Phone` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contact1Phone` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contact2Name` varchar(50) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contact2Name` varchar(50) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contact2Phone` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contact2Phone` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contact3Name` varchar(50) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contact3Name` varchar(50) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contact3Phone` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contact3Phone` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contact4Name` varchar(50) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contact4Name` varchar(50) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contact4Phone` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contact4Phone` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contactAddress` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contactAddress` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contactName` varchar(70) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contactName` varchar(70) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contactPhone` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contactPhone` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contactRelationship` varchar(120) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`contactRelationship` varchar(120) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`countryOfOrigin` varchar(60) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`created_timestamp` datetime default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`created` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`creation_date` datetime NOT NULL default '1900-01-01 00:00:00',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`currAddress` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`currDescriptionOfHousing` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`currPhone` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`currSocialServiceClientAccesses` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`currWhyClientDoNotAccessSocialServices` varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`currentIssues` text default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`data_key` varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`date1` varchar(20) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`date2` varchar(20) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`date3` varchar(20) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`date4` varchar(20) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateAssessment` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateAssessment` varchar(24) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateClosed` datetime default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateCreated` datetime default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateEnteredSeaton` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateEnteredSeaton` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateExitedSeaton` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateExitedSeaton` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateLastContact1` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateLastContact1` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateLastContact2` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateLastContact2` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateLastContact3` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateLastContact3` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateLastContact4` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateLastContact4` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateLastDoctor1Contact` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateLastDoctor1Contact` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateLastDoctor2Contact` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateLastDoctor2Contact` varchar(24) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateLaunched` datetime default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateLivedThere` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateLivedThere` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateOfHospitalization` varchar(10) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateOfReadmission` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dateOfReadmission` varchar(24) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`date_created` datetime default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`datesAtSeaton` varchar(70) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`datesAtSeaton` varchar(70) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dayOfBirth` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`day` char(2) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`day` char(2) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`default_answer` varchar(16) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`demographic_no` bigint(11) NOT NULL default '0',</ViolationValue>
@@ -1740,45 +1103,28 @@
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`dischargePlan` text default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`discharge_date` datetime default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`discharge_notes` text default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`doctor1NameAddr` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`doctor1NameAddr` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`doctor1Phone` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`doctor1Phone` varchar(24) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`doctor1` varchar(30) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`doctor2NameAddr` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`doctor2NameAddr` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`doctor2Phone` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`doctor2Phone` varchar(24) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`doctor2` varchar(30) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`doctor3` varchar(30) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`doctor4` varchar(30) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`doctorAddress` varchar(120) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`doctorAddress` varchar(120) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`doctorName2` varchar(50) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`doctorName` varchar(50) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`doctorName` varchar(50) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`doctorPhoneExt` varchar(8) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`doctorPhoneExt` varchar(8) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`doctorPhone` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`doctorPhone` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`drinksPerDay` char(3) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`drinksPerDay` char(3) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`drinksPerMonth` varchar(5) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`drinksPerMonth` varchar(5) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`drinksPerWeek` varchar(4) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`drinksPerWeek` varchar(4) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`duration` int(10) unsigned NOT NULL default '0',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`effDate` varchar(10) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`elt` bigint(20) NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`encounter_type` varchar(100) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`end_date` date NOT NULL default '0000-00-00',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`end_date` date default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`enterSeatonDate` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`enterSeatonDate` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`entryDate` varchar(10) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`eq_to_id` int(10) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`everAtSeatonBefore` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`everMadeAppforOtherIncome` varchar(120) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`everMadeAppforOtherIncome` varchar(120) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`expire_cookie` int(11) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`expiry_date` datetime NOT NULL default '1900-01-01 00:00:00',</ViolationValue>
@@ -1787,50 +1133,32 @@
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`filter_id` int(10) NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`floor` varchar(45) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`followUpAppointment` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`followupAppmts` varchar(120) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`followupAppmts` varchar(120) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`formCreated` date default '0001-01-01',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`formCreated` date default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`formEdited` datetime default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`formEdited` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`form_id` bigint(20) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`form_type` integer default 0,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`form_version` int(10) unsigned default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`frequencyOfSeeingDoctor` varchar(8) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`frequencyOfSeeingDoctor` varchar(8) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`frequencyOfSeeingEmergencyRoomDoctor` varchar(8) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`frequencyOfSeeingEmergencyRoomDoctor` varchar(8) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`generate_super_certs` tinyint(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`goToOthers` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`goToOthers` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`hasWhatID` varchar(120) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`haveOther` varchar(70) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`haveOther` varchar(70) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`head_client_id` bigint(11) NOT NULL default '0',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`healthCardNum` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`healthCardNum` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`healthCardVer` char(2) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`healthIssueDetails` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`healthIssueDetails` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`helpObtainMedication` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`helpObtainMedication` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`historyOfJail` varchar(50) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`historyOfJail` varchar(50) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`housingInterested` varchar(70) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`housingInterested` varchar(70) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`howHearAboutSeaton` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`howHearAboutSeaton` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`howLongEmployed` char(3) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`howLongEmployed` char(3) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`howLongUnemployed` char(3) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`howLongUnemployed` char(3) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`howMuchYouReceive` varchar(12) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`howMuchYouReceive` varchar(12) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`id` bigint(20) NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`id` int(10) NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`idx` int(10) not null default 0,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`image_type` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`immigrantNum` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`include_issue_innote` tinyint(1) NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`instance_id` bigint(20) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`intake_answer_validation_id` int(10) unsigned default NULL,</ViolationValue>
@@ -1846,14 +1174,11 @@
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`ip` varchar(15) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`is_enabled` tinyint(1) NOT NULL default TRUE,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`issue_id` int(10) NOT NULL default '0',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`lastIssueDate` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`lastIssueDate` varchar(24) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`lastUpdateDate` date default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`last_changed` datetime default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`late_pass` tinyint(1) unsigned NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`launched_instance_id` bigint(20) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`lengthOfHospitalization` varchar(25) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`livedWithWhom` varchar(120) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`livedWithWhom` varchar(120) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`location1` varchar(100) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`location2` varchar(100) default NULL,</ViolationValue>
@@ -1864,46 +1189,32 @@
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`machine_id` varchar(37) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`machine_id` varchar(37) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`machine_name` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`mainSourceOfIncome` varchar(70) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`mainSourceOfIncome` varchar(70) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`major` tinyint(1) NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`mandatory` boolean NOT NULL default false,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`max_time_between_usage` int(11) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`medicationProvided` char(1) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`mentalHealthConcerns` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`mentalHealthConcerns` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`mobilityImpair` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`mobilityImpair` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`monthOfBirth` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`month` char(2) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`month` char(2) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`monthlyProgressReport` varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`name` varchar(255) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`name` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`namesOfMedication` varchar(120) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`namesOfMedication` varchar(120) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`needAssistInLegal` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`needAssistInLegal` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`needHelpWithImmigration` varchar(50) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`needHelpWithImmigration` varchar(50) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`note_id` int(10) NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`notes` text default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`notes` varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`observation_date` datetime NOT NULL default '0000-00-00 00:00:00',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`occupancy`  int(10) NULL default '0',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`office` varchar(50) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`office` varchar(50) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`ohip` varchar(25) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`oscar_name` varchar(255) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`otherFileNumber` varchar(100) default null,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`otherHealthConerns` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`otherHealthConerns` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`otherIdentification` varchar(70) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`otherIdentification` varchar(70) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`otherSpecify` varchar(120) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`otherSupportSystems` text default null,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`page_number` bigint(20) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`pamphletNotIssued` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`pamphletNotIssued` varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`parent_intake_node_id` int(10) unsigned default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`password_digest` varchar(128) default NULL,</ViolationValue>
@@ -1918,7 +1229,6 @@
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`policy_id` varchar(37) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`pos` int(10) unsigned default '0',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`position` int(10) default 0,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`preferredLanguage` varchar(30) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`prescriptionProvided` char(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`prescriptionSummary` text default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`present_problems` text default NULL,</ViolationValue>
@@ -1942,7 +1252,6 @@
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`providerName` varchar(60) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`providerName` varchar(60) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`provider_no` bigint(11) NOT NULL default '0',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`provider_no` bigint(11) default '0',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`provider_no` bigint(20) NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`provider_no` bigint(20) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`provider_no` int(10) default NULL,</ViolationValue>
@@ -1951,7 +1260,6 @@
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`provider_no` varchar(6) NOT NULL default ''</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`provider_no` varchar(6) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`provider_no` varchar(6) NOT NULL default '0',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`publicTrusteeInfo` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`publicTrusteeInfo` varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`publish_by` varchar(60) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`publish_date` date default NULL,</ViolationValue>
@@ -1959,173 +1267,74 @@
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`question_id` varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`question_id` varchar(37) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`question` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioBaseEmploymentStatus` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioBaseHealthCareAccess` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioBaseHighestEductionLevel` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioBaseLegalStatus` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioBaseNeedSocialServices` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioBaseParticipateInEduction` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioBasePrimaryIncomeSourceOther` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioBasePrimaryIncomeSource` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioBasePrimaryResidenceType` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioBaseResidenceStatus` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioBaseSocialServiceAccess` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioCanadianBorn` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioCountryOfOrigin` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioCurrEmploymentStatus` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioCurrHealthCareAccess` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioCurrHighestEductionLevel` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioCurrLegalStatus` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioCurrNeedSocialServices` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioCurrParticipateInEduction` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioCurrPrimaryIncomeSourceOther` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioCurrPrimaryIncomeSource` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioCurrPrimaryResidenceType` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioCurrResidenceStatus` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioCurrSocialServiceAccess` varchar(16) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioDischargeReason` varchar(10) default '0',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioGender` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioIsAboriginal` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioLanguageEnglish` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioPrimaryDiagnosis` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioRaceCaucasian` varchar(16) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioRejectionReason` varchar(10) default '0',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioResistTreatment` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radioTreatmentOrders` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_active` varchar(36) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_active` varchar(36) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_allergicToMedication` varchar(36) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_allergicToMedication` varchar(36) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_appmtSeeDoctorIn3Mths` varchar(36) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_appmtSeeDoctorIn3Mths` varchar(36) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_behaviorProblem` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_behaviorProblem` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_caredForAnxiety` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_caredForAnxiety` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_caredForDepression` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_caredForDepression` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_caredForManic` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_caredForManic` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_caredForOther` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_caredForOther` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_caredForSchizophrenia` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_caredForSchizophrenia` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_citizen` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_citizen` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_currentlyEmployed` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_currentlyEmployed` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_didNotReceiveHealthCare` varchar(36) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_didNotReceiveHealthCare` varchar(36) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_doYouDrink` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_doYouDrink` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_drinkThese` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_drinkThese` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_drinking` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_drinking` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_drugUseFrequency` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_drugUseFrequency` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_drugUse` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_drugUse` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_entitledToOtherIncome` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_entitledToOtherIncome` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_everBeenJailed` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_everBeenJailed` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_everMadeAppforOtherIncome` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_everMadeAppforOtherIncome` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_hasBehaviorProblem` varchar(36) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_hasBehaviorProblem` varchar(36) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_hasDoctor` varchar(36) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_hasDoctor` varchar(36) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_hasDrinkingProblem` varchar(36) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_hasDrinkingProblem` varchar(36) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_hasDrugProblem` varchar(36) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_hasDrugProblem` varchar(36) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_hasHealthProblem` varchar(36) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_hasHealthProblem` varchar(36) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_hasIDInFile` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_hasIDInFile` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_hasMentalIllness` varchar(36) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_hasMentalIllness` varchar(36) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_haveHealthCoverage` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_haveHealthCoverage` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_haveMentalProblem` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_haveMentalProblem` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_havePublicTrustee` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_havePublicTrustee` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_healthIssue` varchar(36) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_healthIssue` varchar(36) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_healthProblem` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_healthProblem` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_helpObtainMedication` varchar(36) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_helpObtainMedication` varchar(36) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_howMuchDrink` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_howMuchDrink` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_interestBackToSchool` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_interestBackToSchool` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_interestedInTraining` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_interestedInTraining` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_involvedOtherAgencies` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_involvedOtherAgencies` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_livedInSubsidized` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_livedInSubsidized` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_mentalHealthConcerns` varchar(36) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_mentalHealthConcerns` varchar(36) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_mentalIllness` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_mentalIllness` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_need60DaysSeatonServices` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_need60DaysSeatonServices` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_needAssistInLegal` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_needAssistInLegal` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_needAssistWithMedication` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_needAssistWithMedication` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_needRegularDoctor` varchar(36) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_needRegularDoctor` varchar(36) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_needSeatonService` varchar(36) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_needSeatonService` varchar(36) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_objectToRegularDoctorIn4Wks` varchar(36) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_objectToRegularDoctorIn4Wks` varchar(36) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_onlineCheck` varchar(36) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_onlineCheck` varchar(36) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_otherHealthConcern` varchar(36) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_otherHealthConcern` varchar(36) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_owedRent` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_owedRent` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_pamphletIssued` varchar(36) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_pamphletIssued` varchar(36) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_rateOverallHealth` varchar(36) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_rateOverallHealth` varchar(36) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_requireReferralToESL` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_requireReferralToESL` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_seatonTour` varchar(36) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_seatonTour` varchar(36) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_seeDoctor` varchar(36) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_seeDoctor` varchar(36) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_seeSameDoctor` varchar(36) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_seeSameDoctor` varchar(36) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_seenDoctorRegAlcohol` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_seenDoctorRegAlcohol` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_sex` varchar(36) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_speakToResearcher` varchar(36) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_speakToResearcher` varchar(36) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_sponsorshipBreakdown` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_sponsorshipBreakdown` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_takeMedication` varchar(36) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_takeMedication` varchar(36) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_useDrugs` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_useDrugs` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_wantAppmt` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_wantAppmt` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_wantHelpQuitDrug` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_wantHelpQuitDrug` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_wantHelpQuit` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_wantHelpQuit` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_yourCanadianStatus` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`radio_yourCanadianStatus` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`reactionToMedication` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`reactionToMedication` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`reasonToSeaton` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`reasonToSeaton` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`referralComment` varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`referralMade1` varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`referralMade2` varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`referralMade3` varchar(255) default NULL,</ViolationValue>
@@ -2143,7 +1352,6 @@
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`referralProgram5` varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`referral_date` datetime default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`referral_id` bigint(20) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`refugeeNum` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`remote_access` tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`remote_intake_node_template_id` int(10) unsigned default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`remove_bans` tinyint(1) default NULL,</ViolationValue>
@@ -2158,7 +1366,6 @@
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`room_id` int(10) unsigned NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`room_id` int(10) unsigned default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`room_type_id` int(10) unsigned NOT NULL default '1',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`seatonNotToured` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`seatonNotToured` varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`section_id` bigint(20) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`shortcut` tinyint(1) default '0',</ViolationValue>
@@ -2168,20 +1375,14 @@
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`signed` tinyint(1) NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`signing_provider_no` varchar(20) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`signnote` tinyint(1) default '0',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`sinNum` varchar(24) default '',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`speakOther` varchar(36) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`speakOther` varchar(36) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`speakOther` varchar(50) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`speakOther` varchar(50) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`sponsorName` varchar(50) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`sponsorName` varchar(50) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`staffName` varchar(60) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`start_date` date NOT NULL default '0000-00-00',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`static_ip` tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`status` char(1) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`status` smallint(6) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`status` varchar(30) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`summary` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`summary` varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`survey_id` bigint(20) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`team_id` bigint(20) default NULL,</ViolationValue>
@@ -2191,9 +1392,7 @@
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`temp_admit_discharge` char(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`temporary_admission_flag` tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`tmp_instance_id` bigint(20) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`treatOtherReasons` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`treatOtherReasons` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`typeOfIncome` varchar(120) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`typeOfIncome` varchar(120) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`type_id` bigint(3) NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`type` varchar(100) NOT NULL default '',</ViolationValue>
@@ -2213,30 +1412,19 @@
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`user_specific` tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`user_type_id` bigint(20) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`username` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`usualOccupation` varchar(70) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`usualOccupation` varchar(70) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`uuid` char(36) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`validations` varchar(255) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`value` text default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`verification_needed` tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`version` bigint(20) default '0',</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`whenMadeAppforOtherIncome` varchar(24) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`whenMadeAppforOtherIncome` varchar(24) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`whereBeforeSeaton` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`whereBeforeSeaton` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`whereOweRent` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`whereOweRent` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`whySponsorshipBreakdown` varchar(255) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`whySponsorshipBreakdown` varchar(255) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`workerNum` varchar(36) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`workerNum` varchar(36) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`yearArrivedInCanada` varchar(16) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`yearOfBirth` varchar(4) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`year` varchar(4) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`year` varchar(4) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`yearsOfEducation` varchar(4) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`yearsOfEducation` varchar(4) default NULL,</ViolationValue>
-        <ViolationValue>/database/mysql/caisi/initcaisi.sql:`yourCanadianStatus` varchar(50) default '',</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:`yourCanadianStatus` varchar(50) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:access_type	char(1) 	default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/caisi/initcaisi.sql:activeyn       tinyint(1)	default 0,</ViolationValue>
@@ -12267,6 +11455,7 @@
         <ViolationValue>/database/mysql/updates/update-2012-06-23.sql:alter table formONAREnhanced add pg2_wt69 varchar(6) default NULL;</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2012-06-23.sql:alter table formONAREnhanced add pg2_wt70 varchar(6) default NULL;</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2012-07-10.sql:alter table formONAREnhanced add  sent_to_born tinyint(1) default 0;</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2012-11-05.sql:alter table admission change clientstatus_id clientstatus_id bigint(20) default NULL;</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-hsfo.sql:A1C double(2, 2) default null,</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-hsfo.sql:ABPM bool NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-hsfo.sql:Ace_RxDecToday enum('Same', 'Increase', 'Decrease', 'Stop', 'Start', 'InClassSwitch', 'null') default null,</ViolationValue>
