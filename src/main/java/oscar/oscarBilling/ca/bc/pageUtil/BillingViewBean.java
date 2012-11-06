@@ -32,16 +32,22 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
+import oscar.entities.Billingmaster;
 import oscar.entities.PaymentType;
 import oscar.oscarBilling.ca.bc.MSP.MSPBillingNote;
 import oscar.oscarBilling.ca.bc.data.BillRecipient;
 import oscar.oscarBilling.ca.bc.data.BillingNote;
+import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
 import oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem;
 import oscar.oscarDB.DBHandler;
 import oscar.util.SqlUtils;
 
 public class BillingViewBean {
+	private BillingmasterDAO dao =  SpringUtils.getBean(BillingmasterDAO.class);
+
+	
   private String apptProviderNo = null;
   private String patientName = null;
   private String providerView = null;
@@ -168,9 +174,12 @@ public class BillingViewBean {
         for (int i = 0; i < billingMasterNos.size(); i++) {
           String[] values = billingMasterNos.get(i);
           String billingMasternum = values[0];
-          DBHandler.RunSQL("update billingmaster set payee_no = '" + payeeNo + "' " +
-                    " where billingmaster_no = " + billingMasternum + "");
-
+          Billingmaster bm = dao.getBillingmaster(Integer.parseInt(billingMasternum));
+          if(bm != null) {
+        	  bm.setPayee_no(payeeNo);
+        	  dao.update(bm);
+          }
+         
         }
       }
     }

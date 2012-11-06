@@ -43,85 +43,6 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
 	public Properties getCaisiFormRecord(int demographicNo, int existingID, int providerNo, int programNo) {
         Properties props = new Properties();
         if (existingID <= 0) {
-            /**************will delete this section later *****************************/
-            /* For Client Report in Seaton House */
-            /* ******************
-
-            String sql_cr1 = "SELECT demographic_no, last_name, first_name, CONCAT(date_of_birth,'/',month_of_birth,'/',year_of_birth) as dob from demographic";
-            ResultSet rs_cr1 = DBHandler.GetSQL(sql_cr1);
-            while(rs_cr1.next()) {
-            	String fusion47_yn = "";
-                String rotary12_yn = "";
-                String programId = "";
-                String program_name = "";
-                String c_fusion47 = "";
-                String c_rotary12 = "";
-                String fusion47 = "";
-
-            	String demographic_no = rs_cr1.getString("demographic_no");
-            	String last_name = rs_cr1.getString("last_name");
-            	String first_name = rs_cr1.getString("first_name");
-            	String dob = rs_cr1.getString("dob");
-
-            	String sql_cr2 = "select program_id from admission where client_id="+demographic_no+" and admission_status='current' ";
-            	ResultSet rs_cr2 = DBHandler.GetSQL(sql_cr2);
-        		while(rs_cr2.next()) {
-        			programId = rs_cr2.getString("program_id");
-
-        			String sql_cr22 = "select name from program where id="+programId+" and type='Bed' ";
-            	//String sql_cr2 = "select p.name as program_name from program p, admission a where p.id=a.program_id and a.client_id="+demographic_no+" and a.admission_status='current' and p.type='Bed' ";
-        			ResultSet rs_cr22 = DBHandler.GetSQL(sql_cr22);
-        			if(rs_cr22.next()) {
-        				program_name = rs_cr22.getString("name");
-        			}
-        			rs_cr22.close();
-        		}
-
-        		rs_cr2.close();
-
-            	String sql_cr3 = "select count(*) as c_fusion47 from admission a where a.client_id="+demographic_no +" and a.admission_status='current' and a.program_id=47";
-            	ResultSet rs_cr3 = DBHandler.GetSQL(sql_cr3);
-        		if(rs_cr3.next()) {
-        			c_fusion47 = rs_cr3.getString("c_fusion47");
-        			if(c_fusion47.equals("0")) {
-        				fusion47_yn = "No";
-        			}
-        			else
-        				fusion47_yn = "Yes";
-        		}
-        		rs_cr3.close();
-
-        		String sql_cr4 = "select count(*) as c_rotary12 from admission a where a.client_id="+demographic_no+" and a.admission_status='current' and a.program_id=12";
-        		ResultSet rs_cr4 = DBHandler.GetSQL(sql_cr4);
-        		if(rs_cr4.next()) {
-        			c_rotary12 = rs_cr4.getString("c_rotary12");
-        			if(c_rotary12.equals("0")) {
-        				rotary12_yn = "No";
-        			}
-        			else
-        				rotary12_yn = "Yes";
-        		}
-        		rs_cr4.close();
-
-        		String sql_cr5 = "select i.code as code ,i.description as descr, ci.resolved as resolved,ci.type as type from casemgmt_issue ci, issue i where ci.demographic_no="+demographic_no+" and ci.issue_id=i.issue_id";
-        		ResultSet rs_cr5 = DBHandler.GetSQL(sql_cr5);
-        		while(rs_cr5.next()) {
-        			String issue_code = rs_cr5.getString("code");
-        			String issue_description = rs_cr5.getString("descr");
-        			String casemgmt_issue_resolved = rs_cr5.getString("resolved");
-        			String casemgmt_issue_type = rs_cr5.getString("type");
-        			//issue_description.replace("'","'\'");
-        			//UtilMisc.charEscape(issue_description,'\'');
-        			MiscUtils.getLogger().debug(sql_insert);
-        			DBHandler.RunSQL(sql_insert);
-
-        		}
-        		rs_cr5.close();
-
-            }
-            rs_cr1.close();
-
-            *******************end *************************/
 
             String sql0 = "SELECT name AS programName FROM program WHERE id='"+programNo+"'";
             
@@ -185,7 +106,6 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
             
             
 
-            //String sql2 = "SELECT admission_date,discharge_date,admission_notes FROM admission where client_id="+demographicNo+" and program_id="+programNo+" and admission_status='discharged' ORDER BY discharge_date DESC ";
             String sql2 = "SELECT admission_date,discharge_date,admission_notes FROM admission where client_id="+demographicNo+" and program_id="+programNo+" and admission_status='current' ORDER BY admission_date DESC ";
            
             
@@ -263,7 +183,6 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
 
 
             StringBuilder prescriptions = new StringBuilder();
-            //select d.rx_date,d.special,d.end_date, d.archived,d.BN,d.GCN_SEQNO,d.customName from Drug d where d.demographic_no = ? ORDER BY d.rx_date DESC, d.id DESC";
             String sql5 = "SELECT special from drugs where demographic_no="+demographicNo+" and archived=0 ORDER BY rx_date DESC, drugid DESC";
             ResultSet rs5 = null;
             

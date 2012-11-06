@@ -40,7 +40,10 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
+import org.oscarehr.common.dao.ReportTemplatesDao;
+import org.oscarehr.common.model.ReportTemplates;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilXML;
@@ -50,6 +53,8 @@ import oscar.util.UtilXML;
  * @apavel (Paul)
  */
 public class ReportManager {
+
+	private ReportTemplatesDao dao = SpringUtils.getBean(ReportTemplatesDao.class);
 
     /** Creates a new instance of reportManager */
     public ReportManager() {
@@ -197,28 +202,22 @@ public class ReportManager {
     }
 
     public String updateTemplateXml(String xmltext) {
-        String sqldelete = "DELETE FROM reportTemplates";
-        String sqlinsert = "INSERT INTO reportTemplates VALUES ('globalxml', 'Global XML file', '', '', '" +
-                StringEscapeUtils.escapeSql(UtilXML.unescapeXML(xmltext)) + "', 0)";
-        try {
-
-            DBHandler.RunSQL(sqldelete);
-            DBHandler.RunSQL(sqlinsert);
-        } catch (SQLException sqe) {
-            MiscUtils.getLogger().error("Error", sqe);
+          
+        for(ReportTemplates r:dao.findAll()) {
+        	dao.remove(r.getId());
         }
+        ReportTemplates r = new ReportTemplates();
+        r.setTemplateTitle("globalxml");
+        r.setTemplateDescription("Global XML File");
+        r.setTemplateSql("");
+        r.setTemplateXml(UtilXML.unescapeXML(xmltext));
+        r.setActive(0);
+        r.setType("");
+        
+        
         return loadInReports();
     }
-    /*
-CREATE TABLE reportTemplates (
-  templateid varchar(40) NOT NULL,
-  templatetitle varchar(80) NOT NULL DEFAULT '',
-  templatedescription text NOT NULL DEFAULT '',
-  templatesql text NOT NULL DEFAULT '',
-  templatexml text NOT NULL DEFAULT '',
-  active tinyint NOT NULL DEFAULT 1,
-  PRIMARY KEY (templateid)
-);*/
+
     //templateid must not repeat
     public String loadInReports() {
         String xml = getTemplateXml("1");
@@ -259,14 +258,15 @@ CREATE TABLE reportTemplates (
                 String sql = "INSERT INTO reportTemplates (templatetitle, templatedescription, templatesql, templatexml, active) " +
                         "VALUES ('" + templateTitle + "', '" + templateDescription + "', '" + querysql + "', '" + reportXML + "', " + activeint + ")";
 
-                try {
-
-                    DBHandler.RunSQL(sql);
-                } catch (SQLException sqe) {
-                    MiscUtils.getLogger().error("Error", sqe);
-                    MiscUtils.getLogger().debug("Report Error Caught: assumed duplicate report id");
-                    return "Database Error: check for duplicate report id on the '" + templateTitle + "' report";
-                }
+                ReportTemplates r = new ReportTemplates();
+                r.setTemplateTitle(templateTitle);
+                r.setTemplateDescription(templateDescription);
+                r.setTemplateSql(querysql);
+                r.setTemplateXml(reportXML);
+                r.setActive(activeint);
+                r.setType("");
+                dao.persist(r);
+               
             }
         } catch (Exception e) {
             MiscUtils.getLogger().error("Error", e);
@@ -329,21 +329,29 @@ CREATE TABLE reportTemplates (
                 templateXMLstr = StringEscapeUtils.escapeSql(templateXMLstr);
                 String sql = "";
 
-                if (templateId == null)
-                    sql = "INSERT INTO reportTemplates (templatetitle, templatedescription, templatesql, templatexml, active, type) " +
-                        "VALUES ('" + templateTitle + "', '" + templateDescription + "', '" + querysql + "', '" + templateXMLstr + "', " + activeint + ", '" + type + "')";
-                else
-                    sql = "UPDATE reportTemplates SET templatetitle='" + templateTitle + "', templatedescription='" + templateDescription + "', " +
-                        "templatesql='" + querysql + "', templatexml='" + templateXMLstr + "', active=" + activeint + ", type= '" + type + "' WHERE templateid='" + templateId + "'";
-
-                try {
-
-                    DBHandler.RunSQL(sql);
-                } catch (SQLException sqe) {
-                    MiscUtils.getLogger().error("Error", sqe);
-                    MiscUtils.getLogger().debug("Report Template Writing Error Caught");
-                    return "Database Error: Could not write to database";
+                if (templateId == null) {
+                	 ReportTemplates r = new ReportTemplates();
+                     r.setTemplateTitle(templateTitle);
+                     r.setTemplateDescription(templateDescription);
+                     r.setTemplateSql(querysql);
+                     r.setTemplateXml(templateXMLstr);
+                     r.setActive(activeint);
+                     r.setType(type);
+                     dao.persist(r);
+                } else {
+                	ReportTemplates r = dao.find(Integer.parseInt(templateId));
+                	if(r != null) {
+                		r.setTemplateTitle(templateTitle);
+                        r.setTemplateDescription(templateDescription);
+                        r.setTemplateSql(querysql);
+                        r.setTemplateXml(templateXMLstr);
+                        r.setActive(activeint);
+                        r.setType(type);
+                        dao.merge(r);
+                	}
+                    
                 }
+               
             }
         } catch (Exception e) {
             MiscUtils.getLogger().error("Error", e);
@@ -353,14 +361,7 @@ CREATE TABLE reportTemplates (
     }
 
     public String deleteTemplate(String templateid) {
-        String sql = "DELETE FROM reportTemplates WHERE templateid='" + templateid + "'";
-        try {
-
-            DBHandler.RunSQL(sql);
-        } catch (SQLException sqe) {
-            MiscUtils.getLogger().error("Error", sqe);
-            return "Database Error: Could not delete template";
-        }
+    	dao.remove(dao.find(Integer.parseInt(templateid)).getId());
         return "";
     }
 

@@ -37,6 +37,9 @@ import org.oscarehr.util.SpringUtils;
 import oscar.oscarDB.DBHandler;
 
 public class TicklerCreator {
+	TicklerDAO dao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
+	
+	
   public TicklerCreator() {
   }
 
@@ -58,7 +61,6 @@ public class TicklerCreator {
     	t.setCreator(provNo);
     	t.setPriority("4");
     	t.setTask_assigned_to(provNo);
-    	TicklerDAO dao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
     	dao.saveTickler(t);
     	
 
@@ -100,27 +102,10 @@ public class TicklerCreator {
   /**
    * resolveTicklers
    *
-   * @param cdmPatientNos Vector
+   * @param cdmPatientNos Vector (strings)
    * @param remString String
    */
   public void resolveTicklers(List cdmPatientNos, String remString) {
-    String qry = "delete from tickler where demographic_no in(";
-    for (int i = 0; i < cdmPatientNos.size(); i++) {
-      qry += cdmPatientNos.get(i);
-      if (i < cdmPatientNos.size() - 1) {
-        qry += ",";
-      }
-    }
-    qry += cdmPatientNos.size()==0 ? "0" : "";
-
-    qry += ") and message like '%" + remString + "%' and status = 'A'";
-    
-
-    try {
-      
-      DBHandler.RunSQL(qry);
-    }
-    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
-    }
+	  dao.deleteTicklers(cdmPatientNos, remString);  
   }
 }

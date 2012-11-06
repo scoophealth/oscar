@@ -24,7 +24,6 @@
 package oscar.oscarBilling.pageUtil;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -36,15 +35,21 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.BillingDao;
+import org.oscarehr.common.model.Billing;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
-import oscar.oscarDB.DBHandler;
+import oscar.entities.Billingmaster;
+import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
 import oscar.oscarDemographic.data.DemographicData;
 
 public class BillingReProcessBillAction extends Action {
 
-
+	private BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
+	private BillingmasterDAO billingmasterDao = SpringUtils.getBean(BillingmasterDAO.class);
+	
     public ActionForward execute(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
@@ -166,69 +171,69 @@ public class BillingReProcessBillAction extends Action {
         }
 
 
+        Billingmaster b = billingmasterDao.getBillingmaster(Integer.parseInt(billingmasterNo));
+        if(b != null) {
+        	b.setBillingstatus(billingStatus);
+        	b.setDatacenter(dataCenterId);
+        	b.setPayee_no(billingGroupNo);
+        	b.setPractitionerNo(practitionerNo);
+        	b.setPhn(hcNo);
+        	b.setNameVerify(name_verify);
+        	b.setDependentNum(dependentNo);
+        	b.setBillingUnit(billingUnit);
+        	b.setClarificationCode(clarificationCode);
+        	b.setAnatomicalArea(anatomicalArea);
+        	b.setAfterHour(afterHour);
+        	b.setNewProgram(newProgram);
+        	b.setBillingCode(billingServiceCode);
+        	b.setBillAmount(billingServicePrice);
+        	b.setPaymentMode(payment_mode);
+        	b.setServiceDate(serviceDate);
+        	b.setServiceToDay(convertDate8Char(serviceDate));
+        	b.setSubmissionCode(exSubmissionCode);
+        	b.setExtendedSubmissionCode(exSubmissionCode);
+        	b.setDxCode1(dxCode1);
+        	b.setDxCode2(dxCode2);
+        	b.setDxCode3(dxCode3);
+        	b.setDxExpansion(dxExpansion);
+        	b.setServiceLocation(serviceLocation);
+        	b.setReferralFlag1(referralFlag1);
+        	b.setReferralNo1(referralNo1);
+        	b.setReferralFlag2(referralFlag2);
+        	b.setReferralNo2(referralNo2);
+        	b.setTimeCall(timeCall);
+        	b.setServiceStartTime(serviceStartTime);
+        	b.setServiceEndTime(serviceEndTime);
+        	b.setBirthDate(oinBirthdate);
+        	b.setCorrespondenceCode(correspondenceCode);
+        	b.setClaimComment(claimComment);
+        	b.setOinInsurerCode(oinInsurerCode);
+        	b.setOinRegistrationNo(oinRegistrationNo);
+        	b.setOinBirthdate(oinBirthdate);
+        	b.setOinFirstName(oinFirstName);
+        	b.setOinSecondName(oinSecondName);
+        	b.setOinSurname(oinSurname);
+        	b.setOinSexCode(oinSexCode);
+        	b.setOinAddress(oinAddress4);
+        	b.setOinAddress2(oinAddress2);
+        	b.setOinAddress3(oinAddress3);
+        	b.setOinAddress4(oinAddress4);
+        	b.setOinPostalcode(oinPostalcode);
+        	
+        	billingmasterDao.update(b);
+        	
+        }
 
-            String sql = "update billingmaster set "
-                        + "billingstatus = '"+billingStatus+"', "
-                        + "datacenter = '"+dataCenterId+"', "
-                        + "payee_no = '"+billingGroupNo+"', "
-                        + "practitioner_no = '"+practitionerNo+"', "
-                        + "phn = '"+hcNo+"', "
-                        + "name_verify = '"+name_verify+"', "
-                        + "dependent_num = '"+dependentNo+"', "
-                        + "billing_unit = '"+billingUnit+"', "
-                        + "clarification_code = '"+clarificationCode+"', "
-                        + "anatomical_area = '"+anatomicalArea+"', "
-                        + "after_hour = '"+afterHour+"', "
-                        + "new_program = '"+newProgram+"', "
-                        + "billing_code = '"+billingServiceCode+"', "
-                        + "bill_amount = '"+billingServicePrice+"', "
-                        +" payment_mode = '"+payment_mode+"', "
-                        +" service_date = '"+convertDate8Char(serviceDate)+"', "
-                        +" service_to_day = '"+serviceToDate+"', "
-                        + "submission_code = '"+submissionCode+"', "
-                        + "extended_submission_code = '"+exSubmissionCode+"', "
-                        + "dx_code1 = '"+dxCode1+"', "
-                        + "dx_code2 = '"+dxCode2+"', "
-                        + "dx_code3 = '"+dxCode3+"', "
-                        + "dx_expansion = '"+dxExpansion+"', "
-                        + "service_location = '"+serviceLocation+"', "
-                        + "referral_flag1 = '"+referralFlag1+"', "
-                        + "referral_no1 = '"+referralNo1+"', "
-                        + "referral_flag2 = '"+referralFlag2+"', "
-                        + "referral_no2 = '"+referralNo2+"', "
-                        + "time_call = '"+timeCall+"', "
-                        + "service_start_time = '"+serviceStartTime+"', "
-                        + "service_end_time = '"+serviceEndTime+"', "
-                        + "birth_date = '"+birthDate+"', "
-                        + "correspondence_code = '"+correspondenceCode+"', "
-                        + "claim_comment = '"+claimComment+"', "
-
-                        + "oin_insurer_code = '"+oinInsurerCode+"', "
-                        + "oin_registration_no = '"+oinRegistrationNo+"', "
-                        + "oin_birthdate = '"+oinBirthdate+"', "
-                        + "oin_first_name = '"+oinFirstName+"', "
-                        + "oin_second_name = '"+oinSecondName+"', "
-                        + "oin_surname = '"+oinSurname+"', "
-                        + "oin_sex_code = '"+oinSexCode+"', "
-                        + "oin_address = '"+oinAddress+"', "
-                        + "oin_address2 = '"+oinAddress2+"', "
-                        + "oin_address3 = '"+oinAddress3+"', "
-                        + "oin_address4 = '"+oinAddress4+"', "
-                        + "oin_postalcode = '"+oinPostalcode+"'  "
-                        +" where billingmaster_no  = '"+billingmasterNo+"'";
-
-            MiscUtils.getLogger().debug("\n"+sql+"\n");
-            try {
-
-               DBHandler.RunSQL(sql);
-               if (secondSQL != null){
-                    MiscUtils.getLogger().debug(secondSQL);
-                    DBHandler.RunSQL(secondSQL);
-               }
-               MiscUtils.getLogger().debug("sql "+sql);
-            } catch (SQLException e3) {
-               MiscUtils.getLogger().debug(e3.getMessage());
-            }
+      
+       if (secondSQL != null){
+    	  Billing bb = billingDao.find(Integer.parseInt(frm.getBillNumber()));
+    	   if(bb != null) {
+    		   bb.setStatus("O");
+    		   billingDao.merge(bb);
+    	   }
+            
+       }
+              
 
         request.setAttribute("billing_no", billingmasterNo);
         return (mapping.findForward("success"));

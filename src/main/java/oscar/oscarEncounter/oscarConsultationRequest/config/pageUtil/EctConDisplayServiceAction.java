@@ -26,7 +26,6 @@
 package oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -42,8 +41,6 @@ import org.oscarehr.common.model.ServiceSpecialistsPK;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
-
 public class EctConDisplayServiceAction extends Action {
    
 	private ServiceSpecialistsDao dao = SpringUtils.getBean(ServiceSpecialistsDao.class);
@@ -55,19 +52,17 @@ public class EctConDisplayServiceAction extends Action {
       String specialists[] = displayServiceForm.getSpecialists();
       MiscUtils.getLogger().debug("service id ".concat(String.valueOf(String.valueOf(serviceId))));
       MiscUtils.getLogger().debug("num specs".concat(String.valueOf(String.valueOf(specialists.length))));
-      try {
-         
-         String sql = String.valueOf(String.valueOf((new StringBuilder("delete from serviceSpecialists where serviceId = '")).append(serviceId).append("'")));
-         DBHandler.RunSQL(sql);
-         for(int i = 0; i < specialists.length; i++) {
-        	 ServiceSpecialists ss = new ServiceSpecialists();
-        	 ss.setId(new ServiceSpecialistsPK(Integer.parseInt(serviceId),Integer.parseInt(specialists[i])));
-        	 dao.persist(ss);
-         }
+      
+      for(ServiceSpecialists s:dao.findByServiceId(Integer.parseInt(serviceId))) {
+    	  dao.remove(s.getId());
       }
-      catch(SQLException e) {
-         MiscUtils.getLogger().error("Error", e);
+      for(int i = 0; i < specialists.length; i++) {
+     	 ServiceSpecialists ss = new ServiceSpecialists();
+     	 ss.setId(new ServiceSpecialistsPK(Integer.parseInt(serviceId),Integer.parseInt(specialists[i])));
+     	 dao.persist(ss);
       }
+      
+      
       EctConConstructSpecialistsScriptsFile constructSpecialistsScriptsFile = new EctConConstructSpecialistsScriptsFile();
       constructSpecialistsScriptsFile.makeString(request.getLocale());
       return mapping.findForward("success");

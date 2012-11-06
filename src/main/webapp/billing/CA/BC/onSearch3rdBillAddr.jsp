@@ -79,7 +79,6 @@
 %>
 <%@ page errorPage="../../../appointment/errorpage.jsp"
 	import="java.util.*,java.sql.*,java.net.*"%>
-<%@ page import="oscar.oscarBilling.ca.on.data.BillingONDataHelp"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ page import="org.apache.commons.lang.WordUtils"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>

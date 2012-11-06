@@ -26,7 +26,6 @@
 package oscar.oscarEncounter.oscarMeasurements.pageUtil;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -37,12 +36,16 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.MeasurementGroupStyleDao;
+import org.oscarehr.common.model.MeasurementGroupStyle;
 import org.oscarehr.util.MiscUtils;
-
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.util.SpringUtils;
 
 
 public class EctEditMeasurementStyleAction extends Action {
+	
+	private MeasurementGroupStyleDao dao = SpringUtils.getBean(MeasurementGroupStyleDao.class);
+
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
@@ -71,14 +74,10 @@ public class EctEditMeasurementStyleAction extends Action {
      ******************************************************************************************/
     private void changeCSS(String inputGroupName, String styleSheet){
         
-        try {
-            
-            String sql = "UPDATE measurementGroupStyle SET cssID ='" + styleSheet + "' WHERE groupName='" + inputGroupName + "'";
-            MiscUtils.getLogger().debug("Sql Statement: " + sql);
-            DBHandler.RunSQL(sql);
-        }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);            
-        }        
+    	for(MeasurementGroupStyle m:dao.findByGroupName(inputGroupName)) {
+    		m.setId(Integer.parseInt(styleSheet));
+    		dao.merge(m);
+    	}
+         
     }
 }

@@ -32,7 +32,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.oscarehr.common.dao.ReportFilterDao;
+import org.oscarehr.common.model.ReportFilter;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.login.DBHelp;
 
@@ -40,6 +42,9 @@ import oscar.login.DBHelp;
  * @author yilee18
  */
 public class RptReportFilter {
+	
+	private ReportFilterDao dao = SpringUtils.getBean(ReportFilterDao.class);
+	
     int report_id = 0;
     String description;
     String value;
@@ -51,39 +56,36 @@ public class RptReportFilter {
     DBHelp dbObj = new DBHelp();
 
     public boolean insertRecord()  {
-        boolean ret = false;
-        String sql = "insert into reportFilter (report_id, description, value, position, status,order_no,javascript,date_format) values ("
-                + report_id
-                + ", '"
-                + StringEscapeUtils.escapeSql(description)
-                + "','"
-                + StringEscapeUtils.escapeSql(value)
-                + "','"
-                + StringEscapeUtils.escapeSql(position)
-                + "', "
-                + status
-                + " , "
-                + order_no
-                + ",'"
-                + StringEscapeUtils.escapeSql(javascript)
-                + "','"
-                + StringEscapeUtils.escapeSql(date_format) + "')";
-        ret = DBHelp.updateDBRecord(sql);
-        return ret;
+    	ReportFilter r = new ReportFilter();
+        r.setReportId(report_id);
+        r.setDescription(description);
+        r.setValue(value);
+        r.setPosition(position);
+        r.setStatus(status);
+        r.setOrderNo(order_no);
+        r.setJavascript(javascript);
+        r.setDateFormat(date_format);
+        dao.persist(r);
+    	
+        return true;
     }
 
     public boolean deleteRecord(int recordId) {
-        boolean ret = false;
-        String sql = "update reportFilter set status=0 where id=" + recordId;
-        ret = DBHelp.updateDBRecord(sql);
-        return ret;
+    	ReportFilter r = dao.find(recordId);
+    	if(r != null) {
+    		r.setStatus(0);
+    		dao.merge(r);
+    	}
+        return true;
     }
 
     public boolean unDeleteRecord(int recordId) {
-        boolean ret = false;
-        String sql = "update reportFilter set status=1 where id=" + recordId;
-        ret = DBHelp.updateDBRecord(sql);
-        return ret;
+    	ReportFilter r = dao.find(recordId);
+    	if(r != null) {
+    		r.setStatus(1);
+    		dao.merge(r);
+    	}
+    	return true;
     }
 
     // 1 - name list, 0 - deleted name list, 0-`description` 1-value 2-javascript 3-dateformat

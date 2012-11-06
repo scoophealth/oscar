@@ -7125,7 +7125,7 @@ CREATE TABLE quickList(
 --
 CREATE TABLE quickListUser(
   `id` int(10) not null auto_increment primary key,
-  providerNo int(10) NOT NULL,
+  providerNo varchar(20) NOT NULL,
   quickListName varchar(10) NOT NULL,
   lastUsed datetime
 ) ;

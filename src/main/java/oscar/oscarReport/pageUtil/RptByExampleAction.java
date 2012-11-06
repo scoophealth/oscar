@@ -25,27 +25,30 @@
 
 package oscar.oscarReport.pageUtil;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Properties;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.common.dao.ReportByExamplesDao;
+import org.oscarehr.common.model.ReportByExamples;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
-import oscar.oscarDB.DBHandler;
 import oscar.oscarReport.bean.RptByExampleQueryBeanHandler;
 
 
 public class RptByExampleAction extends Action {
+	
+	private ReportByExamplesDao dao = SpringUtils.getBean(ReportByExamplesDao.class);
+
     
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException
@@ -84,22 +87,22 @@ public class RptByExampleAction extends Action {
     
     public void write2Database(String query, String providerNo){
         if (query!=null && query.compareTo("")!=0){
-            try {
+            
                 
-                
-                StringEscapeUtils strEscUtils = new StringEscapeUtils();
-                
-                //query = exampleData.replaceSQLString (";","",query);
-                //query = exampleData.replaceSQLString("\"", "\'", query);            
+       // StringEscapeUtils strEscUtils = new StringEscapeUtils();
+        
+        //query = exampleData.replaceSQLString (";","",query);
+        //query = exampleData.replaceSQLString("\"", "\'", query);            
 
-                query = StringEscapeUtils.escapeSql(query);
-                
-                String sql = "INSERT INTO reportByExamples(providerNo, query, date) VALUES('" + providerNo + "','" + query + "', NOW())";
-                DBHandler.RunSQL(sql);
-            }
-            catch(SQLException e) {
-                MiscUtils.getLogger().error("Error", e);            
-            }
+       // query = StringEscapeUtils.escapeSql(query);
+        
+        ReportByExamples r = new ReportByExamples();
+        r.setProviderNo(providerNo);
+        r.setQuery(query);
+        r.setDate(new Date());
+        dao.persist(r);
+       
+           
         }
     }
 }

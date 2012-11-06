@@ -38,7 +38,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.GroupMembersDao;
+import org.oscarehr.common.dao.GroupsDao;
 import org.oscarehr.common.model.GroupMembers;
+import org.oscarehr.common.model.Groups;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -46,6 +48,11 @@ import oscar.oscarDB.DBHandler;
 import oscar.oscarMessenger.data.MsgAddressBookMaker;
 
 public class MsgMessengerAdminAction extends Action {
+	
+	private GroupsDao groupsDao = SpringUtils.getBean(GroupsDao.class);
+	private GroupMembersDao groupMembersDao = (GroupMembersDao)SpringUtils.getBean(GroupMembersDao.class);
+
+	
 
  public ActionForward execute(ActionMapping mapping,
 				 ActionForm form,
@@ -64,13 +71,11 @@ public class MsgMessengerAdminAction extends Action {
 
         if (update.equals(oscarR.getString("oscarMessenger.config.MessengerAdmin.btnUpdateGroupMembers"))){
 
-           try{
-              
-              java.sql.ResultSet rs;
-              String sql = new String("delete from groupMembers_tbl where groupID = '"+grpNo+"'");
-              DBHandler.RunSQL(sql);
-              
-              GroupMembersDao groupMembersDao = SpringUtils.getBean(GroupMembersDao.class);
+        	for(GroupMembers g:groupMembersDao.findByGroupId(Integer.parseInt(grpNo))) {
+        		groupMembersDao.remove(g.getId());
+        	}
+        	
+           try{          
               for (int i = 0; i < providers.length ; i++){
             	  GroupMembers gm = new GroupMembers();
             	  gm.setGroupId(Integer.parseInt(grpNo));
@@ -106,11 +111,14 @@ public class MsgMessengerAdminAction extends Action {
                     request.setAttribute("fail","This Group has Children, you must delete the children groups first");
                     return (mapping.findForward("failure"));
                  }else{
-                    sql = new String("delete from groupMembers_tbl where groupID = '"+grpNo+"'");
-                    DBHandler.RunSQL(sql);
-
-                    sql = new String("delete from groups_tbl where groupID = '"+grpNo+"'");
-                    DBHandler.RunSQL(sql);
+                	 for(GroupMembers g:groupMembersDao.findByGroupId(Integer.parseInt(grpNo))) {
+                 		groupMembersDao.remove(g.getId());
+                 	}
+                   
+                	 Groups g = groupsDao.find(Integer.parseInt(grpNo));
+                	 if(g != null) {
+                		 groupsDao.remove(g.getId());
+                	 }
 
                  }
               rs.close();

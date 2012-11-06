@@ -23,6 +23,10 @@
  */
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.ServiceSpecialists;
 import org.springframework.stereotype.Repository;
 
@@ -30,7 +34,16 @@ import org.springframework.stereotype.Repository;
 public class ServiceSpecialistsDao extends AbstractDao<ServiceSpecialists> {
 
 	public ServiceSpecialistsDao() {
-		super(ServiceSpecialists.class);
+		super(ServiceSpecialists.class);	
+	}
+	
+	public List<ServiceSpecialists> findByServiceId(int serviceId) {
+		Query q = entityManager.createQuery("select x from ServiceSpecialists x where x.id.serviceId = ?");
+		q.setParameter(1, serviceId);
 		
+		@SuppressWarnings("unchecked")
+		List<ServiceSpecialists> results = q.getResultList();
+		
+		return results;
 	}
 }

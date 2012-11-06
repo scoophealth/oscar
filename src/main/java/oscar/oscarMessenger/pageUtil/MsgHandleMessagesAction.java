@@ -35,12 +35,18 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.MessageListDao;
+import org.oscarehr.common.model.MessageList;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 
 public  class MsgHandleMessagesAction extends Action {
 
+	private MessageListDao messageListDao = SpringUtils.getBean(MessageListDao.class);
+
+	
     public ActionForward execute(ActionMapping mapping,
 				 ActionForm form,
 				 HttpServletRequest request,
@@ -109,14 +115,10 @@ public  class MsgHandleMessagesAction extends Action {
 	}
 
         if (delete.compareToIgnoreCase("Delete") == 0){
-          try{    //sents this message status to del
-             
-             
-             String sql = "update messagelisttbl set status = 'del' where provider_no = '"+providerNo+"' and message = '"+messageNo+"'";
-             DBHandler.RunSQL(sql);
-
-          }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
-
+        	for(MessageList ml:messageListDao.findByProviderNoAndMessageNo(providerNo, Long.valueOf(messageNo))) {
+        		ml.setStatus("del");
+        		messageListDao.merge(ml);
+        	}
         }
         else if(reply.equalsIgnoreCase("Reply") || (replyAll.equalsIgnoreCase("reply All") )){
 

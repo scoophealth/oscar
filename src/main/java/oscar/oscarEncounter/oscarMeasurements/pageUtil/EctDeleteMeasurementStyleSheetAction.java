@@ -39,12 +39,16 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.oscarehr.common.dao.MeasurementCSSLocationDao;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 
 
 public class EctDeleteMeasurementStyleSheetAction extends Action {
+
+	private MeasurementCSSLocationDao dao = SpringUtils.getBean(MeasurementCSSLocationDao.class);
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
@@ -75,9 +79,7 @@ public class EctDeleteMeasurementStyleSheetAction extends Action {
                         }
                     }
                     else{
-                        sql = "DELETE  FROM measurementCSSLocation WHERE cssID='"+ deleteCheckbox[i] +"'";                                        
-                        MiscUtils.getLogger().debug(" sql statement "+sql);
-                        DBHandler.RunSQL(sql);                        
+                    	dao.remove(Integer.parseInt(deleteCheckbox[i]));   
                     }
                 }
             }

@@ -112,40 +112,8 @@ public final class WCBAction extends Action {
    * @param frm WCBForm
    */
   private void createWCBEntry(WCBForm frm) {
-    // WCB wcb = new WCB();
-
-   // BeanUtils.copyProperties(wcb,frm);
-
-
-   // billingmasterDAO.save(wcb);
-
-
 
     MiscUtils.getLogger().debug("WOULD BE A GOOD TIME TO SAVE---  i still get called WCB ACTION");
 
-//
-//    try {
-//
-//      DBHandler.RunSQL(frm.SQL("0", "0"));
-//      List idList = SqlUtils.getQueryResultsList("SELECT max(ID) from wcb");
-//      if(idList!=null){
-//        String[] id = (String[])idList.get(0);
-//        frm.setWcbFormId(id[0]);
-//      }
-//
-//    }
-//    catch (SQLException ex) {
-//MiscUtils.getLogger().error("Error", ex);
-//    }
-//    finally{
-//      if(db!=null){
-//        try {
-//        }
-//        catch (SQLException ex1) {
-//MiscUtils.getLogger().error("Error", ex1);
-//        }
-//      }
-//    }
-//  }
   }
 }

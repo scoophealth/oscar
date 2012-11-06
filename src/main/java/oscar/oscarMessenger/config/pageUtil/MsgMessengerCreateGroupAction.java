@@ -41,10 +41,11 @@ import org.oscarehr.common.model.Groups;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarMessenger.data.MsgAddressBookMaker;
 
 public class MsgMessengerCreateGroupAction extends Action {
+
+	private GroupsDao dao = SpringUtils.getBean(GroupsDao.class);
 
     public ActionForward execute(ActionMapping mapping,
 				 ActionForm form,
@@ -77,9 +78,13 @@ public class MsgMessengerCreateGroupAction extends Action {
            }else if (type.equals("2")){
                 try{
                  
-                 java.sql.ResultSet rs;
-                 String sql = "update groups_tbl set groupDesc = '"+grpName+"' where groupID = '"+parentID+"'";
-                 DBHandler.RunSQL(sql);
+                 
+                 Groups g = dao.find(Integer.parseInt(parentID));
+                 if(g != null) {
+                	 g.setGroupDesc(grpName);
+                	 dao.merge(g);
+                 }
+                 
 
                  MsgAddressBookMaker addMake = new MsgAddressBookMaker();
                  addMake.updateAddressBook();

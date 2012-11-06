@@ -32,7 +32,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.SurveyDataDao;
+import org.oscarehr.common.model.SurveyData;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
@@ -44,6 +47,7 @@ import oscar.oscarDB.DBHandler;
 public class ProcessSurveyFile{
    private static Logger log = MiscUtils.getLogger();
    
+   private SurveyDataDao dao = SpringUtils.getBean(SurveyDataDao.class);
    
    
    private int maxProcessed(String surveyId){
@@ -64,13 +68,11 @@ public class ProcessSurveyFile{
    }
    
    private void setProcessed(String surveyDataId, int processedId){
-      try{
-         
-         String sql = "update surveyData set processed = '"+processedId+"' where surveyDataId = '"+surveyDataId+"'  ";         
-         DBHandler.RunSQL(sql);         
-      }catch(Exception e){
-         MiscUtils.getLogger().error("Error", e);
-      }
+	   SurveyData s = dao.find(Integer.parseInt(surveyDataId));
+	   if(s != null) {
+		   s.setProcessed(processedId);
+		   dao.merge(s);
+	   }
    }
                
    String replaceAllValues(String guideString,ResultSet rs) throws SQLException{      

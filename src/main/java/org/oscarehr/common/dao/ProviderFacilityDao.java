@@ -25,6 +25,10 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.ProviderFacility;
 import org.springframework.stereotype.Repository;
 
@@ -33,5 +37,17 @@ public class ProviderFacilityDao extends AbstractDao<ProviderFacility>{
 
 	public ProviderFacilityDao() {
 		super(ProviderFacility.class);
+	}
+	
+	public List<ProviderFacility> findByProviderNoAndFacilityId(String providerNo, int facilityId) {
+		Query q = entityManager.createQuery("SELECT x FROM ProviderFacility x WHERE x.providerNo=? AND x.facilityId=?");
+		q.setParameter(1, providerNo);
+		q.setParameter(2, facilityId);
+		
+		@SuppressWarnings("unchecked")
+		List<ProviderFacility> results = q.getResultList();
+		
+		return results;
+		
 	}
 }

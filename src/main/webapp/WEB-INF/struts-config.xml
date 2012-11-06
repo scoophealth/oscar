@@ -169,8 +169,6 @@
 		<form-bean name="dxResearchUpdateQuickListForm" type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxResearchUpdateQuickListForm" />
 		<form-bean name="dxAssociationsForm" type="oscar.oscarResearch.oscarDxResearch.bean.dxAssociationBean" />
 		<form-bean name="StudentImportForm" type="org.oscarehr.learning.web.StudentImportBean" />
-		<form-bean name="procedimentoForm" type="oscar.billing.popup.ProcedimentoForm" />
-		<form-bean name="atividadeSaudeForm" type="oscar.billing.popup.AtividadeSaudeForm" />
 		<form-bean name="cidForm" type="oscar.billing.popup.CidForm" />
 		<form-bean name="BillingForm" type="oscar.oscarBilling.ca.bc.pageUtil.BillingForm" />
 		<form-bean name="BillingCreateBillingForm" type="oscar.oscarBilling.ca.bc.pageUtil.BillingCreateBillingForm" />

@@ -295,17 +295,13 @@ public class Survey {
    public void setAnswer(String surveyDataId,String answer){
       Answer a = getAnswerByString(answer);
       log.debug("Answer a :"+a.answerString +" answer "+answer);
-      try{
-         
-         String sql = "update surveyData set "
-                     +" status = '"+a.answerStatus+"',"
-                     +" answer = '"+a.answerValue+"'"
-                     +" where surveyDataId = "
-                     +"'"+surveyDataId+"'";
-         DBHandler.RunSQL(sql);         
-      }catch(Exception e){
-         MiscUtils.getLogger().error("Error", e);
-      }      
+      SurveyData s = this.surveyDataDao.find(Integer.parseInt(surveyDataId));
+      if(s != null) {
+    	  s.setStatus(a.answerStatus);
+    	  s.setAnswer(a.answerValue);
+    	  surveyDataDao.merge(s);
+      }
+    
    }
    
    

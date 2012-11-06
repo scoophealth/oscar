@@ -89,6 +89,16 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		return list;
 	}
 	
+	public List<BillingService> findByServiceCodeAndDate(String code, Date date) {
+		Query query = entityManager.createQuery("select bs  from BillingService bs where bs.serviceCode = ? and bs.billingserviceDate = ? order by bs.billingserviceDate desc");
+		query.setParameter(1, code);
+		query.setParameter(2, date);
+
+		@SuppressWarnings("unchecked")
+		List<BillingService> list = query.getResultList();
+		return list;
+	}
+	
 	
 	public List<BillingService> findByServiceCodes(List<String> codes) {
 		Query query = entityManager.createQuery("select bs  from BillingService bs where bs.serviceCode IN (:codes)");
@@ -315,14 +325,6 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		query.setParameter("serviceCode", serviceCode + "%");
 		return query.getResultList();
 	}
-
-	@SuppressWarnings("unchecked")
-    public List<BillingService> findByServiceCodeAndDate(String serviceCode, Date serviceDate) {
-	    Query query = createQuery("bs", "bs.serviceCode = :sc AND bs.billingserviceDate = :sd");
-	    query.setParameter("sc", serviceCode);
-	    query.setParameter("sd", serviceDate);
-	    return query.getResultList();
-    }
 
     @Override
     @SuppressWarnings("unchecked")

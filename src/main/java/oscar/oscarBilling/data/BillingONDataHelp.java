@@ -37,17 +37,6 @@ import oscar.oscarDB.DBHandler;
 public class BillingONDataHelp {
 
 	
-	public synchronized boolean updateDBRecord(String sql) {
-		boolean ret = false;
-		try {
-			
-			ret = DBHandler.RunSQL(sql);
-		} catch (SQLException e) {
-			MiscUtils.getLogger().error("Error", e);
-		}
-		return ret;
-	}
-	
 	public synchronized ResultSet searchDBRecord(String sql) {
 		ResultSet ret = null;
 		try {

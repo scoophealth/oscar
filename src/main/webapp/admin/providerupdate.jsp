@@ -26,7 +26,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ page
-	import="java.sql.*, oscar.login.*, java.util.*,oscar.*,oscar.oscarDB.*,oscar.util.SqlUtils,oscar.oscarProvider.data.ProviderBillCenter"
+	import="java.sql.*, oscar.login.*, java.util.*,oscar.*,oscar.oscarDB.*,oscar.oscarProvider.data.ProviderBillCenter"
 	errorPage="errorpage.jsp"%>
 
 <%@page import="org.oscarehr.common.dao.SiteDao"%>

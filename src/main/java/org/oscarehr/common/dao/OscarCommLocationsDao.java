@@ -25,6 +25,10 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.OscarCommLocations;
 import org.springframework.stereotype.Repository;
 
@@ -33,5 +37,16 @@ public class OscarCommLocationsDao extends AbstractDao<OscarCommLocations>{
 
 	public OscarCommLocationsDao() {
 		super(OscarCommLocations.class);
+	}
+	
+	public List<OscarCommLocations> findByCurrent1(int current1) {
+		Query q = entityManager.createQuery("SELECT x FROM OscarCommLocations x WHERE x.current1=?");
+		q.setParameter(1, current1);
+		
+		@SuppressWarnings("unchecked")
+		List<OscarCommLocations> results = q.getResultList();
+		
+		return results;
+		
 	}
 }

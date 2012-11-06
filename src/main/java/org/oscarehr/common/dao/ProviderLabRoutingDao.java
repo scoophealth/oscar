@@ -42,6 +42,17 @@ public class ProviderLabRoutingDao extends AbstractDao<ProviderLabRoutingModel> 
 		return q.getResultList();
 	}
 
+	@SuppressWarnings("unchecked")
+    public List<ProviderLabRoutingModel> findByLabNoAndLabTypeAndProviderNo(int labNo, String labType, String providerNo) {
+		Query q = entityManager.createQuery("select x from " + modelClass.getName() + " x where x.labNo=? and x.labType=? and x.providerNo=?");
+		q.setParameter(1, labNo);
+		q.setParameter(2, labType);
+		q.setParameter(3, providerNo);
+	
+		return q.getResultList();
+	}
+
+	
 	public List<ProviderLabRoutingModel> getProviderLabRoutingDocuments(String labNo) {
 		return getProviderLabRoutings(labNo, "DOC", null, null);
 	}

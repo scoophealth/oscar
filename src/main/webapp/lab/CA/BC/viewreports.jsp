@@ -23,16 +23,24 @@
     Ontario, Canada
 
 --%>
-
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.billing.CA.BC.dao.Hl7LinkDao" %>
+<%@page import="org.oscarehr.billing.CA.BC.model.Hl7Link" %>
 <%
 	if(session.getAttribute("user") == null || !session.getAttribute("userprofession").equals("doctor")){
     	response.sendRedirect("../../../logout.jsp");
     }
+
+	Hl7LinkDao linkDao = SpringUtils.getBean(Hl7LinkDao.class);
+
     String demo_no = request.getParameter("demo_no"),
     pid = request.getParameter("pid");
 	if(null != request.getParameter("unlink")){
-		String update_link = "UPDATE hl7_link SET hl7_link.status = 'P' WHERE hl7_link.pid_id='@pid';";
-		DBHandler.RunSQL(update_link.replaceAll("@pid", pid));
+		Hl7Link h = linkDao.find(Integer.parseInt(pid));
+		if(h != null) {
+			h.setStatus("P");
+			linkDao.merge(h);
+		}
 	}
 	if(null == demo_no){
 		out.println("<script language=\"JavaScript\">javascript:window.close();</SCRIPT>");

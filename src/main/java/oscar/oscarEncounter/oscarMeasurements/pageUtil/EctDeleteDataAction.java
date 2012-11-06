@@ -39,6 +39,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.dao.MeasurementsDeletedDao;
 import org.oscarehr.common.model.MeasurementsDeleted;
 import org.oscarehr.util.MiscUtils;
@@ -51,6 +52,7 @@ import oscar.util.UtilDateUtilities;
 public class EctDeleteDataAction extends Action {
 	
 	private static MeasurementsDeletedDao measurementsDeletedDao = (MeasurementsDeletedDao) SpringUtils.getBean("measurementsDeletedDao");
+	private MeasurementDao measurementDao = SpringUtils.getBean(MeasurementDao.class);
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
@@ -87,8 +89,9 @@ public class EctDeleteDataAction extends Action {
                     	measurementsDeletedDao.persist(measurementsDeleted);
                     	
                         rs.close();
-                        sql = "DELETE FROM `measurements` WHERE id='"+ deleteCheckbox[i] +"'"; 
-                        DBHandler.RunSQL(sql);
+                        
+                        measurementDao.remove(Integer.parseInt(deleteCheckbox[i]));
+                      
                     }
                 }
             }

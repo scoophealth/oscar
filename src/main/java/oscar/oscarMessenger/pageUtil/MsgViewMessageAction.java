@@ -35,13 +35,19 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.MessageListDao;
+import org.oscarehr.common.model.MessageList;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarMessenger.util.MsgDemoMap;
 import oscar.util.ParameterActionForward;
 
 public class MsgViewMessageAction extends Action {
+	
+	private MessageListDao messageListDao = SpringUtils.getBean(MessageListDao.class);
+
 
     public ActionForward execute(ActionMapping mapping,
 				 ActionForm form,
@@ -128,11 +134,16 @@ public class MsgViewMessageAction extends Action {
                  MiscUtils.getLogger().debug("viewMessagePosition: " + messagePosition + "IsLastMsg: " + request.getAttribute("viewMessageIsLastMsg"));
               }
               else{
-                 i=0; // somethin wrong no message there
+                 i=0; // something wrong no message there
               }
 
               if (i == 1){
-                 DBHandler.RunSQL("update messagelisttbl set status = \'read\' where provider_no = \'"+providerNo+"\' and message = \'"+messageNo+"\' and status not like 'del'");
+            	  for(MessageList ml:messageListDao.findByProviderNoAndMessageNo(providerNo, Long.valueOf(messageNo))) {
+            		  if(!ml.getStatus().equals("del")) {
+            			  ml.setStatus("read");
+            			  messageListDao.merge(ml);
+            		  }
+            	  }
               }
               
               if (linkMsgDemo !=null && demographic_no!=null){

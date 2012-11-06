@@ -30,11 +30,19 @@ import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import org.oscarehr.common.dao.BillingDao;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
+import oscar.entities.Billingmaster;
+import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
 import oscar.oscarDB.DBHandler;
 
 public class MSPReconcile{
+	 private BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
+	  private BillingmasterDAO billingmasterDao = SpringUtils.getBean(BillingmasterDAO.class);
+	 
+	  
     public static String REJECTED           = "R";
     public static String NOTSUBMITTED       = "O";
     public static String SUBMITTED          = "B";
@@ -468,14 +476,13 @@ public class MSPReconcile{
          updated = false;
          MiscUtils.getLogger().debug("billing No "+billingNo+" is settled, will not be updated");
         }
-        if (updated){
-            try {
+        if (updated){ 
+        	Billingmaster b = billingmasterDao.getBillingmaster(billingNo);
+        	if(b != null) {
+        		b.setBillingstatus(newStat);
+        		billingmasterDao.update(b);
+        	}
 
-                MiscUtils.getLogger().debug("Updating billing no "+billingNo+" to "+newStat);
-                DBHandler.RunSQL("update billingmaster set billingstatus = '"+newStat+"' where billingmaster_no = '"+billingNo+"'");
-            }catch(Exception e){
-                MiscUtils.getLogger().error("Error", e);
-            }
         }
         return updated;
     }
