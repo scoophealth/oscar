@@ -48,10 +48,10 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
-import oscar.oscarDemographic.data.DemographicData;
-import oscar.util.UtilDateUtilities;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
+import oscar.oscarDemographic.data.DemographicData;
+import oscar.util.UtilDateUtilities;
 
 /**
  *
@@ -86,6 +86,22 @@ public class PHRViewPatientRecord extends DispatchAction {
             request.setAttribute("forwardToOnSuccess", request.getContextPath() + "/demographic/viewPhrRecord.do?demographic_no=" + demographicNo);
             return mapping.findForward("login");
         } else {
+        	
+        	//Check if patient has been verified
+            PHRVerificationDao phrVerificationDao = SpringUtils.getBean(PHRVerificationDao.class); 
+    	   	String verificationLevel = phrVerificationDao.getVerificationLevel(Integer.parseInt(demographicNo));
+    	   	int verifyLevel = 0;
+    	   	try{
+    	      verifyLevel = Integer.parseInt(verificationLevel.replace('+', ' ').trim());
+    	   	}catch(Exception e){ /*Should already be set to zero */ }
+    	   
+    	   	if (verifyLevel != 3){ //Prompt for verification
+    	   		request.setAttribute("forwardToOnSuccess", "/demographic/viewPhrRecord.do?demographic_no=" + demographicNo);
+    	   		request.setAttribute("demographicNo", demographicNo);
+    	   		return mapping.findForward("viewVerification");//verifyAndRedirect");
+    	   		
+    	   	}
+        	
             String phrPath = OscarProperties.getInstance().getProperty("myOSCAR.url"); //http://130.113.106.96:8080/myoscar_client/
             if (phrPath == null) {
                 response.getWriter().println("Error: 'myOSCAR.url' property is not configured... please contact support to have this feature enabled");
@@ -148,8 +164,12 @@ public class PHRViewPatientRecord extends DispatchAction {
         
         LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.VERIFY, LogConst.CON_PHR, phrA.getPhrUserName(), request.getRemoteAddr(), demographicNo, "");
         
-        ActionRedirect ar = new ActionRedirect(mapping.findForward("viewVerification"));
-        ar.addParameter("demographic_no", demographicNo);
+    	ActionRedirect ar = new ActionRedirect(mapping.findForward("viewVerification"));
+    	ar.addParameter("demographic_no", demographicNo);
+        
+        if(request.getParameter("forwardToOnSuccess") != null ){
+        	ar = new ActionRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath()+request.getParameter("forwardToOnSuccess"));
+        }
         return ar;
     }
     
