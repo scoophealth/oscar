@@ -168,4 +168,16 @@ public class BillingmasterDAO {
 		return query.executeUpdate();
 	}
 
+	@SuppressWarnings("unchecked")
+    public WCB getWcbByBillingNo(Integer billing_no) {
+		Query query =  entityManager.createQuery("FROM WCB w WHERE w.billing_no = :billingNo");
+		query.setParameter("billingNo", billing_no);
+		query.setMaxResults(1);
+		
+		List<WCB> ws = query.getResultList();
+		if (ws.isEmpty())
+			return null;
+		return ws.get(0);
+    }
+
 }
