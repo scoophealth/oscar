@@ -26,15 +26,11 @@
  */
 package org.oscarehr.common.dao;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -42,75 +38,61 @@ import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
-import org.oscarehr.common.model.SystemMessage;
+import org.oscarehr.common.model.StudyData;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-/**
- * @author Shazib
- */
 
-@SuppressWarnings("unused")
-public class SystemMessageDaoTest extends DaoTestFixtures {
-
-	private SystemMessageDao dao = SpringUtils.getBean(SystemMessageDao.class);
-	DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
-
-
+public class StudyDataDaoTest extends DaoTestFixtures {
+	
+	private StudyDataDao dao = (StudyDataDao)SpringUtils.getBean(StudyDataDao.class);
+	
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("SystemMessage");
+		SchemaUtils.restoreTable("studydata");
 	}
 
 	@Test
-	public void testCreate() throws Exception {
-		SystemMessage entity = new SystemMessage();
-		EntityDataGenerator.generateTestDataForModelClass(entity);
-		dao.persist(entity);
-		assertNotNull(entity.getId());
-	}
-
-
-	@Test
-	public void testFindAll() throws Exception {
+	public void testFindByDemoAndStudy() throws Exception {
 		
-		SystemMessage sysMessage1 = new SystemMessage();
-		EntityDataGenerator.generateTestDataForModelClass(sysMessage1);
-		Date date1 = new Date(dfm.parse("20110701").getTime());
-		sysMessage1.setExpiryDate(date1);
-		dao.persist(sysMessage1);
+		int demoNo1 = 100;
+		int demoNo2 = 200;
 		
-		SystemMessage sysMessage2 = new SystemMessage();
-		EntityDataGenerator.generateTestDataForModelClass(sysMessage2);
-		Date date2 = new Date(dfm.parse("20100701").getTime());
-		sysMessage2.setExpiryDate(date2);
-		dao.persist(sysMessage2);
+		int studyNo1 = 111;
+		int studyNo2 = 222;
 		
-		SystemMessage sysMessage3 = new SystemMessage();
-		EntityDataGenerator.generateTestDataForModelClass(sysMessage3);
-		Date date3 = new Date(dfm.parse("20120701").getTime());
-		sysMessage3.setExpiryDate(date3);
-		dao.persist(sysMessage3);
+		StudyData studyData1 = new StudyData();
+		EntityDataGenerator.generateTestDataForModelClass(studyData1);
+		studyData1.setDemographicNo(demoNo1);
+		studyData1.setStudyNo(studyNo1);
+		dao.persist(studyData1);
 		
-		List<SystemMessage> result = dao.findAll();
-		List<SystemMessage> expectedResult = new ArrayList<SystemMessage>(Arrays.asList(sysMessage3,sysMessage1,sysMessage2));
-			
+		StudyData studyData2 = new StudyData();
+		EntityDataGenerator.generateTestDataForModelClass(studyData2);
+		studyData2.setDemographicNo(demoNo2);
+		studyData2.setStudyNo(studyNo2);
+		dao.persist(studyData2);
+		
+		StudyData studyData3 = new StudyData();
+		EntityDataGenerator.generateTestDataForModelClass(studyData3);
+		studyData3.setDemographicNo(demoNo1);
+		studyData3.setStudyNo(studyNo1);
+		dao.persist(studyData3);
+		
+		List<StudyData> result = dao.findByDemoAndStudy(demoNo1, studyNo1);
+		List<StudyData> expectedResult = new ArrayList<StudyData>(Arrays.asList(studyData1, studyData3));
+		
 		Logger logger = MiscUtils.getLogger();
-
+		
 		if (result.size() != expectedResult.size()) {
 			logger.warn("Array sizes do not match.");
 			fail("Array sizes do not match.");
 		}
-
 		for (int i = 0; i < expectedResult.size(); i++) {
 			if (!expectedResult.get(i).equals(result.get(i))){
 				logger.warn("Items do not match.");
 				fail("Items do not match.");
 			}
 		}
-		assertTrue(true);
-		
-		
-		
+		assertTrue(true);	
 	}
-
 }
