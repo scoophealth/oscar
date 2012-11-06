@@ -366,9 +366,8 @@ public class MigrateCaisiRolesAction extends BaseAdminAction {
 				
 				Mapping mappedRole = mappingMap.get((long)role_id);
 				if(mappedRole == null) {
-					//DBHandler.RunSQL("delete from program_access_roles where id="+id + " and role_id=" + role_id);
+					//do nothing
 				} else {
-					//DBHandler.RunSQL("insert into program_access_roles  values (" + id + ","+mappedRole.getOscarRole().getId() + ")");
 					valuesToAdd.add(id + "," + mappedRole.getOscarRole().getId());
 				}
 			}

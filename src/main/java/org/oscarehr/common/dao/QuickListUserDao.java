@@ -25,6 +25,10 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.QuickListUser;
 import org.springframework.stereotype.Repository;
 
@@ -33,6 +37,18 @@ public class QuickListUserDao extends AbstractDao<QuickListUser>{
 
 	public QuickListUserDao() {
 		super(QuickListUser.class);
+	}
+	
+	public List<QuickListUser> findByNameAndProviderNo(String name, String providerNo) {
+		Query q = entityManager.createQuery("SELECT x FROM QuickListUser x WHERE x.quickListName=? AND x.providerNo=?");
+		q.setParameter(1, name);
+		q.setParameter(2, providerNo);
+		
+		@SuppressWarnings("unchecked")
+		List<QuickListUser> results = q.getResultList();
+		
+		return results;
+		
 	}
 
 }

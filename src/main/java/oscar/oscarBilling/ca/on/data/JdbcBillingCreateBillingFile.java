@@ -32,9 +32,15 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.billing.CA.ON.dao.BillingONFilenameDao;
+import org.oscarehr.billing.CA.ON.dao.BillingONHeaderDao;
+import org.oscarehr.billing.CA.ON.model.BillingONFilename;
+import org.oscarehr.billing.CA.ON.model.BillingONHeader;
+import org.oscarehr.common.dao.BillingONCHeader1Dao;
 import org.oscarehr.common.dao.BillingServiceDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.SiteDao;
+import org.oscarehr.common.model.BillingONCHeader1;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Site;
 import org.oscarehr.util.SpringUtils;
@@ -50,6 +56,12 @@ public class JdbcBillingCreateBillingFile {
 	private BillingItemData itemObj = null;
 	private Properties propBillingNo = null;
 	private DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+	private BillingONCHeader1Dao cheaderDao = SpringUtils.getBean(BillingONCHeader1Dao.class);
+	private BillingONHeaderDao headerDao = SpringUtils.getBean(BillingONHeaderDao.class);
+	private BillingONFilenameDao filenameDao = SpringUtils.getBean(BillingONFilenameDao.class);
+
+
+	
 
 	// private String batchCount = "";
 	private String batchHeader;
@@ -916,26 +928,30 @@ public class JdbcBillingCreateBillingFile {
 	}
 
 	public void updateHeader1BilledBatchId(String newInvNo, String batchId) {
-		BillingONDataHelp dbObj = new BillingONDataHelp();
-		String sql = "update billing_on_cheader1 set status='B',header_id=" + batchId + " where id=" + newInvNo + "";
-		dbObj.updateDBRecord(sql);
+		BillingONCHeader1 header = cheaderDao.find(Integer.parseInt(newInvNo));
+		if(header != null) {
+			header.setStatus("B");
+			header.setHeaderId(Integer.parseInt(batchId));
+			cheaderDao.merge(header);
+		}
 	}
 
 	private void updateBatchHeaderSum(String bid, String hn, String rn, String tn) {
-		BillingONDataHelp dbObj = new BillingONDataHelp();
-		String sql = "update billing_on_header set h_count='" + hn + "', r_count='" + rn + "', t_count='" + tn
-				+ "' where id=" + bid;
-		_logger.info("JdbcBillingCreateBillingFile(sql = " + sql + ")");
-		dbObj.updateDBRecord(sql);
+		BillingONHeader h = headerDao.find(Integer.parseInt(bid));
+		if(h != null) {
+			h.sethCount(hn);
+			h.setrCount(rn);
+			h.settCount(tn);
+			headerDao.merge(h);
+		}
 	}
 
 	public void updateDisknameSum(int bid) {
-		BillingONDataHelp dbObj = new BillingONDataHelp();
-		String sql = "update billing_on_filename set claimrecord='" + (healthcardCount + patientCount) + "/"
-				+ recordCount + "', total='" + totalAmount + "' where disk_id=" + bid + " and providerno='"
-				+ providerNo + "'";
-		_logger.info("JdbcBillingCreateBillingFile(sql = " + sql + ")");
-		dbObj.updateDBRecord(sql);
+		for(BillingONFilename f: filenameDao.findByDiskIdAndProvider(bid,providerNo)) {
+			f.setClaimRecord((healthcardCount + patientCount) + "/"	+ recordCount);
+			f.setTotal(totalAmount);
+			filenameDao.merge(f);
+		}
 	}
 
 	private void updateDemoData(BillingClaimHeader1Data chObj) {

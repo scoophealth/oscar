@@ -150,5 +150,9 @@ public class SnomedCore extends AbstractCodeSystemModel<Integer> implements java
     	this.replacedBySnomedCid = replacedBySnomedCid;
     }
 
+	@Override
+	public void setCode(String code) {
+		this.setSnomedCore(code);
+	}
 
 }

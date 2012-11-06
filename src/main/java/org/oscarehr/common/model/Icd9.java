@@ -75,6 +75,12 @@ public class Icd9 extends AbstractCodeSystemModel<Integer> implements java.io.Se
 	    return "icd9";
     }
 
+	@Override
+	public void setCode(String code) {
+		this.setIcd9(code);
+	}
+	
+	
 
 
 

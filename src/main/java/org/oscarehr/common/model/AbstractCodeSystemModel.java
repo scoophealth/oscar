@@ -28,4 +28,7 @@ public abstract class AbstractCodeSystemModel<T> extends AbstractModel<T> {
 	public abstract String getCode();
 	public abstract String getDescription();
 	public abstract String getCodingSystem();
+	
+	public abstract void setCode(String code);
+	public abstract void setDescription(String description);
 }

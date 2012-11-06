@@ -35,20 +35,25 @@ import java.text.SimpleDateFormat;
 import org.apache.log4j.Logger;
 import org.oscarehr.billing.CA.BC.dao.LogTeleplanTxDao;
 import org.oscarehr.billing.CA.BC.model.LogTeleplanTx;
+import org.oscarehr.common.dao.BillingDao;
+import org.oscarehr.common.model.Billing;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.Misc;
 import oscar.OscarProperties;
+import oscar.entities.Billingmaster;
 import oscar.oscarBilling.ca.bc.data.BillingHistoryDAO;
+import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
 import oscar.oscarDB.DBHandler;
-import oscar.util.UtilMisc;
 
 
 
 public class ExtractBean extends Object implements Serializable {
     private static Logger logger=MiscUtils.getLogger();
     private LogTeleplanTxDao logTeleplanTxDao = SpringUtils.getBean(LogTeleplanTxDao.class);
+    private BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
+    private BillingmasterDAO billingmasterDao =  SpringUtils.getBean(BillingmasterDAO.class);
 
 
     private String ohipRecord;
@@ -276,29 +281,24 @@ public class ExtractBean extends Object implements Serializable {
 
 
     public void setAsBilled(String newInvNo){
-      if (eFlag.equals("1")){
-         String query30 = "update billing set status='B' where billing_no='" + newInvNo + "'";
-         try {
-
-        	 DBHandler.RunSQL(query30);
-         }catch (SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-         }
+        if (eFlag.equals("1")){
+      	  Billing b = billingDao.find(Integer.parseInt(newInvNo));
+      	  if(b != null) {
+      		  b.setStatus("B");
+      		  billingDao.merge(b);
+      	  }
+        }
       }
-    }
 
-    public void setAsBilledMaster(String newInvNo){
-      if (eFlag.equals("1")){
-         String query30 = "update billingmaster set billingstatus='B' where billingmaster_no='" + newInvNo + "'";
-         try {
-
-        	 DBHandler.RunSQL(query30);
-            createBillArchive(newInvNo);
-         }catch (SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-         }
+      public void setAsBilledMaster(String newInvNo){
+        if (eFlag.equals("1")){
+      	  Billingmaster b = billingmasterDao.getBillingmaster(Integer.parseInt(newInvNo));
+      	  if(b != null) {
+      		  b.setBillingstatus("B");
+      		  billingmasterDao.update(b);
+      	  }
+        }
       }
-    }
 
     /**
      * Adds a new entry into the billing_history table
@@ -311,13 +311,11 @@ public class ExtractBean extends Object implements Serializable {
 
     public void setLog(String x, String logValue){
       if (eFlag.equals("1")){
-         String nsql = "update log_teleplantx set claim='" + UtilMisc.mysqlEscape(logValue) + "' where log_no='"+ x +"'";
-         try {
-
-        	 DBHandler.RunSQL(nsql);
-         }catch (SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-         }
+    	  LogTeleplanTx l = this.logTeleplanTxDao.find(Integer.parseInt(x));
+    	  if(l != null) {
+    		  l.setClaim(logValue.getBytes());
+    		  logTeleplanTxDao.merge(l);
+    	  }
       }
     }
 

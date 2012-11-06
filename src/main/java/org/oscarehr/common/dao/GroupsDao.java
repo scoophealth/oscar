@@ -34,4 +34,6 @@ public class GroupsDao extends AbstractDao<Groups>{
 	public GroupsDao() {
 		super(Groups.class);
 	}
+	
+	
 }

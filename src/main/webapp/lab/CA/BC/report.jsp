@@ -23,6 +23,14 @@
     Ontario, Canada
 
 --%>
+<%@page import="java.sql.ResultSet" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.billing.CA.BC.dao.Hl7PidDao" %>
+<%@page import="org.oscarehr.billing.CA.BC.model.Hl7Pid" %>
+<%@page import="org.oscarehr.billing.CA.BC.dao.Hl7LinkDao" %>
+<%@page import="org.oscarehr.billing.CA.BC.model.Hl7Link" %>
+<%@page import="org.oscarehr.billing.CA.BC.dao.Hl7MessageDao" %>
+<%@page import="org.oscarehr.billing.CA.BC.model.Hl7Message" %>
 
 <%
 	if(session.getAttribute("user") == null || !session.getAttribute("userprofession").equals("doctor")){
@@ -39,17 +47,41 @@
 	String pid = request.getParameter("pid"),
 	sign = request.getParameter("cmd_sign"),
 	save = request.getParameter("cmd_save");
+	
+	Hl7PidDao pidDao = SpringUtils.getBean(Hl7PidDao.class);
+	Hl7MessageDao messageDao = SpringUtils.getBean(Hl7MessageDao.class);
+	Hl7LinkDao linkDao = SpringUtils.getBean(Hl7LinkDao.class);
+	
 	if(null != save){
-		DBHandler.RunSQL(update_doc_notes.replaceAll("@pid", pid).replaceAll("@notes", oscar.Misc.mysqlEscape(request.getParameter("notes"))));
+		ResultSet rs = DBHandler.GetSQL("select m.* from hl7_pid p, hl7_message m where p.pid_id=" + pid + " and p.message_id=m.message_id");
+		while(rs.next()) {
+			int msgId = rs.getInt("message_id");
+			Hl7Message h = messageDao.find(msgId);
+			if(h != null) {
+				h.setNotes(request.getParameter("notes"));
+			}
+		}
 	}
 	if(null != sign){
-		DBHandler.RunSQL(update_lab_report_signed.replaceAll("@pid", sign).replaceAll("@provider_no", (String)session.getAttribute("user")));
+		Hl7Link h = linkDao.find(Integer.parseInt(pid));
+		if(h != null) {
+			h.setStatus("S");
+			h.setProviderNo((String)session.getAttribute("user"));
+			h.setSignedOn(new java.util.Date());
+			linkDao.merge(h);
+		}
+		
 	}
 	if(null == pid){
 		out.print("<script language=\"JavaScript\">window.close();</script>");
 	}
 	if(request.getParameter("viewed") != null){
-		DBHandler.RunSQL(update_lab_report_viewed.replaceAll("@pid", pid));
+		Hl7Link h = linkDao.find(Integer.parseInt(pid));
+		if(h != null && !h.getStatus().equals("S")) {
+			h.setStatus("A");
+			linkDao.merge(h);
+		}
+		
 	}
 	java.sql.ResultSet rs = DBHandler.GetSQL(select_signed.replaceAll("@pid", pid));
 	if(rs.next()){

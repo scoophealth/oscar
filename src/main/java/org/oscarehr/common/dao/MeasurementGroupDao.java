@@ -30,7 +30,6 @@ import java.util.List;
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.MeasurementGroup;
-import org.oscarehr.common.model.MeasurementType;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -40,7 +39,7 @@ public class MeasurementGroupDao extends AbstractDao<MeasurementGroup>{
 		super(MeasurementGroup.class);
 	}
 	
-	public List<MeasurementType> findByNameAndTypeDisplayName(String name, String typeDisplayName) {
+	public List<MeasurementGroup> findByNameAndTypeDisplayName(String name, String typeDisplayName) {
 		String sqlCommand = "select x from " + modelClass.getSimpleName()+" x where x.name=? AND x.typeDisplayName=?2";
 
 		Query query = entityManager.createQuery(sqlCommand);
@@ -48,19 +47,31 @@ public class MeasurementGroupDao extends AbstractDao<MeasurementGroup>{
 		query.setParameter(2, typeDisplayName);
 
 		@SuppressWarnings("unchecked")
-		List<MeasurementType> results = query.getResultList();
+		List<MeasurementGroup> results = query.getResultList();
 
 		return (results);
 	}
 	
-	public List<MeasurementType> findByTypeDisplayName(String typeDisplayName) {
+	public List<MeasurementGroup> findByTypeDisplayName(String typeDisplayName) {
 		String sqlCommand = "select x from " + modelClass.getSimpleName()+" x where x.typeDisplayName=?1";
 
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, typeDisplayName);
 
 		@SuppressWarnings("unchecked")
-		List<MeasurementType> results = query.getResultList();
+		List<MeasurementGroup> results = query.getResultList();
+
+		return (results);
+	}
+	
+	public List<MeasurementGroup> findByName(String name) {
+		String sqlCommand = "select x from " + modelClass.getSimpleName()+" x where x.name=?";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, name);
+		
+		@SuppressWarnings("unchecked")
+		List<MeasurementGroup> results = query.getResultList();
 
 		return (results);
 	}

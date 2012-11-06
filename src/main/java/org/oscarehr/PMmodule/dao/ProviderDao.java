@@ -310,8 +310,10 @@ public class ProviderDao extends HibernateDaoSupport {
 
 	public static void removeProviderFromFacility(String provider_no,
 			int facilityId) {
-		SqlUtils.update("delete from provider_facility where provider_no='"
-				+ provider_no + "' and facility_id=" + facilityId);
+		ProviderFacilityDao dao = SpringUtils.getBean(ProviderFacilityDao.class);
+		for(ProviderFacility p:dao.findByProviderNoAndFacilityId(provider_no,facilityId)) {
+			dao.remove(p.getId());
+		}
 	}
 
 	public static List<Integer> getFacilityIds(String provider_no) {

@@ -417,8 +417,12 @@
 
 		    	if (nBillDetailNo == 0) {
 		    		// roll back
-		    		sql = "update billing set status='D' where billing_no = " + nBillNo;
-					dbObj.updateDBRecord(sql);
+		    		Billing bb = billingDao.find(nBillNo);
+		    		if(bb != null) {
+		    			bb.setStatus("D");
+		    			billingDao.merge(bb);
+		    		}
+		    		
 		    		break;
 		    	}
 			}

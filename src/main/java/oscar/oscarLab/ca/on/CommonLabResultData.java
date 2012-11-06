@@ -432,8 +432,10 @@ public class CommonLabResultData {
 			for (int i = 0; i < labArray.length; i++) {
 
 				// delete old entries
-				String sql = "delete from patientLabRouting where lab_no='" + labArray[i] + "' and lab_type = '" + labType + "'";
-				result = DBHandler.RunSQL(sql);
+				for(PatientLabRouting p:patientLabRoutingDao.findByLabNoAndLabType(Integer.parseInt(labArray[i]),labType)) {
+					patientLabRoutingDao.remove(p.getId());
+				}
+				
 
 				// add new entries
 				PatientLabRouting plr = new PatientLabRouting();
@@ -483,10 +485,10 @@ public class CommonLabResultData {
 					}
 
 					// delete old entries
-					String sql = "delete from providerLabRouting where provider_no='0' and lab_type= '" + labType + "' and lab_no = '" + labIds[k] + "'";
-
-					result = DBHandler.RunSQL(sql);
-
+					for(ProviderLabRoutingModel p:providerLabRoutingDao.findByLabNoAndLabTypeAndProviderNo(Integer.parseInt(labIds[k]),labType,"0")) {
+						providerLabRoutingDao.remove(p.getId());
+					}
+					
 				}
 
 			}

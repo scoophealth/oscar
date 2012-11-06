@@ -28,17 +28,23 @@ package oscar.oscarMessenger.data;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
+import org.oscarehr.common.dao.OscarCommLocationsDao;
+import org.oscarehr.common.model.OscarCommLocations;
+import org.oscarehr.util.SpringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarMessenger.docxfer.util.MsgCommxml;
-import oscar.oscarMessenger.docxfer.util.MsgUtil;
 
 // This is a modified version of oscar.comm.client.AddressBook
 public class MsgAddressBookMaker
 {
+	private OscarCommLocationsDao oscarCommLocationsDao = SpringUtils.getBean(OscarCommLocationsDao.class);
+
+	
     // Update the local address book and return true if changed
     public boolean updateAddressBook() throws SQLException
     {
@@ -52,15 +58,13 @@ public class MsgAddressBookMaker
         if(rs.next())
         {
             String newAddressBook = MsgCommxml.toXML(addressBook);
-
-            //if((oscar.Misc.getString(rs,"addressBook")==null) /*|| (oscar.Misc.getString(rs,"addressBook").equals(newAddressBook)==false)*/)
-            //{
-                DBHandler.RunSQL("UPDATE oscarcommlocations SET addressBook = '" + MsgUtil.replaceQuote(newAddressBook) + "' WHERE current1 = 1");
-            //}
-            //else
-            //{
-            //    addressBook = null;
-            //}
+            
+            List<OscarCommLocations> ls = oscarCommLocationsDao.findByCurrent1(1);
+            for(OscarCommLocations l:ls) {
+            	l.setAddressBook(newAddressBook);
+            	oscarCommLocationsDao.merge(l);
+            }
+       
         }
         rs.close();
 

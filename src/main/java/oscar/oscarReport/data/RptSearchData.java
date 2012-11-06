@@ -115,12 +115,11 @@ public class RptSearchData {
 
 
     public void deleteQueryFavourite(String id){
-       try{
-
-          DBHandler.RunSQL("update demographicQueryFavourites set archived = '0' where favId = '"+id+"'");
-       }catch (java.sql.SQLException e){
-           MiscUtils.getLogger().error("Error", e);
-       }
+    	DemographicQueryFavourite d = demographicQueryFavouritesDao.find(Integer.parseInt(id));
+    	if(d != null) {
+    		d.setArchived("0");
+    		demographicQueryFavouritesDao.merge(d);
+    	}
     }
 
 

@@ -116,8 +116,11 @@ public class GDMLHandler implements MessageHandler {
 						logger.info("obr(" + i + ") obx(" + j + ") abnormal ? : " + h.getOBXAbnormalFlag(i, j));
 						if (h.isOBXAbnormal(i, j)) {
 							resultStatus = "A";
-							sql = "UPDATE hl7TextInfo SET result_status='A' WHERE lab_no='" + oscar.Misc.getString(rs, "lab_no") + "'";
-							DBHandler.RunSQL(sql);
+							 Hl7TextInfo obj = hl7TextInfoDao.findLabId(Integer.parseInt(oscar.Misc.getString(rs, "lab_no")));
+	                            if(obj != null) {
+	                            	obj.setResultStatus("A");
+	                            	hl7TextInfoDao.merge(obj);
+	                            }
 						}
 						j++;
 					}

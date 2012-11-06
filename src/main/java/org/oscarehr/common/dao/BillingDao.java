@@ -28,13 +28,35 @@ import javax.persistence.Query;
 import org.oscarehr.common.model.Billing;
 import org.springframework.stereotype.Repository;
 
+import oscar.util.ConversionUtils;
+
 @Repository
 public class BillingDao extends AbstractDao<Billing> {
 
 	public BillingDao() {
 		super(Billing.class);
 	}
+	
+	public List<Billing> findByBillingType(String type) {
+		Query q = entityManager.createQuery("select x from Billing x where x.billingType=?");
+		q.setParameter(1, type);
+		
+		@SuppressWarnings("unchecked")
+		List<Billing> results = q.getResultList();
+		
+		return results;
+	}
 
+	public List<Billing> findSet(List<String> list) { 
+		Query query = entityManager.createQuery("SELECT b FROM  Billing b  where b.billingmasterNo in (:billingNumbers)");
+		query.setParameter("billingNumbers", ConversionUtils.toIntList(list));
+		
+		@SuppressWarnings("unchecked")
+		List<Billing> results = query.getResultList();
+		
+		return results;
+	}
+	
 	@SuppressWarnings("unchecked")
     public List<Object[]> findBillings(Integer demoNo, List<String> serviceCodes) {    	
 		Map<String, Object> params = new HashMap<String, Object>();

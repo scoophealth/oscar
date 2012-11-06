@@ -666,21 +666,6 @@ public class SqlUtils {
 		}
 	}
 
-	public static int update(String sqlCommand) {
-		Connection c = null;
-		Statement s = null;
-		try {
-			c = DbConnectionFilter.getThreadLocalDbConnection();
-			s = c.createStatement();
-			return (s.executeUpdate(sqlCommand));
-		}
-		catch (SQLException e) {
-			throw (new PersistenceException(e));
-		}
-		finally {
-			closeResources(c, s, null);
-		}
-	}
 
 	public static String getCurrentDatabaseName() {
 		Connection c = null;

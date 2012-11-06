@@ -32,13 +32,17 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.BillingDao;
+import org.oscarehr.common.model.Billing;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarBilling.data.BillingONDataHelp;
 import oscar.util.UtilDateUtilities;
 public class ExtractBean extends Object implements Serializable {
     private static Logger logger=MiscUtils.getLogger(); 
+    private BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
 
     private String apptDate;
 	private String batchCount = "";
@@ -456,10 +460,11 @@ public class ExtractBean extends Object implements Serializable {
 		return value;
 	}
 	public void setAsBilled(String newInvNo) {
-		BillingONDataHelp dbObj = new BillingONDataHelp();
-		String sql = "update billing set status='B' where billing_no='"
-				+ newInvNo + "'";
-		dbObj.updateDBRecord(sql);
+		Billing b= billingDao.find(Integer.parseInt(newInvNo));
+		if(b != null) {
+			b.setStatus("B");
+			billingDao.merge(b);
+		}
 	}
 	// batchCount 1 ???
 	public synchronized void setBatchCount(String newBatchCount) {

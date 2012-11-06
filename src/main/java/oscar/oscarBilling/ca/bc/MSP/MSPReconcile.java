@@ -49,13 +49,17 @@ import org.oscarehr.billing.CA.BC.dao.BillRecipientsDao;
 import org.oscarehr.billing.CA.BC.dao.BillingHistoryDao;
 import org.oscarehr.billing.CA.BC.model.BillRecipients;
 import org.oscarehr.billing.CA.BC.model.BillingHistory;
+import org.oscarehr.common.dao.BillingDao;
+import org.oscarehr.common.model.Billing;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.entities.Billingmaster;
 import oscar.entities.MSPBill;
 import oscar.entities.Provider;
 import oscar.oscarBilling.ca.bc.data.BillRecipient;
 import oscar.oscarBilling.ca.bc.data.BillingHistoryDAO;
+import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
 import oscar.oscarDB.DBHandler;
 import oscar.util.BeanUtilHlp;
 import oscar.util.SqlUtils;
@@ -66,6 +70,11 @@ public class MSPReconcile {
   private static Logger log = MiscUtils.getLogger();
   private BillRecipientsDao billRecipientDao = SpringUtils.getBean(BillRecipientsDao.class);
   private BillingHistoryDao billingHistoryDao = SpringUtils.getBean(BillingHistoryDao.class);
+  
+  private BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
+  private BillingmasterDAO billingmasterDao = SpringUtils.getBean(BillingmasterDAO.class);
+  
+  
 
   //Accounting Report Types
   public static final String REP_INVOICE = "REP_INVOICE";
@@ -1149,27 +1158,26 @@ public class MSPReconcile {
 
   //Only updates only the billingmaster status
   private void updateBillingStatusHlp2(String billingNo, String stat) {
-    try {
-
-    	DBHandler.RunSQL("update billingmaster set billingstatus = '" + stat +
-                "' where billingmaster_no = '" + billingNo + "'");
-    }
-    catch (Exception e) {
-      MiscUtils.getLogger().error("Error", e);
-    }
+	  Billingmaster b = billingmasterDao.getBillingmaster(Integer.parseInt(billingNo));
+	  if(b != null) {
+		  b.setBillingstatus(stat);
+		  billingmasterDao.update(b);
+	  }
   }
 
   private void updateBillingStatusHlp(String billingNo, String stat) {
-    try {
-
-    	DBHandler.RunSQL("update billingmaster set billingstatus = '" + stat +
-                "' where billing_no = '" + billingNo + "'");
-    	DBHandler.RunSQL("update billing set status = '" + stat +
-                "' where billing_no = '" + billingNo + "'");
-    }
-    catch (Exception e) {
-      MiscUtils.getLogger().error("Error", e);
-    }
+	  Billingmaster b = billingmasterDao.getBillingmaster(Integer.parseInt(billingNo));
+	  if(b != null) {
+		  b.setBillingstatus(stat);
+		  billingmasterDao.update(b);
+	  }
+	  
+	  Billing bb = billingDao.find(Integer.parseInt(billingNo));
+	  if(bb != null) {
+		  bb.setStatus(stat);
+		  billingDao.merge(bb);
+	  }
+  
   }
 
   /**
@@ -1188,13 +1196,11 @@ public class MSPReconcile {
   }
 
   private void updatePaymentMethodHlp(String billingNo, String paymentMethod) {
-    try {
-    	DBHandler.RunSQL("update billingmaster set paymentMethod =  " + paymentMethod +
-                " where billing_no = " + billingNo + "");
-    }
-    catch (Exception e) {
-      MiscUtils.getLogger().error("Error", e);
-    }
+	  Billingmaster b = billingmasterDao.getBillingmaster(Integer.parseInt(billingNo));
+	  if(b != null) {
+		 b.setPaymentMethod(Integer.parseInt(paymentMethod));
+		  billingmasterDao.update(b);
+	  }
   }
 
   /**
@@ -1202,8 +1208,13 @@ public class MSPReconcile {
    */
   private void updatePrivateBillState() {
     try {
-    	DBHandler.RunSQL(
-          "UPDATE billing b SET b.billingtype = 'Pri' where b.billingtype = 'PRIV'");
+    	for(Billing b:billingDao.findByBillingType("PRIV")) {
+    		b.setBillingtype("Pri");
+    		billingDao.merge(b);
+    	}
+    	
+  	
+    	
       String findPrivs = "select b.billing_no " +
           "from billing b,billingmaster bm " +
           "where b.billingtype = 'Pri' " +
@@ -1288,16 +1299,11 @@ public class MSPReconcile {
    * @param billType String - The type of bill
    */
   private void updateBillTypeHlp(String billingNo, String billType) {
-    String updateBillingSQL = "update billing set billingtype = '" +
-        billType + "' where billing_no ='" +
-        billingNo + "'";
-
-    try {
-
-    	DBHandler.RunSQL(updateBillingSQL);
-    }
-    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
-    }
+	  Billing b = billingDao.find(Integer.parseInt(billingNo));
+	  if(b != null) {
+		  b.setBillingtype(billType);
+		  billingDao.merge(b);
+	  }
   }
 
   /**
@@ -1307,14 +1313,12 @@ public class MSPReconcile {
    */
   public void updateBillingMasterStatus(String billingMasterNo, String stat) {
     log.debug("setting billingmaster_no "+billingMasterNo+ " to "+stat);
-    try {
-
-    	DBHandler.RunSQL("update billingmaster set billingstatus = '" + stat +
-                "' where billingmaster_no = '" + billingMasterNo + "'");
-    }
-    catch (Exception e) {
-      MiscUtils.getLogger().error("Error", e);
-    }
+    Billingmaster b = billingmasterDao.getBillingmaster(Integer.parseInt(billingMasterNo));
+	  if(b != null) {
+		  b.setBillingstatus(stat);
+		  billingmasterDao.update(b);
+	  }
+   
   }
 
   public boolean updateStat(String stat, String billingNo) {
@@ -1384,10 +1388,13 @@ public class MSPReconcile {
     if (updated) {
       try {
 
-        MiscUtils.getLogger().debug("Updating billing no " + billingNo + " to " +
-                           newStat);
-        DBHandler.RunSQL("update billingmaster set billingstatus = '" + newStat +
-                  "' where billingmaster_no = '" + billingNo + "'");
+       
+        Billingmaster b = billingmasterDao.getBillingmaster(Integer.parseInt(billingNo));
+  	  if(b != null) {
+  		  b.setBillingstatus(newStat);
+  		  billingmasterDao.update(b);
+  	  }
+  	  
         dao.createBillingHistoryArchive(billingNo);
       }
       catch (Exception e) {

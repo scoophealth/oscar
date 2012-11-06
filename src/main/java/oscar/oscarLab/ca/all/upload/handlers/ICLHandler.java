@@ -21,6 +21,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.Hl7TextInfoDao;
+import org.oscarehr.common.model.Hl7TextInfo;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.all.parsers.Factory;
@@ -33,6 +36,8 @@ import oscar.oscarLab.ca.all.util.ICLUtilities;
 public class ICLHandler implements MessageHandler  {
     
     Logger logger = Logger.getLogger(ICLHandler.class);
+    Hl7TextInfoDao hl7TextInfoDao = SpringUtils.getBean(Hl7TextInfoDao.class);
+    
     
     public String parse(String serviceName, String fileName,int fileId, String ipAddr){
         
@@ -78,8 +83,12 @@ public class ICLHandler implements MessageHandler  {
                     while(resultStatus.equals("") && j < h.getOBXCount(i)){
                         if(h.isOBXAbnormal(i, j)){
                             resultStatus = "A";
-                            sql = "UPDATE hl7TextInfo SET result_status='A' WHERE lab_no='"+oscar.Misc.getString(rs, "lab_no")+"'";
-                            DBHandler.RunSQL(sql);
+                            Hl7TextInfo obj = hl7TextInfoDao.findLabId(Integer.parseInt(oscar.Misc.getString(rs, "lab_no")));
+                            if(obj != null) {
+                            	obj.setResultStatus("A");
+                            	hl7TextInfoDao.merge(obj);
+                            }
+                           
                         }
                         j++;
                     }

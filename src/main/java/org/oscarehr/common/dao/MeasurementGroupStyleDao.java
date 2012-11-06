@@ -39,9 +39,10 @@ public class MeasurementGroupStyleDao extends AbstractDao<MeasurementGroupStyle>
 		super(MeasurementGroupStyle.class);
 	}
 
-	   public List<MeasurementGroupStyle> findAll() {
-	    	String sql = "select x from MeasurementGroupStyle x";
+	   public List<MeasurementGroupStyle> findByGroupName(String groupName) {
+	    	String sql = "select x from MeasurementGroupStyle x where x.groupName=?";
 	    	Query query = entityManager.createQuery(sql);
+	    	query.setParameter(1, groupName);
 
 	        @SuppressWarnings("unchecked")
 	        List<MeasurementGroupStyle> results = query.getResultList();

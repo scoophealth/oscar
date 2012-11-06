@@ -30,17 +30,18 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.math.BigDecimal;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.oscarehr.common.dao.BillingDao;
+import org.oscarehr.common.model.Billing;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanSequenceDAO;
 import oscar.oscarBilling.ca.bc.data.BillActivityDAO;
 import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
-import oscar.oscarDB.DBHandler;
 import oscar.util.StringUtils;
 
 /**
@@ -48,6 +49,8 @@ import oscar.util.StringUtils;
  * @author jay
  */
 public class TeleplanSubmission {
+	
+	private BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
     
     private String mspFileStr = null;
     private String mspHtmlStr = null;
@@ -187,13 +190,10 @@ public class TeleplanSubmission {
         
     //NEEDS TO BE MOVED OUT OF HERE    
     private void markListAsBilled(List list){
-        String query = "update billing set status = 'B' where billing_no in ("+ StringUtils.getCSV(list) +")"; 
-        try {             
-           
-        	DBHandler.RunSQL(query);
-        }catch (SQLException sqlexception) {
-           MiscUtils.getLogger().debug(sqlexception.getMessage());
-        }
+    	for(Billing b:billingDao.findSet(list)) {
+    		b.setStatus("B");
+    		billingDao.merge(b);
+    	}
     }
     
   

@@ -25,6 +25,10 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.ReportTableFieldCaption;
 import org.springframework.stereotype.Repository;
 
@@ -33,5 +37,17 @@ public class ReportTableFieldCaptionDao extends AbstractDao<ReportTableFieldCapt
 
 	public ReportTableFieldCaptionDao() {
 		super(ReportTableFieldCaption.class);
+	}
+	
+	public List<ReportTableFieldCaption> findByTableNameAndName(String tableName, String name) {
+		Query q = entityManager.createQuery("SELECT x FROM ReportTableFieldCaption x WHERE x.tableName=? AND x.name=?");
+		q.setParameter(1, tableName);
+		q.setParameter(2, name);
+		
+		@SuppressWarnings("unchecked")
+		List<ReportTableFieldCaption> results = q.getResultList();
+		
+		return results;
+		
 	}
 }

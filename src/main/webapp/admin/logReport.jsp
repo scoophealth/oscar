@@ -27,7 +27,7 @@
 <%@ page import="java.util.*"%>
 <%@ page import="java.sql.*"%>
 <%@ page
-	import="oscar.login.*,oscar.util.SqlUtils, oscar.oscarDB.*, oscar.MyDateFormat"%>
+	import="oscar.login.*, oscar.oscarDB.*, oscar.MyDateFormat"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>

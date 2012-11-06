@@ -23,10 +23,18 @@
     Ontario, Canada
 
 --%>
+<%@page import="java.sql.ResultSet" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.billing.CA.BC.dao.Hl7LinkDao" %>
+<%@page import="org.oscarehr.billing.CA.BC.model.Hl7Link" %>
+
 <%  
 	if(session.getAttribute("user") == null || !session.getAttribute("userprofession").equals("doctor")){
     	response.sendRedirect("../../../logout.jsp");
    }
+
+	Hl7LinkDao linkDao = SpringUtils.getBean(Hl7LinkDao.class);
+	
     String
     	update_linking = "UPDATE hl7_link SET hl7_link.status='N' WHERE hl7_link.pid_id='@pid'",
     	insert_auto_matching = "INSERT INTO hl7_link ( pid_id, demographic_no ) SELECT hl7_pid.pid_id, demographic.demographic_no FROM demographic, hl7_pid LEFT JOIN hl7_link ON hl7_pid.pid_id=hl7_link.pid_id WHERE demographic.hin=hl7_pid.external_id AND hl7_link.pid_id IS NULL",
@@ -36,13 +44,31 @@
     if(request.getParameterValues("chk")!= null){
     	String[] values = request.getParameterValues("chk");
     	for(int i = 0; i < values.length; ++i){
-    		DBHandler.RunSQL(update_linking.replaceAll("@pid", values[i]));
+    		Hl7Link l = linkDao.find(Integer.parseInt(values[i]));
+    		if(l != null) {
+    			l.setStatus("N");
+    			linkDao.merge(l);
+    		}
     	}
     }
-	DBHandler.RunSQL(insert_auto_matching);
+   	
+   	ResultSet rs = DBHandler.GetSQL("SELECT hl7_pid.pid_id, demographic.demographic_no FROM demographic, hl7_pid LEFT JOIN hl7_link ON hl7_pid.pid_id=hl7_link.pid_id WHERE demographic.hin=hl7_pid.external_id AND hl7_link.pid_id IS NULL");
+    while(rs.next()) {
+		Hl7Link h = new Hl7Link();
+		h.setId(rs.getInt(1));
+		h.setDemographicNo(rs.getInt(2));
+		linkDao.persist(h);
+    }
+	
     if(request.getParameter("demo_id") != null && request.getParameter("pid") != null){
-    	DBHandler.RunSQL(delete_linking.replaceAll("@pid", request.getParameter("pid")));
-    	DBHandler.RunSQL(insert_linking.replaceAll("@pid", request.getParameter("pid")).replaceAll("@demo", request.getParameter("demo_id")));
+    	
+    	linkDao.remove(linkDao.find(Integer.parseInt(request.getParameter("pid"))));
+    	
+    	Hl7Link h = new Hl7Link();
+    	h.setId(Integer.parseInt(request.getParameter("pid")));
+    	h.setDemographicNo(Integer.parseInt(request.getParameter("demo_id")));
+    	linkDao.persist(h);
+    	
     }
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>

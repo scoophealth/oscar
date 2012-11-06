@@ -44,7 +44,6 @@
 <%@ page errorPage="../appointment/errorpage.jsp"
 	import="java.util.*,
                                                            java.sql.*"%>
-<%@ page import="oscar.oscarBilling.ca.on.data.BillingONDataHelp"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.common.model.Billingreferral" %>
@@ -58,7 +57,6 @@
   String action = "search"; // add/edit
   //BillingServiceCode serviceCodeObj = new BillingServiceCode();
   Properties	prop  = new Properties();
-  BillingONDataHelp dbObj = new BillingONDataHelp();
   if (request.getParameter("submit") != null && request.getParameter("submit").equals("Save")) {
     // check the input data
 

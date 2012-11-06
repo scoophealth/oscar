@@ -27,7 +27,6 @@ package oscar.oscarBilling.ca.bc.pageUtil;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -38,8 +37,10 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.BillingDao;
 import org.oscarehr.common.model.Billing;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -53,13 +54,13 @@ import oscar.oscarBilling.ca.bc.data.BillingFormData;
 import oscar.oscarBilling.ca.bc.data.BillingHistoryDAO;
 import oscar.oscarBilling.ca.bc.data.BillingNote;
 import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
-import oscar.oscarDB.DBHandler;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.util.SqlUtils;
 import oscar.util.StringUtils;
 
 public class BillingReProcessBillAction extends Action {
     private static final Logger logger = MiscUtils.getLogger();
+    private static BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
 
   //Misc misc = new Misc();
   MSPReconcile msp = new MSPReconcile();
@@ -321,10 +322,8 @@ public class BillingReProcessBillAction extends Action {
         logger.debug("type 2"+bill.getBillingtype());
         logger.debug("WHAT IS BILL <ASTER2 "+billingmaster.getBillingmasterNo());
 
-        try {
-
-      //DBHandler.RunSQL(sql);
-      //DBHandler.RunSQL(providerSQL);
+      
+      
       if (!StringUtils.isNullOrEmpty(billingStatus)) {  //What if billing status is null?? the status just doesn't get updated but everything else does??'
           //Why does this get called??  update billing type based on the billing status.  I guess this is effective when you switch this to bill on
         msp.updateBillingStatus(frm.getBillNumber(), billingStatus,billingmasterNo);
@@ -343,8 +342,12 @@ public class BillingReProcessBillAction extends Action {
         dao.createBillingHistoryArchive(billingmasterNo);
       }
       if (secondSQL != null) {
-        logger.debug(secondSQL);
-        DBHandler.RunSQL(secondSQL);
+        Billing b = billingDao.find(Integer.parseInt(frm.getBillNumber()));
+        if(b != null) {
+        	b.setStatus(billingStatus);
+        	billingDao.merge(b);
+        }
+       
       }
 
       if (correspondenceCode.equals("N") || correspondenceCode.equals("B")) {
@@ -358,10 +361,7 @@ public class BillingReProcessBillAction extends Action {
           n.addNote(billingmasterNo,(String) request.getSession().getAttribute("user"),messageNotes);
         }
       }
-    }
-    catch (SQLException e3) {
-      logger.info(e3.getMessage());
-    }
+   
 
     request.setAttribute("billing_no", billingmasterNo);
     if (submit.equals("Reprocess and Resubmit Bill")) {

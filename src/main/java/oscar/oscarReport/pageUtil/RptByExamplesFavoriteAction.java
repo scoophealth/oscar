@@ -37,12 +37,17 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.ReportByExamplesFavoriteDao;
+import org.oscarehr.common.model.ReportByExamplesFavorite;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarReport.bean.RptByExampleQueryBeanHandler;
 
 public class RptByExamplesFavoriteAction extends Action {
+
+	private ReportByExamplesFavoriteDao dao = SpringUtils.getBean(ReportByExamplesFavoriteDao.class);
 
     
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
@@ -108,14 +113,20 @@ public class RptByExamplesFavoriteAction extends Action {
                 String sql = "SELECT * from reportByExamplesFavorite WHERE providerNo = '"+providerNo+"' and name LIKE '" + favoriteName + "' OR query LIKE '" + query + "'";
                 ResultSet rs = DBHandler.GetSQL(sql);
                 if(!rs.next()){
-                    sql = "INSERT INTO reportByExamplesFavorite(providerNo, name, query) VALUES('" + providerNo + "','" 
-                          + favoriteName + "','" + query + "')";
-                    DBHandler.RunSQL(sql);
+                	ReportByExamplesFavorite r= new ReportByExamplesFavorite();
+                	r.setProviderNo(providerNo);
+                	r.setName(favoriteName);
+                	r.setQuery(query);
+                	dao.persist(r);
                 }
                 else{
-                    sql = "UPDATE reportByExamplesFavorite SET name='" + favoriteName + "', query='" + query + 
-                          "' WHERE id ='" + rs.getString("id") + "'";
-                    DBHandler.RunSQL(sql);
+                	ReportByExamplesFavorite r = dao.find(rs.getInt("id"));
+                	if(r != null) {
+                		r.setName(favoriteName);
+                		r.setQuery(query);
+                		dao.merge(r);
+                	}
+                   
                 }
             }
             catch(SQLException e) {
@@ -125,16 +136,6 @@ public class RptByExamplesFavoriteAction extends Action {
     }
     
     public void deleteQuery(String id){
-        
-        try {
-                               
-
-            String sql = "DELETE FROM reportByExamplesFavorite WHERE id = '" + id + "'";                
-            DBHandler.RunSQL(sql);
-        }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);            
-        }
-
+    	dao.remove(Integer.parseInt(id));
     }
 }

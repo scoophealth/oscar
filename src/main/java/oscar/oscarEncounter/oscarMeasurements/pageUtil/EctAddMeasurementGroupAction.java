@@ -38,7 +38,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.MeasurementGroupDao;
 import org.oscarehr.common.model.MeasurementGroup;
-import org.oscarehr.common.model.MeasurementType;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -85,8 +84,8 @@ public class EctAddMeasurementGroupAction extends Action {
                 if(selectedDeleteTypes != null){
                     for(int i=0; i<selectedDeleteTypes.length; i++){
                         MiscUtils.getLogger().debug(selectedDeleteTypes[i]);
-                        List<MeasurementType> mts = dao.findByNameAndTypeDisplayName(groupName,selectedDeleteTypes[i]);
-                        for(MeasurementType mt:mts) {
+                        List<MeasurementGroup> mts = dao.findByNameAndTypeDisplayName(groupName,selectedDeleteTypes[i]);
+                        for(MeasurementGroup mt:mts) {
                         	dao.remove(mt.getId());
                         }                             
                     }

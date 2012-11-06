@@ -28,14 +28,24 @@ package oscar.oscarResearch.oscarDxResearch.bean;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 import java.util.Vector;
 
+import org.oscarehr.common.dao.AbstractCodeSystemDao;
+import org.oscarehr.common.dao.QuickListUserDao;
+import org.oscarehr.common.model.AbstractCodeSystemModel;
+import org.oscarehr.common.model.QuickListUser;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarResearch.oscarDxResearch.util.dxResearchCodingSystem;
 
 public class dxQuickListItemsHandler {
+	
+	private QuickListUserDao dao = SpringUtils.getBean(QuickListUserDao.class);
+
 
     Vector dxQuickListItemsVector = new Vector();
 
@@ -64,22 +74,25 @@ public class dxQuickListItemsHandler {
             else
                 name = quickListName;
 
-            //need to put the providerID as well
-            String sql = "Select quickListName, providerNo from quickListUser where quickListName='"+name + "' AND providerNo ='"+providerNo+"'";
-            rs = DBHandler.GetSQL(sql);
-            if(rs.next()){
-                sql = "Update quickListUser set lastUsed=now() where quickListName='"+name + "' AND providerNo ='"+providerNo+"'";
-                DBHandler.RunSQL(sql);
-            }
-            else{
-                sql = "Insert into quickListUser(quickListName, providerNo, lastUsed) VALUES ('"+name+"','"+providerNo+"',now())";
-                DBHandler.RunSQL(sql);
-            }
+            List<QuickListUser> results = dao.findByNameAndProviderNo(name, providerNo);
+            if(!results.isEmpty()) {
+	            for(QuickListUser result:results) {
+	            	result.setLastUsed(new Date());
+	            	dao.merge(result);
+	            }
+	        } else {
+	        	QuickListUser q = new QuickListUser();
+	        	q.setQuickListName(name);
+	        	q.setProviderNo(providerNo);
+	        	q.setLastUsed(new Date());
+	        	dao.persist(q);
+	        }
+            
 
             for( int idx = 0; idx < codingSystems.length; ++idx )
             {
                 codingSystem = codingSystems[idx];
-                sql = "Select q.dxResearchCode, c.description FROM quickList q, "+codingSystem+" c where codingSystem = '"+codingSystem+"' and quickListName='"+ quickListName +"' AND c."+codingSystem+" = q.dxResearchCode order by c.description";
+                String sql = "Select q.dxResearchCode, c.description FROM quickList q, "+codingSystem+" c where codingSystem = '"+codingSystem+"' and quickListName='"+ quickListName +"' AND c."+codingSystem+" = q.dxResearchCode order by c.description";
 
                 rs = DBHandler.GetSQL(sql);
                 while(rs.next()){
@@ -158,15 +171,14 @@ public class dxQuickListItemsHandler {
 
 
     public static void updatePatientCodeDesc( String type, String code, String desc ){
-      String sql = String.format( "update %s set description = '%s' where %s = '%s'", type, desc, type, code );
-      try{
-        DBHandler.RunSQL( sql );
-      }catch ( Exception e ){
-	MiscUtils.getLogger().error("Error", e);
-      }finally{
+    	String daoName = AbstractCodeSystemDao.getDaoName(type);
+		@SuppressWarnings("unchecked")
+		AbstractCodeSystemDao<AbstractCodeSystemModel<?>> csDao = (AbstractCodeSystemDao<AbstractCodeSystemModel<?>>) SpringUtils.getBean(daoName);
 
-      }
-
+		
+		AbstractCodeSystemModel<?> codingSystemEntity = csDao.findByCode(code);
+		codingSystemEntity.setDescription(desc);
+		csDao.merge(codingSystemEntity);
     }
 
 }
