@@ -57,6 +57,7 @@
 <%
 String demographicNo = request.getParameter("demographic_no");
 if (demographicNo == null) demographicNo = request.getParameter("demographicNo");
+if (demographicNo == null) demographicNo = (String) request.getAttribute("demographicNo");
 Integer demoNo = Integer.parseInt(demographicNo);
 
 PHRVerificationDao phrVerificationDao = (PHRVerificationDao)SpringUtils.getBean("PHRVerificationDao");
@@ -202,11 +203,17 @@ br {
 	</tr>
 	<tr>
 		<td class="MainTableRightColumn" valign="top">
+			<%if(request.getAttribute("forwardToOnSuccess") != null ){ %>
+			<span style="color:red">Patient Has not been verified in person.  Verify and Continue</span>
+			<%}%>	
 			<fieldset>
 		    	<legend><bean:message key="phr.verification.add.fieldset.legend"/></legend>
 		    	<html:form action="/demographic/viewPhrRecord" onsubmit="return checkLevel(verificationLevel.value);" >
 			    	<input type="hidden" name="method" value="saveNewVerification"/>
 			    	<input type="hidden" name="demographic_no" value="<%=demographicNo%>"/>
+			    	<%if(request.getAttribute("forwardToOnSuccess") != null ){ %>
+			    	<input type="hidden" name="forwardToOnSuccess" value="<%=request.getAttribute("forwardToOnSuccess")%>" />
+			    	<%}%>
 			    	<label><bean:message key="phr.verification.add.fieldset.method"/>:</label> 
 				    	<select name="verificationLevel">
 				    		<option value="">--</option>

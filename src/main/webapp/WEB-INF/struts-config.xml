@@ -2346,6 +2346,7 @@
 			<forward name="document_not_found" path="/phr/PHRDocNotFound.jsp" />
 			<forward name="echart" path="/oscarEncounter/IncomingEncounter.do"/>
 			<forward name="loginAndRedirect" path="/phr/PHRLoginAndRedirect.jsp" />
+			<forward name="verifyAndRedirect" path="/phr/PHRVerification.jsp" />
 		</action>
 		<action path="/phr/Login" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
 		</action>

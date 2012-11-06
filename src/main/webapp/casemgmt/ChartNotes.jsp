@@ -156,7 +156,7 @@ try
 	<input type="hidden" id="check_issue" name="check_issue">
 	<input type="hidden" id="serverDate" value="<%=strToday%>">
 	<input type="hidden" id="resetFilter" name="resetFilter" value="false">
-	<div id="topContent" style="float: left; width: 100%; margin-right: -2px; padding-bottom: 10px; background-color: #CCCCFF; font-size: 10px;">
+	<div id="topContent" style="float: left; width: 100%; margin-right: -2px; padding-bottom: 1px; background-color: #CCCCFF; font-size: 10px;">
 		<nested:notEmpty name="caseManagementViewForm" property="filter_providers">
 			<div style="float: left; margin-left: 10px; margin-top: 0px;"><u><bean:message key="oscarEncounter.providers.title" />:</u><br>
 				<nested:iterate type="String" id="filter_provider" property="filter_providers">
@@ -320,7 +320,7 @@ try
 			</table>
 		</div>
 
-		<div style="float: left; clear: both; margin-top: 5px; margin-bottom: 5px; width: 100%; text-align: center;">
+		<div style="float: left; clear: both; margin-top: 5px; margin-bottom: 3px; width: 100%; text-align: center;">
 			<div style="display:inline-block">
 				<img alt="<bean:message key="oscarEncounter.msgFind"/>" src="<c:out value="${ctx}/oscarEncounter/graphics/edit-find.png"/>">
 				<input id="enTemplate" tabindex="6" size="16" type="text" value="" onkeypress="return grabEnterGetTemplate(event)">
@@ -342,7 +342,7 @@ try
 				<input type="button" id="searchButton" name="button" value="<bean:message key="oscarEncounter.Index.btnSearch"/>" onClick="popupPage(600,800,'<bean:message key="oscarEncounter.Index.popupSearchPageWindow"/>',$('channel').options[$('channel').selectedIndex].value+urlencode($F('keyword')) ); return false;">
 			</div>
 			&nbsp;&nbsp;
-			<div style="display:inline-block">
+			<div style="display:inline-block;text-align: left;" id="toolbar">
 				<input type="button" value="<bean:message key="oscarEncounter.Filter.title"/>" onclick="showFilter();" />
 				<%
 					String roleName = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -352,7 +352,7 @@ try
 					<%@include file="calculatorsSelectList.jspf" %>
 				</security:oscarSec>
 				<security:oscarSec roleName="<%=roleName%>" objectName="_newCasemgmt.templates" rights="r" reverse="false">
-					<select>
+					<select style="width:100px;">
 						<option><bean:message key="oscarEncounter.Header.Templates"/></option>
 						<option>------------------</option>
 						<option onClick="popupPage(700,700,'Templates','<%=request.getContextPath()%>/admin/providertemplate.jsp');">New Template</option>
@@ -371,7 +371,15 @@ try
 						%>
 					</select>
 				</security:oscarSec>
-			</div>
+				
+				<script>
+				function updateMYOSCAR(){
+					jQuery.getScript('phrLinks.jsp?demographicNo=<%=demographicNo%>');
+				}
+				updateMYOSCAR();
+				</script>
+				
+			</div>	
 		</div>
 	</div>
 </html:form>
