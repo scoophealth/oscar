@@ -761,8 +761,8 @@
 
 		<dependency>
 			<groupId>org.oscarehr</groupId>
-			<artifactId>utils</artifactId>
-			<version>2012.11.03</version>
+			<artifactId>util</artifactId>
+			<version>2012.11.06</version>
 		</dependency>
 	</dependencies>
 
@@ -1048,7 +1048,7 @@
 					<dependency>
 						<groupId>org.oscarehr</groupId>
 						<artifactId>util</artifactId>
-						<version>2012.11.03</version>
+						<version>2012.11.06</version>
 					</dependency>
 				</dependencies>
 			</plugin>
