@@ -830,10 +830,10 @@ body {
             <%@ include file="TopLinks2.jspf" %><!-- Row One included here-->
             <tr>
                 <%@ include file="SideLinksEditFavorites2.jsp"%><%-- <td></td>Side Bar File --%>
-                <td width="100%" style="border-left: 2px solid #A9A9A9;" height="100%" valign="top"><!--Column Two Row Two-->
+                <td style="border-left: 2px solid #A9A9A9;" height="100%" valign="top"><!--Column Two Row Two-->
 
 
-                    <table cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
+                    <table cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" >
 
 
                         <tr><!--put this left-->
@@ -1042,25 +1042,24 @@ body {
                         </tr>
                     </table>
                 </td>
-                <td width="15%" valign="top">
+                <td width="300px" valign="top" >
                     <div id="interactionsRxMyD" style="float:right;"></div>
                 </td>
             </tr>
             <tr><td></td><td align="center" ><a href="javascript:window.scrollTo(0,0);"><bean:message key="oscarRx.BackToTop"/></a></td></tr>
 
 <tr>
-    <td height="0%" style="border-bottom: 2px solid #A9A9A9; border-top: 2px solid #A9A9A9;"></td>
-    <td height="0%" style="border-bottom: 2px solid #A9A9A9; border-top: 2px solid #A9A9A9;"></td>
+    <td height="0%" style="border-bottom: 2px solid #A9A9A9; border-top: 2px solid #A9A9A9;" colspan="3">
 </tr>
 
 <tr>
-    <td width="100%" height="0%" colspan="2">&nbsp;
+    <td width="100%" height="0%" colspan="3">&nbsp;
 
     </td>
 </tr>
 
 <tr>
-    <td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC" colspan="2">
+    <td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC" colspan="3">
 
     </td>
 </tr>
