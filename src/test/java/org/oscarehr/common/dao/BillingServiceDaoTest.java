@@ -903,4 +903,22 @@ public class BillingServiceDaoTest extends DaoTestFixtures {
 		billingServices = dao.findByRegionGroupAndType("REG", "GRP", "TYP");
 		assertNotNull(billingServices);
 	}
+	
+	@Test
+	public void testFindByServiceCodeOrDescription() {
+		List<BillingService> bss = dao.findByServiceCodeOrDescription("VOTGVNO");
+		assertNotNull(bss);
+	}
+	
+	@Test
+	public void testFindMostRecentByServiceCode() {
+		List<BillingService> bss = dao.findMostRecentByServiceCode("VOTGVNO");
+		assertNotNull(bss);
+	}
+	
+	@Test
+	public void testFindByServiceCodeAndDate() {
+		List<BillingService> bss = dao.findByServiceCodeAndDate("PRSHA", new Date());
+		assertNotNull(bss);
+	}
 }
