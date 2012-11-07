@@ -146,8 +146,7 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/bean/BillingClaimBatchAcknowledgementReportBeanHandler.java:public Vector getBatchAckReportBeanVector(){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/bean/BillingClaimsErrorReportBeanHandler.java:Vector claimsErrorReportBeanVector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/bean/BillingClaimsErrorReportBeanHandler.java:public Vector getClaimsErrorReportBeanVector(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/bean/BillingEDTOBECOutputSpecificationBeanHandler.java:Vector EDTOBECOutputSecifiationBeanVector = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/bean/BillingEDTOBECOutputSpecificationBeanHandler.java:public Vector getEDTOBECOutputSecifiationBeanVector(){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/bean/BillingEDTOBECOutputSpecificationBeanHandler.java:public Vector&lt;BillingEDTOBECOutputSpecificationBean&gt; getEDTOBECOutputSecifiationBeanVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingClaimsErrorReportBeanHandlerSave.java:Vector claimsErrorReportBeanVector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingDataHlp.java:public static Vector vecPaymentType = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingClaimImpl.java:List retval = new Vector();</ViolationValue>
@@ -1236,8 +1235,6 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/administration/GstReport.java:ResultSet rs1 = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/administration/GstReport.java:rs1 = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/administration/GstReport.java:rs2 = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/bean/BillingEDTOBECOutputSpecificationBeanHandler.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/bean/BillingEDTOBECOutputSpecificationBeanHandler.java:ResultSet rsProvider = DBHandler.GetSQL(sqlProvider);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/dao/BillingOnItemDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/dao/BillingOnItemDao.java:public class BillingOnItemDao extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingCodeData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -1248,7 +1245,6 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingReviewImpl.java:import oscar.oscarDB.DBPreparedHandlerParam;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingReviewImpl.java:public List getBillingHist(String demoNo, int iPageSize, int iOffSet, DBPreparedHandlerParam[] pDateRange) throws Exception{</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/RAData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/pageUtil/BillingDocumentErrorReportUploadAction.java:ResultSet rsDemo = DBHandler.GetSQL(sqlDemo);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/data/BillingONDataHelp.java:ret = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/data/BillingONDataHelp.java:ret = DBHandler.RunSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/pageUtil/BillingReProcessBillAction.java:DBHandler.RunSQL(secondSQL);</ViolationValue>
@@ -1921,9 +1917,9 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/bean/BillingClaimsErrorReportBeanHandler.java:return claimsErrorReportBeanVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/bean/BillingClaimsErrorReportBeanHandler.java:this.claimsErrorReportBeanVector = claimsErrorReportBeanVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/bean/BillingEDTOBECOutputSpecificationBeanHandler.java:EDTOBECOutputSecifiationBeanVector.add(osBean);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/bean/BillingEDTOBECOutputSpecificationBeanHandler.java:Vector EDTOBECOutputSecifiationBeanVector = new Vector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/bean/BillingEDTOBECOutputSpecificationBeanHandler.java:Vector&lt;BillingEDTOBECOutputSpecificationBean&gt; EDTOBECOutputSecifiationBeanVector = new Vector&lt;BillingEDTOBECOutputSpecificationBean&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/bean/BillingEDTOBECOutputSpecificationBeanHandler.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/bean/BillingEDTOBECOutputSpecificationBeanHandler.java:public Vector getEDTOBECOutputSecifiationBeanVector(){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/bean/BillingEDTOBECOutputSpecificationBeanHandler.java:public Vector&lt;BillingEDTOBECOutputSpecificationBean&gt; getEDTOBECOutputSecifiationBeanVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/bean/BillingEDTOBECOutputSpecificationBeanHandler.java:return EDTOBECOutputSecifiationBeanVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingClaimsErrorReportBeanHandlerSave.java:Vector claimsErrorReportBeanVector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingClaimsErrorReportBeanHandlerSave.java:claimsErrorReportBeanVector.add(CERBean);</ViolationValue>
@@ -1938,10 +1934,10 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingCodeData.java:public Hashtable&lt;String, String&gt; fillCodeDataHashtable(BillingService bs) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingCodeData.java:public Hashtable&lt;String, String&gt; searchBillingCode(String str) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingCodeData.java:public List&lt;Hashtable&lt;String, String&gt;&gt; search(String str) {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingData.java:ArrayList&lt;Hashtable&lt;String,Object&gt;&gt; list = new ArrayList&lt;Hashtable&lt;String,Object&gt;&gt;();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingData.java:Hashtable&lt;String,Object&gt; h = new Hashtable&lt;String,Object&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingData.java:ArrayList&lt;Hashtable&lt;String, Object&gt;&gt; list = new ArrayList&lt;Hashtable&lt;String, Object&gt;&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingData.java:Hashtable&lt;String, Object&gt; h = new Hashtable&lt;String, Object&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingData.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingData.java:public ArrayList&lt;Hashtable&lt;String,Object&gt;&gt; getBills(String statusType, String providerNo, String startDate, String endDate, String demoNo) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingData.java:public ArrayList&lt;Hashtable&lt;String, Object&gt;&gt; getBills(String statusType, String providerNo, String startDate, String endDate, String demoNo) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingDataHlp.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingDataHlp.java:public static Vector vecPaymentType = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingDiskNameData.java:Vector htmlfilename;</ViolationValue>
@@ -2415,9 +2411,6 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayMsgAction.java:for( int i=0; i&lt;msgVector.size(); i++) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayMsgAction.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayMsgAction.java:msgId = (String) msgVector.elementAt(i);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayOcularProcedureAction.java:Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.ocularProcedure");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayOcularProcedureAction.java:a = OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1));</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayOcularProcedureAction.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayPregnancyAction.java:Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.pregnancy");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayPregnancyAction.java:a = OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1));</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayPregnancyAction.java:import java.util.Vector;</ViolationValue>
@@ -2427,9 +2420,6 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayRxAction.java:Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.prescriptions");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayRxAction.java:a = OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1));</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayRxAction.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplaySpecsHistoryAction.java:Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.specsHistory");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplaySpecsHistoryAction.java:a = OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1));</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplaySpecsHistoryAction.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayTicklerAction.java:Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.viewTickler");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayTicklerAction.java:a = OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1));</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctDisplayTicklerAction.java:import java.util.Vector;</ViolationValue>
