@@ -91,12 +91,16 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 	<tr>
 		<td valign="bottom">
 			<ul id="navlist">
+				<security:oscarSec roleName="<%=roleName$%>" objectName="_day" rights="r">
 				<li>
     				<a href="<html:rewrite page="/provider/providercontrol.jsp"/>?year=<%=curYear%>&month=<%=curMonth%>&day=<%=curDay%>&view=0&displaymode=day&dboperation=searchappointmentday" TITLE="<bean:message key="provider.appointmentProviderAdminDay.viewDaySched"/>"><u>T</u>oday</a>
 				</li>
+				</security:oscarSec>
+				<security:oscarSec roleName="<%=roleName$%>" objectName="_month" rights="r">
 				<li>
 					<a href="<html:rewrite page="/provider/providercontrol.jsp"/>?year=<%=curYear%>&month=<%=curMonth%>&day=1&view=0&displaymode=month&dboperation=searchappointmentmonth" TITLE="<bean:message key="provider.appointmentProviderAdminDay.viewMonthSched"/>">Mo<u>n</u>th</a>
 				</li>
+				</security:oscarSec>
 				<security:oscarSec roleName="<%=roleName$%>" objectName="_resource" rights="r">
 				<li>
                     <a href="#" ONCLICK ="popupPage2('<%=resourcebaseurl%>');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.viewResources"/>">R<u>e</u>sources</a>
@@ -145,16 +149,22 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 					<span id="oscar_aged_consults">C<u>o</u>n</span></a>
 				</li>
 				</security:oscarSec>
+				<security:oscarSec roleName="<%=roleName$%>" objectName="_pref" rights="r">
 				<li>
 					<a href="#" onClick ="popupPage(400,680,'<html:rewrite page="/provider/providerpreference.jsp"/>?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>&new_tickler_warning_window=<%=newticklerwarningwindow%>&default_pmm=<%=default_pmm%>');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>"><u>P</u>ref</a>
 				</li>
+				</security:oscarSec>
+				<security:oscarSec roleName="<%=roleName$%>" objectName="_edoc" rights="r">
 				<li>
 					<a HREF="#" onclick="popup('700', '1000', '<html:rewrite page="/dms/documentReport.jsp"/>?function=provider&functionid=<%=curUser_no%>&curUser=<%=curUser_no%>', 'edocView');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.viewEdoc"/>">e<u>D</u>oc</a>
 				</li>
+				</security:oscarSec>
+				<security:oscarSec roleName="<%=roleName$%>" objectName="_tickler" rights="r">
 				<li>
 					<a HREF="#" ONCLICK ="popupPage2('<html:rewrite page="/Tickler.do"/>?filter.demographic_no=','<bean:message key="global.tickler"/>');return false;" TITLE='<bean:message key="global.tickler"/>'+'+'>
 					<span id="oscar_new_tickler">T<u>i</u>ckler</span></a>
 				</li>
+				 </security:oscarSec>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.schedule,_admin.billing,_admin.resource,_admin.reporting,_admin.backup,_admin.messenger,_admin.eform,_admin.encounter,_admin.misc" rights="r">
 				<li>
 					<a HREF="#" ONCLICK ="popupOscarRx(700,687,'<html:rewrite page="/admin/admin.jsp"/>');return false;"><u>A</u>dmin</a>

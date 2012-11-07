@@ -211,7 +211,7 @@ public class AdmissionManager {
 		newAdmission.setClientId(demographicNo);
 		newAdmission.setProgramId(program.getId());
 		newAdmission.setProviderNo(providerNo);
-		newAdmission.setTeamId(0);
+		newAdmission.setTeamId(null);
 		newAdmission.setTemporaryAdmission(tempAdmission);
 		newAdmission.setAdmissionFromTransfer(fromTransfer);
 		
@@ -220,7 +220,7 @@ public class AdmissionManager {
 				
 		//check if the client status is valid/existed in program_clientStatus
 		if(programClientStatusDAO.getProgramClientStatus(clientStatusId.toString()) == null)
-			clientStatusId = 0;
+			clientStatusId = null;
 				
 		newAdmission.setClientStatusId(clientStatusId);					
 
@@ -290,7 +290,7 @@ public class AdmissionManager {
 		newAdmission.setClientId(demographicNo);
 		newAdmission.setProgramId(program.getId());
 		newAdmission.setProviderNo(providerNo);
-		newAdmission.setTeamId(0);
+		newAdmission.setTeamId(null);
 		saveAdmission(newAdmission);
 	}
 
@@ -436,10 +436,10 @@ public class AdmissionManager {
 		admission.setClientId(demographicNo);
 		admission.setProgramId(communityProgramId);
 		admission.setProviderNo(providerNo);
-		admission.setTeamId(0);
+		admission.setTeamId(null);
 		admission.setTemporaryAdmission(false);
 		admission.setRadioDischargeReason(radioDischargeReason);
-		admission.setClientStatusId(0);
+		admission.setClientStatusId(null);
 		saveAdmission(admission);
                 
                 if (dependents != null){
