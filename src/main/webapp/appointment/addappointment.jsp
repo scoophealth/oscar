@@ -915,7 +915,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
 %>
                 <INPUT TYPE="TEXT" NAME="createdatetime" readonly VALUE="<%=strDateTime%>" WIDTH="25" HEIGHT="20" border="0" hspace="2">
                 <INPUT TYPE="hidden" NAME="provider_no" VALUE="<%=curProvider_no%>">
-                <INPUT TYPE="hidden" NAME="dboperation" VALUE="add_apptrecord">
+                <INPUT TYPE="hidden" NAME="dboperation" VALUE="search_titlename">
                 <INPUT TYPE="hidden" NAME="creator" VALUE='<%=StringEscapeUtils.escapeHtml(userlastname)+", "+StringEscapeUtils.escapeHtml(userfirstname)%>'>
                 <INPUT TYPE="hidden" NAME="remarks" VALUE="">
             </div>
