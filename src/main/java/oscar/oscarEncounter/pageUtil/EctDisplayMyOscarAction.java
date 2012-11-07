@@ -54,6 +54,14 @@ public class EctDisplayMyOscarAction extends EctDisplayAction {
     	String myoscarusername = demographic.getMyOscarUserName();
     	if(myoscarusername == null ||  myoscarusername.trim().equals("")){//No Account don't show
     		logger.debug("no myoscar account registered");
+    		Dao.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.LeftNavBar.Myoscar"));
+    		NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
+    		String registrationUrl = "popupPage(700,1000,'indivoRegistration','" + request.getContextPath() + "/phr/indivo/RegisterIndivo.jsp?demographicNo="+demographic.getDemographicNo()+"');return false;";
+            item.setURL(registrationUrl);         
+            item.setTitle(messages.getMessage(request.getLocale(), "demographic.demographiceditdemographic.msgRegisterMyOSCAR"));
+            Dao.addItem(item);
+            Dao.setRightURL(registrationUrl);  
+            Dao.setRightHeadingID(cmd); 
     		return true;
     	}
     	
