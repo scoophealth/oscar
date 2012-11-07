@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,32 +21,32 @@
  * Hamilton
  * Ontario, Canada
  */
+package org.oscarehr.common.dao;
+
+import static org.junit.Assert.assertNotNull;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.oscarehr.common.dao.utils.EntityDataGenerator;
+import org.oscarehr.common.dao.utils.SchemaUtils;
+import org.oscarehr.common.model.LogLetters;
+import org.oscarehr.util.SpringUtils;
+
+public class LogLettersDaoTest extends DaoTestFixtures {
+
+	private LogLettersDao dao = SpringUtils.getBean(LogLettersDao.class);
 
 
-package org.oscarehr.billing.CA.dao;
-
-import java.util.List;
-
-import javax.persistence.Query;
-
-import org.oscarehr.billing.CA.model.BillingDetail;
-import org.oscarehr.common.dao.AbstractDao;
-import org.springframework.stereotype.Repository;
-
-@Repository
-public class BillingDetailDao extends AbstractDao<BillingDetail>{
-
-	public BillingDetailDao() {
-		super(BillingDetail.class);
+	@Before
+	public void before() throws Exception {
+		SchemaUtils.restoreTable("log_letters");
 	}
-	
-	public List<BillingDetail> findByBillingNo(int billingNo) {
-		Query q = entityManager.createQuery("select x from BillingDetail x where x.billingNo=?");
-		q.setParameter(1, billingNo);
-		
-		@SuppressWarnings("unchecked")
-		List<BillingDetail> results = q.getResultList();
-		
-		return results;
+
+	@Test
+	public void testCreate() throws Exception {
+		LogLetters entity = new LogLetters();
+		EntityDataGenerator.generateTestDataForModelClass(entity);
+		dao.persist(entity);
+		assertNotNull(entity.getId());
 	}
 }

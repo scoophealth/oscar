@@ -22,7 +22,6 @@
  */
 package org.oscarehr.common.dao;
 
-import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -39,23 +38,6 @@ public class CaseManagementIssueNotesDao {
     
     @PersistenceContext
     protected EntityManager entityManager = null;
-
-    public void setNoteIssues(Integer noteId, Collection<CaseManagementIssue> issues)
-    {
-    	// delete old
-    	Query query=entityManager.createNativeQuery("delete from casemgmt_issue_notes where note_id=?1");
-    	query.setParameter(1, noteId);
-    	query.executeUpdate();
-    	
-    	// add new / current list
-    	for (CaseManagementIssue issue : issues)
-    	{
-        	query=entityManager.createNativeQuery("insert into casemgmt_issue_notes values (?1,?2)");
-        	query.setParameter(1, issue.getId());
-        	query.setParameter(2, noteId);
-        	query.executeUpdate();
-    	}
-    }
     
     public List<CaseManagementIssue> getNoteIssues(Integer noteId)
     {

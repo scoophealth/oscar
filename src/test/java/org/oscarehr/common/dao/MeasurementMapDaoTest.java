@@ -53,4 +53,9 @@ public class MeasurementMapDaoTest extends DaoTestFixtures{
 
 		assertNotNull(entity.getId());
 	}
+	
+	@Test
+	public void testFindDistinctLabTypes() {
+		assertNotNull(dao.findDistinctLabTypes());
+	}
 }

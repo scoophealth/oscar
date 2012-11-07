@@ -76,6 +76,16 @@ public class CtlBillingServiceDao extends AbstractDao<CtlBillingService> {
             
             return results;
         }
+        
+        public List<CtlBillingService> findByServiceType(String serviceTypeId) {
+            Query query = entityManager.createQuery("select b from CtlBillingService b where b.serviceType=?");
+            query.setParameter(1, serviceTypeId);
+            
+            @SuppressWarnings("unchecked")
+            List<CtlBillingService> results = query.getResultList();
+            
+            return results;
+        }
 
 		/**
 		 * Gets all service type names and service types from the {@link CtlBillingService} instances.

@@ -23,20 +23,27 @@
 
 --%>
 <%
-  if(session.getAttribute("user") == null)
-    response.sendRedirect("../logout.htm");
-  String curUser_no,userfirstname,userlastname;
-  curUser_no = (String) session.getAttribute("user");
-
+  String curUser_no = (String) session.getAttribute("user");
 %>
-<%@ page import="java.sql.*, java.util.*,oscar.*"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.sql.*, java.util.*,oscar.*" errorPage="errorpage.jsp"%>
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
 <%@ include file="../../../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%@ include file="dbBilling.jspf"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.BillingDao" %>
+<%@page import="org.oscarehr.common.model.Billing" %>
+<%@page import="org.oscarehr.common.dao.AppointmentArchiveDao" %>
+<%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
+<%@page import="org.oscarehr.common.model.Appointment" %>
+
+<%
+	BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
+	AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
+	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
+%>
+
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -62,19 +69,15 @@
 <%
    	String billCode = " ";
    	String apptNo = request.getParameter("appointment_no");
-   	ResultSet rsprovider = null;  
-	// String proNO = request.getParameter("xml_provider");
-	String billNo ="";
-  	rsprovider = null;
-  	
+   	String billNo ="";
+   	
   	billNo = request.getParameter("billNo_old");
   	billCode = request.getParameter("billStatus_old");  	
   	if(billNo==null || billNo.equals("")) {
- 	rsprovider = apptMainBean.queryResults(apptNo, "search_bill_beforedelete");
-	 	while(rsprovider.next()){
-	 	billCode = rsprovider.getString("status");
-	 	billNo = rsprovider.getString("billing_no");
-	 	}
+  		for(Billing b:billingDao.findByAppointmentNo(Integer.parseInt(apptNo))) {
+  		   billCode = b.getStatus();
+  		   billNo = b.getId().toString();
+  	   }
   	}
   	
    	if (billCode.substring(0,1).compareTo("B") == 0) {
@@ -106,20 +109,15 @@
 	  }
 	  
   } else {
-	  rowsAffected = apptMainBean.queryExecuteUpdate(billNo,"delete_bill");
+	  Billing b = billingDao.find(Integer.parseInt(billNo));
+	  if(b != null) {
+		  b.setStatus("D");
+		  billingDao.merge(b);
+		  rowsAffected=1;
+	  }
   }   
  
   if (rowsAffected ==1) {
-	  //still need to be able to edit the billing, so don't need to change appointment's status here.
-	  //So comment out all 6 lines below
-	  
-    // oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
-	//String unbillStatus = as.unbillStatus(request.getParameter("billStatus_old"));
-	//String[] param1 =new String[2];
-	//  param1[0]=unbillStatus;
-	//  param1[1]=request.getParameter("appointment_no");
-	//rowsAffected = apptMainBean.queryExecuteUpdate(param1,"updateapptstatus");
-  
 %>
 <p>
 <h1>Successful Addition of a billing Record.</h1>

@@ -35,7 +35,9 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.BillingDao;
 import org.oscarehr.common.dao.BillingServiceDao;
+import org.oscarehr.common.model.Billing;
 import org.oscarehr.common.model.BillingService;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -60,11 +62,13 @@ import oscar.util.StringUtils;
 public class TeleplanCorrectionActionWCB
         extends org.apache.struts.action.Action {
 
-    private static final String sql_biling = "update_wcb_billing"; //set it to be billed again in billing
-	private static final String sql_wcb = "update_wcb_wcb"; //updates wcb form
+   private static final String sql_wcb = "update_wcb_wcb"; //updates wcb form
 	private static final String provider_wcb = "update_provider_wcb";
 	
 	static Logger log=MiscUtils.getLogger();
+	
+	private BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
+	
 
     public ActionForward execute(ActionMapping mapping, ActionForm form,
             HttpServletRequest request,
@@ -108,13 +112,19 @@ public class TeleplanCorrectionActionWCB
             }
             updateUnitValue(data.getBillingUnit(), data.getBillingNo());
 
-            log.debug("sql_biling " + sql_biling + " ");
-            bean.queryExecuteUpdate(data.getBillingForStatus(), sql_biling);
+           
+            Billing billing = billingDao.find(Integer.parseInt(data.getBillingNo()));
+            if(billing != null) {
+            	billing.setStatus(data.getStatus());
+            	billingDao.merge(billing);
+            }
+           
             String feeItem = data.getW_feeitem();
             String extraFeeItem = data.getW_extrafeeitem();
             String getItemAmt = this.GetFeeItemAmount(feeItem, extraFeeItem);
             log.debug("fee " + feeItem + " extra " + extraFeeItem + " item amt " + getItemAmt);
             String[] wcbParams = data.getWcb(getItemAmt);
+            
             bean.queryExecuteUpdate(wcbParams, sql_wcb);
 
             String providerNo = data.getProviderNo();

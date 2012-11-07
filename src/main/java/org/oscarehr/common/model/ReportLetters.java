@@ -55,7 +55,7 @@ public class ReportLetters extends AbstractModel<Integer> {
 	private String fileName;
 
 	@Column(name="report_file")
-	private String reportFile;
+	private byte[] reportFile;
 
 	@Column(name="date_time")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -95,11 +95,11 @@ public class ReportLetters extends AbstractModel<Integer> {
     	this.fileName = fileName;
     }
 
-	public String getReportFile() {
+	public byte[] getReportFile() {
     	return reportFile;
     }
 
-	public void setReportFile(String reportFile) {
+	public void setReportFile(byte[] reportFile) {
     	this.reportFile = reportFile;
     }
 

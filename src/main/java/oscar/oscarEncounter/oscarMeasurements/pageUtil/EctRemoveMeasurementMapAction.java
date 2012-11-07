@@ -35,7 +35,6 @@
 package oscar.oscarEncounter.oscarMeasurements.pageUtil;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -72,7 +71,6 @@ public class EctRemoveMeasurementMapAction extends Action{
         
         if (id != null){
             
-            try{
                 MeasurementMapConfig mmc = new MeasurementMapConfig();
                 
                 // these values will be set if the measurement is to be remapped instead of deleted
@@ -89,10 +87,6 @@ public class EctRemoveMeasurementMapAction extends Action{
                     mmc.removeMapping(id, request.getParameter("provider_no"));
                     outcome = "success";
                 }
-            }catch(SQLException e){
-                logger.error("Failed to delete measurement mapping");
-                outcome = "failure";
-            }
             
         }
         

@@ -115,7 +115,6 @@ int recordAffected=0;
    rowsAffected=1;
 
 if (rowsAffected ==1) {
-	//change the status to billed {"updateapptstatus", "update appointment set status=? where appointment_no=? //provider_no=? and appointment_date=? and start_time=?"},
 	String[] param1 =new String[2];
 	param1[0]="B";
 	param1[1]=request.getParameter("appointment_no");

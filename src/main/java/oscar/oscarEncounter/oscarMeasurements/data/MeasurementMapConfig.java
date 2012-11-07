@@ -38,6 +38,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.LinkedList;
@@ -49,10 +50,7 @@ import org.oscarehr.common.dao.RecycleBinDao;
 import org.oscarehr.common.model.MeasurementMap;
 import org.oscarehr.common.model.RecycleBin;
 import org.oscarehr.util.DbConnectionFilter;
-import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-
-import oscar.oscarDB.DBHandler;
 
 /**
  *
@@ -61,161 +59,82 @@ import oscar.oscarDB.DBHandler;
 public class MeasurementMapConfig {
 
     Logger logger = Logger.getLogger(MeasurementMapConfig.class);
+    private MeasurementMapDao dao = SpringUtils.getBean(MeasurementMapDao.class);
 
-    /** Creates a new instance of MeasurementMapConfig */
+
     public MeasurementMapConfig() {
     }
 
     public List<String> getLabTypes() {
-        List<String> ret = new LinkedList<String>();
-        String sql = "select distinct lab_type from measurementMap";
-        try {
-
-            Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            logger.info(sql);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                ret.add(oscar.Misc.getString(rs, "lab_type"));
-            }
-            pstmt.close();
-        } catch (SQLException e) {
-            logger.error("Exception in getLoincCodes", e);
-        }
-        return ret;
-
+       return dao.findDistinctLabTypes();
     }
 
     public List<Hashtable<String,String>> getMappedCodesFromLoincCodes(String loincCode) {
         List<Hashtable<String,String>> ret = new LinkedList<Hashtable<String,String>>();
-        String sql = "select * from measurementMap where loinc_code = ?";
-
-        try {
-
-            Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, loincCode);
-            logger.info(sql);
-
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                Hashtable<String, String> ht = new Hashtable<String,String>();
-                ht.put("id", getString(oscar.Misc.getString(rs, "id")));
-                ht.put("loinc_code", getString(oscar.Misc.getString(rs, "loinc_code")));
-                ht.put("ident_code", getString(oscar.Misc.getString(rs, "ident_code")));
-                ht.put("name", getString(oscar.Misc.getString(rs, "name")));
-                ht.put("lab_type", getString(oscar.Misc.getString(rs, "lab_type")));
-                ret.add(ht);
-            }
-
-            pstmt.close();
-        } catch (SQLException e) {
-            logger.error("Exception in getMeasurementMap", e);
+        
+        for(MeasurementMap map:dao.findByLoincCode(loincCode)) {
+        	Hashtable<String, String> ht = new Hashtable<String,String>();
+            ht.put("id", map.getId().toString());
+            ht.put("loinc_code", map.getLoincCode());
+            ht.put("ident_code", map.getIdentCode());
+            ht.put("name", map.getName());
+            ht.put("lab_type", map.getLabType());
+            ret.add(ht);
         }
         return ret;
     }
 
     public Hashtable<String, Hashtable<String,String>> getMappedCodesFromLoincCodesHash(String loincCode) {
         Hashtable<String, Hashtable<String,String>> ret = new Hashtable<String,Hashtable<String,String>>();
-        String sql = "select * from measurementMap where loinc_code = ?";
-
-        try {
-
-            Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, loincCode);
-            logger.info(sql);
-
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                Hashtable<String, String> ht = new Hashtable<String,String>();
-                ht.put("id", getString(oscar.Misc.getString(rs, "id")));
-                ht.put("loinc_code", getString(oscar.Misc.getString(rs, "loinc_code")));
-                ht.put("ident_code", getString(oscar.Misc.getString(rs, "ident_code")));
-                ht.put("name", getString(oscar.Misc.getString(rs, "name")));
-                ht.put("lab_type", getString(oscar.Misc.getString(rs, "lab_type")));
-                ret.put(getString(oscar.Misc.getString(rs, "lab_type")), ht);
-            }
-
-            pstmt.close();
-        } catch (SQLException e) {
-            logger.error("Exception in getMeasurementMap", e);
+        
+        for(MeasurementMap map:dao.findByLoincCode(loincCode)) {
+        	Hashtable<String, String> ht = new Hashtable<String,String>();
+            ht.put("id", map.getId().toString());
+            ht.put("loinc_code", map.getLoincCode());
+            ht.put("ident_code", map.getIdentCode());
+            ht.put("name", map.getName());
+            ht.put("lab_type", map.getLabType());
+            ret.put(map.getLabType(),ht);
         }
         return ret;
     }
 
     public List<String> getDistinctLoincCodes() {
-        List<String> ret = new LinkedList<String>();
-        String sql = "SELECT DISTINCT loinc_code FROM measurementMap ORDER BY name";
-
-        try {
-
-            Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            logger.info(sql);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                ret.add(oscar.Misc.getString(rs, "loinc_code"));
-            }
-            pstmt.close();
-        } catch (SQLException e) {
-            logger.error("Exception in getLoincCodes", e);
-        }
-        return ret;
+    	List<String> results = dao.findDistinctLoincCodes();
+    	Collections.sort(results);
+    	return results;
     }
 
-    public String getLoincCodeByIdentCode(String identifier) throws SQLException {
+    public String getLoincCodeByIdentCode(String identifier) {
         if (identifier != null && identifier.trim().length() > 0) {
 
-            String sql = "SELECT loinc_code FROM measurementMap WHERE ident_code='" + identifier + "'";
-            ResultSet rs = DBHandler.GetSQL(sql);
-
-            if (rs.next()) {
-                return rs.getString("loinc_code");
-            }
+        	for(MeasurementMap map:dao.getMapsByIdent(identifier)) {
+        		return map.getLoincCode();
+        	}
         }
         return null;
     }
 
-    public boolean isTypeMappedToLoinc(String measurementType) throws SQLException {
-        String sql = "SELECT mm.id, mm.loinc_code, mm.ident_code, mm.name, mm.lab_type FROM measurementMap mm WHERE ident_code='" + measurementType + "'";
-
-        ResultSet rs = DBHandler.GetSQL(sql);
-        return rs.next();
+    public boolean isTypeMappedToLoinc(String measurementType) {
+    	int size = dao.getMapsByIdent(measurementType).size();
+    	if(size>0)
+    		return true;
+        return false;
     }
 
-    //--------these methods are currently used for sending to indivo, feel free to use them elsewhere (Paul)
     public LoincMapEntry getLoincMapEntryByIdentCode(String identCode) {
-        String sql = "SELECT mm.id, mm.loinc_code, mm.ident_code, mm.name, mm.lab_type FROM measurementMap mm WHERE ident_code='" + identCode + "'";
-        try {
-
-            ResultSet rs = DBHandler.GetSQL(sql);
-            if (rs.next()) return rsToLoincMapEntry(rs);
-            else return null;
-        } catch (SQLException sqe) {
-            MiscUtils.getLogger().error("Error", sqe);
-        }
+    	for(MeasurementMap map:dao.getMapsByIdent(identCode)) {
+    		LoincMapEntry loincMapEntry = new LoincMapEntry();
+            loincMapEntry.setId(map.getId().toString());
+            loincMapEntry.setLoincCode(map.getLoincCode());
+            loincMapEntry.setIdentCode(map.getIdentCode());
+            loincMapEntry.setName(map.getName());
+            loincMapEntry.setLabType(map.getLabType());
+            return loincMapEntry;
+    	}
+    	
         return null;
     }
-
-    private ArrayList<LoincMapEntry> rsToLoincMapEntries(ResultSet rs) throws SQLException {
-        ArrayList<LoincMapEntry> loincMapEntries = new ArrayList<LoincMapEntry>();
-        while (rs.next()) {
-            loincMapEntries.add(this.rsToLoincMapEntry(rs));
-        }
-        return loincMapEntries;
-    }
-
-    private LoincMapEntry rsToLoincMapEntry(ResultSet rs) throws SQLException {
-        LoincMapEntry loincMapEntry = new LoincMapEntry();
-        loincMapEntry.setId(rs.getString("id"));
-        loincMapEntry.setLoincCode(rs.getString("loinc_code"));
-        loincMapEntry.setIdentCode(rs.getString("ident_code"));
-        loincMapEntry.setName(rs.getString("name"));
-        loincMapEntry.setLabType(rs.getString("lab_type"));
-        return loincMapEntry;
-    }
-    // ------------------------------------------------------------------------------------------------------
 
     public ArrayList<Hashtable<String,Object>> getLoincCodes(String searchString) {
         searchString = "%" + searchString.replaceAll("\\s", "%") + "%";
@@ -309,7 +228,6 @@ public class MeasurementMapConfig {
     }
 
     public void mapMeasurement(String identifier, String loinc, String name, String type)  {
-
     	MeasurementMapDao dao = SpringUtils.getBean(MeasurementMapDao.class);
     	MeasurementMap mm = new MeasurementMap();
     	mm.setLoincCode(loinc);
@@ -317,70 +235,42 @@ public class MeasurementMapConfig {
     	mm.setName(name);
     	mm.setLabType(type);
     	dao.persist(mm);
-       
-
     }
 
-    public void removeMapping(String id, String provider_no) throws SQLException {
+    public void removeMapping(String id, String provider_no)  {
+    	 String ident_code = "";
+         String loinc_code = "";
+         String name = "";
+         String lab_type = "";
+         
+    	MeasurementMap map = dao.find(Integer.parseInt(id));
+    	if(map != null) {
+    		ident_code = map.getIdentCode();
+    		loinc_code = map.getLoincCode();
+    		name = map.getName();
+    		lab_type = map.getLabType();
+    	}
+       
+    	dao.remove(map.getId());
+    	
+    	RecycleBin rb = new RecycleBin();
+        rb.setProviderNo(provider_no);
+        rb.setUpdateDateTime(new Date());
+        rb.setTableName("measurementMap");
+        rb.setKeyword(id);
+        rb.setTableContent("<id>" + id + "</id><ident_code>" + ident_code + "</ident_code><loinc_code>" + loinc_code + "</loinc_code><name>" + name + "</name><lab_type>" + lab_type + "</lab_type>");
 
-        String ident_code = "";
-        String loinc_code = "";
-        String name = "";
-        String lab_type = "";
-
-
-        Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
-
-        String sql = "SELECT * FROM measurementMap WHERE id='" + id + "'";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        ResultSet rs = pstmt.executeQuery();
-        if (rs.next()) {
-            ident_code = getString(oscar.Misc.getString(rs, "ident_code"));
-            loinc_code = getString(oscar.Misc.getString(rs, "loinc_code"));
-            name = getString(oscar.Misc.getString(rs, "name"));
-            lab_type = getString(oscar.Misc.getString(rs, "lab_type"));
-        }
-
-        sql = "DELETE FROM measurementMap WHERE id='" + id + "'";
-        pstmt = conn.prepareStatement(sql);
-        if (!pstmt.execute()) {
-            logger.info("we should be writing to the recycle bin");
-            pstmt.close();
-            
-            RecycleBin rb = new RecycleBin();
-            rb.setProviderNo(provider_no);
-            rb.setUpdateDateTime(new Date());
-            rb.setTableName("measurementMap");
-            rb.setKeyword(id);
-            rb.setTableContent("<id>" + id + "</id><ident_code>" + ident_code + "</ident_code><loinc_code>" + loinc_code + "</loinc_code><name>" + name + "</name><lab_type>" + lab_type + "</lab_type>");
-
-            RecycleBinDao recycleBinDao = SpringUtils.getBean(RecycleBinDao.class);
-            recycleBinDao.persist(rb);
-            
-        }
-
-        pstmt.close();
-
+        RecycleBinDao recycleBinDao = SpringUtils.getBean(RecycleBinDao.class);
+        recycleBinDao.persist(rb);
     }
 
     /**
      *  Only one identifier per type is allowed to be mapped to a single loinc code
      *  Return true if there is already an identifier mapped to the loinc code.
      */
-    public boolean checkLoincMapping(String loinc, String type) throws SQLException {
-
-        boolean ret = false;
-        String sql = "SELECT * from measurementMap WHERE loinc_code='" + loinc + "' AND lab_type='" + type + "'";
-
-
-        Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        logger.info(sql);
-
-        ResultSet rs = pstmt.executeQuery();
-        ret = rs.next();
-
-        return ret;
+    public boolean checkLoincMapping(String loinc, String type) {
+    	List<MeasurementMap> maps = dao.findByLoincCodeAndLabType(loinc,type);
+    	return maps.size()>0;   	
     }
 
     private String getString(String input) {

@@ -23,19 +23,28 @@
 
 --%>
 <%
-  if(session.getAttribute("user") == null)
-    response.sendRedirect("../logout.htm");
-  String curUser_no,userfirstname,userlastname;
-  curUser_no = (String) session.getAttribute("user");
+  
+  String curUser_no = (String) session.getAttribute("user");
 %>
-<%@ page import="java.sql.*, java.util.*,oscar.*"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.sql.*, java.util.*,oscar.*" errorPage="errorpage.jsp"%>
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
 <%@ include file="../../../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%@ include file="dbBilling.jspf"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.BillingDao" %>
+<%@page import="org.oscarehr.common.model.Billing" %>
+<%@page import="org.oscarehr.common.dao.AppointmentArchiveDao" %>
+<%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
+<%@page import="org.oscarehr.common.model.Appointment" %>
+
+<%
+	BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
+	AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
+	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
+%>
+
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -62,15 +71,13 @@
 <%
    String billCode = " ";
    String apptNo = request.getParameter("appointment_no");
-   ResultSet rsprovider = null;  
-// String proNO = request.getParameter("xml_provider");
-String billNo ="";
-  rsprovider = null;
- rsprovider = apptMainBean.queryResults(apptNo, "search_bill_beforedelete");
- while(rsprovider.next()){
- billCode = rsprovider.getString("status");
- billNo = rsprovider.getString("billing_no");
- }
+   String billNo ="";
+   
+   for(Billing b:billingDao.findByAppointmentNo(Integer.parseInt(apptNo))) {
+	   billCode = b.getStatus();
+	   billNo = b.getId().toString();
+   }
+   
    if (billCode.substring(0,1).compareTo("B") == 0) {
    %>
 <p>
@@ -87,7 +94,7 @@ String billNo ="";
   if(props.getProperty("isNewONbilling", "").equals("true")) {
 	  //search bill status
 	  BillingCorrectionPrep dbObj = new BillingCorrectionPrep();
-	  List billStatus = dbObj.getBillingNoStatusByAppt(apptNo);
+	  List<String> billStatus = dbObj.getBillingNoStatusByAppt(apptNo);
 	  //delete the bill
 	  if(billStatus!=null && ((billStatus.size() == 0) || (billStatus.size()>1 && ((String)billStatus.get(billStatus.size()-1)).startsWith("B")))){
 		  out.println("Sorry, cannot delete billed items.");
@@ -100,34 +107,31 @@ String billNo ="";
 	  }
 	  
   } else {
-	  rowsAffected = apptMainBean.queryExecuteUpdate(billNo,"delete_bill");
+	  Billing b = billingDao.find(Integer.parseInt(billNo));
+	  if(b != null) {
+		  b.setStatus("D");
+		  billingDao.merge(b);
+		  rowsAffected=1;
+	  }
   }   
        
-       //       }
 
-//	  int[] demo_no = new int[1]; demo_no[0]=Integer.parseInt(request.getParameter("demographic_no")); int rowsAffected = apptMainBean.queryExecuteUpdate(demo_no,param,request.getParameter("dboperation"));
-  
   if (rowsAffected ==1) {
-    //apptMainBean.closePstmtConn();//change the status to billed {"updateapptstatus", "update appointment set status=? where appointment_no=? //provider_no=? and appointment_date=? and start_time=?"},
-  oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
-String unbillStatus = as.unbillStatus(request.getParameter("status"));
-  String[] param1 =new String[2];
-	  param1[0]=unbillStatus;
-	  param1[1]=request.getParameter("appointment_no");
-//	  param1[1]=request.getParameter("apptProvider_no"); param1[2]=request.getParameter("appointment_date"); param1[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
-   rowsAffected = apptMainBean.queryExecuteUpdate(param1,"updateapptstatus");
-// rsdemo = null;
- //  rsdemo = apptMainBean.queryResults(request.getParameter("demographic_no"), "search_billing_no");
- //  while (rsdemo.next()) {    
+	  oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
+		String unbillStatus = as.unbillStatus(request.getParameter("status"));
+		 Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no")));
+	    appointmentArchiveDao.archiveAppointment(appt);
+	    if(appt != null) {
+		   appt.setStatus(unbillStatus);
+		   appt.setLastUpdateUser((String)session.getAttribute("user"));
+		   appointmentDao.merge(appt);
+	   }
 %>
 <p>
 <h1>Successful Addition of a billing Record.</h1>
 </p>
 <script LANGUAGE="JavaScript">
       self.close();
-      //self.top.location = 'providercontrol.jsp?appointment_no=<%// =request.getParameter("appointment_no")%>&demographic_no=<%// =Integer.parseInt(request.getParameter("demographic_no"))%>&curProvider_no=<%// =curUser_no%>&username=<%// = userfirstname+" "+userlastname %>&appointment_date=<%// =request.getParameter("appointment_date")%>&start_time=<%// =request.getParameter("start_time")%>&status=B&displaymode=encounter&dboperation=search_demograph&template=';
-    //  self.opener.document.encounter.encounterattachment.value +="<billing>../billing/billingOB2.jsp?billing_no=<%// =rsdemo.getString("billing_no")%>^dboperation=search_bill^hotclick=0</billing>"; //providercontrol.jsp?billing_no=<%// =rsdemo.getString("billing_no")%>^displaymode=vary^displaymodevariable=<%// =URLEncoder.encode("../billing/")%>billing<%// =request.getParameter("billing_name")%>.jsp^dboperation=search_bill^hotclick=0</billing>";
-     // self.opener.document.encounter.attachmentdisplay.value +="Billing "; //:<%=request.getParameter("billing_name")%> ";
      	self.opener.refresh();
 </script> <%
   //  break; //get only one billing_no
@@ -139,7 +143,7 @@ String unbillStatus = as.unbillStatus(request.getParameter("status"));
 </p>
 <%  
   }
-  //apptMainBean.closePstmtConn(); //this call does not exist
+ 
   }
 %>
 <p></p>

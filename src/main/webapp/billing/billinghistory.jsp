@@ -138,7 +138,7 @@
 		<td align="center" width="10%" height="25">&nbsp;</td>
 		<% } else { %>
 		<td align="center" width="10%" height="25"><a
-			href="../billing/billingDeleteNoAppt.jsp?billing_no=<%=rs.getString("billing_no")%>&billCode=<%=billCode%>&dboperation=delete_bill&hotclick=0">Unbill</a></td>
+			href="../billing/billingDeleteNoAppt.jsp?billing_no=<%=rs.getString("billing_no")%>&billCode=<%=billCode%>&hotclick=0">Unbill</a></td>
 		<% } %>
 	</tr>
 	<% 

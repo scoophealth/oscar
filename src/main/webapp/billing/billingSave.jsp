@@ -134,23 +134,23 @@ int rowsAffected=1;
     	   billingDetailDao.persist(bd);
     }
 
-//	  int[] demo_no = new int[1]; demo_no[0]=Integer.parseInt(request.getParameter("demographic_no")); int rowsAffected = apptMainBean.queryExecuteUpdate(demo_no,param,request.getParameter("dboperation"));
 
     if (rowsAffected ==1) {
-    //change the status to billed {"updateapptstatus", "update appointment set status=? where appointment_no=? //provider_no=? and appointment_date=? and start_time=?"},
         rsdemo = apptMainBean.queryResults(request.getParameter("appointment_no"), "searchapptstatus");
         String apptCurStatus = rsdemo.next()?rsdemo.getString("status"):"T";
 
         oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
         String billStatus = as.billStatus(apptCurStatus);
-        String[] param1 =new String[3];
-	    param1[0]=billStatus;
-	    param1[1]=(String)session.getAttribute("user");
-	    param1[2]=request.getParameter("appointment_no");
-//	  param1[1]=request.getParameter("apptProvider_no"); param1[2]=request.getParameter("appointment_date"); param1[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
+        
 		Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no")));
     	appointmentArchiveDao.archiveAppointment(appt);
-        rowsAffected = apptMainBean.queryExecuteUpdate(param1,"updateapptstatus");
+    	if(appt != null) {
+    		appt.setStatus(billStatus);
+    		appt.setLastUpdateUser((String)session.getAttribute("user"));
+    		appointmentDao.merge(appt);
+    		rowsAffected=1;
+    	}
+        
         rsdemo = null;
         rsdemo = apptMainBean.queryResults(request.getParameter("demographic_no"), "search_billing_no");
         while (rsdemo.next()) {

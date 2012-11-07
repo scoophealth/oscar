@@ -35,7 +35,6 @@
 package oscar.oscarEncounter.oscarMeasurements.pageUtil;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -69,8 +68,6 @@ public class EctAddMeasurementMapAction extends Action{
         
         if (loinc_code != null && identifier != null){
             
-            try{
-                
                 String[] measurement = identifier.split(",");
                 MeasurementMapConfig mmc = new MeasurementMapConfig();
                 if (!mmc.checkLoincMapping(loinc_code, measurement[1])){
@@ -80,11 +77,6 @@ public class EctAddMeasurementMapAction extends Action{
                     outcome = "failedcheck";
                 }
                 
-            }catch(SQLException e){
-                logger.error("Failed to create new measurement mapping", e);
-                outcome = "failure";
-            }
-            
         }
         return mapping.findForward(outcome);
     }

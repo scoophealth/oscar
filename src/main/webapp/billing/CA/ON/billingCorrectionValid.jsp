@@ -112,7 +112,6 @@ try {
 		billunit = request.getParameter("billingunit" + tempBill.substring(11));
 		billingamount = request.getParameter("billingamount" + tempBill.substring(11));
 		dbBillingDataBean.setService_code(request.getParameter(tempBill));      
-		dbBillingDataBean.setVariables(oscarVariables);
 		
 		strAuth = dbBillingDataBean.ejbLoad();
 		if(strAuth!=null) { //login successfully

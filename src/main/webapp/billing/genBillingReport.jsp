@@ -123,7 +123,7 @@ function onUnbilled(url) {
 		<td align="center" width="10%" height="25">MISMATCH</td>
 		<% } %>
 		<td align="center" width="20%" height="25"><a href=#
-			onClick="popupPage(600,800, '../billing/billingOB2.jsp?billing_no=<%=rs.getString("billing_no")%>&dboperation=search_bill&hotclick=0')">View</a><!--|<a href=# onclick="onUnbilled('../billing/billingDelete.jsp?appointment_no=<%=rs.getString("appointment_no")%>&billing_no=<%=rs.getString("billing_no")%>&billCode=<%=billCode%>&dboperation=delete_bill&hotclick=0')">-$</a>--></td>
+			onClick="popupPage(600,800, '../billing/billingOB2.jsp?billing_no=<%=rs.getString("billing_no")%>&dboperation=search_bill&hotclick=0')">View</a><!--|<a href=# onclick="onUnbilled('../billing/billingDelete.jsp?appointment_no=<%=rs.getString("appointment_no")%>&billing_no=<%=rs.getString("billing_no")%>&billCode=<%=billCode%>&hotclick=0')">-$</a>--></td>
 
 	</tr>
 	<%

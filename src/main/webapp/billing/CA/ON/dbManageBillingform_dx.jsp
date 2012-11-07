@@ -17,9 +17,6 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
-<%
-if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
-%>
 
 
 <%@ page
@@ -39,8 +36,10 @@ String[] group = new String[4];
 String typeid = "", type="";
 
 typeid = request.getParameter("typeid");
-int rowsAffected0 = apptMainBean.queryExecuteUpdate(typeid,"delete_ctldiagcode");
 
+for(CtlDiagCode d:ctlDiagCodeDao.findByServiceType(typeid)) {
+	ctlDiagCodeDao.remove(d.getId());
+}
 for (int i=0; i<45; i++){
 	if(request.getParameter("diagcode"+i).length() !=0){
 		CtlDiagCode cdc = new CtlDiagCode();

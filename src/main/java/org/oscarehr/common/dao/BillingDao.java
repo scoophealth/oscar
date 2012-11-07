@@ -46,6 +46,16 @@ public class BillingDao extends AbstractDao<Billing> {
 		
 		return results;
 	}
+	
+	public List<Billing> findByAppointmentNo(int apptNo) {
+		Query q = entityManager.createQuery("select x from Billing x where x.appointmentNo=?");
+		q.setParameter(1, apptNo);
+		
+		@SuppressWarnings("unchecked")
+		List<Billing> results = q.getResultList();
+		
+		return results;
+	}
 
 	public List<Billing> findSet(List<String> list) { 
 		Query query = entityManager.createQuery("SELECT b FROM  Billing b  where b.billingmasterNo in (:billingNumbers)");

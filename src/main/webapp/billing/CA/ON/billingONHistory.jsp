@@ -117,11 +117,11 @@ for(int i=0; i<aL.size(); i=i+2) {
 		<td align="center">&nbsp;</td>
 		<% } else if (OscarProperties.getInstance().getBooleanProperty("warnOnDeleteBill","true")){ %>
 		<td align="center"><a
-			href="#" onClick="onUnbilled('billingDeleteNoAppt.jsp?billing_no=<%=obj.getId()%>&billCode=<%=obj.getStatus()%>&dboperation=delete_bill&hotclick=0');return false;">Unbill</a>
+			href="#" onClick="onUnbilled('billingDeleteNoAppt.jsp?billing_no=<%=obj.getId()%>&billCode=<%=obj.getStatus()%>&hotclick=0');return false;">Unbill</a>
                 </td>
 		<% } else { %>
                 <td align="center">
-                        <a href="billingDeleteNoAppt.jsp?billing_no=<%=obj.getId()%>&billCode=<%=obj.getStatus()%>&dboperation=delete_bill&hotclick=0">Unbill</a>
+                        <a href="billingDeleteNoAppt.jsp?billing_no=<%=obj.getId()%>&billCode=<%=obj.getStatus()%>&hotclick=0">Unbill</a>
                 </td>
                 <% }%>
 	</tr>

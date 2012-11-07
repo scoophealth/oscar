@@ -70,7 +70,6 @@
         <ViolationValue>/src/main/java/org/oscarehr/util/OntarioMD.java:h  = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/Misc.java:Hashtable H = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/Misc.java:Vector V = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/billing/cad/dao/TipoAtendimentoDAO.java:ArrayList list = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/actions/AddEditDocumentAction.java:Hashtable errors = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/actions/AddEditHtmlAction.java:Hashtable errors = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/actions/DmsInboxManageAction.java:HashMap hm = new HashMap();</ViolationValue>
@@ -1054,10 +1053,7 @@
         <ViolationValue>/src/main/java/oscar/appt/JdbcApptImpl.java:import oscar.service.OscarSuperManager;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/appt/status/dao/hibernate/AppointmentStatusDAOHibernate.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/appt/status/dao/hibernate/AppointmentStatusDAOHibernate.java:public class AppointmentStatusDAOHibernate extends HibernateDaoSupport</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/billing/cad/dao/CadAtividadeSaudeDAO.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/billing/cad/dao/CadProcedimentoDAO.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/billing/cad/dao/CidDAO.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/billing/cad/dao/TipoAtendimentoDAO.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/billing/dao/DiagnosticoDAO.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/billing/dao/ProviderDAO.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/billing/fat/dao/FatFormulariosDAO.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -1247,7 +1243,6 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingCodeData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingData.java:ResultSet rs = DBHandler.GetSQL(p);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingONDataHelp.java:ret = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingONDataHelp.java:ret = DBHandler.RunSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingReviewImpl.java:DBPreparedHandler dbPH=new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingReviewImpl.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingReviewImpl.java:import oscar.oscarDB.DBPreparedHandlerParam;</ViolationValue>
@@ -1355,7 +1350,6 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/dao/MeasurementsDao.java:public class MeasurementsDao extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/dao/MeasurementsExtDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/dao/MeasurementsExtDao.java:public class MeasurementsExtDao extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/MeasurementMapConfig.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/MeasurementTypes.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/MeasurementTypes.java:ResultSet rs = DBHandler.GetSQL(sqlValidation);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctDeleteDataAction.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -1483,11 +1477,9 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportConfigData.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportConfigData.java:if ("".equals(DBHelp.getString(rs,"caption"))) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportConfigData.java:if (DBHelp.getString(rs,"name").matches(RptTableShadowFieldConst.fieldName)) {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportConfigData.java:if (DBHelp.updateDBRecord(sql)) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportConfigData.java:import oscar.login.DBHelp;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportConfigData.java:prop.setProperty("caption", DBHelp.getString(rs,"caption"));</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportConfigData.java:prop.setProperty("name", DBHelp.getString(rs,"name"));</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportConfigData.java:ret = DBHelp.updateDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportConfigData.java:ret.add(DBHelp.getString(rs,"caption") + " |" + DBHelp.getString(rs,"name"));</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportConfigData.java:ret.add(DBHelp.getString(rs,"table_name"));</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportConfigData.java:ret[0].add(DBHelp.getString(rs,"table_name") + "." + DBHelp.getString(rs,"name"));</ViolationValue>
@@ -1505,7 +1497,6 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportFilter.java:DBHelp dbObj = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportFilter.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportFilter.java:import oscar.login.DBHelp;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportFilter.java:ret = DBHelp.updateDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportFilter.java:str[0] = DBHelp.getString(rs,"description");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportFilter.java:str[1] = DBHelp.getString(rs,"value");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportFilter.java:str[2] = DBHelp.getString(rs,"position");</ViolationValue>
@@ -1516,14 +1507,12 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportItem.java:import oscar.login.DBHelp;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportItem.java:prop.setProperty("" + rs.getInt("id"), DBHelp.getString(rs,"report_name"));</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportItem.java:ret = DBHelp.getString(rs,"report_name");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptReportItem.java:ret = DBHelp.updateDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptSearchData.java:rs = DBHandler.GetSQL("select distinct patient_status from demographic where patient_status is not null order by patient_status");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptSearchData.java:rs = DBHandler.GetSQL("select distinct provider_no from demographic order by provider_no");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptSearchData.java:rs = DBHandler.GetSQL("select distinct roster_status from demographic where roster_status is not null order by roster_status");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptTableFieldNameCaption.java:DBHelp dbObj = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptTableFieldNameCaption.java:ResultSet rs = DBHelp.searchDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptTableFieldNameCaption.java:import oscar.login.DBHelp;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/RptTableFieldNameCaption.java:ret = DBHelp.updateDBRecord(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptTableFieldNameCaption.java:ret.setProperty(DBHelp.getString(rs,"name"), DBHelp.getString(rs,"caption"));</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/VisitReportData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/data/RptMeasurementsData.java:for(rs=DBHandler.GetSQL(sql); rs.next();){</ViolationValue>
@@ -1645,7 +1634,6 @@
         <ViolationValue>/src/main/webapp/lab/CA/BC/report.jsp:rs = DBHandler.GetSQL(select_pid_information.replaceAll("@pid", pid));</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/BC/searchreports.jsp:java.sql.ResultSet rs = DBHandler.GetSQL(select_providers_with_reports);</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/BC/searchreports.jsp:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/webapp/lab/CA/BC/viewreports.jsp:DBHandler.RunSQL(update_link.replaceAll("@pid", pid));</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/BC/viewreports.jsp:java.sql.ResultSet rs = DBHandler.GetSQL(select_lab_reports.replaceAll("@demo_no", demo_no));</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/ON/CMLDisplay.jsp:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/LinkReq.jsp:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -2739,8 +2727,8 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/data/ManageLetters.java:ArrayList&lt;Hashtable&lt;String,Object&gt;&gt; list = new ArrayList&lt;Hashtable&lt;String,Object&gt;&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/ManageLetters.java:Hashtable&lt;String,Object&gt; h = new Hashtable&lt;String,Object&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/ManageLetters.java:Hashtable&lt;String,Object&gt; h = null;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/data/ManageLetters.java:h = new Hashtable&lt;String,Object&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/ManageLetters.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarReport/data/ManageLetters.java:private Hashtable&lt;String,Object&gt; getHashFromResultSet(ResultSet rs) throws Exception{</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/ManageLetters.java:public ArrayList&lt;Hashtable&lt;String,Object&gt;&gt; getActiveReportList(){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/ManageLetters.java:public Hashtable&lt;String,Object&gt; getReportData(String id){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptDemographicColumnNames.java:backhash = new java.util.Hashtable();</ViolationValue>

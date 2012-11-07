@@ -105,7 +105,7 @@ for(int i=0; i<aL.size(); i=i+2) {
 		<td align="center" width="10%" height="25">&nbsp;</td>
 		<% } else { %>
 		<td align="center" width="10%" height="25"><a
-			href="billingDeleteNoAppt.jsp?billing_no=<%=obj.getId()%>&billCode=<%=obj.getStatus()%>&dboperation=delete_bill&hotclick=0">Unbill</a></td>
+			href="billingDeleteNoAppt.jsp?billing_no=<%=obj.getId()%>&billCode=<%=obj.getStatus()%>&hotclick=0">Unbill</a></td>
 		<% } %>
 	</tr>
 	<% 
@@ -173,7 +173,7 @@ if(!props.getProperty("isNewONbilling", "").equals("true")) {
 		<td align="center" width="10%" height="25">&nbsp;</td>
 		<% } else { %>
 		<td align="center" width="10%" height="25"><a
-			href="billingDeleteNoAppt.jsp?billing_no=<%=rs.getString("billing_no")%>&billCode=<%=billCode%>&dboperation=delete_bill&hotclick=0">Unbill</a></td>
+			href="billingDeleteNoAppt.jsp?billing_no=<%=rs.getString("billing_no")%>&billCode=<%=billCode%>&hotclick=0">Unbill</a></td>
 		<% } %>
 	</tr>
 	<% 

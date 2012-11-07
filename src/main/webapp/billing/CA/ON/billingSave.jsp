@@ -36,9 +36,14 @@ session.setAttribute("content", "");
 <%@ page import="org.oscarehr.common.dao.BillingDao" %>
 <%@ page import="org.oscarehr.billing.CA.model.BillingDetail" %>
 <%@ page import="org.oscarehr.billing.CA.dao.BillingDetailDao" %>
+<%@page import="org.oscarehr.common.dao.AppointmentArchiveDao" %>
+<%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
+<%@page import="org.oscarehr.common.model.Appointment" %>
 <%
 	BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
 	BillingDetailDao billingDetailDao = SpringUtils.getBean(BillingDetailDao.class);
+	AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
+	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
 %>
 <html>
 <head>
@@ -126,12 +131,17 @@ if (nBillNo > 0) {
 
         oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
         String billStatus = as.billStatus(apptCurStatus);
-        String[] param1 =new String[3];
-	    param1[0]=billStatus;
-	    param1[1]=(String)session.getAttribute("user");
-	    param1[2]=request.getParameter("appointment_no");
-
-        int rowsAffected = apptMainBean.queryExecuteUpdate(param1,"updateapptstatus");
+        Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no")));
+    	appointmentArchiveDao.archiveAppointment(appt);
+    	
+        int rowsAffected=0;
+        if(appt != null) {
+    		appt.setStatus(billStatus);
+    		appt.setLastUpdateUser((String)session.getAttribute("user"));
+    		appointmentDao.merge(appt);
+    		rowsAffected=1;
+    	}
+        
         rsdemo.close();
         rsdemo = apptMainBean.queryResults(request.getParameter("demographic_no"), "search_billing_no");
         while (rsdemo.next()) {

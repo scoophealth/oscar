@@ -43,7 +43,11 @@ String typeid = "", type="";
 
 typeid = request.getParameter("typeid");
 type = request.getParameter("type");
-  int rowsAffected0 = apptMainBean.queryExecuteUpdate(typeid,"delete_ctlbillservice");
+
+for(CtlBillingService b:ctlBillingServiceDao.findByServiceType(typeid)) {
+	ctlBillingServiceDao.remove(b.getId());
+}
+
 %>
 
 <%
