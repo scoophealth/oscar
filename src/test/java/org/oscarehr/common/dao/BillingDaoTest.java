@@ -27,11 +27,13 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.SchemaUtils;
+import org.oscarehr.common.model.Billing;
 import org.oscarehr.util.SpringUtils;
 
 public class BillingDaoTest extends DaoTestFixtures {
@@ -50,6 +52,27 @@ public class BillingDaoTest extends DaoTestFixtures {
 
 		billings = dao.findBillings(1, Arrays.asList(new String[] { "BLIYSD", "GVNUIO" }));
 		assertNotNull(billings);
+	}
+
+	@Test
+	public void testFindOtherBillings() {
+		List<Billing> bs = dao.findBillings(1, "STA", "01", new Date(), new Date());
+		assertNotNull(bs);
+
+		bs = dao.findBillings(1, "STA", "01", new Date(), new Date());
+		assertNotNull(bs);
+
+		bs = dao.findBillings(1, "STA", "01", null, new Date());
+		assertNotNull(bs);
+
+		bs = dao.findBillings(1, "STA", "01", new Date(), null);
+		assertNotNull(bs);
+
+		bs = dao.findBillings(1, "STA", null, new Date(), new Date());
+		assertNotNull(bs);
+
+		bs = dao.findBillings(null, "STA", null, null, null);
+		assertNotNull(bs);
 	}
 
 }

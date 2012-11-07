@@ -35,8 +35,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URLEncoder;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -68,7 +66,6 @@ import oscar.oscarBilling.ca.on.bean.BillingClaimsErrorReportBeanHandler;
 import oscar.oscarBilling.ca.on.bean.BillingEDTOBECOutputSpecificationBean;
 import oscar.oscarBilling.ca.on.bean.BillingEDTOBECOutputSpecificationBeanHandler;
 import oscar.oscarBilling.ca.on.data.BillingClaimsErrorReportBeanHandlerSave;
-import oscar.oscarDB.DBHandler;
 
 public class BillingDocumentErrorReportUploadAction extends Action {
 
@@ -184,7 +181,6 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 			// Assign associated report Name
 			ArrayList<String> messages = new ArrayList<String>();
 			String ReportName = "";
-			String ReportFlag = "";
 
 			if (fileName.substring(0, 1).compareTo("E") == 0 || fileName.substring(0, 1).compareTo("F") == 0) {
 				ReportName = "Claims Error Report";
@@ -316,52 +312,47 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 	 * @param file
 	 * @return BillingEDTOBECOutputSpecificationBeanHandler
 	 */
-	private BillingEDTOBECOutputSpecificationBeanHandler generateReportR(FileInputStream file) {
+	@SuppressWarnings("unchecked")
+    private BillingEDTOBECOutputSpecificationBeanHandler generateReportR(FileInputStream file) {
 		BillingEDTOBECOutputSpecificationBeanHandler hd = new BillingEDTOBECOutputSpecificationBeanHandler(file);
 		Vector<BillingEDTOBECOutputSpecificationBean> outputSpecVector = hd.getEDTOBECOutputSecifiationBeanVector();
-		try {
 
+		for (int i = 0; i < outputSpecVector.size(); i++) {
+			BillingEDTOBECOutputSpecificationBean bean = outputSpecVector.elementAt(i);
+			String hin = bean.getHealthNo();
+			String responseCode = bean.getResponseCode();
+			int responseCodeNum = -1;
+			try {
+				responseCodeNum = Integer.parseInt(responseCode);
+			} catch (Exception e) {
+				MiscUtils.getLogger().error("Error",e);
+			}
 
-			for (int i = 0; i < outputSpecVector.size(); i++) {
-				BillingEDTOBECOutputSpecificationBean bean = outputSpecVector.elementAt(i);
-				String hin = bean.getHealthNo();
-				String responseCode = bean.getResponseCode();
-				int responseCodeNum = -1;
-				try {
-					responseCodeNum = Integer.parseInt(responseCode);
-				} catch (Exception e) {
-					MiscUtils.getLogger().error("Error",e);
-				}
+			if (responseCodeNum < 50 || responseCodeNum > 59) {
 
-				if (responseCodeNum < 50 || responseCodeNum > 59) {
-
-					BatchEligibility batchEligibility = batchEligibilityDao.find(Integer.parseInt(responseCode));
-
-					String sqlDemo = "SELECT * FROM demographic WHERE hin='" + hin + "'";
-					ResultSet rsDemo = DBHandler.GetSQL(sqlDemo);
-
-					if (rsDemo.next()) {
-						if (rsDemo.getString("ver").compareTo(bean.getVersion()) == 0) {
-							List<Demographic> demographics = demographicDao.searchByHealthCard(hin);
-							for(Demographic demographic:demographics) {
-								demographic.setVer("##");
-								demographicDao.save(demographic);
-							}
-							DemographicCust demographicCust = demographicCustDao.find(Integer.parseInt(rsDemo.getString("demographic_no")));
-							if(demographicCust != null && batchEligibility != null) {
-								String newAlert =  demographicCust.getAlert() + "\n" + "Invalid old version code: "
-										+ bean.getVersion() + "\nReason: " + batchEligibility.getMOHResponse() + "- "
-										+ batchEligibility.getReason() + "\nResponse Code: " + responseCode;
-								demographicCust.setAlert(newAlert);
-								demographicCustDao.merge(demographicCust);
-							}
+				BatchEligibility batchEligibility = batchEligibilityDao.find(Integer.parseInt(responseCode));
+				
+				List<Demographic> ds = demographicDao.searchByHealthCard(hin);
+				
+				if (!ds.isEmpty()) {
+					Demographic d = ds.get(0);
+					if (d.getVer().compareTo(bean.getVersion()) == 0) {
+						List<Demographic> demographics = demographicDao.searchByHealthCard(hin);
+						for(Demographic demographic:demographics) {
+							demographic.setVer("##");
+							demographicDao.save(demographic);
 						}
-						rsDemo.close();
+						DemographicCust demographicCust = demographicCustDao.find(d.getDemographicNo());
+						if(demographicCust != null && batchEligibility != null) {
+							String newAlert =  demographicCust.getAlert() + "\n" + "Invalid old version code: "
+									+ bean.getVersion() + "\nReason: " + batchEligibility.getMOHResponse() + "- "
+									+ batchEligibility.getReason() + "\nResponse Code: " + responseCode;
+							demographicCust.setAlert(newAlert);
+							demographicCustDao.merge(demographicCust);
+						}
 					}
 				}
 			}
-		} catch (SQLException e) {
-			MiscUtils.getLogger().error("Error", e);
 		}
 
 		return hd;

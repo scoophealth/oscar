@@ -18,6 +18,7 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,5 +100,45 @@ public class BillingDao extends AbstractDao<Billing> {
 		}		
 		return query.getResultList();
 	}
+
+	@SuppressWarnings("unchecked")
+    public List<Billing> findBillings(Integer demoNo, String statusType, String providerNo, Date startDate, Date endDate) {
+		String providerQuery = "", startDateQuery = "", endDateQuery = "", demoQuery = "";
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		if (providerNo != null && !providerNo.trim().equalsIgnoreCase("all")) {
+			providerQuery = " and b.apptProviderNo = :providerNo";
+			
+			params.put("providerNo", providerNo);
+		}
+
+		if (startDate != null) {
+			startDateQuery = " and ( b.billingDate >= :startDate ) ";
+			params.put("startDate", startDate);
+		}
+
+		if (endDate != null) {
+			endDateQuery = " and ( b.billingDate <= :endDate) ";
+			params.put("endDate", endDate);
+		}
+		
+		if (demoNo != null) {
+			demoQuery = " and b.demographicNo = :demoNo";
+			params.put("demoNo", demoNo);
+		}
+
+		String queryString = "FROM Billing b WHERE b.status like :status "
+				+ providerQuery				+ startDateQuery
+				+ endDateQuery
+				+ demoQuery;
+		params.put("status", statusType);
+		
+		Query query = entityManager.createQuery(queryString);
+		for(Entry<String, Object> param : params.entrySet()) {
+			query.setParameter(param.getKey(), param.getValue());
+		}
+		
+		return query.getResultList();
+    }
 
 }
