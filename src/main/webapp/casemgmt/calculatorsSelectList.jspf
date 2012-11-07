@@ -1,4 +1,4 @@
-  <select>
+  <select style="width:100px;">
 	<option><bean:message key="oscarEncounter.Header.Calculators"/></option>
 	<option>----------------------</option>
 	

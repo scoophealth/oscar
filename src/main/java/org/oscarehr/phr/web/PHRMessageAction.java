@@ -39,6 +39,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionRedirect;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.common.dao.PHRVerificationDao;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.dao.PHRActionDAO;
 import org.oscarehr.phr.dao.PHRDocumentDAO;
@@ -50,6 +51,7 @@ import org.oscarehr.phr.util.MyOscarMessageManager;
 import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarProvider.data.ProviderData;
@@ -158,6 +160,21 @@ public class PHRMessageAction extends DispatchAction {
             return mapping.findForward("loginAndRedirect");
         }
 		
+        //Check if patient has been verified
+        PHRVerificationDao phrVerificationDao = SpringUtils.getBean(PHRVerificationDao.class); 
+	   	String verificationLevel = phrVerificationDao.getVerificationLevel(Integer.parseInt(demographicNo));
+	   	int verifyLevel = 0;
+	   	try{
+	      verifyLevel = Integer.parseInt(verificationLevel.replace('+', ' ').trim());
+	   	}catch(Exception e){ /*Should already be set to zero */ }
+	   
+	   	if (verifyLevel != 3){ //Prompt for verification
+	   		request.setAttribute("forwardToOnSuccess", "/phr/PhrMessage.do?method=createMessage&providerNo="+provNo+"&demographicNo=" + demographicNo);
+	   		request.setAttribute("demographicNo", demographicNo);
+	   		return mapping.findForward("verifyAndRedirect");
+	   		
+	   	}
+        
 		
 		
 		DemographicData dd = new DemographicData();
