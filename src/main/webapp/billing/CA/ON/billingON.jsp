@@ -126,7 +126,7 @@
                             CtlBillingServiceDao ctlBillingServiceDao = (CtlBillingServiceDao) SpringUtils.getBean("ctlBillingServiceDao");
                             List<CtlBillingService> ctlBillSrvList = ctlBillingServiceDao.findByServiceTypeId(rosterStatus);
                             
-                            if (!ctlBillSrvList.isEmpty()) {
+                            if (!ctlBillSrvList.isEmpty() && !rosterStatus.isEmpty()) {
                                 ctlBillForm = rosterStatus;
                             }
                             else {                                                        
