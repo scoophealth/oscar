@@ -72,7 +72,7 @@ public class EctDisplayOcularProcedureAction extends EctDisplayAction {
 	    Dao.setRightHeadingID(cmd); //no menu so set div id to unique id for this action
 	
 	
-	    EyeformOcularProcedureDao opDao = (EyeformOcularProcedureDao)SpringUtils.getBean("OcularProcDAO");
+	    EyeformOcularProcedureDao opDao = (EyeformOcularProcedureDao)SpringUtils.getBean(EyeformOcularProcedureDao.class);
 	    ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 	
 	

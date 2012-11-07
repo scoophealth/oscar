@@ -78,7 +78,7 @@ public class EctDisplayConReportAction extends EctDisplayAction {
 	    Dao.setRightURL(url);
 	    Dao.setRightHeadingID(cmd); //no menu so set div id to unique id for this action
 	
-	    EyeformConsultationReportDao crDao = (EyeformConsultationReportDao)SpringUtils.getBean("consultationReportDao");
+	    EyeformConsultationReportDao crDao = (EyeformConsultationReportDao)SpringUtils.getBean(EyeformConsultationReportDao.class);
 	
 	    List<EyeformConsultationReport> crs = crDao.getByDemographic(Integer.parseInt(bean.demographicNo));
 	    for(EyeformConsultationReport cr:crs) {
