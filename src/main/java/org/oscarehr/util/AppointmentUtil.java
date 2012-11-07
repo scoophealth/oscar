@@ -22,44 +22,35 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.util;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.Format;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.common.dao.OscarAppointmentDao;
+import org.oscarehr.common.model.Appointment;
+
+import oscar.util.ConversionUtils;
 
 public class AppointmentUtil {
-	private AppointmentUtil() {}
-	
+
+	private static final String NONE = "(none)";
+
+	private AppointmentUtil() {
+	}
+
 	public static String getNextAppointment(String demographicNo) {
 		Date nextApptDate = null;
-	       if (demographicNo != null && !demographicNo.equalsIgnoreCase("") && !demographicNo.equalsIgnoreCase("null")){
-	           try {
-	              String sql = "select * from appointment where demographic_no = '"+demographicNo+"' and status not like '%C%' and CONCAT(IFNULL(appointment_date, ''), ' ', IFNULL(start_time, '')) >= now() order by appointment_date";
-	              ResultSet rs = DBHandler.GetSQL(sql);
-	              if (rs.next()) {
-	                 nextApptDate = rs.getDate("appointment_date");
-	              }
-	              rs.close();
-	           }catch(SQLException e)        {
-	              MiscUtils.getLogger().error("error",e);
-	           } 
-	       }    
-	       String s = "(none)";
-	       try{
-	          if ( nextApptDate != null ){    
-	             Format formatter = new SimpleDateFormat("yyyy-MM-dd");
-	             s = formatter.format(nextApptDate);
-	          }         
-	       }catch(Exception p) {
-	    	   MiscUtils.getLogger().error("error",p);
-	       }
-	       
-	       return s;
+		if (demographicNo != null && !demographicNo.equalsIgnoreCase("") && !demographicNo.equalsIgnoreCase("null")) {
+			return NONE;
+		}
+
+		OscarAppointmentDao dao = SpringUtils.getBean(OscarAppointmentDao.class);
+		Appointment appt = dao.findNextAppointment(ConversionUtils.fromIntString(demographicNo));
+		if (appt == null) {
+			return NONE;
+		}
+
+		return ConversionUtils.toDateString(nextApptDate);
 	}
+	
 }
