@@ -761,10 +761,8 @@
 
 		<dependency>
 			<groupId>org.oscarehr</groupId>
-			<artifactId>utils</artifactId>
-			<version>0.0-SNAPSHOT</version>
-			<type>jar</type>
-			<scope>compile</scope>
+			<artifactId>util</artifactId>
+			<version>2012.11.06</version>
 		</dependency>
 	</dependencies>
 
@@ -1049,8 +1047,8 @@
 				<dependencies>
 					<dependency>
 						<groupId>org.oscarehr</groupId>
-						<artifactId>utils</artifactId>
-						<version>0.0-SNAPSHOT</version>
+						<artifactId>util</artifactId>
+						<version>2012.11.06</version>
 					</dependency>
 				</dependencies>
 			</plugin>
@@ -1141,7 +1139,7 @@
 						<param>org.oscarehr.caisi_integrator.caisi_integrator_client_stubs</param>
 						<param>org.oscarehr.myoscar_server.myoscar_server_client_stubs</param>
 						<param>org.oscarehr.ar2005.ar2005</param>
-						<param>org.oscarehr.utils</param>
+						<param>org.oscarehr.util</param>
 						<param>dm.dm</param>
 						<param>cds.cds</param>
 						<param>cds.cds_cihi_phcvrs</param>

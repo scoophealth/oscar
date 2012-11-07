@@ -174,8 +174,8 @@ detect those and search the source.
 
     <h3>----- Thread Monitor -----</h3>
 
-	Thread Format: <%=VMStat.getThreadFormat() %><br />
-	Thread Info: <%=VMStat.getThreadInfo()%>
+	Thread Format: <%=VmStat.getThreadFormat() %><br />
+	Thread Info: <%=VmStat.getThreadInfo()%>
 
 	<br /><br />
 	<%
