@@ -31,6 +31,7 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import org.oscarehr.common.NativeSql;
 import org.oscarehr.common.model.BillingService;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
@@ -297,5 +298,36 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		query.setParameter("serviceType", serviceType);
 		return query.getResultList();
     }
+	
+	@SuppressWarnings("unchecked")
+    public List<BillingService> findByServiceCodeOrDescription(String serviceCode) {
+		Query query = createQuery("bs", "bs.serviceCode like :sc or bs.description like :ds");
+		query.setParameter("sc", serviceCode);
+		query.setParameter("ds", "%" + serviceCode + "%");
+		return query.getResultList();
+	}
 
+	@SuppressWarnings("unchecked")
+	@NativeSql("billingservice")
+    public List<BillingService> findMostRecentByServiceCode(String serviceCode) {
+		Query query = entityManager.createNativeQuery("select * from billingservice b where b.service_code like :serviceCode and b.billingservice_date = " +
+				"(select max(b2.billingservice_date) from billingservice b2 where b2.service_code = b.service_code and b2.billingservice_date <= now())", BillingService.class);
+		query.setParameter("serviceCode", serviceCode + "%");
+		return query.getResultList();
+	}
+
+	@SuppressWarnings("unchecked")
+    public List<BillingService> findByServiceCodeAndDate(String serviceCode, Date serviceDate) {
+	    Query query = createQuery("bs", "bs.serviceCode = :sc AND bs.billingserviceDate = :sd");
+	    query.setParameter("sc", serviceCode);
+	    query.setParameter("sd", serviceDate);
+	    return query.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<BillingService> findAll() {
+	    Query query = entityManager.createQuery("FROM BillingService bs ORDER BY TRIM(bs.description)");
+	    return query.getResultList();
+    }
 }
