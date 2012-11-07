@@ -66,4 +66,48 @@ public class MeasurementMapDao extends AbstractDao<MeasurementMap> {
 
 		return rs;    
 	}
+	
+	public List<MeasurementMap> findByLoincCode(String loincCode) {   
+		String queryStr = "select m FROM MeasurementMap m WHERE m.loincCode=?";
+		Query q = entityManager.createQuery(queryStr);
+		q.setParameter(1, loincCode);
+            
+		@SuppressWarnings("unchecked")    
+		List<MeasurementMap> rs  = q.getResultList();
+
+		return rs;    
+	}
+	
+	public List<MeasurementMap> findByLoincCodeAndLabType(String loincCode,String labType) {   
+		String queryStr = "select m FROM MeasurementMap m WHERE m.loincCode=? and m.labType=?";
+		Query q = entityManager.createQuery(queryStr);
+		q.setParameter(1, loincCode);
+		q.setParameter(2, labType);
+            
+		@SuppressWarnings("unchecked")    
+		List<MeasurementMap> rs  = q.getResultList();
+
+		return rs;    
+	}
+	
+	public List<String> findDistinctLabTypes() {    
+		String queryStr = "select distinct(m.labType) FROM MeasurementMap m";
+		Query q = entityManager.createQuery(queryStr);
+            
+		@SuppressWarnings("unchecked")
+		List<String> rs = q.getResultList();
+
+		return rs;    
+	}
+	
+	public List<String> findDistinctLoincCodes() {    
+		String queryStr = "select distinct(m.loincCode) FROM MeasurementMap m";
+		Query q = entityManager.createQuery(queryStr);
+            
+		@SuppressWarnings("unchecked")
+		List<String> rs = q.getResultList();
+
+		return rs;    
+	}
+
 }

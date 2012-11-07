@@ -58,4 +58,13 @@ public class CtlDiagCodeDao extends AbstractDao<CtlDiagCode> {
 
 	}
 
+	public List<CtlDiagCode> findByServiceType(String serviceType) {
+		Query q = entityManager.createQuery("select x from CtlDiagCode x where x.serviceType = ?");
+		q.setParameter(1, serviceType);
+		
+		@SuppressWarnings("unchecked")
+		List<CtlDiagCode> results = q.getResultList();
+		
+		return results;
+	}
 }

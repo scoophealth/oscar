@@ -123,8 +123,8 @@ public class BillingCorrectionPrep {
 	}
 		
 	// for appt unbill; 0 - id, 1 - status
-	public List getBillingNoStatusByAppt(String apptNo) {
-		List ret = dbObj.getBillingCH1NoStatusByAppt(apptNo);
+	public List<String> getBillingNoStatusByAppt(String apptNo) {
+		List<String> ret = dbObj.getBillingCH1NoStatusByAppt(apptNo);
 		return ret;
 	}
 

@@ -44,7 +44,10 @@ String typeid = "", type="";
 
 typeid = request.getParameter("typeid");
 
-  int rowsAffected0 = apptMainBean.queryExecuteUpdate(typeid,"delete_ctldiagcode");
+for(CtlDiagCode d:ctlDiagCodeDao.findByServiceType(typeid)) {
+	ctlDiagCodeDao.remove(d.getId());
+}
+
 %>
 
 <%

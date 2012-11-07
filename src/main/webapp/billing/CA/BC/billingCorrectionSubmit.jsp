@@ -87,7 +87,12 @@
 	recycleBin.setUpdateDateTime(new java.util.Date());
 	recycleBinDao.persist(recycleBin);
 
- int rowsAffected2 = apptMainBean.queryExecuteUpdate(_p0_1,"delete_bill_detail");
+	int rowsAffected2 = 0;
+	for(BillingDetail b:billingDetailDao.findByBillingNo(Integer.parseInt(_p0_1))) {
+		b.setStatus("D");
+		billingDetailDao.merge(b);
+		rowsAffected2++;
+	}
 
 
   String[] param2 =new String[11];

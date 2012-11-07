@@ -35,7 +35,10 @@ if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp"
 <%
 String typeid = request.getParameter("typeid");
 String type = request.getParameter("type");
-int rowsAffected0 = apptMainBean.queryExecuteUpdate(typeid,"delete_ctlbillservice");
+
+for(CtlBillingService b:ctlBillingServiceDao.findByServiceType(typeid)) {
+	ctlBillingServiceDao.remove(b.getId());
+}
 
 String[] group = new String[4];
 int rowsAffected = -100;

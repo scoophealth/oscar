@@ -17,9 +17,6 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
-<%
-if(session.getValue("user") == null) response.sendRedirect("../../../logout.htm");
-%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -87,9 +84,13 @@ if(session.getValue("user") == null) response.sendRedirect("../../../logout.htm"
 	recycleBin.setUpdateDateTime(new java.util.Date());
 	recycleBinDao.persist(recycleBin);
 
- int rowsAffected2 = apptMainBean.queryExecuteUpdate(_p0_1,"delete_bill_detail");
-
-
+	int rowsAffected2 = 0;
+	for(BillingDetail b:billingDetailDao.findByBillingNo(Integer.parseInt(_p0_1))) {
+		b.setStatus("D");
+		billingDetailDao.merge(b);
+		rowsAffected2++;
+	}
+	
   String[] param2 =new String[11];
 		if(_p0_18 == null) _p0_18 = "000";
 	  param2[0]=_p0_2;
@@ -113,7 +114,7 @@ if(session.getValue("user") == null) response.sendRedirect("../../../logout.htm"
     ListIterator it	=	billing.getBillingItems().listIterator();
 
 	while (it.hasNext()) {
-    billingItem = (BillingItemBean)it.next();
+  	  billingItem = (BillingItemBean)it.next();
 
 	   BillingDetail bd = new BillingDetail();
 	   bd.setBillingNo(Integer.parseInt(_p0_1));

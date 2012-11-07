@@ -32,19 +32,20 @@
   userfirstname = (String) session.getAttribute("userfirstname");
   userlastname = (String) session.getAttribute("userlastname");
 %>
-<%@ page import="java.sql.*, java.util.*,java.net.*, oscar.MyDateFormat"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.sql.*, java.util.*,java.net.*, oscar.MyDateFormat" errorPage="errorpage.jsp"%>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%@ include file="dbBilling.jspf"%>
 <%@page import="org.oscarehr.common.dao.AppointmentArchiveDao" %>
 <%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
 <%@page import="org.oscarehr.common.model.Appointment" %>
 <%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.BillingDao" %>
+<%@page import="org.oscarehr.common.model.Billing" %>
 <%
 	AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
 	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
+	BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
 %>
 <html>
 <head>
@@ -55,8 +56,6 @@
       this.focus();
     }
     function closeit() {
-    	//self.opener.refresh();
-      //self.close();
     }
     //-->
 </script>
@@ -72,15 +71,13 @@
 <%
    String billCode = "";
    String apptNo = request.getParameter("appointment_no");
-   ResultSet rsprovider = null;
-// String proNO = request.getParameter("xml_provider");
-String billNo ="";
-  rsprovider = null;
- rsprovider = apptMainBean.queryResults(apptNo, "search_bill_beforedelete");
- while(rsprovider.next()){
- billCode = rsprovider.getString("status");
- billNo = rsprovider.getString("billing_no");
- }
+   String billNo ="";
+   
+  
+   for(Billing b:billingDao.findByAppointmentNo(Integer.parseInt(apptNo))) {
+	   billCode = b.getStatus();
+	   billNo = b.getId().toString();
+   }
    if (billCode.substring(0,1).compareTo("B") == 0) {
    %>
 <p>
@@ -92,39 +89,25 @@ String billNo ="";
    else{
 
 
-  int rowsAffected=0;
-  // int recordCount = Integer.parseInt(request.getParameter("record"));
- //      for (int i=0;i<recordCount;i++){
- //     String[] param2 = new String[7];
-   //    param2[0] = billNo;
-   //    param2[1] = request.getParameter("billrec"+i);
-   //    param2[2] = request.getParameter("billrecdesc"+i);
-   //    param2[3] = request.getParameter("pricerec"+i);
-   //    param2[4] = request.getParameter("diagcode");
-   //    param2[5] = request.getParameter("appointment_date");
-   //    param2[6] = request.getParameter("billtype");
-       rowsAffected = apptMainBean.queryExecuteUpdate(billNo,"delete_bill");
-
-
-       //       }
-
-//	  int[] demo_no = new int[1]; demo_no[0]=Integer.parseInt(request.getParameter("demographic_no")); int rowsAffected = apptMainBean.queryExecuteUpdate(demo_no,param,request.getParameter("dboperation"));
+ 	 int rowsAffected=1;
+ 	 Billing b = billingDao.find(Integer.parseInt(billNo));
+ 	 if(b != null) {
+ 		 b.setStatus("D");
+ 		 billingDao.merge(b);
+ 	 }
+     
 
   if (rowsAffected ==1) {
-    //change the status to billed {"updateapptstatus", "update appointment set status=? where appointment_no=? //provider_no=? and appointment_date=? and start_time=?"},
-  oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
-String unbillStatus = as.unbillStatus(request.getParameter("status"));
-  String[] param1 =new String[3];
-	  param1[0]=unbillStatus;
-	  param1[1]=(String)session.getAttribute("user");
-	  param1[2]=request.getParameter("appointment_no");
-//	  param1[1]=request.getParameter("apptProvider_no"); param1[2]=request.getParameter("appointment_date"); param1[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
- Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no")));
+    oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
+	String unbillStatus = as.unbillStatus(request.getParameter("status"));
+	 Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no")));
     appointmentArchiveDao.archiveAppointment(appt);
-   rowsAffected = apptMainBean.queryExecuteUpdate(param1,"updateapptstatus");
-// rsdemo = null;
- //  rsdemo = apptMainBean.queryResults(request.getParameter("demographic_no"), "search_billing_no");
- //  while (rsdemo.next()) {
+    if(appt != null) {
+	   appt.setStatus(unbillStatus);
+	   appt.setLastUpdateUser((String)session.getAttribute("user"));
+	   appointmentDao.merge(appt);
+   }
+   
 %>
 <p>
 <h1>Successful Addition of a billing Record.</h1>
@@ -133,8 +116,6 @@ String unbillStatus = as.unbillStatus(request.getParameter("status"));
       self.close();
      	self.opener.refresh();
 </script> <%
-  //  break; //get only one billing_no
-  //  }//end of while
  }  else {
 %>
 <p>

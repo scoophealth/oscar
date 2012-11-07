@@ -25,26 +25,26 @@
 --%>
 
 <%
-if(session.getValue("user") == null)
-    response.sendRedirect(".././../logout.htm");
-String curUser_no,userfirstname,userlastname;
-curUser_no = (String) session.getAttribute("user");
-userfirstname = (String) session.getAttribute("userfirstname");
-userlastname = (String) session.getAttribute("userlastname");
+	String curUser_no = (String) session.getAttribute("user");
 %>
-<%@ page import="java.sql.*, java.util.*,java.net.*, oscar.MyDateFormat"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.sql.*, java.util.*,java.net.*, oscar.MyDateFormat" errorPage="errorpage.jsp"%>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%@ include file="dbBilling.jspf"%>
 <%@page import="org.oscarehr.common.dao.AppointmentArchiveDao" %>
 <%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
 <%@page import="org.oscarehr.common.model.Appointment" %>
 <%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.BillingDao" %>
+<%@page import="org.oscarehr.common.model.Billing" %>
+<%@page import="oscar.oscarBilling.ca.bc.data.BillingmasterDAO" %>
+<%@page import="oscar.entities.Billingmaster" %>
+
 <%
 	AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
 	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
+	BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
+	BillingmasterDAO billingMasterDao =  SpringUtils.getBean(BillingmasterDAO.class);
 %>
 <html>
 <head>
@@ -72,20 +72,17 @@ userlastname = (String) session.getAttribute("userlastname");
 <%
 
 String apptNo = request.getParameter("appointment_no");
-ResultSet rsprovider = null;
-// String proNO = request.getParameter("xml_provider");
-
-rsprovider = null;
-rsprovider = apptMainBean.queryResults(apptNo, "search_bill_beforedelete");
 ArrayList<String> billCodeList = new ArrayList();
-boolean cannotDelete = false;
-while(rsprovider.next()){
-    String billCode = rsprovider.getString("status");
-    if (billCode.substring(0,1).equals("B")){
+boolean cannotDelete=false;
+
+for(Billing b:billingDao.findByAppointmentNo(Integer.parseInt(apptNo))) {
+   if (b.getStatus().substring(0,1).equals("B")){
         cannotDelete = true;
     }
-    billCodeList.add(rsprovider.getString("billing_no"));
+    billCodeList.add(b.getId().toString());
 }
+
+
 if (cannotDelete) {
 %>
 <p>
@@ -97,24 +94,29 @@ if (cannotDelete) {
 
     boolean updateApptStatus = false;
     for (String billNo:billCodeList){
-       int rowsAffected=0;
-       rowsAffected = apptMainBean.queryExecuteUpdate(billNo,"delete_bill");
-       apptMainBean.queryExecuteUpdate(billNo,"delete_bill_master");
-       if (rowsAffected == 1){
-          updateApptStatus = true;
-       }
+    	Billing b = billingDao.find(Integer.parseInt(billNo));
+    	 if(b != null) {
+    		 b.setStatus("D");
+    		 billingDao.merge(b);
+    		 updateApptStatus = true;
+    	 }
+      
+    	 for(Billingmaster m : billingMasterDao.getBillingMasterByBillingNo(billNo)) {
+    		 m.setBillingstatus("D");
+    		 billingMasterDao.update(m);
+    	 }
     }
 
     if (updateApptStatus) {
         oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
         String unbillStatus = as.unbillStatus(request.getParameter("status"));
-        String[] param1 =new String[3];
-        param1[0]=unbillStatus;
-        param1[1]=(String)session.getAttribute("user");
-        param1[2]=request.getParameter("appointment_no");
         Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no")));
         appointmentArchiveDao.archiveAppointment(appt);
-        apptMainBean.queryExecuteUpdate(param1,"updateapptstatus");
+        if(appt != null) {
+     	   appt.setStatus(unbillStatus);
+     	   appt.setLastUpdateUser((String)session.getAttribute("user"));
+     	   appointmentDao.merge(appt);
+        }
 %>
 <p>
 <h1>Successful Addition of a billing Record.</h1>

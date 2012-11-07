@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,32 +21,16 @@
  * Hamilton
  * Ontario, Canada
  */
+package org.oscarehr.billing.CA.BC.dao;
 
-
-package org.oscarehr.billing.CA.dao;
-
-import java.util.List;
-
-import javax.persistence.Query;
-
-import org.oscarehr.billing.CA.model.BillingDetail;
+import org.oscarehr.billing.CA.BC.model.Wcb;
 import org.oscarehr.common.dao.AbstractDao;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class BillingDetailDao extends AbstractDao<BillingDetail>{
+public class WcbDao extends AbstractDao<Wcb>{
 
-	public BillingDetailDao() {
-		super(BillingDetail.class);
-	}
-	
-	public List<BillingDetail> findByBillingNo(int billingNo) {
-		Query q = entityManager.createQuery("select x from BillingDetail x where x.billingNo=?");
-		q.setParameter(1, billingNo);
-		
-		@SuppressWarnings("unchecked")
-		List<BillingDetail> results = q.getResultList();
-		
-		return results;
+	public WcbDao() {
+		super(Wcb.class);
 	}
 }

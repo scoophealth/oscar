@@ -67,7 +67,7 @@ public class BillingmasterDAO {
 		return list;
 	}
 
-	public List getBillingMasterByBillingNo(String billingNo) {
+	public List<Billingmaster> getBillingMasterByBillingNo(String billingNo) {
 		return getBillingmasterByBillingNo(Integer.parseInt(billingNo));
 	}
 

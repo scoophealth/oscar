@@ -1,6 +1,7 @@
 
 package oscar;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.Connection;
@@ -94,6 +95,17 @@ public class OscarDocumentCreator {
     }
     return jasperReport;
   }
+  
+  public JasperReport getJasperReport(byte[] xmlDesign) {
+	    JasperReport jasperReport = null;
+	    try {
+	      jasperReport = JasperCompileManager.compileReport(
+	          new ByteArrayInputStream(xmlDesign));
+	    }
+	    catch (JRException ex) {MiscUtils.getLogger().error("Error", ex);
+	    }
+	    return jasperReport;
+	  }
 
   /**
    * Fills a servletoutout stream with data from a JasperReport

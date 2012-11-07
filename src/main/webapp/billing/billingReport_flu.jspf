@@ -96,7 +96,7 @@ int rowCount1 = 0;
     <TD align="right" width="10%"><b> <font size="2" face="Arial, Helvetica, sans-serif">&nbsp;</font></b></TD>
   
     <TD align="right" width="10%"><b> <font size="2" face="Arial, Helvetica, sans-serif"><%=total%></font></b></TD>
-   <TD align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=reason.compareTo("X")==0?"Bad Debt":reason.compareTo("B")==0?"Submitted to OHIP":reason.compareTo("S")==0?"Settled":"<a href=# onClick='popupPage(700,720, \"../billing/billingDeleteNoAppt.jsp?billing_no=" + rs.getString("billing_no") + "&billCode=" +reason+ "&dboperation=delete_bill&hotclick=0\")'>-B</a>"%></font></b></TD>
+   <TD align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=reason.compareTo("X")==0?"Bad Debt":reason.compareTo("B")==0?"Submitted to OHIP":reason.compareTo("S")==0?"Settled":"<a href=# onClick='popupPage(700,720, \"../billing/billingDeleteNoAppt.jsp?billing_no=" + rs.getString("billing_no") + "&billCode=" +reason+ "&hotclick=0\")'>-B</a>"%></font></b></TD>
 
   </tr>
   <%  rowCount1 = rowCount1 + 1;
@@ -114,7 +114,7 @@ int rowCount1 = 0;
       <TD align="right" width="10%"><b> <font size="2" face="Arial, Helvetica, sans-serif">&nbsp;</font></b></TD>
     
   
-     <TD align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=reason.compareTo("X")==0?"Bad Debt":reason.compareTo("B")==0?"Submitted to OHIP":reason.compareTo("S")==0?"Settled":"<a href=# onClick='popupPage(700,720, \"../billing/billingDeleteNoAppt.jsp?billing_no=" + rs.getString("billing_no") + "&billCode=" +reason+ "&dboperation=delete_bill&hotclick=0\")'>-B</a>"%></font></b></TD>
+     <TD align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=reason.compareTo("X")==0?"Bad Debt":reason.compareTo("B")==0?"Submitted to OHIP":reason.compareTo("S")==0?"Settled":"<a href=# onClick='popupPage(700,720, \"../billing/billingDeleteNoAppt.jsp?billing_no=" + rs.getString("billing_no") + "&billCode=" +reason+ "&hotclick=0\")'>-B</a>"%></font></b></TD>
   
     </tr>
   <%  

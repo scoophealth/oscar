@@ -25,19 +25,19 @@
 --%>
 
 <%
-  if(session.getValue("user") == null)
-    response.sendRedirect("../logout.htm");
-  String curUser_no,userfirstname,userlastname;
-  curUser_no = (String) session.getAttribute("user");
-  userfirstname = (String) session.getAttribute("userfirstname");
-  userlastname = (String) session.getAttribute("userlastname");
+  String curUser_no = (String) session.getAttribute("user");
+ 
 %>
-<%@ page import="java.sql.*, java.util.*,java.net.*, oscar.MyDateFormat"
-	errorPage="errorpage.jsp"%>
-
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ page import="java.sql.*, java.util.*,java.net.*, oscar.MyDateFormat" errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%@ include file="dbBilling.jspf"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.BillingDao" %>
+<%@page import="org.oscarehr.common.model.Billing" %>
+<%
+	BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
+%>
+
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -73,12 +73,11 @@
 <% }
    else{
      
-   
-  int rowsAffected=0;
-  rowsAffected = apptMainBean.queryExecuteUpdate(request.getParameter("billing_no"),"delete_bill");
-       
-       
-
+	   Billing b = billingDao.find(Integer.parseInt(request.getParameter("billing_no")));
+	   if(b != null) {
+		   b.setStatus("D");
+		   billingDao.merge(b);
+	   }
 %>
 <p>
 <h1>Successful Addition of a billing Record.</h1>
