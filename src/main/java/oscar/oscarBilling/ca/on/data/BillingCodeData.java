@@ -22,195 +22,127 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarBilling.ca.on.data;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.oscarehr.common.dao.BillingServiceDao;
 import org.oscarehr.common.model.BillingService;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
+import oscar.util.ConversionUtils;
 
 /**
  *
  * @author Jay Gallagher
  */
 public class BillingCodeData {
-	
+
 	private BillingServiceDao billingServiceDao = SpringUtils.getBean(BillingServiceDao.class);
-	
 
-   public List<Hashtable<String,String>> search(String str){
-      ArrayList<Hashtable<String,String>> list = new ArrayList<Hashtable<String,String>>();
-      String sql = "select * from billingservice where service_code like '"+str+"' or description like '%"+str+"%' ";
-      try {
+	public List<Hashtable<String, String>> search(String str) {
+		ArrayList<Hashtable<String, String>> list = new ArrayList<Hashtable<String, String>>();
 
-         ResultSet rs = DBHandler.GetSQL(sql);
-         while (rs.next()){
-             list.add(fillCodeDataHashtable(rs));
-         }
-         rs.close();
-      } catch (SQLException e) {
-         MiscUtils.getLogger().error("Error", e);
-      }
-      return list;
-   }
+		for (BillingService bs : billingServiceDao.findByServiceCodeOrDescription(str)) {
+			list.add(fillCodeDataHashtable(bs));
+		}
+		return list;
+	}
 
-   public Hashtable<String,String> fillCodeDataHashtable(ResultSet rs) throws SQLException{
-       MiscUtils.getLogger().debug("fillCode " + c(rs.getString("service_code")) + " " + c(rs.getString("value")));
-      Hashtable<String,String> h = new Hashtable<String,String>();
-       h.put("service_compositecode", c(rs.getString("service_compositecode")));
-       h.put("service_code", c(rs.getString("service_code")));
-       h.put("description", c(rs.getString("description")));
-       h.put("value", c(rs.getString("value")));
-       h.put("percentage", c(rs.getString("percentage")));
-       h.put("billingservice_date", c(rs.getString("billingservice_date")));
-       h.put("specialty", c(rs.getString("specialty")));
-       h.put("region", c(rs.getString("region")));
-       h.put("anaesthesia", c(rs.getString("anaesthesia")));
-      return h;
-   }
+	public Hashtable<String, String> fillCodeDataHashtable(BillingService bs) {
+		Hashtable<String, String> h = new Hashtable<String, String>();
+		if (bs == null) {
+			MiscUtils.getLogger().warn("Expected a billing service, but got null");
+			return h;
+		}
 
-   String c(String str){
-      return ( str == null ) ? "" : str;
-   }
+		h.put("service_compositecode", c(bs.getServiceCompositecode()));
+		h.put("service_code", c(bs.getServiceCode()));
+		h.put("description", c(bs.getDescription()));
+		h.put("value", c(bs.getValue()));
+		h.put("percentage", c(bs.getPercentage()));
+		h.put("billingservice_date", c(ConversionUtils.toDateString(bs.getBillingserviceDate())));
+		h.put("specialty", c(bs.getSpecialty()));
+		h.put("region", c(bs.getRegion()));
+		h.put("anaesthesia", c(bs.getAnaesthesia()));
+		return h;
+	}
 
-   public Hashtable<String,String> searchBillingCode(String str){
-      Hashtable<String,String> h = null;
-      int count = 0;
-      String sql = "select * from billingservice b where b.service_code like '"+str+"%' and b.billingservice_date = (select max(b2.billingservice_date) from billingservice b2 where b2.service_code = b.service_code and b2.billingservice_date <= now())";
-      try {
+	String c(String str) {
+		return (str == null) ? "" : str;
+	}
 
-         ResultSet rs = DBHandler.GetSQL(sql);
-         while (rs.next()){
-             count++;
-             h = fillCodeDataHashtable(rs);
-         }
-         MiscUtils.getLogger().debug(count+" for "+str);
-         if (h != null){
-            h.put("count",""+count);
-         }
-         rs.close();
-      } catch (SQLException e) {
-         MiscUtils.getLogger().error("Error", e);
-      }
-      return h;
-   }
+	public Hashtable<String, String> searchBillingCode(String str) {
+		Hashtable<String, String> h = null;
 
+		List<BillingService> bss = billingServiceDao.findMostRecentByServiceCode(str);
 
-   ///
-   public int searchNumBillingCode(String str){
-      int count = 0;
-      String sql = "select count(*) as coun from billingservice b where b.service_code like '"+str+"%' and b.billingservice_date = (select max(b2.billingservice_date) from billingservice b2 where b2.service_code = b.service_code and b2.billingservice_date <= now())";
-      try {
+		for (BillingService bs : bss) {
+			h = fillCodeDataHashtable(bs);
+		}
 
-         ResultSet rs = DBHandler.GetSQL(sql);
-         while (rs.next()){
-             count = rs.getInt("coun");
-         }
-         rs.close();
-      } catch (SQLException e) {
-         MiscUtils.getLogger().error("Error", e);
-      }
-      return count;
-   }
+		if (h != null) {
+			h.put("count", "" + bss.size());
+		}
 
+		return h;
+	}
 
-   public void lastLetterofEachBillingCode(){
+	public int searchNumBillingCode(String str) {
+		return billingServiceDao.findMostRecentByServiceCode(str).size();
+	}
 
-      String sql = "select service_code from billingservice ";
-      try {
+	public boolean editBillingCodeDesc(String desc, String val, String codeId) {
+		BillingService bs = billingServiceDao.find(codeId);
+		if (bs == null) {
+			MiscUtils.getLogger().warn("Unable to find billing service for id " + codeId);
+			return false;
+		}
 
-         ResultSet rs = DBHandler.GetSQL(sql);
-         while (rs.next()){
-            String service_code = rs.getString("service_code");
-            MiscUtils.getLogger().debug(service_code.charAt(service_code.length()-1));
-         }
-         rs.close();
-      } catch (SQLException e) {
-         MiscUtils.getLogger().error("Error", e);
-      }
-   }
+		if (desc != null) {
+			bs.setDescription(desc);
+		}
 
+		if (val != null) {
+			bs.setValue(val);
+		}
 
-   public BillingCodeData() {
-   }
+		billingServiceDao.merge(bs);
+		return true;
+	}
 
-   public boolean editBillingCodeDesc(String desc, String val, String codeId){
-      boolean retval = true;
-      try{
+	public boolean editBillingCode(String val, String codeId) {
+		return editBillingCodeDesc(null, val, codeId);
+	}
 
+	public boolean editBillingCodeByServiceCode(String val, String codeId, String date) {
+		for (BillingService bs : billingServiceDao.findByServiceCodeAndDate(codeId, ConversionUtils.fromDateString(date))) {
+			bs.setValue(val);
+			billingServiceDao.merge(bs);
+		}
+		return true;
+	}
 
-         String str = "update billingservice set "+
-                      "description = '"+StringEscapeUtils.escapeSql(desc) +"', "+
-                      "value       = '"+StringEscapeUtils.escapeSql(val)  +"' "+
-                      "where billingservice_no = '"+StringEscapeUtils.escapeSql(codeId)+"'";
-         DBHandler.RunSQL(str);
-      }catch(Exception e1){MiscUtils.getLogger().error("Error", e1);
-      }
-      return retval;
-   }
+	public boolean insertBillingCode(String value, String code, String date, String description, String termDate) throws Exception {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		BillingService bs = new BillingService();
+		bs.setServiceCompositecode("");
+		bs.setServiceCode(code);
+		bs.setDescription(description);
+		bs.setValue(value);
+		bs.setPercentage("");
+		bs.setBillingserviceDate(formatter.parse(date));
+		bs.setSpecialty("");
+		bs.setRegion("ON");
+		bs.setAnaesthesia("00");
+		bs.setTerminationDate(formatter.parse(termDate));
 
+		billingServiceDao.persist(bs);
 
-   public boolean editBillingCode(String val, String codeId){
-      boolean retval = true;
-      try{
-
-
-         String str = "update billingservice set "+
-                      "value =                   '"+StringEscapeUtils.escapeSql(val)  +"' "+
-                      "where billingservice_no = '"+StringEscapeUtils.escapeSql(codeId)+"'";
-         MiscUtils.getLogger().debug(str);
-         DBHandler.RunSQL(str);
-         MiscUtils.getLogger().debug("NOW updated");
-      }catch(Exception e1){MiscUtils.getLogger().error("Error", e1);
-      }
-      return retval;
-   }
-
-
-
-   public boolean editBillingCodeByServiceCode(String val, String codeId, String date){
-      boolean retval = true;
-      try{
-
-
-         String str = "update billingservice set "+
-                      "value =                   '"+StringEscapeUtils.escapeSql(val)  +"' "+
-                      "where service_code = '"+StringEscapeUtils.escapeSql(codeId)+"' and billingservice_date = '" + date + "'";
-         MiscUtils.getLogger().debug(str);
-         DBHandler.RunSQL(str);
-         MiscUtils.getLogger().debug("NOW updated");
-      }catch(Exception e1){MiscUtils.getLogger().error("Error", e1);
-      }
-      return retval;
-   }
-
-   public boolean insertBillingCode(String value, String code, String date, String description, String termDate) throws Exception  {
-	   SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-	   BillingService bs = new BillingService();
-	   bs.setServiceCompositecode("");
-	   bs.setServiceCode(code);
-	   bs.setDescription(description);
-	   bs.setValue(value);
-	   bs.setPercentage("");
-	   bs.setBillingserviceDate(formatter.parse(date));
-	   bs.setSpecialty("");
-	   bs.setRegion("ON");
-	   bs.setAnaesthesia("00");
-	   bs.setTerminationDate(formatter.parse(termDate));
-	   
-	   billingServiceDao.persist(bs);
-	   
-	   return true;
-   }
+		return true;
+	}
 }
