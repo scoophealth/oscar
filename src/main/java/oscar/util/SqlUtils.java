@@ -25,24 +25,16 @@
 
 package oscar.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
@@ -67,149 +59,6 @@ public class SqlUtils {
 		MYSQL, ORACLE, POSTGRESQL
 	}
 
-	private static java.sql.Date createAppropriateDate(Object value) {
-		if (value == null) {
-			return null;
-		}
-		String valueStr = ((String) value).trim();
-		if (valueStr.length() == 0) {
-			return null;
-		}
-		SimpleDateFormat sdf = DateUtils.getDateFormatter();
-		Date result = null;
-		try {
-			result = new java.sql.Date(sdf.parse(valueStr).getTime());
-		}
-		catch (Exception exc) {
-			result = null;
-		}
-		if (result == null) {
-			// Maybe date has been returned as a timestamp?
-			try {
-				result = new java.sql.Date(java.sql.Timestamp.valueOf(valueStr).getTime());
-			}
-			catch (java.lang.IllegalArgumentException ex) {
-				// Try date
-				logger.info("date = " + valueStr);
-				result = java.sql.Date.valueOf(valueStr);
-			}
-		}
-		return result;
-	}
-
-	private static java.math.BigDecimal createAppropriateNumeric(Object value) {
-		if (value == null) {
-			return null;
-		}
-		String valueStr = ((String) value).trim();
-		if (valueStr.length() == 0) {
-			return null;
-		}
-		return new java.math.BigDecimal(valueStr);
-	}
-
-	/**
-	 * this utility-method assigns a particular value to a place holder of a PreparedStatement. it tries to find the correct setXxx() value, accoring to the field-type information
-	 * represented by "fieldType". quality: this method is bloody alpha (as you migth see :=)
-	 */
-	public static void fillPreparedStatement(PreparedStatement ps, int col, Object val, int fieldType) throws SQLException {
-		try {
-			logger.info("fillPreparedStatement( ps, " + col + ", " + val + ", " + fieldType + ")...");
-			Object value = null;
-			// Check for hard-coded NULL
-			if (!("$null$".equals(val))) {
-				value = val;
-			}
-			if (value != null) {
-				switch (fieldType) {
-				case FieldTypes.INTEGER:
-					ps.setInt(col, Integer.parseInt((String) value));
-					break;
-				case FieldTypes.NUMERIC:
-					ps.setBigDecimal(col, createAppropriateNumeric(value));
-					break;
-				case FieldTypes.CHAR:
-					ps.setString(col, (String) value);
-					break;
-				case FieldTypes.DATE:
-					ps.setDate(col, createAppropriateDate(value));
-					break; // #checkme
-				case FieldTypes.TIMESTAMP:
-					ps.setTimestamp(col, java.sql.Timestamp.valueOf((String) value));
-					break;
-				case FieldTypes.DOUBLE:
-					ps.setDouble(col, Double.valueOf((String) value).doubleValue());
-					break;
-				case FieldTypes.FLOAT:
-					ps.setFloat(col, Float.valueOf((String) value).floatValue());
-					break;
-				case FieldTypes.LONG:
-					ps.setLong(col, Long.parseLong(String.valueOf(value)));
-					break;
-				case FieldTypes.BLOB:
-					FileHolder fileHolder = (FileHolder) value;
-					try {
-						ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-						ObjectOutputStream out = new ObjectOutputStream(byteOut);
-						out.writeObject(fileHolder);
-						out.flush();
-						byte[] buf = byteOut.toByteArray();
-						byteOut.close();
-						out.close();
-						ByteArrayInputStream bytein = new ByteArrayInputStream(buf);
-						int byteLength = buf.length;
-						ps.setBinaryStream(col, bytein, byteLength);
-						// store fileHolder as a whole (this way we don't lose file meta-info!)
-					}
-					catch (IOException ioe) {
-						MiscUtils.getLogger().error("Error", ioe);
-						logger.info(ioe.toString());
-						throw new SQLException("error storing BLOB in database - " + ioe.toString(), null, 2);
-					}
-					break;
-				case FieldTypes.DISKBLOB:
-					ps.setString(col, (String) value);
-					break;
-				default:
-					ps.setObject(col, value); // #checkme
-				}
-			}
-			else {
-				switch (fieldType) {
-				case FieldTypes.INTEGER:
-					ps.setNull(col, java.sql.Types.INTEGER);
-					break;
-				case FieldTypes.NUMERIC:
-					ps.setNull(col, java.sql.Types.NUMERIC);
-					break;
-				case FieldTypes.CHAR:
-					ps.setNull(col, java.sql.Types.CHAR);
-					break;
-				case FieldTypes.DATE:
-					ps.setNull(col, java.sql.Types.DATE);
-					break;
-				case FieldTypes.TIMESTAMP:
-					ps.setNull(col, java.sql.Types.TIMESTAMP);
-					break;
-				case FieldTypes.DOUBLE:
-					ps.setNull(col, java.sql.Types.DOUBLE);
-					break;
-				case FieldTypes.FLOAT:
-					ps.setNull(col, java.sql.Types.FLOAT);
-					break;
-				case FieldTypes.BLOB:
-					ps.setNull(col, java.sql.Types.BLOB);
-				case FieldTypes.DISKBLOB:
-					ps.setNull(col, java.sql.Types.CHAR);
-				default:
-					ps.setNull(col, java.sql.Types.OTHER);
-				}
-			}
-		}
-		catch (Exception e) {
-			throw new SQLException("Field type seems to be incorrect - " + e.toString(), null, 1);
-		}
-	}
 
 	/**
 	 * A simple and convenient method for retrieving object by criteria from the database. The ActiveRecord pattern is assumed whereby and object represents a row in the database.
@@ -575,20 +424,6 @@ public class SqlUtils {
 		}
 	}
 
-	public static String addOneDay(String oldDate) throws ParseException {
-		SimpleDateFormat isoFormat = new SimpleDateFormat("dd-MMM-yyyy");
-		java.util.Date date1 = isoFormat.parse(oldDate);
-
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date1);
-		calendar.add(Calendar.DAY_OF_YEAR, 1);
-		date1 = calendar.getTime();
-
-		SimpleDateFormat oracleFormat = new SimpleDateFormat("dd-MMM-yyyy");
-
-		return (oracleFormat.format(date1));
-	}
-
 	private static DatabaseTypes getDatabaseType() {
 		BasicDataSource basicDataSource = (BasicDataSource) SpringUtils.getBean("dataSource");
 		String driverName = basicDataSource.getDriverClassName();
@@ -597,19 +432,6 @@ public class SqlUtils {
 		if (driverName.startsWith("org.postgresql.")) return (DatabaseTypes.POSTGRESQL);
 		if (driverName.startsWith("oracle.")) return (DatabaseTypes.ORACLE);
 		else throw (new IllegalArgumentException("Need a new database driver type added : " + driverName));
-	}
-
-	/**
-	 * This method will return the like condition for the appropriate database. As an example on mysql it will return "name like 'bob'" on postgres it would be "name ilike 'bob'"
-	 * on oracle "regexp_like(name, 'bob', 'i')"
-	 */
-	public static String getCaseInsensitiveLike(String column, String pattern) {
-		DatabaseTypes databaseType = getDatabaseType();
-
-		if (databaseType == DatabaseTypes.MYSQL) return (column + " like '" + pattern + '\'');
-		if (databaseType == DatabaseTypes.POSTGRESQL) return (column + " ilike '" + pattern + '\'');
-		if (databaseType == DatabaseTypes.ORACLE) return ("regexp_like(" + column + ",'" + pattern + "','i')");
-		else throw (new IllegalArgumentException("Need a new databaseType added : " + databaseType));
 	}
 
 	/**
