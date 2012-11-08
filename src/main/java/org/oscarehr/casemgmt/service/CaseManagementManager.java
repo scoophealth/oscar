@@ -47,7 +47,6 @@ import org.oscarehr.PMmodule.dao.ProgramAccessDAO;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.AccessType;
-import org.oscarehr.common.model.Admission;
 import org.oscarehr.PMmodule.model.DefaultRoleAccess;
 import org.oscarehr.PMmodule.model.ProgramAccess;
 import org.oscarehr.PMmodule.model.ProgramProvider;
@@ -89,6 +88,7 @@ import org.oscarehr.common.dao.MessageTblDao;
 import org.oscarehr.common.dao.MsgDemoMapDao;
 import org.oscarehr.common.dao.ProviderExtDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
@@ -805,10 +805,6 @@ public class CaseManagementManager {
 
 	public boolean haveIssue(Long issid, Long noteId, String demoNo) {
 		return caseManagementNoteDAO.haveIssue(issid, demoNo);
-		/*
-		 * List allNotes = caseManagementNoteDAO.getNotesByDemographic(demoNo); Iterator itr = allNotes.iterator(); while (itr.hasNext()) { CaseManagementNote note = (CaseManagementNote)itr.next(); if( note.getId() == noteId ) { continue; } Set issues =
-		 * note.getIssues(); Iterator its = issues.iterator(); while (its.hasNext()) { CaseManagementIssue iss = (CaseManagementIssue)its.next(); if (iss.getId().intValue() == issid.intValue()) return true; } } return false;
-		 */
 	}
 
 	/**

@@ -24,12 +24,18 @@
 
 --%>
 
-<%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat, org.oscarehr.common.OtherIdManager"%>
+<%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat, org.oscarehr.common.OtherIdManager, oscar.util.ConversionUtils"%>
 <%@ page import="org.oscarehr.event.EventService, org.oscarehr.util.SpringUtils"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
-
+<%@page import="org.oscarehr.common.dao.AppointmentArchiveDao" %>
+<%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
+<%@page import="org.oscarehr.common.model.Appointment" %>
+<%
+	AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
+	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
+%>
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -77,7 +83,41 @@
     }
     param[18]=request.getParameter("urgency");
 
-    int rowsAffected = oscarSuperManager.update("appointmentDao", request.getParameter("dboperation"), param);
+    int rowsAffected = 0;
+    
+    
+    Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no")));
+    if(appt != null) {
+    	appt.setProviderNo(request.getParameter("provider_no"));
+    	appt.setAppointmentDate(ConversionUtils.fromDateString(request.getParameter("appointment_date")));
+    	appt.setStartTime(ConversionUtils.fromTimeString(MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"))));
+    	appt.setEndTime(ConversionUtils.fromTimeString(MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"))));
+    	appt.setName(request.getParameter("keyword"));
+    	appt.setNotes(request.getParameter("notes"));
+    	appt.setReason(request.getParameter("reason"));
+    	appt.setLocation(request.getParameter("location"));
+    	appt.setResources(request.getParameter("resources"));
+    	appt.setType(request.getParameter("type"));
+    	appt.setStyle(request.getParameter("style"));
+    	appt.setBilling(request.getParameter("billing"));
+    	appt.setStatus(request.getParameter("status"));
+    	appt.setLastUpdateUser((String)session.getAttribute("user"));
+    	appt.setRemarks(request.getParameter("remarks"));
+    	appt.setUpdateDateTime(new java.util.Date());
+    	appt.setUrgency((request.getParameter("urgency")!=null)?request.getParameter("urgency"):"");
+    	if (request.getParameter("demographic_no")!=null && !(request.getParameter("demographic_no").equals(""))) {
+      		appt.setDemographicNo(Integer.parseInt(request.getParameter("demographic_no")));
+     	} else {
+    	 	appt.setDemographicNo(0);
+     	}
+    	appt.setProgramId(Integer.parseInt((String)request.getSession().getAttribute("programId_oscarView")));
+    	appt.setCreator(request.getParameter("creator"));
+    	appt.setCreateDateTime(ConversionUtils.fromDateString(request.getParameter("createdatetime")));
+    	appointmentDao.merge(appt);
+    	rowsAffected=1;
+    }
+    
+    
 	if (rowsAffected == 1) {
 
                 String patientname = "";
@@ -144,15 +184,15 @@
             para[2] = new java.sql.Date(cal.getTime().getTime());
             resultList  = oscarSuperManager.find("appointmentDao", "search_appt_future", para);
 
-            for (Map appt : resultList) {
+            for (Map appt1 : resultList) {
                 iRow ++;
                 if (iRow > iPageSize) break;
-                appt_time = MyDateFormat.getTimeXX_XXampm("" + appt.get("start_time"));
-                pname = "" + appt.get("first_name");
-                pname = ""+ appt.get("last_name")+ ", "+ pname.substring(0,1);
+                appt_time = MyDateFormat.getTimeXX_XXampm("" + appt1.get("start_time"));
+                pname = "" + appt1.get("first_name");
+                pname = ""+ appt1.get("last_name")+ ", "+ pname.substring(0,1);
     %>
             <tr bgcolor="#eeeeff">
-		<td style="padding-right: 10px"><%=appt.get("appointment_date")%></td>
+		<td style="padding-right: 10px"><%=appt1.get("appointment_date")%></td>
 		<td style="padding-right: 10px"><%=appt_time%></td>
 		<td style="padding-right: 10px"><%=pname%></td>
             </tr>

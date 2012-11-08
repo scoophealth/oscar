@@ -25,32 +25,36 @@
 
 package oscar.appt;
 
-import oscar.service.MessageMailer;
-import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
-import java.util.Properties;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.FileInputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.DataInputStream;
 import java.io.InputStream;
-import org.apache.log4j.Logger;
-import org.oscarehr.util.MiscUtils;
-import org.oscarehr.PMmodule.utility.DateUtils;  
-import oscar.dao.AppointmentDao;
-import org.oscarehr.util.SpringUtils;
-import java.util.Map;
-import java.util.List;
-import java.util.Date;
+import java.io.InputStreamReader;
 import java.sql.Time;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
-import org.oscarehr.common.model.Demographic;
-import org.oscarehr.common.dao.ClinicDAO;
-import org.oscarehr.common.model.Clinic;
-import javax.mail.internet.InternetAddress;
 import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
+import org.apache.log4j.Logger;
+import org.oscarehr.PMmodule.utility.DateUtils;
+import org.oscarehr.common.dao.ClinicDAO;
+import org.oscarehr.common.dao.OscarAppointmentDao;
+import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.Clinic;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
+
+import oscar.dao.AppointmentDao;
+import oscar.service.MessageMailer;
 /**
  *
  * @author mweston4
@@ -66,7 +70,8 @@ public class AppointmentMailer implements MessageMailer{
     private Integer apptNo;
     private Demographic demographic;
     
-   
+    OscarAppointmentDao dao=(OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
+
     
     public AppointmentMailer(Integer apptNo, Demographic demographic) {
         this.mailSender = (MailSender) SpringUtils.getBean("asyncMailSender");
@@ -231,9 +236,12 @@ public class AppointmentMailer implements MessageMailer{
             if (doSend) {
                 mailSender.send(this.message);
                 
-                //Update appt history accordingly                 
-                AppointmentDao apptDao = (AppointmentDao) SpringUtils.getBean("appointmentSuperDao");                
-                apptDao.executeUpdateQuery("appendremarks", new Object[]{"Emailed:" + DateUtils.getCurrentDateOnlyStr("-") +"\n",this.apptNo}); 
+                //Update appt history accordingly      
+                Appointment appt = dao.find(this.apptNo);
+                if(appt != null) {
+                	appt.setRemarks(appt.getRemarks() + "Emailed:" + DateUtils.getCurrentDateOnlyStr("-") +"\n");
+                	dao.merge(appt);
+                }
             }
             else {
                 logger.error("MailSender is not instantiated or MailMessage is not prepared");

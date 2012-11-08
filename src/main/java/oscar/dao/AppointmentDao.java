@@ -147,23 +147,16 @@ public class AppointmentDao extends OscarSuperDao {
             {"search_appt_data", "select app.*, prov.first_name, prov.last_name, prov.ohip_no, adm.program_id as adm_program_id from provider prov, appointment app left join admission adm on app.demographic_no = adm.client_id where app.provider_no = prov.provider_no and app.provider_no=? and app.appointment_date=? and app.start_time=? and app.end_time=? and app.createdatetime=? and app.creator=? and app.demographic_no=? order by app.appointment_no desc limit 1"},
 
             {"search_waitinglist", "select wl.listID, wln.name from waitingList wl, waitingListName wln where wl.demographic_no=? and wln.ID=wl.listID and wl.is_history ='N' order by wl.listID"},
-            {"appendremarks", "update appointment set remarks=CONCAT(remarks,?) where appointment_no=?"},
-            {"updatestatusc", "update appointment set status=?, lastupdateuser=?, updatedatetime=now() where appointment_no=?"},
-            {"update_apptrecord", "update appointment set demographic_no=?,appointment_date=?,start_time=?,end_time=?,name=?, notes=?,reason =?,location=?, resources=?, type=?,style=?,billing =?,status=?,lastupdateuser=?,remarks=?,updatedatetime=now(),urgency=? where appointment_no=? "},
-
+            
             {"search", "select * from appointment where appointment_no=?"},
             {"search_detail", "select * from demographic where demographic_no=?"},
 
-            {"delete", "delete from appointment where appointment_no=?"},
-
+            
             {"search_otherappt", "select * from appointment where appointment_date=? and ((start_time <= ? and end_time >= ?) or (start_time > ? and start_time < ?) ) order by provider_no, start_time" },
             {"search_groupprovider", "select p.last_name, p.first_name, p.provider_no from mygroup m, provider p where m.mygroup_no=? and m.provider_no=p.provider_no order by p.last_name"},
             {"search_scheduledate_single", "select * from scheduledate where sdate=? and provider_no=?" },
 
-            {"cancel_appt", "update appointment set status = ?, updatedatetime = ?, lastupdateuser = ? where appointment_date=? and provider_no=? and start_time=? and end_time=? and name=? and notes=? and reason=? and createdatetime like ?  and creator=? and demographic_no=? " },
-            {"delete_appt", "delete from appointment where appointment_date=? and provider_no=? and start_time=? and end_time=? and name=? and notes=? and reason=? and createdatetime like ?  and creator=? and demographic_no=? " },
-            {"update_appt", "update appointment set start_time=?, end_time=?, name=?, demographic_no=?, notes=?, reason=?, location=?, resources=?, updatedatetime=?, lastupdateuser=?, urgency=? where appointment_date=? and provider_no=? and start_time=? and end_time=? and name=? and notes=? and reason=? and createdatetime like ?  and creator=? and demographic_no=?" },
-
+            
             {"search_group_day_appt", "select count(appointment_no) as numAppts from appointment, mygroup where mygroup.provider_no=appointment.provider_no and appointment.status != 'C' and mygroup.mygroup_no=? and  appointment.demographic_no=? and  appointment.appointment_date=?"},
             {"search_formtbl","select * from encounterForm where form_table= ?"},
             {"export_appt", "select app.*, prov.first_name, prov.last_name, prov.ohip_no from appointment app, provider prov where app.provider_no = prov.provider_no and app.demographic_no = ?" }

@@ -29,7 +29,6 @@ import org.oscarehr.util.SpringUtils;
 
 import oscar.SxmlMisc;
 import oscar.oscarBilling.ca.on.data.BillingONDataHelp;
-import oscar.service.OscarSuperManager;
 import oscar.util.UtilDateUtilities;
 
 public class JdbcApptImpl {
@@ -40,10 +39,13 @@ public class JdbcApptImpl {
 
 
 	public boolean deleteAppt(String apptNo) {
-                OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");
                 Appointment appt = appointmentDao.find(Integer.parseInt(apptNo));
           	  	appointmentArchiveDao.archiveAppointment(appt);
-                int retval = oscarSuperManager.update("appointmentDao", "delete", new String[]{apptNo});
+          	  	int retval=0;
+          	  	if(appt != null) {
+          	  		appointmentDao.remove(appt.getId());
+          	  		retval=1;
+          	  	}
 		if (retval==1) {
 			_logger.error("deleteAppt(id=" + apptNo + ")");
 		}

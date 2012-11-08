@@ -21,6 +21,7 @@
 
 package com.quatro.dao;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ import java.util.List;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.common.model.Facility;
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -503,7 +505,7 @@ public class LookupDao extends HibernateDaoSupport {
 		}
 		DBPreparedHandler db = new DBPreparedHandler();
 		try{
-			db.queryExecuteUpdate(sql, params);
+			queryExecuteUpdate(sql, params);
 		}
 		finally
 		{
@@ -550,7 +552,7 @@ public class LookupDao extends HibernateDaoSupport {
 		params[fieldDefList.size()] = params[0];
 		DBPreparedHandler db = new DBPreparedHandler();
 		try {
-			db.queryExecuteUpdate(sql, params);
+			queryExecuteUpdate(sql, params);
 		}
 		finally
 		{
@@ -752,4 +754,24 @@ public class LookupDao extends HibernateDaoSupport {
 	public void setProviderDao(ProviderDao providerDao) {
 		this.providerDao = providerDao;
 	}
+	
+    private int queryExecuteUpdate(String preparedSQL, DBPreparedHandlerParam[] params) throws SQLException {
+        PreparedStatement preparedStmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(preparedSQL);
+        for (int i = 0; i < params.length; i++) {
+        	DBPreparedHandlerParam param = params[i];
+        	
+        	if (param==null) preparedStmt.setObject(i+1, null);
+        	else if(DBPreparedHandlerParam.PARAM_STRING.equals(param.getParamType())){
+                    preparedStmt.setString(i+1, param.getStringValue());
+        	}else if (DBPreparedHandlerParam.PARAM_DATE.equals(param.getParamType())){
+                    preparedStmt.setDate(i+1, param.getDateValue());
+        	}else if (DBPreparedHandlerParam.PARAM_INT.equals(param.getParamType())){
+                    preparedStmt.setInt(i+1,param.getIntValue());
+        	}else if (DBPreparedHandlerParam.PARAM_TIMESTAMP.equals(param.getParamType())){
+                    preparedStmt.setTimestamp(i+1,param.getTimestampValue());
+                }
+        }
+        return(preparedStmt.executeUpdate());
+    }
+
 }
