@@ -38,6 +38,17 @@ public class BillingDao extends AbstractDao<Billing> {
 		super(Billing.class);
 	}
 	
+	public List<Billing> findActive(int billingNo) {
+		Query q = entityManager.createQuery("select x from Billing x where x.id=? and x.status <> ?");
+		q.setParameter(1, billingNo);
+		q.setParameter(2, "D");
+		
+		@SuppressWarnings("unchecked")
+		List<Billing> results = q.getResultList();
+		
+		return results;
+	}
+	
 	public List<Billing> findByBillingType(String type) {
 		Query q = entityManager.createQuery("select x from Billing x where x.billingType=?");
 		q.setParameter(1, type);
