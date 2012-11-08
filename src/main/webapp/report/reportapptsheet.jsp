@@ -155,16 +155,7 @@ function setfocus() {
     } else { //select all providers
 	  rsdemo = daySheetBean.queryResults(param[0], "search_apptsheetall");
     }
-/*  } else { //new appt, need to update status
-    if(!provider_no.equals("*") && !provider_no.startsWith("_grp_") ) {
-	  rsdemo = daySheetBean.queryResults(param, "search_daysheetsinglenew");
-	  int rowsAffected = daySheetBean.queryExecuteUpdate(param, "update_apptstatussingle");
-    } else { //select all providers
-	  rsdemo = daySheetBean.queryResults(param[0], "search_daysheetnew");
-	  int rowsAffected = daySheetBean.queryExecuteUpdate(param[0], "update_apptstatus");
-    }
-  }
-*/	
+
   while (rsdemo.next()) { 
     //if it is a group and a group member
 	if(!myGroupBean.isEmpty()) {

@@ -593,7 +593,7 @@ public class LookupDao extends HibernateDaoSupport {
 		}
 		this.SaveCodeValue(isNew,pcd);
 	}
-	private void updateOrgTree(String orgCd, LookupCodeValue newCd) throws SQLException
+	private void updateOrgTree(String orgCd, LookupCodeValue newCd)
 	{
 		LookupCodeValue oldCd = GetCode("ORG", orgCd);
 		if(!oldCd.getCodecsv().equals(newCd.getCodecsv())) {
@@ -604,42 +604,33 @@ public class LookupDao extends HibernateDaoSupport {
 			String newFullCode = newCd.getBuf1();
 			String newTreeCode = newCd.getCodeTree();
 			String newCsv = newCd.getCodecsv();
+			
 			String sql = "update lst_orgcd set fullcode =replace(fullcode,'" + oldFullCode + "','" + newFullCode + "')" +
 											  ",codetree =replace(codetree,'" + oldTreeCode + "','" + newTreeCode + "')" +
 						                       ",codecsv =replace(codecsv,'" + oldCsv + "','" + newCsv + "')" +
 						 " where codecsv like '" + oldCsv + "_%'";
 
-			DBPreparedHandler db = new DBPreparedHandler();
-			try{
-				db.queryExecuteUpdate(sql);
-			}
-			finally
-			{
-			}
+			this.getSession().createSQLQuery(sql).executeUpdate();
+			
 		}
 
 
 	}
 
-	private void updateOrgStatus(String orgCd, LookupCodeValue newCd) throws SQLException
+	private void updateOrgStatus(String orgCd, LookupCodeValue newCd) 
 	{
 		LookupCodeValue oldCd = GetCode("ORG", orgCd);
 		if(!newCd.isActive()) {
 			String oldCsv = oldCd.getCodecsv();
 
-			String sql = "update lst_orgcd set activeyn ='0' where codecsv like '" + oldCsv + "_%'";
-
-			DBPreparedHandler db = new DBPreparedHandler();
-			try{
-				db.queryExecuteUpdate(sql);
-			}
-			finally
-			{
+			List<LstOrgcd> o = this.getHibernateTemplate().find("FROM LstOrgcd o WHERE o.codecsv like ?",oldCsv+"_%");
+			for(LstOrgcd l:o) {
+				l.setActiveyn(0);
+				this.getHibernateTemplate().update(l);
 			}
 		}
-
-
 	}
+	
 	public boolean inOrg(String org1,String org2){
 		boolean isInString=false;
 		String sql="From LstOrgcd a where  a.fullcode like '%"+"?'  ";

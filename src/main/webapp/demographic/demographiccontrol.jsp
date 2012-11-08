@@ -174,11 +174,7 @@
 	  {"Update Record" , "demographicupdatearecord.jsp"},
 
 	  {"Delete" , "demographicdeletearecord.jsp"},
-	  {"Save Record & Back to Appointment" , "demographicaddbacktoappt.jsp"},
-	  {"Update Record & Back to Appointment" , "demographicupdatebacktoappt.jsp"},
 	  {"Demographic ID" , "adddemographictoeditappt.jsp"},
-	  {"Add Record & Back to Appointment" , "adddemographicbacktoappt.jsp"},
-	  {"Update Record & Back to Appointment" , "updatedemographicbacktoappt.jsp"},
 	  {"linkMsg2Demo" , "../oscarMessenger/msgSearchDemo.jsp"},
 	};
 	apptMainBean.doConfigure( dbQueries,responseTargets);

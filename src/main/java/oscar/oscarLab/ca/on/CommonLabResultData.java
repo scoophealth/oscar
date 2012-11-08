@@ -338,11 +338,13 @@ public class CommonLabResultData {
 			while (rs.next()) { //
 				empty = false;
 				String id = oscar.Misc.getString(rs, "id");
-				sql = "update providerLabRouting set status='" + status + "', comment=? where id = '" + id + "'";
 				if (!oscar.Misc.getString(rs, "status").equals("A")) {
-
-					db.queryExecute(sql, new String[] { comment });
-
+					ProviderLabRoutingModel plr  = providerLabRoutingDao.find(Integer.parseInt(id));
+					if(plr != null) {
+						plr.setStatus(""+status);
+						plr.setComment(comment);
+						providerLabRoutingDao.merge(plr);
+					}
 				}
 			} 
 			if (empty) {
@@ -357,10 +359,13 @@ public class CommonLabResultData {
 
 			if (!"0".equals(providerNo)) {
 				String recordsToDeleteSql = "select * from providerLabRouting where provider_no='0' and lab_no='" + labNo + "' and lab_type = '" + labType + "'";
-				sql = "delete from providerLabRouting where provider_no='0' and lab_no=? and lab_type = '" + labType + "'";
 				ArchiveDeletedRecords adr = new ArchiveDeletedRecords();
 				adr.recordRowsToBeDeleted(recordsToDeleteSql, "" + providerNo, "providerLabRouting");
-				db.queryExecute(sql, new String[] { Integer.toString(labNo) });
+				
+				for(ProviderLabRoutingModel plr : providerLabRoutingDao.findByLabNoAndLabTypeAndProviderNo(labNo, labType, "0")) {
+					providerLabRoutingDao.remove(plr.getId());
+				}
+				
 			}
 			return true;
 		} catch (Exception e) {

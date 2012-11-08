@@ -191,10 +191,6 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"Security_Update" , "securityupdatesecurity.jsp"},
     {"Security_Delete" , "securitydelete.jsp"},
     {"Security_Update_Record" , "securityupdate.jsp"},
-    {"Preference_Add_Record" , "preferenceaddpreference.jsp"},
-    {"Preference_Search" , "preferencesearchresults.jsp"},
-    {"Preference_Delete" , "preferencedelete.jsp"},
-    {"Preference_Update_Record" , "preferenceupdate.jsp"},
     {"Demographic_Admin_Reports" , "../demographic/demographicsearch2reportresults.jsp"},
 
     {"displaymygroup" , "admindisplaymygroup.jsp"},
