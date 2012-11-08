@@ -764,6 +764,11 @@
 			<artifactId>util</artifactId>
 			<version>2012.11.06</version>
 		</dependency>
+		<dependency>
+			<groupId>org.oscarehr</groupId>
+			<artifactId>myoscar_client_utils</artifactId>
+			<version>2012.11-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -1137,7 +1142,10 @@
 				<configuration>
 					<groupIdsToRemove>
 						<param>org.oscarehr.caisi_integrator.caisi_integrator_client_stubs</param>
-						<param>org.oscarehr.myoscar_server.myoscar_server_client_stubs</param>
+						<param>org.oscarehr.myoscar_client_server_commons</param>
+						<param>org.oscarehr.myoscar_server</param>
+						<param>org.oscarehr.myoscar_client_utils</param>
+						<param>org.oscarehr.util</param>
 						<param>org.oscarehr.ar2005.ar2005</param>
 						<param>org.oscarehr.util</param>
 						<param>dm.dm</param>
