@@ -23,24 +23,26 @@
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 package oscar.oscarBilling.data;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
+
 /**
  * @author yilee18
  * 
-
+ * @deprecated Use appropriate DAO instead.
  */
+@Deprecated
 public class BillingONDataHelp {
 
-	
 	public synchronized ResultSet searchDBRecord(String sql) {
 		ResultSet ret = null;
 		try {
-			
+
 			ret = DBHandler.GetSQL(sql);
 		} catch (SQLException e) {
 			MiscUtils.getLogger().error("Error", e);
@@ -51,11 +53,11 @@ public class BillingONDataHelp {
 	public synchronized ResultSet searchDBRecord_paged(String sql, int iOffSet) {
 		ResultSet ret = null;
 		try {
-			
+
 			ret = DBHandler.GetSQL(sql);
-	        for(int i=1; i<=iOffSet; i++){
-	            if(ret.next()==false) break;
-	        }
+			for (int i = 1; i <= iOffSet; i++) {
+				if (ret.next() == false) break;
+			}
 		} catch (SQLException e) {
 			MiscUtils.getLogger().error("Error", e);
 		}

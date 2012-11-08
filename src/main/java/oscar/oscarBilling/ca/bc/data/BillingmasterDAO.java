@@ -84,6 +84,9 @@ public class BillingmasterDAO {
 		return query.getResultList();
 	}
 
+	/**
+	 * Same as {@link #getBillingmaster(int)} 
+	 */
 	public Billingmaster getBillingmaster(String billingNo) {
 		return getBillingmaster(Integer.parseInt(billingNo));
 	}
