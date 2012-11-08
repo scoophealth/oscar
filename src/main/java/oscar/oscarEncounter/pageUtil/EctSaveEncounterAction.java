@@ -254,13 +254,21 @@ public class EctSaveEncounterAction extends Action {
                   "Sign,Save and Exit")) {
             	  Appointment appt = appointmentDao.find(Integer.parseInt(sessionbean.appointmentNo));
             	  appointmentArchiveDao.archiveAppointment(appt);
-                  oscarSuperManager.update("appointmentDao", "updatestatusc", new Object[]{as.signStatus(),sessionbean.providerNo,sessionbean.appointmentNo});
+                  if(appt != null) {
+                  	appt.setStatus(as.signStatus());
+                  	appt.setLastUpdateUser(sessionbean.providerNo);
+                  	appointmentDao.merge(appt);
+                  }
               }
               if (httpservletrequest.getParameter("btnPressed").equals(
                   "Verify and Sign")) {
             	  Appointment appt = appointmentDao.find(Integer.parseInt(sessionbean.appointmentNo));
             	  appointmentArchiveDao.archiveAppointment(appt);
-            	  oscarSuperManager.update("appointmentDao", "updatestatusc", new Object[]{as.verifyStatus(),sessionbean.providerNo,sessionbean.appointmentNo});
+            	  if(appt != null) {
+                  	appt.setStatus(as.verifyStatus());
+                  	appt.setLastUpdateUser(sessionbean.providerNo);
+                  	appointmentDao.merge(appt);
+                  }
               }
             }
           }

@@ -43,30 +43,12 @@ public class dbExtract implements Serializable {
     private Statement stmt3 = null;
     private int numUpdate;
     private Statement prepStmt = null;
-    private String updateString;
     PreparedStatement prep = null;
     ResultSet resultSet = null;
     ResultSet resultSet2 = null;
     ResultSet resultSet3 = null;
 
     public dbExtract() {
-        //	try{
-        //	 String userHomePath = System.getProperty("user.home", "user.dir");
-
-        //    File pFile = new File(userHomePath, "oscar.prop");
-        //  FileInputStream pStream = new FileInputStream(pFile.getPath());
-
-        //Properties ap = new Properties();
-        // ap.load(pStream);
-
-        //  surl = ap.getProperty("DB_DRIVER");
-        // user = ap.getProperty("DB_USERID");
-        //  password = ap.getProperty("DB_PASSWORD");
-        //  pStream.close();
-        // }
-        // catch (Exception ex) {
-
-        //   }
     }
 
     public void openConnection() {
@@ -127,32 +109,6 @@ public class dbExtract implements Serializable {
             MiscUtils.getLogger().debug("Exception is: " + e);
             return resultSet3;
         }
-    }
-
-    public int executeUpdate() {
-
-        try {
-            String SQLup = getUpdateString();
-
-            prepStmt = con.createStatement();
-            numUpdate = prepStmt.executeUpdate(SQLup);
-            con.commit();
-
-            return numUpdate;
-        }
-        catch (SQLException e) {
-            MiscUtils.getLogger().debug("Cannot get connection ");
-            MiscUtils.getLogger().debug("Exception is: " + e);
-            return numUpdate;
-        }
-    }
-
-    public synchronized void setUpdateString(String newUpdateString) {
-        updateString = newUpdateString;
-    }
-
-    public String getUpdateString() {
-        return updateString;
     }
 
     public void closeConnection() {

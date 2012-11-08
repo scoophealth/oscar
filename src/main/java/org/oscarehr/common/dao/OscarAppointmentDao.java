@@ -256,4 +256,26 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 
 		return appointment;
 	}
+	
+
+	public List<Appointment> findByEverything(Date appointmentDate, String providerNo, Date startTime, Date endTime, String name, String notes, String reason, String createDateTime, String creator, int demographicNo) {
+		String sql = "SELECT a FROM Appointment a WHERE a.appointmentDate=? and a.providerNo=? and a.startTime=? and a.endTime=? and a.name=? and a.notes=? and a.reason=? and a.createDateTime like ? and a.creator = ? and a.demographicNo=?";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, appointmentDate);
+		query.setParameter(2, providerNo);
+		query.setParameter(3, startTime);
+		query.setParameter(4, endTime);
+		query.setParameter(5, name);
+		query.setParameter(6, notes);
+		query.setParameter(7, reason);
+		query.setParameter(8, createDateTime);
+		query.setParameter(9, creator);
+		query.setParameter(10, demographicNo);
+
+		@SuppressWarnings("unchecked")
+		List<Appointment> rs = query.getResultList();
+
+		return rs;
+	}
+	
 }

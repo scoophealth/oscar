@@ -691,7 +691,7 @@ if (bMultisites) { %>
                     WIDTH="25">
                 <INPUT TYPE="hidden" NAME="createdatetime" VALUE="<%=strDateTime%>">
 				<INPUT TYPE="hidden" NAME="provider_no" VALUE="<%=curProvider_no%>">
-				<INPUT TYPE="hidden" NAME="dboperation" VALUE="update_apptrecord">
+				<INPUT TYPE="hidden" NAME="dboperation" VALUE="">
                 <INPUT TYPE="hidden" NAME="creator" VALUE="<%=userlastname+", "+userfirstname%>">
                 <INPUT TYPE="hidden" NAME="remarks" VALUE="<%=remarks%>">
                 <INPUT TYPE="hidden" NAME="appointment_no" VALUE="<%=appointment_no%>">

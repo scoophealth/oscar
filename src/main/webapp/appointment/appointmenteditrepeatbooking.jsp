@@ -157,8 +157,18 @@
 			while (true) {
 				Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no")));
 			    appointmentArchiveDao.archiveAppointment(appt);
-				rowsAffected = oscarSuperManager.update("appointmentDao", "cancel_appt", param);
-
+			    
+			    List<Appointment> appts = appointmentDao.find(dayFormatter.parse((String)param[3]), (String)param[4], (java.sql.Time)param[5], (java.sql.Time)param[6],
+						(String)param[7], (String)param[8], (String)param[9], (java.sql.Timestamp)param[10], (String)param[11], (Integer)param[12]);
+			    
+            	for(Appointment a:appts) {
+            		a.setStatus("C");
+            		a.setUpdateDateTime(ConversionUtils.fromTimestampString(createdDateTime));
+            		a.setLastUpdateUser(userName);
+            		appointmentDao.merge(a);
+            		rowsAffected++;
+            	}
+				
 				gCalDate.setTime(UtilDateUtilities.StringToDate((String)param[3], "yyyy-MM-dd"));
 				gCalDate = addDateByYMD(gCalDate, everyUnit, delta);
 
@@ -180,9 +190,10 @@
 						(String)param[4], (String)param[5], (String)param[6], (java.sql.Timestamp)param[7], (String)param[8], (Integer)param[9]);
 				for(Appointment appt:appts) {
 					appointmentArchiveDao.archiveAppointment(appt);
+					appointmentDao.remove(appt.getId());
+					rowsAffected++;
 				}
-				rowsAffected = oscarSuperManager.update("appointmentDao", "delete_appt", param);
-
+				
 				gCalDate.setTime(UtilDateUtilities.StringToDate((String)param[0], "yyyy-MM-dd"));
 				gCalDate = addDateByYMD(gCalDate, everyUnit, delta);
 
@@ -213,9 +224,22 @@
 						(String)paramE[4], (String)paramE[5], (String)paramE[6], (java.sql.Timestamp)paramE[7], (String)paramE[8], (Integer)paramE[9]);
 				for(Appointment appt:appts) {
 					appointmentArchiveDao.archiveAppointment(appt);
+					appt.setStartTime(ConversionUtils.fromTimeString(MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"))));
+					appt.setEndTime(ConversionUtils.fromTimeString(MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"))));
+					appt.setName(request.getParameter("keyword"));
+					appt.setDemographicNo(Integer.parseInt(request.getParameter("demographic_no")));
+					appt.setNotes(request.getParameter("notes"));
+					appt.setReason(request.getParameter("reason"));
+					appt.setLocation(request.getParameter("location"));
+					appt.setResources(request.getParameter("resources"));
+					appt.setUpdateDateTime(ConversionUtils.fromTimestampString(createdDateTime));
+					appt.setLastUpdateUser(userName);
+					appt.setUrgency(request.getParameter("urgency"));
+					appointmentDao.merge(appt);
+					rowsAffected++;
 				}
-				rowsAffected = oscarSuperManager.update("appointmentDao", "update_appt", param);
-
+				
+				
 				gCalDate.setTime(UtilDateUtilities.StringToDate((String)param[11], "yyyy-MM-dd"));
 				gCalDate = addDateByYMD(gCalDate, everyUnit, delta);
 

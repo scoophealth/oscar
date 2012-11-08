@@ -43,11 +43,17 @@
     param[2]=request.getParameter("appointment_no");
     Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no")));
     appointmentArchiveDao.archiveAppointment(appt);
+    int rowsAffected=0;
+    if(appt != null) {
+  	  appt.setStatus(request.getParameter("status") + request.getParameter("statusch"));
+  	  appt.setLastUpdateUser((String)session.getAttribute("user"));
+  	  appointmentDao.merge(appt);
+  	  rowsAffected=1;
+    }
     
     EventService eventService = SpringUtils.getBean(EventService.class);//This is when the icon is clicked in the appt screen
 	eventService.appointmentStatusChanged(this,request.getParameter("appointment_no"), request.getParameter("provider_no"), request.getParameter("statusch"));
     
-    int rowsAffected = oscarSuperManager.update("providerDao", request.getParameter("dboperation"), param);
     if (rowsAffected == 1) {//add_record
       int view=0;
       if(request.getParameter("view")!=null) view=Integer.parseInt(request.getParameter("view")); //0-multiple views, 1-single view

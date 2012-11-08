@@ -24,8 +24,10 @@
 package org.oscarehr.PMmodule.web.admin;
 
 import java.io.IOException;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +48,7 @@ import org.oscarehr.PMmodule.dao.RoleDAO;
 import org.oscarehr.PMmodule.model.SecUserRole;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
@@ -304,7 +307,7 @@ public class MigrateCaisiRolesAction extends BaseAdminAction {
 					ppDao.deleteProgramProvider(rs.getLong("id"));					
 				} else {
 					//change
-					DBHandler.RunSQL("update program_provider set role_id=" + mappingMap.get(caisiRoleId).getOscarRole().getId() + " where id=" + rs.getLong("id"));					
+					RunSQL("update program_provider set role_id=" + mappingMap.get(caisiRoleId).getOscarRole().getId() + " where id=" + rs.getLong("id"));					
 				}
 				
 				//2
@@ -349,10 +352,10 @@ public class MigrateCaisiRolesAction extends BaseAdminAction {
 				
 				Mapping mappedRole = mappingMap.get((long)role_id);
 				if(mappedRole == null) {
-					DBHandler.RunSQL("delete from default_role_access where id = " + id);
+					RunSQL("delete from default_role_access where id = " + id);
 					logger.info("delete from default_role_access where id = " + id);
 				} else {
-					DBHandler.RunSQL("update default_role_access set role_id=" + mappedRole.getOscarRole().getId() + " where id=" + id);
+					RunSQL("update default_role_access set role_id=" + mappedRole.getOscarRole().getId() + " where id=" + id);
 					logger.info("update default_role_access set role_id=" + mappedRole.getOscarRole().getId() + " where id=" + id);
 				}
 			}		
@@ -371,10 +374,10 @@ public class MigrateCaisiRolesAction extends BaseAdminAction {
 					valuesToAdd.add(id + "," + mappedRole.getOscarRole().getId());
 				}
 			}
-			DBHandler.RunSQL("delete from program_access_roles");
+			RunSQL("delete from program_access_roles");
 			for(String vta:valuesToAdd) {
 				String[] p = vta.split(",");
-				DBHandler.RunSQL("insert into program_access_roles  values (" +p[0] + "," + p[1] + ")");
+				RunSQL("insert into program_access_roles  values (" +p[0] + "," + p[1] + ")");
 				logger.info("insert into program_access_roles  values (" +p[0] + "," + p[1] + ")");
 			}
 			
@@ -389,7 +392,7 @@ public class MigrateCaisiRolesAction extends BaseAdminAction {
 					//we don't remove notes.
 					
 				} else {
-					DBHandler.RunSQL("update casemgmt_note set reporter_caisi_role="+mappedRole.getOscarRole().getId() + " where note_id="+id);
+					RunSQL("update casemgmt_note set reporter_caisi_role="+mappedRole.getOscarRole().getId() + " where note_id="+id);
 					logger.info("update casemgmt_note set reporter_caisi_role="+mappedRole.getOscarRole().getId() + " where note_id="+id);
 				}
 			}
@@ -468,5 +471,20 @@ public class MigrateCaisiRolesAction extends BaseAdminAction {
 		}
 		
 		
+	}
+	
+	public static int RunSQL(String SQLStatement, String para1) throws SQLException {
+		PreparedStatement ps = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(SQLStatement);
+		ps.setString(1, para1);
+		int result = ps.executeUpdate();
+		return result;
+	}
+
+	public static boolean RunSQL(String SQLStatement) throws SQLException {
+		boolean b = false;
+		Statement stmt;
+		stmt = DbConnectionFilter.getThreadLocalDbConnection().createStatement();
+		b = stmt.execute(SQLStatement);
+		return b;
 	}
 }

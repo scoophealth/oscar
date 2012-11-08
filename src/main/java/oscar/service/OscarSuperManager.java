@@ -35,20 +35,6 @@ import oscar.dao.OscarSuperDao;
  * class that extends OscarSuperDao. Use methods of this manager in JSP/Action
  * code to perform database access: <br>
  * <br>
- * <code>
-	<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
-
-	// update
-	int rowsAffected = oscarSuperManager.update("appointmentDao", "delete",
-		new Object[] {request.getParameter("appointment_no")});
-
-	// select
-	List<Map> resultList = oscarSuperManager.find("appointmentDao", "search_waitinglist",
-		new Object[] {request.getParameter("demographic_no")});
-	for (Map wl : resultList) {
-		out.print(wl.get("name"));
-	}
- * </code>
  *
  * @author Eugene Petruhin
  *
@@ -134,22 +120,6 @@ public class OscarSuperManager {
 	 */
 	public List<Object> populate(String daoName, String queryName, Object[] params) {
 		return getDao(daoName).executeRowMappedSelectQuery(queryName, params);
-	}
-
-	/**
-	 * Directs a call to a specified dao object that executes a parameterized
-	 * insert/update/delete query identified by a query name.<br>
-	 *
-	 * @param daoName
-	 *            dao class key
-	 * @param queryName
-	 *            sql query key
-	 * @param params
-	 *            sql query parameters
-	 * @return number of affected rows
-	 */
-	public int update(String daoName, String queryName, Object[] params) {
-		return getDao(daoName).executeUpdateQuery(queryName, params);
 	}
 
 	/**
