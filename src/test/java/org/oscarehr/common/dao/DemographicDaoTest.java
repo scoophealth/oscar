@@ -40,6 +40,7 @@ public class DemographicDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
+		this.beforeForInnoDB();
 		SchemaUtils.restoreTable("demographic","lst_gender","admission","demographic_merged",
 				"program","health_safety","provider","providersite","site","program_team");
 	}
