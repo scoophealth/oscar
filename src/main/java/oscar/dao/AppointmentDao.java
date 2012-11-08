@@ -25,22 +25,13 @@ package oscar.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.oscarehr.common.dao.DemographicDao;
-import org.oscarehr.common.hl7.v2.HL7A04Data;
-import org.oscarehr.common.model.Demographic;
-import org.oscarehr.util.SpringUtils;
 import org.springframework.jdbc.core.RowMapper;
 
-import oscar.OscarProperties;
 import oscar.appt.ApptData;
-import oscar.oscarClinic.ClinicData;
-import oscar.oscarDemographic.data.DemographicData;
-//import org.oscarehr.PMmodule.model.Program;
-//import org.oscarehr.PMmodule.dao.ProgramDao;
+
 
 /**
  * Oscar Appointment DAO implementation created to extract database access code
@@ -56,83 +47,6 @@ public class AppointmentDao extends OscarSuperDao {
 
 	public AppointmentDao() {
 		rowMappers.put("export_appt", new ExportApptDataRowMapper());
-	}
-	
-	/**
-	 * Executes a parameterized insert/update/delete query identified by a key.<br>
-	 * 
-	 * @param queryName sql query key
-	 * @param params sql query parameters
-	 * @return number of affected rows
-	 */
-	public int executeUpdateQuery(String queryName, Object[] params) {
-		int result = super.executeUpdateQuery(queryName, params);
-		
-		// Generate our HL7 A04 file when we add an appointment
-		// Should we also generate an HL7 A04 when we import an appointment?
-		if (OscarProperties.getInstance().isHL7A04GenerationEnabled() && 
-			queryName.equalsIgnoreCase("add_apptrecord") && result == 1) {
-			generateHL7A04(params);
-		}
-		
-		return result;
-	}
-	
-	/**
-	 * 
-	 */ 
-	private void generateHL7A04(Object[] params) {
-		try {	
-			String[] param2 = new String[7];
-			param2[0] = params[0].toString(); //provider_no
-			param2[1] = params[1].toString(); //appointment_date
-			param2[2] = params[2].toString(); //start_time
-			param2[3] = params[3].toString(); //end_time
-			param2[4] = params[13].toString(); //createdatetime
-			param2[5] = params[14].toString(); //creator
-			param2[6] = params[16].toString(); //demographic_no
-			
-			// get appointment data
-			ApptData appData = new ApptData();
-			List<Map<String, Object>> apptInfo = this.executeSelectQuery("search_appt_data", param2);
-			if (apptInfo.size() > 0) {
-				appData.setAppointment_no( 		apptInfo.get(0).get("appointment_no").toString() );
-				appData.setAppointment_date( 	apptInfo.get(0).get("appointment_date").toString() );
-				appData.setStart_time( 			apptInfo.get(0).get("start_time").toString() );
-				appData.setEnd_time( 			apptInfo.get(0).get("end_time").toString() );
-				appData.setNotes( 				apptInfo.get(0).get("notes").toString() );
-				appData.setReason( 				apptInfo.get(0).get("reason").toString() );
-				appData.setStatus( 				apptInfo.get(0).get("status").toString() );
-				appData.setProviderFirstName( 	apptInfo.get(0).get("first_name").toString() );
-				appData.setProviderLastName( 	apptInfo.get(0).get("last_name").toString() );
-				appData.setOhipNo( 				apptInfo.get(0).get("ohip_no").toString() );
-				appData.setUrgency( 			apptInfo.get(0).get("urgency").toString() );				
-			}
-				
-			// get demographic data
-			DemographicData demoData = new DemographicData();
-			Demographic demo = demoData.getDemographic(params[16].toString());
-			
-			// get clinic name/id
-			ClinicData clinicData = new ClinicData();
-			
-			//Program program = null;
-			DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
-			List programs = demographicDao.getDemoProgramCurrent( demo.getDemographicNo() );
-			/*
-			if ( apptInfo.get(0).get("adm_program_id").toString() != null ) {
-				Integer programId = new Integer( apptInfo.get(0).get("adm_program_id").toString() );
-				ProgramDao programDao = (ProgramDao)SpringUtils.getBean("programDao");
-				program = programDao.getProgram( programId );
-			}
-			*/
-			
-			// generate A04 HL7
-			HL7A04Data A04Obj = new HL7A04Data(demo, appData, clinicData, programs);
-			A04Obj.save();
-		} catch (Exception e) {
-			logger.error("Unable to generate HL7 A04 file.", e);
-		}
 	}
 
 	private String [][] dbQueries = new String[][] {
