@@ -70,17 +70,6 @@ public abstract class OscarSuperDao extends JdbcDaoSupport {
 	}
 
 	/**
-	 * Executes a parameterized insert/update/delete query identified by a key.<br>
-	 *
-	 * @param queryName sql query key
-	 * @param params sql query parameters
-	 * @return number of affected rows
-	 */
-	public int executeUpdateQuery(String queryName, Object[] params) {
-		return getJdbcTemplate().update(getSqlQueryByKey(queryName), params);
-	}
-
-	/**
 	 * Retrieves a sql query associated with a query name or reports an error.
 	 *
 	 * @param key query name
