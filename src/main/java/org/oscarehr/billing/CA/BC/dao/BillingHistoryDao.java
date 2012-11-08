@@ -23,14 +23,64 @@
  */
 package org.oscarehr.billing.CA.BC.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.billing.CA.BC.model.BillingHistory;
 import org.oscarehr.common.dao.AbstractDao;
+import org.oscarehr.common.model.BillingPaymentType;
 import org.springframework.stereotype.Repository;
 
+import oscar.entities.Billingmaster;
+
 @Repository
-public class BillingHistoryDao extends AbstractDao<BillingHistory>{
+public class BillingHistoryDao extends AbstractDao<BillingHistory> {
 
 	public BillingHistoryDao() {
 		super(BillingHistory.class);
 	}
+
+	/**
+	 * Finds billing info for the specified master number
+	 * 
+	 * @param billingMasterNo
+	 * 		Master number to find info for
+	 * @return
+	 * 		Returns the list of pairs containing {@link BillingHistory}, {@link BillingPaymentType} instances
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Object[]> findByBillingMasterNo(Integer billingMasterNo) {
+		// "from billing_history bh left join billing_payment_type bt on bh.payment_type_id = bt.id where bh.billingmaster_no = " +
+		// billingMasterNo;
+
+		// attempt to rewrite a left join with a cross product...
+		Query query = entityManager.createQuery("FROM BillingHistory bh, " 
+				+ BillingPaymentType.class.getSimpleName() 
+				+ " bpt WHERE (bh.paymentTypeId = bpt.id OR bpt.id IS NULL) AND bh.billingMasterNo = :bmn");
+		query.setParameter("bmn", billingMasterNo);
+		return query.getResultList();
+	}
+
+	/**
+	 * Finds billing history for the specified master number
+	 * 
+	 * @param billingMasterNo
+	 * 		Master number to find info for
+	 * @return
+	 * 		Returns the list of triples containing {@link Billingmaster}, {@link BillingHistory}, {@link BillingPaymentType} instances 
+	 */
+	public List<Object[]> findBillingHistoryByBillingMasterNo(Integer billingMasterNo) {
+		// "from billingmaster bm, billing_history bh left join billing_payment_type bt on bh.payment_type_id = bt.id 
+		//     where bh.billingmaster_no = bm.billingmaster_no and bm.billing_no = " + billingNo;
+		Query query = entityManager.createQuery("FROM "
+				+ Billingmaster.class.getSimpleName() + " bm " 
+				+ "BillingHistory bh, " 
+				+ BillingPaymentType.class.getSimpleName() 
+				+ " bpt WHERE (bh.paymentTypeId = bpt.id OR bpt.id IS NULL) AND bm.billingMasterNo = bh.billingMasterNo AND bm.billingMasterNo = :bmn");
+		query.setParameter("bmn", billingMasterNo);
+		return query.getResultList();
+
+
+    }
 }

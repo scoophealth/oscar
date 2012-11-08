@@ -25,6 +25,8 @@ package org.oscarehr.billing.CA.BC.dao;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.billing.CA.BC.model.BillingHistory;
@@ -42,7 +44,7 @@ public class BillingHistoryDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("billing_history");
+		SchemaUtils.restoreTable("billing_history", "billing_payment_type");
 	}
 
 	@Test
@@ -51,5 +53,11 @@ public class BillingHistoryDaoTest extends DaoTestFixtures {
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		dao.persist(entity);
 		assertNotNull(entity.getId());
+	}
+
+	@Test
+	public void findByBillingMasterNo() {
+		List<Object[]> bs = dao.findByBillingMasterNo(100);
+		assertNotNull(bs);
 	}
 }
