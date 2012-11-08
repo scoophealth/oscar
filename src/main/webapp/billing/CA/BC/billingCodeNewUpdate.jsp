@@ -25,17 +25,16 @@
 --%>
 
 <%
-  if (session.getValue("user") == null)
-    response.sendRedirect("../logout.htm");
-  String curUser_no, userfirstname, userlastname;
-  curUser_no = (String) session.getAttribute("user");
-  userfirstname = (String) session.getAttribute("userfirstname");
-  userlastname = (String) session.getAttribute("userlastname");
+  String curUser_no = (String) session.getAttribute("user");
 %>
-<%@page
-	import="java.util.*, java.sql.*, oscar.*, java.net.*,oscar.oscarBilling.ca.bc.pageUtil.*"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@page	import="java.util.*, java.sql.*, oscar.*, java.net.*,oscar.oscarBilling.ca.bc.pageUtil.*"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.BillingServiceDao" %>
+<%@page import="org.oscarehr.common.model.BillingService" %>
+<%
+	BillingServiceDao billingServiceDao = SpringUtils.getBean(BillingServiceDao.class);
+%>
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -125,11 +124,11 @@ function CodeAttach(File0, File1, File2,dx1,dx2,dx3) {
   String code = request.getParameter("update");
   code = code.substring(code.length() - 5);
   int rowsAffected = 0;
-  String[] param1 = new String[2];
-  param1[0] = request.getParameter(code);
-  param1[1] = code;
-  //	  param1[1]=request.getParameter("apptProvider_no"); param1[2]=request.getParameter("appointment_date"); param1[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
-  rowsAffected = apptMainBean.queryExecuteUpdate(param1, "updatebillservice");
+	for( BillingService bs:billingServiceDao.findByServiceCode(code)) {
+  		bs.setDescription(request.getParameter(code));
+  		billingServiceDao.merge(bs);
+  		rowsAffected++;
+  	}
 %>
 
 <p>
