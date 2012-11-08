@@ -42,7 +42,7 @@ public class BillingDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("billing", "billingdetail");
+		SchemaUtils.restoreTable("billing", "billingdetail","billingmaster");
 	}
 
 	@Test
@@ -72,6 +72,12 @@ public class BillingDaoTest extends DaoTestFixtures {
 		assertNotNull(bs);
 
 		bs = dao.findBillings(null, "STA", null, null, null);
+		assertNotNull(bs);
+	}
+
+	@Test
+	public void testFindMoreBillings() {
+		List<Object[]> bs = dao.findBillings(10);
 		assertNotNull(bs);
 	}
 

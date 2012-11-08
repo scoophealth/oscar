@@ -29,6 +29,7 @@ import javax.persistence.Query;
 import org.oscarehr.common.model.Billing;
 import org.springframework.stereotype.Repository;
 
+import oscar.entities.Billingmaster;
 import oscar.util.ConversionUtils;
 
 @Repository
@@ -150,6 +151,21 @@ public class BillingDao extends AbstractDao<Billing> {
 		}
 		
 		return query.getResultList();
+    }
+
+	/**
+	 * Finds all billings with the specified billing number
+	 * 
+	 * @param billing_no
+	 * 		Billing number to find billings for
+	 * @return
+	 * 		Returns a list of pairs containing {@link Billingmaster} and {@link Billing} instances.
+	 */
+	@SuppressWarnings("unchecked")
+    public List<Object[]> findBillings(Integer billing_no) {
+		Query query = entityManager.createQuery("FROM " + Billingmaster.class.getSimpleName() + " b, Billing bi where bi.id = b.billingNo and b.billingNo = :bn");
+		query.setParameter("bn", billing_no);
+	    return query.getResultList();
     }
 
 }
