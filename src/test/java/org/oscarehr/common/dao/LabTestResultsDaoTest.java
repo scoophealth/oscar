@@ -25,6 +25,8 @@ package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
@@ -39,7 +41,6 @@ public class LabTestResultsDaoTest extends DaoTestFixtures {
 	public LabTestResultsDaoTest() {
 	}
 
-
 	@Before
 	public void before() throws Exception {
 		SchemaUtils.restoreTable("labTestResults");
@@ -53,4 +54,23 @@ public class LabTestResultsDaoTest extends DaoTestFixtures {
 
 		assertNotNull(entity.getId());
 	}
+
+	@Test
+	public void testFindByTitleAndLabInfoId() {
+		List<LabTestResults> results = dao.findByTitleAndLabInfoId(100);
+		assertNotNull(results);
+	}
+
+	@Test
+	public void testFindByLabInfoId() {
+		List<LabTestResults> results = dao.findByLabInfoId(100);
+		assertNotNull(results);
+	}
+
+	@Test
+	public void testFindByAbnAndLabInfoId() {
+		List<LabTestResults> results = dao.findByAbnAndLabInfoId("A", 100);
+		assertNotNull(results);
+	}
+
 }
