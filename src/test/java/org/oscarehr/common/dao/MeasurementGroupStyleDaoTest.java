@@ -23,13 +23,20 @@
  */
 package org.oscarehr.common.dao;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.MeasurementGroupStyle;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class MeasurementGroupStyleDaoTest extends DaoTestFixtures {
@@ -43,10 +50,35 @@ public class MeasurementGroupStyleDaoTest extends DaoTestFixtures {
 	}
 
 	@Test
-	public void testCreate() throws Exception {
-		MeasurementGroupStyle entity = new MeasurementGroupStyle();
-		EntityDataGenerator.generateTestDataForModelClass(entity);
-		dao.persist(entity);
-		assertNotNull(entity.getId());
+	public void testFindAll() throws Exception {
+		
+		MeasurementGroupStyle measurementGrpStyle1 = new MeasurementGroupStyle();
+		EntityDataGenerator.generateTestDataForModelClass(measurementGrpStyle1);
+		dao.persist(measurementGrpStyle1);
+		
+		MeasurementGroupStyle measurementGrpStyle2 = new MeasurementGroupStyle();
+		EntityDataGenerator.generateTestDataForModelClass(measurementGrpStyle2);
+		dao.persist(measurementGrpStyle2);
+		
+		MeasurementGroupStyle measurementGrpStyle3 = new MeasurementGroupStyle();
+		EntityDataGenerator.generateTestDataForModelClass(measurementGrpStyle3);
+		dao.persist(measurementGrpStyle3);
+		
+		List<MeasurementGroupStyle> expectedResult = new ArrayList<MeasurementGroupStyle>(Arrays.asList(measurementGrpStyle1, measurementGrpStyle2, measurementGrpStyle3));
+		List<MeasurementGroupStyle> result = dao.findAll();
+
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);		
 	}
 }
