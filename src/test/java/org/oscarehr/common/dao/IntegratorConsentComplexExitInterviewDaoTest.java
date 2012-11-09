@@ -29,6 +29,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.FacilityDemographicPrimaryKey;
 import org.oscarehr.common.model.IntegratorConsentComplexExitInterview;
 import org.oscarehr.util.SpringUtils;
@@ -36,20 +38,39 @@ import org.oscarehr.util.SpringUtils;
 public class IntegratorConsentComplexExitInterviewDaoTest extends DaoTestFixtures {
 
 	private IntegratorConsentComplexExitInterviewDao dao = SpringUtils.getBean(IntegratorConsentComplexExitInterviewDao.class);
-
-
+	private FacilityDao facilityDao = SpringUtils.getBean(FacilityDao.class);
+	private DemographicDao demographicDao  =SpringUtils.getBean(DemographicDao.class);
+	
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("IntegratorConsentComplexExitInterview");
+		SchemaUtils.restoreTable("Facility","demographic","IntegratorConsentComplexExitInterview");
 	}
 
 	@Test
 	public void testCreate() throws Exception {
+		Facility f = new Facility();
+		f.setDescription("test");
+		f.setDisabled(false);
+		f.setName("test");
+		f.setOcanServiceOrgNumber("0");
+		f.setOrgId(0);
+		f.setSectorId(0);
+		facilityDao.persist(f);
+		
+		Demographic d = new Demographic();
+		d.setFirstName("a");
+		d.setLastName("b");
+		d.setYearOfBirth("2000");
+		d.setMonthOfBirth("1");
+		d.setDateOfBirth("1");
+		d.setSex("M");
+		demographicDao.save(d);
+		
 		IntegratorConsentComplexExitInterview entity = new IntegratorConsentComplexExitInterview();
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		FacilityDemographicPrimaryKey id = new FacilityDemographicPrimaryKey();
-		id.setDemographicId(4);
-		id.setFacilityId(1);
+		id.setDemographicId(d.getDemographicNo());
+		id.setFacilityId(f.getId());
 		entity.setId(id);
 		dao.persist(entity);
 		assertNotNull(entity.getId());
