@@ -29,6 +29,16 @@
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <%@ include file="dbBilling.jspf"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.RaHeader" %>
+<%@page import="org.oscarehr.common.dao.RaHeaderDao" %>
+<%@page import="org.oscarehr.common.model.Billing" %>
+<%@page import="org.oscarehr.common.dao.BillingDao" %>
+<%
+	RaHeaderDao dao = SpringUtils.getBean(RaHeaderDao.class);
+	BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
+%>
+
 
 <% 
 String raNo = "", flag="", plast="", pfirst="", pohipno="", proNo="";
@@ -100,14 +110,17 @@ BillingRAPrep obj = new BillingRAPrep();
 for (int j=0; j< noErrorBill.size();j++){
 	noErrorAccount=(String) noErrorBill.get(j);
 	obj.updateBillingStatus(noErrorAccount, "S");
-	//int recordAffected = apptMainBean.queryExecuteUpdate(noErrorAccount,"update_billhd");
+	
 }
 
-String[] paramx = new String[2]; 
-paramx[0] = "F";
-paramx[1] = raNo;
-
-int recordAffected1 = apptMainBean.queryExecuteUpdate(paramx,"update_rahd_status");
+int recordAffected1 = 0;
+	 
+	 RaHeader raHeader = dao.find(Integer.parseInt(raNo));
+	 if(raHeader != null) {
+		 raHeader.setStatus("F");
+		 dao.merge(raHeader);
+		recordAffected1++;
+	 }
 %>
 
 <script LANGUAGE="JavaScript">

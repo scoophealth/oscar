@@ -31,6 +31,15 @@
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <%@ include file="dbBilling.jspf"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.RaHeader" %>
+<%@page import="org.oscarehr.common.dao.RaHeaderDao" %>
+<%@page import="org.oscarehr.common.model.Billing" %>
+<%@page import="org.oscarehr.common.dao.BillingDao" %>
+<%
+	RaHeaderDao dao = SpringUtils.getBean(RaHeaderDao.class);
+	BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
+%>
 <% 
   GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
@@ -86,35 +95,28 @@ String errorAccount ="", eFlag="", noErrorAccount="";
       	            for (int j=0; j< noErrorBill.size();j++){
       	           
       	           noErrorAccount=(String) noErrorBill.get(j);
-      	       //    ResultSet rsdemo2 = null;
-      	       //    rsdemo2 = apptMainBean.queryResults(noErrorAccount, "search_bill_record");
-      	       //      while (rsdemo2.next()) {   
-      	       //    servicecode = rsdemo2.getString("service_code");
-      	       //    amountsubmit = rsdemo2.getString("billing_amount");
-      	       //    count = count + 1;
-      	       //    }
-      	           
-      	       //    String[] param3 = new String[2];
-		//                               param3[0] = raNo;
-               //       param3[1] = noErrorAccount;
-               //       
-      	       //     ResultSet rsdemo3 = null;
-		//         	           rsdemo3 = apptMainBean.queryResults(param3, "search_rabillno");
-		//         	             while (rsdemo3.next()) {   
-		//         	           serviceno = rsdemo3.getString("service_code");
-		//         	           amountpay = rsdemo3.getString("amountpay");
-		//   count1 = count1 +1 ;      	           
-      	        //   }
+      	      
       	        
-      	          int recordAffected = apptMainBean.queryExecuteUpdate(noErrorAccount,"update_billhd");
+      	          int recordAffected = 0;
+      	        for(Billing b:billingDao.findActive(Integer.parseInt(noErrorAccount))) {
+	      	          if(b != null) {
+	      	        	  b.setStatus("S");
+	      	        	  billingDao.merge(b);
+	      	        	  recordAffected++;
+	      	          }
+    	          }
       	           %>
 
 <%
       	            }
-      	             String[] paramx = new String[2]; 
-		          	              paramx[0] = "S";
-		                                paramx[1] = raNo;
-      	        int recordAffected1 = apptMainBean.queryExecuteUpdate(paramx,"update_rahd_status");
+ 
+      	        int recordAffected1 = 0;
+      	 	 RaHeader raHeader = dao.find(Integer.parseInt(raNo));
+      		 if(raHeader != null) {
+      			 raHeader.setStatus("S");
+      			 dao.merge(raHeader);
+      			recordAffected1++;
+      		 }
       	           %>
 
 <script LANGUAGE="JavaScript">

@@ -261,16 +261,17 @@ message = "<xml_message><tr><td>Message Facility Record</td></tr><tr><td>" + mes
 
 xml_ra = transaction + balancefwd + "<xml_cheque>"+total+"</xml_cheque>";
 
-String[] param3 =new String[6];
-param3[0]=total;
-param3[1]=String.valueOf(count);
-param3[2]=String.valueOf(tCount);
-param3[3]=xml_ra;
-param3[4]=paymentdate;
-param3[5]=filename;
 // only one? for paymentdate, filename
-int rowsAffected1 = apptMainBean.queryExecuteUpdate(param3,"update_rahd");
+int rowsAffected1 = 0;
 
+for(RaHeader r:raHeaderDao.findByFilenamePaymentDate(filename, paymentdate)) {
+	r.setTotalAmount(total);
+	r.setRecords(String.valueOf(count));
+	r.setClaims(String.valueOf(tCount));
+	r.setContent(xml_ra);
+	raHeaderDao.merge(r);
+	rowsAffected1++;
+}
 %>
 
 

@@ -25,18 +25,17 @@
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.common.model.Provider,org.oscarehr.PMmodule.dao.ProviderDao"%>
 <%@page import="org.oscarehr.common.model.BillingONPremium, org.oscarehr.common.dao.BillingONPremiumDao"%>
-<%  
-if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
-%>
 
-<%@ page
-	import="java.io.*, java.util.*, java.sql.*, oscar.*, java.net.*"
-	errorPage="errorpage.jsp"%>
+<%@ page import="java.io.*, java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp"%>
 <%@ include file="../../../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
 <%@ include file="dbBilling.jspf"%>
+<%@page import="org.oscarehr.common.model.RaHeader" %>
+<%@page import="org.oscarehr.common.dao.RaHeaderDao" %>
+<%
+	RaHeaderDao dao = SpringUtils.getBean(RaHeaderDao.class);
+%>
 
 <% 
 String raNo = "", note="", htmlContent="", transaction="", messages="";
@@ -142,14 +141,16 @@ balancefwd = "<xml_balancefwd><table width='100%' border='0' cellspacing='0' cel
 xml_ra = transaction + balancefwd +"<xml_local>" + local_total + "</xml_local>" +"<xml_cheque>"+total+"</xml_cheque>" + "<xml_total>"+new_total+"</xml_total>" + "<xml_other_total>"+other_total+"</xml_other_total>" + "<xml_ob_total>"+ob_total+"</xml_ob_total>" +
 "<xml_co_total>"+co_total+"</xml_co_total>";	 
 
-String[] param3 =new String[6];
-param3[0]=total;
-param3[1]=String.valueOf(count);
-param3[2]=String.valueOf(tCount);
-param3[3]=xml_ra;
-param3[4]=paymentdate;
-param3[5]=filename;
-int rowsAffected1 = apptMainBean.queryExecuteUpdate(param3,"update_rahd");
+int rowsAffected1 = 0;
+
+for(RaHeader r:dao.findByFilenamePaymentDate(filename, paymentdate)) {
+		r.setTotalAmount(total);
+		r.setRecords(String.valueOf(count));
+		r.setClaims(String.valueOf(tCount));
+		r.setContent(xml_ra);
+		dao.merge(r);
+		rowsAffected1++;
+	}
 
 rslocal = apptMainBean.queryResults(raNo, "search_rahd_content");
 while(rslocal.next()){
