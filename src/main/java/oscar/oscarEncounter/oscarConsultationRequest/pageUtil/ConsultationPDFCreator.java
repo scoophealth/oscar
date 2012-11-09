@@ -338,7 +338,7 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 														    reqFrm.patientHealthNum,
 														    reqFrm.patientHealthCardVersionCode)));
 
-		if (reqFrm.pwb.equals("1")) {
+		if (!reqFrm.pwb.equals("1")) {
 			infoTable.addCell(setInfoCell(cell, getResource("msgappDate")));
 			infoTable.addCell(setDataCell(cell, reqFrm.pwb.equals("1") ? getResource("pwb") : String.format("%s/%s/%s (y/m/d)", reqFrm.appointmentYear,
 					 reqFrm.appointmentMonth,

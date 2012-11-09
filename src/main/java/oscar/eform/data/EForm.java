@@ -253,7 +253,7 @@ public class EForm extends EFormBase {
 
 				int needing = needValueInForm;
 				String fieldType = getFieldType(fieldHeader); // textarea, text, hidden etc..
-				if ((fieldType.equals("")) || (apName0.equals(""))) continue;
+				if ((fieldType==null || fieldType.equals("")) || (apName0==null || apName0.equals(""))) continue;
 
 				// sets up the pointer where to write the value
 				int pointer = markerLoc + EFormUtil.getAttributePos(marker,fieldHeader) + marker.length() + 1;
