@@ -20,6 +20,8 @@ import org.oscarehr.common.model.ProviderLabRoutingModel;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
+
 @Repository
 @Transactional
 public class ProviderLabRoutingDao extends AbstractDao<ProviderLabRoutingModel> {
@@ -107,4 +109,13 @@ public class ProviderLabRoutingDao extends AbstractDao<ProviderLabRoutingModel> 
 		query.setParameter("labType", labType);
 		return query.getResultList();
 	}
+
+	@SuppressWarnings("unchecked")
+    public List<ProviderLabRouting> findByStatusANDLabNoType(Integer labNo, String labType, String status) {
+	    Query query = createQuery("r", "r.labNo = :labNo and r.labType = :labType and r.status = :status");
+	    query.setParameter("labNo", labNo);
+	    query.setParameter("labType", labType);
+	    query.setParameter("status", status);
+	    return query.getResultList();
+    }
 }
