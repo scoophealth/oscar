@@ -81,6 +81,14 @@ public class ProviderLabRoutingDao extends AbstractDao<ProviderLabRoutingModel> 
 
 		return this.getSingleResultOrNull(query);
 	}
+	
+	public ProviderLabRoutingModel findByLabNoAndLabType(int labNo, String labType) {
+		Query query = entityManager.createQuery("select x from " + modelClass.getName() + " x where x.labNo=? and x.labType = ?");
+		query.setParameter(1, labNo);
+		query.setParameter(2, labType);
+		
+		return this.getSingleResultOrNull(query);
+	}
 
 	/**
 	 * Finds all providers and lab routing models for the specified lab

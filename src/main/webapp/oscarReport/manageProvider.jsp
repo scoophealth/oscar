@@ -40,7 +40,6 @@ GregorianCalendar now=new GregorianCalendar();
   String nowDate = String.valueOf(curYear)+"-"+String.valueOf(curMonth) + "-" + String.valueOf(curDay);
 //String nowDate = "2002-08-21";
 int dob_yy=0, dob_dd=0, dob_mm=0, age=0;
-//int  recordAffected = apptMainBean.queryExecuteUpdate(nowDate,"delete_reportagesex_bydate");
 String demo_no="", demo_sex="", provider_no="", roster="", patient_status="", status="";
 String demographic_dob="1800";
 String action = request.getParameter("action");

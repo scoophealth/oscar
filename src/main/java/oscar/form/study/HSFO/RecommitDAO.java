@@ -102,38 +102,15 @@ public class RecommitDAO {
 	 }
 
 	 public void updateLastSchedule(RecommitSchedule rd) {
-		 PreparedStatement st = null;
-	     String sqlstatement ="update hsfo_recommit_schedule set id=?, status=?, "+
-	     		"memo=?, schedule_time=?,user_no=?,check_flag=? where id=?";
-	     SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-
-	     try {
-
-	         Connection connect = DbConnectionFilter.getThreadLocalDbConnection();
-	         st = connect.prepareStatement(sqlstatement);
-	         st.setString(1,rd.getId().toString());
-	         st.setString(2,rd.getStatus());
-	         st.setString(3,rd.getMemo());
-	         st.setString(4,sf.format(rd.getSchedule_time()));
-	         st.setString(5, rd.getUser_no());
-	         st.setBoolean(6,rd.isCheck_flag());
-	         st.setString(7, rd.getId().toString());
-	         st.executeUpdate();
-	     }catch (SQLException se) {
-	         MiscUtils.getLogger().debug("SQL Error while update the latest record to the hsfo_xml_recommit table : "+ se.toString());
-	     }catch (Exception ne) {
-	         MiscUtils.getLogger().debug("Other Error while update the latest record to the hsfo_xml_recommit table : "+ ne.toString());
-	     }finally {
-
-	    	 if (st != null)
-				try {
-						st.close();
-					} catch (SQLException e) {
-                                            MiscUtils.getLogger().error("Error", e);
-					}
-			}
-
+		 HsfoRecommitSchedule h = dao.find(rd.getId());
+		 if(h != null) {
+			 h.setStatus(rd.getStatus());
+			 h.setMemo(rd.getMemo());
+			 h.setScheduleTime(rd.getSchedule_time());
+			 h.setUserNo(rd.getUser_no());
+			 h.setCheckFlag(rd.isCheck_flag());
+			 dao.merge(h);
+		 }
 	 }
 
 	 public void insertchedule(RecommitSchedule rd) {

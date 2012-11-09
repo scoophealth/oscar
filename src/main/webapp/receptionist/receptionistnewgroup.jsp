@@ -75,7 +75,12 @@ function checkForm() {
     	if (param[1].equals("") || strbuf.toString().startsWith("__vieworder")) continue;
 		param[2] = strbuf.toString().substring(param[1].length());
     	param[0] = request.getParameter("__vieworder" + param[1] + param[2]);
-    	rowsAffected = oscarSuperManager.update("receptionistDao", "upgradegroupmember", param);
+    	MyGroup mg = myGroupDao.find(new MyGroupPrimaryKey(param[1],param[2]));
+    	if(mg != null) {
+    		mg.setViewOrder(param[0]);
+    		myGroupDao.merge(mg);
+    		rowsAffected=1;
+    	}
     }
     out.println("<script language='JavaScript'>self.close();</script>");
     return;

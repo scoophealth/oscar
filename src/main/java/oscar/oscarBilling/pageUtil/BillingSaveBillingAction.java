@@ -98,8 +98,12 @@ public class BillingSaveBillingAction extends Action {
     OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");
     Appointment appt = appointmentDao.find(Integer.parseInt(bean.getApptNo()));
     appointmentArchiveDao.archiveAppointment(appt);
-    oscarSuperManager.update("appointmentDao", "updatestatusc", new Object[]{billStatus,bean.getCreator(),bean.getApptNo()});
-
+    if(appt != null) {
+    	appt.setStatus(billStatus);
+    	appt.setLastUpdateUser(bean.getCreator());
+    	appointmentDao.merge(appt);
+    }
+    
     Billing b= new Billing();
     b.setDemographicNo(Integer.parseInt(bean.getPatientNo()));
     b.setProviderNo(bean.getBillingProvider());

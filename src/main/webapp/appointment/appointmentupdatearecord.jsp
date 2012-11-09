@@ -32,6 +32,7 @@
 <%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
 <%@page import="org.oscarehr.common.model.Appointment" %>
 <%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="oscar.util.ConversionUtils" %>
 <%
 	AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
 	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
@@ -63,35 +64,43 @@
   }
   
   if (request.getParameter("buttoncancel")!=null && (request.getParameter("buttoncancel").equals("Cancel Appt") || request.getParameter("buttoncancel").equals("No Show"))) {
-	  String[] param = new String[3];
-	  changedStatus = request.getParameter("buttoncancel").equals("Cancel Appt")?"C":"N";
-	  param[0]=request.getParameter("buttoncancel").equals("Cancel Appt")?"C":"N";
-	  param[1]=updateuser;  //request.getParameter("creator");
-	  param[2]=request.getParameter("appointment_no");
-	  rowsAffected = oscarSuperManager.update("appointmentDao", "updatestatusc", param);
+	  changedStatus = request.getParameter("buttoncancel").equals("Cancel Appt")?"C":"N"; 
+	  if(appt != null) {
+      	appt.setStatus(request.getParameter("buttoncancel").equals("Cancel Appt")?"C":"N");
+      	appt.setLastUpdateUser(updateuser);
+      	appointmentDao.merge(appt);
+      	rowsAffected=1;
+      }
 
   } else {
-	  String[] param = new String[17];
-	  if (request.getParameter("demographic_no")!=null && !(request.getParameter("demographic_no").equals(""))) {
-		  param[0] = request.getParameter("demographic_no");
-	  } else param[0]="0";
-	  param[1]=request.getParameter("appointment_date");
-	  param[2]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
-	  param[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"));
-	  param[4]=request.getParameter("keyword");
-	  param[5]=request.getParameter("notes");
-	  param[6]=request.getParameter("reason");
-	  param[7]=request.getParameter("location");
-	  param[8]=request.getParameter("resources");
-	  param[9]=request.getParameter("type");
-	  param[10]=request.getParameter("style");
-	  param[11]=request.getParameter("billing");
-	  param[12]=request.getParameter("status");
-	  param[13]=updateuser;  //request.getParameter("creator");
-	  param[14]=request.getParameter("remarks");
-	  param[15]=(request.getParameter("urgency")!=null)?request.getParameter("urgency"):"";
-	  param[16]=request.getParameter("appointment_no");
-	  rowsAffected = oscarSuperManager.update("appointmentDao", request.getParameter("dboperation"), param);
+
+	  if(appt != null) {
+		  	if (request.getParameter("demographic_no")!=null && !(request.getParameter("demographic_no").equals(""))) {
+		  		appt.setDemographicNo(Integer.parseInt(request.getParameter("demographic_no")));
+		 	} else {
+			 	appt.setDemographicNo(0);
+		 	}
+			appt.setAppointmentDate(ConversionUtils.fromDateString(request.getParameter("appointment_date")));
+			appt.setStartTime(ConversionUtils.fromTimeString(MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"))));
+			appt.setEndTime(ConversionUtils.fromTimeString(MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"))));
+			appt.setName(request.getParameter("keyword"));
+			appt.setNotes(request.getParameter("notes"));
+			appt.setReason(request.getParameter("reason"));
+			appt.setLocation(request.getParameter("location"));
+			appt.setResources(request.getParameter("resources"));
+			appt.setType(request.getParameter("type"));
+			appt.setStyle(request.getParameter("style"));
+			appt.setBilling(request.getParameter("billing"));
+			appt.setStatus(request.getParameter("status"));
+			appt.setLastUpdateUser(updateuser);
+			appt.setRemarks(request.getParameter("remarks"));
+			appt.setUpdateDateTime(new java.util.Date());
+			appt.setUrgency((request.getParameter("urgency")!=null)?request.getParameter("urgency"):"");
+			
+			appointmentDao.merge(appt);
+			rowsAffected=1;
+	  }
+	  
   }
   if (rowsAffected == 1) {
 %>

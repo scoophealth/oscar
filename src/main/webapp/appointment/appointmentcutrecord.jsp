@@ -57,7 +57,11 @@
 	ApptUtil.copyAppointmentIntoSession(request);
 	Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no")));
 	appointmentArchiveDao.archiveAppointment(appt);
-	int rowsAffected = oscarSuperManager.update("appointmentDao", "delete", new Object [] {request.getParameter("appointment_no")});
+	int rowsAffected=0;
+	if(appt != null) {
+		appointmentDao.remove(appt.getId());
+		rowsAffected=1;
+	}
 	if (rowsAffected == 1) {
 %>
 <p>

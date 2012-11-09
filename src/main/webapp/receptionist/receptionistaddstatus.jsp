@@ -37,13 +37,15 @@
 %>
 
 <%
-  String[] param = new String[3];
-  param[0] = request.getParameter("status") + request.getParameter("statusch");
-  param[1] = (String)session.getAttribute("user");
-  param[2] = request.getParameter("appointment_no");
   Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no")));
   appointmentArchiveDao.archiveAppointment(appt);
-  int rowsAffected = oscarSuperManager.update("receptionistDao", request.getParameter("dboperation"), param);
+  int rowsAffected=0;
+  if(appt != null) {
+	  appt.setStatus(request.getParameter("status") + request.getParameter("statusch"));
+	  appt.setLastUpdateUser((String)session.getAttribute("user"));
+	  appointmentDao.merge(appt);
+	  rowsAffected=1;
+  }
   if (rowsAffected == 1) {
     int view=0;
     if(request.getParameter("view")!=null) view=Integer.parseInt(request.getParameter("view")); //0-multiple views, 1-single view

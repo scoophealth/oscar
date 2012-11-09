@@ -57,27 +57,12 @@ public final class DBHandler {
 		rs = stmt.executeQuery(SQLStatement);
 		return rs;
 	}
-
-	public static int RunSQL(String SQLStatement, String para1) throws SQLException {
-		PreparedStatement ps = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(SQLStatement);
-		ps.setString(1, para1);
-		int result = ps.executeUpdate();
-		return result;
-	}
-
+	
 	public static java.sql.ResultSet GetPreSQL(String SQLStatement, String para1) throws SQLException {
 		PreparedStatement ps = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(SQLStatement);
 		ps.setString(1, para1);
 		ResultSet result = ps.executeQuery();
 		return result;
-	}
-
-	public static boolean RunSQL(String SQLStatement) throws SQLException {
-		boolean b = false;
-		Statement stmt;
-		stmt = DbConnectionFilter.getThreadLocalDbConnection().createStatement();
-		b = stmt.execute(SQLStatement);
-		return b;
 	}
 
 }

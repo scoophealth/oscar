@@ -112,8 +112,13 @@ public class BillingSaveBillingAction extends Action {
             log.debug("BillStatus:" + billStatus);
             Appointment appt = appointmentDao.find(Integer.parseInt(bean.getApptNo()));
             appointmentArchiveDao.archiveAppointment(appt);
-            int rowsAffected = oscarSuperManager.update("appointmentDao", "updatestatusc", new Object[]{billStatus,bean.getCreator(),bean.getApptNo()});
-
+            int rowsAffected = 0;
+            if(appt != null) {
+            	appt.setStatus(billStatus);
+            	appt.setLastUpdateUser(bean.getCreator());
+            	appointmentDao.merge(appt);
+            }
+            
             if (rowsAffected<1) log.error("LLLOOK: APPT ERROR - CANNOT UPDATE APPT ("+bean.getApptNo()+") FOR demo:" + bean.getPatientName() +" date " + curDate);
         }
 

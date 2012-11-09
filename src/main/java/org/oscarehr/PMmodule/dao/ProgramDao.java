@@ -28,7 +28,6 @@ import java.util.List;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
-import org.hibernate.Query;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -562,9 +561,15 @@ public class ProgramDao extends HibernateDaoSupport {
     }
     
     public void resetHoldingTank() {
-        Query q = getSession().createQuery("update Program set holdingTank = false");
-        q.executeUpdate();
-
+    	List<Program> programs = this.getAllPrograms();
+    	for(Program p:programs) {
+    		if(p.getHoldingTank()) {
+    			p.setHoldingTank(false);
+    			this.saveProgram(p);
+    		}
+    		
+    	}
+      
         if (log.isDebugEnabled()) {
             log.debug("resetHoldingTank:");
         }

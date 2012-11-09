@@ -26,7 +26,13 @@
 
 <%@ page import="java.sql.*, java.util.*" errorPage="errorpage.jsp"%>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
-
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@page import="org.oscarehr.common.model.Provider" %>
+<%@page import="oscar.util.ConversionUtils" %>
+<%
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+%>
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -58,8 +64,24 @@
 	  param[10]=request.getParameter("hso_no");
 	  param[11]=request.getParameter("status");
 	  param[12]=request.getParameter("provider_no");
+	  
+	  Provider p = providerDao.getProvider(request.getParameter("provider_no"));
+		if(p != null) {
+			p.setLastName(request.getParameter("last_name"));
+			p.setFirstName(request.getParameter("first_name"));
+			p.setSpecialty(request.getParameter("specialty"));
+			p.setTeam(request.getParameter("team"));
+			p.setSex(request.getParameter("sex"));
+			p.setDob(ConversionUtils.fromDateString(request.getParameter("dob")));
+			p.setAddress(request.getParameter("address"));
+			p.setPhone(request.getParameter("phone"));
+			p.setOhipNo(request.getParameter("ohip_no"));
+			p.setRmaNo(request.getParameter("rma_no"));
+			p.setHsoNo(request.getParameter("hso_no"));
+			p.setStatus(request.getParameter("status"));
+			providerDao.saveProvider(p);
+		}
 
-	  oscarSuperManager.update("providerDao", request.getParameter("dboperation"), param);
 	  List<Map<String,Object>> resultList = oscarSuperManager.find("providerDao", "search_detail", new Object[] {request.getParameter("provider_no")});
 	  for (Map provider : resultList) {
 	  // the cursor only goes through once from top

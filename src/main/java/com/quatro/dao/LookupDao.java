@@ -21,6 +21,7 @@
 
 package com.quatro.dao;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ import java.util.List;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.common.model.Facility;
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -503,7 +505,7 @@ public class LookupDao extends HibernateDaoSupport {
 		}
 		DBPreparedHandler db = new DBPreparedHandler();
 		try{
-			db.queryExecuteUpdate(sql, params);
+			queryExecuteUpdate(sql, params);
 		}
 		finally
 		{
@@ -550,7 +552,7 @@ public class LookupDao extends HibernateDaoSupport {
 		params[fieldDefList.size()] = params[0];
 		DBPreparedHandler db = new DBPreparedHandler();
 		try {
-			db.queryExecuteUpdate(sql, params);
+			queryExecuteUpdate(sql, params);
 		}
 		finally
 		{
@@ -593,7 +595,7 @@ public class LookupDao extends HibernateDaoSupport {
 		}
 		this.SaveCodeValue(isNew,pcd);
 	}
-	private void updateOrgTree(String orgCd, LookupCodeValue newCd) throws SQLException
+	private void updateOrgTree(String orgCd, LookupCodeValue newCd)
 	{
 		LookupCodeValue oldCd = GetCode("ORG", orgCd);
 		if(!oldCd.getCodecsv().equals(newCd.getCodecsv())) {
@@ -604,42 +606,33 @@ public class LookupDao extends HibernateDaoSupport {
 			String newFullCode = newCd.getBuf1();
 			String newTreeCode = newCd.getCodeTree();
 			String newCsv = newCd.getCodecsv();
+			
 			String sql = "update lst_orgcd set fullcode =replace(fullcode,'" + oldFullCode + "','" + newFullCode + "')" +
 											  ",codetree =replace(codetree,'" + oldTreeCode + "','" + newTreeCode + "')" +
 						                       ",codecsv =replace(codecsv,'" + oldCsv + "','" + newCsv + "')" +
 						 " where codecsv like '" + oldCsv + "_%'";
 
-			DBPreparedHandler db = new DBPreparedHandler();
-			try{
-				db.queryExecuteUpdate(sql);
-			}
-			finally
-			{
-			}
+			this.getSession().createSQLQuery(sql).executeUpdate();
+			
 		}
 
 
 	}
 
-	private void updateOrgStatus(String orgCd, LookupCodeValue newCd) throws SQLException
+	private void updateOrgStatus(String orgCd, LookupCodeValue newCd) 
 	{
 		LookupCodeValue oldCd = GetCode("ORG", orgCd);
 		if(!newCd.isActive()) {
 			String oldCsv = oldCd.getCodecsv();
 
-			String sql = "update lst_orgcd set activeyn ='0' where codecsv like '" + oldCsv + "_%'";
-
-			DBPreparedHandler db = new DBPreparedHandler();
-			try{
-				db.queryExecuteUpdate(sql);
-			}
-			finally
-			{
+			List<LstOrgcd> o = this.getHibernateTemplate().find("FROM LstOrgcd o WHERE o.codecsv like ?",oldCsv+"_%");
+			for(LstOrgcd l:o) {
+				l.setActiveyn(0);
+				this.getHibernateTemplate().update(l);
 			}
 		}
-
-
 	}
+	
 	public boolean inOrg(String org1,String org2){
 		boolean isInString=false;
 		String sql="From LstOrgcd a where  a.fullcode like '%"+"?'  ";
@@ -761,4 +754,24 @@ public class LookupDao extends HibernateDaoSupport {
 	public void setProviderDao(ProviderDao providerDao) {
 		this.providerDao = providerDao;
 	}
+	
+    private int queryExecuteUpdate(String preparedSQL, DBPreparedHandlerParam[] params) throws SQLException {
+        PreparedStatement preparedStmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(preparedSQL);
+        for (int i = 0; i < params.length; i++) {
+        	DBPreparedHandlerParam param = params[i];
+        	
+        	if (param==null) preparedStmt.setObject(i+1, null);
+        	else if(DBPreparedHandlerParam.PARAM_STRING.equals(param.getParamType())){
+                    preparedStmt.setString(i+1, param.getStringValue());
+        	}else if (DBPreparedHandlerParam.PARAM_DATE.equals(param.getParamType())){
+                    preparedStmt.setDate(i+1, param.getDateValue());
+        	}else if (DBPreparedHandlerParam.PARAM_INT.equals(param.getParamType())){
+                    preparedStmt.setInt(i+1,param.getIntValue());
+        	}else if (DBPreparedHandlerParam.PARAM_TIMESTAMP.equals(param.getParamType())){
+                    preparedStmt.setTimestamp(i+1,param.getTimestampValue());
+                }
+        }
+        return(preparedStmt.executeUpdate());
+    }
+
 }
