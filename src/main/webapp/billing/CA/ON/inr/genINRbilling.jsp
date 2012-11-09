@@ -18,12 +18,9 @@
 
 --%>
 <%
-if(session.getAttribute("user") == null)    response.sendRedirect("../../../../logout.jsp");
-String user_no="";
-user_no = (String) session.getAttribute("user");
+String user_no = (String) session.getAttribute("user");
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*"
-	errorPage="../../../errorpage.jsp"%>
+<%@ page import="java.util.*, java.sql.*, oscar.*" errorPage="../../../errorpage.jsp"%>
 
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
@@ -33,6 +30,12 @@ user_no = (String) session.getAttribute("user");
 <%@ page import="org.oscarehr.common.dao.BillingDao"%>
 <%@ page import="org.oscarehr.billing.CA.model.BillingDetail"%>
 <%@ page import="org.oscarehr.billing.CA.dao.BillingDetailDao"%>
+<%@page import="org.oscarehr.billing.CA.model.BillingInr" %>
+<%@page import="org.oscarehr.billing.CA.dao.BillingInrDao" %>
+<%@page import="oscar.util.ConversionUtils" %>
+<%
+	BillingInrDao billingInrDao = SpringUtils.getBean(BillingInrDao.class);
+%>
 <%
 	BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
 	java.text.SimpleDateFormat timeFormatter = new java.text.SimpleDateFormat("HH:mm");
@@ -131,12 +134,15 @@ for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
    }
 
    int recordAffected=0;
-         String[] param3 = new String[3];
-                 param3[0] = "A";
-                 param3[1] = request.getParameter("xml_appointment_date");
-                 param3[2] = temp.substring(10);
-          recordAffected = apptMainBean.queryExecuteUpdate(param3,"update_inrbilling_dt_billno");
-
+  
+          BillingInr bi = billingInrDao.find(Integer.parseInt(temp.substring(10)));
+          if(bi != null && !bi.getStatus().equals("D")) {
+				bi.setStatus("A");
+				bi.setCreateDateTime(ConversionUtils.fromDateString(request.getParameter("xml_appointment_date")));
+				billingInrDao.merge(bi);
+				recordAffected++;
+			}
+          
 
    int recordCount = 1;
        for (int i=0;i<recordCount;i++){

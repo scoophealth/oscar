@@ -72,9 +72,7 @@
       {"search_billactivity_group_monthCode", "select * from billactivity where monthCode=? and groupno=? and updatedatetime > ? and status <> 'D' order by batchcount"},
       {"search_inrbilling_dt", "select *  from billinginr where provider_no like ? and status<>'D'"},
       {"search_inrbilling_dt_billno", "select *  from billinginr where billinginr_no=? and status<>'D'"},
-      {"update_inrbilling_dt_billno", "update billinginr set status=?, createdatetime=? where billinginr_no=? and status<>'D'"},
-      {"update_inrbilling_dt_item", "update billinginr set hin=?,dob=?, service_code=?, service_desc=?, billing_amount=?, diagnostic_code=? where billinginr_no=? and status<>'D'"},
-
+      
   };
 
   //associate each operation with an output JSP file - displaymode

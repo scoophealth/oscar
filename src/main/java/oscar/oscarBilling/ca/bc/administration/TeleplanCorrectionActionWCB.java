@@ -25,6 +25,7 @@
 package oscar.oscarBilling.ca.bc.administration;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -35,18 +36,22 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.billing.CA.BC.dao.WcbDao;
+import org.oscarehr.billing.CA.BC.model.Wcb;
 import org.oscarehr.common.dao.BillingDao;
 import org.oscarehr.common.dao.BillingServiceDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Billing;
 import org.oscarehr.common.model.BillingService;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.AppointmentMainBean;
 import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 import oscar.oscarBilling.ca.bc.data.BillingHistoryDAO;
 import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
 import oscar.oscarProvider.data.ProviderData;
+import oscar.util.ConversionUtils;
 import oscar.util.StringUtils;
 
 /*
@@ -59,16 +64,13 @@ import oscar.util.StringUtils;
  * Created on Mar 10, 2004
  */
 
-public class TeleplanCorrectionActionWCB
-        extends org.apache.struts.action.Action {
-
-   private static final String sql_wcb = "update_wcb_wcb"; //updates wcb form
-	private static final String provider_wcb = "update_provider_wcb";
+public class TeleplanCorrectionActionWCB extends org.apache.struts.action.Action {
 	
 	static Logger log=MiscUtils.getLogger();
 	
 	private BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
-	
+	private WcbDao wcbDao = SpringUtils.getBean(WcbDao.class);
+	private DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 
     public ActionForward execute(ActionMapping mapping, ActionForm form,
             HttpServletRequest request,
@@ -81,7 +83,6 @@ public class TeleplanCorrectionActionWCB
 
         try {
 
-            AppointmentMainBean bean = (AppointmentMainBean) request.getSession().getAttribute("apptMainBean");
             MSPReconcile msp = new MSPReconcile();
             String status = data.getStatus();
 
@@ -123,10 +124,61 @@ public class TeleplanCorrectionActionWCB
             String extraFeeItem = data.getW_extrafeeitem();
             String getItemAmt = this.GetFeeItemAmount(feeItem, extraFeeItem);
             log.debug("fee " + feeItem + " extra " + extraFeeItem + " item amt " + getItemAmt);
-            String[] wcbParams = data.getWcb(getItemAmt);
+          
+            Demographic d = demographicDao.getDemographic(data.getDemographicNumber());
             
-            bean.queryExecuteUpdate(wcbParams, sql_wcb);
-
+            for(Wcb w : wcbDao.findByBillingNo(Integer.parseInt(data.getBillingNo()))) {
+            	w.setFormEdited(new Date());
+            	w.setStatus("O");
+            	w.setReportType(data.getW_reporttype());
+            	w.setBillAmount(getItemAmt);
+            	w.setfName(d.getFirstName());
+            	w.setlName(d.getLastName());
+            	w.setmName("");
+            	w.setGender(d.getSex());
+            	w.setDob(ConversionUtils.fromDateString(d.getYearOfBirth() + "-" + d.getMonthOfBirth() + "-" + d.getDateOfBirth()));
+            	w.setAddress(d.getAddress());
+            	w.setCity(d.getCity());
+            	w.setPostal(d.getPostal());
+            	w.setArea(oscar.Misc.areaCode(d.getPhone2()));
+            	w.setPhone(oscar.Misc.phoneNumber(d.getPhone2()));
+            	w.setPhn(d.getHin()+d.getVer());
+            	w.setEmpName(data.getW_empname());
+            	w.setEmpArea(data.getW_emparea());
+            	w.setEmpPhone(data.getW_empphone());
+            	w.setWcbNo(data.getW_wcbno());
+            	w.setOpAddress(data.getW_opaddress());
+            	w.setOpCity(data.getW_opcity());
+            	w.setrPhysician(data.getW_rphysician());
+            	w.setDuration(Integer.parseInt(data.getW_duration()));
+            	w.setProblem(data.getW_problem());
+            	w.setServiceDate(ConversionUtils.fromDateString(data.getW_servicedate()));
+            	w.setDiagnosis(data.getW_diagnosis());
+            	w.setIcd9(data.getW_icd9());
+            	w.setBp(data.getW_bp());
+            	w.setSide(data.getW_side());
+            	w.setNoi(data.getW_noi());
+            	w.setWork(data.getW_work());
+            	w.setWorkDate(ConversionUtils.fromDateString(data.getW_workdate()));
+            	w.setClinicInfo(data.getW_clinicinfo());
+            	w.setCapability(data.getW_capability());
+            	w.setCapReason(data.getW_capreason());
+            	w.setEstimate(data.getW_estimate());
+            	w.setRehab(data.getW_rehab());
+            	w.setRehabType(data.getW_rehabtype());
+            	w.setWcbAdbvisor(data.getW_wcbadvisor());
+            	w.setfTreatment(data.getW_ftreatment());
+            	w.setEstimateDate(ConversionUtils.fromDateString(data.getW_estimate()));
+            	w.setToFollow(data.getW_tofollow());
+            	w.setPracNo(data.getW_pracno());
+            	w.setDoi(ConversionUtils.fromDateString(data.getW_doi()));
+            	w.setServiceLocation(data.getServiceLocation());
+            	w.setFeeItem(data.getW_feeitem());
+            	w.setExtraFeeItem(data.getW_extrafeeitem());
+            	
+            	wcbDao.merge(w);
+            }
+            
             String providerNo = data.getProviderNo();
 
             ProviderData pd = new ProviderData(providerNo);
@@ -134,9 +186,14 @@ public class TeleplanCorrectionActionWCB
             String pracno = pd.getOhip_no();
             String billingNo = data.getBillingNo();
 
-            String s[] = {providerNo, payee, pracno, billingNo};
-
-            bean.queryExecuteUpdate(s, provider_wcb);
+            
+            for(Wcb wcb : wcbDao.findByBillingNo(Integer.parseInt(billingNo))) {
+            	//TODO: This has to be eventually changed to a string
+            	wcb.setProviderNo(Integer.parseInt(providerNo));
+            	wcb.setPayeeNo(payee);
+            	wcb.setPracNo(pracno);
+            	wcbDao.merge(wcb);
+            }
 
         } catch (Exception ex) {
             log.error("WCB Teleplan Correction Query Error: " +ex.getMessage() + " - ", ex);
