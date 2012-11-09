@@ -60,6 +60,8 @@ public class ReportStatus {
 		// boneheaded calendar numbers months from 0
 		if (t.length() > 18) {
 			cal.set(Integer.parseInt(t.substring(0, 4)), Integer.parseInt(t.substring(5, 7)) - 1, Integer.parseInt(t.substring(8, 10)), Integer.parseInt(t.substring(11, 13)), Integer.parseInt(t.substring(14, 16)), Integer.parseInt(t.substring(17, 19)));
+		} else if(t.length() == 10 ){
+			cal.set(Integer.parseInt(t.substring(0, 4)), Integer.parseInt(t.substring(5, 7)) - 1, Integer.parseInt(t.substring(8, 10) ) );
 		} else {
 			cal.set(Integer.parseInt(t.substring(0, 4)), Integer.parseInt(t.substring(4, 6)) - 1, Integer.parseInt(t.substring(6, 8)), Integer.parseInt(t.substring(8, 10)), Integer.parseInt(t.substring(10, 12)), Integer.parseInt(t.substring(12, 14)));
 		}
