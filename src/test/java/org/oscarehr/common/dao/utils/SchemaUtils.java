@@ -154,6 +154,26 @@ public class SchemaUtils
 		restoreTable(true,tableNames);
 	}
 
+	public static void dropTable(String... tableNames) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException
+	{
+		String schema=ConfigUtils.getProperty("db_schema");
+
+		Connection c=getConnection();
+		try
+		{
+			Statement s=c.createStatement();
+			s.executeUpdate("use "+schema);
+			for (int i = 0; i < tableNames.length; i++) {
+				s.executeUpdate("drop table if exists " + tableNames[i]);
+            }
+			s.close();
+
+		}
+		finally
+		{
+			c.close();
+		}
+	}
 	public static void restoreTable(boolean includeInitData, String... tableNames) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException
 	{
 		long start = System.currentTimeMillis();
@@ -166,7 +186,8 @@ public class SchemaUtils
 			s.executeUpdate("use "+schema);
 			for (int i = 0; i < tableNames.length; i++) {
 				s.executeUpdate("drop table if exists " + tableNames[i]);
-				s.executeUpdate(createTableStatements.get(tableNames[i]));
+				s.executeUpdate(createTableStatements.get(tableNames[i]).replaceAll("_maventest", ""));
+				
 				if(includeInitData)
 					s.executeUpdate("insert into " + tableNames[i] + " select * from " + tableNames[i] + "_maventest");
             }

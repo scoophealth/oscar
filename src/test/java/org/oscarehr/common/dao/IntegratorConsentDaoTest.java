@@ -27,29 +27,70 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.common.model.IntegratorConsent.ConsentStatus;
 import org.oscarehr.common.model.IntegratorConsent.SignatureStatus;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.SpringUtils;
 
 public class IntegratorConsentDaoTest extends DaoTestFixtures {
 
 	private IntegratorConsentDao dao = SpringUtils.getBean(IntegratorConsentDao.class);
+	private FacilityDao facilityDao = SpringUtils.getBean(FacilityDao.class);
+	private DemographicDao demographicDao  =SpringUtils.getBean(DemographicDao.class);
+	private ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("IntegratorConsent");
+		this.beforeForInnoDB();
+		SchemaUtils.restoreTable("Facility","demographic","provider","DigitalSignature","IntegratorConsent");
 	}
 
 	@Test
 	public void testCreate() throws Exception {
+		Facility f = new Facility();
+		f.setDescription("test");
+		f.setDisabled(false);
+		f.setName("test");
+		f.setOcanServiceOrgNumber("0");
+		f.setOrgId(0);
+		f.setSectorId(0);
+		facilityDao.persist(f);
+		
+		Demographic d = new Demographic();
+		d.setFirstName("a");
+		d.setLastName("b");
+		d.setYearOfBirth("2000");
+		d.setMonthOfBirth("1");
+		d.setDateOfBirth("1");
+		d.setSex("M");
+		demographicDao.save(d);
+		
+		Provider p = new Provider();
+		p.setLastName("x");
+		p.setFirstName("y");
+		p.setProviderNo("111111");
+		p.setProviderType("doctor");
+		p.setSex("M");
+		p.setDob(new java.util.Date());
+		p.setSpecialty("MD");
+		providerDao.saveProvider(p);
+		
 		IntegratorConsent entity = new IntegratorConsent();
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		entity.setClientConsentStatus(ConsentStatus.GIVEN);
 		entity.setSignatureStatus(SignatureStatus.ELECTRONIC);
+		entity.setDemographicId(d.getDemographicNo());
+		entity.setDigitalSignatureId(null);
+		entity.setFacilityId(f.getId());
+		entity.setProviderNo(p.getProviderNo());
+		
 		dao.persist(entity);
 		assertNotNull(entity.getId());
 	}
