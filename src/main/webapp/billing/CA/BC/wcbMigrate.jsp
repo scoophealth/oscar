@@ -25,6 +25,20 @@
 --%>
 
 <%@page import="org.oscarehr.util.DbConnectionFilter,java.sql.*" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.BillingServiceDao" %>
+<%@page import="org.oscarehr.common.model.BillingService" %>
+<%@page import="org.oscarehr.billing.CA.BC.dao.WcbDao" %>
+<%@page import="org.oscarehr.billing.CA.BC.model.Wcb" %>
+<%@page import="oscar.oscarBilling.ca.bc.data.BillingmasterDAO" %>
+<%@page import="oscar.entities.Billingmaster" %>
+<%
+	BillingServiceDao billingServiceDao = SpringUtils.getBean(BillingServiceDao.class);
+    WcbDao wcbDao = SpringUtils.getBean(WcbDao.class);
+    BillingmasterDAO billingmasterDao = SpringUtils.getBean(BillingmasterDAO.class);
+    		   
+%>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -39,13 +53,10 @@
 
 
         <%
-        Connection c = DbConnectionFilter.getThreadLocalDbConnection();
+        Connection c = DbConnectionFilter.getThreadLocalDbConnection(); //select only
         try {
             PreparedStatement ps = c.prepareStatement("select * from wcb where billing_no = ?");
             PreparedStatement ps_findunlinkedWcbBills = c.prepareStatement("select * from billing,billingmaster where billing.billing_no = billingmaster.billing_no  and  billingtype = 'WCB' and wcb_id is null");
-
-
-            PreparedStatement billingmasterInsert = c.prepareStatement("update billingmaster set wcb_id = ? , bill_amount = ?,  billing_code =?  , service_location =? , birth_date =?, payee_no   =? ,practitioner_no =?   where billing_no = ?");
             ResultSet rs = ps_findunlinkedWcbBills.executeQuery();
 
             //For each bill that is of type WCB and has a wcb_id of null (or blank?)
@@ -74,15 +85,21 @@
                     String feeItem = wcbResult.getString("w_feeitem");
                     String sLocation = wcbResult.getString("w_servicelocation");
 
-                    billingmasterInsert.setString(1, wcbId);
-                    billingmasterInsert.setString(2, bill_amount);
-                    billingmasterInsert.setString(3, feeItem);
-                    billingmasterInsert.setString(4, sLocation);
-
-                    billingmasterInsert.setString(5, dob);
-                    billingmasterInsert.setString(6, w_payeeno);
-                    billingmasterInsert.setString(7, w_pracno);
-                    billingmasterInsert.setInt(8, billingNo);
+                   
+                    int inResult = 0;
+           			for(Billingmaster bm : billingmasterDao.getBillingMasterByBillingNo(String.valueOf(billingNo))) {
+           				bm.setWcbId(Integer.parseInt(wcbId));
+           				bm.setBillAmount(bill_amount);
+           				bm.setBillingCode(feeItem);
+           				bm.setServiceLocation(sLocation);
+           				bm.setBirthDate(dob);
+           				bm.setPayee_no(w_payeeno);
+           				bm.setPractitioner_no(w_pracno);
+           				
+           				billingmasterDao.update(bm);
+           				inResult++;
+           			}
+           			
 
         %>
 
@@ -100,11 +117,7 @@
                 billing_no = <%=billingNo%> &nbsp;&nbsp;
                 billingmaster_no= <%=billingmaster%> &nbsp;&nbsp;
 
-        <%
-                  int inResult = billingmasterInsert.executeUpdate();
-                  billingmasterInsert.clearParameters();
-        %>
-        <%=inResult%>--<%=billingmasterInsert.getUpdateCount()%>
+        <%=inResult%>
                <br>
         <%
              }

@@ -101,12 +101,14 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 	public List<CaseManagementNote> getNotes(List<Long> ids) {
 		if(ids.size()==0)
 			return new ArrayList<CaseManagementNote>();
+		@SuppressWarnings("unchecked")
 		List<CaseManagementNote> notes = this.getHibernateTemplate().findByNamedParam("SELECT n FROM CaseManagementNote n WHERE n.id IN (:ids)","ids",ids);
 		return notes;
 	}
 
 	public CaseManagementNote getMostRecentNote(String uuid) {
 		String hql = "select distinct cmn from CaseManagementNote cmn where cmn.uuid = ? and cmn.id = (select max(cmn.id) from cmn where cmn.uuid = ?)";
+		@SuppressWarnings("unchecked")
 		List<CaseManagementNote> tmp = this.getHibernateTemplate().find(hql, new Object[] { uuid, uuid });
 		if (tmp == null) return null;
 
@@ -115,6 +117,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 
 	public List<CaseManagementNote> getNotesByUUID(String uuid) {
 		String hql = "select cmn from CaseManagementNote cmn where cmn.uuid = ?";
+		@SuppressWarnings("unchecked")
 		List<CaseManagementNote> ret = this.getHibernateTemplate().find(hql, uuid);
 		return ret;
 	}
@@ -443,7 +446,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		return this.getHibernateTemplate().save(note);
 	}
 
-	public List search(CaseManagementSearchBean searchBean) {
+	public List<CaseManagementNote> search(CaseManagementSearchBean searchBean) {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
 		Criteria criteria = getSession().createCriteria(CaseManagementNote.class);
@@ -480,12 +483,16 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		}
 
 		criteria.addOrder(Order.desc("update_date"));
-		return criteria.list();
+		@SuppressWarnings("unchecked")
+		List<CaseManagementNote> results = criteria.list();
+		
+		return results;
 
 	}
 
-	public List getAllNoteIds() {
-		List results = this.getHibernateTemplate().find("select n.id from CaseManagementNote n");
+	public List<Long> getAllNoteIds() {
+		@SuppressWarnings("unchecked")
+		List<Long> results = this.getHibernateTemplate().find("select n.id from CaseManagementNote n");
 		return results;
 	}
 
@@ -654,6 +661,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 	public List<CaseManagementNote> searchDemographicNotes(String demographic_no, String searchString) {
 		String hql = "select distinct cmn from CaseManagementNote cmn where cmn.id in (select max(cmn.id) from cmn where cmn.demographic_no = ? GROUP BY uuid) and cmn.demographic_no = ? and cmn.note like ? and cmn.archived = 0";
 
+		@SuppressWarnings("unchecked")
 		List<CaseManagementNote> result = getHibernateTemplate().find(hql, new Object[] {demographic_no, demographic_no, searchString });
 		return result;
 	}
@@ -669,6 +677,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 
 	public List<CaseManagementNote> getMostRecentNotesByAppointmentNo(int appointmentNo) {
 		String hql = "select distinct cmn.uuid from CaseManagementNote cmn where cmn.appointmentNo = ?";
+		@SuppressWarnings("unchecked")
 		List<String> tmp = this.getHibernateTemplate().find(hql, appointmentNo);
 		List<CaseManagementNote> mostRecents = new ArrayList<CaseManagementNote>();
 		for(String uuid:tmp) {

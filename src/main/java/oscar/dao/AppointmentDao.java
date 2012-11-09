@@ -25,22 +25,13 @@ package oscar.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.oscarehr.common.dao.DemographicDao;
-import org.oscarehr.common.hl7.v2.HL7A04Data;
-import org.oscarehr.common.model.Demographic;
-import org.oscarehr.util.SpringUtils;
 import org.springframework.jdbc.core.RowMapper;
 
-import oscar.OscarProperties;
 import oscar.appt.ApptData;
-import oscar.oscarClinic.ClinicData;
-import oscar.oscarDemographic.data.DemographicData;
-//import org.oscarehr.PMmodule.model.Program;
-//import org.oscarehr.PMmodule.dao.ProgramDao;
+
 
 /**
  * Oscar Appointment DAO implementation created to extract database access code
@@ -57,83 +48,6 @@ public class AppointmentDao extends OscarSuperDao {
 	public AppointmentDao() {
 		rowMappers.put("export_appt", new ExportApptDataRowMapper());
 	}
-	
-	/**
-	 * Executes a parameterized insert/update/delete query identified by a key.<br>
-	 * 
-	 * @param queryName sql query key
-	 * @param params sql query parameters
-	 * @return number of affected rows
-	 */
-	public int executeUpdateQuery(String queryName, Object[] params) {
-		int result = super.executeUpdateQuery(queryName, params);
-		
-		// Generate our HL7 A04 file when we add an appointment
-		// Should we also generate an HL7 A04 when we import an appointment?
-		if (OscarProperties.getInstance().isHL7A04GenerationEnabled() && 
-			queryName.equalsIgnoreCase("add_apptrecord") && result == 1) {
-			generateHL7A04(params);
-		}
-		
-		return result;
-	}
-	
-	/**
-	 * 
-	 */ 
-	private void generateHL7A04(Object[] params) {
-		try {	
-			String[] param2 = new String[7];
-			param2[0] = params[0].toString(); //provider_no
-			param2[1] = params[1].toString(); //appointment_date
-			param2[2] = params[2].toString(); //start_time
-			param2[3] = params[3].toString(); //end_time
-			param2[4] = params[13].toString(); //createdatetime
-			param2[5] = params[14].toString(); //creator
-			param2[6] = params[16].toString(); //demographic_no
-			
-			// get appointment data
-			ApptData appData = new ApptData();
-			List<Map<String, Object>> apptInfo = this.executeSelectQuery("search_appt_data", param2);
-			if (apptInfo.size() > 0) {
-				appData.setAppointment_no( 		apptInfo.get(0).get("appointment_no").toString() );
-				appData.setAppointment_date( 	apptInfo.get(0).get("appointment_date").toString() );
-				appData.setStart_time( 			apptInfo.get(0).get("start_time").toString() );
-				appData.setEnd_time( 			apptInfo.get(0).get("end_time").toString() );
-				appData.setNotes( 				apptInfo.get(0).get("notes").toString() );
-				appData.setReason( 				apptInfo.get(0).get("reason").toString() );
-				appData.setStatus( 				apptInfo.get(0).get("status").toString() );
-				appData.setProviderFirstName( 	apptInfo.get(0).get("first_name").toString() );
-				appData.setProviderLastName( 	apptInfo.get(0).get("last_name").toString() );
-				appData.setOhipNo( 				apptInfo.get(0).get("ohip_no").toString() );
-				appData.setUrgency( 			apptInfo.get(0).get("urgency").toString() );				
-			}
-				
-			// get demographic data
-			DemographicData demoData = new DemographicData();
-			Demographic demo = demoData.getDemographic(params[16].toString());
-			
-			// get clinic name/id
-			ClinicData clinicData = new ClinicData();
-			
-			//Program program = null;
-			DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
-			List programs = demographicDao.getDemoProgramCurrent( demo.getDemographicNo() );
-			/*
-			if ( apptInfo.get(0).get("adm_program_id").toString() != null ) {
-				Integer programId = new Integer( apptInfo.get(0).get("adm_program_id").toString() );
-				ProgramDao programDao = (ProgramDao)SpringUtils.getBean("programDao");
-				program = programDao.getProgram( programId );
-			}
-			*/
-			
-			// generate A04 HL7
-			HL7A04Data A04Obj = new HL7A04Data(demo, appData, clinicData, programs);
-			A04Obj.save();
-		} catch (Exception e) {
-			logger.error("Unable to generate HL7 A04 file.", e);
-		}
-	}
 
 	private String [][] dbQueries = new String[][] {
             {"search_appt", "select count(appointment_no) AS n from appointment where appointment_date = ? and provider_no = ? and status !='C' and ((start_time>= ? and start_time<= ?) or (end_time>= ? and end_time<= ?) or (start_time<= ? and end_time>= ?) ) and program_id=?" },
@@ -147,23 +61,16 @@ public class AppointmentDao extends OscarSuperDao {
             {"search_appt_data", "select app.*, prov.first_name, prov.last_name, prov.ohip_no, adm.program_id as adm_program_id from provider prov, appointment app left join admission adm on app.demographic_no = adm.client_id where app.provider_no = prov.provider_no and app.provider_no=? and app.appointment_date=? and app.start_time=? and app.end_time=? and app.createdatetime=? and app.creator=? and app.demographic_no=? order by app.appointment_no desc limit 1"},
 
             {"search_waitinglist", "select wl.listID, wln.name from waitingList wl, waitingListName wln where wl.demographic_no=? and wln.ID=wl.listID and wl.is_history ='N' order by wl.listID"},
-            {"appendremarks", "update appointment set remarks=CONCAT(remarks,?) where appointment_no=?"},
-            {"updatestatusc", "update appointment set status=?, lastupdateuser=?, updatedatetime=now() where appointment_no=?"},
-            {"update_apptrecord", "update appointment set demographic_no=?,appointment_date=?,start_time=?,end_time=?,name=?, notes=?,reason =?,location=?, resources=?, type=?,style=?,billing =?,status=?,lastupdateuser=?,remarks=?,updatedatetime=now(),urgency=? where appointment_no=? "},
-
+            
             {"search", "select * from appointment where appointment_no=?"},
             {"search_detail", "select * from demographic where demographic_no=?"},
 
-            {"delete", "delete from appointment where appointment_no=?"},
-
+            
             {"search_otherappt", "select * from appointment where appointment_date=? and ((start_time <= ? and end_time >= ?) or (start_time > ? and start_time < ?) ) order by provider_no, start_time" },
             {"search_groupprovider", "select p.last_name, p.first_name, p.provider_no from mygroup m, provider p where m.mygroup_no=? and m.provider_no=p.provider_no order by p.last_name"},
             {"search_scheduledate_single", "select * from scheduledate where sdate=? and provider_no=?" },
 
-            {"cancel_appt", "update appointment set status = ?, updatedatetime = ?, lastupdateuser = ? where appointment_date=? and provider_no=? and start_time=? and end_time=? and name=? and notes=? and reason=? and createdatetime like ?  and creator=? and demographic_no=? " },
-            {"delete_appt", "delete from appointment where appointment_date=? and provider_no=? and start_time=? and end_time=? and name=? and notes=? and reason=? and createdatetime like ?  and creator=? and demographic_no=? " },
-            {"update_appt", "update appointment set start_time=?, end_time=?, name=?, demographic_no=?, notes=?, reason=?, location=?, resources=?, updatedatetime=?, lastupdateuser=?, urgency=? where appointment_date=? and provider_no=? and start_time=? and end_time=? and name=? and notes=? and reason=? and createdatetime like ?  and creator=? and demographic_no=?" },
-
+            
             {"search_group_day_appt", "select count(appointment_no) as numAppts from appointment, mygroup where mygroup.provider_no=appointment.provider_no and appointment.status != 'C' and mygroup.mygroup_no=? and  appointment.demographic_no=? and  appointment.appointment_date=?"},
             {"search_formtbl","select * from encounterForm where form_table= ?"},
             {"export_appt", "select app.*, prov.first_name, prov.last_name, prov.ohip_no from appointment app, provider prov where app.provider_no = prov.provider_no and app.demographic_no = ?" }

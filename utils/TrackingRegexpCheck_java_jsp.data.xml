@@ -872,8 +872,10 @@
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:DBPreparedHandler db = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:DBPreparedHandlerParam [] params = new DBPreparedHandlerParam[100];</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:DBPreparedHandlerParam [] pars = new DBPreparedHandlerParam[i];</ViolationValue>
+        <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:DBPreparedHandlerParam param = params[i];</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:DBPreparedHandlerParam[] params = new DBPreparedHandlerParam[fieldDefList.size()+1];</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:DBPreparedHandlerParam[] params = new DBPreparedHandlerParam[fieldDefList.size()];</ViolationValue>
+        <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:else if(DBPreparedHandlerParam.PARAM_STRING.equals(param.getParamType())){</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:import oscar.oscarDB.DBPreparedHandlerParam;</ViolationValue>
@@ -886,7 +888,11 @@
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:params[i] = new DBPreparedHandlerParam(fdv.getVal());</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:params[i] = new DBPreparedHandlerParam(new java.sql.Date(MyDateFormat.getCalendar(fdv.getVal()).getTime().getTime()));</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:params[i] = new DBPreparedHandlerParam(new java.sql.Date(MyDateFormat.getCalendarwithTime(fdv.getVal()).getTime().getTime()));</ViolationValue>
+        <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:private int queryExecuteUpdate(String preparedSQL, DBPreparedHandlerParam[] params) throws SQLException {</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:public class LookupDao extends HibernateDaoSupport {</ViolationValue>
+        <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:}else if (DBPreparedHandlerParam.PARAM_DATE.equals(param.getParamType())){</ViolationValue>
+        <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:}else if (DBPreparedHandlerParam.PARAM_INT.equals(param.getParamType())){</ViolationValue>
+        <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:}else if (DBPreparedHandlerParam.PARAM_TIMESTAMP.equals(param.getParamType())){</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/security/SecObjectNameDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/security/SecObjectNameDao.java:public class SecObjectNameDao extends HibernateDaoSupport{</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/security/SecProviderDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
@@ -1045,7 +1051,6 @@
         <ViolationValue>/src/main/java/oscar/AppointmentMainBean.java:import oscar.oscarDB.DBPreparedHandlerParam;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/AppointmentMainBean.java:private DBPreparedHandler dbPH=null;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/AppointmentMainBean.java:public ResultSet queryResults_paged(DBPreparedHandlerParam[] aKeyword, String dboperation, int iOffSet) throws Exception{</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/AppointmentMainBean.java:public int queryExecuteUpdate(DBPreparedHandlerParam[] params, String dboperation) throws SQLException</ViolationValue>
         <ViolationValue>/src/main/java/oscar/OscarAction.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/OscarAction.java:protected DBPreparedHandler handler = null;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/appt/JdbcApptImpl.java:OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");</ViolationValue>
@@ -1058,7 +1063,6 @@
         <ViolationValue>/src/main/java/oscar/billing/fat/dao/FatFormulariosDAO.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dao/OscarSuperDao.java:* Oscar super DAO implementation created to extract database access code from JSP files. This class should be extended by a scope named DAO class, i.e. AppointmentDao. Do not access methods of this class directly - use OscarSuperManager methods instead.</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dbBillingData.java:DBPreparedHandler accessDB = null;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/dbBillingData.java:accessDB = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dbBillingData.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dms/EDocUtil.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -1220,12 +1224,6 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/WcbSb.java:DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/MSP/WcbSb.java:ResultSet rs = DBHandler.GetSQL("SELECT billingmaster_no FROM billingmaster WHERE billing_no="+ invNo);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/data/BillingHistoryDAO.java:rs = DBHandler.GetSQL(qry);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingReProcessBillAction.java://DBHandler.RunSQL(providerSQL);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingReProcessBillAction.java://DBHandler.RunSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingReProcessBillAction.java:DBHandler.RunSQL(secondSQL);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingBillingManager.java:ResultSet wcbrs = DBHandler.GetSQL(</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingBillingManager.java:rs = DBHandler.GetSQL("select billingtype from billing where billing_no = '" +</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingBillingManager.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingSaveBillingAction.java:OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingSaveBillingAction.java:import oscar.service.OscarSuperManager;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/bc/pageUtil/BillingSessionBean.java://             rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -1237,8 +1235,6 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/administration/GstReport.java:rs2 = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/dao/BillingOnItemDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/dao/BillingOnItemDao.java:public class BillingOnItemDao extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingCodeData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingData.java:ResultSet rs = DBHandler.GetSQL(p);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingONDataHelp.java:ret = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingReviewImpl.java:DBPreparedHandler dbPH=new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingReviewImpl.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
@@ -1246,28 +1242,17 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingReviewImpl.java:public List getBillingHist(String demoNo, int iPageSize, int iOffSet, DBPreparedHandlerParam[] pDateRange) throws Exception{</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/RAData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/data/BillingONDataHelp.java:ret = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/data/BillingONDataHelp.java:ret = DBHandler.RunSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/pageUtil/BillingReProcessBillAction.java:DBHandler.RunSQL(secondSQL);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/pageUtil/BillingReProcessBillAction.java:DBHandler.RunSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/pageUtil/BillingBillingManager.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/pageUtil/BillingSaveBillingAction.java:OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/pageUtil/BillingSaveBillingAction.java:import oscar.service.OscarSuperManager;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/pageUtil/BillingSessionBean.java://             rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/pageUtil/BillingViewBean.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDB/ArchiveDeletedRecords.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDB/DBPreparedHandler.java:DBPreparedHandlerParam param = params[i];</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDB/DBPreparedHandler.java:else if(DBPreparedHandlerParam.PARAM_STRING.equals(param.getParamType())){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDB/DBPreparedHandler.java:else if(param[i].getParamType().equals(DBPreparedHandlerParam.PARAM_DATE)){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDB/DBPreparedHandler.java:else if(param[i].getParamType().equals(DBPreparedHandlerParam.PARAM_INT)){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDB/DBPreparedHandler.java:if(param[i].getParamType().equals(DBPreparedHandlerParam.PARAM_STRING)){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDB/DBPreparedHandler.java:public final class DBPreparedHandler {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDB/DBPreparedHandler.java:synchronized public ResultSet queryResults(String preparedSQL, DBPreparedHandlerParam[] param) throws SQLException {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDB/DBPreparedHandler.java:synchronized public ResultSet queryResults_paged(String preparedSQL, DBPreparedHandlerParam[] param, int iOffSet) throws SQLException {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDB/DBPreparedHandler.java:synchronized public int queryExecuteInsertReturnId(String preparedSQL, DBPreparedHandlerParam[] params) throws SQLException {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDB/DBPreparedHandler.java:synchronized public int queryExecuteUpdate(String preparedSQL, DBPreparedHandlerParam[] params) throws SQLException {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDB/DBPreparedHandler.java:}else if (DBPreparedHandlerParam.PARAM_DATE.equals(param.getParamType())){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDB/DBPreparedHandler.java:}else if (DBPreparedHandlerParam.PARAM_INT.equals(param.getParamType())){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarDB/DBPreparedHandler.java:}else if (DBPreparedHandlerParam.PARAM_TIMESTAMP.equals(param.getParamType())){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDB/DBPreparedHandlerParam.java:public DBPreparedHandlerParam(Date dateValue){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDB/DBPreparedHandlerParam.java:public DBPreparedHandlerParam(String stringValue){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDB/DBPreparedHandlerParam.java:public DBPreparedHandlerParam(Timestamp dateValue){</ViolationValue>
@@ -1365,7 +1350,6 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctWindowSizes.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/FileUploadCheck.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ForwardingRules.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/AcknowledgementData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/Hl7textResultsData.java:ResultSet rs = DBHandler.GetSQL(attachQuery);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/Hl7textResultsData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/Hl7textResultsData.java:ResultSet rs2=DBHandler.GetSQL(sql2);</ViolationValue>
@@ -1580,8 +1564,6 @@
         <ViolationValue>/src/main/webapp/admin/logReport.jsp:DBPreparedHandlerParam[] params = new DBPreparedHandlerParam[2];</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/logReport.jsp:params[0]= new DBPreparedHandlerParam(MyDateFormat.getSysDateEX(eDate, 1));</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/logReport.jsp:params[1]= new DBPreparedHandlerParam(MyDateFormat.getSysDate(sDate));</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/preferenceaddpreference.jsp:&lt;%@ page import="oscar.login.DBHelp"%&gt;</ViolationValue>
-        <ViolationValue>/src/main/webapp/admin/preferenceaddpreference.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/providerAddRole.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/providerRole.jsp:DBHelp dbObj = new DBHelp();</ViolationValue>
         <ViolationValue>/src/main/webapp/admin/providerRole.jsp:ResultSet rs = DBHelp.searchDBRecord(query);</ViolationValue>
@@ -3263,7 +3245,6 @@
         <ViolationValue>/src/main/webapp/billing/CA/ON/genGroupReport.jsp:Vector vecGrpBillingPro = new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/ON/genreport.jsp:Vector vecGrpBillingPro = new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/ON/inr/genINRbilling.jsp:StringBuffer sotherBuffer = new StringBuffer(billing_amount);</ViolationValue>
-        <ViolationValue>/src/main/webapp/billing/CA/ON/inr/onGenINRbilling.jsp://StringBuffer sotherBuffer = new StringBuffer(billing_amount);</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/ON/inr/onGenINRbilling.jsp:List aL = new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/ON/onGenRASummary.jsp:Hashtable map = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/billing/CA/ON/onGenRASummary.jsp:Vector CObilling_no = (Vector) obj.getRABillingNo4Code(raNo, colposcopyCodes);</ViolationValue>

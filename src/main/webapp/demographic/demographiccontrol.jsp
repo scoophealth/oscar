@@ -138,7 +138,6 @@
     {"search_titlename", "select *  from demographic where "+fieldname+" "+regularexp+" ? "+ptstatusexp+domainRestriction+orderby},
     {"search_titlename_mysql", "select *  from demographic where "+fieldname+" "+regularexp+" ? "+ptstatusexp+domainRestriction+orderby + " " + limit},
     {"search_demorecord", "select demographic_no,first_name,last_name,roster_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no from demographic where "+fieldname+ " "+regularexp+" ? " +ptstatusexp+domainRestriction+orderby},
-    {"update_apptrecord", "select demographic_no,first_name,last_name,roster_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no  from demographic where "+fieldname+ " "+regularexp+" ? " +ptstatusexp+domainRestriction+orderby + " "+limit},
     {"search_detail", "select * from demographic where demographic_no=?"},
     {"search_detail_ptbr", "select * from demographic d left outer join demographic_ptbr dptbr on dptbr.demographic_no = d.demographic_no where d.demographic_no=?"},
 
@@ -174,11 +173,7 @@
 	  {"Update Record" , "demographicupdatearecord.jsp"},
 
 	  {"Delete" , "demographicdeletearecord.jsp"},
-	  {"Save Record & Back to Appointment" , "demographicaddbacktoappt.jsp"},
-	  {"Update Record & Back to Appointment" , "demographicupdatebacktoappt.jsp"},
 	  {"Demographic ID" , "adddemographictoeditappt.jsp"},
-	  {"Add Record & Back to Appointment" , "adddemographicbacktoappt.jsp"},
-	  {"Update Record & Back to Appointment" , "updatedemographicbacktoappt.jsp"},
 	  {"linkMsg2Demo" , "../oscarMessenger/msgSearchDemo.jsp"},
 	};
 	apptMainBean.doConfigure( dbQueries,responseTargets);

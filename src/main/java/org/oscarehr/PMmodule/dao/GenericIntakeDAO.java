@@ -478,22 +478,7 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 		}
 	}
 
-	private void convertToReportStatistics2(List<?> results, SortedMap<Integer, SortedMap<String, ReportStatistic>> reportStatistics) {
-		// for (Object o : results) {
-		// Object[] tuple = (Object[])o;
-		//
-		// Integer nodeId = (Integer)tuple[0];
-		// String value = (String)tuple[1];
-		//
-		// Integer count = Integer.valueOf(tuple[2].toString());
-		//
-		// if (!reportStatistics.containsKey(nodeId)) {
-		// reportStatistics.put(nodeId, new TreeMap<String, ReportStatistic>());
-		// }
-		//
-		// reportStatistics.get(nodeId).put(value, new ReportStatistic(count, size));
-		// }
-	}
+
 
 	public List<IntakeNode> getIntakeNodesByType(Integer formType) {
 		return this.getHibernateTemplate().find("From IntakeNode n where n.formType = ? and n.publish_by is not null", new Object[] {formType});

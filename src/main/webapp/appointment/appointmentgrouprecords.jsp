@@ -147,13 +147,14 @@
  		    datano=Integer.parseInt(request.getParameter(strbuf.toString()) );
 
             if (request.getParameter("groupappt").equals("Group Cancel")) {
-                String[] param = new String[3];
-	            param[0]="C";
-                    param[1]=userName;   //request.getParameter("createdatetime");
-	            param[2]=request.getParameter("appointment_no" + datano);  //request.getParameter("creator");
 	            Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no"+datano)));
 	            appointmentArchiveDao.archiveAppointment(appt);
-	            rowsAffected = oscarSuperManager.update("appointmentDao", "updatestatusc", param);
+	            if(appt != null) {
+	              	appt.setStatus("C");
+	              	appt.setLastUpdateUser(userName);
+	              	appointmentDao.merge(appt);
+	              	rowsAffected=1;
+	              }
 			}
 
 		    //delete the selected appts
@@ -162,8 +163,9 @@
             		Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no"+datano)));
             		if( appt != null ) {
 	            		appointmentArchiveDao.archiveAppointment(appt);
-            			rowsAffected = oscarSuperManager.update("appointmentDao", "delete",
-            				new Object [] {request.getParameter("appointment_no" + datano)});
+	            		appointmentDao.remove(appt.getId());
+	            		rowsAffected=1;
+	            	
             		}
             	}
             }
@@ -173,8 +175,9 @@
             		Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no"+datano)));
             		if( appt != null ) {
 	            		appointmentArchiveDao.archiveAppointment(appt);
-            			rowsAffected = oscarSuperManager.update("appointmentDao", "delete",
-            				new Object [] {request.getParameter("appointment_no" + datano)});
+	            		appointmentDao.remove(appt.getId());
+	            		rowsAffected=1;
+	            	
             		}
             	}
 

@@ -108,9 +108,11 @@ public class ProviderLabRouting {
             pstmt = conn.prepareStatement(sql);
             rs = pstmt.executeQuery();
             if (!rs.next()){
-                sql = "UPDATE providerLabRouting set status='N' WHERE lab_no='"+labId+"' AND lab_type='"+labType+"'";
-                pstmt = conn.prepareStatement(sql);
-                pstmt.executeUpdate();
+            	ProviderLabRoutingModel plr = providerLabRoutingDao.findByLabNoAndLabType(labId,labType);
+            	if(plr != null) {
+            		plr.setStatus("N");
+            		providerLabRoutingDao.merge(plr);
+            	}
             }
         }
         pstmt.close();

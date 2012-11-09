@@ -28,6 +28,12 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
+<%@page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
+<%@page import="org.oscarehr.common.model.Appointment" %>
+<%@page import="oscar.util.ConversionUtils" %>
+<%
+	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
+%>
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -70,7 +76,45 @@
     }
     param[18]=request.getParameter("urgency");
 
-    int rowsAffected = oscarSuperManager.update("appointmentDao", request.getParameter("dboperation"), param);
+	Appointment a = new Appointment();
+	a.setProviderNo(request.getParameter("provider_no"));
+	a.setAppointmentDate(ConversionUtils.fromDateString(request.getParameter("appointment_date")));
+	a.setStartTime(ConversionUtils.fromTimeStringNoSeconds(request.getParameter("start_time")));
+	a.setEndTime(ConversionUtils.fromTimeStringNoSeconds(request.getParameter("end_time")));
+	a.setName(request.getParameter("keyword"));
+	a.setNotes(request.getParameter("notes"));
+	a.setReason(request.getParameter("reason"));
+	a.setLocation(request.getParameter("location"));
+	a.setResources(request.getParameter("resources"));
+	a.setType(request.getParameter("type"));
+	a.setStyle(request.getParameter("style"));
+	a.setBilling(request.getParameter("billing"));
+	a.setStatus(request.getParameter("status"));
+	a.setCreateDateTime(new java.util.Date());
+	a.setCreator(request.getParameter("creator"));
+	a.setRemarks(request.getParameter("remarks"));
+	//the keyword(name) must match the demographic_no if it has been changed
+    demo = null;
+if (request.getParameter("demographic_no") != null && !(request.getParameter("demographic_no").equals(""))) {
+    DemographicMerged dmDAO = new DemographicMerged();
+    a.setDemographicNo(Integer.parseInt(dmDAO.getHead(request.getParameter("demographic_no"))));
+
+	DemographicData demData = new DemographicData();
+	demo = demData.getDemographic(String.valueOf(a.getDemographicNo()));
+	a.setName(demo.getLastName()+","+demo.getFirstName());
+} else {
+    a.setDemographicNo(0);
+	a.setName(request.getParameter("keyword"));
+}
+	
+	a.setProgramId(Integer.parseInt((String)request.getSession().getAttribute("programId_oscarView")));
+	a.setUrgency((request.getParameter("urgency")!=null)?request.getParameter("urgency"):"");
+	
+	appointmentDao.persist(a);
+	
+    
+    
+    int rowsAffected = 1;
 	if (rowsAffected == 1) {
 %>
 <p>
