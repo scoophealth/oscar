@@ -22,16 +22,41 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.common.dao;
+
+import java.util.List;
+
+import javax.persistence.Query;
 
 import org.oscarehr.common.model.LabTestResults;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class LabTestResultsDao extends AbstractDao<LabTestResults>{
+public class LabTestResultsDao extends AbstractDao<LabTestResults> {
 
 	public LabTestResultsDao() {
 		super(LabTestResults.class);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<LabTestResults> findByTitleAndLabInfoId(Integer labId) {
+		Query query = createQuery("r", "r.title IS NOT EMPTY and r.labPatientPhysicianInfoId = :labId");
+		query.setParameter("labId", labId);
+		return query.getResultList();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<LabTestResults> findByLabInfoId(Integer labId) {
+		Query query = createQuery("r", "r.labPatientPhysicianInfoId = :labId");
+		query.setParameter("labId", labId);
+		return query.getResultList();
+	}
+
+	@SuppressWarnings("unchecked")
+    public List<LabTestResults> findByAbnAndLabInfoId(String abn, Integer labId) {
+		Query query = createQuery("r", "r.abn = :abn and r.labPatientPhysicianInfoId = :labId");
+		query.setParameter("labId", labId);
+		query.setParameter("abn", abn);
+		return query.getResultList();
 	}
 }
