@@ -1143,7 +1143,7 @@
 					<groupIdsToRemove>
 						<param>org.oscarehr.caisi_integrator.caisi_integrator_client_stubs</param>
 						<param>org.oscarehr.myoscar_client_server_commons</param>
-						<param>org.oscarehr.myoscar_server</param>
+						<param>org.oscarehr.myoscar_server_client_stubs</param>
 						<param>org.oscarehr.myoscar_client_utils</param>
 						<param>org.oscarehr.util</param>
 						<param>org.oscarehr.ar2005.ar2005</param>
