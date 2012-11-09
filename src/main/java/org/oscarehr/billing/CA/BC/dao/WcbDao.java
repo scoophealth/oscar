@@ -23,6 +23,10 @@
  */
 package org.oscarehr.billing.CA.BC.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.billing.CA.BC.model.Wcb;
 import org.oscarehr.common.dao.AbstractDao;
 import org.springframework.stereotype.Repository;
@@ -32,5 +36,16 @@ public class WcbDao extends AbstractDao<Wcb>{
 
 	public WcbDao() {
 		super(Wcb.class);
+	}
+	
+	public List<Wcb> findByBillingNo(int billingNo) {
+		Query q = entityManager.createQuery("SELECT x FROM Wcb x WHERE x.billingNo=?");
+		q.setParameter(1, billingNo);
+		
+		@SuppressWarnings("unchecked")
+		List<Wcb> results = q.getResultList();
+		
+		return results;
+		
 	}
 }

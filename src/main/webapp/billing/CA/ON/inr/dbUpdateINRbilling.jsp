@@ -18,18 +18,20 @@
 
 --%>
 <%
-if(session.getAttribute("user") == null) response.sendRedirect("../../../../logout.htm");
-
-String curUser_no,userfirstname,userlastname;
-curUser_no = (String) session.getAttribute("user");
-userfirstname = (String) session.getAttribute("userfirstname");
-userlastname = (String) session.getAttribute("userlastname");
+String curUser_no = (String) session.getAttribute("user");
 %>   
 
 <%@page import="java.sql.*, java.util.*,java.net.*, oscar.MyDateFormat"  errorPage="../../errorpage.jsp"%>
 
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
 <%@ include file="dbINR.jspf" %>
+<%@page import="org.oscarehr.billing.CA.model.BillingInr" %>
+<%@page import="org.oscarehr.billing.CA.dao.BillingInrDao" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="oscar.util.ConversionUtils" %>
+<%
+	BillingInrDao dao = SpringUtils.getBean(BillingInrDao.class);
+%>
 <html>
 <head>
 <script LANGUAGE="JavaScript">
@@ -99,17 +101,18 @@ if (errorCode.compareTo("") ==0){
 	if (request.getParameter("inraction").compareTo("update")==0) {
 		demo_hin = request.getParameter("demo_hin");
 		demo_dob = request.getParameter("demo_dob");
-
-		String[] param = new String[7];
-		param[0] = demo_hin;
-		param[1] = demo_dob;
-		param[2] = service_code;
-		param[3] = service_desc;
-		param[4] = service_amount; 
-		param[5] = diag_code;
-		param[6] = billinginr_no; 
-
-		int rowAffect = apptMainBean.queryExecuteUpdate(param,"update_inrbilling_dt_item");
+		
+		BillingInr b = dao.find(Integer.parseInt(billinginr_no));
+		if(b != null && !b.getStatus().equals("D")) {
+			b.setHin(demo_hin);
+			b.setDob(demo_dob);
+			b.setServiceCode(service_code);
+			b.setServiceDesc(service_desc);
+			b.setBillingAmount(service_amount);
+			b.setDiagnosticCode(diag_code);
+			dao.merge(b);
+		}
+		
 %>
 <script LANGUAGE="JavaScript">
       self.close();
@@ -124,12 +127,16 @@ if (errorCode.compareTo("") ==0){
 			int curDay = now.get(Calendar.DAY_OF_MONTH);
 			String nowDate = String.valueOf(curYear)+"/"+String.valueOf(curMonth) + "/" + String.valueOf(curDay);
 
-			String[] param1 = new String[3];
-			param1[0] = "D";
-			param1[1] = nowDate;
-			param1[2] = billinginr_no;
-
-			int rowAffect = apptMainBean.queryExecuteUpdate(param1,"update_inrbilling_dt_billno");
+			int rowAffect = 0;
+			
+			BillingInr bi = dao.find(Integer.parseInt(billinginr_no));
+			if(bi != null && !bi.getStatus().equals("D")) {
+				bi.setStatus("D");
+				bi.setCreateDateTime(ConversionUtils.fromDateString(nowDate));
+				dao.merge(bi);
+				rowAffect++;
+			}
+      		
 %>
 <script LANGUAGE="JavaScript">
       self.close();

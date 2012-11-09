@@ -17,19 +17,19 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
-<%//
-			if (session.getAttribute("user") == null)
-				response.sendRedirect("../../../../logout.jsp");
-			String user_no = "";
-			user_no = (String) session.getAttribute("user");
+<%
+	String user_no = (String) session.getAttribute("user");
 %>
-<%@ page
-	import="java.util.*,java.sql.*,oscar.util.*,oscar.*,oscar.oscarBilling.ca.on.data.*"
-	errorPage="../../../errorpage.jsp"%>
-
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ page import="java.util.*,java.sql.*,oscar.util.*,oscar.*,oscar.oscarBilling.ca.on.data.*" errorPage="../../../errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%@ include file="dbINR.jspf"%>
+<%@page import="org.oscarehr.billing.CA.model.BillingInr" %>
+<%@page import="org.oscarehr.billing.CA.dao.BillingInrDao" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="oscar.util.ConversionUtils" %>
+<%
+	BillingInrDao billingInrDao = SpringUtils.getBean(BillingInrDao.class);
+%>
 <%//
 			JdbcBillingClaimImpl dbObj = new JdbcBillingClaimImpl();
 			String temp = "";
@@ -76,12 +76,6 @@
 					String sex = rsdemo.getString("sex");
 					String last_name = rsdemo.getString("last_name");
 					String first_name = rsdemo.getString("first_name");
-
-					//StringBuffer sotherBuffer = new StringBuffer(billing_amount);
-					//int f = billing_amount.indexOf('.');
-					//sotherBuffer.deleteCharAt(f);
-					//sotherBuffer.insert(f, "");
-					//billing_amount = sotherBuffer.toString();
 
 					String[] param = new String[23];
 					param[0] = clinic_no;
@@ -156,11 +150,13 @@
 					String billNo = "" + nNo;
 
 					int recordAffected = 0;
-					String[] param3 = new String[3];
-					param3[0] = "A";
-					param3[1] = request.getParameter("xml_appointment_date");
-					param3[2] = temp.substring(10);
-					recordAffected = apptMainBean.queryExecuteUpdate(param3, "update_inrbilling_dt_billno");
+					BillingInr bi = billingInrDao.find(Integer.parseInt(temp.substring(10)));
+					if(bi != null && !bi.getStatus().equals("D")) {
+						bi.setStatus("A");
+						bi.setCreateDateTime(ConversionUtils.fromDateString(request.getParameter("xml_appointment_date")));
+						billingInrDao.merge(bi);
+						recordAffected++;
+					}
 
 					int recordCount = Integer.parseInt("1");
 					for (int i = 0; i < recordCount; i++) {
