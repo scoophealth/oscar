@@ -32,8 +32,8 @@
 </head>
 <body>
 <%@ page import="oscar.*,java.text.*, java.util.*"%>
-<jsp:useBean id="billing" scope="session" class="oscar.BillingBean" />
 <jsp:useBean id="billingItem" scope="page" class="oscar.BillingItemBean" />
+<jsp:useBean id="billingBean" scope="session" class="oscar.BillingBean" />
 <jsp:useBean id="billingDataBean" class="oscar.BillingDataBean" scope="session" />
 <jsp:useBean id="billingPatientDataBean" class="oscar.BillingPatientDataBean" scope="session" />
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
@@ -42,9 +42,13 @@
 <%@ page import="org.oscarehr.billing.CA.dao.BillingDetailDao"%>
 <%@ page import="org.oscarehr.common.model.RecycleBin" %>
 <%@ page import="org.oscarehr.common.dao.RecycleBinDao" %>
+<%@ page import="org.oscarehr.common.model.Billing" %>
+<%@ page import="org.oscarehr.common.dao.BillingDao" %>
+<%@ page import="oscar.util.ConversionUtils" %>
 <%
 	BillingDetailDao billingDetailDao = SpringUtils.getBean(BillingDetailDao.class);
 	RecycleBinDao recycleBinDao = SpringUtils.getBean(RecycleBinDao.class);
+	BillingDao billingDao = SpringUtils.getBean(BillingDao.class);
 %>
 <%@ include file="dbBilling.jspf"%>
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -93,28 +97,27 @@
 		billingDetailDao.merge(b);
 		rowsAffected2++;
 	}
-
-
-  String[] param2 =new String[11];
-	  param2[0]=_p0_2;
-	  param2[1]=_p0_6;
-	  param2[2]=_p0_3;
-	  param2[3]=_p0_4;
-	  param2[4]=_p0_8;
-	  param2[5]=_p0_7;
-	  param2[6]=_p0_5;
-	  param2[7]=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH);
-	  param2[8] = _p0_18;
-	  param2[9]=_p0_16;
-	  param2[10]=_p0_1;
-
-	  int rowsAffected3 = apptMainBean.queryExecuteUpdate(param2,"update_bill_header");
+	  
+	  Billing b = billingDao.find(Integer.parseInt(_p0_1));
+	  if(b != null) {
+		 b.setHin(_p0_2);
+		 b.setDob(_p0_6);
+		 b.setVisitType(_p0_3);
+		 b.setVisitDate(ConversionUtils.fromDateString(_p0_4));
+		 b.setClinicRefCode(_p0_8);
+		 b.setProviderNo(_p0_7);
+		 b.setStatus(_p0_5);
+		 b.setUpdateDate(ConversionUtils.fromDateString(now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)));
+		 b.setTotal(_p0_18);
+		 b.setContent(_p0_16);
+		  billingDao.merge(b);
+	  }
 
  %>
 
 <%
     int recordAffected = 0;
-    ListIterator it	=	billing.getBillingItems().listIterator();
+    ListIterator it	=	billingBean.getBillingItems().listIterator();
 
 	while (it.hasNext()) {
     billingItem = (BillingItemBean)it.next();

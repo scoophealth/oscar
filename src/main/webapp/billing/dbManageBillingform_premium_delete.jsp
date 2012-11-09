@@ -30,6 +30,12 @@
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <%@ include file="dbBilling.jspf"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.model.CtlBillingServicePremium" %>
+<%@ page import="org.oscarehr.common.dao.CtlBillingServicePremiumDao" %>
+<%
+	CtlBillingServicePremiumDao dao = SpringUtils.getBean(CtlBillingServicePremiumDao.class);
+%>
 <%
 
 
@@ -41,18 +47,12 @@ String typeid = "", type="";
 		temp=e.nextElement().toString();
 		if( temp.indexOf("service")==-1 ) continue; 
 
-                int   recordAffected = apptMainBean.queryExecuteUpdate(request.getParameter(temp),"delete_ctlpremium");
-	
+                
+                for(CtlBillingServicePremium b:dao.findByServiceCode(request.getParameter(temp))) {
+                	dao.remove(b.getId());
+                }
              
 }
-
-			 	           
-	            
-	    
-	    
-
-
-
 
 %>
 <% response.sendRedirect("manageBillingform.jsp"); %>

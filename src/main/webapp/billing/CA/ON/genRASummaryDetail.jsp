@@ -30,6 +30,12 @@ if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.
 <jsp:useBean id="billingLocalInvNoBean" class="java.util.Properties"
 	scope="page" />
 <%@ include file="dbBilling.jspf"%>
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.RaHeader" %>
+<%@page import="org.oscarehr.common.dao.RaHeaderDao" %>
+<%
+	RaHeaderDao dao = SpringUtils.getBean(RaHeaderDao.class);
+%>
 
 
 <%@page import="org.oscarehr.util.MiscUtils"%><html>
@@ -611,12 +617,12 @@ content = content + "<xml_transaction>" + transaction + "</xml_transaction>" + "
 content = content + "<xml_local>" + BigLTotal + "</xml_local>"+ "<xml_total>" + BigPTotal + "</xml_total>" + "<xml_other_total>" + BigOTotal + "</xml_other_total>" + "<xml_ob_total>" + BigOBTotal + "</xml_ob_total>" + "<xml_co_total>" + BigCOTotal + "</xml_co_total>";
 
 int recordAffected=0;
-String[] param2 = new String[2];
-param2[0] = content;
-param2[1] = raNo; 
-
-recordAffected = apptMainBean.queryExecuteUpdate(param2,"update_rahd_content");
-
+RaHeader raHeader = dao.find(Integer.parseInt(raNo));
+if(raHeader != null) {
+	 raHeader.setContent(content);
+	 dao.merge(raHeader);
+	recordAffected++;
+}
 file.close();
 reader.close();
 input.close();

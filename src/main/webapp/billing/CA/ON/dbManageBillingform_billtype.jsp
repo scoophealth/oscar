@@ -49,7 +49,8 @@ billtype = request.getParameter("billtype");
 billtype_old = request.getParameter("billtype_old");
 
 if (billtype.equals("no")) {
-    int recordAffected = apptMainBean.queryExecuteUpdate(servicetype,"delete_ctlbilltype");
+    ctlBillingTypeDao.remove(servicetype);
+    
 }
 else if (billtype_old.equals("no")) {
     CtlBillingType cbt = new CtlBillingType();
@@ -57,9 +58,11 @@ else if (billtype_old.equals("no")) {
     cbt.setBillType(billtype);
     ctlBillingTypeDao.persist(cbt);
 } else {
-    param[0]=billtype;
-    param[1]=servicetype;
-    int recordAffected = apptMainBean.queryExecuteUpdate(param,"update_ctlbilltype");
+    CtlBillingType cbt = ctlBillingTypeDao.find(servicetype);
+    if(cbt != null) {
+    	cbt.setBillType(billtype);
+    	ctlBillingTypeDao.merge(cbt);
+    }
 }
 %>
 
