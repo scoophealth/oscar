@@ -93,7 +93,7 @@ public class DocumentUploadAction extends DispatchAction {
 	            QueueDocumentLinkDao queueDocumentLinkDAO = (QueueDocumentLinkDao) ctx.getBean("queueDocumentLinkDAO");
 	            Integer qid=Integer.parseInt(queueId.trim());
 	            Integer did=Integer.parseInt(doc_no.trim());
-	            queueDocumentLinkDAO.addToQueueDocumentLink(qid,did);
+	            queueDocumentLinkDAO.addActiveQueueDocumentLink(qid,did);
 	            request.getSession().setAttribute("preferredQueue", queueId);
 	        }
 			
