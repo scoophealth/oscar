@@ -70,5 +70,6 @@
 	<context:component-scan base-package="org.oscarehr.billing.CA.ON.dao" />
 	<context:component-scan base-package="org.oscarehr.billing.CA.BC.dao" />
 	<context:component-scan base-package="org.oscarehr.billing.CA.dao" />
+	<context:component-scan base-package="org.oscarehr.PMmodule.dao" />
 
 </beans>

@@ -29,13 +29,13 @@ import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
-import org.oscarehr.PMmodule.dao.CriteriaDAO;
-import org.oscarehr.PMmodule.dao.CriteriaSelectionOptionDAO;
-import org.oscarehr.PMmodule.dao.CriteriaTypeDAO;
-import org.oscarehr.PMmodule.dao.CriteriaTypeOptionDAO;
+import org.oscarehr.PMmodule.dao.CriteriaDao;
+import org.oscarehr.PMmodule.dao.CriteriaSelectionOptionDao;
+import org.oscarehr.PMmodule.dao.CriteriaTypeDao;
+import org.oscarehr.PMmodule.dao.CriteriaTypeOptionDao;
 import org.oscarehr.PMmodule.dao.ProgramDao;
-import org.oscarehr.PMmodule.dao.VacancyDAO;
-import org.oscarehr.PMmodule.dao.VacancyTemplateDAO;
+import org.oscarehr.PMmodule.dao.VacancyDao;
+import org.oscarehr.PMmodule.dao.VacancyTemplateDao;
 import org.oscarehr.PMmodule.model.Criteria;
 import org.oscarehr.PMmodule.model.CriteriaSelectionOption;
 import org.oscarehr.PMmodule.model.CriteriaType;
@@ -50,13 +50,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class VacancyTemplateManager {
 	
-	private static VacancyTemplateDAO vacancyTemplateDAO = (VacancyTemplateDAO) SpringUtils.getBean("vacancyTemplateDAO");
-	private static CriteriaDAO criteriaDAO = (CriteriaDAO) SpringUtils.getBean("criteriaDAO");
-	private static CriteriaTypeDAO criteriaTypeDAO = (CriteriaTypeDAO) SpringUtils.getBean("criteriaTypeDAO");
-	private static CriteriaTypeOptionDAO criteriaTypeOptionDAO = (CriteriaTypeOptionDAO) SpringUtils.getBean("criteriaTypeOptionDAO");
-	private static CriteriaSelectionOptionDAO criteriaSelectionOptionDAO = (CriteriaSelectionOptionDAO) SpringUtils.getBean("criteriaSelectionOptionDAO");
+	private static VacancyTemplateDao vacancyTemplateDAO = (VacancyTemplateDao) SpringUtils.getBean("vacancyTemplateDAO");
+	private static CriteriaDao criteriaDAO = (CriteriaDao) SpringUtils.getBean("criteriaDAO");
+	private static CriteriaTypeDao criteriaTypeDAO = (CriteriaTypeDao) SpringUtils.getBean("criteriaTypeDAO");
+	private static CriteriaTypeOptionDao criteriaTypeOptionDAO = (CriteriaTypeOptionDao) SpringUtils.getBean("criteriaTypeOptionDAO");
+	private static CriteriaSelectionOptionDao criteriaSelectionOptionDAO = (CriteriaSelectionOptionDao) SpringUtils.getBean("criteriaSelectionOptionDAO");
 	private static ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
-	private static VacancyDAO vacancyDAO= (VacancyDAO) SpringUtils.getBean("vacancyDAO");
+	private static VacancyDao vacancyDAO= (VacancyDao) SpringUtils.getBean("vacancyDAO");
 	
 	public static List<Program> getPrograms(Integer facilityId) {
 		return programDao.getProgramsByFacilityId(facilityId);
@@ -78,7 +78,7 @@ public class VacancyTemplateManager {
 	} 
 
 	public static List<CriteriaTypeOption> getAllCriteriaTypeOptions() {
-		List<CriteriaTypeOption> results = criteriaTypeOptionDAO.getAllCriteriaTypeOptions();
+		List<CriteriaTypeOption> results = criteriaTypeOptionDAO.findAll();
 		return (results);
 	} 
 		
