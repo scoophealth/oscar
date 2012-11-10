@@ -21,21 +21,38 @@
  * Hamilton
  * Ontario, Canada
  */
+
+/**
+ * @author Shazib
+ */
 package org.oscarehr.common.dao;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.junit.Assert.assertNotNull;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.PHRVerification;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.util.MiscUtils;
 
 public class PHRVerificationDaoTest extends DaoTestFixtures {
 
 	private PHRVerificationDao dao = SpringUtils.getBean(PHRVerificationDao.class);
-
+	DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
+	
 
 	@Before
 	public void before() throws Exception {
@@ -48,5 +65,91 @@ public class PHRVerificationDaoTest extends DaoTestFixtures {
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		dao.persist(entity);
 		assertNotNull(entity.getId());
+	}
+
+	public void testGetForDemographic() throws Exception {
+		
+		int demographicNo1 = 100;
+		int demographicNo2 = 200;
+		
+		boolean isArchived = true;
+		boolean isNotArchived = false;
+		
+		PHRVerification phrVerification1 = new PHRVerification();
+		EntityDataGenerator.generateTestDataForModelClass(phrVerification1);
+		phrVerification1.setDemographicNo(demographicNo1);
+		phrVerification1.setArchived(isNotArchived);
+		Date createdDate1 = new Date(dfm.parse("20110701").getTime());
+		phrVerification1.setCreatedDate(createdDate1);
+		dao.persist(phrVerification1);
+		
+		PHRVerification phrVerification2 = new PHRVerification();
+		EntityDataGenerator.generateTestDataForModelClass(phrVerification2);
+		phrVerification2.setDemographicNo(demographicNo2);
+		phrVerification2.setArchived(isArchived);
+		Date createdDate2 = new Date(dfm.parse("20100701").getTime());
+		phrVerification2.setCreatedDate(createdDate2);
+		dao.persist(phrVerification2);
+		
+		PHRVerification phrVerification3 = new PHRVerification();
+		EntityDataGenerator.generateTestDataForModelClass(phrVerification3);
+		phrVerification3.setDemographicNo(demographicNo1);
+		phrVerification3.setArchived(isNotArchived);
+		Date createdDate3 = new Date(dfm.parse("20090701").getTime());
+		phrVerification3.setCreatedDate(createdDate3);
+		dao.persist(phrVerification3);
+		
+		List<PHRVerification> expectedResult = new ArrayList<PHRVerification>(Arrays.asList(phrVerification1, phrVerification3));
+		List<PHRVerification> result = dao.getForDemographic(demographicNo1);
+
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);
+	}
+
+	@Test
+	public void testGetVerificationLevel() throws Exception {
+		
+		int demographicNo1 = 100;
+		int demographicNo2 = 200;
+		
+		String authenticationLevel1 = "FAX";
+		String authenticationLevel2 = "VIDEOPHONE";
+		
+		boolean isArchived = true;
+		boolean isNotArchived = false;
+		
+		PHRVerification phrVerification1 = new PHRVerification();
+		EntityDataGenerator.generateTestDataForModelClass(phrVerification1);
+		phrVerification1.setDemographicNo(demographicNo1);
+		phrVerification1.setArchived(isNotArchived);
+		Date createdDate1 = new Date(dfm.parse("20110701").getTime());
+		phrVerification1.setCreatedDate(createdDate1);
+		phrVerification1.setVerificationLevel(authenticationLevel1);
+		dao.persist(phrVerification1);
+		
+		PHRVerification phrVerification2 = new PHRVerification();
+		EntityDataGenerator.generateTestDataForModelClass(phrVerification2);
+		phrVerification2.setDemographicNo(demographicNo2);
+		phrVerification2.setArchived(isArchived);
+		Date createdDate2 = new Date(dfm.parse("20100701").getTime());
+		phrVerification2.setCreatedDate(createdDate2);
+		phrVerification2.setVerificationBy(authenticationLevel2);
+		dao.persist(phrVerification2);
+		
+		String expectedResult = "+1";
+		String result = dao.getVerificationLevel(demographicNo1);
+		
+		assertEquals(expectedResult, result);
 	}
 }
