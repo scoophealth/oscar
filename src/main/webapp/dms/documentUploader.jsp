@@ -20,7 +20,7 @@ ArrayList<Provider> providers = new ArrayList<Provider>(providerDao.getActivePro
 String provider = CommonLabResultData.NOT_ASSIGNED_PROVIDER_NO;
 
 QueueDao queueDao = (QueueDao) SpringUtils.getBean("queueDao");
-HashMap queues = queueDao.getHashMapOfQueues();
+HashMap<Integer,String> queues = queueDao.getHashMapOfQueues();
 String queueIdStr = (String) request.getSession().getAttribute("preferredQueue");
 int queueId = 1;
 if (queueIdStr != null) {
@@ -56,6 +56,11 @@ if (isFirefox > 0) {
 	function setProvider(select){
 		jQuery("#provider").val(select.options[select.selectedIndex].value);
 	}
+	
+	function setQueue(select){
+		jQuery("#queue").val(select.options[select.selectedIndex].value);
+	}
+	
 	</script>
 	<style type="text/css">
 	body {
@@ -75,7 +80,7 @@ if (isFirefox > 0) {
             <button itd="cancel" type="reset" class="cancel">Cancel upload</button>
             <span>
 				<input type="hidden" id="provider" name="provider" value="<%=provider%>" />
-				<input type="hidden" name="queue" value="<%=queueId%>"/>
+				<input type="hidden" id="queue"    name="queue" value="<%=queueId%>"/>
 				<label style="font-family:Arial; font-weight:normal; font-size:12px" for="providerDrop" class="fields">Send to Provider:</label>
 				<select onchange="javascript:setProvider(this);" id="providerDrop" name="providerDrop">
 					<option value="0" <%=("0".equals(provider) ? " selected" : "")%>>None</option>
@@ -88,6 +93,21 @@ if (isFirefox > 0) {
 					}
 					%>
 				</select>
+				<label style="font-family:Arial; font-weight:normal; font-size:12px" for="queueDrop" class="fields">Queue:</label>
+				<select onchange="javascript:setQueue(this);" id="queueDrop" name="queueDrop">
+					<%-- option value="0" <%=("0".equals(queueId) ? " selected" : "")%>>None</option  --%>
+					<%
+					for (Map.Entry<Integer,String> entry : queues.entrySet()) {
+					    int key = entry.getKey();
+					    String value = entry.getValue();
+					   
+	                %>
+					<option value="<%=key%>" <%=( (key == queueId) ? " selected" : "")%>><%= value%></option>
+					<%
+					}
+					%>
+				</select>
+				
 			</span>
         </div>
     </form>
