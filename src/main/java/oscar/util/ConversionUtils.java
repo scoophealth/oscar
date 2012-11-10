@@ -40,6 +40,7 @@ public class ConversionUtils {
 
 	private static final Long ZERO_LONG = new Long(0);
 	private static final Integer ZERO_INT = new Integer(0);
+	private static final Double ZERO_DOUBLE = new Double(0.0);
 	private static final String ZERO_STRING = "0";
 
 	private ConversionUtils() {
@@ -189,6 +190,35 @@ public class ConversionUtils {
 	public static boolean fromBoolString(String str) {
 		if (str == null || str.trim().isEmpty() || ZERO_STRING.equals(str)) return false;
 		return true;
+	}
+
+	/**
+	 * Parses the specified string as an Double instance. 
+	 * 
+	 * @param str
+	 * 		String to be parsed as double
+	 * @return
+	 * 		Returns the parsed double
+	 */
+	public static Double fromDoubleString(String str) {
+		if (str == null || str.trim().isEmpty())
+			return ZERO_DOUBLE;
+		
+	    return Double.parseDouble(str);
+    }
+	
+	/**
+	 * Formats the specified double as string 
+	 * 
+	 * @param d
+	 * 		Double to format as a string.
+	 * @return
+	 * 		Returns the formatted string, or {@value #ZERO_STRING} for null value.
+	 */
+	public static String toDoubleString(Double d) {
+		if (d == null)
+			return ZERO_STRING;
+		return d.toString();
 	}
 
 }
