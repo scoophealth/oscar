@@ -32,197 +32,174 @@ import java.util.List;
 
 import org.oscarehr.billing.CA.BC.dao.BillingHistoryDao;
 import org.oscarehr.billing.CA.BC.model.BillingHistory;
+import org.oscarehr.common.model.BillingPaymentType;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.entities.BillHistory;
 import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 import oscar.oscarDB.DBHandler;
+import oscar.util.ConversionUtils;
 import oscar.util.SqlUtils;
 
 /**
  * BillingHistoryDAO is responsible for providing database CRUD operations
  * on the BillHistory Object
+ * 
  * @author not attributable
  * @version 1.0
  */
 public class BillingHistoryDAO {
 
 	private BillingHistoryDao dao = SpringUtils.getBean(BillingHistoryDao.class);
-	
-  public BillingHistoryDAO() {
-  }
 
-  /**
-   * Retrieves a List of BillHistory instances according to the specified billingMaster number
-   * @param billingMasterNo - The String billingMaster Number
-   * @return List - The List of BillHistory instances
-   */
-  public List getBillHistory(String billingMasterNo) {
-    String qry =
-        "select bh.id,bh.billingmaster_no,bh.billingstatus,bh.creation_date,bh.practitioner_no,bh.billingtype,bh.seqnum,bh.amount,bh.amount_received,bh.payment_type_id,bt.payment_type " +
-       "from billing_history bh left join billing_payment_type bt on bh.payment_type_id = bt.id where bh.billingmaster_no = " +
-        billingMasterNo;
-    return getBillHistoryHlp(qry);
-  }
+	public BillingHistoryDAO() {
+	}
 
-  /**
-   * A helper method for methods that require the retrieval of BillHistory instances according to
-   * an arbitrary query
-   * @param qry String - The string query
-   * @return List - The List of BillHistory instances
-   */
-  private List<BillHistory> getBillHistoryHlp(String qry) {
-    List<BillHistory> list = new ArrayList<BillHistory>();
-    ResultSet rs = null;
-    try {
+	/**
+	 * Retrieves a List of BillHistory instances according to the specified billingMaster number
+	 * @param billingMasterNo - The String billingMaster Number
+	 * @return List - The List of BillHistory instances
+	 */
+	public List<BillHistory> getBillHistory(String billingMasterNo) {
+		List<BillHistory> result = new ArrayList<BillHistory>();
+		for (Object[] b : dao.findByBillingMasterNo(ConversionUtils.fromIntString(billingMasterNo))) {
+			result.add(toBillHistory((BillingHistory) b[0], (BillingPaymentType) b[1]));
+		}
+		return result;
+	}
 
-      rs = DBHandler.GetSQL(qry);
-      while (rs.next()) {
-        BillHistory bh = new BillHistory();
-        bh.setId(rs.getInt(1));
-        bh.setBillingMasterNo(rs.getInt(2));
-        bh.setBillingStatus(rs.getString(3));
-        bh.setArchiveDate(rs.getDate(4));
-        bh.setPractitioner_no(rs.getString(5));
-        bh.setBillingtype(rs.getString(6));
-        bh.setSeqNum(rs.getString(7));
-        bh.setAmount(rs.getDouble(8));
-        bh.setAmountReceived(rs.getDouble(9));
-        bh.setPaymentTypeId(rs.getString(10));
-        bh.setPaymentTypeDesc(rs.getString(11));
-        list.add(bh);
-      }
-    }
-    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
-    }
-    finally {
-      try {
-        rs.close();
-      }
-      catch (SQLException ex1) {MiscUtils.getLogger().error("Error", ex1);
-      }
-    }
-    return list;
-  }
+	private BillHistory toBillHistory(BillingHistory bh, BillingPaymentType bpt) {
+		BillHistory result = new BillHistory();
+		result.setId(bh.getId());
+		result.setBillingMasterNo(bh.getBillingMasterNo());
+		result.setBillingStatus(bh.getStatus());
+		result.setArchiveDate(bh.getCreationDate());
+		result.setPractitioner_no(bh.getPractitionerNo());
+		result.setBillingtype(bh.getBillingType());
+		result.setSeqNum(bh.getSeqNum());
+		result.setAmount(ConversionUtils.fromDoubleString(bh.getAmount()));
+		result.setAmountReceived(ConversionUtils.fromDoubleString(bh.getAmountReceived()));
+		result.setPaymentTypeId(bpt.getId().toString());
+		result.setPaymentTypeDesc(bpt.getPaymentType());
+		return result;
+	}
 
-  /**
-   * Returns a List of BillHistory instances according to the specified billing number
-   * @param billingNo - The String billingNo Number
-   * @return List - The List of BillHistory instances
-   */
-  public List<BillHistory> getBillHistoryByBillNo(String billingNo) {
-    String qry = "select bh.id,bm.billingmaster_no,bh.billingstatus,bh.creation_date,bh.practitioner_no,bh.billingtype,bh.seqnum,bh.amount,bh.amount_received,bh.payment_type_id,bt.payment_type" +
-        " from billingmaster bm,billing_history bh left join billing_payment_type bt on bh.payment_type_id = bt.id" +
-        " where bh.billingmaster_no = bm.billingmaster_no" +
-        " and bm.billing_no = " + billingNo;
-    return getBillHistoryHlp(qry);
-  }
+	/**
+	 * Returns a List of BillHistory instances according to the specified billing number
+	 * @param billingNo - The String billingNo Number
+	 * @return List - The List of BillHistory instances
+	 */
+	public List<BillHistory> getBillHistoryByBillNo(String billingNo) {
+		List<BillHistory> result = new ArrayList<BillHistory>();
+		for(Object[] i : dao.findBillingHistoryByBillingMasterNo(ConversionUtils.fromIntString(billingNo))) {
+			// Billingmaster bm = (Billingmaster) i[0];
+			BillingHistory bh = (BillingHistory) i[1];
+			BillingPaymentType bpt = (BillingPaymentType ) i[2];
+			
+			result.add(toBillHistory(bh, bpt)); 
+		}
+		return result;
+	}
 
-  /**
-   * Saves a new new billing history instance, associated with the specified billingMaster Number
-   * @param billMasterNo String - The BillingMaster record that the archive is associated with
-   * @param status String - The status of the BillingMaster  record
-   */
-  public void createBillingHistoryArchive(BillHistory history) {
+	/**
+	 * Saves a new new billing history instance, associated with the specified billingMaster Number
+	 * @param billMasterNo String - The BillingMaster record that the archive is associated with
+	 * @param status String - The status of the BillingMaster  record
+	 */
+	public void createBillingHistoryArchive(BillHistory history) {
 
-	  BillingHistory b = new BillingHistory();
-	  b.setBillingMasterNo(history.getBillingMasterNo());
-	  b.setStatus(history.getBillingStatus());
-	  b.setCreationDate(new Date());
-	  b.setPractitionerNo(history.getPractitioner_no());
-	  b.setBillingType(history.getBillingtype());
-	  b.setSeqNum(history.getSeqNum());
-	  b.setAmount(String.valueOf(history.getAmount()));
-	  b.setAmountReceived(String.valueOf(history.getAmountReceived()));
-	  b.setPaymentTypeId(Integer.parseInt(history.getPaymentTypeId()));
-	  
-	  dao.persist(b);
-  }
+		BillingHistory b = new BillingHistory();
+		b.setBillingMasterNo(history.getBillingMasterNo());
+		b.setStatus(history.getBillingStatus());
+		b.setCreationDate(new Date());
+		b.setPractitionerNo(history.getPractitioner_no());
+		b.setBillingType(history.getBillingtype());
+		b.setSeqNum(history.getSeqNum());
+		b.setAmount(String.valueOf(history.getAmount()));
+		b.setAmountReceived(String.valueOf(history.getAmountReceived()));
+		b.setPaymentTypeId(Integer.parseInt(history.getPaymentTypeId()));
 
-  /**
-   * Saves a new new billing history instance, associated with the specified billingMaster Number
-   * @param billMasterNo String - The BillingMaster record that the archive is associated with
-   * @param status String - The status of the BillingMaster  record
-   */
-  public void createBillingHistoryArchive(String billMasterNo) {
-    BillHistory item = getCurrentBillItemState(billMasterNo);
-    if(item != null){
-      createBillingHistoryArchive(item);
-    }
-    else{
-      throw new RuntimeException("Archive Not Created for Billing Master Number - " + billMasterNo);
-    }
-  }
+		dao.persist(b);
+	}
 
-  /**
-   * Returns a BillHistoryItem representing the current state of a BillingMaster record.
-   * Returns null if no record exists for the supplied billingMaster number
-   * @param billMasterNo String
-   * @return BillHistoryItem
-   */
-  private BillHistory getCurrentBillItemState(String billMasterNo) {
-    BillHistory history = null;
-    String bmQuery = "SELECT b.provider_no, b.billingtype,bm.billingstatus, bm.bill_amount,bm.paymentMethod FROM billing b, billingmaster bm " +
-        " WHERE b.billing_no=bm.billing_no AND bm.billingmaster_no = " +
-        billMasterNo;
-    List billValues = SqlUtils.getQueryResultsList(bmQuery);
-    if (billValues != null) {
-      history = new BillHistory();
-      String[] values = (String[]) billValues.get(0);
-      history.setBillingMasterNo(new Integer(billMasterNo).intValue());
-      history.setPractitioner_no(values[0]);
-      history.setBillingtype(values[1]);
-      history.setBillingStatus(values[2]);
-      history.setAmount(new Double(values[3]).doubleValue());
-      history.setPaymentTypeId(values[4]);
-      MSPReconcile rec = new MSPReconcile();
-      //don't waste resources if this is a private bill
-      if (!MSPReconcile.BILLTYPE_PRI.equals(history.getBillingtype())) {
-        String maxSeqNum = rec.getMaxSeqNum(billMasterNo);
-        history.setSeqNum(maxSeqNum);
-      }
-    }
-    return history;
-  }
+	/**
+	 * Saves a new new billing history instance, associated with the specified billingMaster Number
+	 * @param billMasterNo String - The BillingMaster record that the archive is associated with
+	 * @param status String - The status of the BillingMaster  record
+	 */
+	public void createBillingHistoryArchive(String billMasterNo) {
+		BillHistory item = getCurrentBillItemState(billMasterNo);
+		if (item != null) {
+			createBillingHistoryArchive(item);
+		} else {
+			throw new RuntimeException("Archive Not Created for Billing Master Number - " + billMasterNo);
+		}
+	}
 
-  /**
-   *  Saves a new new billing history instance, associated with the specified billing number
-   * @param billingNo String - The billing number which will be used to determine the underlying billingMaster numbers
-   * @param stat String - The status of the billingMaster records that will be archived
-   */
-  public void createBillingHistoryArchiveByBillNo(String billingNo) {
+	/**
+	 * Returns a BillHistoryItem representing the current state of a BillingMaster record.
+	 * Returns null if no record exists for the supplied billingMaster number
+	 * @param billMasterNo String
+	 * @return BillHistoryItem
+	 */
+	private BillHistory getCurrentBillItemState(String billMasterNo) {
+		BillHistory history = null;
+		String bmQuery = "SELECT b.provider_no, b.billingtype,bm.billingstatus, bm.bill_amount,bm.paymentMethod FROM billing b, billingmaster bm " + " WHERE b.billing_no=bm.billing_no AND bm.billingmaster_no = " + billMasterNo;
+		List billValues = SqlUtils.getQueryResultsList(bmQuery);
+		if (billValues != null) {
+			history = new BillHistory();
+			String[] values = (String[]) billValues.get(0);
+			history.setBillingMasterNo(new Integer(billMasterNo).intValue());
+			history.setPractitioner_no(values[0]);
+			history.setBillingtype(values[1]);
+			history.setBillingStatus(values[2]);
+			history.setAmount(new Double(values[3]).doubleValue());
+			history.setPaymentTypeId(values[4]);
+			MSPReconcile rec = new MSPReconcile();
+			//don't waste resources if this is a private bill
+			if (!MSPReconcile.BILLTYPE_PRI.equals(history.getBillingtype())) {
+				String maxSeqNum = rec.getMaxSeqNum(billMasterNo);
+				history.setSeqNum(maxSeqNum);
+			}
+		}
+		return history;
+	}
 
-    ResultSet rs = null;
-    String qry =
-        "SELECT billingmaster_no FROM billingmaster b WHERE b.billing_no = " +
-        billingNo;
-    try {
+	/**
+	 *  Saves a new new billing history instance, associated with the specified billing number
+	 * @param billingNo String - The billing number which will be used to determine the underlying billingMaster numbers
+	 * @param stat String - The status of the billingMaster records that will be archived
+	 */
+	public void createBillingHistoryArchiveByBillNo(String billingNo) {
 
-      rs = DBHandler.GetSQL(qry);
-      while (rs.next()) {
-        String billMasterNo = rs.getString(1);
-        this.createBillingHistoryArchive(billMasterNo);
-      }
-    }
-    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
-    }
-  }
+		ResultSet rs = null;
+		String qry = "SELECT billingmaster_no FROM billingmaster b WHERE b.billing_no = " + billingNo;
+		try {
 
-  /**
-   * Creates a history archive initiialized with the supplied parameters
-   *
-   * @param billingMasterNo int
-   * @param amount double
-   * @param paymentType int
-   */
-  public void createBillingHistoryArchive(String billingMasterNo, double amount,
-                                          String paymentType) {
-    BillHistory item = this.getCurrentBillItemState(billingMasterNo);
-    if(item != null){
-      item.setAmountReceived(amount);
-      item.setPaymentTypeId(paymentType);
-      this.createBillingHistoryArchive(item);
-    }
-  }
+			rs = DBHandler.GetSQL(qry);
+			while (rs.next()) {
+				String billMasterNo = rs.getString(1);
+				this.createBillingHistoryArchive(billMasterNo);
+			}
+		} catch (SQLException ex) {
+			MiscUtils.getLogger().error("Error", ex);
+		}
+	}
+
+	/**
+	 * Creates a history archive initiialized with the supplied parameters
+	 *
+	 * @param billingMasterNo int
+	 * @param amount double
+	 * @param paymentType int
+	 */
+	public void createBillingHistoryArchive(String billingMasterNo, double amount, String paymentType) {
+		BillHistory item = this.getCurrentBillItemState(billingMasterNo);
+		if (item != null) {
+			item.setAmountReceived(amount);
+			item.setPaymentTypeId(paymentType);
+			this.createBillingHistoryArchive(item);
+		}
+	}
 }
