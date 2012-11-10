@@ -100,7 +100,8 @@
 				if (isExternal)
 				{
 					// "Bed Reservation", "Forms", "Refer"
-					if ("Bed Reservation".equalsIgnoreCase(ClientManagerFormBean.tabs[x]) || "Forms".equalsIgnoreCase(ClientManagerFormBean.tabs[x]) || "Refer".equalsIgnoreCase(ClientManagerFormBean.tabs[x])) 
+					if ("Bed Reservation".equalsIgnoreCase(ClientManagerFormBean.tabs[x]) || "Forms".equalsIgnoreCase(ClientManagerFormBean.tabs[x]) || "Refer".equalsIgnoreCase(ClientManagerFormBean.tabs[x])
+							|| "Refer to vacancy".equals(ClientManagerFormBean.tabs[x])) 
 						continue;				
 				}
 					
@@ -132,7 +133,8 @@
 			        int demographicId=Integer.parseInt((String)request.getAttribute("id"));
 					AdmissionManager admissionManager=(AdmissionManager)SpringUtils.getBean("admissionManager");
 					boolean activeInFacility=admissionManager.isActiveInCurrentFacility(demographicId);
-					boolean requireActiveTab="Refer".equals(ClientManagerFormBean.tabs[x]) || "Discharge".equals(ClientManagerFormBean.tabs[x]);
+					boolean requireActiveTab="Refer".equals(ClientManagerFormBean.tabs[x]) || "Discharge".equals(ClientManagerFormBean.tabs[x]) 
+							                 || "Refer to vacancy".equals(ClientManagerFormBean.tabs[x]);
 					
 					if (requireActiveTab && !activeInFacility)
 					{

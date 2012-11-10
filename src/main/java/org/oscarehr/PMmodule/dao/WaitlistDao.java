@@ -45,15 +45,14 @@ import org.oscarehr.match.client.ClientData;
 import org.oscarehr.match.vacancy.VacancyData;
 import org.oscarehr.match.vacancy.VacancyTemplateData;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
 @Repository
 public class WaitlistDao {
 
 	@PersistenceContext
 	protected EntityManager entityManager = null;
 	
+  
 	public List<MatchBO> getClientMatches(int vacancyId) {
 		String sql = "SELECT client_id, first_name, last_name, DATEDIFF(CURDATE(), e.form_date) days_in_waitlist, " +
 				"DATEDIFF(CURDATE(), last_contact_date) last_contact_days, form_id, match_percent "
@@ -153,7 +152,8 @@ public class WaitlistDao {
         }
 		return bos;
 	}
-
+	
+	 
 	public List<VacancyDisplayBO> listDisplayVacanciesForAllWaitListPrograms() {
 		List<VacancyDisplayBO> bos = new ArrayList<VacancyDisplayBO>();
 		String queryString = "SELECT v.id, t.NAME, v.dateCreated FROM vacancy v JOIN vacancy_template t ON " + 
@@ -260,6 +260,8 @@ public class WaitlistDao {
 			return null;
 		}
 	}
+	    
+
 
 	public List<VacancyDisplayBO> listNoOfVacanciesForWaitListProgram() {
 		final List<VacancyDisplayBO> bos = new ArrayList<VacancyDisplayBO>();

@@ -302,8 +302,15 @@
 			<form-property name="client_status" type="org.oscarehr.PMmodule.model.ProgramClientStatus" />
 			<form-property name="searchStatus" type="java.lang.String"></form-property>
 			<form-property name="searchType" type="java.lang.String"></form-property>
-			<form-property name="searchFacilityId" type="java.lang.String"></form-property>
-			<form-property name="vacancyOrTemplateId" type="java.lang.String"></form-property>
+			<form-property name="searchFacilityId" type="java.lang.String"></form-property>	
+			<form-property name="vacancyOrTemplateId" type="java.lang.String"></form-property>		
+		</form-bean>
+		<form-bean name="vacancyClientMatchForm" type="org.apache.struts.action.DynaActionForm">
+			<form-property name="clientList" type="java.util.List" />
+			<form-property name="template" type="java.lang.String" />
+			<form-property name="vacancy" type="java.lang.String" />
+			<form-property name="criteriaList" type="java.util.List" />
+			<form-property name="programId" type="java.lang.Integer" />
 		</form-bean>
 		<form-bean name="agencyManagerForm" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="agency" type="org.oscarehr.PMmodule.model.Agency" />
@@ -520,6 +527,10 @@
                 <form-bean name="billing3rdPartyPayment" type="org.apache.struts.validator.DynaValidatorForm"/>
                 <form-bean name="applyPractitionerPremium" type="org.apache.struts.validator.DynaValidatorForm"> 
                 </form-bean>
+		<form-bean name="remoteReferralForm" type="org.apache.struts.action.DynaActionForm">
+			<form-property name="fdid" type="java.lang.String"/>
+                        <form-property name="appointment" type="java.lang.String"/>
+		</form-bean>
 	</form-beans>
 
 	<global-forwards>
@@ -1525,6 +1536,9 @@
 			<forward name="survey" path="/oscarSurveillance/Surveillance.jsp" />
 			<forward name="close" path="/oscarEncounter/TimeOut.jsp" />
 		</action>
+		<action name="remoteReferralForm" path="/PMmodule/remoteReferal" scope="request" type="oscar.remotereferal.OscarRemoteReferal">
+			<forward name="success" path="/eform/efmshowform_data.jsp"/>
+		</action>
 		<action name="SurveillanceAnswerForm" path="/oscarSurveillance/SurveillanceAnswer" scope="request" type="oscar.oscarSurveillance.SurveillanceAnswerAction">
 			<forward name="survey" path="/oscarSurveillance/CheckSurveillance.do" />
 		</action>
@@ -1847,6 +1861,12 @@
 			<forward name="timeout" path="/PMmodule/Timeout.jsp" />
 			<forward name="programSignatures" path="/PMmodule/Admin/ProgramSignatures.jsp" />
 		</action>
+		<action path="/PMmodule/AllVacancies" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="programManagerForm" scope="session">
+			<forward name="waitList" path="page.pmm.allWatingList"/>
+		</action>
+		<action path="/PMmodule/VacancyClientMatch" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="vacancyClientMatchForm" scope="session">
+			<forward name="success" path="page.pmm.vacancyClientMatch"/>
+		</action>
 		<action path="/PMmodule/ProgramManagerView" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="programManagerViewForm" scope="session">
 			<forward name="view" path="page.pmm.admin.view" />
 			<forward name="viewBedReservationChangeReport" path="/PMmodule/Admin/ProgramView/bed_reservation_change_report.jsp" />
@@ -1879,6 +1899,7 @@
 		</action>
 		<action path="/PMmodule/ClientManager" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="clientManagerForm" scope="session">
 			<forward name="edit" path="page.pmm.client" />
+			<forward name="refer_vacancy" path="page.pmm.client.vacancy" />
 			<forward name="edit-redirect" path="page.pmm.client" redirect="true" />
 			<forward name="search_programs" path="/PMmodule/ClientManager/ProgramSearch.jsp" />
 			<forward name="survey" path="/PMmodule/Forms/SurveyExecute.do" />

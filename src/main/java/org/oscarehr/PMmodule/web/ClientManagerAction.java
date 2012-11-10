@@ -90,6 +90,9 @@ import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.web.formbean.ClientManagerFormBean;
 import org.oscarehr.PMmodule.web.formbean.ErConsentFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
+import org.oscarehr.PMmodule.wlmatch.MatchBO;
+import org.oscarehr.PMmodule.wlmatch.MatchingManager;
+import org.oscarehr.PMmodule.wlmatch.VacancyDisplayBO;
 import org.oscarehr.caisi_integrator.ws.CachedAdmission;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.CachedProgram;
@@ -150,6 +153,7 @@ public class ClientManagerAction extends BaseAction {
 	// private OcanClientFormDao ocanClientFormDao = (OcanClientFormDao)SpringUtils.getBean("ocanClientFormDao");
 	// private CdsClientFormDao cdsClientFormDao = (CdsClientFormDao)SpringUtils.getBean("cdsClientFormDao");
 	private RemoteReferralDao remoteReferralDao = (RemoteReferralDao) SpringUtils.getBean("remoteReferralDao");
+	private MatchingManager matchingManager = new MatchingManager();
 
 	public void setIntegratorConsentDao(IntegratorConsentDao integratorConsentDao) {
 		this.integratorConsentDao = integratorConsentDao;
@@ -543,7 +547,47 @@ public class ClientManagerAction extends BaseAction {
 
 		return mapping.findForward("edit");
 	}
+	
+	public ActionForward vacancy_refer_select_program(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm clientForm = (DynaActionForm) form;
+		Program p = (Program) clientForm.get("program");
+		ClientReferral r = (ClientReferral) clientForm.get("referral");
+		String id = request.getParameter("id");
+		setEditAttributes(form, request, id);
 
+		// if it's a local referral
+		long programId = p.getId();
+		if (programId != 0) {
+			Program program = programManager.getProgram(programId);
+			p.setName(program.getName());
+			request.setAttribute("program", program);
+		}
+		// if it's a remote referal
+		else if (r.getRemoteFacilityId() != null && r.getRemoteProgramId() != null) {
+			try {
+				FacilityIdIntegerCompositePk pk = new FacilityIdIntegerCompositePk();
+				pk.setIntegratorFacilityId(Integer.parseInt(r.getRemoteFacilityId()));
+				pk.setCaisiItemId(Integer.parseInt(r.getRemoteProgramId()));
+				CachedProgram cachedProgram = CaisiIntegratorManager.getRemoteProgram(pk);
+
+				p.setName(cachedProgram.getName());
+
+				Program program = new Program();
+				BeanUtils.copyProperties(program, cachedProgram);
+
+				request.setAttribute("program", program);
+			} catch (Exception e) {
+				MiscUtils.getLogger().error("Error", e);
+			}
+		}
+
+		request.setAttribute("do_refer", true);
+		request.setAttribute("temporaryAdmission", programManager.getEnabled());
+
+		//return mapping.findForward("edit");
+		return mapping.findForward("refer_vacancy");
+	}
+	
 	public ActionForward service_restrict(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		DynaActionForm clientForm = (DynaActionForm) form;
 		ProgramClientRestriction restriction = (ProgramClientRestriction) clientForm.get("serviceRestriction");
@@ -1083,7 +1127,9 @@ public class ClientManagerAction extends BaseAction {
 
 		Program criteria = (Program) clientForm.get("program");
 
-		request.setAttribute("programs", programManager.search(criteria));
+		List<Program> programs = programManager.search(criteria);
+		
+		request.setAttribute("programs", programs);
 
 		if (CaisiIntegratorManager.isEnableIntegratedReferrals()) {
 			try {
@@ -1613,7 +1659,7 @@ public class ClientManagerAction extends BaseAction {
 		}
 
 		/* refer */
-		if (tabBean.getTab().equals("Refer")) {
+		if (tabBean.getTab().equals("Refer") || tabBean.getTab().equals("Refer to vacancy")) {
 			request.setAttribute("referrals", clientManager.getActiveReferrals(demographicNo, String.valueOf(facilityId)));
 
 			if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
@@ -1673,6 +1719,48 @@ public class ClientManagerAction extends BaseAction {
 					logger.error("Unexpected Error.", e);
 				}
 			}
+			//Added for refer to Vacancy
+			if(tabBean.getTab().equals("Refer to vacancy")){
+				Program criteria = (Program) clientForm.get("program");
+				
+				List<Program> programs = programManager.search(criteria);
+				List<VacancyDisplayBO> vacancyDisplayBOs = matchingManager.listNoOfVacanciesForWaitListProgram();
+				
+				for(int i=0;i<programs.size();i++){
+					Program program = programs.get(i);
+					for(int j=0;j<vacancyDisplayBOs.size();j++){
+						if(vacancyDisplayBOs.get(j).getProgramId().equals(programs.get(i).getId())){
+							if(vacancyDisplayBOs.get(j).getNoOfVacancy() != 0){
+								program.setNoOfVacancy(vacancyDisplayBOs.get(j).getNoOfVacancy());
+								program.setVacancyName(vacancyDisplayBOs.get(j).getVacancyName());
+								program.setDateCreated(vacancyDisplayBOs.get(j).getCreated().toString());
+								
+								int vacancyId = vacancyDisplayBOs.get(j).getVacancyID();
+								List<MatchBO> matchList= matchingManager.getClientMatches(vacancyId);
+								double percentageMatch = 0;
+								for(int k=0;k<matchList.size();k++){
+									percentageMatch = percentageMatch + matchList.get(k).getPercentageMatch();
+								}
+								program.setVacancyId(vacancyId);
+								program.setMatches(percentageMatch);
+								
+								programs.set(i, program);
+							}
+							
+						}
+					 }
+					}
+				
+				for(int i=0;i<programs.size();i++){
+					Program program = programs.get(i);
+					if(program.getNoOfVacancy() == 0){
+						programs.remove(i);
+					}
+				}
+				
+				request.setAttribute("programs", programs);
+			}
+			
 		}
 
 		/* service restrictions */

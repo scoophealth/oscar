@@ -50,13 +50,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class VacancyTemplateManager {
 	
-	private static VacancyTemplateDao vacancyTemplateDAO = (VacancyTemplateDao) SpringUtils.getBean("vacancyTemplateDAO");
-	private static CriteriaDao criteriaDAO = (CriteriaDao) SpringUtils.getBean("criteriaDAO");
-	private static CriteriaTypeDao criteriaTypeDAO = (CriteriaTypeDao) SpringUtils.getBean("criteriaTypeDAO");
-	private static CriteriaTypeOptionDao criteriaTypeOptionDAO = (CriteriaTypeOptionDao) SpringUtils.getBean("criteriaTypeOptionDAO");
-	private static CriteriaSelectionOptionDao criteriaSelectionOptionDAO = (CriteriaSelectionOptionDao) SpringUtils.getBean("criteriaSelectionOptionDAO");
+	private static VacancyTemplateDao vacancyTemplateDAO = SpringUtils.getBean(VacancyTemplateDao.class);
+	private static CriteriaDao criteriaDAO = SpringUtils.getBean(CriteriaDao.class);
+	private static CriteriaTypeDao criteriaTypeDAO = SpringUtils.getBean(CriteriaTypeDao.class);
+	private static CriteriaTypeOptionDao criteriaTypeOptionDAO =  SpringUtils.getBean(CriteriaTypeOptionDao.class);
+	private static CriteriaSelectionOptionDao criteriaSelectionOptionDAO = SpringUtils.getBean(CriteriaSelectionOptionDao.class);
 	private static ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
-	private static VacancyDao vacancyDAO= (VacancyDao) SpringUtils.getBean("vacancyDAO");
+	private static VacancyDao vacancyDAO= SpringUtils.getBean(VacancyDao.class);
 	
 	public static List<Program> getPrograms(Integer facilityId) {
 		return programDao.getProgramsByFacilityId(facilityId);

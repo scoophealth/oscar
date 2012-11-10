@@ -23,6 +23,8 @@
 
 package org.oscarehr.PMmodule.web;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -71,6 +73,8 @@ import org.oscarehr.casemgmt.dao.ClientImageDAO;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.match.IMatchManager;
+import org.oscarehr.match.MatchManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
@@ -89,7 +93,8 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 	
 	private ClientImageDAO clientImageDAO = null;
 	private SurveyManager surveyManager;
-
+	private IMatchManager matchManager = new MatchManager();
+	
 	public void setOscarSurveyManager(SurveyManager mgr) {
 		this.surveyManager = mgr;
 	}
@@ -719,6 +724,22 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		return createRedirectForward(mapping, forward, parameters);
 	}
 
+	
+	public ActionForward save_proxy(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
+		try {
+			save(mapping, formBean, request, response);
+			int clientEditId = formBean.getClient().getDemographicNo();
+			OutputStream os = response.getOutputStream();
+			os.write((""+clientEditId).getBytes());
+        } catch (IOException e) {
+	        //ignore
+	        LOG.error(e.getMessage(), e);
+        }
+
+		return null;
+	}
+
 	// Adapt
 
 	private Demographic getClient(Integer clientId) {
@@ -857,6 +878,12 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		client.setProviderNo(providerNo);
 
 		clientManager.saveClient(client);
+		try {
+			log.info("Processing client creation event with MatchManager..." + 
+					matchManager.<Demographic>processEvent(client, IMatchManager.Event.CLIENT_CREATED));
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("Error while processing MatchManager.processEvent(Client)",e);
+		}
 	}
 
 	private void admitExternalProgram(Integer clientId, String providerNo, Integer externalProgramId) throws ProgramFullException, AdmissionException, ServiceRestrictionException {

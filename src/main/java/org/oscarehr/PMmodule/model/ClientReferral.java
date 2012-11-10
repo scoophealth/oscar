@@ -58,6 +58,9 @@ public class ClientReferral implements Serializable {
     private String remoteFacilityId;
     private String remoteProgramId;
 
+    //transient
+    private String selectVacancy;
+    
     
     // constructors
     public ClientReferral() {
@@ -396,6 +399,16 @@ public class ClientReferral implements Serializable {
 	public void setRemoteProgramId(String remoteProgramId) {
 		this.remoteProgramId = remoteProgramId;
 	}
+
+	public String getSelectVacancy() {
+		return selectVacancy;
+	}
+
+	public void setSelectVacancy(String selectVacancy) {
+		this.selectVacancy = selectVacancy;
+	}
+	
+	
     
     
 }

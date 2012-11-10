@@ -51,7 +51,6 @@ import org.oscarehr.PMmodule.dao.CriteriaSelectionOptionDao;
 import org.oscarehr.PMmodule.dao.CriteriaTypeDao;
 import org.oscarehr.PMmodule.dao.CriteriaTypeOptionDao;
 import org.oscarehr.PMmodule.dao.VacancyTemplateDao;
-import org.oscarehr.common.model.Admission;
 import org.oscarehr.PMmodule.model.BedCheckTime;
 import org.oscarehr.PMmodule.model.Criteria;
 import org.oscarehr.PMmodule.model.CriteriaSelectionOption;
@@ -86,7 +85,11 @@ import org.oscarehr.caisi_integrator.ws.Referral;
 import org.oscarehr.caisi_integrator.ws.ReferralWs;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.dao.FunctionalCentreDao;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.FunctionalCentre;
+import org.oscarehr.match.IMatchManager;
+import org.oscarehr.match.MatchManager;
+import org.oscarehr.match.MatchManagerException;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,11 +114,13 @@ public class ProgramManagerAction extends BaseAction {
 	//private RoleManager roleManager;
 	private RolesManager roleManager;
 	private FunctionalCentreDao functionalCentreDao;
-	private static VacancyTemplateDao vacancyTemplateDAO = (VacancyTemplateDao) SpringUtils.getBean("vacancyTemplateDAO");
-	private static CriteriaDao criteriaDAO = (CriteriaDao) SpringUtils.getBean("criteriaDAO");
-	private static CriteriaTypeDao criteriaTypeDAO = (CriteriaTypeDao) SpringUtils.getBean("criteriaTypeDAO");
-	private static CriteriaTypeOptionDao criteriaTypeOptionDAO = (CriteriaTypeOptionDao) SpringUtils.getBean("criteriaTypeOptionDAO");
-	private static CriteriaSelectionOptionDao criteriaSelectionOptionDAO = (CriteriaSelectionOptionDao) SpringUtils.getBean("criteriaSelectionOptionDAO");
+	private static VacancyTemplateDao vacancyTemplateDAO = (VacancyTemplateDao) SpringUtils.getBean(VacancyTemplateDao.class);
+	private static CriteriaDao criteriaDAO = SpringUtils.getBean(CriteriaDao.class);
+	private static CriteriaTypeDao criteriaTypeDAO = SpringUtils.getBean(CriteriaTypeDao.class);
+	private static CriteriaTypeOptionDao criteriaTypeOptionDAO = SpringUtils.getBean(CriteriaTypeOptionDao.class);
+	private static CriteriaSelectionOptionDao criteriaSelectionOptionDAO = (CriteriaSelectionOptionDao) SpringUtils.getBean(CriteriaSelectionOptionDao.class);
+	
+	private IMatchManager matchManager = new MatchManager();
 	
 	public void setFacilityDao(FacilityDao facilityDao) {
 		this.facilityDao = facilityDao;
@@ -873,7 +878,7 @@ public class ProgramManagerAction extends BaseAction {
 		vacancy.setTemplateId(templateId);
 		vacancy.setStatus(parameters.get("vacancyStatus")[0]);
 		vacancy.setReasonClosed(parameters.get("reasonClosed")[0]);		
-			
+		vacancy.setName(request.getParameter("vacancyName"));
 		String dateClosed = parameters.get("dateClosed")[0];
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", request.getLocale());
 		ResourceBundle props = ResourceBundle.getBundle("oscarResources", request.getLocale());
@@ -913,7 +918,13 @@ public class ProgramManagerAction extends BaseAction {
 		}	
 		
 		setEditAttributes(request, String.valueOf(program.getId()));
-		
+		//Call Match Manager
+		//TODO do the testing
+		try {
+	        matchManager.processEvent(vacancy, IMatchManager.Event.VACANCY_CREATED);
+        } catch (MatchManagerException e) {
+        	log.error("Match manager failed", e);
+        }
 		return edit(mapping, form, request, response);		
 		
 	}
