@@ -9524,6 +9524,7 @@ CREATE TABLE `criteria_selection_option` (
 
 CREATE TABLE `vacancy` (
   `id` int(11) primary key NOT NULL AUTO_INCREMENT,
+  `vacancyName` varchar(255) NOT NULL,
   `templateId` int(11) NOT NULL,
   `status` varchar(24) NOT NULL,
   `dateClosed` timestamp NULL,
@@ -9532,6 +9533,20 @@ CREATE TABLE `vacancy` (
   `dateCreated` date NOT NULL,
   `emailNotificationAddressesCsv` varchar(255)
 );
+
+CREATE TABLE `vacancy_client_match` (
+  `match_id` int NOT NULL AUTO_INCREMENT,
+  `vacancy_id` int(11),
+  `client_id` int(11),
+  `contact_attempts` int(11),
+  `last_contact_date` datetime,
+  `status` varchar(30),
+  `rejection_reason` text,
+  `form_id` int(10),
+  `match_percent` double,
+   PRIMARY KEY (`match_id`),
+   UNIQUE KEY `vacancy_id` (`vacancy_id`,`client_id`,`form_id`)
+) ;
 
 
 create table MyGroupAccessRestriction (

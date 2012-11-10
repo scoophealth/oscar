@@ -27,7 +27,7 @@
 <%@page import="org.oscarehr.PMmodule.model.Vacancy"%>
 <%@page import="org.oscarehr.PMmodule.model.VacancyTemplate"%>
 <%@page import="org.oscarehr.PMmodule.model.Criteria"%>
-<%@page import="org.oscarehr.PMmodule.dao.CriteriaDAO"%>
+<%@page import="org.oscarehr.PMmodule.dao.CriteriaDao"%>
 <%@page import="org.oscarehr.PMmodule.model.CriteriaType"%>
 <%@page import="org.oscarehr.PMmodule.service.VacancyTemplateManager"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
@@ -43,7 +43,7 @@
 <%@ include file="/taglibs.jsp"%>
 
 <%
-	CriteriaDAO criteriaDAO = (CriteriaDAO) SpringUtils.getBean("criteriaDAO");
+	CriteriaDao criteriaDAO = SpringUtils.getBean(CriteriaDao.class);
 	List<Criteria> criterias = new ArrayList<Criteria>();
 	Vacancy vacancy = null;
 	Integer templateId = null, vacancyId_int = null;

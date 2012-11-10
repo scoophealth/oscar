@@ -29,9 +29,9 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Expression;
-import org.oscarehr.common.model.Admission;
 import org.oscarehr.PMmodule.model.ClientReferral;
 import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -230,4 +230,12 @@ public class ClientReferralDAO extends HibernateDaoSupport {
 
         return criteria.list();
     }
+    
+    public List<ClientReferral> getClientReferralsByProgram(int programId) {
+    	@SuppressWarnings("unchecked")
+        List<ClientReferral> results = this.getHibernateTemplate().find("from ClientReferral cr where cr.ProgramId = ?", new Long(programId));
+
+       return results;
+    }
+
 }
