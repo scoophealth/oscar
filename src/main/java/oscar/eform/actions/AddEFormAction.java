@@ -151,8 +151,12 @@ public class AddEFormAction extends Action {
 			curField = paramNamesE.nextElement();
 			if( curField.equalsIgnoreCase("parentAjaxId"))
 				continue;
-			paramNames.add(curField);
-			paramValues.add(request.getParameter(curField));
+			if(request.getParameter(curField) != null && (!request.getParameter(curField).trim().equals("")) )
+			{
+				paramNames.add(curField);
+				paramValues.add(request.getParameter(curField));
+			}
+			
 		}
 
 		EForm curForm = new EForm(fid, demographic_no, provider_no);

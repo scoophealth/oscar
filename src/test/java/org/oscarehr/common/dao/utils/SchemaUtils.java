@@ -257,12 +257,12 @@ public class SchemaUtils
         // read the output from the command
         String s= null;
         while ((s = stdInput.readLine()) != null) {
-            System.out.println(s);
+            MiscUtils.getLogger().info(s);
         }
 
         // read any errors from the attempted command
         while ((s = stdError.readLine()) != null) {
-            System.out.println(s);
+        	 MiscUtils.getLogger().info(s);
         }
 
         int exitValue = -1;

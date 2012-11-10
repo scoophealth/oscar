@@ -21,33 +21,32 @@
  * Toronto, Ontario, Canada
  */
 
-package org.oscarehr.PMmodule.web.formbean;
+package org.oscarehr.PMmodule.wlservice;
 
-import java.io.Serializable;
+import java.util.Date;
 
-public class ClientManagerFormBean implements Serializable {
+public class MatchParam {
+	public int getClientID() {
+		return clientID;
+	}
+	public void setClientID(int clientID) {
+		this.clientID = clientID;
+	}
+	public int getVacancyID() {
+		return vacancyID;
+	}
+	public void setVacancyID(int vacancyID) {
+		this.vacancyID = vacancyID;
+	}
+	public Date getContactDateTime() {
+		return contactDateTime;
+	}
+	public void setContactDateTime(Date contactDateTime) {
+		this.contactDateTime = contactDateTime;
+	}
 	
-	public static final String[] tabs = { "Summary", "History", "Bed/Room Reservation", "Forms", "Refer","Refer to vacancy", "Discharge", "Service Restrictions" };
-
-	private String tab;
-
-	public ClientManagerFormBean() {
-		setTab(tabs[0]);
-	}
-
-	/**
-	 * @return Returns the tab.
-	 */
-	public String getTab() {
-		return tab;
-	}
-
-	/**
-	 * @param tab
-	 *            The tab to set.
-	 */
-	public void setTab(String tab) {
-		this.tab = tab;
-	}
-
+	int clientID=0;
+	int vacancyID=0;
+	Date contactDateTime=null;
+	
 }

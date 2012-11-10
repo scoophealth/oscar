@@ -236,8 +236,10 @@
 <div>
 	
 		<span>Wait-list Management</span>
+		<!--  
 		<div><span><a target='_blank' href='<c:out value="${ctx}"/>/PMmodule/incVacancyMatches.jsp'>New Vacancies</a></span></div>
-		<div><span><a target='_blank' href='<c:out value="${ctx}"/>/PMmodule/incVacancyList.jsp'>All Vacancies</a></span></div>
+		-->
+		<div><html:link action="/PMmodule/AllVacancies.do">All Vacancies</html:link></div>
 </div>
 
 <div>

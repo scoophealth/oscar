@@ -211,7 +211,7 @@ public class AdmissionManager {
 		newAdmission.setClientId(demographicNo);
 		newAdmission.setProgramId(program.getId());
 		newAdmission.setProviderNo(providerNo);
-		newAdmission.setTeamId(0);
+		newAdmission.setTeamId(null);
 		newAdmission.setTemporaryAdmission(tempAdmission);
 		newAdmission.setAdmissionFromTransfer(fromTransfer);
 		
@@ -220,7 +220,7 @@ public class AdmissionManager {
 				
 		//check if the client status is valid/existed in program_clientStatus
 		if(programClientStatusDAO.getProgramClientStatus(clientStatusId.toString()) == null)
-			clientStatusId = 0;
+			clientStatusId = null;
 				
 		newAdmission.setClientStatusId(clientStatusId);					
 

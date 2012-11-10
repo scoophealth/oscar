@@ -602,7 +602,7 @@ public class ProgramDao extends HibernateDaoSupport {
     @SuppressWarnings("unchecked")
     public List<Program> getLinkedServicePrograms(Integer bedProgramId, Integer clientId) {
         List results = this.getHibernateTemplate().find(
-                "select p from Admission a,Program p where a.ProgramId = p.id and p.type='Service' and  p.bedProgramLinkId = ? and a.ClientId=?",
+                "select p from Admission a,Program p where a.programId = p.id and p.type='Service' and  p.bedProgramLinkId = ? and a.clientId=?",
                 new Object[] { bedProgramId, clientId });
         return results;
     }

@@ -21,33 +21,16 @@
  * Toronto, Ontario, Canada
  */
 
-package org.oscarehr.PMmodule.web.formbean;
+package org.oscarehr.PMmodule.wlservice;
 
-import java.io.Serializable;
+public class ProgramQuery {
+	int programID=0;
 
-public class ClientManagerFormBean implements Serializable {
-	
-	public static final String[] tabs = { "Summary", "History", "Bed/Room Reservation", "Forms", "Refer","Refer to vacancy", "Discharge", "Service Restrictions" };
-
-	private String tab;
-
-	public ClientManagerFormBean() {
-		setTab(tabs[0]);
+	public int getProgramID() {
+		return programID;
 	}
 
-	/**
-	 * @return Returns the tab.
-	 */
-	public String getTab() {
-		return tab;
+	public void setProgramID(int programID) {
+		this.programID = programID;
 	}
-
-	/**
-	 * @param tab
-	 *            The tab to set.
-	 */
-	public void setTab(String tab) {
-		this.tab = tab;
-	}
-
 }
