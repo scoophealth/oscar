@@ -41,7 +41,9 @@ import oscar.oscarDB.DBHandler;
 /**
  * @author Yi Li
  * 
+ * @deprecated Use appropriate DAO class instead.
  */
+@Deprecated
 public class BillingONDataHelp {
 
 
