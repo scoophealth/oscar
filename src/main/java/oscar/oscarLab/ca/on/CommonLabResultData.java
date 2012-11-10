@@ -42,7 +42,10 @@ import org.oscarehr.common.dao.DocumentResultsDao;
 import org.oscarehr.common.dao.PatientLabRoutingDao;
 import org.oscarehr.common.dao.ProviderLabRoutingDao;
 import org.oscarehr.common.model.PatientLabRouting;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.ProviderLabRoutingModel;
+import org.oscarehr.document.dao.DocumentDAO;
+import org.oscarehr.document.model.CtlDocument;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 import org.oscarehr.util.DbConnectionFilter;
@@ -55,7 +58,6 @@ import org.xml.sax.SAXException;
 
 import oscar.OscarProperties;
 import oscar.oscarDB.ArchiveDeletedRecords;
-import oscar.oscarDB.DBHandler;
 import oscar.oscarDB.DBPreparedHandler;
 import oscar.oscarLab.ca.all.Hl7textResultsData;
 import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
@@ -376,22 +378,17 @@ public class CommonLabResultData {
 	}
 
 	public ArrayList<ReportStatus> getStatusArray(String labId, String labType) {
-
 		ArrayList<ReportStatus> statusArray = new ArrayList<ReportStatus>();
-
-		String sql = "select provider.first_name, provider.last_name, provider.provider_no, providerLabRouting.status, providerLabRouting.comment, providerLabRouting.timestamp from provider, providerLabRouting where provider.provider_no = providerLabRouting.provider_no and providerLabRouting.lab_no='" + labId + "' and providerLabRouting.lab_type = '" + labType + "'";
-		try {
-
-			ResultSet rs = DBHandler.GetSQL(sql);
-			logger.info(sql);
-			while (rs.next()) {
-				statusArray.add(new ReportStatus(oscar.Misc.getString(rs, "first_name") + " " + oscar.Misc.getString(rs, "last_name"), oscar.Misc.getString(rs, "provider_no"), descriptiveStatus(oscar.Misc.getString(rs, "status")), oscar.Misc.getString(rs, "comment"), oscar.Misc.getString(rs, "timestamp"), labId));
-				// statusArray.add( new ReportStatus(oscar.Misc.getString(rs,"first_name")+" "+oscar.Misc.getString(rs,"last_name"), oscar.Misc.getString(rs,"provider_no"), descriptiveStatus(oscar.Misc.getString(rs,"status")),
-				// oscar.Misc.getString(rs,"comment"), rs.getTimestamp("timestamp").getTime(), labId ) );
-			}
-			rs.close();
-		} catch (Exception e) {
-			logger.error("exception in CommonLabResultData.getStatusArray()", e);
+		ProviderLabRoutingDao dao = SpringUtils.getBean(ProviderLabRoutingDao.class);
+		for(Object[] i : dao.getProviderLabRoutings(ConversionUtils.fromIntString(labId), labType)) {
+			Provider p = (Provider) i[0];
+			ProviderLabRoutingModel m = (ProviderLabRoutingModel) i[1]; 
+			statusArray.add(new ReportStatus(p.getFullName(), 
+					p.getProviderNo(), 
+					descriptiveStatus(m.getStatus()), 
+					m.getComment(), 
+					ConversionUtils.toTimestampString(m.getTimestamp()), 
+					labId));
 		}
 		return statusArray;
 	}
@@ -410,20 +407,13 @@ public class CommonLabResultData {
 	}
 
 	public static String searchPatient(String labNo, String labType) {
-		String retval = "0";
-		try {
-
-			String sql = "select demographic_no from patientLabRouting where lab_no='" + labNo + "' and lab_type = '" + labType + "'";
-			ResultSet rs = DBHandler.GetSQL(sql);
-			if (rs.next()) {
-				retval = oscar.Misc.getString(rs, "demographic_no");
-			}
-		} catch (Exception e) {
-			Logger l = Logger.getLogger(CommonLabResultData.class);
-			l.error("exception in CommonLabResultData.searchPatient()", e);
+		PatientLabRoutingDao dao = SpringUtils.getBean(PatientLabRoutingDao.class);
+		List<PatientLabRouting> routings = dao.findByLabNoAndLabType(ConversionUtils.fromIntString(labNo), labType);
+		if (routings.isEmpty()) {
 			return "0";
 		}
-		return retval;
+		
+		return routings.get(0).getDemographicNo().toString();
 	}
 
 	public static boolean updatePatientLabRouting(String labNo, String demographicNo, String labType) {
@@ -555,61 +545,28 @@ public class CommonLabResultData {
 	}
 
 	public String getDemographicNo(String labId, String labType) {
-		String demoNo = null;
-		try {
-
-            ResultSet rs = DBHandler.GetSQL("select demographic_no from patientLabRouting where lab_no = '"+labId+"' and lab_type = '"+labType+"'");
-			if (rs.next()) {
-				String d = oscar.Misc.getString(rs, "demographic_no");
-				if (!"0".equals(d)) {
-					demoNo = d;
-				}
-			}
-			rs.close();
-
-		} catch (Exception e) {
-			MiscUtils.getLogger().error("Error", e);
-		}
-		return demoNo;
+		return searchPatient(labId, labType);
 	}
 
 	public boolean isDocLinkedWithPatient(String labId, String labType) {
-		boolean ret = false;
-		try {
-			String sql = "select module_id from ctl_document where document_no=" + labId + " and module='demographic'";
-			ResultSet rs = DBHandler.GetSQL(sql);
-			if (rs.next()) {
-				String mi = oscar.Misc.getString(rs, "module_id");
-				if (mi != null && !mi.trim().equals("-1")) {
-					ret = true;
-				}
-			}
-			rs.close();
-		} catch (Exception e) {
-			logger.error("exception in isDocLinkedWithPatient", e);
+		DocumentDAO dao = SpringUtils.getBean(DocumentDAO.class);
+		List<CtlDocument> docList = dao.findByDocumentNoAndModule(ConversionUtils.fromIntString(labId), "demographic");
+		if (docList.isEmpty()) {
+			return false;
 		}
-		return ret;
+		
+		String mi = ConversionUtils.toIntString(docList.get(0).getModuleId());
+		return mi != null && !mi.trim().equals("-1");		
 	}
 
 	public boolean isLabLinkedWithPatient(String labId, String labType) {
-		boolean ret = false;
-		try {
-
-			String sql = "select demographic_no from patientLabRouting where lab_no = '" + labId + "' and lab_type  = '" + labType + "' ";
-
-			ResultSet rs = DBHandler.GetSQL(sql);
-			if (rs.next()) {
-				String demo = oscar.Misc.getString(rs, "demographic_no");
-				if (demo != null && !demo.trim().equals("0")) {
-					ret = true;
-				}
-			}
-			rs.close();
-		} catch (Exception e) {
-			logger.error("exception in isLabLinkedWithPatient", e);
-
-		}
-		return ret;
+		PatientLabRoutingDao dao = SpringUtils.getBean(PatientLabRoutingDao.class);
+		PatientLabRouting routing = dao.findDemographics(labType, ConversionUtils.fromIntString(labId));
+		if (routing == null)
+			return false;
+		
+		String demo = ConversionUtils.toIntString(routing.getDemographicNo());
+		return demo != null && !demo.trim().equals("0");
 	}
 
 	public boolean isHRMLinkedWithPatient(String labId, String labType) {
@@ -629,20 +586,8 @@ public class CommonLabResultData {
 
 
 	public int getAckCount(String labId, String labType) {
-		int ret = 0;
-		try {
-
-			String sql = "select count(*) from providerLabRouting where lab_no = '" + labId + "' and lab_type  = '" + labType + "' and status='A'";
-			ResultSet rs = DBHandler.GetSQL(sql);
-			if (rs.next()) {
-				ret = rs.getInt(1);
-			}
-			rs.close();
-		} catch (Exception e) {
-			logger.error("exception in getAckCount", e);
-
-		}
-		return ret;
+		ProviderLabRoutingDao dao = SpringUtils.getBean(ProviderLabRoutingDao.class);
+		return dao.findByStatusANDLabNoType(ConversionUtils.fromIntString(labId), labType, "A").size();
 	}
 
 	public static void populateMeasurementsTable(String labId, String demographicNo, String labType) {
