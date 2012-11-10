@@ -25,41 +25,27 @@ package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
-import org.oscarehr.common.model.ProviderLabRoutingModel;
+import org.oscarehr.document.dao.DocumentDAO;
+import org.oscarehr.document.model.CtlDocument;
 import org.oscarehr.util.SpringUtils;
 
-public class ProviderLabRoutingDaoTest extends DaoTestFixtures {
+public class DocumentDAOTest extends DaoTestFixtures {
 
-	private ProviderLabRoutingDao dao = SpringUtils.getBean(ProviderLabRoutingDao.class);
-
-	public ProviderLabRoutingDaoTest() {
-	}
+	private DocumentDAO dao = SpringUtils.getBean(DocumentDAO.class);
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("provider", "providerLabRouting");
+		SchemaUtils.restoreTable("ctl_document");
 	}
 
 	@Test
-	public void testCreate() throws Exception {
-		ProviderLabRoutingModel ql = new ProviderLabRoutingModel();
-		EntityDataGenerator.generateTestDataForModelClass(ql);
-		dao.persist(ql);
-		assertNotNull(ql.getId());
+	public void testFindByDocumentNoAndModule() {
+		List<CtlDocument> result = dao.findByDocumentNoAndModule(100, "demo");
+		assertNotNull(result);
 	}
-
-	@Test
-	public void testGetProviderLabRoutings() {
-		assertNotNull(dao.getProviderLabRoutings(1, "HL7"));
-	}
-
-	@Test
-	public void testFindByStatusANDLabNoType() {
-		assertNotNull(dao.findByStatusANDLabNoType(100, "HL7", "A"));
-	}
-
 }

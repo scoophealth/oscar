@@ -194,4 +194,20 @@ public class DocumentDAO extends HibernateDaoSupport {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+    public List<CtlDocument> findByDocumentNoAndModule(Integer ctlDocNo, String module) {
+		Session session = null;
+		try {
+			session = getHibernateTemplate().getSessionFactory().openSession();
+			
+			Query query = getSession().createQuery("FROM CtlDocument c WHERE c.id.documentNo = :cltDocNo AND c.id.module = :module");
+			query.setParameter("cltDocNo", ctlDocNo);
+			query.setParameter("module", module);
+			return query.list();
+		} finally {
+			if (session != null)
+				session.close();
+		}
+    }
+
 }

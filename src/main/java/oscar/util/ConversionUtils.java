@@ -84,6 +84,10 @@ public class ConversionUtils {
 	public static Date fromTimestampString(String dateString) {
 		return fromDateString(dateString, DEFAULT_TS_PATTERN);
 	}
+	
+	public static String toTimestampString(Date timestamp) {
+		return toDateString(timestamp, DEFAULT_TS_PATTERN);
+	}
 
 	private static Date fromDateString(String dateString, String formatPattern) {
 		if (dateString == null || "".equals(dateString.trim())) return null;
