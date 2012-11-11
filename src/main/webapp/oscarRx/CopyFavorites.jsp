@@ -20,7 +20,19 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%><%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
-<%@ page import="oscar.oscarRx.service.RxPrescriptionMgr,oscar.oscarRx.model.*,java.util.*"%>
+<%@ page import="java.util.*"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.common.dao.FavoritesDao" %>
+<%@ page import="org.oscarehr.common.model.Favorites" %>
+<%@ page import="org.oscarehr.common.dao.FavoritesPrivilegeDao" %>
+<%@ page import="org.oscarehr.common.model.FavoritesPrivilege" %>
+<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
+<%
+	FavoritesDao favoritesDao = SpringUtils.getBean(FavoritesDao.class);
+    FavoritesPrivilegeDao favoritesPrivilegeDao = SpringUtils.getBean(FavoritesPrivilegeDao.class);
+    ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+%>
 <html:html locale="true">
     <head>
         <script type="text/javascript" src="<%= request.getContextPath()%>/js/global.js"></script>
@@ -52,9 +64,13 @@
         int i, j;
 
         String providerNo = bean.getProviderNo();
-        RxPrescriptionMgr rxMgr = (RxPrescriptionMgr) webApplicationContext.getBean("RxPrescriptionMgr");
-        boolean share = rxMgr.getFavoritesPrivilege(providerNo)[0];
-        List allProviders = rxMgr.getProviders();
+        boolean share = false;
+        FavoritesPrivilege fp = favoritesPrivilegeDao.findByProviderNo(providerNo);
+        if(fp != null) {
+        	share = fp.isOpenToPublic();
+        }
+        
+        List<String> allProviders = favoritesPrivilegeDao.getProviders();
         String copyProviderNo="";
         if (request.getAttribute("copyProviderNo")!=null)
             copyProviderNo=request.getAttribute("copyProviderNo").toString();
@@ -134,7 +150,7 @@
                                         %>
 
                                         <option
-                                            value=<%=((String) allProviders.get(p))%>  <%=((String) allProviders.get(p)).equalsIgnoreCase(copyProviderNo) ? "SELECTED" : ""%> > <%=( rxMgr.getProviderName((String)allProviders.get(p)))%>
+                                            value=<%=((String) allProviders.get(p))%>  <%=((String) allProviders.get(p)).equalsIgnoreCase(copyProviderNo) ? "SELECTED" : ""%> > <%=( providerDao.getProvider((String)allProviders.get(p)).getFormattedName())%>
                                         </option>
                                         <% }%>
 
@@ -147,10 +163,10 @@
                             </tr>
                             <%
         String style;
-        int count = (rxMgr.getFavoritesFromProvider((String) request.getAttribute("copyProviderNo"))).size();
+        int count = (favoritesDao.findByProviderNo((String) request.getAttribute("copyProviderNo"))).size();
         for (i = 0; i < count; i++) {
-            Favorites fav = rxMgr.getFavoritesFromProvider(copyProviderNo).get(i);
-            boolean isCustom = fav.getGcnSeqno().intValue() == 0;
+            Favorites fav = favoritesDao.findByProviderNo(copyProviderNo).get(i);
+            boolean isCustom = fav.getGcnSeqNo() == 0;
             style = "style='background-color:#F5F5F5'";
                             %>
                             <tr><td>
@@ -161,7 +177,7 @@
                                 <td colspan=2><b>Favorite Name:</b><input type=hidden
                                                                               name="fldFavoriteId<%= i%>" value="<%= fav.getId()%>" />
                                     <input type=text size="50"  name="fldFavoriteName<%= i%>"
-                                           class=tblRow size=80 value="<%= fav.getFavoritename()%>" />&nbsp;&nbsp;&nbsp;
+                                           class=tblRow size=80 value="<%= fav.getFavoriteName()%>" />&nbsp;&nbsp;&nbsp;
                                 </td>
                             </tr>
                             <% if (!isCustom) {%>
@@ -181,16 +197,16 @@
                             <tr class=tblRow <%= style%> name="record<%= i%>Line3">
                                 <td nowrap><b>Take:</b> <input type=text
                                                                    name="fldTakeMin<%= i%>" class=tblRow size=3
-                                                                   value="<%= fav.getTakemin()%>" /> <span>to</span> <input
+                                                                   value="<%= fav.getTakeMin()%>" /> <span>to</span> <input
                                         type=text name="fldTakeMax<%= i%>" class=tblRow size=3
-                                        value="<%= fav.getTakemax()%>" /> <select
+                                        value="<%= fav.getTakeMax()%>" /> <select
                                         name="fldFrequencyCode<%= i%>" class=tblRow>
                                         <%
                                 for (j = 0; j < freq.length; j++) {
                                         %><option
                                             value="<%= freq[j].getFreqCode()%>"
                                             <%
-                                            if (freq[j].getFreqCode().equals(fav.getFreqcode())) {
+                                            if (freq[j].getFreqCode().equals(fav.getFreqCode())) {
                                             %>
                                             selected="selected"
                                             <%                                                }
@@ -203,21 +219,21 @@
                                         name="fldDurationUnit<%= i%>" class=tblRow>
                                         <option
                                             <%
-                                if (fav.getDurunit().equals("D")) {%>
+                                if (fav.getDurationUnit().equals("D")) {%>
                                             selected="selected"
                                             <% }
                                             %>
                                             value="D">Day(s)</option>
                                         <option
                                             <%
-                                if (fav.getDurunit().equals("W")) {%>
+                                if (fav.getDurationUnit().equals("W")) {%>
                                             selected="selected"
                                             <% }
                                             %>
                                             value="W">Week(s)</option>
                                         <option
                                             <%
-                                if (fav.getDurunit().equals("M")) {%>
+                                if (fav.getDurationUnit().equals("M")) {%>
                                             selected="selected"
                                             <% }
                                             %>
@@ -233,7 +249,7 @@
                                                           class=tblRow size=3 value="<%= fav.getRepeat()%>" /></td>
 
                                 <td><b>No Subs:</b><input type=checkbox
-                                                              name="fldNosubs<%= i%>" <% if (fav.isNosubs() == true) {%> checked
+                                                              name="fldNosubs<%= i%>" <% if (fav.isNoSubs() == true) {%> checked
                                                           <%}%> class=tblRow size=1 value="on" /></td>
                                 <td><b>PRN:</b><input type=checkbox name="fldPrn<%= i%>"
                                                           <% if (fav.isPrn() == true) {%> checked <%}%> class=tblRow size=1

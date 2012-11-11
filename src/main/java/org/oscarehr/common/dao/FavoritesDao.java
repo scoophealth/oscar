@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-. OSCARservice, OpenSoft System. All Rights Reserved.
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,29 +14,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package oscar.oscarRx.service;
+package org.oscarehr.common.dao;
 
 import java.util.List;
 
-import oscar.oscarRx.model.Favorites;
+import javax.persistence.Query;
 
-/**
- *
- * @author toby
- */
-public interface RxPrescriptionMgr {
+import org.oscarehr.common.model.Favorites;
+import org.springframework.stereotype.Repository;
 
-    public List<Favorites> getFavoritesFromProvider(String providerNo);
-    public void setFavoritesForProvider(String providerNo, List<Integer> ids);
-    public List<String> getProviders(); 
-    public List<String[]> getFavoritesName(List<Favorites> list);
-    public void setFavoritesPrivilege(String providerNo, boolean openpublic, boolean writeable);
-    public boolean[] getFavoritesPrivilege(String providerNo);
-    public String getProviderName(String providerNo);
+@Repository
+public class FavoritesDao extends AbstractDao<Favorites>{
+
+	public FavoritesDao() {
+		super(Favorites.class);	
+	}
+	
+	public List<Favorites> findByProviderNo(String providerNo) {
+		Query query = entityManager.createQuery("select x from Favorites x where x.providerNo=?");
+		query.setParameter(1, providerNo);
+		
+		@SuppressWarnings("unchecked")
+		List<Favorites> results = query.getResultList();
+		
+		return results;
+	}
 }
