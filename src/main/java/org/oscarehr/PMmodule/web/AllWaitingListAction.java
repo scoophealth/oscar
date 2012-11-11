@@ -21,33 +21,23 @@
  * Toronto, Ontario, Canada
  */
 
-package org.oscarehr.PMmodule.web.formbean;
+package org.oscarehr.PMmodule.web;
 
-import java.io.Serializable;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-public class ClientManagerFormBean implements Serializable {
-	
-	public static final String[] tabs = { "Summary", "History", "Bed/Room Reservation", "Forms", "Refer","Refer to vacancy", "Discharge", "Service Restrictions" };
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.actions.DispatchAction;
 
-	private String tab;
-
-	public ClientManagerFormBean() {
-		setTab(tabs[0]);
+/**
+ * @author AnooshTech
+ *
+ */
+public class AllWaitingListAction extends DispatchAction{
+	@Override
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	    return mapping.findForward("waitList");
 	}
-
-	/**
-	 * @return Returns the tab.
-	 */
-	public String getTab() {
-		return tab;
-	}
-
-	/**
-	 * @param tab
-	 *            The tab to set.
-	 */
-	public void setTab(String tab) {
-		this.tab = tab;
-	}
-
 }

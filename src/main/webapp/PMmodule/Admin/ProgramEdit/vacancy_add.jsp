@@ -49,6 +49,7 @@
 	Integer templateId = null, vacancyId_int = null;
 	String reasonClosed = "", dateClosed = "";
 	String vacancyId = (String) request.getAttribute("vacancyOrTemplateId");
+	String vacancyName = "";
 	boolean dontSave = false;
 	
 	if (!StringUtils.isBlank(vacancyId) && !vacancyId.equalsIgnoreCase("null"))	{	
@@ -64,7 +65,7 @@
 			if(reasonClosed == null) 
 				reasonClosed = "";
 			Date dc = vacancy.getDateClosed();
-			
+			vacancyName = vacancy.getName();
 			SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy H:mm", request.getLocale());
 			ResourceBundle props = ResourceBundle.getBundle("oscarResources", request.getLocale());
 			if (dc !=null ) {			
@@ -137,6 +138,10 @@
 				<option value="<%=vt.getId()%>" <%=selectedOrNot%> ><%=vt.getName() %></option>
 		<%} %>
 		</select></td>
+	</tr>
+	<tr class="b">
+		<td class="beright">Vacancy Name:</td>
+		<td><input type="text" name="vacancyName" value="<%= vacancyName %>" size="40" /></td>
 	</tr>
 </table>
 <br>

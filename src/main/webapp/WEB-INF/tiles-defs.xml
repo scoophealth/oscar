@@ -31,6 +31,14 @@
 		<put name="navigation" value="/PMmodule/navigation.jsp" />
 		<put name="body" value="/PMmodule/Admin/ProgramManagerList.jsp" />
 	</definition>
+	<definition name="page.pmm.allWatingList" path="/PMmodule/layout.jsp">
+		<put name="navigation" value="/PMmodule/navigation.jsp" />
+		<put name="body" value="/PMmodule/incVacancyList.jsp" />
+	</definition>
+	<definition name="page.pmm.vacancyClientMatch" path="/PMmodule/layout.jsp">
+		<put name="navigation" value="/PMmodule/navigation.jsp" />
+		<put name="body" value="/PMmodule/incVacancyMatches.jsp" />
+	</definition>
 	<definition name="page.pmm.client.merge" path="/PMmodule/layout_quatro.jsp">
 		<put name="leftNav"  value="/PMmodule/navigation_client.jsp" />
 		<put name="body" value="/PMmodule/MergeClient.jsp" />
@@ -121,6 +129,10 @@
 	<definition name="page.pmm.client" path="/PMmodule/layout.jsp">
 		<put name="navigation" value="/PMmodule/navigation.jsp" />
 		<put name="body" value="/PMmodule/ClientManager.jsp" />
+	</definition>
+	<definition name="page.pmm.client.vacancy" path="/PMmodule/layout.jsp">
+		<put name="navigation" value="/PMmodule/navigation.jsp" />
+		<put name="body" value="/PMmodule/ClientManagerVacancy.jsp" />
 	</definition>
 	<definition name="page.pmm.client.service_restriction_error"
 		path="/PMmodule/layout.jsp">

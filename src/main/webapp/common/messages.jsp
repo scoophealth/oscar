@@ -46,4 +46,4 @@
 		</html:messages>
 	</table>
 </logic:messagesPresent>
-<br />
+
