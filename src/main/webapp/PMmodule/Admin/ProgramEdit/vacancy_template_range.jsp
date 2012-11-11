@@ -30,12 +30,12 @@
 <%@page import="org.oscarehr.PMmodule.model.CriteriaType"%>
 <%@page import="org.oscarehr.PMmodule.model.CriteriaTypeOption"%>
 <%@page import="org.oscarehr.PMmodule.service.VacancyTemplateManager"%>
-<%@page import="org.oscarehr.PMmodule.dao.CriteriaTypeDAO"%>
-<%@page import="org.oscarehr.PMmodule.dao.CriteriaTypeOptionDAO"%>
+<%@page import="org.oscarehr.PMmodule.dao.CriteriaTypeDao"%>
+<%@page import="org.oscarehr.PMmodule.dao.CriteriaTypeOptionDao"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%
-	CriteriaTypeDAO criteriaTypeDAO = (CriteriaTypeDAO) SpringUtils.getBean("criteriaTypeDAO");
-	CriteriaTypeOptionDAO criteriaTypeOptionDAO = (CriteriaTypeOptionDAO) SpringUtils.getBean("criteriaTypeOptionDAO");
+	CriteriaTypeDao criteriaTypeDAO = SpringUtils.getBean(CriteriaTypeDao.class);
+	CriteriaTypeOptionDao criteriaTypeOptionDAO = SpringUtils.getBean(CriteriaTypeOptionDao.class);
 	String min="", max="", nameMax="", nameMin="";	
 	
 	String optionValueSelected = request.getParameter("optionValueSelected");

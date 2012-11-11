@@ -44,6 +44,9 @@ public class Vacancy extends AbstractModel<Integer> implements java.io.Serializa
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer id;
+	@Column(name="vacancyName")
+	private String name;
+	
 	@Column(nullable = false)
 	private Integer templateId;
 	@Column(nullable = false, length = 24)
@@ -86,11 +89,12 @@ public class Vacancy extends AbstractModel<Integer> implements java.io.Serializa
 
 	/** full constructor */
 	public Vacancy(Integer templateId, String status, Timestamp dateClosed,
-			String reasonClosed) {
+			String reasonClosed, String name) {
 		this.templateId = templateId;
 		this.status = status;
 		this.dateClosed = dateClosed;
 		this.reasonClosed = reasonClosed;
+		this.name = name;
 	}
 
 	/**
@@ -172,4 +176,14 @@ public class Vacancy extends AbstractModel<Integer> implements java.io.Serializa
 	public void setWlProgramId(Integer wlProgramId) {
     	this.wlProgramId = wlProgramId;
     }
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	
 }

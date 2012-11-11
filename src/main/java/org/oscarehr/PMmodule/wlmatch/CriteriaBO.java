@@ -21,31 +21,23 @@
  * Hamilton
  * Ontario, Canada
  */
+package org.oscarehr.PMmodule.wlmatch;
 
-package org.oscarehr.PMmodule.dao;
-
-import java.util.List;
-
-import javax.persistence.Query;
-
-import org.oscarehr.PMmodule.model.Vacancy;
-import org.oscarehr.common.dao.AbstractDao;
-import org.springframework.stereotype.Repository;
-
-@Repository
-public class VacancyDAO extends AbstractDao<Vacancy> {
-
-	public VacancyDAO() {
-		super(Vacancy.class);
-	}
-
-	@SuppressWarnings("unchecked")
-    public List<Vacancy> getVacanciesByWlProgramId(Integer wlProgramId) {
-		String sqlCommand = "select x from Vacancy x where x.wlProgramId=?1 ";
-
-		Query query = entityManager.createQuery(sqlCommand);
-		query.setParameter(1, wlProgramId);
-		
-		return query.getResultList();	
+public class CriteriaBO {
+	public String field=null;
+	public String fieldType=null;
+	
+	public String value=null;
+	public String[] values=null;
+	public Integer rangeStart=null;
+	public Integer rangeEnd=null;
+	
+	public boolean stringent=true;
+	
+	public double weight=1;
+	
+	double score(PotentialMatchBO pot) {
+		// TODO place-holder for complex scoring, always returns 100% match * weight right now 
+		return weight;
 	}
 }

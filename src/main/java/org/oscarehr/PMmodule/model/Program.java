@@ -106,6 +106,12 @@ public class Program implements Serializable {
     private String emailNotificationAddressesCsv=null;
     private Date lastReferralNotification=null;
 
+    //these are all transient
+    private Integer noOfVacancy = 0;
+	private String vacancyName;
+	private String dateCreated;
+	private double matches;
+	private Integer vacancyId;
    
     /**
      * Constructor for required fields
@@ -763,4 +769,66 @@ public class Program implements Serializable {
 	public void setLastReferralNotification(Date lastReferralNotification) {
     	this.lastReferralNotification = lastReferralNotification;
     }
+
+
+
+	public Integer getNoOfVacancy() {
+		return noOfVacancy;
+	}
+
+
+
+	public void setNoOfVacancy(Integer noOfVacancy) {
+		this.noOfVacancy = noOfVacancy;
+	}
+
+
+
+	public String getVacancyName() {
+		return vacancyName;
+	}
+
+
+
+	public void setVacancyName(String vacancyName) {
+		this.vacancyName = vacancyName;
+	}
+
+
+
+	public String getDateCreated() {
+		return dateCreated;
+	}
+
+
+
+	public void setDateCreated(String dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+
+
+
+	public double getMatches() {
+		return matches;
+	}
+
+
+
+	public void setMatches(double matches) {
+		this.matches = matches;
+	}
+
+
+
+	public Integer getVacancyId() {
+		return vacancyId;
+	}
+
+
+
+	public void setVacancyId(Integer vacancyId) {
+		this.vacancyId = vacancyId;
+	}
+	
+	
 }

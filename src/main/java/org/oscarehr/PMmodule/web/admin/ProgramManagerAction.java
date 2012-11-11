@@ -46,11 +46,11 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
-import org.oscarehr.PMmodule.dao.CriteriaDAO;
-import org.oscarehr.PMmodule.dao.CriteriaSelectionOptionDAO;
-import org.oscarehr.PMmodule.dao.CriteriaTypeDAO;
-import org.oscarehr.PMmodule.dao.CriteriaTypeOptionDAO;
-import org.oscarehr.PMmodule.dao.VacancyTemplateDAO;
+import org.oscarehr.PMmodule.dao.CriteriaDao;
+import org.oscarehr.PMmodule.dao.CriteriaSelectionOptionDao;
+import org.oscarehr.PMmodule.dao.CriteriaTypeDao;
+import org.oscarehr.PMmodule.dao.CriteriaTypeOptionDao;
+import org.oscarehr.PMmodule.dao.VacancyTemplateDao;
 import org.oscarehr.common.model.Admission;
 import org.oscarehr.PMmodule.model.BedCheckTime;
 import org.oscarehr.PMmodule.model.Criteria;
@@ -111,11 +111,11 @@ public class ProgramManagerAction extends BaseAction {
 	//private RoleManager roleManager;
 	private RolesManager roleManager;
 	private FunctionalCentreDao functionalCentreDao;
-	private static VacancyTemplateDAO vacancyTemplateDAO = (VacancyTemplateDAO) SpringUtils.getBean("vacancyTemplateDAO");
-	private static CriteriaDAO criteriaDAO = (CriteriaDAO) SpringUtils.getBean("criteriaDAO");
-	private static CriteriaTypeDAO criteriaTypeDAO = (CriteriaTypeDAO) SpringUtils.getBean("criteriaTypeDAO");
-	private static CriteriaTypeOptionDAO criteriaTypeOptionDAO = (CriteriaTypeOptionDAO) SpringUtils.getBean("criteriaTypeOptionDAO");
-	private static CriteriaSelectionOptionDAO criteriaSelectionOptionDAO = (CriteriaSelectionOptionDAO) SpringUtils.getBean("criteriaSelectionOptionDAO");
+	private static VacancyTemplateDao vacancyTemplateDAO = (VacancyTemplateDao) SpringUtils.getBean("vacancyTemplateDAO");
+	private static CriteriaDao criteriaDAO = (CriteriaDao) SpringUtils.getBean("criteriaDAO");
+	private static CriteriaTypeDao criteriaTypeDAO = (CriteriaTypeDao) SpringUtils.getBean("criteriaTypeDAO");
+	private static CriteriaTypeOptionDao criteriaTypeOptionDAO = (CriteriaTypeOptionDao) SpringUtils.getBean("criteriaTypeOptionDAO");
+	private static CriteriaSelectionOptionDao criteriaSelectionOptionDAO = (CriteriaSelectionOptionDao) SpringUtils.getBean("criteriaSelectionOptionDAO");
 	
 	public void setFacilityDao(FacilityDao facilityDao) {
 		this.facilityDao = facilityDao;
