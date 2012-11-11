@@ -26,6 +26,7 @@
 
 
 
+<%@page import="oscar.eform.EFormUtil"%>
 <%@ page import="java.util.*"%>
 <%@ page import="org.oscarehr.PMmodule.model.ProgramQueue"%>
 <%@ page import="org.oscarehr.PMmodule.web.admin.ProgramManagerAction.RemoteQueueEntry"%>
@@ -192,7 +193,20 @@ String reason ="";
 				HttpSession se = request.getSession();			
 				ProgramQueue temp=(ProgramQueue)pageContext.getAttribute("queue_entry");
 				String programId = String.valueOf(temp.getProgramId());
-				int demographic_no = temp.getClientId().intValue();
+				Integer demographic_no = temp.getClientId().intValue();
+				String appointment = request.getParameter("appointment") == null ? "0":request.getParameter("appointment");
+				String orderBy = "";
+				String orderByRequest = request.getParameter("orderby");
+				if (orderByRequest == null) orderBy = EFormUtil.DATE;
+				else if (orderByRequest.equals("form_subject")) orderBy = EFormUtil.SUBJECT;
+				else if (orderByRequest.equals("form_name")) orderBy = EFormUtil.NAME;
+				Map<String,? extends Object> curform = Collections.EMPTY_MAP;
+				ArrayList<HashMap<String,? extends Object>> eForms = EFormUtil.listPatientEForms(orderBy, EFormUtil.CURRENT, demographic_no.toString(), roleName$);
+				if(eForms != null ){
+					int eformsSize = eForms.size();
+					curform = eformsSize > 0 ? eForms.get(eformsSize-1):Collections.EMPTY_MAP;
+				}
+				String url = request.getContextPath() + "/eform/efmshowform_data.jsp?fdid= " + curform.get("fdid") + "&appointment=" + demographic_no;
 				if(ppd.isThisProgramInProgramDomain(curUser_no,Integer.valueOf(programId))) {				
 					
 					String eURL = "../oscarEncounter/IncomingEncounter.do?programId="+programId+"&providerNo="+curUser_no+"&appointmentNo="+rsAppointNO+"&demographicNo="+demographic_no+"&curProviderNo="+curUser_no+"&reason="+java.net.URLEncoder.encode(reason)+"&encType="+java.net.URLEncoder.encode("face to face encounter with client","UTF-8")+"&userName="+java.net.URLEncoder.encode( userfirstname+" "+userlastname)+"&curDate=null&appointmentDate=null&startTime=0:0"+"&status="+status+"&source=cm";
@@ -200,7 +214,11 @@ String reason ="";
 		<a href=#
 			onClick="popupPage(710, 1024,'../oscarSurveillance/CheckSurveillance.do?demographicNo=<%=demographic_no%>&proceed=<%=java.net.URLEncoder.encode(eURL)%>');return false;"
 			title="<bean:message key="global.encounter"/>"> <bean:message
-			key="provider.appointmentProviderAdminDay.btnE" /></a> 
+			key="provider.appointmentProviderAdminDay.btnE" /></a>&nbsp;&nbsp;
+		<a href=#
+			onClick="popupPage(710,1024,'../PMmodule/remoteReferal.do?appointment=<%=demographic_no%>&fdid=<%=curform.get("fdid")%>','0'); return false;"
+			title="<bean:message key="global.remoteReferral"/>"> <bean:message
+			key="provider.appointmentProviderAdminDay.btnI"/></a>
 		
 		
 	<% 	}	} 

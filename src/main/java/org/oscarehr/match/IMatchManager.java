@@ -21,33 +21,27 @@
  * Toronto, Ontario, Canada
  */
 
-package org.oscarehr.PMmodule.web.formbean;
+package org.oscarehr.match;
 
-import java.io.Serializable;
-
-public class ClientManagerFormBean implements Serializable {
+/**
+ * @author AnooshTech
+ *
+ */
+public interface IMatchManager {
+	/**
+	 * Defines possible {@link Event} for matches.
+	 *
+	 */
+	public static enum Event {
+		CLIENT_CREATED, VACANCY_CREATED, SCHEDULED_EVENT;
+	}
 	
-	public static final String[] tabs = { "Summary", "History", "Bed/Room Reservation", "Forms", "Refer","Refer to vacancy", "Discharge", "Service Restrictions" };
-
-	private String tab;
-
-	public ClientManagerFormBean() {
-		setTab(tabs[0]);
-	}
-
 	/**
-	 * @return Returns the tab.
+	 * Processes the passed event with received entity
+	 * @param <E>
+	 * @param entity
+	 * @param e
+	 * @return
 	 */
-	public String getTab() {
-		return tab;
-	}
-
-	/**
-	 * @param tab
-	 *            The tab to set.
-	 */
-	public void setTab(String tab) {
-		this.tab = tab;
-	}
-
+	public <E> String processEvent(E entity, Event event) throws MatchManagerException;
 }

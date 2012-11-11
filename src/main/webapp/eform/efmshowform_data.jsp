@@ -26,6 +26,7 @@
 <%@ page import="java.sql.*, oscar.eform.data.*"%>
 <%
 	String id = request.getParameter("fid");
+	String messageOnFailure = "No eform or appointment is available";
   if (id == null) {  // form exists in patient
       id = request.getParameter("fdid");
       String appointmentNo = request.getParameter("appointment");

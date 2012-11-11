@@ -32,7 +32,6 @@ import org.oscarehr.PMmodule.dao.JointAdmissionDAO;
 import org.oscarehr.PMmodule.exception.AlreadyAdmittedException;
 import org.oscarehr.PMmodule.exception.AlreadyQueuedException;
 import org.oscarehr.PMmodule.exception.ServiceRestrictionException;
-import org.oscarehr.common.model.Admission;
 import org.oscarehr.PMmodule.model.ClientReferral;
 import org.oscarehr.PMmodule.model.JointAdmission;
 import org.oscarehr.PMmodule.model.ProgramClientRestriction;
@@ -40,6 +39,7 @@ import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DemographicExtDao;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicExt;
 import org.springframework.beans.factory.annotation.Required;
@@ -108,7 +108,11 @@ public class ClientManager {
     public void saveClientReferral(ClientReferral referral) {
 
         referralDAO.saveClientReferral(referral);
+        addClientReferralToProgramQueue(referral);
+    } 
 
+    
+    public void addClientReferralToProgramQueue(ClientReferral referral) {
         if (referral.getStatus().equalsIgnoreCase(ClientReferral.STATUS_ACTIVE)) {
             ProgramQueue queue = new ProgramQueue();
             queue.setClientId(referral.getClientId());
