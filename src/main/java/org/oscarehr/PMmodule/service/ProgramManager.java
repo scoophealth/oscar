@@ -38,7 +38,7 @@ import org.oscarehr.PMmodule.dao.ProgramFunctionalUserDAO;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.dao.ProgramSignatureDao;
 import org.oscarehr.PMmodule.dao.ProgramTeamDAO;
-import org.oscarehr.PMmodule.dao.VacancyTemplateDAO;
+import org.oscarehr.PMmodule.dao.VacancyTemplateDao;
 import org.oscarehr.PMmodule.model.AccessType;
 import org.oscarehr.common.model.Admission;
 import org.oscarehr.PMmodule.model.DefaultRoleAccess;
@@ -65,7 +65,7 @@ public class ProgramManager {
     private DefaultRoleAccessDAO defaultRoleAccessDAO;
     private ProgramClientStatusDAO clientStatusDAO;
     private ProgramSignatureDao programSignatureDao;
-    private VacancyTemplateDAO vacancyTemplateDao;
+    private VacancyTemplateDao vacancyTemplateDao;
     
     private boolean enabled;
 
@@ -477,7 +477,7 @@ public class ProgramManager {
     	return vacancyTemplateDao.getVacancyTemplate(templateId);
     }
 
-	public void setVacancyTemplateDao(VacancyTemplateDAO vacancyTemplateDao) {
+	public void setVacancyTemplateDao(VacancyTemplateDao vacancyTemplateDao) {
     	this.vacancyTemplateDao = vacancyTemplateDao;
     }
 

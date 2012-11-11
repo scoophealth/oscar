@@ -21,33 +21,38 @@
  * Hamilton
  * Ontario, Canada
  */
-
 package org.oscarehr.PMmodule.dao;
 
-import java.util.List;
+import static org.junit.Assert.assertNotNull;
 
-import javax.persistence.Query;
+import org.junit.Before;
+import org.junit.Test;
+import org.oscarehr.PMmodule.model.Vacancy;
+import org.oscarehr.common.dao.DaoTestFixtures;
+import org.oscarehr.common.dao.utils.EntityDataGenerator;
+import org.oscarehr.common.dao.utils.SchemaUtils;
+import org.oscarehr.util.SpringUtils;
 
-import org.oscarehr.PMmodule.model.CriteriaSelectionOption;
-import org.oscarehr.common.dao.AbstractDao;
-import org.springframework.stereotype.Repository;
+public class VacancyDaoTest extends DaoTestFixtures {
 
-@Repository
-public class CriteriaSelectionOptionDAO extends AbstractDao<CriteriaSelectionOption> {
+	private VacancyDao dao = SpringUtils.getBean(VacancyDao.class);
 
-	public CriteriaSelectionOptionDAO() {
-		super(CriteriaSelectionOption.class);
+
+	@Before
+	public void before() throws Exception {
+		SchemaUtils.restoreTable("vacancy");
 	}
 
-	@SuppressWarnings("unchecked")
-    public List<CriteriaSelectionOption> getCriteriaSelectedOptionsByCriteriaId(Integer criteriaId) {
-		String sqlCommand = "select * from criteria_selection_option where CRITERIA_ID=?1 ";
-
-		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
-		query.setParameter(1, criteriaId);
-		
-		return query.getResultList();
-		
+	@Test
+	public void testCreate() throws Exception {
+		Vacancy entity = new Vacancy();
+		EntityDataGenerator.generateTestDataForModelClass(entity);
+		dao.persist(entity);
+		assertNotNull(entity.getId());
+	}
+	
+	@Test
+	public void testGetVacanciesByWlProgramId() {
+		assertNotNull(dao.getVacanciesByWlProgramId(1));
 	}
 }
-

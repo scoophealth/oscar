@@ -25,62 +25,58 @@
 package org.oscarehr.PMmodule.dao;
 
 import java.util.List;
+
 import javax.persistence.Query;
+
 import org.oscarehr.PMmodule.model.VacancyTemplate;
 import org.oscarehr.common.dao.AbstractDao;
-import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class VacancyTemplateDAO extends AbstractDao<VacancyTemplate> {
+public class VacancyTemplateDao extends AbstractDao<VacancyTemplate> {
 
-	public VacancyTemplateDAO() {
+	public VacancyTemplateDao() {
 		super(VacancyTemplate.class);
 	}
 
 	public void saveVacancyTemplate(VacancyTemplate obj) {
-		try {
-			persist(obj);
-		} catch (Exception e) {
-			MiscUtils.getLogger().error("Error", e);
-		}
+		persist(obj);
 	}
 	
 	public VacancyTemplate getVacancyTemplate(Integer templateId) {
-		String sqlCommand = "select * from vacancy_template where TEMPLATE_ID=?1 ";
-
-		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
-		query.setParameter(1, templateId);
-		
-		return getSingleResultOrNull(query);	
+		return find(templateId);
 	}
 	
-	@SuppressWarnings("unchecked")
-    public List<VacancyTemplate> getVacancyTemplateByWlProgramId(Integer wlProgramId) {
-		String sqlCommand = "select * from vacancy_template where WL_PROGRAM_ID=?1 ";
-
-		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
+	public List<VacancyTemplate> getVacancyTemplateByWlProgramId(Integer wlProgramId) {
+		Query query = entityManager.createQuery("select x from VacancyTemplate x where x.wlProgramId=?");
 		query.setParameter(1, wlProgramId);
 		
-		return query.getResultList();	
-	}
-	
-	@SuppressWarnings("unchecked")
-    public List<VacancyTemplate> getActiveVacancyTemplatesByProgramId(Integer programId) {
-		String sqlCommand = "select * from vacancy_template where ACTIVE=1 and PROGRAM_ID=?1 ";
-
-		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
-		query.setParameter(1, programId);
+		@SuppressWarnings("unchecked")
+		List<VacancyTemplate> results = query.getResultList();
 		
-		return query.getResultList();	
+		
+		return results;	
 	}
 	
-	 public List<VacancyTemplate> getActiveVacancyTemplatesByWlProgramId(Integer programId) {
-			String sqlCommand = "select * from vacancy_template where ACTIVE=1 and WL_PROGRAM_ID=?1 ";
-
-			Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
-			query.setParameter(1, programId);
-			
-			return query.getResultList();	
+	public List<VacancyTemplate> getActiveVacancyTemplatesByProgramId(Integer programId) {
+		Query query = entityManager.createQuery("select x from VacancyTemplate x where x.programId=? and x.active=?");
+		query.setParameter(1, programId);
+		query.setParameter(2, true);
+		
+		@SuppressWarnings("unchecked")
+		List<VacancyTemplate> results = query.getResultList();
+		
+		return results;	
+	}
+	
+	 public List<VacancyTemplate> getActiveVacancyTemplatesByWlProgramId(Integer wlProgramId) {
+		Query query = entityManager.createQuery("select x from VacancyTemplate x where x.wlProgramId=? and x.active=?");
+		query.setParameter(1, wlProgramId);
+		query.setParameter(2, true);
+		
+		@SuppressWarnings("unchecked")
+		List<VacancyTemplate> results = query.getResultList();
+		
+		return results;	
 	}
 }
