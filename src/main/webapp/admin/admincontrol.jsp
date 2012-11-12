@@ -139,11 +139,8 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"searchprovider", "select provider_no, last_name, first_name from provider where provider_type='doctor' and status='1' order by last_name"},
     {"searchproviderall", "select provider_no, last_name, first_name from provider where status='1' order by last_name"},
 
-    {"search_ptstatus", "select distinct patient_status from demographic where patient_status != '' and patient_status != 'AC' and patient_status != 'IN' and patient_status != 'DE' and patient_status != 'MO' and patient_status != 'FI'"},
-    {"search_rsstatus", "select distinct roster_status from demographic where roster_status != '' and roster_status != 'RO' and roster_status != 'NR' and roster_status != 'TE' and roster_status != 'FS' "},
-    {"search_wlstatus", "select * from waitingList where demographic_no=? AND is_history='N' order by onListSince DESC"},
-    {"search_waiting_list", "select * from waitingListName where group_no='" + ((ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE)).getMyGroupNo() +"' AND is_history='N' order by name"},
-    //muti-site query
+
+	//muti-site query
     {"site_searchproviderall","select p.provider_no, p.last_name, p.first_name from provider p INNER JOIN providersite s ON p.provider_no = s.provider_no WHERE s.site_id IN (SELECT site_id from providersite where provider_no=?) AND p.status='1' order by last_name"},
     {"site_preference_search_titlename", "select p.* from preference p INNER JOIN providersite s ON p.provider_no = s.provider_no where p."+fieldname+ " "+regularexp+" ?  AND s.site_id IN (SELECT site_id from providersite where provider_no= ? ) " +orderby + " "+limit},
     {"site_provider_search_titlename", "select p.provider_no,p.first_name,p.last_name,p.specialty,p.sex,p.team,p.phone,p.status from provider p where "+fieldname+ " "+regularexp+" ? and exists(select * from providersite s where p.provider_no = s.provider_no and s.site_id IN (SELECT site_id from providersite where provider_no=" + curProvider_no + ")) "  +orderby + " "+limit},
@@ -164,12 +161,9 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"searchmygroupprovider", "select provider_no, last_name, first_name from mygroup where mygroup_no=? "},
     {"searchprovider", "select provider_no, last_name, first_name from provider where provider_type='doctor' and status='1' order by last_name"},
     {"searchproviderall", "select provider_no, last_name, first_name from provider where status='1' order by last_name"},
+        
 
-    {"search_ptstatus", "select distinct patient_status from demographic where patient_status != '' and patient_status != 'AC' and patient_status != 'IN' and patient_status != 'DE' and patient_status != 'MO' and patient_status != 'FI'"},
-    {"search_rsstatus", "select distinct roster_status from demographic where roster_status != '' and roster_status != 'RO' and roster_status != 'NR' and roster_status != 'TE' and roster_status != 'FS' "},
-    {"search_wlstatus", "select * from waitingList where demographic_no=? AND is_history='N' order by onListSince DESC"},
-    {"search_waiting_list", "select * from waitingListName where group_no='" + ((ProviderPreference)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER_PREFERENCE)).getMyGroupNo() +"' AND is_history='N' order by name"},
-    //muti-site query
+	//muti-site query
     {"site_searchproviderall","select p.provider_no, p.last_name, p.first_name from provider p INNER JOIN providersite s ON p.provider_no = s.provider_no WHERE s.site_id IN (SELECT site_id from providersite where provider_no=?) AND p.status='1' order by last_name"},
     {"site_preference_search_titlename", "select p.* from preference p INNER JOIN providersite s ON p.provider_no = s.provider_no where p."+fieldname+ " "+regularexp+" ?  AND s.site_id IN (SELECT site_id from providersite where provider_no=?) " +orderby + " "+limit},
     {"site_provider_search_titlename", "select p.provider_no,p.first_name,p.last_name,p.specialty,p.sex,p.team,p.phone,p.status from provider p where "+fieldname+ " "+regularexp+" ? and exists(select * from providersite s where p.provider_no = s.provider_no and s.site_id IN (SELECT site_id from providersite where provider_no=" + curProvider_no + ")) "  +orderby + " "+limit},
