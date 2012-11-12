@@ -182,7 +182,7 @@ request.setAttribute("forwardto", request.getRequestURI());
                                     <logic:present name="<%=PHRAuthentication.SESSION_PHR_AUTH%>">
                                         <td class="myoscarLoginElementAuth">
                                             <div>
-                                                Status: <b>Logged in as <%=providerName%></b> (<%=phrAuth.getUserId()%>)
+                                                Status: <b>Logged in as <%=providerName%></b>
                                                 <form action="../../phr/Logout.do" name="phrLogout" method="POST"  style="margin: 0px; padding: 0px;">
                                                     <input type="hidden" name="forwardto" value="<%=request.getServletPath()%>?method=<%=request.getParameter("method")%>">
                                                     <center><a href="javascript: document.forms['phrLogout'].submit()">Logout</a></center>
