@@ -47,7 +47,7 @@
 
 <h1>OCAN IAR Report - v2.0.6</h1>
 
-<script src="<%=request.getContextPath()%>/js/jquery-1.3.2.min.js"></script>
+<script src="<%=request.getContextPath()%>/js/jquery-1.7.1.min.js"></script>
 <script>
 	function submitIAR() {
 		document.getElementById("ocanForm").action="ocan_report_export_iar.jsp";
