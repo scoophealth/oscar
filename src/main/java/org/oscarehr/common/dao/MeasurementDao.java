@@ -23,8 +23,13 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.Query;
 
@@ -83,6 +88,76 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 
 		return results;
 	}
+	
+	public List<Measurement> findByDemographicNo(Integer demographicNo) {
+		String sqlCommand = "select x from Measurement x where x.demographicId = ?1";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, demographicNo);
+		
+		@SuppressWarnings("unchecked")
+		List<Measurement> results = query.getResultList();
+
+		return results;
+	}
+	
+	public List<Measurement> findByDemographicNoAndType(Integer demographicNo, String type) {
+		String sqlCommand = "select x from Measurement x where x.demographicId = ?1 and x.type=?2";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, demographicNo);
+		query.setParameter(2, type);
+		
+		@SuppressWarnings("unchecked")
+		List<Measurement> results = query.getResultList();
+
+		return results;
+	}
+	
+	public Measurement findLatestByDemographicNoAndType(int demographicNo, String type) {
+		List<Measurement> ms = findByDemographicNoAndType(demographicNo,type);
+		if(ms.size()==0)
+			return null;
+		Collections.sort(ms, Measurement.DateObservedComparator);
+		return ms.get(ms.size()-1);
+		
+	}
+	
+	
+	public List<Measurement> findByAppointmentNo(Integer appointmentNo) {
+		String sqlCommand = "select x from Measurement x where x.appointmentNo = ?1";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, appointmentNo);
+		
+		@SuppressWarnings("unchecked")
+		List<Measurement> results = query.getResultList();
+
+		return results;
+	}
+	
+	public List<Measurement> findByAppointmentNoAndType(Integer appointmentNo, String type) {
+		String sqlCommand = "select x from Measurement x where x.appointmentNo = ?1 and x.type = ?2";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, appointmentNo);
+		query.setParameter(2, type);
+		
+		@SuppressWarnings("unchecked")
+		List<Measurement> results = query.getResultList();
+
+		return results;
+	}
+	
+	public Measurement findLatestByAppointmentNoAndType(int appointmentNo, String type) {
+		List<Measurement> ms = findByAppointmentNoAndType(appointmentNo,type);
+		if(ms.size()==0)
+			return null;
+		Collections.sort(ms, Measurement.DateObservedComparator);
+		return ms.get(ms.size()-1);
+		
+	}
+	
 
 	public List<Measurement> findByDemographicIdObservedDate(Integer demographicId, Date startDate, Date endDate) {
 		String sqlCommand = "select x from Measurement x where x.demographicId=? and x.type!='' and x.dateObserved >? and x.dateObserved <? order by x.dateObserved desc";
@@ -116,7 +191,7 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Measurement> find(SearchCriteria criteria) {
-		Query query = entityManager.createQuery("FROM Measurements m WHERE m.demographicNo = :demographicNo " + "AND m.type= :type " + "AND m.dataField = :dataField " + "AND m.measuringInstruction = :measuringInstrc " + "AND m.comments = :comments " + "AND m.dateObserved = :dateObserved");
+		Query query = entityManager.createQuery("select m FROM Measurement m WHERE m.demographicId = :demographicNo " + "AND m.type= :type " + "AND m.dataField = :dataField " + "AND m.measuringInstruction = :measuringInstrc " + "AND m.comments = :comments " + "AND m.dateObserved = :dateObserved");
 		query.setParameter("demographicNo", criteria.getDemographicNo());
 		query.setParameter("type", criteria.getType());
 		query.setParameter("dataField", criteria.getDataField());
@@ -212,4 +287,85 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		query.setMaxResults(1);
 		return query.getResultList();
 	}
+	
+	
+	public HashMap<String, Measurement> getMeasurements(Integer demographicNo, String[] types) {
+		HashMap<String, Measurement> map = new HashMap<String, Measurement>();
+		String queryStr = "select m from Measurement m WHERE m.demographicId = :demographicNo AND m.type IN (:types) ORDER BY m.type,m.dateObserved";
+		Query query = entityManager.createQuery(queryStr);
+		query.setParameter("demographicId", demographicNo);
+		List<String> lst = new ArrayList<String>();
+		for(int x=0;x<types.length;x++) {
+			lst.add(types[x]);
+		}
+		query.setParameter("types", lst);
+		
+		
+		@SuppressWarnings("unchecked")
+		List<Measurement> results = query.getResultList();
+
+		for (Measurement m : results) {
+			map.put(m.getType(), m);
+		}
+		return map;
+	}
+	
+	public Set<Integer> getAppointmentNosByDemographicNoAndType(int demographicNo, String type, Date startDate, Date endDate) {
+		Map<Integer, Boolean> results = new HashMap<Integer, Boolean>();
+
+		String queryStr = "select m from  Measurement m WHERE m.demographicId = " + demographicNo + " and m.type=? and m.dateObserved>=? and m.dateObserved<=? ORDER BY m.dateObserved DESC";
+		Query query = entityManager.createQuery(queryStr);
+		query.setParameter(1, demographicNo);
+		query.setParameter(2, type);
+		query.setParameter(3, startDate);
+		query.setParameter(4, endDate);
+		
+		@SuppressWarnings("unchecked")
+		List<Measurement> rs = query.getResultList();
+		for (Measurement m : rs) {
+			results.put(m.getAppointmentNo(), true);
+		}
+
+		return results.keySet();
+	}
+	
+	public HashMap<String, Measurement> getMeasurementsPriorToDate(String demographicNo, Date d) {
+		String queryStr = "select m From Measurement m WHERE m.demographicId = " + demographicNo + " AND m.dateObserved <= ?";
+		Query query = entityManager.createQuery(queryStr);
+		query.setParameter(1, demographicNo);
+		query.setParameter(2, d);
+		
+		@SuppressWarnings("unchecked")
+    	List<Measurement> rs = query.getResultList();
+		
+    	HashMap<String,Measurement> map = new HashMap<String,Measurement>();
+
+    	for(Measurement m:rs) {
+    		map.put(m.getType(), m);
+    	}
+
+    	return map;
+	}
+	
+	public List<Date> getDatesForMeasurements(String demographicNo, String[] types) {
+		List<String> lst = new ArrayList<String>();
+		
+    	for(String type:types) {
+    		lst.add(type);
+    	}
+
+		String queryStr = "SELECT DISTINCT m.dateObserved FROM Measurement m WHERE m.demographicId = :demographicNo AND m.type IN (:types) ORDER BY m.dateObserved DESC";
+		
+		Query query = entityManager.createQuery(queryStr);
+		query.setParameter("demographicNo",demographicNo);
+		query.setParameter("types", lst);
+		
+		@SuppressWarnings("unchecked")
+		List<Date> results = query.getResultList();
+
+		return results;
+	}
+	
+	
+
 }

@@ -67,6 +67,7 @@ import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.dao.DocumentResultsDao;
 import org.oscarehr.common.dao.EFormGroupDao;
 import org.oscarehr.common.dao.EFormValueDao;
+import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.dao.SiteDao;
@@ -80,6 +81,7 @@ import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.common.model.Document;
 import org.oscarehr.common.model.EFormGroup;
 import org.oscarehr.common.model.EFormValue;
+import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Site;
@@ -108,8 +110,6 @@ import org.springframework.beans.BeanUtils;
 
 import oscar.OscarProperties;
 import oscar.SxmlMisc;
-import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsDao;
-import oscar.oscarEncounter.oscarMeasurements.model.Measurements;
 import oscar.util.UtilDateUtilities;
 
 import com.lowagie.text.DocumentException;
@@ -135,13 +135,12 @@ public class EyeformAction extends DispatchAction {
 	EyeformTestBookDao testBookDao = SpringUtils.getBean(EyeformTestBookDao.class);
 	EyeFormDao eyeFormDao = SpringUtils.getBean(EyeFormDao.class);
 	
-	MeasurementsDao measurementsDao = (MeasurementsDao) SpringUtils.getBean("measurementsDao");
+	MeasurementDao measurementDao = SpringUtils.getBean(MeasurementDao.class);
 	ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
 	BillingreferralDao billingreferralDao = (BillingreferralDao) SpringUtils.getBean("billingreferralDao");
 	ClinicDAO clinicDao = (ClinicDAO)SpringUtils.getBean("clinicDAO");
 	SiteDao siteDao = (SiteDao)SpringUtils.getBean("siteDao");
 	TicklerDAO ticklerDao = (TicklerDAO)SpringUtils.getBean("ticklerDAOT");
-	//CppMeasurementsDao cppMeasurementsDao = (CppMeasurementsDao)SpringUtils.getBean("cppMeasurementsDao");
 	CaseManagementIssueNotesDao caseManagementIssueNotesDao=(CaseManagementIssueNotesDao)SpringUtils.getBean("caseManagementIssueNotesDao");
 	DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
 
@@ -383,7 +382,6 @@ public class EyeformAction extends DispatchAction {
            request.setAttribute("probooking", StringEscapeUtils.escapeJavaScript(probook.toString()));
 
            //measurements
-           MeasurementsDao measurementsDao = (MeasurementsDao) SpringUtils.getBean("measurementsDao");
            if(requestId > 0) {
         	   String tmp = consultationRequestExtDao.getConsultationRequestExtsByKey(requestId, "specialProblem");
         	   request.setAttribute("specialProblem", StringEscapeUtils.escapeJavaScript(tmp));
@@ -395,7 +393,7 @@ public class EyeformAction extends DispatchAction {
 	   }
 
 	   public String getFormattedCppItemFromMeasurements(String header, String measurementType, int demographicNo, int appointmentNo, boolean includePrevious) {
-		  Measurements measurement = measurementsDao.getLatestMeasurementByDemographicNoAndType(demographicNo,measurementType);
+		  Measurement measurement = measurementDao.findLatestByAppointmentNoAndType(demographicNo,measurementType);
 		  if(measurement == null) {
 			  return new String();
 		  }
@@ -570,7 +568,7 @@ public class EyeformAction extends DispatchAction {
 				printer.printRx(String.valueOf(demographic.getDemographicNo()));
 
 				//measurements
-				List<Measurements> measurements = measurementsDao.getMeasurementsByAppointment(appointmentNo);
+				List<Measurement> measurements = measurementDao.findByAppointmentNo(appointmentNo);
 				if(measurements.size()>0) {
 /*
 					if(cppFromMeasurements) {
@@ -655,9 +653,9 @@ public class EyeformAction extends DispatchAction {
 		}
 
 
-	   public int getNumMeasurementsWithoutCpp(List<Measurements> measurements) {
-		   List<Measurements> filtered = new ArrayList<Measurements>();
-		   for(Measurements m:measurements) {
+	   public int getNumMeasurementsWithoutCpp(List<Measurement> measurements) {
+		   List<Measurement> filtered = new ArrayList<Measurement>();
+		   for(Measurement m:measurements) {
 			   if(m.getType().startsWith("cpp_")) {
 				   continue;
 			   }
@@ -680,7 +678,7 @@ public class EyeformAction extends DispatchAction {
 	   }
 
 	   public void printCppItemFromMeasurements(PdfRecordPrinter printer, String header, String measurementType, int demographicNo, int appointmentNo, boolean includePrevious) throws DocumentException {
-			  Measurements measurement = measurementsDao.getLatestMeasurementByDemographicNoAndType(demographicNo,measurementType);
+			  Measurement measurement = measurementDao.findLatestByDemographicNoAndType(demographicNo,measurementType);
 			  if(measurement == null) {
 				  return;
 			  }
@@ -715,9 +713,9 @@ public class EyeformAction extends DispatchAction {
 		   return filteredNotes;
 	   }
 
-	   public List<Measurements> filterMeasurementsByAppointment(List<Measurements> measurements, int appointmentNo) {
-		   List<Measurements> filteredMeasurements = new ArrayList<Measurements>();
-		   for(Measurements measurement:measurements) {
+	   public List<Measurement> filterMeasurementsByAppointment(List<Measurement> measurements, int appointmentNo) {
+		   List<Measurement> filteredMeasurements = new ArrayList<Measurement>();
+		   for(Measurement measurement:measurements) {
 			   if(measurement.getAppointmentNo() == appointmentNo) {
 				   filteredMeasurements.add(measurement);
 			   }
@@ -725,9 +723,9 @@ public class EyeformAction extends DispatchAction {
 		   return filteredMeasurements;
 	   }
 
-	   public List<Measurements> filterMeasurementsByPreviousOrCurrentAppointment(List<Measurements> measurements, int appointmentNo) {
-		   List<Measurements> filteredMeasurements = new ArrayList<Measurements>();
-		   for(Measurements measurement:measurements) {
+	   public List<Measurement> filterMeasurementsByPreviousOrCurrentAppointment(List<Measurement> measurements, int appointmentNo) {
+		   List<Measurement> filteredMeasurements = new ArrayList<Measurement>();
+		   for(Measurement measurement:measurements) {
 			   if(measurement.getAppointmentNo() <= appointmentNo) {
 				   filteredMeasurements.add(measurement);
 			   }
@@ -1507,7 +1505,7 @@ public class EyeformAction extends DispatchAction {
 				headerMap.put(values[x],true);
 			}
 
-			List<Measurements> measurements = measurementsDao.getMeasurementsByAppointment(Integer.parseInt(appointmentNo));
+			List<Measurement> measurements = measurementDao.findByAppointmentNo(Integer.parseInt(appointmentNo));
 			MeasurementFormatter formatter = new MeasurementFormatter(measurements);
 			exam.append(formatter.getVisionAssessment(headerMap));
 			String tmp = null;

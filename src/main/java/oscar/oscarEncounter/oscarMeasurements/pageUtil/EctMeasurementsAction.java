@@ -253,7 +253,8 @@ public class EctMeasurementsAction extends Action {
                             	m.setDataField(inputValue);
                             	m.setMeasuringInstruction(mInstrc);
                             	m.setComments(comments);
-                            	m.setDateObserved(ConversionUtils.fromTimestampString(dateObserved));
+                            	m.setDateObserved(ConversionUtils.fromDateString(dateObserved));
+                            	m.setAppointmentNo(0);
                             	dao.persist(m);
                                 
                                 //prepare input values for writing to the encounter form
