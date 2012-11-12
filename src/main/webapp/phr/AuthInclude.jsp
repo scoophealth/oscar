@@ -95,7 +95,7 @@ PHRAuthentication phrAuth = (PHRAuthentication) session.getAttribute(PHRAuthenti
    </style>
    <logic:present name="<%=PHRAuthentication.SESSION_PHR_AUTH%>">
        <div class="myoscarLoginElementAuth">
-           Status: <b>Logged in as <%=providerName%></b> (<%=phrAuth.getUserId()%>)<br/>
+           Status: <b>Logged in as <%=providerName%></b><br/>
            <form action="<%=request.getContextPath()%>/phr/Logout.do" name="phrLogout" method="POST">
                <input type="hidden" name="forwardto" value="<%=(String) request.getAttribute("forwardto")%>">
                <center><a href="javascript:;" onclick="document.forms['phrLogout'].submit();">Logout</a></center>

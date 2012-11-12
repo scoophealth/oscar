@@ -31,7 +31,6 @@ import javax.persistence.Transient;
 
 import org.indivo.xml.attributes.RoleType;
 import org.indivo.xml.phr.types.AuthorType;
-import org.indivo.xml.talk.AuthenticateResultType;
 
 import oscar.oscarEncounter.data.EctProviderData;
 
@@ -39,7 +38,6 @@ public final class PHRAuthentication
 {
 	public static final String SESSION_PHR_AUTH = "PHR_AUTH";
 
-	AuthenticateResultType authResult = null;
 	String providerNo = null;
 
 	private Long myOscarUserId;
@@ -51,26 +49,6 @@ public final class PHRAuthentication
 	public PHRAuthentication()
 	{
 		// nothing for now
-	}
-
-	public PHRAuthentication(AuthenticateResultType authResult)
-	{
-		this.authResult = authResult;
-	}
-	
-	public String getToken()
-	{
-		return authResult.getActorTicket();
-	}
-
-	public String getUserId()
-	{
-		return authResult.getActorId();
-	}
-
-	public String getRole()
-	{
-		return authResult.getCurrentRole();
 	}
 
 	public Date getExpirationDate()
@@ -114,11 +92,9 @@ public final class PHRAuthentication
 	{
 		org.indivo.xml.phr.types.ObjectFactory objectFactory = new org.indivo.xml.phr.types.ObjectFactory();
 		AuthorType authorType = objectFactory.createAuthorType();
-		authorType.setIndivoId(this.getUserId());
 		authorType.setName(this.getNamePHRFormat());
 		org.indivo.xml.attributes.ObjectFactory attributeObjectFactory = new org.indivo.xml.attributes.ObjectFactory();
 		RoleType roleType = attributeObjectFactory.createRoleType();
-		roleType.setValue(this.getRole());
 		authorType.setRole(roleType);
 		return authorType;
 	}
