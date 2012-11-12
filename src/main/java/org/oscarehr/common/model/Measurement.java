@@ -26,6 +26,7 @@
 package org.oscarehr.common.model;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -154,4 +155,17 @@ public class Measurement extends AbstractModel<Integer> implements Serializable 
 	public Date getCreateDate() {
 		return (createDate);
 	}
+	
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+	
+	   public static final Comparator<Measurement> DateObservedComparator = new Comparator<Measurement>() {
+	        public int compare(Measurement o1, Measurement o2) {
+	        	if(o1.getId()!=null && o2.getId() != null) {
+	        		return o1.getDateObserved().compareTo(o2.getDateObserved());
+	        	}
+	        	return 0;
+	        }
+	    };
 }

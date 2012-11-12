@@ -46,19 +46,19 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.Measurement;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsDao;
-import oscar.oscarEncounter.oscarMeasurements.model.Measurements;
 import oscar.util.StringUtils;
 
 public class ExaminationHistoryAction extends DispatchAction {
 
 	Logger logger = MiscUtils.getLogger();	
-	protected MeasurementsDao measurementsDao = (MeasurementsDao) SpringUtils.getBean("measurementsDao");
+	protected MeasurementDao measurementsDao = SpringUtils.getBean(MeasurementDao.class);
 	DemographicDao demographicDao= (DemographicDao)SpringUtils.getBean("demographicDao");
 	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
 	
@@ -72,37 +72,7 @@ public class ExaminationHistoryAction extends DispatchAction {
 		String demographicNo = request.getParameter("demographicNo");		
 		request.setAttribute("demographic",demographicDao.getClientByDemographicNo(Integer.parseInt(demographicNo)));
 
-		/*
-		List<String> mapList = new ArrayList<String>();
-		String refPage = request.getParameter("refPage");
-
-		if (refPage == null || "".equalsIgnoreCase(refPage)) {
-			List examList = getEyeFormMgr().getUniqExamHis(fromdate, todate,
-					demoNo);
-			// create result map by selected fields
-
-			List relist = createMapListBySelect(selected, examList);
-			mapList = (List) relist.get(0);
-			List emptyFlagMap = (List) relist.get(1);
-			request.getSession().setAttribute("eyeExamMapList", mapList);
-			request.getSession().setAttribute("eyeExamFlag", emptyFlagMap);
-			request.getSession().setAttribute("complexFlag", relist.get(2));
-			int temps = mapList.size();
-			int p = ((temps % 5) == 0) ? temps / 5 : temps / 5 + 1;
-			request.getSession().setAttribute("totalpage", new Integer(p));
-			refPage = "1";
-		} else {
-			mapList = (List) request.getSession()
-					.getAttribute("eyeExamMapList");
-
-		}
-
-		// 5 days per page
-		request.getSession().setAttribute("curPage", refPage);
-		
-		// set date, if null, set default,one year before to today
-		return mapping.findForward("examHis");
-		 */
+	
 		return mapping.findForward("success");	   
 	}
 	
@@ -186,12 +156,12 @@ public class ExaminationHistoryAction extends DispatchAction {
 		//narrow the window using the refpage variable (page number)
 		appointments = filterByRefPage(appointments,refPage);
 		
-		Measurements simpleFields[][] = new Measurements[simpleFieldNames.size()][appointments.size()];				
+		Measurement simpleFields[][] = new Measurement[simpleFieldNames.size()][appointments.size()];				
 		for(int x=0;x<simpleFields.length;x++) {
 			for(int y=0;y<simpleFields[x].length;y++) {				
 				String field =simpleFieldNames.get(x);
 				int apptId = appointments.get(y).getId();				
-				Measurements m = measurementsDao.getLatestMeasurementByAppointment(apptId, field);	
+				Measurement m = measurementsDao.findLatestByAppointmentNoAndType(apptId, field);	
 				simpleFields[x][y] = m;
 			}
 		}
@@ -212,19 +182,19 @@ public class ExaminationHistoryAction extends DispatchAction {
 			List<Appointment> appts = this.getAppointmentsForAr(demographicNo, startDate, endDate);
 			for(Appointment appt:appts) {
 				Map<String,String> map = new HashMap<String,String>();
-				Measurements m = null;
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"od_ar_sph");
+				Measurement m = null;
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"od_ar_sph");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("od_ar_sph", "");}
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"od_ar_cyl");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"od_ar_cyl");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("od_ar_cyl", "");}
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"od_ar_axis");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"od_ar_axis");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("od_ar_axis", "");}
 				
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"os_ar_sph");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"os_ar_sph");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("os_ar_sph", "");}
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"os_ar_cyl");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"os_ar_cyl");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("os_ar_cyl", "");}
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"os_ar_axis");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"os_ar_axis");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("os_ar_axis", "");}
 				SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 				map.put("date", formatter.format(appt.getAppointmentDate()));
@@ -239,19 +209,19 @@ public class ExaminationHistoryAction extends DispatchAction {
 			List<Appointment> appts = this.getAppointmentsForK(demographicNo, startDate, endDate);
 			for(Appointment appt:appts) {
 				Map<String,String> map = new HashMap<String,String>();
-				Measurements m = null;
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"od_k1");
+				Measurement m = null;
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"od_k1");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("od_k1", "");}
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"od_k2");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"od_k2");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("od_k2", "");}
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"od_k2_axis");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"od_k2_axis");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("od_k2_axis", "");}
 				
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"os_k1");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"os_k1");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("os_k1", "");}
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"os_k2");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"os_k2");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("os_k2", "");}
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"os_k2_axis");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"os_k2_axis");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("os_k2_axis", "");}
 								
 				SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -267,23 +237,23 @@ public class ExaminationHistoryAction extends DispatchAction {
 			List<Appointment> appts = this.getAppointmentsForManifestRefraction(demographicNo, startDate, endDate);
 			for(Appointment appt:appts) {
 				Map<String,String> map = new HashMap<String,String>();
-				Measurements m = null;
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"od_manifest_refraction_sph");
+				Measurement m = null;
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"od_manifest_refraction_sph");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("od_manifest_refraction_sph", "");}
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"od_manifest_refraction_cyl");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"od_manifest_refraction_cyl");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("od_manifest_refraction_cyl", "");}
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"od_manifest_refraction_axis");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"od_manifest_refraction_axis");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("od_manifest_refraction_axis", "");}
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"od_manifest_refraction_add");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"od_manifest_refraction_add");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("od_manifest_refraction_add", "");}
 				
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"os_manifest_refraction_sph");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"os_manifest_refraction_sph");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("os_manifest_refraction_sph", "");}
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"os_manifest_refraction_cyl");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"os_manifest_refraction_cyl");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("os_manifest_refraction_cyl", "");}
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"os_manifest_refraction_axis");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"os_manifest_refraction_axis");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("os_manifest_refraction_axis", "");}
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"os_manifest_refraction_add");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"os_manifest_refraction_add");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("os_manifest_refraction_add", "");}
 				
 				SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -299,23 +269,23 @@ public class ExaminationHistoryAction extends DispatchAction {
 			List<Appointment> appts = this.getAppointmentsForCycloplegicRefraction(demographicNo, startDate, endDate);
 			for(Appointment appt:appts) {
 				Map<String,String> map = new HashMap<String,String>();
-				Measurements m = null;
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"od_cycloplegic_refraction_sph");
+				Measurement m = null;
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"od_cycloplegic_refraction_sph");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("od_cycloplegic_refraction_sph", "");}
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"od_cycloplegic_refraction_cyl");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"od_cycloplegic_refraction_cyl");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("od_cycloplegic_refraction_cyl", "");}
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"od_cycloplegic_refraction_axis");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"od_cycloplegic_refraction_axis");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("od_cycloplegic_refraction_axis", "");}
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"od_cycloplegic_refraction_add");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"od_cycloplegic_refraction_add");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("od_cycloplegic_refraction_add", "");}
 				
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"os_cycloplegic_refraction_sph");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"os_cycloplegic_refraction_sph");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("os_cycloplegic_refraction_sph", "");}
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"os_cycloplegic_refraction_cyl");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"os_cycloplegic_refraction_cyl");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("os_cycloplegic_refraction_cyl", "");}
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"os_cycloplegic_refraction_axis");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"os_cycloplegic_refraction_axis");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("os_cycloplegic_refraction_axis", "");}
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"os_cycloplegic_refraction_add");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"os_cycloplegic_refraction_add");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("os_cycloplegic_refraction_add", "");}
 				
 				SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -331,27 +301,27 @@ public class ExaminationHistoryAction extends DispatchAction {
 			List<Appointment> appts = this.getAppointmentsForCycloplegicRefraction(demographicNo, startDate, endDate);
 			for(Appointment appt:appts) {
 				Map<String,String> map = new HashMap<String,String>();
-				Measurements m = null;
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"od_angle_up");
+				Measurement m = null;
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"od_angle_up");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("od_angle_up", "");}
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"od_angle_middle0");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"od_angle_middle0");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("od_angle_middle0", "");}
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"od_angle_middle1");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"od_angle_middle1");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("od_angle_middle1", "");}
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"od_angle_middle2");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"od_angle_middle2");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("od_angle_middle2", "");}
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"od_angle_down");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"od_angle_down");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("od_angle_down", "");}
 
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"os_angle_up");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"os_angle_up");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("os_angle_up", "");}
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"os_angle_middle0");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"os_angle_middle0");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("os_angle_middle0", "");}
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"os_angle_middle1");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"os_angle_middle1");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("os_angle_middle1", "");}
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"os_angle_middle2");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"os_angle_middle2");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("os_angle_middle2", "");}
-				m = measurementsDao.getLatestMeasurementByAppointment(appt.getId(),"os_angle_down");
+				m = measurementsDao.findLatestByAppointmentNoAndType(appt.getId(),"os_angle_down");
 				if(m!=null){map.put(m.getType(), m.getDataField());}else{map.put("os_angle_down", "");}
 				
 				SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");

@@ -26,6 +26,7 @@ package org.oscarehr.common.dao;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -82,5 +83,39 @@ public class MeasurementDaoTest extends DaoTestFixtures {
 
 		List<Measurement> m = dao.findByIdTypeAndInstruction(999, "TIPPITIP", "MSRNIGINSRCTIONS");
 		assertFalse(m.isEmpty());
+	}
+	
+	@Test
+	public void testFindByDemographicIdUpdatedAfterDate() {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, -1);
+		
+		Measurement m = new Measurement();
+		m.setDemographicId(1);
+		m.setAppointmentNo(100);
+		m.setComments("NUIOBLAHA");
+		m.setDataField("DTATAHEROVATA");
+		m.setDateObserved(cal.getTime());
+		m.setCreateDate(cal.getTime());
+		m.setMeasuringInstruction("MSRNIGINSRCTIONS");
+		m.setProviderNo("PRVDRE");
+		m.setType("TIPPITIP");
+		dao.persist(m);
+		
+		m = new Measurement();
+		m.setDemographicId(1);
+		m.setAppointmentNo(100);
+		m.setComments("NUIOBLAHA");
+		m.setDataField("DTATAHEROVATA");
+		m.setDateObserved(new Date());
+		m.setMeasuringInstruction("MSRNIGINSRCTIONS");
+		m.setProviderNo("PRVDRE");
+		m.setType("TIPPITIP");
+		dao.persist(m);
+		
+		cal = Calendar.getInstance();
+		cal.add(Calendar.MONTH, -1);
+		
+		assertEquals(1,dao.findByDemographicIdUpdatedAfterDate(1, cal.getTime()).size());
 	}
 }
