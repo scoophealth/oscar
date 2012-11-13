@@ -126,16 +126,13 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
   dbQueries=new String[][] {
     {"provider_search_titlename", "select provider_no,first_name,last_name,specialty,sex,team,phone,status from provider where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
     {"provider_search_detail", "select * from provider where provider_no=?"},
-    {"search_provider_doc", "select * from provider where provider_type='doctor' and status='1' order by last_name"},
 
     {"demographic_search_titlename", "select demographic_no,first_name,last_name,roster_status,sex,year_of_birth,month_of_birth,date_of_birth  from demographic where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
     {"demographic_search_merged", "select d.demographic_no,first_name,last_name,roster_status,sex,year_of_birth,month_of_birth,date_of_birth  from demographic d join demographic_merged dm on d.demographic_no = dm.demographic_no and dm.deleted = 0 where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
     {"demographic_search_detail", "select * from demographic where demographic_no=?"},
     {"demographic_search_detail_ptbr", "select * from demographic d left outer join demographic_ptbr dptbr on dptbr.demographic_no = d.demographic_no where d.demographic_no=?"},
     {"demographic_search_demoaddno", "select demographic_no from demographic where last_name=? and first_name =? and year_of_birth=? and month_of_birth=? and date_of_birth=? and hin=? and ver=?"},
-    {"search_lastfirstnamedob", "select demographic_no from demographic where last_name=? and first_name=? and year_of_birth=? and month_of_birth=? and date_of_birth=?"},
 
-    {"searchmygroupprovider", "select provider_no, last_name, first_name from mygroup where mygroup_no=? "},
     {"searchprovider", "select provider_no, last_name, first_name from provider where provider_type='doctor' and status='1' order by last_name"},
     {"searchproviderall", "select provider_no, last_name, first_name from provider where status='1' order by last_name"},
 
@@ -150,15 +147,12 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
 	dbQueries=new String[][] {
     {"provider_search_titlename", "select provider_no,first_name,last_name,specialty,sex,team,phone,status from provider where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
     {"provider_search_detail", "select * from provider where provider_no=?"},
-    {"search_provider_doc", "select * from provider where provider_type='doctor' and status='1' order by last_name"},
 
     {"demographic_search_titlename", "select demographic_no,first_name,last_name,roster_status,sex,year_of_birth,month_of_birth,date_of_birth  from demographic where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
     {"demographic_search_merged", "select d.demographic_no,first_name,last_name,roster_status,sex,year_of_birth,month_of_birth,date_of_birth  from demographic d join demographic_merged dm on d.demographic_no = dm.demographic_no and dm.deleted = 0 where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
     {"demographic_search_detail", "select * from demographic where demographic_no=?"},
     {"demographic_search_demoaddno", "select demographic_no from demographic where last_name=? and first_name =? and year_of_birth=? and month_of_birth=? and date_of_birth=? and hin=? and ver=?"},
-    {"search_lastfirstnamedob", "select demographic_no from demographic where last_name=? and first_name=? and year_of_birth=? and month_of_birth=? and date_of_birth=?"},
 
-    {"searchmygroupprovider", "select provider_no, last_name, first_name from mygroup where mygroup_no=? "},
     {"searchprovider", "select provider_no, last_name, first_name from provider where provider_type='doctor' and status='1' order by last_name"},
     {"searchproviderall", "select provider_no, last_name, first_name from provider where status='1' order by last_name"},
         
