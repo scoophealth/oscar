@@ -25,6 +25,8 @@
 
 package org.oscarehr.common.dao;
 
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.MdsZMN;
 import org.springframework.stereotype.Repository;
 
@@ -34,4 +36,18 @@ public class MdsZMNDao extends AbstractDao<MdsZMN>{
 	public MdsZMNDao() {
 		super(MdsZMN.class);
 	}
+
+	public MdsZMN findBySegmentIdAndReportName(Integer id, String reportName) {
+		Query query = createQuery("z", "z.id = :id AND z.reportName = :reportName");
+		query.setParameter("id", id);
+		query.setParameter("reportName", reportName);
+		return getSingleResultOrNull(query);
+    }
+
+	public MdsZMN findBySegmentIdAndResultMnemonic(Integer id, String rm) {
+	    Query query = createQuery("z", "z.id = :id and z.resultMnemonic = :rm");
+	    query.setParameter("id", id);
+	    query.setParameter("rm", rm);
+	    return getSingleResultOrNull(query);
+    }
 }

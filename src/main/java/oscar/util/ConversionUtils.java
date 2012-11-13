@@ -89,7 +89,17 @@ public class ConversionUtils {
 		return toDateString(timestamp, DEFAULT_TS_PATTERN);
 	}
 
-	private static Date fromDateString(String dateString, String formatPattern) {
+	/**
+	 * Parses the date string using the specified format pattern 
+	 * 
+	 * @param dateString
+	 * 		Date string to be parsed
+	 * @param formatPattern
+	 * 		Format pattern to use for parsing
+	 * @return
+	 * 		Returns the parsed date or null if the date can't be parsed
+	 */
+	public static Date fromDateString(String dateString, String formatPattern) {
 		if (dateString == null || "".equals(dateString.trim())) return null;
 
 		SimpleDateFormat format = new SimpleDateFormat(formatPattern);

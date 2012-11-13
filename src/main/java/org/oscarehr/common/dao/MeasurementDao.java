@@ -366,6 +366,73 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		return results;
 	}
 	
-	
+	/**
+	 * Finds abnormal measurements for the specified patient
+	 * 
+	 * @param demoNo
+	 * 		Patient ID
+	 * @param loincCode
+	 * 		LOINC Code
+	 * @return
+	 * 		Returns a list of tuples containing record data, observation date, lab no, abnormal value.
+	 */
+	@SuppressWarnings("unchecked")
+    public List<Object[]> findMeasurementsByDemographicIdAndLocationCode(Integer demoNo, String loincCode) {
+		String sql = "SELECT m.dataField, m.dateObserved, e1.val, e3.val " +
+				"FROM Measurement m, MeasurementsExt e1, MeasurementsExt e2, MeasurementsExt e3, MeasurementMap mm " +
+				"WHERE m.id = e1.measurementId " +
+				"AND e1.keyVal = 'lab_no' " +
+				"AND m.id = e2.measurementId " +
+				"AND e2.keyVal = 'identifier' " +
+				"AND m.id = e3.measurementId " +
+				"AND e3.keyVal = 'abnormal' " +
+				"AND e2.val = mm.identCode " +
+				"AND mm.loincCode = :loincCode " +
+				"AND m.demographicId = :demoNo " +
+				"ORDER BY m.dateObserved DESC";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("demoNo", demoNo);
+		query.setParameter("loincCode", loincCode);
+		return query.getResultList();	    
+    }
+    
+	@SuppressWarnings("unchecked")
+    public List<Object[]> findMeasurementsWithIdentifiersByDemographicIdAndLocationCode(Integer demoNo, String loincCode) {
+		String sql = "SELECT m.dataField, m.dateObserved, e1.val, e3.val, e4.val " + 
+				"FROM Measurement m, MeasurementsExt e1, MeasurementsExt e2, MeasurementsExt e3, MeasurementsExt e4, MeasurementMap mm " +
+				"WHERE m.id = e1.measurementId " +
+				"AND e1.keyVal = 'lab_no' " +
+				"AND m.id = e2.measurementId " +
+				"AND e2.keyVal='identifier'" +
+				"AND m.id = e4.measurementId " +
+				"AND e4.keyVal='identifier' " +
+				"AND m.id = e3.measurementId " +
+				"AND e3.keyVal='abnormal' " + 
+				"AND e2.val = mm.identCode " +
+				"AND mm.loincCode = :loincCode " +
+				"AND m.demographicId = :demoNo " +
+				"ORDER BY m.dateObserved DESC";
+		
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("demoNo", demoNo);
+		query.setParameter("loincCode", loincCode);
+		return query.getResultList();
+	    
+    }
 
+	@SuppressWarnings("unchecked")
+    public List<Object> findLabNumbers(Integer demoNo, String identCode) {
+		String sql = "SELECT DISTINCT e2.val FROM Measurement m, MeasurementsExt e1, MeasurementsExt e2 " +
+				"WHERE m.id = e1.measurementId " +
+				"AND e1.keyVal = 'identifier' " +
+				"AND m.id = e2.measurementId " +
+				"AND e2.keyVal = 'lab_no' " +
+				"AND e1.val= :identCode " +
+				"AND m.demographicId = :demoNo";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("identCode", identCode);
+		query.setParameter("demoNo", demoNo);
+		return query.getResultList();
+    }
+	
 }

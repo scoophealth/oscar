@@ -23,60 +23,28 @@
  */
 package org.oscarehr.common.dao;
 
-import static org.junit.Assert.assertNotNull;
-
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
-import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
-import org.oscarehr.common.model.LabTestResults;
 import org.oscarehr.util.SpringUtils;
 
-public class LabTestResultsDaoTest extends DaoTestFixtures {
+public class MdsZMNDaoTest extends DaoTestFixtures {
 
-	private LabTestResultsDao dao = SpringUtils.getBean(LabTestResultsDao.class);
-
-	public LabTestResultsDaoTest() {
-	}
+	private MdsZMNDao dao = SpringUtils.getBean(MdsZMNDao.class);
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("labTestResults", "patientLabRouting", "labPatientPhysicianInfo");
+		SchemaUtils.restoreTable("mdsZMN");
 	}
 
 	@Test
-	public void testCreate() throws Exception {
-		LabTestResults entity = new LabTestResults();
-		EntityDataGenerator.generateTestDataForModelClass(entity);
-		dao.persist(entity);
-
-		assertNotNull(entity.getId());
+	public void testFindBySegmentIdAndReportName() {
+		dao.findBySegmentIdAndReportName(100, "CDE");
 	}
 
 	@Test
-	public void testFindByTitleAndLabInfoId() {
-		List<LabTestResults> results = dao.findByTitleAndLabInfoId(100);
-		assertNotNull(results);
+	public void testFindBySegmentIdAndResultMnemonic() {
+		dao.findBySegmentIdAndResultMnemonic(100, "CDE");
 	}
-
-	@Test
-	public void testFindByLabInfoId() {
-		List<LabTestResults> results = dao.findByLabInfoId(100);
-		assertNotNull(results);
-	}
-
-	@Test
-	public void testFindByAbnAndLabInfoId() {
-		List<LabTestResults> results = dao.findByAbnAndLabInfoId("A", 100);
-		assertNotNull(results);
-	}
-	
-	@Test
-	public void testFindUniqueTestNames() {
-		List<Object[]> results = dao.findUniqueTestNames(100, "CML");
-		assertNotNull(results);
-	} 
 
 }

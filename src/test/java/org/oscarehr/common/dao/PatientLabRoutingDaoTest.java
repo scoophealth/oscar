@@ -23,11 +23,8 @@
  */
 package org.oscarehr.common.dao;
 
-import static junit.framework.Assert.fail;
+import static org.junit.Assert.assertNotNull;
 
-import javax.persistence.PersistenceException;
-
-import org.hibernate.HibernateException;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.SchemaUtils;
@@ -39,29 +36,43 @@ public class PatientLabRoutingDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("patientLabRouting");
+		SchemaUtils.restoreTable("patientLabRouting", "labTestResults", "labPatientPhysicianInfo", "mdsOBX", "mdsMSH", "hl7_msh", "hl7_pid", "hl7_obr", "hl7_obx", "hl7_orc");
 	}
 
 	@Test
 	public void testFindDemographicByLabId() {
-		try {
-			dao.findDemographicByLabId(1);
-		} catch (HibernateException e) {
-			fail();
-		} catch (PersistenceException e) {
-			fail();
-		}
+		dao.findDemographicByLabId(1);
 	}
 
 	@Test
 	public void testFindDemographic() {
-		try {
-			dao.findDemographics("TYPE", 10);
-		} catch (HibernateException e) {
-			fail();
-		} catch (PersistenceException e) {
-			fail();
-		}
+		dao.findDemographics("TYPE", 10);
+	}
+
+	@Test
+	public void testFindUniqueTestNames() {
+		assertNotNull(dao.findUniqueTestNames(100, "MDS"));
+	}
+
+	@Test
+	public void testFindUniqueTestNamesForPatientExcelleris() {
+		assertNotNull(dao.findUniqueTestNamesForPatientExcelleris(100, "MDS"));
+	}
+
+	@Test
+	public void testFindByDemographicAndLabType() {
+		assertNotNull(dao.findByDemographicAndLabType(100, "MDS"));
+	}
+	
+	@Test
+	public void testFindRoutingsAndTests() {
+		assertNotNull(dao.findRoutingsAndTests(100, "MDS"));
+		assertNotNull(dao.findRoutingsAndTests(100, "MDS", "TEST"));
+	}
+	
+	@Test
+	public void testFindHl7InfoForRoutingsAndTests() {
+		assertNotNull(dao.findHl7InfoForRoutingsAndTests(100, "MDS", "TEST"));
 	}
 
 }

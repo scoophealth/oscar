@@ -28,6 +28,10 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import org.oscarehr.common.model.LabPatientPhysicianInfo;
+import org.oscarehr.common.model.LabTestResults;
+import org.oscarehr.common.model.MdsMSH;
+import org.oscarehr.common.model.MdsOBX;
 import org.oscarehr.common.model.PatientLabRouting;
 import org.springframework.stereotype.Repository;
 
@@ -81,14 +85,10 @@ public class PatientLabRoutingDao extends AbstractDao<PatientLabRouting> {
     	return q.getResultList();
     }
     
-    @SuppressWarnings("unchecked")
     public PatientLabRouting findByLabNo(int labNo) {
-
     	String query = "select x from " + modelClass.getName() + " x where x.labNo=?";
     	Query q = entityManager.createQuery(query);
-
     	q.setParameter(1, labNo);
-    	
     	return this.getSingleResultOrNull(q);
     }
     
@@ -102,6 +102,185 @@ public class PatientLabRoutingDao extends AbstractDao<PatientLabRouting> {
     	q.setParameter(2, labType);
     	
     	return q.getResultList();
+    }
+
+	/**
+	 * Finds unique test names for a patient
+	 * 
+	 * @param demoId
+	 * 		Demographic ID for the patient
+	 * @param labType
+	 * 		Lab type to find test for
+	 * @return
+	 * 		Returns a list of triples containing lab type, observation identifier and observation result status
+	 */
+	@SuppressWarnings("unchecked")
+    public List<Object[]> findUniqueTestNames(Integer demoId, String labType) {
+		String sql = "SELECT DISTINCT p.labType, x.observationIdentifier, x.observationResultStatus " +
+                "FROM MdsOBX x, MdsMSH m, PatientLabRouting p " +
+                "WHERE p.demographicNo = :demoNo " +
+                "AND m.id = p.labNo " +
+                "AND x.id = m.id " +
+                "AND p.labType = :labType";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("demoNo", demoId);
+		query.setParameter("labType", labType);
+		return query.getResultList();
+    }
+    
+	/**
+	 * Finds unique test names for a patient
+	 * 
+	 * @param demoId
+	 * 		Demographic ID for the patient
+	 * @param labType
+	 * 		Lab type to find test for
+	 * @return
+	 * 		Returns a list of triples containing {@link MdsOBX}, {@link MdsMSH}, {@link PatientLabRouting}
+	 */
+	@SuppressWarnings("unchecked")
+    public List<Object[]> findTests(Integer demoId, String labType) {
+		String sql = "FROM " + MdsOBX.class.getName() + " x, " +  MdsMSH.class.getName() + " m, PatientLabRouting p " +
+                "WHERE p.demographicNo = :demoNo " +
+                "AND m.id = p.labNo " +
+                "AND x.id = m.id " +
+                "AND p.labType = :labType";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("demoNo", demoId);
+		query.setParameter("labType", labType);
+		return query.getResultList();
+    }
+
+    /**
+	 * Finds unique test names for a patient
+	 * 
+	 * @param demoId
+	 * 		Demographic ID for the patient
+	 * @param labType
+	 * 		Lab type to find test for
+	 * @return
+	 * 		Returns a list of pairs containing lab type and observation identifier
+	 */
+    @SuppressWarnings("unchecked")
+    public List<Object[]> findUniqueTestNamesForPatientExcelleris(Integer demoNo, String labType) {
+		String sql = "SELECT DISTINCT p.labType, x.observationIdentifier " +
+				"FROM PatientLabRouting p, Hl7Msh m, Hl7Pid pi, Hl7Obr r, Hl7Obx x  " + 
+				"WHERE p.demographicNo = :demoNo " + 
+				"AND p.labNo = m.messageId " + 
+				"AND pi.messageId = m.messageId " + 
+				"AND r.id = pi.id " + 
+				"AND r.id = x.obrId " +
+				"AND p.labType = :labType";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("demoNo", demoNo);
+		query.setParameter("labType", labType);
+		return query.getResultList();
+    }
+
+	/**
+	 * Finds lab routings for the specified demographic and lab type
+	 * 
+	 * @param demoNo
+	 * 		Demographic to find labs for
+	 * @param labType
+	 * 		Type of the lab to get routings for
+	 * @return
+	 * 		Returns the routings found. 
+	 */
+	@SuppressWarnings("unchecked")
+    public List<PatientLabRouting> findByDemographicAndLabType(Integer demoNo, String labType) {
+		Query query = createQuery("r", "r.demographicNo = :demoNo AND r.labType = :labType");
+		query.setParameter("demoNo", demoNo);
+		query.setParameter("labType", labType);
+		return query.getResultList();	    
+    }
+	
+	/**
+	 * Finds all routings and tests for the specified demographic and lab
+	 * 
+	 * @param demoNo
+	 * 		Demographic to find tests for
+	 * @param labType
+	 * 		Lab type to find tests for
+	 * @return
+	 * 		Returns a list of triples containing {@link PatientLabRouting}, {@link LabTestResults}, {@link LabPatientPhysicianInfo}
+	 */
+	@SuppressWarnings("unchecked")
+    public List<Object[]> findRoutingsAndTests(Integer demoNo, String labType, String testName) {
+		String sql = "FROM PatientLabRouting p, " + LabTestResults.class.getSimpleName() + " ltr, " + LabPatientPhysicianInfo.class.getSimpleName() + " lpp WHERE " +
+				"p.labType = :labType " +
+				"AND p.demographicNo = :demoNo " +
+				"AND p.labNo = ltr.labPatientPhysicianInfoId " +
+				"AND ltr.testName = :testName " +
+		        "AND ltr.labPatientPhysicianInfoId = lpp.id " +
+		        "ORDER BY lpp.collectionDate";
+	    Query query = entityManager.createQuery(sql);
+	    query.setParameter("labType", labType);
+	    query.setParameter("demoNo", demoNo);
+	    query.setParameter("testName", testName);
+	    return query.getResultList();
+    }
+    
+	/**
+	 * Finds all routings and tests for the specified demographic and lab
+	 * 
+	 * @param demoNo
+	 * 		Demographic to find tests for
+	 * @param labType
+	 * 		Lab type to find tests for
+	 * @return
+	 * 		Returns a list of triples containing {@link PatientLabRouting}, {@link LabTestResults}, {@link LabPatientPhysicianInfo}
+	 */
+	@SuppressWarnings("unchecked")
+    public List<Object[]> findRoutingsAndTests(Integer demoNo, String labType) {
+		String sql = "FROM PatientLabRouting p, LabTestResults ltr, LabPatientPhysicianInfo lpp WHERE " +
+				"p.labType = :labType " +
+				"AND p.demographicNo = :demoNo " +
+				"AND p.labNo = ltr.labPatientPhysicianInfoId " +
+				"AND ltr.labPatientPhysicianInfoId = lpp.id " +
+				"AND ltr.testName <> '' " +
+		        "ORDER BY lpp.collectionDate";
+		
+	    Query query = entityManager.createQuery(sql);
+	    query.setParameter("labType", labType);
+	    query.setParameter("demoNo", demoNo);
+	    return query.getResultList();
+    }
+
+	@SuppressWarnings("unchecked")
+    public List<Object[]> findMdsRoutings(Integer demoNo, String testName, String labType) {
+		String sql = "FROM MdsOBX x, MdsMSH m, PatientLabRouting p " +
+				"WHERE p.labType = :labType " +
+				"AND p.demographicNo = :demoNo " + 
+				"AND p.observationIdentifier like :testName " + 
+				"AND x.id = m.id " +
+				"AND m.idId = p.labNo " +
+				"ORDER BY p.dateTime";
+		
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("demoNo", demoNo);
+		query.setParameter("testName", "%^" + testName + "%");
+		query.setParameter("labType", labType);
+		return query.getResultList();
+    }
+
+	@SuppressWarnings("unchecked")
+    public List<Object[]> findHl7InfoForRoutingsAndTests(Integer demoNo, String labType, String testName) {
+		String sql = "FROM PatientLabRouting p, Hl7Msh m, Hl7Pid pi, Hl7Obr r, Hl7Obx x, Hl7Orc c " +
+				"WHERE p.labType = :labType " +
+				"AND p.demographicNo = :demoNo " +
+				"AND x.observationIdentifier like :testName " +
+				"AND p.labNo = m.messageId " +
+				"AND pi.messageId = m.messageId " +
+				"AND r.pidId = pi.id " +
+				"AND c.pidId = pi.id " +
+				"AND r.id = x.id " +
+				"ORDER BY r.oberservationDateTime";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("demoNo", demoNo);
+		query.setParameter("labType", labType);
+		query.setParameter("testName", testName);
+		return query.getResultList();
     }
 
 }
