@@ -33,8 +33,6 @@
  */
 package oscar.oscarLab.ca.all.upload.handlers;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +42,6 @@ import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.util.OscarAuditLogger;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.oscarLab.ca.all.upload.MessageUploader;
 import oscar.oscarLab.ca.all.upload.RouteReportResults;
@@ -97,16 +94,17 @@ public class GDMLHandler implements MessageHandler {
 	}
 
 	// recheck the abnormal status of the last 'n' labs
-	private void updateLabStatus(int n) throws SQLException {
-		String sql = "SELECT lab_no, result_status FROM hl7TextInfo ORDER BY lab_no DESC";
+	private void updateLabStatus(int n) {
+		Hl7TextInfoDao dao = SpringUtils.getBean(Hl7TextInfoDao.class);
 		
-
-		ResultSet rs = DBHandler.GetSQL(sql);
-		while (rs.next() && n > 0) {
+		List<Hl7TextInfo> infos = dao.findAll();
+		
+		for(int k = 0; k < infos.size() && n > 0; k++) {
+			Hl7TextInfo info = infos.get(k);
 
 			// only recheck the result status if it is not already set to abnormal
-			if (!oscar.Misc.getString(rs, "result_status").equals("A")) {
-				oscar.oscarLab.ca.all.parsers.MessageHandler h = Factory.getHandler(oscar.Misc.getString(rs, "lab_no"));
+			if (!info.getResultStatus().equals("A")) {
+				oscar.oscarLab.ca.all.parsers.MessageHandler h = Factory.getHandler("" + info.getLabNumber());
 				int i = 0;
 				int j = 0;
 				String resultStatus = "";
@@ -116,7 +114,7 @@ public class GDMLHandler implements MessageHandler {
 						logger.info("obr(" + i + ") obx(" + j + ") abnormal ? : " + h.getOBXAbnormalFlag(i, j));
 						if (h.isOBXAbnormal(i, j)) {
 							resultStatus = "A";
-							 Hl7TextInfo obj = hl7TextInfoDao.findLabId(Integer.parseInt(oscar.Misc.getString(rs, "lab_no")));
+							 Hl7TextInfo obj = hl7TextInfoDao.findLabId(info.getLabNumber());
 	                            if(obj != null) {
 	                            	obj.setResultStatus("A");
 	                            	hl7TextInfoDao.merge(obj);
