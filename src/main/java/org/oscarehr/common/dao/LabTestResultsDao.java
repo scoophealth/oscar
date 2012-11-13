@@ -59,4 +59,35 @@ public class LabTestResultsDao extends AbstractDao<LabTestResults> {
 		query.setParameter("abn", abn);
 		return query.getResultList();
 	}
+
+	/**
+	 * Finds unique test names for the specified patient and lab type
+	 * 
+	 * @param demoNo
+	 * 		Demographic id of the patient
+	 * @param labType
+	 * 		Type of the lab to find results for
+	 * @return
+	 * 		Returns a list of triples containing lab type, test title and test name.
+	 */
+	@SuppressWarnings("unchecked")
+    public List<Object[]> findUniqueTestNames(Integer demoNo, String labType) {
+        String jpql = "SELECT DISTINCT p.labType, ltr.title, ltr.testName " +
+                "FROM " +
+                "PatientLabRouting p, " +
+                "LabTestResults ltr, " +
+                "LabPatientPhysicianInfo lpp "+
+                "WHERE p.labType = :labType "+
+                "AND p.demographicNo = :demoNo "+
+                "AND p.labNo = ltr.labPatientPhysicianInfoId "+
+                "AND ltr.labPatientPhysicianInfoId = lpp.id " +
+                "AND ltr.testName IS NOT NULL " +
+                "AND ltr.testName IS NOT EMPTY "+
+                "ORDER BY ltr.title";
+        
+        Query query = entityManager.createQuery(jpql);
+        query.setParameter("labType", labType);
+        query.setParameter("demoNo", demoNo);
+        return query.getResultList();
+    }
 }

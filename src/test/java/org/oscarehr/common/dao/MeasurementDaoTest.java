@@ -25,6 +25,7 @@ package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -43,7 +44,7 @@ public class MeasurementDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("measurements");
+		SchemaUtils.restoreTable("measurements", "measurementsExt", "measurementMap");
 	}
 
 	@Test
@@ -117,5 +118,20 @@ public class MeasurementDaoTest extends DaoTestFixtures {
 		cal.add(Calendar.MONTH, -1);
 		
 		assertEquals(1,dao.findByDemographicIdUpdatedAfterDate(1, cal.getTime()).size());
+	}
+	
+	@Test
+	public void testFindMeasurementsByDemographicIdAndLocationCode() {
+		assertNotNull(dao.findMeasurementsByDemographicIdAndLocationCode(100, "CDE"));
+	}
+	
+	@Test
+	public void testFindMeasurementsWithIdentifiersByDemographicIdAndLocationCode() {
+		assertNotNull(dao.findMeasurementsWithIdentifiersByDemographicIdAndLocationCode(100, "CDE"));
+	}
+	
+	@Test
+	public void testFindLabNumbers() {
+		assertNotNull(dao.findLabNumbers(100, "CDE"));
 	}
 }
