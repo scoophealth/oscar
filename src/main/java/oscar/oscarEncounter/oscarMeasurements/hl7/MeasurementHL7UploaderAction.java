@@ -39,13 +39,13 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
+import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Measurement;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.web.struts.DispatchActionSupport;
 
 import oscar.OscarProperties;
-import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsDao;
-import oscar.oscarEncounter.oscarMeasurements.model.Measurements;
 import oscar.oscarLab.ca.all.pageUtil.LabUploadAction;
 import oscar.oscarLab.ca.all.pageUtil.LabUploadForm;
 import oscar.oscarLab.ca.all.util.Utilities;
@@ -65,7 +65,7 @@ public class MeasurementHL7UploaderAction extends DispatchActionSupport {
 
 	private static SimpleDateFormat sdf = new SimpleDateFormat(OscarProperties.getInstance().getProperty("oscar.measurements.hl7.datetime.format", "yyyyMMddHHmmss"));
 
-	private MeasurementsDao measurementsDao;
+	private MeasurementDao measurementsDao = SpringUtils.getBean(MeasurementDao.class);
 
 	// settings to be set in spring config xml, if needed
 	private String defaultProviderNo = OscarProperties.getInstance().getProperty("oscar.measurements.hl7.defaultProviderNo", "999998");
@@ -73,10 +73,6 @@ public class MeasurementHL7UploaderAction extends DispatchActionSupport {
 
 	public void setHl7UploadPassword(String uploadPassword) {
 		this.hl7UploadPassword = uploadPassword;
-	}
-
-	public void setMeasurementsDao(MeasurementsDao measurementsDao) {
-		this.measurementsDao = measurementsDao;
 	}
 
 	public void setDefaultProviderNo(String defaultProviderNo) {
@@ -163,17 +159,16 @@ public class MeasurementHL7UploaderAction extends DispatchActionSupport {
 					Integer demographicNo = demo.getDemographicNo();
 
 					// add to oscar measurements table
-					Measurements m = new Measurements();
+					Measurement m = new Measurement();
 					m.setComments(abnormal + " by " + sender);
 					m.setDataField(data);
-					m.setDateEntered(dateEntered);
 					m.setDateObserved(dateObserved);
-					m.setDemographicNo(demographicNo);
+					m.setDemographicId(demographicNo);
 					m.setMeasuringInstruction(unit);
 					m.setProviderNo(providerNo);
 					m.setType(measurementType);
 
-					measurementsDao.addMeasurements(m);
+					measurementsDao.persist(m);
 				}
 			}
 

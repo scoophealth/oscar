@@ -47,6 +47,7 @@ import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.EFormValue;
+import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.printing.FontSettings;
 import org.oscarehr.common.printing.PdfWriterFactory;
 import org.oscarehr.eyeform.MeasurementFormatter;
@@ -62,7 +63,6 @@ import org.oscarehr.util.SpringUtils;
 import oscar.OscarProperties;
 import oscar.eform.util.GraphicalCanvasToImage;
 import oscar.oscarClinic.ClinicData;
-import oscar.oscarEncounter.oscarMeasurements.model.Measurements;
 
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
@@ -401,7 +401,7 @@ public class PdfRecordPrinter {
 
     }
 
-    public void printCPPItem(String heading, Measurements measurement) throws DocumentException {
+    public void printCPPItem(String heading, Measurement measurement) throws DocumentException {
         if( newPage )
             document.newPage();
       //  else

@@ -30,22 +30,24 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
 <%@ page import="org.oscarehr.util.LoggedInInfo" %>
-<%@ page import="oscar.oscarEncounter.oscarMeasurements.model.Measurements" %>
+<%@ page import="org.oscarehr.common.model.Measurement" %>
+<%@ page import="org.oscarehr.common.dao.MeasurementDao" %>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
-<%@ page import="oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsDao" %>
+
 
 <%
 	String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
-	Measurements m = new Measurements();
+	Measurement m = new Measurement();
 	m.setComments("");
 	m.setDataField("Yes");
-	m.setDateEntered(new java.util.Date());
+	m.setCreateDate(new java.util.Date());
 	m.setDateObserved(new java.util.Date());
-	m.setDemographicNo(Integer.parseInt(request.getParameter("demographicNo")));
+	m.setDemographicId(Integer.parseInt(request.getParameter("demographicNo")));
 	m.setMeasuringInstruction("");
 	m.setProviderNo(providerNo);
 	m.setType("medr");
+	m.setAppointmentNo(0);
 	
-	MeasurementsDao dao = (MeasurementsDao)SpringUtils.getBean("measurementsDao");
-	dao.addMeasurements(m);
+	MeasurementDao dao = SpringUtils.getBean(MeasurementDao.class);
+	dao.persist(m);
 %>
