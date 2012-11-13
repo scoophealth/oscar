@@ -228,14 +228,22 @@ String curUser_no = (String) session.getAttribute("user");
                                 		if (result.isDocument()) { %>
                                 <!-- segment ID <%= segmentID %>  -->
                                 <!-- demographic name <%=StringEscapeUtils.escapeJavaScript(result.getPatientName()) %>  -->
-                        		<jsp:include page="../dms/showDocument.jsp" flush="true">
-                        			<jsp:param name="segmentID" value="<%=segmentID%>"/>
-                        			<jsp:param name="demoName" value="<%=demoName%>"/>
-                        			<jsp:param name="providerNo" value="<%=providerNo%>"/>
-                        			<jsp:param name="searchProviderNo" value="<%=searchProviderNo%>"/>
-                        			<jsp:param name="status" value="<%=status%>"/>
-                        		</jsp:include>
-
+                                <form id="frmDocumentDisplay_<%=segmentID%>">
+                                	<input type="hidden" name="segmentID" value="<%=segmentID%>"/>
+									<input type="hidden" name="demoName" value="<%=demoName%>"/>
+									<input type="hidden" name="providerNo" value="<%=providerNo%>"/>
+									<input type="hidden" name="searchProviderNo" value="<%=searchProviderNo%>"/>
+									<input type="hidden" name="status" value="<%=status%>"/>
+								</form> 
+                                <div id="document_<%=segmentID%>">                                 	                                		                            
+                        			<jsp:include page="../dms/showDocument.jsp" flush="true">
+                        				<jsp:param name="segmentID" value="<%=segmentID%>"/>
+                        				<jsp:param name="demoName" value="<%=demoName%>"/>
+                        				<jsp:param name="providerNo" value="<%=providerNo%>"/>
+                        				<jsp:param name="searchProviderNo" value="<%=searchProviderNo%>"/>
+                        				<jsp:param name="status" value="<%=status%>"/>
+                        			</jsp:include>
+								</div>
                         		<%
                                 		}
                                 		else if (result.isHRM()) {

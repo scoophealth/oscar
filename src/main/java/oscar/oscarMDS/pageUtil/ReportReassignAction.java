@@ -38,12 +38,12 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.ProviderLabRoutingFavoritesDao;
+import org.oscarehr.common.model.ProviderLabRoutingFavorite;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarLab.ca.on.CommonLabResultData;
-
-import org.oscarehr.common.dao.ProviderLabRoutingFavoritesDao;
-import org.oscarehr.common.model.ProviderLabRoutingFavorite;
 
 public class ReportReassignAction extends Action {
     
@@ -60,11 +60,21 @@ public class ReportReassignAction extends Action {
         
         String providerNo = request.getParameter("providerNo");
         String searchProviderNo = request.getParameter("searchProviderNo");
-        String status = request.getParameter("status");
+        String status = request.getParameter("status");        
+        if( status == null) {
+        	status = "";
+        }
         
         String[] flaggedLabs = request.getParameterValues("flaggedLabs");
+        MiscUtils.getLogger().info("Flagged Labs is null " + String.valueOf(flaggedLabs == null));
+
         String selectedProviders = request.getParameter("selectedProviders");
+        MiscUtils.getLogger().info("selectedProviders " + selectedProviders);
         String newFavorites = request.getParameter("favorites");
+        if(newFavorites == null || newFavorites.equals("null") ) {
+        	newFavorites = "";
+        }
+        
        // String labType = request.getParameter("labType");
         String ajax=request.getParameter("ajax");
         //Hashtable htable = new Hashtable();
@@ -77,12 +87,13 @@ public class ReportReassignAction extends Action {
         }*/
 
         if(flaggedLabs != null && labTypes != null){
+        	MiscUtils.getLogger().info("flagged Labs length " + flaggedLabs.length);
             for (int i = 0; i < flaggedLabs.length; i++){
-                //MiscUtils.getLogger().info(flaggedLabs[i]);
+                MiscUtils.getLogger().info("FLAGGED LABS " + i + " " + flaggedLabs[i]);
                 for (int j = 0; j < labTypes.length; j++){
-                    //MiscUtils.getLogger().info(labTypes[j]);
-                    String s =  request.getParameter("labType"+flaggedLabs[i]+labTypes[j]);
-                    //MiscUtils.getLogger().info(s);
+                    MiscUtils.getLogger().info("LAB TYPE " + labTypes[j]);
+                    String s =  request.getParameter("labType"+flaggedLabs[i]+labTypes[j]);                    
+                    MiscUtils.getLogger().info(s);
                     if (s != null){  //This means that the lab was of this type.
                         String[] la =  new String[] {flaggedLabs[i],labTypes[j]};
                         listFlaggedLabs.add(la);
