@@ -161,7 +161,7 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
 		if (p == "Next") { page++; }
 		else if (p == "Previous") { page--; }
 		else { page = p; }
-		if (request != null) { request.transport.abort(); }
+		if (request != null) { request.abort(); }
 		request = updateListView();
 	};
 
@@ -213,12 +213,50 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
 		}
 		var div;
 		if (!isListView || page == 1) {
-			div = document.getElementById("docViews");
+			div = "#docViews";
 		}
 		else {
-			div = document.getElementById("summaryView");
+			div = "#summaryView";
 		}
-		return new Ajax.Updater(div,url,{method:'get',parameters:query,insertion:Insertion.Bottom,evalScripts:true,onSuccess:function(transport){
+		
+		return jQuery.ajax({
+			url: url,
+			method: "get",
+			data: query,
+			dataType: 'html',
+			success: function(data) {
+				loadingDocs = false;
+				
+				var tmp = jQuery("#tempLoader");
+				if (tmp != null) { tmp.remove(); }
+				if (isListView) {
+					if (page == 1) { jQuery("#tempLoader").remove(); }
+					else { document.getElementById("loader").style.display = "none"; }
+				}
+				
+				if (page == 1) {
+					if (isListView) {
+						document.getElementById("docViews").style.overflow = "hidden";
+					}
+					else {
+						document.getElementById("docViews").style.overflow = "auto";
+					}
+				}
+				
+				jQuery(div).append(data);
+				
+				if (data.indexOf("<input type=\"hidden\" name=\"NoMoreItems\" value=\"true\" />") >= 0) {
+					canLoad = false;
+				}
+				else {
+					// It is possible that the current amount of loaded items has not filled up the page enough
+					// to create a scroll bar. So we fake a scroll (since no scroll bar is equivalent to reaching the bottom).
+					setTimeout("fakeScroll();", 1000);
+				}
+			}
+		})
+		
+		/*return new Ajax.Updater(div,url,{method:'get',parameters:query,insertion:Insertion.Bottom,evalScripts:true,onSuccess:function(transport){
 			loadingDocs = false;
 			var tmp = jQuery("#tempLoader");
 			if (tmp != null) { tmp.remove(); }
@@ -243,7 +281,7 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
 				// to create a scroll bar. So we fake a scroll (since no scroll bar is equivalent to reaching the bottom).
 				setTimeout("fakeScroll();", 1000);
 			}
-		}});
+		}});*/
 	}
 
 	function getQuery() {
@@ -306,6 +344,7 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
 	function switchView() {
 		loadingDocs = true;
 		isListView = !isListView;
+		jQuery("input[name=isListView]").val(isListView);
 		document.getElementById("docViews").innerHTML = "";
 		var list = document.getElementById("listSwitcher");
 		var view = document.getElementById("readerSwitcher");
@@ -328,17 +367,18 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
 
 	jQuery(document).ready(function() {
 		isListView = <%= (selectedCategoryPatient != null) %>;
+		jQuery('input[name=isListView]').val(isListView);
 		switchView();
 		//un_bold($("totalAll"));
 		currentBold = "totalAll";
 		refreshCategoryList();
 	});
-	window.ForwardSelectedRows = function() {
+	function ForwardSelectedRows() {
 		var query = jQuery(document.reassignForm).formSerialize();
 		var labs = jQuery("input[name='flaggedLabs']:checked");
 		for (var i = 0; i < labs.length; i++) {
 			query += "&flaggedLabs=" + labs[i].value;
-			query += "&" + labs[i].next().name + "=" + labs[i].next().value;
+			query += "&" + jQuery(labs[i]).next().name + "=" + jQuery(labs[i]).next().value;
 		}
 		jQuery.ajax({
 			type: "POST",
@@ -435,6 +475,7 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
                                 <input type="hidden" name="status" value="<%= ackStatus %>" />
                                 <input type="hidden" name="selectedProviders" />
                                 <input type="hidden" name="favorites" value="" />
+                                <input type="hidden" name="isListView" value="" />
                                 <input id="listSwitcher" type="button" style="display:none;" class="smallButton" value="<bean:message key="inboxmanager.document.listView"/>" onClick="switchView();" />
                                 <input id="readerSwitcher" type="button" class="smallButton" value="<bean:message key="inboxmanager.document.readerView"/>" onClick="switchView();" />
                                 <% if (demographicNo == null) { %>

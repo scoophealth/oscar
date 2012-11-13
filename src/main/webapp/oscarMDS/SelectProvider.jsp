@@ -74,10 +74,27 @@ function prepSubmit() {
            fwdFavorites = fwdFavorites + $("favorites").options[i].value;
        }
 
-
-	self.opener.document.forms["reassignForm"].selectedProviders.value = fwdProviders;
-    self.opener.document.forms["reassignForm"].favorites.value = fwdFavorites;
-    self.opener.document.forms["reassignForm"].submit();
+	var isListView = <%=request.getParameter("isListView")%>;
+	var docId = '<%=request.getParameter("docId")%>';
+	var frm = "reassignForm";
+	
+	if( docId != "null" ) {
+		frm += "_" + docId;	
+		self.opener.document.forms[frm].selectedProviders.value = fwdProviders;
+	    self.opener.document.forms[frm].favorites.value = fwdFavorites;
+	    self.opener.forwardDocument(docId);
+	}
+	else if( isListView != "null" && isListView == true ){
+		self.opener.document.forms[frm].selectedProviders.value = fwdProviders;
+    	self.opener.document.forms[frm].favorites.value = fwdFavorites;
+    	self.opener.ForwardSelectedRows();
+	}
+	else {
+		self.opener.document.forms[frm].selectedProviders.value = fwdProviders;
+    	self.opener.document.forms[frm].favorites.value = fwdFavorites;
+    	self.opener.document.forms[frm].submit();
+	}
+	
     self.close();
 
 }
