@@ -44,19 +44,18 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.Measurement;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsDao;
-import oscar.oscarEncounter.oscarMeasurements.model.Measurements;
-
 public class MeasurementDataAction extends DispatchAction {
 
 	private static Logger logger = MiscUtils.getLogger();
-	private static MeasurementsDao measurementsDao = (MeasurementsDao) SpringUtils.getBean("measurementsDao");
+	private static MeasurementDao measurementDao = SpringUtils.getBean(MeasurementDao.class);
 	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
 
 	public ActionForward getLatestValues(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -95,16 +94,16 @@ public class MeasurementDataAction extends DispatchAction {
 		}
 		String[] types = typeStr.split(",");
 
-		Map<String,Measurements> measurementMap = measurementsDao.getMeasurements(demographicNo,types);
+		Map<String,Measurement> measurementMap = measurementDao.getMeasurements(Integer.parseInt(demographicNo),types);
 
 		Date nctTs = null;
 		Date applanationTs=null;
 
 		StringBuilder script = new StringBuilder();
 		for(String key:measurementMap.keySet()) {
-			Measurements value = measurementMap.get(key);
+			Measurement value = measurementMap.get(key);
 			if((freshMap.get(key)==null) ||(freshMap.get(key) != null && value.getAppointmentNo() == Integer.parseInt(appointmentNo))) {
-				script.append("jQuery(\"[measurement='"+key+"']\").val(\""+value.getDataField().replace("\n", "\\n")+"\").attr({itemtime: \"" + value.getDateEntered().getTime() + "\", appointment_no: \"" + value.getAppointmentNo() + "\"});\n");
+				script.append("jQuery(\"[measurement='"+key+"']\").val(\""+value.getDataField().replace("\n", "\\n")+"\").attr({itemtime: \"" + value.getCreateDate().getTime() + "\", appointment_no: \"" + value.getAppointmentNo() + "\"});\n");
 				if(apptNo>0 && apptNo == value.getAppointmentNo()) {
 					script.append("jQuery(\"[measurement='"+key+"']\").addClass('examfieldwhite');\n");
 				}
@@ -145,8 +144,8 @@ public class MeasurementDataAction extends DispatchAction {
 		String demographicNo = request.getParameter("demographicNo");
 		String[] types = (request.getParameter("types") != null ? request.getParameter("types") : "").split(",");
 
-		List<Date> measurementDates = measurementsDao.getDatesForMeasurements(demographicNo, types);
-		HashMap<String, HashMap<String, Measurements>> measurementsMap = new HashMap<String, HashMap<String, Measurements>>();
+		List<Date> measurementDates = measurementDao.getDatesForMeasurements(demographicNo, types);
+		HashMap<String, HashMap<String, Measurement>> measurementsMap = new HashMap<String, HashMap<String, Measurement>>();
 
 		for (Date d : measurementDates) {
 			Calendar c = Calendar.getInstance();
@@ -155,7 +154,7 @@ public class MeasurementDataAction extends DispatchAction {
 			Date outDate = c.getTime();
 
 			if (!measurementsMap.keySet().contains(outDate.getTime() + ""))
-				measurementsMap.put(outDate.getTime() + "", measurementsDao.getMeasurementsPriorToDate(demographicNo, d));
+				measurementsMap.put(outDate.getTime() + "", measurementDao.getMeasurementsPriorToDate(demographicNo, d));
 		}
 
 		boolean isJsonRequest = request.getParameter("json") != null && request.getParameter("json").equalsIgnoreCase("true");
@@ -188,17 +187,16 @@ public class MeasurementDataAction extends DispatchAction {
 					continue;
 				if(values.length>0 && values[0]!=null && values[0].length()>0) {
 					measurements.put(key,values[0]);
-					Measurements m = new Measurements();
+					Measurement m = new Measurement();
 					m.setComments("");
 					m.setDataField(values[0]);
-					m.setDateEntered(new Date());
 					m.setDateObserved(new Date());
-					m.setDemographicNo(Integer.parseInt(demographicNo));
+					m.setDemographicId(Integer.parseInt(demographicNo));
 					m.setMeasuringInstruction("");
 					m.setProviderNo(providerNo);
 					m.setType(key);
 					m.setAppointmentNo(appointmentNo);
-					measurementsDao.addMeasurements(m);
+					measurementDao.persist(m);
 				}
 			}
 

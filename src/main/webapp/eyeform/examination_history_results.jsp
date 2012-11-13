@@ -27,7 +27,7 @@
 <%@ include file="/taglibs.jsp"%>
 <%@page import="org.oscarehr.eyeform.web.EyeformAction"%>
 <%@page import="org.oscarehr.common.model.Appointment"%>
-<%@page import="oscar.oscarEncounter.oscarMeasurements.model.Measurements"%>
+<%@page import="org.oscarehr.common.model.Measurement"%>
 <%@page import="java.util.List"%>
 <%@page import="oscar.util.StringUtils" %>
 <%@page import="java.text.SimpleDateFormat" %>
@@ -154,7 +154,7 @@
 			<%
 				@SuppressWarnings("unchecked")
 				List<String> simpleFieldNames = (List<String>)request.getAttribute("simpleFieldNames");
-				Measurements simpleFields[][] = (Measurements[][])request.getAttribute("simpleFields");
+				Measurement simpleFields[][] = (Measurement[][])request.getAttribute("simpleFields");
 				for(int x=0;x<simpleFields.length;x++) {
 					out.println("<tr class=\""+(((x%2)==0)?"even":"odd")+"\">");
 					out.println("<td nowrap=\"nowrap\">"+simpleFieldNames.get(x)+"</td>");

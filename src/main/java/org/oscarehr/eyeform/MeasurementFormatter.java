@@ -31,15 +31,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import oscar.oscarEncounter.oscarMeasurements.model.Measurements;
+import org.oscarehr.common.model.Measurement;
 
 public class MeasurementFormatter {
 
-	Map<String,Measurements> mmap=new HashMap<String,Measurements>();
+	Map<String,Measurement> mmap=new HashMap<String,Measurement>();
 	
 	
-	public MeasurementFormatter(List<Measurements> measurements) {
-		for(Measurements m:measurements) {
+	public MeasurementFormatter(List<Measurement> measurements) {
+		for(Measurement m:measurements) {
 			mmap.put(m.getType(), m);
 		}
 	}

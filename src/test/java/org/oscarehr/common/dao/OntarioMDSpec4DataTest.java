@@ -91,6 +91,7 @@ import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.DemographicQueryFavourite;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Dxresearch;
+import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Security;
@@ -102,8 +103,6 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.form.FrmLabReq07Record;
-import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsDao;
-import oscar.oscarEncounter.oscarMeasurements.model.Measurements;
 
 
 public class OntarioMDSpec4DataTest extends DaoTestFixtures {
@@ -568,16 +567,17 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 	        return prevention;
 		}
 
-		Measurements getMeasurement(String type,Date dateEntered,Integer demographicNo,String dataField,String providerNo){
-	    	Measurements measurement = new Measurements();
+		Measurement getMeasurement(String type,Date dateEntered,Integer demographicNo,String dataField,String providerNo){
+	    	Measurement measurement = new Measurement();
 	    	measurement.setType(type);
-	    	measurement.setDateEntered(dateEntered);
+	    	measurement.setCreateDate(dateEntered);
 	    	measurement.setDateObserved(dateEntered);
-	    	measurement.setDemographicNo(demographicNo);
+	    	measurement.setDemographicId(demographicNo);
 	    	measurement.setDataField(dataField);
 	    	measurement.setProviderNo(providerNo);
 	    	measurement.setMeasuringInstruction("");
 	    	measurement.setComments("");
+	    	measurement.setAppointmentNo(0);
 	    	return measurement;
 		}
 
@@ -682,7 +682,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 		ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
 		PreventionDao preventionDao = (PreventionDao) SpringUtils.getBean("preventionDao");
 		TicklerDAO ticklerDao = (TicklerDAO) SpringUtils.getBean("ticklerDAOT");
-		MeasurementsDao measurementsDao = (MeasurementsDao) SpringUtils.getBean("measurementsDao");
+		MeasurementDao measurementsDao = SpringUtils.getBean(MeasurementDao.class);
 		SecurityDao securityDao = (SecurityDao) SpringUtils.getBean("securityDao");
 		SecUserRoleDao secuserroleDao = (SecUserRoleDao) SpringUtils.getBean("secUserRoleDao");
 		AllergyDao allergyDao = (AllergyDao) SpringUtils.getBean("allergyDao");
@@ -1616,11 +1616,11 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 
     	//PAPF
 
-		Measurements measurements=  getMeasurement("PAPF",getDate("2009-12-22"),ellenEastman.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+		Measurement measurements=  getMeasurement("PAPF",getDate("2009-12-22"),ellenEastman.getDemographicNo(),"L1",drl.getProviderNo());
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("MAMF",getDate("2008-05-23"),ellenEastman.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
 
@@ -1649,19 +1649,19 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	preventionDao.persist(prevention);
 
     	measurements=  getMeasurement("PAPF",getDate("2010-06-10"),feliciaFoster.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("PAPF",getDate("2010-09-10"),feliciaFoster.getDemographicNo(),"L2",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("FOBF",getDate("2008-05-12"),feliciaFoster.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("FOBF",getDate("2008-08-08"),feliciaFoster.getDemographicNo(),"L2",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("FLUF",getDate("2010-10-22"),feliciaFoster.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//7 Gloria  Grant 	19-Dec-1945 F 1-Jan-2002 27-Jul-2008
     	Demographic gloriaGrant = getDemographic(null,"Grant", "Gloria",  hin, ver, "1945", "12", "19", "F", address, city, province, postal, phone, "AC", "RO", drl.getProviderNo());
@@ -1682,7 +1682,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	preventionDao.persist(prevention);
 
     	measurements=  getMeasurement("FOBF",getDate("2010-10-22"),gloriaGrant.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
 
@@ -1711,16 +1711,16 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	preventionDao.persist(prevention);
 
     	measurements=  getMeasurement("PAPF",getDate("2010-05-15"),hillaryHopkins.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("MAMF",getDate("2010-08-23"),hillaryHopkins.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("FOBF",getDate("2010-10-22"),hillaryHopkins.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("FLUF",getDate("2010-10-22"),hillaryHopkins.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
 
@@ -1743,10 +1743,10 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	preventionDao.persist(prevention);
 
     	measurements=  getMeasurement("MAMF",getDate("2010-08-23"),irinaItzak.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("MAMF",getDate("2010-09-24"),irinaItzak.getDemographicNo(),"L2",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
 
@@ -1773,22 +1773,22 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
 
 
     	measurements=  getMeasurement("PAPF",getDate("2010-09-15"),janeJacobs.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("PAPF",getDate("2010-10-16"),janeJacobs.getDemographicNo(),"L2",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("MAMF",getDate("2008-08-19"),janeJacobs.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("MAMF",getDate("2008-09-20"),janeJacobs.getDemographicNo(),"L2",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("MAMF",getDate("2008-10-21"),janeJacobs.getDemographicNo(),"P1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("FLUF",getDate("2010-10-22"),janeJacobs.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
 
@@ -1820,16 +1820,16 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	preventionDao.persist(prevention);
 
     	measurements=  getMeasurement("PAPF",getDate("2010-09-15"),karlaKotts.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("PAPF",getDate("2010-10-16"),karlaKotts.getDemographicNo(),"L2",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("FLUF",getDate("2009-09-09"),karlaKotts.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("FLUF",getDate("2009-10-22"),karlaKotts.getDemographicNo(),"P1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	////13 Karla  Kotts 	24-May-1945 F 1-Jan-2002 24-Aug-2008 15-Sep-2010 ? 16-Oct-2010 ?
@@ -1858,10 +1858,10 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	preventionDao.persist(prevention);
 
     	measurements=  getMeasurement("PAPF",getDate("2010-10-18"),lauraLauzan.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("MAMF",getDate("2010-09-21"),lauraLauzan.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
 
@@ -1951,10 +1951,10 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	preventionDao.persist(prevention);
 
     	measurements=  getMeasurement("PAPF",getDate("2010-12-15"),priscillaPetcu.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("FOBF",getDate("2010-12-24"),priscillaPetcu.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//19 Serrena Singleton 10-Aug-1940 F 1-Jan-2002 24-Sep-2010 15-Nov-2009 ? 17-Dec-2009 Refused
     	Demographic serrenaSingleton = getDemographic(null,"Singleton", "Serrena",  hin, ver, "1940", "08", "10", "F", address, city, province, postal, phone, "AC", "RO", drl.getProviderNo());
@@ -1981,10 +1981,10 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	preventionDao.persist(prevention);
 
     	measurements=  getMeasurement("PAPF",getDate("2009-11-15"),serrenaSingleton.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("PAPF",getDate("2009-12-17"),serrenaSingleton.getDemographicNo(),"L2",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	//20 Tania Truman 	10-Aug-1935 F 1-Jan-2002 24-Sep-2010
@@ -2020,10 +2020,10 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	preventionDao.persist(prevention);
 
     	measurements=  getMeasurement("FLUF",getDate("2010-09-20"),samSenior.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("FLUF",getDate("2010-10-22"),samSenior.getDemographicNo(),"P1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//10 Tom Totter 22-Mar-1945 M 1-Jan-2002 24-Sep-2010
     	Demographic tomTotter = getDemographic(null,"Totter", "Tom",  hin, ver, "1945", "03", "22", "M", address, city, province, postal, phone, "AC", "RO", drl.getProviderNo());
@@ -2067,7 +2067,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	admissionDao.saveAdmission(getAdmission(billBauman,referenceDate, oscarProgramID));
 
     	measurements=  getMeasurement("CIMF",getDate("2010-07-17"),billBauman.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//3 Chris Churchill 18-Sep-2009 M 18-Sep-2009 29-Dec-2009 4 17-Dec-2010 App
     	Demographic chrisChurchill = getDemographic(null,"Churchill", "Chris",  hin, ver, "2009", "09", "18", "M", address, city, province, postal, phone, "AC", "RO", drl.getProviderNo());
@@ -2089,7 +2089,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	preventionDao.persist(prevention);
 
     	measurements=  getMeasurement("CIMF",getDate("2010-12-17"),chrisChurchill.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//4 Dan Dayton 18-Sep-2009 M 18-Sep-2009 29-Dec-2010 2 17-Dec-2010 Refused
     	Demographic danDayton = getDemographic(null,"Dayton", "Dan",  hin, ver, "2009", "09", "18", "F", address, city, province, postal, phone, "AC", "RO", drl.getProviderNo());
@@ -2107,7 +2107,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	preventionDao.persist(prevention);
 
     	measurements=  getMeasurement("CIMF",getDate("2010-12-17"),danDayton.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//5 Edward Edison 18-Aug-2010 M 18-Aug-2009 26-Dec-2010 3 17-Nov-2010 ? 18-Dec-2010 ?
     	Demographic edwardEdison = getDemographic(null,"Edison", "Edward",  hin, ver, "2010", "08", "18", "M", address, city, province, postal, phone, "AC", "RO", drl.getProviderNo());
@@ -2125,10 +2125,10 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	preventionDao.persist(prevention);
 
     	measurements=  getMeasurement("CIMF",getDate("2010-11-17"),edwardEdison.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("CIMF",getDate("2010-12-18"),edwardEdison.getDemographicNo(),"L2",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//6 Frank Ford 18-Aug-2009 M 18-Aug-2009 26-Dec-2009 4 17-Nov-2010 ? 18-Dec-2010 App
     	Demographic frankFord = getDemographic(null,"Ford", "Frank",  hin, ver, "2009", "08", "18", "M", address, city, province, postal, phone, "AC", "RO", drl.getProviderNo());
@@ -2149,10 +2149,10 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	preventionDao.persist(prevention);
 
     	measurements=  getMeasurement("CIMF",getDate("2010-11-17"),frankFord.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("CIMF",getDate("2010-12-18"),frankFord.getDemographicNo(),"L2",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	//7 George Godard 18-Aug-2009 M 18-Aug-2009 26-Dec-2009 2 17-Nov-2010 ? 18-Dec-2010 Refused
@@ -2173,10 +2173,10 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	preventionDao.persist(prevention);
 
     	measurements=  getMeasurement("CIMF",getDate("2010-11-17"),georgeGodard.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("CIMF",getDate("2010-12-18"),georgeGodard.getDemographicNo(),"L2",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//8 Harry Hope 18-Jul-2009 M 18-Jul-2009 0 13-Oct-2010 ? 14-Nov-2010 ? 25-Dec-2010 ?
     	Demographic harryHope = getDemographic(null,"Hope", "Harry",  hin, ver, "2009", "07", "18", "M", address, city, province, postal, phone, "AC", "RO", drl.getProviderNo());
@@ -2185,13 +2185,13 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	admissionDao.saveAdmission(getAdmission(harryHope,referenceDate, oscarProgramID));
 
     	measurements=  getMeasurement("CIMF",getDate("2010-10-13"),harryHope.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("CIMF",getDate("2010-11-14"),harryHope.getDemographicNo(),"L2",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("CIMF",getDate("2010-12-15"),harryHope.getDemographicNo(),"P1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	//9 Jennifer Jackson 9-Mar-2009 F 9-Mar-2009 26-Dec-2010 5 14-Nov-2010 Refused
@@ -2222,7 +2222,7 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	preventionDao.persist(prevention);
 
     	measurements=  getMeasurement("CIMF",getDate("2010-11-14"),jenniferJackson.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	//10 Kate Kay 21-Aug-2008 F 21-Aug-2008 26-Dec-2010 3
@@ -2448,10 +2448,10 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	preventionDao.persist(prevention);
 
     	measurements=  getMeasurement("CIMF",getDate("2010-02-24"),vivianVernon.getDemographicNo(),"L2",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("CIMF",getDate("2009-12-24"),vivianVernon.getDemographicNo(),"L1",drl.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
 
@@ -2982,141 +2982,141 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
     	//measurements
     	//smoking status   SKST
     	measurements=  getMeasurement("SKST",getDate("2009-01-01"),coleenCopper.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("SKST",getDate("2010-01-01"),coleenCopper.getDemographicNo(),"No",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("SKST",getDate("2011-01-01"),coleenCopper.getDemographicNo(),"No",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//smoking packs/day   POSK
     	measurements=  getMeasurement("POSK",getDate("2009-01-01"),coleenCopper.getDemographicNo(),"2",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("POSK",getDate("2011-01-01"),coleenCopper.getDemographicNo(),"1",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//Mesaured patient weight   WT
     	measurements=  getMeasurement("WT",getDate("2009-01-01"),coleenCopper.getDemographicNo(),"90",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("WT",getDate("2010-01-01"),coleenCopper.getDemographicNo(),"80",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("WT",getDate("2011-01-01"),coleenCopper.getDemographicNo(),"70",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
     	//Height    HT
     	measurements=  getMeasurement("HT",getDate("2009-01-01"),coleenCopper.getDemographicNo(),"170",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("HT",getDate("2010-01-01"),coleenCopper.getDemographicNo(),"170",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("HT",getDate("2011-01-01"),coleenCopper.getDemographicNo(),"170",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//Waist Circumfrence    WC
     	measurements=  getMeasurement("WC",getDate("2009-01-01"),coleenCopper.getDemographicNo(),"80",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("WC",getDate("2010-01-01"),coleenCopper.getDemographicNo(),"70",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("WC",getDate("2011-01-01"),coleenCopper.getDemographicNo(),"60",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
     	//BP    bP
     	measurements=  getMeasurement("BP",getDate("2009-01-01"),coleenCopper.getDemographicNo(),"120/70",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("BP",getDate("2010-01-01"),coleenCopper.getDemographicNo(),"140/80",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("BP",getDate("2011-01-01"),coleenCopper.getDemographicNo(),"160/90",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
     	//Dilated Eye Exam  EYEE
     	measurements=  getMeasurement("EYEE",getDate("2009-01-01"),coleenCopper.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("EYEE",getDate("2010-01-01"),coleenCopper.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("EYEE",getDate("2011-01-01"),coleenCopper.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//Foot Exam    FTE
     	measurements=  getMeasurement("FTE",getDate("2009-01-01"),coleenCopper.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//Neurological Exam  PANE
     	measurements=  getMeasurement("PANE",getDate("2009-01-01"),coleenCopper.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//Motivational Counselling completed - nutrition    MCCN
     	measurements=  getMeasurement("MCCN",getDate("2009-01-01"),coleenCopper.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("MCCN",getDate("2010-01-01"),coleenCopper.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	//Motivational Counselling completed - excersize    MCCE
     	measurements=  getMeasurement("MCCE",getDate("2009-01-01"),coleenCopper.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("MCCE",getDate("2010-01-01"),coleenCopper.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	//Motivational Counselling completed - Smoking Cessation  MCCS
     	measurements=  getMeasurement("MCCS",getDate("2009-01-01"),coleenCopper.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("MCCS",getDate("2011-01-01"),coleenCopper.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//Motivational Counselling - other   MCCO
     	measurements=  getMeasurement("MCCO",getDate("2009-01-01"),coleenCopper.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("MCCO",getDate("2011-01-01"),coleenCopper.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//collaborative Goal      CGSD
     	measurements=  getMeasurement("MCCE",getDate("2009-01-01"),coleenCopper.getDemographicNo(),"aaaa",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("MCCE",getDate("2010-01-01"),coleenCopper.getDemographicNo(),"bbbb",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//self management     SMCD
     	measurements=  getMeasurement("SMCD",getDate("2009-01-01"),coleenCopper.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("SMCD",getDate("2010-01-01"),coleenCopper.getDemographicNo(),"No",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	//education dm   DMME
     	measurements=  getMeasurement("DMME",getDate("2009-01-01"),coleenCopper.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("DMME",getDate("2010-01-01"),coleenCopper.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//#of hypoglcemic    HYPE
     	measurements=  getMeasurement("HYPE",getDate("2009-01-01"),coleenCopper.getDemographicNo(),"0",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("HYPE",getDate("2010-01-01"),coleenCopper.getDemographicNo(),"5",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//self mon bg    SMBG
     	measurements=  getMeasurement("SMBG",getDate("2009-01-01"),coleenCopper.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("SMBG",getDate("2010-01-01"),coleenCopper.getDemographicNo(),"No",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
 
@@ -3205,135 +3205,135 @@ public class OntarioMDSpec4DataTest extends DaoTestFixtures {
       //measurements
     	//smoking status   SKST
     	measurements=  getMeasurement("SKST",getDate("2010-01-01"),silviuSilver.getDemographicNo(),"No",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("SKST",getDate("2011-01-11"),silviuSilver.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//smoking packs/day   POSK
     	// 3 cigs a day  pack is considered 20 (from wikipedia) 3/20
 
     	measurements=  getMeasurement("POSK",getDate("2012-08-08"),silviuSilver.getDemographicNo(),"0.15",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//Mesaured patient weight   WT
 
 
     	measurements=  getMeasurement("WT",getDate("2010-01-01"),silviuSilver.getDemographicNo(),"78",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("WT",getDate("2011-01-11"),silviuSilver.getDemographicNo(),"80",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
     	//Height    HT
 
 
     	measurements=  getMeasurement("HT",getDate("2010-01-01"),silviuSilver.getDemographicNo(),"176",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	//Waist Circumfrence    WC
 
 
     	measurements=  getMeasurement("WC",getDate("2010-01-01"),silviuSilver.getDemographicNo(),"103",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("WC",getDate("2011-01-11"),silviuSilver.getDemographicNo(),"105",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
     	//BP    bP
 
     	measurements=  getMeasurement("BP",getDate("2010-01-01"),silviuSilver.getDemographicNo(),"145/140",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("BP",getDate("2011-01-11"),silviuSilver.getDemographicNo(),"91/90",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//Dilated Eye Exam  EYEE
     	measurements=  getMeasurement("EYEE",getDate("2010-01-01"),silviuSilver.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("EYEE",getDate("2011-01-11"),silviuSilver.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//Foot Exam    FTE
     	measurements=  getMeasurement("FTE",getDate("2010-01-01"),silviuSilver.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("FTE",getDate("2011-01-11"),silviuSilver.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//Neurological Exam  PANE
     	measurements=  getMeasurement("PANE",getDate("2010-01-01"),silviuSilver.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("PANE",getDate("2011-01-11"),silviuSilver.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	//Motivational Counselling completed - nutrition    MCCN
     	measurements=  getMeasurement("MCCN",getDate("2010-06-01"),silviuSilver.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("MCCN",getDate("2011-03-01"),silviuSilver.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	//Motivational Counselling completed - excersize    MCCE
     	measurements=  getMeasurement("MCCE",getDate("2010-06-01"),silviuSilver.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("MCCE",getDate("2011-03-01"),silviuSilver.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	//Motivational Counselling completed - Smoking Cessation  MCCS
     	measurements=  getMeasurement("MCCS",getDate("2010-06-01"),silviuSilver.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("MCCS",getDate("2011-03-01"),silviuSilver.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//Motivational Counselling - other   MCCO
     	measurements=  getMeasurement("MCCO",getDate("2010-06-01"),silviuSilver.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("MCCO",getDate("2011-03-01"),silviuSilver.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//collaborative Goal      CGSD
     	measurements=  getMeasurement("MCCE",getDate("2010-06-01"),silviuSilver.getDemographicNo(),"Goals Text 123",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("MCCE",getDate("2011-03-01"),silviuSilver.getDemographicNo(),"Goals Text 456",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//self management     SMCD
     	measurements=  getMeasurement("SMCD",getDate("2010-06-01"),silviuSilver.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("SMCD",getDate("2011-03-01"),silviuSilver.getDemographicNo(),"No",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	//education dm   DMME
     	measurements=  getMeasurement("DMME",getDate("2010-06-01"),silviuSilver.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("DMME",getDate("2011-03-01"),silviuSilver.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//#of hypoglcemic    HYPE
     	measurements=  getMeasurement("HYPE",getDate("2010-06-01"),silviuSilver.getDemographicNo(),"9",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("HYPE",getDate("2011-03-01"),silviuSilver.getDemographicNo(),"10",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//self mon bg    SMBG
     	measurements=  getMeasurement("SMBG",getDate("2010-06-01"),silviuSilver.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("SMBG",getDate("2011-03-01"),silviuSilver.getDemographicNo(),"No",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
 
@@ -3457,257 +3457,257 @@ Past Medical and Surgical History:	TAH  BSO at 48 yo (menometrorrhagia)
     	//Self Monitoring BG (Yes/No)
     	measurements=  getMeasurement("SMBG",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"Yes",drk.getProviderNo());
     	measurements.setComments("1x/d");
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("SMBG",eightMinus3,debbieDiabetes.getDemographicNo(),"No",drk.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("SMBG",eightMinus16,debbieDiabetes.getDemographicNo(),"Yes",drk.getProviderNo());
     	measurements.setComments("4x/wk");
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("SMBG",fourMonthsAgo,debbieDiabetes.getDemographicNo(),"Yes",drk.getProviderNo());
     	measurements.setComments("2x/d");
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//"# Of Hypoglycemic Episodes (since last assessed)
 
     	measurements=  getMeasurement("HYPE",fourMonthsAgo,debbieDiabetes.getDemographicNo(),"0",drk.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("HYPE",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"0",drk.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	measurements=  getMeasurement("HYPE",eightMinus3,debbieDiabetes.getDemographicNo(),"3",drk.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("HYPE",eightMinus16,debbieDiabetes.getDemographicNo(),"4",drk.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
 
     	//Blood Pressure
     	measurements=  getMeasurement("BP",fourMonthsAgo,debbieDiabetes.getDemographicNo(),"120/70",drk.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("BP",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"140/80",drk.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("BP",eightMinus3,debbieDiabetes.getDemographicNo(),"150/80",drk.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("BP",eightMinus16,debbieDiabetes.getDemographicNo(),"160/90",drk.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	//Height
     	measurements=  getMeasurement("HT",fourMonthsAgo,debbieDiabetes.getDemographicNo(),"170",drk.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("HT",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"170",drk.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("HT",eightMinus16,debbieDiabetes.getDemographicNo(),"170",drk.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	//Weight
     	measurements=  getMeasurement("WT",fourMonthsAgo,debbieDiabetes.getDemographicNo(),"75",drk.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("WT",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"80",drk.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("WT",eightMinus16,debbieDiabetes.getDemographicNo(),"85",drk.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//BMI (Body Mass Index)
     	measurements=  getMeasurement("BMI",fourMonthsAgo,debbieDiabetes.getDemographicNo(),"26",drk.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("BMI",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"27.7",drk.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("BMI",eightMinus16,debbieDiabetes.getDemographicNo(),"29.4",drk.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//Waist Circumference
     	measurements=  getMeasurement("WC",fourMonthsAgo,debbieDiabetes.getDemographicNo(),"75",drk.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("WC",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"80",drk.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("WC",eightMinus16,debbieDiabetes.getDemographicNo(),"85",drk.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//Smoking Status (Yes/No)
 
     	measurements=  getMeasurement("SKST",fourMonthsAgo,debbieDiabetes.getDemographicNo(),"No",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("SKST",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"No",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("SKST",eightMinus16,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
     	measurements.setComments("Heavy Smoker");
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//Smoking Packs per Day
     	measurements=  getMeasurement("POSK",fourMonthsAgo,debbieDiabetes.getDemographicNo(),"0",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("POSK",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"0",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("POSK",eightMinus16,debbieDiabetes.getDemographicNo(),"2",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	//Dilated Eye Exam (Retinal Exam)
     	measurements=  getMeasurement("EYEE",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
     	measurements.setComments("Referred");
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("EYEE",eightMinus3,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("EYEE",eightMinus16,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//Foot Exam    FTE
     	measurements=  getMeasurement("FTE",fourMonthsAgo,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
     	measurements.setComments("Normal");
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("FTE",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
     	measurements.setComments("Completed");
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	measurements=  getMeasurement("FTE",eightMinus3,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
     	measurements.setComments("Normal");
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("FTE",eightMinus16,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
     	measurements.setComments("Normal");
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	//Neurological Exam:  10-g monofilament  or  128 Hz tuning fork D1
 
     	measurements=  getMeasurement("PANE",fourMonthsAgo,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
     	measurements.setComments("Normal");
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("PANE",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
     	measurements.setComments("Normal");
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	measurements=  getMeasurement("PANE",eightMinus3,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
     	measurements.setComments("Normal");
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("PANE",eightMinus16,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
     	measurements.setComments("Normal");
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//Fasting Glucose Meter  lab result comparison (Calibrated Yes/No)
     	measurements=  getMeasurement("FGLC",eightMinus3,debbieDiabetes.getDemographicNo(),"No",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("FGLC",eightMinus16,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	//Education  Diabetes (Yes/No) DMME
     	measurements=  getMeasurement("DMME",eightMinus3,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("DMME",eightMinus16,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	//Education  Nutrition (lipids) (Yes/No) EDNL
     	measurements=  getMeasurement("EDNL",eightMinus3,debbieDiabetes.getDemographicNo(),"YEs",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("EDNL",eightMinus16,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	//Education  Nutrition (diabetes) (Yes/No) EDND
     	measurements=  getMeasurement("EDND",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("EDND",eightMinus16,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//Motivational Counseling Completed  Nutrition (Yes/No) MCCN
     	measurements=  getMeasurement("MCCN",eightMinus3,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//Motivational Counseling Completed  Exercise (Yes/No) MCCE
     	measurements=  getMeasurement("MCCE",eightMinus3,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("MCCE",eightMinus16,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	//Motivational Counseling Completed  Smoking Cessation (Yes/No) MCCS
     	measurements=  getMeasurement("MCCS",eightMinus3,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("MCCS",eightMinus16,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//Motivational Counseling  Other (Yes/No) MCCO
     	measurements=  getMeasurement("MCCO",eightMinus3,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//Collaborative Goal Setting/Self Management Goals (Indicate Goal) CGSD
 
     	measurements=  getMeasurement("CGSD",fourMonthsAgo,debbieDiabetes.getDemographicNo(),"Exercise to 25min 5x/wk",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("CGSD",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"Excersize to 20min 5x/wk",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	measurements=  getMeasurement("CGSD",eightMinus3,debbieDiabetes.getDemographicNo(),"Increase excercise to 20min 5x/wk",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("CGSD",eightMinus16,debbieDiabetes.getDemographicNo(),"Agrees to self monitoring of glucose 2x/wk",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	//Self Management Challenges/Barriers to Self Management (Indicate Challenge) SMCD
     	measurements=  getMeasurement("SMCD",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"Excess salt in diet",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	measurements=  getMeasurement("SMCD",eightMinus3,debbieDiabetes.getDemographicNo(),"Financial - glucometer supplies",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("SMCD",eightMinus16,debbieDiabetes.getDemographicNo(),"Financial - glucometer supplies",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//ASA (Acetylsalicylic acid) Use (Yes/No) ASAU
     	measurements=  getMeasurement("ASAU",fourMonthsAgo,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("ASAU",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	measurements=  getMeasurement("ASAU",eightMinus3,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("ASAU",eightMinus16,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//Influenza Vaccine
     	prevention = getPrevention(eightMinus3,"FLU",debbieDiabetes.getDemographicNo(),drk.getProviderNo(),false,false);
@@ -3719,11 +3719,11 @@ Past Medical and Surgical History:	TAH  BSO at 48 yo (menometrorrhagia)
     	preventionDao.persist(prevention);
     	//Erectile Dysfunction EDGI
     	measurements=  getMeasurement("EDGI",eightMinus3,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//ECG ECG
     	measurements=  getMeasurement("ECG",eightMinus3,debbieDiabetes.getDemographicNo(),"Yes",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//Psychosocial  Screening TODO: where does this go?
 
@@ -3732,102 +3732,102 @@ Past Medical and Surgical History:	TAH  BSO at 48 yo (menometrorrhagia)
     	//HbA1C (Glycated haemoglobin) A1C
 
     	measurements=  getMeasurement("A1C",referenceMinus1Week,debbieDiabetes.getDemographicNo(),"6.5",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("A1C",eightMinus3,debbieDiabetes.getDemographicNo(),"8.0",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("A1C",eightMinus16,debbieDiabetes.getDemographicNo(),"9.0",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//Fasting Plasma Glucose/AC (or Preprandial Glucose) FBS
     	measurements=  getMeasurement("FBS",referenceMinus1Week,debbieDiabetes.getDemographicNo(),"5.5",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("FBS",eightMinus3,debbieDiabetes.getDemographicNo(),"7.5",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("FBS",eightMinus16,debbieDiabetes.getDemographicNo(),"8.5",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	//2 hr PC BG FBPC
     	measurements=  getMeasurement("FBPC",referenceMinus1Week,debbieDiabetes.getDemographicNo(),"6",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	measurements=  getMeasurement("FBPC",eightMonthsAgo,debbieDiabetes.getDemographicNo(),"11",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("FBPC",eightMinus3,debbieDiabetes.getDemographicNo(),"10",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("FBPC",eightMinus16,debbieDiabetes.getDemographicNo(),"15",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	//LDL-C LDL
     	measurements=  getMeasurement("LDL",referenceMinus1Week,debbieDiabetes.getDemographicNo(),"3.5",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("LDL",eightMinus3,debbieDiabetes.getDemographicNo(),"2.0",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("LDL",eightMinus16,debbieDiabetes.getDemographicNo(),"4.0",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//HDL-C HDL
     	measurements=  getMeasurement("HDL",referenceMinus1Week,debbieDiabetes.getDemographicNo(),"4.1",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("HDL",eightMinus3,debbieDiabetes.getDemographicNo(),"4.2",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("HDL",eightMinus16,debbieDiabetes.getDemographicNo(),"4.2",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//TC:HDL-C Ratio TCHD
     	measurements=  getMeasurement("TCHD",referenceMinus1Week,debbieDiabetes.getDemographicNo(),"1.7",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("TCHD",eightMinus3,debbieDiabetes.getDemographicNo(),"1.5",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("TCHD",eightMinus16,debbieDiabetes.getDemographicNo(),"3.5",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	//Triglycerides TG
     	measurements=  getMeasurement("TG",referenceMinus1Week,debbieDiabetes.getDemographicNo(),"1.4",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("TG",eightMinus3,debbieDiabetes.getDemographicNo(),"1.5",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("TG",eightMinus16,debbieDiabetes.getDemographicNo(),"2.5",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
     	//Random Urinary ACR (Albumin to Creatinine Ratio) ACR
     	measurements=  getMeasurement("ACR",referenceMinus1Week,debbieDiabetes.getDemographicNo(),"2.4",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("ACR",eightMinus3,debbieDiabetes.getDemographicNo(),"2.5",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("ACR",eightMinus16,debbieDiabetes.getDemographicNo(),"3.5",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
 
     	//eGFR EGFR
     	measurements=  getMeasurement("EGFR",fourMinus1Week,debbieDiabetes.getDemographicNo(),"55",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("EGFR",eightMinus3,debbieDiabetes.getDemographicNo(),"55",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
     	measurements=  getMeasurement("EGFR",eightMinus16,debbieDiabetes.getDemographicNo(),"65",drs.getProviderNo());
-    	measurementsDao.addMeasurements(measurements);
+    	measurementsDao.persist(measurements);
 
 
 
