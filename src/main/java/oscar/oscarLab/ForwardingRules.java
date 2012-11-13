@@ -22,7 +22,6 @@
  * Ontario, Canada
  */
 
-
 /*
  * ForwardingRules.java
  *
@@ -34,12 +33,14 @@
 
 package oscar.oscarLab;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
-
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.common.dao.IncomingLabRulesDao;
+import org.oscarehr.common.model.IncomingLabRules;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.SpringUtils;
 
 /**
  *
@@ -47,59 +48,43 @@ import oscar.oscarDB.DBHandler;
  */
 public class ForwardingRules {
 
-    Logger logger = Logger.getLogger(ForwardingRules.class);
+	Logger logger = Logger.getLogger(ForwardingRules.class);
 
-    /** Creates a new instance of ForwardingRules */
-    public ForwardingRules() {
-    }
+	/** Creates a new instance of ForwardingRules */
+	public ForwardingRules() {
+	}
 
-    public ArrayList<ArrayList<String>> getProviders(String providerNo){
-        ArrayList<ArrayList<String>> ret = new ArrayList<ArrayList<String>>();
-        String sql = "SELECT p.provider_no, p.first_name, p.last_name FROM incomingLabRules i, provider p WHERE i.archive='0' AND i.provider_no='"+providerNo+"' AND p.provider_no=i.frwdProvider_no";
-        try{
+	public ArrayList<ArrayList<String>> getProviders(String providerNo) {
+		ArrayList<ArrayList<String>> ret = new ArrayList<ArrayList<String>>();
+		IncomingLabRulesDao dao = SpringUtils.getBean(IncomingLabRulesDao.class);
 
-            ResultSet rs = DBHandler.GetSQL(sql);
-            while (rs.next()){
-                ArrayList<String> info = new ArrayList<String>();
-                info.add(oscar.Misc.getString(rs, "provider_no"));
-                info.add(oscar.Misc.getString(rs, "first_name"));
-                info.add(oscar.Misc.getString(rs, "last_name"));
-                ret.add(info);
-            }
-        }catch(Exception e){
-            logger.error("Could not retrieve forwarding rules", e);
-        }
-        return ret;
-    }
+		for (Object[] i : dao.findRules(providerNo)) {
+			Provider p = (Provider) i[1];
 
-    public String getStatus(String providerNo){
-        String ret = "N";
-        String sql = "SELECT status FROM incomingLabRules WHERE archive='0' AND provider_no='"+providerNo+"'";
-        try{
+			ArrayList<String> info = new ArrayList<String>();
+			info.add(p.getProviderNo());
+			info.add(p.getFirstName());
+			info.add(p.getLastName());
+			ret.add(info);
+		}
+		return ret;
+	}
 
-            ResultSet rs = DBHandler.GetSQL(sql);
-            if (rs.next()){
-                ret = oscar.Misc.getString(rs, "status");
-            }
-        }catch(Exception e){
-            logger.error("Could not retrieve forwarding rules", e);
-        }
-        return ret;
-    }
+	public String getStatus(String providerNo) {
+		String ret = "N";
+		IncomingLabRulesDao dao = SpringUtils.getBean(IncomingLabRulesDao.class);
+		List<IncomingLabRules> rules = dao.findCurrentByProviderNo(providerNo);
+		if (!rules.isEmpty()) {
+			IncomingLabRules rule = rules.get(0);
+			ret = rule.getStatus();
+		}
+		return ret;
+	}
 
-    public boolean isSet(String providerNo){
-        boolean ret = false;
-        String sql = "SELECT status FROM incomingLabRules WHERE archive='0' AND provider_no='"+providerNo+"'";
-        try{
-
-            ResultSet rs = DBHandler.GetSQL(sql);
-            if (rs.next()){
-                ret = true;
-            }
-        }catch(Exception e){
-            logger.error("Could not retrieve forwarding rules", e);
-        }
-        return ret;
-    }
+	public boolean isSet(String providerNo) {
+		IncomingLabRulesDao dao = SpringUtils.getBean(IncomingLabRulesDao.class);
+		List<IncomingLabRules> rules = dao.findCurrentByProviderNo(providerNo);
+		return !rules.isEmpty();
+	}
 
 }

@@ -22,14 +22,13 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarLab;
 
 import java.io.InputStream;
-import java.sql.ResultSet;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -38,68 +37,50 @@ import org.oscarehr.common.dao.FileUploadCheckDao;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
+import oscar.util.ConversionUtils;
 
 /**
  * @author Jay Gallagher
  */
 public final class FileUploadCheck {
 
-	static FileUploadCheckDao fileUploadCheckDao = SpringUtils.getBean(FileUploadCheckDao.class);
-	
 	private FileUploadCheck() {
 		// no instantiation allowed
 	}
 
 	private static boolean hasFileBeenUploaded(String md5sum) {
-		boolean hasFileBeenUploaded = false;
-		try {
-
-			String sql = "select * from fileUploadCheck where md5sum = '" + md5sum + "' ";
-			ResultSet rs = DBHandler.GetSQL(sql);
-			if (rs.next()) {
-				hasFileBeenUploaded = true;
-			}
-		} catch (Exception e) {
-			MiscUtils.getLogger().error("Error", e);
-		}
-		return hasFileBeenUploaded;
+		FileUploadCheckDao dao = SpringUtils.getBean(FileUploadCheckDao.class);
+		List<org.oscarehr.common.model.FileUploadCheck> checks = dao.findByMd5Sum(md5sum);
+		return !checks.isEmpty();
 	}
-	
-	public static Map<String,String> getFileInfo(Integer id) {
+
+	public static Map<String, String> getFileInfo(Integer id) {
 		Map<String, String> fileInfo = new HashMap<String, String>();
-		try {
-			String sql = "select * from fileUploadCheck where id = " + id.toString();
-			ResultSet rs = DBHandler.GetSQL(sql);
-			if (rs.next()) {
-				fileInfo.put("providerNo", oscar.Misc.getString(rs, "provider_no"));
-				fileInfo.put("filename", oscar.Misc.getString(rs, "filename"));
-				fileInfo.put("md5sum", oscar.Misc.getString(rs, "md5sum"));
-				fileInfo.put("dateTime", oscar.Misc.getString(rs, "date_time"));
-			}
-		} catch (Exception e) {
-			MiscUtils.getLogger().error("Error", e);
+		FileUploadCheckDao dao = SpringUtils.getBean(FileUploadCheckDao.class);
+		org.oscarehr.common.model.FileUploadCheck c = dao.find(id);
+		if (c != null) {
+			toMap(fileInfo, c);
 		}
-		
 		return fileInfo;
-		
+	}
+
+	private static void toMap(Map<String, String> fileInfo, org.oscarehr.common.model.FileUploadCheck c) {
+		fileInfo.put("providerNo", c.getProviderNo());
+		fileInfo.put("filename", c.getFilename());
+		fileInfo.put("md5sum", c.getMd5sum());
+		fileInfo.put("dateTime", ConversionUtils.toTimestampString(c.getDateTime()));
 	}
 
 	public static Hashtable<String, String> getFileInfo(String md5sum) {
 		Hashtable<String, String> fileInfo = new Hashtable<String, String>();
-		try {
+		FileUploadCheckDao dao = SpringUtils.getBean(FileUploadCheckDao.class);
+		List<org.oscarehr.common.model.FileUploadCheck> checks = dao.findByMd5Sum(md5sum);
 
-			String sql = "select * from fileUploadCheck where md5sum = '" + md5sum + "' ";
-			ResultSet rs = DBHandler.GetSQL(sql);
-			if (rs.next()) {
-				fileInfo.put("providerNo", oscar.Misc.getString(rs, "provider_no"));
-				fileInfo.put("filename", oscar.Misc.getString(rs, "filename"));
-				fileInfo.put("md5sum", oscar.Misc.getString(rs, "md5sum"));
-				fileInfo.put("dateTime", oscar.Misc.getString(rs, "date_time"));
-			}
-		} catch (Exception e) {
-			MiscUtils.getLogger().error("Error", e);
+		if (!checks.isEmpty()) {
+			org.oscarehr.common.model.FileUploadCheck c = checks.get(0);
+			toMap(fileInfo, c);
 		}
+
 		return fileInfo;
 	}
 
@@ -108,7 +89,7 @@ public final class FileUploadCheck {
 	/**
 	 *Used to add a new file to the database, checks to see if it already has been added
 	 */
-	public static synchronized int addFile(String name, InputStream is, String provider)  {
+	public static synchronized int addFile(String name, InputStream is, String provider) {
 		int fileUploaded = UNSUCCESSFUL_SAVE;
 		try {
 			String md5sum = DigestUtils.md5Hex(IOUtils.toByteArray(is));
@@ -119,8 +100,10 @@ public final class FileUploadCheck {
 				f.setFilename(name);
 				f.setMd5sum(md5sum);
 				f.setDateTime(new Date());
+
+				FileUploadCheckDao dao = SpringUtils.getBean(FileUploadCheckDao.class); 
+				dao.persist(f);
 				
-				fileUploadCheckDao.persist(f);
 				fileUploaded = f.getId();
 			}
 		} catch (Exception e) {

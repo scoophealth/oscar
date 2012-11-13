@@ -25,6 +25,10 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.FileUploadCheck;
 import org.springframework.stereotype.Repository;
 
@@ -34,4 +38,11 @@ public class FileUploadCheckDao extends AbstractDao<FileUploadCheck>{
 	public FileUploadCheckDao() {
 		super(FileUploadCheck.class);
 	}
+
+	@SuppressWarnings("unchecked")
+    public List<FileUploadCheck> findByMd5Sum(String md5sum) {
+	    Query query = createQuery("c", "c.md5sum = :md5sum");
+	    query.setParameter("md5sum", md5sum);
+	    return query.getResultList();
+    }
 }
