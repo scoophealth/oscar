@@ -30,6 +30,7 @@ import java.util.List;
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.IncomingLabRules;
+import org.oscarehr.common.model.Provider;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -83,4 +84,19 @@ public class IncomingLabRulesDao extends AbstractDao<IncomingLabRules>{
 		
 		return results;
 	}
+
+	/**
+	 * @param providerNo
+	 * @return
+	 * 		Returns a list of pairs {@link IncomingLabRules}, {@link Provider}
+	 */
+	@SuppressWarnings("unchecked")
+    public List<Object[]> findRules(String providerNo) {
+		Query q = entityManager.createQuery("FROM IncomingLabRules i, " + Provider.class.getSimpleName() + " p " +
+				"WHERE i.archive = '0' " +
+				"AND i.providerNo = :providerNo " +
+				"AND p.id = i.frwdProviderNo");
+		q.setParameter("providerNo", providerNo);
+		return q.getResultList();
+    }
 }

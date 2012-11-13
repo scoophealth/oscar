@@ -36,7 +36,6 @@ public class FileUploadCheckDaoTest extends DaoTestFixtures {
 
 	private FileUploadCheckDao dao = SpringUtils.getBean(FileUploadCheckDao.class);
 
-
 	@Before
 	public void before() throws Exception {
 		SchemaUtils.restoreTable("fileUploadCheck");
@@ -48,5 +47,10 @@ public class FileUploadCheckDaoTest extends DaoTestFixtures {
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		dao.persist(entity);
 		assertNotNull(entity.getId());
+	}
+
+	@Test
+	public void testFind() {
+		assertNotNull(dao.findByMd5Sum("MD"));
 	}
 }

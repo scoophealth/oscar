@@ -39,7 +39,7 @@ public class IncomingLabRulesDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("incomingLabRules");
+		SchemaUtils.restoreTable("incomingLabRules", "provider");
 	}
 
 	@Test
@@ -48,5 +48,10 @@ public class IncomingLabRulesDaoTest extends DaoTestFixtures {
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		dao.persist(entity);
 		assertNotNull(entity.getId());
+	}
+	
+	@Test
+	public void testFindRules() {
+		assertNotNull(dao.findRules("123"));
 	}
 }
