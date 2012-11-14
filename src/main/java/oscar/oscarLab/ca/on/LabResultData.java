@@ -25,15 +25,16 @@
 
 package oscar.oscarLab.ca.on;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.LabReportInformationDao;
+import org.oscarehr.common.model.LabReportInformation;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.bc.PathNet.PathnetResultsData;
 import oscar.oscarLab.ca.on.CML.CMLLabTest;
 import oscar.oscarLab.ca.on.Spire.SpireLabTest;
@@ -45,7 +46,7 @@ import oscar.util.UtilDateUtilities;
  *
  * @author Jay Gallagher
  */
-public class LabResultData implements Comparable{
+public class LabResultData implements Comparable<LabResultData> {
 
 	Logger logger = MiscUtils.getLogger();
 
@@ -301,16 +302,11 @@ public class LabResultData implements Comparable{
 			this.dateTimeObr = UtilDateUtilities.getDateFromString(this.getDateTime(), "yyyy-MM-dd HH:mm:ss");
 		}else if(CML.equals(this.labType)){
 			String date="";
-			String sql = "select print_date, print_time from labReportInformation, labPatientPhysicianInfo where labPatientPhysicianInfo.id = '"+this.segmentID+"' and labReportInformation.id = labPatientPhysicianInfo.labReportInfo_id ";
-			try{
-
-				ResultSet rs = DBHandler.GetSQL(sql);
-				if(rs.next()){
-					date=oscar.Misc.getString(rs, "print_date")+oscar.Misc.getString(rs, "print_time");
-				}
-				rs.close();
-			}catch(Exception e){
-				logger.error("Error in getDateObj (CML message)", e);
+			
+			LabReportInformationDao dao = SpringUtils.getBean(LabReportInformationDao.class);
+			for(Object[] i : dao.findReportsByPhysicianId(this.getSegmentID())) {
+				LabReportInformation lri = (LabReportInformation) i[0];  
+				date = lri.getPrintDate() + lri.getPrintTime(); 
 			}
 			this.dateTimeObr = UtilDateUtilities.getDateFromString(date, "yyyyMMddHH:mm");
 		}
@@ -322,17 +318,17 @@ public class LabResultData implements Comparable{
 		this.dateTimeObr = d;
 	}
 
-	public int compareTo(Object object) {
+	public int compareTo(LabResultData object) {
 		//int ret = 1;
 		int ret = 0;
 		if (this.getDateObj() != null){
-			if (this.dateTimeObr.after( ((LabResultData) object).getDateObj() )){
+			if (this.dateTimeObr.after( object.getDateObj() )){
 				ret = -1;
-			}else if(this.dateTimeObr.before( ((LabResultData) object).getDateObj() )){
+			}else if(this.dateTimeObr.before( object.getDateObj() )){
 				ret = 1;
-			}else if(this.finalResultsCount > ((LabResultData) object).finalResultsCount){
+			}else if(this.finalResultsCount > object.finalResultsCount){
 				ret = -1;
-			}else if(this.finalResultsCount < ((LabResultData) object).finalResultsCount){
+			}else if(this.finalResultsCount < object.finalResultsCount){
 				ret = 1;
 			}
 		}
@@ -344,12 +340,9 @@ public class LabResultData implements Comparable{
 	}
 
 
-	public class CompareId implements Comparator {
+	public class CompareId implements Comparator<LabResultData> {
 
-		public int compare( Object o1, Object o2 ) {
-			LabResultData lab1 = (LabResultData)o1;
-			LabResultData lab2 = (LabResultData)o2;
-
+		public int compare( LabResultData lab1, LabResultData lab2 ) {
 			int labPatientId1 = Integer.parseInt(lab1.labPatientId);
 			int labPatientId2 = Integer.parseInt(lab2.labPatientId);
 

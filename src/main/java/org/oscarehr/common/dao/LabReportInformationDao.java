@@ -22,16 +22,30 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.common.dao;
+
+import java.util.List;
+
+import javax.persistence.Query;
 
 import org.oscarehr.common.model.LabReportInformation;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class LabReportInformationDao extends AbstractDao<LabReportInformation>{
+public class LabReportInformationDao extends AbstractDao<LabReportInformation> {
 
 	public LabReportInformationDao() {
 		super(LabReportInformation.class);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Object[]> findReportsByPhysicianId(String physicianId) {
+		String sql = "FROM LabReportInformation lri, LabPatientPhysicianInfo lpp " 
+				+ "WHERE lpp.id = :physicianId "
+				+ "AND lri.id = lpp.labReportInfoId";
+		Query q = entityManager.createQuery(sql);
+		q.setParameter("physicianId", physicianId);
+		return q.getResultList();
+
 	}
 }
