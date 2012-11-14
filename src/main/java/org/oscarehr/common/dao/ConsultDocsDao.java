@@ -62,6 +62,17 @@ public class ConsultDocsDao extends AbstractDao<ConsultDocs>{
 		q.setParameter("consultationId", consultationId);
 		q.setParameter("docType", docType);
 		return q.getResultList();
-		
+	}
+
+    public List<Object[]> findDocs(Integer cid) {
+		String sql = "FROM ConsultDocs c, PatientLabRouting p " +
+				"WHERE p.id = c.documentNo " +
+				"AND c.requestId = :cid " +
+				"AND c.doctype = 'L' " +
+				"AND c.deleted IS NULL " +
+				"ORDER BY c.documentNo";
+		Query q = entityManager.createQuery(sql);
+		q.setParameter("cid", cid);
+		return q.getResultList();
     }
 }

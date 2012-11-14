@@ -76,7 +76,7 @@ public class MeasurementsDeleted extends AbstractModel<Integer> implements Seria
 	}
 	
 	public MeasurementsDeleted(Measurement m) {
-		setType(m.getType());
+    	setType(m.getType());
     	setDemographicNo(m.getDemographicId());
     	setProviderNo(m.getProviderNo());
     	setDataField(m.getDataField());
