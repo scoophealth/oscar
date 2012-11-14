@@ -118,4 +118,11 @@ public class ProviderLabRoutingDao extends AbstractDao<ProviderLabRoutingModel> 
 	    query.setParameter("status", status);
 	    return query.getResultList();
     }
+
+	public List<ProviderLabRoutingModel> findByProviderNo(String providerNo, String status) {
+	    Query query = createQuery("p", "p.providerNo = :pNo AND p.status = :sts");
+	    query.setParameter("pNo", providerNo);
+	    query.setParameter("sts", status);
+	    return query.getResultList();
+    }
 }
