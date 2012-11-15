@@ -23,14 +23,20 @@
  */
 package org.oscarehr.common.dao;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
+import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.MessageList;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class MessageListDaoTest extends DaoTestFixtures {
@@ -43,8 +49,53 @@ public class MessageListDaoTest extends DaoTestFixtures {
 	}
 
 	@Test
-	public void testFindByProviderNoAndMessageNo() {
-		List<MessageList> msgs = dao.findByProviderNoAndMessageNo("10", 1l);
-		assertNotNull(msgs);
+	public void testFindByProviderNoAndMessageNo() throws Exception {
+		
+		String providerNo1 = "111";
+		String providerNo2 = "222";
+		
+		long message1 = 101;
+		long message2 = 202;
+		
+		MessageList messageList1 = new MessageList();
+		EntityDataGenerator.generateTestDataForModelClass(messageList1);
+		messageList1.setProviderNo(providerNo1);
+		messageList1.setMessage(message1);
+		dao.persist(messageList1);
+		
+		MessageList messageList2 = new MessageList();
+		EntityDataGenerator.generateTestDataForModelClass(messageList2);
+		messageList2.setProviderNo(providerNo2);
+		messageList2.setMessage(message1);
+		dao.persist(messageList2);
+		
+		MessageList messageList3 = new MessageList();
+		EntityDataGenerator.generateTestDataForModelClass(messageList3);
+		messageList3.setProviderNo(providerNo1);
+		messageList3.setMessage(message1);
+		dao.persist(messageList3);
+		
+		MessageList messageList4 = new MessageList();
+		EntityDataGenerator.generateTestDataForModelClass(messageList4);
+		messageList4.setProviderNo(providerNo1);
+		messageList4.setMessage(message2);
+		dao.persist(messageList4);
+		
+		List<MessageList> expectedResult = new ArrayList<MessageList>(Arrays.asList(messageList1, messageList3));
+		List<MessageList> result = dao.findByProviderNoAndMessageNo(providerNo1, message1);
+
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);
 	}
 }
