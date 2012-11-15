@@ -897,40 +897,6 @@
                         <exclude>docs/**</exclude>
                         <exclude>local_repo/**</exclude>
                         <exclude>**/.gitignore</exclude>
-			<exclude>src/main/java/oscar/billing/cad/dao/CadAtividadeSaudeDAO.java</exclude>
-			<exclude>src/main/java/oscar/billing/cad/dao/CadProcedimentoDAO.java</exclude>
-			<exclude>src/main/java/oscar/billing/cad/dao/CidDAO.java</exclude>
-			<exclude>src/main/java/oscar/billing/cad/dao/TipoAtendimentoDAO.java</exclude>
-			<exclude>src/main/java/oscar/billing/cad/model/CadAtividadesSaude.java</exclude>
-			<exclude>src/main/java/oscar/billing/cad/model/CadCid.java</exclude>
-			<exclude>src/main/java/oscar/billing/cad/model/CadFaixasEtaria.java</exclude>
-			<exclude>src/main/java/oscar/billing/cad/model/CadGrupoAtendimento.java</exclude>
-			<exclude>src/main/java/oscar/billing/cad/model/CadNaturezaEas.java</exclude>
-			<exclude>src/main/java/oscar/billing/cad/model/CadProcedimentos.java</exclude>
-			<exclude>src/main/java/oscar/billing/cad/model/CadTiposAtendimento.java</exclude>
-			<exclude>src/main/java/oscar/billing/controler/ConsultaFaturamentoMedicoAction.java</exclude>
-			<exclude>src/main/java/oscar/billing/controler/ConsultaFaturamentoMedicoForm.java</exclude>
-			<exclude>src/main/java/oscar/billing/controler/ConsultaFaturamentoPacienteAction.java</exclude>
-			<exclude>src/main/java/oscar/billing/controler/ConsultaFaturamentoPacienteForm.java</exclude>
-			<exclude>src/main/java/oscar/billing/controler/ProcedimentoRealizadoAction.java</exclude>
-			<exclude>src/main/java/oscar/billing/controler/ProcedimentoRealizadoForm.java</exclude>
-			<exclude>src/main/java/oscar/billing/dao/DiagnosticoDAO.java</exclude>
-			<exclude>src/main/java/oscar/billing/dao/ProcedimentoRealizadoDAO.java</exclude>
-			<exclude>src/main/java/oscar/billing/fat/dao/FatFormulariosDAO.java</exclude>
-			<exclude>src/main/java/oscar/billing/fat/model/FatAgendaBpa.java</exclude>
-			<exclude>src/main/java/oscar/billing/fat/model/FatBpa.java</exclude>
-			<exclude>src/main/java/oscar/billing/fat/model/FatEas.java</exclude>
-			<exclude>src/main/java/oscar/billing/fat/model/FatFaturamento.java</exclude>
-			<exclude>src/main/java/oscar/billing/fat/model/FatFormularioProcedimento.java</exclude>
-			<exclude>src/main/java/oscar/billing/fat/model/FatFormularios.java</exclude>
-			<exclude>src/main/java/oscar/billing/model/Diagnostico.java</exclude>
-			<exclude>src/main/java/oscar/billing/model/ProcedimentoRealizado.java</exclude>
-			<exclude>src/main/java/oscar/billing/popup/AtividadeSaudeAction.java</exclude>
-			<exclude>src/main/java/oscar/billing/popup/AtividadeSaudeForm.java</exclude>
-			<exclude>src/main/java/oscar/billing/popup/CidAction.java</exclude>
-			<exclude>src/main/java/oscar/billing/popup/CidForm.java</exclude>
-			<exclude>src/main/java/oscar/billing/popup/ProcedimentoAction.java</exclude>
-			<exclude>src/main/java/oscar/billing/popup/ProcedimentoForm.java</exclude>
 			<exclude>src/main/java/oscar/form/FrmAdfRecord.java</exclude>
 			<exclude>src/main/java/oscar/form/FrmAdfV2Record.java</exclude>
 			<exclude>src/main/java/oscar/form/FrmBCARRecord.java</exclude>
