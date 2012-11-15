@@ -24,7 +24,6 @@
 
 package oscar.oscarLab.ca.bc.PathNet.HL7.V2_3;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -33,7 +32,6 @@ import org.oscarehr.billing.CA.BC.dao.Hl7ObrDao;
 import org.oscarehr.billing.CA.BC.model.Hl7Obr;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.bc.PathNet.HL7.Node;
 /*
  * @author Jesse Bank
@@ -81,19 +79,6 @@ public class OBR extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
       return notes;
    }
  
-
-   //////
-
-
-   protected int getLastUpdated(DBHandler db, String id)throws SQLException {
-      ResultSet result = DBHandler.GetSQL("SELECT obr_id FROM hl7_obr WHERE filler_order_number='" + id +"'");
-      int parent = 0;
-      if(result.next()) {
-         parent = result.getInt(1);
-      }
-      return parent;
-   }
-
    protected String getInsertSql(int parent) {return null;}
    
    protected String getUpdateSql(String id) { return null;}

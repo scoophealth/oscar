@@ -23,6 +23,10 @@
  */
 package org.oscarehr.billing.CA.BC.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.billing.CA.BC.model.Hl7Pid;
 import org.oscarehr.common.dao.AbstractDao;
 import org.springframework.stereotype.Repository;
@@ -33,4 +37,22 @@ public class Hl7PidDao extends AbstractDao<Hl7Pid>{
 	public Hl7PidDao() {
 		super(Hl7Pid.class);
 	}
+
+	@SuppressWarnings("unchecked")
+    public List<Hl7Pid> findByMessageId(int messageId) {
+		Query q = createQuery("h", "h.messageId = :msgId");
+		q.setParameter("msgId", messageId);
+		return q.getResultList();
+    }
+
+	@SuppressWarnings("unchecked")
+    public List<Object[]> findPidsByStatus(String status) {
+		String sql = "FROM Hl7Pid p, Hl7Link l " +
+				"WHERE p.id = l.id " +
+				"AND ( l.status = :status " +
+				"OR l.status IS NULL)";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("status", status);
+		return query.getResultList();
+    }
 }

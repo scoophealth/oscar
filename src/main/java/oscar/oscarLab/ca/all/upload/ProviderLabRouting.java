@@ -22,7 +22,6 @@
  * Ontario, Canada
  */
 
-
 /*
  * ProviderLabRouting.java
  *
@@ -35,8 +34,6 @@
 package oscar.oscarLab.ca.all.upload;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,8 +46,8 @@ import org.oscarehr.common.model.ProviderLabRoutingModel;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
-import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ForwardingRules;
+import oscar.util.ConversionUtils;
 
 /**
  *
@@ -58,139 +55,143 @@ import oscar.oscarLab.ForwardingRules;
  */
 public class ProviderLabRouting {
 
-    Logger logger = Logger.getLogger(ProviderLabRouting.class);
-    private ProviderLabRoutingDao providerLabRoutingDao = SpringUtils.getBean(ProviderLabRoutingDao.class);
+	Logger logger = Logger.getLogger(ProviderLabRouting.class);
+	private ProviderLabRoutingDao providerLabRoutingDao = SpringUtils.getBean(ProviderLabRoutingDao.class);
 
-    public ProviderLabRouting() {
-    }
-
-    public void route(String labId, String provider_no, Connection conn, String labType) throws SQLException{
-        route(Integer.parseInt(labId), provider_no, conn, labType);
-    }
-
-    public void route(int labId, String provider_no,String labType) throws SQLException{
-        route(Integer.toString(labId), provider_no,labType);
-    }
-
-    public void route(int labId, String provider_no, Connection conn, String labType) throws SQLException{
-        PreparedStatement pstmt;
-        ForwardingRules fr = new ForwardingRules();
-        OscarProperties props = OscarProperties.getInstance();
-        String autoFileLabs = props.getProperty("AUTO_FILE_LABS");
-
-        String sql = "SELECT status FROM providerLabRouting WHERE provider_no='"+provider_no+"' AND lab_no='"+labId+"' AND lab_type='"+labType+"'";
-        pstmt = conn.prepareStatement(sql);
-        ResultSet rs = pstmt.executeQuery();
-
-        if (!rs.next()){
-
-            String status = fr.getStatus(provider_no);
-            ArrayList<ArrayList<String>> forwardProviders = fr.getProviders(provider_no);
-            ProviderLabRoutingModel p = new ProviderLabRoutingModel();
-            p.setProviderNo(provider_no);
-            p.setLabNo(labId);
-            p.setStatus(status);
-            p.setLabType(labType);
-            providerLabRoutingDao.persist(p);
-           
-
-            //forward lab to specified providers
-            for (int j=0; j < forwardProviders.size(); j++){
-                logger.info("FORWARDING PROVIDER: "+((forwardProviders.get(j)).get(0)));
-                route(labId, ( ( forwardProviders.get(j)).get(0)), conn, labType);
-            }
-
-        // If the lab has already been sent to this provider check to make sure that
-        // it is set as a new lab for at least one provider if AUTO_FILE_LABS=yes is not
-        // set in the oscar.properties file
-        }else if (autoFileLabs == null || !autoFileLabs.equalsIgnoreCase("yes")){
-            sql = "SELECT provider_no FROM providerLabRouting WHERE lab_no='"+labId+"' AND status='N' AND lab_type='"+labType+"'";
-            pstmt = conn.prepareStatement(sql);
-            rs = pstmt.executeQuery();
-            if (!rs.next()){
-            	ProviderLabRoutingModel plr = providerLabRoutingDao.findByLabNoAndLabType(labId,labType);
-            	if(plr != null) {
-            		plr.setStatus("N");
-            		providerLabRoutingDao.merge(plr);
-            	}
-            }
-        }
-        pstmt.close();
-    }
-
-    public static Hashtable<String,Object> getInfo(String lab_no) throws SQLException {
-	Hashtable<String,Object> info = new Hashtable<String,Object>();
-	String sql = "SELECT * FROM providerLabRouting WHERE lab_no='"+lab_no+"'";
-
-	ResultSet rs = DBHandler.GetSQL(sql);
-
-	if (rs.next()) {
-	    info.put("lab_no", lab_no);
-	    info.put("provider_no", rs.getString("provider_no"));
-	    info.put("status", rs.getString("status"));
-	    info.put("comment", rs.getString("comment"));
-	    info.put("timestamp", rs.getString("timestamp"));
-	    info.put("lab_type", rs.getString("lab_type"));
-	    info.put("id", rs.getInt("id"));
+	public ProviderLabRouting() {
 	}
-	return info;
-    }
 
-
-    public void route(String labId, String provider_no, String labType) throws SQLException{
-    	ForwardingRules fr = new ForwardingRules();
-        OscarProperties props = OscarProperties.getInstance();
-        String autoFileLabs = props.getProperty("AUTO_FILE_LABS");
-
-        ProviderLabRoutingDao providerLabRoutingDao = new ProviderLabRoutingDao();
-        List<ProviderLabRoutingModel> rs = providerLabRoutingDao.getProviderLabRoutingForLabProviderType(labId, provider_no, labType);
-
-        if(!rs.isEmpty()) {
-        	String status = fr.getStatus(provider_no);
-            ArrayList<ArrayList<String>> forwardProviders = fr.getProviders(provider_no);
-
-            ProviderLabRoutingModel newRouted = new ProviderLabRoutingModel();
-            newRouted.setProviderNo(provider_no);
-            newRouted.setLabNo(Integer.parseInt(labId));
-            newRouted.setLabType(labType);
-            newRouted.setStatus(status);
-
-            providerLabRoutingDao.persist(newRouted);
-
-            //forward lab to specified providers
-            for (int j=0; j < forwardProviders.size(); j++){
-                logger.info("FORWARDING PROVIDER: "+((forwardProviders.get(j)).get(0)));
-                route(labId, ( ( forwardProviders.get(j)).get(0)),labType);
-            }
-
-            // If the lab has already been sent to this provider check to make sure that
-            // it is set as a new lab for at least one provider if AUTO_FILE_LABS=yes is not
-            // set in the oscar.properties file
-           }else if (autoFileLabs == null || !autoFileLabs.equalsIgnoreCase("yes")){
-        	   rs = providerLabRoutingDao.getProviderLabRoutingForLabAndType(labId, labType);
-        	   if (rs.isEmpty()) {
-        		   providerLabRoutingDao.updateStatus(labId,labType);
-        	   }
-           }
-
-
-    }
-
-    public static HashMap<String,Object> getInfo(String lab_no, String lab_type) throws SQLException {
-	HashMap<String, Object> info = new HashMap<String, Object>();
-	String sql = "SELECT * FROM providerLabRouting WHERE lab_no='"+lab_no+"' AND lab_type='"+lab_type+"'";
-
-	ResultSet rs = DBHandler.GetSQL(sql);
-
-	if (rs.next()) {
-	    info.put("lab_no", lab_no);
-	    info.put("provider_no", rs.getString("provider_no"));
-	    info.put("status", rs.getString("status"));
-	    info.put("comment", rs.getString("comment"));
-	    info.put("timestamp", rs.getString("timestamp"));
-	    info.put("lab_type", rs.getString("lab_type"));
-	    info.put("id", rs.getInt("id"));
+	public void route(String labId, String provider_no, Connection conn, String labType) throws SQLException {
+		route(Integer.parseInt(labId), provider_no, conn, labType);
 	}
-	return info;
-    }
+
+	public void route(int labId, String provider_no, String labType) throws SQLException {
+		route(Integer.toString(labId), provider_no, labType);
+	}
+
+	/**
+	 * @deprecated Use {@link #routeMagic(int, String, String)} instead
+	 */
+	@Deprecated
+	@SuppressWarnings("unused")
+	public void route(int labId, String provider_no, Connection conn, String labType) throws SQLException {
+		// hey, Eclipse now shows no errors for this method!
+		if (false) {
+			throw new SQLException("" + conn);
+		}
+
+		routeMagic(labId, provider_no, labType);
+	}
+
+	public void routeMagic(int labId, String provider_no, String labType) {
+		ForwardingRules fr = new ForwardingRules();
+		OscarProperties props = OscarProperties.getInstance();
+		String autoFileLabs = props.getProperty("AUTO_FILE_LABS");
+
+		ProviderLabRoutingDao dao = SpringUtils.getBean(ProviderLabRoutingDao.class);
+		List<ProviderLabRoutingModel> routings = dao.findByLabNoAndLabTypeAndProviderNo(labId, labType, provider_no);
+
+		if (!routings.isEmpty()) {
+			String status = fr.getStatus(provider_no);
+			ArrayList<ArrayList<String>> forwardProviders = fr.getProviders(provider_no);
+
+			ProviderLabRoutingModel p = new ProviderLabRoutingModel();
+			p.setProviderNo(provider_no);
+			p.setLabNo(labId);
+			p.setStatus(status);
+			p.setLabType(labType);
+			providerLabRoutingDao.persist(p);
+
+			//forward lab to specified providers
+			for (int j = 0; j < forwardProviders.size(); j++) {
+				logger.info("FORWARDING PROVIDER: " + ((forwardProviders.get(j)).get(0)));
+				routeMagic(labId, ((forwardProviders.get(j)).get(0)), labType);
+			}
+
+			// If the lab has already been sent to this provider check to make sure that
+			// it is set as a new lab for at least one provider if AUTO_FILE_LABS=yes is not
+			// set in the oscar.properties file
+		} else if (autoFileLabs == null || !autoFileLabs.equalsIgnoreCase("yes")) {
+			List<ProviderLabRoutingModel> moreRoutings = dao.findByLabNoTypeAndStatus(labId, labType, "N");
+			if (!moreRoutings.isEmpty()) {
+				ProviderLabRoutingModel plr = providerLabRoutingDao.findByLabNoAndLabType(labId, labType);
+				if (plr != null) {
+					plr.setStatus("N");
+					providerLabRoutingDao.merge(plr);
+				}
+			}
+		}
+
+	}
+
+	public static Hashtable<String, Object> getInfo(String lab_no) {
+		Hashtable<String, Object> info = new Hashtable<String, Object>();
+		ProviderLabRoutingDao dao = SpringUtils.getBean(ProviderLabRoutingDao.class);
+		ProviderLabRoutingModel r = dao.findByLabNo(ConversionUtils.fromIntString(lab_no));
+		if (r != null) {
+			info.put("lab_no", lab_no);
+			info.put("provider_no", r.getProviderNo());
+			info.put("status", r.getStatus());
+			info.put("comment", r.getComment());
+			info.put("timestamp", r.getTimestamp());
+			info.put("lab_type", r.getLabType());
+			info.put("id", r.getId());
+		}
+		return info;
+	}
+
+	public void route(String labId, String provider_no, String labType) throws SQLException {
+		ForwardingRules fr = new ForwardingRules();
+		OscarProperties props = OscarProperties.getInstance();
+		String autoFileLabs = props.getProperty("AUTO_FILE_LABS");
+
+		ProviderLabRoutingDao providerLabRoutingDao = new ProviderLabRoutingDao();
+		List<ProviderLabRoutingModel> rs = providerLabRoutingDao.getProviderLabRoutingForLabProviderType(labId, provider_no, labType);
+
+		if (!rs.isEmpty()) {
+			String status = fr.getStatus(provider_no);
+			ArrayList<ArrayList<String>> forwardProviders = fr.getProviders(provider_no);
+
+			ProviderLabRoutingModel newRouted = new ProviderLabRoutingModel();
+			newRouted.setProviderNo(provider_no);
+			newRouted.setLabNo(Integer.parseInt(labId));
+			newRouted.setLabType(labType);
+			newRouted.setStatus(status);
+
+			providerLabRoutingDao.persist(newRouted);
+
+			//forward lab to specified providers
+			for (int j = 0; j < forwardProviders.size(); j++) {
+				logger.info("FORWARDING PROVIDER: " + ((forwardProviders.get(j)).get(0)));
+				route(labId, ((forwardProviders.get(j)).get(0)), labType);
+			}
+
+			// If the lab has already been sent to this provider check to make sure that
+			// it is set as a new lab for at least one provider if AUTO_FILE_LABS=yes is not
+			// set in the oscar.properties file
+		} else if (autoFileLabs == null || !autoFileLabs.equalsIgnoreCase("yes")) {
+			rs = providerLabRoutingDao.getProviderLabRoutingForLabAndType(labId, labType);
+			if (rs.isEmpty()) {
+				providerLabRoutingDao.updateStatus(labId, labType);
+			}
+		}
+
+	}
+
+	public static HashMap<String, Object> getInfo(String lab_no, String lab_type) {
+		HashMap<String, Object> info = new HashMap<String, Object>();
+		ProviderLabRoutingDao dao = SpringUtils.getBean(ProviderLabRoutingDao.class);
+		ProviderLabRoutingModel r = dao.findByLabNoAndLabType(ConversionUtils.fromIntString(lab_no), lab_type);
+
+		if (r != null) {
+			info.put("lab_no", lab_no);
+			info.put("provider_no", r.getProviderNo());
+			info.put("status", r.getStatus());
+			info.put("comment", r.getComment());
+			info.put("timestamp", r.getTimestamp());
+			info.put("lab_type", r.getLabType());
+			info.put("id", r.getId());
+		}
+		return info;
+	}
 }

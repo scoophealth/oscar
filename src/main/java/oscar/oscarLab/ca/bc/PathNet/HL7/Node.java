@@ -23,7 +23,6 @@
 
 
 package oscar.oscarLab.ca.bc.PathNet.HL7;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -31,8 +30,6 @@ import java.util.Date;
 import java.util.Hashtable;
 
 import org.apache.log4j.Logger;
-
-import oscar.oscarDB.DBHandler;
 
 /*
  * @author Jesse Bank
@@ -43,7 +40,7 @@ import oscar.oscarDB.DBHandler;
 public abstract class Node {
    Logger _logger = Logger.getLogger(this.getClass());
    protected Hashtable data;
-   private static final String last_insert_id = "SELECT LAST_INSERT_ID();";
+   
    protected abstract String[] getProperties();
    public abstract int ToDatabase(int parent)
    throws SQLException;
@@ -61,17 +58,6 @@ public abstract class Node {
 		   //nothing
 	   }
 	   return null;
-   }
-   
-   protected int getLastInsertedId() throws SQLException {
-      ResultSet result = DBHandler.GetSQL(last_insert_id);
-      int parent = 0;
-      if (result.next()) {
-         parent = result.getInt(1);
-      }
-      if (parent == 0)
-         throw new SQLException("Could not get last inserted id");
-      return parent;
    }
    
    public int booleanConvert(boolean b){
