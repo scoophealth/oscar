@@ -23,13 +23,21 @@
  */
 package org.oscarehr.common.dao;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.FlowSheetUserCreated;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class FlowSheetUserCreatedDaoTest extends DaoTestFixtures {
@@ -42,11 +50,49 @@ public class FlowSheetUserCreatedDaoTest extends DaoTestFixtures {
 		SchemaUtils.restoreTable("FlowSheetUserCreated");
 	}
 
+        @Test
+        public void testCreate() throws Exception {
+                FlowSheetUserCreated entity = new FlowSheetUserCreated();
+                EntityDataGenerator.generateTestDataForModelClass(entity);
+                dao.persist(entity);
+                assertNotNull(entity.getId());
+        }
+
 	@Test
-	public void testCreate() throws Exception {
-		FlowSheetUserCreated entity = new FlowSheetUserCreated();
-		EntityDataGenerator.generateTestDataForModelClass(entity);
-		dao.persist(entity);
-		assertNotNull(entity.getId());
+	public void testGetAllUserCreatedFlowSheets() throws Exception {
+		
+		boolean isArchived = true;
+		
+		FlowSheetUserCreated flowSheetUserCreated1 = new FlowSheetUserCreated();
+		EntityDataGenerator.generateTestDataForModelClass(flowSheetUserCreated1);
+		flowSheetUserCreated1.setArchived(!isArchived);
+		dao.persist(flowSheetUserCreated1);
+		
+		FlowSheetUserCreated flowSheetUserCreated2 = new FlowSheetUserCreated();
+		EntityDataGenerator.generateTestDataForModelClass(flowSheetUserCreated2);
+		flowSheetUserCreated2.setArchived(isArchived);
+		dao.persist(flowSheetUserCreated2);
+		
+		FlowSheetUserCreated flowSheetUserCreated3 = new FlowSheetUserCreated();
+		EntityDataGenerator.generateTestDataForModelClass(flowSheetUserCreated3);
+		flowSheetUserCreated3.setArchived(!isArchived);
+		dao.persist(flowSheetUserCreated3);
+		
+		List<FlowSheetUserCreated> expectedResult = new ArrayList<FlowSheetUserCreated>(Arrays.asList(flowSheetUserCreated1, flowSheetUserCreated3));
+		List<FlowSheetUserCreated> result = dao.getAllUserCreatedFlowSheets();
+
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);
 	}
 }
