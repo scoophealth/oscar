@@ -603,7 +603,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         }
     }
 
-    void setLaboratoryResults(PatientRecord patientRecord, String demoNo) throws SQLException {
+    void setLaboratoryResults(PatientRecord patientRecord, String demoNo) {
 	List<LabMeasurements> labMeaList = ImportExportMeasurements.getLabMeasurements(demoNo);
 	for (LabMeasurements labMea : labMeaList) {
 	    String data = StringUtils.noNull(labMea.getExtVal("identifier"));
@@ -619,7 +619,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    LaboratoryResults labResults = patientRecord.addNewLaboratoryResults();
 	    labResults.setTestName(testName); //LOINC code
 	    labResults.setLabTestCode(data);
-
 
 	    cdsDt.DateFullOrPartial collDate = labResults.addNewCollectionDateTime();
         String sDateTime = labMea.getExtVal("datetime");
