@@ -23,7 +23,14 @@
  */
 package org.oscarehr.common.dao;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,21 +41,78 @@ import org.oscarehr.util.SpringUtils;
 
 public class AppointmentTypeDaoTest extends DaoTestFixtures {
 
-	private AppointmentTypeDao dao = (AppointmentTypeDao)SpringUtils.getBean("appointmentTypeDao");
-
-	public AppointmentTypeDaoTest() {
-	}
+	private AppointmentTypeDao dao = (AppointmentTypeDao)SpringUtils.getBean(AppointmentTypeDao.class);
 
 	@Before
-	public void before() throws Exception {
-		SchemaUtils.restoreTable("appointmentType");
+	public void setup() throws Exception {
+		SchemaUtils.restoreTable(false, "appointmentType");
 	}
 
 	@Test
 	public void testCreate() throws Exception {
-		 AppointmentType entity = new AppointmentType();
-		 EntityDataGenerator.generateTestDataForModelClass(entity);
-		 dao.persist(entity);
-		 assertNotNull(entity.getId());
+		AppointmentType entity = new AppointmentType();
+		EntityDataGenerator.generateTestDataForModelClass(entity);
+		dao.persist(entity);
+		assertNotNull(entity.getId());
+	}
+
+	@Test
+	public void testListAll() throws Exception {
+		AppointmentType appointmentType1 = new AppointmentType();
+		EntityDataGenerator.generateTestDataForModelClass(appointmentType1);
+		appointmentType1.setName("A");
+		
+		AppointmentType appointmentType2 = new AppointmentType();
+		EntityDataGenerator.generateTestDataForModelClass(appointmentType2);
+		appointmentType2.setName("C");
+		
+		AppointmentType appointmentType3 = new AppointmentType();
+		EntityDataGenerator.generateTestDataForModelClass(appointmentType3);
+		appointmentType3.setName("B");
+		
+		dao.persist(appointmentType1);
+		dao.persist(appointmentType2);
+		dao.persist(appointmentType3);
+		
+		List<AppointmentType> result = dao.listAll();
+		List<AppointmentType> expectedResult = new ArrayList<AppointmentType>(Arrays.asList(
+				appointmentType2, appointmentType3, appointmentType1 ));
+		
+		if (result.size() != expectedResult.size()) {
+			fail("Array sizes do not match.");
+		}
+
+		for (int i =0; i < result.size(); i++) {
+			if (!result.get(i).equals(expectedResult.get(i))) {
+				fail("Items not ordered by name descending.");
+			}
+		}
+		assertTrue(true);
+	}
+	
+	@Test
+	public void testFindAppointmentTypeByName() throws Exception {
+		String name = "A";
+		
+		AppointmentType appointmentType1 = new AppointmentType();
+		EntityDataGenerator.generateTestDataForModelClass(appointmentType1);
+		appointmentType1.setName("A");
+		
+		AppointmentType appointmentType2 = new AppointmentType();
+		EntityDataGenerator.generateTestDataForModelClass(appointmentType2);
+		appointmentType2.setName("C");
+		
+		AppointmentType appointmentType3 = new AppointmentType();
+		EntityDataGenerator.generateTestDataForModelClass(appointmentType3);
+		appointmentType3.setName("B");
+		
+		dao.persist(appointmentType1);
+		dao.persist(appointmentType2);
+		dao.persist(appointmentType3);
+		
+		AppointmentType result = dao.findByAppointmentTypeByName(name);
+		AppointmentType expectedResult = appointmentType1;
+		
+		assertEquals(expectedResult, result);
 	}
 }
