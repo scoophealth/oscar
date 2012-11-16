@@ -24,8 +24,18 @@
 package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.oscarehr.billing.CA.dao.BillActivityDao;
 import org.oscarehr.billing.CA.model.BillActivity;
@@ -33,16 +43,14 @@ import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.util.SpringUtils;
 
-public class BillActivityDaoTest {
+public class BillActivityDaoTest extends DaoTestFixtures {
 
-	private BillActivityDao dao = SpringUtils.getBean(BillActivityDao.class);
-
-	public BillActivityDaoTest() {
-	}
+	private BillActivityDao dao = (BillActivityDao)SpringUtils.getBean(BillActivityDao.class);
+	DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
 
 	@Before
-	public void before() throws Exception {
-		SchemaUtils.restoreTable("billactivity");
+	public void setup() throws Exception {
+		SchemaUtils.restoreTable(false, "billactivity");
 	}
 
 	@Test
@@ -51,5 +59,152 @@ public class BillActivityDaoTest {
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		dao.persist(entity);
 		assertNotNull(entity.getId());
+	}
+
+	/**
+	 * Test throws errors with sql query (BillActivityDao.java, line 45)
+	 * @throws Exception
+	 */
+	@Ignore @Test
+	public void testFindCurrentByMonthCodeAndGroupNo() throws Exception {
+		String monthCode = "A";
+		String groupNo= "101";
+		Date updateDateTime = new Date(dfm.parse("20080101").getTime());
+
+		BillActivity billActivity1 = new BillActivity();
+		EntityDataGenerator.generateTestDataForModelClass(billActivity1);
+		Date date1 = new Date(dfm.parse("20090101").getTime());
+		billActivity1.setUpdateDateTime(date1);
+		billActivity1.setMonthCode(monthCode);
+		billActivity1.setGroupNo(groupNo);
+		billActivity1.setStatus("A");
+		billActivity1.setBatchCount(10);
+
+		// wrong monthCode; should not be selected
+		BillActivity billActivity2 = new BillActivity();
+		EntityDataGenerator.generateTestDataForModelClass(billActivity2);
+		Date date2 = new Date(dfm.parse("20090101").getTime());
+		billActivity2.setUpdateDateTime(date2);
+		billActivity2.setMonthCode("B");
+		billActivity2.setGroupNo(groupNo);
+		billActivity2.setStatus("A");
+
+		// wrong group number; should not be selected
+		BillActivity billActivity3 = new BillActivity();
+		EntityDataGenerator.generateTestDataForModelClass(billActivity3);
+		Date date3 = new Date(dfm.parse("20090101").getTime());
+		billActivity3.setUpdateDateTime(date3);
+		billActivity3.setMonthCode(monthCode);
+		billActivity3.setGroupNo("102");
+		billActivity3.setStatus("A");
+
+		// update time older than specified; should not be selected
+		BillActivity billActivity4 = new BillActivity();
+		EntityDataGenerator.generateTestDataForModelClass(billActivity4);
+		Date date4 = new Date(dfm.parse("20070101").getTime());
+		billActivity4.setUpdateDateTime(date4);
+		billActivity4.setMonthCode(monthCode);
+		billActivity4.setGroupNo(groupNo);
+		billActivity4.setStatus("A");
+
+		// inactive; should not be selected
+		BillActivity billActivity5 = new BillActivity();
+		EntityDataGenerator.generateTestDataForModelClass(billActivity5);
+		Date date5 = new Date(dfm.parse("20090101").getTime());
+		billActivity5.setUpdateDateTime(date5);
+		billActivity5.setMonthCode(monthCode);
+		billActivity5.setGroupNo(groupNo);
+		billActivity5.setStatus("D");
+
+		BillActivity billActivity6 = new BillActivity();
+		EntityDataGenerator.generateTestDataForModelClass(billActivity6);
+		Date date6 = new Date(dfm.parse("20090101").getTime());
+		billActivity6.setUpdateDateTime(date6);
+		billActivity6.setMonthCode(monthCode);
+		billActivity6.setGroupNo(groupNo);
+		billActivity6.setStatus("A");
+		billActivity6.setBatchCount(6);
+
+		dao.persist(billActivity1);
+		dao.persist(billActivity2);
+		dao.persist(billActivity3);
+		dao.persist(billActivity4);
+		dao.persist(billActivity5);
+		dao.persist(billActivity6);
+
+		List<BillActivity> result = dao.findCurrentByMonthCodeAndGroupNo(monthCode, groupNo, updateDateTime);
+		List<BillActivity> expectedResult = new ArrayList<BillActivity>(Arrays.asList(
+				billActivity6, billActivity1));
+
+		if (result.size() != expectedResult.size()) {
+			fail("Array sizes do not match.");
+		}
+
+		for (int i =0; i < result.size(); i++) {
+			if (!result.get(i).equals(expectedResult.get(i))) {
+				fail("Items not ordered by batch count.");
+			}
+		}
+
+		assertTrue(true);
+	}
+
+	/**
+	 * Test throws errors with sql query (BillActivityDao.java, line 57)
+	 * @throws Exception
+	 */
+	@Ignore @Test
+	public void testFindCurrentByDateRange() throws Exception {
+		String monthCode = "A";
+		String groupNo= "101";
+		Date startDate = new Date(dfm.parse("20090101").getTime());
+		Date endDate = new Date(dfm.parse("20090301").getTime());
+
+		BillActivity billActivity1 = new BillActivity();
+		EntityDataGenerator.generateTestDataForModelClass(billActivity1);
+		Date date1 = new Date(dfm.parse("20090101").getTime());
+		billActivity1.setUpdateDateTime(date1);
+		billActivity1.setMonthCode(monthCode);
+		billActivity1.setGroupNo(groupNo);
+		billActivity1.setStatus("A");
+
+		BillActivity billActivity2 = new BillActivity();
+		EntityDataGenerator.generateTestDataForModelClass(billActivity2);
+		Date date2 = new Date(dfm.parse("20090201").getTime());
+		billActivity2.setUpdateDateTime(date2);
+		billActivity2.setStatus("A");
+
+		BillActivity billActivity3 = new BillActivity();
+		EntityDataGenerator.generateTestDataForModelClass(billActivity3);
+		Date date3 = new Date(dfm.parse("20090301").getTime());
+		billActivity3.setUpdateDateTime(date3);
+		billActivity3.setStatus("A");
+
+		BillActivity billActivity4 = new BillActivity();
+		EntityDataGenerator.generateTestDataForModelClass(billActivity4);
+		Date date4 = new Date(dfm.parse("20081231").getTime());
+		billActivity4.setUpdateDateTime(date4);
+		billActivity4.setStatus("A");
+		
+		dao.persist(billActivity1);
+		dao.persist(billActivity2);
+		dao.persist(billActivity3);
+		dao.persist(billActivity4);
+		
+		List<BillActivity> result = dao.findCurrentByDateRange(startDate, endDate);
+		List<BillActivity> expectedResult = new ArrayList<BillActivity>(Arrays.asList(
+				billActivity2, billActivity1));
+
+		if (result.size() != expectedResult.size()) {
+			fail("Array sizes do not match.");
+		}
+
+		for (int i =0; i < result.size(); i++) {
+			if (!result.get(i).equals(expectedResult.get(i))) {
+				fail("Items not ordered by id.");
+			}
+		}
+
+		assertTrue(true);
 	}
 }
