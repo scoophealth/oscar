@@ -25,7 +25,8 @@ package org.oscarehr.survey.service;
 
 import java.util.List;
 
-import org.oscarehr.survey.model.Survey;
+import org.oscarehr.common.model.Survey;
+
 
 public interface SurveyManager {
 	public void saveSurvey(Survey survey);

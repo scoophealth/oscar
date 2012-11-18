@@ -26,11 +26,13 @@ package org.oscarehr.survey.service.impl;
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
-import org.oscarehr.survey.dao.SurveyTestDAO;
-import org.oscarehr.survey.model.SurveyTestData;
-import org.oscarehr.survey.model.SurveyTestInstance;
+import org.oscarehr.common.dao.SurveyTestDataDao;
+import org.oscarehr.common.dao.SurveyTestInstanceDao;
+import org.oscarehr.common.model.SurveyTestData;
+import org.oscarehr.common.model.SurveyTestInstance;
 import org.oscarehr.survey.service.SurveyTestManager;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
@@ -38,27 +40,24 @@ public class SurveyTestManagerImpl implements SurveyTestManager {
 
 	private static Logger log = MiscUtils.getLogger();
 
-	private SurveyTestDAO surveyTestDAO;
-	
-	public void setSurveyTestDAO(SurveyTestDAO dao) {
-		this.surveyTestDAO = dao;
-	}
+	private SurveyTestInstanceDao surveyTestDAO = SpringUtils.getBean(SurveyTestInstanceDao.class);
+	private SurveyTestDataDao surveyTestDataDAO = SpringUtils.getBean(SurveyTestDataDao.class);
 	
 	public SurveyTestInstance getSurveyInstance(String id) {
-		return this.surveyTestDAO.getSurveyInstance(Long.valueOf(id));
+		return this.surveyTestDAO.find(Integer.valueOf(id));
 	}
 
 	public SurveyTestInstance getSurveyInstance(String surveyId, String clientId) {
-		return this.surveyTestDAO.getSurveyInstance(Long.valueOf(surveyId),Long.valueOf(clientId));
+		return this.surveyTestDAO.getSurveyInstance(Integer.valueOf(surveyId),Integer.valueOf(clientId));
 	}
 
 	public void saveSurveyInstance(SurveyTestInstance instance) {
 		log.debug("Saving a test instance");
 		for(Iterator iter=instance.getData().iterator();iter.hasNext();) {
 			SurveyTestData data = (SurveyTestData)iter.next();
-			this.surveyTestDAO.saveSurveyData(data);
+			surveyTestDataDAO.persist(data);
 		}
-		this.surveyTestDAO.saveSurveyInstance(instance);
+		this.surveyTestDAO.persist(instance);
 	}
 
 	public void clearTestData(String surveyId) {

@@ -23,7 +23,7 @@
 
 package org.oscarehr.survey.service;
 
-import org.oscarehr.survey.model.Survey;
+import org.oscarehr.common.model.Survey;
 
 public interface SurveyLaunchManager {
 	public long launch(Survey survey);
