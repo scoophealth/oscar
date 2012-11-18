@@ -26,40 +26,41 @@ package org.oscarehr.survey.service.impl;
 import java.io.StringReader;
 import java.util.List;
 
-import org.oscarehr.survey.dao.SurveyDAO;
-import org.oscarehr.survey.model.Survey;
+import org.oscarehr.common.dao.SurveyDao;
+import org.oscarehr.common.model.Survey;
 import org.oscarehr.survey.service.SurveyManager;
 import org.oscarehr.surveymodel.SurveyDocument;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public class SurveyManagerImpl implements SurveyManager {
 
-	private SurveyDAO surveyDAO;
+	private SurveyDao surveyDAO = SpringUtils.getBean(SurveyDao.class);
 	
-	public void setSurveyDAO(SurveyDAO dao) {
-		this.surveyDAO = dao;
-	}
 	
 	public void saveSurvey(Survey survey) {
-		surveyDAO.saveSurvey(survey);
+		if(survey.getId()==null)
+			surveyDAO.persist(survey);
+		else
+			surveyDAO.merge(survey);
 	}
 
 	public Survey getSurvey(String surveyId) {
-		return surveyDAO.getSurvey(Long.valueOf(surveyId));
+		return surveyDAO.find(Integer.valueOf(surveyId));
 	}
 
-	public List getSurveys() {
-		return surveyDAO.getSurveys();
+	public List<Survey> getSurveys() {
+		return surveyDAO.findAll();
 	}
 
 	public void deleteSurvey(String surveyId) {
-		surveyDAO.deleteSurvey(Long.valueOf(surveyId));
+		surveyDAO.remove(Integer.valueOf(surveyId));
 	}
 
 	public Survey getSurveyByName(String name) {
-		return surveyDAO.getSurveyByName(name);
+		return surveyDAO.findByName(name);
 	}
 	
 	public Survey updateStatus(String surveyId, short status) {

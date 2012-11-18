@@ -40,8 +40,8 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
-import org.oscarehr.survey.model.SurveyTestData;
-import org.oscarehr.survey.model.SurveyTestInstance;
+import org.oscarehr.common.model.SurveyTestData;
+import org.oscarehr.common.model.SurveyTestInstance;
 import org.oscarehr.survey.service.SurveyManager;
 import org.oscarehr.survey.service.SurveyModelManager;
 import org.oscarehr.survey.service.SurveyTestManager;
@@ -96,7 +96,7 @@ public class SurveyTestAction extends AbstractSurveyAction {
 		}
 		formBean.setId(Long.parseLong(surveyId));
 		
-		org.oscarehr.survey.model.Survey surveyObj = surveyManager.getSurvey(String.valueOf(formBean.getId()));
+		org.oscarehr.common.model.Survey surveyObj = surveyManager.getSurvey(String.valueOf(formBean.getId()));
 		String descr = surveyObj.getDescription();
 		descr = descr.replaceAll(" ","_");
 		descr = descr.toLowerCase();				
@@ -115,7 +115,7 @@ public class SurveyTestAction extends AbstractSurveyAction {
 			return mapping.findForward("manager");
 		}
 		
-		log.debug("running test on survey " + surveyObj.getSurveyId());
+		log.debug("running test on survey " + surveyObj.getId());
 		
 		SurveyDocument model = null;
 		try {
@@ -134,7 +134,7 @@ public class SurveyTestAction extends AbstractSurveyAction {
         	log.debug("loading up test data");
         	for(Iterator iter=instance.getData().iterator();iter.hasNext();) {
         		SurveyTestData dataItem = (SurveyTestData)iter.next();
-        		String key = dataItem.getKey();
+        		String key = dataItem.getDataKey();
         		if(SurveyModelManager.isCheckbox(model.getSurvey(),key)) {
         			String value = dataItem.getValue();
         			if(value != null) {
@@ -241,8 +241,8 @@ public class SurveyTestAction extends AbstractSurveyAction {
 		SurveyTestInstance instance = new SurveyTestInstance();
 		instance.setClientId(1);
 		instance.setDateCreated(new Date());
-		instance.setSurveyId(formBean.getId());
-		instance.setUserId(userManager.getUserId(request));
+		instance.setSurveyId((int)formBean.getId());
+		instance.setUserId((int)userManager.getUserId(request));
 		
 		/* fix the checkboxes */
 		Map test = new HashMap();
@@ -276,11 +276,11 @@ public class SurveyTestAction extends AbstractSurveyAction {
 	    	String questionId = parsed[2];
 	    	
 			SurveyTestData dataItem = new SurveyTestData();
-			dataItem.setPageNumber(Long.parseLong(pageNumber));
-			dataItem.setSectionId(Long.parseLong(sectionId));
-			dataItem.setQuestionId(Long.parseLong(questionId));
+			dataItem.setPageNumber(Integer.parseInt(pageNumber));
+			dataItem.setSectionId(Integer.parseInt(sectionId));
+			dataItem.setQuestionId(Integer.parseInt(questionId));
 			dataItem.setValue((String)data.getValue(key));
-			dataItem.setKey(key);
+			dataItem.setDataKey(key);
 			instance.getData().add(dataItem);
 		}
 		

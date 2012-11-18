@@ -23,8 +23,8 @@
 
 package org.oscarehr.survey.service.impl;
 
+import org.oscarehr.common.model.Survey;
 import org.oscarehr.survey.dao.oscar.OscarFormDAO;
-import org.oscarehr.survey.model.Survey;
 import org.oscarehr.survey.model.oscar.OscarForm;
 import org.oscarehr.survey.service.SurveyLaunchManager;
 import org.springframework.transaction.annotation.Transactional;
