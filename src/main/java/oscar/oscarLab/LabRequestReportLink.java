@@ -30,22 +30,17 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.oscarehr.common.dao.LabRequestReportLinkDao;
+import org.oscarehr.common.dao.MeasurementsExtDao;
+import org.oscarehr.common.model.MeasurementsExt;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsExtDao;
-import oscar.oscarEncounter.oscarMeasurements.model.MeasurementsExt;
 import oscar.util.ConversionUtils;
 import oscar.util.StringUtils;
 import oscar.util.UtilDateUtilities;
 
 public class LabRequestReportLink {
 	private static LabRequestReportLinkDao dao = SpringUtils.getBean(LabRequestReportLinkDao.class);
-	
-	private static MeasurementsExtDao measurementsExtDao = null;
-	
-	static {
-		measurementsExtDao = (MeasurementsExtDao) SpringUtils.getBean("measurementsExtDao");
-	}
+	private static MeasurementsExtDao measurementsExtDao = SpringUtils.getBean(MeasurementsExtDao.class);
     
 	public static HashMap<String,Object> getLinkByReport(String reportTable, Long reportId) {
 		HashMap<String,Object> link = new HashMap<String,Object>();
@@ -157,9 +152,12 @@ public class LabRequestReportLink {
 		if (mExt==null) {
 			mExt = new MeasurementsExt(measurementId);
 			mExt.setKeyVal("request_datetime");
+			mExt.setVal(requestDate);
+			measurementsExtDao.persist(mExt);
+		} else {
+			mExt.setVal(requestDate);
+			measurementsExtDao.merge(mExt);
 		}
-		mExt.setVal(requestDate);
-		measurementsExtDao.getHibernateTemplate().saveOrUpdate(mExt);
 	}
 	
 	private static MeasurementsExt getRequestDate_MeasurementsExt(Integer measurementId) {
