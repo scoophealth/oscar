@@ -184,6 +184,7 @@ public class SchemaUtils
 		{
 			Statement s=c.createStatement();
 			s.executeUpdate("use "+schema);
+			s.executeUpdate("set foreign_key_checks = 0");
 			for (int i = 0; i < tableNames.length; i++) {
 				s.executeUpdate("drop table if exists " + tableNames[i]);
 				s.executeUpdate(createTableStatements.get(tableNames[i]).replaceAll("_maventest", ""));
@@ -191,6 +192,7 @@ public class SchemaUtils
 				if(includeInitData)
 					s.executeUpdate("insert into " + tableNames[i] + " select * from " + tableNames[i] + "_maventest");
             }
+			s.executeUpdate("set foreign_key_checks = 1");
 			s.close();
 
 		}
