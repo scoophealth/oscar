@@ -27,15 +27,14 @@ import java.util.Vector;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.BillingONCHeader1Dao;
 import org.oscarehr.common.dao.BillingONEAReportDao;
+import org.oscarehr.common.dao.BillingONItemDao;
 import org.oscarehr.common.dao.BillingONRepoDao;
 import org.oscarehr.common.dao.RaDetailDao;
 import org.oscarehr.common.model.BillingONCHeader1;
 import org.oscarehr.common.model.BillingONEAReport;
+import org.oscarehr.common.model.BillingONItem;
 import org.oscarehr.common.model.RaDetail;
 import org.oscarehr.util.SpringUtils;
-
-import oscar.oscarBilling.ca.on.dao.BillingOnItemDao;
-import oscar.oscarBilling.ca.on.model.BillingOnItem;
 
 public class JdbcBillingCorrection {
 	private static final Logger _logger = Logger.getLogger(JdbcBillingCorrection.class);
@@ -45,7 +44,7 @@ public class JdbcBillingCorrection {
 	
 	private BillingONCHeader1Dao billingHeaderDao = SpringUtils.getBean(BillingONCHeader1Dao.class);
 	private BillingONRepoDao billingRepoDao = SpringUtils.getBean(BillingONRepoDao.class);
-	private BillingOnItemDao billingItemDao = (BillingOnItemDao)SpringUtils.getBean("billingOnItemDao");
+	private BillingONItemDao billingItemDao = (BillingONItemDao)SpringUtils.getBean("BillingONItemDao");
 	private BillingONEAReportDao billingEaReportDao = SpringUtils.getBean(BillingONEAReportDao.class);
 	private RaDetailDao raDetailDao = SpringUtils.getBean(RaDetailDao.class);
 	
@@ -62,8 +61,8 @@ public class JdbcBillingCorrection {
 			billingHeaderDao.merge(h);
 			dbLog.addBillingLog(providerNo, "updateBillingStatus", "", id);
 			
-			List<BillingOnItem> items = billingItemDao.getBillingItemByCh1Id(Integer.valueOf(id));
-			for(BillingOnItem i:items) {
+			List<BillingONItem> items = billingItemDao.getBillingItemByCh1Id(Integer.valueOf(id));
+			for(BillingONItem i:items) {
 				i.setStatus(status);
 			}
 			 dbLog.addBillingLog(providerNo, "updateBillingStatus-items", "", id);
@@ -164,18 +163,18 @@ public class JdbcBillingCorrection {
 			obj.add(ch1Obj);
 		}
 		
-		List<BillingOnItem> items = billingItemDao.getActiveBillingItemByCh1Id(Integer.parseInt(id));
-		for(BillingOnItem i:items) {
+		List<BillingONItem> items = billingItemDao.getActiveBillingItemByCh1Id(Integer.parseInt(id));
+		for(BillingONItem i:items) {
 			itemObj = new BillingItemData();
 			itemObj.setId(i.getId().toString());
-			itemObj.setCh1_id(i.getCh1_id().toString());
-			itemObj.setTransc_id(i.getTransc_id());
-			itemObj.setRec_id(i.getRec_id());
-			itemObj.setService_code(i.getService_code());
+			itemObj.setCh1_id(i.getCh1Id().toString());
+			itemObj.setTransc_id(i.getTranscId());
+			itemObj.setRec_id(i.getRecId());
+			itemObj.setService_code(i.getServiceCode());
 			itemObj.setFee(i.getFee());
-			itemObj.setSer_num(i.getSer_num());
-			if(i.getService_date() != null)
-				itemObj.setService_date(dateFormatter.format(i.getService_date()));
+			itemObj.setSer_num(i.getServiceCount());
+			if(i.getServiceDate() != null)
+				itemObj.setService_date(dateFormatter.format(i.getServiceDate()));
 			else
 				itemObj.setService_date("");
 			
@@ -185,8 +184,8 @@ public class JdbcBillingCorrection {
 			itemObj.setDx1(i.getDx1());
 			itemObj.setDx2(i.getDx2());
 			itemObj.setStatus(i.getStatus());
-			if(i.getTimestamp() != null)
-				itemObj.setTimestamp(tsFormatter.format(i.getTimestamp()));
+			if(i.getLastEditDT() != null)
+				itemObj.setTimestamp(tsFormatter.format(i.getLastEditDT()));
 			else
 				itemObj.setTimestamp("");
 		

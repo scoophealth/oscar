@@ -22,7 +22,6 @@
 				<value>classpath:/com/quatro/model</value>
 				<value>classpath:/org/oscarehr/document/model</value>
                 <value>classpath:/org/oscarehr/decisionSupport/model</value>
-                <value>classpath:/oscar/oscarBilling/ca/on/model</value>
                 <value>classpath:/oscar/entities</value>
                                 
 			</list>

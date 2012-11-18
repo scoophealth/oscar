@@ -23,13 +23,53 @@
  */
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
+import org.oscarehr.common.model.BillingONCHeader1;
 import org.oscarehr.common.model.BillingONItem;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class BillingONItemDao extends AbstractDao<BillingONItem>{
 
+	
 	public BillingONItemDao() {
 		super(BillingONItem.class);
 	}
+
+    public List<BillingONItem> getBillingItemByCh1Id(Integer ch1_id) {
+        String queryStr = "FROM BillingONItem b WHERE b.ch1Id = ?1";
+        Query q = entityManager.createQuery(queryStr);
+        q.setParameter(1, ch1_id);
+        
+        @SuppressWarnings("unchecked")
+        List<BillingONItem> rs = q.getResultList();
+
+        return rs;
+    }
+        
+    public List<BillingONItem> getActiveBillingItemByCh1Id(Integer ch1_id) {
+        String queryStr = "FROM BillingONItem b WHERE b.ch1Id = ?1 AND b.status <> ?2";
+        Query q = entityManager.createQuery(queryStr);
+        q.setParameter(1, ch1_id);
+        q.setParameter(2, "D");
+        
+        @SuppressWarnings("unchecked")
+        List<BillingONItem> rs = q.getResultList();
+
+        return rs;
+    }
+
+    public List<BillingONCHeader1> getCh1ByDemographicNo(Integer demographic_no) {
+        String queryStr = "FROM BillingONCHeader1 b WHERE b.demographicNo = ?1";
+        Query q = entityManager.createQuery(queryStr);
+        q.setParameter(1, demographic_no);
+        
+        @SuppressWarnings("unchecked")
+        List<BillingONCHeader1> rs = q.getResultList();
+
+        return rs;
+    }
 }
