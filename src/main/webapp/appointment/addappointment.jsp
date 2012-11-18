@@ -56,7 +56,7 @@
 	errorPage="../appointment/errorpage.jsp"%>
 <%@ page import="oscar.appt.status.service.AppointmentStatusMgr"
 	errorPage="../appointment/errorpage.jsp"%>
-<%@ page import="oscar.appt.status.model.AppointmentStatus"
+<%@ page import="org.oscarehr.common.model.AppointmentStatus"
 	errorPage="../appointment/errorpage.jsp"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>

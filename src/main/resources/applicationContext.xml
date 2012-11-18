@@ -105,7 +105,6 @@
 	<!-- bean id="documentDAO" class="org.oscarehr.document.dao.DocumentDAO" autowire="byName" / -->
 	<bean id="documentDAO" class="org.oscarehr.document.dao.DocumentMergeDemographicDAO" autowire="byName" />
 	<bean id="userAccessDao" class="com.quatro.dao.security.UserAccessDao" autowire="byName" />
-	<bean id="appointStatusDao" class="oscar.appt.status.dao.hibernate.AppointmentStatusDAOHibernate" autowire="byName" />
 	<bean id="providerInboxRoutingDAO" class="org.oscarehr.common.dao.ProviderInboxRoutingDao" autowire="byName"/>
 	<bean id="ProviderLabRoutingFavoritesDao" class="org.oscarehr.common.dao.ProviderLabRoutingFavoritesDao" autowire="byName"/>
 
@@ -268,11 +267,7 @@
 	<bean id="preparedTicklerManagerT" class="org.caisi.tickler.prepared.PreparedTicklerManager" scope="singleton" />
 	<bean id="providerManager" class="org.oscarehr.PMmodule.service.ProviderManager" autowire="byName" />
 	<bean id="clientRestrictionManager" class="org.oscarehr.PMmodule.service.ClientRestrictionManager" autowire="byName" />
-	<bean id="AppointmentStatusMgr" class="oscar.appt.status.service.impl.AppointmentStatusMgrImpl">
-		<property name="appointStatusDao">
-			<ref local="appointStatusDao" />
-		</property>
-	</bean>
+	<bean id="AppointmentStatusMgr" class="oscar.appt.status.service.impl.AppointmentStatusMgrImpl" autowire="byName"/>
 
 	<!-- Admin Start -->
 	<bean id="secobjprivilegeDao" class="com.quatro.dao.security.SecobjprivilegeDao" autowire="byName" />
