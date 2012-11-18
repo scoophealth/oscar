@@ -263,9 +263,10 @@
         }
     }
 
-    DemographicArchive da = new DemographicArchive();
-	da.setDemographicNo(Integer.parseInt(request.getParameter("demographic_no")));
-    demographicArchiveDao.persist(da);
+    demographicArchiveDao.archiveRecord(demographic);
+    //DemographicArchive da = new DemographicArchive();
+	//da.setDemographicNo(Integer.parseInt(request.getParameter("demographic_no")));
+    //demographicArchiveDao.persist(da);
 
     demographicDao.save(demographic);
     int rowsAffected=1;
