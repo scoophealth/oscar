@@ -99,6 +99,7 @@ import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.common.dao.AdmissionDao;
 import org.oscarehr.common.dao.AllergyDao;
+import org.oscarehr.common.dao.BillingONItemDao;
 import org.oscarehr.common.dao.CaseManagementIssueNotesDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DemographicExtDao;
@@ -121,6 +122,8 @@ import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.BillingONCHeader1;
+import org.oscarehr.common.model.BillingONItem;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.common.model.Drug;
@@ -154,9 +157,6 @@ import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
 import oscar.form.FrmLabReq07Record;
 import oscar.log.LogAction;
-import oscar.oscarBilling.ca.on.dao.BillingOnItemDao;
-import oscar.oscarBilling.ca.on.model.BillingOnCHeader1;
-import oscar.oscarBilling.ca.on.model.BillingOnItem;
 import oscar.oscarLab.ca.all.web.LabDisplayHelper;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
@@ -194,7 +194,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private MeasurementsExtDao measurementsExtDao = SpringUtils.getBean(MeasurementsExtDao.class);
 	private MeasurementMapDao measurementMapDao = (MeasurementMapDao) SpringUtils.getBean("measurementMapDao");
 	private DxresearchDAO dxresearchDao = (DxresearchDAO) SpringUtils.getBean("dxresearchDAO");
-	private BillingOnItemDao billingOnItemDao = (BillingOnItemDao) SpringUtils.getBean("billingOnItemDao");
+	private BillingONItemDao BillingONItemDao = (BillingONItemDao) SpringUtils.getBean("BillingONItemDao");
 	private EFormValueDao eFormValueDao = (EFormValueDao) SpringUtils.getBean("EFormValueDao");
 	private EFormDataDao eFormDataDao = (EFormDataDao) SpringUtils.getBean("EFormDataDao");
 	private GroupNoteDao groupNoteDao = (GroupNoteDao) SpringUtils.getBean("groupNoteDao");
@@ -1189,34 +1189,34 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private void pushBillingItems(Date lastDataUpdated, Facility facility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
 		logger.debug("pushing billingitems facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
-		List<BillingOnCHeader1> billingCh1s = billingOnItemDao.getCh1ByDemographicNo(demographicId);
+		List<BillingONCHeader1> billingCh1s = BillingONItemDao.getCh1ByDemographicNo(demographicId);
 		if (billingCh1s.size() == 0) return;
 
-		for (BillingOnCHeader1 billingCh1 : billingCh1s) {
-			List<BillingOnItem> billingItems = billingOnItemDao.getBillingItemByCh1Id(billingCh1.getId());
-			for (BillingOnItem billingItem : billingItems) {
+		for (BillingONCHeader1 billingCh1 : billingCh1s) {
+			List<BillingONItem> billingItems = BillingONItemDao.getBillingItemByCh1Id(billingCh1.getId());
+			for (BillingONItem billingItem : billingItems) {
 				MiscUtils.checkShutdownSignaled();
 
-				CachedBillingOnItem cachedBillingOnItem = new CachedBillingOnItem();
+				CachedBillingOnItem cachedBillingONItem = new CachedBillingOnItem();
 				FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
 				facilityIdIntegerCompositePk.setCaisiItemId(billingItem.getId());
-				cachedBillingOnItem.setFacilityIdIntegerCompositePk(facilityIdIntegerCompositePk);
+				cachedBillingONItem.setFacilityIdIntegerCompositePk(facilityIdIntegerCompositePk);
 
-				cachedBillingOnItem.setCaisiDemographicId(demographicId);
-				cachedBillingOnItem.setCaisiProviderId(billingCh1.getProvider_no());
-				cachedBillingOnItem.setApptProviderId(billingCh1.getApptProvider_no());
-				cachedBillingOnItem.setAsstProviderId(billingCh1.getAsstProvider_no());
-				cachedBillingOnItem.setAppointmentId(billingCh1.getAppointment_no());
-				cachedBillingOnItem.setDx(billingItem.getDx());
-				cachedBillingOnItem.setDx1(billingItem.getDx1());
-				cachedBillingOnItem.setDx2(billingItem.getDx2());
-				cachedBillingOnItem.setServiceCode(billingItem.getService_code());
-				cachedBillingOnItem.setServiceDate(MiscUtils.toCalendar(billingItem.getService_date()));
-				cachedBillingOnItem.setStatus(billingItem.getStatus());
+				cachedBillingONItem.setCaisiDemographicId(demographicId);
+				cachedBillingONItem.setCaisiProviderId(billingCh1.getProviderNo());
+				cachedBillingONItem.setApptProviderId(billingCh1.getApptProviderNo());
+				cachedBillingONItem.setAsstProviderId(billingCh1.getAsstProviderNo());
+				cachedBillingONItem.setAppointmentId(billingCh1.getAppointmentNo());
+				cachedBillingONItem.setDx(billingItem.getDx());
+				cachedBillingONItem.setDx1(billingItem.getDx1());
+				cachedBillingONItem.setDx2(billingItem.getDx2());
+				cachedBillingONItem.setServiceCode(billingItem.getServiceCode());
+				cachedBillingONItem.setServiceDate(MiscUtils.toCalendar(billingItem.getServiceDate()));
+				cachedBillingONItem.setStatus(billingItem.getStatus());
 
-				ArrayList<CachedBillingOnItem> cachedBillingOnItems = new ArrayList<CachedBillingOnItem>();
-				cachedBillingOnItems.add(cachedBillingOnItem);
-				demographicService.setCachedBillingOnItem(cachedBillingOnItems);
+				ArrayList<CachedBillingOnItem> cachedBillingONItems = new ArrayList<CachedBillingOnItem>();
+				cachedBillingONItems.add(cachedBillingONItem);
+				demographicService.setCachedBillingOnItem(cachedBillingONItems);
 			}
 		}
 
