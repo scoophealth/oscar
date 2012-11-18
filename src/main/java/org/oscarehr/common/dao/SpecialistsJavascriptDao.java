@@ -40,7 +40,7 @@ public class SpecialistsJavascriptDao extends AbstractDao<SpecialistsJavascript>
 	}
 	
 	public List<SpecialistsJavascript> findBySetId(String setId) {
-		Query q = entityManager.createQuery("select x from SpecialistsJavascript where x.setId=?");
+		Query q = entityManager.createQuery("select x from SpecialistsJavascript x where x.setId=?");
 		q.setParameter(1, setId);
 		
 		@SuppressWarnings("unchecked")
