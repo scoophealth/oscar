@@ -285,7 +285,175 @@ public class DemographicDao extends HibernateDaoSupport {
 		return list;
 	}
 
-	public List<Demographic> getDemographicsByExtKey(String key, String value) {
+	public List<Demographic> searchDemographicByName(String searchStr, String limit, String offset) {
+
+		String queryString = "From Demographic d where last_name like :lastName ";
+
+		String[] name = searchStr.split(",");
+		if(name.length==2) {
+			queryString += " and first_name like :firstName ";
+		}
+		
+		Query q = this.getSession().createQuery(queryString);
+		q.setFirstResult(Integer.parseInt(offset));
+		q.setMaxResults(Integer.parseInt(limit));
+		
+		q.setParameter("lastName", name[0].trim() + "%");
+		if(name.length==2) {
+			q.setParameter("firstName", name[1].trim() + "%");
+		}
+		
+		List list = q.list();
+		return list;
+	}
+
+	public List<Demographic> searchMergedDemographicByName(String searchStr, String limit, String offset) {
+
+		String queryString = "From Demographic d where d.LastName like :lastName and d.HeadRecord is not null ";
+
+		String[] name = searchStr.split(",");
+		if(name.length==2) {
+			queryString += " and first_name like :firstName ";
+		}
+		
+		Query q = this.getSession().createQuery(queryString);
+		q.setFirstResult(Integer.parseInt(offset));
+		q.setMaxResults(Integer.parseInt(limit));
+		
+		q.setParameter("lastName", name[0].trim() + "%");
+		if(name.length==2) {
+			q.setParameter("firstName", name[1].trim() + "%");
+		}
+		
+		List list = q.list();
+		return list;
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+    public List<Demographic> searchDemographicByDOB(String dobStr, String limit, String offset) {
+
+		String queryString = "From Demographic d where d.YearOfBirth like :yearOfBirth AND d.MonthOfBirth like :monthOfBirth AND d.DateOfBirth like :dateOfBirth";
+
+		//format must be yyyy-mm-dd
+		String[] params = dobStr.split("-");
+		
+		Query q = this.getSession().createQuery(queryString);
+		q.setFirstResult(Integer.parseInt(offset));
+		q.setMaxResults(Integer.parseInt(limit));
+
+		q.setParameter("yearOfBirth", params[0].trim() + "%");
+		q.setParameter("monthOfBirth", params[1].trim() + "%");
+		q.setParameter("dateOfBirth", params[2].trim() + "%");
+
+		List list = q.list();
+		return list;
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+    public List<Demographic> searchMergedDemographicByDOB(String dobStr, String limit, String offset) {
+
+		String queryString = "From Demographic d where d.YearOfBirth like :yearOfBirth AND d.MonthOfBirth like :monthOfBirth AND d.DateOfBirth like :dateOfBirth and d.HeadRecord is not null ";
+
+		//format must be yyyy-mm-dd
+		String[] params = dobStr.split("-");
+		
+		Query q = this.getSession().createQuery(queryString);
+		q.setFirstResult(Integer.parseInt(offset));
+		q.setMaxResults(Integer.parseInt(limit));
+
+		q.setParameter("yearOfBirth", params[0].trim() + "%");
+		q.setParameter("monthOfBirth", params[1].trim() + "%");
+		q.setParameter("dateOfBirth", params[2].trim() + "%");
+
+		List list = q.list();
+		return list;
+	}
+	
+    public List<Demographic> searchDemographicByPhone(String phoneStr, String limit, String offset) {
+
+		String queryString = "From Demographic d where d.Phone like :phone";
+		
+		Query q = this.getSession().createQuery(queryString);
+		q.setFirstResult(Integer.parseInt(offset));
+		q.setMaxResults(Integer.parseInt(limit));
+
+		q.setParameter("phone", phoneStr.trim() + "%");
+		
+		List list = q.list();
+		return list;
+	}
+    
+    public List<Demographic> searchMergedDemographicByPhone(String phoneStr, String limit, String offset) {
+
+		String queryString = "From Demographic d where d.Phone like :phone and d.HeadRecord is not null ";
+		
+		Query q = this.getSession().createQuery(queryString);
+		q.setFirstResult(Integer.parseInt(offset));
+		q.setMaxResults(Integer.parseInt(limit));
+
+		q.setParameter("phone", phoneStr.trim() + "%");
+		
+		List list = q.list();
+		return list;
+	}
+
+    public List<Demographic> searchDemographicByHIN(String hinStr, String limit, String offset) {
+
+		String queryString = "From Demographic d where d.Hin like :hin";
+
+		Query q = this.getSession().createQuery(queryString);
+		q.setFirstResult(Integer.parseInt(offset));
+		q.setMaxResults(Integer.parseInt(limit));
+
+		q.setParameter("hin", hinStr.trim() + "%");
+		
+		List list = q.list();
+		return list;
+	}
+    
+    public List<Demographic> searchMergedDemographicByHIN(String hinStr, String limit, String offset) {
+
+		String queryString = "From Demographic d where d.Hin like :hin and d.HeadRecord is not null ";
+
+		Query q = this.getSession().createQuery(queryString);
+		q.setFirstResult(Integer.parseInt(offset));
+		q.setMaxResults(Integer.parseInt(limit));
+
+		q.setParameter("hin", hinStr.trim() + "%");
+		
+		List list = q.list();
+		return list;
+	}
+
+    public List<Demographic> searchDemographicByAddress(String addressStr, String limit, String offset) {
+
+		String queryString = "From Demographic d where d.Address like :address";
+
+		Query q = this.getSession().createQuery(queryString);
+		q.setFirstResult(Integer.parseInt(offset));
+		q.setMaxResults(Integer.parseInt(limit));
+
+		q.setParameter("address", addressStr.trim() + "%");
+		
+		List list = q.list(); 
+		return list;
+	}
+
+    public List<Demographic> searchMergedDemographicByAddress(String addressStr, String limit, String offset) {
+
+		String queryString = "From Demographic d where d.Address like :address and d.HeadRecord is not null ";
+
+		Query q = this.getSession().createQuery(queryString);
+		q.setFirstResult(Integer.parseInt(offset));
+		q.setMaxResults(Integer.parseInt(limit));
+
+		q.setParameter("address", addressStr.trim() + "%");
+		
+		List list = q.list(); 
+		return list;
+	}
+
+    public List<Demographic> getDemographicsByExtKey(String key, String value) {
 		List<DemographicExt> extras = this.getHibernateTemplate().find("from DemographicExt d where d.key=? and d.value=?", new Object[] { key, value });
 		if (extras.size() == 0) {
 			return new ArrayList<Demographic>();
