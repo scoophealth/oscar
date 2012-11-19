@@ -23,13 +23,21 @@
  */
 package org.oscarehr.common.dao;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.CtlBillingServicePremium;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class CtlBillingServicePremiumDaoTest extends DaoTestFixtures {
@@ -42,11 +50,56 @@ public class CtlBillingServicePremiumDaoTest extends DaoTestFixtures {
 		SchemaUtils.restoreTable("ctl_billingservice_premium");
 	}
 
+       @Test
+        public void testCreate() throws Exception {
+                CtlBillingServicePremium entity = new CtlBillingServicePremium();
+                EntityDataGenerator.generateTestDataForModelClass(entity);
+                dao.persist(entity);
+                assertNotNull(entity.getId());
+        }
+
 	@Test
-	public void testCreate() throws Exception {
-		CtlBillingServicePremium entity = new CtlBillingServicePremium();
-		EntityDataGenerator.generateTestDataForModelClass(entity);
-		dao.persist(entity);
-		assertNotNull(entity.getId());
+	public void testFindByServiceCode() throws Exception {
+		
+		String serviceCode1 = "alpha";
+		String serviceCode2 = "bravo";
+		
+		CtlBillingServicePremium ctlBillingServicePremium1 = new CtlBillingServicePremium();
+		EntityDataGenerator.generateTestDataForModelClass(ctlBillingServicePremium1);
+		ctlBillingServicePremium1.setServiceCode(serviceCode1);
+		dao.persist(ctlBillingServicePremium1);
+		
+		CtlBillingServicePremium ctlBillingServicePremium2 = new CtlBillingServicePremium();
+		EntityDataGenerator.generateTestDataForModelClass(ctlBillingServicePremium2);
+		ctlBillingServicePremium2.setServiceCode(serviceCode1);
+		dao.persist(ctlBillingServicePremium2);
+		
+		CtlBillingServicePremium ctlBillingServicePremium3 = new CtlBillingServicePremium();
+		EntityDataGenerator.generateTestDataForModelClass(ctlBillingServicePremium3);
+		ctlBillingServicePremium3.setServiceCode(serviceCode2);
+		dao.persist(ctlBillingServicePremium3);
+		
+		CtlBillingServicePremium ctlBillingServicePremium4 = new CtlBillingServicePremium();
+		EntityDataGenerator.generateTestDataForModelClass(ctlBillingServicePremium4);
+		ctlBillingServicePremium4.setServiceCode(serviceCode1);
+		dao.persist(ctlBillingServicePremium4);
+		
+		List<CtlBillingServicePremium> expectedResult = new ArrayList<CtlBillingServicePremium>(Arrays.asList(ctlBillingServicePremium1, ctlBillingServicePremium2, ctlBillingServicePremium4));
+		List<CtlBillingServicePremium> result = dao.findByServiceCode(serviceCode1);
+
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);
+		
 	}
 }
