@@ -25,27 +25,38 @@
 
 package oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
 import org.oscarehr.common.dao.ConsultationServiceDao;
+import org.oscarehr.common.dao.ProfessionalSpecialistDao;
+import org.oscarehr.common.dao.ServiceSpecialistsDao;
 import org.oscarehr.common.model.ConsultationServices;
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.common.model.ProfessionalSpecialist;
+import org.oscarehr.common.model.ServiceSpecialists;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
+import oscar.util.ConversionUtils;
 
 public class EctConDisplayServiceUtil
 {
 	private ConsultationServiceDao consultationServiceDao = (ConsultationServiceDao)SpringUtils.getBean("consultationServiceDao");
 	
-
-
+    public Vector<String> fNameVec;
+    public Vector<String> lNameVec;
+    public Vector<String> proLettersVec;
+    public Vector<String> addressVec;
+    public Vector<String> phoneVec;
+    public Vector<String> faxVec;
+    public Vector<String> websiteVec;
+    public Vector<String> emailVec;
+    public Vector<String> specTypeVec;
+    public Vector<String> specIdVec;
+    public Vector<String> serviceName;
+    public Vector<String> serviceId;
+    public ArrayList<String> referralNoVec;
+	
     public String getServiceDesc(String serId)
     {
         String retval = new String();
@@ -58,87 +69,52 @@ public class EctConDisplayServiceUtil
         return retval;
     }
     
-    
     public void estSpecialist() {
-    	try {
-    		//get method that takes a String as argument
-    		Method method = this.getClass().getMethod("estSpecialistVe"+"ctor", null);
-    		method.invoke(this, new Object[] {});    		
-        } catch (SecurityException e) {
-	        MiscUtils.getLogger().error("Unexpected error", e);
-        } catch (NoSuchMethodException e) {
-        	MiscUtils.getLogger().error("Unexpected error", e);
-        } catch (IllegalArgumentException e) {
-        	MiscUtils.getLogger().error("Unexpected error", e);
-        } catch (IllegalAccessException e) {
-        	MiscUtils.getLogger().error("Unexpected error", e);
-        } catch (InvocationTargetException e) {
-        	MiscUtils.getLogger().error("Unexpected error", e);
-        }
+    	estSpecialistVector();
     }
 
     public void estSpecialistVector()
     {
-        fNameVec = new Vector();
-        lNameVec = new Vector();
-        proLettersVec = new Vector();
-        addressVec = new Vector();
-        phoneVec = new Vector();
-        faxVec = new Vector();
-        websiteVec = new Vector();
-        emailVec = new Vector();
-        specTypeVec = new Vector();
-        specIdVec = new Vector();
+        fNameVec = new Vector<String>();
+        lNameVec = new Vector<String>();
+        proLettersVec = new Vector<String>();
+        addressVec = new Vector<String>();
+        phoneVec = new Vector<String>();
+        faxVec = new Vector<String>();
+        websiteVec = new Vector<String>();
+        emailVec = new Vector<String>();
+        specTypeVec = new Vector<String>();
+        specIdVec = new Vector<String>();
         referralNoVec = new ArrayList<String>();
-        try
-        {
-
-            String sql = "select * from professionalSpecialists order by lName ";
-            ResultSet rs;
-            for(rs = DBHandler.GetSQL(sql); rs.next(); specIdVec.add(oscar.Misc.getString(rs, "specId")))
-            {
-                fNameVec.add(oscar.Misc.getString(rs, "fName"));
-                lNameVec.add(oscar.Misc.getString(rs, "lName"));
-                proLettersVec.add(oscar.Misc.getString(rs, "proLetters"));
-                addressVec.add(oscar.Misc.getString(rs, "address"));
-                phoneVec.add(oscar.Misc.getString(rs, "phone"));
-                faxVec.add(oscar.Misc.getString(rs, "fax"));
-                websiteVec.add(oscar.Misc.getString(rs, "website"));
-                emailVec.add(oscar.Misc.getString(rs, "email"));
-                specTypeVec.add(oscar.Misc.getString(rs, "specType"));
-                //referralNoVec.add(oscar.Misc.getString(rs, "referral_no"));
-            }
-
-            rs.close();
-        }
-        catch(SQLException e)
-        {
-            MiscUtils.getLogger().error("Error", e);
+        
+        ProfessionalSpecialistDao dao = SpringUtils.getBean(ProfessionalSpecialistDao.class);        
+        for(ProfessionalSpecialist ps : dao.findAll()) {
+            fNameVec.add(ps.getFirstName());
+            lNameVec.add(ps.getLastName());
+            proLettersVec.add(ps.getProfessionalLetters());
+            addressVec.add(ps.getStreetAddress());
+            phoneVec.add(ps.getPhoneNumber());
+            faxVec.add(ps.getFaxNumber());
+            websiteVec.add(ps.getWebSite());
+            emailVec.add(ps.getEmailAddress());
+            specTypeVec.add(ps.getSpecialtyType());
         }
     }
 
-    public Vector getSpecialistInField(String serviceId)
-    {
-        Vector vector = new Vector();
-        try
-        {
-
-            String sql = String.valueOf(String.valueOf((new StringBuilder("select * from serviceSpecialists where serviceId = '")).append(serviceId).append("'")));
-            ResultSet rs;
-            for(rs = DBHandler.GetSQL(sql); rs.next(); vector.add(oscar.Misc.getString(rs, "specId")));
-            rs.close();
-        }
-        catch(SQLException e)
-        {
-            MiscUtils.getLogger().error("Error", e);
+    public Vector<String> getSpecialistInField(String serviceId) {
+        Vector<String> vector = new Vector<String>();
+        ServiceSpecialistsDao dao = SpringUtils.getBean(ServiceSpecialistsDao.class);
+        
+        for(ServiceSpecialists ss : dao.findByServiceId(ConversionUtils.fromIntString(serviceId))) {
+        	vector.add("" + ss.getId().getSpecId());
         }
         return vector;
     }
 
     public void estServicesVectors()
     {
-        serviceId = new Vector();
-        serviceName = new Vector();
+        serviceId = new Vector<String>();
+        serviceName = new Vector<String>();
 
         List<ConsultationServices> services = consultationServiceDao.findActive();
         for(ConsultationServices service:services) {
@@ -147,18 +123,4 @@ public class EctConDisplayServiceUtil
         }
 
     }
-
-    public Vector fNameVec;
-    public Vector lNameVec;
-    public Vector proLettersVec;
-    public Vector addressVec;
-    public Vector phoneVec;
-    public Vector faxVec;
-    public Vector websiteVec;
-    public Vector emailVec;
-    public Vector specTypeVec;
-    public Vector specIdVec;
-    public Vector serviceName;
-    public Vector serviceId;
-    public ArrayList<String> referralNoVec;
 }
