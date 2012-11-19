@@ -287,7 +287,9 @@ public class MsgMessageData {
      mt.setSentByNo(userNo);
      mt.setSentByLocation(Integer.parseInt(getCurrentLocationId()));
      mt.setAttachment(attach);
-     mt.setPdfAttachment(pdfAttach.getBytes());
+     if(pdfAttach !=null){
+    	 mt.setPdfAttachment(pdfAttach.getBytes());
+     }
      messageTblDao.persist(mt);
      
      

@@ -98,17 +98,17 @@ public class MsgViewMessageAction extends Action {
                  String sentto  = (oscar.Misc.getString(rs, "sentto"));
                  String thetime = (oscar.Misc.getString(rs, "theime"));
                  String thedate = (oscar.Misc.getString(rs, "thedate"));
-                 String att     = oscar.Misc.getString(rs, "attachment");
-                 String pdfAtt     = oscar.Misc.getString(rs, "pdfattachment");
+                 String att     = rs.getString("attachment");
+                 String pdfAtt  = rs.getString("pdfattachment");
 
-                 if (att == null || att.equals("null") ){
+                 if (att == null || att.equalsIgnoreCase("null") ){
                     attach ="0";
                  }else{
                     attach ="1";
                  }
 
 
-                 if (pdfAtt == null || pdfAtt.equals("null") ){
+                 if (pdfAtt == null || pdfAtt.equalsIgnoreCase("null") ){
                     pdfAttach ="0";
                  }else{
                     pdfAttach ="1";

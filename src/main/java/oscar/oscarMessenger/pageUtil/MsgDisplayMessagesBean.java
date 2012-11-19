@@ -358,15 +358,15 @@ public class MsgDisplayMessagesBean implements java.io.Serializable  {
             dm.theime    = oscar.Misc.getString(rs, "theime");
             dm.sentby     = oscar.Misc.getString(rs, "sentby");
             dm.demographic_no = oscar.Misc.getString(rs, "demographic_no");
-            String att    = oscar.Misc.getString(rs, "attachment");
-            String pdfAtt    = oscar.Misc.getString(rs, "pdfattachment");
-            
-            if (att == null || att.equals("null") ){
+            String att    = rs.getString("attachment");
+            String pdfAtt    = rs.getString("pdfattachment");
+
+            if (att == null || att.equalsIgnoreCase("null")){
               dm.attach = "0";
             }else{
               dm.attach = "1";
             }
-            if ( pdfAtt == null || pdfAtt.equals("null") ){
+            if ( pdfAtt == null || pdfAtt.equalsIgnoreCase("null")){
               dm.pdfAttach = "0";
             }else{
               dm.pdfAttach = "1";
