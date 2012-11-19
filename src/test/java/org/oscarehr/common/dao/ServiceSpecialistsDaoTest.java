@@ -39,21 +39,24 @@ public class ServiceSpecialistsDaoTest extends DaoTestFixtures {
 	public ServiceSpecialistsDaoTest() {
 	}
 
-
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("serviceSpecialists");
+		SchemaUtils.restoreTable("serviceSpecialists", "professionalSpecialists");
 	}
 
 	@Test
 	public void testCreate() {
 		ServiceSpecialists entity = new ServiceSpecialists();
-		ServiceSpecialistsPK key = new ServiceSpecialistsPK(1,1);
+		ServiceSpecialistsPK key = new ServiceSpecialistsPK(1, 1);
 		entity.setId(key);
 		dao.persist(entity);
 
 		assertNotNull(entity.getId());
 	}
 
-	
+	@Test
+	public void testFindSpecialists() {
+		assertNotNull(dao.findSpecialists(1000));
+	}
+
 }

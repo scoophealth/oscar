@@ -27,6 +27,7 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import org.caisi.model.ProfessionalSpecialists;
 import org.oscarehr.common.model.ServiceSpecialists;
 import org.springframework.stereotype.Repository;
 
@@ -46,4 +47,22 @@ public class ServiceSpecialistsDao extends AbstractDao<ServiceSpecialists> {
 		
 		return results;
 	}
+
+	/**
+	 * Find all specialists for the specified service ID
+	 * 
+	 * @param servId
+	 * 		Specialists to find for the specified service ID
+	 * @return	
+	 * 		Returns the list of {@link ServiceSpecialists}, {@link ProfessionalSpecialists} pairs
+	 */
+	@SuppressWarnings("unchecked")
+    public List<Object[]> findSpecialists(Integer servId) {
+		String sql = "FROM ServiceSpecialists ser, " + ProfessionalSpecialists.class.getSimpleName() + " pro " +
+				"WHERE pro.specId = ser.id.specId and ser.id.serviceId = :serviceId " +
+				"ORDER BY pro.lastName";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("serviceId", servId);
+	    return query.getResultList();
+    }
 }
