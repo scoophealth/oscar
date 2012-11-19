@@ -23,6 +23,7 @@
  */
 package org.oscarehr.common.dao;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
@@ -36,18 +37,46 @@ import org.oscarehr.util.SpringUtils;
 public class EyeFormDaoTest extends DaoTestFixtures {
 
 	private EyeFormDao dao = SpringUtils.getBean(EyeFormDao.class);
-
-
+	
 	@Before
 	public void before() throws Exception {
 		SchemaUtils.restoreTable("Eyeform");
 	}
 
+        @Test
+        public void testCreate() throws Exception {
+                EyeForm entity = new EyeForm();
+                EntityDataGenerator.generateTestDataForModelClass(entity);
+                dao.persist(entity);
+                assertNotNull(entity.getId());
+        }
+
+
 	@Test
-	public void testCreate() throws Exception {
-		EyeForm entity = new EyeForm();
-		EntityDataGenerator.generateTestDataForModelClass(entity);
-		dao.persist(entity);
-		assertNotNull(entity.getId());
+	public void testGetByAppointmentNo() throws Exception {
+		
+		int appointmentNo1 = 101;
+		int appointmentNo2 = 202;
+		int appointmentNo3 = 303;
+		
+		EyeForm eyeform1 = new EyeForm();
+		EntityDataGenerator.generateTestDataForModelClass(eyeform1);
+		eyeform1.setAppointmentNo(appointmentNo1);
+		dao.persist(eyeform1);
+		
+		EyeForm eyeform2 = new EyeForm();
+		EntityDataGenerator.generateTestDataForModelClass(eyeform2);
+		eyeform2.setAppointmentNo(appointmentNo2);
+		dao.persist(eyeform2);
+		
+		EyeForm eyeform3 = new EyeForm();
+		EntityDataGenerator.generateTestDataForModelClass(eyeform3);
+		eyeform3.setAppointmentNo(appointmentNo3);
+		dao.persist(eyeform3);
+		
+		EyeForm expectedResult = eyeform2;
+		EyeForm result = dao.getByAppointmentNo(appointmentNo2);
+		
+		assertEquals(expectedResult, result);
 	}
 }

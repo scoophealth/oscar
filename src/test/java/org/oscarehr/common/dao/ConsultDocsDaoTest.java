@@ -23,55 +23,103 @@
  */
 package org.oscarehr.common.dao;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.ConsultDocs;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class ConsultDocsDaoTest extends DaoTestFixtures {
 
-	private ConsultDocsDao dao = (ConsultDocsDao)SpringUtils.getBean("consultDocsDao");
+	private ConsultDocsDao dao = (ConsultDocsDao)SpringUtils.getBean(ConsultDocsDao.class);
 
 	@Before
 	public void before() throws Exception {
 		SchemaUtils.restoreTable("consultdocs");
 	}
 
-	@Test
-	public void testCreate() throws Exception {
-		ConsultDocs entity = new ConsultDocs();
-		EntityDataGenerator.generateTestDataForModelClass(entity);
-		dao.persist(entity);
-		assertNotNull(entity.getId());
-	}
+        @Test
+        public void testCreate() throws Exception {
+                ConsultDocs entity = new ConsultDocs();
+                EntityDataGenerator.generateTestDataForModelClass(entity);
+                dao.persist(entity);
+                assertNotNull(entity.getId());
+        }
 
 	@Test
-	public void testFindByX()  {
-		ConsultDocs entity = new ConsultDocs();
-		entity.setAttachDate(new Date());
-		entity.setDeleted(null);
-		entity.setDocType("D");
-		entity.setDocumentNo(99);
-		entity.setProviderNo("999998");
-		entity.setRequestId(55);
+	public void testFindByRequestIdDocumentNoAndDocumentType() throws Exception {
+		
+		int requestId1 = 111;
+		int requestId2 = 222;
+		
+		int documentNo1 = 101;
+		int documentNo2 = 202;
+		
+		String docType1 = "a";
+		String docType2 = "b";
+		
+		ConsultDocs consultDocs1 = new ConsultDocs();
+		EntityDataGenerator.generateTestDataForModelClass(consultDocs1);
+		consultDocs1.setRequestId(requestId1);
+		consultDocs1.setDocumentNo(documentNo1);
+		consultDocs1.setDocType(docType1);
+		dao.persist(consultDocs1);
+		
+		ConsultDocs consultDocs2 = new ConsultDocs();
+		EntityDataGenerator.generateTestDataForModelClass(consultDocs2);
+		consultDocs2.setRequestId(requestId2);
+		consultDocs2.setDocumentNo(documentNo1);
+		consultDocs2.setDocType(docType1);
+		dao.persist(consultDocs2);
+		
+		ConsultDocs consultDocs3 = new ConsultDocs();
+		EntityDataGenerator.generateTestDataForModelClass(consultDocs3);
+		consultDocs3.setRequestId(requestId1);
+		consultDocs3.setDocumentNo(documentNo2);
+		consultDocs3.setDocType(docType1);
+		dao.persist(consultDocs3);
+		
+		ConsultDocs consultDocs4 = new ConsultDocs();
+		EntityDataGenerator.generateTestDataForModelClass(consultDocs4);
+		consultDocs4.setRequestId(requestId1);
+		consultDocs4.setDocumentNo(documentNo1);
+		consultDocs4.setDocType(docType2);
+		dao.persist(consultDocs4);
+		
+		ConsultDocs consultDocs5 = new ConsultDocs();
+		EntityDataGenerator.generateTestDataForModelClass(consultDocs5);
+		consultDocs5.setRequestId(requestId1);
+		consultDocs5.setDocumentNo(documentNo1);
+		consultDocs5.setDocType(docType1);
+		dao.persist(consultDocs5);
+		
+		List<ConsultDocs> expectedResult = new ArrayList<ConsultDocs>(Arrays.asList(consultDocs1, consultDocs5));
+		List<ConsultDocs> result = dao.findByRequestIdDocumentNoAndDocumentType(requestId1, documentNo1, docType1);
 
-		dao.persist(entity);
-		assertNotNull(entity.getId());
-
-		List<ConsultDocs> consultDocs = dao.findByRequestIdDocumentNoAndDocumentType
-		(entity.getRequestId(), entity.getDocumentNo(), entity.getDocType());
-
-		assertNotNull(consultDocs);
-		assertEquals(consultDocs.size(),1);
-		assertEquals(consultDocs.get(0).getId(),entity.getId());
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match. Result: " + result.size());
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);
 	}
 
 }

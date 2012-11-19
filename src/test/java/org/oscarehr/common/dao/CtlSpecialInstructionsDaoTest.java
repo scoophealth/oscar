@@ -23,16 +23,21 @@
  */
 package org.oscarehr.common.dao;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.CtlSpecialInstructions;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class CtlSpecialInstructionsDaoTest extends DaoTestFixtures {
@@ -41,30 +46,55 @@ public class CtlSpecialInstructionsDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("ctl_specialinstructions");
+		SchemaUtils.restoreTable(false, "ctl_specialinstructions");
 	}
 
-	@Test
-	public void testCreate() throws Exception {
-		CtlSpecialInstructions entity = new CtlSpecialInstructions();
-		EntityDataGenerator.generateTestDataForModelClass(entity);
-		dao.persist(entity);
-		assertNotNull(entity.getId());
-	}
+        @Test
+        public void testCreate() throws Exception {
+                CtlSpecialInstructions entity = new CtlSpecialInstructions();
+                EntityDataGenerator.generateTestDataForModelClass(entity);
+                dao.persist(entity);
+                assertNotNull(entity.getId());
+        }
 
 	@Test
 	public void testFindAll() throws Exception {
 
-		int startNo = dao.findAll().size();
+		CtlSpecialInstructions ctlSpecialInstructions1 = new CtlSpecialInstructions();
+		EntityDataGenerator.generateTestDataForModelClass(ctlSpecialInstructions1);
+		dao.persist(ctlSpecialInstructions1);
+		
+		CtlSpecialInstructions ctlSpecialInstructions2 = new CtlSpecialInstructions();
+		EntityDataGenerator.generateTestDataForModelClass(ctlSpecialInstructions2);
+		dao.persist(ctlSpecialInstructions2);
+		
+		CtlSpecialInstructions ctlSpecialInstructions3 = new CtlSpecialInstructions();
+		EntityDataGenerator.generateTestDataForModelClass(ctlSpecialInstructions3);
+		dao.persist(ctlSpecialInstructions3);
+		
+		CtlSpecialInstructions ctlSpecialInstructions4 = new CtlSpecialInstructions();
+		EntityDataGenerator.generateTestDataForModelClass(ctlSpecialInstructions4);
+		dao.persist(ctlSpecialInstructions4);
+		
+		CtlSpecialInstructions ctlSpecialInstructions5 = new CtlSpecialInstructions();
+		EntityDataGenerator.generateTestDataForModelClass(ctlSpecialInstructions5);
+		dao.persist(ctlSpecialInstructions5);
+		
+		List<CtlSpecialInstructions> expectedResult = new ArrayList<CtlSpecialInstructions>(Arrays.asList(ctlSpecialInstructions1, ctlSpecialInstructions2, ctlSpecialInstructions3, ctlSpecialInstructions4, ctlSpecialInstructions5));
+		List<CtlSpecialInstructions> result = dao.findAll();
 
-		CtlSpecialInstructions entity = new CtlSpecialInstructions();
-		EntityDataGenerator.generateTestDataForModelClass(entity);
-		dao.persist(entity);
-		assertNotNull(entity.getId());
-
-		List<CtlSpecialInstructions> list = dao.findAll();
-
-		assertNotNull(list);
-		assertEquals(list.size(),startNo+1);
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);		
 	}
 }

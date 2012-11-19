@@ -23,30 +23,78 @@
  */
 package org.oscarehr.common.dao;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.EyeformMacro;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-public class EyeformMacroDaoTest {
+public class EyeformMacroDaoTest extends DaoTestFixtures {
 
 	private EyeformMacroDao dao = SpringUtils.getBean(EyeformMacroDao.class);
 
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("eyeform_macro_def");
+		SchemaUtils.restoreTable("eyeform_macro_def", "eyeform_macro_billing");
 	}
 
+        @Test
+        public void testCreate() throws Exception {
+                EyeformMacro entity = new EyeformMacro();
+                EntityDataGenerator.generateTestDataForModelClass(entity);
+                dao.persist(entity);
+                assertNotNull(entity.getId());
+        }
+
 	@Test
-	public void testCreate() throws Exception {
-		EyeformMacro entity = new EyeformMacro();
-		EntityDataGenerator.generateTestDataForModelClass(entity);
-		dao.persist(entity);
-		assertNotNull(entity.getId());
+	public void testGetMacros() throws Exception {
+		
+		String macroName1 = "bravo";
+		String macroName2 = "charlie";
+		String macroName3 = "alpha";
+
+		EyeformMacro eyeformMacro1 = new EyeformMacro();
+		EntityDataGenerator.generateTestDataForModelClass(eyeformMacro1);
+		eyeformMacro1.setMacroName(macroName1);
+		dao.persist(eyeformMacro1);
+		
+		EyeformMacro eyeformMacro2 = new EyeformMacro();
+		EntityDataGenerator.generateTestDataForModelClass(eyeformMacro2);
+		eyeformMacro2.setMacroName(macroName2);
+		dao.persist(eyeformMacro2);
+		
+		EyeformMacro eyeformMacro3 = new EyeformMacro();
+		EntityDataGenerator.generateTestDataForModelClass(eyeformMacro3);
+		eyeformMacro3.setMacroName(macroName3);
+		dao.persist(eyeformMacro3);
+		
+		List<EyeformMacro> expectedResult = new ArrayList<EyeformMacro>(Arrays.asList(eyeformMacro3, eyeformMacro1, eyeformMacro2));
+		List<EyeformMacro> result = dao.getMacros();
+
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);		
 	}
 }
