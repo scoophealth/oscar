@@ -67,6 +67,10 @@ if (detector.detectSmartphone() && detector.detectWebkit()  && session.getAttrib
     session.removeAttribute("mobileOptimized");
 }
 Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
+
+
+//Input field styles
+String login_input_style="login_txt_fields";
 %>
 
 <html:html locale="true">
@@ -112,11 +116,29 @@ Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
                padding:0px;
             }
             
+            .login_txt_fields {
+		
+			 
+				border: 1px solid #999;
+				height: 25px;
+				-webkit-box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.3);
+				-moz-box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.3);
+				box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.3);
+			}
+			 
+			.login_txt_fields_error {
+			  border: 1px solid #F78181;
+				height: 25px;
+				-webkit-box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.3);
+				-moz-box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.3);
+				box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.3);
+			}
+            
             td.topbar{
                background-color: gold;
             }
             td.leftbar{
-                background-color: #009966;
+                background-color:  #106B3A; /*#009966; */
                 color: white;
             }
             td.leftinput{
@@ -153,8 +175,10 @@ Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
             <tr>
                 <td align="center" class="leftbar" height="20px" width="200px"><%
                     String key = "loginApplication.formLabel" ;
-                    if(request.getParameter("login")!=null && request.getParameter("login").equals("failed") )
+                    if(request.getParameter("login")!=null && request.getParameter("login").equals("failed") ){
                     key = "loginApplication.formFailedLabel" ;
+                    login_input_style="login_txt_fields_error";                    
+                    }
                     %><bean:message key="<%=key%>"/>        
                 </td>
                 <td  class="topbar" align="center" >
@@ -179,15 +203,15 @@ Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
                             %>
                         
                         <br/>            
-                        <input type="text" name="username" value="" size="15" maxlength="15" autocomplete="off"/>
+                        <input type="text" name="username" value="" size="15" maxlength="15" autocomplete="off" class="<%=login_input_style %>"/>
                         <br/>                
                         <bean:message key="loginApplication.formPwd"/><br/>
-                        <input type="password" name="password" value="" size="15" maxlength="32" autocomplete="off"/><br/>
+                        <input type="password" name="password" value="" size="15" maxlength="32" autocomplete="off" class="<%=login_input_style %>"/><br/>
                                 <input type="submit" value="<bean:message key="index.btnSignIn"/>" />
                         <br/>
                         <bean:message key="index.formPIN"/>: 
                         <br/>
-                        <input type="password" name="pin" value="" size="15" maxlength="15" autocomplete="off"/><br/>
+                        <input type="password" name="pin" value="" size="15" maxlength="15" autocomplete="off" class="<%=login_input_style %>"/><br/>
                        
                         <span class="extrasmall">
                             <bean:message key="loginApplication.formCmt"/>
