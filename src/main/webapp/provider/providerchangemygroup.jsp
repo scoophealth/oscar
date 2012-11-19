@@ -57,8 +57,7 @@ function setfocus() {
 </script>
 </head>
 
-<body background="../images/gray_bg.jpg" bgproperties="fixed"
-	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <FORM NAME="UPDATEPRE" METHOD="post" ACTION="providercontrol.jsp">
 <table border=0 cellspacing=0 cellpadding=0 width="100%">
 	<tr bgcolor="#486ebd">

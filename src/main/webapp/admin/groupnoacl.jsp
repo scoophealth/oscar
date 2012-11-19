@@ -129,7 +129,7 @@
 </head>
 
 
-<body background="../images/gray_bg.jpg" bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
+<body topmargin="0" leftmargin="0" rightmargin="0">
 
 <FORM id="myform" NAME="UPDATEPRE" METHOD="post" ACTION="groupnoacl.jsp">
 	<input type="hidden" id="method" name="method"/>

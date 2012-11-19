@@ -97,7 +97,6 @@
        body {
             font-family: Verdana, helvetica, sans-serif;
             font-size: 14px; margin: 0px; padding: 0px;
-            background-image: url("../images/gray_bg.jpg");
        }
        .searchBox .title { display: none; /* We don't want to display the title in the included jsp file ' */ }
    </style>

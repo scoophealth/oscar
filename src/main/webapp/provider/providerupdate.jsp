@@ -39,7 +39,7 @@
 <title>Provider: the following records</title>
 </head>
 <link rel="stylesheet" href="../web.css" />
-<body background="../images/gray_bg.jpg" bgproperties="fixed">
+<body>
 <center>
 <table border="0" cellspacing="0" cellpadding="0" width="90%">
 	<tr bgcolor="#486ebd">

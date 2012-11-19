@@ -94,8 +94,7 @@ function validate() {
 }
 </script>
 
-<body background="../images/gray_bg.jpg" bgproperties="fixed"
-	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <%
   ResourceBundle properties = ResourceBundle.getBundle("oscarResources", request.getLocale());
 

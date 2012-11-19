@@ -46,8 +46,7 @@
 <title><bean:message key="provider.providerdisplaymygroup.title" /></title>
 </head>
 
-<body background="../images/gray_bg.jpg" bgproperties="fixed"
-	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <FORM NAME="UPDATEPRE" METHOD="post" ACTION="providercontrol.jsp">
 
 <div id="topMenuDiv" style="position:fixed;width:100%">

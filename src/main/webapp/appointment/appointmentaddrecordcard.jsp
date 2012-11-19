@@ -45,8 +45,7 @@
     }
 </style>
 </head>
-<body background="../images/gray_bg.jpg"
-	bgproperties="fixed">
+<body>
 <center>
 <div class="DoNotPrint">
 <table border="0" cellspacing="0" cellpadding="0" width="90%">
