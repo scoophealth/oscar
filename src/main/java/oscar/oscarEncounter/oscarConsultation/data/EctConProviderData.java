@@ -22,32 +22,27 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarEncounter.oscarConsultation.data;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.SpringUtils;
 
-import org.oscarehr.util.MiscUtils;
+public class EctConProviderData {
 
-import oscar.oscarDB.DBHandler;
+	public EctConProviderData() {
+	}
 
-public class EctConProviderData
-{
+	public String getTeam(String proNo) {
+		String team = null;
 
-    public EctConProviderData() { }
+		ProviderDao dao = SpringUtils.getBean(ProviderDao.class);
+		Provider provider = dao.getProvider(proNo);
 
-    public String getTeam(String proNo) {
-        String team = null;
-        try {
-            
-            String sql = "select team from provider where provider_no = '" +proNo+ "'";
-            ResultSet rs = DBHandler.GetSQL(sql);
-            if(rs.next()) team = oscar.Misc.getString(rs, "team");
-            rs.close();
-        } catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-        }
-        return team;
-    }
+		if (provider != null) {
+			team = provider.getTeam();
+		}
+
+		return team;
+	}
 }
