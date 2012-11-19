@@ -72,8 +72,7 @@ function checkPwdPolicy() {
 </script>
 </head>
 
-<body background="../images/gray_bg.jpg" bgproperties="fixed"
-	onLoad="setfocus('oldpassword')" topmargin="0" leftmargin="0" rightmargin="0">
+<body onLoad="setfocus('oldpassword')" topmargin="0" leftmargin="0" rightmargin="0">
 <FORM NAME="updatepassword" METHOD="post"
 	ACTION="providerupdatepassword.jsp" onSubmit="return(checkPwdPolicy())">
 <table border=0 cellspacing=0 cellpadding=0 width="100%">

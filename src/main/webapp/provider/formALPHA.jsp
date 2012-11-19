@@ -102,8 +102,7 @@ function onSubmitForm() {
   }
 %>
 </head>
-<body onLoad="setfocus()" background="../images/gray_bg.jpg"
-	bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
+<body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <form name="serviceform" action="providercontrol.jsp" method="POST"
 	onSubmit="return (onSubmitForm());">
 

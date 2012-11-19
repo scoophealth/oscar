@@ -41,8 +41,7 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 </head>
-<body onload="start()" background="../images/gray_bg.jpg"
-	bgproperties="fixed">
+<body onload="start()">
 <center>
 <table border="0" cellspacing="0" cellpadding="0" width="90%">
 	<tr bgcolor="#486ebd">

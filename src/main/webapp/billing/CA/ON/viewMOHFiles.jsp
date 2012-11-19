@@ -61,8 +61,7 @@ function checkForm() {
 </script>
 </head>
 
-<body background="<%= request.getContextPath() %>/images/gray_bg.jpg" bgproperties="fixed"
-	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <form id="form" method="POST">
 	<input type="hidden" id="filename" name="filename" value="" >
 </form>

@@ -60,8 +60,7 @@ function checkForm() {
 </script>
 </head>
 
-<body background="../images/gray_bg.jpg" bgproperties="fixed"
-	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <%
   int rowsAffected=0;
 

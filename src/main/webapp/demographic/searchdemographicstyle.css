@@ -27,7 +27,6 @@ body {
     font-size: 100%;
     margin: 0px;
     padding: 0px;
-    background-image: url("../images/gray_bg.jpg");
     padding-top:17px; /* push everything down, since the element with class title is at top */
 }
 

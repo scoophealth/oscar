@@ -112,7 +112,7 @@
 	}
 </script>
     </head>
-    <body background="../images/gray_bg.jpg" bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
+    <body topmargin="0" leftmargin="0" rightmargin="0">
 	<table width="100%">
 	  <tr><td colspan="3" height="30"></td></tr>
 	  <tr>	

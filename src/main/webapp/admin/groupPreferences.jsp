@@ -68,7 +68,7 @@
     </head>
 
 
-    <body background="../images/gray_bg.jpg" bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
+    <body topmargin="0" leftmargin="0" rightmargin="0">
 
         <html:form method="post" action="/admin/GroupPreference">
             
