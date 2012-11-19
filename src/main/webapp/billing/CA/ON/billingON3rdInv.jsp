@@ -61,6 +61,10 @@
     String invoiceRefNum = "";
     String billingDateStr ="";
     
+    ClinicDAO clinicDao = (ClinicDAO) SpringUtils.getBean("clinicDAO");
+    Clinic clinic = clinicDao.getClinic();              
+    oscar.OscarProperties props = oscar.OscarProperties.getInstance();
+    
     if (bCh1 != null) {
         BillingONExtDao billExtDao = (BillingONExtDao) SpringUtils.getBean("billingONExtDao");
         BillingONPaymentDao billPaymentDao = (BillingONPaymentDao) SpringUtils.getBean("billingONPaymentDao");
@@ -87,22 +91,45 @@
         
         Provider provider = providerDao.getProvider(bCh1.getProviderNo());
         providerFormattedName = provider.getFormattedName();
-        
+                
         BillingONExt billToBillExt = billExtDao.getBillTo(bCh1);
         
-        if (billToBillExt != null)
-            billTo = billToBillExt.getValue();
+         String useDemoClinicInfoOnInvoice = props.getProperty("useDemoClinicInfoOnInvoice","");
+        if (!useDemoClinicInfoOnInvoice.isEmpty() && useDemoClinicInfoOnInvoice.equals("true")) { 
+            
+            String clinicBillingPhone = props.getProperty("clinic_billing_phone","");
+            if (clinicBillingPhone.isEmpty()) {
+                clinicBillingPhone = clinic.getClinicDelimPhone();
+            }
+            
+            StringBuilder buildBillTo = new StringBuilder();
+            buildBillTo.append(demo.getFirstName()).append(" ").append(demo.getLastName()).append("\n")
+                    .append(demo.getAddress()).append("\n")
+                    .append(demo.getCity()).append(",").append(demo.getProvince()).append("\n")
+                    .append(demo.getPostal()).append("\n\n")
+                    .append("Email:").append(demo.getEmail()).append("\n")
+                    .append("Tel:").append(demo.getPhone()).append("\n")
+                    .append("\n\n\nStudent ID:").append(demo.getChartNo());
+            billTo = buildBillTo.toString();
+            
+            StringBuilder buildRemitTo = new StringBuilder();
+            buildRemitTo.append(clinic.getClinicName()).append("\n")
+                    .append(clinic.getClinicAddress()).append("\n")
+                    .append(clinic.getClinicCity()).append(",").append(clinic.getClinicProvince()).append("\n")
+                    .append(clinic.getClinicPostal()).append("\n")
+                    .append("Ph:").append(clinicBillingPhone).append("\n");
+            remitTo = buildRemitTo.toString();
+        } else {
+            if (billToBillExt != null)
+                billTo = billToBillExt.getValue();
 
-        BillingONExt remitToBillExt = billExtDao.getRemitTo(bCh1);
-        
-        if (remitToBillExt != null)
-            remitTo = remitToBillExt.getValue();
+            BillingONExt remitToBillExt = billExtDao.getRemitTo(bCh1);
+
+            if (remitToBillExt != null)
+                remitTo = remitToBillExt.getValue();
+        }                 
     }
-
-    ClinicDAO clinicDao = (ClinicDAO) SpringUtils.getBean("clinicDAO");
-    Clinic clinic = clinicDao.getClinic();              
-    oscar.OscarProperties props = oscar.OscarProperties.getInstance();
-
+   
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
