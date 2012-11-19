@@ -177,7 +177,6 @@ public class DemographicExportAction4 extends Action {
 		boolean exReportsReceived = WebUtils.isChecked(request, "exReportsReceived");
 		boolean exAlertsAndSpecialNeeds = WebUtils.isChecked(request, "exAlertsAndSpecialNeeds");
 		boolean exCareElements = WebUtils.isChecked(request, "exCareElements");
-		//boolean exTemplateFeature = WebUtils.isChecked(request, "exTemplateFeature");
 		
 		List<String> list = new ArrayList<String>();
 		if (demographicNo==null) {
@@ -1403,10 +1402,6 @@ public class DemographicExportAction4 extends Action {
 					}
 
 					//lab requisition datetime
-					/*
-					HashMap<String,Object> link = LabRequestReportLink.getLinkByReport("hl7TextMessage", Long.valueOf(lab_no));
-					Date reqDate = (Date) link.get("request_date");
-					*/
 					String reqDate = labMea.getExtVal("request_datetime");
 					if (StringUtils.filled(reqDate)) labResults.addNewLabRequisitionDateTime().setFullDateTime(Util.calDate(reqDate));
 
@@ -2027,6 +2022,7 @@ public class DemographicExportAction4 extends Action {
 					
 					// Call Template Export & add to ArrayList
 					patient.setExMedications(exMedicationsAndTreatments);
+					patient.setExAllergiesAndAdverseReactions(exAllergiesAndAdverseReactions);
 					String output = t.export(patient);
 					
 					//export file to temp directory

@@ -28,9 +28,11 @@ import java.util.Date;
 import java.util.List;
 
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.oscarRx.data.RxPatientData;
 import oscar.oscarRx.data.RxPrescriptionData;
 
 /**
@@ -40,10 +42,12 @@ import oscar.oscarRx.data.RxPrescriptionData;
 public class PatientExport {
 	private Integer demographicNo;
 	private Demographic demographic;
-	private DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+	private static DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 	private ArrayList<Medication> medications = new ArrayList<Medication>();
+	private ArrayList<Allergy> allergies = new ArrayList<Allergy>();
 	
 	private boolean exMedicationsAndTreatments = false;
+	private boolean exAllergiesAndAdverseReactions = false;
 	
 	public PatientExport() {
 	}
@@ -59,6 +63,11 @@ public class PatientExport {
 		RxPrescriptionData.Prescription[] drugs = new RxPrescriptionData().getPrescriptionsByPatient(Integer.parseInt(demoNo));
 		for(RxPrescriptionData.Prescription d : drugs) {
 			medications.add(parseDrugs(d));
+		}
+		
+		Allergy[] allergiesArray = RxPatientData.getPatient(demoNo).getAllergies();
+		for(Allergy a : allergiesArray) {
+			allergies.add(a);
 		}
 	}
 	
@@ -82,6 +91,10 @@ public class PatientExport {
 	
 	public void setExMedications(boolean rhs) {
 		this.exMedicationsAndTreatments = rhs;
+	}
+	
+	public void setExAllergiesAndAdverseReactions(boolean rhs) {
+		this.exAllergiesAndAdverseReactions = rhs;
 	}
 	
 	/*
@@ -163,7 +176,18 @@ public class PatientExport {
 		if(demographic.getSex().equals("M")) return "Male";
 		else return "Female";
 	}
-
+	
+	/*
+	 * Allergies
+	 */
+	public List<Allergy> getAllergies() {
+		return allergies;
+	}
+	
+	public boolean hasAllergies() {
+		return!(!exAllergiesAndAdverseReactions || allergies==null || allergies.isEmpty());
+	}
+	
 	/*
 	 * Medications
 	 */

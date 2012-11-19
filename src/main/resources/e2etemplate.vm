@@ -67,6 +67,105 @@ e-MS CDA Structured Body
 		<structuredBody>
 <!--
 ********************************************************
+Allergies and Intolerances - (Reaction List)
+********************************************************
+-->
+#if ( $patient.hasAllergies() )
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.4.1"/>
+					<code code="48765-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Allergies & Adverse Reactions Doc"/>
+					<title>Allergies & Intolerances (Reaction List) [with entries]</title>
+					<text>Text text text</text>
+#**##foreach( $allergy in $patient.getAllergies() )
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.3.1818.10.3.3"/>
+						<!--Allergy and Intolerance Observation-->
+						<observation classCode="OBS" moodCode="EVN">
+							<id extension="$allergy.id" root="2.16.840.1.113883.3.1818.10.2.10.1"/>
+							<code nullFlavor='NA'/>
+#*    *##if ( $allergy.archived == 0 )
+							<statusCode code="active"/>
+#*    *##else
+							<statusCode code="completed"/>
+#*    *##end
+							<effectiveTime value="$dateTool.format('yyyyMMdd', $allergy.getLastUpdateDate())"/>
+							<entryRelationship typeCode="COMP" contextConductionInd="true">
+								<observation classCode="OBS" moodCode="EVN">
+#*    *##if ( $allergy.typecode == 8 ||  $allergy.typecode == 10 || $allergy.typecode == 11 || $allergy.typecode == 13 )
+									<code code="MED" displayName="Medication" codeSystem="2.16.840.1.113883.5.4"            
+										codeSystemName="HL7 ActCode"/>
+#*    *##elseif ( $allergy.typecode == 12 ||  $allergy.typecode == 14 )
+									<code code="SUB" displayName="Substance" codeSystem="2.16.840.1.113883.5.4"            
+										codeSystemName="HL7 ActCode"/>
+#*    *##else
+									<code nullFlavor='NA'/>
+#*    *##end
+									<effectiveTime>
+										<low value="$dateTool.format('yyyyMMdd', $allergy.getStartDate())"/>
+									</effectiveTime>
+									<participant typeCode="CSM" contextControlCode="OP">
+										<participantRole classCode="MANU">
+											<playingEntity classCode="MMAT" determinerCode="INSTANCE">
+#*    *##if ( !$allergy.regionalIdentifier )
+												<code nullFlavor='NA'/>
+#*    *##else
+												<code code="$allergy.regionalIdentifier" displayName="$allergy.description" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN"/>
+#*    *##end
+												<name>$allergy.description</name>
+											</playingEntity>
+										</participantRole>
+									</participant>
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.23"/>
+										<!-- Reaction Observation -->
+										<observation classCode="OBS" moodCode="EVN">
+											<code code="REACTOBS" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType" displayName="Reaction Observation"/>
+											<text>$allergy.reaction</text>
+											<value xsi:type="CD" nullFlavor="NI" displayName="No Information"/>
+										</observation>
+									</entryRelationship>
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.3.1818.10.4.30"/>
+										<!-- Severity Observation -->
+										<observation classCode="OBS" moodCode="EVN">
+											<code code="SEV" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 ActCode" displayName="Severity"/>
+#*    *##if ( $allergy.severityOfReaction == 1 )
+											<value xsi:type="CD" code="MI" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 ObservationValue" displayName="mild"/>
+#*    *##elseif ( $allergy.severityOfReaction == 2 )
+											<value xsi:type="CD" code="MI" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 ObservationValue" displayName="moderate"/>
+#*    *##elseif ( $allergy.severityOfReaction == 3 )
+											<value xsi:type="CD" code="MI" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 ObservationValue" displayName="severe"/>
+#*    *##else
+											<value xsi:type="CD" code="MI" codeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 ObservationValue" displayName="unknown"/>
+#*    *##end
+										</observation>	
+									</entryRelationship>
+									<entryRelationship typeCode="COMP" contextConductionInd="true">
+										<observation classCode="OBS" moodCode="EVN">
+											<code code="ALLCLINSTS" codeSystem="2.16.840.1.113883.3.1818.10.2.8.1" codeSystemName="PITO ObservationType" displayName="Allergy Clinical Status Code"/>
+											<value xsi:type="CD" code="C" codeSystem="2.16.840.1.113883.3.1818.10.2.8.2" codeSystemName="PITO AllergyClinicalStatus" displayName="Confirmed"/>
+										</observation>
+									</entryRelationship>
+								</observation>
+							</entryRelationship>
+						</observation>
+					</entry>
+#**##end		
+				</section>
+			</component>
+#else
+			<component typeCode="COMP" contextConductionInd="true">
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.3.1818.10.2.4"/>
+					<code code="48765-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Allergies & Adverse Reactions Doc"/>
+					<title>Allergies & Intolerances (Reaction List) [without entries]</title>
+					<text>Sorry, no allergies</text>
+				</section>
+			</component>
+#end
+<!--
+********************************************************
 Medications & Prescriptions - Medication List
 ********************************************************
 -->
