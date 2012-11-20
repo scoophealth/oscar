@@ -302,7 +302,6 @@ else {
 	<tr bgcolor="<%=toggleLine?"ivory":"white"%>">
 		<%
         DemographicMerged dmDAO = new DemographicMerged();
-        String dbop = "demographic_search_detail";
 		String demographicNo = demo.getDemographicNo().toString() ;
 		String head = dmDAO.getHead(demographicNo);
         
@@ -312,10 +311,6 @@ else {
 		// if record has a head record, then it is not the head record
         if(demo.getHeadRecord() != null)
         	isHeadRecord = false;
-        
-        java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
-        if (vLocale.getCountry().equals("BR"))
-            dbop = "demographic_search_detail_ptbr";
     
         if(mergedSearch || isHeadRecord  ){%>
 			<td align="center" width="5%" height="25"><input type="checkbox" name="records" value="<%= demographicNo%>"></td>
@@ -332,7 +327,7 @@ else {
 		}%>
 		<td width="15%" align="center" height="25">
 		<caisi:isModuleLoad	moduleName="TORONTO_RFQ" reverse="true">
-			<a href="javascript:popupWindow('admincontrol.jsp?demographic_no=<%= head %>&displaymode=Demographic_Edit2&dboperation=<%= dbop %>')"><%=demographicNo%></a>
+			<a href="javascript:popupWindow('../demographic/demographiccontrol.jsp?demographic_no=<%= head %>&displaymode=edit&dboperation=search_detail')"><%=demographicNo%></a>
 		</caisi:isModuleLoad></td>
 		<td align="center" width="20%" height="25"><%=demo.getLastName()%></td>
 		<td align="center" width="20%" height="25"><%=demo.getFirstName()%></td>
