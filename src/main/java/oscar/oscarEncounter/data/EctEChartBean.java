@@ -22,54 +22,18 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarEncounter.data;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Date;
 
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.common.dao.EChartDao;
+import org.oscarehr.common.model.EChart;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
+import oscar.util.ConversionUtils;
 
 public class EctEChartBean {
-	public EctEChartBean() {
-	}
-	public void setEChartBean(String demoNo) {
-		demographicNo = demoNo;
-		try {
-			
-			String sql = "select * from eChart where demographicNo=" + demoNo
-					+ " ORDER BY eChartId DESC";
-//         			+ " ORDER BY eChartId DESC limit 1";
-			ResultSet rs = DBHandler.GetSQL(sql);
-			if (rs.next()) {
-				eChartTimeStamp = rs.getTimestamp("timeStamp");
-				socialHistory = oscar.Misc.getString(rs, "socialHistory");
-				familyHistory = oscar.Misc.getString(rs, "familyHistory");
-				medicalHistory = oscar.Misc.getString(rs, "medicalHistory");
-				ongoingConcerns = oscar.Misc.getString(rs, "ongoingConcerns");
-				reminders = oscar.Misc.getString(rs, "reminders");
-				encounter = oscar.Misc.getString(rs, "encounter");
-				subject = oscar.Misc.getString(rs, "subject");
-				providerNo = oscar.Misc.getString(rs, "providerNo");
-			} else {
-				eChartTimeStamp = null;
-				socialHistory = "";
-				familyHistory = "";
-				medicalHistory = "";
-				ongoingConcerns = "";
-				reminders = "";
-				encounter = "";
-				subject = "";
-				providerNo = "";
-			}
-			rs.close();
-		} catch (SQLException e) {
-			MiscUtils.getLogger().error("Error", e);
-		}
-	}
+
 	public Date eChartTimeStamp;
 	public String providerNo;
 	public String userName;
@@ -81,4 +45,37 @@ public class EctEChartBean {
 	public String reminders;
 	public String encounter;
 	public String subject;
+
+	public EctEChartBean() {
+	}
+
+	public void setEChartBean(String demoNo) {
+		demographicNo = demoNo;
+
+		EChartDao dao = SpringUtils.getBean(EChartDao.class);
+		EChart ec = dao.getLatestChart(ConversionUtils.fromIntString(demoNo));
+
+		if (ec != null) {
+			eChartTimeStamp = ec.getTimestamp();
+			socialHistory = ec.getSocialHistory();
+			familyHistory = ec.getFamilyHistory();
+			medicalHistory = ec.getMedicalHistory();
+			ongoingConcerns = ec.getOngoingConcerns();
+			reminders = ec.getReminders();
+			encounter = ec.getEncounter();
+			subject = ec.getSubject();
+			providerNo = ec.getProviderNo();
+		} else {
+			eChartTimeStamp = null;
+			socialHistory = "";
+			familyHistory = "";
+			medicalHistory = "";
+			ongoingConcerns = "";
+			reminders = "";
+			encounter = "";
+			subject = "";
+			providerNo = "";
+		}
+	}
+
 }
