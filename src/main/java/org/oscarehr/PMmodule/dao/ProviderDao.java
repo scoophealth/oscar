@@ -34,6 +34,7 @@ import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.oscarehr.common.NativeSql;
 import org.oscarehr.common.dao.ProviderFacilityDao;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.ProviderFacility;
@@ -402,6 +403,26 @@ public class ProviderDao extends HibernateDaoSupport {
     		
         	return this.getHibernateTemplate().find(hql);
         }
-        
-    
+
+		public List<String> getActiveTeams() {	        
+			List<String> providerList = getHibernateTemplate().find("select distinct p.Team From Provider p where p.status = '1' and p.team != '' order by p.team");
+			return providerList;
+        }
+		
+		@NativeSql({"provider", "providersite"})
+		@SuppressWarnings("unchecked")
+        public List<String> getActiveTeamsViaSites(String providerNo) {
+			// providersite is not mapped in hibernate - this can be rewritten w.o. subselect with a cross product IHMO 
+			SQLQuery query = getSession().createSQLQuery("select distinct team from provider p inner join providersite s on s.provider_no = p.provider_no " +
+            		" where s.site_id in (select site_id from providersite where provider_no = '" + providerNo + "') order by team ");
+			return query.list();
+        }
+
+		@SuppressWarnings("unchecked")
+        public List<Provider> getProviderByPatientId(Integer patientId) {
+	        String hql = "SELECT p FROM Provider p, Demographic d "
+	    				+ "WHERE d.ProviderNo = p.ProviderNo " 
+	        			+ "AND d.DemographicNo = ?";
+        	return this.getHibernateTemplate().find(hql, patientId);
+        }
 }
