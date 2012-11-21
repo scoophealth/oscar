@@ -23,6 +23,10 @@
  */
 package org.oscarehr.billing.CA.BC.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.billing.CA.BC.model.Hl7Obr;
 import org.oscarehr.common.dao.AbstractDao;
 import org.springframework.stereotype.Repository;
@@ -33,4 +37,11 @@ public class Hl7ObrDao extends AbstractDao<Hl7Obr>{
 	public Hl7ObrDao() {
 		super(Hl7Obr.class);
 	}
+
+	@SuppressWarnings("unchecked")
+    public List<Hl7Obr> findByPid(int id) {
+		Query query = createQuery("h", "h.pidId = :id");
+		query.setParameter("id", id);
+		return query.getResultList();
+    }
 }

@@ -229,4 +229,10 @@ public class DemographicDaoTest extends DaoTestFixtures {
 		assertEquals(1,dao.getDemographicWithLastFirstDOB(entity.getLastName(),entity.getFirstName(), entity.getYearOfBirth(), entity.getMonthOfBirth(), entity.getDateOfBirth()).size());
 
 	}
+	
+	@Test
+	public void testFindByCriterion() {
+		assertNotNull(dao.findByCriterion(new DemographicDao.DemographicCriterion(null, "", "", "", "", "", "", "")));
+		assertNotNull(dao.findByCriterion(new DemographicDao.DemographicCriterion("", "", "", "", "", "", "", "")));
+	}
 }

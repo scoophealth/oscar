@@ -974,4 +974,128 @@ public class DemographicDao extends HibernateDaoSupport {
 	public List<Demographic> getDemographicsByHealthNum(String hin) {
 		return this.getHibernateTemplate().find("from Demographic d where d.Hin=?", new Object[] { hin });
 	}
+
+	@SuppressWarnings("unchecked")
+    public List<Demographic> findByCriterion(DemographicCriterion c) {
+		if (c.getHealthNumber() == null || c.getHealthNumber().trim().isEmpty()) {
+			return this.getHibernateTemplate().find("FROM Demographic d " +
+		    		"WHERE d.LastName like ?" +
+		    		"AND d.FirstName like ? " +
+		    		"AND d.YearOfBirth = ? " +
+		    		"AND d.MonthOfBirth = ? " +
+		    		"AND d.DateOfBirth = ? " +
+		    		"AND d.Sex like ? " +
+		    		"AND d.PatientStatus = ?", c.getAll(false));
+		}
+		
+	    return this.getHibernateTemplate().find("FROM Demographic d " +
+	    		"WHERE d.Hin = ? " +
+	    		"AND d.LastName like ?" +
+	    		"AND d.FirstName like ? " +
+	    		"AND d.YearOfBirth = ? " +
+	    		"AND d.MonthOfBirth = ? " +
+	    		"AND d.DateOfBirth = ? " +
+	    		"AND d.Sex like ? " +
+	    		"AND d.PatientStatus = ?", c.getAll(true));
+    }
+	
+	public static class DemographicCriterion {
+		
+		private String healthNumber;
+		private String lastNamePrefix;
+		private String firstNamePrefix;
+		private String birthYear;
+		private String birthMonth;
+		private String birthDay;
+		private String sex;
+		private String patientStatus;
+		
+		public DemographicCriterion() {
+			this("", "", "", "", "", "", "", "");
+		}
+		
+		public DemographicCriterion(String healthNumber, String lastNamePrefix, String firstNamePrefix, String birthYear, String birthMonth, String birthDay, String sex, String patientStatus) {
+			super();
+			this.healthNumber = healthNumber;
+			this.lastNamePrefix = lastNamePrefix;
+			this.firstNamePrefix = firstNamePrefix;
+			this.birthYear = birthYear;
+			this.birthMonth = birthMonth;
+			this.birthDay = birthDay;
+			this.sex = sex;
+			this.patientStatus = patientStatus;
+		}
+
+		Object[] getAll(boolean includeHin) {
+			if (includeHin) {
+				return new Object[] { healthNumber, lastNamePrefix + "%", firstNamePrefix + "%", birthYear, birthMonth, birthDay, sex.toUpperCase() + "%", patientStatus };
+			} else {
+				return new Object[] { lastNamePrefix + "%", firstNamePrefix + "%", birthYear, birthMonth, birthDay, sex.toUpperCase() + "%", patientStatus };
+			}
+		}
+		
+		public String getHealthNumber() {
+			return healthNumber;
+		}
+
+		public void setHealthNumber(String healthNumber) {
+			this.healthNumber = healthNumber;
+		}
+
+		public String getLastNamePrefix() {
+			return lastNamePrefix;
+		}
+
+		public void setLastNamePrefix(String lastNamePrefix) {
+			this.lastNamePrefix = lastNamePrefix;
+		}
+
+		public String getFirstNamePrefix() {
+			return firstNamePrefix;
+		}
+
+		public void setFirstNamePrefix(String firstNamePrefix) {
+			this.firstNamePrefix = firstNamePrefix;
+		}
+
+		public String getBirthYear() {
+			return birthYear;
+		}
+
+		public void setBirthYear(String birthYear) {
+			this.birthYear = birthYear;
+		}
+
+		public String getBirthMonth() {
+			return birthMonth;
+		}
+
+		public void setBirthMonth(String birthMonth) {
+			this.birthMonth = birthMonth;
+		}
+
+		public String getBirthDay() {
+			return birthDay;
+		}
+
+		public void setBirthDay(String birthDay) {
+			this.birthDay = birthDay;
+		}
+
+		public String getSex() {
+			return sex;
+		}
+
+		public void setSex(String sex) {
+			this.sex = sex;
+		}
+
+		public String getPatientStatus() {
+			return patientStatus;
+		}
+
+		public void setPatientStatus(String patientStatus) {
+			this.patientStatus = patientStatus;
+		}
+	}
 }

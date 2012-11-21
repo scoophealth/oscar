@@ -20,8 +20,6 @@ import org.oscarehr.common.model.ProviderLabRoutingModel;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
-
 @Repository
 @Transactional
 public class ProviderLabRoutingDao extends AbstractDao<ProviderLabRoutingModel> {
@@ -53,7 +51,6 @@ public class ProviderLabRoutingDao extends AbstractDao<ProviderLabRoutingModel> 
 	
 		return q.getResultList();
 	}
-
 	
 	public List<ProviderLabRoutingModel> getProviderLabRoutingDocuments(String labNo) {
 		return getProviderLabRoutings(labNo, "DOC", null, null);
@@ -111,7 +108,7 @@ public class ProviderLabRoutingDao extends AbstractDao<ProviderLabRoutingModel> 
 	}
 
 	@SuppressWarnings("unchecked")
-    public List<ProviderLabRouting> findByStatusANDLabNoType(Integer labNo, String labType, String status) {
+    public List<ProviderLabRoutingModel> findByStatusANDLabNoType(Integer labNo, String labType, String status) {
 	    Query query = createQuery("r", "r.labNo = :labNo and r.labType = :labType and r.status = :status");
 	    query.setParameter("labNo", labNo);
 	    query.setParameter("labType", labType);
@@ -119,10 +116,20 @@ public class ProviderLabRoutingDao extends AbstractDao<ProviderLabRoutingModel> 
 	    return query.getResultList();
     }
 
-	public List<ProviderLabRoutingModel> findByProviderNo(String providerNo, String status) {
+	@SuppressWarnings("unchecked")
+    public List<ProviderLabRoutingModel> findByProviderNo(String providerNo, String status) {
 	    Query query = createQuery("p", "p.providerNo = :pNo AND p.status = :sts");
 	    query.setParameter("pNo", providerNo);
 	    query.setParameter("sts", status);
 	    return query.getResultList();
+    }
+
+	@SuppressWarnings("unchecked")
+	public List<ProviderLabRoutingModel> findByLabNoTypeAndStatus(int labId, String labType, String status) {
+		Query query = createQuery("p", "p.labNo = :lNo AND p.status = :sts AND p.labType = :lType");
+		query.setParameter("lNo", labId);
+		query.setParameter("sts", status);
+		query.setParameter("lType", labType);
+		return query.getResultList();
     }
 }
