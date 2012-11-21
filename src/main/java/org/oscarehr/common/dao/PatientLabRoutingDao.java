@@ -283,4 +283,17 @@ public class PatientLabRoutingDao extends AbstractDao<PatientLabRouting> {
 		return query.getResultList();
     }
 
+	@SuppressWarnings("unchecked")
+    public List<Object[]> findRoutingsAndConsultDocsByRequestId(Integer reqId, String docType) {
+        String sql = "FROM PatientLabRouting p, ConsultDocs c " +
+        		"WHERE p.id = c.documentNo " +
+        		"AND c.requestId = :reqId " +
+        		"AND c.docType = :docType " +
+        		"AND c.deleted IS NULL";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter("reqId", reqId);
+        query.setParameter("docType", docType);
+        return query.getResultList();
+    }
+    
 }

@@ -38,24 +38,26 @@ import java.awt.Color;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.oscarehr.common.dao.PatientLabRoutingDao;
+import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.common.printing.FontSettings;
 import org.oscarehr.common.printing.PdfWriterFactory;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
 import oscar.oscarClinic.ClinicData;
-import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.all.pageUtil.LabPDFCreator;
 import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.oscarLab.ca.all.parsers.MessageHandler;
 import oscar.util.ConcatPDF;
+import oscar.util.ConversionUtils;
 import oscar.util.UtilDateUtilities;
 
 import com.lowagie.text.Document;
@@ -85,9 +87,6 @@ public class EctConsultationFormRequestPrintPdf {
     private PdfContentByte cb;
     private BaseFont bf;
     private float height;
-    private float width;
-
-    private int PAGENUM = 1;
     private final float LINEHEIGHT = 14;
     private final float FONTSIZE = 10;
 
@@ -101,10 +100,6 @@ public class EctConsultationFormRequestPrintPdf {
 
         EctConsultationFormRequestUtil reqForm = new EctConsultationFormRequestUtil();
         reqForm.estRequestFromId((String) request.getAttribute("reqId"));
-
-        //make sure we have data to print
-        if( reqForm == null )
-            throw new DocumentException();
 
         // init req form info
         reqForm.specAddr = request.getParameter("address");
@@ -127,7 +122,6 @@ public class EctConsultationFormRequestPrintPdf {
         //Use the template located at '/oscar/oscarEncounter/oscarConsultationRequest/props'
         reader = new PdfReader("/oscar/oscarEncounter/oscarConsultationRequest/props/consultationFormRequest.pdf");
         Rectangle pSize = reader.getPageSize(1);
-        width = pSize.getWidth();
         height = pSize.getHeight();
         document.setPageSize(pSize);
 
@@ -239,10 +233,6 @@ public class EctConsultationFormRequestPrintPdf {
         cb.setFontAndSize(bf, FONTSIZE);
         cb.showTextAligned(PdfContentByte.ALIGN_LEFT, reqForm.patientName, 110, height - 82, 0);
         cb.endText();
-
-        PAGENUM++;
-        // addFooter();
-
     }
 
     private void printClinicData(){
@@ -293,16 +283,15 @@ public class EctConsultationFormRequestPrintPdf {
             if ( curDoc.isPDF() )
                 pdfDocs.add(curDoc.getFilePath());
         }
-        //TODO:need to do something about the docs that are not PDFs
-
+        // TODO:need to do something about the docs that are not PDFs
         // create pdfs from attached labs
+        PatientLabRoutingDao dao = SpringUtils.getBean(PatientLabRoutingDao.class);
+        
         try {
-
-            String sql = "SELECT lab_no FROM patientLabRouting p, consultdocs c WHERE p.id = c.document_no AND c.requestId='"+reqId+"' AND c.doctype='L' AND c.deleted IS NULL";
-
-            ResultSet rs = DBHandler.GetSQL(sql);
-            while(rs.next()){
-                String segmentId = oscar.Misc.getString(rs, "lab_no");
+            for(Object[] i : dao.findRoutingsAndConsultDocsByRequestId(ConversionUtils.fromIntString(reqId), "L")) {
+            	PatientLabRouting p = (PatientLabRouting) i[0];
+            	
+                String segmentId = "" + p.getLabNo();
                 request.setAttribute("segmentID", segmentId);
                 MessageHandler handler = Factory.getHandler(segmentId);
                 String fileName = OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"//"+handler.getPatientName().replaceAll("\\s", "_")+"_"+handler.getMsgDate()+"_LabReport.pdf";
@@ -311,8 +300,6 @@ public class EctConsultationFormRequestPrintPdf {
                 pdf.printPdf();
                 pdfDocs.add(fileName);
             }
-            rs.close();
-
         }catch(DocumentException de) {
             request.setAttribute("printError", new Boolean(true));
         }catch(IOException ioe) {
