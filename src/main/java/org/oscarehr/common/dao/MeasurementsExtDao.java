@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,40 +21,41 @@
  * Hamilton
  * Ontario, Canada
  */
-
-
-package oscar.oscarEncounter.oscarMeasurements.dao;
+package org.oscarehr.common.dao;
 
 import java.util.List;
 
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import javax.persistence.Query;
 
-import oscar.oscarEncounter.oscarMeasurements.model.MeasurementsExt;
+import org.oscarehr.common.model.MeasurementsExt;
+import org.springframework.stereotype.Repository;
 
-public class MeasurementsExtDao extends HibernateDaoSupport {
+@Repository
+public class MeasurementsExtDao extends AbstractDao<MeasurementsExt>{
 
-	public void save(MeasurementsExt measurementsExt) {
-		this.getHibernateTemplate().saveOrUpdate(measurementsExt);
+	public MeasurementsExtDao() {
+		super(MeasurementsExt.class);
 	}
 	
-	public void addMeasurementsExt(MeasurementsExt measurementsExt) {
-		getHibernateTemplate().merge(measurementsExt);
-	}
-
 	public List<MeasurementsExt> getMeasurementsExtByMeasurementId(Integer measurementId) {
-		String queryStr = "FROM MeasurementsExt m WHERE m.measurementId = "+measurementId+" ORDER BY m.id";
+		String queryStr = "select m FROM MeasurementsExt m WHERE m.measurementId = ?1";
+		Query q = entityManager.createQuery(queryStr);
+		q.setParameter(1, measurementId);
 		
 		@SuppressWarnings("unchecked")
-		List<MeasurementsExt> rs = getHibernateTemplate().find(queryStr);
+		List<MeasurementsExt> rs = q.getResultList();
 
 		return rs;
 	}
 	
 	public MeasurementsExt getMeasurementsExtByMeasurementIdAndKeyVal(Integer measurementId, String keyVal) {
-		String queryStr = "FROM MeasurementsExt m WHERE m.measurementId = "+measurementId+" AND m.keyVal="+keyVal;
+		String queryStr = "select m FROM MeasurementsExt m WHERE m.measurementId = ?1 AND m.keyVal = ?2";
+		Query q = entityManager.createQuery(queryStr);
+		q.setParameter(1, measurementId);
+		q.setParameter(2, keyVal);
 		
 		@SuppressWarnings("unchecked")
-		List<MeasurementsExt> rs = getHibernateTemplate().find(queryStr);
+		List<MeasurementsExt> rs = q.getResultList();
 
 		if(rs.isEmpty()) {
 			return null;
@@ -63,25 +64,27 @@ public class MeasurementsExtDao extends HibernateDaoSupport {
 	}
 	
 	public Integer getMeasurementIdByKeyValue(String key, String value) {
-		String queryStr = "FROM MeasurementsExt m WHERE m.keyVal='"+key+"' AND m.val='"+value+"'";
+		String queryStr = "select m FROM MeasurementsExt m WHERE m.keyVal=?1 AND m.val=?2";
+		Query q = entityManager.createQuery(queryStr);
+		q.setParameter(1, key);
+		q.setParameter(2, value);
 		
 		@SuppressWarnings("unchecked")
-		List<MeasurementsExt> rs = getHibernateTemplate().find(queryStr);
+		List<MeasurementsExt> rs =q.getResultList();
 		
 		if (rs.size()>0) return rs.get(0).getMeasurementId();
 		return null;
 	}
 	
 	public List<MeasurementsExt> findByKeyValue(String key, String value) {
-		String queryStr = "FROM MeasurementsExt m WHERE m.keyVal='"+key+"' AND m.val='"+value+"'";
+		String queryStr = "select m FROM MeasurementsExt m WHERE m.keyVal=?1 AND m.val=?2";
+		Query q = entityManager.createQuery(queryStr);
+		q.setParameter(1, key);
+		q.setParameter(2, value);
 		
 		@SuppressWarnings("unchecked")
-		List<MeasurementsExt> rs = getHibernateTemplate().find(queryStr);
+		List<MeasurementsExt> rs = q.getResultList();
 		
 		return rs;
-	}
-	
-	public void remove(Integer id) {
-		this.getHibernateTemplate().delete(this.getHibernateTemplate().load(MeasurementsExt.class, id));
 	}
 }

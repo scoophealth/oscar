@@ -48,6 +48,7 @@ import org.indivo.xml.phr.urns.DocumentClassificationUrns;
 import org.indivo.xml.phr.vital.ResultType;
 import org.indivo.xml.phr.vital.VitalSign;
 import org.indivo.xml.phr.vital.VitalSignType;
+import org.oscarehr.common.model.MeasurementsExt;
 import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Element;
 
@@ -56,7 +57,6 @@ import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean;
 import oscar.oscarEncounter.oscarMeasurements.data.ImportExportMeasurements;
 import oscar.oscarEncounter.oscarMeasurements.data.LoincMapEntry;
 import oscar.oscarEncounter.oscarMeasurements.data.MeasurementMapConfig;
-import oscar.oscarEncounter.oscarMeasurements.model.MeasurementsExt;
 
 /**
  *
