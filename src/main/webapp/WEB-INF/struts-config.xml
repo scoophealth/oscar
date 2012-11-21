@@ -1460,15 +1460,6 @@
 		<action parameter="method" path="/oscarLearning/StudentImport" name="StudentImportForm" scope="request" type="org.oscarehr.learning.web.StudentImportAction">
 			<forward name="success" path="/oscarLearning/StudentImport.jsp" redirect="true" />
 		</action>
-		
-	
-		
-		<action input="/popup/cid.jsp" name="cidForm" parameter="INIT" path="/popup/cid/init" scope="session" type="oscar.billing.popup.CidAction">
-			<forward name="success" path="/popup/cid.jsp" />
-		</action>
-		<action input="/popup/cid.jsp" name="cidForm" parameter="FIND_CID" path="/popup/cid/findCid" scope="session" type="oscar.billing.popup.CidAction">
-			<forward name="success" path="/popup/cid.jsp" />
-		</action>
 		<action input="/billing/CA/BC/billingBC.jsp" name="BillingCreateBillingForm" path="/billing" scope="session" type="oscar.oscarBilling.ca.bc.pageUtil.BillingAction" validate="false">
 			<forward name="BC" path="/billing/CA/BC/billingBC.jsp" />
 			<forward name="ON" path="/billing/CA/ON/billingOB.jsp" redirect="true" />
