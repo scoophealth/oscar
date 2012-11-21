@@ -37,15 +37,15 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.dao.MeasurementsDeletedDao;
+import org.oscarehr.common.dao.MeasurementsExtDao;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.MeasurementsDeleted;
+import org.oscarehr.common.model.MeasurementsExt;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
-import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsExtDao;
-import oscar.oscarEncounter.oscarMeasurements.model.MeasurementsExt;
 import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.oscarLab.ca.all.parsers.MessageHandler;
 import oscar.oscarLab.ca.on.LabResultData;
@@ -174,51 +174,51 @@ public class Hl7textResultsData {
                     me.setMeasurementId(mId);
                     me.setKeyVal("lab_no");
                     me.setVal(lab_no);
-                    measurementsExtDao.save(me);
+                    measurementsExtDao.persist(me);
 
                     
                     me = new MeasurementsExt();
                     me.setMeasurementId(mId);
                     me.setKeyVal("abnormal");
                     me.setVal(abnormal);
-                    measurementsExtDao.save(me);
+                    measurementsExtDao.persist(me);
 
                     me = new MeasurementsExt();
                     me.setMeasurementId(mId);
                     me.setKeyVal("identifier");
                     me.setVal(identifier);
-                    measurementsExtDao.save(me);
+                    measurementsExtDao.persist(me);
                     
                     me = new MeasurementsExt();
                     me.setMeasurementId(mId);
                     me.setKeyVal("name");
                     me.setVal(name);
-                    measurementsExtDao.save(me);
+                    measurementsExtDao.persist(me);
                     
                     me = new MeasurementsExt();
                     me.setMeasurementId(mId);
                     me.setKeyVal("labname");
                     me.setVal(labname);
-                    measurementsExtDao.save(me);
+                    measurementsExtDao.persist(me);
                     
                     me = new MeasurementsExt();
                     me.setMeasurementId(mId);
                     me.setKeyVal("accession");
                     me.setVal(accession);
-                    measurementsExtDao.save(me);
+                    measurementsExtDao.persist(me);
                     
                     me = new MeasurementsExt();
                     me.setMeasurementId(mId);
                     me.setKeyVal("request_datetime");
                     me.setVal(req_datetime);
-                    measurementsExtDao.save(me);
+                    measurementsExtDao.persist(me);
                     
                     
                     me = new MeasurementsExt();
                     me.setMeasurementId(mId);
                     me.setKeyVal("datetime");
                     me.setVal(datetime);
-                    measurementsExtDao.save(me);
+                    measurementsExtDao.persist(me);
                    
 
                     if (olis_status!=null && olis_status.length()>0) {
@@ -226,7 +226,7 @@ public class Hl7textResultsData {
                          me.setMeasurementId(mId);
                          me.setKeyVal("olis_status");
                          me.setVal(olis_status);
-                         measurementsExtDao.save(me);
+                         measurementsExtDao.persist(me);
                     }
 
 				    if (unit!=null && unit.length()>0) {
@@ -234,7 +234,7 @@ public class Hl7textResultsData {
                          me.setMeasurementId(mId);
                          me.setKeyVal("unit");
                          me.setVal(unit);
-                         measurementsExtDao.save(me);
+                         measurementsExtDao.persist(me);
 				    }
 		
 				    if (refRange[0].length()>0) {
@@ -242,21 +242,21 @@ public class Hl7textResultsData {
                          me.setMeasurementId(mId);
                          me.setKeyVal("range");
                          me.setVal(refRange[0]);
-                         measurementsExtDao.save(me);
+                         measurementsExtDao.persist(me);
 				    } else {
 						if (refRange[1].length()>0) {
 							 me = new MeasurementsExt();
 	                         me.setMeasurementId(mId);
 	                         me.setKeyVal("minimum");
 	                         me.setVal(refRange[1]);
-	                         measurementsExtDao.save(me);
+	                         measurementsExtDao.persist(me);
 						}
 						
 						me = new MeasurementsExt();
                         me.setMeasurementId(mId);
                         me.setKeyVal("other_id");
                         me.setVal(i+"-"+j);
-                        measurementsExtDao.save(me);
+                        measurementsExtDao.persist(me);
 				    }
 				}
             }

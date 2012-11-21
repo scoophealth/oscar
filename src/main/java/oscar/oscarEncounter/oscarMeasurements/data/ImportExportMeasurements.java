@@ -31,12 +31,11 @@ import java.util.List;
 
 import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.dao.MeasurementTypeDao;
+import org.oscarehr.common.dao.MeasurementsExtDao;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.MeasurementType;
+import org.oscarehr.common.model.MeasurementsExt;
 import org.oscarehr.util.SpringUtils;
-
-import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsExtDao;
-import oscar.oscarEncounter.oscarMeasurements.model.MeasurementsExt;
 
 public class ImportExportMeasurements {
 
@@ -138,7 +137,7 @@ public class ImportExportMeasurements {
     	m.setKeyVal(mExt.getKeyVal());
     	m.setVal(mExt.getVal());
     	
-    	measurementsExtDao.save(m);
+    	measurementsExtDao.persist(m);
     	mExt.setId(m.getId());
 
     }

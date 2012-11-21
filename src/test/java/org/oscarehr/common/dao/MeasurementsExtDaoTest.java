@@ -29,10 +29,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
+import org.oscarehr.common.model.MeasurementsExt;
 import org.oscarehr.util.SpringUtils;
-
-import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsExtDao;
-import oscar.oscarEncounter.oscarMeasurements.model.MeasurementsExt;
 
 public class MeasurementsExtDaoTest extends DaoTestFixtures {
 
@@ -51,9 +49,28 @@ public class MeasurementsExtDaoTest extends DaoTestFixtures {
 	public void testCreate() throws Exception {
 		MeasurementsExt entity = new MeasurementsExt();
 		EntityDataGenerator.generateTestDataForModelClass(entity);
-		entity.setId(null);
-		dao.save(entity);
+		dao.persist(entity);
 
 		assertNotNull(entity.getId());
+	}
+	
+	@Test
+	public void testGetMeasurementsExtByMeasurementId () {
+		dao.getMeasurementsExtByMeasurementId(0);
+	}
+	
+	@Test
+	public void testGetMeasurementsExtByMeasurementIdAndKeyVal() {
+		dao.getMeasurementsExtByMeasurementIdAndKeyVal(1, "");
+	}
+	
+	@Test
+	public void testGetMeasurementIdByKeyValue() {
+		dao.getMeasurementIdByKeyValue("", "");
+	}
+	
+	@Test
+	public void testFindByKeyValue() {
+		dao.findByKeyValue("", "");
 	}
 }
