@@ -200,8 +200,6 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/immunization/config/pageUtil/EctImmCreateImmunizationSetConfigAction.java:Vector yearAgeVector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/immunization/config/pageUtil/EctImmCreateImmunizationSetConfigAction.java:immunization.indexAge = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/immunization/data/EctImmConfigData.java:Vector ret = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConConstructSpecialistsScriptsFile.java:serviceDesc = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConConstructSpecialistsScriptsFile.java:serviceId = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConDisplayServiceUtil.java:Vector vector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConDisplayServiceUtil.java:addressVec = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConDisplayServiceUtil.java:emailVec = new Vector();</ViolationValue>
@@ -1291,7 +1289,6 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctType2DiabetesRecord.java:ResultSet rs1 = DBHandler.GetSQL("select nextval('formtype2diabetes_numeric_se')");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctType2DiabetesRecord.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultation/data/EctConProviderData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConConstructSpecialistsScriptsFile.java:for(rs = DBHandler.GetSQL(sql); rs.next(); MiscUtils.getLogger().debug("this went this many times = ".concat(String.valueOf(String.valueOf(servId)))))</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConDisplayServiceUtil.java:for(rs = DBHandler.GetSQL(sql); rs.next(); specIdVec.add(oscar.Misc.getString(rs, "specId")))</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConDisplayServiceUtil.java:for(rs = DBHandler.GetSQL(sql); rs.next(); vector.add(oscar.Misc.getString(rs, "specId")));</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/ConsultationAttachDocs.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -1342,6 +1339,12 @@
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/SpireResultsData.java:ResultSet rs2=DBHandler.GetSQL(sql2);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/upload/handlers/GDMLHandler.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/upload/handlers/ICLHandler.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarLab/ca/all/upload/ProviderLabRouting.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarLab/ca/bc/PathNet/HL7/Message.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarLab/ca/bc/PathNet/HL7/Message.java:ResultSet rs2 = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarLab/ca/bc/PathNet/HL7/Message.java:ResultSet rs3 = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarLab/ca/bc/PathNet/HL7/Message.java:ResultSet rsr = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarLab/ca/bc/PathNet/HL7/Message.java:rsr = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/bc/PathNet/HL7/Node.java:ResultSet result = DBHandler.GetSQL(last_insert_id);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/bc/PathNet/HL7/V2_3/OBR.java:ResultSet result = DBHandler.GetSQL("SELECT obr_id FROM hl7_obr WHERE filler_order_number='" + id +"'");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/bc/PathNet/PathNetInfo.java:ResultSet rsLab = DBHandler.GetSQL(select_not_signed);</ViolationValue>
@@ -1359,7 +1362,6 @@
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/bc/PathNet/PathnetResultsData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabResultData.java:DBPreparedHandler db = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/CommonLabResultData.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/LabResultData.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/Spire/SpireLabTest.java://ResultSet rs = DBHandler.GetSQL("select distinct title from labTestResults where title != '' and labPatientPhysicianInfo_id = '"+labid+"'");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/Spire/SpireLabTest.java:ResultSet rs = DBHandler.GetSQL("select * from labPatientPhysicianInfo where id = '"+labid+"'");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarLab/ca/on/Spire/SpireLabTest.java:ResultSet rs = DBHandler.GetSQL("select * from labReportInformation where id = '"+labid+"'");</ViolationValue>
@@ -2052,11 +2054,11 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/immunization/data/EctImmConfigData.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/immunization/data/EctImmConfigData.java:public Vector getImmunizationConfigId() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/immunization/data/EctImmConfigData.java:public Vector getImmunizationConfigName() {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConConstructSpecialistsScriptsFile.java:Vector serviceDesc;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConConstructSpecialistsScriptsFile.java:Vector serviceId;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConConstructSpecialistsScriptsFile.java:Vector&lt;String&gt; serviceDesc;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConConstructSpecialistsScriptsFile.java:Vector&lt;String&gt; serviceId;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConConstructSpecialistsScriptsFile.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConConstructSpecialistsScriptsFile.java:serviceDesc = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConConstructSpecialistsScriptsFile.java:serviceId = new Vector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConConstructSpecialistsScriptsFile.java:serviceDesc = new Vector&lt;String&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConConstructSpecialistsScriptsFile.java:serviceId = new Vector&lt;String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConDisplayServiceUtil.java:Vector vector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConDisplayServiceUtil.java:addressVec = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConDisplayServiceUtil.java:emailVec = new Vector();</ViolationValue>

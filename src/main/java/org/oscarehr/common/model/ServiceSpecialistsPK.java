@@ -59,4 +59,20 @@ public class ServiceSpecialistsPK implements Serializable {
 			return (false);
 		}
 	}
+
+	public Integer getServiceId() {
+    	return serviceId;
+    }
+
+	public void setServiceId(Integer serviceId) {
+    	this.serviceId = serviceId;
+    }
+
+	public Integer getSpecId() {
+    	return specId;
+    }
+
+	public void setSpecId(Integer specId) {
+    	this.specId = specId;
+    }
 }
