@@ -170,7 +170,7 @@ String labStatus = "";
 if (ackList != null){
     for (int i=0; i < ackList.size(); i++){
         ReportStatus reportStatus = ackList.get(i);
-        if (reportStatus.getProviderNo().equals(providerNo) ) {
+        if (reportStatus.getProviderNo() != null && reportStatus.getProviderNo().equals(providerNo) ) {
         	labStatus = reportStatus.getStatus();
         	if( labStatus.equals("A") ){
             	ackFlag = true;//lab has been ack by this provider.
@@ -953,7 +953,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                         <% if ( ackStatus.equals("Acknowledged") ) { %>
                                                                             <%= report.getTimestamp() %>,
                                                                         <% } %>
-                                                                        <span id="<%=report.getProviderNo()%>commentLabel"><%=report.getComment().equals("") ? "no comment" : "comment : "%></span><span id="<%=report.getProviderNo()%>commentText"><%=report.getComment()%></span>
+                                                                        <span id="<%=report.getProviderNo()%>commentLabel"><%=report.getComment() == null || report.getComment().equals("") ? "no comment" : "comment : "%></span><span id="<%=report.getProviderNo()%>commentText"><%=report.getComment()%></span>
                                                                         <br>
                                                                     <% }
                                                                     if (ackList.size() == 0){

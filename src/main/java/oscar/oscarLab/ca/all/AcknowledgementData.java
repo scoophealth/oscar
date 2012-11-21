@@ -50,7 +50,7 @@ public class AcknowledgementData {
 	}
 
 	public static ArrayList<ReportStatus> getAcknowledgements(String segmentID) {
-		return getAcknowledgements(segmentID, "HL7");
+		return getAcknowledgements("HL7", segmentID);
 	}
 
 	public static ArrayList<ReportStatus> getAcknowledgements(String docType, String segmentID) {

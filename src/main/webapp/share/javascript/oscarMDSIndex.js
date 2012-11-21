@@ -276,7 +276,31 @@ function sendMRP(ele){
 	}
 }
 
-
+function forwardDocument(docId) {
+	var frm = "#reassignForm_" + docId;
+	var query = jQuery(frm).serialize();
+	
+	jQuery.ajax({
+		type: "POST",
+		url:  contextpath + "/oscarMDS/ReportReassign.do",
+		data: query,
+		success: function (data) {
+			frm = "#frmDocumentDisplay_" + docId;
+			query = jQuery(frm).serialize();
+			jQuery.ajax({
+				type: "POST",
+				url: contextpath + "/dms/showDocument.jsp",
+				data: query,
+				success: function(data) {
+					jQuery("#document_"+docId).html(data);
+				}
+			});
+		},
+		error: function(jqXHR, err, exception) {
+			alert(jqXHR.status);
+		}
+	});
+}
 
 
 function rotate180(id) {
@@ -1193,7 +1217,9 @@ function checkSelected(doc) {
 		}
 	}
 	if (aBoxIsChecked) {
-		popupStart(355, 675, 'SelectProvider.jsp', 'providerselect');
+		var isListView = jQuery("input[name=isListView]").val();
+		var url = contextpath + "/oscarMDS/SelectProvider.jsp?isListView="+isListView;
+		popupStart(355, 685, url, 'providerselect');
 	} else {
 		alert(msgSelectOneLab);
 	}

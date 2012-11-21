@@ -80,7 +80,7 @@ public class LabResultData implements Comparable<LabResultData> {
 	public boolean abn = false;
 	public String labType; // ie CML or MDS
 	public boolean finalRes = true;
-	public boolean isMatchedToPatient = true;
+	public Boolean isMatchedToPatient = null;
 	public String multiLabId;
 	public String label;
 	public boolean cancelledReport = false;
@@ -247,12 +247,14 @@ public class LabResultData implements Comparable<LabResultData> {
 			//       }
 		CommonLabResultData commonLabResultData = new CommonLabResultData();
 		logger.debug("in ismatchedtopatient, "+this.segmentID+"--"+this.labType);
-		if(this.labType.equals("DOC")){
-			this.isMatchedToPatient=commonLabResultData.isDocLinkedWithPatient(this.segmentID,this.labType);
-		}else if(this.labType.equals("HRM")){
-			this.isMatchedToPatient = commonLabResultData.isHRMLinkedWithPatient(this.segmentID, this.labType);
-		}else{
-			this.isMatchedToPatient = commonLabResultData.isLabLinkedWithPatient(this.segmentID,this.labType);
+		if( this.isMatchedToPatient == null ) {
+			if(this.labType.equals("DOC")){
+				this.isMatchedToPatient=commonLabResultData.isDocLinkedWithPatient(this.segmentID,this.labType);
+			}else if(this.labType.equals("HRM")){
+				this.isMatchedToPatient = commonLabResultData.isHRMLinkedWithPatient(this.segmentID, this.labType);
+			}else{
+				this.isMatchedToPatient = commonLabResultData.isLabLinkedWithPatient(this.segmentID,this.labType);
+			}
 		}
 		return this.isMatchedToPatient;
 	}
