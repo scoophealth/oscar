@@ -44,7 +44,7 @@ public class MeasurementDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("measurements", "measurementsExt", "measurementMap");
+		SchemaUtils.restoreTable("measurements", "measurementType", "measurementsExt", "measurementMap", "provider");
 	}
 
 	@Test
@@ -61,6 +61,56 @@ public class MeasurementDaoTest extends DaoTestFixtures {
 
 		List<Measurement> ms = dao.find(c);
 		assertEquals(1, ms.size());
+
+		c = new SearchCriteria();
+		ms = dao.find(c);
+		assertNotNull(ms);
+
+		c = new SearchCriteria();
+		c.setComments(m.getComments());
+		ms = dao.find(c);
+		assertNotNull(ms);
+
+		c = new SearchCriteria();
+		c.setDataField(m.getDataField());
+		ms = dao.find(c);
+		assertNotNull(ms);
+
+		c = new SearchCriteria();
+		c.setDateObserved(m.getDateObserved());
+		ms = dao.find(c);
+		assertNotNull(ms);
+
+		c = new SearchCriteria();
+		c.setDemographicNo(m.getDemographicId());
+		ms = dao.find(c);
+		assertNotNull(ms);
+
+		c = new SearchCriteria();
+		c.setMeasuringInstrc(m.getMeasuringInstruction());
+		ms = dao.find(c);
+		assertNotNull(ms);
+
+		c = new SearchCriteria();
+		c.setType(m.getType());
+		ms = dao.find(c);
+		assertNotNull(ms);
+
+		c = new SearchCriteria();
+		c.setDataField(m.getDataField());
+		c.setDateObserved(m.getDateObserved());
+		c.setMeasuringInstrc(m.getMeasuringInstruction());
+		c.setType(m.getType());
+		ms = dao.find(c);
+		assertNotNull(ms);
+
+		c = new SearchCriteria();
+		c.setComments(m.getComments());
+		c.setDataField(m.getDataField());
+		c.setDemographicNo(m.getDemographicId());
+		c.setMeasuringInstrc(m.getMeasuringInstruction());
+		ms = dao.find(c);
+		assertNotNull(ms);
 	}
 
 	private Measurement populate() {
@@ -85,12 +135,12 @@ public class MeasurementDaoTest extends DaoTestFixtures {
 		List<Measurement> m = dao.findByIdTypeAndInstruction(999, "TIPPITIP", "MSRNIGINSRCTIONS");
 		assertFalse(m.isEmpty());
 	}
-	
+
 	@Test
 	public void testFindByDemographicIdUpdatedAfterDate() {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.YEAR, -1);
-		
+
 		Measurement m = new Measurement();
 		m.setDemographicId(1);
 		m.setAppointmentNo(100);
@@ -102,7 +152,7 @@ public class MeasurementDaoTest extends DaoTestFixtures {
 		m.setProviderNo("PRVDRE");
 		m.setType("TIPPITIP");
 		dao.persist(m);
-		
+
 		m = new Measurement();
 		m.setDemographicId(1);
 		m.setAppointmentNo(100);
@@ -113,23 +163,23 @@ public class MeasurementDaoTest extends DaoTestFixtures {
 		m.setProviderNo("PRVDRE");
 		m.setType("TIPPITIP");
 		dao.persist(m);
-		
+
 		cal = Calendar.getInstance();
 		cal.add(Calendar.MONTH, -1);
-		
-		assertEquals(1,dao.findByDemographicIdUpdatedAfterDate(1, cal.getTime()).size());
+
+		assertEquals(1, dao.findByDemographicIdUpdatedAfterDate(1, cal.getTime()).size());
 	}
-	
+
 	@Test
 	public void testFindMeasurementsByDemographicIdAndLocationCode() {
 		assertNotNull(dao.findMeasurementsByDemographicIdAndLocationCode(100, "CDE"));
 	}
-	
+
 	@Test
 	public void testFindMeasurementsWithIdentifiersByDemographicIdAndLocationCode() {
 		assertNotNull(dao.findMeasurementsWithIdentifiersByDemographicIdAndLocationCode(100, "CDE"));
 	}
-	
+
 	@Test
 	public void testFindLabNumbers() {
 		assertNotNull(dao.findLabNumbers(100, "CDE"));
@@ -138,5 +188,20 @@ public class MeasurementDaoTest extends DaoTestFixtures {
 	@Test
 	public void testFindLastEntered() {
 		dao.findLastEntered(100, "CDE");
+	}
+
+	@Test
+	public void testFindMeasurementsAndProviders() {
+		assertNotNull(dao.findMeasurementsAndProviders(100));
+	}
+
+	@Test
+	public void testFindMeasurementsAndProvidersByType() {
+		assertNotNull(dao.findMeasurementsAndProvidersByType("TYPE", 100));
+	}
+
+	@Test
+	public void testFindMeasurementsAndProvidersByDemoAndType() {
+		dao.findMeasurementsAndProvidersByDemoAndType(100, "TYPE");
 	}
 }
