@@ -22,79 +22,64 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarLab.tld;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.oscarehr.common.dao.ProviderLabRoutingDao;
 import org.oscarehr.util.MiscUtils;
-
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.util.SpringUtils;
 
 /**
  *
  * @author Jay Gallagher
  */
 public class LabTag extends TagSupport {
-   
-  
-   public LabTag() {
-	numNewLabs = 0;
-   }
-   
-   public int doStartTag() throws JspException    {
-        try {
-            
-            String sql = new String("select count(*) from providerLabRouting where provider_no = '"+ providerNo +"' and status = 'N'");            
-            ResultSet rs = DBHandler.GetSQL(sql);
-            while (rs.next()) {
-               numNewLabs = (rs.getInt(1));
-            }
 
-            rs.close();
-        }      catch(SQLException e)        {
-           MiscUtils.getLogger().error("Error", e);
-        }
-        try        {
-            JspWriter out = super.pageContext.getOut();            
-            if(numNewLabs > 0)
-                out.print("<span class='tabalert'>  ");
-            else
-                out.print("<span>  ");
-        } catch(Exception p) {MiscUtils.getLogger().error("Error",p);
-        }        
-        return(EVAL_BODY_INCLUDE);
-    }
-   
+	private String providerNo;
+	private int numNewLabs;
+	
+	public LabTag() {
+		numNewLabs = 0;
+	}
 
-    public void setProviderNo(String providerNo1)    {
-       providerNo = providerNo1;
-    }
+	public int doStartTag() throws JspException {
+		ProviderLabRoutingDao dao = SpringUtils.getBean(ProviderLabRoutingDao.class);
 
-    public String getProviderNo()    {
-        return providerNo;
-    }
+		numNewLabs = dao.findByProviderNo(providerNo, "N").size();
+		try {
+			JspWriter out = super.pageContext.getOut();
+			if (numNewLabs > 0) {
+				out.print("<span class='tabalert'>  ");
+			}
+			else out.print("<span>  ");
+		} catch (Exception p) {
+			MiscUtils.getLogger().error("Error", p);
+		}
+		return (EVAL_BODY_INCLUDE);
+	}
 
-    
+	public void setProviderNo(String providerNo1) {
+		providerNo = providerNo1;
+	}
 
-    public int doEndTag()        throws JspException    {
-       try{
-          JspWriter out = super.pageContext.getOut();         
-        //ronnie 2007-5-4
-          if (numNewLabs>0)
-              out.print("<sup>"+numNewLabs+"</sup></span>");
-          else
-              out.print("</span>");
-       }catch(Exception p) {MiscUtils.getLogger().error("Error",p);
-       }
-       return EVAL_PAGE;
-    }
+	public String getProviderNo() {
+		return providerNo;
+	}
 
-    private String providerNo;
-    private int numNewLabs;
+	public int doEndTag() throws JspException {
+		try {
+			JspWriter out = super.pageContext.getOut();
+			//ronnie 2007-5-4
+			if (numNewLabs > 0) {
+				out.print("<sup>" + numNewLabs + "</sup></span>");
+			}
+			else out.print("</span>");
+		} catch (Exception p) {
+			MiscUtils.getLogger().error("Error", p);
+		}
+		return EVAL_PAGE;
+	}
 }
