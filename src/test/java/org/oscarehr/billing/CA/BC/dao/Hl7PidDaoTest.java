@@ -37,10 +37,9 @@ public class Hl7PidDaoTest extends DaoTestFixtures {
 
 	private Hl7PidDao dao = SpringUtils.getBean(Hl7PidDao.class);
 
-
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("hl7_pid");
+		SchemaUtils.restoreTable("hl7_pid", "hl7_link");
 	}
 
 	@Test
@@ -49,5 +48,15 @@ public class Hl7PidDaoTest extends DaoTestFixtures {
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		dao.persist(entity);
 		assertNotNull(entity.getId());
+	}
+
+	@Test
+	public void testFindByMessageId() {
+		assertNotNull(dao.findByMessageId(100));
+	}
+
+	@Test
+	public void testFindPidsByStatus () {
+		assertNotNull(dao.findPidsByStatus("F"));
 	}
 }

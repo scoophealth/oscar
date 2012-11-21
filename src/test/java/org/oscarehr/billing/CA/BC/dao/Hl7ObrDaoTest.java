@@ -50,4 +50,9 @@ public class Hl7ObrDaoTest extends DaoTestFixtures {
 		dao.persist(entity);
 		assertNotNull(entity.getId());
 	}
+	
+	@Test
+	public void testFindByPid() {
+		assertNotNull(dao.findByPid(100));
+	}
 }

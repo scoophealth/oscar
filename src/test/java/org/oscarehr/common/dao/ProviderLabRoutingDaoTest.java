@@ -67,5 +67,9 @@ public class ProviderLabRoutingDaoTest extends DaoTestFixtures {
 		assertNotNull(dao.findByProviderNo("100", "N"));
 	}
 
+	@Test
+	public void testFindByLabNoTypeAndStatus() {
+		assertNotNull(dao.findByLabNoTypeAndStatus(100, "BCP", "STS"));
+	}
 	
 }
