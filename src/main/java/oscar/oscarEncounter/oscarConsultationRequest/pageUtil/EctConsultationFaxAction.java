@@ -26,9 +26,8 @@
 package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -43,13 +42,14 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.FaxClientLogDao;
+import org.oscarehr.common.dao.OscarCommLocationsDao;
 import org.oscarehr.common.model.FaxClientLog;
+import org.oscarehr.common.model.OscarCommLocations;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarClinic.ClinicData;
-import oscar.oscarDB.DBHandler;
 import oscar.oscarFax.client.OSCARFAXClient;
 import oscar.oscarFax.client.OSCARFAXSOAPMessage;
 
@@ -231,13 +231,6 @@ public class EctConsultationFaxAction extends Action {
             faxClientLog.setEndTime(new Date());
             faxDao.merge(faxClientLog);
          }
-
-
-
-
-
-
-
       } catch(Throwable e) {
          MiscUtils.getLogger().error("Error", e);
       }
@@ -253,19 +246,14 @@ public class EctConsultationFaxAction extends Action {
 
    }
    String getLocationId(){
-      String retval = "";
-      try {
-
-         String sql = "select locationId from oscarcommlocations where current1 = '1' ";
-         ResultSet rs = DBHandler.GetSQL(sql);
-         if(rs.next())
-            retval = oscar.Misc.getString(rs, "locationId");
+      OscarCommLocationsDao dao = SpringUtils.getBean(OscarCommLocationsDao.class);
+      List<OscarCommLocations> locations =  dao.findByCurrent1(1);
+      for(OscarCommLocations l : locations) {
+    	  return "" + l.getId();
       }
-      catch(SQLException e) {
-         MiscUtils.getLogger().error("Error", e);
-      }
-      return retval;
+      return "";
    }
+   
    public String urg(String str){
       String retval = "";
       if (str.equals("1")){
