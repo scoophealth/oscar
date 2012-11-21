@@ -434,5 +434,12 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		query.setParameter("demoNo", demoNo);
 		return query.getResultList();
     }
+
+	public Measurement findLastEntered(Integer demo, String type) {
+		Query query = createQuery("ms", "ms.demographicId = :demoNo AND ms.type = :type ORDER BY ms.createDate DESC");
+		query.setParameter("demoNo", demo);
+		query.setParameter("type", type);
+		return getSingleResultOrNull(query);
+	}
 	
 }
