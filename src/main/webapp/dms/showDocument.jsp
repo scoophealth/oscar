@@ -29,6 +29,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%@ page import="oscar.OscarProperties"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils,oscar.oscarLab.ca.all.*,oscar.oscarMDS.data.*,oscar.oscarLab.ca.all.util.*"%>
 <%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*"%><%
@@ -119,6 +120,23 @@
         </style>
 
         <script type="text/javascript">
+        
+        window.forwardDocument = function(docId) {
+        	var frm = "#reassignForm_" + docId;
+    		var query = jQuery(frm).serialize();
+    		
+    		jQuery.ajax({
+    			type: "POST",
+    			url:  "<%= request.getContextPath()%>/oscarMDS/ReportReassign.do",
+    			data: query,
+    			success: function (data) {    				
+    				window.location.reload();    				    				
+    			},
+    			error: function(jqXHR, err, exception) {
+    				alert("Error " + jqXHR.status + " " + err);
+    			}
+    		});
+    	}
 
         function rotate90(id) {
         	jQuery("#rotate90btn_" + id).attr('disabled', 'disabled');
@@ -262,10 +280,10 @@
 
                     <td colspan="8">
                         <div style="text-align: right;font-weight: bold">
-                        	<a id="firstP_<%=docId%>" href="javascript:void(0);" onclick="firstPage('<%=docId%>','<%=cp%>');">&lt;&lt;</a>
-                            <a id="prevP_<%=docId%>" href="javascript:void(0);" onclick="prevPage('<%=docId%>','<%=cp%>');">&lt;</a>
-                            <a id="nextP_<%=docId%>" href="javascript:void(0);" onclick="nextPage('<%=docId%>','<%=cp%>');">&gt;</a>
-                            <a id="lastP_<%=docId%>" href="javascript:void(0);" onclick="lastPage('<%=docId%>','<%=cp%>');">&gt;&gt;</a>
+                        	<a id="firstP_<%=docId%>" href="javascript:void(0);" onclick="firstPage('<%=docId%>','<%=cp%>');">First</a>
+                            <a id="prevP_<%=docId%>" href="javascript:void(0);" onclick="prevPage('<%=docId%>','<%=cp%>');">Prev</a>
+                            <a id="nextP_<%=docId%>" href="javascript:void(0);" onclick="nextPage('<%=docId%>','<%=cp%>');">Next</a>
+                            <a id="lastP_<%=docId%>" href="javascript:void(0);" onclick="lastPage('<%=docId%>','<%=cp%>');">Last</a>
                         </div>
                         <a href="<%=url2%>" target="_blank"><img alt="document" id="docImg_<%=docId%>"  src="<%=url%>" /></a></td>
 
@@ -446,12 +464,13 @@
                           <%--  <input id="test1Regex_<%=docId%>" type="text"/><input id="test2Regex_<%=docId%>" type="text"/>
                             <a href="javascript:void(0);" onclick="testShowDoc();">click</a>--%>
                             <legend><span class="FieldData"><i><bean:message key="inboxmanager.document.NextAppointmentMsg"/> <oscar:nextAppt demographicNo="<%=demographicID%>"/></i></span></legend>
-                            <form name="reassignForm_<%=docId%>" >
+                            <form name="reassignForm_<%=docId%>" id="reassignForm_<%=docId%>">
                                 <input type="hidden" name="flaggedLabs" value="<%= docId%>" />
-                                <input type="hidden" name="selectedProviders" value="" />
+                                <input type="hidden" name="selectedProviders" value="" />                                
                                 <input type="hidden" name="labType" value="DOC" />
                                 <input type="hidden" name="labType<%= docId%>DOC" value="imNotNull" />
                                 <input type="hidden" name="providerNo" value="<%= providerNo%>" />
+                                <input type="hidden" name="favorites" value="" />
                                 <input type="hidden" name="ajax" value="yes" />
                             </form>
                          </fieldset>
@@ -477,14 +496,14 @@
                                                 <tr>
                                                     <td>
                                                         <input type="submit" id="ackBtn_<%=docId%>" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" >
-                                                        <input type="button" id="fwdBtn_<%=docId%>"  value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, '../oscarMDS/SelectProviderAltView.jsp?doc_no=<%=documentNo%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>', 'providerselect')">
+                                                        <input type="button" id="fwdBtn_<%=docId%>"  value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(355, 685, '../oscarMDS/SelectProvider.jsp?docId=<%=docId%>', 'providerselect');">
                                                         <input type="button" id="fileBtn_<%=docId%>"  value="<bean:message key="oscarMDS.index.btnFile"/>" onclick="fileDoc('<%=docId%>');">
                                                         <input type="button" id="closeBtn_<%=docId%>" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
                                                         <input type="button" id="printBtn_<%=docId%>" value=" <bean:message key="global.btnPrint"/> " onClick="popup(700,960,'<%=url2%>','file download')">
                                                         <% if (demographicID != null && !demographicID.equals("") && !demographicID.equalsIgnoreCase("null")) {%>
-                                                        <input type="button" id="msgBtn_<%=docId%>" value="Msg" onclick="popupMsg(700,960,'<%=docId%>');"/>
-                                                        <input type="button" id="ticklerBtn_<%=docId%>" value="Tickler" onclick="popupTickler(450,600,'<%=docId%>')"/>
-                                                        <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '<%= request.getContextPath() %>/oscarMDS/SearchPatient.do?labType=DOC&segmentID=<%= docId %>&name=<%=java.net.URLEncoder.encode(demoName)%>', 'searchPatientWindow')">
+                                                        <input type="button" id="msgBtn_<%=docId%>" value="Msg" onclick="popup(700,960,'../oscarMessenger/SendDemoMessage.do?demographic_no=<%=demographicID%>','msg')"/>
+                                                        <input type="button" id="ticklerBtn_<%=docId%>" value="Tickler" onclick="popup(450,600,'../tickler/ForwardDemographicTickler.do?docType=DOC&docId=<%=docId%>&demographic_no=<%=demographicID%>','tickler')"/>
+                                                        <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popup(360, 680, '<%= request.getContextPath() %>/oscarMDS/SearchPatient.do?labType=DOC&segmentID=<%= docId %>&name=<%=java.net.URLEncoder.encode(demoName)%>', 'encounter')">
                                                         <% }
 
                                                         %>

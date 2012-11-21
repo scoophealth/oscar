@@ -27,17 +27,21 @@ function popup(height, width, url, windowName) {
 }
 
 
-function popup2(height, width, top, left, url, windowName){   
-  var page = url;  
-  windowprops = "height="+height+",width="+width+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=" + top + ",left=" + left;
-  var popup=window.open(url, windowName, windowprops);  
-  if (popup != null){  
-    if (popup.opener == null){  
-      popup.opener = self;  
-    }  
-  }  
-  popup.focus();  
-  return popup;  
+function popup2(height, width, top, left, url, windowName){
+  if ( typeof popup2.winRefs == 'undefined' ) {	  
+	    popup2.winRefs = {};
+  }
+  if ( typeof popup2.winRefs[windowName] == 'undefined' || popup2.winRefs[windowName].closed ) {  
+	  windowprops = "height="+height+",width="+width+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=" + top + ",left=" + left;
+	  popup2.winRefs[windowName]=window.open(url, windowName, windowprops);
+  }
+  else {
+	  popup2.winRefs[windowName].location.href = url;
+	  popup2.winRefs[windowName].resizeTo(width,height);
+	  popup2.winRefs[windowName].focus();
+  }
+  
+  return popup2.winRefs[windowName];  
 }
 
 function confirmNGo(url, message) {

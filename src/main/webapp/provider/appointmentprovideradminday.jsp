@@ -534,7 +534,7 @@ changePassword.moveTo(0,0);
 }
 function popupInboxManager(varpage){
     var page = "" + varpage;
-    var windowname="apptProviderSearch";
+    var windowname="apptProviderInbox";
     windowprops = "height=700,width=1100,location=no,"
     + "scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=10,left=0";
     var popup = window.open(page, windowname, windowprops);
@@ -589,7 +589,7 @@ function popupWithApptNo(vheight,vwidth,varpage,name,apptNo) {
 	if (name=='master')
 		popup(vheight,vwidth,varpage,name);
 	else if (name=='encounter')
-		popupPage(vheight, vwidth, varpage);
+		popup(vheight, vwidth, varpage, name);
 	else
 		popupOscarRx(vheight,vwidth,varpage);
 }

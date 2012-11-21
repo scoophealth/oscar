@@ -30,6 +30,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils,oscar.oscarLab.ca.all.*,oscar.oscarMDS.data.*,oscar.oscarLab.ca.all.util.*"%>
 <%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*, org.oscarehr.PMmodule.dao.ProviderDao"%>
 <%
@@ -104,11 +105,25 @@
         <script type="text/javascript" src="../share/yui/js/animation-min.js"></script>
         <script type="text/javascript" src="../share/yui/js/datasource-min.js"></script>
         <script type="text/javascript" src="../share/yui/js/autocomplete-min.js"></script>
-        <script type="text/javascript" src="../js/demographicProviderAutocomplete.js"></script>
+        <script type="text/javascript" src="../js/demographicProviderAutocomplete.js"></script> 
+        <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/jquery/jquery-1.4.2.js"></script>       
 
         <link rel="stylesheet" type="text/css" href="../share/yui/css/fonts-min.css"/>
         <link rel="stylesheet" type="text/css" href="../share/yui/css/autocomplete.css"/>
         <link rel="stylesheet" type="text/css" media="all" href="../share/css/demographicProviderAutocomplete.css"  />
+        
+        <style type="text/css">
+        	.multiPage {
+        		background-color: RED;
+        		color: WHITE;
+        		font-weight:bold;
+				padding: 0px 5px;
+				font-size: medium;
+        	}
+        	.singlePage {
+
+        	}
+        </style>               
     </head>
     <body >
         <div id="labdoc_<%=docId%>">
@@ -117,10 +132,10 @@
 
 
                     <td colspan="8">
-                        <div style="text-align: right; font-weight: bold"> <a id="firstP" href="javascript:void(0);" onclick="firstPage('<%=docId%>');"><<</a>
-                        <a id="prevP" href="javascript:void(0);" onclick="prevPage('<%=docId%>');"><</a>
-                        <a id="nextP" href="javascript:void(0);" onclick="nextPage('<%=docId%>');">></a>
-                        <a id="lastP" href="javascript:void(0);" onclick="lastPage('<%=docId%>');">>></a></div>
+                        <div style="text-align: right; font-weight: bold"> <a id="firstP" href="javascript:void(0);" onclick="firstPage('<%=docId%>');">First</a>
+                        <a id="prevP" href="javascript:void(0);" onclick="prevPage('<%=docId%>');">Prev</a>
+                        <a id="nextP" href="javascript:void(0);" onclick="nextPage('<%=docId%>');">Next</a>
+                        <a id="lastP" href="javascript:void(0);" onclick="lastPage('<%=docId%>');">Last</a></div>
                         <a href="<%=url2%>" ><img alt="document" src="<%=url%>" id="docImg_<%=docId%>" /></a>
               
                         
@@ -138,7 +153,7 @@
                                 </tr>
                                 <tr>
                                     <td><bean:message key="inboxmanager.document.NumberOfPages"/></td>
-                                    <td><%=numOfPageStr%></td>
+                                    <td><span id="viewedPage_<%=docId%>" class="<%= numOfPage > 1 ? "multiPage" : "singlePage" %>">1</span>&nbsp; of &nbsp;<span id="numPages_<%=docId %>" class="<%= numOfPage > 1 ? "multiPage" : "singlePage" %>"><%=numOfPageStr%></span></td>
                                 </tr>
                             </table>
 
@@ -198,6 +213,24 @@
                                             <div id="autocomplete_choicesprov<%=docId%>" class="autocomplete"></div>
 
                                             <script type="text/javascript">
+                                            jQuery.noConflict();
+                                            
+                                            function forwardDocument(docId) {
+                                            	var frm = "#reassignForm_" + docId;
+                                            	var query = jQuery(frm).serialize();
+                                            	
+                                            	jQuery.ajax({
+                                            		type: "POST",
+                                            		url:  "<%=request.getContextPath()%>/oscarMDS/ReportReassign.do",
+                                            		data: query,
+                                            		success: function (data) {
+                                            			window.location.reload();
+                                            		},
+                                            		error: function(jqXHR, err, exception) {
+                                            			alert(jqXHR.status);
+                                            		}
+                                            	});
+                                            }
 
                                                 var curPage=1;
                                                 var totalPage=<%=numOfPage%>;
@@ -212,8 +245,9 @@
                                                 nextPage=function(docid){
                                                     curPage++;
                                                     
+                                                    	$('viewedPage_'+docid).innerHTML = curPage;
                                                         showPageImg(docid,curPage);
-                                                        if(curPage+1==totalPage){
+                                                        if(curPage==totalPage){
                                                             hideNext();
                                                             showPrev();
                                                         } else{
@@ -226,7 +260,8 @@
                                                     if(curPage<1){
                                                         curPage=1;
                                                         hidePrev();
-                                                    }else{
+                                                    }
+                                                    $('viewedPage_'+docid).innerHTML = curPage;
                                                         showPageImg(docid,curPage);
                                                        if(curPage==1){
                                                            hidePrev();
@@ -235,16 +270,18 @@
                                                             showPrev();
                                                             showNext();
                                                         }
-                                                    }
+                                                    
                                                 }
                                                 firstPage=function(docid){
                                                     curPage=1;
+                                                    $('viewedPage_'+docid).innerHTML = 1;
                                                     showPageImg(docid,curPage);
                                                     hidePrev();
                                                     showNext();
                                                 }
                                                 lastPage=function(docid){
                                                     curPage=totalPage;
+                                                    $('viewedPage_'+docid).innerHTML = totalPage;
                                                     showPageImg(docid,curPage);
                                                     hideNext();
                                                     showPrev();
@@ -594,13 +631,18 @@ function sendMRP(ele){
 
                         <fieldset>
                             <legend><span class="FieldData"><i>Next Appointment: <oscar:nextAppt demographicNo="<%=demographicID%>"/></i></span></legend>
-                            <form name="reassignForm" method="post" action="Forward.do">
+                            <form id="reassignForm_<%=docId%>" name="reassignForm_<%=docId%>" method="post" action="">
                                 <input type="hidden" name="flaggedLabs" value="<%=docId%>" />
                                 <input type="hidden" name="selectedProviders" value="" />
                                 <input type="hidden" name="labType" value="DOC" />
                                 <input type="hidden" name="labType<%=docId%>DOC" value="imNotNull" />
                                 <input type="hidden" name="providerNo" value="<%=providerNo%>" />
+                                <input type="hidden" name="favorites" value="" />
+                                <input type="hidden" name="ajax" value="yes" />
                             </form>
+                            </fieldset>
+                         <fieldset>
+                         	<legend><bean:message key="inboxmanager.document.Comment"/></legend>
                                 <form name="acknowledgeForm_<%=docId%>" id="acknowledgeForm_<%=docId%>" onsubmit="updateStatus('acknowledgeForm_<%=docId%>');" method="post" action="javascript:void(0);">
 
                                 <table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
@@ -621,7 +663,7 @@ function sendMRP(ele){
                                                 <tr>
                                                     <td>
                                                         <input type="submit"  tabindex="<%=tabindex++%>" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" >
-                                                        <input type="button"  tabindex="<%=tabindex++%>" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, '../oscarMDS/SelectProvider.jsp?doc_no=<%=documentNo%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>', 'providerselect')">
+                                                        <input type="button"  tabindex="<%=tabindex++%>" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popup(323, 685, '../oscarMDS/SelectProvider.jsp?docId=<%=docId%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>', 'providerselect')">
                                                         <input type="button"  tabindex="<%=tabindex++%>" class="smallButton" value="<bean:message key="oscarMDS.index.btnFile"/>" onclick="fileDoc('<%=documentNo%>');" >
                                                         <input type="button"  tabindex="<%=tabindex++%>" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
                                                         <input type="button"  tabindex="<%=tabindex++%>" value=" <bean:message key="global.btnPrint"/> " onClick="popup(700,960,'<%=url2%>','file download')">
@@ -630,7 +672,7 @@ function sendMRP(ele){
                                                        	%>
                                                         <input type="button"  tabindex="<%=tabindex++%>" value="Msg" onclick="popup(700,960,'../oscarMessenger/SendDemoMessage.do?demographic_no=<%=demographicID%>','msg')"/>
                                                         <input type="button"  tabindex="<%=tabindex++%>" value="Tickler" onclick="popup(450,600,'../tickler/ForwardDemographicTickler.do?docType=DOC&docId=<%=docId%>&demographic_no=<%=demographicID%>','tickler')"/>
-                                                        <input type="button"  tabindex="<%=tabindex++%>" value="eChart" onclick="popup(710,1024,'<%=eURL%>','eChart')"/>
+                                                        <input type="button"  tabindex="<%=tabindex++%>" value="eChart" onclick="popup(710,1024,'<%=eURL%>','encounter')"/>
                                                         <% }
 
                                                         %>
