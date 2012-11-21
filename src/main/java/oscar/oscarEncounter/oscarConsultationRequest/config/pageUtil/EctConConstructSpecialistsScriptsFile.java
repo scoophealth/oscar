@@ -33,10 +33,10 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
-import org.caisi.model.ProfessionalSpecialists;
 import org.oscarehr.common.dao.ConsultationServiceDao;
 import org.oscarehr.common.dao.ServiceSpecialistsDao;
 import org.oscarehr.common.model.ConsultationServices;
+import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.ServiceSpecialists;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -82,14 +82,14 @@ public class EctConConstructSpecialistsScriptsFile {
 				fileWriter.write("K(" + servId + ",\"" + servDesc + "\");\n");
 				for (Object[] o : dao.findSpecialists(ConversionUtils.fromIntString(servId))) {
 					ServiceSpecialists ser = (ServiceSpecialists) o[0];
-					ProfessionalSpecialists pro = (ProfessionalSpecialists) o[1];
+					ProfessionalSpecialist pro = (ProfessionalSpecialist) o[1];
 
-					String name = pro.getLastName() + ", " + pro.getFirstName() + " " + pro.getProLetters();
+					String name = pro.getLastName() + ", " + pro.getFirstName() + " " + pro.getProfessionalLetters();
 
 					String specId = "" + ser.getId().getSpecId();
-					String phone = pro.getPhone();
-					String address = pro.getAddress();
-					String fax = pro.getFax();
+					String phone = pro.getPhoneNumber();
+					String address = pro.getStreetAddress();
+					String fax = pro.getFaxNumber();
 					fileWriter.write("D(" + servId + ",\"" + specId + "\",\"" + phone + "\",\"" + name + "\",\"" + fax + "\",\"" + address + "\");\n");
 				}
 
@@ -131,15 +131,15 @@ public class EctConConstructSpecialistsScriptsFile {
 			String sql = String.valueOf(String.valueOf((new StringBuilder("select ser.specId, pro.fName, pro.lName, pro.proLetters, pro.address , pro.phone, pro.fax  from serviceSpecialists ser, professionalSpecialists pro where pro.specId = ser.specId and ser.serviceId = '")).append(servId).append("' order by pro.lName")));
 			for (Object[] o : dao.findSpecialists(ConversionUtils.fromIntString(servId))) {
 				ServiceSpecialists ser = (ServiceSpecialists) o[0];
-				ProfessionalSpecialists pro = (ProfessionalSpecialists) o[1];
+				ProfessionalSpecialist pro = (ProfessionalSpecialist) o[1];
 				
-				String name = pro.getLastName() + ", " + pro.getFirstName() + " " + pro.getProLetters();
+				String name = pro.getLastName() + ", " + pro.getFirstName() + " " + pro.getProfessionalLetters();
 				name = this.escapeString(name);
 				String specId = "" + ser.getId().getSpecId();
-				String phone = pro.getPhone();
-				String address = pro.getAddress();
+				String phone = pro.getPhoneNumber();
+				String address = pro.getStreetAddress();
 				address = this.escapeString(address);
-				String fax = pro.getFax();
+				String fax = pro.getFaxNumber();
 				stringBuffer.append("D(" + servId + ",\"" + specId + "\",\"" + phone + "\",\"" + name + "\",\"" + fax + "\",\"" + address + "\");\n");
 			}
 

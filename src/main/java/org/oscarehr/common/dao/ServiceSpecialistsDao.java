@@ -27,7 +27,7 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import org.caisi.model.ProfessionalSpecialists;
+import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.ServiceSpecialists;
 import org.springframework.stereotype.Repository;
 
@@ -54,12 +54,12 @@ public class ServiceSpecialistsDao extends AbstractDao<ServiceSpecialists> {
 	 * @param servId
 	 * 		Specialists to find for the specified service ID
 	 * @return	
-	 * 		Returns the list of {@link ServiceSpecialists}, {@link ProfessionalSpecialists} pairs
+	 * 		Returns the list of {@link ServiceSpecialists}, {@link ProfessionalSpecialist} pairs
 	 */
 	@SuppressWarnings("unchecked")
     public List<Object[]> findSpecialists(Integer servId) {
-		String sql = "FROM ServiceSpecialists ser, " + ProfessionalSpecialists.class.getSimpleName() + " pro " +
-				"WHERE pro.specId = ser.id.specId and ser.id.serviceId = :serviceId " +
+		String sql = "FROM ServiceSpecialists ser, " + ProfessionalSpecialist.class.getSimpleName() + " pro " +
+				"WHERE pro.id = ser.id.specId and ser.id.serviceId = :serviceId " +
 				"ORDER BY pro.lastName";
 		Query query = entityManager.createQuery(sql);
 		query.setParameter("serviceId", servId);
