@@ -25,14 +25,22 @@
 
 package oscar.oscarEncounter.oscarMeasurements.bean;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.common.dao.MeasurementDao;
+import org.oscarehr.common.dao.MeasurementGroupDao;
+import org.oscarehr.common.dao.MeasurementTypeDao;
+import org.oscarehr.common.dao.ValidationsDao;
+import org.oscarehr.common.model.Measurement;
+import org.oscarehr.common.model.MeasurementGroup;
+import org.oscarehr.common.model.MeasurementType;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.Validations;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
+import oscar.util.ConversionUtils;
 
 public class EctMeasurementTypesBeanHandler {
     
@@ -51,130 +59,103 @@ public class EctMeasurementTypesBeanHandler {
     }
 
     public boolean init() {
-        
-        boolean verdict = true;
-        try {
-            
+		MeasurementTypeDao dao = SpringUtils.getBean(MeasurementTypeDao.class);
+		ValidationsDao valDao = SpringUtils.getBean(ValidationsDao.class);
 
-            String sql = "SELECT * FROM measurementType ORDER BY type";              
-            ResultSet rs;        
-            for(rs = DBHandler.GetSQL(sql); rs.next(); )
-            {                
-                String validation = oscar.Misc.getString(rs, "validation");
-                String sqlValidation = "SELECT name FROM validations WHERE id='" + validation + "'";
-                ResultSet rsValidation = DBHandler.GetSQL(sqlValidation);
-                if (rsValidation.next()){
-                    EctMeasurementTypesBean measurementTypes = new EctMeasurementTypesBean(rs.getInt("id"), oscar.Misc.getString(rs, "type"), 
-                                                                                           oscar.Misc.getString(rs, "typeDisplayName"), 
-                                                                                           oscar.Misc.getString(rs, "typeDescription"), 
-                                                                                           oscar.Misc.getString(rs, "measuringInstruction"), 
-                                                                                           rsValidation.getString("name"));   
-                    measurementTypeVector.add(measurementTypes);
-                }
-                rsValidation.close();
-            }
-                            
-            rs.close();
-        }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-            verdict = false;
-        }
-        return verdict;
+		for (MeasurementType mt : dao.findAll()) {
+			String validation = mt.getValidation();
+			if (validation == null || validation.isEmpty()) {
+				continue;
+			}
+
+			Validations val = valDao.find(ConversionUtils.fromIntString(validation));
+			if (val != null) {
+				EctMeasurementTypesBean measurementTypes = new EctMeasurementTypesBean(
+						mt.getId(), mt.getType(), mt.getTypeDisplayName(), 
+						mt.getTypeDescription(), mt.getMeasuringInstruction(), 
+						val.getName());
+				measurementTypeVector.add(measurementTypes);
+			}
+		}
+		return true;
     }
     
     public boolean init(String groupName, String demo) {
+        MeasurementGroupDao mgDao = SpringUtils.getBean(MeasurementGroupDao.class); 
+        MeasurementTypeDao mtDao = SpringUtils.getBean(MeasurementTypeDao.class);
+        MeasurementDao msDao = SpringUtils.getBean(MeasurementDao.class);
+        ProviderDao prDao = SpringUtils.getBean(ProviderDao.class);
         
-        boolean verdict = true;
-        try {
-            
-            String sqlMGr = "SELECT typeDisplayName FROM measurementGroup WHERE name='" + groupName + "'ORDER BY typeDisplayName";            
-            ResultSet rsMGr;
- 
-            for(rsMGr = DBHandler.GetSQL(sqlMGr); rsMGr.next();){
-                String typeDisplayName  = rsMGr.getString("typeDisplayName");
-                String sqlMT = "SELECT * FROM measurementType WHERE typeDisplayName = '" + typeDisplayName + "'";                
-                ResultSet rsMT;        
-                for(rsMT = DBHandler.GetSQL(sqlMT); rsMT.next(); )
-                {                
-                    EctMeasuringInstructionBean mInstrc = new EctMeasuringInstructionBean(rsMT.getString("measuringInstruction"));                    
-                    measuringInstrcVector.add(mInstrc);
-                }
-                rsMT.previous();
-                
-                //Get the data last entered for the current measurement type
-                String sqlData = "SELECT * FROM measurements WHERE demographicNo='"+ demo + "' AND type ='" + rsMT.getString("type")
-                                 + "' ORDER BY dateEntered DESC LIMIT 1";
-                ResultSet rsData = DBHandler.GetSQL(sqlData);
-                boolean hasPreviousData = false;
-                if(rsData.next()){
-                    String providerNo = rsData.getString("providerNo");
-                    String sqlProvider = "SELECT * FROM provider WHERE provider_no='" + providerNo + "'";
-                    ResultSet rsProvider = DBHandler.GetSQL(sqlProvider);
-                    String pFname = "";
-                    String pLname = "";
-                    if(rsProvider.next()){
-                        pFname = rsProvider.getString("first_name");
-                        pLname = rsProvider.getString("last_name");
+        for(MeasurementGroup mg : mgDao.findByName(groupName)){
+          	String typeDisplayName  = mg.getTypeDisplayName();
 
-                    }
-                    else if( providerNo.equals("0") ) {
-                        ResourceBundle props = ResourceBundle.getBundle("oscarResources");
-                        pFname = props.getString("oscarLab.System");
-                        pLname = props.getString("oscarLab.System");
-                    }
-                    rsProvider.close();
-                    EctMeasurementTypesBean measurementTypes = new EctMeasurementTypesBean( rsMT.getInt("id"), 
-                                                                                        rsMT.getString("type"), 
-                                                                                        rsMT.getString("typeDisplayName"), 
-                                                                                        rsMT.getString("typeDescription"), 
-                                                                                        rsMT.getString("measuringInstruction"), 
-                                                                                        rsMT.getString("validation"),
-                                                                                        pFname,
-                                                                                        pLname,
-                                                                                        rsData.getString("dataField"), 
-                                                                                        rsData.getString("measuringInstruction"), 
-                                                                                        rsData.getString("comments"), 
-                                                                                        rsData.getString("dateObserved"), 
-                                                                                        rsData.getString("dateEntered"));                        
-                        
-                    measurementTypeVector.add(measurementTypes);
-                    EctMeasuringInstructionBeanHandler hd = new EctMeasuringInstructionBeanHandler(measuringInstrcVector);
-                    measuringInstrcHdVector.add(hd);
-                    measuringInstrcVectorVector.add(measuringInstrcVector);
-                    measuringInstrcVector = new Vector();
-                    hasPreviousData = true;
-                    
+          	MeasurementType mt = null;        
+            for(MeasurementType m : mtDao.findByTypeDisplayName(typeDisplayName)) {                
+                EctMeasuringInstructionBean mInstrc = new EctMeasuringInstructionBean(m.getMeasuringInstruction());                    
+                measuringInstrcVector.add(mInstrc);
+                mt = m;
+            }
+            
+            Measurement ms = msDao.findLastEntered(ConversionUtils.fromIntString(demo), mt.getType());
+            boolean hasPreviousData = false;
+            if(mt != null){
+                String providerNo = ms.getProviderNo();
+                
+                Provider provider = prDao.getProvider(providerNo);
+                
+                String pFname = "";
+                String pLname = "";
+                if(provider != null){
+                    pFname = provider.getFirstName();
+                    pLname = provider.getLastName();
+
                 }
-                rsData.close();
-                if(!hasPreviousData){
-                    EctMeasurementTypesBean measurementTypes = new EctMeasurementTypesBean( rsMT.getInt("id"), 
-                                                                                        rsMT.getString("type"), 
-                                                                                        rsMT.getString("typeDisplayName"), 
-                                                                                        rsMT.getString("typeDescription"), 
-                                                                                        rsMT.getString("measuringInstruction"), 
-                                                                                        rsMT.getString("validation")); 
-                    
-                    measurementTypeVector.add(measurementTypes);   
-                    EctMeasuringInstructionBeanHandler hd = new EctMeasuringInstructionBeanHandler(measuringInstrcVector);
-                    measuringInstrcHdVector.add(hd);
-                    measuringInstrcVectorVector.add(measuringInstrcVector);
-                    measuringInstrcVector = new Vector();
+                else if( providerNo.equals("0") ) {
+                    ResourceBundle props = ResourceBundle.getBundle("oscarResources");
+                    pFname = props.getString("oscarLab.System");
+                    pLname = props.getString("oscarLab.System");
                 }
                 
-                rsMT.close();
-                                                                                        
-                
+                EctMeasurementTypesBean measurementTypes = new EctMeasurementTypesBean(mt.getId(), 
+                                                                                    mt.getType(), 
+                                                                                    mt.getTypeDisplayName(), 
+                                                                                    mt.getTypeDescription(), 
+                                                                                    mt.getMeasuringInstruction(), 
+                                                                                    mt.getValidation(),
+                                                                                    pFname,
+                                                                                    pLname,
+                                                                                    ms.getDataField(),
+                                                                                    ms.getMeasuringInstruction(), 
+                                                                                    ms.getComments(), 
+                                                                                    ConversionUtils.toDateString(ms.getDateObserved()), 
+                                                                                    ConversionUtils.toDateString(ms.getCreateDate()));                        
+                    
+                measurementTypeVector.add(measurementTypes);
+                EctMeasuringInstructionBeanHandler hd = new EctMeasuringInstructionBeanHandler(measuringInstrcVector);
+                measuringInstrcHdVector.add(hd);
+                measuringInstrcVectorVector.add(measuringInstrcVector);
+                measuringInstrcVector = new Vector();
+                hasPreviousData = true;
                 
             }
             
-            rsMGr.close();
+            if(!hasPreviousData){
+                EctMeasurementTypesBean measurementTypes = new EctMeasurementTypesBean( mt.getId(), 
+																                        mt.getType(), 
+																                        mt.getTypeDisplayName(), 
+																                        mt.getTypeDescription(), 
+																                        mt.getMeasuringInstruction(), 
+																                        mt.getValidation()); 
+                
+                measurementTypeVector.add(measurementTypes);   
+                EctMeasuringInstructionBeanHandler hd = new EctMeasuringInstructionBeanHandler(measuringInstrcVector);
+                measuringInstrcHdVector.add(hd);
+                measuringInstrcVectorVector.add(measuringInstrcVector);
+                measuringInstrcVector = new Vector();
+            }
         }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-            verdict = false;
-        }
-        return verdict;
+        
+        return true;
     }
 
     public Vector getMeasurementTypeVector(){
