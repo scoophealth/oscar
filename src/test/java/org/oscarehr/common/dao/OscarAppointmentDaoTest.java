@@ -204,4 +204,9 @@ public class OscarAppointmentDaoTest extends DaoTestFixtures {
 		assertNotNull(apptCheck);
 		assertEquals(appt, apptCheck);
 	}
+	
+	@Test
+	public void testFindByProviderAndDate() {
+		assertNotNull(dao.findByProviderAndDate("100", new Date()));
+	}
 }

@@ -278,4 +278,13 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		return rs;
 	}
 	
+	@SuppressWarnings("unchecked")
+    public List<Appointment> findByProviderAndDate(String providerNo, Date appointmentDate) {
+		Query query = createQuery("a", "a.providerNo = :pNo and a.appointmentDate= :aDate");
+		query.setParameter("pNo", providerNo);
+		query.setParameter("aDate", appointmentDate);
+	    return query.getResultList();
+    }
+
+	
 }

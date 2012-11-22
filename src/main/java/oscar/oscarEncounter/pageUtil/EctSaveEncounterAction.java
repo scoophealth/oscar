@@ -26,8 +26,6 @@
 package oscar.oscarEncounter.pageUtil;
 
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
@@ -53,9 +51,9 @@ import org.oscarehr.util.SpringUtils;
 import oscar.OscarProperties;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
-import oscar.oscarDB.DBHandler;
 import oscar.oscarSurveillance.SurveillanceMaster;
 import oscar.service.OscarSuperManager;
+import oscar.util.ConversionUtils;
 import oscar.util.UtilDateUtilities;
 
 public class EctSaveEncounterAction extends Action {
@@ -64,34 +62,22 @@ public class EctSaveEncounterAction extends Action {
     OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
 
 
-  private String getLatestID(String demoNo) throws
-    SQLException  {
+	private String getLatestID(String demoNo) {
+		EChartDao dao = SpringUtils.getBean(EChartDao.class);
+		Integer maxId = dao.getMaxIdForDemographic(ConversionUtils.fromIntString(demoNo));
 
-      String sql = "select MAX(eChartId) as maxID from eChart where demographicNo = " + demoNo;
-      ResultSet rs = DBHandler.GetSQL(sql);
-      String latestID = null;
-
-      if (rs.next()) {
-          latestID = oscar.Misc.getString(rs, "maxID");
-      }
-      rs.close();
-
-      return latestID;
-  }
+		if (maxId != null) {
+			return maxId.toString();
+		}
+		return null;
+	}
 
 
   //This function will compare the most current id in the echart with the
   // id that is stored in the session variable.  If the ID in the echart is
   // newer, then the user is working with a old (aka dirty) copy of the encounter
   private boolean isDirtyEncounter(String demographicNo, String userEChartID)  {
-      String latestID;
-      try  {
-        latestID = getLatestID(demographicNo);
-      }
-      catch (SQLException sqlexception) {
-        MiscUtils.getLogger().debug(sqlexception.getMessage());
-        return true;
-      }
+      String latestID = getLatestID(demographicNo);
 
       //latestID should only be null if the assessed encounter is new, which
       // means that it can't be dirty
