@@ -24,6 +24,11 @@
 package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,11 +39,11 @@ import org.oscarehr.util.SpringUtils;
 
 public class ConsultationServicesDaoTest extends DaoTestFixtures {
 
-	private ConsultationServiceDao dao = (ConsultationServiceDao)SpringUtils.getBean("consultationServiceDao");
+	private ConsultationServiceDao dao = (ConsultationServiceDao) SpringUtils.getBean("consultationServiceDao");
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("consultationServices","serviceSpecialists","professionalSpecialists");
+		SchemaUtils.restoreTable("consultationServices", "serviceSpecialists", "professionalSpecialists");
 	}
 
 	@Test
@@ -47,6 +52,37 @@ public class ConsultationServicesDaoTest extends DaoTestFixtures {
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		dao.persist(entity);
 		assertNotNull(entity.getId());
+	}
+
+	@Test
+	public void testFindAll() throws Exception {
+		ConsultationServices consultation1 = new ConsultationServices();
+		EntityDataGenerator.generateTestDataForModelClass(consultation1);
+		ConsultationServices consultation2 = new ConsultationServices();
+		EntityDataGenerator.generateTestDataForModelClass(consultation2);
+		ConsultationServices consultation3 = new ConsultationServices();
+		EntityDataGenerator.generateTestDataForModelClass(consultation3);
+		dao.persist(consultation1);
+		dao.persist(consultation2);
+		dao.persist(consultation3);
+		List<ConsultationServices> result = dao.findAll();
+		List<ConsultationServices> expectedResult = new ArrayList<ConsultationServices>(Arrays.asList(consultation1, consultation2, consultation3));
+
+		assertTrue(result.containsAll(expectedResult));
+	}
+
+	@Test
+	public void testFindActive() throws Exception {
+		ConsultationServices activeConsult = new ConsultationServices();
+		EntityDataGenerator.generateTestDataForModelClass(activeConsult);
+		activeConsult.setActive("1");
+		ConsultationServices inactiveConsult = new ConsultationServices();
+		EntityDataGenerator.generateTestDataForModelClass(activeConsult);
+		activeConsult.setActive("0");
+		dao.persist(activeConsult);
+		dao.persist(inactiveConsult);
+		List<ConsultationServices> all = dao.findAll();
+		assertTrue(all.contains(inactiveConsult));
 	}
 
 }
