@@ -170,5 +170,27 @@ public class EChartDao extends AbstractDao<EChart>{
 
         
     }
+
+	public Integer getMaxIdForDemographic(Integer demoNo) {
+		Query query = entityManager.createQuery("SELECT MAX(e.id) FROM EChart e WHERE e.demographicNo = :demoNo");
+		query.setParameter("demoNo", demoNo);
+		return (Integer) query.getSingleResult();	    
+    }
+
+	@SuppressWarnings("unchecked")
+    public List<EChart> getChartsForDemographic(Integer demoNo) {
+		Query query = createQuery("e", "e.demographicNo = :dNo ORDER BY e.id DESC");
+		query.setParameter("dNo", demoNo);
+		return query.getResultList();
+    }
+
+	@SuppressWarnings("unchecked")
+    public List<EChart> findByDemoIdAndSubject(Integer demoNo, String subj) {
+		Query query = createQuery("e", "e.demographicNo = :demoNo and e.subject = :subj ORDER BY e.timestamp");
+		query.setParameter("demoNo", demoNo);
+		query.setParameter("subj", subj);
+		return query.getResultList();
+    }
 	
 }
+

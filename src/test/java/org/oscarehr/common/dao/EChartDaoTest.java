@@ -48,4 +48,25 @@ public class EChartDaoTest extends DaoTestFixtures {
 		dao.persist(entity);
 		assertNotNull(entity.getId());
 	}
+
+	@Test
+	public void testGetMaxId() throws Exception {
+		EChart entity = new EChart();
+		EntityDataGenerator.generateTestDataForModelClass(entity);
+		dao.persist(entity);
+
+		Integer id = dao.getMaxIdForDemographic(entity.getDemographicNo());
+		assertNotNull(id);
+	}
+
+	@Test
+	public void testGetChartsForDemographic() {
+		assertNotNull(dao.getChartsForDemographic(100));
+	}
+	
+	@Test
+	public void testFindByDemoIdAndSubject() {
+		assertNotNull(dao.findByDemoIdAndSubject(100, "SUBJ"));
+	}
+	
 }

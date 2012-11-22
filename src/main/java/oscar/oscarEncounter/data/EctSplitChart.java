@@ -22,56 +22,33 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarEncounter.data;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.text.Format;
-import java.text.SimpleDateFormat;
 import java.util.Vector;
 
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.common.dao.EChartDao;
+import org.oscarehr.common.model.EChart;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
+import oscar.util.ConversionUtils;
 
 /**
  *
  * @author Jay Gallagher
  */
 public class EctSplitChart {
-   
- 
-   public EctSplitChart() {
-      
-   }
-   
-   
-   public Vector getSplitCharts(String demographicNo){
-      Vector vec = null;//
-      try{              
-         vec = new Vector();
-         
-         String sql = "select eChartId, timeStamp from eChart where demographicNo= '"+demographicNo+"'  and subject = 'SPLIT CHART' order by timeStamp ";
-         ResultSet rs = DBHandler.GetSQL(sql);
-         while(rs.next()) {
-            String[] s = new String[2];
-             s[0] = oscar.Misc.getString(rs, "eChartId");            
-             Timestamp timestamp = rs.getTimestamp("timeStamp");             
-             java.util.Date d = new java.util.Date(timestamp.getTime());
-             
-             Format formatter = new SimpleDateFormat("yyyy-MM-dd");
-             s[1] = formatter.format(d);
-                                                    
-            vec.add(s);
-         }
-         rs.close();
-         
-      }catch(SQLException e){
-         MiscUtils.getLogger().error("Error", e);
-         vec = null;
-      }
-      return vec;
-   }
+
+	public Vector<String[]> getSplitCharts(String demographicNo) {
+		EChartDao dao = SpringUtils.getBean(EChartDao.class);
+		Vector<String[]> vec = new Vector<String[]>();
+
+		for (EChart ec : dao.findByDemoIdAndSubject(ConversionUtils.fromIntString(demographicNo), "SPLIT CHART")) {
+			String[] s = new String[2];
+			s[0] = ec.getId().toString();
+			s[1] = ConversionUtils.toDateString(ec.getTimestamp());
+
+			vec.add(s);
+		}
+		return vec;
+	}
 }

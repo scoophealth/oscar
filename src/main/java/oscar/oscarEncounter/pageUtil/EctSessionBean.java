@@ -25,15 +25,27 @@
 
 package oscar.oscarEncounter.pageUtil;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.EChartDao;
+import org.oscarehr.common.dao.EncounterTemplateDao;
+import org.oscarehr.common.dao.MeasurementGroupStyleDao;
+import org.oscarehr.common.dao.MessageTblDao;
+import org.oscarehr.common.dao.OscarAppointmentDao;
+import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.EChart;
+import org.oscarehr.common.model.EncounterTemplate;
+import org.oscarehr.common.model.MeasurementGroupStyle;
+import org.oscarehr.common.model.MessageTbl;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
-import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarConsultation.data.EctConProviderData;
+import oscar.util.ConversionUtils;
 import oscar.util.UtilDateUtilities;
 
 public class EctSessionBean implements java.io.Serializable {
@@ -120,10 +132,6 @@ public class EctSessionBean implements java.io.Serializable {
      */
     public void setUpEncounterPage() {
         resetAll();
-        String tmp;
-
-        String sql;
-        ResultSet rs;
 
         appointmentsIdArray = new ArrayList<String>();
         appointmentsNamesArray = new ArrayList<String>();
@@ -131,115 +139,98 @@ public class EctSessionBean implements java.io.Serializable {
         measurementGroupNames = new ArrayList<String>();
 
         //This block gets the patient age and
-        try {
+        DemographicDao demoDao = SpringUtils.getBean(DemographicDao.class);
+        Demographic d  = demoDao.getDemographic(demographicNo);
+        
+        patientLastName = d.getLastName();
+        patientFirstName = d.getFirstName();
+        address = d.getAddress();
+        city = d.getCity();
+        postal = d.getPostal();
+        phone = d.getPhone();
+        familyDoctorNo = d.getProviderNo();
+        yearOfBirth = d.getYearOfBirth();
+        monthOfBirth = d.getMonthOfBirth();
+        dateOfBirth = d.getDateOfBirth();
+        roster = d.getRosterStatus();
+        patientSex = d.getSex();
 
-            sql = "select * from demographic where demographic_no=" + demographicNo;
-            rs = DBHandler.GetSQL(sql);
-            while (rs.next()) {
-                patientLastName = oscar.Misc.getString(rs, "last_name");
-                patientFirstName = oscar.Misc.getString(rs, "first_name");
-                address = oscar.Misc.getString(rs, "address");
-                city = oscar.Misc.getString(rs, "city");
-                postal = oscar.Misc.getString(rs, "postal");
-                phone = oscar.Misc.getString(rs, "phone");
-                familyDoctorNo = oscar.Misc.getString(rs, "provider_no");
-                yearOfBirth = oscar.Misc.getString(rs, "year_of_birth");
-                monthOfBirth = oscar.Misc.getString(rs, "month_of_birth");
-                dateOfBirth = oscar.Misc.getString(rs, "date_of_birth");
-                roster = oscar.Misc.getString(rs, "roster_status");
-                patientSex = oscar.Misc.getString(rs, "sex");
-
-                if (yearOfBirth.equals("null") || yearOfBirth=="") {
-                    yearOfBirth = "0";
-                }
-                if (monthOfBirth.equals("null") || monthOfBirth=="") {
-                    monthOfBirth = "0";
-                }
-                if (dateOfBirth.equals("null") || dateOfBirth=="") {
-                    dateOfBirth = "0";
-                }
-            }
-            rs.close();
-
-            if(yearOfBirth!="" && yearOfBirth!=null)
-            	patientAge = UtilDateUtilities
-                    .calcAge(UtilDateUtilities.calcDate(yearOfBirth, monthOfBirth, dateOfBirth));
-
-            sql = "select * from appointment where provider_no='" + curProviderNo + "' and appointment_date='"
-                    + appointmentDate + "'";
-            rs = DBHandler.GetSQL(sql);
-            while (rs.next()) {
-                tmp = Integer.toString(rs.getInt("appointment_no"));
-                appointmentsIdArray.add(tmp);
-                appointmentsNamesArray.add(oscar.Misc.getString(rs, "name") + " " + oscar.Misc.getString(rs, "start_time"));
-
-            }
-            rs.close();
-            sql = "select * from encountertemplate order by encountertemplate_name";
-            rs = DBHandler.GetSQL(sql);
-            while (rs.next()) {
-                templateNames.add(oscar.Misc.getString(rs, "encountertemplate_name"));
-            }
-            rs.close();
-
-            sql = "SELECT groupName from measurementGroupStyle ORDER BY groupName";
-            rs = DBHandler.GetSQL(sql);
-            while (rs.next()) {
-                measurementGroupNames.add(oscar.Misc.getString(rs, "groupName"));
-            }
-            rs.close();
-
-            OscarProperties properties = OscarProperties.getInstance();
-    		if( !Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
-	            sql = "select * from eChart where demographicNo=" + demographicNo + " ORDER BY eChartId DESC";
-	            rs = DBHandler.GetSQL(sql);
-	            if (rs.next()) {
-	                eChartId = oscar.Misc.getString(rs, "eChartId");
-	                eChartTimeStamp = rs.getTimestamp("timeStamp");
-	                socialHistory = oscar.Misc.getString(rs, "socialHistory");
-	                familyHistory = oscar.Misc.getString(rs, "familyHistory");
-	                medicalHistory = oscar.Misc.getString(rs, "medicalHistory");
-	                ongoingConcerns = oscar.Misc.getString(rs, "ongoingConcerns");
-	                reminders = oscar.Misc.getString(rs, "reminders");
-	                encounter = oscar.Misc.getString(rs, "encounter");
-	                subject = oscar.Misc.getString(rs, "subject");
-	            } else {
-	                eChartTimeStamp = null;
-	                socialHistory = "";
-	                familyHistory = "";
-	                medicalHistory = "";
-	                ongoingConcerns = "";
-	                reminders = "";
-	                encounter = "";
-	                subject = "";
-	            }
-	            rs.close();
-    		}
-
-            if (oscarMsgID != null) {
-                sql = "Select * from messagetbl where messageid = \'" + oscarMsgID + "\' ";
-                rs = DBHandler.GetSQL(sql);
-                if (rs.next()) {
-                    String message = (oscar.Misc.getString(rs, "themessage"));
-                    String subject = (oscar.Misc.getString(rs, "thesubject"));
-                    String sentby = (oscar.Misc.getString(rs, "sentby"));
-                    String sentto = (oscar.Misc.getString(rs, "sentto"));
-                    String thetime = (oscar.Misc.getString(rs, "theime"));
-                    String thedate = (oscar.Misc.getString(rs, "thedate"));
-                    oscarMsg = "From: " + sentby + "\n" + "To: " + sentto + "\n" + "Date: " + thedate + " " + thetime
-                            + "\n" + "Subject: " + subject + "\n" + message;
-                }
-                rs.close();
-            }
-
-            if(myoscarMsgId != null){
-            	oscarMsg = myoscarMsgId;
-            }
-
-
-        } catch (java.sql.SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
+        if (yearOfBirth.equals("null") || yearOfBirth=="") {
+            yearOfBirth = "0";
         }
+        if (monthOfBirth.equals("null") || monthOfBirth=="") {
+            monthOfBirth = "0";
+        }
+        if (dateOfBirth.equals("null") || dateOfBirth=="") {
+            dateOfBirth = "0";
+        }
+    
+        if(yearOfBirth!="" && yearOfBirth!=null)
+        	patientAge = UtilDateUtilities
+                .calcAge(UtilDateUtilities.calcDate(yearOfBirth, monthOfBirth, dateOfBirth));
+
+        OscarAppointmentDao apptDao = SpringUtils.getBean(OscarAppointmentDao.class);
+        for(Appointment appt : apptDao.findByProviderAndDate(curProviderNo, ConversionUtils.fromDateString(appointmentDate))){
+            appointmentsIdArray.add(appt.getId().toString());
+            appointmentsNamesArray.add(appt.getName() + " " + ConversionUtils.toTimeString(appt.getStartTime()));
+        }
+        
+        EncounterTemplateDao ectDao = SpringUtils.getBean(EncounterTemplateDao.class);
+        for(EncounterTemplate ect : ectDao.findAll()) {
+            templateNames.add(ect.getEncounterTemplateName());
+        }
+        
+        MeasurementGroupStyleDao mgsDao = SpringUtils.getBean(MeasurementGroupStyleDao.class);
+        for(MeasurementGroupStyle mgs : mgsDao.findAll()) {
+            measurementGroupNames.add(mgs.getGroupName());
+        }
+
+        OscarProperties properties = OscarProperties.getInstance();
+		if( !Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
+			EChartDao ecDao = SpringUtils.getBean(EChartDao.class);
+			List<EChart> ecs = ecDao.getChartsForDemographic(ConversionUtils.fromIntString(demographicNo));
+			if (!ecs.isEmpty()) {
+				EChart ec = ecs.get(0); 
+                eChartId = ec.getId().toString();
+                eChartTimeStamp =  ec.getTimestamp();
+                socialHistory = ec.getSocialHistory();
+                familyHistory = ec.getFamilyHistory();
+                medicalHistory = ec.getMedicalHistory();
+                ongoingConcerns = ec.getOngoingConcerns();
+                reminders = ec.getReminders();
+                encounter = ec.getEncounter();
+                subject = ec.getSubject();
+            } else {
+                eChartTimeStamp = null;
+                socialHistory = "";
+                familyHistory = "";
+                medicalHistory = "";
+                ongoingConcerns = "";
+                reminders = "";
+                encounter = "";
+                subject = "";
+            }
+		}
+
+        if (oscarMsgID != null) {
+        	MessageTblDao mtDao = SpringUtils.getBean(MessageTblDao.class);
+        	MessageTbl mt = mtDao.find(ConversionUtils.fromIntString(oscarMsgID));
+            if (mt != null) {
+                String message = mt.getMessage();
+                String subject = mt.getSubject();
+                String sentby = mt.getSentBy();
+                String sentto = mt.getSentTo();
+                String thetime = ConversionUtils.toTimeString(mt.getTime());
+                String thedate = ConversionUtils.toDateString(mt.getDate());
+                oscarMsg = "From: " + sentby + "\n" + "To: " + sentto + "\n" + "Date: " + thedate + " " + thetime
+                        + "\n" + "Subject: " + subject + "\n" + message;
+            }
+        }
+
+        if(myoscarMsgId != null){
+        	oscarMsg = myoscarMsgId;
+        }
+
     }
 
     /**
@@ -254,115 +245,85 @@ public class EctSessionBean implements java.io.Serializable {
         appointmentsNamesArray = new ArrayList<String>();
         templateNames = new ArrayList<String>();
 
-        String tmp;
-
-        ResultSet rs;
-        String sql;
-
-        try {
-
-            sql = "select * from appointment where appointment_no=" + appointmentNo;
-            rs = DBHandler.GetSQL(sql);
-            while (rs.next()) {
-                demographicNo = oscar.Misc.getString(rs, "demographic_no");
-                this.appointmentNo = appointmentNo;
-                reason = oscar.Misc.getString(rs, "reason");
-                encType = new String("face to face encounter with client");
-                appointmentDate = oscar.Misc.getString(rs, "appointment_date");
-                startTime = oscar.Misc.getString(rs, "start_time");
-                status = oscar.Misc.getString(rs, "status");
-            }
-            rs.close();
-        } catch (java.sql.SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
+        OscarAppointmentDao apptDao = SpringUtils.getBean(OscarAppointmentDao.class);
+		Appointment appt = apptDao.find(ConversionUtils.fromIntString(appointmentNo));
+		demographicNo = "" + appt.getDemographicNo();
+		this.appointmentNo = appointmentNo;
+		reason = appt.getReason();
+		encType = new String("face to face encounter with client");
+		appointmentDate = ConversionUtils.toDateString(appt.getAppointmentDate());
+		startTime = ConversionUtils.toDateString(appt.getStartTime());
+		status = appt.getStatus();
+        
+        for(Appointment a : apptDao.findByProviderAndDate(curProviderNo, appt.getAppointmentDate())){
+            appointmentsIdArray.add(a.getId().toString());
+            appointmentsNamesArray.add(a.getName() + " " + ConversionUtils.toTimeString(a.getStartTime()));
         }
-        try {
-            sql = "select * from appointment where provider_no='" + curProviderNo + "' and appointment_date='"
-                    + appointmentDate + "'";
-            rs = DBHandler.GetSQL(sql);
-            while (rs.next()) {
-                tmp = Integer.toString(rs.getInt("appointment_no"));
-                appointmentsIdArray.add(tmp);
-                appointmentsNamesArray.add(oscar.Misc.getString(rs, "name") + " " + oscar.Misc.getString(rs, "start_time"));
-            }
-            rs.close();
-            sql = "select * from encountertemplate order by encountertemplate_name";
-            rs = DBHandler.GetSQL(sql);
-            while (rs.next()) {
-                templateNames.add(oscar.Misc.getString(rs, "encountertemplate_name"));
-            }
-            rs.close();
-        } catch (java.sql.SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
+        
+        EncounterTemplateDao ectDao = SpringUtils.getBean(EncounterTemplateDao.class);
+        for(EncounterTemplate ect : ectDao.findAll()) {
+            templateNames.add(ect.getEncounterTemplateName());
         }
-        try {
-            //
-        	OscarProperties properties = OscarProperties.getInstance();
-    		if( !Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
-	            sql = "select * from eChart where demographicNo='" + demographicNo + "' ORDER BY eChartId DESC limit 1";
-	            rs = DBHandler.GetSQL(sql);
-
-	            if (rs.next()) {
-	                eChartId = oscar.Misc.getString(rs, "eChartId");
-	                eChartTimeStamp = rs.getTimestamp("timeStamp");
-	                socialHistory = oscar.Misc.getString(rs, "socialHistory");
-	                familyHistory = oscar.Misc.getString(rs, "familyHistory");
-	                medicalHistory = oscar.Misc.getString(rs, "medicalHistory");
-	                ongoingConcerns = oscar.Misc.getString(rs, "ongoingConcerns");
-	                reminders = oscar.Misc.getString(rs, "reminders");
-	                encounter = oscar.Misc.getString(rs, "encounter");
-	                subject = oscar.Misc.getString(rs, "subject");
-	            } else {
-	                eChartTimeStamp = null;
-	                socialHistory = "";
-	                familyHistory = "";
-	                medicalHistory = "";
-	                ongoingConcerns = "";
-	                reminders = "";
-	                encounter = "";
-	                subject = "";
-	            }
-	            rs.close();
-    		}
-        } catch (java.sql.SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-        }
+        
+    	OscarProperties properties = OscarProperties.getInstance();
+		if( !Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
+			EChartDao ecDao = SpringUtils.getBean(EChartDao.class);
+			List<EChart> ecs = ecDao.getChartsForDemographic(ConversionUtils.fromIntString(demographicNo));
+			if (!ecs.isEmpty()) {
+				EChart ec = ecs.get(0); 
+                eChartId = ec.getId().toString();
+                eChartTimeStamp =  ec.getTimestamp();
+                socialHistory = ec.getSocialHistory();
+                familyHistory = ec.getFamilyHistory();
+                medicalHistory = ec.getMedicalHistory();
+                ongoingConcerns = ec.getOngoingConcerns();
+                reminders = ec.getReminders();
+                encounter = ec.getEncounter();
+                subject = ec.getSubject();
+            } else {
+                eChartTimeStamp = null;
+                socialHistory = "";
+                familyHistory = "";
+                medicalHistory = "";
+                ongoingConcerns = "";
+                reminders = "";
+                encounter = "";
+                subject = "";
+            }
+		}
+      
         //apointmentsIdArray and the appointmentsNamesArray are
         //already set up so no need to get them again
-        try {
-            //
-            sql = "select * from demographic where demographic_no=" + demographicNo;
-            rs = DBHandler.GetSQL(sql);
-            while (rs.next()) {
-                patientLastName = oscar.Misc.getString(rs, "last_name");
-                patientFirstName = oscar.Misc.getString(rs, "first_name");
-                address = oscar.Misc.getString(rs, "address");
-                city = oscar.Misc.getString(rs, "city");
-                postal = oscar.Misc.getString(rs, "postal");
-                phone = oscar.Misc.getString(rs, "phone");
-                familyDoctorNo = oscar.Misc.getString(rs, "provider_no");
-                yearOfBirth = oscar.Misc.getString(rs, "year_of_birth");
-                monthOfBirth = oscar.Misc.getString(rs, "month_of_birth");
-                dateOfBirth = oscar.Misc.getString(rs, "date_of_birth");
-                roster = oscar.Misc.getString(rs, "roster_status");
-                patientSex = oscar.Misc.getString(rs, "sex");
-                if (yearOfBirth.equals("null")) {
-                    yearOfBirth = "0";
-                }
-                if (monthOfBirth.equals("null")) {
-                    monthOfBirth = "0";
-                }
-                if (dateOfBirth.equals("null")) {
-                    dateOfBirth = "0";
-                }
+    
+        //
+		DemographicDao demoDao = SpringUtils.getBean(DemographicDao.class);
+		Demographic demo = demoDao.getDemographic(demographicNo);
+        if (demo != null) {
+            patientLastName = demo.getLastName(); 
+            patientFirstName = demo.getFirstName();
+            address = demo.getAddress();
+            city = demo.getCity();
+            postal = demo.getPostal();
+            phone = demo.getPhone();
+            familyDoctorNo = demo.getProviderNo();
+            yearOfBirth = demo.getYearOfBirth();
+            monthOfBirth = demo.getMonthOfBirth();
+            dateOfBirth = demo.getDateOfBirth();
+            roster = demo.getRosterStatus();
+            patientSex = demo.getSex();
+            if (yearOfBirth.equals("null")) {
+                yearOfBirth = "0";
             }
-            rs.close();
-
-            patientAge = UtilDateUtilities
-                    .calcAge(UtilDateUtilities.calcDate(yearOfBirth, monthOfBirth, dateOfBirth));
-        } catch (java.sql.SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
+            if (monthOfBirth.equals("null")) {
+                monthOfBirth = "0";
+            }
+            if (dateOfBirth.equals("null")) {
+                dateOfBirth = "0";
+            }
         }
+        patientAge = UtilDateUtilities
+                    .calcAge(UtilDateUtilities.calcDate(yearOfBirth, monthOfBirth, dateOfBirth));
+        
     }
 
     /**
@@ -373,68 +334,54 @@ public class EctSessionBean implements java.io.Serializable {
     public void setUpEncounterPage(String echartid, String demographicNo) {
         resetAll();
 
+        OscarProperties properties = OscarProperties.getInstance();
+		if( !Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
+	        EChartDao ecDao = SpringUtils.getBean(EChartDao.class);
+			EChart ec = ecDao.find(ConversionUtils.fromIntString(echartid));
+			if (ec.getDemographicNo() != ConversionUtils.fromIntString(demographicNo)) {
+				ec = null;
+			}
+			
+			if (ec != null) {
+	            eChartId = ec.getId().toString();
+	            eChartTimeStamp =  ec.getTimestamp();
+	            socialHistory = ec.getSocialHistory();
+	            familyHistory = ec.getFamilyHistory();
+	            medicalHistory = ec.getMedicalHistory();
+	            ongoingConcerns = ec.getOngoingConcerns();
+	            reminders = ec.getReminders();
+	            encounter = ec.getEncounter();
+	            subject = ec.getSubject();
+	        }
+		}
 
-
-        ResultSet rs;
-        String sql;
-
-        try {
-
-        	OscarProperties properties = OscarProperties.getInstance();
-    		if( !Boolean.parseBoolean(properties.getProperty("AbandonOldChart", "false"))) {
-	            sql = "select * from eChart where eChartId = " + echartid + " and demographicNo=" + demographicNo;
-	            rs = DBHandler.GetSQL(sql);
-
-	            if (rs.next()) {
-	                eChartId = echartid;
-	                eChartTimeStamp = rs.getTimestamp("timeStamp");
-	                socialHistory = oscar.Misc.getString(rs, "socialHistory");
-	                familyHistory = oscar.Misc.getString(rs, "familyHistory");
-	                medicalHistory = oscar.Misc.getString(rs, "medicalHistory");
-	                ongoingConcerns = oscar.Misc.getString(rs, "ongoingConcerns");
-	                reminders = oscar.Misc.getString(rs, "reminders");
-	                encounter = oscar.Misc.getString(rs, "encounter");
-	                subject = oscar.Misc.getString(rs, "subject");
-	            }
-	            rs.close();
-    		}
-        } catch (java.sql.SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-        }
-
-        try {
-            sql = "select * from demographic where demographic_no=" + demographicNo;
-            rs = DBHandler.GetSQL(sql);
-            while (rs.next()) {
-                patientLastName = oscar.Misc.getString(rs, "last_name");
-                patientFirstName = oscar.Misc.getString(rs, "first_name");
-                address = oscar.Misc.getString(rs, "address");
-                city = oscar.Misc.getString(rs, "city");
-                postal = oscar.Misc.getString(rs, "postal");
-                phone = oscar.Misc.getString(rs, "phone");
-                familyDoctorNo = oscar.Misc.getString(rs, "provider_no");
-                yearOfBirth = oscar.Misc.getString(rs, "year_of_birth");
-                monthOfBirth = oscar.Misc.getString(rs, "month_of_birth");
-                dateOfBirth = oscar.Misc.getString(rs, "date_of_birth");
-                roster = oscar.Misc.getString(rs, "roster_status");
-                patientSex = oscar.Misc.getString(rs, "sex");
-                if (yearOfBirth.equals("null")) {
-                    yearOfBirth = "0";
-                }
-                if (monthOfBirth.equals("null")) {
-                    monthOfBirth = "0";
-                }
-                if (dateOfBirth.equals("null")) {
-                    dateOfBirth = "0";
-                }
+		DemographicDao demoDao = SpringUtils.getBean(DemographicDao.class);
+		Demographic demo = demoDao.getDemographic(demographicNo);
+        if (demo != null) {
+            patientLastName = demo.getLastName(); 
+            patientFirstName = demo.getFirstName();
+            address = demo.getAddress();
+            city = demo.getCity();
+            postal = demo.getPostal();
+            phone = demo.getPhone();
+            familyDoctorNo = demo.getProviderNo();
+            yearOfBirth = demo.getYearOfBirth();
+            monthOfBirth = demo.getMonthOfBirth();
+            dateOfBirth = demo.getDateOfBirth();
+            roster = demo.getRosterStatus();
+            patientSex = demo.getSex();
+            if (yearOfBirth.equals("null")) {
+                yearOfBirth = "0";
             }
-            rs.close();
-
-            patientAge = UtilDateUtilities
-                    .calcAge(UtilDateUtilities.calcDate(yearOfBirth, monthOfBirth, dateOfBirth));
-        } catch (java.sql.SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
+            if (monthOfBirth.equals("null")) {
+                monthOfBirth = "0";
+            }
+            if (dateOfBirth.equals("null")) {
+                dateOfBirth = "0";
+            }
         }
+        patientAge = UtilDateUtilities
+                    .calcAge(UtilDateUtilities.calcDate(yearOfBirth, monthOfBirth, dateOfBirth));
     }
 
     public String getTeam() {
