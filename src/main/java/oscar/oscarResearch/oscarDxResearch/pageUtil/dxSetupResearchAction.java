@@ -33,6 +33,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.LoggedInInfo;
 
 import oscar.oscarResearch.oscarDxResearch.bean.dxQuickListBeanHandler;
 import oscar.oscarResearch.oscarDxResearch.bean.dxQuickListItemsHandler;
@@ -56,11 +57,16 @@ public final class dxSetupResearchAction extends Action {
         dxQuickListBeanHandler quicklistHd = null;
         dxQuickListItemsHandler quicklistItemsHd = null;
                 
-        if (selectedQuickList.equals("")||selectedQuickList==null){
+        if(providerNo == null) {
+        	providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
+        }
+        if(selectedQuickList == null) {
+        	selectedQuickList="";
+        }
+        if (selectedQuickList.equals("")){
             quicklistHd = new dxQuickListBeanHandler(providerNo);
             quicklistItemsHd = new dxQuickListItemsHandler(quicklistHd.getLastUsedQuickList(),providerNo);
-        }
-        else{
+        } else{
             quicklistItemsHd = new dxQuickListItemsHandler(selectedQuickList,providerNo);
             quicklistHd = new dxQuickListBeanHandler(providerNo);
         }

@@ -2469,6 +2469,14 @@
 		</action>
 		
 		 <action path="/oscarEncounter/displayContacts" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayContactsAction" />
+
+		<action path="/renal/CkdDSA" type="org.oscarehr.renal.web.CkdDSAAction" parameter="method">
+			<forward name="detail" path="/renal/ckd_dsa_detail.jsp" />
+		</action>
+		
+		<action path="/renal/Renal" type="org.oscarehr.renal.web.RenalAction" parameter="method">
+			
+		</action>
 		
 	</action-mappings>
 	<controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" maxFileSize="100M" />

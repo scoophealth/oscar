@@ -531,6 +531,14 @@
 			<version>0.12-DRAFT</version>
 		</dependency>
 
+        <!-- FOR ORN Project - CKD config in XML format -->
+        <dependency>
+                <groupId>org.oscarehr.ckd</groupId>
+                <artifactId>ckd</artifactId>
+                <version>1.0</version>
+        </dependency>
+
+
 		 <dependency>
                         <groupId>jspellchecker</groupId>
                         <artifactId>jazzy-core</artifactId>

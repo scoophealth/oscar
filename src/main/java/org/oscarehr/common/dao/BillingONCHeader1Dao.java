@@ -607,6 +607,20 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
 		Query query = entityManager.createQuery(app.toString());
 		app.setParams(query);
 		return query.getResultList();
+	}
+
+    public List<BillingONCHeader1> getBillingItemByDxCode(Integer demographicNo, String dxCode) {
+        String queryStr = "select h FROM BillingOnItem b, BillingONCHeader1 h WHERE h.id = b.ch1_id and h.demographicNo=? and b.dx =? or b.dx1 = ? or b.dx2=?";
+        Query query = entityManager.createQuery(queryStr);
+        query.setParameter(1, demographicNo);
+        query.setParameter(2, dxCode);
+        query.setParameter(3, dxCode);
+        query.setParameter(4, dxCode);
+        
+        @SuppressWarnings("unchecked")
+        List<BillingONCHeader1> rs = query.getResultList();
+
+        return rs;
     }
 
 	public List<Object[]> findByMagic2(List<String> payPrograms, String statusType, String providerNo, Date startDate, Date endDate, Integer demoNo, List<String> serviceCodes, String dx, String visitType) {

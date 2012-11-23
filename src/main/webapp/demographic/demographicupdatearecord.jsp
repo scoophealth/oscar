@@ -238,6 +238,7 @@
 	}
 
 
+
      // added check to see if patient has a bc health card and has a version code of 66, in this case you are aloud to have dup hin
      boolean hinDupCheckException = false;
      String hcType = request.getParameter("hc_type");

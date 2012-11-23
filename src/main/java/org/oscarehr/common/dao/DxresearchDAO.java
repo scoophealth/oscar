@@ -274,8 +274,47 @@ public class DxresearchDAO extends AbstractDao<Dxresearch>{
 		return items;
 	}
 
+	public List<Dxresearch> find(int demographicNo, String codeType, String code) {
+		String hql = "select d from Dxresearch d where d.demographicNo=? and d.codingSystem=? and d.dxresearchCode=? order by d.updateDate desc";
+    	Query query = entityManager.createQuery(hql);
+    	query.setParameter(1,demographicNo);
+    	query.setParameter(2,codeType);
+    	query.setParameter(3,code);
+
+    	@SuppressWarnings("unchecked")
+    	List<Dxresearch> items = query.getResultList();
+
+		return items;
+	}
+	
+	public List<Dxresearch> findActive(String codeType, String code) {
+		String hql = "select d from Dxresearch d where d.status='A' and d.codingSystem=? and d.dxresearchCode=? order by d.updateDate desc";
+    	Query query = entityManager.createQuery(hql);
+    	query.setParameter(1,codeType);
+    	query.setParameter(2,code);
+
+    	@SuppressWarnings("unchecked")
+    	List<Dxresearch> items = query.getResultList();
+
+		return items;
+	}
+	
+	
 	public boolean entryExists(int demographicNo, String codeType, String code) {
 		String hql = "select d from Dxresearch d where d.demographicNo=? and d.codingSystem=? and d.dxresearchCode=?";
+    	Query query = entityManager.createQuery(hql);
+    	query.setParameter(1,demographicNo);
+    	query.setParameter(2,codeType);
+    	query.setParameter(3,code);
+
+    	@SuppressWarnings("unchecked")
+    	List<Dxresearch> items = query.getResultList();
+
+		return !items.isEmpty();
+	}
+	
+	public boolean activeEntryExists(int demographicNo, String codeType, String code) {
+		String hql = "select d from Dxresearch d where d.status='A' and d.demographicNo=? and d.codingSystem=? and d.dxresearchCode=?";
     	Query query = entityManager.createQuery(hql);
     	query.setParameter(1,demographicNo);
     	query.setParameter(2,codeType);
@@ -293,7 +332,8 @@ public class DxresearchDAO extends AbstractDao<Dxresearch>{
 
                 query.executeUpdate();
 	}
-
+	
+	@SuppressWarnings("unchecked")
     public List<Dxresearch> findByDemographicNoResearchCodeAndCodingSystem(Integer demographicNo, String dxresearchCode, String codingSystem) {
 		Query query = entityManager.createQuery("FROM Dxresearch d WHERE d.demographicNo = :dn AND d.dxresearchCode = :dxrc and (d.status = 'A' or d.status = 'C') and d.codingSystem = :cs");
 		query.setParameter("dn", demographicNo);
@@ -371,4 +411,16 @@ public class DxresearchDAO extends AbstractDao<Dxresearch>{
 		return query.getResultList();
     }
 
+	
+	public List<Dxresearch> findCurrentByCodeTypeAndCode(String codeType, String code) {
+		String hql = "select d from Dxresearch d where d.codingSystem=? and d.dxresearchCode=? and d.status='A'";
+    	Query query = entityManager.createQuery(hql);
+    	query.setParameter(1,codeType);
+    	query.setParameter(2,code);
+
+    	@SuppressWarnings("unchecked")
+    	List<Dxresearch> items = query.getResultList();
+
+		return items;
+	}
 }
