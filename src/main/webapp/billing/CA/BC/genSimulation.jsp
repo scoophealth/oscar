@@ -17,6 +17,8 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@page import="oscar.util.ConversionUtils"%>
+<%@page import="org.oscarehr.util.DateRange"%>
 <% 
 if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
 %>
@@ -40,7 +42,7 @@ String provider = request.getParameter("provider");
 String proOHIP=""; 
 String billinggroup_no;
    
-String dateRange = "";
+DateRange dateRange = null;
 String htmlValue="";
 String oscar_home= oscarVariables.getProperty("project_home")+".properties";
 
@@ -48,9 +50,9 @@ String dateBegin = request.getParameter("xml_vdate");
 String dateEnd = request.getParameter("xml_appointment_date");
 if (dateEnd.compareTo("") == 0) dateEnd = request.getParameter("curDate");
 if (dateBegin.compareTo("") == 0){
-	dateRange = " and billing_date <= '" + dateEnd + "'";
+	dateRange = new DateRange(null, ConversionUtils.fromDateString(dateEnd));
 }else{
-	dateRange = " and billing_date >='" + dateBegin + "' and billing_date <='" + dateEnd + "'";
+	dateRange = new DateRange(ConversionUtils.fromDateString(dateBegin), ConversionUtils.fromDateString(dateEnd));
 }
 
 ResultSet rslocal = apptMainBean.queryResults(request.getParameter("provider"), "search_provider_ohip_dt");

@@ -332,4 +332,18 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 	    Query query = entityManager.createQuery("FROM BillingService bs ORDER BY TRIM(bs.description)");
 	    return query.getResultList();
     }
+
+	@SuppressWarnings("unchecked")
+    public List<Object[]> findSomethingByBillingId(Integer billingNo) {
+		String sql = "FROM BillingService bs, Wcb w, Billing b " +
+				"WHERE wcb.billingNo = b.id " +
+				"AND wcb.billingNo = :bNo " +
+                "AND wcb.status = 'O' " +
+                "AND b.status IN ('O', 'W') " +
+                "AND bs.serviceCode = wcb.feeItem";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("bNo", billingNo);
+		return query.getResultList();
+
+    }
 }
