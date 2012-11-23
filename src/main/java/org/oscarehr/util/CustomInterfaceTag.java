@@ -47,6 +47,9 @@ public class CustomInterfaceTag extends TagSupport {
 		OscarProperties props = OscarProperties.getInstance();
 		String customJs = props.getProperty("cme_js");
 		
+		if(name != null && name.length()>0) {
+			customJs = name;
+		}
 		if(customJs == null || customJs.length() == 0) {
 			customJs="default";
 		}

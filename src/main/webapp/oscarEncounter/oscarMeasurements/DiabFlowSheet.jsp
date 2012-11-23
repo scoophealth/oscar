@@ -120,6 +120,17 @@ ArrayList<String> recomendations = mi.getRecommendations();
     		$('.xsparkline').sparkline(vals2,{type:"line", lineColor:"#f00", fillColor:"", spotRadius:"0", spotColor:"", composite:"true"});
     	});
     </script>
+    
+<script>
+	function getDemographicNo() {
+		return '<%=demographic_no%>';
+	}
+	function getContextPath() {
+		return '<%=request.getContextPath()%>';
+	}
+</script>
+
+	<oscar:customInterface name="renal" section="indicators"/>
 
 	<script type="text/javascript">
 
@@ -548,7 +559,11 @@ String date = year+"-"+month+"-"+day;
 	<table class="formTable" id="headTable">
 		<tr><th colspan="8"><oscar:nameage demographicNo="<%=demographic_no%>"/></th></tr>
 		<tr>
+<<<<<<< HEAD
 			<td class="rowheader"><a class="header" href="#" onclick="popupPage('700', '1000', '<%=project%>/CaseManagementEntry.do?method=issuehistory&demographicNo=<%=demographic_no%>&issueIds=38'); return false;">Reminders</a></td>
+=======
+			<td class="rowheader"><a class="header" href="#" onclick="popupPage('700', '1000', '../../CaseManagementEntry.do?method=issuehistory&demographicNo=<%=demographic_no%>&issueIds=38'); return false;">Reminders</a></td>
+>>>>>>> ae3403b... ORN Pilot Code
 			<td width="650px"><%=remindersList%></td>
 			<td>
 			<div class="highlightBox">
@@ -568,12 +583,20 @@ String date = year+"-"+month+"-"+day;
 		</tr>
 
 		<tr>
+<<<<<<< HEAD
 			<td class="rowheader"><a class="header" href="#" onclick="popupPage('700', '1000', '<%=project%>/oscarRx/showAllergy.do?demographicNo=<%=demographic_no%>'); return false;">Allergies</a></td>
+=======
+			<td class="rowheader"><a class="header" href="#" onclick="popupPage('700', '1000', '../../oscarRx/showAllergy.do?demographicNo=<%=demographic_no%>'); return false;">Allergies</a></td>
+>>>>>>> ae3403b... ORN Pilot Code
 			<td width="650px"><%=allergiesList%></td>
 		</tr>
 
 		<tr>
+<<<<<<< HEAD
 			<td class="rowheader"><a class="header" href="#" onclick="popupPage('700', '1000', '<%=project%>/oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>'); return false;">Medications</a></td>
+=======
+			<td class="rowheader"><a class="header" href="#" onclick="popupPage('700', '1000', '../../oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>'); return false;">Medications</a></td>
+>>>>>>> ae3403b... ORN Pilot Code
 			<td width="650px"><%=medicationsList%></td>
 			<td>
    			</td>
@@ -593,6 +616,7 @@ String date = year+"-"+month+"-"+day;
     for (int i = 0; i < nodes.size(); i++) {
     	MeasurementTemplateFlowSheetConfig.Node node = nodes.get(i);
     	FlowSheetItem item = node.flowSheetItem;
+    	FlowSheetItem header = item;
 	%>
     	<tr>
     	<th>
@@ -669,8 +693,24 @@ String date = year+"-"+month+"-"+day;
 					<%if(h2.get("graphable") != null && ((String) h2.get("graphable")).equals("yes")){%>
 			            <%if (alist != null && alist.size() > 1) {
 			            boolean sep = false;
+			            	String mInstr = null;
+			            	boolean differentInstr=false;
+			            	for(int x=0;x<alist.size();x++) {
+			            		String tmp = alist.get(x).getMeasuringInstrc();
+			            		if(mInstr==null)
+			            			mInstr = tmp;
+			            		if(mInstr != null && !mInstr.equals(tmp)) {
+			            			differentInstr=true;
+			            			break;
+			            		}
+			            	}
+			            	
+			            	String onclick="";
+			            	if(!differentInstr) {
+			            		onclick="onclick=\"popup(465,635,'../../servlet/oscar.oscarEncounter.oscarMeasurements.pageUtil.ScatterPlotChartServlet?type="+h2.get("measurement_type")+"&mInstrc="+mInstr+"&demographicNo="+demographic_no+"');\"";
+			            	}
 			            %>
-			               	<span class="inlinesparkline" values="
+			               	<span  <%=onclick %> class="inlinesparkline" values="
 			               	 <%=alist.get(alist.size()-1).getDataField()%>
 			               	 <%for (int x=alist.size()-2; x>=0; x--){
 			               	 %>
@@ -694,6 +734,24 @@ String date = year+"-"+month+"-"+day;
 		           		}
 		           	} else if (name.equals("BP")) {
 		           		if (alist != null && alist.size() > 1) {
+		           			
+		           			String mInstr = null;
+			            	boolean differentInstr=false;
+			            	for(int x=0;x<alist.size();x++) {
+			            		String tmp = alist.get(x).getMeasuringInstrc();
+			            		if(mInstr==null)
+			            			mInstr = tmp;
+			            		if(mInstr != null && !mInstr.equals(tmp)) {
+			            			differentInstr=true;
+			            			break;
+			            		}
+			            	}
+			            	
+			            	String onclick="";
+			            	if(!differentInstr) {
+			            		onclick="onclick=\"popup(465,635,'../../servlet/oscar.oscarEncounter.oscarMeasurements.pageUtil.ScatterPlotChartServlet?type="+h2.get("measurement_type")+"&mInstrc="+mInstr+"&demographicNo="+demographic_no+"');\"";
+			            	}
+		           			
 		           			List<String> first = new ArrayList<String>();
 		           			List<String> second = new ArrayList<String>();
 		           			for (int x=alist.size()-1; x>=0; x--){
@@ -706,7 +764,7 @@ String date = year+"-"+month+"-"+day;
 		           					second.add("null");
 		           				}
 		           			} %>
-		           			<span class="bpline"></span>
+		           			<span <%=onclick %> class="bpline"></span>
 		           			<script type="text/javascript">
 		           				var first = new Array();
 		           				var second = new Array();
@@ -735,7 +793,11 @@ String date = year+"-"+month+"-"+day;
    							hdata.put("comments",mdb.getComments());
    							hdata.put("unixTime", Long.toString(mdb.getDateEnteredAsDate().getTime()));
    						%>
+<<<<<<< HEAD
    							<div itemtime="<%=hdata.get("unixTime")%>" class="recentBlock measurements" onclick="javascript:popup(465,635,'<%=project%>/oscarEncounter/oscarMeasurements/AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData')" >
+=======
+   							<div itemtime="<%=hdata.get("unixTime")%>" class="recentBlock measurements" onclick="javascript:popup(465,635,'../../oscarEncounter/oscarMeasurements/AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData')" >
+>>>>>>> ae3403b... ORN Pilot Code
 		   		               		<b><%=hdata.get("data")%></b>; <%=hdata.get("prevention_date")%> <br>
 		   		               <b>
 		   		                    <%=hdata.get("comments")%>
@@ -798,13 +860,14 @@ String date = year+"-"+month+"-"+day;
     	<%	}
 
     	}%>
-    	<tr>
+    	
+    	<tr id="<%=header.getDisplayName()%>_update">
     	<td><input style="font-size:12;" type="submit" name="submit" value="Update" /></td>
     	<td></td>
     	<td></td>
     	<td></td>
     	<td></td>
-    	<td align="right" style="border-top: 1px solid #9d9d9d;">
+    	<td id="<%=header.getDisplayName()%>_update_comments" align="right" style="border-top: 1px solid #9d9d9d;">
     	</td></tr>
     <%
     	node = node.getNextSibling();

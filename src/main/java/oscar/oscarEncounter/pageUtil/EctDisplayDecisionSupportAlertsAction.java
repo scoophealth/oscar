@@ -30,6 +30,9 @@
 
 package oscar.oscarEncounter.pageUtil;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
@@ -39,13 +42,18 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.common.dao.DxresearchDAO;
+import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.decisionSupport.model.DSConsequence;
 import org.oscarehr.decisionSupport.model.DSGuideline;
 import org.oscarehr.decisionSupport.service.DSService;
+import org.oscarehr.renal.CkdScreener;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import oscar.OscarProperties;
 import oscar.util.OscarRoleObjectPrivilege;
 import oscar.util.StringUtils;
 
@@ -56,6 +64,9 @@ import oscar.util.StringUtils;
 public class EctDisplayDecisionSupportAlertsAction extends EctDisplayAction {
     private String cmd = "Guidelines";
     private static final Logger logger = MiscUtils.getLogger();
+    
+    private DxresearchDAO dxResearchDao = (DxresearchDAO)SpringUtils.getBean("DxresearchDAO");
+	
 
   public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
 
@@ -90,16 +101,67 @@ public class EctDisplayDecisionSupportAlertsAction extends EctDisplayAction {
         String key;
         
         String BGCOLOUR = request.getParameter("hC");
-
-        int index = 0;
+        
+        
+        //ORN CKD Pilot Code
+        if(OscarProperties.getInstance().getProperty("ORN_PILOT", "yes").equalsIgnoreCase("yes") && (OscarProperties.getInstance().getProperty("ckd_notification_scheme","dsa").equals("dsa")||OscarProperties.getInstance().getProperty("ckd_notification_scheme","dsa").equals("all"))) {
+	        CkdScreener ckdScreener = new CkdScreener();
+	        List<String> reasons =new ArrayList<String>();
+	        boolean match = ckdScreener.screenDemographic(Integer.parseInt(bean.demographicNo),reasons, null);
+	        boolean notify=false;
+	        
+	        for(Dxresearch dr:dxResearchDao.find(Integer.parseInt(bean.demographicNo), "OscarCode", "CKDSCREEN")) {
+	        	//we have an active one, we should notify
+	        	if(dr.getStatus() == 'A') {
+	        		notify=true;
+	        	}
+	        }
+	        for(Dxresearch dr:dxResearchDao.find(Integer.parseInt(bean.demographicNo), "icd9", "585")) {
+	        	if(dr.getStatus() == 'A') {
+	        		notify=false;
+	        	}
+	        }
+	        if(!notify) {
+	        	//there's no active ones, but let's look at the latest one
+	        	List<Dxresearch> drs = dxResearchDao.find(Integer.parseInt(bean.demographicNo), "OscarCode", "CKDSCREEN");
+	        	if(drs.size()>0) {
+	        		Dxresearch dr = drs.get(0);
+	        		Calendar aYearAgo = Calendar.getInstance();
+	        		aYearAgo.add(Calendar.MONTH, -12);
+	        		if(dr.getUpdateDate().before(aYearAgo.getTime())) {
+	        			notify=true;
+	        			//reopen it
+	        			dr.setStatus('A');
+	        			dr.setUpdateDate(new Date());
+	        			dxResearchDao.merge(dr);
+	        			//need some way to notify that tab to reload
+	        			javascript.append("jQuery(document).ready(function(){reloadNav('Dx');});");
+	        		}
+	        	}
+	        }
+	        if(match && notify) {
+	        	 NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
+	        	 url = "popupPage(500,950,'" + winName + "','" + request.getContextPath() + "/renal/CkdDSA.do?method=detail&demographic_no=" + bean.demographicNo + "&parentAjaxId=" + cmd + "'); return false;";              
+	        	 item.setURL(url);	 
+	        	 item.setLinkTitle("Based on guidelines, a CKD screening should be performed.");
+	        	 item.setTitle("Screen for CKD");
+	        	 item.setColour("#ff5409;");
+	        	 Dao.addItem(item);
+	        }
+        }
+        
+        
         for(DSGuideline dsGuideline: dsGuidelines) {
+        	if(OscarProperties.getInstance().getProperty("dsa.skip."+dsGuideline.getTitle().replaceAll(" ", "_"),"false").equals("true")) {
+        		continue;
+        	}
             try {
                 List<DSConsequence> dsConsequences = dsGuideline.evaluate(bean.demographicNo);
                 if (dsConsequences == null) continue;
                 for (DSConsequence dsConsequence: dsConsequences) {
                     if (dsConsequence.getConsequenceType() != DSConsequence.ConsequenceType.warning)
                         continue;
-                    index++;
+                    
                     NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
                     winName = dsConsequence.getConsequenceType().toString() + bean.demographicNo;
                     

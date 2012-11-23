@@ -37,6 +37,7 @@ if (OscarProperties.getInstance().getBooleanProperty("health_tracker", "true")) 
 	strPage="TemplateFlowSheetPage.jspf";
 
 }
+
 %>
 
 

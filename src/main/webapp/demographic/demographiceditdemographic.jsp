@@ -2259,6 +2259,26 @@ if ( Dead.equals(PatStat) ) {%>
 							</tr>-->
 							<tr valign="top">
 								<td align="right"><b><bean:message
+									key="demographic.demographiceditdemographic.aboriginal" />: </b></td>
+								<td align="left">
+								
+								<select name="aboriginal" <%=getDisabled("aboriginal")%>>
+									<option value="" <%if(aboriginal.equals("")){%>
+										selected <%}%>>Unknown</option>
+									<option value="No" <%if(aboriginal.equals("No")){%> selected
+										<%}%>>No</option>
+									<option value="Yes" <%if(aboriginal.equals("Yes")){%>
+										selected <%}%>>Yes</option>
+						
+								</select>
+								<input type="hidden" name="demo_aboriginalOrig"
+									value="<%=demoExt.get("aboriginal")%>" />
+								</td>
+								<td align="right"><b>&nbsp;</b></td>
+								<td align="left">&nbsp;</td>
+							</tr>
+							<tr valign="top">
+								<td align="right"><b><bean:message
 									key="demographic.demographiceditdemographic.formEmail" />: </b></td>
 								<td align="left"><input type="text" name="email" size="30" <%=getDisabled("email")%>
 									value="<%=demographic.getEmail()!=null? demographic.getEmail() : ""%>">

@@ -1,0 +1,43 @@
+<?xml version="1.0" ?>
+<ckd-config xmlns="http://www.oscarmcmaster.org/ckd">
+	<dx-codes>
+		<code type="icd9" name="DIABETES MELLITUS">250</code>
+		<code type="icd9" name="ESSENTIAL HYPERTENSION">401</code>
+	</dx-codes>
+	<bp>
+		<systolic>140</systolic>
+		<diastolic>90</diastolic>
+	</bp>
+	<hx>
+		<issues>
+			<issue>FamHistory</issue>
+			<issue>SocHistory</issue>
+			<issue>RiskFactors</issue>
+			<issue>MedHistory</issue>
+		</issues>
+		<searchtext>
+			<text>ckd</text>
+			<text>crf</text>
+			<text>renal</text>
+			<text>chronic kidney disease</text>
+			<text>chronic renal failure</text>
+			<text>chronic renal insufficiency</text>
+			<text>AKI</text>
+			<text>ARF</text>
+			<text>acute kidney injury</text>
+			<text>acute renal failure</text>
+			<text>renal failure</text>
+			<text>renal insufficiency</text>
+			<text>ESRD</text>
+			<text>end stage renal disease</text>
+			<text>kidney failure</text>
+			<text>dialysis</text>
+			<text>renal transplantation</text>
+		</searchtext>
+	</hx>
+	<drugs>
+	</drugs>
+	<excludes>
+		<exclude>999998</exclude>
+	</excludes>
+</ckd-config>

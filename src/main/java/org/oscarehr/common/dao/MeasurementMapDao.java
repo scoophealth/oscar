@@ -29,9 +29,7 @@ import javax.persistence.Query;
 
 import org.oscarehr.common.model.MeasurementMap;
 import org.oscarehr.common.model.MeasurementType;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public class MeasurementMapDao extends AbstractDao<MeasurementMap> {
 
 	public MeasurementMapDao() {
@@ -69,9 +67,13 @@ public class MeasurementMapDao extends AbstractDao<MeasurementMap> {
 	}
 	
 	public List<MeasurementMap> findByLoincCode(String loincCode) {   
+		return getMapsByLoinc(loincCode);
+	}
+
+	public List<MeasurementMap> getMapsByLoinc(String loinc) {   
 		String queryStr = "select m FROM MeasurementMap m WHERE m.loincCode=?";
 		Query q = entityManager.createQuery(queryStr);
-		q.setParameter(1, loincCode);
+		q.setParameter(1, loinc);
             
 		@SuppressWarnings("unchecked")    
 		List<MeasurementMap> rs  = q.getResultList();
