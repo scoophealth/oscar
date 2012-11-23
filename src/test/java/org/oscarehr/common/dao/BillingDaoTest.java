@@ -34,6 +34,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.Billing;
+import org.oscarehr.util.DateRange;
 import org.oscarehr.util.SpringUtils;
 
 public class BillingDaoTest extends DaoTestFixtures {
@@ -80,5 +81,19 @@ public class BillingDaoTest extends DaoTestFixtures {
 		List<Object[]> bs = dao.findBillings(10);
 		assertNotNull(bs);
 	}
-
+	
+	@Test
+	public void testFindByProviderStatusAndDates() {
+		assertNotNull(dao.findByProviderStatusAndDates("100", new ArrayList<String>(), null));
+		assertNotNull(dao.findByProviderStatusAndDates("100", new ArrayList<String>(), new DateRange(null, null)));
+		assertNotNull(dao.findByProviderStatusAndDates("100", new ArrayList<String>(), new DateRange(new Date(), null)));
+		assertNotNull(dao.findByProviderStatusAndDates("100", new ArrayList<String>(), new DateRange(null, new Date())));
+		assertNotNull(dao.findByProviderStatusAndDates("100", Arrays.asList(new String[] {"A", "B", "C"}), null));
+		
+	}
+	
+	@Test
+	public void testGetMyMagicBillings() {
+		assertNotNull(dao.getMyMagicBillings());
+	}
 }
