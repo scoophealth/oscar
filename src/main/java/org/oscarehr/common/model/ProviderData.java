@@ -26,6 +26,7 @@
 package org.oscarehr.common.model;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -313,4 +314,23 @@ public class ProviderData extends AbstractModel<String> implements Serializable 
 	public void setSignedConfidentiality(Date d) {
 		signedConfidentiality = d;
 	}
+	
+	public static final Comparator<ProviderData> LastNameComparator = new Comparator<ProviderData>() {
+        public int compare(ProviderData pd1, ProviderData pd2) {
+        	return pd1.getLastName().compareTo(pd2.getLastName());
+        }
+    }; 
+	public static final Comparator<ProviderData> FirstNameComparator = new Comparator<ProviderData>() {
+        public int compare(ProviderData pd1, ProviderData pd2) {
+        	return pd1.getFirstName().compareTo(pd2.getFirstName());
+        }
+    }; 
+	public static final Comparator<ProviderData> ProviderNoComparator = new Comparator<ProviderData>() {
+        public int compare(ProviderData pd1, ProviderData pd2) {
+        	return pd1.getId().compareTo(pd2.getId());
+        }
+    }; 
+	
+	
+	
 }
