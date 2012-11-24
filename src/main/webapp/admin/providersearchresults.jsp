@@ -26,18 +26,13 @@
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%
-  if(session.getValue("user") == null )
-    response.sendRedirect("../logout.jsp");
-  String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):"last_name" ;
-  String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
-  
-  
-%>
-<%@ page import="java.sql.*, java.util.*, oscar.*" buffer="none"
-	errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+
+<%@ page import="java.sql.*, java.util.*, oscar.*" buffer="none" errorPage="errorpage.jsp"%>
+<%@ page import="org.oscarehr.util.SpringUtils"%>
+<%@ page import="org.oscarehr.common.model.ProviderData"%>
+<%@ page import="org.oscarehr.common.dao.ProviderDataDao"%>
+	
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
 <html:html locale="true">
 <head>
@@ -45,26 +40,54 @@
 <title><bean:message key="admin.providersearchresults.title" /></title>
 <link rel="stylesheet" href="../web.css" />
 <script LANGUAGE="JavaScript">
-    <!--
-		function setfocus() {
-		  document.searchprovider.keyword.focus();
-		  document.searchprovider.keyword.select();
-		}
-    function onsub() {
-    	var keyword = document.searchprovider.keyword.value; 
-      var keywordLowerCase = keyword.toLowerCase();
-      document.searchprovider.keyword.value = keywordLowerCase;
-    
-      //if(document.searchprovider.keyword.value=="") {
-       // alert("<bean:message key="global.msgInputKeyword"/>");
-      //  return false;
-      //} else return true;
-      // do nothing at the moment
-      // check input data in the future 
-    }
-    //-->
+	function setfocus() {
+		document.searchprovider.keyword.focus();
+		document.searchprovider.keyword.select();
+	}
+	function onsub() {
+		var keyword = document.searchprovider.keyword.value;
+		var keywordLowerCase = keyword.toLowerCase();
+		document.searchprovider.keyword.value = keywordLowerCase;
+
+	}
 </script>
 </head>
+
+<%
+	if (session.getValue("user") == null)
+			response.sendRedirect("../logout.jsp");
+		String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF";
+
+		//Defaults    		
+		String strOffset = "0";
+		String strLimit = "10";
+
+		//OFFSET
+		if (request.getParameter("limit1") != null)
+			strOffset = request.getParameter("limit1");
+		//LIMIT
+		if (request.getParameter("limit2") != null)
+			strLimit = request.getParameter("limit2");
+
+		String displayMode = request.getParameter("displaymode");
+		String dboperation = request.getParameter("dboperation");
+		String keyword = request.getParameter("keyword");
+		String orderBy = request.getParameter("orderby");
+		String searchMode = request.getParameter("search_mode");
+		if (searchMode == null)
+			searchMode = "search_name";
+		if (orderBy == null)
+			orderBy = "last_name";
+		String[] searchStatuses = request
+				.getParameterValues("search_status");
+		String searchStatus = null;
+
+		if (searchStatuses != null) {
+			if (searchStatuses.length == 1) {
+				searchStatus = searchStatuses[0];
+			}
+		}
+%>
 <body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <center>
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -72,33 +95,28 @@
 		<th><bean:message key="admin.providersearchresults.description" /></th>
 	</tr>
 </table>
-<table cellspacing="0" cellpadding="0" width="100%" border="0"
-	BGCOLOR="<%=weakcolor%>">
-	<form method="post" action="admincontrol.jsp" name="searchprovider"
-		onsubmit="return onsub()">
+<table cellspacing="0" cellpadding="0" width="100%" border="0" BGCOLOR="<%=weakcolor%>">
+	<form method="post" action="admincontrol.jsp" name="searchprovider" onsubmit="return onsub()">
 	<tr valign="top">
 		<td rowspan="2" align="right" valign="middle"><font
-			face="Verdana" color="#0000FF"><b><i><bean:message
-			key="admin.search.formSearchCriteria" /></i></b></font></td>
+			face="Verdana" color="#0000FF"><b><i><bean:message key="admin.search.formSearchCriteria" /></i></b></font></td>
 		<td nowrap><font size="1" face="Verdana" color="#0000FF">
-		<input type="radio"
-			<%=request.getParameter("search_mode").equals("search_name")?"checked":""%>
+		<input type="radio" <%=searchMode.equals("search_name")?"checked":""%>
 			name="search_mode" value="search_name"
-			onclick="document.forms['searchprovider'].keyword.focus();"><bean:message
-			key="admin.providersearch.formLastName" /></font></td>
+			onclick="document.forms['searchprovider'].keyword.focus();">
+			<bean:message key="admin.providersearch.formLastName" /></font></td>
 		<td nowrap><font size="1" face="Verdana" color="#0000FF">
-		<input type="radio"
-			<%=request.getParameter("search_mode").equals("search_providerno")?"checked":""%>
+		<input type="radio"	<%=searchMode.equals("search_providerno")?"checked":""%>
 			name="search_mode" value="search_providerno"
-			onclick="document.forms['searchprovider'].keyword.focus();"><bean:message
-			key="admin.provider.formProviderNo" /></font></td>
+			onclick="document.forms['searchprovider'].keyword.focus();">
+			<bean:message key="admin.provider.formProviderNo" /></font></td>
 		<td nowrap><font size="1" face="Verdana" color="#0000FF">
 		<input type="checkbox" name="search_status" value="1"
-			<%=request.getAttribute("active").equals("1")?"checked":""%>><bean:message
-			key="admin.providersearch.formActiveStatus" /><br />
+			<%=request.getAttribute("active").equals("1")?"checked":""%>>
+			<bean:message key="admin.providersearch.formActiveStatus" /><br />
 		<input type="checkbox" name="search_status" value="0"
-			<%=request.getAttribute("inactive").equals("1")?"checked":""%>><bean:message
-			key="admin.providersearch.formInactiveStatus" /> </font></td>
+			<%=request.getAttribute("inactive").equals("1")?"checked":""%>>
+			<bean:message key="admin.providersearch.formInactiveStatus" /> </font></td>
 		<td valign="middle" rowspan="2" ALIGN="left"><input type="text"
 			NAME="keyword" SIZE="17" MAXLENGTH="100"> <INPUT
 			TYPE="hidden" NAME="orderby" VALUE="last_name"> <INPUT
@@ -110,17 +128,12 @@
 			VALUE=<bean:message key="admin.providersearchresults.btnSubmit"/>
 			SIZE="17"></td>
 	</tr>
-	<!-- <tr> 
-       <td nowrap><font size="1" face="Verdana" color="#0000FF"><bean:message key="admin.providersearchresults.reserved"/></font></td>
-       <td nowrap><font size="1" face="Verdana" color="#0000FF"> </font></td>
-    </tr> -->
 	</form>
 </table>
 
 <table width="100%" border="0">
 	<tr>
-		<td align="left"><i><bean:message key="admin.search.keywords" /></i>
-		: <%=request.getParameter("keyword")%></td>
+		<td align="left"><i><bean:message key="admin.search.keywords" /></i> : <%=keyword%></td>
 	</tr>
 </table>
 
@@ -129,81 +142,68 @@
 	bgcolor="ivory">
 	<tr bgcolor="<%=deepcolor%>">
 		<TH align="center" width="10%"><b><a
-			href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%="provider_no"%>&limit1=0&limit2=10"><bean:message
-			key="admin.providersearchresults.ID" /></a></b></TH>
+			href="admincontrol.jsp?keyword=<%=keyword%>&search_mode=<%=searchMode%>&displaymode=<%=displayMode%>&dboperation=<%=dboperation%>&orderby=provider_no&limit1=0&limit2=10">
+			<bean:message key="admin.providersearchresults.ID" /></a></b></TH>
 		<TH align="center" width="19%"><b><a
-			href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%="first_name"%>&limit1=0&limit2=10"><bean:message
-			key="admin.provider.formFirstName" /></a> </b></TH>
+			href="admincontrol.jsp?keyword=<%=keyword%>&search_mode=<%=searchMode%>&displaymode=<%=displayMode%>&dboperation=<%=dboperation%>&orderby=first_name&limit1=0&limit2=10">
+			<bean:message key="admin.provider.formFirstName" /></a> </b></TH>
 		<TH align="center" width="19%"><b><a
-			href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%="last_name"%>&limit1=0&limit2=10"><bean:message
-			key="admin.provider.formLastName" /></a></b></TH>
-		<TH align="center" width="16%"><b><bean:message
-			key="admin.provider.formSpecialty" /></b></TH>
-		<TH align="center" width="9%"><b><bean:message
-			key="admin.provider.formTeam" /></b></TH>
-		<TH align="center" width="2%"><b><bean:message
-			key="admin.provider.formSex" /></B></TH>
-		<TH align="center" width="15%"><b><bean:message
-			key="admin.providersearchresults.phone" /></B></TH>
-		<TH align="center" width="15%"><b><bean:message
-			key="admin.provider.formStatus" /></B></TH>
+			href="admincontrol.jsp?keyword=<%=keyword%>&search_mode=<%=searchMode%>&displaymode=<%=displayMode%>&dboperation=<%=dboperation%>&orderby=last_name&limit1=0&limit2=10">
+			<bean:message key="admin.provider.formLastName" /></a></b></TH>
+		<TH align="center" width="16%"><b>
+			<bean:message key="admin.provider.formSpecialty" /></b></TH>
+		<TH align="center" width="9%"><b>
+			<bean:message key="admin.provider.formTeam" /></b></TH>
+		<TH align="center" width="2%"><b>
+			<bean:message key="admin.provider.formSex" /></B></TH>
+		<TH align="center" width="15%"><b>
+			<bean:message key="admin.providersearchresults.phone" /></B></TH>
+		<TH align="center" width="15%"><b>
+			<bean:message key="admin.provider.formStatus" /></B></TH>
 	</tr>
-	<%
-  ResultSet rs = null;
-  String dboperation = request.getParameter("dboperation");
-  String keyword=request.getParameter("keyword").trim();  
-  //keyword.replace('*', '%').trim();
-  if(request.getParameter("search_mode").equals("search_name")) {
-    keyword=request.getParameter("keyword")+"%";
-    if(keyword.indexOf(",")==-1)  rs = apptMainBean.queryResults(keyword, dboperation) ; //lastname
-    else if(keyword.indexOf(",")==(keyword.length()-1))  rs = apptMainBean.queryResults(keyword.substring(0,(keyword.length()-1)), dboperation);//lastname
-    else { //lastname,firstname
-  		String[] param =new String[2];
-   		int index = keyword.indexOf(",");
-  		param[0]=keyword.substring(0,index).trim()+"%";//(",");
-  		param[1]=keyword.substring(index+1).trim()+"%";
-   		rs = apptMainBean.queryResults(param, dboperation);
- 		}
-  } else if(request.getParameter("search_mode").equals("search_dob")) {
-    		String[] param =new String[3];
-	  		param[0]=""+MyDateFormat.getYearFromStandardDate(keyword)+"%";//(",");
-	  		param[1]=""+MyDateFormat.getMonthFromStandardDate(keyword)+"%";
-	  		param[2]=""+MyDateFormat.getDayFromStandardDate(keyword)+"%";  
-    		rs = apptMainBean.queryResults(param, dboperation);
-  } else if(request.getParameter("search_mode").equals("search_status")) {
-      rs = apptMainBean.queryResults(keyword, dboperation);
-  }
-  else {
-    keyword=request.getParameter("keyword")+"%";
-    rs = apptMainBean.queryResults(keyword, dboperation);
-  }
+<%
+	List<ProviderData> providerList = null;
+	ProviderDataDao providerDao = SpringUtils.getBean(ProviderDataDao.class);
+	
+	if(searchMode.equals("search_name")) {
+		providerList = providerDao.findByProviderName(keyword, searchStatus, strLimit, strOffset);
+	}
+	else if(searchMode.equals("search_providerno")) {
+		providerList = providerDao.findByProviderNo(keyword, searchStatus, strLimit, strOffset);
+	}
+	
+	if(orderBy.equals("last_name")) {
+		Collections.sort(providerList, ProviderData.LastNameComparator);
+	}
+	else if(orderBy.equals("first_name")) {
+		Collections.sort(providerList, ProviderData.FirstNameComparator);
+	}
+	else if(orderBy.equals("provider_no")) {
+		Collections.sort(providerList, ProviderData.ProviderNoComparator);
+	}
   
-  boolean bodd=false;
+  boolean toggleLine=false;
   int nItems=0;
-  if(rs==null) {
+  
+  if(providerList == null) {
     out.println("failed!!!");
-  } else {
-    while (rs.next()) {
-      bodd=bodd?false:true;
-      nItems++; //to calculate if it is the end of records
-    // the cursor of ResultSet only goes through once from top
+  } 
+  else {
+    
+	  for(ProviderData provider : providerList) {
+		  toggleLine = !toggleLine;
+		  nItems++;
 %>
 
-	<tr bgcolor="<%=bodd?"white":weakcolor%>">
-
-		<td align="center"><a
-			href='admincontrol.jsp?keyword=<%=apptMainBean.getString(rs,"provider_no")%>&displaymode=Provider_Update&dboperation=provider_search_detail'><%= apptMainBean.getString(rs,"provider_no") %></a></td>
-		<td><%= apptMainBean.getString(rs,"first_name") %></td>
-		<td><%= apptMainBean.getString(rs,"last_name") %></td>
-		<td><%= apptMainBean.getString(rs,"specialty") %></td>
-		<td><%= apptMainBean.getString(rs,"team") %></td>
-
-		<td align="center"><%= apptMainBean.getString(rs,"sex") %></td>
-		<td><%= apptMainBean.getString(rs,"phone") %></td>
-		<td><%= apptMainBean.getString(rs,"status").equals("1")?"Active":"Inactive" %></td>
-
-		<!--td align="center" valign="middle" -->
-		<!--img src="../images/buttondetail.gif" width="75" height="30" border="0" valign="middle"-->
+	<tr bgcolor="<%=toggleLine?"white":weakcolor%>">
+		<td align="center"><a href='admincontrol.jsp?keyword=<%=provider.getId()%>&displaymode=Provider_Update&dboperation=provider_search_detail'><%= provider.getId() %></a></td>
+		<td><%= provider.getFirstName() %></td>
+		<td><%= provider.getLastName() %></td>
+		<td><%= provider.getSpecialty() %></td>
+		<td><%= provider.getTeam() %></td>
+		<td align="center"><%= provider.getSex() %></td>
+		<td><%= provider.getPhone() %></td>
+		<td><%= provider.getStatus().equals("1")?"Active":"Inactive" %></td>
 	</tr>
 	<%
     }
@@ -214,19 +214,17 @@
 <br>
 <%
   int nLastPage=0,nNextPage=0;
-  String strLimit1=request.getParameter("limit1");
-  String strLimit2=request.getParameter("limit2");
   
-  nNextPage=Integer.parseInt(strLimit2)+Integer.parseInt(strLimit1);
-  nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
+  nNextPage=Integer.parseInt(strLimit)+Integer.parseInt(strOffset);
+  nLastPage=Integer.parseInt(strOffset)-Integer.parseInt(strLimit);
   if(nLastPage>=0) {
 %> <a
-	href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>"><bean:message
+	href="admincontrol.jsp?keyword=<%= keyword %>&search_mode=<%= searchMode %>&displaymode=<%= displayMode %>&dboperation=<%= dboperation %>&orderby=<%=orderBy%>&limit1=<%=nLastPage%>&limit2=<%=strLimit%>"><bean:message
 	key="admin.providersearchresults.btnLastPage" /></a> | <%
   }
-  if(nItems==Integer.parseInt(strLimit2)) {
+  if(nItems==Integer.parseInt(strLimit)) {
 %> <a
-	href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"><bean:message
+	href="admincontrol.jsp?keyword=<%= keyword %>&search_mode=<%= searchMode %>&displaymode=<%= displayMode%>&dboperation=<%= dboperation %>&orderby=<%= orderBy %>&limit1=<%=nNextPage%>&limit2=<%=strLimit%>"><bean:message
 	key="admin.providersearchresults.btnNextPage" /></a> <%
 }
 %>
