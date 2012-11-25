@@ -134,4 +134,9 @@ public class MeasurementDaoTest extends DaoTestFixtures {
 	public void testFindLabNumbers() {
 		assertNotNull(dao.findLabNumbers(100, "CDE"));
 	}
+	
+	@Test
+	public void testFindLastEntered() {
+		dao.findLastEntered(100, "CDE");
+	}
 }

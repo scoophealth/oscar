@@ -25,14 +25,14 @@
 
 package oscar.oscarEncounter.oscarMeasurements.bean;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.ValidationsDao;
+import org.oscarehr.common.model.Validations;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarMeasurements.data.MeasurementTypes;
+import oscar.util.ConversionUtils;
 
 /**
  *
@@ -53,19 +53,11 @@ public class EctMeasurementTypeBeanHandler {
     }
     
     public String getValidation(String val){
-        String validation = null;
-        try {
-            
-            String sqlValidation = "SELECT name FROM validations WHERE id='"+val+"'";
-            ResultSet rs = DBHandler.GetSQL(sqlValidation);
-            if (rs.next()){ 
-                validation = oscar.Misc.getString(rs, "name");
-
-            }
-            rs.close();
-        }catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
+        ValidationsDao dao = SpringUtils.getBean(ValidationsDao.class);
+        Validations v = dao.find(ConversionUtils.fromIntString(val));
+        if (v != null) {
+        	return v.getName();
         }
-        return validation;
+        return null;
     }
 }
