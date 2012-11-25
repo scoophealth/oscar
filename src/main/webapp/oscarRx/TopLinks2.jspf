@@ -42,7 +42,6 @@ function newWindow(url) {
 			
 <% 
 if (rx_enhance!=null && rx_enhance.equals("true")) { %>
-	<span class="ScreenTitle" >oscarRx</span>
                    --<b><bean:message key="SearchDrug.nameText" /></b> <jsp:getProperty name="patient" property="firstName" /> <jsp:getProperty name="patient" property="surname" /> &nbsp;
 		     <b><bean:message key="SearchDrug.ageText" /></b> <jsp:getProperty name="patient" property="age" />
                      <b>
