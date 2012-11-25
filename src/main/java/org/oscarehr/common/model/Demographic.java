@@ -28,6 +28,7 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Set;
@@ -1081,6 +1082,42 @@ public class Demographic implements Serializable {
 	public void setNewsletter(String newsletter) {
     	this.newsletter = newsletter;
     }
+
+	public static final Comparator<Demographic> LastNameComparator = new Comparator<Demographic>() {
+        public int compare(Demographic dm1, Demographic dm2) {
+        	return dm1.getLastName().compareTo(dm2.getLastName());
+        }
+    }; 
+	public static final Comparator<Demographic> FirstNameComparator = new Comparator<Demographic>() {
+        public int compare(Demographic dm1, Demographic dm2) {
+        	return dm1.getFirstName().compareTo(dm2.getFirstName());
+        }
+    }; 
+	public static final Comparator<Demographic> DemographicNoComparator = new Comparator<Demographic>() {
+        public int compare(Demographic dm1, Demographic dm2) {
+        	return dm1.getDemographicNo().compareTo(dm2.getDemographicNo());
+        }
+    }; 
+	public static final Comparator<Demographic> SexComparator = new Comparator<Demographic>() {
+        public int compare(Demographic dm1, Demographic dm2) {
+        	return dm1.getSex().compareTo(dm2.getSex());
+        }
+    }; 
+	public static final Comparator<Demographic> AgeComparator = new Comparator<Demographic>() {
+        public int compare(Demographic dm1, Demographic dm2) {
+        	return dm1.getAge().compareTo(dm2.getAge());
+        }
+    }; 
+	public static final Comparator<Demographic> DateOfBirthComparator = new Comparator<Demographic>() {
+        public int compare(Demographic dm1, Demographic dm2) {
+        	return dm1.getBirthDayAsString().compareTo(dm2.getBirthDayAsString());
+        }
+    }; 
+	public static final Comparator<Demographic> RosterStatusComparator = new Comparator<Demographic>() {
+        public int compare(Demographic dm1, Demographic dm2) {
+        	return dm1.getRosterStatus().compareTo(dm2.getRosterStatus());
+        }
+    }; 
 
 
 }
