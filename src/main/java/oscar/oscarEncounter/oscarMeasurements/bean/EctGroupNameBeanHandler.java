@@ -22,50 +22,35 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarEncounter.oscarMeasurements.bean;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Vector;
 
-import org.oscarehr.util.MiscUtils;
-
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.common.dao.MeasurementGroupStyleDao;
+import org.oscarehr.common.model.MeasurementGroupStyle;
+import org.oscarehr.util.SpringUtils;
 
 public class EctGroupNameBeanHandler {
-    
-    Vector groupNameVector = new Vector();
- 
-    public EctGroupNameBeanHandler() {
-        init();
-    }
-    
-    public boolean init() {
-        
-        boolean verdict = true;
-        try {
-            
-            String sql = "SELECT groupName from measurementGroupStyle ORDER BY groupName";
-            MiscUtils.getLogger().debug("Sql Statement: " + sql);
-            ResultSet rs;
-            for(rs = DBHandler.GetSQL(sql); rs.next(); )
-            {
-                EctGroupNameBean groupName = new EctGroupNameBean(oscar.Misc.getString(rs, "groupName"));
-                groupNameVector.add(groupName);
-            }
 
-            rs.close();
-        }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-            verdict = false;
-        }
-        return verdict;
-    }
+	Vector<EctGroupNameBean> groupNameVector = new Vector<EctGroupNameBean>();
 
-    public Collection getGroupNameVector(){
-        return groupNameVector;
-    }
+	public EctGroupNameBeanHandler() {
+		init();
+	}
+
+	public boolean init() {
+
+		MeasurementGroupStyleDao dao = SpringUtils.getBean(MeasurementGroupStyleDao.class);
+
+		for (MeasurementGroupStyle group : dao.findAll()) {
+			EctGroupNameBean groupName = new EctGroupNameBean(group.getGroupName());
+			groupNameVector.add(groupName);
+		}
+		return true;
+	}
+
+	public Collection<EctGroupNameBean> getGroupNameVector() {
+		return groupNameVector;
+	}
 }

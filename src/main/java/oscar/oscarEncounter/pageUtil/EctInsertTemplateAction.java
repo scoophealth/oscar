@@ -22,11 +22,7 @@
  * Ontario, Canada
  */
 
-
 package oscar.oscarEncounter.pageUtil;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,46 +31,37 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.oscarehr.util.MiscUtils;
-
-import oscar.oscarDB.DBHandler;
-
+import org.oscarehr.common.dao.EncounterTemplateDao;
+import org.oscarehr.common.model.EncounterTemplate;
+import org.oscarehr.util.SpringUtils;
 
 public final class EctInsertTemplateAction extends Action {
 
-    public ActionForward execute(ActionMapping mapping,
-                                 ActionForm form,
-                                 HttpServletRequest request,
-                                 HttpServletResponse response)
-        throws Exception {
-        String templateName = request.getParameter("templateName");
-            
-        try{
-            
-            String sql = "SELECT encountertemplate_value FROM encountertemplate WHERE encountertemplate_name='" + templateName + "'";
-            ResultSet rs = DBHandler.GetSQL(sql);
-            if (rs.next()){
-                String encounterTmpValue = oscar.Misc.getString(rs, "encountertemplate_value");                   
-                encounterTmpValue = encounterTmpValue.replaceAll("\\\\", "\\\\u005C"); // replace \ with unicode equiv.
-                encounterTmpValue = encounterTmpValue.replaceAll("\"", "\\\\u0022"); // replace " with unicode equiv.
-                encounterTmpValue = encounterTmpValue.replaceAll("'", "\\\\u0027"); // replace ' with unicode equiv.
-                encounterTmpValue = encounterTmpValue.replaceAll(">", "\\\\u003E");
-                encounterTmpValue = encounterTmpValue.replaceAll("<", "\\\\u003C");
-                encounterTmpValue = encounterTmpValue.replaceAll("\n", "\\\\u000A");
-                encounterTmpValue = encounterTmpValue.replaceAll("\r", "\\\\u000D");
-                request.setAttribute("templateValue", encounterTmpValue);
-            }
-        }
-        catch(SQLException e)
-        {
-            MiscUtils.getLogger().error("Error", e);
-        }            
-        
-        String version = request.getParameter("version");
-        if( version != null && version.equals("2") )
-            return (mapping.findForward("success2"));
-        else
-            return (mapping.findForward("success"));
-        
-    }
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String templateName = request.getParameter("templateName");
+
+		EncounterTemplateDao dao = SpringUtils.getBean(EncounterTemplateDao.class);
+		EncounterTemplate t = dao.find(templateName);
+
+		if (t != null) {
+			String encounterTmpValue = t.getEncounterTemplateValue();
+
+			encounterTmpValue = encounterTmpValue.replaceAll("\\\\", "\\\\u005C"); // replace \ with unicode equiv.
+			encounterTmpValue = encounterTmpValue.replaceAll("\"", "\\\\u0022"); // replace " with unicode equiv.
+			encounterTmpValue = encounterTmpValue.replaceAll("'", "\\\\u0027"); // replace ' with unicode equiv.
+			encounterTmpValue = encounterTmpValue.replaceAll(">", "\\\\u003E");
+			encounterTmpValue = encounterTmpValue.replaceAll("<", "\\\\u003C");
+			encounterTmpValue = encounterTmpValue.replaceAll("\n", "\\\\u000A");
+			encounterTmpValue = encounterTmpValue.replaceAll("\r", "\\\\u000D");
+			request.setAttribute("templateValue", encounterTmpValue);
+		}
+
+		String version = request.getParameter("version");
+		if (version != null && version.equals("2")) {
+			return (mapping.findForward("success2"));
+		} else { 
+			return (mapping.findForward("success"));
+		}
+
+	}
 }

@@ -23,6 +23,7 @@
  */
 package org.oscarehr.common.dao;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -43,7 +44,6 @@ public class MeasurementGroupStyleDaoTest extends DaoTestFixtures {
 
 	private MeasurementGroupStyleDao dao = SpringUtils.getBean(MeasurementGroupStyleDao.class);
 
-
 	@Before
 	public void before() throws Exception {
 		SchemaUtils.restoreTable("measurementGroupStyle");
@@ -51,34 +51,40 @@ public class MeasurementGroupStyleDaoTest extends DaoTestFixtures {
 
 	@Test
 	public void testFindAll() throws Exception {
-		
+
 		MeasurementGroupStyle measurementGrpStyle1 = new MeasurementGroupStyle();
 		EntityDataGenerator.generateTestDataForModelClass(measurementGrpStyle1);
 		dao.persist(measurementGrpStyle1);
-		
+
 		MeasurementGroupStyle measurementGrpStyle2 = new MeasurementGroupStyle();
 		EntityDataGenerator.generateTestDataForModelClass(measurementGrpStyle2);
 		dao.persist(measurementGrpStyle2);
-		
+
 		MeasurementGroupStyle measurementGrpStyle3 = new MeasurementGroupStyle();
 		EntityDataGenerator.generateTestDataForModelClass(measurementGrpStyle3);
 		dao.persist(measurementGrpStyle3);
-		
+
 		List<MeasurementGroupStyle> expectedResult = new ArrayList<MeasurementGroupStyle>(Arrays.asList(measurementGrpStyle1, measurementGrpStyle2, measurementGrpStyle3));
 		List<MeasurementGroupStyle> result = dao.findAll();
 
 		Logger logger = MiscUtils.getLogger();
-		
+
 		if (result.size() != expectedResult.size()) {
 			logger.warn("Array sizes do not match.");
 			fail("Array sizes do not match.");
 		}
 		for (int i = 0; i < expectedResult.size(); i++) {
-			if (!expectedResult.get(i).equals(result.get(i))){
+			if (!expectedResult.get(i).equals(result.get(i))) {
 				logger.warn("Items  do not match.");
 				fail("Items  do not match.");
 			}
 		}
-		assertTrue(true);		
+		assertTrue(true);
 	}
+
+	@Test
+	public void testFindByCssId() {
+		assertNotNull(dao.findByCssId(10));
+	}
+
 }

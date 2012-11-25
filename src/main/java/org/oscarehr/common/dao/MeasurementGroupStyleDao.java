@@ -22,7 +22,6 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.common.dao;
 
 import java.util.List;
@@ -33,19 +32,27 @@ import org.oscarehr.common.model.MeasurementGroupStyle;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class MeasurementGroupStyleDao extends AbstractDao<MeasurementGroupStyle>{
+public class MeasurementGroupStyleDao extends AbstractDao<MeasurementGroupStyle> {
 
 	public MeasurementGroupStyleDao() {
 		super(MeasurementGroupStyle.class);
 	}
 
-	   public List<MeasurementGroupStyle> findByGroupName(String groupName) {
-	    	String sql = "select x from MeasurementGroupStyle x where x.groupName=?";
-	    	Query query = entityManager.createQuery(sql);
-	    	query.setParameter(1, groupName);
+	public List<MeasurementGroupStyle> findByGroupName(String groupName) {
+		String sql = "select x from MeasurementGroupStyle x where x.groupName=?";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, groupName);
 
-	        @SuppressWarnings("unchecked")
-	        List<MeasurementGroupStyle> results = query.getResultList();
-	        return results;
-	    }
+		@SuppressWarnings("unchecked")
+		List<MeasurementGroupStyle> results = query.getResultList();
+		return results;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<MeasurementGroupStyle> findByCssId(Integer cssId) {
+		Query query = createQuery("m", "m.cssId = :cssId");
+		query.setParameter("cssId", cssId);
+		return query.getResultList();
+	}
+
 }
