@@ -31,14 +31,20 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
+import oscar.util.ConversionUtils;
 import oscar.util.UtilDateUtilities;
 
 public class EctLabReqRecord
 {
-    private static Logger logger=MiscUtils.getLogger(); 
+    private static Logger logger = MiscUtils.getLogger(); 
 
     public Properties getLabReqRecord(int demographicNo, int existingID, int provNo)
             throws SQLException
@@ -49,52 +55,39 @@ public class EctLabReqRecord
         ResultSet rs;
         String sql;
 
-        if(existingID <= 0)
-        {
-            try{
-                sql = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS patientName, "
-                    + "sex, address, city, province, postal, hin, ver, "
-                    + "phone, year_of_birth, month_of_birth, date_of_birth "
-                    + "FROM demographic WHERE demographic_no = " + demographicNo;
+        if(existingID <= 0) {
+        	DemographicDao dao = SpringUtils.getBean(DemographicDao.class);
+        	Demographic demo = dao.getDemographicById(demographicNo);
+        	
+            if(demo != null) {
+                    java.util.Date dob = ConversionUtils.fromDateString(demo.getBirthDayAsString());
 
-                rs = DBHandler.GetSQL(sql);
-
-                if(rs.next())
-                {
-                    java.util.Date dob = UtilDateUtilities.calcDate(oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"), oscar.Misc.getString(rs, "date_of_birth"));
-
-                    props.setProperty("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
-                    props.setProperty("patientName", oscar.Misc.getString(rs, "patientName"));
-                    props.setProperty("healthNumber", oscar.Misc.getString(rs, "hin"));
-                    props.setProperty("version", oscar.Misc.getString(rs, "ver"));
+                    props.setProperty("demographic_no", "" + demo.getDemographicNo());
+                    props.setProperty("patientName", "" + demo.getFullName());
+                    props.setProperty("healthNumber", demo.getHin());
+                    props.setProperty("version", demo.getVer());
                     props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                     props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                     props.setProperty("birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
-                    props.setProperty("homePhone", oscar.Misc.getString(rs, "phone"));
-                    props.setProperty("patientAddress", oscar.Misc.getString(rs, "address"));
-                    props.setProperty("patientCity", oscar.Misc.getString(rs, "city"));
-                    props.setProperty("patientPC", oscar.Misc.getString(rs, "postal"));
-                    props.setProperty("province", oscar.Misc.getString(rs, "province"));
-                    props.setProperty("sex", oscar.Misc.getString(rs, "sex"));
+                    props.setProperty("homePhone", demo.getPhone());
+                    props.setProperty("patientAddress", demo.getAddress());
+                    props.setProperty("patientCity", demo.getCity());
+                    props.setProperty("patientPC", demo.getPostal());
+                    props.setProperty("province", demo.getProvince());
+                    props.setProperty("sex", demo.getSex());
                 }
-                rs.close();
 
                 // from provider table
-                sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no "
-                    + "FROM provider WHERE provider_no = " + provNo;
+            	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+            	Provider provider = providerDao.getProvider("" + provNo);
 
-                rs = DBHandler.GetSQL(sql);
-
-                if(rs.next())
+                if(provider != null)
                 {
-                    String num = oscar.Misc.getString(rs, "ohip_no");
-                    props.setProperty("provName", oscar.Misc.getString(rs, "provName"));
+                    String num = provider.getOhipNo();
+                    props.setProperty("provName", provider.getFormattedName());
                     props.setProperty("practitionerNo", "0000-"+num+"-00");
                 }
-                rs.close();
-            }catch(SQLException ee) {
-            	logger.error("Unexpected error", ee);
-            }
+           
         }
         else
         {
