@@ -27,6 +27,7 @@ import java.util.Map.Entry;
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.Billing;
+import org.oscarehr.util.DateRange;
 import org.springframework.stereotype.Repository;
 
 import oscar.entities.Billingmaster;
@@ -166,6 +167,52 @@ public class BillingDao extends AbstractDao<Billing> {
 		Query query = entityManager.createQuery("FROM " + Billingmaster.class.getSimpleName() + " b, Billing bi where bi.id = b.billingNo and b.billingNo = :bn");
 		query.setParameter("bn", billing_no);
 	    return query.getResultList();
+    }
+
+    /**
+     * Finds billings by the provider, status and dates
+     * 
+     * @param providerNo
+     * @param statusList
+     * @param dateRange
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+	public List<Billing> findByProviderStatusAndDates(String providerNo, List<String> statusList, DateRange dateRange) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		StringBuilder buf = new StringBuilder("FROM Billing b WHERE b.providerOhipNo = :pon");
+		params.put("pon", providerNo);
+		
+		if (statusList != null && !statusList.isEmpty()) {
+			buf.append(" AND b.status IN (:sl)");
+			params.put("sl", statusList);
+		}
+		
+		if (dateRange != null) {
+			if (dateRange.getFrom() != null) {
+				buf.append(" AND b.billingDate >= :bf");
+				params.put("bf", dateRange.getFrom());
+			}
+			
+			if (dateRange.getTo() != null) {
+				buf.append(" AND b.billingDate <= :bt");
+				params.put("bt", dateRange.getTo());
+			}
+		}
+
+		Query query = entityManager.createQuery(buf.toString());
+		
+		for(Entry<String, Object> param : params.entrySet()) {
+			query.setParameter(param.getKey(), param.getValue());
+		}
+
+		return query.getResultList();
+    }
+
+	@SuppressWarnings("unchecked")
+    public List<Billing> getMyMagicBillings() {
+		Query q = createQuery("b", "b.status <> 'B' AND b.billingtype IN ('ICBC', 'WCB', 'MSP')"); 
+		return q.getResultList();
     }
 
 }
