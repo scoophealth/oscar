@@ -94,6 +94,7 @@ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Se
     public Integer getId() {
 	    return(id);
     }
+	
 
 	public String getFirstName() {
     	return firstName;
@@ -234,5 +235,37 @@ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Se
     	return getLastName() + "," + getFirstName();
     }
 
+	/**
+	 * Gets a comma-separated first and last names, 
+	 * suffixed by the professional title letters
+	 * 
+	 * @return
+	 * 		Returns the formatted title
+	 */
+	public String getFormattedTitle() {
+		StringBuilder buf = new StringBuilder();
+		boolean isAppended = false;
+		
+		if (getLastName() != null && !getLastName().isEmpty()) {
+			buf.append(getLastName());
+			isAppended = true;
+		}
+		
+		if (getFirstName() != null && !getFirstName().isEmpty()) {
+			if (isAppended) {
+				buf.append(", ");
+			}
+			buf.append(getFirstName());
+			isAppended = true;
+		}
+		
+		if (getProfessionalLetters() != null && !getProfessionalLetters().isEmpty()) {
+			if (isAppended) {
+				buf.append(" ");
+			}
+			buf.append(getProfessionalLetters());
+		}
+		return buf.toString();
+	}
 
 }
