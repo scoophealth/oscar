@@ -40,7 +40,7 @@ public class ProviderDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("provider");
+		SchemaUtils.restoreTable("provider", "providersite", "demographic");
 	}
 
 	@Test
@@ -52,5 +52,20 @@ public class ProviderDaoTest extends DaoTestFixtures {
 	@Test
 	public void testGetCurrentTeamProviders() {
 		dao.getCurrentTeamProviders("999998");
+	}
+	
+	@Test
+	public void testActiveProviders() {
+		assertNotNull(dao.getActiveProviders());
+	}
+	
+	@Test
+	public void testGetActiveTeamsViaSites() {
+		assertNotNull(dao.getActiveTeamsViaSites("100"));
+	}
+	
+	@Test
+	public void testGetProviderByPatientId() {
+		assertNotNull(dao.getProviderByPatientId(100));
 	}
 }
