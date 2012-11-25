@@ -34,7 +34,7 @@ import org.oscarehr.document.dao.DocumentDAO;
 import org.oscarehr.document.model.CtlDocument;
 import org.oscarehr.util.SpringUtils;
 
-public class DocumentDAOTest extends DaoTestFixtures {
+public class CtlDocumentDaoTest extends DaoTestFixtures {
 
 	private DocumentDAO dao = SpringUtils.getBean(DocumentDAO.class);
 
