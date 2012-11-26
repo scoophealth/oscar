@@ -32,7 +32,7 @@
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%@ page import="oscar.OscarProperties"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils,oscar.oscarLab.ca.all.*,oscar.oscarMDS.data.*,oscar.oscarLab.ca.all.util.*"%>
-<%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*"%><%
+<%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*,org.oscarehr.util.SpringUtils"%><%
 
             WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
             ProviderInboxRoutingDao providerInboxRoutingDao = (ProviderInboxRoutingDao) ctx.getBean("providerInboxRoutingDAO");
@@ -52,7 +52,11 @@
             EDoc curdoc = EDocUtil.getDoc(documentNo);
 
             String demographicID = curdoc.getModuleId();
-
+            if ((demographicID != null) && !demographicID.isEmpty() && !demographicID.equals("-1")){
+                DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+                Demographic demographic = demographicDao.getDemographic(demographicID);  
+		demoName = demographic.getLastName()+","+demographic.getFirstName();
+            }
             String docId = curdoc.getDocId();
 
             int slash = 0;
@@ -137,7 +141,29 @@
     			}
     		});
     	}
-
+        function handleDocSave(docid,action){
+			var url=contextpath + "/dms/inboxManage.do";
+			var data='method=isDocumentLinkedToDemographic&docId='+docid;
+			new Ajax.Request(url, {method: 'post',parameters:data,onSuccess:function(transport){
+                            var json=transport.responseText.evalJSON();
+                            if(json!=null){
+                                var success=json.isLinkedToDemographic;
+                                var demoid='';
+                            	                                       
+                                if(success){
+                                    if(action=='addTickler'){
+                                        demoid=json.demoId;
+                                        if(demoid!=null && demoid.length>0)
+                                            popupStart(450,600,contextpath + '/tickler/ForwardDemographicTickler.do?docType=DOC&docId='+docid+'&demographic_no='+demoid,'tickler')
+                                    }                    
+                                }
+                                else {
+                                    alert("Make sure demographic is linked and document changes saved!");
+                                }
+                            }
+			}});
+        }
+		        
         function rotate90(id) {
         	jQuery("#rotate90btn_" + id).attr('disabled', 'disabled');
 
@@ -502,7 +528,7 @@
                                                         <input type="button" id="printBtn_<%=docId%>" value=" <bean:message key="global.btnPrint"/> " onClick="popup(700,960,'<%=url2%>','file download')">
                                                         <% if (demographicID != null && !demographicID.equals("") && !demographicID.equalsIgnoreCase("null")) {%>
                                                         <input type="button" id="msgBtn_<%=docId%>" value="Msg" onclick="popup(700,960,'../oscarMessenger/SendDemoMessage.do?demographic_no=<%=demographicID%>','msg')"/>
-                                                        <input type="button" id="ticklerBtn_<%=docId%>" value="Tickler" onclick="popup(450,600,'../tickler/ForwardDemographicTickler.do?docType=DOC&docId=<%=docId%>&demographic_no=<%=demographicID%>','tickler')"/>
+                                                        <input type="button" id="ticklerBtn_<%=docId%>" value="Tickler" onclick="handleDocSave('<%=docId%>','addTickler')"/>
                                                         <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popup(360, 680, '<%= request.getContextPath() %>/oscarMDS/SearchPatient.do?labType=DOC&segmentID=<%= docId %>&name=<%=java.net.URLEncoder.encode(demoName)%>', 'encounter')">
                                                         <% }
 
