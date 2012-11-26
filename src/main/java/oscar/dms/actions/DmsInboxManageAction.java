@@ -776,6 +776,45 @@ public class DmsInboxManageAction extends DispatchAction {
 		return null;
 	}
 
+         public ActionForward isDocumentLinkedToDemographic(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+                boolean success = false;
+                String demoId = null;
+                try {
+                       String docId = request.getParameter("docId");
+                       logger.debug("DocId:"+docId);
+                       if (docId != null) {
+                            docId = docId.trim();
+                            if (docId.length() > 0) {
+                                EDoc doc = EDocUtil.getDoc(docId);
+                                demoId = doc.getModuleId();                                
+
+                                if (demoId != null) {
+                                    logger.debug("DemoId:"+demoId);
+                                    Integer demographicId = Integer.parseInt(demoId);
+                                    if (demographicId > 0) {
+                                        logger.debug("Success true");
+                                        success = true;
+                                    }
+                                }
+                            }
+                        }
+                } catch (Exception e) {
+                    logger.error("Error", e);
+                }
+
+                HashMap hm = new HashMap();
+                hm.put("isLinkedToDemographic", success);
+                hm.put("demoId", demoId);
+                JSONObject jsonObject = JSONObject.fromObject(hm);
+                try {
+                    response.getOutputStream().write(jsonObject.toString().getBytes());
+                } catch (java.io.IOException ioe) {
+                    logger.error("Error", ioe);
+                }
+
+                return null;
+	}
+         
 	public ActionForward isLabLinkedToDemographic(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		boolean success = false;
 		String demoId = null;
