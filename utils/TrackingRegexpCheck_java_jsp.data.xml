@@ -1031,8 +1031,6 @@
         <ViolationValue>/src/main/java/oscar/AppointmentMainBean.java:public ResultSet queryResults_paged(DBPreparedHandlerParam[] aKeyword, String dboperation, int iOffSet) throws Exception{</ViolationValue>
         <ViolationValue>/src/main/java/oscar/OscarAction.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/OscarAction.java:protected DBPreparedHandler handler = null;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/appt/status/dao/hibernate/AppointmentStatusDAOHibernate.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/appt/status/dao/hibernate/AppointmentStatusDAOHibernate.java:public class AppointmentStatusDAOHibernate extends HibernateDaoSupport</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dao/OscarSuperDao.java:* Oscar super DAO implementation created to extract database access code from JSP files. This class should be extended by a scope named DAO class, i.e. AppointmentDao. Do not access methods of this class directly - use OscarSuperManager methods instead.</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dbBillingData.java:DBPreparedHandler accessDB = null;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/dbBillingData.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
@@ -1195,8 +1193,6 @@
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/administration/GstReport.java:ResultSet rs1 = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/administration/GstReport.java:rs1 = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/administration/GstReport.java:rs2 = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/dao/BillingOnItemDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/dao/BillingOnItemDao.java:public class BillingOnItemDao extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/BillingONDataHelp.java:ret = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingReviewImpl.java:DBPreparedHandler dbPH=new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarBilling/ca/on/data/JdbcBillingReviewImpl.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
@@ -1315,10 +1311,6 @@
         <ViolationValue>/src/main/java/oscar/oscarMDS/pageUtil/ReportStatusUpdateAction.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/config/data/MsgMessengerGroupData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/config/pageUtil/MsgMessengerAdminAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgAddressBook.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgAddressBookMaker.java:ResultSet rs = DBHandler.GetSQL("SELECT addressBook FROM oscarcommlocations WHERE current1 = 1");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgAddressBookMaker.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgAddressBookMaker.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgMessageData.java:DBPreparedHandler db = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgMessageData.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/docxfer/send/MsgGenerate.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -1335,7 +1327,6 @@
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgViewMessageByPositionAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgViewPDFAttachmentAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/tld/MsgNewMessagesTag.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/PreventionData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:for(rs = DBHandler.GetSQL(sql); rs.next(); )</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/SQLDenominator.java:ResultSet rs = DBHandler.GetSQL(exeSql);</ViolationValue>
@@ -2462,8 +2453,7 @@
         <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:Vector msgVector= new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:msgVector = null;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:msgVector.add(oscar.Misc.getString(rs, "messageID"));</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:msgVector.add("" + map.getId().getMessageId());</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:public Hashtable getDemoMap (String msgId){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:public Vector getMsgVector(String demographic_no){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:return msgVector;</ViolationValue>

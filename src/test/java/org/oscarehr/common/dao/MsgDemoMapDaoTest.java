@@ -42,7 +42,8 @@ public class MsgDemoMapDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("msgDemoMap");
+		SchemaUtils.restoreTable("msgDemoMap", "demographic","lst_gender","admission","demographic_merged",
+				"program","health_safety","provider","providersite","site","program_team", "messagetbl");
 	}
 
 	@Test
@@ -53,5 +54,15 @@ public class MsgDemoMapDaoTest extends DaoTestFixtures {
 		dao.persist(entity);
 
 		assertNotNull(entity.getId());
+	}
+
+	@Test
+	public void testGetMessagesAndDemographicsByMessageId()  {
+		assertNotNull(dao.getMessagesAndDemographicsByMessageId(100));
+	}
+	
+	@Test
+	public void testGetMapAndMessagesByDemographicNo()  {
+		assertNotNull(dao.getMapAndMessagesByDemographicNo(100));
 	}
 }
