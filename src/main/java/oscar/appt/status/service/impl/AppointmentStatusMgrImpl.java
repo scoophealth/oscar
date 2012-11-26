@@ -24,39 +24,31 @@ package oscar.appt.status.service.impl;
 
 import java.util.List;
 
-import org.springframework.transaction.annotation.Transactional;
+import org.oscarehr.common.dao.AppointmentStatusDao;
+import org.oscarehr.common.model.AppointmentStatus;
 
-import oscar.appt.status.dao.AppointmentStatusDAO;
-import oscar.appt.status.model.AppointmentStatus;
 import oscar.appt.status.service.AppointmentStatusMgr;
 
 /**
  *
  * @author toby
  */
-@Transactional
+
 public class AppointmentStatusMgrImpl implements AppointmentStatusMgr {
 
-    private AppointmentStatusDAO appointStatusDao = null;
+    private AppointmentStatusDao appointStatusDao = null;
 
-    public AppointmentStatusDAO getAppointStatusDao(){
-        return appointStatusDao;
-    }
-    
-    public void setAppointStatusDao(AppointmentStatusDAO dao){
-        this.appointStatusDao = dao;
-    }
-    
-    public List getAllStatus(){
-        return appointStatusDao.getAllStatus();
+  
+    public List<AppointmentStatus> getAllStatus(){
+        return appointStatusDao.findAll();
     };
     
-    public List getAllActiveStatus(){
-        return appointStatusDao.getAllActiveStatus();
+    public List<AppointmentStatus> getAllActiveStatus(){
+        return appointStatusDao.findActive();
     };
 
     public AppointmentStatus getStatus(int ID){
-        return appointStatusDao.getStatus(ID);
+        return appointStatusDao.find(ID);
     };
 
     public void changeStatus(int ID, int iActive){

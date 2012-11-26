@@ -41,7 +41,7 @@
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 <%@page import="oscar.oscarDemographic.data.*, java.util.*, java.sql.*, oscar.appt.*, oscar.*, java.text.*, java.net.*, org.oscarehr.common.OtherIdManager"%>
 <%@ page import="oscar.appt.status.service.AppointmentStatusMgr"%>
-<%@ page import="oscar.appt.status.model.AppointmentStatus"%>
+<%@ page import="org.oscarehr.common.model.AppointmentStatus"%>
 <%@ page import="org.oscarehr.common.dao.DemographicDao, org.oscarehr.common.model.Demographic, org.oscarehr.util.SpringUtils"%>
 <%@ page import="oscar.oscarEncounter.data.EctFormData"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
