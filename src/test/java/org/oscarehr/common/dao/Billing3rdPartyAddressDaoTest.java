@@ -24,12 +24,20 @@
 package org.oscarehr.common.dao;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.billing.CA.ON.model.Billing3rdPartyAddress;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class Billing3rdPartyAddressDaoTest extends DaoTestFixtures{
@@ -50,5 +58,54 @@ public class Billing3rdPartyAddressDaoTest extends DaoTestFixtures{
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		dao.persist(entity);
 		assertNotNull(entity.getId());
+	}
+	
+	@Test
+	public void testFindByCompanyName() throws Exception {
+		
+		String companyName1 = "sigma";
+		String companyName2 = "epsilon";
+		
+		Billing3rdPartyAddress billing3rdPartyAddress1 = new Billing3rdPartyAddress();
+		EntityDataGenerator.generateTestDataForModelClass(billing3rdPartyAddress1);
+		billing3rdPartyAddress1.setCompanyName(companyName1);
+		dao.persist(billing3rdPartyAddress1);
+		
+		Billing3rdPartyAddress billing3rdPartyAddress2 = new Billing3rdPartyAddress();
+		EntityDataGenerator.generateTestDataForModelClass(billing3rdPartyAddress2);
+		billing3rdPartyAddress2.setCompanyName(companyName2);
+		dao.persist(billing3rdPartyAddress2);
+		
+		Billing3rdPartyAddress billing3rdPartyAddress3 = new Billing3rdPartyAddress();
+		EntityDataGenerator.generateTestDataForModelClass(billing3rdPartyAddress3);
+		billing3rdPartyAddress3.setCompanyName(companyName2);
+		dao.persist(billing3rdPartyAddress3);
+		
+		Billing3rdPartyAddress billing3rdPartyAddress4 = new Billing3rdPartyAddress();
+		EntityDataGenerator.generateTestDataForModelClass(billing3rdPartyAddress4);
+		billing3rdPartyAddress4.setCompanyName(companyName1);
+		dao.persist(billing3rdPartyAddress4);
+		
+		Billing3rdPartyAddress billing3rdPartyAddress5 = new Billing3rdPartyAddress();
+		EntityDataGenerator.generateTestDataForModelClass(billing3rdPartyAddress5);
+		billing3rdPartyAddress5.setCompanyName(companyName1);
+		dao.persist(billing3rdPartyAddress5);
+		
+		List<Billing3rdPartyAddress> expectedResult = new ArrayList<Billing3rdPartyAddress>(Arrays.asList(billing3rdPartyAddress1, billing3rdPartyAddress4, billing3rdPartyAddress5));
+		List<Billing3rdPartyAddress> result = dao.findByCompanyName(companyName1);
+
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);
 	}
 }
