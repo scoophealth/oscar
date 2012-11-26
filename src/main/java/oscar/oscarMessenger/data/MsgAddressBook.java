@@ -25,14 +25,17 @@
 
 package oscar.oscarMessenger.data;
 
+import java.util.List;
+
 import javax.servlet.jsp.JspWriter;
 
+import org.oscarehr.common.dao.OscarCommLocationsDao;
+import org.oscarehr.common.model.OscarCommLocations;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-import oscar.oscarDB.DBHandler;
 
 /**
  * <p>Title: </p>
@@ -68,22 +71,19 @@ public class MsgAddressBook {
      * @return String xml string for this location
      */
    public String myAddressBook(){
-      String retval = new String();
-      CurrentLocationName = new String();
-      try{
-            
-            java.sql.ResultSet rs;
-            String sql = new String("select locationDesc, addressBook from oscarcommlocations where current1 = 1");
-            rs = DBHandler.GetSQL(sql);
-            if (rs.next()){
-               retval = oscar.Misc.getString(rs, "addressBook");
-               CurrentLocationName = oscar.Misc.getString(rs, "locationDesc");
-            }
-            rs.close();
-         }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
-
-      return retval;
+      CurrentLocationName = "";
+      
+      OscarCommLocationsDao dao = SpringUtils.getBean(OscarCommLocationsDao.class); 
+      List<OscarCommLocations> comms = dao.findByCurrent1(1);
+      
+      for(OscarCommLocations comm : comms) {
+    	  CurrentLocationName = comm.getLocationDesc();
+          return comm.getAddressBook();
+      }
+      
+      return "";
    }
+   
    //---------------------------------------------------------------------------
 
    /**
@@ -95,20 +95,14 @@ public class MsgAddressBook {
       remoteLocationDesc      = new java.util.Vector();
       remoteLocationId        = new java.util.Vector();
 
-      try{
-            
-            java.sql.ResultSet rs;
-            String sql = new String("select locationDesc, locationId, addressBook from oscarcommlocations where current1 = 0");
-            rs = DBHandler.GetSQL(sql);
-            while (rs.next()){
-               vector.add(oscar.Misc.getString(rs, "addressBook"));
-               remoteLocationDesc.add(oscar.Misc.getString(rs, "locationDesc"));
-               remoteLocationId.add(oscar.Misc.getString(rs, "locationId"));
-            }
-            rs.close();
-      }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
-
-
+      OscarCommLocationsDao dao = SpringUtils.getBean(OscarCommLocationsDao.class); 
+      List<OscarCommLocations> comms = dao.findByCurrent1(1);
+      
+      for(OscarCommLocations comm : comms) {
+    	  vector.add(comm.getAddressBook());
+          remoteLocationDesc.add(comm.getLocationDesc());
+          remoteLocationId.add("" + comm.getId());
+      }
       return vector;
    }
    //---------------------------------------------------------------------------

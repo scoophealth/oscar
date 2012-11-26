@@ -48,5 +48,10 @@ public class GroupMembersDaotest {
 		dao.persist(entity);
 		assertNotNull(entity.getId());
 	}
+	
+	@Test
+	public void testFindMembersByGroupId() {
+		assertNotNull(dao.findMembersByGroupId(100));
+	}
 
 }

@@ -47,6 +47,19 @@ public class GroupMembersDao extends AbstractDao<GroupMembers>{
 		List<GroupMembers> results = q.getResultList();
 		
 		return results;
-		
 	}
+
+	@SuppressWarnings("unchecked")
+    public List<Object[]> findMembersByGroupId(int groupId) {
+        String sql = "FROM GroupMembers g, Provider p " 
+        		+ "WHERE g.providerNo = p.id "
+                + "AND g.groupId = :id " 
+        		+ "ORDER BY p.lastName, p.firstName";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter("id", groupId);
+        return query.getResultList();
+    }
+	
+	
+	
 }
