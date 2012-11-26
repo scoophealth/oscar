@@ -246,7 +246,6 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementTypesBeanHandler.java:public Vector getMeasuringInstrcHdVector(){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementTypesBeanHandler.java:public Vector getMeasuringInstrcVector(){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementTypesBeanHandler.java:public Vector getMeasuringInstrcVectorVector(){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java://                Hashtable data = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java:public Collection&lt;EctMeasurementsDataBean&gt; getMeasurementsDataVector(){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasuringInstructionBeanHandler.java:Vector measuringInstructionVector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasuringInstructionBeanHandler.java:public Vector getMeasuringInstructionVector(){</ViolationValue>
@@ -255,7 +254,7 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctTypeDisplayNameBeanHandler.java:Vector typeDisplayNameVector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctTypeDisplayNameBeanHandler.java:public Collection getTypeDisplayNameVector(){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctValidationsBeanHandler.java:Vector validationsVector = new Vector();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctValidationsBeanHandler.java:public Collection getValidationsVector(){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctValidationsBeanHandler.java:public Collection getValidationsVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/MeasurementTypes.java:byId = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/MeasurementTypes.java:byType = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctAddMeasurementGroupForm.java:/*    private final Map values = new HashMap();</ViolationValue>
@@ -1298,15 +1297,9 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementTypesBeanHandler.java:for(rs = DBHandler.GetSQL(sql); rs.next(); )</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementTypesBeanHandler.java:for(rsMGr = DBHandler.GetSQL(sqlMGr); rsMGr.next();){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementTypesBeanHandler.java:for(rsMT = DBHandler.GetSQL(sqlMT); rsMT.next(); )</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java://            ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java:for (rs = DBHandler.GetSQL(sql); rs.next(); ) {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java:for(rs = DBHandler.GetSQL(sql); rs.next(); ) {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctStyleSheetBeanHandler.java:for(rs = DBHandler.GetSQL(sql); rs.next(); )</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctTypeDisplayNameBeanHandler.java:for(rs = DBHandler.GetSQL(sql); rs.next(); )</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctTypeDisplayNameBeanHandler.java:for(rsGr = DBHandler.GetSQL(sqlGr); rsGr.next();){</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctValidationsBeanHandler.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/dao/MeasurementsExtDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/dao/MeasurementsExtDao.java:public class MeasurementsExtDao extends HibernateDaoSupport {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/MeasurementTypes.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -1317,6 +1310,12 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/ScatterPlotChartServlet.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/ScatterPlotChartServlet.java:rsData = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/WriteNewMeasurements.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctDeleteDataAction.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/EctDeleteMeasurementStyleSheetAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/MeasurementGraphAction2.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/ScatterPlotChartServlet.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/ScatterPlotChartServlet.java:rsData = DBHandler.GetSQL(sql);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctInsertTemplateAction.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctSaveEncounterAction.java:OscarSuperManager oscarSuperManager = (OscarSuperManager)SpringUtils.getBean("oscarSuperManager");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctSaveEncounterAction.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/pageUtil/EctSaveEncounterAction.java:import oscar.service.OscarSuperManager;</ViolationValue>
@@ -2200,19 +2199,17 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementTypesBeanHandler.java:return measuringInstrcHdVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementTypesBeanHandler.java:return measuringInstrcVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementTypesBeanHandler.java:return measuringInstrcVectorVector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java://                Hashtable data = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java://    public static Hashtable getLast(String demo, String type) {</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java:Hashtable&lt;String,Object&gt; data = null;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java:Hashtable&lt;String,Object&gt; data = new Hashtable&lt;String,Object&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java:Vector&lt;EctMeasurementsDataBean&gt; measurementsDataVector = new Vector&lt;EctMeasurementsDataBean&gt;();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java:data = new Hashtable&lt;String,Object&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java:measurementsDataVector.add(data);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java:private static Hashtable&lt;String,Object&gt; getHashfromSQL(String sql){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java:private static Hashtable&lt;String,Object&gt; toHashTable(Measurement m, MeasurementType mt, Provider p){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java:public Collection&lt;EctMeasurementsDataBean&gt; getMeasurementsDataVector(){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java:public static Hashtable&lt;String,Object&gt; getLast(String demo, String type) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java:public static Hashtable&lt;String,Object&gt; getMeasurementDataById(String id){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java:return measurementsDataVector;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasurementsDataBeanHandler.java:return new Hashtable&lt;String, Object&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasuringInstructionBeanHandler.java:Vector measuringInstructionVector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasuringInstructionBeanHandler.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctMeasuringInstructionBeanHandler.java:public EctMeasuringInstructionBeanHandler(Vector measuringInstructionVector) {</ViolationValue>
@@ -2232,7 +2229,7 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctTypeDisplayNameBeanHandler.java:typeDisplayNameVector.add(typeDisplayName);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctValidationsBeanHandler.java:Vector validationsVector = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctValidationsBeanHandler.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctValidationsBeanHandler.java:public Collection getValidationsVector(){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctValidationsBeanHandler.java:public Collection getValidationsVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctValidationsBeanHandler.java:return validationsVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctValidationsBeanHandler.java:validationsVector.add(validation);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/data/ExportMeasurementType.java:Vector validationRules = mtb.getValidationRules();</ViolationValue>

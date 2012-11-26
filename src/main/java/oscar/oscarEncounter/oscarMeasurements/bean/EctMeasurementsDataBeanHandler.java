@@ -25,8 +25,6 @@
 
 package oscar.oscarEncounter.oscarMeasurements.bean;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -40,11 +38,18 @@ import java.util.Vector;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.CachedMeasurement;
+import org.oscarehr.common.dao.MeasurementDao;
+import org.oscarehr.common.dao.ValidationsDao;
+import org.oscarehr.common.model.Measurement;
+import org.oscarehr.common.model.MeasurementType;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.Validations;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarMeasurements.data.MeasurementTypes;
+import oscar.util.ConversionUtils;
 
 public class EctMeasurementsDataBeanHandler {
     private static Logger log = MiscUtils.getLogger();
@@ -58,135 +63,69 @@ public class EctMeasurementsDataBeanHandler {
         init(demo, type);
     }
 
-
     public boolean init(String demo) {
-        boolean verdict = true;
-        try {
-
-            String sql ="SELECT mt.type, mt.typeDisplayName, mt.typeDescription, mt.measuringInstruction FROM measurements m," +
-                    "measurementType mt WHERE m.demographicNo='" + demo + "' AND m.type = mt.type " +
-                    "GROUP BY mt.type ORDER BY m.type ASC";
-
-            log.debug(" EctMeasurementDataBeanHandler sql: " + sql);
-            ResultSet rs;
-            for(rs = DBHandler.GetSQL(sql); rs.next(); ) {
-                EctMeasurementsDataBean data = new EctMeasurementsDataBean();
-                data.setType(oscar.Misc.getString(rs, "type"));
-                data.setTypeDisplayName(oscar.Misc.getString(rs, "typeDisplayName"));
-                data.setTypeDescription(oscar.Misc.getString(rs, "typeDescription"));
-                data.setMeasuringInstrc(oscar.Misc.getString(rs, "measuringInstruction"));
-                //log.debug("Measurments: " + oscar.Misc.getString(rs,"type") + " " + oscar.Misc.getString(rs,"typeDisplayName") + " " + oscar.Misc.getString(rs,"typeDescription"));
-                measurementsDataVector.add(data);
-            }
-
-            rs.close();
-        } catch(SQLException e) {
-            log.error(e.getMessage());
-            verdict = false;
+        MeasurementDao dao = SpringUtils.getBean(MeasurementDao.class);
+        for(Object[] i : dao.findMeasurementsAndTypes(ConversionUtils.fromIntString(demo))) {
+        	MeasurementType mt = (MeasurementType) i[1];
+        	
+            EctMeasurementsDataBean data = new EctMeasurementsDataBean();
+            data.setType(mt.getType());
+            data.setTypeDisplayName(mt.getTypeDisplayName());
+            data.setTypeDescription(mt.getTypeDescription());
+            data.setMeasuringInstrc(mt.getMeasuringInstruction());
+                
+            measurementsDataVector.add(data);
         }
-        return verdict;
+        return true;
     }
 
-
     public boolean init(String demo, String type) {
-        log.debug("Getting type "+type+" for demograph "+demo);
-        boolean verdict = true;
-        try {
-
-            MeasurementTypes mt = MeasurementTypes.getInstance();
-            EctMeasurementTypesBean mBean = mt.getByType(type);
-            if ( mBean != null){
-
-                /*String sql ="SELECT m.id,m.type, m.demographicNo, m.providerNo, m.dataField, m.measuringInstruction,"+
-                        "m.comments, m.dateObserved, m.dateEntered , p.first_name AS provider_first, p.last_name AS provider_last," +
-                        "v.isNumeric AS numericValidation, v.name AS validationName FROM measurements m, provider p, validations v" +
-                        " WHERE m.demographicNo='" + demo + "' AND m.type = '" + type + "' AND m.providerNo= p.provider_no " +
-                        "AND v.id = "+mBean.getValidation()+" GROUP BY m.id ORDER BY m.dateObserved DESC," +
-                        "m.dateEntered DESC";
-                */
-                String sql ="SELECT m.id,m.type, m.demographicNo, m.providerNo, m.dataField, m.measuringInstruction,"+
-                        "m.comments, m.dateObserved, m.dateEntered , p.first_name AS provider_first, p.last_name AS provider_last," +
-                        "v.isNumeric AS numericValidation, v.name AS validationName FROM validations v, measurements m LEFT JOIN provider p" +
-                        " ON m.providerNo= p.provider_no WHERE m.demographicNo='" + demo + "' AND m.type = '" + type + "'" +
-                        "AND v.id = "+mBean.getValidation()+" GROUP BY m.id ORDER BY m.dateObserved DESC," +
-                        "m.dateEntered DESC";
-
-                log.debug("sql: " + sql);
-                ResultSet rs;
+        MeasurementTypes mt = MeasurementTypes.getInstance();
+        EctMeasurementTypesBean mBean = mt.getByType(type);
+        if ( mBean != null){
+            ValidationsDao dao = SpringUtils.getBean(ValidationsDao.class);
+            for(Object[] o : dao.findValidationsBy(ConversionUtils.fromIntString(demo), type, ConversionUtils.fromIntString(mBean.getValidation()))) {
+            	Validations v = (Validations) o[0];   
+            	Measurement m = (Measurement) o[1];
+            	Provider p = (Provider) o[2];
                 String canPlot = null;
                 String firstName;
                 String lastName;
-                rs = DBHandler.GetSQL(sql);
 
-                while( rs.next() ){
-                    if (rs.getInt("numericValidation")==1 || oscar.Misc.getString(rs, "validationName").compareTo("Blood Pressure")==0)
-                        canPlot = "true";
-                    else
-                        canPlot = null;
-
-                    firstName = oscar.Misc.getString(rs, "provider_first");
-                    lastName = oscar.Misc.getString(rs, "provider_last");
-                    if (firstName == null && lastName == null){
-                        firstName = "Automatic";
-                        lastName = "";
-                    }
-                    //log.debug("canPlot value: " + canPlot);
-                    EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), oscar.Misc.getString(rs, "type"), mBean.getTypeDisplayName(),mBean.getTypeDesc(), oscar.Misc.getString(rs, "demographicNo"),
-                            firstName, lastName,
-                            oscar.Misc.getString(rs, "dataField"), oscar.Misc.getString(rs, "measuringInstruction"),
-                            oscar.Misc.getString(rs, "comments"), oscar.Misc.getString(rs, "dateObserved"),
-                            oscar.Misc.getString(rs, "dateEntered"), canPlot,rs.getDate("dateObserved"),rs.getDate("dateEntered"));
-                    measurementsDataVector.add(data);
-
-                }
-
-                rs.close();
-            }else{
-            	//empty
-            }
-        } catch(SQLException e) {
-            log.debug(e.getMessage());
-            verdict = false;
-        }
-        return verdict;
-    }
-
-
-
-    public boolean init2(String demo, String type) {
-        boolean verdict = true;
-        try {
-
-            String sql ="SELECT m.id, mt.type, mt.typeDisplayName, mt.typeDescription, m.demographicNo, m.providerNo, m.dataField, m.measuringInstruction,"+
-                    "m.comments, m.dateObserved, m.dateEntered , p.first_name AS provider_first, p.last_name AS provider_last," +
-                    "v.isNumeric AS numericValidation, v.name AS validationName FROM measurements m, provider p, validations v," +
-                    "measurementType mt WHERE m.demographicNo='" + demo + "' AND m.type = '" + type + "' AND m.providerNo= p.provider_no " +
-                    "AND m.type = mt.type AND mt.validation = v.id GROUP BY m.id ORDER BY m.dateObserved DESC," +
-                    "m.dateEntered DESC";
-            log.debug("sql: " + sql);
-            ResultSet rs;
-            String canPlot = null;
-            for(rs = DBHandler.GetSQL(sql); rs.next(); ) {
-                if (rs.getInt("numericValidation")==1 || oscar.Misc.getString(rs, "validationName").compareTo("Blood Pressure")==0)
+                boolean isNumeric = v.isNumeric() != null && v.isNumeric();
+                if (isNumeric || v.getName().equalsIgnoreCase("Blood Pressure"))
                     canPlot = "true";
                 else
                     canPlot = null;
+
+                firstName = p.getFirstName();
+                lastName = p.getLastName();
+                if (firstName == null && lastName == null){
+                    firstName = "Automatic";
+                    lastName = "";
+                }
                 //log.debug("canPlot value: " + canPlot);
-                EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), oscar.Misc.getString(rs, "type"), oscar.Misc.getString(rs, "typeDisplayName"), oscar.Misc.getString(rs, "typeDescription"), oscar.Misc.getString(rs, "demographicNo"),
-                        oscar.Misc.getString(rs, "provider_first"), oscar.Misc.getString(rs, "provider_last"),
-                        oscar.Misc.getString(rs, "dataField"), oscar.Misc.getString(rs, "measuringInstruction"),
-                        oscar.Misc.getString(rs, "comments"), oscar.Misc.getString(rs, "dateObserved"),
-                        oscar.Misc.getString(rs, "dateEntered"), canPlot,rs.getDate("dateObserved"),rs.getDate("dateEntered"));
+                EctMeasurementsDataBean data = new EctMeasurementsDataBean(
+                		m.getId().intValue(), 
+                		m.getType(), 
+                		mBean.getTypeDisplayName(),
+                		mBean.getTypeDesc(), 
+                		"" + m.getDemographicId(),
+                        firstName, lastName,
+                        m.getDataField(), 
+                        m.getMeasuringInstruction(),
+                        m.getComments(), 
+                        ConversionUtils.toDateString(m.getDateObserved()),
+                        ConversionUtils.toDateString(m.getCreateDate()), 
+                        canPlot,
+                        m.getDateObserved(),
+                        m.getCreateDate());
+                
                 measurementsDataVector.add(data);
 
             }
-
-            rs.close();
-        } catch(SQLException e) {
-            log.error(e.getMessage());
-            verdict = false;
         }
-        return verdict;
+        return true;
     }
 
     public Collection<EctMeasurementsDataBean> getMeasurementsDataVector(){
@@ -194,130 +133,69 @@ public class EctMeasurementsDataBeanHandler {
     }
 
     public static Hashtable<String,Object> getMeasurementDataById(String id){
-        String sql = "SELECT mt.typeDisplayName, mt.typeDescription, m.dataField, m.measuringInstruction,  "
-                +" m.comments, m.dateObserved, m.dateEntered , p.first_name AS provider_first, p.last_name AS provider_last "
-                +" FROM measurements m LEFT JOIN provider p ON m.providerNo=p.provider_no, measurementType mt "
-                +" WHERE m.id = '"+id+"' AND m.type = mt.type ";
-        return getHashfromSQL(sql);
+        MeasurementDao dao = SpringUtils.getBean(MeasurementDao.class);
+        for(Object[] i : dao.findMeasurementsAndProviders(ConversionUtils.fromIntString(id))) {
+        	Measurement m = (Measurement) i[0];
+        	MeasurementType mt = (MeasurementType) i[1];
+        	Provider p = (Provider) i[2];
+        	return toHashTable(m, mt, p);
+        }
+        return new Hashtable<String, Object>();
     }
 
     public static List<EctMeasurementsDataBean> getMeasurementObjectByType(String type, String demographicNo) {
-        try {
-
-            String sql = "SELECT m.id, m.type, m.demographicNo, m.providerNo, m.dataField, m.measuringInstruction, m.comments," +
-                    " m.dateObserved, m.dateEntered, mt.typeDisplayName, mt.typeDescription, p.first_name AS provider_first," +
-                    " p.last_name AS provider_last FROM measurements m LEFT JOIN provider p ON m.providerNo=p.provider_no," +
-                    " measurementType mt WHERE m.type = mt.type AND m.type = '" + type + "' AND m.demographicNo = " + demographicNo;
-            MiscUtils.getLogger().debug("Measurements retreival sql: " + sql);
-            ResultSet rs;
-
-            ArrayList<EctMeasurementsDataBean> measurements = new ArrayList<EctMeasurementsDataBean>();
-            for (rs = DBHandler.GetSQL(sql); rs.next(); ) {
-                EctMeasurementsDataBean measurement = new EctMeasurementsDataBean();
-                measurement.setId(Integer.parseInt(rsGetString(rs, "id")));
-                measurement.setMeasuringInstrc(rsGetString(rs, "measuringInstruction"));
-                measurement.setType(rsGetString(rs, "type"));
-                measurement.setProviderFirstName(rsGetString(rs, "provider_first"));
-                measurement.setProviderLastName(rsGetString(rs, "provider_last"));
-                measurement.setDataField(rsGetString(rs, "dataField"));
-                measurement.setComments(rsGetString(rs, "comments"));
-                measurement.setDateObservedAsDate(rs.getDate("dateObserved"));
-                measurement.setDateEnteredAsDate(rs.getDate("dateEntered"));
-                measurements.add(measurement);
-            }
-            rs.close();
-            return measurements;
-        } catch (SQLException sqe) {
-            MiscUtils.getLogger().error("Error", sqe);
+    	List<EctMeasurementsDataBean> measurements = new ArrayList<EctMeasurementsDataBean>();
+    	
+    	MeasurementDao dao = SpringUtils.getBean(MeasurementDao.class);
+        for(Object[] i : dao.findMeasurementsAndProvidersByType(type, ConversionUtils.fromIntString(demographicNo))) {
+        	Measurement m = (Measurement) i[0];
+        	Provider p = (Provider) i[2];
+        	
+        	EctMeasurementsDataBean measurement = new EctMeasurementsDataBean();
+            measurement.setId(m.getId());
+            measurement.setMeasuringInstrc(m.getMeasuringInstruction());
+            measurement.setType(m.getType());
+            measurement.setProviderFirstName(p.getFirstName());
+            measurement.setProviderLastName(p.getLastName());
+            measurement.setDataField(m.getDataField());
+            measurement.setComments(m.getComments());
+            measurement.setDateObservedAsDate(m.getDateObserved());
+            measurement.setDateEnteredAsDate(m.getCreateDate());
+            measurements.add(measurement);
         }
-        return null;
+       
+        return measurements;
     }
 
     public static Hashtable<String,Object> getLast(String demo, String type) {
-        String sql ="SELECT mt.typeDisplayName, mt.typeDescription, m.dataField, m.measuringInstruction,"+
-                "m.comments, m.dateObserved, m.dateEntered , p.first_name AS provider_first, p.last_name AS provider_last " +
-                "FROM measurements m, provider p, measurementType mt " +
-                "WHERE m.demographicNo='" + demo + "' AND m.type = '" + type +
-                "' AND (m.providerNo = p.provider_no OR m.providerNo = '0') " +
-                "AND m.type = mt.type GROUP BY m.id ORDER BY m.dateObserved DESC,m.dateEntered DESC LIMIT 1";
-        return getHashfromSQL(sql);
+    	MeasurementDao dao = SpringUtils.getBean(MeasurementDao.class);
+        Object[] i = dao.findMeasurementsAndProvidersByDemoAndType(ConversionUtils.fromIntString(demo), type);
+		if (i == null) {
+			return new Hashtable<String, Object>();
+		}
+    
+    	Measurement m = (Measurement) i[0];
+    	MeasurementType mt = (MeasurementType) i[1];
+    	Provider p = (Provider) i[2];
+    	return toHashTable(m, mt, p);
     }
 
-//    public static Hashtable getLast(String demo, String type) {
-//        try {
-//
-//            String sql ="SELECT mt.typeDisplayName, mt.typeDescription, m.dataField, m.measuringInstruction,"+
-//                        "m.comments, m.dateObserved, m.dateEntered , p.first_name AS provider_first, p.last_name AS provider_last " +
-//                        "FROM measurements m, provider p, measurementType mt " +
-//                        "WHERE m.demographicNo='" + demo + "' AND m.type = '" + type + "' AND m.providerNo= p.provider_no " +
-//                        "AND m.type = mt.type GROUP BY m.id ORDER BY m.dateObserved DESC LIMIT 1";
-//            ResultSet rs = DBHandler.GetSQL(sql);
-//            if (rs.next()) {
-//                Hashtable data = new Hashtable();
-//                data.put("type", rsGetString(rs, "typeDisplayName"));
-//                data.put("typeDisplayName", rsGetString(rs, "typeDisplayName"));
-//                data.put("typeDescription", rsGetString(rs, "typeDescription"));
-//                data.put("value", rsGetString(rs, "dataField"));
-//                data.put("measuringInstruction", rsGetString(rs, "measuringInstruction"));
-//                data.put("comments", rsGetString(rs, "comments"));
-//                data.put("dateObserved", rsGetString(rs, "dateObserved"));
-//                data.put("dateObserved_date", rs.getDate("dateObserved"));
-//                data.put("dateEntered", rsGetString(rs, "dateEntered"));
-//                data.put("dateEntered_date", rs.getDate("dateEntered"));
-//                data.put("provider_first", rsGetString(rs, "provider_first"));
-//                data.put("provider_last", rsGetString(rs, "provider_last"));
-//                rs.close();
-//                return data;
-//
-//            } else {
-//                rs.close();
-//                return null;
-//            }
-//        }
-//        catch(SQLException e) {
-//            log.debug(e.getMessage());
-//            return null;
-//        }
-//    }
-//
-
-
-    private static Hashtable<String,Object> getHashfromSQL(String sql){
-        Hashtable<String,Object> data = null;
-        log.debug(sql);
-        try {
-
-            ResultSet rs = DBHandler.GetSQL(sql);
-            if (rs.next()) {
-                data = new Hashtable<String,Object>();
-                data.put("type", rsGetString(rs, "typeDisplayName"));
-                data.put("typeDisplayName", rsGetString(rs, "typeDisplayName"));
-                data.put("typeDescription", rsGetString(rs, "typeDescription"));
-                data.put("value", rsGetString(rs, "dataField"));
-                data.put("measuringInstruction", rsGetString(rs, "measuringInstruction"));
-                data.put("comments", rsGetString(rs, "comments"));
-                data.put("dateObserved", rsGetString(rs, "dateObserved"));
-                data.put("dateObserved_date", rs.getDate("dateObserved"));
-                data.put("dateEntered", rsGetString(rs, "dateEntered"));
-                data.put("dateEntered_date", rs.getDate("dateEntered"));
-                data.put("provider_first", rsGetString(rs, "provider_first"));
-                data.put("provider_last", rsGetString(rs, "provider_last"));
-            }
-            rs.close();
-        } catch(SQLException e) {
-            log.error(e.getMessage());
-        }
+    private static Hashtable<String,Object> toHashTable(Measurement m, MeasurementType mt, Provider p){
+        Hashtable<String,Object> data = new Hashtable<String,Object>();
+        data.put("type", mt.getTypeDisplayName());
+        data.put("typeDisplayName", mt.getTypeDisplayName());
+        data.put("typeDescription", mt.getTypeDescription());
+        data.put("value", m.getDataField());
+        data.put("measuringInstruction", m.getMeasuringInstruction());
+        data.put("comments", m.getComments());
+        data.put("dateObserved", ConversionUtils.toDateString(m.getDateObserved()));
+        data.put("dateObserved_date", ConversionUtils.toDateString(m.getDateObserved()));
+        data.put("dateEntered", ConversionUtils.toDateString(m.getCreateDate()));
+        data.put("dateEntered_date", m.getCreateDate());
+        data.put("provider_first", p.getFirstName());
+        data.put("provider_last", p.getLastName());
         return data;
-    }
-
-    private static String rsGetString(ResultSet rs, String column) throws SQLException {
-        //protects agianst null values;
-        String thisStr = oscar.Misc.getString(rs,column);
-        if (thisStr == null) return "";
-        return thisStr;
-    }
-    
-    
+    }   
     
     private static List<CachedMeasurement> getRemoteMeasurements(Integer demographicId){
     	List<CachedMeasurement> remoteMeasurements = null;

@@ -25,8 +25,6 @@
 
 package oscar.oscarEncounter.oscarMeasurements.util;
 //used by eforms for writing measurements
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -36,13 +34,13 @@ import org.apache.commons.validator.GenericValidator;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.oscarehr.common.dao.MeasurementDao;
+import org.oscarehr.common.dao.MeasurementDao.SearchCriteria;
 import org.oscarehr.common.dao.MeasurementTypeDao;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.MeasurementType;
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.common.model.Validations;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarMeasurements.pageUtil.EctValidation;
 import oscar.util.ConversionUtils;
 import oscar.util.UtilDateUtilities;
@@ -138,97 +136,100 @@ public class WriteNewMeasurements {
     
     static private ActionMessages validate(Vector measures, String demographicNo) {
         ActionMessages errors = new ActionMessages();
-        try {
-            
-            EctValidation ectValidation = new EctValidation();
-            ResultSet rs;
-            boolean valid = true;
-            for (int i=0; i<measures.size(); i++) {
-                Hashtable measure = (Hashtable) measures.get(i);
-                String inputType = (String) measure.get("type");
-                String inputValue = (String) measure.get("value");
-                String dateObserved = (String) measure.get("dateObserved");
-                String comments = (String) measure.get("comments");
-                String mInstrc, regCharExp;
-                String regExp = null;
-                double dMax = 0;
-                double dMin = 0;
-                int iMax = 0;
-                int iMin = 0;
-                org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
-                if (GenericValidator.isBlankOrNull(inputValue)) {
-                    measures.removeElementAt(i);
-                    i--;
-                    continue;
-                }
-                mInstrc = (String) measure.get("measuringInstruction");
-                rs = ectValidation.getValidationType(inputType, mInstrc);
-                regCharExp = ectValidation.getRegCharacterExp();
-                if (rs.next()){
-                    dMax = rs.getDouble("maxValue1");
-                    dMin = rs.getDouble("minValue");
-                    iMax = rs.getInt("maxLength");
-                    iMin = rs.getInt("minLength");
-                    regExp = oscar.Misc.getString(rs,"regularExp");
-                }
-                else {
-                    //if type with instruction does not exist
-                    errors.add(inputType, 
-                    new ActionMessage("errors.oscarEncounter.Measurements.cannotFindType", inputType, mInstrc));
-                    valid=false;
-                    continue;
-                }
-                rs.close();
-
-                if(!ectValidation.isInRange(dMax, dMin, inputValue)){
-                    errors.add(inputType,
-                    new ActionMessage("errors.range", inputType, Double.toString(dMin), Double.toString(dMax)));
-                    valid=false;
-                }
-                if(!ectValidation.maxLength(iMax, inputValue)){
-                    errors.add(inputType,
-                    new ActionMessage("errors.maxlength", inputType, Integer.toString(iMax)));
-                    valid=false;
-                }
-                if(!ectValidation.minLength(iMin, inputValue)){
-                    errors.add(inputType,
-                    new ActionMessage("errors.minlength", inputType, Integer.toString(iMin)));
-                    valid=false;
-                }
-                if(!ectValidation.matchRegExp(regExp, inputValue)){
-                    errors.add(inputType,
-                    new ActionMessage("errors.invalid", inputType));
-                    valid=false;
-                }
-                if(!ectValidation.isValidBloodPressure(regExp, inputValue)){
-                    errors.add(inputType,
-                    new ActionMessage("error.bloodPressure"));
-                    valid=false;
-                }
-                if(!ectValidation.isDate(dateObserved)&&inputValue.compareTo("")!=0){
-                    errors.add(inputType,
-                    new ActionMessage("errors.invalidDate", inputType));
-                    valid=false;
-                }
-                
-                if (!valid) continue;
-                inputValue = org.apache.commons.lang.StringEscapeUtils.escapeSql(inputValue);
-                inputType = org.apache.commons.lang.StringEscapeUtils.escapeSql(inputType);
-                mInstrc = org.apache.commons.lang.StringEscapeUtils.escapeSql(mInstrc);
-                comments = org.apache.commons.lang.StringEscapeUtils.escapeSql(comments);
-
-                //Find if the same data has already been entered into the system
-                String sql = "SELECT * FROM measurements WHERE demographicNo='"+demographicNo+ "' AND dataField='"+inputValue
-                +"' AND measuringInstruction='" + mInstrc + "' AND comments='" + comments
-                + "' AND dateObserved='" + dateObserved + "'";
-                rs = DBHandler.GetSQL(sql);
-                if(rs.next()) {
-                    measures.remove(i);
-                    i--;
-                    continue;
-                }
+        EctValidation ectValidation = new EctValidation();
+        List<Validations> vs;
+        boolean valid = true;
+        for (int i=0; i<measures.size(); i++) {
+            Hashtable measure = (Hashtable) measures.get(i);
+            String inputType = (String) measure.get("type");
+            String inputValue = (String) measure.get("value");
+            String dateObserved = (String) measure.get("dateObserved");
+            String comments = (String) measure.get("comments");
+            String mInstrc, regCharExp;
+            String regExp = null;
+            double dMax = 0;
+            double dMin = 0;
+            int iMax = 0;
+            int iMin = 0;
+            org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
+            if (GenericValidator.isBlankOrNull(inputValue)) {
+                measures.removeElementAt(i);
+                i--;
+                continue;
             }
-        } catch (SQLException sqe) { MiscUtils.getLogger().error("Error", sqe); }
+            mInstrc = (String) measure.get("measuringInstruction");
+            vs = ectValidation.getValidationType(inputType, mInstrc);
+            regCharExp = ectValidation.getRegCharacterExp();
+            if (!vs.isEmpty()) {
+    			Validations v = vs.iterator().next();
+    			dMax = v.getMaxValue();
+    			dMin = v.getMinValue();
+    			iMax = v.getMaxLength();
+    			iMin = v.getMinLength();
+    			regExp = v.getRegularExp();
+    		}
+            else {
+                //if type with instruction does not exist
+                errors.add(inputType, 
+                new ActionMessage("errors.oscarEncounter.Measurements.cannotFindType", inputType, mInstrc));
+                valid=false;
+                continue;
+            }
+
+            if(!ectValidation.isInRange(dMax, dMin, inputValue)){
+                errors.add(inputType,
+                new ActionMessage("errors.range", inputType, Double.toString(dMin), Double.toString(dMax)));
+                valid=false;
+            }
+            if(!ectValidation.maxLength(iMax, inputValue)){
+                errors.add(inputType,
+                new ActionMessage("errors.maxlength", inputType, Integer.toString(iMax)));
+                valid=false;
+            }
+            if(!ectValidation.minLength(iMin, inputValue)){
+                errors.add(inputType,
+                new ActionMessage("errors.minlength", inputType, Integer.toString(iMin)));
+                valid=false;
+            }
+            if(!ectValidation.matchRegExp(regExp, inputValue)){
+                errors.add(inputType,
+                new ActionMessage("errors.invalid", inputType));
+                valid=false;
+            }
+            if(!ectValidation.isValidBloodPressure(regExp, inputValue)){
+                errors.add(inputType,
+                new ActionMessage("error.bloodPressure"));
+                valid=false;
+            }
+            if(!ectValidation.isDate(dateObserved)&&inputValue.compareTo("")!=0){
+                errors.add(inputType,
+                new ActionMessage("errors.invalidDate", inputType));
+                valid=false;
+            }
+            
+            if (!valid) continue;
+            inputValue = org.apache.commons.lang.StringEscapeUtils.escapeSql(inputValue);
+            inputType = org.apache.commons.lang.StringEscapeUtils.escapeSql(inputType);
+            mInstrc = org.apache.commons.lang.StringEscapeUtils.escapeSql(mInstrc);
+            comments = org.apache.commons.lang.StringEscapeUtils.escapeSql(comments);
+
+            //Find if the same data has already been entered into the system
+            MeasurementDao dao = SpringUtils.getBean(MeasurementDao.class);
+            SearchCriteria sc = new SearchCriteria();
+            sc.setDemographicNo(demographicNo);
+            sc.setDataField(inputValue);
+            sc.setMeasuringInstrc(mInstrc);
+            sc.setComments(comments);
+            sc.setDateObserved(ConversionUtils.fromDateString(dateObserved));
+            List<Measurement> ms = dao.find(sc);
+            
+            if(!ms.isEmpty()) {
+                measures.remove(i);
+                i--;
+                continue;
+            }
+        }
+        
         return errors;   
     }
 

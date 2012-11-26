@@ -25,6 +25,8 @@
 
 package oscar.oscarEncounter.oscarMeasurements.bean;
 
+import org.oscarehr.common.model.Validations;
+
 
 public class EctValidationsBean{
 
@@ -46,7 +48,35 @@ public class EctValidationsBean{
             this.id = id;
        }
 
-       public int getId(){
+	public EctValidationsBean(Validations v) {
+		if (v.getName() != null) {
+			setName(v.getName());
+		}
+		if (v.getRegularExp() != null) {
+			setRegularExp(v.getRegularExp());
+		}
+		if (v.getMinValue() != null) {
+			setMinValue("" + v.getMinValue());
+		}
+		if (v.getMaxValue() != null) {
+			setMaxValue("" + v.getMaxValue());
+		}
+		if (v.getMinLength() != null) {
+			setMinLength("" + v.getMinLength());
+		}
+		if (v.getMaxLength() != null) {
+			setMaxLength("" + v.getMaxLength());
+		}
+		if (v.isNumeric() != null) {
+			setIsNumeric("" + v.isNumeric());
+		}
+		if (v.isDate() != null) {
+			setIsDate("" + v.isDate());
+		}
+
+	}
+
+	public int getId(){
            return id;
        }
        public String getName(){

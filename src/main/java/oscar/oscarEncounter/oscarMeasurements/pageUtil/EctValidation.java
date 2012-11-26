@@ -25,17 +25,26 @@
 
 package oscar.oscarEncounter.oscarMeasurements.pageUtil;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.validator.GenericValidator;
+import org.oscarehr.common.dao.MeasurementCSSLocationDao;
+import org.oscarehr.common.dao.MeasurementGroupStyleDao;
+import org.oscarehr.common.dao.MeasurementTypeDao;
+import org.oscarehr.common.dao.ValidationsDao;
+import org.oscarehr.common.model.MeasurementCSSLocation;
+import org.oscarehr.common.model.MeasurementGroupStyle;
+import org.oscarehr.common.model.MeasurementType;
+import org.oscarehr.common.model.Validations;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
+import oscar.util.ConversionUtils;
 
 public class EctValidation{
 
@@ -49,25 +58,21 @@ public class EctValidation{
         return this.regCharacterExp;
     }
               
-    public ResultSet getValidationType(String inputType, String mInstrc){
-        ResultSet rs = null;
-        try{
-                                
-                String sql = "SELECT validation FROM measurementType WHERE type = '"+ inputType + "'AND measuringInstruction='" + mInstrc + "'"; 
-                rs = DBHandler.GetSQL(sql);
-                if (rs.next()){
-                    String validation = oscar.Misc.getString(rs, "validation");                
-                    rs.close();
-
-                    sql = "SELECT * FROM validations where id=" + validation;
-                    rs = DBHandler.GetSQL(sql);
-                }
-        }
-        catch(SQLException e){
-            MiscUtils.getLogger().error("Error", e);
+    public List<Validations> getValidationType(String inputType, String mInstrc){
+        List<Validations> result = new ArrayList<Validations>();
+        
+    	MeasurementTypeDao dao = SpringUtils.getBean(MeasurementTypeDao.class);
+        List<MeasurementType> types = dao.findByTypeAndMeasuringInstruction(inputType, mInstrc);
+        if (types.isEmpty()) {
+        	return result;
         }
         
-        return rs;
+        ValidationsDao vDao = SpringUtils.getBean(ValidationsDao.class); 
+        for(MeasurementType type : types) {
+        	Validations vs = vDao.find(ConversionUtils.fromIntString(type.getValidation()));
+        	result.add(vs);
+        }
+        return result;
     }
     
     public boolean matchRegExp(String regExp, String inputValue){
@@ -205,45 +210,32 @@ public class EctValidation{
      ******************************************************************************************/
     public String getCssPath(String inputGroupName){
         String cssLocation = null;
-        try {
-            
-            String sql = "SELECT * from measurementGroupStyle where groupName = '" + inputGroupName + "'";
-            MiscUtils.getLogger().debug("Sql Statement: " + sql);
-            ResultSet rs;
-            rs = DBHandler.GetSQL(sql);
-            if(rs.next()){
-                String cssId = oscar.Misc.getString(rs, "cssID");
-                rs.close();   
-                
-                sql = "SELECT * from measurementCSSLocation where cssID = '" + cssId + "'";
-                rs = DBHandler.GetSQL(sql);
-                if(rs.next()){
-                    String place = "StreamStyleSheet.do?cssfilename="; // Streams by default
-
-                    // Use the following commented code in place of the above line to allow the
-                    // option of using the oscarMeasurement_css property to form the css path.
-                    // If using this code, also uncomment the line in oscar.login.Startup.java
-                    // that checks and sets that property.
-                    /*
-                     * String downloadMethod = OscarProperties.getInstance().getProperty("oscarMeasurement_css_download_method");
-                     * String place = "";
-                     * if (downloadMethod == null || !(downloadMethod.equalsIgnoreCase("stream"))) {
-                     *    place = OscarProperties.getInstance().getProperty("oscarMeasurement_css");
-                     *    if(!place.endsWith("/"))
-                     *       place = new StringBuilder(place).insert(place.length(),"/").toString();
-                     * } else {
-                     *    place = "StreamStyleSheet.do?cssfilename=";
-                     * }
-                     */
-
-                    cssLocation = place+oscar.Misc.getString(rs, "location");
-                }
-            }
+        MeasurementGroupStyleDao dao = SpringUtils.getBean(MeasurementGroupStyleDao.class);
+        MeasurementCSSLocationDao cssDao = SpringUtils.getBean(MeasurementCSSLocationDao.class);
+        List<MeasurementGroupStyle> styles = dao.findByGroupName(inputGroupName);
+        for(MeasurementGroupStyle style : styles) {
+        	MeasurementCSSLocation location = cssDao.find(style.getCssId());
+        	String place = "StreamStyleSheet.do?cssfilename="; // Streams by default
+        	
+            // Use the following commented code in place of the above line to allow the
+            // option of using the oscarMeasurement_css property to form the css path.
+            // If using this code, also uncomment the line in oscar.login.Startup.java
+            // that checks and sets that property.
+            /*
+             * String downloadMethod = OscarProperties.getInstance().getProperty("oscarMeasurement_css_download_method");
+             * String place = "";
+             * if (downloadMethod == null || !(downloadMethod.equalsIgnoreCase("stream"))) {
+             *    place = OscarProperties.getInstance().getProperty("oscarMeasurement_css");
+             *    if(!place.endsWith("/"))
+             *       place = new StringBuilder(place).insert(place.length(),"/").toString();
+             * } else {
+             *    place = "StreamStyleSheet.do?cssfilename=";
+             * }
+             */
+        	if (location != null) {
+        		cssLocation = place + location.getLocation();
+        	}
         }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);            
-        }
-
         return cssLocation;
     }
     
@@ -254,27 +246,17 @@ public class EctValidation{
      ******************************************************************************************/
     public String getCssName(String inputGroupName){
         String cssName = null;
-        try {
-            
-            String sql = "SELECT * from measurementGroupStyle where groupName = '" + inputGroupName + "'";
-            MiscUtils.getLogger().debug("Sql Statement: " + sql);
-            ResultSet rs;
-            rs = DBHandler.GetSQL(sql);
-            if(rs.next()){
-                String cssId = oscar.Misc.getString(rs, "cssID");
-                rs.close();   
-                
-                sql = "SELECT * from measurementCSSLocation where cssID = '" + cssId + "'";
-                rs = DBHandler.GetSQL(sql);
-                if(rs.next()){                    
-                    cssName = oscar.Misc.getString(rs, "location");
-                }
+        
+        MeasurementGroupStyleDao dao = SpringUtils.getBean(MeasurementGroupStyleDao.class);
+        MeasurementCSSLocationDao cssDao = SpringUtils.getBean(MeasurementCSSLocationDao.class);
+        List<MeasurementGroupStyle> styles = dao.findByGroupName(inputGroupName);
+        for(MeasurementGroupStyle style : styles) {
+        	MeasurementCSSLocation location = cssDao.find(style.getCssId());
+        	
+            if(location != null){                    
+                cssName = location.getLocation();
             }
         }
-        catch(SQLException e) {
-            MiscUtils.getLogger().error("Error", e);            
-        }
-
         return cssName;
     }
 }

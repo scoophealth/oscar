@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -41,6 +42,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.common.model.Validations;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
@@ -135,39 +137,35 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
                     
                     String mInstrc = (String) frm.getValue("mInstrcsCheckbox"+ctr+j);
                     if(mInstrc!=null){
-                        ResultSet rs = ectValidation.getValidationType(measurementType, mInstrc);                        
+                    	List<Validations> vs = ectValidation.getValidationType(measurementType, mInstrc);                        
                         String regExp = null;
                         double dMax = 0;
                         double dMin = 0;
-                        try{
-                            if (rs.next()){
-                                dMax = rs.getDouble("maxValue1");
-                                dMin = rs.getDouble("minValue");
-                                regExp = rs.getString("regularExp");
-                            }
-                            
-                            if(!ectValidation.isInRange(dMax, dMin, guideline)){                       
-                                errors.add(guideline, new ActionMessage("errors.range", measurementType, 
-                                           Double.toString(dMin), Double.toString(dMax)));
-                                saveErrors(request, errors);
-                                valid = false;                               
-                            }                            
-                            else if(!ectValidation.matchRegExp(regExp, guideline)){                        
-                                errors.add(guideline,
-                                new ActionMessage("errors.invalid", measurementType));
-                                saveErrors(request, errors);
-                                valid = false;
-                            }
-                            else if(!ectValidation.isValidBloodPressure(regExp, guideline)){                        
-                                errors.add(guideline,
-                                new ActionMessage("error.bloodPressure"));
-                                saveErrors(request, errors);
-                                valid = false;
-                            }
+                    
+                    	if (!vs.isEmpty()) {
+                			Validations v = vs.iterator().next();
+                			dMax = v.getMaxValue();
+                			dMin = v.getMinValue();
+                			regExp = v.getRegularExp();
+                		}
+                        
+                        if(!ectValidation.isInRange(dMax, dMin, guideline)){                       
+                            errors.add(guideline, new ActionMessage("errors.range", measurementType, 
+                                       Double.toString(dMin), Double.toString(dMax)));
+                            saveErrors(request, errors);
+                            valid = false;                               
+                        }                            
+                        else if(!ectValidation.matchRegExp(regExp, guideline)){                        
+                            errors.add(guideline,
+                            new ActionMessage("errors.invalid", measurementType));
+                            saveErrors(request, errors);
+                            valid = false;
                         }
-                        catch(SQLException e)
-                        {
-                            MiscUtils.getLogger().error("Error", e);
+                        else if(!ectValidation.isValidBloodPressure(regExp, guideline)){                        
+                            errors.add(guideline,
+                            new ActionMessage("error.bloodPressure"));
+                            saveErrors(request, errors);
+                            valid = false;
                         }
                     }
                 }
