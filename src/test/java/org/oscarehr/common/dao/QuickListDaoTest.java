@@ -23,15 +23,21 @@
  */
 package org.oscarehr.common.dao;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.QuickList;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class QuickListDaoTest extends DaoTestFixtures {
@@ -43,23 +49,65 @@ public class QuickListDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable(new String[]{"quickList"});
+		SchemaUtils.restoreTable("quickList");
 	}
+
+        @Test
+        public void testCreate() throws Exception {
+                 QuickList ql = new QuickList();
+                 EntityDataGenerator.generateTestDataForModelClass(ql);
+                 dao.persist(ql);
+                 assertNotNull(ql.getId());
+        }
 
 	@Test
-	public void testCreate() throws Exception {
-		 QuickList ql = new QuickList();
-		 EntityDataGenerator.generateTestDataForModelClass(ql);
-		 dao.persist(ql);
-		 assertNotNull(ql.getId());
-	}
-	
-	@Test
-	public void testFindByNameResearchCodeAndCodingSystem() {
-		List<QuickList> qls = dao.findByNameResearchCodeAndCodingSystem("QLNAME", "RSRCHCDE", "CDNGSTM");
-		assertNotNull(qls);
-	}
+	public void testFindByNameResearchCodeAndCodingSystem() throws Exception {
+		 
+		String quickListName1 = "alpha";
+		String quickListName2 = "bravo";
+		
+		String dxResearchCode1 = "111";
+		String dxResearchCode2 = "222";
+		
+		String codingSystem1 = "101";
+		String codingSystem2 = "202";
+		
+		QuickList quickList1 = new QuickList();
+		EntityDataGenerator.generateTestDataForModelClass(quickList1);
+		quickList1.setQuickListName(quickListName1);
+		quickList1.setDxResearchCode(dxResearchCode1);
+		quickList1.setCodingSystem(codingSystem1);
+		dao.persist(quickList1);
+		
+		QuickList quickList2 = new QuickList();
+		EntityDataGenerator.generateTestDataForModelClass(quickList2);
+		quickList2.setQuickListName(quickListName2);
+		quickList2.setDxResearchCode(dxResearchCode2);
+		quickList2.setCodingSystem(codingSystem2);
+		dao.persist(quickList2);
+		
+		QuickList quickList3 = new QuickList();
+		EntityDataGenerator.generateTestDataForModelClass(quickList3);
+		quickList3.setQuickListName(quickListName1);
+		quickList3.setDxResearchCode(dxResearchCode1);
+		quickList3.setCodingSystem(codingSystem1);
+		dao.persist(quickList3);
+		
+		List<QuickList> expectedResult = new ArrayList<QuickList>(Arrays.asList(quickList1, quickList3));
+		List<QuickList> result = dao.findByNameResearchCodeAndCodingSystem(quickListName1, dxResearchCode1, codingSystem1);
 
-
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);
+	}
 }
-

@@ -23,6 +23,7 @@
  */
 package org.oscarehr.common.dao;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
@@ -42,11 +43,39 @@ public class HL7HandlerMSHMappingDaoTest extends DaoTestFixtures {
 		SchemaUtils.restoreTable("HL7HandlerMSHMapping");
 	}
 
+        @Test
+        public void testCreate() throws Exception {
+                HL7HandlerMSHMapping entity = new HL7HandlerMSHMapping();
+                EntityDataGenerator.generateTestDataForModelClass(entity);
+                dao.persist(entity);
+                assertNotNull(entity.getId());
+        }
+
 	@Test
-	public void testCreate() throws Exception {
-		HL7HandlerMSHMapping entity = new HL7HandlerMSHMapping();
-		EntityDataGenerator.generateTestDataForModelClass(entity);
-		dao.persist(entity);
-		assertNotNull(entity.getId());
+	public void testFindByFacility() throws Exception {
+		
+		String facility1 = "alpha";
+		String facility2 = "bravo";
+		String facility3 = "charlie";
+		
+		HL7HandlerMSHMapping hl7HandlerMSHMapping1 = new HL7HandlerMSHMapping();
+		EntityDataGenerator.generateTestDataForModelClass(hl7HandlerMSHMapping1);
+		hl7HandlerMSHMapping1.setFacility(facility1);
+		dao.persist(hl7HandlerMSHMapping1);
+		
+		HL7HandlerMSHMapping hl7HandlerMSHMapping2 = new HL7HandlerMSHMapping();
+		EntityDataGenerator.generateTestDataForModelClass(hl7HandlerMSHMapping2);
+		hl7HandlerMSHMapping2.setFacility(facility2);
+		dao.persist(hl7HandlerMSHMapping2);
+		
+		HL7HandlerMSHMapping hl7HandlerMSHMapping3 = new HL7HandlerMSHMapping();
+		EntityDataGenerator.generateTestDataForModelClass(hl7HandlerMSHMapping3);
+		hl7HandlerMSHMapping3.setFacility(facility3);
+		dao.persist(hl7HandlerMSHMapping3);
+		
+		HL7HandlerMSHMapping expectedResult = hl7HandlerMSHMapping2;
+		HL7HandlerMSHMapping result = dao.findByFacility(facility2);
+		
+		assertEquals(expectedResult, result);
 	}
 }
