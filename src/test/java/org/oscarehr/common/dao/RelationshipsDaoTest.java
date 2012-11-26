@@ -23,19 +23,22 @@
  */
 package org.oscarehr.common.dao;
 
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.Relationships;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-
-import oscar.util.ConversionUtils;
 
 public class RelationshipsDaoTest extends DaoTestFixtures {
 
@@ -47,29 +50,224 @@ public class RelationshipsDaoTest extends DaoTestFixtures {
 	}
 
 	@Test
-	public void testAll() throws Exception {
-		Relationships active = new Relationships();
-		EntityDataGenerator.generateTestDataForModelClass(active);
-		active.setDeleted(null);
-		dao.persist(active);
+	public void testFindAll() throws Exception {
+		
+		int demographicNo1 = 300;
+		int demographicNo2 = 100;
+		int demographicNo3 = 200;
+		
+		Relationships relationships1 = new Relationships();
+		EntityDataGenerator.generateTestDataForModelClass(relationships1);
+		relationships1.setDemographicNo(demographicNo1);
+		dao.persist(relationships1);
 
-		Relationships passive = new Relationships();
-		EntityDataGenerator.generateTestDataForModelClass(passive);
-		passive.setDeleted(ConversionUtils.toBoolString(Boolean.TRUE));
-		dao.persist(passive);
+		Relationships relationships2 = new Relationships();
+		EntityDataGenerator.generateTestDataForModelClass(relationships2);
+		relationships2.setDemographicNo(demographicNo2);
+		dao.persist(relationships2);
+		
+		Relationships relationships3 = new Relationships();
+		EntityDataGenerator.generateTestDataForModelClass(relationships3);
+		relationships3.setDemographicNo(demographicNo3);
+		dao.persist(relationships3);
+		
+		List<Relationships> expectedResult = new ArrayList<Relationships>(Arrays.asList(relationships2, relationships3, relationships1));
+		List<Relationships> result = dao.findAll();
 
-		Relationships activeCheck = dao.findActive(active.getId());
-		Relationships activeAnotherCheck = dao.find(active.getId());
-		assertNotNull(activeCheck);
-		assertNull(dao.findActive(passive.getId()));
-
-		assertNull(dao.findActive(active.getDemographicNo()));
-		assertNull(dao.findActive(passive.getDemographicNo()));
-
-		List<Relationships> rs = dao.findActiveSubDecisionMaker(active.getId());
-		assertNotNull(rs);
-
-		assertNotNull(dao.findActiveByDemographicNumberAndFacility(active.getDemographicNo(), active.getFacilityId()));
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);	
 	}
+	
+	@Test
+	public void testFindActive() throws Exception {
+		
+		Relationships relationships1 = new Relationships();
+		EntityDataGenerator.generateTestDataForModelClass(relationships1);
+		relationships1.setDeleted(null);
+		dao.persist(relationships1);
 
+		Relationships relationships2 = new Relationships();
+		EntityDataGenerator.generateTestDataForModelClass(relationships2);
+		relationships2.setDeleted(null);
+		dao.persist(relationships2);
+		
+		Relationships relationships3 = new Relationships();
+		EntityDataGenerator.generateTestDataForModelClass(relationships3);
+		relationships3.setDeleted("S");
+		dao.persist(relationships3);
+		
+		Relationships expectedResult = relationships1;
+		Relationships result = dao.findActive(1);
+		
+		assertEquals(expectedResult, result);
+	}
+	
+	@Test
+	public void testFindByDemographicNumber() throws Exception {
+		
+		int demographicNo1 = 101;
+		int demographicNo2 = 202;
+		
+		Relationships relationships1 = new Relationships();
+		EntityDataGenerator.generateTestDataForModelClass(relationships1);
+		relationships1.setDemographicNo(demographicNo1);
+		relationships1.setDeleted(null);
+		dao.persist(relationships1);
+
+		Relationships relationships2 = new Relationships();
+		EntityDataGenerator.generateTestDataForModelClass(relationships2);
+		relationships2.setDemographicNo(demographicNo2);
+		relationships2.setDeleted(null);
+		dao.persist(relationships2);
+		
+		Relationships relationships3 = new Relationships();
+		EntityDataGenerator.generateTestDataForModelClass(relationships3);
+		relationships3.setDemographicNo(demographicNo1);
+		relationships3.setDeleted("S");
+		dao.persist(relationships3);
+		
+		Relationships relationships4 = new Relationships();
+		EntityDataGenerator.generateTestDataForModelClass(relationships4);
+		relationships4.setDemographicNo(demographicNo1);
+		relationships4.setDeleted(null);
+		dao.persist(relationships4);
+		
+		List<Relationships> expectedResult = new ArrayList<Relationships>(Arrays.asList(relationships1, relationships4));
+		List<Relationships> result = dao.findByDemographicNumber(demographicNo1);
+
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.");
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);
+	}
+	
+	@Test
+	public void testFindActiveSubDecisionMaker() throws Exception {
+		
+		int demographicNo1 = 101;
+		int demographicNo2 = 202;
+		
+		String subDecisionMaker1 = "1";
+		String subDecisionMaker2 = "FALSE";
+		
+		Relationships relationships1 = new Relationships();
+		EntityDataGenerator.generateTestDataForModelClass(relationships1);
+		relationships1.setDemographicNo(demographicNo1);
+		relationships1.setSubDecisionMaker(subDecisionMaker1);
+		relationships1.setDeleted(null);
+		dao.persist(relationships1);
+
+		Relationships relationships2 = new Relationships();
+		EntityDataGenerator.generateTestDataForModelClass(relationships2);
+		relationships2.setDemographicNo(demographicNo2);
+		relationships2.setSubDecisionMaker(subDecisionMaker2);
+		relationships2.setDeleted(null);
+		dao.persist(relationships2);
+		
+		Relationships relationships3 = new Relationships();
+		EntityDataGenerator.generateTestDataForModelClass(relationships3);
+		relationships3.setDemographicNo(demographicNo1);
+		relationships3.setSubDecisionMaker(subDecisionMaker1);
+		relationships3.setDeleted("S");
+		dao.persist(relationships3);
+		
+		Relationships relationships4 = new Relationships();
+		EntityDataGenerator.generateTestDataForModelClass(relationships4);
+		relationships4.setDemographicNo(demographicNo1);
+		relationships4.setSubDecisionMaker(subDecisionMaker1);
+		relationships4.setDeleted(null);
+		dao.persist(relationships4);
+		
+		List<Relationships> expectedResult = new ArrayList<Relationships>(Arrays.asList(relationships1, relationships4));
+		List<Relationships> result = dao.findActiveSubDecisionMaker(demographicNo1);
+
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match. Result: " +result.size());
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);	
+	}
+	
+	@Test
+	public void testFindActiveByDemographicNumberAndFacility() throws Exception {
+		
+		int demographicNo1 = 101;
+		int demographicNo2 = 202;
+		
+		int facilityId1 = 111;
+		int facilityId2 = 222;
+		
+		Relationships relationships1 = new Relationships();
+		EntityDataGenerator.generateTestDataForModelClass(relationships1);
+		relationships1.setDemographicNo(demographicNo1);
+		relationships1.setFacilityId(facilityId1);
+		relationships1.setDeleted(null);
+		dao.persist(relationships1);
+
+		Relationships relationships2 = new Relationships();
+		EntityDataGenerator.generateTestDataForModelClass(relationships2);
+		relationships2.setDemographicNo(demographicNo2);
+		relationships2.setFacilityId(facilityId2);
+		relationships2.setDeleted(null);
+		dao.persist(relationships2);
+		
+		Relationships relationships3 = new Relationships();
+		EntityDataGenerator.generateTestDataForModelClass(relationships3);
+		relationships3.setDemographicNo(demographicNo1);
+		relationships3.setFacilityId(facilityId1);
+		relationships3.setDeleted("S");
+		dao.persist(relationships3);
+		
+		Relationships relationships4 = new Relationships();
+		EntityDataGenerator.generateTestDataForModelClass(relationships4);
+		relationships4.setDemographicNo(demographicNo1);
+		relationships4.setFacilityId(facilityId1);
+		relationships4.setDeleted(null);
+		dao.persist(relationships4);
+		
+		List<Relationships> expectedResult = new ArrayList<Relationships>(Arrays.asList(relationships1, relationships4));
+		List<Relationships> result = dao.findActiveByDemographicNumberAndFacility(demographicNo1, facilityId1);
+
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match. Result: " +result.size());
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);	
+	}
 }

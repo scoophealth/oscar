@@ -23,7 +23,12 @@
  */
 package org.oscarehr.common.dao;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -35,6 +40,7 @@ import org.oscarehr.util.SpringUtils;
 public class SecurityTokenDaoTest extends DaoTestFixtures {
 
 	private SecurityTokenDao dao = SpringUtils.getBean(SecurityTokenDao.class);
+	DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
 
 
 	@Before
@@ -42,11 +48,54 @@ public class SecurityTokenDaoTest extends DaoTestFixtures {
 		SchemaUtils.restoreTable("SecurityToken");
 	}
 
+        @Test
+        public void testCreate() throws Exception {
+                SecurityToken entity = new SecurityToken();
+                EntityDataGenerator.generateTestDataForModelClass(entity);
+                dao.persist(entity);
+                assertNotNull(entity.getId());
+        }
+
 	@Test
-	public void testCreate() throws Exception {
-		SecurityToken entity = new SecurityToken();
-		EntityDataGenerator.generateTestDataForModelClass(entity);
-		dao.persist(entity);
-		assertNotNull(entity.getId());
+	public void testGetByTokenAndExpiry() throws Exception {
+		
+		String token1 = "alpha";
+		String token2 = "bravo";
+		
+		Date date1 = new Date(dfm.parse("20100301").getTime());
+		Date date2 = new Date(dfm.parse("20110301").getTime());
+		Date date3 = new Date(dfm.parse("20130301").getTime());
+		Date date4 = new Date(dfm.parse("20080301").getTime());
+		
+		Date expiry = new Date(dfm.parse("20090301").getTime());
+		
+		SecurityToken securityToken1 = new SecurityToken();
+		EntityDataGenerator.generateTestDataForModelClass(securityToken1);
+		securityToken1.setToken(token1);
+		securityToken1.setExpiry(date1);
+		dao.persist(securityToken1);
+		
+		SecurityToken securityToken2 = new SecurityToken();
+		EntityDataGenerator.generateTestDataForModelClass(securityToken2);
+		securityToken2.setToken(token2);
+		securityToken2.setExpiry(date2);
+		dao.persist(securityToken2);
+		
+		SecurityToken securityToken3 = new SecurityToken();
+		EntityDataGenerator.generateTestDataForModelClass(securityToken3);
+		securityToken3.setToken(token1);
+		securityToken3.setExpiry(date3);
+		dao.persist(securityToken3);
+		
+		SecurityToken securityToken4 = new SecurityToken();
+		EntityDataGenerator.generateTestDataForModelClass(securityToken4);
+		securityToken4.setToken(token1);
+		securityToken4.setExpiry(date4);
+		dao.persist(securityToken4);
+		
+		SecurityToken result = dao.getByTokenAndExpiry(token1, expiry);
+		SecurityToken expectedResult = securityToken1;
+		
+		assertEquals(expectedResult, result);
 	}
 }
