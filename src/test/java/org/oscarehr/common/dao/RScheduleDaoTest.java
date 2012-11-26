@@ -23,49 +23,100 @@
  */
 package org.oscarehr.common.dao;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.RSchedule;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class RScheduleDaoTest extends DaoTestFixtures {
 
 	private RScheduleDao dao = (RScheduleDao) SpringUtils.getBean("rScheduleDao");
-
-	public RScheduleDaoTest() {
-	}
-
+	DateFormat dfm = new SimpleDateFormat("yyyyMMdd");
 
 	@Before
 	public void before() throws Exception {
 		SchemaUtils.restoreTable("rschedule");
 	}
 
-	@Test
-	public void testCreate() throws Exception {
-		RSchedule entity = new RSchedule();
-		EntityDataGenerator.generateTestDataForModelClass(entity);
-		dao.persist(entity);
+        @Test
+        public void testCreate() throws Exception {
+                RSchedule entity = new RSchedule();
+                EntityDataGenerator.generateTestDataForModelClass(entity);
+                dao.persist(entity);
 
-		assertNotNull(entity.getId());
-	}
+                assertNotNull(entity.getId());
+        }
 
 	@Test
 	public void testFindByProviderAvailableAndDate() throws Exception {
-		RSchedule entity = new RSchedule();
-		EntityDataGenerator.generateTestDataForModelClass(entity);
-		entity.setProviderNo("000001");
-		entity.setAvailable("1");
-		entity.setsDate(new Date());
-		dao.persist(entity);
+		
+		String providerNo1 = "100";
+		String providerNo2 = "200";
+		
+		String available1 = "y";
+		String available2 = "n";
+		
+		Date sDate1 = new Date(dfm.parse("20110101").getTime());
+		Date sDate2 = new Date(dfm.parse("20100101").getTime());
+		
+		RSchedule rSchedule1 = new RSchedule();
+		EntityDataGenerator.generateTestDataForModelClass(rSchedule1);
+		rSchedule1.setProviderNo(providerNo1);
+		rSchedule1.setAvailable(available1);
+		rSchedule1.setsDate(sDate1);
+		dao.persist(rSchedule1);
+		
+		RSchedule rSchedule2 = new RSchedule();
+		EntityDataGenerator.generateTestDataForModelClass(rSchedule2);
+		rSchedule2.setProviderNo(providerNo2);
+		rSchedule2.setAvailable(available2);
+		rSchedule2.setsDate(sDate2);
+		dao.persist(rSchedule2);
+		
+		RSchedule rSchedule3 = new RSchedule();
+		EntityDataGenerator.generateTestDataForModelClass(rSchedule3);
+		rSchedule3.setProviderNo(providerNo1);
+		rSchedule3.setAvailable(available1);
+		rSchedule3.setsDate(sDate1);
+		dao.persist(rSchedule3);
+		
+		RSchedule rSchedule4 = new RSchedule();
+		EntityDataGenerator.generateTestDataForModelClass(rSchedule4);
+		rSchedule4.setProviderNo(providerNo1);
+		rSchedule4.setAvailable(available1);
+		rSchedule4.setsDate(sDate2);
+		dao.persist(rSchedule4);
+		
+		List<RSchedule> expectedResult = new ArrayList<RSchedule>(Arrays.asList(rSchedule1, rSchedule3));
+		List<RSchedule> result = dao.findByProviderAvailableAndDate(providerNo1, available1, sDate1);
 
-		assertEquals(1,dao.findByProviderAvailableAndDate("000001", "1", new Date()).size());
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match.RESULT: " + result.size());
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);
 	}
 }

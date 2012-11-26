@@ -23,13 +23,21 @@
  */
 package org.oscarehr.common.dao;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.WorkFlow;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class WorkFlowDaoTest extends DaoTestFixtures {
@@ -41,12 +49,158 @@ public class WorkFlowDaoTest extends DaoTestFixtures {
 		SchemaUtils.restoreTable("workflow");
 	}
 
-	@Test
-	public void testCreate() throws Exception {
-		WorkFlow entity = new WorkFlow();
-		EntityDataGenerator.generateTestDataForModelClass(entity);
-		dao.persist(entity);
+        @Test
+        public void testCreate() throws Exception {
+                WorkFlow entity = new WorkFlow();
+                EntityDataGenerator.generateTestDataForModelClass(entity);
+                dao.persist(entity);
 
-		assertNotNull(entity.getId());
+                assertNotNull(entity.getId());
+        }
+
+	@Test
+	public void testFindByWorkflowType() throws Exception {
+		
+		String workflowType1 = "alpha";
+		String workflowType2 = "bravo";
+		
+		WorkFlow workFlow1 = new WorkFlow();
+		EntityDataGenerator.generateTestDataForModelClass(workFlow1);
+		workFlow1.setWorkflowType(workflowType1);
+		dao.persist(workFlow1);
+		
+		WorkFlow workFlow2 = new WorkFlow();
+		EntityDataGenerator.generateTestDataForModelClass(workFlow2);
+		workFlow2.setWorkflowType(workflowType2);
+		dao.persist(workFlow2);
+		
+		WorkFlow workFlow3 = new WorkFlow();
+		EntityDataGenerator.generateTestDataForModelClass(workFlow3);
+		workFlow3.setWorkflowType(workflowType1);
+		dao.persist(workFlow3);
+		
+		List<WorkFlow> expectedResult = new ArrayList<WorkFlow>(Arrays.asList(workFlow1, workFlow3));
+		List<WorkFlow> result = dao.findByWorkflowType(workflowType1);
+
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match. RESULT:" + result.size());
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);	
+	}
+
+	@Test
+	public void testFindActiveByWorkflowType() throws Exception {
+		
+		String workflowType1 = "alpha";
+		String workflowType2 = "bravo";
+		
+		String currentState1 = "C";
+		String currentState2 = "B";
+		
+		WorkFlow workFlow1 = new WorkFlow();
+		EntityDataGenerator.generateTestDataForModelClass(workFlow1);
+		workFlow1.setWorkflowType(workflowType1);
+		workFlow1.setCurrentState(currentState2);
+		dao.persist(workFlow1);
+		
+		WorkFlow workFlow2 = new WorkFlow();
+		EntityDataGenerator.generateTestDataForModelClass(workFlow2);
+		workFlow2.setWorkflowType(workflowType2);
+		workFlow2.setCurrentState(currentState1);
+		dao.persist(workFlow2);
+		
+		WorkFlow workFlow3 = new WorkFlow();
+		EntityDataGenerator.generateTestDataForModelClass(workFlow3);
+		workFlow3.setWorkflowType(workflowType1);
+		workFlow3.setCurrentState(currentState2);
+		dao.persist(workFlow3);
+		
+		WorkFlow workFlow4 = new WorkFlow();
+		EntityDataGenerator.generateTestDataForModelClass(workFlow4);
+		workFlow4.setWorkflowType(workflowType1);
+		workFlow4.setCurrentState(currentState1);
+		dao.persist(workFlow4);
+		
+		List<WorkFlow> expectedResult = new ArrayList<WorkFlow>(Arrays.asList(workFlow1, workFlow3));
+		List<WorkFlow> result = dao.findActiveByWorkflowType(workflowType1);
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match. RESULT:" + result.size());
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);
+	}
+
+	@Test
+	public void testFindActiveByWorkflowTypeAndDemographicNo() throws Exception {
+
+		String workflowType1 = "alpha";
+		String workflowType2 = "bravo";
+		
+		String currentState1 = "C";
+		String currentState2 = "B";
+		
+		String demographicNo1 = "100";
+		String demographicNo2 = "200";
+		
+		WorkFlow workFlow1 = new WorkFlow();
+		EntityDataGenerator.generateTestDataForModelClass(workFlow1);
+		workFlow1.setWorkflowType(workflowType1);
+		workFlow1.setCurrentState(currentState2);
+		workFlow1.setDemographicNo(demographicNo1);
+		dao.persist(workFlow1);
+		
+		WorkFlow workFlow2 = new WorkFlow();
+		EntityDataGenerator.generateTestDataForModelClass(workFlow2);
+		workFlow2.setWorkflowType(workflowType2);
+		workFlow2.setCurrentState(currentState1);
+		workFlow2.setDemographicNo(demographicNo2);
+		dao.persist(workFlow2);
+		
+		WorkFlow workFlow3 = new WorkFlow();
+		EntityDataGenerator.generateTestDataForModelClass(workFlow3);
+		workFlow3.setWorkflowType(workflowType1);
+		workFlow3.setCurrentState(currentState2);
+		workFlow3.setDemographicNo(demographicNo1);
+		dao.persist(workFlow3);
+		
+		WorkFlow workFlow4 = new WorkFlow();
+		EntityDataGenerator.generateTestDataForModelClass(workFlow4);
+		workFlow4.setWorkflowType(workflowType1);
+		workFlow4.setCurrentState(currentState1);
+		workFlow4.setDemographicNo(demographicNo1);
+		dao.persist(workFlow4);
+		
+		List<WorkFlow> expectedResult = new ArrayList<WorkFlow>(Arrays.asList(workFlow1, workFlow3));
+		List<WorkFlow> result = dao.findActiveByWorkflowTypeAndDemographicNo(workflowType1, demographicNo1);
+		Logger logger = MiscUtils.getLogger();
+		
+		if (result.size() != expectedResult.size()) {
+			logger.warn("Array sizes do not match. RESULT:" + result.size());
+			fail("Array sizes do not match.");
+		}
+		for (int i = 0; i < expectedResult.size(); i++) {
+			if (!expectedResult.get(i).equals(result.get(i))){
+				logger.warn("Items  do not match.");
+				fail("Items  do not match.");
+			}
+		}
+		assertTrue(true);
 	}
 }
