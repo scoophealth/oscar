@@ -23,7 +23,11 @@
  */
 package org.oscarehr.common.dao;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -52,5 +56,38 @@ public class ViewDaoTest extends DaoTestFixtures {
 		dao.persist(entity);
 
 		assertNotNull(entity.getId());
+	}
+	
+	@Test
+	public void testGetView() throws Exception {
+		
+		String role1 = "alpha";
+		String role2 = "bravo";
+		
+		String viewName1 = "sigma";
+		String viewName2 = "delta";
+		
+		String name1 = "gamma";
+		String name2 = "zeta";
+		
+		View view1 = new View();
+		EntityDataGenerator.generateTestDataForModelClass(view1);
+		view1.setRole(role1);
+		view1.setView_name(viewName1);
+		view1.setName(name1);
+		dao.persist(view1);
+		
+		View view2 = new View();
+		EntityDataGenerator.generateTestDataForModelClass(view2);
+		view2.setRole(role2);
+		view2.setView_name(viewName2);
+		view2.setName(name2);
+		dao.persist(view2);
+		
+		Map<String,View> expectedResult = new HashMap<String,View>();
+		expectedResult.put(name1, view1);
+		Map<String,View> result = dao.getView(viewName1, role1);
+		
+		assertEquals(expectedResult, result);
 	}
 }
