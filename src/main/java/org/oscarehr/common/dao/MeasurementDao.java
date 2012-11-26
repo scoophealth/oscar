@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.persistence.Query;
@@ -191,13 +192,40 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Measurement> find(SearchCriteria criteria) {
-		Query query = entityManager.createQuery("select m FROM Measurement m WHERE m.demographicId = :demographicNo " + "AND m.type= :type " + "AND m.dataField = :dataField " + "AND m.measuringInstruction = :measuringInstrc " + "AND m.comments = :comments " + "AND m.dateObserved = :dateObserved");
-		query.setParameter("demographicNo", criteria.getDemographicNo());
-		query.setParameter("type", criteria.getType());
-		query.setParameter("dataField", criteria.getDataField());
-		query.setParameter("measuringInstrc", criteria.getMeasuringInstrc());
-		query.setParameter("comments", criteria.getComments());
-		query.setParameter("dateObserved", criteria.getDateObserved());
+		Map<String, Object> params = new HashMap<String, Object>();
+		StringBuilder buf = new StringBuilder();
+		
+		for(Object[] obj : new Object[][] {{"m.demographicId = :demographicNo", "demographicNo", criteria.getDemographicNo()},
+			{"m.type= :type", "type", criteria.getType()}, {"m.dataField = :dataField", "dataField", criteria.getDataField()},
+			{"m.measuringInstruction = :measuringInstrc", "measuringInstrc", criteria.getMeasuringInstrc()},
+			{"m.comments = :comments" , "comments", criteria.getComments()}, {"m.dateObserved = :dateObserved", "dateObserved", criteria.getDateObserved()}}) {
+			
+			String queryClause = (String) obj[0];
+			String paramName = (String) obj[1];
+			Object paramValue = obj[2];
+			
+			if (paramValue == null) {
+				continue;
+			}
+				
+			if (buf.length() != 0) {
+				buf.append("AND ");
+			}
+			
+			buf.append(queryClause).append(" ");
+			params.put(paramName, paramValue);
+		}
+		
+		// make sure empty sc still results in a well-formed query
+		if (buf.length() > 0) {
+			buf.insert(0, " WHERE ");
+		}
+		buf.insert(0, "select m FROM Measurement m");
+		
+		Query query = entityManager.createQuery(buf.toString());
+		for(Entry<String, Object> param : params.entrySet()) {
+			query.setParameter(param.getKey(), param.getValue());
+		}
 		return query.getResultList();
 	}
 
@@ -212,6 +240,19 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		private String measuringInstrc;
 		private String comments;
 		private Date dateObserved;
+		
+		public SearchCriteria() {
+		}
+
+		public SearchCriteria(Integer demographicNo, String type, String dataField, String measuringInstrc, String comments, Date dateObserved) {
+	        super();
+	        this.demographicNo = demographicNo;
+	        this.type = type;
+	        this.dataField = dataField;
+	        this.measuringInstrc = measuringInstrc;
+	        this.comments = comments;
+	        this.dateObserved = dateObserved;
+        }
 
 		public Integer getDemographicNo() {
 			return demographicNo;
@@ -441,5 +482,65 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		query.setParameter("type", type);
 		return getSingleResultOrNull(query);
 	}
+
+	@SuppressWarnings("unchecked")
+    public List<Object[]> findMeasurementsAndTypes(Integer demoNo) {
+		 String sql ="FROM Measurements m, MeasurementType mt " +
+		 		"WHERE m.demographicNo = :demoNo " +
+		 		"AND m.type = mt.type " +
+                "GROUP BY mt.type " +
+                "ORDER BY m.type ASC";
+		 Query query = entityManager.createQuery(sql);
+		 query.setParameter("demoNo", demoNo);
+		 return query.getResultList();
+    }
+
+    @SuppressWarnings("unchecked")
+	public List<Object[]> findMeasurementsAndProviders(Integer measurementId) {
+		String sql = "FROM Measurement m, MeasurementType mt, Provider p "
+				+ "WHERE m.providerNo = p.ProviderNo "
+                + "AND m.id = :mrId " 
+				+ "AND m.type = mt.type";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("mrId", measurementId);
+	    return query.getResultList();
+    }
+	
+	@SuppressWarnings("unchecked")
+	public List<Object[]> findMeasurementsAndProvidersByType(String type, Integer demographicNo) {
+		  String sql = "FROM Measurement m, Provider p, MeasurementType mt " +
+		  		"WHERE m.providerNo = p.ProviderNo " +
+		  		"AND m.type = mt.type " +
+		  		"AND m.type = :type " +
+		  		"AND m.demographicId = :demoNo";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("type", type);
+		query.setParameter("demoNo", demographicNo);
+		return query.getResultList();
+    }
+
+	public Object[] findMeasurementsAndProvidersByDemoAndType(Integer demographicNo, String type) {
+		String sql ="FROM Measurement m, Provider p, MeasurementType mt " +
+                "WHERE m.demographicId = :demoNo " +
+                "AND m.type = :type " +
+                "AND (" +
+                "	m.providerNo = p.ProviderNo " +
+                "	OR m.providerNo = '0'" +
+                ") " +
+                "AND m.type = mt.type " +
+                "GROUP BY m.id " +
+                "ORDER BY m.dateObserved DESC, m.createDate DESC";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("type", type);
+		query.setParameter("demoNo", demographicNo);
+		query.setMaxResults(1);
+		
+		@SuppressWarnings("unchecked")
+        List<Object[]> result = query.getResultList();
+		if (result.isEmpty()) {
+			return null;
+		}
+		return result.get(0);
+    }
 	
 }

@@ -39,7 +39,7 @@ public class ValidationsDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("validations");
+		SchemaUtils.restoreTable("validations", "measurements", "provider");
 	}
 
 	@Test
@@ -48,5 +48,28 @@ public class ValidationsDaoTest extends DaoTestFixtures {
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		dao.persist(entity);
 		assertNotNull(entity.getId());
+	}
+	
+	@Test
+	public void testFindByAll() {
+		assertNotNull(dao.findByAll(null, null, null, null, null, null, null));
+		assertNotNull(dao.findByAll("RE", null, null, null, null, null, null));
+		assertNotNull(dao.findByAll(null, 2.0, null, null, null, null, null));
+		assertNotNull(dao.findByAll(null, null, 1.0, null, null, null, null));
+		assertNotNull(dao.findByAll(null, null, null, 100, null, null, null));
+		assertNotNull(dao.findByAll(null, null, null, null, 200, null, null));
+		assertNotNull(dao.findByAll(null, null, null, null, null, true, null));
+		assertNotNull(dao.findByAll(null, null, null, null, null, null, false));
+		assertNotNull(dao.findByAll("BR", 1.0, 2.0, 199, 0, false, false));
+	}
+	
+	@Test
+	public void testFindValidationsBy() {
+		assertNotNull(dao.findValidationsBy(10, "type", 10));
+	}
+	
+	@Test
+	public void testFindByName() {
+		assertNotNull(dao.findByName("NM"));
 	}
 }

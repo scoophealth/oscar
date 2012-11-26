@@ -26,8 +26,6 @@
 package oscar.oscarEncounter.oscarMeasurements.pageUtil;
 
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
 
@@ -45,14 +43,14 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.oscarehr.common.dao.FlowSheetCustomizationDao;
 import org.oscarehr.common.dao.MeasurementDao;
+import org.oscarehr.common.dao.MeasurementDao.SearchCriteria;
 import org.oscarehr.common.model.FlowSheetCustomization;
 import org.oscarehr.common.model.Measurement;
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.common.model.Validations;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarMeasurements.MeasurementFlowSheet;
 import oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
@@ -129,8 +127,7 @@ public class EctMeasurementsAction extends Action {
         request.setAttribute("parentChanged", parentChanged);
 
         boolean valid = true;
-        try
-            {
+        
 
                 EctValidation ectValidation = new EctValidation();
                 ActionMessages errors = new ActionMessages();
@@ -145,7 +142,7 @@ public class EctMeasurementsAction extends Action {
                 int iMax = 0;
                 int iMin = 0;
 
-                ResultSet rs;
+                List<Validations> vs = null;
                 String regCharExp;
                 //goes through each type to check if the input value is valid
                 for(int i=0; i<iType; i++){
@@ -169,17 +166,17 @@ public class EctMeasurementsAction extends Action {
                     iMax = 0;
                     iMin = 0;
 
-                    rs = ectValidation.getValidationType(inputType, mInstrc);
+                    vs = ectValidation.getValidationType(inputType, mInstrc);
                     regCharExp = ectValidation.getRegCharacterExp();
 
-                    if (rs.next()){
-                        dMax = rs.getDouble("maxValue1");
-                        dMin = rs.getDouble("minValue");
-                        iMax = rs.getInt("maxLength");
-                        iMin = rs.getInt("minLength");
-                        regExp = oscar.Misc.getString(rs,"regularExp");
+                    if (!vs.isEmpty()){
+                    	Validations v = vs.iterator().next();
+                        dMax = v.getMaxValue();
+                        dMin = v.getMinValue();
+                        iMax = v.getMaxLength();
+                        iMin = v.getMinLength();
+                        regExp = v.getRegularExp();
                     }
-                    rs.close();
 
                     if(!ectValidation.isInRange(dMax, dMin, inputValue)){
                         errors.add(inputValueName, new ActionMessage("errors.range", inputTypeDisplay, Double.toString(dMin), Double.toString(dMax)));
@@ -238,13 +235,19 @@ public class EctMeasurementsAction extends Action {
 
                         org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
                         if(!GenericValidator.isBlankOrNull(inputValue)){
-                            //Find if the same data has already been entered into the system
-                            String sql = "SELECT * FROM measurements WHERE demographicNo='"+demographicNo+ "' AND dataField='"+inputValue
-                                        +"' AND measuringInstruction='" + mInstrc + "' AND comments='" + comments
-                                        + "' AND dateObserved='" + dateObserved + "' and type = '"+inputType+"'";
-
-                            rs = DBHandler.GetSQL(sql);
-                            if(!rs.next()){
+                        	
+                        	//Find if the same data has already been entered into the system
+                        	MeasurementDao dao = SpringUtils.getBean(MeasurementDao.class);
+                        	SearchCriteria sc = new SearchCriteria();
+                        	sc.setDemographicNo(demographicNo);
+                        	sc.setDataField(inputValue);
+                        	sc.setMeasuringInstrc(mInstrc);
+                        	sc.setComments(comments);
+                        	sc.setDateObserved(ConversionUtils.fromDateString(dateObserved));
+                        	sc.setType(inputType);
+                        	List<Measurement> ms = dao.find(sc);
+                        	
+                            if(ms.isEmpty()){
                                 //Write to the Dababase if all input values are valid
                             	Measurement m = new Measurement();
                             	m.setType(inputType);
@@ -264,7 +267,6 @@ public class EctMeasurementsAction extends Action {
                                     textOnEncounter += mFlowsheet.getFlowSheetItem(inputType).getDisplayName()+"    "+inputValue + " " +  comments + "\\n";
                                 }
                             }
-                            rs.close();
                         }
 
                     }
@@ -279,11 +281,7 @@ public class EctMeasurementsAction extends Action {
                     return (new ActionForward(mapping.getInput()));
                 }
                
-            }
-            catch(SQLException e)
-            {
-                MiscUtils.getLogger().error("Error", e);
-            }
+            
 
 
         //put the inputvalue to the encounter form
