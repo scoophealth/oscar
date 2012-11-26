@@ -52,4 +52,14 @@ public class TeleplanC12DaoTest extends DaoTestFixtures {
 		dao.persist(entity);
 		assertNotNull(entity.getId());
 	}
+	
+	@Test
+	public void testFindCurrent() {
+		assertNotNull(dao.findCurrent());
+	}
+	
+	@Test
+	public void testFindByOfficeClaimNo() {
+		assertNotNull(dao.findByOfficeClaimNo("100"));
+	}
 }
