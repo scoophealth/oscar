@@ -89,7 +89,7 @@ public class HSFODAO
   public int numberOfVisits( String demographic_no ) {
 	  Date preDate = new Date();
 	  int count=0;
-	  List<Hsfo2Visit> visits = visitDao.getHsfoVisitByDemographicNo(demographic_no) ;
+	  List<Hsfo2Visit> visits = visitDao.getHsfoVisitByDemographicNo(Integer.parseInt(demographic_no)) ;
 	  for(Hsfo2Visit visit: visits ) {
 		  Date visiteDate = visit.getVisitDate_Id();
 		  if(visiteDate.equals(preDate)) {

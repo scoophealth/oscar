@@ -48,7 +48,7 @@ public class Hsfo2VisitDao extends AbstractDao<Hsfo2Visit>
 		return getSingleResultOrNull(query);
     }
 
-    public List<Hsfo2Visit> getHsfoVisitByDemographicNo( String demographic_no) {
+    public List<Hsfo2Visit> getHsfoVisitByDemographicNo( Integer demographic_no) {
     	String sqlCommand = "select x from Hsfo2Visit x where x.demographic_no=? order by x.VisitDate_Id";
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, demographic_no);

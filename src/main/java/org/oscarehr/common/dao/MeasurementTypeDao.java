@@ -38,7 +38,7 @@ public class MeasurementTypeDao extends AbstractDao<MeasurementType> {
 	}
 
 	public List<MeasurementType> findAll() {
-		String sqlCommand = "select x from " + modelClass.getSimpleName();
+		String sqlCommand = "select x from " + modelClass.getSimpleName() + " x";
 
 		Query query = entityManager.createQuery(sqlCommand);
 
