@@ -35,39 +35,40 @@ import org.oscarehr.util.SpringUtils;
 
 public class CountryCodeDaoTest extends DaoTestFixtures {
 
-private CountryCodeDao dao = SpringUtils.getBean(CountryCodeDao.class);
+	private CountryCodeDao dao = SpringUtils.getBean(CountryCodeDao.class);
 
-public CountryCodeDaoTest() {
+	public CountryCodeDaoTest() {
 
-}
+	}
 
-@Before
-public void before() throws Exception {
-SchemaUtils.restoreTable("country_codes");
-}
+	@Before
+	public void before() throws Exception {
+		SchemaUtils.restoreTable("country_codes");
+	}
 
-@Test
-public void testCreate() throws Exception {
-CountryCode entity = new CountryCode();
-EntityDataGenerator.generateTestDataForModelClass(entity);
-dao.persist(entity);
-assertNotNull(entity.getId());
-}
-@Test
-public void testGetAllCountryCodes() throws Exception{
-int initialSize = dao.findAll().size();
-String locale = "en";
-CountryCode entity = new CountryCode();
-EntityDataGenerator.generateTestDataForModelClass(entity);
-dao.persist(entity);
+	@Test
+	public void testCreate() throws Exception {
+		CountryCode entity = new CountryCode();
+		EntityDataGenerator.generateTestDataForModelClass(entity);
+		dao.persist(entity);
+		assertNotNull(entity.getId());
+	}
 
-assertEquals(dao.findAll().size(),initialSize + 1);
-}
-public void testGetCountryCode() throws Exception{
-CountryCode country = new CountryCode();
-EntityDataGenerator.generateTestDataForModelClass(country);
-country = dao.getCountryCode("CA");
-assertEquals("Canada", country.getCountryName());
-}
+	@Test
+	public void testGetAllCountryCodes() throws Exception {
+		int initialSize = dao.findAll().size();
+		CountryCode entity = new CountryCode();
+		EntityDataGenerator.generateTestDataForModelClass(entity);
+		dao.persist(entity);
+
+		assertEquals(dao.findAll().size(), initialSize + 1);
+	}
+
+	public void testGetCountryCode() throws Exception {
+		CountryCode country = new CountryCode();
+		EntityDataGenerator.generateTestDataForModelClass(country);
+		country = dao.getCountryCode("CA");
+		assertEquals("Canada", country.getCountryName());
+	}
 
 }
