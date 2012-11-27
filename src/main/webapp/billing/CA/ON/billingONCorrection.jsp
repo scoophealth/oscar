@@ -520,7 +520,10 @@ function checkSettle(status) {
             if("".equals(codeNo)) continue;
 
             BillingONErrorCode errorCode = billingONErrorCodeDao.find(codeNo);
-            String codeDesc = errorCode.getDescription();
+            String codeDesc = null;
+            if (errorCode != null) {
+                codeDesc = errorCode.getDescription();
+            }
             codeDesc = codeDesc == null ? "Unknown" : codeDesc;
 %>
     <tr>
