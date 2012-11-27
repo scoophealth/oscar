@@ -23,43 +23,54 @@
 
 package oscar.oscarDemographic.pageUtil;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.DrugDao;
+import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Drug;
+import org.oscarehr.common.model.Prevention;
 import org.oscarehr.util.SpringUtils;
-
-import oscar.oscarRx.data.RxPatientData;
-import oscar.oscarRx.data.RxPrescriptionData;
 
 /**
  * @author Jeremy Ho
- * This class is meant to be a model for a "patient" which contains all data required to define a "patient"
+ * This class models a "patient" which bundles all data required to define a "patient" for export
  */
 public class PatientExport {
-	private Integer demographicNo;
-	private Demographic demographic;
 	private static DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
-	private ArrayList<Medication> medications = new ArrayList<Medication>();
-	private ArrayList<Allergy> allergies = new ArrayList<Allergy>();
+	private static AllergyDao allergyDao = (AllergyDao)SpringUtils.getBean("allergyDao");
+	private static DrugDao drugDao = (DrugDao)SpringUtils.getBean("drugDao");
+	private static PreventionDao preventionDao = (PreventionDao)SpringUtils.getBean("preventionDao");
+	
+	private Date currentDate = new Date();
+	private Integer demographicNo = null;
+	private Demographic demographic = null;
+	private List<Drug> drugs = null;
+	private List<Allergy> allergies = null;
+	private List<Prevention> preventions = null;
 	
 	private boolean exMedicationsAndTreatments = false;
 	private boolean exAllergiesAndAdverseReactions = false;
+	private boolean exImmunizations = false;
 	
-	public PatientExport() {
+	protected PatientExport() {
 	}
 	
 	public PatientExport(String demoNo) {
 		this.demographicNo = new Integer(demoNo);
-		initialize(demoNo);
-	}
-
-	private void initialize(String demoNo) {
 		this.demographic = demographicDao.getDemographic(demoNo);
-		
+		this.allergies = allergyDao.findAllergies(demographicNo);
+		this.drugs = drugDao.findByDemographicId(demographicNo);
+		this.preventions = preventionDao.findNotDeletedByDemographicId(demographicNo);
+		//initialize(demoNo);
+	}
+	
+	/*
+	private void initialize(String demoNo) {
 		RxPrescriptionData.Prescription[] drugs = new RxPrescriptionData().getPrescriptionsByPatient(Integer.parseInt(demoNo));
 		for(RxPrescriptionData.Prescription d : drugs) {
 			medications.add(parseDrugs(d));
@@ -84,11 +95,11 @@ public class PatientExport {
 		
 		return medication;
 	}
+	*/
 	
 	/*
 	 * Section Booleans
 	 */
-	
 	public void setExMedications(boolean rhs) {
 		this.exMedicationsAndTreatments = rhs;
 	}
@@ -97,11 +108,14 @@ public class PatientExport {
 		this.exAllergiesAndAdverseReactions = rhs;
 	}
 	
+	public void setExImmunizations(boolean rhs) {
+		this.exImmunizations = rhs;
+	}
+	
 	/*
 	 * Demographics
 	 */
-	
-	// Directly mappable functions
+	// Directly mapped functions
 	public String getDemographicNo() {
 		return demographicNo.toString();
 	}
@@ -188,20 +202,46 @@ public class PatientExport {
 		return!(!exAllergiesAndAdverseReactions || allergies==null || allergies.isEmpty());
 	}
 	
+	
+	/*
+	 * Immunizations
+	 */
+	public List<Prevention> getImmunizations() {
+		return preventions;
+	}
+	
+	public boolean hasImmunizations() {
+		return!(!exImmunizations || preventions==null || preventions.isEmpty());
+	}
+	
+	
 	/*
 	 * Medications
 	 */
-	public List<Medication> getMedications() {
-		return medications;
+	public List<Drug> getMedications() {
+		return drugs;
 	}
 	
 	public boolean hasMedications() {
-		return!(!exMedicationsAndTreatments || medications==null || medications.isEmpty());
+		return!(!exMedicationsAndTreatments || drugs==null || drugs.isEmpty());
 	}
-
+	
+	public boolean isActiveDrug(Date rhs) {
+		if(currentDate.after(rhs)) return false;
+		else return true;
+	}
+	
+	/*
+	 * Utility
+	 */
+	public Date getCurrentDate() {
+		return currentDate;
+	}
+	
 	/*
 	 * Medication Sub-object
 	 */
+	/*
 	public static class Medication {
 		private String drugId;
 		private Date startDate;
@@ -285,4 +325,5 @@ public class PatientExport {
 			return false;
 		}
 	}
+	*/
 }

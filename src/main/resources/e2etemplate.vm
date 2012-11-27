@@ -179,15 +179,15 @@ Medications & Prescriptions - Medication List
 					<entry typeCode="COMP" contextConductionInd="true">
 						<templateId root="2.16.840.1.113883.3.1818.10.3.18" />
 						<substanceAdministration classCode="SBADM" moodCode="EVN">
-							<id extension="$med.drugId" root="OSCAR.local" />
+							<id extension="$med.id" root="OSCAR.local" />
 							<code code="DRUG" codeSystem="2.16.840.1.113883.5.4" displayName="Drug Therapy"/>
-#*    *##if ( $med.isActive() )
+#*    *##if ( $patient.isActiveDrug($med.getEndDate()) )
 							<statusCode code="active"/>
 #*    *##else
 							<statusCode code="completed"/>
 #*    *##end
 							<effectiveTime xsi:type="IVL_TS" operator="I">
-								<low value="$dateTool.format('yyyyMMdd', $med.getStartDate())"/>
+								<low value="$dateTool.format('yyyyMMdd', $med.getRxDate())"/>
 								<high value="$dateTool.format('yyyyMMdd', $med.getEndDate())" />
 							</effectiveTime>
 							<!--Medication Identification-->
@@ -195,11 +195,11 @@ Medications & Prescriptions - Medication List
 								<templateId root="2.16.840.1.113883.3.1818.10.4.16"/>
 								<manufacturedProduct classCode="MANU">
 									<manufacturedMaterial classCode="MMAT" determinerCode="KIND">
-										<code code="$med.din" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN" displayName="$med.genericName"/>
-#*    *##if ( $med.isValidAtc() )
+										<code code="$med.regionalIdentifier" codeSystem="2.16.840.1.113883.5.1105" codeSystemName="HC-DIN" displayName="$med.genericName"/>
+#*    *##if ( $med.atc )
 										<code code="$med.atc" codeSystem="2.16.840.1.113883.6.73" codeSystemName="whoATC" displayName="$med.genericName"/>
 #*    *##end
-										<name>$med.genericName</name>
+										<name>$med.brandName</name>
 									</manufacturedMaterial>
 								</manufacturedProduct>
 							</consumable>    
