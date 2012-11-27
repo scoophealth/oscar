@@ -166,6 +166,17 @@
        adding a calendar a matter of 1 or 2 lines of code. -->
 <script type="text/javascript"
 	src="../../../share/calendar/calendar-setup.js"></script>
+var reprintUpdate = 0;
+function updateReprint(hrefValue) {
+    var reprintLink = document.getElementById("reprintLink");  
+    if (reprintUpdate > 0) {
+        reprintUpdate = 0;
+        reprintLink.href=hrefValue;
+    } else {    
+        reprintUpdate = 1;
+        reprintLink.href=hrefValue + "&overrideUseDemoContact=1"
+    }
+}
 <script language="JavaScript">
 <!--
 
@@ -994,6 +1005,10 @@ function changeSite(sel) {
                     <span id="thirdParty" style="float:right; <%=thirdParty ? "" : "display:none"%>">
                         <a href="#" onclick="search3rdParty('billTo');return false;"><bean:message key="billing.billingCorrection.msgPayer"/></a><br>
                         <textarea id="billTo" name="billTo" cols="32" rows=4><%=payer%></textarea>
+                          <% String useDemoClinicInfoOnInvoice = oscar.OscarProperties.getInstance().getProperty("useDemoClinicInfoOnInvoice","");
+                             if (!useDemoClinicInfoOnInvoice.isEmpty() && useDemoClinicInfoOnInvoice.equals("true")) { %>
+                                <br><bean:message key="billing.billingCorrection.useDemoContactYesNo"/>:<input type="checkbox" name="overrideUseDemoContact" id="overrideUseDemoContact" onclick="updateReprint('billingON3rdInv.jsp?billingNo=<%=billNo%>')"/>
+                          <% } %>
                     </span>
                 
                 <span style="float:left;">
@@ -1003,7 +1018,7 @@ function changeSite(sel) {
             </td>
 	</tr>
 	<tr>
-		<td><a href="billingON3rdInv.jsp?billingNo=<%=billNo%>">Reprint</a>
+		<td><a id="reprintLink" name="reprintLink" href="billingON3rdInv.jsp?billingNo=<%=billNo%>">Reprint</a>
 		</td>
 	</tr>
 </table>
