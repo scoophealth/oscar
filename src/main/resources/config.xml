@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<server>
+	<myoscar_client>
+		<!-- Cache Settings, 3600000 ms is 1 hour -->
+		<account_manager_people_cache_size>256</account_manager_people_cache_size>
+		<account_manager_people_cache_time_ms>3600000</account_manager_people_cache_time_ms>
+		<account_manager_minimal_person_cache_size>5120</account_manager_minimal_person_cache_size>
+		<account_manager_minimal_person_cache_time_ms>86400000</account_manager_minimal_person_cache_time_ms>
+		<medical_data_manager_data_cache_size>2048</medical_data_manager_data_cache_size>
+		<medical_data_manager_max_object_size_to_cache>5120</medical_data_manager_max_object_size_to_cache>
+		<medical_data_manager_cache_time_ms>3600000</medical_data_manager_cache_time_ms>
+		<message_manager_send_list_cache_size>128</message_manager_send_list_cache_size>
+		<message_manager_send_list_cache_time_ms>3600000</message_manager_send_list_cache_time_ms>
+		<remote_component_manager_cache_time_ms>300000</remote_component_manager_cache_time_ms>
+	</myoscar_client>
+</server>

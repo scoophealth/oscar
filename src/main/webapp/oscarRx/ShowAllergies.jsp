@@ -23,8 +23,8 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="org.oscarehr.util.LocaleUtils"%>
-<%@page import="org.oscarehr.phr.PHRAuthentication"%>
 <%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="oscar.oscarRx.pageUtil.AllergyHelperBean"%>
@@ -257,10 +257,10 @@ padding-right:6;
 				%>
 				</span>
 				<%
-                  	  if (MyOscarUtils.isVisibleMyOscarSendButton())
+                  	  if (MyOscarUtils.isMyOscarEnabled())
                   	  {
-							PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
-                  		  	boolean enabledMyOscarButton=MyOscarUtils.isMyOscarSendButtonEnabled(auth, Integer.valueOf(demoNo));
+                  		  MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
+                  		  	boolean enabledMyOscarButton=MyOscarUtils.isMyOscarSendButtonEnabled(myOscarLoggedInInfo, Integer.valueOf(demoNo));
 							if (enabledMyOscarButton) 
 							{
 								%>

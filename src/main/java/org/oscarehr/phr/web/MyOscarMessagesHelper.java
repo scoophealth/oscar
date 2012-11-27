@@ -22,58 +22,57 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.phr.web;
 
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
-import org.oscarehr.myoscar_server.ws.MessageTransfer;
+import org.oscarehr.myoscar.client.ws_manager.MessageManager;
+import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
+import org.oscarehr.myoscar_server.ws.Message2RecipientPersonAttributesTransfer;
+import org.oscarehr.myoscar_server.ws.MessageTransfer3;
 import org.oscarehr.myoscar_server.ws.NoSuchItemException_Exception;
 import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
-import org.oscarehr.myoscar_server.ws.UnsupportedEncodingException_Exception;
-import org.oscarehr.phr.PHRAuthentication;
-import org.oscarehr.phr.util.MyOscarMessageManager;
-import org.oscarehr.phr.util.MyOscarUtils;
 
 public final class MyOscarMessagesHelper {
-	private static final int MESSAGE_DISPLAY_SIZE=25;
-	
-	public static int getNextPageStartIndex(int currentStartIndex)
-	{
-		return(currentStartIndex+MESSAGE_DISPLAY_SIZE);
+	private static final int MESSAGE_DISPLAY_SIZE = 25;
+
+	public static int getNextPageStartIndex(int currentStartIndex) {
+		return (currentStartIndex + MESSAGE_DISPLAY_SIZE);
 	}
-	
-	public static int getPreviousPageStartIndex(int currentStartIndex)
-	{
-		int temp=currentStartIndex-MESSAGE_DISPLAY_SIZE;
-		return(Math.max(0,  temp));
+
+	public static int getPreviousPageStartIndex(int currentStartIndex) {
+		int temp = currentStartIndex - MESSAGE_DISPLAY_SIZE;
+		return (Math.max(0, temp));
 	}
-	
-	public static List<MessageTransfer> getReceivedMessages(HttpSession session, Boolean active, int startIndex) {
-		PHRAuthentication auth = (PHRAuthentication) session.getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
-		List<MessageTransfer> remoteMessages = MyOscarMessageManager.getReceivedMessages(auth.getMyOscarUserId(), auth.getMyOscarPassword(), active, startIndex, MESSAGE_DISPLAY_SIZE);
+
+	public static List<MessageTransfer3> getReceivedMessages(HttpSession session, Boolean active, int startIndex) throws NoSuchItemException_Exception, NotAuthorisedException_Exception {
+		MyOscarLoggedInInfo myOscarLoggedInInfo = MyOscarLoggedInInfo.getLoggedInInfo(session);
+		List<MessageTransfer3> remoteMessages = MessageManager.getReceivedMessages(myOscarLoggedInInfo, myOscarLoggedInInfo.getLoggedInPersonId(), active, startIndex, MESSAGE_DISPLAY_SIZE);
 		return (remoteMessages);
 	}
 
-	public static List<MessageTransfer> getSentMessages(HttpSession session, int startIndex) {
-		PHRAuthentication auth = (PHRAuthentication) session.getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
-		List<MessageTransfer> remoteMessages = MyOscarMessageManager.getSentMessages(auth.getMyOscarUserId(), auth.getMyOscarPassword(), startIndex, MESSAGE_DISPLAY_SIZE);
+	public static List<MessageTransfer3> getSentMessages(HttpSession session, int startIndex) throws NoSuchItemException_Exception, NotAuthorisedException_Exception {
+		MyOscarLoggedInInfo myOscarLoggedInInfo = MyOscarLoggedInInfo.getLoggedInInfo(session);
+		List<MessageTransfer3> remoteMessages = MessageManager.getSentMessages(myOscarLoggedInInfo, myOscarLoggedInInfo.getLoggedInPersonId(), startIndex, MESSAGE_DISPLAY_SIZE);
 		return (remoteMessages);
 	}
 
-	public static MessageTransfer readMessage(HttpSession session, Long messageId) throws NotAuthorisedException_Exception, NoSuchItemException_Exception, UnsupportedEncodingException_Exception
-	{
-		PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
-		MessageTransfer messageTransfer=MyOscarMessageManager.getMessage(auth.getMyOscarUserId(), auth.getMyOscarPassword(), messageId);
-		
-		// can only mark as read if I'm the recipient.
-		if (messageTransfer!=null && messageTransfer.getRecipientPersonId().equals(auth.getMyOscarUserId()))
-		{
-			MyOscarMessageManager.markRead(auth.getMyOscarUserId(), auth.getMyOscarPassword(), messageId);
+	public static MessageTransfer3 readMessage(HttpSession session, Long messageId) throws NotAuthorisedException_Exception, NoSuchItemException_Exception {
+		MyOscarLoggedInInfo myOscarLoggedInInfo = MyOscarLoggedInInfo.getLoggedInInfo(session);
+		MessageTransfer3 messageTransfer = MessageManager.getMessage(myOscarLoggedInInfo, messageId);
+
+		if (messageTransfer != null) {
+			// can only mark as read if I'm the recipient.
+			if (messageTransfer.getRecipientPeopleIds().contains(myOscarLoggedInInfo.getLoggedInPersonId())) {
+				Message2RecipientPersonAttributesTransfer recipientAttributes = MessageManager.getMessageRecipientPersonAttributesTransfer(myOscarLoggedInInfo, messageId, myOscarLoggedInInfo.getLoggedInPersonId());
+				recipientAttributes.setFirstViewDate(new GregorianCalendar());
+				MessageManager.updateMessageRecipientPersonAttributesTransfer(myOscarLoggedInInfo, recipientAttributes);
+			}
 		}
-		
-		return(messageTransfer);
+
+		return (messageTransfer);
 	}
 }

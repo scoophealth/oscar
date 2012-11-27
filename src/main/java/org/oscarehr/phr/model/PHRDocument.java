@@ -36,7 +36,6 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.indivo.xml.phr.contact.ConciseContactInformationType;
-import org.oscarehr.myoscar_server.ws.MessageTransfer;
 
 import oscar.oscarClinic.ClinicData;
 
@@ -62,9 +61,6 @@ public class PHRDocument implements Serializable {
 	public static final int STATUS_SENT = PHRAction.STATUS_SENT;
 	public static final int STATUS_SEND_PENDING = PHRAction.STATUS_SEND_PENDING;
 	public static final int STATUS_NOT_SET = PHRAction.STATUS_NOT_SET;
-	public static final String CLASSIFICATION_MED = "urn:org:indivo:document:classification:medical:medication";
-	public static final String CLASSIFICATION_MSG = "urn:org:indivo:document:classification:message";
-	public static final String CLASSIFICATION_SURVEY = "urn:org:indivo:document:classification:survey";
 
 	public static final String CODE_ATC = "ATC";
 	public static final String CODE_GCN_SEQNO = "GCN_SEQNO";
@@ -78,7 +74,7 @@ public class PHRDocument implements Serializable {
 	private String senderOscar;
 	private int senderType;
 	private Long senderMyOscarUserId;
-	private String receiverOscar;
+	private Integer receiverOscar;
 	private int receiverType;
 	private Long receiverMyOscarUserId;
 	private String docSubject;
@@ -98,7 +94,7 @@ public class PHRDocument implements Serializable {
 		action.setActionType(actionType);
 		action.setDateQueued(new Date());
 		action.setDocContent(this.getDocContent());
-		action.setReceiverOscar(this.getReceiverOscar());
+		action.setReceiverOscar(""+this.getReceiverOscar());
 		action.setReceiverType(this.getReceiverType());
 		action.setReceiverMyOscarUserId(this.getReceiverMyOscarUserId());
 		action.setSenderOscar(this.getSenderOscar());
@@ -119,7 +115,7 @@ public class PHRDocument implements Serializable {
 		action.setReceiverType(this.getSenderType());
 		action.setReceiverMyOscarUserId(this.getSenderMyOscarUserId());
 
-		action.setSenderOscar(this.getReceiverOscar());
+		action.setSenderOscar(""+this.getReceiverOscar());
 		action.setSenderType(this.getReceiverType());
 		action.setSenderMyOscarUserId(this.getReceiverMyOscarUserId());
 		action.setPhrClassification(this.getPhrClassification());
@@ -209,11 +205,11 @@ public class PHRDocument implements Serializable {
 		this.senderMyOscarUserId = senderMyOscarUserId;
 	}
 
-	public String getReceiverOscar() {
+	public Integer getReceiverOscar() {
 		return receiverOscar;
 	}
 
-	public void setReceiverOscar(String receiverOscar) {
+	public void setReceiverOscar(Integer receiverOscar) {
 		this.receiverOscar = receiverOscar;
 	}
 
@@ -286,25 +282,6 @@ public class PHRDocument implements Serializable {
 	@Override
 	public String toString() {
 		return (ReflectionToStringBuilder.toString(this));
-	}
-
-	public static PHRDocument converFromTransfer(MessageTransfer remoteMessage) {
-		PHRDocument phrDocument = new PHRDocument();
-
-		phrDocument.setDateExchanged(new Date());
-		phrDocument.setDateSent(remoteMessage.getSendDate().getTime());
-		phrDocument.setDocContent(remoteMessage.getContents());
-		phrDocument.setDocSubject(remoteMessage.getSubject());
-		phrDocument.setPhrClassification("MESSAGE");
-		phrDocument.setPhrIndex(remoteMessage.getId().toString());
-		phrDocument.setReceiverMyOscarUserId(remoteMessage.getRecipientPersonId());
-		phrDocument.setSenderMyOscarUserId(remoteMessage.getSenderPersonId());
-
-		phrDocument.setStatus(PHRMessage.STATUS_NEW);
-		if (remoteMessage.getFirstViewDate() != null) phrDocument.setStatus(PHRMessage.STATUS_READ);
-		if (remoteMessage.getFirstRepliedDate() != null) phrDocument.setStatus(PHRMessage.STATUS_REPLIED);
-
-		return (phrDocument);
 	}
 
 }

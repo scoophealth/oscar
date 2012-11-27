@@ -55,17 +55,17 @@ public class EctMeasurementsDataBeanHandler {
     private static Logger log = MiscUtils.getLogger();
     Vector<EctMeasurementsDataBean> measurementsDataVector = new Vector<EctMeasurementsDataBean>();
 
-    public EctMeasurementsDataBeanHandler(String demo) {
+    public EctMeasurementsDataBeanHandler(Integer demo) {
         init(demo);
     }
 
-    public EctMeasurementsDataBeanHandler(String demo, String type) {
+    public EctMeasurementsDataBeanHandler(Integer demo, String type) {
         init(demo, type);
     }
 
-    public boolean init(String demo) {
+    public boolean init(Integer demo) {
         MeasurementDao dao = SpringUtils.getBean(MeasurementDao.class);
-        for(Object[] i : dao.findMeasurementsAndTypes(ConversionUtils.fromIntString(demo))) {
+        for(Object[] i : dao.findMeasurementsAndTypes(demo)) {
         	MeasurementType mt = (MeasurementType) i[1];
         	
             EctMeasurementsDataBean data = new EctMeasurementsDataBean();
@@ -75,19 +75,21 @@ public class EctMeasurementsDataBeanHandler {
             data.setMeasuringInstrc(mt.getMeasuringInstruction());
                 
             measurementsDataVector.add(data);
+
         }
         return true;
     }
 
-    public boolean init(String demo, String type) {
+    public boolean init(Integer demo, String type) {
         MeasurementTypes mt = MeasurementTypes.getInstance();
         EctMeasurementTypesBean mBean = mt.getByType(type);
         if ( mBean != null){
             ValidationsDao dao = SpringUtils.getBean(ValidationsDao.class);
-            for(Object[] o : dao.findValidationsBy(ConversionUtils.fromIntString(demo), type, ConversionUtils.fromIntString(mBean.getValidation()))) {
+            for(Object[] o : dao.findValidationsBy(demo, type, ConversionUtils.fromIntString(mBean.getValidation()))) {
             	Validations v = (Validations) o[0];   
             	Measurement m = (Measurement) o[1];
             	Provider p = (Provider) o[2];
+
                 String canPlot = null;
                 String firstName;
                 String lastName;
@@ -143,11 +145,11 @@ public class EctMeasurementsDataBeanHandler {
         return new Hashtable<String, Object>();
     }
 
-    public static List<EctMeasurementsDataBean> getMeasurementObjectByType(String type, String demographicNo) {
+    public static List<EctMeasurementsDataBean> getMeasurementObjectByType(String type, Integer demographicNo) {
     	List<EctMeasurementsDataBean> measurements = new ArrayList<EctMeasurementsDataBean>();
     	
     	MeasurementDao dao = SpringUtils.getBean(MeasurementDao.class);
-        for(Object[] i : dao.findMeasurementsAndProvidersByType(type, ConversionUtils.fromIntString(demographicNo))) {
+        for(Object[] i : dao.findMeasurementsAndProvidersByType(type, demographicNo)) {
         	Measurement m = (Measurement) i[0];
         	Provider p = (Provider) i[2];
         	

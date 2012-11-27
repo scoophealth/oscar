@@ -44,17 +44,6 @@
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
 
-<%
-/*
-@page import="org.oscarehr.util.SessionConstants"
-oscar.oscarDemographic.data.*
-@page import="org.oscarehr.phr.PHRAuthentication, org.oscarehr.phr.util.MyOscarUtils"
-org.oscarehr.common.dao.DemographicDao, org.oscarehr.common.model.Demographic
-@page import="org.oscarehr.util.LocaleUtils"
-@page import="org.oscarehr.util.WebUtils"
-*/
-%>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <html:html locale="true">

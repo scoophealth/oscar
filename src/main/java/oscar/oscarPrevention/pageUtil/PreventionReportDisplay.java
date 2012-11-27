@@ -33,7 +33,7 @@ import java.util.Date;
  */
 public class PreventionReportDisplay implements Comparable{
    
-   public String demographicNo = null;
+   public Integer demographicNo = null;
    public String lastDate = null;
    public int rank = 0;
    public String state = null;

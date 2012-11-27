@@ -63,11 +63,11 @@ public class MammogramReport implements PreventionReport{
 
         for (int i = 0; i < list.size(); i ++){//for each  element in arraylist
              ArrayList<String> fieldList = list.get(i);
-             String demo = fieldList.get(0);
+             Integer demo =Integer.valueOf(fieldList.get(0));
 
              //search   prevention_date prevention_type  deleted   refused
              ArrayList<Map<String,Object>>  prevs = PreventionData.getPreventionData("MAM",demo);
-             PreventionData.addRemotePreventions(prevs, Integer.parseInt(demo),"MAM",null);
+             PreventionData.addRemotePreventions(prevs, demo,"MAM",null);
              ArrayList<Map<String,Object>> noFutureItems =  removeFutureItems(prevs, asofDate);
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;

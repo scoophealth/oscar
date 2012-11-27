@@ -78,18 +78,18 @@ public class ChildImmunizationReport implements PreventionReport{
           for (int i = 0; i < list.size(); i ++){//for each  element in arraylist
              ArrayList<String> fieldList = list.get(i);
              log.debug("list "+list.size());
-             String demo = fieldList.get(0);
+             Integer demo = Integer.parseInt(fieldList.get(0));
              log.debug("fieldList "+fieldList.size());
 
 			// search prevention_date prevention_type deleted refused
 			ArrayList<Map<String, Object>> prevs1 = PreventionData.getPreventionData("DTap-IPV", demo);
-			PreventionData.addRemotePreventions(prevs1, Integer.parseInt(demo),"DTap-IPV",null);
+			PreventionData.addRemotePreventions(prevs1, demo,"DTap-IPV",null);
 			ArrayList<Map<String, Object>> prevsDtapIPVHIB = PreventionData.getPreventionData("DTaP-IPV-Hib", demo);
-			PreventionData.addRemotePreventions(prevsDtapIPVHIB, Integer.parseInt(demo),"DTaP-IPV-Hib",null);
+			PreventionData.addRemotePreventions(prevsDtapIPVHIB, demo,"DTaP-IPV-Hib",null);
 			ArrayList<Map<String, Object>> prevs2 = PreventionData.getPreventionData("Hib", demo);
-			PreventionData.addRemotePreventions(prevs2, Integer.parseInt(demo),"Hib",null);
+			PreventionData.addRemotePreventions(prevs2, demo,"Hib",null);
 			ArrayList<Map<String, Object>> prevs4 = PreventionData.getPreventionData("MMR",demo);
-			PreventionData.addRemotePreventions(prevs4, Integer.parseInt(demo),"MMR",null);
+			PreventionData.addRemotePreventions(prevs4, demo,"MMR",null);
 
              //need to compile accurate dtap numbers
 			 Map<String, Object> hDtapIpv, hDtapIpvHib;
@@ -121,7 +121,7 @@ public class ChildImmunizationReport implements PreventionReport{
              log.debug("prev1 "+prevs1.size()+ " prevs2 "+ prevs2.size() +" prev4 "+prevs4.size());
 
              DemographicData dd = new DemographicData();
-             org.oscarehr.common.model.Demographic demoData = dd.getDemographic(demo);
+             org.oscarehr.common.model.Demographic demoData = dd.getDemographic(demo.toString());
              // This a kludge to get by conformance testing in ontario -- needs to be done in a smarter way
              int totalImmunizations = numDtap + /*numHib +*/ numMMR ;
              int recommTotal = 5; //9;NOT SURE HOW HIB WORKS
@@ -185,7 +185,7 @@ public class ChildImmunizationReport implements PreventionReport{
                    numMonths = ""+num+" months";
                 }
 
-                Date dob = dd.getDemographicDOB(demo);
+                Date dob = dd.getDemographicDOB(demo.toString());
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(dob);
                 cal.add(Calendar.MONTH, 30);

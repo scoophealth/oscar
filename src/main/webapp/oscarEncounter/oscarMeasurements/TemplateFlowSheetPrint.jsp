@@ -101,7 +101,7 @@
     /////
 
     long startTimeToGetP = System.currentTimeMillis();
-    Prevention p = PreventionData.getPrevention(demographic_no);
+    Prevention p = PreventionData.getPrevention(Integer.valueOf(demographic_no));
 
     boolean dsProblems = false;
 
@@ -352,7 +352,7 @@ div.recommendations li{
 
 <body class="BodyStyle" >
 <!--  -->
-<form action="TemplateFlowSheetPrint.jsp" method="POST">
+<form action="TemplateFlowSheetPrint.jsp" method="post">
 <table  class="MainTable" id="scrollNumber1" >
 <tr class="MainTableTopRow">
     <td class="MainTableTopRowLeftColumn"  >
@@ -558,7 +558,7 @@ div.recommendations li{
 <%}else{
     String prevType = (String) h2.get("prevention_type");
     long startPrevType = System.currentTimeMillis();
-    ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(prevType, demographic_no);
+    ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(prevType, Integer.valueOf(demographic_no));
 %>
 
 

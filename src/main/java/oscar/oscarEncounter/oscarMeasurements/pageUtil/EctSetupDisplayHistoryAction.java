@@ -55,13 +55,13 @@ public final class EctSetupDisplayHistoryAction extends Action {
         MiscUtils.getLogger().debug("Type: " + type);
         oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler hd = null;
         if (bean!=null){
-            String demo = bean.getDemographicNo();
+            Integer demo = Integer.valueOf( bean.getDemographicNo());
             request.setAttribute("demographicNo",demo);
             if(type!=null){
                 hd = new oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler(demo, type);
                 if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
                 	List<EctMeasurementsDataBean> measures = (List<EctMeasurementsDataBean>) hd.getMeasurementsDataVector ();
-                	oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler.addRemoteMeasurements(measures,type,Integer.parseInt(demo));
+                	oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler.addRemoteMeasurements(measures,type,demo);
                 }
                 request.setAttribute("type", type);
             }            

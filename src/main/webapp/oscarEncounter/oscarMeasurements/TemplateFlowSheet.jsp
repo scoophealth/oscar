@@ -86,7 +86,9 @@
     if ( request.getParameter("numEle") != null ){
         try{
             numElementsToShow = Integer.parseInt(request.getParameter("numEle"));
-        }catch(Exception e){}
+        }catch(Exception e){
+      	  MiscUtils.getLogger().debug("might be ok, might no, not sure, some one else left this blank", e);
+        }
     }
 
     if (request.getParameter("sdate") != null){
@@ -748,7 +750,7 @@ div.recommendations li{
     }else{
     String prevType = (String) h2.get("prevention_type");
     long startPrevType = System.currentTimeMillis();
-    ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(prevType, demographic_no);
+    ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(prevType, Integer.parseInt(demographic_no));
 %>
 
 
@@ -898,14 +900,7 @@ function createAddAll(d,t,h){
             ret = "<span style='color:"+colour+"'>"+s+"</span> </br>";
         }
         return ret;
-    }
-
-    public void printOutStringLists(List<String> measurements){
-       for (String measurement : measurements){
-
-       }
-    }
-    
+    }    
     
     public String getFromFacilityMsg(EctMeasurementsDataBean emdb){
 		if (emdb.getRemoteFacility()!=null)	return("<br /><span style=\"color:#990000\">(At facility : "+emdb.getRemoteFacility()+")<span>");

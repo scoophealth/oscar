@@ -106,7 +106,7 @@ public class MeasurementInfo {
     public void getMeasurements(List<String> list){
         for (int i =0; i < list.size(); i++){
            String measurement = list.get(i);
-           EctMeasurementsDataBeanHandler ect = new EctMeasurementsDataBeanHandler(demographicNo, measurement);
+           EctMeasurementsDataBeanHandler ect = new EctMeasurementsDataBeanHandler(Integer.valueOf(demographicNo), measurement);
            Collection v = ect.getMeasurementsDataVector();
            measurementList.add(new ArrayList(v));
            measurementHash.put(measurement,new ArrayList(v));
