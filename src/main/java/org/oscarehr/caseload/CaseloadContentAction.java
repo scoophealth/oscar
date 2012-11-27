@@ -31,12 +31,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
-
 import org.oscarehr.common.dao.CaseloadDao;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import oscar.OscarProperties;
 import oscar.util.OscarRoleObjectPrivilege;
@@ -288,7 +285,7 @@ public class CaseloadContentAction extends DispatchAction {
 		CaseloadDao caseloadDao = (CaseloadDao)SpringUtils.getBean("caseloadDao");
 
 		HttpSession session = request.getSession();
-		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(session.getServletContext());
+
 		String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 
 		String curUser_no = (String) session.getAttribute("user");

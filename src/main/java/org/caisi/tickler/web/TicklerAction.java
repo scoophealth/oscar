@@ -48,20 +48,14 @@ import org.caisi.tickler.prepared.PreparedTicklerManager;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
-import org.oscarehr.common.dao.ConsultationRequestDao;
 import org.oscarehr.common.dao.EChartDao;
 import org.oscarehr.common.model.EChart;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
-import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 
-/*
- * Updated by Eugene Petruhin on 11 dec 2008 while fixing #2356548 & #2393547
- * Updated by Eugene Petruhin on 19 dec 2008 while fixing #2422864 & #2317933 & #2379840
- */
 public class TicklerAction extends DispatchAction {
     private static Logger log = MiscUtils.getLogger();
     private TicklerManager ticklerMgr = null;
@@ -70,8 +64,6 @@ public class TicklerAction extends DispatchAction {
     private DemographicManagerTickler demographicMgr = null;
     private EChartDao echartDao = null;
     private ProgramManager programMgr = null;
-    private ConsultationRequestDao consultationRequestDao = (ConsultationRequestDao)SpringUtils.getBean("consultationRequestDao");
-    private EChartDao eChartDao = SpringUtils.getBean(EChartDao.class);
 
     public void setTicklerManager(TicklerManager ticklerManager) {
         this.ticklerMgr = ticklerManager;
