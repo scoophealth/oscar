@@ -25,6 +25,11 @@
 
 package org.oscarehr.billing.CA.BC.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.billing.CA.BC.model.TeleplanS00;
 import org.oscarehr.common.dao.AbstractDao;
 import org.springframework.stereotype.Repository;
@@ -35,4 +40,22 @@ public class TeleplanS00Dao extends AbstractDao<TeleplanS00>{
 	public TeleplanS00Dao() {
 		super(TeleplanS00.class);
 	}
+
+	@SuppressWarnings("unchecked")
+    public List<TeleplanS00> findByBillingNo(String mspCtlNo) {
+		Query q = createQuery("t", "t.mspCtlNo = :no");
+		q.setParameter("no", mspCtlNo);
+	    return q.getResultList();
+    }
+
+	@SuppressWarnings("unchecked")
+	public List<TeleplanS00> findByOfficeNumbers(List<String> officeNumbers) {
+		if (officeNumbers.isEmpty()) {
+			return new ArrayList<TeleplanS00>();
+		}
+
+		Query q = createQuery("t", "t.officeNo IN (:no)");
+		q.setParameter("no", officeNumbers);
+	    return q.getResultList();
+    }
 }

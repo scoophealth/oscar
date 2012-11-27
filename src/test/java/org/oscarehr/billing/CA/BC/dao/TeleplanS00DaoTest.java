@@ -25,6 +25,8 @@ package org.oscarehr.billing.CA.BC.dao;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.Arrays;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.billing.CA.BC.model.TeleplanS00;
@@ -51,5 +53,16 @@ public class TeleplanS00DaoTest extends DaoTestFixtures {
 		EntityDataGenerator.generateTestDataForModelClass(entity);
 		dao.persist(entity);
 		assertNotNull(entity.getId());
+	}
+
+	@Test
+	public void testFindByBillingNo() {
+		dao.findByBillingNo("101");
+	}
+
+	@Test
+	public void testFindByOfficeNumbers() {
+		assertNotNull(dao.findByOfficeNumbers(Arrays.asList(new String[] {})));
+		assertNotNull(dao.findByOfficeNumbers(Arrays.asList(new String[] { "10", "20" })));
 	}
 }

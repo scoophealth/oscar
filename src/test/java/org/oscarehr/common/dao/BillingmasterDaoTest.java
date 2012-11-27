@@ -44,7 +44,7 @@ public class BillingmasterDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("billingmaster", "wcb");
+		SchemaUtils.restoreTable("billingmaster", "wcb", "billing");
 	}
 
 	@Test
@@ -89,4 +89,15 @@ public class BillingmasterDaoTest extends DaoTestFixtures {
 		
 		assertNotNull(dao.getWcbByBillingNo(999));
 	}
+
+	@Test
+	public void testGetBillingMasterByVariousFields() {
+		dao.getBillingMasterByVariousFields("ST", null, null, null);
+		dao.getBillingMasterByVariousFields("ST", null, null, "01-01-2012");
+		dao.getBillingMasterByVariousFields("ST", null, "01-01-2011", "01-01-2012");
+		dao.getBillingMasterByVariousFields("ST", "01", null, null);
+		dao.getBillingMasterByVariousFields("ST", "01", "01-01-2011", "01-01-2012");
+		
+	}
+	
 }
