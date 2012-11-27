@@ -44,7 +44,7 @@ public class JdbcBillingCorrection {
 	
 	private BillingONCHeader1Dao billingHeaderDao = SpringUtils.getBean(BillingONCHeader1Dao.class);
 	private BillingONRepoDao billingRepoDao = SpringUtils.getBean(BillingONRepoDao.class);
-	private BillingONItemDao billingItemDao = (BillingONItemDao)SpringUtils.getBean("BillingONItemDao");
+	private BillingONItemDao billingItemDao = SpringUtils.getBean(BillingONItemDao.class);
 	private BillingONEAReportDao billingEaReportDao = SpringUtils.getBean(BillingONEAReportDao.class);
 	private RaDetailDao raDetailDao = SpringUtils.getBean(RaDetailDao.class);
 	
