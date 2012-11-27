@@ -48,4 +48,9 @@ public class GroupsDaoTest {
 		dao.persist(entity);
 		assertNotNull(entity.getId());
 	}
+
+	@Test
+	public void testFindByParentId() {
+		assertNotNull(dao.findByParentId(100));
+	}
 }

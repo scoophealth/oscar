@@ -1307,10 +1307,6 @@
         <ViolationValue>/src/main/java/oscar/oscarMDS/pageUtil/ReportStatusUpdateAction.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/config/data/MsgMessengerGroupData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/config/pageUtil/MsgMessengerAdminAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgAddressBook.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgAddressBookMaker.java:ResultSet rs = DBHandler.GetSQL("SELECT addressBook FROM oscarcommlocations WHERE current1 = 1");</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgAddressBookMaker.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgAddressBookMaker.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgMessageData.java:DBPreparedHandler db = new DBPreparedHandler();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/data/MsgMessageData.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/docxfer/send/MsgGenerate.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
@@ -1327,7 +1323,6 @@
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgViewMessageByPositionAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/pageUtil/MsgViewPDFAttachmentAction.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/tld/MsgNewMessagesTag.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:ResultSet rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarPrevention/PreventionData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarProvider/bean/ProviderNameBeanHandler.java:for(rs = DBHandler.GetSQL(sql); rs.next(); )</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/SQLDenominator.java:ResultSet rs = DBHandler.GetSQL(exeSql);</ViolationValue>
@@ -2453,8 +2448,7 @@
         <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:Vector msgVector= new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:import java.util.Vector;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:msgVector = null;</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:msgVector.add(oscar.Misc.getString(rs, "messageID"));</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:msgVector.add("" + map.getId().getMessageId());</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:public Hashtable getDemoMap (String msgId){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:public Vector getMsgVector(String demographic_no){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarMessenger/util/MsgDemoMap.java:return msgVector;</ViolationValue>
