@@ -37,10 +37,13 @@
 <%@ page import="org.oscarehr.common.model.MyGroup" %>
 <%@ page import="org.oscarehr.common.model.MyGroupPrimaryKey" %>
 <%@ page import="org.oscarehr.common.dao.MyGroupDao" %>
+<%@ page import="org.oscarehr.common.model.ProviderData"%>
+<%@ page import="org.oscarehr.common.dao.ProviderDataDao"%>
+
 <%
 	MyGroupDao myGroupDao = SpringUtils.getBean(MyGroupDao.class);
-%>
-<%
+	ProviderDataDao providerDao = SpringUtils.getBean(ProviderDataDao.class);
+
     if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
     String curProvider_no = (String) session.getAttribute("user");
 
@@ -60,7 +63,6 @@
 <title><bean:message key="admin.adminnewgroup.title" /></title>
 </head>
 <script language="javascript">
-<%-- start javascript ---- check to see if it is really empty in database --%>
 
 function setfocus() {
   this.focus();
@@ -75,8 +77,8 @@ function validate() {
      alert("<bean:message key="admin.adminNewGroup.msgGroupIsRequired"/>");
 
      return false;
-  }else{
-
+  }
+  else {
   	var checked=false;
   	var checkboxes = document.getElementsByName("data");
 	var x=0;
@@ -116,12 +118,11 @@ function validate() {
   }
 %>
 
-<FORM NAME="UPDATEPRE" METHOD="post" ACTION="admincontrol.jsp"
-	onsubmit="return validate();">
+<FORM NAME="UPDATEPRE" METHOD="post" ACTION="admincontrol.jsp" onsubmit="return validate();">
 <table border=0 cellspacing=0 cellpadding=0 width="100%">
 	<tr bgcolor="#486ebd">
-		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message
-			key="admin.adminnewgroup.description" /></font></th>
+		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">
+		<bean:message key="admin.adminnewgroup.description" /></font></th>
 	</tr>
 </table>
 
@@ -133,44 +134,34 @@ function validate() {
 		<table BORDER="0" CELLPADDING="0" CELLSPACING="1" WIDTH="100%"
 			BGCOLOR="#C0C0C0">
 			<tr BGCOLOR="#CCFFFF">
-				<td ALIGN="center"><font face="arial"><bean:message
-					key="admin.adminmygroup.formGroupNo" /></font></td>
-				<td ALIGN="center"><font face="arial"> </font> <input
-					type="text" name="mygroup_no" size="10" maxlength="10"> <font
-					size="-2">(Max. 10 chars.)</font></td>
+				<td ALIGN="center"><font face="arial">
+					<bean:message key="admin.adminmygroup.formGroupNo" /></font></td>
+				<td ALIGN="center"><font face="arial"> </font> 
+					<input type="text" name="mygroup_no" size="10" maxlength="10">
+					<font size="-2">(Max. 10 chars.)</font></td>
 			</tr>
-
-
 <%
-   ResultSet rsgroup = null;
-   int i=0;
-   if (isSiteAccessPrivacy)
-   {
-	  rsgroup = apptMainBean.queryResults(curProvider_no,"site_searchproviderall");
-   }
-   else
-   {
-	  rsgroup = apptMainBean.queryResults("searchproviderall");
-   }
-   while (rsgroup.next()) {
-     i++;
+
+	// find all active providers
+	int i=0;
+	List<ProviderData> providerList = providerDao.findAll(false);
+   
+   for(ProviderData provider : providerList) {
+		i++;
 %>
 			<tr BGCOLOR="<%=i%2==0?"ivory":"white"%>">
-				<td>&nbsp; <%=rsgroup.getString("last_name")%>, <%=rsgroup.getString("first_name")%></td>
-				<td ALIGN="center"><input type="checkbox" name="data"
-					value="<%=i%>"> <input type="hidden"
-					name="provider_no<%=i%>"
-					value="<%=rsgroup.getString("provider_no")%>"> <INPUT
-					TYPE="hidden" NAME="last_name<%=i%>"
-					VALUE='<%=rsgroup.getString("last_name")%>'> <INPUT
-					TYPE="hidden" NAME="first_name<%=i%>"
-					VALUE='<%=rsgroup.getString("first_name")%>'></td>
+				<td>&nbsp; <%= provider.getLastName() %>, <%= provider.getFirstName() %></td>
+				<td ALIGN="center">
+				<input type="checkbox" name="data" value="<%=i%>"> 
+				<input type="hidden" name="provider_no<%=i%>" value="<%= provider.getId() %>"> 
+				<input type="hidden" name="last_name<%=i%>" value='<%= provider.getLastName() %>'> 
+				<input type="hidden" name="first_name<%=i%>" value='<%= provider.getFirstName() %>'>
+				</td>
 			</tr>
-			<%
+<%
    }
 %>
-			<INPUT TYPE="hidden" NAME="displaymode" VALUE='savemygroup'>
-
+			<input type="hidden" name="displaymode" value='savemygroup'>
 		</table>
 
 		</td>
