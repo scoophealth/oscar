@@ -24,8 +24,8 @@
 
 --%>
 
+<%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="org.oscarehr.util.LocaleUtils"%>
-<%@page import="org.oscarehr.phr.PHRAuthentication"%>
 <%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
 <%@page import="org.oscarehr.util.WebUtils"%>
 <%
@@ -101,10 +101,10 @@
 	</logic:present>
 	
 	<%
-		if (MyOscarUtils.isVisibleMyOscarSendButton())
+		if (MyOscarUtils.isMyOscarEnabled())
 		{
-			PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
-			boolean enabledMyOscarButton=MyOscarUtils.isMyOscarSendButtonEnabled(auth, Integer.valueOf(bean.getDemographicNo()));
+			MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
+			boolean enabledMyOscarButton=MyOscarUtils.isMyOscarSendButtonEnabled(myOscarLoggedInInfo, Integer.valueOf(bean.getDemographicNo()));
 
 			String sendDataPath = request.getContextPath() + "/phr/send_medicaldata_to_myoscar.jsp?"
 					+ "demographicId=" + bean.getDemographicNo() + "&"

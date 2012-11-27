@@ -159,7 +159,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    setReportInformation(patientRecord);
 	    setDemographicDetails(patientRecord, demoNo);
 	    setCareElements(patientRecord, demoNo);
-	    setImmunizations(patientRecord, demoNo);
+	    setImmunizations(patientRecord, Integer.valueOf(demoNo));
 	    setLaboratoryResults(patientRecord, demoNo);
 	    setMedicationsAndTreatments(patientRecord, demoNo);
             return true;
@@ -555,7 +555,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         }
     }
 
-    void setImmunizations(PatientRecord patientRecord, String demoNo) {
+    void setImmunizations(PatientRecord patientRecord, Integer demoNo) {
         ArrayList<String> inject = new ArrayList<String>();
         ArrayList<? extends Map<String,? extends Object>> preventionList = PreventionDisplayConfig.getInstance().getPreventions();
         for (int i=0; i<preventionList.size(); i++){

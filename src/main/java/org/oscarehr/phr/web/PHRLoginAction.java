@@ -37,8 +37,10 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.ProviderPreferenceDao;
 import org.oscarehr.common.model.ProviderPreference;
-import org.oscarehr.phr.PHRAuthentication;
-import org.oscarehr.phr.service.PHRService;
+import org.oscarehr.myoscar.client.ws_manager.AccountManager;
+import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
+import org.oscarehr.myoscar_server.ws.LoginResultTransfer;
+import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.EncryptionUtils;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -58,13 +60,12 @@ public class PHRLoginAction extends DispatchAction
 		HttpSession session = request.getSession();
 
 		String providerNo = (String)session.getAttribute("user");
-		PHRAuthentication phrAuth = null;
 		String forwardTo = request.getParameter("forwardto");
 
 		ActionForward ar = new ActionForward(forwardTo);
 		request.setAttribute("forwardToOnSuccess", request.getParameter("forwardToOnSuccess"));
 
-		if (!PHRService.canAuthenticate(providerNo))
+		if (MyOscarUtils.getMyOscarUserNameFromOscar(providerNo)==null)
 		{
 			request.setAttribute("phrUserLoginErrorMsg", "You have not registered for MyOSCAR");
 			request.setAttribute("phrTechLoginErrorMsg", "No MyOSCAR information in the database");
@@ -74,12 +75,21 @@ public class PHRLoginAction extends DispatchAction
 		String myoscarPassword=request.getParameter("phrPassword");
 		try
 		{
-			phrAuth = PHRService.authenticate(providerNo, myoscarPassword);
+			String myOscarUserName=MyOscarUtils.getMyOscarUserNameFromOscar(providerNo);
+			LoginResultTransfer loginResultTransfer=AccountManager.login(MyOscarLoggedInInfo.getMyOscarServerBaseUrl(), myOscarUserName, myoscarPassword);
 
-			if (phrAuth == null)
+			if (loginResultTransfer == null)
 			{
 				request.setAttribute("phrUserLoginErrorMsg", "Incorrect user/password");
 				return ar;
+			}
+			else
+			{
+				MyOscarLoggedInInfo myOscarLoggedInInfo=new MyOscarLoggedInInfo(loginResultTransfer.getPerson().getId(), loginResultTransfer.getSecurityTokenKey(), request.getSession().getId());
+				MyOscarLoggedInInfo.setLoggedInInfo(request.getSession(), myOscarLoggedInInfo);
+				
+				boolean saveMyOscarPassword=WebUtils.isChecked(request, "saveMyOscarPassword");
+				if (saveMyOscarPassword) saveMyOscarPassword(session, myoscarPassword);
 			}
 		}
 		catch (Exception e)
@@ -89,12 +99,7 @@ public class PHRLoginAction extends DispatchAction
 			request.setAttribute("phrTechLoginErrorMsg", e.getMessage());
 			return ar;
 		}
-		
-		session.setAttribute(PHRAuthentication.SESSION_PHR_AUTH, phrAuth);
-
-		boolean saveMyOscarPassword=WebUtils.isChecked(request, "saveMyOscarPassword");
-		if (saveMyOscarPassword) saveMyOscarPassword(session, myoscarPassword);
-				
+						
 		log.debug("Correct user/pass, auth success");
 		return ar;
 	}

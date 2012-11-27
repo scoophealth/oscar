@@ -24,6 +24,12 @@
 
 --%>
 
+<%@page import="org.oscarehr.myoscar.client.ws_manager.MessageManager"%>
+<%@page import="org.oscarehr.myoscar_server.ws.Message2RecipientPersonAttributesTransfer"%>
+<%@page import="org.oscarehr.myoscar.client.ws_manager.AccountManager"%>
+<%@page import="org.oscarehr.myoscar_server.ws.MinimalPersonTransfer"%>
+<%@page import="org.oscarehr.myoscar_server.ws.MessageTransfer3"%>
+<%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="oscar.util.DateUtils"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
@@ -44,7 +50,7 @@
 <%@ taglib uri="/WEB-INF/phr-tag.tld" prefix="phr" %>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
 
-<%@ page import="oscar.oscarDemographic.data.DemographicData"%><%@ page import="org.oscarehr.phr.PHRAuthentication"%>
+<%@ page import="oscar.oscarDemographic.data.DemographicData"%>
 <%@ page import="org.oscarehr.phr.model.PHRAction"%>
 <%@ page import="oscar.oscarProvider.data.ProviderData"%>
 <%@ page import="org.oscarehr.phr.model.PHRMessage"%>
@@ -102,6 +108,9 @@ request.setAttribute("pageMethod",pageMethod);
     
     //get Actions Pending Approval
     List<PHRAction> actionsPendingApproval = (List<PHRAction>) request.getSession().getAttribute("actionsPendingApproval");
+    
+		MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
+
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
@@ -330,39 +339,43 @@ request.setAttribute("pageMethod",pageMethod);
                                         </td></tr></table>
                                     </td>
                                     <%
-                                    	PHRAuthentication phrAuth = (PHRAuthentication) session.getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
+                                    	if (MyOscarUtils.isMyOscarEnabled())
+                                    	{
+		                                    %>
+		                                        <td class="myoscarLoginElementAuth">
+		                                            <div>
+		                                                Status: <b>Logged in as <%=myOscarLoggedInInfo.getLoggedInPerson().getFirstName()+' '+myOscarLoggedInInfo.getLoggedInPerson().getLastName()%></b> (<%=myOscarLoggedInInfo.getLoggedInPerson().getUserName()%>)
+		                                                <form action="../../phr/Logout.do" name="phrLogout" method="POST"  style="margin: 0px; padding: 0px;">
+		                                                    <input type="hidden" name="forwardto" value="<%=request.getServletPath()%>?method=<%=request.getParameter("method")%>">
+		                                                    <center><a href="javascript: document.forms['phrLogout'].submit()">Logout</a><div class="statusDiv" id="statusDiv"></div></center>
+		                                                </form>
+		                                            </div>
+		                                        </td>
+											<%
+                                    	}
+                                    	else
+                                    	{
+											%>
+		                                        <td class="myoscarLoginElementNoAuth">
+		                                            <div>
+		                                                <form action="../../phr/Login.do" name="phrLogin" method="POST"  style="margin-bottom: 0px;">
+		                                                    <logic:present name="phrUserLoginErrorMsg">
+		                                                        <div class="phrLoginErrorMsg"><font color="red"><bean:write name="phrUserLoginErrorMsg"/>.</font>  
+		                                                        <logic:present name="phrTechLoginErrorMsg">
+		                                                            <a href="javascript:;" title="fade=[on] requireclick=[off] cssheader=[moreInfoBoxoverHeader] cssbody=[moreInfoBoxoverBody] singleclickstop=[on] header=[MyOSCAR Server Response:] body=[<bean:write name="phrTechLoginErrorMsg"/> </br>]">More Info</a></div>
+		                                                        </logic:present>
+		                                                    </logic:present>
+		                                                    Status: <b>Not logged in</b><br/>
+		                                                    <%=providerName%> password: <input type="password" id="phrPassword" name="phrPassword" style="font-size: 8px; width: 40px;"> <a href="javascript: document.forms['phrLogin'].submit()">Login</a>
+		                                                    <br />
+		                                                    Keep me logged in <input type="checkbox" checked="checked" name="saveMyOscarPassword" />
+		                                                    <input type="hidden" name="forwardto" value="<%=request.getServletPath()%>?method=<%=request.getParameter("method")%>">
+		                                                </form>
+		                                            </div>
+		                                        </td>
+			                                <%
+                                    	}
                                     %>
-                                    <logic:present name="<%=PHRAuthentication.SESSION_PHR_AUTH%>">
-                                        <td class="myoscarLoginElementAuth">
-                                            <div>
-                                                Status: <b>Logged in as <%=phrAuth.getMyOscarUserName()%></b> (<%=phrAuth.getMyOscarUserId()%>)
-                                                <form action="../../phr/Logout.do" name="phrLogout" method="POST"  style="margin: 0px; padding: 0px;">
-                                                    <input type="hidden" name="forwardto" value="<%=request.getServletPath()%>?method=<%=request.getParameter("method")%>">
-                                                    <center><a href="javascript: document.forms['phrLogout'].submit()">Logout</a><div class="statusDiv" id="statusDiv"></div></center>
-                                                </form>
-                                            </div>
-                                        </td>
-                                      <!--<p style="background-color: #E00000"  title="fade=[on] requireclick=[on] header=[Diabetes Med Changes] body=[<span style='color:red'>no DM Med changes have been recorded</span> </br>]">dsfsdfsdfsdfgsdgsdg</p>-->
-                                    </logic:present>
-                                    <logic:notPresent name="<%=PHRAuthentication.SESSION_PHR_AUTH%>">
-                                        <td class="myoscarLoginElementNoAuth">
-                                            <div>
-                                                <form action="../../phr/Login.do" name="phrLogin" method="POST"  style="margin-bottom: 0px;">
-                                                    <logic:present name="phrUserLoginErrorMsg">
-                                                        <div class="phrLoginErrorMsg"><font color="red"><bean:write name="phrUserLoginErrorMsg"/>.</font>  
-                                                        <logic:present name="phrTechLoginErrorMsg">
-                                                            <a href="javascript:;" title="fade=[on] requireclick=[off] cssheader=[moreInfoBoxoverHeader] cssbody=[moreInfoBoxoverBody] singleclickstop=[on] header=[MyOSCAR Server Response:] body=[<bean:write name="phrTechLoginErrorMsg"/> </br>]">More Info</a></div>
-                                                        </logic:present>
-                                                    </logic:present>
-                                                    Status: <b>Not logged in</b><br/>
-                                                    <%=providerName%> password: <input type="password" id="phrPassword" name="phrPassword" style="font-size: 8px; width: 40px;"> <a href="javascript: document.forms['phrLogin'].submit()">Login</a>
-                                                    <br />
-                                                    Keep me logged in <input type="checkbox" checked="checked" name="saveMyOscarPassword" />
-                                                    <input type="hidden" name="forwardto" value="<%=request.getServletPath()%>?method=<%=request.getParameter("method")%>">
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </logic:notPresent>
                                 </tr>
                             </table><!--cell spacing=3-->
                         </td>
@@ -452,24 +465,39 @@ request.setAttribute("pageMethod",pageMethod);
                                 
  <%-- Inbox -------------------------------------------------------------- --%>
 	
-				<%
-					PHRAuthentication auth = (PHRAuthentication) session.getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
-					
-					if (auth!=null)
+				<%					
+					if (myOscarLoggedInInfo!=null && myOscarLoggedInInfo.isLoggedIn())
 					{
-						List<MessageTransfer> messages=null;
+						List<MessageTransfer3> messages=null;
 						
 						if ("viewSentMessages".equals(pageMethod)) messages=MyOscarMessagesHelper.getSentMessages(session, startIndex);
 						else if ("viewArchivedMessages".equals(pageMethod)) messages=MyOscarMessagesHelper.getReceivedMessages(session, false, startIndex);
 						else messages=MyOscarMessagesHelper.getReceivedMessages(session, true, startIndex);
  
-						for (MessageTransfer message : messages)
+						for (MessageTransfer3 message : messages)
 						{
+							Long senderPersonId=message.getSenderPersonId();
+							MinimalPersonTransfer minimalPersonSender=AccountManager.getMinimalPerson(myOscarLoggedInInfo, senderPersonId);
+							String senderString=minimalPersonSender.getLastName()+", "+minimalPersonSender.getFirstName()+" ("+minimalPersonSender.getUserName()+")";
+							
+							StringBuilder sb=new StringBuilder();
+		               		for (Long recipientId : message.getRecipientPeopleIds())
+		               		{
+		               			MinimalPersonTransfer recipient=AccountManager.getMinimalPerson(myOscarLoggedInInfo, recipientId);
+		               			sb.append(recipient.getLastName()+", "+recipient.getFirstName()+" ("+recipient.getUserName()+"); ");
+		               		}
+							String recipientString=sb.toString();
+							if (recipientString.length()>32) recipientString=recipientString.substring(0, 32)+"...";
+		               		
+							String subject=MessageManager.getSubject(message);
+							
+							Message2RecipientPersonAttributesTransfer recipientAttributes=message.getOneSpecificRecipientAttributes();
+
 							%>
-		                        <tr class="<%=message.getFirstViewDate()!=null?"normal":"new"%>">
+		                        <tr class="<%=recipientAttributes!=null && recipientAttributes.getFirstViewDate()!=null?"normal":"new"%>">
 		                            <td bgcolor="#EEEEFF" width="30">
 		                            	<%
-		                            		if (message.getFirstRepliedDate()!=null)
+		                            		if (recipientAttributes!=null && recipientAttributes.getFirstViewDate()!=null)
 		                            		{
 		                            			%>
 		                            				-->
@@ -478,19 +506,19 @@ request.setAttribute("pageMethod",pageMethod);
 		                            	%>
 		                            </td>
 		                            <td bgcolor="#EEEEFF" width="75">
-		                            	<%=message.getFirstViewDate()!=null?"read":"new"%>
+		                            	<%=recipientAttributes!=null && recipientAttributes.getFirstViewDate()!=null?"read":"new"%>
 		                            </td>
 		                            <td bgcolor="#EEEEFF">      
 		                            	<%
 		                                String demographicLink = "";
-		                                String myOscarUserName=message.getSenderPersonUserName();
+		                                String myOscarUserName=minimalPersonSender.getUserName();
 		                                Demographic demographic=MyOscarUtils.getDemographicByMyOscarUserName(myOscarUserName);
 		                                if (demographic!=null){
 		                                		demographicLink = "&demographicNo="+demographic.getDemographicNo();
 	                                	}
 		                                %>
 		                            	<a href="<%=request.getContextPath()%>/phr/PhrMessage.do?&method=read&comingfrom=viewMessages&messageId=<%=message.getId()%><%=demographicLink%>">    
-		                            		 <%=StringEscapeUtils.escapeHtml(message.getSenderPersonLastName()+", "+message.getSenderPersonFirstName())%>
+		                            		 <%=StringEscapeUtils.escapeHtml(senderString)%>
 		                            	</a>                      
 		                               <%
 		                                	if (demographic!=null)
@@ -503,16 +531,20 @@ request.setAttribute("pageMethod",pageMethod);
 		                            </td>
 		                            <td bgcolor="#EEEEFF">                                
 		                                <%
-		                                	myOscarUserName=message.getRecipientPersonUserName();
-		                                	demographic=MyOscarUtils.getDemographicByMyOscarUserName(myOscarUserName);
-		                                	if (demographic!=null)
+		                                	if (recipientAttributes!=null)
 		                                	{
-				                                %>
-				                               		<a href="?<%=request.getQueryString()%>" onClick="gotoEchart2(<%=demographic.getDemographicNo()%>,<%=message.getId()%>);" >
-			                               		<%
+			                                	Long recipientPersonId=recipientAttributes.getRecipientPersonId();
+			                                	MinimalPersonTransfer minimalPerson=AccountManager.getMinimalPerson(myOscarLoggedInInfo, recipientPersonId);
+			                                	demographic=MyOscarUtils.getDemographicByMyOscarUserName(minimalPerson.getUserName());
+			                                	if (demographic!=null)
+			                                	{
+					                                %>
+					                               		<a href="?<%=request.getQueryString()%>" onClick="gotoEchart2(<%=demographic.getDemographicNo()%>,<%=message.getId()%>);" >
+				                               		<%
+		                                		}
 		                                	}
 			                            %>
-		                                <%=StringEscapeUtils.escapeHtml(message.getRecipientPersonLastName()+", "+message.getRecipientPersonFirstName())%>
+		                                <%=StringEscapeUtils.escapeHtml(recipientString)%>
 										<%
 		                                	if (demographic!=null)
 		                                	{
@@ -524,36 +556,40 @@ request.setAttribute("pageMethod",pageMethod);
 		                            </td>
 		                            <td bgcolor="#EEEEFF">
 		                                <a href="<%=request.getContextPath()%>/phr/PhrMessage.do?&method=read&comingfrom=viewMessages&messageId=<%=message.getId()%><%=demographicLink%>">
-		                                   <%=StringEscapeUtils.escapeHtml(message.getSubject())%>
+		                                   <%=StringEscapeUtils.escapeHtml(subject)%>
 		                                </a>
 		                            </td>
 		                            <td bgcolor="#EEEEFF"> 
-	                                   <%=DateUtils.formatDate(message.getSendDate(), request.getLocale())%>
+	                                   <%=DateUtils.formatDate(message.getSentDate(), request.getLocale())%>
 										&nbsp;
-	                                   <%=DateUtils.formatTime(message.getSendDate(), request.getLocale())%>
+	                                   <%=DateUtils.formatTime(message.getSentDate(), request.getLocale())%>
 		                            </td>
 		                            <td>
 		                            	<% 
 		                            		if (!"viewSentMessages".equals(pageMethod))
 		                            		{
-				                            	%>
-				                                <a href="<%=request.getContextPath()%>/phr/PhrMessage.do?prevDisplay=<%=pageMethod%>&method=flipActive&messageId=<%=message.getId()%>"  >
-						                            <%
-						                            	if (message.isActive())
-						                            	{
-						                            		%>
-								                                   <bean:message key="oscarMessenger.DisplayMessages.formArchive"/>
-						                            		<%
-						                            	}
-						                            	else
-						                            	{
-						                            		%>
-								                                   <bean:message key="oscarMessenger.DisplayMessages.formUnarchive"/>
-						                            		<%			                            		
-						                            	}
+				                            	Message2RecipientPersonAttributesTransfer recipientAttributesTransfer= message.getOneSpecificRecipientAttributes();
+				                            	if (recipientAttributesTransfer!=null)
+				                            	{
 					                            	%>
-				                                </a>
-				                              <%
+					                                <a href="<%=request.getContextPath()%>/phr/PhrMessage.do?prevDisplay=<%=pageMethod%>&method=flipActive&messageId=<%=message.getId()%>"  >
+							                            <%
+							                            	if (recipientAttributesTransfer.isActive())
+							                            	{
+							                            		%>
+									                                   <bean:message key="oscarMessenger.DisplayMessages.formArchive"/>
+							                            		<%
+							                            	}
+							                            	else
+							                            	{
+							                            		%>
+									                                   <bean:message key="oscarMessenger.DisplayMessages.formUnarchive"/>
+							                            		<%			                            		
+							                            	}
+						                            	%>
+					                                </a>
+					                              <%
+				                            	}
 		                            		}
 				                        %>
 		                            </td>

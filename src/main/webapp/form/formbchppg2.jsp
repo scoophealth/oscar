@@ -73,7 +73,7 @@ if (props == null || (props.getProperty("pg2_medName1", "").equals("") && props.
     }
     
     // fill the preventions
-    ArrayList<Map<String,Object>> vaccines = PreventionData.getPreventionData(""+demoNo);
+    ArrayList<Map<String,Object>> vaccines = PreventionData.getPreventionData(demoNo);
     int count1 = 0;
     int count2 = 0;
     int count3 = 0;

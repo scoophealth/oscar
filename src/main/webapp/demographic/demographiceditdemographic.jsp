@@ -25,6 +25,7 @@
 --%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%-- @ taglib uri="../WEB-INF/taglibs-log.tld" prefix="log" --%>
+<%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
 <%@page import="org.oscarehr.util.LoggedInInfo" %>
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.ConformanceTestHelper"%>
@@ -57,12 +58,10 @@
 </security:oscarSec>
 
 <%@ page import="java.util.*, java.sql.*, java.net.*,java.text.DecimalFormat, oscar.*, oscar.oscarDemographic.data.ProvinceNames, oscar.oscarWaitingList.WaitingList, oscar.oscarReport.data.DemographicSets,oscar.log.*"%>
-<%@ page import="org.oscarehr.phr.PHRAuthentication"%>
 <%@ page import="oscar.oscarDemographic.data.*"%>
 <%@ page import="oscar.oscarDemographic.pageUtil.Util" %>
 <%@ page import="org.springframework.web.context.*,org.springframework.web.context.support.*" %>
 <%@ page import="oscar.OscarProperties"%>
-<%@ page import="org.oscarehr.phr.PHRAuthentication"%>
 <%@ page import="org.oscarehr.common.dao.*,org.oscarehr.common.model.*" %>
 <%@ page import="org.oscarehr.common.OtherIdManager" %>
 <%@ page import="org.oscarehr.common.web.ContactAction" %>
@@ -1117,8 +1116,8 @@ if(wLReadonly.equals("")){
 							<%
 								String onclickString="alert('Please login to MyOscar first.')";
 
-								PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
-								if (auth!=null) onclickString="popupOscarRx(600,900,'../phr/PhrMessage.do?method=createMessage&providerNo="+curProvider_no+"&demographicNo="+demographic_no+"')";
+								MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
+								if (myOscarLoggedInInfo!=null && myOscarLoggedInInfo.isLoggedIn()) onclickString="popupOscarRx(600,900,'../phr/PhrMessage.do?method=createMessage&providerNo="+curProvider_no+"&demographicNo="+demographic_no+"')";
 							%>
 							<a href="javascript: function myFunction() {return false; }" ONCLICK="<%=onclickString%>"	title="myOscar">
 								<bean:message key="demographic.demographiceditdemographic.msgSendMsgPHR"/>
@@ -2255,8 +2254,8 @@ if ( PatStat.equals(Dead) ) {%>
 
 								<%
 									String onclickString="popup(600, 650, '../phr/indivo/RegisterIndivo.jsp?demographicNo="+demographic_no+"', 'indivoRegistration');";
-									PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
-									if (auth==null) onclickString="alert('Please login to MyOscar first.')";
+									MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
+									if (myOscarLoggedInInfo==null || !myOscarLoggedInInfo.isLoggedIn()) onclickString="alert('Please login to MyOscar first.')";
 								%>
 								<a href="javascript:"
 									onclick="<%=onclickString%>"><sub

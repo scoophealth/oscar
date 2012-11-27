@@ -41,9 +41,11 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionRedirect;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.PHRVerificationDao;
-import org.oscarehr.phr.PHRAuthentication;
-import org.oscarehr.phr.util.MyOscarUtils;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.myoscar.client.ws_manager.AccountManager;
+import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -80,9 +82,10 @@ public class PHRViewPatientRecord extends DispatchAction {
             response.getWriter().println("Error: Lost demographic number.  Please try again");
             return null;
         }
-        PHRAuthentication auth = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
         
-        if (auth == null || auth.getMyOscarUserId() == null) {
+        MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
+        
+        if (myOscarLoggedInInfo == null || !myOscarLoggedInInfo.isLoggedIn()) {
             request.setAttribute("forwardToOnSuccess", request.getContextPath() + "/demographic/viewPhrRecord.do?demographic_no=" + demographicNo);
             return mapping.findForward("login");
         } else {
@@ -107,14 +110,16 @@ public class PHRViewPatientRecord extends DispatchAction {
                 response.getWriter().println("Error: 'myOSCAR.url' property is not configured... please contact support to have this feature enabled");
                 return null;
             }
-            DemographicData demographicData = new DemographicData();
-            Long myOscarUserId = MyOscarUtils.getMyOscarUserId(auth, demographicData.getDemographic(demographicNo).getMyOscarUserName());
+            
+    		DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+    		Demographic demographic = demographicDao.getDemographicById(Integer.parseInt(demographicNo));
+            Long myOscarUserId = AccountManager.getUserId(myOscarLoggedInInfo, demographic.getMyOscarUserName());
 
             LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.READ, LogConst.CON_PHR, String.valueOf(myOscarUserId), request.getRemoteAddr(), demographicNo, "");
 //            request.setAttribute("userid", auth.getUserId());
 //            request.setAttribute("ticket", auth.getToken());
-            request.setAttribute("userName", auth.getMyOscarUserName());
-            request.setAttribute("password", auth.getMyOscarPassword());
+            request.setAttribute("userName", myOscarLoggedInInfo.getLoggedInPerson().getUserName());
+            request.setAttribute("password", myOscarLoggedInInfo.getLoggedInPersonSecurityToken());
             request.setAttribute("viewpatient", myOscarUserId);
             request.setAttribute("url", phrPath + (phrPath.endsWith("/")?"":"/") + "patient_view_action.jsp");
             return mapping.findForward("phr");

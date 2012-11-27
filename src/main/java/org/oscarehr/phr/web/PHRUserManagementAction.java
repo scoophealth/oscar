@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
@@ -53,13 +54,16 @@ import org.oscarehr.common.printing.PdfWriterFactory;
 import org.oscarehr.document.dao.DocumentDAO;
 import org.oscarehr.document.model.CtlDocument;
 import org.oscarehr.document.model.CtlDocumentPK;
+import org.oscarehr.myoscar.client.ws_manager.AccountManager;
+import org.oscarehr.myoscar.client.ws_manager.MyOscarServerWebServicesManager;
+import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.myoscar_server.ws.AccountWs;
 import org.oscarehr.myoscar_server.ws.InvalidRelationshipException_Exception;
 import org.oscarehr.myoscar_server.ws.InvalidRequestException_Exception;
 import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 import org.oscarehr.myoscar_server.ws.PersonTransfer2;
 import org.oscarehr.myoscar_server.ws.Relation;
-import org.oscarehr.phr.PHRAuthentication;
+import org.oscarehr.myoscar_server.ws.Role;
 import org.oscarehr.phr.RegistrationHelper;
 import org.oscarehr.phr.dao.PHRActionDAO;
 import org.oscarehr.phr.dao.PHRDocumentDAO;
@@ -67,8 +71,6 @@ import org.oscarehr.phr.indivo.service.accesspolicies.IndivoAPService;
 import org.oscarehr.phr.model.PHRAction;
 import org.oscarehr.phr.service.PHRService;
 import org.oscarehr.phr.util.MyOscarServerRelationManager;
-import org.oscarehr.phr.util.MyOscarServerWebServicesManager;
-import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
@@ -407,8 +409,8 @@ public class PHRUserManagementAction extends DispatchAction {
 
     	ActionRedirect ar = new ActionRedirect(mapping.findForward("registrationResult").getPath());
 
-        PHRAuthentication phrAuth = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
-        if (phrAuth == null || phrAuth.getMyOscarUserId() == null) {
+    	MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
+        if (myOscarLoggedInInfo == null || !myOscarLoggedInInfo.isLoggedIn() ) {
             ar.addParameter("failmessage", "Permission Denied: You must be logged into myOSCAR to register users");
             return ar;
         }
@@ -424,7 +426,7 @@ public class PHRUserManagementAction extends DispatchAction {
         }
         ht.put("registeringProviderNo", request.getSession().getAttribute("user"));
         try {
-            PersonTransfer2 newAccount=phrService.sendUserRegistration(phrAuth, ht);
+            PersonTransfer2 newAccount=sendUserRegistration(myOscarLoggedInInfo, ht);
             //if all is well, add the "pin" in the demographic screen
             String demographicNo = request.getParameter("demographicNo");
 
@@ -488,7 +490,45 @@ public class PHRUserManagementAction extends DispatchAction {
 
         return ar;
     }
+	/**
+	 * @return the myOscarUserId of the created user.
+	 * @throws Exception
+	 */
+	public PersonTransfer2 sendUserRegistration(MyOscarLoggedInInfo myOscarLoggedInInfo, HashMap<String, Object> phrRegistrationForm) throws Exception {
 
+		PersonTransfer2 newAccount = new PersonTransfer2();
+		newAccount.setUserName((String) phrRegistrationForm.get("username"));
+		newAccount.setRole(Role.PATIENT.name());
+		newAccount.setFirstName((String) phrRegistrationForm.get("firstName"));
+		newAccount.setLastName((String) phrRegistrationForm.get("lastName"));
+		newAccount.setStreetAddress1((String) phrRegistrationForm.get("address"));
+		newAccount.setCity((String) phrRegistrationForm.get("city"));
+		newAccount.setProvince((String) phrRegistrationForm.get("province"));
+		newAccount.setPostalCode((String) phrRegistrationForm.get("postal"));
+		newAccount.setPhone1((String) phrRegistrationForm.get("phone"));
+		newAccount.setPhone2((String) phrRegistrationForm.get("phone2"));
+		newAccount.setEmailAddress((String) phrRegistrationForm.get("email"));
+
+		String iDob = (String) phrRegistrationForm.get("dob");
+		if (iDob != null) {
+			String[] split = iDob.split("[/\\-\\.]");
+			if (split.length == 3) {
+				GregorianCalendar cal = new GregorianCalendar(Integer.parseInt(split[0]), Integer.parseInt(split[1]) - 1, Integer.parseInt(split[2]));
+				newAccount.setBirthDate(cal);
+			}
+		}
+
+		String newAccountPassword = (String) phrRegistrationForm.get("password");
+
+		// if no password is set, we'll make one up, the nano time is to ensure it's not guessable.
+		if (newAccountPassword == null || newAccountPassword.length() == 0) newAccountPassword = newAccount.getUserName() + System.nanoTime();
+
+		newAccount=AccountManager.createPerson(myOscarLoggedInInfo, newAccount, newAccountPassword);
+
+		if (newAccount == null) throw (new Exception("Error creating new Myoscar Account."));
+
+		return (newAccount);
+	}
     private void addRelationships(HttpServletRequest request, PersonTransfer2 newAccount) throws NotAuthorisedException_Exception, InvalidRequestException_Exception, InvalidRelationshipException_Exception {
 
     	if (log.isDebugEnabled())
@@ -496,8 +536,8 @@ public class PHRUserManagementAction extends DispatchAction {
     		WebUtils.dumpParameters(request);
     	}
 
-    	PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(request.getSession());
-		AccountWs accountWs=MyOscarServerWebServicesManager.getAccountWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
+    	MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
+		AccountWs accountWs=MyOscarServerWebServicesManager.getAccountWs(myOscarLoggedInInfo);
 
 		@SuppressWarnings("unchecked")
         Enumeration<String> e = request.getParameterNames();
@@ -556,8 +596,8 @@ public class PHRUserManagementAction extends DispatchAction {
     	String demoNo = request.getParameter("demoNo");
     	String myOscarUserName = request.getParameter("myOscarUserName");
 
-    	PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(request.getSession());
-    	boolean patientRelationshipCreated = MyOscarServerRelationManager.addPatientRelationship(auth,  demoNo );
+    	MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
+    	boolean patientRelationshipCreated = MyOscarServerRelationManager.addPatientRelationship(myOscarLoggedInInfo,  demoNo );
     	log.debug("Patient Added: "+patientRelationshipCreated);
 		request.setAttribute("myOscarUserName",myOscarUserName);
 		request.setAttribute("demoNo",demoNo);

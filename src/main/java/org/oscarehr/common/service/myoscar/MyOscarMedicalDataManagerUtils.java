@@ -43,6 +43,8 @@ import org.oscarehr.common.model.PHRVerification;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.RemoteDataLog;
 import org.oscarehr.common.model.SentToPHRTracking;
+import org.oscarehr.myoscar.client.ws_manager.MyOscarServerWebServicesManager;
+import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.myoscar_server.ws.InvalidRequestException_Exception;
 import org.oscarehr.myoscar_server.ws.ItemAlreadyExistsException_Exception;
 import org.oscarehr.myoscar_server.ws.ItemCompletedException_Exception;
@@ -51,14 +53,10 @@ import org.oscarehr.myoscar_server.ws.MedicalDataWs;
 import org.oscarehr.myoscar_server.ws.NoSuchItemException_Exception;
 import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
 import org.oscarehr.myoscar_server.ws.UnsupportedEncodingException_Exception;
-import org.oscarehr.phr.PHRAuthentication;
-import org.oscarehr.phr.util.MyOscarServerWebServicesManager;
 import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-
-import oscar.oscarProvider.data.ProviderMyOscarIdData;
 
 public final class MyOscarMedicalDataManagerUtils {
 	private static final Logger logger=MiscUtils.getLogger();
@@ -77,7 +75,7 @@ public final class MyOscarMedicalDataManagerUtils {
 	/**
 	 * @return a MedicalDataTransfer2 with default data, but missing MedicalDataType, Data fields, orignalSourceId, set those after yourself.
 	 */
-	public static MedicalDataTransfer3 getEmptyMedicalDataTransfer3(PHRAuthentication auth, Date dateOfData, String providerNo, Integer demographicId)
+	public static MedicalDataTransfer3 getEmptyMedicalDataTransfer3(MyOscarLoggedInInfo myOscarLoggedInInfo, Date dateOfData, String providerNo, Integer demographicId)
 	{
 		MedicalDataTransfer3 medicalDataTransfer=new MedicalDataTransfer3();
 		
@@ -88,21 +86,19 @@ public final class MyOscarMedicalDataManagerUtils {
 		cal.setTime(dateOfData);
 		medicalDataTransfer.setDateOfData(cal);
 		
-		String myOscarUserName = getProviderMyOscarUserName(providerNo);
-		if (myOscarUserName != null) {
-			Long providerMyOscarUserId = MyOscarUtils.getMyOscarUserId(auth, myOscarUserName);
-			medicalDataTransfer.setObserverOfDataPersonId(providerMyOscarUserId);
-		}
+		Long providerMyOscarUserId = MyOscarUtils.getMyOscarUserIdFromOscarProviderNo(myOscarLoggedInInfo, providerNo);
+		medicalDataTransfer.setObserverOfDataPersonId(providerMyOscarUserId);
+
 		medicalDataTransfer.setObserverOfDataPersonName(getObserverOfDataPersonName(providerNo));
 
-		Long patientMyOscarUserId = MyOscarUtils.getPatientMyOscarId(auth, demographicId);
+		Long patientMyOscarUserId = MyOscarUtils.getMyOscarUserIdFromOscarDemographicId(myOscarLoggedInInfo, demographicId);
 		medicalDataTransfer.setOwningPersonId(patientMyOscarUserId);
 		
 		return(medicalDataTransfer);
 	}
 	
-	public static Long addMedicalData(PHRAuthentication auth, MedicalDataTransfer3 medicalDataTransfer, String oscarDataType, Object localOscarObjectId) throws ItemAlreadyExistsException_Exception, NotAuthorisedException_Exception, UnsupportedEncodingException_Exception {
-		MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
+	public static Long addMedicalData(MyOscarLoggedInInfo myOscarLoggedInInfo, MedicalDataTransfer3 medicalDataTransfer, String oscarDataType, Object localOscarObjectId) throws ItemAlreadyExistsException_Exception, NotAuthorisedException_Exception, UnsupportedEncodingException_Exception {
+		MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(myOscarLoggedInInfo);
 
 		Long resultId=medicalDataWs.addMedicalData3(medicalDataTransfer);
 		logger.debug("addMedicalData success : resultId="+resultId);
@@ -112,8 +108,8 @@ public final class MyOscarMedicalDataManagerUtils {
 		return(resultId);
 	}
 	
-	public static Long updateMedicalData(PHRAuthentication auth, MedicalDataTransfer3 medicalDataTransfer, String oscarDataType, Object localOscarObjectId) throws NotAuthorisedException_Exception, NoSuchItemException_Exception, ItemCompletedException_Exception, UnsupportedEncodingException_Exception, InvalidRequestException_Exception {
-		MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
+	public static Long updateMedicalData(MyOscarLoggedInInfo myOscarLoggedInInfo, MedicalDataTransfer3 medicalDataTransfer, String oscarDataType, Object localOscarObjectId) throws NotAuthorisedException_Exception, NoSuchItemException_Exception, ItemCompletedException_Exception, UnsupportedEncodingException_Exception, InvalidRequestException_Exception {
+		MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(myOscarLoggedInInfo);
 
 		Long resultId=medicalDataWs.updateMedicalData4(medicalDataTransfer);
 		logger.debug("updateMedicalData success : resultId="+resultId);
@@ -123,9 +119,9 @@ public final class MyOscarMedicalDataManagerUtils {
 		return(resultId);
 	}
 	
-	public static Long addMedicalDataRelationship(PHRAuthentication auth, Long ownerId, Long primaryMedicalDataId, Long relatedMedicalDataId, String relationship) throws NoSuchItemException_Exception, NotAuthorisedException_Exception
+	public static Long addMedicalDataRelationship(MyOscarLoggedInInfo myOscarLoggedInInfo, Long ownerId, Long primaryMedicalDataId, Long relatedMedicalDataId, String relationship) throws NoSuchItemException_Exception, NotAuthorisedException_Exception
 	{
-		MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
+		MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(myOscarLoggedInInfo);
 		Long resultId=medicalDataWs.addMedicalDataRelationship2(ownerId, primaryMedicalDataId, relatedMedicalDataId, relationship);
 		return(resultId);
 	}
@@ -141,12 +137,6 @@ public final class MyOscarMedicalDataManagerUtils {
 		Provider p = providerDao.getProvider(providerNo);
 		return getObserverOfDataPersonName(p);
 	}
-	
-	private static String getProviderMyOscarUserName(String providerNo)
-	{
-		String myOscarUserName = ProviderMyOscarIdData.getMyOscarId(providerNo);
-		return(myOscarUserName);
-	}
 
 	public static String generateSourceId(String facilityName, String dataType, Object objectId)
 	{
@@ -156,7 +146,7 @@ public final class MyOscarMedicalDataManagerUtils {
 	private static void addSendRemoteDataLog(String oscarDataType, Object oscarObjectId, String dataContentsDescription) {
 		RemoteDataLog remoteDataLog = new RemoteDataLog();
 		remoteDataLog.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
-		remoteDataLog.setDocumentId(MyOscarServerWebServicesManager.getMyOscarServerBaseUrl(), oscarDataType, oscarObjectId);
+		remoteDataLog.setDocumentId(MyOscarLoggedInInfo.getMyOscarServerBaseUrl(), oscarDataType, oscarObjectId);
 		remoteDataLog.setAction(RemoteDataLog.Action.SEND);
 		remoteDataLog.setDocumentContents(dataContentsDescription);
 		remoteDataLogDao.persist(remoteDataLog);
@@ -184,16 +174,16 @@ public final class MyOscarMedicalDataManagerUtils {
 		return(lastTracking);
 	}
 	
-	public static List<MedicalDataTransfer3> getMedicalData(PHRAuthentication auth, Long ownerId, String medicalDataType, Boolean active, int startIndex, int itemsToReturn)
+	public static List<MedicalDataTransfer3> getMedicalData(MyOscarLoggedInInfo myOscarLoggedInInfo, Long ownerId, String medicalDataType, Boolean active, int startIndex, int itemsToReturn)
 	{
-		MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
+		MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(myOscarLoggedInInfo);
 		List<MedicalDataTransfer3> results=medicalDataWs.getMedicalDataByType(ownerId, medicalDataType, active, startIndex, itemsToReturn);
 		return(results);
 	}
 
-	public static MedicalDataTransfer3 getMedicalData(PHRAuthentication auth, Long ownerId, Long medicalDataId) throws NoSuchItemException_Exception, NotAuthorisedException_Exception
+	public static MedicalDataTransfer3 getMedicalData(MyOscarLoggedInInfo myOscarLoggedInInfo, Long ownerId, Long medicalDataId) throws NoSuchItemException_Exception, NotAuthorisedException_Exception
 	{
-		MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
+		MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(myOscarLoggedInInfo);
 		MedicalDataTransfer3 result=medicalDataWs.getMedicalData4(ownerId, medicalDataId);
 		return(result);
 	}
@@ -206,11 +196,11 @@ public final class MyOscarMedicalDataManagerUtils {
 		return phrVerificationDao.getVerificationLevel(demographicNo);
 	}
 
-	public static MedicalDataTransfer3 materialiseDataIfRequired(PHRAuthentication auth, MedicalDataTransfer3 medicalDataTransfer) throws NotAuthorisedException_Exception, NoSuchItemException_Exception
+	public static MedicalDataTransfer3 materialiseDataIfRequired(MyOscarLoggedInInfo myOscarLoggedInInfo, MedicalDataTransfer3 medicalDataTransfer) throws NotAuthorisedException_Exception, NoSuchItemException_Exception
 	{
 		if (medicalDataTransfer.getData() == null)
 		{
-			medicalDataTransfer = getMedicalData(auth, medicalDataTransfer.getOwningPersonId(), medicalDataTransfer.getId());
+			medicalDataTransfer = getMedicalData(myOscarLoggedInInfo, medicalDataTransfer.getOwningPersonId(), medicalDataTransfer.getId());
 		}
 
 		return(medicalDataTransfer);

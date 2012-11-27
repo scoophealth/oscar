@@ -507,8 +507,8 @@ table.ele thead {
                          for (int i = 0; i < list.size(); i++){
                              setBill = false;
                             PreventionReportDisplay dis = (PreventionReportDisplay) list.get(i);
-                            Hashtable h = deName.getNameAgeSexHashtable(dis.demographicNo);
-                            org.oscarehr.common.model.Demographic demo = demoData.getDemographic(dis.demographicNo);
+                            Hashtable h = deName.getNameAgeSexHashtable(dis.demographicNo.toString());
+                            org.oscarehr.common.model.Demographic demo = demoData.getDemographic(dis.demographicNo.toString());
 
                             if ( dis.nextSuggestedProcedure != null ){
                                 if (dis.nextSuggestedProcedure.equals("L1")){
@@ -556,7 +556,7 @@ table.ele thead {
 
 
                           <% }else {
-                              org.oscarehr.common.model.Demographic demoSDM = demoData.getSubstituteDecisionMaker(dis.demographicNo);%>
+                              org.oscarehr.common.model.Demographic demoSDM = demoData.getSubstituteDecisionMaker(dis.demographicNo.toString());%>
                           <td><%=demo.getAgeAsOf(asDate)%></td>
                           <td><%=h.get("sex")%></td>
                           <td><%=h.get("lastName")%></td>
@@ -602,7 +602,7 @@ table.ele thead {
                           <td bgcolor="<%=dis.color%>"><%=providerName%></td>
                           <td bgcolor="<%=dis.color%>">
                               <% if( billCode != null && setBill ) {
-                                  numDays = bCh1Dao.getDaysSinceBilled(billCode, dis.demographicNo);
+                                  numDays = bCh1Dao.getDaysSinceBilled(billCode, dis.demographicNo.toString());
                                   //we only want to enable billing if it has been a year since the last invoice was created
                                   enabled = numDays >= 0 && numDays < 365 ? "disabled" : "checked";
                               %>

@@ -38,13 +38,13 @@ import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.RemoteDataLogDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.RemoteDataLog;
+import org.oscarehr.myoscar.client.ws_manager.AccountManager;
+import org.oscarehr.myoscar.client.ws_manager.MyOscarServerWebServicesManager;
+import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.myoscar_server.ws.ItemAlreadyExistsException_Exception;
 import org.oscarehr.myoscar_server.ws.MedicalDataTransfer3;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
 import org.oscarehr.myoscar_server.ws.MedicalDataWs;
-import org.oscarehr.phr.PHRAuthentication;
-import org.oscarehr.phr.util.MyOscarServerWebServicesManager;
-import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -103,10 +103,10 @@ public class SendDocToPhrAction extends Action {
     		XmlUtils.appendChildToRoot(doc, "Data", eDoc.getFileBytes());
     		String docAsString=XmlUtils.toString(doc, false);
 
-    		PHRAuthentication auth  = MyOscarUtils.getPHRAuthentication(request.getSession());
-    		MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
+    		MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
+    		MedicalDataWs medicalDataWs = MyOscarServerWebServicesManager.getMedicalDataWs(myOscarLoggedInInfo);
 
-    		Long patientMyOscarUserId=MyOscarUtils.getMyOscarUserId(auth, demo.getMyOscarUserName());
+    		Long patientMyOscarUserId=AccountManager.getUserId(myOscarLoggedInInfo, demo.getMyOscarUserName());
     		GregorianCalendar dateOfData=new GregorianCalendar();
     		if (eDoc.getDateTimeStampAsDate()!=null) dateOfData.setTime(eDoc.getDateTimeStampAsDate());
 
@@ -116,7 +116,7 @@ public class SendDocToPhrAction extends Action {
 			medicalDataTransfer.setData(docAsString);
 			medicalDataTransfer.setDateOfData(dateOfData);
 			medicalDataTransfer.setMedicalDataType(MedicalDataType.BINARY_DOCUMENT.name());
-			medicalDataTransfer.setObserverOfDataPersonId(auth.getMyOscarUserId());
+			medicalDataTransfer.setObserverOfDataPersonId(myOscarLoggedInInfo.getLoggedInPersonId());
 			medicalDataTransfer.setObserverOfDataPersonName(loggedInInfo.loggedInProvider.getFormattedName());
 			medicalDataTransfer.setOriginalSourceId(loggedInInfo.currentFacility.getName()+":eDoc:"+eDoc.getDocId());
 			medicalDataTransfer.setOwningPersonId(patientMyOscarUserId);
@@ -126,7 +126,7 @@ public class SendDocToPhrAction extends Action {
     		// log the send
     		RemoteDataLog remoteDataLog=new RemoteDataLog();
     		remoteDataLog.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
-    		remoteDataLog.setDocumentId(MyOscarServerWebServicesManager.getMyOscarServerBaseUrl(), "eDoc", eDoc.getDocId());
+    		remoteDataLog.setDocumentId(MyOscarLoggedInInfo.getMyOscarServerBaseUrl(), "eDoc", eDoc.getDocId());
     		remoteDataLog.setAction(RemoteDataLog.Action.SEND);
     		remoteDataLog.setDocumentContents("id="+eDoc.getDocId()+", fileName="+eDoc.getFileName());
     		remoteDataLogDao.persist(remoteDataLog);

@@ -24,9 +24,9 @@
 
 --%>
 
+<%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="org.oscarehr.util.LocaleUtils"%>
 <%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
-<%@page import="org.oscarehr.phr.PHRAuthentication"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.model.UserProperty, org.springframework.web.context.support.WebApplicationContextUtils" %>
@@ -579,15 +579,15 @@ function popup1(height, width, url, windowName){
 				<%
                     if( module.equals("demographic") ) {
 
-                  	  if (MyOscarUtils.isVisibleMyOscarSendButton())
+                  	  if (MyOscarUtils.isMyOscarEnabled())
                   	  {
        						String onclickString="alert('"+LocaleUtils.getMessage(request, "LoginToMyOscarFirst")+"')";
 
-      						PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
-      						if (auth!=null) onclickString="return submitPhrForm('SendDocToPhr.do', 'sendDocToPhr');";
+       						MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
+      						if (myOscarLoggedInInfo!=null && myOscarLoggedInInfo.isLoggedIn()) onclickString="return submitPhrForm('SendDocToPhr.do', 'sendDocToPhr');";
 
 	      					%>
-	      					<input type="button" <%=MyOscarUtils.getDisabledStringForMyOscarSendButton(auth, Integer.parseInt(demographicNo))%> value="<%=LocaleUtils.getMessage(request, "SendToMyOscar")%>" onclick="<%=onclickString%>" />
+	      					<input type="button" <%=MyOscarUtils.getDisabledStringForMyOscarSendButton(myOscarLoggedInInfo, Integer.parseInt(demographicNo))%> value="<%=LocaleUtils.getMessage(request, "SendToMyOscar")%>" onclick="<%=onclickString%>" />
 							<%
                   	  }
                     }

@@ -23,11 +23,11 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="org.oscarehr.common.dao.DrugDao"%>
 <%@page import="org.oscarehr.common.model.Drug"%>
 <%@page import="org.oscarehr.util.WebUtils"%>
 <%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
-<%@page import="org.oscarehr.phr.PHRAuthentication"%>
 <%@page import="org.oscarehr.util.LocaleUtils"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -913,10 +913,10 @@ body {
                                                     <a href="javascript: void(0);" onclick="callReplacementWebService('GetmyDrugrefInfo.do?method=view','interactionsRxMyD');" >DS run</a>
                                                     &nbsp;&nbsp;
 													<%
-									                  	  if (MyOscarUtils.isVisibleMyOscarSendButton())
+									                  	  if (MyOscarUtils.isMyOscarEnabled())
 									                  	  {
-																PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
-									                  		  	boolean enabledMyOscarButton=MyOscarUtils.isMyOscarSendButtonEnabled(auth, Integer.valueOf(demoNo));
+																MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
+									                  		  	boolean enabledMyOscarButton=MyOscarUtils.isMyOscarSendButtonEnabled(myOscarLoggedInInfo, Integer.valueOf(demoNo));
 																if (enabledMyOscarButton)
 																{
 																	String sendDataPath = request.getContextPath() + "/phr/send_medicaldata_to_myoscar.jsp?"

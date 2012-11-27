@@ -24,9 +24,10 @@
 
 --%>
 
+<%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="oscar.OscarProperties"%>
 <%@page import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*"%>
-<%@page import="org.oscarehr.phr.PHRAuthentication, org.oscarehr.phr.util.MyOscarUtils" %>
+<%@page import="org.oscarehr.phr.util.MyOscarUtils" %>
 <%@page import="org.oscarehr.common.dao.DemographicDao, org.oscarehr.common.model.Demographic" %>
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.util.LocaleUtils"%>
@@ -55,11 +56,11 @@
 
 
 
-  Prevention p = PreventionData.getPrevention(demographic_no);
+  Prevention p = PreventionData.getPrevention(Integer.valueOf(demographic_no));
 
   Integer demographicId=Integer.parseInt(demographic_no);
   PreventionData.addRemotePreventions(p, demographicId);
-  Date demographicDateOfBirth=PreventionData.getDemographicDateOfBirth(demographic_no);
+  Date demographicDateOfBirth=PreventionData.getDemographicDateOfBirth(Integer.valueOf(demographic_no));
   String demographicDob = oscar.util.UtilDateUtilities.DateToString(demographicDateOfBirth);
 
   PreventionDS pf = PreventionDS.getInstance();
@@ -468,10 +469,10 @@ text-align:left;
 		<a href="#" onclick="popup(600,800,'http://www.phac-aspc.gc.ca/im/is-cv/index-eng.php')">Immunization Schedules - Public Health Agency of Canada</a>
 
 		<%
-				if (MyOscarUtils.isVisibleMyOscarSendButton())
+				if (MyOscarUtils.isMyOscarEnabled())
 				{
-					PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
-           		  	boolean enabledMyOscarButton=MyOscarUtils.isMyOscarSendButtonEnabled(auth, Integer.valueOf(demographic_no));
+					MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
+           		  	boolean enabledMyOscarButton=MyOscarUtils.isMyOscarSendButtonEnabled(myOscarLoggedInInfo, Integer.valueOf(demographic_no));
 					if (enabledMyOscarButton)
 					{
 						String sendDataPath = request.getContextPath() + "/phr/send_medicaldata_to_myoscar.jsp?"
@@ -563,7 +564,7 @@ text-align:left;
                   for (int i = 0 ; i < prevList.size(); i++){
                   		HashMap<String,String> h = prevList.get(i);
                         String prevName = h.get("name");
-                        ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(prevName, demographic_no);
+                        ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(prevName, Integer.valueOf(demographic_no));
                         PreventionData.addRemotePreventions(alist, demographicId,prevName,demographicDateOfBirth);
                         boolean show = pdc.display(h, demographic_no,alist.size());
                         if(!show){
@@ -700,7 +701,7 @@ text-align:left;
 		</div>
 		<%
             String prevType=h.get("name");
-            ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(prevType, demographic_no);
+            ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(prevType, Integer.valueOf(demographic_no));
             PreventionData.addRemotePreventions(alist, demographicId, prevType,demographicDateOfBirth);
             String result;
             for (int k = 0; k < alist.size(); k++){
@@ -742,7 +743,7 @@ text-align:left;
 		    for (int i = 0 ; i < prevList.size(); i++){
 		   	 	HashMap<String,String> h = prevList.get(i);
 		        String prevName = h.get("name");
-		        ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(prevName, demographic_no);
+		        ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(prevName, Integer.valueOf(demographic_no));
 		        PreventionData.addRemotePreventions(alist, demographicId, prevName,demographicDateOfBirth);
 		        if( alist.size() > 0 ) { %>
 		<input type="hidden" id="preventionHeader<%=i%>"

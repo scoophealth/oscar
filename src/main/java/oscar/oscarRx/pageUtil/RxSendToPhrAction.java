@@ -44,13 +44,15 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.myoscar.client.ws_manager.AccountManager;
+import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
-import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.service.PHRService;
-import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarEncounter.data.EctProviderData;
 import oscar.oscarRx.data.RxPatientData;
 import oscar.oscarRx.data.RxPrescriptionData.Prescription;
@@ -75,16 +77,14 @@ public class RxSendToPhrAction extends Action {
 		EctProviderData.Provider prov = new EctProviderData().getProvider(bean.getProviderNo());
 
 		try {
-
-			// get demographic id
-			DemographicData demoData = new DemographicData();
-			PHRAuthentication auth = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
-			Long myOscarUserId = MyOscarUtils.getMyOscarUserId(auth, demoData.getDemographic("" + bean.getDemographicNo()).getMyOscarUserName());
+			MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
+			DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+			Demographic demographic = demographicDao.getDemographicById(bean.getDemographicNo());
+			Long myOscarUserId = AccountManager.getUserId(myOscarLoggedInInfo, demographic.getMyOscarUserName());
 
 			RxPatientData.Patient patient = null;
 
-			String demoNo = bean.getDemographicNo() + "";
-			patient = RxPatientData.getPatient(Integer.parseInt(demoNo));
+			patient = RxPatientData.getPatient(demographic.getDemographicNo());
 
 			oscar.oscarRx.data.RxPrescriptionData.Prescription[] prescribedDrugs;
 			prescribedDrugs = patient.getPrescribedDrugs();
@@ -104,7 +104,7 @@ public class RxSendToPhrAction extends Action {
 
 						if (!phrService.isIndivoRegistered(MedicalDataType.MEDICATION.name(), drug.getDrugId() + "")) {
 
-							phrService.sendAddMedication(prov, demoNo, myOscarUserId, drug);
+							phrService.sendAddMedication(prov, demographic.getDemographicNo(), myOscarUserId, drug);
 						}
 						// throw new Exception("Error: Cannot marshal the document");
 					} catch (Exception e) {

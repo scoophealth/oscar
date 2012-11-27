@@ -57,7 +57,7 @@ public class DemographicNameAgeString {
     * @return returns a String containing name age sex ie "Last, First M 2 weeks"
     *
     */   
-   public String getNameAgeString(String demoNo){
+   public String getNameAgeString(Integer demoNo){
 
       String retval = "";      
       if (demoNo != null){                     
@@ -107,7 +107,7 @@ public class DemographicNameAgeString {
          if (!hashtable.containsKey(demoNo)){
 
             DemographicData dData = new DemographicData();
-            String[] dArray = dData.getNameAgeSexArray(demoNo);
+            String[] dArray = dData.getNameAgeSexArray(Integer.valueOf(demoNo));
             if (dArray != null){
                hashtable.put(demoNo,dArray);
             }                                

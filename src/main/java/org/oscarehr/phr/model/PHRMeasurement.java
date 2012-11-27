@@ -72,7 +72,7 @@ public class PHRMeasurement extends PHRDocument{
     }
 
     //sending new meds to PHR
-    public PHRMeasurement(EctProviderData.Provider provider, String demographicNo, Long myOscarUserId, String dataType, EctMeasurementsDataBean measurement) throws JAXBException, IndivoException  {
+    public PHRMeasurement(EctProviderData.Provider provider, Integer demographicNo, Long myOscarUserId, String dataType, EctMeasurementsDataBean measurement) throws JAXBException, IndivoException  {
         //super();
         IndivoDocumentType document = getPhrMeasurementDocument(provider, measurement);
         JAXBContext docContext = JAXBContext.newInstance(IndivoDocumentType.class.getPackage().getName());

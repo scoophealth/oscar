@@ -24,10 +24,14 @@
 
 --%>
 
+<%@page import="org.oscarehr.myoscar_server.ws.MinimalPersonTransfer"%>
+<%@page import="org.oscarehr.myoscar.client.ws_manager.AccountManager"%>
+<%@page import="org.oscarehr.myoscar_server.ws.MessageTransfer3"%>
+<%@page import="org.oscarehr.myoscar.client.ws_manager.MessageManager"%>
+<%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
-<%@page import="org.oscarehr.phr.PHRAuthentication"%>
-<%@page import="org.oscarehr.phr.util.MyOscarMessageManager,org.oscarehr.phr.util.MyOscarServerRelationManager"%>
+<%@page import="org.oscarehr.phr.util.MyOscarServerRelationManager"%>
 <%@page import="org.oscarehr.myoscar_server.ws.MessageTransfer"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -43,12 +47,12 @@
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-html-el" prefix="html-el" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
 <%
-Demographic demographic= null;
-String DemographicNo = null;
-String myOscarUserName = null;
-PHRAuthentication phrAuthentication=MyOscarUtils.getPHRAuthentication(session);
-DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
-
+	Demographic demographic= null;
+	String DemographicNo = null;
+	String myOscarUserName = null;
+	DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+	
+	MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
 %>
 <html:html locale="true">
 
@@ -195,14 +199,15 @@ DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographi
                             <table> 
                             	<%
                             		Long replyToMessageId=null;
-                            		MessageTransfer replyToMessage=null;
+                            		MessageTransfer3 replyToMessage=null;
                             		try
                             		{
                             			replyToMessageId=new Long(request.getParameter("replyToMessageId"));
                             			
-                            			replyToMessage=MyOscarMessageManager.getMessage(phrAuthentication.getMyOscarUserId(), phrAuthentication.getMyOscarPassword(), replyToMessageId);
-                            			myOscarUserName=replyToMessage.getSenderPersonUserName();
-                                		demographic=MyOscarUtils.getDemographicByMyOscarUserName(myOscarUserName);
+                            			replyToMessage=MessageManager.getMessage(myOscarLoggedInInfo, replyToMessageId);
+                            			Long myOscarSenderUserId=replyToMessage.getSenderPersonId();
+                            			MinimalPersonTransfer senderMinimalPerson=AccountManager.getMinimalPerson(myOscarLoggedInInfo, myOscarSenderUserId);
+                                		demographic=MyOscarUtils.getDemographicByMyOscarUserName(senderMinimalPerson.getUserName());
                             		}
                             		catch (Exception e)
                             		{
@@ -231,8 +236,12 @@ DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographi
 			                                        	<%
 			                                        		if (replyToMessage!=null)
 			                                        		{
-			                                        			%>
-			                                        				<input size="30" readonly="readonly" type="text" value="<%=StringEscapeUtils.escapeHtml(replyToMessage.getSenderPersonLastName()+", "+replyToMessage.getSenderPersonFirstName())%>" />
+			                           							Long senderPersonId=replyToMessage.getSenderPersonId();
+			                           							MinimalPersonTransfer minimalPersonSender=AccountManager.getMinimalPerson(myOscarLoggedInInfo, senderPersonId);
+			                           							String senderString=minimalPersonSender.getLastName()+", "+minimalPersonSender.getFirstName()+" ("+minimalPersonSender.getUserName()+")";
+
+			                           							%>
+			                                        				<input size="30" readonly="readonly" type="text" value="<%=StringEscapeUtils.escapeHtml(senderString)%>" />
 			                                        			<%
 			                                        		}
 			                                        		else
@@ -266,8 +275,9 @@ DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographi
 			                                        	<%
 			                                        		if (replyToMessage!=null)
 			                                        		{
+			                                        			String subject=MessageManager.getSubject(replyToMessage);
 			                                        			%>
-			                                        				<input size="67" readonly="readonly" type="text" value="Re: <%=StringEscapeUtils.escapeHtml(replyToMessage.getSubject())%>" />
+			                                        				<input size="67" readonly="readonly" type="text" value="Re: <%=StringEscapeUtils.escapeHtml(subject)%>" />
 			                                        			<%
 			                                        		}
 			                                        		else
@@ -282,11 +292,13 @@ DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographi
 	                                        	<%
 	                                        		if (replyToMessage!=null)
 	                                        		{
+	                                        			String messageBody=MessageManager.getMessageBody(replyToMessage);
+	                                        			
 	                                        			%>
 		                                                    <tr>
 		                                                        <td style="text-align:right;vertical-align:top">Re:</td>
 		                                                        <td >
-		                                                            <textarea disabled="disabled" readonly="readonly" cols="60" rows="4" style="border: 1px solid black;color:black" ><%=StringEscapeUtils.escapeHtml(replyToMessage.getContents())%></textarea>
+		                                                            <textarea disabled="disabled" readonly="readonly" cols="60" rows="4" style="border: 1px solid black;color:black" ><%=StringEscapeUtils.escapeHtml(messageBody)%></textarea>
 		                                                        </td>
 		                                                    </tr>
 	                                        			<%

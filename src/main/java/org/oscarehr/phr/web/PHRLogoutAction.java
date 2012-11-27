@@ -36,7 +36,7 @@ import org.apache.struts.action.ActionRedirect;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.ProviderPreferenceDao;
 import org.oscarehr.common.model.ProviderPreference;
-import org.oscarehr.phr.PHRAuthentication;
+import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -49,7 +49,7 @@ public class PHRLogoutAction extends DispatchAction {
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		HttpSession session = request.getSession();
-		session.removeAttribute(PHRAuthentication.SESSION_PHR_AUTH);
+		MyOscarLoggedInInfo.setLoggedInInfo(session, null);
 
 		clearSavedMyOscarPassword();
 
