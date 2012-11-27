@@ -33,12 +33,13 @@ on Libraries node in Projects view can be used to add the JSTL 1.1 library.
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%> 
 --%>
 
+<%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
+<%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-bean" prefix="bean" %>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-html" prefix="html" %>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-logic" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/phr-tag.tld" prefix="phr" %>
 
-<%@ page import="org.oscarehr.phr.PHRAuthentication"%>
 <%@ page import="oscar.oscarProvider.data.ProviderData"%>
 
 <%
@@ -57,7 +58,6 @@ String providerName = request.getSession().getAttribute("userfirstname") + " " +
 String providerNo = (String) request.getSession().getAttribute("user");
 ProviderData providerData = new ProviderData();
 providerData.setProviderNo(providerNo);
-PHRAuthentication phrAuth = (PHRAuthentication) session.getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
@@ -133,38 +133,46 @@ PHRAuthentication phrAuth = (PHRAuthentication) session.getAttribute(PHRAuthenti
                 <center><font class="announcementGreen">SUCCESS, added to send queue.</font></center>
                 <center><font style="font-size: 10px;"><sup>(It will be sent next time you log in)</sup></font></center>
                <br/>
-                   <logic:present name="<%=PHRAuthentication.SESSION_PHR_AUTH%>">
-                       <div class="myoscarLoginElementAuth">
-                           Status: <b>Logged in as <%=providerName%></b> (<%=phrAuth.getMyOscarUserId()%>)<br/>
-                           <center>Closing Window... <a href="javascript:;" onclick="closeWindow()">close</a></center>
-                           <%-- if no errors and logged in, close window--%>
-                           <%if (!errors) {%>
-                                <script type="text/javascript" language="JavaScript">startCloseWindowTimeout()</script>
-                           <%}%>
-                       </div>
-                       <!--<p style="background-color: #E00000"  title="fade=[on] requireclick=[on] header=[Diabetes Med Changes] body=[<span style='color:red'>no DM Med changes have been recorded</span> </br>]">dsfsdfsdfsdfgsdgsdg</p>-->
-                   </logic:present>
-                   <logic:notPresent name="<%=PHRAuthentication.SESSION_PHR_AUTH%>">
-                        <div class="myoscarLoginElementNoAuth">
-                            <form action="<%=request.getContextPath()%>/phr/Login.do" name="phrLogin" method="POST" style="margin-bottom: 0px;">
-                                <logic:present name="phrUserLoginErrorMsg">
-                                    <div class="phrLoginErrorMsg"><font color="red"><bean:write name="phrUserLoginErrorMsg"/></font>  
-                                    <logic:present name="phrTechLoginErrorMsg">
-                                        <a href="javascript:;" title="fade=[on] requireclick=[off] cssheader=[moreInfoBoxoverHeader] cssbody=[moreInfoBoxoverBody] singleclickstop=[on] header=[MyOSCAR Server Response:] body=[<bean:write name="phrTechLoginErrorMsg"/> </br>]">More Info</a></div>
-                                    </logic:present>
-                                </logic:present>
-                                Status: <b>Not logged in</b><br/>
-                                <%=providerName%> password: <input type="password" id="phrPassword" name="phrPassword" style="font-size: 8px; width: 40px;"><br/>
-                                <center>
-                                    <a href="javascript: document.forms['phrLogin'].submit()">Login & Send Now</a> &nbsp;&nbsp;
-                                    <a href="javascript:;" onclick="closeWindow()">Send Later</a>
-                                </center>
-                                <input type="hidden" name="forwardto" value="<%=request.getServletPath()%>">
-                            </form>
-                        </div>
-                   </logic:notPresent>
-               
-            <%}%>
+               		<%
+               			if (MyOscarUtils.isMyOscarEnabled())
+               			{
+                  			MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
+               				%>
+		                       <div class="myoscarLoginElementAuth">
+		                           Status: <b>Logged in as <%=providerName%></b> (<%=myOscarLoggedInInfo.getLoggedInPerson().getUserName()%>)<br/>
+		                           <center>Closing Window... <a href="javascript:;" onclick="closeWindow()">close</a></center>
+		                           <%-- if no errors and logged in, close window--%>
+		                           <%if (!errors) {%>
+		                                <script type="text/javascript" language="JavaScript">startCloseWindowTimeout()</script>
+		                           <%}%>
+		                       </div>
+		               		<%
+               			}
+               			else
+               			{
+               				%>
+		                        <div class="myoscarLoginElementNoAuth">
+		                            <form action="<%=request.getContextPath()%>/phr/Login.do" name="phrLogin" method="POST" style="margin-bottom: 0px;">
+		                                <logic:present name="phrUserLoginErrorMsg">
+		                                    <div class="phrLoginErrorMsg"><font color="red"><bean:write name="phrUserLoginErrorMsg"/></font>  
+		                                    <logic:present name="phrTechLoginErrorMsg">
+		                                        <a href="javascript:;" title="fade=[on] requireclick=[off] cssheader=[moreInfoBoxoverHeader] cssbody=[moreInfoBoxoverBody] singleclickstop=[on] header=[MyOSCAR Server Response:] body=[<bean:write name="phrTechLoginErrorMsg"/> </br>]">More Info</a></div>
+		                                    </logic:present>
+		                                </logic:present>
+		                                Status: <b>Not logged in</b><br/>
+		                                <%=providerName%> password: <input type="password" id="phrPassword" name="phrPassword" style="font-size: 8px; width: 40px;"><br/>
+		                                <center>
+		                                    <a href="javascript: document.forms['phrLogin'].submit()">Login & Send Now</a> &nbsp;&nbsp;
+		                                    <a href="javascript:;" onclick="closeWindow()">Send Later</a>
+		                                </center>
+		                                <input type="hidden" name="forwardto" value="<%=request.getServletPath()%>">
+		                            </form>
+		                        </div>
+               				<%
+               			}
+				
+            }
+            %>
         </div>
         <script type="text/javascript" src="<%=request.getContextPath()%>/share/javascript/boxover.js"></script>
     </body>

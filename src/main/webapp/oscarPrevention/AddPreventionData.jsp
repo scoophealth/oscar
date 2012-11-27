@@ -101,12 +101,12 @@
   List providers = ProviderData.getProviderList();
 
   //calc age at time of prevention
-  Date dob = PreventionData.getDemographicDateOfBirth(demographic_no);
+  Date dob = PreventionData.getDemographicDateOfBirth(Integer.valueOf(demographic_no));
   SimpleDateFormat fmt = new SimpleDateFormat(dateFmt);
   Date dateOfPrev = fmt.parse(prevDate);
   String age = UtilDateUtilities.calcAgeAtDate(dob, dateOfPrev);
   DemographicData demoData = new DemographicData();
-  String[] demoInfo = demoData.getNameAgeSexArray(demographic_no);
+  String[] demoInfo = demoData.getNameAgeSexArray(Integer.valueOf(demographic_no));
   String nameage = demoInfo[0] + ", " + demoInfo[1] + " " + demoInfo[2] + " " + age;
 
   HashMap<String,String> genders = new HashMap<String,String>();

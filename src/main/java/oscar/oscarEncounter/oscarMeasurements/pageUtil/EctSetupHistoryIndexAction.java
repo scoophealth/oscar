@@ -51,14 +51,14 @@ public final class EctSetupHistoryIndexAction extends Action {
 		request.getSession().setAttribute("EctSessionBean", bean);
 
 		if (bean != null) {
-			String demo = bean.getDemographicNo();
+			Integer demo = Integer.valueOf(bean.getDemographicNo());
 
 			request.getSession().setAttribute("EctSessionBean", bean);
 
 			oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler hd = new oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler(demo);
 			if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
 				List<EctMeasurementsDataBean> measureTypes = (List<EctMeasurementsDataBean>) hd.getMeasurementsDataVector ();
-				oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler.addRemoteMeasurementsTypes(measureTypes,Integer.parseInt(demo));
+				oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler.addRemoteMeasurementsTypes(measureTypes,demo);
 			}
 
 			HttpSession session = request.getSession();

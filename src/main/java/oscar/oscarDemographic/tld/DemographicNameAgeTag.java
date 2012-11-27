@@ -49,7 +49,7 @@ public class DemographicNameAgeTag extends TagSupport {
 
     public int doStartTag() throws JspException    {       
        DemographicNameAgeString demoNameAge = DemographicNameAgeString.getInstance();       
-       String nameage = demoNameAge.getNameAgeString(demoNo);
+       String nameage = demoNameAge.getNameAgeString(Integer.valueOf(demoNo));
             
        try{
           JspWriter out = super.pageContext.getOut();          

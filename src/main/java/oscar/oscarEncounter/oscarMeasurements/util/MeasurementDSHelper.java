@@ -78,7 +78,7 @@ public class MeasurementDSHelper {
     public boolean setMeasurement(String measurementType){
         boolean setM = false;
         log.debug("demo "+this.demographic_no+" type "+measurementType);
-        EctMeasurementsDataBeanHandler mdbh = new  EctMeasurementsDataBeanHandler(this.demographic_no, measurementType);
+        EctMeasurementsDataBeanHandler mdbh = new  EctMeasurementsDataBeanHandler(Integer.valueOf(this.demographic_no), measurementType);
         Collection col = mdbh.getMeasurementsDataVector();
         if (col.size() >0){
             this.mdb = (EctMeasurementsDataBean) col.iterator().next();

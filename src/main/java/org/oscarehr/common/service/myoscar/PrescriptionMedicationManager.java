@@ -41,12 +41,11 @@ import org.oscarehr.common.dao.SentToPHRTrackingDao;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Prescription;
 import org.oscarehr.common.model.SentToPHRTracking;
+import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.myoscar_server.ws.ItemAlreadyExistsException_Exception;
 import org.oscarehr.myoscar_server.ws.MedicalDataRelationshipType;
 import org.oscarehr.myoscar_server.ws.MedicalDataTransfer3;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
-import org.oscarehr.phr.PHRAuthentication;
-import org.oscarehr.phr.util.MyOscarServerWebServicesManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -61,7 +60,7 @@ public final class PrescriptionMedicationManager {
 	private static final String OSCAR_MEDICATION_DATA_TYPE = "MEDICATION";
 	private static final SentToPHRTrackingDao sentToPHRTrackingDao = (SentToPHRTrackingDao) SpringUtils.getBean("sentToPHRTrackingDao");
 
-	public static void sendPrescriptionsMedicationsToMyOscar(PHRAuthentication auth, Integer demographicId) throws ClassCastException {
+	public static void sendPrescriptionsMedicationsToMyOscar(MyOscarLoggedInInfo myOscarLoggedInInfo, Integer demographicId) throws ClassCastException {
 		// get last synced prescription info
 
 		// get the medications for the person which are changed since last sync
@@ -75,30 +74,30 @@ public final class PrescriptionMedicationManager {
 		// if it was a new prescription, add relationlinks from the previous medications sent results map.
 
 		Date startSyncTime = new Date();
-		SentToPHRTracking sentToPHRTracking = MyOscarMedicalDataManagerUtils.getExistingOrCreateInitialSentToPHRTracking(demographicId, OSCAR_PRESCRIPTION_DATA_TYPE, MyOscarServerWebServicesManager.getMyOscarServerBaseUrl());
+		SentToPHRTracking sentToPHRTracking = MyOscarMedicalDataManagerUtils.getExistingOrCreateInitialSentToPHRTracking(demographicId, OSCAR_PRESCRIPTION_DATA_TYPE, MyOscarLoggedInInfo.getMyOscarServerBaseUrl());
 		logger.debug("sendPrescriptionsMedicationsToMyOscar : demographicId=" + demographicId + ", lastSyncTime=" + sentToPHRTracking.getSentDatetime());
 
-		HashMap<Drug, Long> remoteMedicationIdMap = sendMedicationsToMyOscar(auth, demographicId, sentToPHRTracking);
-		sendPrescriptionsToMyOscar(auth, demographicId, sentToPHRTracking, remoteMedicationIdMap);
+		HashMap<Drug, Long> remoteMedicationIdMap = sendMedicationsToMyOscar(myOscarLoggedInInfo, demographicId, sentToPHRTracking);
+		sendPrescriptionsToMyOscar(myOscarLoggedInInfo, demographicId, sentToPHRTracking, remoteMedicationIdMap);
 
 		sentToPHRTracking.setSentDatetime(startSyncTime);
 		sentToPHRTrackingDao.merge(sentToPHRTracking);
 	}
 	
 
-	private static void sendPrescriptionsToMyOscar(PHRAuthentication auth, Integer demographicId, SentToPHRTracking sentToPHRTracking, HashMap<Drug, Long> remoteMedicationIdMap) {
+	private static void sendPrescriptionsToMyOscar(MyOscarLoggedInInfo myOscarLoggedInInfo, Integer demographicId, SentToPHRTracking sentToPHRTracking, HashMap<Drug, Long> remoteMedicationIdMap) {
 		PrescriptionDao prescriptionDao = (PrescriptionDao) SpringUtils.getBean("prescriptionDao");
 		List<Prescription> changedPrescriptions = prescriptionDao.findByDemographicIdUpdatedAfterDate(demographicId, sentToPHRTracking.getSentDatetime());
 		for (Prescription prescription : changedPrescriptions) {
 			logger.debug("sendPrescriptionsMedicationsToMyOscar : prescriptionId=" + prescription.getId());
 
 			try {
-				MedicalDataTransfer3 medicalDataTransfer = toMedicalDataTransfer(auth, prescription);
+				MedicalDataTransfer3 medicalDataTransfer = toMedicalDataTransfer(myOscarLoggedInInfo, prescription);
 				try {
-					Long remotePrescriptionId = MyOscarMedicalDataManagerUtils.addMedicalData(auth, medicalDataTransfer, OSCAR_PRESCRIPTION_DATA_TYPE, prescription.getId());
-					linkPrescriptionToMedications(auth, prescription, medicalDataTransfer.getOwningPersonId(), remotePrescriptionId, remoteMedicationIdMap);
+					Long remotePrescriptionId = MyOscarMedicalDataManagerUtils.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_PRESCRIPTION_DATA_TYPE, prescription.getId());
+					linkPrescriptionToMedications(myOscarLoggedInInfo, prescription, medicalDataTransfer.getOwningPersonId(), remotePrescriptionId, remoteMedicationIdMap);
 				} catch (ItemAlreadyExistsException_Exception e) {
-					MyOscarMedicalDataManagerUtils.updateMedicalData(auth, medicalDataTransfer, OSCAR_PRESCRIPTION_DATA_TYPE, prescription.getId());
+					MyOscarMedicalDataManagerUtils.updateMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_PRESCRIPTION_DATA_TYPE, prescription.getId());
 				}
 			} catch (Exception e) {
 				logger.error("Error", e);
@@ -106,11 +105,11 @@ public final class PrescriptionMedicationManager {
 		}
 	}
 
-	private static void linkPrescriptionToMedications(PHRAuthentication auth, Prescription prescription, Long ownerId, Long remotePrescriptionId, HashMap<Drug, Long> remoteMedicationIdMap) {
+	private static void linkPrescriptionToMedications(MyOscarLoggedInInfo myOscarLoggedInInfo, Prescription prescription, Long ownerId, Long remotePrescriptionId, HashMap<Drug, Long> remoteMedicationIdMap) {
 		for (Entry<Drug, Long> entry : remoteMedicationIdMap.entrySet()) {
 			if (prescription.getId().equals(entry.getKey().getScriptNo())) {
 				try {
-					MyOscarMedicalDataManagerUtils.addMedicalDataRelationship(auth, ownerId,remotePrescriptionId, entry.getValue(), MedicalDataRelationshipType.PRESCRIPTION_MEDICATION.name());
+					MyOscarMedicalDataManagerUtils.addMedicalDataRelationship(myOscarLoggedInInfo, ownerId,remotePrescriptionId, entry.getValue(), MedicalDataRelationshipType.PRESCRIPTION_MEDICATION.name());
 				} catch (Exception e) {
 					logger.error("Error", e);
 				}
@@ -118,7 +117,7 @@ public final class PrescriptionMedicationManager {
 		}
 	}
 
-	private static HashMap<Drug, Long> sendMedicationsToMyOscar(PHRAuthentication auth, Integer demographicId, SentToPHRTracking sentToPHRTracking) {
+	private static HashMap<Drug, Long> sendMedicationsToMyOscar(MyOscarLoggedInInfo myOscarLoggedInInfo, Integer demographicId, SentToPHRTracking sentToPHRTracking) {
 		DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
 		List<Drug> changedMedications = drugDao.findByDemographicIdUpdatedAfterDate(demographicId, sentToPHRTracking.getSentDatetime());
 		HashMap<Drug, Long> remoteIdMap = new HashMap<Drug, Long>();
@@ -126,12 +125,12 @@ public final class PrescriptionMedicationManager {
 			logger.debug("sendPrescriptionsMedicationsToMyOscar : drugId=" + drug.getId());
 
 			try {
-				MedicalDataTransfer3 medicalDataTransfer = toMedicalDataTransfer(auth, drug);
+				MedicalDataTransfer3 medicalDataTransfer = toMedicalDataTransfer(myOscarLoggedInInfo, drug);
 				Long remoteMedicationId = null;
 				try {
-					remoteMedicationId = MyOscarMedicalDataManagerUtils.addMedicalData(auth, medicalDataTransfer, OSCAR_MEDICATION_DATA_TYPE, drug.getId());
+					remoteMedicationId = MyOscarMedicalDataManagerUtils.addMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_MEDICATION_DATA_TYPE, drug.getId());
 				} catch (ItemAlreadyExistsException_Exception e) {
-					remoteMedicationId = MyOscarMedicalDataManagerUtils.updateMedicalData(auth, medicalDataTransfer, OSCAR_MEDICATION_DATA_TYPE, drug.getId());
+					remoteMedicationId = MyOscarMedicalDataManagerUtils.updateMedicalData(myOscarLoggedInInfo, medicalDataTransfer, OSCAR_MEDICATION_DATA_TYPE, drug.getId());
 				}
 
 				remoteIdMap.put(drug, remoteMedicationId);
@@ -156,8 +155,8 @@ public final class PrescriptionMedicationManager {
 		return (doc);
 	}
 
-	private static MedicalDataTransfer3 toMedicalDataTransfer(PHRAuthentication auth, Prescription prescription) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException {
-		MedicalDataTransfer3 medicalDataTransfer = MyOscarMedicalDataManagerUtils.getEmptyMedicalDataTransfer3(auth, prescription.getDatePrescribed(), prescription.getProviderNo(), prescription.getDemographicId());
+	private static MedicalDataTransfer3 toMedicalDataTransfer(MyOscarLoggedInInfo myOscarLoggedInInfo, Prescription prescription) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException {
+		MedicalDataTransfer3 medicalDataTransfer = MyOscarMedicalDataManagerUtils.getEmptyMedicalDataTransfer3(myOscarLoggedInInfo, prescription.getDatePrescribed(), prescription.getProviderNo(), prescription.getDemographicId());
 		// don't ask me why but prescription are currently changeable in oscar, therefore, they're never completed.
 		medicalDataTransfer.setCompleted(false);
 
@@ -263,8 +262,8 @@ public final class PrescriptionMedicationManager {
 		return (doc);
 	}
 
-	private static MedicalDataTransfer3 toMedicalDataTransfer(PHRAuthentication auth, Drug drug) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException {
-		MedicalDataTransfer3 medicalDataTransfer = MyOscarMedicalDataManagerUtils.getEmptyMedicalDataTransfer3(auth, drug.getRxDate(), drug.getProviderNo(), drug.getDemographicId());
+	private static MedicalDataTransfer3 toMedicalDataTransfer(MyOscarLoggedInInfo myOscarLoggedInInfo, Drug drug) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException {
+		MedicalDataTransfer3 medicalDataTransfer = MyOscarMedicalDataManagerUtils.getEmptyMedicalDataTransfer3(myOscarLoggedInInfo, drug.getRxDate(), drug.getProviderNo(), drug.getDemographicId());
 
 		Document doc = toXml(drug);
 		medicalDataTransfer.setData(XmlUtils.toString(doc, false));

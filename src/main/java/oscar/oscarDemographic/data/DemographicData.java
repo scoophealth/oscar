@@ -147,9 +147,9 @@ public class DemographicData {
 		return nameage;
 	}
 
-	public String[] getNameAgeSexArray(String demographicNo) {
+	public String[] getNameAgeSexArray(Integer demographicNo) {
 		String[] nameage = null;
-		org.oscarehr.common.model.Demographic demographic = demographicDao.getDemographic(demographicNo);
+		org.oscarehr.common.model.Demographic demographic = demographicDao.getDemographicById(demographicNo);
 		if(demographic != null) {
 			String age = UtilDateUtilities.calcAge(UtilDateUtilities.calcDate(demographic.getYearOfBirth(), demographic.getMonthOfBirth(), demographic.getDateOfBirth()));
 			if (age == null) {

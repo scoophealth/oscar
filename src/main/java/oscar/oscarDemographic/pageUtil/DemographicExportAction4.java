@@ -1016,7 +1016,7 @@ public class DemographicExportAction4 extends Action {
 
 			if (exImmunizations) {
 				// IMMUNIZATIONS
-				ArrayList<Map<String,Object>> prevList = PreventionData.getPreventionData(demoNo);
+				ArrayList<Map<String,Object>> prevList = PreventionData.getPreventionData(Integer.valueOf(demoNo));
 				String imSummary;
 				for (int k =0 ; k < prevList.size(); k++){
 					imSummary = null;

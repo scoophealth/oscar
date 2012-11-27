@@ -24,9 +24,13 @@
 
 --%>
 
+<%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
+<%@page import="org.oscarehr.myoscar.client.ws_manager.MessageManager"%>
+<%@page import="org.oscarehr.myoscar.client.ws_manager.AccountManager"%>
+<%@page import="org.oscarehr.myoscar_server.ws.MinimalPersonTransfer"%>
+<%@page import="org.oscarehr.myoscar_server.ws.MessageTransfer3"%>
 <%@page import="oscar.util.DateUtils"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
-<%@page import="org.oscarehr.myoscar_server.ws.MessageTransfer"%>
 <%@page import="org.oscarehr.phr.web.MyOscarMessagesHelper"%>
 <%@page import="oscar.oscarDemographic.data.*, java.util.Enumeration" %>
 <%@page import="oscar.util.UtilDateUtilities,java.util.*" %>
@@ -40,7 +44,13 @@
 <%
 	Long messageId=new Long(request.getParameter("messageId"));
 	String demographicNo = request.getParameter("demographicNo");
-	MessageTransfer messageTransfer=MyOscarMessagesHelper.readMessage(session, messageId);
+	MessageTransfer3 messageTransfer=MyOscarMessagesHelper.readMessage(session, messageId);
+	String subject=MessageManager.getSubject(messageTransfer);
+	String messageBody=MessageManager.getMessageBody(messageTransfer);
+	
+ 	MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
+	Long senderPersonId=messageTransfer.getSenderPersonId();
+	MinimalPersonTransfer minimalPersonSender=AccountManager.getMinimalPerson(myOscarLoggedInInfo, senderPersonId);
 %>
 
 <html:html locale="true">
@@ -130,7 +140,7 @@ function gotoEchart3(demoNo) {
                                     <bean:message key="oscarMessenger.ViewMessage.msgFrom"/>:
                                     </td>
                                     <td class="Printable" bgcolor="#CCCCFF">
-                                    	<%=StringEscapeUtils.escapeHtml(messageTransfer.getSenderPersonLastName()+", "+messageTransfer.getSenderPersonFirstName())%>
+                                    	<%=StringEscapeUtils.escapeHtml(minimalPersonSender.getLastName()+", "+minimalPersonSender.getFirstName()+" ("+minimalPersonSender.getUserName()+")")%>
                                     </td>
                                 </tr>
                                 <tr>
@@ -138,7 +148,15 @@ function gotoEchart3(demoNo) {
                                     <bean:message key="oscarMessenger.ViewMessage.msgTo"/>:
                                     </td>
                                     <td class="Printable" bgcolor="#BFBFFF">
-                                    	<%=StringEscapeUtils.escapeHtml(messageTransfer.getRecipientPersonLastName()+", "+messageTransfer.getRecipientPersonFirstName())%>
+                                    	<%
+                                    		for (Long recipientId : messageTransfer.getRecipientPeopleIds())
+                                    		{
+                                    			MinimalPersonTransfer recipient=AccountManager.getMinimalPerson(myOscarLoggedInInfo, recipientId);
+                                    			%>
+			                                    	<%=StringEscapeUtils.escapeHtml(recipient.getLastName()+", "+recipient.getFirstName()+" ("+recipient.getUserName()+"); ")%>
+                                    			<%
+                                    		}
+                                    	%>
                                     </td>
                                 </tr>
                                 <tr>
@@ -146,7 +164,7 @@ function gotoEchart3(demoNo) {
                                         <bean:message key="oscarMessenger.ViewMessage.msgSubject"/>:
                                     </td>
                                     <td class="Printable" bgcolor="#BBBBFF">
-                                    	<%=StringEscapeUtils.escapeHtml(messageTransfer.getSubject())%>
+                                    	<%=StringEscapeUtils.escapeHtml(subject)%>
                                     </td>
                                 </tr>
                                 <tr>
@@ -154,17 +172,18 @@ function gotoEchart3(demoNo) {
                                       <bean:message key="oscarMessenger.ViewMessage.msgDate"/>:
                                   </td>
                                   <td  class="Printable" bgcolor="#B8B8FF">
-                                   	<%=StringEscapeUtils.escapeHtml(DateUtils.formatDateTime(messageTransfer.getSendDate(), request.getLocale()))%>
+                                   	<%=StringEscapeUtils.escapeHtml(DateUtils.formatDateTime(messageTransfer.getSentDate(), request.getLocale()))%>
                                   </td>
                                 </tr>
                                 <tr>
                                     
                                     <td bgcolor="#EEEEFF" ></td>
                                     <td bgcolor="#EEEEFF" >
-                                        <textarea name="msgBody" wrap="hard" readonly="true" rows="18" cols="60" ><%=StringEscapeUtils.escapeHtml(messageTransfer.getContents())%></textarea><br>
+                                        <textarea name="msgBody" wrap="hard" readonly="true" rows="18" cols="60" ><%=StringEscapeUtils.escapeHtml(messageBody)%></textarea><br>
                                         <input class="ControlPushButton" type="button" value="<bean:message key="oscarMessenger.ViewMessage.btnReply"/>" onclick="window.location.href='<%=request.getContextPath()%>/phr/msg/CreatePHRMessage.jsp?replyToMessageId=<%=messageId%>&demographicNo=<%=demographicNo%>'"/>
-                                        <%String myOscarUserName=messageTransfer.getSenderPersonUserName();
-		                                Demographic demographic=MyOscarUtils.getDemographicByMyOscarUserName(myOscarUserName);
+                                        <%
+    		                                String myOscarUserName=minimalPersonSender.getUserName();
+		                                	Demographic demographic=MyOscarUtils.getDemographicByMyOscarUserName(myOscarUserName);
 		                                %>
                                         
                                         

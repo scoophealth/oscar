@@ -33,6 +33,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 
+<%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.oscarehr.common.model.Provider"%>
@@ -208,9 +209,11 @@ if (wPhoneExt != null)
                     		</tr>
                 	<%
                 		TreeMap<String, Provider> myOscarProviders=RegistrationHelper.getMyOscarProviders();
+                		MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
+                		
                 		for (Map.Entry<String, Provider> entry : myOscarProviders.entrySet())
                 		{
-                			Long providerMyOscarId=MyOscarUtils.getMyOscarUserId(session, entry.getKey());
+                			Long providerMyOscarId=MyOscarUtils.getMyOscarUserIdFromOscarProviderNo(myOscarLoggedInInfo, entry.getValue().getProviderNo());
 		                	%>
 		                	<tr class="userrow">
 		                		<%if (providerMyOscarId != null){ %>
