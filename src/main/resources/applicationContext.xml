@@ -266,8 +266,7 @@
 	<bean id="preparedTicklerManagerT" class="org.caisi.tickler.prepared.PreparedTicklerManager" scope="singleton" />
 	<bean id="providerManager" class="org.oscarehr.PMmodule.service.ProviderManager" autowire="byName" />
 	<bean id="clientRestrictionManager" class="org.oscarehr.PMmodule.service.ClientRestrictionManager" autowire="byName" />
-	<bean id="AppointmentStatusMgr" class="oscar.appt.status.service.impl.AppointmentStatusMgrImpl" autowire="byName"/>
-
+	
 	<!-- Admin Start -->
 	<bean id="secobjprivilegeDao" class="com.quatro.dao.security.SecobjprivilegeDao" autowire="byName" />
 	<bean id="secProviderDao" class="com.quatro.dao.security.SecProviderDao" autowire="byName" />
