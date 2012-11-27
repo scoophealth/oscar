@@ -60,7 +60,7 @@ public abstract class PHRIndivoDocument extends PHRDocument {
     protected PHRIndivoDocument() {
     }
 
-    protected PHRIndivoDocument(ProviderData provider, String demographicNo, Long demographicPhrId) {
+    protected PHRIndivoDocument(ProviderData provider, Integer demographicNo, Long demographicPhrId) {
         this.setPhrClassification(getClassification());
         this.setReceiverOscar(demographicNo);
         this.setReceiverType(PHRDocument.TYPE_DEMOGRAPHIC);

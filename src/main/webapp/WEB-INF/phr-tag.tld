@@ -39,27 +39,6 @@
     <small-icon></small-icon>
     <large-icon></large-icon>
     <description>PHR module tags</description>
-    <tag>
-        <name>setColor</name>
-        <tag-class>org.oscarehr.phr.taglib.SetColor</tag-class>
-        <body-content>JSP</body-content>
-        
-        <attribute>
-            <name>newMessagesCss</name>
-            <required>false</required>
-            <type>String</type>
-        </attribute>
-        <attribute>
-            <name>noNewMessagesCss</name>
-            <required>false</required>
-            <type>String</type>
-        </attribute>
-        <attribute>
-            <name>noAuthorizationCss</name>
-            <required>false</required>
-            <type>String</type>
-        </attribute>
-    </tag>
         
     <tag>
         <name>IfNotPHRAuthenticated</name>

@@ -275,11 +275,11 @@ public class CommonLabTestValues {
 	 * //fifth field is range
 	 * //sixth field is date : collection Date
 	 */
-	public static ArrayList<Map<String, Serializable>> findValuesForTest(String labType, String demographicNo, String testName) {
+	public static ArrayList<Map<String, Serializable>> findValuesForTest(String labType, Integer demographicNo, String testName) {
 		return findValuesForTest(labType, demographicNo, testName, "NULL");
 	}
 
-	public static ArrayList<Map<String, Serializable>> findValuesForTest(String labType, String demographicNo, String testName, String identCode) {
+	public static ArrayList<Map<String, Serializable>> findValuesForTest(String labType, Integer demographicNo, String testName, String identCode) {
 		HashMap<String, Serializable> accessionMap = new HashMap<String, Serializable>();
 		LinkedHashMap<String, Map<String, Serializable>> labMap = new LinkedHashMap<String, Map<String, Serializable>>();
 		ArrayList<Map<String, Serializable>> labList = new ArrayList<Map<String, Serializable>>();
@@ -290,7 +290,7 @@ public class CommonLabTestValues {
 		if (labType != null && labType.equals("CML")) {
 			// LabTestResultsDao dao = SpringUtils.getBean(LabTestResultsDao.class);
 			PatientLabRoutingDao dao = SpringUtils.getBean(PatientLabRoutingDao.class);
-			for(Object[] i : dao.findRoutingsAndTests(ConversionUtils.fromIntString(demographicNo), labType, testName)) {
+			for(Object[] i : dao.findRoutingsAndTests(demographicNo==null?0:demographicNo, labType, testName)) {
 				PatientLabRouting p = (PatientLabRouting) i[0]; 
 				LabTestResults ltr = (LabTestResults) i[1];
 				LabPatientPhysicianInfo lfp = (LabPatientPhysicianInfo) i[2];
@@ -333,7 +333,7 @@ public class CommonLabTestValues {
 			PatientLabRoutingDao dao = SpringUtils.getBean(PatientLabRoutingDao.class);
 			MdsZMNDao zmDao = SpringUtils.getBean(MdsZMNDao.class);
 			
-			for(Object[] i : dao.findMdsRoutings(ConversionUtils.fromIntString(demographicNo), testName, "MDS")) {
+			for(Object[] i : dao.findMdsRoutings(demographicNo==null?0:demographicNo, testName, "MDS")) {
 					MdsOBX x = (MdsOBX) i[0];
 					MdsMSH m = (MdsMSH) i[1];
 					PatientLabRouting p = (PatientLabRouting) i[2];
@@ -400,7 +400,7 @@ public class CommonLabTestValues {
 			PatientLabRoutingDao dao = SpringUtils
 					.getBean(PatientLabRoutingDao.class);
 			
-			for (Object[] i : dao.findHl7InfoForRoutingsAndTests(ConversionUtils.fromIntString(demographicNo), "BCP", testName)) {
+			for (Object[] i : dao.findHl7InfoForRoutingsAndTests(demographicNo==null?0:demographicNo, "BCP", testName)) {
 					// PatientLabRouting p = (PatientLabRouting) i[0];
 					// Hl7Msh m = (Hl7Msh) i[1];
 					Hl7Pid pi = (Hl7Pid) i[2];
@@ -450,7 +450,7 @@ public class CommonLabTestValues {
 		} else if (labType != null && labType.equals("HL7")) {
 			MeasurementDao dao = SpringUtils.getBean(MeasurementDao.class);
 			
-			for(Object lNo : dao.findLabNumbers(ConversionUtils.fromIntString(demographicNo), identCode)) {
+			for(Object lNo : dao.findLabNumbers(demographicNo==null?0:demographicNo, identCode)) {
 					String lab_no = String.valueOf(lNo);
 
 					MessageHandler handler = Factory.getHandler(lab_no);

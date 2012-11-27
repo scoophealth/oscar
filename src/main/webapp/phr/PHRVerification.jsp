@@ -29,7 +29,7 @@
 <%@ page import="java.util.Enumeration"%>
 <%@ page import="oscar.util.DateUtils"%>
 <%@ page import="org.oscarehr.PMmodule.dao.ProviderDao,oscar.util.UtilDateUtilities" %>
-<%@ page import="org.oscarehr.phr.util.MyOscarServerRelationManager,org.oscarehr.phr.util.MyOscarUtils,org.oscarehr.phr.PHRAuthentication" %>
+<%@ page import="org.oscarehr.phr.util.MyOscarServerRelationManager,org.oscarehr.phr.util.MyOscarUtils" %>
 
 <%@ taglib uri="/WEB-INF/phr-tag.tld" prefix="phr"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -67,8 +67,6 @@ List<PHRVerification> phrVerifications = phrVerificationDao.getForDemographic(de
 
 org.oscarehr.common.model.Demographic demo = new DemographicData().getDemographic(demographicNo); 
 String myOscarUserName = demo.getMyOscarUserName();
-
-PHRAuthentication phrAuthentication= MyOscarUtils.getPHRAuthentication(session);
 
 %>
 

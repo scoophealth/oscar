@@ -54,8 +54,8 @@ import org.indivo.xml.phr.types.AuthorType;
 import org.indivo.xml.phr.urns.ContentTypeQNames;
 import org.indivo.xml.phr.urns.DocumentClassificationUrns;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.myoscar_server.ws.MedicalDataType;
-import org.oscarehr.phr.PHRAuthentication;
 import org.w3c.dom.Element;
 
 import oscar.dms.EDoc;
@@ -63,17 +63,13 @@ import oscar.dms.EDocUtil;
 import oscar.oscarProvider.data.ProviderData;
 import oscar.oscarProvider.data.ProviderMyOscarIdData;
 
-/**
- *
- * @author root
- */
 public class PHRBinaryData extends PHRDocument {
 
     /** Creates a new instance of PHRBinaryDocument */
     public PHRBinaryData() {
     }
 
-    public PHRBinaryData(PHRAuthentication auth, ProviderData sender, String recipientOscarId, int recipientType, Long recipientMyOscarUserId, EDoc document) throws JAXBException, IndivoException {
+    public PHRBinaryData(MyOscarLoggedInInfo myOscarLoggedInInfo, ProviderData sender, Integer recipientOscarId, int recipientType, Long recipientMyOscarUserId, EDoc document) throws JAXBException, IndivoException {
         //Temp data: We're not setting the document just yet
 
         GregorianCalendar calendar = new GregorianCalendar();
@@ -82,13 +78,13 @@ public class PHRBinaryData extends PHRDocument {
         BinaryDataType binaryDataType = getPhrBinaryData(document.getContentType(), document.getDescription(), fname, new byte[0]);
         IndivoDocumentType indivoDoc = getPhrBinaryDataDocument(sender, binaryDataType);
 
-        this.setSenderMyOscarUserId(auth.getMyOscarUserId());
+        this.setSenderMyOscarUserId(myOscarLoggedInInfo.getLoggedInPersonId());
         this.setSenderOscar(sender.getProviderNo());
 
         setConstructorData(recipientOscarId, recipientType, recipientMyOscarUserId, indivoDoc);
     }
 
-    public PHRBinaryData(Provider provider, String recipientOscarId, int recipientType, Long recipientMyOscarUserId, String documentType, String documentContentType, String documentDesription) throws JAXBException, IndivoException {
+    public PHRBinaryData(Provider provider, Integer recipientOscarId, int recipientType, Long recipientMyOscarUserId, String documentType, String documentContentType, String documentDesription) throws JAXBException, IndivoException {
         //Temp data: We're not setting the document just yet
 
         GregorianCalendar calendar = new GregorianCalendar();
@@ -102,7 +98,7 @@ public class PHRBinaryData extends PHRDocument {
         setConstructorData(recipientOscarId, recipientType, recipientMyOscarUserId, indivoDoc);
     }
 
-	private void setConstructorData(String recipientOscarId, int recipientType, long recipientMyOscarUserId, IndivoDocumentType indivoDoc) throws IndivoException, JAXBException {
+	private void setConstructorData(Integer recipientOscarId, int recipientType, long recipientMyOscarUserId, IndivoDocumentType indivoDoc) throws IndivoException, JAXBException {
 	    byte[] docContentBytes = JAXBUtils.marshalToByteArray(new IndivoDocument(indivoDoc), JAXBContext.newInstance(IndivoDocumentType.class.getPackage().getName()));
         String docContentStr = new String(docContentBytes);
         this.setPhrClassification(MedicalDataType.BINARY_DOCUMENT.name());

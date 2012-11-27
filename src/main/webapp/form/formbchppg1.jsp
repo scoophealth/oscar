@@ -70,7 +70,7 @@ if (props == null || props.getProperty("c_lastVisited", "").equals("")){
     
     
     // fill the vaccines
-    ArrayList<Map<String,Object>> vaccines = PreventionData.getPreventionData(""+demoNo);
+    ArrayList<Map<String,Object>> vaccines = PreventionData.getPreventionData(demoNo);
     int fluCount = 0;
     int pnuCount = 0;
     int tdCount = 0;

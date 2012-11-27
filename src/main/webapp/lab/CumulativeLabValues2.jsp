@@ -198,7 +198,7 @@ function addLabToList(req){
                       //TEMPORARY
                       String labType = (String) h.get("labType");
    
-                      ArrayList list   = CommonLabTestValues.findValuesForTest(labType, demographic_no, prevName);
+                      ArrayList list   = CommonLabTestValues.findValuesForTest(labType, Integer.valueOf(demographic_no), prevName);
                       Hashtable labsBasedOnDate = new Hashtable();
                       for (int g = 0; g < list.size(); g++){
                           Hashtable hdata = (Hashtable) list.get(g);

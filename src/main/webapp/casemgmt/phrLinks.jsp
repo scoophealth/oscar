@@ -24,7 +24,6 @@
 
 --%>
 <%@page import="oscar.oscarProvider.data.ProviderMyOscarIdData" %>
-<%@page import="org.oscarehr.phr.PHRAuthentication" %>
 <%@page import="org.oscarehr.phr.util.MyOscarUtils" %>
 <%@page import="org.oscarehr.common.model.Demographic" %>
 <%@page import="org.oscarehr.common.dao.DemographicDao" %>
@@ -36,7 +35,7 @@ String provNo = (String) session.getAttribute("user");
 if( !ProviderMyOscarIdData.idIsSet(provNo)) {	
 	return;
 }
-PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
+
 DemographicDao demographicDao=(DemographicDao)SpringUtils.getBean("demographicDao");
 Demographic demographic=demographicDao.getDemographic(demographicNo);
 String winName = "viewPatientPHR" + demographicNo;

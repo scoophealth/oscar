@@ -65,10 +65,10 @@ public class PapReport implements PreventionReport {
         /////
         for (int i = 0; i < list.size(); i ++){//for each  element in arraylist
              ArrayList<String> fieldList = (ArrayList<String>) list.get(i);
-             String demo = fieldList.get(0);
+             Integer demo = Integer.valueOf(fieldList.get(0));
              //search   prevention_date prevention_type  deleted   refused
              ArrayList<Map<String,Object>>  prevs = PreventionData.getPreventionData("PAP",demo);
-             PreventionData.addRemotePreventions(prevs, Integer.parseInt(demo),"PAP",null);
+             PreventionData.addRemotePreventions(prevs, demo,"PAP",null);
              ArrayList<Map<String,Object>> noFutureItems =  removeFutureItems(prevs, asofDate);
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;

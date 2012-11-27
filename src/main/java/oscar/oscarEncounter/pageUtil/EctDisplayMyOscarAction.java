@@ -31,8 +31,7 @@ import org.apache.log4j.Logger;
 import org.apache.struts.util.MessageResources;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
-import org.oscarehr.phr.PHRAuthentication;
-import org.oscarehr.phr.util.MyOscarUtils;
+import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -66,8 +65,8 @@ public class EctDisplayMyOscarAction extends EctDisplayAction {
     	}
     	
     	//Is provider not logged in?
-    	PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(request.getSession());
-    	if(auth != null){
+    	MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
+    	if(myOscarLoggedInInfo != null && myOscarLoggedInInfo.isLoggedIn()){
     		Dao.setHeadingColour("83C659");
     	}else{
 			logger.debug("provider not logged into myoscar");

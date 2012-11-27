@@ -39,16 +39,21 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionRedirect;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.PHRVerificationDao;
-import org.oscarehr.phr.PHRAuthentication;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.myoscar.client.ws_manager.AccountManager;
+import org.oscarehr.myoscar.client.ws_manager.MessageManager;
+import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
+import org.oscarehr.myoscar_server.ws.Message2DataTransfer;
+import org.oscarehr.myoscar_server.ws.Message2RecipientPersonAttributesTransfer;
+import org.oscarehr.myoscar_server.ws.MessageTransfer3;
 import org.oscarehr.phr.dao.PHRActionDAO;
 import org.oscarehr.phr.dao.PHRDocumentDAO;
 import org.oscarehr.phr.model.PHRAction;
 import org.oscarehr.phr.model.PHRDocument;
 import org.oscarehr.phr.model.PHRMessage;
 import org.oscarehr.phr.service.PHRService;
-import org.oscarehr.phr.util.MyOscarMessageManager;
-import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -93,8 +98,7 @@ public class PHRMessageAction extends DispatchAction {
 	}
 
 	public ActionForward viewMessages(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		PHRAuthentication auth = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
-		log.debug("AUTH " + auth);
+
 		clearSessionVariables(request);
 
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
@@ -133,10 +137,6 @@ public class PHRMessageAction extends DispatchAction {
 	}
 
 	public ActionForward read(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		/*
-		 * PHRAuthentication auth = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH); log.debug("AUTH "+auth); String indivoId = auth.getUserId(); String ticket = auth.getToken();
-		 */
-
 		return mapping.findForward("read");
 	}
 
@@ -149,13 +149,11 @@ public class PHRMessageAction extends DispatchAction {
 	}
 
 	public ActionForward createMessage(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		// PHRAuthentication auth = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
 		String demographicNo = request.getParameter("demographicNo");
 		String provNo = (String) request.getSession().getAttribute("user");
 		
-		PHRAuthentication auth = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
-        
-        if (auth == null || auth.getMyOscarUserId() == null) {
+        MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
+        if (myOscarLoggedInInfo == null || !myOscarLoggedInInfo.isLoggedIn()) {
             request.setAttribute("forwardToOnSuccess", request.getContextPath() + "/phr/PhrMessage.do?method=createMessage&providerNo="+provNo+"&demographicNo=" + demographicNo);
             return mapping.findForward("loginAndRedirect");
         }
@@ -205,8 +203,13 @@ public class PHRMessageAction extends DispatchAction {
 		Long replyToMessageId=new Long(request.getParameter("replyToMessageId"));
 		String message=StringUtils.trimToNull(request.getParameter("body"));
 
-		PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(request.getSession());
-		Long messageId = MyOscarMessageManager.sendReply(auth.getMyOscarUserId(), auth.getMyOscarPassword(), replyToMessageId, message);
+		MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
+		MessageTransfer3 previousMessage=MessageManager.getMessage(myOscarLoggedInInfo, replyToMessageId);
+		
+		Message2DataTransfer subjectPart=MessageManager.getMessage2DataTransfer(previousMessage, "SUBJECT");
+		String replySubject="re: "+(subjectPart!=null?new String(subjectPart.getContents(), "UTF-8"):"");
+	
+		Long messageId = MessageManager.sendMessage(myOscarLoggedInInfo, previousMessage.getSenderPersonId(), replySubject, message);
 
 		if(request.getParameter("andPasteToEchart")!= null && request.getParameter("andPasteToEchart").equals("yes")){
 			ActionRedirect redirect = new ActionRedirect(mapping.findForward("echart"));
@@ -224,23 +227,20 @@ public class PHRMessageAction extends DispatchAction {
 	public ActionForward sendPatient(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String subject = request.getParameter("subject");
 		String messageBody = request.getParameter("body");
-		String demographicId = request.getParameter("demographicId");
+		Integer demographicId = Integer.parseInt(request.getParameter("demographicId"));
 
-		PHRAuthentication auth = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
+		MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
+		
+		DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+		Demographic demographic = demographicDao.getDemographicById(demographicId);
+		Long recipientMyOscarUserId = AccountManager.getUserId(myOscarLoggedInInfo, demographic.getMyOscarUserName());
 
-		DemographicData demo = new DemographicData();
-		Long recipientMyOscarUserId = MyOscarUtils.getMyOscarUserId(auth, demo.getDemographic(demographicId).getMyOscarUserName());
-
-		MyOscarMessageManager.sendMessage(auth.getMyOscarUserId(), auth.getMyOscarPassword(), recipientMyOscarUserId, subject, messageBody);
+		Long messageId = MessageManager.sendMessage(myOscarLoggedInInfo, recipientMyOscarUserId, subject, messageBody);
 
 		return mapping.findForward("view");
 	}
 
 	public ActionForward delete(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		/*
-		 * PHRAuthentication auth = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH); log.debug("AUTH "+auth); String indivoId = auth.getUserId(); String ticket = auth.getToken();
-		 */
-
 		String id = request.getParameter("id");
 		if (id == null) return viewSentMessages(mapping, form, request, response);
 		log.debug("Id to delete:" + id);
@@ -254,10 +254,6 @@ public class PHRMessageAction extends DispatchAction {
 	}
 
 	public ActionForward resend(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		/*
-		 * PHRAuthentication auth = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH); log.debug("AUTH "+auth); String indivoId = auth.getUserId(); String ticket = auth.getToken();
-		 */
-
 		String id = request.getParameter("id");
 		if (id != null) {
 			PHRAction action = phrActionDAO.getActionById(id);
@@ -273,8 +269,11 @@ public class PHRMessageAction extends DispatchAction {
 	public ActionForward flipActive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Long messageId=new Long(request.getParameter("messageId"));
 
-		PHRAuthentication auth = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
-		MyOscarMessageManager.flipActive(auth.getMyOscarUserId(), auth.getMyOscarPassword(), messageId);
+		MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
+		
+		Message2RecipientPersonAttributesTransfer recipientAttributes=MessageManager.getMessageRecipientPersonAttributesTransfer(myOscarLoggedInInfo, messageId, myOscarLoggedInInfo.getLoggedInPersonId());
+		recipientAttributes.setActive(!recipientAttributes.isActive());
+		MessageManager.updateMessageRecipientPersonAttributesTransfer(myOscarLoggedInInfo, recipientAttributes);
 
 		return mapping.findForward("view");
 	}

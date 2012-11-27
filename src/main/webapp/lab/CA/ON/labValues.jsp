@@ -53,7 +53,7 @@ ArrayList list = null;
 if (!(demographicNo == null || demographicNo.equals("null"))){
 	if(remoteFacilityIdString==null)
 	{
-		list = CommonLabTestValues.findValuesForTest(labType, demographicNo, testName, identifier);
+		list = CommonLabTestValues.findValuesForTest(labType, Integer.valueOf(demographicNo), testName, identifier);
 	}
 	else
 	{

@@ -93,15 +93,9 @@ public class LabDisplayHelper {
 					break;
 				}
 					
-					
 			}
 			
-			
 		} 
-		 
-		
-		
-		
 
 		return (cachedDemographicLabResult);
 	}
@@ -150,7 +144,7 @@ public class LabDisplayHelper {
 				for (int k = 0; k < obxCount; k++) {
 					String obxName = handler.getOBXName(j, k);
 					String identifier = handler.getOBXIdentifier(j, k);
-					ArrayList<Map<String, Serializable>> storedValues = CommonLabTestValues.findValuesForTest(lab.labType, String.valueOf(demographicId), obxName, identifier);
+					ArrayList<Map<String, Serializable>> storedValues = CommonLabTestValues.findValuesForTest(lab.labType, demographicId, obxName, identifier);
 					mapOfTestValues.put(identifier, storedValues);
 				}
 			}

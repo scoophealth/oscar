@@ -3383,7 +3383,7 @@
         <ViolationValue>/src/main/webapp/oscarMessenger/ViewPDFAttachment.jsp:&lt;% for ( int i = 0 ; i &lt; attVector.size(); i++) { %&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarMessenger/ViewPDFAttachment.jsp:&lt;td bgcolor="#DDDDFF"&gt;&lt;%=(String) attVector.get(i)%&gt;&lt;/td&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarPrevention/AddPreventionData.jsp:Hashtable h = (Hashtable) providers.get(i);%&gt;</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarPrevention/PreventionReporting.jsp:Hashtable h = deName.getNameAgeSexHashtable(dis.demographicNo);</ViolationValue>
+        <ViolationValue>/src/main/webapp/oscarPrevention/PreventionReporting.jsp:Hashtable h = deName.getNameAgeSexHashtable(dis.demographicNo.toString());</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarReport/LabReqReport.jsp:Hashtable h = (Hashtable) labRep.get(j);</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarReport/RptByExamplesAllFavorites.jsp:property="favoriteVector"&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarReport/RptViewAllQueryByExamples.jsp:property="queryVector"&gt;</ViolationValue>

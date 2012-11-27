@@ -65,19 +65,19 @@ public class FluReport implements PreventionReport {
 
         for (int i = 0; i < list.size(); i ++){//for each  element in arraylist
              ArrayList<String> fieldList = list.get(i);
-             String demo = fieldList.get(0);
+             Integer demo = Integer.valueOf(fieldList.get(0));
 
              log.debug("processing patient : "+demo);
 
              //search   prevention_date prevention_type  deleted   refused
 
              ArrayList<Map<String,Object>>  prevs = PreventionData.getPreventionData("Flu",demo);
-             PreventionData.addRemotePreventions(prevs, Integer.parseInt(demo),"Flu",null);
+             PreventionData.addRemotePreventions(prevs, demo,"Flu",null);
 
              LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
              if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
             	 try {
-	                ArrayList<HashMap<String,Object>> remotePreventions=PreventionData.getLinkedRemotePreventionData("Flu", Integer.parseInt(demo));
+	                ArrayList<HashMap<String,Object>> remotePreventions=PreventionData.getLinkedRemotePreventionData("Flu", demo);
 	                prevs.addAll(remotePreventions);
 
 	                Collections.sort(prevs, new PreventionData.PreventionsComparator());
@@ -102,7 +102,7 @@ public class FluReport implements PreventionReport {
                 Date dueDate = cal.getTime();
                 //cal.add(Calendar.MONTH,-6);
                 Date cutoffDate =  dueDate;//asofDate ; //cal.getTime();
-             if(!isOfAge(demo,asofDate)){
+             if(!isOfAge(demo.toString(),asofDate)){
                 prd.rank = 5;
                 prd.lastDate = "------";
                 prd.state = "Ineligible";
@@ -183,7 +183,7 @@ public class FluReport implements PreventionReport {
                 log.debug("bonusEl start date "+beginingOfYear+ " "+beginingOfYear.before(prevDate));
                 log.debug("bonusEl end date "+endOfYear+ " "+endOfYear.after(prevDate));
                 log.debug("ASOFDATE "+asofDate);
-                if (beginingOfYear.before(prevDate) && endOfYear.after(prevDate) && isOfAge(demo,asofDate)){
+                if (beginingOfYear.before(prevDate) && endOfYear.after(prevDate) && isOfAge(demo.toString(),asofDate)){
                     if( refused ) {
                         prd.billStatus = "Y";
                     }

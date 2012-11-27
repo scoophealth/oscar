@@ -196,12 +196,12 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
 			}
 
 			//finally we add specific measurements to module item list
-			String demo = bean.getDemographicNo();
+			Integer demo = Integer.valueOf(bean.getDemographicNo());
 			oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler hd = new oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler(demo);
 			oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean data;
 			Vector measureTypes = (Vector) hd.getMeasurementsDataVector();
 			if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
-				EctMeasurementsDataBeanHandler.addRemoteMeasurementsTypes(measureTypes,Integer.parseInt(demo));
+				EctMeasurementsDataBeanHandler.addRemoteMeasurementsTypes(measureTypes,demo);
 			}
 			
 			for (int idx = 0; idx < measureTypes.size(); ++idx) {
@@ -215,7 +215,7 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
 				hd = new oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler(demo, data.getType());
 				Vector measures = (Vector) hd.getMeasurementsDataVector();
 				if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
-					EctMeasurementsDataBeanHandler.addRemoteMeasurements(measures,data.getType(),Integer.parseInt(demo));
+					EctMeasurementsDataBeanHandler.addRemoteMeasurements(measures,data.getType(),demo);
 				}
 
 				if (measures.size() > 0) {

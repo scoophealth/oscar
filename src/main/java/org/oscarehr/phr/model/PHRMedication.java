@@ -89,12 +89,12 @@ public class PHRMedication extends PHRDocument {
 		// super();
 	}
 
-	public PHRMedication(IndivoDocumentType doc, String demoId, Long receiverMyOscarUserId, String providerNo) throws Exception {
+	public PHRMedication(IndivoDocumentType doc, Integer demoId, Long receiverMyOscarUserId, String providerNo) throws Exception {
 		setReceiverInfo(demoId, receiverMyOscarUserId);
 		parseDocument(doc, providerNo);
 	}
 
-	public PHRMedication(MedicalDataTransfer3 medicalDataTransfer, String demoId, Long receiverMyOscarUserId, String providerNo) throws Exception {
+	public PHRMedication(MedicalDataTransfer3 medicalDataTransfer, Integer demoId, Long receiverMyOscarUserId, String providerNo) throws Exception {
 		setReceiverInfo(demoId, receiverMyOscarUserId);
 		parseDocument(medicalDataTransfer, providerNo);
 	}
@@ -110,7 +110,7 @@ public class PHRMedication extends PHRDocument {
 		drug = d;
 	}
 
-	private void setReceiverInfo(String demoId, Long receiverMyOscarUserId) {
+	private void setReceiverInfo(Integer demoId, Long receiverMyOscarUserId) {
 		this.setReceiverOscar(demoId);
 		this.setReceiverMyOscarUserId(receiverMyOscarUserId);
 	}
@@ -169,7 +169,7 @@ public class PHRMedication extends PHRDocument {
 	}
 
 	// sending new meds to PHR
-	public PHRMedication(EctProviderData.Provider prov, String demographicNo, Long receiverMyOscarUserId, RxPrescriptionData.Prescription drug) throws JAXBException, IndivoException {
+	public PHRMedication(EctProviderData.Provider prov, Integer demographicNo, Long receiverMyOscarUserId, RxPrescriptionData.Prescription drug) throws JAXBException, IndivoException {
 		// super();
 		IndivoDocumentType document = getPhrMedicationDocument(prov, drug);
 		JAXBContext docContext = JAXBContext.newInstance(IndivoDocumentType.class.getPackage().getName());
@@ -224,7 +224,7 @@ public class PHRMedication extends PHRDocument {
 		drug = new Drug();
 		drug.setHideFromDrugProfile(med.isHideFromDrugProfile());
 		drug.setProviderNo(providerNo);
-		if (this.getReceiverOscar() != null) drug.setDemographicId(Integer.parseInt(this.getReceiverOscar()));
+		if (this.getReceiverOscar() != null) drug.setDemographicId(this.getReceiverOscar());
 		else drug.setDemographicId(0);
 		DurationType dt = med.getPrescriptionDuration();
 		if (dt != null) {

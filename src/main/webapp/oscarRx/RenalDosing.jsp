@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page %><%@page import="oscar.oscarDemographic.data.*,org.oscarehr.common.model.Demographic"%>
 <%@page import="oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler,java.util.*,oscar.oscarRx.util.*" %>
 <%@page import="oscar.oscarLab.ca.on.*,oscar.util.*,oscar.oscarLab.*" %>
@@ -64,7 +65,7 @@ if (measurementHash != null && measurementHash.get("value") != null){
 double sCr = -1;
 Date sCrDate = null;
 
-List labs = CommonLabTestValues.findValuesForTest("CML",demographicNo, "CREATININE");
+List labs = CommonLabTestValues.findValuesForTest("CML",Integer.valueOf(demographicNo), "CREATININE");
 if(labs != null && labs.size() >0 ){
 //SortHashtable sorter = ;
     Collections.sort(labs,new SortHashtable());
@@ -73,7 +74,9 @@ if(labs != null && labs.size() >0 ){
     sCrDate = (Date) hash.get("collDateDate");
     try{
         sCr = Double.parseDouble(sCrStr);
-    }catch(Exception e){}
+    }catch(Exception e){
+   	 MiscUtils.getLogger().debug("No idea if this is ok or not, some one else left the block blank", e);
+    }
 }
 
 

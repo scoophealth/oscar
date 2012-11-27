@@ -24,6 +24,7 @@
 
 package org.oscarehr.phr.util;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -31,23 +32,19 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.PropertyDao;
 import org.oscarehr.common.dao.ProviderPreferenceDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.ProviderPreference;
-import org.oscarehr.myoscar_server.ws.AccountWs;
-import org.oscarehr.myoscar_server.ws.NoSuchItemException_Exception;
-import org.oscarehr.myoscar_server.ws.NotAuthorisedException_Exception;
-import org.oscarehr.myoscar_server.ws.PersonTransfer2;
-import org.oscarehr.phr.PHRAuthentication;
-import org.oscarehr.phr.service.PHRService;
+import org.oscarehr.myoscar.client.ws_manager.AccountManager;
+import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
+import org.oscarehr.myoscar_server.ws.LoginResultTransfer;
 import org.oscarehr.util.DeamonThreadFactory;
 import org.oscarehr.util.EncryptionUtils;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
-import org.oscarehr.util.QueueCache;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
 
@@ -56,67 +53,9 @@ import oscar.OscarProperties;
 public final class MyOscarUtils {
 	private static final Logger logger = MiscUtils.getLogger();
 
-	private static QueueCache<String, Long> userNameToIdCache = new QueueCache<String, Long>(4, 100, DateUtils.MILLIS_PER_HOUR);
-	private static QueueCache<Long, String> userIdToNameCache = new QueueCache<Long, String>(4, 100, DateUtils.MILLIS_PER_HOUR);
-	private static final DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 	private static ExecutorService asyncAutoLoginThreadPool=Executors.newFixedThreadPool(4, new DeamonThreadFactory("asyncAutoLoginThreadPool", Thread.MIN_PRIORITY));
-	
-	/**
-	 * Note this method must only return the ID, it must never return the PersonTransfer2 itself since it reads from a cache.
-	 * @throws NotAuthorisedException_Exception 
-	 */
-	public static Long getMyOscarUserId(PHRAuthentication auth, String myOscarUserName) {
-		int indexOfAt = myOscarUserName.indexOf('@');
-		if (indexOfAt != -1) myOscarUserName = myOscarUserName.substring(0, indexOfAt);
 
-		Long myOscarUserId = userNameToIdCache.get(myOscarUserName);
-
-		if (myOscarUserId == null) {
-			AccountWs accountWs = MyOscarServerWebServicesManager.getAccountWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
-			PersonTransfer2 person = null;
-			try {
-				person = accountWs.getPersonByUserName2(myOscarUserName, null);
-			} catch (Exception e) {
-				MiscUtils.getLogger().error("Myoscar user " + myOscarUserName + " not found ", e);
-			}
-			if (person != null) {
-				myOscarUserId = person.getId();
-				userNameToIdCache.put(myOscarUserName, myOscarUserId);
-			}
-		}
-
-		return (myOscarUserId);
-	}
-
-	public static Long getMyOscarUserId(HttpSession session, String myOscarUserName) {
-		PHRAuthentication auth = (PHRAuthentication) session.getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
-		return (getMyOscarUserId(auth, myOscarUserName));
-	}
-
-	/**
-	 * Note this method must only return the userName, it must never return the PersonTransfer2 itself since it reads from a cache.
-	 * @throws NotAuthorisedException_Exception 
-	 * @throws NoSuchItemException_Exception 
-	 */
-	public static String getMyOscarUserName(PHRAuthentication auth, Long myOscarUserId) throws NotAuthorisedException_Exception, NoSuchItemException_Exception {
-		String myOscarUserName = userIdToNameCache.get(myOscarUserId);
-
-		if (myOscarUserName == null) {
-			AccountWs accountWs = MyOscarServerWebServicesManager.getAccountWs(auth.getMyOscarUserId(), auth.getMyOscarPassword());
-			PersonTransfer2 person = accountWs.getPerson2(myOscarUserId);
-			if (person != null) {
-				myOscarUserName = person.getUserName();
-				userIdToNameCache.put(myOscarUserId, myOscarUserName);
-			}
-		}
-
-		return (myOscarUserName);
-	}
-
-	public static String getMyOscarUserName(HttpSession session, Long myOscarUserId) throws NotAuthorisedException_Exception, NoSuchItemException_Exception {
-		PHRAuthentication auth = (PHRAuthentication) session.getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
-		return (getMyOscarUserName(auth, myOscarUserId));
-	}
+	private static boolean myOscarEnabled=initMyOscarEnabled();
 
 	public static Demographic getDemographicByMyOscarUserName(String myOscarUserName) {
 		DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
@@ -124,14 +63,7 @@ public final class MyOscarUtils {
 		return (demographic);
 	}
 
-	public static PHRAuthentication getPHRAuthentication(HttpSession session) {
-		return (PHRAuthentication) (session.getAttribute(PHRAuthentication.SESSION_PHR_AUTH));
-	}
-
-	/**
-	 * @return true if the myoscar send button should be displayed, false otherwise.
-	 */
-	public static boolean isVisibleMyOscarSendButton() {
+	private static boolean initMyOscarEnabled() {
 		OscarProperties properties = OscarProperties.getInstance();
 		String myOscarModule = properties.getProperty("MY_OSCAR");
 		if (myOscarModule != null) myOscarModule = myOscarModule.toLowerCase();
@@ -139,40 +71,42 @@ public final class MyOscarUtils {
 		boolean module = ("yes".equals(myOscarModule) || "true".equals(myOscarModule));
 
 		return (module);
-	}
+    }
 
-	public static String getDisabledStringForMyOscarSendButton(PHRAuthentication auth, Integer demographicId) {
-		boolean enabled = isMyOscarSendButtonEnabled(auth, demographicId);
+	public static boolean isMyOscarEnabled()
+	{
+		return(myOscarEnabled);
+	}
+	
+	public static String getDisabledStringForMyOscarSendButton(MyOscarLoggedInInfo myOscarLoggedInInfo, Integer demographicId) {
+		boolean enabled = isMyOscarSendButtonEnabled(myOscarLoggedInInfo, demographicId);
 
 		return (WebUtils.getDisabledString(enabled));
 	}
 
-	public static String getDisabledStringForMyOscarSendButton(PHRAuthentication auth, Demographic demographic) {
-		boolean enabled = isMyOscarSendButtonEnabled(auth, demographic);
+	public static String getDisabledStringForMyOscarSendButton(MyOscarLoggedInInfo myOscarLoggedInInfo, Demographic demographic) {
+		boolean enabled = isMyOscarSendButtonEnabled(myOscarLoggedInInfo, demographic);
 
 		return (WebUtils.getDisabledString(enabled));
 	}
 
-	public static boolean isMyOscarSendButtonEnabled(PHRAuthentication auth, Integer demographicId) {
+	public static boolean isMyOscarSendButtonEnabled(MyOscarLoggedInInfo myOscarLoggedInInfo, Integer demographicId) {
 		DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 		Demographic demographic = demographicDao.getDemographicById(demographicId);
 
-		return (auth != null && auth.isloggedIn() && demographic != null && demographic.getMyOscarUserName() != null);
+		return (isMyOscarSendButtonEnabled(myOscarLoggedInInfo, demographic));
 	}
 
-	public static boolean isMyOscarSendButtonEnabled(PHRAuthentication auth, Demographic demographic) {
-		return (auth != null && auth.isloggedIn() && demographic != null && demographic.getMyOscarUserName() != null);
-	}
-
-	public static Long getPatientMyOscarId(PHRAuthentication auth, Integer demographicId) {
-		Demographic demographic = demographicDao.getDemographicById(demographicId);
-		Long patientMyOscarUserId = getMyOscarUserId(auth, demographic.getMyOscarUserName());
-		return (patientMyOscarUserId);
+	public static boolean isMyOscarSendButtonEnabled(MyOscarLoggedInInfo myOscarLoggedInInfo, Demographic demographic) {
+		return (myOscarLoggedInInfo != null && myOscarLoggedInInfo.isLoggedIn() && demographic != null && demographic.getMyOscarUserName() != null);
 	}
 
 	public static void attemptMyOscarAutoLoginIfNotAlreadyLoggedInAsynchronously(final LoggedInInfo loggedInInfo) {
+		if (!isMyOscarEnabled()) return;
+		
 		HttpSession session = loggedInInfo.session;
-		if (getPHRAuthentication(session)!=null) return;
+		MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
+		if (myOscarLoggedInInfo!=null && myOscarLoggedInInfo.isLoggedIn()) return;
 
 		Runnable runnable=new Runnable()
 		{
@@ -186,25 +120,54 @@ public final class MyOscarUtils {
 		asyncAutoLoginThreadPool.submit(runnable);
 	}
 
+	public static String getMyOscarUserNameFromOscar(String providerNo)
+	{
+		PropertyDao propertyDao = (PropertyDao) SpringUtils.getBean("propertyDao");
+		List<org.oscarehr.common.model.Property> myOscarUserNameProperties=propertyDao.findByNameAndProvider("MyOscarId", providerNo); 
+		if (myOscarUserNameProperties.size()>0) return(myOscarUserNameProperties.get(0).getValue());
+		return(null);
+	}
+	
+	public static Long getMyOscarUserIdFromOscarProviderNo(MyOscarLoggedInInfo myOscarLoggedInInfo, String providerNo)
+	{
+		String userName =getMyOscarUserNameFromOscar(providerNo);
+		return(AccountManager.getUserId(myOscarLoggedInInfo, userName));
+	}
+	
+	public static Long getMyOscarUserIdFromOscarDemographicId(MyOscarLoggedInInfo myOscarLoggedInInfo, Integer demographicId)
+	{
+		DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+		Demographic demographic = demographicDao.getDemographicById(demographicId);
+		return(AccountManager.getUserId(myOscarLoggedInInfo, demographic.getMyOscarUserName()));
+	}
+	
 	public static void attemptMyOscarAutoLoginIfNotAlreadyLoggedIn(LoggedInInfo loggedInInfo) {
 		HttpSession session = loggedInInfo.session;
-		if (getPHRAuthentication(session)!=null) return;
+		
+		MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
+		if (myOscarLoggedInInfo!=null && myOscarLoggedInInfo.isLoggedIn()) return;
 		
 		try {
+			String myOscarUserName=getMyOscarUserNameFromOscar(loggedInInfo.loggedInProvider.getProviderNo());
+			if (myOscarUserName==null) return;
+
 			ProviderPreferenceDao providerPreferenceDao = (ProviderPreferenceDao) SpringUtils.getBean("providerPreferenceDao");
 			ProviderPreference providerPreference = providerPreferenceDao.find(loggedInInfo.loggedInProvider.getProviderNo());
 
 			byte[] encryptedMyOscarPassword = providerPreference.getEncryptedMyOscarPassword();
 			if (encryptedMyOscarPassword == null) return;
-
+			
 			SecretKeySpec key = EncryptionUtils.getDeterministicallyMangledPasswordSecretKeyFromSession(session);
 			byte[] decryptedMyOscarPasswordBytes = EncryptionUtils.decrypt(key, encryptedMyOscarPassword);
 			String decryptedMyOscarPasswordString = new String(decryptedMyOscarPasswordBytes, "UTF-8");
 
-			PHRAuthentication phrAuth = PHRService.authenticate(loggedInInfo.loggedInProvider.getProviderNo(), decryptedMyOscarPasswordString);
-
-			if (phrAuth != null) {
-				session.setAttribute(PHRAuthentication.SESSION_PHR_AUTH, phrAuth);
+			
+			
+			LoginResultTransfer loginResultTransfer=AccountManager.login(MyOscarLoggedInInfo.getMyOscarServerBaseUrl(), myOscarUserName, decryptedMyOscarPasswordString);
+			
+			if (loginResultTransfer != null) {
+				myOscarLoggedInInfo=new MyOscarLoggedInInfo(loginResultTransfer.getPerson().getId(), loginResultTransfer.getSecurityTokenKey(), session.getId());
+				MyOscarLoggedInInfo.setLoggedInInfo(session, myOscarLoggedInInfo);
 			} else {
 				// login failed, remove myoscar saved password
 				providerPreference.setEncryptedMyOscarPassword(null);

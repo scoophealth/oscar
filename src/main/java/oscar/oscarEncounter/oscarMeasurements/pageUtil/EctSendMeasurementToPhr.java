@@ -44,13 +44,12 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.indivo.IndivoException;
-import org.oscarehr.phr.PHRAuthentication;
+import org.oscarehr.myoscar.utils.MyOscarLoggedInInfo;
 import org.oscarehr.phr.model.PHRMeasurement;
 import org.oscarehr.phr.service.PHRService;
 import org.oscarehr.phr.util.MyOscarUtils;
 import org.oscarehr.util.MiscUtils;
 
-import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarEncounter.data.EctProviderData;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler;
@@ -70,15 +69,14 @@ public class EctSendMeasurementToPhr extends Action {
         String errorMsg = null;
         
         try {
-	        String demographicNo = request.getParameter("demographicNo");
+	        Integer demographicNo = Integer.parseInt(request.getParameter("demographicNo"));
 	        String providerNo = (String) request.getSession().getAttribute("user");
 	        String[] measurementTypeList = request.getParameterValues("measurementTypeList");
 	        
 	        EctProviderData.Provider provider = new EctProviderData().getProvider(providerNo);
-	        DemographicData demoData = new DemographicData();
-	        PHRAuthentication auth = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
-	        Long myOscarUserId = MyOscarUtils.getMyOscarUserId(auth, demoData.getDemographic(demographicNo).getMyOscarUserName());
-
+	        
+			MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(request.getSession());
+	        Long myOscarUserId = MyOscarUtils.getMyOscarUserIdFromOscarDemographicId(myOscarLoggedInInfo, demographicNo);
 	        
 	        EctMeasurementsDataBeanHandler hd = new EctMeasurementsDataBeanHandler(demographicNo);
 	        for (String measurementType: measurementTypeList) {

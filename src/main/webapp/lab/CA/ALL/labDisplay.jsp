@@ -24,8 +24,8 @@
 
 --%>
 
+<%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
-<%@page import="org.oscarehr.phr.PHRAuthentication"%>
 <%@page import="java.net.URLEncoder"%>
 <%@page import="org.apache.commons.lang.builder.ReflectionToStringBuilder"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
@@ -402,9 +402,9 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 
         function sendToPHR(labId, demographicNo) {
         	<%
-        		PHRAuthentication auth=MyOscarUtils.getPHRAuthentication(session);
+        		MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
 
-        		if (auth==null)
+        		if (myOscarLoggedInInfo==null || !myOscarLoggedInInfo.isLoggedIn())
         		{
         			%>
     					alert('Please Login to MyOscar before performing this action.');
