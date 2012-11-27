@@ -31,7 +31,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -46,25 +45,18 @@ import org.oscarehr.common.dao.ConsultationRequestDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.model.ConsultationRequest;
 import org.oscarehr.common.model.ProfessionalSpecialist;
-import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-public class NotifyConsultationTickler extends AbstractPreparedTickler
-		implements PreparedTickler {
+public class NotifyConsultationTickler extends AbstractPreparedTickler implements PreparedTickler {
 
-	private static Logger log = MiscUtils.getLogger();
-
-
-	private ConsultationRequestDao  consultationRequestDao = (ConsultationRequestDao)SpringUtils.getBean("consultationRequestDao");
-	private ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao)SpringUtils.getBean("professionalSpecialistDao");
+	private ConsultationRequestDao consultationRequestDao = (ConsultationRequestDao) SpringUtils.getBean("consultationRequestDao");
+	private ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
 	private TicklerManager ticklerMgr;
-	private ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
-
+	private ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 
 	public void setTicklerManager(TicklerManager ticklerMgr) {
 		this.ticklerMgr = ticklerMgr;
 	}
-
 
 	public String getName() {
 		return "Notify Consultation Appointment";
@@ -74,9 +66,7 @@ public class NotifyConsultationTickler extends AbstractPreparedTickler
 		return "/ticklerPlus/notifyConsultation.jsp";
 	}
 
-	public ActionForward execute(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		NotifyConsultationBean formBean = null;
 
@@ -84,28 +74,28 @@ public class NotifyConsultationTickler extends AbstractPreparedTickler
 		ConsultationConfiguration config = new ConsultationConfiguration(path + File.separator + "WEB-INF/consultation.xml");
 		ConsultationsConfigBean configBean = config.loadConfig();
 
-		String providerNo = (String)request.getSession().getAttribute("user");
-		request.setAttribute("providers",providerDao.getActiveProviders());
+		String providerNo = (String) request.getSession().getAttribute("user");
+		request.setAttribute("providers", providerDao.getActiveProviders());
 
-		if(request.getParameter("action") == null) {
+		if (request.getParameter("action") == null) {
 			formBean = new NotifyConsultationBean();
 			formBean.setId("Notify Consultation Appointment");
-			request.setAttribute("formHandler",formBean);
+			request.setAttribute("formHandler", formBean);
 			return new ActionForward(getViewPath());
 		}
 
 		//populate the bean - better way to do this???
 		formBean = tearForm(request);
 
-		if(formBean.getDemographic_no() != null && formBean.getAction().equals("populate")) {
-			List<ConsultationRequest> consultationRequests = consultationRequestDao.getConsultationsByStatus(formBean.getDemographic_no(),"1");
-			request.setAttribute("consultations",consultationRequests);
+		if (formBean.getDemographic_no() != null && formBean.getAction().equals("populate")) {
+			List<ConsultationRequest> consultationRequests = consultationRequestDao.getConsultationsByStatus(formBean.getDemographic_no(), "1");
+			request.setAttribute("consultations", consultationRequests);
 			formBean.setAction("");
-			request.setAttribute("formBean",formBean);
+			request.setAttribute("formBean", formBean);
 			return new ActionForward(this.getViewPath());
 		}
 
-		if(formBean.getAction().equals("generate")) {
+		if (formBean.getAction().equals("generate")) {
 			SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
 			SimpleDateFormat timeFormatter = new SimpleDateFormat("hh:mm");
 			String requestId = request.getParameter("current_consultation");
@@ -121,19 +111,11 @@ public class NotifyConsultationTickler extends AbstractPreparedTickler
 			tickler.setService_date(new Date());
 			tickler.setTask_assigned_to(configBean.getNotifyconsultation().getRecipient());
 			tickler.setUpdate_date(new Date());
-			String contextName = request.getScheme()+ "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath().substring(0,request.getContextPath().indexOf("/",1));
-			tickler.setMessage(
-				"You are being notified that a consultation appointment has been arranged for<br/>"
-				+ formBean.getDemographic_name() + "<br/>at<br/> " +
-				spec.getFirstName() + " " + spec.getLastName() +
-				" <br/>ADDRESS:" + spec.getStreetAddress() + " <br/>PHONE:" + spec.getPhoneNumber()
-				+ " <br/>FAX:" + spec.getFaxNumber()+ "<br/><br/>Reason: " + consultation.getReasonForReferral()
-				+ "<br/><br/>Appointment Date: " + dateFormatter.format(consultation.getAppointmentDate())
-				+ "<br/>Appointment Time: " + timeFormatter.format(consultation.getAppointmentTime())
+			String contextName = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath().substring(0, request.getContextPath().indexOf("/", 1));
+			tickler.setMessage("You are being notified that a consultation appointment has been arranged for<br/>" + formBean.getDemographic_name() + "<br/>at<br/> " + spec.getFirstName() + " " + spec.getLastName() + " <br/>ADDRESS:" + spec.getStreetAddress() + " <br/>PHONE:" + spec.getPhoneNumber() + " <br/>FAX:" + spec.getFaxNumber() + "<br/><br/>Reason: " + consultation.getReasonForReferral() + "<br/><br/>Appointment Date: " + dateFormatter.format(consultation.getAppointmentDate())
+			        + "<br/>Appointment Time: " + timeFormatter.format(consultation.getAppointmentTime())
 
-				+ "<br/><br/><a target=\"consultation\" href=\"" + contextName + "/OscarWAR/oscarEncounter/ViewRequest.do?requestId=" + consultation.getId() + "\">Link to consultation</a>"
-				+ "<br/><a target=\"demographic\" href=\"" + contextName +  "/demographic/demographiccontrol.jsp?displaymode=edit&demographic_no=" + formBean.getDemographic_no() + "&dboperation=search_detail\">Link to patient</a>"
-			);
+			        + "<br/><br/><a target=\"consultation\" href=\"" + contextName + "/OscarWAR/oscarEncounter/ViewRequest.do?requestId=" + consultation.getId() + "\">Link to consultation</a>" + "<br/><a target=\"demographic\" href=\"" + contextName + "/demographic/demographiccontrol.jsp?displaymode=edit&demographic_no=" + formBean.getDemographic_no() + "&dboperation=search_detail\">Link to patient</a>");
 
 			ticklerMgr.addTickler(tickler);
 		}
@@ -150,7 +132,5 @@ public class NotifyConsultationTickler extends AbstractPreparedTickler
 		bean.setMethod(request.getParameter("method"));
 		return bean;
 	}
-
-
 
 }
