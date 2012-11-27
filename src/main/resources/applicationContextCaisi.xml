@@ -38,8 +38,6 @@
 	<bean id="healthSafetyDao" class="org.oscarehr.PMmodule.dao.HealthSafetyDao" autowire="byName" />
 	<bean id="logDAO" class="org.oscarehr.PMmodule.dao.LogDAO" autowire="byName" />
 	<bean id="formsDAO" class="org.oscarehr.PMmodule.dao.FormsDAO" autowire="byName" />
-	<bean id="surveyDAO" class="org.oscarehr.survey.dao.hibernate.SurveyDAOHibernate" autowire="byName" />
-	<bean id="surveyTestDAO" class="org.oscarehr.survey.dao.hibernate.SurveyTestDAOHibernate" autowire="byName" />
 	<bean id="oscarFormDAO" class="org.oscarehr.survey.dao.oscar.hibernate.OscarFormDAOHibernate" autowire="byName" />
 	<bean id="populationReportDao" class="org.oscarehr.common.dao.PopulationReportDao" autowire="byName" />
 
@@ -63,9 +61,7 @@
 	<bean id="logManager" class="org.oscarehr.PMmodule.service.LogManager" autowire="byName" />
 	<bean id="oscarSecurityManager" class="org.oscarehr.PMmodule.service.impl.OscarSecurityManagerImpl" autowire="byName" />
 	<bean id="formsManager" class="org.oscarehr.PMmodule.service.impl.FormsManagerImpl" autowire="byName" />
-	<bean id="surveyManager" class="org.oscarehr.survey.service.impl.SurveyManagerImpl">
-		<property name="surveyDAO" ref="surveyDAO" />
-	</bean>
+	<bean id="surveyManager" class="org.oscarehr.survey.service.impl.SurveyManagerImpl" autowire="byName"/>
 	<bean id="oscarFormManager" class="org.oscarehr.survey.service.impl.OscarFormManagerImpl">
 		<property name="oscarFormDAO" ref="oscarFormDAO" />
 	</bean>

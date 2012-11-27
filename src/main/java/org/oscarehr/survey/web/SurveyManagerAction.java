@@ -45,8 +45,8 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.util.LabelValueBean;
 import org.apache.xmlbeans.XmlOptions;
+import org.oscarehr.common.model.Survey;
 import org.oscarehr.survey.model.QuestionTypes;
-import org.oscarehr.survey.model.Survey;
 import org.oscarehr.survey.service.OscarFormManager;
 import org.oscarehr.survey.service.SurveyLaunchManager;
 import org.oscarehr.survey.service.SurveyManager;
@@ -57,11 +57,11 @@ import org.oscarehr.survey.web.formbean.SurveyManagerFormBean;
 import org.oscarehr.surveymodel.DateDocument;
 import org.oscarehr.surveymodel.DateDocument.Date.Enum;
 import org.oscarehr.surveymodel.Page;
+import org.oscarehr.surveymodel.PossibleAnswersDocument.PossibleAnswers;
 import org.oscarehr.surveymodel.Question;
 import org.oscarehr.surveymodel.Section;
-import org.oscarehr.surveymodel.SurveyDocument;
-import org.oscarehr.surveymodel.PossibleAnswersDocument.PossibleAnswers;
 import org.oscarehr.surveymodel.SelectDocument.Select;
+import org.oscarehr.surveymodel.SurveyDocument;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
@@ -232,7 +232,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
             return list(mapping,form,request,response);
         }
         
-        if(survey.getStatus().equals(new Short(Survey.STATUS_TEST))) {
+        if(survey.getStatus() == Survey.STATUS_TEST) {
         	surveyTestManager.clearTestData(id);
         }
         
@@ -757,7 +757,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 			Survey survey = surveyManager.getSurvey(surveyId);
 			if(survey.getStatus()==1) {
 			long instanceId = surveyLaunchManager.launch(survey);
-			survey.setLaunchedInstanceId(instanceId);
+			survey.setLaunchedInstanceId((int)instanceId);
 			surveyManager.saveSurvey(survey);
 			surveyManager.updateStatus(surveyId,Survey.STATUS_LAUNCHED);
 			}
@@ -823,7 +823,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
         LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
         survey.setFacilityId(loggedInInfo.currentFacility.getId());
         
-        survey.setUserId(Long.valueOf((String)request.getSession().getAttribute("user")));
+        survey.setUserId(Integer.valueOf((String)request.getSession().getAttribute("user")));
         
         try {
         	StringWriter sw = new StringWriter();
@@ -899,7 +899,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 			survey.setDescription(surveyDocument.getSurvey().getName());
 			survey.setStatus(new Short(Survey.STATUS_TEST));
 			//survey.setSurveyData()
-			survey.setUserId(new Long(userManager.getUserId(request)));
+			survey.setUserId(new Long(userManager.getUserId(request)).intValue());
 			survey.setVersion(surveyDocument.getSurvey().getVersion());
 			
 			//save data
@@ -965,7 +965,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 		newSurvey.setDateCreated(new Date());
 		newSurvey.setDescription(survey.getDescription());
 		newSurvey.setSurveyData(survey.getSurveyData());
-		newSurvey.setUserId(new Long(userManager.getUserId(request)));
+		newSurvey.setUserId(new Long(userManager.getUserId(request)).intValue());
 		newSurvey.setVersion(survey.getVersion());
 		newSurvey.setStatus(new Short(Survey.STATUS_IN_REVIEW));
 		
