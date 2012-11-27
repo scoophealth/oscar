@@ -162,7 +162,6 @@ public class BatchBillAction extends DispatchAction {
 		BatchBillingDAO batchBillingDAO = (BatchBillingDAO) SpringUtils.getBean("batchBillingDAO");
 		List<BatchBilling> batchBillingList;
 		BatchBilling batchBilling;
-		String total;
 		
 		//create the invoice and update batch_billing table
 		if( billingInfo != null ) {
