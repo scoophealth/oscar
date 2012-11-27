@@ -75,7 +75,6 @@ public class ProviderDataDao extends AbstractDao<ProviderData> {
 		return null;
 	}
 
-	//vvh
 	public List<ProviderData> findByProviderNo(String providerNo, String status, String limit, String offset) {
 
 		String sqlCommand = "From ProviderData p where p.id like ?";
@@ -96,7 +95,6 @@ public class ProviderDataDao extends AbstractDao<ProviderData> {
 		return results;
 	}
 
-	//vvh
 	public  List<ProviderData> findByProviderName(String searchStr, String status, String limit, String offset) {
 		
 		String queryString = "From ProviderData p where p.lastName like :lastName ";

@@ -51,6 +51,11 @@
 <%@page import="org.oscarehr.common.model.Site"%>
 <%@page import="oscar.login.*,org.apache.commons.lang.StringUtils"%>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%><html:html locale="true">
+<%@page import="org.oscarehr.common.model.ProviderSite"%>
+<%@page import="org.oscarehr.common.model.ProviderSitePK"%>
+<%@page import="org.oscarehr.common.dao.ProviderSiteDao"%>
+
+
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="admin.providerupdateprovider.title" /></title>
@@ -75,19 +80,19 @@ function setfocus() {
     boolean isSiteAccessPrivacy=false;
 %>
 
-<security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
-	<%
-	isSiteAccessPrivacy=true;
-	DBHelp dbObj = new DBHelp();
-	String sqlString = "SELECT site_id from providersite where provider_no=" + curProvider_no;
-	ResultSet siters = DBHelp.searchDBRecord(sqlString);
+<security:oscarSec objectName="_site_access_privacy"
+	roleName="<%=roleName$%>" rights="r" reverse="false">
+<%
+	isSiteAccessPrivacy = true;
 
-	while (siters.next()) {
-		siteIDs.add(siters.getInt("site_id"));
+	ProviderSiteDao providerSiteDao = (ProviderSiteDao) SpringUtils.getBean("providerSiteDao");
+	
+	List<ProviderSite> psList = providerSiteDao.findByProviderNo(curProvider_no);
+	for (ProviderSite pSite : psList) {
+		siteIDs.add(pSite.getId().getSiteId());
 	}
 
-	siters.close();
-	%>
+%>
 </security:oscarSec>
 
 <body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
@@ -100,24 +105,28 @@ function setfocus() {
 </table>
 
 <form method="post" action="admincontrol.jsp" name="updatearecord">
+
 <%
-  ResultSet rs = apptMainBean.queryResults(request.getParameter("keyword"), request.getParameter("dboperation"));
-  if(rs==null) {
-    out.println("failed");
-  } else {
-	LogAction.addLog((String)session.getAttribute("user"), LogConst.UPDATE, "adminUpdateUser",
+	String keyword = request.getParameter("keyword");
+	ProviderData provider = providerDao.findByProviderNo(keyword);
+	
+	if(provider == null) {
+	    out.println("failed");
+	} 
+	else {
+		LogAction.addLog((String)session.getAttribute("user"), LogConst.UPDATE, "adminUpdateUser",
 			request.getParameter("keyword"), request.getRemoteAddr());
-    while (rs.next()) {
 %>
 
-<table cellspacing="0" cellpadding="2" width="100%" border="0"
+			<table cellspacing="0" cellpadding="2" width="100%" border="0"
 	datasrc='#xml_list'>
 
 	<tr>
 		<td width="50%" align="right"><bean:message
 			key="admin.provider.formProviderNo" />:</td>
 		<td>
-		<% String provider_no = apptMainBean.getString(rs,"provider_no"); %><%= provider_no %>
+		<% String provider_no = provider.getId(); %>
+		<%= provider_no %>
 		<input type="hidden" name="provider_no" value="<%= provider_no %>">
 		<input type="hidden" name="dboperation" value="provider_update_record"></td>
 	</tr>
@@ -127,7 +136,7 @@ function setfocus() {
 			key="admin.provider.formLastName" />:</div>
 		</td>
 		<td><input type="text" index="3" name="last_name"
-			value="<%= apptMainBean.getString(rs,"last_name") %>" maxlength="30"></td>
+			value="<%= provider.getLastName() %>" maxlength="30"></td>
 	</tr>
 	<tr>
 		<td>
@@ -135,7 +144,7 @@ function setfocus() {
 			key="admin.provider.formFirstName" />:</div>
 		</td>
 		<td><input type="text" index="4" name="first_name"
-			value="<%= apptMainBean.getString(rs,"first_name") %>" maxlength="30"></td>
+			value="<%= provider.getFirstName() %>" maxlength="30"></td>
 	</tr>
 
 
@@ -146,8 +155,6 @@ function setfocus() {
 		</td>
 		<td>
 <%
-ProviderDao pDao = (ProviderDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("providerDao");
-
 SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
 List<Site> psites = siteDao.getActiveSitesByProviderNo(provider_no);
 List<Site> sites = siteDao.getAllActiveSites();
@@ -162,44 +169,42 @@ for (int i=0; i<sites.size(); i++) {
 	</tr>
 <% } %>
 
-
-
 	<tr>
 		<td align="right"><bean:message key="admin.provider.formType" />:
 		</td>
 		<td>
 			<select name="provider_type">
 			<option value="receptionist"
-				<% if (apptMainBean.getString(rs,"provider_type").equals("receptionist")) { %>
+				<% if (provider.getProviderType().equals("receptionist")) { %>
 				SELECTED <%}%>><bean:message
 				key="admin.provider.formType.optionReceptionist" /></option>
 			<option value="doctor"
-				<% if (apptMainBean.getString(rs,"provider_type").equals("doctor")) { %>
+				<% if (provider.getProviderType().equals("doctor")) { %>
 				SELECTED <%}%>><bean:message
 				key="admin.provider.formType.optionDoctor" /></option>
 			<option value="nurse"
-				<% if (apptMainBean.getString(rs,"provider_type").equals("nurse")) { %>
+				<% if (provider.getProviderType().equals("nurse")) { %>
 				SELECTED <%}%>><bean:message
 				key="admin.provider.formType.optionNurse" /></option>
 			<option value="resident"
-				<% if (apptMainBean.getString(rs,"provider_type").equals("resident")) { %>
+				<% if (provider.getProviderType().equals("resident")) { %>
 				SELECTED <%}%>><bean:message
 				key="admin.provider.formType.optionResident" /></option>
 			<option value="midwife"
-				<% if (apptMainBean.getString(rs,"provider_type").equals("midwife")) { %>
+				<% if (provider.getProviderType().equals("midwife")) { %>
 				SELECTED <%}%>><bean:message
 				key="admin.provider.formType.optionMidwife" /></option>
 			<option value="admin"
-				<% if (apptMainBean.getString(rs,"provider_type").equals("admin")) { %>
+				<% if (provider.getProviderType().equals("admin")) { %>
 				SELECTED <%}%>><bean:message
 				key="admin.provider.formType.optionAdmin" /></option>
 			<caisi:isModuleLoad moduleName="survey">
 				<option value="er_clerk"
-					<% if (apptMainBean.getString(rs,"provider_type").equals("er_clerk")) { %>
+					<% if (provider.getProviderType().equals("er_clerk")) { %>
 					SELECTED <%}%>><bean:message
 					key="admin.provider.formType.optionErClerk" /></option>
 			</caisi:isModuleLoad>
-		</select> <!--input type="text" name="provider_type" value="<%= apptMainBean.getString(rs,"provider_type") %>" maxlength="15" -->
+		</select> <!--input type="text" name="provider_type" value="<%= provider.getProviderType() %>" maxlength="15" -->
 		</td>
 	</tr>
 	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
@@ -207,131 +212,131 @@ for (int i=0; i<sites.size(); i++) {
 			<td align="right"><bean:message
 				key="admin.provider.formSpecialty" />:</td>
 			<td><input type="text" name="specialty"
-				value="<%= apptMainBean.getString(rs,"specialty") %>" maxlength="40"></td>
+				value="<%= provider.getSpecialty() %>" maxlength="40"></td>
 		</tr>
 		<tr>
 			<td align="right"><bean:message key="admin.provider.formTeam" />:
 			</td>
 			<td><input type="text" name="team"
-				value="<%= apptMainBean.getString(rs,"team") %>" maxlength="20"></td>
+				value="<%= provider.getTeam() %>" maxlength="20"></td>
 		</tr>
 		<tr>
 			<td align="right"><bean:message key="admin.provider.formSex" />:
 			</td>
 			<td><input type="text" name="sex"
-				value="<%= apptMainBean.getString(rs,"sex") %>" maxlength="1"></td>
+				value="<%= provider.getSex() %>" maxlength="1"></td>
 		</tr>
 		<tr>
 			<td align="right"><bean:message key="admin.provider.formDOB" />:
 			</td>
 			<td><input type="text" name="dob"
-				value="<%= oscar.MyDateFormat.getMyStandardDate(apptMainBean.getString(rs,"dob")) %>"
+				value="<%= oscar.MyDateFormat.getMyStandardDate(provider.getDob()) %>"
 				maxlength="11"></td>
 		</tr>
 		<tr>
 			<td align="right"><bean:message key="admin.provider.formAddress" />:
 			</td>
 			<td><input type="text" name="address"
-				value="<%= apptMainBean.getString(rs,"address") %>" size="40"
+				value="<%= provider.getAddress()==null ? "" : provider.getAddress() %>" size="40"
 				maxlength="40"></td>
 		</tr>
 		<tr>
 			<td align="right"><bean:message
 				key="admin.provider.formHomePhone" />:</td>
 			<td><input type="text" name="phone"
-				value="<%= apptMainBean.getString(rs,"phone") %>"></td>
+				value="<%= provider.getPhone()==null ? "" : provider.getPhone() %>"></td>
 		</tr>
 		<tr>
 			<td align="right"><bean:message
 				key="admin.provider.formWorkPhone" />:</td>
 			<td><input type="text" name="workphone"
-				value="<%= apptMainBean.getString(rs,"work_phone") == null?"":(apptMainBean.getString(rs,"work_phone")) %>"
+				value="<%= provider.getWorkPhone()==null ? "" : provider.getWorkPhone() %>"
 				maxlength="50"></td>
 		</tr>
 		<tr>
 			<td align="right"><bean:message key="admin.provider.formEmail" />:</td>
 			<td><input type="text" name="email"
-				value="<%= apptMainBean.getString(rs,"email") == null?"":(apptMainBean.getString(rs,"email")) %>"
+				value="<%= provider.getEmail()==null ? "" : provider.getEmail() %>"
 				maxlength="50"></td>
 		</tr>
 		<tr>
 			<td align="right"><bean:message key="admin.provider.formPager" />:
 			</td>
 			<td><input type="text" name="xml_p_pager"
-				value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_pager")==null?"":SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_pager") %>"
+				value="<%= SxmlMisc.getXmlContent(provider.getComments(),"xml_p_pager")==null ? "" : SxmlMisc.getXmlContent(provider.getComments(),"xml_p_pager")  %>"
 				datafld='xml_p_pager'></td>
 		</tr>
 		<tr>
 			<td align="right"><bean:message key="admin.provider.formCell" />:
 			</td>
 			<td><input type="text" name="xml_p_cell"
-				value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_cell")==null?"": SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_cell")%>"
+				value="<%= SxmlMisc.getXmlContent(provider.getComments(),"xml_p_cell")==null ? "" : SxmlMisc.getXmlContent(provider.getComments(),"xml_p_cell") %>"
 				datafld='xml_p_cell'></td>
 		</tr>
 		<tr>
 			<td align="right"><bean:message
 				key="admin.provider.formOtherPhone" />:</td>
 			<td><input type="text" name="xml_p_phone2"
-				value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_phone2")==null?"":SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_phone2") %>"
+				value="<%= SxmlMisc.getXmlContent(provider.getComments(),"xml_p_phone2")==null ? "" : SxmlMisc.getXmlContent(provider.getComments(),"xml_p_phone2") %>"
 				datafld='xml_p_phone2'></td>
 		</tr>
 		<tr>
 			<td align="right"><bean:message key="admin.provider.formFax" />:
 			</td>
 			<td><input type="text" name="xml_p_fax"
-				value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_fax")==null?"": SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_fax")%>"
+				value="<%= SxmlMisc.getXmlContent(provider.getComments(),"xml_p_fax")==null ? "" : SxmlMisc.getXmlContent(provider.getComments(),"xml_p_fax") %>"
 				datafld='xml_p_fax'></td>
 		</tr>
 		<tr>
 			<td align="right"><bean:message key="admin.provider.formOhipNo" />:
 			</td>
 			<td><input type="text" name="ohip_no"
-				value="<%= apptMainBean.getString(rs,"ohip_no") %>" maxlength="20"></td>
+				value="<%= provider.getOhipNo()==null ? "" : provider.getOhipNo() %>" maxlength="20"></td>
 		</tr>
 		<tr>
 			<td align="right"><bean:message key="admin.provider.formRmaNo" />:
 			</td>
 			<td><input type="text" name="rma_no"
-				value="<%= apptMainBean.getString(rs,"rma_no") %>" maxlength="20"></td>
+				value="<%= provider.getRmaNo()==null ? "" : provider.getRmaNo() %>" maxlength="20"></td>
 		</tr>
 		<tr>
 			<td align="right"><bean:message
 				key="admin.provider.formBillingNo" />:</td>
 			<td><input type="text" name="billing_no"
-				value="<%= apptMainBean.getString(rs,"billing_no") %>"
+				value="<%= provider.getBillingNo()==null ? "" : provider.getBillingNo() %>"
 				maxlength="20"></td>
 		</tr>
 		<tr>
 			<td align="right"><bean:message key="admin.provider.formHsoNo" />:
 			</td>
 			<td><input type="text" name="hso_no"
-				value="<%= apptMainBean.getString(rs,"hso_no") %>" maxlength="10"></td>
+				value="<%= provider.getHsoNo()==null ? "" : provider.getHsoNo() %>" maxlength="10"></td>
 		</tr>
 		<tr>
 			<td align="right"><bean:message key="admin.provider.formStatus" />:
 			</td>
 			<td><input type="text" name="status"
-				value="<%= apptMainBean.getString(rs,"status") %>" maxlength="1"></td>
+				value="<%= provider.getStatus()==null? "" : provider.getStatus() %>" maxlength="1"></td>
 		</tr>
 		<tr>
 			<td align="right"><bean:message
 				key="admin.provider.formSpecialtyCode" />:</td>
 			<td><input type="text" name="xml_p_specialty_code"
-				value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_specialty_code")==null?"":SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_specialty_code") %>"
+				value="<%= SxmlMisc.getXmlContent(provider.getComments(),"xml_p_specialty_code")==null ? "" : SxmlMisc.getXmlContent(provider.getComments(),"xml_p_specialty_code") %>"
 				datafld='xml_p_specialty_code'></td>
 		</tr>
 		<tr>
 			<td align="right"><bean:message
 				key="admin.provider.formBillingGroupNo" />:</td>
 			<td><input type="text" name="xml_p_billinggroup_no"
-				value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_billinggroup_no") %>"
+				value="<%= SxmlMisc.getXmlContent(provider.getComments(),"xml_p_billinggroup_no")==null ? "" : SxmlMisc.getXmlContent(provider.getComments(),"xml_p_billinggroup_no") %>"
 				datafld='xml_p_billinggroup_no'></td>
 		</tr>
 		<tr>
 			<td align="right"><bean:message key="admin.provider.formCPSID" />:
 			</td>
 			<td><input type="text" name="practitionerNo"
-				value="<%= apptMainBean.getString(rs,"practitionerNo") %>"
+				value="<%= provider.getPractitionerNo()==null ? "" : provider.getPractitionerNo() %>"
 				maxlength="10"></td>
 		</tr>
 		<%
@@ -350,10 +355,6 @@ for (int i=0; i<sites.size(); i++) {
 		</tr>
 		
 		
-		
-		
-		
-		
 		<% if (OscarProperties.getInstance().getBooleanProperty("rma_enabled", "true")) { %>
 			<tr>
 				<td align="right">Default Clinic NBR:</td>
@@ -367,7 +368,7 @@ for (int i=0; i<sites.size(); i++) {
 					ClinicNbr tempNbr = nbrIter.next();
 					String valueString = tempNbr.getNbrValue() + " | " + tempNbr.getNbrString();
 				%>
-					<option value="<%=tempNbr.getNbrValue()%>" <%=SxmlMisc.getXmlContent(rs.getString("comments"),"xml_p_nbr").startsWith(tempNbr.getNbrValue())?"selected":""%>><%=valueString%></option>
+					<option value="<%=tempNbr.getNbrValue()%>" <%=SxmlMisc.getXmlContent(provider.getComments(),"xml_p_nbr").startsWith(tempNbr.getNbrValue())?"selected":""%>><%=valueString%></option>
 				<%}%>
 
 				</select>
@@ -404,21 +405,21 @@ for (int i=0; i<sites.size(); i++) {
 		<td align="right"><bean:message
 			key="admin.provider.formSlpUsername" />:</td>
 		<td><input type="text" name="xml_p_slpusername"
-			value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_slpusername")==null?"":SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_slpusername") %>"
+			value="<%= SxmlMisc.getXmlContent(provider.getComments(),"xml_p_slpusername")==null ? "" : SxmlMisc.getXmlContent(provider.getComments(),"xml_p_slpusername") %>"
 			datafld='xml_p_slpusername'></td>
 	</tr>
 	<tr>
 		<td align="right"><bean:message
 			key="admin.provider.formSlpPassword" />:</td>
 		<td><input type="text" name="xml_p_slppassword"
-			value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_slppassword")==null?"": SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_slppassword")%>"
+			value="<%= SxmlMisc.getXmlContent(provider.getComments(),"xml_p_slppassword")==null ? "" : SxmlMisc.getXmlContent(provider.getComments(),"xml_p_slppassword") %>"
 			datafld='xml_p_slppassword'></td>
 	</tr>
     <tr>
 		<td align="right"><bean:message
 			key="provider.login.title.confidentiality" />:</td>
 		<td><input type="text" readonly name="signed_confidentiality"
-			value="<%=apptMainBean.getString(rs,"signed_confidentiality")%>">
+			value="<%= provider.getSignedConfidentiality()==null ? "" : provider.getSignedConfidentiality() %>">
         </td>
 	</tr>
 	<tr>
@@ -433,7 +434,7 @@ for (int i=0; i<sites.size(); i++) {
 
 </table>
 <%
-  }}
+  }
 %>
 </form>
 
