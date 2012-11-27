@@ -853,29 +853,29 @@
     <ViolationSet>
         <ViolationKey>.*DBHandler\..*|.*getConnection\(.*|.*DBHandler\..*|.*DBPreparedHandler.*|.*DBHelp.*|.*\.selectIntList.*|.*\.selectStringList.*|.*OscarSuperManager.*|.*HibernateDaoSupport.*</ViolationKey>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:DBPreparedHandler db = new DBPreparedHandler();</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:DBPreparedHandlerParam [] params = new DBPreparedHandlerParam[100];</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:DBPreparedHandlerParam [] pars = new DBPreparedHandlerParam[i];</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:DBPreparedHandlerParam param = params[i];</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:DBPreparedHandlerParam[] params = new DBPreparedHandlerParam[fieldDefList.size()+1];</ViolationValue>
+        <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:DBPreparedHandlerParam[] params = new DBPreparedHandlerParam[100];</ViolationValue>
+        <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:DBPreparedHandlerParam[] params = new DBPreparedHandlerParam[fieldDefList.size() + 1];</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:DBPreparedHandlerParam[] params = new DBPreparedHandlerParam[fieldDefList.size()];</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:else if(DBPreparedHandlerParam.PARAM_STRING.equals(param.getParamType())){</ViolationValue>
+        <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:DBPreparedHandlerParam[] pars = new DBPreparedHandlerParam[i];</ViolationValue>
+        <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:else if (DBPreparedHandlerParam.PARAM_STRING.equals(param.getParamType())) {</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:import oscar.oscarDB.DBPreparedHandler;</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:import oscar.oscarDB.DBPreparedHandlerParam;</ViolationValue>
+        <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:params[i++] = new DBPreparedHandlerParam("%" + codeDesc.toUpperCase() + "%");</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:params[i++] = new DBPreparedHandlerParam(1);</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:params[i++] = new DBPreparedHandlerParam(codes[0]);</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:params[i++] = new DBPreparedHandlerParam(codes[k]);</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:params[i++]= new DBPreparedHandlerParam("%" + codeDesc.toUpperCase() + "%");</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:params[i++]= new DBPreparedHandlerParam(parentCode);</ViolationValue>
+        <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:params[i++] = new DBPreparedHandlerParam(parentCode);</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:params[i] = new DBPreparedHandlerParam(Integer.valueOf(fdv.getVal()).intValue());</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:params[i] = new DBPreparedHandlerParam(fdv.getVal());</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:params[i] = new DBPreparedHandlerParam(new java.sql.Date(MyDateFormat.getCalendar(fdv.getVal()).getTime().getTime()));</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:params[i] = new DBPreparedHandlerParam(new java.sql.Date(MyDateFormat.getCalendarwithTime(fdv.getVal()).getTime().getTime()));</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:private int queryExecuteUpdate(String preparedSQL, DBPreparedHandlerParam[] params) throws SQLException {</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:public class LookupDao extends HibernateDaoSupport {</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:}else if (DBPreparedHandlerParam.PARAM_DATE.equals(param.getParamType())){</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:}else if (DBPreparedHandlerParam.PARAM_INT.equals(param.getParamType())){</ViolationValue>
-        <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:}else if (DBPreparedHandlerParam.PARAM_TIMESTAMP.equals(param.getParamType())){</ViolationValue>
+        <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:} else if (DBPreparedHandlerParam.PARAM_DATE.equals(param.getParamType())) {</ViolationValue>
+        <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:} else if (DBPreparedHandlerParam.PARAM_INT.equals(param.getParamType())) {</ViolationValue>
+        <ViolationValue>/src/main/java/com/quatro/dao/LookupDao.java:} else if (DBPreparedHandlerParam.PARAM_TIMESTAMP.equals(param.getParamType())) {</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/security/SecObjectNameDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/security/SecObjectNameDao.java:public class SecObjectNameDao extends HibernateDaoSupport{</ViolationValue>
         <ViolationValue>/src/main/java/com/quatro/dao/security/SecProviderDao.java:import org.springframework.orm.hibernate3.support.HibernateDaoSupport;</ViolationValue>
