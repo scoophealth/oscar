@@ -26,17 +26,19 @@
 package oscar.oscarMessenger.data;
 
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.oscarehr.common.dao.GroupMembersDao;
+import org.oscarehr.common.dao.GroupsDao;
 import org.oscarehr.common.dao.OscarCommLocationsDao;
+import org.oscarehr.common.model.Groups;
 import org.oscarehr.common.model.OscarCommLocations;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.SpringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarMessenger.docxfer.util.MsgCommxml;
 
 // This is a modified version of oscar.comm.client.AddressBook
@@ -54,8 +56,7 @@ public class MsgAddressBookMaker
 
         addressBook.appendChild(this.getChildren(doc, 0, ""));
 
-        ResultSet rs = DBHandler.GetSQL("SELECT addressBook FROM oscarcommlocations WHERE current1 = 1");
-        if(rs.next())
+        if(!oscarCommLocationsDao.findByCurrent1(1).isEmpty())
         {
             String newAddressBook = MsgCommxml.toXML(addressBook);
             
@@ -66,7 +67,6 @@ public class MsgAddressBookMaker
             }
        
         }
-        rs.close();
 
         return (addressBook != null);
     }
@@ -81,35 +81,25 @@ public class MsgAddressBookMaker
             group.setAttribute("desc", desc);
         }
 
-        String sql = "SELECT * FROM groups_tbl WHERE parentID = " + groupId;
-
-        ResultSet rs = DBHandler.GetSQL(sql);
-
-        while(rs.next())
+        GroupsDao dao = SpringUtils.getBean(GroupsDao.class);
+        for(Groups g : dao.findByParentId(groupId))
         {
-            Element subGrp = getChildren(doc, rs.getInt("groupID"), oscar.Misc.getString(rs, "groupDesc"));
+            Element subGrp = getChildren(doc, g.getId(), g.getGroupDesc());
 
             if(subGrp.hasChildNodes())
             {
                 group.appendChild(subGrp);
             }
         }
-        rs.close();
-
-        sql = "SELECT p.provider_no, p.last_name, p.first_name "
-            + "FROM groupMembers_tbl g INNER JOIN provider p ON g.provider_No = p.provider_no "
-            + "WHERE groupID = " + groupId + " ORDER BY p.last_name, p.first_name";
-
-        rs = DBHandler.GetSQL(sql);
-
-        while(rs.next())
-        {
+        
+        GroupMembersDao gDao = SpringUtils.getBean(GroupMembersDao.class);
+        for(Object[] g : gDao.findMembersByGroupId(groupId)) {
+        	Provider p = (Provider) g[1]; 
+        	
             Element address = MsgCommxml.addNode(group, "address");
-            address.setAttribute("id", oscar.Misc.getString(rs, "provider_no"));
-            address.setAttribute("desc", new String(oscar.Misc.getString(rs, "last_name") + ", " + oscar.Misc.getString(rs, "first_name")));
+            address.setAttribute("id", p.getProviderNo());
+            address.setAttribute("desc", p.getFormattedName());
         }
-        rs.close();
-
         return group;
     }
 
