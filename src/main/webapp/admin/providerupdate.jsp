@@ -196,7 +196,7 @@
 %>
 <p>
 <h2><bean:message key="admin.providerupdate.msgUpdateSuccess" /><a
-	href="admincontrol.jsp?keyword=<%=request.getParameter("provider_no")%>&displaymode=Provider_Update&dboperation=provider_search_detail"><%= request.getParameter("provider_no") %></a>
+	href="admincontrol.jsp?keyword=<%=request.getParameter("provider_no")%>&displaymode=Provider_Update"><%= request.getParameter("provider_no") %></a>
 </h2>
 <%
   } else {
