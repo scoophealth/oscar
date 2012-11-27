@@ -1,6 +1,5 @@
 /**
- *
- * Copyright (c) 2005-2012. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved.
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,21 +15,38 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * This software was written for
- * Centre for Research on Inner City Health, St. Michael's Hospital,
- * Toronto, Ontario, Canada
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
-
-package org.oscarehr.survey.dao;
+package org.oscarehr.common.dao;
 
 import java.util.List;
 
-import org.oscarehr.survey.model.Survey;
+import javax.persistence.Query;
 
-public interface SurveyDAO {
-	public void saveSurvey(Survey survey);
-	public Survey getSurvey(Long id);
-	public List getSurveys();
-	public void deleteSurvey(Long id);
-	public Survey getSurveyByName(String name);
+import org.oscarehr.common.model.Survey;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class SurveyDao extends AbstractDao<Survey> {
+
+	public SurveyDao() {
+		super(Survey.class);
+	}
+	
+	public Survey findByName(String name) {
+		Query q = entityManager.createQuery("select s from Survey s where s.description = ?1");
+		q.setParameter(1, name);
+		
+		@SuppressWarnings("unchecked")
+		List<Survey> results = q.getResultList();
+		
+		if(results.size()>0) {
+			return results.get(0);
+		}
+		return null;
+	}
 }
