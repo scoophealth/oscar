@@ -26,6 +26,7 @@ import java.util.List;
 
 import org.oscarehr.common.dao.AppointmentStatusDao;
 import org.oscarehr.common.model.AppointmentStatus;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.appt.status.service.AppointmentStatusMgr;
 
@@ -36,7 +37,7 @@ import oscar.appt.status.service.AppointmentStatusMgr;
 
 public class AppointmentStatusMgrImpl implements AppointmentStatusMgr {
 
-    private AppointmentStatusDao appointStatusDao = null;
+    private AppointmentStatusDao appointStatusDao = SpringUtils.getBean(AppointmentStatusDao.class);
 
   
     public List<AppointmentStatus> getAllStatus(){

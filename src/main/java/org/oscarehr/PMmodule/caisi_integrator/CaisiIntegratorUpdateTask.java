@@ -194,7 +194,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private MeasurementsExtDao measurementsExtDao = SpringUtils.getBean(MeasurementsExtDao.class);
 	private MeasurementMapDao measurementMapDao = (MeasurementMapDao) SpringUtils.getBean("measurementMapDao");
 	private DxresearchDAO dxresearchDao = (DxresearchDAO) SpringUtils.getBean("dxresearchDAO");
-	private BillingONItemDao BillingONItemDao = (BillingONItemDao) SpringUtils.getBean("BillingONItemDao");
+	private BillingONItemDao BillingONItemDao = SpringUtils.getBean(BillingONItemDao.class);
 	private EFormValueDao eFormValueDao = (EFormValueDao) SpringUtils.getBean("EFormValueDao");
 	private EFormDataDao eFormDataDao = (EFormDataDao) SpringUtils.getBean("EFormDataDao");
 	private GroupNoteDao groupNoteDao = (GroupNoteDao) SpringUtils.getBean("groupNoteDao");
