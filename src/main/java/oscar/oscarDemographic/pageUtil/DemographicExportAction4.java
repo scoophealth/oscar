@@ -2023,6 +2023,7 @@ public class DemographicExportAction4 extends Action {
 					// Call Template Export & add to ArrayList
 					patient.setExMedications(exMedicationsAndTreatments);
 					patient.setExAllergiesAndAdverseReactions(exAllergiesAndAdverseReactions);
+					patient.setExImmunizations(exImmunizations);
 					String output = t.export(patient);
 					
 					//export file to temp directory
