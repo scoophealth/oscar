@@ -262,7 +262,10 @@
 
                     <td colspan="8">
                         <div style="text-align: right;font-weight: bold">
-                        <!-- Page navigation can go here -->
+                        	<a id="firstP_<%=docId%>" href="javascript:void(0);" onclick="firstPage('<%=docId%>','<%=cp%>');">First</a>
+                            <a id="prevP_<%=docId%>" href="javascript:void(0);" onclick="prevPage('<%=docId%>','<%=cp%>');">Prev</a>
+                            <a id="nextP_<%=docId%>" href="javascript:void(0);" onclick="nextPage('<%=docId%>','<%=cp%>');">Next</a>
+                            <a id="lastP_<%=docId%>" href="javascript:void(0);" onclick="lastPage('<%=docId%>','<%=cp%>');">Last</a>
                         </div>
                         <a href="<%=url2%>" target="_blank"><img alt="document" id="docImg_<%=docId%>"  src="<%=url%>" /></a></td>
 
@@ -282,7 +285,7 @@
                                     <td><bean:message key="inboxmanager.document.NumberOfPages"/></td>
                                     <td>
                                     	<input id="shownPage_<%=docId %>" type="hidden" value="1" />
-                                    	<span id="numPages_<%=docId %>" class="<%= numOfPage > 1 ? "multiPage" : "singlePage" %>"><%=numOfPageStr%></span>
+                                    	<span id="viewedPage_<%=docId%>" class="<%= numOfPage > 1 ? "multiPage" : "singlePage" %>">1</span>&nbsp; of &nbsp;<span id="numPages_<%=docId %>" class="<%= numOfPage > 1 ? "multiPage" : "singlePage" %>"><%=numOfPageStr%></span>
                                     </td>
                                 </tr>
 
