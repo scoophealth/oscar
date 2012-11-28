@@ -53,6 +53,8 @@
 	DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 	
 	MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
+	
+	boolean replyAll=Boolean.parseBoolean(request.getParameter("replyAll"));
 %>
 <html:html locale="true">
 
@@ -207,6 +209,7 @@
                             			replyToMessage=MessageManager.getMessage(myOscarLoggedInInfo, replyToMessageId);
                             			Long myOscarSenderUserId=replyToMessage.getSenderPersonId();
                             			MinimalPersonTransfer senderMinimalPerson=AccountManager.getMinimalPerson(myOscarLoggedInInfo, myOscarSenderUserId);
+                            			myOscarUserName=senderMinimalPerson.getUserName();
                                 		demographic=MyOscarUtils.getDemographicByMyOscarUserName(senderMinimalPerson.getUserName());
                             		}
                             		catch (Exception e)
@@ -231,7 +234,7 @@
                                         <td bgcolor="#EEEEFF" valign=top>
                                             <table>
                                                 <tr>
-                                                    <td align="right">To :</td>
+                                                    <td style="text-align:right;vertical-align:top">To :</td>
                                                     <td>
 			                                        	<%
 			                                        		if (replyToMessage!=null)
@@ -243,6 +246,20 @@
 			                           							%>
 			                                        				<input size="30" readonly="readonly" type="text" value="<%=StringEscapeUtils.escapeHtml(senderString)%>" />
 			                                        			<%
+			                                        			
+			                                        			if (replyAll)
+			                                        			{
+			                                        				for (Long recipientId : replyToMessage.getRecipientPeopleIds())
+			                                        				{
+			                                        					if (myOscarLoggedInInfo.getLoggedInPersonId().equals(recipientId)) continue;
+					                           							MinimalPersonTransfer minimalPersonRecipient=AccountManager.getMinimalPerson(myOscarLoggedInInfo, recipientId);
+					                           							String recipientString=minimalPersonRecipient.getLastName()+", "+minimalPersonRecipient.getFirstName()+" ("+minimalPersonRecipient.getUserName()+")";
+					                           							%>
+					                           								<br />
+				                                        					<input size="30" readonly="readonly" type="text" value="<%=StringEscapeUtils.escapeHtml(recipientString)%>" />
+				                                        				<%
+			                                        				}
+			                                        			}
 			                                        		}
 			                                        		else
 			                                        		{
@@ -318,6 +335,7 @@
                                         		{
                                         			%>
                                         				<input type="hidden" name="replyToMessageId" value="<%=replyToMessageId%>" />
+                                        				<input type="hidden" name="replyAll" value="<%=replyAll%>" />
                                         				<input type="hidden" name="method" value="sendReply" />
                                         				<input type="hidden" name="demographicNo" value="<%=request.getParameter("demographicNo")%>" />
                                         				
