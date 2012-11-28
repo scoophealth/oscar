@@ -100,21 +100,10 @@
 			<bean:message key="admin.providersearch.formInactiveStatus" /> </font></td>
 		<td valign="middle" rowspan="2" ALIGN="left"><input type="text"	NAME="keyword" SIZE="17" MAXLENGTH="100"> 
 			<INPUT TYPE="hidden" NAME="orderby" VALUE="last_name"> 
-			<%if (isSiteAccessPrivacy)  {
-			%>	 
-				<INPUT	TYPE="hidden" NAME="dboperation" VALUE="site_provider_search_titlename">
-			<%
-			}
-			  else	  {
-			 %>
-				<INPUT	TYPE="hidden" NAME="dboperation" VALUE="provider_search_titlename">
-			 <%
-			  }
-			%>				
-			
-		<INPUT TYPE="hidden" NAME="limit1" VALUE="0"> <INPUT TYPE="hidden" NAME="limit2" VALUE="10"> 
-		<INPUT TYPE="hidden" NAME="displaymode" VALUE="Provider_Search"> 
-		<INPUT TYPE="SUBMIT" NAME="button" VALUE=<bean:message key="admin.search.btnSubmit"/> SIZE="17"></td>
+
+			<INPUT TYPE="hidden" NAME="limit1" VALUE="0"> <INPUT TYPE="hidden" NAME="limit2" VALUE="10"> 
+			<INPUT TYPE="hidden" NAME="displaymode" VALUE="Provider_Search"> 
+			<INPUT TYPE="SUBMIT" NAME="button" VALUE=<bean:message key="admin.search.btnSubmit"/> SIZE="17"></td>
 	</tr>
 	</form>
 </table>
