@@ -339,7 +339,7 @@ request.setAttribute("pageMethod",pageMethod);
                                         </td></tr></table>
                                     </td>
                                     <%
-                                    	if (MyOscarUtils.isMyOscarEnabled())
+                                    	if (MyOscarUtils.isMyOscarEnabled() && myOscarLoggedInInfo!=null && myOscarLoggedInInfo.isLoggedIn())
                                     	{
 		                                    %>
 		                                        <td class="myoscarLoginElementAuth">

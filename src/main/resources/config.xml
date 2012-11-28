@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <server>
+	<misc>
+		<override_config_sytem_property_key>myoscar_client_config</override_config_sytem_property_key>
+		<ws_client_connection_timeout_ms>1500</ws_client_connection_timeout_ms>
+		<ws_client_receive_timeout_ms>4000</ws_client_receive_timeout_ms>
+	</misc>
 	<myoscar_client>
 		<!-- Cache Settings, 3600000 ms is 1 hour -->
 		<account_manager_people_cache_size>256</account_manager_people_cache_size>
