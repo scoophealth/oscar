@@ -120,7 +120,7 @@
 		<td valign="middle" rowspan="2" ALIGN="left"><input type="text"
 			NAME="keyword" SIZE="17" MAXLENGTH="100"> <INPUT
 			TYPE="hidden" NAME="orderby" VALUE="last_name"> <INPUT
-			TYPE="hidden" NAME="dboperation" VALUE="provider_search_titlename">
+
 		<INPUT TYPE="hidden" NAME="limit1" VALUE="0"> <INPUT
 			TYPE="hidden" NAME="limit2" VALUE="10"> <INPUT TYPE="hidden"
 			NAME="displaymode" VALUE="Provider_Search"> <INPUT
@@ -196,7 +196,7 @@
 %>
 
 	<tr bgcolor="<%=toggleLine?"white":weakcolor%>">
-		<td align="center"><a href='admincontrol.jsp?keyword=<%=provider.getId()%>&displaymode=Provider_Update&dboperation=provider_search_detail'><%= provider.getId() %></a></td>
+		<td align="center"><a href='admincontrol.jsp?keyword=<%=provider.getId()%>&displaymode=Provider_Update'><%= provider.getId() %></a></td>
 		<td><%= provider.getFirstName() %></td>
 		<td><%= provider.getLastName() %></td>
 		<td><%= provider.getSpecialty() %></td>
